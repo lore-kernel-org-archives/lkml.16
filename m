@@ -1,116 +1,121 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D4B1F30A9;
-	Fri, 13 Jun 2025 17:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE33226CF0
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749837027; cv=none; b=W1d882rdnDpzQVHxkfjGYJbyYHBQ68h9+360XwSD0Yaz2zyzRWMbjSyTWxq2odLuQVFLIII3PrH5dMSa1KupoYqD7zXs/7e/CxO7ndc94bxuOdyyVbgwcmYpo/x4My162bDRCQaVAGn33kMdfdLmp2uWK4bqFYc2IFv4amepVLE=
+	t=1749837033; cv=none; b=BCK9IWLviZY3MzwEiPnd0//Twbn4zTgeRqz+2F3ZqNV3+PYZTzk/Xa6a8XGoN15mwDJx53PoveFYnc7zW1qWd0cO0kDx4kk0QufK3lDw36S7wLcxddrnFLh31ZxUO4MKjWI7bYrAcPMTNMqyUVc6wBgxHvzy8A5gApTaFEuDK2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749837027; c=relaxed/simple;
-	bh=grGD1BatuuubiWHAlkLnKJeKsVSRWGPxb+ckyopQoVM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TT/8j4k3ByBz/xoPTZHAwHY5W0lUCfqh2LVH4eowtzYjFeV7R4vkLL3VYIQnwzbu2mzWEcs69tzttlFOzeu8Cj5JeSCn2MLzLleNMjYYt9Xjqx+CFF5ny/81hoqBvUAPBxwYLf9pbEgL0pG8rS523wzZFmvKrwxpLDJMBCI8sMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=MGXI7+Jd; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MGXI7+Jd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1749837023;
-	bh=grGD1BatuuubiWHAlkLnKJeKsVSRWGPxb+ckyopQoVM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=MGXI7+JdL7JV8hcjQoELyCd8uCa1nl188+1So3o1HvFskKw0gTsvNOsDg3xSvE3MO
-	 QZsDsi3Xh9Df9ecR5YOnwpvuQneNCl8C3jjWJfMZ4dzSXChbY3ZFkW2fyFXlOmIt08
-	 sSs/NVI2MtmF+l+ACPUzfCPZbUHKtyiIDcv9F2bU=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 825111C004F;
-	Fri, 13 Jun 2025 13:50:23 -0400 (EDT)
-Message-ID: <3081793dc1d846dccef07984520fc544f709ca84.camel@HansenPartnership.com>
-Subject: Re: Module signing and post-quantum crypto public key algorithms
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Simo Sorce <simo@redhat.com>, Ignat Korchagin <ignat@cloudflare.com>, 
-	David Howells <dhowells@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Stephan Mueller
-	 <smueller@chronox.de>, torvalds@linux-foundation.org, Paul Moore
-	 <paul@paul-moore.com>, Lukas Wunner <lukas@wunner.de>, Clemens Lang
-	 <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>, Roberto Sassu
-	 <roberto.sassu@huawei.com>, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 13 Jun 2025 13:50:22 -0400
-In-Reply-To: <de070353cc7ef2cd6ad68f899f3244917030c39b.camel@redhat.com>
-References: <501216.1749826470@warthog.procyon.org.uk>
-	 <CALrw=nGkM9V12y7dB8y84UHKnroregUwiLBrtn5Xyf3k4pREsg@mail.gmail.com>
-	 <de070353cc7ef2cd6ad68f899f3244917030c39b.camel@redhat.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1749837033; c=relaxed/simple;
+	bh=wBcluHVfZDxgVBR1a8uWz3JYLXKCKsQvLm8RbgidcoA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tgI6gRoO9kOXBZ/dCJRjQ6TD4mPqPOl/yY3lV00blmhVSsUYSHdwlWpfsf96vtkIRlmyV3gAWJyQa+h50cq98TAjueTLCEpMbzHZQLPC+B8l2LHwyFBv1GNpr7/Jy5U+L2J+U8WjXUxGK5jKrfip4goVXo/HKR0T/e8KQT0DhII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so61710625ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:50:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749837031; x=1750441831;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bwGJztskvbfBImqGnRKJLgsCOkaX/LFRrR+fiR9HybY=;
+        b=A4gbWx2HlijoB/LLmnwTralB+/uXDv8FtksVfuWNppHkbTUgkz8iJ9+Fn5KJiIRyN+
+         cleseGJ3yQosJXz03Yl3Txxv+qfLvpX2Gnqr5DyXAvtMvIP5qmDM9RTC3Tss+w3SaK43
+         pSGU/Hivr/OBvjrtznRgt145p7YfbpIu90A12tzNJZWgCh0HEW1t3bLItmu8xeq8YarZ
+         Qh/Sve28JLEOEW9rPzY9Pn8lEHILiT2EjxODrFfdNhbD+pl/QaMYbCxpDMlIZo+u1Lq7
+         LtdUU8qXCNb6fx51PjJaBRd8Cp/MMous8Ds6upN/C61PPFqtDyYoXhNF4Ns/Te37eq9o
+         CNAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGDUiwQg2Qy/+swcMnX28R4WHLz5pea+4vS/JNvceznc2ELp52j96LbsGNNgcsgHPZspK5xsPMSXWYJ8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYida7NCEoMZUmp89ccb3cHULbyfAugH3QfVx0bGcMzCGSYdfP
+	WtNwweBZOMhA5SgbVGz/57hzL8vwkGkD/8t8Vpxb5BR8i1vP5ukHyZyV/Hhkv+9iS+iorgA3rSV
+	1FRqTp/Sg19p1uoZO1uAE1KfZlv//pEpQMsM4fIdJ8vt68MBpNJyNUlVW4II=
+X-Google-Smtp-Source: AGHT+IEGOA5sl7U3TB9FQZZfW7xan/BqVFdapzUx/q7fhfgy8xt5Kv5UyEL6UHnCAPkPzMPyO35VapFeTZ5FeN6vrw9LS6KSJZ11
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1529:b0:3dd:b706:b7d3 with SMTP id
+ e9e14a558f8ab-3de07c55935mr8227755ab.7.1749837030762; Fri, 13 Jun 2025
+ 10:50:30 -0700 (PDT)
+Date: Fri, 13 Jun 2025 10:50:30 -0700
+In-Reply-To: <684c565b.a00a0220.279073.0014.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684c64e6.050a0220.be214.02a2.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] BUG: unable to handle kernel NULL pointer
+ dereference in bch2_btree_update_start
+From: syzbot <syzbot+2f3859bd28f20fa682e6@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2025-06-13 at 13:33 -0400, Simo Sorce wrote:
-> Premise: this problem can't be ignored, even if you think Quantum
-> Computers are BS, various government regulations are pushing all
-> commercial entities to require PQ signatures, so we have to deal with
-> this problem.
+syzbot has found a reproducer for the following issue on:
 
-I agree it's coming, but there's currently no date for post quantum
-requirement in FIPS, which is the main driver for this.
+HEAD commit:    19272b37aa4f Linux 6.16-rc1
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=11fc310c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8409c4d4e51ac27
+dashboard link: https://syzkaller.appspot.com/bug?extid=2f3859bd28f20fa682e6
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e29e0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14199d70580000
 
-> On Fri, 2025-06-13 at 16:21 +0100, Ignat Korchagin wrote:
-> > Hi David,
-> >=20
-> > On Fri, Jun 13, 2025 at 3:54=E2=80=AFPM David Howells <dhowells@redhat.=
-com>
-> > wrote:
-> > >=20
-> > > Hi,
-> > >=20
-> > > So we need to do something about the impending quantum-related
-> > > obsolescence of the RSA signatures that we use for module
-> > > signing, kexec, BPF signing, IMA and a bunch of other things.
-> >=20
-> > Is it that impending? At least for now it seems people are more
-> > concerned about quantum-safe TLS, so their communications cannot be
-> > decrypted later. But breaking signatures of open source modules
-> > probably only makes sense when there is an actual capability to
-> > break RSA (or ECDSA)
->=20
-> We do not know when Q-day (or Y2Q if you prefer) will strike, "never"
-> is still a possibility.
->=20
-> But, as a data point, IBM just announced a roadmap for a contraption
-> with 200 error corrected logic qubits. That is substantial progress,
-> so we cannot assume it will never happen, the risk is too high (it is
-> not me saying this, it is the cryptography community consensus).
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/92d22b0c6493/disk-19272b37.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3fb0142bb63a/vmlinux-19272b37.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3d5f3836ae42/Image-19272b37.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/4a262746417e/mount_0.gz
 
-Current estimates say Shor's algorithm in "reasonable[1]" time requires
-around a million qubits to break RSA2048, so we're still several orders
-of magnitude off that.  Grover's only requires just over 2,000 (which
-is why NIST is worried about that first).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2f3859bd28f20fa682e6@syzkaller.appspotmail.com
 
-Regards,
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Mem abort info:
+  ESR = 0x0000000086000006
+  EC = 0x21: IABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x06: level 2 translation fault
+user pgtable: 4k pages, 48-bit VAs, pgdp=0000000114af4000
+[0000000000000000] pgd=08000001144e0403, p4d=08000001144e0403, pud=08000001144e1403, pmd=0000000000000000
+Internal error: Oops: 0000000086000006 [#1]  SMP
+Modules linked in:
+CPU: 1 UID: 0 PID: 6497 Comm: syz-executor379 Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : 0x0
+lr : mempool_alloc_noprof+0x150/0x3f4 mm/mempool.c:402
+sp : ffff8000a36a6c80
+x29: ffff8000a36a6d80 x28: 0000000000000000 x27: 1fffe0001c5c07df
+x26: 0000000000092800 x25: ffff7000146d4d9c x24: ffff0000e2e03ef0
+x23: 0000000000092c40 x22: ffff0000e2e03ef8 x21: 0000000000000400
+x20: 1fffe0001c5c07de x19: ffff0000e2e03ea0 x18: 00000000ffffffff
+x17: ffff800093215000 x16: ffff80008051b344 x15: ffff800092d9eb80
+x14: ffff0000c9ba0a90 x13: ffff800093014c08 x12: ffff0000c9ba0ab0
+x11: 0000000000008004 x10: 0000000000ff0100 x9 : 0000000000000000
+x8 : 0000000000000000 x7 : ffff800080b774a8 x6 : 0000000000000000
+x5 : 0000000000000020 x4 : ffff8000a36a6a20 x3 : 0000000000000000
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000092800
+Call trace:
+ 0x0 (P)
+ bch2_btree_update_start+0x488/0x1398 fs/bcachefs/btree_update_interior.c:1212
+ bch2_btree_node_rewrite+0x190/0xd34 fs/bcachefs/btree_update_interior.c:2226
+ bch2_move_btree+0x538/0xa8c fs/bcachefs/move.c:1145
+ bch2_scan_old_btree_nodes+0x80/0x21c fs/bcachefs/move.c:1266
+ bch2_data_job+0x570/0x7cc fs/bcachefs/move.c:1404
+ bch2_data_thread+0xb4/0x1cc fs/bcachefs/chardev.c:315
+ kthread+0x5fc/0x75c kernel/kthread.c:464
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Code: ???????? ???????? ???????? ???????? (????????) 
+---[ end trace 0000000000000000 ]---
 
-James
 
-[1] you can change this by a couple of orders of magnitude depending on
-how long you're willing to wait
-
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
