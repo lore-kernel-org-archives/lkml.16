@@ -1,118 +1,170 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012037.outbound.protection.outlook.com [52.101.126.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426092D5C96;
-	Fri, 13 Jun 2025 11:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749812937; cv=none; b=tCkSx669ezxAlcJmVtcGnd8zHUn7Ol2op5OhPrhr4Yrz55idTCmBVlVal03rZWDFEYddzUiscC5F7yNBu2y2tmg0Mq2+GOvx9rnSxYov3ecZcxPF227ZkxcWbZpSP1PXHULObI5eKh+MSQ+82IRLTc9e7oGTj4OhnQXSnsLKjPU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749812937; c=relaxed/simple;
-	bh=qpED5RneP071FcS910odYqSdpMX7aA1qp1GZ8YptsVQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tsC1p50r2eTAC5cTc2AwWi9LEykaEqyXggHK6hTNz/9Gu/86gIQAlJDW0FiGlwXlG+HCfT3bDkhoXilct98GHDLrr2mkJ7LdYFrKTf2+ivoV7PYskLoJGA5u0kSQGLguXxni3ukPZ6Yt1iN4IwyAQWJCszTXaq7cJs/7IIHyD+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gtLu7mVt; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC80B2D5405;
+	Fri, 13 Jun 2025 11:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749812973; cv=fail; b=tWFrQ5XrNzbAu3LfWfwhNpbqRz2ICC3EjMDHvG1LvPZMg0YPe7a8WY0LIBZ2OL/NU8tFPWaOBfU2MbvfswJmy8ttj3/ApVC7YjsfwlWLjWXBOnW+xk51Bt98pt7Zpw5rP2YbgNRBO/rrtEohW8ZeF9LRn4Lftgp/DoDQ4pf69LY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749812973; c=relaxed/simple;
+	bh=7Fw3wtJ73vv3Qgm/3GkbI4mQR4gPkrDSmIWryYYMxS8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=QjOuv8ljCvEArZa8+MjPyjuupPNGIY5HUtDg5VSNils0EvYKLzjKKME/nEQnw4yC/WZHHuMLbZLEx2CFPZ6vaqLE/Rk6CgKrpEFOnQm+jVlPwbFHLgysD78zap/BWGjYbmPQqqZVWBqRJNdXQ7lKC02GXvtYx9WJqcynmRZkgZE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=h4k+d6V+; arc=fail smtp.client-ip=52.101.126.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtLu7mVt"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235e1d4cba0so19200995ad.2;
-        Fri, 13 Jun 2025 04:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749812935; x=1750417735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vrqTpVYTUrU+ceEisjCQ8uxeM+STV7VUnkv+XUZSFN8=;
-        b=gtLu7mVtNHJ5I14YtlE9fNcyacHHSjdl+CiGL5f8WDGQ+q+c7B3Xsz3inxlCWJRC9r
-         MvuGWcfknod+csYugkAGR6ceWqNoog7vb9X30Kqtwiqpu1QBwbaz/AjTIAXEWvhSyJRQ
-         PlcTJ8AoUuKCDyW4I7cAsfzHYbRsXNaeYTtVbZfqdYGt6HylYPtW2GA7s2ANkJf1zD7e
-         E/lnhtfMy11lu5CKlnZAg5ayenzEmg4Sv3TVu7YTICncku1GxBWzH0NxRwMC72ct/E5Y
-         T4ePvJILGWO7//5VGZQiokfz+ndB/zHXtcvC0fX/31NHKcNtFcmTlVTar7GrgR+yYEgU
-         GNkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749812935; x=1750417735;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vrqTpVYTUrU+ceEisjCQ8uxeM+STV7VUnkv+XUZSFN8=;
-        b=T8/Al7m5RFwRWcUmuWpnzZBCVeaVrwXASVQyhiF0pirfhRSzXdhCM9POkQyJFGlM0I
-         xCTNzUXcVI5MLMsIIqWPB7E9POF9SwIHwsRzj03D0Ys+GR+1Y2IKwVv4DVoNfqmLBnCq
-         cRhpxRgE7VmhfEI1CUrCtdqzA/4uopoWHZ9ySaltWwr7RzT4BhPrCpqsT9WMx5ZQ0DHp
-         wo7998WQh7ZmqtDgJF4qf3PGUeRzuLZBExkEWfi4O0lnaKKmS9jWhE7ThOUEqsKCb20r
-         tTapvut8nI3ue+IHP26g5LkQi2I+EAuBkjxH2Jrbsu31feir222KznppMff6XLpdVUsG
-         Gs/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUIOsSAB3rXeUFuUr9nyGz3kOElhNuylhjFKynwxaXc1ukDlhUzX+Wgza0+RwSxiFhEOJHw6ko4hX+1OoA=@vger.kernel.org, AJvYcCVODRDvgpB48ATtH265YRMBmxZJSwKNnQS2Tr8o4tHij+rsiSV/p9qjMOSUzeFHwITbskKBEgsPL/R2H1aO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSpL/kET+UTfiVaJiX6l3d/GI1cXBkz1CbQ+8X1HyYrwTxOYpr
-	z0URLYDN6CL4sh8I3v3fZA/b4sH8frjfyDVLpP7jQUXsq2K5f5Xzq/xkDVHKaOT0
-X-Gm-Gg: ASbGncvhXLUh4HjGDXROrgAwf2mQOn09mYTjmtn40oKacgpDpFXb4XiaiE/YRIY8+70
-	7a+IfeCXuZnX0nX7jaI+MzJI4vc6Ml3pmukJv72LsV86wT+TJi8fsvL11DqOYE3B00Ky3UR14wh
-	9sZNysmANRVIcjy6zbEULZyx8Nw4J2yE20v7M0ld8bs8b4W0qU3xdmD8OA5WeR53l431NVAMxid
-	A0Y5FLAx2HrWY+uk/I+xVvi5bTTV10c/x+DaENQJZpaiZKzEpY9RxVZmB6Wa01Kd+YuRjZHvSl+
-	9BfSzA7vy7GLl8bxjyp/XZm+jAHD75xO77kmyOnrpDetz4rJXaVvQhcCFQi4D48LrkO8FxCJBK8
-	ogWJn1tCqBdyQE+3aKZ3r5nZ4
-X-Google-Smtp-Source: AGHT+IGxnGVdLNa3QM4N3nCtfUL7gEmFwOsKPaTJVix/l5Pmfv+2ZMvQlVHBL9KFupuE57locHOuIw==
-X-Received: by 2002:a17:903:249:b0:235:e71e:a37b with SMTP id d9443c01a7336-2365dafffc8mr38168085ad.34.1749812935514;
-        Fri, 13 Jun 2025 04:08:55 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:b:d53a:6918:4c22:f91])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a19e3sm11894235ad.82.2025.06.13.04.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 04:08:55 -0700 (PDT)
-From: Tianyu Lan <ltykernel@gmail.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	kvijayab@amd.com,
-	Neeraj.Upadhyay@amd.com
-Cc: Tianyu Lan <tiala@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="h4k+d6V+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Pfyq41+PUvQ4foxrnDW7G+Cv7P/PVbKDXeNZL5fr3E+Bx97aodZPAA6mO18E1Bbh65Vzh2NHykkOVmryHpwgH88U/Vu9ShtkTTlowXUJZqKWKNVHx/6jCverMET/I6eXs/OU3pPTYTXW9GW6oaS/3aOdI6l6c09AC3Iw4vA06HmshYpR/tjvbpLNdw/4KAp4BCJlfViwi60f7mEyrLkiEoSoBNpOEx+tX6hcrePVB8gDux4c7TpOCUimy5D5SARkyX2vv8quBQqiYHPT42WU44Ji6evUDEz/pzHkxpLIdM3llvYOP3svS6HeOxgteLD9lfzJcSMmwjczWygNvD0F/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DtMBj33Sx1oAMqINRFAH5h963S3E6ZA3nRC5DmVePTA=;
+ b=FsFGmY9pbNqRuxE4U6YCDk+notS9//yy/OwbAMPa0myiENc2vPI0t0mn18I7LcJfTwIkcY9gFDnVdKLWwaip41t3tch5OaOe1WQJnCOvAcbou/h+5weH9SVOks0I8Y+MnLgQQt1DyY51ia3D4+Ll+/ZX/pmQd3/OgfbaHK6nFp4QVsGlCFs3an4uPbho5TKQKnxOG1CjGsKqvF4RQPDB/9/kVfCzNf9/K1+oHNMTCt7S4QoggmBZjIXps5vrlE2oK/dpW1MHhX5NvgiyHeLqwggar49z/E6kvJGvHSctykZOEU9QcWs1Ja3cfMyWmFYNo5HSqZRytuC8xgP2UfBAuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DtMBj33Sx1oAMqINRFAH5h963S3E6ZA3nRC5DmVePTA=;
+ b=h4k+d6V+icWoKqoAxKGOM46onww5lRlZsN3AsXB5hvriUWSXqiLt4IVUM4gSbIzomV0rFfCuLF3VgoQYIOaAifj4bK2tZvd5qhgXDoyAbaLGrQico8iHXKqJ3CcsCpBu5RGdaZGjXQp15wiqlH1ZPO+FYe2guOPUZfX+8GWgY4JlzVCb7iwX/QEO9+nNf/gX1lUQLaScfFHJnI68PAXXUVG0gTDb+0M74E1N9oB8S5/wz0p6ZWe9Gtyd8AtEanNvk54sLkCYKNW2mqyBNsK1YNkqu0MbN9ExEYPQuJkeDsjo0z+T/MIFexkNqbgO2UghGN86SJeJ2rin7Z9StKVcew==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB4802.apcprd06.prod.outlook.com (2603:1096:4:169::8) by
+ TYSPR06MB7344.apcprd06.prod.outlook.com (2603:1096:405:9b::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8813.29; Fri, 13 Jun 2025 11:09:26 +0000
+Received: from SG2PR06MB4802.apcprd06.prod.outlook.com
+ ([fe80::685f:929d:f06c:a349]) by SG2PR06MB4802.apcprd06.prod.outlook.com
+ ([fe80::685f:929d:f06c:a349%3]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
+ 11:09:26 +0000
+From: Yuesong Li <liyuesong@vivo.com>
+To: Dong Aisheng <aisheng.dong@nxp.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	linux-i2c@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC Patch v2 4/4] x86/Hyper-V: Allow Hyper-V to inject Hyper-V vectors
-Date: Fri, 13 Jun 2025 07:08:29 -0400
-Message-Id: <20250613110829.122371-5-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250613110829.122371-1-ltykernel@gmail.com>
-References: <20250613110829.122371-1-ltykernel@gmail.com>
+Cc: opensource.kernel@vivo.com,
+	Yuesong Li <liyuesong@vivo.com>
+Subject: [PATCH v1] i2c: lpi2c: convert to use secs_to_jiffies()
+Date: Fri, 13 Jun 2025 19:06:38 +0800
+Message-Id: <20250613110649.3283336-1-liyuesong@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0026.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::16) To SG2PR06MB4802.apcprd06.prod.outlook.com
+ (2603:1096:4:169::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PR06MB4802:EE_|TYSPR06MB7344:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6364c83f-8d0c-4558-b777-08ddaa6ac2aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|52116014|376014|366016|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZAG5UpNG4jDEhZlYHg7IlulPsEV8PFsySc12eJdKEKed+yAEg711B8YOrq+/?=
+ =?us-ascii?Q?vCfZLC+tdXnAea+OAuIBkUigRONdIaBVniXGa+NkwclnYWdvxPYM90e6Zv6h?=
+ =?us-ascii?Q?P9uLvAPhQ7CSmZnIRQx5IBjX2N4vr9JYjPk4gydtUS82LIm8auwIMaooQlY0?=
+ =?us-ascii?Q?OUrT99x/3e8imIAgCNyTIjAHJ/O9iuZ0vaDjG64837ZeiljpXzpFblgznGdh?=
+ =?us-ascii?Q?/COyR9RLXgbDFMqCeHIsq5zSN7CE0GBZmzNaXEGnEBMA7m292dwotL0x+H5N?=
+ =?us-ascii?Q?1/Uno35R3z+szmgNp+t0qzLqFds8peqv/LRdTNitwwA/cZPw0EevnA9db9k6?=
+ =?us-ascii?Q?zV+cNCH0eliLv4W9wQKYQQtbNzfP2t6IskQgv2K4/qLiTNAW8p2gvA2svWJJ?=
+ =?us-ascii?Q?Sv+ykmlH5r6U2YseDe/SP37PBa52mfM4U5T8UgnJzEgNkIdjAVAHA4LsBpkY?=
+ =?us-ascii?Q?kggT6zGx5/y/NlI6bdDnk/HyuhzUXeQo2E5gYs9ca9jASXICF3J61T01F1P1?=
+ =?us-ascii?Q?WSwm01tMjyDSWrwBfZwmLXnilX9lkap5aaz6BI5h1j2mvvjUHznzBJXXq35g?=
+ =?us-ascii?Q?+rg8F/K40IQRDrxeSpn9t08HGVls4fRoBtE14VjD1lbH5U1U39J99GtmGZPL?=
+ =?us-ascii?Q?j1jYESQsxJpx3HWfB0fJKAxAK3jV+gjEHST5nvcRM8uNTIhsemu9UpHuyyfe?=
+ =?us-ascii?Q?yZsD0AjZKTBFrLatjPHY8lJ6L6wQ0k6O0ys0ZRYpy0VWP5nnIEzR1h4Jt+Xf?=
+ =?us-ascii?Q?yHc4KigA6v/htpk//O6YHYTAWHkRArtKW9Ay/RIaon4psVp2cyjsijrSNHMc?=
+ =?us-ascii?Q?szYYpUNhwvN3vmPDTl3WfopCx4SkaABSInTMJGlY+U8kh5nFX+ur7cxJxw1R?=
+ =?us-ascii?Q?N8jQhICQioeg0sCEBWm9DNabqrDRw131JD8XfJiF6AAIbURC8KWwz4jARdup?=
+ =?us-ascii?Q?0T/Z1TjHfHL/wwamsapnzA8R8T4CoQPD7eiFcdgdr/jDsdsKZVX6d54ItD46?=
+ =?us-ascii?Q?UPRgN4Hft8mbPTmv0tEDo6ZFm3TM2HWcO/qMgK6C2Ga76FLJA+Co7F0ccl/Y?=
+ =?us-ascii?Q?heWfirPTVHORVFujXgW7yRmoRfgSDBeRp5UWD8Qb66r9cVp3V3WfaEruLB1p?=
+ =?us-ascii?Q?6F4jz6MIlGKW0xRP5Qac+INGm3iF8JSDyIlBPJukuAt9rszUUxF7ZNbS4e7/?=
+ =?us-ascii?Q?n/hoKFpF7+FkJPugxLu9mnNcZDyK2T45/N8TtKZlJBvE9Rr7JwYC0h6D27eW?=
+ =?us-ascii?Q?CPCsBd82NBTKB8rH2qEqp4nAx4ZLeBxkUCjfanEP1lTYoGvgq7afrnKUESEJ?=
+ =?us-ascii?Q?N+sz3SMatlFzDjRbZqs4mXmgmd43aW50LDw7T49kbseNbgGYtFn6MFzrlP2/?=
+ =?us-ascii?Q?SyY01dndTdhxraTIXXyRs0n7i3hDrlvzaESkzuYy2QzHjyKILcUJElmpeNhW?=
+ =?us-ascii?Q?TVU0mzZhTHNTvsehUhVfaacsrrdVFvK0SA317kCM1baH6qYSLGqrH52hFTBV?=
+ =?us-ascii?Q?O3DDC6P/5/tnNnI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB4802.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(376014)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VzmykN5X/bhC2rBh00nOTaIIsqx/8pnjO3p2xBiD3lg/BrrqoWcXsywCObD5?=
+ =?us-ascii?Q?hYO5Zh1a4Rs+QP/9sJLwezxM5tbZ1CKoRN4UkHai9Tuulsx361KqwWV8PEyt?=
+ =?us-ascii?Q?D+sy7iCpKpILTHLSmsbN4zdQmSORjKMyeofVyU6ASvOcazJpw2ZPavt3qOXM?=
+ =?us-ascii?Q?ZteKCZ2CqcY8gkYbd+WNGewamiBox/2vUcBTftHZTWVxTday1XKg98gLkKND?=
+ =?us-ascii?Q?8h8KU02/EMbetEBo/7pa2BN4PP5J1NA1hJxpcdyQz47VhhIl8s3Udv1xoqTF?=
+ =?us-ascii?Q?sXDxooGgjBN8MeTcFPbkKshmggBiVGt0J7A4dZLp8kkYOOZXvaZK4IaDvc7Z?=
+ =?us-ascii?Q?LJgK6xnlIy0MfCoOmNiver1ZOV3RVp2D+mcKLLP4yuHCB0TOgGdY1CWnxz+2?=
+ =?us-ascii?Q?s0ErVfDXcNdI+rpEx4iv7ZvGpjkw5iYQL4EruplIaDykY/Sh5+TDn+k2g5yr?=
+ =?us-ascii?Q?7GoNBzfHX0GtCfrAScnq//V5Cn454vKdlb6FQ7BSVgvngUORT+o0jI7FXYf5?=
+ =?us-ascii?Q?cpjSD2Pf5THsefwZQ2T3wuy3pCL8F1QnKfFJoDeJvMpaHAwRj3Fisb5aBPzx?=
+ =?us-ascii?Q?4xs0/jB5He2xzZFoSUkRPhjXU8H+YQf8LE8CCIXZ+dlBi/Q7RCPm+eyKCzvv?=
+ =?us-ascii?Q?r+Lvmn+8vt1GzGnJldb0o0V3I214SR7ZZB+6/8+MQjA01V7yvWJLus65REd/?=
+ =?us-ascii?Q?jrPOh4fS2kbx1zIpaCOXMNJaXighfZifFtGq4pImvWCldtknyHCdUG/tlwna?=
+ =?us-ascii?Q?sjmed2b9RlRjPomScuUcNqyS7PDTcCkjUA5cUcN5muVoX+n7k+cXJRCfZPQT?=
+ =?us-ascii?Q?9aD5KjEr02KE8HmnU/QikRWC0PM31DVRLih3+US0S+duS4MxQiiF/lLQMvMH?=
+ =?us-ascii?Q?iVagUBJj5miVRMbQ05ivIZjWlLP7Wxlc+zREmn0eiDUAgOWHC7FBHYyQcuOJ?=
+ =?us-ascii?Q?oo6ruC5sBloqSN6umoMDCRLmrDGLHOswcIp6eB/IVi6Po6e+ExFwYEPRz3/U?=
+ =?us-ascii?Q?7X11ZV6+Q7DrVpkvMoI5RhBOVoOzDUjZ2BYUCkWiG5Sw4cKoMb4AufjlsJ2M?=
+ =?us-ascii?Q?uArlVNtAuZtp8dXymWzPgiF5498DJKXKJcHZZ1oxRSsfj82YpwNHm+Efx/Pc?=
+ =?us-ascii?Q?QUaEfI34mudt3XQeYlC+K+P6MqB2xTzZ67cRCJNYnE0N8gx5XJbp3gRj2Ygf?=
+ =?us-ascii?Q?GB7RJhcqG8WI3FajEkDr2BfQGFmUoLsqeZzBh3j900+tj4+7DAtI3lIguVpO?=
+ =?us-ascii?Q?IRmK7QE8YbaX9WR81j3zveJExZSkHMkECjS+nIUTSv0kp76Ij24zt52Dy8bU?=
+ =?us-ascii?Q?HjZCeYV5wRxnSzH2iDq0Z3nlY+KAn3mHb6YiumR3mu1tzalonhLz42050Lug?=
+ =?us-ascii?Q?3EnAcY1V/MAWtVlw034JuLo4PawioBf4lxIPCgcs0eD/jZjLuqeRQHW7msdB?=
+ =?us-ascii?Q?D/uKeKBg8BkXUTF+OujaWuQO9+GmWW2AkcJ0VoVO+zuYosxwPblZZASS2e+1?=
+ =?us-ascii?Q?aIY+trU3zejytLiX2JT+TkeER82n90mkI8a/DVnFno8/7J9yMJXa7v73v2U1?=
+ =?us-ascii?Q?t8vlGair+RNrwWCSWwcRR9yhSYeC7CChI546DcDb?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6364c83f-8d0c-4558-b777-08ddaa6ac2aa
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB4802.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 11:09:26.8306
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AiI+rKyy9lxoM7ogv6hBLT3psF+PWw2t5DmURJxqcFUmeDUIYiOiFJhTCYfJ6Sg8HhTvaEQbV2oBN4xaRC3C/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7344
 
-From: Tianyu Lan <tiala@microsoft.com>
+Since secs_to_jiffies()(commit:b35108a51cf7) has been introduced, we can
+use it to avoid scaling the time to msec.
 
-When Secure AVIC is enabled, call Secure AVIC
-function to allow Hyper-V to inject STIMER0 interrupt.
-
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+Signed-off-by: Yuesong Li <liyuesong@vivo.com>
 ---
- arch/x86/hyperv/hv_init.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-imx-lpi2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 3d1d3547095a..3b99fffb9ffd 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -132,6 +132,10 @@ static int hv_cpu_init(unsigned int cpu)
- 		wrmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
- 	}
+diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
+index 342d47e67586..dfdfc23551ab 100644
+--- a/drivers/i2c/busses/i2c-imx-lpi2c.c
++++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
+@@ -563,7 +563,7 @@ static int lpi2c_imx_dma_timeout_calculate(struct lpi2c_imx_struct *lpi2c_imx)
+ 	time += 1;
  
-+	/* Allow Hyper-V stimer vector to be injected from Hypervisor. */
-+	if (ms_hyperv.misc_features & HV_STIMER_DIRECT_MODE_AVAILABLE)
-+		apic_update_vector(cpu, HYPERV_STIMER0_VECTOR, true);
-+
- 	return hyperv_init_ghcb();
+ 	/* Double calculated time */
+-	return msecs_to_jiffies(time * MSEC_PER_SEC);
++	return secs_to_jiffies(time);
  }
  
+ static int lpi2c_imx_alloc_rx_cmd_buf(struct lpi2c_imx_struct *lpi2c_imx)
 -- 
-2.25.1
+2.34.1
 
