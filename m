@@ -1,171 +1,86 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0952E11B3;
-	Fri, 13 Jun 2025 17:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C878472
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834163; cv=none; b=tdkgZOoCl5Cl2jfozly7snOOpDRZG97dWK2F3GjFPG2M6eTWULVV6l99nlFKuGTqjRsYc+TkKkXNLQbnO1Wpo70FCYXF8/pg99rF0kMKrcNCXfPsXosrzN5MJ470Wv0MK94vgV//mRl093ocZlVPgA0FjdrUJMDaiPpxnkn4vrY=
+	t=1749834186; cv=none; b=db98+oW8wyGwL0uc6BcEKfZE8O7aP10IvYnei0Ouh/08MBNHLtQE/jLsI5qzYWsyZBQjKLpftwrhPsb5FHS9/9JYfojMTIlEF0SKOxqJ3Temn1lPpr6+v9u7fPXbAI5Wf2KImF2xj/Orj9RKP3f62LJ0J1WxKMV7o8rXiozZV5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834163; c=relaxed/simple;
-	bh=pQzWwNs1c1jnqfC8/YmCsQhipvx2mAuPU3qM0U9TB/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pXaKk9kZOveWspregyWxyLBfjorW2gERkc6vDLU5Gg/C5/3wQZiyHT+6rHmUhEirnwOLGE46JwF/tSCMVQab6nqA8TggrpfFn/ZuCvTTeaDVv2P3iDNV96d8YMmSFoWf90gXT3ZMdWa8OXSND3bUzAi66JFDzHFmjThXgdUqmUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=J6jcsvJ+; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=bB+rfBnS; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1749834186; c=relaxed/simple;
+	bh=/r40uZR/KO3gsL0fdXn7quqO1Y7noMETxV4Ji86P3s4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Dlrtr+U2w4wHdnEKCrPAoUjZNVZ355a0yCz8oI9K9NF7l5euG4WfvQenzhV2Atk8rAhvNIBdXZkFs80J9s+e/+g+g+v0Hq7Wc+XvG4tb+Ac9sV1+Qxuv1DiwHLj3mPbzUUZ3J+vsJd9oEuiLvYLZYfTCcov75VI6LPZqGMmWFsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wVAhFgzS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PuY4vm91; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="J6jcsvJ+";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="bB+rfBnS"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bJm0n1mzDz9t9X;
-	Fri, 13 Jun 2025 19:02:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749834153;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wVAhFgzS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PuY4vm91"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749834183;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Fgy4RPImZQ6te0w0AD2byb84u39inJxHlG6DKwtCVbE=;
-	b=J6jcsvJ+3VTTQWzi3RGjS+qno7Hkm57HIIa+gOmEl5kILqr8xh5Lgt1S3Pl016EED5Ybh9
-	YPfJIiUhfccamBWFCAs5xK34p90cPauRZHHR8CUNAlLlJY6EKUBGWh7g9dQRGQlm6uWQYR
-	Mko+gyVPbWA7Wbp4apF/PV6K8Vy3G5CcKO/3AbbPfPXjvcthoL9V7/qZseSTMaaWqIKmWT
-	PblSH5iJ1a14UE1ALRcBG7xM7w8jf2/WubAlQdyQYLsvLbL7O2QWi4DaUFaiawNtZVz/ch
-	oJjEScNtgL2CXN11not50dqjPjTXrouAxtn4HjFOC+WitjtBhvUr+l9GsY2gmw==
-Message-ID: <8605141c-b615-4e84-9574-81e24590df48@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749834151;
+	bh=7NfgeF2dC2QINSkCwFY7dOB7Pf1iyEUqChtxCjfUjFw=;
+	b=wVAhFgzSVm6kS9Ztjloehah17EJj+npVOpu28Rq3gsN1hS4V1h2mSEIlJRWU4AJnlIKbNr
+	z38NJ4+88VYuLXah9EzRxhATJpgB7BfnVQMwRHnq3LMRjnn22QT471Fut4bYze/PZTh53K
+	QkBBHHbXkwDjPtVFNpidWFJEh8nI0Ou4cLwB4utWMAFkFxE2AayA43MMus4D8+3hKGLjNi
+	P15woFv/kylxgiqQ1+7dzJ3xxqrGUXRVzi13pluT9BCFaP26jwgWtgJYZnUmMnBd8SZpxu
+	HghbHz9XBwav8SlKFMjlEPeuZQD67QyKELdrAFb3tomsEjRn28zUicyAFOBwyA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749834183;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Fgy4RPImZQ6te0w0AD2byb84u39inJxHlG6DKwtCVbE=;
-	b=bB+rfBnSKNSslyEXRXA0cFPfuj+d1ZmwxNgUxxx6oVuCc5vWrVtrYmRtTHak1JdVMFTllq
-	kHgGEJRuf/JjfmjsQ19M9ONgDDYP8KcOxzlK2l6Z1gHb183yMplrnCmMV/Hv/jGO3SLPy2
-	6c7uhZS7/uX5hhnQwDxmHKzRsjj55yN8XbDAqIvJTpOKT3cLVqdY3xOU5EJeDAHZ92Ovdx
-	47WgVr4IQoj7BRK6oG3AcOsYRKEeK762dH81NXnIRJYclgvwpc1VMcm2JfVg+LPNbWQJKS
-	hx4wmwQwiC1GanzPex3+p91n3/QJ/BhqytyEFaSnquBWYZN75g2Ahsk/VXdpCA==
-Date: Fri, 13 Jun 2025 19:02:28 +0200
+	bh=7NfgeF2dC2QINSkCwFY7dOB7Pf1iyEUqChtxCjfUjFw=;
+	b=PuY4vm91yJw+AZX3wKbnV/GEGRYKRqnpCNpkt4TvNPtP58geJXOrMmrJCjwm5Dj+AgqFE+
+	lFRWNWHAW5SxrFBQ==
+To: patchwork-bot+linux-riscv@kernel.org, Andrew Bresticker
+ <abrestic@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, anup@brainfault.org,
+ palmer@dabbelt.com, alex@ghiti.fr, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqchip/riscv-imsic: Start local sync timer on correct CPU
+In-Reply-To: <174957291849.2454024.7268696984666677694.git-patchwork-notify@kernel.org>
+References: <20250514171320.3494917-1-abrestic@rivosinc.com>
+ <174957291849.2454024.7268696984666677694.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 19:03:02 +0200
+Message-ID: <87sek3poah.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
- IRQ connected
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Marek Vasut <marek.vasut+bmc150@mailbox.org>,
- Hans de Goede <hansg@kernel.org>
-Cc: linux-iio@vger.kernel.org, =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, David Lechner <dlechner@baylibre.com>,
- Jonathan Cameron <jic23@kernel.org>, Julien Stephan <jstephan@baylibre.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Salvatore Bonaccorso <carnil@debian.org>, linux-kernel@vger.kernel.org
-References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
- <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: 2380e27ffcba99d8a1d
-X-MBO-RS-META: nai8ozn4c3ho5f1z9wc3yxbpafzgip16
-X-Rspamd-Queue-Id: 4bJm0n1mzDz9t9X
+Content-Type: text/plain
 
-On 6/13/25 5:09 PM, Andy Shevchenko wrote:
-> Strange I don't see Hans in the Cc list, so added.
-> Thanks for the report and patch, my comments below.
-> 
-> On Fri, Jun 13, 2025 at 02:45:22PM +0200, Marek Vasut wrote:
->> The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
->> which leads to bmc150_accel_core_probe() being called with irq=0, which
->> leads to bmc150_accel_interrupts_setup() never being called, which leads
->> to struct bmc150_accel_data *data ->interrupts[i].info being left unset
->> to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
->> which depends on struct bmc150_accel_data *data ->interrupts[i].info being
->> non-NULL, and which triggers NULL pointer dereference. This is triggered
->> e.g. from iio-sensor-proxy.
->>
->> Fix this by skipping the IRQ register configuration in case there is no
->> IRQ connected in hardware, in a manner similar to what the driver did in
->> the very first commit which added the driver.
->>
->> ACPI table dump:
-> 
->>          Device (BMA2)
->>          {
->>              Name (_ADR, Zero)  // _ADR: Address
->>              Name (_HID, "BOSC0200")  // _HID: Hardware ID
->>              Name (_CID, "BOSC0200")  // _CID: Compatible ID
->>              Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
->>              Name (_UID, One)  // _UID: Unique ID
->>              Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->>              {
->>                  Name (RBUF, ResourceTemplate ()
->>                  {
->>                      I2cSerialBusV2 (0x0019, ControllerInitiated, 0x00061A80,
->>                          AddressingMode7Bit, "\\_SB.PCI0.I2C0",
->>                          0x00, ResourceConsumer, , Exclusive,
->>                          )
->>                  })
->>                  Return (RBUF) /* \_SB_.PCI0.I2C0.BMA2._CRS.RBUF */
->>              }
-> 
-> These lines...
-> 
->>              Method (ROTM, 0, NotSerialized)
->>              {
->>                  Name (SBUF, Package (0x03)
->>                  {
->>                      "0 1 0",
->>                      "1 0 0 ",
->>                      "0 0 1"
->>                  })
->>                  Return (SBUF) /* \_SB_.PCI0.I2C0.BMA2.ROTM.SBUF */
->>              }
->>
->>              Method (_STA, 0, NotSerialized)  // _STA: Status
->>              {
->>                  Return (0x0F)
->>              }
-> 
-> ...are irrelevant.
-> 
->>          }
->> "
->>
->> Splat, collected from debian unstable, probably not very useful:
-> 
-> Oh my gosh, please leave only ~3-5 *important* lines out of this, or move it
-> completely to the comment block (after '---' cutter line).
-> 
-> This is requirement written in Submitting Patches.
-> 
-> ...
-> 
-> As for the solution, are you sure the line is not wired at all?
+On Tue, Jun 10 2025 at 16:28, patchwork-bot wrote:
+> Hello:
+>
+> This patch was applied to riscv/linux.git (fixes)
+> by Thomas Gleixner <tglx@linutronix.de>:
 
-No . It is some cheap mini-laptop , I have no schematics or any other 
-info really .
+No. I never apply patches to the riscv tree :)
 
-Note that I am not really familiar with x86 and ACPI, so there is that.
+> On Wed, 14 May 2025 10:13:20 -0700 you wrote:
+>> When starting the local sync timer to synchronize the state of a remote
+>> CPU it should be added on the CPU to be synchronized, not the initiating
+>> CPU. This results in interrupt delivery being delayed until the timer
+>> eventually runs (due to another mask/unmask/migrate operation) on the
+>> target CPU.
+>> 
+>> Fixes: 0f67911e821c ("irqchip/riscv-imsic: Separate next and previous pointers in IMSIC vector")
+>> Signed-off-by: Andrew Bresticker <abrestic@rivosinc.com>
+>> 
+>> [...]
+>
+> Here is the summary with links:
+>   - irqchip/riscv-imsic: Start local sync timer on correct CPU
+>     https://git.kernel.org/riscv/c/08fb624802d8
+>
+> You are awesome, thank you!
 
-> IIRC Hans had a broken tales where it was simply forgotten, meaning
-> the Android / Windows driver simply hardcoded needed info.
-> 
-> If it's the case, it should be solved differently around PDx86 special quirk
-> driver for the cases like this.
-There are likely two issues.
+That patch has been committed to the tip tree and is already upstream.
 
-First, this driver needs to handle i2c_client->irq == 0 correctly if it 
-should work without IRQ line, which the driver seems to indicate that it 
-does. The current crashing the kernel is not the correct way of handling 
-that. That's this patch, in some form.
-
-Second, if this laptop has some IRQ line for this chip hidden somewhere, 
-then it might need a quirk of sorts, sure. Is there some way to find 
-out, without taking the thing apart and poking around with a scope ?
+Can you fix your bot scripts please?
