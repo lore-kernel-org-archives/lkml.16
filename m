@@ -1,265 +1,149 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A6B2DA767
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801675; cv=none; b=apSsQzvBfUjx7s9JStwixrlYnpITCk/2l1c27TeStbS58z4p1dRuA1hDo8LWn9uejPUv62Cn8kmZsQGigP6YmMGAN/fCaYM4XOJKb9Xd9w5o4r+u2RY8EkKXnq0IG48fkVrhPp9r3v4KpXUKdBwSCtIhE54bQikIhjEMufrKIUM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801675; c=relaxed/simple;
-	bh=oVkBrK/A0vLvhoTA8U0y8twjRvHkjlMpOpc6rdFuRs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dNiDOau9mmxrIQYY1WJpE/013dIURDeoqZLh86lOSgWOleTFhTX6EZWuSz36bFmtdv50lrZ1QyVaiAHSBAGT0aJ5WacjNx8wHcV0j9yRSiL69v4QuluQd0Gx6kK6WmSmcMmXBzhPrl/iedbuXpvALhshfFk2Sz17psIOTM4nY8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Xap7Gkdv; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7522DA755;
+	Fri, 13 Jun 2025 08:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749801741; cv=pass; b=jSY5hl+kJoE/zVvsOtbr9jGBiCcXTf8Yi1STu/s/Y9d0wl1T4xnaLwOpYOHSWL3cDvnJn8tGMbhwglntYJLp54GDvYK8ZWDhCiGw8EOsI6FcByueH3TXERyoQ1a72xjqHQSO6KGDflVFXGya5NYOCfHEsWjDZm/AyZJ+72422uQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749801741; c=relaxed/simple;
+	bh=IriJbLd3oW21fvlp51YbALvpgoBSDDPr2ACz05AwQb8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qb8w4d9+Iev0SOyJ9LyLV1EjcMjZd7FVeetdELaNJqAGGnYchdj4RebMWWxH/LhprS9Pj989cYfeLpvclNha0VoU6X8CbWOqaLczlkduBC2XfjhesP60APN7qMG4sNmF8HY5aTCVyeJqihCQWqGq+vB06TJKWBjsYSVMIX5RCW0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=rGsB++Qe; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Xap7Gkdv"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so14000825e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749801672; x=1750406472; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oVkBrK/A0vLvhoTA8U0y8twjRvHkjlMpOpc6rdFuRs4=;
-        b=Xap7GkdvZLFoSn10I4VPS572uchA0ixQGhkMgBe/r3ojQAGzKTZWlL/MvGf07lF2KF
-         JsAgfzrrQJLxIEwPzSwk6uibPBl2vOif/GrzqrBipcV78MqCVXN4sXVULGmOljtaOWMa
-         ojjoa5W53zj0j9LiU+miKp8gKO1/wczbvvRfWOmaswiO47aylzUijPR5KCLP0vR1DbGY
-         MhFsKiIlnUb4tLLvvOhpmjNSiAScAea2IlTwcyefvRF1OAl64TKw7pvinJV3rfWWd9F4
-         R/TSrGTaBndZ0KyfUO0zNW8G9u6yU4uyxyhXj3H6tdnMLxrQ8QcfF/BgNF4lfm9ddKGU
-         ahBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749801672; x=1750406472;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oVkBrK/A0vLvhoTA8U0y8twjRvHkjlMpOpc6rdFuRs4=;
-        b=kFsk9mZUM1A/Q9RvmAUBgUUaHPvE94Cyoe+8uvSemuMExTdnc5FbPfdio7UEuABk23
-         GdMq+2f/NlSRgyWta+YKrkuQVdE3xGuxD9N3E84l5D/FHfWotVreeDoD74LaBR5Q5iTN
-         PKnJ0vv3EZDRqVU2rL3+Ltv6EU1csnbUqiZji37JjoiWzmIZx4W9txiPYFjkG/Lp/WeV
-         1ZdhuUENyjg3bkYwH5ux4In/HAAn0GGivtHN8++lYI5iCa4SqW1l5tU6eytAAFhgcCCW
-         bFh9eZdmmD6j97SGIWWPCv47weTLWr3gmYzHA1/ghPLlfniox/4pqJ6yQb+L+2eVv2bS
-         LL0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXeLZZ/c7f+HqkSqQTrBoEOhKvntU+j9PUlZdfXYHpRJn5ATkL0F7ysBr855GBzNrg7ivkWyM6NE5F8tFk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDpO0mbiuUNZtd6LWo0QvW6t7CG6xPxD0kf4Sc+5BoiJQbcZPE
-	MZbibfKB1llclsOkBspqm0a1ojnvvgOpdTaIPwmQ3bZhuZcbHQyZvZT9dW0UllwP4Cs=
-X-Gm-Gg: ASbGnctVS2A473TOoruDZ5svnz/V9qaY7c148Q4cujoJmctQGz6hJTXMR+s8wX3olBW
-	oOgsyC7QIfAmbPg1JZvItaB6YIcw5YYIDM+5SZx9vhmiTWAG7NDV5ButxYV8kVzHiXrjCxh+zH+
-	QykVw5cEZbWvqd9mBqLxN/Tv6EUwbgmhUqRg/gKE7qrCVoxru0hCZLDMX0llU3crnpHMonV8sHc
-	w+nq5R1ZTwmb+ZhaC9Kg6Pq69kk3r+OHmtvjUv1atGs4SVzLIUGkZFKCCgLROj587iaTGudrpFa
-	p8I3AZnCawJi5eCWmIhtI2gAxijXiLyW97vNWTBWLpNLIyJM6VDqlSuE9vNkxwHwXKwb3xDbivC
-	fvRVL4475RGmn9iSWIuVNOQ9N/VKegqHsKLMmrZeKBChpKZRd9jKlYG/6sjYmqAV4stKsvYMGFR
-	Hl0V+hcOArFjk=
-X-Google-Smtp-Source: AGHT+IFMe7wbeTc0LOBRSkO3BDuKqUyRIhs/5ZGTQ8wq12AaIc2cDx4+sbER33SEbuRIuacSzKv0ag==
-X-Received: by 2002:a05:600c:4e02:b0:442:e147:bea6 with SMTP id 5b1f17b1804b1-45334a7fce4mr17323885e9.11.1749801671116;
-        Fri, 13 Jun 2025 01:01:11 -0700 (PDT)
-Received: from ?IPV6:2003:e5:872a:8800:5c7b:1ac1:4fa0:423b? (p200300e5872a88005c7b1ac14fa0423b.dip0.t-ipconnect.de. [2003:e5:872a:8800:5c7b:1ac1:4fa0:423b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224cb2sm46051975e9.5.2025.06.13.01.01.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 01:01:10 -0700 (PDT)
-Message-ID: <bd565df5-b87c-42b1-a717-9ed1267df0c2@suse.com>
-Date: Fri, 13 Jun 2025 10:01:09 +0200
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="rGsB++Qe"
+ARC-Seal: i=1; a=rsa-sha256; t=1749801707; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BeYh0vqVWvMsZH2jhwqNWP0o2xljKxT0qmmEyR8a3x1dXIjsO6mau0NqMB8fs9S/XFOMfAOBWntFIwRmNhPDW6xvBJ/uC/bDc6jhp4DSsmSixTOVEnJUr3qDhF6qXhRaFzILbLnNeKjSypKQ3ztP+X9r8z7e3/FK9Ay9JELE2GQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749801707; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IriJbLd3oW21fvlp51YbALvpgoBSDDPr2ACz05AwQb8=; 
+	b=HPnZ1qGJ7DTdrwINps2F2lH8tIh2Vr+P59gp5y9Rmu4KewkXnvFyRdmc6X7K0bWaLtYqV+oB8O95rGVvihBiRinTvIzfD5/7SvFDglaiIeYrV6cIu44e78Y5ehLG08/x42zAJjUN8Wl1ned7T5LxXJsd6fqrWThYNSLf3xEaKpo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749801707;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=IriJbLd3oW21fvlp51YbALvpgoBSDDPr2ACz05AwQb8=;
+	b=rGsB++Qe5OLSz6rEIGPzgSBLlPY4ps0FFHo3O2RKLHtaKsV85LeAOTh/twHZzFAo
+	wrH9bLSteSUHmLWWXgff6MoGXTBdRNXRUknrOWJBvU4BLx/qONmIF1aJO4OtO/SfzuN
+	P3JkEZrKMHG4Wzln0QSmYnk8qG3+2/56xTrJ4hHx2+ZBjrik/fNxcKaFknYG1xXcSoR
+	Hy9Be8CiGu4ICxCpqLRQG8PpNHiMaOyqiRPpM8f8y/8CkhD+RuZQQTdGFtzybJ5JOsp
+	saOrRj2LZLVndqi2kgs9GP82qfv29LD8vj1yZRZd00JALrvcpQY6vyCHkmlMP+NR4jw
+	kOD6/J9SJg==
+Received: by mx.zohomail.com with SMTPS id 1749801704443553.1069514426033;
+	Fri, 13 Jun 2025 01:01:44 -0700 (PDT)
+Message-ID: <40fc8f3fec4da0ed2b59e8d2612345fb42b1fdd3.camel@icenowy.me>
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chaoyi Chen
+ <chaoyi.chen@rock-chips.com>, Matthias Schiffer
+ <matthias.schiffer@ew.tq-group.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>,  netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 13 Jun 2025 16:01:37 +0800
+In-Reply-To: <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
+References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
+	 <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+	 <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
+	 <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+	 <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+	 <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+	 <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
+	 <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+	 <aElArNHIwm1--GUn@shell.armlinux.org.uk>
+	 <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
+	 <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
- instruction interfaces
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- xen-devel@lists.xenproject.org, Andrew Cooper <andrew.cooper3@citrix.com>
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-6-jgross@suse.com>
- <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
- <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
- <2365af70-d36f-4663-b819-59d886936ef5@zytor.com>
- <8a82946a-6c3e-41d1-b3bd-be164dc6eeba@suse.com>
- <0c2dab1d-9b5c-4d34-af0e-8a14907d7335@zytor.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <0c2dab1d-9b5c-4d34-af0e-8a14907d7335@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------STIfmqOdBFBaxqvTwNHJSgls"
+X-ZohoMailClient: External
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------STIfmqOdBFBaxqvTwNHJSgls
-Content-Type: multipart/mixed; boundary="------------tCGUA4CXW29PV7rMp3vv2bed";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- xen-devel@lists.xenproject.org, Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <bd565df5-b87c-42b1-a717-9ed1267df0c2@suse.com>
-Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
- instruction interfaces
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-6-jgross@suse.com>
- <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
- <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
- <2365af70-d36f-4663-b819-59d886936ef5@zytor.com>
- <8a82946a-6c3e-41d1-b3bd-be164dc6eeba@suse.com>
- <0c2dab1d-9b5c-4d34-af0e-8a14907d7335@zytor.com>
-In-Reply-To: <0c2dab1d-9b5c-4d34-af0e-8a14907d7335@zytor.com>
+=E5=9C=A8 2025-06-11=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 17:28 +0200=EF=BC=
+=8CAndrew Lunn=E5=86=99=E9=81=93=EF=BC=9A
+> > Well in fact I have an additional question: when the MAC has any
+> > extra
+> > [tr]x-internal-delay-ps property, what's the threshold of MAC
+> > triggering patching phy mode? (The property might be only used for
+> > a
+> > slight a few hundred ps delay for tweak instead of the full 2ns
+> > one)
+>=20
+> Maybe you should read the text.
+>=20
+> The text says:
+>=20
+> =C2=A0 In the MAC node, the Device Tree properties 'rx-internal-delay-ps'
+> =C2=A0 and 'tx-internal-delay-ps' should be used to indicate fine tuning
+> =C2=A0 performed by the MAC. The values expected here are small. A value
+> of
+> =C2=A0 2000ps, i.e 2ns, and a phy-mode of 'rgmii' will not be accepted by
+> =C2=A0 Reviewers.
+>=20
+> So a few hundred ps delay is fine. The MAC is not providing the 2ns
+> delay, the PHY needs to do that, so you don't mask the value.
 
---------------tCGUA4CXW29PV7rMp3vv2bed
-Content-Type: multipart/mixed; boundary="------------5Uu5knDZMhxHDHh1wwEwuctw"
+Thus if the MAC delay is set to 1xxx ps (e.g. 1800ps), should the MAC
+do the masking?
 
---------------5Uu5knDZMhxHDHh1wwEwuctw
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+What should be the threshold? 1ns?
 
-T24gMTMuMDYuMjUgMDk6MzEsIFhpbiBMaSB3cm90ZToNCj4gT24gNi8xMS8yMDI1IDU6NTgg
-QU0sIEp1ZXJnZW4gR3Jvc3Mgd3JvdGU6DQo+Pj4gSGVyZSBpcyBhIHBhdGNoIEkgY29va2Vk
-LsKgIEkgYWRkZWQgYW4gQUxURVJOQVRJVkUoKSBoYWNrIGJlY2F1c2UgdGhlIG5ldyANCj4+
-PiBpbnN0cnVjdGlvbnMgY2FuJ3QgYmUgbW9yZSB0aGFuIDYgYnl0ZXMgbG9uZy7CoCBCdXQg
-d2l0aCB0aGUgcGF0Y2ggeW91DQo+Pj4ganVzdCBzZW50LCBpdCBzaG91bGRuJ3QgYmUgbmVl
-ZGVkLg0KPj4NCj4+IEkgaGF2ZSBtZWFud2hpbGUgZHJvcHBlZCB0aGUgcGF0Y2ggY29weWlu
-ZyB0aGUgb3JpZ2luYWwgaW5kaXJlY3QgY2FsbC4NCj4+DQo+PiBSZWFzb24gaXMgdGhhdCBJ
-J20gc2VlaW5nIGEgcG90ZW50aWFsIHJpc2sgd2l0aCBjdXJyZW50IGFsdGVybmF0aXZlDQo+
-PiBwYXRjaGluZyB3aGVuIHVzaW5nIEFMVEVSTkFUSVZFX1syM10oKTogZGVwZW5kaW5nIG9u
-IHRoZSB0ZXN0ZWQgZmVhdHVyZXMNCj4+IGl0IG1pZ2h0IGhhcHBlbiB0aGF0IGFuIGluc3Ry
-dWN0aW9uIHNlcXVlbmNlIG5vdCBzdWl0YWJsZSBmb3IgdGhlIGN1cnJlbnQNCj4+IHJ1bnRp
-bWUgZW52aXJvbm1lbnQgaXMgcGF0Y2hlZCBpbiBhcyBhbiBpbnRlcm1lZGlhdGUgc3RlcC4g
-SW4gY2FzZSB0aGVyZQ0KPj4gaXMgYW4gaW50ZXJydXB0IGhhcHBlbmluZyBqdXN0IHRoZW4g
-QU5EIHRoZSBoYW5kbGluZyBvZiB0aGUgaW50ZXJydXB0IGlzDQo+PiB1c2luZyB0aGUgcGF0
-Y2ggc2l0ZSwgdGhpcyBjb3VsZCByZXN1bHQgaW4gY3Jhc2hlcyBvciB1bmRlZmluZWQgYmVo
-YXZpb3IuDQo+IA0KPiBPaCwgSSBoYWQgYXNzdW1lZCB0aGF0IExpbnV4IGRpc2FibGVzIGlu
-dGVycnVwdHMgZHVyaW5nIHRoZSBwYXRjaGluZw0KPiBwcm9jZXNzLiBKdXN0IG91dCBvZiBj
-dXJpb3NpdHksIHdoeSBhcmUgaW50ZXJydXB0cyBhbGxvd2VkIGluIHRoaXMgY2FzZT8NCg0K
-SW50ZXJydXB0cyBhcmUgZGlzYWJsZWQgd2l0aGluIHRleHRfcG9rZV9lYXJseSgpIHdoaWxl
-IHBhdGNoaW5nIGEgc2luZ2xlDQppbnN0YW5jZS4NCg0KSSBndWVzcyBrZWVwaW5nIGludGVy
-cnVwdHMgZGlzYWJsZWQgZHVyaW5nIHRoZSBjb21wbGV0ZSBhcHBseV9hbHRlcm5hdGl2ZXMo
-KQ0KaGFuZGxpbmcgd291bGQgcG90ZW50aWFsbHkgcmVzdWx0IGluIGEgdG9vIGxvbmcgcGVy
-aW9kIHdpdGhvdXQgaGFuZGxpbmcgYW55DQppbnRlcnJ1cHRzLg0KDQoNCkp1ZXJnZW4NCg==
+>=20
+> > > > Well I can't find the reason of phy-mode being so designed
+> > > > except
+> > > > for
+> > > > leaky abstraction from phylib.
+> > >=20
+> > > I have no idea what that sentence means, sorry.
+> >=20
+> > Well, I mean the existence of rgmii-* modes is coupled with the
+> > internal of phylib, did I get it right?
+>=20
+> This is the external API of phylib, it has nothing to do with the
+> internals of phylib.
+>=20
+> /**
+> =C2=A0* phy_attach - attach a network device to a particular PHY device
+> =C2=A0* @dev: network device to attach
+> =C2=A0* @bus_id: Bus ID of PHY device to attach
+> =C2=A0* @interface: PHY device's interface
+> =C2=A0*
+> =C2=A0* Description: Same as phy_attach_direct() except that a PHY bus_id
+> =C2=A0*=C2=A0=C2=A0=C2=A0=C2=A0 string is passed instead of a pointer to =
+a struct phy_device.
+> =C2=A0*/
+> struct phy_device *phy_attach(struct net_device *dev, const char
+> *bus_id,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 phy_interface_t interface)
+>=20
+> interface tells the PHY how it should configure its interface.
+>=20
+> If you follow the guidelines, the PHY adds the delay if needed, you
+> get interface =3D=3D phy-mode. However, interface and phy-mode are
+> different things. phy-mode describes the hardware, the PCB. interface
+> tells the PHY what to do. There are legitimate cases where
+> interface !=3D phy-mode.
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Andrew
 
---------------5Uu5knDZMhxHDHh1wwEwuctw
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------5Uu5knDZMhxHDHh1wwEwuctw--
-
---------------tCGUA4CXW29PV7rMp3vv2bed--
-
---------------STIfmqOdBFBaxqvTwNHJSgls
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmhL2sUFAwAAAAAACgkQsN6d1ii/Ey8T
-6wf+Lx95IbfTTKOQJFyx7WrMg/Jq+6GRUWowQjPiHr/aJ2NgIXbtQnBkykc8J89EMOvdqAW8C0Cc
-bd5sVr161doZhvg+ZCIT6a65ziNnm559DTq1iXGc5k9VtqKRaooC7JJ8qvvVdAGBeCYBCTC/2UXc
-MfiH8EaqL3YxPMhmEKEi5LU7LN6Ylfw93GkrpTbNu/lAMrGytCb4/rKcBMrT+steHNkWmcDqi1XB
-xew917zFd74V70INHfo0/vp+Lic341GI4JJOSi1UzZ2a38QQNV8dOMG4DWvN62EipkMCNu8EkVWC
-lQriuZk/bV7jOnAacKD6QzbwJVQIn9650sn/u5gBQQ==
-=g6uR
------END PGP SIGNATURE-----
-
---------------STIfmqOdBFBaxqvTwNHJSgls--
