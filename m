@@ -1,105 +1,144 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB6619E7E2
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7228219E7E2
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834016; cv=none; b=n/a6Fs8RoebuBD37nzSh+5MRqBxRKeG+vorqqfrOlJgu06iqgIaS6nmDG0ktjJIXni+dRoBEHM3eSVDbhvsXDclRNlVlYAWIt4iNVP5UWY3tdcVdgKKrIfpH0HBMFUYhbql6zRMQBGn+UxgYZO0zKMc7OOmfhqSSx+RaqntJpDI=
+	t=1749834030; cv=none; b=Jjj5URl5mNK13xgIhubJn5phow4G6H+e+iZoCXE7Y3GEZ0KBlAvwN9Z2IC1RnGtGciitfp9pLiJCj9SNf+X2kVEDYxC4qpY1JtcHJezH13/muDrBXuzGYGw26xqNVWEJ5wvOpuZ8Yd9gSyzIWB8LVdZDx1d3pDbFXkTjZW3frhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834016; c=relaxed/simple;
-	bh=qFHf05pLwIZBpGvazuZgcxkgWqabzO1YL2jAHuc/neA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hpDgqiTbJ2DB6Zk17Xc8tDhtyDEcZo92FnH4GCnhE2rPJmnGpsEj9ILodCxSRcb9BGTfd4QSakWrZ8ZQ42A7byYhP6a6hQLQWSdITl1sQMXIX1Dkd9wMc32hDPzBbluG5Qq9dSQhADH+VchB+tnCUINjKvF635x7R6W3V2S0GgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Utvw4WCZ; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749834030; c=relaxed/simple;
+	bh=Ee23bSYewgw1pZtLKYfWhlq/qzuBs8kymYq9pjayqSE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ASAz09QlXY3m5AZWlK83X+qlHz0HUfQV5pjsdIF9xFERycq/wjVloEQpxw/dvH/n4LMfpphwQDbouUbZpxNFh5s8GWeW2iqclppzbbKSY+peVShHWSdgqkf6/TDkR3mOi/i3AqsAqomKWIUgoSKa7y79XpvpABPmtMvPBiFhz80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u9aG/XAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ocT+pKRE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u9aG/XAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ocT+pKRE; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Utvw4WCZ"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-735b9d558f9so730089a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749834012; x=1750438812; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W4PmbLTdx7bKxmJ58LSBL+52b6YKUjWHxLD3jkqTwUs=;
-        b=Utvw4WCZi1urkBooRT1Cvxk+qwFRfZ65qKh2LkZ12mBRhfipGAdfquzUsR8jtmX/Bq
-         ThQoKCxNxFHgoPYxD3nipFoxgW8EuDlwurwsLZ9/fFrHqqMnlyjcOkQzExEX2L5qb2gh
-         g9mBbdxh+lNpAkNo6jJ79U7yjusivdMHLkK5vY75A1Sjw8TcCy+Sk4b9UEiWjaoICv3D
-         phDSwyW7z7pTyVdTuai1qBlPwvj7943eAwbcOWtNcuMCO2EEur2/Y2LHyLwyK8nOjOH1
-         Napiab14EHuueN/EXia+A70Ke97cS1mc6LmnCfDD20ChK3owKqygRp4kzB1qemed9+2s
-         UFGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749834012; x=1750438812;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W4PmbLTdx7bKxmJ58LSBL+52b6YKUjWHxLD3jkqTwUs=;
-        b=hS/6ln0f1ffB7HxrnJijrI5KAWd0QUwOEMkh44xlM9OaWUtX6vU6X3QJS9gg8Y1kZo
-         Pc9oDqFffU4uywYO8wevCSjYkCRCsII8Q2yRITkeh1jX3bmB8HIyn/z7hi3aFMWrBUno
-         8RFG7n2fnyrFhxf8akF3OqlkoCJnHRUCbPe2lhR7wS04aP0mJP11U15CD+6Bz4Rl9Otc
-         0xn3sR15H8Tl2bWBpy7nC3Yep4++PKu2LY+o8/7TvVy+PH74D1o0qJI4cj/CrhCRmqyp
-         8KmHUDDvTOpWwaXT+6R5ISIwLM63I6ux2idhngmY/GEO1xpHk8VjulHZbyyVw0UjCWlR
-         SI4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV3+beLv+6zapWTDQiHmHfKJ2bnujkjSBnpmeyt19g6473mp6O7YL4QSfdE+i8R55QB3IQF/9YNuSZBA2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6OKBm4MkeQwBXTryH8hvJppvBz8yCtixyukj44uL0VAmwQNac
-	9hGQuksswq68LIww9ojN+3NvDzMpFE9EQ6c2+4u807IYAIDxO2UKx4LzvbSeDLrei88=
-X-Gm-Gg: ASbGncsvmhgCN9v4fMNZnQOp7TQ6YxVVcdO5cSE0vm0Ayjs65gXRe6I0/4SswMIdGF2
-	PJZJNeVBRGJnTip4xztfzAEnyu+n2cf12KwAPWd9mBElHm6fSajMkwlruBth5MM0621P+Tp2unz
-	mK9yVR9vEKoCV7zMURnkcmLX4QZWNTLi7JcSagyT6n5+dYoOSE0DMDbYBtfA6gk8i5Ety/cm5D4
-	kxDayUO1mVc/cQp14MHAKX1ktrJnyGE8SOPaon8+3I1gQV1KSjOYOvbrp8sbdkvE40iXiUP+rga
-	a6+AhFHwmDp1WGM/Nw9PNtvPe850ddrxlKWncGidDZ/wH/S0swCLVyJHWmRoZrmNc72ULfqARWz
-	aRcbiDZpTxNsCWZ4H8xVwKNxysKHBWzMIqmyX
-X-Google-Smtp-Source: AGHT+IE7h+SZVToKJUAin3fOr868BbMSOLFocQ+et42SsT9JMuC0JS5qAKXXAH1oH1f2QX3S8vjHvg==
-X-Received: by 2002:a05:6830:210b:b0:72b:94a4:9143 with SMTP id 46e09a7af769-73a3626644bmr315551a34.2.1749834011794;
-        Fri, 13 Jun 2025 10:00:11 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4647:c57:a73c:39d8? ([2600:8803:e7e4:1d00:4647:c57:a73c:39d8])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a284ff5f4sm258694a34.43.2025.06.13.10.00.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 10:00:11 -0700 (PDT)
-Message-ID: <46208c8d-8370-4b9e-bca1-7ede7ee9b078@baylibre.com>
-Date: Fri, 13 Jun 2025 12:00:10 -0500
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u9aG/XAy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ocT+pKRE";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u9aG/XAy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ocT+pKRE"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9339C1F892;
+	Fri, 13 Jun 2025 17:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749834026; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
+	b=u9aG/XAy248ET//vYRdstDzkp9e1gMhJ9a1HNBFgWBgkqQ+DzLQHTCdDuzdjJXNyc8sQsj
+	tJc3ghB024EctTUGHt0guaki0rPUDLxL5DFjJKiMw905+EiBJYUwcxBNeS8E/WWZh42zr6
+	W+MEoKdKBOaRPeamP6LjmhCF59/urCQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749834026;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
+	b=ocT+pKRE0yIBuDKH/NadiAPPUhisX2hRv3LVIi3nXKaMqJ6vwZH5DwuI1Zki5i8j1KTFCd
+	UVHFb9xm6+EPziCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749834026; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
+	b=u9aG/XAy248ET//vYRdstDzkp9e1gMhJ9a1HNBFgWBgkqQ+DzLQHTCdDuzdjJXNyc8sQsj
+	tJc3ghB024EctTUGHt0guaki0rPUDLxL5DFjJKiMw905+EiBJYUwcxBNeS8E/WWZh42zr6
+	W+MEoKdKBOaRPeamP6LjmhCF59/urCQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749834026;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
+	b=ocT+pKRE0yIBuDKH/NadiAPPUhisX2hRv3LVIi3nXKaMqJ6vwZH5DwuI1Zki5i8j1KTFCd
+	UVHFb9xm6+EPziCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ABD6713782;
+	Fri, 13 Jun 2025 17:00:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LSjlJilZTGgwRAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 13 Jun 2025 17:00:25 +0000
+Date: Fri, 13 Jun 2025 18:00:23 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Alex Williamson <alex.williamson@redhat.com>, Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>, 
+	Nico Pache <npache@redhat.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
+Message-ID: <koa6s4cdbnch45vr55td2okarbpyirnmqlvovvfsnu6rdagdu3@ofp2jkeryoa7>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-2-peterx@redhat.com>
+ <1fa31b8c-4074-45c7-ad59-077b9f0ab8fb@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] iio: adc: stm32-adc: Use dev_fwnode()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, jic23@kernel.org
-Cc: tglx@linutronix.de, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <0ec0fd5e-8fbe-43c4-8aad-f36d2872f280@baylibre.com>
- <20250612084627.217341-1-jirislaby@kernel.org>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250612084627.217341-1-jirislaby@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1fa31b8c-4074-45c7-ad59-077b9f0ab8fb@lucifer.local>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.990];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On 6/12/25 3:46 AM, Jiri Slaby (SUSE) wrote:
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
+On Fri, Jun 13, 2025 at 04:57:12PM +0100, Lorenzo Stoakes wrote:
+> You've not cc'd maintainers/reviewers of mm/mmap.c, please make sure to do so.
 > 
-> So use the dev_fwnode() helper.
+> +cc Liam
+> +cc Vlastimiil
+> +cc Jann
+> +cc Pedro
 > 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: David Lechner <dlechner@baylibre.com>
-> Cc: "Nuno Sá" <nuno.sa@analog.com>
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Cc: linux-iio@vger.kernel.org
+> ...!
 > 
-> ---
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+> On Fri, Jun 13, 2025 at 09:41:07AM -0400, Peter Xu wrote:
+> > Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
+> > the helper instead to dedup the lines.
+> >
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> 
+> This looks fine though, so:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+
+Looks good, thanks!
+
+-- 
+Pedro
