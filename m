@@ -1,110 +1,388 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07CF2E0B79;
-	Fri, 13 Jun 2025 11:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7212D5C8C;
+	Fri, 13 Jun 2025 11:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749813635; cv=none; b=LCV9xHHyhnO8XjK+zP6F1fXge9UJXtHuP5yGYXxcQP79EJ4qBdeCF1L8+wDgy4haU986w8FJIURDkmFf+PmOb0/SXgvEs0wjOrpLmmr3XRl1tHX5gowDgts3FtlksN5Iip5onVHN5X/3D6X+LOdrP9xYnZQAnf6jrXfzbQc3OLM=
+	t=1749813633; cv=none; b=PUtvk9te9MnboOX0rhGBcEXzCooWRV00TRV15G1Rj5hzl0Ukoa6LBixaieKI7Xb+of8ao2wFb7mXv7V/pCt9X8zDrIRvAhC78Xsy/2sQ86VxJ0w9JUAtpZx4Lnr6JOQEd0EZygrlzHGcQZ7e2GR1VzovrxuvIBcnzE/DMHvfquA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749813635; c=relaxed/simple;
-	bh=4ORPoEmUrrRcxmN7XshtQHXsvTt3IceYcN2rLTizFKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NhDs5lFfCjBvYINO6nmyBML0Ow5A3cmMvN7bKqE4qa7Of33tbldqTapo0CZkj0a105iN5+mTofg/Dk2DKVNEvryMGML+Y5cDWpZ35jnCtB+nvNiTUUr0RO2BFb73/UZbO5HehZZdx3hs3ugX01TcsbWzqPgD+vbM3PrDQGvgfMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bJc2151R8z9sqS;
-	Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 2EYXYIC_ssC4; Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bJc214Bzmz9sl0;
-	Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B7A58B77B;
-	Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Gd6ZZdiQooSp; Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 067608B769;
-	Fri, 13 Jun 2025 13:03:04 +0200 (CEST)
-Message-ID: <2df61bbf-76f6-4932-a347-7820350a156e@csgroup.eu>
-Date: Fri, 13 Jun 2025 13:03:04 +0200
+	s=arc-20240116; t=1749813633; c=relaxed/simple;
+	bh=G0oeYoO5zh0MZIY+o1uefvAKwGbbqqD6PD6BXIp9CD8=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=dxvceWExNxQUQTPF3g0RvpcVb76jHDU1xWci6esYTKYkw9Cwgre08kgkQcTjKe/yTrU3Z5wKTVguN93Jt3FkruynvZb+wi7b2a5/EcdOcF1bHPvXuM6zvIvf8iJ5KAOGJHQ8u33y7Mf0t6KqmOXHyD3NW8IYVCwDJmZ1MXvQSVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IdPwk6vE; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IdPwk6vE"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 3BA102113A73; Fri, 13 Jun 2025 04:20:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3BA102113A73
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749813631;
+	bh=s0PEMM2zSlk/k5ztWfVZgDG0WnnnScL7Cy11uQzbLIE=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=IdPwk6vE8Jv322byJFyr8qHpIhaI4Oe04oyNlFy7EM17k3ps1W2MgUQKMORF/uMud
+	 J2zgmpXv/J5dYZxBUrEpB1uaSQ2eFVqCOXl3eGXkTralViIDgPbwaTuVN/OZlGJCZF
+	 Hm3kbXWQkbhnCoFNsOlk2DCFxu9gRk8mmM1GgQqI=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	longli@microsoft.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	shirazsaleem@microsoft.com,
+	leon@kernel.org,
+	ernis@linux.microsoft.com,
+	shradhagupta@linux.microsoft.com,
+	schakrabarti@linux.microsoft.com,
+	gerhard@engleder-embedded.com,
+	rosenp@gmail.com,
+	sdf@fomichev.me,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH net-next v2 2/4] net: mana: Add support for net_shaper_ops
+Date: Fri, 13 Jun 2025 04:20:25 -0700
+Message-Id: <1749813627-8377-3-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
+References: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/3] ALSA: pcm: Convert snd_pcm_sync_ptr() to
- user_access_begin/user_access_end()
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-sound@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>,
- Mark Brown <broonie@kernel.org>
-References: <7baa34d4046c7750799b11830d38a46f8b581765.1749724478.git.christophe.leroy@csgroup.eu>
- <79b86a0618328ba1d0cb5cf4011fd73ac6900e8f.1749724478.git.christophe.leroy@csgroup.eu>
- <878qlwrnv1.wl-tiwai@suse.de>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <878qlwrnv1.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Introduce support for net_shaper_ops in the MANA driver,
+enabling configuration of rate limiting on the MANA NIC.
 
+To apply rate limiting, the driver issues a HWC command via
+mana_set_bw_clamp() and updates the corresponding shaper object
+in the net_shaper cache. If an error occurs during this process,
+the driver restores the previous speed by querying the current link
+configuration using mana_query_link_cfg().
 
-Le 13/06/2025 à 11:29, Takashi Iwai a écrit :
-> On Thu, 12 Jun 2025 12:51:05 +0200,
-> Christophe Leroy wrote:
->>
->> Now that snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user()
->> are converted to user_access_begin/user_access_end(),
->> snd_pcm_sync_ptr_get_user() is more efficient than a raw get_user()
->> followed by a copy_from_user(). And because copy_{to/from}_user() are
->> generic functions focussed on transfer of big data blocks to/from user,
->> snd_pcm_sync_ptr_put_user() is also more efficient for small amont of
->> data.
->>
->> So use snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user() in
->> snd_pcm_sync_ptr() too.
->>
->> In order to have snd_pcm_mmap_status32 similar to snd_pcm_mmap_status,
->> replace to tsamp_{sec/nsec} and audio_tstamp_{sec/nsec} by equivalent
->> struct __snd_timespec.
->>
->> snd_pcm_ioctl_sync_ptr_buggy() is left as it is because the conversion
->> wouldn't be straigh-forward do to the workaround it provides.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> 
-> Through a quick glance, all patches look almost fine, but one favor to
-> ask: this patch contains the convert from s32/s32 pair to struct
-> __snd_timespec.  It should be factored out to a prerequisite patch
-> instead of burying in a big change.
+The minimum supported bandwidth is 100 Mbps, and only values that are
+exact multiples of 100 Mbps are allowed. Any other values are rejected.
 
-Shall I understand you prefer this series over the more simple "ALSA: 
-pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to 
-user_access_begin/user_access_end()" patch ?
+To remove a shaper, the driver resets the bandwidth to the maximum
+supported by the SKU using mana_set_bw_clamp() and clears the
+associated cache entry. If an error occurs during this process,
+the shaper details are retained.
 
-I'm asking because I was myself not sure about the benefit of such two 
-big macros over the other proposal in terms of readability.
+On the hardware that does not support these APIs, the net-shaper
+calls to set speed would fail.
 
+Set the speed:
+./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/net_shaper.yaml \
+ --do set --json '{"ifindex":'$IFINDEX',
+		   "handle":{"scope": "netdev", "id":'$ID' },
+		   "bw-max": 200000000 }'
 
-> 
-> I'm asking it because this timepsec definition is very confusing (and
-> complex) due to historical reasons, and it should be handled with a
-> special care.
-> IIUC, struct __snd_timespec is always s32/s32 for the kernel code, so
-> the conversion must be fine.  This needs to be commented in the
-> commit.
+Get the shaper details:
+./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/net_shaper.yaml \
+ --do get --json '{"ifindex":'$IFINDEX',
+		      "handle":{"scope": "netdev", "id":'$ID' }}'
 
+> {'bw-max': 200000000,
+> 'handle': {'scope': 'netdev'},
+> 'ifindex': $IFINDEX,
+> 'metric': 'bps'}
 
-Sure I will do that.
+Delete the shaper object:
+./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/net_shaper.yaml \
+ --do delete --json '{"ifindex":'$IFINDEX',
+		      "handle":{"scope": "netdev","id":'$ID' }}'
 
-Christophe
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+---
+Changes in v2:
+* No change.
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 155 ++++++++++++++++++
+ include/net/mana/mana.h                       |  40 +++++
+ 2 files changed, 195 insertions(+)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index ca5e9c3d374b..7e8bc2c6a194 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -719,6 +719,78 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
+ 	return err;
+ }
+ 
++static int mana_shaper_set(struct net_shaper_binding *binding,
++			   const struct net_shaper *shaper,
++			   struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(binding->netdev);
++	u32 old_speed, rate;
++	int err;
++
++	if (shaper->handle.scope != NET_SHAPER_SCOPE_NETDEV) {
++		NL_SET_ERR_MSG_MOD(extack, "net shaper scope should be netdev");
++		return -EINVAL;
++	}
++
++	if (apc->handle.id && shaper->handle.id != apc->handle.id) {
++		NL_SET_ERR_MSG_MOD(extack, "Cannot create multiple shapers");
++		return -EOPNOTSUPP;
++	}
++
++	if (!shaper->bw_max || (shaper->bw_max % 100000000)) {
++		NL_SET_ERR_MSG_MOD(extack, "Please use multiples of 100Mbps for bandwidth");
++		return -EINVAL;
++	}
++
++	rate = div_u64(shaper->bw_max, 1000); /* Convert bps to Kbps */
++	rate = div_u64(rate, 1000);	      /* Convert Kbps to Mbps */
++
++	/* Get current speed */
++	err = mana_query_link_cfg(apc);
++	old_speed = (err) ? SPEED_UNKNOWN : apc->speed;
++
++	if (!err) {
++		err = mana_set_bw_clamp(apc, rate, TRI_STATE_TRUE);
++		apc->speed = (err) ? old_speed : rate;
++		apc->handle = (err) ? apc->handle : shaper->handle;
++	}
++
++	return err;
++}
++
++static int mana_shaper_del(struct net_shaper_binding *binding,
++			   const struct net_shaper_handle *handle,
++			   struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(binding->netdev);
++	int err;
++
++	err = mana_set_bw_clamp(apc, 0, TRI_STATE_FALSE);
++
++	if (!err) {
++		/* Reset mana port context parameters */
++		apc->handle.id = 0;
++		apc->handle.scope = NET_SHAPER_SCOPE_UNSPEC;
++		apc->speed = 0;
++	}
++
++	return err;
++}
++
++static void mana_shaper_cap(struct net_shaper_binding *binding,
++			    enum net_shaper_scope scope,
++			    unsigned long *flags)
++{
++	*flags = BIT(NET_SHAPER_A_CAPS_SUPPORT_BW_MAX) |
++		 BIT(NET_SHAPER_A_CAPS_SUPPORT_METRIC_BPS);
++}
++
++static const struct net_shaper_ops mana_shaper_ops = {
++	.set = mana_shaper_set,
++	.delete = mana_shaper_del,
++	.capabilities = mana_shaper_cap,
++};
++
+ static const struct net_device_ops mana_devops = {
+ 	.ndo_open		= mana_open,
+ 	.ndo_stop		= mana_close,
+@@ -729,6 +801,7 @@ static const struct net_device_ops mana_devops = {
+ 	.ndo_bpf		= mana_bpf,
+ 	.ndo_xdp_xmit		= mana_xdp_xmit,
+ 	.ndo_change_mtu		= mana_change_mtu,
++	.net_shaper_ops         = &mana_shaper_ops,
+ };
+ 
+ static void mana_cleanup_port_context(struct mana_port_context *apc)
+@@ -1162,6 +1235,86 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	return err;
+ }
+ 
++int mana_query_link_cfg(struct mana_port_context *apc)
++{
++	struct net_device *ndev = apc->ndev;
++	struct mana_query_link_config_resp resp = {};
++	struct mana_query_link_config_req req = {};
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_LINK_CONFIG,
++			     sizeof(req), sizeof(resp));
++
++	req.vport = apc->port_handle;
++	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
++
++	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
++				sizeof(resp));
++
++	if (err) {
++		netdev_err(ndev, "Failed to query link config: %d\n", err);
++		return err;
++	}
++
++	err = mana_verify_resp_hdr(&resp.hdr, MANA_QUERY_LINK_CONFIG,
++				   sizeof(resp));
++
++	if (err || resp.hdr.status) {
++		netdev_err(ndev, "Failed to query link config: %d, 0x%x\n", err,
++			   resp.hdr.status);
++		if (!err)
++			err = -EOPNOTSUPP;
++		return err;
++	}
++
++	if (resp.qos_unconfigured) {
++		err = -EINVAL;
++		return err;
++	}
++	apc->speed = resp.link_speed_mbps;
++	return 0;
++}
++
++int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
++		      int enable_clamping)
++{
++	struct mana_set_bw_clamp_resp resp = {};
++	struct mana_set_bw_clamp_req req = {};
++	struct net_device *ndev = apc->ndev;
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_SET_BW_CLAMP,
++			     sizeof(req), sizeof(resp));
++	req.vport = apc->port_handle;
++	req.link_speed_mbps = speed;
++	req.enable_clamping = enable_clamping;
++
++	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
++				sizeof(resp));
++
++	if (err) {
++		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
++			   speed, err);
++		return err;
++	}
++
++	err = mana_verify_resp_hdr(&resp.hdr, MANA_SET_BW_CLAMP,
++				   sizeof(resp));
++
++	if (err || resp.hdr.status) {
++		netdev_err(ndev, "Failed to set bandwidth clamp: %d, 0x%x\n", err,
++			   resp.hdr.status);
++		if (!err)
++			err = -EOPNOTSUPP;
++		return err;
++	}
++
++	if (resp.qos_unconfigured)
++		netdev_info(ndev, "QoS is unconfigured\n");
++
++	return 0;
++}
++
+ int mana_create_wq_obj(struct mana_port_context *apc,
+ 		       mana_handle_t vport,
+ 		       u32 wq_type, struct mana_obj_spec *wq_spec,
+@@ -3013,6 +3166,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 		goto free_indir;
+ 	}
+ 
++	debugfs_create_u32("current_speed", 0400, apc->mana_port_debugfs, &apc->speed);
++
+ 	return 0;
+ 
+ free_indir:
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 4176edf1be71..038b18340e51 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -5,6 +5,7 @@
+ #define _MANA_H
+ 
+ #include <net/xdp.h>
++#include <net/net_shaper.h>
+ 
+ #include "gdma.h"
+ #include "hw_channel.h"
+@@ -526,7 +527,12 @@ struct mana_port_context {
+ 	struct mutex vport_mutex;
+ 	int vport_use_count;
+ 
++	/* Net shaper handle*/
++	struct net_shaper_handle handle;
++
+ 	u16 port_idx;
++	/* Currently configured speed (mbps) */
++	u32 speed;
+ 
+ 	bool port_is_up;
+ 	bool port_st_save; /* Saved port state */
+@@ -562,6 +568,9 @@ struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
+ void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
+ int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
+ void mana_query_gf_stats(struct mana_port_context *apc);
++int mana_query_link_cfg(struct mana_port_context *apc);
++int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
++		      int enable_clamping);
+ void mana_query_phy_stats(struct mana_port_context *apc);
+ int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
+ void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
+@@ -589,6 +598,8 @@ enum mana_command_code {
+ 	MANA_FENCE_RQ		= 0x20006,
+ 	MANA_CONFIG_VPORT_RX	= 0x20007,
+ 	MANA_QUERY_VPORT_CONFIG	= 0x20008,
++	MANA_QUERY_LINK_CONFIG	= 0x2000A,
++	MANA_SET_BW_CLAMP	= 0x2000B,
+ 	MANA_QUERY_PHY_STAT     = 0x2000c,
+ 
+ 	/* Privileged commands for the PF mode */
+@@ -598,6 +609,35 @@ enum mana_command_code {
+ 	MANA_DEREGISTER_HW_PORT	= 0x28004,
+ };
+ 
++/* Query Link Configuration*/
++struct mana_query_link_config_req {
++	struct gdma_req_hdr hdr;
++	mana_handle_t vport;
++}; /* HW DATA */
++
++struct mana_query_link_config_resp {
++	struct gdma_resp_hdr hdr;
++	u32 qos_speed_mbps;
++	u8 qos_unconfigured;
++	u8 reserved1[3];
++	u32 link_speed_mbps;
++	u8 reserved2[4];
++}; /* HW DATA */
++
++/* Set Bandwidth Clamp*/
++struct mana_set_bw_clamp_req {
++	struct gdma_req_hdr hdr;
++	mana_handle_t vport;
++	enum TRI_STATE enable_clamping;
++	u32 link_speed_mbps;
++}; /* HW DATA */
++
++struct mana_set_bw_clamp_resp {
++	struct gdma_resp_hdr hdr;
++	u8 qos_unconfigured;
++	u8 reserved[7];
++}; /* HW DATA */
++
+ /* Query Device Configuration */
+ struct mana_query_device_cfg_req {
+ 	struct gdma_req_hdr hdr;
+-- 
+2.34.1
+
