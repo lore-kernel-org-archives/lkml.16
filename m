@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDC8238C26;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD6E1EA7E1;
 	Fri, 13 Jun 2025 07:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800072; cv=none; b=kaWiwQjaVnLpA4rfvZUzmfMfmEZjqIgN4TtHREBG2MAOzXfcWEquBi6zSYC6MOEKpfvQJSWhmJXDBwud+OlumPUzQXBx6l+YnxQL27qcCHVoAXoTeODdDliG7GpBhXKe+V8n4cB9JMJ7vkGLGIGgKgW4iVgIZTtvM8xZ4NVi+SI=
+	t=1749800072; cv=none; b=p+3Q/8fNGO0Pcuy1rdSr4AYdob0iQs1pvXm7aTMtT7gsKZPqvbu0O/14aNA3rWEAAhcFIXkNUMzusCuWQf9mLXUtqF5n2mYLHRMVm2LJZrwW7Hsr04yJqDRb43A3nAfK7V+un6x3eIo4uZCCa8PzzLyAOj+yWWuUVw97CahwJhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749800072; c=relaxed/simple;
-	bh=TwO64dudIgSMsHCJyLSriUaJU7jxFNj2lwY1rcJ4tMI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kLPCP58aIIoDza3pjrdAD2eNS0tN5ExxIzlNaVIC+RkrUaNWDAfSDrhZryF46p7ZQc39zDmmBSWTOVeM8mmDevKxvUn4mUvHAoA6QtAhZjYXpaCIqZxgT8Guwc/XmccCAzLtQpvEK13k+sgFMSUZPjKRufeROOLK/9PqL23C3PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0cnVtUt; arc=none smtp.client-ip=10.30.226.201
+	bh=T8pIxKQmOw7lVpBaKtcVaZ2RyDzlv50gApXra5EGrds=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H+L7g0Uqzu9WYvPAPQBYXj3pms2jsF1ZGwFwBVHGHzgixGSmsfFRvMkVQ4423aphJS6lOMYJxCRnPGRlvfPRKiCwz0+qocPqFp22phDzn8EtFVYXbEqs+nOC7KlCcxGV3dPHenuptbN6oKmdXeePJ75XBSIlaKJ1NDB6bfrzsdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhZi7imR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0cnVtUt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CECAC4CEE3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhZi7imR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C114C4CEF1;
 	Fri, 13 Jun 2025 07:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749800072;
-	bh=TwO64dudIgSMsHCJyLSriUaJU7jxFNj2lwY1rcJ4tMI=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=j0cnVtUti3K+VmYaVL8loJotzc2iwSugPx8Lpms2yx8Q22sTLU03+2xeMvPSxgBBC
-	 2bO8H0kp+p12c6Ckvkw7ot1sLl8fUCGNxoZfgl66YZdO76erPF0xkIO0VocQk1Gg0t
-	 fkWVKADCt05PyfPMTMawdwKcXiqGCZxxgDtxVSsnIV2Yz2m7GOOmOi2sHwkSACaFe4
-	 p4Fn4aHjTVPJBZJR7It0CHlvEyEqNbb7bi34Lqz/GySEufTspBx0C58gCKNwYdAr2u
-	 EDpGubrbkTvnaS8y/brewhPiXlEL9Th7CSL4AEJKDUwu1CEYiNFfAY+gf5V8bXZ+yn
-	 5YGYMAxD70RAw==
+	bh=T8pIxKQmOw7lVpBaKtcVaZ2RyDzlv50gApXra5EGrds=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=YhZi7imReP6DsVavfNzcXVzimklVTWt3Z3Z/iFvNEfpjicqL5qQWzVLTQp9mryH8j
+	 d12APyLhUv5Ol6+x1mm9DszwJSH8HKAK2yHqjeaZ4njTr5bbEsktUQGhyj3UGGeWh7
+	 2H9u9i0swYaynKY+sD8KfxchMZK9x4fTRVuL9m3eNXmFJQovsEgN6wc9p7yRuQtiQt
+	 SL3iGVv0uDAkTA2X2yYDVWIUkIJZAV+31t8pRvHd3JWxyjq7QmkSUbewZBUsvUwXtC
+	 ar7vbMVe2RCc2+aWI61A+vvq3lgVsEK9OaRYPZTtPqUKLmP/vJmrgzG39Ot9SbL10Z
+	 OQZsNl+iIeeFw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBB6C61DB2;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AA2C71135;
 	Fri, 13 Jun 2025 07:34:32 +0000 (UTC)
 From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Subject: [PATCH v4 0/2] Add support for WoM (Wake-on-Motion) feature
-Date: Fri, 13 Jun 2025 09:34:25 +0200
-Message-Id: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
+Date: Fri, 13 Jun 2025 09:34:27 +0200
+Subject: [PATCH v4 2/2] iio: imu: inv_icm42600: add wakeup functionality
+ for Wake-on-Motion
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIHUS2gC/5XNvQ7CIBSG4VsxzB5zeqA/OHkfxqEUUKItDVTUm
- N676KJuOr7f8Hx3Fk1wJrL14s6CSS46P+QQywXrDu2wN+B0bkZIJRIhnHzUwMENCVzXC6oQodU
- aLr6HeB5HHybAitAaK7UizrI0BmPd9fWy3eU+uDj5cHudpuK5/uenAhCkkry2sqlkKTaTPq463
- 7OnnugtiqL8TaQsaiOFtkqSqs23yD/F5jeRZ7FuiwZbi6TshzjP8wO80NbpeAEAAA==
-X-Change-ID: 20250220-losd-3-inv-icm42600-add-wom-support-0620fef9db23
+Message-Id: <20250613-losd-3-inv-icm42600-add-wom-support-v4-2-7e5f554201bf@tdk.com>
+References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
+In-Reply-To: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
 To: Jonathan Cameron <jic23@kernel.org>, 
  Lars-Peter Clausen <lars@metafoo.de>, David Lechner <dlechner@baylibre.com>, 
  =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
@@ -52,11 +51,11 @@ To: Jonathan Cameron <jic23@kernel.org>,
 Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749800071; l=2005;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749800071; l=5290;
  i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
- bh=TwO64dudIgSMsHCJyLSriUaJU7jxFNj2lwY1rcJ4tMI=;
- b=Pmoj3isAVCMsHd+CoUSknvOHXDcqng1pbj168wEOv4VwC4WH0CffPaQ+h59eUfroh23ux1DkL
- MTpT4/X8u6vA8XkIbHdpWLAUCoP2m50YmEL+gnHUMcvaUysmaZLS0FV
+ bh=KDCTv7gpEv39CHX+r2t6f3t7cUBXM4lGf6ce0mTmS5s=;
+ b=R95RMBpi7F8u7Ndrqsm2evDBTuHKFYPyd6cQKR7GCzDK8vNe+M67j7xxE6Jmp722V/UCjFhYj
+ eMy52BA3rDaCQPEgnQCsaQ2zum9ZVUYakH7CO1AZZivKiVODhS8P1Ti
 X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
  pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
 X-Endpoint-Received: by B4 Relay for
@@ -64,52 +63,156 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 Reply-To: jean-baptiste.maneyrol@tdk.com
 
-Similar to feature present in older chip, it compares the magnitude of
-the last 2 accel samples against a threshold and returns an interrupt
-even if the value is higher.
+From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 
-WoM maps best to accel x|y|z ROC event. This series add system wakeup
-functionality if WoM is on and wakeup is enabled when system suspends.
-
-This series also prepare the driver for supporting further APEX
-features like pedometer, tilt, ... It introduces an apex structure that
-will hold all APEX settings and track the enable state.
+When Wake-on-Motion is on, enable system wakeup and keep the chip on
+for waking up the system with an interrupt.
 
 Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 ---
-Changes in v4:
-- Avoid mix of gotos and scoped_guard()
-- Invert conditionals for better code readability
-- Switch to use devm_device_init_wakeup()
-- Several code readabilities improvements
-- Link to v3: https://lore.kernel.org/r/20250418-losd-3-inv-icm42600-add-wom-support-v3-0-7a180af02bfe@tdk.com
+ drivers/iio/imu/inv_icm42600/inv_icm42600.h       |  2 +
+ drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c |  3 ++
+ drivers/iio/imu/inv_icm42600/inv_icm42600_core.c  | 53 +++++++++++++++++------
+ 3 files changed, 45 insertions(+), 13 deletions(-)
 
-Changes in v3:
-- Rewrites following code review
-- Link to v2: https://lore.kernel.org/r/20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+index 413a15493bcb880dc00b20da3b3168d5addd32a9..67f5c1a611988776d0bdf4d43a46f2fda43e3e44 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+@@ -151,6 +151,7 @@ struct inv_icm42600_apex {
+  *  @map:		regmap pointer.
+  *  @vdd_supply:	VDD voltage regulator for the chip.
+  *  @vddio_supply:	I/O voltage regulator for the chip.
++ *  @irq:		chip irq, required to enable/disable and set wakeup
+  *  @orientation:	sensor chip orientation relative to main hardware.
+  *  @conf:		chip sensors configurations.
+  *  @suspended:		suspended sensors configuration.
+@@ -168,6 +169,7 @@ struct inv_icm42600_state {
+ 	struct regmap *map;
+ 	struct regulator *vdd_supply;
+ 	struct regulator *vddio_supply;
++	int irq;
+ 	struct iio_mount_matrix orientation;
+ 	struct inv_icm42600_conf conf;
+ 	struct inv_icm42600_suspended suspended;
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+index 9a2089527a9426b70eb796d4e9c234d8804c508b..ddc04fdf1d4ed3afaa8c0c9385ed9739cec39a4b 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+@@ -1171,6 +1171,9 @@ struct iio_dev *inv_icm42600_accel_init(struct inv_icm42600_state *st)
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
++	/* accel events are wakeup capable */
++	devm_device_init_wakeup(&indio_dev->dev);
++
+ 	return indio_dev;
+ }
+ 
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+index 9a2150ab9e874f17d7fda731cb131c3f688a75a3..0809561b8119d1ff5cf4b36ff571f9c8dc4050a0 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+@@ -765,6 +765,7 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+ 	mutex_init(&st->lock);
+ 	st->chip = chip;
+ 	st->map = regmap;
++	st->irq = irq;
+ 
+ 	ret = iio_read_mount_matrix(dev, &st->orientation);
+ 	if (ret) {
+@@ -843,6 +844,9 @@ EXPORT_SYMBOL_NS_GPL(inv_icm42600_core_probe, "IIO_ICM42600");
+ static int inv_icm42600_suspend(struct device *dev)
+ {
+ 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
++	struct device *accel_dev;
++	bool wakeup;
++	int accel_conf;
+ 	int ret;
+ 
+ 	mutex_lock(&st->lock);
+@@ -863,20 +867,32 @@ static int inv_icm42600_suspend(struct device *dev)
+ 			goto out_unlock;
+ 	}
+ 
+-	/* disable APEX features */
+-	if (st->apex.wom.enable) {
+-		ret = inv_icm42600_disable_wom(st);
+-		if (ret)
+-			goto out_unlock;
++	/* keep chip on and wake-up capable if APEX and wakeup on */
++	accel_dev = &st->indio_accel->dev;
++	wakeup = st->apex.on && device_may_wakeup(accel_dev);
++	if (wakeup) {
++		/* keep accel on and setup irq for wakeup */
++		accel_conf = st->conf.accel.mode;
++		enable_irq_wake(st->irq);
++		disable_irq(st->irq);
++	} else {
++		/* disable APEX features and accel if wakeup disabled */
++		if (st->apex.wom.enable) {
++			ret = inv_icm42600_disable_wom(st);
++			if (ret)
++				goto out_unlock;
++		}
++		accel_conf = INV_ICM42600_SENSOR_MODE_OFF;
+ 	}
+ 
+ 	ret = inv_icm42600_set_pwr_mgmt0(st, INV_ICM42600_SENSOR_MODE_OFF,
+-					 INV_ICM42600_SENSOR_MODE_OFF, false,
+-					 NULL);
++					 accel_conf, false, NULL);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+-	regulator_disable(st->vddio_supply);
++	/* disable vddio regulator if chip is sleeping */
++	if (!wakeup)
++		regulator_disable(st->vddio_supply);
+ 
+ out_unlock:
+ 	mutex_unlock(&st->lock);
+@@ -892,13 +908,24 @@ static int inv_icm42600_resume(struct device *dev)
+ 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
+ 	struct inv_icm42600_sensor_state *gyro_st = iio_priv(st->indio_gyro);
+ 	struct inv_icm42600_sensor_state *accel_st = iio_priv(st->indio_accel);
++	struct device *accel_dev;
++	bool wakeup;
+ 	int ret;
+ 
+ 	mutex_lock(&st->lock);
+ 
+-	ret = inv_icm42600_enable_regulator_vddio(st);
+-	if (ret)
+-		goto out_unlock;
++	/* check wakeup capability */
++	accel_dev = &st->indio_accel->dev;
++	wakeup = st->apex.on && device_may_wakeup(accel_dev);
++	/* restore irq state or vddio if cut off */
++	if (wakeup) {
++		enable_irq(st->irq);
++		disable_irq_wake(st->irq);
++	} else {
++		ret = inv_icm42600_enable_regulator_vddio(st);
++		if (ret)
++			goto out_unlock;
++	}
+ 
+ 	pm_runtime_disable(dev);
+ 	pm_runtime_set_active(dev);
+@@ -911,8 +938,8 @@ static int inv_icm42600_resume(struct device *dev)
+ 	if (ret)
+ 		goto out_unlock;
+ 
+-	/* restore APEX features */
+-	if (st->apex.wom.enable) {
++	/* restore APEX features if disabled */
++	if (!wakeup && st->apex.wom.enable) {
+ 		ret = inv_icm42600_enable_wom(st);
+ 		if (ret)
+ 			goto out_unlock;
 
-Changes in v2:
-- change struct order to avoir DMA overflow
-- separate wom enable/disable in 2 functions
-- delete mutex rework
-- Link to v1: https://lore.kernel.org/r/20250220-losd-3-inv-icm42600-add-wom-support-v1-0-9b937f986954@tdk.com
-
----
-Jean-Baptiste Maneyrol (2):
-      iio: imu: inv_icm42600: add WoM support
-      iio: imu: inv_icm42600: add wakeup functionality for Wake-on-Motion
-
- drivers/iio/imu/inv_icm42600/inv_icm42600.h        |  56 +++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c  | 292 ++++++++++++++++++++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c |   2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c   |  97 ++++++-
- 4 files changed, 433 insertions(+), 14 deletions(-)
----
-base-commit: 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
-change-id: 20250220-losd-3-inv-icm42600-add-wom-support-0620fef9db23
-
-Best regards,
 -- 
-Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+2.49.0
 
 
