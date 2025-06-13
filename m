@@ -1,117 +1,91 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED82C1885B8
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0577D1885B8
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749773980; cv=none; b=fWsjlnCRUdmnJ/HcNTGrWuVkt4BYSQbHkavRXQSHUmHHZyu5N5jsnv2Qav+Mhv0xpvUlrHP7CsdoHqgW82ZTTZTEUOD/u5JaO+s1NssnYau6S3FVmdULkFdyEzf2tY8KTLVOI5IZSa5HcxaVoceM2okyJgBan6rm6d8uZg0Guxg=
+	t=1749774020; cv=none; b=Y943VcMVrrWaJcIvMNz3NY6lpUnzj1Aiqrkjk3whjnnPxNMf3RDqiSnXtNk+9FuvCdw4IhDxnzjMk12FEL8mtC96lTHjrJ8x69vC7xD/wcrmi65QR6ccLbnx70vQbnjCMe9nb1nwTlWcZwM3MkG7t+v5wDNbUKYSZlMmgXbLufY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749773980; c=relaxed/simple;
-	bh=XKX29iWpKhMQompHnBgc4Myn5jWYJDdT+waJrSl6fzc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EyacQRnD+Rj8zP7in6IMbJw8XSp+fNwqbkDYZopPQrzdwjycEFE5LGzw4PD1tqnIp34uWxE1J7C1tCiwr/GEPdo/98RjjWLNHXSp+OByYb87gSf7qn/Wqdw/MmmrrzeHK79u2aWLnHVfDTBL+GV0u0tCH8mAa0hWFbKXL4wdC7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=evBAP4J6; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1749774020; c=relaxed/simple;
+	bh=WZlDFmASrocHsgBMFA0A1825qOL/T77/ZQIcSB82Jbo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tyVtht7Bve9M03nIoI9snMiSPLMJKjHjEbIRFgeF03J4qCScngHhwgM66HAXFaZSOMqpNXPwj4xF1gMXHcWpBMX4mDModYi7cYlp3EG5KWvs8mM9CPTzDkiGmuxbtdiq4Zkvspyn3N0bsJIDI6i6Kmk8CPNvZ9E6M3LQjdvS6EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jOCiI75I; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="evBAP4J6"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26e6b84a31so931753a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:19:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jOCiI75I"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b16a0e38so46738e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:20:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749773978; x=1750378778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zBXdLKf3EEYV1ASkezHpDPB0kJtg+7zVKaBfxM4yoCM=;
-        b=evBAP4J6jgkQysXauVhvsI++1Q8WFQeVqPNed61ULxbbkWQcixjnKBAhNxJTkc24JV
-         CLuwAjshcdo56v1m8z8fhzra0dlN0L1qkACA5xU1LF/87i1ZXDW/hdkD1BoD2GK9wmnH
-         GhRiUuiNHE6Ee2nbtEga22jy+VO8N33zFz0Vk5xvK3NQYxGRBBlyBG+2IB+5GYCjwpm3
-         0ba9J6f4NQI5EMY+tFHrnEGcf9J51TPlBrdzjmak4JLYRBUAVN366ehtWZ67S1VrMqJz
-         OoJu/wYUb6Db2JlVclynrrf/0+9+i0mGVn+Lr4h0aO0BrkwA3OOewZfb02f///2WESpc
-         zbqg==
+        d=google.com; s=20230601; t=1749774017; x=1750378817; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WZlDFmASrocHsgBMFA0A1825qOL/T77/ZQIcSB82Jbo=;
+        b=jOCiI75I/dVUga9KJoFSPw/Td/LBB/Txr+OHp8wAUWrJt81HiCNn+pasztvpbiT7sP
+         rt19klF3ki1JlgXEVFez2G5hF2buukzwRU0XCyjIEoYnML9m2yo51xHTJ3dcHs7gOWdF
+         bwJto1co0bWSJ3n3RmMuGzqapDbtBB7MajC3qA/d4B1HJ10g7yTzBq+8Y07rX488TnG5
+         adh0PunS9h/V1Amuhu2r1wsCQogFBNbV6KUUfIJENgsKJI/oBnSJ5nBxSo8soPvh3TVh
+         pby7lBGnDw4CZADD+eGyW0miy5VdXl54jcchCnOSDATGu1JYJYgawxwoA+k1F22j9shQ
+         aNwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749773978; x=1750378778;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zBXdLKf3EEYV1ASkezHpDPB0kJtg+7zVKaBfxM4yoCM=;
-        b=gmeGeWsgHIe74XA3zdaWCz1rs5Wmb+WKdUYTDTv065fBvOqOROK2n2X/C3R0hjo6vw
-         izswQ59slMTrZ0LE4mZjfDBEtM6+Uh/zvvtEmzHs/VH8U9gCkecYDubUUU9v7d6YAWWZ
-         wkeRwoGOTB5aDXR7o8l09kn4C2w3d6QiKGXUQZg/rYrB23cMfOy+arKDRBxw0b9NovbO
-         XOjexrP1DuHa9NK+CLmKjK3d16n8zo+W5tg0dz7YG2Y6HxV2JkoFYOC3qC8OlsaKve74
-         SmXqPmjyVUXSkppJCjKiHYQNX1/oXWVH7zmANfd+Po6VZOgo9D1Tz+B+xjygzdUWzIwv
-         t4Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaHDfKcCtPS1Kxmy8i7Y38jCDzwd7Bd4KlEyLpwbpLGVR6iTtfjzIdFfjRlniUmNp5M1G0xo9wArB8ELc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHpz1oVJCuunr5O2kiu46ivQGNNIgkrt+GEniJQkeTIR7l3hcZ
-	nEHN/z6V+kKdhJKUksJnTb6HTJdt9l9bbHITZskUPaMo1AGo4BdFxkyqLhwu9uR3yH4vRd48VID
-	+3yiZeA==
-X-Google-Smtp-Source: AGHT+IF0k1+tIZDVtopDDRGGLH/11kf76s150e/KNVxM3GDrSe802uK39miuCbgBaj11TWbqb+85X1tW07M=
-X-Received: from pgbdh21.prod.google.com ([2002:a05:6a02:b95:b0:b2e:b370:6975])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:999a:b0:216:5f67:98f7
- with SMTP id adf61e73a8af0-21facc87cc7mr1099362637.33.1749773977713; Thu, 12
- Jun 2025 17:19:37 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:19:36 -0700
-In-Reply-To: <f001881a152772b623ff9d3bb6ca5b2f72034db9.camel@intel.com>
+        d=1e100.net; s=20230601; t=1749774017; x=1750378817;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WZlDFmASrocHsgBMFA0A1825qOL/T77/ZQIcSB82Jbo=;
+        b=szOP2CdF7sz0P9ItkSMJx6or5gzBeDOVKQpvRdLPuSfP0Lgyz9Tjpkxlh+9T20GW4J
+         iA+V5G7VNE5SBRVGNB7SSvOcJZ0gdRn0zPJeHtlLIsLpF/SAEBkKmlbsZHI+bkdXf+zP
+         fg2z2haxyYX1PBs2BHjGbGhStNtYUbqQVUrpIA0VNQugopaKOX8exdGGi6h8joJY8CsE
+         BUV2331VC3W/PsHh+CpAh4OLswNdYr3lopaqPCnOqrMB45Wn2TI4CBKfCp1sL4lKaJAf
+         kc0uxrVT5hgJ8Kv1uPtruvehkdk2CQkiMLRsvGs7QrqhNOdbWM22UCab82Eet/Quj+sD
+         t4oA==
+X-Gm-Message-State: AOJu0YzpIWZe3PWIgQFHsXVtsknjRLZ4IZ6iRHpOAIE1F+RG6tayF2OD
+	ZTxLf8CmpbPMVU3TV0BBp7npjhqiVlsD6LuLVoTXzeyLTssbhwPWU9HgP91LelhJBhLYuvjuD5B
+	7WV9r1Z8XbtkuHTIo94kLZSFFf86sjlqbU7C8MYw=
+X-Gm-Gg: ASbGncuKOCwA6In7Qm0NYwBJ+jU4E+6L+tAseOjq3epq7Iiyyfhg9Qk09T1SakhpEzJ
+	SPLiVxGWVWGoxuQTAK0RzHqpUgsNNlxpER8SN7qcK49SJjwe+thKsVFyH05sCh85N8OfLxLvC3L
+	0jPvKDyfm8G7cTjmRGxiVvVzzcKKPCgp1j+fP61DhTEGltUqmbiC+68npq6B8uG2GPVnU7LFdq
+X-Google-Smtp-Source: AGHT+IGpyU+vYa4AHJ5TrF9QSMMKoyCgsBhIqqAajnWFJBSwGiySKKfYWnqphEtQSJ7TRHqRNRR3tmhItuK+4KFoleQ=
+X-Received: by 2002:a05:6512:2210:b0:553:30fc:cee4 with SMTP id
+ 2adb3069b0e04-553b0e1d842mr87385e87.49.1749774016925; Thu, 12 Jun 2025
+ 17:20:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <dc20a7338f615d34966757321a27de10ddcbeae6.camel@intel.com>
- <c19b4f450d8d079131088a045c0821eeb6fcae52.camel@intel.com>
- <aCcIrjw9B2h0YjuV@yzhao56-desk.sh.intel.com> <c98cbbd0d2a164df162a3637154cf754130b3a3d.camel@intel.com>
- <aCrsi1k4y8mGdfv7@yzhao56-desk.sh.intel.com> <f9a2354f8265efb9ed99beb871e471f92adf133f.camel@intel.com>
- <aCxMtjuvYHk2oWbc@yzhao56-desk.sh.intel.com> <119e40ecb68a55bdf210377d98021683b7bda8e3.camel@intel.com>
- <aEmVa0YjUIRKvyNy@google.com> <f001881a152772b623ff9d3bb6ca5b2f72034db9.camel@intel.com>
-Message-ID: <aEtumIYPJSV49_jL@google.com>
-Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is RUNNABLE
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Kai Huang <kai.huang@intel.com>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Fan Du <fan.du@intel.com>, Dave Hansen <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, Zhiquan1 Li <zhiquan1.li@intel.com>, 
-	Kirill Shutemov <kirill.shutemov@intel.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"ackerleytng@google.com" <ackerleytng@google.com>, "tabba@google.com" <tabba@google.com>, 
-	Chao P Peng <chao.p.peng@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Vishal Annapurve <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, Jun Miao <jun.miao@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250519082042.742926976@linutronix.de> <20250519083026.032425931@linutronix.de>
+In-Reply-To: <20250519083026.032425931@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 12 Jun 2025 17:20:04 -0700
+X-Gm-Features: AX0GCFtORLLO_9bWzU_W_-Y94_1YZMrdP7FmQlEgdNla6qXvQHPJsbqo7ZuqNzc
+Message-ID: <CANDhNComWT8NC9ZyCd4Rr0EuLj_uCxv0mj=eW-zVpEJ+EGMmxw@mail.gmail.com>
+Subject: Re: [patch V2 07/26] ntp: Add timekeeper ID arguments to public functions
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025, Rick P Edgecombe wrote:
-> On Wed, 2025-06-11 at 07:42 -0700, Sean Christopherson wrote:
-> > If there's a *legitimate* use case where the guest wants to ACCEPT a su=
-bset of
-> > memory, then there should be an explicit TDCALL to request that the unw=
-anted
-> > regions of memory be unmapped.=C2=A0 Smushing everything into implicit =
-behavior has
-> > obvioulsy created a giant mess.
->=20
-> Hi, still digging on if there is any possible use.
->=20
-> I think this may need a guest opt-in, so the guest can say it can handle =
-errors
-> for both smaller and larger page size matches. So it may not matter if th=
-ere is
-> a rare usage or not. If KVM finds the guest opts-in (how to do that TBD),=
- it can
-> start mapping at the host level.=20
+On Mon, May 19, 2025 at 1:33=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> In preparation for supporting auxiliary POSIX clocks, add a timekeeper ID
+> to the relevant functions.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Hmm, clever.  That should work; requiring an updated guest kernel to get op=
-timal
-performance doesn't seem too onerous.
+Acked-by: John Stultz <jstultz@google.com>
 
-> If KVM doesn't see the opt-in, the guest gets 4k pages.
-
-As in, KVM doesn't even try to use hugepage mappings?  If so, this idea pro=
-bably
-gets my vote.
+thanks
+-john
