@@ -1,107 +1,76 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2423FE7;
-	Fri, 13 Jun 2025 19:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C51823E229
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749843795; cv=none; b=SLZ/W+SBLTZjFVYE7M4GAKdXh5KyDyho9Tabucinp7yORr59Rvfw39QwrfYg3qdYH+dyzyNNdWVKO7nESBeuA+UUqSjvIlaUqjuC2NIF48mvJjsRDHtp3rfLvEAbJFpS3aRfEX/icj7yQDrXIEreQaVnwCxKFGUoMLa0g7t9220=
+	t=1749843811; cv=none; b=Mw2ojSlfJf7dRM5fsUZ2ggO5fsZZpuQo4o6wbhzzHjmExQvbeR2mQu3HbzNhgthscCucYspIKJvHbuqm12kMLpWPlJsimNfVT2NJLoEYhDnruZDRH4sgmWNOPmhlQBj+k7myvTZQfpBVuWy/9vz1TwqaJu9C5HqHnaNpgqme7Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749843795; c=relaxed/simple;
-	bh=gWaM2SwWG/RzB3IQhP4sXhYbKHVGU+CduuDqU1xoFbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T64gqQx/KMCuu2lFW//WHySlhqD0ZhkSuGH46OLLRtI1saUaFZ48girPfATHGU4eBXfqhka+FuvD/Hw1o+NNXcH2exj9xISPSmSqQxU6cKo5PzHKqkdcOhzFQ7oE5YW2LelEDy4SKR08Qciy2OjrESCJd4rUHvK3YrP1bTVF55E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cV4Z/+Io; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749843811; c=relaxed/simple;
+	bh=hC4V+1Dt27/Fv+cHSYNpPlN1jU584vWBlk4E/iSJqNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekJzMUs13xNT4YPMmS7YAJebobykvmrLTpYijf2sX2K3owj0+pbgxby5UWmrAs/zzmPTMQAloXBJcvu9vB5v+71H1KjaovUst9Dsw6XtNBs1HTRvc3IMNPu7RqgBNxWhaiiEkkWcgNlS0eK7zOtvgnhvj9naNRUXryiBpNgs7B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vd7PKd8w; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cV4Z/+Io"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo4787162a12.3;
-        Fri, 13 Jun 2025 12:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749843792; x=1750448592; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JVnXDO8P8TTyy5ZMGp74R4GEWT4MAhPxsWXUOSUBcps=;
-        b=cV4Z/+IoKU9SwAXqZxVWqaHq1Lwx3w+bav64GDT9TwOf1/uWGH1Jqy8XB5sS6yGwM7
-         vzKZ05qG7ng8mDz1vhN2beM3oYVy67O3Soa50c3LTVcjzsYMLIDOXtWUbfGmsjS+YGsy
-         P8zyOP5fSWqxKboRjvnYYHL1HwIDG9tXcJhDb5TzdBxFlAOgFafp79EBBoDrH5ejz/Sh
-         AC9KJ3a/BgJVKVdLzOVr3UsOiqxBk/EnuXxJyDNxF/N8UV4qnIMmjX8IwXHIj8sCoyAJ
-         z1P0MqPIr1E1Rg62CMaG4uNYPju6XFJA3QRiUxbSTFK/p1DoHHQu/gFxYx4r+qNLubr9
-         qdQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749843792; x=1750448592;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JVnXDO8P8TTyy5ZMGp74R4GEWT4MAhPxsWXUOSUBcps=;
-        b=Lu7D+F24gjePP0UxGOhGTyBwObvepXLbVivCmHqZ6dsL3hCi4KAnLEa6Nc7ZIvOEX1
-         vbl1DTC6TDLzDiVHOPIkNOW9YbcqToHIPzGwxHQACaS7Dn0RwP0K19yNZieRaRNmB0iM
-         8X3GwbkLQJUZNXUEHGvJhPIUhw+dDmAi8pXNSdOMZVB69jv659TThq8bwnkeUoa4u70l
-         Nk6ibI1eRA58BSfkcoRuYYVzu3uKLzOI0KN8IXsWz7bVBB9hu193CgJvWFiT2b4JMVG/
-         D4P61WGlPEMYuduy9fyMNTOajYIPusS0Xn9+CUzua8zKMQxs8XJ8Ige2Zka/oeKxBeDl
-         1rZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9baJg2gHAoKmo7LJIVx9YpT+Z6NQgOfZ8nXNHUcPEOXn/8OJ1vqUT4GAycJXejDca/28815NxLqY454mVqQ==@vger.kernel.org, AJvYcCUBihFoV4BaEtFRBFiyIjk5MDW8IoALPE/zj5ZxI1E6a58/LTq2njHSIFmAcfMbQXbUF02j9mTsLVholoVY@vger.kernel.org, AJvYcCX6piUBCJlCWj+xEXDCnwl47rPUmV/qF4Q1EsjSE4v9cdMA/UD4aRMGoT7F+LgtRtTQ1Lm4fj7p9XJT@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb3ds+RGm2kvz9k2qFg17ytxQavHkvM8SCeQJXcBhFaBhlb3QJ
-	PqVmsqxiwm89ygh4U4CM39+qXYsFeWvRe3Q55+gXEN68mS18ZBdvHw5YzlDeyotdjgY=
-X-Gm-Gg: ASbGncs2dnFWHNkB5u3gz46dEGc8ax7NeutmfOPMMxI9wPTFKEPVT201Oe2oB6weJiI
-	lH8qs4d6LPDF09AMJJcCHO0qSm7VXJVBjVG1U1g9yBOl3oI85Xep7/L/zUOGw22i1SMBVui1L4u
-	TQAWfSWQkY+fMYN23+CarbUKwxH6OYDpIk93pJ2tyepg/LyqC0C/h7DZ3orkjBsOHI3ebSzd7jq
-	NmvG6dGXriD0VZd91Jw9z3XB4/aP3iNCqpKeiqxW0hEUZpGPVBSsIGor5R7Poxv9SqZf1QAXf2y
-	aJ8D2c8iy5HLIVVXyw3oaqiUDHCHAKcPov0jlBhZn8opGEfwqiG+icM/ZXoGo9fDCg==
-X-Google-Smtp-Source: AGHT+IEea1UCROg9VWoHOogW+rzKLVn6Eb9YuxISnCP3IOJmiBzBCZd+dWoG38r40j+VpjnkqgwJHw==
-X-Received: by 2002:a17:907:7f92:b0:ad8:959c:c55d with SMTP id a640c23a62f3a-adfad2a1efbmr48350466b.2.1749843792507;
-        Fri, 13 Jun 2025 12:43:12 -0700 (PDT)
-Received: from ainazi.fritz.box ([2001:9e8:1ad:9f00:925:9e86:49c5:c55f])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adecd50da29sm161053166b.72.2025.06.13.12.43.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 12:43:12 -0700 (PDT)
-From: Shinjo Park <peremen@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM MAILING LIST),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Shinjo Park <peremen@gmail.com>
-Subject: [PATCH] ARM: dts: qcom: pm8921: add vibrator device node
-Date: Fri, 13 Jun 2025 21:42:53 +0200
-Message-ID: <20250613194253.20080-1-peremen@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vd7PKd8w"
+Date: Fri, 13 Jun 2025 12:43:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749843807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RiYXVgcIqh/RTLmK+Rx+QzUVOjDT9BY8SQ3RWUnrRPA=;
+	b=Vd7PKd8wGfZvL5kqVq+Dca3A5hDB3H0EKNSbHMcN6e7P8ORHUnyy6UkFj4MyqfKzaiKyyy
+	cluvv8f1WJyFdH2b+/DBV0z7DYn18aGgYZ50ltz3iGZ+XYjl8KLTJ8+lmr7urH53OmMXpz
+	IzAMWm6MMTUuosIcgGHMBqXqO+4KxIA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Francesco Lavra <francescolavra.fl@gmail.com>,
+	David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH v3 01/62] KVM: arm64: Explicitly treat routing entry type
+ changes as changes
+Message-ID: <aEx_VlekBuL0ds5v@linux.dev>
+References: <20250611224604.313496-2-seanjc@google.com>
+ <20250611224604.313496-3-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611224604.313496-3-seanjc@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Use the same definition as pm8058.dtsi. Since vibrator is used only by
-some devices, disable it by default and let it be enabled explicitly.
+On Wed, Jun 11, 2025 at 03:45:04PM -0700, Sean Christopherson wrote:
+> Explicitly treat type differences as GSI routing changes, as comparing MSI
+> data between two entries could get a false negative, e.g. if userspace
+> changed the type but left the type-specific data as-
+> 
+> Note, the same bug was fixed in x86 by commit bcda70c56f3e ("KVM: x86:
+> Explicitly treat routing entry type changes as changes").
 
-Signed-off-by: Shinjo Park <peremen@gmail.com>
----
- arch/arm/boot/dts/qcom/pm8921.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yeah, I'll let you guess where I got the idea from...
 
-diff --git a/arch/arm/boot/dts/qcom/pm8921.dtsi b/arch/arm/boot/dts/qcom/pm8921.dtsi
-index 058962af3005..535cb6a2543f 100644
---- a/arch/arm/boot/dts/qcom/pm8921.dtsi
-+++ b/arch/arm/boot/dts/qcom/pm8921.dtsi
-@@ -17,6 +17,12 @@ pwrkey@1c {
- 			pull-up;
- 		};
- 
-+		pm8921_vibrator: vibrator@4a {
-+			compatible = "qcom,pm8921-vib";
-+			reg = <0x4a>;
-+			status = "disabled";
-+		};
-+
- 		pm8921_mpps: mpps@50 {
- 			compatible = "qcom,pm8921-mpp",
- 				     "qcom,ssbi-mpp";
--- 
-2.48.1
+> Fixes: 4bf3693d36af ("KVM: arm64: Unmap vLPIs affected by changes to GSI routing information")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
+Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+
+Thanks,
+Oliver
