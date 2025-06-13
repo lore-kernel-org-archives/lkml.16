@@ -1,151 +1,133 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CD710F9;
-	Fri, 13 Jun 2025 14:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D628F10F9;
+	Fri, 13 Jun 2025 14:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826038; cv=none; b=L7aPJiTIchiNMnkN1BNEKZBxwTvkiVMn5HVNd/G41ah96dC8USZNHqGG71UrQFCK9cMhyO6srLbbmxXdxClRYLof2E/IRY9mnoLzoQeM2GwjwJp90ktH+lwgigdKfMrwwxOZemKX+0LHFW9Jm+K4oDxMCAhCEJ6NViNYo0S+XIU=
+	t=1749826049; cv=none; b=R2Vk1QLjjNF3NLTJZRqQMn6UgTBQsaFLY6XMlO+8qexLXV4Fokofr2vMnz/dYGqEFojFLL8y2okFog+JCJZRV7tTe6AaKJuBXPC99fFafxBRGVXsjww04DFkaaw5b33oPETDhl4LXFZ8mg8v52u63s/Aic4D3xm0JHkisHtddEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826038; c=relaxed/simple;
-	bh=ERWxMeHhioNfPsdKe7XiVsTeKQhpBmGUmbGktlPg+z4=;
+	s=arc-20240116; t=1749826049; c=relaxed/simple;
+	bh=Vck2Z3Pn+YuFhuarhlC9R7s/5ZP8BvkQdzh7LJHwePE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NQ+UBSAAC3LQHGbXLSCX45icTlAU5vGEg0HpzbX5z8m0Xw88YQbCb3xd6BCcIqPyXqe9/WrNBDAn+1gcdKJCrK/N2AlOsr2gKF8NnvQUF3+ldYB5WzsWY3/hyHKMzA6XUjOz2vvCh4n9U0BREohLQKZ4UkXdvF/1x+6PimXsquY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-adb2e9fd208so433217766b.3;
-        Fri, 13 Jun 2025 07:47:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749826035; x=1750430835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ba5rtWXHw98X49Jgpy1we8+pwJv0vzJYUJGITyfZEgU=;
-        b=ZXHTNVPtHCdJ0MbVcwwpToRRyrh2svGY0GyKY5gpsTkYEi/hEc9Ilsx+FK2pkma8bZ
-         iyYNcn7vVHIOt3Hs7SR5fK/kToN37aN2LVohNgJHL1FJS3FniCJgHEpoEFwk/KRPdBEt
-         fz2r5jm6chU66PX3Q220imgTk5GX5qrYHfT+wVw0jR5JDxrmLiWCXIOqrHBneBVHpQN1
-         WgufYLzzCgQT4zltzGsxaLKztSQcrixheDnyBwKb5YUXNNILhJPLS8lUzkEUj4ddD4iI
-         JDCI//UCpajTO+meSqxx3e2i5O40kkUyVI3Io6belzk+jnxjkDX29FrXIE3GegjoZJ7f
-         lxzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWW1yed78PQOJ06S/nvLBPo9aXATdIgcbrc8brgQbOhibjyPxb05UHyvACvPv4Nzvo3vdrrr7qhpPFhTzA=@vger.kernel.org, AJvYcCXcXSTEOgEPWqIq9vJxRRpnbGln8IyLw58w6i4/2An4P5r/uECiM6ILeiVi4VQkJ54m81B0gU951zEzRoE1Btg6@vger.kernel.org
-X-Gm-Message-State: AOJu0YydsAVOC/F1AEzAmdf3SgqUjWb4E5uKzNy/CIzMKPOy7qTD7Dig
-	QIGHhYqScLq28gM+h7jMtxYE75SrLRCaVPu2iFH/kLJIRwN4byvzRjHh
-X-Gm-Gg: ASbGncvelgapNNwUjvem7WK9FZbLmZJZiBrIrErcNpBWmSBmjyFRw2/DxnOES2m0B4Q
-	aNr+dNcFE5Q8oA1iOG+OgxQLGvsKrEtxbccaFFaE13MWGhvpyQkf3HXJj4XwfS38FHtsyPYf2L9
-	i12GhBga1moXK19juI46ORHkq1H4GLiF+XkUnsYpHSNRCVrfxhu0zwzc+FmT0Hj+RlrjpvlEUEy
-	d4KThi4MD3HBRThk150ReyWYBQkbWQZkiuAAa265QFpJWAUAnHC7atIgELdm94nUgbWbej3H6ao
-	g8jA/Db1zXDHlZ1aPD2I2A57eubJ/b2/PVdtlK8OTcuq9HUrqoicCSZtOditQ2g=
-X-Google-Smtp-Source: AGHT+IGIoUifCDQIiPJ4VVQegeNUofVJ2y5IzyBemUy+n1oa8GSrv3o5HP6cOyjuaOlLMoE/7CUmRw==
-X-Received: by 2002:a17:907:c1f:b0:ad5:5302:4023 with SMTP id a640c23a62f3a-adec5d6daf8mr349836266b.44.1749826034398;
-        Fri, 13 Jun 2025 07:47:14 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:4::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48a836asm1291134a12.13.2025.06.13.07.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 07:47:14 -0700 (PDT)
-Date: Fri, 13 Jun 2025 07:47:11 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	David Wei <dw@davidwei.uk>, Shuah Khan <shuah@kernel.org>,
-	Simon Horman <horms@kernel.org>, joe@dama.to
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next v2 4/4] netdevsim: account dropped packet length
- in stats on queue free
-Message-ID: <aEw579mm+3aiXti+@gmail.com>
-References: <20250613-netdevsim_stat-v2-0-98fa38836c48@debian.org>
- <20250613-netdevsim_stat-v2-4-98fa38836c48@debian.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sHMArMafbW1qJuy9FfWnbHvSpNsL1AWe9FDd+pVAhHrJmKRJMsG2VfdknYPexMavLRV+YccPxhWm7Ocvy3y3Jv5ewEnX6stlYWQpk8+/OmEWZUHvQL+XJC3dOnF1+xj4lSvOWGgWsxMfZ/lZOL3ycPqseFvcLnYuvp4P4cP/BOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOCpuMA9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOCpuMA9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7429EC4CEE3;
+	Fri, 13 Jun 2025 14:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749826048;
+	bh=Vck2Z3Pn+YuFhuarhlC9R7s/5ZP8BvkQdzh7LJHwePE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dOCpuMA9hqXLFa9KJ4I8LAiuqIqbK9S4cdhLImmLbzbfKzK8jRS8CV1UyQopxGbiN
+	 yVyxhdY+/hP/4EO25XmBvKRIuh/Eh/h6YD0ES3F4Nj7eL1AExBJoWeMKDPrtuBWCgY
+	 WWjMRT/gCVZ+V5py9J3LYhZDBcYLdXxFk5ds3i3g7FdNkcgmpZhLPsa8bun1qvRTTj
+	 06zocGTvj6/uVH9i8DuviVVvAfoPr2rddauLoXAdU1CoGOMX/8UT6oNglLwdHtQsVd
+	 OhU7RgX8iv5aiQ0MzVVX5Yj01npyM8A1Bdyk3FNruwn6OuDEzdellbktWbaH4TXl9g
+	 4Gv2EvDdo8qZw==
+Date: Fri, 13 Jun 2025 15:47:23 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ghennadi Procopciuc <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Xu Yang <xu.yang_2@nxp.com>,
+	Peng Fan <peng.fan@nxp.com>, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, s32@nxp.com, linaro-s32@linaro.org,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Ionut Vicovan <Ionut.Vicovan@nxp.com>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+Subject: Re: [PATCH 1/3 v2] dt-bindings: usb: Add compatible strings for
+ s32g2/s32g3
+Message-ID: <20250613-alongside-remark-819b10305ca7@spud>
+References: <cover.1749747898.git.dan.carpenter@linaro.org>
+ <cb3970d93f2df0d350f3f3de27d9f0cdb41d0d3b.1749747898.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GK+9otxDYzRic2k2"
+Content-Disposition: inline
+In-Reply-To: <cb3970d93f2df0d350f3f3de27d9f0cdb41d0d3b.1749747898.git.dan.carpenter@linaro.org>
+
+
+--GK+9otxDYzRic2k2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613-netdevsim_stat-v2-4-98fa38836c48@debian.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 03:40:01AM -0700, Breno Leitao wrote:
-> Add a call to dev_dstats_rx_dropped_add() in nsim_queue_free() to
-> account for the number of packets dropped when purging the skb queue.
-> 
-> This improves the accuracy of RX drop statistics reported by
-> netdevsim.
-> 
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+On Thu, Jun 12, 2025 at 09:50:51PM +0300, Ghennadi Procopciuc wrote:
+> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>=20
+> Add the compatible strings for the NXP s32g2 and s32g3.  These chips
+> are mostly compatible.  The one difference is that the s32g2-usbmisc
+> device has an errata ERR050474 which requires a special flag to be set
+> for handling packages that aren't 4 byte aligned.
+>=20
+> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
+This signoff chain is absolutely wrong, what were the contributions of
+Larisa, Ionut or Dan to this patch? If they were co-authors (surely not
+4 people for a trivial 4 line diff) they need co-developed-by tags.
+You sent it, so your name should be last.=20
 > ---
->  drivers/net/netdevsim/netdev.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-> index de309ff69e43e..6e8fb8922ace2 100644
-> --- a/drivers/net/netdevsim/netdev.c
-> +++ b/drivers/net/netdevsim/netdev.c
-> @@ -634,7 +634,10 @@ static struct nsim_rq *nsim_queue_alloc(void)
->  
->  static void nsim_queue_free(struct nsim_rq *rq)
->  {
-> +	struct net_device *dev = rq->napi.dev;
-> +
->  	hrtimer_cancel(&rq->napi_timer);
-> +	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
+> Changes since v1:
+> 1: Alphabetize
+> 2: Update the commit message a bit.
+>=20
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml | 2 ++
+>  Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml  | 2 ++
+>  2 files changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml b/Do=
+cumentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
+> index cc5787a8cfa3..f6372b76ed5a 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
+> @@ -23,6 +23,8 @@ properties:
+>            - nvidia,tegra30-udc
+>            - nvidia,tegra114-udc
+>            - nvidia,tegra124-udc
+> +          - nxp,s32g2-usb
+> +          - nxp,s32g3-usb
+>            - qcom,ci-hdrc
+>        - items:
+>            - enum:
+> diff --git a/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml b/Doc=
+umentation/devicetree/bindings/usb/fsl,usbmisc.yaml
+> index 019435540df0..ca677d1a8274 100644
+> --- a/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml
+> +++ b/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml
+> @@ -21,6 +21,8 @@ properties:
+>            - fsl,imx53-usbmisc
+>            - fsl,imx6q-usbmisc
+>            - fsl,vf610-usbmisc
+> +          - nxp,s32g2-usbmisc
+> +          - nxp,s32g3-usbmisc
+>        - items:
+>            - enum:
+>                - fsl,imx6ul-usbmisc
+> --=20
+> 2.47.2
+>=20
 
-This is wrong and it will cause the kernel to crash in some cases, given
-we can get here with dev == NULL, in the following path:
+--GK+9otxDYzRic2k2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	nsim_destroy (drivers/net/netdevsim/netdev.c:1067) netdevsim
-	nsim_dev_reload_destroy (drivers/net/netdevsim/dev.c:426 drivers/net/netdevsim/dev.c:1429 drivers/net/netdevsim/dev.c:1440 drivers/net/netdevsim/dev.c:1661) netdevsim
-	nsim_dev_reload_down (drivers/net/netdevsim/dev.c:?) netdevsim
-	devlink_reload (net/devlink/dev.c:462)
-	? lock_acquire (kernel/locking/lockdep.c:5871)
-	? devlink_remote_reload_actions_performed (net/devlink/dev.c:446)
-	devlink_nl_reload_doit (net/devlink/dev.c:?)
-	? devlink_reload (net/devlink/dev.c:520)
-	? __nla_parse (lib/nlattr.c:732)
-	genl_family_rcv_msg_doit (net/netlink/genetlink.c:1115)
-	? genl_family_rcv_msg_dumpit (net/netlink/genetlink.c:1088)
-	genl_rcv_msg (net/netlink/genetlink.c:? net/netlink/genetlink.c:1210)
-	? genl_release (net/netlink/genetlink.c:1201)
-	? devlink_nl_pre_doit_port (net/devlink/netlink.c:257)
-	? devlink_reload (net/devlink/dev.c:520)
-	? devlink_nl_post_doit (net/devlink/netlink.c:288)
-	? __lock_acquire (kernel/locking/lockdep.c:?)
-	netlink_rcv_skb (net/netlink/af_netlink.c:2534)
-	? genl_release (net/netlink/genetlink.c:1201)
-	? netlink_ack_tlv_fill (net/netlink/af_netlink.c:2511)
-	? down_read (./arch/x86/include/asm/atomic64_64.h:20 ./include/linux/atomic/atomic-arch-fallback.h:2629 ./include/linux/atomic/atomic-long.h:79 ./include/linux/atomic/atomic-instrumented.h:3224 kernel/locking/rwsem.c:176 kernel/locking/rwsem.c:181 kernel/locking/rwsem.c:256 kernel/locking/rwsem.c:1247 kernel/locking/rwsem.c:1261 kernel/locking/rwsem.c:1526)
-	genl_rcv (net/netlink/genetlink.c:1220)
-	netlink_unicast (net/netlink/af_netlink.c:1314 net/netlink/af_netlink.c:1339)
-	netlink_sendmsg (net/netlink/af_netlink.c:1883)
-	? netlink_getsockopt (net/netlink/af_netlink.c:1802)
-	? __might_fault (mm/memory.c:6991)
-	__sys_sendto (net/socket.c:715 net/socket.c:727 net/socket.c:2180)
-	? __ia32_sys_getpeername (net/socket.c:2147)
-	? __might_fault (mm/memory.c:6991)
-	? __bpf_trace_rseq_ip_fixup (kernel/rseq.c:425)
-	__x64_sys_sendto (net/socket.c:2187 net/socket.c:2183 net/socket.c:2183)
-	? entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-	do_syscall_64 (arch/x86/entry/syscall_64.c:?)
-	? exc_page_fault (arch/x86/mm/fault.c:1536)
-	entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+-----BEGIN PGP SIGNATURE-----
 
-I am wondering if this additional patch is too ugly:
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEw5+wAKCRB4tDGHoIJi
+0jfHAQCkXsavnoWfTZY4GsGpIgS9OIp2XucKbJDZfr4z7ZRpHAD6A6tUb10kViaP
+x6MhqceZjJ2qIXckKfk7V3lgR3mCjQg=
+=V3nJ
+-----END PGP SIGNATURE-----
 
-	diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-	index 6e8fb8922ace2..328c7e83f2823 100644
-	--- a/drivers/net/netdevsim/netdev.c
-	+++ b/drivers/net/netdevsim/netdev.c
-	@@ -637,7 +637,8 @@ static void nsim_queue_free(struct nsim_rq *rq)
-		struct net_device *dev = rq->napi.dev;
-
-		hrtimer_cancel(&rq->napi_timer);
-	-       dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
-	+       if (dev)
-	+               dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
-		skb_queue_purge_reason(&rq->skb_queue, SKB_DROP_REASON_QUEUE_PURGE);
-		kfree(rq);
-	}
+--GK+9otxDYzRic2k2--
