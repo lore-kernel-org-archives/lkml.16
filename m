@@ -1,89 +1,226 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BAC26B774;
-	Fri, 13 Jun 2025 08:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDF86279DBD;
+	Fri, 13 Jun 2025 08:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803184; cv=none; b=hV8FdKC7fpH5vB66os8OPH6Rk2kwda9v1YhG4+gt6dTP9K9GW3aVnYAnNjo5UD+3K7AQ6Z7F0ApYJeTc90006q7H2QGg9unUiLXPTj8azuK3kWwY9fDh0MZueYV4v5QyHHDnN5DQbT7M0zVEuVQlUdXUy12aPQ5KcrQAo7EZIqY=
+	t=1749803204; cv=none; b=FUqP8gch54mjErhkVi86gfuBJZS86gNj5uDTt91ky9Am2ZZ60wmE0ydK6CNefWigH+WixjK6qmiAm09YuJVlBUoz6bWqKBwjVJ799hNaWqDf+ELp5t2n0/qLnN8u1wbrAVlnavFJ5QdDUMD0mgAfMNXhVieODQUCRyO+aLG3gNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803184; c=relaxed/simple;
-	bh=ZHfesctzgFNOrFtmn+aXJup7a3ssdaH492fgBMdVnlE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cUm/l+kv7OHvBdP3GafzqZOMsJtXn9ks739GSP200HRops+tNRW7cuPJkZtDEW81xlpSrk0m3tdBqjSow3AGxDF87C1Qkq+oZecc3NGzRHZ2uTYu4F1aF0ZpfrbnMScRDvhabRYC7+NVYIeoQI0NkQ6dCVKD6Df4y9Qo30fLfUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=LZl7Ozvt; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LZl7Ozvt"
-Received: from canonical.com (1.general.ivanhu.uk.vpn [10.172.194.164])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 82D5B3FAEC;
-	Fri, 13 Jun 2025 08:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1749803179;
-	bh=d/pzoPC2lfC8W0PA9XL09cFHVO8DAv+BBjkHc2wSDhc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=LZl7Ozvt/b76Wn+QIB3OyfFzxAMUfZMhBrXfE4ekP0mcbBe0FRXvHK2JveQx5hVnY
-	 yLKgTcYcIn1ute17pUv86lWuCO9tdfEaiMXVviuqIKDlxKTC1TiaeHzPvqp/B+ndoF
-	 laaduu36+eTERwJ/9WS8Su6+Wqxl9VFlqpSjrrxmxJnyMeYeP/HDBQOLJRe4zpZKBr
-	 dzItl6+sCYwu3Gao78Ca+q5k/P/3gfK60LPHR/XXCn6AtvHEFRS5maal/6F78/+9yj
-	 mkpxjW29HpVRltSkiPtKhkbsLtVkbJWAVONeVJF5TpLjwkQJCR/1wiImiSr90rHpM4
-	 OFBoAdbE6IiQg==
-From: Ivan Hu <ivan.hu@canonical.com>
-To: hdegoede@redhat.com,
-	jesse.huang@portwell.com.tw,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ivan.hu@canonical.com
-Subject: [PATCH] platform/x86: portwell-ec: Move watchdog device under correct platform hierarchy
-Date: Fri, 13 Jun 2025 16:26:14 +0800
-Message-Id: <20250613082614.28929-1-ivan.hu@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1749803204; c=relaxed/simple;
+	bh=dQLXWr36qkCWVvdoVAPdCoVdhFpM8XiZAKcaOSDzWV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kbffMYS23sZcgOmbv5s2P9lvNrlwWulKfLoodnPtcqfmYg/BpPgvW3qN0SFiX4E4B6hMKRKKyIkX7jvif0HNd1DXQG+6HXCmEX/wK3+nQ8Vv2rKlskZ9+NzzIt6hTyJwrSGqGXOM1REqjXdYrI3nMKjwImS9MpW3t6AQpReWq0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 338E114BF;
+	Fri, 13 Jun 2025 01:26:21 -0700 (PDT)
+Received: from [10.57.84.117] (unknown [10.57.84.117])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 243333F66E;
+	Fri, 13 Jun 2025 01:26:38 -0700 (PDT)
+Message-ID: <bf59680e-c523-4af8-b81f-ea0b4d0e12f2@arm.com>
+Date: Fri, 13 Jun 2025 09:26:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] mm: Lock kernel page tables before entering lazy MMU
+ mode
+Content-Language: en-GB
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
+ Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
+ Jeremy Fitzhardinge <jeremy@goop.org>
+References: <cover.1749747752.git.agordeev@linux.ibm.com>
+ <7bd3a45dbc375dc2c15cebae09cb2bb972d6039f.1749747752.git.agordeev@linux.ibm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <7bd3a45dbc375dc2c15cebae09cb2bb972d6039f.1749747752.git.agordeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Without explicitly setting a parent for the watchdog device, the device is
-registered with a NULL parent. This causes device_add() (called internally
-by devm_watchdog_register_device()) to register the device under
-/sys/devices/virtual, since no parent is provided. The result is:
+On 12/06/2025 18:36, Alexander Gordeev wrote:
+> As a follow-up to commit 691ee97e1a9d ("mm: fix lazy mmu docs and
+> usage") take a step forward and protect with a lock not only user,
+> but also kernel mappings before entering the lazy MMU mode. With
+> that the semantics of arch_enter|leave_lazy_mmu_mode() callbacks
+> is consolidated, which allows further simplifications.
+> 
+> The effect of this consolidation is not fully preemptible (Real-Time)
+> kernels can not enter the context switch while the lazy MMU mode is
+> active - which is easier to comprehend.
+> 
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  include/linux/pgtable.h | 12 ++++++------
+>  mm/kasan/shadow.c       |  5 -----
+>  mm/memory.c             |  5 ++++-
+>  mm/vmalloc.c            |  6 ++++++
+>  4 files changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 0b6e1f781d86..33bf2b13c219 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -224,12 +224,12 @@ static inline int pmd_dirty(pmd_t pmd)
+>   * a raw PTE pointer after it has been modified are not guaranteed to be
+>   * up to date.
+>   *
+> - * In the general case, no lock is guaranteed to be held between entry and exit
+> - * of the lazy mode. So the implementation must assume preemption may be enabled
+> - * and cpu migration is possible; it must take steps to be robust against this.
+> - * (In practice, for user PTE updates, the appropriate page table lock(s) are
+> - * held, but for kernel PTE updates, no lock is held). Nesting is not permitted
+> - * and the mode cannot be used in interrupt context.
+> + * For PREEMPT_RT kernels implementation must assume that preemption may
+> + * be enabled and cpu migration is possible between entry and exit of the
+> + * lazy MMU mode; it must take steps to be robust against this. There is
+> + * no such assumption for non-PREEMPT_RT kernels, since both kernel and
+> + * user page tables are protected with a spinlock while in lazy MMU mode.
+> + * Nesting is not permitted and the mode cannot be used in interrupt context.
 
-DEVPATH=/devices/virtual/watchdog/watchdog0
+While I agree that spec for lazy mmu mode is not well defined, and welcome
+changes to clarify and unify the implementations across arches, I think this is
+a step in the wrong direction.
 
-To fix this, assign &pdev->dev as the parent of the watchdog device before
-calling devm_watchdog_register_device(). This ensures the device is
-associated with the Portwell EC platform device and placed correctly in
-sysfs as:
+First the major one: you are serializing kernel pgtable operations that don't
+need to be serialized. This, surely, can only lead to performance loss? vmalloc
+could previously (mostly) run in parallel; The only part that was serialized was
+the allocation of the VA space. Once that's done, operations on the VA space can
+be done in parallel because each is only operating on the area it allocated.
+With your change I think all pte operations are serialised with the single
+init_mm.page_table_lock.
 
-DEVPATH=/devices/platform/portwell-ec/watchdog/watchdog0
+Additionally, some arches (inc arm64) use apply_to_page_range() to modify the
+permissions of regions of kernel VA space. Again, we used to be able to modify
+multiple regions in parallel, but you are now serializing this for no good reason.
 
-This aligns the device hierarchy with expectations and avoids misplacement
-under the virtual class.
+Secondly, the lazy mmu handler still needs to handle the
+preemption-while-in-lazy-mmu case because, as you mention, it can still be
+preempted for PREEMPT_RT kernels where the spin lock is converted to a sleepable
+lock.
 
-Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
----
- drivers/platform/x86/portwell-ec.c | 1 +
- 1 file changed, 1 insertion(+)
+So I think the handler needs to either explicitly disable preemption (as powerpc
+and sparc do) or handle it by plugging into the arch-specific context switch
+code (as x86 does) or only maintain per-task state in the first place (as arm64
+does).
 
-diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-index 8b788822237b..3e019c51913e 100644
---- a/drivers/platform/x86/portwell-ec.c
-+++ b/drivers/platform/x86/portwell-ec.c
-@@ -236,6 +236,7 @@ static int pwec_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ec_wdt_dev.parent = &pdev->dev;
- 	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register Portwell EC Watchdog\n");
--- 
-2.34.1
+Thanks,
+Ryan
+
+>   */
+>  #ifndef __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+>  #define arch_enter_lazy_mmu_mode()	do {} while (0)
+> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
+> index d2c70cd2afb1..45115bd770a9 100644
+> --- a/mm/kasan/shadow.c
+> +++ b/mm/kasan/shadow.c
+> @@ -313,12 +313,10 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>  	__memset(page_to_virt(page), KASAN_VMALLOC_INVALID, PAGE_SIZE);
+>  	pte = pfn_pte(page_to_pfn(page), PAGE_KERNEL);
+>  
+> -	spin_lock(&init_mm.page_table_lock);
+>  	if (likely(pte_none(ptep_get(ptep)))) {
+>  		set_pte_at(&init_mm, addr, ptep, pte);
+>  		data->pages[index] = NULL;
+>  	}
+> -	spin_unlock(&init_mm.page_table_lock);
+>  
+>  	return 0;
+>  }
+> @@ -465,13 +463,10 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>  
+>  	page = (unsigned long)__va(pte_pfn(ptep_get(ptep)) << PAGE_SHIFT);
+>  
+> -	spin_lock(&init_mm.page_table_lock);
+> -
+>  	if (likely(!pte_none(ptep_get(ptep)))) {
+>  		pte_clear(&init_mm, addr, ptep);
+>  		free_page(page);
+>  	}
+> -	spin_unlock(&init_mm.page_table_lock);
+>  
+>  	return 0;
+>  }
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 71b3d3f98999..1ddc532b1f13 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3017,6 +3017,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  			pte = pte_offset_kernel(pmd, addr);
+>  		if (!pte)
+>  			return err;
+> +		spin_lock(&init_mm.page_table_lock);
+>  	} else {
+>  		if (create)
+>  			pte = pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> @@ -3042,7 +3043,9 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  
+>  	arch_leave_lazy_mmu_mode();
+>  
+> -	if (mm != &init_mm)
+> +	if (mm == &init_mm)
+> +		spin_unlock(&init_mm.page_table_lock);
+> +	else
+>  		pte_unmap_unlock(mapped_pte, ptl);
+>  
+>  	*mask |= PGTBL_PTE_MODIFIED;
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index ab986dd09b6a..57b11000ae36 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -105,6 +105,7 @@ static int vmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	if (!pte)
+>  		return -ENOMEM;
+>  
+> +	spin_lock(&init_mm.page_table_lock);
+>  	arch_enter_lazy_mmu_mode();
+>  
+>  	do {
+> @@ -132,6 +133,7 @@ static int vmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	} while (pte += PFN_DOWN(size), addr += size, addr != end);
+>  
+>  	arch_leave_lazy_mmu_mode();
+> +	spin_unlock(&init_mm.page_table_lock);
+>  	*mask |= PGTBL_PTE_MODIFIED;
+>  	return 0;
+>  }
+> @@ -359,6 +361,7 @@ static void vunmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	unsigned long size = PAGE_SIZE;
+>  
+>  	pte = pte_offset_kernel(pmd, addr);
+> +	spin_lock(&init_mm.page_table_lock);
+>  	arch_enter_lazy_mmu_mode();
+>  
+>  	do {
+> @@ -379,6 +382,7 @@ static void vunmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	} while (pte += (size >> PAGE_SHIFT), addr += size, addr != end);
+>  
+>  	arch_leave_lazy_mmu_mode();
+> +	spin_unlock(&init_mm.page_table_lock);
+>  	*mask |= PGTBL_PTE_MODIFIED;
+>  }
+>  
+> @@ -525,6 +529,7 @@ static int vmap_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	if (!pte)
+>  		return -ENOMEM;
+>  
+> +	spin_lock(&init_mm.page_table_lock);
+>  	arch_enter_lazy_mmu_mode();
+>  
+>  	do {
+> @@ -542,6 +547,7 @@ static int vmap_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	} while (pte++, addr += PAGE_SIZE, addr != end);
+>  
+>  	arch_leave_lazy_mmu_mode();
+> +	spin_unlock(&init_mm.page_table_lock);
+>  	*mask |= PGTBL_PTE_MODIFIED;
+>  	return 0;
+>  }
 
