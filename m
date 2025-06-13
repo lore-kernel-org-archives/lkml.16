@@ -1,82 +1,127 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A16C23AE62;
-	Fri, 13 Jun 2025 02:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A3C1EF09B;
+	Fri, 13 Jun 2025 02:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749782258; cv=none; b=JFRcd8ImafO22RtFY7KD1QHeg+exLgEPS579ZCm0LEfJwi/AN/KNboFSLRhz82M5Nr9JpT6l8T7xp/Ez4cSfjUgH/z/SGWzq8g5fxXJzgGVUMT7sKk5m+RueZ1ffH9WRCtZhWMKXa5YlaCWhww4nKYYnBCOgrFay9TQvdnOxdVY=
+	t=1749782280; cv=none; b=hQJNEY7i8UMQAE99jqKTzjM8+3poReAnV4CSL8G2D1EV1R2FnNpq8cVbvlDWtfXzNc9sB06dB1Vm3lvMqEjq5tNPkFYrIXvPhsNy9BacfCeZrmt9VQHFrPoXHunFfmKAefiAQhn3RO6l1HZy3tG/UF2AYakn9jibaWMArP2vons=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749782258; c=relaxed/simple;
-	bh=LJWAuQOr6gJLtbQ1+3X2NJZqAsFLjMQDr8H9MVFlA3g=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=PnSSm4vvRUWoFFVSrXYwmEMBZIiNS5EryuAAbRJezfAOFLDh0qNDYL8V4Mbp+tp+xbZQ+p9p61/AtjmXL4HVqloqeiJFik2ofgLYwIxSuTkXIPWdF1wW/iGtCuUdhzqebG/3IuSSinKSKxgYHMbJS37NeD2CWalkvsgqDa/ZYRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPuIP-009mxQ-Fe;
-	Fri, 13 Jun 2025 02:37:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1749782280; c=relaxed/simple;
+	bh=rLyoFCsONdMg1X5FWeZBMkMcATeLGJmZZ6dsAOCgWIU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YqG+tJFTSwyUscNKv7EihmB6bUw8lBZNMwDjGx0tzC0fShppdisiv86y3gCat8lTjkoqvnBwLnDYICXFPbY5b4LCb84RCzYKBV9rSWnDzOc7wKebyvxedVAeFVgsdi7Oo+juQv0PmnDpJYE9c6iDdw36Qdw71KoqVb0T+z9LGPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aCp9rHNO; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aCp9rHNO"
+Message-ID: <6d0e5cd2-bb4e-45af-bf85-0b95d5d2ac18@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749782267;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UEexevjYeaESnUVPiOmfuE919TTbWUklAG5JrE9vJ2w=;
+	b=aCp9rHNOudNL6WYLZrNQ5r4O7uk5JxlBhUWc/+JWs87qA62V+2p9z1u6MEheu/KcEneWfZ
+	gXo2AIF3zlKmxaFA63HeEgSr8J+06PR4MvUeihuqI3KZUYZY9NR0rrPaP4C0PIs5MbMXgv
+	unocSTYKHj52/jJraQKUoS6r1rUJOGw=
+Date: Fri, 13 Jun 2025 10:37:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Kees Cook" <kees@kernel.org>, "Joel Granados" <joel.granados@kernel.org>,
- linux-fsdevel@vger.kernel.org, "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] proc_sysctl: Fix up ->is_seen() handling
-In-reply-to: <20250613020111.GE1647736@ZenIV>
-References: <>, <20250613020111.GE1647736@ZenIV>
-Date: Fri, 13 Jun 2025 12:37:33 +1000
-Message-id: <174978225309.608730.8864073362569294982@noble.neil.brown.name>
+Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf
+ <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20250611154859.259682-1-chen.dylane@linux.dev>
+ <CAEf4Bzbn=RVhMOR7RapYwi+s8gbVS=1msOuZ7MhPvgz8zHiE9w@mail.gmail.com>
+ <CAADnVQJ8cVi4KyJqWgEfyWYs+zSYQ73PevrNszPkisrdPSjYMg@mail.gmail.com>
+ <CAEf4BzayBd9e5c9fiEPgDKPoRm-E4uB_u__xKcRpXDz18kNnkA@mail.gmail.com>
+ <CAADnVQKw2u9y-Cf+8idB0bZ0v-p6BtuyRV=JpmN4to3_1Z6GEA@mail.gmail.com>
+ <CAEf4BzbScdvawnTZ7364bXxU2QpW_ooCB-tjohBgC4WSvFigFg@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAEf4BzbScdvawnTZ7364bXxU2QpW_ooCB-tjohBgC4WSvFigFg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 13 Jun 2025, Al Viro wrote:
-> On Fri, Jun 13, 2025 at 02:54:21AM +0100, Al Viro wrote:
-> > On Fri, Jun 13, 2025 at 10:37:58AM +1000, NeilBrown wrote:
-> > > 
-> > > Some sysctl tables can provide an is_seen() function which reports if
-> > > the sysctl should be visible to the current process.  This is currently
-> > > used to cause d_compare to fail for invisible sysctls.
-> > > 
-> > > This technique might have worked in 2.6.26 when it was implemented, but
-> > > it cannot work now.  In particular if ->d_compare always fails for a
-> > > particular name, then d_alloc_parallel() will always create a new dentry
-> > > and pass it to lookup() resulting in a new inode for every lookup.  I
-> > > tested this by changing sysctl_is_seen() to always return 0.  When
-> > > all sysctls were still visible and repeated lookups (ls -li) reported
-> > > different inode numbers.
-> > 
-> > What do you mean, "name"?
+在 2025/6/13 08:06, Andrii Nakryiko 写道:
+> On Thu, Jun 12, 2025 at 4:56 PM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+>>
+>> On Thu, Jun 12, 2025 at 4:27 PM Andrii Nakryiko
+>> <andrii.nakryiko@gmail.com> wrote:
+>>>
+>>> On Thu, Jun 12, 2025 at 2:40 PM Alexei Starovoitov
+>>> <alexei.starovoitov@gmail.com> wrote:
+>>>>
+>>>> On Thu, Jun 12, 2025 at 2:29 PM Andrii Nakryiko
+>>>> <andrii.nakryiko@gmail.com> wrote:
+>>>>>
+>>>>> On Wed, Jun 11, 2025 at 8:49 AM Tao Chen <chen.dylane@linux.dev> wrote:
+>>>>>>
+>>>>>> The bpf_d_path() function may fail. If it does,
+>>>>>> clear the user buf, like bpf_probe_read etc.
+>>>>>>
+>>>>>
+>>>>> But that doesn't mean we *have to* do memset(0) for bpf_d_path(),
+>>>>> though. Especially given that path buffer can be pretty large (4KB).
+>>>>>
+>>>>> Is there an issue you are trying to address with this, or is it more
+>>>>> of a consistency clean up? Note, that more or less recently we made
+>>>>> this zero filling behavior an option with an extra flag
+>>>>> (BPF_F_PAD_ZEROS) for newer APIs. And if anything, bpf_d_path() is
+>>>>> more akin to variable-sized string probing APIs rather than
+>>>>> fixed-sized bpf_probe_read* family.
+>>>>
+>>>> All old helpers had this BPF_F_PAD_ZEROS behavior
+>>>> (or rather should have had).
+>>>> So it makes sense to zero in this helper too for consistency.
+>>>> I don't share performance concerns. This is an error path.
+>>>
+>>> It's just a bizarre behavior as it stands right now.
+>>>
+>>> On error, you'll have a zeroed out buffer, OK, good so far.
+>>>
+>>> On success, though, you'll have a buffer where first N bytes are
+>>> filled out with good path information, but then the last sizeof(buf) -
+>>> N bytes would be, effectively, garbage.
+>>>
+>>> All in all, you can't use that buffer as a key for hashmap looking
+>>> (because of leftover non-zeroed bytes at the end), yet on error we
+>>> still zero out bytes for no apparently useful reason.
+>>>
+>>> And then for the bpf_path_d_path(). What do we do about that one? It
+>>> doesn't have zeroing out either in the error path, nor in the success
+>>> path. So just more inconsistency all around.
+>>
+>> Consistency with bpf_path_d_path() kfunc is indeed missing.
+>>
+>> Ok, since you insist, dropped this patch, and force pushed.
 > 
-> The whole fucking point of that thing is that /proc/sys/net contents for
-> processes in different netns is not the same.  And such processes should
-> not screw each other into the ground by doing lookups in that area.
-> 
-> Yes, it means multiple children of the same dentry having the same name
-> *and* staying hashed at the same time.
-> 
+> Great, thank you!
 
-If two threads in the same namespace look up the same name at the same
-time (which previously didn't exist), they will both enter
-d_alloc_parallel() where neither will notice the other, so both will
-create and install d_in_lookup() dentries, and then both will call
-->lookup, creating two identical inodes.
+The changes in this patch are relatively simple, but the discussion 
+between the two of you is more meaningful to me. I agree with Andrii's 
+point of view. Thank you both for discussing this patch.
 
-I suspect that isn't fatal, but it does seem odd.
-
-Maybe proc_sys_compare should return 0 for d_in_lookup() (aka !inode)
-dentries, and then proc_sys_revalidate() can perform the is_seen test
-and return -EAGAIN if needed, and __lookup_slow() and others could
-interpret that as meaning to "goto again" without calling
-d_invalidate().
-
-Maybe.
-
-NeilBrown
+-- 
+Best Regards
+Tao Chen
