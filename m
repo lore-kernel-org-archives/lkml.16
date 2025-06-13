@@ -1,70 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE072E11C6;
-	Fri, 13 Jun 2025 15:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F001DED47;
+	Fri, 13 Jun 2025 15:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828786; cv=none; b=C8umc/6FqM38BVY0qlVRbUhUgM3uihCoMU4b7fnRgLKA+wlyIjyUaNKt+1i+8jnmOCx/UP5xh7thblNyZczwY3wXqxoSfBFAJfqIPy4TTmrvD2NywdFYBkfa5DcrPSB1m6nzTN0lX6KbPiKFObgeTuo5rBUyuIuMo6F2Zfgcj7s=
+	t=1749828829; cv=none; b=lH6qJ0HQHKZcKI1tw9jKQlYbSFIf/FQemodgNjW+T/ow/lM9040viFsbw23tzvq7BUrovBMjIOp2UOn4T+55DtDBk1KM1KDEokkiVa/q0Ggep4RgA0K0bOQGRWzRG1BV5EG1Q1q2zNMNorN5DjRi41MlwEpv6OJ8pqk2nLdRCic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828786; c=relaxed/simple;
-	bh=TxSx9uI/el5NQN7lNloQxdE5TP1Wr5TQHhVJmFCBOG8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bfQ5ghqhMPQI6EfK19nn5zbVLCG23duGWDDIp0Jouu195wcb9i+xvPVNIiZqH2C7mJ2CHe174B2dR2jwUI3vzB57+wcQCWuwjQvo9rcX5wTsoPPLRUSlbOUClqHLpfm124obs9Cu6ukE7Bw3KOYtmMXDsGz1v28zRJNfn7qWH7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rT8Pr90a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749828829; c=relaxed/simple;
+	bh=4A53RFLXlY4zQxfXBrQekZwEIReTVbrIpCwQ5LO8DLM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Cemyf5IgsgQy6tTIBGPPil/NCk7US2KmJE4EVuVTwh9KSxOElbcehEfpRUDuOEKzTpsPZyOqnstrJ9uhUy87cJL3gxE1V+LfUDDVr+w/Vl11DQzQTpv2dwMJtY6a+8gxX7+NmVm7gP7Jxf6ovTxB3XrkdXYk0NhLSt82SgZP75g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wam1Zery; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3oyORhNP; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rT8Pr90a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D731AC4CEE3;
-	Fri, 13 Jun 2025 15:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749828786;
-	bh=TxSx9uI/el5NQN7lNloQxdE5TP1Wr5TQHhVJmFCBOG8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rT8Pr90a3Y+G7AJRhxHZ+op0+llAi2hzmxKOc4Pxx/9kkgcGFb94XiTUXYxqlM4vj
-	 f6F/gacH/EzBxBGIxPnDDY8khbnhXoEN8uVRvEG3yOrdX8qndBus4qAO1VHF6h9QO3
-	 rc4AB/jJUlLA+oXWsDmiMzuJZe0kBXmUNizbrMVoAESY7SkuR3YQyAW8Isyb8a4mHF
-	 TtSyXpgiC+U0QFlNDcW3jOZuve69bcKXZSzbWLbkI3NeJ0EjqwVmX6uOdpldMX0RsA
-	 kNzvC9v97WUqSKKRhKE7Wa53RwBS6OLMRxkmoJPQQRZkDlz8F77Sxuyx8bdLyVFcC1
-	 IsMk34Ki5+ATw==
-Date: Fri, 13 Jun 2025 10:33:04 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Graham Whyte <grwhyte@linux.microsoft.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
-	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org,
-	bhelgaas@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
-Message-ID: <20250613153304.GA959741@bhelgaas>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wam1Zery";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3oyORhNP"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749828826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h8Q++Tfje6GjVU5ZbxYDb9xgWKXCeQmLjtaQsH9Blrg=;
+	b=Wam1ZeryyWsLC839quGmvrQZxsl2Qu2r1Wbbz10NjClptQ3jXkEJ2o3N5iCZ8jEqOCm/D1
+	Q1Gfk3JDLdKsKMieahHNU1lT2runC8/OPNNVYUoaiObqBAS+lKVzghN3wc/cU9EtSrzuXo
+	Ay2va7G4g6E+uUQYK1nqWJY71JA2ss2dkQSsAsVxFLoD/nt5RiSVqa3zq77DSUgCAWpiTB
+	kG06m+Q8qAy9BxG0rXrjWq0T89cYIy5xKZBnH0xSwCYmP3YHbLlZwm2kRuWVf+0/WqzO+k
+	xwwe4VBC5v12Pkm5+sDIIveRZeleIlaKg6YKcgYNk6PpNrP1YbAoRHUKJ0n7rg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749828826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h8Q++Tfje6GjVU5ZbxYDb9xgWKXCeQmLjtaQsH9Blrg=;
+	b=3oyORhNP3386qwl3ZT3zsuGyBlNpKcQv05Bm+651IskbFfbN56X1uEmU/I3TikwWhkrzWk
+	Nt8e7dFKI/DRzYCg==
+To: Anup Patel <apatel@ventanamicro.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J .
+ Wysocki" <rafael@kernel.org>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Uwe
+ =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Len Brown <lenb@kernel.org>, Sunil V L
+ <sunilvl@ventanamicro.com>, Rahul Pathak <rpathak@ventanamicro.com>,
+ Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra
+ <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, Samuel
+ Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel
+ <apatel@ventanamicro.com>
+Subject: Re: [PATCH v5 12/23] irqchip: Add driver for the RPMI system MSI
+ service group
+In-Reply-To: <20250611062238.636753-13-apatel@ventanamicro.com>
+References: <20250611062238.636753-1-apatel@ventanamicro.com>
+ <20250611062238.636753-13-apatel@ventanamicro.com>
+Date: Fri, 13 Jun 2025 17:33:45 +0200
+Message-ID: <87ldpvirl2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57ad1095-89ba-4044-91ce-1ab37bcc79dd@linux.microsoft.com>
+Content-Type: text/plain
 
-On Thu, Jun 12, 2025 at 09:41:45AM -0700, Graham Whyte wrote:
-> On 6/11/2025 11:31 PM, Christoph Hellwig wrote:
-> > On Wed, Jun 11, 2025 at 01:08:21PM -0700, Graham Whyte wrote:
-> >> We can ask our HW engineers to implement function readiness but we need
-> >> to be able to support exiting products, hence why posting it as a quirk.
-> > 
-> > Your report sounds like it works perfectly fine, it's just that you
-> > want to reduce the delay.  For that you'll need to stick to the standard
-> > methods instead of adding quirks, which are for buggy hardware that does
-> > not otherwise work.
-> 
-> Bjorn, what would you recommend as next steps here?
+On Wed, Jun 11 2025 at 11:52, Anup Patel wrote:
+> +	ret = rpmi_sysmsi_set_msi_target(priv, hwirq, msg);
+> +	if (ret) {
+> +		dev_warn(priv->dev, "Failed to set target for hwirq %lu (error %d)\n",
+> +			 hwirq, ret);
 
-This is a tough call and I don't pretend to have an obvious answer.  I
-understand the desire to improve performance.  On the other hand, PCI
-has been successful over the long term because devices adhere to
-standardized ways of doing things, which makes generic software
-possible.  Quirks degrade that story, of course, especially when there
-is an existing standardized solution that isn't being used.  I'm not
-at all happy about vendors that decide against the standard solution
-and then ask OS folks to do extra work to compensate.
+Just let stick it out. You have 100 characters ...
 
-Bjorn
+> +	}
+> +}
+
+Other than that:
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
+under the assumption that this goes all through either the RISC-V or the
+mailbox tree.
+
+Thanks,
+
+        tglx
