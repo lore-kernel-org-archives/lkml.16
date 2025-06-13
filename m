@@ -1,137 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDB18F6C
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A75B8F6C
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749857157; cv=none; b=bFxOwGHMNqRgzfyd3obGu5Kz5hB6HvKdBFJpifJRXIREBIxWWNnXpeKn/TRqu+uNv3dXrHJoQJZB69s7aD6EM7h9q9+zeTXN/+8izVN4NrdxqUfN7uMY4bNKYixhB4vP40v4WpCIqw9Bt9cpL+sIh24PA8t41JxnhZ7uXgx7HOA=
+	t=1749857288; cv=none; b=P2eNpJ0tj6tk4tzz94sSCbMlaKkgXaXAZHIsmUw6qBTbPxiz19Xj+oM9kP+utEpuM+uOfpnyttdPzG5DuIYJBTXGvcProuC1fCGVK4rApvPPnRxxPgqSNeioWEyVm5bkj3iJGk7HWABcauB5rtFQR3FdDnb9CRSyOWsmO9gWmFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749857157; c=relaxed/simple;
-	bh=IEXN+n5qdOk1V2msHLry4HZSsSFYxaYDfiuyJL9kEN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KPslikIFBcFykjC9qiCxXNQueXSyPxnYxvea5vQZu6ts6yh8grcDn3ywXdHiwuub9bxQdpbbvEaNmGxlaBH0qdqdxrBooOPdGEGtBvTwLI6PywBpQ8D2O2Umd6vT9LQK+9Y2iyDMuM/gWj+rd9ei1grj+uN8oiH3/tt7tO0HkkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fqxci/jt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749857288; c=relaxed/simple;
+	bh=+ZAohITBQjhk2/GF2fXLN09ph7yDQI5CSf7zJSY9S38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TzNXjVMTpgxeSNYxtRzspxNIlMM3dnCBbHgLoSDRy+jXHz+ZRTTRjXZP4ohsJ7Gg9ZAyqdqahdZnuhZG6xRlkUANY3Ef76BUA7c+JxB1xzUBCrlgm/nScaTeJMcJD/5nApbwOIqilI2nt1W9rYpi6nqjeQj0D49pMgs62GCTups=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OiHM8R8b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fqxci/jt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D166C4CEE3;
-	Fri, 13 Jun 2025 23:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749857157;
-	bh=IEXN+n5qdOk1V2msHLry4HZSsSFYxaYDfiuyJL9kEN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fqxci/jtE8dSY+VbfwQDsuTR/y7+u89TK5XEOk/silkA5ZYPWKkU40oJFRAw1H3wA
-	 yeDwgnf1jWM1JyuN57+pGWTXLgf/UK5B69sbErIH2ab1XE5dqRRnLSn30rs33Zgpeg
-	 VWBJNM4xdv/SonSj1OR/0SJv62VguUVUtNGtT6i9erdWqOj8CbcWSDv9gDRAXXE7id
-	 Z0dEiRVQvoLPmT1rc2Fhlu+uWMQSsYBIRO5BzIAMituWGwHgmP4dz4Xqbzesbk8Bex
-	 4f2oDoQuq5q97DOFuV/hOluez42AiPptOtUWGY1rRdqH5/oSsTj15f6SywOkWtN3Zq
-	 oG5AH6sE1wecA==
-Date: Fri, 13 Jun 2025 13:25:56 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 2/2 sched_ext/for-6.16-fixes] sched_ext, sched/core: Don't
- call scx_group_set_weight() prematurely from sched_create_group()
-Message-ID: <aEyzhBAl5zkP6Ku-@slm.duckdns.org>
-References: <aEyy27BecPPHDWHc@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OiHM8R8b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749857286;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BbaPuiNOYQFpAXePmauqapWTH5XyW5Y8p/T1f3wRJsk=;
+	b=OiHM8R8b95K+7Giml87IM7825ufdRkGz5fZNfoa9amYMtn8v91oXMqqiUBBkvdz7KJhbR3
+	Tin4X5rXmMoNdQ+agC4Nkyl5JpjcmwaJcs+4YwU5m5O+39rrrSCo3ruZb/lo8sb4quNLtu
+	lGYruiWMqnqS07/u1HClUhp74gtN28E=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-187-Z2KglNonOXSKoQwqPeImcg-1; Fri,
+ 13 Jun 2025 19:28:03 -0400
+X-MC-Unique: Z2KglNonOXSKoQwqPeImcg-1
+X-Mimecast-MFC-AGG-ID: Z2KglNonOXSKoQwqPeImcg_1749857281
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 099EE195608F;
+	Fri, 13 Jun 2025 23:28:01 +0000 (UTC)
+Received: from chopper.redhat.com (unknown [10.22.64.52])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 10741180035C;
+	Fri, 13 Jun 2025 23:27:57 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-kernel@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v5 0/7] rust/hrtimer: Various hrtimer + time additions
+Date: Fri, 13 Jun 2025 19:22:21 -0400
+Message-ID: <20250613232754.451450-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEyy27BecPPHDWHc@slm.duckdns.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-During task_group creation, sched_create_group() calls
-scx_group_set_weight() with CGROUP_WEIGHT_DFL to initialize the sched_ext
-portion. This is premature and ends up calling ops.cgroup_set_weight() with
-an incorrect @cgrp before ops.cgroup_init() is called.
+This is a collection of various bindings that I added to hrtimer when I
+was originally getting it ready to be used in rvkms. I've mostly been
+waiting for Andreas's hrtimer series to go upstream before submitting
+these.
 
-sched_create_group() should just initialize SCX related fields in the new
-task_group. Fix it by factoring out scx_tg_init() from sched_init() and
-making sched_create_group() call that function instead of
-scx_group_set_weight().
+All of these are currently being used within rvkms for vblank emulation.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 819513666966 ("sched_ext: Add cgroup support")
-Cc: stable@vger.kernel.org # v6.12+
----
-Ingo, Peter, while this touches kernel/sched/core.c, the changes are trivial
-and only affect sched_ext. I'm planning to route it through
-sched_ext/for-6.14-fixes. Please holler if you want it routed through tip.
+Based on top of Fujita's patch series "rust: time: Convert hrtimer to
+use Instant and Delta":
 
-Thanks.
+  https://lkml.org/lkml/2025/6/10/1045
 
- kernel/sched/core.c |    9 ++++-----
- kernel/sched/ext.c  |    5 +++++
- kernel/sched/ext.h  |    2 ++
- 3 files changed, 11 insertions(+), 5 deletions(-)
+Previous versions:
+  Version 1: https://lkml.org/lkml/2025/4/2/1474
+  Version 2: https://lkml.org/lkml/2025/4/15/1750
+  Version 3 (only a revision of one patch): https://lkml.org/lkml/2025/4/15/1780
+  Version 4: https://lkml.org/lkml/2025/4/29/1715
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8544,17 +8544,16 @@ void __init sched_init(void)
- 		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
- 		init_cfs_bandwidth(&root_task_group.cfs_bandwidth, NULL);
- #endif /* CONFIG_FAIR_GROUP_SCHED */
--#ifdef CONFIG_EXT_GROUP_SCHED
--		root_task_group.scx_weight = CGROUP_WEIGHT_DFL;
--#endif /* CONFIG_EXT_GROUP_SCHED */
-+
- #ifdef CONFIG_RT_GROUP_SCHED
- 		root_task_group.rt_se = (struct sched_rt_entity **)ptr;
- 		ptr += nr_cpu_ids * sizeof(void **);
- 
- 		root_task_group.rt_rq = (struct rt_rq **)ptr;
- 		ptr += nr_cpu_ids * sizeof(void **);
--
- #endif /* CONFIG_RT_GROUP_SCHED */
-+
-+		scx_tg_init(&root_task_group);
- 	}
- 
- #ifdef CONFIG_SMP
-@@ -8985,7 +8984,7 @@ struct task_group *sched_create_group(st
- 	if (!alloc_rt_sched_group(tg, parent))
- 		goto err;
- 
--	scx_group_set_weight(tg, CGROUP_WEIGHT_DFL);
-+	scx_tg_init(tg);
- 	alloc_uclamp_sched_group(tg, parent);
- 
- 	return tg;
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -4092,6 +4092,11 @@ bool scx_can_stop_tick(struct rq *rq)
- DEFINE_STATIC_PERCPU_RWSEM(scx_cgroup_rwsem);
- static bool scx_cgroup_enabled;
- 
-+void scx_tg_init(struct task_group *tg)
-+{
-+	tg->scx_weight = CGROUP_WEIGHT_DFL;
-+}
-+
- int scx_tg_online(struct task_group *tg)
- {
- 	struct scx_sched *sch = scx_root;
---- a/kernel/sched/ext.h
-+++ b/kernel/sched/ext.h
-@@ -79,6 +79,7 @@ static inline void scx_update_idle(struc
- 
- #ifdef CONFIG_CGROUP_SCHED
- #ifdef CONFIG_EXT_GROUP_SCHED
-+void scx_tg_init(struct task_group *tg);
- int scx_tg_online(struct task_group *tg);
- void scx_tg_offline(struct task_group *tg);
- int scx_cgroup_can_attach(struct cgroup_taskset *tset);
-@@ -88,6 +89,7 @@ void scx_cgroup_cancel_attach(struct cgr
- void scx_group_set_weight(struct task_group *tg, unsigned long cgrp_weight);
- void scx_group_set_idle(struct task_group *tg, bool idle);
- #else	/* CONFIG_EXT_GROUP_SCHED */
-+static inline void scx_tg_init(struct task_group *tg) {}
- static inline int scx_tg_online(struct task_group *tg) { return 0; }
- static inline void scx_tg_offline(struct task_group *tg) {}
- static inline int scx_cgroup_can_attach(struct cgroup_taskset *tset) { return 0; }
+Lyude Paul (7):
+  rust: hrtimer: Document the return value for HrTimerHandle::cancel()
+  rust: hrtimer: Add HrTimerInstant
+  rust: hrtimer: Add HrTimer::raw_forward() and forward()
+  rust: hrtimer: Add HrTimerCallbackContext and ::forward()
+  rust: time: Add Instant::from_nanos()
+  rust: hrtimer: Add HrTimer::raw_cb_time()
+  rust: hrtimer: Add forward_now() to HrTimer and HrTimerCallbackContext
+
+ rust/kernel/time.rs                 |  21 +++
+ rust/kernel/time/hrtimer.rs         | 200 +++++++++++++++++++++++++++-
+ rust/kernel/time/hrtimer/arc.rs     |   9 +-
+ rust/kernel/time/hrtimer/pin.rs     |   9 +-
+ rust/kernel/time/hrtimer/pin_mut.rs |  12 +-
+ rust/kernel/time/hrtimer/tbox.rs    |   9 +-
+ 6 files changed, 252 insertions(+), 8 deletions(-)
+
+
+base-commit: 61ff71163cf6d869f326a32b3d9afb157a78f734
+-- 
+2.49.0
+
