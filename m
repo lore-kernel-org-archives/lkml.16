@@ -1,95 +1,97 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747322DA753;
-	Fri, 13 Jun 2025 09:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE9D256C73;
+	Fri, 13 Jun 2025 09:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806209; cv=none; b=V4bU+qs+PBt5o4FxiEpzSk9oW83ywpDaLqj01e1Rg3/GVjW3K/8YQeL3qCCqfQ6hdieD6/rI+PEk6PiGSghRKavx08OmOxKvhIneTmLpgqhvemkexWe3YxpTTsfeRnN5kpsskxHbpIGLdJwadXMLX8wOE9EJEe2oANJKZteH/KI=
+	t=1749806243; cv=none; b=INwlK6vLXehEm/TtHCwsjee3jmeA2ggJc0p6zomidhtvZA/W68GSxjUolVAN1wIeUVcvmbtQ2dG8e5VWyPiZhTay8YmM5jM4O+Ul/trUocrWlJsaOCHs+I0YN6A22UZnpqEDgvZPqvGhVkeXCIg0ZCwXaxXOqW9L0YJf+kpAtTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806209; c=relaxed/simple;
-	bh=JvXRxWo86OXDBk2ZyHGvr7t32N/IGnu9bOmgh+9I2HE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kv7//7NVfHNxgBiMsTdUPU99DoRA0Zt/aQTO3Ifb94+eD0qmFnW1kPUTW2RuRu8Cs9eIBxsCVAkyeCxcM3GUaN5CP8IAGjSTlrDeXF4iGrRcjlxydxWc2Qooq9jSpzWmbZS8/BR9kds2x9TTlZUQHcVdS6Oq78AGhf//1+ay7Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=lMifu4a6; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1749806243; c=relaxed/simple;
+	bh=F4rJ5BwcN0RB0dXEazhieLwPneVhkmrr00PMJvRARk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnfhDl7WFKQ7MwXcDWYpGPBtykRFSDAbNl/RBW33VC07j9VvkzWEGrl94ERUgDbgihG0GARghO/aZj1Drg4th6GqIWAqY27YPvnfRS4nBmIZ/mkVKrTfsbX937MxikOOdeKtDlLwC4MUj0HE4Xa7tPLJITa2+8iySwyeZYx3CI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EnXMlNk/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lMifu4a6"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55D8IOEk002141;
-	Fri, 13 Jun 2025 02:16:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=G5KoRAnZUPZZQGP0oxC9d6JUk
-	CUEKSK8pPBaJhC/9yA=; b=lMifu4a6QraFdztb7W57zpDyAvrttgxaecBBXc5qh
-	PDeDg7729rjVlG/BmmUiaKsCUT92oTk9YFjl/4PgJRzjLLWdDvv4o4zMcjnwul3q
-	M17NEHEEJ/YQb1ZigcZYR8gib0hO/nV+B1YIcQ0UwXt0RSO7NALZx0g2/hP7Fxrm
-	hHhL4ugSdbQgyF69IeRd7G/QczxVcSDj32d5s5oDFJS357tTQfFVbbfNUok+qP5L
-	tv+XIlQSSTzYKrcFDD8By4rHSZqBXYT6I4MCcJOshEznwHV0KGxA5P6diC3poXh8
-	hreX31TmFp1w+pi097O0tj7ZeAT3j94Jm1Az+REijMz+g==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 478gbt83xy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 02:16:30 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 13 Jun 2025 02:16:29 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 13 Jun 2025 02:16:29 -0700
-Received: from b9e1f7b84bd3 (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id BD9E25B6926;
-	Fri, 13 Jun 2025 02:16:27 -0700 (PDT)
-Date: Fri, 13 Jun 2025 09:16:25 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Jun Miao <jun.miao@intel.com>, <oneukum@suse.com>,
-        <netdev@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-Message-ID: <aEvsaUrhXgFzvtzZ@b9e1f7b84bd3>
-References: <20250610145403.2289375-1-jun.miao@intel.com>
- <20250612185131.2dc7218a@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EnXMlNk/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aASqYL+WWuxJmDxdPdt+F1d81lP+5hpDbC2pdF/86eE=; b=EnXMlNk/zSmE/OIDI6rMYHXNgV
+	VedHrx2OpJBjW0AqK3F9lBqvhpUR4g6YskJB6tA6tO72jrWS9FrF/YzaKMWbyo6VdcHoqE8wk6dJ8
+	+vImWLMvJf5OU78k98Jb3t2VK1QOJDRvCUNvFdccZBAk6UOZPAR6NDWBDiHOziKbuOU8WtGKidrTD
+	CrWyUUjXmPS6+6h15nO1NaWlc7mOotj0HAWCLt4POU5A/Q7TCyLtb73aXCZhoxi4LZ5M0+fNp7MUP
+	qHFATGld5+McsDvcPhkZpBxtDviaB7zo1bz9DomoqkYAe5FTytnZSeIrwpkSX1vCHuneW4u/7lIZN
+	0Asw2Xbw==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uQ0XD-00000002xCO-1RDO;
+	Fri, 13 Jun 2025 09:17:15 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 369073011E4; Fri, 13 Jun 2025 11:17:13 +0200 (CEST)
+Date: Fri, 13 Jun 2025 11:17:13 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Tomasz Figa <tfiga@chromium.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] sched/wait: Add wait_event_state_exclusive()
+Message-ID: <20250613091713.GD2278213@noisy.programming.kicks-ass.net>
+References: <20250610045321.4030262-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612185131.2dc7218a@kernel.org>
-X-Authority-Analysis: v=2.4 cv=X9tSKHTe c=1 sm=1 tr=0 ts=684bec6e cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=07d9gI8wAAAA:8 a=VwQbUJbxAAAA:8 a=5NWDvjWUo4JBtSxIGnEA:9 a=CjuIK1q_8ugA:10
- a=e2CUPOnPG4QKp8I52DXD:22 a=lhd_8Stf4_Oa5sg58ivl:22
-X-Proofpoint-ORIG-GUID: LWkoPQ7xeq6PzxOuIVZ-dsBOhUfy6FQF
-X-Proofpoint-GUID: LWkoPQ7xeq6PzxOuIVZ-dsBOhUfy6FQF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDA2OCBTYWx0ZWRfX9O52cA8d0gLt jwI6NM+BEHy2GNmUzRtWzASRP4pA7qZtBOaX3CdwuP+UT+zfjoZZWppD5MJmXYeufY2UbhHonT8 4gj+OdqvjLMNiiXyILwZelgYC2vjI+FrmlvCxP0nS/F2J5Z0yxDcKpoEG3PdmvGJeOHLvIUraZS
- I1OJRQ/C/dQyRrOe14oQLf7/NgNFhqgPIpOj+dIMIYc8Cdt6RRVH7y5GbKIrVw+YL16ZZJ9cLpf dRNdwirfAWgWG37VBgDHV48PnHWu1AMGqxkUdsn6WPa2j1834VrEQaFu8sj+xOJQpAhEeTsz8/6 sGXET778dtuXsX0136LIjmRQmt2FVsa43S9E1e8uVOPS0T8UNtFRxe7iWUzu55KyNi/Yb2VSt/w
- jykZc2Gj2xfyW+CXf97O7J0vOSsllHjyu928TtK+4jYIj5W+Cn4XGpN8H+xL7s9QraxpAwhQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
+In-Reply-To: <20250610045321.4030262-1-senozhatsky@chromium.org>
 
-On 2025-06-13 at 01:51:31, Jakub Kicinski (kuba@kernel.org) wrote:
-> On Tue, 10 Jun 2025 22:54:03 +0800 Jun Miao wrote:
-> > -			if (rx_alloc_submit(dev, GFP_ATOMIC) == -ENOLINK)
-> > +			if (rx_alloc_submit(dev, GFP_NOIO) == -ENOLINK)
+On Tue, Jun 10, 2025 at 01:52:28PM +0900, Sergey Senozhatsky wrote:
+> Allows exclusive waits with a custom @state.
 > 
-> Sorry, I think Subbaraya mislead you. v1 was fine.
-> If we want to change the flags (which Im not sure is correct) it should
-> be a separate commit. Could you repost v1? There is no need to attribute
-Yeah hence asked to correct me if wrong.
-GFP_ATOMIC has to be there - "this patchset implements BH workqueues
-which are like regular workqueues but executes work items in the BH
-(softirq) context" from:
-https://lwn.net/Articles/960020/
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 
-Thanks,
-Sundeep
-> reviewers with Suggested-by tags. They can send their review tags if
-> they so wish.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+> ---
+> 
+> v2: switched to wait_event_state_exclusive()
+> 
+>  include/linux/wait.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/include/linux/wait.h b/include/linux/wait.h
+> index 327894f022cf..9ebb0d2e422a 100644
+> --- a/include/linux/wait.h
+> +++ b/include/linux/wait.h
+> @@ -968,6 +968,18 @@ extern int do_wait_intr_irq(wait_queue_head_t *, wait_queue_entry_t *);
+>  		      state, 0, timeout,					\
+>  		      __ret = schedule_timeout(__ret))
+>  
+> +#define __wait_event_state_exclusive(wq, condition, state)			\
+> +	___wait_event(wq, condition, state, 1, 0, schedule())
+> +
+> +#define wait_event_state_exclusive(wq, condition, state)			\
+> +({										\
+> +	int __ret = 0;								\
+> +	might_sleep();								\
+> +	if (!(condition))							\
+> +		__ret = __wait_event_state_exclusive(wq, condition, state);	\
+> +	__ret;									\
+> +})
+> +
+>  #define __wait_event_killable_timeout(wq_head, condition, timeout)		\
+>  	___wait_event(wq_head, ___wait_cond_timeout(condition),			\
+>  		      TASK_KILLABLE, 0, timeout,				\
 > -- 
-> pw-bot: cr
+> 2.50.0.rc1.591.g9c95f17f64-goog
+> 
