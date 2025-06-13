@@ -1,91 +1,154 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225A1256C73;
-	Fri, 13 Jun 2025 09:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DA7279DDE
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806817; cv=none; b=sdV7vfde+Qv0RipDZ4WgD0Q+0HYH8XOsd/WbOD2PNZ+Gj6m9/p6JRPhoUFEprCtLu3WZHFDatVoC0bqgymA+VvWxprYvPc5GQN6e5jbkqRkiMrcdo9Uk+71aGr2xmaIqP6SlmtBI4Rsum1FH6F+SMr6YuHpDXD8ExpuJIkXu31o=
+	t=1749806830; cv=none; b=i98DxHtH1Gv58Zc5TGPbekovXtzx6x6lhl3ay+FuQQ4Y7xsXWv6kCPSpvgcW0ncZgjPAV3jwoKRprRMXEjo7LTa58gqYwNDHkLk84dvTxAO6iIQ7oR8tcnMo6tUL7c617Rx7OYkJTsD7F7fu+Uws7D7eDUcvtmZyvAhSssKxsa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806817; c=relaxed/simple;
-	bh=Q5BhcgYpE35Y8AxcdDXKZviSULn7xDLW+iYnDJ09n7Y=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=Cvu2xcf1OwctF/68W21TmGNW5snNkc6q5GKLhZUbPyucXU13pfjqvkd9JrdH+YdYPMhGcAQM4VI54VLb/01UDyKLDaV0Av2A1BfZNM9RxwWEUi8IGmxAhLnU9Oj1l+eP3jtMb3jwbMaGKDaLRGpgcTlLNQ8Zlr2MjuF6s632oS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8I/jcG7; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749806830; c=relaxed/simple;
+	bh=mhgTTIZZsefj8mnYxT3QFETIlhACxk/HMINCBYR2EQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pbkfEefDRaNbb8xLJwC4yx29qqvuMnXl5G1TlE4rq94iJpFRIFQMiAt9uUJeiypN3HrgKms+CH3BNKFGnX/M7Vyp8M+LsYbOPVnS1uweyVijEuGeXT6HGbpzjCujjcg8iTSwuNg81iL2PW1OC1kK32J79cU6mjw7mT0Tb9oy0+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mg/GtxPT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8I/jcG7"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d3f72391so25058495e9.3;
-        Fri, 13 Jun 2025 02:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749806814; x=1750411614; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Itja5tG6Qc2KiSi1iAZTXe7H2ni0UGVq2sw+wpmt+pc=;
-        b=b8I/jcG7pVixJfDnTkSOJZQMIHjZ0y0rIeieVDjWnYBTBsq98bxy3a6NEdTHzW6BNT
-         9onF45FJmkCKtFS2hI+lkQpo+ALf6ooEVhmQ/DY4CNMfdjqORr1HxZKO3rTc9XrCDkbr
-         6BIAungUXFlJQqYq2RXsHfU75xSndEUBbZn3aVBSNEVXpLGI9ULNS1qGih8Sg1kkj28e
-         kNTm9rZeXOUA4Wwy3BAm7sUxQ7hDGX1t+Dde1CSPQZCZ7HXrlVzfFQhEJ1fLi9HRsCNt
-         uXqKjuupN71gCQqjs9+A6mxQsuKPyiscOWbkVTkrxVKDkVdNOzNh62pDVRDINQn+strY
-         Uf4g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mg/GtxPT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749806828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eA9hGBugFKNk6aXi/MtXxZpnAai7SGsOuKl0QrS3BOQ=;
+	b=Mg/GtxPTsl5cND2KFhWSqcEDCa3hQA7EkVtwBe6JRrJ1MIWcfyHWho44MoYTHjp3SbfXVo
+	kbzdmyi3VxavJBbFFqQqRS+NovD4d9D2EHxDC9lAfjz6HtQeA2GoAGqy5+urHJ5POqJAqD
+	f8HpjM6YW4KNYWEjaR+rK1ecedhd8QQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-413-jm9Ng9NePHuGaAgsutKziA-1; Fri, 13 Jun 2025 05:27:05 -0400
+X-MC-Unique: jm9Ng9NePHuGaAgsutKziA-1
+X-Mimecast-MFC-AGG-ID: jm9Ng9NePHuGaAgsutKziA_1749806824
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d5600a54so16869375e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:27:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749806814; x=1750411614;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Itja5tG6Qc2KiSi1iAZTXe7H2ni0UGVq2sw+wpmt+pc=;
-        b=IPR5W9ZA0alpdRQJclgU0HluDiBJtxKqLUo/6RKWY52+3O3w311ydy99fVbZKc3qAj
-         SuwKUXMF+DYAA+YE4x8FKyhxIJ9fLWyHZq/71B+QgacQMrQj+gfr7S4avceHrZ9sHwiJ
-         XyEePYSLWYUkjUE2gVwzBZRU6xPRAt4NrK1MXvVjjEYnIZeJlpaRayu0R+yMdPitgIx4
-         7hssZFK0qQpz/c+rry/CWDqkwY9ZIj5lUSgTTN0mIp64lff1Lo0lcHHYqHnCca7s5rRR
-         g/bipGvpidXAzNfi3DkWMZeJwnntBR1K+6Aq328lYD3I4q8SExIwU52E637jkjHfmnXW
-         L8zA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhYAiQaU0W5sGUbpDZfWOWCcbVLz3/WjyhraScX4Q7T+pftr45m11cwebO9AWJ/yvucww3OCp3@vger.kernel.org, AJvYcCXIMke6S966bMhv/jyPPrnP2lMU4Sg2K3KQmofz+0ZMFL+a9vn54WltiFicbyrRjmm9l68NUZa7vVBhSUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOiFDbP49YcpE5MENnVmKmwJbif78i71XLpJrHcHgwcaK66dlv
-	8wTikIevzqJddWM2+sym8jnrPizdwPtadVhchu+S7Yv4GEAPOU7lSv1C
-X-Gm-Gg: ASbGncsptgGactUSyDibv4fT9rjOQEuAfXIE1NXPMldbf+WKepqPrgbpPCIL59EkqSd
-	M6G2Bhtfsgxj8QyW+H4bqzTcudW+BumON/F1LexXRixgPnZ95zTceqNZgySeC7uD1z5a5Ot7FM8
-	oymloKQt48eEtBVU/kun/v5QWr2Pb90RXmiCLqp/o9lk/wGsn5VGkBLR8ddtSp7kYj/QpfDqikr
-	Xbq13OnfOsU9ZYE9A2ncVGo01vZRA/1MTgLhZHpzEdwkLrlMsug6wZAe/xVHpz1QWXm4mLPRa8p
-	7rIJYk/RPPQ0Phtyw2Mc0Qv8porV/xX16D/vvX3+8YFqxtnuxp+4lju++fbR9c5DsBj3wLCqy34
-	=
-X-Google-Smtp-Source: AGHT+IEBTo7kIZ4DJ8graOHN/KQaV05qSrUjoSPXsongpILB30NWUheQhDMVK1PCPCF5Qi8PHQzzXQ==
-X-Received: by 2002:a05:600c:4f16:b0:44d:a244:4983 with SMTP id 5b1f17b1804b1-45335582b9dmr20908865e9.3.1749806814082;
-        Fri, 13 Jun 2025 02:26:54 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b2c957sm1747795f8f.76.2025.06.13.02.26.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 02:26:53 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
- <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
- <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
- Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
-  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
- <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
- <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
-  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
-  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
-  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v2 0/2] Some extra patches for netlink doc generation
-In-Reply-To: <cover.1749735022.git.mchehab+huawei@kernel.org>
-Date: Fri, 13 Jun 2025 09:24:43 +0100
-Message-ID: <m2ldpwnj5g.fsf@gmail.com>
-References: <cover.1749735022.git.mchehab+huawei@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        d=1e100.net; s=20230601; t=1749806824; x=1750411624;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eA9hGBugFKNk6aXi/MtXxZpnAai7SGsOuKl0QrS3BOQ=;
+        b=Z2rzO+jdRbx3nN2mOcBP9geysrB9rxQEWkkKUd9Apoo7jaJvtJUAHQzufkSWnGNJjv
+         NVVTj1Cny7L4Mrkyi5DEbqoVd30Xg6WH8pVJt7/pnOLZbu0WCsjJznUQtjpag83bmMgH
+         rx5oMitT1sXme11DKeZ3kB2YLwbT8QdMFHWOGNcfXmLf11Ge9xdZpCv9Lmvib3a4oZ9X
+         ZumACDeNVuTNnashmCL+b8OGziY8c7PKUtejnxwMhJUfzx0wVMMkzGDSAxlhVqlOsdv7
+         c7Abvm6VZi940VO0QH4RC6j7h5OfuNxO7tHnoMa/AHDMUtlWqpFdAEGMw35IHxj97ZVy
+         CrvA==
+X-Gm-Message-State: AOJu0Yy4jdp9J/hPXoUXczedTl8ISAllGlOQ48txxTe0zFGaS7c9yj/6
+	/Pe4mV76BJntPxZTDlv3B04AMrF1SH94NqkJOEqPmIqYdiQMQdzqKK+DUpeIhgujQRg7RYtHGMp
+	AzEN9w60tYdLXK8iJoFXjQU3DSMArzVrRDblWoG7xROL6j7IBk/aU5NBcrWWQ6AUCzUrTnxHwR/
+	sGUjU2DBx7UMtoZHPPxvUK2d5InvBb7UJxl+lkbaK029pfFyy4
+X-Gm-Gg: ASbGncsQdO6BXEEKEfcfDRYZp1cHsKfW0O92URj/L05DHOIDYT4Lybjuh/4wZC2wwo6
+	AeG0jIkj4M904m0o99cJoHt95iTO85hNz6LRw8TRugrRRFFymx4Sn38jn/KJzuFkSyDhzq6lGTD
+	vQYcBzgUCeCj9aXfwaMUQ3CLa8UD/bt8T5HgCFE1d+RqAUk4VdtzicOACr6NmbiVv7h5VNEl1aI
+	2mf8FIAqWu9BYuLg+yFCiNI775GdR/9aTYinn2ZwmfMh1f3J/KJqZjzcIsuOlmmS0FDfLAeY4ej
+	WWOPxJdbsC2YwrEROChipJl6SSwc5cAxjwg4Hj8ZwQz6P0ZolZPTh05c9fHTXnYciIMKIZ5iL/B
+	V8oqsjpk=
+X-Received: by 2002:a05:600c:1c19:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-4533499edc7mr24668215e9.0.1749806824406;
+        Fri, 13 Jun 2025 02:27:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGERaE8MR+6/dmyK3cZQ7xtwJhWFU3zCcnVAfTUdbkGjRrz6rE1iR9ahL+Nyc7gnKqK2+FRCw==
+X-Received: by 2002:a05:600c:1c19:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-4533499edc7mr24667655e9.0.1749806823907;
+        Fri, 13 Jun 2025 02:27:03 -0700 (PDT)
+Received: from localhost (p200300d82f1a37002982b5f7a04e4cb4.dip0.t-ipconnect.de. [2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568a73a7bsm1822993f8f.36.2025.06.13.02.27.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 02:27:03 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v3 0/3] mm/huge_memory: vmf_insert_folio_*() and vmf_insert_pfn_pud() fixes
+Date: Fri, 13 Jun 2025 11:26:59 +0200
+Message-ID: <20250613092702.1943533-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+Based on mm/mm-unstable.
 
-> This patch series comes after:
-> 	https://lore.kernel.org/linux-doc/cover.1749723671.git.mchehab+huawei@kernel.org/T/#t
+While working on improving vm_normal_page() and friends, I stumbled
+over this issues: refcounted "normal" folios must not be marked
+using pmd_special() / pud_special(). Otherwise, we're effectively telling
+the system that these folios are no "normal", violating the rules we
+documented for vm_normal_page().
 
-Can you please incorporate this series into a v3 of the other patch set.
+Fortunately, there are not many pmd_special()/pud_special() users yet.
+So far there doesn't seem to be serious damage.
+
+Tested using the ndctl tests ("ndctl:dax" suite).
+
+v2 -> v3:
+* Added tags (thanks for all the review!)
+* Smaller fixups (add empty lines) and patch description improvements
+
+v1 -> v2:
+* "mm/huge_memory: don't ignore queried cachemode in vmf_insert_pfn_pud()"
+ -> Added after stumbling over that
+* Modified the other tests to reuse the existing function by passing a
+  new struct
+* Renamed the patches to talk about "folios" instead of pages and adjusted
+  the patch descriptions
+* Dropped RB/TB from Dan and Oscar due to the changes
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Nico Pache <npache@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+
+David Hildenbrand (3):
+  mm/huge_memory: don't ignore queried cachemode in vmf_insert_pfn_pud()
+  mm/huge_memory: don't mark refcounted folios special in
+    vmf_insert_folio_pmd()
+  mm/huge_memory: don't mark refcounted folios special in
+    vmf_insert_folio_pud()
+
+ include/linux/mm.h |  19 +++++++-
+ mm/huge_memory.c   | 112 ++++++++++++++++++++++++++++-----------------
+ 2 files changed, 87 insertions(+), 44 deletions(-)
+
+-- 
+2.49.0
+
