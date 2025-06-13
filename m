@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9CA1FCCEB;
-	Fri, 13 Jun 2025 15:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41AA18DB29;
+	Fri, 13 Jun 2025 15:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830308; cv=none; b=Tafyq3OuMN1u604hZJeoqtU52fr4HMnD8vfb/bIxp3S+DwTxJFZTWFROuA1iBktev4jjIK1JxDH5DYz0hEWop+jN7jnowJFZZy9xqz99KrUfOrueoEvkERF/jyjpHmcj1D7AyenlaL7yK0Y36+Y+RYQjvROC21mLQ88lLRksauU=
+	t=1749830328; cv=none; b=tycHGQaLTd9A776LpwUOgC2gWyIo/XYHZIr9f9EUY1CSWtKkmoUfonnp2eSArCECKbak9fEtjeM3R2wVBI3xhBTkIq7fmCCZud1HhQuHBa7gWYLR3AjlVNGX4rMoZ/NS05U8QsH1mtd/1241CBStLvao/Sk85FKrvSX3WwkBEFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830308; c=relaxed/simple;
-	bh=cGUKaP6dgfpeo+RKTZCV94jyFa+uREbM3iubZvhap0M=;
+	s=arc-20240116; t=1749830328; c=relaxed/simple;
+	bh=jHspmyvQYxNtlI9sxlSzz47M3IR/Dsvnejhvt4pQ7kY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nndWGyE91EYoCbI9ATMVhf8246wSYZHHELB0Yaw+a9n2IQq5Sk3fo3ZTcyA326Vh0nWHOtrNObLiSBLwriP6xusn81K64A53psiyaWXg+eZc8u1BoIEot+mCCMJIeo1NhJI37tBlfRm+BSdf4objNvxWxtHqsSlOmmz/TqiUbmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pjqt138l; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=MvG3TzwaGfJMouHlNBAgUEmfUY72w0wH8fNUfU8vSO3PNofDsN4EHHqkjLc/MqJ4fNhCw0DkzrMWtsxur0LNAzOOl/hgYmpzXI4BNfDINbgr8oynS9+ZYdAth99ri+STUC3u/2I4GUlu03OR9V4jSgFELDQ+z/ESUR7laccpdUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KgH6HZMH; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pjqt138l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749830307; x=1781366307;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cGUKaP6dgfpeo+RKTZCV94jyFa+uREbM3iubZvhap0M=;
-  b=Pjqt138lW+iEvt7Srov9kVIQRHYRKcxlw10kLXShQrH1LXNYZSgaJy0O
-   zq1G5w0Rhow9Nw6JcuX658RGeDvhGwQ2LLUjwfNzbc+fTBNSialJeWsVX
-   3DlwofaQ0l3MKdE4WNVhkXcBv3hEZlD+wQ0nGpDwg5/NqPaC1TUgthSzd
-   QwbcURku9tQOfZOKW/tF+NGDLAzGADKHvOo5zJrWTBazXV6Vbms8qtUC3
-   Z1V/ynBhOHgPcn5R1dlj9G+8XQpgFgq5laswbniDntMCPo1muSBwM2vh7
-   /bACBQ15E6GmcLXhG3p0h1LLS88Erq/OpLB2ArH+IjlAVvovx+BJVt9+a
-   g==;
-X-CSE-ConnectionGUID: 7ZWwf9qzRzCXfKLnJd/DNw==
-X-CSE-MsgGUID: w7bB8LruQm+s6wQLf2wvog==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63403165"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="63403165"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:58:25 -0700
-X-CSE-ConnectionGUID: ZNpjhcVcQvCbGVVMZUTnnQ==
-X-CSE-MsgGUID: Q3OrfPCuRPKKipwCiTZe7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="147743732"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.232]) ([10.125.111.232])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:58:19 -0700
-Message-ID: <4fed7722-d0f7-4bde-a06b-a003718651ea@intel.com>
-Date: Fri, 13 Jun 2025 08:58:17 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgH6HZMH"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2363e973db1so28656495ad.0;
+        Fri, 13 Jun 2025 08:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749830326; x=1750435126; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QN6pByW5k+1ZTsCPCBrvGzfPYIjlhF9IzLERSPXHg6s=;
+        b=KgH6HZMHJPKd7am8AKvo+fR21YSu5m6+D/mbvvdHBi/JJ3+APBUooSsDKpffEyUn3o
+         C2ag0K781o16uJRukEeI8WxprkmPevaf3CgsUyGCMfvtmnVNNSBlebvUFHU8iPSIxE+0
+         tjEO7MUgt0G4NM2/XMQSQ6hOw8E5ZV70mkS8OYo/oRL7Apzr8nQ6MjX54zGhEfNQyacq
+         8eVMNj19Ltgl4lB9Tbkvb+l0JhkYdmHwvTcUKScgPHUGkKYy670GtP2evR02wIdmHh6D
+         CwZk7I5lVlHJ3nAcxdVej5LzQJUjpUOTS0W7APn6QASjsD6I+96oK7gcHuGCHFmtf2Tu
+         nqqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749830326; x=1750435126;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QN6pByW5k+1ZTsCPCBrvGzfPYIjlhF9IzLERSPXHg6s=;
+        b=T3v1PViZrLguQIdqxWWC+WCcKAsEXNSoCCn135hx7juUewpijdDhOJr+L4/8+0/a2N
+         Q5nzhL4NGrpAv+lo6f3Lt60EZ+QctjaWkHrn7PS5QUf6oSZcx7xXB9bhfFrz3ZZBbSUd
+         X5qfstNrdxQ+0B7HOPJQjXJFUbYN7WoNKlzNIxCrmjOSM3mwiIFOxIsVpzq24EsufP7t
+         pHN+HXgmOmQGLtGMDcxtglH00CCK7PH7AE/TPjDs1E6MdnsIu2NWMB/LTCDuvJlFOnZl
+         QNwYLj8Wz5aF2xUTnotErBY3WkTE1Kw1bmImQ4ejVaaVNzqshPrR/Gdu+90dIA7qvtLq
+         dlKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPXd7nFpXcFwl/fUIjsfDCKhCmIc/A1gZXBl3AyPDkAWZfAGD8pE2+14aDoZHSrGEfPFh70cmm@vger.kernel.org, AJvYcCVjW6EkAtFjTCP8tksYfQXlSVXbvO3r/rI/KgNklydjWmxUqmBr5FpsnTW4Dw+cagH3gAPl0Hxewic7C0H/@vger.kernel.org, AJvYcCVzAFVn/OblS2MvsQr9SVq7sTg6YNupoEAVwxDxGcZJprL9cm5PaT6r74n7ruiNBbtWGE3hP7Hd@vger.kernel.org, AJvYcCXTmQCLG53wApwcRgH3hSqJV9poOO6WtoLEu4Y/RZ2LyoPBRUdz3T3CIgRIkSPLA7bPJMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw768hJdx2p/YPzfuhhtCWSZZZc0UULB8TpSYMySB30JDriZgmg
+	RISRD5CCok1F1Z7Guhx6TkZba71xH6xaa+YmAlUzufJ/vqc98FlhKOsETx0cTw==
+X-Gm-Gg: ASbGnct/LMkD/VuCAMMIqIMKP4SMGDKj5FlJZhnIdv25UKBN7PKrPeOLI7lTkj6TES4
+	Oatu2dnkhwixVJSJnUujwz8/jU7HOF91PrYuS3pv2ulw1wHKmkboUvLqeNOwHkF1qfoBVeDmsXs
+	cZXWeBu3JpSfuzQGIvGZH3hD8N8kczUIwX/ab1bjmOSyiBu8DrLuAz9c52I4hq4X9RrIbLt8A3D
+	FoV/APEFleNUhQ5PYYvRs1yHq7sPINybylFqGT57NGj4Jq/mxHzzyARk+HinyTc8yMqQsG/t31z
+	YpIinJ6zWXuMEDCuxXi9HgjZ8yq0sx+kNsBovcLvptinn2C7b/YILvPbU4W1G9+k/UVdxr/HeBE
+	6Mq6+DW9GV3dr1gQGoYvM/XwGuFm8/LExSu581LPj
+X-Google-Smtp-Source: AGHT+IE49Pb69AIw0IS9/8YqLJ7V6KI3z9sFVxvTeTw1vDhGs4tCHtUAJ+SZdvTjEVwhLWGuNznZpQ==
+X-Received: by 2002:a17:903:320b:b0:231:ad5a:fe9c with SMTP id d9443c01a7336-2366ae41407mr2879835ad.15.1749830326267;
+        Fri, 13 Jun 2025 08:58:46 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:3762:5a1d:19b5:ad26? ([2001:ee0:4f0e:fb30:3762:5a1d:19b5:ad26])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78176sm15999775ad.96.2025.06.13.08.58.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 08:58:45 -0700 (PDT)
+Message-ID: <9dd17a20-b5b8-4385-9a61-d9647da337a9@gmail.com>
+Date: Fri, 13 Jun 2025 22:58:38 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,74 +67,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/28] cxl/test: Use fw_devlink_set_device()
-To: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>,
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>,
- Len Brown <lenb@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-11-herve.codina@bootlin.com>
+Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in
+ zerocopy
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, stable@vger.kernel.org
+References: <20250603150613.83802-1-minhquangbui99@gmail.com>
+ <dd087fdf-5d6c-4015-bed3-29760002f859@redhat.com>
+ <f6d7610b-abfe-415d-adf8-08ce791e4e72@gmail.com>
+ <20250605074810.2b3b2637@kernel.org>
+ <f073b150-b2e9-43db-aa61-87eee4755a2f@gmail.com>
+ <20250609095824.414cffa1@kernel.org>
+ <e2de0cd8-6ee2-4dab-9d41-cfe5e85d796d@gmail.com>
+ <20250610133750.7c43e634@kernel.org>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250613134817.681832-11-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250610133750.7c43e634@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 6/11/25 03:37, Jakub Kicinski wrote:
+> On Tue, 10 Jun 2025 22:18:32 +0700 Bui Quang Minh wrote:
+>>>> Furthermore, we are in the zerocopy so we cannot linearize by
+>>>> allocating a large enough buffer to cover the whole frame then copy the
+>>>> frame data to it. That's not zerocopy anymore. Also, XDP socket zerocopy
+>>>> receive has assumption that the packet it receives must from the umem
+>>>> pool. AFAIK, the generic XDP path is for copy mode only.
+>>> Generic XDP == do_xdp_generic(), here I think you mean the normal XDP
+>>> patch in the virtio driver? If so then no, XDP is very much not
+>>> expected to copy each frame before processing.
+>> Yes, I mean generic XDP = do_xdp_generic(). I mean that we can linearize
+>> the frame if needed (like in netif_skb_check_for_xdp()) in copy mode for
+>> XDP socket but not in zerocopy mode.
+> Okay, I meant the copies in the driver - virtio calls
+> xdp_linearize_page() in a few places, for normal XDP.
+>
+>>> This is only slightly related to you patch but while we talk about
+>>> multi-buf - in the netdev CI the test which sends ping while XDP
+>>> multi-buf program is attached is really flaky :(
+>>> https://netdev.bots.linux.dev/contest.html?executor=vmksft-drv-hw&test=ping-py.ping-test-xdp-native-mb&ld-cases=1
+>> metal-drv-hw means the NETIF is the real NIC, right?
+> The "metal" in the name refers to the AWS instance type that hosts
+> the runner. The test runs in a VM over virtio, more details:
+> https://github.com/linux-netdev/nipa/wiki/Running-driver-tests-on-virtio
 
+I've figured out the problem. When the test fails, in mergeable_xdp_get_buf
 
-On 6/13/25 6:47 AM, Herve Codina wrote:
-> The code set directly fwnode.dev field.
-> 
-> Use the dedicated fw_devlink_set_device() helper to perform this
-> operation.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+         xdp_room = SKB_DATA_ALIGN(XDP_PACKET_HEADROOM +
+                       sizeof(struct skb_shared_info));
+         if (*len + xdp_room > PAGE_SIZE)
+             return NULL;
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  tools/testing/cxl/test/cxl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 1db7732a70df..80e6fb3c9a43 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1047,7 +1047,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
->  	device_initialize(&adev->dev);
->  	fwnode_init(&adev->fwnode, NULL);
->  	device_set_node(dev, &adev->fwnode);
-> -	adev->fwnode.dev = dev;
-> +	fw_devlink_set_device(&adev->fwnode, dev);
->  }
->  
->  #ifndef SZ_64G
+*len + xdp_room > PAGE_SIZE and NULL is returned, so the packet is 
+dropped. This case happens when add_recvbuf_mergeable is called when XDP 
+program is not loaded, so it does not reserve space for 
+XDP_PACKET_HEADROOM and struct skb_shared_info. But when the vhost uses 
+that buffer and send back to virtio-net, XDP program is loaded. The code 
+has the assumption that XDP frag cannot exceed PAGE_SIZE which I think 
+is not correct anymore. Due to that assumption, when the frame data + 
+XDP_PACKET_HEADROOM + sizeof(struct skb_shared_info) > PAGE_SIZE, the 
+code does not build xdp_buff but drops the frame. xdp_linearize_page has 
+the same assumption. As I don't think the assumption is correct anymore, 
+the fix might be allocating a big enough buffer to build xdp_buff.
 
+Thanks,
+Quang Minh.
