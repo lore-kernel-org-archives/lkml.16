@@ -1,60 +1,63 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2EA2E62C0
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771C22E6D12
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823529; cv=none; b=jeMIOw13fil9AK665AeFRzum3GDDLT+08oVFwVhhh92AgGMNH/gy+1j8i1Z3PqpSkh834jDmUS0uD+2+KOehoQ4lQGWazafQYf0j68AIzuJzx0xj7qanY1J729xuKnvg/tsjtDK7Iw260jDa4b8E2SOXRqenyPFckkEO9Ao1LEc=
+	t=1749823532; cv=none; b=EuQcLa5wFXHKv4zNU3gD4HYt0TN64Iqn7zBL9QCafntFDm5l7j1QZVjgLuO7qfcmmXN+6O5Sh/QN17w+7tTp334ReqTIhC2nvgGnp9fm7DRnvkShyX1/k/0YMprOw1tfZq3cK/fpukjaJWxpOi/kIiM0/BMuLih4abOEdt8A8yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823529; c=relaxed/simple;
-	bh=nQQY8r4AqBWCZLAYoiGl5tuEybGgauAH/FoUqrA0yKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKUn0n6yID22oDFM9PzeKxq9FhVhznZ4fe6VkeOqcEgxTmBeXLzJbOyA0EkoM2ptdo0NvXy93syzlTPYQ+LW69taf32QGljlW+mNRRU0AkmYbs95Jrh2dsx0kqzOKAWfZE9vnc5Xs6YF0hkmJLCmYTjwUJ+bzFMj7jTPIpwJnpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AQlnWcOf; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1749823532; c=relaxed/simple;
+	bh=N3iswA1+2DOgy7vZ7wIfGsqALlE/MMqX5CZyUip3DqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VgeKI4FKr0ZLrZfLePqETYpcedeOkcI1jpQmr91KgGGcyTjBKQm2JvD1rUVLVQfZRWyprpPTGji5fbz/7YFczsiqwkTD7DwYWK/nYKx49Df/mz281NsvwyM+BQnbIq0XujoyqMqql/gFEClvzZwKVL6XIkFhc4XVi9AX51wa0/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=imdPfDew; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AQlnWcOf"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d54214adso17962685e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:05:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="imdPfDew"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a365a6804eso1408754f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749823526; x=1750428326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F27/yU98gV+ui+PcKWJ6G0AAiy45xq+x+LuecMEAq64=;
-        b=AQlnWcOfFIKfkd6P77cnK5JV36IAmujxWELKs+wd10/EbZz7/2xu8wA11a6gjBwsMZ
-         6rk/e8P0v3g8wWUjHSzDedOG73Chd1nCnZtA5BzxjHb+hvf6rCRYiLz+Jlborml5srnZ
-         RzJVoDRzj9te1v9DFRWR6iw7P6FOmWLMN/03L9VT0vsgoxMbqjX7YlSraNRaOJpocZZ9
-         5FagExZQ/n5irPq+I3ibtvgzonL5InJDxw5fgr2RWcRQ8RyP72UuX1RjsBJ2kqEr/5DV
-         CMzG8mAayfPmzSBYKkfvCNaEBE5zTSbTSke1RClw66oVG4jot00THGG9/w4827RIh77S
-         8Jkw==
+        d=linaro.org; s=google; t=1749823529; x=1750428329; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DgbpV62LiWrQKsbfwnMZoUM9+oxW7YVl7WWXsQs3wV4=;
+        b=imdPfDewX+YYI8XmW2g6UkWogRzy9XvGfaAwX7ZRJnCbyGT7LJy/fTrxTrteKICMOy
+         WThfg0c1xtGbpp8JAVfRjk3FGkzqnjN8UDCWa1Rk8keGfnzfHYndjAeAuuL6X54ZDwMv
+         y7GnNFsEw3svuyaGvuwT/U+7A70iNZ8yhL5UlJWJSe/XQ9lkU0DviTF5ZwAFOagYPAZd
+         YnIqzWNw8SeycmoDVz8VcDYPaqhSWqtAHuEBHUg9aJVoSEjHVu5A3/tNDfChcY1tlZqQ
+         WPkw6JNgeKMxwaT19MvzMwf68Tc/Wlgm2Sop2aW0s+SCM2eKoHp62/m4Byx1tcPodp6S
+         rXxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749823526; x=1750428326;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F27/yU98gV+ui+PcKWJ6G0AAiy45xq+x+LuecMEAq64=;
-        b=Xh9p5DNAi2X76RfXSyevVVj6cEVf9WqOkX6q/LzLWItxccKnoru5q8/qPLPqK4lggF
-         spr83wZ30dov5szXmSWvYDOH2n9G2CCyhC7xBHYCXTBAPts+54RkSJqwKT8LfezV47Tm
-         pPgawn3OXpbRsyj+bfcLsFpUnph7ulp3g1a+zrkWM6g76Rgxm0nZPC3f3cR6kOey4P6m
-         7TMLH5hwtFy+mL0InMLS13rt1QtF0DCQwhCyhsbShlILcFIvuRqRkQqrxeRUc4EUfIjL
-         KZuQxCO1w9t5loDKW3M+pzMSDAZIcHVIpjmo5i+jyMEGkxPuOxbmaGPuMdINHo2myEUh
-         IFkA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7mszUhgWSRBEhv+bLcTPbFPCo+2jGIt2xCWDp467yiJdmg6FKzVnVXtido7OOzGoRbWgxctcyMlAxuEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYUIOnfs5dyZqpkdhZdEo6Q1TXpgCkwJ680rGYOJ7zysFszqoC
-	9X2L9JQIkkSXsiCQuVRxK4CUxc+ihY55kWaZS/kLXZl5YSn4QlyLAMatdxboLmd61n0=
-X-Gm-Gg: ASbGnctDIr/qEIjFt80rafwrS2LeQ/kCZvRLfGUY8pZ72HGWJ6RtdX1p/IAPkiMLrsy
-	CkPPAJ2hz0QW3Vez3RPnZHu8xZOAPKVpBM5GFZop+KTxMW7H8dH6V6F8aESk42uyf9+N4+elqDH
-	H3FFLutW6HoXxKiii45TbFATGBX/56MwQVDz8+ljYPhGHxwMylgOwuttTMGSp3Ok0teEkTcixTA
-	uyE62QUxCbAdN5WZ9WzeTElwoRUqNWDwAkxDtIycVNaVDaSQxZf9WrJF/DsSj7+13XL6kaOGzw9
-	cKqEjrDci4ok1+BQZFNNq8NWfybU07XWtM/9cELKt4nZBY+jAGUNwzTi7X8pfKHFJB2GRw==
-X-Google-Smtp-Source: AGHT+IEm/Zt0roffoNu2GWdSjf9k9SHfjVb02ezcqjOwtckvOlHxDTIDePUNdzHNap8GHVaQph+RNA==
-X-Received: by 2002:a05:600c:154c:b0:451:edc8:7806 with SMTP id 5b1f17b1804b1-45334b7f861mr31277795e9.32.1749823525856;
-        Fri, 13 Jun 2025 07:05:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749823529; x=1750428329;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DgbpV62LiWrQKsbfwnMZoUM9+oxW7YVl7WWXsQs3wV4=;
+        b=d7K99eVAZOJMPZ7mQAbFuTDqBxCLZM/4G0+c01ysp48DrUmNSLa+NZ6+6QdWhgcnki
+         +rMO3ZYWO5n9BAqmO60Tw4+8jtKvvYBN5QVkICjt4oyrhCvbX8bzEqOINa//m6QEYrt8
+         wr6AEjCUynlaVuZQ55bamISq8dpche2xXV968Qeei5JssNljvgppnWZGiBbRNSi2VOR2
+         gRzbzevHkgjG5Zg5NSOOx0cIvo/o4OCYbG+IymSscyN/jQHIMQJDV9RBkPhzmJUX6uKU
+         1bhSWT2GaXOkXIQHPEnr5ZeK3cUoj2TOI3giXAUHWS/lx/H1N6F+d7MXtl/aQrgVA84i
+         4o4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUhHGbs+/W/ogHx1prPyDJB6IdeCx8v2xeBeoTZb64yFyWG1AFssCtbUHXMj++4JuZviN/UtbY/qL34oCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws7Rt42ZzauE3c2EdG3QW+2IvydsYf9QEH6kZ4KMapOZ7ByWjz
+	EKDvq3LoCRrtYAkxG6MK7pqYkjKYrDUpJZwUqu/lb8SzhKvAIYcqKTwDbc+DnMAHv5o=
+X-Gm-Gg: ASbGncve20fEv/eEorX7PhjAKJREsgua98X0DXDNg+g3Q6WHvqju8qSUIA0UyarxWwo
+	rY/ieubuiyfz2UT38mWJB8GcPYgIgzyv1H2XSKOA9LeqF10kp4aoIbB1KuoINaBgeDITxZ1OMY7
+	83v2aOjWl5FLV9/LeLTCQI9JU524LaqQx7ese/g1keaOLmXvzfP7Zdo3ZfTe6eEW0/tLa8vVBrd
+	Lu9B6+9jrjaXZ76RUCKnZKEJpeNGmw+6UJSfHgwZcH+OnaxbEP9dX6/WKqiLbzCB4lWVhxZDUaw
+	GiISAHMjEsQtig0FR/3I938AZV8YpgsEUGfOTJ20p2MatlMkR9QgpenClr47etX57CzIzogg1LT
+	3CJSr
+X-Google-Smtp-Source: AGHT+IH+uHLM8Q1BZumEUNO1NXYHlJbHUt903NUJo6OhYuVLmqYHugYn5cTTmIt9ZkzYIXnCM72nWg==
+X-Received: by 2002:a5d:5f8f:0:b0:3a4:d6ed:8df8 with SMTP id ffacd0b85a97d-3a568716312mr3152834f8f.39.1749823526913;
+        Fri, 13 Jun 2025 07:05:26 -0700 (PDT)
 Received: from vingu-cube.. ([2a01:e0a:f:6020:f98:f3a4:ec28:1d4e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b27795sm2472276f8f.71.2025.06.13.07.05.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b27795sm2472276f8f.71.2025.06.13.07.05.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 07:05:25 -0700 (PDT)
+        Fri, 13 Jun 2025 07:05:26 -0700 (PDT)
 From: Vincent Guittot <vincent.guittot@linaro.org>
 To: mingo@redhat.com,
 	peterz@infradead.org,
@@ -66,10 +69,12 @@ To: mingo@redhat.com,
 	vschneid@redhat.com,
 	linux-kernel@vger.kernel.org
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 0/4] sched/fair: Manage lag and run to parity with different slices
-Date: Fri, 13 Jun 2025 16:05:10 +0200
-Message-ID: <20250613140514.2781138-1-vincent.guittot@linaro.org>
+Subject: [PATCH 1/4] sched/fair: Use protect_slice() instead of direct comparison
+Date: Fri, 13 Jun 2025 16:05:11 +0200
+Message-ID: <20250613140514.2781138-2-vincent.guittot@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250613140514.2781138-1-vincent.guittot@linaro.org>
+References: <20250613140514.2781138-1-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,37 +83,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This follows the attempt to better track maximum lag of task in presence
-of different slices duration:
-[1]  https://lore.kernel.org/all/20250418151225.3006867-1-vincent.guittot@linaro.org/
+Replace the test by the relevant protect_slice() function.
 
-Patch 1 is a simple cleanup to ease following changes.
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch 2 uses Peter's proposal made in [1] to track the max slice of
-enqueued tasks and use it to clamp the lag of dequeued task.
-
-Patch 3 modify the protection of the slice of the current task to take
-into account case when tasks with shorter slice wait to run on the cpu
-
-Patch 4 extend to slice protection mecanism to the NO_RUN_TO_PARITY case
-to ensure that a resched will be set regularly. Currently, the resched 
-will be set only when curr will elapse its slice which is partly similar
-to RUN_TO_PARITY. Now the running task has a minimum time quantum (0.7ms)
-before eevdf looks for another task to run with the exception of
-PREEMPT_SHORT case which remains valid.
-
-Peter Zijlstra (1):
-  sched/fair: Increase max lag clamping
-
-Vincent Guittot (3):
-  sched/fair: Use protect_slice() instead of direct comparison
-  sched/fair: Limit run to parity to the min slice of enqueued entities
-  sched/fair: Improve NO_RUN_TO_PARITY
-
- include/linux/sched.h |  1 +
- kernel/sched/fair.c   | 76 ++++++++++++++++++++++++++++++++++---------
- 2 files changed, 61 insertions(+), 16 deletions(-)
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 83157de5b808..44a09de38ddf 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1178,7 +1178,7 @@ static inline bool did_preempt_short(struct cfs_rq *cfs_rq, struct sched_entity
+ 	if (!sched_feat(PREEMPT_SHORT))
+ 		return false;
+ 
+-	if (curr->vlag == curr->deadline)
++	if (protect_slice(curr))
+ 		return false;
+ 
+ 	return !entity_eligible(cfs_rq, curr);
 -- 
 2.43.0
 
