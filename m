@@ -1,122 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D167B3594F;
-	Fri, 13 Jun 2025 15:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C351F463A;
+	Fri, 13 Jun 2025 15:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830201; cv=none; b=G0hprV+0SxBX3SwZe/+Emahywq5ll5KgqezUT1OJqKYoTrcYZUuePXUlBWiibLLttRynUnBYaR7OPwap8q3unZs53zHO99MPyGxZ76MZl7v4Ec6SBdiASiOg7QKwFMnH59wctAgBMF+p165C8hgIAqPuj9Wy5YNCOKgS8jO6grA=
+	t=1749830204; cv=none; b=s7dNHHfALcB3fjZFo21Z+snAfxnH67wzp76pggtSIeW6b1VdA+//9+h3lqbawCtHsY7Tt+IEEY4fRbty/qUeSRb6ceBtdDq5o1P5DcwpsU162OLAlITNbnKwVmrKUgGSANwx4UTsxlpbPJJrMeDqpP6Qds6xRoSyIxtN6Kb7aFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830201; c=relaxed/simple;
-	bh=T32rF5Ppsy5mjl762Ap1LKWpRnK50PIiK7HeE2yoxkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RWSdf6PgvKtbZJvp2qKB/toXVzygFZpO5z4QQezrvcODNuZDtWf8SI5ohzBh5GWfntu49+fm9hzjgCKaEcZjm7H0FPlRo5r/OmzVbJwBnG/4WQVg8HDhDg70zkFyi7Fzp9JGs8z4pzkfUi+rAbTm20rb3G2dpyTdT2lhdkrZvKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LebIydd3; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749830204; c=relaxed/simple;
+	bh=OwWwJMJMz1gVCx/M2Des8/aF3uScnadX1L2LxSc73zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lia9isCdDn+IcmhDXLd2Q8vDRPSTI5AXPs4EZgDLbgPuPCZmBc+U41vrVvEqoPkdRbW/hKVcuiyBIkBcgVot/CkH7BeuPse1QyWWeXYqNBHAS8GPZnGI8H+1tvE0RTMl0aAT8DNWQaWgEigtIu+g9DagAb8GSOV9hLwnNOYdVvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WtJvzLIU; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LebIydd3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749830199; x=1781366199;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=T32rF5Ppsy5mjl762Ap1LKWpRnK50PIiK7HeE2yoxkk=;
-  b=LebIydd3yb4lCSnWtHpuWawqXGb0KuB5W7SB8uhXhtpTosdpxLneYNEN
-   nnIWqdQXNesKjPWhiJfshNmGakSUvz0ON/TcHzE8rL1rsHqBJkzkxN04z
-   IFX4unHSd/oZAAu2TGbuyJQJCSkQzBcPADYpH2M5iTi0v7U2Y93MBRSvk
-   xmA3kOL5M+WFXq5MEM1X61Hr0+fF06z4Cn2wYTK/0uJz8H+CuCC43lbn9
-   4Tri7dPBpNoJZvndxxNrJWOZA1I76cHN2suu2I+hW0zVzZ4oLv3G44K4l
-   27ALOyNohZJCqgzkd8aIAip5Jnq8+gotPa0VIrIaHurpvAggOC0FT986Z
-   A==;
-X-CSE-ConnectionGUID: 3oo6Laf3T8KQbcJRe410hw==
-X-CSE-MsgGUID: fGCwrwDpSAG+pB9w+rbvtw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="39660878"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="39660878"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:56:38 -0700
-X-CSE-ConnectionGUID: 6y7GbN6TTkO5xEqqlI6GqQ==
-X-CSE-MsgGUID: pwLhQMyvQ+il9thN61lIOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="178842443"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.232]) ([10.125.111.232])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:56:36 -0700
-Message-ID: <ada06e3d-598f-4d6d-a468-f007be3f29ca@intel.com>
-Date: Fri, 13 Jun 2025 08:56:33 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WtJvzLIU"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so17596385e9.0;
+        Fri, 13 Jun 2025 08:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749830201; x=1750435001; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qPo6H/9j3Ay9teefhcqMxpNsx0jvAC7MjlPzeeLu5rE=;
+        b=WtJvzLIU5z2gsfsyfs2NvE2Vu7stYrE5zg/WHTCxjLyuQODy45mMFrGEmc7kWcWLTy
+         4R9qZwdcJRuvjWLR/fVHIbY5KrMRoiqiMBIbub671TSbcQBrFEsBM3pFNVy1LhsSFhFF
+         1iJIgn/+b4Nxzl+F7tns8XM85R1tZSosw8Cntr1hUSk9rk2bhDX6d7y9r+plULrNpqO6
+         WYIw/g/mSb9hCylllFa1ts6WPeyrUfRtoLWKtSRH3foSDLQAhGMa6hE52LMejbtbcBHo
+         PJpgXUbJA0Lc7339r+XDHop8zPLqKsRVuPa+6aAO63MLhbYekKM+3PfNfosQG8IZqZic
+         J15A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749830201; x=1750435001;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qPo6H/9j3Ay9teefhcqMxpNsx0jvAC7MjlPzeeLu5rE=;
+        b=jxybNoFOl3guTZDbva2/WThvZ54R6rfFHM2DwSyD2S4bQWrvGYOvXCVziyBZi5ZvnM
+         6c6zwmDsfu8dUIr6tUoQnYEwp8Pya/XKaLReTYgz+LnQhWXzhMo1+ocOUPub+M3laYID
+         iSQZ96xIq88DNdwIFDlPa8lc8DgvWZLcIzxIgLzP7kjBTpWWJW2scS/9tbc87KAY8ZtE
+         t2m4IZzIW5Nfl3zIYn8wIf8xMGtnwtZkx6Y0u7HYCozfUWrh3RzHK2llgrYaEtmNDEXQ
+         +JEe3+w4p23tajN03r3KGBedXtjIYBrCowpFk7rNtr77a94SMBMq6JPc1RhGsHAoSqWI
+         u/Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSEP5+zTleaWixrzwhYIf67HvXNynMOP1RT/1CkRKn+0jvbOPAM0tz0ZHqgX9zvOS2gC0mymwhKx9U@vger.kernel.org, AJvYcCWgGN6WcqZ6ETswc4EwGJpKE1Rb2M08EJAu2MQwaaciCXE2KbB453ZbfAeaux6CAYV+YwhXLyV/FBmTN8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxY9j/2CJotS7zs3tPLmEQJ0tSIwOlVrm5LqPxSdcXAbxgRP/Y
+	xPIN5sIxH72QFEHwRiCaK97L4llA+q2ZEWiosXIp1+ep2s/c0r/0U5d3IlVRiQ==
+X-Gm-Gg: ASbGnctbGWTI9LCzcVYddYEmZCxRUaVx9e1WXk+Dmv+nWOJbGXeH7eaQAYOU3No+iV7
+	5+ab4dv9oATYRny7wtmQdtvdWApyOJWzNjtcHakYfosD3QtwzOTqIac44Gno6/yZTo2qCMkW4Dm
+	VndF+WOw/OsUBjqTK61Lw/Pqki4IybvaQYULPD1dOgFOVE1XISO1jtL3mzddUuTg6BaPNumJyIU
+	imP3lWXsJ2WJ7ieeUUL/U2SoP26qXsnk+MP4V179mvHmiYbs+UFaCh39Fhr+5gvKownTGr9N813
+	6jLKLweAX26/ixmWTOShYv75Rza/BsnscwEybubodkjqpFEbbOqd4i8VolHsbe9aNDg/+F8PyLh
+	/j++dBxWYsfSuBqOabKkOM8P/
+X-Google-Smtp-Source: AGHT+IEek+xBG8qH6etYMJhHA/6eRULw+qWjFJ15S/9q/UV/dFart736CLdrph6JJHU+y3p0PfPeMA==
+X-Received: by 2002:a05:6000:4284:b0:3a4:da87:3a73 with SMTP id ffacd0b85a97d-3a572e8cd82mr226657f8f.42.1749830200407;
+        Fri, 13 Jun 2025 08:56:40 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm2782895f8f.16.2025.06.13.08.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:56:40 -0700 (PDT)
+Date: Fri, 13 Jun 2025 16:56:38 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Frank Li <Frank.li@nxp.com>, Vladimir Oltean <olteanv@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+Message-ID: <20250613165638.5d8ed000@pumpkin>
+In-Reply-To: <d364667f-e0b1-4f1b-9034-2fadfd5d457b@linaro.org>
+References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+	<20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
+	<aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
+	<d364667f-e0b1-4f1b-9034-2fadfd5d457b@linaro.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] cxl/edac: Fix potential memory leak issues
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250613011648.102840-1-ming.li@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250613011648.102840-1-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 10 Jun 2025 16:46:36 +0100
+James Clark <james.clark@linaro.org> wrote:
 
-
-On 6/12/25 6:16 PM, Li Ming wrote:
-> In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
-> duplicate a cxl gen_media/dram event to store the event in a xarray by
-> xa_store(). The cxl gen_media/dram event allocated by kmemdup() should
-> be freed in the case that the xa_store() fails.
+> On 10/06/2025 4:15 pm, Frank Li wrote:
+> > On Mon, Jun 09, 2025 at 04:32:39PM +0100, James Clark wrote:  
+> >> Using coherent memory here isn't functionally necessary.
+> >> Because the
+> >> change to use non-coherent memory isn't overly complex and only a few
+> >> synchronization points are required, we might as well do it while fixing
+> >> up some other DMA issues.  
+> > 
+> > Any beanfit by use on-coherent memory here?
+> > 
+> > Frank
+> >   
 > 
-> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> Tested-by: Shiju Jose <shiju.jose@huawei.com>
-> Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
-> v2:
-> * Use kfree() instead of __free(kfree). (Jonathan)
-> 
-> base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/next
+> Presumably less cache maintenance traffic?
 
-Applied to cxl/fixes
+I bet it only helps when cache-coherent memory has to be uncached.
+Otherwise the software cache operations are pretty much guaranteed
+to be more expensive than the hardware ones.
 
-In the future, probably best to base against Linus's latest rc rather than cxl/next. Thanks.
-
-> ---
->  drivers/cxl/core/edac.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-> index 2cbc664e5d62..628786def464 100644
-> --- a/drivers/cxl/core/edac.c
-> +++ b/drivers/cxl/core/edac.c
-> @@ -1099,8 +1099,10 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
->  	old_rec = xa_store(&array_rec->rec_gen_media,
->  			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
->  			   GFP_KERNEL);
-> -	if (xa_is_err(old_rec))
-> +	if (xa_is_err(old_rec)) {
-> +		kfree(rec);
->  		return xa_err(old_rec);
-> +	}
->  
->  	kfree(old_rec);
->  
-> @@ -1127,8 +1129,10 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
->  	old_rec = xa_store(&array_rec->rec_dram,
->  			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
->  			   GFP_KERNEL);
-> -	if (xa_is_err(old_rec))
-> +	if (xa_is_err(old_rec)) {
-> +		kfree(rec);
->  		return xa_err(old_rec);
-> +	}
->  
->  	kfree(old_rec);
->  
-
+	David
