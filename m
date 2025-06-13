@@ -1,223 +1,337 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9252A26A0E3;
-	Fri, 13 Jun 2025 21:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817E6270EBC;
+	Fri, 13 Jun 2025 21:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848614; cv=none; b=t5sMv/wS/jEFZklLyjbeyRMOn6oH9NXps6J2b1aUa5CneU5v8ull0Rkcx+8CdbKBeHJ8rVpXju6lDGm8rY9TFSi34jdnA+NjToBmR1gvhA5JqCzKYC95/+0AnlBYSPm7v3j1gLtINeY/0ICeBquaSmsz9oxEi5NFWVnWPCJtYds=
+	t=1749848709; cv=none; b=q+pCr2+uZF/HMzS5Q8+vnvMa2g5AOcTQ8/16TYoRu3cmMU8NeNTM6ifr12rMziO+sOkbjskLMfb+c9v0czDFeZDtNwVVxNUqP61TOrrIrYyJ+hn8dliDl8hwsgVOtwTNbMATL7OvgR4fqmRryTqXBQnnlmWJ7l016Gs0+vLpaLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848614; c=relaxed/simple;
-	bh=IyzwKXOWUU8N4gJ4oYPEoooee64bDvtK5035+V25JGM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiI8X9Xy9M7HQhmlLcy2C6l/jvqZb4DO3OL6L04HGZLxHkqWEwoezcoCi1kP8vMkCyfB0oNyvUOv3wWx60C34ViQPl0awD7qfhDiDXSe7kNMAwgxPXPPcK/rrXrRz4f8WYOeNK5kQgTs3lVa2huDL/91L/SgXX1a3dlHxi1hyG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DpY20LQc; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749848709; c=relaxed/simple;
+	bh=riqdrxkchD8LFwzBCMlF3Imf3FCZoNoP21Xd7szeknw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IUgrD+siXLNvGF3AFzvcutLNRr5Xx6pDxyB1YrD/zo4SQte9Ac2+pIFnP06yqRaYLEp9PROWa1Ks1PO2/pi7O4j5xhTiFLKZFIKZiZi8S3gbH+oAZuzRbFLifUw9mAthUfX/GmSuXpAWx4iuC/S1YFKQj9XBdhgzQtY4ODvhhM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltGmLkZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpY20LQc"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ade750971f2so316611966b.2;
-        Fri, 13 Jun 2025 14:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749848611; x=1750453411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4R5mc6uUx7bSRT5odrTZCsHFmbha7bqUvNpknNdXdSs=;
-        b=DpY20LQcQ79NCetQbCfPu5A03ktc4GOwtcmY3ZX1v0e9pFoIlIxKi0rifhX5qzYt9E
-         /+9kdjv1Ecm48qQWXA7AGO4Jo1li1MhJmNyj6blBs6KY0ouZQ7iLGrMPHOhn0DboxIUo
-         0ieY/mJBOAUIzaVxueTvQAAQxneJb8Kj+6PXSOI+zrbKdXf9Mo6vUP/Kt1+OykJFUH2o
-         k8Fc5OXA0P/NMd4+LacjyMdFDIJjsLiNIX/sLKemWDgxHg+NcPY0JhEvmjcvzydFe3o/
-         1QeFPnP0xJs5VjennlbllMrf10fm2jbOjujU32YcEF5q0eYoOfBwqtnO8L0YqBAjLzMd
-         HMQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749848611; x=1750453411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4R5mc6uUx7bSRT5odrTZCsHFmbha7bqUvNpknNdXdSs=;
-        b=N+GFvu9u+O89t3qutgsdqnvoX/hv1BA/M77zxgIQXoaA/pChizqwgsbzKlhk4TEhot
-         vYGPlqp095LGB3Uwf00QuS/kKOHgz8wTf5bsAT4WYx3uuvJvlcgNXINs2NNTAxEKs9cc
-         qApMLcVqhb2G2bccHYE/4d67CHBxq/3aSJCYg3RI3E6RZNQkFpWo1uxQLX27AQC0e6iz
-         6QvHdGmACm/TO4i73nmyymaoKMg67Wf+V/SB/tVMOLgH6BAWRzYjSZpM0nM6sOwfZEAL
-         dGZLdrJd3V0M4AAZPaICxneG3hHBI9XVKszSGFUANuq0R9R/PQXtNHMoP2N1LoUXEoJm
-         7chA==
-X-Forwarded-Encrypted: i=1; AJvYcCWg7ZMD1wuxOIkFVEMfwFyd1Yp8MvAo4ehbcvJJLqBs+VeJ+TlUk8GlfJ1aYR4oU18epUcN+1HyeIKeaHoZ@vger.kernel.org, AJvYcCXbPJ9Jd4V3C4cPvgQUnhVDnNB7hpsy+KzWsF6xlAi+GuGzHGygYaP1Ph10Ad1N//N4Q0SPX0gl6Mk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPuLUkRwKjE93qJgidz8pudYros+2O120ByPlk9Li20pAz46sL
-	LJnPFJGNOrr1HxlnK7QKaIsZLGGJi1rVmBjPR9TiLaxWFzmCvp8MXMluTZd2mSWW9ikJ0uZnPZX
-	CuXH6maGPEdwyQoUGQnjeHv8mfXP1eX0=
-X-Gm-Gg: ASbGnctXS1InEi6nutolniNUiYx/rBs2zLtAomOtKBj+aoWFON2mWrwxngWZ5LCk1um
-	mRx7kgYTpg6czAj1sUJzPCKpBISmgOiytTPDFzDwodbi/ybTims93gCyCjr0UOV+Iv6sndITP62
-	vZT4Z5+ruCw1LeDQSCMpMrTICHSRretDocqmx0Sp7FIqU=
-X-Google-Smtp-Source: AGHT+IGAJCWhpIZ5cBm4LAFsrDxyQjCv6z7IHjNQdgw7ZYReNFJnO6KlSLetdJXWDmAzvC8PGJ1qHs/aNr0Q9jJbSVQ=
-X-Received: by 2002:a17:907:3d16:b0:adb:229f:6b71 with SMTP id
- a640c23a62f3a-adfad29dd95mr60119666b.5.1749848610511; Fri, 13 Jun 2025
- 14:03:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltGmLkZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383E1C4CEEF;
+	Fri, 13 Jun 2025 21:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749848709;
+	bh=riqdrxkchD8LFwzBCMlF3Imf3FCZoNoP21Xd7szeknw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ltGmLkZ0Y0nIy9SeSra84asXfRhsLs7IwyEyvPtTomikiRhLnJp4yE/NIY2PsuiY9
+	 8qXhVI0i/1Uv/7khX196sXH91ZbBW2/AiKW+rOAaiTo9KSK9XZYp2DMm2C0cRD+OFx
+	 t9q16sAiBnKJcUF2Q3jZS6rIodbYcH2w71u4Lfa+Dv1zxUgREJYeCZ9Lc+VRVxdl9g
+	 QyqaUFGq4YtC2LSZelNiK/rm+SEIZvJO8sYtrDjkNrg4Hn+CSXygSXqp+GhG2g3e0z
+	 sJd6+4rRtq8ef5bvLd0BJxL2e2X05NEYvnuUzT7a38hPVpO7uHuGpo50tcXz0OAi7l
+	 wqun6Y2YnhwwA==
+Message-ID: <238e4d9decc44ed82dcba940725cbf4c6802812e.camel@kernel.org>
+Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Benjamin Coddington
+	 <bcodding@redhat.com>
+Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steven Rostedt
+ <rostedt@goodmis.org>,  Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Trond Myklebust	
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, "David S. Miller"	
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski	
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
+ <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Date: Fri, 13 Jun 2025 17:05:06 -0400
+In-Reply-To: <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
+References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
+	 <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
+	 <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
+	 <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
+	 <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
+	 <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
+	 <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
+	 <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
- <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
- <aEvhZiXHLLIRe41-@smile.fi.intel.com> <FR3P281MB17578B82AC67F49552E24EB3CE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
- <aEwfUMgLTnQxOh_k@smile.fi.intel.com> <aEwfgP3tiio52Rj-@smile.fi.intel.com>
- <FR3P281MB1757AEF932A3CE2AB9637046CE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
- <aEw4q3p12q1iI7vC@smile.fi.intel.com> <aEw9Yxhodwhh8BT6@smile.fi.intel.com> <FR3P281MB175722266C119B719FCE9E6CCE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-In-Reply-To: <FR3P281MB175722266C119B719FCE9E6CCE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 14 Jun 2025 00:02:52 +0300
-X-Gm-Features: AX0GCFvL8R2aNRCEB9bzIup3Cgf6bvQBDKQQ_tT_IOLmq8KP1Z-ailvQKGnsuNQ
-Message-ID: <CAHp75VeS8XQbcTaDFLUYTcd4SEdfoVOd4-mht6NGk__exSD0Vg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 8:14=E2=80=AFPM Jean-Baptiste Maneyrol
-<Jean-Baptiste.Maneyrol@tdk.com> wrote:
- >From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> >Sent: Friday, June 13, 2025 17:01
-> >On Fri, Jun 13, 2025 at 05:41:47PM +0300, Andy Shevchenko wrote:
-> >> On Fri, Jun 13, 2025 at 01:43:58PM +0000, Jean-Baptiste Maneyrol wrote=
-:
-> >> > >From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> >> > >Sent: Friday, June 13, 2025 14:54
-> >> > >On Fri, Jun 13, 2025 at 03:53:36PM +0300, Andy Shevchenko wrote:
-> >> > >> On Fri, Jun 13, 2025 at 12:46:46PM +0000, Jean-Baptiste Maneyrol =
-wrote:
-> >> > >> > >From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> >> > >> > >Sent: Friday, June 13, 2025 10:29
-> >> > >> > >On Fri, Jun 13, 2025 at 09:34:26AM +0200, Jean-Baptiste Maneyr=
-ol via B4 Relay wrote:
-
-...
-
-> >> > >> > >Overall, looking to this patch again, I think it would be bett=
-er to prepend it
-> >> > >> > >by replacing *int*_t types by the respective uXX ones. Because=
- in this patch
-> >> > >> > >we add dozens of new ones which increases an unneeded churn in=
- the future.
-> >> > >> > >
-> >> > >> > In my opinion, to respect the rule don't mix *int*_t and uXX ty=
-pes, it is better
-> >> > >> > to keep *int*_t types. If it need to be changed, we can change =
-afterward the
-> >> > >> > whole driver types with a replace tool and send it in a separat=
-e patch.
-> >> > >>
-> >> > >> It will be never ending story, sorry. We need someone to solve th=
-is tech debt.
-> >> > >> And since this patch adds more than 3 new users of it, I think it=
-'s a candidate
-> >> > >> to embrace the burden.
-> >> > >
-> >> > >For your convenience I can mock-up a change...
-> >> >
-> >> > It looks like there's something I don't understand in the kernel Doc=
-umentation about
-> >> > types then.
-> >> > Quoting Documentation/process/coding-style.rst, section 5.d:
-> >> > ---
-> >> > New types which are identical to standard C99 types, in certain exce=
-ptional circumstances.
-> >> >
-> >> > Although it would only take a short amount of time for the eyes and =
-brain to become accustomed
-> >> > to the standard types like uint32_t, some people object to their use=
- anyway.
-> >> >
-> >> > Therefore, the Linux-specific u8/u16/u32/u64 types and their signed =
-equivalents which are
-> >> > identical to standard types are permitted -- although they are not m=
-andatory in new code
-> >> > of your own.
-> >> >
-> >> > When editing existing code which already uses one or the other set o=
-f types, you should
-> >> > conform to the existing choices in that code.
-> >> > ---
-> >> >
-> >> > My understanding is that uXX are not mandatory for new code. You can=
- use types like *int*_t.
-> >> > But you need to conform afterward to the existing choice. That's why=
- this driver was
-> >> > done initially with *int*_t types, and that patches are conforming t=
-o this choice.
-> >>
-> >> This part of the documentation has a lot of room for different interpr=
-etations.
-> >> One [1] may consider this as uXX superior, another, like you, that it'=
-s okay
-> >> to use.  In any case Greg KH prefers uXX over uintXX_t. And he is also=
- in
-> >> the chain of maintainers here. Feel free to amend the Documentation. B=
-ut
-> >> be sure all stakeholders will see your proposal (like Greg KH and othe=
-r
-> >> key maintainers).
-> >>
-> >> > By looking at all Linux drivers, there are plenty of them using *int=
-*_t, even
-> >> > inside iio:
-> >>
-> >> $ git grep -l 'u\?int[0-9][0-9]\?_t' -- drivers/iio/ | wc -l
-> >> 59
-> >>
-> >> $ git ls-files drivers/iio*.c | wc -l
-> >> 640
-> >>
-> >> Less than 10%.
-> >>
-> >> > Then, why it is mandatory to change this driver to use uXX instead?
-> >>
-> >> TO be consistent. With the above wording in the documentation I may ar=
-gue that
-> >> entire subsystem should be consistent and at least in IIO we have tons=
- of patch
-> >> series that are against the whole subsystem to do one style change or =
-another
-> >> (look at the recent memset() vs. {} for initialisation).
-> >>
-> >> [1] https://urldefense.com/v3/__https://lore.kernel.org/all/2025040918=
-0953.398686-1-matchstick@neverthere.org/__;!!FtrhtPsWDhZ6tw!DVTvkgDsymM7132=
-dB-wjei-s0JxYiivZxtzEHfWjsrn_6toqTXA__hm2nPUh7jmectCXcP9Z3OAh0hMm-WD6eQAHOt=
-diGbYQqsw$[lore[.]kernel[.]org]
-> >
-> >Oh, this [2] is golden!
-> >You may found support for your arguments and for mine in that thread, bu=
+On Fri, 2025-06-13 at 10:56 -0400, Chuck Lever wrote:
+> On 6/13/25 7:33 AM, Benjamin Coddington wrote:
+> > On 12 Jun 2025, at 12:42, Chuck Lever wrote:
+> >=20
+> > > On 6/12/25 12:15 PM, Jeff Layton wrote:
+> > > > On Thu, 2025-06-12 at 12:05 -0400, Chuck Lever wrote:
+> > > > > On 6/12/25 11:57 AM, Jeff Layton wrote:
+> > > > > > On Tue, 2025-05-27 at 20:12 -0400, Jeff Layton wrote:
+> > > > > > > The old nfsdfs interface for starting a server with multiple =
+pools
+> > > > > > > handles the special case of a single entry array passed down =
+from
+> > > > > > > userland by distributing the threads over every NUMA node.
+> > > > > > >=20
+> > > > > > > The netlink control interface however constructs an array of =
+length
+> > > > > > > nfsd_nrpools() and fills any unprovided slots with 0's. This =
+behavior
+> > > > > > > defeats the special casing that the old interface relies on.
+> > > > > > >=20
+> > > > > > > Change nfsd_nl_threads_set_doit() to pass down the array from=
+ userland
+> > > > > > > as-is.
+> > > > > > >=20
+> > > > > > > Fixes: 7f5c330b2620 ("nfsd: allow passing in array of thread =
+counts via netlink")
+> > > > > > > Reported-by: Mike Snitzer <snitzer@kernel.org>
+> > > > > > > Closes: https://lore.kernel.org/linux-nfs/aDC-ftnzhJAlwqwh@ke=
+rnel.org/
+> > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > > > ---
+> > > > > > >  fs/nfsd/nfsctl.c | 5 ++---
+> > > > > > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > > > > > >=20
+> > > > > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > > > > > index ac265d6fde35df4e02b955050f5b0ef22e6e519c..22101e08c3e80=
+350668e94c395058bc228b08e64 100644
+> > > > > > > --- a/fs/nfsd/nfsctl.c
+> > > > > > > +++ b/fs/nfsd/nfsctl.c
+> > > > > > > @@ -1611,7 +1611,7 @@ int nfsd_nl_rpc_status_get_dumpit(struc=
+t sk_buff *skb,
+> > > > > > >   */
+> > > > > > >  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct gen=
+l_info *info)
+> > > > > > >  {
+> > > > > > > -	int *nthreads, count =3D 0, nrpools, i, ret =3D -EOPNOTSUPP=
+, rem;
+> > > > > > > +	int *nthreads, nrpools =3D 0, i, ret =3D -EOPNOTSUPP, rem;
+> > > > > > >  	struct net *net =3D genl_info_net(info);
+> > > > > > >  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > > > > > >  	const struct nlattr *attr;
+> > > > > > > @@ -1623,12 +1623,11 @@ int nfsd_nl_threads_set_doit(struct s=
+k_buff *skb, struct genl_info *info)
+> > > > > > >  	/* count number of SERVER_THREADS values */
+> > > > > > >  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
+> > > > > > >  		if (nla_type(attr) =3D=3D NFSD_A_SERVER_THREADS)
+> > > > > > > -			count++;
+> > > > > > > +			nrpools++;
+> > > > > > >  	}
+> > > > > > >=20
+> > > > > > >  	mutex_lock(&nfsd_mutex);
+> > > > > > >=20
+> > > > > > > -	nrpools =3D max(count, nfsd_nrpools(net));
+> > > > > > >  	nthreads =3D kcalloc(nrpools, sizeof(int), GFP_KERNEL);
+> > > > > > >  	if (!nthreads) {
+> > > > > > >  		ret =3D -ENOMEM;
+> > > > > >=20
+> > > > > > I noticed that this didn't go in to the recent merge window.
+> > > > > >=20
+> > > > > > This patch fixes a rather nasty regression when you try to star=
 t the
-> >bottom line is: what do maintainers of IIO prefer? (Taking into account =
-that it
-> >goes via Greg KH)
-> >
-> >[2]: https://urldefense.com/v3/__https://lore.kernel.org/all/20210423230=
-609.13519-1-alx.manpages@gmail.com/__;!!FtrhtPsWDhZ6tw!DVTvkgDsymM7132dB-wj=
-ei-s0JxYiivZxtzEHfWjsrn_6toqTXA__hm2nPUh7jmectCXcP9Z3OAh0hMm-WD6eQAHOtdiuFc=
-54eI$[lore[.]kernel[.]org]
->
-> If this is required, I can do it. I would just want to know if this is ma=
-ndatory
-> since we already have a couple of drivers merged using standard types and
-> other drivers planned to be merged.
+> > > > > > server on a NUMA-capable box.
+> > > > >=20
+> > > > > The NFSD netlink interface is not broadly used yet, is it?
+> > > > >=20
+> > > >=20
+> > > > It is. RHEL10 shipped with it, for instance and it's been in Fedora=
+ for
+> > > > a while.
+> > >=20
+> > > RHEL 10 is shiny and new, and Fedora is bleeding edge. It's not likel=
+y
+> > > either of these are deployed in production environments yet. Just say=
+in
+> > > that in this case, the Bayesian filter leans towards waiting a full d=
+ev
+> > > cycle.
+> >=20
+> > We don't consider it acceptable to allow known defects to persist in ou=
+r
+> > products just because they are bleeding edge.
+>=20
+> I'm not letting this issue persist. Proper testing takes time.
+>=20
+> The patch description and discussion around this change did not include
+> any information about its pervasiveness and only a little about its
+> severity. I used my best judgement and followed my usual rules, which
+> are:
+>=20
+> 1. Crashers, data corrupters, and security bugs with public bug reports
+>    and confirmed fix effectiveness go in as quickly as we can test.
+>    Note well that we have to balance the risk of introducing regressions
+>    in this case, since going in quickly means the fix lacks significant
+>    test experience.
+>=20
+> 1a. Rashes and bug bites require application of topical hydrocortisone.
+>=20
+> 2. Patches sit in nfsd-testing for at least two weeks; better if they
+>    are there for four. I have CI running daily on that branch, and
+>    sometimes it takes a while for a problem to surface and be noticed.
+>=20
+> 3. Patches should sit in nfsd-next or nfsd-fixes for at least as long
+>    as it takes for them to matriculate into linux-next and fs-next.
+>=20
+> 4. If the patch fixes an issue that was introduced in the most recent
+>    merge window, it goes in -fixes .
+>=20
+> 5. If the patch fixes an issue that is already in released kernels
+>    (and we are at rule 5 because the patch does not fix an immediate
+>    issue) then it goes in -next .
+>=20
+> These evidence-oriented guidelines are in place to ensure that we don't
+> panic and rush commits into the kernel without careful review and
+> testing. There have been plenty of times when a fix that was pushed
+> urgently was not complete or even made things worse. It's a long
+> pipeline on purpose.
+>=20
+> The issues with this patch were:
+>=20
+> - It was posted very late in the dev cycle for v6.16. (Jeff's urgent
+>   fixes always seem to happen during -rc7 ;-)
+>=20
+> - The Fixes: tag refers to a commit that was several releases ago, and
+>   I am not aware of specific reports of anyone hitting a similar issue.
+>=20
+> - IME, the adoption of enterprise distributions is slow. RHEL 10 is
+>   still only on its GA release. Therefore my estimation is that the
+>   number of potentially impacted customers will be small for some time,
+>   enough time for us to test Jeff's fix appropriately.
+>=20
+> - The issue did not appear to me to be severe, but maybe I didn't read
+>   the patch description carefully enough.
+>=20
+> - Although I respect, admire, and greatly appreciate the effort Jeff
+>   made to nail this one, that does not mean it is a pervasive problem.
+>   Jeff is quite capable of applying his own work to the kernels he and
+>   his employer care about.
+>=20
 
-Let's wait for others to speak up. Especially maintainers.
+The rules all make sense to me. In this case though, I felt the
+potential harm from not taking this patch outweighed the risk. NUMA
+hardware is more prevalent than you might think.=20
 
-> Can I do it in the same series or should it be in a separate patch before=
- this
-> series?
+>=20
+> > > > > Since this one came in late during the 6.16 dev cycle and the Fix=
+es: tag
+> > > > > references a commit that is already in released kernels, I put in=
+ the
+> > > > > "next merge window" pile. On it's own it doesn't look urgent to m=
+e.
+> > > > >=20
+> > > >=20
+> > > > I'd really like to see this go in soon and to stable. If you want m=
+e to
+> > > > respin the changelog, I can. It's not a crash, but it manifests as =
+lost
+> > > > RPCs that just hang. It took me quite a while to figure out what wa=
+s
+> > > > going on, and I'd prefer that we not put users through that.
+> > >=20
+> > > If someone can confirm that it is effective, I'll add it to nfsd-fixe=
+s.
+> >=20
+> > I'm sure it is if Jeff spent time on it.
+> >=20
+> > We're going to try to get this into RHEL-10 ASAP, because dropped RPCs
+> > manifest as datacenter-wide problems that are very hard to diagnose.
+>=20
+> It sounds like Red Hat also does not have clear evidence that links this
+> patch to a specific failure experienced by your customers. This affirms
+> my understanding that this fix is defensive rather than urgent.
+>=20
+> As a rule, defensive fixes go in during merge windows.
+>=20
+>=20
+> > Its a
+> > real pain that we won't have an upstream commit assigned for it.
+>=20
+> It's not reasonable for any upstream maintainer not employed by Red Hat
+> to know about or cleave to Red Hat's internal processes. But, if an
+> issue is on Red Hat's radar, then you are welcome to make its priority
+> known to me so I can schedule fixes appropriately.
+>=20
+> All that said, I've promoted the fix to nfsd-fixes, since it's narrow
+> and has several weeks of test experience now.
+>=20
 
-Same series, just a prerequisite patch. Note, I have one locally, I
-just need to send it and you can use it, but the reason why I haven't
-sent is the same =E2=80=94 I want to know the official position of the IIO
-subsystem about this.
-
+Many thanks!
 --=20
-With Best Regards,
-Andy Shevchenko
+Jeff Layton <jlayton@kernel.org>
