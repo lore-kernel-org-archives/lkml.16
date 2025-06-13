@@ -1,72 +1,76 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B11610C;
-	Fri, 13 Jun 2025 02:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1560B1EFF8B;
+	Fri, 13 Jun 2025 02:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749781104; cv=none; b=IYOwX7CthBTpnDHCPQRUui00OLC3jdZyJLOuUUgNrtXs+I+hw5ZsqnMwH8Lt1wvlMKZoG+EoZhCb+YRDUV2G8KhM+OTQuLeJW8ytYrLEabPXUQ8hgYXhJFMwVSgfQEwbNyC4EcHgFK6hMm2MbruhmfFpdtMYYfe8MtsuTCzp1Bw=
+	t=1749781205; cv=none; b=sR8PN/BtY7mLLS5Aan2IGRZW4XfC4X8UhQYndqh3OdsZk4Vy5ALiRGawEXgCnIBUQUK3Vg6RBb0hGl3z5/JDyzg43XjpAZv/zrCoUY1E2v9K5OzKiHPF2RVfmUm80ZeItax0RHyLhogh/Oz7NFjc6rptlWbqTpVAwIEIDuwz7pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749781104; c=relaxed/simple;
-	bh=vQZh0BojKe9rNgmmJExHLh+YL6uN/ZsAFvnjSw9pvek=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=c4FYlER+FNDA8M9em6EjIYYnvpqhIaf5lcua5fVFXv+FyNaWadGsYPPAmqXsqoH7LlDw57BdeeqgNOloYvePRBPwjfD8J7yyJ5IMKNnloFiXP4Wk+dgi4EEMbohCztWF9L5NCARigd0+4ACB7vYNXVOH77WeGz7JlYFwHFMQVU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPtzl-009jaA-GO;
-	Fri, 13 Jun 2025 02:18:17 +0000
+	s=arc-20240116; t=1749781205; c=relaxed/simple;
+	bh=TLjcE0YICO3kvaYsCN72SwXHbWe98aZ1eqQahmYFW7k=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=eV3Bj4Miz68zeMx5ihKQcnBZd1bw3WAV2WO0xI0mhqK8L1ymVCtU74VXcgzTsC+fnwK3bBd2p/BIk4lkCnlICG4BpUdfFnX5j/pfe1RXk1Ek/i0VvFMZpWZAqZVjMbOgsWU2QbqjSftfjYEFg3mGWqAQ/arOEMjfH4Ex86bcLdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SisH+KVV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SisH+KVV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E330FC4CEF2;
+	Fri, 13 Jun 2025 02:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749781204;
+	bh=TLjcE0YICO3kvaYsCN72SwXHbWe98aZ1eqQahmYFW7k=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=SisH+KVVC41sI+q1/5diUZeLLx8ecT33wZ8FPu7A5bUkXdM7IJk60qJLakNVgVEPM
+	 WOHEHLk4DFdZbASXIn3zbPvLC/edmDfyy2T3LUGWhEJreqF0hHdbSQxcvLaOQmBeTd
+	 FxMe5pQqtzeGCUz200Y9XnbGVEioy1jqiDQ9AAjzxWqXYrFxDZnYhf/tblOH/3hqdt
+	 1afVUfxWTFNDxNJsERRwUOuA1EEyeGdX0L3W7EwMfSrIn61BSFfLkagfaEHX6tH54x
+	 DKTCjCOyMr4SSdUwQsv6Fog+v5DrxT+/GwkRC1Cp+8KB0ReBo3RZ+Pux/dtr9sNN2G
+	 VgYJAkYnUBgDQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD4539EFFD1;
+	Fri, 13 Jun 2025 02:20:35 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Kees Cook" <kees@kernel.org>, "Joel Granados" <joel.granados@kernel.org>,
- linux-fsdevel@vger.kernel.org, "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] proc_sysctl: Fix up ->is_seen() handling
-In-reply-to: <20250613020111.GE1647736@ZenIV>
-References: <>, <20250613020111.GE1647736@ZenIV>
-Date: Fri, 13 Jun 2025 12:18:17 +1000
-Message-id: <174978109711.608730.10518925097265210072@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] potential negative index dereference fix in
+ get_exec_path()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174978123449.192771.10901561494426019024.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 02:20:34 +0000
+References: <20250612131816.1870-1-uncleruc2075@gmail.com>
+In-Reply-To: <20250612131816.1870-1-uncleruc2075@gmail.com>
+To: Ruslan Semchenko <uncleruc2075@gmail.com>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
+ daniel@iogearbox.net
 
-On Fri, 13 Jun 2025, Al Viro wrote:
-> On Fri, Jun 13, 2025 at 02:54:21AM +0100, Al Viro wrote:
-> > On Fri, Jun 13, 2025 at 10:37:58AM +1000, NeilBrown wrote:
-> > > 
-> > > Some sysctl tables can provide an is_seen() function which reports if
-> > > the sysctl should be visible to the current process.  This is currently
-> > > used to cause d_compare to fail for invisible sysctls.
-> > > 
-> > > This technique might have worked in 2.6.26 when it was implemented, but
-> > > it cannot work now.  In particular if ->d_compare always fails for a
-> > > particular name, then d_alloc_parallel() will always create a new dentry
-> > > and pass it to lookup() resulting in a new inode for every lookup.  I
-> > > tested this by changing sysctl_is_seen() to always return 0.  When
-> > > all sysctls were still visible and repeated lookups (ls -li) reported
-> > > different inode numbers.
-> > 
-> > What do you mean, "name"?
-> 
-> The whole fucking point of that thing is that /proc/sys/net contents for
-> processes in different netns is not the same.  And such processes should
-> not screw each other into the ground by doing lookups in that area.
-> 
-> Yes, it means multiple children of the same dentry having the same name
-> *and* staying hashed at the same time.
-> 
+Hello:
 
-Ahh - I misunderstood the meaning of "is_seen".
-It means "matches current namespace".
-I think I have a slightly better understanding now - thanks.
-I'll just remove the rcu stuff, which is pointless.
+This patch was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Thanks,
-NeilBrown
+On Thu, 12 Jun 2025 16:18:16 +0300 you wrote:
+> If readlink() fails, len will be -1, which can cause negative indexing
+> and undefined behavior. This patch ensures that len is set to 0 on
+> readlink failure, preventing such issues.
+> 
+> Signed-off-by: Ruslan Semchenko <uncleruc2075@gmail.com>
+> ---
+>  tools/bpf/bpf_jit_disasm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Here is the summary with links:
+  - potential negative index dereference fix in get_exec_path()
+    https://git.kernel.org/bpf/bpf-next/c/af91af33c168
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
