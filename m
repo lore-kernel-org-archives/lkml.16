@@ -1,99 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16254275AE1;
-	Fri, 13 Jun 2025 11:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F702275AEC;
+	Fri, 13 Jun 2025 11:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749815494; cv=none; b=Cx5HmOjkxnKW+hxqawe+pR7JhySUEwCua2lKnyZVJofe6wgCya5RdbHWD22XXw3Seu+KnMOlnOxUp1/CobbG5LyhJX1688kTP7cGaV3t/YqSZzH2sio4T+zlGuK6vxNJJ4Z55QQ4fI2WEGtqi3uE1YDq4O2GUo8cJyl3yVsK5ic=
+	t=1749815560; cv=none; b=AaBspT4OT+WcXLCWpN59k0YQsAVnt08p5VBxcxCL1FSWXVnQi/gxF2fNOwUn4cXn80Q7/3+65DJR66WLlPlphf2cbje7ONdLX0xNYNWHedyDnlw1/PKKf5tQl9YlDU2dYQWh/aanxYGyj/KeZKIvGAJWxmGs1nS2JIjCppBtREo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749815494; c=relaxed/simple;
-	bh=2YaQMA/P3sso6tRVUrftw0eEpHckdSBVm49F8Yxx4wA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tmypKZkj2HNuljo2OrWy9ENmR9/jVTg2UIZsKmBrC06Jtb6wtQKTWoB+kdmYzLSd6Dkcr2Zsypcl8jH+0/Egkpsv/aVL7yTEejMl4YgViBKvgw9g71sVJKdeOlCI/Xb9jy/4EJ9SlzFtNVBfDFMxYmQRCfb4VE7HWVF6ZYqUOUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm714X45; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749815560; c=relaxed/simple;
+	bh=9Ib3i1mlFKicVwKiPGf5NRYHamJ2n8eOcsjuXffXj54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzXMnCe1ZM8YDq4HAgWinI/Y1Zg7FAmI5xxVU4AFPCoENXqvSBUD/kRa5CsfqdWjxdxUeV4IZokteMxcweGAnkRyPFh2yHvwl2jXI9ksJxNpHJ+nGOPLIgxKrt1C/r8Ie7R+H6xdNWC1qvPd8YpT4s/xySwIJL032GqQI8LJQDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aw8bXodJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm714X45"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C35FC4CEF0;
-	Fri, 13 Jun 2025 11:51:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aw8bXodJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3680CC4CEE3;
+	Fri, 13 Jun 2025 11:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749815493;
-	bh=2YaQMA/P3sso6tRVUrftw0eEpHckdSBVm49F8Yxx4wA=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Lm714X45swi8SAgpFvc1CDA36DKH1s+6rG2Qnx7SoqyJ3xSQN70lgD+p4YCBiEj96
-	 2sJ5mBY9w0o1sR3fHRte/3x2Kc8c7yuUwJoJ2PTMnnR9NMO1Q25dAV9FGukMHej9Qz
-	 bfqNg8qiK6awtObZe9It8oDbgdcpSZFVLM3iR6J9qsEAnyFAbXCHVcNmXMvJJw99+O
-	 qX3mK+J6w+YQX1hLYk8WfCccRsxejzgnTcho7PVbnNS92907SoTAMEqbuel+E/fSfG
-	 IPihd4BdLzFHyigOczLAMhDL84UgBivNaQx2PNHNVxWKpDzrGdNtalo4Nv6pK5LMwG
-	 Dxy5uZ31e00eA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E3C61DB2;
-	Fri, 13 Jun 2025 11:51:33 +0000 (UTC)
-From: Raven Black via B4 Relay <devnull+ravenblack.gmail.com@kernel.org>
-Date: Fri, 13 Jun 2025 07:51:25 -0400
-Subject: [PATCH] ASoC: amd: yc: update quirk data for HP Victus
+	s=k20201202; t=1749815560;
+	bh=9Ib3i1mlFKicVwKiPGf5NRYHamJ2n8eOcsjuXffXj54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aw8bXodJydbeLxjxs9CS/1ymdxGC+nk/uG6P0DwTJYpW42Pg/5BHWY+BJi5zY2cph
+	 LKHTsRogZ8cDXCb/AGkccXPdupEBA3Ah84vP4n+51iTDbEwRj00qU77a4uUHOCw+dQ
+	 lnvzOuTJRixDvWsz/46CN4nXvGvstFtySvo/iVuwszfFmwpXdTX4FmiqNhqbUvvFLZ
+	 J2BSZ+yTPCkuHm6UqmrUuIOEuWfSgydKa9JUjRMSu3uRcbiIIJPnDNrIhn7wfg9b43
+	 n3qU/sG/nuANHXA8sduV69dpVBZTlX5yi68+CoSdIcI3cTPulotnddlGKqRm5Nx7Gf
+	 LDrFtJaEuhFtQ==
+Date: Fri, 13 Jun 2025 13:52:33 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
+	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 1/2] PCI: Configure root port MPS during host probing
+Message-ID: <aEwRAZgLJUECbGz6@ryzen>
+References: <20250510155607.390687-1-18255117159@163.com>
+ <20250510155607.390687-2-18255117159@163.com>
+ <co2q55j4mk2ux7af4sj6snnfomditwizg5jevg6oilo3luby5z@6beqtbn3l432>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-support-hp-victus-microphone-v1-1-bebc4c3a2041@gmail.com>
-X-B4-Tracking: v=1; b=H4sIALwQTGgC/x3MwQqDMAwA0F+RnBeodQ7Zr4wdShvXHGxDoiKI/
- 27Z8V3eCUbKZPDuTlDa2biWhv7RQcyh/Ag5NYN3fnSvfkDbRKqumAV3jutmuHDUKrkWwtm5NKX
- RP0MM0ApRmvn495/vdd2ZeuRYbgAAAA==
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Raven Black <ravenblack@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749815492; l=967;
- i=ravenblack@gmail.com; s=20250613; h=from:subject:message-id;
- bh=/bACXv58cmQwq8+BzTLIvAZpJC8AGmmTuOuCZ0+0UMk=;
- b=xTamQF7Ox7AfzVbSqdl2WJ2aehKA1sXLoBYMMIHt4t5lDQBvpUfTfzF3uR3CmlDPtjct7mg0i
- oEdrNV2z+uMA3v04due/xp8ttfSkDZA1ZPneno5EuviXCV1ZrN4poCo
-X-Developer-Key: i=ravenblack@gmail.com; a=ed25519;
- pk=8ECM1VXVU5AHsXWVPR5Gs6qmW8kY07IYbgnWZDe+ddY=
-X-Endpoint-Received: by B4 Relay for ravenblack@gmail.com/20250613 with
- auth_id=431
-X-Original-From: Raven Black <ravenblack@gmail.com>
-Reply-To: ravenblack@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <co2q55j4mk2ux7af4sj6snnfomditwizg5jevg6oilo3luby5z@6beqtbn3l432>
 
-From: Raven Black <ravenblack@gmail.com>
+On Fri, Jun 13, 2025 at 12:08:31PM +0530, Manivannan Sadhasivam wrote:
+> On Sat, May 10, 2025 at 11:56:06PM +0800, Hans Zhang wrote:
+> > Current PCIe initialization logic may leave root ports operating with
+> > non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> > configuration is handled during bus enumeration, root port MPS values
+> > inherited from firmware or hardware defaults might not utilize the full
+> > capabilities supported by the controller hardware. This can result is
+> > uboptimal data transfer efficiency across the PCIe hierarchy.
+> > 
+> > During host controller probing phase, when PCIe bus tuning is enabled,
+> > the implementation now configures root port MPS settings to their
+> > hardware-supported maximum values. By iterating through bridge devices
+> > under the root bus and identifying PCIe root ports, each port's MPS is
+> > set to 128 << pcie_mpss to match the device's maximum supported payload
+> > size.
+> 
+> I don't think the above statement is accurate. This patch is not iterating
+> through the bridges and you cannot identify root ports using that. What this
+> patch does is, it checks whether the device is root port or not and if it is,
+> then it sets the MPS to MPSS (hw maximum) if PCIE_BUS_TUNE_OFF is not set.
 
-Make the internal microphone work on HP Victus laptops.
+Correct.
+Later, when the bus is walked, if any downstream device does not support
+the MPS value currently configured in the root port, pci_configure_mps()
+will reduce the MPS in the root port to the max supported by the downstream
+device.
 
-Signed-off-by: Raven Black <ravenblack@gmail.com>
----
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 7e62445e02c1..3451d2f9c9ba 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -514,6 +514,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "OMEN by HP Gaming Laptop 16z-n000"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Victus by HP Gaming Laptop 15-fb2xxx"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250613-support-hp-victus-microphone-f00d8d524aca
-
-Best regards,
--- 
-Raven Black <ravenblack@gmail.com>
+So even we start off by setting MPS in the root port to the max supported
+by the root port, it might get reduced later on.
 
 
+> 
+> > The Max Read Request Size (MRRS) is subsequently adjusted through
+> > existing companion logic to maintain compatibility with PCIe
+> > specifications.
+> > 
+> > Explicit initialization at host probing stage ensures consistent PCIe
+> > topology configuration before downstream devices perform their own MPS
+> > negotiations. This proactive approach addresses platform-specific
+> > requirements where controller drivers depend on properly initialized
+> > root port settings, while maintaining backward compatibility through
+> > PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
+> > utilized without altering existing device negotiation behaviors.
+> > 
+> > Suggested-by: Niklas Cassel <cassel@kernel.org>
+> > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > ---
+> >  drivers/pci/probe.c | 72 ++++++++++++++++++++++++++-------------------
+> >  1 file changed, 41 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 364fa2a514f8..1f67c03d170a 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -2149,6 +2149,37 @@ int pci_setup_device(struct pci_dev *dev)
+> >  	return 0;
+> >  }
+> >  
+> > +static void pcie_write_mps(struct pci_dev *dev, int mps)
+> > +{
+> > +	int rc;
+> > +
+> > +	if (pcie_bus_config == PCIE_BUS_PERFORMANCE) {
+> > +		mps = 128 << dev->pcie_mpss;
+> > +
+> > +		if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
+> > +		    dev->bus->self)
+> > +
+> > +			/*
+> > +			 * For "Performance", the assumption is made that
+> > +			 * downstream communication will never be larger than
+> > +			 * the MRRS.  So, the MPS only needs to be configured
+> > +			 * for the upstream communication.  This being the case,
+> > +			 * walk from the top down and set the MPS of the child
+> > +			 * to that of the parent bus.
+> > +			 *
+> > +			 * Configure the device MPS with the smaller of the
+> > +			 * device MPSS or the bridge MPS (which is assumed to be
+> > +			 * properly configured at this point to the largest
+> > +			 * allowable MPS based on its parent bus).
+> > +			 */
+> > +			mps = min(mps, pcie_get_mps(dev->bus->self));
+> > +	}
+> > +
+> > +	rc = pcie_set_mps(dev, mps);
+> > +	if (rc)
+> > +		pci_err(dev, "Failed attempting to set the MPS\n");
+> > +}
+> > +
+> >  static void pci_configure_mps(struct pci_dev *dev)
+> >  {
+> >  	struct pci_dev *bridge = pci_upstream_bridge(dev);
+> > @@ -2178,6 +2209,16 @@ static void pci_configure_mps(struct pci_dev *dev)
+> >  		return;
+> >  	}
+> >  
+> > +	/*
+> > +	 * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at all),
+> > +	 * start off by setting root ports' MPS to MPSS. Depending on the MPS
+> > +	 * strategy, and the MPSS of the devices below the root port, the MPS
+> > +	 * of the root port might get overridden later.
+> > +	 */
+> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+> > +	    pcie_bus_config != PCIE_BUS_TUNE_OFF)
+> > +		pcie_write_mps(dev, 128 << dev->pcie_mpss);
+> 
+> I believe you can just use "pcie_set_mps(dev, 128 << dev->pcie_mpss)" directly
+> and avoid moving pcie_write_mps() around.
+
++1
+
+
+Kind regards,
+Niklas
