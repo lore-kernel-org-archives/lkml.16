@@ -1,74 +1,71 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1836728ECC8
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5D12900B0
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749799012; cv=none; b=c3BYqc0QBT+BFhtcGsv6AsAS06DYpURUEa4dLc7rdGzQG5pBfCpUd5o9LJ8K5FglyFre1rYBRJcWMM1EarHoy6OeUGuQlQRjls6yp0B0z2TiFcLzweF9wFSwlQUF8itzcdX+CjxDL4+bQmugq02+Gx4hOjxrNS4Ovv8WSiQRs8o=
+	t=1749799021; cv=none; b=WKC04xkp6aK78bdRosrXji3xzoYsJM+Od27dF/u9KEzKzcWgMUvLqJMvaTazLMglo3M3ji31PXUnV6GRpbOymKLxcg8uOBFnOvUG0jk1LZ/0iTgFsW2xWknybgNO66AcgfoNW7Xg79edrzb3CAh92s4UxtFvgRt+LSmkd6qy13I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749799012; c=relaxed/simple;
-	bh=ikGB3PaPKDJ3MFxbiuFsbOiaKxZREXTcoX44pbpvZpM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GcKJBpftNipWDgbWu0CCc9Wp+pPRh1lfZWgpslMq20hIdH/y/9xHOVCrkH6C23qjfyOvJ0veNaom3Q6H3Hvtct+rwq/PzPQixKl0luDYaLRdCiL8kc4N/M3yOKqzzKRBaahkJ3gQat5yD+Txod2PjUMPaQ0khOqY2hggRfjgdmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PWo3182/; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1749799021; c=relaxed/simple;
+	bh=s7H8hAOu8r6PsF0xyvqZ3QYYYUvxVZaHwOSbxv1Gj8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qHw+66j2s1ccMr/Uenk2q/MFz/cA0SwrkxTlpH5xDlBOOWXk8tBhc5mbPO9L0G3RX5bhIwPeKgOH8ZgYX/ThCjurP19faWg7p1sjVDK5ZO2uuwan4r7hB2SjyEq/Rth4sRJLSR7FuNi7uEYqVx2VEu+/XbqjWKiD8CJCEy+7uvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dhCA2aE/; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PWo3182/"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso130087f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:16:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dhCA2aE/"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4eb4acf29so163788f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749799008; x=1750403808; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749799018; x=1750403818; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7fv69bovuvm+Pb08hvzVs40FNmn1nR1es7GqKP5snc4=;
-        b=PWo3182/UzV++eyAJBwPiOs6BRlQxx1DcMfg0/N1t2kccEkL/lKGob1b654vMDrPFz
-         UvByef1bfo6dKFy9Ib/UhIkE8KodMpCPph34Y7PxObepKmOY6e/3Ss9qJAAYXQeV/w2t
-         uZpi0o5HwyK87Kj9eIbiPe3kk5w65L2JmvN2VN5di+ZNTNTSj7inI4koDq2JMnbSoBZV
-         /AI/zrNdrdEr/o+/k4y68WqP1NPpNXH5OyK8WEX0xr53PmWHDMgxK24WY0JMNOHTSOX0
-         s/0QBd4G0xRSV2U/DEjmx0U2p796W6tbz/A0i8Gxn7ROrPq9Da94xxzTPqLKxzmczyhH
-         +mVg==
+        bh=WmM3uzbZnyWX7ZTyVsPhybFQT3KPyRdO9ddniD4WDrg=;
+        b=dhCA2aE/1Bns4NAqje1kAy9UQcDDMl3NqX4q/WKh6Q4VjPTb497ofSdgRdrho5EKnU
+         gTtSskcNUHbt62U8kUwrHh0c9wk0z9cMIoUqWi9mrmo7YNjLdNyjWBaeq+VgMaKNSQ75
+         98mqFeLnDjXWtNoszaJq29yrOj9yQ86H9krklTjJT0gf/RBXzKSFSphBan+uWOYGdtBz
+         SLN43AfC9jsYQ5pOw0Mlgd3Ewko4uZ3b8/FCsRjW6sPb5kD6BFX1sk8F4OY153v6eOUa
+         tRwIR9AUaPJ8lyaT6xC3Mo32QYNsLIQetTnlPp6OQLVqYidU1s8wgdfvK7AVd85ggyNR
+         szeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749799008; x=1750403808;
+        d=1e100.net; s=20230601; t=1749799018; x=1750403818;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7fv69bovuvm+Pb08hvzVs40FNmn1nR1es7GqKP5snc4=;
-        b=VagOs8sZ4uHvh7gDg9R8AdQQJ9v49thWMsZYia9j9ojwlO/7R+Qz1/2+WDy3ltvX5A
-         xqdpsjTfiihkSfPiMAjWEPyc1/sBCt8GrAJwiogn5dOH4/CAyP77HvTXkb7a4i4pUIUF
-         bOaZfn1Qjpr+YyXFGXBnCZrXLa1DsHetEfE76Eq63bskBl6a2ptPHKOBr0GWsWwuc3dR
-         tjnFkKlFAPTruLOEq3ZlFJQnbcr309fU9tIJ3t44PkAelIADYKbhsWG4lXxlnAmxNAzK
-         smVcWDaH/6UneRKyKDdYGMp2uzvjbprp9hlDg7JnRlx/7wo/BEIQ1Z1jZbCR+qB6NLq7
-         TL0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUiTnnmgYhhEt6vGJYMc7J4PCmTRbEoG2pvjUgAFhwAsYCHTUO3GnOaVyUBLmIyf0wtN+dxMpehpQodBeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCCAjiSHWt3pkqdLLVLnBcDYakzK0Ttc5BK1O4gQ5J93mDRe+x
-	QCopC84Lem4YtVcsYf4mYrJR4HsHv4n1LBQigzs9iCQ+JzOkNZeDIWpj+JeEGcv/iZM=
-X-Gm-Gg: ASbGnct+4Tc2FHwTraQ9xYtav9whfcsTvm3uKuOD9ff88WlpKhaJs5kfRHtmKB8yu2S
-	9BQzGEr+5VKHIUROZdIHRfWDQz0yUoT99Z2C1f/67ITO74KktmK1VS4Dg3rxLPg0B6q2S8aZTgn
-	iAzbyWJJl2gNSoFUWT9SmuF0BhOjzaKrw+jmriQWMiAXhLn5Shg2AV8+vrTLYk1nrq6Jthsvf+p
-	AZvcHYbkRwO8BMZFY01C5MPX4dh4CXscUvIowVyCst5FLL8biJf0uoJPY9d1Xw9yNLYsWZVlM7n
-	Aon1pzmkOg5r95HZxiHiNsnTPWshwehX1oNxYRuZ4otD3qNXIt4+UWrgH9SdEUuVvtYUxSkUOw=
+        bh=WmM3uzbZnyWX7ZTyVsPhybFQT3KPyRdO9ddniD4WDrg=;
+        b=RO8Djyd5dfiH9Z9ThmA/FiesTy56y3R5tL2Wugi8U2iVdYkD9kkxZK2fLBqnRnaC1L
+         4mYkNYJHhUAsYNtwYsmZmd9p2A0U2fPhVFdDmSs/dcNIAuqBTqSg/GhUcGQyegz/yaQB
+         nJS1K8NgkLhyZWSXqN0pqSccT44+8OQWYJ3kWvD/qvSxyujsz+KdyaCdyPb65A3ytxKt
+         grSmwSURoFJg/EVM4L5A3HNEN9O7IeH+UFbkASgspC3moyCdjzpUExJC/3zYV1D1fsog
+         LnXsOZ6u0JQg7JbPzDLRZIuI+Sli4nQ3whjhkXN2eZOWV1skEGEdnZZ362xlka4J+uyn
+         VT/g==
+X-Forwarded-Encrypted: i=1; AJvYcCV7h3+LHBZmqMFBmeyBHgvu1IF44x0njCu84gd3KblhbFBj8xUnTJat7c+cF4CyZR/r47/PXcLn6En5Oy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrHYlybcnv8kj3HCFfAKrYEuUU5PHawHAyUnL/J3w6AvDgXb/l
+	zeXOrHuuCH82xufs1dgiySP1WmBF4MTrv8Sj9ewcmsgQGogHCyqB5CHwopQE0FLxEhxCiXSvvWa
+	X6HI5
+X-Gm-Gg: ASbGncuGkpfYkCvOTwghnV1lnl0Xk54flSjuPPsVc06zJs68yJVJq8fw4OxrWdyYEFT
+	K6Z7cycySrkZpvo557aznbjWf4AZafPTiadKqgzkzA2tkPC/rvouxN38cdgzicaQyW4qlhOOW+F
+	USvL445qBY5rANy5cRR0e30ykHEJh+cezKfptnDEwEdHDrLvUZClKkPLoMIV28G0Bcd10ujQGK9
+	3RWa+ciSQOdRku+q9fGw0e+kqj2ILlgV1o3DmnCdMbi7anq2wRfUDmBYyaBUorbVDnlgSxW0+9z
+	JbfmtWbADfPu3xSPv26F32wiTE0wukRastLGKjnxXS4eT8eVRcRPEGxn6IEdDDa7SnrUtdG0gg=
 	=
-X-Google-Smtp-Source: AGHT+IEouw2NsfDahsieU/ds8sAFUKZF8nkQYwWmiRsIPTzuT+5LOlyePYyXZlerd2b78gEPXxyFXA==
-X-Received: by 2002:a05:6000:310e:b0:3a4:f7ae:7801 with SMTP id ffacd0b85a97d-3a5686b97f1mr502671f8f.8.1749799008387;
-        Fri, 13 Jun 2025 00:16:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEolEb7tfFX0Bt2Sg7VF+35gzR6nKVWcO4jX4ONIvd6pX3z/jY8SqI9dzduB6tESwjhI8nX3w==
+X-Received: by 2002:a05:6000:401f:b0:3a3:7be3:d0f3 with SMTP id ffacd0b85a97d-3a56874a312mr648054f8f.14.1749799017861;
+        Fri, 13 Jun 2025 00:16:57 -0700 (PDT)
 Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25e89fsm41966305e9.33.2025.06.13.00.16.45
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a72cd3sm1479822f8f.32.2025.06.13.00.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 00:16:47 -0700 (PDT)
+        Fri, 13 Jun 2025 00:16:57 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Markus Mayer <mmayer@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sangwon Jee <jeesw@melfas.com>,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] cpufreq: brcmstb-avs: Fully open-code compatible for grepping
-Date: Fri, 13 Jun 2025 09:16:44 +0200
-Message-ID: <20250613071643.46754-2-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] Input: Fully open-code compatible for grepping
+Date: Fri, 13 Jun 2025 09:16:54 +0200
+Message-ID: <20250613071653.46809-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -76,19 +73,19 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=913; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=ikGB3PaPKDJ3MFxbiuFsbOiaKxZREXTcoX44pbpvZpM=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoS9BbtykD5yvYSc3IHLEdjE6QZ5fdc7hdJcQrQ
- XkjcMUBVBCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEvQWwAKCRDBN2bmhouD
- 1wyTD/4tuGyG5NOtPnE74wIMfUoYOtAeELKZqjvXWwUylioml49Ac0Qh6ZwPIaOu6U7ixm1CaLX
- cvHcPSpQYap42DayHLhB2urDzc+vx/ZVB5gOf9anqtvnNYoozDRjA8bCA2tXM345DT6pjpMNMpn
- yUtCamRrvJftoe0NPeSghpF/Md58mdCQohDIjUwLwMPdFqMFk33KBSrExBgRauwS+RHh/ftdx7o
- jJBk160pZbXfVhozDuUe4Lf6ldoDXrbIBKIYkHm6v5T2y5hrRn0QyerlUf7tQVPfTcjYpe5wV1w
- PAj+YEWvQ2lA/8hSqsYkjddLpbv/AEVYCK7JhEn6rrbYpKKBs0eB+fyrTq2BSH1N0pjReG7zjEi
- S8jap4jOZ07USJi1POvO9icL5K4I4VKfCaG5Ej4g4nl40AkOkdoZy7B/vP3YDv5wJd9HwB1V0cY
- hajKRVpx4s6zPVO6wUHcbuuXXh9ZrkExPtQ7BrdQGCAeIemdgWO3jM6VQ0DD0Fhl0yYpjnY9I9E
- 2wNuPMjx7pzqVMRaMD4KyaOFu9L1tjzgaJThhaFI2KdshNVZs06kT0ImV/2RTSi7KK3mZSvJJoI
- jByr8SOdPhXJOwQKfCO23j8GkJ2o0cVlP6WPS+c3ji0LqqPcPTwUkgpEmk0OXDPLLLizpwUHRsy IcqefU8bvrtJjYQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1486; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=s7H8hAOu8r6PsF0xyvqZ3QYYYUvxVZaHwOSbxv1Gj8Y=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoS9BldlK1h6nRICmW5g3qvf7r8ym+wnDpkfXeU
+ DxMLIRUhMuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEvQZQAKCRDBN2bmhouD
+ 17BFEACbck70vrGqWZcrG0AXxn9j9xycYF2Hd/YtQ0ckdRj/G65KoOMz9eEuVojxIuZpJg9rkun
+ F5lVaneeh34cJ0EEMPHk4w4t7pJ3i82l9rRByG6NOHPk6zYa8zMzo5b5UL7RwM+UREIIrTMU9s5
+ 7HJMdLfJlVVvGCIVDewunl9XNq6rYTiSun6u07eeyiatuHi6pCPDDkrGa5Q+JkVdakewfss8Itl
+ VY7I+pEp9bF9Fysx5i14nTZqeM2rSRAyCIUC0MF9BeHxoZTd+42Gq9xCTLVleugvD8GpyK1ckSV
+ jiu3a2yS7nq0/cHly18Pu5ii1jw2WuMyfqGMg1vLnFFVdSZ49zNnUkW2Zj7678gg9WohARn43C8
+ VqS2bchHSzvYFDZSkUyzsEi/rUzgEe8C/FRfYtOUn2Xjg/QuPiQrWgU7MqaLB6SV+I+tTbGkxaE
+ Qx38u3c05SJXQiLEUcvCOMnyx3NdOnwwZF9+2XOaA2RGhHPThoq7PsFJ8LpZ8P41yN7j7YvUYed
+ tJP8mCZSD74SOV+1bMzzFhLPS5/+ajC+Va8igThqg8orZAn7Cf/55XxzoI13B9/JnWz9tZF1/To
+ iwdm5wcDGVceIL44FeRitBUulnggd+JenE0/qpniIX2nH3ePMJ/FQXMeQJwtbhrHrmh9ToQPcWo 1W/0EE9IvQs50jw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
@@ -98,22 +95,36 @@ this means string will be effectively duplicated.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/misc/gpio-beeper.c        | 2 +-
+ drivers/input/touchscreen/melfas_mip4.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-index 7b841a086acc..5940d262374f 100644
---- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-+++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-@@ -765,7 +765,7 @@ static void brcm_avs_cpufreq_remove(struct platform_device *pdev)
- }
+diff --git a/drivers/input/misc/gpio-beeper.c b/drivers/input/misc/gpio-beeper.c
+index d2d2954e2f79..3d65cb4f4ef3 100644
+--- a/drivers/input/misc/gpio-beeper.c
++++ b/drivers/input/misc/gpio-beeper.c
+@@ -94,7 +94,7 @@ static int gpio_beeper_probe(struct platform_device *pdev)
  
- static const struct of_device_id brcm_avs_cpufreq_match[] = {
--	{ .compatible = BRCM_AVS_CPU_DATA },
-+	{ .compatible = "brcm,avs-cpu-data-mem" },
+ #ifdef CONFIG_OF
+ static const struct of_device_id gpio_beeper_of_match[] = {
+-	{ .compatible = BEEPER_MODNAME, },
++	{ .compatible = "gpio-beeper", },
  	{ }
  };
- MODULE_DEVICE_TABLE(of, brcm_avs_cpufreq_match);
+ MODULE_DEVICE_TABLE(of, gpio_beeper_of_match);
+diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
+index a6946e3d8376..869884219908 100644
+--- a/drivers/input/touchscreen/melfas_mip4.c
++++ b/drivers/input/touchscreen/melfas_mip4.c
+@@ -1554,7 +1554,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(mip4_pm_ops, mip4_suspend, mip4_resume);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id mip4_of_match[] = {
+-	{ .compatible = "melfas,"MIP4_DEVICE_NAME, },
++	{ .compatible = "melfas,mip4_ts", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, mip4_of_match);
 -- 
 2.45.2
 
