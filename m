@@ -1,153 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B61A2D879C
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0F72D5C63;
+	Fri, 13 Jun 2025 11:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749813150; cv=none; b=XYU8F9b1865TTB40nygSsH93qLn01g0Qw4FBbImseTzLMgZnJsc/Wclr6/v32+Xbcj00kZoz4wSIm8CcyRV8+ve5uuodHAW313q7Ferz/0q2p2zBU1JhDA8+QUDWePHANnmbVMqAD4u4ccC28ZGO1Zbsfd5okiu59+yCPcZCw68=
+	t=1749813157; cv=none; b=SIE0oH12zaJNGQgTffdst6kxIlvMHSdHjKBEYy+I2T6tBLLm1saRCC7H6t+Oeby9jOEwmRYks9xmPIF8QrY9j0yTcZQ9MT4hLokl2PyDMnYrnU3AKhmYs+G+X3KWaJNG3W+rmJyX31Qq8VbqNmjvlQW1EWa7vNTy6dO7O9ssolU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749813150; c=relaxed/simple;
-	bh=0REG/zbLfQM6oL3as2H+NdQ8dWf2KHS+uwkIi/jVwfM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KJCFZJxBrDc+3oWL9wmbjHd9YKxQfTXor/JHE8Jw2XV1S8l2lUCUqCuiE7EosQo6xMpKcwWOIDxFIP8xLk9QsJEKTqJn8rdygKaZM7ZWfqVLhnZpA+uxy8qTqEEy63zxtjKWIOiYyKtFSd6vZN5SgnL8Gkb+yVx6v99GhyAqOzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECA9E1D14;
-	Fri, 13 Jun 2025 04:12:01 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 284E63F59E;
-	Fri, 13 Jun 2025 04:12:21 -0700 (PDT)
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: will@kernel.org,
-	catalin.marinas@arm.com,
-	sami.mujawar@arm.com,
-	aneesh.kumar@kernel.org,
-	steven.price@arm.com,
-	linux-kernel@vger.kernel.org,
-	sudeep.holla@arm.com,
-	Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 1/3] arm64: realm: ioremap: Allow mapping memory as encrypted
-Date: Fri, 13 Jun 2025 12:11:51 +0100
-Message-ID: <20250613111153.1548928-2-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613111153.1548928-1-suzuki.poulose@arm.com>
-References: <20250613111153.1548928-1-suzuki.poulose@arm.com>
+	s=arc-20240116; t=1749813157; c=relaxed/simple;
+	bh=3JSffdcKG1BEdfLxDkvCLXE5WcpkgQe1rrYaCHuFNrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gxwTZXmvmzlIjd4Wtz6vucKvPu0KgqWuIKw28WuizKOHJ7y3czPBm4Rur1Ps/ffXaM7s8DybRV8AjDdtHSSR0JHY6HSTPCpnO8/dVsa/60T+DKMWwm5bopFKdY+SEnPiwvXWy++8WUKPaPr290dXLifV2tuCDI/ePYyZOb/x6sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4kKdw9S; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4kKdw9S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE8AC4CEF1;
+	Fri, 13 Jun 2025 11:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749813156;
+	bh=3JSffdcKG1BEdfLxDkvCLXE5WcpkgQe1rrYaCHuFNrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g4kKdw9SM2bno1fEAUiCi6mw5ZmG2oOwM9TdgZeIyT1IQbX7X77HcJ1LYqfuskboa
+	 JGRT3GgKJU7HfdKVHhEwM6RbZVBVlK/P5c4ZU4IqGpHDoM9jVWM/ytqZuhOEoKayrO
+	 xTsq76VB+ZzyRppRpOMFJJN6JOHbjdwagkrEFx3Ng0/lhqAyAceklyVmJaQug8641Q
+	 JSHHo90KaBC05xuTm1/zTU/9LwbDwYf8mzg7yZYfDEuuM89nlEVvUy9Ws3qrTN5xaj
+	 +W1kJlaU5hXI6P9GIWNe9FGwWwkVeh7uwqDhoiXxU9TaeL0RzbPSSxvPd6dZscVPeL
+	 2OG33FATjlbqg==
+Date: Fri, 13 Jun 2025 12:12:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sandy Huang <hjc@rock-chips.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Qin Jian <qinjian@cqplus1.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, kernel@collabora.com,
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
+	linux-sound@vger.kernel.org, netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 14/20] ASoC: rockchip: i2s-tdm: switch to
+ HWORD_UPDATE_CONST macro
+Message-ID: <f38ea320-8eaa-4eea-85c1-63d44c8d359a@sirena.org.uk>
+References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+ <20250612-byeword-update-v1-14-f4afb8f6313f@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EoywhozqJ8iTP5HR"
+Content-Disposition: inline
+In-Reply-To: <20250612-byeword-update-v1-14-f4afb8f6313f@collabora.com>
+X-Cookie: Use extra care when cleaning on stairs.
 
-For ioremap(), so far we only checked if it was a device (RIPAS_DEV) to choose
-an encrypted vs decrypted mapping. However, we may have firmware reserved memory
-regions exposed to the OS (e.g., EFI Coco Secret Securityfs, ACPI CCEL).
-We need to make sure that anything that is RIPAS_RAM (i.e., Guest
-protected memory with RMM guarantees) are also mapped as encrypted.
 
-Rephrasing the above, anything that is not RIPAS_EMPTY is guaranteed to be
-protected by the RMM. Thus we choose encrypted mapping for anything that is not
-RIPAS_EMPTY. While at it, rename the helper function
+--EoywhozqJ8iTP5HR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  __arm64_is_protected_mmio => arm64_rsi_is_protected
+On Thu, Jun 12, 2025 at 08:56:16PM +0200, Nicolas Frattaroli wrote:
+> The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+> drivers that use constant masks.
+>=20
+> Replace the implementation of this driver's HIWORD_UPDATE macro with an
+> instance of HWORD_UPDATE_CONST. The const variant is chosen here because
+> some of the header defines are then used in initializers.
 
-to clearly indicate that this not an arm64 generic helper, but something to do
-with Realms.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Cc: Sami Mujawar <sami.mujawar@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Steven Price <steven.price@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- arch/arm64/include/asm/io.h  |  2 +-
- arch/arm64/include/asm/rsi.h |  2 +-
- arch/arm64/kernel/rsi.c      | 26 ++++++++++++++++++++++----
- 3 files changed, 24 insertions(+), 6 deletions(-)
+--EoywhozqJ8iTP5HR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 9b96840fb979..82276282a3c7 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -311,7 +311,7 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
- static inline bool arm64_is_protected_mmio(phys_addr_t phys_addr, size_t size)
- {
- 	if (unlikely(is_realm_world()))
--		return __arm64_is_protected_mmio(phys_addr, size);
-+		return arm64_rsi_is_protected(phys_addr, size);
- 	return false;
- }
- 
-diff --git a/arch/arm64/include/asm/rsi.h b/arch/arm64/include/asm/rsi.h
-index b42aeac05340..88b50d660e85 100644
---- a/arch/arm64/include/asm/rsi.h
-+++ b/arch/arm64/include/asm/rsi.h
-@@ -16,7 +16,7 @@ DECLARE_STATIC_KEY_FALSE(rsi_present);
- 
- void __init arm64_rsi_init(void);
- 
--bool __arm64_is_protected_mmio(phys_addr_t base, size_t size);
-+bool arm64_rsi_is_protected(phys_addr_t base, size_t size);
- 
- static inline bool is_realm_world(void)
- {
-diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
-index ce4778141ec7..c64a06f58c0b 100644
---- a/arch/arm64/kernel/rsi.c
-+++ b/arch/arm64/kernel/rsi.c
-@@ -84,7 +84,25 @@ static void __init arm64_rsi_setup_memory(void)
- 	}
- }
- 
--bool __arm64_is_protected_mmio(phys_addr_t base, size_t size)
-+/*
-+ * Check if a given PA range is Trusted (e.g., Protected memory, a Trusted Device
-+ * mapping, or an MMIO emulated in the Realm world).
-+ *
-+ * We can rely on the RIPAS value of the region to detect if a given region is
-+ * protected.
-+ *
-+ *  RIPAS_DEV - A trusted device memory or a trusted emulated MMIO (in the Realm
-+ *		world
-+ *  RIPAS_RAM - Memory (RAM), protected by the RMM guarantees. (e.g., Firmware
-+ *		reserved regions for data sharing).
-+ *
-+ *  RIPAS_DESTROYED is a special case of one of the above, where the host did
-+ *  something without our permission and as such we can't do anything about it.
-+ *
-+ * The only case where something is emulated by the untrusted hypervisor or is
-+ * backed by shared memory is indicated by RSI_RIPAS_EMPTY.
-+ */
-+bool arm64_rsi_is_protected(phys_addr_t base, size_t size)
- {
- 	enum ripas ripas;
- 	phys_addr_t end, top;
-@@ -101,18 +119,18 @@ bool __arm64_is_protected_mmio(phys_addr_t base, size_t size)
- 			break;
- 		if (WARN_ON(top <= base))
- 			break;
--		if (ripas != RSI_RIPAS_DEV)
-+		if (ripas == RSI_RIPAS_EMPTY)
- 			break;
- 		base = top;
- 	}
- 
- 	return base >= end;
- }
--EXPORT_SYMBOL(__arm64_is_protected_mmio);
-+EXPORT_SYMBOL(arm64_rsi_is_protected);
- 
- static int realm_ioremap_hook(phys_addr_t phys, size_t size, pgprot_t *prot)
- {
--	if (__arm64_is_protected_mmio(phys, size))
-+	if (arm64_rsi_is_protected(phys, size))
- 		*prot = pgprot_encrypted(*prot);
- 	else
- 		*prot = pgprot_decrypted(*prot);
--- 
-2.43.0
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhMB5YACgkQJNaLcl1U
+h9Bobgf/dsPkAlIpLO/GS4oVRLlRiPIWa/agIoUuXFfDugqesR7MdX12gZHAzJ9s
+BnznMlPSuOjDnlFPdVpRCgVr4iPfs88ixFAuy/SjKEjvV8VYAUBEs1sg2JykJyMZ
+SkQ69/Iii/uButuWqecqljEHZvL7j67axT7KsEimeZ1zynLexrz7vtE6t4P8p+YE
+7qrc1oKA5kjXrIug8enyLvuLzI75M7MfzuRaooCPej44mc4bjqpuH6zXCxPzAWt9
+0LEzYDn7kdMZ5Yn0Vp35b8uKRqPdQs1heacEsmiHmKPfvnY/klYg1G9M71t9OVpm
+EE2sy3C4QrYbYl73/UBH9Z7zoN/X2A==
+=9PDr
+-----END PGP SIGNATURE-----
+
+--EoywhozqJ8iTP5HR--
