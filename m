@@ -1,315 +1,165 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2078.outbound.protection.outlook.com [40.107.100.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9853D1A254C;
-	Fri, 13 Jun 2025 18:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840689; cv=none; b=CDL50gYAa/pKdqo8+2/LOSYxPpFOcobZcqVx2PXGGvVT624rQiYsZGHeJKEtn98cwq+oO6xbIcdMa+ooQ7OwhJW3tFvQHCrPU/8OqFWHO+Tp+4J60kvRS8htODuo6vpDQRa2hcubrxIOW9OUKn9y3T0hxFcT/OtHAEsjpfQC5cM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840689; c=relaxed/simple;
-	bh=z33FYu9xpQR91mz28Ot9Lsn4vMCPOY75basP6xozkFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Th5+pBwjbPqwhrx4djWmZkfKMQ/ygsSnkPGyyUXl1Rax5YFphVIdPU9spp5fkPflT2kpT1X2AGlzTYyC+IutxrQsz20ML3zYOxJ4n2IFuSXvzNOnYrY+jk2fmICIA/LhlI5kPOo3CMAgQcTVzIeh5rOrYO2bk8v8gb/IkaSkhpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhGe6Fxi; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C732AE6D;
+	Fri, 13 Jun 2025 18:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749840727; cv=fail; b=ey4P/e6ufNLBMnu9oR982nKG3luNFDiJ3+SgARij0K+OrvDUUTyvKr7u3XRzukUIP1DMGYYrvJ99xYitr69YTwrp3z8NtyRsq38bJWLeytgljSLcFKmR0JME6t25njowtvzLGREKcTvT3G0XQVC4oNMEvrUxCesLVwt2Fchr9DY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749840727; c=relaxed/simple;
+	bh=XiB56qM3I0Z9nN48zoF0QxxExr4Qs/aYpVHQ9X7KfyI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fkH5YzRB3wEO4UoOhkYmh4Zjfppz18pdTqUdlfHqzE/M/MN2pzdL7x92YHi2IqOzS83f0qi/sWohctgM/EFi5a6yGBRoxTAKyf95+Mgepbu7I4NHs0zJl7jHOvhVDc/bSMp5j7uiy5Sq9isDJ8Ufj3Tsx5jH/H+ch2ztYw7hk5k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=IJZ1qP4y; arc=fail smtp.client-ip=40.107.100.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhGe6Fxi"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ade48b24c97so364872066b.2;
-        Fri, 13 Jun 2025 11:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749840686; x=1750445486; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JSRxValwcmkk+jvT8gtFqyK3rDsLmQ1dL3e3fNgDB+I=;
-        b=WhGe6Fximn/UE8km1XTkPLRUgi8LoTphUMyQtL9GeeFJnuPlg1kLFgk7Ncp66jcqu3
-         jCl5YGTzZ2ocX1LZM/32o6jrkXRoXYjrwuntaH55P2thX2K6fQeG88fO8fDA3vfh/aCz
-         YywN391ZNPRzv8WxhUmrFtsBFrHxMz6BZr0cuq2YP7jF1DAj7sq8G0x/SRDKbgN9xW2d
-         8Gvyj7s2Y7upJS3rfvKetSIeo3Hpk/lf9LnhD7rQZp01gDHtcHDepM5FVLqPJORCpsMd
-         +kybLqp464svnKtHbP4XCpctmCb9uEqGNc0T0BRggN+penec3U1zH/9gN2N8Guu2Punp
-         7DOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749840686; x=1750445486;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JSRxValwcmkk+jvT8gtFqyK3rDsLmQ1dL3e3fNgDB+I=;
-        b=X+FVB3YwsYy66xzLS2xc9m5iLdtNB75T7F5uWJ8EaALgFsrYY3KkoKVUTfvrvyOyIs
-         3lr6D8J46KRhLNCCGG8IvHzSCGHQ4iYjHvXKCnMk9umE7Z/jlHsv8cwLgtawbZks+rSO
-         TmmLwuafZ8Zjsue5ZLj7igLI4Yss90+xYvz29AOd96B+4yAMu79gaReYGPHaeBxGk2IQ
-         4hGkFlMfvFQaSVHMtLIhQeFGp+3xWVQzrghVtseTyITjrz9jWLWfOku8YSJ710RGXyNQ
-         0uYyR20nAaFYljSLqFrvUz0HNowWNzq+Kxwb2MHkN2mXyBJV2++mZp+DGwZACxE2FmNd
-         7Krw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtLqB6sjPs2Wqdv6AlZ7Cs29Mklz1FXsXDEe+YcPkpI8Psy+u89yVWFwu47J5YM34aTttorl739EGrBoaG@vger.kernel.org, AJvYcCXJ2XeS1u+DPhaAHZKMrh2EKBtLK1ah0/THQpbF1vzl3g01fyXVO61v3LFcQXmYhPQ+gqdd/XsjRE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzttraOtDLkDpD0qL3Xxm4b638KdnQjthdG5v1J/lENrcr0+sPc
-	m2o96eJ27kDVBqBNzTBHPupPZcOkptdkHlRdRVnNPpIQRheUfrJA0ltP44yMe7wFbrtDetndvuT
-	gEzXOslvI5+tG4/4sZtuAJOkeUeEzJVA=
-X-Gm-Gg: ASbGncviEtYMO8CtR4MZp/xUiDK9tfQewxOONNnFdXv65QwAU1weKJ8kJQUL72f5CLM
-	mlvWOwcJneULv2LFrmLsjfZI6O/29uXXPI7hAdjcRHU4U//yG99XWeCxxfFrJND/ti1vZGpnf76
-	bZBQag3Qp2RYUABIZfOViUj2ujxxHxVOSILIpPwzoUaQ==
-X-Google-Smtp-Source: AGHT+IEnTw18i3vfnI0CJk3MDKIj5ydGBKKQQghUhrAvgODgZu02EiwLas1fNGjBXvj9+G9KC9JQEosJjVG83PcvjNw=
-X-Received: by 2002:a17:907:97ce:b0:ade:9b52:4cc2 with SMTP id
- a640c23a62f3a-adfad4b7e61mr24182966b.59.1749840685299; Fri, 13 Jun 2025
- 11:51:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="IJZ1qP4y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aNZOXET2WRhcudBw7xyA9x72VljXMiXUJ0qLVf9+E8GKdNZdcXNfzORTYxuDHhMAKePelyNbrw6OwqnD/GQhhLyQPrwuhz+8pNzXfki4roSDFVrOxnv6yxlI2kK/7XAteT0rQ7wGL0Ww5a8/NqFvzwe+vs1ZYsX7ruME3KaZ62Bs6gXDIFtmjUhLKp0mjGeFp3jfEuR/eLqpKbjdCtMO46DIvSsujSWsrjxGewIIFktkqnCc7KZqADgnmFHV8plvcBLMcrYyKujFil/14HoENR062+XYpEfPHMs36KVAx4weOWZsuST1EM4UEbcoFgifHILL7O56YaMqpsBCB7khng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iVUypV9a6PWHZQlw8mairoRJndMRMR1TKRuuZBcUSfk=;
+ b=AMEnRvFUaQ/LKCyPNwyY9XykTmQHhjYMUTwjOabutXbgh/FRTvHh/oG+ZIuxEyBNGbR00PQDsRmijltk2A5S2CdSSXB6vJpO/Sey6kJrxMmH5B/yUj2eY7GL54t48TCDrPYtb2sesBS/e39Ns4yVtN89p4Xwj4lVL8JSRh/qUnw8SEDORpwZJAJDKgktrluUgosCRyc3fc/LcW9V13UqVK20YLg5oSXViTInCqXWwgeuyw3dgzRsbOqJgtf5L15DEo18mv0UbfeH9wF+8xjjoOb2wkxFIpV607Ud8g6FvO+GdvNogMHkV4DTIGtwVB3O3yMCqzWs7xs8LH59oaJFcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=lunn.ch smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iVUypV9a6PWHZQlw8mairoRJndMRMR1TKRuuZBcUSfk=;
+ b=IJZ1qP4yZn5DPJwvPSdsh12a3DQeV/JM6UeOafO56Hijq9jhjAD5xv8bf8ayHBIaBs8eYo+CFvo5yR1OL5j4F4IuJcdsxFShYPQju/Ziy0F+20uvVfKVZ/B8+yjFg1adUSfwTpgmwdPGbHaX1zevhmEFGAjbdBe7unQV03sSDyBNi9tFdbI84wCnLq1IjF/eeR6DlY+Dllu+E7a7wTHcILTis3/hmnpR+7aMRrwzBz0mLB6veOXkOaPSjSo794Mu8CfkYB/8Rgz8uw+5JJ2r10S+nJPSH2DNFYKaX4vJBnQxozjl4+lktB0zIAgeiT3eCkZ+VTrWk47yrHpBeG3t9g==
+Received: from SN6PR05CA0008.namprd05.prod.outlook.com (2603:10b6:805:de::21)
+ by MN0PR12MB6102.namprd12.prod.outlook.com (2603:10b6:208:3ca::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
+ 2025 18:51:58 +0000
+Received: from SN1PEPF000252A0.namprd05.prod.outlook.com
+ (2603:10b6:805:de:cafe::c4) by SN6PR05CA0008.outlook.office365.com
+ (2603:10b6:805:de::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.26 via Frontend Transport; Fri,
+ 13 Jun 2025 18:51:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF000252A0.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 18:51:58 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 13 Jun
+ 2025 11:51:34 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 13 Jun
+ 2025 11:51:34 -0700
+Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Fri, 13
+ Jun 2025 11:51:34 -0700
+From: David Thompson <davthompson@nvidia.com>
+To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<u.kleine-koenig@baylibre.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, David Thompson
+	<davthompson@nvidia.com>, Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: [PATCH net v1] mlxbf_gige: return EPROBE_DEFER if PHY IRQ is not available
+Date: Fri, 13 Jun 2025 18:51:29 +0000
+Message-ID: <20250613185129.1998882-1-davthompson@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613143605.5748-1-al.kochet@gmail.com> <20250613143605.5748-2-al.kochet@gmail.com>
- <aExS9WB0Ussl4Lec@smile.fi.intel.com>
-In-Reply-To: <aExS9WB0Ussl4Lec@smile.fi.intel.com>
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Date: Fri, 13 Jun 2025 21:51:14 +0300
-X-Gm-Features: AX0GCFtCk7v9OD9f3sQF1fL8ctIXm0GIREAbZAwkzKzRDhdNPbUrzKoQgjba-ko
-Message-ID: <CAPUzuU1r2xmJyG_Ke8pAvoZjJdvFwnxUqv1XQH7PrW3e3PTZoQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] dmaengine: virt-dma: convert tasklet to BH workqueue
- for callback invocation
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>, 
-	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Shan-Chun Hung <schung@nuvoton.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Paul Cercueil <paul@crapouillou.net>, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Longfang Liu <liulongfang@huawei.com>, Andy Shevchenko <andy@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Keguang Zhang <keguang.zhang@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, 
-	Robert Jarzmik <robert.jarzmik@free.fr>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, 
-	=?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Laxman Dewangan <ldewangan@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Dave Jiang <dave.jiang@intel.com>, Amit Vadhavana <av2082000@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Md Sadre Alam <quic_mdalam@quicinc.com>, 
-	Casey Connolly <casey.connolly@linaro.org>, Kees Cook <kees@kernel.org>, 
-	Fenghua Yu <fenghua.yu@intel.com>, Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A0:EE_|MN0PR12MB6102:EE_
+X-MS-Office365-Filtering-Correlation-Id: cacdc8ab-1690-4fea-540d-08ddaaab5ff4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6707V0to7zpNEloFlgR4EoHpl950Aefmk4h/tdKFI+J5j7u8ZaZhgBYOmDhB?=
+ =?us-ascii?Q?8K/q1de8VRirZChEUGKBmdUZ7r1GL9zMkkHFJa07Sj9iUgvDIflO85NxB9gM?=
+ =?us-ascii?Q?/C0oEIWl/H8Q4Mgdq+fbQrBOoSCPfgZRimLwr4IQr5j4s1XUthm2e9+0Z8o8?=
+ =?us-ascii?Q?t3rDMxIDem1NsER6trwiMqFwLMyKBKRQJvYQC3W+xZjAYU6J0k3UrdMhVdk/?=
+ =?us-ascii?Q?b+aHNWiZWSM4Yjd7xNYhs9yGUW2zx8gOPO3gahVfmTHtKDxymxTwmOR36KOt?=
+ =?us-ascii?Q?SolCQmLS6nNM+1FEwfNPCNmntFgNyIB9D48pyt3QkAITIQCqR7wsutLv/gCb?=
+ =?us-ascii?Q?L38cOJYvN0MwJ0OTq80+ZJzq/Y0bbtlnEqUqKDVuJMycBYQRZFb+ne0pxdB9?=
+ =?us-ascii?Q?Qks+l4vQaVy/DscF55LOQfLMMB/Si6JJnZDrmNBKDosRBM+eT0GD3WKWcQwy?=
+ =?us-ascii?Q?j+Q9WWjTpO8RPzi3KxY3+LaHc0smIV3OKtxcsaQMxuoTnRtV48RJxZHEvBRG?=
+ =?us-ascii?Q?3ZNUYGB4lixmpgUuAlgoZdRFtC4y5V2g4U78yfnlqWEdZ30LyylL//+9fBeU?=
+ =?us-ascii?Q?7+LL3HunmdjxYVFatpUZh3J1LWWubIpE4MlZBbP8atG9izA51fG4UrE424fi?=
+ =?us-ascii?Q?WmCyK5UMjXPnP3vtgTlsLoOlUHdfJZwnulykNQNov2Ax4sBfGita1Ht42LBD?=
+ =?us-ascii?Q?Galq6NQ3vtPGFBfofIhk03KU/VfQf4BrjaZMN8T64I2VzD7KNpYfTFZiiU2i?=
+ =?us-ascii?Q?N/tTybC1pS7Kp/T6keRJb2ia5CY7DiTYkjLaCTEAlNhDixDukEN6qTV5uvbi?=
+ =?us-ascii?Q?qylUo9viSEEY67qU3Qz1NMT4708hMVENI0bmXyTc2+S2Eydad7Dt7ImVppZp?=
+ =?us-ascii?Q?4s34QxfgJ0LXqFNNBVfNuomThnSOSY/88z+RTrO8uvwzdY7kuKuUPC/jEa7g?=
+ =?us-ascii?Q?RWffzGkrBXlU4uHE8d9VkCOwfQ1rTRQNSCYb562+ZMzMEH47fM170g5Map6U?=
+ =?us-ascii?Q?bhFqEukfDt/+vDtF605GwrNINPogq75HTNfTIV4Xo6KsSjHpdAeAlobvnEHL?=
+ =?us-ascii?Q?QYanV63Ale2HGtj09apOXht510MU6mnSQbmqCXOyQ5VoO6Om/LZKG2+SZ//u?=
+ =?us-ascii?Q?QUdZnw7sj4eN9BkjwEJcoNBjS3eBN6kua7ZY60WpGnTaqibT8rcziwbfF/Vs?=
+ =?us-ascii?Q?Cp1KjDwdUo1zPenlx3d+j6DWxJom6zQ1pEyVGR12OH8HwY1Vz2Liz9EbZDrw?=
+ =?us-ascii?Q?/wQVkMQ6OZ4MrY9WergND2oRHO0O6Ar3PEWOT8UvQz4RGCIZfx5LL57UmEVr?=
+ =?us-ascii?Q?WR7YOfQIJC8VBjcVsbl9pFfxwyKQEIHfyFmFd2r4mMlbWfJuEay3kkv2JKi+?=
+ =?us-ascii?Q?fmLlvIVL7Qr9yfsPKaeAHHrif2BzDeZjp13Dq4kcGHruJJ3XuWdMDcyM9SiP?=
+ =?us-ascii?Q?2Bdd65z6BsLlnzT2BRtIEK1tkUJ6djfN947JAJyoEYEv0PxZxeadw1tc0kYw?=
+ =?us-ascii?Q?AFYJb7RuVkQbh1+CycVY5nwaDP226MH3yyfN?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 18:51:58.1290
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cacdc8ab-1690-4fea-540d-08ddaaab5ff4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6102
 
->
-> It seems it was ordered. Please, preserve the order.
-> It not, try to squeeze to have longest possible ordered chain
-> (it can be interleaved with something unordered, just look at
->  the big picture).
->
-> (Same applies to other similar cases)
+The message "Error getting PHY irq. Use polling instead"
+is emitted when the mlxbf_gige driver is loaded by the
+kernel before the associated gpio-mlxbf driver, and thus
+the call to get the PHY IRQ fails since it is not yet
+available. The driver probe() must return -EPROBE_DEFER
+if acpi_dev_gpio_irq_get_by() returns the same.
 
-I'll this that in v2. Thanks!
+Signed-off-by: David Thompson <davthompson@nvidia.com>
+Reviewed-by: Asmaa Mnebhi <asmaa@nvidia.com>
+---
+ drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> ...
->
-> What about the driver(s) that use threaded IRQ instead?
-> Do you plan to convert them as well?
->
-> I am talking about current users of virt-dma that do not use tasklets.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
+diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
+index fb2e5b844c15..d76d7a945899 100644
+--- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
++++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
+@@ -447,8 +447,10 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
+ 	priv->llu_plu_irq = platform_get_irq(pdev, MLXBF_GIGE_LLU_PLU_INTR_IDX);
+ 
+ 	phy_irq = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(&pdev->dev), "phy", 0);
+-	if (phy_irq < 0) {
+-		dev_err(&pdev->dev, "Error getting PHY irq. Use polling instead");
++	if (phy_irq == -EPROBE_DEFER) {
++		err = -EPROBE_DEFER;
++		goto out;
++	} else if (phy_irq < 0) {
+ 		phy_irq = PHY_POLL;
+ 	}
+ 
+-- 
+2.43.2
 
-I think, I've found all the users of virt-dma. Could you, please,
-provide example of such driver?
-Here is what I did to locate current users of virt-dma.
-
-I got list of drivers using following command:
-grep -r -e 'struct virt_dma_chan' -e 'virt-dma.h' . | sort | cut -f 1
--d : | uniq
-
-./drivers/dma/amba-pl08x.c
-./drivers/dma/amd/ae4dma/ae4dma.h
-./drivers/dma/amd/ptdma/ptdma.h
-./drivers/dma/amd/qdma/qdma.c
-./drivers/dma/amd/qdma/qdma.h
-./drivers/dma/arm-dma350.c
-./drivers/dma/at_hdmac.c
-./drivers/dma/bcm2835-dma.c
-./drivers/dma/dma-axi-dmac.c
-./drivers/dma/dma-jz4780.c
-./drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-./drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-./drivers/dma/dw-edma/dw-edma-core.c
-./drivers/dma/dw-edma/dw-edma-core.h
-./drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-./drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
-./drivers/dma/fsl-edma-common.h
-./drivers/dma/fsl-qdma.c
-./drivers/dma/hisi_dma.c
-./drivers/dma/hsu/hsu.h
-./drivers/dma/idma64.h
-./drivers/dma/img-mdc-dma.c
-./drivers/dma/imx-sdma.c
-./drivers/dma/k3dma.c
-./drivers/dma/lgm/lgm-dma.c
-./drivers/dma/loongson1-apb-dma.c
-./drivers/dma/loongson2-apb-dma.c
-./drivers/dma/mediatek/mtk-cqdma.c
-./drivers/dma/mediatek/mtk-hsdma.c
-./drivers/dma/mediatek/mtk-uart-apdma.c
-./drivers/dma/milbeaut-hdmac.c
-./drivers/dma/milbeaut-xdmac.c
-./drivers/dma/moxart-dma.c
-./drivers/dma/owl-dma.c
-./drivers/dma/pxa_dma.c
-./drivers/dma/qcom/bam_dma.c
-./drivers/dma/qcom/gpi.c
-./drivers/dma/qcom/qcom_adm.c
-./drivers/dma/sa11x0-dma.c
-./drivers/dma/sf-pdma/sf-pdma.c
-./drivers/dma/sf-pdma/sf-pdma.h
-./drivers/dma/sh/rz-dmac.c
-./drivers/dma/sh/usb-dmac.c
-./drivers/dma/sprd-dma.c
-./drivers/dma/st_fdma.h
-./drivers/dma/stm32/stm32-dma.c
-./drivers/dma/stm32/stm32-dma3.c
-./drivers/dma/stm32/stm32-mdma.c
-./drivers/dma/sun4i-dma.c
-./drivers/dma/sun6i-dma.c
-./drivers/dma/tegra186-gpc-dma.c
-./drivers/dma/tegra210-adma.c
-./drivers/dma/ti/edma.c
-./drivers/dma/ti/k3-udma.c
-./drivers/dma/ti/omap-dma.c
-./drivers/dma/uniphier-mdmac.c
-./drivers/dma/uniphier-xdmac.c
-./drivers/dma/virt-dma.c
-./drivers/dma/virt-dma.h
-./drivers/dma/xilinx/xdma.c
-./drivers/dma/xilinx/xilinx_dpdma.c
-
-After that I did following to find additional drivers, and found them
-inside misc.
-grep -r -e ae4dma.h -e ptdma.h -e qdma.h -e dw-axi-dmac.h -e
-dw-edma-core.h -e dpaa2-qdma.h -e fsl-edma-common.h -e hsu.h -e
-idma64.h -e sf-pdma.h -e st_fdma.h  . | sort | cut -f 1 -d : | uniq
-
-./drivers/dma/amd/ae4dma/ae4dma-dev.c
-./drivers/dma/amd/ae4dma/ae4dma-pci.c
-./drivers/dma/amd/ae4dma/ae4dma.h
-./drivers/dma/amd/ptdma/ptdma-debugfs.c
-./drivers/dma/amd/ptdma/ptdma-dev.c
-./drivers/dma/amd/ptdma/ptdma-dmaengine.c
-./drivers/dma/amd/ptdma/ptdma-pci.c
-./drivers/dma/amd/qdma/qdma-comm-regs.c
-./drivers/dma/amd/qdma/qdma.c
-./drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-./drivers/dma/dw-edma/dw-edma-core.c
-./drivers/dma/dw-edma/dw-edma-pcie.c
-./drivers/dma/dw-edma/dw-edma-v0-core.c
-./drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-./drivers/dma/dw-edma/dw-hdma-v0-core.c
-./drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-./drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-./drivers/dma/fsl-edma-common.c
-./drivers/dma/fsl-edma-main.c
-./drivers/dma/fsl-edma-trace.c
-./drivers/dma/fsl-qdma.c
-./drivers/dma/hsu/hsu.c
-./drivers/dma/hsu/hsu.h
-./drivers/dma/hsu/pci.c
-./drivers/dma/idma64.c
-./drivers/dma/idma64.h
-./drivers/dma/mcf-edma-main.c
-./drivers/dma/mediatek/mtk-cqdma.c
-./drivers/dma/sf-pdma/sf-pdma.c
-./drivers/dma/st_fdma.c
-./drivers/dma/st_fdma.h
-./drivers/mfd/intel-lpss.c
-./drivers/net/ethernet/airoha/airoha_eth.c
-./drivers/net/ethernet/mediatek/mtk_eth_soc.c
-./drivers/net/ethernet/mediatek/mtk_eth_soc.h
-./drivers/pci/controller/pcie-xilinx-dma-pl.c
-./drivers/tty/serial/8250/8250_mid.c
-./include/linux/dma/hsu.h
-
-Just realized, that I missed to check this drivers:
-./drivers/net/ethernet/airoha/airoha_eth.c
-./drivers/net/ethernet/mediatek/mtk_eth_soc.c
-./drivers/net/ethernet/mediatek/mtk_eth_soc.h
-./drivers/pci/controller/pcie-xilinx-dma-pl.c
-./drivers/tty/serial/8250/8250_mid.c
-
-I've applied the following config to the kernel, to build all the
-drivers. I've modified some Kconfig files in order all options apply.
-And checked that every file in the above list builds successfully.
-Some drivers have compile errors, unrelated to virt-dma. Some drivers
-produce link errors, but compile success. I checked that each .o-file
-has a reasonable size.
-
-CONFIG_FORCE_PCI=y
-CONFIG_PCI=y
-CONFIG_AMD_QDMA=y
-CONFIG_AMD_PTDMA=y
-CONFIG_DW_AXI_DMAC=y
-CONFIG_DW_EDMA=y
-CONFIG_DW_EDMA_PCIE=y
-CONFIG_INTEL_LDMA=y
-CONFIG_MTK_HSDMA=y
-CONFIG_MTK_CQDMA=y
-CONFIG_MTK_UART_APDMA=y
-# CONFIG_QCOM_ADM=y - error: assignment to 'u32 *' {aka 'unsigned int
-*'} from incompatible pointer type 'phys_addr_t *'
-CONFIG_QCOM_GPI_DMA=y
-CONFIG_QCOM_BAM_DMA=y
-CONFIG_SF_PDMA=y
-CONFIG_STM32_DMA=y
-CONFIG_STM32_MDMA=y
-CONFIG_STM32_DMA3=y
-CONFIG_DMA_OMAP=y
-CONFIG_TI_EDMA=y
-CONFIG_TI_K3_UDMA=y
-CONFIG_XILINX_ZYNQMP_DPDMA=y
-CONFIG_XILINX_XDMA=y
-CONFIG_AMBA_PL08X=y
-CONFIG_ARM_DMA350=y
-# CONFIG_FSL_DMA=y - error: implicit declaration of function '__ilog2
-CONFIG_FSL_EDMA=y
-CONFIG_FSL_QDMA=y
-CONFIG_MCF_EDMA=y
-CONFIG_INTEL_IDMA64=y
-CONFIG_DMA_SUN6I=y
-CONFIG_DMA_SUN4I=y
-CONFIG_AT_HDMAC=y
-# CONFIG_ST_FDMA=y - link errors
-CONFIG_K3_DMA=y
-CONFIG_DMA_SA11X0=y
-CONFIG_AXI_DMAC=y
-CONFIG_IMG_MDC_DMA=y
-CONFIG_UNIPHIER_XDMAC=y
-CONFIG_UNIPHIER_MDMAC=y
-CONFIG_LOONGSON1_APB_DMA=y
-CONFIG_LOONGSON2_APB_DMA=y
-CONFIG_DMA_BCM2835=y
-CONFIG_TEGRA210_ADMA=y
-CONFIG_TEGRA186_GPC_DMA=y
-CONFIG_MOXART_DMA=y
-CONFIG_DMA_JZ4780=y
-CONFIG_IMX_SDMA=y
-CONFIG_OWL_DMA=y
-CONFIG_SPRD_DMA=y
-CONFIG_MILBEAUT_XDMAC=y
-CONFIG_MILBEAUT_HDMAC=y
-CONFIG_HISI_DMA=y
-# CONFIG_FSL_DPAA2_QDMA=y - link errors
-CONFIG_RZ_DMAC=y
-CONFIG_RENESAS_USB_DMAC=y
-CONFIG_PXA_DMA=y
-CONFIG_HSU_DMA=y
-CONFIG_HSU_DMA_PCI=y
-CONFIG_MFD_INTEL_LPSS=y
