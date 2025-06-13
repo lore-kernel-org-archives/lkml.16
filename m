@@ -1,322 +1,179 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE731F03DE;
-	Fri, 13 Jun 2025 15:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC871FC7F1;
+	Fri, 13 Jun 2025 15:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829800; cv=none; b=LisXldHsqi2Z7WyaGPm8bKrNAD8+rxg5TIaW5rcV57KtdJq2+9pHOkzjk9sjn6sRB8zDCXyJALRevIuB40hzMs1wcv2jl3kgAMk7Wv5XuPrxV621OdQxnr+MJkEgZZZV//0SPtG9E6EGi5ljxuCcxhAzwZ64cz7dFsk1qYtzWAo=
+	t=1749829837; cv=none; b=dTLthk9dNDY+AK8GfbE+MKvO1EDLVNfcWd7NKFT/ekUdJnWAsT0i0Csqf4OJLBgvL+J6UGLAdeW4j3c1c2Bn2sluCe/TTZb/e3XbkyNis5rd80l5oqeQfxMN2aDUAa1YrFXFkU/A+376ZvMYwBwZtiBwUqdJq4zmo15W+YytbTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749829800; c=relaxed/simple;
-	bh=Ho9WUdUq4dE9CodwkzaNAXuptrYf/mR8lmxugbEGPZ4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KDf4s+zb5H/SCXZlB3WRVZEX3C3vYBEzXVaRyQVSXze1Q6PVv9JOtjSbYoSnsvcY9H1SKnSq+FINMBrXC/tv6shDKxV92Z5GD2B8cqPoyuvsqjAMs2qxbanT78GR3fQ3HMRDPhLpx3+frrTXqIixQ8w032xRDN7S0iI7luaqOh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WXQNqti3; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WXQNqti3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5CEE844438;
-	Fri, 13 Jun 2025 15:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749829790;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZSH9/JObnPTVLPPYQSol8VAyWy/AC5Rlv6pQLcORTck=;
-	b=WXQNqti3VNRR/NbclSJdoWUJWiTjuH9hKt82evHmEW0/TChCLJfbS7AaDVzH/h189zxmi/
-	AreEkejH6oel2uav9d/XvIx2nxrZy22r6aFKo23SKnlMkfF+OSFEytg2k2n/yHUDD4THKe
-	8zfKaYFJq/YZj6j1XhK/8u+RJytUhbXWOMCVw9ifqF1hUio4zpVQm+1mmYgYGhY1+qCF48
-	9NGyOvWBR19cWQMdq8SFxqXa8+ZM1hPdyalKZ4ue+HxfT4MFZxaX/gMPx8kSN64i96Ev6V
-	yaVektx2ErG/p4CA28ke4A7YBwAIpGCjsbwANLrAq1z1cHyDSKdt3+O3UEJEoA==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 13 Jun 2025 17:49:45 +0200
-Subject: [PATCH v3 2/7] ARM: dts: omap: Remove incorrect compatible strings
- from device trees
+	s=arc-20240116; t=1749829837; c=relaxed/simple;
+	bh=Td6hiZXhhqoBLfs3QmUNs9jotqLzTXOjBxWUYpRWpLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dSytzyskxuiXsa1bgwFpSCRKwaHrInS2t3XdEZzwYxCftfm4frFKrItURK3cY2ThIjvJlsZYpPD1P9KbY9GO3owaNO/rDkqPI3USrabi9yChCmYBa2+TdD2GLoIeZg7Kx+XSsyivyU+w2ty207poxhBGPUM73bMIIlyxMEUtnWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bJk6Q27zXz9ssb;
+	Fri, 13 Jun 2025 17:37:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id EousmuU7QcO6; Fri, 13 Jun 2025 17:37:18 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bJk6P2lTwz9sqT;
+	Fri, 13 Jun 2025 17:37:17 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 59E238B77C;
+	Fri, 13 Jun 2025 17:37:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id saUuz8-oaz9r; Fri, 13 Jun 2025 17:37:17 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E268C8B77B;
+	Fri, 13 Jun 2025 17:37:16 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v2 1/4] ALSA: pcm: refactor copy from/to user in SNDRV_PCM_IOCTL_SYNC_PTR
+Date: Fri, 13 Jun 2025 17:37:08 +0200
+Message-ID: <1ae442f2df889ad5cc90297ad38503cd1e6cf457.1749828169.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <cover.1749828169.git.christophe.leroy@csgroup.eu>
+References: <cover.1749828169.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-bbg-v3-2-514cdc768448@bootlin.com>
-References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
-In-Reply-To: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
- Roger Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Paul Barker <paul.barker@sancloud.com>, 
- Marc Murphy <marc.murphy@sancloud.com>
-Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, 
- Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.15-dev-8cb71
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeeftdgtfeemkegthegsmehftdekugemgeefgegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfedttgefmeektgehsgemfhdtkegumeegfeegsgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepmhgrrhgtrdhmuhhrp
- hhhhiesshgrnhgtlhhouhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqohhmrghpsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhkrhhiughnvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749829028; l=5427; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=Td6hiZXhhqoBLfs3QmUNs9jotqLzTXOjBxWUYpRWpLs=; b=YZdzXs8CDghpeoQcKRKxw5QdexUFYtYZ4bx5NKG8myA4PcnEt7kTvmbmE0vbEZHkJRFotrPrU jm7JOEuEJEfBIBy8U7U9fyfGshxNXMo4UjyUz0bPiWdLMuDd4Z9ccJr
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-Several device trees incorrectly included extraneous compatible strings
-in their compatible property lists. The policy is to only describe the
-specific board name and SoC name to avoid confusion.
+In an effort of optimising SNDRV_PCM_IOCTL_SYNC_PTR ioctl which
+is a hot path, lets first refactor the copy from and to user
+with macros.
 
-Remove these incorrect compatible strings to fix the inconsistency.
+This is done with macros and not static inline fonctions because
+types differs between the different versions of snd_pcm_sync_ptr()
+like functions.
 
-Also fix board vendor prefixes for BeagleBoard variants that were
-incorrectly using "ti" instead of "beagle" or "seeed".
+First step is to refactor only snd_pcm_ioctl_sync_ptr_compat() and
+snd_pcm_ioctl_sync_ptr_x32() as it would be a performance
+regression for snd_pcm_sync_ptr() and snd_pcm_ioctl_sync_ptr_buggy()
+for now. They may be refactored after next patch.
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
+ sound/core/pcm_compat.c | 14 ++------------
+ sound/core/pcm_native.c | 42 +++++++++++++++++++++++++++++------------
+ 2 files changed, 32 insertions(+), 24 deletions(-)
 
-Changes in v3:
-- Remove extraneous compatible strings.
-- Replace BeagleBone board name vendor.
-
-Changes in v2:
-- New patch
----
- arch/arm/boot/dts/ti/omap/am335x-base0033.dts                   | 2 +-
- arch/arm/boot/dts/ti/omap/am335x-bone.dts                       | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts         | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-boneblack.dts                  | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-boneblue.dts                   | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts         | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts                  | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts                 | 3 +--
- arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts               | 2 +-
- arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts             | 2 +-
- arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts               | 4 ++--
- arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts | 5 +----
- arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts          | 5 +----
- arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts               | 2 +-
- arch/arm/boot/dts/ti/omap/am335x-shc.dts                        | 2 +-
- 15 files changed, 22 insertions(+), 29 deletions(-)
-
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-base0033.dts b/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
-index 46078af4b7a3..176de29de2a6 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
-@@ -9,7 +9,7 @@
+diff --git a/sound/core/pcm_compat.c b/sound/core/pcm_compat.c
+index a42ec7f5a1da..17540020ac2f 100644
+--- a/sound/core/pcm_compat.c
++++ b/sound/core/pcm_compat.c
+@@ -418,9 +418,7 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
+ 	if (snd_BUG_ON(!runtime))
+ 		return -EINVAL;
  
- / {
- 	model = "IGEP COM AM335x on AQUILA Expansion";
--	compatible = "isee,am335x-base0033", "isee,am335x-igep0033", "ti,am33xx";
-+	compatible = "isee,am335x-base0033", "ti,am33xx";
+-	if (get_user(sflags, &src->flags) ||
+-	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    get_user(scontrol.avail_min, &src->c.control.avail_min))
++	if (snd_pcm_sync_ptr_get_user(sflags, scontrol, src))
+ 		return -EFAULT;
+ 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
+ 		err = snd_pcm_hwsync(substream);
+@@ -450,15 +448,7 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
+ 	}
+ 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
+ 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
+-	if (put_user(sstatus.state, &src->s.status.state) ||
+-	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
+-	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
+-	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
+-	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
+-	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
+-	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
+-	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    put_user(scontrol.avail_min, &src->c.control.avail_min))
++	if (snd_pcm_sync_ptr_put_user(sstatus, scontrol, src))
+ 		return -EFAULT;
  
- 	hdmi {
- 		compatible = "ti,tilcdc,slave";
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-bone.dts b/arch/arm/boot/dts/ti/omap/am335x-bone.dts
-index b5d85ef51a02..2790c0c5a473 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-bone.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-bone.dts
-@@ -8,8 +8,8 @@
- #include "am335x-bone-common.dtsi"
+ 	return 0;
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index ecb71bf1859d..20326aa377b0 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -3052,6 +3052,34 @@ static inline int snd_pcm_hwsync(struct snd_pcm_substream *substream)
+ 	return snd_pcm_delay(substream, NULL);
+ }
  
- / {
--	model = "TI AM335x BeagleBone";
--	compatible = "ti,am335x-bone", "ti,am33xx";
-+	model = "AM335x BeagleBone";
-+	compatible = "beagle,am335x-bone", "ti,am33xx";
- };
++#define snd_pcm_sync_ptr_get_user(__f, __c, __ptr) ({				\
++	int __err = 0;								\
++	typeof(*(__ptr)) __user *__src = (__ptr);					\
++										\
++	if (get_user(__f, &src->flags) ||					\
++	    get_user(__c.appl_ptr, &__src->c.control.appl_ptr) ||		\
++	    get_user(__c.avail_min, &__src->c.control.avail_min))		\
++		__err = -EFAULT;						\
++	__err;									\
++})
++
++#define snd_pcm_sync_ptr_put_user(__s, __c, __ptr) ({				\
++	int __err = 0;								\
++	typeof(*(__ptr)) __user *__src = (__ptr);					\
++										\
++	if (put_user(__s.state, &__src->s.status.state) ||			\
++	    put_user(__s.hw_ptr, &__src->s.status.hw_ptr) ||			\
++	    put_user(__s.tstamp.tv_sec, &__src->s.status.tstamp_sec) ||		\
++	    put_user(__s.tstamp.tv_nsec, &__src->s.status.tstamp_nsec) ||	\
++	    put_user(__s.suspended_state, &__src->s.status.suspended_state) ||	\
++	    put_user(__s.audio_tstamp.tv_sec, &__src->s.status.audio_tstamp_sec) ||	\
++	    put_user(__s.audio_tstamp.tv_nsec, &__src->s.status.audio_tstamp_nsec) ||	\
++	    put_user(__c.appl_ptr, &__src->c.control.appl_ptr) ||		\
++	    put_user(__c.avail_min, &__src->c.control.avail_min))		\
++		__err = -EFAULT;						\
++	__err;									\
++})
++
+ static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
+ 			    struct snd_pcm_sync_ptr __user *_sync_ptr)
+ {
+@@ -3165,9 +3193,7 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
+ 	if (snd_BUG_ON(!runtime))
+ 		return -EINVAL;
  
- &ldo3_reg {
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts
-index b4b4b80df08c..d78b6427b8f2 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts
-@@ -11,8 +11,8 @@
- #include <dt-bindings/interrupt-controller/irq.h>
+-	if (get_user(sflags, &src->flags) ||
+-	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    get_user(scontrol.avail_min, &src->c.control.avail_min))
++	if (snd_pcm_sync_ptr_get_user(sflags, scontrol, src))
+ 		return -EFAULT;
+ 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
+ 		err = snd_pcm_hwsync(substream);
+@@ -3200,15 +3226,7 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
+ 	}
+ 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
+ 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
+-	if (put_user(sstatus.state, &src->s.status.state) ||
+-	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
+-	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
+-	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
+-	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
+-	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
+-	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
+-	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    put_user(scontrol.avail_min, &src->c.control.avail_min))
++	if (snd_pcm_sync_ptr_put_user(sstatus, scontrol, src))
+ 		return -EFAULT;
  
- / {
--	model = "TI AM335x BeagleBone Black Wireless";
--	compatible = "ti,am335x-bone-black-wireless", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+	model = "AM335x BeagleBone Black Wireless";
-+	compatible = "beagle,am335x-bone-black-wireless", "ti,am33xx";
- 
- 	wlan_en_reg: fixedregulator@2 {
- 		compatible = "regulator-fixed";
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts b/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts
-index 16b567e3cb47..70c26d090ecb 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts
-@@ -10,8 +10,8 @@
- #include "am335x-boneblack-hdmi.dtsi"
- 
- / {
--	model = "TI AM335x BeagleBone Black";
--	compatible = "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+	model = "AM335x BeagleBone Black";
-+	compatible = "beagle,am335x-bone-black", "ti,am33xx";
- };
- 
- &cpu0_opp_table {
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts b/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts
-index f579df4c2c54..779e74218b57 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts
-@@ -9,8 +9,8 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
--	model = "TI AM335x BeagleBone Blue";
--	compatible = "ti,am335x-bone-blue", "ti,am33xx";
-+	model = "AM335x BeagleBone Blue";
-+	compatible = "beagle,am335x-bone-blue", "ti,am33xx";
- 
- 	chosen {
- 		stdout-path = &uart0;
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts
-index a4f5b5262645..ee92abf43175 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts
-@@ -10,8 +10,8 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
--	model = "TI AM335x BeagleBone Green Wireless";
--	compatible = "ti,am335x-bone-green-wireless", "ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+	model = "Seeed AM335x BeagleBone Green Wireless";
-+	compatible = "seeed,am335x-bone-green-wireless", "ti,am33xx";
- 
- 	wlan_en_reg: fixedregulator@2 {
- 		compatible = "regulator-fixed";
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts b/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts
-index 18cc0f49e999..3d771721dcb8 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts
-@@ -9,6 +9,6 @@
- #include "am335x-bonegreen-common.dtsi"
- 
- / {
--	model = "TI AM335x BeagleBone Green";
--	compatible = "ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+	model = "Seeed AM335x BeagleBone Green";
-+	compatible = "seeed,am335x-bone-green", "ti,am33xx";
- };
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts b/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts
-index 648e97fe1dfd..224095304ef3 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts
-@@ -8,8 +8,7 @@
- 
- / {
- 	model = "AM335x Chiliboard";
--	compatible = "grinn,am335x-chiliboard", "grinn,am335x-chilisom",
--		     "ti,am33xx";
-+	compatible = "grinn,am335x-chiliboard", "ti,am33xx";
- 
- 	chosen {
- 		stdout-path = &uart0;
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts b/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts
-index fd91a3c01a63..55a454f51148 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts
-@@ -12,7 +12,7 @@
- 
- / {
- 	model = "MYIR MYD-AM335X";
--	compatible = "myir,myd-am335x", "myir,myc-am335x", "ti,am33xx";
-+	compatible = "myir,myd-am335x", "ti,am33xx";
- 
- 	chosen {
- 		stdout-path = &uart0;
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts
-index d28d39728847..d87ac31a16a9 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts
-@@ -16,7 +16,7 @@
- 
- / {
- 	model = "Octavo Systems OSD3358-SM-RED";
--	compatible = "oct,osd3358-sm-refdesign", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+	compatible = "oct,osd3358-sm-refdesign", "ti,am33xx";
- };
- 
- &ldo3_reg {
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts b/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts
-index 78ce860e59b3..c2f26687790c 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts
-@@ -11,8 +11,8 @@
- #include <dt-bindings/leds/common.h>
- 
- / {
--	model = "TI AM335x PocketBeagle";
--	compatible = "ti,am335x-pocketbeagle", "ti,am335x-bone", "ti,am33xx";
-+	model = "AM335x PocketBeagle";
-+	compatible = "beagle,am335x-pocketbeagle", "ti,am33xx";
- 
- 	chosen {
- 		stdout-path = &uart0;
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts
-index 7c9f65126c63..61210f975542 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts
-@@ -13,10 +13,7 @@
- 
- / {
- 	model = "SanCloud BeagleBone Enhanced Extended WiFi";
--	compatible = "sancloud,am335x-boneenhanced",
--		     "ti,am335x-bone-black",
--		     "ti,am335x-bone",
--		     "ti,am33xx";
-+	compatible = "sancloud,am335x-boneenhanced", "ti,am33xx";
- 
- 	wlan_en_reg: fixedregulator@2 {
- 		compatible = "regulator-fixed";
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts
-index c6c96f6182a8..10488b55689c 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts
-@@ -12,10 +12,7 @@
- 
- / {
- 	model = "SanCloud BeagleBone Enhanced Lite";
--	compatible = "sancloud,am335x-boneenhanced",
--		     "ti,am335x-bone-black",
--		     "ti,am335x-bone",
--		     "ti,am33xx";
-+	compatible = "sancloud,am335x-boneenhanced", "ti,am33xx";
- };
- 
- &am33xx_pinmux {
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts
-index 32669346cefe..f1bdbf053fb2 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts
-@@ -13,7 +13,7 @@
- 
- / {
- 	model = "SanCloud BeagleBone Enhanced";
--	compatible = "sancloud,am335x-boneenhanced", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+	compatible = "sancloud,am335x-boneenhanced", "ti,am33xx";
- };
- 
- &am33xx_pinmux {
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-shc.dts b/arch/arm/boot/dts/ti/omap/am335x-shc.dts
-index 597482822608..f2393ff3f4d7 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-shc.dts
-+++ b/arch/arm/boot/dts/ti/omap/am335x-shc.dts
-@@ -12,7 +12,7 @@
- 
- / {
- 	model = "Bosch SHC";
--	compatible = "ti,am335x-shc", "ti,am335x-bone", "ti,am33xx";
-+	compatible = "ti,am335x-shc", "ti,am33xx";
- 
- 	aliases {
- 		mmcblk0 = &mmc1;
-
+ 	return 0;
 -- 
-2.43.0
+2.47.0
 
