@@ -1,140 +1,258 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C440828BAAF;
-	Fri, 13 Jun 2025 22:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320B6244676
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749852387; cv=none; b=NscmbkAfl1EWoMeR91Ph9Lxiw2Iuo+Go+NeM+YFyPiX3L7d5TsPH1oqGvP+RFHIDLorfgc4I0EiexZbVxGOtQAOUIhD4k6IBiPOws6vuxCCUcBPDU0Yh9VGD55smaZsdoEi5bE7jE0hNolvE9dbBty133LCRjzn07/phuvvkUOQ=
+	t=1749852456; cv=none; b=WoWMIy44FKwIKnTjeR5z5U1jJVXzcB6FvGS3cct/4aV8+Ds641yl/spuyOKkAmIoQaXF3mRX/NYF4W1kuXBdGX78MPY+40HwBliTMp9jkIqVQteNp5r5QHjYA+UB8YUOnAPxm+kEthfi2pya9BhDHNGuduShIL7W5EptXBqEnRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749852387; c=relaxed/simple;
-	bh=sXnQbNzsS+eVq9/kMPprNFgpItunamYmRKrz1o3X9IE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=baAYIhH3LLguzk63sEhxUU2NbykUumbO/1uD18Oj5O7HCUSGyO8C7NEDRp2HhaSUd1CUebDFVpvaFD/WvAp8Ez/U48sfy2Y/guto8FpyKJIXEz1XRMalD5MCAJw0hNA9ImFeevqa2WWas/Yzg3umbJHZoDMeYQFgL7QQ/dEV3DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JVEArvEz; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749852456; c=relaxed/simple;
+	bh=5LQDwgXZiTJZifCIskJfO8E5M68MeEmmWIMewJk/ejw=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=Z4Yb9QK6R03gvT7UBKpYzXeKiqx4jLalKpi1oxdCj4g5pmtz14jmqqyJ/Dsl7HVAgX8Le6rv8Qk2Wa45l8neBP8SOndrXffw8feT/ss/UjCjLNdCCNbbGqAVQ+Zvh/e9Sgq+iY1qmz0cwKRBYnSjVH1CHO/xWlTAv4TY9V2VnIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0QSf5fzl; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVEArvEz"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1602378f8f.2;
-        Fri, 13 Jun 2025 15:06:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0QSf5fzl"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b0e0c573531so1497028a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749852384; x=1750457184; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SPyM26zxF7m6NElFrQVsOHv9j/rb7Pw26mq3IjRYYf4=;
-        b=JVEArvEz7qofEtAIT2uAb7pfeQ7OIrRVT39H+tONxvdq5jcXUFCn44k+LcKztNrp+s
-         HJd8WPUch1KbiZNNYjqYs8d+GY0SDxuKJedISCPEvs39tvkvBUQYo5Pl25M046yTEMs9
-         RmU0ggqW8FQdva23tZw1p+vDC45rlCxCd22yA7jzU5vOeCOI8Gsgf6Ia76M8+STQbrj6
-         3IME3raSeySVoXd05yNZL1PvJ6UlSYRyp8Lx0PpzOHsTbE9okObUR62oMzTLSd6SxM0M
-         /DyzHk9CrR4/WrBNVFVlWJWH4pvYsA2mOuyRn8uskAeABeHge9WOEwkgSTqHQY10Dk6J
-         292w==
+        d=google.com; s=20230601; t=1749852454; x=1750457254; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jHrVv2kDcovHNoP3EEC76tcx39dbcoagl8VnybVR6Q8=;
+        b=0QSf5fzlMGtX0Pn75NwkwkK0kZumjQz1FggRUy6UK32q5jjWMAC9zOTemgzXCGvSF+
+         pG/HZjYnhMT4m8LU2WIKVf2CPJ1NoMTtwuFym4u/uoX8vB/3s/9YJyjukGoPIB6IXx37
+         /sdYtGBaw5DJ3BPN40i3wQkhfFt/vSBh2Ttj2TB62g0s0oh/Gok5GamUetIDzAgEDKWE
+         g32ltwFtLAGqDZh+a9b/JZY35pxcuYtS3P1dzx7Qi8U2VNfeb9pYfTj1FMe6BELbd105
+         /ND3PKyanhmapwizsk0QC07VkkIp7IkqD/6BCSxFtPoETQxbFoDSWyHgTGMevk9LcJ6y
+         NEpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749852384; x=1750457184;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SPyM26zxF7m6NElFrQVsOHv9j/rb7Pw26mq3IjRYYf4=;
-        b=MEMexhEn6kiSyLrkx4wkWpxlbR9YIHn8bDrQXD74TmaByfx3GpJYGya9R8b5RjlRAo
-         A4NlmRD+0Vy6kZafMYBemmxcZDDNscLmCu+ZftYlnHwQN4j6o16MHe1nJIhcdeTIqsG0
-         kBBW31PBICcf9n49RaHNpaZXNFwcH8Gh+NW3z5l8mBMEv09Do/2SKwVSSGtM0uZlm544
-         vg0hAA6xUle1uMEpCKQ+uA1PW+DT/ZcGvAcQi6MI9lS64BhtAhwV1kxqsc4J4Qiljj/X
-         1+ne+PF5VmhTMeqwJl22Gqkz/UC/jREjzJxOGz1QZyAh093/gGnPc7+NAlsN7/E7Z9Ox
-         NjDA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6Y0AUqDD9kQvIV/LGvEaePMOh8WWSTxZzzDKlR65c/SbOhUtQWzkARwIxLUz/thrBYB5wPqDKLCCTkXZS@vger.kernel.org, AJvYcCViqU92vJjHskDs0xImevCiUAn2p5USjUOH01ZWQ5VNfhjo4hBn/qAQ4qQJpdDd4ecs//U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5R2WCwa5xYikuSJAbnwGrX6+pZ7SqdKZyuIQqxhc7WEcg0+aR
-	QxgsSFHoBNEPcsVSGL03IAKuJSc16kpp8Ios+Fn9WG78u2mkNWVMFOP1MOLcUd/hNfj/qEUY4+b
-	RaBvHK8gPYDpGycmpy460Wi16CtrHqaOW35FJ
-X-Gm-Gg: ASbGncs5UpIJ5bcKqBnJD5FjMkhQqfwZFLHiIkfB1XDw8f0zHUsK46LfFnX4NJjPXYQ
-	RxuJqtLAdtegW10snZivTRnnpS+BMfPVBu/+qCT5WQOFhBepwDIYilPeljRi4KZq14DUgXVhEuI
-	Jgf5f2WeynGahXrQvvF/2TiFysQNf/dF01t4gR+U65iapq4+GzuAX6xQlgLvSRpY+Pv6dWFiHO
-X-Google-Smtp-Source: AGHT+IG5n5v+AjGzede3ra1+9Ys2ku5sScZRKs2ji0qJ0+np98EK2avrMv89kmpWx68lc1HuzLzxN/9DycHttQnIcPU=
-X-Received: by 2002:a05:6000:4b03:b0:3a4:eac6:e320 with SMTP id
- ffacd0b85a97d-3a5723993bfmr1380044f8f.3.1749852383821; Fri, 13 Jun 2025
- 15:06:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749852454; x=1750457254;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jHrVv2kDcovHNoP3EEC76tcx39dbcoagl8VnybVR6Q8=;
+        b=e80LUxkRlSWrbqbhGqPnxY20u0oUzKLjUUsZI4OiBlorbyP7qHzVGZ2h4o18q/iOQJ
+         vvFhXbPyCm1DOjFuFplRrXrQXvSnl8ZX+cXEX041+0nJqe2i327zVdCvdxaotlIgtiHz
+         uGrtFqD3I6nOvMzlcka2s8MSZUkEFP99+671e0unij7fxcYhkTYlVFjcS2mdYnJnWKtR
+         T3Z5lrRYroXhmBBbHQc5pbAH0KndDYnV93eEfc9s5BBOufOTdLi7cMoHIeE+jXxlK/4I
+         2veKT2pGeFdr1ebIwiFWhZ2+dowBRrjilUWUF2cFhdVIhWfjXeVuWiN0nkkhs+2HWcv2
+         D9Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVg1WJ5+uTLqByx9I3IGrrL9wjBF6XQNlOfflewacwQ14aCTGzOqy+UNy5OshcNxM6/BKSpzc65Gceej3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvU8UOHO5vvCqwgSwJkTxmNV8+bc0iSnaYzsAX7YZCh8U04TsF
+	55yGKjuELa7Zewj42P9JgrnrY2zhOE/SUN4UohOJ4wBtCWLjFLy5tLTICBa7+nJOQR9oXOtRaxf
+	wgYlRLdiZ0VYfXzGGpqN1V0SYJw==
+X-Google-Smtp-Source: AGHT+IFVHWXFz2fZtkBz3H5QkGTBOJiqvd4jqlHEGetNFDiMdeIl66etnmH5TFa6nz2Zwxoho7DNwLI7pEhSfm9NmQ==
+X-Received: from pgbfy15.prod.google.com ([2002:a05:6a02:2a8f:b0:b2e:c15e:3eb7])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:3943:b0:21f:97f3:d4c2 with SMTP id adf61e73a8af0-21fbd525cffmr1383658637.16.1749852454508;
+ Fri, 13 Jun 2025 15:07:34 -0700 (PDT)
+Date: Fri, 13 Jun 2025 15:07:33 -0700
+In-Reply-To: <683ba0fe64dd5_13031529421@iweiny-mobl.notmuch> (message from Ira
+ Weiny on Sat, 31 May 2025 19:38:22 -0500)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <19f50af28e3a90cbd24b2325da8025e47f221739.camel@gmail.com>
- <20250613090157.568349-2-luis.gerhorst@fau.de> <a4fbe41d6f4c25c3d1edd42905eb556541857327.camel@gmail.com>
-In-Reply-To: <a4fbe41d6f4c25c3d1edd42905eb556541857327.camel@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 13 Jun 2025 15:06:12 -0700
-X-Gm-Features: AX0GCFt_qp8WRPpXxRVFY9J6VAyovzzrT2MnbqQVTN5ecf7AQb4-MmDfj-rtFQA
-Message-ID: <CAADnVQKV3=S7Cs52QjiKY3ByOC08J9HxnN4wYUTmMX_ctrGVig@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] bpf: Remove redundant free_verifier_state()/pop_stack()
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Luis Gerhorst <luis.gerhorst@fau.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Mime-Version: 1.0
+Message-ID: <diqzsek3mh22.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 23/51] mm: hugetlb: Refactor out hugetlb_alloc_folio()
+From: Ackerley Tng <ackerleytng@google.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 2:17=E2=80=AFPM Eduard Zingerman <eddyz87@gmail.com=
-> wrote:
->
-> On Fri, 2025-06-13 at 11:01 +0200, Luis Gerhorst wrote:
-> > This patch removes duplicated code.
-> >
-> > Eduard points out [1]:
-> >
-> >     Same cleanup cycles are done in push_stack() and push_async_cb(),
-> >     both functions are only reachable from do_check_common() via
-> >     do_check() -> do_check_insn().
-> >
-> >     Hence, I think that cur state should not be freed in push_*()
-> >     functions and pop_stack() loop there is not needed.
-> >
-> > This would also fix the 'symptom' for [2], but the issue also has a
-> > simpler fix which was sent separately. This fix also makes sure the
-> > push_*() callers always return an error for which
-> > error_recoverable_with_nospec(err) is false. This is required because
-> > otherwise we try to recover and access the stale `state`.
-> >
-> > Moving free_verifier_state() and pop_stack(..., pop_log=3Dfalse) to hap=
-pen
-> > after the bpf_vlog_reset() call in do_check_common() is fine because th=
-e
-> > pop_stack() call that is moved does not call bpf_vlog_reset() with the
-> > pop_log=3Dfalse parameter.
-> >
-> > [1] https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69=
-a.camel@gmail.com/
-> > [2] https://lore.kernel.org/all/68497853.050a0220.33aa0e.036a.GAE@googl=
-e.com/
-> >
-> > Reported-by: Eduard Zingerman <eddyz87@gmail.com>
-> > Link: https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb=
-69a.camel@gmail.com/
-> > Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-> > Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> > ---
->
-> Tried v2, all looks good.
->
-> [...]
->
-> > @@ -22934,6 +22922,11 @@ static void free_states(struct bpf_verifier_en=
-v *env)
-> >       struct bpf_scc_info *info;
-> >       int i, j;
-> >
-> > +     WARN_ON_ONCE(!env->cur_state);
->
-> Tbh I woudn't do this a warning, just an 'if (env->cur_state) ...',
-> but that's immaterial. Given current way do_check_common() is written
-> env->cur_state !=3D NULL at this point, so the patch is safe to land.
+Ira Weiny <ira.weiny@intel.com> writes:
 
-I removed it while applying, since it's useless.
-If do_check_common() changes in the future and cur_state is NULL
-here the warn will warn, but won't prevent the crash in the next line.
+> Ackerley Tng wrote:
+>> Refactor out hugetlb_alloc_folio() from alloc_hugetlb_folio(), which
+>> handles allocation of a folio and cgroup charging.
+>>
+>> Other than flags to control charging in the allocation process,
+>> hugetlb_alloc_folio() also has parameters for memory policy.
+>>
+>> This refactoring as a whole decouples the hugetlb page allocation from
+>> hugetlbfs, (1) where the subpool is stored at the fs mount, (2)
+>> reservations are made during mmap and stored in the vma, and (3) mpol
+>> must be stored at vma->vm_policy (4) a vma must be used for allocation
+>> even if the pages are not meant to be used by host process.
+>>
+>> This decoupling will allow hugetlb_alloc_folio() to be used by
+>> guest_memfd in later patches. In guest_memfd, (1) a subpool is created
+>> per-fd and is stored on the inode, (2) no vma-related reservations are
+>> used (3) mpol may not be associated with a vma since (4) for private
+>> pages, the pages will not be mappable to userspace and hence have to
+>> associated vmas.
+>>
+>> This could hopefully also open hugetlb up as a more generic source of
+>> hugetlb pages that are not bound to hugetlbfs, with the complexities
+>> of userspace/mmap/vma-related reservations contained just to
+>> hugetlbfs.
+>>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> Change-Id: I60528f246341268acbf0ed5de7752ae2cacbef93
+>> ---
+>>  include/linux/hugetlb.h |  12 +++
+>>  mm/hugetlb.c            | 192 ++++++++++++++++++++++------------------
+>>  2 files changed, 118 insertions(+), 86 deletions(-)
+>>
+>
+> [snip]
+>
+>>
+>> +/**
+>> + * hugetlb_alloc_folio() - Allocates a hugetlb folio.
+>> + *
+>> + * @h: struct hstate to allocate from.
+>> + * @mpol: struct mempolicy to apply for this folio allocation.
+>> + * @ilx: Interleave index for interpretation of @mpol.
+>> + * @charge_cgroup_rsvd: Set to true to charge cgroup reservation.
+>> + * @use_existing_reservation: Set to true if this allocation should use an
+>> + *                            existing hstate reservation.
+>> + *
+>> + * This function handles cgroup and global hstate reservations. VMA-related
+>> + * reservations and subpool debiting must be handled by the caller if necessary.
+>> + *
+>> + * Return: folio on success or negated error otherwise.
+>> + */
+>> +struct folio *hugetlb_alloc_folio(struct hstate *h, struct mempolicy *mpol,
+>> +				  pgoff_t ilx, bool charge_cgroup_rsvd,
+>> +				  bool use_existing_reservation)
+>> +{
+>> +	unsigned int nr_pages = pages_per_huge_page(h);
+>> +	struct hugetlb_cgroup *h_cg = NULL;
+>> +	struct folio *folio = NULL;
+>> +	nodemask_t *nodemask;
+>> +	gfp_t gfp_mask;
+>> +	int nid;
+>> +	int idx;
+>> +	int ret;
+>> +
+>> +	idx = hstate_index(h);
+>> +
+>> +	if (charge_cgroup_rsvd) {
+>> +		if (hugetlb_cgroup_charge_cgroup_rsvd(idx, nr_pages, &h_cg))
+>> +			goto out;
+>
+> Why not just return here?
+> 			return ERR_PTR(-ENOSPC);
+>
 
-Also for tricky things we switched to verifier_bug() instead of WARN.
-So no new WARNs allowed.
+I wanted to consistently exit the function on errors at the same place,
+and also make this refactoring look like I just took the middle of
+alloc_hugetlb_folio() out as much as possible.
+
+>> +	}
+>> +
+>> +	if (hugetlb_cgroup_charge_cgroup(idx, nr_pages, &h_cg))
+>> +		goto out_uncharge_cgroup_reservation;
+>> +
+>> +	gfp_mask = htlb_alloc_mask(h);
+>> +	nid = policy_node_nodemask(mpol, gfp_mask, ilx, &nodemask);
+>> +
+>> +	spin_lock_irq(&hugetlb_lock);
+>> +
+>> +	if (use_existing_reservation || available_huge_pages(h))
+>> +		folio = dequeue_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
+>> +
+>> +	if (!folio) {
+>> +		spin_unlock_irq(&hugetlb_lock);
+>> +		folio = alloc_surplus_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
+>> +		if (!folio)
+>> +			goto out_uncharge_cgroup;
+>> +		spin_lock_irq(&hugetlb_lock);
+>> +		list_add(&folio->lru, &h->hugepage_activelist);
+>> +		folio_ref_unfreeze(folio, 1);
+>> +		/* Fall through */
+>> +	}
+>> +
+>> +	if (use_existing_reservation) {
+>> +		folio_set_hugetlb_restore_reserve(folio);
+>> +		h->resv_huge_pages--;
+>> +	}
+>> +
+>> +	hugetlb_cgroup_commit_charge(idx, nr_pages, h_cg, folio);
+>> +
+>> +	if (charge_cgroup_rsvd)
+>> +		hugetlb_cgroup_commit_charge_rsvd(idx, nr_pages, h_cg, folio);
+>> +
+>> +	spin_unlock_irq(&hugetlb_lock);
+>> +
+>> +	gfp_mask = htlb_alloc_mask(h) | __GFP_RETRY_MAYFAIL;
+>> +	ret = mem_cgroup_charge_hugetlb(folio, gfp_mask);
+>> +	/*
+>> +	 * Unconditionally increment NR_HUGETLB here. If it turns out that
+>> +	 * mem_cgroup_charge_hugetlb failed, then immediately free the page and
+>> +	 * decrement NR_HUGETLB.
+>> +	 */
+>> +	lruvec_stat_mod_folio(folio, NR_HUGETLB, pages_per_huge_page(h));
+>> +
+>> +	if (ret == -ENOMEM) {
+>> +		free_huge_folio(folio);
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	return folio;
+>> +
+>> +out_uncharge_cgroup:
+>> +	hugetlb_cgroup_uncharge_cgroup(idx, nr_pages, h_cg);
+>> +out_uncharge_cgroup_reservation:
+>> +	if (charge_cgroup_rsvd)
+>> +		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, nr_pages, h_cg);
+>
+> I find the direct copy of the unwind logic from alloc_hugetlb_folio()
+> cumbersome and it seems like a good opportunity to clean it up.
+>
+
+I really wanted to make this refactoring look like I just took the
+middle of alloc_hugetlb_folio() out as much as possible, to make it
+obvious and understandable. I think the cleanup can be a separate patch
+(series?)
+
+>> +out:
+>> +	folio = ERR_PTR(-ENOSPC);
+>> +	goto out;
+>
+> Endless loop?
+>
+
+Thanks, this should have been
+
+return folio;
+
+> Ira
+>
+> [snip]
