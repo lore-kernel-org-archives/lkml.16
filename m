@@ -1,295 +1,95 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA615255E27
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747322DA753;
+	Fri, 13 Jun 2025 09:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806116; cv=none; b=Os97YP6zI9hxoh3ZSJjf7otnjuN+1Wa4QGLGJGwizyP6CPuLoXKYwDBY5bDJwBimKNtLoFL0t1roKCK8P5oPnTmNWEjHyBl7QKEPuU9ubcoeEngvmsx6jOnFZKCfwCz+tguFU4phZZdNvLEooeOg/0MJmxr7sHYaP7e7AQWSCSI=
+	t=1749806209; cv=none; b=V4bU+qs+PBt5o4FxiEpzSk9oW83ywpDaLqj01e1Rg3/GVjW3K/8YQeL3qCCqfQ6hdieD6/rI+PEk6PiGSghRKavx08OmOxKvhIneTmLpgqhvemkexWe3YxpTTsfeRnN5kpsskxHbpIGLdJwadXMLX8wOE9EJEe2oANJKZteH/KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806116; c=relaxed/simple;
-	bh=F0e0SFf/vKSHXJF8fZ++vE4zeIDUxEkUkvSRxYgh8GA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KDOyTdPiv59rkUpRMzMH2Hzz3R2Gntn7RWJ27IP5ELqzJFMm/CQQ0X0aFQxV+AoN0F6hY2n97Rn6ptdwhmPEv7qqoqKEASSOrIkg8gyBVsoKh9PyBRb+wyScBKhM/E38YFHnWr8rqlXU3YJ5PhWorPVpySW04wQNHGPp2r7wplk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jsZ3jErx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5kQgcHbS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lQ+Eg3e9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VrYZpozi; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749806209; c=relaxed/simple;
+	bh=JvXRxWo86OXDBk2ZyHGvr7t32N/IGnu9bOmgh+9I2HE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kv7//7NVfHNxgBiMsTdUPU99DoRA0Zt/aQTO3Ifb94+eD0qmFnW1kPUTW2RuRu8Cs9eIBxsCVAkyeCxcM3GUaN5CP8IAGjSTlrDeXF4iGrRcjlxydxWc2Qooq9jSpzWmbZS8/BR9kds2x9TTlZUQHcVdS6Oq78AGhf//1+ay7Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=lMifu4a6; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jsZ3jErx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5kQgcHbS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lQ+Eg3e9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VrYZpozi"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D48C621185;
-	Fri, 13 Jun 2025 09:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749806113; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
-	b=jsZ3jErxWF+qQWtcV9dOuBZQgt7fImbZbQxpL/A4BxJifkLZs2UoY+sQPm48+jT87QDXbX
-	6LKhfBsh/Odcl1VEQUIx204jt4NG+/Azl5YxG4s0nK2XQaLFl1LD3IiT9TSquvj93cX0y6
-	r1PB05X92tK54YRn+oAR6m+7prPK1d4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749806113;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
-	b=5kQgcHbSBcNxCKw+j/6cpYnddVl9r9xKZz2KgaiuSoQMS/7dPoYAnWIlW4sNpVjZcOMblT
-	xyhUy5PJIk38+xAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749806112; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
-	b=lQ+Eg3e92o4z8o9eKaqOQCt1MbWg5ToGpgotVEh+9vXZYcNCicIVmuEmia7kWVHHBqsd1s
-	7w90+JFfwo9NY4cHj6lMf5TKqK73puDOqWs1E2N07jMeds4CnrpdGvMrBsYZ72ZLmZFNN+
-	+960iFlJCy+7iwS9n3820d54wI8H6oc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749806112;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
-	b=VrYZpoziUd4gHOj94fvOhe8usaRNWM+cBfpEzILHVy9dpUOdJWqQHdELrkf8S57QGpAXds
-	lmyo9IgHVIX37WDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 96429137FE;
-	Fri, 13 Jun 2025 09:15:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cSWRIyDsS2ikNwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 13 Jun 2025 09:15:12 +0000
-Date: Fri, 13 Jun 2025 11:15:12 +0200
-Message-ID: <87a56croin.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ALSA: pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to user_access_begin/user_access_end()
-In-Reply-To: <fa8c0bca-a127-410e-9b13-3fa5ea7d8110@csgroup.eu>
-References: <8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu>
-	<87wm9hte77.wl-tiwai@suse.de>
-	<fa8c0bca-a127-410e-9b13-3fa5ea7d8110@csgroup.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lMifu4a6"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55D8IOEk002141;
+	Fri, 13 Jun 2025 02:16:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=G5KoRAnZUPZZQGP0oxC9d6JUk
+	CUEKSK8pPBaJhC/9yA=; b=lMifu4a6QraFdztb7W57zpDyAvrttgxaecBBXc5qh
+	PDeDg7729rjVlG/BmmUiaKsCUT92oTk9YFjl/4PgJRzjLLWdDvv4o4zMcjnwul3q
+	M17NEHEEJ/YQb1ZigcZYR8gib0hO/nV+B1YIcQ0UwXt0RSO7NALZx0g2/hP7Fxrm
+	hHhL4ugSdbQgyF69IeRd7G/QczxVcSDj32d5s5oDFJS357tTQfFVbbfNUok+qP5L
+	tv+XIlQSSTzYKrcFDD8By4rHSZqBXYT6I4MCcJOshEznwHV0KGxA5P6diC3poXh8
+	hreX31TmFp1w+pi097O0tj7ZeAT3j94Jm1Az+REijMz+g==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 478gbt83xy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Jun 2025 02:16:30 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 13 Jun 2025 02:16:29 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Fri, 13 Jun 2025 02:16:29 -0700
+Received: from b9e1f7b84bd3 (HY-LT91368.marvell.com [10.29.24.116])
+	by maili.marvell.com (Postfix) with SMTP id BD9E25B6926;
+	Fri, 13 Jun 2025 02:16:27 -0700 (PDT)
+Date: Fri, 13 Jun 2025 09:16:25 +0000
+From: Subbaraya Sundeep <sbhatta@marvell.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Jun Miao <jun.miao@intel.com>, <oneukum@suse.com>,
+        <netdev@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] net: usb: Convert tasklet API to new bottom half
+ workqueue mechanism
+Message-ID: <aEvsaUrhXgFzvtzZ@b9e1f7b84bd3>
+References: <20250610145403.2289375-1-jun.miao@intel.com>
+ <20250612185131.2dc7218a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-7.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -7.30
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250612185131.2dc7218a@kernel.org>
+X-Authority-Analysis: v=2.4 cv=X9tSKHTe c=1 sm=1 tr=0 ts=684bec6e cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=07d9gI8wAAAA:8 a=VwQbUJbxAAAA:8 a=5NWDvjWUo4JBtSxIGnEA:9 a=CjuIK1q_8ugA:10
+ a=e2CUPOnPG4QKp8I52DXD:22 a=lhd_8Stf4_Oa5sg58ivl:22
+X-Proofpoint-ORIG-GUID: LWkoPQ7xeq6PzxOuIVZ-dsBOhUfy6FQF
+X-Proofpoint-GUID: LWkoPQ7xeq6PzxOuIVZ-dsBOhUfy6FQF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDA2OCBTYWx0ZWRfX9O52cA8d0gLt jwI6NM+BEHy2GNmUzRtWzASRP4pA7qZtBOaX3CdwuP+UT+zfjoZZWppD5MJmXYeufY2UbhHonT8 4gj+OdqvjLMNiiXyILwZelgYC2vjI+FrmlvCxP0nS/F2J5Z0yxDcKpoEG3PdmvGJeOHLvIUraZS
+ I1OJRQ/C/dQyRrOe14oQLf7/NgNFhqgPIpOj+dIMIYc8Cdt6RRVH7y5GbKIrVw+YL16ZZJ9cLpf dRNdwirfAWgWG37VBgDHV48PnHWu1AMGqxkUdsn6WPa2j1834VrEQaFu8sj+xOJQpAhEeTsz8/6 sGXET778dtuXsX0136LIjmRQmt2FVsa43S9E1e8uVOPS0T8UNtFRxe7iWUzu55KyNi/Yb2VSt/w
+ jykZc2Gj2xfyW+CXf97O7J0vOSsllHjyu928TtK+4jYIj5W+Cn4XGpN8H+xL7s9QraxpAwhQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
 
-On Fri, 13 Jun 2025 07:24:46 +0200,
-Christophe Leroy wrote:
+On 2025-06-13 at 01:51:31, Jakub Kicinski (kuba@kernel.org) wrote:
+> On Tue, 10 Jun 2025 22:54:03 +0800 Jun Miao wrote:
+> > -			if (rx_alloc_submit(dev, GFP_ATOMIC) == -ENOLINK)
+> > +			if (rx_alloc_submit(dev, GFP_NOIO) == -ENOLINK)
 > 
-> 
-> 
-> Le 12/06/2025 à 13:02, Takashi Iwai a écrit :
-> > On Thu, 12 Jun 2025 12:39:39 +0200,
-> > Christophe Leroy wrote:
-> >> 
-> >> With user access protection (Called SMAP on x86 or KUAP on powerpc)
-> >> each and every call to get_user() or put_user() performs heavy
-> >> operations to unlock and lock kernel access to userspace.
-> >> 
-> >> SNDRV_PCM_IOCTL_SYNC_PTR ioctl is a hot path that needs to be
-> >> optimised. To do that, perform user accesses by blocks using
-> >> user_access_begin/user_access_end() and unsafe_get_user()/
-> >> unsafe_put_user() and alike.
-> >> 
-> >> Before the patch the 9 calls to put_user() at the
-> >> end of snd_pcm_ioctl_sync_ptr_compat() imply the following set of
-> >> instructions about 9 times (access_ok - enable user - write - disable
-> >> user):
-> >>      0.00 :   c057f858:       3d 20 7f ff     lis     r9,32767
-> >>      0.29 :   c057f85c:       39 5e 00 14     addi    r10,r30,20
-> >>      0.77 :   c057f860:       61 29 ff fc     ori     r9,r9,65532
-> >>      0.32 :   c057f864:       7c 0a 48 40     cmplw   r10,r9
-> >>      0.36 :   c057f868:       41 a1 fb 58     bgt     c057f3c0 <snd_pcm_ioctl+0xbb0>
-> >>      0.30 :   c057f86c:       3d 20 dc 00     lis     r9,-9216
-> >>      1.95 :   c057f870:       7d 3a c3 a6     mtspr   794,r9
-> >>      0.33 :   c057f874:       92 8a 00 00     stw     r20,0(r10)
-> >>      0.27 :   c057f878:       3d 20 de 00     lis     r9,-8704
-> >>      0.28 :   c057f87c:       7d 3a c3 a6     mtspr   794,r9
-> >> ...
-> >> 
-> >> A perf profile shows that in total the 9 put_user() represent 36% of
-> >> the time spent in snd_pcm_ioctl() and about 80 instructions.
-> >> 
-> >> With this patch everything is done in 13 instructions and represent
-> >> only 15% of the time spent in snd_pcm_ioctl():
-> >> 
-> >>      0.57 :   c057f5dc:       3d 20 dc 00     lis     r9,-9216
-> >>      0.98 :   c057f5e0:       7d 3a c3 a6     mtspr   794,r9
-> >>      0.16 :   c057f5e4:       92 7f 00 04     stw     r19,4(r31)
-> >>      0.63 :   c057f5e8:       93 df 00 0c     stw     r30,12(r31)
-> >>      0.16 :   c057f5ec:       93 9f 00 10     stw     r28,16(r31)
-> >>      4.95 :   c057f5f0:       92 9f 00 14     stw     r20,20(r31)
-> >>      0.19 :   c057f5f4:       92 5f 00 18     stw     r18,24(r31)
-> >>      0.49 :   c057f5f8:       92 bf 00 1c     stw     r21,28(r31)
-> >>      0.27 :   c057f5fc:       93 7f 00 20     stw     r27,32(r31)
-> >>      5.88 :   c057f600:       93 36 00 00     stw     r25,0(r22)
-> >>      0.11 :   c057f604:       93 17 00 00     stw     r24,0(r23)
-> >>      0.00 :   c057f608:       3d 20 de 00     lis     r9,-8704
-> >>      0.79 :   c057f60c:       7d 3a c3 a6     mtspr   794,r9
-> >> 
-> >> Note that here the access_ok() in user_write_access_begin() is skipped
-> >> because the exact same verification has already been performed at the
-> >> beginning of the fonction with the call to user_read_access_begin().
-> >> 
-> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> >> ---
-> >> This is a lighter version of previous patch "[PATCH v2] ALSA: pcm: Convert multiple {get/put}_user to user_access_begin/user_access_end()" focussing on identified hot path.
-> >> Moved and nested the failure labels closer in order to increase readability
-> > 
-> > Thanks for the revised patch!
-> > 
-> > Although it's now much lighter, I still believe that we can reduce
-> > get_user() / put_user() calls significantly by adjusting the struct
-> > usage.
-> > 
-> > Could you check whether the patch below can improve?
-> > (Zero-ing of sstatus can be an overhead here, but there are some
-> > holes, and these need to be initialized before copying back...)
-> > 
-> 
-> Thanks for the proposed patch. Unfortunately it doesn't improve the
-> situation. The problem with copy_from_user() and copy_to_user() is
-> that they perform quite bad on small regions. And for the from_user
-> side we still get two user access enable/disable instead 3 and for the
-> to_user side we still get two as well (Allthough we had 7
-> previously). Those 4 user access enable/disable still have a cost.
-> 
-> Nowadays the tendency is really to go for the unsafe_put/get_user
-> style, see some significant exemples below. And as mentioned in those
-> commits, behind the performance improvement it also lead to much
-> cleaner code generation.
-> - 38ebcf5096a8 ("scm: optimize put_cmsg()")
-> - 9f79b78ef744 ("Convert filldir[64]() from __put_user() to
-> unsafe_put_user()")
-> - ef0ba0553829 ("poll: fix performance regression due to out-of-line
-> __put_user()")
-> 
-> Commit 38ebcf5096a8 is explicit about copy_to_user() being bad for
-> small regions.
-> 
-> Here below is some comparison between the three way of doing
-> snd_pcm_ioctl_sync_ptr_compat(), output is from 'perf top':
-> 
-> Initially I got the following. That 12%+ is the reason why I started
-> investigating.
-> 
->     14.20%  test_perf           [.] engine_main
-> ==> 12.86%  [kernel]            [k] snd_pcm_ioctl
->     11.91%  [kernel]            [k] finish_task_switch.isra.0
->      4.15%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
->      4.07%  libc.so.6           [.] __ioctl_time64
->      3.58%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
->      3.37%  [kernel]            [k] sys_ioctl
->      2.96%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
->      2.73%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
->      2.58%  [kernel]            [k] system_call_exception
->      1.93%  libasound.so.2.0.0  [.] sync_ptr1
->      1.85%  libasound.so.2.0.0  [.] snd_pcm_unlock
->      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
->      1.83%  libasound.so.2.0.0  [.] bad_pcm_state
->      1.68%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
->      1.67%  libasound.so.2.0.0  [.] snd_pcm_avail_update
-> 
-> With _your_ patch I get the following. copy_from_user() calls
-> _copy_from_user() and copy_to_user() calls _copy_to_user(). Both then
-> call __copy_tofrom_user(). In total it is 16.4% so it is worse than
-> before.
-> 
->     14.47%  test_perf           [.] engine_main
->     12.00%  [kernel]            [k] finish_task_switch.isra.0
-> ==>  8.37%  [kernel]            [k] snd_pcm_ioctl
->      5.44%  libc.so.6           [.] __ioctl_time64
->      5.03%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
-> ==>  4.86%  [kernel]            [k] __copy_tofrom_user
->      4.62%  [kernel]            [k] sys_ioctl
->      3.22%  [kernel]            [k] system_call_exception
->      2.42%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
->      2.31%  [kernel]            [k] fdget
->      2.23%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
->      2.19%  [kernel]            [k] syscall_exit_prepare
->      1.92%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
->      1.86%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
->      1.68%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
-> ==>  1.67%  [kernel]            [k] _copy_from_user
->      1.66%  libasound.so.2.0.0  [.] bad_pcm_state
-> ==>  1.53%  [kernel]            [k] _copy_to_user
->      1.40%  libasound.so.2.0.0  [.] sync_ptr1
-> 
-> With my patch I get the following:
-> 
->     17.46%  test_perf           [.] engine_main
->      9.14%  [kernel]            [k] finish_task_switch.isra.0
-> ==>  4.92%  [kernel]            [k] snd_pcm_ioctl
->      3.99%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
->      3.71%  libc.so.6           [.] __ioctl_time64
->      3.61%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
->      2.72%  libasound.so.2.0.0  [.] sync_ptr1
->      2.65%  [kernel]            [k] system_call_exception
->      2.46%  [kernel]            [k] sys_ioctl
->      2.43%  [kernel]            [k] __rseq_handle_notify_resume
->      2.34%  [kernel]            [k] do_epoll_wait
->      2.30%  libasound.so.2.0.0  [.] __snd_pcm_mmap_commit
->      2.14%  libasound.so.2.0.0  [.] __snd_pcm_avail
->      2.04%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
->      1.89%  libasound.so.2.0.0  [.] snd_pcm_lock
->      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
->      1.76%  libasound.so.2.0.0  [.] __snd_pcm_avail_update
->      1.61%  libasound.so.2.0.0  [.] bad_pcm_state
->      1.60%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
->      1.49%  libasound.so.2.0.0  [.] query_status_data
+> Sorry, I think Subbaraya mislead you. v1 was fine.
+> If we want to change the flags (which Im not sure is correct) it should
+> be a separate commit. Could you repost v1? There is no need to attribute
+Yeah hence asked to correct me if wrong.
+GFP_ATOMIC has to be there - "this patchset implements BH workqueues
+which are like regular workqueues but executes work items in the BH
+(softirq) context" from:
+https://lwn.net/Articles/960020/
 
-Thanks for the detailed analysis!  Then unsafe_*_user() seems to be
-the way to go.  I'll check your latest patches.
-
-
-Takashi
+Thanks,
+Sundeep
+> reviewers with Suggested-by tags. They can send their review tags if
+> they so wish.
+> -- 
+> pw-bot: cr
