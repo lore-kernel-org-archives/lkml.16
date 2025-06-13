@@ -1,150 +1,91 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3222822172C;
-	Fri, 13 Jun 2025 17:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421492E11B5;
+	Fri, 13 Jun 2025 17:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834691; cv=none; b=ebL4SPpiRKrXZow5AVtjZtr9TUYGpDLitWBtHjIUyxnA2J0JFicIe0xu7cSJcyGO6F0tEj87QP6KtOT5IVmyUgOOpNgdVqVvELIDxwleig6cSYEQBiz59RTgHxGpo5flHqU3D4YHpVUv37Iqh1pC6eg8FIfJk08r0NipkusotJ4=
+	t=1749834731; cv=none; b=HaGarC9OnRlElahiis/CeOXeRG8fW/rIKhZBKEUIAdGRqTym5G5gKACZjqtHuMoKRloU1ZYB3klLZh/p9sopyNQbW6tGzDPVq4J8i3D/wqNfflWjQNjPDgEdXi1p8VA+XhPqk38of2ZiBM/w5amX2EGTC5hfRautlYaDCJR7eSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834691; c=relaxed/simple;
-	bh=AiswGbK3djk2IUV13ftX1mKgDhSEBB5EEtxgQVhWtec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZFSyF28pTY/9CpY1W7SuKfKcV3sf3lKF5dFwO1xe23LF+KEauMnxF+juldGeSNtKYco5Fk4SrjTb9RD/PMVv+RyPcTBDy4bwj0j0Ioa3sbROgpSow3WRsllIpgqhRJvd4iPJx9wgbGhpUZv0MIY7Auyr/gTWxRhEgMcFRup2TfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Y3W/JpxV; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749834731; c=relaxed/simple;
+	bh=MwLvd5PG7WoLPNV5X3+UTldK/899ju4MNdrqiosDJ9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8B7u0E+bYv99iwsHQAe2TCbBucBkiL8Ku8BOQqcgsOMl0LMXE+c0EaGyvi32tNYCdRH3yUgFSth3InU1zlbD26fsacpbctsuTFDgzKpzzdIY5PBpM4jgxsXgDyCCyyEgIe7k11KEWVIL9s9Z8xPFGPLlhSDdgSIYwg+YkMGXpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhivCur+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y3W/JpxV"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55DHAnCP3183815;
-	Fri, 13 Jun 2025 12:10:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749834649;
-	bh=tIfdzcVsJS+Y1xlZNSjmnndTMnBgOYe6g0smELzJkrE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Y3W/JpxVwNVQbD3bTSuqcNoWS2DUs1sx94Iq2aqEy4TDX1+edD6Gn5xLVlmu+bMLZ
-	 Hdg5BR6bstG2Vcd1BvuJnxPF6Sbin5e0q38zTbnTh40leylgPCcj/ovbVd2of2s0sF
-	 ceHivc9iWxLQ7q0+sBQ5ejLR4gkyJzXLvJSbcMEc=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55DHAnHH2745269
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 13 Jun 2025 12:10:49 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 13
- Jun 2025 12:10:48 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 13 Jun 2025 12:10:48 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55DHAmgB4049360;
-	Fri, 13 Jun 2025 12:10:48 -0500
-Message-ID: <db82d506-3d10-4f6d-a100-d29e3685ba46@ti.com>
-Date: Fri, 13 Jun 2025 12:10:47 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhivCur+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43202C4CEEB;
+	Fri, 13 Jun 2025 17:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749834730;
+	bh=MwLvd5PG7WoLPNV5X3+UTldK/899ju4MNdrqiosDJ9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BhivCur+l0uxRrXdj3m3GKjsKlQNT6CXQx3iCBvVkXSvE4m7EvCcVuRfY6gZB5DtI
+	 RrJabvRIGIr3L4g87xf0gTfQDs/DflrsqDAj5QlhN5vplNG9fEENywbAPzXW3gnNlq
+	 m+coGK+eBLQeJtsoxM3fU4c5Xpiy8kfmTbUODa1wg4jIDHjdtxdql01cyMgso0UG9q
+	 znLaUKdE+SbabPCvrEijY1od4XSYKiQECxgj+txYdWIoB7IUqgUD3yiEVggSkRo5Am
+	 oG2oDjLPd9qcjldUhG53BMbb8wG7cjW4jHsngIK0FAWMIuyciYpkyJRP9+ahUBrIUW
+	 mqv3dY3gjk5ZQ==
+Date: Fri, 13 Jun 2025 10:11:43 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org,
+	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 09/12] lib/crc/s390: migrate s390-optimized CRC code
+ into lib/crc/
+Message-ID: <20250613171143.GB1284@sol>
+References: <20250607200454.73587-1-ebiggers@kernel.org>
+ <20250607200454.73587-10-ebiggers@kernel.org>
+ <aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] dt-bindings: omap: Add missing AM33xx compatible
- strings
-To: Kory Maincent <kory.maincent@bootlin.com>,
-        Tony Lindgren
-	<tony@atomide.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Aaro Koskinen
-	<aaro.koskinen@iki.fi>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Kevin Hilman
-	<khilman@baylibre.com>,
-        Roger Quadros <rogerq@kernel.org>,
-        Russell King
-	<linux@armlinux.org.uk>,
-        Paul Barker <paul.barker@sancloud.com>,
-        Marc Murphy
-	<marc.murphy@sancloud.com>
-CC: Jason Kridner <jkridner@gmail.com>, Bajjuri Praneeth <praneeth@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
- <20250613-bbg-v3-1-514cdc768448@bootlin.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250613-bbg-v3-1-514cdc768448@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 
-On 6/13/25 10:49 AM, Kory Maincent wrote:
-> Add several compatible strings that were missing from the binding
-> documentation for AM33xx-based boards. Update vendor prefix from
-> "ti" to "beagle" for BeagleBone to match actual hardware vendors.
+On Fri, Jun 13, 2025 at 06:01:41PM +0200, Alexander Gordeev wrote:
+> On Sat, Jun 07, 2025 at 01:04:51PM -0700, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Move the s390-optimized CRC code from arch/s390/lib/crc* into its new
+> > location in lib/crc/s390/, and wire it up in the new way.  This new way
+> > of organizing the CRC code eliminates the need to artificially split the
+> > code for each CRC variant into separate arch and generic modules,
+> > enabling better inlining and dead code elimination.  For more details,
+> > see "lib/crc: prepare for arch-optimized code in subdirs of lib/crc/".
+> > 
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ...
 > 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
+> Hi Eric,
 > 
-> Change in v3:
-> - Change vendor prefix from ti to beagle
-> - Remove BeagleBone board variant description.
+> With this series I am getting on s390:
 > 
-> Change in v2:
-> - New patch
-> ---
->   Documentation/devicetree/bindings/arm/ti/omap.yaml | 22 +++++++++++++++++++++-
->   1 file changed, 21 insertions(+), 1 deletion(-)
+> alg: hash: skipping comparison tests for crc32c-s390 because crc32c-generic is unavailable
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml b/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> index 3603edd7361d..45fa1c61cafd 100644
-> --- a/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> +++ b/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> @@ -104,12 +104,32 @@ properties:
->         - description: TI AM33 based platform
->           items:
->             - enum:
-> +              - beagle,am335x-bone
-> +              - beagle,am335x-bone-black
-> +              - beagle,am335x-bone-black-wireless
-> +              - beagle,am335x-bone-blue
-> +              - beagle,am335x-pocketbeagle
-> +              - bosch,am335x-guardian
->                 - compulab,cm-t335
-> +              - grinn,am335x-chiliboard
-> +              - grinn,am335x-chilisom
-> +              - gumstix,am335x-pepper
-> +              - isee,am335x-base0033
-> +              - moxa,uc-2101
->                 - moxa,uc-8100-me-t
-> +              - myir,myc-am335x
-> +              - myir,myd-am335x
->                 - novatech,am335x-lxm
-> -              - ti,am335x-bone
-> +              - oct,osd3358-sm-refdesign
-> +              - sancloud,am335x-boneenhanced
-> +              - seeed,am335x-bone-green
-> +              - seeed,am335x-bone-green-wireless
-> +              - tcl,am335x-sl50
->                 - ti,am335x-evm
-> +              - ti,am335x-evmsk
-> +              - ti,am335x-shc
+> Thanks!
 
-SHC looks like a Bosch board.
+I think that's actually from "crypto/crc32c: register only one shash_alg"
+(https://lore.kernel.org/linux-crypto/20250601224441.778374-3-ebiggers@kernel.org/),
+not the patch you replied to.
 
-Otherwise this looks much nicer now,
+Those self-test warnings are expected.  But I guess they are going to confuse
+people, so we should do something to make them go away.
 
-Reviewed-by: Andrew Davis <afd@ti.com>
+I think we should do what I've proposed for SHA-512: stop worrying about setting
+the cra_driver_name to something meaningful (which has never really worked
+anyway), instead just use *-lib, and update crypto/testmgr.c accordingly.
 
->                 - ti,am3359-icev2
-> +              - vscom,onrisc
->             - const: ti,am33xx
->   
->         - description: Compulab board variants based on TI AM33
-> 
+I'll send out patches that do that.
+
+- Eric
