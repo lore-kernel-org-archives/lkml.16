@@ -1,88 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E552C3253;
-	Fri, 13 Jun 2025 07:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CA2C3250
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749799256; cv=none; b=ADunU6U2SZZdov7HKL/e0uG+xAryw773HHoZ1uH7JICqQ37vz79cJQv8MRx6EvdjyDF4zrwgxZ1jcal5R6bJtdxXSlBxZ7slWqPjrm5JJhe03JOwpLaKks/0oAznkNKuolKRBwKKjkSdsqU6FuGKTF0u5Lw5qGfi/bDjJeEggM4=
+	t=1749799366; cv=none; b=aSeJ9EqVFsppEAacjAIfRzylSahLOh8AwdrSuThE2OBjVQ8dJNODh/rSgRYDaRx0lQ+lX9OXlJGl1S3jjO/K26jVBfY+JAh9O8K2VOjDeflJ4Uxup+cFFjQVhlBrYFJVNZ3gl+tJbuzE+weDofbONbiU6eJtct5h1U5l5Hu/iv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749799256; c=relaxed/simple;
-	bh=7oG7PdaLuoIzjD9feldhuWnbLoPMo98j5mUEc/aR7hQ=;
+	s=arc-20240116; t=1749799366; c=relaxed/simple;
+	bh=b3lB0rcM9VOkECT6kNBX2H73+BzxMx1FRcYjmAgtr2I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H20nOZ3NFIbkPUdlZe5l3kjbIwr44gH6LknIMTZO1aDbHopv1DYqYhO7NtoBwHIl0jZ5WebvM/XxmPjJDt+WI8mIquxrhsknmLpWCNUHFjkTl/hcjxrY/SDZmau4v5fbv49FbK0jE3FIICnJ42uh2/3tjrb9bayKuOHdcLBpS68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MlqHmZpo; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tVkxqmPo8OqSsx1clCF67p8f8zdOcUG6I1+bnRmRa7ueqyAz04/2sp1qloGE3Kz7KZLxIlSunfnr+w49NfzgtaX54WF5+8VG0MmainWOdnwC1yqtjRrDON8f9QtUbL64Sw6VHVI7y2npUtR9uYUrdMClgQ811bEUGan6/1WKcIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=MSC1dE1r; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MlqHmZpo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JwBBviHmEevVyR2yj/WBOAB/USjZOit0uE7ec1Txdc0=; b=MlqHmZpomiTv3FPCm1DCY51m56
-	OYYRsGs7+U885FPv6c1qKomXmBCLuMhytGmdKXeuFS7WLrUdZPZ26v21Sp7IOeRkUg7qyafptJutm
-	MOvGEK21SHP7yYXfZMYIL+sBZY/snLgixEuyg1Hn7yGoGHycKPj8Oh1ZNvTrV0yrgwbmEtEte2ywI
-	WrmqiLE551VDECZmGdVUH97hbrk8qoEBOz3OXCY1wbTfUJ14qWitpF/+5bvwsnN3qdN/oXy4t7VYw
-	jY7A9VfnlHvn/bs9/MRKaDRyRVD5dhxZIVtiMdbCdxFOWpmXr1arhP2Ts/AAfiEIgULpel3VcDXTc
-	VtC8Dstw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPydV-0000000CgPh-27uq;
-	Fri, 13 Jun 2025 07:15:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2857030BC59; Fri, 13 Jun 2025 09:15:36 +0200 (CEST)
-Date: Fri, 13 Jun 2025 09:15:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, seanjc@google.com,
-	pbonzini@redhat.com, brgerst@gmail.com, tony.luck@intel.com,
-	fenghuay@nvidia.com
-Subject: Re: [PATCH v1 2/3] x86/traps: Initialize DR7 by writing its
- architectural reset value
-Message-ID: <20250613071536.GG2273038@noisy.programming.kicks-ass.net>
-References: <20250613070118.3694407-1-xin@zytor.com>
- <20250613070118.3694407-3-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="MSC1dE1r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=b3lB
+	0rcM9VOkECT6kNBX2H73+BzxMx1FRcYjmAgtr2I=; b=MSC1dE1re8ahddE/Ncwf
+	qx5WDrUnFvJlCkSRNJHHdm+9/9s/9ABeBTpo8AMgiw6XP5a/xqdI9iZVFOkQVrfK
+	QWo2asGAIwaJ4RxB5nvXdxLcUmrRskWkCtNc23XFvXh2PGeObnjnAWtrMG99GM7T
+	4U1NWDs096+L6pDtJ2SPoT03Heu/h0cNXKNML4TJ3UQrEX6SDeRrqlRia0gB87+d
+	glKffrB3I24+BD7TtM9uHPaD/Kt7PP+wvtclp0/BQkOE1lnm0cm6YCFU4NvIeoF9
+	Zxfg4MLNXvH1wZu+YfJI2U2fiUzedbhl1h04Lb7p0BEiRWjSop3vU2lu6oPsYrox
+	ZQ==
+Received: (qmail 122092 invoked from network); 13 Jun 2025 09:22:38 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2025 09:22:38 +0200
+X-UD-Smtp-Session: l3s3148p1@MN8z6W43cLYgAwDPXy2/ACpZfVCNKldR
+Date: Fri, 13 Jun 2025 09:22:33 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sloppy-logic-analyzer: Fully open-code compatible
+ for grepping
+Message-ID: <aEvRuTTMO6DMl-Mx@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gKr9pJH9WT+fA8Xg"
+Content-Disposition: inline
+In-Reply-To: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
+
+
+--gKr9pJH9WT+fA8Xg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613070118.3694407-3-xin@zytor.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 12:01:16AM -0700, Xin Li (Intel) wrote:
+On Fri, Jun 13, 2025 at 09:16:28AM +0200, Krzysztof Kozlowski wrote:
+> It is very useful to find driver implementing compatibles with `git grep
+> compatible`, so driver should not use defines for that string, even if
+> this means string will be effectively duplicated.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> While at it, replace the hardcoded debug register number 7 with the
-> existing DR_CONTROL macro for clarity.
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Yeah, not really a fan of that... IMO that obfuscates the code more than
-it helps, consider:
 
-> -	get_debugreg(dr7, 7);
-> +	get_debugreg(dr7, DR_CONTROL);
+--gKr9pJH9WT+fA8Xg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-and:
+-----BEGIN PGP SIGNATURE-----
 
-> -	for (i = 0; i < 8; i++) {
-> -		/* Ignore db4, db5 */
-> -		if ((i == 4) || (i == 5))
-> -			continue;
-> +	/* Control register first */
-> +	set_debugreg(DR7_RESET_VALUE, DR_CONTROL);
-> +	set_debugreg(0, DR_STATUS);
->  
-> +	/* Ignore db4, db5 */
-> +	for (i = DR_FIRSTADDR; i <= DR_LASTADDR; i++)
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhL0bUACgkQFA3kzBSg
+KbY+IA//ef7jNGLhdkKLtTjvVJwVY2f72YXu2V215beViViJAKesgITfPKnuCMKY
+C5Ci6PihI0PNhezH/0Tib1P/wULxQxuWIe5k8SNslqgoJtOpEDtACKWa7hWt9pxT
+JYtsOU6soGRyqavOPll1Th65axt0/ZFI4UkBf02TWaW76bF6m7jcaZxZoExrPm3Q
+JXxFmfRqKoBet98aRb0+NvSdhQVTh5dq1kRTknx/u9oUmlP06pEKHYlSBuhRiomo
+yZCMJZefNkCGbkwQbqSFwgslHg995OVNedO3X5oUKz5yhL1yor9vZA0wi1wFhqUk
+pcOSzMuuEaKDsGZlVQoxwOD+I4qz0ijeAx40nApQPWZPIDgVrC2rRtIAHLlRtOHj
+PJEhUSbNfI2n0YMNkK3B1OZc0/0ITE+9m2+lRwdMaeEXg1hHMDP3lNfmGmriV/Ze
+WhxMB1rW6GpTuF3942NO8VEeQsnRJiyXYXFhZ0iCJ9iaOn7qA1Yj2bRQbdpQrmZU
+B14bR/Ynj+7YcjXla+tC6HmiCVbRhzOmerMzxrUorg0OKKhH408SKQ+zZb7tKKHE
+qOpk4n2r8AJQAwE5zVLmei6pQz+PANxxUIJE0nr73vSk7NB8JLJ33MJmtIS5DIGP
+eLiyHPzrx51UBGjAjlpwIxYX0RF2R8ZuCGHzxASWBOeSo/4kJcQ=
+=KPLM
+-----END PGP SIGNATURE-----
 
-I had to git-grep DR_{FIRST,LAST}ADDR to double check this was correct :(
-
-Also, you now write them in the order:
-
-  dr7, dr6, /* dr4, dr5 */, dr0, dr1, dr2, dr3
-
-My OCD disagrees with this :-)
+--gKr9pJH9WT+fA8Xg--
