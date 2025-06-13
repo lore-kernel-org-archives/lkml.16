@@ -1,176 +1,153 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DD42E11AE;
-	Fri, 13 Jun 2025 18:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749838496; cv=none; b=hZpy1UqtiNA9PbJnsQ5GbbY+nlDxcFGq+GkZpB64snhGt0JTaRoHTEzv+aZvcswDf7LDdzdYP+5WYZy8i35V3hLYrAnavNhb2jlIpQ8r37wakvT43V5O11/iOce/A8jVZlTEJ5+t/lqQylB3ASDhe0FqzVxPVY9NtO1zbR1tK48=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749838496; c=relaxed/simple;
-	bh=KjYY4bsTZUm05TpfR2l4YdrK8TqDiMRSIg8azQwn+r8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r+0tKsyQuv/00ta0/2TInysyq5G2CgcwIj3etfFSF+IczCuuZ1H++h1oA9SWGTY9mrRu888y50JAomGCPGbJw3/VjGL7YVvLgAhhgU69guF1kJLLdQIH5ekqea8cORi3QjO4B/JFDLBgm0gMI5QUJed/zJu+x0n7hZjihbc39Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rc/SufIb; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAAF1FAC50;
+	Fri, 13 Jun 2025 18:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749838539; cv=pass; b=p37lokPdmrfIU28AQ/oz98XvqARXBOffUr0r+0Hp9R/iZHefV70b2yHLd58ESPA1JcUzNYvskTShEnzUu1cB5reiSfSQbhw80h9UNbjLmedNPcvUiLyARyWE/sJtTFkQmYaJQhomRV/BPntQK51J7BLbns/vsOTiBu7JwkZXq2E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749838539; c=relaxed/simple;
+	bh=LUrCrKkDYX/6NVCPx+kge0VavIImLKCir7xCevaMB20=;
+	h=From:Subject:Message-Id:MIME-Version:Content-Type:To:Cc:Date; b=Z+PJlOYlf7j+/Iw2HVjFqdlZ+WPE6yP+qvMISykxYKkA7K66Y4/DUnPFfB05tOwONbatDWim6SexjepXPIw0OWbdFRwKkw/FHA3p1cllJYD4QFf4YBRFRS+dKYv9xtRIZyTIFP4qp1b+aPv4I4P2NgazkCiW1NvCM8MDqLksuxM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=C1yEc/3+; arc=pass smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rc/SufIb"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235a6b89dfaso3343005ad.3;
-        Fri, 13 Jun 2025 11:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749838494; x=1750443294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wF4gp/2m+krKdbuHM8VFo8aUcpegmRfbsaqd6bWd3zs=;
-        b=Rc/SufIbtuMmpD6Mno48+Skl8X3xzck1mg4EWxe6804WHz7pH+EKgPkswvbcEreSu5
-         55oqAjn/WPxKlODXvgqYjSkFBCqL1PKYy600xyIsvMHPH1REnw8Ojtr/BDShRpubjeJN
-         ChUiAy3pCMUuKVUJof1Md+byZ9whV3SJxm7JwR/1509jvdE1gjBNJHIdSLnFdoRJ9/LO
-         9gEr1lBKgiqaa9Jp+3R/RP+TjyjPzLG6jSJXMRfcZPUlO3V3d3vCyyDb5fRGHECh5BQj
-         8ItRs+1gNF+br83shz+NqLHQiRChLMODrK1bmne9LMXgfjFawxW454wsP6mutWOOOI86
-         XPpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749838494; x=1750443294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wF4gp/2m+krKdbuHM8VFo8aUcpegmRfbsaqd6bWd3zs=;
-        b=a1nh24khltTWa4mq05V0VzYI57drDu/r8guM0wAOrPkxvvSoLE69Rj4ChrKjmLdVyR
-         //hLa/Efx2F1Qmr1HIwOBV/5RxTD8bA7dHmGLiNs6D+Xld3gMC3iLkd0keR0f5wTchVP
-         damEV7SwcZhLOQPWvvq14wZyF4AolRuSx7nhOdElbEabZBs7yPGxJziNsa6Gwlng1Rzl
-         qBvTOkWOZFgZiuSQhgi1zpmvALOrXafvyxQME7CBzNNAY25Wrd9zRSNk7LpWDnxBOxxH
-         2gyTDSZ7GUpOXTib6lJfR7ScPsF1MOJM7Lkc5g/X5vzERBI5QkFO4UzV69GW+QYN/xgv
-         IldA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3LN9yfgUSWIJHmnl8PNaFAmvjXZk3bcW457RiAKzEBiQ68wmU5SzrBjQA73MBBbv4xgrlVXaSZMGe@vger.kernel.org, AJvYcCUHdPdao90MhiLwLKsAwfVqHpmXqGlgVTMFtmSNd+eL93lbVdR24OLce0dymDr3LqcjwNYcVLgO@vger.kernel.org, AJvYcCUPaoZiGpnoKO4M72G3wLUM28MVs/1Fnrbfduv+rnqymyOhIXeO5It7dUOHpWAp1D3jH68pxI16SfK5wZQ=@vger.kernel.org, AJvYcCUzM1y4jq8dbckYTzfQgVanNb98jKiF7T4PB9AAHhmpfalKuY6gsjeWD+a4RHXyplrZ7IW/yv2kW7MixE4S@vger.kernel.org, AJvYcCVhXaiv16f12Fl5+p9ZAuu/cBk/u2Ndk90zp6hmkclL09yM5xwTUwgKQVKQtsb/Cc7WXm/Jmh1cD6LPVEDJiSY=@vger.kernel.org, AJvYcCW/6sPwSn0aJXdOaSH9OOT5wp3BYbITyCZgVDn/VB3qQMOfe+STW3AyL99n2SraDQBNQeDok7v5rUl9Tjh0@vger.kernel.org, AJvYcCWb2K0JENWU1RB1FxUR/0SMZ9RfuULepOHJUw5IimNlklWCiR2eTZiAm3tjMQfgXnWtaShyimVgwshb@vger.kernel.org, AJvYcCXZhCj3LEzW4HlFMEEA3xlCJmf1p5VezLoZGJuwb6hZ5nInK7KF0MMlKoQ8NktyIO1jcC43gIUgSrHGLb67BwKv@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqd+YBtiMxx7BsSJ/M5sHvCtilN4OrfwatALPNxn3Ygy5Efjz4
-	qIHmkoLMatb55QfBME9BxxU/x66CVXSxxPVYAQiqldGEq8ZAxZyZm1kWZeYhbT92R+NgFnKqG5q
-	aadVQaRdXX52b3AlwbnXma/9VwLbUJUY=
-X-Gm-Gg: ASbGnctTTRR7XYh0Ygs0sWzTsWBS55j+naRltlgMTgeBbp7l20bOQ972SXXRs15/tUv
-	Ib9FkNxMiUp+eOsk9vjFK8dZ7mLKHtVoaspcQyXqnzljU3tcovx7+DN9qSopHuRxK7BiSMGBP3T
-	5RTBQZwqOTHOs/LKZrSQcoOWQ6LcONv6QLdo8km5vUGxQ=
-X-Google-Smtp-Source: AGHT+IFYalb1OTW7qnfDKSlOci9VWDAXekpMbN5b2vtf3GW8ZUpuOTwRiHQFxL1wuWQtjgsw7eVkO7CajlLxN6YkM2A=
-X-Received: by 2002:a17:902:d48d:b0:234:d14c:50ff with SMTP id
- d9443c01a7336-2366b00ba59mr2634725ad.6.1749838494222; Fri, 13 Jun 2025
- 11:14:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="C1yEc/3+"
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 304984E5CDC;
+	Fri, 13 Jun 2025 17:50:23 +0000 (UTC)
+Received: from fr-int-smtpout9.hostinger.io (100-125-233-42.trex-nlb.outbound.svc.cluster.local [100.125.233.42])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1DA2F4E60A6;
+	Fri, 13 Jun 2025 17:50:14 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749837016; a=rsa-sha256;
+	cv=none;
+	b=qOBQL5PQwb/dni3S81DpgWibxcJcKUHQWVMIQ9VeMjNzW2nLJnwZc2Yw2GxnzEjjEWP4uV
+	Dg4bTNPevHCEzyfyNkzNpBOYuRhSxrXaISPuLJAB0wke2xaOWG8ByAm1ofFqNVxNTKJaS0
+	FLYgtNfA++97JPO7MWFHU+qD6XJ+nOmCj9vNVa/+3IZsNva/tX4kfnTGB7lYplIeEC5+c5
+	s3uSaL3mooz3lieqSfTS6xUwky3DHFeQ5Mmtg7jxfZ03tXrSmLuKp17YwKN0oBfZEb1ZTR
+	dbXwzwF+Oqp9j8agfWoLTIUN4ns3Cklqmc10dJFAlcgg6P1GX97PPhW0hzJ+Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1749837016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=AWWl9p0qJrCVlYqvg6a7tQNgHptNPJxlUXIbGVPJHi8=;
+	b=PlKFC5IgUp5VJBssKPtZgexemZLkyyRU8GeWb6+xuYVuysUNzpGnnvmq5qi8JKp9dUO3VT
+	/5TGGCoUa0C6YSknmBuLNXBAUsmqsq8dqoHJkntsRIVZpgNfNyp0IBjEX2vPoiSja36NLV
+	Ajw0PbdNb7LmaFdbHu/PbD/7/PE5D/mGNSGA9/17VpGyZ4ulKpq6adYqnYeNO4w6nK9DQE
+	whVYoHQl/QJ60tjKoaAwHlWEJx+ORJ4XC/WDOCtE9VCBRlzeRZ4dUW42Dmg34frkwhpPJe
+	kNZ78eVf58dMW1fDnw7dw5qL44lkoksSuc4qd5EcVaJDRnuoe1AU/eGsW5XvDg==
+ARC-Authentication-Results: i=1;
+	rspamd-5859dfb5d9-9fv9s;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Plucky-Unite: 2064cfd77a905cba_1749837019652_944131949
+X-MC-Loop-Signature: 1749837019652:2132242319
+X-MC-Ingress-Time: 1749837019651
+Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
+ [89.116.146.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.125.233.42 (trex/7.0.3);
+	Fri, 13 Jun 2025 17:50:19 +0000
+Received: from [172.17.0.2] (unknown [36.79.97.133])
+	(Authenticated sender: linux@smankusors.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bJn3f418HzH9gKb;
+	Fri, 13 Jun 2025 17:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
+	s=hostingermail-a; t=1749837010;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AWWl9p0qJrCVlYqvg6a7tQNgHptNPJxlUXIbGVPJHi8=;
+	b=C1yEc/3+OwYyng96pwwZCWyHwWENG+g1gPnoL/TMz6axh173MPDrVxFn5s4YwyMRG9d3Lv
+	oTetBR1dWyLZMpFU3eiVqQVynQztj0jX8eimL4n0KUSbqVgDTW7qEFI3pgA4nVHVUfM8Ol
+	FRvxmHlfzCNZt0w+09cOQpdWxqMCxH/LRpkgwt9/LtHtHB9LRodeKxpYJN9FzChtv7sFuw
+	h3yet5xlr5MSxGb62XjHe/T2n+W4Rh8qeeAusWYZRRv/hrLBjopXFPfc3gDXiLnyx53Rl9
+	6T/ZBnFkl1zER2xtyVeP7v3Z0oNkOUycVUuL21dBwcAjTUdM2hcATHOA9yH3wA==
+From: Antony Kurniawan Soemardi <linux@smankusors.com>
+Subject: [PATCH 0/5] Add support for Sony Xperia SP
+Message-Id: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com>
-In-Reply-To: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 13 Jun 2025 20:14:41 +0200
-X-Gm-Features: AX0GCFtsUq0DPj-o5G6erQ-PfWcX7A0QtacSDQOlDe1Lx8EsxSkeObOaFNw6_Co
-Message-ID: <CANiq72m1ZWxPgCda1C-8X5XOvEq9Z9JfJZqhU4ZUzZ64=N+2fQ@mail.gmail.com>
-Subject: Re: [PATCH v11 0/6] rust: reduce `as` casts, enable related lints
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHlkTGgC/x3MMQqAMAxA0atIZgNpUVGvIg7FRs1QlQREKN7d4
+ viG/zMYq7DBWGVQvsXkPApcXcGyh2NjlFgMnnxLHTlMlvqhI7S4BI3I3kVuhhB6bqBEl/Iqzz+
+ c5vf9AFKgjRNgAAAA
+X-Change-ID: 20250601-msm8960-sdcard-e21de49aa8e4
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Antony Kurniawan Soemardi <linux@smankusors.com>, 
+ Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749837006; l=1855;
+ i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
+ bh=LUrCrKkDYX/6NVCPx+kge0VavIImLKCir7xCevaMB20=;
+ b=IVUFmJPqR5Ky4KGfiZfSL2rObsRm49tahel7j2dGjq3aOVye0N7qlBmpTUX5OtJbcV0lYiHQf
+ vvlJdmSYDm2BtJL2fSqjeWhj5h3EcwOqLMAliWM1O0IQj9LK2b9Cc2R
+X-Developer-Key: i=linux@smankusors.com; a=ed25519;
+ pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
+Date: Fri, 13 Jun 2025 17:50:06 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=684c64d2 a=/sUT9SOQbq9tkq2xjVjq6Q==:117 a=/sUT9SOQbq9tkq2xjVjq6Q==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=2cXSbqf0HCtMDuU6HZcA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
+X-CM-Envelope: MS4xfIoD/sm9VMovFuu71Wfr7lPiGO9nVd4gBakO7WWSwOU9RstjhuA4lwp8SIYgISJrzh5F2+gmg6i8zaIUvhmGqciHbU00tPVrA8rFQcdHrpWxB0KakOkO Cl8au8NKKZHwHn9bV3YcbHl5P6k3UHTpD+dPwwozYb16ZSfiCBuIngEuZLZ9Kw5soCo91xZrbkDcu+8Px4L2OI1C75jO2TBKn9U3NNk/oNefVe+HpyQ1vFwP oKpuB3Dro/nSUo1NqiZffLShQAxwyoMaoYMVL4nV8KxBgljFNrCIn8JKVfke18KoOwkyEWJ50PwIXdefhNJbhjD2HtdTMIutzigrnyN92xjYHTjsRHUWzaAV vgndqDdHVtH/KAT4stR60MD448e3sQGl2UfgsZWtGLR5Mw2Ac/eVkxiFeAAcJaMmsvjZSVdCCZHhBlihFXhb7NefHDucV2FlkuVZ+aprm654kY0rkiAhkuti S7s9kacH67YU8+h8nY1Vd+9m/arRkCcDzalbqubDPn94jG6cpDk7GJMKxSs=
+X-AuthUser: linux@smankusors.com
 
-On Wed, Jun 11, 2025 at 12:23=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
-> wrote:
->
-> This series depends on "rust: retain pointer mut-ness in
-> `container_of!`"[1].
+This patch series adds initial support for the Sony Xperia SP (codename:
+sony-huashan), a smartphone based on the Qualcomm MSM8960T SoC. The
+MSM8960T is a variant of the MSM8960 featuring an upgraded GPU (Adreno
+320 instead of Adreno 225) and a slightly overclocked CPU (1.7GHz
+instead of 1.5GHz).
 
-Not anymore! :)
+The following changes are included:
 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+1. Adding sdcc3 pinctrl states to ensure micro SD card functionality.
+2. Adding gsbi8 node and serial configuration for the MSM8960 SoC.
+3. Disabling unused gsbi1 and gsbi5 nodes in the MSM8960 SoC device
+   tree.
+4. Documentation for the Sony Xperia SP.
+5. Initial device tree support for the Sony Xperia SP, including serial
+   console, GPIO keys, PM8921 keypad, eMMC, micro SD card, and USB OTG.
 
-Thanks for rebasing, Tamir, I appreciate it.
+This patch series has been tested on the non-LTE variant of the
+Xperia SP.
 
-This has a bunch of hits in configfs, cpufreq and Nova [1]. I guess
-you built without those enabled.
+Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
+---
+Antony Kurniawan Soemardi (5):
+      ARM: dts: qcom: msm8960: add sdcc3 pinctrl states
+      ARM: dts: qcom: msm8960: add gsbi8 and its serial configuration
+      ARM: dts: qcom: msm8960: disable gsbi1 and gsbi5 nodes in msm8960 dtsi
+      dt-bindings: arm: qcom: add Sony Xperia SP
+      ARM: dts: qcom: add device tree for Sony Xperia SP
 
-Could you please fix those? Since this affects other maintainers that
-we need to ask the Acked-by to, let's try to at least give them the
-final state.
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   7 +
+ arch/arm/boot/dts/qcom/Makefile                    |   1 +
+ arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi      |  38 +++
+ .../dts/qcom/qcom-msm8960-samsung-expressatt.dts   |   5 +
+ .../boot/dts/qcom/qcom-msm8960-sony-huashan.dts    | 361 +++++++++++++++++++++
+ arch/arm/boot/dts/qcom/qcom-msm8960.dtsi           |  26 ++
+ 6 files changed, 438 insertions(+)
+---
+base-commit: 8630c59e99363c4b655788fd01134aef9bcd9264
+change-id: 20250601-msm8960-sdcard-e21de49aa8e4
 
-Thanks!
+Best regards,
+--
+Antony Kurniawan Soemardi <linux@smankusors.com>
 
-Cheers,
-Miguel
-
-[1]
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:429:9
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:467:9
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:479:9
-
-warning: `as` casting between raw pointers without changing their constness
-   --> rust/kernel/configfs.rs:564:48
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:721:39
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:764:35
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:783:35
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:764:35
-
-warning: reference as raw pointer
-   --> rust/kernel/configfs.rs:783:35
-
-warning: using `as _` conversion
-   --> rust/kernel/cpufreq.rs:650:45
-
-warning: `as` casting between raw pointers without changing their constness
-   --> rust/kernel/cpufreq.rs:650:45
-
-warning: using `as _` conversion
-  --> drivers/gpu/nova-core/driver.rs:22:64
-
-warning: casts from `u8` to `u32` can be expressed infallibly using `From`
-   --> drivers/gpu/nova-core/regs/macros.rs:267:26
-
-warning: casts from `u8` to `u32` can be expressed infallibly using `From`
-   --> drivers/gpu/nova-core/regs/macros.rs:267:26
-
-warning: casts from `u8` to `u32` can be expressed infallibly using `From`
-   --> drivers/gpu/nova-core/regs/macros.rs:267:26
-
-warning: casts from `u8` to `u32` can be expressed infallibly using `From`
-   --> drivers/gpu/nova-core/regs/macros.rs:267:26
-
-warning: casts from `u8` to `u32` can be expressed infallibly using `From`
-   --> drivers/gpu/nova-core/regs/macros.rs:267:26
-
-warning: casts from `u8` to `u32` can be expressed infallibly using `From`
-  --> drivers/gpu/nova-core/regs.rs:35:65
