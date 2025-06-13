@@ -1,132 +1,115 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AB545948
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B3D2DA777;
+	Fri, 13 Jun 2025 08:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749802005; cv=none; b=Kh2s1LTse1Nh1W5e44ku6f0lMWfuSemCVXTzmqVDfwlf74yMhaave+Vdp4sp5+nVHLfKeFoARm2qOa7J3QE9aE70DDVSQ86AekwPPatO+rRjyFdUkzwCoFAWSxBG9Q0gS4fdSbaq0DNMsBrikicbdj5a2DwhdRw91nOlK47/2hE=
+	t=1749802320; cv=none; b=JX2VYV7AwoGindnMHhqBsieTtBfrXelDjwiNURV6jh+NvmUUJ1+3KVE+n57e24hqox5ORQu9ukkfeBcop7QlzGg+59YRv/WLZuQIJkJnrj1jZ+h4wIKUYvtKSOuBz/AwUaEtcRh5vqPgLBmGPQxmPOj2o+WZoBpD7//Y4D34jxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749802005; c=relaxed/simple;
-	bh=SS6GUy7+iSGrMAI8Lio5hdVZyVEhieiGp9O0m4ddPPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NukhqYda6fJ4zm6TnF39I0+WqRDghz5rcBSooY5YmdzX1P0nc05ivoMsLGLL5Jcf9/l1Upp/0+1A+UNrncUIssEez3d7bPobFntNaPBG4Fb8Ve+dtBJfT73fMD7mt+N5aJLZDOXKUBmF9rBHZG6b4kH1kuDLm2iVGczOy90wuoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EsU2OSJH; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749802320; c=relaxed/simple;
+	bh=m4XILQdlyhOEuGIrG8GkhmJQpyqVphUns6R2oeWJu9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ux6WqrkPPHvp26IPjrQaFQ4NOXfK0tiIsjn9KlZvNeDTIgFgfNwLN/EfZK9EPzDTvT5hkpaiqIBLJIf2viGfWIlx9+rqO+rn8oA/Tsijfq24Hfiw6BivycEgHjsP+sC/S6XqQb/hnfdhZNYYPZED0fodTfXTdZoYvwVecLsZy0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=if3J+62J; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EsU2OSJH"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1048585f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749802000; x=1750406800; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qkqDFUZXCEB8bR8DaJ2XDhGAG8e6Iv9Jz4tCnxztU5U=;
-        b=EsU2OSJH8aW92PaxpbLI9nQ0uktIgs64bW6Q/7YE+yj5YTwjEP5wr/44RSb4s4PT9Z
-         i0JrxeE95LjFUAm84dOodnUN2O47ha1oJV5BDUm7TboIxCel4kdWE1AZ148oqQYVNV0X
-         V35e42BUX38VqqzxxlLSAsxopnYvwsHKlyWO8Uy9D1KkE6c95rJLKjqLwZbnyFyBpqWT
-         XCA0PbRQz0tnDtigC25LeOxgVoCmZ5Es11wBvWvH5W+finrYiZA7fqCSsKsQzzpU4rF/
-         qcs3DgYtWDqR0j2Ec+HTfRTHI7+gjxzs5CItLEYzeFuhX3pVXiTR4EOo2BFh8lcu7H3v
-         25/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749802000; x=1750406800;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qkqDFUZXCEB8bR8DaJ2XDhGAG8e6Iv9Jz4tCnxztU5U=;
-        b=C19OqBthCt9utXaxuCDG7xWhYUCx7PGiPsPfouVKrjXo/ipfw4mheevFC19VEhLpHK
-         nOD2MH+ykQzgnjGn/bzuvR1YnVEhC78sLLUxCz7nN+pT7O6aAhRA7lZSO001UUVIixSg
-         NY/QnwkAwqLO8i/LCVLECSqouYYaMC2bf6dU9T9V4fRU+oi6sLRZM7nt8FfbzoQDYpzt
-         sKVIdbCTUve+DRVZ49onuzlTu4n/yFW2IZuMGyaS0r3ze7KVehxfKMajzzHO12CBh3Ks
-         jvxNK01c/gEB6LysecFwqFl5J3WAcvvg3P2RftQpLtsg3zCs8MiOFhaQ2kg8iN4jiBhi
-         xFvQ==
-X-Gm-Message-State: AOJu0YzuIfhYPraRFUFOsQgAzZ1C8FXYmQs96v6si2hdOmMDeabrd1nz
-	0DSAGKxkmThv/Hsv0BAjgOF1W+otzw0ucTIa3sodUPevtTCmvTm9GTXkcIInMSuMA6s=
-X-Gm-Gg: ASbGncu9NhLPJm+Iaw3GbAApsGCTI9kOLwuZW0KNDfSAr7n7kY31BbQfIp+VBOd5ypc
-	L9SAqENo/6uTqwq7x38RT5uQ+vCLGytJzsmI8hdaQq+sZTJ+w+1WfsjjXEAZKoNPIrPpEH3GS4w
-	B2rMZ3IfnCQPhWObyppf5vwvcCA6fcJB3xu5MjQOvqA7YaCQkoVHEak2v7VySgrLqghDAtVITV6
-	Q74b6gRttMw/c82JvGbRw7PUQb7AQRkgwtXMvxn26CDw+9v/htvifUA/2FgQu9xr8ii46Uh4zj/
-	aqViybmEHUn6MZxpK7/VcYF4XjRvnX7Yi4osPlwYeXI3dZM2eJE3zLy2ZEL3zXGDmuFMTTyWYGY
-	ZYVyBoVeXx/OmV4vToIIKQUDErkc=
-X-Google-Smtp-Source: AGHT+IG/O5UhDJVykXf2VjbwfD0QSNx5aG0GPegjXalhCDoQfY+0ubOtvsqOybm9J5xA3EHEjqAziQ==
-X-Received: by 2002:a05:6000:3103:b0:3a4:eb80:762d with SMTP id ffacd0b85a97d-3a56871e167mr1902935f8f.56.1749801999608;
-        Fri, 13 Jun 2025 01:06:39 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4ba58sm1540669f8f.84.2025.06.13.01.06.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 01:06:39 -0700 (PDT)
-Message-ID: <03f54bb4-ddbb-4be8-9f9b-8328fdb98443@linaro.org>
-Date: Fri, 13 Jun 2025 09:06:36 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="if3J+62J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=m4XILQdlyhOEuGIrG8GkhmJQpyqVphUns6R2oeWJu9E=; b=if3J+62JkNzeEHqPi1mxH/620g
+	qbcmwRd9/sN2gu7fYdEieQ472dRs1NUjlLOrPe+LrNMaNOybKB9RJ5nrnr7JUciLzvr8yWDn5WPhd
+	rjx68mKpzXFARN/1pSa0P3Hjh/ruZo3UBs7yEl6mKcKGqmuiQwA+oehZrJYblS8IHty47WnzTfpUQ
+	aK6G7NQv89PMHFtnryrKWiKXkm0miAEO4njn+KucKk4gQdMqrpJ2Pgx/b6N0NaugMg1RZpmwXvhR3
+	WKMgULs4MBp5Rbde8GCQaNGQJSHdTMEtTXgvNN8I6oW0AsGX1eM4FtI1HAHXX1V39luP1oOz+HxZO
+	dQwXzi/g==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPzVw-00000002v6a-2GjE;
+	Fri, 13 Jun 2025 08:11:52 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id DDD5E30BC59; Fri, 13 Jun 2025 10:11:50 +0200 (CEST)
+Date: Fri, 13 Jun 2025 10:11:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexis =?iso-8859-1?Q?Lothor=E9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Menglong Dong <imagedong@tencent.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	ebpf@linuxfoundation.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Bastien Curutchet <bastien.curutchet@bootlin.com>,
+	netdev@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH bpf 2/7] bpf/x86: prevent trampoline attachment when args
+ location on stack is uncertain
+Message-ID: <20250613081150.GJ2273038@noisy.programming.kicks-ass.net>
+References: <20250613-deny_trampoline_structs_on_stack-v1-0-5be9211768c3@bootlin.com>
+ <20250613-deny_trampoline_structs_on_stack-v1-2-5be9211768c3@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] media: qcom: camss: Add support for MSM8939
-To: Vincent Knecht <vincent.knecht@mailoo.org>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
- <20250602-camss-8x39-vbif-v4-2-32c277d8f9bf@mailoo.org>
- <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
- <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250613-deny_trampoline_structs_on_stack-v1-2-5be9211768c3@bootlin.com>
 
-On 07/06/2025 22:43, Vincent Knecht wrote:
-> Le vendredi 06 juin 2025 à 13:59 +0300, Vladimir Zapolskiy a écrit :
->> Hello Vincent.
->>
->> On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
->>> From: Vincent Knecht <vincent.knecht@mailoo.org>
->>>
->>> The camera subsystem for the MSM8939 is the same as MSM8916 except with
->>> 3 CSID instead of 2, and some higher clock rates.
->>>
->>> As a quirk, this SoC needs writing values to 2 VFE VBIF registers
->>> (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
->>> This fixes black stripes across sensor and garbage in CSID TPG outputs.
->>>
->>> Add support for the MSM8939 camera subsystem.
->>>
->>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->>> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
->>
->> There was a preceding and partially reviewed changeset published on
->> linux-media [1] before v1 of the MSM8939 platform support in CAMSS,
->> due to a merge conflict this platform changeset should be rebased IMHO.
->>
->> [1] https://lore.kernel.org/all/20250513142353.2572563-4-vladimir.zapolskiy@linaro.org/
->>
->> --
->> Best wishes,
->> Vladimir
-> 
-> Thank you, I'll look into it
-> 
-> 
+On Fri, Jun 13, 2025 at 09:37:11AM +0200, Alexis Lothor� (eBPF Foundation) wrote:
+> When the target function receives more arguments than available
+> registers, the additional arguments are passed on stack, and so the
+> generated trampoline needs to read those to prepare the bpf context,
+> but also to prepare the target function stack when it is in charge of
+> calling it. This works well for scalar types, but if the value is a
+> struct, we can not know for sure the exact struct location, as it may
+> have been packed or manually aligned to a greater value.
 
-I think I will take 8939, plus any of the other now 3 SoCs waiting to be 
-merged with RBs.
+https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf
 
-Bindings consistent with the last 10 years can go ahead. Its not 
-reasonable or in the interests of the community and developers to gate 
-any further.
+Has fairly clear rules on how arguments are encoded. Broadly speaking
+for the kernel, if the structure exceeds 2 registers in size, it is
+passed as a reference, otherwise it is passed as two registers.
 
----
-bod
+
