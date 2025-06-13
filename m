@@ -1,62 +1,62 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B3C2D5C94;
-	Fri, 13 Jun 2025 11:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513D92E0B5B;
+	Fri, 13 Jun 2025 11:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749815735; cv=none; b=O6Pt/o77rzYqfQoiBFUT9ORMm88Ppgek7p2hUo9bns1yhYiNGMoBdEalQ8a0AP5rg86sQZVrNP1wdlpbRKUqSOY5KpraLcaMMP5bwwuLRPI35Td7Iny1V2hPiUneLJxQ4EDe2XEyujE3SsO6vWzgUl3ZteqLLj4uETvostullck=
+	t=1749815737; cv=none; b=awc8o4apGSrHZwgLvbFAKJ4bE6PPg/TLUOnT33FSi0B9EugACj8f53Pe5ZAY0NYNAfvEa65tQGBOQexrwObUHdT8X4m3kF6epWBhrnQ+/2maRKUoHLY33XQ366cHDk65ySrkSRcPrHk1pC+FUhdZFuq6UwIE6QrVM6qysmHrN7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749815735; c=relaxed/simple;
-	bh=39J8B/it+yKmHYIqv06bQIDCskhQbpop8t56XJh97As=;
+	s=arc-20240116; t=1749815737; c=relaxed/simple;
+	bh=Ci7710RjJSELOL+1/2aPBQoHM+FZu2LTyHSsddj27FE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=NRws+Ma73F5zbhtWfq+xj0cpIhQKhsErDnuzkIcH2Dr3MWGSOIg4j2elpXjU4KDh4MbIR0KsLncpWSb0za0yHpnLlcMKNy93f8mMAmKF8sQPtYXAIS/lFtkf+WhBiV3jWigzyNRufN2Xosw/JroFitWx62JXCaQRTJ33HgeQMQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsx6/CLA; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version:Content-Type; b=ke77fxshc2L49XDm3dqgeVG6iXkU8DxJLipM+NFDAnuMblHHgfgXDqC521VSl4Fop9gBjUZfBrXMKy6xHD+nmJFZ4CR1CfGjwjh/a9arH+1FsZKRn+sLcHDF28mM3NJUCVv7dHbBjCKsBHjol4Eh808UbMqt7j9ptZ9q7PTL4Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GMrA+9bE; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsx6/CLA"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a3798794d3so1954912f8f.1;
-        Fri, 13 Jun 2025 04:55:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMrA+9bE"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d3f72391so26536115e9.3;
+        Fri, 13 Jun 2025 04:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749815731; x=1750420531; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749815734; x=1750420534; darn=vger.kernel.org;
         h=mime-version:user-agent:references:message-id:date:in-reply-to
          :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1JJXFHi9ldlQPLqupON6xlA5LEI029g70pUzRWZNKyU=;
-        b=gsx6/CLA3wUh4qzsSFVoyYoJTzCGcaYqQX7jkLru6VrKrwFuIVBJNgy9wer/weqgjO
-         UJSBonkdhKsCiU9qtYmScIKS46+bfoEt1qaai3LU4B+RoWjYzSUguRyr9bshXU0Oh8aK
-         +mbzHO+cGbofk4F66W810o/Yy7WMnqAP76yQOiEpDBYofyIqJeQJ96kh+jEZ3LRyI0v4
-         gPd/67Q0O4m8opiWNY9oXPQlNOD+AJpiqyzBdoOq+/fFD9yKliTuqLFhMOC9BOAqXbXd
-         kZ74f+YfGfQkFY+XBWWqV0JibJlt07tq5RMVkQcdyg5oH9V0FvhtwXqy6+XWcJTdEO5U
-         SrZQ==
+        bh=uL5y/ewTTMQ7/ta7feOWe7CZOUk7g4FBbNi0PxftJG0=;
+        b=GMrA+9bEWblntAdDLO/iRvlH4v0xDnbd0mfNh5/zC1NZKkWBQmjO0/QeHFnWiUsxm7
+         hpyIqLXFT28+ZjhxEdP9sPI9Cbq/DuUSazSlzYO1xm5Sz0V6qy2+6omT6h+aPaC7Pu0+
+         6gJW92Ny4bPhVJ18r+kBViYzGjJZyA/TikHv6n0kyFVF1Gps9eB/J3y2nSuFOIQ5UHL2
+         7cLfU26vpSEyzNVojFg6oHS2yXe1ZnO+dyajo5asC6EhofIgQXXIis2o2g/Gm91IaW+h
+         G3T/b3XfCLsbYJKzCTwux1xsoSm0wsPexTGZ3lP7xiIuJQG6mRZK7C8ejlx7pF3G/hJS
+         0Q+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749815731; x=1750420531;
+        d=1e100.net; s=20230601; t=1749815734; x=1750420534;
         h=mime-version:user-agent:references:message-id:date:in-reply-to
          :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1JJXFHi9ldlQPLqupON6xlA5LEI029g70pUzRWZNKyU=;
-        b=PLjBvaUolE4Zf+iOXO0Ta2a42h46Vmv9pye5DVpguGrHIzZ6GgmIebFjkhzq28VauC
-         gSNHb5zPdUXOuOQPDQVoqxGWzZ0IYMFQbCKsdJexUulx7/17iwkDzLs1F4xvLRoTEYQL
-         kfnIrxUMncyTuefKP6tG4nDAYRePelhwgN0wZ0A1EJuXHVrpOyxL0fD3bxaxggmsgFvi
-         7T76PsmxLOMubU+woEKqOaBQwBIy3615I3iFF+DRzS8gGNZ9pe8NpUaxb9xl00RVIOvB
-         qX6V4ft+vamEp46AvfFLm1VEmY1SQQuDBGwSLDCo1yIJNdouzoGpH8Sml1s/GKFjjKHc
-         pSEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvBUuk/VYpRsadhpR6xztnjIJcNmR54PnNUxfFSc59BKbFtmfsCNxvgPWMZZYlpDvsp4cccWovDo/I+Ao=@vger.kernel.org, AJvYcCX19prqCcVQbPbBHB0dAFr71IpJ7JldTr5eFJk8N+6gmpPHo+x4dg37/sOnFKmf4mAFDOfCEKx0@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywoum3cXWHApPhaik693hZ794tQP6DQp9+l0NRvwBJPeBx84Q24
-	OOhWk7HrW3ERnVvZTE5rSKgPJtISKxOn4Lq0Bws3c+tWAXGlQvQbZXrt
-X-Gm-Gg: ASbGncus8lTJt4iqjTU9SJx4KnMC4ldrJpaUOpqdmep85JyZs7bQuwBPwYBNNO27a7B
-	IOBnwUehis9bJAxdf6o4ybFMwqfcW3JvNRykqMnkC3Y5JX+pqC+Gi8LjdYbzDhKzi368niBiTid
-	Je2DuJUxvZBretjvSI1zNa0ULPzc4/gyK6D/Gy54UdafD2cw3aV3wnDI+hMxc5xFBAVSDM5ucHo
-	1pgf7GMMHTtSHsFatOxYZ9NHFy/m8RColE1hVcYXWG4GV+IrerAgd6GJ7zyEu7BIDNPd6QWcEX+
-	ti5NkLw030cFqsmb4TfpH2ufh7xrnpAdHU/p5fUjxKbRqJHUqpKXyi3n+p5NAUgqFHCvY3/mDLE
+        bh=uL5y/ewTTMQ7/ta7feOWe7CZOUk7g4FBbNi0PxftJG0=;
+        b=H5GOFwK6nk0yx7GYNCElA+riSxSLveFjQlbfwoeiS9vMDOxzQ+vuDnY6m1B4tiwV4o
+         yTL/kyqBlESeaE4IV64CWo1szVmvQPfT2mYbHoRdIuIdYGqzZpSBuK1oUYCEkU3ZLxIO
+         pK+3RB32UjHbkByUfq5huwQEIoLZtKdn6kshr05I7/mLb3kRhEmQGqYTNiTTc8cU1E9Q
+         zoP9XqisOJoxMnnNDDJ3hNf/Ofx3NkH7Mm9n3ReTkTEl0csuO0PkTMkmkOyfhRepTl6a
+         7BYnlaqfeOHQ2oGQiYGEi0fELFO2J81JHG5D137U8X6oa1rinbDwpfQ62YY0nrY2VTDw
+         pSiw==
+X-Forwarded-Encrypted: i=1; AJvYcCVawf1p4AqFP52U1gZVaWLxxZU05SpAXzL3NVYNrkujIMuESbkgDHjjyQJ4NaAHCvwfzM4Bw2oUMlIBsdQ=@vger.kernel.org, AJvYcCXD4mWqPuagF3vl1Edy2cbxAzoT3AVqEi+qXA0oAywvSQKBUe4ZxIxNDjwVJx7qf0rOyU4P4kmD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhE/W30Fch57bYJuHV0winEstw4AJb3Jzc4VB3LvygKQPhS0MO
+	6gridwCe9lxIW5eGE0Mj3OAkOnx2SXbKiQ4AHMNbBL/AMcdiJDJcJvDp
+X-Gm-Gg: ASbGnctDKXlGAGZBbwkgmVqJUTlBge6rq4D9H67cZk6DCSAfQGEEXoKy1ggB8MSFsq0
+	CFPgAu5kkkhItzKhenxbo/6wO4moQyAtdmfCK8rWWLvbj4LosFnaO5asjz6TMslrrbakvKmj1FZ
+	LXwhHtAHfhcO+A4wiejzMxHLkJh7x0rXYaDNJ1nAeRsPQSRqWvAwQXDwNheT6Hvsfsc81fL10gY
+	oas1dJ9T2lrxM0UHaL6DrsNz6tsTc2ytfL4vYzXsWFUaZEwfnzNQlfEZ01/31Z90nJyCnur3fcx
+	nimeUOjMAfREy2B2bUNcjyYd1AFbou5/8yJNIOydvLu9R8T/vKS5ZwY8vHghMOvs/qz2d+x0CF8
 	=
-X-Google-Smtp-Source: AGHT+IH6ZxOKA+nk3cYFyy4sPdDCDQoX/fjJFz1gR0pdr5Ok5AHJOjXsI4WxV20/dTCer5v7vreBMQ==
-X-Received: by 2002:a05:6000:2c0c:b0:3a5:5fa4:a3f7 with SMTP id ffacd0b85a97d-3a5687603d1mr3028691f8f.58.1749815731307;
-        Fri, 13 Jun 2025 04:55:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMtOD0UDTm67fkmitVK21heePsVMtSrnMkraeiIzLg5EK6P4byBT359avt25zMBKAJPT5CUA==
+X-Received: by 2002:a05:600c:34c7:b0:442:f8e7:25ef with SMTP id 5b1f17b1804b1-45334ad3f41mr27165075e9.11.1749815733431;
+        Fri, 13 Jun 2025 04:55:33 -0700 (PDT)
 Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087f8sm2176397f8f.53.2025.06.13.04.55.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e261ebdsm52187085e9.39.2025.06.13.04.55.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 04:55:30 -0700 (PDT)
+        Fri, 13 Jun 2025 04:55:32 -0700 (PDT)
 From: Donald Hunter <donald.hunter@gmail.com>
 To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
@@ -69,13 +69,12 @@ Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
   joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
   linux-kernel@vger.kernel.org,  lkmm@lists.linux.dev,
   netdev@vger.kernel.org,  peterz@infradead.org,  stern@rowland.harvard.edu
-Subject: Re: [PATCH v2 05/12] tools: ynl_gen_rst.py: Split library from
- command line tool
-In-Reply-To: <440956b08faee14ed22575bea6c7b022666e5402.1749723671.git.mchehab+huawei@kernel.org>
-Date: Fri, 13 Jun 2025 12:13:28 +0100
-Message-ID: <m234c3opwn.fsf@gmail.com>
+Subject: Re: [PATCH v2 06/12] scripts: lib: netlink_yml_parser.py: use classes
+In-Reply-To: <08ac4b3457b99037c7ec91d7a2589d4c820fd63a.1749723671.git.mchehab+huawei@kernel.org>
+Date: Fri, 13 Jun 2025 12:20:33 +0100
+Message-ID: <m2y0tvnb0e.fsf@gmail.com>
 References: <cover.1749723671.git.mchehab+huawei@kernel.org>
-	<440956b08faee14ed22575bea6c7b022666e5402.1749723671.git.mchehab+huawei@kernel.org>
+	<08ac4b3457b99037c7ec91d7a2589d4c820fd63a.1749723671.git.mchehab+huawei@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -87,15 +86,20 @@ Content-Type: text/plain
 
 Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> As we'll be using the Netlink specs parser inside a Sphinx
-> extension, move the library part from the command line parser.
+> As we'll be importing netlink parser into a Sphinx extension,
+> move all functions and global variables inside two classes:
 >
-> No functional changes.
+> - RstFormatters, containing ReST formatter logic, which are
+>   YAML independent;
+> - NetlinkYamlParser: contains the actual parser classes. That's
+>   the only class that needs to be imported by the script or by
+>   a Sphinx extension.
+
+I suggest a third class for the doc generator that is separate from the
+yaml parsing. The yaml parsing should really be refactored to reuse
+tools/net/ynl/pyynl/lib/nlspec.py at some point.
+
+> With that, we won't pollute Sphinx namespace, avoiding any
+> potential clashes.
 >
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  scripts/lib/netlink_yml_parser.py  | 391 +++++++++++++++++++++++++++++
->  tools/net/ynl/pyynl/ynl_gen_rst.py | 374 +--------------------------
-
-I think the library code should be put in tools/net/ynl/pyynl/lib
-because it is YNL specific code. Maybe call it rst_generator.py
