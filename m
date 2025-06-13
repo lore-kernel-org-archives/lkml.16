@@ -1,95 +1,91 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A8D2E11AF;
-	Fri, 13 Jun 2025 17:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D429229B1F;
+	Fri, 13 Jun 2025 17:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749836765; cv=none; b=W6v+CYRQ6XGTA00U3tXFji0T/xT2SC7MN/U9434Zz1R1KksdQeFtv9V2tvwIqW9Dgu0soumne79T7yWIryymNjHcil+Iu7YpOSDa89B0rZV996FfjYNj7YoukfIYZmyEgJyXk+LYW1X8aSZMiFXu1R2YDJDpY/7Hw0VL4kgMaNg=
+	t=1749836768; cv=none; b=U8pFZX2ZeMVzfDPkzA4Zuqf9jS97sVFyAB9XwE6xJaxOL43A0HlbUwyOf5EajaEd6ohFt0wPxeFp4WKF5mZFPN3vXyvLBTrDVNCChzZdTV1qsW6u2ektaBFwtP5vs7m1EFALjyAdinm3AEDQR8uWuCnQu0jwa9pRsCf+RIhuBgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749836765; c=relaxed/simple;
-	bh=E1CAs9I3Bl6bAji658FN5T6DdKnek8IoObKmUgz9ZLE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B2OxuExCUkTfl+UezsePGPXJpH0YKACEUMexfumNTFO1ZKbX0lvdnkaswGicqU7XpOv/yurijcQEk4bkETkRnMwgBU9hl+RElL3wHdoAZ2HF5K1J4gI5kOUDako+kkyPC28SUjk56LwOq8lsyBLuPe41+vlGST7ATTEHvBGbExU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8bxLJx3; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749836768; c=relaxed/simple;
+	bh=9/OROHOU0d5H6AaQmhQJwXfenk0HE8Iz8C97u9uaoas=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=UPBMLhsIrBLLDJE9Tr1jgD04cZjcBbEM4e1aSWmBDVEr++pFE+TcyubjK+rssn6kgg/3+mQayDpg6cM+d+RDCm7rQvYEyaUjDgoLIglYB2ezHrv+6Vd8/HSyX1VN0cx7LUWcIJOdR+FWn8iVycsUIsvTbKAH8Vk+epPIB2H3XwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=kLU+ljCi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8bxLJx3"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a54700a463so1693869f8f.1;
-        Fri, 13 Jun 2025 10:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749836762; x=1750441562; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=m7o6LgB7AIkkK7r/dWQxcX71VitA91tOarrZtPxNhdw=;
-        b=E8bxLJx3lVlAPHUxIIVF5gP1pd78jHskmPaqlekNawsNvzgZLGV825l50bVyfg8dkM
-         C4i73iKJx82K1dDAd1wlY6mgLF52rgbcFU4HFolBo5XOXt33SBR27g/93KXxEHvQrIqU
-         QtPZA6VELPl9WI38gGtTutyNtVsu7tWOg3d3uV6GSax+m9riWiPQGSk1R+LbzPpL+TH9
-         LJju2+7rwfPBAcmsZu3iidABqv8TbgoUBpp1FeitC+H3quKiJf0Tkfp/vljEkmInuGX1
-         ByA8vRJSN0dGXxKkqnYzS7LxIRlLLDAFzyC73AwWWts1eQAkcq9SWA1ngngjOY6DEW34
-         g1ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749836762; x=1750441562;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m7o6LgB7AIkkK7r/dWQxcX71VitA91tOarrZtPxNhdw=;
-        b=hg33NFb7lLQmXJv9CrTi/ojxZBb34wVZ3C+pF0joV/K6KRmiB7m/HPB/qLqaXYYmZJ
-         VZO5IPNqIMqNM/7NEIiVV02B1rBET1ha2cCfLmMlI/ORU1NKb40a3WAHfeq2ky8HTcwD
-         1JlSVgtA/rlHjXejQ+H6QknZpUIyTD4jvvodL2A/Cnm7d1qBd5j+8XJ/5Ke+4JX7SSG+
-         v/M3C7Z7eAirTabuFH6Sqfw6JPic6l+qWWyCTdoAdmcQTwQ+OwZAGPd1X+vnDFxS/OWF
-         Qjgy0SiRQuli4pr6ZEZsuBVUHX8cCdPPQ8E/TIH7+1HLcil9HimYijEqM5cWySujU4cR
-         kiPg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+GjB6GLN7v8ayMHMfeLjkL2uaDbW8XJZBLI6orKTica7F6f7gDH1nPVOjz5fIB2sYQ4gJMVFpMBBScoA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvzISHakAaYLA1pHeba70eGO/rrBtJ+t3wicN3D587mzavfsWK
-	RAHMKo4/nzhQVhbnOiphIvUiuW8VA8kVm4yNZw2p0KawusyBnpRKsn7U
-X-Gm-Gg: ASbGncvJmZnDhQBdmeIjs8uuhoZ/7TN9GMahxBNGPuhmfcKlnnkrDoWnfC/wLPJ9xZ4
-	wPePAVDRoZq6/QP6Wiu40zjvspWA0CZFFb9W9yIGqozGB5lbiRgZnK6h0pAGrbxMbnyWRbmEbsL
-	p9NQNFCVM0H602jjrmONlyqnzmMcRpu5NTFJqHJNALwkxTyus4qdVarc/M3JLuMg8PzCGt6dtCn
-	avCp6bUo0gJCxn70QW9oZoXLYO3B08DpkH8ZJWtF/84Z6J4NaPkhPALjsDiX2TEMpGp4x7VQ31x
-	yeDezguvDWTNWEBqIhhC131oX4GCml569MESngH31Ufmq3lweMyDxTr6anusHHmhAojS/jti2c7
-	0og==
-X-Google-Smtp-Source: AGHT+IE1GHPidTcikKR9hQdtjMOMkWc4BcYjavA7DREfS2b2HpPP4JObZbGROJKY8gwS0khF3F+fJQ==
-X-Received: by 2002:a05:6000:4025:b0:3a3:598f:5a97 with SMTP id ffacd0b85a97d-3a56d7cd473mr1858505f8f.9.1749836762305;
-        Fri, 13 Jun 2025 10:46:02 -0700 (PDT)
-Received: from [10.245.245.66] ([192.198.151.47])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224cb2sm61493715e9.5.2025.06.13.10.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 10:46:01 -0700 (PDT)
-Message-ID: <17f85f0bfa5446b86188616349b17d02fe207c22.camel@gmail.com>
-Subject: Re: [PATCH] tools/power turbostat: Fix build with musl
-From: Artem Bityutskiy <dedekind1@gmail.com>
-To: Calvin Owens <calvin@wbinvd.org>, linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
- rui.zhang@intel.com
-Date: Fri, 13 Jun 2025 20:45:58 +0300
-In-Reply-To: <7edd4c688111a697cfe913c73d074738b3d1dffb.1749833196.git.calvin@wbinvd.org>
-References: 
-	<7edd4c688111a697cfe913c73d074738b3d1dffb.1749833196.git.calvin@wbinvd.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="kLU+ljCi"
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id D3E812115198; Fri, 13 Jun 2025 10:46:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3E812115198
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1749836766;
+	bh=rodYPJvZe1E9/OuzpNcjCvCD37LtJfgG2pZAezDxKpM=;
+	h=From:To:Cc:Subject:Date:Reply-To:From;
+	b=kLU+ljCiwonkzBrHYoXeiCJwBuGj0s1P8xJ/qmSpqywUW3C/olx+FdemyGspFjfWc
+	 AQmKX8Kllsc39Lpg4l+1EC654WsJueo9c85WxBDti/Q9cFFplxTj/3wPb5nkYQWhrn
+	 wDSU/Vo1Dy0ZN/cEQWNWFrXj8oIeLiP9Vmjc8pI0=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>
+Subject: [Patch net-next v2] net: mana: Record doorbell physical address in PF mode
+Date: Fri, 13 Jun 2025 10:46:05 -0700
+Message-Id: <1749836765-28886-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: longli@microsoft.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-On Fri, 2025-06-13 at 09:54 -0700, Calvin Owens wrote:
->     turbostat.c: In function 'parse_int_file':
->     turbostat.c:5567:19: error: 'PATH_MAX' undeclared (first use in this =
-function)
->      5567 |         char path[PATH_MAX];
->           |                   ^~~~~~~~
->=20
->     turbostat.c: In function 'probe_graphics':
->     turbostat.c:6787:19: error: 'PATH_MAX' undeclared (first use in this =
-function)
->      6787 |         char path[PATH_MAX];
->           |                   ^~~~~~~~
->=20
-> Signed-off-by: Calvin Owens <calvin@wbinvd.org>
-Reviewed-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+From: Long Li <longli@microsoft.com>
+
+MANA supports RDMA in PF mode. The driver should record the doorbell
+physical address when in PF mode.
+
+The doorbell physical address is used by the RDMA driver to map
+doorbell pages of the device to user-mode applications through RDMA
+verbs interface. In the past, they have been mapped to user-mode while
+the device is in VF mode. With the support for PF mode implemented,
+also expose those pages in PF mode.
+
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+Changes
+v2: add more details in commit message on how the doorbell physical address is used
+
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c6..52cf7112762c 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -31,6 +31,9 @@ static void mana_gd_init_pf_regs(struct pci_dev *pdev)
+ 	gc->db_page_base = gc->bar0_va +
+ 				mana_gd_r64(gc, GDMA_PF_REG_DB_PAGE_OFF);
+ 
++	gc->phys_db_page_base = gc->bar0_pa +
++				mana_gd_r64(gc, GDMA_PF_REG_DB_PAGE_OFF);
++
+ 	sriov_base_off = mana_gd_r64(gc, GDMA_SRIOV_REG_CFG_BASE_OFF);
+ 
+ 	sriov_base_va = gc->bar0_va + sriov_base_off;
+-- 
+2.25.1
+
