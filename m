@@ -1,139 +1,106 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F87275B1F;
-	Fri, 13 Jun 2025 12:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABC363A9;
+	Fri, 13 Jun 2025 12:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819382; cv=none; b=i8RugTLmH4tGAg9XUymo0BYQSMGMh85xkh7AsKBIZAUKRR2qb8lMvHgzyRRzvEQzp2i9AySGYnXNk0PgBEuLxsVyZ98Ne+MGzk0vcxBms0uzZ2iQVAXphQ/XicxF93pO8MAcHOblGkZyyBCx/TCkye8BrzandP46QSI9vHoQ23I=
+	t=1749819520; cv=none; b=JDYh3BDm4lh/Q/3iqdsDamVmlINdbZV0igz6Yt7sNd27tuvBZxbf1EA8hKbhCviEwmc+K6uFMguXRqX7vQ+daSHpGCSQ8IplFQl0ntlHwPOQoTWhmYDKD/rVdxNRliV56HSgqsJqKn7rGTH5vh2SX8b8mIrGF9+V/wkaD3+cqT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819382; c=relaxed/simple;
-	bh=MqkTIBby2wvrD0suonE6HSiAFSYk5pQxx0AVGdk6xM4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YolWiQXHbZQ/irqv5OGfmhzzsGRcf6MxoZJlluRjHprVPfxQuNaHzXjYWF0zoJx0hd3TBQOGNMuCtwYcbKknyEk4PFcFDG/GHILtyYGvc0Yj3yCXAMYc/+F1ShDlox59vs3ssHzg4WGfl/UW12NR9PIw4jjTYFM1abOCs6wf+08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1uQ3oY-000000001H0-12R5;
-	Fri, 13 Jun 2025 12:56:04 +0000
-Date: Fri, 13 Jun 2025 14:55:46 +0200
-From: Daniel Golle <daniel@makrotopia.org>
-To: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Simon Horman <horms@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Robert Hancock <robert.hancock@calian.com>,
-	John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>,
-	Robert Marko <robimarko@gmail.com>
-Subject: [RFC] comparing the propesed implementation for standalone PCS
- drivers
-Message-ID: <aEwfME3dYisQtdCj@pidgin.makrotopia.org>
+	s=arc-20240116; t=1749819520; c=relaxed/simple;
+	bh=HB0wDOJzS3HrgqoMV7bcUDMPRb1iMOcaGiVDH6zpgx4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=i5OCFNbtkLwsKfWe9FaiH1/BIDLfYIpjh7CWvzRyoaSQ/NMo2600VZmGDZ1uLyVmjXnJiyRyYwf0PC9ut26cVJPZOCQHpSIXac4YVGpaVWb9uiiNB7TnHF1xp/BPcMEViXW8Xpjy77kBOBiAfXnEz9ut7mM+crCtp+W/gLPfgKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HvdIj8MG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tfyyus7o; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HvdIj8MG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tfyyus7o"
+Date: Fri, 13 Jun 2025 12:58:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749819509;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CTuNRKXMmRC4Te9gor2dckm4EkkJG0/0j525o8lM6z8=;
+	b=HvdIj8MGEB/8x5NboKXz5B5/RytGWKRrP161XGmvsQMHNP+OtuLs+0HcsKVytcxNWW3TRk
+	Is7ajaU3YJp8NDtTFqhAnZXp7ZDCl7xUsxTBXWypvrUCQk+G1RHiOIDNFW3OzZJLI5GE2e
+	/pu8+QWWOMTYqHW4gSTczY3Nxl+QeU1EQdVAoWAlSdorSwBXA0CIKPKPuiHr73+FL9nqok
+	NChlGyvFCpTOOqxwn6jw51J1zz9oV+Qu6xernD/DAFQDd+YwHtJwW+glULMq+bVY4lcmDr
+	VMJ+gSUc31B1EZ5P63Ey/UdL53BhM+lyxkdIbnEchR8ikKDNgW8uRRXnN3ZDfw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749819509;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CTuNRKXMmRC4Te9gor2dckm4EkkJG0/0j525o8lM6z8=;
+	b=Tfyyus7o6CU5UZgrdJzVS0sGisNkbNhCYtVOXN3E4InDzTWsYm66SIhHgJv0k6OHIFkS6Q
+	zvVzfPgc2IkGDyDw==
+From: "tip-bot2 for Viresh Kumar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] smp: Fix typo in comment for raw_smp_processor_id()
+Cc: Boqun Feng <boqun.feng@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Cd096779819962c305b85cd12bda41b593e0981aa=2E17495?=
+ =?utf-8?q?36622=2Egit=2Eviresh=2Ekumar=40linaro=2Eorg=3E?=
+References: =?utf-8?q?=3Cd096779819962c305b85cd12bda41b593e0981aa=2E174953?=
+ =?utf-8?q?6622=2Egit=2Eviresh=2Ekumar=40linaro=2Eorg=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <174981950839.406.6889829329461040913.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi netdev folks,
+The following commit has been merged into the smp/core branch of tip:
 
-there are currently 2 competing implementations for the groundworks to
-support standalone PCS drivers.
+Commit-ID:     09735f0624b494c0959f3327af009283567af320
+Gitweb:        https://git.kernel.org/tip/09735f0624b494c0959f3327af009283567af320
+Author:        Viresh Kumar <viresh.kumar@linaro.org>
+AuthorDate:    Tue, 10 Jun 2025 13:27:13 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 13 Jun 2025 14:48:54 +02:00
 
-https://patchwork.kernel.org/project/netdevbpf/list/?series=970582&state=%2A&archive=both
+smp: Fix typo in comment for raw_smp_processor_id()
 
-https://patchwork.kernel.org/project/netdevbpf/list/?series=961784&state=%2A&archive=both
+The comment in `smp.h` incorrectly refers to `raw_processor_id()`
+instead of the correct function name `raw_smp_processor_id()`.
 
-They both kinda stalled due to a lack of feedback in the past 2 months
-since they have been published.
+Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Link: https://lore.kernel.org/all/d096779819962c305b85cd12bda41b593e0981aa.1749536622.git.viresh.kumar@linaro.org
 
-Merging the 2 implementation is not a viable option due to rather large
-architecture differences:
+---
+ include/linux/smp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-				| Sean			| Ansuel
---------------------------------+-----------------------+-----------------------
-Architecture			| Standalone subsystem	| Built into phylink
-Need OPs wrapped		| Yes			| No
-resource lifecycle		| New subsystem		| phylink
-Supports hot remove		| Yes			| Yes
-Supports hot add		| Yes (*)		| Yes
-provides generic select_pcs	| No			| Yes
-support for #pcs-cell-cells	| No			| Yes
-allows migrating legacy drivers	| Yes			| Yes
-comes with tested migrations	| Yes			| No
-
-(*) requires MAC driver to also unload and subsequent re-probe for link
-to work again
-
-Obviously both architectures have pros and cons, here an incomplete and
-certainly biased list (please help completing it and discussing all
-details):
-
-Standalone Subsystem (Sean)
-
-pros
-====
- * phylink code (mostly) untouched
- * doesn't burden systems which don't use dedicated PCS drivers
- * series provides tested migrations for all Ethernet drivers currently
-   using dedicated PCS drivers
-
-cons
-====
- * needs wrapper for each PCS OP
- * more complex resource management (malloc/free) 
- * hot add and PCS showing up late (eg. due to deferred probe) are
-   problematic
- * phylink is anyway the only user of that new subsystem
-
-
-phylink-managed standalone PCS drivers (Ansuel)
-
-pros
-====
- * trivial resource management
- * no wrappers needed
- * full support for hot-add and deferred probe
- * avoids code duplication by providing generic select_pcs
-   implementation
- * supports devices which provide more than one PCS port per device
-   ('#pcs-cell-cells')
-
-cons
-====
- * inclusion in phylink means more (dead) code on platforms not using
-   dedicated PCS
- * series does not provide migrations for existing drivers
-   (but that can be done after)
- * probably a bit harder to review as one needs to know phylink very well
-
-
-It would be great if more people can take a look and help deciding the
-general direction to go. There are many drivers awaiting merge which
-require such infrastructure (most are fine with either of the two), some
-for more than a year by now.
-
-
-Thank you!
-
-
-Daniel
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index f1aa095..bea8d28 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -234,7 +234,7 @@ static inline int get_boot_cpu_id(void)
+ #endif /* !SMP */
+ 
+ /**
+- * raw_processor_id() - get the current (unstable) CPU id
++ * raw_smp_processor_id() - get the current (unstable) CPU id
+  *
+  * For then you know what you are doing and need an unstable
+  * CPU id.
