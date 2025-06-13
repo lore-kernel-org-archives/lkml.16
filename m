@@ -1,103 +1,196 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAD02D3238;
-	Fri, 13 Jun 2025 10:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6047122F767;
+	Fri, 13 Jun 2025 10:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749810715; cv=none; b=T0yThhAl1adp3MxWObS1vxe43/H1W6cF7JrKFcS/O7ZBCY6VE/bNR1TByCU0uYj8N4GoR85DfFgyuc38kRXRCdt98errQmcYw+nTROsi8M8EGTAVkE2R/h59ITCek3Jxf0/CJS9wUUzL++g1125pcn7SkMI0cKeb8h6YIleBFVU=
+	t=1749810746; cv=none; b=tOx+F3dUgencnCQcl/6q3aS/Oh8Spn3sKLBU4C96DbXLAPmzESF2jk05SbmDGDJEqqR3V9Ze/LJl2DfU2dYdvUtlzUexExie/D0sob0Wt6Ejz+zf0K21KErWhTyPGznZ2eCnib7JOn/TyRmWVfcCU0EuRqzKe9VPvlTyyyjFSGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749810715; c=relaxed/simple;
-	bh=Jo2S1Vhmz+DHyBwpm2/Wakx8tkEoQUYYmyKwEmiczVc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hbJ2E3kPaJOYwcUqRqnMhadFRTQFNHOkbcBCBg9+1xJdo8DGhVDFW6yB0fgLkyw+GzbypOSNVg/ybptL/oztlNls9jIe0x/Z8TjVlHw1gHC5tQ6WjdOU9Qachr+Hal59uSFShczDh4hJlh88f2TFae89VWaYa+XmdnpT6GGDa08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B76Sqbjv; arc=none smtp.client-ip=209.85.208.177
+	s=arc-20240116; t=1749810746; c=relaxed/simple;
+	bh=IktqxgkhvmBKeCJtPqtfyuSdk/dvJscRN+UmlbcMLWM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jmr/Js27erIlxGgbYQGu6TKTWn+eRajlht+nvm950N5I/yaGVJj2bggNHItUKCsi7oQp5w1BHTYjl2efr6RjysDg4NACesD/KnhpBTtfoeVe/YeI6a4vIx8eb+P19yxOeVzMbCXr2BM8Ptzvx51J2ecrdS2Rzw7FHKxHzINOzaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ar9tLsdL; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B76Sqbjv"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so16486211fa.2;
-        Fri, 13 Jun 2025 03:31:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar9tLsdL"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-310447fe59aso19511081fa.0;
+        Fri, 13 Jun 2025 03:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749810712; x=1750415512; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qFr8LwPYLDgF3kaOI6zifGZaMW4ZcZipWwfZcZc5XZU=;
-        b=B76SqbjvGuUztFvEC3+Lax67vR0xtVZJoerpgY1ljk59lPI4d3dWdwzmqUCYtN5i/M
-         iqJsAPPwGEIBjSCcojF27Y/gdznp7w2yuQGoOGXEApMKrxg3NQgOM6xUdxhY0e3Cv6+P
-         X1RmVqATrOrYYrV3u2JqDQS8A4aRt2FHhJE4k7dWVToKRvdJ4ByMlBqISt76Rg5/om3g
-         vicV5vrWzq91r+sdLVmhvOOXLB06LlKDF/MZS43Bq4HfNhaw0FyWD2wfi6MicgUpUjSl
-         LtjYP1tnDS/8Cnm11P1Rp5lYHm5Qm8E2mHz0zjbJ+y37q8+oV68vOIXiVlJ+TeUsxcrs
-         3GZQ==
+        d=gmail.com; s=20230601; t=1749810741; x=1750415541; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wu4qJvn4Llwk0tWZQ65fBk0n6CvVyWDwwMQQPjhEpAs=;
+        b=ar9tLsdL8e2q1OqzyqhO6Bggu2U6CtSq2QoD85Mxgn7/6jc47diTpzI1Uk+93YqX3q
+         OYCwcagkFYWGYsEReGmSV3bWmB0oHktxPlbtktl7wLb9+1RNegvIi87PzTaiK17jzawU
+         a5aGkBjjUGP3pgARXCl5sXp8E096zCm7EksBP+7/o1ZO8Ber/gSc2y/dsYKVM84T9d4i
+         RrTWYhat0I1N4So1LW+l2rJ6n041P5pFF9CrQp0J2et4r511kO3AOCDZK2G3vviY+g/E
+         NCSnngMMDBiHmt7OozCqAzqFHBrsU80tf/dGRQ1r5pCsDbMw6mar/PXp7Y2PwlkC1q+5
+         3M7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749810712; x=1750415512;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qFr8LwPYLDgF3kaOI6zifGZaMW4ZcZipWwfZcZc5XZU=;
-        b=Thv4xscUDqLqwGM+1/m4709q1wY+4dLQtWjh/8vwg1mPlY1RyC9h56AJQfaEk9geQr
-         Cu9xYqTeSY/VP6BkQT009u/994JzMfkc0KUyAggBu+cfn5uQJbxt2uNcOVaQt5aaoMWe
-         bq3PIe/QUurUmbqBtRSFQ9gcSePMwNvUJQnsnYIMYLVVKtAHarwq8sQu5n7LLgpZG+3L
-         9LKc4by6l+8lpesyRfNnjOfH0ifRbdwAtlRBwvjKCJPtV6KZAaNNN3YzLIQr/e401oKu
-         u5H+u9gMuAxsvVRZ7SbTiGNqWWXIck5Htg/VHQkwdhZwML2cOELzflGHAIPNh/gPiRRH
-         azsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+qw9jIbwqT2uJFV5LaIylPeO9i62vagyz07VpXK66w9EczO2y0OuxkjR5LxPbgSHGqtcH+T3k2tQ8lawAZ+M=@vger.kernel.org, AJvYcCWChJCVNdP+irOGUKFDTATsToNaKMAcK5TgygES1fyp/V5otiUHMn+1IscLonSyN77a+5ozsAkaHXVwFzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlkGM0TAh7qgQEdaBEaABz7Z9j0neeeRoYIqk9kGIMkPaAVhLm
-	lTLftdz1FCKLgwwgzww68oE5RNsluc4k8GIQ8RCBv+EIspTWQDUjqptxYtSIapYF
-X-Gm-Gg: ASbGnctYwbfcCVHx1LKdm+pVrIuVmKvWeDzUVSFGqBQ4xhtgiuQNScnHHbISXebKFjN
-	gCl8HN1Eq+LEUF4fKdo9p0PdruZ91I+NDaHIWE0OxehbJ3wDvsS7BzrENJWAIKTWcRgbIl7MSiM
-	rqBqmjQC6wjioUplKJd5F7CBOn4OSf8l+kxEkJ73UxsxYv8kAkSpIJrJSvoDlkwSUJ8dfy/exVU
-	RocYjFmoJAHXooSBJt/TE1FAUNV9cCcXbKcninRlgQmmWB4Y5FWSrAWZfNUu032f3Ow8BoivUmq
-	DrUZQjTpblAt6WnchuViJdZ/kysgFM0cFLtemuyGtjQyPZPc0IXoEzNNbUvZoap5FG93pLViYmE
-	KRQcSfpokboV62CeId0FsXstRP5M37SMnW/P4WA0=
-X-Google-Smtp-Source: AGHT+IFRFFHwGOays8LaUCDYJXNXCmkVUhd04lr0fFAv7SLkPad+uB9OtTwn3owIn4pP4b0UsMJj7Q==
-X-Received: by 2002:a2e:be9f:0:b0:32b:3cf5:7358 with SMTP id 38308e7fff4ca-32b3eb6edc0mr7716691fa.28.1749810711440;
-        Fri, 13 Jun 2025 03:31:51 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b33189c36sm4876741fa.76.2025.06.13.03.31.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 03:31:50 -0700 (PDT)
-Message-ID: <2d269d74-6151-4871-95a3-08089111358d@gmail.com>
-Date: Fri, 13 Jun 2025 13:31:50 +0300
+        d=1e100.net; s=20230601; t=1749810741; x=1750415541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wu4qJvn4Llwk0tWZQ65fBk0n6CvVyWDwwMQQPjhEpAs=;
+        b=abkMRPLeoq69IHtwgr8vk9eNI8PZUl0y/GBV/V/bc6H2onR94JLrKmsjmbSlr0Gd93
+         65fuZnFzYaq2BITyWBtw1rxtOwcTqwJAXLawANu8AI/MmXjECWUzoTT+lpKNWi/i+e7r
+         EPDZLlOZehFF+br+2Ef9kAOkAzsr7W98GG9tTkzKH6gAgQ5YLsCZlmvjpxuG8W8+SpUk
+         RmBi938kUSjXbPWdzRdgP7s+M1J5LnCtx2QbQNaADu8S5JHXgefGK/Jxmygqrl5sdjmB
+         N+AvuH/PUjPx7Eq27OUM9n0aM1K4AtpPIoi0OzC2RqiqJIx7fqRPa0v2DGusdJWm7+YO
+         mE2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU0PxhHVj+1aXogoS+OpzkZjGr/6nDy5MBv7H74EUYOgaIMRyMWGVsFdmuQMSuyl11WP7hRyLCq6mT2hA==@vger.kernel.org, AJvYcCVn7jplKibjdQ31XcaABIx/1uTl1ywtdF9qdh/S2IFk5wxOQs4q6HwVaztzFGtWNLf/mv+sKUWmnfDzr94=@vger.kernel.org, AJvYcCWQ2YR6ZPSN2m15H9fx70UxC44OqLqVvUa+g4aDAeMWzODpYorrpov6wOqaFirsjOo0JnFeJ6lhvXONIQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWAFURmNrLu77PoWugD43qf5PwailhRtfBLHC0OXhbStUdxJiy
+	DGvZ1g0sBeSFI+KHtUcwmKuaN9IVnC7EQIPTbM/E09PZo4yhcr5rqi1sUvvAcYPt
+X-Gm-Gg: ASbGncsWFJb+JR+HBzHf5YJccNCQOMFt78mjkP+pzKpZ0IGNU20slc3Hqm87LUk1e+h
+	Tf+6uQktF0HWRbBzBOF8COyyRkCQGb9ORxDRqZckl9QkJTj31wsPmQ2u//1/kI1Dy62m+/i/mEd
+	HpZm4gxJ49uBwq55YdZzVzfQDTvOpUbvQVn+GyQWzKLLIUJQq4RcL1Mrn3bRa1KpJrqchSxqstF
+	FHE29DwITt5RlvKrC68LmVk97qhZNmdPDi2pNs6PTQZV0ZTybVXb3jhQVHcDvNQjfRxbNz4o9ag
+	AIluOWU3ZeliPRH3GehHJSpKoFUC3XMrDD0QNRLVjqqTCSlWwS+eXwSh8q6XoJe1j9dbH8H5gkF
+	IIWuQEEDREBs=
+X-Google-Smtp-Source: AGHT+IH9UJ7uFj1fdsdkfO2A9iWrTLeLn4U5mol1YXw4WzFM5kRsgurhm6wsyckaQjO11Dn5eJdcbA==
+X-Received: by 2002:a05:6512:3b06:b0:553:a3e7:812e with SMTP id 2adb3069b0e04-553af90817dmr681078e87.20.1749810730193;
+        Fri, 13 Jun 2025 03:32:10 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1dc3absm402194e87.197.2025.06.13.03.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 03:32:09 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Fri, 13 Jun 2025 12:32:06 +0200
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
+	Jeremy Fitzhardinge <jeremy@goop.org>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Subject: Re: [PATCH 2/6] mm: Lock kernel page tables before entering lazy MMU
+ mode
+Message-ID: <aEv-JjY4lUPNqyjZ@pc636>
+References: <cover.1749747752.git.agordeev@linux.ibm.com>
+ <7bd3a45dbc375dc2c15cebae09cb2bb972d6039f.1749747752.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] rust: dma: add as_slice/write functions for
- CoherentAllocation
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-To: Alexandre Courbot <acourbot@nvidia.com>, dakr@kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
- <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
- <DAC2ILD2DSIZ.3TF8W39X5DDH8@nvidia.com>
- <0b71832f-f3a9-4109-baa1-f29a8327d872@gmail.com>
-Content-Language: en-US
-In-Reply-To: <0b71832f-f3a9-4109-baa1-f29a8327d872@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7bd3a45dbc375dc2c15cebae09cb2bb972d6039f.1749747752.git.agordeev@linux.ibm.com>
 
+On Thu, Jun 12, 2025 at 07:36:09PM +0200, Alexander Gordeev wrote:
+> As a follow-up to commit 691ee97e1a9d ("mm: fix lazy mmu docs and
+> usage") take a step forward and protect with a lock not only user,
+> but also kernel mappings before entering the lazy MMU mode. With
+> that the semantics of arch_enter|leave_lazy_mmu_mode() callbacks
+> is consolidated, which allows further simplifications.
+> 
+> The effect of this consolidation is not fully preemptible (Real-Time)
+> kernels can not enter the context switch while the lazy MMU mode is
+> active - which is easier to comprehend.
+> 
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  include/linux/pgtable.h | 12 ++++++------
+>  mm/kasan/shadow.c       |  5 -----
+>  mm/memory.c             |  5 ++++-
+>  mm/vmalloc.c            |  6 ++++++
+>  4 files changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 0b6e1f781d86..33bf2b13c219 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -224,12 +224,12 @@ static inline int pmd_dirty(pmd_t pmd)
+>   * a raw PTE pointer after it has been modified are not guaranteed to be
+>   * up to date.
+>   *
+> - * In the general case, no lock is guaranteed to be held between entry and exit
+> - * of the lazy mode. So the implementation must assume preemption may be enabled
+> - * and cpu migration is possible; it must take steps to be robust against this.
+> - * (In practice, for user PTE updates, the appropriate page table lock(s) are
+> - * held, but for kernel PTE updates, no lock is held). Nesting is not permitted
+> - * and the mode cannot be used in interrupt context.
+> + * For PREEMPT_RT kernels implementation must assume that preemption may
+> + * be enabled and cpu migration is possible between entry and exit of the
+> + * lazy MMU mode; it must take steps to be robust against this. There is
+> + * no such assumption for non-PREEMPT_RT kernels, since both kernel and
+> + * user page tables are protected with a spinlock while in lazy MMU mode.
+> + * Nesting is not permitted and the mode cannot be used in interrupt context.
+>   */
+>  #ifndef __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+>  #define arch_enter_lazy_mmu_mode()	do {} while (0)
+> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
+> index d2c70cd2afb1..45115bd770a9 100644
+> --- a/mm/kasan/shadow.c
+> +++ b/mm/kasan/shadow.c
+> @@ -313,12 +313,10 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>  	__memset(page_to_virt(page), KASAN_VMALLOC_INVALID, PAGE_SIZE);
+>  	pte = pfn_pte(page_to_pfn(page), PAGE_KERNEL);
+>  
+> -	spin_lock(&init_mm.page_table_lock);
+>  	if (likely(pte_none(ptep_get(ptep)))) {
+>  		set_pte_at(&init_mm, addr, ptep, pte);
+>  		data->pages[index] = NULL;
+>  	}
+> -	spin_unlock(&init_mm.page_table_lock);
+>  
+>  	return 0;
+>  }
+> @@ -465,13 +463,10 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>  
+>  	page = (unsigned long)__va(pte_pfn(ptep_get(ptep)) << PAGE_SHIFT);
+>  
+> -	spin_lock(&init_mm.page_table_lock);
+> -
+>  	if (likely(!pte_none(ptep_get(ptep)))) {
+>  		pte_clear(&init_mm, addr, ptep);
+>  		free_page(page);
+>  	}
+> -	spin_unlock(&init_mm.page_table_lock);
+>  
+>  	return 0;
+>  }
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 71b3d3f98999..1ddc532b1f13 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3017,6 +3017,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  			pte = pte_offset_kernel(pmd, addr);
+>  		if (!pte)
+>  			return err;
+> +		spin_lock(&init_mm.page_table_lock);
+>  	} else {
+>  		if (create)
+>  			pte = pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> @@ -3042,7 +3043,9 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  
+>  	arch_leave_lazy_mmu_mode();
+>  
+> -	if (mm != &init_mm)
+> +	if (mm == &init_mm)
+> +		spin_unlock(&init_mm.page_table_lock);
+> +	else
+>  		pte_unmap_unlock(mapped_pte, ptl);
+>  
+>  	*mask |= PGTBL_PTE_MODIFIED;
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index ab986dd09b6a..57b11000ae36 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -105,6 +105,7 @@ static int vmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	if (!pte)
+>  		return -ENOMEM;
+>  
+> +	spin_lock(&init_mm.page_table_lock);
+>
+This is not good. We introduce another bottle-neck.
 
-On 13/06/2025 12:45, Abdiel Janulgue wrote:
-> that the subsequent paragraph makes it clear that the unit is in bytes 
-> unit? 
-
-Sorry, I mean *not* in bytes unit.
+--
+Uladzislau Rezki
