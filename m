@@ -1,116 +1,64 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9525C21B19D
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE7D248F6F;
+	Fri, 13 Jun 2025 06:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749795758; cv=none; b=cf7vsP+c4x7jUnMbauo7BoOvvxdK4bXm6oZWPaZ9VNHsQdRCSrylnf8LKLbuMB4XR/g0sgm4jKQe98br/8IWaU//KVsuwwEzhKZpl+j7b1GCsxKwR8MUYZO/0AuhJnLJefgFtkLwsAXnQyuAUr5ODd45DLkOGAgEcNIFqWN8XlI=
+	t=1749795764; cv=none; b=oq91l9Fq3acpQ7vPIiHwVsqNa/9KEFwZbMZt61jSIZW3jFHt5YGVbaBmBOA5gl/F2HYUQ8iMhvwmBD1phf1/1aE1dD6+C1icDp27WncjJQMuHi6JmLUhsIAXHgu+I/Wn5a6urxlpGwUlQji/eV5X2zw9E+xj74rpKxxYwTJ1DOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749795758; c=relaxed/simple;
-	bh=pfabPYrH590QkZNWCjJCN9mikHn6aDw/cOSboVgm6C4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmUh8Ch/zNmdQw9iWIn4YH8eQnmoPV/G/v0Ren3s3l3E/8hl8I0L2wzFyRzG887w4mvUWNzGkX+L7sXJ9NGSaxcUEcSCMvdybroffYo7fGNQ9UhepVNmtkI+7Xg9mizpOUefCTl9HljldOkiEDPfMg3IzrUO8Fo+XH8L0H6cDp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uPxnu-000536-V5; Fri, 13 Jun 2025 08:22:18 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uPxnt-003FE8-2P;
-	Fri, 13 Jun 2025 08:22:17 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 607D9426CE3;
-	Fri, 13 Jun 2025 06:22:17 +0000 (UTC)
-Date: Fri, 13 Jun 2025 08:22:16 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, Frank Li <frank.li@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
-	Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>
-Subject: Re: RE: [PATCH net-next v2 00/10] net: fec: cleanups, update quirk,
- update IRQ naming
-Message-ID: <20250613-light-convivial-sawfish-04e008-mkl@pengutronix.de>
-References: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
- <20250612-nostalgic-elk-of-vigor-fc7df7-mkl@pengutronix.de>
- <PAXPR04MB8510C523E90B33C2CD15DAEF8877A@PAXPR04MB8510.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1749795764; c=relaxed/simple;
+	bh=CqOl17e7Ivjdg620kfbggEADnVLIrP+tN+mDP2fqmf0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=eAbRW5/Ux0Dy9pbl1nMULL7Cz/HwALpHhB9Xb18eLXTbO6Rnt5jKu/wvYDEC2aKpHsimAQzKb4kaC1r6v5qGq2snzWtyny8M5G6Q9M9LX3s/nSitQTpfLeLJnGQZ5whDPlI6wOFaTg0QUhpxWKLLaD9kRLPVkJUj4WpGmQ866r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=B40P4cfS; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="B40P4cfS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1749795761;
+	bh=uN1gPb2PJM1vKZa2B8fQ33X5LS8Zuqa+quq/5JZM2BA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=B40P4cfSWEj4Q/LwKoGxYvT4RLjXhogL2r3AVuZNFrSQ292nwIkZyyIfsr6TMQwAS
+	 CGgpA0sNwE0nIfTa2ujfVAzpvNpLtYq/idY1aK5rrPMFwgOUD8PC1SkqvA3YR65cKr
+	 yloqW9w8OQ1lIixBEdWjeJiImDFbd5arK9CATd1Ev3FbqZJcf2SvDFLX3Vf6fNxxlV
+	 Sms1eChY2DZW5N395hSbJbPe4nLNGEleb1u1LuAtJUWCLuGIoQ/LC/M5xeLLFwd1Ea
+	 h43xtY7ffyR6GKo4TQK95/ceTkELC9GH5HKYOaKbO/roMChk2eF9TqZDGj7oX+iiM6
+	 gZYh+bW+Xguzw==
+Received: from [127.0.1.1] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 616D5680F3;
+	Fri, 13 Jun 2025 14:22:40 +0800 (AWST)
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ joel@jms.id.au, Ankit Chauhan <ankitchauhan2065@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250612075057.80433-1-ankitchauhan2065@gmail.com>
+References: <20250612075057.80433-1-ankitchauhan2065@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: lanyang: Fix 'lable' typo in LED
+ nodes
+Message-Id: <174979576026.385457.16320702443597106607.b4-ty@codeconstruct.com.au>
+Date: Fri, 13 Jun 2025 15:52:40 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3gti35dwvq4i22l6"
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8510C523E90B33C2CD15DAEF8877A@PAXPR04MB8510.eurprd04.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.2
 
+On Thu, 12 Jun 2025 13:20:57 +0530, Ankit Chauhan wrote:
+> Fix an obvious spelling error in the DTS file for the Lanyang BMC
+> ("lable" → "label"). This was reported by bugzilla a few years ago
+> but never got fixed.
+> 
+> 
 
---3gti35dwvq4i22l6
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: RE: [PATCH net-next v2 00/10] net: fec: cleanups, update quirk,
- update IRQ naming
-MIME-Version: 1.0
+Thanks, I've applied this to be picked up through the BMC tree.
 
-On 13.06.2025 06:19:32, Wei Fang wrote:
-> > On 12.06.2025 16:15:53, Marc Kleine-Budde wrote:
-> > > This series first cleans up the fec driver a bit (typos, obsolete
-> > > comments, add missing header files, rename struct, replace magic
-> > > number by defines).
-> > >
-> > > The next 2 patches update the order of IRQs in the driver and gives
-> > > them names that reflect their function.
-> >=20
-> > Doh! These 2 patches have been removed, I'll send an updated series tom=
-orrow.
-> >=20
->=20
-> "update IRQ naming" needs to be removed from the subject as well.
+-- 
+Andrew Jeffery <andrew@codeconstruct.com.au>
 
-ACK, it's already updated in my cover letter.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---3gti35dwvq4i22l6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhLw5UACgkQDHRl3/mQ
-kZyyjwf+M9Kq6yICdtKGZf7U1bvemrZCbWOvshb+rI9PV++6WC8qD/UdbfsGidGg
-feYiVWHnac6D2zdvRAtHD8LLhIxMZDnuCR3oa8titVAbNPHtgIfzoDEklDmunT6j
-IvVJTevazK4yb1q55n9l4+TSo7TqzzBa/cUR4xj/xb56MPK4Zyii1i3UEFRbpWQB
-bEHvFJt9YHacN3KeiUhHZQOoBT+nCoMNZ0CQ4lRg892lEXaGj5DnEqtdhToKUcze
-j+4ovzD6FvWXtpqQg68MRBZI00OJcdrWQyVTqqwhJ1ERoOWdFUeNoIKdF3oplMbB
-ex0qrIrbaJEQHb+4YkC4xQWvFuhkKw==
-=vJnJ
------END PGP SIGNATURE-----
-
---3gti35dwvq4i22l6--
