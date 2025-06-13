@@ -1,79 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7851420DD;
-	Fri, 13 Jun 2025 01:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DCF1420DD;
+	Fri, 13 Jun 2025 01:21:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749777599; cv=none; b=QMdGBB0FHk3QH5H15yaB2YzTtylkAuHniF7gkQQy/1DyW7bvcHoF1tdWOAPOEA29wM4qzPnZCHjsC/BNwd0mYWWkASod2Jr9HWLbLT6fZt89Z246NeiukOE8Fo7ManyzNBPwiYePVxCbuagWf83WzS5IekKR9EuV7NfFUd5yeDg=
+	t=1749777705; cv=none; b=U/Ha37XdVIOnK5eY8r8EOhRgzsClXWTuwQIPLa0UhTWX2HqCKTQhOK7xGEkquxLmLCbPcZPsn3NCuDe8LWK72OA08HzKLkWk1ZE2DBMfk7gjtr6Z9V1pfcNXwrrTnJoR/I3NPr33wT1oR4MT0AD8OpLbY0UKBJZo6UhBN0WIKYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749777599; c=relaxed/simple;
-	bh=r4mE97ua+bkOvUmTWRgQCtRNdee4YOd1InjvmIXuWH8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lG4FuI4nRB+WBEIz6e8URLQoChELrPqNkAlpJXg8JKtUiJgMjl61a83fSi0jhszYhoWAuAb0LKgIPgEPPJx9ITT94kWd2SMT9OZoqfTeVZIwFJuvWqyTgB6xPdmr0gzTncaFbh4KebW2YJugwS7R3DuPgf1R8nv2bq9MU8YvOu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b35X8M09; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749777705; c=relaxed/simple;
+	bh=CkV7K9JkoZIX1EFm22k3RUVUrhM4a86eMgsQGHb5Sq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cPWnznb6HeueDMyqB+ZXTrIqwQJCqJsNh5XJ1e47SXj/IRWXJ887/k7op0FhKI101rf7rxATYmQewAH2FakwyGS74d0sY0Z8OyzS6B+0ohGCxL/uvM9xF3yYi9JorCz0sc9auNJqJMTaUQWiKJOVW2q+jb/RaL+8BzAaMHR5KyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkxk6dB+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b35X8M09"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA456C4CEEA;
-	Fri, 13 Jun 2025 01:19:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkxk6dB+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0637AC4CEEA;
+	Fri, 13 Jun 2025 01:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749777599;
-	bh=r4mE97ua+bkOvUmTWRgQCtRNdee4YOd1InjvmIXuWH8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=b35X8M09pnfbvYnyfomGmGYFUvR+aONRM1j6E+yph+2Vfzmx59MI/sQ+LI1wLo2je
-	 6goO+zuuLO5wA+7LFWOrd6W5Cv5NRoxaDJF3pquW4GnU8fMhqT/mx1XWjh/0TH26lD
-	 Ek0txaKJtybY3cPaqI4eKJQ3SNW7ymmM+eaV4CWC7aNwiany00JDyGmOst4AQ0AXkZ
-	 wSWsrLPanDLDqViCgQAPKTmatbzAogjzV+j4gWjxKiEgIaNDqlF0oIT5RJ97Ftrvc8
-	 aOjdLLwMrNNH9o0OwtEUP5C8mr+SbAyEzL+J8nQDLfaSDVy6xZp/AVf+4XiXjKNUAl
-	 xRdUxMwZxTIzw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EACBA39EFFCF;
-	Fri, 13 Jun 2025 01:20:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749777705;
+	bh=CkV7K9JkoZIX1EFm22k3RUVUrhM4a86eMgsQGHb5Sq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nkxk6dB+kugt2d9edQ/jopnXbnc2+S8g1W/kk6Xj40u5oVCDdK2Ac+7WHs3i+Ve7q
+	 UuO6fsjybG3L9lyaHQqYQCkQQzutMrsElQN5uPcqKbx8kRxP5jB0kE3Fr7GMSNisqF
+	 AAU2YkbkGz8bgusMc32CgIpMtekatIgwW6YwoGBynF4mqhzv3PlQJ8G4xEppMr+r3N
+	 IQBPUMP0XPjLM9IE4UknlL7N0GirnB1Z2t92soRx0HmgP/dPHwZipUxU/UzF65VDA4
+	 BW0E74mnrKNGez1eU0emtxVYIN6CylOphGMPvZ2dmxocKgV4RWGdXDpisMmfz1QHEp
+	 tRGR37QgESr2g==
+Date: Thu, 12 Jun 2025 18:21:43 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ haiyangz@microsoft.com, decui@microsoft.com, stephen@networkplumber.org,
+ kys@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
+ vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
+ edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
+ longli@microsoft.com, ssengar@linux.microsoft.com,
+ linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
+ shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
+ kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next,v7] net: mana: Add handler for hardware
+ servicing events
+Message-ID: <20250612182143.16f857a9@kernel.org>
+In-Reply-To: <1749580942-17671-1-git-send-email-haiyangz@linux.microsoft.com>
+References: <1749580942-17671-1-git-send-email-haiyangz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] ionic: Prevent driver/fw getting out of sync on
- devcmd(s)
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174977762875.176894.10298712830260716394.git-patchwork-notify@kernel.org>
-Date: Fri, 13 Jun 2025 01:20:28 +0000
-References: <20250609212827.53842-1-shannon.nelson@amd.com>
-In-Reply-To: <20250609212827.53842-1-shannon.nelson@amd.com>
-To: Shannon Nelson <shannon.nelson@amd.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, brett.creeley@amd.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Tue, 10 Jun 2025 11:42:22 -0700 Haiyang Zhang wrote:
+> v6:
+> Not acquiring module refcnt as suggested by Paolo Abeni.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+TBH I'm not 100% sure this is correct.
+If the service worker operations end up unbinding the driver from
+the device holding the device ref may not prevent the module from
+being unloaded.
 
-On Mon, 9 Jun 2025 14:28:27 -0700 you wrote:
-> From: Brett Creeley <brett.creeley@amd.com>
-> 
-> Some stress/negative firmware testing around devcmd(s) returning
-> EAGAIN found that the done bit could get out of sync in the
-> firmware when it wasn't cleared in a retry case.
-> 
-> While here, change the type of the local done variable to a bool
-> to match the return type from ionic_dev_cmd_done().
-> 
-> [...]
-
-Here is the summary with links:
-  - [net] ionic: Prevent driver/fw getting out of sync on devcmd(s)
-    https://git.kernel.org/netdev/net/c/5466491c9e33
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Could you try to trigger that condition? Make that msleep() in the work
+even longer and try to remove the module while the work is sleeping
+there?
