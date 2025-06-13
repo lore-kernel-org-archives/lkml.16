@@ -1,140 +1,140 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43184253951
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5A72397A4;
+	Fri, 13 Jun 2025 21:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749849941; cv=none; b=D9Mgu5DqqR3fToKAsO5tW8UuPVOTrSHujJ4WyFB8E9bwJCIq+0AzCyVvPzWZMLopxM04S0GIEjGwFJPtGKcuC2+3YhmdP9Cmxhab8L6DagL38iljJ8kmAZMDveciZfkA0kd0XleuRtyt6aztYy/rLu9EwwW4vJPNHLlJmArDRn0=
+	t=1749850031; cv=none; b=HQDm+WTZ0apLTCuy4mTNHR1wZbmOC1mjjVWrrtTOSGayzMNk5o/gi3ezkrwpgOxtAisdrosb/O0NHMswqSC8p8kQledHjOYllY2F5mRWoIX0oioj1zQGF8XtNmoqA8UgkdFKchP93Gumsb2WoWaDi9wUNDfUG0nFOK2UFFb+S2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749849941; c=relaxed/simple;
-	bh=sHV8yx62yol9Bk56YKbLE0IVF5sfS+vZdmV+r8o63x0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ILUgKQ6XbmLbF/MAS1ZpPTlO9cfKmugpnLQRZgSCDe+3kQHaQCEF40Osb4VyqCe3f25c02ZF9C/tLV6i6HZ3aKkvT/krkWt1x4377cNdXfqjdGyrhVAdUlXWDJRUjUolx0uG3fDHD3PUZ5Do8vKGpVoi+pmoJLfb7ZMfNCm1aiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I+P/i+yj; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749850031; c=relaxed/simple;
+	bh=uao9vXicfmNGv7hAWWVlUXBcpeUEFrEd/9ktZYSF5ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dilfbHh4ddjSDIa8/lp8fKlVdZIezejxeMDxe8Tr9xUG195kgAjoDmbIO7onYUXKV+f7nRdqry/KPOASd07SvIWsLvGAqIFceaVUDDEUPBFgCERaGMOB2U9k/TmWG2ZrqzQuSMsJpMf8CyRlvx+gk43XFa50ueSKfj133mg2wNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZbpXBjn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+P/i+yj"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a5ac8fae12so114101cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749849939; x=1750454739; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TPUzIppHcu65DcXjx+xmQ4p2o7TM+1lbGXLpXn/D90M=;
-        b=I+P/i+yjFwiAoPxoTgsLZdfFg8675RXWd3N3Md6glKsbKl4lvRtve5J0ZIuEaau554
-         UKda9Hl/lIcu6s6TXwx1TSrSSrz0g6+2Q9Rs6DJ7S8teVdvnfdT9QMjW9CbtMEpHRRbd
-         j6g8yktMlwMwLf2fpmUKuIF0ivDJdJtw9WBdJZd6c0ZDo9BvPcrX5fONn3sA3pkO2dXQ
-         FXgdpCc1kXmxz5zi5fQYAinoBaY5s1lBxDO7OkrsWCO7jKHWvAljQyFmsI2dQFNLqofn
-         G9Xb2I8IhglbdKiaDaJxnWzG6ruENsoJERAej4g/XSf7628bPMJ3BMsqiOSUnksUbFvo
-         Wn7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749849939; x=1750454739;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TPUzIppHcu65DcXjx+xmQ4p2o7TM+1lbGXLpXn/D90M=;
-        b=iT1a3eWj9zLTlo+IRLr2CuJpWghv1HgjstVTutGre51sqOJA2g+YkJY5sPeqRiVAdm
-         zaFmqA3xQU5MQXxoYRgA3FKJz9yRV8YJ5AI6h7tFx3fXVRldq5ABkVOD0xJZJgKtxlaf
-         ZK0jL1g4T4jkTS/F79vDlWEtgQ+zZHzo44fRvqvnZ7oOZuDC5H4M0nk8H3YvfeEsi2C6
-         ZybI3QVZfdIgaWCLWHFqbe+V7yB3oBq0gFAFVOTs2w3fEMGOHf7B8xX/H/t1Yu+G203V
-         PE/BVxeXVFv1MH6x1t6Rk6TVrDvRYhug3k9k1tUIK05jLUd0cJx/EVxKBuqkBbUrU6FL
-         jRlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXug0px1kx+/Q0NJkr2/3qybov1EjuYgkep+kFvQRWtjhbdPn+BHoQB7TZDh5MT0OC8CCH7sJoqKfXOSlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj3LHcCQ6/SZEWurQyqp31U/Xjw1hWuwenOY9nvd9p/H6jLpYs
-	5ZntymK7xIup2uLlUUjNYaJy3xcAPDSLcxmc5pjqPaCSGL7wd+5kioogBhyZopNOw21U2m5npV2
-	409TmWBPLWa6ugbZdFaWaU1CxNszeYkMOZjL6m6OE
-X-Gm-Gg: ASbGncs5nOclZiFwqx9BXhKkrwcmNAyqgAWZv8Z3w06zncRBYXmkZ/CJKhu2T1QnRXl
-	pQYdSMpwkZqM8mOFUolT4ZfWfR/1Y7zug9dwd2wWKa5IZa8IqHm0dbfnl+1sxZITpKUcmK8aLN8
-	xXrmFicBy7+c8hhCLr6ESXD4iBLzPLRZc+/IaN5s3cTZBDVcYpWItJmQ==
-X-Google-Smtp-Source: AGHT+IHRTXKzQVq2KTm0RSt5qVgrnPAP0bkIbd607Uu6/KmOUX6+sJKqoHDdBmms0U0ufq7rNkEH/UqGIKX1Oa8Sr14=
-X-Received: by 2002:a05:622a:610d:b0:498:e884:7ca9 with SMTP id
- d75a77b69052e-4a73da5803emr310651cf.13.1749849938737; Fri, 13 Jun 2025
- 14:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZbpXBjn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62DCC4CEE3;
+	Fri, 13 Jun 2025 21:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749850030;
+	bh=uao9vXicfmNGv7hAWWVlUXBcpeUEFrEd/9ktZYSF5ig=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nZbpXBjnZAtM27vBM686WDSlmCevbldUDcv0haHfTvmlSbLoJxSVxv9p7sUN/igzZ
+	 DQK/ujQyUDtDXKo2+9/B+og9k8xaILfs7yj0Ci3wDQTJoB15fvuJM/ChAGShZ3sJS/
+	 bufKhI9YRG+YCjlQBcTTG/xsYrSg2fEsxsIA3vHaqMgwXY8cAwIwDfocOYkk4kfsyJ
+	 P4ztXwL4ANgDMym+oXwaG7Bg27bJtH+40UVzknDgw/qfvepHaMcja5TXadWM+ftgzY
+	 JKVnZ/05xPQ/3S7h35bYqr18+mF84NOxMFMKg9d3gusw5T0wrId6QwXlt1I1+pXePB
+	 G+ukl5JR60TBg==
+Date: Fri, 13 Jun 2025 16:27:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 24/28] PCI: Add Microchip LAN9662 PCI Device ID
+Message-ID: <20250613212709.GA979346@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613155239.2029059-1-rananta@google.com> <aEyPswyvfJ2-oC3l@linux.dev>
-In-Reply-To: <aEyPswyvfJ2-oC3l@linux.dev>
-From: Raghavendra Rao Ananta <rananta@google.com>
-Date: Fri, 13 Jun 2025 14:25:26 -0700
-X-Gm-Features: AX0GCFvCkuSdtDxaxbaw03np7924c6ya2dvq2vPeL3lenyiqTkrCE5acxgbNPCk
-Message-ID: <CAJHc60yacW7-1K3Uw9RT7a8qH9JyTXouiP=6VP3gifqzHgMaQQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] KVM: arm64: Add attribute to control GICD_TYPER2.nASSGIcap
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Marc Zyngier <maz@kernel.org>, Mingwei Zhang <mizhang@google.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134817.681832-25-herve.codina@bootlin.com>
 
-On Fri, Jun 13, 2025 at 1:53=E2=80=AFPM Oliver Upton <oliver.upton@linux.de=
-v> wrote:
->
-> On Fri, Jun 13, 2025 at 03:52:34PM +0000, Raghavendra Rao Ananta wrote:
-> > A shortcoming of the GIC architecture is that there's an absolute limit=
- on
-> > the number of vPEs that can be tracked by the ITS. It is possible that
-> > an operator is running a mix of VMs on a system, only wanting to provid=
-e
-> > a specific class of VMs with hardware interrupt injection support.
-> >
-> > The series introduces KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap vGIC attribute=
- to allow
-> > the userspace to control GICD_TYPER2.nASSGIcap (GICv4.1) on a per-VM ba=
-sis.
-> >
-> > v1: https://lore.kernel.org/kvmarm/20250514192159.1751538-1-rananta@goo=
-gle.com/
-> >
-> > v1 -> v2: https://lore.kernel.org/all/20250531012545.709887-1-oliver.up=
-ton@linux.dev/
-> >  - Drop all use of GICv4 in the UAPI and KVM-internal helpers in favor
-> >    of nASSGIcap. This changes things around to model a guest feature,
-> >    not a host feature.
-> >
-> >  - Consolidate UAPI into a single attribute and expect userspace to use
-> >    to read the attribute for discovery, much like we do with the ID
-> >    registers
-> >
-> >  - Squash documentation together with implementation
-> >
-> >  - Clean up maintenance IRQ attribute handling, which I ran into as par=
-t
-> >    of reviewing this series
-> >
-> > v2 -> v3:
-> >  - Update checks in vgic-v3.c and vgic-v4.c to also include nASSGIcap (=
-via
-> >    vgic_supports_direct_sgis()) that's configured by the userspace. (Ol=
-iver)
-> >
-> > Oliver Upton (2):
-> >   KVM: arm64: Disambiguate support for vSGIs v. vLPIs
-> >   KVM: arm64: vgic-v3: Consolidate MAINT_IRQ handling
->
-> Make sure you run checkpatch next time before sending out, it should've
-> warned you about sending patches w/o including your SOB.
->
-Hmm, I do run checkpatch before sending, but I don't see any warning as suc=
-h.
+On Fri, Jun 13, 2025 at 03:48:04PM +0200, Herve Codina wrote:
+> Existing code uses the 0x9660 value (LAN9662 PCI Device ID) in several
+> places.
+> 
+> Avoid this direct use of the 0x9660 value replacing it by defined PCI
+> Device ID.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-Example:
-$ ./scripts/checkpatch.pl
-v3-0001-KVM-arm64-Disambiguate-support-for-vSGIs-v.-vLPIs.patch
-total: 0 errors, 0 warnings, 107 lines checked
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-v3-0001-KVM-arm64-Disambiguate-support-for-vSGIs-v.-vLPIs.patch has no
-obvious style problems and is ready for submission.
-
-I do see an option to tell the script to ignore the check:
---no-signoff, so I'm guessing it should check by default? Or is there
-any other option?
-
-Thank you.
-Raghavendra
+> ---
+>  drivers/misc/lan966x_pci.c | 2 +-
+>  drivers/pci/quirks.c       | 2 +-
+>  include/linux/pci_ids.h    | 1 +
+>  3 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/lan966x_pci.c b/drivers/misc/lan966x_pci.c
+> index b28066c96534..e60ab662b8f3 100644
+> --- a/drivers/misc/lan966x_pci.c
+> +++ b/drivers/misc/lan966x_pci.c
+> @@ -197,7 +197,7 @@ static void lan966x_pci_remove(struct pci_dev *pdev)
+>  }
+>  
+>  static struct pci_device_id lan966x_pci_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, PCI_DEVICE_ID_EFAR_LAN9662) },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(pci, lan966x_pci_ids);
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d7f4ee634263..bde077ce663a 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6302,7 +6302,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, PCI_DEVICE_ID_EFAR_LAN9662, of_pci_make_dev_node);
+>  
+>  /*
+>   * Devices known to require a longer delay before first config space access
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index e2d71b6fdd84..5d69fde7dd97 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -934,6 +934,7 @@
+>  #define PCI_VENDOR_ID_EFAR		0x1055
+>  #define PCI_DEVICE_ID_EFAR_SLC90E66_1	0x9130
+>  #define PCI_DEVICE_ID_EFAR_SLC90E66_3	0x9463
+> +#define PCI_DEVICE_ID_EFAR_LAN9662	0x9660
+>  
+>  #define PCI_VENDOR_ID_MOTOROLA		0x1057
+>  #define PCI_DEVICE_ID_MOTOROLA_MPC105	0x0001
+> -- 
+> 2.49.0
+> 
