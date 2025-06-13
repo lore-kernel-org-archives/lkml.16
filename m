@@ -1,187 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878A61D07BA
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7033718A6DF;
+	Fri, 13 Jun 2025 15:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828206; cv=none; b=GzvhtootS1pSNriaT4qt4gj6OCFVQlaa1lcguf18KcbkSsp2m6OOM3Ta4NbaWZIctQksz+ahqrfno98pvGmHFXN2UUqaUeCe754F42pGlICGP9hdDem+tOVsEUJ5beARNwVqTSDpA1HcSVCzGwzgMrTi+LgPQ1ceLmpZs1u5qcg=
+	t=1749828316; cv=none; b=eytB3TJ/XKw3fH8Lzz0GMq/gzxa+ZJVHhlnvcQgJ5KLHKG0+O9ovrCUtH00AowdrvUvnMJVUFDyeMl+8F1bafRgVl1mFGJ15cMS8natWqsMK3JcV7mI5S9TqRpIUCVLVP2ooWAf0+jwLgsc0PAulO7PWKQDql0EAcdxzxfcXxMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828206; c=relaxed/simple;
-	bh=/hXfFYfBfbotrpQpMR/vgWRHOpzAwTsszsgRbICb1ss=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kdm1cxXBDPC0On/VdsilaAov4saOzugOBygobLBWS3h6WW3RKa6VWgqZe7YODfWuvIxUtd3xRSiZv51Sx4Ye4ofOMb5qOq0I0EEGxY6FIiowajwBTfgsr1ppEvdTTc+1MALVfajQ7JzUyV/hYhfOntyX8xMR5D+Q2VCm97YY4Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aQFYA69B; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749828316; c=relaxed/simple;
+	bh=7kbpf/amXiLBHBqrXHn/DDFLA4Nstyyxn9xRrRyEAxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfvUCvA3qsuv0/9W+k6+F+YyyNgQ3FRavIlI3OohzB2fkEuvZsFyb7sLD0UcJWJ+LHdXpOATSSj3IZnjvSmX+A5HkGx71MtdNBuqauCCb/+bS2L8oljNABf13/ljQOqRvwD7PorNkqZg7sdMY0VNwVGlw01PFgHiEfIYokMpJjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E31CWq5M; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aQFYA69B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749828203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1p5HdA5CaRZpyjsJJugbtkVKQTEXEDNVElJiBH9/rEM=;
-	b=aQFYA69BAKUwyYJGjjJKE6XD/BtVmYnJ2iFe5KXIP9D1c3wnX9TkncArjHklgB2bLGcHcW
-	0AUi9CSILku0qqe2/V4HASZPw5R/HgUwXlxJcTKi2BEIgoclnkYicD1ewl31sb/8vA5zWB
-	lB+b7S1R1w1sy/9ge31UF4VbCeB1Cec=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-C0We3tJzMne5spLZueix3g-1; Fri,
- 13 Jun 2025 11:23:17 -0400
-X-MC-Unique: C0We3tJzMne5spLZueix3g-1
-X-Mimecast-MFC-AGG-ID: C0We3tJzMne5spLZueix3g_1749828195
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71891195609F;
-	Fri, 13 Jun 2025 15:23:14 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.9])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D6EEA180045C;
-	Fri, 13 Jun 2025 15:23:09 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
-Date: Fri, 13 Jun 2025 11:23:07 -0400
-Message-ID: <6D3B09C4-0E35-4A98-8C29-C2EDDBD17163@redhat.com>
-In-Reply-To: <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
-References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
- <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
- <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
- <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
- <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
- <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
- <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
- <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E31CWq5M"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c922169051so140821585a.0;
+        Fri, 13 Jun 2025 08:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749828313; x=1750433113; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lAvMYCY7N602oTIv1xbvy3rwaOD5ob45HmfKgySj4yM=;
+        b=E31CWq5MpUA0O/wu1tAnQI2jhikTTKXYgddt/d9IuoU1B9gJ16FL0ixk+LrLBlIQLD
+         TWDpcYGJ325BigLzPO2uB+9FDkuWccmc75UL10JGzMbgxQ0ush0uXpb31dwyVQ13l5QY
+         rlM0iv4BTbPNDLQ3oopXm9CahGg8Yc9Oy0+ZofqYhuK3+pNrsRAhhLcBG43uIkOAdQUR
+         hG1IIHsWt6bv2toBSmPSVyu9ngdABPlP0ehemzOFmi7MniQynzOyVkJvP4J1AZ72QwQO
+         jHFe5k2ZURVuZvYNXVQcXwxFXzg0saTGLUpa2M/uTz/vFiW5x+M3xBzVhOsIWxVijd5p
+         EZNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749828313; x=1750433113;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lAvMYCY7N602oTIv1xbvy3rwaOD5ob45HmfKgySj4yM=;
+        b=mlawKeQDTB293EotX3K1jNPnbsZZ3ePAXMeFjMBNfKCQ7g2RyQd00MF5QpQJDi3/Ii
+         SWwT4UFhfK73ROvN7baztBht4/XHFJUEBKhHTyArB77rSK4DzefuGO4uoBQnGqGpaqW6
+         SxYBSinTaDqR+/AaayXah/gZsieR4lXUTZsbeAm/QS8+25Q5HfFDlF/L3U8LyQanx5oO
+         NW/izgv/ZpXiCwpf/34xqcFKTsWAVyp8LWSxmLrlcX+8ruI2zcBpr+kNEFVzN2sxeGsY
+         tPmFcOFLD3ARrsmQyvUytUIuCVYAFJRyf+C42Xp27pGyK1kzd2MDrEq4uZHMhlJt6idb
+         A38A==
+X-Forwarded-Encrypted: i=1; AJvYcCUHSQMO008sSv9G8EOHsI6eSBaVIFmsto/eulxf2raRIqBhLErpkjuM4OdWD1oQNU9AJpLuj7h5T11Y0Fk=@vger.kernel.org, AJvYcCUbJAE9lGu5Dbr+7biEvJ+ymFxIdGw/lqbI5757jG8yDajiTyIvWjb8MN/orzGTIkRB36ngUR4EwBcoceZ5fEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxJb2WNQX0YSHoMrC516lkYi1XZ0x68+XleXVINSlCzpTdMkW+
+	n4aiTGgpuQJPWR3BuPpa4Po8o5B4wMgNL9EfvvrspvXBDFj0V3rwR+fZ
+X-Gm-Gg: ASbGnct5yHAclEzbKvaoEs1zzmFxULp9QqtB0ftkhGxRn8wu1KVDoSbtX0feDaSHYUj
+	uIgN2cVtdqfMOB7mNi+OMe3qbksspavptvtuUNW4JSGGzUR9AChFO6p0uGeOLH1HKjrRZC0BPNQ
+	kFxmOGYt3tJI/duEwOYV4VTjWUfolQqo2poJ/v7SKNjdJX4e3GfEl7ZUaeR0T4lTuNzuZOHf+Dm
+	ng6GYlOhKSqb0GDEore7PCk1cTZU1z1Y0rRAYzK40hstlxAjcPT/2X/klin0+ZPwGlA5vWZgv8u
+	CuC1hahgtV/WRTw6k0g20AdHwBlPIIzV67rNcOAzzNXTtlkCWPfuCAOQ3kC/zXi9/NAaYhCE8UE
+	/GxnzIKZSeSBgoGi9b7YaJBwcE4GGAxAd7iyVW+3NOVjjNQRNjAIi
+X-Google-Smtp-Source: AGHT+IF0nUAxa3ReBaADmdgbTluy0nUpM5l1CqJ7CF4aRQW+mAF+H8dNcq9aeQVegX9bYVkg1XO5gw==
+X-Received: by 2002:a05:620a:2905:b0:7ca:df2c:e112 with SMTP id af79cd13be357-7d3bc4b8904mr469287285a.45.1749828313083;
+        Fri, 13 Jun 2025 08:25:13 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eac852sm184655885a.71.2025.06.13.08.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:25:12 -0700 (PDT)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B68461200043;
+	Fri, 13 Jun 2025 11:25:11 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Fri, 13 Jun 2025 11:25:11 -0400
+X-ME-Sender: <xms:10JMaOdiZhcyzdY9O-UyB-HYPT4bQ2eExX7BSrCeeVb_lvLYlm5YuQ>
+    <xme:10JMaIPCXbrhyhWgzd2KbHv3tqiEgajb8TKENsm-AA05nZMNtwojaMca2R1AEfHoG
+    PHK8lHfRad0WPP8Iw>
+X-ME-Received: <xmr:10JMaPjb0XgDR_VD9sZev4hdAsMDoQjNbtigy7Ghh-_dV-W9yvAHZM1Hvg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvhedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheprggtohhurhgsohhtsehnvhhiughirgdrtg
+    homhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegr
+    lhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrg
+    hrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgr
+    ihhlrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthho
+    pehtmhhgrhhoshhssehumhhitghhrdgvughupdhrtghpthhtohepuggrkhhrsehkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:10JMaL_kfhoKrO6X8e3fz52F0wnehq8a6jKkLf17zQC5_DLEj2z-0A>
+    <xmx:10JMaKvD4gdM7EQ95ZJZjAv5YReN4IXxytDIypr7FBVye2qNKA75zg>
+    <xmx:10JMaCGO40MMjFycUE4eFTeVCmv8MrGVbGoWc57K13ufV-rjUvrk0w>
+    <xmx:10JMaJO7nnDgCfmU5iEo8WgGK6AoKvkSkG8oC9hOFgZth1sQ5r7QFQ>
+    <xmx:10JMaHO8UP66GCv2E26QOvTPmojbt-HM3WaXjUu0O8N_sb9of3oQwtMv>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 13 Jun 2025 11:25:11 -0400 (EDT)
+Date: Fri, 13 Jun 2025 08:25:10 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Benno Lossin <lossin@kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
+ type
+Message-ID: <aExC1j8WmkJn3Csb@Mac.home>
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
+ <aErtL6yxLu3Azbsm@tardis.local>
+ <DALGWEM3TD3O.95L77CD6R62S@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DALGWEM3TD3O.95L77CD6R62S@nvidia.com>
 
-On 13 Jun 2025, at 10:56, Chuck Lever wrote:
+On Fri, Jun 13, 2025 at 11:16:10PM +0900, Alexandre Courbot wrote:
+[...]
+> >> +#[repr(transparent)]
+> >> +pub struct PowerOfTwo<T>(T);
+> >> +
+> >> +macro_rules! power_of_two_impl {
+> >> +    ($($t:ty),+) => {
+> >> +        $(
+> >> +            impl PowerOfTwo<$t> {
+> >> +                /// Validates that `v` is a power of two at build-time, and returns it wrapped into
+> >> +                /// `PowerOfTwo`.
+> >> +                ///
+> >> +                /// A build error is triggered if `v` cannot be asserted to be a power of two.
+> >> +                ///
+> >> +                /// # Examples
+> >> +                ///
+> >> +                /// ```
+> >> +                /// use kernel::num::PowerOfTwo;
+> >> +                ///
+> >> +                /// let v = PowerOfTwo::<u32>::new(256);
+> >> +                /// assert_eq!(v.value(), 256);
+> >> +                /// ```
+> >> +                #[inline(always)]
+> >> +                pub const fn new(v: $t) -> Self {
+> >
+> > Then this function should be unsafe, because an invalid `v` can create
+> > an invalid PowerOfTwo.
+> 
+> Doesn't the `build_assert` below allow us to keep this method safe,
+> since it will fail at build-time if it cannot be asserted that `v` is a
+> power of two?
+> 
 
-> On 6/13/25 7:33 AM, Benjamin Coddington wrote:
->> We don't consider it acceptable to allow known defects to persist in our
->> products just because they are bleeding edge.
->
-> I'm not letting this issue persist. Proper testing takes time.
->
-> The patch description and discussion around this change did not include
-> any information about its pervasiveness and only a little about its
-> severity. I used my best judgement and followed my usual rules, which
-> are:
->
-> 1. Crashers, data corrupters, and security bugs with public bug reports
->    and confirmed fix effectiveness go in as quickly as we can test.
->    Note well that we have to balance the risk of introducing regressions
->    in this case, since going in quickly means the fix lacks significant
->    test experience.
->
-> 1a. Rashes and bug bites require application of topical hydrocortisone.
+You're right, I misunderstood a bit, so if compiler cannot be sure about
+the assertion from build_assert!() it'll still generate a build error,
+i.e. even for cases like:
 
-:) no rash here, this response is very soothing.
+    pub fn my_power_of_two(v: i32) -> PowerOfTwo<i32> {
+        PowerOfTwo::new(v)
+    }
 
-> 2. Patches sit in nfsd-testing for at least two weeks; better if they
->    are there for four. I have CI running daily on that branch, and
->    sometimes it takes a while for a problem to surface and be noticed.
->
-> 3. Patches should sit in nfsd-next or nfsd-fixes for at least as long
->    as it takes for them to matriculate into linux-next and fs-next.
->
-> 4. If the patch fixes an issue that was introduced in the most recent
->    merge window, it goes in -fixes .
->
-> 5. If the patch fixes an issue that is already in released kernels
->    (and we are at rule 5 because the patch does not fix an immediate
->    issue) then it goes in -next .
->
-> These evidence-oriented guidelines are in place to ensure that we don't
-> panic and rush commits into the kernel without careful review and
-> testing. There have been plenty of times when a fix that was pushed
-> urgently was not complete or even made things worse. It's a long
-> pipeline on purpose.
+where `v` is a user input and the value is unknown at the build time.
+build_assert!() will trigger.
 
-I totally understand, thanks very much for having a set of rules and
-guidelines and even more for taking the time to spell them out here.
+Regards,
+Boqun
 
-I wanted to express that Red Hat does consider all of its releases to be
-important to fix and maintain. I'd like to speak against arguments about fix
-urgency based on distro versions.  I think in this case we innocently crept
-into these arguments as Jeff presented evidence that the problem exists in
-the wild.
-
-> The issues with this patch were:
->
-> - It was posted very late in the dev cycle for v6.16. (Jeff's urgent
->   fixes always seem to happen during -rc7 ;-)
->
-> - The Fixes: tag refers to a commit that was several releases ago, and
->   I am not aware of specific reports of anyone hitting a similar issue.
->
-> - IME, the adoption of enterprise distributions is slow. RHEL 10 is
->   still only on its GA release. Therefore my estimation is that the
->   number of potentially impacted customers will be small for some time,
->   enough time for us to test Jeff's fix appropriately.
-
-While this is true, I hope we can still treat every release version equally
-/if/ we make any arguments about urgency based on what's currently released
-in a particular distro.  Your point is a good counter-arguement to Jeff's
-assertion that the problem has been widely distributed - but it does start
-to creep into a space which feels like we're treating certain early versions
-of a specific distro differently and didn't sit well for me.  I'd rather not
-have our upstream work or decisions appear to favor a particular distro.
-
-> - The issue did not appear to me to be severe, but maybe I didn't read
->   the patch description carefully enough.
->
-> - Although I respect, admire, and greatly appreciate the effort Jeff
->   made to nail this one, that does not mean it is a pervasive problem.
->   Jeff is quite capable of applying his own work to the kernels he and
->   his employer care about.
->
-<snip>
->
-> It sounds like Red Hat also does not have clear evidence that links this
-> patch to a specific failure experienced by your customers. This affirms
-> my understanding that this fix is defensive rather than urgent.
-
-Also true - not yet, but there's a significant lag between customers
-discovering a problem and our engineers knowing about it, and during that
-lag all sorts of time, money, and reputation points are lost.
-
-> As a rule, defensive fixes go in during merge windows.
->
->> Its a real pain that we won't have an upstream commit assigned for it.
->
-> It's not reasonable for any upstream maintainer not employed by Red Hat
-> to know about or cleave to Red Hat's internal processes. But, if an
-> issue is on Red Hat's radar, then you are welcome to make its priority
-> known to me so I can schedule fixes appropriately.
-
-Thanks!  I realize that, which is why I spoke up.
-
-> All that said, I've promoted the fix to nfsd-fixes, since it's narrow
-> and has several weeks of test experience now.
-
-Again, thanks!  We greatly appreciate the work you're doing.
-
-Best,
-Ben
-
+> >
+> >> +                    build_assert!(v.count_ones() == 1);
+> >> +                    Self(v)
+> >> +                }
+[...]
