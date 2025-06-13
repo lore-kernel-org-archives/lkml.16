@@ -1,136 +1,121 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0492367D9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC9C148;
+	Fri, 13 Jun 2025 20:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846634; cv=none; b=BXWiKe8/7CtlOnxb2CwZYj6bsuW5RTa/AWiA5W1ax9wSf9YRrr3WKQ3ZLaQmssSuSF0ZAlaVOIMfsEMtvxRnktY0auHAxzan1ByMlRjDvboeHxQuwGKz4/c5eaeKUcjPubeDS4ZEdxNTQrF+hAIBHjrhxd3w1AChEyxN/ZwXx/0=
+	t=1749846781; cv=none; b=Vf2lNzAzmwcnVuQCl/3+2Bf86ZszXHizcg10Qtu6KKQxObSkFc3bBJDLEvVsLfvhqWXgFYKSN/tIy8KzWMH1Rw0J3e+opKeq/72w8vfkHSA+fMhHj808wWE5B+xs+drNj42xF20u0tDmviOcav+D6S8gp9HDxdHozvyOXMMatdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846634; c=relaxed/simple;
-	bh=6hMvnHrlDGmIsq+dHiAUFLU63nbpFzoG7BlKtAAWUjk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1zO3Vnr23C/7jMso4U/5HlpRo5wgE4l8kEgThg32ARf6vowXiRy/ZSoS4cKD+27Zk04Seqi61Ord833Oyy/bGrW0RHqmsTPkwR/1FeelevN20WOuVED4GgBAdcfGnRxzYd27+1nxuffKJdj7H7hh4Y3DL3SzUjfEaHXgUZryGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X3AABrSp; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1749846781; c=relaxed/simple;
+	bh=9v3ZlTT3uTG28Lb2pGd4rNu9RPW97DkH1ephQbQHVew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PvI2Ir/faVNFvFiW33ncOag8DWiV4aCmp3pwt1oPotApDcbJyMcviRNHxmWYQQBMUAMWGobg2VOfS+k2dDQNKXBeev25Sk4+GKlxHH0S25DNsF1HSlp8YNeDfklph497SPph+NdT43pfFlQFLLy/gOIaLrI836aH9NcRIwOn4Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/lKuQzO; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3AABrSp"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so2465067f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:30:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/lKuQzO"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso2867727a91.3;
+        Fri, 13 Jun 2025 13:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749846631; x=1750451431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X6gxnPqEZ3rJPOAZK/e5c7eolLEIOuidR5IiopqFvaw=;
-        b=X3AABrSpzXyCphUFVLSdRepaqzHHfrh1wgUyL10IRMj99KMchZZiI6pk1qmtGOHhJG
-         E8AMSxgw98Wnjg8NpJdILz/KeX4AoVoOkh4QhdcGkY3UsJOjl9SpxCQ9kUdrI2cP/Orq
-         xWoWzR9yMZFggcd2hn04XQpISVmP04mVR6K+LhsoIPvyumyzR2xqE3HGj656eOvcKN18
-         DG7qM/4RN3+UwFeeggZBZAVCCIovGNPVjxCGgoJHWZOYpYUsUs7h1hZxEl2zC35tQBY3
-         ZSrOI/cWPwkMQkVd0Nwo3PXKJ6MLzzymzvGHknjBgkSXuUxOsj9Wni+U1c1xYNb6B2Xe
-         +YRA==
+        d=gmail.com; s=20230601; t=1749846779; x=1750451579; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MeqoJN1VtlXAfshyNe71l2zrQUFvyNq6mFSXz5PurIE=;
+        b=b/lKuQzOKzvuC9O4ta1e420Tb5Bn/Z5K8ApbyxExnxJcYMcX6S0JTXaAmMQ2I8cCwH
+         qHGjMTrAxuFnOOEaJQzV4UQICVlu6xcs+K5LELVjY2rTNR/z2QUyxneCipLYptb8NyG/
+         vkTEzT8mbb1Gj/PrZWDoP1I8hsPejAxfEPjZL/Xw/dYxc2oTTzZNnjraIdrJ0EtLcSr2
+         Cc7btaYA3ABz5ML2KiISl8WgchAoPfVuuMXWTKpQGVw8RcRqetAoINw8w9Zz4cZNVUW9
+         mSlm0Jz/BJTYjthK5y3vfAByG8rSQxXxXdHBJrQG71N5xf8A08zjFclsMUCMr3r+Qfd7
+         08zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846631; x=1750451431;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X6gxnPqEZ3rJPOAZK/e5c7eolLEIOuidR5IiopqFvaw=;
-        b=aWTlxYt2RS+3SqLpxXeS7k9tO3DfYFGlV5EYsLWs3Ewr63GYCjBXsMcK+IMBqipgMs
-         5QWJJVvwFm410sIett5AGrO3Q7JOeOPNwZyzaOYvLsQ5Ike38FC7Vl1nv8mxKOPhPiDF
-         ivFCaqiVeApOSIo176vOGrbr1hxjH3F29A8XQijvbMSdQp5AWDtlCo+8PU0JVCCvQ5AW
-         nFJqXTGirJRb2DT1VWwbkYyo6UAOx4Ps8+HQpilkgEgdHL8sLYti1b+VjXJb2Sjr2XMV
-         ez0s6ss0R4Ds5EOfk3dxkar8hcBCZlbrsleM1wibC/WA6TaMu3Z5vVtoviF6mjEaZjHL
-         OgQQ==
-X-Gm-Message-State: AOJu0Yz+CSJ/3x4aNqdG6bsGTdv47X/MC1iE2iEhoSt1vQ9ttcjk14x+
-	GkdXd3ukSwy0HWIVnslUMFAi3whKFdXcdKM+AyvNfuRaMXTkTMsUuWsPH4Xhtw4B
-X-Gm-Gg: ASbGncvtTxtUrXebO1LctMDApuy+ye0BATKbRQXOheybdak83AgCSp+gZCffHTNtomR
-	0p/tSI/KQSdmP5goGqbfjaXfsQ6ys7AdGhhToLtsu0gEypY+ckzSqEPYUoGJsoqjl2W59ioKksT
-	Z5kZD1m04EDZkPxgSVuaPaQ8G6MDenAUq7YNhPvz3s001QKNSUxkoRgd2d+KJNhDifIuqwoqRux
-	wacrbJAy3ymI6cFvkYoJdeorxDefOL7mB7DgHKdGGOkYnfQpHYz+H5Uh05nJr7xxnZjI/WNF0sz
-	443u61YUQ561UNiqW78jZlwU5n+8k/8ii1zoTqkt6eU246HwCTgSTVN9Pm1m+Wm472Jk+69269q
-	U
-X-Google-Smtp-Source: AGHT+IEDjuQsLnKawdR179gPNxjs65VEiakJVNIb2Tu9L+ChyqkN7o042MQHiuqMO5RKVjxKiaqvWA==
-X-Received: by 2002:a05:6000:2507:b0:3a5:527b:64c6 with SMTP id ffacd0b85a97d-3a572398d8emr1099000f8f.1.1749846630570;
-        Fri, 13 Jun 2025 13:30:30 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8f2e0sm61628255e9.8.2025.06.13.13.30.29
+        d=1e100.net; s=20230601; t=1749846779; x=1750451579;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MeqoJN1VtlXAfshyNe71l2zrQUFvyNq6mFSXz5PurIE=;
+        b=oGL223DAkU/KBG4nDvPjo+90qWKLxYsl8L1o1ivpt4bmrYk2CA6RAVxZ04iAb2PDEm
+         7FWj37+y+1wIUp/q3oiUwIf1AXoz9p7L2s4E6SmHqDP0EDxDGHKIY3xZWBMfd7TVwy3t
+         Mh6Jy31/NXrTvOnW43hjTPr963MyFuPkushDRqNGN7UBvOqyYPlzkCzYOd3EdzST5HuT
+         Tv6KE866+dJSLvAz+ZGGz4JpjbiglwOYEHO+TtfAAzZVckm2fm4fEmEvrWjsS0aND3Ez
+         /bs7kR344hCq3U5QT5ZpRrvxElFd7Vh26GojoyCAX1xk4y7H+6+C43Qkk47NEWotfdO9
+         LZXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPIUl4aPMMg+yhb3XrrHyEz4xRLJu8V1vsUNwkCWynYsUTK5y29SLSjKr7t9LajBsyUBdYBJs/i1yNVqc=@vger.kernel.org, AJvYcCUhmtr8FOBuCm17VPLtBYLz89QcW+3+WtYuWMo8S2I6xWR+jTc3787Sty8GyWM1i/bldcvCXi0K71CQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk5JgsLUZGYTKUSrlVXugaRhmeJejkksBLOt4dNCjoHyz/k0nf
+	M3dYglC1t/a2qyWbZe21JyMmsxPtF/gKTRGHHU9Dlihq4xYAIr0EAtjK
+X-Gm-Gg: ASbGnct9ROaKGpzCkW7OzplHGy5p/xUvkUYEuj5m7EworZIT6M96RWEX+4EkbngFtEk
+	yXc3JFbMLSgaZSQOp3j2CSy8bDyOtqSQtln0lyjOnNOls29+80TLz5sfB2KUTRlnVs1NrH/OIgv
+	Mv/ukUzj1whm0kvlqxLOTL2ezPVOhL3hMUrkiVGtJJMuT8+8R5gh9zViI67OFCNHKHFYiANZhu/
+	4D11kkhn3McDoLT55+mAPstN/rRj7GcddhDry2DltqgCs0m1dbnft6PdvDDQq6xc9eR8xkro9bT
+	GVmEtAc8Rfjfr2QPBveSQeVNkJ+Ty4rqsq4sdXpQvQSzugl2uA==
+X-Google-Smtp-Source: AGHT+IF94BUUijNOoyBUX4URz+4YXCZAGHiqdCm6FPEJcMyBQe0H9exqeo272TTJAvxI2G2WRqOyNQ==
+X-Received: by 2002:a17:90b:582f:b0:313:bf67:b354 with SMTP id 98e67ed59e1d1-313f1b87a40mr1776345a91.0.1749846779495;
+        Fri, 13 Jun 2025 13:32:59 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:84a2::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5fd7esm3812515a91.37.2025.06.13.13.32.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 13:30:30 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	peterz@infradead.org,
-	luto@kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/entry: Remove some redundancy checks on syscall works
-Date: Fri, 13 Jun 2025 20:28:49 +0000
-Message-ID: <20250613202937.679-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Fri, 13 Jun 2025 13:32:58 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:32:52 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v4 5/5] phy: rockchip-pcie: Adjust read mask
+ and write
+Message-ID: <aEyK9BcyZq1qiNQD@geday>
+References: <b32c8e4e0e36c03ae72bff13926d8bdd9131c838.1749827015.git.geraldogabriel@gmail.com>
+ <20250613202056.GA974155@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613202056.GA974155@bhelgaas>
 
-On Wed, Jun 11 2025 at 11:43, Khalid Ali wrote:
-> > There is a redundant checks of thread syscall work.
+On Fri, Jun 13, 2025 at 03:20:56PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 13, 2025 at 12:06:28PM -0300, Geraldo Nascimento wrote:
+> > Section 17.6.10 of the RK3399 TRM "PCIe PIPE PHY registers Description"
+> > defines asynchronous strobe TEST_WRITE which should be enabled then
+> > disabled and seems to have been copy-pasted as of current. Adjust it.
+> > While at it, adjust read mask which should be the same as write mask.
+> 
+> Not a PCI patch, but "adjust" doesn't tell us what's happening.
+> 
+> From reading the patch, I assume that since PHY_CFG_WR_ENABLE and
+> PHY_CFG_WR_DISABLE were both defined to be 1, this code:
+> 
+>         regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+>                      HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
+>                                    PHY_CFG_WR_MASK,
+>                                    PHY_CFG_WR_SHIFT));
+> 
+> actually left something *enabled* when it meant to disable it.
+> 
+> Maybe the subject/commit log could say something about actually
+> disabling whatever this is instead of leaving it enabled?
+> 
+> PHY_CFG_RD_MASK appears unused, so maybe it should be just removed.
 
-> Not really.
->
-> >  After we read thread syscall work we are checking the work bits using
->
-> We are doing nothing. Please write your changelogs in imperative mood
-> and do not try to impersonate code.
+Your line of reasoning is correct regarding the TEST_WRITE async strobe
+register, and there's a picture of the flow in Section 17.5.3
+(PCIe PHY Configuration) of the RK3399 TRM, Part 2.
 
-Sorry, i guess my english sucks.
+I'll make sure to be more clear in the commit message.
 
-> > SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT on syscall entry and exit
-> > respectively, and at the same time syscall_trace_enter() and
-> > syscall_exit_work() checking bits one by one, the bits we already checked.
-> > This is redundancy. So either we need to check the work bits one by one as I
-> > did, or check as whole. On my prespective, i think the way code is
-> > implemented now checking work bits one by one is simpler and gives us
-> > more granular control.
+Regarding PHY_CFG_RD_MASK, yes, it is unused AFAICT and can be removed.
+It's leftover from BSP where the debugging function phy_rd_cfg exists.
 
-> That's just wrong and absolutely not redundant. Care to look at the
-> definition of SYSCALL_WORK_ENTER:
->
-> #define SYSCALL_WORK_ENTER	(SYSCALL_WORK_SECCOMP |			\
->				 SYSCALL_WORK_SYSCALL_TRACEPOINT |	\
->				 SYSCALL_WORK_SYSCALL_TRACE |		\
->				 SYSCALL_WORK_SYSCALL_EMU |		\
->				 SYSCALL_WORK_SYSCALL_AUDIT |		\
->				 SYSCALL_WORK_SYSCALL_USER_DISPATCH |	\
->				 ARCH_SYSCALL_WORK_ENTER)
->
-> So this initial check avoids:
->
->    1) Doing an unconditional out of line call
->
->    2) Checking bit for bit to figure out that there is none set.
->
-> Same applies for SYSCALL_WORK_EXIT.
->
-> Your change neither makes anything simpler nor provides more granular
-> control.
->
-> All it does is adding overhead and therefore guaranteed to introduce a
-> performance regression.
->
-> Not going to happen.
->
-> Thanks,
->
->        tglx
-Thanks, for the response and noted all your points, however i spotted some minor details also:
-
-First if we are talking about performance then we may need likely() on SYSCALL_WORK_ENTER since 
-the probability of condition evaluating as true is very high.
-
-Second syscall_enter_audit() missing SYSCALL_WORK_SYSCALL_AUDIT	evaluation, aren't we supposed to call
-it only if SYSCALL_WORK_SYSCALL_AUDIT is set?
-
-Should i create another patch fixing these two points, of course if i am right?
-
-Thanks, Khalid Ali
+Thanks,
+Geraldo Nascimento
