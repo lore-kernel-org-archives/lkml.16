@@ -1,130 +1,114 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AEE2DA75C;
-	Fri, 13 Jun 2025 08:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A552DA75C;
+	Fri, 13 Jun 2025 08:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803562; cv=none; b=KonmucDLdQrKZp2U89uFrzfKJNacrP8rAQB9oC4HAGc9/XvQog86IsmbDxkw6ZWmMl3H/PigBLBXeFmcujTdizWKOUxMmSPMACvdvS4cegO4OR7jh61WffL46BXUpTtAOxMhW6CCAORNnvx/dKdXGxx7Hq4TQFJW2BONmWhw9bk=
+	t=1749803742; cv=none; b=fRf5HfADP6gi3xDsIs84XjdDLu5NqG6pyewNNbDaJQRNcKSPLmbX8+H0m9ZLQnLYo2N0wNurmZ4kRHrv9lV2lhUF/5m8M1UB3LJ8SMt97iMAg03inBJC7oBrgNJFJmyWvlXES+ueu5HGH8uYLTGvYs/DYG0lmWVa2yMM1DDifb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803562; c=relaxed/simple;
-	bh=lH/7F/aDPraj67MYN2H8m0zzpepfCQa9N8ZMrQCE/h4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dKMlGnOi/WzMqGQtUz77oQ9CIJM+rSewIMUqze8XN8G6nTFTmcxOtQdXMpTHUg45OSFwV/UtIePw1Pu5db4KTR6OOGzCPJz0R0hUGBgQlbHZxcX8GdxRk6TMv7HqDWRLLAV+kTSu68saS2kSpIJbcELd8/YAyMYVWhIZhr7geio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZRWi8pCI; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749803742; c=relaxed/simple;
+	bh=N/8P0oycOvrWCHveGAARJ8Iq/A6rTrCmjERwqUceixE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cjMP7mZD+HXG9MBMtCSJ3N+gIZBtoKB/Kd/wAlblUUzNNbJ3Sg02nyUX38PoQVy67sS/92rzRAnNKWq4P3LjPaoqVwzAQhCrg4i6d0V3MM7KZ3H8TZWEtrbKElOJ5agODTQQ4QRxJdYqESpoOG8IVHRUvzZpzb7Y5C5krjr67Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAMjjzcJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZRWi8pCI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=ceyQVU1s/TeC1A0uuWSXGNuCFCVzbMABPNZsJKr21a4=; b=ZRWi8pCIRln6gDBwDpL5TpDfHk
-	niUGHnvaDU0AKjQp3zTX54Kw4vhPB112ARtEB3A3tsfHGDPm6te2aBSu7kQtFjcx3+kRZgROg+c7W
-	kS7pt8ASyk3TCFFxhiEm6kPTIZMPPiU8dnfjrPAPRbBVgSDRNGvQTO0GcSsXKkLM7uvdZc9X4Otcr
-	A50grAGUwhRNlVjkB6SSJaMvazcQwGoFc0/VziikYdX2zpo1f5E8Gom7g2W12Se9sFjjSftOPGhfM
-	tDyo0kZ13bbnUwgZboISoP0egP9ZHd1TSEPBzLl/kwGBrm/dWyTWo/out4wopH6YyoR9cHDgoastf
-	/btuiUCQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPzpy-00000002viF-2jCO;
-	Fri, 13 Jun 2025 08:32:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 94D9E300969; Fri, 13 Jun 2025 10:32:32 +0200 (CEST)
-Date: Fri, 13 Jun 2025 10:32:32 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexis =?iso-8859-1?Q?Lothor=E9?= <alexis.lothore@bootlin.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Menglong Dong <imagedong@tencent.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	ebpf@linuxfoundation.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Bastien Curutchet <bastien.curutchet@bootlin.com>,
-	netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH bpf 2/7] bpf/x86: prevent trampoline attachment when args
- location on stack is uncertain
-Message-ID: <20250613083232.GL2273038@noisy.programming.kicks-ass.net>
-References: <20250613-deny_trampoline_structs_on_stack-v1-0-5be9211768c3@bootlin.com>
- <20250613-deny_trampoline_structs_on_stack-v1-2-5be9211768c3@bootlin.com>
- <20250613081150.GJ2273038@noisy.programming.kicks-ass.net>
- <DAL9GRMH74F4.2IV0HN0NGU65X@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAMjjzcJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABC2C4CEE3;
+	Fri, 13 Jun 2025 08:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749803741;
+	bh=N/8P0oycOvrWCHveGAARJ8Iq/A6rTrCmjERwqUceixE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VAMjjzcJGtBEMa/AETTO4Z89i5RT5sA32Le4ZYKcA+R1uZt1O+/34FtTwu+fqKrB7
+	 Bex5iL8vLE2UgqPd8QZP82V4okcTXDuJoYhO5zt4TWFTU+ecSsa6bLHCvtqnarooK1
+	 t4APrMv/dZzUW/qpPr0EIoUkz0LAn85po8PWcKlswsUno6gBKg1Gwn/So6WE6P8FeI
+	 B7mKfDSAtdeG20sUQkYl+BF8tnp0fPFlp5/fBnW/mqj4FeP+Za+93PeAt0z9XBBNUn
+	 dMxiuzZRykFrB28NcqAOykW+1QqYj9VY3pGFeocaNqFbos5xZP+nQJMj4FOCvuddgf
+	 YqUSHnfRufsiQ==
+Message-ID: <af89d78a-c3ea-4771-a9b3-805266e263c6@kernel.org>
+Date: Fri, 13 Jun 2025 10:35:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DAL9GRMH74F4.2IV0HN0NGU65X@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt: bindings: arm: add bindings for TQMLS1012AL
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: Matthias Schiffer <matthias.schiffer@tq-group.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux@ew.tq-group.com, Conor Dooley <conor.dooley@microchip.com>
+References: <20250613075927.392499-1-alexander.stein@ew.tq-group.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250613075927.392499-1-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 10:26:37AM +0200, Alexis Lothoré wrote:
-> Hi Peter,
+On 13/06/2025 09:59, Alexander Stein wrote:
+> From: Matthias Schiffer <matthias.schiffer@tq-group.com>
 > 
-> On Fri Jun 13, 2025 at 10:11 AM CEST, Peter Zijlstra wrote:
-> > On Fri, Jun 13, 2025 at 09:37:11AM +0200, Alexis Lothoré (eBPF Foundation) wrote:
-> >> When the target function receives more arguments than available
-> >> registers, the additional arguments are passed on stack, and so the
-> >> generated trampoline needs to read those to prepare the bpf context,
-> >> but also to prepare the target function stack when it is in charge of
-> >> calling it. This works well for scalar types, but if the value is a
-> >> struct, we can not know for sure the exact struct location, as it may
-> >> have been packed or manually aligned to a greater value.
-> >
-> > https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf
-> >
-> > Has fairly clear rules on how arguments are encoded. Broadly speaking
-> > for the kernel, if the structure exceeds 2 registers in size, it is
-> > passed as a reference, otherwise it is passed as two registers.
+> TQMLS1012AL is a SOM using NXP LS1012A CPU. MBLS1012AL is a carrier
+> reference design.
 > 
-> Maybe my commit wording is not precise enough, but indeed, there's not
-> doubt about whether the struct value is passed on the stack or through a
-> register/a pair of registers. The doubt is rather about the struct location
-> when it is passed _by value_ and _on the stack_: the ABI indeed clearly
-> states that "Structures and unions assume the alignment of their most
-> strictly aligned component" (p.13), but this rule is "silently broken" when
-> a struct has an __attribute__((packed)) or and __attribute__((aligned(X))),
-> and AFAICT this case can not be detected at runtime with current BTF info.
 
-Ah, okay. So it is a failure of BTF. That was indeed not clear.
+Subject: It's dt-bindings. Also double bindings is redundant.
+
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+
+
+
+
+Best regards,
+Krzysztof
