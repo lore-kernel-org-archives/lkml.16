@@ -1,374 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846292C3253;
-	Fri, 13 Jun 2025 10:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236FF1E0DE8;
+	Fri, 13 Jun 2025 10:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749809820; cv=none; b=tuBTVKm1393VVHN7gv2AMESfWw281MOniwgDsk1R8xnjJJEskjurTROoB/Y9bVOif2sD3KKYBH2c3K7b8s+W9aQonaymaC2c4Rawyn/SXiIiYSL7jaIjqZ3KgNIjXX5amQtknzkObdkGhVP9b9ieQhxAWZaPHnn1refXJ0UOzoM=
+	t=1749809975; cv=none; b=F08a1sUof3QoWObKddXyCA+9XesIiGl+rhh0yRw/3E8kQzINypta7pGVuG4t+bHsqWhgGH0ppSdu7n+cJLQIOVjwYZM7jm7e6QY4/lOx5LiJhJYh02T4f8L5uzwrpP5YdGJK+3bk2wyJ0U1qtAdQ2S6xF+II02kwk+UX704INhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749809820; c=relaxed/simple;
-	bh=BbvwoOMhx5QUYjz1948lGeP96P+UqKHJjDfYHav2DJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8cC4soBvSLaQnwIoMIJphHA3gGTDsesmLouChzBT9BD4T3jYTzMGGH0YYaI58t3wPmHMpGPskSnenR3u/us2vaVkb8gVX+djg04+nHknLRjF+zzvUmpVoFcPZTtk7HXMFV1HPIp8U/pl0t9ENhdz5CmNcw3IzR12lRVszgbIUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OuHU6G1u; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749809975; c=relaxed/simple;
+	bh=vG5VPJHwBrHvFMVg43CkcMXHNb8KegOopXpaTYM4A5I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pm6LBQEmqN8H0pDKDq86jQCtyCnOqaPYAMULGw6cMY8nMqdIJ+kbU1kKgLRb6SI3nD7Md1B9vAOF3I5WFlnw94cZCfzqohnkM2vgmPjGrBynRppj2hJEmH/2FqP9OwxNNHQn62hyIXUeuyHJ45WrdYU+uvGmLiR5OU8cO6iQOA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZSwq20OJ; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OuHU6G1u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749809818; x=1781345818;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BbvwoOMhx5QUYjz1948lGeP96P+UqKHJjDfYHav2DJs=;
-  b=OuHU6G1u+eBvQacgNBXYD9m4KCSxE2OYt0cKASe4J4Hrj0hreUEl2bob
-   FuMVDwPmxVbpWv/+PL1IcQ3xR2LIiFC49rXhvCn9cP1OOLkg5Hlpq6h4l
-   s8vBF5/ODDJd+76Oubt3l/6CE9toetWtbmlRkJ9atzUfWPKDkpqcrx7aL
-   7XVP5xcwkxfMjIbX+HYe7Clp/qBXcT3d+sjT4CWZBHXpjOZZOLE5w0Kc6
-   XPUjmO67gC0VK5R6PzhAOwRft2+FX3h7MpT4u5KlquHZmsmIVCs6H+INN
-   H7mHAuKbyyCXPuzFf8ZoyMTGyIvj2EjOSNZzRt/3AyAq87I/YRrSg2pQP
-   w==;
-X-CSE-ConnectionGUID: oIBEqrn7TR2LSJ6K5Yg2bg==
-X-CSE-MsgGUID: QpH/8Pw5SV2OQBfwVVSuag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="62672901"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="62672901"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:16:57 -0700
-X-CSE-ConnectionGUID: UwDJ2zuBTN+9Bp4hy8iYFA==
-X-CSE-MsgGUID: cM2K0UbJTI6TcRXG86BJXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="152758340"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 13 Jun 2025 03:16:53 -0700
-Date: Fri, 13 Jun 2025 18:09:52 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Manne, Nava kishore" <nava.kishore.manne@amd.com>
-Cc: "mdf@kernel.org" <mdf@kernel.org>,
-	"hao.wu@intel.com" <hao.wu@intel.com>,
-	"yilun.xu@intel.com" <yilun.xu@intel.com>,
-	"trix@redhat.com" <trix@redhat.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"saravanak@google.com" <saravanak@google.com>,
-	"linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"git (AMD-Xilinx)" <git@amd.com>
-Subject: Re: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface for
- runtime FPGA configuration
-Message-ID: <aEv48IZSinWjJgBt@yilunxu-OptiPlex-7050>
-References: <20250519033950.2669858-1-nava.kishore.manne@amd.com>
- <20250519033950.2669858-2-nava.kishore.manne@amd.com>
- <aDxrUD9YjnFkWy3M@yilunxu-OptiPlex-7050>
- <DS7PR12MB607015CAB2781E16A4EC110ECD74A@DS7PR12MB6070.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSwq20OJ"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b26d7ddbfd7so2203909a12.0;
+        Fri, 13 Jun 2025 03:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749809973; x=1750414773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1TZ09B9fF9qt3C3sRYNWKIJIgwZYwxaDL2K655BrwcY=;
+        b=ZSwq20OJ0/aN9J7C24GzgH99HlHFXZFtoYLghootWwMBcLmsFaBpLPlq9u2BpfrnTF
+         DN5mVigGZ0muNSgvyTbHIyVoBq6HYzoasOjD3SmVBrKnujuDLlW90HjkRaXNrFxWqxrs
+         MIggTVq5qGonoxqsKCB3Cy3TiXMqjDYp/gmhVfGJJ8Ow0pxtAmJcSjPFIcaW4TsKPWTi
+         rmFQPDOSKXvgGcDP+a/D5JZBRTM0lZ6IEnUeTDSx67LujIWghFdxRdXnvYuNauuky/zA
+         AHQKGTyig2R8QVvrE+t+WX8YTd/ucAM1sY381/gJ4UASRCa2/F0pk/3xN1T6AJlqrQcC
+         elTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749809973; x=1750414773;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1TZ09B9fF9qt3C3sRYNWKIJIgwZYwxaDL2K655BrwcY=;
+        b=m0EK5w3ikkPeB76TJWV9WajWUAnrGKzDwlX0PGvC97Inkj20ayQ9RAgHYMIkPUP02g
+         s8sHqijkTVIWTUE/ru0g2At7ICDuJXzvSOv3OR/OlAAFr37F6PX5CKD5FYnZCtJpXRaA
+         3ibj6SHRSLkXpIAwtreTeU+xtztJFedEEtS76fyVXeD7him5oBrba+HjMtQmTFucwovK
+         z57l4wYSvsCXTFIxrIOPXljD3+z7tZAhTUWXZmaIUnstyweruXZ0uz10pUF5lRL85T1H
+         bt7XZOFn8KeqtBAzXjXjDMY2dQk7oY0Rz4rb6FEptrF/soAQOgsmu8s9oYgHPKlOI0Sc
+         3NUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNWsSdCqAbAv4UvIWrhfBF3rRc+3sbpVGNE9ALoMZrjL06vPI7MoubiPneCycYvDsB+ZAUFx16x5O6eTsGBcQ=@vger.kernel.org, AJvYcCVwpoh/XQAFob8C7SKaEp25VUx+EiDSuTHcPzi6BFd0h9AZfjuZ04d09p46wIzrneAoEExP9QcbmgI=@vger.kernel.org, AJvYcCXxUGLB+PggVY7Ee0BY1nPUzSpU0KRRHv3YiYi/EOsvzB7bXhliN31W2LiW4YoxYf0WbMP+V/auPb+ciyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKrDO1oe0GPfiAGbQmcXByU0lq5VEJEshHMV1RV3YvYIlrbFOo
+	Fk8VdHBJPn2urmpnwDKcD+ioeq+gNzHg5auJ34aZ5IrVSCP3Cc7aYyURyAcrfrE9wMI=
+X-Gm-Gg: ASbGncs+VtaZKMeKD3bzqS1vrJfP4r9zfYddcOq/G6zA0zfN+qpyRYDyWyY9mgaGmMt
+	hfzH1PXI/SvqDyLZXLZKR1YgvIvCSmSGJ23HhZnS8haMDiX/ZYZoaRa4EpldrY9/b3Uo+Jv1Dwg
+	vRd3zI7zR8e9YG+vulsNaYT8NCIPRsAnQCRrSALkRY6UPS+ElLo8aCJykopFif0pPvBekdYNwFn
+	Ms/RDpi7tJHE6SQn92WA1Kmqy7L5CEQnTds7zil11TprCMGV9Js97taP2D3uBo4cEGK9z0das1z
+	XlkpsCHdHMaChMOnH8/PkkFeIpy6l5MU8x3qaLCRvtCe5ScOm+J8xpO0MFzSnkUD
+X-Google-Smtp-Source: AGHT+IHnrhBynvQl4izswdqX0FGr2tTEWxmV7V8m/R0CNjLpc+6kxSaRl0OBDyyoeTl8M6wMWU7Cfw==
+X-Received: by 2002:a05:6a21:3982:b0:215:e60b:3bd3 with SMTP id adf61e73a8af0-21facf11c33mr4300123637.29.1749809973179;
+        Fri, 13 Jun 2025 03:19:33 -0700 (PDT)
+Received: from pop-os.. ([2401:4900:1c96:fdb4:b26c:8198:a171:6fa6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d24bbsm1214044b3a.169.2025.06.13.03.19.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 03:19:32 -0700 (PDT)
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	linux-pm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abhinav Ananthu <abhinav.ogl@gmail.com>
+Subject: [PATCH v3] rust: cpufreq: Ensure C ABI compatibility in all unsafe
+Date: Fri, 13 Jun 2025 15:48:16 +0530
+Message-Id: <20250613101815.18092-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DS7PR12MB607015CAB2781E16A4EC110ECD74A@DS7PR12MB6070.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 09:05:21AM +0000, Manne, Nava kishore wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> Hi Yilun,
-> 
->         Thanks for quick response.
-> Please find my response inline.
-> 
-> > -----Original Message-----
-> > From: Xu Yilun <yilun.xu@linux.intel.com>
-> > Sent: Sunday, June 1, 2025 8:32 PM
-> > To: Manne, Nava kishore <nava.kishore.manne@amd.com>
-> > Cc: mdf@kernel.org; hao.wu@intel.com; yilun.xu@intel.com; trix@redhat.com;
-> > robh@kernel.org; saravanak@google.com; linux-fpga@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; devicetree@vger.kernel.org; git (AMD-Xilinx)
-> > <git@amd.com>
-> > Subject: Re: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface for runtime
-> > FPGA configuration
-> >
-> > On Mon, May 19, 2025 at 09:09:37AM +0530, Nava kishore Manne wrote:
-> > > Introduces an ConfigFS interface within the fpga-region subsystem,
-> > > providing a generic and standardized mechanism for configuring (or)
-> > > reprogramming FPGAs during runtime. The newly added interface supports
-> > > both OF (Open Firmware) and non-OF devices, leveraging vendor-specific
-> > > callbacks (e.g., pre_config, post_config, removal, and status) to
-> > > accommodate a wide range of device specific configurations.
-> > >
-> > > The ConfigFS interface ensures compatibility with both OF and non-OF
-> > > devices, allowing for seamless FPGA reprogramming across diverse
-> > > platforms.
-> > >
-> > > Vendor-specific callbacks are integrated into the interface, enabling
-> > > custom FPGA pre_config, post_config, removal, and status reporting
-> > > mechanisms, ensuring flexibility for vendor implementations.
-> > >
-> > > This solution enhances FPGA runtime management, supporting various
-> > > device types and vendors, while ensuring compatibility with the
-> > > current FPGA configuration flow.
-> > >
-> > > Signed-off-by: Nava kishore Manne <nava.kishore.manne@amd.com>
-> > > ---
-> > > Changes for v3:
-> > >  - As discussed with Yilun, the implementation continues to use a
-> > > callback-based  approach to seamlessly support both OF (Open Firmware)
-> > > and non-OF devices via  vendor-specific hooks. Additionally, the
-> > > earlier IOCTL-based interface has been  replaced with a more suitable
-> > > ConfigFS-based mechanism to enable runtime FPGA  configuration.
-> > >
-> > > Changes for v2:
-> > >  - As discussed with Yilun, the implementation has been modified to
-> > > utilize a  callback approach, enabling seamless handling of both OF and non-OF
-> > devices.
-> > >
-> > >  - As suggested by Yilun in the POC code, we have moved away from
-> > > using  void *args  as a parameter for ICOTL inputs to obtain the
-> > > required user inputs. Instead, we are  utilizing the
-> > > fpga_region_config_info structure to gather user inputs. Currently,
-> > > this structure is implemented to support only OF devices, but we intend to extend
-> > it by incorporating new members to accommodate non-OF devices in the future.
-> > >
-> > >  drivers/fpga/fpga-region.c       | 196 +++++++++++++
-> > >  drivers/fpga/of-fpga-region.c    | 474 +++++++++++++++++--------------
-> > >  include/linux/fpga/fpga-region.h |  34 +++
-> > >  3 files changed, 493 insertions(+), 211 deletions(-)
-> > >
-> > > diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
-> > > index 753cd142503e..d583fc22955b 100644
-> > > --- a/drivers/fpga/fpga-region.c
-> > > +++ b/drivers/fpga/fpga-region.c
-> > > @@ -5,6 +5,7 @@
-> > >   *  Copyright (C) 2013-2016 Altera Corporation
-> > >   *  Copyright (C) 2017 Intel Corporation
-> > >   */
-> > > +#include <linux/configfs.h>
-> > >  #include <linux/fpga/fpga-bridge.h>
-> > >  #include <linux/fpga/fpga-mgr.h>
-> > >  #include <linux/fpga/fpga-region.h>
-> > > @@ -180,6 +181,158 @@ static struct attribute *fpga_region_attrs[] = {
-> > > };  ATTRIBUTE_GROUPS(fpga_region);
-> > >
-> > > +static struct fpga_region *item_to_fpga_region(struct config_item
-> > > +*item) {
-> > > +   return container_of(to_configfs_subsystem(to_config_group(item)),
-> > > +                       struct fpga_region, subsys);
-> > > +}
-> > > +
-> > > +/**
-> > > + * fpga_region_image_store - Set firmware image name for FPGA region
-> > > + * This function sets the firmware image name for an FPGA region through
-> > configfs.
-> > > + * @item: Configfs item representing the FPGA region
-> > > + * @buf: Input buffer containing the firmware image name
-> > > + * @count: Size of the input buffer
-> > > + *
-> > > + * Return: Number of bytes written on success, or negative errno on failure.
-> > > + */
-> > > +static ssize_t fpga_region_image_store(struct config_item *item,
-> > > +const char *buf, size_t count) {
-> > > +   struct fpga_region *region = item_to_fpga_region(item);
-> > > +   struct device *dev = &region->dev;
-> > > +   struct fpga_image_info *info;
-> > > +   char firmware_name[NAME_MAX];
-> > > +   char *s;
-> > > +
-> > > +   if (region->info) {
-> > > +           dev_err(dev, "Region already has already configured.\n");
-> > > +           return -EINVAL;
-> > > +   }
-> > > +
-> > > +   info = fpga_image_info_alloc(dev);
-> > > +   if (!info)
-> > > +           return -ENOMEM;
-> > > +
-> > > +   /* copy to path buffer (and make sure it's always zero terminated */
-> > > +   count = snprintf(firmware_name, sizeof(firmware_name) - 1, "%s", buf);
-> > > +   firmware_name[sizeof(firmware_name) - 1] = '\0';
-> > > +
-> > > +   /* strip trailing newlines */
-> > > +   s = firmware_name + strlen(firmware_name);
-> > > +   while (s > firmware_name && *--s == '\n')
-> > > +           *s = '\0';
-> > > +
-> > > +   region->firmware_name = devm_kstrdup(dev, firmware_name,
-> > GFP_KERNEL);
-> > > +   if (!region->firmware_name)
-> > > +           return -ENOMEM;
-> > > +
-> > > +   region->info = info;
-> > > +
-> > > +   return count;
-> > > +}
-> > > +
-> > > +/**
-> > > + * fpga_region_config_store - Trigger FPGA configuration via configfs
-> > > + * @item: Configfs item representing the FPGA region
-> > > + * @buf: Input buffer containing the configuration command (expects
-> > > +"1" to program, "0" to remove)
-> > > + * @count: Size of the input buffer
-> > > + *
-> > > + * If the input is "1", this function performs:
-> > > + *   1. region_pre_config() (if defined)
-> >
-> > Please define explicit workflow, and explicit expectation for each callback, or this
-> > framework makes no sense. From your of-fpga-region implementation, seems
-> > pre_config() means "parse image", post_config() means "populate devices".
-> >
-> > > + *   2. Bitstream programming via fpga_region_program_fpga() (unless external
-> > config flag is set)
-> > > + *   3. region_post_config() (if defined)
-> > > + *
-> > > + * If the input is "0", it triggers region_remove() (if defined).
-> > > + *
-> > > + * Return: Number of bytes processed on success, or negative errno on failure.
-> >
-> > Please put the uAPI description in Documentation/ABI/testing. Then we could know
-> > the file path layout from userspace POV.
-> >
-> > > + */
-> > > +static ssize_t fpga_region_config_store(struct config_item *item,
-> > > +                                   const char *buf, size_t count)
-> > > +{
-> > > +   struct fpga_region *region = item_to_fpga_region(item);
-> > > +   int config_value, ret = 0;
-> > > +
-> > > +   /* Parse input: must be "0" or "1" */
-> > > +   if (kstrtoint(buf, 10, &config_value) || (config_value != 0 && config_value !=
-> > 1))
-> > > +           return -EINVAL;
-> > > +
-> > > +   /* Ensure fpga_image_info is available */
-> > > +   if (!region->info)
-> > > +           return -EINVAL;
-> > > +
-> > > +   if (config_value == 1) {
-> > > +           /* Pre-config */
-> > > +           if (region->region_ops->region_pre_config) {
-> > > +                   ret = region->region_ops->region_pre_config(region);
-> > > +                   if (ret)
-> > > +                           return ret;
-> > > +           }
-> > > +
-> > > +           /* Program bitstream if not external */
-> > > +           if (!(region->info->flags & FPGA_MGR_EXTERNAL_CONFIG)) {
-> > > +                   ret = fpga_region_program_fpga(region);
-> > > +                   if (ret)
-> > > +                           return ret;
-> > > +           }
-> > > +
-> > > +           /* Post-config */
-> > > +           if (region->region_ops->region_post_config) {
-> > > +                   ret = region->region_ops->region_post_config(region);
-> > > +                   if (ret)
-> > > +                           return ret;
-> > > +           }
-> > > +
-> > > +   } else {
-> > > +           /* Remove configuration */
-> > > +           if (region->region_ops->region_remove) {
-> > > +                   ret = region->region_ops->region_remove(region);
-> > > +                   if (ret)
-> > > +                           return ret;
-> > > +           }
-> > > +   }
-> > > +
-> > > +   return count;
-> > > +}
-> > > +
-> > > +/* Define Attributes */
-> > > +CONFIGFS_ATTR_WO(fpga_region_, image);
-> > CONFIGFS_ATTR_WO(fpga_region_,
-> > > +config);
-> > > +
-> > > +/* Attribute List */
-> > > +static struct configfs_attribute *fpga_region_config_attrs[] = {
-> > > +   &fpga_region_attr_image,
-> > > +   &fpga_region_attr_config,
-> > > +   NULL,
-> > > +};
-> > > +
-> > > +/* ConfigFS Item Type */
-> > > +static const struct config_item_type fpga_region_item_type = {
-> > > +   .ct_attrs = fpga_region_config_attrs,
-> > > +   .ct_owner = THIS_MODULE,
-> > > +};
-> >
-> > I think this is still the sysfs methodology. My understanding from configfs.rst is, use
-> > userspace interfaces to control the lifecycle of a kernel object.
-> >
-> > Now for existing kernel reprogramming flow, the image object for fpga_region is the
-> > struct fpga_image_info. We need to associate the struct with a config_item: alloc the
-> > struct fpga_image_info instance by mkdir, expose necessary fields
-> > (enable_timeout_us, disable_timeout_us, firmware_name, and the most important for
-> > of-fpga-region - overlay blob ...) for user to fill/query via configfs attributes. And finally
-> > use a writeable attribute (e.g. load) to trigger fpga_region_program_fpga().
-> >
-> 
-> Thanks for the inputs. We've now implemented a ConfigFS-based reprogramming
-> interface for fpga_region that aligns with the intended lifecycle-driven model
-> described in configfs.rst.
-> 
-> New Interface Usage Instructions:
-> # 1. Mount configfs (if not already mounted)
-> mkdir -p /configfs
-> mount -t configfs configfs /configfs
-> 
-> # 2. Create a region directory (e.g., region0)
-> mkdir /configfs/fpga_regions/region0
+Update all `unsafe extern "C"` callback functions in the cpufreq module to
+use `kernel::ffi` types (`c_int`, `c_uint`, etc.) instead of Rust-native
+types like `i32`, `u32`, or `usize`.
 
-FPGA region is the device driver generated kernel object, so this per
-fpga_region group should be created by kernel, not userspace.  User
-should create fpga_image config_item under region group.
+This change ensures that all Rust callbacks have signatures that are
+ABI-compatible with their corresponding C counterparts, which is critical
+for FFI correctness and safety.
 
-  mkdir /configfs/fpga_region/region0/my_image
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Link: https://github.com/Rust-for-Linux/linux/issues/1170
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+---
+ rust/kernel/cpufreq.rs | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-> 
-> # 3. Copy your bitstream or overlay files to firmware path
-> cp pl.dtbo /lib/firmware/
-> 
-> # 4. Set the firmware name (e.g., overlay .dtbo)
-> echo pl.dtbo > /configfs/fpga_regions/region0/image
-> 
-> # 5. Trigger Programming/reprogramming
-> echo 1 > /configfs/fpga_regions/region0/config
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 11b03e9d7e89..481a6d2dc362 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -1207,8 +1207,8 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn target_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-        target_freq: u32,
+-        relation: u32,
++        target_freq: c_uint,
++        relation: c_uint,
+     ) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1226,7 +1226,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn target_index_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-        index: u32,
++        index: c_uint,
+     ) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1249,7 +1249,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn fast_switch_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-        target_freq: u32,
++        target_freq: c_uint,
+     ) -> kernel::ffi::c_uint {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+@@ -1263,10 +1263,10 @@ impl<T: Driver> Registration<T> {
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+     unsafe extern "C" fn adjust_perf_callback(
+-        cpu: u32,
+-        min_perf: usize,
+-        target_perf: usize,
+-        capacity: usize,
++        cpu: c_uint,
++        min_perf: c_ulong,
++        target_perf: c_ulong,
++        capacity: c_ulong,
+     ) {
+         // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
+         let cpu_id = unsafe { CpuId::from_u32_unchecked(cpu) };
+@@ -1284,7 +1284,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn get_intermediate_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-        index: u32,
++        index: c_uint,
+     ) -> kernel::ffi::c_uint {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+@@ -1305,7 +1305,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn target_intermediate_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-        index: u32,
++        index: c_uint,
+     ) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1325,7 +1325,7 @@ impl<T: Driver> Registration<T> {
+     /// # Safety
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+-    unsafe extern "C" fn get_callback(cpu: u32) -> kernel::ffi::c_uint {
++    unsafe extern "C" fn get_callback(cpu: c_uint) -> kernel::ffi::c_uint {
+         // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
+         let cpu_id = unsafe { CpuId::from_u32_unchecked(cpu) };
+ 
+@@ -1351,7 +1351,7 @@ impl<T: Driver> Registration<T> {
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+     /// - The pointer arguments must be valid pointers.
+-    unsafe extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
++    unsafe extern "C" fn bios_limit_callback(cpu: c_int, limit: *mut c_uint) -> kernel::ffi::c_int {
+         // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
+         let cpu_id = unsafe { CpuId::from_i32_unchecked(cpu) };
+ 
+@@ -1371,7 +1371,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn set_boost_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-        state: i32,
++        state: c_int,
+     ) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+-- 
+2.34.1
 
-My idea is, when an image item is first created, it is not activated,
-user needs to read/write its attributes to initialize it, then we
-could have an attribute (e.g. enable) to activate/reprograme the image.
-
-For example:
-
-  echo 1 > /configfs/fpga_regions/region0/my_image/enable
-
-> 
-> # 6. Unload/Reset the Programmable Logic
-> echo 0 > /configfs/fpga_regions/region0/config
-
-Maybe we could just delete the image item for unloading
-
-  rmdir /configfs/fpga_region/region0/my_image
-
-Thanks,
-Yilun
-
-> 
-> Summary of Changes:
-> ->Lifecycle Management:
->     ->On mkdir /configfs/fpga_regions/regionX, we allocate and associate
->        a struct fpga_image_info to the corresponding fpga_region.
->     ->On rmdir, we clean up the associated image info via the new
->        fpga_regions_drop_item() callback.
-> ->Device Lookup:
->     ->class_find_device_by_name() is now used in fpga_regions_make_item()
->        to map a region name (e.g., region0) directly to a registered
->        fpga_region device.
-> 
-> Please share your thoughts on this approach.
-> 
-> Regards,
-> Navakishore.
