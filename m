@@ -1,121 +1,164 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC9C148;
-	Fri, 13 Jun 2025 20:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0441D21C176;
+	Fri, 13 Jun 2025 20:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846781; cv=none; b=Vf2lNzAzmwcnVuQCl/3+2Bf86ZszXHizcg10Qtu6KKQxObSkFc3bBJDLEvVsLfvhqWXgFYKSN/tIy8KzWMH1Rw0J3e+opKeq/72w8vfkHSA+fMhHj808wWE5B+xs+drNj42xF20u0tDmviOcav+D6S8gp9HDxdHozvyOXMMatdc=
+	t=1749846809; cv=none; b=mQtjbQ9ZNRGJErRQlu4s/zBkfSVW1psjgHxjsD0bYB2yOG5PyhL6f0lyrrDVQ0q5/+hlGYDx5+i5hNP+JMP4fJRg2RwkiYzSJ34FSV0JccC2+45M/y3d2K42wyHaQgozo9xqiNja2bVeQEZPR1pNwOfAkLDWlcSCY1ivgRiB6sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846781; c=relaxed/simple;
-	bh=9v3ZlTT3uTG28Lb2pGd4rNu9RPW97DkH1ephQbQHVew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PvI2Ir/faVNFvFiW33ncOag8DWiV4aCmp3pwt1oPotApDcbJyMcviRNHxmWYQQBMUAMWGobg2VOfS+k2dDQNKXBeev25Sk4+GKlxHH0S25DNsF1HSlp8YNeDfklph497SPph+NdT43pfFlQFLLy/gOIaLrI836aH9NcRIwOn4Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/lKuQzO; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1749846809; c=relaxed/simple;
+	bh=UovT/ZB9FyESr0A8ZCouEz1hivRGNty4iTls1N5CnYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TgBEwJyEZ/yetTUxu4XMU1Gr4br/U/LnE4DP3Yh5JpddPsmn/LukfhrfSCwztm0JtFOdbaTUOSkA/ilCyZJ33lFW3XbR5y0pRbiXvnM8kXaYkZJs86qJhtMyeKjNqyv54SFrdEmfM71RojYjslF23mHmSqvWlV60danLEERLtQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9rLcgov; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/lKuQzO"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso2867727a91.3;
-        Fri, 13 Jun 2025 13:33:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9rLcgov"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2c4476d381so2307025a12.0;
+        Fri, 13 Jun 2025 13:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749846779; x=1750451579; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MeqoJN1VtlXAfshyNe71l2zrQUFvyNq6mFSXz5PurIE=;
-        b=b/lKuQzOKzvuC9O4ta1e420Tb5Bn/Z5K8ApbyxExnxJcYMcX6S0JTXaAmMQ2I8cCwH
-         qHGjMTrAxuFnOOEaJQzV4UQICVlu6xcs+K5LELVjY2rTNR/z2QUyxneCipLYptb8NyG/
-         vkTEzT8mbb1Gj/PrZWDoP1I8hsPejAxfEPjZL/Xw/dYxc2oTTzZNnjraIdrJ0EtLcSr2
-         Cc7btaYA3ABz5ML2KiISl8WgchAoPfVuuMXWTKpQGVw8RcRqetAoINw8w9Zz4cZNVUW9
-         mSlm0Jz/BJTYjthK5y3vfAByG8rSQxXxXdHBJrQG71N5xf8A08zjFclsMUCMr3r+Qfd7
-         08zA==
+        d=gmail.com; s=20230601; t=1749846807; x=1750451607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pwRAnCMRMy4NI04BUJ5xATTCrVm8zFet775Y9+JU/To=;
+        b=Q9rLcgovjWMiyH3hvqvLsJH9iLk3EzGnne8DV8ZXEZL0JUsjwUqCitE5h1XoOB8Lp+
+         H8GHC9rUfBjXhhj5lQX/9bLpIyJ77/MAehO2q6ggMR+QQx9JGzk5Zcoe8TGUIk8m5/G0
+         H6tmU7xtO6A0sZT/Or6PL08wvoFYr63jSbqpmIFbeyBi5LLDu/+pFsWx92/0joE/CPD6
+         8B8k64HvhhgZ129JGOkUvDMaTF19oi8I58gJeIn0X1BK5gDywAYumwBp8b2h5KqSpU6N
+         xkhO5CpDEY000vQLRAi8juhiSrhCZ/G5yEnCqRuQ7YbXa+GWKFI2ArV+iyjfgTy6k1R1
+         w3gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846779; x=1750451579;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MeqoJN1VtlXAfshyNe71l2zrQUFvyNq6mFSXz5PurIE=;
-        b=oGL223DAkU/KBG4nDvPjo+90qWKLxYsl8L1o1ivpt4bmrYk2CA6RAVxZ04iAb2PDEm
-         7FWj37+y+1wIUp/q3oiUwIf1AXoz9p7L2s4E6SmHqDP0EDxDGHKIY3xZWBMfd7TVwy3t
-         Mh6Jy31/NXrTvOnW43hjTPr963MyFuPkushDRqNGN7UBvOqyYPlzkCzYOd3EdzST5HuT
-         Tv6KE866+dJSLvAz+ZGGz4JpjbiglwOYEHO+TtfAAzZVckm2fm4fEmEvrWjsS0aND3Ez
-         /bs7kR344hCq3U5QT5ZpRrvxElFd7Vh26GojoyCAX1xk4y7H+6+C43Qkk47NEWotfdO9
-         LZXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPIUl4aPMMg+yhb3XrrHyEz4xRLJu8V1vsUNwkCWynYsUTK5y29SLSjKr7t9LajBsyUBdYBJs/i1yNVqc=@vger.kernel.org, AJvYcCUhmtr8FOBuCm17VPLtBYLz89QcW+3+WtYuWMo8S2I6xWR+jTc3787Sty8GyWM1i/bldcvCXi0K71CQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk5JgsLUZGYTKUSrlVXugaRhmeJejkksBLOt4dNCjoHyz/k0nf
-	M3dYglC1t/a2qyWbZe21JyMmsxPtF/gKTRGHHU9Dlihq4xYAIr0EAtjK
-X-Gm-Gg: ASbGnct9ROaKGpzCkW7OzplHGy5p/xUvkUYEuj5m7EworZIT6M96RWEX+4EkbngFtEk
-	yXc3JFbMLSgaZSQOp3j2CSy8bDyOtqSQtln0lyjOnNOls29+80TLz5sfB2KUTRlnVs1NrH/OIgv
-	Mv/ukUzj1whm0kvlqxLOTL2ezPVOhL3hMUrkiVGtJJMuT8+8R5gh9zViI67OFCNHKHFYiANZhu/
-	4D11kkhn3McDoLT55+mAPstN/rRj7GcddhDry2DltqgCs0m1dbnft6PdvDDQq6xc9eR8xkro9bT
-	GVmEtAc8Rfjfr2QPBveSQeVNkJ+Ty4rqsq4sdXpQvQSzugl2uA==
-X-Google-Smtp-Source: AGHT+IF94BUUijNOoyBUX4URz+4YXCZAGHiqdCm6FPEJcMyBQe0H9exqeo272TTJAvxI2G2WRqOyNQ==
-X-Received: by 2002:a17:90b:582f:b0:313:bf67:b354 with SMTP id 98e67ed59e1d1-313f1b87a40mr1776345a91.0.1749846779495;
-        Fri, 13 Jun 2025 13:32:59 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:84a2::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5fd7esm3812515a91.37.2025.06.13.13.32.55
+        d=1e100.net; s=20230601; t=1749846807; x=1750451607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pwRAnCMRMy4NI04BUJ5xATTCrVm8zFet775Y9+JU/To=;
+        b=v53sdNRCw8VI71i2abX8vmXxaLENTgohvN/sZx7P4Ns5mq5CfWIoppeODKYB8FDNvm
+         oK+iO+WiFTQFvEwUcoWL9lWFTr3+AHZHXv3X8WmS5LcxacJxO6okPJOP4/na5aaDTcWS
+         PX6PUAPekx9S0R6X7MiWfUB9jqQa+lyokjIvpCAHhu+C1hXcGfo3lnV+V+OmC/iJK0KZ
+         xIXyYrWGEbTHKhuhrueGiq3ovJBgtD+VOhUgZ/MRRItf8PKSRkPhnqMhzyL9gPdzH6pu
+         uiGKX9oF0/HorhNQ8Y8BNC5lfRpSp6o21bUdE2HwNTudSMgrmAC0xNVFpZvIYUxTNxEj
+         O/8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV65bNMh5U2wXESK7ARiP27P7AnlHNboiWB2j8wZnpAARVysWUOMdfYJWP7pyknhFkacONMDIVL4YSTDg==@vger.kernel.org, AJvYcCVCtWproQYl2ER1V9baeMGfIK5+throSH+A4C14Ae3f3neCtIilKgnW54voVpJ8lVoO72mfunY2+HvqnmDyb82j@vger.kernel.org, AJvYcCWph8sgZFVd2xhy5qqKHoxXy3RwojHLQ2nDgawvM5WodyaHOHeP+mFnm41cc6a1E6oepK4k7tlWrRry2Xs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywoi5t6qUuqthERfsvJabQh2DIHLyzmqsO9NUdTKLFG5gxe952A
+	z9A39D5MaMLs1S0leuJxd/bx4hwfFNtCZICFV0isHyeGFHV0KSVUgcICWm38
+X-Gm-Gg: ASbGncsjGS3F7RLDZf8o4NB0OIrZWHKSHu2kAPE2TeKkpjVaHgpVKhZyaflv3dKgk//
+	ZmwEIbqf9I2FIfkKsblPklQY4B0hTT5NUzUQdLsu7MuJrlkaHm+MaIp0/wVdE7t3ZIT6zBsEsXT
+	9e/GxvFT49Mji2LltVnWqHwdPav6CVDTAhQEXrZL3bMrdKL+agnMq64jCZ+UH/ihOm6UZLpE9JQ
+	eyr5N+C2ciONVQWdKYjnHOoYkz6/mE4BRKfFdd+BLyelqDlKLgLipaSqrx7FOeouRV/xxU+jCzC
+	NBiTZC1TSa9mDGhLRC846l9qDspS/DEvwaYMBi/UxuffhQZniGuu2x3aDMLNrOhWQ8o7ZS7b4pM
+	zhIG0ktv4nQc5oID9/wKylPQ=
+X-Google-Smtp-Source: AGHT+IFofoxaBBjnJtXHhezT3t2Miq2Uz35b+y2fjwYckYFssZ1+zOwtoBfHJPoJcIM6hLG+m6recw==
+X-Received: by 2002:a05:6a20:7346:b0:21f:54e0:b0a3 with SMTP id adf61e73a8af0-21fbc62cb6bmr1432515637.2.1749846806751;
+        Fri, 13 Jun 2025 13:33:26 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74890084af3sm2135347b3a.97.2025.06.13.13.33.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 13:32:58 -0700 (PDT)
-Date: Fri, 13 Jun 2025 17:32:52 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v4 5/5] phy: rockchip-pcie: Adjust read mask
- and write
-Message-ID: <aEyK9BcyZq1qiNQD@geday>
-References: <b32c8e4e0e36c03ae72bff13926d8bdd9131c838.1749827015.git.geraldogabriel@gmail.com>
- <20250613202056.GA974155@bhelgaas>
+        Fri, 13 Jun 2025 13:33:26 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	skalluru@marvell.com,
+	manishc@marvell.com,
+	andrew+netdev@lunn.ch,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	ajit.khaparde@broadcom.com,
+	sriharsha.basavapatna@broadcom.com,
+	somnath.kotur@broadcom.com,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	tariqt@nvidia.com,
+	saeedm@nvidia.com,
+	louis.peens@corigine.com,
+	shshaikh@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	ecree.xilinx@gmail.com,
+	horms@kernel.org,
+	dsahern@kernel.org,
+	shuah@kernel.org,
+	tglx@linutronix.de,
+	mingo@kernel.org,
+	ruanjinjie@huawei.com,
+	idosch@nvidia.com,
+	razor@blackwall.org,
+	petrm@nvidia.com,
+	kuniyu@google.com,
+	sdf@fomichev.me,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	oss-drivers@corigine.com,
+	linux-net-drivers@amd.com,
+	linux-kselftest@vger.kernel.org,
+	leon@kernel.org
+Subject: [PATCH net-next v4 0/6] udp_tunnel: remove rtnl_lock dependency
+Date: Fri, 13 Jun 2025 13:33:19 -0700
+Message-ID: <20250613203325.1127217-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613202056.GA974155@bhelgaas>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 03:20:56PM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 13, 2025 at 12:06:28PM -0300, Geraldo Nascimento wrote:
-> > Section 17.6.10 of the RK3399 TRM "PCIe PIPE PHY registers Description"
-> > defines asynchronous strobe TEST_WRITE which should be enabled then
-> > disabled and seems to have been copy-pasted as of current. Adjust it.
-> > While at it, adjust read mask which should be the same as write mask.
-> 
-> Not a PCI patch, but "adjust" doesn't tell us what's happening.
-> 
-> From reading the patch, I assume that since PHY_CFG_WR_ENABLE and
-> PHY_CFG_WR_DISABLE were both defined to be 1, this code:
-> 
->         regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
->                      HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
->                                    PHY_CFG_WR_MASK,
->                                    PHY_CFG_WR_SHIFT));
-> 
-> actually left something *enabled* when it meant to disable it.
-> 
-> Maybe the subject/commit log could say something about actually
-> disabling whatever this is instead of leaving it enabled?
-> 
-> PHY_CFG_RD_MASK appears unused, so maybe it should be just removed.
+Recently bnxt had to grow back a bunch of rtnl dependencies because
+of udp_tunnel's infra. Add separate (global) mutext to protect
+udp_tunnel state.
 
-Your line of reasoning is correct regarding the TEST_WRITE async strobe
-register, and there's a picture of the flow in Section 17.5.3
-(PCIe PHY Configuration) of the RK3399 TRM, Part 2.
+v4:
+- grab lock in more places, specifically netlink and notifiers (Jakub)
+- convert geneve and vxlan notifiers to (sleepable) rtnl lock
 
-I'll make sure to be more clear in the commit message.
+v3:
+- fix 2 test failures (Jakub NIPA)
 
-Regarding PHY_CFG_RD_MASK, yes, it is unused AFAICT and can be removed.
-It's leftover from BSP where the debugging function phy_rd_cfg exists.
+v2:
+- move the lock into udp_tunnel_nic (Jakub)
+- reorder the lock ordering (Jakub)
+- move udp_ports_sleep removal into separate patch and update the test
+(Jakub)
 
-Thanks,
-Geraldo Nascimento
+Cc: Michael Chan <michael.chan@broadcom.com>
+
+Stanislav Fomichev (6):
+  geneve: rely on rtnl lock in geneve_offload_rx_ports
+  vxlan: drop sock_lock
+  udp_tunnel: remove rtnl_lock dependency
+  net: remove redundant ASSERT_RTNL() in queue setup functions
+  netdevsim: remove udp_ports_sleep
+  Revert "bnxt_en: bring back rtnl_lock() in the bnxt_open() path"
+
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     | 42 ++-------
+ drivers/net/ethernet/emulex/benet/be_main.c   |  3 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |  1 -
+ drivers/net/ethernet/intel/ice/ice_main.c     |  1 -
+ .../net/ethernet/mellanox/mlx4/en_netdev.c    |  3 +-
+ .../net/ethernet/mellanox/mlx5/core/en_main.c |  3 +-
+ .../ethernet/netronome/nfp/nfp_net_common.c   |  3 +-
+ .../net/ethernet/qlogic/qede/qede_filter.c    |  3 -
+ .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  |  1 -
+ drivers/net/ethernet/sfc/ef10.c               |  1 -
+ drivers/net/geneve.c                          |  7 +-
+ drivers/net/netdevsim/netdevsim.h             |  2 -
+ drivers/net/netdevsim/udp_tunnels.c           | 12 ---
+ drivers/net/vxlan/vxlan_core.c                | 34 ++++----
+ drivers/net/vxlan/vxlan_private.h             |  2 +-
+ drivers/net/vxlan/vxlan_vnifilter.c           | 18 ++--
+ include/net/udp_tunnel.h                      | 87 ++++++++++++++-----
+ net/core/dev.c                                |  4 +-
+ net/ipv4/udp_tunnel_core.c                    | 16 ++--
+ net/ipv4/udp_tunnel_nic.c                     | 78 +++++++++++++----
+ .../drivers/net/netdevsim/udp_tunnel_nic.sh   | 23 +----
+ 22 files changed, 177 insertions(+), 170 deletions(-)
+
+-- 
+2.49.0
+
