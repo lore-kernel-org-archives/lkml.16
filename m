@@ -1,200 +1,130 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013032.outbound.protection.outlook.com [40.107.159.32])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA671FF1C4;
-	Fri, 13 Jun 2025 21:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749850689; cv=fail; b=nexJGYFZRhgyPP0X7LpkR2vQ+1InIO9P5/jHGE/AjlsNPKTbpKH4CldN9zIU698AdO/bCikshXg1LHiXwH92l6f4J7L1wwjRJ5gf99s0YijLJbbXEg0//lo1PX9uLg601ecZV1SPlRyPrpJFaXuBOzahxt34ze6KIoBZoDDSpXk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749850689; c=relaxed/simple;
-	bh=ESZM2ilTwZb7FH6i5+m2QYpG5Hnkalie9Aw//DstId0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Pi8J/RgkRifNjgTobYS89TpwqtaoVZVseEQxpWbeDaLfa3cFxOcbThT+6PDMsg2VZ6mRLnnnpU+JPs6iu/AFteXJ7tguy1E8vFsUnwNAiAMCq528btD+fJuqdBy9FUxwsALokPtoIab2cs1VvqkEcWaNmIyU0IVrfaepEjwqLxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=O7+4WU3x reason="signature verification failed"; arc=fail smtp.client-ip=40.107.159.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C6E25393B;
+	Fri, 13 Jun 2025 21:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749850766; cv=none; b=Z8RQJTAeNcWBazWhh8E/WskR1IVfKCfwIhT/npusx2gjWCX5PE6ZPxXUDJnuagmCiThJsEj8DXAsTxEj/PalmeGei5HkxYEHZYWUPi+n2zbKoq4r8y12+iSJGGgRtcw3H0l4FjUD4yv84VPF2VF0QHdPLDkuq07VQoiP2naeHOo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749850766; c=relaxed/simple;
+	bh=dd5YllNw3LiDL+FK0LS1lk/yrXXaTOqxnyryj86SIKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V+5ER7GkWBeCBCoGLkqPVLCO0fOJd9vGc5cfMbVTWoGFjqng2gwQm6GGzR1TjnEny6hbLQv6V4SQYxm7lvWumBVf+Xittgd+FzvJJgk0nqoRdZ0zGkPfbL37QSZbL5KGTI07qm+ikNFUx6NHykqcBFQ6Tn5wgfKF7dwAV2ukqv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=b1GzwnCI; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="O7+4WU3x"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qJLkWnIgUO4+VNutAeWTs/0fCI8ojySnqLMOCP+Rl9qWfyMN9OcjOKhmfVJGjTnrK+/TtNDC1Tp6j+Sm7Nk0AOZLtMTgLYuuvoQxHbXKDk2fuSuTyMZ0yM6V6ttOscGdmvOi4W2mvAzy6HZdci/QCEcD+LflhaOc+P2HynQLm9wP3R9VpIlJzFtuGbWLoeiMHF1ouxNKBA8x022z8sfg/Lg/S5nyrcSM45vAZudYTJC4JmirSaHvLp6rAT5fL9VZaIALNpxIxoaKY3QBrgrs4w9Ck6rX6FbyvuLJHTRPlIn34MPO0DD1b0hSpHxsf59LbHKEm7njQiTRLxNV5LmbRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VFJAvsV0zNOqPyCCAPdhwbyV3irLpG1oqJK7Y2ShdnM=;
- b=szsF3u4kCLKnPP9Dd87jdbRWy+sSeV+x9tBmekciGWhiTFr1hFndDOPgQOXly29HObwItwaxkmhWitfO09qw7l/oZd7cVbCsSR4qx5KKwD+nSwW562NbsZjMz3tYaZTGurASTEBqOmPNCo6WAN8q00cA8Pfo/XVMdzw6xwxkXP2g6xRjtL3h68nrKApdiDZlUmaLU5aphs269AcNWunzD5isvCVA0qLe9AL+01GvAr0tiVZ8r1Svf+dcE9KxRxD5jST9CZ2zckEu/+aMWUrfpjRWAaMKZzsgACNp9yJcuHW0zZSpV6HeHA3LbV+DweOcp4++iH4CpEHmxOFEcIbsqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VFJAvsV0zNOqPyCCAPdhwbyV3irLpG1oqJK7Y2ShdnM=;
- b=O7+4WU3xZceF8nqKmfr601lWn4y+iijV7AXp7DAJnZ4vrD+J6J5qkVW6PvVK41jxK7F0ho8RBhbJDi1HF39R+jqgOP/3xMJ6MRdTRjAJmd4EubUb0pxzBv8O0JAr1UanZB08v90JNTjzRk71bb7L1lh78+ePQQd6dgVb71QrPH6SY3Wd7S8zHiyea1L75xEJY9lAWIS5BEDxY4AFZCTaK7lxmcVcxvZeu29tvp554Nb8gYpv/TASyOEu5rcyrgp1yMnA3D8lzZgEwj0k5+lX8yxWUxkq83gMzWqzll5dVAgmEEMcxsjTVcoBfMLfHAcyo2C4Swb9lwH/6RLazYOMBw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU2PR04MB8582.eurprd04.prod.outlook.com (2603:10a6:10:2d9::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Fri, 13 Jun
- 2025 21:38:04 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
- 21:38:04 +0000
-Date: Fri, 13 Jun 2025 17:37:56 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: =?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>
-Subject: Re: [PATCH] arm64: dts: freescale: imx8mp-toradex-smarc: add fan
- cooling levels
-Message-ID: <aEyaNEFl3gD6snOP@lizhi-Precision-Tower-5810>
-References: <20250613-tdx-smarc-imx8mp-fan-cooling-level-v1-1-59aae8fee2db@toradex.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250613-tdx-smarc-imx8mp-fan-cooling-level-v1-1-59aae8fee2db@toradex.com>
-X-ClientProxiedBy: PH7P220CA0102.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:32d::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b1GzwnCI"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55DLcahi3958308
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 13 Jun 2025 14:38:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55DLcahi3958308
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749850720;
+	bh=wzkE3kgI5Av/aAIbr36C6n1BwVjfhYQH2jljupg13ag=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b1GzwnCIgYQQs2+eR9/+9fjYiOWtIpDw6y8LuSnDjMIiLjQHdu5atNFwFgGCYIJ+j
+	 l5J+gBR5cA/nsADAwKWhgtXV7rOqgXHBlEjotdPLOeRX04XhLrqJyO/OtH/K20c/7F
+	 qZ8iJpiK1dbKyp1Ewus7a4mR2rE1+w9l+s0iLZJ/Xyyd9RjEFx2Uh0cZh406qhdUYJ
+	 kpSGIA2Ho56YA2gZAlBs1v8aIYQCnXshL60iUtmt3vzV3Btpc7SBuevH1LsxnrHG39
+	 auAMZ7UeqEmn8b0XVrwTqWr1KU7UT+9UcXUe+iCc9uSLX6SiHrEwvEHMWDIk4FkNr+
+	 9td15WLkLNxtw==
+Message-ID: <06d93a19-ebc1-418b-becd-225caac76baf@zytor.com>
+Date: Fri, 13 Jun 2025 14:38:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB8582:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39c98fae-90a3-4352-ec5f-08ddaac293f2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?+7Ijaa5Kn6K9leLQRV8lRnbhGeoqiKo51NLG2T54EtvPsMwa2Y9UN+qmLI?=
- =?iso-8859-1?Q?6ktAvDBcEHSEhye9aZpn0PGLOK9gISdgPonMwQrdiSiEkB5UaZPHCd7Kk7?=
- =?iso-8859-1?Q?Cu4WWoofclB85qRe0oEKZH+x6u1kIVUttVsHbjpCn5tEGkEOn5W/grqCzn?=
- =?iso-8859-1?Q?q4j27Lz8W4UDDKLG/9TSMrIU92vK83bVzVouU3C/ediSnRihHSagrR8zle?=
- =?iso-8859-1?Q?YOWSqmnIrtVFzqIss7m6kt5dUXPpEDuqJlUiEFfh+6nHmv8j0xf/v/Jnsn?=
- =?iso-8859-1?Q?E7HiE3NdMjZfYdmBrlIerLE99aDIMO31TA8di9SeevJWhcNVV9rultbDkZ?=
- =?iso-8859-1?Q?GclPaxEURbgtq1gfXddBhUd0mVUpqM6VExeHyPYkRRM26mhDP1MBOZuzSe?=
- =?iso-8859-1?Q?V7r/XY072SB1cqQC59DdzCSjc8MEOpoKJNIPJrvQxs5ObSi4plC07lA2eV?=
- =?iso-8859-1?Q?SFVS2nfEWYrQbvm9RrUWzJFtzKKz0c1jEHAK/NHU2KRfq41L04QxFD3LXN?=
- =?iso-8859-1?Q?RCa1XVqmbXeqIh9ZnP5HUHsmkiy3wPnQbLKgLjFi2xbl6KydpyIECCRuaw?=
- =?iso-8859-1?Q?eq2eU3EG36rPIdpKMkkUtag6Fhc0O2NssXYPGiMu4I5PqzsACpQXAqBD/4?=
- =?iso-8859-1?Q?dhqYYR/8oqhNGx9S8djbuxi80k3D5VcgYNbTMmdCStzIYTOGx14YVkjPMA?=
- =?iso-8859-1?Q?rLY6aRXZZdhy3xLu2qJ9FizQ+qgy5JnCgQi1mcjTZ8DXNNw+WwnSQ7niSp?=
- =?iso-8859-1?Q?zyeBQWc95tLs+wG40qll0TsUzfiwK9geC8JxbWwPlhy/DRJ+i5tUnAIwwV?=
- =?iso-8859-1?Q?4CIYR5ak3VHFpXVdmLWVrPRuzxQmGru5dzgsrmk2ZE8QVts0l6aR3XUYIa?=
- =?iso-8859-1?Q?lt+SOeZ8xVph12SBlDsyDgy3wo+ntwtgpeBHVoIDIW5xSt4Fc8+RMA3wIy?=
- =?iso-8859-1?Q?PelE8jcaonv2VaaCmMILHtt7wsve2hKuWWlAl7LGc1IYoRiG63WPKIEEqC?=
- =?iso-8859-1?Q?xVI7wTmWarjRieLAId/HUu1s65kj2/s3iSlCFXYddXqKRP1FaJZtyirHxQ?=
- =?iso-8859-1?Q?aE6vycSbWYV0+BpurBPJrWSTi3UMfVzdkJFIcD9Bvvh3nMM1TxOfZP2tZN?=
- =?iso-8859-1?Q?RM7A8VLlf18KIb3YJLcpUqx51qK1g1WH9ac1s5n4qa7HlyrsoH3+XehC86?=
- =?iso-8859-1?Q?kX1v49aP/rqv2I87eqBjf+8xSXzf6XynXPEzvYFZngYJy7plSi4z64/rlS?=
- =?iso-8859-1?Q?dO04hHJX4Ahp43qqv7yAIqKJGry7S8YrzCZujJWRBuKmtKmmpRddtxBCfs?=
- =?iso-8859-1?Q?IywbUrdcUlaAz/eEs0cFn2+MM0kIr6tgkmyJRMo/icHVtW/1mHYQvQlVUn?=
- =?iso-8859-1?Q?87veQSSFPzR8I5j1s8uusWj5N55z3eWn4Zbah8sT04SLM9xJ7refrAGWE8?=
- =?iso-8859-1?Q?HOp+6nujRlcr3vigbnAQlYkQnXSP3gwlt9+FY232PIwkX39XeqdKDexKaU?=
- =?iso-8859-1?Q?088vNiVYj1veasBcJvwa0Fi5dn5S6a+0eA4NYcFFMyEQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?wOQQgwXsGMqtOrj+yGyZvBin/vtCXkgLmB3ZuriNS3RSnLu22pp4aZlGS0?=
- =?iso-8859-1?Q?Gj8cuVoA0F1KKQYLYWCz3zvRHjw34D6qzV78vM1Sih45HEi66d9mn0DdvR?=
- =?iso-8859-1?Q?MWNAPkP/l/N1i+eyNLnAnhaw6myINLE8rdPtvi+7EID0nxn+tqoYsqIBq0?=
- =?iso-8859-1?Q?UNQk94j8lmsy0FuXnUAwZj8M1Vop3om1RCLnFYK1SKJ5qWiH6UDLXBh0SX?=
- =?iso-8859-1?Q?Z5w0Aa9+W/uf79yD5etIW2gniWY6nYVqncN/IcpzF7DHcnw5jo9nRIWFbM?=
- =?iso-8859-1?Q?dypoK8MdYgh6GRvELysc/xgKTef50y+5od7qWNHpixy9NWhruscqd9BTIj?=
- =?iso-8859-1?Q?w1GuIAsmx+DTVVttjh6lLt08k/v8xeTdN6ezvFw01J5jcSKARoAjgsJQJt?=
- =?iso-8859-1?Q?BB5exsyuNSw3AmnLce2K5zaV1rmpxpjblTWy4eqHQS/iIXQDkkWI3IYh7f?=
- =?iso-8859-1?Q?jfGjQLXXnHUXaYPhLXyoP+M2+inSI+pwGuhyWhYy6jCO6RQg1aQqqPpYq4?=
- =?iso-8859-1?Q?DGSnGMlCocGOFKxoy6xV8bRGbiA6XzQHzgoNQ4BZ1f4bhGgXcK0IARIrT5?=
- =?iso-8859-1?Q?mMOleYwyMI+/qQIiJeSOq5O7obvkfgaMquXnWfP+b58th5xromc30QK/lX?=
- =?iso-8859-1?Q?apxB7s6Y/D7iFgn8+fWX2iL9AViCi9+roAUj5Hs3VUh/RGy0lh/oeJxpqX?=
- =?iso-8859-1?Q?P6YcUd7BC/DtwFoXXoE4RCtfZFWTzzmDagAj3PvsukBJEJq7KMjL/crAR3?=
- =?iso-8859-1?Q?PWERgJ6LhJ1YXzSJ7bK9gpzn7EalL4DZa4sgbwqsSyszEmWzce0mdL47oH?=
- =?iso-8859-1?Q?nfsHJkpomvoURsqoMLhGOZtH6ERiQdZE4WzXXQVzb/iWl1ZA1K8y5C8fYw?=
- =?iso-8859-1?Q?m4fgrUM9pVIRukdmCXu7SzdMufyg92k0KatOi5Jdef30mSUWOddeiSXZLQ?=
- =?iso-8859-1?Q?WYz2ywfd+vhn8W49LjHjvIeCsuotNWWFh2kaxnwdy3XFs9XlhqVELdDSva?=
- =?iso-8859-1?Q?U/ESXFX+8cylVi3pDZru3jwLNkshRP7WvHRavlS5oBAYg3tT6APdW+UcKS?=
- =?iso-8859-1?Q?QUvcfvl4rzM8gBhUQlx0XSLoMctaAU+CkrX1o/c6gqJCbqgiG49VDfVOHC?=
- =?iso-8859-1?Q?cOHFC37b3tw4EWetyK0tTI2K/nuOd9gatpd0zXCTIa4xGJVc5wGEN95pS/?=
- =?iso-8859-1?Q?yYi9uMPO0fiOaJC3YE21cOBOU/riJqlfTRz3mSbTlrLtDLJ9OhnjpqTxOA?=
- =?iso-8859-1?Q?5mdXvFlMiUFFxBp0RLxLJqWdgQrMCekYMDIqHIxjUa9C13x3KzuQ2LnAM0?=
- =?iso-8859-1?Q?GyTukKFqrxkh+yYBiJjZGPXD0K69X2wDkv1AXQNvcZ7sDmeE+q3tpanBql?=
- =?iso-8859-1?Q?CgabpoMMq9YPuN2mCHadWJzem4mJvzUzfM42YiVqIt0xGqh4+MNIWCLqQl?=
- =?iso-8859-1?Q?IqxqvxtuX1iKO91OQeCiKnAPwgBHafzhQ2OkWOnF+ztm5UINwFhAIw3LCQ?=
- =?iso-8859-1?Q?O4/c0OSQZxTbOoqQa4Yz08J5NyRv6z4b2qlnyb09HCkmTECh1Jat0Cj+OV?=
- =?iso-8859-1?Q?F3anFYsI2w1rPWKQf9hlZMbAn+FCtzbz6eaxB7ZrJ5IRxLI8Gunqk17S9W?=
- =?iso-8859-1?Q?U23gk1gfapZYi1dsRX7eldeXOCCvUdDqkg?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39c98fae-90a3-4352-ec5f-08ddaac293f2
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:38:04.0491
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 89V6CwBVbTSg4txwHsBpn+1rhsvbE8H0DFI0b8GsEh8S5Cs8frBUiCD/eGTy66toPjEbNCudB18UEShHiOjC2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8582
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] x86/traps: Move DR7_RESET_VALUE to
+ <uapi/asm/debugreg.h>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
+        peterz@infradead.org, brgerst@gmail.com, tony.luck@intel.com,
+        fenghuay@nvidia.com
+References: <20250613070118.3694407-1-xin@zytor.com>
+ <20250613070118.3694407-2-xin@zytor.com> <aEwzQ9vIcaZPtDsw@google.com>
+ <00358cf3-e59a-4a5f-8cfd-06a174da72b4@zytor.com>
+ <aEyEA6hXGeiN-0jp@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aEyEA6hXGeiN-0jp@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 01:35:04PM -0300, João Paulo Gonçalves wrote:
-> From: João Paulo Gonçalves <joao.goncalves@toradex.com>
->
-> The fan controller on this board cannot work in automatic mode, and
-> requires software control, the reason is that it has no temperature
-> sensor connected.
+On 6/13/2025 1:03 PM, Sean Christopherson wrote:
+> On Fri, Jun 13, 2025, Xin Li wrote:
+>> On 6/13/2025 7:18 AM, Sean Christopherson wrote:
+>>> On Fri, Jun 13, 2025, Xin Li (Intel) wrote:
+>>>> Move DR7_RESET_VALUE to <uapi/asm/debugreg.h> to prepare to write DR7
+>>>> with DR7_RESET_VALUE at boot time.
+>>>
+>>> Alternatively, what about dropping DR7_RESET_VALUE,  moving KVM's DR6 and DR7
+>>> #defines out of arch/x86/include/asm/kvm_host.h, and then using DR7_FIXED_1?
+>>
+>> We definitely should do it, I see quite a few architectural definitions
+>> are in KVM only headers (the native FRED patches needed to reuse the event
+>> types that were previously VMX-specific and moved them out of KVM
+>> headers).
+>>
+>> Because there is an UAPI header, we probably don't want to remove
+>> definitions from it?
+> 
+> What #defines are in which uapi header?
 
-why not use built-in temperature sensor
+arch/x86/include/uapi/asm/debugreg.h has:
 
-tmu: tmu@30260000 {
-                                compatible = "fsl,imx8mp-tmu";
-                                reg = <0x30260000 0x10000>;
-                                clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
-                                nvmem-cells = <&tmu_calib>;
-                                nvmem-cell-names = "calib";
-                                #thermal-sensor-cells = <1>;
-                        };
+#define DR_BUS_LOCK     (0x800)         /* bus_lock */
+#define DR_STEP         (0x4000)        /* single-step */
+#define DR_SWITCH       (0x8000)        /* task switch */
 
-Frank
+And arch/x86/include/asm/kvm_host.h also has:
 
->
-> Given that this board is a development kit and does not have any
-> specific fan, add a default single cooling level that would enable the
-> fan to spin with a 100% duty cycle, enabling a safe default.
->
-> Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts b/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
-> index 55b8c5c14fb4f3e7407243760ac01b0aca0dacf5..5f233304cea747d3f04a748265f96696668c9d6b 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
-> @@ -213,6 +213,7 @@ fan_controller: fan@18 {
->  		#pwm-cells = <2>;
->
->  		fan {
-> +			cooling-levels = <255>;
->  			pwms = <&fan_controller 40000 PWM_POLARITY_INVERTED>;
->  		};
->  	};
->
-> ---
-> base-commit: 1a2ad59da68dd294f994efbf68c5d671f6b42fad
-> change-id: 20250613-tdx-smarc-imx8mp-fan-cooling-level-b67265ae2c49
->
-> Best regards,
-> --
-> João Paulo Gonçalves <joao.goncalves@toradex.com>
->
+#define DR6_BUS_LOCK   (1 << 11)
+#define DR6_BD          (1 << 13)
+#define DR6_BS          (1 << 14)
+#define DR6_BT          (1 << 15)
+#define DR6_RTM         (1 << 16)
+
+Duplicated definitions for the same DR6 bits.
