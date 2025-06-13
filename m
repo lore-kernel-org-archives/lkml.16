@@ -1,133 +1,100 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588102E8881;
-	Fri, 13 Jun 2025 13:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87550230269;
+	Fri, 13 Jun 2025 13:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823006; cv=none; b=CJidw0DVaxzYBNLBm2qHoI0+HkFGIIRdJGcydTgy6SbugYfE9EkPyezT/Lvwt67VztV2d0uaFPkNphfTwov5fVvQ44TP+4/O05fioKz5L4fQKJOo/K5slcpUxFHS0GAEoJZsYe+0Lt3W5ogG7fqcq9oft/Up61xftGkyTSWP6vM=
+	t=1749823016; cv=none; b=Wr1j7k/RqLcbuGAkBVS3Z2NE2IwxUg5PyARKdaa862DVYSdvBql5SH2YhQ+7faCSfsattgVaxy8OtDxIBoSgie/XDwqafjZsHGqPiTvbJ2PTiogNWwM6MRM3y0g6QxLkcDFKXccIh8MA9eHrbOlDm5C0wPqMsdFNJcUgTBgJlAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823006; c=relaxed/simple;
-	bh=FbSG7oqEixz+Lt7JXxGPKfUSWkfOVll573DXpU2SYOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fqXcnRJVFGHTIbVsDTqluRXvqI3LusuH7kla5WaE8G54e/hbZFtwV38GEgZK7/BYKQTTu78f12HHOMuryWU15EI2frSN7dLSSTN+MiEuxmpzx+n+ofCUAHA0lCKKoiEsKRgvZn18i6nLdWn0Td3MedSZQBKWQn4/rxl2Ncs1jOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNMJybEg; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749823016; c=relaxed/simple;
+	bh=pqqmjyCXZZ0bEvnRtKy6568CVn9/zn32/fe0b6yqKC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2iS4Ggy3RY5+bt7cXuthQ2UWHHKHqEEP2OAuyy8cN4msONVNkFD5tYlIKqiahpC3ztE+veTLI0PGIIPwpxmqBkiYyqrs+HO8d8OsNsgQkejY74qJu0TODFCMay6o2BgqkRNrykkrFjkaX4v++6mlTWnJ18Q3UlpUU6GhIfhCJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlxRmIjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNMJybEg"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so25282005e9.1;
-        Fri, 13 Jun 2025 06:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749823003; x=1750427803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MDZVCBMqk2by3w5W29vq8r2Gs2ZZ6Ke4X3ZM1bUSmlM=;
-        b=MNMJybEggQ+dQ2MCTCTe4cf56Ut7kq04cB9HfnMdzDrgHEigbgc2O8I54RhHxSBTk0
-         JMXgJ0QwtC5RvB07hSaid2NDxZxANSUfLDCDacArs71fqGuO8FW3N3zdeFMkH1xN2Oj9
-         5KpOLGqeh3dzBaOEuYHkeK9iGf0juojCo9aO2dDl8wBqIV0SHo24LsepyeZowNq9YVMi
-         We3Vq5JkCbaAHihcYPxDO5PkuAIbKN4RwU3LMaTE76u43vWn1VFWdY+3ATCFIvCe6oGJ
-         viy0I5t6mqDpMUNRRS4UNRZofllqZD4TkFLlicR2Ej734CFaH6ZmO1WZfPTvwkRYsHwt
-         +b1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749823003; x=1750427803;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MDZVCBMqk2by3w5W29vq8r2Gs2ZZ6Ke4X3ZM1bUSmlM=;
-        b=biRcDm+sGRbkzHj4n6fo0fcHCCpsR3gPtcZNGYZrRcoT6CymGHCQiXI5yVIraRUsBA
-         dZ73iSRKjc0Z0Q3wMADTJ3LS75h9nhiZ4lIo4m4CM9ahrEHVEflj0WeXZLUVPJuhkHq7
-         JcsMdx5ArCwOdcZwr9KK7FbhYWGRcTC/b6Eecolou96x5WG9sPcdQsfl5HgiNZ1nQJCR
-         oo31V+oQj9ae47/FND71SmkGq5536k+1648Znravfb+s1cGeD9Qs/x6H+bpBNzEDOjkE
-         /+7jD/inpXZ5OroE0XKRQvMEBkIo6qygWuWF+k79BOfsiHi6/8pWkeIOuV0Fb3M80hvV
-         in6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWwlqo8o9HUdLS0aFbRVNDl1On1VHCqaL3dLUUysCwCePjGEYEcDq63Rc0x551OvcE9HNPaRrM7wS1L@vger.kernel.org, AJvYcCXE3ZM/H8VLnIRpNtsqpUfC5SUKlPb0RS/ciBjTHk4yEymcdAQ5927z4w2xiT5ypezPAz1hCQH0E4S/WL2b@vger.kernel.org
-X-Gm-Message-State: AOJu0YziRvZzkr0wlgSNQP3hZnJWvOjEblv3exRISruTUMCmN0STA0tR
-	28CSAxiKvwqZQjWsM7Nor9z0IG2/o2GfmVYfr7y8/7QOlf6gohTvj7H01zveIGZ3EBk=
-X-Gm-Gg: ASbGnctd91++uaIDrqdqQQy30i+k5bmz47QuLZHkeQCYX99PcLJP9YmHt0zSK7MpXWO
-	/RUnjypswHdXqIZ7kMhl3b1OdsIaJq8tXNuoWMv2WUF67PiJ0ZfMpYpWeqUOaS5pkI2FH8I4FGu
-	o4Vvl715A3sV+8vE1dqfZa5e3tEkhZrcJZKQfvvuTq2AmNAHwH/0R6LqpXyMSHV7oXgmrV+Lbb2
-	2+kB54FpXO04liwkwaRClV89jGp2ZpbQx+igu5VdWpjf+j36Q4YZcCSFVQqXDv7Sc4CGr0T05Tv
-	EBH7jNJUPIwCCpFNY6JtDEfGJW7t50Yws7d3D47mqc7iUYc2AlvbyAMsHWl2aRSeWAjak4RVUYB
-	IMZu4QAFU7A==
-X-Google-Smtp-Source: AGHT+IEfPeYDkrNCoR4s7sbKcac+o5tWKlMy9gin1B3YMssvw6p+gwF3iY1/9+Q+zXKCsDJ2bPfV9Q==
-X-Received: by 2002:a05:600c:1d8c:b0:450:cff7:62f9 with SMTP id 5b1f17b1804b1-45334ad4ea5mr30581495e9.22.1749823002525;
-        Fri, 13 Jun 2025 06:56:42 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:2c2d:5496:6768:592])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089a7sm2404489f8f.49.2025.06.13.06.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:56:41 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 3/3] arm64: dts: renesas: r9a09g077: Sort extal_clk node by name
-Date: Fri, 13 Jun 2025 14:56:14 +0100
-Message-ID: <20250613135614.154100-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613135614.154100-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250613135614.154100-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlxRmIjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EBAC4CEE3;
+	Fri, 13 Jun 2025 13:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749823014;
+	bh=pqqmjyCXZZ0bEvnRtKy6568CVn9/zn32/fe0b6yqKC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NlxRmIjYsxLlWlVIWgNP7RRNrSkRqTKfFh/RLjujROKF6mKVxyQsz+XuWmJvrz6ww
+	 /7D1xAe3+yACbp2doBMAMgBgcJfwyVFHeqn8W9glY8HfjGzDIjNBzACI0YRE0wjP9C
+	 INZM/a6uriaYJZolYujPy9DtsB8eFHnNcVQKkuYZXKfWgZA1YMarj02FZ5KpuciU0l
+	 dpRqIyS5oZIl7neYdJhyjByzJSmbR7oztkGtEtOmuTeFlonuKTBDzGhgeSwrUrxohv
+	 UmVNVEVRr0mcR1GF8XkRRsdUkmL50myUrUTBG5cWLed6pXiFMQ6Cqwjy/kPISwd3fz
+	 8IxM9cEEqc3mQ==
+Date: Fri, 13 Jun 2025 19:26:46 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: grwhyte@linux.microsoft.com, linux-pci@vger.kernel.org, 
+	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+Message-ID: <g6azpscddqx4kqnpoy3lrfsczfjnn2hev2q5qzuwdi62wmipr2@rhzi3av3n4ab>
+References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
+ <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
+ <aEwrfy63cvBLr5yc@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEwrfy63cvBLr5yc@wunner.de>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, Jun 13, 2025 at 03:45:35PM +0200, Lukas Wunner wrote:
+> On Fri, Jun 13, 2025 at 05:12:48PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
+> > > Add a new flr_delay member of the pci_dev struct to allow customization of
+> > > the delay after FLR for devices that do not support immediate readiness
+> > > or readiness time reporting. The main scenario this addresses is VF
+> > > removal and rescan during runtime repairs and driver updates, which,
+> > > if fixed to 100ms, introduces significant delays across multiple VFs.
+> > > These delays are unnecessary for devices that complete the FLR well
+> > > within this timeframe.
+> > > 
+> > 
+> > I don't think it is acceptable to *reduce* the standard delay just
+> > because your device completes it more quickly. Proper way to reduce
+> > the timing would be to support FRS as you said, but we cannot have
+> > arbitrary delays for random devices.
+> 
+> To be fair, we already have that for certain devices:
+> 
+> The quirk delay_250ms_after_flr() is referenced by three different
+> Vendor ID / Device ID combos and *lengthens* the delay after FLR.
+> 
 
-Reorder the `extal_clk` node in the RZ/T2H SoC DTSI to maintain
-consistent sorting by node name.
+This quirk is fine as it works around an issue in the device. But this patch is
+not fixing/working around an issue in the device, but rather optimizing the
+delay for performance, which is not what quirks are used for AFAIK.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a09g077.dtsi | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> It's probably difficult to justify rejecting custom delays for
+> certain MANA devices, even though we allowed them for three other
+> devices.
+> 
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-index 7a79db19aac6..1508f581cb66 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-@@ -13,13 +13,6 @@ / {
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
--	extal_clk: extal {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		/* This value must be overridden by the board */
--		clock-frequency = <0>;
--	};
--
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -64,6 +57,13 @@ cpu3: cpu@300 {
- 		};
- 	};
- 
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0", "arm,psci-0.2";
- 		method = "smc";
+If the MANA devices require extended delay, then a quirk indeed makes sense.
+But it is the other way around.
+
+> The proposed patch introduces a generic solution which avoids
+> further cluttering up pci_dev_reset_methods[] with extra entries,
+> so I think it's an approach worth considering.
+> 
+> There are a bunch of nits in the proposed patches, such as "pci"
+> not being capitalized, but the general approach seems fine to me.
+> 
+
+I honestly don't know if there is any other way to handle this. So I think it is
+upto Bjorn to take a call.
+
+- Mani
+
 -- 
-2.49.0
-
+மணிவண்ணன் சதாசிவம்
