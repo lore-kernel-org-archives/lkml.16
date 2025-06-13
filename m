@@ -1,175 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1841993B9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B91A2E11A4;
+	Fri, 13 Jun 2025 19:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749844714; cv=none; b=ezM9xxyGITCl0YV4pE3vg0JNxUa0y/5GHF2Sk1arTQu6x5rSHgJL8IWyT2QO3biOY3zZAuL03fUMF+QvNX4rmBFn429843FYmlPwXZb9M55uD6/oYyCSwz8Il/HIcH333y+inbFIJXMM6G9eHkq/zCE0Z3DlVjLVnpsxV8tzBTo=
+	t=1749844723; cv=none; b=jIgSpI89SCFgoozamLaQTlaBYklTKljSMSdHU1HsLzR84e2PMbw7teb7Cnc+/JbLSe6QCq0UTWlbzcMIdTXQIemAiIy7o0hnwdyc8G9HUAjktwOrnUO9QUxuT+lEQQJyAD7KT6LLr9Cqm8nJOiBJB8413G2ISVLeUHBXt9nBcCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749844714; c=relaxed/simple;
-	bh=IeYwvKyDtkdNwkXBmUEPUfygtldoD6XTQDr2/SAnxOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=l+FMgfqsf42wFtz8/lYWty9H+Z+IeDNgp8w1a6oz+G4PtJgj/IMVIdntEF8nf78srKQ76ttdX3VIl6KlK8YhgJoQ/WybwMP8y+5MER10HbUIQm6b3YXcl/Qwl2ujAT5BPJCcwTmBnRWrlTFSZH/qcWIlAjWHma8YqDBF/CT2SYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H4ww2Vei; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749844723; c=relaxed/simple;
+	bh=ymXTtsfX9C9aaHeOfLlUZe3fofSZISf2I3CC4sJN8cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXsO0+wtJ2RNwLVjQKOHmn64c5HfYg8CsY3eDoGTHuynExbVlshbONk3ufSd1S4EjxrUckRLwgQevHuyXW6hA2eFI3Up7ybL19CrLVB6E4/yVgQZFQj45HaH/cGveLj8B08VIj65afLwDmFbqNqf6UYOmlEG2N4Anpziglp3omY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uyRtt/CT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x7gHM2VE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4ww2Vei"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749844710;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uyRtt/CT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x7gHM2VE"
+Date: Fri, 13 Jun 2025 21:58:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749844719;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3q6Z4753+JxM0nf5lTzUU2EKJgTUXryaQ/k3iYZUiHs=;
-	b=H4ww2Vei2xqQ17/atVgN1ZqVw3ZNLLQ/V3MNT1nAuXuO3B0s1Was3TfFOy07wczcPmv6nq
-	KwvUAFd3YGDbDkij3eIiuOmMrJQGVHQqc6UnRaWx43PiQH1KO7C7jHh7UbYARnqZPsMAt5
-	Zu53g78Pk8HC3SOmSU8/1hNFWAXDaqM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-vi28vK1pM_68bzEqqbgThQ-1; Fri,
- 13 Jun 2025 15:58:28 -0400
-X-MC-Unique: vi28vK1pM_68bzEqqbgThQ-1
-X-Mimecast-MFC-AGG-ID: vi28vK1pM_68bzEqqbgThQ_1749844707
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E0D95180034E;
-	Fri, 13 Jun 2025 19:58:26 +0000 (UTC)
-Received: from madcap2.tricolour.com (unknown [10.22.76.7])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CF3E18003FC;
-	Fri, 13 Jun 2025 19:58:24 +0000 (UTC)
-From: Richard Guy Briggs <rgb@redhat.com>
-To: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-modules@vger.kernel.org,
-	Linux Kernel Audit Mailing List <audit@vger.kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>,
-	Eric Paris <eparis@parisplace.org>,
-	Steve Grubb <sgrubb@redhat.com>,
-	Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH v3] audit,module: restore audit logging in load failure case
-Date: Fri, 13 Jun 2025 15:58:00 -0400
-Message-ID: <9b7b21e5f37f5718fe9176a36ebf670bbdfdd54a.1748462545.git.rgb@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ymXTtsfX9C9aaHeOfLlUZe3fofSZISf2I3CC4sJN8cs=;
+	b=uyRtt/CT1kCkvstsyyry8N4E/4bj2rOMOikcSuPPwTujBXT4p6MEdengs7hsRSf0vaAVIf
+	uJVl3wlJAXpmE72iaTEKoj5dpJJiFQaklD1D5eQF7SAg5Hr46OFxi6Y2krFVVPj8RY4i30
+	j9Sn8PdNOStgdu6UKl0tQui/zE3SNAv6uss+e0KGvWwneumNEw14mXbJTY05PLLxrJdiFN
+	yM9T/WG913BFh/rhQvImP3wchvEuOQOtzwMr6ESfgFwKVjo+2uTDCpF97XYIZzw7wS94K+
+	LzDjZG+8Vqhmsz1umCc3OYa5IovWz0x2OvSBz3NXHqFf7+LiM/QGhNk5nbnt/w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749844719;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ymXTtsfX9C9aaHeOfLlUZe3fofSZISf2I3CC4sJN8cs=;
+	b=x7gHM2VEYOQNqJm5QCfWmK7ELuFJA2kEMy9Lo6Pou3R/HGNyLMCwEiRIuN7PJKtZSXfgMe
+	awWT6yYqxEiQOTDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "marc.straemke" <marc.straemke@eltropuls.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel?
+ IGB
+Message-ID: <20250613195838.0-gZ6bqS@linutronix.de>
+References: <20250613145434.T2x2ML8_@linutronix.de>
+ <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
 
-The move of the module sanity check to earlier skipped the audit logging
-call in the case of failure and to a place where the previously used
-context is unavailable.
+On 2025-06-13 17:26:15 [+0200], marc.straemke wrote:
+> Thanks Sebastian, I will do that tomorrow.To confirm: Just pure event
+> tracing without the function tracer? (After enabling the sched
+> events)Regards,Marc=C2=A0
 
-Add an audit logging call for the module loading failure case and get
-the module name when possible.
+The event tracing should narrow down which of the tasks cause the spike.
+So if you say it is the ip comment then you should see ip.
+Step two would be the function tracer to narrow it down further. You
+could start right away with the function tracer to see where the big gap
+is.
+rtla could speed up the whole process (via the timerlat auto analysis).
 
-Link: https://issues.redhat.com/browse/RHEL-52839
-Fixes: 02da2cbab452 ("module: move check_modinfo() early to early_mod_check()")
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
-Changelog:
-v2
-- use info->name for both audit_log_kern_module() calls and add const
-v3
-- use "?" rather than "(unavailable)" for consistency with other records
----
- include/linux/audit.h | 9 ++++-----
- kernel/audit.h        | 2 +-
- kernel/auditsc.c      | 2 +-
- kernel/module/main.c  | 6 ++++--
- 4 files changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 0050ef288ab3..a394614ccd0b 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -417,7 +417,7 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
- extern void __audit_log_capset(const struct cred *new, const struct cred *old);
- extern void __audit_mmap_fd(int fd, int flags);
- extern void __audit_openat2_how(struct open_how *how);
--extern void __audit_log_kern_module(char *name);
-+extern void __audit_log_kern_module(const char *name);
- extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
- extern void __audit_tk_injoffset(struct timespec64 offset);
- extern void __audit_ntp_log(const struct audit_ntp_data *ad);
-@@ -519,7 +519,7 @@ static inline void audit_openat2_how(struct open_how *how)
- 		__audit_openat2_how(how);
- }
- 
--static inline void audit_log_kern_module(char *name)
-+static inline void audit_log_kern_module(const char *name)
- {
- 	if (!audit_dummy_context())
- 		__audit_log_kern_module(name);
-@@ -677,9 +677,8 @@ static inline void audit_mmap_fd(int fd, int flags)
- static inline void audit_openat2_how(struct open_how *how)
- { }
- 
--static inline void audit_log_kern_module(char *name)
--{
--}
-+static inline void audit_log_kern_module(const char *name)
-+{ }
- 
- static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
- { }
-diff --git a/kernel/audit.h b/kernel/audit.h
-index 0211cb307d30..2a24d01c5fb0 100644
---- a/kernel/audit.h
-+++ b/kernel/audit.h
-@@ -200,7 +200,7 @@ struct audit_context {
- 			int			argc;
- 		} execve;
- 		struct {
--			char			*name;
-+			const char		*name;
- 		} module;
- 		struct {
- 			struct audit_ntp_data	ntp_data;
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 78fd876a5473..eb98cd6fe91f 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -2864,7 +2864,7 @@ void __audit_openat2_how(struct open_how *how)
- 	context->type = AUDIT_OPENAT2;
- }
- 
--void __audit_log_kern_module(char *name)
-+void __audit_log_kern_module(const char *name)
- {
- 	struct audit_context *context = audit_context();
- 
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index a2859dc3eea6..4860e534de05 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -3297,7 +3297,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 
- 	module_allocated = true;
- 
--	audit_log_kern_module(mod->name);
-+	audit_log_kern_module(info->name);
- 
- 	/* Reserve our place in the list. */
- 	err = add_unformed_module(mod);
-@@ -3458,8 +3458,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	 * failures once the proper module was allocated and
- 	 * before that.
- 	 */
--	if (!module_allocated)
-+	if (!module_allocated) {
-+		audit_log_kern_module(info->name ? info->name : "?");
- 		mod_stat_bump_becoming(info, flags);
-+	}
- 	free_copy(info, flags);
- 	return err;
- }
--- 
-2.43.5
-
+Sebastian
