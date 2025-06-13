@@ -1,124 +1,84 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4265B20F088
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69950211476;
+	Fri, 13 Jun 2025 16:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833732; cv=none; b=EWR54gmMjjV0nLmE/q4GkBxQPCmlU5r1OUVtU5GgogSPn30ePKUB8U1x/f2WptE6msRnUJ/VbJE5ca0OrCX+VSzRSH9I55vNBgVYHnYAImbcexy1i/1s30ZtwO7IILyjRTJLgn26j49q3wyJjFUypuaV29fiWZu3F7XEW+eNTt4=
+	t=1749833761; cv=none; b=E9tyYpRiv6EH6yXOtdsphLasWy2wt+lpUZyB0dcD8IH1r5RXm2z/nEoTSaTFNg6x39l0XfW55Romsakc9pxFi2Sm5Gzpl8XSM6TBwZ5x5Ok0xfPO9eAywTKEZXY8xkTXf1ntYO7ma5vorrm9R3FjweHFJ4VMhbF6tb83CiMBQg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833732; c=relaxed/simple;
-	bh=EyA7K/UJkv0KDItC2B+aTPhx+w2ReP8awivRPgdNn4Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JUZBiCh7ZOQ4RRajjBCGBeEO8I+TOQAKzUEtcYfZrP80Z0PrZopKyBQ0xBe9bh34TaRPnHSgZyEsUfeULHp2xW4ikILi+/uyeaKQNgozQ7VyIy9QdGcVS5oVsqv3Chqywkz/xNsPkbFfvLephyjBxHch6lVGxIwpCPDmAmVLOoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddce94383bso13343625ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:55:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749833730; x=1750438530;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xfFfu5lbJJMNTBMo7YWpaTR16Ke8kLxIXpcVDPuOtVo=;
-        b=nvcjBCHP5a+/zTzEgfmmTYbAt+My7hHdpAXT3eRgtFvtTM/YhD/p2Ijco/u+WO2ofc
-         4G6X4f6VKRhx84vcHx8UQ5MyknVBHSwZdhkjrcy6tFRIG3DGNv5B59KVf//btOXWVtQ8
-         xuESqsYKE/5SQs/O4zwgIqOprg6QKgZ+EhtkideRbYpFZRDYOooz6C0DsjYf1qRNQypH
-         BHlvwQ08dJMAXFWjLrr6aJEfVFfG+RPECKXMvpV51uir4XRUN8HGwRgMPLSCxT2UcWcT
-         XagSmZv0E6NBWNFlEMk7g0PcyXYiyz714PAUvSSvGrnGhpx/s5bqYQWkmyMRqFrDsEjQ
-         jCyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWFeK1AnDsGMpylhqzK2AIYjSq3d9YEpYrONmUI/W0/DJvLSyj/la1H03AP6osySY26wCQ10s/IQH5L94=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywee3jR/q4LR9W8s9v+FmNLJalB2zl3f0CTNVyeshDxdonJJ3AM
-	uXN9AHs3b6ibiFgwofKgTyKOaawS5kNlNGlcN+UWkZy8URafb/qCUJ/HvQYC9e8F7ofpmvQKTFa
-	W//9LAkTk0Dh6Ieu9X+Bx1D46TMOzgn1bTqwMOfQsGer8pKs1I3cDLuQg988=
-X-Google-Smtp-Source: AGHT+IEPMNwQDBTk1kc1fwMXUQgBYdRHPXV1DL9UpCJJcu5v76uYq/XUmitmH3dNOQryCTN/hiFNDS9pCbq6wrF1xuBsFWyZfmuL
+	s=arc-20240116; t=1749833761; c=relaxed/simple;
+	bh=FOdKOxiJZ2/SG1w79e7BZqr7n17OwPwEdtWDqq4NXw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hPx6Ind9NU6ohdEqiBwBj5MhsxaweDsFodXWa0tpawdE3bm+oDI3bQJ0R2XUznL0UAjNwY4J01gNotcoAh9mBP4Hm1VJQZ8uap9XNinb0O1rKqT6xBGzY2EhiC74zQheFXnTJhOfIxDTVWkHCZoeW6WkpDRczhLUHgPrTmTX+iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B7C21C0A;
+	Fri, 13 Jun 2025 09:55:38 -0700 (PDT)
+Received: from [10.57.28.131] (unknown [10.57.28.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1F523F66E;
+	Fri, 13 Jun 2025 09:55:53 -0700 (PDT)
+Message-ID: <7ffe2c8a-1433-4adf-9786-ee0a9d2f3867@arm.com>
+Date: Fri, 13 Jun 2025 17:55:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca4a:0:b0:3dd:b726:cc52 with SMTP id
- e9e14a558f8ab-3de07cdb48amr4834205ab.5.1749833730348; Fri, 13 Jun 2025
- 09:55:30 -0700 (PDT)
-Date: Fri, 13 Jun 2025 09:55:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684c5802.a00a0220.279073.0016.GAE@google.com>
-Subject: [syzbot] [cgroups?] WARNING in css_rstat_exit
-From: syzbot <syzbot+8d052e8b99e40bc625ed@syzkaller.appspotmail.com>
-To: cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
-	mkoutny@suse.com, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/11] iommu/apple-dart: Drop default ARCH_APPLE in
+ Kconfig
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Vinod Koul <vkoul@kernel.org>, =?UTF-8?Q?Martin_Povi=C5=A1er?=
+ <povik+lin@cutebit.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+ linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-sound@vger.kernel.org
+References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
+ <20250612-apple-kconfig-defconfig-v1-7-0e6f9cb512c1@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250612-apple-kconfig-defconfig-v1-7-0e6f9cb512c1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 2025-06-12 10:11 pm, Sven Peter wrote:
+> When the first driver for Apple Silicon was upstreamed we accidentally
+> included `default ARCH_APPLE` in its Kconfig which then spread to almost
+> every subsequent driver. As soon as ARCH_APPLE is set to y this will
+> pull in many drivers as built-ins which is not what we want.
+> Thus, drop `default ARCH_APPLE` from Kconfig.
 
-syzbot found the following issue on:
+Acked-by: Robin Murphy <robin.murphy@arm.com>
 
-HEAD commit:    27605c8c0f69 Merge tag 'net-6.16-rc2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=103b1e0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89df02a4e09cb64d
-dashboard link: https://syzkaller.appspot.com/bug?extid=8d052e8b99e40bc625ed
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> Signed-off-by: Sven Peter <sven@kernel.org>
+> ---
+>   drivers/iommu/Kconfig | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 0a33d995d15dd759eb47705c00b411f1157b408a..91d0c871acc418ac5fede4f177ce3af97aef5560 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -305,7 +305,6 @@ config APPLE_DART
+>   	depends on !GENERIC_ATOMIC64	# for IOMMU_IO_PGTABLE_DART
+>   	select IOMMU_API
+>   	select IOMMU_IO_PGTABLE_DART
+> -	default ARCH_APPLE
+>   	help
+>   	  Support for Apple DART (Device Address Resolution Table) IOMMUs
+>   	  found in Apple ARM SoCs like the M1.
+> 
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/79ab1e186123/disk-27605c8c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d37bf85b966d/vmlinux-27605c8c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eed2865abf8f/bzImage-27605c8c.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8d052e8b99e40bc625ed@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5887 at kernel/cgroup/rstat.c:497 css_rstat_exit+0x368/0x470 kernel/cgroup/rstat.c:497
-Modules linked in:
-CPU: 0 UID: 0 PID: 5887 Comm: kworker/0:5 Not tainted 6.16.0-rc1-syzkaller-00101-g27605c8c0f69 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: cgroup_destroy css_free_rwork_fn
-RIP: 0010:css_rstat_exit+0x368/0x470 kernel/cgroup/rstat.c:497
-Code: 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 0e 01 00 00 49 c7 85 70 05 00 00 00 00 00 00 e9 00 ff ff ff e8 c9 07 07 00 90 <0f> 0b 90 e9 3e ff ff ff e8 bb 07 07 00 90 0f 0b 90 e9 30 ff ff ff
-RSP: 0000:ffffc9000b6afbc0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888057c7a800 RCX: ffff888124754000
-RDX: ffff8880308b8000 RSI: ffffffff81b514e7 RDI: ffffffff8df26da0
-RBP: ffff888057c7a808 R08: 0000000000000005 R09: 0000000000000007
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888057c7a820
-R13: 0000000000000000 R14: 0000000000000003 R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff888124754000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b31b10ff8 CR3: 0000000079092000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- css_free_rwork_fn+0x80/0x12e0 kernel/cgroup/cgroup.c:5449
- process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3321 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
- kthread+0x3c5/0x780 kernel/kthread.c:464
- ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
