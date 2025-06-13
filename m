@@ -1,186 +1,179 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF2F272E45;
-	Fri, 13 Jun 2025 21:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749849011; cv=none; b=Ka6w8RLcfIAvRzP7/5JFOpFduE6qTIhcoCSe6F1dnHEpm3cCPPCd+VjJsh0aGNb5cNUvX+xaiICegbIMnQM5gpaURWZhOYMsXUP2pvVbvnhCv8t86f6AQZ+kRG1TZIRVuqzSTT4eJEeMgTGcsYAWjnnJFZllF2ct/e0ClcIOW0k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749849011; c=relaxed/simple;
-	bh=OmkcJNAV0hfO/+rD4d1mO4Zskm+DdbNdyEKY6x3S9ZA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NFIHgkYtlaCEl8vktKQGX2Tz0D31a/kKZXDcqYvbQ8QNEAbigNgzHOupWPwr5sMSWkluRBUgXC0dIjImoG2kRhrpiAex7EbSUIzAatKykAVDuYxM8wpH1ZWiNvH2rTRbWIsmuxmPgTwHYdYKOdFaYJM9vYDiZBzaHi6BHKsS4dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W/+KmpmN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B+7CxHUz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CE1272E68;
+	Fri, 13 Jun 2025 21:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749849041; cv=fail; b=Mmfoa6kFnUy56NT6adrtkWGl/9fBqX/yD9qBz+G3ISx17sRVJqSD87lS/kDgmod4Y50kWwgiVGUdmJ0C2ue9rkfYj+tLH3euowaxAJrw2j7gi2xCiebJJXpHwmZF2J1vVFSNy+grwupqdJoa5At03ikRqnypbH9/xsHT/C8Por4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749849041; c=relaxed/simple;
+	bh=/p0OuZ+dfIxYJtuqw3WJUoQ9CqNl/+Rc6kRUV97M7Ak=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l7BKvMT2wicd6tohg4hib+DCVgR0Lol1NiKnFwurf1wOdIczqPrWrNTncKASa0CEY7qBTbUt7MTPUICYcnIEANPtS3ExuEAGfOjhN/AYAUbV6Z2JDzgLT3itMFHL4wRC+SYpBNpzB+4/SnqKvWTtYOp+OHWyiGkv/H+owJNf21I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BwZkKE7s; arc=fail smtp.client-ip=40.107.223.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W/+KmpmN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B+7CxHUz"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749849007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MuBzFJ8bax/C07ekYms0nJGiLaxwPvHrXMpn69ItGCE=;
-	b=W/+KmpmNybGnuRoYv0AkuKtnsKYy49mDsnZqnAuVFR1iteOuBy0nacsuwGwXn52voU6/A3
-	rlpGxKzE17HSzJPSKGvwNQJEKPQ2IFAH0QXreT8YqKLVvYCy/n1ZCmO4AAVX15Jd+MYBUZ
-	f078Jahg2V4fzWuEaulUv7ngS3jkX9Tek/CfN3Gn+gU1TOIbsKZQYlPliMSLFsqyqornBW
-	lsIadsSDSfNHZTi+A/6p2ZwnwTvAdvZSMEF/OVyDAxeAFC4jk3gJJG1QVukp+FAy2z+3wo
-	2gYCjOHwj5rC7TfnnNYbSEVUNJgT0ejodJqurt21ADxWP4ylesQwYB2SVPEGEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749849007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MuBzFJ8bax/C07ekYms0nJGiLaxwPvHrXMpn69ItGCE=;
-	b=B+7CxHUzslKZqG2mQ5S8cP+m4qTSW7M8mzh4mOWSOA/tKqAiCbq9U6NTQHVBHdo+sCpJ1L
-	VBPCCiAD4jsOM0DA==
-To: Eugen Hristev <eugen.hristev@linaro.org>, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
- rostedt@goodmis.org, john.ogness@linutronix.de, senozhatsky@chromium.org,
- pmladek@suse.com, peterz@infradead.org, mojha@qti.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, vincent.guittot@linaro.org,
- konradybcio@kernel.org, dietmar.eggemann@arm.com, juri.lelli@redhat.com,
- andersson@kernel.org
-Subject: Re: [RFC][PATCH 09/14] genirq: add irq_kmemdump_register
-In-Reply-To: <f916cf7f-6d0d-4d31-8e4b-24fc7da13f4d@linaro.org>
-References: <20250422113156.575971-1-eugen.hristev@linaro.org>
- <20250422113156.575971-10-eugen.hristev@linaro.org> <87h61wn2qq.ffs@tglx>
- <1331aa82-fee9-4788-abd9-ef741d00909e@linaro.org>
- <f916cf7f-6d0d-4d31-8e4b-24fc7da13f4d@linaro.org>
-Date: Fri, 13 Jun 2025 23:10:06 +0200
-Message-ID: <87ikkzpcup.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BwZkKE7s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GqBVNvy96oPEXorOlF7xpfhrckw9t6Byhw6TrW3XoJPbrFBPK82txNKa93ojlbveL+tSkrouOHT89X7sGjczOOMiRFuGPnuegKuL6p6zFo5nF1k4CrPgy6vZTtpR8z6+cnuVD92q+Xi7vW8g2QUAgHYhrGEJ6WecjlbzuggMkVCvyrbNHdvjiTCrvWTjaknyo6fkD3eBqTXdWadUf1EYpo6eoMEGt49nfbtPVCJG6b2nKAuEuRRFQW1GiN5DZ8HpWV70al1vS7emjvDPycN2iiN9sPWJ/shXM3L4OB2OP9OMpZisAyowei8/r9MRqSKElXcLirTJ9ngbGvkcMpRkVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+URw5bHkI8YkIVb/QgBPiHBJcp95HvR/yygtjmxnDsY=;
+ b=AGDhHJfnMfpR3+ep0tmYu+A5btC4Q8iZNgZh9LBjtirJ10L9KqLT5s0QAKuCc6aq6hKtht+H77QKy1uMiI4zqt1/z7U4xMbx01NrOyIwwYiH8OQstFFFb5nSZBM/++ODtBwzNIGgI5TXZoylNON/qfbVACbTsVwlOScWhOPuZFFp35FipZP5DRK0yOQTHY53AOYuRNI3tm5sKuPewpNypCrdAOyMELV3Opbx84bb6sHhwKO4cf3Oq7aWaRKvk/8WManEMql2HXm57O8/Lvezmjx5IMPnRxSwBiyFA3lXRpgAKLTaFNsPWX5WT3450iiTjcH0R2wfYHT3MCFWWtPbvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+URw5bHkI8YkIVb/QgBPiHBJcp95HvR/yygtjmxnDsY=;
+ b=BwZkKE7sjg+auNlNcqh5z8Fj+ZjeWWEUVYy7Oe4yZFkZi0shOFnaK6bTdI8F7d0AKTu1qvpKK5cJOw50B0nIMAZeigwbqz3H5YI2QAPsDPCP2LniRp1x59l7F/jB3v+Q3VaAelfqX8YGQKv0zNGPd8c+3vBnIRFa5zpCQcdmS4bBPzA6W8ifY7PlOCT2iEaoaRQpYOgwVbppvN1LwFnRym8AZoiwmSFeuzeqUjwnUwzPrH+NkIRTchpm7Q/gRQv5/GY/Nkz7QBOc0BJfbTc9CghBc7kS/exTYqQngnFucADnf7vCik7YJf0LLeeSrfc9iEc1RWI24BnwOI9UaIbvUA==
+Received: from CH5PR02CA0020.namprd02.prod.outlook.com (2603:10b6:610:1ed::25)
+ by DM4PR12MB8559.namprd12.prod.outlook.com (2603:10b6:8:17d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Fri, 13 Jun
+ 2025 21:10:37 +0000
+Received: from CH1PEPF0000AD74.namprd04.prod.outlook.com
+ (2603:10b6:610:1ed:cafe::c7) by CH5PR02CA0020.outlook.office365.com
+ (2603:10b6:610:1ed::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Fri,
+ 13 Jun 2025 21:10:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH1PEPF0000AD74.mail.protection.outlook.com (10.167.244.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 21:10:36 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 13 Jun
+ 2025 14:10:22 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 13 Jun
+ 2025 14:10:21 -0700
+Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 13 Jun 2025 14:10:18 -0700
+Date: Fri, 13 Jun 2025 14:10:15 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Jason Gunthorpe <jgg@nvidia.com>, Robin Murphy <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <will@kernel.org>, <bhelgaas@google.com>,
+	<iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+	<pjaroszynski@nvidia.com>, <vsethi@nvidia.com>
+Subject: Re: [PATCH RFC v1 0/2] iommu&pci: Disable ATS during FLR resets
+Message-ID: <aEyTtwcGLHq+ObVn@nvidia.com>
+References: <20250610163045.GI543171@nvidia.com>
+ <20250613192709.GA971579@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250613192709.GA971579@bhelgaas>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD74:EE_|DM4PR12MB8559:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c17888c-95fa-4e69-6711-08ddaabebe67
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vdiPoIVsC+0Ne8MMd4hNM8iYBZETO8lI3Bnj//39pAD8HHEvogv9WGZXWoel?=
+ =?us-ascii?Q?mEObVWe0t3kfIfHnYzhf6lmPjIkqIaODr65UnvPf3M6LZ/GhZfRXAppVOPTi?=
+ =?us-ascii?Q?D7pr/LoVXk8fv/3spWwkAlb/VQOoakhsUujQhL3PrbJi0QMok6A0ZIUf+9UI?=
+ =?us-ascii?Q?JzHNwI3WE9coAOvyd/tvEQdJag2eVfB8J5x6RgWEBTQFSI/cvXJ4+ueZu64L?=
+ =?us-ascii?Q?IlIj71U/ygNMnY6nMnoy85PucMzTmsT/CsRw9NLrO/xWO4qJTFCkzQjA7Bkd?=
+ =?us-ascii?Q?HD2ztrel0ceLLr3xqCquNZg65AWkglFrFI3HkRufK2PcNuXEOhAJDUP43DTH?=
+ =?us-ascii?Q?6rON4C8laJr7X6bdjw/pYCOSrgorF+d4+VNCTXECENKwK1E8ZkFK7dOCg4PU?=
+ =?us-ascii?Q?c2c4ehFnXtaKRJrXEBMK/R6XPENiaccpYa4L43LQuQf8ejUpruwImanBUQMz?=
+ =?us-ascii?Q?+y7VF8Sy6pIcT7PW+zlkw+b5sLFLuVSlX+B8Wy4Wk0HANCNm0+8g8AsTmRcm?=
+ =?us-ascii?Q?9x5lWmnq3xFzx+7ANY9qcfdXYkyK/380Fz+WVvj7feWdFni/O94xjfTfZ9Zo?=
+ =?us-ascii?Q?T7haY9pic8r+lwwJG9drv/68kc1Ur7uz8IQU9gTs07WKR4Q1P3iuLYRUOuEA?=
+ =?us-ascii?Q?XK4YDIEsJ4h3CenHsuTjSJZj0gn5KKC7iDKmq8af7o6kTpIQFXheL9Jj/GI4?=
+ =?us-ascii?Q?rvMuPfa3VOmV/IVcLRV6vwq78qkC3eeafQCjSbcBV32Rn9JMhKzPSDUsVw7a?=
+ =?us-ascii?Q?725RQqgM8Ra4w/+gC/jFGNoOD/rftD/I190+FW1qV/+5383RwHCkVLguNMSi?=
+ =?us-ascii?Q?Z6Z8U/I9AJnV+lhAB3FaACUWi7uDQcvhPPTXnWDl3w9NiQ1Viwe8u2IvydwI?=
+ =?us-ascii?Q?shdQsLBPQjfckqMPLNE3kzgWN34me8aTJXIUhyfCVVxFoKtgg5RxVe0fYDwu?=
+ =?us-ascii?Q?GcIkTI4PWUxQHmfJq0vs3rCGTZl07JtiGDP0dQ2u5/O+PSfF2T5BJOxP4fvq?=
+ =?us-ascii?Q?Rd9H7B9/MNjFOEPBr9C2V0cA+M0YmolS41S0uUFMkWnzEnJSv+6WLBYnsyqZ?=
+ =?us-ascii?Q?IRZJ+2UcZFJkz07zfMXa4/NUhUGGnA34V9hi9xsJ08qYM1AIgx1CnEF4+U/l?=
+ =?us-ascii?Q?vmC6VEufOH7qhHTJ4UOdeAfnIyw2PDi6iELjVBeNTQK4tkO0UUAiMkpRtt+f?=
+ =?us-ascii?Q?191igHt0bzqot3Tooe/c4erieuc2+iYy24OXsNrJsNSkjAdtsDXb93FtwAWm?=
+ =?us-ascii?Q?jxd28uoiXAqiueKam87Aq/gxgPJVJBtkZV4PY4tevh1Y5lfkhVP0eM7/XUEL?=
+ =?us-ascii?Q?vqS8T5eGHU0RO0D4kdCwXkWV4t8zJJKYFej+vJ/3uyFzu3IQe3fichIIg2Zd?=
+ =?us-ascii?Q?2vVwZQfVsnSSZGz+mXHGUjsyacbbt9shq/nHCEU/JWMswEteP5DrLxZkIZyy?=
+ =?us-ascii?Q?ungMf4PODuPfhlJk56L8F8NRKJihWI93SnfH2XknhNce4Z5sdpxPaGlXiaBN?=
+ =?us-ascii?Q?o8vCSsXQ/c7ugNEAuu8gAiYlKPPFRF+/YsTK?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:10:36.9830
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c17888c-95fa-4e69-6711-08ddaabebe67
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD74.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8559
 
-On Fri, Jun 13 2025 at 17:33, Eugen Hristev wrote:
-> On 5/7/25 13:27, Eugen Hristev wrote:
->>> Let KMEMDUMP_VAR() store the size and the address of 'nr_irqs' in a
->>> kmemdump specific section and then kmemdump can just walk that section
->>> and dump stuff. No magic register functions and no extra storage
->>> management for static/global variables.
->>>
->>> No?
->> 
->> Thank you very much for your review ! I will try it out.
->
-> I have tried this way and it's much cleaner ! thanks for the
-> suggestion.
+On Fri, Jun 13, 2025 at 02:27:09PM -0500, Bjorn Helgaas wrote:
+> On Tue, Jun 10, 2025 at 01:30:45PM -0300, Jason Gunthorpe wrote:
+> > On Tue, Jun 10, 2025 at 04:37:58PM +0100, Robin Murphy wrote:
+> > > On 2025-06-09 7:45 pm, Nicolin Chen wrote:
+> > > > Hi all,
+> > > > 
+> > > > Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software should disable ATS
+> > > > before initiating a Function Level Reset, and then ensure no invalidation
+> > > > requests being issued to a device when its ATS capability is disabled.
+> > > 
+> > > Not really - what it says is that software should not expect to receive
+> > > invalidate completions from a function which is in the process of being
+> > > reset or powered off, and if software doesn't want to be confused by that
+> > > then it should take care to wait for completion or timeout of all
+> > > outstanding requests, and avoid issuing new requests, before initiating such
+> > > a reset or power transition.
+> > 
+> > The commit message can be more precise, but I agree with the
+> > conclusion that the right direction for Linux is to disable and block
+> > ATS, instead of trying to ignore completion time out events, or trying
+> > to block page table mutations. Ie do what the implementation note
+> > says..
+> > 
+> > Maybe:
+> > 
+> > PCIe permits a device to ignore ATS invalidation TLPs while it is
+> > processing FLR. This creates a problem visible to the OS where ATS
+> > invalidation commands will time out. For instance a SVA domain will
+> > have no coordination with a FLR event and can racily issue ATC
+> > invalidations into a resetting device.
+> 
+> The sec 10.3.1 implementation note mentions FLR specifically, but it
+> seems like *any* kind of reset would be vulnerable, e.g., SBR,
+> external PERST# assert, etc?
 
-Welcome.
+Yes. I forgot to put a question mark in the cover-letter, asking
+whether other reset routines would or not need the same trick.
 
-> The thing that I am trying to figure out now is how to do something
-> similar for a dynamically allocated memory, e.g.
-> void *p = kmalloc(...);
-> and then I can annotate `p` itself, it's address and size, but what I
-> would also want to so dump the whole memory region pointed out by p. and
-> that area address and size cannot be figured out at compile time hence I
-> can't instantiate a struct inside the dedicated section for it.
-> Any suggestion on how to make that better ? Or just keep the function
-> call to register the area into kmemdump ?
+So, let's apply this to all the pci_reset_fn_methods.reset_fns?
 
-Right. For dynamically allocated memory there is obviously no compile
-time magic possible.
-
-But I think you can simplify the registration for dynamically allocated
-memory significantly.
-
-struct kmemdump_entry {
-	void			*ptr;
-        size_t			size;
-        enum kmemdump_uids	uid;
-};
-
-You use that layout for the compile time table and the runtime
-registrations.
-
-I intentionally used an UID as that avoids string allocation and all of
-the related nonsense. Mapping UID to a string is a post processing
-problem and really does not need to be done in the kernel. The 8
-character strings are horribly limited and a simple 4 byte unique id is
-achieving the same and saving space.
-
-Just stick the IDs into include/linux/kmemdump_ids.h and expose the
-content for the post processing machinery.
-
-So you want KMEMDUMP_VAR() for the compile time created table to either
-automatically create that ID derived from the variable name or you add
-an extra argument with the ID.
-
-kmemdump_init()
-        // Use a simple fixed size array to manage this
-        // as it avoids all the memory allocation nonsense
-        // This stuff is neither performance critical nor does allocating
-        // a few hundred entries create a memory consumption problem
-        // It consumes probably way less memory than the whole IDR/XARRAY allocation
-        // string duplication logic consumes text and data space.
-	kmemdump_entries = kcalloc(NR_ENTRIES, sizeof(*kmemdump_entries), GFP_KERNEL);
-
-kmemdump_register(void *ptr, size_t size, enum kmemdump_uids uid)
-{
-        guard(entry_mutex);
-
-	entry = kmemdump_find_empty_slot();
-        if (!entry)
-        	return;
-
-        entry->ptr = ptr;
-        entry->size = size;
-        entry->uid = uid;
-
-        // Make this unconditional by providing a dummy backend
-        // implementation. If the backend changes re-register all
-        // entries with the new backend and be done with it.
-        backend->register(entry);
-}
-
-kmemdump_unregister(void *ptr)
-{
-        guard(entry_mutex);
-        entry = find_entry(ptr);
-        if (entry) {
-                backend->unregister(entry);
-        	memset(entry, 0, sizeof(*entry);
-        }
-}
-
-You get the idea.
-
-Coming back to the registration at the call site itself.
-
-       struct foo = kmalloc(....);
-
-       if (!foo)
-       		return;
-
-       kmemdump_register(foo, sizeof(*foo), KMEMDUMP_ID_FOO);
-
-That's a code duplication shitshow. You can wrap that into:
-
-       struct foo *foo = kmemdump_alloc(foo, KMEMDUMP_ID_FOO, kmalloc, ...);
-
-#define kmemdump_alloc(var, id, fn, ...)				\
-	({								\
-        	void *__p = fn(##__VA_ARGS__);				\
-									\
-                if (__p)						\
-                	kmemdump_register(__p, sizeof(*var), id);	\
-		__p;
-        })
-
-or something daft like that. And provide the matching magic for the free
-side.
-
-Thoughts?
-
-Thanks,
-
-        tglx
+Thanks
+Nicolin
