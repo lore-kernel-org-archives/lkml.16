@@ -1,78 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9F51C84AD;
-	Fri, 13 Jun 2025 01:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21FB1C84AD;
+	Fri, 13 Jun 2025 01:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749779894; cv=none; b=oaXjOROMNOsJD+P+lL8TVtxuahQuAloaSBHg01URZA8g3LekHt6dYyD8IxM8xHjeYwbmW4ag8rhTo4EoZ/Cdk9d5swSLr5KIN/e74XwlFYxj2yr2jAfqiPBsc95PHXX0FWQ48Bj5OY2+dhICuK0Agnt1nMODHa95QlEvVRDap4Q=
+	t=1749779999; cv=none; b=aOnrJ198i2ShhFDl7b38D26NJ2bYXkrpjepxhBfSk1iK3UGYby71vtHV6tcqNvShWGAw18bUtuWMK3apPH2Qtxeikc4drzY40ENJSTIYnkMI38mC6EE1qoetrBme0yZddjeE8Un2/WEaQVV6oGBGw6ttCxDq9+OhLpbVZ+PAxs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749779894; c=relaxed/simple;
-	bh=f8QMY8mB0N1LrAKGUrjE24/b/zE5GWubtfdOBpiexTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rmqEaFtTa2nrm1HIid8BF1Y41feF6KsJiah4+zDbzTVH/U9PsUOutzxS3t37/LS6BHszj8XF3kA5aprMLGmScs3pNIAqc0K2rmPcQkBxeUVbPCHlf/HRyxLR+av4IUJyL34kDSj6AIKDJXxqihshtBCE+zGd2NTndAJnZ948mu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0384CC089D;
-	Fri, 13 Jun 2025 01:58:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 2F5EB20025;
-	Fri, 13 Jun 2025 01:58:02 +0000 (UTC)
-Date: Thu, 12 Jun 2025 21:58:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, NeilBrown <neil@brown.name>, Jeff Layton
- <jlayton@kernel.org>
-Subject: Unused trace events in nfs and nfsd
-Message-ID: <20250612215801.2c4c0ff8@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749779999; c=relaxed/simple;
+	bh=PdQx8SDHF2OkhNpbxe9NUNMzYfyqf5xrF8iOKtmIe6w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=qJ6QXu7CkdDeKW+FN3hwVWx3rZxNSsiYcM3e3o6GGbxbHBxLwi71RFdmNb5VJGAUZQzYDL8AOQcDhInv5CtVw6XREjz7XGxjpq1D5SF05QqiIjhp/6f+9L5vVbFv7OFioP8f5EGjCT6Reaw8k6pwljvBYuE8Ko8UeFm3s0BQVIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvSZiZll; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvSZiZll"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3510CC4CEEA;
+	Fri, 13 Jun 2025 01:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749779999;
+	bh=PdQx8SDHF2OkhNpbxe9NUNMzYfyqf5xrF8iOKtmIe6w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jvSZiZll3nclK2PkENuIpFcnJ3jFjDsRG5/lkj6Wf5Y+8aqqRPDnZwsN0QOBqju3l
+	 TylGIwx2vptMxQtlUva/uZEe66ngjecMKHthn4WGGI3ztulC5qJfdcxhqc1Q0bYVqC
+	 TDzrZz6RecObZP14lcKo+dCK0Kv/RjgNQhBm9sxD8ciiyKhgsFXCXuTHjmo2qbG8Qz
+	 ApJyrbT6MmXeA0xBPq2EBX5ifuNYzyAndXsG1ZFh8kW2wDZcT9WZ8y1/Sf8WnS9L83
+	 rPGc+GlSDvAp7+6ONLir4xuuYc5V4rz4WRTK8YMYDhgU3jOeV/s4ESBT2j0LOdwzAn
+	 Jx3QO9Njoueqg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BB239EFFD1;
+	Fri, 13 Jun 2025 02:00:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: x719qad1fpmmsad68t94rj1wrs8aayhp
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2F5EB20025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Ztyoxj3+BWsPrNZnq+hEv3EPGmd3HT/Y=
-X-HE-Tag: 1749779882-397026
-X-HE-Meta: U2FsdGVkX18ba4CfpSNkMDnfUmhGv2rUl4sBX6UVhqnssSHcEzMyJ25jDfRIJTZvGjJNFhd+cUm9JMDGrOckC/ZF15SS2AHFg4oBViepJ/lGowxZWJF4X4Kv+dqH6lnuJZyguknHD44xurRgmgk7CE4bxzg3RmakM8ZRPIIDhQ0cbLFbg2iqNLjLzZ0zJoZOe5dsfybX6fXnJOmxPHppO6iQOUejOqZgQQupavrqaiC4LiyhIELkzVJfISRUNLp8mWTKrgC/p4Ewn89VfcymE9PjrS/kcZ1CrOTkr0jp3pl4iC3t/flBaZge0HM+2rQyxq7Y9TGmUX8/B4+tg66OBfc+dtMpHIfQcVBXLPvrkTLlYLDChiM4/oFuTeuhf2zUWlbKvMXLzvivYTlEkiIlGA==
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] net: Use dev_fwnode()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174978002900.187534.13912380514697676901.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 02:00:29 +0000
+References: <20250611104348.192092-15-jirislaby@kernel.org>
+In-Reply-To: <20250611104348.192092-15-jirislaby@kernel.org>
+To: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, kuba@kernel.org,
+ davem@davemloft.net, netdev@vger.kernel.org, woojung.huh@microchip.com,
+ UNGLinuxDriver@microchip.com, andrew@lunn.ch, olteanv@gmail.com,
+ edumazet@google.com, pabeni@redhat.com, Thangaraj.S@microchip.com,
+ Rengarajan.S@microchip.com, richardcochran@gmail.com,
+ linux-usb@vger.kernel.org
 
-I have code that will trigger a warning if a trace event is defined but
-not used[1]. It gives a list of unused events. Here's what I have in nfs
-and nfsd:
+Hello:
 
-warning: tracepoint 'nfs4_renew' is unused.
-warning: tracepoint 'nfs4_rename' is unused.
-warning: tracepoint 'nfsd_file_unhash_and_queue' is unused.
-warning: tracepoint 'nfsd_file_lru_add_disposed' is unused.
-warning: tracepoint 'nfsd_file_lru_del_disposed' is unused.
-warning: tracepoint 'nfsd_file_gc_recent' is unused.
-warning: tracepoint 'nfsd_ctl_maxconn' is unused.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-nfs4_renew looks to never have been used.
+On Wed, 11 Jun 2025 12:43:43 +0200 you wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
+> 
+> So use the dev_fwnode() helper.
+> 
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> 
+> [...]
 
-trace_nfs4_rename() was removed by 33912be816d9 ("nfs: remove
-synchronous rename code") but did not remove the event.
+Here is the summary with links:
+  - net: Use dev_fwnode()
+    https://git.kernel.org/netdev/net-next/c/6d4e01d29d87
 
-trace_nfsd_file_unhash_and_queue() was removed by ac3a2585f01 ("nfsd:
-rework refcounting in filecache")
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Events nfsd_file_lru_add_disposed and nfsd_file_lru_del_disposed were
-added by 4a0e73e635e3 ("NFSD: Leave open files out of the filecache
-LRU") but they were never used.
 
-Event nfsd_file_gc_recent was added by 64912122a4f8 ("nfsd: filecache:
-introduce NFSD_FILE_RECENT") but never used.
-
-trace_nfsd_ctl_maxconn() was removed by a4b853f183a1 ("sunrpc: remove
-all connection limit configuration") but did not remove the event.
-
--- Steve
-
-[1] https://lore.kernel.org/linux-trace-kernel/20250612235827.011358765@goodmis.org/
