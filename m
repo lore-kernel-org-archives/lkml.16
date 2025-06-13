@@ -1,255 +1,243 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2072.outbound.protection.outlook.com [40.107.220.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD772C15B0
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749811980; cv=none; b=LpQuWJne6nnJina9sDdB7JSfBbk9SwQ933E07sNO8jcmgnTur8xrkASFjMeEEuy5qqml9O8lH4p0nYk0D7mtpsh2uf4Nzbvn1ISg61dpGSdnWm4uuZ7BZSwUIaJZDKZSCE9mMtm8NwKwG/30cg+aroeHWdUtPq6X9YdT80XGD0I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749811980; c=relaxed/simple;
-	bh=dATxbca+ASPlW96U0TtaJ9IYiEu9l+L7yn537Xj305s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uPQsMaLMESK5Nek4V4G85DTbuNDHJeREQ4fQUk1Ef3IYhr7EanZ5Dv7SAlG/EQVM8Uzqc8X9PFDoEEQDVNetI8XAINoqFo1hx2+JVX+km+T1KDZP/RUy8c7XOQMC1rcqZcGEma3pq6Q5+RAJCTN9sZl1R/53IcV8oI2tDqMqBIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A0KZniRP; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BEA2D5C6F;
+	Fri, 13 Jun 2025 10:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749811985; cv=fail; b=A1cRxXys+f6RZU+4T8YXyEsC1HV/hje1yAotwbYUrveh5VZe4/65TydSglHBmp24lt+00jo9tlCdc8fiu9syIjUDReYufMEp5uhyGZyhw0l0p9eLAkUwzEPJwKc1WiBoNF3PBGfjB2ccr/7KayQ+HQsNW+TUpluXWR+sXutDJws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749811985; c=relaxed/simple;
+	bh=VYv3hWlKTFhX+xgu+O4EkvykcwcVJHRClxa80x8gMf4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VPW2pv0mtMGZ0z2PljMVjW6k4+9YhK3ZimJA+Thd0if2G+Jfci3T/ZWvChSdMeT4q58BIrcu2Rmzt025+ihqbmytDIBWKSnGEGWyqtk09KzrUU3kLn0YvXXY7TRJUrQaJ11D7wMWSQPXulC6AE1vN6RTzHyAkjixd9G7zXMkG1w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IGGOHP/d; arc=fail smtp.client-ip=40.107.220.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A0KZniRP"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a54836cb7fso1260505f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 03:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749811975; x=1750416775; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DgWvQag2QGzdzZH71/CBz+H5MGX3oMtaddibtY3jjg8=;
-        b=A0KZniRPtIf+/Dk4oZqLCVOk7dzRtrYgyq5fdGaFbZidLLdkFG28l1bair95aKNug+
-         k0QuN5Sa0MLF3PZSjNrmUlwivQI9HEvkRVeyEuguwUZGU41sFrrTl0ndu4dGkDmrTtRD
-         TDUS/BVuI8r7cpB1aKmXgyXNZx7VH7iVkE7tidVTnREetfWaGEvciB25r/LvhjgWhQu/
-         kKsu6/40ySOkjMu0WnbITbnRufgNgXaCRQhqNAI9gjiyCY10DYvdZYE6iOLpSMvt7uTt
-         6ko3L8oNgCoFSfDyn68uewSFFUnFg4Z935ogrJ8rwXvQXN+MZC3yqsRPN/Har2jghieK
-         Rwhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749811975; x=1750416775;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DgWvQag2QGzdzZH71/CBz+H5MGX3oMtaddibtY3jjg8=;
-        b=ZlRlfSAFUvFKvPNhKV6gbuidir4ZbKF/6iIZFZnngoczBkV95zYGQCNk5b0eft35dx
-         PiQX4/UBtjnQSWn/FwvWNbuYo/h01jiBrmuWOgCHz6+cavUwwH83lJUBFCgDBJCfyHAq
-         PkeXunH52+6UNewt5w5I0wdYtF4uo9ID+oZHTZSSNCcn4waI4/UjcbObspmAk7R1h7t8
-         VTWJksHfHDcJMj8nDieVCE3PKYd1Ac3VuyRC4MGttSRDUYFHyolpnWD5MVBGYWefHfB1
-         WUt2t6WnTLFmwOCvxQw1oeSm58vEuH+J6vyDf8so2ZbZm8WIVo1VqDczkBPwvIivDceF
-         JwdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVh6nZyPbX8qzvTUREyz7yA5WsVhXhjYMV8bK8xhV++g9NXxQnqQRJKtv6rNqVxmV2h9IJCmAdAdHFYOUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT+JfweW6vPI4ZntCThtlod2myo6O6ZO9uXMlbn7DTcCTs4zmT
-	1xvDWuTMZ/cT/uZzkjYuv5Z55f2IwjmyTw6PfJS0qxjo0d0ESVbk3vhnAXu96ME/IoQ=
-X-Gm-Gg: ASbGncuzD5tvXBqnYh1Qa4iikZfLTCCVpV1LkQY7r1BsexriYAjCnRqLcE54GLVKKLC
-	SgcrwlqkX1gMLvFpa3SPjNPkydZVSARN5Xr4RW14nkArTk9Ww7rnW+Zi+AbVtnIa+aW5pwP/4Lx
-	ke622DaKOGBTKxs8zGNfLYnCzPSFIEkGoHF9RkaRVyr5rYRc71e37qdbqH5Q+eptTupvlwrlrKS
-	+sx4TraPZF4pmxG3RtYl7pVfyFklF45xvNvlis/O/UvaLa9Upl815qUFu5xyrIeYL6UhA2fEIwB
-	I59CVT1YZpPK9Gug0+nCwPI3vK7oy1Hrr+tf2CE0w6OUSE3iIAexFx8IcK91Sc7B
-X-Google-Smtp-Source: AGHT+IHJOeLrZP5NvvZh4tWyIjAn3K7bzr2Vcb2r/+QXO+h/w0YFHvsR1/KLQStT6Bew+1GfqtSw2g==
-X-Received: by 2002:a05:6000:2582:b0:3a4:f722:f00b with SMTP id ffacd0b85a97d-3a5686e4287mr1798399f8f.11.1749811975195;
-        Fri, 13 Jun 2025 03:52:55 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900060c5sm1273973b3a.45.2025.06.13.03.52.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 03:52:54 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:52:35 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
-Subject: Re: [PATCH 4/7] drivers: serial: kgdboc: Check CON_SUSPENDED instead
- of CON_ENABLED
-Message-ID: <aEwC81RhvveGP73Y@pathway.suse.cz>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
- <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
- <f962e9bab3dc8bf5cae1c7e187a54fb96a543d51.camel@suse.com>
- <CAD=FV=XFeokpbMUFjAc0OkwJ97vR8aB+4GbnFxRKymvpEY3gnA@mail.gmail.com>
- <aErcrCKcsi9cpANY@pathway.suse.cz>
- <CAD=FV=WFWviPPR6VWmsN2-+vzRDoU6oTNH=EP6z1usG4EDR3+w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IGGOHP/d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z003DqVz+36koF9Od82RaRqp+IFWKKt2pUfvcPPSF02elKi0x5qMRU3a2S3L4OXcIns8dMG14oOKW1p6kfHyL38JvQ4SgpSrhDti+WyZQ9uGf+QSXfrYocZ6vVSocmvOLxVyt/AlTGO4624God6bKd2D3cd78uj3jWZxFcXk1nYZL0//lyxqmQ1pKyo+LBWIXJ8YnaDyG55cQmK+rG1OqA29yRNkW+BDpqgJvMM9Bl4OWmGuly4Lv6YxoIfwmZs2185nFU8Bzl+Ci5RMo/LQoVp1+RXY/zqqngU8wzCM9eCYfXuisWcrY+5iFo6f/6Tv8dGyGOgOMePiyjLJ3nk0Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u6txDdq9yS1gMwThrZni48+FFdQ8LviglGIPtyNz5Gc=;
+ b=CrhLCAGvoyDygdo/+9jKcvfphf9f5BDLfbR4vumHs2Hzv+yBxCHqriqDBGpd21MoClhVJiXEQhOlp+opY9rk24GN4gfeDsxT67zXQALKjA/vHRZjqc6Qrwz0xsJ8M50vE6Z0FC35y6sQoORxD7eUpIBY0LFthBb8NuomSFtwNdAbIHl5OgTWFWfnEZ6vhhukwiLj2LYl+URUfO1pmobZqh/2Zz6kwRVApk2lCGKUNjswxSVj8JTfMBnnXNB73E78TzxaDu71tZDs6BBuhY0nh+lPOCUyIeKVBWQ3TDeIxxEij6Z3upO1LDeYG8sKZS894PNCL7tW6JyvzitRDQ7k1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u6txDdq9yS1gMwThrZni48+FFdQ8LviglGIPtyNz5Gc=;
+ b=IGGOHP/d9/cVkfJ2icuT/auURnvxf41yOMBqEOxhgN3EAwJYfx+fHNImWt/19b7GeHwCtk70/RANgKG4z6Nj4TGtkEHwBdwQtrjqcoj0ORMJom0kDD0pLtphNeQFfAY3QcedH9wGfUClHrDZQ3US3T0IQ5VqA1vt7GOKoGzn7ao=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by PH7PR12MB6657.namprd12.prod.outlook.com (2603:10b6:510:1fe::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.23; Fri, 13 Jun
+ 2025 10:53:00 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30%7]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
+ 10:53:00 +0000
+Message-ID: <712b690d-2fcf-486e-87a1-17e2354d371f@amd.com>
+Date: Fri, 13 Jun 2025 12:52:46 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: fpga: Also describe clock for gpio
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
+ git@xilinx.com, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>,
+ Rob Herring <robh@kernel.org>, Tom Rix <trix@redhat.com>,
+ Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "open list:FPGA MANAGER FRAMEWORK" <linux-fpga@vger.kernel.org>
+References: <8407ef56b11632c1a7abfce8a4534ed8a8ed56cc.1749809570.git.michal.simek@amd.com>
+ <aEwA/pFuvbP+acSY@yilunxu-OptiPlex-7050>
+Content-Language: en-US
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ mpwx1d8=
+In-Reply-To: <aEwA/pFuvbP+acSY@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1P190CA0029.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:2b::42) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=WFWviPPR6VWmsN2-+vzRDoU6oTNH=EP6z1usG4EDR3+w@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|PH7PR12MB6657:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2a7a7e1f-2a79-4c76-bdde-08ddaa6876b0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?M0JPRndxTzZ2M1lUemEwVkRKMlA4NzJnazZTTnRVY25LRWZhYUN1ZDZtclk0?=
+ =?utf-8?B?bHd5TmI5cmlaNmVQWFp3MzRnNVFBbnNHYzBDcG9ua2VnWDl3Ynk3OHBjcHY1?=
+ =?utf-8?B?dVE4L1hnTVEzRXJQVXpmdGxtdDdndjNJMTd1Mjc5TGhrN2hpRWxtWWxXbkpq?=
+ =?utf-8?B?UG9mUXVFMVpRSld3b25ITGtvZWFvZ3k1V2VDU1hhR09UK0k1L0QyeC9BWGd6?=
+ =?utf-8?B?ME43ZVJDcFRGbkhEZ2IraEdNalFkRlBnTE5aYzZSTnp2c292VGgvZUFRcmVF?=
+ =?utf-8?B?blpWSzFiK1ZzTEhsQ2FaMWtjdFdNMWltVDVmd3FSdUdNaXVzMWtYNE1ZVFA1?=
+ =?utf-8?B?S1VwK2E3bDVkaTIrbVZrS1U4cEFPSHUrRDBDZnE3SG9WVjlOWTlhejdENDQ4?=
+ =?utf-8?B?UTB4SXQwOUR2Szg0Q00wTXgzaFAyTm5DYVRmUUdYaXowNnhDMjdHWTE5QW9i?=
+ =?utf-8?B?TFRpcmxkRnFwUThOckFLa1M2V2dQY3RRRnVMRktod0JxRkFORHdwUEJFYTZN?=
+ =?utf-8?B?NTN0WEJ4VzQvK2MwUXVYVE1YT2g3elFOWjBRRWk2UDBhekVWMUMxOVhzOWQ1?=
+ =?utf-8?B?RjZOejU3dWRPTjMvOXIwWGpVeC8vbHJoTS9Bek1wU2VYaUFrSHJ2eW1JNkZE?=
+ =?utf-8?B?VTQ4MVBPVzJmNDNXcEJCR3llQ0tHYWdZc3N5eENkUEl6OUpvS3JacmtYYldQ?=
+ =?utf-8?B?RjJXa21JTlB3a2Y2VVpCQzk0MHVuNlZONU5xNGhFVnk2VE83ZUl6TWNYb3Z6?=
+ =?utf-8?B?NVJkT09SaURKbmFaOC93S1hMcjhlUkxvOW5GWjJYcllrMWJaRlJJQjRBeEpY?=
+ =?utf-8?B?d2RGNXZLZU5wWXpaM2hNU0pFckpxQ2VocVYwYThMdzdKZjVUeVJvbHNUUGxB?=
+ =?utf-8?B?eG9GWXNBZnUyeHVXWVdNZTcySDN4WTVZRFBIWWlJY3lrbldxVWJQcWJmbTZn?=
+ =?utf-8?B?K1kwVXQwN1ZDeGQ4Y0dGcEtzTDVXdHhqY2VDTWFHMzlSY09ZMnpWbUZNdEtE?=
+ =?utf-8?B?NnlzNWN0V0Q2V29OYkdhTzZkTFVxU2pnTXlXcWhOVG9oMEVBdUhYV05ZendS?=
+ =?utf-8?B?T2xpUFhRcTVPTWhPSldsK0dmZFgrbGVvbFlBQVBuU2lQeFdXbmpsNDFGOVBh?=
+ =?utf-8?B?K3BCUFhKckl2TjZSdG9HTGpuYVJ5ZTlZTmd2Slp4d1Nvbm1FODMvMU9jWnZ0?=
+ =?utf-8?B?c3JMb3JqU3BHY3ZQRXh6Q2c5OG1jZXpMTzFWdUM5ZVE0YitVUzNzOWVPUlVT?=
+ =?utf-8?B?eDU5dkJMTTZPSUdKM2toVXpHVVQxTG45bnE3S2VEYU4zU3JUWkszRTFCYlE3?=
+ =?utf-8?B?Q0c0ZEcrVmVOQXM0M0VPQlAySHdxRVVGTExRa0Z4V2VvbU8xQnkxN2U0OVFU?=
+ =?utf-8?B?a2dqQVQrM2Rwa2ZFZk9TVHI3ZEl3UWJqZVpUeXZYMmpsZmc0cldWTGl2d0hB?=
+ =?utf-8?B?aFZ1WG5TWm03YWd1VFdpVHlhRS9yVktwb2Rhb2JUSlJNUVdDY05ZZTlKWS8r?=
+ =?utf-8?B?blBMaTdHZmtBM0RJTW9haWdPdEZyS3VCbzhkZ0FCZjB5L1YrTG1MQ3kvRlFa?=
+ =?utf-8?B?OEhpREIwOG5hNVluNFN0TnFRYlVVdmI1V2JBM1doUkhadXlRNWpRbW9QRWVG?=
+ =?utf-8?B?ZlVWY1NJR2NvOE92RmV2OUdSYTlPa1VXL0Zka1g2WnJ2Q3V4VVI5OTNRT0Ur?=
+ =?utf-8?B?UFJwSlFoakFreS9kOHNNZVdYczdwYzRaUmtQMzdBdGNZRTVkWlBSMzdjWktl?=
+ =?utf-8?B?WDlxeXRIcW0yT3dyNnBTM3J1Ti9ZZVdFV3NIcVVtZkJHSSs0cUp3VmxxRW92?=
+ =?utf-8?B?MjNNKzNlVUlUd25XNlhTc01IRGNub1ozbVljeHBsU2xGbHZvUW1pUnRJRFB3?=
+ =?utf-8?B?RTZPL0ZnV2pHVUxLTHFGM2JCN2xicGV5N1lmV2JHdmZGbzlxd24wa08rN1Fx?=
+ =?utf-8?Q?yRvVR80JHXM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NzNlbkgzaEV5Y3RRQW8xaU1HSWpoYlF2MzFXNlZhczZKWDBGMk5kZWtHRFpN?=
+ =?utf-8?B?Qm04WEloanVWdm1UbXhoRnNkT1NwK0Y5TTZoVjBQeHliZmZIWnE0VnpNVmZY?=
+ =?utf-8?B?ZEZyTW5aZ3pmZDFLcXJ0bTMzQXcvdDQ5TlByMkRNRm55eHRHbDZQY3kxK21M?=
+ =?utf-8?B?YytycDliajZ4SkxGSGxKc1Bwd2dDaWdCMEQxZzNRdmR1SlZ4NUpvN1ZEd2ZH?=
+ =?utf-8?B?MTRFZEVIMG5LcHpJdHlaRTZkR3c5U1h4bGVCVmJwQWxHbW1tWk5pa3JaOUtU?=
+ =?utf-8?B?aFVGU0dWNm9KZ0dLN3g4Ynorc1NYdkdORFpmWEU5WHJYWEtwbHRwdHcxUzVj?=
+ =?utf-8?B?U1Axbld0ejhnc0p6LzNKWDg3NjNlalJ6UXphYys3cUJRNXZ0Vi9KcExDaytU?=
+ =?utf-8?B?bFhxRmRRSzVyZ1pMdTk0RTZoTk80bVhPeXhZNFN4cllkYU5tc3JLVk1ydHkx?=
+ =?utf-8?B?RUJnd3prbEs5TkY5TmI3c3l1TzZ2Q0tUWUhGRHVLdE9HNStObFYyWnNCS2R4?=
+ =?utf-8?B?RW1ZMHluNVIxeHRFT1M1aVNTREF4eExxTm43YXVoRm4vcUVBME5nUGFuS3Jv?=
+ =?utf-8?B?Y0xUTGpHc2Ewc2Z1VFM2a05UclJTLzQvSVNrd293V3YreWdROUZ3R3V5RnBQ?=
+ =?utf-8?B?R2hWemZQanAvNDk5OXVBTlFqSnBNUk1zZlhTWjdVQng0cHY0TFlUSXdCdnRa?=
+ =?utf-8?B?SzlEUnRaK0s4di9jYndRcDJJSEo2dnliM3hLR1g3czRpRDYzZFBnenNhaFhl?=
+ =?utf-8?B?cVRxVU15N0VHdXpONm9RTmxMTHpTUlVsRUhRaUNsVmlBMXJnNDRkenZRKzlp?=
+ =?utf-8?B?Q3RBRlNiSWoxMUMyWGVjVDJ5VzFQU1hzQitnQk50eGVTVDhUZzA4b2k3Vkxk?=
+ =?utf-8?B?VW9hdUQwc3owVWFoczg0Q1ZvNEJlQWVmNFpscXpmSFNBZW5YQk9MckhtTVF6?=
+ =?utf-8?B?ZUJTcUxsTnFwbnArQXBXSDdYaVhtQkM4STBycVZyTzlFVFE5R2pZS285c2RK?=
+ =?utf-8?B?ODhKVnVDU1hjcjRWUUlkcHBOSVpTb0JOcms5ckNHc3ZWdENuT1RmM3E3emVu?=
+ =?utf-8?B?UmZTRUlVTXJtaEVKdzBsc29NRzZlb1B2T1czcXE2elNydG9PS1orV2p1Mk5s?=
+ =?utf-8?B?d0lwT2hmWjhiRkZ5MlZKRCtQV2JDeEFpb2ppbnlrYVBHYWJReEtZTmFuMlBG?=
+ =?utf-8?B?elVHMCtjQTJEMm5uV3lTS2NpZTZ5N25HeWpOcmpXNDlxNk96SWZiZzRsR01G?=
+ =?utf-8?B?Z05mSHhjZFpaaHcyNlZ4R2h0akxPRS9TS1loSTZWU045cU8yTjFnRTI2SW5m?=
+ =?utf-8?B?NDBmQStvTVE1aU56Vk1KNVlNNjNRMEZvd2FzbEhKUzk1eWgzc25idnpIaVZt?=
+ =?utf-8?B?NXdNOXQrN0U4akJZTFNGR0lhcWwydFhKVkZUMk5JWkFCSDBZRW1SMWRHMkZi?=
+ =?utf-8?B?dGFlWVUyY2JLMmhrSGlqRlhjbU9YNG10dGxucUI1REh3MTJzbzdSbnVhVi96?=
+ =?utf-8?B?UUZ4WWlHN3RNT3htUTVycER4aHVoTGZ6amcyaDFrcElRVjNwdllwM0ZIa2Jh?=
+ =?utf-8?B?blFhMmJxMHlDdXY0WTlXNmhsK0JtZTRZb3NybVBmM2xySkp1TmV1Z0tCV3Rl?=
+ =?utf-8?B?K2xCQTZBZkltaDlDSXd2Rmtxam8vRWVLQW8wUk5xYTBrYjZhMTkxbHdod09o?=
+ =?utf-8?B?Wk5uSzY3VFpmWm94MWxqdXMrbHN0Qko0UWJtVUtpN3VlVTk4MWNlalRKSUVL?=
+ =?utf-8?B?WlJkWFZXOVB1ZjNoVnl3U21SbXRUcmpCdVFra29oZ2plS2g1dFNnV0RoNDVG?=
+ =?utf-8?B?L1lQZU1zMkdsVGZwMTdkWExQRHdHbXhqMUtnSVRlUGNoVjkwMU9VNEh0MU05?=
+ =?utf-8?B?SEFReWJrZUdMa0hhd3dUcTdzcmNHT2hJVjd3TlZxL1kwSmxMV3EwU1lQbjdl?=
+ =?utf-8?B?dDBiTDJiL0hPSENMMHB6ZDZRSjBNNC9aUENBVXh5WHQwV1g5T1NsWVFwdUhi?=
+ =?utf-8?B?SkIvdUVjK2Nia0lrSVZzS1o5VElEMFhoTDhZcU4zbHBkMzNWOFZiNlgvcW81?=
+ =?utf-8?B?QitvbEU5NlhWMkFuQTVLYlZ3Z2F6Z2Y5K0lpMzZSMWxMUW95eUdMT1RHdFov?=
+ =?utf-8?Q?bPi471sGGaP9Uj8w6GlL0weCY?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a7a7e1f-2a79-4c76-bdde-08ddaa6876b0
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 10:53:00.3910
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 57t+zanuPPrS3hdMFRIBRSrMIP8F2KJZlOIVs2bZR6II4muq4INqbhISJtcLrbKY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6657
 
-On Thu 2025-06-12 16:16:09, Doug Anderson wrote:
-> Hi,
+
+
+On 6/13/25 12:44, Xu Yilun wrote:
+> On Fri, Jun 13, 2025 at 12:12:52PM +0200, Michal Simek wrote:
+>> Axi gpio is going to have clocks as required property that's why it should
+>> be also described in bindings which are using axi gpio node.
+>>
+>> Signed-off-by: Michal Simek <michal.simek@amd.com>
+>> ---
+>>
+>> Changes in v2:
+>> - New patch to fix reported as issue by the second patch
+>> - https://lore.kernel.org/r/174954437576.4177094.15371626866789542129.robh@kernel.org
+>>
+>>   Documentation/devicetree/bindings/fpga/fpga-region.yaml | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.yaml b/Documentation/devicetree/bindings/fpga/fpga-region.yaml
+>> index 77554885a6c4..7d2d3b7aa4b7 100644
+>> --- a/Documentation/devicetree/bindings/fpga/fpga-region.yaml
+>> +++ b/Documentation/devicetree/bindings/fpga/fpga-region.yaml
+>> @@ -316,6 +316,7 @@ examples:
+>>           reg = <0x40000000 0x10000>;
+>>           gpio-controller;
+>>           #gpio-cells = <2>;
+>> +        clocks = <&clk>;
 > 
-> On Thu, Jun 12, 2025 at 6:57 AM Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > > > > > @@ -577,7 +577,8 @@ static int __init kgdboc_earlycon_init(char
-> > > > > > *opt)
-> > > > > >         console_list_lock();
-> > > > > >         for_each_console(con) {
-> > > > > >                 if (con->write && con->read &&
-> > > > > > -                   (con->flags & (CON_BOOT | CON_ENABLED)) &&
-> > > > > > +                   (con->flags & CON_BOOT) &&
-> > > > > > +                   ((con->flags & CON_SUSPENDED) == 0) &&
-> > > > >
-> > > > > I haven't tried running the code, so I could easily be mistaken,
-> > > > > but...
-> > > > >
-> > > > > ...the above doesn't seem like the correct conversion. The old
-> > > > > expression was:
-> > > > >
-> > > > > (con->flags & (CON_BOOT | CON_ENABLED))
-> > > > >
-> > It is easy to get confused by the register_console() code. And
-> > it has been even worse some years ago.
-> >
-> > Anyway, the current code sets CON_ENABLED for all registered
-> > consoles, including CON_BOOT consoles. The flag is cleared only
-> > by console_suspend()[*] or unregister_console().
-> >
-> > IMHO, kgdboc_earlycon_init() does not need to care about
-> > console_suspend() because the kernel could not be suspended
-> > during boot. Does this makes sense?
-> 
-> Yeah, makes sense to me.
-> 
-> > Resume:
-> >
-> > I would remove the check of CON_ENABLED or CON_SUSPENDED
-> > from kgdboc_earlycon_init() completely.
-> >
-> > IMHO, we should keep the check of CON_BOOT because we do not
-> > want to register "normal" console drivers as kgdboc_earlycon_io_ops.
-> > It is later removed by kgdboc_earlycon_deinit(). I guess
-> > that the code is not ready to handle a takeover from normal
-> > to normal (even the same) console driver.
-> 
-> I'm not sure I understand your last sentence there. In general the
-> code handling all of the possible handoff (or lack of handoff) cases
-> between kgdboc_earlycon and regular kgdboc is pretty wacky. At one
-> point I thought through it all and tried to test as many scenarios as
-> I could and I seem to remember trying to model some of the behavior on
-> how earlycon worked. If something looks broken here then let me know.
+> This file is mainly for fpga-region bindings. So I don't think we have
+> to strictly align with the example IP block binding every time it has
+> an update.
 
-Later update: The code is safe. The scenario below does not exist,
-	      see the "WAIT:" section below.
+But Rob's script are reporting issue if they are not. Please take a look at link 
+above.
 
-
-I am not familiar with the kgdb init code. I thought about the
-following scenario:
-
-1. kgdboc_earlycon_init() registers some struct console via
-
-	kgdboc_earlycon_io_ops.cons = con;
-	pr_info("Going to register kgdb with earlycon '%s'\n", con->name);
-	if (kgdb_register_io_module(&kgdboc_earlycon_io_ops) != 0) {
-
-   and sets
-
-		earlycon_orig_exit = con->exit;
-		con->exit = kgdboc_earlycon_deferred_exit;
-
-
-2. Later, configure_kgdboc() would find some "preferred" console
-   and register it via
-
-	for_each_console_srcu(cons) {
-		int idx;
-		if (cons->device && cons->device(cons, &idx) == p &&
-		    idx == tty_line) {
-			kgdboc_io_ops.cons = cons;
-[...]
-	err = kgdb_register_io_module(&kgdboc_io_ops);
-
-   , where kgdb_register_io_module would call deinit for the
-   previously registered kgdboc_earlycon_io_ops:
-
-	if (old_dbg_io_ops) {
-		old_dbg_io_ops->deinit();
-		return 0;
-	}
-
-   , where kgdboc_earlycon_deinit() might call the .exit() callback
-
-		kgdboc_earlycon_io_ops.cons->exit(kgdboc_earlycon_io_ops.cons);
-
-
-BANG: If both "kgdboc_earlycon_io_ops" and "kgdboc_io_ops" pointed to
-      the same struct console then this might call .exit() callback
-      for a console which is still being used.
-
-      But I am wrong, see below.
-
-WAIT:
-
-I have got all the pieces together when writing this mail).
-I see that the code is safe, namely:
-
-static void kgdboc_earlycon_deinit(void)
-{
-	if (!kgdboc_earlycon_io_ops.cons)
-		return;
-
-	if (kgdboc_earlycon_io_ops.cons->exit == kgdboc_earlycon_deferred_exit)
-		/*
-		 * kgdboc_earlycon is exiting but original boot console exit
-		 * was never called (AKA kgdboc_earlycon_deferred_exit()
-		 * didn't ever run).  Undo our trap.
-		 */
-		kgdboc_earlycon_io_ops.cons->exit = earlycon_orig_exit;
-	else if (kgdboc_earlycon_io_ops.cons->exit)
-		/*
-		 * We skipped calling the exit() routine so we could try to
-		 * keep using the boot console even after it went away.  We're
-		 * finally done so call the function now.
-		 */
-		kgdboc_earlycon_io_ops.cons->exit(kgdboc_earlycon_io_ops.cons);
-
-	kgdboc_earlycon_io_ops.cons = NULL;
-}
-
-It calls kgdboc_earlycon_io_ops.cons->exit() only when
-unregister_console() tried to call the original con->exit()
-which was reassigned to kgdboc_earlycon_deferred_exit()...
-
-Updated resume:
-
-It looks to me that even normal console can be used by
-kgdboc_earlycon_io_ops and we could remove even the check
-of the CON_BOOT flag.
-
-My expectation:
-
-If a "struct console" is registered then the driver is used
-by printk() and it should be safe even for kgdboc_earlycon,
-as long as it has both "con->write" and "con->read" callbacks.
-
-So the check in kgdboc_earlycon_init() might be:
-
-	for_each_console(con) {
-		if (con->write && con->read &&
-		    (!opt || !opt[0] || strcmp(con->name, opt) == 0))
-			break;
-	}
-
-Heh, I hope that you were able to follow my thoughts and I did not
-create even bigger confusion.
-
-Best Regards,
-Petr
+M
