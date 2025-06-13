@@ -1,54 +1,54 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256E123C8B3
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5724924169B
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749842056; cv=none; b=ZWf035phnvtCe3XStyoWPxxG4WV17uzpTzVZvye6hxFvCFu00YK5lFyIS27hDR9EwrlZfKB3Re0yAYfhApqzgXPCGsqAKv0J5DkvJR7n809yhEuLnl77WYT4crhb51hFmoFQqQ7iyuW3/+mJ9sF/pehP97iE0iuK/0YDGxPXgCc=
+	t=1749842057; cv=none; b=dCPVkSx/Ygba7PaIRei7cY6NEatylJn2tqgMA8qUL3RaW4eO+Yi3T1Eh70keU67DvrqsoPVbMQUG0D176/bpnRhrce6B1eoRay35FVmY5j9hxaBLDiw5cH6VZKM5Bm4uUNf/aE5wM98JQZ1cZg+UHEArhUe0moREUchMgM6Z3c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749842056; c=relaxed/simple;
-	bh=QuoLs+Ux/84Fr9p1idJvfX2ZqaXEeJLcVJ7fjk8E1lI=;
+	s=arc-20240116; t=1749842057; c=relaxed/simple;
+	bh=y/hrB1WH2W68tURtle+cVWCtRB2T0n9nfcp8qRvBYpI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Nj4J+3/Rsku0LhC+LhQOwKMYuy7SH6ddu59cJYlUJBPDBxS2aus4N5HEXmVwBXYOjnJhVSVeT+p1vvrykP+rdlPcfInTvEFQ+vxNZynJ7dR3a4kMg0425vNdqo42TwQd9m2B9tCPCTxGXa7uIAJTvfgBbNDsKF+Zyu4MD90Hy7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wUCMjW9H; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=mStWgiORP1OYxibxdIEFjZ/Bg+HMSzQ5GC0OPKzn4nV2/orW4DlsXgLPw+/PcCiMJrK4FmX7wTKPWjFrCpw9ifXzOFbyIkti0KHQC8JsEUe74LgFTammIdjKIHy41opv/eG9e5QRKs9aYkzGWnS2zK+XCsYncmLQyxdfjDd+4JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xHlTAdJW; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sagis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wUCMjW9H"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2ede156ec4so2827189a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:14:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xHlTAdJW"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c37558eccso1820360a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749842054; x=1750446854; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749842056; x=1750446856; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8nR6zImbEfU50Eu9z3twsYvD96Y1yoYJi3jd8xgLx4=;
-        b=wUCMjW9HOeW8D41iioeTYFGt1Noeodi/Am/DeAmASpS7iuz39bQOynq6ddWI3W6IhY
-         XWlLQH/nFWL5Bs1xo561bKjeA0A7atEJ9TFzkWo3/opnnSLX6jRh7gp0Pkyo4sE5+cOM
-         eVMz4L2y6apHpitZ3/YPmi1vL+hj4u33Jiae1wCPP1OWVZGByywP1gbAlHRNYD8iHwV9
-         WCcTFcmQtVfYQ4neaiOpu59IaQcLlbau7Cwu7Hgl9S5w1mC8M4cGSIVUSBwDjb1MKfMl
-         l17+LlPxH38TlQwn9mLdVec2K+7ChFX+4k7mhDDFZWpWdyVJKZFlV5jULWDO8dm24dXa
-         Xxxg==
+        bh=vOmgMRXV+mc8xC1osg2zhcuISDjyHCoSZSrFaYvlLLs=;
+        b=xHlTAdJWVPSS5wdYQH8WRX9r6pHX74riahODGrI7rNJB93QNzLn0UJ+4grsHejCos5
+         eEtTjCqxrPL5SZAB35Y3qO6gS88IhOudQPaqLg2KJ4HsWoAK0Z2/B7h/hTp2k5Y2jhpE
+         x5BCS6yqC5wD2Mp0tJGZO7brsS19eTrzbKJ/qZUdz/0JpeAF6n4H9CvTxtxt2YFWlbPl
+         O6ofIQih0Qs8bdnA8y2TxOLNZ+kaxpP5TGSd+h6bu4tr3/kJ1Ph3sGtJuDLwjV+LqYGW
+         3nFq7OZ22rovxFWJbmMfwBSxiFQI2605vV/5XTn9VRJ5xzGs7E4riLvFSWuc254rgkVh
+         YPKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749842054; x=1750446854;
+        d=1e100.net; s=20230601; t=1749842056; x=1750446856;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8nR6zImbEfU50Eu9z3twsYvD96Y1yoYJi3jd8xgLx4=;
-        b=HXzw09fz3vT8J0MYs4OVi6hgQVuYNF9ZaCsFeunK4wbbr+CQWagAC25usNo0P+zNN0
-         dpd7vadkGxF+Vw5fx/hzl6WqS1YG2kID7zCajNVanlezG6/WS3/VuIb7JgJjy20aIB+p
-         h8npQh6dKn+cWjoK6RjuP6Jh8nmBYkiWUpiBdmHjBe0uuqjc6+OePkFPpDSVzHfbwPkw
-         iFncZjxaq9CQ3U6h4T01vRrkzfIjhxaUdNX5Mx3L/T3MoIgckQyH3zOglri3uROLFKMZ
-         hpZ5H8qLfUmGE3Q/7GoE+77t/SyDG6ISnk/LKVgMVIgnTaAXXXAohK8wBMehRznuDqDB
-         aGug==
-X-Gm-Message-State: AOJu0YyUeL0fDBiuzbZuFEkkIrPLr2LAdTmDhJkBMi8b/FTyg1UXouP0
-	is6nLAL1G5T1Jh5OHdR1ihroH8XZm/QvMyQ3dTPSFNi74TAEmx/tYzxQHyvTLUcIYDa/leIFnjT
-	xvQ==
-X-Google-Smtp-Source: AGHT+IEQ8vV+FXVD3XBCjRhMRewZ5yjQ1j2sph+yUOFNhR655zuqbYE+7ObmNf6VZS8HUTBkCOPm+HspBQ==
-X-Received: from pfblh20.prod.google.com ([2002:a05:6a00:7114:b0:746:2117:6f55])
- (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:513:b0:21a:de8e:5cbb
- with SMTP id adf61e73a8af0-21fbd550de1mr661897637.25.1749842054156; Fri, 13
- Jun 2025 12:14:14 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:13:28 -0700
+        bh=vOmgMRXV+mc8xC1osg2zhcuISDjyHCoSZSrFaYvlLLs=;
+        b=bDJm4tP+nhg5Wp+v+aGmlupsehqvuLiUjMurs5AaSk8WMn11TVneQNNHJDGB5v8/V0
+         Skpe0+7NiLR1plvaYx4uMjYBYVfUtj16HS5v6/ekpXQn52kO8hpyWJRN+vF/nclHXiUR
+         Se/6BPfdPR5FJCNFekcYIeom/B6JsLWuT/7CWLONADNRRCxw1X7jiGNCqhGFwHYXnFCx
+         96osksorHGmwoSkP1pfuro+6s2VbdCF3ARmkLUCw1OQnyX4ccGE1ftmZybT+zZbQq8Qw
+         xD8m6H9UpwAiBgeg2BCjv2khsNimxneKXBwdP+N+s3STGD0QAfxpQBcGzx8If2/LHkXg
+         cijA==
+X-Gm-Message-State: AOJu0YyJIQN8iMgrghsFQcGztbLfkrWfb+P+ID+9wUDoX1LwW5Cf+aA6
+	Vt06CqBs6hYrsDz7em1dsv/LGGA6J/x4Kf+8JdPswpPSWNDjgJpje9Cb/+PYvzp+FltDt2mEDzA
+	c3g==
+X-Google-Smtp-Source: AGHT+IHAhgpmm/q01FxLsxN/r16xAnrj+YeQUD4vxuoiPdSbJLlzwjizxPtfCy3TN+V0J86WsXFecaW5gg==
+X-Received: from pjbqa3.prod.google.com ([2002:a17:90b:4fc3:b0:308:6685:55e6])
+ (user=sagis job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d43:b0:313:d6d9:8891
+ with SMTP id 98e67ed59e1d1-313f1be1d48mr1058480a91.3.1749842055693; Fri, 13
+ Jun 2025 12:14:15 -0700 (PDT)
+Date: Fri, 13 Jun 2025 12:13:29 -0700
 In-Reply-To: <20250613191359.35078-1-sagis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250613191359.35078-1-sagis@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250613191359.35078-2-sagis@google.com>
-Subject: [PATCH v7 01/30] KVM: selftests: Add function to allow one-to-one GVA
- to GPA mappings
+Message-ID: <20250613191359.35078-3-sagis@google.com>
+Subject: [PATCH v7 02/30] KVM: selftests: Expose function that sets up sregs
+ based on VM's mode
 From: Sagi Shahar <sagis@google.com>
 To: linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
 	Shuah Khan <shuah@kernel.org>, Sean Christopherson <seanjc@google.com>, 
@@ -75,89 +75,93 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-One-to-one GVA to GPA mappings can be used in the guest to set up boot
-sequences during which paging is enabled, hence requiring a transition
-from using physical to virtual addresses in consecutive instructions.
+This allows initializing sregs without setting vCPU registers in
+KVM.
+
+No functional change intended.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Sagi Shahar <sagis@google.com>
 ---
- .../testing/selftests/kvm/include/kvm_util.h  |  3 +++
- tools/testing/selftests/kvm/lib/kvm_util.c    | 27 +++++++++++++++----
- 2 files changed, 25 insertions(+), 5 deletions(-)
+ .../selftests/kvm/include/x86/processor.h     |  1 +
+ .../testing/selftests/kvm/lib/x86/processor.c | 45 ++++++++++---------
+ 2 files changed, 25 insertions(+), 21 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index bee65ca08721..9994861d2acb 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -650,6 +650,9 @@ vm_vaddr_t __vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
- vm_vaddr_t vm_vaddr_alloc_shared(struct kvm_vm *vm, size_t sz,
- 				 vm_vaddr_t vaddr_min,
- 				 enum kvm_mem_region_type type);
-+vm_vaddr_t vm_vaddr_identity_alloc(struct kvm_vm *vm, size_t sz,
-+				   vm_vaddr_t vaddr_min,
-+				   enum kvm_mem_region_type type);
- vm_vaddr_t vm_vaddr_alloc_pages(struct kvm_vm *vm, int nr_pages);
- vm_vaddr_t __vm_vaddr_alloc_page(struct kvm_vm *vm,
- 				 enum kvm_mem_region_type type);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index a055343a7bf7..8f3dbf749afa 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -1460,15 +1460,14 @@ vm_vaddr_t vm_vaddr_unused_gap(struct kvm_vm *vm, size_t sz,
+diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
+index b11b5a53ebd5..f2eb764cbd7c 100644
+--- a/tools/testing/selftests/kvm/include/x86/processor.h
++++ b/tools/testing/selftests/kvm/include/x86/processor.h
+@@ -1025,6 +1025,7 @@ static inline struct kvm_cpuid2 *allocate_kvm_cpuid2(int nr_entries)
  }
  
- static vm_vaddr_t ____vm_vaddr_alloc(struct kvm_vm *vm, size_t sz,
--				     vm_vaddr_t vaddr_min,
-+				     vm_vaddr_t vaddr_min, vm_paddr_t paddr_min,
- 				     enum kvm_mem_region_type type,
- 				     bool protected)
- {
- 	uint64_t pages = (sz >> vm->page_shift) + ((sz % vm->page_size) != 0);
+ void vcpu_init_cpuid(struct kvm_vcpu *vcpu, const struct kvm_cpuid2 *cpuid);
++void vcpu_setup_mode_sregs(struct kvm_vm *vm, struct kvm_sregs *sregs);
  
- 	virt_pgd_alloc(vm);
--	vm_paddr_t paddr = __vm_phy_pages_alloc(vm, pages,
--						KVM_UTIL_MIN_PFN * vm->page_size,
-+	vm_paddr_t paddr = __vm_phy_pages_alloc(vm, pages, paddr_min,
- 						vm->memslots[type], protected);
- 
- 	/*
-@@ -1492,7 +1491,7 @@ static vm_vaddr_t ____vm_vaddr_alloc(struct kvm_vm *vm, size_t sz,
- vm_vaddr_t __vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
- 			    enum kvm_mem_region_type type)
+ static inline void vcpu_get_cpuid(struct kvm_vcpu *vcpu)
  {
--	return ____vm_vaddr_alloc(vm, sz, vaddr_min, type,
-+	return ____vm_vaddr_alloc(vm, sz, vaddr_min, KVM_UTIL_MIN_PFN * vm->page_size, type,
- 				  vm_arch_has_protected_memory(vm));
+diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
+index a92dc1dad085..002303e2a572 100644
+--- a/tools/testing/selftests/kvm/lib/x86/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86/processor.c
+@@ -488,34 +488,37 @@ static void kvm_seg_set_tss_64bit(vm_vaddr_t base, struct kvm_segment *segp)
+ 	segp->present = 1;
  }
  
-@@ -1500,7 +1499,25 @@ vm_vaddr_t vm_vaddr_alloc_shared(struct kvm_vm *vm, size_t sz,
- 				 vm_vaddr_t vaddr_min,
- 				 enum kvm_mem_region_type type)
+-static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
++void vcpu_setup_mode_sregs(struct kvm_vm *vm, struct kvm_sregs *sregs)
  {
--	return ____vm_vaddr_alloc(vm, sz, vaddr_min, type, false);
-+	return ____vm_vaddr_alloc(vm, sz, vaddr_min, KVM_UTIL_MIN_PFN * vm->page_size, type, false);
+-	struct kvm_sregs sregs;
+-
+ 	TEST_ASSERT_EQ(vm->mode, VM_MODE_PXXV48_4K);
+ 
+-	/* Set mode specific system register values. */
+-	vcpu_sregs_get(vcpu, &sregs);
+-
+-	sregs.idt.base = vm->arch.idt;
+-	sregs.idt.limit = NUM_INTERRUPTS * sizeof(struct idt_entry) - 1;
+-	sregs.gdt.base = vm->arch.gdt;
+-	sregs.gdt.limit = getpagesize() - 1;
++	sregs->idt.base = vm->arch.idt;
++	sregs->idt.limit = NUM_INTERRUPTS * sizeof(struct idt_entry) - 1;
++	sregs->gdt.base = vm->arch.gdt;
++	sregs->gdt.limit = getpagesize() - 1;
+ 
+-	sregs.cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
+-	sregs.cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
++	sregs->cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
++	sregs->cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
+ 	if (kvm_cpu_has(X86_FEATURE_XSAVE))
+-		sregs.cr4 |= X86_CR4_OSXSAVE;
+-	sregs.efer |= (EFER_LME | EFER_LMA | EFER_NX);
++		sregs->cr4 |= X86_CR4_OSXSAVE;
++	sregs->efer |= (EFER_LME | EFER_LMA | EFER_NX);
++
++	kvm_seg_set_unusable(&sregs->ldt);
++	kvm_seg_set_kernel_code_64bit(&sregs->cs);
++	kvm_seg_set_kernel_data_64bit(&sregs->ds);
++	kvm_seg_set_kernel_data_64bit(&sregs->es);
++	kvm_seg_set_kernel_data_64bit(&sregs->gs);
++	kvm_seg_set_tss_64bit(vm->arch.tss, &sregs->tr);
+ 
+-	kvm_seg_set_unusable(&sregs.ldt);
+-	kvm_seg_set_kernel_code_64bit(&sregs.cs);
+-	kvm_seg_set_kernel_data_64bit(&sregs.ds);
+-	kvm_seg_set_kernel_data_64bit(&sregs.es);
+-	kvm_seg_set_kernel_data_64bit(&sregs.gs);
+-	kvm_seg_set_tss_64bit(vm->arch.tss, &sregs.tr);
++	sregs->cr3 = vm->pgd;
 +}
 +
-+/*
-+ * Allocate memory in @vm of size @sz beginning with the desired virtual address
-+ * of @vaddr_min and backed by physical address equal to returned virtual
-+ * address.
-+ *
-+ * Return the address where the memory is allocated.
-+ */
-+vm_vaddr_t vm_vaddr_identity_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
-+				   enum kvm_mem_region_type type)
++static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
 +{
-+	vm_vaddr_t gva = ____vm_vaddr_alloc(vm, sz, vaddr_min,
-+					    (vm_paddr_t)vaddr_min, type,
-+					    vm_arch_has_protected_memory(vm));
-+	TEST_ASSERT_EQ(gva, addr_gva2gpa(vm, gva));
-+
-+	return gva;
++	struct kvm_sregs sregs;
+ 
+-	sregs.cr3 = vm->pgd;
++	vcpu_sregs_get(vcpu, &sregs);
++	vcpu_setup_mode_sregs(vm, &sregs);
+ 	vcpu_sregs_set(vcpu, &sregs);
  }
  
- /*
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
