@@ -1,107 +1,139 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D03C3FE7;
-	Fri, 13 Jun 2025 19:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031BD3FE7
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749843445; cv=none; b=DWLQ6Rf8iG0BoTBh/o39QcIdQ0myRVdH3nc32uAg4rfwhtfYXxCz+m1Yqqx+fMv15c0tJT08rFxra0nzb0fG/rsjfxAaE7NA8ZuYthF5zEl8EW/3qSq4MPdPIoDunPT2A8kkYOu+oJcAl4V5Wvv19zoYW0lA8D6g/goOcyy++sA=
+	t=1749843526; cv=none; b=Ze7afPW/Amgs6iIuvTdtIgSiKMNet6j2BlX8jdAlf2qdH2Ef32Qp+Dkm8odEAa/hDUzFwSn5CuIA3zhQnXtA+XH8bKFIxhUeeKnpt2h49zLHODs52vLPuWI3B3A0WL91Ke9xkTzQNVneWb9OdlLePfR+Gyw6akDmVcPRDMVVZ60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749843445; c=relaxed/simple;
-	bh=gWaM2SwWG/RzB3IQhP4sXhYbKHVGU+CduuDqU1xoFbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ivnhRK65/2qWXJDd0xdbqVhI3NeQYLDyi2Ir33Sa7NYzsyrFu+iKowZc4mekB0YsvGfCOMNWCvCxEP4SVDM3ATblg8yf3hFN09PMQjxNL46JIT31aYazP77i5ekSITolPAwNkuilxYny3fCRaLX+I2QbGcFeYeGBVHB1WMFVNf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RvDhYuQq; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749843526; c=relaxed/simple;
+	bh=eberJJVri/JbW+ewBsWi96de30fvoFdHHT2AU4+7Ce0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YF5DqWks0XcIhINphJ6rheyDMMKPABqru2n57u9JjBbv98s2fDyaikcgcrZIQMCdMmnRdPFD44BMvEnNudI/6q3qBhZzGEe8XsPuT0C75ZJYYnAXch0DmuqERhqcv3hUS/WgFHZPCxsiImSLt7EYmH+twBDUnekx7d3d3YqILhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nHVMfSp1; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvDhYuQq"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so29146645e9.1;
-        Fri, 13 Jun 2025 12:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749843442; x=1750448242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JVnXDO8P8TTyy5ZMGp74R4GEWT4MAhPxsWXUOSUBcps=;
-        b=RvDhYuQqjV/ihSLh466y1f8Woo9Et/SGRh/DnxSu2cx/x1nshYNLU16xVX/PpzoAqt
-         iPHfujg27shGsjvnVMc+IbMTw8BeiCyRI1heX807Q6in+in6qcUCyQyu9/3Un/Wbw84g
-         aoVihmkraR8KwTWD84yisfmKGeqkdPRWKm8z6OhBqEh6k7MPAJwKFHY+hjheys3tRGE2
-         rBOhH2TaI1rjRhFvbOKtNWk+vqfdiIwCn3V5mdZ+E+JOZPfsRnl5drcSDrUOz8YA23sC
-         TeVwVasupMCIkOYcU195jfJvpldkNRt4AkojzCs7b1KsMo57qC3YTXH329g0L2Yt9fH1
-         DgnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749843442; x=1750448242;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JVnXDO8P8TTyy5ZMGp74R4GEWT4MAhPxsWXUOSUBcps=;
-        b=mao25I8Lz1zSYq6JBuTKENM/zbXoAlT9raAuvxrVj7tU1gZi2KiJ74uVmmhbbEKMDt
-         9gamdgUeGgMLKN7EGa5Zc+/gkHChjMWBYtqS4HSyxoXMAvb6doOfUBrcWHQ8MQHdiiPW
-         YINOk5sfD9zXhsqZCv/oLyzei52S2h74Jkg7864XYI+JRO+LrusVipROP5tlNBqfl8mV
-         Gs/uUcQxgxTHGBpiphZbPJa/gxuIwfGZVfAMrSmcMTcSW4XxAyjHiijIWDZY/7t/8k1V
-         xbFgWPY6VrOE/H5xVBunNT+W9M9HxjmwkBMXV+Avbo4ewc1cAF8jzqdBe7Htn+uRfSwQ
-         CoQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvLL6DwiMNDkt1vikkaZjUyoAHvuUf+3dW6fi+BEYjaIi4jQQ7w0St48lg2jMtAp8kQoyPgjB641IM@vger.kernel.org, AJvYcCW/dms8VAALq85/hpCev5w17osCqJ2X1py0xNFRQCgKvIr5PR/GjDaxZcd4H5w1bA8P8mK5hc2F7p1gGbmn@vger.kernel.org, AJvYcCXKyvA5jomdG4xqHmwsfc8i2Kz7gJgnGd9irzYNapskKeUavuT6NET/0TRvurtu4WOREzyde6Teh/LRaxPzAg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEX0BO1Zrm0HwxXZJXmZ1a0087/vQHmCvZKVO+ew9kHrr+FBOe
-	yQ0QNjedJiUIQHEqhFsmW4KYAR2yfHv8mpOl5djyNnYMCuJRNM/jSHdG
-X-Gm-Gg: ASbGncuwaUaJ5h4O5xeaKab9uLL+jQbpUyFglSgE+cvPQMam1jbCU9Wy6yVoFGkjuxB
-	hFZIlxBCaljWSN9UPo0EAJsTEdyKx1WbZEd/aTpPuknoFpImlhZT8nNyNxsYNbF0cHu4cqjzbxF
-	HFqiHsGvERIsHALPmMkRWcGdEEji0ezS267xSSJSxxWB7HwRuhodoc1N8MrFgGIfT0zYPTp24Tq
-	yKE8v/BEYM7iqNtJXHbS9GX7j9GXFNVANqsP5+EVVkg2NUL2poxtoNKC9kpZYgzaohHxwqZFNPV
-	t0E9pp4DlKT2qHJHMcdNYE0LoSw/vJ6xD2vc2VfUCfd820EfwvPXWvuO+ZKkoPd9BA==
-X-Google-Smtp-Source: AGHT+IE51GwvZHeZkjWpAoorVe29UzRKjPOQEkinYvcn23mI/tvwl1AzLqiToypl32uj80peUhCIyA==
-X-Received: by 2002:a05:600c:8b0d:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-4533caa6283mr10881615e9.18.1749843441884;
-        Fri, 13 Jun 2025 12:37:21 -0700 (PDT)
-Received: from ainazi.fritz.box ([2001:9e8:1ad:9f00:925:9e86:49c5:c55f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e13c187sm61379055e9.23.2025.06.13.12.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 12:37:21 -0700 (PDT)
-From: Shinjo Park <peremen@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM MAILING LIST),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Shinjo Park <peremen@gmail.com>
-Subject: [PATCH] ARM: dts: qcom: pm8921: add vibrator device node
-Date: Fri, 13 Jun 2025 21:37:17 +0200
-Message-ID: <20250613193717.18668-1-peremen@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nHVMfSp1"
+Date: Fri, 13 Jun 2025 12:38:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749843512;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=05h3cJJBxazbpz5FiVZjgC7ryx5+viWkk/L4vbZmO2k=;
+	b=nHVMfSp17TO+6pXWRN4z4CUhv9KXUKZYW16bR+BF10UJ7m/uUOfxNwfBQwC4twFlBHRKSw
+	Pf4lttmhhbapozJhj8WeTWmvaEhliYPwyic1QqNvnmgCUFm2IwxzdvvDpp7lJZ6EY7EXPe
+	YehBIglTD6fsw9/Y9qBBC2aqrl5gBus=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Ankit Agrawal <ankita@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	"maz@kernel.org" <maz@kernel.org>,
+	"joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>,
+	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
+	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	"coltonlewis@google.com" <coltonlewis@google.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"maobibo@loongson.cn" <maobibo@loongson.cn>
+Subject: Re: [PATCH v6 3/5] kvm: arm64: New memslot flag to indicate
+ cacheable mapping
+Message-ID: <aEx-JlaYJsLAQx3J@linux.dev>
+References: <20250524013943.2832-1-ankita@nvidia.com>
+ <20250524013943.2832-4-ankita@nvidia.com>
+ <20250527002652.GM61950@nvidia.com>
+ <SA1PR12MB71990A84FDB4350DC02CEC6EB064A@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <aEMsDsi3DSm1up0G@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEMsDsi3DSm1up0G@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Use the same definition as pm8058.dtsi. Since vibrator is used only by
-some devices, disable it by default and let it be enabled explicitly.
+Hey,
 
-Signed-off-by: Shinjo Park <peremen@gmail.com>
----
- arch/arm/boot/dts/qcom/pm8921.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Sorry for going AWOL on this for so long, buried under work for a while.
 
-diff --git a/arch/arm/boot/dts/qcom/pm8921.dtsi b/arch/arm/boot/dts/qcom/pm8921.dtsi
-index 058962af3005..535cb6a2543f 100644
---- a/arch/arm/boot/dts/qcom/pm8921.dtsi
-+++ b/arch/arm/boot/dts/qcom/pm8921.dtsi
-@@ -17,6 +17,12 @@ pwrkey@1c {
- 			pull-up;
- 		};
- 
-+		pm8921_vibrator: vibrator@4a {
-+			compatible = "qcom,pm8921-vib";
-+			reg = <0x4a>;
-+			status = "disabled";
-+		};
-+
- 		pm8921_mpps: mpps@50 {
- 			compatible = "qcom,pm8921-mpp",
- 				     "qcom,ssbi-mpp";
--- 
-2.48.1
+On Fri, Jun 06, 2025 at 10:57:34AM -0700, Sean Christopherson wrote:
+> I would much prefer we have a way userspace query the effective memtype for a
+> range of memory, either for a VMA or for a KVM mapping, and let _userspace_ do
+> whatever sanity checks it wants.  That seems like it would be more generally
+> useful, and would be feasible to support on multiple architectures.  Though I'd
+> probably prefer to avoid even that, e.g. in favor of providing enough information
+> in other ways so that userspace can (somewhat easily) deduce how KVM will behave
+> for a giving mapping.
 
+Agreed, and really userspace needs to know what it has in its own
+stage-1 for that to make sense. The idea with a memslot flag is that
+you'd get a 'handshake' with KVM, although that only works for a single
+memory type.
+
+What's really needed is a fine-grained enumeration as the architecture
+allows an implementation to break uniprocessor semantics + coherency for _any_
+deviation in memory attributes (e.g. Device-nGnRE v. Device-nGnRnE).
+Although in practice it's usually a Normal-* v. Device-* mismatch that
+we actually expose to the VMM.
+
+So, in the absence of a complete solution, I guess we can forgo the
+memslot flag. OTOH, the KVM cap is still useful since even now we do the
+wrong thing with cacheable PFNMAP so KVM_SET_USER_MEMORY_REGION
+accepting a VMA doesn't mean much.
+
+Burden is on the VMM to decide what that means in the context of $THING
+it wants to install into a memslot.
+
+> > > There is no easy way for VFIO to know to set it, and the kernel will
+> > > not allow switching a cachable VMA to non-cachable anyhow.
+> > 
+> > > So all it does is make it harder to create a memslot.
+> > 
+> > Oliver had mentioned earlier that he would still prefer a memslot flag as
+> > VMM should convey its intent through that flag:
+> >
+> > https://lore.kernel.org/all/aAdKCGCuwlUeUXKY@linux.dev/
+> > Oliver, could you please confirm if you are convinced with not having this
+> > flag? Can we rely on MT_NORMAL in vma mapping to convey this?
+
+Yes, following the VMAs memory attributes is the right thing to do. To
+be clear, this is something I'd really like to have settled for 6.17.
+
+> Is MT_NORMAL visable and/or controllable by userspace?
+
+Generally speaking, no.
+
+Thanks,
+Oliver
