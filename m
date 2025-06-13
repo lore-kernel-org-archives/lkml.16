@@ -1,114 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A552DA75C;
-	Fri, 13 Jun 2025 08:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE642DA75C;
+	Fri, 13 Jun 2025 08:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803742; cv=none; b=fRf5HfADP6gi3xDsIs84XjdDLu5NqG6pyewNNbDaJQRNcKSPLmbX8+H0m9ZLQnLYo2N0wNurmZ4kRHrv9lV2lhUF/5m8M1UB3LJ8SMt97iMAg03inBJC7oBrgNJFJmyWvlXES+ueu5HGH8uYLTGvYs/DYG0lmWVa2yMM1DDifb8=
+	t=1749803772; cv=none; b=gfJQG41gg+PGaveEd+bEnpchyBwfiQk1Y/CJ8Zkv9NVZgy7YThmLgiehzLtPD49egR6wRcuhPRYtiZMcP3BMWppaMh1MoSXxV9VaL44LFSe6NrVO5b7fK3hAmMOSTX8MIiP8JbrxD2C4NO6JW8XFvVo3sGy4ix5rtxLimBbtnxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803742; c=relaxed/simple;
-	bh=N/8P0oycOvrWCHveGAARJ8Iq/A6rTrCmjERwqUceixE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cjMP7mZD+HXG9MBMtCSJ3N+gIZBtoKB/Kd/wAlblUUzNNbJ3Sg02nyUX38PoQVy67sS/92rzRAnNKWq4P3LjPaoqVwzAQhCrg4i6d0V3MM7KZ3H8TZWEtrbKElOJ5agODTQQ4QRxJdYqESpoOG8IVHRUvzZpzb7Y5C5krjr67Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAMjjzcJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749803772; c=relaxed/simple;
+	bh=vuUa5kcHm0jnXDz+1HgJdsjs5l21I1CdnITtFPnTziQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGPWMyVck3Pj6hkscXhGCJ++krrjxguLn3uNleeeI/ps1praWy0OTaVlD3xrOCe3PvZvPGb1lTQE+jWxL2iQE1KxsLZqpRfvXCScnZridTM2DTh8byyzW/ysalt1ZrG2lmOV0u9C4CWf41oo8JYCO3WkejJiO9ji/clJaS8u5j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=NL8pToJc; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAMjjzcJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABC2C4CEE3;
-	Fri, 13 Jun 2025 08:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749803741;
-	bh=N/8P0oycOvrWCHveGAARJ8Iq/A6rTrCmjERwqUceixE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VAMjjzcJGtBEMa/AETTO4Z89i5RT5sA32Le4ZYKcA+R1uZt1O+/34FtTwu+fqKrB7
-	 Bex5iL8vLE2UgqPd8QZP82V4okcTXDuJoYhO5zt4TWFTU+ecSsa6bLHCvtqnarooK1
-	 t4APrMv/dZzUW/qpPr0EIoUkz0LAn85po8PWcKlswsUno6gBKg1Gwn/So6WE6P8FeI
-	 B7mKfDSAtdeG20sUQkYl+BF8tnp0fPFlp5/fBnW/mqj4FeP+Za+93PeAt0z9XBBNUn
-	 dMxiuzZRykFrB28NcqAOykW+1QqYj9VY3pGFeocaNqFbos5xZP+nQJMj4FOCvuddgf
-	 YqUSHnfRufsiQ==
-Message-ID: <af89d78a-c3ea-4771-a9b3-805266e263c6@kernel.org>
-Date: Fri, 13 Jun 2025 10:35:35 +0200
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NL8pToJc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=SYHRlRiBv6lwu5E+iu4c2GkKdYvA5tlAOMCjBwwNqMY=; b=NL8pToJcx7VtKpZq9RceeeEjZi
+	0wq67Ld6C0ug5UkBAnNmBHlT8B2hBCXDYcnBhthyb18SeOWnsAB1HuBt+BhG6nHLaDOgdqcmLat4M
+	hLuCZoFBq2YEERvuxWl5L4Lu+ihZT65lFEtfAX8ShD4wAoIHSp9TvjOZfBuElNWt4a4Utk5NrrTLh
+	pPqtJ4iBpviKA6sReoWHgDMs8w2ZeeQb7L+GGghyKCPNQqRe5ZZ7ADqyWCXwAYzoaCcUiXrdvMrgN
+	FzeRWFWrjVkLAXQG9XLFPtPcZpn4ReKdQKKTScVrrbWUs8hJoQyDEmIu2hVx+S1aMW4uP6/llSiSz
+	pywON9Og==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34862)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uPztB-0000ZL-2o;
+	Fri, 13 Jun 2025 09:35:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uPzt6-0001ed-2O;
+	Fri, 13 Jun 2025 09:35:48 +0100
+Date: Fri, 13 Jun 2025 09:35:48 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+Message-ID: <aEvi5DTBj-cltE5w@shell.armlinux.org.uk>
+References: <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
+ <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+ <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+ <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+ <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
+ <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+ <aElArNHIwm1--GUn@shell.armlinux.org.uk>
+ <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
+ <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
+ <40fc8f3fec4da0ed2b59e8d2612345fb42b1fdd3.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt: bindings: arm: add bindings for TQMLS1012AL
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-Cc: Matthias Schiffer <matthias.schiffer@tq-group.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux@ew.tq-group.com, Conor Dooley <conor.dooley@microchip.com>
-References: <20250613075927.392499-1-alexander.stein@ew.tq-group.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250613075927.392499-1-alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <40fc8f3fec4da0ed2b59e8d2612345fb42b1fdd3.camel@icenowy.me>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 13/06/2025 09:59, Alexander Stein wrote:
-> From: Matthias Schiffer <matthias.schiffer@tq-group.com>
+On Fri, Jun 13, 2025 at 04:01:37PM +0800, Icenowy Zheng wrote:
+> 在 2025-06-11星期三的 17:28 +0200，Andrew Lunn写道：
+> > > Well in fact I have an additional question: when the MAC has any
+> > > extra
+> > > [tr]x-internal-delay-ps property, what's the threshold of MAC
+> > > triggering patching phy mode? (The property might be only used for
+> > > a
+> > > slight a few hundred ps delay for tweak instead of the full 2ns
+> > > one)
+> > 
+> > Maybe you should read the text.
+> > 
+> > The text says:
+> > 
+> >   In the MAC node, the Device Tree properties 'rx-internal-delay-ps'
+> >   and 'tx-internal-delay-ps' should be used to indicate fine tuning
+> >   performed by the MAC. The values expected here are small. A value
+> > of
+> >   2000ps, i.e 2ns, and a phy-mode of 'rgmii' will not be accepted by
+> >   Reviewers.
+> > 
+> > So a few hundred ps delay is fine. The MAC is not providing the 2ns
+> > delay, the PHY needs to do that, so you don't mask the value.
 > 
-> TQMLS1012AL is a SOM using NXP LS1012A CPU. MBLS1012AL is a carrier
-> reference design.
+> Thus if the MAC delay is set to 1xxx ps (e.g. 1800ps), should the MAC
+> do the masking?
 > 
+> What should be the threshold? 1ns?
 
-Subject: It's dt-bindings. Also double bindings is redundant.
+Why should there be a "threshold" ? It's really a case by case issue
+where the capabilities of the hardware need to be provided and
+considered before a decision can be made.
 
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+In order to first understand this, one needs to understand the
+requirements of RGMII. RGMII v1.3 states:
 
+Symbol	Parameter		Min	Typ	Max	Units
+TskewT	Data to Clock output	-500	0	500	ps
+	skew at clock tx
+TskewR	Data to Clock input	1		2.6	ns
+	skew at clock rx
 
+The RGMII specification is written based upon the clock transmitter
+and receiver having no built-in delays, and the delay is achieved
+purely by trace routing. So, where delays are provided by the
+transmitter or receiver (whether that's the MAC or the PHY depends
+on whether TXC or RXC is being examined) these figures need to be
+thought about.
 
+However, the range for the delay at the receiver is -1ns to +0.6ns.
 
-Best regards,
-Krzysztof
+In your example, you're talking about needing a 1800ps delay. I
+would suggest that, *assuming the PCB tracks introduce a 200ps skew
+between the data and clock*, then using the PHY's built-in 2ns delay
+is perfectly within the requirements of the RGMII specification.
+
+That bit "assuming" is where the discussion needs to happen, and why
+it would be case by case. If the skew due to trace routing were
+800ps, then enabling the PHY's built-in 2ns delay would take the
+delay out of spec.
+
+Thrown into this would also be temperature effects, so trying to get
+to as near as the 2ns delay as possible is probably a good idea.
+
+Lastly, there's the question whether the software engineer even
+knows what the skew provided by the hardware actually is.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
