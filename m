@@ -1,170 +1,110 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C17F2D8778;
-	Fri, 13 Jun 2025 11:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07CF2E0B79;
+	Fri, 13 Jun 2025 11:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749813634; cv=none; b=aoeJtL+0EGM/YEmGm7KIVpdUFDki5rMv4uxJJZx5BuWH404zptfWNly5RHTbHQssAfI+c+s7IxpzGKLp2BmMz678gTZ9ecPOIc8PGcxymiYW0xcMDUUvV1SJC7fctL0HNsKHaPxYjWDLF+fw95PS2lSq5wuu7bvr9bCIx1L9MUQ=
+	t=1749813635; cv=none; b=LCV9xHHyhnO8XjK+zP6F1fXge9UJXtHuP5yGYXxcQP79EJ4qBdeCF1L8+wDgy4haU986w8FJIURDkmFf+PmOb0/SXgvEs0wjOrpLmmr3XRl1tHX5gowDgts3FtlksN5Iip5onVHN5X/3D6X+LOdrP9xYnZQAnf6jrXfzbQc3OLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749813634; c=relaxed/simple;
-	bh=OBRSd7WT4BkXBIhKRy7/4sQyu81IXc/MtzNZy6JnjkU=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=UqlMp2wAYLJv8nip4hW5zHXLizqKgheDKplMja/ifb9S1fJ8Go8IxUkJ2AGv1FzrcpQDyqLsKdPnu/hVX1ajBA+Ubgrl3DQXZ40HQpUKoK7jPjDKvHLCwSDIA/xSPyNtGbpUKY21KSEC6bYrH2nbg608NNjVstfO04RhQC42ViQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fdBndOap; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fdBndOap"
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 1CFCD2115189; Fri, 13 Jun 2025 04:20:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1CFCD2115189
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749813632;
-	bh=BqSBN+65YZJiSCSL/gtogSMXpS7OJBtQMStl9721njU=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=fdBndOapKxV3jXo7zfVJa5MhUBBNJlov+QsSwWJ4IH6AKizPaqZyjvJq2r010k91a
-	 CVeREEkf3ldgaDg3xOvghFKHOYeLpcpHxFJHzZoPgqoGUrukkNe+0JVZnVwtvBAbmC
-	 XGNBtwILCRLJ0flMjE4L0p0q+6/9vYDi7W/flqtE=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	shirazsaleem@microsoft.com,
-	leon@kernel.org,
-	ernis@linux.microsoft.com,
-	shradhagupta@linux.microsoft.com,
-	schakrabarti@linux.microsoft.com,
-	gerhard@engleder-embedded.com,
-	rosenp@gmail.com,
-	sdf@fomichev.me,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH net-next v2 3/4] net: mana: Add speed support in mana_get_link_ksettings
-Date: Fri, 13 Jun 2025 04:20:26 -0700
-Message-Id: <1749813627-8377-4-git-send-email-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
-References: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1749813635; c=relaxed/simple;
+	bh=4ORPoEmUrrRcxmN7XshtQHXsvTt3IceYcN2rLTizFKc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NhDs5lFfCjBvYINO6nmyBML0Ow5A3cmMvN7bKqE4qa7Of33tbldqTapo0CZkj0a105iN5+mTofg/Dk2DKVNEvryMGML+Y5cDWpZ35jnCtB+nvNiTUUr0RO2BFb73/UZbO5HehZZdx3hs3ugX01TcsbWzqPgD+vbM3PrDQGvgfMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bJc2151R8z9sqS;
+	Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 2EYXYIC_ssC4; Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bJc214Bzmz9sl0;
+	Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B7A58B77B;
+	Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id Gd6ZZdiQooSp; Fri, 13 Jun 2025 13:03:05 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 067608B769;
+	Fri, 13 Jun 2025 13:03:04 +0200 (CEST)
+Message-ID: <2df61bbf-76f6-4932-a347-7820350a156e@csgroup.eu>
+Date: Fri, 13 Jun 2025 13:03:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/3] ALSA: pcm: Convert snd_pcm_sync_ptr() to
+ user_access_begin/user_access_end()
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-sound@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>,
+ Mark Brown <broonie@kernel.org>
+References: <7baa34d4046c7750799b11830d38a46f8b581765.1749724478.git.christophe.leroy@csgroup.eu>
+ <79b86a0618328ba1d0cb5cf4011fd73ac6900e8f.1749724478.git.christophe.leroy@csgroup.eu>
+ <878qlwrnv1.wl-tiwai@suse.de>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <878qlwrnv1.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Allow mana ethtool get_link_ksettings operation to report
-the maximum speed supported by the SKU in mbps.
 
-The driver retrieves this information by issuing a
-HWC command to the hardware via mana_query_link_cfg(),
-which retrieves the SKU's maximum supported speed.
 
-These APIs when invoked on hardware that are older/do
-not support these APIs, the speed would be reported as UNKNOWN.
+Le 13/06/2025 à 11:29, Takashi Iwai a écrit :
+> On Thu, 12 Jun 2025 12:51:05 +0200,
+> Christophe Leroy wrote:
+>>
+>> Now that snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user()
+>> are converted to user_access_begin/user_access_end(),
+>> snd_pcm_sync_ptr_get_user() is more efficient than a raw get_user()
+>> followed by a copy_from_user(). And because copy_{to/from}_user() are
+>> generic functions focussed on transfer of big data blocks to/from user,
+>> snd_pcm_sync_ptr_put_user() is also more efficient for small amont of
+>> data.
+>>
+>> So use snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user() in
+>> snd_pcm_sync_ptr() too.
+>>
+>> In order to have snd_pcm_mmap_status32 similar to snd_pcm_mmap_status,
+>> replace to tsamp_{sec/nsec} and audio_tstamp_{sec/nsec} by equivalent
+>> struct __snd_timespec.
+>>
+>> snd_pcm_ioctl_sync_ptr_buggy() is left as it is because the conversion
+>> wouldn't be straigh-forward do to the workaround it provides.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> 
+> Through a quick glance, all patches look almost fine, but one favor to
+> ask: this patch contains the convert from s32/s32 pair to struct
+> __snd_timespec.  It should be factored out to a prerequisite patch
+> instead of burying in a big change.
 
-Before:
-$ethtool enP30832s1
-> Settings for enP30832s1:
-        Supported ports: [  ]
-        Supported link modes:   Not reported
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  Not reported
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: Unknown!
-        Duplex: Full
-        Auto-negotiation: off
-        Port: Other
-        PHYAD: 0
-        Transceiver: internal
-        Link detected: yes
+Shall I understand you prefer this series over the more simple "ALSA: 
+pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to 
+user_access_begin/user_access_end()" patch ?
 
-After:
-$ethtool enP30832s1
-> Settings for enP30832s1:
-        Supported ports: [  ]
-        Supported link modes:   Not reported
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  Not reported
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: 16000Mb/s
-        Duplex: Full
-        Auto-negotiation: off
-        Port: Other
-        PHYAD: 0
-        Transceiver: internal
-        Link detected: yes
+I'm asking because I was myself not sure about the benefit of such two 
+big macros over the other proposal in terms of readability.
 
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
----
-Changes in v2:
-* No change.
----
- drivers/net/ethernet/microsoft/mana/mana_en.c      | 1 +
- drivers/net/ethernet/microsoft/mana/mana_ethtool.c | 6 ++++++
- include/net/mana/mana.h                            | 2 ++
- 3 files changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 7e8bc2c6a194..54a86c233948 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1272,6 +1272,7 @@ int mana_query_link_cfg(struct mana_port_context *apc)
- 		return err;
- 	}
- 	apc->speed = resp.link_speed_mbps;
-+	apc->max_speed = resp.qos_speed_mbps;
- 	return 0;
- }
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 4fb3a04994a2..a1afa75a9463 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -495,6 +495,12 @@ static int mana_set_ringparam(struct net_device *ndev,
- static int mana_get_link_ksettings(struct net_device *ndev,
- 				   struct ethtool_link_ksettings *cmd)
- {
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+	int err;
-+
-+	err = mana_query_link_cfg(apc);
-+	cmd->base.speed = (err) ? SPEED_UNKNOWN : apc->max_speed;
-+
- 	cmd->base.duplex = DUPLEX_FULL;
- 	cmd->base.port = PORT_OTHER;
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 038b18340e51..e1030a7d2daa 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -533,6 +533,8 @@ struct mana_port_context {
- 	u16 port_idx;
- 	/* Currently configured speed (mbps) */
- 	u32 speed;
-+	/* Maximum speed supported by the SKU (mbps) */
-+	u32 max_speed;
- 
- 	bool port_is_up;
- 	bool port_st_save; /* Saved port state */
--- 
-2.34.1
+> 
+> I'm asking it because this timepsec definition is very confusing (and
+> complex) due to historical reasons, and it should be handled with a
+> special care.
+> IIUC, struct __snd_timespec is always s32/s32 for the kernel code, so
+> the conversion must be fine.  This needs to be commented in the
+> commit.
 
+
+Sure I will do that.
+
+Christophe
