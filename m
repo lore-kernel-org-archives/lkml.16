@@ -1,125 +1,94 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5D0226D1E;
-	Fri, 13 Jun 2025 17:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749837329; cv=pass; b=KHzjdlILD8avmmmIgTYA7UW5M18HHmOR+a6GlNvGUMQ2yaqpY0Wecy+elFVcOiXY3fGmQu2cBn7IUJqJopShIRCVPj8FpsNQHP0d1eUxVh6AW8x2RHW/C24lIhJEHJu+CuaVEIGwsPgkVZ2yZK3IYpW1Bp7B1Ln3advGChdwdfw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749837329; c=relaxed/simple;
-	bh=ofr+fvQbblYayi+b6RtbvNLe46eCfV6/Q2We6eydfN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nSgEfeajIHWMelmtWdTLOKl20vQRmGr1irc0V3q2fNAh/BdeRjzzczXoQBO/CcgOulGLzfkY3OmQuD0rxq9ox1qaJ1Qb2KSRwEpZNKZQeZ+zqRob83UTSLOLgpvrcfCE80ACw/Iv5C+jzsl3SzUI5PCCRiFIEElJeiKpT2HtMbA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chronox.de; spf=none smtp.mailfrom=chronox.de; dkim=pass (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b=MJsQo9AQ; dkim=permerror (0-bit key) header.d=chronox.de header.i=@chronox.de header.b=Ndo0S8cQ; arc=pass smtp.client-ip=85.215.255.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chronox.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chronox.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E0222ACF3
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749837373; cv=none; b=K4q7GFdYUhkQuM1IkDTQzEOXy89lmMQYdtWhpuFunAuiE2pWVYoVa/VTxJbQfLpEf54wUmjAqdjBOA760G6j286eUAlch7Y86e/TsIW/SpXx48ZS9IC8YBY6lezQJU31bu8ZZauEpHgkWhsQJdz/MtFn9CvCjqBe6Nz2jMLwtgk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749837373; c=relaxed/simple;
+	bh=9cmE/x9SF8N0mzKbcfHCN6giVnuVjrUq49cv5yAJ3dk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OIyzajbLWpGqENyBx47QG9k/POkG4dlr/JtHDM6kQpUh+GnlY3VJ2jvgznS6VKZrc2Eebskhn+5iv7/ptsCrLm/O57zpJExr9bzOFIXGFfg4if5dayFkvOdNtWgdqeqiH67+jV5dChtKorsPbcYvnvl7SQrbF+mx5yJS+fw+Hws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZMPSI8CL; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="MJsQo9AQ";
-	dkim=permerror (0-bit key) header.d=chronox.de header.i=@chronox.de header.b="Ndo0S8cQ"
-ARC-Seal: i=1; a=rsa-sha256; t=1749837314; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=X6WxiaTf1eWL8+ivP3OTpzZB4FCb9jVDhhwGjwe25qKtiS0JBd1pEarbkYa+Q3ONpZ
-    cV0tSKLiw5E8iB31YaB/yV92yekzN++6Bnf7A3z9K3tou2BspLtD4v80dNSWTM6+3SRd
-    H96GdzVrRJrjYxyGt7KnE/5vF5kjfqB9QXJHyHVgjFYqtFVrprrK+3KJcxvB4wJdP8CW
-    xNWOXn7MoWdWKU9tEJjt+0jDN9Jih2E+5mg6jg5rKSJLLve0c85UqWFCPXhT8SwLSDDN
-    Su5aRJrI0XZzlx21kfPCZZILOCTihdnQQEvA2R2IqzRRxMsSsa3soex+whNEzhPH3nmv
-    LpqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1749837314;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=ofr+fvQbblYayi+b6RtbvNLe46eCfV6/Q2We6eydfN0=;
-    b=lGByFhG90J7+WGmxaFo3PKQpskzdWJKaClC1LBxQiXoTzZL0UZ/R0h+W8l2y/nQu7J
-    j+zIC51yjSScTuZLmA+1eMxGpnEpXYNQtX9kUymrGGlr0hqeNtcVZCSD6IcGYHQl/IUo
-    bUy8/H/zLuWT3gkYrzTKDw6E9eZL1UTzOf3PzpB2Rh453aMC/waT78ZcKlgJuL0Lcy4I
-    x7671bePlUSnDqRtOD+ADffwp7F/JAfUrdW3KJBSjbOuaddKd/6LJpNnXmP1F956TJS3
-    7/MyhHZYNgwOs6V27/sS8HEYxfta+kIqIDTY+wh0qY7NdO6KO/b6J782eQde1WPUxTEa
-    +C5A==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1749837314;
-    s=strato-dkim-0002; d=chronox.de;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=ofr+fvQbblYayi+b6RtbvNLe46eCfV6/Q2We6eydfN0=;
-    b=MJsQo9AQ6ACFPZdMfRxS3MoyVMcMV3qBpsRZgKoT9XQp9bOOoi3nmhRGj8n3cgIKXU
-    PYPu70Zdgee4pwx0teEN3LhVZKvgxo1i2FiaXWjPXHhJ2F9EXa2x5CrrRBBTDNKtoFso
-    bNxwt4qzjw6vMO4skKMXh7HJsgqX0FBFyhe9KEAWIc/ronvXnyUkRQeuXw8v8YEQdUHi
-    M3Vrbh/V2Igcr8n3NOG8R9+49jA8IkoShQRAilKd3VKmnf4l6wqzwTSACfiAX/G3P2ul
-    qb1bhDU8d5ztBnrgj2LjBBt/Vd1fpbxTMH+skSKX83ci7OtUtK9iEfT0hkfaQUnaTZKJ
-    SdcA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1749837314;
-    s=strato-dkim-0003; d=chronox.de;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=ofr+fvQbblYayi+b6RtbvNLe46eCfV6/Q2We6eydfN0=;
-    b=Ndo0S8cQNoboJ8bgQijqYjzmdQP1YnhKAqZjZrPChzeHKia3BAQ2pUDHt7fD9sGD/E
-    RO71IVAkGwF4ZEZ7zcBw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDYJfScBm5T"
-Received: from tauon.localnet
-    by smtp.strato.de (RZmta 51.3.0 DYNA|AUTH)
-    with ESMTPSA id f29bbf15DHtCxyu
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Fri, 13 Jun 2025 19:55:12 +0200 (CEST)
-From: Stephan Mueller <smueller@chronox.de>
-To: Simo Sorce <simo@redhat.com>, Ignat Korchagin <ignat@cloudflare.com>,
- David Howells <dhowells@redhat.com>,
- James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, torvalds@linux-foundation.org,
- Paul Moore <paul@paul-moore.com>, Lukas Wunner <lukas@wunner.de>,
- Clemens Lang <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>,
- Roberto Sassu <roberto.sassu@huawei.com>, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: Module signing and post-quantum crypto public key algorithms
-Date: Fri, 13 Jun 2025 19:55:12 +0200
-Message-ID: <13066544.VsHLxoZxqI@tauon>
-In-Reply-To:
- <3081793dc1d846dccef07984520fc544f709ca84.camel@HansenPartnership.com>
-References:
- <501216.1749826470@warthog.procyon.org.uk>
- <de070353cc7ef2cd6ad68f899f3244917030c39b.camel@redhat.com>
- <3081793dc1d846dccef07984520fc544f709ca84.camel@HansenPartnership.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZMPSI8CL"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso4099189a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1749837369; x=1750442169; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7bjFF2c1v0tAi/T+zj/04ixyFcwt4O9RAaNc5aiFloU=;
+        b=ZMPSI8CLmvMQWq0BxJcCkwBDEyWeGAeptOJ4qqxv4hdCrjpixTeA7I4xoEUIFSPc/5
+         VbF/k/WJtCEYgi5unyGXFDMQC1qhDML3yz5sVQcvG1IshedeOYlDvXeeAOAKLD3VyUC/
+         0WzFPwkVfHP5UoNN+inlgfkDTQOORRYyW/fzs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749837369; x=1750442169;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7bjFF2c1v0tAi/T+zj/04ixyFcwt4O9RAaNc5aiFloU=;
+        b=rOVfVlwISUJ5MiIAdUF8kjEFlV6PfKM8uliX0m66smEy/3VW7yWk4sPU/Ei2Q3KprE
+         eC554owZ0RmJe6omA5lUPIe+Zfq/A6Gc50HzaG2NTeQyOsX2m04T1HMONcuqtpGdLEcn
+         AZ/goi/yWDb2998KqHCIol8/A4jnQcb/GcYj29Nxl9IQrPlbfMzDs6uUpZnQ84WtIqzT
+         dHirGH8g0J/4Ov4PVz1qj3Jo/vlBiCM45W/5BWljn9Ljw6Z6Vld27uwlDfH1jJ1w8Q/H
+         GZ8JmfyjVGkZeWT2sOX5zyz4Cn+hd3+rJIrKJUHLnR8DKfwn4gdLAYh+QYh+VgS2G2zy
+         MeVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWV6PfWN3kucCOI6jraWewM9oVaNowPZe0XyHkYKmUvvLELYAdTYSzPlbiGtNFodTnlIITgKd15TOdlmc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8mnfVQUQ3bQoNCemqhz2OtX/ItGAtMfFH/knWaUtJ542ISsqi
+	McJ9oMXfMYbozXD76OvN99bzEC/O/GR46JW5eG7iDLfaVOx+Mf+H+gxTLlK/Ch0CHCQ3/7nSuxp
+	yCHVO4XvE1w==
+X-Gm-Gg: ASbGnctogf/8bWWC0diD06ibu/y1oFtxvJ/ogbs07xa3kM4I2k9hauxTQQvY/33To4H
+	pse3GWMUoJEFGlb7ccOP3A4MK1JRJvgUaGaQwzQLRnKs7WKh9dZfq1cmCs8OWsgTwyJhMi4RYRM
+	ZfFZwe6c+5KDR63GDs+XvIP/AB7X9O/W2s68Lz47FSZNu5RsgBZcnOXPOBJ0z34h0d8M63OdT5n
+	ek232gX/jtmMdevg8AECkzyGa4bXlJVS21PD+SMPxQ6yB+WoXZyuNLD5Ci4jRQGVZGauxcO9Y7w
+	JIONjPjkmjw/82dqlfGIFee2MrG5nJJ5nSiMhKT63/F0YIpWDnCqQXttRiHbrHSP/aCaUB8NClc
+	BFkTVFYCJY4oDoSEZakn7xadRxjGVKESmgHFz3wCU0gDLJw==
+X-Google-Smtp-Source: AGHT+IG5TdTD7Lh/tM+TISs6R2ky4yaWNi9lYaRbMWGAaKieiTlor82q9sArOvLfhznoQM/9DcRb1Q==
+X-Received: by 2002:a05:6402:42c3:b0:604:e602:779a with SMTP id 4fb4d7f45d1cf-608d097ab9fmr133790a12.28.1749837369176;
+        Fri, 13 Jun 2025 10:56:09 -0700 (PDT)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4ae32a7sm1501028a12.77.2025.06.13.10.56.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 10:56:08 -0700 (PDT)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so3556934a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:56:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXODoeax2fsmIyJNlazcZ2GhIjkY/RVgyGs3A+7XObKdjXRruA2jekOMjAMqYD62BplY+c+tFpKk0rHpMA=@vger.kernel.org
+X-Received: by 2002:a05:6402:2355:b0:608:6501:6a1f with SMTP id
+ 4fb4d7f45d1cf-608d0837a32mr169376a12.1.1749837368073; Fri, 13 Jun 2025
+ 10:56:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+References: <CAGCho0V0x_Y2+vg5G8-r45Xc6uftLbZK5K1=vpavd_4783fogQ@mail.gmail.com>
+ <20250613172650.GA26022@redhat.com>
+In-Reply-To: <20250613172650.GA26022@redhat.com>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Fri, 13 Jun 2025 10:55:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whhcUJU20xVOPRDOGH1Yvt6KD2ao=xDk_dk0qLHZHD1hw@mail.gmail.com>
+X-Gm-Features: AX0GCFtTTKrFInkTh6jFyh_Xi-b0dUhPbxbYC0wvZShcJRJTupCmNumFoq0nUxE
+Message-ID: <CAHk-=whhcUJU20xVOPRDOGH1Yvt6KD2ao=xDk_dk0qLHZHD1hw@mail.gmail.com>
+Subject: Re: [PATCH] posix-cpu-timers: fix race between handle_posix_cpu_timers()
+ and posix_cpu_timer_del()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Sevens?= <bsevens@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Zander Work <zdw@google.com>, 
+	security@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Am Freitag, 13. Juni 2025, 19:50:22 Mitteleurop=C3=A4ische Sommerzeit schri=
-eb James=20
-Bottomley:
+On Fri, 13 Jun 2025 at 10:27, Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> Add the tsk->exit_state check into run_posix_cpu_timers() to fix this.
 
-Hi James,
+Thanks, I'll just apply this directly since I've been cc'd on the
+whole discussion anyway.
 
-> On Fri, 2025-06-13 at 13:33 -0400, Simo Sorce wrote:
-> > Premise: this problem can't be ignored, even if you think Quantum
-> > Computers are BS, various government regulations are pushing all
-> > commercial entities to require PQ signatures, so we have to deal with
-> > this problem.
->=20
-> I agree it's coming, but there's currently no date for post quantum
-> requirement in FIPS, which is the main driver for this.
-
-Perhaps [1] should be considered if you refer to FIPS?
-
-=46urther, [2] also gives a timeline.
-
-[1] https://csrc.nist.gov/pubs/ir/8547/ipd
-
-[2] https://www.nsa.gov/Press-Room/News-Highlights/Article/Article/3148990/
-nsa-releases-future-quantum-resistant-qr-algorithm-requirements-for-nationa=
-l-
-se/
-
-Ciao
-Stephan
-
-
+             Linus
