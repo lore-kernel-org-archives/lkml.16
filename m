@@ -1,1148 +1,309 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139B325A642;
-	Fri, 13 Jun 2025 03:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749785422; cv=none; b=i8dK8JPUAnFpQ18AbiUxCT6DBOy0yH3t41A1FLreQ+GBg/waXeXJ9bGlCxyVcqte3HQoRb6UGZPeUWJx0q6DVP+zqR3as8xfMtNTj8Rwx8wM9bN7e3xktghTHGq+n/qHA+zon+y/mvZEHJ+n3Ay/7lAh1PPByoEafipWTqW1hU4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749785422; c=relaxed/simple;
-	bh=1qQPAidl5l3JKSTb4YuWznkmrYUJjIJufVjAyVxCSOY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X4SKeY1nwmRLUMWAH9IXgwALlThx0fV45XHw2i/o+vmUFObnT9Gd2HWm0LS80JzWIa01BQM4fI6/f9QpTOk8JJTIfjAG2LfjtiwMCkZg6Fi4bBExapT3jBr/hc62DtQcN4wXSKSrj67+XiI6xZ36oYzPPFWZ+qTw9oo9LL+8TtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 13 Jun
- 2025 11:30:02 +0800
-Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Fri, 13 Jun 2025 11:30:02 +0800
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
-	<mani@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <joel@jms.id.au>, <andrew@codeconstruct.com.au>,
-	<vkoul@kernel.org>, <kishon@kernel.org>, <linus.walleij@linaro.org>,
-	<p.zabel@pengutronix.de>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-phy@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
-	<linux-gpio@vger.kernel.org>
-CC: <elbadrym@google.com>, <romlem@google.com>, <anhphan@google.com>,
-	<wak@google.com>, <yuxiaozhang@google.com>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Date: Fri, 13 Jun 2025 11:30:01 +0800
-Message-ID: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5C81E87B;
+	Fri, 13 Jun 2025 03:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749785532; cv=fail; b=nMaix5N8ko6QFZR3q9UxEjqo5ADItTZuMe7a9qrre/s0Gt55Nza0PgxWgygnwe+oI6XCs5lEWfGnTrhDf31UV19DR6mSQ7Q0uUbash7+SPJRmoWO8+Lm6L7YeJWF2ex7+5wxn0vDgZ443opdlOwe2kIT0no2JIlvY05+N3sksIs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749785532; c=relaxed/simple;
+	bh=qwYV6Y9wWmWxBbsfWC7y36o0ykCax1f1Fz0Hed/jK+o=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MrYP7RdnoW0MMFIAplc8AdrCv7iUvkz7w4TE+dOw1TiPA3p4rArrvTDT/ol6du/FNiaY0kvuc9y2zp9VJoV7cibwtxaSoyfjxCMhckuMG/v8K//OEexAjr+Ct3yFTN6PmvJHUjwW2gu9n0MpCIT1ssP7OfJG14eLWdsmzSCxPmA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RrL3UKLN; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RrL3UKLN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749785531; x=1781321531;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=qwYV6Y9wWmWxBbsfWC7y36o0ykCax1f1Fz0Hed/jK+o=;
+  b=RrL3UKLNWvJlYR0bDOoRlK9/1ohWs0bGzoOB2YGMENFiPwvRelwsdvIR
+   CdWK0EPKw2ZHcuk3H+O0pyMk375KPxWxu4Rq3nYBqgv4qyeJxUzgh/psp
+   rYDsze3/LqX/e9PIZnLx3fCr0jSR+nIJT7QsLSuvQSvSmmAKHngCMoX7G
+   64l+aNZdjtsHcc46yBg0skQ9y9CbNHZ6ijdPSN4A0aL4xOoM/Pc7xy75k
+   d5un6xdIIoITLs0e+ORxCPc35xCcksbnmqp4XmpSHQ/fTR+kuvPID0cUW
+   EVPShy6taVWuTm0m3aL9SpDpO41bxPdgHfUO55+N6FgbMB8vWzYQsn4Fc
+   w==;
+X-CSE-ConnectionGUID: 0fiYHykZR7+phMO1SForbg==
+X-CSE-MsgGUID: ueAXHAaqRoqLvSMQNLVg6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51905794"
+X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
+   d="scan'208";a="51905794"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 20:32:10 -0700
+X-CSE-ConnectionGUID: f44BpYftT66e2kfBhObKHA==
+X-CSE-MsgGUID: ok9IJvjzQhOA7S4zH8wLkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
+   d="scan'208";a="152865123"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 20:32:10 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 12 Jun 2025 20:32:09 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 12 Jun 2025 20:32:09 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.73)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 12 Jun 2025 20:32:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qVZCzAnTMYuqxQtWDsMdu92xBpyZCc113r9r/hIft4zk5WhySzAjqE5yMs6FbE2R6SG1F+fFZVZujZ15bQS4BowouYHbq2vljLS2IibcIzdoneSTr7DjipMnibdy/uAZDmTemQm3Yyo7JGaDckZLth/svz6z7vWXviK5KqjB5/zABTfgc+STLr0paxTHV3Yzqg56TTAaGG2tNdK0DVmaoLko/4yfDF9feH1/nJDgIRBwSAy+Ld/NbATgPhs05lqa4l0dXxPwrtKyVw0lDbbeJ7qr/RSvLvcEl4728O0YVzvXG1NCl62v8InWD1BTyN4JYL9AXSFLTrBq6b8DzPwWqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vvrt8h27CiuR59l+X0JTnJLCPU+3Vq3ANTC/wEjU8Pg=;
+ b=T9QcUKWBUZXA1Gy4Lz2gaasYULcTicNy4pAbj7ebqTMgKpF5nYO6yvk7zCfjYTQiHxd+nw3RE08SWZU5wP6ZCeInHv/0+aIv+40ulpsNCUb/mAzXOuDqnP5qaEPHQe2brcOVnSehxVfNJJh+snI/yaI9kikyXOXSGTJaff5jRRUcoKlF67Pp4vRrwPDiYs0PvQBZSK5nkYEzBDgGuVGHDYNIRKc+NvxMGBznMXbOrTS8RRtbTUQn6l2w9ouXc3NVp6ULO5kpJpd2V7pgAY+TNpiG519z+3Seu0YlINQYkIOz/Z9K72omUUhP9VLfExLp3DYtvkT/UypQzZcRJ4/V4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ MW5PR11MB5930.namprd11.prod.outlook.com (2603:10b6:303:1a1::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Fri, 13 Jun
+ 2025 03:32:06 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%5]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
+ 03:32:06 +0000
+Date: Fri, 13 Jun 2025 11:29:39 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+CC: Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>,
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Kirill Shutemov
+	<kirill.shutemov@intel.com>, Fan Du <fan.du@intel.com>, Dave Hansen
+	<dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, Zhiquan Li
+	<zhiquan1.li@intel.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"tabba@google.com" <tabba@google.com>, "quic_eberman@quicinc.com"
+	<quic_eberman@quicinc.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>,
+	"vbabka@suse.cz" <vbabka@suse.cz>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>,
+	"michael.roth@amd.com" <michael.roth@amd.com>, "binbin.wu@linux.intel.com"
+	<binbin.wu@linux.intel.com>, "ackerleytng@google.com"
+	<ackerleytng@google.com>, Chao P Peng <chao.p.peng@intel.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, Vishal Annapurve
+	<vannapurve@google.com>, "jroedel@suse.de" <jroedel@suse.de>, Jun Miao
+	<jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is
+ RUNNABLE
+Message-ID: <aEubI/6HkEw/IkUr@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <dc20a7338f615d34966757321a27de10ddcbeae6.camel@intel.com>
+ <c19b4f450d8d079131088a045c0821eeb6fcae52.camel@intel.com>
+ <aCcIrjw9B2h0YjuV@yzhao56-desk.sh.intel.com>
+ <c98cbbd0d2a164df162a3637154cf754130b3a3d.camel@intel.com>
+ <aCrsi1k4y8mGdfv7@yzhao56-desk.sh.intel.com>
+ <f9a2354f8265efb9ed99beb871e471f92adf133f.camel@intel.com>
+ <aCxMtjuvYHk2oWbc@yzhao56-desk.sh.intel.com>
+ <119e40ecb68a55bdf210377d98021683b7bda8e3.camel@intel.com>
+ <aEmVa0YjUIRKvyNy@google.com>
+ <3a7e883a-440f-4bec-a592-ac3af4cb1677@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <3a7e883a-440f-4bec-a592-ac3af4cb1677@intel.com>
+X-ClientProxiedBy: SI2PR02CA0032.apcprd02.prod.outlook.com
+ (2603:1096:4:195::12) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|MW5PR11MB5930:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77abd13d-6a61-427f-0a08-08ddaa2adf13
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?mbLONMkQA2aLWg3VDQfkQLMrDqMthroit8NrL6sP02oOhUrfVeyriSqqklPP?=
+ =?us-ascii?Q?VqXymPhPTjwbsoOOxXW0x05Hj/7ePR3j2RAV/FylO3Z8r7R8houQmEmwuF4P?=
+ =?us-ascii?Q?obeHwkZBL5kdIQewKiQPMSogCIyR6xYVH77kRZQ1urPp+RD7aCKqFHdOGQk9?=
+ =?us-ascii?Q?EqeH5FmsgEdduaRbXbxEb68aRlidrHsIH06dS7UqP/tLnVEHF41Xebn9qJ24?=
+ =?us-ascii?Q?ErwJ3PR6YoA1lPuBCjcWufP1Kpkr0HptNxIekjk0lxcFZlY/Jdz0zuLqRsll?=
+ =?us-ascii?Q?WAKLKFexxNcdl7zJFjNWH7kncYYKkfr2jNl+W6jICTqtN2sQ2LEjpIGLDNuR?=
+ =?us-ascii?Q?bFRtfGZgYCXtHaOsFcFeNUKifzRUipNWGSC+o+IFslZ+Yb0D0ZMiIfmnKVjZ?=
+ =?us-ascii?Q?6avUegVjmby2tdzAM7/Vg7N6d92XNz6kNcABE+R3gcakXo4xq7rQm1+yjAtC?=
+ =?us-ascii?Q?oXWqvfmd2JNt9THx4z56KMb7Gfp3sPa94NUV4OIhC4nkq81Te+M1AunzbSuw?=
+ =?us-ascii?Q?Ceodd4QT8LF1zlGHTl5AZYc5CSIQBerK16aNKMxzp0PT0EdSF5+0oGxOmoql?=
+ =?us-ascii?Q?N15LmN+8ioi2yKwa/fkLupeTFCsNhY+XfyMQ3TaV4gQXv2TNglsOwSPh9up0?=
+ =?us-ascii?Q?A9ArAzgF3/c1jepoE6d2azgVfYrapZOSW44uFyQe6Hq03hxu7skCNkNsWRfj?=
+ =?us-ascii?Q?AE2k6rt5lurG1BlIjR8EZ6T0b3uxHNdYR4+ZfNgCF/CcZYvONKiZAFK3y/jy?=
+ =?us-ascii?Q?HiJOchQ+PdVhYJQCZfFPw7OZ6QYBGVmVxWR55vyLctx5WC1ImFOyx/ZH8alF?=
+ =?us-ascii?Q?6pBfV2NFpk1lg2svkavNExRgtWeOTl1syenO2hNbev8sXmogJPaZpBJ+v7zN?=
+ =?us-ascii?Q?Vb7JjHtxJDvU9C8Gp/xJeyzK80+WAT3A7Z5KNhJnQv34jz0a449gjLr4EraK?=
+ =?us-ascii?Q?D9tfACD9yKujYETkaHiCbOCVqJu4SChtegjg1fjL+80h89ZHrayMpz0lGIoE?=
+ =?us-ascii?Q?wxKqZ0G+IZUMg8a/qiLS/14V81g5OQiSIjY2iwmj8hy+uWm+gpxD1ST1b+dc?=
+ =?us-ascii?Q?6od+xW2yDiomKO3on2Nx3gjyBDuA9zJJnpxNDVmQ4fPTsxN+rTw8FeVEfZbH?=
+ =?us-ascii?Q?ii+AtCikq1YXZnVfl05/fN+irFCTDvlvhqbPLzgm5MxgPdEGFUDouVNYHP9I?=
+ =?us-ascii?Q?9hBKS25dxJB6juWcdby3U6NxZ5PV97xh4JRipqAj1UH4ybFk9taCwwssKoO/?=
+ =?us-ascii?Q?jhZujYy6JcgyKYXxHYutc3o6wQ0nqUnRZogJSe+SGaKY0CzYrW7toZg6FqLu?=
+ =?us-ascii?Q?fUaLTLcr9/3OfQZfcu93TOQyuUgcTJ7jYUcwnMamLwalRCXvMP9JsbAgtSWn?=
+ =?us-ascii?Q?o/i04yKWgPqulIV3bhS1cRMCDrZ4d0jBFemiWjXm1e2TfHtOCYaeZ/a2e+8/?=
+ =?us-ascii?Q?daGbBBWA0xI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hZtOhxB0nltPjLbrXLmEpcayMPinEyFWAyCcbgug+83OsAd3lKaPG/BHjwsa?=
+ =?us-ascii?Q?oZ9Gp2EfFNf5e/og4+XxYH4H0JLVdaQ3feU1fw9RCtyw8FtkcLk9k73+Hglz?=
+ =?us-ascii?Q?JbJnUz5OdorOmocZUwvYcBCUlT6U2wMLqc/6I525uK8BtW1F8dLHiR+s2zar?=
+ =?us-ascii?Q?h2YyZQZiPY1y3WnvQGx9pODpG6+NVScbcVHDfy5rNqUKje3BGkv6iwKNmlgu?=
+ =?us-ascii?Q?g6JtwRPfLBv5Pv9rSM4skxz49e7VjVlEV/6oB3RTbrblMC+il32BKKm2uDYI?=
+ =?us-ascii?Q?IkbJy1pIF/8ERi9SfLSPZZ35bYvK1wTq/LOZmi7+CpVbauLMc0/aH55u7U26?=
+ =?us-ascii?Q?10UsEj1nsPsMM36IUzur0WprqYmQXCuO1bjGNPO4nwxfe2FYZoPBVWm25Sx7?=
+ =?us-ascii?Q?Ia8c9jU8rROBnWH09cZsMHXO4yetC5p0HJCV4CEaYhLRgiHXWMB91yX9W18c?=
+ =?us-ascii?Q?sI15jgyLX2ZQVvLgv9Ytl/yNf9LZclp8kkaGUX4X3hgRTak7o3e2e4UhFvnj?=
+ =?us-ascii?Q?B/HM7fBNsWQTKaDnZJ+5DL/Ce+HG1IsXmcO/9kes/+j2C4O1w0dvIWHMh6f0?=
+ =?us-ascii?Q?YPthZeyg6BPWU/CjpAHAnTwt9rUF7ohzF+Su3yDUcwIr1CgYIRwxzbiqxg8A?=
+ =?us-ascii?Q?Xe0rhayCKONU94bT6g9NyZnScdrG1AimVJF/swCjcofoTxgfzfiAcq4uLfTL?=
+ =?us-ascii?Q?QUZIL9sxPdB3SRCZ0okNyvOXExFO+Ofo01Gg7FGBzrRQZe8rJVNemLUbt/Ny?=
+ =?us-ascii?Q?mN9XvB3eJ7l5rRC7K6RjPT6aJuDt67uBF6GsnWl3jmB+7cBGNQlUZzAwVTkr?=
+ =?us-ascii?Q?DEjHuEiIR4yh0sCj9BxspFs8JpC/ipNdgdt4QkXNP8pQH+vLp7U+cT3Iyl98?=
+ =?us-ascii?Q?BpDXxikvmK+qA25E84sRPsyrqviTgI/7nX8xRVj4zSxEHDYtF7RZ+WMHzg5R?=
+ =?us-ascii?Q?ssN2Q2f4KomS1zcwpjOvuDBX35hfXySAQH/Nc0QyDogGf26D9DVDRUJlTw9E?=
+ =?us-ascii?Q?tLp3xLC4EmAhnAi8QlprUVpTXP7rzs62loXjGQHXlKUwU44pf2fpBE8tkjdg?=
+ =?us-ascii?Q?6XoJyb1/jzp5WPkLm8BnpCroe2ZvHSPU2xJ3ZvGP7WB5KrqZc/2tLNMQ6ZU+?=
+ =?us-ascii?Q?CoSzipsS4txigDsJHiKVCQkBYGvjDrPdUSY/DdlLW+Rdtn34Th0xXdLOiDKl?=
+ =?us-ascii?Q?MYih0PoTHPrXLU+bw90WZfdeUwfLCfQw7cA7AKuZAuy7qn8ZtyD5GTsVF8Uo?=
+ =?us-ascii?Q?FNt3NAeb9xA3d+0+tMJSkvoIQk3U/VICw1IQc7EH0eLLfvNqdknXOOKZwaA0?=
+ =?us-ascii?Q?B6QCpKxNJIVVHJ0VXHSbWUZbRpnlLbFQoZuPhYtFx/KtY4tfmKXezRtsnVHt?=
+ =?us-ascii?Q?1AEEWyyDzKOe/HaXFoTd3a/xzG/lFA3YukmZRYfWfBO9d8Z1JUTQ8fQxaIld?=
+ =?us-ascii?Q?Xd/tWFBOLZxEVsrxstFyn0XCE8ESeDocQBj/DuTeVt8VeMagXBnNMK778iqx?=
+ =?us-ascii?Q?HU1SFACOtahlk/Rzru9lHT1OderaoIpDw/pMWA4MN1lPTOnTCr8NIMLL/5S5?=
+ =?us-ascii?Q?+m87QR2noWQEJ7bbkQ5DXIJ+139SWmFYUedSqHFALn0K4SKqx2/g3hEFL6XW?=
+ =?us-ascii?Q?0w=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77abd13d-6a61-427f-0a08-08ddaa2adf13
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 03:32:06.5484
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +wRwEUO82q3vpsA5YSZ/hvxMYmz59ORC89A8xOXmUBe2qC96zKOzUs7YrOpBZ67dgYSz7xkeQGf8pH/raIFiiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5930
+X-OriginatorOrg: intel.com
 
-Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
-initialization, reset, clock, IRQ domain, and MSI domain setup.
-Implement platform-specific setup and register configuration for
-ASPEED. And provide PCI config space read/write and INTx/MSI
-interrupt handling.
+On Fri, Jun 13, 2025 at 10:41:21AM +0800, Xiaoyao Li wrote:
+> On 6/11/2025 10:42 PM, Sean Christopherson wrote:
+> > On Tue, May 20, 2025, Kai Huang wrote:
+> > > On Tue, 2025-05-20 at 17:34 +0800, Zhao, Yan Y wrote:
+> > > > On Tue, May 20, 2025 at 12:53:33AM +0800, Edgecombe, Rick P wrote:
+> > > > > On Mon, 2025-05-19 at 16:32 +0800, Yan Zhao wrote:
+> > > > > > > On the opposite, if other non-Linux TDs don't follow 1G->2M->4K
+> > > > > > > accept order, e.g., they always accept 4K, there could be *endless
+> > > > > > > EPT violation* if I understand your words correctly.
+> > > > > > > 
+> > > > > > > Isn't this yet-another reason we should choose to return PG_LEVEL_4K
+> > > > > > > instead of 2M if no accept level is provided in the fault?
+> > > > > > As I said, returning PG_LEVEL_4K would disallow huge pages for non-Linux TDs.
+> > > > > > TD's accept operations at size > 4KB will get TDACCEPT_SIZE_MISMATCH.
+> > > > > 
+> > > > > TDX_PAGE_SIZE_MISMATCH is a valid error code that the guest should handle. The
+> > > > > docs say the VMM needs to demote *if* the mapping is large and the accept size
+> > > > > is small.
+> > 
+> > No thanks, fix the spec and the TDX Module.  Punting an error to the VMM is
+> > inconsistent, convoluted, and inefficient.
+> > 
+> > Per "Table 8.2: TDG.MEM.PAGE.ACCEPT SEPT Walk Cases":
+> > 
+> >    S-EPT state         ACCEPT vs. Mapping Size         Behavior
+> >    Leaf SEPT_PRESENT   Smaller                         TDACCEPT_SIZE_MISMATCH
+> >    Leaf !SEPT_PRESENT  Smaller                         EPT Violation <=========================|
+> >    Leaf DONT_CARE      Same                            Success                                 | => THESE TWO SHOULD MATCH!!!
+> >    !Leaf SEPT_FREE     Larger                          EPT Violation, BECAUSE THERE'S NO PAGE  |
+> >    !Leaf SEPT_FREE     Larger                          TDACCEPT_SIZE_MISMATCH <================|
+> > 
+> > 
+> > If ACCEPT is "too small", an EPT violation occurs.  But if ACCEPT is "too big",
+> > a TDACCEPT_SIZE_MISMATCH error occurs.  That's asinine.
+> > 
+> > The only reason that comes to mind for punting the "too small" case to the VMM
+> > is to try and keep the guest alive if the VMM is mapping more memory than has
+> > been enumerated to the guest.  E.g. if the guest suspects the VMM is malicious
+> > or buggy.  IMO, that's a terrible reason to push this much complexity into the
+> > host.  It also risks godawful boot times, e.g. if the guest kernel is buggy and
+> > accepts everything at 4KiB granularity.
+> > 
+> > The TDX Module should return TDACCEPT_SIZE_MISMATCH and force the guest to take
+> > action, not force the hypervisor to limp along in a degraded state.  If the guest
+> > doesn't want to ACCEPT at a larger granularity, e.g. because it doesn't think the
+> > entire 2MiB/1GiB region is available, then the guest can either log a warning and
+> > "poison" the page(s), or terminate and refuse to boot.
+> > 
+> > If for some reason the guest _can't_ ACCEPT at larger granularity, i.e. if the
+> > guest _knows_ that 2MiB or 1GiB is available/usable but refuses to ACCEPT at the
+> > appropriate granularity, then IMO that's firmly a guest bug.
+> 
+> It might just be guest doesn't want to accept a larger level instead of
+> can't. Use case see below.
+> 
+> > If there's a *legitimate* use case where the guest wants to ACCEPT a subset of
+> > memory, then there should be an explicit TDCALL to request that the unwanted
+> > regions of memory be unmapped.  Smushing everything into implicit behavior has
+> > obvioulsy created a giant mess.
+> 
+> Isn't the ACCEPT with a specific level explicit? Note that ACCEPT is not
+> only for the case that VMM has already mapped page and guest only needs to
+> accept it to make it available, it also works for the case that guest
+> requests VMM to map the page for a gpa (at specific level) then guest
+> accepts it.
+> 
+> Even for the former case, it is understandable for behaving differently for
+> the "too small" and "too big" case. If the requested accept level is "too
+> small", VMM can handle it by demoting the page to satisfy guest. But when
+> the level is "too big", usually the VMM cannot map the page at a higher
+> level so that ept violation cannot help. I admit that it leads to the
+> requirement that VMM should always try to map the page at the highest
+> available level, if the EPT violation is not caused by ACCEPT which contains
+> a desired mapping level.
+> 
+> As for the scenario, the one I can think of is, guest is trying to convert a
+> 4K sized page between private and shared constantly, for testing purpose.
+> Guest knows that if accepting the gpa at higher level, it takes more time.
+> And when convert it to shared, it triggers DEMOTE and more time. So for
+> better performance, guest just calls ACCEPT with 4KB page. However, VMM
+Hmm, ACCEPT at 4KB level at the first time triggers DEMOTE already.
+So, I don't see how ACCEPT at 4KB helps performance.
 
-Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
----
- drivers/pci/controller/Kconfig       |   13 +
- drivers/pci/controller/Makefile      |    1 +
- drivers/pci/controller/pcie-aspeed.c | 1039 ++++++++++++++++++++++++++
- 3 files changed, 1053 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-aspeed.c
+Support VMM has mapped a page at 4MB,
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 886f6f43a895..f6b5eea3b570 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -216,6 +216,19 @@ config PCIE_MT7621
- 	help
- 	  This selects a driver for the MediaTek MT7621 PCIe Controller.
- 
-+config PCIE_ASPEED
-+	bool "ASPEED PCIe controller"
-+	depends on PCI
-+	depends on OF || COMPILE_TEST
-+	select PCI_MSI_ARCH_FALLBACKS
-+	help
-+	  Enable this option to add support for the PCIe controller
-+	  found on ASPEED SoCs.
-+	  This driver provides initialization and management for PCIe
-+	  Root Complex functionality, including interrupt and MSI support.
-+	  Select Y if your platform uses an ASPEED SoC and requires PCIe
-+	  connectivity.
-+
- config PCI_HYPERV_INTERFACE
- 	tristate "Microsoft Hyper-V PCI Interface"
- 	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 038ccbd9e3ba..1339f88e153d 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
- obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
- obj-$(CONFIG_PCIE_APPLE) += pcie-apple.o
- obj-$(CONFIG_PCIE_MT7621) += pcie-mt7621.o
-+obj-$(CONFIG_PCIE_ASPEED) += pcie-aspeed.o
- 
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
-diff --git a/drivers/pci/controller/pcie-aspeed.c b/drivers/pci/controller/pcie-aspeed.c
-new file mode 100644
-index 000000000000..c745684a7f9b
---- /dev/null
-+++ b/drivers/pci/controller/pcie-aspeed.c
-@@ -0,0 +1,1039 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2025 Aspeed Technology Inc.
-+ */
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/kernel.h>
-+#include <linux/msi.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/workqueue.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+
-+#define MAX_MSI_HOST_IRQS	64
-+
-+/* AST2600 AHBC Registers */
-+#define AHBC_KEY		0x00
-+#define AHBC_UNLOCK_KEY			0xAEED1A03
-+#define AHBC_UNLOCK			0x01
-+#define AHBC_ADDR_MAPPING	0x8C
-+#define PCIE_RC_MEMORY_EN		BIT(5)
-+
-+/* AST2600 PCIe Host Controller Registers */
-+#define PEHR_MISC_10		0x10
-+#define DATALINK_REPORT_CAPABLE		BIT(4)
-+#define PEHR_GLOBAL		0x30
-+#define RC_SYNC_RESET_DISABLE		BIT(20)
-+#define PCIE_RC_SLOT_ENABLE		BIT(1)
-+#define ROOT_COMPLEX_ID(x)		((x) << 4)
-+#define PEHR_LOCK		0x7C
-+#define PCIE_UNLOCK			0xa8
-+#define PEHR_LINK		0xC0
-+#define PCIE_LINK_STS			BIT(5)
-+
-+/* AST2600 H2X Controller Registers */
-+/* Common Registers*/
-+#define H2X_INT_STS		0x08
-+#define PCIE_TX_IDLE_CLEAR		BIT(0)
-+#define H2X_TX_DESC0		0x10
-+#define H2X_TX_DESC1		0x14
-+#define H2X_TX_DESC2		0x18
-+#define H2X_TX_DESC3		0x1C
-+#define H2X_TX_DESC_DATA	0x20
-+#define H2X_STS			0x24
-+#define PCIE_TX_IDLE			BIT(31)
-+#define PCIE_STATUS_OF_TX		GENMASK(25, 24)
-+#define	PCIE_RC_L_TX_COMPLETE		BIT(24)
-+#define	PCIE_RC_H_TX_COMPLETE		BIT(25)
-+#define PCIE_TRIGGER_TX			BIT(0)
-+#define H2X_AHB_ADDR_CONFIG0	0x60
-+#define AHB_REMAP_ADDR_31_20(x)	FIELD_PREP(GENMASK(15, 4), x)
-+#define AHB_MASK_ADDR_31_20(x)	FIELD_PREP(GENMASK(31, 20), x)
-+#define H2X_AHB_ADDR_CONFIG1	0x64
-+#define AHB_REMAP_ADDR_64_32(x)	(x)
-+#define H2X_AHB_ADDR_CONFIG2	0x68
-+#define AHB_MASK_ADDR_64_32(x)	(x)
-+/* Device Registers */
-+#define H2X_DEV_CTRL		0x00
-+#define PCIE_RX_DMA_EN			BIT(9)
-+#define PCIE_RX_LINEAR			BIT(8)
-+#define PCIE_RX_MSI_SEL			BIT(7)
-+#define PCIE_RX_MSI_EN			BIT(6)
-+#define PCIE_UNLOCK_RX_BUFF		BIT(4)
-+#define PCIE_Wait_RX_TLP_CLR		BIT(2)
-+#define PCIE_RC_RX_ENABLE		BIT(1)
-+#define PCIE_RC_ENABLE			BIT(0)
-+#define H2X_DEV_STS		0x08
-+#define PCIE_RC_RX_DONE_ISR		BIT(4)
-+#define H2X_DEV_RX_DESC_DATA	0x0C
-+#define H2X_DEV_RX_DESC1	0x14
-+#define H2X_DEV_TX_TAG		0x3C
-+
-+/* AST2700 H2X */
-+#define H2X_CTRL		0x00
-+#define H2X_BRIDGE_EN			BIT(0)
-+#define H2X_BRIDGE_DIRECT_EN		BIT(1)
-+#define H2X_CFGE_INT_STS	0x08
-+#define CFGE_TX_IDLE			BIT(0)
-+#define CFGE_RX_BUSY			BIT(1)
-+#define H2X_CFGI_TLP		0x20
-+#define H2X_CFGI_WR_DATA	0x24
-+#define CFGI_WRITE			BIT(20)
-+#define H2X_CFGI_CTRL		0x28
-+#define CFGI_TLP_FIRE			BIT(0)
-+#define H2X_CFGI_RET_DATA	0x2C
-+#define H2X_CFGE_TLP_1ST	0x30
-+#define H2X_CFGE_TLP_NEXT	0x34
-+#define H2X_CFGE_CTRL		0x38
-+#define CFGE_TLP_FIRE			BIT(0)
-+#define H2X_CFGE_RET_DATA	0x3C
-+#define H2X_REMAP_PREF_ADDR	0x70
-+#define REMAP_PREF_ADDR_63_32(x)	(x)
-+#define H2X_REMAP_DIRECT_ADDR	0x78
-+#define REMAP_BAR_BASE(x)		(x)
-+
-+/* AST2700 PEHR */
-+#define PEHR_VID_DID		0x00
-+#define PEHR_MISC_58		0x58
-+#define LOCAL_SCALE_SUP			BIT(0)
-+#define PEHR_MISC_5C		0x5C
-+#define CONFIG_RC_DEVICE		BIT(30)
-+#define PEHR_MISC_60		0x60
-+#define PORT_TPYE			GENMASK(7, 4)
-+#define PORT_TYPE_ROOT			BIT(2)
-+#define PEHR_MISC_70		0x70
-+#define POSTED_DATA_CREDITS(x)		FIELD_PREP(GENMASK(15, 0), x)
-+#define POSTED_HEADER_CREDITS(x)	FIELD_PREP(GENMASK(27, 16), x)
-+#define PEHR_MISC_78		0x78
-+#define COMPLETION_DATA_CREDITS(x)	FIELD_PREP(GENMASK(15, 0), x)
-+#define COMPLETION_HEADER_CREDITS(x)	FIELD_PREP(GENMASK(27, 16), x)
-+#define PEHR_MISC_300		0x300
-+#define CAPABILITY_GEN2		BIT(0)
-+#define PEHR_MISC_344		0x344
-+#define LINK_STATUS_GEN2		BIT(18)
-+#define PEHR_MISC_358		0x358
-+#define LINK_STATUS_GEN4		BIT(8)
-+
-+/* AST2700 SCU */
-+#define SCU_60			0x60
-+#define RC_E2M_PATH_EN			BIT(0)
-+#define RC_H2XS_PATH_EN			BIT(16)
-+#define RC_H2XD_PATH_EN			BIT(17)
-+#define RC_H2XX_PATH_EN			BIT(18)
-+#define RC_UPSTREAM_MEM_EN		BIT(19)
-+#define SCU_64			0x64
-+#define RC0_DECODE_DMA_BASE(x)		FIELD_PREP(GENMASK(7, 0), x)
-+#define RC0_DECODE_DMA_LIMIT(x)		FIELD_PREP(GENMASK(15, 8), x)
-+#define RC1_DECODE_DMA_BASE(x)		FIELD_PREP(GENMASK(23, 16), x)
-+#define RC1_DECODE_DMA_LIMIT(x)		FIELD_PREP(GENMASK(31, 24), x)
-+#define SCU_70			0x70
-+#define DISABLE_EP_FUNC			0x0
-+
-+/* TLP configuration type 0 and type 1 */
-+#define CRG_READ_FMTTYPE(type)		(0x04000000 | (type << 24))
-+#define CRG_WRITE_FMTTYPE(type)		(0x44000000 | (type << 24))
-+#define CRG_PAYLOAD_SIZE		0x01 /* 1 DWORD */
-+#define TLP_COMP_STATUS(s)		(((s) >> 13) & 7)
-+#define TLP_BYTE_EN(x)			(x)
-+#define AST2600_TX_DESC1_VALUE		0x00002000
-+#define AST2700_TX_DESC1_VALUE		0x00401000
-+
-+struct aspeed_pcie_rc_platform {
-+	int (*setup)(struct platform_device *pdev);
-+	/* Interrupt Register Offset */
-+	int reg_intx_en;
-+	int reg_intx_sts;
-+	int reg_msi_en;
-+	int reg_msi_sts;
-+};
-+
-+struct aspeed_pcie {
-+	struct pci_host_bridge *host;
-+	struct device *dev;
-+	void __iomem *reg;
-+	struct regmap *ahbc;
-+	struct regmap *cfg;
-+	struct regmap *pciephy;
-+	struct clk *clock;
-+	const struct aspeed_pcie_rc_platform *platform;
-+
-+	int domain;
-+	u32 msi_address;
-+	u8 tx_tag;
-+
-+	struct reset_control *h2xrst;
-+	struct reset_control *perst;
-+
-+	struct irq_domain *irq_domain;
-+	struct irq_domain *dev_domain;
-+	struct irq_domain *msi_domain;
-+	/* Protect bitmap variable */
-+	struct mutex lock;
-+
-+	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_HOST_IRQS);
-+};
-+
-+static void aspeed_pcie_intx_ack_irq(struct irq_data *d)
-+{
-+	struct aspeed_pcie *pcie = irq_data_get_irq_chip_data(d);
-+	int intx_en = pcie->platform->reg_intx_en;
-+
-+	writel(readl(pcie->reg + intx_en) | BIT(d->hwirq), pcie->reg + intx_en);
-+}
-+
-+static void aspeed_pcie_intx_mask_irq(struct irq_data *d)
-+{
-+	struct aspeed_pcie *pcie = irq_data_get_irq_chip_data(d);
-+	int intx_en = pcie->platform->reg_intx_en;
-+
-+	writel(readl(pcie->reg + intx_en) & ~BIT(d->hwirq), pcie->reg + intx_en);
-+}
-+
-+static void aspeed_pcie_intx_unmask_irq(struct irq_data *d)
-+{
-+	struct aspeed_pcie *pcie = irq_data_get_irq_chip_data(d);
-+	int intx_en = pcie->platform->reg_intx_en;
-+
-+	writel(readl(pcie->reg + intx_en) | BIT(d->hwirq), pcie->reg + intx_en);
-+}
-+
-+static struct irq_chip aspeed_intx_irq_chip = {
-+	.name = "ASPEED:IntX",
-+	.irq_ack = aspeed_pcie_intx_ack_irq,
-+	.irq_mask = aspeed_pcie_intx_mask_irq,
-+	.irq_unmask = aspeed_pcie_intx_unmask_irq,
-+};
-+
-+static int aspeed_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-+				irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &aspeed_intx_irq_chip, handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+	irq_set_status_flags(irq, IRQ_LEVEL);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops aspeed_intx_domain_ops = {
-+	.map = aspeed_pcie_intx_map,
-+};
-+
-+static irqreturn_t aspeed_pcie_intr_handler(int irq, void *dev_id)
-+{
-+	struct aspeed_pcie *pcie = dev_id;
-+	const struct aspeed_pcie_rc_platform *platform = pcie->platform;
-+	unsigned long status;
-+	unsigned long intx;
-+	u32 bit;
-+	int i;
-+
-+	intx = readl(pcie->reg + platform->reg_intx_sts) & 0xf;
-+	if (intx) {
-+		for_each_set_bit(bit, &intx, PCI_NUM_INTX)
-+			generic_handle_domain_irq(pcie->irq_domain, bit);
-+	}
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		for (i = 0; i < 2; i++) {
-+			status = readl(pcie->reg + platform->reg_msi_sts + (i * 4));
-+			writel(status, pcie->reg + platform->reg_msi_sts + (i * 4));
-+
-+			for_each_set_bit(bit, &status, 32) {
-+				bit += (i * 32);
-+				generic_handle_domain_irq(pcie->dev_domain, bit);
-+			}
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static u32 aspeed_pcie_get_bdf_offset(struct pci_bus *bus, unsigned int devfn,
-+				      int where)
-+{
-+	return ((bus->number) << 24) | (PCI_SLOT(devfn) << 19) |
-+		(PCI_FUNC(devfn) << 16) | (where & ~3);
-+}
-+
-+static int aspeed_ast2600_rd_conf(struct pci_bus *bus, unsigned int devfn,
-+				  int where, int size, u32 *val)
-+{
-+	struct aspeed_pcie *pcie = bus->sysdata;
-+	u32 bdf_offset;
-+	int rx_done_fail = 0, slot = PCI_SLOT(devfn);
-+	u32 cfg_val, isr, type = 0;
-+	u32 link_sts = 0;
-+	int ret;
-+
-+	/* Driver may set unlock RX buffere before triggering next TX config */
-+	writel(PCIE_UNLOCK_RX_BUFF | readl(pcie->reg + H2X_DEV_CTRL),
-+	       pcie->reg + H2X_DEV_CTRL);
-+
-+	if (bus->number == 128 && slot != 0 && slot != 8)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	type = (bus->number > 128);
-+
-+	if (type) {
-+		regmap_read(pcie->pciephy, PEHR_LINK, &link_sts);
-+		if (!(link_sts & PCIE_LINK_STS))
-+			return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+
-+	bdf_offset = aspeed_pcie_get_bdf_offset(bus, devfn, where);
-+
-+	regmap_write(pcie->cfg, H2X_TX_DESC0, CRG_READ_FMTTYPE(type) | CRG_PAYLOAD_SIZE);
-+	regmap_write(pcie->cfg, H2X_TX_DESC1,
-+		     AST2600_TX_DESC1_VALUE | (pcie->tx_tag << 8) | TLP_BYTE_EN(0xf));
-+	regmap_write(pcie->cfg, H2X_TX_DESC2, bdf_offset);
-+	regmap_write(pcie->cfg, H2X_TX_DESC3, 0);
-+
-+	regmap_write_bits(pcie->cfg, H2X_STS, PCIE_TRIGGER_TX, PCIE_TRIGGER_TX);
-+
-+	ret = regmap_read_poll_timeout(pcie->cfg, H2X_STS, cfg_val,
-+				       (cfg_val & PCIE_TX_IDLE), 0, 50);
-+	if (ret) {
-+		dev_err(pcie->dev,
-+			"[%X:%02X:%02X.%02X]CR tx timeout sts: 0x%08x\n",
-+			pcie->domain, bus->number, PCI_SLOT(devfn),
-+			PCI_FUNC(devfn), cfg_val);
-+		ret = PCIBIOS_SET_FAILED;
-+		*val = ~0;
-+		goto out;
-+	}
-+
-+	regmap_write_bits(pcie->cfg, H2X_INT_STS, PCIE_TX_IDLE_CLEAR,
-+			  PCIE_TX_IDLE_CLEAR);
-+
-+	regmap_read(pcie->cfg, H2X_STS, &cfg_val);
-+	switch (cfg_val & PCIE_STATUS_OF_TX) {
-+	case PCIE_RC_L_TX_COMPLETE:
-+	case PCIE_RC_H_TX_COMPLETE:
-+		ret = readl_poll_timeout(pcie->reg + H2X_DEV_STS, isr,
-+					 (isr & PCIE_RC_RX_DONE_ISR), 0, 50);
-+		if (ret) {
-+			dev_err(pcie->dev,
-+				"[%X:%02X:%02X.%02X]CR rx timeoutsts: 0x%08x\n",
-+				pcie->domain, bus->number, PCI_SLOT(devfn),
-+				PCI_FUNC(devfn), isr);
-+			rx_done_fail = 1;
-+			*val = ~0;
-+		}
-+		if (!rx_done_fail) {
-+			if (readl(pcie->reg + H2X_DEV_RX_DESC1) & BIT(13))
-+				*val = ~0;
-+			else
-+				*val = readl(pcie->reg + H2X_DEV_RX_DESC_DATA);
-+		}
-+
-+		writel(PCIE_UNLOCK_RX_BUFF | readl(pcie->reg + H2X_DEV_CTRL),
-+		       pcie->reg + H2X_DEV_CTRL);
-+		break;
-+	case PCIE_STATUS_OF_TX:
-+		*val = ~0;
-+		break;
-+	default:
-+		regmap_read(pcie->cfg, H2X_DEV_RX_DESC_DATA, &cfg_val);
-+		*val = cfg_val;
-+		break;
-+	}
-+
-+	switch (size) {
-+	case 1:
-+		*val = (*val >> ((where & 3) * 8)) & 0xff;
-+		break;
-+	case 2:
-+		*val = (*val >> ((where & 2) * 8)) & 0xffff;
-+		break;
-+	case 4:
-+	default:
-+		break;
-+	}
-+
-+	ret = PCIBIOS_SUCCESSFUL;
-+out:
-+	writel(readl(pcie->reg + H2X_DEV_STS), pcie->reg + H2X_DEV_STS);
-+	pcie->tx_tag = (pcie->tx_tag + 1) % 0x8;
-+	return ret;
-+}
-+
-+static int aspeed_ast2600_wr_conf(struct pci_bus *bus, unsigned int devfn,
-+				  int where, int size, u32 val)
-+{
-+	u32 type = 0;
-+	u32 shift = 8 * (where & 3);
-+	u32 bdf_offset;
-+	u8 byte_en = 0;
-+	struct aspeed_pcie *pcie = bus->sysdata;
-+	u32 isr, cfg_val;
-+	int ret;
-+
-+	/* Driver may set unlock RX buffere before triggering next TX config */
-+	writel(PCIE_UNLOCK_RX_BUFF | readl(pcie->reg + H2X_DEV_CTRL),
-+	       pcie->reg + H2X_DEV_CTRL);
-+
-+	switch (size) {
-+	case 1:
-+		byte_en = 1 << (where % 4);
-+		val = (val & 0xff) << shift;
-+		break;
-+	case 2:
-+		byte_en = 0x3 << (2 * ((where >> 1) % 2));
-+		val = (val & 0xffff) << shift;
-+		break;
-+	case 4:
-+	default:
-+		byte_en = 0xf;
-+		break;
-+	}
-+
-+	type = (bus->number > 128);
-+
-+	bdf_offset = aspeed_pcie_get_bdf_offset(bus, devfn, where);
-+
-+	regmap_write(pcie->cfg, H2X_TX_DESC0, CRG_WRITE_FMTTYPE(type) | CRG_PAYLOAD_SIZE);
-+	regmap_write(pcie->cfg, H2X_TX_DESC1,
-+		     AST2600_TX_DESC1_VALUE | (pcie->tx_tag << 8) | TLP_BYTE_EN(byte_en));
-+	regmap_write(pcie->cfg, H2X_TX_DESC2, bdf_offset);
-+	regmap_write(pcie->cfg, H2X_TX_DESC3, 0);
-+	regmap_write(pcie->cfg, H2X_TX_DESC_DATA, val);
-+
-+	regmap_write_bits(pcie->cfg, H2X_STS, PCIE_TRIGGER_TX, PCIE_TRIGGER_TX);
-+
-+	ret = regmap_read_poll_timeout(pcie->cfg, H2X_STS, cfg_val,
-+				       (cfg_val & PCIE_TX_IDLE), 0, 50);
-+	if (ret) {
-+		dev_err(pcie->dev,
-+			"[%X:%02X:%02X.%02X]CT tx timeout sts: 0x%08x\n",
-+			pcie->domain, bus->number, PCI_SLOT(devfn),
-+			PCI_FUNC(devfn), cfg_val);
-+		ret = PCIBIOS_SET_FAILED;
-+		goto out;
-+	}
-+
-+	regmap_write_bits(pcie->cfg, H2X_INT_STS, PCIE_TX_IDLE_CLEAR,
-+			  PCIE_TX_IDLE_CLEAR);
-+
-+	regmap_read(pcie->cfg, H2X_STS, &cfg_val);
-+	switch (cfg_val & PCIE_STATUS_OF_TX) {
-+	case PCIE_RC_L_TX_COMPLETE:
-+	case PCIE_RC_H_TX_COMPLETE:
-+		ret = readl_poll_timeout(pcie->reg + H2X_DEV_STS, isr,
-+					 (isr & PCIE_RC_RX_DONE_ISR), 0, 50);
-+		if (ret) {
-+			dev_err(pcie->dev,
-+				"[%X:%02X:%02X.%02X]CT rx timeout sts: 0x%08x\n",
-+				pcie->domain, bus->number, PCI_SLOT(devfn),
-+				PCI_FUNC(devfn), isr);
-+			ret = PCIBIOS_SET_FAILED;
-+			goto out;
-+		}
-+		break;
-+	}
-+
-+	ret = PCIBIOS_SUCCESSFUL;
-+out:
-+	writel(readl(pcie->reg + H2X_DEV_STS), pcie->reg + H2X_DEV_STS);
-+	pcie->tx_tag = (pcie->tx_tag + 1) % 0x8;
-+	return ret;
-+}
-+
-+static bool aspeed_ast2700_get_link(struct aspeed_pcie *pcie)
-+{
-+	u32 reg;
-+	bool link;
-+
-+	regmap_read(pcie->pciephy, PEHR_MISC_300, &reg);
-+	if (reg & CAPABILITY_GEN2) {
-+		regmap_read(pcie->pciephy, PEHR_MISC_344, &reg);
-+		link = !!(reg & LINK_STATUS_GEN2);
-+	} else {
-+		regmap_read(pcie->pciephy, PEHR_MISC_358, &reg);
-+		link = !!(reg & LINK_STATUS_GEN4);
-+	}
-+
-+	return link;
-+}
-+
-+static int aspeed_ast2700_rd_conf(struct pci_bus *bus, unsigned int devfn,
-+				  int where, int size, u32 *val)
-+{
-+	struct aspeed_pcie *pcie = bus->sysdata;
-+	u32 bdf_offset, status;
-+	u8 type;
-+	int ret;
-+
-+	if ((bus->number == 0 && devfn != 0))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	if (bus->number == 0) {
-+		/* Internal access to bridge */
-+		writel(TLP_BYTE_EN(0xf) << 16 | (where & ~3), pcie->reg + H2X_CFGI_TLP);
-+		writel(CFGI_TLP_FIRE, pcie->reg + H2X_CFGI_CTRL);
-+		*val = readl(pcie->reg + H2X_CFGI_RET_DATA);
-+	} else {
-+		if (!aspeed_ast2700_get_link(pcie))
-+			return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+		bdf_offset = aspeed_pcie_get_bdf_offset(bus, devfn, where);
-+
-+		type = (bus->number == 1) ? PCI_HEADER_TYPE_NORMAL : PCI_HEADER_TYPE_BRIDGE;
-+
-+		writel(CRG_READ_FMTTYPE(type) | CRG_PAYLOAD_SIZE, pcie->reg + H2X_CFGE_TLP_1ST);
-+		writel(AST2700_TX_DESC1_VALUE | (pcie->tx_tag << 8) | TLP_BYTE_EN(0xf),
-+		       pcie->reg + H2X_CFGE_TLP_NEXT);
-+		writel(bdf_offset, pcie->reg + H2X_CFGE_TLP_NEXT);
-+		writel(CFGE_TX_IDLE | CFGE_RX_BUSY, pcie->reg + H2X_CFGE_INT_STS);
-+		writel(CFGE_TLP_FIRE, pcie->reg + H2X_CFGE_CTRL);
-+
-+		ret = readl_poll_timeout(pcie->reg + H2X_CFGE_INT_STS, status,
-+					 (status & CFGE_TX_IDLE), 0, 50);
-+		if (ret) {
-+			dev_err(pcie->dev,
-+				"[%X:%02X:%02X.%02X]CR tx timeout sts: 0x%08x\n",
-+				pcie->domain, bus->number, PCI_SLOT(devfn),
-+				PCI_FUNC(devfn), status);
-+			ret = PCIBIOS_SET_FAILED;
-+			*val = ~0;
-+			goto out;
-+		}
-+
-+		ret = readl_poll_timeout(pcie->reg + H2X_CFGE_INT_STS, status,
-+					 (status & CFGE_RX_BUSY), 0, 50000);
-+		if (ret) {
-+			dev_err(pcie->dev,
-+				"[%X:%02X:%02X.%02X]CR rx timeoutsts: 0x%08x\n",
-+				pcie->domain, bus->number, PCI_SLOT(devfn),
-+				PCI_FUNC(devfn), status);
-+			ret = PCIBIOS_SET_FAILED;
-+			*val = ~0;
-+			goto out;
-+		}
-+		*val = readl(pcie->reg + H2X_CFGE_RET_DATA);
-+	}
-+
-+	switch (size) {
-+	case 1:
-+		*val = (*val >> ((where & 3) * 8)) & 0xff;
-+		break;
-+	case 2:
-+		*val = (*val >> ((where & 2) * 8)) & 0xffff;
-+		break;
-+	case 4:
-+	default:
-+		break;
-+	}
-+
-+	ret = PCIBIOS_SUCCESSFUL;
-+out:
-+	writel(status, pcie->reg + H2X_CFGE_INT_STS);
-+	pcie->tx_tag = (pcie->tx_tag + 1) % 0xF;
-+	return ret;
-+}
-+
-+static int aspeed_ast2700_wr_conf(struct pci_bus *bus, unsigned int devfn,
-+				  int where, int size, u32 val)
-+{
-+	struct aspeed_pcie *pcie = bus->sysdata;
-+	u32 shift = 8 * (where & 3);
-+	u8 byte_en;
-+	u32 bdf_offset, status, type;
-+	int ret;
-+
-+	if ((bus->number == 0 && devfn != 0))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	switch (size) {
-+	case 1:
-+		byte_en = 1 << (where % 4);
-+		val = (val & 0xff) << shift;
-+		break;
-+	case 2:
-+		byte_en = 0x3 << (2 * ((where >> 1) % 2));
-+		val = (val & 0xffff) << shift;
-+		break;
-+	case 4:
-+	default:
-+		byte_en = 0xf;
-+		break;
-+	}
-+
-+	if (bus->number == 0) {
-+		/* Internal access to bridge */
-+		writel(CFGI_WRITE | TLP_BYTE_EN(byte_en) << 16 | (where & ~3),
-+		       pcie->reg + H2X_CFGI_TLP);
-+		writel(val, pcie->reg + H2X_CFGI_WR_DATA);
-+		writel(CFGI_TLP_FIRE, pcie->reg + H2X_CFGI_CTRL);
-+	} else {
-+		if (!aspeed_ast2700_get_link(pcie))
-+			return PCIBIOS_SET_FAILED;
-+
-+		bdf_offset = aspeed_pcie_get_bdf_offset(bus, devfn, where);
-+
-+		type = (bus->number == 1) ? PCI_HEADER_TYPE_NORMAL : PCI_HEADER_TYPE_BRIDGE;
-+
-+		writel(CRG_WRITE_FMTTYPE(type) | CRG_PAYLOAD_SIZE, pcie->reg + H2X_CFGE_TLP_1ST);
-+		writel(AST2700_TX_DESC1_VALUE | (pcie->tx_tag << 8) | byte_en,
-+		       pcie->reg + H2X_CFGE_TLP_NEXT);
-+		writel(bdf_offset, pcie->reg + H2X_CFGE_TLP_NEXT);
-+		writel(val, pcie->reg + H2X_CFGE_TLP_NEXT);
-+		writel(CFGE_TX_IDLE | CFGE_RX_BUSY, pcie->reg + H2X_CFGE_INT_STS);
-+		writel(CFGE_TLP_FIRE, pcie->reg + H2X_CFGE_CTRL);
-+
-+		ret = readl_poll_timeout(pcie->reg + H2X_CFGE_INT_STS, status,
-+					 (status & CFGE_TX_IDLE), 0, 50);
-+		if (ret) {
-+			dev_err(pcie->dev,
-+				"[%X:%02X:%02X.%02X]CT tx timeout sts: 0x%08x\n",
-+				pcie->domain, bus->number, PCI_SLOT(devfn),
-+				PCI_FUNC(devfn), status);
-+			ret = PCIBIOS_SET_FAILED;
-+			goto out;
-+		}
-+
-+		ret = readl_poll_timeout(pcie->reg + H2X_CFGE_INT_STS, status,
-+					 (status & CFGE_RX_BUSY), 0, 50000);
-+		if (ret) {
-+			dev_err(pcie->dev,
-+				"[%X:%02X:%02X.%02X]CT rx timeout sts: 0x%08x\n",
-+				pcie->domain, bus->number, PCI_SLOT(devfn),
-+				PCI_FUNC(devfn), status);
-+			ret = PCIBIOS_SET_FAILED;
-+			goto out;
-+		}
-+
-+		(void)readl(pcie->reg + H2X_CFGE_RET_DATA);
-+	}
-+
-+	ret = PCIBIOS_SUCCESSFUL;
-+out:
-+	writel(status, pcie->reg + H2X_CFGE_INT_STS);
-+	pcie->tx_tag = (pcie->tx_tag + 1) % 0xF;
-+	return ret;
-+}
-+
-+static struct pci_ops aspeed_ast2600_pcie_ops = {
-+	.read = aspeed_ast2600_rd_conf,
-+	.write = aspeed_ast2600_wr_conf,
-+};
-+
-+static struct pci_ops aspeed_ast2700_pcie_ops = {
-+	.read = aspeed_ast2700_rd_conf,
-+	.write = aspeed_ast2700_wr_conf,
-+};
-+
-+#ifdef CONFIG_PCI_MSI
-+static void aspeed_msi_compose_msi_msg(struct irq_data *data,
-+				       struct msi_msg *msg)
-+{
-+	struct aspeed_pcie *pcie = irq_data_get_irq_chip_data(data);
-+
-+	msg->address_hi = 0;
-+	msg->address_lo = pcie->msi_address;
-+	msg->data = data->hwirq;
-+}
-+
-+static int aspeed_msi_set_affinity(struct irq_data *irq_data,
-+				   const struct cpumask *mask, bool force)
-+{
-+	return -EINVAL;
-+}
-+
-+static struct irq_chip aspeed_msi_bottom_irq_chip = {
-+	.name = "ASPEED MSI",
-+	.irq_compose_msi_msg = aspeed_msi_compose_msi_msg,
-+	.irq_set_affinity = aspeed_msi_set_affinity,
-+};
-+
-+static int aspeed_irq_msi_domain_alloc(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs,
-+				       void *args)
-+{
-+	struct aspeed_pcie *pcie = domain->host_data;
-+	int bit;
-+	int i;
-+
-+	mutex_lock(&pcie->lock);
-+
-+	bit = bitmap_find_free_region(pcie->msi_irq_in_use, MAX_MSI_HOST_IRQS,
-+				      get_count_order(nr_irqs));
-+
-+	mutex_unlock(&pcie->lock);
-+
-+	if (bit < 0)
-+		return -ENOSPC;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		irq_domain_set_info(domain, virq + i, bit + i,
-+				    &aspeed_msi_bottom_irq_chip,
-+				    domain->host_data, handle_simple_irq, NULL,
-+				    NULL);
-+	}
-+
-+	return 0;
-+}
-+
-+static void aspeed_irq_msi_domain_free(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *data = irq_domain_get_irq_data(domain, virq);
-+	struct aspeed_pcie *pcie = irq_data_get_irq_chip_data(data);
-+
-+	mutex_lock(&pcie->lock);
-+
-+	bitmap_release_region(pcie->msi_irq_in_use, data->hwirq,
-+			      get_count_order(nr_irqs));
-+
-+	mutex_unlock(&pcie->lock);
-+}
-+
-+static const struct irq_domain_ops aspeed_msi_domain_ops = {
-+	.alloc = aspeed_irq_msi_domain_alloc,
-+	.free = aspeed_irq_msi_domain_free,
-+};
-+
-+static struct irq_chip aspeed_msi_irq_chip = {
-+	.name = "PCIe MSI",
-+	.irq_enable = pci_msi_unmask_irq,
-+	.irq_disable = pci_msi_mask_irq,
-+	.irq_mask = pci_msi_mask_irq,
-+	.irq_unmask = pci_msi_unmask_irq,
-+};
-+
-+static struct msi_domain_info aspeed_msi_domain_info = {
-+	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-+	.chip = &aspeed_msi_irq_chip,
-+};
-+#endif
-+
-+static void aspeed_pcie_irq_domain_free(struct aspeed_pcie *pcie)
-+{
-+	if (pcie->irq_domain) {
-+		irq_domain_remove(pcie->irq_domain);
-+		pcie->irq_domain = NULL;
-+	}
-+#ifdef CONFIG_PCI_MSI
-+	if (pcie->msi_domain) {
-+		irq_domain_remove(pcie->msi_domain);
-+		pcie->msi_domain = NULL;
-+	}
-+
-+	if (pcie->dev_domain) {
-+		irq_domain_remove(pcie->dev_domain);
-+		pcie->dev_domain = NULL;
-+	}
-+#endif
-+}
-+
-+static int aspeed_pcie_init_irq_domain(struct aspeed_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	struct device_node *node = dev->of_node;
-+	struct device_node *pcie_intc_node;
-+	int ret;
-+
-+	pcie_intc_node = of_get_next_child(node, NULL);
-+	if (!pcie_intc_node)
-+		return dev_err_probe(dev, -ENODEV, "No PCIe Intc node found\n");
-+
-+	pcie->irq_domain =
-+		irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX, &aspeed_intx_domain_ops, pcie);
-+	of_node_put(pcie_intc_node);
-+	if (!pcie->irq_domain) {
-+		ret = dev_err_probe(dev, -ENOMEM, "failed to get an INTx IRQ domain\n");
-+		goto err;
-+	}
-+
-+	writel(0, pcie->reg + pcie->platform->reg_intx_en);
-+	writel(~0, pcie->reg + pcie->platform->reg_intx_sts);
-+
-+#ifdef CONFIG_PCI_MSI
-+	pcie->dev_domain =
-+		irq_domain_add_linear(NULL, MAX_MSI_HOST_IRQS, &aspeed_msi_domain_ops, pcie);
-+	if (!pcie->dev_domain) {
-+		ret = dev_err_probe(pcie->dev, -ENOMEM, "failed to create IRQ domain\n");
-+		goto err;
-+	}
-+
-+	pcie->msi_domain = pci_msi_create_irq_domain(dev_fwnode(pcie->dev), &aspeed_msi_domain_info,
-+						     pcie->dev_domain);
-+	if (!pcie->msi_domain) {
-+		ret = dev_err_probe(pcie->dev, -ENOMEM, "failed to create MSI domain\n");
-+		goto err;
-+	}
-+
-+	writel(~0, pcie->reg + pcie->platform->reg_msi_en);
-+	writel(~0, pcie->reg + pcie->platform->reg_msi_en + 0x04);
-+	writel(~0, pcie->reg + pcie->platform->reg_msi_sts);
-+	writel(~0, pcie->reg + pcie->platform->reg_msi_sts + 0x04);
-+#endif
-+	return 0;
-+err:
-+	aspeed_pcie_irq_domain_free(pcie);
-+	return ret;
-+}
-+
-+static void aspeed_pcie_port_init(struct aspeed_pcie *pcie)
-+{
-+	u32 link_sts = 0;
-+
-+	regmap_write(pcie->pciephy, PEHR_LOCK, PCIE_UNLOCK);
-+	regmap_write(pcie->pciephy, PEHR_GLOBAL, ROOT_COMPLEX_ID(0x3));
-+
-+	reset_control_deassert(pcie->perst);
-+	mdelay(500);
-+
-+	writel(PCIE_RX_DMA_EN | PCIE_RX_LINEAR | PCIE_RX_MSI_SEL | PCIE_RX_MSI_EN |
-+	       PCIE_Wait_RX_TLP_CLR | PCIE_RC_RX_ENABLE | PCIE_RC_ENABLE,
-+	       pcie->reg + H2X_DEV_CTRL);
-+
-+	writel(0x28, pcie->reg + H2X_DEV_TX_TAG);
-+
-+	regmap_read(pcie->pciephy, PEHR_LINK, &link_sts);
-+	if (link_sts & PCIE_LINK_STS)
-+		dev_info(pcie->dev, "PCIe Link UP");
-+	else
-+		dev_info(pcie->dev, "PCIe Link DOWN");
-+}
-+
-+static int aspeed_ast2600_setup(struct platform_device *pdev)
-+{
-+	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
-+	struct device *dev = pcie->dev;
-+
-+	pcie->ahbc = syscon_regmap_lookup_by_phandle(dev->of_node, "aspeed,ahbc");
-+	if (IS_ERR(pcie->ahbc))
-+		return dev_err_probe(dev, PTR_ERR(pcie->ahbc), "failed to map ahbc base\n");
-+
-+	reset_control_assert(pcie->h2xrst);
-+	mdelay(5);
-+	reset_control_deassert(pcie->h2xrst);
-+
-+	regmap_write(pcie->ahbc, AHBC_KEY, AHBC_UNLOCK_KEY);
-+	regmap_update_bits(pcie->ahbc, AHBC_ADDR_MAPPING, PCIE_RC_MEMORY_EN, PCIE_RC_MEMORY_EN);
-+	regmap_write(pcie->ahbc, AHBC_KEY, AHBC_UNLOCK);
-+
-+	regmap_write(pcie->cfg, H2X_AHB_ADDR_CONFIG0,
-+		     AHB_REMAP_ADDR_31_20(0x600) | AHB_MASK_ADDR_31_20(0xE00));
-+	regmap_write(pcie->cfg, H2X_AHB_ADDR_CONFIG1, AHB_REMAP_ADDR_64_32(0));
-+	regmap_write(pcie->cfg, H2X_AHB_ADDR_CONFIG2, AHB_MASK_ADDR_64_32(~0));
-+
-+	regmap_write(pcie->cfg, H2X_CTRL, H2X_BRIDGE_EN);
-+
-+	aspeed_pcie_port_init(pcie);
-+
-+	pcie->host->ops = &aspeed_ast2600_pcie_ops;
-+
-+	return 0;
-+}
-+
-+static int aspeed_ast2700_setup(struct platform_device *pdev)
-+{
-+	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
-+	u32 cfg_val;
-+
-+	reset_control_assert(pcie->perst);
-+
-+	regmap_write(pcie->pciephy, PEHR_MISC_70,
-+		     POSTED_DATA_CREDITS(0xc0) | POSTED_HEADER_CREDITS(0xa));
-+	regmap_write(pcie->pciephy, PEHR_MISC_78,
-+		     COMPLETION_DATA_CREDITS(0x30) | COMPLETION_HEADER_CREDITS(0x8));
-+	regmap_write(pcie->pciephy, PEHR_MISC_58, LOCAL_SCALE_SUP);
-+
-+	regmap_update_bits(pcie->cfg, SCU_60,
-+			   RC_E2M_PATH_EN | RC_H2XS_PATH_EN | RC_H2XD_PATH_EN | RC_H2XX_PATH_EN |
-+			   RC_UPSTREAM_MEM_EN,
-+			   RC_E2M_PATH_EN | RC_H2XS_PATH_EN | RC_H2XD_PATH_EN | RC_H2XX_PATH_EN |
-+			   RC_UPSTREAM_MEM_EN);
-+	regmap_write(pcie->cfg, SCU_64,
-+		     RC0_DECODE_DMA_BASE(0) | RC0_DECODE_DMA_LIMIT(0xFF) | RC1_DECODE_DMA_BASE(0) |
-+		     RC1_DECODE_DMA_LIMIT(0xFF));
-+	regmap_write(pcie->cfg, SCU_70, DISABLE_EP_FUNC);
-+
-+	reset_control_assert(pcie->h2xrst);
-+	mdelay(10);
-+	reset_control_deassert(pcie->h2xrst);
-+
-+	regmap_write(pcie->pciephy, PEHR_MISC_5C, CONFIG_RC_DEVICE);
-+	regmap_read(pcie->pciephy, PEHR_MISC_60, &cfg_val);
-+	regmap_write(pcie->pciephy, PEHR_MISC_60,
-+		     (cfg_val & ~PORT_TPYE) | FIELD_PREP(PORT_TPYE, PORT_TYPE_ROOT));
-+
-+	writel(0, pcie->reg + H2X_CTRL);
-+	writel(H2X_BRIDGE_EN | H2X_BRIDGE_DIRECT_EN, pcie->reg + H2X_CTRL);
-+
-+	/* The BAR mapping:
-+	 * CPU Node0(domain 0): 0x60000000
-+	 * CPU Node1(domain 1): 0x80000000
-+	 * IO       (domain 2): 0xa0000000
-+	 */
-+	writel(REMAP_BAR_BASE(0x60000000 + (0x20000000 * pcie->domain)),
-+	       pcie->reg + H2X_REMAP_DIRECT_ADDR);
-+
-+	/* Prepare for 64-bit BAR pref */
-+	writel(REMAP_PREF_ADDR_63_32(0x3), pcie->reg + H2X_REMAP_PREF_ADDR);
-+
-+	reset_control_deassert(pcie->perst);
-+	mdelay(1000);
-+
-+	pcie->host->ops = &aspeed_ast2700_pcie_ops;
-+
-+	if (aspeed_ast2700_get_link(pcie))
-+		dev_info(pcie->dev, "PCIe Link UP");
-+	else
-+		dev_info(pcie->dev, "PCIe Link DOWN");
-+
-+	return 0;
-+}
-+
-+static int aspeed_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pci_host_bridge *host;
-+	struct aspeed_pcie *pcie;
-+	struct device_node *node = dev->of_node;
-+	const void *md = of_device_get_match_data(dev);
-+	int irq, ret;
-+
-+	if (!md)
-+		return -ENODEV;
-+
-+	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-+	if (!host)
-+		return -ENOMEM;
-+
-+	pcie = pci_host_bridge_priv(host);
-+	pcie->dev = dev;
-+	pcie->tx_tag = 0;
-+	platform_set_drvdata(pdev, pcie);
-+
-+	pcie->platform = md;
-+	pcie->host = host;
-+
-+	pcie->reg = devm_platform_ioremap_resource(pdev, 0);
-+
-+	of_property_read_u32(node, "msi_address", &pcie->msi_address);
-+	of_property_read_u32(node, "linux,pci-domain", &pcie->domain);
-+
-+	pcie->cfg = syscon_regmap_lookup_by_phandle(dev->of_node, "aspeed,pciecfg");
-+	if (IS_ERR(pcie->cfg))
-+		return dev_err_probe(dev, PTR_ERR(pcie->cfg), "Failed to map pciecfg base\n");
-+
-+	pcie->pciephy = syscon_regmap_lookup_by_phandle(node, "aspeed,pciephy");
-+	if (IS_ERR(pcie->pciephy))
-+		return dev_err_probe(dev, PTR_ERR(pcie->pciephy), "Failed to map pciephy base\n");
-+
-+	pcie->h2xrst = devm_reset_control_get_exclusive(dev, "h2x");
-+	if (IS_ERR(pcie->h2xrst))
-+		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst), "Failed to get h2x reset\n");
-+
-+	pcie->perst = devm_reset_control_get_exclusive(dev, "perst");
-+	if (IS_ERR(pcie->perst))
-+		return dev_err_probe(dev, PTR_ERR(pcie->perst), "Failed to get perst reset\n");
-+
-+	ret = pcie->platform->setup(pdev);
-+	if (ret)
-+		goto err_setup;
-+
-+	host->sysdata = pcie;
-+
-+	ret = aspeed_pcie_init_irq_domain(pcie);
-+	if (ret)
-+		goto err_irq_init;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		goto err_irq;
-+
-+	ret = devm_request_irq(dev, irq, aspeed_pcie_intr_handler, IRQF_SHARED, dev_name(dev),
-+			       pcie);
-+	if (ret)
-+		goto err_irq;
-+
-+	pcie->clock = clk_get(dev, NULL);
-+	if (IS_ERR(pcie->clock))
-+		goto err_clk;
-+	ret = clk_prepare_enable(pcie->clock);
-+	if (ret)
-+		goto err_clk_enable;
-+
-+	ret = pci_host_probe(host);
-+	if (ret)
-+		goto err_clk_enable;
-+
-+	return 0;
-+
-+err_clk_enable:
-+	clk_put(pcie->clock);
-+err_clk:
-+err_irq:
-+	aspeed_pcie_irq_domain_free(pcie);
-+err_irq_init:
-+err_setup:
-+	return dev_err_probe(dev, ret, "Failed to setup PCIe RC\n");
-+}
-+
-+static void aspeed_pcie_remove(struct platform_device *pdev)
-+{
-+	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	if (pcie->clock) {
-+		clk_disable_unprepare(pcie->clock);
-+		clk_put(pcie->clock);
-+	}
-+
-+	pci_stop_root_bus(pcie->host->bus);
-+	pci_remove_root_bus(pcie->host->bus);
-+	aspeed_pcie_irq_domain_free(pcie);
-+}
-+
-+static struct aspeed_pcie_rc_platform pcie_rc_ast2600 = {
-+	.setup = aspeed_ast2600_setup,
-+	.reg_intx_en = 0x04,
-+	.reg_intx_sts = 0x08,
-+	.reg_msi_en = 0x20,
-+	.reg_msi_sts = 0x28,
-+};
-+
-+static struct aspeed_pcie_rc_platform pcie_rc_ast2700 = {
-+	.setup = aspeed_ast2700_setup,
-+	.reg_intx_en = 0x40,
-+	.reg_intx_sts = 0x48,
-+	.reg_msi_en = 0x50,
-+	.reg_msi_sts = 0x58,
-+};
-+
-+static const struct of_device_id aspeed_pcie_of_match[] = {
-+	{ .compatible = "aspeed,ast2600-pcie", .data = &pcie_rc_ast2600 },
-+	{ .compatible = "aspeed,ast2700-pcie", .data = &pcie_rc_ast2700 },
-+	{}
-+};
-+
-+static struct platform_driver aspeed_pcie_driver = {
-+	.driver = {
-+		.name = "aspeed-pcie",
-+		.suppress_bind_attrs = true,
-+		.of_match_table = aspeed_pcie_of_match,
-+	},
-+	.probe = aspeed_pcie_probe,
-+	.remove = aspeed_pcie_remove,
-+};
-+
-+module_platform_driver(aspeed_pcie_driver);
-+
-+MODULE_AUTHOR("Jacky Chou <jacky_chou@aspeedtech.com>");
-+MODULE_DESCRIPTION("ASPEED PCIe Root Complex");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+         Scenario 1                           Effort
+  (1) Guest ACCEPT at 2MB                   ACCEPT 2MB         
+  (2) converts a 4KB page to shared         DEMOTE
+  (3) convert it back to private            ACCEPT 4KB
 
+
+         Scenario 2                           Effort
+  (1) Guest ACCEPT at 4MB                   DEMOTE, ACCEPT 4MB         
+  (2) converts a 4KB page to shared
+  (3) convert it back to private            ACCEPT 4KB
+
+
+In step (3) of "Scenario 1", VMM will not map the page at 2MB according to the
+current implementation because PROMOTION requires uniform ACCEPT status across
+all 512 4KB pages to be succeed.
+
+> returns PAGE_SIZE_MATCH and enforces guest to accept a bigger size. what a
+> stupid VMM.
+I agree with Sean that if guest doesn't want to accept at a bigger size for
+certain reasons (e.g. it thinks it's unsafe or consider it as an attack),
+invoking an explicit TDVMCALL may be a better approach.
+
+> Anyway, I'm just expressing how I understand the current design and I think
+> it's reasonable. And I don't object the idea to return ACCEPT_SIZE_MISMATCH
+> for "too small" case, but it's needs to be guest opt-in, i.e., let guest
+> itself chooses the behavior.
