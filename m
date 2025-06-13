@@ -1,349 +1,315 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4449233159;
-	Fri, 13 Jun 2025 18:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9853D1A254C;
+	Fri, 13 Jun 2025 18:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840639; cv=none; b=YVtnM8Jpei5fNFGsDFNW37FyivYhuzUQLkvOy+BdQ18TV927NxIEvr7GTN8I+tACwThWtbGIac373+NzMT/k5NA229LPASu2yGtkytKtpn5rjuZnfHTZ02NOMwhqwP1SvDt/blYcbQ/5MR2GaZvQ+V68kXR9OzP2RT5F1ophIwQ=
+	t=1749840689; cv=none; b=CDL50gYAa/pKdqo8+2/LOSYxPpFOcobZcqVx2PXGGvVT624rQiYsZGHeJKEtn98cwq+oO6xbIcdMa+ooQ7OwhJW3tFvQHCrPU/8OqFWHO+Tp+4J60kvRS8htODuo6vpDQRa2hcubrxIOW9OUKn9y3T0hxFcT/OtHAEsjpfQC5cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840639; c=relaxed/simple;
-	bh=vOJoLHa2gnZMY8Ii+Yxcw8/mzZATpgoYQs1ixFqDEVA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=gE25crCDVfu5plCZthXw1JzLsRXCC9DTGtW9upLW/qNqAxW8lo7pLPAX9iXE5J2z+wP0Mm0x8S0wos5UfOkeLPt8bmbdHVAVS43wb7Spq9edIePoUy1jYgKdIUuVeHDr6vVGemgozlrt0+QY2dyPS+DZCXBHciE1Kkn6pkqIUQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKSRbwtF; arc=none smtp.client-ip=209.85.222.174
+	s=arc-20240116; t=1749840689; c=relaxed/simple;
+	bh=z33FYu9xpQR91mz28Ot9Lsn4vMCPOY75basP6xozkFQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Th5+pBwjbPqwhrx4djWmZkfKMQ/ygsSnkPGyyUXl1Rax5YFphVIdPU9spp5fkPflT2kpT1X2AGlzTYyC+IutxrQsz20ML3zYOxJ4n2IFuSXvzNOnYrY+jk2fmICIA/LhlI5kPOo3CMAgQcTVzIeh5rOrYO2bk8v8gb/IkaSkhpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhGe6Fxi; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKSRbwtF"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d38b84984dso386934085a.0;
-        Fri, 13 Jun 2025 11:50:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhGe6Fxi"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ade48b24c97so364872066b.2;
+        Fri, 13 Jun 2025 11:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749840636; x=1750445436; darn=vger.kernel.org;
-        h=in-reply-to:subject:autocrypt:from:content-language:references:cc
-         :to:user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ssas791YCXeKD/QD+JlJCVMdCAPoseQHAAr8HsPhqJM=;
-        b=TKSRbwtFbvLD7Qr8Tv0P4HGpN2GzPntER55jHjfeOiUOLzDMeG6kvUQNcny3vUpxB4
-         x+wiylrDFmKXYXPkFkNhz+U4Sgxs2HQz24sgwU1ueNAa0kevTfxwb4FBVGla9/d2y8NH
-         IDuou4I5jzonWQCp8TlJG8++BnnCckYYjiNizCxHlYv0pbjTMZu3HjbmkOUszqPRKp5g
-         5CjvWH3i+qaNNausGfI/SIxeImBBVw/xujYBx61bnN1S4mGOb/wtePL3wLgQQ8wnK4+F
-         cLgv2701sNpuNkMx2w1MBm2FFnAYhkBjolXolHyoKk92NqUGBsR2nMZbHo1d+u77aiav
-         0peQ==
+        d=gmail.com; s=20230601; t=1749840686; x=1750445486; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JSRxValwcmkk+jvT8gtFqyK3rDsLmQ1dL3e3fNgDB+I=;
+        b=WhGe6Fximn/UE8km1XTkPLRUgi8LoTphUMyQtL9GeeFJnuPlg1kLFgk7Ncp66jcqu3
+         jCl5YGTzZ2ocX1LZM/32o6jrkXRoXYjrwuntaH55P2thX2K6fQeG88fO8fDA3vfh/aCz
+         YywN391ZNPRzv8WxhUmrFtsBFrHxMz6BZr0cuq2YP7jF1DAj7sq8G0x/SRDKbgN9xW2d
+         8Gvyj7s2Y7upJS3rfvKetSIeo3Hpk/lf9LnhD7rQZp01gDHtcHDepM5FVLqPJORCpsMd
+         +kybLqp464svnKtHbP4XCpctmCb9uEqGNc0T0BRggN+penec3U1zH/9gN2N8Guu2Punp
+         7DOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749840636; x=1750445436;
-        h=in-reply-to:subject:autocrypt:from:content-language:references:cc
-         :to:user-agent:mime-version:date:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ssas791YCXeKD/QD+JlJCVMdCAPoseQHAAr8HsPhqJM=;
-        b=nT3l6S58B709wV8ySqpLEKpTmA9fbP2hs8Pv1MEGEmSlcTvGJSkFWEGcei2m8GNKz0
-         r7GObssPsfoVlRzyVb3FgxutQWuqA4OpZdrdWTwOLYWuA6RzEK59MU3RuBH7EarvpMOx
-         +0SaMSoFc5WVRqTM9zwJMuoRO4pVD/AA7LVnHfPVmiQXj7+I63rzA+G2njC6quxtzn8+
-         wFQT4D6Ebd3N7qLPl+mIJiCbhqgqA0brzz4ZZcUgA0bHZKVWMe3w0XsLdCjzEWtrgcG7
-         zOf2h2wioYtm27eUxadgoagAQMgahMVqqBGXL4oVzZI8lqg07TKCv1AbMnGLU3kjbt7z
-         vTHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnaLOLCmW1qJ7L/jin11B0dAFAC0jxLGeDU+F/DY9Z/9BK18KT6rJPK/AiSl9eiTlmsoi9lu10UAhFAFQ=@vger.kernel.org, AJvYcCWRygxjaai86+Iymt8C0ernr+vMtxrSjwH+OU+KAw1UK9sqhF7f9sMy+bsly1MFsVy262ZJFvMsDtFI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzU8y6Wni9ofbXQaIyqVGHg2ElU+LksL854pnfYVsMMMcaGgGr
-	wj33iyNi6cZeqMaSOsX2grItYzF8V3PxaFnWOoOjrm3+EUjKA6PpnacV
-X-Gm-Gg: ASbGncuMrb+gQZ02NOJ5AjE+1wXC9tHsWe0hBc+uuLd4Vvqy9Mu+4mttgVmVmbe9L+b
-	kCtlXnHfipQp/EM/uzlTnBAZUoJ6SBaGnNn37A+6YUw+/QwgpK4LM3r6bCf4cDnXgW+MaD1nDkA
-	NmI2jEbFkQIqRLejLLpzi3J47qYOCLzsT7rmkK9GPbDkSe33x7TYvfWe9o/fdiDeOfdx+oM0pPS
-	vMTZWvUddtRdpBykHsJGcsz3c1Kklb/W+CdsmDiLIQc3tqK6aPPSaYt5rwGACwpCXFSQ29zs33n
-	N2fBf+M5nuUZ2tfktps1+dS2oe9/j2SyE27ApSuH+aBAYX06x7RL9fyXeojclLBdcr6ghlxEP1q
-	P/w==
-X-Google-Smtp-Source: AGHT+IEMXtw/Ah6KNxMdjC6SeMqIZcruyHPplmMh9NTFdcpBcc3v52YYh7xDRoVcF1IT5KrTdD5JBw==
-X-Received: by 2002:a05:620a:4085:b0:7ce:ca97:a6bf with SMTP id af79cd13be357-7d3c6ce53ccmr83023585a.41.1749840636357;
-        Fri, 13 Jun 2025 11:50:36 -0700 (PDT)
-Received: from [10.138.10.6] ([89.187.178.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e0535csm205804985a.41.2025.06.13.11.50.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 11:50:35 -0700 (PDT)
-Message-ID: <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
-Date: Fri, 13 Jun 2025 14:50:01 -0400
+        d=1e100.net; s=20230601; t=1749840686; x=1750445486;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JSRxValwcmkk+jvT8gtFqyK3rDsLmQ1dL3e3fNgDB+I=;
+        b=X+FVB3YwsYy66xzLS2xc9m5iLdtNB75T7F5uWJ8EaALgFsrYY3KkoKVUTfvrvyOyIs
+         3lr6D8J46KRhLNCCGG8IvHzSCGHQ4iYjHvXKCnMk9umE7Z/jlHsv8cwLgtawbZks+rSO
+         TmmLwuafZ8Zjsue5ZLj7igLI4Yss90+xYvz29AOd96B+4yAMu79gaReYGPHaeBxGk2IQ
+         4hGkFlMfvFQaSVHMtLIhQeFGp+3xWVQzrghVtseTyITjrz9jWLWfOku8YSJ710RGXyNQ
+         0uYyR20nAaFYljSLqFrvUz0HNowWNzq+Kxwb2MHkN2mXyBJV2++mZp+DGwZACxE2FmNd
+         7Krw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtLqB6sjPs2Wqdv6AlZ7Cs29Mklz1FXsXDEe+YcPkpI8Psy+u89yVWFwu47J5YM34aTttorl739EGrBoaG@vger.kernel.org, AJvYcCXJ2XeS1u+DPhaAHZKMrh2EKBtLK1ah0/THQpbF1vzl3g01fyXVO61v3LFcQXmYhPQ+gqdd/XsjRE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzttraOtDLkDpD0qL3Xxm4b638KdnQjthdG5v1J/lENrcr0+sPc
+	m2o96eJ27kDVBqBNzTBHPupPZcOkptdkHlRdRVnNPpIQRheUfrJA0ltP44yMe7wFbrtDetndvuT
+	gEzXOslvI5+tG4/4sZtuAJOkeUeEzJVA=
+X-Gm-Gg: ASbGncviEtYMO8CtR4MZp/xUiDK9tfQewxOONNnFdXv65QwAU1weKJ8kJQUL72f5CLM
+	mlvWOwcJneULv2LFrmLsjfZI6O/29uXXPI7hAdjcRHU4U//yG99XWeCxxfFrJND/ti1vZGpnf76
+	bZBQag3Qp2RYUABIZfOViUj2ujxxHxVOSILIpPwzoUaQ==
+X-Google-Smtp-Source: AGHT+IEnTw18i3vfnI0CJk3MDKIj5ydGBKKQQghUhrAvgODgZu02EiwLas1fNGjBXvj9+G9KC9JQEosJjVG83PcvjNw=
+X-Received: by 2002:a17:907:97ce:b0:ade:9b52:4cc2 with SMTP id
+ a640c23a62f3a-adfad4b7e61mr24182966b.59.1749840685299; Fri, 13 Jun 2025
+ 11:51:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org, devel@spectrum-os.org,
- Alyssa Ross <hi@alyssa.is>, Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
- <20250613181345.GA1350149@myrica>
-Content-Language: en-US
-From: Demi Marie Obenour <demiobenour@gmail.com>
-Autocrypt: addr=demiobenour@gmail.com; keydata=
- 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
- +MYSfkEjBz0E8CLOcAw7JIwAaeBT
-Subject: Re: Virtio interrupt remapping
-In-Reply-To: <20250613181345.GA1350149@myrica>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0ETCOYWHDk5RxNgLbpT3afON"
+References: <20250613143605.5748-1-al.kochet@gmail.com> <20250613143605.5748-2-al.kochet@gmail.com>
+ <aExS9WB0Ussl4Lec@smile.fi.intel.com>
+In-Reply-To: <aExS9WB0Ussl4Lec@smile.fi.intel.com>
+From: Alexander Kochetkov <al.kochet@gmail.com>
+Date: Fri, 13 Jun 2025 21:51:14 +0300
+X-Gm-Features: AX0GCFtCk7v9OD9f3sQF1fL8ctIXm0GIREAbZAwkzKzRDhdNPbUrzKoQgjba-ko
+Message-ID: <CAPUzuU1r2xmJyG_Ke8pAvoZjJdvFwnxUqv1XQH7PrW3e3PTZoQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dmaengine: virt-dma: convert tasklet to BH workqueue
+ for callback invocation
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>, 
+	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Paul Cercueil <paul@crapouillou.net>, 
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>, 
+	Longfang Liu <liulongfang@huawei.com>, Andy Shevchenko <andy@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Keguang Zhang <keguang.zhang@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, 
+	=?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Laxman Dewangan <ldewangan@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Dave Jiang <dave.jiang@intel.com>, Amit Vadhavana <av2082000@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Md Sadre Alam <quic_mdalam@quicinc.com>, 
+	Casey Connolly <casey.connolly@linaro.org>, Kees Cook <kees@kernel.org>, 
+	Fenghua Yu <fenghua.yu@intel.com>, Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0ETCOYWHDk5RxNgLbpT3afON
-Content-Type: multipart/mixed; boundary="------------Ek0jj2uxDXMmtwViAPvvUiRK";
- protected-headers="v1"
-From: Demi Marie Obenour <demiobenour@gmail.com>
-To: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org, devel@spectrum-os.org,
- Alyssa Ross <hi@alyssa.is>, Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Message-ID: <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
-Subject: Re: Virtio interrupt remapping
-References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
- <20250613181345.GA1350149@myrica>
-In-Reply-To: <20250613181345.GA1350149@myrica>
+>
+> It seems it was ordered. Please, preserve the order.
+> It not, try to squeeze to have longest possible ordered chain
+> (it can be interleaved with something unordered, just look at
+>  the big picture).
+>
+> (Same applies to other similar cases)
 
---------------Ek0jj2uxDXMmtwViAPvvUiRK
-Content-Type: multipart/mixed; boundary="------------409V4M9fXd47lv2pMEw2XfDL"
+I'll this that in v2. Thanks!
 
---------------409V4M9fXd47lv2pMEw2XfDL
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> ...
+>
+> What about the driver(s) that use threaded IRQ instead?
+> Do you plan to convert them as well?
+>
+> I am talking about current users of virt-dma that do not use tasklets.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
 
-On 6/13/25 14:13, Jean-Philippe Brucker wrote:
-> Hi,
->=20
-> On Fri, Jun 13, 2025 at 01:08:07PM -0400, Demi Marie Obenour wrote:
->> I=E2=80=99m working on virtio-IOMMU interrupt remapping for Spectrum O=
-S [1],
->> and am running into a problem.  All of the current interrupt remapping=
+I think, I've found all the users of virt-dma. Could you, please,
+provide example of such driver?
+Here is what I did to locate current users of virt-dma.
 
->> drivers use __init code during initialization, and I=E2=80=99m not sur=
-e how to
->> plumb the struct virtio_device * into the IOMMU initialization code.
->>
->> What is the proper way to do this, where =E2=80=9Cproper=E2=80=9D mean=
-s that it doesn=E2=80=99t
->> do something disgusting like =E2=80=9Cstuff the virtio device in a glo=
-bal
->> variable=E2=80=9D?
->=20
-> I'm not familiar at all with interrupt remapping, but I suspect a major=
+I got list of drivers using following command:
+grep -r -e 'struct virt_dma_chan' -e 'virt-dma.h' . | sort | cut -f 1
+-d : | uniq
 
-> hurdle will be device probing order: the PCI subsystem probes the
-> virtio-pci transport device relatively late during boot, and the virtio=
+./drivers/dma/amba-pl08x.c
+./drivers/dma/amd/ae4dma/ae4dma.h
+./drivers/dma/amd/ptdma/ptdma.h
+./drivers/dma/amd/qdma/qdma.c
+./drivers/dma/amd/qdma/qdma.h
+./drivers/dma/arm-dma350.c
+./drivers/dma/at_hdmac.c
+./drivers/dma/bcm2835-dma.c
+./drivers/dma/dma-axi-dmac.c
+./drivers/dma/dma-jz4780.c
+./drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+./drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+./drivers/dma/dw-edma/dw-edma-core.c
+./drivers/dma/dw-edma/dw-edma-core.h
+./drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+./drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
+./drivers/dma/fsl-edma-common.h
+./drivers/dma/fsl-qdma.c
+./drivers/dma/hisi_dma.c
+./drivers/dma/hsu/hsu.h
+./drivers/dma/idma64.h
+./drivers/dma/img-mdc-dma.c
+./drivers/dma/imx-sdma.c
+./drivers/dma/k3dma.c
+./drivers/dma/lgm/lgm-dma.c
+./drivers/dma/loongson1-apb-dma.c
+./drivers/dma/loongson2-apb-dma.c
+./drivers/dma/mediatek/mtk-cqdma.c
+./drivers/dma/mediatek/mtk-hsdma.c
+./drivers/dma/mediatek/mtk-uart-apdma.c
+./drivers/dma/milbeaut-hdmac.c
+./drivers/dma/milbeaut-xdmac.c
+./drivers/dma/moxart-dma.c
+./drivers/dma/owl-dma.c
+./drivers/dma/pxa_dma.c
+./drivers/dma/qcom/bam_dma.c
+./drivers/dma/qcom/gpi.c
+./drivers/dma/qcom/qcom_adm.c
+./drivers/dma/sa11x0-dma.c
+./drivers/dma/sf-pdma/sf-pdma.c
+./drivers/dma/sf-pdma/sf-pdma.h
+./drivers/dma/sh/rz-dmac.c
+./drivers/dma/sh/usb-dmac.c
+./drivers/dma/sprd-dma.c
+./drivers/dma/st_fdma.h
+./drivers/dma/stm32/stm32-dma.c
+./drivers/dma/stm32/stm32-dma3.c
+./drivers/dma/stm32/stm32-mdma.c
+./drivers/dma/sun4i-dma.c
+./drivers/dma/sun6i-dma.c
+./drivers/dma/tegra186-gpc-dma.c
+./drivers/dma/tegra210-adma.c
+./drivers/dma/ti/edma.c
+./drivers/dma/ti/k3-udma.c
+./drivers/dma/ti/omap-dma.c
+./drivers/dma/uniphier-mdmac.c
+./drivers/dma/uniphier-xdmac.c
+./drivers/dma/virt-dma.c
+./drivers/dma/virt-dma.h
+./drivers/dma/xilinx/xdma.c
+./drivers/dma/xilinx/xilinx_dpdma.c
 
-> driver probes the virtio-iommu device afterwards, at which point we can=
+After that I did following to find additional drivers, and found them
+inside misc.
+grep -r -e ae4dma.h -e ptdma.h -e qdma.h -e dw-axi-dmac.h -e
+dw-edma-core.h -e dpaa2-qdma.h -e fsl-edma-common.h -e hsu.h -e
+idma64.h -e sf-pdma.h -e st_fdma.h  . | sort | cut -f 1 -d : | uniq
 
-> call viommu_probe() and inspect the device features and config.  This c=
-an
-> be quite late in userspace if virtio and virtio-iommu get loaded as
-> modules (which distros tend to do).>=20
-> The way we know to hold off initializing dependent devices before the
-> IOMMU is ready is by reading the firmware tables. In devicetree the
-> "msi-parent" and "msi-map" properties point to the interrupt remapping
-> device, so by reading those Linux knows to wait for the probe of the
-> remapping device before setting up those endpoints. The ACPI VIOT
-> describes this topology as well, although at the moment it does not hav=
-e
-> separate graphs for MMU and interrupts, like devicetree does (could
-> probably be added to the spec if needed, but I'm guessing the topologie=
-s
-> may be the same for a VM).  If the interrupt infrastructure supports
-> probe deferral, then that's probably the way to go.
+./drivers/dma/amd/ae4dma/ae4dma-dev.c
+./drivers/dma/amd/ae4dma/ae4dma-pci.c
+./drivers/dma/amd/ae4dma/ae4dma.h
+./drivers/dma/amd/ptdma/ptdma-debugfs.c
+./drivers/dma/amd/ptdma/ptdma-dev.c
+./drivers/dma/amd/ptdma/ptdma-dmaengine.c
+./drivers/dma/amd/ptdma/ptdma-pci.c
+./drivers/dma/amd/qdma/qdma-comm-regs.c
+./drivers/dma/amd/qdma/qdma.c
+./drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+./drivers/dma/dw-edma/dw-edma-core.c
+./drivers/dma/dw-edma/dw-edma-pcie.c
+./drivers/dma/dw-edma/dw-edma-v0-core.c
+./drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+./drivers/dma/dw-edma/dw-hdma-v0-core.c
+./drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+./drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+./drivers/dma/fsl-edma-common.c
+./drivers/dma/fsl-edma-main.c
+./drivers/dma/fsl-edma-trace.c
+./drivers/dma/fsl-qdma.c
+./drivers/dma/hsu/hsu.c
+./drivers/dma/hsu/hsu.h
+./drivers/dma/hsu/pci.c
+./drivers/dma/idma64.c
+./drivers/dma/idma64.h
+./drivers/dma/mcf-edma-main.c
+./drivers/dma/mediatek/mtk-cqdma.c
+./drivers/dma/sf-pdma/sf-pdma.c
+./drivers/dma/st_fdma.c
+./drivers/dma/st_fdma.h
+./drivers/mfd/intel-lpss.c
+./drivers/net/ethernet/airoha/airoha_eth.c
+./drivers/net/ethernet/mediatek/mtk_eth_soc.c
+./drivers/net/ethernet/mediatek/mtk_eth_soc.h
+./drivers/pci/controller/pcie-xilinx-dma-pl.c
+./drivers/tty/serial/8250/8250_mid.c
+./include/linux/dma/hsu.h
 
-I don't see any examples of probe deferral in the codebase.  Would it
-instead be possible to require virtio-iommu (and thus virtio) to be
-built-in rather than modules?
+Just realized, that I missed to check this drivers:
+./drivers/net/ethernet/airoha/airoha_eth.c
+./drivers/net/ethernet/mediatek/mtk_eth_soc.c
+./drivers/net/ethernet/mediatek/mtk_eth_soc.h
+./drivers/pci/controller/pcie-xilinx-dma-pl.c
+./drivers/tty/serial/8250/8250_mid.c
 
-CCing the IRQ and PCI maintainers as well.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
---------------409V4M9fXd47lv2pMEw2XfDL
-Content-Type: application/pgp-keys; name="OpenPGP_0xB288B55FFF9C22C1.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB288B55FFF9C22C1.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+I've applied the following config to the kernel, to build all the
+drivers. I've modified some Kconfig files in order all options apply.
+And checked that every file in the above list builds successfully.
+Some drivers have compile errors, unrelated to virt-dma. Some drivers
+produce link errors, but compile success. I checked that each .o-file
+has a reasonable size.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsFNBFp+A0oBEADffj6anl9/BHhUSxGTICeVl2tob7hPDdhHNgPR4C8xlYt5q49y
-B+l2nipdaq+4Gk6FZfqC825TKl7eRpUjMriwle4r3R0ydSIGcy4M6eb0IcxmuPYf
-bWpr/si88QKgyGSVZ7GeNW1UnzTdhYHuFlk8dBSmB1fzhEYEk0RcJqg4AKoq6/3/
-UorR+FaSuVwT7rqzGrTlscnTDlPWgRzrQ3jssesI7sZLm82E3pJSgaUoCdCOlL7M
-MPCJwI8JpPlBedRpe9tfVyfu3euTPLPxwcV3L/cfWPGSL4PofBtB8NUU6QwYiQ9H
-zx4xOyn67zW73/G0Q2vPPRst8LBDqlxLjbtx/WLR6h3nBc3eyuZ+q62HS1pJ5EvU
-T1vjyJ1ySrqtUXWQ4XlZyoEFUfpJxJoN0A9HCxmHGVckzTRl5FMWo8TCniHynNXs
-BtDQbabt7aNEOaAJdE7to0AH3T/Bvwzcp0ZJtBk0EM6YeMLtotUut7h2Bkg1b//r
-6bTBswMBXVJ5H44Qf0+eKeUg7whSC9qpYOzzrm7+0r9F5u3qF8ZTx55TJc2g656C
-9a1P1MYVysLvkLvS4H+crmxA/i08Tc1h+x9RRvqba4lSzZ6/Tmt60DPM5Sc4R0nS
-m9BBff0Nm0bSNRS8InXdO1Aq3362QKX2NOwcL5YaStwODNyZUqF7izjK4QARAQAB
-zTxEZW1pIE9iZW5vdXIgKElUTCBFbWFpbCBLZXkpIDxhdGhlbmFAaW52aXNpYmxl
-dGhpbmdzbGFiLmNvbT7CwY4EEwEIADgWIQR2h02fEza6IlkHHHGyiLVf/5wiwQUC
-X6YJvQIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRCyiLVf/5wiwWRhD/0Y
-R+YYC5Kduv/2LBgQJIygMsFiRHbR4+tWXuTFqgrxxFSlMktZ6gQrQCWe38WnOXkB
-oY6n/5lSJdfnuGd2UagZ/9dkaGMUkqt+5WshLFly4BnP7pSsWReKgMP7etRTwn3S
-zk1OwFx2lzY1EnnconPLfPBc6rWG2moA6l0WX+3WNR1B1ndqpl2hPSjT2jUCBWDV
-rGOUSX7r5f1WgtBeNYnEXPBCUUM51pFGESmfHIXQrqFDA7nBNiIVFDJTmQzuEqIy
-Jl67pKNgooij5mKzRhFKHfjLRAH4mmWZlB9UjDStAfFBAoDFHwd1HL5VQCNQdqEc
-/9lZDApqWuCPadZN+pGouqLysesIYsNxUhJ7dtWOWHl0vs7/3qkWmWun/2uOJMQh
-ra2u8nA9g91FbOobWqjrDd6x3ZJoGQf4zLqjmn/P514gb697788e573WN/MpQ5XI
-Fl7aM2d6/GJiq6LC9T2gSUW4rbPBiqOCeiUx7Kd/sVm41p9TOA7fEG4bYddCfDsN
-xaQJH6VRK3NOuBUGeL+iQEVF5Xs6Yp+U+jwvv2M5Lel3EqAYo5xXTx4ls0xaxDCu
-fudcAh8CMMqx3fguSb7Mi31WlnZpk0fDuWQVNKyDP7lYpwc4nCCGNKCj622ZSocH
-AcQmX28L8pJdLYacv9pU3jPy4fHcQYvmTavTqowGnM08RGVtaSBNYXJpZSBPYmVu
-b3VyIChsb3ZlciBvZiBjb2RpbmcpIDxkZW1pb2Jlbm91ckBnbWFpbC5jb20+wsF4
-BBMBAgAiBQJafgNKAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyiLVf
-/5wiwYa/EACv8a2+MMou9cSCNoZBQaU+fTmyzft9hUE+0d5W2UY1RY3OsjFIzm9R
-/4SVccfsqOYLEo+S0vQMIIIqFEq3FCpXXwPzyimotps05VA8U3Bd7yseojFygOgK
-sAMOAee2RCaDDOnoJue01dfZMzzHPO/TVdp3OvnpWipfv5G1Xg96rwbhMLE3tg6N
-xwAHa31Bv4/Xq8CJOoIWvx6fcmZQpz01/lSvsYn0KrfEbTKkuUf0vM9JrCTCP2oz
-VNN5BYzqaq2M4r+jmSyeXLim922VOWqGkUEQ85BSEemqrRS06IU6NtEMsF8EWt/b
-hWjk/9GDKTcnpdJHTrMxTspExBiNrvpI2t+YPU5B/dJJAUxvmhFrbSIbdB8umBZs
-I3AMYrEmpAbh5x7jEjoskUC7uN3o9vpg1oCLS2ePDLtAtyBtbHnkA4xGD7ar8mem
-xpH9lY/i+sC6CyyIUWcUDnnagKyJP0m9ks0GLsTeOCA0bft2XA6rD6aaCnMUsndT
-ctrab42CV5XypjmC4U1rPJ8JQJUh1/3P48/8sMH+3krxpJ06KNWNFaUbaMTGiltZ
-7x9DngklSYrX0T+2G4kVXNmjaljwkoLahwLla2gUWwBSyofXdqyhQdwZsp01KXNQ
-UCyT/Pg+aDcm/E7OMV3d4lf7g/CSxiX2GSEe6BlhSz+Lmd7ZJ3g32M1ARGVtaSBN
-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
-EtJuZYM5blWncBOJCoWMnBEcTEo/viU3GgcVRw=3D=3D
-=3Dx94R
------END PGP PUBLIC KEY BLOCK-----
-
---------------409V4M9fXd47lv2pMEw2XfDL--
-
---------------Ek0jj2uxDXMmtwViAPvvUiRK--
-
---------------0ETCOYWHDk5RxNgLbpT3afON
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmhMctoACgkQszaHOrMp
-8lOvBBAAh8KgX6d3oz8RWKXcHQG6DrdVlgotwhqJPPl1VZ3hW2/BKnXohAuKth1/
-zMfrbBYjJbD0ehx7riLKWFVbOCRoGV2P23GXVopqlFRuu6+q36KRrWOakjIm2g8O
-87Z5YRiXN855M2UBxv64217Zp8HUmB2bnA3kqF9KWLFLNCzJMjMONHJZ0lQeFhZH
-Lzv4vhKeY65D4NAygC/uJegvSS1CCqihKkRNE15hUmga5eGLQi1ufD/HxudA28Ps
-Jd80rrqosp24380c/zpQ2yzAFkZ64qHbzTyioLmIFGbKYrIb+B3JW1/ROMzU69Ue
-88Df1Xfktq90LenkDeDJJjI0c5qxTxEE6N+uq/mkJ69Aw2zAu/1iBCidlkOa+AEB
-muG8ausoSxIvFGab8WkfAeBZnEZkXI5znAMi4uFD2tCtnqPTtNn8re2UtW5wknqz
-8vp8HxsA2ujn43NOqz/Felzpcq/HhYKFlcz875FWZNUyNlUtTxC9bCKt3CVUNvn7
-PXkM4yTfC14O9JMuiRy7o9FVk4eSUpnTqiLkPdRAJfOMGDzDAzWYP59Nxx/WEis6
-Rk82FGWdPTqy/YjiBe0M3K/3gSYnE/DcnEaCAKgfiV8IIKFifdPSM+kI7sSCcBN1
-O3I9+lohiKkEbrANtw9cOfJWkJ93EEEkuP3UbdGKTmuwLDj+Dos=
-=L13m
------END PGP SIGNATURE-----
-
---------------0ETCOYWHDk5RxNgLbpT3afON--
+CONFIG_FORCE_PCI=y
+CONFIG_PCI=y
+CONFIG_AMD_QDMA=y
+CONFIG_AMD_PTDMA=y
+CONFIG_DW_AXI_DMAC=y
+CONFIG_DW_EDMA=y
+CONFIG_DW_EDMA_PCIE=y
+CONFIG_INTEL_LDMA=y
+CONFIG_MTK_HSDMA=y
+CONFIG_MTK_CQDMA=y
+CONFIG_MTK_UART_APDMA=y
+# CONFIG_QCOM_ADM=y - error: assignment to 'u32 *' {aka 'unsigned int
+*'} from incompatible pointer type 'phys_addr_t *'
+CONFIG_QCOM_GPI_DMA=y
+CONFIG_QCOM_BAM_DMA=y
+CONFIG_SF_PDMA=y
+CONFIG_STM32_DMA=y
+CONFIG_STM32_MDMA=y
+CONFIG_STM32_DMA3=y
+CONFIG_DMA_OMAP=y
+CONFIG_TI_EDMA=y
+CONFIG_TI_K3_UDMA=y
+CONFIG_XILINX_ZYNQMP_DPDMA=y
+CONFIG_XILINX_XDMA=y
+CONFIG_AMBA_PL08X=y
+CONFIG_ARM_DMA350=y
+# CONFIG_FSL_DMA=y - error: implicit declaration of function '__ilog2
+CONFIG_FSL_EDMA=y
+CONFIG_FSL_QDMA=y
+CONFIG_MCF_EDMA=y
+CONFIG_INTEL_IDMA64=y
+CONFIG_DMA_SUN6I=y
+CONFIG_DMA_SUN4I=y
+CONFIG_AT_HDMAC=y
+# CONFIG_ST_FDMA=y - link errors
+CONFIG_K3_DMA=y
+CONFIG_DMA_SA11X0=y
+CONFIG_AXI_DMAC=y
+CONFIG_IMG_MDC_DMA=y
+CONFIG_UNIPHIER_XDMAC=y
+CONFIG_UNIPHIER_MDMAC=y
+CONFIG_LOONGSON1_APB_DMA=y
+CONFIG_LOONGSON2_APB_DMA=y
+CONFIG_DMA_BCM2835=y
+CONFIG_TEGRA210_ADMA=y
+CONFIG_TEGRA186_GPC_DMA=y
+CONFIG_MOXART_DMA=y
+CONFIG_DMA_JZ4780=y
+CONFIG_IMX_SDMA=y
+CONFIG_OWL_DMA=y
+CONFIG_SPRD_DMA=y
+CONFIG_MILBEAUT_XDMAC=y
+CONFIG_MILBEAUT_HDMAC=y
+CONFIG_HISI_DMA=y
+# CONFIG_FSL_DPAA2_QDMA=y - link errors
+CONFIG_RZ_DMAC=y
+CONFIG_RENESAS_USB_DMAC=y
+CONFIG_PXA_DMA=y
+CONFIG_HSU_DMA=y
+CONFIG_HSU_DMA_PCI=y
+CONFIG_MFD_INTEL_LPSS=y
