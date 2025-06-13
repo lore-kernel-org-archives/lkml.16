@@ -1,117 +1,112 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015F824169B
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BD5226D0F;
+	Fri, 13 Jun 2025 21:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848436; cv=none; b=hcnsLGGV7583kfwQmm85cmZ5G+/wyBof+zWtDS4JIGzFaWtuFK63VkVx/gKeh8vk6I1Uho/bgMsb6I07Eo8cVFA09qxmgxPiErNUBJVrQR1ivyTSk6QSD44ZZqwe0CoXv/6VGl7xema21rtC8K2NQktuJ4nndMKraMSlhMHAUIc=
+	t=1749848502; cv=none; b=RQvOdmLK6XJ3FFpBSn2+IPuBsIHJeVU//jVEtH/nicX2awSaEWNw7x4Uuz8Z9hXQu2uKMH4ilkEgVBwS5KZo5See4OM+cKBvAmaJEfKLddoCcjj1AkfC8pywzmNOMJ8Fl4F8LgumhcKHQ13MVzcPl53aab4aHmE6gj+Uh6Lje5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848436; c=relaxed/simple;
-	bh=sMwWiyacSDvV5Tp1lolpnmezCxwjuQeCgQRuB/ycI+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xw3HaRk9omJ58GE12mL73lE+09SGA+IpJjjwklJXqSg0zIPFeNd/fz+tjzf7FfjZh0WqbKQyhYHgCS30YDSf3VKSTGapl7x1SLSzv0zyn7EyfQWuoIWgPVyAWkrBdL7d2x/wVhtYgnf7RQ0ZZ4cw1Qdhzj6lYSX+PDdVOSxj7Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=S10vQ4f0; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749848502; c=relaxed/simple;
+	bh=WSsEb8PQcuYS5aVeXGNEh761dSAbr4YH/Hi8Q64XgHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=guN2fAvxXEUvt93fCMANIZ5qfpMFYGFMa9lYGuAuiZ5ivnnekP4mbG+xUMaFAx8X2K+cBGPusGDGz+SCOsUoOvYScooLfNIUvlvfrYSEPV9aruxI4KNn0SG75XvfKqptgBvh9yigUIV2D+fj0JeG3ZBZVpg+gFGHFZkMaKalHsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PrmwyBBA; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="S10vQ4f0"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-736f1953673so713197a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:00:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrmwyBBA"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso2997446b3a.2;
+        Fri, 13 Jun 2025 14:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749848432; x=1750453232; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OC4lGjpRIsFQ3PxsIGKswS7a8Sk/ulLQg+3aOcjhhnA=;
-        b=S10vQ4f0F0I+vkGGawiigC2cT25hZX4QMYgiBAp3bCGHN7cQz7+qW1i3eolTFauiJ9
-         bXIXb0kLqNVzcq5E1jPbfzVshLQ82Z1zuMsoqx0mUn97wySGSO1bRp4S77uKEqr0rrKm
-         Fd3mVMYwxaBiTq7PcweG1xoXtWoCW/OqsFGS9WbnxjbJztenqzw1KZa09OF8Cb1zBXfD
-         bkISBPZbj/x0ovxvhstYW6gt4D/jMABFQBIeHx5wr82xi0SvlJdisaJ8QshHI7iE3VkW
-         WKJH5YMBtBvDtxY9FzT6YlbUorM0u1uWhP1sOsWgY5BmRocNT3zL/EXsU6hLyAHxd7BE
-         ws6Q==
+        d=gmail.com; s=20230601; t=1749848500; x=1750453300; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Ea/eTX+P8wMCNrPfmeI34ssYwADQCsaNDUn6KV6aWI=;
+        b=PrmwyBBAwsHjiTsDlA7zReWzeCUVOP8pc83mmQpoGsNxN9FUOOO+Gs5ORLH1iDxXx+
+         byN9Ac5OChvRxfXQOoKQbceDmHrpdoDaA8h6SiNRGTtbXBhyAt0gGOVhx+imh56/bq0G
+         N6q/86hJC0uUFsu67mBSIHJYmE7vQv9AQmAWxlyRYbxJY4VprhmC5CU91OEX4achBUYG
+         m/zO/FwM5UkiBKuI9xEv2ONOEytGiOTXgPJaZEfpvP3xWLtIbfIEOi4IQIiG10IBTIcr
+         fO750U02pGhNNgCs3unoNXnFZacPuHIfNZZJCNlZzysoP1d0iS0s07O06b8KFm0FOugF
+         I0Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749848432; x=1750453232;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OC4lGjpRIsFQ3PxsIGKswS7a8Sk/ulLQg+3aOcjhhnA=;
-        b=dpKTQBwyS2SFAyK/vOW+Q0KX1CswiQRXPjt0OTZrtA15qpC5DIJJn/nILnTwIfawZE
-         jauQgSsr3IEKSYiAdt5Cm6DukL6UXgjogV091Mo2gQSkXgwSVQ52B+3JB93oeCOlLK52
-         PSz4Gd31Mwsv3Ul9QIsIgCx+qO3g7zLQuPP/e3ZxdrMZ3dquOqe65orKJSE5rdG1kYZR
-         XbPsy1ml6TxT+xGjCggzvde5wNl3YGPoAZ+gSuxigOyKobGv3TJ62S70gh9D2zNYoOip
-         6CUflW3Ppc/bj1S+Xp9CbpajL6sexG0QaGSXz2ezFEhP/KySpLPI04kOFJ74dGEXiqlh
-         kW/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUvJBS9oIwmTJGIAG1ukQVJOSVFS7HCaWdH1N1teMMpV6tvirNHwLUJGC3tJBsONL+Rpyz8bR+ILpBPYW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkMJGeW0OX8R2X4mrHxnvciiw02nzw+2E2EJZqN71e1NHJrlZ0
-	Wj9bIHY8V03vvkZtfzv+3sqtPm6XSKbmkkd+5NiIF8mJPycg/8Zfx2nc5cg1Rimn/eiCzux8ozG
-	+IflV
-X-Gm-Gg: ASbGncssYX6h4cHJk6H/OO0qdYxIynpqT2eHnyLjV9Ciyq03aTYBJ0FdH9o/LQRj6yv
-	h+o+R8JUGCYIkpBaGPD27baLGn+7fRLU+iSUf81x/4Ba5H3eoKC0eV0pE4BnsatVpRZDmPv2Y6C
-	iCw1M95sSGITROHxut8WKtO/XBroeC3wQ6H88YyLjb1PZ6mRbDe3N9CjRmAEhOKfFdrrzIOAkdQ
-	NTm7kpsrYUaIyY4aD3d3RyZJ/K/78kUXkrbIcaeSJORm6YcKaq9hfd584SHQ8/2dalFa+Lu0S/g
-	8ZkGgNemtxEQiUygiiLH+Wcf8vpzS7vtBEEgX/kNyOma0U/S4LMNzSu+WwLH3w5l9FXGXDzMBHv
-	vlIKR5AtPZxNoEh3WBylmB2giAKgCB7NvfPzz
-X-Google-Smtp-Source: AGHT+IEtXeO28HYPr7tm/gNlkY2Yoh25MnNBR5GISA6s3KtN+9pVdziylV4ZXeGQBQkLiZ7HAFTGYQ==
-X-Received: by 2002:a05:6808:2182:b0:404:766:3129 with SMTP id 5614622812f47-40a7c17a034mr646649b6e.1.1749848431590;
-        Fri, 13 Jun 2025 14:00:31 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4647:c57:a73c:39d8? ([2600:8803:e7e4:1d00:4647:c57:a73c:39d8])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a74172ccbsm413546b6e.29.2025.06.13.14.00.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 14:00:31 -0700 (PDT)
-Message-ID: <439f78d1-aa1f-4929-99a0-8d6bb1958912@baylibre.com>
-Date: Fri, 13 Jun 2025 16:00:30 -0500
+        d=1e100.net; s=20230601; t=1749848500; x=1750453300;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Ea/eTX+P8wMCNrPfmeI34ssYwADQCsaNDUn6KV6aWI=;
+        b=u3kR95kfr/3ZxPjYUmBb0jpgIGR2Za++5qUbmSKhlRJBqJAP6rhxCapm3WZ15ZYh+E
+         7fiZwOPfUI63Cbf0O7ZiMnGHP4HF/FOm2SX2xJtKSRSuAGdRAv3jorNnxz3gcvtcZ+6e
+         F+s7HNTv/WrL9wqi/IueaIZoci12vKWc4gpOMVAcjsc+wpzFPBFIsWEn4riIFajPq9Jp
+         l+SS2vaM4NItI/xZHTVWnk1Wh+tkchd9ItI1U3wZ1k3J/YGnpCVDn2EsslcZdMfkOgBd
+         /o6R0yv9TXZV2mul4uQhzipxwwNhUinb8oBX6qaP1LnR9KapAbn1cKMHaQ/CqoAEul86
+         3Ngg==
+X-Forwarded-Encrypted: i=1; AJvYcCUA1ZNVbyWG2pwPPHdN8moEgP3TISnCit0FcPe6KOXoSoWiAzXjuWxJnHu0RUUBZKtTfGpUFI9ATJHczlM=@vger.kernel.org, AJvYcCW+a/QKtaQl4Boomq99p7XYNdTOTZBeZV0X+DSFw2z9szr83lFMMBQfAC77+aypTW9kkBhx/T9nj76m@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmzqzqYjxLnpHSu+Zyr0+1HzF0SAkOdNMDOXGhjPGWwpsZeY1o
+	aMiW3hL0jG1NEV9byJ9uz7aE8+MUuSMYorU7pf0cw7GoEB8kLbWiw0CA
+X-Gm-Gg: ASbGnct+duS8tqRMU1mMFXFRbj5qI0N6fpe7s+/F5Y6ZF6GoUXDVphe0JDq0+fHnT2b
+	NFjv+lgjpwPmeyZxTByNEFNx6uzEBCXt4IULhl+tAlnSzhtTpDxcLN5M4AKXig5vIpavUHuMxBg
+	zbrmTIYx9bAI/yFnswGQ3yhCX5hcYKaUjwidkEN92QWSpDjcqN777b2zgF7uIXvINq8us9Yo/cr
+	0/DfaIUdRaemY5p1a0WZWuPPOQ9g5pW/qLR96Yk6FB/isk08dNqPyEjB6x63RjFWwECDMniiZTQ
+	b5k6EjQqQlufDQObn6ZolOqN2oZqsJ53evOH8QpZrIZCWyHQOgz2LFVw4enE
+X-Google-Smtp-Source: AGHT+IEsJDU1mE5FbmCdQgmCN7qJMpOL0gk1MDx5GEVgrbcSEqjFwfTmcrPEttgVlM8tBhRjqtH0pg==
+X-Received: by 2002:a05:6a00:a85:b0:736:43d6:f008 with SMTP id d2e1a72fcca58-7489cffbb1emr1058801b3a.12.1749848500523;
+        Fri, 13 Jun 2025 14:01:40 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:84a2::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900051a6sm2111176b3a.42.2025.06.13.14.01.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 14:01:39 -0700 (PDT)
+Date: Fri, 13 Jun 2025 18:01:34 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v4 1/5] PCI: rockchip: Use standard PCIe
+ defines
+Message-ID: <aEyRrtMZ0LidhyOR@geday>
+References: <aEyJhoiPP0Ugm1t6@geday>
+ <20250613205023.GA975137@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/3] bus: ts-nbus: use gpiod_multi_set_value_cansleep
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
- Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-References: <20250613-gpio-set-array-helper-v5-0-273fab50cc8e@baylibre.com>
- <b0859b25-0e95-4966-a433-5757d8bd9e6a@app.fastmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <b0859b25-0e95-4966-a433-5757d8bd9e6a@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613205023.GA975137@bhelgaas>
 
-On 6/13/25 3:37 PM, Arnd Bergmann wrote:
-> On Fri, Jun 13, 2025, at 20:55, David Lechner wrote:
->> This is what remains from "gpiolib: add gpiod_multi_set_value_cansleep"
->> that didn't get applied yet for the bus subsystem. So I have changed
->> the subject line accordingly.
->>
->> Arnd,
->>
->> There was no maintainer listed in MAINTAINERS for the ts-nbus driver
->> and it looks like you have picked up patches for it in the past. Could
->> you please pick up these as well?
+On Fri, Jun 13, 2025 at 03:50:23PM -0500, Bjorn Helgaas wrote:
+> I don't have access to any of these TRMs, so I only know what's in the
+> driver.
 > 
-> Sure, no problem, just a few things:
+
+They are not under NDA and can be obtained though Rockchip's
+official site:
+https://rockchip.fr/Rockchip%20RK3399%20TRM%20V1.3%20Part2.pdf
+
+> When you say "without fear", are you saying there's a way to do that
+> 32-bit write such that the LNKSTA bits are discarded by the hardware?
+> Or just that the hardware forces us to accept this potential status
+> register corruption?
+
+I meant to say those registers themselves are defined in TRM as 32 bits.
+
 > 
-> - These are all cleanups that can wait until 6.17, right?
-
-yes
-
-> - I see the driver has no in-tree users, and apparently never
->   were. There is a imx28-ts4600.dts file that should reference
->   it but doesn't. Do we have any indication that the driver works?
->   Added Sebastien to Cc as well for clarification.
-
-I dropped Sebastien in v5 because the emails bounced in v4, so I
-don't expect we will get a response. I'm not familiar with this
-driver or related hardware myself.
-
-> - it would help me if you can send the patches to soc@kernel.org
->   for me to pick up, as that ensures I don't forget them.
+> Is this something that could be written using the config access path?
+> I guess probably not, based on this:
 > 
->      Arnd
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-rockchip-host.c?id=v6.15#n141
+> 
 
+That certainly looks frightening.
+
+> Bjorn
