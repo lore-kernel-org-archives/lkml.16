@@ -1,149 +1,130 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7522DA755;
-	Fri, 13 Jun 2025 08:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801741; cv=pass; b=jSY5hl+kJoE/zVvsOtbr9jGBiCcXTf8Yi1STu/s/Y9d0wl1T4xnaLwOpYOHSWL3cDvnJn8tGMbhwglntYJLp54GDvYK8ZWDhCiGw8EOsI6FcByueH3TXERyoQ1a72xjqHQSO6KGDflVFXGya5NYOCfHEsWjDZm/AyZJ+72422uQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801741; c=relaxed/simple;
-	bh=IriJbLd3oW21fvlp51YbALvpgoBSDDPr2ACz05AwQb8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qb8w4d9+Iev0SOyJ9LyLV1EjcMjZd7FVeetdELaNJqAGGnYchdj4RebMWWxH/LhprS9Pj989cYfeLpvclNha0VoU6X8CbWOqaLczlkduBC2XfjhesP60APN7qMG4sNmF8HY5aTCVyeJqihCQWqGq+vB06TJKWBjsYSVMIX5RCW0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=rGsB++Qe; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="rGsB++Qe"
-ARC-Seal: i=1; a=rsa-sha256; t=1749801707; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BeYh0vqVWvMsZH2jhwqNWP0o2xljKxT0qmmEyR8a3x1dXIjsO6mau0NqMB8fs9S/XFOMfAOBWntFIwRmNhPDW6xvBJ/uC/bDc6jhp4DSsmSixTOVEnJUr3qDhF6qXhRaFzILbLnNeKjSypKQ3ztP+X9r8z7e3/FK9Ay9JELE2GQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749801707; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=IriJbLd3oW21fvlp51YbALvpgoBSDDPr2ACz05AwQb8=; 
-	b=HPnZ1qGJ7DTdrwINps2F2lH8tIh2Vr+P59gp5y9Rmu4KewkXnvFyRdmc6X7K0bWaLtYqV+oB8O95rGVvihBiRinTvIzfD5/7SvFDglaiIeYrV6cIu44e78Y5ehLG08/x42zAJjUN8Wl1ned7T5LxXJsd6fqrWThYNSLf3xEaKpo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749801707;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=IriJbLd3oW21fvlp51YbALvpgoBSDDPr2ACz05AwQb8=;
-	b=rGsB++Qe5OLSz6rEIGPzgSBLlPY4ps0FFHo3O2RKLHtaKsV85LeAOTh/twHZzFAo
-	wrH9bLSteSUHmLWWXgff6MoGXTBdRNXRUknrOWJBvU4BLx/qONmIF1aJO4OtO/SfzuN
-	P3JkEZrKMHG4Wzln0QSmYnk8qG3+2/56xTrJ4hHx2+ZBjrik/fNxcKaFknYG1xXcSoR
-	Hy9Be8CiGu4ICxCpqLRQG8PpNHiMaOyqiRPpM8f8y/8CkhD+RuZQQTdGFtzybJ5JOsp
-	saOrRj2LZLVndqi2kgs9GP82qfv29LD8vj1yZRZd00JALrvcpQY6vyCHkmlMP+NR4jw
-	kOD6/J9SJg==
-Received: by mx.zohomail.com with SMTPS id 1749801704443553.1069514426033;
-	Fri, 13 Jun 2025 01:01:44 -0700 (PDT)
-Message-ID: <40fc8f3fec4da0ed2b59e8d2612345fb42b1fdd3.camel@icenowy.me>
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Rob Herring
- <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chaoyi Chen
- <chaoyi.chen@rock-chips.com>, Matthias Schiffer
- <matthias.schiffer@ew.tq-group.com>, Heiner Kallweit
- <hkallweit1@gmail.com>,  netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 13 Jun 2025 16:01:37 +0800
-In-Reply-To: <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
-	 <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
-	 <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
-	 <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
-	 <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
-	 <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
-	 <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
-	 <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
-	 <aElArNHIwm1--GUn@shell.armlinux.org.uk>
-	 <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
-	 <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EC826B759;
+	Fri, 13 Jun 2025 08:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749801749; cv=none; b=id4Xx0Wx89tndwUT0qwXEMaAAUeK1f4KVBCbSlK19o6zJX/TMc32xnaS4hPyNmXIiw6R91D9JO9LTcM6NYu+rc+sGaGjWSNPEB6SPmuBXLjLF5H95kC8tpnP/LplbUvf1y0K2V5w5piTqLKkuXWaHe2cy5bW64cG819ul+RQeQ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749801749; c=relaxed/simple;
+	bh=lgBm2HgvbLnlWMqEH6iVk5jwW921qaxzecXQG5eqrxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rnnjEaEY7yNcILEHwL+UeMurJhybtRa+dqxuIdCkyDL7+3OWvpnScjKAW1C7XVpS4SgBSjRNqzVltdkJZ4XW7O8MhLsKHUIaKf5SpWzIghJm9wXHZIc0DtmbHsJOrCerBg071RQueWulDSKyOz5hE9dtXJV4O7lKxUEkWK3GJks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e7c7680591so1109738137.1;
+        Fri, 13 Jun 2025 01:02:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749801745; x=1750406545;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pXilN1K6MrIzaL2KoxsI8w57QJn0FDqqP0EZncSgdhA=;
+        b=N+hEU63jdyhdaOUJRfDNhYDnv5jvpSc2e2d6le+S0Hvy3RbX8pXbjdVXGOar2GsVXG
+         LRatUsJKqdoplWvUeM4Z8nfMHXtORdpUFihcIBULD3E/sbBczQGRDSF5b8Pa8Gf5tWui
+         81QkNa/XA9aqt4V3UEo8pP2YLkaub2OOxWsBZ5G8i7Yk7VWu3qeECHARu+Hz0UZw34cz
+         Kd7CoeARZoNvnenagpeDwCt9P5/fxBRfUsxvryMp8XYCyzl91+Q6q9AfnGu0BiuL7fAr
+         ljcnkcqP08TzgNnubex1nRxP3KEXmW5WoidbHMnkf0m+J9jOx42UwoFQghQEQB0rTpOr
+         WbqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWceNWWYxNZx6QIxV/aIrtyG2J1ebt7G773fdBPs+uzbFjqGU6KKqv2m4jOGhYj+aIUnINt8nN0bMzs@vger.kernel.org, AJvYcCXxN4lnD74YVL96biuHeOFYIW7MsewXgF/muD3FD0LrNKQTJTe9xhfBjJbxQTwOLXJ5YyBN3yPR0R2DNiQs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL2EIUVkcWaO1VPk78yiND7jzWPpfJ6TWZN96JfhFy5ac+in7q
+	Wsy1IKysgfNyWonB/8BFOYSF+mJGMkWX29gYg96439we9EV+NLf9oJozlXWldaLr
+X-Gm-Gg: ASbGncsX6lff4Qm2CGUDMA0mRi0uV3REgm4JF5yvnpecSNW7AYewHR6IfZCF8X3v/D2
+	XXSTl61XUtgAjvlUvOTbjfwrLUy6jDxRapXKzYHEtexcscnDNcExMDrMwVgy2R1Mc45i7mozuh0
+	A8RhoQEf4ch7MjTkDMw/R0mF2Bzn7WA8SYhIxb87i16NxkDDVebFMrAFRe1Wn97qMg+dPlfs88C
+	UOjoK7+M1jebbb74WP9EZJR7yp+KZP/7tpynx6Yuik3TbwSC0thFf2j8t9by7S9peqLo4CD1tVa
+	kG5nqHBEgVeOUyo0Pr7+ShCrnG8hZxP1wcHQ6wBmlk/k8/ZlJiDygW8qrTbGglCH4ZKwNh6fqG5
+	44l1ZepUhXhPEl9+Q0goiSn66KaLL5Om3GJY=
+X-Google-Smtp-Source: AGHT+IF7EwHq7ah/nkl7WvaG9K2jL1JwahraHDmWcjnpabOvqfdzt3mHP26PUiPp5KVNpXAmizqQXw==
+X-Received: by 2002:a05:6102:3005:b0:4e7:af64:1e91 with SMTP id ada2fe7eead31-4e7e65a9933mr751086137.11.1749801744853;
+        Fri, 13 Jun 2025 01:02:24 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7e6e1d526sm151556137.10.2025.06.13.01.02.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 01:02:24 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87ee954ca95so1047847241.0;
+        Fri, 13 Jun 2025 01:02:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWCS2ojxBnUPb8k+Jl16+iuw7D8QGg7nGs01grYVHBpqMooNHhQv+QZzaJeWSOYTTW8sWPCLxiX1a6qQ7n1@vger.kernel.org, AJvYcCXOr3kQCRq0qZ3RFhs5Iaj0M2q9MbIjWbykpq/A7WiGREONLzwt31eU+3jcgeEKgx4qkdIX1GwJOAV7@vger.kernel.org
+X-Received: by 2002:ac5:cb65:0:b0:531:3cde:6c74 with SMTP id
+ 71dfb90a1353d-5313d83ef8fmr749693e0c.0.1749801744017; Fri, 13 Jun 2025
+ 01:02:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 13 Jun 2025 10:02:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
+X-Gm-Features: AX0GCFtL-d2TpLaeEEFThajisMZBkRFYXMovtv4udXAumQPPptBhnhzZw60wM4M
+Message-ID: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
+Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-=E5=9C=A8 2025-06-11=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 17:28 +0200=EF=BC=
-=8CAndrew Lunn=E5=86=99=E9=81=93=EF=BC=9A
-> > Well in fact I have an additional question: when the MAC has any
-> > extra
-> > [tr]x-internal-delay-ps property, what's the threshold of MAC
-> > triggering patching phy mode? (The property might be only used for
-> > a
-> > slight a few hundred ps delay for tweak instead of the full 2ns
-> > one)
->=20
-> Maybe you should read the text.
->=20
-> The text says:
->=20
-> =C2=A0 In the MAC node, the Device Tree properties 'rx-internal-delay-ps'
-> =C2=A0 and 'tx-internal-delay-ps' should be used to indicate fine tuning
-> =C2=A0 performed by the MAC. The values expected here are small. A value
-> of
-> =C2=A0 2000ps, i.e 2ns, and a phy-mode of 'rgmii' will not be accepted by
-> =C2=A0 Reviewers.
->=20
-> So a few hundred ps delay is fine. The MAC is not providing the 2ns
-> delay, the PHY needs to do that, so you don't mask the value.
+Hi Bartosz,
 
-Thus if the MAC delay is set to 1xxx ps (e.g. 1800ps), should the MAC
-do the masking?
+On Tue, 10 Jun 2025 at 16:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> Following our discussion[1], here's a proposal for extending the sysfs
+> interface with attributes not referring to GPIO lines by their global
+> numbers in a backward compatible way.
+>
+> Long story short: there is now a new class device for each GPIO chip.
+> It's called chipX where X is the ID of the device as per the driver
+> model and it lives next to the old gpiochipABC where ABC is the GPIO
+> base. Each new chip class device has a pair of export/unexport
+> attributes which work similarly to the global ones under /sys/class/gpio
+> but take hardware offsets within the chip as input, instead of the
+> global numbers. Finally, each exported line appears at the same time as
+> the global /sys/class/gpio/gpioABC as well as per-chip
+> /sys/class/gpio/chipX/gpioY sysfs group.
+>
+> First, there are some documentation updates, followed by a set of
+> updates to the sysfs code that's useful even without the new
+> functionality. Then the actual implementation of a parallel GPIO chip
+> entry not containing the base GPIO number in the name and the
+> corresponding sysfs attribute group for each exported line that lives
+> under the new chip class device. Finally: also allow to compile out the
+> legacy parts leaving only the new elements of the sysfs ABI.
+>
+> This series passes the compatibility tests I wrote while working on the
+> user-space compatibility layer for sysfs[2].
+>
+> [1] https://lore.kernel.org/all/CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com/
+> [2] https://github.com/brgl/gpio-sysfs-compat-tests
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-What should be the threshold? 1ns?
+Thanks for your series!
 
->=20
-> > > > Well I can't find the reason of phy-mode being so designed
-> > > > except
-> > > > for
-> > > > leaky abstraction from phylib.
-> > >=20
-> > > I have no idea what that sentence means, sorry.
-> >=20
-> > Well, I mean the existence of rgmii-* modes is coupled with the
-> > internal of phylib, did I get it right?
->=20
-> This is the external API of phylib, it has nothing to do with the
-> internals of phylib.
->=20
-> /**
-> =C2=A0* phy_attach - attach a network device to a particular PHY device
-> =C2=A0* @dev: network device to attach
-> =C2=A0* @bus_id: Bus ID of PHY device to attach
-> =C2=A0* @interface: PHY device's interface
-> =C2=A0*
-> =C2=A0* Description: Same as phy_attach_direct() except that a PHY bus_id
-> =C2=A0*=C2=A0=C2=A0=C2=A0=C2=A0 string is passed instead of a pointer to =
-a struct phy_device.
-> =C2=A0*/
-> struct phy_device *phy_attach(struct net_device *dev, const char
-> *bus_id,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 phy_interface_t interface)
->=20
-> interface tells the PHY how it should configure its interface.
->=20
-> If you follow the guidelines, the PHY adds the delay if needed, you
-> get interface =3D=3D phy-mode. However, interface and phy-mode are
-> different things. phy-mode describes the hardware, the PCB. interface
-> tells the PHY what to do. There are legitimate cases where
-> interface !=3D phy-mode.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Andrew
+I gave it a quick try, and it seems to work as expected, great!
 
+Given the /sys/class/gpio/chip* numbering is volatile, I expect
+script writers should use topological path names instead, .e.g.
+/sys/devices/platform/soc/e6052000.gpio/gpio/chip*/export and
+sys/devices/platform/soc/e6052000.gpio/gpio/chip*/gpio19
+(note the wildcards).
+
+I hope to find time to do a review of the patches soon...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
