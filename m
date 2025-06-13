@@ -1,315 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AA028135D
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613A628D83A
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749854369; cv=none; b=njrzKiiNCFL0vqxXUzqRpM92aXahuUX6cMUI1z9rllLzc/QwUPM4tiF2UmGF86/IqxIZayDSCCyWXrA6AYWZAguMySHi3zeT7/7tZDOBSY1eNSxxCUCFShbOKDf90EOGwjyGdYMUl1zBNtGt/rxWdKtDTB/8eZBdEFoFKKF250k=
+	t=1749854394; cv=none; b=fd4BrPtp0cFt9LUvWDNIpIf47f7Ga/i0yGGjx+aZzVRCkoGbPm8/MJzNm5yVlGLs1yPrD3KZFWImOEk72IbuYdlU++YUYXG9rQoPzyXzgBI/f53eiePlUdL01YzvluGFyWIsm0AMOJF1HJc1ixP62gJPIooXCFwfeHSrSpuqmj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749854369; c=relaxed/simple;
-	bh=VMwh7u7GSXcQqv+7EQuiAzvaIkdTZQ3lYV24xsoAH5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=i6BE955BWaiszgFDeeKnYdBWA0BbsElWFt12cpbYJp6Ebj/GWxrZqDwRrepmysRgNJud/FBd6XFvFxRN7Cio7XbZssf2A7bLdd7B6PC9E8/UaQzsBL+9WBmpUq7dE6yD7mGfywIC5sgk0HHP92HzV8X50ZKKK4ynhcyLdTgzPNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNMPKsHj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749854394; c=relaxed/simple;
+	bh=ePkKGarZg1yxKpMRWvBxlYBrx6EdK6XqYYg37ZcpYok=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JzN4U71+0aYYISj6wTWX7SEreNyFGqsRt+t7MVMDDT48TI7TuE+M+4hvLvszJj8t6kdSM1hG37YE3KVBOEe/u7z8PKSMxgx8s1bjCiHp1L2iV9fanF6mhdogCEYTd2BpAv0GMKIQi7roWXku7XhU8kxBZSQmhfyaQ6pGSPv2/B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=k1T1J56E; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNMPKsHj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749854367; x=1781390367;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=VMwh7u7GSXcQqv+7EQuiAzvaIkdTZQ3lYV24xsoAH5I=;
-  b=dNMPKsHjx39msGZSqZRHwNF5icW7xsGDvl3BTfFGZCAvZeq8r5W7NU95
-   IBMLCkYqNmbz2wth6B8OK8H/ifF2LjmX9j8TXPMQUNF4N3NxtZcXLy7gq
-   2CWxvQ+jvrOJlDg6wjXT4przfe/sJTIP7pwHYrkfnLYzgx448aiE/eUpJ
-   MBeYQnAfw01KNoEqGgay7vcdBIheqFIc7ig4ytdng3JfHo2kbYb2KRaKY
-   wJlN5OIwNUpoPoHBUL0hCOPBuRYNQxutwI1KPrPhDKI5OSpIxZIZiUDpP
-   uICE6W61FB6bePraWQayROqnURUZoV5fl+KlU3fUfdDI1AQqZDgqOcm4f
-   A==;
-X-CSE-ConnectionGUID: eXefORvwSv63MfP8rOxUSw==
-X-CSE-MsgGUID: IU7hEWbWQN2+LUMpGW1S9w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="77471994"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="77471994"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 15:39:27 -0700
-X-CSE-ConnectionGUID: ypMulCcnTfqdcJe/j0GTUw==
-X-CSE-MsgGUID: 6jW9DguNR/GIPh0iHlXQhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="151763247"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 13 Jun 2025 15:39:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQD3T-000D3G-13;
-	Fri, 13 Jun 2025 22:39:23 +0000
-Date: Sat, 14 Jun 2025 06:39:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Akshata Jahagirdar <akshata.jahagirdar@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Matt Roper <matthew.d.roper@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>
-Subject: drivers/gpu/drm/xe/xe_migrate.c:304:52: error: result of comparison
- of constant 274877906944 with expression of type 'resource_size_t' (aka
- 'unsigned int') is always true
-Message-ID: <202506140651.jm3HRodM-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k1T1J56E"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234c5b57557so26883965ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749854392; x=1750459192; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GfJ9tjW10c2n8OZdNWcGcJdHL86wIrVqT0sfkoG38mk=;
+        b=k1T1J56Evx8HsCrtGG0nHQIbEaWt3SVZbFIQtdK/ZoE5rvvY5lKVwagOVqa2EAInze
+         tffpNsw3DKvZ6FBsDRiqwGhi/bHTp/vxokid7/S8ygbwW74UdChLxMliLW6Ws+QCLVrp
+         3MbuCFEjknqCKyH/Jya/Hm3m/Ls1NhdDPf7f4J56lUJmJWzKGCkADLfUoJLsQOL4ZAFC
+         vEKGa5gpqpBp0z5pPXpaIGphQidh+2d5TU064G7o9nwRFnqEAIFwqdA6JbQOCmV2j/C8
+         UCIL/pD3ykTg+lkMhjhT3n3WiFbQemBgEQ2u4jz4eIEs0YINVtzfp0/3p+nRA4GWN37U
+         zM3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749854392; x=1750459192;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GfJ9tjW10c2n8OZdNWcGcJdHL86wIrVqT0sfkoG38mk=;
+        b=MKUFvv+3AYuNIhB/TOWtrS6pEky55jcHMdzBwzDkTMECGU76JhFv03jGoNkva/t5RD
+         jKFw5lJRx+YnQuvwXbkjSJL/KkgyQ0Jm/JiQdi0YCj0I2hEXgrYXUid/PH1VGLvGnUqO
+         yIrXrFxSN3o8Mk6lVEj8Bvfmk6LTgIb9MtdeWALH831epn+KBKio4eJLxiJ5JYvDwSdu
+         cxp+jolPXil2/oxv4EvvN6zveg8dbb5SNA9ddVFHA0KQNZPA7XLLkJv3oHiTnoPBfdjF
+         CzI1KRKeDuKq1OTUBNRmCb+sXM14Y+9E/2+iyslssOoYhUacldFH9eUi7JK5cAycga7H
+         oOtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGdNF805a0dlCJYwibBkQv+4SWrC9ToebbgJPAyIOdiTn5on6b4+FlX4eTEp3e98GWIrAl94AqemD+qJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxwl46K+ZQdOGfl03ZuI1b+fNFqd5treGnx1iOYVa8v2BMRCT26
+	/skyb8r2RSLLlJY9tTuExHyjJz+N7Vg4lWX70SRTdfNtXy88CaS07uj306KQY+1DbfZlsoN/bOV
+	0qeJF2b0=
+X-Gm-Gg: ASbGncvUDvWZeRI6nh7OwhTkDrksblKtiJ3wculfvdmx7qmXZVFhsAOKeHiTIVqTEgn
+	CBudv2Fa2qttUmQFN+7jjMVDP8P5r+OoDqhRLFFMw0ex3IDYZv9fXxAuup5pes5ReUN/WQIpti+
+	g7//j2Y5sfpIJvsyOdOXqFLpCB6jOe/W97F+KTobgXni/6LidPVgU9kTX/YbWdsdd2HqA3zwfkt
+	l0wvrpldy3RQPBTY4LvaqdCSpygt17IzIOKkzk2gVv4JnLmasYAAQIKYiubf1b8p/H0/THxUO0N
+	KLAPMyjyZkrYdyoP9B6Rii1t/dmWHJC2wuIzTpxUBa+Tcci4jJ99+XLQhLHr
+X-Google-Smtp-Source: AGHT+IEUbUa0L8a+Y7yqrzl4ZeW/SJ4xyJAVMdlKUrKNOtCmmtvE/AuX9mNwhOf5Awjt0gPehoT5/g==
+X-Received: by 2002:a17:903:1d0:b0:234:a734:4ac7 with SMTP id d9443c01a7336-2366b3fe6f9mr16050505ad.49.1749854391714;
+        Fri, 13 Jun 2025 15:39:51 -0700 (PDT)
+Received: from localhost ([97.126.182.119])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de783a8sm19787785ad.99.2025.06.13.15.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 15:39:51 -0700 (PDT)
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH RFC v3 0/2] pmdomain: core: add support for domain
+ hierarchies in DT
+Date: Fri, 13 Jun 2025 15:39:26 -0700
+Message-Id: <20250613-pmdomain-hierarchy-onecell-v3-0-5c770676fce7@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ6oTGgC/43NQQqDMBQE0KtI1v0lSY1JuyoUeoBuSxcxfpsPa
+ iSWUBHv3uCyK5czA28WNmEknNilWFjERBOFIYfToWDO2+GNQE3OTHKpuJIGxr4JvaUBPGG00fk
+ ZwoAOuw5sWbW2KXVjlGIZGCO29N3wJ3vcb+yVS0/TJ8R5O0xim/bYSYAAo4Q2XHPuKnOt7dxRH
+ fHoQr/JSe7XJHDQxiiLpUJ1dn/auq4/9Zq6WxoBAAA=
+X-Change-ID: 20250528-pmdomain-hierarchy-onecell-a46fad47d855
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, 
+ arm-scmi@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3-dev-d7477
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1307; i=khilman@baylibre.com;
+ h=from:subject:message-id; bh=ePkKGarZg1yxKpMRWvBxlYBrx6EdK6XqYYg37ZcpYok=;
+ b=owEBbQKS/ZANAwAIAVk3GJrT+8ZlAcsmYgBoTKi2npPlv8omUUI0eMPcksp7QB/oTG72KYhw4
+ L2v7lGQBLOJAjMEAAEIAB0WIQR7h0YOFpJ/qfW/8QxZNxia0/vGZQUCaEyotgAKCRBZNxia0/vG
+ ZQGAD/9X8VPwakHZ4knvT+SJkf9bf6x/fwl5+utW+gfsQOrUSB/7FAfOCeLcykP9snNa4uevhye
+ UhdaUEKIp8UJG5ehdsXAYFydwzn6JC3MIcOMtjrSDW6qiG7dSzTXEPBgjhu5dnXQnHgmlxwR6Tz
+ H6hk+VUWNX3A3tOUQqg33Qhz0Jc4MJGkyWzjVIJlBMefsWz99LcanYPVKRCQBiE+SA8c3GdKosX
+ UHAERZueU/xWNql/AfQcWL2suTN1LkulzHFcMq5OYx1RGQnEZzUcRZUxRhixavkEbZ10H6C6VFi
+ G3sw4j+W3vMnHfbU3MoimUUpgUhBO2dT4eUofXJGC12AMmsV6XMWbU8yXDUgCgBHm6EiCTk0zFW
+ syuAOPSehRX9V9zZ02mdrlhs0yVubJZN0xymZLmCHXh8Mk0BG2oaY4XDyZK4f6DIC53iOqSAKjL
+ HS9G9wnnal+WFfRmf3a0b/155V0anDB/2Rq6et0T3NfPximnYw2+uDK0FfJ9yhbwawCK2AuBhWV
+ 1a0lf2kLBrW6yZJ1zFiE83Ckm9K5PfLCyUJ8Fb7bZfxTPN4aIj1QMwm67k1Sj/+pA4SD+SU6Yk1
+ Xt1t0CbwaTEftxn+s8r23yCvPjHt1nqHNFgv4Qq3vXeQqGhBwHs38Seti0qnBcaCrJscPQVWNf4
+ bXCvkZXz98e5alA==
+X-Developer-Key: i=khilman@baylibre.com; a=openpgp;
+ fpr=7B87460E16927FA9F5BFF10C5937189AD3FBC665
 
-Hi Akshata,
+Currently, PM domains can only support hierarchy for simple
+providers (e.g. ones with #power-domain-cells = 0).
 
-FYI, the error/warning still remains.
+Add more generic support by adding support for a nexus node map, as
+described in section 2.5.1 of the DT spec.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   18531f4d1c8c47c4796289dbbc1ab657ffa063d2
-commit: 8d79acd567db183e675cccc6cc737d2959e2a2d9 drm/xe/migrate: Add helper function to program identity map
-date:   11 months ago
-config: i386-randconfig-016-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140651.jm3HRodM-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506140651.jm3HRodM-lkp@intel.com/reproduce)
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---
+Changes in v3:
+- use of_parse_phandle_with_args_map() instead of custom parsing
+- probe when device is attatched to PM domain
+- Link to v2: https://lore.kernel.org/r/20250528-pmdomain-hierarchy-onecell-v2-0-7885ae45e59c@baylibre.com
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506140651.jm3HRodM-lkp@intel.com/
+Changes in v2:
+- Use nexus map instead of creating new property as suggested by Rob H.
+- Link to v1: https://lore.kernel.org/r/20250528-pmdomain-hierarchy-onecell-v1-1-851780700c68@baylibre.com
 
-All errors (new ones prefixed by >>):
+---
+Kevin Hilman (2):
+      dt-bindings: power: add nexus map for power-domains
+      pmdomain: core: add support for subdomains using power-domain-map
 
-   In file included from drivers/gpu/drm/xe/xe_migrate.c:12:
-   In file included from include/drm/ttm/ttm_tt.h:30:
-   In file included from include/linux/pagemap.h:8:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: error: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Werror,-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/gpu/drm/xe/xe_migrate.c:304:52: error: result of comparison of constant 274877906944 with expression of type 'resource_size_t' (aka 'unsigned int') is always true [-Werror,-Wtautological-constant-out-of-range-compare]
-     304 |                 xe_assert(xe, (xe->mem.vram.actual_physical_size <= SZ_256G));
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-   drivers/gpu/drm/xe/xe_assert.h:108:54: note: expanded from macro 'xe_assert'
-     108 | #define xe_assert(xe, condition) xe_assert_msg((xe), condition, "")
-         |                                  ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-   drivers/gpu/drm/xe/xe_assert.h:111:24: note: expanded from macro 'xe_assert_msg'
-     111 |         __xe_assert_msg(__xe, condition,                                                        \
-         |         ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     112 |                         "platform: %s subplatform: %d\n"                                        \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     113 |                         "graphics: %s %u.%02u step %s\n"                                        \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     114 |                         "media: %s %u.%02u step %s\n"                                           \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     115 |                         msg,                                                                    \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     116 |                         __xe->info.platform_name, __xe->info.subplatform,                       \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     117 |                         __xe->info.graphics_name,                                               \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     118 |                         __xe->info.graphics_verx100 / 100,                                      \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     119 |                         __xe->info.graphics_verx100 % 100,                                      \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     120 |                         xe_step_name(__xe->info.step.graphics),                                 \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     121 |                         __xe->info.media_name,                                                  \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     122 |                         __xe->info.media_verx100 / 100,                                         \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     123 |                         __xe->info.media_verx100 % 100,                                         \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     124 |                         xe_step_name(__xe->info.step.media),                                    \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     125 |                         ## arg);                                                                \
-         |                         ~~~~~~~
-   drivers/gpu/drm/xe/xe_assert.h:84:31: note: expanded from macro '__xe_assert_msg'
-      84 |         (void)drm_WARN(&(xe)->drm, !(condition), "[" DRM_NAME "] Assertion `%s` failed!\n" msg, \
-         |               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      85 |                        __stringify(condition), ## arg);                                         \
-         |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/drm/drm_print.h:635:7: note: expanded from macro 'drm_WARN'
-     635 |         WARN(condition, "%s %s: [drm] " format,                         \
-         |         ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     636 |                         dev_driver_string((drm)->dev),                  \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     637 |                         dev_name((drm)->dev), ## arg)
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/bug.h:132:25: note: expanded from macro 'WARN'
-     132 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   2 errors generated.
+ Documentation/devicetree/bindings/power/power-domain.yaml | 35 +++++++++++++++++++++++++++++++++++
+ drivers/pmdomain/core.c                                   | 24 ++++++++++++++++++++++--
+ 2 files changed, 57 insertions(+), 2 deletions(-)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250528-pmdomain-hierarchy-onecell-a46fad47d855
 
-
-vim +304 drivers/gpu/drm/xe/xe_migrate.c
-
-   177	
-   178	static int xe_migrate_prepare_vm(struct xe_tile *tile, struct xe_migrate *m,
-   179					 struct xe_vm *vm)
-   180	{
-   181		struct xe_device *xe = tile_to_xe(tile);
-   182		u16 pat_index = xe->pat.idx[XE_CACHE_WB];
-   183		u8 id = tile->id;
-   184		u32 num_entries = NUM_PT_SLOTS, num_level = vm->pt_root[id]->level,
-   185		    num_setup = num_level + 1;
-   186		u32 map_ofs, level, i;
-   187		struct xe_bo *bo, *batch = tile->mem.kernel_bb_pool->bo;
-   188		u64 entry, pt30_ofs;
-   189	
-   190		/* Can't bump NUM_PT_SLOTS too high */
-   191		BUILD_BUG_ON(NUM_PT_SLOTS > SZ_2M/XE_PAGE_SIZE);
-   192		/* Must be a multiple of 64K to support all platforms */
-   193		BUILD_BUG_ON(NUM_PT_SLOTS * XE_PAGE_SIZE % SZ_64K);
-   194		/* And one slot reserved for the 4KiB page table updates */
-   195		BUILD_BUG_ON(!(NUM_KERNEL_PDE & 1));
-   196	
-   197		/* Need to be sure everything fits in the first PT, or create more */
-   198		xe_tile_assert(tile, m->batch_base_ofs + batch->size < SZ_2M);
-   199	
-   200		bo = xe_bo_create_pin_map(vm->xe, tile, vm,
-   201					  num_entries * XE_PAGE_SIZE,
-   202					  ttm_bo_type_kernel,
-   203					  XE_BO_FLAG_VRAM_IF_DGFX(tile) |
-   204					  XE_BO_FLAG_PINNED);
-   205		if (IS_ERR(bo))
-   206			return PTR_ERR(bo);
-   207	
-   208		/* PT31 reserved for 2M identity map */
-   209		pt30_ofs = bo->size - 2 * XE_PAGE_SIZE;
-   210		entry = vm->pt_ops->pde_encode_bo(bo, pt30_ofs, pat_index);
-   211		xe_pt_write(xe, &vm->pt_root[id]->bo->vmap, 0, entry);
-   212	
-   213		map_ofs = (num_entries - num_setup) * XE_PAGE_SIZE;
-   214	
-   215		/* Map the entire BO in our level 0 pt */
-   216		for (i = 0, level = 0; i < num_entries; level++) {
-   217			entry = vm->pt_ops->pte_encode_bo(bo, i * XE_PAGE_SIZE,
-   218							  pat_index, 0);
-   219	
-   220			xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64, entry);
-   221	
-   222			if (vm->flags & XE_VM_FLAG_64K)
-   223				i += 16;
-   224			else
-   225				i += 1;
-   226		}
-   227	
-   228		if (!IS_DGFX(xe)) {
-   229			/* Write out batch too */
-   230			m->batch_base_ofs = NUM_PT_SLOTS * XE_PAGE_SIZE;
-   231			for (i = 0; i < batch->size;
-   232			     i += vm->flags & XE_VM_FLAG_64K ? XE_64K_PAGE_SIZE :
-   233			     XE_PAGE_SIZE) {
-   234				entry = vm->pt_ops->pte_encode_bo(batch, i,
-   235								  pat_index, 0);
-   236	
-   237				xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64,
-   238					  entry);
-   239				level++;
-   240			}
-   241			if (xe->info.has_usm) {
-   242				xe_tile_assert(tile, batch->size == SZ_1M);
-   243	
-   244				batch = tile->primary_gt->usm.bb_pool->bo;
-   245				m->usm_batch_base_ofs = m->batch_base_ofs + SZ_1M;
-   246				xe_tile_assert(tile, batch->size == SZ_512K);
-   247	
-   248				for (i = 0; i < batch->size;
-   249				     i += vm->flags & XE_VM_FLAG_64K ? XE_64K_PAGE_SIZE :
-   250				     XE_PAGE_SIZE) {
-   251					entry = vm->pt_ops->pte_encode_bo(batch, i,
-   252									  pat_index, 0);
-   253	
-   254					xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64,
-   255						  entry);
-   256					level++;
-   257				}
-   258			}
-   259		} else {
-   260			u64 batch_addr = xe_bo_addr(batch, 0, XE_PAGE_SIZE);
-   261	
-   262			m->batch_base_ofs = xe_migrate_vram_ofs(xe, batch_addr);
-   263	
-   264			if (xe->info.has_usm) {
-   265				batch = tile->primary_gt->usm.bb_pool->bo;
-   266				batch_addr = xe_bo_addr(batch, 0, XE_PAGE_SIZE);
-   267				m->usm_batch_base_ofs = xe_migrate_vram_ofs(xe, batch_addr);
-   268			}
-   269		}
-   270	
-   271		for (level = 1; level < num_level; level++) {
-   272			u32 flags = 0;
-   273	
-   274			if (vm->flags & XE_VM_FLAG_64K && level == 1)
-   275				flags = XE_PDE_64K;
-   276	
-   277			entry = vm->pt_ops->pde_encode_bo(bo, map_ofs + (u64)(level - 1) *
-   278							  XE_PAGE_SIZE, pat_index);
-   279			xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE * level, u64,
-   280				  entry | flags);
-   281		}
-   282	
-   283		/* Write PDE's that point to our BO. */
-   284		for (i = 0; i < map_ofs / PAGE_SIZE; i++) {
-   285			entry = vm->pt_ops->pde_encode_bo(bo, (u64)i * XE_PAGE_SIZE,
-   286							  pat_index);
-   287	
-   288			xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE +
-   289				  (i + 1) * 8, u64, entry);
-   290		}
-   291	
-   292		/* Set up a 1GiB NULL mapping at 255GiB offset. */
-   293		level = 2;
-   294		xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE * level + 255 * 8, u64,
-   295			  vm->pt_ops->pte_encode_addr(xe, 0, pat_index, level, IS_DGFX(xe), 0)
-   296			  | XE_PTE_NULL);
-   297		m->cleared_mem_ofs = (255ULL << xe_pt_shift(level));
-   298	
-   299		/* Identity map the entire vram at 256GiB offset */
-   300		if (IS_DGFX(xe)) {
-   301			u64 pt31_ofs = bo->size - XE_PAGE_SIZE;
-   302	
-   303			xe_migrate_program_identity(xe, vm, bo, map_ofs, 256, pat_index, pt31_ofs);
- > 304			xe_assert(xe, (xe->mem.vram.actual_physical_size <= SZ_256G));
-   305		}
-   306	
-   307		/*
-   308		 * Example layout created above, with root level = 3:
-   309		 * [PT0...PT7]: kernel PT's for copy/clear; 64 or 4KiB PTE's
-   310		 * [PT8]: Kernel PT for VM_BIND, 4 KiB PTE's
-   311		 * [PT9...PT27]: Userspace PT's for VM_BIND, 4 KiB PTE's
-   312		 * [PT28 = PDE 0] [PT29 = PDE 1] [PT30 = PDE 2] [PT31 = 2M vram identity map]
-   313		 *
-   314		 * This makes the lowest part of the VM point to the pagetables.
-   315		 * Hence the lowest 2M in the vm should point to itself, with a few writes
-   316		 * and flushes, other parts of the VM can be used either for copying and
-   317		 * clearing.
-   318		 *
-   319		 * For performance, the kernel reserves PDE's, so about 20 are left
-   320		 * for async VM updates.
-   321		 *
-   322		 * To make it easier to work, each scratch PT is put in slot (1 + PT #)
-   323		 * everywhere, this allows lockless updates to scratch pages by using
-   324		 * the different addresses in VM.
-   325		 */
-   326	#define NUM_VMUSA_UNIT_PER_PAGE	32
-   327	#define VM_SA_UPDATE_UNIT_SIZE		(XE_PAGE_SIZE / NUM_VMUSA_UNIT_PER_PAGE)
-   328	#define NUM_VMUSA_WRITES_PER_UNIT	(VM_SA_UPDATE_UNIT_SIZE / sizeof(u64))
-   329		drm_suballoc_manager_init(&m->vm_update_sa,
-   330					  (size_t)(map_ofs / XE_PAGE_SIZE - NUM_KERNEL_PDE) *
-   331					  NUM_VMUSA_UNIT_PER_PAGE, 0);
-   332	
-   333		m->pt_bo = bo;
-   334		return 0;
-   335	}
-   336	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kevin Hilman <khilman@baylibre.com>
+
