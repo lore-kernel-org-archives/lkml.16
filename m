@@ -1,60 +1,84 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814E6433A8
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7579B433A8;
+	Fri, 13 Jun 2025 02:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749782955; cv=none; b=jbiI9RfPZ0Ud2BYtShweRvznSU8V6XhrrzBSrYZ0La6CgfS4qsWOyXR9/u1LgOuX7hGTEZBNoQ9H0oH9hPSvZILXXEcMopgKW2MbA0l8/VlpW9hSyBXj4GOzFQE4et5cdv2VB3U2/SKZE+IZZVitYUgjtht78rRCmeoFRwWmSNU=
+	t=1749783003; cv=none; b=FBD6OCqh4NfK/mYiJF/ow/tlx2+MK+gozU8n+EcpxIP97Tw0GdUWOu/pj1xM7gWvXCua7yeM52ljlfxfEyYQqpU+uJFugT8s8TYeJm2Qv6IUmj1hv+qRCUpKJnQFDV637khmLVvVr+Ypbo7ziiRKm3t3sGg6sP6ACYojaUs3P78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749782955; c=relaxed/simple;
-	bh=Bk0pghWnCWdBO1NH6y+lDiL+29upUOFZxuYWtspWj8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PQOU3T1ECvBOR65CSC7jj/Swxyyn863XPA8F6sm0NMfYMSnfEDX/p9AWSL+3xPduIV1zflrMSJ6/v+eYNzticbj6pSJ26YRujfNaB3s/B4BYv4jYihKb+RYBUJNQZHqrDEcUEv9eIXL0zGCKIjguddDAWFmjI4jpe/9hcZ2Nvqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 430AC160B58;
-	Fri, 13 Jun 2025 02:49:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id B800C60013;
-	Fri, 13 Jun 2025 02:49:07 +0000 (UTC)
-Date: Thu, 12 Jun 2025 22:49:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>
-Subject: Unused trace event in erofs
-Message-ID: <20250612224906.15000244@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749783003; c=relaxed/simple;
+	bh=NGlagSnJ4T/MF2hIBZ8ka35d70cJhY8BeilcrfmgwlY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DNbwGKaJ7aQXFsTcGRrdfL/BxecBz6f1m3ZgwmPhjKg+fEdNno+7AynMGk5WqNiIpfRq5mah5y350awcZuEWYk1dfw7EP3lNoInQol88U1vj6jxJmxI5yRU5Nvdj26fEwttwceLfHwE9uQphhZr8ZPa8r15DS9WSULgftZy/qM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjhcKUIk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjhcKUIk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0747DC4CEEA;
+	Fri, 13 Jun 2025 02:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749783003;
+	bh=NGlagSnJ4T/MF2hIBZ8ka35d70cJhY8BeilcrfmgwlY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gjhcKUIkIvw0aFZzmmButMRI0Y6RX6YuRIpPhv/glNpgj1Vzj7nEjZn+LttDIR565
+	 n5ejnM3KxJ82r9Rf2tSVyQ7+bqBghW7ufCrtNGxjfAumvNJuQ13okOlmZfJ9qXTjLi
+	 QqcfrNcb/Fy/G++2kc6DglkfXAalHBxZxQzWuiF0MQ7uYnwRyG/xYpKnYUppgBoL1G
+	 Y7UJC1Z86RN52cf4tAPiHuqagFx7/jvoOGVCvnY/InDdSAHFhbfrgYVyLN8PBPJUq5
+	 RqHFts+KCuF6DrQuLVctQgkkL0I6TqRC+kbX9/u/hjpkL3T5xBLX1CLu/W8scJZlQF
+	 IcRJxlIrKXRMw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE3739EFFD0;
+	Fri, 13 Jun 2025 02:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B800C60013
-X-Stat-Signature: uaoocgjsrjds49dg1urx9xzjnucpez7i
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19dmni3gDNOYbl6Buih8pDWlCcmVoa3n6g=
-X-HE-Tag: 1749782947-201819
-X-HE-Meta: U2FsdGVkX1+Npnbb2LjhalCEdzBhqg8nBpYAH6nNAKTfYYmARJVFTicOE31+R8LLN0xAMDnEKluS4+g0zXdLpSVrL11sDFrm0ft8zXX9XIx7L3dJz/rr425dPVXnHrUTN0fkL2lyzvgYVKC9sij/YPsj2qZ1pYyArdMcjteIHKoa71jfXcbNqwAAFl85SHi8czMXLA1yWkRQ4n2xbSt/zkjKL0yn7kNLr+XY8mum1jMIbJwbDp8rf9SvGVzq89DlWAZLKIZvRg2OEbEgE7p0hDChYdDXaR83K9m8JgznTq4dLYEea/+2kv/3sNbD6jWWmsVSbh4I/YNxW9cDYWH6qiEoqVSRhJs6aO8se8AB7Mgq0PdUtAqjTlia8zhlyjj0obdTKp5CvMHQs8Tc4RbWMQ==
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
+ xdp_redirect_map_err
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174978303251.199960.6452866597649393391.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 02:50:32 +0000
+References: <20250611155615.0c2cf61c@batman.local.home>
+In-Reply-To: <20250611155615.0c2cf61c@batman.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
+ hawk@kernel.org, john.fastabend@gmail.com
 
-I have code that will trigger a warning if a trace event is defined but
-not used[1]. It gives a list of unused events. Here's what I have for
-erofs:
+Hello:
 
-warning: tracepoint 'erofs_destroy_inode' is unused.
+This patch was applied to bpf/bpf-next.git (net)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Each trace event can take up to around 5K in memory regardless if they
-are used or not. Soon there will be warnings when they are defined but
-not used. Please remove any unused trace event or at least hide it
-under an #ifdef if they are used within configs. I'm planning on adding
-these warning in the next merge window.
+On Wed, 11 Jun 2025 15:56:15 -0400 you wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Each TRACE_EVENT() defined can take up around 5K of text and meta data
+> regardless if they are used or not. New code is being developed that will
+> warn when a tracepoint is defined but not used.
+> 
+> The trace events xdp_redirect_map and xdp_redirect_map_err are defined but
+> not used, but there's also a comment that states these are kept around for
+> backward compatibility. Which is interesting because since they are not
+> used, any old BPF program that expects them to exist will get incorrect
+> data (no data) when they use them. It's worse than not working, it's
+> silently failing.
+> 
+> [...]
 
-Thanks,
+Here is the summary with links:
+  - xdp: Remove unused events xdp_redirect_map and xdp_redirect_map_err
+    https://git.kernel.org/bpf/bpf-next/c/a9a5f41b04dd
 
--- Steve
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250612235827.011358765@goodmis.org/
+
