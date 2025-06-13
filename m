@@ -1,74 +1,65 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401532F4317
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDC92F4317;
+	Fri, 13 Jun 2025 01:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749779598; cv=none; b=bmIHXzJ/A7OGHAJ63MIU8+w9JGiax09hGClg2kRq5Bj4kkubxY93ScMjdj7wZDoGIczbjwTCxLRSZQOCvI91TIaqBLnPKCPuVvn+7eTFp+ql4heKPvdLAjPsUkl/ChQXZ7JugjTXT+w070dQNhZPhfb7JKy0wxBTTWWiyzhSxtI=
+	t=1749779634; cv=none; b=sH0Rkj87lVSNYVCclh66Z0HNVoYsY3C9d1WqMHikuyfTG2/4WKUiIFnvHFv63WFTGbcloWtwKF9YtIhmMomSNvCK3wMq8/ukRQMNN0gBhdg+x/MyuGzCXIimVMt0+L1XZaQVnUlZqTGTEYR2dmjGciFMi8k6tRIFK+I8vAcEWPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749779598; c=relaxed/simple;
-	bh=q2CeiThjXnBn+PX0vpfkOk8gxArW4doBcjm6JOl6Xd4=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=TkY5x72TvF0ht2EAsU+i1C+SgiZQtaxpLElrXmqXrj9YKaVs+4e7+YRSMPRgDeR5MuCuvBpzjBt6JViSUkViD+qpPA/LFwqRbzvQjukbWe+0Txuz1NKhqcZR291SMpqnP1IFjnWOXAOGhKrTln67auUseWi93XRVaQ73azaRW9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tQylNxta; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749779634; c=relaxed/simple;
+	bh=5um7OlRXyxNfArLU1AL8h3ux8D8haG7NSWSfxT0SEGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6f7AP5Oo9QQTWAERpL6TiHMLnNeojJNwlXaWjgym3q3J802fckrPRCpuU0DwjsXW2zDxtBBjl/jbm17Cv+8ZBn4pgWRpoYIi97wJATfVXTVkR1Zf7GWS+ovghmKed/6rw9hqO+fcnDU2XFt8eO+OeKhGtaHPfjkYyXgUh/QaLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=XjzXugX+; arc=none smtp.client-ip=220.197.32.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tQylNxta"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749779592; h=Message-ID:Subject:Date:From:To;
-	bh=5Oe5PaQlPk7LtILWAf2eOzYErXMVWS9+usSmUJzI5Dc=;
-	b=tQylNxtaR2P7w5byKAgb+jUb12BRRt1IVVZqcRDVi4YQxIN85Z4H7hhjpeS8XSr191m8wnkb+ZffU2BxdzyKlENlzctkrWc9mvKiyljYuwXYfjHWZ12hof2oDVkAsz3zgycpJ3+Ba8SYGErAZmMW9YigpNPRp/hOudSf2Quh7XI=
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WdifYuV_1749779592 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 13 Jun 2025 09:53:12 +0800
-Message-ID: <1749779585.8414617-4-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH] virtio: document ENOSPC
-Date: Fri, 13 Jun 2025 09:53:05 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Parav Pandit <parav@nvidia.com>,
- Jason Wang <jasowang@redhat.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <2e6ec46b8d5e6755be291cec8e2ec57ef286e97b.1748356035.git.mst@redhat.com>
-In-Reply-To: <2e6ec46b8d5e6755be291cec8e2ec57ef286e97b.1748356035.git.mst@redhat.com>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="XjzXugX+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=yNSQ64cT373OaCtnIDdjjowAPRVl8grFK8GwPySFH44=;
+	b=XjzXugX+Y0L5kDUQGGjBHSbYml6ugiTpJjEekPdIPyky4WzCp7f+UKXTMsm1Sa
+	Bd4SxbYcN6a2Iax1T3Fp+GnzoJaHo3Hy7fS9uVAL13rtZEvSUQq4U/4AiJUzKbdp
+	AtWsWRfVrsNJfW+u00De/02wxsQCow1Q8oz0/p78dbOkA=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD3l3xyhEtoHGyLAA--.13454S3;
+	Fri, 13 Jun 2025 09:52:52 +0800 (CST)
+Date: Fri, 13 Jun 2025 09:52:50 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+	linux@ew.tq-group.com, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: freescale: imx93-tqma9352: Limit BUCK2
+ to 600mV
+Message-ID: <aEuEcqW/Na69wfsM@dragon>
+References: <20250514094130.621087-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514094130.621087-1-alexander.stein@ew.tq-group.com>
+X-CM-TRANSID:Mc8vCgD3l3xyhEtoHGyLAA--.13454S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUnHq2DUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBBdrZWhLgIcJPAABsN
 
-On Tue, 27 May 2025 10:27:19 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> drivers handle ENOSPC specially since it's an error one can
-> get from a working VQ. Document the semantics.
->
-> Reported-by: Parav Pandit <parav@nvidia.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+On Wed, May 14, 2025 at 11:41:27AM +0200, Alexander Stein wrote:
+> TQMa9352 is only using LPDDR4X, so the BUCK2 regulator should be fixed
+> at 600MV.
+> 
+> Fixes: d2858e6bd36c ("arm64: dts: freescale: imx93-tqma9352: Add PMIC node")
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Applied both, thanks!
 
-> ---
->  drivers/virtio/virtio_ring.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index b784aab66867..97ab0cce527d 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -2296,6 +2296,10 @@ static inline int virtqueue_add(struct virtqueue *_vq,
->   * at the same time (except where noted).
->   *
->   * Returns zero or a negative error (ie. ENOSPC, ENOMEM, EIO).
-> + *
-> + * NB: ENOSPC is a special code that is only returned on an attempt to add a
-> + * buffer to a full VQ. It indicates that some buffers are outstanding and that
-> + * the operation can be retried after some buffers have been used.
->   */
->  int virtqueue_add_sgs(struct virtqueue *_vq,
->  		      struct scatterlist *sgs[],
-> --
-> MST
->
