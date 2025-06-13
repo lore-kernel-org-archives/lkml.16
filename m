@@ -1,176 +1,188 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1F82D9EF9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6734191F84
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822604; cv=none; b=M8nu8Qq6jE+yZ3EsKiZLqNCB6uG2OcbcH/PUAEB9Dqglr8/H6jpuK1YAXcF43wzKaJS2z9x/jsHvW3H2mTepjnkxDD+gvM4hZXa4DFzipaOsCUot7ToXzDRW9U3YPam67XHxuCZ7yy58lemnX96QJ8WnOKh+RknB3ykEAcdjY8c=
+	t=1749822617; cv=none; b=EXrmkMI9Wqr6fgkZZ+8OAYKLd7SGUYUdPCoExTFOdgzsaheWL0r27BqQvrv3LM4q0FGfoRj5mumOGIL7swYZlGLWdZbD3ERlaSxop35s5NTUGQg+01hwTrtnd4qZ29cn/j21a5tBvTE4mvKZMWwRdUFKKv8235k+/5AiHqGdqDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822604; c=relaxed/simple;
-	bh=48Btmq48StA+CNIKojo0XJZQ2ucjHK2q9m1cr1JmpC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=StysjiGWTWRSyjWvXHKdX+v9DHh1sCKGFGZOZGr4lcJR3L8D3Fg/0VjruODKzg7OxOh0FE1g8eWwsccaCsfQvgF9zE58LILJLv6vwG+DdJEdb6JabkXZhzEh106nea43siSQ3ZKFmUZ0HwaXI062Fkb0sVMDeySyQYpwkhulN4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JFjl4Q+8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o96Nzw7P; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NbaSZyMh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eVEysA6P; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749822617; c=relaxed/simple;
+	bh=wvswiUX9KL+CSfsq+NBsxpwVD0hxpn2FLWO0CHcERHU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i4JfWWal6thjszEHuFw1PyCfBip+WbuOclD9d1FSK4T8DN1gtqdDJLL+cLVB/eEctvVDu8AFQkljffY2pMA0sQZ0RVg8eoyjsDJQz8XKyqRXYfcp44339ADvbmFc5WSstWdL7YDeScwbVsRg5hY7+0cxuPsNaPxPhLAxtO0/eU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GTj11mKk; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JFjl4Q+8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o96Nzw7P";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NbaSZyMh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eVEysA6P"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id ECA3A1F397;
-	Fri, 13 Jun 2025 13:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749822599; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
-	b=JFjl4Q+8AQh3LwubknOdgVD4oUmh/ajNptA0CrIeZKCCvmOXloT8lUDyYG+1tNPeQWM3jv
-	BLIHQfk/uEkLXQA+j5MHUnsYNPvk/h8jfEH0Diex3gDY1oavFRzRBmzRjSQieqP9jYKzsY
-	8pHGvZ/oLdcexdUNfJQ9/H7KdHhD57c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749822599;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
-	b=o96Nzw7PtgzWpMVZQFmTXHcKaN74FiNyCjJ+V8KDPdlG237umtLqeLOLvbEX2pTAJtefK8
-	NoSyXdSxlk/8anCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NbaSZyMh;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eVEysA6P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749822597; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
-	b=NbaSZyMh2LIU02VlY3UXMG0lONn/VkG1qtlN1zCkfDwjYs+DM0S4mem9gjq4P1zmqkLmDh
-	YVclMWgVBTbaXTR/GzcLBnP66qNBEvTk3rrA224aJdYofXtjFExAGEfDRoX5mGE4EXBD8K
-	ANJw+A6+MtTJz7uS40K/npORwMS65BU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749822597;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
-	b=eVEysA6Ptqu/+c6G9EG/hmLqxlRPje3ZL7uIEDYEnzE4yugEDcubXkv7uHVQ5Kw+so46xd
-	ClyMP9aLEV0tJ/AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA7A9137FE;
-	Fri, 13 Jun 2025 13:49:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ng2tMoQsTGhFCwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 13 Jun 2025 13:49:56 +0000
-Date: Fri, 13 Jun 2025 15:49:46 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v3 2/3] mm/huge_memory: don't mark refcounted folios
- special in vmf_insert_folio_pmd()
-Message-ID: <aEwseqmFrpNO5NJC@localhost.localdomain>
-References: <20250613092702.1943533-1-david@redhat.com>
- <20250613092702.1943533-3-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GTj11mKk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749822616; x=1781358616;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wvswiUX9KL+CSfsq+NBsxpwVD0hxpn2FLWO0CHcERHU=;
+  b=GTj11mKkAH70reTq4pi8DFH6xPGJ/yXe9vz/YYft/h4HIb/r7k8x3O+O
+   1A50RdFFGKnoU0Cor56vVsSj0cgNgoewyVodu1Fpyso2vJnAyroPeLyxk
+   yFcgSNaRFXqDZ6vQuIiNlFF8zUp7ElsHppNOvrCWwk0KyYHIqkx9LMg0I
+   NetYFXfGYY3Xvt/+hxTLuydj/ePAzOxNJwuIRGqp3go1Yc3Q99bhcN55I
+   vuMT+bRn0/jPznqJRo4PkV6a9nKDNpQjV7F5bJB0g8uo0ZasKYMrZQHY9
+   QBqrII3cd2HxVzNMrHTY7YPBwRyPTF5n008ufz4oGOLVwgaJ3iqvkMvwC
+   w==;
+X-CSE-ConnectionGUID: iz4N+fulQ6GB2eQxGAGDiA==
+X-CSE-MsgGUID: bv5mMF1OQpmH1vHS/CCPow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="55837543"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="55837543"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 06:50:15 -0700
+X-CSE-ConnectionGUID: EbeouDvnQRCND3ty3obTaQ==
+X-CSE-MsgGUID: Lb8uIDXWSQGTRYgHbkW1Xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="171017593"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa002.fm.intel.com with ESMTP; 13 Jun 2025 06:50:15 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	tglx@linutronix.de,
+	dave.hansen@linux.intel.com,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Cc: dapeng1.mi@linux.intel.com,
+	ak@linux.intel.com,
+	zide.chen@intel.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [RFC PATCH 00/12] Support vector and more extended registers in perf
+Date: Fri, 13 Jun 2025 06:49:31 -0700
+Message-Id: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613092702.1943533-3-david@redhat.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: ECA3A1F397
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 11:27:01AM +0200, David Hildenbrand wrote:
-> Marking PMDs that map a "normal" refcounted folios as special is
-> against our rules documented for vm_normal_page(): normal (refcounted)
-> folios shall never have the page table mapping marked as special.
-> 
-> Fortunately, there are not that many pmd_special() check that can be
-> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
-> would get this wrong right now are rather harmless: e.g., none so far
-> bases decisions whether to grab a folio reference on that decision.
-> 
-> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-> implications as it seems.
-> 
-> Getting this right will get more important as we use
-> folio_normal_page_pmd() in more places.
-> 
-> Fix it by teaching insert_pfn_pmd() to properly handle folios and
-> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
-> insert_pmd(), and distinguishing between both cases using a new simple
-> "struct folio_or_pfn" structure.
-> 
-> Use folio_mk_pmd() to create a pmd for a folio cleanly.
-> 
-> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Altough we have it quite well explained here in the changelog, maybe
-having a little comment in insert_pmd() noting why pmds mapping normal
-folios cannot be marked special would be nice.
+Starting from the Intel Ice Lake, the XMM registers can be collected in
+a PEBS record. More registers, e.g., YMM, ZMM, OPMASK, SPP and APX, will
+be added in the upcoming Architecture PEBS as well. But it requires the
+hardware support.
 
-But just saying :-)
+The patch set provides a software solution to mitigate the hardware
+requirement. It utilizes the XSAVES command to retrieve the requested
+registers in the overflow handler. The feature isn't limited to the PEBS
+event or specific platforms anymore.
+The hardware solution (if available) is still preferred, since it has
+low overhead (especially with the large PEBS) and is more accurate.
 
-Reviewed-by: Oscar salvador <osalvador@suse.de>
+In theory, the solution should work for all X86 platforms. But I only
+have newer Inter platforms to test. The patch set only enable the
+feature for Intel Ice Lake and later platforms.
 
- 
+Open:
+The new registers include YMM, ZMM, OPMASK, SSP, and APX.
+The sample_regs_user/intr has run out. A new field in the
+struct perf_event_attr is required for the registers.
+There could be several options as below for the new field.
+
+- Follow a similar format to XSAVES. Introduce the below fields to store
+  the bitmap of the registers.
+  struct perf_event_attr {
+        ...
+        __u64   sample_ext_regs_intr[2];
+        __u64   sample_ext_regs_user[2];
+        ...
+  }
+  Includes YMMH (16 bits), APX (16 bits), OPMASK (8 bits),
+           ZMMH0-15 (16 bits), H16ZMM (16 bits), SSP
+  For example, if a user wants YMM8, the perf tool needs to set the
+  corresponding bits of XMM8 and YMMH8, and reconstruct the result.
+  The method is similar to the existing method for
+  sample_regs_user/intr, and match the XSAVES format.
+  The kernel doesn't need to do extra configuration and reconstruction.
+  It's implemented in the patch set.
+
+- Similar to the above method. But the fields are the bitmap of the
+  complete registers, E.g., YMM (16 bits), APX (16 bits),
+  OPMASK (8 bits), ZMM (32 bits), SSP.
+  The kernel needs to do extra configuration and reconstruction,
+  which may brings extra overhead.
+
+- Combine the XMM, YMM, and ZMM. So all the registers can be put into
+  one u64 field.
+        ...
+        union {
+                __u64 sample_ext_regs_intr;   //sample_ext_regs_user is simiar
+                struct {
+                        __u32 vector_bitmap;
+                        __u32 vector_type   : 3, //0b001 XMM 0b010 YMM 0b100 ZMM
+                              apx_bitmap    : 16,
+                              opmask_bitmap : 8,
+                              ssp_bitmap    : 1,
+                              reserved      : 4,
+
+                };
+        ...
+  For example, if the YMM8-15 is required,
+  vector_bitmap: 0x0000ff00
+  vector_type: 0x2
+  This method can save two __u64 in the struct perf_event_attr.
+  But it's not straightforward since it mixes the type and bitmap.
+  The kernel also needs to do extra configuration and reconstruction.
+
+Please let me know if there are more ideas.
+
+Thanks,
+Kan
+
+
+
+Kan Liang (12):
+  perf/x86: Use x86_perf_regs in the x86 nmi handler
+  perf/x86: Setup the regs data
+  x86/fpu/xstate: Add xsaves_nmi
+  perf: Move has_extended_regs() to header file
+  perf/x86: Support XMM register for non-PEBS and REGS_USER
+  perf: Support extension of sample_regs
+  perf/x86: Add YMMH in extended regs
+  perf/x86: Add APX in extended regs
+  perf/x86: Add OPMASK in extended regs
+  perf/x86: Add ZMM in extended regs
+  perf/x86: Add SSP in extended regs
+  perf/x86/intel: Support extended registers
+
+ arch/arm/kernel/perf_regs.c           |   9 +-
+ arch/arm64/kernel/perf_regs.c         |   9 +-
+ arch/csky/kernel/perf_regs.c          |   9 +-
+ arch/loongarch/kernel/perf_regs.c     |   8 +-
+ arch/mips/kernel/perf_regs.c          |   9 +-
+ arch/powerpc/perf/perf_regs.c         |   9 +-
+ arch/riscv/kernel/perf_regs.c         |   8 +-
+ arch/s390/kernel/perf_regs.c          |   9 +-
+ arch/x86/events/core.c                | 226 ++++++++++++++++++++++++--
+ arch/x86/events/intel/core.c          |  49 ++++++
+ arch/x86/events/intel/ds.c            |  12 +-
+ arch/x86/events/perf_event.h          |  58 +++++++
+ arch/x86/include/asm/fpu/xstate.h     |   1 +
+ arch/x86/include/asm/perf_event.h     |   6 +
+ arch/x86/include/uapi/asm/perf_regs.h | 101 ++++++++++++
+ arch/x86/kernel/fpu/xstate.c          |  22 +++
+ arch/x86/kernel/perf_regs.c           |  85 +++++++++-
+ include/linux/perf_event.h            |  23 +++
+ include/linux/perf_regs.h             |  29 +++-
+ include/uapi/linux/perf_event.h       |   8 +
+ kernel/events/core.c                  |  63 +++++--
+ 21 files changed, 699 insertions(+), 54 deletions(-)
 
 -- 
-Oscar Salvador
-SUSE Labs
+2.38.1
+
