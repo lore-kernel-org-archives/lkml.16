@@ -1,200 +1,162 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2742E11B5;
-	Fri, 13 Jun 2025 16:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109A2E11B5;
+	Fri, 13 Jun 2025 16:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832413; cv=none; b=ggI/W92Gpk1C3iAkjaLBoqoYVLBbIeKMN1Nd3AT8i152Gil0ew+lfjQ+Luet+JRgm3xDpkKtlwU1WPfAVycrA9ANR3UfrxQkzASu0etp4HF3VDtnPwcejykDZq79hn+BNvxC9L4HitnqmqM5+ndFBjdxkgbTe4MxM8I1kWWNfRA=
+	t=1749832458; cv=none; b=ggZPSIaNfcix16oOFfej5Tk/16ohnjp8qOGbk4YnzkuYWh1Y9u1Gn9eSS+sdb2Nd2sS4gKxYK5k5VjwR1XvlWG1yMOf/yI+shq2V+MVS4Le8QUQxRN6jLpvTXazZQXm1zZ8tAT5l/+nOmpX262eDCRF0nrIdb8lBCxzMdIh105Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832413; c=relaxed/simple;
-	bh=1WcSibMacZOYwlTkoDbYGvtq44j+e8sb3UdJnXTKqC8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pd00AvCBF7aNQnYsIpPi1yNmgza2xPrZip7btgHYuc0mjyfPGHejIoW5f7Z3sUQqIoqZ8yp981tf3xFUKAkGMRCVw//RB++HFcKkTVWozrYVU2VMDslDath7EwC8mjJnUC+x1JW72oN0HetwR9eK7pGdKRFvqWp+2ohWFAdPi50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUc0gRyK; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749832458; c=relaxed/simple;
+	bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DvSaIwoPWa1stderyx1a5nLSjm28Iw6AZFjx4z+H5ueRzrs2fpWQGuOTnpns3A6PAoa2O0qipFwWLq3/jahZY5K07paOPXBrRN4/5MKKyXzSQkZLFrQv4x74TbcyBfHL6Pq5PXMxrLa/YBEi3hyQakgbajRZSss4WzlhH8P1WvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1rWZEPS; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUc0gRyK"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-adb2bd27c7bso350816666b.2;
-        Fri, 13 Jun 2025 09:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749832410; x=1750437210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Va7AE6ZRu0tUcIQ8yzYRsNan45fKyNNXoobCqFtK7Vc=;
-        b=TUc0gRyKWj4D7pYXIG+9KszbZp1yMHnJlI21nQH2xlZu/Xdkoc+VcjNySy4aGEs6/n
-         edG7WVcYNokdDgVlaTltsFaAIWOYqLKHmDBy61m+Gm7U9vbRJl3pvG8yS9JuLLIBmb1i
-         J0Pk/zLRLknYc5V8nXwovJ7tSZvoGCMnSTsvZpSai5jc0dKeNnV0YF9Bb2F5yUpVM97Q
-         zETwmPMJg76s0VE0DXY/Og2r3zSM980DUD9MWIumZHR/WDGJZt9wJJTkua/ITT0NeRKp
-         q9OQwLZcEZ9ia3ZdnSVEI8U2mQDAtGEmkEuuikYgsNvmqjOnZ+ov8a2K5a1GOVaHPn9M
-         sYPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749832410; x=1750437210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Va7AE6ZRu0tUcIQ8yzYRsNan45fKyNNXoobCqFtK7Vc=;
-        b=gRs7tM2S3Oa+Kc8Cx3IK9rZwv7pYqKl2pMtCr+R9ulW2TI10SZgyKn2IzUFUgMmns8
-         0BMnkkPIZYqylqi0B5u3BFfEjYZb38x2Yez40vJcJz9aaxpldqq1HnayTHB425+ZQqjm
-         oGr0NIfWmOtdZ7kwCfsxvvhx/3Oc13VcQVHeRyraMNvsAf0mpjTcVvwwpHwhqF6rGTk5
-         4qi/mVqJZuovG+owKcnnJvISSDj093bgrkiUxHAAi3dE31XrUZD72K1EblBghSLTtE+E
-         2cvyfq3Y/e5OpZ+iP9HGRKN+jm/ZxOqoS7OwXr3Igjuw+H3dahPdk/dshHg14WtzqC3m
-         JCVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWELFW3CN3HWiXC1ULkcVJgVko7fuT8Lw7PUDu/arEsr3cSom8BaJnRKenooldBdUVPrOTdt0UYysM97rg1@vger.kernel.org, AJvYcCWH1E82KtgjRCdWetODpvlHfr0vx0UscSLboTVnV3rUYHoY5n5AHEjTQnTTsowKYFwYZUGluv16xT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9zYy9hYTDfJe7FDtGXWIlvOpoi685Q2iR+/n2weanj8tGJkPS
-	4XMkesAkvIrMTBIt4iqpLighlsFeQI232PmB0x8SBZKkUl2ct5xJjXIrNpthP3XCoaorJYs+evS
-	GBl/Hv0kOGgvOYn5nLXCqyFO2rCMZlDI=
-X-Gm-Gg: ASbGnct3z6KW4iNoBSahVOLNX/4gaOQzvRnBYr/341M8FL7shmUtO77FkgSVcmO7B0C
-	xWugC/b/HW8A+egsRBy/iogYXyDPApzrozKRhxUZCYUAdrTVWv/n/fPtlHSBSzIzQveczJi/VRF
-	NllfBZBafEQEysUTklr+HjX11MYyTtpuDC6mBzGWt1XXqPqJ12NxNw6jkFQrZLWQhH0Phod6JxD
-	GJO
-X-Google-Smtp-Source: AGHT+IG/OBkyK/agG2UVMmJWvTU1QMm4SmGMs9KD3Ezvf+J2tTxEtlceU4dEUBXWyJAHxcNkqh7edre0kjWHg3dWMyQ=
-X-Received: by 2002:a17:906:fe0c:b0:ad8:93a3:299c with SMTP id
- a640c23a62f3a-adec5436bc6mr372908166b.10.1749832409926; Fri, 13 Jun 2025
- 09:33:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1rWZEPS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749832456; x=1781368456;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
+  b=Z1rWZEPSUjOXaFCHVCOE90SJp7n5KAViY9SXv4Rn6GT/CSpgFYh87fkV
+   TyWMVtpgWGrxtQ3cQkpVpGFE4d1+hl01loLoFFD73IdT4mAHu+dxp2LUw
+   6FaKJF1I5V7AWCGZnlqSPQ9cdn/GOqUOYJvkcbIeupp6DAILTiDoZ8CAO
+   UOAPXcsLpi7yzhLvRzBnffQywRUQ2ExGY9c6YY+g6C79MREs92for1D8M
+   LSYe8fwhnjklnEVhQO0onvbigw2SZlNN/AkCLZ25f5/Q8AeMopYU6cKPd
+   MqMCcTm3VuEqRvz+TgWdUq7jr2enc77pkfLFekejVm/WFqEhVCZvN2xkW
+   w==;
+X-CSE-ConnectionGUID: D0ju2UKdSnm7TG/08lmd4A==
+X-CSE-MsgGUID: S5FtnycxSd+xcp47mSMkBQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="54672617"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="54672617"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:15 -0700
+X-CSE-ConnectionGUID: xTT/NwgZQVyWy81RA0eR+g==
+X-CSE-MsgGUID: EOizAm/wT4OMCyvmQSPCSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="153160363"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uQ7Lp-00000006IeZ-3Wol;
+	Fri, 13 Jun 2025 19:33:57 +0300
+Date: Fri, 13 Jun 2025 19:33:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>,
+	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Amit Vadhavana <av2082000@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Kees Cook <kees@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Subject: Re: [PATCH 1/1] dmaengine: virt-dma: convert tasklet to BH workqueue
+ for callback invocation
+Message-ID: <aExS9WB0Ussl4Lec@smile.fi.intel.com>
+References: <20250613143605.5748-1-al.kochet@gmail.com>
+ <20250613143605.5748-2-al.kochet@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612181330.31236-1-bijan311@gmail.com> <20250612181330.31236-2-bijan311@gmail.com>
- <5a50eeba-b26d-4913-8016-45278608a1ee@redhat.com>
-In-Reply-To: <5a50eeba-b26d-4913-8016-45278608a1ee@redhat.com>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Fri, 13 Jun 2025 11:33:18 -0500
-X-Gm-Features: AX0GCFuazzkdI3MgkIT3-iQtcMQlbIVIrSXGr9CiMXXa7M0L7hQSrqNXvr4KFyU
-Message-ID: <CAMvvPS5U8exSvy0fknfhv8ym_dKgMVa7cfMOqn0fGyd+NSjSuQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sj@kernel.org, akpm@linux-foundation.org, 
-	corbet@lwn.net, ziy@nvidia.com, matthew.brost@intel.com, 
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
-	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
-	bijantabatab@micron.com, venkataravis@micron.com, emirakhur@micron.com, 
-	ajayjoshi@micron.com, vtavarespetr@micron.com, damon@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613143605.5748-2-al.kochet@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jun 13, 2025 at 8:45=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 12.06.25 20:13, Bijan Tabatabai wrote:
-> > From: Bijan Tabatabai <bijantabatab@micron.com>
-> >
-> > This patch is to allow DAMON to call policy_nodemask() so it can
-> > determine where to place a page for interleaving.
-> >
-> > Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
-> > ---
-> >   include/linux/mempolicy.h | 9 +++++++++
-> >   mm/mempolicy.c            | 4 +---
-> >   2 files changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
-> > index 0fe96f3ab3ef..e96bf493ff7a 100644
-> > --- a/include/linux/mempolicy.h
-> > +++ b/include/linux/mempolicy.h
-> > @@ -133,6 +133,8 @@ struct mempolicy *__get_vma_policy(struct vm_area_s=
-truct *vma,
-> >   struct mempolicy *get_vma_policy(struct vm_area_struct *vma,
-> >               unsigned long addr, int order, pgoff_t *ilx);
-> >   bool vma_policy_mof(struct vm_area_struct *vma);
-> > +nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
-> > +             pgoff_t ilx, int *nid);
-> >
-> >   extern void numa_default_policy(void);
-> >   extern void numa_policy_init(void);
-> > @@ -232,6 +234,13 @@ static inline struct mempolicy *get_vma_policy(str=
-uct vm_area_struct *vma,
-> >       return NULL;
-> >   }
-> >
-> > +static inline nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy =
-*pol,
-> > +                             pgoff_t ilx, int *nid)
-> > +{
-> > +     *nid =3D NUMA_NO_NODE;
-> > +     return NULL;
-> > +}
-> > +
-> >   static inline int
-> >   vma_dup_policy(struct vm_area_struct *src, struct vm_area_struct *dst=
-)
-> >   {
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 3b1dfd08338b..54f539497e20 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -596,8 +596,6 @@ static const struct mempolicy_operations mpol_ops[M=
-POL_MAX] =3D {
-> >
-> >   static bool migrate_folio_add(struct folio *folio, struct list_head *=
-foliolist,
-> >                               unsigned long flags);
-> > -static nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
-> > -                             pgoff_t ilx, int *nid);
-> >
-> >   static bool strictly_unmovable(unsigned long flags)
-> >   {
-> > @@ -2195,7 +2193,7 @@ static unsigned int interleave_nid(struct mempoli=
-cy *pol, pgoff_t ilx)
-> >    * Return a nodemask representing a mempolicy for filtering nodes for
-> >    * page allocation, together with preferred node id (or the input nod=
-e id).
-> >    */
-> > -static nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
-> > +nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
-> >                                  pgoff_t ilx, int *nid)
-> >   {
-> >       nodemask_t *nodemask =3D NULL;
->
-> You actually only care about the nid for your use case.
->
-> Maybe we should add
->
-> get_vma_policy_node() that internally does a get_vma_policy() to then
-> give you only the node back.
->
-> If get_vma_policy() is not the right thing (see my reply to patch #2),
-> of course a get_task_policy_node() could be added.
->
-> --
-> Cheers,
->
-> David / dhildenb
+On Fri, Jun 13, 2025 at 02:34:44PM +0000, Alexander Kochetkov wrote:
+> Currently DMA callbacks are called from tasklet. However the tasklet is
+> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
+> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
+> workqueue work items are executed in the BH context. Changing tasklet to
+> BH workqueue improved DMA callback latencies.
+> 
+> The commit changes virt-dma driver and all of its users:
+> - tasklet is replaced to work_struct, tasklet callback updated accordingly
+> - kill_tasklet() is replaced to cancel_work_sync()
+> - added include of linux/interrupt.h where necessary
+> 
+> Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
+> drivers are changed similarly and tested for compilation.
 
-Hi David,
+...
 
-I did not use get_vma_policy or mpol_misplaced, which I believe is the
-closest function that exists for what I want in this patch, because
-those functions
-seem to assume they are called inside of the task that the folio/vma
-is mapped to.
-More specifically, mpol_misplaced assumes it is being called within a
-page fault.
-This doesn't work for us, because we call it inside of a kdamond process.
+> --- a/drivers/dma/amd/qdma/qdma.c
+> +++ b/drivers/dma/amd/qdma/qdma.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_data/amd_qdma.h>
+>  #include <linux/regmap.h>
+> +#include <linux/interrupt.h>
 
-I would be open to adding a new function that takes in a folio, vma,
-address, and
-task_struct and returns the nid the folio should be placed on. It could pos=
-sibly
-be implemented as a function internal to mpol_misplaced because the two wou=
-ld
-be very similar.
+It seems it was ordered. Please, preserve the order.
+It not, try to squeeze to have longest possible ordered chain
+(it can be interleaved with something unordered, just look at
+ the big picture).
 
-How would you propose we handle MPOL_BIND and MPOL_PREFFERED_MANY
-in this function? mpol_misplaced chooses a nid based on the node and
-cpu the fault
-occurred on, which we wouldn't have in a kdamond context. The two options I=
- see
-are either:
-1. return the nid of the first node in the policy's nodemask
-2. return NUMA_NO_NODE
-I think I would lean towards the first.
+(Same applies to other similar cases)
 
-Thanks,
-Bijan
+...
+
+What about the driver(s) that use threaded IRQ instead?
+Do you plan to convert them as well?
+
+I am talking about current users of virt-dma that do not use tasklets.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
