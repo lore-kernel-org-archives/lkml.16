@@ -1,69 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9AB2571BA;
-	Fri, 13 Jun 2025 08:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E474B2DA77F;
+	Fri, 13 Jun 2025 08:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804460; cv=none; b=q38QtOqDKcq35ar0VVfd0ZQJGc2tHEupVm07eyZmD9u98sjKztyJ5XKxQfuSO6Dx02fET1c7L91osx74+CduNn/srx0RfuDCBZtUXxvX6aA2xPQ4BslqD3aSBZ53JiP31RjVK+gObNSFdIQvjW/5H33lfNDHvHUjC6bdICJn6vA=
+	t=1749804503; cv=none; b=cMbOCHCB9W3B0T3IYgQ/9S6x1uwb2bORVRPFQ/LTWshprTQl7agDG/YUOkJzhMfn8eueNWJa4o8NISc4cxamKRNKSrhQ0QGEhzC0CCakXNcR/jk9wcMxuox5FsVlZQPypOKY8yRE1w4jIOtsSmB2XHhRk9GtXkFDe+9UVLFTC+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804460; c=relaxed/simple;
-	bh=dtmDdNwL/250+5oiAPMHIU8MljAqBQVgAWLaJgUZWHk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MG5xMy99DgCMsAyXl7shGV6rdGCy9SQiZeHkFueVIR3+XqjJklEljW+rvoxHDgRDP6f4MZDUu0UHIMROyvmOga27ARO5oreZKedemtmM9ZV5nqro4W35Y7msb0kv+hl5fNdfa/B0BF8uIszYM3NFCq+GD6vpyM2zA7T13/sqhv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVhmTi0S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749804503; c=relaxed/simple;
+	bh=PjS8zzwBErJ5XZsMyktKp4mX9z2fWJ7QaMUytAfCx68=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mHNSMgTUdPNjUkaFAC478uaFHVObgKb2vMmaPIHGJh1+/69tA33Bf7ZvK/Did2i1rLAtUr0dr+tQFdSBNMWx8IukG0ie+3D7aboFuVpDGj/WZuGy/wIte0BU7LmjnWeQUv1RcYEA+0zlaZZ2FvP/PCj7TrTcKi5yVKSGcmWDxl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EykgHarO; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVhmTi0S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18706C4CEEB;
-	Fri, 13 Jun 2025 08:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749804459;
-	bh=dtmDdNwL/250+5oiAPMHIU8MljAqBQVgAWLaJgUZWHk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HVhmTi0SJYx5tAiGqF0lOhHBUTkG4s5fVSRpyWI4Z81QovR11yyi7XcdZA9aqYX1K
-	 6t7dV2powtpuaQ+EVddtUwrA6UPsy8Wexd2SMPS75srmEkJU5Tk5TNBaVT0SCXlYdj
-	 rIMplzyR8l3h7yGK32BY1Ka8TF9jaSI69u3lGIVBR3Q31Xy7o2qWT8sEDK7SI+2isZ
-	 e7KR6AUaXvSgD4HNjYwWftla+Kf8eEhc1zf85XGRA6N471Ppz8XDlGLHflo8eKjHjO
-	 Qi3y5Vjv6W4XyxwYgFIWYi378nQA72t01xLn2JGBqX2lD23X3e/v68KSbyjBnZAk/s
-	 pT1pNfwY2AjVA==
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id DBC281AF6DD5; Fri, 13 Jun 2025 10:47:25 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard
- Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [PATCH v2] xdp: tracing: Hide some xdp events under
- CONFIG_BPF_SYSCALL
-In-Reply-To: <20250612182023.78397b76@batman.local.home>
-References: <20250612182023.78397b76@batman.local.home>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Fri, 13 Jun 2025 10:47:25 +0200
-Message-ID: <87wm9grpsy.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EykgHarO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749804502; x=1781340502;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=PjS8zzwBErJ5XZsMyktKp4mX9z2fWJ7QaMUytAfCx68=;
+  b=EykgHarO/HxQI8TYPTkFJKmTALj5pAlsRrYSyT9pxSAbu3xPVzVCumxh
+   K2OGQ1Kj3IX87rYaXthTNblQFVLDQDCXpjO9iBpH1YEPphj2qyJsgPIBY
+   EUPRHPgNkVDqNgdQHRuW6qtUHwPJJKsPWs5UYkYwDeg4Zd6fI2+zWSS1E
+   yH1Yms+V+t1EwzmVdNK2f4QNi8lYbzu1HJj65bONC1JMg2hZy0X8WiaA0
+   5qBW2RMWCsX2cfSYvuIMPd6QawhGpgWUR9ofwIFcFxMEjHbsPW5XFU4Hx
+   mmBybGFU7hMv2flNggN/pC0jfFiwn18nNbHYLU3vLCYAJlQxJy10/e4QQ
+   Q==;
+X-CSE-ConnectionGUID: FBrB2gLoQI6h3lqm6J3muQ==
+X-CSE-MsgGUID: uSZt///BT26aVABBx9abDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51993202"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="51993202"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:21 -0700
+X-CSE-ConnectionGUID: Gc0sCCM2RtO3reCsvYG3NA==
+X-CSE-MsgGUID: nICVCTpXRo+Y/Ah2jw0t1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="148659566"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+ Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <20250610230416.622970-1-xi.pardee@linux.intel.com>
+References: <20250610230416.622970-1-xi.pardee@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel/pmc: Add Lunar Lake support to
+ Intel PMC SSRAM Telemetry
+Message-Id: <174980449349.1640.10907164330928365040.b4-ty@linux.intel.com>
+Date: Fri, 13 Jun 2025 11:48:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Tue, 10 Jun 2025 16:04:06 -0700, Xi Pardee wrote:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> The events xdp_cpumap_kthread, xdp_cpumap_enqueue and xdp_devmap_xmit are
-> only called when CONFIG_BPF_SYSCALL is defined.  As each event can take up
-> to 5K regardless if they are used or not, it's best not to define them
-> when they are not used. Add #ifdef around these events when they are not
-> used.
->
-> Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Add Lunar Lake support to Intel PMC SSRAM Telemetry driver.
+> 
+> 
 
-Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@kernel.org>
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/2] platform/x86/intel/pmc: Add Lunar Lake support to Intel PMC SSRAM Telemetry
+      commit: 2d5a84c3ecc075d87bcb16c1cc80277b5837c153
+[2/2] platform/x86/intel/pmc: Add Panther Lake support to Intel PMC SSRAM Telemetry
+      commit: be574d5eee9808a422cff0293da9b08c0e434ed0
+
+--
+ i.
+
