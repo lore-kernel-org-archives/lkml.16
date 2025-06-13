@@ -1,68 +1,105 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFC63C3C;
-	Fri, 13 Jun 2025 00:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3C13C26
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749773145; cv=none; b=V14HXABFgJRnrw5bz/t4tUdmxGduvIT6x+KA7ukmVRqrhGAu5mXY9anrTgdbC3OfgqJiw2r46cDaU2DWe8UV4mG3D23kWtjllEdLSXPnLPpophIfsge6nEOH+iXC9ry2LyIxtTjwtI4vbempXSjaYeyxvGPzj7+wyotGsvAWIGQ=
+	t=1749773196; cv=none; b=DeiTioQ2O+Y0OX44KL7HdJxc/5yyD1Crdh/LTUXSqLWJNKVYDrGJZOPbqDJYlc8znrw8HXeO67ET03h/7SpCGg77361HdH2LDkrPs2nvE6G6Tf8S8MCGVQzN2j1djxBk5tyoQ6FoofPu8a+WuYRQNeJG6/NohwqGV6svq3ig6zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749773145; c=relaxed/simple;
-	bh=Kt7Accb+8i/pjZpVG85NE9OT4gOLDzlzRlWVvUOQv38=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WAHpDP1YU4t9tjOFpTmQSK78O5EegxWhLgun+2R0v6VX6A+/mFNy1oPW45wpj0eMnOoEGTr6GiaUFUpt4g0aQcVTy3y02oA0Z3oSnBk8w/LXUzfFckBqss9S33Tzwd7H3iJau8nwBKyKCUljQ2iw5NDfe7NgRhKy8U/kj1uI0C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 28704803FC;
-	Fri, 13 Jun 2025 00:05:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 1ECD46000C;
-	Fri, 13 Jun 2025 00:05:39 +0000 (UTC)
-Date: Thu, 12 Jun 2025 20:05:38 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- llvm@lists.linux.dev
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas.schier@linux.dev>, Nick Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 0/5] tracepoints: Add warnings for unused tracepoints
- and trace events
-Message-ID: <20250612200538.004283c5@batman.local.home>
-In-Reply-To: <20250612235827.011358765@goodmis.org>
-References: <20250612235827.011358765@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749773196; c=relaxed/simple;
+	bh=ZLUVLq6ZMae4ILViuvnXnlaNGnyYVL5EvQU2zGv7KHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HolFiR51ZTiiHqflW8lwlBCffP6BvdZSgcU8IemOSCqZJePZG70XJ5nYj7/ZeJGjGYukTwgEzQkBbs2/q9zlTHnpv2UmYBLquRQd+CxYAjHd9NhGG8DyXtRGKizeBdatg9EoHmvGtkLkKU2PWOdikSyaGlysVjK/mP6Is8Nod/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J5Jp7sia; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J5Jp7sia"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5534edc646dso1608938e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749773193; x=1750377993; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZLUVLq6ZMae4ILViuvnXnlaNGnyYVL5EvQU2zGv7KHU=;
+        b=J5Jp7sia5WTG2/LVu3RsY5FnuGoJDgKrN2rYWPZk4U6/BkobOxpCTEQwtL3Wfq2/ns
+         AtQZJWtbDLpYxDyEhNErKQ3gwAS0Y2HlnkTjDft1FDZHwHSehX2vkRv+vecZxNVc44sg
+         bMi8A3M7mpvKU+FC2upKtAyf4Qw+6Qxhdn2JTqFZl7WQiSI+BmwYPwDmW2w+Np8JUv86
+         +4YiR4aGZqqA1qIFHZhQSRU4lxlRUAJQXRy5TrPerFJ4aFLegoFkYl8rZ1FuC7jRKfne
+         EBayOBtymFCQlcJcBeFpKKkf1XkPIV8FQ4DUcQ65awBQ3tVD01T0fLlsnbpqqG4jWC5H
+         Y43A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749773193; x=1750377993;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZLUVLq6ZMae4ILViuvnXnlaNGnyYVL5EvQU2zGv7KHU=;
+        b=VxXFFqRyniLPqg/BXn+WPQCXut4DQFOW+Ckb8tg13UzKRO8JnGlay3+1Pjn5M/nsAw
+         Xlxx5N1zoXDO/mVNv/8uvvhhej2E8P0rARIAsCLoq3eNLeesgJ5fofiJ00SibJLhXMff
+         U16POynM3rjqpKoqtngJMkU/rE6hLESpDQVChXkYESQc85OfkIQe5Jw2A0ZEg9LQybkf
+         GPQY/pI0wAP+VZi8t8Eykp1C/sNMc4EGJ9o2RiQWpctaFCF5EaxiQtZkle4kH0ijGKaC
+         qrQIrtHcqgj40sA2cirVVfbKO+9hOXqRam3PtmSUyndZnqPUJDH1lKgb5JBwvLgEeiWr
+         EAoQ==
+X-Gm-Message-State: AOJu0YxsBmXcGDEeI7JHMa+rrfjfeCPeWCDjPMfQpAy1adI7alUlqcf6
+	ZcOHMe8jSJHwlQDp+UJblbPgKzVwHf0GAxraSmmqpAeajLokvP0n75OpOfq9UhBaQGVj1D68jFA
+	7VRCyzcce/ghdVyGSlDNJzErDRTTT46qnCdEkjp/tapAbRy3Enn58U8g=
+X-Gm-Gg: ASbGnctTIiwki8Js00BCkmwTlJuXlJYDG5z7b5zDXsWF+NfXyaSlb3XPF5MsM5L3Wj/
+	tG8hzOY1Uj4EdTYCZQPUR+Ib0Slsr0HQ5PP82JwOnRqJ7URSEI6G0YxSVcKF8bRHBap7lhg2eId
+	Yz68uEm3Hi/0F/SX+f5HqNPPTWBKyx/rI1zVYusN1GWn/9K0209Ku/pNmQDsOfyFx8ST0d6X2F
+X-Google-Smtp-Source: AGHT+IHrEg+ybJdcpWZWIVUBLy8G0/MTjrY27t22H91RsC9IYefq0lqnA7Sz5zwnWvTkvn7s+HRj380Nj1zbba7qjA4=
+X-Received: by 2002:a05:6512:3d8d:b0:553:28f1:66ec with SMTP id
+ 2adb3069b0e04-553af990214mr235784e87.31.1749773193289; Thu, 12 Jun 2025
+ 17:06:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 1ECD46000C
-X-Stat-Signature: zdf4b9343ct3rz8p7oiftf7by5wymr9z
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX182rpPACDbXiIIR169ho7pJ1BHFcNrKlGw=
-X-HE-Tag: 1749773139-898727
-X-HE-Meta: U2FsdGVkX18LiKy4WkjPLf1kuMnEFrGs1hRhmTl/iYvGYdOPKZHoPnY8OV2lr/+jsGUYxNcviqUvI2Fc6oTpWpXF3nf7lAPwHpSXbI7hzw1Oo9MdDmt2jp9Akz5X9C2pOOY4MyevT3r1QFEQThSNnq4Uayd+R//FnxUZdVnWL+LnQCwFjixcwcOMxBc0dN5cIwuQQ4eWXq3LkrIhh3qRCwyMHhA3RClrgqkQyEdJwYUvLUJgjw7hK+D083fv9jHV6Onj0ILajZ0RvnP2NZ7SlP2n6QQq+hPIyXAhSra1AjXPoGjXXE+fw27xQ0mdDm4Y9V2lOBmkdUPgV5xzWpx6v2BMSeF71YiFUNg74KmJKBKyBm7w00l8D8r/3O+HapSj
+References: <20250519082042.742926976@linutronix.de> <20250519083025.905800695@linutronix.de>
+In-Reply-To: <20250519083025.905800695@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 12 Jun 2025 17:06:21 -0700
+X-Gm-Features: AX0GCFt5aLTih3d6dZUnHL1BbMpxOZ5rYd3fDRpWeoi6bk5px2yuSvTUdeBo7Uo
+Message-ID: <CANDhNCqSbz39AN5Pp_1+YzW4jgO-089=L5WzgBrb077KTz4LYw@mail.gmail.com>
+Subject: Re: [patch V2 05/26] time: Introduce auxiliary POSIX clocks
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Jun 2025 19:58:27 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, May 19, 2025 at 1:33=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+>
+> To support auxiliary timekeeping and the related user space interfaces,
+> it's required to define a clock ID range for them.
+>
+> Reserve 8 auxiliary clock IDs after the regular timekeeping clock ID spac=
+e.
+>
+> This is the maximum number of auxiliary clocks the kernel can support. Th=
+e actual
+> number of supported clocks depends obviously on the presence of related d=
+evices
+> and might be constraint by the available VDSO space.
+>
+> Add the corresponding timekeeper IDs as well.
+>
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-> The third patch updates sorttable to work for arm64 when compiled with gcc. As
-> gcc's arm64 build doesn't put addresses in their section but saves them off in
-> the RELA sections. This mostly takes the work done that was needed to do the
-> mcount sorting at boot up on arm64.
+Acked-by: John Stultz <jstultz@google.com>
 
-FYI, I built this on every architecture with their default config and
-every architecture that supports tracing reported unused events. Mostly
-they were the same, but depending on the defconfig it gave different
-output.
-
--- Steve
+thanks
+-john
