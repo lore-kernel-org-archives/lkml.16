@@ -1,25 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCA722094
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB6619E7E2
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833862; cv=none; b=FGVayUNj4vMP7UWl/KVTjZGPKyR004w/j0DdCYkDgzJzQles7UssV+IbsEgt3JI8PTI6ZZd65j7B/gQZmy85v6hDNntRFZn7LVnfMRy31mLeKu/UapQ4d8+40Lpw6BpzttXOJncqShRT91rUiUd7pNCHJhN/2SYS/yT63CjtM7w=
+	t=1749834016; cv=none; b=n/a6Fs8RoebuBD37nzSh+5MRqBxRKeG+vorqqfrOlJgu06iqgIaS6nmDG0ktjJIXni+dRoBEHM3eSVDbhvsXDclRNlVlYAWIt4iNVP5UWY3tdcVdgKKrIfpH0HBMFUYhbql6zRMQBGn+UxgYZO0zKMc7OOmfhqSSx+RaqntJpDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833862; c=relaxed/simple;
-	bh=3Qe/FdBeOc+QnO+HQahFdAzaCy0xJ/SS+AgmNJWBIbE=;
+	s=arc-20240116; t=1749834016; c=relaxed/simple;
+	bh=qFHf05pLwIZBpGvazuZgcxkgWqabzO1YL2jAHuc/neA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N3c4aPRfA5iq6MCeERO4w7rT8GChckP+ANwsjXgVfrgzB3EoTuDz09I31lj1khpyWBebTM1vHgX+i1w3duRarqNXfbaJpev5b39n7+q/9us0P3xfsRlSwNfL/ZuKpywaiU9dVQNPAeAxFWZcOua/xR8UdUq/voEmGkL2isrCjok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8767C1C0A;
-	Fri, 13 Jun 2025 09:57:19 -0700 (PDT)
-Received: from [10.1.197.43] (eglon.cambridge.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09E483F66E;
-	Fri, 13 Jun 2025 09:57:33 -0700 (PDT)
-Message-ID: <c6f9a69e-0c91-408c-97fe-d17b9f938756@arm.com>
-Date: Fri, 13 Jun 2025 17:57:33 +0100
+	 In-Reply-To:Content-Type; b=hpDgqiTbJ2DB6Zk17Xc8tDhtyDEcZo92FnH4GCnhE2rPJmnGpsEj9ILodCxSRcb9BGTfd4QSakWrZ8ZQ42A7byYhP6a6hQLQWSdITl1sQMXIX1Dkd9wMc32hDPzBbluG5Qq9dSQhADH+VchB+tnCUINjKvF635x7R6W3V2S0GgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Utvw4WCZ; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Utvw4WCZ"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-735b9d558f9so730089a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749834012; x=1750438812; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W4PmbLTdx7bKxmJ58LSBL+52b6YKUjWHxLD3jkqTwUs=;
+        b=Utvw4WCZi1urkBooRT1Cvxk+qwFRfZ65qKh2LkZ12mBRhfipGAdfquzUsR8jtmX/Bq
+         ThQoKCxNxFHgoPYxD3nipFoxgW8EuDlwurwsLZ9/fFrHqqMnlyjcOkQzExEX2L5qb2gh
+         g9mBbdxh+lNpAkNo6jJ79U7yjusivdMHLkK5vY75A1Sjw8TcCy+Sk4b9UEiWjaoICv3D
+         phDSwyW7z7pTyVdTuai1qBlPwvj7943eAwbcOWtNcuMCO2EEur2/Y2LHyLwyK8nOjOH1
+         Napiab14EHuueN/EXia+A70Ke97cS1mc6LmnCfDD20ChK3owKqygRp4kzB1qemed9+2s
+         UFGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749834012; x=1750438812;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W4PmbLTdx7bKxmJ58LSBL+52b6YKUjWHxLD3jkqTwUs=;
+        b=hS/6ln0f1ffB7HxrnJijrI5KAWd0QUwOEMkh44xlM9OaWUtX6vU6X3QJS9gg8Y1kZo
+         Pc9oDqFffU4uywYO8wevCSjYkCRCsII8Q2yRITkeh1jX3bmB8HIyn/z7hi3aFMWrBUno
+         8RFG7n2fnyrFhxf8akF3OqlkoCJnHRUCbPe2lhR7wS04aP0mJP11U15CD+6Bz4Rl9Otc
+         0xn3sR15H8Tl2bWBpy7nC3Yep4++PKu2LY+o8/7TvVy+PH74D1o0qJI4cj/CrhCRmqyp
+         8KmHUDDvTOpWwaXT+6R5ISIwLM63I6ux2idhngmY/GEO1xpHk8VjulHZbyyVw0UjCWlR
+         SI4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV3+beLv+6zapWTDQiHmHfKJ2bnujkjSBnpmeyt19g6473mp6O7YL4QSfdE+i8R55QB3IQF/9YNuSZBA2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6OKBm4MkeQwBXTryH8hvJppvBz8yCtixyukj44uL0VAmwQNac
+	9hGQuksswq68LIww9ojN+3NvDzMpFE9EQ6c2+4u807IYAIDxO2UKx4LzvbSeDLrei88=
+X-Gm-Gg: ASbGncsvmhgCN9v4fMNZnQOp7TQ6YxVVcdO5cSE0vm0Ayjs65gXRe6I0/4SswMIdGF2
+	PJZJNeVBRGJnTip4xztfzAEnyu+n2cf12KwAPWd9mBElHm6fSajMkwlruBth5MM0621P+Tp2unz
+	mK9yVR9vEKoCV7zMURnkcmLX4QZWNTLi7JcSagyT6n5+dYoOSE0DMDbYBtfA6gk8i5Ety/cm5D4
+	kxDayUO1mVc/cQp14MHAKX1ktrJnyGE8SOPaon8+3I1gQV1KSjOYOvbrp8sbdkvE40iXiUP+rga
+	a6+AhFHwmDp1WGM/Nw9PNtvPe850ddrxlKWncGidDZ/wH/S0swCLVyJHWmRoZrmNc72ULfqARWz
+	aRcbiDZpTxNsCWZ4H8xVwKNxysKHBWzMIqmyX
+X-Google-Smtp-Source: AGHT+IE7h+SZVToKJUAin3fOr868BbMSOLFocQ+et42SsT9JMuC0JS5qAKXXAH1oH1f2QX3S8vjHvg==
+X-Received: by 2002:a05:6830:210b:b0:72b:94a4:9143 with SMTP id 46e09a7af769-73a3626644bmr315551a34.2.1749834011794;
+        Fri, 13 Jun 2025 10:00:11 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:4647:c57:a73c:39d8? ([2600:8803:e7e4:1d00:4647:c57:a73c:39d8])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a284ff5f4sm258694a34.43.2025.06.13.10.00.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 10:00:11 -0700 (PDT)
+Message-ID: <46208c8d-8370-4b9e-bca1-7ede7ee9b078@baylibre.com>
+Date: Fri, 13 Jun 2025 12:00:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,47 +67,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/resctrl: Optimize code in rdt_get_tree()
-To: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
- Yury Norov <yury.norov@gmail.com>, Dave Martin <dave.martin@arm.com>,
- fenghuay@nvidia.com, peternewman@google.com, Babu Moger
- <Babu.Moger@amd.com>, Borislav Petkov <bp@alien8.de>,
- shameerali.kolothum.thodi@huawei.com, bobo.shaobowang@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Xin Hao
- <xhao@linux.alibaba.com>, baolin.wang@linux.alibaba.com,
- lcherian@marvell.com, amitsinght@marvell.com, Ingo Molnar
- <mingo@redhat.com>, David Hildenbrand <david@redhat.com>,
- H Peter Anvin <hpa@zytor.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Jamie Iles <quic_jiles@quicinc.com>, dfustini@baylibre.com,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20250613073733.3642679-1-tan.shaopeng@jp.fujitsu.com>
- <20250613073733.3642679-2-tan.shaopeng@jp.fujitsu.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <20250613073733.3642679-2-tan.shaopeng@jp.fujitsu.com>
+Subject: Re: [PATCH v2] iio: adc: stm32-adc: Use dev_fwnode()
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, jic23@kernel.org
+Cc: tglx@linutronix.de, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <0ec0fd5e-8fbe-43c4-8aad-f36d2872f280@baylibre.com>
+ <20250612084627.217341-1-jirislaby@kernel.org>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250612084627.217341-1-jirislaby@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello!
-
-On 13/06/2025 08:37, Shaopeng Tan wrote:
-> schemata_list_destroy() has to be called if schemata_list_create() fails.
+On 6/12/25 3:46 AM, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
 > 
-> rdt_get_tree() calls schemata_list_destroy() in two different ways: 
-> directly if schemata_list_create() itself fails and 
-> on the exit path via the out_schemata_free goto label.
+> So use the dev_fwnode() helper.
 > 
-> Remove schemata_list_destroy() call on schemata_list_create() failure.
-> Use existing out_schemata_free goto label instead.
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-Thanks,
-
-James
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: David Lechner <dlechner@baylibre.com>
+> Cc: "Nuno Sá" <nuno.sa@analog.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: linux-iio@vger.kernel.org
+> 
+> ---
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
