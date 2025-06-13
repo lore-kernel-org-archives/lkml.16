@@ -1,228 +1,245 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C9D1B95B;
-	Fri, 13 Jun 2025 00:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE5EEEBA;
+	Fri, 13 Jun 2025 00:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749773470; cv=none; b=txc9DusHujGDBWNifMHbDcJhoR6xr16/1dfGyJPgYQCm907OLSXVqKlAllfr6ML/RQsMjPuGXIpKQ4YW6mmPGEyyaS4ilIIiyC7Zml4czmMHsJyLSgtdO3tTU+6oJdMiwC5XbltXwuY6TH9373aK6Jhqdd1V3z3zteVxiz02D+4=
+	t=1749773573; cv=none; b=CaCdh4iwAhTDU6BfjUqINuZWn/1HEpFmHSyFNUb9sKhgzmpfIk6JlJjGFNEEHjnx4THtxgwAPYkUEXEuWxt9K48OBLFhP4lo1cIfF/TnVFilodzkRv2iwTDIhOnNpGhBZPfEBQmgtElxT0I8jLrOigl/5TR/iMye9jRKInf/1PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749773470; c=relaxed/simple;
-	bh=Xf1sOH/3QGZlGQDOZlVWDmfVLgVBfgZWJ/NW2lY6tIA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=mQuMq9hiA9WB8Mwp6zVimAOrodTzPEf9GwFHgebV/l+o/QQqO3ypNy0mhW2B2uEzYAUZgtZZmneAOXx3WVBYh2wmFT38z1HaX65xoIF8utwspM5NfDqMhil2AYmNtZzKonYlwmEUBAz0yrwWYTh/uOnNnYtKWgALMKaR+QMWvHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPs0W-009ZlJ-Ou;
-	Fri, 13 Jun 2025 00:10:56 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1749773573; c=relaxed/simple;
+	bh=3F7494cmc7/Fl9yANNE98r1EgCW3sE8+07m1Ypz4ohI=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=doCMT/u/5B3lNPQe0gqFYJAkS2ezoTe7NLx5uS4gGDX/sh5iklgFix3+16093VPbU/tSGXGN+KJvnW86LWcFbRxmFyhr5vu+SOkKcOC8p5ts10MlSN8hKvdvDfDTB34fsWiiEZ1Opct9CJJ2ntn9xaNPfWCjQv5xUUz1xTsh/RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=IvkV97XQ; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="IvkV97XQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1749773566;
+	bh=3F7494cmc7/Fl9yANNE98r1EgCW3sE8+07m1Ypz4ohI=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=IvkV97XQ4qiRyu4WeVvr5qQZ3xoVotePwjBoXWBomtLq3iWy+T8WVRsvJnLOhwqc4
+	 zuSAxmhRpLisAeaaTuO9S3Z1fWx0wrc9mQvXd/nGiQJTZMy2G1j/MjUNC0i+f8+Syx
+	 rG+xwYEp7A12rlQoC05JrboBmjanxf5xuh7FT610R3+dMTySvBpAkxJ2JDEYDzKBvt
+	 bZa002mMPH6VY/Faog3QJkFRL8pu1sThk9BUY4Fwj8dvhK6G3LNy3T+OIwZlr9uKxO
+	 GvGm7YByiO7ZlobLez4b88RmCtCa2tL3b3OsoofGIxYsSpEK9BDMSkxPDG9kRcylu1
+	 ZaeevBw1rAQ/g==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 7C6986445B;
+	Fri, 13 Jun 2025 08:12:43 +0800 (AWST)
+Message-ID: <13b88c1e404a9abe5cfae6673cb93e0b020e3524.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v3 2/2] mailbox: aspeed: add mailbox driver for AST27XX
+ series SoC
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Jammy Huang <jammy_huang@aspeedtech.com>, jassisinghbrar@gmail.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date: Fri, 13 Jun 2025 09:42:42 +0930
+In-Reply-To: <20250610091026.49724-3-jammy_huang@aspeedtech.com>
+References: <20250610091026.49724-1-jammy_huang@aspeedtech.com>
+	 <20250610091026.49724-3-jammy_huang@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Song Liu" <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
- mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
- jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com,
- m@maowtm.org, "Song Liu" <song@kernel.org>
-Subject: Re: [PATCH v4 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-In-reply-to: <20250611220220.3681382-2-song@kernel.org>
-References: <20250611220220.3681382-1-song@kernel.org>,
- <20250611220220.3681382-2-song@kernel.org>
-Date: Fri, 13 Jun 2025 10:10:55 +1000
-Message-id: <174977345565.608730.2655286329643493783@noble.neil.brown.name>
 
-On Thu, 12 Jun 2025, Song Liu wrote:
-> This helper walks an input path to its parent. Logic are added to handle
-> walking across mount tree.
->=20
-> This will be used by landlock, and BPF LSM.
->=20
-> Suggested-by: Neil Brown <neil@brown.name>
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  fs/namei.c            | 99 +++++++++++++++++++++++++++++++++++++------
->  include/linux/namei.h |  2 +
->  2 files changed, 87 insertions(+), 14 deletions(-)
->=20
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 4bb889fc980b..bc65361c5d13 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2048,36 +2048,107 @@ static struct dentry *follow_dotdot_rcu(struct nam=
-eidata *nd)
->  	return nd->path.dentry;
->  }
-> =20
-> -static struct dentry *follow_dotdot(struct nameidata *nd)
-> +/**
-> + * __path_walk_parent - Find the parent of the given struct path
-> + * @path  - The struct path to start from
-> + * @root  - A struct path which serves as a boundary not to be crosses.
-> + *        - If @root is zero'ed, walk all the way to global root.
-> + * @flags - Some LOOKUP_ flags.
-> + *
-> + * Find and return the dentry for the parent of the given path
-> + * (mount/dentry). If the given path is the root of a mounted tree, it
-> + * is first updated to the mount point on which that tree is mounted.
-> + *
-> + * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a new
-> + * mount, the error EXDEV is returned.
-> + *
-> + * If no parent can be found, either because the tree is not mounted or
-> + * because the @path matches the @root, then @path->dentry is returned
-> + * unless @flags contains %LOOKUP_BENEATH, in which case -EXDEV is returne=
-d.
-> + *
-> + * Returns: either an ERR_PTR() or the chosen parent which will have had
-> + * the refcount incremented.
-> + */
-> +static struct dentry *__path_walk_parent(struct path *path, const struct p=
-ath *root, int flags)
->  {
->  	struct dentry *parent;
-> =20
-> -	if (path_equal(&nd->path, &nd->root))
-> +	if (path_equal(path, root))
->  		goto in_root;
-> -	if (unlikely(nd->path.dentry =3D=3D nd->path.mnt->mnt_root)) {
-> -		struct path path;
-> +	if (unlikely(path->dentry =3D=3D path->mnt->mnt_root)) {
-> +		struct path new_path;
-> =20
-> -		if (!choose_mountpoint(real_mount(nd->path.mnt),
-> -				       &nd->root, &path))
-> +		if (!choose_mountpoint(real_mount(path->mnt),
-> +				       root, &new_path))
->  			goto in_root;
-> -		path_put(&nd->path);
-> -		nd->path =3D path;
-> -		nd->inode =3D path.dentry->d_inode;
-> -		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
-> +		path_put(path);
-> +		*path =3D new_path;
-> +		if (unlikely(flags & LOOKUP_NO_XDEV))
->  			return ERR_PTR(-EXDEV);
->  	}
->  	/* rare case of legitimate dget_parent()... */
-> -	parent =3D dget_parent(nd->path.dentry);
-> -	if (unlikely(!path_connected(nd->path.mnt, parent))) {
-> +	parent =3D dget_parent(path->dentry);
-> +	if (unlikely(!path_connected(path->mnt, parent))) {
->  		dput(parent);
->  		return ERR_PTR(-ENOENT);
->  	}
->  	return parent;
-> =20
->  in_root:
-> -	if (unlikely(nd->flags & LOOKUP_BENEATH))
-> +	if (unlikely(flags & LOOKUP_BENEATH))
->  		return ERR_PTR(-EXDEV);
-> -	return dget(nd->path.dentry);
-> +	return dget(path->dentry);
-> +}
-> +
-> +/**
-> + * path_walk_parent - Walk to the parent of path
-> + * @path: input and output path.
-> + * @root: root of the path walk, do not go beyond this root. If @root is
-> + *        zero'ed, walk all the way to real root.
-> + *
-> + * Given a path, find the parent path. Replace @path with the parent path.
-> + * If we were already at the real root or a disconnected root, @path is
-> + * released and zero'ed.
-> + *
-> + * Returns:
-> + *  true  - if @path is updated to its parent.
-> + *  false - if @path is already the root (real root or @root).
-> + */
-> +bool path_walk_parent(struct path *path, const struct path *root)
-> +{
-> +	struct dentry *parent;
-> +
-> +	parent =3D __path_walk_parent(path, root, LOOKUP_BENEATH);
-> +
-> +	if (IS_ERR(parent))
-> +		goto false_out;
-> +
-> +	if (parent =3D=3D path->dentry) {
-> +		dput(parent);
-> +		goto false_out;
-> +	}
-> +	dput(path->dentry);
-> +	path->dentry =3D parent;
-> +	return true;
-> +
-> +false_out:
-> +	path_put(path);
-> +	memset(path, 0, sizeof(*path));
-> +	return false;
-> +}
-
-I think the public function should return 0 on success and -error on
-failure.  That is a well established pattern.  I also think you
-shouldn't assume that all callers will want the same flags.
-
-And it isn't clear to me why you want to path_put() on failure.
-
-I wonder if there might be other potential users in the kernel.
-If so we should consider how well the interface meets their needs.
-
-autofs, devpts, nfsd, landlock all call follow_up...
-maybe they should be using the new interface...
-nfsd is the most likely to benefit - particularly nfsd_lookup_parent().
-
-Just a thought..
-
-NeilBrown
-
-
-
-> +
-> +static struct dentry *follow_dotdot(struct nameidata *nd)
-> +{
-> +	struct dentry *parent =3D __path_walk_parent(&nd->path, &nd->root, nd->fl=
-ags);
-> +
-> +	if (IS_ERR(parent))
-> +		return parent;
-> +	if (unlikely(!path_connected(nd->path.mnt, parent))) {
-> +		dput(parent);
-> +		return ERR_PTR(-ENOENT);
-> +	}
-> +	nd->inode =3D nd->path.dentry->d_inode;
-> +	return parent;
->  }
-> =20
->  static const char *handle_dots(struct nameidata *nd, int type)
-> diff --git a/include/linux/namei.h b/include/linux/namei.h
-> index 5d085428e471..cba5373ecf86 100644
-> --- a/include/linux/namei.h
-> +++ b/include/linux/namei.h
-> @@ -85,6 +85,8 @@ extern int follow_down_one(struct path *);
->  extern int follow_down(struct path *path, unsigned int flags);
->  extern int follow_up(struct path *);
-> =20
-> +bool path_walk_parent(struct path *path, const struct path *root);
-> +
->  extern struct dentry *lock_rename(struct dentry *, struct dentry *);
->  extern struct dentry *lock_rename_child(struct dentry *, struct dentry *);
->  extern void unlock_rename(struct dentry *, struct dentry *);
-> --=20
-> 2.47.1
->=20
->=20
+SGkgSmFtbXksCgpBcyBmYXIgYXMgSSBjYW4gdGVsbCB0aGlzIGNvbnRyb2xsZXIgaXNuJ3QgZG9j
+dW1lbnRlZCBpbiB0aGUgZGF0YXNoZWV0CmZvciB0aGUgQVNUMjcwMC4gQ2FuIHlvdSBwb2ludCBt
+ZSB0byB0aGUgcmlnaHQgcGxhY2U/IE9yLCBjYW4gd2UgZ2V0CnRoZSBkb2N1bWVudGF0aW9uIHVw
+ZGF0ZWQ/CgpPbiBUdWUsIDIwMjUtMDYtMTAgYXQgMTc6MTAgKzA4MDAsIEphbW15IEh1YW5nIHdy
+b3RlOgo+ID4gQWRkIG1haWxib3ggY29udHJvbGxlciBkcml2ZXIgZm9yIEFTVDI3WFggU29Dcywg
+d2hpY2ggcHJvdmlkZXMKPiA+IGluZGVwZW5kZW50IHR4L3J4IG1haWxib3ggYmV0d2VlbiBkaWZm
+ZXJlbnQgcHJvY2Vzc29ycy4gVGhlcmUgYXJlIDQKPiA+IGNoYW5uZWxzIGZvciBlYWNoIHR4L3J4
+IG1haWxib3ggYW5kIGVhY2ggY2hhbm5lbCBoYXMgYW4gMzItYnl0ZSBGSUZPLgo+ID4gCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBKYW1teSBIdWFuZyA8amFtbXlfaHVhbmdAYXNwZWVkdGVjaC5jb20+Cj4g
+PiAtLS0KPiA+IMKgZHJpdmVycy9tYWlsYm94L0tjb25maWfCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
+wqDCoCA4ICsrCj4gPiDCoGRyaXZlcnMvbWFpbGJveC9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDC
+oCB8wqDCoCAyICsKPiA+IMKgZHJpdmVycy9tYWlsYm94L2FzdDI3MDAtbWFpbGJveC5jIHwgMjI2
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gwqAzIGZpbGVzIGNoYW5nZWQsIDIz
+NiBpbnNlcnRpb25zKCspCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21haWxib3gv
+YXN0MjcwMC1tYWlsYm94LmMKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWFpbGJveC9L
+Y29uZmlnIGIvZHJpdmVycy9tYWlsYm94L0tjb25maWcKPiA+IGluZGV4IDY4ZWVlZDY2MGE0YS4u
+MWMzOGNkNTcwMDkxIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9tYWlsYm94L0tjb25maWcKPiA+
+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9LY29uZmlnCj4gPiBAQCAtMzQwLDQgKzM0MCwxMiBAQCBj
+b25maWcgVEhFQURfVEgxNTIwX01CT1gKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoCBrZXJuZWwgaXMg
+cnVubmluZywgYW5kIEU5MDIgY29yZSB1c2VkIGZvciBwb3dlciBtYW5hZ2VtZW50IGFtb25nIG90
+aGVyCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqAgdGhpbmdzLgo+ID4gwqAKPiA+ICtjb25maWcgQVNU
+MjcwMF9NQk9YCj4gPiArwqDCoMKgwqDCoMKgwqB0cmlzdGF0ZSAiQVNQRUVEIEFTVDI3MDAgSVBD
+IGRyaXZlciIKPiA+ICvCoMKgwqDCoMKgwqDCoGRlcGVuZHMgb24gQVJDSF9BU1BFRUQgfHwgQ09N
+UElMRV9URVNUCj4gPiArwqDCoMKgwqDCoMKgwqBoZWxwCj4gPiArwqDCoMKgwqDCoMKgwqDCoCBN
+YWlsYm94IGRyaXZlciBpbXBsZW1lbnRhdGlvbiBmb3IgQVNQRUVEIEFTVDI3WFggU29Dcy4gVGhp
+cyBkcml2ZXIKPiA+ICvCoMKgwqDCoMKgwqDCoMKgIGNhbiBiZSB1c2VkIHRvIHNlbmQgbWVzc2Fn
+ZSBiZXR3ZWVuIGRpZmZlcmVudCBwcm9jZXNzb3JzIGluIFNvQy4KPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgIFRoZSBkcml2ZXIgcHJvdmlkZXMgbWFpbGJveCBzdXBwb3J0IGZvciBzZW5kaW5nIGludGVy
+cnVwdHMgdG8gdGhlCj4gPiArwqDCoMKgwqDCoMKgwqDCoCBjbGllbnRzLiBTYXkgWSBoZXJlIGlm
+IHlvdSB3YW50IHRvIGJ1aWxkIHRoaXMgZHJpdmVyLgo+ID4gwqBlbmRpZgo+ID4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZSBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+
+ID4gaW5kZXggMTNhMzQ0OGIzMjcxLi45YTlhZGQ5YTc1NDggMTAwNjQ0Cj4gPiAtLS0gYS9kcml2
+ZXJzL21haWxib3gvTWFrZWZpbGUKPiA+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+
+ID4gQEAgLTcyLDMgKzcyLDUgQEAgb2JqLSQoQ09ORklHX1FDT01fQ1BVQ1BfTUJPWCnCoCs9IHFj
+b20tY3B1Y3AtbWJveC5vCj4gPiDCoG9iai0kKENPTkZJR19RQ09NX0lQQ0MpwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqArPSBxY29tLWlwY2Mubwo+ID4gwqAKPiA+IMKgb2JqLSQoQ09O
+RklHX1RIRUFEX1RIMTUyMF9NQk9YKcKgwqDCoMKgwqDCoMKgwqArPSBtYWlsYm94LXRoMTUyMC5v
+Cj4gPiArCj4gPiArb2JqLSQoQ09ORklHX0FTVDI3MDBfTUJPWCnCoMKgwqDCoMKgKz0gYXN0Mjcw
+MC1tYWlsYm94Lm8KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21haWxib3gvYXN0MjcwMC1tYWls
+Ym94LmMgYi9kcml2ZXJzL21haWxib3gvYXN0MjcwMC1tYWlsYm94LmMKPiA+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjBlZTEwYmQzYTZlMQo+ID4gLS0tIC9k
+ZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9tYWlsYm94L2FzdDI3MDAtbWFpbGJveC5jCj4gPiBA
+QCAtMCwwICsxLDIyNiBAQAo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
+LW9ubHkKPiA+ICsvKgo+ID4gKyAqIENvcHlyaWdodCBBc3BlZWQgVGVjaG5vbG9neSBJbmMuIChD
+KSAyMDI1LiBBbGwgcmlnaHRzIHJlc2VydmVkCj4gPiArICovCj4gPiArCj4gPiArI2luY2x1ZGUg
+PGxpbnV4L2ludGVycnVwdC5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPgo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9pb3BvbGwuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L21haWxib3hfY29udHJvbGxlci5oPgo+ID4gKyNpbmNsdWRlIDxsaW51
+eC9tb2R1bGUuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPiA+ICsjaW5jbHVkZSA8bGlu
+dXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiA+ICsK
+PiA+ICsvKiBFYWNoIGJpdCBpbiB0aGUgcmVnaXN0ZXIgcmVwcmVzZW50cyBhbiBJUEMgSUQgKi8K
+PiA+ICsjZGVmaW5lIElQQ1JfVFhfVFJJR8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwCj4gPiAr
+I2RlZmluZSBJUENSX1RYX0VOQUJMRcKgwqDCoMKgwqDCoMKgwqDCoDB4MDQKPiA+ICsjZGVmaW5l
+IElQQ1JfUlhfRU5BQkxFwqDCoMKgwqDCoMKgwqDCoMKgMHgxMDQKPiA+ICsjZGVmaW5lIElQQ1Jf
+VFhfU1RBVFVTwqDCoMKgwqDCoMKgwqDCoMKgMHgwOAo+ID4gKyNkZWZpbmUgSVBDUl9SWF9TVEFU
+VVPCoMKgwqDCoMKgwqDCoMKgwqAweDEwOAo+ID4gKyNkZWZpbmXCoCBSWF9JUlEobinCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoEJJVCgwICsgMSAqIChuKSkKPiA+ICsjZGVmaW5lwqAgUlhfSVJR
+X01BU0vCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMHhmCj4gPiArI2RlZmluZSBJUENSX1RYX0RBVEHC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgMHgxMAo+ID4gKyNkZWZpbmUgSVBDUl9SWF9EQVRBwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoDB4MTEwCj4gPiArCj4gPiArc3RydWN0IGFzdDI3MDBfbWJveF9kYXRh
+IHsKPiA+ICvCoMKgwqDCoMKgwqDCoHU4IG51bV9jaGFuczsKPiA+ICvCoMKgwqDCoMKgwqDCoHU4
+IG1zZ19zaXplOwo+ID4gK307Cj4gPiArCj4gPiArc3RydWN0IGFzdDI3MDBfbWJveCB7Cj4gPiAr
+wqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbWJveF9jb250cm9sbGVyIG1ib3g7Cj4gPiArwqDCoMKgwqDC
+oMKgwqBjb25zdCBzdHJ1Y3QgYXN0MjcwMF9tYm94X2RhdGEgKmRydl9kYXRhOwo+ID4gK8KgwqDC
+oMKgwqDCoMKgdm9pZCBfX2lvbWVtICpyZWdzOwo+ID4gK8KgwqDCoMKgwqDCoMKgdTMyICpyeF9i
+dWZmOwo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIGlubGluZSBpbnQgY2hfbnVtKHN0cnVjdCBt
+Ym94X2NoYW4gKmNoYW4pCj4gPiArewo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIGNoYW4gLSBj
+aGFuLT5tYm94LT5jaGFuczsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGlubGluZSBpbnQgYXN0
+MjcwMF9tYm94X3R4X2RvbmUoc3RydWN0IGFzdDI3MDBfbWJveCAqbWIsIGludCBpZHgpCj4gPiAr
+ewo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuICEocmVhZGwobWItPnJlZ3MgKyBJUENSX1RYX1NU
+QVRVUykgJiBCSVQoaWR4KSk7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBh
+c3QyNzAwX21ib3hfaXJxKGludCBpcnEsIHZvaWQgKnApCj4gPiArewo+ID4gK8KgwqDCoMKgwqDC
+oMKgc3RydWN0IGFzdDI3MDBfbWJveCAqbWIgPSBwOwo+ID4gK8KgwqDCoMKgwqDCoMKgdm9pZCBf
+X2lvbWVtICpkYXRhX3JlZzsKPiA+ICvCoMKgwqDCoMKgwqDCoGludCBudW1fd29yZHM7Cj4gPiAr
+wqDCoMKgwqDCoMKgwqB1MzIgKndvcmRfZGF0YTsKPiA+ICvCoMKgwqDCoMKgwqDCoHUzMiBzdGF0
+dXM7Cj4gPiArwqDCoMKgwqDCoMKgwqBpbnQgbjsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoC8q
+IE9ubHkgZXhhbWluZSBjaGFubmVscyB0aGF0IGFyZSBjdXJyZW50bHkgZW5hYmxlZC4gKi8KPiA+
+ICvCoMKgwqDCoMKgwqDCoHN0YXR1cyA9IHJlYWRsKG1iLT5yZWdzICsgSVBDUl9SWF9FTkFCTEUp
+ICYKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVhZGwobWItPnJlZ3MgKyBJ
+UENSX1JYX1NUQVRVUyk7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoIShzdGF0dXMgJiBS
+WF9JUlFfTUFTSykpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIElS
+UV9OT05FOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgZm9yIChuID0gMDsgbiA8IG1iLT5tYm94
+Lm51bV9jaGFuczsgKytuKSB7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3Ry
+dWN0IG1ib3hfY2hhbiAqY2hhbiA9ICZtYi0+bWJveC5jaGFuc1tuXTsKPiA+ICsKPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoIShzdGF0dXMgJiBSWF9JUlEobikpKQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb250aW51ZTsK
+PiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmb3IgKGRhdGFfcmVnID0g
+bWItPnJlZ3MgKyBJUENSX1JYX0RBVEEgKyBtYi0+ZHJ2X2RhdGEtPm1zZ19zaXplICogbiwKPiA+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3b3JkX2RhdGEgPSBjaGFu
+LT5jb25fcHJpdiwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBu
+dW1fd29yZHMgPSAobWItPmRydl9kYXRhLT5tc2dfc2l6ZSAvIHNpemVvZih1MzIpKTsKPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBudW1fd29yZHM7IG51bV93b3Jk
+cy0tLCBkYXRhX3JlZyArPSBzaXplb2YodTMyKSwgd29yZF9kYXRhKyspCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCp3b3JkX2RhdGEgPSByZWFkbChk
+YXRhX3JlZyk7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWJveF9j
+aGFuX3JlY2VpdmVkX2RhdGEoY2hhbiwgY2hhbi0+Y29uX3ByaXYpOwo+ID4gKwo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qIFRoZSBJUlEgY2FuIGJlIGNsZWFyZWQgb25seSBv
+bmNlIHRoZSBGSUZPIGlzIGVtcHR5LiAqLwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHdyaXRlbChSWF9JUlEobiksIG1iLT5yZWdzICsgSVBDUl9SWF9TVEFUVVMpOwo+ID4gK8Kg
+wqDCoMKgwqDCoMKgfQo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIElSUV9IQU5ETEVE
+Owo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgaW50IGFzdDI3MDBfbWJveF9zZW5kX2RhdGEoc3Ry
+dWN0IG1ib3hfY2hhbiAqY2hhbiwgdm9pZCAqZGF0YSkKPiA+ICt7Cj4gPiArwqDCoMKgwqDCoMKg
+wqBzdHJ1Y3QgYXN0MjcwMF9tYm94ICptYiA9IGRldl9nZXRfZHJ2ZGF0YShjaGFuLT5tYm94LT5k
+ZXYpOwo+ID4gK8KgwqDCoMKgwqDCoMKgdm9pZCBfX2lvbWVtICpkYXRhX3JlZzsKPiA+ICvCoMKg
+wqDCoMKgwqDCoHUzMiAqd29yZF9kYXRhOwo+ID4gK8KgwqDCoMKgwqDCoMKgaW50IG51bV93b3Jk
+czsKPiA+ICvCoMKgwqDCoMKgwqDCoGludCBpZHggPSBjaF9udW0oY2hhbik7Cj4gPiArCj4gPiAr
+wqDCoMKgwqDCoMKgwqBpZiAoIShyZWFkbChtYi0+cmVncyArIElQQ1JfVFhfRU5BQkxFKSAmIEJJ
+VChpZHgpKSkgewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldl93YXJuKG1i
+LT5tYm94LmRldiwgIiVzOiBDaC0lZCBub3QgZW5hYmxlZCB5ZXRcbiIsIF9fZnVuY19fLCBpZHgp
+Owo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRUJVU1k7Cj4gPiAr
+wqDCoMKgwqDCoMKgwqB9Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoIShhc3QyNzAwX21i
+b3hfdHhfZG9uZShtYiwgaWR4KSkpIHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBkZXZfd2FybihtYi0+bWJveC5kZXYsICIlczogQ2gtJWQgbGFzdCBkYXRhIGhhcyBub3QgZmlu
+aXNoZWRcbiIsIF9fZnVuY19fLCBpZHgpOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHJldHVybiAtRUJVU1k7Cj4gPiArwqDCoMKgwqDCoMKgwqB9Cj4gPiArCj4gPiArwqDCoMKg
+wqDCoMKgwqBmb3IgKGRhdGFfcmVnID0gbWItPnJlZ3MgKyBJUENSX1RYX0RBVEEgKyBtYi0+ZHJ2
+X2RhdGEtPm1zZ19zaXplICogaWR4LAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbnVtX3dv
+cmRzID0gKG1iLT5kcnZfZGF0YS0+bXNnX3NpemUgLyBzaXplb2YodTMyKSksCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB3b3JkX2RhdGEgPSAodTMyICopZGF0YTsKPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIG51bV93b3JkczsgbnVtX3dvcmRzLS0sIGRhdGFfcmVnICs9IHNpemVvZih1
+MzIpLCB3b3JkX2RhdGErKykKClRoZSByZWFkYWJpbGl0eSBvZiB0aGlzIGlzIG5vdCBncmVhdC4g
+Q2FuIHlvdSB0cnkgdG8gaW1wcm92ZSBpdD8gQXQKbGVhc3QgcHV0IGVhY2ggaGVhZGVyIHN0YXRl
+bWVudCBvbiBpdHMgb3duIGxpbmUgKGF0IHRoZSBtb21lbnQgdGhlCmNvbmRpdGlvbiBzdGF0ZW1l
+bnQgaXMgb24gdGhlIHNhbWUgbGluZSBhcyB0aGUgaW5jcmVtZW50IHN0YXRlbWVudCkuCgo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHdyaXRlbCgqd29yZF9kYXRhLCBkYXRhX3Jl
+Zyk7CgpJJ20gbm90IHN1cGVyIGZhbWlsaWFyIHdpdGggdGhlIG1haWxib3ggc3Vic3lzdGVtLCBi
+dXQgSSBmZWVsIHNvbWUKY29tbWVudGFyeSBvbiB0aGUgZGF0YSBzaXplIGFuZCBhbGlnbm1lbnQg
+YXNzdW1wdGlvbnMgd291bGQgYmUgaGVscGZ1bCwKZ2l2ZW4gdGhlIEFQSXMgYXJlIGFsbCBgdm9p
+ZCAqYCB3aXRob3V0IGEgbGVuZ3RoIHBhcmFtZXRlci4KClNob3VsZCB5b3UgZGVmaW5lIGEgdHlw
+ZSBmb3IgY2xpZW50cyB0byBzdWJtaXQ/Cgo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgd3JpdGVs
+KEJJVChpZHgpLCBtYi0+cmVncyArIElQQ1JfVFhfVFJJRyk7Cj4gPiArwqDCoMKgwqDCoMKgwqBk
+ZXZfZGJnKG1iLT5tYm94LmRldiwgIiVzOiBDaC0lZCBzZW50XG4iLCBfX2Z1bmNfXywgaWR4KTsK
+PiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0
+aWMgaW50IGFzdDI3MDBfbWJveF9zdGFydHVwKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pCj4gPiAr
+ewo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IGFzdDI3MDBfbWJveCAqbWIgPSBkZXZfZ2V0X2Ry
+dmRhdGEoY2hhbi0+bWJveC0+ZGV2KTsKPiA+ICvCoMKgwqDCoMKgwqDCoGludCBpZHggPSBjaF9u
+dW0oY2hhbik7Cj4gPiArwqDCoMKgwqDCoMKgwqB2b2lkIF9faW9tZW0gKnJlZyA9IG1iLT5yZWdz
+ICsgSVBDUl9SWF9FTkFCTEU7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqB3cml0ZWxfcmVsYXhl
+ZChyZWFkbF9yZWxheGVkKHJlZykgfCBCSVQoaWR4KSwgcmVnKTsKPiA+ICsKPiA+ICvCoMKgwqDC
+oMKgwqDCoHJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgdm9pZCBhc3QyNzAwX21i
+b3hfc2h1dGRvd24oc3RydWN0IG1ib3hfY2hhbiAqY2hhbikKPiA+ICt7Cj4gPiArwqDCoMKgwqDC
+oMKgwqBzdHJ1Y3QgYXN0MjcwMF9tYm94ICptYiA9IGRldl9nZXRfZHJ2ZGF0YShjaGFuLT5tYm94
+LT5kZXYpOwo+ID4gK8KgwqDCoMKgwqDCoMKgaW50IGlkeCA9IGNoX251bShjaGFuKTsKPiA+ICvC
+oMKgwqDCoMKgwqDCoHZvaWQgX19pb21lbSAqcmVnID0gbWItPnJlZ3MgKyBJUENSX1JYX0VOQUJM
+RTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoHdyaXRlbF9yZWxheGVkKHJlYWRsX3JlbGF4ZWQo
+cmVnKSAmIH5CSVQoaWR4KSwgcmVnKTsKCldoeSBhcmUgd2UgdXNpbmcgcmVsYXhlZCBvcGVyYXRp
+b25zIGZvciBzdGFydHVwIGFuZCBzaHV0ZG93bj8gSWYgdGhpcwppcyB2YWxpZCBhIGNvbW1lbnQg
+d291bGQgYmUgaGVscGZ1bC4KCj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBib29sIGFzdDI3MDBf
+bWJveF9sYXN0X3R4X2RvbmUoc3RydWN0IG1ib3hfY2hhbiAqY2hhbikKPiA+ICt7Cj4gPiArwqDC
+oMKgwqDCoMKgwqBzdHJ1Y3QgYXN0MjcwMF9tYm94ICptYiA9IGRldl9nZXRfZHJ2ZGF0YShjaGFu
+LT5tYm94LT5kZXYpOwo+ID4gK8KgwqDCoMKgwqDCoMKgaW50IGlkeCA9IGNoX251bShjaGFuKTsK
+PiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoHJldHVybiBhc3QyNzAwX21ib3hfdHhfZG9uZShtYiwg
+aWR4KSA/IHRydWUgOiBmYWxzZTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVj
+dCBtYm94X2NoYW5fb3BzIGFzdDI3MDBfbWJveF9jaGFuX29wcyA9IHsKPiA+ICvCoMKgwqDCoMKg
+wqDCoC5zZW5kX2RhdGHCoMKgwqDCoMKgwqA9IGFzdDI3MDBfbWJveF9zZW5kX2RhdGEsCj4gPiAr
+wqDCoMKgwqDCoMKgwqAuc3RhcnR1cMKgwqDCoMKgwqDCoMKgwqA9IGFzdDI3MDBfbWJveF9zdGFy
+dHVwLAo+ID4gK8KgwqDCoMKgwqDCoMKgLnNodXRkb3duwqDCoMKgwqDCoMKgwqA9IGFzdDI3MDBf
+bWJveF9zaHV0ZG93biwKPiA+ICvCoMKgwqDCoMKgwqDCoC5sYXN0X3R4X2RvbmXCoMKgwqA9IGFz
+dDI3MDBfbWJveF9sYXN0X3R4X2RvbmUsCj4gPiArfTsKPiA+ICsKPiA+ICtzdGF0aWMgaW50IGFz
+dDI3MDBfbWJveF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gK3sKPiA+
+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCBhc3QyNzAwX21ib3ggKm1iOwo+ID4gK8KgwqDCoMKgwqDC
+oMKgY29uc3Qgc3RydWN0IGFzdDI3MDBfbWJveF9kYXRhICpkcnZfZGF0YTsKPiA+ICvCoMKgwqDC
+oMKgwqDCoHN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gPiArwqDCoMKgwqDCoMKg
+wqBpbnQgaXJxLCByZXQ7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoIXBkZXYtPmRldi5v
+Zl9ub2RlKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5PREVW
+Owo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgZHJ2X2RhdGEgPSAoY29uc3Qgc3RydWN0IGFzdDI3
+MDBfbWJveF9kYXRhICopZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOwoKVGhlcmUn
+cyBubyBuZWVkIGZvciB0aGUgY2FzdCBoZXJlLCBkZXZpY2VfZ2V0X21hdGNoX2RhdGEoKSByZXR1
+cm5zCmBjb25zdCB2b2lkICpgLgoKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoG1iID0gZGV2bV9r
+emFsbG9jKGRldiwgc2l6ZW9mKCptYiksIEdGUF9LRVJORUwpOwo+ID4gK8KgwqDCoMKgwqDCoMKg
+aWYgKCFtYikKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVOT01F
+TTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoG1iLT5tYm94LmNoYW5zID0gZGV2bV9rY2FsbG9j
+KCZwZGV2LT5kZXYsIGRydl9kYXRhLT5udW1fY2hhbnMsCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNp
+emVvZigqbWItPm1ib3guY2hhbnMpLCBHRlBfS0VSTkVMKTsKPiA+ICvCoMKgwqDCoMKgwqDCoGlm
+ICghbWItPm1ib3guY2hhbnMpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0
+dXJuIC1FTk9NRU07Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBmb3IgKGludCBpID0gMDsgaSA8
+IGRydl9kYXRhLT5udW1fY2hhbnM7IGkrKykgewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoG1iLT5tYm94LmNoYW5zW2ldLmNvbl9wcml2ID0gZGV2bV9rY2FsbG9jKGRldiwgZHJ2
+X2RhdGEtPm1zZ19zaXplLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgc2l6ZW9mKHU4KSwgR0ZQX0tFUk5FTCk7Cj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKCFtYi0+bWJveC5jaGFuc1tpXS5jb25fcHJpdikK
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJu
+IC1FTk9NRU07Cj4gPiArwqDCoMKgwqDCoMKgwqB9Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBw
+bGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBtYik7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBt
+Yi0+cmVncyA9IGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZShwZGV2LCAwKTsKPiA+ICvC
+oMKgwqDCoMKgwqDCoGlmIChJU19FUlIobWItPnJlZ3MpKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldHVybiBQVFJfRVJSKG1iLT5yZWdzKTsKCkp1c3QgY2hlY2tpbmcgdGhl
+IGNvbnRyb2xsZXIgZG9lc24ndCByZXF1aXJlIGFueSBjbG9jayBvciByZXNldApjb25maWd1cmF0
+aW9uIGJlZm9yZSB3ZSBhY2Nlc3MgaXQ/CgpBbmRyZXcK
 
