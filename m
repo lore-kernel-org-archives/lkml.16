@@ -1,87 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400E5372;
-	Fri, 13 Jun 2025 16:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071BC372
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833559; cv=none; b=hi9o9ZV0vHlH+iOot9odUz5Y942HssE1rfcsHkybJ5SnXyg+GwyVtumn4J+i/rdp4sOplnkqFk1ulJddxjpSO8JVuzB0fIiwooxm1WG60GywqX2kTdrkQrGENf1gBI7cf6gQooSRT7HULtZjwqNob2tVAaedXyRtKTg53DRi5zo=
+	t=1749833625; cv=none; b=gJ45EuDdttX81PFcXtG77GNEWnv5XS8beAcGj91EtrAns1VaqrWxFTENL2hset7Dl2qIVc3gilnKw7zOVmR9/MH1UJHOJy4AyhnLyZ1NVaD+m3CpPsL/ZxhifcAeLCGKPJsLNXiLbkvVBtS2FiMrj3MQ9KRFI2rj3KLPNIDk8o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833559; c=relaxed/simple;
-	bh=4TXdH2chBIzzclR6XBIb/wdafoWaQagzYoJB0R6IAwo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=betXqcXwvvfFGWMpEryY5KoH1pAztO7Gt7pNTLreXiK0noDw40gfTlxcTatxKpcc+mTEjlWuDZoJ8AR1Rl8tE1sDcf82yMxgiY9c/si9/kXHHl9RmFCTZIdpcOlahSGn+3QpMRdH5yhzP/8krx6p4qoQBRuw9ztyoHKbxyZpKoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOlPbD+n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749833625; c=relaxed/simple;
+	bh=of+RfkyUwUWB1N7PLvaD8Hi+cZYOEmZpwBeNPbXpgqM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RHKwDAeh4RhyMhwicYtWTCrafk8v+D6REhs1ZxKMPnad6bh+om/LpftGub0JMD7ihpGkSSohK2gNj+vzcYF/OMKkv9r6NWcGx5/KDF5RJEc/EnAK54Xejh13vb29snx6f4nOoMoe09rHQR7TDPsjynnqr0/OgjlEduskHrtYZsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=orYpH9ZB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J/N8+M7I; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOlPbD+n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C34EC4CEE3;
-	Fri, 13 Jun 2025 16:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749833558;
-	bh=4TXdH2chBIzzclR6XBIb/wdafoWaQagzYoJB0R6IAwo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GOlPbD+nYlPwcPuKpDzwv3fOjUPo7ZXF8vABXsEIaKGXNQ39gPdQGCQndaxpQZsoO
-	 +snF8BqArTfNCk4agMwVpL3/PvTLD+krTpy92hdSaVD31exsL5LKuE40nTbvdMSdXS
-	 3nch1oE76LKFNgFO7a+sI/ZCS17H9tIlMvTZEkCxLJPMPqBWSP1Tpqp+HFxW0SH14x
-	 6qysAPtjK5UCp4vNBmz93Z86PsYdHehegSlJs8qi9VO7ob1ha6fMps/G2gLZ+pUNAx
-	 1ynQmPNba9hLiPmZgQfbMyL8lBW1g8aQwRFGvzlxpGONMdg8mHlP62sS9Ym/8+bfOr
-	 XnFx7gFRInJnw==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Terry Cheong <htcheong@chromium.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bailideng@google.com, judyhsiao@google.com, yuhsuan@google.com
-In-Reply-To: <20250613-hdmi-v1-1-665ba7ecd5e7@chromium.org>
-References: <20250613-hdmi-v1-1-665ba7ecd5e7@chromium.org>
-Subject: Re: [PATCH] ASoC: hdmi-codec: use SND_JACK_AVOUT as jack status
-Message-Id: <174983355678.217351.11777150034827074781.b4-ty@kernel.org>
-Date: Fri, 13 Jun 2025 17:52:36 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="orYpH9ZB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J/N8+M7I"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749833622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pA8riBJ4L+Yt6U8k+OhYniJyX6AVY098DQeeteAuS0I=;
+	b=orYpH9ZBvaL1mER9+h8JZnggsG7WQz6Qe8H3r4QAr+Zq2rgpJulsh5gZldvuZzThi/LapO
+	b519Xnhjq+bcPiF1jrJWFc0z4IYBTFecpFBObttRRiE+MmQCllD7mwVZ9Vgeixj+GVGNr5
+	ybhTekXC5ote7dfjXeQNMZMBi7fwHiu/C1UNfn29rlxsmeJdGBMW9BBE0AbrpwcUaTNG/1
+	OiaE/zVAg0WwStR3rIu9EK6NHq8zK7xWjgkDBGEo3kbcwtWyjBJaWQ2qR+6e5LgDwVW3b8
+	dUDVqo/AzrXqvq2bM20kJEAskVIMCt35thCqpTPIeZDO6jV7L8JgUqPaTOvqTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749833622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pA8riBJ4L+Yt6U8k+OhYniJyX6AVY098DQeeteAuS0I=;
+	b=J/N8+M7IocoFkop/kYDdfvQOiJSkwcyYFX5YAnLLdxbRChdEdTGsNTOqkuVbG+axl0HK6G
+	rsdE4gsixUGGb4Dw==
+To: Liya Huang <1425075683@qq.com>, linux-kernel@vger.kernel.org
+Cc: Liya Huang <1425075683@qq.com>
+Subject: Re: [PATCH] posix-timers: omit posix_cpu_timers_init_group when
+ CONFIG_POSIX_TIMERS is disabled
+In-Reply-To: <tencent_92F5880EDEB07D078301A561B64F06F9AC0A@qq.com>
+References: <tencent_92F5880EDEB07D078301A561B64F06F9AC0A@qq.com>
+Date: Fri, 13 Jun 2025 18:53:36 +0200
+Message-ID: <87y0tvpoq7.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 13 Jun 2025 16:51:27 +0800, Terry Cheong wrote:
-> Use SND_JACK_AVOUT as the mask to align with hdac_hdmi driver so that we
-> can determine HDMI/DP devices from event type.
-> 
-> Most drivers that uses hdmi-codec driver will not be affected since they
-> are creating jacks with SND_JACK_LINEOUT mask. They will still report
-> SND_JACK_LINEOUT when the jack status is updated with
-> snd_soc_jack_report.
-> 
-> [...]
+On Sat, Jun 07 2025 at 19:41, Liya Huang wrote:
+>     When POSIX timers are disabled (CONFIG_POSIX_TIMERS=3Dn), the helper
+>     function posix_cpu_timers_init_group() is effectively a no-op=E2=80=
+=94but it
+>     still consumes valuable code space. To avoid generating an empty stub,
+>     we should conditionally compile this function out entirely when POSIX
+>     timers support is turned off.
 
-Applied to
+I have no idea what you are trying to say here. See below.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> This logic was originally introduced in commit b18b6a9cef7f ("timers:
+>     Omit POSIX timer stuff from task_struct when disabled"), but was
+>     dropped in commit 244d49e30653 ("posix-cpu-timers: Move state tracking
+>      to struct posix_cputimers")
 
-Thanks!
+Can you please format your change logs properly as everybody else
+does? These indents provide zero value.
 
-[1/1] ASoC: hdmi-codec: use SND_JACK_AVOUT as jack status
-      commit: 5eb8a0d7733d4cd32a776acf1d1aa1c7c01c8a14
+> ---
+> Signed-off-by: Liya Huang <1425075683@qq.com>
+> ---
+>  kernel/fork.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 168681fc4b25a9fddcb90ce155c027551455f4ee..9632e863c17b44424fadc40b2=
+445034ec5cd20d6 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1883,6 +1883,7 @@ void __cleanup_sighand(struct sighand_struct *sigha=
+nd)
+>  	}
+>  }
+>=20=20
+> +#ifdef CONFIG_POSIX_TIMERS
+>  /*
+>   * Initialize POSIX timer handling for a thread group.
+>   */
+> @@ -1894,6 +1895,9 @@ static void posix_cpu_timers_init_group(struct sign=
+al_struct *sig)
+>  	cpu_limit =3D READ_ONCE(sig->rlim[RLIMIT_CPU].rlim_cur);
+>  	posix_cputimers_group_init(pct, cpu_limit);
+>  }
+> +#else
+> +static inline void posix_cpu_timers_init_group(struct signal_struct *sig=
+) { }
+> +#endif
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+If CONFIG_POSIX_TIMERS=3Dn then posix_cputimers_group_init() is an empty
+inline function and the compiler optimizes posix_cpu_timers_init_group()
+away completely. If it does not, then the compiler wants to be fixed.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+And no, we are not adding ugly ifdeffery just because.
 
 Thanks,
-Mark
 
+        tglx
