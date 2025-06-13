@@ -1,103 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3D715A87C;
-	Fri, 13 Jun 2025 16:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400E5372;
+	Fri, 13 Jun 2025 16:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833429; cv=none; b=IENNzv0tPurCN5Zt8ngXn6ZEvX3ZK2ZazGkX9eRj13U+my5lW5pYZmmo7ehLNqZUOgxiLwo1EmYU0YfxTazx/oyhbtsajBcCb5MHjPH6PBKvwpEhue+mv9Viy9SX3fD5P97Fkl3k3FwbyK9WCTwC7ACXBgw4kAso31KFueY9fM8=
+	t=1749833559; cv=none; b=hi9o9ZV0vHlH+iOot9odUz5Y942HssE1rfcsHkybJ5SnXyg+GwyVtumn4J+i/rdp4sOplnkqFk1ulJddxjpSO8JVuzB0fIiwooxm1WG60GywqX2kTdrkQrGENf1gBI7cf6gQooSRT7HULtZjwqNob2tVAaedXyRtKTg53DRi5zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833429; c=relaxed/simple;
-	bh=7bhRMmk/rqBBya6D/yZgVdiqWytle+3/P0OHnRbqkE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g9Km91Li3RINnrlUSYGRvoP9flskxbcRRSwuhJp3LGl+mR6dW6R1bRQCodnsBfLe6ITnEhgMTNU5hne8QrOwBdVR/03OMy3UzoPkvM+GjhtRFxoOPEyBU42bD0lUAFimVPMZDFnhBVQIQYsPrcwGaHTaS3kwrS2T++aSahi9Lpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B22231C0A;
-	Fri, 13 Jun 2025 09:50:06 -0700 (PDT)
-Received: from [10.57.28.131] (unknown [10.57.28.131])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 534A23F673;
-	Fri, 13 Jun 2025 09:50:22 -0700 (PDT)
-Message-ID: <2e022f4e-4c87-4da1-9d02-f7a3ae7c5798@arm.com>
-Date: Fri, 13 Jun 2025 17:50:20 +0100
+	s=arc-20240116; t=1749833559; c=relaxed/simple;
+	bh=4TXdH2chBIzzclR6XBIb/wdafoWaQagzYoJB0R6IAwo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=betXqcXwvvfFGWMpEryY5KoH1pAztO7Gt7pNTLreXiK0noDw40gfTlxcTatxKpcc+mTEjlWuDZoJ8AR1Rl8tE1sDcf82yMxgiY9c/si9/kXHHl9RmFCTZIdpcOlahSGn+3QpMRdH5yhzP/8krx6p4qoQBRuw9ztyoHKbxyZpKoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOlPbD+n; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOlPbD+n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C34EC4CEE3;
+	Fri, 13 Jun 2025 16:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749833558;
+	bh=4TXdH2chBIzzclR6XBIb/wdafoWaQagzYoJB0R6IAwo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=GOlPbD+nYlPwcPuKpDzwv3fOjUPo7ZXF8vABXsEIaKGXNQ39gPdQGCQndaxpQZsoO
+	 +snF8BqArTfNCk4agMwVpL3/PvTLD+krTpy92hdSaVD31exsL5LKuE40nTbvdMSdXS
+	 3nch1oE76LKFNgFO7a+sI/ZCS17H9tIlMvTZEkCxLJPMPqBWSP1Tpqp+HFxW0SH14x
+	 6qysAPtjK5UCp4vNBmz93Z86PsYdHehegSlJs8qi9VO7ob1ha6fMps/G2gLZ+pUNAx
+	 1ynQmPNba9hLiPmZgQfbMyL8lBW1g8aQwRFGvzlxpGONMdg8mHlP62sS9Ym/8+bfOr
+	 XnFx7gFRInJnw==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Terry Cheong <htcheong@chromium.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bailideng@google.com, judyhsiao@google.com, yuhsuan@google.com
+In-Reply-To: <20250613-hdmi-v1-1-665ba7ecd5e7@chromium.org>
+References: <20250613-hdmi-v1-1-665ba7ecd5e7@chromium.org>
+Subject: Re: [PATCH] ASoC: hdmi-codec: use SND_JACK_AVOUT as jack status
+Message-Id: <174983355678.217351.11777150034827074781.b4-ty@kernel.org>
+Date: Fri, 13 Jun 2025 17:52:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] arm64: defconfig: Enable Apple Silicon drivers
-To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Vinod Koul <vkoul@kernel.org>, =?UTF-8?Q?Martin_Povi=C5=A1er?=
- <povik+lin@cutebit.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
- linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org
-References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
- <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On 2025-06-12 10:11 pm, Sven Peter wrote:
-> Enable drivers for hardware present on Apple Silicon machines.
-> The power domain and interrupt driver should be built-it since these are
-> critical for the system to boot, the rest can be build as modules.
+On Fri, 13 Jun 2025 16:51:27 +0800, Terry Cheong wrote:
+> Use SND_JACK_AVOUT as the mask to align with hdac_hdmi driver so that we
+> can determine HDMI/DP devices from event type.
+> 
+> Most drivers that uses hdmi-codec driver will not be affected since they
+> are creating jacks with SND_JACK_LINEOUT mask. They will still report
+> SND_JACK_LINEOUT when the jack status is updated with
+> snd_soc_jack_report.
+> 
+> [...]
 
-Nit: I'd be tempted to put this patch first, just in case anyone 
-bisecting with "make defconfig" in their process lands in the middle and 
-suddenly loses some drivers (although arguably them going from "=y" to 
-"=m" could still be a surprise, but at least a bit less so).
+Applied to
 
-[...]
-> @@ -1504,6 +1520,7 @@ CONFIG_ARCH_TEGRA_194_SOC=y
->   CONFIG_ARCH_TEGRA_234_SOC=y
->   CONFIG_TI_PRUSS=m
->   CONFIG_OWL_PM_DOMAINS=y
-> +CONFIG_APPLE_PMGR_PWRSTATE=y
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-If this is critical for any Apple platform to work then it would 
-probably make sense to explicitly select it from ARCH_APPLE, as is done 
-for APPLE_AIC...
+Thanks!
 
->   CONFIG_RASPBERRYPI_POWER=y
->   CONFIG_IMX_SCU_PD=y
->   CONFIG_QCOM_CPR=y
-> @@ -1567,6 +1584,7 @@ CONFIG_QCOM_PDC=y
->   CONFIG_QCOM_MPM=y
->   CONFIG_TI_SCI_INTR_IRQCHIP=y
->   CONFIG_TI_SCI_INTA_IRQCHIP=y
-> +CONFIG_APPLE_AIC=y
+[1/1] ASoC: hdmi-codec: use SND_JACK_AVOUT as jack status
+      commit: 5eb8a0d7733d4cd32a776acf1d1aa1c7c01c8a14
 
-...which I think means this would already be redundant.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Robin.
-
->   CONFIG_RESET_GPIO=m
->   CONFIG_RESET_IMX7=y
->   CONFIG_RESET_QCOM_AOSS=y
-> @@ -1640,6 +1658,7 @@ CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU=m
->   CONFIG_NVIDIA_CORESIGHT_PMU_ARCH_SYSTEM_PMU=m
->   CONFIG_MESON_DDR_PMU=m
->   CONFIG_NVMEM_LAYOUT_SL28_VPD=m
-> +CONFIG_NVMEM_APPLE_EFUSES=m
->   CONFIG_NVMEM_IMX_OCOTP=y
->   CONFIG_NVMEM_IMX_OCOTP_ELE=m
->   CONFIG_NVMEM_IMX_OCOTP_SCU=y
-> 
+Mark
 
