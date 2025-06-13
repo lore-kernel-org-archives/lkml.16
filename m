@@ -1,150 +1,121 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51040748F
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D16B86349;
+	Fri, 13 Jun 2025 13:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749820241; cv=none; b=Rujxz39XvbY+VzannqwDg1HfW7uvwAVhkGqjeRdpsYt8Eu690zkgLo9cYG9+1dPfoSme/Je+hQYDCE7EXaSiiVQxDSP06PokkQnuU4Wa6D8UrTK5LpipgU6/ZI+2IVg3M18icw6fI+O0VzJKnG4O1gYT/kX5LdZsOPoNwESPX8g=
+	t=1749820252; cv=none; b=Fr7qx/eHawBvr6dYFCimAeSLb6U9UNj92YrqI1TkiVRz4FlFCpf03q8x6I0jr1BZ35mzd0sKo/kYhXV020313NlsmC1g+aJKFGOVEf04OTOW0aErtv/k6w5yVEo8Bnj0UngghhXubr6D2i2YI0QcTvB4HO2DuBKu+gXGlIgMGAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749820241; c=relaxed/simple;
-	bh=0ZB4tBA7VPI4q2+c0Iur9EkWxAnjfflthKsJ5EfCyNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uBzLjjmgg+aDHTkjR8s94/jNtkBfb+F1w7+Q1Be52Gp4Ocq+Yf5nPJEKhPxTaMxoIVwtZ6gCi9B0K7XinzFpGxI2IOgWhm7uQ0i/EjjbQVWoezhFZ0jjtpkCATUOVNB6lD402Ze0bfXbasUXK1ohH/BkugmL2pm6msClOj73snk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FZtOAtCT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749820252; c=relaxed/simple;
+	bh=bighsJukvHCmbsxtrGb5PYuln7NuXuTra9dKT6j4s1c=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=lwZjbzG7LNuRKF4KU8kuT4QLwZGM072TYG/keytSop1HHlWxJdGBY4kCDoN34KhrVecht441HJFleF6nIypfHjDhcjHDmBwYN4BB5o6AIFguvSolLjo8avda4PsTawgPRmPwlHa3YCxIm2IBDBtcjUZSOaUFmPeBe76+cUuuGjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0HvrRJb; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FZtOAtCT"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55D0fmwT018527
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:10:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=311F7krfIodtR5drIHKaH5kh
-	X/9H/NonlAsY598nqSA=; b=FZtOAtCTdEghKcZAGH7tmzlOnJ+QW+EJbZ4a2iKl
-	t2KhWrnRDLdrAlHY+QHXOtOtX4jVsrkiFWyVL4gHnyKM2U9KS2gqBy7FvzdjhKHv
-	06+rwmBVGmq2HlCv7L3e5fKh9qD63JTFc1yZfs7OSJKRGwZlTzQa4VPtJreLCFRl
-	9gBq8lp1iLl104flOuAILllRUNq3+X13vYOyZSEBpkL3urbsUYC+QZVD6XAR5bg+
-	zBB6l4F4rkGn/r0YjjQ1aeLxBWC5yl/uIjV2PsFkZ97XJG+iin9fWXCmtYO17FTu
-	XQiBIlEK20iNZt3BZePZvcdxqC5FjY91ePv2xUNboDy1zA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 477y3gu0wr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:10:39 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d38c5c3130so385620085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:10:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0HvrRJb"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so17073095e9.1;
+        Fri, 13 Jun 2025 06:10:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749820248; x=1750425048; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gLilsl7/9YCC/BIaIFPuFIBhon3SF7Um1puCDANK0WU=;
+        b=Q0HvrRJbqVopDXVPrXr5ITlLYfTLWIX3RKrAjtBbaxncr75NvI6L/KSvTl+Yg8Ba8j
+         ZlHML0kn+v8bo+J/svOiEkx25EgYMNrsX2WsXUwenybzgcj/+0lXIDwstrUQ1o2ozh4v
+         cXI7jelz1Vc6bv5vi1hyK5p5SKqBxSNHehGF2Uk3QEK/YINDR9MOA9ctCs62fSvMeOiy
+         JFl1yHP5YpLqFNpLYTAoKb8trmKErOaD9yjMRiYcPjchxaLa997PMQb8HXBoKna900hz
+         TVO5AvmbwUV8EK/XO1zedahMEPn8/y4zeCliDMVKmnB/6ClAXCm1DvbnHDocbgTLSkcH
+         c4Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749820238; x=1750425038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1749820248; x=1750425048;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=311F7krfIodtR5drIHKaH5khX/9H/NonlAsY598nqSA=;
-        b=t2iLO+rsqWYq7K+eos3zgKeND0ZRzUvo6mJFN3xxWblI5QAUAh8PPZII606LGqCB0T
-         I1kwxVO8jyBRVR9Y1OUrHvzvL6SYfAjf9WfI5YroFR3trfocGsMPKYJ+daE0UR7gOHV4
-         Scv+5GUZC3HReVddSYJsrIDEwK+v0SJhMZQoX3j8mPCKR6b6mPhJQCng7Rvtqw82YeEC
-         uMyIslt8B3N3/ffnxj0JVhpvKsK1d8fBAHUnovmXkwxk/lhpAcO5OMNxjPvFIyWCaQBU
-         jWbiOohkMrbt9KrGn03NZDPuFP3fck3doql02Azjgrzie2UPD5GWp2vFo3+RVaZSx8xg
-         HSKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeSBIFPMRNze0Llkkh/usQhV0Gjel4UDwJiA2NxONeQatiQqVUAMs9HcwbfNsnpyjS/DRf/6yNKFP6FuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZiTZ3xwAVVlO29u4ScRxwK6nm7w6PtfqfqxEjImUXc73ZFUcK
-	sQbXGYL10o/T1cfujVk62kKRSFpWtLxdB3aci1Hnbxoi6bbnpUefMnFUqffKGIwKMqv5VterHET
-	moqy0K0dOxPdEXF2rg5xUq4q/Im9iip+9VsgFS1fzUi/kfkfKcPmiG/yqb6VZLc8KQHY=
-X-Gm-Gg: ASbGncuVvxM58C8diUHBs2Bm4AGZma1Ccsugg2bt++i/QV93hCzl+onz9QbempswXbX
-	gYXY55346K5UlGzYQU7xTLFA3Ak0lNaTRWEjEURCJtAMX1eXHBDwsLqjBsBISpZvWbBLmaLyhSn
-	kMwcZGcgkLWQ+Co9fFGgefDTum6Ab06Z/XYq+FK3g32Tak9oIpR35w0b+GxzXvGOkDcny28DhnS
-	/KnXxGYeHtyCORZkQXreEwvCNJsQGxkXzsZhRaBBELCFCXSQXfCQGz+zxD/MqqDXD9SHVrIZJ8F
-	sy+icw3UbXHS2WO9YtSOZvgfB3zF2I7p8NTu8xJuX6itROFLmFndbxYL7G2QfVeGoBwd3IdHVGa
-	pcQUiCUj9yvJY4V5boY4GM4ycn8rSyjz2b4w=
-X-Received: by 2002:a05:620a:24d2:b0:7d2:271d:d395 with SMTP id af79cd13be357-7d3bc4b5acamr527514585a.37.1749820238091;
-        Fri, 13 Jun 2025 06:10:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF7prG3XcpQX6Swj4+2/RLuYYqGBZcoo3RwqH7z0osM9u+iPSEeNwNKJ7Z5Tg9Glvb5yCkC8Q==
-X-Received: by 2002:a05:620a:24d2:b0:7d2:271d:d395 with SMTP id af79cd13be357-7d3bc4b5acamr527502985a.37.1749820236999;
-        Fri, 13 Jun 2025 06:10:36 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b33069a9asm5648641fa.27.2025.06.13.06.10.34
+        bh=gLilsl7/9YCC/BIaIFPuFIBhon3SF7Um1puCDANK0WU=;
+        b=O5EkMBqqrj4yeiBnINe5PAYSCktTEM88XkU+txRE6LUl4Efk1Mxt2dSuXNl4cfCWsZ
+         9MY/KXJ6HAlSAu9BHzcK4bbUSkOx9jMOf65eCIyfXlJdjCiC/uWqgifH9x6cmiZ5Ns6L
+         BifgMq/hLFcL9+X0wugxeHTBbci0OkGhefmmd9hA3Z55YbEmMGcxG2mJofjEvbcH6Ur/
+         Sz1Giik7shC9p9nohG8pF77Uwn3fIi9yaBlI2K1d8l7Yy5fyBMNWfpth1OKeGeQYJsOt
+         e6LNZqkn7188Sc2Q2rq/5jInGjU02/Ig3klgYrxMeXxS3AUqSWTOiCUwoismsMxRef8k
+         o5kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXWstr9yKOBiHMBIAHkAP00buhxlbWt+NmCURxzvLW7//JAfNjazkqrqLrJuf98jt/+ijR4IEjfuNFBp4=@vger.kernel.org, AJvYcCWsLuNYVzHG1QSyGZOfkpMHTIOb48t1MiaF58PBgQTm6YEx8yBDCQK6uk+QxtEEEFU0eTB1bpNX@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCDqZxSs51r0DM489hfdVb5ZrvTnN5HlF35jTiWyKvHdlSaLo3
+	GBydFz+EcBEKdkH28l5eT7mlqOzwAGc4pdzFix8iUIQe19WEmhGNyb6y
+X-Gm-Gg: ASbGncsIReij2lOAEBcuGJMPUa63Rhxe5Q2wANaE5tGcVpHVL3Rq+B1f9AsiM3GJZYR
+	UmcMN7IUrWTqED7j5ilB1EMCKF19DFavtPHkPOn2ThHh/ixZNV8xo5ZpbEDbrSvZurvZp6X8EMJ
+	AVzRy9J3jsuCg8866AuAOhwYm3AFZ+kWOWI2CRehzE14LMnViE5LMk31TfUk+x9aWHwRFBjw+kS
+	rJ0Z0A0bTtJNw54gXew8ntxmdeKz4n7pqAdiOSxTTEe6r4kbEXkPAkCIb6ikZhlVLLV8c9aZDIA
+	qIRLUtBCEtD3JBcW4iGyGj6WeoCWbGSNUZ7MdDf3PZrI4xllhodesdYphFl1yG3EfJzgmKpkLNk
+	=
+X-Google-Smtp-Source: AGHT+IGfVZFiAggq9Aw6BMb9XwyEivoymyFHVpaowGl0cVCFRIr9NgEggsMqUnBqGZmFMU5CQmtjhA==
+X-Received: by 2002:a05:600c:5908:b0:453:827:d0b1 with SMTP id 5b1f17b1804b1-4533b235e16mr6682555e9.2.1749820248270;
+        Fri, 13 Jun 2025 06:10:48 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2384cesm51114175e9.16.2025.06.13.06.10.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:10:35 -0700 (PDT)
-Date: Fri, 13 Jun 2025 16:10:33 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Taniya Das <quic_tdas@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcs615: Add CPU scaling clock
- node
-Message-ID: <ezlboeao2mqdbyxw6orzcqla3xthbo5ppuuhugwyxs5t4njvsd@qyy5r2ksmrj2>
-References: <20250612-qcs615-mm-cpu-dt-v3-v3-0-721d5db70342@quicinc.com>
- <20250612-qcs615-mm-cpu-dt-v3-v3-2-721d5db70342@quicinc.com>
+        Fri, 13 Jun 2025 06:10:47 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  "Akira Yokosawa" <akiyks@gmail.com>,  "Breno Leitao"
+ <leitao@debian.org>,  "David S. Miller" <davem@davemloft.net>,  "Eric
+ Dumazet" <edumazet@google.com>,  "Ignacio Encinas Rubio"
+ <ignacio@iencinas.com>,  "Jan Stancek" <jstancek@redhat.com>,  "Marco
+ Elver" <elver@google.com>,  "Paolo Abeni" <pabeni@redhat.com>,  "Ruben
+ Wauters" <rubenru09@aol.com>,  "Shuah Khan" <skhan@linuxfoundation.org>,
+  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
+  linux-kernel@vger.kernel.org,  lkmm@lists.linux.dev,
+  netdev@vger.kernel.org,  peterz@infradead.org,  stern@rowland.harvard.edu
+Subject: Re: [PATCH v3 13/16] docs: conf.py: add include_pattern to speedup
+In-Reply-To: <62f2de3a195dc47ba6919721e460a8dd7ae95bc3.1749812870.git.mchehab+huawei@kernel.org>
+Date: Fri, 13 Jun 2025 14:02:55 +0100
+Message-ID: <m2ikkzlrpc.fsf@gmail.com>
+References: <cover.1749812870.git.mchehab+huawei@kernel.org>
+	<62f2de3a195dc47ba6919721e460a8dd7ae95bc3.1749812870.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-qcs615-mm-cpu-dt-v3-v3-2-721d5db70342@quicinc.com>
-X-Proofpoint-GUID: 1tH4n7qqUGH907khkKUZ820NkueJ_hEw
-X-Proofpoint-ORIG-GUID: 1tH4n7qqUGH907khkKUZ820NkueJ_hEw
-X-Authority-Analysis: v=2.4 cv=DPqP4zNb c=1 sm=1 tr=0 ts=684c234f cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=A1pg4z-Cax2pQkPbWCoA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDA5NiBTYWx0ZWRfX7iOudW7m8GlY
- Tps8tw8XxQuAUAxqT7amQunARKhA0jsLIb0o5PUmG4a+hZrDx2UZj0sFEaUBd4POpjCJrZ9J3+4
- SiMNQpYylUF12t0mMBQ9Is6WMtoq/2anHSp3JWsGrpzP3ArYmJD+KLkyvX2gswemcFs5VYkHW7Y
- 0tIWYFc3+u8OmeSN1VaLE48VFjiR/VxsChW4Z8lW5L4agkWh0imZeb2IUOO0yXiNjYBDQ439xic
- Bf5OmiiWOS6OECSAHgpzxz8ANEbC7J6S6zx+AJCy2YX7zGK2n5DKIoG6d0/3PVGxHt9wprn+c14
- BAt/S64uW0TQ1kwNBQxAYdToQcfaJKHAJDR8Ji1NyLVTV68zIpIzVyQFcqiZIm8cB04DwzzjesQ
- DX4E6/rNFZH0dDi5sHncO28GyBwMzxhEna0HXB5svVvuWIlHi4cnS/GsSiZKcU5oLmk5I0zf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-13_01,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=988 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506130096
+Content-Type: text/plain
 
-On Thu, Jun 12, 2025 at 03:47:21PM +0530, Taniya Das wrote:
-> Add cpufreq-hw node to support CPU frequency scaling.
-> 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+
+> Now that we have a parser for yaml, use include_pattern, adding
+> just yaml files from the only directory we currently process.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> +
-> +		cpufreq_hw: cpufreq@18323000 {
-> +			compatible = "qcom,sc7180-cpufreq-hw", qcom,cpufreq-hw";
-
-This wasn't build-tested (or was edited after being compile-tested).
-
-> +			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
-> +			reg-names = "freq-domain0", "freq-domain1";
-> +
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-> +			clock-names = "xo", "alternate";
-> +
-> +			#freq-domain-cells = <1>;
-> +			#clock-cells = <1>;
-> +		};
-> +
->  	};
+>  Documentation/conf.py | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/conf.py b/Documentation/conf.py
+> index b8668bcaf090..60e6998e49e1 100644
+> --- a/Documentation/conf.py
+> +++ b/Documentation/conf.py
+> @@ -222,10 +222,13 @@ language = 'en'
 >  
->  	arch_timer: timer {
-> 
-> -- 
-> 2.34.1
-> 
+>  # List of patterns, relative to source directory, that match files and
+>  # directories to ignore when looking for source files.
+> +include_patterns = [
+> +	'**.rst',
+> +	'netlink/specs/*.yaml',
+> +]
 
--- 
-With best wishes
-Dmitry
+It's unfortunate where you added the include patterns because the
+adjacent comment is specific to exclude patterns. I suggest rewording
+the comment to be relevant to both.
+
+> +
+>  exclude_patterns = [
+>  	'output',
+> -	'devicetree/bindings/**.yaml',
+> -	'netlink/*.yaml',
+>  ]
+>  
+>  # The reST default role (used for this markup: `text`) to use for all
