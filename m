@@ -1,99 +1,131 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E710420DD40;
-	Fri, 13 Jun 2025 16:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F36214A93
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833141; cv=none; b=OVtf+jMM/XWQELr+iliLfqp51mDNi7zPD6PBadKYxxFV5bCHzUVSAYLfD6nOWkRij+ZovO/1/Un7nP0IZodtv3xMZOOGS8OzR9WDdoEAmY9eNfse+UDWnwurNndnwaupjARkDwRiiEUDqy5vdv19tN4etDFwEqGmimBA2s/TNMc=
+	t=1749833168; cv=none; b=XCyrjknyViQ8oX7UBTBprGxI9qyqzFdxQIjIlMe7ob900WE8d2Yl7EGbrlc0nGW5ojTF3Hg/bass6JR1gqUIx/s18NzC+LoG3cpjW0+20ziNIEahBrZq9pLe7mpVXnK53dImCOPz6gjZk/JNl2GcCEqxoJi4Wy6X3da5B97NIDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833141; c=relaxed/simple;
-	bh=S0zyK/GY1rA3FSqhRjuAct93VjLVuOwJ1yGwVpnbLUo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fy7fc4Q0ioL7BVHXA9yM7jQ3jR6nHgISV3EFGkn6iC2qOjGdTqyDTGJejUeAKOJp390AZuNPoayxO1FJTrd9HawCXTAt8wMzHTNTUY+Or2m1Vs8B3y14pMTSOxOpy2dw+TJAm9U9wqUQaDB4EKcKygSyxLUdTcKrGx7gaHvyjuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRmQyvx1; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749833168; c=relaxed/simple;
+	bh=i4hm9CHKm/3oJOWsJxscFqz/8Ylt/YD/hMzaFSn5rPs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=QhKmxV6wTpYIPQmfGb7wWQzL9tuGzPpR9Uwi9EX4+J/m7+6YME/525emzQpsd1gsbt2/Xbvv147m9cI6ckMcsloN2u8crbrcgD7fVSBw5z8C/4Z40fCv15YC8W1AID7TnmPMfIS5+ELbToX90IYwPtW9nu7e+l7A/CWu8rx9T+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IuW+tWi6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRmQyvx1"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30f30200b51so23313721fa.3;
-        Fri, 13 Jun 2025 09:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749833138; x=1750437938; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S0zyK/GY1rA3FSqhRjuAct93VjLVuOwJ1yGwVpnbLUo=;
-        b=QRmQyvx1EjYmJnXVmqavghlbZ3WNFynCY/kMLRxkNMwI/6hN6JwQFYM7KFYaVXpe/j
-         /4eexcSFetyNXGWuX43+sBx8XlWHXWo2uM/5++Gsf2TtUHaFratbY1VZaTXJ884aziMb
-         qFxajJBxN5ZIidir4QKtX7BbfhkFYzYuViMXjX037TaBJedL/ZrynyCDfNZ2b9rT/40l
-         gmzPIRTBdjSkGKuUSkmBucK+yF5EcAUWTF4U1QMv/Lxx0ZPrYDEZ98ZfZrw1yS+/x0uu
-         MsfGy6jdXHaGW3PfCmWlyVlSAMd9KUXqM0KymZ8QbKeCv+eSJ/fTFbp27LDw1zP+7aLp
-         gNig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749833138; x=1750437938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S0zyK/GY1rA3FSqhRjuAct93VjLVuOwJ1yGwVpnbLUo=;
-        b=W66fv/vXYDbzP3w2A0E29sB3pvXhSODTkz0/PNXmoYq0B/efuF2hHYz00hVj2XjC2K
-         5ow3zDakj56oJCoyuAbY2nkJ/aOedfjS5zAtevF3fw3SUkteogVsyj4Jp7wygtyx80sy
-         SWLSv5hN7qiVyNeeHD6oZlt3zn5Oze8FQKHt9Qxx3PEdgcOFHtZhMQksTWBEfaDpzP5o
-         5YYjtWgKHryI4cLh/PJnWlBfKb2YE6bRnfT++pRHKT7UgRvnUXfJcHeRBNvlvo/ZZLf4
-         Kug8QwmwPfRFqanPn1MkkWPhRTG7nbTDGoGdOOtbQp0Lwr+nrEC2uIC8C3mpPEhMLnxd
-         fG7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWDPgfMAFVe28aBoflVnCgkymszUI2kYrxW9HeBBmEWrxqrtFpVvAM2Pm+YYYrVMFXhb6T2OAW3eOqpD98=@vger.kernel.org, AJvYcCX+/v1CEVTtqkDgi31Lsckiz6OxKCbH7LHa2RnbhrPCByT/+ECgyM93cadqSnnqhE0Hjrrj02icM9J5+B5N344=@vger.kernel.org, AJvYcCXrYnx4fBVXQ+MZB3r0sInCqxxa3ESHroPcNasMXIAwj2T3ICCnnoipU/+REfa2+4n0aA28nYZulvVh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxhc8aQOHDRvPynIzXQkAaxqLJUISHz+RFzBZFnbJAuSd77XCLF
-	jIDpphqYufRN72fUHErw0PlGRVwuzt9Hwj9IpfqvQj7GGgkQBuqtTnsPGxsJEzckCOX6jtCFQeT
-	kXSlYcdnXHNWFZEdh1u5mcxEKsGivRuFt1aSo
-X-Gm-Gg: ASbGncsJ8GPYwZVtsEYfqpu3qGbvvu/3NP0TDEPxw3DcyaxaoaJBCA04u7BFXWQ74Qz
-	BoCgxDlFMbA7ZBs7+w91v8CSLPgf4LKto53buT05V3clAF9AjZqCYrDjNtzDeDFGAcM3W/+91ZR
-	2taY/UY5i37sQoNBeyCbDD8hxEWNmgWCTcPspr3j961z/D638V5prsjoFqzPE=
-X-Google-Smtp-Source: AGHT+IFMV9/Dsdhdbnvbfn5+xkOvEa6Z7kEha0BSODFi02M026bNUoCF60wCk4CTk28DH9/iZjGOtBsn3L7I1XSlBzc=
-X-Received: by 2002:a2e:b888:0:b0:32a:8ac3:93f7 with SMTP id
- 38308e7fff4ca-32b3ea562cemr9979901fa.14.1749833137656; Fri, 13 Jun 2025
- 09:45:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuW+tWi6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749833163;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bbROYjb4mdQOqht6aHh/H9xfCrTcRr7mEK6Oc+kCnJc=;
+	b=IuW+tWi6GtwT+2GK3CexQhxuU8RdinZSXgfOX4pDUvI2PLYjAimTNBBh6bRuR3ed9MvCfx
+	8wQkD42ab9XlnhrrzltcTEniHTrTWA4BRXPRjhO2vroTw6H2V2w58Yy936uHXsDETrgZ78
+	gkNoK+XRqVIBshhmKIkpzCR8S/Uhc3s=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-172-qBL8VcTUMKOyuYyy47NJxw-1; Fri,
+ 13 Jun 2025 12:45:58 -0400
+X-MC-Unique: qBL8VcTUMKOyuYyy47NJxw-1
+X-Mimecast-MFC-AGG-ID: qBL8VcTUMKOyuYyy47NJxw_1749833157
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FFB519560AA;
+	Fri, 13 Jun 2025 16:45:57 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F1BB180035C;
+	Fri, 13 Jun 2025 16:45:56 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 6.16-rc2
+Date: Fri, 13 Jun 2025 12:45:56 -0400
+Message-ID: <20250613164556.163306-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com> <aAkoVfiZDAXdYxrr@google.com>
-In-Reply-To: <aAkoVfiZDAXdYxrr@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 13 Jun 2025 12:45:00 -0400
-X-Gm-Features: AX0GCFvlR_lP-p0sk3-QO67Q9vxrmgVX-5FVQbNhAZfIbp4rOoPEVpF9GuPXBiA
-Message-ID: <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] rust: list: remove HasListLinks::OFFSET
-To: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, Apr 23, 2025 at 1:50=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Wed, Apr 23, 2025 at 12:30:01PM -0400, Tamir Duberstein wrote:
-> > The bulk of this change occurs in the last commit, please its commit
-> > messages for details.
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->
-> This works with Rust Binder and Ashmem.
->
-> Tested-by: Alice Ryhl <aliceryhl@google.com>
+Linus,
 
-Thanks Alice. Could you also review? I guess this still needs some
-RBs. @Benno Lossin could you perhaps have a look as well? You both
-reviewed my other series[0] which was quite similar.
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
-[0] https://lore.kernel.org/all/20250411-no-offset-v3-1-c0b174640ec3@gmail.=
-com/
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 8046d29dde17002523f94d3e6e0ebe486ce52166:
+
+  KVM: x86/mmu: Reject direct bits in gpa passed to KVM_PRE_FAULT_MEMORY (2025-06-12 00:51:42 -0400)
+
+----------------------------------------------------------------
+ARM:
+
+- Rework of system register accessors for system registers that are
+  directly writen to memory, so that sanitisation of the in-memory
+  value happens at the correct time (after the read, or before the
+  write). For convenience, RMW-style accessors are also provided.
+
+- Multiple fixes for the so-called "arch-timer-edge-cases' selftest,
+  which was always broken.
+
+x86:
+
+- Make KVM_PRE_FAULT_MEMORY stricter for TDX, allowing userspace to pass
+  only the "untouched" addresses and flipping the shared/private bit
+  in the implementation.
+
+- Disable SEV-SNP support on initialization failure
+
+----------------------------------------------------------------
+Ashish Kalra (1):
+      KVM: SEV: Disable SEV-SNP support on initialization failure
+
+Marc Zyngier (4):
+      KVM: arm64: Add assignment-specific sysreg accessor
+      KVM: arm64: Add RMW specific sysreg accessor
+      KVM: arm64: Don't use __vcpu_sys_reg() to get the address of a sysreg
+      KVM: arm64: Make __vcpu_sys_reg() a pure rvalue operand
+
+Paolo Bonzini (3):
+      Merge tag 'kvmarm-fixes-6.16-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+      KVM: x86/mmu: Embed direct bits into gpa for KVM_PRE_FAULT_MEMORY
+      KVM: x86/mmu: Reject direct bits in gpa passed to KVM_PRE_FAULT_MEMORY
+
+Sebastian Ott (4):
+      KVM: arm64: selftests: Fix help text for arch_timer_edge_cases
+      KVM: arm64: selftests: Fix thread migration in arch_timer_edge_cases
+      KVM: arm64: selftests: Fix xVAL init in arch_timer_edge_cases
+      KVM: arm64: selftests: Determine effective counter width in arch_timer_edge_cases
+
+ arch/arm64/include/asm/kvm_host.h                  | 34 +++++++++---
+ arch/arm64/kvm/arch_timer.c                        | 18 +++----
+ arch/arm64/kvm/debug.c                             |  4 +-
+ arch/arm64/kvm/fpsimd.c                            |  4 +-
+ arch/arm64/kvm/hyp/exception.c                     |  4 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h            |  4 +-
+ arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h         |  6 +--
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c                 |  4 +-
+ arch/arm64/kvm/hyp/vhe/switch.c                    |  4 +-
+ arch/arm64/kvm/hyp/vhe/sysreg-sr.c                 | 46 ++++++++---------
+ arch/arm64/kvm/nested.c                            |  2 +-
+ arch/arm64/kvm/pmu-emul.c                          | 24 ++++-----
+ arch/arm64/kvm/sys_regs.c                          | 60 +++++++++++-----------
+ arch/arm64/kvm/sys_regs.h                          |  4 +-
+ arch/arm64/kvm/vgic/vgic-v3-nested.c               | 10 ++--
+ arch/x86/kvm/mmu/mmu.c                             |  9 +++-
+ arch/x86/kvm/svm/sev.c                             | 44 ++++++++++++----
+ .../selftests/kvm/arm64/arch_timer_edge_cases.c    | 39 +++++++++-----
+ 18 files changed, 194 insertions(+), 126 deletions(-)
+
