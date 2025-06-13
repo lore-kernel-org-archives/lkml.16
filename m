@@ -1,56 +1,48 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C692C1780;
-	Fri, 13 Jun 2025 07:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2372C3250;
+	Fri, 13 Jun 2025 07:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749799103; cv=none; b=YcSLp/b8IpHomyr9JyDn+JdURZ5FeOiDFkjq3kWMJKJYNGFc/rE68DvW8idHGbRviqVaqmZgbEAbkU3LK0cI5N1WraJEqmP7Yn7RtHmIMFdsfJoyy3JY6ulYaOK7s2erbPjVBfxOFqOclDUpVkwwvgUdZYfQpCvXnBoMO+AB44s=
+	t=1749799133; cv=none; b=eOMZUOGWkxRFPhUyp4c3H1bpjcng8P8/mw9i80jVcVDxFd4i/FMiNhye7jWbLrl+PnEg6uTewldcGWcgr8y+Y2JthDrLVEgaO+pLF4w8EEGOa6ig3UwkNjUawOlsxEUBfP8Ddv5WKJ6V/rDsWnrLO/5+6QdNA7wUIpnCpPTfLws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749799103; c=relaxed/simple;
-	bh=b1TH0pBAHA4l6ksFhPq0KMWofIveyzTRlJwcCJOHSgE=;
+	s=arc-20240116; t=1749799133; c=relaxed/simple;
+	bh=M7EkRO7IVX8UmYnG8NR5ldDY2OALH+ByUr7WbfjmLEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAHi1ZIqHyUxoiLjhn+ZrZK/KRcytvsP9PRbP2OI6Z81SDjrxjWVXXtiiX0/ehr2uRAI1uPI7Ve/H+kzIC2kXGicuN2RoI+CNbCyAOrHNnem3xJnYti0r9ZfmWb61IYNI4/tAfHm8ZUT8MNXmECQX5/NmzXomWortijev0XgI6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cRur5C/X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r91IW4PC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=XfnkkXL5Vic/mjP/4N8Wf2CoEAyhwS7Qsv7Thc8bCvLoiVd+q9ba8ljhchfSK+OI5GXbQtyIxD1lZknxTGnsz/R+DqKlzfkH5sg9kMWAb/0Sxsd+jo6YTGOpVD23OB8SKUL+Qa7ljeIpJDANutZerUlV6JB44vaEEtztYlrnXd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FE9BNqw8; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cRur5C/X";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r91IW4PC"
-Date: Fri, 13 Jun 2025 09:18:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749799100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=01/G+GPT96bJOUWgFH1yRp4RIEAyJuEv6ZoK2XgM5wY=;
-	b=cRur5C/XrKB9u9N1MRoo0uxF4WypLzGNE8OEdpE4jSqQkhpqw7t35gb1uJqmjgdqPPey26
-	2zeqMAnqUx5HP5ZYwTglm0ZN7Dukv2UQPYkVp+IR9A28gU7g9808eqWlB/JF3Q31Y6D8lt
-	mIdyd4NMXzheXj05sKvRS5zA5bOyTnjlgGP0attu1OW9kv6m+24ESbz+tS1sNy4jUJL1X9
-	IoMa42qg4gdONcdizBKQNYsZ/7xgHNWPY8pDD/SFA5IAUmLzjZje11HAzE1UK5HQAPqAWV
-	dbV4Nz8RJAal6EFQPzOMKnENXJqltyg6m6LeLEIyKzTbayMryat05hU+5GbJlQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749799100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=01/G+GPT96bJOUWgFH1yRp4RIEAyJuEv6ZoK2XgM5wY=;
-	b=r91IW4PCDs6KEdmf0Hk9AZ21bRcxqwcaIX5SBpsGtGVjlON+YrJIyzV7OdLWM8G0VAlPlG
-	H73NrPKtEMP7TRDA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
-	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
-	John Stultz <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar <mlichvar@redhat.com>, 
-	Werner Abt <werner.abt@meinberg-usa.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Kurt Kanzenbach <kurt@linutronix.de>, 
-	Nam Cao <namcao@linutronix.de>, Antoine Tenart <atenart@kernel.org>
-Subject: Re: [patch V2 26/26] timekeeping: Provide interface to control
- auxiliary clocks
-Message-ID: <20250613083529-510f21e5-1c61-4320-afb0-863666b0f590@linutronix.de>
-References: <20250519082042.742926976@linutronix.de>
- <20250519083027.209080298@linutronix.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FE9BNqw8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=V7JkxG9Vy1kJOBwLEP7Ot+HWce3fGBM19nyA8Vb3JDQ=; b=FE9BNqw8CyaElbDtdH5KyL32Ph
+	rBhR75TipRafHBAo5oPFRWkCMU5upIY+Ce9wsDDsnaWnYvlQBfg3j76zTksl8kPGJZuKqtzjXP0uM
+	XfwyLE2MyQzGOi9cIcpkWOm9e8oSEfO0bSnLv3QEwKXMk160uGy648pUInVZ+Bq5tkIQDLZrticpk
+	EVSjaNp/F54OcmmhLVW8exVmoMJxpJLs1fcKBV/QiFrwJdIKqkcryPHREmJxtqPcvoMHj6E+DleGn
+	v1xfwtzc5hckcwlJ89HKleZlKgvHoco8F58tcRddx8+/Th4BGfWmuLzu6ygfR/1CupuMlECbTUD/9
+	gI8My4pg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPygX-00000002tHy-2jwr;
+	Fri, 13 Jun 2025 07:18:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 087FE30BC46; Fri, 13 Jun 2025 09:18:43 +0200 (CEST)
+Date: Fri, 13 Jun 2025 09:18:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, seanjc@google.com,
+	pbonzini@redhat.com, brgerst@gmail.com, tony.luck@intel.com,
+	fenghuay@nvidia.com
+Subject: Re: [PATCH v1 0/3] x86/traps: Fix DR6/DR7 inintialization
+Message-ID: <20250613071842.GH2273038@noisy.programming.kicks-ass.net>
+References: <20250613070118.3694407-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,139 +51,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250519083027.209080298@linutronix.de>
+In-Reply-To: <20250613070118.3694407-1-xin@zytor.com>
 
-On Mon, May 19, 2025 at 10:33:46AM +0200, Thomas Gleixner wrote:
-> Auxiliary clocks are disabled by default and attempts to access them
-> fail.
+On Fri, Jun 13, 2025 at 12:01:14AM -0700, Xin Li (Intel) wrote:
+> Sohil reported seeing a split lock warning when running a test that
+> generates userspace #DB:
 > 
-> Provide an interface to enable/disable them at run-time.
+>   x86/split lock detection: #DB: sigtrap_loop_64/4614 took a bus_lock trap at address: 0x4011ae
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  Documentation/ABI/stable/sysfs-kernel-time-aux-clocks |    5 
->  kernel/time/timekeeping.c                             |  125 ++++++++++++++++++
->  2 files changed, 130 insertions(+)
-
-<snip>
-
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -14,6 +14,7 @@
->  #include <linux/sched/loadavg.h>
->  #include <linux/sched/clock.h>
->  #include <linux/syscore_ops.h>
-> +#include <linux/sysfs.h>
-
-#include <linux/kobject.h>
-
->  #include <linux/clocksource.h>
->  #include <linux/jiffies.h>
->  #include <linux/time.h>
-> @@ -2900,6 +2901,130 @@ const struct k_clock clock_aux = {
->  	.clock_adj		= aux_clock_adj,
->  };
->  
-> +static void aux_clock_enable(unsigned int id)
-
-"clockid_t id".
-
-> +{
-> +	struct tk_read_base *tkr_raw = &tk_core.timekeeper.tkr_raw;
-> +	struct tk_data *tkd = aux_get_tk_data(id);
-> +	struct timekeeper *tks = &tkd->shadow_timekeeper;
-> +
-> +	/* Prevent the core timekeeper from changing. */
-> +	guard(raw_spinlock_irq)(&tk_core.lock);
-> +
-> +	/*
-> +	 * Setup the auxiliary clock assuming that the raw core timekeeper
-> +	 * clock frequency conversion is close enough. Userspace has to
-> +	 * adjust for the deviation via clock_adjtime(2).
-> +	 */
-> +	guard(raw_spinlock_nested)(&tkd->lock);
-> +
-> +	/* Remove leftovers of a previous registration */
-> +	memset(tks, 0, sizeof(*tks));
-> +	/* Restore the timekeeper id */
-> +	tks->id = tkd->timekeeper.id;
-> +	/* Setup the timekeeper based on the current system clocksource */
-> +	tk_setup_internals(tks, tkr_raw->clock);
-> +
-> +	/* Mark it valid and set it live */
-> +	tks->clock_valid = true;
-> +	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
-> +}
-
-<snip>
-
-> +static struct kobj_attribute aux_clock_enable_attr = __ATTR_RW(aux_clock_enable);
-> +
-> +static struct attribute *aux_clock_enable_attrs[] = {
-> +	&aux_clock_enable_attr.attr,
-> +	NULL,
-
-There should be no comma after sentinel values.
-
-> +};
-> +
-> +static const struct attribute_group aux_clock_enable_attr_group = {
-> +	.attrs = aux_clock_enable_attrs,
-> +};
-> +
-> +static int __init tk_aux_sysfs_init(void)
-> +{
-> +	struct kobject *auxo, *tko = kobject_create_and_add("time", kernel_kobj);
-> +
-> +	if (!tko) {
-> +		pr_warn("Unable to create /sys/kernel/time/. POSIX AUX clocks disabled.\n");
-
-The other timer code does not log details on failed initcalls.
-To me the strings look like wasted memory.
-If failure is really intended to be handled gracefully then some cleanup logic
-may be necessary, too.
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	auxo = kobject_create_and_add("aux_clocks", tko);
-> +	if (!auxo) {
-> +		pr_warn("Unable to create /sys/kernel/time/aux_clocks. POSIX AUX clocks disabled.\n");
-> +		kobject_put(tko);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	for (int i = TIMEKEEPER_AUX; i <= TIMEKEEPER_AUX_LAST; i++) {
-
-for (int i = 0; i < MAX_AUX_CLOCKS; i++)
-
-This avoids the need for the repeated calculations below and also better
-matches the actual semantics.
-
-> +		char id[2] = { [0] = '0' + (i - TIMEKEEPER_AUX), };
-> +		struct kobject *clk = kobject_create_and_add(id, auxo);
-> +
-> +		if (!clk) {
-> +			pr_warn("Unable to create /sys/kernel/time/aux_clocks/%d\n",
-> +				i - TIMEKEEPER_AUX);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		int ret = sysfs_create_group(clk, &aux_clock_enable_attr_group);
-> +
-> +		if (ret) {
-> +			pr_warn("Unable to create /sys/kernel/time/aux_clocks/%d/enable\n",
-> +				i - TIMEKEEPER_AUX);
-
-
-> +			return ret;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +late_initcall(tk_aux_sysfs_init);
-> +
->  static __init void tk_aux_setup(void)
->  {
->  	For (int i = TIMEKEEPER_AUX; i <= TIMEKEEPER_AUX_LAST; i++)
 > 
+> We investigated the issue and identified how the false bus lock detected
+> warning is generated under certain test conditions:
+> 
+>   1) The warning is a false positive.
+> 
+>   2) It is not caused by the test itself.
+> 
+>   3) It occurs even when Bus Lock Detection (BLD) is disabled.
+> 
+>   4) It only happens on the first #DB on a CPU.
+> 
+> 
+> And the root cause is, at boot time, Linux zeros DR6.  This leads to
+> different DR6 values depending on whether the CPU supports BLD:
+> 
+>   1) On CPUs with BLD support, DR6 becomes 0xFFFF07F0 (bit 11, DR6.BLD,
+>      is cleared).
+> 
+>   2) On CPUs without BLD, DR6 becomes 0xFFFF0FF0.
+> 
+> Since only BLD-induced #DB exceptions clear DR6.BLD and other debug
+> exceptions leave it unchanged, even if the first #DB is unrelated to
+> BLD, DR6.BLD is still cleared.  As a result, such a first #DB is
+> misinterpreted as a BLD #DB, and a false warning is triggerred.
+> 
+> 
+> Fix the bug by initializing DR6 by writing its architectural reset
+> value at boot time.
+> 
+> 
+> DR7 suffers from a similar issue.  We apply the same fix.
+
+Bah, this DR6 polarity is a pain in the behind for sure. Patches look
+good, except I'm really not a fan of using those 'names'. But I'll not
+object too much of others like it.
