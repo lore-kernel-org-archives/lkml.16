@@ -1,141 +1,365 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D516259CB0;
-	Fri, 13 Jun 2025 06:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FFA2AE68;
+	Fri, 13 Jun 2025 06:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749795363; cv=none; b=MYcZAD69TRPBU9afj9del1ZXiS6wAg8JeInmwWuDo0ZZt61jvdaCXhFDtVIBRWCizQAkcJYpoZdAQjWzZveyaXWekcH5YmsD4EzvGJUzRsqsJhbwic5YWxG6L+YFhLC1YHzGoMi5Ya/Wf/tRd9Cdm8f9KIXjHHCyH2wm8f28QG4=
+	t=1749795376; cv=none; b=Nj7hgk6fq1IQC7J5u15YHLaayK3iPZFs4ZrKDjiUWZ/veQMHDEHmOmRLhUQcYNduqwwhiB74r44EWKgKWYLSncpIlC+zTYFq+WtPSba3RrFBosPlgTdeuCw/VsH/iEcA8XOIHtOFbcFs6PsbPeYoh5/nr5YRBRTImWOeGnffa0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749795363; c=relaxed/simple;
-	bh=A7x6HR3awkaHrJYvKTix22WAo9uMjCW12r2Ub/QMie0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XH32D6a+OG6ipmvMgAWJ0WbsMB2ErHZLtyVapJHUmcs0/whs7XwmF/bEGnMs/T6WmlTU1XmbqXjnsvvES9lnnXyqyYsoB0lrqsD8j5bA59zI3unNmuIAGUJzzi5nHRoJvWuEZoh2FtN5VkkbXGk6K66hvdVIADj4h6OMIHSikvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvvPzwJo; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749795376; c=relaxed/simple;
+	bh=LDowsZjTisnENRW4Zn7Q4eTu221JSNSVoxDBbay443M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BXpEwJTxJzfVrhZxJuClDERpwStlvlwrybHMl4OMlAHsvGq/CLzJiWbQgMFA+VzhAWV7+SkMH4dQrPC2do/dnrljWpZP/XPj8ORplLMqPDhPtMspHwllVL4zhgCVa8gBsjyQqNLCnIjaWc7WUkc2bHbzoSijsosJyDnROgU6M5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0EEjyNN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvvPzwJo"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235e1d4cba0so17251465ad.2;
-        Thu, 12 Jun 2025 23:16:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749795361; x=1750400161; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pRiko2rbLjsvU6r51stSZP3eWjmH5GuALjIO6S1USnA=;
-        b=GvvPzwJo1j/FK2dP//u7fMDmLolHcScZmo5IKeoP3b8kXWjB6WNLstt6Pqw+tUHa2p
-         A69GNMuk773+CaVanhASMjYk6ie6F9DdjFnaOVLrf+Q8FTqwU/1AJZYS745H3LeqQchj
-         3BLsIv6kvfXp9w95D60JqRTxDmMPFzwRZWgPHHgQKAneghhxtH4QNmukcMQ5Oso0RhGt
-         zvfo5ipbHifpzSKzuoMPVj+bIo/HMUWgz1Hhvn5sVntIoATvVIimAQMlMWjvjXv58hu+
-         /NULy3koqNayZUO/p2PuTpmQiMyQdRztotR92vGSW70lmVuMs7jG4jq6ftl+t8j/kK/R
-         0PXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749795361; x=1750400161;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pRiko2rbLjsvU6r51stSZP3eWjmH5GuALjIO6S1USnA=;
-        b=pKy0CDPCOM5broerakXTF7jY4OVuYFqUn/VkSga1Y6EjqqUaMAElZBW8gF2vPK9HPf
-         +wn+3uj/8y0gdgioM3kUzRHEVvZZk3YqKLJ2VNPLQcdZl7+yDK6M49PrVXf2sE+erSAp
-         k6M4iHHegn0ZVFoIq4GwIWICSYR2uD81W64e0jmJyrMFW7vZBV1gexPBaaU6pl1PtADs
-         8brvuOlmCdz5y50KeWvuUcVfD7WjL/gNEybCAC8DSuBe1AwaVgCD5iaiVXaktk3+0QIU
-         VMQFb3g3S4HZB89ZCP9cnybNhjb0RL0J/YKVY6TwJZnGNIjzXByMlYCz0bwPa1eUk1Oa
-         diiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKpR/B963YKuoB38GR3zN3xXDGur0Z7HYEZBRb7gKUnJMRNx8E22FptDcUac7w+MiAQG64R5HOGBKpze2i@vger.kernel.org, AJvYcCVJE36tVz++VPSf3K2puwne/rLlPopm2uX5pPf1UsN1Lg9660FjfD9tCdyU4iv9E5nwM54uNDgNttMrXTM=@vger.kernel.org, AJvYcCWDJaQkhqFLAy1agEd+2QcJGTLOUkG+7v39f8AALDK9vDDt/B/bwSIB4cZ0cRT3RU3XFovB0Ga5@vger.kernel.org, AJvYcCXDzA4BSC4oSPFEdDrX29cttN9nwIUbC2dCihYMSphHDgTwR4dsxA687l5xXFaxArFZmKCLCXSqoO7p@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAsEt5JUhHTa2XwKSTwcNipXdEnQ1ajI0utp4HVhv8QQMbp5lH
-	i6Vwyty8jJ2E8+7M80q/3TsxsWT0e4uxvOUT3p2K9F/OLBrmOCZZXQnV
-X-Gm-Gg: ASbGncucPNKVzAlXr9FScT80rqE1CghJhGWk6tQHbgfYhWbrzCIFv5fZWyJ8x1xdk6l
-	+a9IASVOxXfN2V94UW59PR8OdQQi9QQwuTi0lD12+If+3TFY5HJxz/HUWt5SyvJyFdkyoJV+Ai8
-	4DUd2bngspu2LEvy8PWYp/aSwgJ5NZd+n9vPmYgFc3gy6rjSgvDNOLg59Y7Tzm6J0cMlhK3gLmr
-	JOLKbREK72O+bRiUpLDpCIW6GVRGvgIOf7vZiN2kpHUg4tTaVO0ziupkO25y5FdOSQIc0kvZRS8
-	6kqvtZ3JahTH75T10r2pzIKvxAUm4ObJDIVIDUlkhPbbcA3TQr+vzX1a1nZt0VZWgX2NOxGyTCA
-	O2qF6DwPHRcludA==
-X-Google-Smtp-Source: AGHT+IHdwA1GAXrHqr0CaqLrmS9BTcaxxJ7z/qilRWCbaHa1XZCD4YPJOT+hjfbsOrWmhi7GlgjXpA==
-X-Received: by 2002:a17:902:d4c9:b0:234:ed31:fc96 with SMTP id d9443c01a7336-2365da0744bmr28458085ad.26.1749795361245;
-        Thu, 12 Jun 2025 23:16:01 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea8ff7sm7094245ad.171.2025.06.12.23.15.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 23:16:00 -0700 (PDT)
-Date: Fri, 13 Jun 2025 14:15:57 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: corbet@lwn.net, colyli@kernel.org, kent.overstreet@linux.dev,
-	robertpang@google.com, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-bcache@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw, stable@vger.kernel.org
-Subject: Re: [PATCH 0/8] Fix bcache regression with equality-aware heap APIs
-Message-ID: <aEvCHUcNOe1YPv37@visitorckw-System-Product-Name>
-References: <20250610215516.1513296-1-visitorckw@gmail.com>
- <20250611184817.bf9fee25d6947a9bcf60b6f9@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0EEjyNN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B6DFC4CEE3;
+	Fri, 13 Jun 2025 06:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749795376;
+	bh=LDowsZjTisnENRW4Zn7Q4eTu221JSNSVoxDBbay443M=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=p0EEjyNNYNNUXw9BDQHuScNWevEGP3VSXiDrTR6/5rGE3V4bqZ3GKs4UpwDKeLqmN
+	 7rlQ0eJyK96vBZgdjhMTxR28pYZMQRlsydkDC7rdhB3NYiThf/34P1qTXKmnXg0ihj
+	 8DwesiLrXaLehrhfaOiJfSE5U9rYYGSHz/nMYFG8q9An7T7MpzlbB9e6mzXZv+q6aW
+	 jq1OcReKDnB9jdYu1N6ohLwmW39GERw6GYdeIcChblOOgntz3tq+TpXwEmm+ZfflsW
+	 JLd/kVOXnvFvDEZDQGwSIju7+K18kCTEN7ccvzEOhxyel6Pcfh83ydxDMiJJgb4O18
+	 RwTFvB8c4+P1Q==
+Message-ID: <749c581e-cc00-428f-8eb9-222f9d574486@kernel.org>
+Date: Fri, 13 Jun 2025 08:16:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611184817.bf9fee25d6947a9bcf60b6f9@linux-foundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v0 3/5] arm64: dts: aspeed: Add initial AST2700 SoC device
+ tree
+To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Nishanth Menon <nm@ti.com>,
+ "nfraprado@collabora.com" <nfraprado@collabora.com>,
+ Taniya Das <quic_tdas@quicinc.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Eric Biggers <ebiggers@google.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "soc@lists.linux.dev" <soc@lists.linux.dev>, Mo Elbadry
+ <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>,
+ William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>,
+ "wthai@nvidia.com" <wthai@nvidia.com>, "leohu@nvidia.com"
+ <leohu@nvidia.com>, "dkodihalli@nvidia.com" <dkodihalli@nvidia.com>,
+ "spuranik@nvidia.com" <spuranik@nvidia.com>
+References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
+ <20250612100933.3007673-4-ryan_chen@aspeedtech.com>
+ <485749d4-b3c4-4965-9714-ad534d37e8c9@kernel.org>
+ <OS8PR06MB7541A100B918AAA84D1ABDCAF277A@OS8PR06MB7541.apcprd06.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <OS8PR06MB7541A100B918AAA84D1ABDCAF277A@OS8PR06MB7541.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Andrew,
+On 13/06/2025 04:29, Ryan Chen wrote:
+>> Subject: Re: [PATCH v0 3/5] arm64: dts: aspeed: Add initial AST2700 SoC device
+>> tree
+>>
+>> On 12/06/2025 12:09, Ryan Chen wrote:
+>>> This add the initial device tree support for the ASPEED AST2700 SoC.
+>>>
+>>> - Add top-level compatible string "aspeed,ast2700" and set up
+>>> address-cells/size-cells for 64-bit address space.
+>>> - Describe a quad-core ARM Cortex-A35 CPU cluster with L2 cache,
+>>> including cache properties and PSCI enable-method.
+>>> - Add PMU and ARMv8 timer nodes with correct PPI interrupt wiring.
+>>> - Model the dual-SoC architecture with two simple-bus nodes:
+>>> soc0 (@0x10000000) and soc1 (@0x14000000).
+>>> - Add syscon nodes for both SoCs (syscon0, syscon1) with clock/reset
+>>> cell definitions and address mapping.
+>>> - Add GICv3 interrupt controller node under soc0, with full register
+>>> mapping and interrupt properties.
+>>> - Hierarchical interrupt controller structure:
+>>>   - intc0 under soc0, with child intc0_11 node.
+>>>   - intc1 under soc1, with child intc1_0~intc1_5 nodes.
+>>> - Add serial4 node under soc0, others serial node under soc1.
+>>>
+>>> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+>>> ---
+>>>  arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi | 380
+>>> ++++++++++++++++++++++
+>>>  1 file changed, 380 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
+>>>
+>>> diff --git a/arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
+>>> b/arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
+>>> new file mode 100644
+>>> index 000000000000..d197187bcf9f
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
+>>> @@ -0,0 +1,380 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-or-later #include
+>>> +<dt-bindings/clock/aspeed,ast2700-scu.h>
+>>> +#include <dt-bindings/reset/aspeed,ast2700-scu.h>
+>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +
+>>> +/ {
+>>> +	#address-cells = <2>;
+>>> +	#size-cells = <1>;
+>>> +	interrupt-parent = <&gic>;
+>>> +
+>>> +	cpus {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		cpu0: cpu@0 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a35";
+>>> +			reg = <0x0 0x0>;
+>>> +			enable-method = "psci";
+>>> +			i-cache-size = <0x8000>;
+>>> +			i-cache-line-size = <64>;
+>>> +			i-cache-sets = <256>;
+>>> +			d-cache-size = <0x8000>;
+>>> +			d-cache-line-size = <64>;
+>>> +			d-cache-sets = <128>;
+>>> +			next-level-cache = <&l2>;
+>>> +		};
+>>> +
+>>> +		cpu1: cpu@1 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a35";
+>>> +			enable-method = "psci";
+>>> +			reg = <0x0 0x1>;
+>>> +			i-cache-size = <0x8000>;
+>>> +			i-cache-line-size = <64>;
+>>> +			i-cache-sets = <256>;
+>>> +			d-cache-size = <0x8000>;
+>>> +			d-cache-line-size = <64>;
+>>> +			d-cache-sets = <128>;
+>>> +			next-level-cache = <&l2>;
+>>> +		};
+>>> +
+>>> +		cpu2: cpu@2 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a35";
+>>> +			enable-method = "psci";
+>>> +			reg = <0x0 0x2>;
+>>> +			i-cache-size = <0x8000>;
+>>> +			i-cache-line-size = <64>;
+>>> +			i-cache-sets = <256>;
+>>> +			d-cache-size = <0x8000>;
+>>> +			d-cache-line-size = <64>;
+>>> +			d-cache-sets = <128>;
+>>> +			next-level-cache = <&l2>;
+>>> +		};
+>>> +
+>>> +		cpu3: cpu@3 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a35";
+>>> +			enable-method = "psci";
+>>> +			reg = <0x0 0x3>;
+>>> +			i-cache-size = <0x8000>;
+>>> +			i-cache-line-size = <64>;
+>>> +			i-cache-sets = <256>;
+>>> +			d-cache-size = <0x8000>;
+>>> +			d-cache-line-size = <64>;
+>>> +			d-cache-sets = <128>;
+>>> +			next-level-cache = <&l2>;
+>>> +		};
+>>> +
+>>> +		l2: l2-cache0 {
+>>> +			compatible = "cache";
+>>> +			cache-level = <2>;
+>>> +			cache-unified;
+>>> +			cache-size = <0x80000>;
+>>> +			cache-line-size = <64>;
+>>> +			cache-sets = <1024>;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	arm-pmu {
+>>> +		compatible = "arm,cortex-a35-pmu";
+>>> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_HIGH)>;
+>>> +	};
+>>> +
+>>> +	psci {
+>>> +		compatible = "arm,psci-1.0";
+>>> +		method = "smc";
+>>> +	};
+>>> +
+>>> +	timer {
+>>> +		compatible = "arm,armv8-timer";
+>>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_LOW)>,
+>>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_LOW)>,
+>>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_LOW)>,
+>>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_LOW)>;
+>>> +		arm,cpu-registers-not-fw-configured;
+>>> +		always-on;
+>>> +	};
+>>> +
+>>> +	soc0: soc@10000000 {
+>>> +		compatible = "simple-bus";
+>>> +		reg = <0x0 0x10000000 0x10000000>;
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <1>;
+>>> +		ranges;
+>>> +
+>>> +		syscon0: syscon@12c02000 {
+>>> +			compatible = "aspeed,ast2700-scu0", "syscon", "simple-mfd";
+>>> +			reg = <0x0 0x12c02000 0x1000>;
+>>> +			ranges = <0x0 0x0 0 0x12c02000 0x1000>;
+>>> +			#address-cells = <2>;
+>>> +			#size-cells = <1>;
+>>> +			#clock-cells = <1>;
+>>> +			#reset-cells = <1>;
+>>> +		};
+>>> +
+>>> +		gic: interrupt-controller@12200000 {
+>>> +			compatible = "arm,gic-v3";
+>>> +			reg = <0 0x12200000 0x10000>, /* GICD */
+>>> +			      <0 0x12280000 0x80000>, /* GICR */
+>>> +			      <0 0x40440000 0x1000>;  /* GICC */
+>>> +			#interrupt-cells = <3>;
+>>> +			interrupt-controller;
+>>> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_HIGH)>;
+>>> +			interrupt-parent = <&gic>;
+>>> +		};
+>>> +
+>>> +		serial4: serial@12c1a000 {
+>>> +			compatible = "ns16550a";
+>>> +			reg = <0x0 0x12c1a000 0x1000>;
+>>> +			clocks = <&syscon0 SCU0_CLK_GATE_UART4CLK>;
+>>> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>>> +			reg-shift = <2>;
+>>> +			status = "disabled";
+>>> +		};
+>>> +	};
+>>> +
+>>> +	soc1: soc@14000000 {
+>>> +		compatible = "simple-bus";
+>>> +		reg = <0x0 0x14000000 0x10000000>;
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <1>;
+>>> +		ranges;
+>>> +
+>>> +		syscon1: syscon@14c02000 {
+>>> +			compatible = "aspeed,ast2700-scu1", "syscon", "simple-mfd";
+>>> +			reg = <0x0 0x14c02000 0x1000>;
+>>> +			ranges = <0x0 0x0 0x0 0x14c02000 0x1000>;
+>>> +			#address-cells = <2>;
+>>> +			#size-cells = <1>;
+>>> +			#clock-cells = <1>;
+>>> +			#reset-cells = <1>;
+>>> +		};
+>>> +
+>>> +		serial12: serial@14c33b00 {
+>>> +			compatible = "ns16550a";
+>>> +			reg = <0x0 0x14c33b00 0x100>;
+>>> +			clocks = <&syscon1 SCU1_CLK_GATE_UART12CLK>;
+>>> +			interrupts-extended =
+>>> +				<&intc1_4 18 (GIC_CPU_MASK_SIMPLE(4) |
+>> IRQ_TYPE_LEVEL_HIGH)>;
+>>> +			reg-shift = <2>;
+>>> +			status = "disabled";
+>>> +		};
+>>> +	};
+>>> +};
+>>> +
+>>> +&soc0 {
+>>
+>> This is the base DTSI, there is no existing node to override. Just define
+>> complete SoC node in one place like every other vendor.
+> 
+> My original is use this way, but when I do checkpatch, get
+> CHECK: line length of 106 exceeds 100 columns.
+> interrupts = <GIC_SPI 192 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> That the reason modify by this way.
 
-On Wed, Jun 11, 2025 at 06:48:17PM -0700, Andrew Morton wrote:
-> On Wed, 11 Jun 2025 05:55:08 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
-> 
-> > This patch series introduces equality-aware variants of the min heap
-> > API that use a top-down heapify strategy to improve performance when
-> > many elements are equal under the comparison function. It also updates
-> > the documentation accordingly and modifies bcache to use the new APIs
-> > to fix a performance regression caused by the switch to the generic min
-> > heap library.
-> > 
-> > In particular, invalidate_buckets_lru() in bcache suffered from
-> > increased comparison overhead due to the bottom-up strategy introduced
-> > in commit 866898efbb25 ("bcache: remove heap-related macros and switch
-> > to generic min_heap"). The regression is addressed by switching to the
-> > equality-aware variants and using the inline versions to avoid function
-> > call overhead in this hot path.
-> > 
-> > Cc: stable@vger.kernel.org
-> 
-> To justify a -stable backport this performance regression would need to
-> have a pretty significant impact upon real-world userspace.  Especially
-> as the patchset is large.
-> 
-> Unfortunately the changelog provides no indication of the magnitude of
-> the userspace impact.   Please tell us this, in detail.
-> 
-I'll work with Robert to provide a more detailed explanation of the
-real-world impact on userspace.
-
-> Also, if we are to address this regression in -stable kernels then
-> reverting 866898efbb25 is an obvious way - it is far far safer.  So
-> please also tell us why the proposed patchset is a better way for us to
-> go.
-> 
-I agree that reverting 866898efbb25 is a much safer and smaller change
-for backporting. In fact, I previously raised the discussion of whether
-we should revert the commit or instead introduce an equality-aware API
-and use it. The bcache maintainer preferred the latter, and I also
-believe that it is a more forward-looking approach. Given that bcache
-has run into this issue, it's likely that other users with similar use
-cases may encounter it as well. We wouldn't want those users to
-continue relying on the current default heapify behavior. So, although
-reverting may be more suitable for stable in isolation, adding an
-equality-aware API could better serve a broader set of use cases going
-forward.
-
-> (Also, each patch should have a fixes:866898efbb25 to help direct the
-> backporting efforts)
-> 
-Ack. Will do.
+Look how other recent, most developed platforms do it and learn from
+them instead of coming with own, confusing style.
 
 > 
-> I'll add the patches to mm.git to get you some testing but from what
-> I'm presently seeing the -stable backporting would be unwise.
+>>
+>>
+>>> +	intc0: interrupt-controller@12100000 {
+>>> +		compatible = "simple-mfd";
+>>
+>> NAK, never tested.
+>>
+>> Not allowed, see bindings. And test it next time.
+> 
+> Got it, will update by following. 
+> Intc0: bus@12100000 {
+>         compatible = "simple-bus";
+>         #address-cells = <2>;
+>         #size-cells = <1>;
+>         reg = <0 0x12100000 0x4000>;
+> 		ranges = <0x0 0x0 0x0 0x12100000 0x4000>;
+> 		#address-cells = <2>;
 
-Thanks!
+Does not follow DTS coding style and anyway, what sort of bus is this?
 
-Regards,
-Kuan-Wei
+
+
+Best regards,
+Krzysztof
