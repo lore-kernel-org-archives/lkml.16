@@ -1,100 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87550230269;
-	Fri, 13 Jun 2025 13:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71552293C43;
+	Fri, 13 Jun 2025 13:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823016; cv=none; b=Wr1j7k/RqLcbuGAkBVS3Z2NE2IwxUg5PyARKdaa862DVYSdvBql5SH2YhQ+7faCSfsattgVaxy8OtDxIBoSgie/XDwqafjZsHGqPiTvbJ2PTiogNWwM6MRM3y0g6QxLkcDFKXccIh8MA9eHrbOlDm5C0wPqMsdFNJcUgTBgJlAQ=
+	t=1749823040; cv=none; b=VZM35EFG0XnG6KdEEoM7oNLAXaVFP6hmRhNXhj7dYpjjdWODkCtDPY3/zOqX5TSzKGGikP4nwA6sbRwocEv0WTECK3zKtoJuWfpAbvATnJ6zuGUnRISyA+8KJ3/8j+sXDTyxRaeWwrWIXZfSuCrIbYCIfJ5BpZwLqQds4LJ/XIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823016; c=relaxed/simple;
-	bh=pqqmjyCXZZ0bEvnRtKy6568CVn9/zn32/fe0b6yqKC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C2iS4Ggy3RY5+bt7cXuthQ2UWHHKHqEEP2OAuyy8cN4msONVNkFD5tYlIKqiahpC3ztE+veTLI0PGIIPwpxmqBkiYyqrs+HO8d8OsNsgQkejY74qJu0TODFCMay6o2BgqkRNrykkrFjkaX4v++6mlTWnJ18Q3UlpUU6GhIfhCJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlxRmIjY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749823040; c=relaxed/simple;
+	bh=Ap3YfoMrAAPUvNenAlN6PgDCXyKScfqGCsqAZOV8aE0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U/fQmeEAfRyLsVSbHtUl/hzEe6MQi9c4RK+MJhJL/ygDqHqH+CeI5+0SXPlJrMAsZF6PwKBYLso/VSUmWGmSV34wT7horJnlr9BDDp4XyaPLNjh3zVnZ1ERdTLqeFhOB9PmznrQ59QtBqaEFrjSy+2feg0PQs0Tuxukumt8jvfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0YJdYSB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlxRmIjY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EBAC4CEE3;
-	Fri, 13 Jun 2025 13:56:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0YJdYSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F558C4CEEF;
+	Fri, 13 Jun 2025 13:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749823014;
-	bh=pqqmjyCXZZ0bEvnRtKy6568CVn9/zn32/fe0b6yqKC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NlxRmIjYsxLlWlVIWgNP7RRNrSkRqTKfFh/RLjujROKF6mKVxyQsz+XuWmJvrz6ww
-	 /7D1xAe3+yACbp2doBMAMgBgcJfwyVFHeqn8W9glY8HfjGzDIjNBzACI0YRE0wjP9C
-	 INZM/a6uriaYJZolYujPy9DtsB8eFHnNcVQKkuYZXKfWgZA1YMarj02FZ5KpuciU0l
-	 dpRqIyS5oZIl7neYdJhyjByzJSmbR7oztkGtEtOmuTeFlonuKTBDzGhgeSwrUrxohv
-	 UmVNVEVRr0mcR1GF8XkRRsdUkmL50myUrUTBG5cWLed6pXiFMQ6Cqwjy/kPISwd3fz
-	 8IxM9cEEqc3mQ==
-Date: Fri, 13 Jun 2025 19:26:46 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: grwhyte@linux.microsoft.com, linux-pci@vger.kernel.org, 
-	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
-Message-ID: <g6azpscddqx4kqnpoy3lrfsczfjnn2hev2q5qzuwdi62wmipr2@rhzi3av3n4ab>
-References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
- <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
- <aEwrfy63cvBLr5yc@wunner.de>
+	s=k20201202; t=1749823040;
+	bh=Ap3YfoMrAAPUvNenAlN6PgDCXyKScfqGCsqAZOV8aE0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=f0YJdYSBM0NhkuR+ilaaiG+/5suEAkg6qQuSWwqD3/t3vGt6i6iY6Jy80l2nyrq0+
+	 ffodXlfZP5yW3t0K9NdkZ/3yYqP7rsy6xkOWF8lOIhHT1nlzwziFnL3v8Feefxc/JS
+	 pxr+pksRSwTJ4ujPRXd0aGwlC5yq0ktpox+/ynb2N4PLfyYzfkAySNAg8R08EjUJDX
+	 SNz0+U2Heyh40/Uru2pNo4yoNuXLvnN6L8ttdcqbXx6FW5inZpl5tgaocbCx94IxKe
+	 RSm3rk9bRz/y5BGo5U+alYKWtttJ8B2MT7IRoo/HmAcCf9Es2ZMStJZox7i7jksnwl
+	 4ooZuaNqRwMiA==
+From: Lee Jones <lee@kernel.org>
+To: linux-kernel@vger.kernel.org, 
+ Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc: michael@amarulasolutions.com, Frank Li <Frank.Li@nxp.com>, 
+ linux-amarula@amarulasolutions.com, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20250530160748.2476088-2-dario.binacchi@amarulasolutions.com>
+References: <20250530160748.2476088-1-dario.binacchi@amarulasolutions.com>
+ <20250530160748.2476088-2-dario.binacchi@amarulasolutions.com>
+Subject: Re: (subset) [PATCH v5 1/6] dt-bindings: mfd: convert mxs-lradc
+ bindings to json-schema
+Message-Id: <174982303687.920028.789914432686351362.b4-ty@kernel.org>
+Date: Fri, 13 Jun 2025 14:57:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEwrfy63cvBLr5yc@wunner.de>
+X-Mailer: b4 0.15-dev-459a0
 
-On Fri, Jun 13, 2025 at 03:45:35PM +0200, Lukas Wunner wrote:
-> On Fri, Jun 13, 2025 at 05:12:48PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
-> > > Add a new flr_delay member of the pci_dev struct to allow customization of
-> > > the delay after FLR for devices that do not support immediate readiness
-> > > or readiness time reporting. The main scenario this addresses is VF
-> > > removal and rescan during runtime repairs and driver updates, which,
-> > > if fixed to 100ms, introduces significant delays across multiple VFs.
-> > > These delays are unnecessary for devices that complete the FLR well
-> > > within this timeframe.
-> > > 
-> > 
-> > I don't think it is acceptable to *reduce* the standard delay just
-> > because your device completes it more quickly. Proper way to reduce
-> > the timing would be to support FRS as you said, but we cannot have
-> > arbitrary delays for random devices.
+On Fri, 30 May 2025 18:07:32 +0200, Dario Binacchi wrote:
+> Convert the Freescale MXS Low-Resoulution ADC (LRADC) device tree
+> binding documentation to json-schema.
 > 
-> To be fair, we already have that for certain devices:
+> The clocks and #io-channel-cells properties have also been added; They
+> are present in the respective SoC DTSI files but were missing from the
+> old mxs-lradc.txt file.
 > 
-> The quirk delay_250ms_after_flr() is referenced by three different
-> Vendor ID / Device ID combos and *lengthens* the delay after FLR.
-> 
+> [...]
 
-This quirk is fine as it works around an issue in the device. But this patch is
-not fixing/working around an issue in the device, but rather optimizing the
-delay for performance, which is not what quirks are used for AFAIK.
+Applied, thanks!
 
-> It's probably difficult to justify rejecting custom delays for
-> certain MANA devices, even though we allowed them for three other
-> devices.
-> 
+[1/6] dt-bindings: mfd: convert mxs-lradc bindings to json-schema
+      commit: e528f715cd30110137fb4830eceea6c817285163
 
-If the MANA devices require extended delay, then a quirk indeed makes sense.
-But it is the other way around.
+--
+Lee Jones [李琼斯]
 
-> The proposed patch introduces a generic solution which avoids
-> further cluttering up pci_dev_reset_methods[] with extra entries,
-> so I think it's an approach worth considering.
-> 
-> There are a bunch of nits in the proposed patches, such as "pci"
-> not being capitalized, but the general approach seems fine to me.
-> 
-
-I honestly don't know if there is any other way to handle this. So I think it is
-upto Bjorn to take a call.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
