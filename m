@@ -1,129 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF82D2853E0;
-	Fri, 13 Jun 2025 22:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85D723C4F8
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749852593; cv=none; b=Ez7lG5yooQUeCovDZgfLbLj+qWl9vWn3SQePcCuefUv6D25vQhkZYiL9ch/rmUWTUzR1iKMxN23wVwkgtholkAV//Reu0owVre6DxSOWJ1OxTkTxgBezN/EzDJ+LVORRaJgWgGptWHdEGzCOegm1ZNduYTqykxwondRgpWjLB6Y=
+	t=1749853187; cv=none; b=bnYwPSBdUzU1Wnwh+1qI0nRBepE5DAdzpfmbgrSxzulxjCzm9tFYKGF0gbnX6rDhlKxILTjtLRZCZWiv9w/PRvGNq+4QfNmycCJaods9JfkF1C/C04j4ZEHTPpn1u7sMfIzxKJbcI0XTqQiFrzwFRrGf2OPU48U7OvMoFcUxO+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749852593; c=relaxed/simple;
-	bh=+lWOBO1C6Ko1Y9qFO+NUe+Lqz7c5PErCb0ymzfE96bU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kx1DbUy4zJWmikQey89/o+klvnsOig1VRPJg3CefA9xhAA1VntK2F+kg1Z38FakNelwNnDidT6Wn+E0uKTfv4UqIo0FOHGIgbPWfuT7LLjtYtlr6VAuA0ci4ajuPYbdW/hG2K++HVntnJ3M+z+FDiYujetTCdfDxhSOvU3EnsN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4GYnoBu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749853187; c=relaxed/simple;
+	bh=lGoDVzvZHtKjCoMFQ206RusFiNUukA7uRfeTM6a8MWo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=bBeva59XRvHlQtxXiGTlnN1tX4AnmWK1UKcZrWFcGMI1MFa+hOEsy53f5QEVyB2G4Am/LUTfW5FPu2wHcyol5RK8llExEvhMyVlHuWpSiJJctzUP3aT7PL7o/mwwayXs3lSQ1zQgDRO9TE51zQitr0Mz2lWpS5hrn1l0FXKphWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MmXk1Wul; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4GYnoBu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343C8C4CEE3;
-	Fri, 13 Jun 2025 22:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749852592;
-	bh=+lWOBO1C6Ko1Y9qFO+NUe+Lqz7c5PErCb0ymzfE96bU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=K4GYnoBuUU7GRDMarwe1/9S8m5ynn8y2ddttEsbhgGPWw/1qgZBi+EDVzH34hmSvg
-	 o2dBA7ZUrn66g1aKUGxCsktUwPmdItLyhG7uxGHn4IR/jXKB7GBdTTEEmtSycOu/HQ
-	 UwpSlFrXPCyBL7KFa819HIVnFxTfIPlimCX7TGKdFtvVkV0JCh8pq7dgmTezSM5pkZ
-	 cuXM6s71cV99ASx7Kc8h2VHLIADDYQRKkoA0TNCYqBoT99Opc0zgt4IIMvIi/54Yhe
-	 XWuWTUA4sUo5xwamWnQGGWagq6VImg+wA6VpCAI6RFcHa02B1mYrabOo3em82vsC6q
-	 S9iO9ZBgYR4mQ==
-Date: Fri, 13 Jun 2025 17:09:50 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ammar Qadri <ammarq@google.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Reduce verbosity of device enable messages
-Message-ID: <20250613220950.GA986935@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MmXk1Wul"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235e1d70d67so22868155ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749853185; x=1750457985; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=42AUdUBGNQTAFRrD0wAu6CzQXCkmh1XLsLi6b5Aht+k=;
+        b=MmXk1Wul0PmVd4ZueFYvuSydyu+r5vgFuzmB+/1nYa41k5C16NYgezOxpnKosYWFYm
+         G0rdBR7S8o4nNa0sgXYP0MYRkfktX1MaPzAy/lA4AxOydImMi0QJ1LISojUfPZwN8YIF
+         S88X6LJBvDqbDT1VfCNHwiwL+yS4nplBHEtHEK88STAElfATwNlFgqqQld+Fsbr6j+hj
+         RyrEKA9P7z0Fjh2lZ0hESoDRwi55WeYl/TPxqBn/wfoEjYXKgq1veJsurbrk+Tv9ePT+
+         C+GjD2xWxw6arSzoTT1a0WWCo58gFSX0b4zvF625Y8ImVeEEBfsoxjhISsLn2mGYLDvH
+         4ckQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749853185; x=1750457985;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=42AUdUBGNQTAFRrD0wAu6CzQXCkmh1XLsLi6b5Aht+k=;
+        b=L8GW83oDfpFFqilxy779J10zzCZzWe+3l7Qwzc5vUzs2w0ULzcjF0dkJuQfnoj176t
+         UB/rS9LRVvDFjufMgQTXwT/3e3nEmM07iEd+QuX5YqjHxqAgeiQ3IntaFHuBJVut6sb+
+         3IiHoIFmQxUMOqht2Ezo6KIGwjXjtLItSU4/YlU+7UvbARM7IiwvJ1S0sTJ18064TJN1
+         /UpkQmUVVE9OHDLSc37Iwcjz/nYmSQ7PMZ3bnD10oY/B49bBcIUjq5sKEvblLobZEEXP
+         OXQFm+9vBb4IistOwD5XmwyD3Av328S/+LDwS4iSE2NrK0I6Z0PeWD7GNmk9jL5PF7UF
+         veMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfhedzFSC3+v/WeZBukafhmlLAF9806eJFnTSOMO8TWI4H+cg92ar7oqgQjfct4tbA0+bbep3fIe7tuBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynJ5tK4aRzs0yN9gdy5mDUlBP7AUaNba0icZT0BB/EX+QomAlh
+	oPUF+jtAeVAk9zt4BkVyakvKUYAAvFGR1u8aKFPyMjiR17zFERr2qAGk0pyoITntlpqrsn+Rqkm
+	/H6NA6g==
+X-Google-Smtp-Source: AGHT+IE1Pe0RJu4cqLiBIYibBuLTbUdnctxXUYFVnTNR3P30eWn3CrihLdjtpSzgcLHep2PJ7XxCHCYjSUY=
+X-Received: from pjbsg10.prod.google.com ([2002:a17:90b:520a:b0:313:1c10:3595])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce8a:b0:234:d10d:9f9f
+ with SMTP id d9443c01a7336-2366b14e571mr16937145ad.40.1749853185010; Fri, 13
+ Jun 2025 15:19:45 -0700 (PDT)
+Date: Fri, 13 Jun 2025 15:19:43 -0700
+In-Reply-To: <cbee132077fd59f181d1fc19670b72a51f2d9fa1.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFbbpayW+y8s3i4qxzHcoY0Yz5qeAhb7ziey=FayDiZbC_mm7w@mail.gmail.com>
+Mime-Version: 1.0
+References: <aCxMtjuvYHk2oWbc@yzhao56-desk.sh.intel.com> <119e40ecb68a55bdf210377d98021683b7bda8e3.camel@intel.com>
+ <aEmVa0YjUIRKvyNy@google.com> <f001881a152772b623ff9d3bb6ca5b2f72034db9.camel@intel.com>
+ <aEtumIYPJSV49_jL@google.com> <d9bf81fc03cb0d92fc0956c6a49ff695d6b2d1ad.camel@intel.com>
+ <aEt0ZxzvXngfplmN@google.com> <4737093ef45856b7c1c36398ee3d417d2a636c0c.camel@intel.com>
+ <aEt/ohRVsdjKuqFp@yzhao56-desk.sh.intel.com> <cbee132077fd59f181d1fc19670b72a51f2d9fa1.camel@intel.com>
+Message-ID: <aEyj_5WoC-01SPsV@google.com>
+Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is RUNNABLE
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Yan Y Zhao <yan.y.zhao@intel.com>, Fan Du <fan.du@intel.com>, 
+	Xiaoyao Li <xiaoyao.li@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, Dave Hansen <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, Zhiquan1 Li <zhiquan1.li@intel.com>, 
+	Kirill Shutemov <kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chao P Peng <chao.p.peng@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	Vishal Annapurve <vannapurve@google.com>, "tabba@google.com" <tabba@google.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, Jun Miao <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 02:40:40PM -0700, Ammar Qadri wrote:
-> Hi Mani,
-> 
-> The issue we are experiencing is not caused from
-> removing/reattaching the device driver, so the other messages have
-> not been problematic.
-> 
-> The vfio-pci driver is attached to each VF once. Clients in our
-> system call open and close on the vfio-pci driver, respectively, at
-> the start and end of their use, with fairly short-term tenancy,
-> which ends up triggering these enable messages.  This message is
-> proving challenging not only because they are not particularly
-> useful,  but because they are causing log files to rotate once every
-> 30 minutes or so, and we lose a lot of other more valuable logging
-> as a consequence.  I'm open to other solutions, but in my opinion
-> this preserves the message, without over-engineering and introducing
-> throttling or other behaviour.
+On Fri, Jun 13, 2025, Rick P Edgecombe wrote:
+> On Fri, 2025-06-13 at 09:32 +0800, Yan Zhao wrote:
+> > > > Eww, no.=C2=A0 Having to react on _every_ EPT violation would be an=
+noying,
+> > > > and trying to debug issues where the guest is mixing options would
+> > > > probably be a nightmare.
+> > > >=20
+> > > > I was thinking of something along the lines of an init-time or
+> > > > boot-time opt- in.
+> > >=20
+> > > Fair.
+> >=20
+> > Agreed.
+>=20
+> Arg, I just realized a one-way opt-in will have a theoretical gap. If the=
+ guest
+> kexec's, the new kernel will need to match the opt-in.
 
-Are there any other messages associated with the open/close?  I assume
-probably not, or you would want to demote those as well.
+All the more reason to make this a property of the VM that is passed via
+"struct td_params".  I.e. put the onus on the owner of the VM to ensure the=
+ir
+kernel(s) have been updated accordingly.
 
-I did happen to find some value in this particular message just the
-other day because it showed that a config read was successful after
-previous ones had failed.
+I understand that this could be painful, but honestly _all_ of TDX and SNP =
+is
+painful for the guest.  E.g. I don't think it's any worse than the security
+issues with TDX (and SNP) guests using kvmclock (which I'd love some review=
+s on,
+btw).
 
-But I agree in general that it's fairly low value and at least the
-uninterpreted "%04x -> %04x" part is not really user-friendly.
-
-If people think there's enough value in retaining it at KERN_INFO, I
-suppose there's always the option of carrying an out-of-tree patch to
-demote it?
-
-> On Thu, Jun 12, 2025 at 11:12 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Wed, May 07, 2025 at 11:29:19PM +0000, Ammar Qadri wrote:
-> > > Excessive logging of PCIe device enable operations can create significant
-> > > noise in system logs, especially in environments with a high number of
-> > > such devices, especially VFs.
-> > >
-> > > High-rate logging can cause log files to rotate too quickly, losing
-> > > valuable information from other system components.This commit addresses
-> > > this issue by downgrading the logging level of "enabling device" messages
-> > > from `info` to `dbg`.
-> > >
-> >
-> > While I generally prefer reduced verbosity of the device drivers, demoting an
-> > existing log to debug might surprise users. Especially in this case, the message
-> > is widely used to identify the enablement of a PCI device. So I don't think it
-> > is a good idea to demote it to a debug log.
-> >
-> > But I'm surprised that this single message is creating much overhead in the
-> > logging. I understand that you might have 100s of VFs in cloud environments, but
-> > when a VF is added, a bunch of other messages would also get printed (resource,
-> > IRQ, device driver etc...). Or you considered that this message is not that
-> > important compared to the rest?
-> >
-> > - Mani
-> >
-> > > Signed-off-by: Ammar Qadri <ammarq@google.com>
-> > > ---
-> > >  drivers/pci/setup-res.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> > > index c6657cdd06f67..be669ff6ca240 100644
-> > > --- a/drivers/pci/setup-res.c
-> > > +++ b/drivers/pci/setup-res.c
-> > > @@ -516,7 +516,7 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
-> > >       }
-> > >
-> > >       if (cmd != old_cmd) {
-> > > -             pci_info(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
-> > > +             pci_dbg(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
-> > >               pci_write_config_word(dev, PCI_COMMAND, cmd);
-> > >       }
-> > >       return 0;
-> > > --
-> > > 2.49.0.987.g0cc8ee98dc-goog
-> > >
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
+https://lore.kernel.org/all/20250227021855.3257188-35-seanjc@google.com
