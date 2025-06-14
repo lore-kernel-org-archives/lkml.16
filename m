@@ -1,135 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F97BA33;
-	Sat, 14 Jun 2025 00:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459B0566A
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749861226; cv=none; b=b47M6ETRnNDBNh6nS8VrNC3SAErAiiuSKtrlHcIpi0AF8Qy4E7du/vwxIEXaZFspVE916wADqNIYiFnRsZwgilzzmn7xC3f5QfjJ7uXJd7TWNl4CuEb/Kgf7vgUjOzqvJazpiTILX/a3oieWeHpQVLf4pOeF9HIwonaS6Td//as=
+	t=1749861371; cv=none; b=itD0enx23gdfQ9BwxyXNdUrseH/mw+dGaukEHHtdVXa9rH3OjqEEzYgrH6Raq8Ju6yg4amy4nYOiONtrN7PVvkUmkz9ievTBEfVZ9AUhXPJoSrxBOcDP23GCp1oLlT8zIqxxHQVdWMin4Y8M9cZkfUR9lvXhKD1BMKpIAVL7t3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749861226; c=relaxed/simple;
-	bh=Amvs3Luk2aA4Ri+Z+WtskuRg9fDppnYMUjoOrkGgVbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d3snAuUbSKMS1R0AoxenyRfHo0TuwVIHiuyzhrYgTvWr7FK1SecielaSrEY+MRzlYjDBw9QuM2NlQOqbb/FHDfmiyFoXyNsA07DZr9oYP16Y747JoIxoA1EqlKr7Yl1hkw8ucmxkir6uIgbmq1IT6XBIsRtY2LpecJaVltbB4Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NxBxlxoE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749861371; c=relaxed/simple;
+	bh=V3gKkZyJoVLU65p1MmuPCnNPvMxWcutqGk8WIWwz7m8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fHacH7/44IYRZImkCIQcHtOZcpO8J2OJ5BmygT2jFf7ocAnHhtt4/lZOHTWnYjvcd/ZODR0cSKHEoST96XWHLtcoo5mnfgm+9quyScaIM+eWmPEqoT2/YbQFaaEVFVpSsda9Lulo3UjJOCOUhEVBb82aRyWtRQEJF9mhQLK8dtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4y9B6t6Q; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NxBxlxoE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01892C4CEE3;
-	Sat, 14 Jun 2025 00:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749861225;
-	bh=Amvs3Luk2aA4Ri+Z+WtskuRg9fDppnYMUjoOrkGgVbQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NxBxlxoElxULFRktcPXheHA+ZhwM+HzsqYZuX8z6zB4t0Qp58HcLUeFpynStULZ5g
-	 atUcGPqdRjW5wBbIB5kZzC+VenLzfG0+GpZfTg1E7SQz2YpgtagjcgPAYVb1Dc3VFd
-	 BU9RlTRfzh1DUOz+sGA0BHjgXYvgF6INszYDq6dg=
-Date: Fri, 13 Jun 2025 20:33:42 -0400
-From: Greg KH <gregkh@linuxfoundation.org>
-To: marc.herbert@linux.intel.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>, rafael.j.wysocki@intel.com,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
- faux_device_destroy()
-Message-ID: <2025061313-theater-surrender-944c@gregkh>
-References: <20250613191556.4184103-1-marc.herbert@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4y9B6t6Q"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748269c6516so2235553b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749861369; x=1750466169; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LsGNwzjJybqThQOT8fD0kBJYces/xSpMR2ULC69ZMTA=;
+        b=4y9B6t6Q9QRB+bX6ChsQ1onqtRetAZofIy8BLMZl4Upr6sUjmbho4FkxxSzTX8L7UV
+         Pqho483hAUA2HXab6BO84FraPAPaNpox8LgvA1bdlhdZT3gTclHPcD/6jgh3NRFSTDDd
+         HGUPlwMEeoMuNZTIzYNzhl7wTE9mdNKuhkBRkRyYktJ13yHM1H7im8EhWkXICGJOmHrv
+         LAhh/ICS+OBtcUrKzW+Yp79IwC9wGHZlUqDzZZA/nWZgs+GJavGPhV+Gv1BipYZv4wbK
+         H8dDjuEIvJuZzh8Zcf8gD/GQ1aMCZQqeWXUMn7W4jckDkSu6Oan91MB035Ll6fm11ieI
+         MdAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749861369; x=1750466169;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LsGNwzjJybqThQOT8fD0kBJYces/xSpMR2ULC69ZMTA=;
+        b=btJYD+A+YBShsxHieMpzZ5kxDy/V8LFUfYKg4XQDbWszYGcHCMkVTEEQdX0SP6BL5w
+         eBsCrwX0ya9iGqUSMZiKgoAe/6dBK7ihZquTTRUAMvVR9QZxpevKsL6HY8IUP8EqMl+c
+         NobpZmB+Wg4c3EFBKh4mOBzOAbcZ73cBVswKBxnlcuhzJHHikTjkAn1ZdGwbVt2jRnSr
+         LrfZ44DOiGFdRaGUw5yw5Rmk+7xY7U5WhGdYKfURzbjNTRABenmAZqisVyxUxSRWFgbf
+         Qx9K1kEMcubripnjfbrV1Mdn4ih+OrHA+mXc6/KKzXFAKM7pMxK6qGD5HnIuQlQBiyXB
+         lKnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtZFagbL/oAMM4C9Afc+ta8cc9U7eRzMemLDfmifgNvfUnmRm6jIE5PIlib7BcfqPzX28H2aflDQhkHd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIhUXZK66FSyT19ecC5yVJV6yCMQJmsovFSj32U5rL97cQIvzJ
+	0Sr49Qys8SAe+HrIiyEJaqfMQLXikdh030tWg5Nl+vhPJyEJPtVIP9LZQ+5AxPd5Vrxu5j9u6Y7
+	y0TYBaUqdCw==
+X-Google-Smtp-Source: AGHT+IHqLoqmlxmqsh8euk0ITwAFXpQgXFZ8FKMEePf+KFc9sgQ9UBMVfeleItXZeZXM4tzmvg+uVOzwHQRt
+X-Received: from pfbef24.prod.google.com ([2002:a05:6a00:2c98:b0:746:223d:ebdc])
+ (user=pmalani job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:230d:b0:742:a7e3:7c84
+ with SMTP id d2e1a72fcca58-7489cf97bf8mr1624147b3a.13.1749861369622; Fri, 13
+ Jun 2025 17:36:09 -0700 (PDT)
+Date: Sat, 14 Jun 2025 00:35:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613191556.4184103-1-marc.herbert@linux.intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250614003601.1600784-1-pmalani@google.com>
+Subject: [PATCH] cpufreq: CPPC: Dont read counters for idle CPUs
+From: Prashant Malani <pmalani@google.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Prashant Malani <pmalani@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 07:15:56PM +0000, marc.herbert@linux.intel.com wrote:
-> From: Marc Herbert <marc.herbert@linux.intel.com>
-> 
-> Fixes undefined behavior that was spotted by Jonathan Cameron in
-> https://lore.kernel.org/linux-cxl/20250609170509.00003625@huawei.com/
-> 
-> The possible consequences of the undefined behavior fixed here are fairly
-> well documented across the Internet but to save research time and avoid
-> doubts, I include a very short and simple demo below. I imagine kernel
-> compilation flags and various other conditions may not make the
-> consequences as bad as this example, however those conditions could change
-> and this type of code is still Undefined Behavior no matter what.
-> One of the best articles - there are many others:
-> https://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html
-> 
-> Since commit b5ec6fd286dfa4 ("kbuild: Drop -Wdeclaration-after-statement"),
-> it's now possible to use C99 declarations; the kernel is not constrained
-> anymore to group all declarations at the top of a block like single-pass
-> compilers used to require. This allows combining declarations and
-> definitions in one place - like literally every other language and project
-> does - and trivially fix undefined behavior like this.  This also reduces
-> variable scope and avoids misuse between declaration and definition like
-> uninitialized reads or writing to the wrong variable by mistake. C99
-> declarations also allow using a lot more `const` (the default in some
-> languages) which avoids some misuse after legitimate use.
-> tl;dr: C99 declarations are not just a "codestyle" or "taste" issue;
-> they are an important (and not mandatory) feature.
-> 
-> cc --version
->   cc (GCC) 15.1.1 20250425
-> 
-> for i in 0 1 2 g; do printf "gcc -O$i: "; gcc -O$i nullptrUB.c &&
->    ./a.out; done
-> 
-> gcc -O0: Segmentation fault (core dumped)
-> gcc -O1: ptr is zero
-> gcc -O2: ptr is NOT zero!!!
-> gcc -O3: ptr is NOT zero!!!
-> gcc -Og: ptr is zero
-> 
-> clang --version
->   clang version 19.1.7
-> 
-> clang -O0: Segmentation fault (core dumped)
-> clang -O1: ptr is NOT zero!!!
-> clang -O2: ptr is NOT zero!!!
-> clang -O3: ptr is NOT zero!!!
-> clang -Og: ptr is NOT zero!!!
-> 
-> int faux_device_destroy(int *ptr)
-> {
->   int i = *ptr;  i++;
-> 
->   // Because we dereferenced ptr, the compiler knows the pointer cannot
->   // be null (even when it is!) and can optimize this away.
->   if (!ptr) {
->     printf("ptr is zero\n");
->     return 0;
->   }
-> 
->   printf("ptr is NOT zero!!!\n");
->   return 1;
-> }
-> 
-> int main()
-> {
->   struct timespec t1, t2;
->   clock_gettime(CLOCK_MONOTONIC, &t1);
->   clock_gettime(CLOCK_MONOTONIC, &t2);
-> 
->   // Use the clock to hide zero from the compiler
->   int * zeroptr = (int *)(t2.tv_sec - t1.tv_sec);
-> 
->   return faux_device_destroy(zeroptr);
-> }
-> 
-> Fixes: 35fa2d88ca94 ("driver core: add a faux bus for use when a simple device/bus is needed")
-> Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
+AMU performance counters tend to be inaccurate when measured on idle CPUs.
+On an idle CPU which is programmed to 3.4 GHz (verified through firmware),
+here is a measurement and calculation of operating frequency:
 
-Great writeup, but as Miguel says, this isn't needed at all, the kernel
-relies on the compiler to be sane :)
+t0: ref=3D899127636, del=3D3012458473
+t1: ref=3D899129626, del=3D3012466509
+perf=3D40
 
-thanks,
+For reference, when we measure the same CPU with stress-ng running, we have
+a more accurate result:
+t0: ref=3D30751756418, del=3D104490567689
+t1: ref=3D30751760628, del=3D104490582296
+perf=3D34
 
-greg k-h
+(t0 and t1 are 2 microseconds apart)
+
+In the above, the prescribed method[1] of calculating frequency from CPPC
+counters was used.
+
+The follow-on effect is that the inaccurate frequency is stashed in the
+cpufreq policy struct when the CPU is brought online. Since CPUs are mostly
+idle when they are brought online, this means cpufreq has an inaccurate
+view of the programmed clock rate.
+
+Consequently, if userspace tries to actually set the frequency to the
+previously erroneous rate (4 GHz in the above example), cpufreq returns
+early without calling in to the CPPC driver to send the relevant PCC
+command; it thinks the CPU is already at that frequency.
+
+Update the CPPC get_rate() code to skip sampling counters if we know a CPU
+is idle, and go directly to the fallback response of returning the
+=E2=80=9Cdesired=E2=80=9D frequency. The code intends to do that anyway if =
+the counters
+happen to return an =E2=80=9Cidle=E2=80=9D reading.
+
+[1] https://docs.kernel.org/admin-guide/acpi/cppc_sysfs.html#computing-aver=
+age-delivered-performance
+
+Signed-off-by: Prashant Malani <pmalani@google.com>
+---
+ drivers/cpufreq/cppc_cpufreq.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.=
+c
+index b7c688a5659c..9bc2546fb4a7 100644
+--- a/drivers/cpufreq/cppc_cpufreq.c
++++ b/drivers/cpufreq/cppc_cpufreq.c
+@@ -753,6 +753,10 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int=
+ cpu)
+=20
+ 	cpufreq_cpu_put(policy);
+=20
++	/* Idle CPUs have unreliable counters, so skip to the end. */
++	if (idle_cpu(cpu))
++		goto out_invalid_counters;
++
+ 	ret =3D cppc_get_perf_ctrs_sample(cpu, &fb_ctrs_t0, &fb_ctrs_t1);
+ 	if (ret) {
+ 		if (ret =3D=3D -EFAULT)
+--=20
+2.50.0.rc1.591.g9c95f17f64-goog
+
