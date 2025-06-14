@@ -1,105 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F251F1531;
-	Sat, 14 Jun 2025 11:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D372C08D0
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749901227; cv=none; b=Gm4x3Km18ZT3UJkqnadPoMTYBLxWRYI9VFG8zzQmNwt0nJyvCeV3R96Jx3dZDOUoRss/V2Zw9GUun8ikDSnnGIeasm6j+IUwmvnoWcQ8zdjayHBudprQYz2ub6pjUEdNVTKqoBRDUMSPFAEJpve7LeQIlIeYiSGTFRzLoFFKA0k=
+	t=1749901241; cv=none; b=tc6iwoVZFvBXkR3BtMduYZI4I8h/URAKQljdabxAdWpxSmySdzKkp/Jij+Icvr21vGGEZ6o7O7kro1GceRDVPRL7QCEIRs9FFUzVpzQWp2Vitq1bfll2nK4NXBo/Pwj8U+NhXbbtK9IhfKFd3DvykZAxWgvPDXleYS1TdXaEaz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749901227; c=relaxed/simple;
-	bh=6My9Wlirf2exQSKlnTmP3+KTjTBj/UNq/AL2IrRVC7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fgl8v1jWz90BipF+9rqqKMMEUTn/V/08iH3VNHjMbPaVTvPA+zSVRHolQyN5E0eS5a7VRYxXfNZJ2BGoOvkCU6nlK2W6hSTYZfnFZB2zzbUU6uyg8DNRHT0Oz41hZqBWXghCoDc1IJtPy+2NhB5RrmmxlGkT9rM4vHN5/FcqdXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIYrMGob; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIYrMGob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B07DDC4CEEB;
-	Sat, 14 Jun 2025 11:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749901226;
-	bh=6My9Wlirf2exQSKlnTmP3+KTjTBj/UNq/AL2IrRVC7g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hIYrMGob8I9X6ijwrUoUObU9xJu0/o7WSj2ch4icNuILPG6yF9UDL5ZNGmyOVioDz
-	 tXm0bfrm7YtuuLscWcPqjRS4tLLSXq/h10WgmQ6hk4KH1PufbTykqvn1l7vrp2PU1z
-	 u8cVHGCRf9DBszyk4iyU7wr22Dt+7eUGU3Nb4i7qO00Uhb+cdtTx8Q5xgA4lh55w9y
-	 YSNX5vZGvV09uXAojqQPjCBTb18P5hBSyGZRa98Bzjw1iVs87HQGLseRSM6+dLOMBd
-	 bqwrgbeM4h5jtorHh1CoLUQVuTy/eBxyihwIG0wQtTM7hhKbsyEswrOJaIrp2iKEgm
-	 PO0gz2UjjPm3g==
-Date: Sat, 14 Jun 2025 12:40:19 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Da Xue <da@libre.computer>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7949: use spi_is_bpw_supported()
-Message-ID: <20250614124019.114079e0@jic23-huawei>
-In-Reply-To: <1bbee6de-adac-4f28-9a96-fd6480691ac4@baylibre.com>
-References: <20250611-iio-adc-ad7949-use-spi_is_bpw_supported-v1-1-c4e15bfd326e@baylibre.com>
-	<aEmdhV0ATRuUeGaL@smile.fi.intel.com>
-	<851b7d08-3e77-4344-97d1-9d60f1fb8762@baylibre.com>
-	<20250611175506.01d11675@jic23-huawei>
-	<1bbee6de-adac-4f28-9a96-fd6480691ac4@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749901241; c=relaxed/simple;
+	bh=ZIYpkuU/T03fzdX/8jF6Kg6q4VaYgoZbs4ULm3W849w=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JrkI2bW8praSfKiAXxe9HAwzz2zLFNi50qeyPKsINJL4qsQGvT3pPjzDBdCk2thISfEzO4THaBCeqU3kBhU/zGbYaLahC9faWj3bKOy5KMzauF3zkiAs9HbCjldYChClOabj1iIFl32/nm5dtv24pa60rqtUPCyeO578uPw4/tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 64ED1219A0;
+	Sat, 14 Jun 2025 11:40:37 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A30C13A17;
+	Sat, 14 Jun 2025 11:40:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id adOlCLVfTWj7UAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sat, 14 Jun 2025 11:40:37 +0000
+Date: Sat, 14 Jun 2025 13:40:36 +0200
+Message-ID: <87a56ar1or.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH v3 0/4] ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to user_access_begin/user_access_end()
+In-Reply-To: <cover.1749883041.git.christophe.leroy@csgroup.eu>
+References: <cover.1749883041.git.christophe.leroy@csgroup.eu>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Queue-Id: 64ED1219A0
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.00
 
-On Wed, 11 Jun 2025 12:00:27 -0500
-David Lechner <dlechner@baylibre.com> wrote:
-
-> On 6/11/25 11:55 AM, Jonathan Cameron wrote:
-> > On Wed, 11 Jun 2025 10:21:56 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >   
-> >> On 6/11/25 10:15 AM, Andy Shevchenko wrote:  
-> >>> On Wed, Jun 11, 2025 at 10:04:58AM -0500, David Lechner wrote:    
-> >>>> Use spi_is_bpw_supported() instead of directly accessing spi->controller    
-> >>>> ->bits_per_word_mask. bits_per_word_mask may be 0, which implies that    
-> >>>> 8-bits-per-word is supported. spi_is_bpw_supported() takes this into
-> >>>> account while spi_ctrl_mask == SPI_BPW_MASK(8) does not.    
-> >>>     
-> >>>> Closes: https://lore.kernel.org/linux-spi/c8b8a963-6cef-4c9b-bfef-dab2b7bd0b0f@sirena.org.uk/    
-> >>>
-> >>> Reported-by yourself. I'm wondering if the Closes adds a value in this case.
-> >>> Otherwise I can do the same to maybe 10% of my patches, for instance. But
-> >>> I don't think I put Closes tag on whatever improvement potential bug fix
-> >>> I do report (read: notice) myself.    
-> >>
-> >> I included it so that Da Xue will know that this has been resolved and
-> >> doesn't need to do anything more. Normally I would have not included
-> >> it though.  
-> > 
-> > If I followed the discussion correctly does this need a fixes tag?  
+On Sat, 14 Jun 2025 08:43:13 +0200,
+Christophe Leroy wrote:
 > 
-> I supposed it doesn't hurt. It could be possible that someone tries to
-> use an older stable kernel with a SPI controller that didn't set the
-> flags, in which case there could be a problem.
+> This series converts all variants of SNDRV_PCM_IOCTL_SYNC_PTR to 
+> user_access_begin/user_access_end() in order to reduce the CPU load
+> measured in function snd_pcm_ioctl.
 > 
-> Fixes: 0b2a740b424e ("iio: adc: ad7949: enable use with non 14/16-bit controllers")
-Applied to the fixes-togreg branch of iio.git.
-
-I didn't mark it for stable purely because it would have been obvious
-I think if anyone actually hit this.
-
-Jonathan
-
+> With the current implementation, "perf top" reports a high load in
+> snd_pcm_iotcl(). Most calls to that function are SNDRV_PCM_IOCTL_SYNC_PTR.
 > 
-> >   
-> >>  
-> >>>     
-> >>>> Signed-off-by: David Lechner <dlechner@baylibre.com>    
-> >>>
-> >>> Code wise LGTM,
-> >>> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> >>>     
-> >>  
-> >   
+>     14.20%  test_perf           [.] engine_main
+> ==> 12.86%  [kernel]            [k] snd_pcm_ioctl
+>     11.91%  [kernel]            [k] finish_task_switch.isra.0
+>      4.15%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+>      4.07%  libc.so.6           [.] __ioctl_time64
+>      3.58%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+>      3.37%  [kernel]            [k] sys_ioctl
+>      2.96%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+>      2.73%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+>      2.58%  [kernel]            [k] system_call_exception
+>      1.93%  libasound.so.2.0.0  [.] sync_ptr1
+>      1.85%  libasound.so.2.0.0  [.] snd_pcm_unlock
+>      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
+>      1.83%  libasound.so.2.0.0  [.] bad_pcm_state
+>      1.68%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+>      1.67%  libasound.so.2.0.0  [.] snd_pcm_avail_update
 > 
+> A tentative was done with going via intermediaire structs on stack to
+> replace the multiple get_user() and put_user() with copy_from_user()
+> and copy_to_user(). But copy_from_user() calls _copy_from_user() and
+> copy_to_user() calls _copy_to_user(). Both then call __copy_tofrom_user().
+> In total it is 16.4% so it is worse than before.
+> 
+>     14.47%  test_perf           [.] engine_main
+>     12.00%  [kernel]            [k] finish_task_switch.isra.0
+> ==>  8.37%  [kernel]            [k] snd_pcm_ioctl
+>      5.44%  libc.so.6           [.] __ioctl_time64
+>      5.03%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+> ==>  4.86%  [kernel]            [k] __copy_tofrom_user
+>      4.62%  [kernel]            [k] sys_ioctl
+>      3.22%  [kernel]            [k] system_call_exception
+>      2.42%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
+>      2.31%  [kernel]            [k] fdget
+>      2.23%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+>      2.19%  [kernel]            [k] syscall_exit_prepare
+>      1.92%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+>      1.86%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+>      1.68%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+> ==>  1.67%  [kernel]            [k] _copy_from_user
+>      1.66%  libasound.so.2.0.0  [.] bad_pcm_state
+> ==>  1.53%  [kernel]            [k] _copy_to_user
+>      1.40%  libasound.so.2.0.0  [.] sync_ptr1
+> 
+> With this series which uses unsafe_put_user() and unsafe_get_user(),
+> the load is significantly reduced:
+> 
+>     17.46%  test_perf           [.] engine_main
+>      9.14%  [kernel]            [k] finish_task_switch.isra.0
+> ==>  4.92%  [kernel]            [k] snd_pcm_ioctl
+>      3.99%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+>      3.71%  libc.so.6           [.] __ioctl_time64
+>      3.61%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+>      2.72%  libasound.so.2.0.0  [.] sync_ptr1
+>      2.65%  [kernel]            [k] system_call_exception
+>      2.46%  [kernel]            [k] sys_ioctl
+>      2.43%  [kernel]            [k] __rseq_handle_notify_resume
+>      2.34%  [kernel]            [k] do_epoll_wait
+>      2.30%  libasound.so.2.0.0  [.] __snd_pcm_mmap_commit
+>      2.14%  libasound.so.2.0.0  [.] __snd_pcm_avail
+>      2.04%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+>      1.89%  libasound.so.2.0.0  [.] snd_pcm_lock
+>      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+>      1.76%  libasound.so.2.0.0  [.] __snd_pcm_avail_update
+>      1.61%  libasound.so.2.0.0  [.] bad_pcm_state
+>      1.60%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+>      1.49%  libasound.so.2.0.0  [.] query_status_data
+> 
+> Since v2:
+> - Fix macros to skip user_read_access_end() when user_read_access_begin() failed
+> - Fix some tabulations for properly aligning backslashes
+> 
+> Since RFC:
+> - Added a cover letter to summarize some of the measurements done on and around the RFC
+> - Fixed relevant checkpatch feedback
+> - Split last patch in two
+> 
+> Christophe Leroy (4):
+>   ALSA: pcm: refactor copy from/to user in SNDRV_PCM_IOCTL_SYNC_PTR
+>   ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to
+>     user_access_begin/user_access_end()
+>   ALSA: pcm: Replace [audio_]tstamp_[n]sec by struct __snd_timespec in
+>     struct snd_pcm_mmap_status32
+>   ALSA: pcm: Convert snd_pcm_sync_ptr() to
+>     user_access_begin/user_access_end()
 
+Applied now all patches.  Thanks!
+
+
+Takashi
