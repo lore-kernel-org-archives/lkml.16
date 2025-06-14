@@ -1,74 +1,80 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4E61CAA4;
-	Sat, 14 Jun 2025 14:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5F11FC8
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 14:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749911486; cv=none; b=PcvLx3MSpCtZvdh3Pz4pnUngJjkmGsDjhZ9SHW3N0zxBZm2dOZ1IXgTlzBHwCWdY+GSrBZSDrW0q/e3XN8E78aXDspMo2SHkpWuL+s1LdVefBBkGCQEZp4rk2fTrxU2opsQG6zMpjRQQlO5k9sqxbOgaifoTaqUu2yi6UFCfxAA=
+	t=1749911709; cv=none; b=cius5K8cdXrDN4pLI+Kt2AFYOvN4CUKA98U+q1ttRiDHEWGtMKPZ5MvuPBCUHkcPekgxtPY5uGr+inIjZu0uNElgLA3HczUdt/f4rK2+ZMldmbuXKFmxeeRfG8T3H4OxlIDGONI93COOj32F0FZQntvBoEIz1rofdkk5YPZgDI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749911486; c=relaxed/simple;
-	bh=nkZfACPbAZYiMo0yba8y/ZNVqELFDNwH2ijh2AR8nig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1uo9iIkRqRVciLUmg8vNxUXjUPdhQlQSmoWMbCIGo62coGxlfmcM/HqTGtk5y0dJjKITl2eHKAlGW46exE4x4em4NfnG8StqfxisJJUQS7LaL25rphJWVPaNpB9zhpQBT9PkLOK4OP03jFfKPkxueGSGbj1cwZs+/CpMMiJrmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=dTE4CLCm; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="dTE4CLCm"
-Received: from localhost (unknown [10.10.165.14])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 2BB4E552F527;
-	Sat, 14 Jun 2025 14:31:19 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 2BB4E552F527
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1749911479;
-	bh=vezHVgus5Nj2g1IeYhLAF3M4Cc0sGwErYshdPXsCNIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dTE4CLCm9fLLXAyEtPxYcwpVrSDQQ8+AZBUS7t+OV0F6esV9Qk7FeT4+Y+OY59XOC
-	 hKZdQERA+2llYBJxiUeRX1DdGRkpXopWJ8eGhYoxPcaLjasaEgOvhFfw7dkQgW0G+c
-	 2VZMfb+fYama65bAwIMB3sgywPL3XND8R3GKe/t8=
-Date: Sat, 14 Jun 2025 17:31:19 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Takashi Iwai <tiwai@suse.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>, 
-	Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH 0/3] ASoC: amd: fixes for runtime private data memory
- leaks
-Message-ID: <ikzadk3upz2uh2zbnamycs2ua6qmhsdok34xsvygdcwqy3hzbk@epeuts7j5htr>
-References: <20250530164425.119102-1-pchelkin@ispras.ru>
+	s=arc-20240116; t=1749911709; c=relaxed/simple;
+	bh=LviThTNa7WFSySQCtkVWg9h/yH8uPysYxenL5Gkm01I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DTL8dQ8eBjHadWRfM3gFcPN9dzOjoFVpUk6N19uIbC87MhkmiSPfyzR0m6208HcC32BdYelLf4pHHu0a8rBN3jDN7H+bQmYxK+9a/5hosNmwFvjCAb7JR2T/Ggv5Vb69FRAs9QCVDSqP85WXEhKFvlMroIkjmKvbBNXdT90uTYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bKJbG0RyKzRk30;
+	Sat, 14 Jun 2025 22:30:50 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id B15CB1800B1;
+	Sat, 14 Jun 2025 22:35:04 +0800 (CST)
+Received: from localhost.huawei.com (10.90.31.46) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 14 Jun 2025 22:35:04 +0800
+From: Qinxin Xia <xiaqinxin@huawei.com>
+To: <21cnbao@gmail.com>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>
+CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
+	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <xiaqinxin@huawei.com>
+Subject: [RESEND PATCH v4 1/4] dma-mapping: benchmark: Add padding to ensure uABI remained consistent
+Date: Sat, 14 Jun 2025 22:34:51 +0800
+Message-ID: <20250614143454.2927363-2-xiaqinxin@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250614143454.2927363-1-xiaqinxin@huawei.com>
+References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250530164425.119102-1-pchelkin@ispras.ru>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-On Fri, 30. May 19:44, Fedor Pchelkin wrote:
-> Here follows a set of related patches regarding leaks of memory referenced
-> to by runtime->private_data pointers in amd soc drivers.
+The padding field in the structure was previously reserved to
+maintain a stable interface for potential new fields, ensuring
+compatibility with user-space shared data structures.
+However,it was accidentally removed by tiantao in a prior commit,
+which may lead to incompatibility between user space and the kernel.
 
-Hi,
+This patch reinstates the padding to restore the original structure
+layout and preserve compatibility.
 
-a ping on the series..
+Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header file for map_benchmark definition")
+Cc: stable@vger.kernel.org
+Acked-by: Barry Song <baohua@kernel.org>
+Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+---
+ include/linux/map_benchmark.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks!
+diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
+index 62674c83bde4..2ac2fe52f248 100644
+--- a/include/linux/map_benchmark.h
++++ b/include/linux/map_benchmark.h
+@@ -27,5 +27,6 @@ struct map_benchmark {
+ 	__u32 dma_dir; /* DMA data direction */
+ 	__u32 dma_trans_ns; /* time for DMA transmission in ns */
+ 	__u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
++	__u8 expansion[76];     /* For future use */
+ };
+ #endif /* _KERNEL_DMA_BENCHMARK_H */
+-- 
+2.33.0
 
-> 
-> Fedor Pchelkin (3):
->   ASoC: amd: acp6x-pdm-dma: free pdm device data on closing
->   ASoC: amd: acp3x-pcm-dma: free runtime private data on closing
->   ASoC: amd: acp3x-pdm-dma: free pdm device data on closing
-> 
->  sound/soc/amd/raven/acp3x-pcm-dma.c  | 2 +-
->  sound/soc/amd/renoir/acp3x-pdm-dma.c | 2 ++
->  sound/soc/amd/yc/acp6x-pdm-dma.c     | 2 ++
->  3 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 2.49.0
-> 
