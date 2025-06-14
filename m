@@ -1,78 +1,272 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5529C256D
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 03:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A03C111BF
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 03:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749870738; cv=none; b=YN2N/OoX0E/Yclghk2NKL5Bz5B3Y4ZGVffnzNbqyczMMn8WYV+NQs1TNyGzZFq8bO2/3M8pgj63u+12YuBoXInK1oqEoS3aSS4N18ihydvoydjoX+jwF5BydcPlPbWPTZJn8rPYx4WgeVHRvShDJNwjprIfOyzYc/rASJ+T+esk=
+	t=1749871221; cv=none; b=bdjhwtNQUhobppgC+DhG2zPEahW+5t5VjYzJKfJKyVKv57YJy9ctiCdTfjrEKQFfDBYSzOUSHurm2s0k5yxX0r6sJAiKuTSg4UX6vZjeTKf8HibBzsULpOt2s2+m+FKtwS3Rp3PiRH99IIKof8PEaRTdX1R2Y+2AqW14ZWtlUAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749870738; c=relaxed/simple;
-	bh=AO604sKUXT9W23j2cCVV+mLwsTV31RV1LgAcTgYCip4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=C9Br53K6752slyjAEyaKqj91CZrbwQYjuxMBbCuNZ9BhOrKN4lb9v82h6yWf+vhMJHSqGQW6lkHUbaQvQepFFgSJD/hTzWa9k3rynXauYFLuyr8U5H5CDGyCQpldVc5Ugv1Wet09HtrQz47AcOM1wwXhdysJNMPgD4wOnTkEAuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=gNbkMRJ1; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1749871221; c=relaxed/simple;
+	bh=SqRyC0599YbSC3pytdJJTA8OdbCcr/ZOp45Pkil2hV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l7IuTWAJB8/C3niitxDKgtQ6maEms6A1CnVFO3Tf0gcS6keInzw3wo5QX/It8euc3BiOg4giwDrDxJ8BwSla3Hhfnsu5sjXkwFvLyY+Rj8InCMUNJrsn31Z9GV6mr896jwqD6Ecxx9pkJpg6I9nndg9HKjGflco4xVS5RbHiCO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=mTJ12zUQ; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="gNbkMRJ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1749870422; bh=LYh2yGQubkln7lA07EZ0QWtEyVyFfuuF4akaRUZNfwg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gNbkMRJ1jTEIxLHVZJFjSY7BcQgczN96/mGSFoSEVV5P7VjXfgLWE/AfyAYzcIGgf
-	 Ho63yf1MDaWfJm96GcSwpm52fkqGg3meXNLiS60nkyjp1ja4soWgC47WrCdK2GRWh4
-	 n0dp6X5DGYU/pEsLiXMDn/2KKVIRuN2EAuFENR6E=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 1C019445; Sat, 14 Jun 2025 11:07:00 +0800
-X-QQ-mid: xmsmtpt1749870420tc2v3ahv3
-Message-ID: <tencent_5164697F63AFA45C5776B771A6C83368C305@qq.com>
-X-QQ-XMAILINFO: M0PjjqbLT90wcf+TOeu3MoRogzNpvQBumhElY4jlVKynplMr5YdF63m0t9qqTC
-	 Tn9hB4DA+0vgm6tC+lZ/ELusy1vQ9ajlkvSog/JPXB0K8Y7PqqFGbDoWpMc9VC0fRO37smgKHvUI
-	 M3xGBuc+ApTPBM83csV0QtWOmtMbqbiyHA6UT6l2Smb1KoZisurSVZ7aCy/Mayaq1eiv28IV1rpd
-	 rWOg9kIWVNvgTX078HDMBXhfcTUlg0zblFJchdvUg/MTM3zlp4Sc03KD/djEuMGuhfxS0rODUxwr
-	 fAfrD3Ox54q6xAyiu3WTtzymiWJeIhDqk8o+aWNLcWTKnJ928VbdEq+NKU2Ov9fYJFRRQaCcDH3O
-	 eYxL1QokUgf1/PohU3xC1P8hXrT7s2vsuPvBGuvA6lhzTvxFD1FtwBqOGFBmZsdNVMHxnxtclzB8
-	 J8eTwz7V8CYU6ZOG5PxaTPSqqhobKqL0Hxr1fvyj5j4HRpqV6R+9QSQd/7QdM6glxXiwZo+F/SmM
-	 ZWVbqUfErMKGjGyuYtpwR2MJU4EyXO0rXw7zWIYQ3DJwqMBaWZBwP8FN2alALkysIwOslCCuYioK
-	 azO9GGzpwvuk9IwPEU2IB53/8rNM/yb+s2pIUzNWFxvKO67zknxKsd/10nlqp7jhwbTpUWfvrcXf
-	 3cfJksn8auI/ZKCcHeOFNmR41YaFQ2RlTrXrROAcG931SWKtpt0itruKmjjan0Grhqy+gyr1NxH7
-	 exmSqxI+WBx5mj9PqCwp/gwQfZgqw2GcDBjy2PCsIe2+HiD+Lwbl2hPayF8+k0nH3Ip5BuHVn0Lm
-	 Xt4E8QRRouCHQk3l0nA/sir1584FWqyAVQDxTOtqCgxunXzvqXz/2vWuphlL2RPkzPUMns7FQem3
-	 LXJwdL/rpoZjo/bwIiuA7WSHB+8lvtVpyvA6hfQyyVTF7vO7eunhjufrNN9cz+o7I1XmOMW6kX
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
-Date: Sat, 14 Jun 2025 11:06:55 +0800
-X-OQ-MSGID: <20250614030654.2936126-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
-References: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="mTJ12zUQ"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c13802133so988676a34.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1749871219; x=1750476019; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0nrY70xBFHGJS9UHfvsdjKO7bxO6w1GEV8th9m+GedU=;
+        b=mTJ12zUQuAOXEBu1WeWnhuF0lgjbELKmLtuJI7ft1Z8kIFYGaCRkFR4dFVu/Gmrs6b
+         yFEaHyXZI7Fr0lBuQRh84cASSV0Ke57NDmgcnsxa6iPQkE1vAD7WpWv1ErR3PEUFCMNp
+         M8zF/Y7kv37AHKJ2AyN6ZIMzpE+jOc1NUBdUe8lWi/j74rfT+EXWKDYuiujdA26usR0Q
+         aN7owLANMPV554ROE1K5uod8mZ+KCjZ7EDj/mDgaJJ63A+5sQScniWKW1DIZ6kGa3TaB
+         xtZ1AseREYnowm3d8m2pB3KJB2dejavQXRc1geJdyFV14224PNIquX6dx5AT5z5EJTUF
+         Of6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749871219; x=1750476019;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0nrY70xBFHGJS9UHfvsdjKO7bxO6w1GEV8th9m+GedU=;
+        b=d96N/JCPpb8JuhnVkEobZwQM8ZJd1bY3SRbjkEo2CK9ketbxhiH4SPeHEBx+p3BwBI
+         QvGcTGeaj4jLAifGqG9IYp/p2QHByzmNtwPnYnFKm6Ruv0QHAdsM/ygTADR5JxadjElk
+         Y8wPIQMyQvsq1czkSNHhfcPhkUK7UmvnLL2a9AuxLUSNRyI0gTYo+uAelUu/L2ww1HJu
+         BhYrfD6J5/RJsM7a/U8EGafMK4BO/fJt8s8Ro6Lm5aKyBG3qpoEyhDwLJqgcLMsjaTmW
+         rxXghgofgJomU1Fjhq7rUBOfWcRPExE4qjgzAcbK9i6yxtx/dHTjKgEB3p+DtjZBI5nl
+         fuJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlTwJgGWsAwHSbc0/9niohBh8lrrYSIw8Trfn5KDdOTw3O5g34ExoskkIOrxNyM0weR5t+un0cD4Zbh7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw085Gx2hNc/Zwv1N833JO2nKML5UdKqrz2KfTPiJ961TRilKMH
+	HkyR3Mrl3e1kecAMRcQoMVUPN0RPwJD6o1wzEF3m1Il/fSY6GMV5+TWiWwhpFW8zZa0=
+X-Gm-Gg: ASbGncszGIlfPAYOz9pDwiMRd2gfnler9xazxsp0wOwzkeZ6/qfb5LlAX98rpDpJVba
+	3inSfkUMMF1qLRcXn6jfyrITDE9pvDmESeR97vLuN6elOkDPhAqEiF5mQ1sSSIRtKyM11vyMBsc
+	S3xYryFkoy1yPJ6Dt19vVXzPfPwaaPH5SH83453nttU3TcDa2Ergs/RwtNUiYEAzx0OOvlT01Fl
+	QOGmZZdj/MDN2ErAznx9tNctGt6Fh44rZMH6Iwzb3p/hAPpQ44sMFYyl+uwqHbRWXM+Q8rmKLmm
+	+i79/7ZCdw8qDTx6KlsiOLux7r+krjLc+02sd+YQXBnYOEHiugLol0VfGkBTwPVd2g==
+X-Google-Smtp-Source: AGHT+IFtCdsypXfUIdSkDWsQPLx8bOs0XHQwf9Hrlo4CGtcSwtwK74KjLlbplPl5Z1gluc8x6QVWFg==
+X-Received: by 2002:a05:6830:4188:b0:72b:9d5e:9429 with SMTP id 46e09a7af769-73a3627b78dmr1784445a34.12.1749871219059;
+        Fri, 13 Jun 2025 20:20:19 -0700 (PDT)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:f41f:8468:bca8:a5f7])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a28402827sm437749a34.17.2025.06.13.20.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 20:20:18 -0700 (PDT)
+Date: Fri, 13 Jun 2025 22:20:12 -0500
+From: Corey Minyard <corey@minyard.net>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com
+Subject: Re: [PATCH v4 0/3] LoongArch: Add Loongson-2K BMC support
+Message-ID: <aEzqbLHSB6phFNox@mail.minyard.net>
+Reply-To: corey@minyard.net
+References: <cover.1749731531.git.zhoubinbin@loongson.cn>
+ <aEzFPdYEvbkaH_B5@mail.minyard.net>
+ <CAMpQs4L66sXLdj6+ebMXcwq4i+XVi+AmwBbQSx0-EuULNJ5XeQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4L66sXLdj6+ebMXcwq4i+XVi+AmwBbQSx0-EuULNJ5XeQ@mail.gmail.com>
 
-#syz test
+On Sat, Jun 14, 2025 at 10:50:37AM +0800, Binbin Zhou wrote:
+> Hi Corey:
+> 
+> On Sat, Jun 14, 2025 at 8:41 AM Corey Minyard <corey@minyard.net> wrote:
+> >
+> > On Fri, Jun 13, 2025 at 02:43:38PM +0800, Binbin Zhou wrote:
+> > > Hi all:
+> > >
+> > > This patch set introduces the Loongson-2K BMC.
+> > >
+> > > It is a PCIe device present on servers similar to the Loongson-3 CPUs.
+> > > And it is a multifunctional device (MFD), such as display as a sub-function
+> > > of it.
+> >
+> > I've asked this before, but I haven't gotten a answer, I don't think.
+> >
+> > Is this really a multi-function device?  Is there (or will there be)
+> > another driver that uses the MFD code?
+> 
+> I am very sorry, I may have overlooked your previous question.
+> 
+> And I also may not have a thorough understanding of multifunction devices.
+> 
+> The Loongson-2K BMC device provides two functions: display and IPMI.
+> For display, we pass the simplefb_platform_data parameter and register
+> the simpledrm device, as shown in patch-1.
+> 
+> Therefore, I think this should be considered a multifunction device.
 
-diff --git a/fs/iomap/iter.c b/fs/iomap/iter.c
-index 6ffc6a7b9ba5..e53591538643 100644
---- a/fs/iomap/iter.c
-+++ b/fs/iomap/iter.c
-@@ -30,7 +30,8 @@ int iomap_iter_advance(struct iomap_iter *iter, u64 *count)
- 
- static inline void iomap_iter_done(struct iomap_iter *iter)
- {
--	WARN_ON_ONCE(iter->iomap.offset > iter->pos);
-+	WARN_ON_ONCE(iter->iomap.type != IOMAP_HOLE &&
-+		     iter->iomap.offset > iter->pos);
- 	WARN_ON_ONCE(iter->iomap.length == 0);
- 	WARN_ON_ONCE(iter->iomap.offset + iter->iomap.length <= iter->pos);
- 	WARN_ON_ONCE(iter->iomap.flags & IOMAP_F_STALE);
+Ok, that's clear, thank you.
 
+However, that's not really very clear from the patches you have
+provided.  Particularly, the "bmc" in the name from patch 1 makes one
+think that it's only a bmc.
+
+The "bmc" name is also a little confusing; the devices with a "bmc" in
+the name are all the BMC side, but you are doing a host side device.
+
+If you look at most of the other MFDs, they have a "core" section then
+various other parts that use the core.  And possibly parts in other
+directories for individual functions.  I think you need to do the same
+design.  Have a "core" section that both the display and bmc use, then a
+separate display and bmc driver.
+
+That way, you can use the display without the IPMI interface, or the
+IPMI interface without the display.
+
+I would like to see:
+
+* A core mfd device named ls2k-core.c that has the core functions.
+  It would have its own config item (MFD_LS2K) that would be
+  selected if either the display or IPMI device is enabled.
+
+* A separate display device in its own file with its own config item.
+  This isn't my area, so I'm not sure where this should go.
+
+* The IPMI device in the ipmi directory named ipmi_ls2k.c, again
+  with it's own config item (IPMI_LS2K).
+
+Does that make sense?  I don't want to make things too hard, but that's
+the way pretty much everything else is done on MFDs.
+
+Thanks,
+
+-corey
+
+> 
+> >
+> > If nothing else is going to use this, then it's really not a
+> > multi-function device and all the code can go into the IPMI directory.
+> > That simplifies maintenance.
+> >
+> > If it is a multi-function device, then I want two separate Kconfig
+> > items, one for the MFD and one for the IPMI portion.  That way it's
+> > ready and you don't have to bother about the IPMI portion when
+> > adding the other device.
+> >
+> > All else looks good, I think.
+> >
+> > -corey
+> >
+> > >
+> > > For IPMI, according to the existing design, we use software simulation to
+> > > implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+> > >
+> > > Also since both host side and BMC side read and write kcs status, we use
+> > > fifo pointer to ensure data consistency.
+> > >
+> > > For the display, based on simpledrm, the resolution is read from a fixed
+> > > position in the BMC since the hardware does not support auto-detection
+> > > of the resolution. Of course, we will try to support multiple
+> > > resolutions later, through a vbios-like approach.
+> > >
+> > > Especially, for the BMC reset function, since the display will be
+> > > disconnected when BMC reset, we made a special treatment of re-push.
+> > >
+> > > Based on this, I will present it in four patches:
+> > > patch-1: BMC device PCI resource allocation.
+> > > patch-2: BMC reset function support
+> > > patch-3: IPMI implementation
+> > >
+> > > Thanks.
+> > >
+> > > -------
+> > > V4:
+> > > - Add Reviewed-by tag;
+> > > - Change the order of the patches.
+> > > Patch (1/3):
+> > >   - Fix build warning by lkp: Kconfig tristate -> bool
+> > >     - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
+> > >  - Update commit message;
+> > >  - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfig and
+> > >    Makefile.
+> > > Patch (2/3):
+> > >   - Remove unnecessary newlines;
+> > >   - Rename ls2k_bmc_check_pcie_connected() to
+> > >     ls2k_bmc_pcie_is_connected();
+> > >   - Update comment message.
+> > > Patch (3/3):
+> > >   - Remove unnecessary newlines.
+> > >
+> > > Link to V3:
+> > > https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin@loongson.cn/
+> > >
+> > > V3:
+> > > Patch (1/3):
+> > >  - Drop "MFD" in title and comment;
+> > >  - Fromatting code;
+> > >  - Add clearer comments.
+> > > Patch (2/3):
+> > >  - Rebase linux-ipmi/next tree;
+> > >  - Use readx()/writex() to read and write IPMI data instead of structure
+> > >    pointer references;
+> > >  - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
+> > >  - Drop unused output.
+> > > Patch (3/3):
+> > >  - Inline the ls2k_bmc_gpio_reset_handler() function to ls2k_bmc_pdata_initial();
+> > >  - Add clearer comments.
+> > >  - Use proper multi-line commentary as per the Coding Style documentation;
+> > >  - Define all magic numbers.
+> > >
+> > > Link to V2:
+> > > https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin@loongson.cn/
+> > >
+> > > V2:
+> > > - Drop ls2kdrm, use simpledrm instead.
+> > > Patch (1/3):
+> > >  - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+> > >  - Add resolution fetching due to replacing the original display
+> > >    solution with simpledrm;
+> > >  - Add aperture_remove_conflicting_devices() to avoid efifb
+> > >    conflict with simpledrm.
+> > > Patch (3/3):
+> > >  - This part of the function, moved from the original ls2kdrm to mfd;
+> > >  - Use set_console to implement the Re-push display function.
+> > >
+> > > Link to V1:
+> > > https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
+> > >
+> > > Binbin Zhou (3):
+> > >   mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+> > >   mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+> > >   ipmi: Add Loongson-2K BMC support
+> > >
+> > >  drivers/char/ipmi/Makefile       |   1 +
+> > >  drivers/char/ipmi/ipmi_si.h      |   7 +
+> > >  drivers/char/ipmi/ipmi_si_intf.c |   3 +
+> > >  drivers/char/ipmi/ipmi_si_ls2k.c | 189 ++++++++++++
+> > >  drivers/mfd/Kconfig              |  12 +
+> > >  drivers/mfd/Makefile             |   2 +
+> > >  drivers/mfd/ls2kbmc-mfd.c        | 485 +++++++++++++++++++++++++++++++
+> > >  7 files changed, 699 insertions(+)
+> > >  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+> > >  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
+> > >
+> > >
+> > > base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+> > > --
+> > > 2.47.1
+> > >
+> 
+> 
+> -- 
+> Thanks.
+> Binbin
