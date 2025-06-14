@@ -1,79 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11314170A26;
-	Sat, 14 Jun 2025 21:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064AB7462;
+	Sat, 14 Jun 2025 21:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749936497; cv=none; b=p4Z+w0oYr4U1kRcBo/Fy4PJ2UbAtVJ+2PPWCttazIOo+2EP4L0jUWZCt1YCcj0GYRASE+zoDJlThdtlWVvd/o13XEF+1D+eEdBR7h1DpWlgUQlEtcslcKNQK2J1B2SU7lCGkxBqO/kMQ7OBndk546w5cORK46o4u4HvFMslGiVg=
+	t=1749936751; cv=none; b=rlQOW0hkjzAYYARSLoVwiUFK/56PBT+282mNP6CGS3WGo0FSXtqMG+bNXfrUlJ+OmFHCss2eJPE5WCc43OFjKMgCyDbyWi2podtH+3mTFppJeG5oSdLnkjzCA4F2vX5RzX6u2/vaqxD4qI+v5ueG6x8LsCX0SDmol9e8Roy71ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749936497; c=relaxed/simple;
-	bh=c/J28r/JLXHW83WD1oCAc7pgMinEjT5jwvrbBAFF8kI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S1IYWEn6FrplJGCvZhby9AlGmBgRUzHDqsFqHNKbwUgoQb+iL69aoizrkHde+gWjRZsxrfP36wBnud7/xWE3OImRzUex8vxys9AQ6sAS0k5/69L2v1p8/H0b/Kzx0lNNzsuNDVt/QN/ZqC5vIQNGfZD5xj41ZvgKNRgAoazFQgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chL7MZ5m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749936751; c=relaxed/simple;
+	bh=c7Xr1RrIFGE5wjzGDdsNevrNIjfIdMNqpuDBse36Yig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SttcZPI3kvW10UGSylvu/jFdNHyrjSNQWtyP6V7HLPb62EoNQwEoQIpF3w3v1LDBJ0sFTCWaVjzcmVDe4MfJ0pkIHqEAmOIRhEcrLzAoHNtXzXn8FHbCnFXudBRYDMPtX00Ihv0WhFs2wrt/ttHzDQkoGhk5km6jwJ5Noxkuq/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nfjICEDp; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chL7MZ5m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44149C4CEEB;
-	Sat, 14 Jun 2025 21:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749936495;
-	bh=c/J28r/JLXHW83WD1oCAc7pgMinEjT5jwvrbBAFF8kI=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=chL7MZ5m80b3LlPWPzGUpb4Gxg41WA3qMq+W/bBnzShZapivw8PzvuHdPatrhvGP0
-	 YyLAKzQVjhwbX4MN92wIXmAkQN8sEyh3R26NbpZlpB3osioIHx+p0O7nJKRsHROYaK
-	 ym8HCJr+lSfZHl8MV2+6g/PgZ1sxostbEkWL2JItLlbNX2uNVr89saa137hrvdv4CT
-	 aixlxUKsB/5anXprYMH+Btm5UknYTIjq+uL/ZlkDeLmNiXAos8Y+FNGZnyOcIWH4X5
-	 seEm5jYxvSm7518aTB6kImMzRsHAqIxT/oOv/F3rQMhHlerLWYeFqn0Z0f817p9h+r
-	 5YVDM2k4Xg6qg==
-Message-ID: <7cf40cd1-fe0d-4493-ac15-e70c418e54a5@kernel.org>
-Date: Sat, 14 Jun 2025 23:28:12 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nfjICEDp"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 769D15B3;
+	Sat, 14 Jun 2025 23:32:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749936737;
+	bh=c7Xr1RrIFGE5wjzGDdsNevrNIjfIdMNqpuDBse36Yig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nfjICEDpWKZ1geb9rv4DyhPhesthM5lyXX3xvFqEeHG2Jv6hn1GrvZWpOG1Fp8Xk8
+	 Lpg+0YcOg5k+uGTAFVd3QgbEmKhR6glinhjuvVrNgERP/s54c04FBZDQnlUGldEd67
+	 6kw9N79rLTrkw9pLc5VAST6pVihMczQpbijxIX8k=
+Date: Sun, 15 Jun 2025 00:32:13 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] media: rcar-vin: Check for correct capture interrupt
+ event
+Message-ID: <20250614213213.GM10542@pendragon.ideasonboard.com>
+References: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250614141545.2860860-3-niklas.soderlund+renesas@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Daniel Gomez <da.gomez@kernel.org>
-Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
- move_module()
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250607161823.409691-1-petr.pavlu@suse.com>
- <20250607161823.409691-2-petr.pavlu@suse.com>
- <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
- <c7dbb33d-98b6-45da-be77-e86b9e6787ee@suse.com>
-Content-Language: en-US
-From: Daniel Gomez <da.gomez@kernel.org>
-Organization: kernel.org
-In-Reply-To: <c7dbb33d-98b6-45da-be77-e86b9e6787ee@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250614141545.2860860-3-niklas.soderlund+renesas@ragnatech.se>
 
-> This seems to be off by one. For instance, if the loop reaches the last
-> valid type in mod_mem_type, MOD_INIT_RODATA, and successfully allocates
-> its memory, the variable t gets set to MOD_INIT_RODATA. Subsequently, if
-> an error occurs later in move_module() and control is transferred to
-> out_err, the deallocation starts from t-1, and therefore MOD_INIT_RODATA
-> doesn't get freed.
-> 
-> If we want to always start from the last type found, the code would need
-> to be:
-> 
-> 		[...]
-> 		ret = module_memory_alloc(mod, type);
-> 		if (ret)
-> 			goto out_err;
-> 		t = type + 1;
-> 	}
-> 
-> I can adjust it in this way if it is preferred.
-> 
+Hi Niklas,
 
-My earlier suggestion was incorrect. We can simply initialize the memory
-type t to MOD_MEM_NUM_TYPES since it's only used in the error path of
-module_memory_alloc().
+On Sat, Jun 14, 2025 at 04:15:44PM +0200, Niklas Söderlund wrote:
+> Depending on if the capture session deals with fields or whole frames
+> interrupts can be generated at an end of field, or end of frame event.
+> The interrupt mask is setup to generate an interrupt on one of the two
+> events depending on what is needed when the VIN is started. The end of
+> field bit is set in both cases so controlling the mask that generates an
+> interrupt have been enough to control the two use-cases.
+> 
+> Before extending the interrupt handler to deal with other types of
+> interrupt events it is needs to extended to "capture complete" check for
+> correct the use-case in operation. Without this the simplification in
+> the handler can result in corrupted frames when the mask on what type of
+> events can generate an interrupt generated can no longer be assumed to
+> only be an "capture complete" event.
+> 
+> Which bit is checked matches which bit is enabled at configuration time
+> as which event can generate an interrupt for "capture complete". There
+> is no functional change.
+> 
+> While at it switch to use the BIT() macro to describe the bit positions
+> for the interrupt functions.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> ---
+>  drivers/media/platform/renesas/rcar-vin/rcar-dma.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> index 585b8b3dcfd8..85e44a00e0fc 100644
+> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> @@ -115,11 +115,12 @@
+>  #define VNFC_S_FRAME		(1 << 0)
+>  
+>  /* Video n Interrupt Enable Register bits */
+> -#define VNIE_FIE		(1 << 4)
+> -#define VNIE_EFE		(1 << 1)
+> +#define VNIE_FIE		BIT(4)
+> +#define VNIE_EFE		BIT(1)
+>  
+>  /* Video n Interrupt Status Register bits */
+> -#define VNINTS_FIS		(1 << 4)
+> +#define VNINTS_FIS		BIT(4)
+> +#define VNINTS_EFS		BIT(1)
+>  
+>  /* Video n Data Mode Register bits */
+>  #define VNDMR_A8BIT(n)		(((n) & 0xff) << 24)
+> @@ -1034,7 +1035,7 @@ static void rvin_capture_stop(struct rvin_dev *vin)
+>  static irqreturn_t rvin_irq(int irq, void *data)
+>  {
+>  	struct rvin_dev *vin = data;
+> -	u32 status, vnms;
+> +	u32 capture, status, vnms;
+>  	int slot;
+>  	unsigned int handled = 0;
+>  	unsigned long flags;
+> @@ -1049,7 +1050,10 @@ static irqreturn_t rvin_irq(int irq, void *data)
+>  	handled = 1;
+>  
+>  	/* Nothing to do if nothing was captured. */
+> -	if (!(status & VNINTS_FIS))
+> +	capture = vin->format.field == V4L2_FIELD_NONE ||
+> +		vin->format.field == V4L2_FIELD_ALTERNATE ?
+> +		VNINTS_FIS : VNINTS_EFS;
+
+I would find
+
+	capture = vin->format.field == V4L2_FIELD_NONE ||
+		  vin->format.field == V4L2_FIELD_ALTERNATE
+		? VNINTS_FIS : VNINTS_EFS;
+
+easier to read, but it could be just me.
+
+Do I read it correctly that you use the "Field Interrupt" with
+V4L2_FIELD_NONE ? That seems a bit weird to me, but maybe I don't get
+how the hardware operates.
+
+> +	if (!(status & capture))
+>  		goto done;
+>  
+>  	/* Nothing to do if not running. */
+
+-- 
+Regards,
+
+Laurent Pinchart
