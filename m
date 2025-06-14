@@ -1,97 +1,154 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26D62D1302;
-	Sat, 14 Jun 2025 13:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC842E11CC;
+	Sat, 14 Jun 2025 13:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749907806; cv=none; b=QoK8CUsocVXuLwGWr4JINsuc49p/H+fNToKEOngPZi+313R2Z3UidyaSzgxzwnlEjfJ7vmNoUhkp+XQ6hsntBTycRZsLFCXNYx0uK3YTJMAZMz888AaMkLUA2sRFvFRa3aZ54IgXG2x0VU0/ALceQNsk83WrH1dWDVCEGV0OU+g=
+	t=1749908026; cv=none; b=N55URcqs66jGBlC1L3usqlxq2Gd9KfSOLcLVk65wv9N9h8bIZCB8307J66BMegKi5mE2YRYU7p2OAxz85N6Js3w+wDRo82i+ZvVi4ZLFyzQpUoxNYtVC9b2qW4idEeNDg62i3J0lbqvKI1Gy+wPz2XauzhIYvWSukPAwE79M5G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749907806; c=relaxed/simple;
-	bh=a4+RnhGxiQVnAjxqCAjlsrCrgJ9m6DH1744AYL0N99M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QLah13NC1uvYaD1bk40qkw7QvFEf+EOOLSppZFprzbglAdiQGPEUAWvnAKxVQCqD4+Bs0NWMd+hZBiqGWcxnTpwvBYxwZwS7PHhmNocYflpjZEkYfxa0L1btl8DqDzczG4eXp33DCMhb2Y5XSVctFokSUE3WNKtPKludhDq74qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mpmQn5fw; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749908026; c=relaxed/simple;
+	bh=FwV0qHN2N+rQBmiE1YjwcFdnvo4kF9W8W+kUyPqNMCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YIwcpS6iwEs14GT14PIrTpYs23lkGxHe/moEnr005o6e+s9CiZiWMi3/wmPsbokwBMdYsJ5at7pSDMnSlpDsRJ7UsMS//jJ6fUMMKw8aYbAECafzTRhssKAHPYZzQRgtP+eSIAQRCgYHdbznWY1493xTQpT3QDgrAHoVbE3/Tgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEvXEJJo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mpmQn5fw"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4066a0d0256so1978231b6e.3;
-        Sat, 14 Jun 2025 06:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749907804; x=1750512604; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gpxLAeD+HVolSZVyFVghlR1xvl2/NKfSFQXQsuCC2t8=;
-        b=mpmQn5fwaBvXK3l8w5lHsb6HOwuam6WXJcR7feQccXrkosYcAm2HpemVF+FcnoB78F
-         Rpa1Hjc2kwzQZOPLGFz4U1XsELTHE/IbAxJ9vZVYKZpZjQjf5GF1DW2hYYP3GwVr9d1P
-         Q22to/iO0PxWMIEOCti/hdswiZfjRs5tNIR0b84j1NOFvlQLZyf4WIfPvh6+Pag/WOdY
-         p4GLefZvJcwnSsSAA0YX1+NaCVUDIyxrDyBRoFEIqTqksfPWivtY60/fNIbiEZ4j2H1j
-         sIIOrDoV3ySNbs4k7KW0IW8B4hd6hxm8K67va/HzsAqCdOODktCJF/4f/ERjo0yyEri8
-         AM1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749907804; x=1750512604;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gpxLAeD+HVolSZVyFVghlR1xvl2/NKfSFQXQsuCC2t8=;
-        b=iADKjewHn7Y0BnPsnbbbpLe7MR0Euf4NmNRYtGeo6VX3EyKqRwru99qzDEqwA/ft8x
-         YJZFgVHJa9Nm1MQ0jVJd/sWdhGDE/kbP4z15RvOdV2KQIho4P4kmjXyBuWi5YkzuLIjE
-         gtJnRZXpRCFjBI76dCmkTOpoziqaYaH5kefAvIlzkfMpN3PZ0j4XF/pPMrtj7As7AlEi
-         EV/uEAZHazejeHi2AvHr18iv7YEja82Ky9N4GEYknDM0f2H0Zniwwn5AKd1Lvnve1Zfg
-         kvb/lznXPjVmVm8B8AG+pNln/QYCbfhqRHh2zLrRruPmlpE36C9diXYd+pCFhDdV009Z
-         41lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVJCJyHoI74IN2MuKo5JxNMLT3vHwd9VqZJfkE8rWmzGGnj0XiYbrm51WzHl1a41T8/2ZaELAI@vger.kernel.org, AJvYcCVnSfFKCO+EGO+PbRe+IqLOwhI4k3Dex2NTDoLnEaUZzyp9rvI7YvTpFBpUSTMOwh6MkAP9LXjV+banu6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgvE86eqGaVOqSFcI6koBJ3QZtw2XELA8n5q15236lUKw+lkJs
-	ifC4Kas4S49wPFZatdYsnanTzF/Cdb0HVII5uS7db1nJ3BV+eBb/+qVpkjzt57HcOBJIDvKAzh8
-	hplZEw2FGZjSATCmSGef0RkRnltpZd9c=
-X-Gm-Gg: ASbGncvUIpK8zbi1BHJMICGZEkeIrttlmqa6BoW+7f6MW7Pakb/uyUX3Da0UbGzlU5+
-	x88wmKoZz0ZnROXCq7lTDzvyqy8//aH5hDd7GWqiNsr2q0yymbahVmtuWaxgaWjLXYh4aWmGh+e
-	FkHr9woAo6nTSSA4ye1RQNQtf7Ji/GECm9JenJ77Ow6Pec22gW3Ngi+TaJYVHAC8wcpasClGx2I
-	A==
-X-Google-Smtp-Source: AGHT+IGTVlBMWe1jUtHr/9UxJLQLB7fTFlDVLqP+v2cbZPfJZOQCuTo318T7Bp2vjunGuEb33YuFW6h9rg9YFZ3d2OQ=
-X-Received: by 2002:a05:6808:1b2c:b0:406:6e31:18a1 with SMTP id
- 5614622812f47-40a7c1b1ea5mr2201254b6e.2.1749907803915; Sat, 14 Jun 2025
- 06:30:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEvXEJJo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB12C4CEEB;
+	Sat, 14 Jun 2025 13:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749908026;
+	bh=FwV0qHN2N+rQBmiE1YjwcFdnvo4kF9W8W+kUyPqNMCw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pEvXEJJo+NQ4Dphn1wbyiNg/J6gwj1Pu7Cm8/k+InY68Kyi2Aa4lkTZFJvlVdw5c/
+	 Aqy/hTZEMNSD0rMoNGTVcvLHwxPuoWZR8fvrxPSWptKFsQPXnRpBJxcwdflHNgTosC
+	 Rx3oGexCXRwBpH0jd7h3ZhQkHcWm2PomlLla4PjsO+2QRQ7gpTe/+OHC037IBHUJkE
+	 DC/ewLGsyikj33EVBl8x5Zp08QMWfZBzCCFXoSY7ISIyEg+qckmGVuWv28pseMWYQT
+	 042uoljQvysKpk21/T8pHmbrqt6rZUcwcfn7WwgPSdTwAd/7A9z2VbM1TjF2dx3Avf
+	 9pwD/PJnOj7qw==
+Date: Sat, 14 Jun 2025 14:33:35 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 10/11] iio: accel: adxl313: add AC coupled
+ activity/inactivity events
+Message-ID: <20250614143335.2049da6e@jic23-huawei>
+In-Reply-To: <CAFXKEHZj7nYOJA7Ztxh8xiOcPpwDNBzNyN830tiKL=7rL0fiug@mail.gmail.com>
+References: <20250601172139.59156-1-l.rubusch@gmail.com>
+	<20250601172139.59156-11-l.rubusch@gmail.com>
+	<20250608172317.63473b9b@jic23-huawei>
+	<CAFXKEHZj7nYOJA7Ztxh8xiOcPpwDNBzNyN830tiKL=7rL0fiug@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749723671.git.mchehab+huawei@kernel.org>
- <m27c1foq97.fsf@gmail.com> <20250613141355.1bba92fc@foz.lan>
-In-Reply-To: <20250613141355.1bba92fc@foz.lan>
-From: Donald Hunter <donald.hunter@gmail.com>
-Date: Sat, 14 Jun 2025 14:29:52 +0100
-X-Gm-Features: AX0GCFuxx8riQsYcwnktkvT2HBgg8dodkVLgKdtxUeyINtr1KrOWe6fVqRSEbVM
-Message-ID: <CAD4GDZz-hVEWhSP9sGqZH2tGrU9T8cd3aed5hRtMNZcXk2WmNw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Don't generate netlink .rst files inside $(srctree)
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Ignacio Encinas Rubio <ignacio@iencinas.com>, 
-	Marco Elver <elver@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Eric Dumazet <edumazet@google.com>, Jan Stancek <jstancek@redhat.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>, joel@joelfernandes.org, 
-	linux-kernel-mentees@lists.linux.dev, lkmm@lists.linux.dev, 
-	netdev@vger.kernel.org, peterz@infradead.org, stern@rowland.harvard.edu, 
-	Breno Leitao <leitao@debian.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 13 Jun 2025 at 13:14, Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
-> >
-> > >   docs: netlink: don't ignore generated rst files
-> >
-> > Maybe leave this patch to the end and change the description to be a
-> > cleanup of the remants of the old approach.
->
-> Ok for me, but I usually prefer keeping one patch per logical change.
-> In this case, one patch adding support at the tool; the other one
-> improving docs to benefit from the new feature.
+On Wed, 11 Jun 2025 21:58:36 +0200
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-My point is that "don't ignore generated rst files" is not a step on
-the way from the old method towards the new method. The new method
-does not involve generating any .rst files so the patch is something
-more like "remove obsolete .gitignore from unused directory".
+> Hi Jonathan,
+>=20
+> On Sun, Jun 8, 2025 at 6:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+> >
+> > On Sun,  1 Jun 2025 17:21:38 +0000
+> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > =20
+> > > Add AC coupling activity and inactivity as MAG_ADAPTIVE events. This =
+adds
+> > > up an additional set of threshold and period handles, verifies matchi=
+ng
+> > > disabling functionality and extends setting the link bit to complemen=
+tary
+> > > event configurations.
+> > >
+> > > This means, e.g. either ACTIVITY or ACTIVITY_AC can be enabled. The m=
+ost
+> > > recent set will remain configured. Disabling ACTIVITY where ACTIVITY_=
+AC was
+> > > enabled is ignored, since it does not match (should be disabling
+> > > ACTIVITY_AC). When INACTIVITY or INACTIVITY_AC is also enabled, the l=
+ink
+> > > bit will be set. Note, having the link bit and auto-sleep in place ac=
+tivity
+> > > and inactivity indicate the power save state change and thus will onl=
+y be
+> > > triggered once a state transition occurs. Since there is a separate A=
+C bit
+> > > for ACTIVITY and for INACTIVITY, events can be linked independently f=
+rom
+> > > each other i.e. ACTIVITY can be linked to INACTIVITY_AC for instance.
+> > >
+> > > When one of both is disabled, the link bit will be removed. Hence, the
+> > > remaining event will not indicate a plain state change anymore, but o=
+ccur
+> > > as a periodically triggered inactivity event or for each activity eve=
+nt
+> > > above the threshold.
+> > >
+> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
+> >
+> > Minor thought on rereading this.  If we don't have the link bit set
+> > (and the paired event) the AC events are more accurately described as
+> > MAG_REFERENCED as they are referenced simply to whatever acceleration
+> > was going on when they were first enabled.   Only with the link bit
+> > set (and the other event type enabled) are they actually adapting
+> > (so MAG_ADAPTIVE).
+> > =20
+>=20
+> Going by examples, I can follow you as practically I'm aware of the
+> difference between a plain inactivity setup and a link-bit enabled
+> inactivity(and activity) setup. Initially I thought of MAG and the
+> AC-coupled equivalent being MAG_REFERENCED. By your explanation I
+> understand why you preferred MAG_ADAPTIVE rather. But still all three
+> configurations are possible.
+>=20
+> My idea is, the driver implementation supports all cases in parallel,
+> at least to a certain extent. I mean, at the current implementation
+> someone can configure plain activity, or AC-coupled activity, or
+> respectively, their inactivity equivalents - when both, an activity
+> type together with an inactivity type are enabled, they will be linked
+> counter events. I.e. "adaptive" - and auto-sleep will be turned on for
+> the inactivity periods. Built on using just plain IIO API w/o custom
+> API calls.
+>=20
+> Due to all the possible combinations, this comes at a certain
+> complexity. In terms of configuration and for instance mapping to MAG,
+> MAG_REFERNCED or MAG_ADAPTIVE. Here I rely on your feedback. On my
+> side, I'll try to recycle the automation setup to verify registers are
+> configured as I like them to be using the sysfs handles (that's btw
+> the reason why I'm glad to have debugfs on board). So, if you tell me,
+> to change it rather to MAG_REFERENCED, I'll do it, but then AC-coupled
+> events will be all MAG_REFRENCED w/ or w/o link bit. Or we come up
+> with a total different approach, like putting link-bit AC on
+> MAG_ADAPTIVE and plain AC-coupled on MAG_REFERENCED, but then what
+> about MAG events w/ or w/o link-bit? hmm, I think current approach
+> seems to be a good compromise. Let me know what you think.
+
+I don't have a good answer for how to handle this complexity :(
+This was more about an earlier question I think you asked about whether
+there was a way to have the user opt in to the link bit or not.
+
+I'm fine with treating them all as adaptive and glossing over exactly
+how it is adapting but that doesn't get us to link bit control if
+we decide that wants to be explicitly exposed at all.
+
+J
+>=20
+> Best,
+> L
+>=20
+> >
+> > Maybe there is room to use that to ultimately control whether the
+> > link bit is set or not (putting aside the power aspect of that).
+> > =20
+
