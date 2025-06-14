@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F64C1DA21
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DA921348
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749861676; cv=none; b=XGgPNKFYM/o1cWeXwCCxmsoxPMzjY9xazbHGm08IjcsPQ61oZZlzUa3yJxc4VqZ4yLrQSv6PwzB3EDZrNJDbuIPvHE+t/q0wTLGU5MaFnQlcKEIlsFo+5I7D/NFSK0HaunMuvQb++WEwP6T6/lWiQKsoheON3tTAdQxTFEonxnU=
+	t=1749861677; cv=none; b=KPgTU+lwS/nEejoH879o5P/AyCPrvnrSn1dNplVEffuvMj2BM5hFd38r+X96Hh2Kx9z7PpSI39Oy9bLaBkFG3NJYhQUv1kVmFFncor9bWZ6P7VDgMIo/h4pkslzw6AIuPCpI8dj1PteEDuVqVSJ6bSfLsyGUUg8mTGVuU2qmIbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749861676; c=relaxed/simple;
-	bh=xTOdQaDFHDOLDoGnodTGxcVryRqHweiuzzowdYYZ+/s=;
+	s=arc-20240116; t=1749861677; c=relaxed/simple;
+	bh=oN3BYIv1X3S/u1Mo6YTEtbt/BDcHUYpHqNKZWnMpRxE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=gLXrwhrH+BQ+YGlRDGd3L4BD7Bf+fDn69jdE74icNK3DE9Yx8vNKuvHK7hZzZsjfL5AHQWb4rAccKbJdkwqmwSTMO59spuIHkxWzpDlWQtWfIojdhh7P9Ju60+HRhJU4oVvO4/r1hkwIaVfMr/rhx7M51d9cxp4WymXFFWoEJ4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GM7DtP/S; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=KA+expHy/eEQm1XEmaFNoEkJZyzWvdh+vQ0MNUslofnPW6KKfT4AgYffEX75ZzHWxsrorq13wHXTOJrlgliNLciU0hPf017OiKSvfWc9AOVkR2NPv+/AiiuTK90cMZA24jnTPxBK2h5l9AUOO5Sn2RYME4n7F00SNQTi6nYzziA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KXEmh/pC; arc=none smtp.client-ip=209.85.160.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GM7DtP/S"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so2516631a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:41:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXEmh/pC"
+Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2e95bf2f61dso2066704fac.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:41:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749861673; x=1750466473; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749861675; x=1750466475; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=G6wqE2DwPYgnf73taxRicYtVZNEYSfB+JsxDjsylyec=;
-        b=GM7DtP/SghpfBJmqiCZuTZrKuQBf9dYfPa8EDvNda8cPQLPiqz16y0C0ghCN/0GpSE
-         dz2T4tTkVPfnY1B8ZRHiy/YbC9O8hX135/y2/aWvlrO9DOfjoIK/fZtLsVRw51/pu8YN
-         +JI2f5u1FEKlbBdFmSmho1D2erZxW13JdBgRWUv66QKGsIDjls9AOqxAHBWkGKotSWMc
-         17QlayX3iPDNel+D7EMYUJK7K2hck/IVXiiVtnGSuQ4CtTAU4hJn5WVkCCByeGGQuQUo
-         6g6evQsJFXmG74p10x8+6f4ETzUcoI40SFO88fH9wilIU/yNIQdMOzy8vCGQtqFXOysT
-         uqZQ==
+        bh=iIS7VuzJ57xapf7f7yFC0ISYZ4tym+nwEbWhw3lcqKw=;
+        b=KXEmh/pCQqgR/9gPg0ngePiFcpFoIl3JR05EbK5z5ZRz3J42BeIVtAUpVCbpqzbAcZ
+         Ok4SZNAJOKm3qE4foDoGbTOLaoPLQg8oXXZlJ31+eM01n9hhDxf7ePps0awtHCmiVZBI
+         mzOIzMyqDU5SN60XEYnHQPlqfvwnRWDiRgJEIe1/8prl4GIJ+T9TivV2rGictddXffPI
+         MMV/UeFnDVVnmJulTV+vV7JSe47AV0zwq4GgdLikx6raArs9yh9Jw2OTe5ypHwFB3T1D
+         fCs56lPKdsMEsqKWHmad3i8Cef6ZBgewCUt/JWuwK/k8FOURJOxppQYU+HKogqMr771S
+         5FVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749861673; x=1750466473;
+        d=1e100.net; s=20230601; t=1749861675; x=1750466475;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G6wqE2DwPYgnf73taxRicYtVZNEYSfB+JsxDjsylyec=;
-        b=rfECiMPUTvMX01s1J/XbHdCV3w6XGGrE3U1WHjd/0U7uIoNvceGbbTg80EhGefLr5a
-         z6pQzR4o0SXMzJfI/iZXt8w0meCU1xEOZ4MckY8LIEEOJEWrs/iZwxfJq7wY2GVgMPTw
-         Eh89/v07HDKfzxDFtn7fgorkRSelPVRELFlByAVoprPCtxVUaTuld0kinvBnQgIcKcT7
-         JWkq7WDBYhEXFlfL4Hb6Z+OoczAEH6d1OaBRvxzpwPVQD0ryWxQQMq2/zc3FOS5183LF
-         d5qiPX9JgqQnxdUgYb5hcvnJ5BeAH3cslVm2du+jl7IzLLcTo1Al+c8WKFw2njalc3p4
-         eTBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnymQ9+rT+pZHQ2Zmv5jCvkkOOrdROEPfKyr0/zKA3gpRciNlFVvF7J+7d+/1C+jDRSwQKRbZ2GCM2Hjg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZVbzNe3F5w9yWEyiqk2PgKBM2SGc/Z66isYpULMrgP9/gsElL
-	q6y10zA4GmiJzQ7JRHpnlZ7fwwBwsA0IiIbK0BREhDf58ZvcYhaRimXOQiOXtgLvjaIG2Pu5vtL
-	KCArV4BIahA==
-X-Google-Smtp-Source: AGHT+IEkT8Zxs0LgIgAOV0H9rBTm0bmbA4vzTW6yXlwBYc8wizWTaaBCJ/voFHQYtmqqVTAIXKbK9D8DA9Ik
-X-Received: from pjbmf6.prod.google.com ([2002:a17:90b:1846:b0:313:d6cf:4fa0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f8b:b0:312:51a9:5d44
- with SMTP id 98e67ed59e1d1-313f1bef890mr2129572a91.5.1749861673306; Fri, 13
- Jun 2025 17:41:13 -0700 (PDT)
-Date: Fri, 13 Jun 2025 17:41:05 -0700
+        bh=iIS7VuzJ57xapf7f7yFC0ISYZ4tym+nwEbWhw3lcqKw=;
+        b=SYFripzifly4tKFCXhWySa7kxmuAR/LYvTX+JM6LWYkprBcOh9W6vE9rBPivp4nE1J
+         /Q95FvAjQ5aFLI3n6rLBr5MTc0qDNaTqNTh30s6v3SprgNemZPPVMk4doD/4H/KSjeIG
+         5G1CyW6jpRQ46kABRvs25YRBAgUlv+Aowv0VPOk0ICE02W/wD+8QX0MlvFd7u0f1uQq5
+         iPjPugNYDSr5W3A0Lmo+gwfLdFPbIPucIq8cEHnFXCrCd8MT9XNMDiBfror4GPx36cmP
+         6hZpjmiWhZP/4/xuqHZJWypRv0+LXgpIa+etjGxfJE5w+AF9y6+Fg+nGJGTf40lpdC1B
+         znjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSuWM4YhG+H12ho8uX9xiOJHVZofWzLxU49ALet2JR8MMhBYSmZ0I/3z3qpPLJlvapawgydXyM+DVncc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwobfnUrZgrUnMS9hR72RkeLEOTYvZb/h45drwIUoIH40zzY1eM
+	75doSIMbTPWEfBmZ3dW+vmgYlVBmgTA0OBiurpGrQ4lT7GLt8pMMN6/AKTS6DKv1Q/RXEoj7bzq
+	lnBNPbihyMA==
+X-Google-Smtp-Source: AGHT+IEkR+VxlvZKAv3aQOYK6PDsZQNMN4JyVSg8Cy2Rg3MCcgHrM2sojs7CgZIizz2tDc+Jew6e07LhSzCb
+X-Received: from oabgh10.prod.google.com ([2002:a05:6870:3b0a:b0:2c1:6d20:7b92])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:d1c5:b0:2d4:e101:13f1
+ with SMTP id 586e51a60fabf-2eaf0a147b1mr1068527fac.13.1749861675136; Fri, 13
+ Jun 2025 17:41:15 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:41:06 -0700
 In-Reply-To: <20250614004108.1650988-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250614004108.1650988-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250614004108.1650988-2-irogers@google.com>
-Subject: [PATCH v1 2/4] perf evsel: Missed close when probing hybrid core PMUs
+Message-ID: <20250614004108.1650988-3-irogers@google.com>
+Subject: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events and thread
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,29 +73,33 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add missing close to avoid leaking perf events. In past perfs this
-mattered little as the function was just used by perf list. As the
-function is now used to detect hybrid PMUs leaking the perf event is
-somewhat more painful.
+Caught by leak sanitizer running "perf trace BTF general tests".
 
-Fixes: b41f1cec91c3 ("perf list: Skip unsupported events")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/print-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index a786cbfb0ff5..83aaf7cda635 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -268,6 +268,7 @@ bool is_event_supported(u8 type, u64 config)
- 			ret = evsel__open(evsel, NULL, tmap) >= 0;
- 		}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index bf9b5d0630d3..39b6a13ca862 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -5359,6 +5359,7 @@ static int trace__config(const char *var, const char *value, void *arg)
  
-+		evsel__close(evsel);
- 		evsel__delete(evsel);
- 	}
- 
+ static void trace__exit(struct trace *trace)
+ {
++	thread__zput(trace->current);
+ 	strlist__delete(trace->ev_qualifier);
+ 	zfree(&trace->ev_qualifier_ids.entries);
+ 	if (trace->syscalls.table) {
+@@ -5369,6 +5370,7 @@ static void trace__exit(struct trace *trace)
+ 	zfree(&trace->perfconfig_events);
+ 	evlist__delete(trace->evlist);
+ 	trace->evlist = NULL;
++	ordered_events__free(&trace->oe.data);
+ #ifdef HAVE_LIBBPF_SUPPORT
+ 	btf__free(trace->btf);
+ 	trace->btf = NULL;
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
