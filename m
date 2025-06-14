@@ -1,102 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA5014BF89;
-	Sat, 14 Jun 2025 12:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D01E2741AD;
+	Sat, 14 Jun 2025 12:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749903798; cv=none; b=iCnY4VaCU9JmiwYMo52hEgzDK1nWOnjME2vszCRrUzGQOMbt9Xb4jI/IxkFDunRsu9zizAfMyAXQ9pdnAdcqYTzd0Ve48yJLxp5L/zWpCeYN6X1KApGcgU1nssd6AJ7P0CkReiinMLWjY3UB6CkF2JU6BW1D8Z3G1cdtV2/rs7g=
+	t=1749904189; cv=none; b=WX1PrHNsKL4g1X0q5/WmAyAarQisUm/gGUBxMp9Y93zJ8tL64BNCY7Ujr6MRC7l/hB8ZbVtrZsClzDiQ71YZ8+7BFHjWaJhD+Bzc+Ipybrxbl0f8X99YWsthtJECueUHnmO4aHGH0Y+ftMTlYKH7T5BBQPGI+U7PLlh/VQRRFKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749903798; c=relaxed/simple;
-	bh=avQIQVx7PU9oe/rVrLoBrchrvxBkxtx/0zHOHlcJODc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c/6SOFceayiXtrDylzpme/HkcIxghTFXiNbk1aaSUu9UBxZBfSBk1DRB+ucuQXJMl3yIT0wZlnnCuK4TTQA54EzTqYz2NZoutaUpeLGVMCUp4SXxgmpZe4/6YK5r0zCGe8iOhYXqNHegtQDrIBxCQxFZbTelIz6L6LEcehrekwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pgti5zy4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749904189; c=relaxed/simple;
+	bh=Wfcj9Z0uZC+J1XfReVkQBWAOdiJOlKthbX24fnDHccY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPChatGPlCVM827nfKRpplkfDl+dRo1Nu1XSHt3e0u0y+s5n9P4ydEk+N+kKU+lfKyljuMl3FZMVC8d2vqzm9UcwRrhuRG94sfotQM4abfjZwJsl+YTSqnB8z1k3IdmVskV5g+QGYdFPMG2xRuwtAloub3cjBh2yQkRovtgNEFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uq16Z+/L; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pgti5zy4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2293FC4CEEB;
-	Sat, 14 Jun 2025 12:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749903796;
-	bh=avQIQVx7PU9oe/rVrLoBrchrvxBkxtx/0zHOHlcJODc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Pgti5zy4ItelGapySex+FZlobPH1ZsV8BcOmcj3kvZ6Snf8tCTF9OmjDGY3m/b9Aj
-	 9TOcW6MkYFqsFdxt+Yd8DvskBa347QChTcLoSzKscD/3BPjAM6oDWD4aqEtqGLCFHJ
-	 gfWHC6vIp9nCB2k7zjGv6UrQnDbSalAu/DY9Rn7uorWpFfqbpjRt6sqse2u82ZxUuN
-	 KFqL9+qjeWTWlaQcSqmx8HfFGcjFxDTQdf5vkViKZkNT+3gXdRlvYPjvJGaSam1uEH
-	 jcn/7MjIf2gi+25/9/TexlgWxUj9VGGmJlktRIIxCG1MglzTHDP9SYeq4mFLCL8x9F
-	 PsUHqZaN26mdg==
-Date: Sat, 14 Jun 2025 13:23:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Heiko
- Stuebner <heiko@sntech.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Francesco Dolcini
- <francesco@dolcini.it>, =?UTF-8?B?Sm/Do28=?= Paulo =?UTF-8?B?R29uw6dhbHZl?=
- =?UTF-8?B?cw==?= <jpaulo.silvagoncalves@gmail.com>, Leonard
- =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, kernel@pengutronix.de,
- Oleksij Rempel <o.rempel@pengutronix.de>, Roan van Dijk <roan@protonic.nl>,
- Tomasz Duszynski <tomasz.duszynski@octakon.com>, Jacopo Mondi
- <jacopo@jmondi.org>, Jean-Baptiste Maneyrol
- <jean-baptiste.maneyrol@tdk.com>, Mudit Sharma
- <muditsharma.info@gmail.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, =?UTF-8?B?T25kxZllag==?= Jirman
- <megi@xff.cz>, Andreas Klinger <ak@it-klinger.de>, Petre Rodan
- <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 25/28] iio: pressure: mprls0025pa: use = { } instead of
- memset()
-Message-ID: <20250614132302.1e134315@jic23-huawei>
-In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-25-ebb2d0a24302@baylibre.com>
-References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
-	<20250611-iio-zero-init-stack-with-instead-of-memset-v1-25-ebb2d0a24302@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uq16Z+/L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749904187; x=1781440187;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Wfcj9Z0uZC+J1XfReVkQBWAOdiJOlKthbX24fnDHccY=;
+  b=Uq16Z+/LqCrWXL4i5spmeS3IhNYwnuvZSsQyaNET8DDifLh7dGm6C8pv
+   xwEksJIs7AJzIsBruNY9hi9ctLRfB1fnEDVDZhPbuT6ETnGMIFajI8mX2
+   G2otIRU1RsRqeJj/3lEALAtFPLsRgAv/j6PMSYFzvD9auE9REIivzErHz
+   HqWEIyNwPWRDc0Qz3i5ZvEYPD3eUKGhluJzvLFiK1GhGj5TWZ/pvAESGc
+   etm5U0ljZ9xwbqRtBudqPAKwndFfFHHlfuY5baJ5OgaoMwKTcDyrgQCcQ
+   G9RMDB0JWpcSYMviDl31rqzq/SFANVWD3zBg72XXAmCooT2xHROIKuJno
+   A==;
+X-CSE-ConnectionGUID: IxM9ckuATp2igKjq2z3BDA==
+X-CSE-MsgGUID: pncXVvAnR26NkpoH77feyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="63460139"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="63460139"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 05:29:47 -0700
+X-CSE-ConnectionGUID: eRUp2Z2+TQeA5wES6VPyZw==
+X-CSE-MsgGUID: ysyuDi1DR/WRKncs7Q0YCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="147943808"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 14 Jun 2025 05:29:44 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQQ10-000DVO-19;
+	Sat, 14 Jun 2025 12:29:42 +0000
+Date: Sat, 14 Jun 2025 20:28:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: James Houghton <jthoughton@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>
+Cc: oe-kbuild-all@lists.linux.dev, Vipin Sharma <vipinsh@google.com>,
+	David Matlack <dmatlack@google.com>,
+	James Houghton <jthoughton@google.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] KVM: x86/mmu: Track TDP MMU NX huge pages
+ separately
+Message-ID: <202506142050.kfDUdARX-lkp@intel.com>
+References: <20250613202315.2790592-2-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613202315.2790592-2-jthoughton@google.com>
 
-On Wed, 11 Jun 2025 17:39:17 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+Hi James,
 
-> Use { } instead of memset() to zero-initialize stack memory to simplify
-> the code.
-> 
-> The initialize of the cmd value is trivial so it can be moved to the
-> array initializer as well.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  drivers/iio/pressure/mprls0025pa_i2c.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/pressure/mprls0025pa_i2c.c b/drivers/iio/pressure/mprls0025pa_i2c.c
-> index 1a48f8d43d716b28b8fceb8e1a06d63a73a74a86..79811fd4a02b370b3fde8bd67a5115a3934f8614 100644
-> --- a/drivers/iio/pressure/mprls0025pa_i2c.c
-> +++ b/drivers/iio/pressure/mprls0025pa_i2c.c
-> @@ -44,10 +44,7 @@ static int mpr_i2c_write(struct mpr_data *data, const u8 cmd, const u8 unused)
->  {
->  	int ret;
->  	struct i2c_client *client = to_i2c_client(data->dev);
-> -	u8 wdata[MPR_PKT_SYNC_LEN];
-> -
-> -	memset(wdata, 0, sizeof(wdata));
-> -	wdata[0] = cmd;
-> +	u8 wdata[MPR_PKT_SYNC_LEN] = { cmd };
+kernel test robot noticed the following build errors:
 
-Slight preference for trailing comma after cmd,
+[auto build test ERROR on 8046d29dde17002523f94d3e6e0ebe486ce52166]
 
->  
->  	ret = i2c_master_send(client, wdata, MPR_PKT_SYNC_LEN);
->  	if (ret < 0)
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/James-Houghton/KVM-x86-mmu-Track-TDP-MMU-NX-huge-pages-separately/20250614-042620
+base:   8046d29dde17002523f94d3e6e0ebe486ce52166
+patch link:    https://lore.kernel.org/r/20250613202315.2790592-2-jthoughton%40google.com
+patch subject: [PATCH v4 1/7] KVM: x86/mmu: Track TDP MMU NX huge pages separately
+config: i386-randconfig-003-20250614 (https://download.01.org/0day-ci/archive/20250614/202506142050.kfDUdARX-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506142050.kfDUdARX-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506142050.kfDUdARX-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/x86/kvm/mmu/mmu.c: In function 'kvm_recover_nx_huge_pages':
+>> arch/x86/kvm/mmu/mmu.c:7609:38: error: 'KVM_TDP_MMU' undeclared (first use in this function)
+    7609 |                 else if (mmu_type == KVM_TDP_MMU)
+         |                                      ^~~~~~~~~~~
+   arch/x86/kvm/mmu/mmu.c:7609:38: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +/KVM_TDP_MMU +7609 arch/x86/kvm/mmu/mmu.c
+
+  7537	
+  7538	static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+  7539					      enum kvm_mmu_type mmu_type)
+  7540	{
+  7541		unsigned long to_zap = nx_huge_pages_to_zap(kvm, mmu_type);
+  7542		struct list_head *nx_huge_pages;
+  7543		struct kvm_memory_slot *slot;
+  7544		struct kvm_mmu_page *sp;
+  7545		LIST_HEAD(invalid_list);
+  7546		bool flush = false;
+  7547		int rcu_idx;
+  7548	
+  7549		nx_huge_pages = &kvm->arch.possible_nx_huge_pages[mmu_type].pages;
+  7550	
+  7551		rcu_idx = srcu_read_lock(&kvm->srcu);
+  7552		write_lock(&kvm->mmu_lock);
+  7553	
+  7554		/*
+  7555		 * Zapping TDP MMU shadow pages, including the remote TLB flush, must
+  7556		 * be done under RCU protection, because the pages are freed via RCU
+  7557		 * callback.
+  7558		 */
+  7559		rcu_read_lock();
+  7560	
+  7561		for ( ; to_zap; --to_zap) {
+  7562			if (list_empty(nx_huge_pages))
+  7563				break;
+  7564	
+  7565			/*
+  7566			 * We use a separate list instead of just using active_mmu_pages
+  7567			 * because the number of shadow pages that be replaced with an
+  7568			 * NX huge page is expected to be relatively small compared to
+  7569			 * the total number of shadow pages.  And because the TDP MMU
+  7570			 * doesn't use active_mmu_pages.
+  7571			 */
+  7572			sp = list_first_entry(nx_huge_pages,
+  7573					      struct kvm_mmu_page,
+  7574					      possible_nx_huge_page_link);
+  7575			WARN_ON_ONCE(!sp->nx_huge_page_disallowed);
+  7576			WARN_ON_ONCE(!sp->role.direct);
+  7577	
+  7578			/*
+  7579			 * Unaccount and do not attempt to recover any NX Huge Pages
+  7580			 * that are being dirty tracked, as they would just be faulted
+  7581			 * back in as 4KiB pages. The NX Huge Pages in this slot will be
+  7582			 * recovered, along with all the other huge pages in the slot,
+  7583			 * when dirty logging is disabled.
+  7584			 *
+  7585			 * Since gfn_to_memslot() is relatively expensive, it helps to
+  7586			 * skip it if it the test cannot possibly return true.  On the
+  7587			 * other hand, if any memslot has logging enabled, chances are
+  7588			 * good that all of them do, in which case unaccount_nx_huge_page()
+  7589			 * is much cheaper than zapping the page.
+  7590			 *
+  7591			 * If a memslot update is in progress, reading an incorrect value
+  7592			 * of kvm->nr_memslots_dirty_logging is not a problem: if it is
+  7593			 * becoming zero, gfn_to_memslot() will be done unnecessarily; if
+  7594			 * it is becoming nonzero, the page will be zapped unnecessarily.
+  7595			 * Either way, this only affects efficiency in racy situations,
+  7596			 * and not correctness.
+  7597			 */
+  7598			slot = NULL;
+  7599			if (atomic_read(&kvm->nr_memslots_dirty_logging)) {
+  7600				struct kvm_memslots *slots;
+  7601	
+  7602				slots = kvm_memslots_for_spte_role(kvm, sp->role);
+  7603				slot = __gfn_to_memslot(slots, sp->gfn);
+  7604				WARN_ON_ONCE(!slot);
+  7605			}
+  7606	
+  7607			if (slot && kvm_slot_dirty_track_enabled(slot))
+  7608				unaccount_nx_huge_page(kvm, sp);
+> 7609			else if (mmu_type == KVM_TDP_MMU)
+  7610				flush |= kvm_tdp_mmu_zap_sp(kvm, sp);
+  7611			else
+  7612				kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
+  7613			WARN_ON_ONCE(sp->nx_huge_page_disallowed);
+  7614	
+  7615			if (need_resched() || rwlock_needbreak(&kvm->mmu_lock)) {
+  7616				kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+  7617				rcu_read_unlock();
+  7618	
+  7619				cond_resched_rwlock_write(&kvm->mmu_lock);
+  7620				flush = false;
+  7621	
+  7622				rcu_read_lock();
+  7623			}
+  7624		}
+  7625		kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+  7626	
+  7627		rcu_read_unlock();
+  7628	
+  7629		write_unlock(&kvm->mmu_lock);
+  7630		srcu_read_unlock(&kvm->srcu, rcu_idx);
+  7631	}
+  7632	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
