@@ -1,83 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A9E1D52B;
-	Sat, 14 Jun 2025 18:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B162E62A2;
+	Sat, 14 Jun 2025 18:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749925068; cv=none; b=BmPKXDssgVkHMZvXAbXFAAtigbTeaZ8F0mxZ2zCaHiiBKXU3JCM07A0cSelRgzQMNEmhrr5NTD4GANeg2E9RfCtfr54afo78l2w2vBtwgt+9Bkh/YFvHlQ4zfH0jQXNm30CyfGEW0MgP119zyvnUd3x2X1hMgx3IMiWZczHTjY8=
+	t=1749925802; cv=none; b=GKNaRKIAUSOAEEggVxGOC0252gq5UIo1V1PsQKcsnSVRH9jgA6IDKyf3mOFRCZjm6x2QARCeLGkug9zHzgTQJ1YtYbcEfpNXiq2nb53nTaYFUw8ELdpMgNKCnlrySl95Bv6bRR+/outDpXgYq4riwAkmpaFqs5H9GC2CaDm9R5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749925068; c=relaxed/simple;
-	bh=kYjMKtc7MklFMBiGIsBwUdz/Ui61mcF79jR156Q6WLE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=j2i8kyTzqPyrNX3aogP3+ThOL+vNcEYp9J/dtPTL9EjA8FYtGaaCOptHqOqKrdd4C6Di1VizOh0o0Xp1Waydkz3ByYPl4R+1+4qkVXXICmbyDsK0Ml/RbePkDw2TSbIh7pxLL3p8BgmN4hClE2EXzLSoe6AUsiaNE0Aefbj5W9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWTcy8dj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749925802; c=relaxed/simple;
+	bh=ZOWX7BWpub6OqdK+2qdgNdaLd3Y1ksfzS7MpICVwCEw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=afgw7ZOe6WAPADsPE1nPV0f74JeLWL6fhjrm1uXSpCghhzxY+1Kq5etJCO7I+sfw+liaTp/pFK0vrfrHODNPOcPlITNfZRySaC3q+EvmMJdtoxW5MmucI5TfqGSD/Xd+XHSdpO3JVTzaZ3ZmkjpNH8VwExAt95nLVrxP9tIrSDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFfk+w5i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWTcy8dj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FEFCC4CEEB;
-	Sat, 14 Jun 2025 18:17:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFfk+w5i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E179C4CEEB;
+	Sat, 14 Jun 2025 18:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749925067;
-	bh=kYjMKtc7MklFMBiGIsBwUdz/Ui61mcF79jR156Q6WLE=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=iWTcy8djg9eMkM73JF3/T5fhhrX0PUH2QYiAkDv3oO6yuylXcmk3CnxrcNCjgLuMK
-	 rGpZLqirzW6xYLgJe4FHVLWvvxwVGiUMkxX8iiGAnUAGv42qWa7UVF/+SZ+SADuUDM
-	 27pB30y4E0AJZQ2Lc7Wz265vVegVDzUeEICh4F9M/RN+8y7wjWVeZCugN8fPYUl/Ye
-	 PyYvNrXq1VT3lo3W5xAppa7Tg5dPiqkFFxA5XzdUHILJnmuBuDaSDk8LujP/TNFSKV
-	 /F9E1FaX1wxtYu1U4vvcY3mnwp5lQsOvOo2zi8alf3BmzoYsFz8gFvAoXZqv2OrVrs
-	 sjf7n3PVhwvdQ==
+	s=k20201202; t=1749925802;
+	bh=ZOWX7BWpub6OqdK+2qdgNdaLd3Y1ksfzS7MpICVwCEw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=kFfk+w5iSMt6D2lX4Hzhd9HRVt3vSdqRin5fWxHjTTsQuigt5EIhuS/hLAWowzqlG
+	 wKSaYEFSpLW+jq7Lp8lg2NanE4zBZpKdva7yWD4qwTi4KSZkQ2rS1t1lYITXj+e3PI
+	 oErcfZT0B8cjuahfAPo2Rgqq+NJeHpw5+uBehdknoLNcoYzKO/vpo/Q2OWWoKaTEaF
+	 rea0f4cCd8z5Vjq7qHxponCCj+X/LxANLNZYCXNWsD8b0n3I1Pd4nXo+uRkHofnv5C
+	 WHyKxEcuChumy/+tOGc8itaMWAkRh8rm3bbawaV1KzjieSW2GOPJWhgqPRgMU1nbtw
+	 HTku+0HLw68NA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD57380AAD0;
+	Sat, 14 Jun 2025 18:30:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Jun 2025 20:17:42 +0200
-Message-Id: <DAMGNVWE7HAH.ZIUK8D3A3VEM@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor Gross"
- <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>, "Bjorn Helgaas"
- <bhelgaas@google.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] rust: list: remove HasListLinks::OFFSET
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
- <aAkoVfiZDAXdYxrr@google.com>
- <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v1] net: amt: convert to use secs_to_jiffies
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174992583150.1145273.16478965870565918025.git-patchwork-notify@kernel.org>
+Date: Sat, 14 Jun 2025 18:30:31 +0000
+References: <20250613102014.3070898-1-liyuesong@vivo.com>
+In-Reply-To: <20250613102014.3070898-1-liyuesong@vivo.com>
+To: Yuesong Li <liyuesong@vivo.com>
+Cc: ap420073@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ opensource.kernel@vivo.com
 
-On Fri Jun 13, 2025 at 6:45 PM CEST, Tamir Duberstein wrote:
-> On Wed, Apr 23, 2025 at 1:50=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
- wrote:
->>
->> On Wed, Apr 23, 2025 at 12:30:01PM -0400, Tamir Duberstein wrote:
->> > The bulk of this change occurs in the last commit, please its commit
->> > messages for details.
->> >
->> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->>
->> This works with Rust Binder and Ashmem.
->>
->> Tested-by: Alice Ryhl <aliceryhl@google.com>
->
-> Thanks Alice. Could you also review? I guess this still needs some
-> RBs. @Benno Lossin could you perhaps have a look as well? You both
-> reviewed my other series[0] which was quite similar.
->
-> [0] https://lore.kernel.org/all/20250411-no-offset-v3-1-c0b174640ec3@gmai=
-l.com/
+Hello:
 
-I probably won't have time for this one.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
----
-Cheers,
-Benno
+On Fri, 13 Jun 2025 18:20:12 +0800 you wrote:
+> Since secs_to_jiffies()(commit:b35108a51cf7) has been introduced, we can
+> use it to avoid scaling the time to msec.
+> 
+> Signed-off-by: Yuesong Li <liyuesong@vivo.com>
+> ---
+>  drivers/net/amt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Here is the summary with links:
+  - [net-next,v1] net: amt: convert to use secs_to_jiffies
+    https://git.kernel.org/netdev/net-next/c/c969149bafbe
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
