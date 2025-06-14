@@ -1,191 +1,181 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7821A7262
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154092BB13
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749915354; cv=none; b=gDFRA5bNKmmbIlRaMHn8IaN80hOCLBSqolbg0A99keyxhGY5LqGUuGNOjcyoZ25UagDtJMJoH8Rf30Q9Q3lp6PRZFuTGzjZUyZn6pkUs2MGwmwhIdcfoemJ7vhR33sGALsowmbs56FsRqaTkROo5p+dkMFRX2PptGlDklY6TeqI=
+	t=1749915480; cv=none; b=gsbixMzXAXGkIAisyZa0M7mEjakupGf7085LMDMcAh1ifB+lA756GYvCgMt6kHVUycK6CWmy48YcsuxwrbBUvGY9D4yhP0JN+no5c2Km3RHmfPJh9MiTF3RKnBKlEp1dVDwjzxrhXGxhQrqQEJi9Z872HRPzIQHhxPZKr/kj5Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749915354; c=relaxed/simple;
-	bh=YOwFReqhltsy4LHvdkwQ650tT/NzemA3b/z2LaAL8RY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGB30lsOE6bDgVau9GHXCxSde/MDeewuf3+KWHWTVdRziXOL8GgXMUQj3kR1pfZDvvnqn+wIb3dI6ydMYHu3FL0O6WpMO9UrRtBuQB3teV6EOZ9Cxe5g+fhdY17flRqIvk3COYI9VTA+H+MJXP0tpYYO9gsjX1rvpnEPSZRaxxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwlBFe8e; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749915480; c=relaxed/simple;
+	bh=IF3sdpNAvm13OXHhsCeFTvS3RRPxExum3RfP79UrgHs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AjfEfA5PFc2QT7o9dt0AIzAgvbawJ1wU7IsOft1yz3ufnT26C+CLPQUQDIcKW/vZYA05Qng6dMlE+yw68uylArJVLhWwDzhbUehT7GU53rjdsyyhRrEwbnyX6B6ne9m97ElOqOFbtQvZuZqzWW/Jm3BzbHYMVGVUt83Ko+YhLHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GmDyXd/J; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwlBFe8e"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so3502054e87.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:35:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GmDyXd/J"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fafb6899c2so37558956d6.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749915350; x=1750520150; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=21CiR4XNO29g+j3jUgvLM4rd1CxnhnosKhv5aVJJKQs=;
-        b=IwlBFe8edaWAAyOdFSB+LmISE+Rhp0oXhxDPyf1zteVXIWxa7lqg4QrDT6n+ppXLTb
-         TecKocV0dvZ/L9a1fESRTYOqsdhHs8jy1Mc4gyTK7i60M+qC/+iZlCrM6SbHb+y5HLoP
-         Q2Rp9bp/ov3p7gz8W3YT4xAOR9eRUGXhwK1JOEJNqqvvxIZ62sHP2zq+1+aA5QnmdUzx
-         gExRgd8mhv2jJANcMGdiUg+o9rgq+HKNr6lRG7E2LveO9+JabSQ32tpjNgwhZqY38z/0
-         69lQr+0M0Gu+tobOcvhN9+7SlOKVO/M+fJjwUO7WJewExa1pGVtLt03nrdnjZa6gD3+U
-         TfwQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749915476; x=1750520276; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dM6MGdI/Cu6BmiAAnMDXynLQyb+kVA2s8KSzJhvRprs=;
+        b=GmDyXd/Jzwy+elq0qR28mgPZQOl8N3zDBq0izggL9g1gXdmCpI8ouSxojOFcvoS7V3
+         uU42kpve6TX67wjY/DVTpCH/uBRPXedDsBzpehNctYaudTy5eyv5yzH0WO/dCRSBfBXX
+         ftGSghQchC6Y6YpRAcn8Hcv0Equ7FtylVOnG9LdpeIv43wgUFzgfei/o/o3JjCDsuW+1
+         jLJMa4XHZeqt6fCiVt7ZSzxLCwV58t35TKUvi+7eP9DfaTQMCszD5MuiooHqPyI/75vM
+         anKAVXo8EWy8W2+kYp7Qy1ekak4gq1ow1hDfTP5Bitvg/uzwOQVMRA9/b/NRz6Qcel+l
+         2cDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749915350; x=1750520150;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=21CiR4XNO29g+j3jUgvLM4rd1CxnhnosKhv5aVJJKQs=;
-        b=so0zUxJY0ZLPvcUlKkIIewjC67jLa11bSsKY0iiF4gTofbnlcIFl3StJl3lh6W4wS6
-         BhaWVTlvbzfZIOxXu3cFjrhpVWElFUI4MfnjmBJ8stucPb9xRR/9Un0lFH/fZVqP4eZ8
-         07JWWskP6pXI9BL9bBKiUBsq2QyPRgQg8BKfUA3Z5BX3zSsEAMZFPI9r9Rda7l3kmChH
-         BiiiCgYrmawl1WPjJiIyrnvAT264v3yU8w50ZBekgUG037WPMgLs+JaWo8QCv7AGIn+4
-         mZB1BkUUeB/HBPM5oTsJtw1/Gxxm72Q5xkZ/cW5quYeFYkXDZY023tG/bqQnieMrfFy9
-         c4CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXR3rOpqSaPWGWu8pE8KJ6DIz3jOD2SzW7y9BxkJMXlr+yiu21/8LX5bnwB1u0Dfl1vzLtYX3Gea5ylQKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuWfKRbJ+/vy3EKO3CL8r5Wb61NZsm3gPtHzfGBwThlb1XNa3a
-	c2NKo03UaKYSu/ae8f7i/Q8xNTizjqfXdGQhHaz8GJHhJa1rLjAh+BWz
-X-Gm-Gg: ASbGncvI4/WtgKmNwqIchAXj2sILN1WIempHjZWgZkT/VNYsD4lNK/0ckO3W5Bu5uzn
-	rjVvR7OQleUzfh7WF18S8CovrX7fPoKCMMkw18mTS7kjPKgVlgS3nrkfShS4OfMZdkAJumThwXV
-	BiA3IGzFopcslUveQzt9sXhR6/UQ+z+KqEme1iMbdzQ31602PJpUGzn2Vxs1wbxjEPpNi9i9EUm
-	9LjYDWXbDLXuze7rD2w6kOdwQWMPt4KGrwl2r1F7EMU6d1yHmOrPIJecyV9dMsSz3wD+mSNZq9l
-	7rGydLm3qzs50IoeUjwnrPEsFn+h
-X-Google-Smtp-Source: AGHT+IHFBaeLcVckKVW7IHweItTPqSsXeF13zuZ3KJFAYsmL34PaHP5pZrggwwKzPhPo3La6tmqrIQ==
-X-Received: by 2002:a05:6512:3e23:b0:553:2190:fef8 with SMTP id 2adb3069b0e04-553b6e6d5f2mr686271e87.7.1749915350032;
-        Sat, 14 Jun 2025 08:35:50 -0700 (PDT)
-Received: from pc636 ([2001:9b1:d5a0:a500::800])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1aa020sm870851e87.101.2025.06.14.08.35.48
+        d=1e100.net; s=20230601; t=1749915476; x=1750520276;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dM6MGdI/Cu6BmiAAnMDXynLQyb+kVA2s8KSzJhvRprs=;
+        b=mhL4JNhgDJVp+lgaZTWxyEcGUJ6/10Hh+WY1dw5dYHt3lBIFLg28Bs1BXxpDabZmDQ
+         qy38EIOuTZE4viMinTYCmWVf4ymiQHNoSFi9i9qn+G3PNJU/eu+sImijJXVVSQEB5Eho
+         HHTD2gIhMrhglY3y6oxn2kDzMLjFYMU4rcmWyquTutPnGxXDzzuSWi6dP2RjRQfOQ41v
+         bf5AVWRWrMdIHJAAHU0KM4Jg4YiqpBPdzanUUJZdLamWNiOyHAr3SIitCO6qc07PGhQ5
+         mtxOztrvkduIOXrZ5XcI7KmNJLhzSvzfleu8b08ea/9r/u9dIqfhfpjmcc2xF7yWKrFZ
+         b+yA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYuShxbPfmPyRP5LRWRXd6vKIBB6tSw94iZV1LejbqATw7U9SBejqN+v7zG6p1SqUE6EVYwdMQiNHPOvw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/A+XRatoAtOEuAXVYwwyi0oReDh0zEJNewLezsZU34fDeZVgm
+	WS8kRFIfV7Q/4FPpyqZuFkKy9rw3BVied+rPJOf0B69JFppz3f8Cth6auAarTasalOg=
+X-Gm-Gg: ASbGncuO//itoN5PpdYNqly2Lyvczr5dXDC8mevN6CX7vtZ5eQJmThZOv/+O0aloLK7
+	eC19hB57wzeFhe7ff/wvqk5sb8LP2bv/1UVOaWUqr9gMCWHo1qlJqBIrCkJO7LSfODQoMzCBaeb
+	XHAhZXJTzshVXOfbaR0ED3co7g7VYNeDkaDtB/wqNB625s5dY7ep/f+WVJgR4b3cjLLj9/rcRa3
+	6mxieeRoBVMtRkYPP+QlT5uQm2R/AjL7kWrSCsV51xw1mVbeGKzS2sj14FqfNCsF0BSiQzhrPez
+	tg2egNmYd2cngLFmYVz40xpj6WaZ3PMlp8XPbd3od3TJze882/sfjp7et9P2lomGwzZbXxLyKXP
+	4jc+uosGVkCsQUbTtqFZKddWsLQ==
+X-Google-Smtp-Source: AGHT+IHZ1Tv9eCXzH9c+bRpLufpmkVwHobMNBPQ0eQgw0xj8wp36TiVM27diht1dJubTVpp/Tdgo2A==
+X-Received: by 2002:a05:6214:f2e:b0:6fa:c5f8:67eb with SMTP id 6a1803df08f44-6fb45b192edmr82734616d6.7.1749915475889;
+        Sat, 14 Jun 2025 08:37:55 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c836a4sm32337176d6.107.2025.06.14.08.37.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 08:35:48 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Sat, 14 Jun 2025 17:35:47 +0200
-To: Dev Jain <dev.jain@arm.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Ryan Roberts <ryan.roberts@arm.com>
-Subject: Re: [PATCH 2/4] lib/test_vmalloc.c: Allow built-in execution
-Message-ID: <aE2W0xX1W4xxhHqc@pc636>
-References: <20250417161216.88318-1-urezki@gmail.com>
- <20250417161216.88318-2-urezki@gmail.com>
- <6c6f1cfa-7f1b-4133-ae2a-c6b1ef2d82e8@arm.com>
- <aEwzcsDM2PPsx1h-@pc636>
- <b28374e1-a387-4a2c-8986-02cd5081a8ab@arm.com>
- <aEw3pSVJxyCkhnTd@pc636>
- <0a7dd23f-9f6f-46b5-8ef0-b09ea1b3ccd7@arm.com>
+        Sat, 14 Jun 2025 08:37:55 -0700 (PDT)
+Date: Sat, 14 Jun 2025 11:37:54 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v3 next 08/10] lib: mul_u64_u64_div_u64() Separate multiply
+ to a helper for clarity
+In-Reply-To: <20250614095346.69130-9-david.laight.linux@gmail.com>
+Message-ID: <58porr76-92os-7019-nr00-n68r74202pps@onlyvoer.pbz>
+References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-9-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a7dd23f-9f6f-46b5-8ef0-b09ea1b3ccd7@arm.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Sat, Jun 14, 2025 at 03:57:26PM +0530, Dev Jain wrote:
+On Sat, 14 Jun 2025, David Laight wrote:
+
+> Move the 64x64 => 128 multiply into a static inline helper function
+> for code clarity.
+> No need for the a/b_hi/lo variables, the implicit casts on the function
+> calls do the work for us.
+> Should have minimal effect on the generated code.
 > 
-> On 13/06/25 8:07 pm, Uladzislau Rezki wrote:
-> > On Fri, Jun 13, 2025 at 07:53:37PM +0530, Dev Jain wrote:
-> > > On 13/06/25 7:49 pm, Uladzislau Rezki wrote:
-> > > > Hello, Dev!
-> > > > 
-> > > > > On 17/04/25 9:42 pm, Uladzislau Rezki (Sony) wrote:
-> > > > > > This patch removes the dependency on module loading ("m")
-> > > > > > for the vmalloc test suite, enabling it to be built directly
-> > > > > > into the kernel, so both ("=m") and ("=y") are supported.
-> > > > > > 
-> > > > > > Motivation:
-> > > > > > - Faster debugging/testing of vmalloc code;
-> > > > > > - It allows to configure the test via kernel-boot parameters.
-> > > > > > 
-> > > > > > Configuration example:
-> > > > > >      test_vmalloc.nr_threads=64
-> > > > > >      test_vmalloc.run_test_mask=7
-> > > > > >      test_vmalloc.sequential_test_order=1
-> > > > > > 
-> > > > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > > > > ---
-> > > > > >     lib/Kconfig.debug  | 3 +--
-> > > > > >     lib/test_vmalloc.c | 5 +++--
-> > > > > >     2 files changed, 4 insertions(+), 4 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > > > > > index f9051ab610d54..166b9d830a85a 100644
-> > > > > > --- a/lib/Kconfig.debug
-> > > > > > +++ b/lib/Kconfig.debug
-> > > > > > @@ -2574,8 +2574,7 @@ config TEST_BITOPS
-> > > > > >     config TEST_VMALLOC
-> > > > > >     	tristate "Test module for stress/performance analysis of vmalloc allocator"
-> > > > > >     	default n
-> > > > > > -       depends on MMU
-> > > > > > -	depends on m
-> > > > > > +	depends on MMU
-> > > > > >     	help
-> > > > > >     	  This builds the "test_vmalloc" module that should be used for
-> > > > > >     	  stress and performance analysis. So, any new change for vmalloc
-> > > > > > diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-> > > > > > index 4ab23e5e772d0..6d65ef725d42c 100644
-> > > > > > --- a/lib/test_vmalloc.c
-> > > > > > +++ b/lib/test_vmalloc.c
-> > > > > > @@ -591,10 +591,11 @@ static void do_concurrent_test(void)
-> > > > > >     	kvfree(tdriver);
-> > > > > >     }
-> > > > > > -static int vmalloc_test_init(void)
-> > > > > > +static int __init vmalloc_test_init(void)
-> > > > > >     {
-> > > > > >     	do_concurrent_test();
-> > > > > > -	return -EAGAIN; /* Fail will directly unload the module */
-> > > > > > +	/* Fail will directly unload the module */
-> > > > > > +	return IS_BUILTIN(CONFIG_TEST_VMALLOC) ? 0:-EAGAIN;
-> > > > > >     }
-> > > > > >     module_init(vmalloc_test_init)
-> > > > > Hi Uladzislau,
-> > > > > 
-> > > > > Post this patch I am seeing the following problem: while booting the kernel, this test is
-> > > > > executed and a particular testcase triggers a warning splat from the kernel, then the boot
-> > > > > gets stuck for 3-4 seconds, then proceeds. I am not an expert on modules so I don't know
-> > > > > what happened but I am guessing that when the test fails, the delay is due to module
-> > > > > unloading time...do you suggest a solution? I reverted your patch and then proceeded with
-> > > > > my work, so apologies for not having the dmesg log, if you need it I'll replicate, although
-> > > > > there is some subtest which has consistently been spitting out a warning on my Apple M3 Linux
-> > > > > VM and I have been just ignoring it for long : )
-> > > > > 
-> > > > This is because CONFIG_TEST_VMALLOC=y is built-in in your case.
-> > > Actually, I have a usecase for test_vmalloc :) I wanted to test my
-> > > patches through the test, but the problem is that the moment it fails,
-> > > it gets unloaded and then I cannot use the test at runtime. Currently it
-> > > is set to =m in my .config.
-> > > 
-> > Ah. It is unloaded itself when tests are done. Do not use the
-> > test_vmalloc.ko directly. Instead use test_vmalloc.sh script.
-> > 
-> > It is located here: ./tools/testing/selftests/mm/test_vmalloc.sh
-> > 
-> > Example: sudo ./test_vmalloc.sh nr_threads=HOW-MANY-CPU-YOU-have(digit) run_test_mask=7
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> ---
 > 
-> This is what I have been doing. Before your patch, I was able to run the test multiple
-> times, even in case of failure. After the patch, it fails at boot time and unloads.
+> new patch for v3.
 > 
-If it is set as "m" it will not run during boot, because it will be
-compiled as a kernel module. Unless your system during a boot process
-loads all modules. But even then you can trigger the test how many
-times you want.
+>  lib/math/div64.c | 54 +++++++++++++++++++++++++++---------------------
+>  1 file changed, 30 insertions(+), 24 deletions(-)
+> 
+> diff --git a/lib/math/div64.c b/lib/math/div64.c
+> index 2ac7e25039a1..fb77fd9d999d 100644
+> --- a/lib/math/div64.c
+> +++ b/lib/math/div64.c
+> @@ -193,42 +193,48 @@ static u64 mul_add(u32 a, u32 b, u32 c)
+>  	return add_u64_u32(mul_u32_u32(a, b), c);
+>  }
+>  
+> -u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> -{
+> -	if (WARN_ONCE(!d, "%s: division of (%#llx * %#llx + %#llx) by zero, returning 0",
+> -		      __func__, a, b, c)) {
+> -		/*
+> -		 * Return 0 (rather than ~(u64)0) because it is less likely to
+> -		 * have unexpected side effects.
+> -		 */
+> -		return 0;
+> -	}
+> -
+>  #if defined(__SIZEOF_INT128__) && !defined(test_mul_u64_add_u64_div_u64)
+> -
+> +static inline u64 mul_u64_u64_add_u64(u64 *p_lo, u64 a, u64 b, u64 c)
 
-It must be set as "y" in your system. Then yes, it executes only once
-during the boot. If you want to execute it many times set it as "m".
+Why not move the #if inside the function body and have only one function 
+definition?
 
-Could you please do below:
 
-urezki@pc638:~/data/raid0/coding/linux.git$ cat .config | grep VMALLOC
-# CONFIG_DEBUG_PERF_USE_VMALLOC is not set
-CONFIG_HAVE_ARCH_HUGE_VMALLOC=y
-CONFIG_VIDEOBUF2_VMALLOC=m
-CONFIG_HAVE_ARCH_KASAN_VMALLOC=y
-CONFIG_TEST_VMALLOC=y
-urezki@pc638:~/data/raid0/coding/linux.git$
 
---
-Uladzislau Rezki
+> +{
+>  	/* native 64x64=128 bits multiplication */
+>  	u128 prod = (u128)a * b + c;
+> -	u64 n_lo = prod, n_hi = prod >> 64;
+>  
+> -#else
+> +	*p_lo = prod;
+> +	return prod >> 64;
+> +}
+>  
+> -	/* perform a 64x64=128 bits multiplication manually */
+> -	u32 a_lo = a, a_hi = a >> 32, b_lo = b, b_hi = b >> 32;
+> +#else
+> +static inline u64 mul_u64_u64_add_u64(u64 *p_lo, u64 a, u64 b, u64 c)
+> +{
+> +	/* perform a 64x64=128 bits multiplication in 32bit chunks */
+>  	u64 x, y, z;
+>  
+>  	/* Since (x-1)(x-1) + 2(x-1) == x.x - 1 two u32 can be added to a u64 */
+> -	x = mul_add(a_lo, b_lo, c);
+> -	y = mul_add(a_lo, b_hi, c >> 32);
+> +	x = mul_add(a, b, c);
+> +	y = mul_add(a, b >> 32, c >> 32);
+>  	y = add_u64_u32(y, x >> 32);
+> -	z = mul_add(a_hi, b_hi, y >> 32);
+> -	y = mul_add(a_hi, b_lo, y);
+> -	z = add_u64_u32(z, y >> 32);
+> -	x = (y << 32) + (u32)x;
+> -
+> -	u64 n_lo = x, n_hi = z;
+> +	z = mul_add(a >> 32, b >> 32, y >> 32);
+> +	y = mul_add(a >> 32, b, y);
+> +	*p_lo = (y << 32) + (u32)x;
+> +	return add_u64_u32(z, y >> 32);
+> +}
+>  
+>  #endif
+>  
+> +u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> +{
+> +	u64 n_lo, n_hi;
+> +
+> +	if (WARN_ONCE(!d, "%s: division of (%llx * %llx + %llx) by zero, returning 0",
+> +		      __func__, a, b, c )) {
+> +		/*
+> +		 * Return 0 (rather than ~(u64)0) because it is less likely to
+> +		 * have unexpected side effects.
+> +		 */
+> +		return 0;
+> +	}
+> +
+> +	n_hi = mul_u64_u64_add_u64(&n_lo, a, b, c);
+>  	if (!n_hi)
+>  		return div64_u64(n_lo, d);
+>  
+> -- 
+> 2.39.5
+> 
+> 
