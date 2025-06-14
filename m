@@ -1,112 +1,143 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9E98F77;
-	Sat, 14 Jun 2025 21:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F6B1C3314;
+	Sat, 14 Jun 2025 21:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749935850; cv=none; b=TrdAef2qQW358YDMa8UYZjt8l0cLrGqWRf10p6fW4ZqnXuVqIty0UD3b+tT8Vs3NE7NzLiQWihOSIf4fh7JDCvc6C0upCFxvO0P9OmTQfDiSoP4TJ9t6hg2ln71ORq8zJXLtkXc2csrfuv08a9oHuZCgy9tOMBvTF8sCIXoHK40=
+	t=1749935969; cv=none; b=ZA6hDVnwo/qLT+u6gkn+I5Q13R5H398sCqxKy2XI3fvj1sIndek03VpClbXbt4YvvoI2qulc0BhbCHh+wXOaulLIqumz8SSeD5lZvbFKl87jujFHROiQUIui+jYVirSHHlN+oI6WC1Ka9P0Aqb79ZA4sW3muo8G/i0ONwsryEEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749935850; c=relaxed/simple;
-	bh=AtCbgc4ofTahpX6BcUnPAx8aFU+Gr7HS1JVprnOvCwk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IT3zNvU/cFASEXlEQz/xMOJ1hiDq7q3HCTKGkmyeiFNKohAgcGngeKqm1E5qXGBygRrIJj01OC9CtJB42BJK7UnNdoH01XlMC8MqihEffb1qj+K7XoXkmQF7OBdOZxtqHnBno/sdbdmaoM7Y46WpgTy3YcTdzAYZDXxmLUvG3p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXkIoMzo; arc=none smtp.client-ip=209.85.217.41
+	s=arc-20240116; t=1749935969; c=relaxed/simple;
+	bh=ZG3m7rZlu9KiGWUjBU4xheaArIWltgYwYSheh/mlU2U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hL/JNfI75NnSySV++nB8q/HpVsSM7Bce2SPeM/vF8EpRG8voMBOzTWlo4lmcEui/Bz9CqFS0QH9GB+KNnutH4/VEMKHp7MMZNkLzeWEuNUXB0GWg8YxNrX9rjE9pGAexe8wNgUv5XmfTKRaTUvMtZmVPd5awVDo46x5TXHWjJck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rh7Ocsym; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXkIoMzo"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e7971effd6so943781137.1;
-        Sat, 14 Jun 2025 14:17:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rh7Ocsym"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so21282085e9.2;
+        Sat, 14 Jun 2025 14:19:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749935848; x=1750540648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AtCbgc4ofTahpX6BcUnPAx8aFU+Gr7HS1JVprnOvCwk=;
-        b=DXkIoMzo4YcvMRF7Tazfz2cgZ4McCMdn4gjeykMB8cC5kaptAai3qgDWCFkCtrq1o0
-         yngtb6WPPZLv0Wn3b+pkKfW2fLDhp6MeWKkuzonTCWwrwNKPF+t7W9FWcQ9xpLLEMLSB
-         oYkl+y3hfONBW495n1vWgF2exR6lHTCgsaUbt1GTsk/c5LH4/V361AeuKmqsAjdbd84/
-         gw3nkpUgg+nmBpaUlMN/HQE+qgQNLq5fsjZ/b+da3K8lY7oDs7bnsCTOo+EOxhRH5uq2
-         44XV9RzcgIYc3SwiVW9TbdyIFdplbr4P1YB35DCu4qB9Mm6o5WdYLASLbU/gts8ituhz
-         vVnA==
+        d=gmail.com; s=20230601; t=1749935965; x=1750540765; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=flIDkZqwc3KWW4PKLKGBRVZjvqroSy4sA7R2DG7HV7A=;
+        b=Rh7OcsymDNpBmNLhkX6BrJZAJKkrHfIuS8SwtwqQFFlVJN/KBFa3tbi8cv0zZQOlgb
+         x1BiNkRULTJ5wP+rWkBjBGbjTqx/P//luJSdIjR7QsgpVenN7hqEzGRrK98iNW4M9a8c
+         x0x9bWyGbhk4bwpJcfvig0g2Db6fh/uiJDHMqbbsXZ9FirHWT/pRhgqQ2wdn42TIEzxY
+         ML1jH1UT/7CXw0wOsobBbuX/tU7aPmvmXvqSMzvD4Yr6MNcT7LMF1TU3HQk31GbUvM7G
+         bZQnw/9BCcOC+8BZEIdItG6fGEz6LhLzaeJQt3z94C2yLIdryipKe/kthFyS5wHSvzqU
+         V/BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749935848; x=1750540648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AtCbgc4ofTahpX6BcUnPAx8aFU+Gr7HS1JVprnOvCwk=;
-        b=wwQIp3Ch0n9NfoZxh+EKsg4aJkh3jsZtQ5VMFn9B+ljPQyI98UMVcvx7rh1zEOn4OT
-         aruqu7VtTwWTCX3KZ/R/DckwSrKK1M9eTc0hfIiACUHSeDhOlesd+TnGhX65kVdVyD/Y
-         6dylexyklFy76OMrh5FaWufxh86aT6Lnrx6GufJhJOlge1l96ewMUXcvcNGfnv/0vlME
-         7j+A/DfLUa1ybYthnAJ9Mkr66Okz7++BAQ9INqyBAPMATFah5mZx2VOEn/jP8RXnndYS
-         hcbye7o82qlrf/azAfpfxOI8318UCZpTneFucDDSOUR7wffvfd1mwWwlN0F6bCO7XWL/
-         eYFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZL1yXe8jtMbj9n/iP/cU1NQfFv+dKYMUHGJ0Ak87DKPuh8r8gL4rP7ysIGXotG3uPDd3VESyaZ5g=@vger.kernel.org, AJvYcCXt+2gDLWqMokfVHl1QBcf0ytNmLj5DGBfp4ok0UZIjeSxP815a9OZPQPSdwp8nu/7m2m2gc+uBwxjLR7D/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5YjQCw1Oo9UDxWahZDOAtXF+IxiRplfiRrzwNseyXrULYEATv
-	dI+Z4Zs27/CvkUmmUM5ZxIFur0iRyWsZeqF0fUGbZqAFmyOQwk7OQpdbFqBvgD5x7fFagobwq9S
-	4Rrf98bn7JCEJ1RwWQ8kkxFdtWOXRFGw=
-X-Gm-Gg: ASbGncu5aj9im5WW88ngr+6csmO2FzzlqVpMILaAZxOn+nDX/RksIZQhziIjJj7KGwf
-	Znjf6mRtKXlgJ/FWFu9O4Dbiot2S7CidWkTskTfFoZer8h+s7xYa1a3Nn1yDT35fy8aFWJlsKnI
-	KY1AOYwRJgZslcPmKaQaB8heD8BL2LkSrLdtZNg1CCJQGrn1i31urHxJ6Xbw==
-X-Google-Smtp-Source: AGHT+IHvK6N0seBFyFZDV5yJGXigXGnKDNfU/5ZbkfquHTqd7i51Wa71GJUKd/zIsx/XWtMlxGxIBTtZb23WytwezSo=
-X-Received: by 2002:a05:6102:2c11:b0:4ba:971a:41fd with SMTP id
- ada2fe7eead31-4e7f6222f5amr3671722137.19.1749935848101; Sat, 14 Jun 2025
- 14:17:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749935965; x=1750540765;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=flIDkZqwc3KWW4PKLKGBRVZjvqroSy4sA7R2DG7HV7A=;
+        b=szqMxOEbbotM31meyP2tvpQB7IOhfitvHQMk+PyRKVxqukyDg7w4X97lV6TytaqM+4
+         cM8MPoU6T+gcFPBSdxFFUgdo5kD2u8kWRQtDH/5+QZKX4DtWOQfd5wUknP9i7MewZULL
+         9hrlbPPwUxhVOP18Ioq+ocMrR6lgV3eIhSQ+71flYsFevwnBv18hbERgIjUxXucIVbOt
+         LCkHB/b4nd+Xe+5VEixKlertN5nQXlrjVsGS2ME6bhxzmrFq1amhvVHmzdmPIKta7Lzq
+         3Ux6dmdQMdU7c5G6d0+alsYKnsCnjEHdWXIXL38ClPJ7xa39+DCdsHDRb4TMi4r8cB6F
+         EYPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUp3WFUECwS22hvBlUf9SaayPx3nH0/i6fcHDqWHfUe2yB+PWv1yU2xYm5IsO3Je9KDsycoG/VqgB8M@vger.kernel.org, AJvYcCX5rVNdGYX66raeJpLJr01UuZNafW2twJn1/uYuMxlLv7+qUiDrHnpOaHIQ5C+PdZpNQQ0WcXo2UiRbgA7z@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRhJtip/5SjWAefS8iKUK2Uiv+bR7dPeMuwQUUJEZIPZpTD25U
+	KrQeHB8U57VFWPrZoKLjluvmfjbL9FjuwzNO/2V6fLBle+TBd7iXFm3R
+X-Gm-Gg: ASbGncvmOw2HZ/Yda2ZjnJ4SefIkf1JJDkPiiWbcXDL1WW7WXgML//692db4gYM2hsC
+	AWFxp3nOVDtgwIHZ3q+CavU4gm1A1FqdNxT4tIa1NqSP6Dt+9kHfAPVKrAOkE97bX5nulg5B682
+	FBUPN5P6mCaXCO0cOLgM85m3Tm1KxetPz/9S583VPrDFAm1ty1aBTBKgO7/I12TpGC3Phj1wxJl
+	f3byuF8OqfU1HxTzKfPjIHkKcRFJ2w5FTaniIFrfL33tpuLIBHzS93qbTC78raA5Yy+Ez77dfMZ
+	wE+VaIpg9iOClXAILSTdIWPmnEyP6MiBohtQpMtyiOaElrBDqbh/eeOe1n+aUNJU4AhPQXFhmK1
+	WDTYcMg==
+X-Google-Smtp-Source: AGHT+IEtV2JLpbYXhmYcHj10cqAe3Asf5UE3CdzjaK74yJYBNUGOKwUpNJwYbVg31UYOBNO1MJCv6w==
+X-Received: by 2002:a05:600c:3e17:b0:448:e8c0:c778 with SMTP id 5b1f17b1804b1-4533cb4948bmr34825035e9.22.1749935965328;
+        Sat, 14 Jun 2025 14:19:25 -0700 (PDT)
+Received: from giga-mm-7.home ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4e4f1sm5925838f8f.87.2025.06.14.14.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 14:19:25 -0700 (PDT)
+Message-ID: <d3b20a9ce58fa296034fe3aa8b60ecde4c4192f4.camel@gmail.com>
+Subject: Re: [PATCH net-next RFC 0/3] riscv: dts: sophgo: Add ethernet
+ support for cv18xx
+From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To: Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>,  "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen
+ Wang	 <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,  Richard Cochran
+ <richardcochran@gmail.com>, Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille	
+ <thomas.bonnefille@bootlin.com>, Ze Huang <huangze@whut.edu.cn>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, 	linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, Longbin Li	 <looong.bin@gmail.com>
+Date: Sat, 14 Jun 2025 23:19:34 +0200
+In-Reply-To: <20250611080709.1182183-1-inochiama@gmail.com>
+References: <20250611080709.1182183-1-inochiama@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
- <20250611194648.18133-4-andrew.lopes@alumni.usp.br> <c707bb2ad7334736c56687f20824be4b3ef71d74.camel@gmail.com>
-In-Reply-To: <c707bb2ad7334736c56687f20824be4b3ef71d74.camel@gmail.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sat, 14 Jun 2025 18:17:17 -0300
-X-Gm-Features: AX0GCFuSy8M5Fs56KHKcfTkTSA4rNH-o5-QwrhA4C0w9vtnhPcJxfDQjXQC6vZ4
-Message-ID: <CANZih_QUvHWhFRr6rNLhYOuyQ77oqUyvrtAMF593zOdWfa=JYQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] iio: accel: sca3000: use guard(mutex)() for
- handling mutex lock
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 4:37=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
->
-> On Wed, 2025-06-11 at 16:39 -0300, Andrew Ijano wrote:
-> > ---
-> > For this one, there are two cases where the previous implementation
-> > was a smalllocking portion of the code and now it's locking the whole
-> > function. I don't know if this is a desired behavior.
-> >
->
-> In theory, it should not break anything. But you can always refactor thin=
-gs (like
-> small helpers) to lock only the code you want. There's also scoped_guard(=
-). I would
-> say, up to you for re-spinning a new version because of the above :).
+Hi Inochi!
 
-Oh, thanks for the suggestion! scoped_guard() is exactly what I was looking=
- for.
+On Wed, 2025-06-11 at 16:07 +0800, Inochi Amaoto wrote:
+> Add device binding and dts for CV18XX series SoC, this dts change series
+> require both the mdio patch [1] and the reset patch [2].
+>=20
+> [1] https://lore.kernel.org/all/20250611080228.1166090-1-inochiama@gmail.=
+com
+> [2] https://lore.kernel.org/all/20250611075321.1160973-1-inochiama@gmail.=
+com
+>=20
+> Inochi Amaoto (3):
+> =C2=A0 dt-bindings: net: Add support for Sophgo CV1800 dwmac
+> =C2=A0 riscv: dts: sophgo: Add ethernet device for cv18xx
+> =C2=A0 riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
 
-> Just have something that I'm not totatlly sure... Did you made sure to co=
-mpile?
-> AFAIR, guard() had some complains when used in switch() case statements. =
-Maybe that
-> got improved.
->
+Have you noticed any problems on the board you are testing on?
+I've added the patchset + pre-requisited + the following into my board DT
+for Milk-V Duo Module 01 EVB:
 
-Well, it did compile for me, but as David and Jonathan suggested, it's
-better to create a scope for that.
-In fact, when implementing this I looked to other examples that used
-guard() in switch() case statements, but I didn't notice that they
-added a local scope too.
+&mdio {
+       status =3D "okay";
+};
 
-Thanks,
-Andrew
+&gmac0 {
+       phy-mode =3D "internal";
+       phy-handle =3D <&internal_ephy>;
+       status =3D "okay";
+};
+
+And the PHY is being detected and the Ethernet controller is being instanti=
+ated,
+but the PHY behaves really strange: LEDs blinking wildly, link status is bo=
+gus
+100FULL UP even without cable insterted and the real traffic starts to trav=
+el
+only roughly a minute after the cable has been plugged in.
+
+I could look into it, if Sophgo has documented the internal PHY, just wante=
+d to
+sync with you for the case you've seen this already...
+
+>=20
+> =C2=A0.../bindings/net/sophgo,cv1800b-dwmac.yaml=C2=A0=C2=A0=C2=A0 | 113 =
+++++++++++++++++++
+> =C2=A0arch/riscv/boot/dts/sophgo/cv180x.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 70 +++++++++++
+> =C2=A02 files changed, 183 insertions(+)
+> =C2=A0create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1=
+800b-dwmac.yaml
+
+--=20
+Alexander Sverdlin.
