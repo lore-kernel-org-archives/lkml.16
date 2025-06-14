@@ -1,151 +1,137 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1813179D0;
-	Sat, 14 Jun 2025 01:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2D63FD4
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749866339; cv=none; b=QLYb8PNZ9un3pKErXyBkJHrIE6vzwjXSo5P4S4ixY4piMTecJtUylGQ3eg/WtisPYgnGzCYDcY1Fk+K+9RSmMJJ+OyEKn5cJ5RgUqaP+sGkLqRFrQOqaJNdfCrywfbPUsD5OxFIU8U8fARE6cG7s/gfR2rGcSUZPcZGFwvSUb3w=
+	t=1749866737; cv=none; b=Lnup0v5diDYq0fxRaWZxlQ70Ty1DNFYOyeUDf9JH5UBH62By3obTmR5GedPYdudW+ichTNldue6jEefx4Ntg+lyetez/CuJ8kJgjgJtEvuQr28hNEIBhRLYoe4eyS2NiR0j7WVKU9mwBO52AEkmkkrWNGKMkY+Orh/fpi9FH/OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749866339; c=relaxed/simple;
-	bh=6CBp9Bt8ciqriMVh1fW/O/ZwDcSTm4fc1epU6lmOQ2s=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fFRWB69wEmdpdDP58x/G8KT1hagxtvgYckfJtHXimPfTpFoUvgGxbC3fiZN9HaG8Rxm0hpIIg0yiKFAADMLTBQCs677osltUQM+vba3gme8YRSF+bvMQXEXgu1lR/YIZVtDwmE1oZPdMM9tPCozudjWGje1J548cYDFx7M2c41s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyRHsyQT; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749866737; c=relaxed/simple;
+	bh=0x5H4LU0a5Taw10cJMJIaOjOW0AjqTmQJgjDEt1m17k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MC8jP4a5KDc/GelkKoNUuMV/Hsm6N1FuPcvTAI1N/jDkFIQ+E4BMx7sy/DPtnn+WJlyF8Bi/zNcjXaaGUdUMkKrCcOv/o71FyM5Uju9qalb/cA/bGhX1Vimkzjfs0grUgYimkUuCl867g6PGipBARDWa6Tt0fVa3W76ETi2yQNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=rm4iv6JX; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyRHsyQT"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3138e64b42aso3011510a91.0;
-        Fri, 13 Jun 2025 18:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749866337; x=1750471137; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z08wJTlTtpFkwBNRhaimLsvTa8BeRJzKO5CD18XcN4A=;
-        b=jyRHsyQTBxMFxP+55EtUh/CAOpFaCShFuX/Xizoa3V59H8SUoiYwyawx619dAdJYRl
-         axqycSUqAFgvRjEH/oDdslRRPmgrq14PJMI3sJB8Gkw67rbDZaCDttDKCWQoT4LG5NmO
-         RdJlANbn5Ao2uPTuAQMjJzumMFHHUo/1RUPNYd/23VKRSS3IJWDpjjg4SoYuFHfTY3ny
-         T7ePzgnsDyOfy9fpQJNynLMDU8LfObSZCR2TlGqG2orm148s7BukL8ztjinyH0hjfq/b
-         iiGvZzsrOGGS89an82tAYAzQAMKkJfQ1hTxPpz34LCgBeil2k44D4DrQeBgCVsUWKHYj
-         tqjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749866337; x=1750471137;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z08wJTlTtpFkwBNRhaimLsvTa8BeRJzKO5CD18XcN4A=;
-        b=H1sBk2yh6sxVndyy8gn+ECbb2e0wSVxzMqUUpR8mrQG2KiFWG/I58oeLWcl5VDl/4I
-         gNGKev6MB2Scj3RNFVDTDBITeD38zUgBqEdEbN/vcL0ChR/WJ66E1IBDAArpW8NdEpUT
-         swc4GPQ3t2FFAaN2TrtEK9ojWiga+kL3CazWlLq1sqSf2/XFKRorwOMOok9bZ80qCqYi
-         YE2XtPcHvJLG/NOfrSrBSzQnJgVx0Y9bttcoq9lXlp1pz+udHB2rVs6jZM7KYtl00MIO
-         p0drHaWiSA7zSpW0jP+hYt8JEMZwrOMMI6CGqUoay7KWCVr6mUofv7HYjM1KXl9SVhmW
-         pmIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsJQ2QfPGK+ILrG+ADMoOuKR3GXMIAWLLN+mPh9YPlf1NYA6jieDmm/Krpan0CPfzzJ70dY3E84obEEuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzon4yF39TaQcP51x/l4g/W1wjBd2D+dFZvALf2WVInsUkW6fy0
-	AM683c7Xe0vm0Yhcp4eNi+ReV2YUFy10YW4rTD4QNiLw7BOXF0Xe+Au5
-X-Gm-Gg: ASbGncuIdyRDiGcckVPMLHr4Q1wLZDAshH64ah8qEz/+JBFQAhEN03WOqnWgcHrB+Ht
-	NVzEUzSriuB0f14a5BFWQ26Ob9EaLRYCWFrJ2rBatNvj0xwC4qGytm36GvZFVNWKk6g82JCAMDB
-	Cnwq1RNMypSirSUhTCLAJhPPYEWAAaZVFiJu0+Fwv901zetbA5UDaeKNOWrE4JOHPDNR/0OCKw0
-	hEY5MLpmLy3yCySctsk40RiHHp1bn1AVn9WmTZ8a6qiLrQHhX5l9iRNkPxN8E/5vJwLPakqLkp9
-	d5y+N5JChWOnxerXI13R/88wIWZhxmxjOUY8TB5gBlX4lBN5K6VSm/zOsOdUyRiEZO6T44j/X4i
-	e7L9sUvtW6Ulm2n0V38rmpvwhwVwZ0WLtD2wWW2P/rOXcM3zY+LE=
-X-Google-Smtp-Source: AGHT+IGceoYIxIl92hkMNowp7lb+kcCpYS2EggVlboWxK1VEo+e7txBj0gQ9mtafc+SJi3uCobEBVQ==
-X-Received: by 2002:a17:90b:3c8e:b0:308:7270:d6ea with SMTP id 98e67ed59e1d1-313f1d2f830mr2492644a91.30.1749866337251;
-        Fri, 13 Jun 2025 18:58:57 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88f46csm21526955ad.39.2025.06.13.18.58.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 18:58:56 -0700 (PDT)
-Date: Sat, 14 Jun 2025 10:58:41 +0900 (JST)
-Message-Id: <20250614.105841.879936495340347805.fujita.tomonori@gmail.com>
-To: lyude@redhat.com
-Cc: rust-for-linux@vger.kernel.org, a.hindborg@kernel.org,
- linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
- fujita.tomonori@gmail.com, frederic@kernel.org, tglx@linutronix.de,
- anna-maria@linutronix.de, jstultz@google.com, sboyd@kernel.org,
- ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu, dakr@kernel.org
-Subject: Re: [PATCH v5 7/7] rust: hrtimer: Add forward_now() to HrTimer and
- HrTimerCallbackContext
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <20250613232754.451450-8-lyude@redhat.com>
-References: <20250613232754.451450-1-lyude@redhat.com>
-	<20250613232754.451450-8-lyude@redhat.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rm4iv6JX"
+X-UUID: 0bd42e4848c411f0b33aeb1e7f16c2b6-20250614
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=3d8Zhx9ObiwNzJOCXqpj07GKelYT8v9Bbdj5NmJup8A=;
+	b=rm4iv6JXqailfLDuFOVVmxKG7qC21pB7C6rypGQE78KqWP7+qPANaJs3AGB/Fkc1gW+N3rSal3bbMdEaUUy2eVBmIzciBNIaRKvlZUjKCmPdkG/D80gBf+qoaBUHtSlJYd3vvt7hE75Uh9ahcQ47bhU02GTscPzo4lsbsjAIOYQ=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:551d217c-5c9c-4707-8f05-bb08d7231846,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-35
+X-CID-META: VersionHash:09905cf,CLOUDID:44cef676-7521-4364-b0ef-cd7d9c0ecbde,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil
+	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
+	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 0bd42e4848c411f0b33aeb1e7f16c2b6-20250614
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1071341168; Sat, 14 Jun 2025 10:05:29 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Sat, 14 Jun 2025 10:05:28 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Sat, 14 Jun 2025 10:05:28 +0800
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: jstultz <jstultz@google.com>, kuyo chang <kuyo.chang@mediatek.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation formula
+Date: Sat, 14 Jun 2025 10:04:55 +0800
+Message-ID: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Fri, 13 Jun 2025 19:22:28 -0400
-Lyude Paul <lyude@redhat.com> wrote:
+From: kuyo chang <kuyo.chang@mediatek.com>
 
-> Using the HrTimer::raw_time_cb() function, we can now add an equivalent to
-> hrtimer_forward_now() to both HrTimer and HrTimerCallbackContext.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> 
-> ---
-> V2:
-> * Change from Ktime to Delta
-> * Make sure that forward_now() takes a mutable reference to the timer
->   struct
-> * Reword this to point out that we're adding forward_now() to both callback
->   context and mutable timer reference
-> * Rename interval to duration
-> 
-> V4:
-> * Fix rust documentation for HrTimerCallbackContext (forgot to update both
->   forward_now() declarations)
-> * Use Pin<&mut Self> for context-less forward.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/kernel/time/hrtimer.rs | 58 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 57 insertions(+), 1 deletion(-)
-> 
-> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index 79d86e1099a1e..0908359b0550a 100644
-> --- a/rust/kernel/time/hrtimer.rs
-> +++ b/rust/kernel/time/hrtimer.rs
-> @@ -201,7 +201,6 @@ unsafe fn raw_forward(self_ptr: *mut Self, now: HrTimerInstant<T>, interval: Del
->      /// - The caller must ensure that the `hrtimer_clock_base` cannot possibly change in the context
->      ///   this function is being called in. This means either exclusive access to `self_ptr` is
->      ///   required, or we must be from within the timer callback context of `self_ptr`.
-> -    #[expect(unused)]
->      unsafe fn raw_cb_time(self_ptr: *const Self) -> HrTimerInstant<T>
->      where
->          T: HasHrTimer<T>,
-> @@ -243,6 +242,44 @@ pub fn forward(self: Pin<&mut Self>, now: HrTimerInstant<T>, interval: Delta) ->
->          //   exclusive access to it - fulfilling the requirements of the C API.
->          unsafe { Self::raw_forward(self.get_unchecked_mut(), now, interval) }
->      }
-> +
-> +    /// Conditionally forward the timer.
-> +    ///
-> +    /// This is a variant of [`forward()`](Self::forward) that uses an interval after the current
-> +    /// time of the base clock for the [`HrTimer`].
-> +    pub fn forward_now(self: Pin<&mut Self>, interval: Delta) -> u64
-> +    where
-> +        T: HasHrTimer<T>,
-> +    {
-> +        // SAFETY: `self` is a mutable reference, guaranteeing it is both a valid pointer to Self
-> +        // and that we also have exclusive access to `self`.
-> +        let now = unsafe { Self::raw_cb_time(&*self.as_ref()) };
+[Symptom]
+The calculation formula for fair_server runtime is based on
+Frequency/CPU scale-invariance.
+This will cause excessive RT latency (expect absolute time).
 
-To the current time of the clock for the hrtimer, would it be possible
-to write it like the following instead?
+[Analysis]
+Consider the following case under a Big.LITTLE architecture:
 
-let now: Instant<<T::TimerMode as HrTimerMode>::Clock> = Instant::now();
+Assume the runtime is : 50,000,000 ns, and FIE/CIE as below
+FIE: 100
+CIE:50
+First by FIE, the runtime is scaled to 50,000,000 * 100 >> 10 = 4,882,812
+Then by CIE, it is further scaled to 4,882,812 * 50 >> 10 = 238,418.
 
-Then we can drop #5 and #6 patches and remove some unsafe code.
+So it will scaled to 238,418 ns.
 
+[Solution]
+The runtime for fair_server should be absolute time
+asis RT bandwidth control.
+Fix the runtime calculation formula for the fair_server.
 
-By the way, where can I find the latest rvkms code that uses this
-patchset?
+Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
+---
+ kernel/sched/deadline.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ad45a8fea245..8bfa846cf0dc 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1504,7 +1504,10 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
+ 
+-	scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
++	if (dl_se == &rq->fair_server)
++		scaled_delta_exec = delta_exec;
++	else
++		scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
+ 
+ 	dl_se->runtime -= scaled_delta_exec;
+ 
+@@ -1611,7 +1614,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+  */
+ void dl_server_update_idle_time(struct rq *rq, struct task_struct *p)
+ {
+-	s64 delta_exec, scaled_delta_exec;
++	s64 delta_exec;
+ 
+ 	if (!rq->fair_server.dl_defer)
+ 		return;
+@@ -1624,9 +1627,7 @@ void dl_server_update_idle_time(struct rq *rq, struct task_struct *p)
+ 	if (delta_exec < 0)
+ 		return;
+ 
+-	scaled_delta_exec = dl_scaled_delta_exec(rq, &rq->fair_server, delta_exec);
+-
+-	rq->fair_server.runtime -= scaled_delta_exec;
++	rq->fair_server.runtime -= delta_exec;
+ 
+ 	if (rq->fair_server.runtime < 0) {
+ 		rq->fair_server.dl_defer_running = 0;
+-- 
+2.45.2
+
