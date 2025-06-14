@@ -1,169 +1,224 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D372C08D0
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749901241; cv=none; b=tc6iwoVZFvBXkR3BtMduYZI4I8h/URAKQljdabxAdWpxSmySdzKkp/Jij+Icvr21vGGEZ6o7O7kro1GceRDVPRL7QCEIRs9FFUzVpzQWp2Vitq1bfll2nK4NXBo/Pwj8U+NhXbbtK9IhfKFd3DvykZAxWgvPDXleYS1TdXaEaz8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749901241; c=relaxed/simple;
-	bh=ZIYpkuU/T03fzdX/8jF6Kg6q4VaYgoZbs4ULm3W849w=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JrkI2bW8praSfKiAXxe9HAwzz2zLFNi50qeyPKsINJL4qsQGvT3pPjzDBdCk2thISfEzO4THaBCeqU3kBhU/zGbYaLahC9faWj3bKOy5KMzauF3zkiAs9HbCjldYChClOabj1iIFl32/nm5dtv24pa60rqtUPCyeO578uPw4/tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 64ED1219A0;
-	Sat, 14 Jun 2025 11:40:37 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A30C13A17;
-	Sat, 14 Jun 2025 11:40:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id adOlCLVfTWj7UAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Sat, 14 Jun 2025 11:40:37 +0000
-Date: Sat, 14 Jun 2025 13:40:36 +0200
-Message-ID: <87a56ar1or.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH v3 0/4] ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to user_access_begin/user_access_end()
-In-Reply-To: <cover.1749883041.git.christophe.leroy@csgroup.eu>
-References: <cover.1749883041.git.christophe.leroy@csgroup.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B46227BF80;
+	Sat, 14 Jun 2025 11:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749901306; cv=fail; b=C0ZSLLejxQEeybrQxBjWUK1T+Ux5XepTLCCLfdJm7XGvjAdyU/JG7NsEZakqKQ5ADMWJusWM5Tj/pAqIU7+m7W1KZHIcjp2CJV+zmzYCBaUPpQhwC94I1WC0HCkg2daVCf0xWCsGa/v2adazFknREuNpXWOIHIGzWDHt79OjNkQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749901306; c=relaxed/simple;
+	bh=x7MJ60hNWo3nG4ddeSTVH6FhNX/QnJfxyR/Mj00Wn04=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cJiVTnXKhYF3rDNCp2FNrqDH+S01alnfWh4LdP7gCyte+8pCr7pa1oycvBgj1S3639S8k01RdXt6PQlCyucYpraBlEwG6uVAUMEAK5Z0QIbGV3S7s4qp5/znFsMTz1lwEciU1PApRbMG6VMBcPlEWoW+k3uY3nOJswy86oStcHc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwbLS/iJ; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwbLS/iJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749901305; x=1781437305;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=x7MJ60hNWo3nG4ddeSTVH6FhNX/QnJfxyR/Mj00Wn04=;
+  b=cwbLS/iJsZd/TxSJ4zAB7EIavP5ILcalPT92wNIytXSuQqQ2791WcONf
+   xqkpRQPD4+AImmHA8KxspEUiTSTeJBqzkiFydUhlLblOHMMUkCENfiGVH
+   AZ84XTTV1OUf4ljOWRG2KXSbxAYdu+ZZUSW6VJxYC7+7QgdXxXnmInX9g
+   nluq/e2asjkIjDB8ol9dekEYveU2dEF2JuZbymyQaPu7EEwHRE4lmpu1t
+   VEkAxHPBbhWWoIYhm0Gt1Uy7FB5hZiLw0egi8SpsDGvvzn75w+M/znNa4
+   tiKbHikpglUOU6qqnLNd0kO7Lkeh8BAi4UoKr2miTrhKZ7QaulX90UPxh
+   g==;
+X-CSE-ConnectionGUID: dE4UWPaETcGpyCIMp+iibg==
+X-CSE-MsgGUID: Wbk7mt/ZTceBvsXdmWB0Rg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="51982078"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="51982078"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 04:41:44 -0700
+X-CSE-ConnectionGUID: v2hr28xvRQitQpd05nIeHA==
+X-CSE-MsgGUID: XvgKH1nkQQuPx27H0Thq9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="148951610"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 04:41:43 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sat, 14 Jun 2025 04:41:42 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Sat, 14 Jun 2025 04:41:42 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.88)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sat, 14 Jun 2025 04:41:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XHxVkY9HAHVj0fL/YVLqkThyxJnrl5ou4URrsKP0mCIWYG5l2m8gvb60nFoowGC/X6XigeDsb+fHAZTUsZ5Xsx03pNgEHSR7h26sKx/8Z7RHDM1WsLhyXR7iPN0UxUjLe8ea0F8frEyroumfbHFR4gLTI5gfR3OmkO+P4ug206EoXo0aQLunMhjpB78fU+IuBtRzFGVYpPBPqlwL6Y6JPDuGo/eXdJ0d6uuUDw0/5ydXrMSC6lixcmo4dftudO7MWiKQEDcXQYFY24dNb+xGT8ehDt4xRDc1LBy1mdt5afD6CpnKdW7MyVBWB5O9AkvNSPTpG72lL8JRbC2aCWxv2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JeQ4QiEN2BNY6T/HvgrGs6zRfuz/Ro4v6OAEEsMeDSc=;
+ b=CImgfBqYqWw82E5eZ/mijr7mhwmNqCkJtmV9lRfFI0aa1ZLtl6DfXr3UWu7xov+ALh7xwoe4Knf/EB3qzMvtb6i7/BJLbyAc6WaU5oyGL3S/rGmUX9sVXQn3ey6mZcfB6wUx+UtQBWgcjTil3TBXZiZkYT4FogzYFBAhGojHGo1Gb+YV4o3BuEZ738WjORbGMw5/UDNklBSrmdY1ey4MVYWoTNiDc/39yhBWiwmhuY9DBcxqLoyCv+h4NTGo9mEP/SNr1nGa7dASKLxN0fsqNrI6PpfNlh3AujJ4j2UPYGdxgHYT2CH2BTqRNa2HQ4Dt2mjh3MOJeYOkdnj8uzIPMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BL3PR11MB6363.namprd11.prod.outlook.com (2603:10b6:208:3b6::5)
+ by IA1PR11MB6371.namprd11.prod.outlook.com (2603:10b6:208:3ad::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Sat, 14 Jun
+ 2025 11:41:22 +0000
+Received: from BL3PR11MB6363.namprd11.prod.outlook.com
+ ([fe80::6206:bcb:fd57:6467]) by BL3PR11MB6363.namprd11.prod.outlook.com
+ ([fe80::6206:bcb:fd57:6467%6]) with mapi id 15.20.8835.019; Sat, 14 Jun 2025
+ 11:41:22 +0000
+Date: Sat, 14 Jun 2025 18:01:28 +0800
+From: Yi Sun <yi.sun@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <vinicius.gomes@intel.com>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <gordon.jin@intel.com>,
+	<fenghuay@nvidia.com>, <anil.s.keshavamurthy@intel.com>,
+	<philip.lantz@intel.com>
+Subject: Re: [PATCH 1/2] dmaengine: idxd: Expose DSA3.0 capabilities through
+ sysfs
+Message-ID: <aE1IeLwIovqvj4KV@ysun46-mobl.ccr.corp.intel.com>
+References: <20250613161834.2912353-1-yi.sun@intel.com>
+ <20250613161834.2912353-2-yi.sun@intel.com>
+ <50e151ed-af26-49f6-86c8-ebb7b1ad43ca@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <50e151ed-af26-49f6-86c8-ebb7b1ad43ca@intel.com>
+X-ClientProxiedBy: KU0P306CA0061.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:23::14) To BL3PR11MB6363.namprd11.prod.outlook.com
+ (2603:10b6:208:3b6::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 64ED1219A0
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.00
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR11MB6363:EE_|IA1PR11MB6371:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73678bf5-d75e-437a-b455-08ddab3862a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?U3JBMmNuSGIwZkFraUkwOEFZR1BYa2hXZEJhQ3RTRE1FMy9PdHpWbGdkRWVm?=
+ =?utf-8?B?Y21Cb3BFVHJQaHA3YnNLQ0dKYXRZRVJ5RkJza1l1cGVNc0N3U0h3TFBvWUwy?=
+ =?utf-8?B?OExxK1g4UjJHdllxVCtBbUFGY2kxTEVBYlBRRWE0M2NCQ2JHYXBTNjRwVUMr?=
+ =?utf-8?B?Vkl6V3VzS1pYSThmUWpFellWZ2FxYmticlJ1SVFQblBucjdiUUZJdFRQRm80?=
+ =?utf-8?B?c3g4UVVGd1VYR2xGNU16TVpLTndJenZWdkVYb0pSQUxZcjdjSG9QQjNYWlBZ?=
+ =?utf-8?B?TkNUaUVGRmNhYy9Cci9HZCsrVU5lQWlrZWs0cWNSZ0tuNTZYMjgxVWRKNkJs?=
+ =?utf-8?B?Z210dmlSTUN5cjM4Skltb0VjRXlQalZMZE5tL2Z0MWx5cWd4ZlhtcnE1RVRG?=
+ =?utf-8?B?SFNBcjNIZ1VvdHpNY0UzbnVUZXJUM09HaGFiV1ZRL1hJWGlIcWxNU05hV0hM?=
+ =?utf-8?B?OTJGcExRWGJjTzVPM2kyWllzRTh4OWNrWjI0eHlhallZT1J4S2Fkekpwa1dt?=
+ =?utf-8?B?T0pOWk1ndkNYMXRjRUlJV01IUDFXSm5CUHBTa3gvcGNnNVlMbVYwcnJCSWF4?=
+ =?utf-8?B?bzlDRmw0Z25nRlpndDRjQTJSRHdUT20rb1ZnbFdoWS9ncjhlbWN4dVl0cTQw?=
+ =?utf-8?B?N1lRck5Pb1pPcndaN3VUNEV6dGdqVWhTK2VjZmU5c0pubWJ5WGZ0RmxpeDIx?=
+ =?utf-8?B?Qmx2ano5cU9FZEVRZkFEVTdsN3p4b0V2MkN3MkIwbjhOSXFTZmtNYWVBR1Uy?=
+ =?utf-8?B?YU43THVGVlh0a1dzRTZEdkFzQnkzZFY1Uk9qWkllK29uSGVNTzJIYTR2aGRy?=
+ =?utf-8?B?a1BLbGtlaEt4UVY5Mlk1dml4M3ZCY1lLVythc2JZREZXYmhxNUdHY1l6amd4?=
+ =?utf-8?B?Q2oxRnZ4V041ektaQVRMaFBxTndsRFFGUVN2L00zT3NoNVVKT1dqSURranRK?=
+ =?utf-8?B?SENWMGpBYUdjWmI2bTczemRkcnNiSldJOHRQSnhmRmtQbDliVVp6TkVZdnpF?=
+ =?utf-8?B?dS9tVEV2K3B6NE83V1pxSVFZOG1nSWpRKzQ3SzZ6UWxQcWRoZ1NPSlA2QkVo?=
+ =?utf-8?B?czRKb2JYSldZOHRKUlFoRi9xSS9VaFVtLzVpeDQ5NThnd3NGL0R4SitFZGxI?=
+ =?utf-8?B?VGxFTjg1alA4T1Y3UlBNbm0xWi9ya3hGbkFQVHNJeTlNaW5QVmZXYkw0d2d5?=
+ =?utf-8?B?OUdxc3gwb1pBdHZmWXJNcVVJUUY2MzB1OEFMUVhGdXJlNGMyVzVKMG5xN3U4?=
+ =?utf-8?B?b2dLWXhKazlRemRQZnNFQXFmd2c3d3FZVi9aVzNSbjVYbWZWNlR2STFQZnRk?=
+ =?utf-8?B?am1CN1Q1aWQ2akUvazYzZUY4aUdQZDUraVFZaWsxSU14OXBoNVduRm1Ta0ph?=
+ =?utf-8?B?QlNuN1hzWS9HTks3TjhtcGtBNFNiOE1IZ2JmZXJrQktsQ3dYUzFvUkdWblpk?=
+ =?utf-8?B?SHJYY0JiV1Yzd2lreXVRTTVyaFFsaVYxWC9hTkZ3THdWcGhXSjdiVlZMWWVF?=
+ =?utf-8?B?S3ZHdzQ1elF5YmJ0ZFFETnJUUEIxM0JyRkgvVlZVMEpDOWxRV0NtQjJheEln?=
+ =?utf-8?B?dldVWlVUMmp4cE9vWDBQK2pRckRnd0NpdnUyeU5vQlBDWEJHd2Q2b25uZzRw?=
+ =?utf-8?B?bWtCNkpuZ3hHSzRXSlYvYUdRNTQwaU5zWVpDcW96MWVGUTNWZ0VjaWUyTGc4?=
+ =?utf-8?B?OHZkRTc4TklhMGZzZlo5UTU2MVVqOVNGVFhWbUUvUW4xVEpEbEhlNXdoTHFi?=
+ =?utf-8?B?NndhdXJiZ0lrMVo1cjN3cUpESFUvOFpFWUgwZjNKcDlHWWdoaWxaZEQ3enIv?=
+ =?utf-8?Q?fOvP4wR/FrHqKtL/RdKO+T/QiOP5LKK/HgwxE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6363.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L0JFNXYrejRwS3hrUUZSeEEreXU4SGUzSHpybjR1Q01QanBteE5pRzhxdnlZ?=
+ =?utf-8?B?OU9KTGhhUGphTnRxWlB5Q3ZvUWI0bTBTTTNBY0NaZXIwSStuckxrcjNmQ1B0?=
+ =?utf-8?B?Zzlvb2pjbTFBZkI4OExjeHZhQ21FY3pHb00wM2JmbmJUZWROUDYvY3MrY24w?=
+ =?utf-8?B?NmFPbmZndWxib1d3VWJPRm4xd0VsNlovanhpYnlBZXh1cTJid0ozMDQvNnQ5?=
+ =?utf-8?B?SUV2Vk1sOTFQNkFjendwc21WNm96d251SUkyRkw0MzhjYmVSL1EwYlZpRlNY?=
+ =?utf-8?B?SENDNXVTMS84NW5mYVZ2VU9UZXRUeXJJWnNUU0o1SndVVjZ0azRhODJoZ0xD?=
+ =?utf-8?B?cjVlOUtiRWY2cU1janhabkRQaXVCclNuN0dxWjJqeVBvWEc4WGRLOTlKYm9O?=
+ =?utf-8?B?d3JlVHdyLzhyeUtWaDFDcEJWQ1YyeWdZdmdZVDB4QjNYTjd5MG1PSGNQazd4?=
+ =?utf-8?B?bGsydEpzUXhWWUJuTnh0SlQzQURwSlZrU2VINSthV1VUaEhxZjMySlA0V2dv?=
+ =?utf-8?B?Rk9iZ0tJNW1wbzJ2L2ZNTEJndCtjRVdPYmFzUHg3eE9yRncvTXdxSDRxNlk1?=
+ =?utf-8?B?NWRjbHY0N29zMlF0VmtReS9la2VtN0NQUnpLWjBCdFcyY0RmZVZTZWh1Y0JP?=
+ =?utf-8?B?MkVEL09Wc04yei9oKysvRURZM0NtelNLNnZ1QTdCUjN4OW9wdm5TY0F5RXA2?=
+ =?utf-8?B?TlIwbXpTL01aOExHdjB5ZCtlbnF1TXlXbkJqcmVxcTFuZjRsSEQxUEtNV3o0?=
+ =?utf-8?B?RDhQTGl4VVhTWDZlenhzZnhHeExPSWQ5alg5K0NGc3ZKZVNnN0d3bVVueUc1?=
+ =?utf-8?B?OVF6dlk3Q2FFeEI5UlN5VUNiWTRKRjJqTTNScnlzTEFxVkNYUzF4U1d6N0l5?=
+ =?utf-8?B?dVh3bDFhODQ0MEtBSkc5SEQ5VnErMnJCMFU3WnBXS1ZoTmR3SWhnMlBaUDlq?=
+ =?utf-8?B?T3RWa3dZbTNLNkJBYnNEbnltRkd6OUIzZFZ2clhlUjFvSFQ0SzF5bW0yV2Vj?=
+ =?utf-8?B?R1BRWnd3L3hHWHBZa3h1T2FFL3Jsa0Q3QUFBUjRJU2hmcXNUbFBiVERCVkcw?=
+ =?utf-8?B?L01QeTgyQWs4Z0ZYYnJwLzdqbzRxaGs5SFYyOWJURktCSlVrT1EvN3gyOHF2?=
+ =?utf-8?B?Lzcxem5ENkprekh6dlFQS2lSTUp0b3ppZDdZdGZ6bVFYV0d6ZmUzVHBCSjd0?=
+ =?utf-8?B?SjZkMTJRekVkVlB5VXBMN1ZiUk9RSHdBNGlEK3g2Z0ttQUE0UnFmOG05cFY2?=
+ =?utf-8?B?eEphZ1d1N0puOGY3QXVDZFplNFhXdE1CSElEaVZWUTBnb1IvTUJBc1ZuWkhO?=
+ =?utf-8?B?eVNJckg0U3I2cEZXc1BwRDNsRTdGR002UDBhbzc2NDVieFRXaEVBYVdJQmtK?=
+ =?utf-8?B?cFBsVFdPblBHV0J2VzJzRGVuYkF6ME80ZlAvM3VvVEo2MW0rNDEyUjdWZUJy?=
+ =?utf-8?B?ai9zVEZPMWZ0Yy9QL0JxNUlEby80UUEvWTE3SDQvMmtNeUhrcVVia1Iva3RW?=
+ =?utf-8?B?aWx5VzBScEFMNS9CdmJ1N1pFRFBXWUdrclhtOUYvRnZpQVRTR1VOK0pWWHpS?=
+ =?utf-8?B?Zkd3SHN6S3hTcitsL3VhbWNTTHZLeUY2QTU5ZDFlUW9HZmUzTGxJOE52WGFG?=
+ =?utf-8?B?RFF6bG4xMnVWSExpM1dPZjlpbEFqMTJia3Faa3RxYWhTc0t3bXoxR2t1OWdU?=
+ =?utf-8?B?ZFZxRXhld0R2QkdYUTd0NjZzK20vY1piNXpDMzEwVDdzU29UM1VycDNjZjJO?=
+ =?utf-8?B?L0VNR0tHaGl1RGxtZXVIS1hvN0NGTUVic1owTjNkYmZPUWpjNEtYK1VIK0VS?=
+ =?utf-8?B?a1pObStaNzcyQ1BKQVVtYkU2RzNUSzlrSXdQZ3U1ai9DNWd6dGdWaUQrbnlC?=
+ =?utf-8?B?aTZCNTNJVlArWmw2TmhRQnNBR0l0aVZCUnR2WGZPMG54L0g3aEFDa203QzBk?=
+ =?utf-8?B?SlpDM1pTaUh1Tnk4OWVsRFVFUUc3RUl1cXNLbXpVcUs0Y3ZrckFKZ1J0UDhq?=
+ =?utf-8?B?Lyt2b2Z6RDJlUDBKclRXQW9nSFNuWVJoTWZGOEp1S01DT0dCek9LMFJJVUxm?=
+ =?utf-8?B?WUkxZUQyUjdzR3FSMTkxeWp3Nm5WRmo2QmlMdGlKVnJLdGU5RGtkblR0cnJu?=
+ =?utf-8?Q?7AqDH7RzLmg/C6YYHqFbDDKg+?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73678bf5-d75e-437a-b455-08ddab3862a4
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6363.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 11:41:21.9443
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4sH2Emthw7mBpzFBRaOuoGC7OSyIw0jftMuJxjJjv+5sRpe7EApnCfXqmmhZfU11ZLEA3CcnFNQ8Bz8bCDkMzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6371
+X-OriginatorOrg: intel.com
 
-On Sat, 14 Jun 2025 08:43:13 +0200,
-Christophe Leroy wrote:
-> 
-> This series converts all variants of SNDRV_PCM_IOCTL_SYNC_PTR to 
-> user_access_begin/user_access_end() in order to reduce the CPU load
-> measured in function snd_pcm_ioctl.
-> 
-> With the current implementation, "perf top" reports a high load in
-> snd_pcm_iotcl(). Most calls to that function are SNDRV_PCM_IOCTL_SYNC_PTR.
-> 
->     14.20%  test_perf           [.] engine_main
-> ==> 12.86%  [kernel]            [k] snd_pcm_ioctl
->     11.91%  [kernel]            [k] finish_task_switch.isra.0
->      4.15%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
->      4.07%  libc.so.6           [.] __ioctl_time64
->      3.58%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
->      3.37%  [kernel]            [k] sys_ioctl
->      2.96%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
->      2.73%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
->      2.58%  [kernel]            [k] system_call_exception
->      1.93%  libasound.so.2.0.0  [.] sync_ptr1
->      1.85%  libasound.so.2.0.0  [.] snd_pcm_unlock
->      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
->      1.83%  libasound.so.2.0.0  [.] bad_pcm_state
->      1.68%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
->      1.67%  libasound.so.2.0.0  [.] snd_pcm_avail_update
-> 
-> A tentative was done with going via intermediaire structs on stack to
-> replace the multiple get_user() and put_user() with copy_from_user()
-> and copy_to_user(). But copy_from_user() calls _copy_from_user() and
-> copy_to_user() calls _copy_to_user(). Both then call __copy_tofrom_user().
-> In total it is 16.4% so it is worse than before.
-> 
->     14.47%  test_perf           [.] engine_main
->     12.00%  [kernel]            [k] finish_task_switch.isra.0
-> ==>  8.37%  [kernel]            [k] snd_pcm_ioctl
->      5.44%  libc.so.6           [.] __ioctl_time64
->      5.03%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
-> ==>  4.86%  [kernel]            [k] __copy_tofrom_user
->      4.62%  [kernel]            [k] sys_ioctl
->      3.22%  [kernel]            [k] system_call_exception
->      2.42%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
->      2.31%  [kernel]            [k] fdget
->      2.23%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
->      2.19%  [kernel]            [k] syscall_exit_prepare
->      1.92%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
->      1.86%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
->      1.68%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
-> ==>  1.67%  [kernel]            [k] _copy_from_user
->      1.66%  libasound.so.2.0.0  [.] bad_pcm_state
-> ==>  1.53%  [kernel]            [k] _copy_to_user
->      1.40%  libasound.so.2.0.0  [.] sync_ptr1
-> 
-> With this series which uses unsafe_put_user() and unsafe_get_user(),
-> the load is significantly reduced:
-> 
->     17.46%  test_perf           [.] engine_main
->      9.14%  [kernel]            [k] finish_task_switch.isra.0
-> ==>  4.92%  [kernel]            [k] snd_pcm_ioctl
->      3.99%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
->      3.71%  libc.so.6           [.] __ioctl_time64
->      3.61%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
->      2.72%  libasound.so.2.0.0  [.] sync_ptr1
->      2.65%  [kernel]            [k] system_call_exception
->      2.46%  [kernel]            [k] sys_ioctl
->      2.43%  [kernel]            [k] __rseq_handle_notify_resume
->      2.34%  [kernel]            [k] do_epoll_wait
->      2.30%  libasound.so.2.0.0  [.] __snd_pcm_mmap_commit
->      2.14%  libasound.so.2.0.0  [.] __snd_pcm_avail
->      2.04%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
->      1.89%  libasound.so.2.0.0  [.] snd_pcm_lock
->      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
->      1.76%  libasound.so.2.0.0  [.] __snd_pcm_avail_update
->      1.61%  libasound.so.2.0.0  [.] bad_pcm_state
->      1.60%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
->      1.49%  libasound.so.2.0.0  [.] query_status_data
-> 
-> Since v2:
-> - Fix macros to skip user_read_access_end() when user_read_access_begin() failed
-> - Fix some tabulations for properly aligning backslashes
-> 
-> Since RFC:
-> - Added a cover letter to summarize some of the measurements done on and around the RFC
-> - Fixed relevant checkpatch feedback
-> - Split last patch in two
-> 
-> Christophe Leroy (4):
->   ALSA: pcm: refactor copy from/to user in SNDRV_PCM_IOCTL_SYNC_PTR
->   ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to
->     user_access_begin/user_access_end()
->   ALSA: pcm: Replace [audio_]tstamp_[n]sec by struct __snd_timespec in
->     struct snd_pcm_mmap_status32
->   ALSA: pcm: Convert snd_pcm_sync_ptr() to
->     user_access_begin/user_access_end()
+On 13.06.2025 13:59, Dave Jiang wrote:
+>
+>
+>On 6/13/25 9:18 AM, Yi Sun wrote:
+>> Introduce sysfs interfaces for 3 new Data Streaming Accelerator (DSA)
+>> capability registers (dsacap0-2) to enable userspace awareness of hardware
+>> features in DSA version 3 and later devices.
+>>
+>> Userspace components (e.g. configure libraries, workload Apps) require this
+>> information to:
+>> 1. Select optimal data transfer strategies based on SGL capabilities
+>> 2. Enable hardware-specific optimizations for floating-point operations
+>> 3. Configure memory operations with proper numerical handling
+>> 4. Verify compute operation compatibility before submitting jobs
+>>
+>> The output consists of values from the three dsacap registers, concatenated
+>> in order and separated by commas.
+>>
+>> Example:
+>> cat /sys/bus/dsa/devices/dsa0/dsacap
+>>  0014000e000007aa,00fa01ff01ff03ff,000000000000f18d
+>>
+>> Signed-off-by: Yi Sun <yi.sun@intel.com>
+>> Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+>> Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+>
+>Would be good to provide a link to the 3.0 spec. Otherwise
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
+Sure, will add this link:
+https://cdrdv2-public.intel.com/857060/341204-006-intel-data-streaming-accelerator-spec.pdf
 
-Applied now all patches.  Thanks!
-
-
-Takashi
+Thanks
+    --Sun, Yi
