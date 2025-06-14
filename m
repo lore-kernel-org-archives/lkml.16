@@ -1,63 +1,63 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8CA1D2F42
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3FB1D54D1
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749894857; cv=none; b=pe8SZeIdjz5t7sXgLTb7YfAS/ZUOE56V7aINHPyl5FXKJpwhorrcNS9Kw7wAbWtRNIbbEMOoRjO+5OlxTqx+0n5Pg33HiSMd4O1pUKT+a1Rb27MzQPwiEInaEfbDc+l4q05n/EGOFVDm95a/fbArQr26sC1RPdEQxQJyJCauceE=
+	t=1749894858; cv=none; b=qZRZUmHJW8RTJKdzvyVFUG2DI5MlWdHW8eS17CgA6TCMNCi+6tlbRsMovXNWWetND0PmaJmwOOsa9dGTLmEod06Wrf5YVYAmNn5h8/gMKmSg5mfTdRSEMf/Fb37uWdwQhEO6HmmYQh6ipD61w91JhzYWO0yjDYZmaw+S8zB4cKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749894857; c=relaxed/simple;
-	bh=gNPWLk7bVGAvDlMuEwd7oZj30Q4/E6JcxEl7T/MFyqI=;
+	s=arc-20240116; t=1749894858; c=relaxed/simple;
+	bh=V5A8c4F+Anra4BnQo+Mv9DZzO6ZTA0M1l0EhuD5TBgA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZvDCpApSV81/5tTubmUCQlZqprbRdEGFWzWaSO+psynp5DDGC3R8KMd673Ds85cOEkMbdZ/IPte/F3RpIMSKXnRBn6juQWmun/sfkrv027q4e5/JQPWeLQsIn3pL91D0Mmmv5L1g5dGXO3glAXaePuCImJ1K/rZeo0C65N432IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9YbXESq; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=eYdNA1sjXD8J1k+vBMrreIVe275CQR64phmYbHkW0UuCOR3xkpTPcrE+mjd3L+NYsH67h1Yd6hmtDJUGNUj9pc+rZQvWGAAUtBMxgDTtw8mGCdLAKizSdLxU+cNnX9ohKnJYzg16yx96rBkzvwt+aCd59UpajuHhJQrrig+NQfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DkLE41Gd; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9YbXESq"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso23752545e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:54:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkLE41Gd"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so22620715e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:54:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749894854; x=1750499654; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749894855; x=1750499655; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oEoRmOROics9XZZ0dFappmfLDjCc2Jum5Eh7tphQmqA=;
-        b=F9YbXESqczbrQOCWdRIZpS3Xa1HUpgXRxBuQmfR2wTSWUy9iIV2CQDJYWLrXHa22SL
-         uCx8T3wEzvUxMq4ITTkukomtYxbM49HXqOha4s2TjESKjaur3NTGzx3r+fWKv5UwWVDG
-         PwZP+noo6qQsMAFCpa35rFFaSPfVhLEO6DgSGHT6+qvM8ilUNPeO1SD7nVGcKZpyxQWK
-         kloOrscFphsylWyzE7jTn1+jcaXm16LNiyFKqt7cNRjKSSuAx7NEHaakFDg5PvDhWKg4
-         T43JeLC08CkM2KCLLo0Ln20FMbTOY1IGiltY9N+bn8yuRgn9NQFnfmEJSfAdHAsmpgOv
-         Q2ag==
+        bh=MRv07B3uuhx1oL47u14W0Ds8EkcLpM2/A7/p5FHeIT8=;
+        b=DkLE41GdHMH1XJo+NfcUH5JjEAFNYIHUY9b0GhSR8JDjMxBHn2rXeqUyQdfHJJYQBh
+         CcFXk8hNdp1DLQyuoern3LX1foKWPU2dBs1e6NzIb6GEmAzC/WOZjA/s4YVmTdiWmf7e
+         bFb994HoJPsOWlQTZRk8/Qgwx4Wewp9njOPypGU1tmXCubfOZam8fHDfKeBTmpNA4rwu
+         nVU9J/AtysLJb/1lDXEZzXPYlzu9Vu4HH/flAHvsyN/TD7/CvpMhAxQ/4ReJi5O534+s
+         aCQXd/CpYKMlsw6te2gvvIVGj1aG7UvJC3XYkYIO6R7SbGf6e4+wOgav56/8YlI8jc4s
+         AHWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749894854; x=1750499654;
+        d=1e100.net; s=20230601; t=1749894855; x=1750499655;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oEoRmOROics9XZZ0dFappmfLDjCc2Jum5Eh7tphQmqA=;
-        b=I+nH5s4aLHi3UfPEAo+Ocs6a7kQMT5dsoRlO+o7+8lrZOt39ghXTVYyu9EmtgIiBSQ
-         9qXCCLEQ8Nd2IHnsXwgDrQmzAMA3xO1U9dg0E8uQvhWmCgG0DszcLBhtX7YlWW/4iaUx
-         uqiNqzwH9j1lycT82WVyokN41cqdtnSdMgObQCXIzCFhs4NBNE0YfHBWUTb6Y0xf3FZW
-         /CmFhkq5ol6XEo6EX+1J4LmjGycvUSfGLsJrYh3edsT2XpWeXm+hyG+M78/BDXQ+NF6t
-         5tG3h7Exxiwbk2ndEinRSlBVoE+5yCMNrEcbshCtSuGkPaLqCiLv1aqeyhOVIGhp8Xjs
-         JW0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWgI8cRFiU2g4wBereCnYe95Ue9b4Lb2/FYlU0jjr1Ga2kXBvBFr8NEC0RHD0hKI0jsTN7Q3lDeoDjl0Wc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1/jz+cc7Dk3qCXk7lAfFXoBAG4sYbmzOEkPM06HH7ygJE7ptT
-	TU68alcqn9pnMjTZuQ5p2qhtx7BYTlANYLRbD9Syuzie7fXs0mJNlQ0Q
-X-Gm-Gg: ASbGncuE1kLS4F2otdGN2skmYEJeh8Ilhw3r5HIGfKo8VdSuT4g6LITgqppufZakDqL
-	P2vAoNi+A9rVCB0K9hH0+sVJZswhIyz/tU8Q87Wb/sWCRJ2+FHiXBEjqlZIgVUrrVTd9XlZyeAl
-	AaQOoA38sYL6KwoT/m6O2+y/x5bi/rc15JndQ6e04FurfaLh4YxlsGuF/4opeBID3FlvUdmfc2i
-	QeBhki2yFwGuUyMdzgJBDS8CGBDfxH9i4wIVd+WsJc3fVcmwnrXgeZVWNXeEJFFckA9OHaZB/jS
-	c4gOlGpMNWeV8dDDPN1o0TfaleF/+EVbKbaBa/00VCLWmUOO1xpwOlzvtaw15VPvZ1PsBS6M8bg
-	TtfRPYbTu8yqUkD90TIsCJCYWbGslfshsm/nqrd9FEDY=
-X-Google-Smtp-Source: AGHT+IGPHoMO7+RCfAgqwFmRqb4OO/WnTD2i72BVayXQxIoB4REUTtbCjI5Mlqa31tNkHVk2IqjKqQ==
-X-Received: by 2002:a05:6000:2002:b0:3a4:f52d:8b11 with SMTP id ffacd0b85a97d-3a572373cbbmr2901003f8f.20.1749894854039;
+        bh=MRv07B3uuhx1oL47u14W0Ds8EkcLpM2/A7/p5FHeIT8=;
+        b=M24H6o/16p1Pd1W5MOVtDtAUcjjFUUPErAD5gpGWonuZHKjV5a9gvPMjbi/lKQb2ea
+         50IGtMVRbfONSVLW+fYPQgEf+pp23LYTDOx+mH2Q0iN/IalRZ6XJ451qJxyt0ldW7CcO
+         nrgV/myYPn5ySpvbl66CYyUwhwZ+cndlC0qglpQrKeSk4ZkEyfxWvUuDoCA7MG6QOMhT
+         FVd1ji6bJKvbCsJ29s04OT7m2nb9LsA0U7n8jnV1Z/A030SL7KQnqqRsTI2hfBz759lB
+         BdCr/hixIrGaO8z+7C04DhL6WTP+OPlhoEVd6N5VuVAnzvXhrIFoWLWg59vn3pLZRwb9
+         VrqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6rvNQ67dE5EaPH1IBHoDINGjTpddsJW2mP1OZNd+PFaqveTgzDXo+VhbVUwZG7seQNiRiwTSdU6fYAJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbItNlqmOxbgqPkeAAItJWzTl9mTREy/1ZEwWvfdtNMyeMcNl1
+	pf6mKCy5iZXGlBFmf4NGwDjK4Rpbafg9fISmLrQfFeXUolwnOCkfvnihb8R0EQ==
+X-Gm-Gg: ASbGncuSqzb11+7On/g76aDlQ5I7q38t+sDi7POi1KqEPdtrsxjReel4tW8WLgF1Iqc
+	V9Tb5HNAnzP6uca4UQATPAcjV/CFZQfV05KB+MO5LjHvRFRemjj0AEkyNWY9yYQymhlJyWCm8st
+	B0X6bHwSZuW9/HkcVviWQ+NGIy1crydLOgrLhPNqzUnjjS2FFjoPynRUWWP6z5UIAkn3qziDhZ4
+	9+7DIJ9GkUjC6cIjpj4LyZaJM/PpR0Z5oG2KhUsPoxYNCrJ7ofdsLCywaCrqYcfkRy/4dpKoNVf
+	5QQ5tE+sXYvENXazDSX6qx6tH6Ai9RuA7OnTZWsSN/PuhPE8+glk3eWXdBcGMY45rp798XBn6X3
+	Su7p3bdI9fFwcM6limdNBLF9aqMupkhqmwZucmsKddsM=
+X-Google-Smtp-Source: AGHT+IF3OOcl+tXXUMMYOpw+OOYGfeCIfuL1vnnTOB42visF2nbrl9E8AE5w/J9WjsQF4BZyPVK+zw==
+X-Received: by 2002:a05:600c:1f94:b0:453:a95:f07d with SMTP id 5b1f17b1804b1-4533ca54b90mr36464145e9.10.1749894854533;
         Sat, 14 Jun 2025 02:54:14 -0700 (PDT)
 Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b19b32sm4869444f8f.67.2025.06.14.02.54.13
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b19b32sm4869444f8f.67.2025.06.14.02.54.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 02:54:13 -0700 (PDT)
+        Sat, 14 Jun 2025 02:54:14 -0700 (PDT)
 From: David Laight <david.laight.linux@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc: David Laight <david.laight.linux@gmail.com>,
 	Oleg Nesterov <oleg@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Biju Das <biju.das.jz@bp.renesas.com>
-Subject: [PATCH v3 next 03/10] lib: mul_u64_u64_div_u64() simplify check for a 64bit product
-Date: Sat, 14 Jun 2025 10:53:39 +0100
-Message-Id: <20250614095346.69130-4-david.laight.linux@gmail.com>
+Subject: [PATCH v3 next 04/10] lib: Add mul_u64_add_u64_div_u64() and mul_u64_u64_div_u64_roundup()
+Date: Sat, 14 Jun 2025 10:53:40 +0100
+Message-Id: <20250614095346.69130-5-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250614095346.69130-1-david.laight.linux@gmail.com>
 References: <20250614095346.69130-1-david.laight.linux@gmail.com>
@@ -81,65 +81,193 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If the product is only 64bits div64_u64() can be used for the divide.
-Replace the pre-multiply check (ilog2(a) + ilog2(b) <= 62) with a
-simple post-multiply check that the high 64bits are zero.
+The existing mul_u64_u64_div_u64() rounds down, a 'rounding up'
+variant needs 'divisor - 1' adding in between the multiply and
+divide so cannot easily be done by a caller.
 
-This has the advantage of being simpler, more accurate and less code.
-It will always be faster when the product is larger than 64bits.
+Add mul_u64_add_u64_div_u64(a, b, c, d) that calculates (a * b + c)/d
+and implement the 'round down' and 'round up' using it.
 
-Most 64bit cpu have a native 64x64=128 bit multiply, this is needed
-(for the low 64bits) even when div64_u64() is called - so the early
-check gains nothing and is just extra code.
+Update the x86-64 asm to optimise for 'c' being a constant zero.
 
-32bit cpu will need a compare (etc) to generate the 64bit ilog2()
-from two 32bit bit scans - so that is non-trivial.
-(Never mind the mess of x86's 'bsr' and any oddball cpu without
-fast bit-scan instructions.)
-Whereas the additional instructions for the 128bit multiply result
-are pretty much one multiply and two adds (typically the 'adc $0,%reg'
-can be run in parallel with the instruction that follows).
+Add kerndoc definitions for all three functions.
 
-The only outliers are 64bit systems without 128bit mutiply and
-simple in order 32bit ones with fast bit scan but needing extra
-instructions to get the high bits of the multiply result.
-I doubt it makes much difference to either, the latter is definitely
-not mainsteam.
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
 
-Split from patch 3 of v2 of this series.
+Changes for v2 (formally patch 1/3):
+- Reinstate the early call to div64_u64() on 32bit when 'c' is zero.
+  Although I'm not convinced the path is common enough to be worth
+  the two ilog2() calls.
 
-If anyone is worried about the analysis they can look at the
-generated code for x86 (especially when cmov isn't used).
+Changes for v3 (formally patch 3/4):
+- The early call to div64_u64() has been removed by patch 3.
+  Pretty much guaranteed to be a pessimisation.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
- lib/math/div64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/div64.h | 19 ++++++++++-----
+ include/linux/math64.h       | 45 +++++++++++++++++++++++++++++++++++-
+ lib/math/div64.c             | 22 ++++++++++--------
+ 3 files changed, 69 insertions(+), 17 deletions(-)
 
+diff --git a/arch/x86/include/asm/div64.h b/arch/x86/include/asm/div64.h
+index 9931e4c7d73f..7a0a916a2d7d 100644
+--- a/arch/x86/include/asm/div64.h
++++ b/arch/x86/include/asm/div64.h
+@@ -84,21 +84,28 @@ static inline u64 mul_u32_u32(u32 a, u32 b)
+  * Will generate an #DE when the result doesn't fit u64, could fix with an
+  * __ex_table[] entry when it becomes an issue.
+  */
+-static inline u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div)
++static inline u64 mul_u64_add_u64_div_u64(u64 a, u64 mul, u64 add, u64 div)
+ {
+ 	u64 q;
+ 
+-	asm ("mulq %2; divq %3" : "=a" (q)
+-				: "a" (a), "rm" (mul), "rm" (div)
+-				: "rdx");
++	if (statically_true(!add)) {
++		asm ("mulq %2; divq %3" : "=a" (q)
++					: "a" (a), "rm" (mul), "rm" (div)
++					: "rdx");
++	} else {
++		asm ("mulq %2; addq %3, %%rax; adcq $0, %%rdx; divq %4"
++			: "=a" (q)
++			: "a" (a), "rm" (mul), "rm" (add), "rm" (div)
++			: "rdx");
++	}
+ 
+ 	return q;
+ }
+-#define mul_u64_u64_div_u64 mul_u64_u64_div_u64
++#define mul_u64_add_u64_div_u64 mul_u64_add_u64_div_u64
+ 
+ static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 div)
+ {
+-	return mul_u64_u64_div_u64(a, mul, div);
++	return mul_u64_add_u64_div_u64(a, mul, 0, div);
+ }
+ #define mul_u64_u32_div	mul_u64_u32_div
+ 
+diff --git a/include/linux/math64.h b/include/linux/math64.h
+index 6aaccc1626ab..e1c2e3642cec 100644
+--- a/include/linux/math64.h
++++ b/include/linux/math64.h
+@@ -282,7 +282,53 @@ static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 divisor)
+ }
+ #endif /* mul_u64_u32_div */
+ 
+-u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div);
++/**
++ * mul_u64_add_u64_div_u64 - unsigned 64bit multiply, add, and divide
++ * @a: first unsigned 64bit multiplicand
++ * @b: second unsigned 64bit multiplicand
++ * @c: unsigned 64bit addend
++ * @d: unsigned 64bit divisor
++ *
++ * Multiply two 64bit values together to generate a 128bit product
++ * add a third value and then divide by a fourth.
++ * Generic code returns 0 if @d is zero and ~0 if the quotient exceeds 64 bits.
++ * Architecture specific code may trap on zero or overflow.
++ *
++ * Return: (@a * @b + @c) / @d
++ */
++u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d);
++
++/**
++ * mul_u64_u64_div_u64 - unsigned 64bit multiply and divide
++ * @a: first unsigned 64bit multiplicand
++ * @b: second unsigned 64bit multiplicand
++ * @d: unsigned 64bit divisor
++ *
++ * Multiply two 64bit values together to generate a 128bit product
++ * and then divide by a third value.
++ * Generic code returns 0 if @d is zero and ~0 if the quotient exceeds 64 bits.
++ * Architecture specific code may trap on zero or overflow.
++ *
++ * Return: @a * @b / @d
++ */
++#define mul_u64_u64_div_u64(a, b, d) mul_u64_add_u64_div_u64(a, b, 0, d)
++
++/**
++ * mul_u64_u64_div_u64_roundup - unsigned 64bit multiply and divide rounded up
++ * @a: first unsigned 64bit multiplicand
++ * @b: second unsigned 64bit multiplicand
++ * @d: unsigned 64bit divisor
++ *
++ * Multiply two 64bit values together to generate a 128bit product
++ * and then divide and round up.
++ * Generic code returns 0 if @d is zero and ~0 if the quotient exceeds 64 bits.
++ * Architecture specific code may trap on zero or overflow.
++ *
++ * Return: (@a * @b + @d - 1) / @d
++ */
++#define mul_u64_u64_div_u64_roundup(a, b, d) \
++	({ u64 _tmp = (d); mul_u64_add_u64_div_u64(a, b, _tmp - 1, _tmp); })
++
+ 
+ /**
+  * DIV64_U64_ROUND_UP - unsigned 64bit divide with 64bit divisor rounded up
 diff --git a/lib/math/div64.c b/lib/math/div64.c
-index 397578dc9a0b..ed9475b9e1ef 100644
+index ed9475b9e1ef..7850cc0a7596 100644
 --- a/lib/math/div64.c
 +++ b/lib/math/div64.c
-@@ -196,9 +196,6 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
- 		return 0;
- 	}
+@@ -184,11 +184,11 @@ u32 iter_div_u64_rem(u64 dividend, u32 divisor, u64 *remainder)
+ }
+ EXPORT_SYMBOL(iter_div_u64_rem);
  
--	if (ilog2(a) + ilog2(b) <= 62)
--		return div64_u64(a * b, d);
--
+-#ifndef mul_u64_u64_div_u64
+-u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
++#ifndef mul_u64_add_u64_div_u64
++u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+ {
+-	if (WARN_ONCE(!d, "%s: division of (%#llx * %#llx) by zero, returning 0",
+-		      __func__, a, b)) {
++	if (WARN_ONCE(!d, "%s: division of (%#llx * %#llx + %#llx) by zero, returning 0",
++		      __func__, a, b, c)) {
+ 		/*
+ 		 * Return 0 (rather than ~(u64)0) because it is less likely to
+ 		 * have unexpected side effects.
+@@ -199,7 +199,7 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
  #if defined(__SIZEOF_INT128__)
  
  	/* native 64x64=128 bits multiplication */
-@@ -222,6 +219,9 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+-	u128 prod = (u128)a * b;
++	u128 prod = (u128)a * b + c;
+ 	u64 n_lo = prod, n_hi = prod >> 64;
  
- #endif
+ #else
+@@ -208,8 +208,10 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+ 	u32 a_lo = a, a_hi = a >> 32, b_lo = b, b_hi = b >> 32;
+ 	u64 x, y, z;
  
-+	if (!n_hi)
-+		return div64_u64(n_lo, d);
-+
+-	x = (u64)a_lo * b_lo;
+-	y = (u64)a_lo * b_hi + (u32)(x >> 32);
++	/* Since (x-1)(x-1) + 2(x-1) == x.x - 1 two u32 can be added to a u64 */
++	x = (u64)a_lo * b_lo + (u32)c;
++	y = (u64)a_lo * b_hi + (u32)(c >> 32);
++	y += (u32)(x >> 32);
+ 	z = (u64)a_hi * b_hi + (u32)(y >> 32);
+ 	y = (u64)a_hi * b_lo + (u32)y;
+ 	z += (u32)(y >> 32);
+@@ -223,8 +225,8 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+ 		return div64_u64(n_lo, d);
+ 
  	if (WARN_ONCE(n_hi >= d,
- 		      "%s: division of (%#llx * %#llx = %#llx%016llx) by %#llx overflows, returning ~0",
- 		      __func__, a, b, n_hi, n_lo, d))
+-		      "%s: division of (%#llx * %#llx = %#llx%016llx) by %#llx overflows, returning ~0",
+-		      __func__, a, b, n_hi, n_lo, d))
++		      "%s: division of (%#llx * %#llx + %#llx = %#llx%016llx) by %#llx overflows, returning ~0",
++		      __func__, a, b, c, n_hi, n_lo, d))
+ 		return ~(u64)0;
+ 
+ 	int shift = __builtin_ctzll(d);
+@@ -268,5 +270,5 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
+ 
+ 	return res;
+ }
+-EXPORT_SYMBOL(mul_u64_u64_div_u64);
++EXPORT_SYMBOL(mul_u64_add_u64_div_u64);
+ #endif
 -- 
 2.39.5
 
