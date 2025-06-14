@@ -1,182 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB07228EA56
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE752E11DB;
+	Sat, 14 Jun 2025 18:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749926581; cv=none; b=jELnjY3c8S2QLgyKLE+Jjp4C+ERfAvxcn4klIpRbwnCJY+38jxPL1WYNzADjcMQUDzgRBrLP/4CtW/f26EF51iHfRPHwkabav/8YJD7tXKgW0Nm5T5VlZzXl5eamzhMjcU6p4hQ0G7FlaX1X57KA3bGB3E1L7g4eOdjXCfqljDU=
+	t=1749926783; cv=none; b=NPICl+eOmmIMYLQGa04KXKg5y1SnC2zUzV+LjBKPn3sJA+l2mBjdhF/eMSHxH9fjS00zPS2hSUqcg2iZnY39jmdSSjrgq16bQlf7SvhwwY3KUcco4wtoYkigwFa7xOLKJLsEhf/MNDdML+iYYR2mJCYPrUvFd5wm84sEYIBj3QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749926581; c=relaxed/simple;
-	bh=s6E01uA7mvRz1DP/q5h1Kgs+cAsIQRRJGrCjFTML+PI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YauQbRbyzPGxj3VNUbRsfv7UQwOVuNE18HyyIK4ZeDyV2PDvxbeI42vWVsmaS1R8KVvh87fnuG2dpUK5jJyUWTGkvXvt49jcHQN5KosV0oB2sr47dxFKjThkk1fvCEsGj6EG3HCn4P/u4Htle/I7khkHnhXin3szHTOVF8Wsae0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E4BOk5zd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749926783; c=relaxed/simple;
+	bh=Bb5ZUwAlQq8gkEwgvvmGUrtzWmZ9r+fPXehJZ6wwGbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u0o1FDC7pQmfyOSw3LFvKdxDn+x9DloOy2Ix6vunn4byaUsrJjBBBe0WUe3p8ZFIR0YGK5Phf11NrSh/hyzbaLipGdfWuB2oQoV5PpXgj40AhM9ixT7B8Jtw/9GGr83CUa3doEDkO8/02KDmlOMtl5furcsY/U13Z6lIFNxQuLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmeSSnNK; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E4BOk5zd"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55EGLxEv006775
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:42:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iLwHJ8QhRIGYKyF4YaLlo9Wwe+HrqcTZDg4UUvCSfuU=; b=E4BOk5zds0DrD8NF
-	shEEzA0umYdl0+l2QQoDtHcBw3muKjC9CdF0eGWK2JNLFxH+WubblyadPNBhyJDt
-	pdj9Gee4bbCTyNCIlObEgpXkd7ae/0BTqpnVCZO3Lfg+SK3uhS8vvoWziYgusxa+
-	AuIiZnsYaItRG+Bt+CubgkgVNA5IuJUqElDU9TdWnFjjt3Ay5s+kVdp3iQefFfX4
-	NqnCqEKE6ZAA6hwZMQRhN948mAJzLL9KTH6DGyLD3iCANdTsO0kLGUGTATNwArcs
-	AuVbw/3v8ac2hLPzkgBQSO6Z3HDhsqFdkZOOOmUYkmgR13zR9ZbL9JPWArBm5Qjs
-	vN4WOg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hf8wb1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:42:58 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a5832bdd8dso6732601cf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:42:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmeSSnNK"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ade4679fba7so580221466b.2;
+        Sat, 14 Jun 2025 11:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749926780; x=1750531580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nj8I/kGHN3gWcFvFq+8HgzJ24UO3U/GkH1WHXxfLGQo=;
+        b=PmeSSnNKfjv1MLTTm9tAEU/fUN848eGyEnr931Ybg02TKJAfhAb0uhEM7o65VpnN8y
+         7EUjKlW6t5J0hZIaK8pdg8p6RR3/noDZhFblhjFOsEBaX2I0he57HP6L3JGuuccBMC3X
+         QhxrIQzGrNSclqdQN+UcxUHA/neERMRkvKZw2BqkgfyfSsDQiATPJNifYPN2dMq4Su2V
+         MumvGKE2utjNNf6g3C6g6DVKV3DpTDXmDNLQ6BoJ3Fb+uvRPoNh/jcpeYKk7PBisUmTu
+         zt+sE+6dKPs0ShJCvBc4912mWC6hW7+oo4TMVqJIDNkmfVhQ/ez90UPyNe+m9+xsAVBM
+         WARg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749926577; x=1750531377;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLwHJ8QhRIGYKyF4YaLlo9Wwe+HrqcTZDg4UUvCSfuU=;
-        b=SLH5ZAzAZP4zNV/I3ntUy/yv3cXpAYQWQ7dhgpiNLqTjF4x7JRfPymArEOgZvHfm3v
-         JlgEd+gFwUYZ3DBDfTGaZEv7X1yoTzsENsnY0z9jEl/daVr/Rj8DtJhw5RNxKYRgAY5i
-         7FzhAVXysSVP1iUaCAHR0iuMrPU8aKKqWKg3yXdHHLMSmoqBIkIZUAP7Rm7oX042ay98
-         xyOKQgplP4q2Z+nMzuxrlRJ8BVAhI2J4GlvlYmtUimEP29nmLHyhxrZqEBXH4g5jUftA
-         zp2JxNH7fSURr3S3YXLKonbqysWlVppNO32WxqDT8b1zExls7xBpsabqT7Sv5AZq0OMZ
-         nmpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcHNjurms9HOns8jUJ0CIfZDsS0a/zlCkJmSWF6g4zVVSW0jtU5N2TYtD0ah/AjsuUZGSBHv9FTWqwt9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsjTgd42g00tdSonukT1F9o2JH9BInByuMbu+9/8H8bhLTh3R1
-	ziMP5aDT1POtOKIjOy5wyWsQ9EXf7O1dZtZGGzig8z1x1wKJlcPDWAHls81+HTpmcb3R1eu+jkM
-	ZtSyErvqmN/qhlFsw5S7vvdUXKd8teeZljTH+2AvXKvNuNKpUio98fC4cz2H57IxhWBs=
-X-Gm-Gg: ASbGncs26ELQLD97TfWUPMRWGXNsGwMCR+jTY6oHq6USJ5WwcEn7iWtMYMql+7gfLkb
-	2DsZ/SU/QzZvYmgUh8i+4TGbu+VwqWQlx1V+PMdVN7ZIWOL95D0U1/R4c3K39knSu/GUhn8uPHl
-	/4TG7ks/8VJOMpcHT/Af4kbJzRb7P5qXnxKGBadkjVaCmGOJKECECYxyehAPR43Low6Rmqg/Cht
-	Be5lsQf9wQJufbyEYKRrKm7hWI6DUnxVcB8cgOGWOyWvhV6VJoF2CtkNnpGM5jrZtSMVoQE43Q2
-	9AcMNTFKtUyMYZqYob+bd82m18BdWomkmVQilSb8PlwcUiFJ8SA7iq1k7Gfv+awtcRZx12PpSyA
-	1IVk=
-X-Received: by 2002:ac8:5d0f:0:b0:4a6:f809:85d6 with SMTP id d75a77b69052e-4a73c568fd6mr22438861cf.4.1749926577324;
-        Sat, 14 Jun 2025 11:42:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHkYi18BH9yEJbdfQSZZnPYYS236AqGcoTRf5C7tWQLhoDTwPCEtKNQkvCzqxnaF0WVubY/jQ==
-X-Received: by 2002:ac8:5d0f:0:b0:4a6:f809:85d6 with SMTP id d75a77b69052e-4a73c568fd6mr22438731cf.4.1749926576868;
-        Sat, 14 Jun 2025 11:42:56 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6090063ff9asm293673a12.21.2025.06.14.11.42.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Jun 2025 11:42:56 -0700 (PDT)
-Message-ID: <29f1de05-0e55-42b2-9bf3-894bf4f07808@oss.qualcomm.com>
-Date: Sat, 14 Jun 2025 20:42:52 +0200
+        d=1e100.net; s=20230601; t=1749926780; x=1750531580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nj8I/kGHN3gWcFvFq+8HgzJ24UO3U/GkH1WHXxfLGQo=;
+        b=iz2Y6cF/kIsBF8/Yog4OX6fM7b5Dm88v0WSe5KQrnzoHcrd/xwWVRBaBPSx0Gy9onS
+         eUiUcxnl2KiXyO7HzAOQTQthCC3pIF7S9+4nzYeTBbDKaEiWtOB6Ig5oRQSqRy1q9pz2
+         g2a+quIx0/MNNt0aMPtp1xgQ/qqyUPjVYares9kfhHfddMLsGsKyF230hGgOMz9yMnka
+         7f6gSXqiNl/pWsuJKO8BZLwAglccNZwrjlf+3xKDboWJCXMbmHue4mHP/XD/ehC2+MIn
+         EYrd/oFKFa/gxwHpRLfmr1X3f1FBQE4ObnQ441QqPfWIUcyySLMKqq6Tvko/xd1aVZgi
+         Oflw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFJC14IkqL+xU0AXsplrRu5AV5k70dn6xZSJUPVbekml0r5pPLAEHY2yq+iCqup6JPNI7hN14G2ryI@vger.kernel.org, AJvYcCWGfXdNVQf0EugotPDHiA3mLRD7Q53uHdcJqOzN20KscYj1014mromuTldE1WM2UbEqaf1Cl8/2FsFRsVII@vger.kernel.org, AJvYcCXABlAaonuOG8PhHplsw3uG9y/gwf8q4zECRjY9ny85lo6OGqUFlG0fh/8z1kKsLWLqkXYDlWmqYhec@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6ZgmhUXQzuPXAqCVV1UPRZKhq5Zi/nsT9SQywaAjq8Uclukqo
+	dPN7wjMyNAwmDp276aXVopP/Soz4Dtt7H+577/MMmRivv3I5yAawDsU1juxlBzu5psjl6jofNpl
+	NqrvHh92pla+sCCpKTnfxxBdVw1d4WmQPGjAL
+X-Gm-Gg: ASbGncsDzF6sZ20FcKD2udLiNQT4yirRvFLUEUyZkTvvUDke5FWRwzuFbQZab0VO1pV
+	7pQ7niIXIBM5TMvPP19pWpsJIsANKKae6i28E2KAS3zIuD/GfB8xRzcBN7htivvE3axKE6H6j13
+	FUxltnpU3AjIYrFz+Zmrw5y8WkFAzinmTuJNnFJ4FrwuQ=
+X-Google-Smtp-Source: AGHT+IHk/igkzFnuL8wtHTLuYiKKBK/qzjOLKCm48WVyulSSu0AARqoztRMXdHMM/WVfOTTC7Mf+m+5P5tP3arAYsYs=
+X-Received: by 2002:a17:907:3c8d:b0:ada:6adb:cca with SMTP id
+ a640c23a62f3a-adfad363e89mr317250566b.6.1749926780064; Sat, 14 Jun 2025
+ 11:46:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Support for Adreno X1-45 GPU
-To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
-        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
- <0e6fd97d-9a56-426b-8b98-dc8aa50d02d2@oldschoolsolutions.biz>
- <036e739c-54e4-4252-b6f0-c8eed5557d15@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <036e739c-54e4-4252-b6f0-c8eed5557d15@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDE1NyBTYWx0ZWRfX1iR0+PtCgZKK
- adYU4wgETQW3jLFfTIW5x4kKJoKwOcDtVIEPcjcLPdoAamcpj+UbwiM9pc7IsTrFwwmTqh7p6jA
- NA0GJqgpKeNfkb0oKzHdzrTATPm6XmWvR14/Ltsr/sn7uCdK/pk30o8AP9rkV7UKzQr4RqW4Boj
- PJuMYr+qF75L4LVjpxBg7zFJb1hehTaCt9EX9DHEueQeZyfANdx43C6AHqldlP8iSCOKkMuoFiR
- my1ejk4V8z147ImdUHHlrTk3N+PcnIgHzf0ohWyX+M6O2AWqKFaNDcOab9KzQI45NWWw+Mg2/Cd
- Fh5JS0+NphZdCgEDbt9xgcCBMj6kmv30oO3EVzIPziYOZe4RDXFvS/JrD4Qm3mR1U0hQVl/MePB
- if9B195sX7E8J+HPRYdAF+mT4M9dEMDztx4pZp9o7KYn+LEGtAEwdhJen8yvIM3uDEwdirvu
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=684dc2b2 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=phG8Y4mLfM-ETw-KuG4A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-GUID: 4vBaIlPMVSirILLKzKSm4TvmkDHoDnjZ
-X-Proofpoint-ORIG-GUID: 4vBaIlPMVSirILLKzKSm4TvmkDHoDnjZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-14_07,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506140157
+References: <20250614091504.575685-1-sbellary@baylibre.com> <20250614091504.575685-5-sbellary@baylibre.com>
+In-Reply-To: <20250614091504.575685-5-sbellary@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 14 Jun 2025 21:45:43 +0300
+X-Gm-Features: AX0GCFtuIQ5JcvZBY4qwc6SDF3RvqoMmXTuXsmVyJS0lq-bmr8PhW-TTssyztQw
+Message-ID: <CAHp75Vf=zQ+pdo5V1fAq2qWEpdUfNfWdO+_iW0wETWSniXisyA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] iio: adc: ti-adc128s052: Add lower resolution
+ devices support
+To: Sukrut Bellary <sbellary@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, 
+	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/25 11:19 PM, Akhil P Oommen wrote:
-> On 6/12/2025 5:32 PM, Jens Glathe wrote:
->> On 6/11/25 13:15, Akhil P Oommen wrote:
->>
->>> Add support for X1-45 GPU found in X1P41200 chipset (8 cpu core
->>> version). X1-45 is a smaller version of X1-85 with lower core count and
->>> smaller memories. From UMD perspective, this is similar to "FD735"
->>> present in Mesa.
->>>
->> Hi Akhil,
->>
->> when loading the driver (still without firmware files) I'm getting a
->> speedbin warning:
->>
->> [    3.318341] adreno 3d00000.gpu: [drm:a6xx_gpu_init [msm]] *ERROR*
->> missing support for speed-bin: 233. Some OPPs may not be supported by
->> hardware
->>
->> I've seen that there is a table for speed bins, this one is not there.
->> Tested on a Lenovo ThinkBook 16 G7 QOY.
-> 
-> Hi Jens,
-> 
-> Could you please try the below patch?
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-> b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-> index 2db748ce7df5..7748f92919b8 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-> @@ -1510,7 +1510,8 @@ static const struct adreno_info a7xx_gpus[] = {
->                         { 0,   0 },
->                         { 294, 1 },
->                         { 263, 2 },
-> -                       { 141, 3 },
-> +                       { 233, 3 },
-> +                       { 141, 4 },
->                 ),
->         }
->  };
-> 
-> With this, you should see 1107Mhz as the GPU Fmax.
+On Sat, Jun 14, 2025 at 12:15=E2=80=AFPM Sukrut Bellary <sbellary@baylibre.=
+com> wrote:
+>
+> The adcxx communicates with a host processor via an SPI/Microwire Bus
+> interface. The device family responds with 12-bit data, of which the LSB =
+bits
+> are transmitted by the lower resolution devices as 0.
+> The unavailable bits are 0 in LSB.
+> Shift is calculated per resolution and used in scaling and raw data read.
+>
+> Lets reuse the driver to support the family of devices with name
+> ADC<bb><c>S<sss>, where
 
-I see your dt entry takes care of bins 0..=4.. this oversight worries
-me a bit - are these values above (post change) all in sync with what
-you entered into DT?
+I believe it's incorrect, i.e. it's something like ...S<ss><?>, where
+<?> is something you need to clarify, and <ss> is definitely a speed
+in kSPS.
 
-I'm not saying they necessarily aren't, but I want to avoid
-inconsistencies
+> * bb is the resolution in number of bits (8, 10, 12)
+> * c is the number of channels (1, 2, 4, 8)
+> * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> and 101 for 1 MSPS)
+>
+> Complete datasheets are available at TI's website here:
+> https://www.ti.com/lit/ds/symlink/adc<bb><c>s<sss>.pdf
+>
+> Tested only with ti-adc102s051 on BegalePlay SBC.
+> https://www.beagleboard.org/boards/beagleplay
 
-Konrad
+...
+
+>   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+>   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
+>   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
+
+Forgot to sort out in the previous patch?
+
+--=20
+With Best Regards,
+Andy Shevchenko
