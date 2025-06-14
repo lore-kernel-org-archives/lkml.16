@@ -1,136 +1,195 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010056.outbound.protection.outlook.com [52.101.84.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9BE1DF246;
-	Sat, 14 Jun 2025 21:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749937943; cv=none; b=lHSG325bvsWAP/bKGvqrwUGVz3QynWLBGmrr+Url7XRidKIKYqv/yxdSDGzaoGZe4Fd8Vt1jLmvWXvNEf5G+oXlsFejXVTTFnwGffM2N1tZkpZYN+Am6ybNtD/fkJRHpfahrVSXznz4T7/biJ4AQfdpkCfuVWtdG/k5nQxAwRq0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749937943; c=relaxed/simple;
-	bh=1zgSDBZr5Fkmb/y7roQGPX54QUJVPxcs9B/Z9Z2RXOA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bvNgF8jq/ITcZ8kYN0yymf9KUvPBV8eGbTytIOy6ZAYFXpPJj3F1RY8X/szzDCHbhYbC4+SsJYKWWpHgjvDtoe71HldPV6n7xImRLk6+E3oWGhsI0os9iZcUQJG29qyGEERT1li0iwFz56l++LhEv2ogq+2z0mrKCoguv8DnEEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VYh81WN0; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E754C1F7569;
+	Sat, 14 Jun 2025 21:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749938208; cv=fail; b=rXoszyejTD2OWEJLNc+1Td8U4Yk5OauPhLacqWjxBPFNVLDdvYvEDh0+pRH6gseEsgQGlqCF8/K7UE8ExlLsfT3zxFmZHaUN92bLmUOx2z/cxMVDK9+eCDankcFJ1Z+TrUMix0H6kJdWuk43o4/RHaX5IQKrUhCN2R9aurc2pW8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749938208; c=relaxed/simple;
+	bh=xH4aH1ujc3IwrdZ4AWc0odMqcyZx+Y2+a5QG80F79b4=;
+	h=From:To:CC:Subject:Message-ID:Date:MIME-Version:Content-Type; b=BWLIvmR8NFRTsLhOWizRfH28UonHxDWh7xYX/BkD2c6Dv9VWrjuY22rY7HKZR9jFslPygQUcmjAvA+Jlbb74Vy49Uk0bkATC27e3yCb8JU561XKrFWY2W796TcmXOy2M6/6x7ieMYb0Ad4toXXjGEsLNsKRAM3FCc8AbzZHdvtg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=Tkad0Yth; arc=fail smtp.client-ip=52.101.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYh81WN0"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so39560525e9.2;
-        Sat, 14 Jun 2025 14:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749937940; x=1750542740; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bg1odM9KUcbjVWw6SM2h9C8Ehh1I33FXJkfY9DO2daw=;
-        b=VYh81WN0PxO6gTRDarXhCG/Ud6ua/Y/AQv3yE6GiRJyl10o43TJmcCe9Q8csnOs6lT
-         0HhuZXeOUUvCkDuSPOTK9SZ3L8IKnOeKohHPCowxompLwmBX2yQe2udXXediXO6KCLxE
-         hDtNNWazR5jf7CTMxEiCGbWoWbQ9G5pVNHjC+OxivwAKP648CgmSaf4CDAZA1iLMMYFr
-         DyUD8zy/hUruChRpJZPv4Qu/fFbfmeoy//RH23bUi3PvfoJr/6QK07s+K+4gc1qNbubu
-         MG9NISM5mRK2uCxkIw52t2SbB9l7sw0Mo0aNE7ebATOSDv4Bg9lUsSXMcHZR2f8pm4j2
-         FU/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749937940; x=1750542740;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bg1odM9KUcbjVWw6SM2h9C8Ehh1I33FXJkfY9DO2daw=;
-        b=ajqeNnxOnWCHmp6a3xzTYKkdEnOx7GbsY95539mFDAGgeEhAk4DV20G+k7tBoEegpp
-         TUjp+sQ0GdScW6g9DRVy3ajqWsxfKA0pUGwFXSP5JCG3pHhGBj92B52O0wDrGisQf5OL
-         6cQIMqlD77BJK1oU1+RiJiy90cuX8pvohenhTp6AnumWgMJvUM7yLkzxIGvPB/cjoJGS
-         NNVjZMP6itUH7dtPNqJQITyj0APNPe4oGAuJQk0dsM3UgZ3lPSmygv1VRgF5B6Qcu3vU
-         /WAF+rV13xZy9+y7NySl3PqarmdcE/SC+deuebe07EJepEDEON5Ve4HsjBdbGCTXnE1N
-         gW6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWSaTZ1qWjhz72d1WQPuMqfdEhBrxbZosAxDdQ8MM5t4z0gsr7M+S4jXFr5+s+OSlDwvcR66Es7zp9RTT38@vger.kernel.org, AJvYcCXUh2y6S3dsCbkqlsXvWhAvr7ZimvvIsSKsSirX+BZZ1W4KhGjv4GyQNCvw4zakqHdDP76V2I1S8K7L@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG8aXRMLxf/cj1R7VtGp1nYxdgxQ5LFtAlSWp6na9EbVamY7uX
-	6YsVTi+RlRyJF8jJboJeV3B9Pj4MBUKuB2i+zgou1/IqfN5ysHpkcpHi
-X-Gm-Gg: ASbGnctsIZeVUoBtWuciY4aKoESpLeZNsfGXU9gb1hiqiqZtNebEKz/KTdNqlQm6HOP
-	5wtQ+ptKB2TZ5U4QPst1Gknp+Y/5fpBQTkqFQ2I+Zg8Yz9pGceL5sWNw3rcCix0Pai6IGfAEUqB
-	vynQAKP87RHizAS77IrfEmHQiFYCLRRhrA3vanfshrBUix4yuw3e9Mg88pBNnp6V95iJNYnt4a7
-	ukG1QN7mxg12BGR3FF8kpUgsQ+YLofsh0noZixUZybE30voWgxbqyrVUfljFEjLLjPRRR1CefQj
-	sOaln1Hls9FInKDYhbLtMXTqd8CxRk9BvfoetXxrhULysBkSlwrfAGwL03tWpswX99qeBgDOVwb
-	Wyue3lw==
-X-Google-Smtp-Source: AGHT+IGahM28OixwThHb31jCwhtlrClMJngbczGluvHx5ulPSa+4X0NSYo1XxDZlq6XZ+IJhlazykw==
-X-Received: by 2002:a05:600c:c117:b0:450:d4ad:b7de with SMTP id 5b1f17b1804b1-4533cc69257mr35521775e9.3.1749937940275;
-        Sat, 14 Jun 2025 14:52:20 -0700 (PDT)
-Received: from giga-mm-7.home ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e13c19esm92865075e9.25.2025.06.14.14.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 14:52:19 -0700 (PDT)
-Message-ID: <e84c95fa52ead5d6099950400aac9fd38ee1574e.camel@gmail.com>
-Subject: Re: [PATCH net-next RFC 0/3] riscv: dts: sophgo: Add ethernet
- support for cv18xx
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>,  "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen
- Wang	 <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,  Richard Cochran
- <richardcochran@gmail.com>, Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille	
- <thomas.bonnefille@bootlin.com>, Ze Huang <huangze@whut.edu.cn>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, 	linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, Longbin Li	 <looong.bin@gmail.com>
-Date: Sat, 14 Jun 2025 23:52:30 +0200
-In-Reply-To: <7a4ceb2e0b75848c9400dc5a56007e6c46306cdc.camel@gmail.com>
-References: <20250611080709.1182183-1-inochiama@gmail.com>
-	 <7a4ceb2e0b75848c9400dc5a56007e6c46306cdc.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="Tkad0Yth"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ab4Konc1Sg6BR5tRO0m/rQEnEyE0K3X/JdK3kh+Ks9EysaMAYS3KX4ylJr+ujBVJAIjWrZbuqk98BQRZZvX2og35UN7y+o5U4MflHyFH/oChmqpHVjSwyuWzu0X1KRCi6q8fCD/CvzhlxxiUvR1b3dI2LkewStTTWMIQEbMf+jmd2whNsohv+H60Q60x4k+sIKp9I5rZ2QI+X/tRarLj1Al4bEDKlD/1Jc5vI2g0LM9YNlxEt8/Pq0lZ063UUEOBkz0nbFovSrgp+WL9Y7POk1tBs5R1jjqNN5Ii9kzrLTz+j0tjiz3WWhlKlChl9zIra7Q34DiuFeW2aCBcHg//JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9uH/wJqBrK4GkuSk295IulBTbyMiUxylgWpuoKKZdog=;
+ b=SiN4+UprAx93O69bDnLezXt0PURt12hSutIUm1xbj2n7fRlDbYhuqI45dGP6l16CI4r+Y2OanYps14ONylgC1zakW1h5aQbJ69DNZWscNy7yVDlrqJw1ghGjuewks752TSb9EY0uW30s5goZHUmZyT5H6uSmablcppRUgd+tfnyDT54NwamrAPyv6x4DmG/M8Bb1gvX7o+Xvc3syoPW7z5OkFjx+i8v2Tk41iAAM/5rHzGGByKVulkBnrEWeVWnW0vNFN/4G/+mQ0GeWqKYu0lsY+RDInhuTIxZ0OPpi3sYod++b9zR9Kyl2NNUM/Ur2uAJyjDBPREuExARDokWhbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9uH/wJqBrK4GkuSk295IulBTbyMiUxylgWpuoKKZdog=;
+ b=Tkad0YthSIEEYT18xDiKaUpgQdBagu+cSWFV9wDTefEFM0DFltbHuElQ31Q8IngGXrpECk6S34/9q/UMPlucWMG417MuhE77RSJjl8f4NLY35cOnL830TXmT7/AmV2tw8/mFME7d+HyILKwKlMsMHSYBPkGVHhmboggYw/IOrvA=
+Received: from AM0PR04CA0080.eurprd04.prod.outlook.com (2603:10a6:208:be::21)
+ by PR3PR02MB6089.eurprd02.prod.outlook.com (2603:10a6:102:6a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Sat, 14 Jun
+ 2025 21:56:42 +0000
+Received: from AMS0EPF000001A3.eurprd05.prod.outlook.com
+ (2603:10a6:208:be:cafe::f4) by AM0PR04CA0080.outlook.office365.com
+ (2603:10a6:208:be::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.28 via Frontend Transport; Sat,
+ 14 Jun 2025 21:56:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS0EPF000001A3.mail.protection.outlook.com (10.167.16.228) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Sat, 14 Jun 2025 21:56:42 +0000
+Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Sat, 14 Jun
+ 2025 23:56:41 +0200
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: <kernel@axis.com>, <linux-kernel@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH 0/3] Add driver for Nicera D3-323-AA PIR sensor
+User-Agent: a.out
+Message-ID: <cover.1749937579.git.waqar.hameed@axis.com>
+Date: Sat, 14 Jun 2025 23:56:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001A3:EE_|PR3PR02MB6089:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef6a1084-9521-4891-e7af-08ddab8e58fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nKswCDnHBOqejparcAu1AR5e9IOTsH8c4CNE/+jj48dO1QFPAsKySXF1S75x?=
+ =?us-ascii?Q?VUuSSrg5s2Yj13UJ1hWMtLLuoTJegotprf3LSEw1T1pfJ02QSRHWSmY40DLJ?=
+ =?us-ascii?Q?09N8cOfo9qP3hc23RqtJBzULtcKfWc2A1f/U9xlqTLs91N7p5b2++h+IxRKa?=
+ =?us-ascii?Q?4HBdC7YdNebPVg1IaCySiui1rLAUR5m7rDg9Qd2OspI19/oWD7mA3aGZ0+Jk?=
+ =?us-ascii?Q?hldR0+LQNcqZnxtZ0cgSqmSfqnP2Rdgoe/A2G4wR8ZJ3+ALcfCGcmMtNEnBS?=
+ =?us-ascii?Q?532ci8/5Ef3vrNiJK1Zp6F/pkFO4ZS8of5m+I9S4YsnuyKAuEWgVze8ZggD4?=
+ =?us-ascii?Q?sTSZUuZ5vRiVpaRcASn3XciLgvoB+gQ7EEu1b43iNoQE1LTdJ9B9CESEAEbd?=
+ =?us-ascii?Q?HTjdIqESoVN8anfAD3BUJrY5jG+4bqd+qGAVB65GA8Vpgb462pza8+mslCEV?=
+ =?us-ascii?Q?qND9GPadZJQCB8ckBa8QzGZc1dYHkhSMRHNieXfm7pnMWRhryIL1sxtCQWXE?=
+ =?us-ascii?Q?UzQBXkyxbW2jgsZg9oeKwlUb0CfZfqxqtf6lvZqp3oK2CGNEtY9c3kIazSbq?=
+ =?us-ascii?Q?8rbVSVH1dDWeskmFGwGlcjYV9qAfEPHJhZNmvQD4om6Rn48z+fzBFsBqNfZs?=
+ =?us-ascii?Q?WwE1wCnKy+NyEb+aljl1xIdRYL3pRr/KpVtB54kppZ3/+C6fdYQRxqbzy7Jp?=
+ =?us-ascii?Q?0ijKCunhnqReuAN/MesgjS+LQ9CotvzscmYCiB9evW6Cztfe28fY58Y/bxbu?=
+ =?us-ascii?Q?issjQaNYgOEFdZRIGpzhc7KA9t14MCs0hI1GdjoIgL4N6M1QEbp904BydxPM?=
+ =?us-ascii?Q?y2iwvEagB3tKO4Y5gEZw27yvddrVPUXzwuC9OzwcmbBPUk7ZbC0KTCSW2oZq?=
+ =?us-ascii?Q?L4b263sUhaKD+iQtgKZjk2PXeLNy1gACh1r8BxtEigg8YEjWH8/knqyf/cUw?=
+ =?us-ascii?Q?JEb/4bqzqevjdzioWfsbkdPKV75FQDXoKHGeSsx9z77hQbCHUQhepSiL2il7?=
+ =?us-ascii?Q?EtL42KYRps1I4AYOxmNC9fQWdvtE4BKTzxXgTnCgmj469rwJX2cuoRTXZmaW?=
+ =?us-ascii?Q?wGNUhoT1kRlwHnPH/tEDGGQL9ddyB8G5AJHPI+UeKQt/fcW1x82j3RnB5iRm?=
+ =?us-ascii?Q?1hwaGqgVVl30eIRphFd4jLfEHjLLLeGS2jjuEUyMJBTQOAtTzKOifA24mJT0?=
+ =?us-ascii?Q?XL5gbmW+oV9a2cxhtE/6n2cKpo9UgS8ANBXX3VBPAAMlfW/uPN4c0s0Wkpxa?=
+ =?us-ascii?Q?oPy0eHLVHXz/WOfZ29pY6/Z6T2xuTIAyaLg87qJ9KOL2cCFfqKGjtuD/6V1m?=
+ =?us-ascii?Q?trqK8Iw0qMo2F3+anEu7RAvZrd/QjRmtsmH0y4u7pjHKJ13eAVDMr9ef5IAx?=
+ =?us-ascii?Q?mzsfO5HDiUltLAge7VtS0NKjACjBcFhUR1Esw0cH8J02TfAjs704xP451ReL?=
+ =?us-ascii?Q?4l8jTFVN4Ab8NwQQ9oaRhqRCQtUMnDnLQTtTIijYe3B0EEhxkWnKag=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 21:56:42.2831
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef6a1084-9521-4891-e7af-08ddab8e58fd
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001A3.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR02MB6089
 
-On Sat, 2025-06-14 at 23:01 +0200, Alexander Sverdlin wrote:
-> Thanks for the series Inochi!
->=20
-> On Wed, 2025-06-11 at 16:07 +0800, Inochi Amaoto wrote:
-> > Add device binding and dts for CV18XX series SoC, this dts change serie=
-s
-> > require both the mdio patch [1] and the reset patch [2].
-> >=20
-> > [1] https://lore.kernel.org/all/20250611080228.1166090-1-inochiama@gmai=
-l.com
-> > [2] https://lore.kernel.org/all/20250611075321.1160973-1-inochiama@gmai=
-l.com
-> >=20
-> > Inochi Amaoto (3):
-> > =C2=A0 dt-bindings: net: Add support for Sophgo CV1800 dwmac
-> > =C2=A0 riscv: dts: sophgo: Add ethernet device for cv18xx
-> > =C2=A0 riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
->=20
-> Taking into account, whatever MII variation is implemented in the SoC
-> is always internal (and only MDIO part is multiplexed), can we add
-> 	phy-mode =3D "internal";
-> and
-> 	phy-handle =3D <&internal_ephy>;
-> right into cv180x.dtsi?
->=20
-> Boards can then enable the corresponding nodes if they wire RJ45 connecto=
-r,
-> but I see no way how they could vary the MII connection.
+Nicera D3-323-AA is a PIR sensor for human detection. It has support for
+raw data measurements and detection notification. The communication
+protocol is custom made and therefore needs to be GPIO bit banged.
 
-I suppose the above proposal was wrong, though undocumented, there seems
-to be an external RMII interface (at least on SG2000 SoC).
+Previously, there has been an attempt to add a driver for this device
+[1]. However, that driver was written for the wrong sub-system. `hwmon`
+is clearly not a suitable framework for a proximity device.
 
-Unfortunately the internal PHY is also barely documented...
-Also ethtool seems to be incompatible with mdio muxes :(
+In this series, we add a driver for support for event notification for
+detections through IIO (the more appropriate sub-system!). The various
+settings have been mapped to existing `sysfs` ABIs in the IIO framework.
 
-> > =C2=A0.../bindings/net/sophgo,cv1800b-dwmac.yaml=C2=A0=C2=A0=C2=A0 | 11=
-3 ++++++++++++++++++
-> > =C2=A0arch/riscv/boot/dts/sophgo/cv180x.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 70 +++++++++++
-> > =C2=A02 files changed, 183 insertions(+)
-> > =C2=A0create mode 100644 Documentation/devicetree/bindings/net/sophgo,c=
-v1800b-dwmac.yaml
+The public datasheet [2] is quite sparse. A more detailed version can be
+obtained through the company.
 
---=20
-Alexander Sverdlin.
+[1] https://lore.kernel.org/lkml/20241212042412.702044-2-Hermes.Zhang@axis.com/
+[2] https://www.endrich.com/Datenbl%C3%A4tter/Sensoren/D3-323-AA_e.pdf
+
+Changes in v2:
+
+[dt-bindings]
+* Convert `vdd-gpio` to a `vdd-supply`.
+* Rename `clk-vout-gpio` to `vout-clk-gpios`.
+* Add description for `data-gpios` explaining the rename to a more
+  descriptive name.
+* Drop all references to driver.
+* Remove unused gpio include in examples.
+* Re-phrase commit message to only describe the hardware.
+
+[iio]
+* Add newline after variable definitions inside the for-loop in
+  `d3323aa_set_lp_filter_freq()`.
+* Remove error code in string in `dev_err_probe()`.
+* Remove driver name macro and use it inline instead.
+* Format filter gain arrays into one line.
+* Drop structure comment in `probe()`.
+* Format sentinel value in `of_device_id` with a space.
+* Rename `gpiod_clk_vout` to `gpiod_clkin_detectout`.
+* Request `vout-clk` GPIO to match rename in dt-bindings.
+* Use the regulator framework for supply voltage.
+* Use only one IRQ handler for both reset and detection.
+* Reword comment about Vout/CLK ramp-up behavior (it's because of VDD charging
+  up).
+* Add comment for why we have both `IRQF_TRIGGER_RISING` and
+  `IRQF_TRIGGER_FALLING`.
+* Rename `regmap` to `regbitmap` to not confuse with the `regmap`-framework.
+* Move `d3323aa_setup()` into the set-functions.
+* Use state variables in `d3323aa_data` instead of bitmap and move bitmap
+  handling to read/write settings functions.
+* Pad bitmap with compulsory end pattern in `d3323aa_write_settings()`.
+* Add `d3323aa_set_hp_filter_freq()` and allow userspace to set it.
+
+Link to v1: https://lore.kernel.org/lkml/cover.1746802541.git.waqar.hameed@axis.com/
+
+Waqar Hameed (3):
+  dt-bindings: vendor-prefixes: Add Nicera
+  dt-bindings: iio: proximity: Add Nicera D3-323-AA PIR sensor
+  iio: Add driver for Nicera D3-323-AA PIR sensor
+
+ .../iio/proximity/nicera,d3323aa.yaml         |  60 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/iio/proximity/Kconfig                 |   9 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/d3323aa.c               | 808 ++++++++++++++++++
+ 5 files changed, 880 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/nicera,d3323aa.yaml
+ create mode 100644 drivers/iio/proximity/d3323aa.c
+
+
+base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
+-- 
+2.39.5
+
