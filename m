@@ -1,104 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011053.outbound.protection.outlook.com [52.101.70.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E211FF7BC
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 22:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749939221; cv=none; b=ZlSFEJIkIILjWTLgPKHZdtMOfhTD7LMzYiJC45154NbTLqji1iz1FMjN8ZXhkma7ZxtSn/atYEN5nZFfgO/ej8DB71GVaHTuSgagLfpTfE6/J8XF1ISXwdWoZZlcPncWF04116kwGAJoEbvov49kNmrU1Xy/vZb12kSmHw09LDA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749939221; c=relaxed/simple;
-	bh=wdD7a3GWS0YdAWzOXT2Mlff7GSe+kh/OpAvMInhNXUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sZGB3vEFeXXZh0tjG2leSvCEeZYlB5smupWioM2jQ6w/HvQIUTpnSu2pmAcP/NMKpcVphKlAd+2ikoM2QXNlsO+fmpP3BntIO94z2LoN+UgIIHJCfO4GFafgm+Jm3hGnrRWrwD4/xwRQLnPEYIMW73Ua/YYbk3IMo35uGJMyLKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lz3UnSOd; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C1919F42D;
+	Sat, 14 Jun 2025 22:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749939243; cv=fail; b=k2WMdTHiNoKB9gf2q5pBWyFALQhZa6pcRqb5DKrXi0oXwrAsVcLglyuyZBTzn68V+WQcBmb4b9licgK1mhchk4sEQKSFjIMKPcjQOCcL3/AhyBhwxrPtvY/2KCo6f/JTbDrmgZesycPGN5JMyofw8N99DxMXyRcqgmFCqyNMckw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749939243; c=relaxed/simple;
+	bh=xH4aH1ujc3IwrdZ4AWc0odMqcyZx+Y2+a5QG80F79b4=;
+	h=From:To:CC:Subject:Message-ID:Date:MIME-Version:Content-Type; b=ZSTkxM+89/Rumii9pnjMfff19LiZNJ8ruNwFEnJ+jJRDNSWl/4V1yU+7EeiTUvlskJuHqYaTfhaP/3cDc9i56Yr2rC+XjGmrwdBAzNN26yOxqKEEh6TP6oHg7Ku4qNnma7swIzjFBtdaHdaGJFQjkuSC2Nhb3e4H6oI3fRXBi80=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=aPvMpAwz; arc=fail smtp.client-ip=52.101.70.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lz3UnSOd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749939220; x=1781475220;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wdD7a3GWS0YdAWzOXT2Mlff7GSe+kh/OpAvMInhNXUg=;
-  b=Lz3UnSOd8uRKkIYKYwNGU8ZFS3Rci7WXScfHP6YTavUxENrkvGwEJPI4
-   MXNcvCmlhCdIofeMCvLrMNA5EAxVF77zC71BBcpoDI0q4lnweO+zjSLHF
-   2gm+NSgGAF8uWTHoNSEWVVrpUC6qmyDY4Jf23ANY4K9b6vmVma6phc+H2
-   +pLCVL96NZGD7FevQDl+FyGd7asaC1uxKP43hBns2FFTjueIR/99kMzz2
-   Ew+iu9stU7O5DBkVSxccnJscFgHBvp5RGcsLEHCT5VADOsIMM2ncGyiaD
-   OZs/YEThFHu5a8eCxqrvdO6TqRUmsFXT8EX5e4hgFnS4sF5bJ7U8wODJY
-   w==;
-X-CSE-ConnectionGUID: qxk9O1JxRZS6qqriXNAVeg==
-X-CSE-MsgGUID: 8U30qoV1Qzq8UFZP8yJi9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="51992206"
-X-IronPort-AV: E=Sophos;i="6.16,237,1744095600"; 
-   d="scan'208";a="51992206"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 15:13:39 -0700
-X-CSE-ConnectionGUID: vE6y2M6yQkq5j5GWxd6ozQ==
-X-CSE-MsgGUID: CvmdSuqwRQyq+GtJrltPuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,237,1744095600"; 
-   d="scan'208";a="153091045"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 14 Jun 2025 15:13:38 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQZ83-000Du4-28;
-	Sat, 14 Jun 2025 22:13:35 +0000
-Date: Sun, 15 Jun 2025 06:13:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>
-Subject: ld.lld: error: Cannot export BSS symbol __inittext_end to startup
- code
-Message-ID: <202506150602.qswx7ZzQ-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="aPvMpAwz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XZ675zAbH79V81t/izawERbF8BhXcb1zHsDCz6N4axX+BmTUCXwCDkVhraHuX6aXLUdrdSINuYBUgMBwyTxlhP74fIpWhK107/1CQGcUOSHQgp10RAx8wlHsOT4t3U5n1ffuO+xY9g2fDfeXudZraTmtjQWWX3QaevOBCVgJhjZzp7FWuUk1OTBqi/VmaHkmJ4OqpTBN5nC31FUP0SIdIX+bjiCtaPsBfeML4JCO8mWq0u8s3hqdYKbNZZu1+/MRJANONH/lkpr0pgPG2xpeY43LCU5PUN30Fq6VfGW1JT91i7HDV8FxSWQ/LOYQo55+RA+51+Ax6GAraTYvzoSfQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9uH/wJqBrK4GkuSk295IulBTbyMiUxylgWpuoKKZdog=;
+ b=UR6HwwTCInCcZSw8PUa9/d+6OcCWlQjD0iZB46ieSLPCtC2KdKhpI8oE0Uwkp5MCO3B/EJApOiYbp7snLhglm1HlQ7zuOC4yW6dZlFLi2Spi1icXFJbAvwIDnh1gi/IyxkW8eSTFvZgngoKxojNQGqKGKpLDP2pDHTNwnr3MBo6On2Og18nNmSyE4rtWUim7E9mzzwU7BONzsyIFUQaAQDoJlMH3gz9Sw8IuKfLUJEgitbAHGSBjdm274MXJTH/Ng0XWevOlszgrEGSEAfqeisl8UzYSZQu2aERDLe2djJl4PqTnaxP3pE0T4bb76A9W0Bsg+9WSYSON/6BpUIaP3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9uH/wJqBrK4GkuSk295IulBTbyMiUxylgWpuoKKZdog=;
+ b=aPvMpAwzv1eVh6T/7ZaCQfbiCS3q89h1HpW31hFkh3pnB5VQhFjYJgffnNtoJ1Xo96E31Z0q0W2J5Oj3G79NsdWMa+ChPIEfhvlT8euepOLNYs2o9S2TJKEPnFBxfPgXyJN+pFFZ8Iu5+WdsJGaSjkXuXCFvEijSjiwG478KCC0=
+Received: from DU7P195CA0029.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::12)
+ by VI0PR02MB10995.eurprd02.prod.outlook.com (2603:10a6:800:25e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Sat, 14 Jun
+ 2025 22:13:56 +0000
+Received: from DU6PEPF0000B61C.eurprd02.prod.outlook.com
+ (2603:10a6:10:54d:cafe::f1) by DU7P195CA0029.outlook.office365.com
+ (2603:10a6:10:54d::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.25 via Frontend Transport; Sat,
+ 14 Jun 2025 22:13:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DU6PEPF0000B61C.mail.protection.outlook.com (10.167.8.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Sat, 14 Jun 2025 22:13:55 +0000
+Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Sun, 15 Jun
+ 2025 00:13:52 +0200
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: <kernel@axis.com>, <linux-kernel@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 0/3] Add driver for Nicera D3-323-AA PIR sensor
+User-Agent: a.out
+Message-ID: <cover.1749938844.git.waqar.hameed@axis.com>
+Date: Sun, 15 Jun 2025 00:13:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU6PEPF0000B61C:EE_|VI0PR02MB10995:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7cb7a5bb-12a2-49e4-1380-08ddab90c0d1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YajtmAPvzqOaA/NAQmbfNQMUveDaGxtOQzR4X4gcvAHA9uTcnNDHmZfHDzX5?=
+ =?us-ascii?Q?L4fuZlFVvES0EfC/2I9oOTLBsCItCJyg+Zno0m/ArSRilLZbVg7pLvzwnRk0?=
+ =?us-ascii?Q?VIMpz/T/RzqVGMdu5x3UHVGIvIEajqCT2uqZ92zhxwsuSWSd0HDzBZWwRCDk?=
+ =?us-ascii?Q?qCdKBWG07JqsrMB5ksVeaJmzrqyvNEgnhikeqmQ8hExqGp6y9q553n0Qt7HJ?=
+ =?us-ascii?Q?iHnVV1HvMkbbPJARaMA/+GoQAvNmokRQfUbWeiIAOv4idRw1d1Jj4RVBgSvD?=
+ =?us-ascii?Q?Vlr5ie+F8UrMkjYAnzVGnwJfWZzvYz8nhVmTmVixlMzg/bl9mAvRVJaHVC0x?=
+ =?us-ascii?Q?uGdD/b6eHBztEktvQdUxUFL1F1x4P6NxWE0nqU4WrTebRcZwMZodQH3yo2fA?=
+ =?us-ascii?Q?7S+cmUt4KaH/j+Y0d0044VUAEaH9DdyIg33meczdAIVjEPgbuQh/cvsxPYyP?=
+ =?us-ascii?Q?M8br6haOzzvo3igH1Ka5xNDPTxeAAJRx45Gg/Qo7pBhGfDK8b33SajoFkpLy?=
+ =?us-ascii?Q?bHHzEaWIcR2a4gUluNDBkbn1mEp0jZDVx2QjMRSEFktpP3YzSN4RGjtsrX9N?=
+ =?us-ascii?Q?O1SAAtvcvMZ8YJXYqxXqYKhMclv5ObjpMg/4awaqwwtzsNk/T7C8M8WG5SGc?=
+ =?us-ascii?Q?UtCHaSoI0jpUWFwdYF4q9y5A/AQmkF3vHNsxNNZ58Ro03Vai6e4VSedebwXb?=
+ =?us-ascii?Q?QIGzfGqFNHki6PyJqkaJYPcO/mXiZijhXSiIfQClgQ2GMuYTTOW4TpY/ASC6?=
+ =?us-ascii?Q?ziKjt0mIR0F/2/cLS+SRBtvEI+b+vVBCQMAFsO5xgJ1ZBn4G4LWI1dh7nJlm?=
+ =?us-ascii?Q?JwAK+ROBJz4eCQRw/29pIVQomPJxI8lSx2sXHa7fPa2/4gIfEOxydWbAZA4m?=
+ =?us-ascii?Q?yIvJLNhWxfuY5WrNPZXm1XaG0FmNM1/oY06AliquXp5wKxAklEgLxNOOSZk4?=
+ =?us-ascii?Q?8SiMK4A7HaWLA7GB/vyx2LPDIqFelqJGorxUEYT1TWyhPSPeaPHL14K7bpc4?=
+ =?us-ascii?Q?9T2Zu4Bm1ki0r6q0YT4eNkQk7ICsy4nT2ya8dOoQEQq1X0S7nwX45lS7xl0l?=
+ =?us-ascii?Q?Af45MyiX7IPTuPlYQdEpMJImJqtBqCEslKvRxv/9HpLiDLkF7Yf/xkMtPPjM?=
+ =?us-ascii?Q?lECvwZXzty55rzgIGO1ahwygtC3V/WXcoumxJSzVujV72BCqxtQfA50XlRR7?=
+ =?us-ascii?Q?zg64D87/8CL9z34XZWXn0Z10r2ctEXCzyKN4GjrWPwJc6zBex1czTsYLiXxR?=
+ =?us-ascii?Q?bC+dv0sQ+bYbLwa2AVe38VsEOyMg3dRton3UrMEpMyfvABVZXdbLs4kH7fBx?=
+ =?us-ascii?Q?qTHS2F+nQRY5SMaSSHcBYEVYlctAuUAUUFv5Oz6sshlsz7jwZ0JB4CA/p0yQ?=
+ =?us-ascii?Q?vI7KjnPvCCuiJ9YZMt/LLWnh05ptSIiNd0hPGroceT078jHg7RyvQ5B8YliI?=
+ =?us-ascii?Q?3NcL45jeeHvZmizboUiX0Z8M4X2vsM7hVLy+CelxDXzb3lPfm2wj0A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 22:13:55.4255
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7cb7a5bb-12a2-49e4-1380-08ddab90c0d1
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU6PEPF0000B61C.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR02MB10995
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8c6bc74c7f8910ed4c969ccec52e98716f98700a
-commit: dc0a083948040ff364d065da8bb50c29f77a39ad arm64: Work around convergence issue with LLD linker
-date:   12 days ago
-config: arm64-randconfig-004-20250615 (https://download.01.org/0day-ci/archive/20250615/202506150602.qswx7ZzQ-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250615/202506150602.qswx7ZzQ-lkp@intel.com/reproduce)
+Nicera D3-323-AA is a PIR sensor for human detection. It has support for
+raw data measurements and detection notification. The communication
+protocol is custom made and therefore needs to be GPIO bit banged.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506150602.qswx7ZzQ-lkp@intel.com/
+Previously, there has been an attempt to add a driver for this device
+[1]. However, that driver was written for the wrong sub-system. `hwmon`
+is clearly not a suitable framework for a proximity device.
 
-All errors (new ones prefixed by >>):
+In this series, we add a driver for support for event notification for
+detections through IIO (the more appropriate sub-system!). The various
+settings have been mapped to existing `sysfs` ABIs in the IIO framework.
 
->> ld.lld: error: Cannot export BSS symbol id_aa64isar1_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64isar2_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64mmfr0_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64mmfr1_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64mmfr2_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64pfr0_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64pfr1_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64smfr0_override to startup code
->> ld.lld: error: Cannot export BSS symbol id_aa64zfr0_override to startup code
->> ld.lld: error: Cannot export BSS symbol arm64_sw_feature_override to startup code
->> ld.lld: error: Cannot export BSS symbol arm64_use_ng_mappings to startup code
->> ld.lld: error: Cannot export BSS symbol _ctype to startup code
->> ld.lld: error: Cannot export BSS symbol swapper_pg_dir to startup code
->> ld.lld: error: Cannot export BSS symbol _etext to startup code
->> ld.lld: error: Cannot export BSS symbol __start_rodata to startup code
->> ld.lld: error: Cannot export BSS symbol __inittext_begin to startup code
->> ld.lld: error: Cannot export BSS symbol __inittext_end to startup code
->> ld.lld: error: Cannot export BSS symbol __initdata_begin to startup code
->> ld.lld: error: Cannot export BSS symbol __initdata_end to startup code
->> ld.lld: error: Cannot export BSS symbol _data to startup code
+The public datasheet [2] is quite sparse. A more detailed version can be
+obtained through the company.
 
+[1] https://lore.kernel.org/lkml/20241212042412.702044-2-Hermes.Zhang@axis.com/
+[2] https://www.endrich.com/Datenbl%C3%A4tter/Sensoren/D3-323-AA_e.pdf
+
+Changes in v2:
+
+[dt-bindings]
+* Convert `vdd-gpio` to a `vdd-supply`.
+* Rename `clk-vout-gpio` to `vout-clk-gpios`.
+* Add description for `data-gpios` explaining the rename to a more
+  descriptive name.
+* Drop all references to driver.
+* Remove unused gpio include in examples.
+* Re-phrase commit message to only describe the hardware.
+
+[iio]
+* Add newline after variable definitions inside the for-loop in
+  `d3323aa_set_lp_filter_freq()`.
+* Remove error code in string in `dev_err_probe()`.
+* Remove driver name macro and use it inline instead.
+* Format filter gain arrays into one line.
+* Drop structure comment in `probe()`.
+* Format sentinel value in `of_device_id` with a space.
+* Rename `gpiod_clk_vout` to `gpiod_clkin_detectout`.
+* Request `vout-clk` GPIO to match rename in dt-bindings.
+* Use the regulator framework for supply voltage.
+* Use only one IRQ handler for both reset and detection.
+* Reword comment about Vout/CLK ramp-up behavior (it's because of VDD charging
+  up).
+* Add comment for why we have both `IRQF_TRIGGER_RISING` and
+  `IRQF_TRIGGER_FALLING`.
+* Rename `regmap` to `regbitmap` to not confuse with the `regmap`-framework.
+* Move `d3323aa_setup()` into the set-functions.
+* Use state variables in `d3323aa_data` instead of bitmap and move bitmap
+  handling to read/write settings functions.
+* Pad bitmap with compulsory end pattern in `d3323aa_write_settings()`.
+* Add `d3323aa_set_hp_filter_freq()` and allow userspace to set it.
+
+Link to v1: https://lore.kernel.org/lkml/cover.1746802541.git.waqar.hameed@axis.com/
+
+Waqar Hameed (3):
+  dt-bindings: vendor-prefixes: Add Nicera
+  dt-bindings: iio: proximity: Add Nicera D3-323-AA PIR sensor
+  iio: Add driver for Nicera D3-323-AA PIR sensor
+
+ .../iio/proximity/nicera,d3323aa.yaml         |  60 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/iio/proximity/Kconfig                 |   9 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/d3323aa.c               | 808 ++++++++++++++++++
+ 5 files changed, 880 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/nicera,d3323aa.yaml
+ create mode 100644 drivers/iio/proximity/d3323aa.c
+
+
+base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
+
