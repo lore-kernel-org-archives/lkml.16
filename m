@@ -1,102 +1,195 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BA6156C6F
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 19:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA87156C6F;
+	Sat, 14 Jun 2025 19:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749929301; cv=none; b=JYLLF+K3dNEZcOUBULw2V8+ZFBlwldALCM65LDN2lNuNH5LsqH92nazR01e4gtOggF8K3FEgiWL0sqrL8KH/x1JBo8lND9TinuOlxdK5HZ4mfJBPEGq0TI1krxtIdgelHZnJSjKS75lAiWaw5fl4mXCYlPGhyevm6P5TSWlzBTE=
+	t=1749929380; cv=none; b=tQneqedaYijVXL73Kj9lvAfYulm13vi9euH4uEWd08FmTgAeguHKIRY3G2QqytYnbYM3y3N4Y3jVhOMT5d6vjYUseN7t+Z0Wxc0e3A1OwePphtsZ8vpnBD16L9wh0X8XO1r71NblnhkPJZSx2ahDSbVbD5s9ixPVyURTZMysqbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749929301; c=relaxed/simple;
-	bh=SizSNbyqPo/JS69EBJtKZ/bomwwa+A9Uf4CcrPtpg2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BvHVoVszQj42i+Y1YeA0Kkqm5BHTTwPewgsIKAASEwc+0pW08hC8nZlc6QcGRPN4gMjIYH3H44LaNoJBtYma6oBlyYA7qkrs18Ji1aSKVwL8h5QxSCnlCgyQnpI6w6H6Z1fJ7T8vizH/VpCtMGa8ZvnsBzpdj3Mmn1o5wqqBdhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZ0g2El2; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749929380; c=relaxed/simple;
+	bh=GWZseLWsS//zsX21MW0UUkqllIe3UMAz7mnhotza1/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ExRmipb/WwgSJpvv++j1RwluC5RaHl5bSkky/SuW4Nzs1z322A0OrsxmvPSwq08WBy4Refl+lPiA4P2JkMU8Gc6204LmFvaCdy/VVdxAcW3YoyI+O6+Gtc5mHP3tyaj2KDM6cP6ZREGIS6Wb6fyPlcEhMOVgMTRcYmZ3K79Zp1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gu4kqTYo; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZ0g2El2"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so4811854a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 12:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749929295; x=1750534095; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=68fOdiUmyAKCoZUQg5F0w7gaN+cimM65QH6eVdQ6QRc=;
-        b=kZ0g2El2nxXJD4p8HPILTngssntd/E+3TYi6cTJlRv3aVG3pOluGuXv+j+ZXSlvMq1
-         BaWDX+F43rh2H4G3umog+eFm2A6DBpUCXwI4H7KRxZeBTDOCk35iXglAvanJXnKCF4hg
-         wQd0RYlSYP0Ey4lgJNuJfrAzDXlq0VOtmfVisgJxQk4IyYFlV8NcmKP3bVAUJkLL0+6O
-         xm8ENvHw89WMqqnKoNI/xc54KsqVKyRIPein0Td5FSeX624iHBAEfDqqx3na7mXYdLFN
-         ZsUU9+URUvqHz1Q9QKNHUXbiiW44S+74AKHcKRhSWXCH3JgiUFXPX83KnjNh5yGj9ld7
-         ijfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749929295; x=1750534095;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=68fOdiUmyAKCoZUQg5F0w7gaN+cimM65QH6eVdQ6QRc=;
-        b=BuUE5Yrv9VFDlI8uxVloks94IG3fu33ONfBMYkGq1Pz9rLVqxMNcR3uElWGPS1PoG6
-         p8UrYr4XwSKQZOt8OAXU0kdlIFNl4SAydp1OHp+t/srUdOx+Mj4TOPBCE122dRGaDPZK
-         a7ZoanOinsGWUNrBF+0qFGiYfaK3fx4eKoympuLDtG9N/QlelnyXV4R9TnWw3iQ2fDf0
-         uCpL2fxXW6zVDUpXi3ynIzrzrSVwDzct3N05x6DlyrK3EaNMyqbUGMZih9S4iLofSK4O
-         F5Gx6D1yodm+BO9izguVhIWL47xDx3onbMqDwnwBqM6mtZQ1KD2Xx1kk01pmyBOzdxOr
-         ui4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXPNUrwlU9889huu+fm5gzDqlTnmJSPf2ybXj4YrcW3VLsPSHD/ygVVjdq/YUlRKHn1UC86/KXbtgDseZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlzxl2UsGY9vigj/xGk6/fGlAjVe5zAaByqq3GqJ8IrejVQu0P
-	8SJlCC/elk0/I+f/yfAkbuOHKQ7lR04hNrBQ00aQknwB1sVqHQervOrx
-X-Gm-Gg: ASbGncubKga/0Z+jxhOc9xege2LVYmdoOjchjRf0UdVbt1VGsHMAo8elWXgrhIcB2yJ
-	C/ak/aS1Nu9H9xO+sJXDRfGGrZ3XtNyRvHJrudQW0yZtQug8U3WQJxRQCgXgSp2SkDs9cJ6EooY
-	SOlHl5RO8v6BWs/h5QFe9jygitXDhaf3jDYyhOhNNP4HtThRwIS7VmYXQ+K7O9UXm5CvvYdqody
-	F2IqXoxHtGknMnK6opqBmwHRePRfEBNFpwJvVD+vkKXCJyzUu5cKTuxdjxK9Sy4qAidCVz3SRgl
-	iWuAQaJAjrSJq96eXsle/YWIxZ6f8AzqfD7I/Fy4NtobNjzBd6Dqk/VfbeEZlJiJfG6Op2kj0Pb
-	0
-X-Google-Smtp-Source: AGHT+IEvSALCMMU3HxJYJyzsV6w3p1cq0fqCoa3rYrjtiSQRp2H3JnlmU10DxlxChMbcISRNYBbbZA==
-X-Received: by 2002:a05:6402:270d:b0:608:cbe7:106e with SMTP id 4fb4d7f45d1cf-608d09d7d7amr2718495a12.29.1749929295015;
-        Sat, 14 Jun 2025 12:28:15 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48d77c1sm3238847a12.19.2025.06.14.12.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 12:28:14 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	peterz@infradead.org,
-	luto@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH] kernel/entry: Fix misleading comment in irqentry_enter()
-Date: Sat, 14 Jun 2025 19:26:29 +0000
-Message-ID: <20250614192729.10760-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gu4kqTYo"
+Message-ID: <a581401c-01e1-45b6-a55e-0361185114ff@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749929375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xN5d4MLrE2OQ8z204hwuo+c3IAo79fmudrGii3bZ0SQ=;
+	b=gu4kqTYosEX2z8Jawy6sUn46pmdpjICOMDHx+kLeGU0mzgiTJ4fVGt/ibuHu5MUM0+R9Mu
+	P1YwF+4/pf/EbxfN6DYizSvGglPO8OCBpveXpJNJdfdrPY0huFfbinUlr/3016VVYNgXIj
+	mWnCv6Up2cMXDw/23G+K2QwBYkzdvd0=
+Date: Sat, 14 Jun 2025 12:29:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 10/12] RISC-V: KVM: Add vmid field to struct
+ kvm_riscv_hfence
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250613065743.737102-1-apatel@ventanamicro.com>
+ <20250613065743.737102-11-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250613065743.737102-11-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Change irqentry_enter_from_user_mode() to enter_from_user_mode(),
-because enter_from_user_mode() function is the one doing the action 
-comment indicates.
 
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- kernel/entry/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index a8dd1f27417c..f49e3440204d 100644
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -224,7 +224,7 @@ noinstr irqentry_state_t irqentry_enter(struct pt_regs *regs)
- 		/*
- 		 * If RCU is not watching then the same careful
- 		 * sequence vs. lockdep and tracing is required
--		 * as in irqentry_enter_from_user_mode().
-+		 * as in enter_from_user_mode().
- 		 */
- 		lockdep_hardirqs_off(CALLER_ADDR0);
- 		ct_irq_enter();
--- 
-2.49.0
-
+On 6/12/25 11:57 PM, Anup Patel wrote:
+> Currently, the struct kvm_riscv_hfence does not have vmid field
+> and various hfence processing functions always pick vmid assigned
+> to the guest/VM. This prevents us from doing hfence operation on
+> arbitrary vmid hence add vmid field to struct kvm_riscv_hfence
+> and use it wherever applicable.
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_tlb.h |  1 +
+>   arch/riscv/kvm/tlb.c             | 30 ++++++++++++++++--------------
+>   2 files changed, 17 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_tlb.h b/arch/riscv/include/asm/kvm_tlb.h
+> index cd00c9a46cb1..f67e03edeaec 100644
+> --- a/arch/riscv/include/asm/kvm_tlb.h
+> +++ b/arch/riscv/include/asm/kvm_tlb.h
+> @@ -19,6 +19,7 @@ enum kvm_riscv_hfence_type {
+>   struct kvm_riscv_hfence {
+>   	enum kvm_riscv_hfence_type type;
+>   	unsigned long asid;
+> +	unsigned long vmid;
+>   	unsigned long order;
+>   	gpa_t addr;
+>   	gpa_t size;
+> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+> index 6fc4361c3d75..349fcfc93f54 100644
+> --- a/arch/riscv/kvm/tlb.c
+> +++ b/arch/riscv/kvm/tlb.c
+> @@ -237,49 +237,43 @@ static bool vcpu_hfence_enqueue(struct kvm_vcpu *vcpu,
+>   
+>   void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu)
+>   {
+> -	unsigned long vmid;
+>   	struct kvm_riscv_hfence d = { 0 };
+> -	struct kvm_vmid *v = &vcpu->kvm->arch.vmid;
+>   
+>   	while (vcpu_hfence_dequeue(vcpu, &d)) {
+>   		switch (d.type) {
+>   		case KVM_RISCV_HFENCE_UNKNOWN:
+>   			break;
+>   		case KVM_RISCV_HFENCE_GVMA_VMID_GPA:
+> -			vmid = READ_ONCE(v->vmid);
+>   			if (kvm_riscv_nacl_available())
+> -				nacl_hfence_gvma_vmid(nacl_shmem(), vmid,
+> +				nacl_hfence_gvma_vmid(nacl_shmem(), d.vmid,
+>   						      d.addr, d.size, d.order);
+>   			else
+> -				kvm_riscv_local_hfence_gvma_vmid_gpa(vmid, d.addr,
+> +				kvm_riscv_local_hfence_gvma_vmid_gpa(d.vmid, d.addr,
+>   								     d.size, d.order);
+>   			break;
+>   		case KVM_RISCV_HFENCE_VVMA_ASID_GVA:
+>   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
+> -			vmid = READ_ONCE(v->vmid);
+>   			if (kvm_riscv_nacl_available())
+> -				nacl_hfence_vvma_asid(nacl_shmem(), vmid, d.asid,
+> +				nacl_hfence_vvma_asid(nacl_shmem(), d.vmid, d.asid,
+>   						      d.addr, d.size, d.order);
+>   			else
+> -				kvm_riscv_local_hfence_vvma_asid_gva(vmid, d.asid, d.addr,
+> +				kvm_riscv_local_hfence_vvma_asid_gva(d.vmid, d.asid, d.addr,
+>   								     d.size, d.order);
+>   			break;
+>   		case KVM_RISCV_HFENCE_VVMA_ASID_ALL:
+>   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
+> -			vmid = READ_ONCE(v->vmid);
+>   			if (kvm_riscv_nacl_available())
+> -				nacl_hfence_vvma_asid_all(nacl_shmem(), vmid, d.asid);
+> +				nacl_hfence_vvma_asid_all(nacl_shmem(), d.vmid, d.asid);
+>   			else
+> -				kvm_riscv_local_hfence_vvma_asid_all(vmid, d.asid);
+> +				kvm_riscv_local_hfence_vvma_asid_all(d.vmid, d.asid);
+>   			break;
+>   		case KVM_RISCV_HFENCE_VVMA_GVA:
+>   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_RCVD);
+> -			vmid = READ_ONCE(v->vmid);
+>   			if (kvm_riscv_nacl_available())
+> -				nacl_hfence_vvma(nacl_shmem(), vmid,
+> +				nacl_hfence_vvma(nacl_shmem(), d.vmid,
+>   						 d.addr, d.size, d.order);
+>   			else
+> -				kvm_riscv_local_hfence_vvma_gva(vmid, d.addr,
+> +				kvm_riscv_local_hfence_vvma_gva(d.vmid, d.addr,
+>   								d.size, d.order);
+>   			break;
+>   		default:
+> @@ -336,10 +330,12 @@ void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
+>   				    gpa_t gpa, gpa_t gpsz,
+>   				    unsigned long order)
+>   {
+> +	struct kvm_vmid *v = &kvm->arch.vmid;
+>   	struct kvm_riscv_hfence data;
+>   
+>   	data.type = KVM_RISCV_HFENCE_GVMA_VMID_GPA;
+>   	data.asid = 0;
+> +	data.vmid = READ_ONCE(v->vmid);
+>   	data.addr = gpa;
+>   	data.size = gpsz;
+>   	data.order = order;
+> @@ -359,10 +355,12 @@ void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
+>   				    unsigned long gva, unsigned long gvsz,
+>   				    unsigned long order, unsigned long asid)
+>   {
+> +	struct kvm_vmid *v = &kvm->arch.vmid;
+>   	struct kvm_riscv_hfence data;
+>   
+>   	data.type = KVM_RISCV_HFENCE_VVMA_ASID_GVA;
+>   	data.asid = asid;
+> +	data.vmid = READ_ONCE(v->vmid);
+>   	data.addr = gva;
+>   	data.size = gvsz;
+>   	data.order = order;
+> @@ -374,10 +372,12 @@ void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
+>   				    unsigned long hbase, unsigned long hmask,
+>   				    unsigned long asid)
+>   {
+> +	struct kvm_vmid *v = &kvm->arch.vmid;
+>   	struct kvm_riscv_hfence data;
+>   
+>   	data.type = KVM_RISCV_HFENCE_VVMA_ASID_ALL;
+>   	data.asid = asid;
+> +	data.vmid = READ_ONCE(v->vmid);
+>   	data.addr = data.size = data.order = 0;
+>   	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
+>   			    KVM_REQ_HFENCE_VVMA_ALL, &data);
+> @@ -388,10 +388,12 @@ void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
+>   			       unsigned long gva, unsigned long gvsz,
+>   			       unsigned long order)
+>   {
+> +	struct kvm_vmid *v = &kvm->arch.vmid;
+>   	struct kvm_riscv_hfence data;
+>   
+>   	data.type = KVM_RISCV_HFENCE_VVMA_GVA;
+>   	data.asid = 0;
+> +	data.vmid = READ_ONCE(v->vmid);
+>   	data.addr = gva;
+>   	data.size = gvsz;
+>   	data.order = order;
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
