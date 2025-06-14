@@ -1,106 +1,83 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C202E62D9;
-	Sat, 14 Jun 2025 18:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A9E1D52B;
+	Sat, 14 Jun 2025 18:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749924973; cv=none; b=nrpR7Bae4zZHJitE2VEXvWPhBXtmU3n9SbJkaZhPQmMfzUFnlV58/YOaPOEnm/Sy/r/BYd1w1LcVnAHB8PJr+Kx7elRz4yJ3M5S6rA1MFWFuZXVOBHCDQX1uy+rjU56zX3JExBRq7Mp5INJPz7rE9JhPewCv7YAnPZrbVVfzt7s=
+	t=1749925068; cv=none; b=BmPKXDssgVkHMZvXAbXFAAtigbTeaZ8F0mxZ2zCaHiiBKXU3JCM07A0cSelRgzQMNEmhrr5NTD4GANeg2E9RfCtfr54afo78l2w2vBtwgt+9Bkh/YFvHlQ4zfH0jQXNm30CyfGEW0MgP119zyvnUd3x2X1hMgx3IMiWZczHTjY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749924973; c=relaxed/simple;
-	bh=lXdq0zd8Y5OrvA4/o/pegESsd0gxqt4j8S8a01Mec80=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SQv0aI5LcDoKuVpsjQwNFTA4I7/lD/OvyPF/YjHA1UNntfyHlBrxZbiWZGLYYkqnfFZrSEagdul5h2hkQAk1T88lOYo6zxr4sa085kA4ZhbzXPxFVQ9M8puiG9ou1ciOG3iXnpkxeB19HdIm4zvs3fUHq7BZgpVfTh5UYHn9jKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Oxg6/7pQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qVz/YGhb; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749925068; c=relaxed/simple;
+	bh=kYjMKtc7MklFMBiGIsBwUdz/Ui61mcF79jR156Q6WLE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=j2i8kyTzqPyrNX3aogP3+ThOL+vNcEYp9J/dtPTL9EjA8FYtGaaCOptHqOqKrdd4C6Di1VizOh0o0Xp1Waydkz3ByYPl4R+1+4qkVXXICmbyDsK0Ml/RbePkDw2TSbIh7pxLL3p8BgmN4hClE2EXzLSoe6AUsiaNE0Aefbj5W9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWTcy8dj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Oxg6/7pQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qVz/YGhb"
-Date: Sat, 14 Jun 2025 18:16:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749924967;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TjFzjT0ijZ/JIKLwJBsB72Jw6BWTexhwNDBvu1tIDBg=;
-	b=Oxg6/7pQcgiv2MOqzj/9hzzEIktCfYyuwwQeZvlXawkFhY29lcTlFoazpT/KTc6ix6qy3C
-	dQodIkPHTgnvDF7IqRfu86QU88t6Q3PDLGMkF+qJjQWNhf9nZlVBjdx+stNT54R+67zkbJ
-	kDSnZWQ9uvckivuOcT5VlDfpuuFlvz1BOelWT1M6H2BHLcVoOmyUHwXJOwwZ7ncszr5RTt
-	A1tt4XoBMgh6dziCIZaQpw7lcsZOjuO9snM9QXyYyafPizpi9Ne0w2dPvP2PM8M63a9dxP
-	ITLPHCaYtbPEFA0a4MHl2pvCnW9llultvS/rsWW3sOfsyDdG9Ryw7r+r2C9xdQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749924967;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TjFzjT0ijZ/JIKLwJBsB72Jw6BWTexhwNDBvu1tIDBg=;
-	b=qVz/YGhbjf/9sY0mHD1BcJCSIHU1lkb4cIAMfxfx1UxV058bt71jMSzZjfaZXPc4/8fjB6
-	nCFltVBy27XtlkCA==
-From: "tip-bot2 for Yury Norov [NVIDIA]" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource: Use cpumask_any_but() in
- clocksource_verify_choose_cpus()
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250614155031.340988-2-yury.norov@gmail.com>
-References: <20250614155031.340988-2-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWTcy8dj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FEFCC4CEEB;
+	Sat, 14 Jun 2025 18:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749925067;
+	bh=kYjMKtc7MklFMBiGIsBwUdz/Ui61mcF79jR156Q6WLE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=iWTcy8djg9eMkM73JF3/T5fhhrX0PUH2QYiAkDv3oO6yuylXcmk3CnxrcNCjgLuMK
+	 rGpZLqirzW6xYLgJe4FHVLWvvxwVGiUMkxX8iiGAnUAGv42qWa7UVF/+SZ+SADuUDM
+	 27pB30y4E0AJZQ2Lc7Wz265vVegVDzUeEICh4F9M/RN+8y7wjWVeZCugN8fPYUl/Ye
+	 PyYvNrXq1VT3lo3W5xAppa7Tg5dPiqkFFxA5XzdUHILJnmuBuDaSDk8LujP/TNFSKV
+	 /F9E1FaX1wxtYu1U4vvcY3mnwp5lQsOvOo2zi8alf3BmzoYsFz8gFvAoXZqv2OrVrs
+	 sjf7n3PVhwvdQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174992496671.406.7971020073622211674.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 14 Jun 2025 20:17:42 +0200
+Message-Id: <DAMGNVWE7HAH.ZIUK8D3A3VEM@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor Gross"
+ <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 0/6] rust: list: remove HasListLinks::OFFSET
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>, "Alice Ryhl"
+ <aliceryhl@google.com>
+X-Mailer: aerc 0.20.1
+References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
+ <aAkoVfiZDAXdYxrr@google.com>
+ <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
 
-The following commit has been merged into the timers/core branch of tip:
+On Fri Jun 13, 2025 at 6:45 PM CEST, Tamir Duberstein wrote:
+> On Wed, Apr 23, 2025 at 1:50=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+>>
+>> On Wed, Apr 23, 2025 at 12:30:01PM -0400, Tamir Duberstein wrote:
+>> > The bulk of this change occurs in the last commit, please its commit
+>> > messages for details.
+>> >
+>> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>>
+>> This works with Rust Binder and Ashmem.
+>>
+>> Tested-by: Alice Ryhl <aliceryhl@google.com>
+>
+> Thanks Alice. Could you also review? I guess this still needs some
+> RBs. @Benno Lossin could you perhaps have a look as well? You both
+> reviewed my other series[0] which was quite similar.
+>
+> [0] https://lore.kernel.org/all/20250411-no-offset-v3-1-c0b174640ec3@gmai=
+l.com/
 
-Commit-ID:     4fa7d61d5a02ad57a05c69365db293afddf678fc
-Gitweb:        https://git.kernel.org/tip/4fa7d61d5a02ad57a05c69365db293afddf678fc
-Author:        Yury Norov [NVIDIA] <yury.norov@gmail.com>
-AuthorDate:    Sat, 14 Jun 2025 11:50:29 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 14 Jun 2025 20:09:44 +02:00
-
-clocksource: Use cpumask_any_but() in clocksource_verify_choose_cpus()
-
-cpumask_any_but() is more verbose than cpumask_first() followed by
-cpumask_next(). Use it in clocksource_verify_choose_cpus().
-
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/all/20250614155031.340988-2-yury.norov@gmail.com
+I probably won't have time for this one.
 
 ---
- kernel/time/clocksource.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 6a8bc7d..a2f2e9f 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -323,9 +323,7 @@ static void clocksource_verify_choose_cpus(void)
- 		return;
- 
- 	/* Make sure to select at least one CPU other than the current CPU. */
--	cpu = cpumask_first(cpu_online_mask);
--	if (cpu == smp_processor_id())
--		cpu = cpumask_next(cpu, cpu_online_mask);
-+	cpu = cpumask_any_but(cpu_online_mask, smp_processor_id());
- 	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
- 		return;
- 	cpumask_set_cpu(cpu, &cpus_chosen);
+Cheers,
+Benno
