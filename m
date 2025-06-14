@@ -1,70 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAEF1DA21;
-	Sat, 14 Jun 2025 00:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928A9F4F1
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749861755; cv=none; b=gTCIYvb4yb2xWG9cuNOl4DdkNtXy5vz94/T9Pz2474CSJQn3kLjO264UO3qY1Y72N5oW0eHJSB1Zf93BRz3xLmLJmmUJCnbOhKyu9Y4rxaDcLzwfrHvYDwbQXmS67WKbP2/Ysv8dh480polZlnc9xFDgz5FtGWwRS7uXh9/pEZk=
+	t=1749861868; cv=none; b=C5Oi/O54D9gIudKZtzcIxy7EYQF2KF9lWLG5gPir2UsnFPFM9vMgBX7hGIpV31NV5xFDDzWPyj2YJXfAaNnnNyBMIWIu3u2mA7Oy/+V1IvBtyZlq26PJm3jq1bjfJ0vPt6mCR1VHKP3dPrCclJKdTyGB8DsehQVkP4khGkNZrK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749861755; c=relaxed/simple;
-	bh=uKOM6v2+PmgvnG+WAFLlO7XD04kdLzHE/y0185cyEF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rwksGY6iGV7fZz6uvdSq7UMsD6ogpULO1JcAoKN7r6v3ENoNEoCxBa2KJPKnzglWfFPd1oYmmicv03p3HPDgMUZhJeWyfRmigOpiauxhiCCtC4gUAcle1EOB70/80YlM/vUbp8w+oQmhOylSFQ3MOZwe+mKiHSfZLt9J4a6WXwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXkUclRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749861868; c=relaxed/simple;
+	bh=29cRgpEIn9i77ft2ErJCGJTeGJHKAHEj16jzFLOkDO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nyh1kjZoaHDZdao1kTZO6AIVbWpfb5b737pD6k9pDa02t8XqRpyJOOi14m5Tv/UlShfBZ7KbIfiakWVnj+Rpn8ym7mZon1IrfpCmyOfkyMmSiRMxS+P9Q5O4+ZRPA2RSHgzUBt4FkjoPU7YcDp02nD2wmcLpeHUr7Pe8/WraebE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=u/e9RR/r; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXkUclRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86738C4CEE3;
-	Sat, 14 Jun 2025 00:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749861754;
-	bh=uKOM6v2+PmgvnG+WAFLlO7XD04kdLzHE/y0185cyEF0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bXkUclRNSN6m6vpPZomqtLo1fg3/gMtnNS5yaEjfpzFG45nmtiWZaF2ICVTS7ref8
-	 GzkHmhTpa8o6e5FCTS9roW7k/N7guK8j0QrCbj1Eyrt/2+iGoJMDnYphFEyFnDy+LB
-	 oRjWAQdm5UQ3DUox+B+mbUbeZzS+NcR2EUtheaN2GveHYQ84rocGfZLPqizL/6kwlv
-	 JsRsWSvzhDr/Q4WiE4yh6r3i8P2KlssGsH47jKxE1n7gmfJc/YUpzbq0V0JT5Dmrcc
-	 zAbZ6n/6vnAhcLMDO7DPgfaPV/TtcKfReitejFQ+YY1FdlPxNIjxDnJAPe4xOlXzsn
-	 rI/n7B0/8eotQ==
-Date: Fri, 13 Jun 2025 17:42:33 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
- <shuah@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, ast@kernel.org
-Subject: Re: [PATCH net-next RFC] selftests: net: add netpoll basic
- functionality test
-Message-ID: <20250613174233.0dd5e7c1@kernel.org>
-In-Reply-To: <aEwd9oLRnxna97JK@gmail.com>
-References: <20250612-netpoll_test-v1-1-4774fd95933f@debian.org>
-	<684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
-	<aEwd9oLRnxna97JK@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="u/e9RR/r"
+Message-ID: <422c5677-48d1-41be-b128-595829c27167@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749861853;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EXuSTcUn0J6P+iqyqyqHY+kzA3pvndl/3kAQ7RECPmE=;
+	b=u/e9RR/rxfXPFPycnlPVQqNrU5k0V5o6T4a0vCElbgKU5CYulJQONn820Lt+bxrHKt3EJj
+	9HC0jaQ//KBjncZGpnjDfEzSqPcZs914149pSwPRty719isCXS245ZnwGFUdJjeAcsJvWy
+	YIWig0jncgm0xUQ2x57lRJYqQf2oUeE=
+Date: Fri, 13 Jun 2025 17:43:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH v2 06/12] RISC-V: KVM: Implement
+ kvm_arch_flush_remote_tlbs_range()
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250613065743.737102-1-apatel@ventanamicro.com>
+ <20250613065743.737102-7-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250613065743.737102-7-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 13 Jun 2025 05:47:50 -0700 Breno Leitao wrote:
-> > Or is there another way that the packets could be observed, e.g.,
-> > counters.  
-> 
-> Unfortunately netpoll doesn't expose any data, thus, it is hard to get
-> it. 
-> 
-> I have plans to create a configfs for netpoll, so, we can check for
-> these numbers (as also configure some pre-defined values today, such as
-> USEC_PER_POLL, MAX_SKBS, ip6h->version = 6; ip6h->priority = 0, etc.
-> 
-> In fact, I've an private PoC for this, but, I am modernizing the code
-> first, and creating some selftests to help me with those changes later
-> (given we have very little test on netpoll, and I aim to improve this,
-> given how critical it is for some datacenter designs).
 
-FWIW you can steal bpftrace integration from this series:
-https://lore.kernel.org/all/20250421222827.283737-22-kuba@kernel.org/
+On 6/12/25 11:57 PM, Anup Patel wrote:
+> The kvm_arch_flush_remote_tlbs_range() expected by KVM core can be
+> easily implemented for RISC-V using kvm_riscv_hfence_gvma_vmid_gpa()
+> hence provide it.
+>
+> Also with kvm_arch_flush_remote_tlbs_range() available for RISC-V, the
+> mmu_wp_memory_region() can happily use kvm_flush_remote_tlbs_memslot()
+> instead of kvm_flush_remote_tlbs().
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_host.h | 2 ++
+>   arch/riscv/kvm/mmu.c              | 2 +-
+>   arch/riscv/kvm/tlb.c              | 8 ++++++++
+>   3 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index ff1f76d6f177..6162575e2177 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -43,6 +43,8 @@
+>   	KVM_ARCH_REQ_FLAGS(5, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>   #define KVM_REQ_STEAL_UPDATE		KVM_ARCH_REQ(6)
+>   
+> +#define __KVM_HAVE_ARCH_FLUSH_REMOTE_TLBS_RANGE
+> +
+>   #define KVM_HEDELEG_DEFAULT		(BIT(EXC_INST_MISALIGNED) | \
+>   					 BIT(EXC_BREAKPOINT)      | \
+>   					 BIT(EXC_SYSCALL)         | \
+> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+> index 29f1bd853a66..a5387927a1c1 100644
+> --- a/arch/riscv/kvm/mmu.c
+> +++ b/arch/riscv/kvm/mmu.c
+> @@ -344,7 +344,7 @@ static void gstage_wp_memory_region(struct kvm *kvm, int slot)
+>   	spin_lock(&kvm->mmu_lock);
+>   	gstage_wp_range(kvm, start, end);
+>   	spin_unlock(&kvm->mmu_lock);
+> -	kvm_flush_remote_tlbs(kvm);
+> +	kvm_flush_remote_tlbs_memslot(kvm, memslot);
+>   }
+>   
+>   int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
+> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+> index da98ca801d31..f46a27658c2e 100644
+> --- a/arch/riscv/kvm/tlb.c
+> +++ b/arch/riscv/kvm/tlb.c
+> @@ -403,3 +403,11 @@ void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
+>   	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE_VVMA_ALL,
+>   			    KVM_REQ_HFENCE_VVMA_ALL, NULL);
+>   }
+> +
+> +int kvm_arch_flush_remote_tlbs_range(struct kvm *kvm, gfn_t gfn, u64 nr_pages)
+> +{
+> +	kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0,
+> +				       gfn << PAGE_SHIFT, nr_pages << PAGE_SHIFT,
+> +				       PAGE_SHIFT);
+> +	return 0;
+> +}
+
+LGTM. However, I noticed that kvm_flush_remote_tlbs_range doesn't 
+increment remote_tlb_flush_requests/remote_tlb_flush stat counter.
+
+So we would be losing those stats here. Do you know if there is a 
+specific reason behind not supporting the stat counters in the *tlbs_range
+function ?
+
+Otherwise,
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+
