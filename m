@@ -1,210 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB2D23DE
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 07:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379182E11D2
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 07:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749886341; cv=none; b=ItV2LXF/xD4ov8krEGYxOKGmna/v03v/y5XkO3WwgsyvsC8EJxi7WUtEaJ5CFlcvpxumEO9VtaIRTVkYBgdQvsCFqSqtWxN1G14LyizVkOLg021XYJv5OFhu9KMFB+JN2/3fZmbnzAH4ShNb+MCZKM0rkPxNlPdsgXfuVLGJKbQ=
+	t=1749886636; cv=none; b=I79qyn/hQPUElXmz31GDRCt+MPJaeGQE+pAmUWTWe4QXZXnqF6aW+PqCiKlN7DZa9NxMDV9o7Ib8du60UAdWbq4d+BLEVd+Qh06IlEF0I+u3k0kWxlbIsUJrC8WLohhxEa3BBbQ2NmdTQWcMUTTlJZdTjXa3t7Ate0g8Ir/0Ulo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749886341; c=relaxed/simple;
-	bh=czQV28/YkuDiLpcPrU879HwkRtZV6i6qIUU/ROMxJXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y4qtdbjKJoY3Ar8tPV8GKP29ynbIAoAAw6o4rCPtJNS1AZQ+lzF8BnQR6bveSRLy8f/hIGurnj2Nu7P5kwdnTX1T4rRMP+TzBXV18NeCd8GeD+31SNPogDn8hsnSjCwqDdZkcMSLKcB5ksIuoDKJVU5AuVG9l8M4R8+JXAYicLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mInjfLnp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749886636; c=relaxed/simple;
+	bh=aIZtGpUWA/3xg8s0SL2dv9xFvbfeNL8+ElVJh6GzKhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PQ38vK4uiagai4mGnaAjRYV1QHCoPhkxZgzd94+ufLHyxGjLcMM33PZBiIhTmN9eotiqtTdpJP+StvucO9sXGVdWCotuv6EIjO8UktUxfR9nAUf2R1mn0gjbgDVIpRR3Qf1lBH7GoIeEiC7nZX6CSh84VMf2yTmTmbG5U3LPLcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwzGJbXm; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mInjfLnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE33C4CEEB;
-	Sat, 14 Jun 2025 07:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749886341;
-	bh=czQV28/YkuDiLpcPrU879HwkRtZV6i6qIUU/ROMxJXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mInjfLnpriobneFm/E30U2RvhasZwtrEo6cTbxmsNPUNZr7nLU6tweTAaGWsPDj44
-	 kGepzSAeHUPqvfDbcsWdCo18m4iGiQ9QJgCw9TZ+rHhEAXgHNuAgKnNhH5P0IsCMlZ
-	 haZxofniuuwPxNt9ng2l3cCnR6mC+ZYJsD98srBq4jiruVjLDfAfYU4qmQhdjaKRxf
-	 gaN2dM7PtNliNPFP1LcILSh3npRjgX3TPUsRiR33CIZQ1xIyeuBRtzlNAuZOKxW5AE
-	 9DkOz9EZFMgX5RT1K7Kt5uFmKxGH3vL27gacnLi0GuRTL42A0Bo8ule67UY6A78WYu
-	 wvoNxjSbo0Adg==
-Date: Sat, 14 Jun 2025 09:32:14 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	=?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Carlos Bilbao <carlos.bilbao@kernel.org>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Fei Li <fei1.li@intel.com>, Jan Kiszka <jan.kiszka@siemens.com>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH] x86/kconfig/defconfig: Enable CONFIG_DRM_FBDEV_EMULATION=y
-Message-ID: <aE0lfuuzXkVNxtKO@gmail.com>
-References: <20250515132719.31868-1-mingo@kernel.org>
- <20250515132719.31868-8-mingo@kernel.org>
- <SN6PR02MB4157B1676A6284ECD21E494FD490A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87o6vtnf8m.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwzGJbXm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749886634; x=1781422634;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=aIZtGpUWA/3xg8s0SL2dv9xFvbfeNL8+ElVJh6GzKhA=;
+  b=jwzGJbXmlKQdHpUlqeSaI7/3MmbrgqvbOjHHLdk8KzHyx8vcCAp3ACma
+   xKbQ4AlvnwpJEmV4ZhH+/x0RylhwaKKkrq/qpnTtNdPAPMyE4fwqqJGFh
+   xKXj5Jeey416XxEKSo8kcBimUPqC4p9y5ui2GRHgVtEWucYnaEhmZwm5q
+   /VruirHdX40cZbHm8MIvw93YlU383buKdX83oqsg6R/0faJ8NmzUScw5d
+   C/YPx4DjhpqCwTvsPxJ4oD1acU9fAbeEoA0Axn0SRiI8xPkKl/qP2ayck
+   B349ctuqIDz86qt49+dtxI3QuZvL3E+mmcXLUzrPSMaDzjXGgoJJ5DPFl
+   A==;
+X-CSE-ConnectionGUID: Xe3I4CR0QwGzMMmUIERhfg==
+X-CSE-MsgGUID: N1F3CUHKQe+MvbYHhSJaww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63511502"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="63511502"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 00:37:14 -0700
+X-CSE-ConnectionGUID: e1UUs9DlTYu6k4lB3GDVzQ==
+X-CSE-MsgGUID: mToR3KE9QM+pbPQ8lup+CA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="148552884"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 14 Jun 2025 00:37:12 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQLRu-000DN2-0J;
+	Sat, 14 Jun 2025 07:37:10 +0000
+Date: Sat, 14 Jun 2025 15:36:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Davis <afd@ti.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: include/linux/platform_device.h:91:23: sparse: sparse: incorrect
+ type in return expression (different address spaces)
+Message-ID: <202506141507.mLBNmMsd-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87o6vtnf8m.fsf@redhat.com>
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4774cfe3543abb8ee98089f535e28ebfd45b975a
+commit: 61de83fd8256e185588670d3cf0bccc3e913819c mux: mmio: Do not use syscon helper to build regmap
+date:   6 weeks ago
+config: s390-randconfig-r112-20250614 (https://download.01.org/0day-ci/archive/20250614/202506141507.mLBNmMsd-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250614/202506141507.mLBNmMsd-lkp@intel.com/reproduce)
 
-* Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506141507.mLBNmMsd-lkp@intel.com/
 
-> Michael Kelley <mhklinux@outlook.com> writes:
-> 
-> > From: Ingo Molnar <mingo@kernel.org> Sent: Thursday, May 15, 2025 6:27 AM
-> >> 
-> >> Since the x86 defconfig aims to be a distro kernel work-alike with
-> >> fewer drivers and a shorter build time, refresh all the virtualization
-> >> guest Kconfig features, enabling paravirt spinlocks, and
-> >> enabling the guest support code for the following guests:
-> >> 
-> >>  - Xen
-> >>  - Xen_PVH
-> >>  - Jailhouse
-> >>  - ACRN
-> >>  - Intel TDX
-> >>  - Hyper-V
-> >
-> > I built and tested a Hyper-V guest with defconfig. The Hyper-V storage
-> > and keyboard drivers are pulled in automatically, so my previous
-> > comment about them being "missing" is moot.
-> >
-> > But the Linux console for each Hyper-V guest is a synthetic graphics
-> > console, and that didn't work with the DRM_HYPERV driver. Missing
-> > the console pretty much kills any usefulness. DRM doesn't have 
-> > Linux console support, so it needs CONFIG_DRM_FBDEV_EMULATION
-> > to be set, and defconfig doesn't have it.
-> >
-> > So either CONFIG_DRM_FBDEV_EMULATION needs to be added, or
-> > defconfig should switch to the older HYPERV_FB driver. I think we'd
-> > rather do the former. Vitaly -- any thoughts?
-> >
-> 
-> Yea, my vote goes to the same option: let's enable
-> CONFIG_DRM_FBDEV_EMULATION.
+sparse warnings: (new ones prefixed by >>)
+   drivers/mux/mmio.c: note: in included file:
+>> include/linux/platform_device.h:91:23: sparse: sparse: incorrect type in return expression (different address spaces) @@     expected void [noderef] __iomem * @@     got void * @@
+   include/linux/platform_device.h:91:23: sparse:     expected void [noderef] __iomem *
+   include/linux/platform_device.h:91:23: sparse:     got void *
 
-Okay - I've addressed the enabling of this option separately in:
+vim +91 include/linux/platform_device.h
 
-    7ce421edd9fc ("x86/kconfig/defconfig: Enable CONFIG_DRM_FBDEV_EMULATION=y")
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  85  
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  86  
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  87  static inline void __iomem *
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  88  devm_platform_ioremap_resource(struct platform_device *pdev,
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  89  			       unsigned int index)
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  90  {
+a0c74f6c9ea9ceb Mark Brown 2023-07-18 @91  	return ERR_PTR(-EINVAL);
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  92  }
+a0c74f6c9ea9ceb Mark Brown 2023-07-18  93  
 
-Also attached below.
+:::::: The code at line 91 was first introduced by commit
+:::::: a0c74f6c9ea9cebd7a8f38142bf87e7c12c2905d platform: Provide stubs for !HAS_IOMEM builds
 
-Thanks,
+:::::: TO: Mark Brown <broonie@kernel.org>
+:::::: CC: Mark Brown <broonie@kernel.org>
 
-	Ingo
-
-=======================>
-From: Ingo Molnar <mingo@kernel.org>
-Date: Sat, 14 Jun 2025 09:10:55 +0200
-Subject: [PATCH] x86/kconfig/defconfig: Enable CONFIG_DRM_FBDEV_EMULATION=y
-
-Michael Kelley reported that the x86 defconfig *almost* works
-well on Hyper-V guests out of box, with the exception of
-console support:
-
- > I built and tested a Hyper-V guest with defconfig. The Hyper-V storage
- > and keyboard drivers are pulled in automatically. [...]
- >
- > But the Linux console for each Hyper-V guest is a synthetic graphics
- > console, and that didn't work with the DRM_HYPERV driver. Missing
- > the console pretty much kills any usefulness. DRM doesn't have
- > Linux console support, so it needs CONFIG_DRM_FBDEV_EMULATION
- > to be set, and defconfig doesn't have it.
-
-So enable CONFIG_DRM_FBDEV_EMULATION.
-
-Also enable the dependent CONFIG_FRAMEBUFFER_CONSOLE_ROTATION option
-(disabled by default), as all major Linux distros have it enabled,
-probably as a sysadmin quality-of-life option:
-
-	.config.distro.debian.x86_32:     CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
-	.config.distro.fedora.generic:    CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
-	.config.distro.opensuse.default:  CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
-	.config.distro.rhel.generic:      CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
-	.config.distro.ubuntu:            CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
-
-There's no measurable build time impact within ~1% stddev:
-
-  $ perf stat --null --repeat 3 --sync --pre='make clean >/dev/null' make -j128 bzImage >/dev/null
-
-  Performance counter stats for 'make -j128 bzImage' (3 runs):
-
-  # before:         33.759 +- 0.286 seconds time elapsed  ( +-  0.85% )
-  # after:          33.593 +- 0.314 seconds time elapsed  ( +-  0.94% )
-
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jürgen Groß <jgross@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/SN6PR02MB4157B1676A6284ECD21E494FD490A@SN6PR02MB4157.namprd02.prod.outlook.com # Discussion
----
- arch/x86/configs/i386_defconfig   | 2 ++
- arch/x86/configs/x86_64_defconfig | 3 +++
- 2 files changed, 5 insertions(+)
-
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index aeba95893086..39a660d71a0a 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -239,8 +239,10 @@ CONFIG_AGP=y
- CONFIG_AGP_AMD64=y
- CONFIG_AGP_INTEL=y
- CONFIG_DRM=y
-+CONFIG_DRM_FBDEV_EMULATION=y
- CONFIG_DRM_VIRTIO_GPU=y
- CONFIG_DRM_HYPERV=y
-+CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
- CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_HRTIMER=y
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index c20100d77387..b5dc26fb715a 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -116,6 +116,7 @@ CONFIG_ANON_VMA_NAME=y
- CONFIG_USERFAULTFD=y
- CONFIG_LRU_GEN=y
- CONFIG_LRU_GEN_ENABLED=y
-+# CONFIG_DAMON is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_XFRM_USER=y
-@@ -248,8 +249,10 @@ CONFIG_AGP=y
- CONFIG_AGP_AMD64=y
- CONFIG_AGP_INTEL=y
- CONFIG_DRM=y
-+CONFIG_DRM_FBDEV_EMULATION=y
- CONFIG_DRM_VIRTIO_GPU=y
- CONFIG_DRM_HYPERV=y
-+CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
- CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_HRTIMER=y
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
