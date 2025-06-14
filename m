@@ -1,109 +1,149 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D9A2CA9;
-	Sat, 14 Jun 2025 16:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCF3DDC5;
+	Sat, 14 Jun 2025 16:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749917644; cv=none; b=F5j8ugx/2cKBB9PLZIgHQeiffkqBu+E1b0PIguxO2s0Mmz2DZGIeMWOAfGifqJ5cOa4a35PV1v2oeulHdnO0Z6cAvDrpXXbn27qrz64xM4UPiXiZ1L8KV6h3THzoHjTglp8hDwBy3FuIih6zaATFSIGzABaorUTBibJn0msahIA=
+	t=1749918813; cv=none; b=Zj4HwSplSmlBhXIZaMSBXuyz68Tncl10zHZ4u3cz4zQNsMljsD7oBq7875zDeoPe7mrP4J9QtjHoFiUhP8A1FEkqJH4C2WMk06ZS/usZfOGbqN/K/xdrH6aZXxXhiNsLGA1xAywUqi9VuyCwkAyYWXQxSwZBirt8eSPfc2Q5dtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749917644; c=relaxed/simple;
-	bh=e+/zlE6xyaYgObCF7so8RDR/0o5dI2JueOMf3qzeEXY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QNzxyONwy0J1Ymu598yPmWqZs53ZhmTCpM1dysCy4X4mEb1U/lZ6MPTNoOOPQ5qwWCBCkNs2kDNObOKG+RdT30VVGJb+aeMlRxBu7gJvwrtIKJsFYAVdLstqNbD60kam1T2ZvzdYsDcQPeKmA4UZ1jFlMRD6DcRNI+JXnrJDF3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TrMP8Rkf; arc=none smtp.client-ip=209.85.208.174
+	s=arc-20240116; t=1749918813; c=relaxed/simple;
+	bh=Mc9g/mMBVl0hoLxyjGjJDGEV32MkXt4yu8l6bhjTqlo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UhEIZzseCZ5CxKhpvN48oZrikDyW36zF5JU6bjmUTUJjD3R8nGZ2GWB10/lrwSJqVimoWI9B4cGgB4+UfE86ZniGUEznUS+3c8F6obks1iR6uZkEA7Kn5mJRJ8phmjQGqN7q31z9H/oeg1tsS9+fx/eb5nDdoChiiN7OFoWaTEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcIiagrE; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrMP8Rkf"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b3c292bb4so20353071fa.1;
-        Sat, 14 Jun 2025 09:14:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcIiagrE"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so20557045e9.2;
+        Sat, 14 Jun 2025 09:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749917641; x=1750522441; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/YgRyCXygOFDd/rhvGyVUhq7/9zR28ePgeTQ2WjwLUs=;
-        b=TrMP8Rkf+2PAyAi8XRu8CX7F2GAWvAoID2dinavRjZJG74gqRXk9zgJYDu1f17SL6F
-         pDyeN5X6PFMPsG5BmDcxPfvjV53pnpQY3akZBHCYEd+OVUPv62HHLihlVfCSWlFyTrTp
-         GnJHXSb3lerHUrvq29TPsC/q2IIwjQTkZlksIxc7TTI7gBWWDikvnozcoN2a+cJGFfqA
-         aLCGu4/C3H22EGbOOUGyzGrXXIXfZUU1z4UhbJbPpl85I9/PL5SmKNtK66kTpc6m2LMQ
-         qA7/9oQkBg8WFDlW6CRW585idu3fQ8abcc7tzvngm/peFR6qzDji9NhmFWlmb1TwHvpL
-         6CGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749917641; x=1750522441;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+        d=gmail.com; s=20230601; t=1749918810; x=1750523610; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/YgRyCXygOFDd/rhvGyVUhq7/9zR28ePgeTQ2WjwLUs=;
-        b=bamxKvazz8JYhYIYY9cIJpSOwh2S7s586UgC0+SaTLPzVHqiREbbahuMh5Hx5bUycC
-         tcxOHce2Uv+rCtezvURQH3QfKo0mtDOxsNCzT/lsM2Uz3rvE/K1WeeEidHNAiqUS6N8q
-         vNcIKiUCB0+som0Ty2o/mJnA3Pl5f0vOZyMoqkjDnQqOwZAZQFyxlWGzH8p5FMoI5S9+
-         BTzSIFyUkt8c6n/GGdCUk7cLPz4MehWYQ6NrVmobd1Y6MfXeNdAz/bOVEBacsNnAN+84
-         0i5hiyWXPrFIu67ngsiXqaorurxEOTZ0X9CMCg5AIs8Vhag9EjkDZ90qLMWBlsnFrMKs
-         /KmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWiyuTy7wmw+Ak7YvxxiyCzwnEZYq1GGPht+MbPz0grHPXAD6m8pdj7lSTGqWjIZMAonTbIYpjYVEFh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/y9dJu7n9ZxSqDfRzjHrAWiO/F+Q8c1ogd7wjE/b+wLVE3Ofd
-	mov70Z2xluA1s529ym+iH1hEtNRrZxYe2HSNP1QYhH3RpYyeMF+9rmzAdnRl6Ivnaj6Dx0tNgRY
-	3uK8VHUBg8Fui8bLZCpMJx5c98Wr58Uc6S/l6
-X-Gm-Gg: ASbGnct4DkkJB0pR1yr0SminZfjslgHDOkfUEyzaAAhMsdXpXdNOG4tLPQtCTi1ImD1
-	HuLBONNEhpZ4BLfXGtYa1URg84IG+6CJyfqsUDfHJD6N0s2dw8otaOo5gpp/7SHiu2se16nOeYv
-	wPS5nW8g2Fb8aoG9/2HUjuClG/svksoUwbZ+uD32CWOCIzynIqZmT9/JCuc1dz1YnrdUU+Xlelu
-	HkB6Q==
-X-Google-Smtp-Source: AGHT+IHmF0kiq/suVB3X/Ly/6h0VJFx5kF7zb+6Gsd5VTUl93chnoBak+Bc331rM1FFlJD4I5+k5Fzn6qtF3m/+a9SI=
-X-Received: by 2002:a2e:bb9e:0:b0:32a:ec98:e15a with SMTP id
- 38308e7fff4ca-32b4a5c5202mr6416801fa.36.1749917640509; Sat, 14 Jun 2025
- 09:14:00 -0700 (PDT)
+        bh=rRVQLuTs3t7N1YX7qJ0PJ83crDrsg5WIEnLObX4tldE=;
+        b=HcIiagrEVvCBlyKpGnPY2E5l9tdfZWjD35JQ/16MAAfxWfeFY2CiUHEGeXkDQ5DCYE
+         5+E1Nt6DIdrJUHjwvnCEN28SWpSSRQa6f6jhVUXusxAlxCcyAa8bdWB2EYgI8u7w0Npf
+         pRFdfLv46BoCXDp0Q8D7Ds4WVqG04Do90NxqVxLF0NLhC7Bx0oUBQlFSUuSsWGCtLdDU
+         g111ELNssG53FA2eD1yMjhjTFKRNKs+rihqchM7hKVcanXs9hYy/66CTOKdCLvvOptAi
+         Edon2Kl1od5lWD7JMW+TLy2sr4R8AC4/8z29ej9x9A+1H2KlOmQdGN7zALLOI/Wx7t9q
+         SWVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749918810; x=1750523610;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rRVQLuTs3t7N1YX7qJ0PJ83crDrsg5WIEnLObX4tldE=;
+        b=apQlCoZBmkW/H8+S9HNEHbpeUEfXJ9rShi6EfMThEwW66243QzWH1I2rwO3aarEZ5X
+         U2UkA4QaM9u17CuwJh4VbwzA9R+A8botvnsuZJzTJnFaxA6Obi77mvmVB+1Dg+LpBNHk
+         RbyFwUOR9eQAvnEWOsF9xDiAvrKxjnQ0Kep7Exq3iaP4rOqqjVUtFKOfCyZ/eCOcaYT1
+         8uKHJuZtl5bxbILrTDaT7kS1ZxVRZ9CbzeOXDaMDQMM2fepvLsGT/6lGqsCr25YmB22z
+         Kot6bkwR7NelwuX0zWY6ScV07avss5VCx2jmeMH1rNotWquf5oSze0GotowVv6raMbqh
+         MKdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEEu82Ag/aIj4DwXo9xumudSeSsWAcy8Ax1q14iUcNfwx4+u6d+V0LQbbwMJX7wLFruSey8T3Ars7fT9nn7j0=@vger.kernel.org, AJvYcCWwNxSlfYsa+gnU/EuouOZWD+NhpxpZvKrNBqkq2UoHf7PQWi3HuHP3rzhmEskyijNrpsQwm/LKMVHR7HM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUycTdlz9tv7qD2Sz3SrHTfrB52GcqnXZsoXLmo6oobe4tItMe
+	FhWJpI9yw/1KNtNRNZCze0xSSdw571zqp9Pl+R7bQrZwIhAOJm8wBZ2k
+X-Gm-Gg: ASbGnctsuth0T7tk20L0kZgLKC73PRbUVFcpcvIBlF4m3kyj7lPcMy3KpyPwLfHJZrN
+	QJ84eSavSTzZPrTNeQXKBKxT6lCJaenapXp9zixnaPFxl96scjy67W0ppvpQifnQH7Tu1jvDI6Q
+	jMzjDTzRNU3poEBs+M1hCzHHWZ1yHwpLTWdHmXjzBXl4ei7QogB/rK6+HHJ+jFmAI0NtiMlFrA6
+	ZvsWIq/pz8UdhgMXK5JJwqEwQmZ77kWtUH0iHza/Ic17KGbsa9FcEeDVJJ6zxVv7SxZi9GgxJNa
+	u2bSNgceR2F3nFwT3FeWoL7FBtRzo4gYSH9ImIRLEkJJsBAOXfBQRMerSdWKUc7f2HI3cO4xlFw
+	UekxqRCSjLY+7D1LRvvqYqzBlS6g7f7kepxA54rtxYdsXMsH00/xv2YpINLE+F86JyCo=
+X-Google-Smtp-Source: AGHT+IHPm2YETQdRcyhGLWGmJhloCz1JAThFE6G+ifkAVCY/pPuAelhjGCQsPMdx4iQWi3AdAUSfMA==
+X-Received: by 2002:a05:600c:6814:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-45344da0e63mr4007955e9.20.1749918809637;
+        Sat, 14 Jun 2025 09:33:29 -0700 (PDT)
+Received: from shift.daheim (p200300d5ff34db0050f496fffe46beef.dip0.t-ipconnect.de. [2003:d5:ff34:db00:50f4:96ff:fe46:beef])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224cb2sm90519355e9.5.2025.06.14.09.33.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 09:33:29 -0700 (PDT)
+Received: from localhost ([127.0.0.1])
+	by shift with esmtp (Exim 4.98.2)
+	(envelope-from <chunkeey@gmail.com>)
+	id 1uQToR-00000000GqF-15UA;
+	Sat, 14 Jun 2025 18:33:28 +0200
+Message-ID: <eda7bc56-2fb6-4566-aecf-3a18de4029c3@gmail.com>
+Date: Sat, 14 Jun 2025 18:33:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 14 Jun 2025 11:13:49 -0500
-X-Gm-Features: AX0GCFsA-QLpiw_wQ1XJ6N3s9v7-RRco9QUToJ6t-4RR1aM0aBN7Fin1ZfoJSGs
-Message-ID: <CAH2r5msg0f6EP24x6dQyt8CbGs9OD6EzQV7rOW0=8gkfLFvJ=w@mail.gmail.com>
-Subject: [GIT PULL] smb3 client fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: carl9170: do not ping device which has failed to
+ load firmware
+To: Fedor Pchelkin <pchelkin@ispras.ru>, Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Christian Lamparter <chunkeey@googlemail.com>,
+ linux-wireless@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+References: <y4ufvifcearf75qds5hlro3rfiadwfwlixz5xg3w6jjozk5sdg@7yyfsdvyehon>
+Content-Language: de-DE, en-US
+From: Christian Lamparter <chunkeey@gmail.com>
+In-Reply-To: <y4ufvifcearf75qds5hlro3rfiadwfwlixz5xg3w6jjozk5sdg@7yyfsdvyehon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Please pull the following changes since commit
-19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+Hi,
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+On 6/13/25 10:19 PM, Fedor Pchelkin wrote:
+> Dmitry Antipov wrote:
+>> Syzkaller reports [1, 2] crashes caused by an attempts to ping
+>> the device which has failed to load firmware. Since such a device
+>> doesn't pass 'ieee80211_register_hw()', an internal workqueue
+>> managed by 'ieee80211_queue_work()' is not yet created and an
+>> attempt to queue work on it causes null-ptr-deref.
+>>
+>> [1] https://syzkaller.appspot.com/bug?extid=9a4aec827829942045ff
+>> [2] https://syzkaller.appspot.com/bug?extid=0d8afba53e8fb2633217
+>> Fixes: e4a668c59080 ("carl9170: fix spurious restart due to high latency")
+>> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+>> ---
+>>   drivers/net/wireless/ath/carl9170/usb.c | 15 ++++++++++-----
+>>   1 file changed, 10 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
+>> index a3e03580cd9f..a0bfa0c477ee 100644
+>> --- a/drivers/net/wireless/ath/carl9170/usb.c
+>> +++ b/drivers/net/wireless/ath/carl9170/usb.c
+>> @@ -438,13 +438,18 @@ static void carl9170_usb_rx_complete(struct urb *urb)
+>>   
+>>   		if (atomic_read(&ar->rx_anch_urbs) == 0) {
+>>   			/*
+>> -			 * The system is too slow to cope with
+>> -			 * the enormous workload. We have simply
+>> -			 * run out of active rx urbs and this
+>> -			 * unfortunately leads to an unpredictable
+>> -			 * device.
+>> +			 * At this point, either the system is too slow to
+>> +			 * cope with the enormous workload (so we have simply
+>> +			 * run out of active rx urbs and this unfortunately
+>> +			 * leads to an unpredictable device), or the device
+>> +			 * is not fully functional after an unsuccessful
+>> +			 * firmware loading attempts (so it doesn't pass
+>> +			 * ieee80211_register_hw() and there is no internal
+>> +			 * workqueue at all).
+>>   			 */
+>>   
+>> +			if (WARN_ON_ONCE(!ar->registered))
+>> +				return;
+> 
+> Is WARN justifiable here if it concerns handling a predefined error
+> condition?
 
-are available in the Git repository at:
+The driver has many more WARN_ON_(ONCE). Most of them are from "back in the day". I think
+carl9170 predates Syzkaller by something like 5 years or less.
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.16-rc1-smb3-client-fixes
+In this case, it would be good to know if this only happens with syzkaller, or with some
+dogy device (be it the hci, or maybe the ar9170 device itself - they are getting old by now).
+I mean Garbage In => Garbage Out. But yes, it shouldn't crash.
 
-for you to fetch changes up to 72dd7961a4bb4fa1fc456169a61dd12e68e50645:
+> I mean, yeah, it avoids a crash in the completion handler but kernels
+> with panic_on_warn - the ones which Syzkaller runs - will still stumble
+> here for no reason.
 
-  smb: improve directory cache reuse for readdir operations
-(2025-06-12 13:38:21 -0500)
+I bet there is already a precedence for this, if someone knows it or has previous decisions:
+Please join in!
 
-----------------------------------------------------------------
-Three smb3 client fixes
-- SMB3.1.1 POSIX extensions fix for char remapping
-- Fix for repeated directory listings when directory leases enabled
-- deferred close handle reuse fix
-----------------------------------------------------------------
-Bharath SM (1):
-      smb: improve directory cache reuse for readdir operations
-
-Paulo Alcantara (1):
-      smb: client: fix perf regression with deferred closes
-
-Philipp Kerling (1):
-      smb: client: disable path remapping with POSIX extensions
-
- Documentation/admin-guide/cifs/usage.rst |  2 ++
- fs/smb/client/cached_dir.h               |  8 ++++----
- fs/smb/client/connect.c                  | 10 ++++++++--
- fs/smb/client/file.c                     |  9 ++++++---
- fs/smb/client/readdir.c                  | 28 +++++++++++++++-------------
- 5 files changed, 35 insertions(+), 22 deletions(-)
-
-
--- 
-Thanks,
-
-Steve
+Regards,
+Christian
