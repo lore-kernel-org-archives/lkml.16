@@ -1,42 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5AC8633A;
-	Sat, 14 Jun 2025 11:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8681C84BD
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749899793; cv=none; b=i3uQdN4KQE3AZo0zm45PZf5nWQ765utcjtz1Z5devqfvSgQF64nVsHh1/LIpS2BVoSnOtnhVRg37M2vPadLqm65nnTrDqEVevYkSBDka0BQB0rainSdmqfljSTOKqwXqSV1lxYrTUC5/JxyXDK5BiME5t5w+MFlN6yh3MJgR9Vk=
+	t=1749899841; cv=none; b=PnsOmPJEImuQM7hdYBt05u7UK4gYL8NS+bhZWqwPTGjRPJTrfLR5IZ5OonNHdoUqBJ9Zbd8ACgcB7fRrm7uMIdDPoDW9N8AnX53t0iV6AHQ0IXy2ngbxhVu+8SbQBBi88dRdX+cELtYju8PsxFuxOqbp1G/ttbmAYaIvAHjpRIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749899793; c=relaxed/simple;
-	bh=X9xDO0up16rT/k7uTrPBb2e9wca60PKhcFhlzmD1abM=;
+	s=arc-20240116; t=1749899841; c=relaxed/simple;
+	bh=d4gNp/0M9SMRUX5Vo9jyFaZjMh959oqzUg9NU3r341s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMzyD3UuMdIoKuQyPVlePm0bO5cVAdWlG89PTo9mZe45AEjTB86ml97sVlkwWC2QZjuwXuCssZ5pGdfph09qtn/Eyi0IHS8UeX/7/wt3fADtjT0BTqVdRHPeAyHU50laGrJHdv+FMo5f8DhE/yReLr+X4qvpqli2P2DTgbKUY7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSvO+Rup; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PKg9Spe71LXZ/fa/hd/RyaaVb1tlmuTJF8IYO3DhlJ+zISWWYeOgITCIPPx3JyYz2qCjEnVXqdxbtHiAPwn7N8QKqyKrwcBMhdO2T03vpDhzGUpxE4W3q/PthDaMd7C3+TJ46Spohw5hA4h8jpzeYIaTjPa0b0Od+esaXza6fPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=Lca7QKh6; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSvO+Rup"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE6EC4CEEB;
-	Sat, 14 Jun 2025 11:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749899792;
-	bh=X9xDO0up16rT/k7uTrPBb2e9wca60PKhcFhlzmD1abM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FSvO+RupbNq8Amfag+Z0W5P8z7b6LcotkjLyXS9/DZA07+dGP7MnbWmF/QvLSDBNH
-	 FXECrjOv4fb9ZBF65GgwPQ+oUkX0D3PNFuqw+vKbfsUD8oSaGfX2tJJtaWA5IrisS6
-	 d68PVUtU1Ksw+Zg6EbW9FMNQC/galUqOTiKcm7D4126N8xlWKFSlTIMtliH190JnRP
-	 GiuW8BgTBP55NYETzAeKWp/1WEfRJ3VgNJoGfGpU441QapwUMjsxYvngVpBG9xd9He
-	 ZILanRzNpsy6tPv62mowDWgTlEfujqqB2z4eNIGbvLU13aJrTa3OSW2bEbYp6cGUxF
-	 XR1eFmHUpN+OA==
-Date: Sat, 14 Jun 2025 16:46:26 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>, 
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition
- to drivers/pci/pwrctrl/
-Message-ID: <sy2pxbexfr7nhpd52ml2s4obghsbr7n7bfkym4guv533lxxxyc@pwi6rih5efmh>
-References: <20250614052651.15055-1-mani@kernel.org>
- <aE0lGcYO1asrwb9z@wunner.de>
+	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="Lca7QKh6"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 3478E240101
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 13:17:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
+	s=1984.ea087b; t=1749899832;
+	bh=d4gNp/0M9SMRUX5Vo9jyFaZjMh959oqzUg9NU3r341s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=Lca7QKh6j957WM9z2uGhxtJ0SvljdRqwb2jlCuWb67exWTonQombxmqnjTCtYsFh5
+	 6wowc8OD7y1uR6Sw0DHc7nc4rp52t+Rbn3jb8JHD0rUjXbYpYuHB6gfPsHghCVQg1k
+	 eoJ2CP6AwhUzFU59QB2uLKmOd0CwOSpJvr0YtHsIyquoZKeJuhyOZNpWCPA4H4ipdP
+	 KEYfc6osVgjdgmG7N53P3rDmLbHF3QmOvxWttVVH1aYepo6ts9ge+t/1ITkpW3xiIE
+	 OHDYljxwR+Lhl8ZCW+tPbDXSFrQr2DSLCWhJX3lyb+i+/pdDQS+Ax41Ro/PF3TLz9K
+	 y2dTiXxYmjplrVYGQDEaSFRCtGqFFCT9vExXL/7K/c1Y2Z6bK2+IJ6VSkVp5GvKZjh
+	 Bn/uUwVyKxJfvKsYREBojzFDxPlooV9wHrXo+vNfSvVFZ3+IvmSSjjFfG6mUDw76eY
+	 lsDFOq2AlyLTUZ+oeOO8HjF1lzN2TVUesC7UWC4oFZB9vL+7jLv
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4bKDHh1hfPz6tsf;
+	Sat, 14 Jun 2025 13:17:04 +0200 (CEST)
+Date: Sat, 14 Jun 2025 11:17:03 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lars Persson <lars.persson@axis.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Manivannan Sadhasivam <mani@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org,
+	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 06/17] pinctrl: nuvoton: Constify static 'pinctrl_desc'
+Message-ID: <aE1aL_ff1230w2DL@probook>
+References: <20250611-pinctrl-const-desc-v2-0-b11c1d650384@linaro.org>
+ <20250611-pinctrl-const-desc-v2-6-b11c1d650384@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,33 +90,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aE0lGcYO1asrwb9z@wunner.de>
+In-Reply-To: <20250611-pinctrl-const-desc-v2-6-b11c1d650384@linaro.org>
 
-On Sat, Jun 14, 2025 at 09:30:33AM +0200, Lukas Wunner wrote:
-> On Sat, Jun 14, 2025 at 10:56:51AM +0530, Manivannan Sadhasivam wrote:
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2508,36 +2508,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
-> >  }
-> >  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
-> >  
-> > -static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-> > -{
-> > -	struct pci_host_bridge *host = pci_find_host_bridge(bus);
-> > -	struct platform_device *pdev;
-> > -	struct device_node *np;
+On Wed, Jun 11, 2025 at 08:13:38AM +0200, Krzysztof Kozlowski wrote:
+> The local static 'struct pinctrl_desc' is not modified, so can be made
+> const for code safety.
 > 
-> Looks like...
-> 
-> 	#include <linux/of_platform.h>
-> 	#include <linux/platform_device.h>
-> 
-> ...can also be removed from probe.c, both introduced by 957f40d039a9.
-> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Right. Will send v2 removing these, thanks!
+Reviewed-by: J. Neuschäfer <j.ne@posteo.net>
 
-- Mani
+Thanks!
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+> ---
+>  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 2 +-
+>  drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 2 +-
+>  drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+> index dfd32feb34286b7a4d807e9033a11f507e277dce..b8872d8f5930ad931dad208afec4e08a23c3d653 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+> @@ -1817,7 +1817,7 @@ static const struct pinconf_ops npcm7xx_pinconf_ops = {
+>  };
+>  
+>  /* pinctrl_desc */
+> -static struct pinctrl_desc npcm7xx_pinctrl_desc = {
+> +static const struct pinctrl_desc npcm7xx_pinctrl_desc = {
+>  	.name = "npcm7xx-pinctrl",
+>  	.pins = npcm7xx_pins,
+>  	.npins = ARRAY_SIZE(npcm7xx_pins),
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+> index be3db8ab406c416f0709d06eb864e33e3208541a..3c3b9d8d3681c64c21927615e1bb49f157f156b5 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+> @@ -2299,7 +2299,7 @@ static const struct pinconf_ops npcm8xx_pinconf_ops = {
+>  };
+>  
+>  /* pinctrl_desc */
+> -static struct pinctrl_desc npcm8xx_pinctrl_desc = {
+> +static const struct pinctrl_desc npcm8xx_pinctrl_desc = {
+>  	.name = "npcm8xx-pinctrl",
+>  	.pins = npcm8xx_pins,
+>  	.npins = ARRAY_SIZE(npcm8xx_pins),
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> index 4264ca749175a2ce0f3603c1d7aa271d98e6cd89..8d8314ba0e4cb55db2b1d3adf2de07e6fb93c279 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> @@ -989,7 +989,7 @@ static const struct pinconf_ops wpcm450_pinconf_ops = {
+>  	.pin_config_set = wpcm450_config_set,
+>  };
+>  
+> -static struct pinctrl_desc wpcm450_pinctrl_desc = {
+> +static const struct pinctrl_desc wpcm450_pinctrl_desc = {
+>  	.name = "wpcm450-pinctrl",
+>  	.pins = wpcm450_pins,
+>  	.npins = ARRAY_SIZE(wpcm450_pins),
+> 
+> -- 
+> 2.45.2
+> 
