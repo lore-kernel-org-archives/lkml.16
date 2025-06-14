@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7458462
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9B9C13B
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749859727; cv=none; b=JicOvod8vlrY3kbTNOY8/J876LsQoql4/3SG//E79LOZjgGKf3AUupIU3dsqweHZwT9OiWXp+kAZvph/6I1mRpBW4cOULBDaDgQ8ZFz1Hm2UaQk1zhz/S2VH7m5KO2TX6WBPCyG4E3SqD3q+l9GF+EhS6JTns9wbAOy2I+ZBwYg=
+	t=1749859728; cv=none; b=fuhDb6ZSKhw0cZG4ZWb/C97BHCJSO859fN/wC8G6bLWE8SzjAl4FI0kPR5X11Q7hzFbyqScXJoKiOB47eD6PMJ7hTkg/TiRbLlBnn1UliOtB8w+nCCKt54pGdM2sjfFU5CQI7C0N47Ofev2X0Euf8+tIzu13Z+5oFj8Qd5FOX6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749859727; c=relaxed/simple;
-	bh=RRBTu/UcJXCy6H5m8hEZ9SDf/wYMt7phWeAfO5CJBvg=;
+	s=arc-20240116; t=1749859728; c=relaxed/simple;
+	bh=foA6oyqgR5qgnydNJ6GYL4dauZjrmBgM5QlI2k6EVy4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hBp3+WJ4bSjQGur5VWkV7YhzyNwdhsD4U6UL78igMFKKYOR9yrF9b/NeExCgmmaCfLDWsmQhhfTR/63yV7T38DkHCXGG7cHfMYJ0YenSAPS9kMNlHjGA8EeWX+QAwpDFucMvNDAN5jarW1RJAtaV3ABaNmBhRGdz3T9s2cbkfnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=odTwI1Os; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=PKKqnOnlD0pOuDoD9Cd0wiwuw4k1oSln9Zp36ZP3QBM3eVYCjx88ZXpO093m72X+00NLzrEQAEGe7sUhMV0/WOoaY9FeGqXIZjZRY+/Lys7LjLsiAp/j2fn1TVYXacHGxF1+efqNkYbY4ssLXIMCcCUf3YstB4Erhii3i8hWZc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g2ByygCU; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odTwI1Os"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c37558eccso1934842a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:08:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g2ByygCU"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so2544892a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749859725; x=1750464525; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749859726; x=1750464526; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mTDG/TDgRblDx+LSEqZBeH+bLXhEOKS8TgJ2OAQlhBo=;
-        b=odTwI1OsjEWVaFb9YBnnI+ntXv7R8r9+miMrfgNXPWmkYxcRWD74T8LH+vjbhO9hIl
-         +G3g9mhssQwqakKZF6HtLg9Rt8MItzzgpZvuQ1dZvyHUnavh9Z8le5vW2OwSjBHYQMfA
-         ML1HKwv77QMCd1+U2parSelj10GDMzl080GB8AXjlTGEm2+G5rnXEjUxtXC2syKoV/SF
-         46sKsYBDfZubG7lXsERKtVMMQ9oXTP9x+EdoZ4j2pxnj0FGxDwO2nbP6Rh3Js9yK+PXJ
-         iitPJaJzf+NsErEwpICUI2VwtwRKdErzaFkeb7oBLbJ9bYku5mHtYQMdfDd+3bn2LLzu
-         lKiw==
+        bh=l3yN+pb1nHRQrMzXHzyq/fi9BjDqDpB+21NaqBWaxXY=;
+        b=g2ByygCUSUkcR5IgFyj+ng2Nsda43wh7zlKOARFnf27gkG3CD0UEmQMsoZzIniEDBF
+         fpQ7NJodK1jR+NtK63uXyJEFQAlaS3elPbjAqCMjrigIPH7SfOECERcciDzDvVuWjsb1
+         ukh/dTJznt+o3X5Fr72Hk7gbk/iRke9TsHg8thBTHKC3Vuh+/en5frVKmXGNHOUnQEdP
+         wlRC5fJ7wpEhBwHtu6obOpEU3/zbT2NkIvoTQLegw1MCVddkJPK3Ex8Uqo7v1EEX7vwq
+         2RB044RSvmwfYm3eaw/chlXf6QaqlK79hXZKk07HKwkU9bbHnKqyM0GcjXszn3fWJg7t
+         dskw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749859725; x=1750464525;
+        d=1e100.net; s=20230601; t=1749859726; x=1750464526;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mTDG/TDgRblDx+LSEqZBeH+bLXhEOKS8TgJ2OAQlhBo=;
-        b=Ild3jVjSfKfNVhZJh13/+fP7nT7tic8rCw7nlVaI/Z4Uvg5eqvdboZE6o5bHujdtEm
-         OklKkeHhWTWtTQUN/2Bs7VmJkJO7b3yKceELHzTEAk78xyIIVa6I/hYXlsIchvxt/GAP
-         qiqNYTY6BpkgFHwI9U0P7vBNfO5ixhtxZi2Lyo9mYyVp1PlwQILFimzq14pAGBqZ52CO
-         ckXB9E5FwISk1KIR5fWMVXdCYARqwG0ZYO6s2DQeRue8dcqinRPFvY2/8RodgvPkqNjt
-         EziSaBZ5sLpJ5GC2/AMo6ROVJL8cefeIuzjJAVYNG8B2wwqiLqVeuU4yPZbAoWkJSZil
-         avXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmtVjp7+dqnBAeaNvJNPjuYjcAD/aAWd6j65SHSimG8vc2L7vZLwxj4VrKYFBBGaNUj+YjaBb7SnZaUWs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2dOCWwVTp08/08VUAknPP60M1tS2sor0SHjhT+cXPRkqf2xPh
-	1zm23xyDPr6NPzOTPYKDdk79BmE9MnmCe9ozyA8VJPkp8O4uAIcZ/oMt98V9DGvLHaD2pVXD6Wd
-	VFxIHbQ==
-X-Google-Smtp-Source: AGHT+IEgdl4JGvpGQHTlvQaZuMAmSd299962DqOd1Lqu7h2Sb8LIi/Q/7YD1GjewTKOR9QaSRwJAcNHb+mY=
-X-Received: from pjtd4.prod.google.com ([2002:a17:90b:44:b0:311:a4ee:7c3d])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da90:b0:312:daf3:bac9
- with SMTP id 98e67ed59e1d1-313f1d07b65mr1845678a91.34.1749859725002; Fri, 13
- Jun 2025 17:08:45 -0700 (PDT)
-Date: Fri, 13 Jun 2025 17:08:27 -0700
+        bh=l3yN+pb1nHRQrMzXHzyq/fi9BjDqDpB+21NaqBWaxXY=;
+        b=jzaVqfwVK85IOu5l1lsEaETOqdzdpOVbTe2Z+Qqnj2yN4nW+0wK8ScIvPpHb9gNpE3
+         KIYWHWnZiyGQMjVcpwvKunjoBDGYAeNWXU9JQqZqSia5Ffh8zIZyFvjbFKnnQghnm3y7
+         HEq8EhHbBrHKqEe9oWQJFZb/VgYWv8a9JaHYEYXPRtBhAJRfpU3hNWthMFVt7wlC1iNR
+         1R94DFroxda3Qb3bRVKrlBYDDQXmuqk8n5sGOOzrgWcQQd/yUo3y1wWPGlm+Q/jy6wL7
+         UEPlXOUsku2WI7tgLvmL8Mwys+swKsXyX4Ta8tJNj2MEWLStz3L41pqg+xQEveUIQtiL
+         A+Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUgdcEMhDgbW3+o3rt8uxDzrcNxrNCDPqKZKhz6sbwrjzdVVqDDKNEcBIH+jVxtxw8KGxuGk2uILmQrNCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy9E4RHfoIS8pF3zCksjnqjXIAzG9udCZFf3+Oo/3yfLpijb0A
+	+pMIA8c2f9C91pqBXSZTDfw4y11Dys2FuhweGHySJJVaNfKN4RO2yPDq28I3K1Tl62W9AYyUomz
+	ltUe5ow==
+X-Google-Smtp-Source: AGHT+IE6UM0RmST7g5H5n/ibK6y/YCjmguPYg7pTwOXIkmY9pOYlCloFeEz5pTDQwVFdDlqtC5ZLYXEmAWE=
+X-Received: from pjh14.prod.google.com ([2002:a17:90b:3f8e:b0:311:f309:e314])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3504:b0:312:959:dc4f
+ with SMTP id 98e67ed59e1d1-313f1c77fc2mr1955724a91.5.1749859726587; Fri, 13
+ Jun 2025 17:08:46 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:08:28 -0700
 In-Reply-To: <20250614000828.311722-1-yuzhuo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250614000828.311722-1-yuzhuo@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250614000828.311722-2-yuzhuo@google.com>
-Subject: [PATCH v1 1/2] crypto: Fix sha1 signed integer comparison compile error
+Message-ID: <20250614000828.311722-3-yuzhuo@google.com>
+Subject: [PATCH v1 2/2] crypto: Fix sha1 signed pointer comparison compile error
 From: Yuzhuo Jing <yuzhuo@google.com>
 To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, 
 	Ian Rogers <irogers@google.com>, linux-crypto@vger.kernel.org, 
@@ -68,37 +68,35 @@ To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemlof
 Cc: Yuzhuo Jing <yuzhuo@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On platforms where -Werror=sign-compare compiler flag is enabled, sha1
-code gives errors when for signed to unsigned integer comparisons.
-This patch fixes the issue.
+In include/crypto/sha1_base.h, sha1_block_fn type is defined as
+void(sha1_block_fn)(struct sha1_state *sst, u8 const *src, int blocks);
+
+In lib/crypto/sha1.c, the second argument on sha1_transform is defined
+as "const char *", which causes type mismatch when calling
+sha1_transform from sha1_generic_block_fn in crypto/sha1_generic.c.
+
+We don't break the widely used sha1_block_fn or sha1_transform function
+signatures, so this patch converts the pointer sign at usage to fix the
+compile error for environments that enable -Werror=pointer-sign.
 
 Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
 ---
- include/crypto/sha1_base.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/sha1_generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/crypto/sha1_base.h b/include/crypto/sha1_base.h
-index 0c342ed0d038..3460759d31db 100644
---- a/include/crypto/sha1_base.h
-+++ b/include/crypto/sha1_base.h
-@@ -73,7 +73,7 @@ static inline int sha1_base_do_update(struct shash_desc *desc,
- static inline int sha1_base_do_finalize(struct shash_desc *desc,
- 					sha1_block_fn *block_fn)
- {
--	const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
-+	const unsigned int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
- 	struct sha1_state *sctx = shash_desc_ctx(desc);
- 	__be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
- 	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
-@@ -99,7 +99,7 @@ static inline int sha1_base_finish(struct shash_desc *desc, u8 *out)
- 	__be32 *digest = (__be32 *)out;
- 	int i;
+diff --git a/crypto/sha1_generic.c b/crypto/sha1_generic.c
+index 325b57fe28dc..3a3f9608b989 100644
+--- a/crypto/sha1_generic.c
++++ b/crypto/sha1_generic.c
+@@ -33,7 +33,7 @@ static void sha1_generic_block_fn(struct sha1_state *sst, u8 const *src,
+ 	u32 temp[SHA1_WORKSPACE_WORDS];
  
--	for (i = 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
-+	for (i = 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
- 		put_unaligned_be32(sctx->state[i], digest++);
- 
- 	memzero_explicit(sctx, sizeof(*sctx));
+ 	while (blocks--) {
+-		sha1_transform(sst->state, src, temp);
++		sha1_transform(sst->state, (const char *)src, temp);
+ 		src += SHA1_BLOCK_SIZE;
+ 	}
+ 	memzero_explicit(temp, sizeof(temp));
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
