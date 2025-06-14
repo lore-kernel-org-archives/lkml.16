@@ -1,249 +1,130 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EF91EBFE0;
-	Sat, 14 Jun 2025 18:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A811DE4D8;
+	Sat, 14 Jun 2025 18:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749927248; cv=none; b=TIHRXR3C5a7bLesoI2Hj6ZPI/C/vSqZ4RED3Q3oD2MRHjlR+IVGS460JzlMjBN5CXQwPJaz//vn/ToZmelBg0B1tMrEHHV0dVs43hXKwqeJ8bd6F7G3GOpyq+N33GirDnSMsilBIz1sjYDLGEPn37zoNF2H5BPYi7PKUc89H+y8=
+	t=1749927376; cv=none; b=NTNLQjwP4Vcx27fo47fvXgLjLkfU3qRh3KI0MTvLvuFm1wqJ8r3NrIYdXuwSfwGxXxOE0NK9Y14wV53QupvE3jO7+20Gmaa/nEDln7MYzd1jlKDHgB6hDXEJpwy/vFH6Nbeq7oh0Nsfe2bJgQsPkph30l/JnM+qhBp7z2oNvx54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749927248; c=relaxed/simple;
-	bh=7ZXzApUk5l2qS86Q3m8IfXmZ+4gYsRPxq+nMQeFcvNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=gXzjdiazsZ3pyZEoaM/cD0+l4aOrGk6q2RZPa9g/QHMbEgSiZwn7FJy6eefmG4VpttDUI41CL7ojP4El6v1LG62hgGofeMgRH+EF++RGmoNOWYDuPFyDLsvpXlGXnXttdyFQJmQ/Rqk7G+jJaLuDGZocLDFJriRewGRSn2mzCV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SFuAS0JT; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749927376; c=relaxed/simple;
+	bh=Ay9WNfd7Dkl5+6/0J8IggnfWgT3C7wSHD0mCsf3vo9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GbW1jXvxIICdGSL54YtTlRBJJ7QEnaFuNC9ksFiw8YUTDbJG9xt8gg1mbwySMUo0KmogLQI+9bKQBLh0PQtcdoGpxtQd+yKzg/AR9mALP1Xag2cEU995JKlKDZCmn/A0h7LzV3n9SuO0MRDIP7Y3C2TyaS9GwSjVDkyVjcJBP4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnEVX1n2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SFuAS0JT"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250614185402euoutp01e5e6f59d2241bc2cbe37305571877d54~I-Y5G6nHA1202912029euoutp01d;
-	Sat, 14 Jun 2025 18:54:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250614185402euoutp01e5e6f59d2241bc2cbe37305571877d54~I-Y5G6nHA1202912029euoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749927242;
-	bh=7KEfhRp6tc3/RqpqL6VW1k9rbi+XK5sl46BXBJoQ56U=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=SFuAS0JTlb+Uc+syWfLpDwqf4YdSFq/Av//E/FZ3W6jbeV6pwQhHBmgirah5wjjCE
-	 RBthWoGosiknr24lAvtDaSp5MDSzpy0g64g1D/P6WEEhNRLidydlQpKY1AJdtL9Hf+
-	 /LsVGpD94bFNpqLMeScHlZ+RHg0338sVELJxAs/0=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250614185401eucas1p2ee3104b2054057c27a757b99f6b1a748~I-Y3uT4wk1692616926eucas1p2K;
-	Sat, 14 Jun 2025 18:54:01 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250614185359eusmtip1bfe9e9bceb8b79c3627bd748ad193068~I-Y2gwiqt2547525475eusmtip1R;
-	Sat, 14 Jun 2025 18:53:59 +0000 (GMT)
-Message-ID: <c7df0d84-93a6-4a9c-b911-515d0816d899@samsung.com>
-Date: Sat, 14 Jun 2025 20:53:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnEVX1n2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16268C4CEEF;
+	Sat, 14 Jun 2025 18:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749927376;
+	bh=Ay9WNfd7Dkl5+6/0J8IggnfWgT3C7wSHD0mCsf3vo9M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lnEVX1n2MxvyMsJ4d1/QTdLtOBZR2/8cC7OnUGlndhbnoUp2wZIYEMhi7bvSkEI4F
+	 l3ui9zw3cjaof3z7J0eL4PhCdAgl5vP7rdHax9fSQd7DZQg2TAUwPwRJVWtcKJLUBN
+	 RE+cOiMKSY5W+slhJ3acsRhbi5JUGljhPHiB5vEAlRPAloJlRS8KN2lwBVGIv4B0op
+	 EgKwLx9yrdWUFYOf4mxquUTsOEanaePdCThj3/EnfDMDs4eglmzj2i8CabZydFS/4b
+	 ivbkx24q4+997EoKwW4I8iSVG12TVfLN9ObHpJ6WFtdy3C+0r6nOg9SzUMrllsPVyp
+	 Gb+91nCyrLHUA==
+Date: Sat, 14 Jun 2025 20:56:09 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Akira
+ Yokosawa <akiyks@gmail.com>, Breno Leitao <leitao@debian.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Ignacio
+ Encinas Rubio <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>,
+ Marco Elver <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Ruben
+ Wauters <rubenru09@aol.com>, Shuah Khan <skhan@linuxfoundation.org>,
+ joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
+ linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
+ peterz@infradead.org, stern@rowland.harvard.edu
+Subject: Re: [PATCH v4 12/14] MAINTAINERS: add maintainers for
+ netlink_yml_parser.py
+Message-ID: <20250614205609.50e7c3ad@foz.lan>
+In-Reply-To: <20250614103700.0be60115@kernel.org>
+References: <cover.1749891128.git.mchehab+huawei@kernel.org>
+	<ba75692b90bf7aa512772ca775fde4c4688d7e03.1749891128.git.mchehab+huawei@kernel.org>
+	<CAD4GDZzA5Dj84vobSdxqXdPjskBjuFm7imFkZoSmgjidbCtSYQ@mail.gmail.com>
+	<20250614173235.7374027a@foz.lan>
+	<20250614103700.0be60115@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/9] drm/verisilicon : support DC8200 and inno hdmi
-To: Maud Spierings <maud_spierings@hotmail.com>, keith zhao
-	<keith.zhao@starfivetech.com>, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, william.qiu@starfivetech.com,
-	xingyu.wu@starfivetech.com, "paul.walmsley@sifive.com"
-	<paul.walmsley@sifive.com>, Marek Szyprowski <m.szyprowski@samsung.com>,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
-	william.qiu@starfivetech.com, xingyu.wu@starfivetech.com, kernel@esmil.dk,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	p.zabel@pengutronix.de, changhuang.liang@starfivetech.com,
-	jack.zhu@starfivetech.com, linux-kernel@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <AM7P189MB10092D0348FC9E0A70C911E2E3D12@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250614185401eucas1p2ee3104b2054057c27a757b99f6b1a748
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250614185401eucas1p2ee3104b2054057c27a757b99f6b1a748
-X-EPHeader: CA
-X-CMS-RootMailID: 20250614185401eucas1p2ee3104b2054057c27a757b99f6b1a748
-References: <20241120061848.196754-1-keith.zhao@starfivetech.com>
-	<AM7P189MB10092D0348FC9E0A70C911E2E3D12@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-	<CGME20250614185401eucas1p2ee3104b2054057c27a757b99f6b1a748@eucas1p2.samsung.com>
 
+Em Sat, 14 Jun 2025 10:37:00 -0700
+Jakub Kicinski <kuba@kernel.org> escreveu:
 
-
-On 3/11/25 08:42, Maud Spierings wrote:
-> On 11/20/24 07:18, keith zhao wrote:
->> Verisilicon/DC8200 display controller IP has 2 display pipes and each
->> pipe support a primary plane and a cursor plane .
->> In addition, there are 4 overlay planes as 2 display pipes common resources.
->>
->> The first display pipe is bound to the inno HDMI encoder.
->> The second display pipe is bound to Internal custom encoder,
->> which is used to find dsi bridge by dts node.
->>
->> This patchset should be applied on next branch.
->>
->> V1:
->> Changes since v1:
->> - Further standardize the yaml file.
->> - Dts naming convention improved.
->> - Fix the problem of compiling and loading ko files.
->> - Use drm new api to automatically manage resources.
->> - Drop vs_crtc_funcs&vs_plane_funcs, subdivide the plane's help interface.
->> - Reduce the modifiers unused.
->> - Optimize the hdmi driver code
->>
->> V2:
->> Changes since v2:
->> - fix the error about checking the yaml file.
->> - match drm driver GEM DMA API.
->> - Delete the custom crtc property .
->> - hdmi use drmm_ new api to automatically manage resources.
->> - update the modifiers comments.
->> - enabling KASAN, fix the error during removing module
->>
->> V3:
->> Changes since v3:
->> - Delete the custom plane property.
->> - Delete the custom fourcc modifiers.
->> - Adjust the calculation mode of hdmi pixclock.
->> - Add match data for dc8200 driver.
->> - Adjust some magic values.
->> - Add a simple encoder for dsi output.
->>
->> V4:
->> Changes since v4:
->> - Delete the display subsystem module as all crtcs and planes are a driver.
->> - Delete the custom struct, directly use the drm struct data.
->> - Tidy up the inno hdmi public interface.
->> - Add a simple encoder for dsi output.
->>
->> V5:
->> Changes since v5:
->> - Refine the Innosilicon HDMI by quoting bridge abstracting.
->> - Delete the encoder driver, which is created directly by internal functions.
->> - Adapt to the changes in kernel upgrade APIs, such as drm_client_setup.
->>
->> keith zhao (9):
->>    dt-bindings: display: bindings for starfive,JH7110 display pipeline
->>    riscv: dts: Add display property
->>    drm: bridge: inno-hdmi: add inno bridge driver.
->>    drm/vs: Add Hardware Functions for VS DC8200
->>    drm/vs: Add Base API for VS Mode Configuration
->>    drm/vs: Add CRTC Functions
->>    drm/vs: Add VS Plane API
->>    drm/vs: Add Innosilicon HDMI Support
->>    drm/vs: Add VS DRM Master Driver for JH7110 SoC
->>
->>   .../display/bridge/innosilicon,inno-hdmi.yaml |   45 +
->>   .../display/rockchip/rockchip,inno-hdmi.yaml  |   27 +-
->>   .../starfive/starfive,jh7110-dc8200.yaml      |  176 +++
->>   .../starfive/starfive,jh7110-inno-hdmi.yaml   |   91 ++
->>   .../soc/starfive/starfive,jh7110-syscon.yaml  |    1 +
->>   MAINTAINERS                                   |   11 +
->>   .../boot/dts/starfive/jh7110-common.dtsi      |  125 ++
->>   arch/riscv/boot/dts/starfive/jh7110.dtsi      |   41 +
->>   drivers/gpu/drm/Kconfig                       |    2 +
->>   drivers/gpu/drm/Makefile                      |    1 +
->>   drivers/gpu/drm/bridge/Kconfig                |    2 +
->>   drivers/gpu/drm/bridge/Makefile               |    1 +
->>   drivers/gpu/drm/bridge/innosilicon/Kconfig    |    6 +
->>   drivers/gpu/drm/bridge/innosilicon/Makefile   |    2 +
->>   .../gpu/drm/bridge/innosilicon/inno-hdmi.c    |  376 ++++++
->>   .../gpu/drm/bridge/innosilicon/inno-hdmi.h    |   34 +
->>   drivers/gpu/drm/rockchip/Kconfig              |    1 +
->>   drivers/gpu/drm/rockchip/Makefile             |    2 +-
->>   drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c |  690 +++++++++++
->>   .../{inno_hdmi.h => inno_hdmi-rockchip.h}     |    0
->>   drivers/gpu/drm/rockchip/inno_hdmi.c          | 1025 ---------------
->>   drivers/gpu/drm/verisilicon/Kconfig           |   32 +
->>   drivers/gpu/drm/verisilicon/Makefile          |   10 +
->>   .../gpu/drm/verisilicon/inno_hdmi-starfive.c  |  553 +++++++++
->>   .../gpu/drm/verisilicon/inno_hdmi-starfive.h  |  194 +++
->>   drivers/gpu/drm/verisilicon/vs_crtc.c         |  241 ++++
->>   drivers/gpu/drm/verisilicon/vs_crtc.h         |   42 +
->>   drivers/gpu/drm/verisilicon/vs_dc_hw.c        | 1104 +++++++++++++++++
->>   drivers/gpu/drm/verisilicon/vs_dc_hw.h        |  492 ++++++++
->>   drivers/gpu/drm/verisilicon/vs_drv.c          |  777 ++++++++++++
->>   drivers/gpu/drm/verisilicon/vs_drv.h          |   41 +
->>   drivers/gpu/drm/verisilicon/vs_modeset.c      |   31 +
->>   drivers/gpu/drm/verisilicon/vs_modeset.h      |   10 +
->>   drivers/gpu/drm/verisilicon/vs_plane.c        |  358 ++++++
->>   drivers/gpu/drm/verisilicon/vs_plane.h        |   27 +
->>   drivers/gpu/drm/verisilicon/vs_type.h         |   54 +
->>   include/drm/bridge/inno_hdmi.h                |   56 +
->>   37 files changed, 5630 insertions(+), 1051 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/display/bridge/innosilicon,inno-hdmi.yaml
->>   create mode 100644 Documentation/devicetree/bindings/display/starfive/starfive,jh7110-dc8200.yaml
->>   create mode 100644 Documentation/devicetree/bindings/display/starfive/starfive,jh7110-inno-hdmi.yaml
->>   create mode 100644 drivers/gpu/drm/bridge/innosilicon/Kconfig
->>   create mode 100644 drivers/gpu/drm/bridge/innosilicon/Makefile
->>   create mode 100644 drivers/gpu/drm/bridge/innosilicon/inno-hdmi.c
->>   create mode 100644 drivers/gpu/drm/bridge/innosilicon/inno-hdmi.h
->>   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
->>   rename drivers/gpu/drm/rockchip/{inno_hdmi.h => inno_hdmi-rockchip.h} (100%)
->>   delete mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/Kconfig
->>   create mode 100644 drivers/gpu/drm/verisilicon/Makefile
->>   create mode 100644 drivers/gpu/drm/verisilicon/inno_hdmi-starfive.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/inno_hdmi-starfive.h
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_crtc.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_crtc.h
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_dc_hw.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_dc_hw.h
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_drv.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_drv.h
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.h
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_plane.c
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_plane.h
->>   create mode 100644 drivers/gpu/drm/verisilicon/vs_type.h
->>   create mode 100644 include/drm/bridge/inno_hdmi.h
->>
+> On Sat, 14 Jun 2025 17:32:35 +0200 Mauro Carvalho Chehab wrote:
+> > > > @@ -27314,6 +27315,7 @@ M:      Jakub Kicinski <kuba@kernel.org>
+> > > >  F:     Documentation/netlink/
+> > > >  F:     Documentation/userspace-api/netlink/intro-specs.rst
+> > > >  F:     Documentation/userspace-api/netlink/specs.rst
+> > > > +F:     scripts/lib/netlink_yml_parser.py
+> > > >  F:     tools/net/ynl/    
+> > 
+> > With regards to the location itself, as I said earlier, it is up to
+> > Jon and you to decide.
+> > 
+> > My preference is to have all Python libraries at the entire Kernel
+> > inside scripts/lib (or at some other common location), no matter where
+> > the caller Python command or in-kernel Sphinx extensions are located.  
 > 
-> Is this patch series still being worked on? If not I would like to give it a try to fix it up and get it merged.
-> 
-> Would like to get it working on my deepcomputing fml13v01 board, there is also a gpu driver for the thead th1520 being worked on by Michal Wilczynski that depends on this. Would be nice if that could get merged when it is ready.
+> I understand that from the PoV of ease of maintenance of the docs.
+> Is it fair to say there is a trade off here between ease of maintenance
+> for docs maintainers and encouraging people to integrate with kernel
+> docs in novel ways?
 
-Hi Maud,
+Placing elsewhere won't make much difference from doc maintainers and
+developers.
 
-Thanks for your interest in this patch series. I'm also keen to see it
-merged, as the GPU support on the TH1520 Soc depends on it. I just sent
-v4 of my series [1] with the last missing pieces to enable the GPU
-driver to probe correctly.
+I'm more interested on having a single place where python libraries
+could be placed. Eventually, some classes might be re-used in the future
+by multiple scripts and subsystems, when it makes sense, just like we do
+already with Kernel's kAPIs. This also helps when checking what is the
+Python's minimal version that are required by the Kernel when updating
+it at:
 
-I'm not aware of any recent progress on this particular set from Keith.
-I would be happy to collaborate with you or take over the work of
-getting it ready for merging.
+	Documentation/process/changes.rst
 
-I also have a StarFive Vision Five 2 board, and my plan was to get the
-driver working for the JH7110 first. The only thing different for the
-TH1520 SoC is the HDMI driver, which could be added later.
+And writing patches documenting it like:
 
-However, the main blocker is the lack of public documentation for the
-Verisilicon DC8200 controller. The official StarFive documentation
-portal [2] mentions two essential documents: "DC8200 Dual Display
-Controller DPU IP Exposed Accessible Registers" and "DC8200 Dual Display
-Controller IP Hardware Features."
+	d2b239099cf0 ("docs: changes: update Sphinx minimal version to 3.4.3")
+	5e25b972a22b ("docs: changes: update Python minimal version")
 
-Pinging the StarFive developers on this thread: would it be possible to
-make these documents available? Access to them is critical for us to
-successfully move this driver forward.
+Properly setting the minimal Python version is important specially to
+check if the minimal version set at changes.rst is compatible with
+the Makefile build targets:
 
-[1] - https://lore.kernel.org/all/20250614-apr_14_for_sending-v4-0-8e3945c819cd@samsung.com/
-[2] - https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/detail_info_display.html
+	$ pip install --user vermin
+	...
+	$ vermin -v scripts/lib/
+	Detecting python files..
+	Analyzing 9 files using 24 processes..
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/abi/abi_parser.py
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/abi/abi_regex.py
+	~2, ~3       /new_devel/v4l/docs/scripts/lib/abi/helpers.py
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/abi/system_symbols.py
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/kdoc/kdoc_files.py
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/kdoc/kdoc_output.py
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/kdoc/kdoc_parser.py
+	2.3, 3.0     /new_devel/v4l/docs/scripts/lib/kdoc/kdoc_re.py
+	!2, 3.6      /new_devel/v4l/docs/scripts/lib/netlink_yml_parser.py
 
-> 
-> Kind regards,
-> Maud
-> 
+	Tips:
+	- You're using potentially backported modules: argparse, typing
+	  If so, try using the following for better results: --backport argparse --backport typing
+	- Since '# novm' or '# novermin' weren't used, a speedup can be achieved using: --no-parse-comments
+	(disable using: --no-tips)
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+	Minimum required versions: 3.6
+	Incompatible versions:     2
+
+Thanks,
+Mauro
