@@ -1,35 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F3D3FB31;
-	Sat, 14 Jun 2025 01:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A162CA9;
+	Sat, 14 Jun 2025 01:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749864005; cv=none; b=XZw6NpGvKveTLIEXfgyBvB/Vve44XjJtwZ/j4ZvA/mtL9iGC6muDUv7oloAXUR7uVKnHeYjGHPcNEOVYT8HF60LifpeYYLbQYuAI5hyU9LJyLKuIMtRy1HuCQ0JhCvbKHCIatebrWn6mQ8aeOzKzkESJutyZCV0GsAtYuszzBQw=
+	t=1749864228; cv=none; b=CsPprTRIsCXo/kwYE7a+XG4snKea7edoYwKsEI/WdIB19yWtzsNyZg1EtMWk5QlWnaTwjmJkWMN1Db9aBRYincOHsn/I0GcRUlKekanCI+hNJR6V14Crp7uG+48oUJb7ue9O6FGUhrn8ECE8DsVJ9lM7I+/d1X3f0XhHywcrC/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749864005; c=relaxed/simple;
-	bh=UCCsPjeVlCnT6w3Gw++i6mvT/wiIv/GNt4lkvZVnfQY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ec+bKTD9w6ew5fNzd4dhMC32nwbutWfsOWhpRHQZkUhuojVcbLpSZ0Zq5wWatIzFhTwi+mfRg7L9vxmi1srPyv+rWPvyLLLmuKe4n3uUf2hS1H6S9UUnx6NVI+QCYOp82meWftdwqGpnoLDqvP0P0Q4PDX+A4uWFmwZFuMPljgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODu71QO3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749864228; c=relaxed/simple;
+	bh=VJqA88rDOceQM6yEHothInyxQRWfVg+uXlcQZBqQreE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hs4xVkJpSHakP7RBscF+ZT9uK2HuTeFjS754fsxiNbnv2q8OnwxZ+U+TH0CCtRc1HWfEtbYfrfclNNXR0eVLWp6l+tTn1BkaCrHl8SojWO15TMjnH7mqiiQuzDl4cJoRTV5inw/TcroPLvzz6mKwa/nrEmAIXnKW9ydtYCMDHMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBgcyh2p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODu71QO3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685F2C4CEEF;
-	Sat, 14 Jun 2025 01:20:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBgcyh2p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED9BFC4CEE3;
+	Sat, 14 Jun 2025 01:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749864005;
-	bh=UCCsPjeVlCnT6w3Gw++i6mvT/wiIv/GNt4lkvZVnfQY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ODu71QO3i9MYG9Vq9azit+yH34REmpBRW7dbnaD0rwWRBB0lqc7em983MA+8GAFTF
-	 4mdMETYSNz6XcD2Hw/HJWb+UJK6hCbw1J7KnfFs05lLJe8QG40f7GVlYPyiQ/0nIVx
-	 JRdtNIRLgY3zYxFaSfPhno/UfT9bW2qaXVxVwXOlS//ez5YadBMJSEe23gV5SOcWSU
-	 voXjA+nYHQwvgNQlSDoxuDTIqchcE74tnrm/OcXcQSPe3K9xAKqJ/eHjiT6BQFoXlj
-	 Jo2QeQI7E4QRP6EWbaz2Adb1pgbQDSoROxvG4zqWrOokkwbESBTsI2b/TSqkC80IJg
-	 XFkHxXdZ6HoKg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B41380AAD0;
-	Sat, 14 Jun 2025 01:20:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749864228;
+	bh=VJqA88rDOceQM6yEHothInyxQRWfVg+uXlcQZBqQreE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BBgcyh2pULY3lrtRJLCgIFi9x6mMBVWoOLlljrRaz/P7uZ7UW3UQ40X9+X/shPiIo
+	 4mEEj+fUJDvTQ52Nne4UcEtTzKG+TLV8bPXgotX2zcEoNGc8wxnbuvy4YUakvXkGMf
+	 cvUc/eAaw4PToCr5CSfptAmWOMXw80X7pgPxhPKxGfwRcU8ukTlW6XkKhngeBhteiu
+	 AvqMa5AU331YiYPbllIQfFi5S1rlY4MRxstqMS/k4eHdKc2fIgSygTiTDp0JYSB319
+	 D0nGmWCKfQVGXBrQPnqTLdxpVVL7xUiit24pLtO8sW/m3kaHTuZVZS3ySdQ2EIN7Cd
+	 UIqEDfjD8E+HA==
+From: Tejun Heo <tj@kernel.org>
+To: mingo@redhat.com,
+	peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	sched-ext@lists.linux.dev,
+	void@manifault.com,
+	arighi@nvidia.com,
+	changwoo@igalia.com
+Subject: [PATCHSET tip/sched/core] sched/core: Reorganize bandwidth control interface handling
+Date: Fri, 13 Jun 2025 15:23:26 -1000
+Message-ID: <20250614012346.2358261-1-tj@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,45 +44,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/3] dp83tg720: Reduce link recovery
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174986403479.949218.2894499433224962476.git-patchwork-notify@kernel.org>
-Date: Sat, 14 Jun 2025 01:20:34 +0000
-References: <20250612104157.2262058-1-o.rempel@pengutronix.de>
-In-Reply-To: <20250612104157.2262058-1-o.rempel@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- kernel@pengutronix.de, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 
-Hello:
+Reorganize cgroup bandwidth control interface handling in preparation of
+sched_ext support.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+- Implement tg_bandwidth() and tg_set_bandwidth() to centralize parameter
+  reads and updates.
 
-On Thu, 12 Jun 2025 12:41:54 +0200 you wrote:
-> This patch series improves the link recovery behavior of the TI
-> DP83TG720 PHY driver.
-> 
-> Previously, we introduced randomized reset delay logic to avoid reset
-> collisions in multi-PHY setups. While this approach was functional, it
-> had notable drawbacks: unpredictable behavior, longer and more variable
-> link recovery times, and overall higher complexity in link handling.
-> 
-> [...]
+- Cleanly delineate time unit boundary - durations are in usecs from the
+  interface files upto tg[_set]_bandwidth(). The fair functions that are
+  called by tg[_set]_bandwidth() map them to nsecs.
 
-Here is the summary with links:
-  - [net-next,v2,1/3] net: phy: dp83tg720: implement soft reset with asymmetric delay
-    https://git.kernel.org/netdev/net-next/c/5f6ec55777d5
-  - [net-next,v2,2/3] net: phy: dp83tg720: remove redundant 600ms post-reset delay
-    https://git.kernel.org/netdev/net-next/c/491e991f7816
-  - [net-next,v2,3/3] net: phy: dp83tg720: switch to adaptive polling and remove random delays
-    https://git.kernel.org/netdev/net-next/c/cc8aeb0f535f
+This reorganization will allow sched_ext to plug into tg[_set]_bandwidth()
+the same way it plugs into tg_weight(). No functional changes intended.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+ 0001-sched-fair-Move-max_cfs_quota_period-decl-and-defaul.patch
+ 0002-sched-core-Relocate-tg_get_cfs_-and-cpu_cfs_-_read_.patch
+ 0003-sched-core-Reorganize-cgroup-bandwidth-control-inter.patch
+ 0004-sched-core-Reorganize-cgroup-bandwidth-control-inter.patch
 
+The patchset is on top of tip/sched/core (dabe1be4e84c ("sched/smp: Use the
+SMP version of double_rq_clock_clear_update()")) and also available in the
+following git branch:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git reorg-bandwidth-control
+
+diffstat follows. Thanks.
+
+ kernel/sched/core.c  |  311 ++++++++++++++++++++++++++++++++++++++++-------------------------------------
+ kernel/sched/fair.c  |   15 ---
+ kernel/sched/sched.h |   13 +++
+ 3 files changed, 178 insertions(+), 161 deletions(-)
+
+--
+tejun
 
