@@ -1,44 +1,78 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C16C199237;
-	Sat, 14 Jun 2025 20:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD9C1AF4D5;
+	Sat, 14 Jun 2025 20:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749933456; cv=none; b=OwALRsxDU9CH0LiTVaeLvrkuOBhfoHo6OrXefewiyUSYh3Rs9xNhem4BJia2VRLTJySc534P+Xfu/IAHDGh07KtWvRh5xjY/wGfN//l/TgQMXxhuxOn4TciL+6fJcaEO+T/8oOGqSBCFy2n9zeFDp8GoWyFDHXRdL4HZY34IOuY=
+	t=1749934645; cv=none; b=DJHZEY78hgEZN+w7nEJSSXdfV8aAo1ZwV5aFGIKRCxzEy8RYc937dK89D7sWfqnHNG1FaaX4t8GimrS9rwlpUP91i2IeGg+vinWU3/NopKSMIedKeOI1GYUOzmr5kDAUG2yaJRDS4Z+APqU8HOonD+ER2mr5IWq7nMwz5vzJ84Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749933456; c=relaxed/simple;
-	bh=9pmEfXdk7iL9pS5LSQiBkiVD0ofCpgQ2sH3AdVhSmWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h5Jo0aV4VbxCnHoB8JOsh8UMH1rd7bd87hYowr1nXHB802vWJT0UYUk1myCFxCUB88/BhaTJcGuI092bD/VggjBi3mFenVWjKKVIflheGmhx+Y1CdOKq1mTHc5l5tP3NBo/vRvyytRoAbZyClfMexSScNk1EOcyWAe6OoJvT8rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=GX/bNeDb; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1749934645; c=relaxed/simple;
+	bh=k29xYtFddwfaMb/ffVcmopJbs5fmoRuWuv/KjhfeZIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g1zKR3BIyGd/P0Y5GRJZJM5FZ+kxp+mhALHpVfYReZgKBBo3ElEp3VFDogGybBtwHPIscVz8KjkfhZFoPwL4AXuSkQqiQUXSVbB30//gqmizhZbf4o7407/Uw7uFCoA/N+k9QDf0OZkSdRrQUQ5cw2R8HsAP+xVt8KCtWDR5yMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DmFs70ls; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="GX/bNeDb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=+jgDBcJCGkYhFUceW2ssi64QZJrhtciHErgU+KLdRxc=; b=GX/bNeDbUTcLdsfq
-	e9twea0F5c6+Ca7aBDgmw1qrYt3uvkGd1pzgaIqIaqpINact2wAVOOXb/nAtnEfYcb4SIki2Q6olN
-	yLr89iNgWJmbUvoZyxVNhDmfFS1Ac0M7vn7Zd8O4ndALD7yOC6dG7PvOY6aJeycwxf5RTljlu/tTp
-	KLn4o//oufU66eyzChPyNUNTcUmBBlJrrtgTIFR5IvQmQ74HeXLDLLS96/k28W2GOybheBaQ/ExcY
-	yA2cBbm3M0tSgRiabzqLqedRGwhFiQ0mBCVf7S210mfC3fFck+6EZpSVlnOGxWFYGQLJXXHdRWWGW
-	63L0bhk8xUyo6V5NYA==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uQXcy-009fVm-2Q;
-	Sat, 14 Jun 2025 20:37:24 +0000
-From: linux@treblig.org
-To: ming.qian@nxp.com,
-	eagle.zhou@nxp.com,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] media: amphion: Remove unused functions
-Date: Sat, 14 Jun 2025 21:37:23 +0100
-Message-ID: <20250614203723.22632-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmFs70ls"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso5914030a12.2;
+        Sat, 14 Jun 2025 13:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749934641; x=1750539441; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AO+Ym8b0ocHC1VS17jgv9+XUpYovIj0EBke9ZZ+l1b8=;
+        b=DmFs70lsZ8rFMvHm6XqSXqKpwfz27IIQAGHjnICVascttOoyr8zNEfAIqKnv0+gMKg
+         Irr0jVJpLtvXlX972preY+9kFDtC6xHh2wBTipLwBplTCE7fyk5K8ZlVSQ9ZOtv25nzp
+         ysmTiiq+1gO72lbmsLT2WRviLSNy5T5ofdJrzhPkY0rWuKNICA/gOE4LA3jnzxGk+8GT
+         rGaaYOGrVzyanJQr3xEL8pR6C+eDhsgKJ6SKeTvEAW9/Mgv4w7BMe3VgtlIjGuElGBa1
+         cPhYamBFArwU3hoSFeWXXw+++YZ6tjrGWpUm1w+YBMjSHdRx0DNN5MJ57FtwccxTKL60
+         pTNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749934641; x=1750539441;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AO+Ym8b0ocHC1VS17jgv9+XUpYovIj0EBke9ZZ+l1b8=;
+        b=fZClnTOsoAUATaBXTvXtAyQohEDYDsWZucGBZWIEH3myz8drckrWscysF9nQObYV7e
+         MaUNrGvNmeixGppkzR36iH3K3bngBSbv4uv6wJF6F410hZagX3/PoN61ueme3ojfTsXq
+         IcDCHpap93N5SuYrWPirG9LLko+GeoMa1FX5FXqNiozRNBcdbCPu4hiZXvoDpzxleFs/
+         f92uKqAsppMGnVxneqH8P9PehxBRjARBPWZTjve7T/K21uN0eDRua7ovOavJH1I25ASo
+         bD+QKkCNBVyU/9MtPcsewwtWG75zPUDYzq6lUKroe2Tx2GVF6LQZ89gU4BiBO1tPJwEK
+         5JMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUILHD/VpjHeRrFoQQmrFLwbIsSBEtgNo4uvJU+2/alEZLHRoguCSeqaMb3ydWXhHCLcz6b/KRHqzjRr1Aetg==@vger.kernel.org, AJvYcCWogOQPYw/TcM26AVEdQe3u/PxpT51WXlXDEX1JoJNlGcbvwZcamQq+aRepkqTYujFOc5d3Jser8DCbBvra@vger.kernel.org, AJvYcCX2jummsZ50uZ1qbVstZp55zN8nCkljN9Bbv6Rg9ZQbXAi9yMs66BeIgUHQa/rb0Jqg/wO9LKAtg2np@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/T+7uPqn/dqHquR0cgo6MTyFoTNNGGoLxnZmucf91LWU1heB2
+	pKwvw5SoU80ekVTW49Hl5ncT+7qDVYVQXqwACYkSbti4M0w2LSOyl+k=
+X-Gm-Gg: ASbGncvHKDSx0xZNR9oeFjtYRNqG6dsNYqR4deylEVP2vfU3v9++2g1ucGGHRNuKysp
+	8Ah/5Sxgxvfciu9c7fYtTbtbSVWtkRzNTcr7gzoqrg9XoSCCXpcLmaR+pV8eK4Q32b5jdHv4AyB
+	MXqNlBchL4dfq0rDvIcVhDkBv4dxsWippA97nOpa152VHdhQKsbYG/D3SnoVoUKvQ1pE0K/QMV6
+	ac3e9BNixNoyGpJ388D9JZKszQ74fdZ85XSJadu60+F1O6FO5TlWjeEzS8EBVYuIysBH+JswmXz
+	vWdJfqgaEfAqhQQZ9ggXScqljOVVYEeM/WCoXvgTODJkVXqFVpXZpnf+qzATjuX0Sg3U
+X-Google-Smtp-Source: AGHT+IHJGWe1AgeLatPSl1oxN2yR8yaeVrLjRLRiSP/3QcBkhzp7/yBXxQlvysbllkzZBMVEjJt38w==
+X-Received: by 2002:a17:907:1ca0:b0:aca:95e7:9977 with SMTP id a640c23a62f3a-adfad438078mr337926666b.28.1749934640965;
+        Sat, 14 Jun 2025 13:57:20 -0700 (PDT)
+Received: from alex-x1.lan ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec89299c2sm361444466b.119.2025.06.14.13.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 13:57:20 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Nikita Travkin <nikita@trvn.ru>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	dmitry.baryshkov@oss.qualcomm.com,
+	maud_spierings@hotmail.com
+Subject: [PATCH v7 0/4] X1E Asus Zenbook A14 support
+Date: Sat, 14 Jun 2025 22:53:48 +0200
+Message-ID: <20250614205718.93166-1-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,161 +81,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+As requested, 1/4 was merged to linux-next by USB maintainers.
+Resending 4/4 rebased on top of latest linux-next. 2/4, 3/4 already
+landed.
 
-The functions:
-  vpu_color_get_default()
-  vpu_color_check_full_range()
-  vpu_color_check_primaries()
-  vpu_color_check_transfers()
-  vpu_color_check_matrix()
 
-have been unused since 2022's
-commit 1925665ef403 ("media: amphion: remove redundant check of
-colorspace in venc_s_fmt")
+With this in mind, and taking into account that this patch was
+already reviewed some time ago, any possibility to still add 4/4 to
+6.16?
 
-The (empty) function vpu_mbox_enable_rx() has been unused since it
-was added in 2022 by the
-commit 61cbf1c1fa6d ("media: amphion: implement vpu core communication
-based on mailbox")
-
-Remove them.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- drivers/media/platform/amphion/vpu_color.c   | 73 --------------------
- drivers/media/platform/amphion/vpu_helpers.h |  5 --
- drivers/media/platform/amphion/vpu_mbox.c    |  4 --
- drivers/media/platform/amphion/vpu_mbox.h    |  1 -
- 4 files changed, 83 deletions(-)
 
-diff --git a/drivers/media/platform/amphion/vpu_color.c b/drivers/media/platform/amphion/vpu_color.c
-index 4ae435cbc5cd..7c0ab8289a7b 100644
---- a/drivers/media/platform/amphion/vpu_color.c
-+++ b/drivers/media/platform/amphion/vpu_color.c
-@@ -108,76 +108,3 @@ u32 vpu_color_cvrt_full_range_i2v(u32 full_range)
- 
- 	return V4L2_QUANTIZATION_LIM_RANGE;
- }
--
--int vpu_color_check_primaries(u32 primaries)
--{
--	return vpu_color_cvrt_primaries_v2i(primaries) ? 0 : -EINVAL;
--}
--
--int vpu_color_check_transfers(u32 transfers)
--{
--	return vpu_color_cvrt_transfers_v2i(transfers) ? 0 : -EINVAL;
--}
--
--int vpu_color_check_matrix(u32 matrix)
--{
--	return vpu_color_cvrt_matrix_v2i(matrix) ? 0 : -EINVAL;
--}
--
--int vpu_color_check_full_range(u32 full_range)
--{
--	int ret = -EINVAL;
--
--	switch (full_range) {
--	case V4L2_QUANTIZATION_FULL_RANGE:
--	case V4L2_QUANTIZATION_LIM_RANGE:
--		ret = 0;
--		break;
--	default:
--		break;
--	}
--
--	return ret;
--}
--
--int vpu_color_get_default(u32 primaries, u32 *ptransfers, u32 *pmatrix, u32 *pfull_range)
--{
--	u32 transfers;
--	u32 matrix;
--	u32 full_range;
--
--	switch (primaries) {
--	case V4L2_COLORSPACE_REC709:
--		transfers = V4L2_XFER_FUNC_709;
--		matrix = V4L2_YCBCR_ENC_709;
--		break;
--	case V4L2_COLORSPACE_470_SYSTEM_M:
--	case V4L2_COLORSPACE_470_SYSTEM_BG:
--	case V4L2_COLORSPACE_SMPTE170M:
--		transfers = V4L2_XFER_FUNC_709;
--		matrix = V4L2_YCBCR_ENC_601;
--		break;
--	case V4L2_COLORSPACE_SMPTE240M:
--		transfers = V4L2_XFER_FUNC_SMPTE240M;
--		matrix = V4L2_YCBCR_ENC_SMPTE240M;
--		break;
--	case V4L2_COLORSPACE_BT2020:
--		transfers = V4L2_XFER_FUNC_709;
--		matrix = V4L2_YCBCR_ENC_BT2020;
--		break;
--	default:
--		transfers = V4L2_XFER_FUNC_DEFAULT;
--		matrix = V4L2_YCBCR_ENC_DEFAULT;
--		break;
--	}
--	full_range = V4L2_QUANTIZATION_LIM_RANGE;
--
--	if (ptransfers)
--		*ptransfers = transfers;
--	if (pmatrix)
--		*pmatrix = matrix;
--	if (pfull_range)
--		*pfull_range = full_range;
--
--	return 0;
--}
-diff --git a/drivers/media/platform/amphion/vpu_helpers.h b/drivers/media/platform/amphion/vpu_helpers.h
-index 0eaddb07190d..84d16eb39650 100644
---- a/drivers/media/platform/amphion/vpu_helpers.h
-+++ b/drivers/media/platform/amphion/vpu_helpers.h
-@@ -54,10 +54,6 @@ static inline u8 vpu_helper_read_byte(struct vpu_buffer *stream_buffer, u32 pos)
- 	return pdata[pos % stream_buffer->length];
- }
- 
--int vpu_color_check_primaries(u32 primaries);
--int vpu_color_check_transfers(u32 transfers);
--int vpu_color_check_matrix(u32 matrix);
--int vpu_color_check_full_range(u32 full_range);
- u32 vpu_color_cvrt_primaries_v2i(u32 primaries);
- u32 vpu_color_cvrt_primaries_i2v(u32 primaries);
- u32 vpu_color_cvrt_transfers_v2i(u32 transfers);
-@@ -66,7 +62,6 @@ u32 vpu_color_cvrt_matrix_v2i(u32 matrix);
- u32 vpu_color_cvrt_matrix_i2v(u32 matrix);
- u32 vpu_color_cvrt_full_range_v2i(u32 full_range);
- u32 vpu_color_cvrt_full_range_i2v(u32 full_range);
--int vpu_color_get_default(u32 primaries, u32 *ptransfers, u32 *pmatrix, u32 *pfull_range);
- 
- int vpu_find_dst_by_src(struct vpu_pair *pairs, u32 cnt, u32 src);
- int vpu_find_src_by_dst(struct vpu_pair *pairs, u32 cnt, u32 dst);
-diff --git a/drivers/media/platform/amphion/vpu_mbox.c b/drivers/media/platform/amphion/vpu_mbox.c
-index c2963b8deb48..b2ac8de6a2d9 100644
---- a/drivers/media/platform/amphion/vpu_mbox.c
-+++ b/drivers/media/platform/amphion/vpu_mbox.c
-@@ -109,7 +109,3 @@ void vpu_mbox_send_msg(struct vpu_core *core, u32 type, u32 data)
- 	mbox_send_message(core->tx_data.ch, &data);
- 	mbox_send_message(core->tx_type.ch, &type);
- }
--
--void vpu_mbox_enable_rx(struct vpu_dev *dev)
--{
--}
-diff --git a/drivers/media/platform/amphion/vpu_mbox.h b/drivers/media/platform/amphion/vpu_mbox.h
-index 79cfd874e92b..8b7aea4f606c 100644
---- a/drivers/media/platform/amphion/vpu_mbox.h
-+++ b/drivers/media/platform/amphion/vpu_mbox.h
-@@ -11,6 +11,5 @@ int vpu_mbox_request(struct vpu_core *core);
- void vpu_mbox_free(struct vpu_core *core);
- void vpu_mbox_send_msg(struct vpu_core *core, u32 type, u32 data);
- void vpu_mbox_send_type(struct vpu_core *core, u32 type);
--void vpu_mbox_enable_rx(struct vpu_dev *dev);
- 
- #endif
+Introduce support for the mentioned laptop.
+
+Particular device exists in two model numbers:
+* UX3407QA: X1P-42-100 or X1-26-100 (as tested)
+* UX3407RA: X1E-78-100
+
+Mostly similar to other X1-based laptops. Notable differences are:
+* Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+  and Qualcomm FastConnect 7800 on UX3407RA
+* USB Type-C retimers are Parade PS8833, appear to behave identical
+  to Parade PS8830
+* gpio90 is TZ protected
+
+When comparing device firmware between UX3407QA, UX3407RA, it seems
+that only ADSP firmware is different, CDSP and GPU firmware appears to
+be the same. (At least assuming the GPU firmware name in both cases is
+`qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
+X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
+also makes it easier for distros to automatically extract firmware from
+Windows and place all blobs for the model under the same path. If/When
+firmware blobs make it to linux-firmware, same blobs can be easily
+symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
+
+NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
+[2], or equivalent proposed solution.
+
+Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
+additionally required both newer firmware and patches to `board-2.bin`.
+I added a short how-to [3], as it is not exactly trivial.
+
+ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
+dtbloader's github [5].
+
+[1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
+[2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
+[3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
+[4] https://github.com/aarch64-laptops/build/pull/134/files
+[5] https://github.com/TravMurav/dtbloader/pull/4/files
+[6] https://lore.kernel.org/all/20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org/
+[7] https://lore.kernel.org/all/20250524-tb16-dt-v4-5-2c1e6018d3f0@oldschoolsolutions.biz/
+
+Changes to v6:
+* _Only sending 4/4 as other patches are already applied_
+* Rebase 4/4 on `next-20250612`
+* Fixed zap_shader to &gpu_zap_shader
+Link to v6: https://lore.kernel.org/all/20250607200229.30538-1-alex.vinarskis@gmail.com/
+
+Changes to v5:
+* _Only sending 4/4 as other patches are already applied_
+* Rebase 4/4 on `next-20250606`
+* Moved gpu enable from dtsi to respective dts as per discussion in [7]
+Link to v5: https://lore.kernel.org/all/20250523131605.6624-1-alex.vinarskis@gmail.com/
+
+Changes to v4:
+* _Only sending 4/4 as other patches are already applied_
+* Rebase 4/4 on `for-next` of qcom tree, adjust makefile to generate el2 dtbs
+* Picked Konrad's R-by for 4/4
+* Droped 'qcom,x1e80100-dp' as per [6]
+Link to v4: https://lore.kernel.org/all/20250426130203.37659-1-alex.vinarskis@gmail.com/
+
+Changes to v3:
+* Drop redundant comments
+* Drop incomplete wcn7850 as it is causing dt errors
+* Picked a-by
+Link to v3: https://lore.kernel.org/all/20250416232345.5240-1-alex.vinarskis@gmail.com/
+
+Changes to v2:
+* Fix/re-add PS8833 as fallback
+* Add EC's i2c address
+* Add pwrseq for wcn6855, placeholder for wcn7850 until its tested
+* Rename x1-zenbook.dtsi to x1-asus-zenbook.dtsi
+Link to v2: https://lore.kernel.org/all/20250402084646.10098-1-alex.vinarskis@gmail.com/
+
+Changes to v1:
+* Drop PS8833 variant, fallback to PS8830 as they behave the same
+* Drop wrong pcie6a_phy compatible revert
+* Drop redundant comments, fix order of properties in the device-tree
+* Fix device name bindings, express in model names instead of the soc
+* Fix GPU firmware name for UX3407QA
+* Fix model string, enclose variant in parenthesis
+* Added missing new lines before 'status = "okay";'
+* Updated cover letter to reflect some of the above changes
+* Left SPI10 disabled as it is unknown how/what for to use it as of now
+Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
+
+Aleksandrs Vinarskis (1):
+  arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
+
+ arch/arm64/boot/dts/qcom/Makefile             |    4 +
+ .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 1302 +++++++++++++++++
+ .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   37 +
+ .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |  141 ++
+ 4 files changed, 1484 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
+
 -- 
-2.49.0
+2.45.2
 
