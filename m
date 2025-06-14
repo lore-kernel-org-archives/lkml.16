@@ -1,154 +1,199 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8681C84BD
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2651E3DEB;
+	Sat, 14 Jun 2025 11:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749899841; cv=none; b=PnsOmPJEImuQM7hdYBt05u7UK4gYL8NS+bhZWqwPTGjRPJTrfLR5IZ5OonNHdoUqBJ9Zbd8ACgcB7fRrm7uMIdDPoDW9N8AnX53t0iV6AHQ0IXy2ngbxhVu+8SbQBBi88dRdX+cELtYju8PsxFuxOqbp1G/ttbmAYaIvAHjpRIA=
+	t=1749900018; cv=none; b=ay7CgnkT9QPTB3l1hUyouGI9YaFdsr9hykKGdA0CziJZG9ABSpVmS0lB4jEwFLpGWeY5wuAN0vf6AQIkFGhpJX63cXAD0FGDCnUENM2xLnPVLosYokSkEJIrVgxpUXDIDkrKSwsdRjhY31JM42bWoL/lLVduJ6ml3/9A7X39oJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749899841; c=relaxed/simple;
-	bh=d4gNp/0M9SMRUX5Vo9jyFaZjMh959oqzUg9NU3r341s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKg9Spe71LXZ/fa/hd/RyaaVb1tlmuTJF8IYO3DhlJ+zISWWYeOgITCIPPx3JyYz2qCjEnVXqdxbtHiAPwn7N8QKqyKrwcBMhdO2T03vpDhzGUpxE4W3q/PthDaMd7C3+TJ46Spohw5hA4h8jpzeYIaTjPa0b0Od+esaXza6fPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=Lca7QKh6; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1749900018; c=relaxed/simple;
+	bh=4bC7wWm1elb5ro8Z0EDJQKlP7Skj63lJVgMYbIWM9vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PWtx4iPA/rci1eQQTnBwikpa6t563Mm/NNLe+5FGcfjVAHtOtVmVYHn+MVs8q6kgbJSMVE5+DFOiGBhgJ4/dTTQTE1mGWyDgL3DzYEtOgn/Dx1sjkPaNyGicU3pZsi7lb51kNoH17LYaRhJN0t1PAf3GkXZfR0btpsPNLwceOjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlOf8gBR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="Lca7QKh6"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 3478E240101
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 13:17:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
-	s=1984.ea087b; t=1749899832;
-	bh=d4gNp/0M9SMRUX5Vo9jyFaZjMh959oqzUg9NU3r341s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=Lca7QKh6j957WM9z2uGhxtJ0SvljdRqwb2jlCuWb67exWTonQombxmqnjTCtYsFh5
-	 6wowc8OD7y1uR6Sw0DHc7nc4rp52t+Rbn3jb8JHD0rUjXbYpYuHB6gfPsHghCVQg1k
-	 eoJ2CP6AwhUzFU59QB2uLKmOd0CwOSpJvr0YtHsIyquoZKeJuhyOZNpWCPA4H4ipdP
-	 KEYfc6osVgjdgmG7N53P3rDmLbHF3QmOvxWttVVH1aYepo6ts9ge+t/1ITkpW3xiIE
-	 OHDYljxwR+Lhl8ZCW+tPbDXSFrQr2DSLCWhJX3lyb+i+/pdDQS+Ax41Ro/PF3TLz9K
-	 y2dTiXxYmjplrVYGQDEaSFRCtGqFFCT9vExXL/7K/c1Y2Z6bK2+IJ6VSkVp5GvKZjh
-	 Bn/uUwVyKxJfvKsYREBojzFDxPlooV9wHrXo+vNfSvVFZ3+IvmSSjjFfG6mUDw76eY
-	 lsDFOq2AlyLTUZ+oeOO8HjF1lzN2TVUesC7UWC4oFZB9vL+7jLv
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4bKDHh1hfPz6tsf;
-	Sat, 14 Jun 2025 13:17:04 +0200 (CEST)
-Date: Sat, 14 Jun 2025 11:17:03 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	Tali Perry <tali.perry1@gmail.com>,
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
-	Benjamin Fair <benjaminfair@google.com>,
-	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Lars Persson <lars.persson@axis.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Manivannan Sadhasivam <mani@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org,
-	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 06/17] pinctrl: nuvoton: Constify static 'pinctrl_desc'
-Message-ID: <aE1aL_ff1230w2DL@probook>
-References: <20250611-pinctrl-const-desc-v2-0-b11c1d650384@linaro.org>
- <20250611-pinctrl-const-desc-v2-6-b11c1d650384@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlOf8gBR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADF8C4CEEB;
+	Sat, 14 Jun 2025 11:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749900018;
+	bh=4bC7wWm1elb5ro8Z0EDJQKlP7Skj63lJVgMYbIWM9vs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SlOf8gBR9d8vqcxgXAcRRblhZuepfQSg7TOPVpUpVJetAyA7BPxAh2AZG0YeZt4T7
+	 hLWck6hsiWD2XEfqVj1XEvfbkESjcySq5hA90gMTtm0N8oY+918tB3XZdqeKgp0BPC
+	 1u9KlkxDUH0/IHbTShoAcunmfzJQN/sen6/gzGTPeUCfQD26kTTGkN1GiQdlT6/dfn
+	 lgJ+3bSpJ1sITQtF8E/d+aZuJp6qPeFfEpbmAGInvS3ijJHvWeUm0sFpLNYL2U3yEp
+	 EJoyn2waEfwMx6Ycj93XfC8YtxGZyXeCVQCJodgbcaAQQvMRguVsFX7MJIfMord/AQ
+	 Ap9UGJhJXihyA==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: bhelgaas@google.com,
+	brgl@bgdev.pl
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lukas@wunner.de,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH v2] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition to drivers/pci/pwrctrl/
+Date: Sat, 14 Jun 2025 16:50:09 +0530
+Message-ID: <20250614112009.6478-1-mani@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250611-pinctrl-const-desc-v2-6-b11c1d650384@linaro.org>
 
-On Wed, Jun 11, 2025 at 08:13:38AM +0200, Krzysztof Kozlowski wrote:
-> The local static 'struct pinctrl_desc' is not modified, so can be made
-> const for code safety.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
+built only when CONFIG_PWRCTRL is enabled. Currently, it is built
+independently of CONFIG_PWRCTRL. This creates enumeration failure on
+platforms like brcmstb using out-of-tree devicetree that describes the
+power supplies for endpoints in the PCIe child node, but doesn't use
+PWRCTRL framework to manage the supplies. The controller driver itself
+manages the supplies.
 
-Reviewed-by: J. Neuschäfer <j.ne@posteo.net>
+But in any case, the API should be built only when CONFIG_PWRCTRL is
+enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
+a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
+fixes the enumeration issues on the affected platforms.
 
-Thanks!
+Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
 
+Changes in v2:
 
-> ---
->  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 2 +-
->  drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 2 +-
->  drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-> index dfd32feb34286b7a4d807e9033a11f507e277dce..b8872d8f5930ad931dad208afec4e08a23c3d653 100644
-> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-> @@ -1817,7 +1817,7 @@ static const struct pinconf_ops npcm7xx_pinconf_ops = {
->  };
->  
->  /* pinctrl_desc */
-> -static struct pinctrl_desc npcm7xx_pinctrl_desc = {
-> +static const struct pinctrl_desc npcm7xx_pinctrl_desc = {
->  	.name = "npcm7xx-pinctrl",
->  	.pins = npcm7xx_pins,
->  	.npins = ARRAY_SIZE(npcm7xx_pins),
-> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-> index be3db8ab406c416f0709d06eb864e33e3208541a..3c3b9d8d3681c64c21927615e1bb49f157f156b5 100644
-> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-> @@ -2299,7 +2299,7 @@ static const struct pinconf_ops npcm8xx_pinconf_ops = {
->  };
->  
->  /* pinctrl_desc */
-> -static struct pinctrl_desc npcm8xx_pinctrl_desc = {
-> +static const struct pinctrl_desc npcm8xx_pinctrl_desc = {
->  	.name = "npcm8xx-pinctrl",
->  	.pins = npcm8xx_pins,
->  	.npins = ARRAY_SIZE(npcm8xx_pins),
-> diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> index 4264ca749175a2ce0f3603c1d7aa271d98e6cd89..8d8314ba0e4cb55db2b1d3adf2de07e6fb93c279 100644
-> --- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> @@ -989,7 +989,7 @@ static const struct pinconf_ops wpcm450_pinconf_ops = {
->  	.pin_config_set = wpcm450_config_set,
->  };
->  
-> -static struct pinctrl_desc wpcm450_pinctrl_desc = {
-> +static const struct pinctrl_desc wpcm450_pinctrl_desc = {
->  	.name = "wpcm450-pinctrl",
->  	.pins = wpcm450_pins,
->  	.npins = ARRAY_SIZE(wpcm450_pins),
-> 
-> -- 
-> 2.45.2
-> 
+* Dropped the unused headers from probe.c (Lukas)
+
+ drivers/pci/pci.h          |  8 ++++++++
+ drivers/pci/probe.c        | 32 --------------------------------
+ drivers/pci/pwrctrl/core.c | 36 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 12215ee72afb..c5efd8b9c96a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1159,4 +1159,12 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
+ 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
+ 	 PCI_CONF1_EXT_REG(reg))
+ 
++#ifdef CONFIG_PCI_PWRCTRL
++struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus,
++						  int devfn);
++#else
++static inline struct platform_device *
++pci_pwrctrl_create_device(struct pci_bus *bus, int devfn) { return NULL; }
++#endif
++
+ #endif /* DRIVERS_PCI_H */
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4b8693ec9e4c..478e217928a6 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -9,8 +9,6 @@
+ #include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of_pci.h>
+-#include <linux/of_platform.h>
+-#include <linux/platform_device.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -2508,36 +2506,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+ }
+ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+ 
+-static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+-{
+-	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+-	struct platform_device *pdev;
+-	struct device_node *np;
+-
+-	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
+-	if (!np || of_find_device_by_node(np))
+-		return NULL;
+-
+-	/*
+-	 * First check whether the pwrctrl device really needs to be created or
+-	 * not. This is decided based on at least one of the power supplies
+-	 * being defined in the devicetree node of the device.
+-	 */
+-	if (!of_pci_supply_present(np)) {
+-		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
+-		return NULL;
+-	}
+-
+-	/* Now create the pwrctrl device */
+-	pdev = of_platform_device_create(np, NULL, &host->dev);
+-	if (!pdev) {
+-		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
+-		return NULL;
+-	}
+-
+-	return pdev;
+-}
+-
+ /*
+  * Read the config data for a PCI device, sanity-check it,
+  * and fill in the dev structure.
+diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+index 6bdbfed584d6..20585b2c3681 100644
+--- a/drivers/pci/pwrctrl/core.c
++++ b/drivers/pci/pwrctrl/core.c
+@@ -6,11 +6,47 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_pci.h>
++#include <linux/of_platform.h>
+ #include <linux/pci.h>
+ #include <linux/pci-pwrctrl.h>
++#include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ 
++#include "../pci.h"
++
++struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
++{
++	struct pci_host_bridge *host = pci_find_host_bridge(bus);
++	struct platform_device *pdev;
++	struct device_node *np;
++
++	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
++	if (!np || of_find_device_by_node(np))
++		return NULL;
++
++	/*
++	 * First check whether the pwrctrl device really needs to be created or
++	 * not. This is decided based on at least one of the power supplies
++	 * being defined in the devicetree node of the device.
++	 */
++	if (!of_pci_supply_present(np)) {
++		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
++		return NULL;
++	}
++
++	/* Now create the pwrctrl device */
++	pdev = of_platform_device_create(np, NULL, &host->dev);
++	if (!pdev) {
++		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
++		return NULL;
++	}
++
++	return pdev;
++}
++
+ static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
+ 			      void *data)
+ {
+-- 
+2.43.0
+
