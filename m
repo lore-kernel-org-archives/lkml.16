@@ -1,63 +1,63 @@
 Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EA2298994
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:15:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8E129C35A
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749892522; cv=none; b=RYvOKHLhJVHqGGnC5RnaA0fml+/GnNT4JTyRhgaYIvSCssPkILRCmClJUEVx/6+H1S4qHmCUQSB6Qg8d26RNxKsD9vOLX7amypM5xDkNwUwwVoFhIO7Jg4u7DfZNi21sYcmUAjpdM6eYQqhKKRUszhIraKMG9bR8ORvmED84L/8=
+	t=1749892525; cv=none; b=qO0gmL4h33eCMDmPTGRvblrQcX1uRgCnV9D328/7kEoI+6t1oN0I/jfhLkR2Z5LqeP0zUrRUbYQ0UsDrdWg9QliZpk7XyjcoQsH97KqfSa+rbCucxnooBpWvIiajyA+RMPPaSF0KZ8E20DOErA3fV3NPtrxT7MhW98JT7Px6Ebs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749892522; c=relaxed/simple;
-	bh=6CStx4GM+Y3xRsxoA6en/6NoY4ToN/JCjja/wXmo/io=;
+	s=arc-20240116; t=1749892525; c=relaxed/simple;
+	bh=N4PxgLq1UklLd2+7SOZmDIsLnd1oB+1AiA0Eie3Ykko=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nEntYoH3r6YI07IEtZNmO5A4l9Q3/kow6SXeZEiya9922+twX8tm3NoekAzW4jWrD6UV81psao3m5TqL8yHnkDiZ3stBfNQ6Q1aoeSPrqHYn3lRJAJFj0pPWbJnLlYUM0OQfp9dmwq+ZjQt+Sjwud78HTYn5aTsWSlSrr+sfI0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=l8N2z5fw; arc=none smtp.client-ip=209.85.210.176
+	 MIME-Version; b=l31AKUJywVpx7Tdq4UvGJGjJD6u/mWq59c+0EpYL3OtHRC4BugU2pS6l2cgp5d4dUMaeb76dAyOnyM06GdT6wlnf/dGaCg06SKa+UA8wHZrCulDzifZrNju1C4Tdu6kJJeH4S2z053CfIfK19S59R+iJmUm5UapmuD/mHMTOQW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=m0kfqJ80; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="l8N2z5fw"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7426c44e014so2420005b3a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:15:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="m0kfqJ80"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c3d06de3so3634583b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749892519; x=1750497319; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749892522; x=1750497322; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ruL1mkmUl73CN9P+D9bFSJBj+1HrTlzxAkeWKwt6bdE=;
-        b=l8N2z5fwe/thyOhnJXQOBjGZHogb54jbGjRVmJw66OLnf4Nguo+Pnm2Q8eeQN/kYr9
-         MxKxqL8dsnpLfaTKPC4yKOKGlFipxh/5YzSIRyKrNkXCAhRrQ4XFa0m+8nO+y5r1/2gk
-         Yc9jpuXklHb1I7788xDiz/wqEfxCuqUPL7EL/APZX0JOEb8HI/CyAhvc9xz4ZdK3qRuV
-         gjTtr0Cnx2xr1Mj2c0fRLlkImhhK4esfSMlTB1GMT8kuUw4Vv8yMiCHQc8TF2qZLpOGC
-         Dzo7rllO63mGnv4doIewWBXeXK1UV1R5XNT3VMACXoPVm9WnxpaX1bnplVXp6CpvCIJy
-         dJEw==
+        bh=3HScxk4eBpHQPzOs90Ehfo4I0XVUQ6OClHqZVBAZwOo=;
+        b=m0kfqJ80dtk8QVKM3onukw3dWMrfaRr/H9T5wnIF7JIorm8UJjK3ijweznNiKr0UXF
+         bZG8UCKqcKkZ3R5Y2LN/T8jmc1AYu41JfL1tJEEJtzRShcN7w/UVZX/tZ04qInal/CpD
+         nSKofhg6lJ5t48T8w4w5hn5avDrCHZ3Z6z/gvTfSTl0QrClUY5povLglHHq8rFGVBnwV
+         E8uoQd0jT5+Wrj7bpQjmsFWY/gGjMcpptzW2zqm8gKzgbu6g+WgbV/N7kCvTYhn+WN+Y
+         cQZF3jP/tLmPQ4ZWm4IJdY3CDTo5xxFhi1bbmKq70LWNOQAeBlEDZ0FT+kMWYFJ3lwr8
+         5hdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749892519; x=1750497319;
+        d=1e100.net; s=20230601; t=1749892522; x=1750497322;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ruL1mkmUl73CN9P+D9bFSJBj+1HrTlzxAkeWKwt6bdE=;
-        b=DLwYgAitpkNYijH4qD4yig/XIp43eeb/7X1dKRAlGebCKZ3xvhKQhd4JTENfp9BlAO
-         ijE0uHaqRP6QdPkXw/m0z++uZ/YFnAtk08INsVPLBsnU/NONpyhmUiN3dgP7Wgq6zrhM
-         ZwdBSys0+I/R7bjY+O1GNBtE4dzDKSicOMLCF9p0voxAmkIWbf1u32Um6/cCnBUadxQH
-         Ze6acZ1WAja66S7Qb1hQicRic1EypDPAC4bU/ZuWi7xVwe6mLpCwMT8ZIGPRUPTgfG9s
-         akbCefYq2cDbUWZ6+XmyIUMFeJ4tCFRrn93LZhKYyGQU/z01TepWqFIRd/nAqt+u2VOz
-         dFMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJcflXdOBwh44/i06jXHqsMqHbiMw2oi5MVBMvGo0VcHw8/jIuBn9BtczTbkFGX2bhHHGCqv4YQAVv1KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVAPulq95fg1RdGYztAAFMhOfuZkTg155C1Bl4Pf5Yxsd3q5mZ
-	1inYirq8iN0TT1ISWFn9Q5uc/HYpbdcBdtOUJsOyws5Q7lgzqjFGGyKdQGmjzVkzHWs=
-X-Gm-Gg: ASbGnct9sdMdsqt9j6pcDXVjb1ZnxUHDNeOuyImHSctS4q1Nx+zCorVRADFg801lIw7
-	1ynbjrSmaSOCOjIh0XE0ruNelM6TQJXMQLueAp8TffzTUGt+2P9R7MqYXGfMF9Ikl65bFLwWUIf
-	F26s1wWl4Au+O60lJ03ygVgL3mPjCepjj1iklOPSrjWjQFv3i7sz3PMEdTDO8vqyQnlNmvQ1nOW
-	7jMke6jyfviINdW+L60368LfLIPIf3lcqSWG4qlT9Yue96kGBtMffXSLgGBqRF1SWyXJZ4C1CmO
-	0KUZOGVzdaO834gxqyS59CNLvmWoBCGpU6FDrnL7lkf9baW2ujkzUS2SJedeeai3PfjBOdW9/f1
-	qN5XhBYF00jcJlie15oobXD34
-X-Google-Smtp-Source: AGHT+IHSee8KOn59ddbeorITEpHraU3p7NzYaHpJvhmIe0t3qhX7CI8PLz19NGTzc6rsINk8EjOJAw==
-X-Received: by 2002:a05:6a00:3c8f:b0:746:2c7f:b271 with SMTP id d2e1a72fcca58-7489ce0d374mr2695253b3a.9.1749892519104;
-        Sat, 14 Jun 2025 02:15:19 -0700 (PDT)
+        bh=3HScxk4eBpHQPzOs90Ehfo4I0XVUQ6OClHqZVBAZwOo=;
+        b=SCpAc8PrNy1R0d9sUUju+OA+BDhsSO3PVuE/dLiyBrQpIzJ7O+T5KhndNlQ69ngd6j
+         lZZkWCe1/k5O/cqQO9pE+oN6/VylCsZijNQuCpaZX4hHIbWINu++7K4fhU8UxC12Pm+J
+         TLAT6Ak/P89hxlZ+oD4+Qx4H/UcUDOdLvHvzBvPQIJFxnuwtVLLuA6mv4rVqyccmoBVu
+         WkLvtwqPoPYXsibGqTmAekhV1DJWjBxOlBsPpXbCUaR5aV3E9YWqMlKWf1p9ML6/cxyz
+         LlLaOQqvgXtzXU1dR5k28zKLBc7sswW/kVDE0uhZTTjqesOLS7dBVk0Opt6TazQT7olB
+         eVPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUV6zbfhLRQuYFiJJ+QZthSBDYMSlHAaI3JVxxTqELJUdEjBDd9Oxivryy7t48zJsyGnmKuixJWX1rQBnU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFH/wkbkf1w8He/Qb4pOL+r7Pw2eJwvkMs28hQSO+5dhs3/62P
+	zhTQMTwh1s4UnZ2xp4/Ak5oYEOzX4E2xTTS5Uq9rLyiSgOAS6Mq0mGkoUiyzaDFaILg=
+X-Gm-Gg: ASbGncv9QiHuQivBZNeHgeaMepQYjqToJPy5kxbF021gmBNy7WXnZrxX3DIiX2Ojd1F
+	poPS/NtPAEGMS+KHlsafTLstWZsV5+b+c7TpUmjt4ehLFE8BCRAfobMpp2GFav4EnSGvtOI0GFY
+	9Cgne3yeN/HHBOoNgZ7TtZ63K2m1jKVHq1HEemDrTVAaYfispA+T8rOABbNWL7qUOHUW7iTvk5x
+	rjlNWayhtL/a44G1iPck3EXl2JpuwAKSobgrAe/jZ9ONJ0LN9yP6BbrAV4+tjXikHjnSfXPpriV
+	OHkwIxNu58btJx6r9zqapXYvtDMlRWijyqUoE+/UiRv8biJTltzQ8Uhvo8ShVStl68rZKkD465Y
+	liHh5M0kHqdfdMoGptzlZiuW1
+X-Google-Smtp-Source: AGHT+IEm6lgpZHziSIdJ4n5wNGcJaqJw7y5etk9WL4ieNyaXhP0N/zAXYxeAOOLogkH7017UfuUs7A==
+X-Received: by 2002:a05:6a00:2186:b0:748:33f3:8da8 with SMTP id d2e1a72fcca58-7489cfc2976mr2558157b3a.5.1749892522235;
+        Sat, 14 Jun 2025 02:15:22 -0700 (PDT)
 Received: from dev-linux.. (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffeca93sm2969630b3a.20.2025.06.14.02.15.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffeca93sm2969630b3a.20.2025.06.14.02.15.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 02:15:18 -0700 (PDT)
+        Sat, 14 Jun 2025 02:15:21 -0700 (PDT)
 From: Sukrut Bellary <sbellary@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>,
 	David Lechner <dlechner@baylibre.com>,
@@ -73,9 +73,9 @@ Cc: Sukrut Bellary <sbellary@baylibre.com>,
 	linux-iio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/5] iio: adc: ti-adc128s052: Use shift and realbits
-Date: Sat, 14 Jun 2025 02:15:01 -0700
-Message-Id: <20250614091504.575685-3-sbellary@baylibre.com>
+Subject: [PATCH v4 4/5] iio: adc: ti-adc128s052: Add lower resolution devices support
+Date: Sat, 14 Jun 2025 02:15:03 -0700
+Message-Id: <20250614091504.575685-5-sbellary@baylibre.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250614091504.575685-1-sbellary@baylibre.com>
 References: <20250614091504.575685-1-sbellary@baylibre.com>
@@ -87,15 +87,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This adcxx communicates with a host processor via an SPI/Microwire Bus
+The adcxx communicates with a host processor via an SPI/Microwire Bus
 interface. The device family responds with 12-bit data, of which the LSB bits
-are transmitted by the lower resolution devices as 0. The unavailable bits are
-0 in LSB. Shift is calculated per resolution and used in scaling and raw data
-read.
+are transmitted by the lower resolution devices as 0.
+The unavailable bits are 0 in LSB.
+Shift is calculated per resolution and used in scaling and raw data read.
 
-Create a separate structure for each device type instead of an array.
-These changes help to reuse the driver to support the family of devices with
-name ADC<bb><c>S<sss>, where
+Lets reuse the driver to support the family of devices with name
+ADC<bb><c>S<sss>, where
 * bb is the resolution in number of bits (8, 10, 12)
 * c is the number of channels (1, 2, 4, 8)
 * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
@@ -104,198 +103,108 @@ and 101 for 1 MSPS)
 Complete datasheets are available at TI's website here:
 https://www.ti.com/lit/ds/symlink/adc<bb><c>s<sss>.pdf
 
+Tested only with ti-adc102s051 on BegalePlay SBC.
+https://www.beagleboard.org/boards/beagleplay
+
 Co-developed-by: Nishanth Menon <nm@ti.com>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
 ---
- drivers/iio/adc/ti-adc128s052.c | 115 ++++++++++++++++++--------------
- 1 file changed, 66 insertions(+), 49 deletions(-)
+ drivers/iio/adc/ti-adc128s052.c | 51 +++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
 diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-index 1b46a8155803..2b206745e53d 100644
+index fbf15c83c127..b515ed0bb1d5 100644
 --- a/drivers/iio/adc/ti-adc128s052.c
 +++ b/drivers/iio/adc/ti-adc128s052.c
-@@ -41,13 +41,14 @@ struct adc128 {
- 	} __aligned(IIO_DMA_MINALIGN);
- };
+@@ -7,6 +7,21 @@
+  * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+  * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
+  * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
++ *
++ * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
++ * interface. This driver supports the whole family of devices with a name
++ * ADC<bb><c>S<sss>, where
++ * bb is the resolution in number of bits (8, 10, 12)
++ * c is the number of channels (1, 2, 4, 8)
++ * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS and
++ * 101 for 1 MSPS)
++ *
++ * Complete datasheets are available at TI's website here:
++ * https://www.ti.com/lit/ds/symlink/adc<bb><c>s<sss>.pdf
++ *
++ * 8, 10, and 12 bits converters send 12-bit data with unavailable bits set to
++ * 0 in LSB.
++ * Shift is calculated per resolution and used in scaling and raw data read.
+  */
  
--static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
-+static int adc128_adc_conversion(struct adc128 *adc,
-+				 struct iio_chan_spec const *channel)
- {
- 	int ret;
- 
- 	guard(mutex)(&adc->lock);
- 
--	adc->buffer[0] = channel << 3;
-+	adc->buffer[0] = channel->channel << 3;
- 	adc->buffer[1] = 0;
- 
- 	ret = spi_write(adc->spi, &adc->buffer, sizeof(adc->buffer));
-@@ -58,7 +59,10 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
- 	if (ret < 0)
- 		return ret;
- 
--	return be16_to_cpu(adc->buffer16) & 0xFFF;
-+	ret = (be16_to_cpu(adc->buffer16) >> channel->scan_type.shift) &
-+	       GENMASK(channel->scan_type.realbits - 1, 0);
-+
-+	return ret;
- }
- 
- static int adc128_read_raw(struct iio_dev *indio_dev,
-@@ -71,7 +75,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 
--		ret = adc128_adc_conversion(adc, channel->channel);
-+		ret = adc128_adc_conversion(adc, channel);
- 		if (ret < 0)
- 			return ret;
- 
-@@ -81,7 +85,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_SCALE:
- 
- 		*val = adc->vref_mv;
--		*val2 = 12;
-+		*val2 = channel->scan_type.realbits;
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 
- 	default:
-@@ -90,15 +94,24 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
- 
- }
- 
--#define ADC128_VOLTAGE_CHANNEL(num)	\
--	{ \
--		.type = IIO_VOLTAGE, \
--		.indexed = 1, \
--		.channel = (num), \
--		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
--		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
-+#define _ADC128_VOLTAGE_CHANNEL(num, real_bits)				\
-+	{								\
-+		.type = IIO_VOLTAGE,					\
-+		.indexed = 1,						\
-+		.channel = (num),					\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.scan_index = (num),					\
-+		.scan_type = {						\
-+			.sign = 'u',					\
-+			.realbits = (real_bits),			\
-+			.storagebits = 16,				\
-+			.shift = (12 - real_bits),			\
-+		},							\
+ #include <linux/cleanup.h>
+@@ -110,8 +125,20 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+ 		},							\
  	}
  
-+#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12)
++#define ADC082_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 8)
++#define ADC102_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 10)
+ #define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12)
+ 
++static const struct iio_chan_spec adc082s021_channels[] = {
++	ADC082_VOLTAGE_CHANNEL(0),
++	ADC082_VOLTAGE_CHANNEL(1),
++};
 +
- static const struct iio_chan_spec adc128s052_channels[] = {
++static const struct iio_chan_spec adc102s021_channels[] = {
++	ADC102_VOLTAGE_CHANNEL(0),
++	ADC102_VOLTAGE_CHANNEL(1),
++};
++
+ static const struct iio_chan_spec adc122s021_channels[] = {
  	ADC128_VOLTAGE_CHANNEL(0),
  	ADC128_VOLTAGE_CHANNEL(1),
-@@ -124,26 +137,30 @@ static const struct iio_chan_spec adc124s021_channels[] = {
+@@ -137,6 +164,18 @@ static const struct iio_chan_spec adc128s052_channels[] = {
  
  static const char * const bd79104_regulators[] = { "iovdd" };
  
--static const struct adc128_configuration adc128_config[] = {
--	{
--		.channels = adc128s052_channels,
--		.num_channels = ARRAY_SIZE(adc128s052_channels),
--		.refname = "vref",
--	}, {
--		.channels = adc122s021_channels,
--		.num_channels = ARRAY_SIZE(adc122s021_channels),
--		.refname = "vref",
--	}, {
--		.channels = adc124s021_channels,
--		.num_channels = ARRAY_SIZE(adc124s021_channels),
--		.refname = "vref",
--	}, {
--		.channels = adc128s052_channels,
--		.num_channels = ARRAY_SIZE(adc128s052_channels),
--		.refname = "vdd",
--		.other_regulators = &bd79104_regulators,
--		.num_other_regulators = 1,
--	},
-+static const struct adc128_configuration adc122s021_config = {
-+	.channels = adc122s021_channels,
-+	.num_channels = ARRAY_SIZE(adc122s021_channels),
++static const struct adc128_configuration adc082s021_config = {
++	.channels = adc082s021_channels,
++	.num_channels = ARRAY_SIZE(adc082s021_channels),
 +	.refname = "vref",
 +};
 +
-+static const struct adc128_configuration adc124s021_config = {
-+	.channels = adc124s021_channels,
-+	.num_channels = ARRAY_SIZE(adc124s021_channels),
++static const struct adc128_configuration adc102s021_config = {
++	.channels = adc102s021_channels,
++	.num_channels = ARRAY_SIZE(adc102s021_channels),
 +	.refname = "vref",
 +};
 +
-+static const struct adc128_configuration adc128s052_config = {
-+	.channels = adc128s052_channels,
-+	.num_channels = ARRAY_SIZE(adc128s052_channels),
-+	.refname = "vref",
-+};
-+
-+static const struct adc128_configuration bd79104_config = {
-+	.channels = adc128s052_channels,
-+	.num_channels = ARRAY_SIZE(adc128s052_channels),
-+	.refname = "vdd",
-+	.other_regulators = &bd79104_regulators,
-+	.num_other_regulators = 1,
- };
- 
- static const struct iio_info adc128_info = {
-@@ -199,33 +216,33 @@ static int adc128_probe(struct spi_device *spi)
- }
+ static const struct adc128_configuration adc122s021_config = {
+ 	.channels = adc122s021_channels,
+ 	.num_channels = ARRAY_SIZE(adc122s021_channels),
+@@ -217,6 +256,12 @@ static int adc128_probe(struct spi_device *spi)
  
  static const struct of_device_id adc128_of_match[] = {
--	{ .compatible = "ti,adc128s052", .data = &adc128_config[0] },
--	{ .compatible = "ti,adc122s021", .data = &adc128_config[1] },
--	{ .compatible = "ti,adc122s051", .data = &adc128_config[1] },
--	{ .compatible = "ti,adc122s101", .data = &adc128_config[1] },
--	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
--	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
--	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
--	{ .compatible = "rohm,bd79104", .data = &adc128_config[3] },
-+	{ .compatible = "ti,adc128s052", .data = &adc128s052_config },
-+	{ .compatible = "ti,adc122s021", .data = &adc122s021_config },
-+	{ .compatible = "ti,adc122s051", .data = &adc122s021_config },
-+	{ .compatible = "ti,adc122s101", .data = &adc122s021_config },
-+	{ .compatible = "ti,adc124s021", .data = &adc124s021_config },
-+	{ .compatible = "ti,adc124s051", .data = &adc124s021_config },
-+	{ .compatible = "ti,adc124s101", .data = &adc124s021_config },
-+	{ .compatible = "rohm,bd79104",  .data = &bd79104_config },
- 	{ }
- };
+ 	{ .compatible = "rohm,bd79104",  .data = &bd79104_config    },
++	{ .compatible = "ti,adc082s021", .data = &adc082s021_config },
++	{ .compatible = "ti,adc082s051", .data = &adc082s021_config },
++	{ .compatible = "ti,adc082s101", .data = &adc082s021_config },
++	{ .compatible = "ti,adc102s021", .data = &adc102s021_config },
++	{ .compatible = "ti,adc102s051", .data = &adc102s021_config },
++	{ .compatible = "ti,adc102s101", .data = &adc102s021_config },
+ 	{ .compatible = "ti,adc122s021", .data = &adc122s021_config },
+ 	{ .compatible = "ti,adc122s051", .data = &adc122s021_config },
+ 	{ .compatible = "ti,adc122s101", .data = &adc122s021_config },
+@@ -229,6 +274,12 @@ static const struct of_device_id adc128_of_match[] = {
  MODULE_DEVICE_TABLE(of, adc128_of_match);
  
  static const struct spi_device_id adc128_id[] = {
--	{ "adc128s052", (kernel_ulong_t)&adc128_config[0] },
--	{ "adc122s021",	(kernel_ulong_t)&adc128_config[1] },
--	{ "adc122s051",	(kernel_ulong_t)&adc128_config[1] },
--	{ "adc122s101",	(kernel_ulong_t)&adc128_config[1] },
--	{ "adc124s021", (kernel_ulong_t)&adc128_config[2] },
--	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
--	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
--	{ "bd79104", (kernel_ulong_t)&adc128_config[3] },
-+	{ "adc128s052", (kernel_ulong_t)&adc128s052_config },
-+	{ "adc122s021",	(kernel_ulong_t)&adc122s021_config },
-+	{ "adc122s051",	(kernel_ulong_t)&adc122s021_config },
-+	{ "adc122s101",	(kernel_ulong_t)&adc122s021_config },
-+	{ "adc124s021", (kernel_ulong_t)&adc124s021_config },
-+	{ "adc124s051", (kernel_ulong_t)&adc124s021_config },
-+	{ "adc124s101", (kernel_ulong_t)&adc124s021_config },
-+	{ "bd79104",	(kernel_ulong_t)&bd79104_config },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, adc128_id);
- 
- static const struct acpi_device_id adc128_acpi_match[] = {
--	{ "AANT1280", (kernel_ulong_t)&adc128_config[2] },
-+	{ "AANT1280", (kernel_ulong_t)&adc124s021_config },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, adc128_acpi_match);
++	{ "adc082s021", (kernel_ulong_t)&adc082s021_config },
++	{ "adc082s051", (kernel_ulong_t)&adc082s021_config },
++	{ "adc082s101", (kernel_ulong_t)&adc082s021_config },
++	{ "adc102s021", (kernel_ulong_t)&adc102s021_config },
++	{ "adc102s051", (kernel_ulong_t)&adc102s021_config },
++	{ "adc102s101", (kernel_ulong_t)&adc102s021_config },
+ 	{ "adc122s021",	(kernel_ulong_t)&adc122s021_config },
+ 	{ "adc122s051",	(kernel_ulong_t)&adc122s021_config },
+ 	{ "adc122s101",	(kernel_ulong_t)&adc122s021_config },
 -- 
 2.34.1
 
