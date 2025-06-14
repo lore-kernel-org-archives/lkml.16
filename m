@@ -1,151 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C757B175A5;
-	Sat, 14 Jun 2025 10:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C11175A5
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749897385; cv=none; b=Il118XBUfOU67Bk3wqUB7qgk44R1lrsdHbYC9Z1I9BDuaFn7Lb9UZpLMhZP7ru1+BxQKsWdSJ3LL2449uhXztpnLN0DRjjYaiJE6xzre+ek8/cxRtzheT6M6zws8R9O28DH6wbUjo+CC6/+YOGDRJ+aEP7n/3lRUwlqzwaTUUuo=
+	t=1749897443; cv=none; b=kmELhMMwabtP6nJSK2gFvHrxzmkaPgunp21rVsOdxhRlu75rG+EGIMn10+yeiv/t8xu7LStMo/H9rCnqOj+tDcp1D1F5gD4ioBuGKuJ9uFqc61nZ5R9vnM6yMr0UIQEDX7mcPddff/EWeSbZYlYTEjObXsFlSDMJ+k7BykkjG5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749897385; c=relaxed/simple;
-	bh=as6jP1DxC+RFLBHeiO5K9WM7RCKivV22V+29vSgyenA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AqZyUkUECIySbq7QHggjUAxxNzE+lGR2JWMmLwOiRk6/z4BNjVzGNhTFleLT75OCVwiWdrcp0eNPgLfFk90Os6ndcnS9TecXTBBkaB0ACdTUwhy47EgrlJ56jQy0XTN+FcFkjgjFA2bBdKaTB9fkXWqzyr0qsuGC3qg7U+T9+BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xt+mCH+h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749897443; c=relaxed/simple;
+	bh=V7uu/VARavhUP6rwGCjJXOTwLAbvEiVz1O2YrqzoPZk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ieFLHfJTU8LBKvf3KeB9r5bJ9ZIMPzk7lf6MQivzWQvhVt27g2AxjYfdFhVN86s3jTC/zCWcg2grtpmOeG6JMoAm1QugveU/diHNR7AZckQ5pqs2ezQ9Vmjx+HODIVX9FS7oSDdDrN0G65ZuDgHSSKJVKl79OHM/5zEr2cB5i/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TqIic4TS; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xt+mCH+h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23AA3C4CEEB;
-	Sat, 14 Jun 2025 10:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749897385;
-	bh=as6jP1DxC+RFLBHeiO5K9WM7RCKivV22V+29vSgyenA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Xt+mCH+haSeQ4kUW2plHlus8Xzir9ynuAnKPyUJqmQa7b4YpLa1Yeh1RPJX8qnjO0
-	 +2Jd8cJVFf/bFhvjHmgFdQtyWNj+z8BkKQ7K690rMFer7BA4VvrrQol73HrP0Aad7V
-	 d8728DhRcb958HVLkROag4TGXaqIEaaIbaLizlfsgSnS99xClSPMKqSq7+HGeCfkTB
-	 vwZCjFOCBeFG/IMJAQvlLqBoSFZGX8yhbuhXk/Cb5Fo6Mu0MiIPzvLSf0skp+/iCXn
-	 pDYjkJzTkjSh9Db/mjPROb9E4CUhF6FYN9tr+crM+PrJyeyT697mQF2qouxHapy13s
-	 upLB0MIad5K+Q==
-Date: Sat, 14 Jun 2025 11:36:16 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
-Message-ID: <20250614113616.4663269f@jic23-huawei>
-In-Reply-To: <20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqIic4TS"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4ee391e6fso217650f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 03:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749897440; x=1750502240; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PLl1qEEwnvWsAvy9J8JIB4fScmcygAgIc7ADndq+ADY=;
+        b=TqIic4TSmaWaJf0Bst3LB64uYxwOnRG+6CncoPUUIWUweyCRK8ZTVoGcNK7TwcUyCw
+         k1uHm4ugFEw6GivU0cWtCanu9hxe6e9zZb6RCwsNcKF0CXYn9wiQCVT3gtYzYeTJ4Hna
+         RgUCkAQYUxY7vTVgel9UERsXzI1AsnJH4kAB8Y7HUXDf7ScTNNSaxIbn5OdQdO6LXCzl
+         m8qB31nFnpA3WqekFKxvUL7suDjUI/0CnxF7U64ik4FdQlBvNGLBQeHQCKzT7TrMmf+J
+         G3pQTk3ZhEbYtSQZOn6GqF9u4Z5WBR5YqSueXmIJzbRxiA3AfI4oPVeulEw8W9mzJPxN
+         /RnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749897440; x=1750502240;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PLl1qEEwnvWsAvy9J8JIB4fScmcygAgIc7ADndq+ADY=;
+        b=weySwRhJfvXKIa+ON33Rp2rRsWiocl7gsEURS9ruobMwFJ0kAh7ku6XzL+wqpZmRA9
+         SgDklKHw1Y44sf/73EEdJKPijGTVqoQXoEy3+bs3oB8uN3VH8qoCgMKrB3R1MGD0FtL8
+         U7dCucg7wPWpzRV3NdW8qU00ujn+xJO3LQcK8qQk4IjO2k2hpeQsIneKKFYUV086NqsX
+         mxZCIl09RZHxuZ26gHPyRWhPsxQecPt6HOB6ALxhYs8WGThPnzp74Y9X3v5xuRWPBII8
+         GUCFyP5p4A/GwBNXKWItZkLyoxVz5wfplF+sWy/RmG6AL3g00++z7hGhvCJeVewNxgeD
+         e/Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkUv5IqjfOzscKxUIb9e1cZth2tcKASCgqiwNi8+pe1xaAR9mHIYblJGCDHjgO2D/PcyosxgioNNK9DnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1XdJfHTmjhCIuJUsy6Yy2xLROrtZlwr1dMZO4POK+u2eXRLck
+	23E3xMr0oaOoLUGkzUsQjl0kx3WoDXs6xKqdZzJ02Ap7EP6LRdJ8ac0Azqq9duVw
+X-Gm-Gg: ASbGncvpB/iCVq/OCLPaJHXDWS67Wop8C89zm9Cflm0MLuWVsrPbkSbS+Bu1+N7fh5V
+	dJnlkPtA3zvZOEW8HzwvF8uLSk8sjjycnzpNNKB2Gib1WVgwsXWbRir+ykzhQtBT0/2dWQBngW2
+	pl/tgPBQIL6WBy43KjEhZlqk1etAfUI5EkzvOrTecMcOrWHHmU/iGngTuAAupHw+g+tQhoGuMA4
+	aG3VQQw/4nWXLcicPrvUvg8XtYsHEpT6eG0Djgxln5R2XY/twMgn9xK/vgIN6yKAbfsWVO97AFM
+	GbtNFN8VsmRecEsj8k/B/YNgvl12Wk6XmcHEk0Vfr/zei6/qkrEGQLhGZkiiwJ9Hq3ugPT1rCtv
+	KO08mYmNnIXE6N7tXgdKaB9s+XLN7qQx1Eg==
+X-Google-Smtp-Source: AGHT+IEO2WJsG7rm3hmH9d2SJMbbIL0GVTNr61YBvUZhyy9Qp55TsFSXVuwBOr+Ocv8M12TzoBRQiA==
+X-Received: by 2002:a05:6000:2f84:b0:3a5:2ee8:ee1d with SMTP id ffacd0b85a97d-3a572e99672mr881171f8f.16.1749897439458;
+        Sat, 14 Jun 2025 03:37:19 -0700 (PDT)
+Received: from localhost.localdomain ([154.182.223.70])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24420csm78091745e9.20.2025.06.14.03.37.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 03:37:18 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	siqueira@igalia.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.com,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH] drm/amd/display: Add kernel-doc for mpc_funcs.mcm and rmcm
+Date: Sat, 14 Jun 2025 13:37:09 +0300
+Message-Id: <20250614103709.72045-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Jun 2025 09:34:41 +0200
-Jorge Marques <jorge.marques@analog.com> wrote:
+This patch fixes documentation build warnings:
+- WARNING: ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1068 
+struct member 'mcm' not described in 'mpc_funcs'
+- WARNING: ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1068
+struct member 'rmcm' not described in 'mpc_funcs'
 
-> The AD4052 family supports autonomous monitoring readings for threshold
-> crossings. Add support for catching the GPIO interrupt and expose as an IIO
-> event. The device allows to set either, rising and falling directions. Only
-> either threshold crossing is implemented.
-> 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-Hi Jorge,
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-A few comments inline.
+diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+index 6e303b81bfb0..ac2957c9fdd2 100644
+--- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
++++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+@@ -1038,6 +1038,16 @@ struct mpc_funcs {
+ 	*/
+ 	void (*program_3dlut_size)(struct mpc *mpc, bool is_17x17x17, int mpcc_id);
+ 
++     /**
++	* @mcm: Multi-Channel Mode configuration operations
++	*
++	* Contains functions for programming Multi-Channel Mode features:
++	* - 3D LUT sizing
++	* - Bias/scale programming
++	* - Bit depth configuration
++	* - LUT read/write control
++	* - LUT population
++	*/
+ 	struct {
+ 		void (*program_3dlut_size)(struct mpc *mpc, uint32_t width, int mpcc_id);
+ 		void (*program_bias_scale)(struct mpc *mpc, uint16_t bias, uint16_t scale, int mpcc_id);
+@@ -1050,6 +1060,11 @@ struct mpc_funcs {
+ 			bool lut_bank_a, int mpcc_id);
+ 	} mcm;
+ 
++     /**
++	* @rmcm: Remove Multi-Channel Mode configuration operations
++	*
++	* Contains functions for removing or resetting Multi-Channel Mode features
++	*/
+ 	struct {
+ 		void (*enable_3dlut_fl)(struct mpc *mpc, bool enable, int mpcc_id);
+ 		void (*update_3dlut_fast_load_select)(struct mpc *mpc, int mpcc_id, int hubp_idx);
+-- 
+2.25.1
 
-Jonathan
-
->
-> +
-> +static int ad4052_write_event_config(struct iio_dev *indio_dev,
-> +				     const struct iio_chan_spec *chan,
-> +				     enum iio_event_type type,
-> +				     enum iio_event_direction dir,
-> +				     bool state)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +	if (st->wait_event == state) {
-> +		ret = 0;
-
-Feels like a case where init ret at declaration would be reasonable.
-
-> +		goto out_release;
-> +	}
-> +
-> +	if (state)
-> +		ret = ad4052_monitor_mode_enable(st);
-> +	else
-> +		ret = ad4052_monitor_mode_disable(st);
-> +
-> +	if (!ret)
-> +		st->wait_event = state;
-> +
-> +out_release:
-> +	iio_device_release_direct(indio_dev);
-> +	return ret;
-> +}
-
-> +
-> +static int ad4052_read_event_value(struct iio_dev *indio_dev,
-> +				   const struct iio_chan_spec *chan,
-> +				   enum iio_event_type type,
-> +				   enum iio_event_direction dir,
-> +				   enum iio_event_info info, int *val,
-> +				   int *val2)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +
-> +	if (st->wait_event) {
-> +		ret = -EBUSY;
-> +		goto out_release;
-
-Not being able to read event parameters whilst monitoring them seems
-very restrictive.  Can't we cache the values?  Either play games to ensure
-we get them from the regmap cache or just cache these few values in st.
-
-Checking what you are monitoring for feels like the sort of thing
-userspace might well do.
-
-Even blocking changing the monitoring parameters is unusually strict.
-Why not just drop out of monitor mode, update them and go back in?
-
-
-> +	}
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		ret = __ad4052_read_event_info_value(st, dir, val);
-> +		break;
-> +	case IIO_EV_INFO_HYSTERESIS:
-> +		ret = __ad4052_read_event_info_hysteresis(st, dir, val);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +out_release:
-> +	iio_device_release_direct(indio_dev);
-> +	return ret ? ret : IIO_VAL_INT;
-> +}
