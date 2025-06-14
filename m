@@ -1,124 +1,100 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5B320F;
-	Sat, 14 Jun 2025 02:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F4A3FE7;
+	Sat, 14 Jun 2025 02:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749868181; cv=none; b=g0WS1NuJs8/x8P+TeusnqTZUGyDnubmfeyieebg2cVP/31czS3p4Ni97anaIGuhARmS0KykBRhpW6y0iYgIXRHoGz+GW2mFVfff6SpFxDBmTxQ4tJ9+CnjQB7lb6/jKSKe5RoXY0FCqxrQaGYFJCeRjNXfXtuEC+SX2SPBjRArU=
+	t=1749868296; cv=none; b=BgvLm9lQ5mGpXDeMzzH1v3EXV63w8ZTOSFGw1/ONGscH0fc8WdoNj4DebeEHi3Up6dEG/7qaHpE7nOY7wyxEdrfLknDXXx9s4COFIwsLCpFzhMwcGZWHgv8fB90zKufpoi7owHj6J4DyZ3vIHgv/8/LpZjfjSDlG6SGwAjJpssc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749868181; c=relaxed/simple;
-	bh=BovxG10OZYqF6W5tq+yAPUVvqZuanHu7KGWMGNq8AGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ursxs3FReL6KS8DTwwEOi2J304eZjli763hWNfTQIj1HXj9yGPlujUzx7zj49+MOiG947phk8ZHxcaplbq/pCjeGDjEorARNUnfpKdl/N1l+rVqXXhlIAbntaw5xJoIs1uSZ/z98RxdKt9uuAekXIw9MGExTO8Moel/b/B9mtfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=TbhnSsGu; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1749868296; c=relaxed/simple;
+	bh=muvH186xbp1wZouT3DAGJVB1Ry12NAmcqUPQ49mvjxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnS2a2C5uFdoBQUjDDKa5/1hwV6iTxCqaxJNqkZmRzlkreHBd8sMDtBSbAT4XjyVpvtgyaOgbq0LeiUeqRHZ+J7cnDsvaFnkJ64xm4phCu2PVGVGxd5W1bG/IsQFM2DiKxOfvAq1BNSkCsEo524Giu7YFZmBqEH4AHpmGBF3S/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CePdE9ql; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="TbhnSsGu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1749868164;
-	bh=BovxG10OZYqF6W5tq+yAPUVvqZuanHu7KGWMGNq8AGs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=TbhnSsGu2AzCWsOUu32kpMJhyhMUPwrIp/ObFG0RVdBxAqXEPdtBiQZbbclHQp2AA
-	 Pizx8UpIy52fYwsfPF88ELeqhIKhoT1UMODiEvSN7i35Bn6LIQpzdTRYIhzNM7493U
-	 qs8TX/mCxJUufytjmhfQH8PxpGHwRAGdqrya47mg=
-X-QQ-mid: zesmtpgz4t1749868161t60c621e0
-X-QQ-Originating-IP: HQ1RifYPmrBvX4nJYiTppklWoUSlq/+jeJSe/oh002w=
-Received: from mail-yb1-f170.google.com ( [209.85.219.170])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 14 Jun 2025 10:29:19 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17128236805914846518
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e81a6da56b2so1952783276.3;
-        Fri, 13 Jun 2025 19:29:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJp1d+Q7v3Ol18kppXibva4o7biINJfTvw2cRW83E1t89wZ1BL3hma3jQyF1c1RrpzL/jW1U/ku1Zx+cCv@vger.kernel.org, AJvYcCUeQufS1vJRnFK2y95icskimaaMPu+xQEQ4AVVjshICtMtJD20/fQjXhPwEiJGWlInbhIsVMD0mhuN6aJP50T1N@vger.kernel.org, AJvYcCXFpNNxmHZnXiaI2HC3/JSMV1aMUecaJK308iQQPbuwptTYoZKWAVrR/U0llyt/QRroNuzZin5SgSN25iEF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqEJFdRU1wOwq3QJouVUixg+u6S3xuyoY/YPi+z/Acw9jyHLpD
-	f8Aq5GzLJ/PrsqQeJlXaIzd+HYHCC+LPPZ4cu2Yq9uRHXI1vHSmzxeeF4qaIhVnu8VvkeZOqof1
-	y4Nmc7E5vz4uT4EEBw7qhWsU+ApLkBog=
-X-Google-Smtp-Source: AGHT+IGeNNvwOwAtaxQXk0HpW6trsT1/uxwZhODR+aTOWuDPm2/IDyjtvVhhpVls3I7U/ySgcvAXiXClyo/4la4+70w=
-X-Received: by 2002:a05:690c:25c9:b0:710:e966:bf96 with SMTP id
- 00721157ae682-7117544ca55mr25388537b3.27.1749868158733; Fri, 13 Jun 2025
- 19:29:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CePdE9ql"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so2235385a91.3;
+        Fri, 13 Jun 2025 19:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749868293; x=1750473093; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=muvH186xbp1wZouT3DAGJVB1Ry12NAmcqUPQ49mvjxQ=;
+        b=CePdE9qlE7gh4vNL3VeKp/XJ/A/SwAOBVUTrART1T+OjGTQDOypwSsCUf2FTDnrHxa
+         8WO6SGDOL2hXWcvgXtWm7gZlixppoqRXD18lzrM731glQOK0Bv9XsijhBH+Sr4w4qHxz
+         KbXzCzQtMclira4j07CwLoqXhu/CZu3PPELRlxHhrILKYthA7EQbEZFSoFFc/U/JvO8e
+         0nIIa0By21MFEc0a/2sl5oNh7LSjl82q/LWHMsR6Fgh80C+R0nm/8pvAHPQ6mK3yQFyD
+         JA9llysN+xiNpLWagMxXOhD+VNK5ktSQw2qUlmiD5AkWVDBa3+p6Om+9CHO9xJJ1cEKI
+         zGEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749868293; x=1750473093;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=muvH186xbp1wZouT3DAGJVB1Ry12NAmcqUPQ49mvjxQ=;
+        b=I0Op8cDOw8prJyHNteejOu8fLzM3dRk4M3wQxvfPxB3NiT1hoQF2UcbRfmf4Rw0kyy
+         eA4EueVI9vsjnZDnBBlmLJ9OIJBpYowP8PsnUhq7cWOG+BHw7314vjVQ0Mp6TLD/2Lst
+         KHr1hvHNQ9T4LuqpOGFjvhTDqLPSu1hZTSzDUXU6yO5JqKqPwCvg7p2H73K5zC7m2Bsa
+         Hb8pWE4DHukNZMriWs2pF/4rqLBZFfvI4FQcDOPBaM1yDsXsszlTMSslFZbLBoQuiOWh
+         XhZaF/8bkk9IqjknIbX4FtzPJWICeixHJloLCKyLtIZRqT5L6NAGPmZ4W728TUQP6WDd
+         CoLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlOr8bZYMPpDvU2gYbd27enwa/kVDkW0S4rSbuD5NnMMtkvibkrPqRa9Xcnz2FZyMMxAVwl4pdUO0N@vger.kernel.org, AJvYcCXjAvBqIajSE28lHmoVqcOvMfZDFR0X7Le4PTaP4u8bfWA49YRjWspRjiEjY7potoyzaY75tXGlALRI6pk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxeue9q3FvmiUW+ud1iS6djbIYSt8m5uiynSpeFN6JQK0ruAp/p
+	891xnElKGz6gg187774ZMNMYMltN+41uU9Mew37fVl0JHgPa+Nxo6pkX
+X-Gm-Gg: ASbGncuvxZfstdoU3EJ4LCswyG3UWNLlLCsmWUOE6YzlmrbjfhnFfwoNbyLhKn8nTRj
+	m6rrHR5rwehOoJrjWgRuk+go8raBVDLirguBPmApVQ2sv5If2uNDAilc0Fnjgq5TViX6cDxSZCe
+	PHEdg9lt1FCG0lR3mT2yoJxeQoTv/p8LJ/4RuMgvbuI1hf98CXSnz2m3FIw89KO4nboF3eZDuNt
+	23bb1fWXikVnMLmMGctFlOSnZZfofdkq1gMJwFzkESlu1Z1Wd5WIvy+oYy7z6dL5ocyGoO2FXvW
+	NCXdZLo8T6XA76XB//9XBX0I/OuiYp9vmHao68n4lInNOFKU0Q==
+X-Google-Smtp-Source: AGHT+IHCj4fIQmaD0smD64d+WdoNvxKcsF+LPm8LepKLk3m/wfu/XLkOZVHbtI+96XbJp9WpjbjE8Q==
+X-Received: by 2002:a17:90b:1dc4:b0:311:fde5:e225 with SMTP id 98e67ed59e1d1-313f1c01641mr3118796a91.14.1749868293053;
+        Fri, 13 Jun 2025 19:31:33 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:87ca::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19cd5a6sm4158494a91.12.2025.06.13.19.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 19:31:32 -0700 (PDT)
+Date: Fri, 13 Jun 2025 23:31:16 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v4 1/5] PCI: rockchip: Use standard PCIe
+ defines
+Message-ID: <aEze9A8jtNsZLxr7@geday>
+References: <aEyJhoiPP0Ugm1t6@geday>
+ <20250613205023.GA975137@bhelgaas>
+ <aEyRrtMZ0LidhyOR@geday>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610021007.2800329-2-chenlinxuan@uniontech.com> <CAJfpegt8Hk6nt5+iPg-if9iquWqr3eecgDSKYZvJY0OX+y5b9A@mail.gmail.com>
-In-Reply-To: <CAJfpegt8Hk6nt5+iPg-if9iquWqr3eecgDSKYZvJY0OX+y5b9A@mail.gmail.com>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Sat, 14 Jun 2025 10:29:07 +0800
-X-Gmail-Original-Message-ID: <AD14EFC7B36E9425+CAC1kPDOvZnjDR9-FxxObdJJDuZ4p_uP=3hkkCUi+S=p-jYT6fQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuGxAdS_kbYhyuhWm8A4nGla2TR44oTlyAhwzQSDVgEI27EUb_JGxe0VDE
-Message-ID: <CAC1kPDOvZnjDR9-FxxObdJJDuZ4p_uP=3hkkCUi+S=p-jYT6fQ@mail.gmail.com>
-Subject: Re: [PATCH v3 RESEND] selftests: filesystems: Add functional test for
- the abort file in fusectl
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, zhanjun@uniontech.com, 
-	niecheng1@uniontech.com, Shuah Khan <skhan@linuxfoundation.org>, 
-	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: MfMKp/VE+ZXdb8puI5hdDSN789SNzcKwpowcwTeEgu1lfmrZzg+lJF7g
-	UUnwbIjIqeaoKEoidrQ6obPwJgBqK8LfkpGbZezdszSep3o4kpSkJJgUqn4m6tD36ngApe7
-	ynEhh11QUdFMMW94Z7ztLy5bmqdQGv1fNu3whIEZKZZ+16mTN+wRA2aVOEprMKsOZA+8n+S
-	bDJQjiTOqqVNC4Qov6CKQZRph8p68xH8ebkvXDN3MnQPwSkt/ngy7QhNcuA7i3WaYAM6wVq
-	ESOC4mtu5jJjoqVHgY8P00SUr3pdDUkybcOc9IufdQ70W8eV+kJQjNXM8EAiWqJ0VEOJAdm
-	wUBTeIh+cl8RJfh9EZ9a6BMQE1gE4cWOXS+ZQgGNhhRumXmGKnHqhQmHMlwP7ytnMri5R5X
-	3riIWqaxtG+DnpqAGDXDpdcHjwBHd5L+GsiEIuH217ltSAeVd9Pq1GPrwe9qPC1HS1UbUKi
-	goPZ3kvyBMxpj4aIdzfnjK1KY1CHt2yV0MheLFhmnPDeGGQQPN1BDpTwuvZGzUyH6duWFcX
-	e5tUdf45vhGZM395KA496/niQZ72V0+AkN1hIgF1usI9fwIP8rkBylp3RcuKgBVUYcbg4iq
-	w27e8HFlKhFpd3tAcXj2nIx34X5f/MqMWQpaL1UQRZvU+7FsTtTFvl1dJnZBwU551enWxw+
-	TsHDMn4Jfs4qQyXRWQoDcgjFdfYwyx8xgUlsUOCEgyLvkgsEEzN6+dHa+ezQxTwsQemwAXA
-	Wh7e2ove9QgpCFC++epPJlkFucKfX6i0nlIkWj00mPITOqMn155j3fuw6B2+4A2rUrSKDEC
-	67Az/JJE8ifFJQvE9wWn+r9ln6ImE6XTVSdSCbsQdLBkWrXl/fKDFacWFX6zhbeYAT9bKzf
-	DNjetx0AnIDZxVKGSYXwwcknUSq0q4zXjxRytWE9+j29EySs6YVvRy0OBKGioQGFvfvHv2b
-	tpwKqH7NQ7zwB8XNpD8RkYQQNhGsD3JTwQzMpL0334NGxlXYanYhb8Si6gFdTo61APwCD6a
-	Kr15eQ9bFYrNzKs3hMmheoDvDWu13y3Jla1cJpAncLdvUGLUX+nR3T4it1NH2TxjFIYR/R5
-	Q==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEyRrtMZ0LidhyOR@geday>
 
-On Thu, Jun 12, 2025 at 4:56=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> =
-wrote:
->
-> On Tue, 10 Jun 2025 at 04:10, Chen Linxuan <chenlinxuan@uniontech.com> wr=
-ote:
-> >
-> > This patch add a simple functional test for the "abort" file
-> > in fusectlfs (/sys/fs/fuse/connections/ID/about).
-> >
-> > A simple fuse daemon is added for testing.
-> >
-> > Related discussion can be found in the link below.
-> >
-> > Link: https://lore.kernel.org/all/CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO6=
-8UcWg_OBhmSY=3DQ@mail.gmail.com/
-> > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> > Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
->
-> Thanks.
->
-> I suggest setting up a userns environment, see attached patch (also
-> fixes a EBUSY on umount/rmdir).
+On Fri, Jun 13, 2025 at 06:01:40PM -0300, Geraldo Nascimento wrote:
+> They are not under NDA and can be obtained though Rockchip's
+> official site:
+> https://rockchip.fr/Rockchip%20RK3399%20TRM%20V1.3%20Part2.pdf
 
-The v4 patch series has been sent with your suggested changes applied:
-https://lore.kernel.org/all/20250612094033.2538122-2-chenlinxuan@uniontech.=
-com/
+Hm, sorry about the confusion Bjorn, that is not an official website
+at all it seems, so I assume these are leaked?
 
-However, I have some concerns about creating a user namespace.
-Some downstream distributions (such as Ubuntu?) may disable
-unprivileged user namespaces by default.
-If we create the user namespace before mounting FUSE, these tests
-would require privileges.
+If so, it's a real pity, there's not particularly confidential about
+these docs, and they are essential for working with Rockchip chips.
 
->
-> Thanks,
-> Miklos
+Sorry,
+Geraldo Nascimento
