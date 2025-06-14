@@ -1,249 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8972AE96;
-	Sat, 14 Jun 2025 11:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980DA2AE96;
+	Sat, 14 Jun 2025 11:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749899559; cv=none; b=C4jA1h8yONYUGcngWIVSySS6bths/SuPwT8EEWjGIQF1PgbDmyM0Y5Tv/Tq32DVXx00Ly9X5NYVGzDCppU/a9DbrCBcRrziF1aq8yNpfzsRSRCBtmlTqd/ljOBviJgA6d8mIQt/a8X08tclRD7M71/gYWxT5DSRpn7GHBGM3kbo=
+	t=1749899566; cv=none; b=FWNa6XtIJWLTBp5euNWUTmMwxcIw8o4KeLGB0nN3JtwXAjYOql3TuWfnBj5sm5bUuJNxCU/Np+SeNzpOkbDFiLtdioSdU3b5hBczSM/v2la0cAzhWhvN+zlsG/qWnrVDTlJtgImEUuNVm7nZP7Ds6wpz13oA2GU1q3PfHsyaerk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749899559; c=relaxed/simple;
-	bh=F+8UTW+Q4CUhNX2TsBxi9hQ5eOyKgDLcbd0bSMhlBUk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YvscQhQNij7vpjzo56BzueothpYENPHjfmNSwnI0ErIKVxuJXHQevcO7/8lhKiQlHWCnaUj41ZL7tRDb5Cxg7FClFZSvuMcNfa+GIXSfBb8jp2OGw6XkPcuHK2HLJ7QaeQ0i8J5sg4AGy/eWtFNqRcUI/cyGgmJw3YUDWxe0Jtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D5x9vjbN; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749899566; c=relaxed/simple;
+	bh=9wVEwKDRxCUUHYAtNHKLRbgqbNZpbzuce/1YR2Sz23o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jeJ6UKGboIikpmtzJ6IW85yPoTot62aNGQOUC6BiAWqYpGKk7+RFveTGHWfesYSoN2//q80B0Qf7wNz2yA5uV9B4h58t+booKk0EPxjnpVV4Z9nhCkNLlmnDQbiTw+HTh0M5XLTpJX0ezG2Tbktf9/pJM3MMLhqPlCs0bL+kpZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTmaV3tb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D5x9vjbN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749899558; x=1781435558;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=F+8UTW+Q4CUhNX2TsBxi9hQ5eOyKgDLcbd0bSMhlBUk=;
-  b=D5x9vjbNV2HDlqpO+s2aPcGXKm4d0gExwhwLVxgiVeyHP4C1mSsHadyk
-   wW7puzv7aTqOaIVilVhTpww75YA2fCW18tFsjF7J8qkGUGal3UN0vcP0Z
-   mOaXFhANbuwn/a60GRP/NSuE9sEFjcNpfpO0yDnOz2gb3t7C3w+R7cAhK
-   3rjamjLbg9yaJNJ7MSGQto7qBL4Dw0APN7SihRtVrXT06GNjc7xWFqZsQ
-   HG6fL6pCSqrdvI1qlrBh8Q5zt+4Q/k7Fhl0XE4JuwHqlce1U3yYt+nIMK
-   XBL7uUTAvfZhMLXrIRkd0pY5owqrlZldiZEoPJSeZtv4VVHtRGqh4/Nma
-   Q==;
-X-CSE-ConnectionGUID: B2hltiC+SXmqzvAqxiA/Zw==
-X-CSE-MsgGUID: 9HVUjKqnRPSOT/t84GG9lQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="77499826"
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="77499826"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 04:12:37 -0700
-X-CSE-ConnectionGUID: AYQimBxbQ9CLWqWeeOOR3g==
-X-CSE-MsgGUID: 4C6ihVhZQ5eEwK7/xPE5tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="185292621"
-Received: from ubuntu.bj.intel.com ([10.238.156.109])
-  by orviesa001.jf.intel.com with ESMTP; 14 Jun 2025 04:12:35 -0700
-From: Jun Miao <jun.miao@intel.com>
-To: sbhatta@marvell.com,
-	kuba@kernel.org,
-	oneukum@suse.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	qiang.zhang@linux.dev,
-	jun.miao@intel.com
-Subject: [PATCH v2] net: usb: Convert tasklet API to new bottom half workqueue mechanism
-Date: Sat, 14 Jun 2025 19:14:14 +0800
-Message-Id: <20250614111414.2502195-1-jun.miao@intel.com>
-X-Mailer: git-send-email 2.32.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTmaV3tb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A581C4CEEB;
+	Sat, 14 Jun 2025 11:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749899566;
+	bh=9wVEwKDRxCUUHYAtNHKLRbgqbNZpbzuce/1YR2Sz23o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=LTmaV3tb2hcMRRxMSe4a59qK2K9g3tJhPwicOqGofFQ2PrPD/j5BTD3GKTqR/LqCL
+	 12Ihqpd6PVhpQOtJw4YW5OCH5LkNF4QBLNPPKx955+Du6fR+HG6829g1/wEEB7vSH2
+	 HxLmnc4gXkJYGKHKlFly4oXB9RXpTUfKkPjN2ZE32Dmnqh0BCc0iXDrTCICrW4jhnw
+	 Jr18OqsYrlwZQlSufeICaZaLnUjfv+MvS9MNqm7YaU9xrOXBlWr/afGJ0c1TXnYknR
+	 Iec62PgQZLpsHqe5kjdPMgrvOAZ4ddEdRY1HRQkBnhV8GVHwFc2RxBSYR3wDWQMl/u
+	 YYYEn5j7KA9gA==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Jiaxin Yu <jiaxin.yu@mediatek.com>, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250424102509.1083185-1-wenst@chromium.org>
+References: <20250424102509.1083185-1-wenst@chromium.org>
+Subject: Re: (subset) [PATCH v2 00/13] ASoC: mediatek: use reserved memory
+ or enable buffer pre-allocation
+Message-Id: <174989956314.19870.6679132279735424997.b4-ty@kernel.org>
+Date: Sat, 14 Jun 2025 12:12:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-replaces all occurrences of tasklet usage with the appropriate workqueue
-APIs throughout the usbnet driver. This transition ensures compatibility
-with the latest design and enhances performance.
+On Thu, 24 Apr 2025 18:24:54 +0800, Chen-Yu Tsai wrote:
+> This is v2 of what was just a single patch "ASoC: mediatek: re-enable
+> buffer pre-allocation on some platforms". Link to v1:
+> 
+>     https://lore.kernel.org/all/20250401085659.1222008-1-wenst@chromium.org/
+> 
+> Angelo requested that these platforms use reserved memory regions if
+> possible, and fall back to pre-allocated buffers only if that fails,
+> to align with other MediaTek SoCs / platforms that already use reserved
+> memory. The series covers MediaTek's MT8173, MT8183, MT8186, and MT8192
+> SoCs.
+> 
+> [...]
 
-Signed-off-by: Jun Miao <jun.miao@intel.com>
----
-v1->v2:
-	Check patch warning, delete the more spaces.
----
- drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
- include/linux/usb/usbnet.h |  2 +-
- 2 files changed, 19 insertions(+), 19 deletions(-)
+Applied to
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index c04e715a4c2a..566127b4e0ba 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
- 	__skb_queue_tail(&dev->done, skb);
- 	if (dev->done.qlen == 1)
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	spin_unlock(&dev->done.lock);
- 	spin_unlock_irqrestore(&list->lock, flags);
- 	return old_state;
-@@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 		default:
- 			netif_dbg(dev, rx_err, dev->net,
- 				  "rx submit, %d\n", retval);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 			break;
- 		case 0:
- 			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-@@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
- 		num++;
- 	}
+Thanks!
 
--	tasklet_schedule(&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
+[01/13] ASoC: dt-bindings: Convert MT8173 AFE binding to dt-schema
+        commit: bb90e0c91d375ec5db8a4f8cd2555900aea0725f
+[02/13] ASoC: dt-bindings: mt8173-afe-pcm: Add power domain
+        commit: 2fd902152c15a8cacab91e4a660413d189411561
+[03/13] ASoC: dt-bindings: mt8173-afe-pcm: Allow specifying reserved memory region
+        commit: 473ee884263f2127ea4e46a74ba15d07446ceabb
+[04/13] ASoC: dt-bindings: mt8186-afe-pcm: Allow specifying reserved memory region
+        commit: 81c73294a4eb2df31e974db2fc4397f5e0ecae09
+[05/13] ASoC: dt-bindings: mt8192-afe-pcm: Allow specifying reserved memory region
+        commit: cd12d3a5ed10e3e3b323f2b2c652de1c8e17a750
+[06/13] ASoC: mediatek: use reserved memory or enable buffer pre-allocation
+        commit: ec4a10ca4a68ec97f12f4d17d7abb74db34987db
+[07/13] ASoC: mediatek: mt8183-afe-pcm: Support >32 bit DMA addresses
+        commit: 9e7bc5cb8d089d9799e17a9ac99c5da9b13b02e3
+[08/13] ASoC: mediatek: mt8173-afe-pcm: use local `dev` pointer in driver callbacks
+        commit: b2c090c9f6aa9d19f4c966233d7fcb872255f83b
+[09/13] ASoC: mediatek: mt8183-afe-pcm: use local `dev` pointer in driver callbacks
+        commit: bb8d8ba4715cb8f997d63d90ba935f6073595df5
 
- 	netif_dbg(dev, rx_status, dev->net,
- 		  "paused rx queue disabled, %d skbs requeued\n", num);
-@@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
- {
- 	if (netif_running(dev->net)) {
- 		(void) unlink_urbs (dev, &dev->rxq);
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- }
- EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-@@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
- 	/* deferred work (timer, softirq, task) must also stop */
- 	dev->flags = 0;
- 	timer_delete_sync(&dev->delay);
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	cancel_work_sync(&dev->kevent);
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
- 	/* We have cyclic dependencies. Those calls are needed
- 	 * to break a cycle. We cannot fall into the gaps because
- 	 * we have a flag
- 	 */
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	timer_delete_sync(&dev->delay);
- 	cancel_work_sync(&dev->kevent);
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-@@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
- 	clear_bit(EVENT_RX_KILL, &dev->flags);
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
- 	// delay posting reads until we're fully open
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	if (info->manage_power) {
- 		retval = info->manage_power(dev, 1);
- 		if (retval < 0) {
-@@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
- 		 */
- 	} else {
- 		/* submitting URBs for reading packets */
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
- 	/* hard_mtu or rx_urb_size may change during link change */
-@@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
- 		} else {
- 			clear_bit (EVENT_RX_HALT, &dev->flags);
- 			if (!usbnet_going_away(dev))
--				tasklet_schedule(&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
-
--	/* tasklet could resubmit itself forever if memory is tight */
-+	/* workqueue could resubmit itself forever if memory is tight */
- 	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
- 		struct urb	*urb = NULL;
- 		int resched = 1;
-@@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
- fail_lowmem:
- 			if (resched)
- 				if (!usbnet_going_away(dev))
--					tasklet_schedule(&dev->bh);
-+					queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
-
-@@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
- 	struct usbnet		*dev = netdev_priv(net);
-
- 	unlink_urbs (dev, &dev->txq);
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	/* this needs to be handled individually because the generic layer
- 	 * doesn't know what is sufficient and could not restore private
- 	 * information if a remedy of an unconditional reset were used.
-@@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
-
- /*-------------------------------------------------------------------------*/
-
--// tasklet (work deferred from completions, in_irq) or timer
-+// workqueue (work deferred from completions, in_irq) or timer
-
- static void usbnet_bh (struct timer_list *t)
- {
-@@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
- 					  "rxqlen %d --> %d\n",
- 					  temp, dev->rxq.qlen);
- 			if (dev->rxq.qlen < RX_QLEN(dev))
--				tasklet_schedule (&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 		if (dev->txq.qlen < TX_QLEN (dev))
- 			netif_wake_queue (dev->net);
- 	}
- }
-
--static void usbnet_bh_tasklet(struct tasklet_struct *t)
-+static void usbnet_bh_workqueue(struct work_struct *work)
- {
--	struct usbnet *dev = from_tasklet(dev, t, bh);
-+	struct usbnet *dev = from_work(dev, work, bh_work);
-
- 	usbnet_bh(&dev->delay);
- }
-@@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
- 	skb_queue_head_init (&dev->txq);
- 	skb_queue_head_init (&dev->done);
- 	skb_queue_head_init(&dev->rxq_pause);
--	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-+	INIT_WORK(&dev->bh_work, usbnet_bh_workqueue);
- 	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
- 	init_usb_anchor(&dev->deferred);
- 	timer_setup(&dev->delay, usbnet_bh, 0);
-a@@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
-
- 			if (!(dev->txq.qlen >= TX_QLEN(dev)))
- 				netif_tx_wake_all_queues(dev->net);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
-
-diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-index 0b9f1e598e3a..208682f77179 100644
---- a/include/linux/usb/usbnet.h
-+++ b/include/linux/usb/usbnet.h
-@@ -58,7 +58,7 @@ struct usbnet {
- 	unsigned		interrupt_count;
- 	struct mutex		interrupt_mutex;
- 	struct usb_anchor	deferred;
--	struct tasklet_struct	bh;
-+	struct work_struct	bh_work;
-
- 	struct work_struct	kevent;
- 	unsigned long		flags;
---
-2.32.0
+Thanks,
+Mark
 
