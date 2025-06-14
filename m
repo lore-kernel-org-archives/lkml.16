@@ -1,148 +1,187 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E0921EDA02;
-	Sat, 14 Jun 2025 06:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084C41EC014;
+	Sat, 14 Jun 2025 06:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749883854; cv=none; b=kvm4qqYWf70AlVgSOPDbR1riQwTfrM7ebAMAS38RjpJ6Q0EcHvGfX4b5z4xOCE/NvNWCqHeEgq1RLjpR6y6ZVr19FUIVIjJRlJ3MDqYfoYCGVKPRb5291rb87honVtq5BsPnrs5mD7kc5Ics3zXoLDsnYpdGsBhRKGlE2l14Wvk=
+	t=1749883855; cv=none; b=c2pQvBlBm3ZagktqE1G9RqaSez5kC18nJims1WbVBKqR0KkoGkUeOrnQokiqHnIGwOCz+E7/BVhTYBoAxEPHVszB52U6rKcRmrmeBa2YYCJAAX3lm1ble+qeY59ogwOTrs1pZLNCPToAnGcU6jz5r1Njc2oKS8lpW6k6FxUaLNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749883854; c=relaxed/simple;
-	bh=jgfZugwghp2JlIjkP+brwrtVHOqmSVyXqYoNE696IOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rEM2agCzX5fPIuUo693508j70JjrM/MCEobGQAb5Lv0kug6wRxJJKlMgaSOFay25zNydXsyVpNRWuAkE1XKFMneRnkFRYxG3H3w5PWum14s3rPMz7jO3GRuwmT8xSZDiCOSrqDlLNJMcDd6z+Ve598oB90uBeOzFURNOdJj1ogI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bK6Cy21Trz9syj;
-	Sat, 14 Jun 2025 08:43:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id A7-nfL4VEBL3; Sat, 14 Jun 2025 08:43:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bK6Cw6f1Lz9syQ;
-	Sat, 14 Jun 2025 08:43:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DF9808B77C;
-	Sat, 14 Jun 2025 08:43:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id IRFdjwNIQ8pl; Sat, 14 Jun 2025 08:43:24 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 74BCB8B77B;
-	Sat, 14 Jun 2025 08:43:24 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v3 4/4] ALSA: pcm: Convert snd_pcm_sync_ptr() to user_access_begin/user_access_end()
-Date: Sat, 14 Jun 2025 08:43:17 +0200
-Message-ID: <6ce6bc4da498ea7ea2be5f279b374370b1613b13.1749883041.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1749883041.git.christophe.leroy@csgroup.eu>
-References: <cover.1749883041.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1749883855; c=relaxed/simple;
+	bh=SO1IwcUlpkHvFquzT6VVmP6Q0aN+gQvE+EvqVBRwB24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=U4xsRxQBrcKM3Nj+5pfzBLmUP2fuc6glEp2C23zFIrhvMvHzIXWe8JVOeDTddMxJeShQFpFCLuwYQKqS96f3P0B6wUXY3FAyw/i4WCNoPLTksbhRV2p7D45Fa3ALqC9hpPn0p+L/jygE7F6G315FkErvnLtXyKEafGYjAE0oz9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bK6Lz3VTNztQnC;
+	Sat, 14 Jun 2025 14:49:31 +0800 (CST)
+Received: from kwepemh100003.china.huawei.com (unknown [7.202.181.85])
+	by mail.maildlp.com (Postfix) with ESMTPS id 99873140154;
+	Sat, 14 Jun 2025 14:50:42 +0800 (CST)
+Received: from [10.174.178.72] (10.174.178.72) by
+ kwepemh100003.china.huawei.com (7.202.181.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 14 Jun 2025 14:50:41 +0800
+Message-ID: <34f22e12-62e7-4e0c-9fd2-b4bacd95a4fc@huawei.com>
+Date: Sat, 14 Jun 2025 14:50:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749883394; l=3615; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=jgfZugwghp2JlIjkP+brwrtVHOqmSVyXqYoNE696IOg=; b=BrHy+Chki7RelxAKtji7NaCi7jwbSjSvpGKGmfSim8KyqAAv7OIf2MPyP/hkx4k7Se9m7a3CD z4DXP83zRYVDpUed2aN7gwZfe63dBK9DNNOyybLBgi3u5uqotuftqqU
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] md/raid1,raid10: fix IO handle for REQ_NOWAIT
+To: Paul Menzel <pmenzel@molgen.mpg.de>, Zheng Qixing
+	<zhengqixing@huaweicloud.com>
+CC: <song@kernel.org>, <yukuai3@huawei.com>, <linux-raid@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+References: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
+ <a67b2409-334b-4712-b31d-efcbd2e216f5@molgen.mpg.de>
+From: Zheng Qixing <zhengqixing@huawei.com>
+In-Reply-To: <a67b2409-334b-4712-b31d-efcbd2e216f5@molgen.mpg.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemh100003.china.huawei.com (7.202.181.85)
 
-Now that snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user()
-are converted to user_access_begin/user_access_end(),
-snd_pcm_sync_ptr_get_user() is more efficient than a raw get_user()
-followed by a copy_from_user(). And because copy_{to/from}_user() are
-generic functions focussed on transfer of big data blocks to/from user,
-snd_pcm_sync_ptr_put_user() is also more efficient for small amont of
-data.
+Hello Paul,
 
-So use snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user() in
-snd_pcm_sync_ptr() too.
 
-snd_pcm_ioctl_sync_ptr_buggy() is left as it is because the conversion
-wouldn't be straigh-forward due to the workaround it provides.
+Please disregard the previous reply email, as it contained garbled text.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- sound/core/pcm_native.c | 38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index b7339c9ebb1f..1eab940fa2e5 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -3096,45 +3096,43 @@ static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
- 			    struct snd_pcm_sync_ptr __user *_sync_ptr)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
--	struct snd_pcm_sync_ptr sync_ptr;
- 	volatile struct snd_pcm_mmap_status *status;
- 	volatile struct snd_pcm_mmap_control *control;
-+	u32 sflags;
-+	struct snd_pcm_mmap_control scontrol;
-+	struct snd_pcm_mmap_status sstatus;
- 	int err;
- 
--	memset(&sync_ptr, 0, sizeof(sync_ptr));
--	if (get_user(sync_ptr.flags, (unsigned __user *)&(_sync_ptr->flags)))
-+	if (snd_pcm_sync_ptr_get_user(sflags, scontrol, _sync_ptr))
- 		return -EFAULT;
--	if (copy_from_user(&sync_ptr.c.control, &(_sync_ptr->c.control), sizeof(struct snd_pcm_mmap_control)))
--		return -EFAULT;	
- 	status = runtime->status;
- 	control = runtime->control;
--	if (sync_ptr.flags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
-+	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
- 		err = snd_pcm_hwsync(substream);
- 		if (err < 0)
- 			return err;
- 	}
- 	scoped_guard(pcm_stream_lock_irq, substream) {
--		if (!(sync_ptr.flags & SNDRV_PCM_SYNC_PTR_APPL)) {
--			err = pcm_lib_apply_appl_ptr(substream,
--						     sync_ptr.c.control.appl_ptr);
-+		if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL)) {
-+			err = pcm_lib_apply_appl_ptr(substream, scontrol.appl_ptr);
- 			if (err < 0)
- 				return err;
- 		} else {
--			sync_ptr.c.control.appl_ptr = control->appl_ptr;
-+			scontrol.appl_ptr = control->appl_ptr;
- 		}
--		if (!(sync_ptr.flags & SNDRV_PCM_SYNC_PTR_AVAIL_MIN))
--			control->avail_min = sync_ptr.c.control.avail_min;
-+		if (!(sflags & SNDRV_PCM_SYNC_PTR_AVAIL_MIN))
-+			control->avail_min = scontrol.avail_min;
- 		else
--			sync_ptr.c.control.avail_min = control->avail_min;
--		sync_ptr.s.status.state = status->state;
--		sync_ptr.s.status.hw_ptr = status->hw_ptr;
--		sync_ptr.s.status.tstamp = status->tstamp;
--		sync_ptr.s.status.suspended_state = status->suspended_state;
--		sync_ptr.s.status.audio_tstamp = status->audio_tstamp;
-+			scontrol.avail_min = control->avail_min;
-+		sstatus.state = status->state;
-+		sstatus.hw_ptr = status->hw_ptr;
-+		sstatus.tstamp = status->tstamp;
-+		sstatus.suspended_state = status->suspended_state;
-+		sstatus.audio_tstamp = status->audio_tstamp;
- 	}
--	if (!(sync_ptr.flags & SNDRV_PCM_SYNC_PTR_APPL))
-+	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
- 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
--	if (copy_to_user(_sync_ptr, &sync_ptr, sizeof(sync_ptr)))
-+	if (snd_pcm_sync_ptr_put_user(sstatus, scontrol, _sync_ptr))
- 		return -EFAULT;
- 	return 0;
- }
--- 
-2.47.0
+在 2025/6/13 16:02, Paul Menzel 写道:
+> Dear Zheng,
+>
+>
+> Thank you for the patch.
+>
+> Am 12.06.25 um 15:21 schrieb Zheng Qixing:
+>> From: Zheng Qixing <zhengqixing@huawei.com>
+>>
+>> IO with REQ_NOWAIT should not set R1BIO_Uptodate when it fails,
+>> and bad blocks should also be cleared when REQ_NOWAIT IO succeeds.
+>
+> It’d be great if you could add an explanation for the *should*. Why 
+> should it not be done?
+>
+> Do you have a reproducer for this?
+>
+
+If we set R1BIO_Uptodate when IO with REQ_NOWAIT fails, the request will
+return a success.
+
+But actually it should return BLK_STS_IOERR or BLK_STS_AGAIN, right?
+
+
+>> Fixes: 9f346f7d4ea7 ("md/raid1,raid10: don't handle IO error for 
+>> REQ_RAHEAD and REQ_NOWAIT")
+>> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+>> ---
+>>   drivers/md/raid1.c  | 11 ++++++-----
+>>   drivers/md/raid10.c |  9 +++++----
+>>   2 files changed, 11 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>> index 19c5a0ce5a40..a1cddd24b178 100644
+>> --- a/drivers/md/raid1.c
+>> +++ b/drivers/md/raid1.c
+>> @@ -455,13 +455,13 @@ static void raid1_end_write_request(struct bio 
+>> *bio)
+>>       struct md_rdev *rdev = conf->mirrors[mirror].rdev;
+>>       sector_t lo = r1_bio->sector;
+>>       sector_t hi = r1_bio->sector + r1_bio->sectors;
+>> -    bool ignore_error = !raid1_should_handle_error(bio) ||
+>> -        (bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
+>> +    bool discard_error = bio->bi_status && bio_op(bio) == 
+>> REQ_OP_DISCARD;
+>
+> Excuse my ignorance. What is the difference between ignore and discard?
+
+
+REQ_OP_DISCARD is a operation type while REQ_NOWAIT is just a request flag.
+
+These two can be combined together. IO with REQ_NOWAIT can fail early, even
+
+though the storage medium is fine. So, we better handle this type of
+error specially.
+
+
+I hope this clarifies your doubts.
+
+
+>
+>>       /*
+>>        * 'one mirror IO has finished' event handler:
+>>        */
+>> -    if (bio->bi_status && !ignore_error) {
+>> +    if (bio->bi_status && !discard_error &&
+>> +        raid1_should_handle_error(bio)) {
+>>           set_bit(WriteErrorSeen,    &rdev->flags);
+>>           if (!test_and_set_bit(WantReplacement, &rdev->flags))
+>>               set_bit(MD_RECOVERY_NEEDED, &
+>> @@ -507,12 +507,13 @@ static void raid1_end_write_request(struct bio 
+>> *bio)
+>>            * check this here.
+>>            */
+>>           if (test_bit(In_sync, &rdev->flags) &&
+>> -            !test_bit(Faulty, &rdev->flags))
+>> +            !test_bit(Faulty, &rdev->flags) &&
+>> +            (!bio->bi_status || discard_error))
+>>               set_bit(R1BIO_Uptodate, &r1_bio->state);
+>>             /* Maybe we can clear some bad blocks. */
+>>           if (rdev_has_badblock(rdev, r1_bio->sector, 
+>> r1_bio->sectors) &&
+>> -            !ignore_error) {
+>> +            !bio->bi_status) {
+>>               r1_bio->bios[mirror] = IO_MADE_GOOD;
+>>               set_bit(R1BIO_MadeGood, &r1_bio->state);
+>>           }
+>> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+>> index b74780af4c22..1848947b0a6d 100644
+>> --- a/drivers/md/raid10.c
+>> +++ b/drivers/md/raid10.c
+>> @@ -458,8 +458,8 @@ static void raid10_end_write_request(struct bio 
+>> *bio)
+>>       int slot, repl;
+>>       struct md_rdev *rdev = NULL;
+>>       struct bio *to_put = NULL;
+>> -    bool ignore_error = !raid1_should_handle_error(bio) ||
+>> -        (bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
+>> +    bool discard_error = bio->bi_status && bio_op(bio) == 
+>> REQ_OP_DISCARD;
+>> +    bool ignore_error = !raid1_should_handle_error(bio) || 
+>> discard_error;
+>>         dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
+>>   @@ -522,13 +522,14 @@ static void raid10_end_write_request(struct 
+>> bio *bio)
+>>            * check this here.
+>>            */
+>>           if (test_bit(In_sync, &rdev->flags) &&
+>> -            !test_bit(Faulty, &rdev->flags))
+>> +            !test_bit(Faulty, &rdev->flags) &&
+>> +            (!bio->bi_status || discard_error))
+>>               set_bit(R10BIO_Uptodate, &r10_bio->state);
+>>             /* Maybe we can clear some bad blocks. */
+>>           if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
+>>                         r10_bio->sectors) &&
+>> -            !ignore_error) {
+>> +            !bio->bi_status) {
+>>               bio_put(bio);
+>>               if (repl)
+>>                   r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
+>
+>
+> Kind regards,
+>
+> Paul
+
+
+Regards,
+
+Zheng
+
 
