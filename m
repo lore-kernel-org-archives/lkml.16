@@ -1,111 +1,185 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92606BA33
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD54A933
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749862052; cv=none; b=TvkwbtErgsAdXCuTRxUh+HkTf2BvQKwWIT5dyN/6f2cl52Qk1cL6odxWHDLVe+piRMFEh2Qdn/5V/T4htruUWpiY9AFjazMp/1+rDHNUFTVXICTFcI8bXpX+B9GUIPss/45juZmcfFxnIyLcWHrLguW3mh9VYtJYqzXhBgnLI3Q=
+	t=1749862161; cv=none; b=X8CH2PmRxqeT9Zfx61v6nWsX6paVFVQuLeFWc+IGb0L+WVysG6LetB9Y1CpFgB/fXo175TI2yd1OaTwFV3U+lUfyvVFX4WPIR7MFd68rngUQp/RVhdRQGYbZ4B699RkRLqsA5FBX5mbkWY1Dz9LCpu8njhGoM8HQQKjF+N3vJPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749862052; c=relaxed/simple;
-	bh=la74RQV8h2p+IDkzPWQSufDLfZGwDtiQubsQvkiupD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s2nvwcHP/TtYwwD8btZWpUGMwFeoKoaWaJ7ZshdrfWkzZliW6yalnAphMfF4FWm+0uQ56rlFuCKG3OiE/bJFjodSXU3pMJQQ3cO5RsLw0Mjplx6QMSPSuu13mmKRZEv2yxcxQTGaudbjSCjrYP+iT8ORCuGjSd3IsRII8EDJSoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=s4zK3NXh; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749862161; c=relaxed/simple;
+	bh=VNrYf9YvW7UZjjz7ig1k6OOs4gGEKfV0rDbtjlC1Y/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBxaUsHobD2ULqbaLeZmoYd0DQddTVgMSjgtbmZqVyMVCjEwWYrxwlaG8qDIoMDRHITMc9VzfF5geOBwME12HducZynFzyRKlapA8WKxT2glFUZgASP7GTU/vd0ponS2cMoPHso+PHg3v71NKo8+mdZEaECBQm6Q0fFRKz9TO00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibZb/YYQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="s4zK3NXh"
-Message-ID: <f60715b1-3d15-4929-95c6-f21b433c14c5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749862047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HzvEnJHeRWwDZLaUSOe8vqoCojm1nty38UfDyMGsc1I=;
-	b=s4zK3NXhh6sDB8D0PyKptlOn6KfFHjeJdB/DX+lfO4Rz7irNI0NmjoVF6SrrzuT54b2rPv
-	Oh5gUqaVEPt0xllkEaIWwsz5Yo9VbNdQlC8LgN2gMPEUnN6gLSawr352WGsZA7Yz375v4P
-	zeH3m6SRfoIEx/mXQ/O6/TFfYAAx5bM=
-Date: Fri, 13 Jun 2025 17:46:38 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibZb/YYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D97DC4CEE3;
+	Sat, 14 Jun 2025 00:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749862161;
+	bh=VNrYf9YvW7UZjjz7ig1k6OOs4gGEKfV0rDbtjlC1Y/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ibZb/YYQ2I8sJrO6RfU8yW0hSCvj0JczXe+KX6ag0v8akgb68AKeX1xsCBchwMT/A
+	 Xi6jYspYftRz6WG1z0BcFpT//fexwlaYsugkpJbxoI5KXocckSseeenn45xwqd38Ak
+	 rYK0Y/+MT+ajFzIS5PzXW1xj5Z0ur88Q5Cl1Hg70Mx5hk24LQp+bdQDwKt1+6yrPJD
+	 pyK1zw1/ZOLYSK9QWtWsGOyUh9GKJXFljDPBlpD/wmRUiLVq1gSkqEPFk8q1b+c9sM
+	 N3v5kFdMvCWXtW9SHZLFQ42s5DEVMGyIsnUZprapL9GJHCbjoKc/Nwck4B6/BsL/Rp
+	 p9C3WbxMhYhlQ==
+Date: Fri, 13 Jun 2025 14:49:20 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Cheng-Yang Chou <yphbchou0911@gmail.com>
+Cc: linux-kernel@vger.kernel.org, void@manifault.com, arighi@nvidia.com,
+	changwoo@igalia.com, jserv@ccns.ncku.edu.tw
+Subject: Re: [PATCH 3/4] sched_ext: Clean up and standardize #if/#else/#endif
+ markers in sched/ext_idle.c
+Message-ID: <aEzHEFgNfQFiDafq@slm.duckdns.org>
+References: <20250611135404.13851-1-yphbchou0911@gmail.com>
+ <20250611135404.13851-4-yphbchou0911@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 07/12] RISC-V: KVM: Use ncsr_xyz() in
- kvm_riscv_vcpu_trap_redirect()
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250613065743.737102-1-apatel@ventanamicro.com>
- <20250613065743.737102-8-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250613065743.737102-8-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611135404.13851-4-yphbchou0911@gmail.com>
 
+The following is the updated version that got applied to sched_ext/for-6.17.
 
-On 6/12/25 11:57 PM, Anup Patel wrote:
-> The H-extension CSRs accessed by kvm_riscv_vcpu_trap_redirect() will
-> trap when KVM RISC-V is running as Guest/VM hence remove these traps
-> by using ncsr_xyz() instead of csr_xyz().
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/kvm/vcpu_exit.c | 13 +++++++------
->   1 file changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index 6e0c18412795..85c43c83e3b9 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -9,6 +9,7 @@
->   #include <linux/kvm_host.h>
->   #include <asm/csr.h>
->   #include <asm/insn-def.h>
-> +#include <asm/kvm_nacl.h>
->   
->   static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   			     struct kvm_cpu_trap *trap)
-> @@ -135,7 +136,7 @@ unsigned long kvm_riscv_vcpu_unpriv_read(struct kvm_vcpu *vcpu,
->   void kvm_riscv_vcpu_trap_redirect(struct kvm_vcpu *vcpu,
->   				  struct kvm_cpu_trap *trap)
->   {
-> -	unsigned long vsstatus = csr_read(CSR_VSSTATUS);
-> +	unsigned long vsstatus = ncsr_read(CSR_VSSTATUS);
->   
->   	/* Change Guest SSTATUS.SPP bit */
->   	vsstatus &= ~SR_SPP;
-> @@ -151,15 +152,15 @@ void kvm_riscv_vcpu_trap_redirect(struct kvm_vcpu *vcpu,
->   	vsstatus &= ~SR_SIE;
->   
->   	/* Update Guest SSTATUS */
-> -	csr_write(CSR_VSSTATUS, vsstatus);
-> +	ncsr_write(CSR_VSSTATUS, vsstatus);
->   
->   	/* Update Guest SCAUSE, STVAL, and SEPC */
-> -	csr_write(CSR_VSCAUSE, trap->scause);
-> -	csr_write(CSR_VSTVAL, trap->stval);
-> -	csr_write(CSR_VSEPC, trap->sepc);
-> +	ncsr_write(CSR_VSCAUSE, trap->scause);
-> +	ncsr_write(CSR_VSTVAL, trap->stval);
-> +	ncsr_write(CSR_VSEPC, trap->sepc);
->   
->   	/* Set Guest PC to Guest exception vector */
-> -	vcpu->arch.guest_context.sepc = csr_read(CSR_VSTVEC);
-> +	vcpu->arch.guest_context.sepc = ncsr_read(CSR_VSTVEC);
->   
->   	/* Set Guest privilege mode to supervisor */
->   	vcpu->arch.guest_context.sstatus |= SR_SPP;
+Thanks.
+------ 8< ------
+From 8834ace4a86db0a85cb003c2efd98e6a4389243c Mon Sep 17 00:00:00 2001
+From: Cheng-Yang Chou <yphbchou0911@gmail.com>
+Date: Wed, 11 Jun 2025 21:54:03 +0800
+Subject: [PATCH] sched_ext: Always use SMP versions in kernel/sched/ext_idle.c
 
+Simplify the scheduler by making formerly SMP-only primitives and data
+structures unconditional.
 
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+tj: Updated subject for clarity. Fixed stray #else block which wasn't
+    removed causing build failure.
+
+Signed-off-by: Cheng-Yang Chou <yphbchou0911@gmail.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ kernel/sched/ext_idle.c | 35 +----------------------------------
+ 1 file changed, 1 insertion(+), 34 deletions(-)
+
+diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
+index 17802693e304..b79cbdb7999a 100644
+--- a/kernel/sched/ext_idle.c
++++ b/kernel/sched/ext_idle.c
+@@ -17,7 +17,6 @@ static DEFINE_STATIC_KEY_FALSE(scx_builtin_idle_enabled);
+ /* Enable/disable per-node idle cpumasks */
+ static DEFINE_STATIC_KEY_FALSE(scx_builtin_idle_per_node);
+ 
+-#ifdef CONFIG_SMP
+ /* Enable/disable LLC aware optimizations */
+ static DEFINE_STATIC_KEY_FALSE(scx_selcpu_topo_llc);
+ 
+@@ -794,17 +793,6 @@ static void reset_idle_masks(struct sched_ext_ops *ops)
+ 		cpumask_and(idle_cpumask(node)->smt, cpu_online_mask, node_mask);
+ 	}
+ }
+-#else	/* !CONFIG_SMP */
+-static bool scx_idle_test_and_clear_cpu(int cpu)
+-{
+-	return -EBUSY;
+-}
+-
+-static s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+-{
+-	return -EBUSY;
+-}
+-#endif	/* CONFIG_SMP */
+ 
+ void scx_idle_enable(struct sched_ext_ops *ops)
+ {
+@@ -818,9 +806,7 @@ void scx_idle_enable(struct sched_ext_ops *ops)
+ 	else
+ 		static_branch_disable_cpuslocked(&scx_builtin_idle_per_node);
+ 
+-#ifdef CONFIG_SMP
+ 	reset_idle_masks(ops);
+-#endif
+ }
+ 
+ void scx_idle_disable(void)
+@@ -906,7 +892,6 @@ static s32 select_cpu_from_kfunc(struct task_struct *p, s32 prev_cpu, u64 wake_f
+ 	if (!rq)
+ 		lockdep_assert_held(&p->pi_lock);
+ 
+-#ifdef CONFIG_SMP
+ 	/*
+ 	 * This may also be called from ops.enqueue(), so we need to handle
+ 	 * per-CPU tasks as well. For these tasks, we can skip all idle CPU
+@@ -923,9 +908,7 @@ static s32 select_cpu_from_kfunc(struct task_struct *p, s32 prev_cpu, u64 wake_f
+ 		cpu = scx_select_cpu_dfl(p, prev_cpu, wake_flags,
+ 					 allowed ?: p->cpus_ptr, flags);
+ 	}
+-#else
+-	cpu = -EBUSY;
+-#endif
++
+ 	if (scx_kf_allowed_if_unlocked())
+ 		task_rq_unlock(rq, p, &rf);
+ 
+@@ -1016,11 +999,7 @@ __bpf_kfunc const struct cpumask *scx_bpf_get_idle_cpumask_node(int node)
+ 	if (node < 0)
+ 		return cpu_none_mask;
+ 
+-#ifdef CONFIG_SMP
+ 	return idle_cpumask(node)->cpu;
+-#else
+-	return cpu_none_mask;
+-#endif
+ }
+ 
+ /**
+@@ -1040,11 +1019,7 @@ __bpf_kfunc const struct cpumask *scx_bpf_get_idle_cpumask(void)
+ 	if (!check_builtin_idle_enabled())
+ 		return cpu_none_mask;
+ 
+-#ifdef CONFIG_SMP
+ 	return idle_cpumask(NUMA_NO_NODE)->cpu;
+-#else
+-	return cpu_none_mask;
+-#endif
+ }
+ 
+ /**
+@@ -1063,14 +1038,10 @@ __bpf_kfunc const struct cpumask *scx_bpf_get_idle_smtmask_node(int node)
+ 	if (node < 0)
+ 		return cpu_none_mask;
+ 
+-#ifdef CONFIG_SMP
+ 	if (sched_smt_active())
+ 		return idle_cpumask(node)->smt;
+ 	else
+ 		return idle_cpumask(node)->cpu;
+-#else
+-	return cpu_none_mask;
+-#endif
+ }
+ 
+ /**
+@@ -1091,14 +1062,10 @@ __bpf_kfunc const struct cpumask *scx_bpf_get_idle_smtmask(void)
+ 	if (!check_builtin_idle_enabled())
+ 		return cpu_none_mask;
+ 
+-#ifdef CONFIG_SMP
+ 	if (sched_smt_active())
+ 		return idle_cpumask(NUMA_NO_NODE)->smt;
+ 	else
+ 		return idle_cpumask(NUMA_NO_NODE)->cpu;
+-#else
+-	return cpu_none_mask;
+-#endif
+ }
+ 
+ /**
+-- 
+2.49.0
 
