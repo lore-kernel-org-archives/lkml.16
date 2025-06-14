@@ -1,181 +1,93 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154092BB13
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF2379D0
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749915480; cv=none; b=gsbixMzXAXGkIAisyZa0M7mEjakupGf7085LMDMcAh1ifB+lA756GYvCgMt6kHVUycK6CWmy48YcsuxwrbBUvGY9D4yhP0JN+no5c2Km3RHmfPJh9MiTF3RKnBKlEp1dVDwjzxrhXGxhQrqQEJi9Z872HRPzIQHhxPZKr/kj5Ng=
+	t=1749916237; cv=none; b=ljam6Y331XltS8hRqxqXHqS2kzO9XiIqcZn0qNIpHccrrwogFKjYV2tcZ3OS25RqohbBcwrx3Lrjx3tEcErrLBOdieOtNpk8ZJucTHrQUGJ0ZS6dpG8JzcEmHhsfsdpiooR3pl2lOn2cK7/ChanZeg3QDD/5UGv2oq/5C5u6zsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749915480; c=relaxed/simple;
-	bh=IF3sdpNAvm13OXHhsCeFTvS3RRPxExum3RfP79UrgHs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AjfEfA5PFc2QT7o9dt0AIzAgvbawJ1wU7IsOft1yz3ufnT26C+CLPQUQDIcKW/vZYA05Qng6dMlE+yw68uylArJVLhWwDzhbUehT7GU53rjdsyyhRrEwbnyX6B6ne9m97ElOqOFbtQvZuZqzWW/Jm3BzbHYMVGVUt83Ko+YhLHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GmDyXd/J; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749916237; c=relaxed/simple;
+	bh=Zaq7Z9twZUJ5mV1KL5HpSHurHn8iAqvfYJNSD2xB1Ks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tZkfEipyHUIL7YXGn5vvQjZtx3RBDu4sraRIPHmCo1Yqgj/i0AD0qji2rTxYcR6L85P7xIy3tvMU8efsS0ux6wYNr6R/gRF7cbalZ6Wvj0I7Cv0kibYLpF9jo6lP3M63hmXyz6RmpM5eOMJICvzxJ8e9dBRdMTRS3liAYEc2CPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HE2XpTPQ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GmDyXd/J"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fafb6899c2so37558956d6.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:37:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HE2XpTPQ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234fcadde3eso40224455ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749915476; x=1750520276; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dM6MGdI/Cu6BmiAAnMDXynLQyb+kVA2s8KSzJhvRprs=;
-        b=GmDyXd/Jzwy+elq0qR28mgPZQOl8N3zDBq0izggL9g1gXdmCpI8ouSxojOFcvoS7V3
-         uU42kpve6TX67wjY/DVTpCH/uBRPXedDsBzpehNctYaudTy5eyv5yzH0WO/dCRSBfBXX
-         ftGSghQchC6Y6YpRAcn8Hcv0Equ7FtylVOnG9LdpeIv43wgUFzgfei/o/o3JjCDsuW+1
-         jLJMa4XHZeqt6fCiVt7ZSzxLCwV58t35TKUvi+7eP9DfaTQMCszD5MuiooHqPyI/75vM
-         anKAVXo8EWy8W2+kYp7Qy1ekak4gq1ow1hDfTP5Bitvg/uzwOQVMRA9/b/NRz6Qcel+l
-         2cDg==
+        d=gmail.com; s=20230601; t=1749916236; x=1750521036; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B6flnCDdhhVLhqhBNFRNvuKlLddHAS5oqgW9XRHr26o=;
+        b=HE2XpTPQkiup14QEhuDLDzBUpO4kC6yuCZnJ6xZu4mweh1SgBzxrojd0/fnObonTlr
+         OpHg/asMXQAL3hUv3GVleEbrd7xqS85rMGPuRg2rcoOcaQ9+Sb3TCQ5ink3fPx1KYAS9
+         94ZKbU5qqUCSJgASre6KdbqxrLaumOgt/25oLB3asexZFDPNtyAmZ2Kf9DFEFpkRSVe6
+         yjGNE2DQVtM1O84LSb/qpcKF//iPQXJm4S0UrD2V5HZ6zLXgEw3DGI+bd4Ugmxq8IeW9
+         umxDU4EzUOMsaBJzk4bBlnYEPIO5uH/jvYUzDoechbYg7O0kmMgUsW0o30/YkOsLsjtn
+         LoLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749915476; x=1750520276;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dM6MGdI/Cu6BmiAAnMDXynLQyb+kVA2s8KSzJhvRprs=;
-        b=mhL4JNhgDJVp+lgaZTWxyEcGUJ6/10Hh+WY1dw5dYHt3lBIFLg28Bs1BXxpDabZmDQ
-         qy38EIOuTZE4viMinTYCmWVf4ymiQHNoSFi9i9qn+G3PNJU/eu+sImijJXVVSQEB5Eho
-         HHTD2gIhMrhglY3y6oxn2kDzMLjFYMU4rcmWyquTutPnGxXDzzuSWi6dP2RjRQfOQ41v
-         bf5AVWRWrMdIHJAAHU0KM4Jg4YiqpBPdzanUUJZdLamWNiOyHAr3SIitCO6qc07PGhQ5
-         mtxOztrvkduIOXrZ5XcI7KmNJLhzSvzfleu8b08ea/9r/u9dIqfhfpjmcc2xF7yWKrFZ
-         b+yA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYuShxbPfmPyRP5LRWRXd6vKIBB6tSw94iZV1LejbqATw7U9SBejqN+v7zG6p1SqUE6EVYwdMQiNHPOvw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/A+XRatoAtOEuAXVYwwyi0oReDh0zEJNewLezsZU34fDeZVgm
-	WS8kRFIfV7Q/4FPpyqZuFkKy9rw3BVied+rPJOf0B69JFppz3f8Cth6auAarTasalOg=
-X-Gm-Gg: ASbGncuO//itoN5PpdYNqly2Lyvczr5dXDC8mevN6CX7vtZ5eQJmThZOv/+O0aloLK7
-	eC19hB57wzeFhe7ff/wvqk5sb8LP2bv/1UVOaWUqr9gMCWHo1qlJqBIrCkJO7LSfODQoMzCBaeb
-	XHAhZXJTzshVXOfbaR0ED3co7g7VYNeDkaDtB/wqNB625s5dY7ep/f+WVJgR4b3cjLLj9/rcRa3
-	6mxieeRoBVMtRkYPP+QlT5uQm2R/AjL7kWrSCsV51xw1mVbeGKzS2sj14FqfNCsF0BSiQzhrPez
-	tg2egNmYd2cngLFmYVz40xpj6WaZ3PMlp8XPbd3od3TJze882/sfjp7et9P2lomGwzZbXxLyKXP
-	4jc+uosGVkCsQUbTtqFZKddWsLQ==
-X-Google-Smtp-Source: AGHT+IHZ1Tv9eCXzH9c+bRpLufpmkVwHobMNBPQ0eQgw0xj8wp36TiVM27diht1dJubTVpp/Tdgo2A==
-X-Received: by 2002:a05:6214:f2e:b0:6fa:c5f8:67eb with SMTP id 6a1803df08f44-6fb45b192edmr82734616d6.7.1749915475889;
-        Sat, 14 Jun 2025 08:37:55 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c836a4sm32337176d6.107.2025.06.14.08.37.55
+        d=1e100.net; s=20230601; t=1749916236; x=1750521036;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B6flnCDdhhVLhqhBNFRNvuKlLddHAS5oqgW9XRHr26o=;
+        b=we9Fcv6NbzBAxLJLgo42m83CH2Ug1PT/1HVODcgAPtXuo5TvyqzV3UYS9YUDvPGUr4
+         UshLcvxEg4c84YgBNZnKDw5cGxqKXvslP9hobhpqnPPYYPp2jzgc6czlwIJo1KFZ43bd
+         8sNrcCLFXvng3P5x3fmUviulCMWZ4+SoQb6QoV18TiyB7xZyKHY48gmEBBwsazA1k8Z+
+         16E1QuaGQKLA8OoXguM7wNJV8EEPhrrhJdArHbcoiB77jNb5ncTQ8ncNkKw7Z0tQwjim
+         5TiHMJ2d2WqpwunhoyQGFmZ7cp1LhcCgsvCI/eG++OfEnVfIjChIqIElg1nRUPbKII/T
+         O25Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUaMgJ+ShhQl13EIestTTG3TXeV0UUtBDa82JZwyZZjs7P+v2RaEerBL82wC2m0cnyg5ZP9LbrSVKKsNhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ6l4KB3wXpOWgWUtQvrC0JEdVNL9AqdsI6u9b3RTGeN+Pjkfo
+	k+Mo87Je9WqH1s/J7rBaNYgYIXMYQA642ZmR5l0A8D9iq6oabtaxgdkx
+X-Gm-Gg: ASbGncvypzxxqqxtwaGTBcnUDVxkG6acsu+eHPKI5bri1wA1g1BvCGcGrV/bR1umB/4
+	DSGL0gtArr3PJl2xbFhfLcRClSOliFrmIJl5J1WIb6iigJuULwE0yqrbEAWSF7oa7prTHgSqnmF
+	1AbXSHLhofXufZqBeSkC10PhbnoK7CFxuiq1CLSZAJz9KRySQ35k7Fsvo6ItNDM0dxT5CAbp6Cq
+	D0Pt/LyQwVXwF2Y/O9Cx1zfo9ZzTVpepCkKYkSDokK3jzKRJmodiDGxsFDd+JZL/N0Jl1qJQCN0
+	GiI/xMqzjXvqH73dZxvFKyNxNvFsROsR88OHB0yeW8uvQ7FG4EciHMaqneX/KQ==
+X-Google-Smtp-Source: AGHT+IGJPauU9lyN9j7kFN+EfeejWwO7Uhp0JuIVx3fKRO4ljVsnpH/GxH6evBPPCoRzupHdkwCPMg==
+X-Received: by 2002:a17:902:ec85:b0:235:eefe:68ec with SMTP id d9443c01a7336-2366b32a069mr54244335ad.19.1749916235534;
+        Sat, 14 Jun 2025 08:50:35 -0700 (PDT)
+Received: from localhost ([216.228.127.129])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb0484sm31711775ad.142.2025.06.14.08.50.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 08:37:55 -0700 (PDT)
-Date: Sat, 14 Jun 2025 11:37:54 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 next 08/10] lib: mul_u64_u64_div_u64() Separate multiply
- to a helper for clarity
-In-Reply-To: <20250614095346.69130-9-david.laight.linux@gmail.com>
-Message-ID: <58porr76-92os-7019-nr00-n68r74202pps@onlyvoer.pbz>
-References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-9-david.laight.linux@gmail.com>
+        Sat, 14 Jun 2025 08:50:34 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	John Stultz <jstultz@google.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Subject: [PATCH RESEND 0/2] clocksource: Use better cpumask API where appropriate
+Date: Sat, 14 Jun 2025 11:50:28 -0400
+Message-ID: <20250614155031.340988-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Sat, 14 Jun 2025, David Laight wrote:
+From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-> Move the 64x64 => 128 multiply into a static inline helper function
-> for code clarity.
-> No need for the a/b_hi/lo variables, the implicit casts on the function
-> calls do the work for us.
-> Should have minimal effect on the generated code.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
-> 
-> new patch for v3.
-> 
->  lib/math/div64.c | 54 +++++++++++++++++++++++++++---------------------
->  1 file changed, 30 insertions(+), 24 deletions(-)
-> 
-> diff --git a/lib/math/div64.c b/lib/math/div64.c
-> index 2ac7e25039a1..fb77fd9d999d 100644
-> --- a/lib/math/div64.c
-> +++ b/lib/math/div64.c
-> @@ -193,42 +193,48 @@ static u64 mul_add(u32 a, u32 b, u32 c)
->  	return add_u64_u32(mul_u32_u32(a, b), c);
->  }
->  
-> -u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
-> -{
-> -	if (WARN_ONCE(!d, "%s: division of (%#llx * %#llx + %#llx) by zero, returning 0",
-> -		      __func__, a, b, c)) {
-> -		/*
-> -		 * Return 0 (rather than ~(u64)0) because it is less likely to
-> -		 * have unexpected side effects.
-> -		 */
-> -		return 0;
-> -	}
-> -
->  #if defined(__SIZEOF_INT128__) && !defined(test_mul_u64_add_u64_div_u64)
-> -
-> +static inline u64 mul_u64_u64_add_u64(u64 *p_lo, u64 a, u64 b, u64 c)
+The dedicated API works better and improves on readability
 
-Why not move the #if inside the function body and have only one function 
-definition?
+Resend: drop 'fix opencoded...' wording (Tomas)
+v2: https://lore.kernel.org/all/20250607141106.563924-1-yury.norov@gmail.com/
+v1: https://lore.kernel.org/all/20250604232550.40491-1-yury.norov@gmail.com/
 
+Yury Norov [NVIDIA] (2):
+  clocksource: Use cpumask_any_but() in clocksource_verify_choose_cpus()
+  clocksource: Use cpumask_next_wrap() in clocksource_watchdog()
 
+ kernel/time/clocksource.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> +{
->  	/* native 64x64=128 bits multiplication */
->  	u128 prod = (u128)a * b + c;
-> -	u64 n_lo = prod, n_hi = prod >> 64;
->  
-> -#else
-> +	*p_lo = prod;
-> +	return prod >> 64;
-> +}
->  
-> -	/* perform a 64x64=128 bits multiplication manually */
-> -	u32 a_lo = a, a_hi = a >> 32, b_lo = b, b_hi = b >> 32;
-> +#else
-> +static inline u64 mul_u64_u64_add_u64(u64 *p_lo, u64 a, u64 b, u64 c)
-> +{
-> +	/* perform a 64x64=128 bits multiplication in 32bit chunks */
->  	u64 x, y, z;
->  
->  	/* Since (x-1)(x-1) + 2(x-1) == x.x - 1 two u32 can be added to a u64 */
-> -	x = mul_add(a_lo, b_lo, c);
-> -	y = mul_add(a_lo, b_hi, c >> 32);
-> +	x = mul_add(a, b, c);
-> +	y = mul_add(a, b >> 32, c >> 32);
->  	y = add_u64_u32(y, x >> 32);
-> -	z = mul_add(a_hi, b_hi, y >> 32);
-> -	y = mul_add(a_hi, b_lo, y);
-> -	z = add_u64_u32(z, y >> 32);
-> -	x = (y << 32) + (u32)x;
-> -
-> -	u64 n_lo = x, n_hi = z;
-> +	z = mul_add(a >> 32, b >> 32, y >> 32);
-> +	y = mul_add(a >> 32, b, y);
-> +	*p_lo = (y << 32) + (u32)x;
-> +	return add_u64_u32(z, y >> 32);
-> +}
->  
->  #endif
->  
-> +u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
-> +{
-> +	u64 n_lo, n_hi;
-> +
-> +	if (WARN_ONCE(!d, "%s: division of (%llx * %llx + %llx) by zero, returning 0",
-> +		      __func__, a, b, c )) {
-> +		/*
-> +		 * Return 0 (rather than ~(u64)0) because it is less likely to
-> +		 * have unexpected side effects.
-> +		 */
-> +		return 0;
-> +	}
-> +
-> +	n_hi = mul_u64_u64_add_u64(&n_lo, a, b, c);
->  	if (!n_hi)
->  		return div64_u64(n_lo, d);
->  
-> -- 
-> 2.39.5
-> 
-> 
+-- 
+2.43.0
+
