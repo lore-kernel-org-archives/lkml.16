@@ -1,101 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8111FC8;
-	Sat, 14 Jun 2025 14:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2BB256C7C;
+	Sat, 14 Jun 2025 15:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749913126; cv=none; b=lD7YaKb+xGbReRqNwRwo5N7L4eu0S46GHZHMEdphXxvEL0xZMTxNg4VvoaiDDtDG+Wuip3MHzs4R6l3YuxY0trI7pMNIHOvt1MKoKG7IpDHVlVv/5RI2CQ1vf+9LjB+21sySqVg6iUUG8lRS86nXxv+/cT5LGAQAcefXhAHKR+A=
+	t=1749913253; cv=none; b=mbMKSiWtafLwhZi8YWV1Z6ln44twx19llURZQWsT48HjYDY2zsDKydgAxzkf/+kxpMWyCtG86AiFvP0LGgDDjpvEQv6v0DXeKzAJKpxfe1PXXxU6f6E+y1GI7gGj4/wr3dCCjl07ykXPxIg61V2457G6S/F7fNSH4AKPumJgjH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749913126; c=relaxed/simple;
-	bh=8mO7WKyJqajUY7NimuV3wsknV491ZZ3uyL2AvijCGt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u6PU3SyY/HHEXWnpXyFPckNEPsaRk+pSZ0wuNvcZoGqGtuqgOg1dFUSaNLmRpVgNvyISw1VNWMrzzzhAtzpT1VJaUoMaQSZlwvPmsoigbNGGzInTNHRSmRp6wpKpeA2uH7av0WLZyxlF2R0i0Pr7jmRK3W8+iTygYQ7mFA3fO4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSVAvMs5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749913253; c=relaxed/simple;
+	bh=pRoQVD1k8gddZ6eCyztA1dMVRZv+vLamQe7EhDenJNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p9xQPJFvMAderInUF8d8YtTcqBM7bBbexWJYL46JLsZzP1CYcLGVSIFaK1yUkQokWHZAIxS/r8MMYqbDz57fN4mykdgnDDDiwxYqFRzpgp6h/h7goC6adywScoCW2remN/skB1REx2JYPVEVT/T9wWXbs4ekOWuPrrJs7yv8NLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=VGBsbGr0; arc=none smtp.client-ip=80.12.242.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSVAvMs5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29138C4CEEB;
-	Sat, 14 Jun 2025 14:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749913126;
-	bh=8mO7WKyJqajUY7NimuV3wsknV491ZZ3uyL2AvijCGt8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tSVAvMs5nad0bV97gI9po8cXWQdtABmJ9BnMbKyGCQT/AJjR8X20Lx6JxAtifB4oM
-	 jsdQ+rjoTl0IH2ZeE6+UU9IU9OIcBdXZZqt2FJkFfRyPcTjzEtf4U1R+URYeE1stgE
-	 Fs7WH+O+KAGJuA37J7KJxaLibDGmYjbah/TDTPCJdEt+OXE9yYLBs6/b9WHyUPbRRH
-	 cvnO7y8dmRmZrUbDBS0N5Mrzqubt8fL7A7XHUgddddUlv/WY6Yld6mh4HyscJ2vC2D
-	 z5RgVY8qJwlBoht/ORJYW6+HK3lFt9SDANBgHbJkIs6xoM2fNQQDyrUA/xipDSek3W
-	 dfGM7yN9c7FPA==
-Date: Sat, 14 Jun 2025 16:58:37 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>, Breno Leitao
- <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Ignacio Encinas Rubio <ignacio@iencinas.com>, Jan
- Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>, Shuah Khan
- <skhan@linuxfoundation.org>, joel@joelfernandes.org,
- linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
- lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
- stern@rowland.harvard.edu
-Subject: Re: [PATCH v4 04/14] tools: ynl_gen_rst.py: make the index parser
- more generic
-Message-ID: <20250614165837.35e9abde@foz.lan>
-In-Reply-To: <CAD4GDZwCLd0rAi-FTWZ2UEsfbMtvxbFAqcLeLtE7SfiJUB2VWg@mail.gmail.com>
-References: <cover.1749891128.git.mchehab+huawei@kernel.org>
-	<3fb42a4aa79631d69041f6750dc0d55dd3067162.1749891128.git.mchehab+huawei@kernel.org>
-	<CAD4GDZwCLd0rAi-FTWZ2UEsfbMtvxbFAqcLeLtE7SfiJUB2VWg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="VGBsbGr0"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id QSM3u88XaEYDLQSM3ueZb6; Sat, 14 Jun 2025 16:59:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1749913177;
+	bh=xaTlGEEhTijiMyHmtHzEn1Ywdg68fkcpPpcl21gOtVE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=VGBsbGr0tJUiVEfqjRlS5v/0u8O+rx/22kkMZr9d6QzPzgbY6EcjzYedaCldieame
+	 GlIjc4UvYFP+XH3plGYZcvxL320qAZlnNeX8RNovxA7rpJJukOfPw6BkFQuc5Cq2qX
+	 b2QXGTHBRBCcea+ADxTh3zzzuLNiX3iqS9UWBdsXnyvvb8mTAU0kksSQcyLRaVrPxU
+	 caifhl7X11UKggM6Z9pcbmJGc+MhQQ2E0ph5Wsda0EFDCSETR/tM9UuY0uDAe6Rr00
+	 9RHrftZvI6coO/KNyPiYEtb4WgzHNwwifneqo5y1RhCWylYsYAVNe+Jd58QTTxRrYW
+	 TjUjNFB8P2+gA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 14 Jun 2025 16:59:37 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Vignesh R <vigneshr@ti.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jayesh Choudhary <j-choudhary@ti.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH] i2c: omap: Fix an error handling path in omap_i2c_probe()
+Date: Sat, 14 Jun 2025 16:59:26 +0200
+Message-ID: <998542981b6d2435c057dd8b9fe71743927babab.1749913149.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Sat, 14 Jun 2025 14:41:29 +0100
-Donald Hunter <donald.hunter@gmail.com> escreveu:
+If an error occurs after calling mux_state_select(), mux_state_deselect()
+should be called as already done in the remove function.
 
-> On Sat, 14 Jun 2025 at 09:56, Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > It is not a good practice to store build-generated files
-> > inside $(srctree), as one may be using O=<BUILDDIR> and even
-> > have the Kernel on a read-only directory.
-> >
-> > Change the YAML generation for netlink files to allow it
-> > to parse data based on the source or on the object tree.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  tools/net/ynl/pyynl/ynl_gen_rst.py | 22 ++++++++++++++++------
-> >  1 file changed, 16 insertions(+), 6 deletions(-)  
-> 
-> It looks like this patch is no longer required since this script
-> doesn't get run by `make htmldocs` any more.
-> 
-> Instead, I think there is cleanup work to remove unused code like
-> `generate_main_index_rst`
+Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+I'm not 100% sure of the error handling path.
 
-It is too early to drop it on this series, as only this patch:
+Should pm_runtime_dont_use_autosuspend() be called after the err_disable_pm
+label? (to match the calling order)
 
-	[PATCH v4 09/14] docs: use parser_yaml extension to handle Netlink specs
+Also, should errors from omap_i2c_init() be handled?
+---
+ drivers/i2c/busses/i2c-omap.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-stops using it.
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 876791d20ed5..5e46dc2cbbd7 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1461,13 +1461,13 @@ omap_i2c_probe(struct platform_device *pdev)
+ 		if (IS_ERR(mux_state)) {
+ 			r = PTR_ERR(mux_state);
+ 			dev_dbg(&pdev->dev, "failed to get I2C mux: %d\n", r);
+-			goto err_disable_pm;
++			goto err_put_pm;
+ 		}
+ 		omap->mux_state = mux_state;
+ 		r = mux_state_select(omap->mux_state);
+ 		if (r) {
+ 			dev_err(&pdev->dev, "failed to select I2C mux: %d\n", r);
+-			goto err_disable_pm;
++			goto err_put_pm;
+ 		}
+ 	}
+ 
+@@ -1515,6 +1515,9 @@ omap_i2c_probe(struct platform_device *pdev)
+ 
+ err_unuse_clocks:
+ 	omap_i2c_write_reg(omap, OMAP_I2C_CON_REG, 0);
++	if (omap->mux_state)
++		mux_state_deselect(omap->mux_state);
++err_put_pm:
+ 	pm_runtime_dont_use_autosuspend(omap->dev);
+ 	pm_runtime_put_sync(omap->dev);
+ err_disable_pm:
+-- 
+2.49.0
 
-> This whole script may be unnecessary now, unless we want a simple way
-> to run YnlDocGenerator separately from the main doc build.
-
-It is up to you to keep or drop after patch 9. Yet, on my experiences with
-kernel_doc.py and get_abi.py, it is a lot easier to test the parser via 
-a simple command line script, without having Sphinx parallel build, complex
-doc build logic and Sphinx exception handling in place.
-
-My suggestion is to keep ynl_gen_rst.py, removing generate_main_index_rst
-as a cleanup patch after patch 9.
-
-Regards,
-Mauro
