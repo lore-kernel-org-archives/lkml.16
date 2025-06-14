@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB8B2E62C5;
-	Sat, 14 Jun 2025 13:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877162E7627;
+	Sat, 14 Jun 2025 13:49:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749908948; cv=none; b=i34vD3AmSoAvRxrN7AIq8F5h6197yGO/ELZET9iLFRFE291XdEjCb8F6OZpLpfpDjXFwri8DccU1LN8IivSV8dGxfSsmuHkVPRUUpanfL5BVQRDEC/WSqUn1i3rvu2K8wpto64/aCX5yo+A3YwPgV0VQDUfsTU9QvrcZxbA8D8g=
+	t=1749908950; cv=none; b=Ox56176m/eK3nb4IUwJnL6ktrwfrM9GM2gf1ysXX6naUWc1q2nWMlfvMJfA7yihvWGke9/BlyvbIIe9kaBsZJce9o7fAC4u0psZAMVyEKq5T9p60b+zYL7psdsj4oQ7R7p6ZhyuwjDBL/cDlAnOQHhuiOQjiKrPD2IAKd5hNrsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749908948; c=relaxed/simple;
-	bh=Su5C0ZLdpHBzNaB3tC3uk3Gzq0bkfxoEFcXkenceNw8=;
+	s=arc-20240116; t=1749908950; c=relaxed/simple;
+	bh=IX6FdEJxog+IYJ7fUmLO8O0E0nHfZo6I9ZqvL4mp2Ps=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZrWaZCGYBqa7caFymR21Clfh3YqeAJZxlSVOnHW2NYJJu+uzs+2QtRW7d3W+gzMjeQyw6aWO1dRh7N9S5Ab/NhzoCjuzsjrCPJ7/ndcWxHjp7hn8/C0RjNmf2KBG8u47vl6zJvbZjIHxInK3kEYo9zuuXSOFzc0PnBypc2gnRuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiEIIBis; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EU6Al7Eq9VwsZmecEXf0q3yj190D+vUP7slJZZzb/z8K2sjIf/Q00h1wLZn7Lg8Wjr/QlHsjmltMK1EFyDoc4fm9wBR9DzmQqnwcHKknnEZqpqTHHJjLEgQp7TYIItfJKde51yEjw7t7NjHyEoET+LMz2eIbejirNS1oYClHonE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BX5Fmk0q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiEIIBis"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67FBC4CEF4;
-	Sat, 14 Jun 2025 13:49:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BX5Fmk0q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912E9C4CEEB;
+	Sat, 14 Jun 2025 13:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749908948;
-	bh=Su5C0ZLdpHBzNaB3tC3uk3Gzq0bkfxoEFcXkenceNw8=;
+	s=k20201202; t=1749908950;
+	bh=IX6FdEJxog+IYJ7fUmLO8O0E0nHfZo6I9ZqvL4mp2Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IiEIIBisIpSWSPSkeX6Z5FrxTiWx86+35Tzr//92ZyjWERwcAoSA6DNtRbELGWLWq
-	 PPVVL6FUVM1MxwiKEMNInS49k2eyI6O1QNWe5Q11+237RpBpuqTeJ8FkJNfrkCc0tD
-	 lV2/g6MCk7x92nz7sMVdP+1N0vn7qxnrtt1U5oK2ckcPxuFlPbq3Mzg8yrhJk7yx8I
-	 lqDU37FC3mI1+1/lNo6PimtiPq0hURMLba+EfdNDzQxLhQgTMBZc6gC7uwq9zXLVIy
-	 irYDeCYFKCI/TynQU8NQLmzlGyU2KJ5dwZAcGYGVM3GSEYEo+aZgqY9g775Hhfa/dc
-	 RR615vuJW6mtA==
+	b=BX5Fmk0qQ4LF++jbcrWQctzE3oCtNiAB4xol8dHhRUVO4BZtsaXsFVMBt54dy0H6g
+	 16oQjJ/+uaacYKNNz8AoyZK5XWfwgGB0Y4advlCh5bYBEP1oU6O8tofNtojP2tP4kL
+	 f5Qaa3Je1GIt5XonmsuwIshmZX+s0IJoL8LdLBBUzdYp6EEq6I4Opv7h1fGe9h1b+G
+	 diCcQRNhenagkgfl7iCp+2o2CAHrbdBivq/3iOuoOXyMbgW23arHg8jATgbW8mlB6s
+	 rwS1cNbKFTTHd6joUddfoq+oecyuz8QxfoKgIL976a7HI05/7LuftVi05fxCcpCxDD
+	 DO92pPrktXfMg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-api@vger.kernel.org,
 	workflows@vger.kernel.org,
 	tools@kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [RFC 08/19] exec: add API specification for execve
-Date: Sat, 14 Jun 2025 09:48:47 -0400
-Message-Id: <20250614134858.790460-9-sashal@kernel.org>
+Subject: [RFC 10/19] mm/mlock: add API specification for mlock
+Date: Sat, 14 Jun 2025 09:48:49 -0400
+Message-Id: <20250614134858.790460-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250614134858.790460-1-sashal@kernel.org>
 References: <20250614134858.790460-1-sashal@kernel.org>
@@ -46,250 +46,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add comprehensive kernel API specification for the execve() system call.
+Add kernel API specification for the mlock() system call.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/exec.c | 218 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 218 insertions(+)
+ mm/mlock.c | 105 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 1f5fdd2e096e3..3d006105ab23d 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -52,6 +52,7 @@
- #include <linux/mount.h>
- #include <linux/security.h>
- #include <linux/syscalls.h>
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 3cb72b579ffd3..a37102df54b01 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -25,6 +25,7 @@
+ #include <linux/memcontrol.h>
+ #include <linux/mm_inline.h>
+ #include <linux/secretmem.h>
 +#include <linux/syscall_api_spec.h>
- #include <linux/tsacct_kern.h>
- #include <linux/cn_proc.h>
- #include <linux/audit.h>
-@@ -1997,7 +1998,224 @@ void set_dumpable(struct mm_struct *mm, int value)
- 	set_mask_bits(&mm->flags, MMF_DUMPABLE_MASK, value);
+ 
+ #include "internal.h"
+ 
+@@ -658,6 +659,110 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
+ 	return 0;
  }
  
 +
-+DEFINE_KERNEL_API_SPEC(sys_execve)
-+	KAPI_DESCRIPTION("Execute a new program")
-+	KAPI_LONG_DESC("Executes the program referred to by filename. This causes the program "
-+		       "that is currently being run by the calling process to be replaced with "
-+		       "a new program, with newly initialized stack, heap, and (initialized and "
-+		       "uninitialized) data segments. The process ID remains the same.")
++DEFINE_KERNEL_API_SPEC(sys_mlock)
++	KAPI_DESCRIPTION("Lock pages in memory")
++	KAPI_LONG_DESC("Locks pages in the specified address range into RAM, "
++		       "preventing them from being paged to swap. Requires "
++		       "CAP_IPC_LOCK capability or RLIMIT_MEMLOCK resource limit.")
 +	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
 +
-+	KAPI_PARAM(0, "filename", "const char __user *", "Pathname of the program to execute")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN | KAPI_PARAM_USER)
-+		.type = KAPI_TYPE_PATH,
++	KAPI_PARAM(0, "start", "unsigned long", "Starting address of memory range to lock")
++		.type = KAPI_TYPE_UINT,
++		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
 +		.constraint_type = KAPI_CONSTRAINT_NONE,
-+		.constraints = "Must be a valid pathname to an executable file or script",
++		.constraints = "Rounded down to page boundary",
++	KAPI_PARAM_END
++	KAPI_PARAM(1, "len", "size_t", "Length of memory range to lock in bytes")
++		.type = KAPI_TYPE_UINT,
++		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
++		.constraint_type = KAPI_CONSTRAINT_RANGE,
++		KAPI_PARAM_RANGE(0, LONG_MAX)
++		.constraints = "Rounded up to page boundary",
 +	KAPI_PARAM_END
 +
-+	KAPI_PARAM(1, "argv", "const char __user *const __user *", "Array of argument strings passed to the new program")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN | KAPI_PARAM_USER)
-+		.type = KAPI_TYPE_USER_PTR,
-+		.constraint_type = KAPI_CONSTRAINT_NONE,
-+		.constraints = "NULL-terminated array of pointers to null-terminated strings",
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(2, "envp", "const char __user *const __user *", "Array of environment strings for the new program")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN | KAPI_PARAM_USER)
-+		.type = KAPI_TYPE_USER_PTR,
-+		.constraint_type = KAPI_CONSTRAINT_NONE,
-+		.constraints = "NULL-terminated array of pointers to null-terminated strings in form key=value",
-+	KAPI_PARAM_END
-+
-+	KAPI_RETURN("long", "Does not return on success; returns -1 on error")
++	.return_spec = {
++		.type_name = "long",
 +		.type = KAPI_TYPE_INT,
 +		.check_type = KAPI_RETURN_ERROR_CHECK,
-+	KAPI_RETURN_END
++		.success_value = 0,
++		.description = "0 on success, negative error code on failure",
++	},
 +
-+	KAPI_ERROR(0, -E2BIG, "E2BIG", "Argument list too long",
-+		   "The total size of argv and envp exceeds the system limit.")
-+	KAPI_ERROR(1, -EACCES, "EACCES", "Permission denied",
-+		   "Search permission denied on a component of the path, file is not regular, "
-+		   "or execute permission denied for file or interpreter.")
-+	KAPI_ERROR(2, -EFAULT, "EFAULT", "Bad address",
-+		   "filename, argv, or envp points outside accessible address space.")
-+	KAPI_ERROR(3, -EINVAL, "EINVAL", "Invalid executable format",
-+		   "An ELF executable has more than one PT_INTERP segment.")
-+	KAPI_ERROR(4, -EIO, "EIO", "I/O error",
-+		   "An I/O error occurred while reading from the file system.")
-+	KAPI_ERROR(5, -EISDIR, "EISDIR", "Is a directory",
-+		   "An ELF interpreter was a directory.")
-+	KAPI_ERROR(6, -ELIBBAD, "ELIBBAD", "Invalid ELF interpreter",
-+		   "An ELF interpreter was not in a recognized format.")
-+	KAPI_ERROR(7, -ELOOP, "ELOOP", "Too many symbolic links",
-+		   "Too many symbolic links encountered while resolving filename or interpreter.")
-+	KAPI_ERROR(8, -EMFILE, "EMFILE", "Too many open files",
-+		   "The per-process limit on open file descriptors has been reached.")
-+	KAPI_ERROR(9, -ENAMETOOLONG, "ENAMETOOLONG", "Filename too long",
-+		   "filename or one of the strings in argv or envp is too long.")
-+	KAPI_ERROR(10, -ENFILE, "ENFILE", "System file table overflow",
-+		   "The system-wide limit on open files has been reached.")
-+	KAPI_ERROR(11, -ENOENT, "ENOENT", "File not found",
-+		   "The file filename or an interpreter does not exist.")
-+	KAPI_ERROR(12, -ENOEXEC, "ENOEXEC", "Exec format error",
-+		   "An executable is not in a recognized format, is for wrong architecture, "
-+		   "or has other format errors preventing execution.")
-+	KAPI_ERROR(13, -ENOMEM, "ENOMEM", "Out of memory",
-+		   "Insufficient kernel memory available.")
-+	KAPI_ERROR(14, -ENOTDIR, "ENOTDIR", "Not a directory",
-+		   "A component of the path prefix is not a directory.")
-+	KAPI_ERROR(15, -EPERM, "EPERM", "Operation not permitted",
-+		   "The filesystem is mounted nosuid, the user is not root, and the file has "
-+		   "set-user-ID or set-group-ID bit set.")
-+	KAPI_ERROR(16, -ETXTBSY, "ETXTBSY", "Text file busy",
-+		   "The executable was open for writing by one or more processes.")
-+	KAPI_ERROR(17, -EAGAIN, "EAGAIN", "Resource temporarily unavailable",
-+		   "RLIMIT_NPROC limit exceeded - too many processes for this user.")
++	KAPI_ERROR(0, -ENOMEM, "ENOMEM", "Address range issue",
++		   "Some of the specified range is not mapped, has unmapped gaps, "
++		   "or the lock would cause the number of mapped regions to exceed the limit.")
++	KAPI_ERROR(1, -EPERM, "EPERM", "Insufficient privileges",
++		   "The caller is not privileged (no CAP_IPC_LOCK) and RLIMIT_MEMLOCK is 0.")
++	KAPI_ERROR(2, -EINVAL, "EINVAL", "Address overflow",
++		   "The result of the addition start+len was less than start (arithmetic overflow).")
++	KAPI_ERROR(3, -EAGAIN, "EAGAIN", "Some or all memory could not be locked",
++		   "Some or all of the specified address range could not be locked.")
++	KAPI_ERROR(4, -EINTR, "EINTR", "Interrupted by signal",
++		   "The operation was interrupted by a fatal signal before completion.")
 +
-+	.error_count = 18,
-+	.param_count = 3,
-+	.since_version = "1.0",
-+	.examples = "char *argv[] = { \"echo\", \"hello\", \"world\", NULL };\n"
-+		    "char *envp[] = { \"PATH=/bin\", NULL };\n"
-+		    "execve(\"/bin/echo\", argv, envp);\n"
-+		    "/* This point is only reached on error */\n"
-+		    "perror(\"execve failed\");\n"
-+		    "exit(EXIT_FAILURE);",
-+	.notes = "On success, execve() does not return; the new program is executed. "
-+		 "File descriptors remain open unless marked close-on-exec. "
-+		 "Signal dispositions are reset to default except for ignored signals. "
-+		 "Any alternate signal stack is not preserved. "
-+		 "The process's set of pending signals is cleared. "
-+		 "All threads except the calling thread are destroyed.",
++	.error_count = 5,
++	.param_count = 2,
++	.since_version = "2.0",
 +
-+	/* Fatal signals can interrupt exec */
-+	KAPI_SIGNAL(0, 0, "FATAL_SIGNALS", KAPI_SIGNAL_RECEIVE, KAPI_SIGNAL_ACTION_TERMINATE)
-+		KAPI_SIGNAL_CONDITION("Fatal signal pending during exec setup")
-+		KAPI_SIGNAL_DESC("Fatal signals (checked via fatal_signal_pending()) can interrupt "
-+				 "exec during setup phases like de_thread(). This causes exec to fail "
-+				 "and the process to exit.")
++	.locks[0] = {
++		.lock_name = "mmap_lock",
++		.lock_type = KAPI_LOCK_RWLOCK,
++		.acquired = true,
++		.released = true,
++		.description = "Process memory map write lock",
++	},
++	.lock_count = 1,
++
++	/* Signal specifications */
++	.signal_count = 1,
++
++	/* Fatal signals can interrupt mmap_write_lock_killable */
++	KAPI_SIGNAL(0, 0, "FATAL", KAPI_SIGNAL_RECEIVE, KAPI_SIGNAL_ACTION_RETURN)
++		KAPI_SIGNAL_CONDITION("Fatal signal pending")
++		KAPI_SIGNAL_DESC("Fatal signals (SIGKILL, etc.) can interrupt the operation "
++				 "when acquiring mmap_write_lock_killable(), causing -EINTR return")
 +	KAPI_SIGNAL_END
 +
-+	/* SIGKILL sent to other threads */
-+	KAPI_SIGNAL(1, SIGKILL, "SIGKILL", KAPI_SIGNAL_SEND, KAPI_SIGNAL_ACTION_TERMINATE)
-+		KAPI_SIGNAL_TARGET("All other threads in the thread group")
-+		KAPI_SIGNAL_CONDITION("Multi-threaded process doing exec")
-+		KAPI_SIGNAL_DESC("During de_thread(), zap_other_threads() sends SIGKILL to all "
-+				 "other threads in the thread group to ensure only the execing "
-+				 "thread survives.")
-+	KAPI_SIGNAL_END
-+
-+	/* Signal handlers reset */
-+	KAPI_SIGNAL(2, 0, "ALL_HANDLERS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Signal has a handler installed")
-+		KAPI_SIGNAL_DESC("flush_signal_handlers() resets all signal handlers to SIG_DFL "
-+				 "except for signals that are ignored (SIG_IGN). This happens "
-+				 "after de_thread() completes.")
-+	KAPI_SIGNAL_END
-+
-+	/* Ignored signals preserved */
-+	KAPI_SIGNAL(3, 0, "IGNORED_SIGNALS", KAPI_SIGNAL_IGNORE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Signal disposition is SIG_IGN")
-+		KAPI_SIGNAL_DESC("Signals set to SIG_IGN are preserved across exec. This is "
-+				 "POSIX-compliant behavior allowing parent processes to ignore "
-+				 "signals in children.")
-+	KAPI_SIGNAL_END
-+
-+	/* Pending signals cleared */
-+	KAPI_SIGNAL(4, 0, "PENDING_SIGNALS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Any pending signals")
-+		KAPI_SIGNAL_DESC("All pending signals are cleared during exec. This includes "
-+				 "both thread-specific and process-wide pending signals.")
-+	KAPI_SIGNAL_END
-+
-+	/* Timer signals cleared */
-+	KAPI_SIGNAL(5, 0, "TIMER_SIGNALS", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Timer-generated signals pending")
-+		KAPI_SIGNAL_DESC("flush_itimer_signals() clears any pending timer signals "
-+				 "(SIGALRM, SIGVTALRM, SIGPROF) to prevent confusion in the "
-+				 "new program.")
-+	KAPI_SIGNAL_END
-+
-+	/* Exit signal set to SIGCHLD */
-+	KAPI_SIGNAL(6, SIGCHLD, "SIGCHLD", KAPI_SIGNAL_SEND, KAPI_SIGNAL_ACTION_DEFAULT)
-+		KAPI_SIGNAL_TARGET("Parent process when this process exits")
-+		KAPI_SIGNAL_CONDITION("Process exit after exec")
-+		KAPI_SIGNAL_DESC("The exit_signal is set to SIGCHLD during exec, ensuring the "
-+				 "parent will receive SIGCHLD when this process terminates.")
-+	KAPI_SIGNAL_END
-+
-+	/* Alternate signal stack cleared */
-+	KAPI_SIGNAL(7, 0, "SIGALTSTACK", KAPI_SIGNAL_HANDLE, KAPI_SIGNAL_ACTION_CUSTOM)
-+		KAPI_SIGNAL_CONDITION("Process had alternate signal stack")
-+		KAPI_SIGNAL_DESC("Any alternate signal stack (sigaltstack) is not preserved "
-+				 "across exec. The new program starts with no alternate stack.")
-+	KAPI_SIGNAL_END
-+
-+	.signal_count = 8,
++	.examples = "mlock(addr, 4096);  // Lock one page\n"
++		    "mlock(addr, len);   // Lock range of pages",
++	.notes = "Memory locks do not stack - multiple calls on the same range can be "
++		 "undone by a single munlock. Locks are not inherited by child processes. "
++		 "Pages are locked on whole page boundaries.",
 +
 +	/* Side effects */
-+	KAPI_SIDE_EFFECT(0, KAPI_EFFECT_PROCESS_STATE | KAPI_EFFECT_FREE_MEMORY | KAPI_EFFECT_ALLOC_MEMORY,
-+			 "process image",
-+			 "Replaces entire process image including code, data, heap, and stack")
++	KAPI_SIDE_EFFECT(0, KAPI_EFFECT_MODIFY_STATE | KAPI_EFFECT_ALLOC_MEMORY,
++			 "process memory",
++			 "Locks pages into physical memory, preventing swapping")
++		KAPI_EFFECT_REVERSIBLE
 +	KAPI_SIDE_EFFECT_END
 +
-+	KAPI_SIDE_EFFECT(1, KAPI_EFFECT_MODIFY_STATE | KAPI_EFFECT_RESOURCE_DESTROY,
-+			 "file descriptors",
-+			 "Closes all file descriptors with close-on-exec flag set")
-+		KAPI_EFFECT_CONDITION("FD_CLOEXEC flag set")
++	KAPI_SIDE_EFFECT(1, KAPI_EFFECT_MODIFY_STATE,
++			 "mm->locked_vm",
++			 "Increases process locked memory counter")
++		KAPI_EFFECT_REVERSIBLE
 +	KAPI_SIDE_EFFECT_END
 +
-+	KAPI_SIDE_EFFECT(2, KAPI_EFFECT_MODIFY_STATE,
-+			 "signal handlers",
-+			 "Resets all signal handlers to default, preserves ignored signals")
++	KAPI_SIDE_EFFECT(2, KAPI_EFFECT_ALLOC_MEMORY,
++			 "physical pages",
++			 "May allocate and populate page table entries")
++		KAPI_EFFECT_CONDITION("Pages not already present")
 +	KAPI_SIDE_EFFECT_END
 +
-+	KAPI_SIDE_EFFECT(3, KAPI_EFFECT_PROCESS_STATE | KAPI_EFFECT_SIGNAL_SEND,
-+			 "thread group",
-+			 "Kills all other threads in the thread group with SIGKILL")
-+		KAPI_EFFECT_CONDITION("Multi-threaded process")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(4, KAPI_EFFECT_MODIFY_STATE,
-+			 "process attributes",
-+			 "Clears pending signals, timers, alternate signal stack, and various process attributes")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(5, KAPI_EFFECT_FILESYSTEM,
-+			 "executable file",
-+			 "Opens and reads the executable file, may trigger filesystem operations")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT_COUNT(6)
++	KAPI_SIDE_EFFECT_COUNT(3)
 +
 +	/* State transitions */
-+	KAPI_STATE_TRANS(0, "process memory",
-+			 "old program image", "new program image",
-+			 "Complete replacement of process address space with new program")
++	KAPI_STATE_TRANS(0, "memory pages", "swappable", "locked in RAM",
++			 "Pages become non-swappable and pinned in physical memory")
 +	KAPI_STATE_TRANS_END
 +
-+	KAPI_STATE_TRANS(1, "process credentials",
-+			 "current credentials", "potentially modified credentials",
-+			 "May change effective UID/GID based on file permissions")
-+		KAPI_STATE_TRANS_COND("setuid/setgid binary")
++	KAPI_STATE_TRANS(1, "VMA flags", "unlocked", "VM_LOCKED set",
++			 "Virtual memory area marked as locked")
 +	KAPI_STATE_TRANS_END
 +
-+	KAPI_STATE_TRANS(2, "thread state",
-+			 "multi-threaded", "single-threaded",
-+			 "Process becomes single-threaded after killing other threads")
-+		KAPI_STATE_TRANS_COND("Multi-threaded process")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(3, "signal state",
-+			 "custom handlers and pending signals", "default handlers, no pending signals",
-+			 "Signal handling reset to clean state for new program")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS_COUNT(4)
++	KAPI_STATE_TRANS_COUNT(2)
 +KAPI_END_SPEC;
- SYSCALL_DEFINE3(execve,
 +
- 		const char __user *, filename,
- 		const char __user *const __user *, argv,
- 		const char __user *const __user *, envp)
+ SYSCALL_DEFINE2(mlock, unsigned long, start, size_t, len)
+ {
+ 	return do_mlock(start, len, VM_LOCKED);
 -- 
 2.39.5
 
