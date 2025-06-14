@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FFA1F4631;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634731E991B;
 	Sat, 14 Jun 2025 08:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749891378; cv=none; b=WVeYR4bC/zNy5Qpmk9TiEr9udnp4hitpDphpdmeRlK1kSCw5Naeqbi7tl8mgusM1pIJ90l6HLH7hDB9/rEC25+Di6Y4ozYlKTlRyvdBf8aVEzBT38NHiMTjiwdcU9SCt4SrfNlrvMcAz6eF2SM0E7mVYBUagmJWBC3PAwBMDZws=
+	t=1749891378; cv=none; b=EN9SnkiHKDs7aJQ63AT5BrmyXEzqaZNfrB+6zZGcCUfq/Ybo0pPNn7bKokvT3+8l5hdbiQ32s3dUXKI0Aqv4pIi6Tj/5iVY4ZMIQh/83eboYdrj1QlkMeYWyyURnrD7Gpe+8Un05V8soJN/LAqRdl7v9I5+DWzul/PtitfV397s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749891378; c=relaxed/simple;
-	bh=8JLj251EiGtS/E11n5n+267zLGC8qyxQhPvEcm7GqEQ=;
+	bh=nVMNn0VSngYDSLAUJezTR2b19OzJ86I1XkvSWoGjSbY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jrv7LaPSrfSZmzcv5iZnus+OaTChVkbDxFVNhNOpwIinEkm9J/wNJaLfZPnUmqWgEgNbyyeWCQaJODFOb1fMvjfDA+WLP38zQ0407jkVr3MhoFeJDKmVnGIkoECBLoZG48jL5/2n5+A6yy2VK0vFREbInC05i2kCFDOz3JXnRug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umeedEFn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ATgnxt1+Qz4CYs9vMj0eZmCnzG7v28Q470sf9rYATzacCxKyYFH9MkHGHP1aWLl7lOwG1/tQkgrHuDBWEDFTTkoUkEjvbHsDZCZ8fU5Eb1aDvHZPgXrwBlqGNAu/qyrMOI+gFIfoeUikNhwYY0WeQGEQaDn8gcB8aKSGOhWq4vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVjE2+p6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umeedEFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8901C4CEF2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVjE2+p6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23C8C4CEF0;
 	Sat, 14 Jun 2025 08:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749891378;
-	bh=8JLj251EiGtS/E11n5n+267zLGC8qyxQhPvEcm7GqEQ=;
+	bh=nVMNn0VSngYDSLAUJezTR2b19OzJ86I1XkvSWoGjSbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=umeedEFnlci600SipXlsi0H6C/9NbbdgnZQ+uUcYKUUcOwhDRHylvby3pkc6uxuUj
-	 gUpz0wA7vicDAg7GMtCsGBJ9LGa/T5Z/a5Q8Lo6DynAT53+IFEMv3lulVXJSBYByTo
-	 0hq4Wcco5yoa1OMPIoCEKVxl7MdAJsIjoUWG1CWKASL2t35GzKCVb5RB+RKcghXsv1
-	 EssBfDGOQij865I4tnSb4ZQqBMwRsCeQk+lsqM/JMKZDGToJ5zcXmrOLzk6LHTIkyr
-	 nPfaL+VU/L0+rZBf16bfLYnPo/fZWecRgnxxUI63PFYplWOUpxlUCFP8mz5rf65eSq
-	 KxFkI3aO5YlKA==
+	b=dVjE2+p6DMNi0/6HW/eClvFnJuABscnX65t/MQFmNMtpkuKkOnjin6f2iw9AQTLke
+	 xPqX+NBm6gUv6VohevhM87xaVRsLKE7Gg6sT+SHkMRhDXDEBG/AnPn3ucar2PQ9ME2
+	 6SOfJXWMNP4XY2FMbt0HB3Xavt6hlp5uYmdJTtA6Vp/KEUHshiKBBmIBFO/Gzj1mmm
+	 aMsluO/2zFcQAcFBC3bWmp4FxCr9VfgwuEzEqCny1oivUnAh8a+kkWtRol6Xq1nf7r
+	 +XBIVis1Bo0y5LqDT4H7xPtMt88FEyIVyl+Z67TF2CRSyHVlA+YmGQIBf4UkEdVy0s
+	 jwjc9bEKamQxA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uQMgR-000000064ah-3uBS;
-	Sat, 14 Jun 2025 10:56:15 +0200
+	id 1uQMgS-000000064ap-0CB8;
+	Sat, 14 Jun 2025 10:56:16 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
@@ -55,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v4 01/14] tools: ynl_gen_rst.py: create a top-level reference
-Date: Sat, 14 Jun 2025 10:55:55 +0200
-Message-ID: <ed66166bec8051df75465f9821671b21011fbda4.1749891128.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v4 03/14] docs: netlink: don't ignore generated rst files
+Date: Sat, 14 Jun 2025 10:55:57 +0200
+Message-ID: <1cf12ab4c027cf27decf70a40aafdd0e2f669299.1749891128.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749891128.git.mchehab+huawei@kernel.org>
 References: <cover.1749891128.git.mchehab+huawei@kernel.org>
@@ -70,41 +70,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Currently, rt documents are referred with:
+Currently, the build system generates ReST files inside the
+source directory. This is not a good idea, specially when
+we have renames, as make clean won't get rid of them.
 
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt-link<../../networking/netlink_spec/rt-link>`
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
-Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
+As the first step to address the issue, stop ignoring those
+files. This way, we can see exactly what has been produced
+at build time inside $(srctree):
 
-that's hard to maintain, and may break if we change the way
-rst files are generated from yaml. Better to use instead a
-reference for the netlink family.
-
-So, add a netlink-<foo> reference to all generated docs.
+        Documentation/networking/netlink_spec/conntrack.rst
+        Documentation/networking/netlink_spec/devlink.rst
+        Documentation/networking/netlink_spec/dpll.rst
+        Documentation/networking/netlink_spec/ethtool.rst
+        Documentation/networking/netlink_spec/fou.rst
+        Documentation/networking/netlink_spec/handshake.rst
+        Documentation/networking/netlink_spec/index.rst
+        Documentation/networking/netlink_spec/lockd.rst
+        Documentation/networking/netlink_spec/mptcp_pm.rst
+        Documentation/networking/netlink_spec/net_shaper.rst
+        Documentation/networking/netlink_spec/netdev.rst
+        Documentation/networking/netlink_spec/nfsd.rst
+        Documentation/networking/netlink_spec/nftables.rst
+        Documentation/networking/netlink_spec/nl80211.rst
+        Documentation/networking/netlink_spec/nlctrl.rst
+        Documentation/networking/netlink_spec/ovs_datapath.rst
+        Documentation/networking/netlink_spec/ovs_flow.rst
+        Documentation/networking/netlink_spec/ovs_vport.rst
+        Documentation/networking/netlink_spec/rt_addr.rst
+        Documentation/networking/netlink_spec/rt_link.rst
+        Documentation/networking/netlink_spec/rt_neigh.rst
+        Documentation/networking/netlink_spec/rt_route.rst
+        Documentation/networking/netlink_spec/rt_rule.rst
+        Documentation/networking/netlink_spec/tc.rst
+        Documentation/networking/netlink_spec/tcp_metrics.rst
+        Documentation/networking/netlink_spec/team.rst
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/net/ynl/pyynl/ynl_gen_rst.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/networking/netlink_spec/.gitignore | 1 -
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 Documentation/networking/netlink_spec/.gitignore
 
-diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-index 0cb6348e28d3..7bfb8ceeeefc 100755
---- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-+++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-@@ -314,10 +314,11 @@ def parse_yaml(obj: Dict[str, Any]) -> str:
- 
-     # Main header
- 
--    lines.append(rst_header())
--
-     family = obj['name']
- 
-+    lines.append(rst_header())
-+    lines.append(rst_label("netlink-" + family))
-+
-     title = f"Family ``{family}`` netlink specification"
-     lines.append(rst_title(title))
-     lines.append(rst_paragraph(".. contents:: :depth: 3\n"))
+diff --git a/Documentation/networking/netlink_spec/.gitignore b/Documentation/networking/netlink_spec/.gitignore
+deleted file mode 100644
+index 30d85567b592..000000000000
+--- a/Documentation/networking/netlink_spec/.gitignore
++++ /dev/null
+@@ -1 +0,0 @@
+-*.rst
 -- 
 2.49.0
 
