@@ -1,122 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C522F32;
-	Sat, 14 Jun 2025 19:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C831DE8A0;
+	Sat, 14 Jun 2025 19:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749928576; cv=none; b=b2rUXMryZQMcQShIQRPpD3SrNx5rTAhvuJ2QNUDzTzGBZcI8EudZ1OtdwxN2yzl1Fv3zT4sgbI/tVulcnNzDt9q1e5TIvWRFemFyPPEWd0pyRhEO+I2UI9wUmXsd+wZGoRk5mHIPZY8A3qGy1Uvopi5yRW2LswovYmtLUbiM9Ic=
+	t=1749928600; cv=none; b=L7WJArx3oDl6FDkXu5Wb3D+s+qjzD75pJpRsqdAHpCd7BRw2/c7gaae++hO/lhM4c6gaKeKi2CzJhP3NZRb5fpHqyY7WQoE2/8ZreV1I+jQ0B4oYSm5dwESD43VbG1Qt80RKm87AC4A0uCjN97RGXHFXUjSUtH9mhaVaZYZSV/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749928576; c=relaxed/simple;
-	bh=mmw5jhQLybady/7202hcLfn6hRFOBIqOFwgpzfoEdeM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=PWYZQn9CeoSXrmQ01aP0ULAfrEv8ttEgSPg/A5qER7V0Ck3ujlFq8U2Hc+py+LhkLIsOVh6hDHbpGhtP8tryShjmRBFgYWyOCC2Ibp17Li5B0RmLDTAviu1M4sfsuCmYPMRYH1Ck/6ABt/N0PMLoIsHfey6br253nciTJ1npK/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SoFx9wZI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749928600; c=relaxed/simple;
+	bh=zI+1aeFc0WrfDTwvebaq1I9+fVkZyGxtwWsm6ZiW0Qw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LvLshVI727Ai11cSZFo9caN9podVGpZS1bo56Rx8nLVbFFxIvlJKEQZiu8xz7juwU9iLirZDp+pLaLBEz0Z1Z9yFuNdsDyP53rxHFzUEanBxWxkzgwGpHn/+2BDCUUYFkpHBgMul++MnBzXdPzXpdFYvFWHt7orOqaSxocPAuG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kBBHGU6a; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SoFx9wZI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D53CBC4CEEB;
-	Sat, 14 Jun 2025 19:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749928576;
-	bh=mmw5jhQLybady/7202hcLfn6hRFOBIqOFwgpzfoEdeM=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=SoFx9wZIX1OI9wd6nGUhXheiyY3QdZlbZ5z9TdQnx/xnbda1R3j25z3Nw40owzddy
-	 sMJQkYY4+YLU1fR0J18xYq8lnNWpVYFyHOTv0vxd3MuzST8R2Yek+uqsTiG8XbZPBP
-	 FlHTc+UpfhnSQJCMh8kfuViz3RP/pYNAUPqRmZc0dlVS0h2m5nuDcRwRinM5GtW/fl
-	 mQaOu/dnKu1bdoLNXl3IhS2dd5zYxzyRAt+7pypC3XOBm1KyhhCXx1NBK0o6uT2IBX
-	 aWetXBQrRQPG56TW0XcXI9XGkLdPnaubFbcXR+i43tPVV2RqzNim1dlAxuo3OabiDI
-	 s8c/+6H60H07Q==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBBHGU6a"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5311937292fso1031057e0c.3;
+        Sat, 14 Jun 2025 12:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749928598; x=1750533398; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zI+1aeFc0WrfDTwvebaq1I9+fVkZyGxtwWsm6ZiW0Qw=;
+        b=kBBHGU6aYVBDJPuWWsPOQkpWXbhLlqc0tbaULzpXJT8xtKySPBKLr88eC5vZ1C4uGt
+         AlwKquikn7o+6iHQUMxZwzg5Qnx3CPmy59FtQSTBEdSfDh1K7O5MsgIPLQ3oV/O05b6o
+         7Ck8cYdYMBedtpZXV69ce++mjLPF5pC4UGn/gBzYJstA8rKBN/cJv5ctTGaspuS8Tlh3
+         3SnrM6pOD5/tHOpjlaYTc+O68VqPWiRlBCJmQO2/Qy9LX//aa03EY1uFRrBAw+flMf/z
+         sC/g7DngdRHJal78syL8bxknBJ/Tle9xPvw7zBS0AHji17NECxfC6t0vh2+XcKH+dcLE
+         Q3qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749928598; x=1750533398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zI+1aeFc0WrfDTwvebaq1I9+fVkZyGxtwWsm6ZiW0Qw=;
+        b=UKj0Ya3hqaZMz77VxmiCOeCqCOcf2whT2OHJIdxeYzpmoDPoeQQqVxvS+3dULm2kih
+         q55K4RcUa082cHmf4ITTfMnbAdZS0mGgcjfXCLzw1cFe6olMusY6a7LQwsxBPK28718c
+         GdGfDri3qp5UEFB8Uh3vQsdi3ACnEAVPkAfsc8AtQ5K6l75JrqexeCfa5IqGWrcbEV7Q
+         V17YMBAozHuaL9VALOMehHcQRzZnueFr2I/7pmu8fKPtYwDIffhZugb4EA+NkAsDDAVA
+         QNXgY04NfHTCE8sjVR8+8tkNYA02LmR1PDGLUtESv0/YtAuYi7mtjm9y175EQArpRS84
+         iCSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaSxBYiOjpul1KPulbkd/dlVWpOLSBUSXxYSLqw1r8OvueU72jjB1LmI+pP4tFGBNTtRgLGufXNcSCKTYK@vger.kernel.org, AJvYcCXcGGbDl3Qge3sYjlXuJhKvHdNRf0vCmFqvCW2YdNmlD9Yn136jhPhNpZs1GQKuHrgAV+2mSLLHaTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGQAs1gmwcZLOTsb9LsfaxEoog4xxMr60khNWILS/uPmOZ/FKI
+	R5jZZlrjWynmUglAYKYjpNub9q1TpMClFUd+e9quso4ZTiv9Q+kWzKKn0LShdy6RVSQVqyYPz82
+	y58cexGKZKb9RtkI+XkYMC23/wDorWpg=
+X-Gm-Gg: ASbGncsghzAPkmDaaMZwmh+BJBt9Djf+BPZEqDtPbL4QIKCKHhNO5tEb9OW6dOZsgVm
+	1rKYTjUf8Ws/Qebqc20qTZajMU2TmGFUHJu2V7V0rRSgKos+MNyfkd7JEn0DFctPNYPMtW/MLLH
+	EPjT2ZW4RBgATvdDf09V2iVxpIOz8O47sS/H3TI5gVijBAjcO9veRNCAu5fA==
+X-Google-Smtp-Source: AGHT+IFPz+MGdR9xaxyWw5ZcFXkAIj7zZTibwK8+1PJ5JbiQSc8w420wRrtSop3ucYZ0WGoLt8TZvqce1UY2Bfi69h8=
+X-Received: by 2002:a05:6102:4a86:b0:4e7:b338:5352 with SMTP id
+ ada2fe7eead31-4e7f616472dmr3504188137.10.1749928597811; Sat, 14 Jun 2025
+ 12:16:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
+ <20250611194648.18133-2-andrew.lopes@alumni.usp.br> <aErOevItBLmKm4Jv@smile.fi.intel.com>
+ <20250614124838.02b79111@jic23-huawei>
+In-Reply-To: <20250614124838.02b79111@jic23-huawei>
+From: Andrew Ijano <andrew.ijano@gmail.com>
+Date: Sat, 14 Jun 2025 16:16:26 -0300
+X-Gm-Features: AX0GCFs_0VtfZ7D3Sr5WHSYQZNvCVZtJvJaC7pRoL7sZJRVTiBx7Q_gjuowjTRo
+Message-ID: <CANZih_QXx8fnXgcngxJ710mNt2tMeGUmezEtTpuQMdDGbqVypQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] iio: accel: sca3000: replace error_ret labels by
+ simple returns
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, andrew.lopes@alumni.usp.br, 
+	gustavobastos@usp.br, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Jun 2025 21:16:10 +0200
-Message-Id: <DAMHWN6ML8A1.2AUE4UWR58KR2@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v5 05/23] rust: num: add the `fls` operation
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
-In-Reply-To: <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
 
-On Thu Jun 12, 2025 at 4:01 PM CEST, Alexandre Courbot wrote:
-> Add an equivalent to the `fls` (Find Last Set bit) C function to Rust
-> unsigned types.
-
-Have you tried to upstream this?
-
-> It is to be first used by the nova-core driver.
+On Sat, Jun 14, 2025 at 8:48=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
 >
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  rust/kernel/num.rs | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
+> On Thu, 12 Jun 2025 15:56:26 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 >
-> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
-> index ee0f67ad1a89e69f5f8d2077eba5541b472e7d8a..934afe17719f789c569dbd545=
-34adc2e26fe59f2 100644
-> --- a/rust/kernel/num.rs
-> +++ b/rust/kernel/num.rs
-> @@ -171,3 +171,34 @@ fn borrow(&self) -> &T {
->          &self.0
->      }
->  }
-> +
-> +macro_rules! impl_fls {
-> +    ($($t:ty),+) =3D> {
-> +        $(
-> +            ::kernel::macros::paste! {
-> +            /// Find Last Set Bit: return the 1-based index of the last =
-(i.e. most significant) set
-> +            /// bit in `v`.
-> +            ///
-> +            /// Equivalent to the C `fls` function.
-> +            ///
-> +            /// # Examples
-> +            ///
-> +            /// ```
-> +            /// use kernel::num::fls_u32;
-> +            ///
-> +            /// assert_eq!(fls_u32(0x0), 0);
-> +            /// assert_eq!(fls_u32(0x1), 1);
-> +            /// assert_eq!(fls_u32(0x10), 5);
-> +            /// assert_eq!(fls_u32(0xffff), 16);
-> +            /// assert_eq!(fls_u32(0x8000_0000), 32);
-> +            /// ```
-> +            #[inline(always)]
-> +            pub const fn [<fls_ $t>](v: $t) -> u32 {
+...
+> >
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Applied this patch to the togreg branch of iio.git which is
+> initially pushed out as testing.
+>
 
-Can we name this `find_last_set_bit_ $t`? When the upstream function
-lands, we should also rename this one.
+Thank you, Nino, Andy and Jonathan for the review! I'll address the
+comments and send a new version of the patchset for paches #2 and #3
+then.
 
----
-Cheers,
-Benno
-
-> +                $t::BITS - v.leading_zeros()
-> +            }
-> +            }
-> +        )+
-> +    };
-> +}
-> +
-> +impl_fls!(usize, u8, u16, u32, u64, u128);
-
+Thanks,
+Andrew
