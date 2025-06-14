@@ -1,135 +1,112 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F67C2F32
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD3B2F32
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749868574; cv=none; b=iprycrtxqtXo/yajv+9WDhuOaQvtIQZ+JWKr05giQMnBE/ArJtenU6Dos8tUL/QNs2ZJ+MMqAol/UJVxOTuZ4nwecathEAp+hyK6QlPMMQI4Trsoa+qIa7CxFGXK5P1v4VCAazlmA5+lUaEv9Y+6iB6ErmpO3wC0lp30P0IhxdI=
+	t=1749868903; cv=none; b=VnH19kSBEnWyfjiYU11CdSsV1jaKmN4wqywp9Cx0uCm/ApSQltChKpbt5i16QFQ8EVyRUO4DzkpOUw15p503W86FXEm6FlGIT4oOw3B1Baz+qYnKtcUq6dm5ek7tmDe9q26hhNBL08l7ec08ytuQ2ibiebP5EXYsVm247GtCg6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749868574; c=relaxed/simple;
-	bh=/4zSIPw19HlLUie6b0kgjQJHS7vidQhIk3Cd96brfSo=;
+	s=arc-20240116; t=1749868903; c=relaxed/simple;
+	bh=pjpmAaFla2SFS9mrocaF+iweTLQPPrgLhxPktz4zL+M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HhqTy6V5sWnVPt9k9YYDMh32udMvx4HhLwYVFOopNsPvJh2oDVdBuf9vx5AxC7zhf5mRG+tc/pYpD7H7cSPUgjPxfbN0gtSLwxOBymVQsGu0PcRzl29qalTdV4u4j82ThN2YkRsy0GpSoO6DGlwyINTP6kjlvy18huWqLzL1o9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sX89axQg; arc=none smtp.client-ip=209.85.167.54
+	 To:Cc:Content-Type; b=XI7Cg8kEeR9wgIl3hRk+gJMAhhjbdO7l37j/P+AZC/W+mT37ZP6ovbMre+xhDwIElC+YdKwYZ5d63WV8rWS0currmRcuKVxKXNgy7yJjOy+n+XiZ7UF1ZdkkSEiW3gwTFIL+CMdUjuYSNHaf7IJpxvmipeskgSUjLIkCu0W+BqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dJKDG5Se; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sX89axQg"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553543ddfc7so2793572e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dJKDG5Se"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-551ed563740so3044684e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:41:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749868570; x=1750473370; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749868899; x=1750473699; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/4zSIPw19HlLUie6b0kgjQJHS7vidQhIk3Cd96brfSo=;
-        b=sX89axQgrXndfTmWgIA4/zYPmIc/6CBvEEWvXLstvxp9m/Nja4LrywYzyjXHB2wjEq
-         2YbaxO83g9XX5eHABWPfBL1CAiOCOnJRFpDaqlZEhH6h2mO9CHMig9npSJPo/vTla+5o
-         ChT3dMe69Va7cRz53ZOICYSbvhdGCoAmpNqcwkMHEB9VIc99KPyJ40J61NSvVJdczr44
-         kRmtBmX3sJa5SwaStebFGVlBylOnTqsYPcE46kh4JgEWsVery+uk7GfvOLiBHEafm4uH
-         v1O6ojkEzCpMW5csZkVbSsz6uJFIO4pV8QCCY+Ga3bg2ZUGZkByo9j9/aO25KtABGpzz
-         AO7g==
+        bh=doPzRJPVP3/xe4/aMYowFwbSzXC9NI8C9CEdrJvNyeE=;
+        b=dJKDG5SeW7gNTOrA+S5bXuJTaNb5egWFA7u/qJUAPwYwgw656wmZE73vMJX6q6DZd8
+         WhVC3zX15TrbLqwAE5tHimxdXYasPxAZEI9AkCxgFF080gM0yKmIBNte0x0fZ/toori/
+         7KGKADA402TzHlisLhJ7wnr2IYRB3VpIsh3mGR586OMvMUBFbPszJvDnUyGTYE9uNzbJ
+         UWl4IZVtCI0NwSsSb6Yg2qv9pLRlz4kfBbY3S1vyCajBOoOH13JvGhMjYBmKLnoYyUV9
+         uIw2TFd+6guJHSdXzYgW/2Syh3iJF9QpiYmI3dEP6W3cgTBmThSd9pg8RiZlXNK95P97
+         GXSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749868570; x=1750473370;
+        d=1e100.net; s=20230601; t=1749868899; x=1750473699;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/4zSIPw19HlLUie6b0kgjQJHS7vidQhIk3Cd96brfSo=;
-        b=OiXY06ZZYagGdW1MMcAHPE5B1/nj3zBQmjsNCnoam4BTWWkBpWUGnuVda/+RhagmGZ
-         yk3SgZQhLCUMnYVb2Xlut7QooIUpsS58Eo5E38BkfnQawDA4jnVJPaPUbV8XWWXdNRQ9
-         Db11PMIyroTzT4vXgcXMAIVVlpezz4vNqFaXK5vt3dcmJmfUQf3kX7xYsntXDgvj0Cyu
-         uJy9eRF6e2e1aN2u/WFuUBzBdwJ+xn2K1tFiBy+xVn9Ru8zIVG0SQe8TMCeDU++a/PKz
-         LYdtvpJNALsrXFpP2fwMCxxhYPMnsjfvpt8lLH6T1MBLHCK5S91D76MZ9/d9xxC9sm0T
-         L04g==
-X-Forwarded-Encrypted: i=1; AJvYcCVuLT8zZLseCE94Bgc2c+XgyE5mpp7OQdIKD+8Z6WJCa/EBlyt3yZz9PkpTVCgAqz4AMWwk4jDQ25qFzf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziwSg+CvT0MVoZnBIfjbtkHNKobJMu9bk0McIQZD8xUpuSbu7b
-	FmXHF28+Zd7Qss9oSPs4Wgy/3eBTkIOUr/VYtnNAElxTumhLaix3WxVKS/CH3eCYA0xwEiF+y9W
-	8eGR50LOkA4bPQT/jsAono3IkT3bSsPV3Q3t8Bf8=
-X-Gm-Gg: ASbGnct3HhWf1JwWRFYAXMcT1Sj+OX72CfQz21IQj/lO4DRFSRmhlJtXPGr4h+LRsq3
-	Y/OrcxC1BQSjbJp2DIPzqxuNBP88tKeRn7nr+ziwMHhUB47HD20DrvoBe00eZQq38u7psMWrLl8
-	jR/8QnbJFibL+cIDR3bDqJxRLbI7iM8sM8mNItI0M+8w1IyA8er8hXJUFEcHPJ5C0aMfqAJU8=
-X-Google-Smtp-Source: AGHT+IFxdd/eeA/jqO+ioIaQwggzyaJAKSp2npacWe2qm5ZmqZbGMbcXq9pAMDlbKaGfZHdE5uH6xTWQR5MyLSGGuXg=
-X-Received: by 2002:a05:6512:3f12:b0:553:ae47:6856 with SMTP id
- 2adb3069b0e04-553b6e7d3b4mr334265e87.10.1749868570161; Fri, 13 Jun 2025
- 19:36:10 -0700 (PDT)
+        bh=doPzRJPVP3/xe4/aMYowFwbSzXC9NI8C9CEdrJvNyeE=;
+        b=A3kGH+f32Q9O0TlxUjSx3GedlySQXyVFY3TSabMYQXYbdbYX0HE5gcbXx7CQqUJley
+         lkxwkzk3pR6nAEDJB8qwIYebmqhKHdY0ZMrWcIvTwaq7jQwuiaL8Hb9lxfTVJo0NX60N
+         au/BSCy3ySr6SQAJqlfoXzVts89aMvsJtVZupiXtpdLA+kbU5E8KK7PixgkqH2ImHv1v
+         6IOWwwcfIVlgOseXSLKueg/cpVeHP20adHcgO0NQ4PFfwBrTWC24deMZVqczSUciPNw+
+         qmbsapH1RZnVkfDgpM7Qk/dNSNebJJeWtqauZhDIrlEbASLvebTQHwdg2P4YdIjCBC/J
+         /1Qg==
+X-Gm-Message-State: AOJu0Yx0O3HS8ySErAnetGDpH/Cg3cEQEdn1GHudLI5BYwvVzGXEqp22
+	sCuxuv8sLudSoJiRBrON5Bv+4RS5UjJ32UM5G8LYWv9WkfsgsJNV0ufmm7qDNjyA3M47VMmqnE4
+	/ofSr1Abhf1jd8/CYpqUAInoCet+zm/6LlfbcMwCkppskN9CgddQJUmw=
+X-Gm-Gg: ASbGncuhTu59q+nbCSw5aeCCKgm9b2mFLhasprqcx2+r992t6MeSeifUv452dCyzSS8
+	Mb4d5mGaFg0PZ/0P45w42THgbAxhLRSK11Ym/ES8UPvzxXKFQz2RIu3+nC0TtGgWbWlO2KE58IZ
+	bJIwhl9mz7dtCt0N4AYpPtLwJ9YDKqgc+53BQGSCx32cHIYyjsKiFgwJJJp7Sl4Uv48G7A9Ow=
+X-Google-Smtp-Source: AGHT+IGyKmLcxos7EcwvVgM6x3f7yo/MjLs4DGE0QOIk/6EfA/xQL0wbg2vDDJZFztxwGG7zsTTPyp1k4n3wV6k8L+Y=
+X-Received: by 2002:a05:6512:3191:b0:553:ad28:210a with SMTP id
+ 2adb3069b0e04-553b6f43b84mr330715e87.51.1749868899145; Fri, 13 Jun 2025
+ 19:41:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614020524.631521-1-kuyo.chang@mediatek.com>
-In-Reply-To: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+References: <20250519082042.742926976@linutronix.de> <20250519083026.350061049@linutronix.de>
+In-Reply-To: <20250519083026.350061049@linutronix.de>
 From: John Stultz <jstultz@google.com>
-Date: Fri, 13 Jun 2025 19:35:58 -0700
-X-Gm-Features: AX0GCFtDliQH_6brlg-dmQaZIRQh31WrUqfBwRgyCd0Z_gzAKUDVN86BzaEZjjk
-Message-ID: <CANDhNCpoKUbQU590m-vBKhk96ZCKDsYWOHwP_LL2W84SPOnXww@mail.gmail.com>
-Subject: Re: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation formula
-To: Kuyo Chang <kuyo.chang@mediatek.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Date: Fri, 13 Jun 2025 19:41:27 -0700
+X-Gm-Features: AX0GCFvDzGMYapzpRturPw50nvQKFTA7BYWBgXb8VydIajUfsXGekrmW0-EEmG4
+Message-ID: <CANDhNCqXMnEOC58PN03M+9-=DSty2FoZpJDz+OUuzd08uQdoEw@mail.gmail.com>
+Subject: Re: [patch V2 12/26] timekeeping: Introduce auxiliary timekeepers
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 7:05=E2=80=AFPM Kuyo Chang <kuyo.chang@mediatek.com=
+On Mon, May 19, 2025 at 1:33=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
 > wrote:
-> From: kuyo chang <kuyo.chang@mediatek.com>
 >
-> [Symptom]
-> The calculation formula for fair_server runtime is based on
-> Frequency/CPU scale-invariance.
-> This will cause excessive RT latency (expect absolute time).
+> From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 >
-> [Analysis]
-> Consider the following case under a Big.LITTLE architecture:
+> Provide timekeepers for auxiliary clocks and initialize them during
+> boot.
 >
-> Assume the runtime is : 50,000,000 ns, and FIE/CIE as below
-> FIE: 100
-> CIE:50
-> First by FIE, the runtime is scaled to 50,000,000 * 100 >> 10 =3D 4,882,8=
-12
-> Then by CIE, it is further scaled to 4,882,812 * 50 >> 10 =3D 238,418.
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 >
-> So it will scaled to 238,418 ns.
->
-> [Solution]
-> The runtime for fair_server should be absolute time
-> asis RT bandwidth control.
-> Fix the runtime calculation formula for the fair_server.
->
-> Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
+> ---
+>  kernel/time/timekeeping.c |   22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> ---
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -2630,3 +2640,11 @@ void hardpps(const struct timespec64 *ph
+>  }
+>  EXPORT_SYMBOL(hardpps);
+>  #endif /* CONFIG_NTP_PPS */
+> +
+> +#ifdef CONFIG_POSIX_AUX_CLOCKS
+> +static __init void tk_aux_setup(void)
+> +{
+> +       for (int i =3D TIMEKEEPER_AUX; i <=3D TIMEKEEPER_AUX_LAST; i++)
 
-While I've not quite gotten my head around the details in the
-dl_server code, I've been able to reproduce the problem described here
-with a 6.12 based kernel.
+My only thought here, seeing its use,  would it be better if
+TIMEKEEPER_AUX was TIMEKEEPER_AUX_FIRST?
 
-Running cyclictest (with arguments "-t -a -p99 -m") , and a randomized
-input test on an Android device, its pretty easy to trip 100ms to
-*multi-second* delays of the RT prio 99 threads.
-
-Perfetto image:
-https://github.com/johnstultz-work/misc/blob/main/images/2025-06-13_cyclict=
-est-dl-server-latency.png
-
-Link to the actual trace:
-https://ui.perfetto.dev/#!/?s=3D9bbb9e539ac2bbbfe3cfa954409134662a9f624a
-
-Using this patch, so far in my testing with the same workload, the max
-cyclictest latencies stick around the single digit ms range.
-
-The part that is a little confusing to me, is that prior to the long
-stall, it doesn't appear that RT tasks are actually starving
-SCHED_NORMAL tasks, so I'm conceptually surprised to see the dl_server
-boosting the normal tasks, especially for so long, but I admittedly
-haven't looked in detail at the code and have been going off my
-understanding of how it was supposed to replace rt-throttling, so I
-may be missing a subtlety.
-
+Acked-by: John Stultz <jstultz@google.com>
 thanks
 -john
