@@ -1,998 +1,174 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011070.outbound.protection.outlook.com [40.107.130.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C29200B99;
-	Sat, 14 Jun 2025 21:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749938226; cv=fail; b=jCeBrlfVPGWLM2xxA+5XNkYdALos+Hwls2Ww3Z3uUkF4msjRCu/1ahubefDsGBS28K55umat8W1SQ4rSFe4s+eUnIkABxZe+U9pglB7BWv5LtUm0kZgl8MR0ZKZ9EodbBirGElZmjLNsOpymLvXfDRo5FFjtZvONbSKPWR/gSgk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749938226; c=relaxed/simple;
-	bh=P5kQO+utbhBf0Mf7K1y6qAG5hI1zm2W3y1Y7HqjPjB8=;
-	h=From:To:CC:Subject:In-Reply-To:Message-ID:Date:MIME-Version:
-	 Content-Type; b=pfqZgd4nKkaVhawtL14VgFBPq/kKaQYEXZUdpelocQJXxATcNMFtfNEDppVNKSDABR1bm8QHjlzOaITYXBVdob5aeWZnkJEtOwHgsTUzj/G9kJuv8g8dvsyMx3SBNUQYPU7X4ksvTzdG2ywoF/hwHVkPteNTXKJmkg/xIuzCyzU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=gvt2Daek; arc=fail smtp.client-ip=40.107.130.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="gvt2Daek"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oR3qjfEpY+82PITkdPH5T1I9qYGs8OnS0T9a5He2QklrFCn49bcMVL1Imh+GbFywJmhZ+Wa4MI9C0wjVlkLGmgj5nXNmOAkYfx+tGx/A6tinkMA6PEyCSW4zKHAaCNBQz2KWs1GKsL3MIJ/kyYV+qSELTE1RheZct3e4uedTkRkKyvspX2DlG99/YRPOidvitj0fnrqxOzDIfsllAux4putVfujuVZQTeRBYfTH/9qDToHFE2z2AHWAxH9AFI/O6xTYhcxP+xchfFMjekxawMhLyvU5LrQ3wl0xizrIhalQ+xDDnogb16BPbRMr77jQCr/bTBAILhsTW/UuwPpPZuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gv5MSOl/2M1l5AAAMPQHjn8l+P8cpZg2Jo3V18/YuM0=;
- b=crTYADIAy1i2kUdL+9a4kiJ4faXGtl9nARt8eNN9hTZliCD7pi+HVuaIg2UXz4DipNYWiNjxomVeoj+ld4M5O6Gd5ckFcaJTv5nykL3ztNWrMOHfNPx6GjQ8FPqZSeUGIDi1gITMi9tVKxFQld4veAe3oJB3ud5DhKBykqtVhRSRrwhr4jzhTPCrXC7cdpzkhKvLKCZzcO+9JILvuLi8WhOGr9HIQs+SqAfc06dpXOUhR/0+ej0ggxg6UrB7ahrOkzOKjqKRTg/QUyNdxK64BvucYNr/FKJXRYtcc40ydto4i3XZW/gs7nPLHpBuNlKiFmwMswWI4qRnfuiNth7Kqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gv5MSOl/2M1l5AAAMPQHjn8l+P8cpZg2Jo3V18/YuM0=;
- b=gvt2Daek/RlhmWQggaSJsQpzXQUQd1xR4npOnAhnCIY6C4wPg3MHLxPNQj1OvSq72keMlvuHPxacca5NNeKjobg8LTVZkvt2/dwkNMlEa4HEcbAVZskv4GCAatbNvUvRNjYnC7r26Do9O6+oNZ5kyTs6S2W9z5CjEBS3QNOieoc=
-Received: from AS9PR06CA0489.eurprd06.prod.outlook.com (2603:10a6:20b:49b::13)
- by DB9PR02MB6969.eurprd02.prod.outlook.com (2603:10a6:10:1fe::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Sat, 14 Jun
- 2025 21:56:56 +0000
-Received: from AMS0EPF000001A5.eurprd05.prod.outlook.com
- (2603:10a6:20b:49b:cafe::3c) by AS9PR06CA0489.outlook.office365.com
- (2603:10a6:20b:49b::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.25 via Frontend Transport; Sat,
- 14 Jun 2025 21:56:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- AMS0EPF000001A5.mail.protection.outlook.com (10.167.16.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Sat, 14 Jun 2025 21:56:56 +0000
-Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Sat, 14 Jun
- 2025 23:56:55 +0200
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-CC: <kernel@axis.com>, <linux-kernel@vger.kernel.org>,
-	<linux-iio@vger.kernel.org>
-Subject: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
-In-Reply-To: <cover.1749937579.git.waqar.hameed@axis.com>
-User-Agent: a.out
-Message-ID: <5d12fcd6faae86f7280e753f887ea60513b22ea9.1749937579.git.waqar.hameed@axis.com>
-Date: Sat, 14 Jun 2025 23:56:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8082E11CB
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 22:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749938672; cv=none; b=XqAKAHs2e5YBBKpfCV4oDkMmfBgub0e7plUo/Qh+HgI6hijV58Jchq1nxbaDryV610QU359kJfjgPkAxOTkhbS2DPXzcrWVxJlPp1FOeAnYQlkChI+EMgBER+e7IGQMArDiaY7fGJwEU2g28bSVAFQWdgHcH63HxhiAtj9TlmHk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749938672; c=relaxed/simple;
+	bh=6sfSlVUXgOQMyPT1nbmF4IKOHML94okR/2LMhebCFXg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bgb7fmOFD1KXdIKbfhJyJmhmiyBn3p+q4Ame6+uvHi3Qk8uOhyumDzZcCq3FGgFsMy1XnydrSFEQEgK6y9zDv+odQkkB7Klwnd3DP3MmrGYFL/9UBajN8gKq2VGbQPYk0D6ERQT9wmyVRF7dQsQlIUZqk0KsWix/zPBV/g0HYew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so78217205ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:04:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749938669; x=1750543469;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mogrcbZ+TiNC+9gUVOUlvySHlEjXaTgQztRk8fEDgYM=;
+        b=g3BMYVCyUT6x10jd0MjglghuM+nzoZx3Gx2I6f34GPB51yIJp+ktstAiip2YEvaMi1
+         BskmjKCsgrU+fXlyU9m1H9lPTUbM+hOf8x5II50VDEzr+Www8nKAUmXywaLwworY6eGP
+         6AlcqS36Ew7q0Uarq1Qx3fZDvglSpdTZSBTsI/P7laCx2FSXNYkLR3vc/LaL9nbTATjW
+         InM4ExJQ+pemTQQBd7oi/afBdaoRX+PD4bBbpspvUljGNZLizITbJFbAWF+J/G/6QG2y
+         7naZXqEP6HLT7EJGhr0b99kEFwq9pYO5J//9LFqsrF7jjxOoqLm47JZabTohsaeGfjzL
+         s13w==
+X-Forwarded-Encrypted: i=1; AJvYcCVwfPGTyZuyHi0iVz16l5HIgGiTV3geTRbcV/Bv376eq7yyGAQrl08ozZGXtBDzpjQ7FE32kqlyh8Kplf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb2bzpOgzosooR4+Tm7b/QEk8QypGnpdwKVN9vvGk1DQRYExsL
+	u+DVeQMQjqdkDdnLEoRQROvrt6pR5CXod0O9jdASYtqgjEAXDuaXBLUFfMZxQ8LOaKtH7AIMyGg
+	GNlWexvLB6otMAvV46voKxouULzoT6wMISc+r92K/gNZuNywZWcl9iJLXnWE=
+X-Google-Smtp-Source: AGHT+IFYSHMnsnnpeVnBEUGLMJ6cO0VDOxaCBIgjTilhI7VFTfRKV4hYrh4wiY0/wstIbswDbiz1CFy68w9x5Mdyi72nkExxp+uk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A5:EE_|DB9PR02MB6969:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7923f82-2975-4af8-2682-08ddab8e6188
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YBL41CvDOm4gMx3MtYXFGfX303Q9ISzXKQW7fu49ILq8laJQZJztSFBSlj5t?=
- =?us-ascii?Q?wfBme2A+WQUANvQUNXBGwxsZKcVbteKFhWiFUiIuS1rGPBJZxYcjdRJGir/b?=
- =?us-ascii?Q?n9ZDtLpPi+64QVZObod7cv/wQESGp2W3uFuvxICRpdxH0++NahsQuVmAtwzc?=
- =?us-ascii?Q?3/JdGifTi+jrw0tBvKCNEoRSTNe/zmkDYNuy0RlMBT3q1IlrjteVAgjS1kTF?=
- =?us-ascii?Q?MO+ZI0A/ZNyuv6++tBP0mksRCCh0/mGeEzbH54yln160ToCC/WCLWV+rmTlx?=
- =?us-ascii?Q?2L6aRCIyfay1vTvhTgip0J7RNw314natYiTL28T8c7cxqCSBDMbSO8YAjWvp?=
- =?us-ascii?Q?jS8qCAGfobUISR7ooNdUnX5cIePvnVHe3sB3LqVPt5QzFYuXmC1cZORdqeLW?=
- =?us-ascii?Q?r2iMLw637ZoVFHKjFz8BSi5Xb+sPM5dcYRpkHdk0pIRMWMi7iYTBS4kIwje6?=
- =?us-ascii?Q?89lApUGs2sgJC8S0rui0U1ntCT2U+ddiFPY0HhkxrFF83cqVv4FFDtVyv5PF?=
- =?us-ascii?Q?gFHdWdC/Bevl51U9Fnt9WeBCu04SLz5+S+HccmDMTSP8BfDbw4FpWbMwaoMW?=
- =?us-ascii?Q?imTOmOgAir/a5GrQjYXhRVcdZuuaWERdTapg4ngjzPSuj62bevy/4h/aseGJ?=
- =?us-ascii?Q?X6QZQNXpBWRFvHI34g1n/gXWfLAfaP1oJGZtSzhz35xSQPE3tpCcfpVRQuz/?=
- =?us-ascii?Q?qOXEorXPE7M4NhOExA5kQztgJWdOAh4yKq1pbrT8+YHoeJKH1oZTQbg5MRoa?=
- =?us-ascii?Q?k9JY1tFxJJTUKUL07Kc+Ity4QG27jLT4/FBHeJW7T4RnLDdsjC16Jh60MjtU?=
- =?us-ascii?Q?vFBwRtTqtBN6saeP0lNqfUP7/P8eyp0KW1P3W0qsI7h33MDvDoZ/8/ISDaZJ?=
- =?us-ascii?Q?SGWwMGLplxklB+logo2+eaQ5ebcAU/9YIqpcz4ElaEEviDP3UcJUzEDmnLHO?=
- =?us-ascii?Q?X72zF57aZiIfbSRj/p6UuAX21y/CyrHzb4SUgU1dNHnnFFWX+y7g2SHmZlHV?=
- =?us-ascii?Q?KiLBYoOpZTudk3RuOkiBqAFYecvNKV3Ecd36ulUQRhH7vnrzQhmQkK1jwa5u?=
- =?us-ascii?Q?/oJ+l3G+mFuVID/LP5MHnGVxlVjbsTuooW7ipCqUbf1T4/Bom4yMOlBIMwd0?=
- =?us-ascii?Q?Q9h9IxyVM5mQJlLH0MTFKMwkUgForarmHE8Zz+lA1J9yn9e6teK/t03H3FB8?=
- =?us-ascii?Q?zWdJ9hhrXiR7iWPXV3bGrk+DHox1JEP/cFuG2IEcglODf69+GBawgQ9x5hmp?=
- =?us-ascii?Q?ybPCQo39RHWRveiPsSRLy4FRV75KZXtCwnqsH4bRdyrQBKsf046om6OXJ9lo?=
- =?us-ascii?Q?G/GWwsZiIJGIzKsnjE2yQE7EG2qq0SLRkW+JfwvKuYXlDMiR3jQtLf/oyOdJ?=
- =?us-ascii?Q?4SCYbfSRWSluV/kPKGqo9w7qMX8e9dmwOLFS/Z4prR+yty22jxmX5Ne6j9rx?=
- =?us-ascii?Q?70jeZOSVAjTuco8jLf980S9VsYcsWK517Idr5noWheUPzvHV3/h7hcEK59Ed?=
- =?us-ascii?Q?pT0SCJKgZmGmYW0cCSpCHhym3Xvgf8gYzdNi?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 21:56:56.6087
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7923f82-2975-4af8-2682-08ddab8e6188
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A5.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB6969
+X-Received: by 2002:a05:6e02:3c88:b0:3dd:d348:715a with SMTP id
+ e9e14a558f8ab-3de07c6ac3bmr52964455ab.8.1749938669514; Sat, 14 Jun 2025
+ 15:04:29 -0700 (PDT)
+Date: Sat, 14 Jun 2025 15:04:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684df1ed.a00a0220.279073.0024.GAE@google.com>
+Subject: [syzbot] [kernel?] WARNING: refcount bug in hdm_disconnect
+From: syzbot <syzbot+d175ca7205b4f18390b1@syzkaller.appspotmail.com>
+To: dakr@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	rafael@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Nicera D3-323-AA is a PIR sensor for human detection. It has support for
-raw data measurements and detection notification. The communication
-protocol is custom made and therefore needs to be GPIO bit banged.
+Hello,
 
-The device has two main settings that can be configured: a threshold
-value for detection and a band-pass filter. The configurable parameters
-for the band-pass filter are the high-pass and low-pass cutoff
-frequencies and its peak gain. Map these settings to the corresponding
-parameters in the `iio` framework.
+syzbot found the following issue on:
 
-Raw data measurements can be obtained from the device. However, since we
-rely on bit banging, it will be rather cumbersome with buffer support.
-The main reason being that the data protocol has strict timing
-requirements (it's serial like UART), and it's mainly used during
-debugging since in real-world applications only the event notification
-is of importance. Therefore, only add support for events (for now).
+HEAD commit:    4774cfe3543a Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b525d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=706b535f9c369932
+dashboard link: https://syzkaller.appspot.com/bug?extid=d175ca7205b4f18390b1
+compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm
 
-Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/98a89b9f34e4/non_bootable_disk-4774cfe3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/cae525065b5b/vmlinux-4774cfe3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ce14ef6ecfe2/zImage-4774cfe3.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d175ca7205b4f18390b1@syzkaller.appspotmail.com
+
+usb 2-1: USB disconnect, device number 30
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 4354 at lib/refcount.c:28 refcount_warn_saturate+0x13c/0x174 lib/refcount.c:28
+refcount_t: underflow; use-after-free.
+Modules linked in:
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+CPU: 0 UID: 0 PID: 4354 Comm: kworker/0:54 Not tainted 6.16.0-rc1-syzkaller #0 PREEMPT 
+Hardware name: ARM-Versatile Express
+Workqueue: usb_hub_wq hub_event
+Call trace: 
+[<80201a00>] (dump_backtrace) from [<80201afc>] (show_stack+0x18/0x1c arch/arm/kernel/traps.c:257)
+ r7:00000000 r6:8282083c r5:00000000 r4:82259bd0
+[<80201ae4>] (show_stack) from [<8021fd94>] (__dump_stack lib/dump_stack.c:94 [inline])
+[<80201ae4>] (show_stack) from [<8021fd94>] (dump_stack_lvl+0x54/0x7c lib/dump_stack.c:120)
+[<8021fd40>] (dump_stack_lvl) from [<8021fdd4>] (dump_stack+0x18/0x1c lib/dump_stack.c:129)
+ r5:00000000 r4:82a6dd18
+[<8021fdbc>] (dump_stack) from [<80202614>] (panic+0x120/0x374 kernel/panic.c:382)
+[<802024f4>] (panic) from [<802585b8>] (check_panic_on_warn kernel/panic.c:273 [inline])
+[<802024f4>] (panic) from [<802585b8>] (get_taint+0x0/0x1c kernel/panic.c:268)
+ r3:8280c684 r2:00000001 r1:822406fc r0:822480ac
+ r7:808c00f4
+[<80258544>] (check_panic_on_warn) from [<8025871c>] (__warn+0x80/0x188 kernel/panic.c:777)
+[<8025869c>] (__warn) from [<80258a0c>] (warn_slowpath_fmt+0x1e8/0x1f4 kernel/panic.c:812)
+ r8:00000009 r7:822b1be4 r6:dfaa1bfc r5:85882400 r4:00000000
+[<80258828>] (warn_slowpath_fmt) from [<808c00f4>] (refcount_warn_saturate+0x13c/0x174 lib/refcount.c:28)
+ r10:00000001 r9:829ca3e8 r8:858c4088 r7:858c7874 r6:84aa87b4 r5:858c7800
+ r4:83d21c00
+[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (__refcount_sub_and_test include/linux/refcount.h:400 [inline])
+[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (__refcount_dec_and_test include/linux/refcount.h:432 [inline])
+[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (refcount_dec_and_test include/linux/refcount.h:450 [inline])
+[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (kref_put include/linux/kref.h:64 [inline])
+[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (kobject_put+0x158/0x1f4 lib/kobject.c:737)
+[<819fcd30>] (kobject_put) from [<80b307e8>] (put_device+0x18/0x1c drivers/base/core.c:3800)
+ r7:858c7874 r6:84aa87b4 r5:858c7800 r4:84aa8000
+[<80b307d0>] (put_device) from [<81418e74>] (hdm_disconnect+0x90/0x9c drivers/most/most_usb.c:1129)
+[<81418de4>] (hdm_disconnect) from [<80e8cd04>] (usb_unbind_interface+0x84/0x2b4 drivers/usb/core/driver.c:458)
+ r7:858c7874 r6:858c7830 r5:00000000 r4:858c4000
+[<80e8cc80>] (usb_unbind_interface) from [<80b38870>] (device_remove drivers/base/dd.c:569 [inline])
+[<80e8cc80>] (usb_unbind_interface) from [<80b38870>] (device_remove+0x64/0x6c drivers/base/dd.c:561)
+ r10:00000001 r9:858c4088 r8:00000044 r7:858c7874 r6:829ca3e8 r5:00000000
+ r4:858c7830
+[<80b3880c>] (device_remove) from [<80b39d60>] (__device_release_driver drivers/base/dd.c:1272 [inline])
+[<80b3880c>] (device_remove) from [<80b39d60>] (device_release_driver_internal+0x18c/0x200 drivers/base/dd.c:1295)
+ r5:00000000 r4:858c7830
+[<80b39bd4>] (device_release_driver_internal) from [<80b39dec>] (device_release_driver+0x18/0x1c drivers/base/dd.c:1318)
+ r9:858c4088 r8:8335cc40 r7:8335cc38 r6:8335cc0c r5:858c7830 r4:8335cc30
+[<80b39dd4>] (device_release_driver) from [<80b37ec4>] (bus_remove_device+0xcc/0x120 drivers/base/bus.c:579)
+[<80b37df8>] (bus_remove_device) from [<80b32220>] (device_del+0x148/0x38c drivers/base/core.c:3881)
+ r9:858c4088 r8:85882400 r7:04208060 r6:00000000 r5:858c7830 r4:858c7874
+[<80b320d8>] (device_del) from [<80e8a754>] (usb_disable_device+0xd4/0x1e8 drivers/usb/core/message.c:1418)
+ r10:00000001 r9:00000000 r8:00000000 r7:858c7800 r6:858c4000 r5:84899748
+ r4:60000013
+[<80e8a680>] (usb_disable_device) from [<80e7f4d0>] (usb_disconnect+0xec/0x29c drivers/usb/core/hub.c:2316)
+ r9:83d21600 r8:858c40cc r7:84282000 r6:858c4088 r5:858c4000 r4:60000013
+[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (hub_port_connect drivers/usb/core/hub.c:5375 [inline])
+[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (hub_port_connect_change drivers/usb/core/hub.c:5675 [inline])
+[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (port_event drivers/usb/core/hub.c:5835 [inline])
+[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (hub_event+0xe78/0x194c drivers/usb/core/hub.c:5917)
+ r10:00000001 r9:00000100 r8:83d03300 r7:858c4000 r6:84281800 r5:84282210
+ r4:00000001
+[<80e81318>] (hub_event) from [<8027e2e8>] (process_one_work+0x1b4/0x4f4 kernel/workqueue.c:3238)
+ r10:8335ce70 r9:8326f405 r8:85882400 r7:dddced40 r6:8326f400 r5:83d03300
+ r4:85a6a100
+[<8027e134>] (process_one_work) from [<8027ef30>] (process_scheduled_works kernel/workqueue.c:3321 [inline])
+[<8027e134>] (process_one_work) from [<8027ef30>] (worker_thread+0x1fc/0x3d8 kernel/workqueue.c:3402)
+ r10:61c88647 r9:85882400 r8:85a6a12c r7:82804d40 r6:dddced40 r5:dddced60
+ r4:85a6a100
+[<8027ed34>] (worker_thread) from [<80285f5c>] (kthread+0x12c/0x280 kernel/kthread.c:464)
+ r10:00000000 r9:85a6a100 r8:8027ed34 r7:dfed1e60 r6:85a6a000 r5:85882400
+ r4:00000001
+[<80285e30>] (kthread) from [<80200114>] (ret_from_fork+0x14/0x20 arch/arm/kernel/entry-common.S:137)
+Exception stack(0xdfaa1fb0 to 0xdfaa1ff8)
+1fa0:                                     00000000 00000000 00000000 00000000
+1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+ r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:80285e30
+ r4:853ec900
+Rebooting in 86400 seconds..
+
+
 ---
- drivers/iio/proximity/Kconfig   |   9 +
- drivers/iio/proximity/Makefile  |   1 +
- drivers/iio/proximity/d3323aa.c | 808 ++++++++++++++++++++++++++++++++
- 3 files changed, 818 insertions(+)
- create mode 100644 drivers/iio/proximity/d3323aa.c
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index a562a78b7d0d..6070974c2c85 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -32,6 +32,15 @@ config CROS_EC_MKBP_PROXIMITY
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_ec_mkbp_proximity.
- 
-+config D3323AA
-+	tristate "Nicera (Nippon Ceramic Co.) D3-323-AA PIR sensor"
-+	depends on GPIOLIB
-+	help
-+	  Say Y here to build a driver for the Nicera D3-323-AA PIR sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called d3323aa.
-+
- config HX9023S
- 	tristate "TYHX HX9023S SAR sensor"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index c5e76995764a..152034d38c49 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -6,6 +6,7 @@
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_AS3935)		+= as3935.o
- obj-$(CONFIG_CROS_EC_MKBP_PROXIMITY) += cros_ec_mkbp_proximity.o
-+obj-$(CONFIG_D3323AA)		+= d3323aa.o
- obj-$(CONFIG_HX9023S)		+= hx9023s.o
- obj-$(CONFIG_IRSD200)		+= irsd200.o
- obj-$(CONFIG_ISL29501)		+= isl29501.o
-diff --git a/drivers/iio/proximity/d3323aa.c b/drivers/iio/proximity/d3323aa.c
-new file mode 100644
-index 000000000000..71bccca75abd
---- /dev/null
-+++ b/drivers/iio/proximity/d3323aa.c
-@@ -0,0 +1,808 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for Nicera D3-323-AA PIR sensor.
-+ *
-+ * Copyright (C) 2025 Axis Communications AB
-+ */
-+
-+#include <linux/atomic.h>
-+#include <linux/bitmap.h>
-+#include <linux/cleanup.h>
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/jiffies.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/types.h>
-+
-+#include <linux/iio/events.h>
-+#include <linux/iio/iio.h>
-+
-+/*
-+ * Register bitmap.
-+ * For some reason the first bit is denoted as F37 in the datasheet, the second
-+ * as F38 and so on. Note the gap between F60 and F64.
-+ */
-+#define D3323AA_REG_BIT_SLAVEA1		0	/* F37. */
-+#define D3323AA_REG_BIT_SLAVEA2		1	/* F38. */
-+#define D3323AA_REG_BIT_SLAVEA3		2	/* F39. */
-+#define D3323AA_REG_BIT_SLAVEA4		3	/* F40. */
-+#define D3323AA_REG_BIT_SLAVEA5		4	/* F41. */
-+#define D3323AA_REG_BIT_SLAVEA6		5	/* F42. */
-+#define D3323AA_REG_BIT_SLAVEA7		6	/* F43. */
-+#define D3323AA_REG_BIT_SLAVEA8		7	/* F44. */
-+#define D3323AA_REG_BIT_SLAVEA9		8	/* F45. */
-+#define D3323AA_REG_BIT_SLAVEA10	9	/* F46. */
-+#define D3323AA_REG_BIT_DETLVLABS0	10	/* F47. */
-+#define D3323AA_REG_BIT_DETLVLABS1	11	/* F48. */
-+#define D3323AA_REG_BIT_DETLVLABS2	12	/* F49. */
-+#define D3323AA_REG_BIT_DETLVLABS3	13	/* F50. */
-+#define D3323AA_REG_BIT_DETLVLABS4	14	/* F51. */
-+#define D3323AA_REG_BIT_DETLVLABS5	15	/* F52. */
-+#define D3323AA_REG_BIT_DETLVLABS6	16	/* F53. */
-+#define D3323AA_REG_BIT_DETLVLABS7	17	/* F54. */
-+#define D3323AA_REG_BIT_DSLP		18	/* F55. */
-+#define D3323AA_REG_BIT_FSTEP0		19	/* F56. */
-+#define D3323AA_REG_BIT_FSTEP1		20	/* F57. */
-+#define D3323AA_REG_BIT_FILSEL0		21	/* F58. */
-+#define D3323AA_REG_BIT_FILSEL1		22	/* F59. */
-+#define D3323AA_REG_BIT_FILSEL2		23	/* F60. */
-+#define D3323AA_REG_BIT_FDSET		24	/* F64. */
-+#define D3323AA_REG_BIT_F65		25
-+#define D3323AA_REG_BIT_F87		(D3323AA_REG_BIT_F65 + (87 - 65))
-+
-+#define D3323AA_REG_NR_BITS (D3323AA_REG_BIT_F87 - D3323AA_REG_BIT_SLAVEA1 + 1)
-+#define D3323AA_THRESH_REG_NR_BITS                                             \
-+	(D3323AA_REG_BIT_DETLVLABS7 - D3323AA_REG_BIT_DETLVLABS0 + 1)
-+#define D3323AA_FILTER_TYPE_NR_BITS                                            \
-+	(D3323AA_REG_BIT_FILSEL2 - D3323AA_REG_BIT_FILSEL0 + 1)
-+#define D3323AA_FILTER_GAIN_REG_NR_BITS                                        \
-+	(D3323AA_REG_BIT_FSTEP1 - D3323AA_REG_BIT_FSTEP0 + 1)
-+
-+#define D3323AA_THRESH_DEFAULT_VAL 56
-+#define D3323AA_FILTER_GAIN_DEFAULT_IDX 1
-+#define D3323AA_LP_FILTER_FREQ_DEFAULT_IDX 1
-+
-+/*
-+ * The pattern is 0b01101, but store it reversed (0b10110) due to writing from
-+ * LSB on the wire (c.f. d3323aa_write_settings()).
-+ */
-+#define D3323AA_SETTING_END_PATTERN 0x16
-+#define D3323AA_SETTING_END_PATTERN_NR_BITS 5
-+
-+/*
-+ * Device should be ready for configuration after this many milliseconds.
-+ * Datasheet mentions "approx. 1.2 s". Measurements show around 1.23 s,
-+ * therefore add 100 ms of slack.
-+ */
-+#define D3323AA_RESET_TIMEOUT (1200 + 100)
-+
-+/*
-+ * The configuration of the device (write and read) should be done within this
-+ * many milliseconds.
-+ */
-+#define D3323AA_CONFIG_TIMEOUT 1400
-+
-+/* Number of IRQs needed for configuration stage after reset. */
-+#define D3323AA_IRQ_RESET_COUNT 2
-+
-+/*
-+ * High-pass filter cutoff frequency for the band-pass filter. There is a
-+ * corresponding low-pass cutoff frequency for each of the filter types
-+ * (denoted A, B, C and D in the datasheet). The index in this array matches
-+ * that corresponding value in d3323aa_lp_filter_freq.
-+ * Note that this represents a fractional value (e.g. the first value
-+ * corresponds to 40 / 100 = 0.4 Hz).
-+ */
-+static const int d3323aa_hp_filter_freq[][2] = {
-+	{ 40, 100 },
-+	{ 30, 100 },
-+	{ 30, 100 },
-+	{ 1, 100 },
-+};
-+
-+/*
-+ * Low-pass filter cutoff frequency for the band-pass filter. There is a
-+ * corresponding high-pass cutoff frequency for each of the filter types
-+ * (denoted A, B, C and D in the datasheet). The index in this array matches
-+ * that corresponding value in d3323aa_hp_filter_freq.
-+ * Note that this represents a fractional value (e.g. the first value
-+ * corresponds to 27 / 10 = 2.7 Hz).
-+ */
-+static const int d3323aa_lp_filter_freq[][2] = {
-+	{ 27, 10 },
-+	{ 15, 10 },
-+	{ 5, 1 },
-+	{ 100, 1 },
-+};
-+
-+/*
-+ * Register bitmap values for filter types (denoted A, B, C and D in the
-+ * datasheet). The index in this array matches the corresponding value in
-+ * d3323aa_lp_filter_freq (which in turn matches d3323aa_hp_filter_freq). For
-+ * example, the first value 7 corresponds to 2.7 Hz low-pass and 0.4 Hz
-+ * high-pass cutoff frequency.
-+ */
-+static const int d3323aa_lp_filter_regval[] = {
-+	7,
-+	0,
-+	1,
-+	2,
-+};
-+
-+/*
-+ * This is denoted as "step" in datasheet and corresponds to the gain at peak
-+ * for the band-pass filter. The index in this array is the corresponding index
-+ * in d3323aa_filter_gain_regval for the register bitmap value.
-+ */
-+static const int d3323aa_filter_gain[] = { 1, 2, 3 };
-+
-+/*
-+ * Register bitmap values for the filter gain. The index in this array is the
-+ * corresponding index in d3323aa_filter_gain for the gain value.
-+ */
-+static const u8 d3323aa_filter_gain_regval[] = { 1, 3, 0 };
-+
-+struct d3323aa_data {
-+	struct completion reset_completion;
-+	/*
-+	 *  Since the setup process always requires a complete write of _all_
-+	 *  the state variables, we need to synchronize them with a lock.
-+	 */
-+	struct mutex statevar_lock;
-+	atomic_t irq_reset_count;
-+
-+	struct device *dev;
-+
-+	/* Supply voltage. */
-+	struct regulator *regulator_vdd;
-+	/* Input clock or output detection signal (Vout). */
-+	struct gpio_desc *gpiod_clkin_detectout;
-+	/* Input (setting) or output data. */
-+	struct gpio_desc *gpiod_data;
-+
-+	/*
-+	 * We only need the low-pass cutoff frequency to unambiguously choose
-+	 * the type of band-pass filter. For example, both filter type B and C
-+	 * have 0.3 Hz as high-pass cutoff frequency (see
-+	 * d3323aa_hp_filter_freq).
-+	 */
-+	size_t lp_filter_freq_idx;
-+	size_t filter_gain_idx;
-+	u8 detect_thresh;
-+
-+	/* Indicator for operational mode (configuring or detecting). */
-+	bool detecting;
-+};
-+
-+static int d3323aa_read_settings(struct iio_dev *indio_dev,
-+				 unsigned long *regbitmap)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	size_t i;
-+	int ret;
-+
-+	/* Bit bang the clock and data pins. */
-+	ret = gpiod_direction_output(data->gpiod_clkin_detectout, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_direction_input(data->gpiod_data);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(data->dev, "Reading settings...\n");
-+
-+	for (i = 0; i < D3323AA_REG_NR_BITS; ++i) {
-+		/* Clock frequency needs to be 1 kHz. */
-+		gpiod_set_value(data->gpiod_clkin_detectout, 1);
-+		udelay(500);
-+
-+		/* The data seems to change when clock signal is high. */
-+		if (gpiod_get_value(data->gpiod_data))
-+			set_bit(i, regbitmap);
-+
-+		gpiod_set_value(data->gpiod_clkin_detectout, 0);
-+		udelay(500);
-+	}
-+
-+	/* The first bit (F37) is just dummy data. Discard it. */
-+	clear_bit(0, regbitmap);
-+
-+	/* Datasheet says to wait 30 ms after reading the settings. */
-+	msleep(30);
-+
-+	return 0;
-+}
-+
-+static int d3323aa_write_settings(struct iio_dev *indio_dev,
-+				  unsigned long *written_regbitmap)
-+{
-+#define REGBITMAP_LEN \
-+	(D3323AA_REG_NR_BITS + D3323AA_SETTING_END_PATTERN_NR_BITS)
-+	DECLARE_BITMAP(regbitmap, REGBITMAP_LEN);
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	size_t i;
-+	int ret;
-+
-+	/* Build the register bitmap. */
-+	bitmap_zero(regbitmap, REGBITMAP_LEN);
-+	bitmap_write(regbitmap, data->detect_thresh, D3323AA_REG_BIT_DETLVLABS0,
-+		     D3323AA_REG_BIT_DETLVLABS7 - D3323AA_REG_BIT_DETLVLABS0 +
-+			     1);
-+	bitmap_write(regbitmap,
-+		     d3323aa_filter_gain_regval[data->filter_gain_idx],
-+		     D3323AA_REG_BIT_FSTEP0,
-+		     D3323AA_REG_BIT_FSTEP1 - D3323AA_REG_BIT_FSTEP0 + 1);
-+	bitmap_write(regbitmap,
-+		     d3323aa_lp_filter_regval[data->lp_filter_freq_idx],
-+		     D3323AA_REG_BIT_FILSEL0,
-+		     D3323AA_REG_BIT_FILSEL2 - D3323AA_REG_BIT_FILSEL0 + 1);
-+	/* Compulsory end pattern. */
-+	bitmap_write(regbitmap, D3323AA_SETTING_END_PATTERN,
-+		     D3323AA_REG_NR_BITS, D3323AA_SETTING_END_PATTERN_NR_BITS);
-+
-+	/* Bit bang the clock and data pins. */
-+	ret = gpiod_direction_output(data->gpiod_clkin_detectout, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_direction_output(data->gpiod_data, 0);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(data->dev, "Writing settings...\n");
-+
-+	/* First bit (F37) is not used when writing the register bitmap. */
-+	for (i = 1; i < REGBITMAP_LEN; ++i) {
-+		gpiod_set_value(data->gpiod_data, test_bit(i, regbitmap));
-+
-+		/* Clock frequency needs to be 1 kHz. */
-+		gpiod_set_value(data->gpiod_clkin_detectout, 1);
-+		udelay(500);
-+		gpiod_set_value(data->gpiod_clkin_detectout, 0);
-+		udelay(500);
-+	}
-+
-+	/* Datasheet says to wait 30 ms after writing the settings. */
-+	msleep(30);
-+
-+	bitmap_copy(written_regbitmap, regbitmap, D3323AA_REG_NR_BITS);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t d3323aa_irq_handler(int irq, void *dev_id)
-+{
-+	struct iio_dev *indio_dev = dev_id;
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	enum iio_event_direction dir;
-+	int val;
-+
-+	val = gpiod_get_value(data->gpiod_clkin_detectout);
-+	if (val < 0) {
-+		dev_err_ratelimited(data->dev,
-+				    "Could not read from GPIO vout-clk (%d)\n",
-+				    val);
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (!data->detecting) {
-+		/* Reset interrupt counting falling edges. */
-+		if (!val && atomic_inc_return(&data->irq_reset_count) ==
-+				    D3323AA_IRQ_RESET_COUNT)
-+			complete(&data->reset_completion);
-+
-+		return IRQ_HANDLED;
-+	}
-+
-+	/* Detection interrupt. */
-+	dir = val ? IIO_EV_DIR_RISING : IIO_EV_DIR_FALLING;
-+	iio_push_event(indio_dev,
-+		       IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
-+					    IIO_EV_TYPE_THRESH, dir),
-+		       iio_get_time_ns(indio_dev));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int d3323aa_reset(struct iio_dev *indio_dev)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	long time;
-+	int ret;
-+
-+	if (regulator_is_enabled(data->regulator_vdd)) {
-+		ret = regulator_disable(data->regulator_vdd);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/*
-+	 * Datasheet says VDD needs to be low at least for 30 ms. Let's add a
-+	 * couple more to allow VDD to completely discharge as well.
-+	 */
-+	msleep(30 + 5);
-+
-+	/*
-+	 * After setting VDD to high, the device signals with
-+	 * D3323AA_IRQ_RESET_COUNT falling edges on Vout/CLK that it is now
-+	 * ready for configuration. Datasheet says that this should happen
-+	 * within D3323AA_RESET_TIMEOUT ms. Count these two edges within that
-+	 * timeout.
-+	 */
-+	atomic_set(&data->irq_reset_count, 0);
-+	reinit_completion(&data->reset_completion);
-+	data->detecting = false;
-+
-+	ret = gpiod_direction_input(data->gpiod_clkin_detectout);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(data->dev, "Resetting...\n");
-+
-+	ret = regulator_enable(data->regulator_vdd);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Wait for VDD to completely charge up. Measurements have shown that
-+	 * Vout/CLK signal slowly ramps up during this period. Thus, the digital
-+	 * signal will have bogus values. It is therefore necessary to wait
-+	 * before we can count the "real" falling edges.
-+	 */
-+	usleep_range(2000, 5000);
-+
-+	time = wait_for_completion_killable_timeout(
-+		&data->reset_completion,
-+		msecs_to_jiffies(D3323AA_RESET_TIMEOUT));
-+	if (time == 0) {
-+		return -ETIMEDOUT;
-+	} else if (time < 0) {
-+		/* Got interrupted. */
-+		return time;
-+	}
-+
-+	dev_dbg(data->dev, "Reset completed\n");
-+
-+	return 0;
-+}
-+
-+static int d3323aa_setup(struct iio_dev *indio_dev, size_t lp_filter_freq_idx,
-+			 size_t filter_gain_idx, u8 detect_thresh)
-+{
-+	DECLARE_BITMAP(write_regbitmap, D3323AA_REG_NR_BITS);
-+	DECLARE_BITMAP(read_regbitmap, D3323AA_REG_NR_BITS);
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	unsigned long start_time;
-+	int ret;
-+
-+	ret = d3323aa_reset(indio_dev);
-+	if (ret) {
-+		if (ret != -ERESTARTSYS)
-+			dev_err(data->dev, "Could not reset device (%d)\n",
-+				ret);
-+
-+		return ret;
-+	}
-+
-+	/*
-+	 * Datasheet says to wait 10 us before setting the configuration.
-+	 * Moreover, the total configuration should be done within
-+	 * D3323AA_CONFIG_TIMEOUT ms. Clock it.
-+	 */
-+	usleep_range(10, 20);
-+	start_time = jiffies;
-+
-+	ret = d3323aa_write_settings(indio_dev, write_regbitmap);
-+	if (ret) {
-+		dev_err(data->dev, "Could not write settings (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = d3323aa_read_settings(indio_dev, read_regbitmap);
-+	if (ret) {
-+		dev_err(data->dev, "Could not read settings (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	if (time_is_before_jiffies(start_time +
-+				   msecs_to_jiffies(D3323AA_CONFIG_TIMEOUT))) {
-+		dev_err(data->dev, "Could not set up configuration in time\n");
-+		return -EAGAIN;
-+	}
-+
-+	/* Check if settings were set successfully. */
-+	if (!bitmap_equal(write_regbitmap, read_regbitmap,
-+			  D3323AA_REG_NR_BITS)) {
-+		dev_err(data->dev, "Settings data mismatch\n");
-+		return -EIO;
-+	}
-+
-+	/* Now in operational mode. */
-+	ret = gpiod_direction_input(data->gpiod_clkin_detectout);
-+	if (ret) {
-+		dev_err(data->dev,
-+			"Could not set GPIO vout-clk as input (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = gpiod_direction_input(data->gpiod_data);
-+	if (ret) {
-+		dev_err(data->dev, "Could not set GPIO data as input (%d)\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	data->lp_filter_freq_idx = lp_filter_freq_idx;
-+	data->filter_gain_idx = filter_gain_idx;
-+	data->detect_thresh = detect_thresh;
-+	data->detecting = true;
-+
-+	dev_dbg(data->dev, "Setup done\n");
-+
-+	return 0;
-+}
-+
-+static int d3323aa_set_lp_filter_freq(struct iio_dev *indio_dev, const int val,
-+				      int val2)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	size_t idx;
-+
-+	/* Truncate fractional part to one digit. */
-+	val2 /= 100000;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(d3323aa_lp_filter_freq); ++idx) {
-+		int integer = d3323aa_lp_filter_freq[idx][0] /
-+			      d3323aa_lp_filter_freq[idx][1];
-+		int fract = d3323aa_lp_filter_freq[idx][0] %
-+			    d3323aa_lp_filter_freq[idx][1];
-+
-+		if (val == integer && val2 == fract)
-+			break;
-+	}
-+
-+	if (idx == ARRAY_SIZE(d3323aa_lp_filter_freq))
-+		return -ERANGE;
-+
-+	return d3323aa_setup(indio_dev, idx, data->filter_gain_idx,
-+			     data->detect_thresh);
-+}
-+
-+static int d3323aa_set_hp_filter_freq(struct iio_dev *indio_dev, const int val,
-+				      int val2)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	size_t idx;
-+
-+	/* Truncate fractional part to two digits. */
-+	val2 /= 10000;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(d3323aa_hp_filter_freq); ++idx) {
-+		int integer = d3323aa_hp_filter_freq[idx][0] /
-+			      d3323aa_hp_filter_freq[idx][1];
-+		int fract = d3323aa_hp_filter_freq[idx][0] %
-+			    d3323aa_hp_filter_freq[idx][1];
-+
-+		if (val == integer && val2 == fract)
-+			break;
-+	}
-+
-+	if (idx == ARRAY_SIZE(d3323aa_hp_filter_freq))
-+		return -ERANGE;
-+
-+	if (idx == data->lp_filter_freq_idx) {
-+		/* Corresponding filter frequency already set. */
-+		return 0;
-+	}
-+
-+	if (idx == 1 && data->lp_filter_freq_idx == 2) {
-+		/*
-+		 * The low-pass cutoff frequency is the only way to
-+		 * unambiguously choose the type of band-pass filter. For
-+		 * example, both filter type B (index 1) and C (index 2) have
-+		 * 0.3 Hz as high-pass cutoff frequency (see
-+		 * d3323aa_hp_filter_freq). Therefore, if one of these are
-+		 * requested _and_ the corresponding low-pass filter frequency
-+		 * is already set, we can't know which filter type is the wanted
-+		 * one. The low-pass filter frequency is the decider (i.e. in
-+		 * this case index 2).
-+		 */
-+		return 0;
-+	}
-+
-+	return d3323aa_setup(indio_dev, idx, data->filter_gain_idx,
-+			     data->detect_thresh);
-+}
-+
-+static int d3323aa_set_filter_gain(struct iio_dev *indio_dev, const int val)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+	size_t idx;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(d3323aa_filter_gain); ++idx) {
-+		if (d3323aa_filter_gain[idx] == val)
-+			break;
-+	}
-+
-+	if (idx == ARRAY_SIZE(d3323aa_filter_gain))
-+		return -ERANGE;
-+
-+	return d3323aa_setup(indio_dev, data->lp_filter_freq_idx, idx,
-+			     data->detect_thresh);
-+}
-+
-+static int d3323aa_set_threshold(struct iio_dev *indio_dev, const int val)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+
-+	if (val > ((1 << D3323AA_THRESH_REG_NR_BITS) - 1))
-+		return -ERANGE;
-+
-+	return d3323aa_setup(indio_dev, data->lp_filter_freq_idx,
-+			     data->filter_gain_idx, val);
-+}
-+
-+static int d3323aa_read_avail(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      const int **vals, int *type, int *length,
-+			      long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
-+		*vals = (int *)d3323aa_hp_filter_freq;
-+		*type = IIO_VAL_FRACTIONAL;
-+		*length = 2 * ARRAY_SIZE(d3323aa_hp_filter_freq);
-+		return IIO_AVAIL_LIST;
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		*vals = (int *)d3323aa_lp_filter_freq;
-+		*type = IIO_VAL_FRACTIONAL;
-+		*length = 2 * ARRAY_SIZE(d3323aa_lp_filter_freq);
-+		return IIO_AVAIL_LIST;
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		*vals = (int *)d3323aa_filter_gain;
-+		*type = IIO_VAL_INT;
-+		*length = ARRAY_SIZE(d3323aa_filter_gain);
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int d3323aa_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int *val,
-+			    int *val2, long mask)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+
-+	guard(mutex)(&data->statevar_lock);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
-+		*val = d3323aa_hp_filter_freq[data->lp_filter_freq_idx][0];
-+		*val2 = d3323aa_hp_filter_freq[data->lp_filter_freq_idx][1];
-+		return IIO_VAL_FRACTIONAL;
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		*val = d3323aa_lp_filter_freq[data->lp_filter_freq_idx][0];
-+		*val2 = d3323aa_lp_filter_freq[data->lp_filter_freq_idx][1];
-+		return IIO_VAL_FRACTIONAL;
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		*val = d3323aa_filter_gain[data->filter_gain_idx];
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int d3323aa_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int val,
-+			     int val2, long mask)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+
-+	guard(mutex)(&data->statevar_lock);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
-+		return d3323aa_set_hp_filter_freq(indio_dev, val, val2);
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		return d3323aa_set_lp_filter_freq(indio_dev, val, val2);
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return d3323aa_set_filter_gain(indio_dev, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int d3323aa_read_event(struct iio_dev *indio_dev,
-+			      const struct iio_chan_spec *chan,
-+			      enum iio_event_type type,
-+			      enum iio_event_direction dir,
-+			      enum iio_event_info info, int *val, int *val2)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+
-+	guard(mutex)(&data->statevar_lock);
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		*val = data->detect_thresh;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int d3323aa_write_event(struct iio_dev *indio_dev,
-+			       const struct iio_chan_spec *chan,
-+			       enum iio_event_type type,
-+			       enum iio_event_direction dir,
-+			       enum iio_event_info info, int val, int val2)
-+{
-+	struct d3323aa_data *data = iio_priv(indio_dev);
-+
-+	guard(mutex)(&data->statevar_lock);
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		return d3323aa_set_threshold(indio_dev, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info d3323aa_info = {
-+	.read_avail = d3323aa_read_avail,
-+	.read_raw = d3323aa_read_raw,
-+	.write_raw = d3323aa_write_raw,
-+	.read_event_value = d3323aa_read_event,
-+	.write_event_value = d3323aa_write_event,
-+};
-+
-+static const struct iio_event_spec d3323aa_event_spec[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-+	},
-+};
-+
-+static const struct iio_chan_spec d3323aa_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY) |
-+			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY) |
-+			BIT(IIO_CHAN_INFO_HARDWAREGAIN),
-+		.info_mask_separate_available =
-+			BIT(IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY) |
-+			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY) |
-+			BIT(IIO_CHAN_INFO_HARDWAREGAIN),
-+		.event_spec = d3323aa_event_spec,
-+		.num_event_specs = ARRAY_SIZE(d3323aa_event_spec),
-+	},
-+};
-+
-+static void d3323aa_disable_regulator(void *indata)
-+{
-+	struct d3323aa_data *data = indata;
-+	int ret;
-+
-+	if (!regulator_is_enabled(data->regulator_vdd))
-+		return;
-+
-+	ret = regulator_disable(data->regulator_vdd);
-+	if (ret)
-+		dev_err(data->dev, "Could not disable regulator (%d)\n", ret);
-+}
-+
-+static int d3323aa_probe(struct platform_device *pdev)
-+{
-+	struct d3323aa_data *data;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return dev_err_probe(&pdev->dev, -ENOMEM,
-+				     "Could not allocate iio device\n");
-+
-+	data = iio_priv(indio_dev);
-+	data->dev = &pdev->dev;
-+
-+	init_completion(&data->reset_completion);
-+
-+	ret = devm_mutex_init(data->dev, &data->statevar_lock);
-+	if (ret)
-+		return dev_err_probe(data->dev, ret,
-+				     "Could not initialize mutex\n");
-+
-+	data->regulator_vdd = devm_regulator_get_exclusive(data->dev, "vdd");
-+	if (IS_ERR(data->regulator_vdd))
-+		return dev_err_probe(data->dev, PTR_ERR(data->regulator_vdd),
-+				     "Could not get regulator\n");
-+
-+	ret = devm_add_action_or_reset(data->dev, d3323aa_disable_regulator,
-+				       data);
-+	if (ret)
-+		return dev_err_probe(
-+			data->dev, ret,
-+			"Could not add disable regulator action\n");
-+
-+	data->gpiod_clkin_detectout =
-+		devm_gpiod_get(data->dev, "vout-clk", GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod_clkin_detectout))
-+		return dev_err_probe(data->dev,
-+				     PTR_ERR(data->gpiod_clkin_detectout),
-+				     "Could not get GPIO vout-clk\n");
-+
-+	data->gpiod_data = devm_gpiod_get(data->dev, "data", GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod_data))
-+		return dev_err_probe(data->dev, PTR_ERR(data->gpiod_data),
-+				     "Could not get GPIO data\n");
-+
-+	ret = gpiod_to_irq(data->gpiod_clkin_detectout);
-+	if (ret < 0)
-+		return dev_err_probe(data->dev, ret, "Could not get IRQ\n");
-+
-+	/*
-+	 * Device signals with a rising or falling detection signal when the
-+	 * proximity data is above or below the threshold, respectively.
-+	 */
-+	ret = devm_request_irq(data->dev, ret, d3323aa_irq_handler,
-+			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+			       dev_name(data->dev), indio_dev);
-+	if (ret)
-+		return dev_err_probe(data->dev, ret, "Could not request IRQ\n");
-+
-+	ret = d3323aa_setup(indio_dev, D3323AA_LP_FILTER_FREQ_DEFAULT_IDX,
-+			    D3323AA_FILTER_GAIN_DEFAULT_IDX,
-+			    D3323AA_THRESH_DEFAULT_VAL);
-+	if (ret)
-+		return ret;
-+
-+	indio_dev->info = &d3323aa_info;
-+	indio_dev->name = "d3323aa";
-+	indio_dev->channels = d3323aa_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(d3323aa_channels);
-+
-+	ret = devm_iio_device_register(data->dev, indio_dev);
-+	if (ret)
-+		return dev_err_probe(data->dev, ret,
-+				     "Could not register iio device\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id d3323aa_of_match[] = {
-+	{
-+		.compatible = "nicera,d3323aa",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, d3323aa_of_match);
-+
-+static struct platform_driver d3323aa_driver = {
-+	.probe = d3323aa_probe,
-+	.driver = {
-+		.name = "d3323aa",
-+		.of_match_table = d3323aa_of_match,
-+	},
-+};
-+module_platform_driver(d3323aa_driver);
-+
-+MODULE_AUTHOR("Waqar Hameed <waqar.hameed@axis.com>");
-+MODULE_DESCRIPTION("Nicera D3-323-AA PIR sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.39.5
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
