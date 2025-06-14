@@ -1,42 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043A82E11DB;
-	Sat, 14 Jun 2025 05:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849C42AE6A;
+	Sat, 14 Jun 2025 05:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749878828; cv=none; b=s4hgo/3tBLdHxi8YGi/5ny3LXrN3yxND9sf+B2DzdZ5zLljdML56BpiMFAY//eVSYMV4EEWaXbLJAyUrXooV28JksN83CbPJmIBCS+RAaeuWLMenGaL4idVR1k1u2gCusOR3Rh+BrPUNn9SXT/n5cU5zrM/y2GR/GfdaBkxYN10=
+	t=1749878988; cv=none; b=P18+19DBFZGxG0A1lMMePa7Ep+c4Uq1kaW30Oj3kGqxJLGD1egKhh3opgEomMydO2vmAkFMoWSVaSJTDUhLfkEfFSyRuzkGmPbueYcwSbFPqNZoighPllPIrdmPK1hcPrdGDwp9Hsouz3yyiJ0qNof/a0yHBraLvBPkagMyN9Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749878828; c=relaxed/simple;
-	bh=KQ9gl4HHifEzzybP2sXHvFgn2l0SIZZLHOuI9RstanI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qoSDfLAHmgAyraFUhG3ydJdNVFQqBgNa71GR3qqUn2+iLWriaX/J1yqjUA0R/rgZcmMtU2y1cdr+nqvOfmR48A+Iq3UlDia/o00o8WWwnqkwytKmJql3w8xVYdi8fXja/eo/v4Yf9p/p4kRVuC9CZ7GbNYn8BF6j7CRrQLLAYYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MB5kLAzf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749878988; c=relaxed/simple;
+	bh=4m+F9CS8Kox6Z71IUBMAHYeOdZ2DV+ck3U5f1CMPmDs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ofEGIX1IR2IFEZCjqFXuf89mkXMA6lKlO5BW4jk5VUEVT8uaasOMV0JjfGl22m2Q/jXMyVhVt1V8Qd9ndzmKBNujUsMaJwKNw8DKfarW1Cw+BIHDyYxvRKrFf6OQT/NZSD/hfU6mlpOsbXSMbRz/DgA3aiul0JgvvEu1Jw936S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUCfTC1S; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MB5kLAzf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B93C4CEEB;
-	Sat, 14 Jun 2025 05:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749878827;
-	bh=KQ9gl4HHifEzzybP2sXHvFgn2l0SIZZLHOuI9RstanI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MB5kLAzf5fDoNGCppBMEslgoKWLN8W46lEHTL4vKSnCIhCBSVmyXGs870X2kGMfDZ
-	 9UGuHH6gLOTTAHS3qburFLwjR6mo55LccRroAPKqHSwSADvemPfJdVyINqtxoKU0Kp
-	 IIjW2Vapq3+eEejK0U1JokVxOgOoOUs3Q7mD1uu7KrV7S1tx4qROmNeyly1qN+0qxq
-	 jgFOuQ0sQx9vW5YobQXexDgZjqUCpRUyKkaD5YEMo1xQRefAtWJF2O9L1DwEJWO+mX
-	 +KKJrGDoPIkkl4GMcDxyu1uaTD8bpdNj1SSXwGCX57RE0x6lX2s0R/7LrbPX1T+M70
-	 DqLRI0YSx9lfg==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: bhelgaas@google.com,
-	brgl@bgdev.pl
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition to drivers/pci/pwrctrl/
-Date: Sat, 14 Jun 2025 10:56:51 +0530
-Message-ID: <20250614052651.15055-1-mani@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUCfTC1S"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-710e344bbf9so25365777b3.2;
+        Fri, 13 Jun 2025 22:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749878985; x=1750483785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KRKrDObQhMPQFf9PTLf1A+HaIc9XWYs9GuKdkW/pSkY=;
+        b=aUCfTC1S04r/MClq0JjIVsjrmIY5vUdFHrn/NrtapuoFDsJOF8itstP9antglcFQIU
+         Ciole0uIK/+AKM1Zv/5mr42vHPSAgRPdGBSQ1y9Mf0xXOYWLV4ywmLF0KPLaDkt9eJUF
+         r4cRHzzyOy/aMaS4ukU01K3TjwWYY1fR8bEq85IWG3wIauS/vh+93U44p3hiztTgv+1B
+         T9Xp7ZbJ+//KNLK6dIukuY1NH2KCmPBeC4eBXrfFP1OJayht3D2Zrlj7n5wcSgwevu7I
+         0c6DdGHr3irBQfqvNO5UXG+DadvZF/3+MxC6nfXw2AKwPoTQCHmfeTKOjkyrfFQyL7Zu
+         fkmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749878985; x=1750483785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KRKrDObQhMPQFf9PTLf1A+HaIc9XWYs9GuKdkW/pSkY=;
+        b=bf6gdb/Fob1f79VYimqxu9Wz0HTBwxL45aZ/rM7NW6fS3nrxSQS77GhbAJlaaRWVHD
+         8Tin0dEF7kF4F3t0RTzM9SzWAl7rh2MJJgPJ48mh+z2y+/2E4SCXQMMkSNphnI6GMnTJ
+         nckZgmkCkxuMn/Y52dD1fB0p6HzolSuYIfAHXdXodme2V9gmFDlvTb88bJxdWwE54uFc
+         2ji1UOTQvp5QY+Xxy8D7vObPqwAOt2rOh/x3ff0w5NdPgpCstsyYPqKaYu4sBTr7jUKX
+         nlRQqSt9cApwBEUZOIpEj4MCgN9yVOfpgHmudWo5v1oLer8lfyYvbCRo73BudgyFeoQJ
+         9YSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUt+PrZPf0fiz8YDa2hbxuHNwkOA4crnn9e967BC+DVruVFWXgt2sOB0lzPjeRqHG0Tel7LtBtYrAioFhgf@vger.kernel.org, AJvYcCXFy5rC8v4oW1/bGAdisvx92xbsBmE6pg6PD6AQgOkdw5TEh+qVcVZYpgLkygd/OmVfzrANv347FAkNTw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWwavUmzYlGZ+vgyBnD5JtgkZ56Iz/0xrRYPMMAw8eJ5ewA6f1
+	Og/AsMM77E//7GGkQskUQr8RAWCP2UoEnfoLblKKr39Np7Quy/oqfUWK
+X-Gm-Gg: ASbGncuwSw4tFtTaHvL+Sl9fyMAhjEo8a3gM+eETW7xAbAVYkLeyBA6HPYtHCtm7xw3
+	1LMgmHDb8/X9Is3Px1hOvxJAINUgA3XFHq8v9XlbNPy2wUt5aDaeGgyVjuRlxnaNkCJvbUxBExI
+	8eL8TB4eBsJ862PIURwQ9Ta5DUr+UjWPc7RyAsda8+V8+MsYqzkaYTTKXBf3iMQKvEU7/GRN10n
+	09kTVRD4xAICNj23zFwyQsZL7mhbkdWPaQGu2iTyq8j3X8q3670dQnRa32MjM+j2efymWpvmXjI
+	DXeFPUaTCaOeuXfRE/1rAdSCVZwQ/1HVm3GIVNZc41G/tkf5wH6+gxd8SaNBXPKVPy+56ISyOAE
+	a
+X-Google-Smtp-Source: AGHT+IFP4qmmzvwCoLSm0orXL9x/zDHgGPO3E4RSSJPSZGS4TypQ6nZnCTxfPpGHPX4C8NHliBZi/g==
+X-Received: by 2002:a05:690c:7083:b0:6fb:9280:5bf4 with SMTP id 00721157ae682-7117544d5cfmr28014767b3.30.1749878985301;
+        Fri, 13 Jun 2025 22:29:45 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7115208b1efsm9080217b3.38.2025.06.13.22.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 22:29:45 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: deller@gmx.de
+Cc: alexguo1023@gmail.com,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fbdev: Fix potential divide by zero
+Date: Sat, 14 Jun 2025 01:29:42 -0400
+Message-Id: <20250614052942.3551870-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,140 +74,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
-built only when CONFIG_PWRCTRL is enabled. Currently, it is built
-independently of CONFIG_PWRCTRL. This creates enumeration failure on
-platforms like brcmstb using out-of-tree devicetree that describes the
-power supplies for endpoints in the PCIe child node, but doesn't use
-PWRCTRL framework to manage the supplies. The controller driver itself
-manages the supplies.
+Variable var->pixclock can be set by user. In case it equals to
+zero, divide by zero would occur in acornfb_validate_timing.
+Similar crashes have happened in other fbdev drivers. We fix this
+by checking whether 'pixclock' is zero.
 
-But in any case, the API should be built only when CONFIG_PWRCTRL is
-enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
-a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
-fixes the enumeration issues on the affected platforms.
+Similar commit: commit 16844e58704 ("video: fbdev: tridentfb:
+Error out if 'pixclock' equals zero")
 
-Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
 ---
- drivers/pci/pci.h          |  8 ++++++++
- drivers/pci/probe.c        | 30 ------------------------------
- drivers/pci/pwrctrl/core.c | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+), 30 deletions(-)
+ drivers/video/fbdev/acornfb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12215ee72afb..c5efd8b9c96a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1159,4 +1159,12 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
- 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
- 	 PCI_CONF1_EXT_REG(reg))
- 
-+#ifdef CONFIG_PCI_PWRCTRL
-+struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus,
-+						  int devfn);
-+#else
-+static inline struct platform_device *
-+pci_pwrctrl_create_device(struct pci_bus *bus, int devfn) { return NULL; }
-+#endif
-+
- #endif /* DRIVERS_PCI_H */
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4b8693ec9e4c..d857e21d6911 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2508,36 +2508,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
- }
- EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
- 
--static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
--{
--	struct pci_host_bridge *host = pci_find_host_bridge(bus);
--	struct platform_device *pdev;
--	struct device_node *np;
--
--	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
--	if (!np || of_find_device_by_node(np))
--		return NULL;
--
--	/*
--	 * First check whether the pwrctrl device really needs to be created or
--	 * not. This is decided based on at least one of the power supplies
--	 * being defined in the devicetree node of the device.
--	 */
--	if (!of_pci_supply_present(np)) {
--		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
--		return NULL;
--	}
--
--	/* Now create the pwrctrl device */
--	pdev = of_platform_device_create(np, NULL, &host->dev);
--	if (!pdev) {
--		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
--		return NULL;
--	}
--
--	return pdev;
--}
--
- /*
-  * Read the config data for a PCI device, sanity-check it,
-  * and fill in the dev structure.
-diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index 6bdbfed584d6..20585b2c3681 100644
---- a/drivers/pci/pwrctrl/core.c
-+++ b/drivers/pci/pwrctrl/core.c
-@@ -6,11 +6,47 @@
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/pci-pwrctrl.h>
-+#include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-+#include "../pci.h"
-+
-+struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-+{
-+	struct pci_host_bridge *host = pci_find_host_bridge(bus);
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+
-+	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
-+	if (!np || of_find_device_by_node(np))
-+		return NULL;
-+
-+	/*
-+	 * First check whether the pwrctrl device really needs to be created or
-+	 * not. This is decided based on at least one of the power supplies
-+	 * being defined in the devicetree node of the device.
-+	 */
-+	if (!of_pci_supply_present(np)) {
-+		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
-+		return NULL;
-+	}
-+
-+	/* Now create the pwrctrl device */
-+	pdev = of_platform_device_create(np, NULL, &host->dev);
-+	if (!pdev) {
-+		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
-+		return NULL;
-+	}
-+
-+	return pdev;
-+}
-+
- static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
- 			      void *data)
- {
+diff --git a/drivers/video/fbdev/acornfb.c b/drivers/video/fbdev/acornfb.c
+index f0600f6ca254..2dc0e64137e5 100644
+--- a/drivers/video/fbdev/acornfb.c
++++ b/drivers/video/fbdev/acornfb.c
+@@ -421,6 +421,8 @@ acornfb_validate_timing(struct fb_var_screeninfo *var,
+ 	 * No need to do long long divisions or anything
+ 	 * like that if you factor it correctly
+ 	 */
++	if (!var->pixclock)
++		return -EINVAL;
+ 	hs = 1953125000 / var->pixclock;
+ 	hs = hs * 512 /
+ 	     (var->xres + var->left_margin + var->right_margin + var->hsync_len);
 -- 
-2.43.0
+2.34.1
 
