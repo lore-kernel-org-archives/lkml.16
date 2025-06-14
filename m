@@ -1,100 +1,135 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F4A3FE7;
-	Sat, 14 Jun 2025 02:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F67C2F32
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749868296; cv=none; b=BgvLm9lQ5mGpXDeMzzH1v3EXV63w8ZTOSFGw1/ONGscH0fc8WdoNj4DebeEHi3Up6dEG/7qaHpE7nOY7wyxEdrfLknDXXx9s4COFIwsLCpFzhMwcGZWHgv8fB90zKufpoi7owHj6J4DyZ3vIHgv/8/LpZjfjSDlG6SGwAjJpssc=
+	t=1749868574; cv=none; b=iprycrtxqtXo/yajv+9WDhuOaQvtIQZ+JWKr05giQMnBE/ArJtenU6Dos8tUL/QNs2ZJ+MMqAol/UJVxOTuZ4nwecathEAp+hyK6QlPMMQI4Trsoa+qIa7CxFGXK5P1v4VCAazlmA5+lUaEv9Y+6iB6ErmpO3wC0lp30P0IhxdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749868296; c=relaxed/simple;
-	bh=muvH186xbp1wZouT3DAGJVB1Ry12NAmcqUPQ49mvjxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GnS2a2C5uFdoBQUjDDKa5/1hwV6iTxCqaxJNqkZmRzlkreHBd8sMDtBSbAT4XjyVpvtgyaOgbq0LeiUeqRHZ+J7cnDsvaFnkJ64xm4phCu2PVGVGxd5W1bG/IsQFM2DiKxOfvAq1BNSkCsEo524Giu7YFZmBqEH4AHpmGBF3S/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CePdE9ql; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749868574; c=relaxed/simple;
+	bh=/4zSIPw19HlLUie6b0kgjQJHS7vidQhIk3Cd96brfSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HhqTy6V5sWnVPt9k9YYDMh32udMvx4HhLwYVFOopNsPvJh2oDVdBuf9vx5AxC7zhf5mRG+tc/pYpD7H7cSPUgjPxfbN0gtSLwxOBymVQsGu0PcRzl29qalTdV4u4j82ThN2YkRsy0GpSoO6DGlwyINTP6kjlvy18huWqLzL1o9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sX89axQg; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CePdE9ql"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so2235385a91.3;
-        Fri, 13 Jun 2025 19:31:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sX89axQg"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553543ddfc7so2793572e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:36:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749868293; x=1750473093; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=muvH186xbp1wZouT3DAGJVB1Ry12NAmcqUPQ49mvjxQ=;
-        b=CePdE9qlE7gh4vNL3VeKp/XJ/A/SwAOBVUTrART1T+OjGTQDOypwSsCUf2FTDnrHxa
-         8WO6SGDOL2hXWcvgXtWm7gZlixppoqRXD18lzrM731glQOK0Bv9XsijhBH+Sr4w4qHxz
-         KbXzCzQtMclira4j07CwLoqXhu/CZu3PPELRlxHhrILKYthA7EQbEZFSoFFc/U/JvO8e
-         0nIIa0By21MFEc0a/2sl5oNh7LSjl82q/LWHMsR6Fgh80C+R0nm/8pvAHPQ6mK3yQFyD
-         JA9llysN+xiNpLWagMxXOhD+VNK5ktSQw2qUlmiD5AkWVDBa3+p6Om+9CHO9xJJ1cEKI
-         zGEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749868293; x=1750473093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1749868570; x=1750473370; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=muvH186xbp1wZouT3DAGJVB1Ry12NAmcqUPQ49mvjxQ=;
-        b=I0Op8cDOw8prJyHNteejOu8fLzM3dRk4M3wQxvfPxB3NiT1hoQF2UcbRfmf4Rw0kyy
-         eA4EueVI9vsjnZDnBBlmLJ9OIJBpYowP8PsnUhq7cWOG+BHw7314vjVQ0Mp6TLD/2Lst
-         KHr1hvHNQ9T4LuqpOGFjvhTDqLPSu1hZTSzDUXU6yO5JqKqPwCvg7p2H73K5zC7m2Bsa
-         Hb8pWE4DHukNZMriWs2pF/4rqLBZFfvI4FQcDOPBaM1yDsXsszlTMSslFZbLBoQuiOWh
-         XhZaF/8bkk9IqjknIbX4FtzPJWICeixHJloLCKyLtIZRqT5L6NAGPmZ4W728TUQP6WDd
-         CoLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlOr8bZYMPpDvU2gYbd27enwa/kVDkW0S4rSbuD5NnMMtkvibkrPqRa9Xcnz2FZyMMxAVwl4pdUO0N@vger.kernel.org, AJvYcCXjAvBqIajSE28lHmoVqcOvMfZDFR0X7Le4PTaP4u8bfWA49YRjWspRjiEjY7potoyzaY75tXGlALRI6pk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxeue9q3FvmiUW+ud1iS6djbIYSt8m5uiynSpeFN6JQK0ruAp/p
-	891xnElKGz6gg187774ZMNMYMltN+41uU9Mew37fVl0JHgPa+Nxo6pkX
-X-Gm-Gg: ASbGncuvxZfstdoU3EJ4LCswyG3UWNLlLCsmWUOE6YzlmrbjfhnFfwoNbyLhKn8nTRj
-	m6rrHR5rwehOoJrjWgRuk+go8raBVDLirguBPmApVQ2sv5If2uNDAilc0Fnjgq5TViX6cDxSZCe
-	PHEdg9lt1FCG0lR3mT2yoJxeQoTv/p8LJ/4RuMgvbuI1hf98CXSnz2m3FIw89KO4nboF3eZDuNt
-	23bb1fWXikVnMLmMGctFlOSnZZfofdkq1gMJwFzkESlu1Z1Wd5WIvy+oYy7z6dL5ocyGoO2FXvW
-	NCXdZLo8T6XA76XB//9XBX0I/OuiYp9vmHao68n4lInNOFKU0Q==
-X-Google-Smtp-Source: AGHT+IHCj4fIQmaD0smD64d+WdoNvxKcsF+LPm8LepKLk3m/wfu/XLkOZVHbtI+96XbJp9WpjbjE8Q==
-X-Received: by 2002:a17:90b:1dc4:b0:311:fde5:e225 with SMTP id 98e67ed59e1d1-313f1c01641mr3118796a91.14.1749868293053;
-        Fri, 13 Jun 2025 19:31:33 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:87ca::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19cd5a6sm4158494a91.12.2025.06.13.19.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 19:31:32 -0700 (PDT)
-Date: Fri, 13 Jun 2025 23:31:16 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v4 1/5] PCI: rockchip: Use standard PCIe
- defines
-Message-ID: <aEze9A8jtNsZLxr7@geday>
-References: <aEyJhoiPP0Ugm1t6@geday>
- <20250613205023.GA975137@bhelgaas>
- <aEyRrtMZ0LidhyOR@geday>
+        bh=/4zSIPw19HlLUie6b0kgjQJHS7vidQhIk3Cd96brfSo=;
+        b=sX89axQgrXndfTmWgIA4/zYPmIc/6CBvEEWvXLstvxp9m/Nja4LrywYzyjXHB2wjEq
+         2YbaxO83g9XX5eHABWPfBL1CAiOCOnJRFpDaqlZEhH6h2mO9CHMig9npSJPo/vTla+5o
+         ChT3dMe69Va7cRz53ZOICYSbvhdGCoAmpNqcwkMHEB9VIc99KPyJ40J61NSvVJdczr44
+         kRmtBmX3sJa5SwaStebFGVlBylOnTqsYPcE46kh4JgEWsVery+uk7GfvOLiBHEafm4uH
+         v1O6ojkEzCpMW5csZkVbSsz6uJFIO4pV8QCCY+Ga3bg2ZUGZkByo9j9/aO25KtABGpzz
+         AO7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749868570; x=1750473370;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/4zSIPw19HlLUie6b0kgjQJHS7vidQhIk3Cd96brfSo=;
+        b=OiXY06ZZYagGdW1MMcAHPE5B1/nj3zBQmjsNCnoam4BTWWkBpWUGnuVda/+RhagmGZ
+         yk3SgZQhLCUMnYVb2Xlut7QooIUpsS58Eo5E38BkfnQawDA4jnVJPaPUbV8XWWXdNRQ9
+         Db11PMIyroTzT4vXgcXMAIVVlpezz4vNqFaXK5vt3dcmJmfUQf3kX7xYsntXDgvj0Cyu
+         uJy9eRF6e2e1aN2u/WFuUBzBdwJ+xn2K1tFiBy+xVn9Ru8zIVG0SQe8TMCeDU++a/PKz
+         LYdtvpJNALsrXFpP2fwMCxxhYPMnsjfvpt8lLH6T1MBLHCK5S91D76MZ9/d9xxC9sm0T
+         L04g==
+X-Forwarded-Encrypted: i=1; AJvYcCVuLT8zZLseCE94Bgc2c+XgyE5mpp7OQdIKD+8Z6WJCa/EBlyt3yZz9PkpTVCgAqz4AMWwk4jDQ25qFzf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziwSg+CvT0MVoZnBIfjbtkHNKobJMu9bk0McIQZD8xUpuSbu7b
+	FmXHF28+Zd7Qss9oSPs4Wgy/3eBTkIOUr/VYtnNAElxTumhLaix3WxVKS/CH3eCYA0xwEiF+y9W
+	8eGR50LOkA4bPQT/jsAono3IkT3bSsPV3Q3t8Bf8=
+X-Gm-Gg: ASbGnct3HhWf1JwWRFYAXMcT1Sj+OX72CfQz21IQj/lO4DRFSRmhlJtXPGr4h+LRsq3
+	Y/OrcxC1BQSjbJp2DIPzqxuNBP88tKeRn7nr+ziwMHhUB47HD20DrvoBe00eZQq38u7psMWrLl8
+	jR/8QnbJFibL+cIDR3bDqJxRLbI7iM8sM8mNItI0M+8w1IyA8er8hXJUFEcHPJ5C0aMfqAJU8=
+X-Google-Smtp-Source: AGHT+IFxdd/eeA/jqO+ioIaQwggzyaJAKSp2npacWe2qm5ZmqZbGMbcXq9pAMDlbKaGfZHdE5uH6xTWQR5MyLSGGuXg=
+X-Received: by 2002:a05:6512:3f12:b0:553:ae47:6856 with SMTP id
+ 2adb3069b0e04-553b6e7d3b4mr334265e87.10.1749868570161; Fri, 13 Jun 2025
+ 19:36:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEyRrtMZ0LidhyOR@geday>
+References: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+In-Reply-To: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 13 Jun 2025 19:35:58 -0700
+X-Gm-Features: AX0GCFtDliQH_6brlg-dmQaZIRQh31WrUqfBwRgyCd0Z_gzAKUDVN86BzaEZjjk
+Message-ID: <CANDhNCpoKUbQU590m-vBKhk96ZCKDsYWOHwP_LL2W84SPOnXww@mail.gmail.com>
+Subject: Re: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation formula
+To: Kuyo Chang <kuyo.chang@mediatek.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 06:01:40PM -0300, Geraldo Nascimento wrote:
-> They are not under NDA and can be obtained though Rockchip's
-> official site:
-> https://rockchip.fr/Rockchip%20RK3399%20TRM%20V1.3%20Part2.pdf
+On Fri, Jun 13, 2025 at 7:05=E2=80=AFPM Kuyo Chang <kuyo.chang@mediatek.com=
+> wrote:
+> From: kuyo chang <kuyo.chang@mediatek.com>
+>
+> [Symptom]
+> The calculation formula for fair_server runtime is based on
+> Frequency/CPU scale-invariance.
+> This will cause excessive RT latency (expect absolute time).
+>
+> [Analysis]
+> Consider the following case under a Big.LITTLE architecture:
+>
+> Assume the runtime is : 50,000,000 ns, and FIE/CIE as below
+> FIE: 100
+> CIE:50
+> First by FIE, the runtime is scaled to 50,000,000 * 100 >> 10 =3D 4,882,8=
+12
+> Then by CIE, it is further scaled to 4,882,812 * 50 >> 10 =3D 238,418.
+>
+> So it will scaled to 238,418 ns.
+>
+> [Solution]
+> The runtime for fair_server should be absolute time
+> asis RT bandwidth control.
+> Fix the runtime calculation formula for the fair_server.
+>
+> Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
 
-Hm, sorry about the confusion Bjorn, that is not an official website
-at all it seems, so I assume these are leaked?
+While I've not quite gotten my head around the details in the
+dl_server code, I've been able to reproduce the problem described here
+with a 6.12 based kernel.
 
-If so, it's a real pity, there's not particularly confidential about
-these docs, and they are essential for working with Rockchip chips.
+Running cyclictest (with arguments "-t -a -p99 -m") , and a randomized
+input test on an Android device, its pretty easy to trip 100ms to
+*multi-second* delays of the RT prio 99 threads.
 
-Sorry,
-Geraldo Nascimento
+Perfetto image:
+https://github.com/johnstultz-work/misc/blob/main/images/2025-06-13_cyclict=
+est-dl-server-latency.png
+
+Link to the actual trace:
+https://ui.perfetto.dev/#!/?s=3D9bbb9e539ac2bbbfe3cfa954409134662a9f624a
+
+Using this patch, so far in my testing with the same workload, the max
+cyclictest latencies stick around the single digit ms range.
+
+The part that is a little confusing to me, is that prior to the long
+stall, it doesn't appear that RT tasks are actually starving
+SCHED_NORMAL tasks, so I'm conceptually surprised to see the dl_server
+boosting the normal tasks, especially for so long, but I admittedly
+haven't looked in detail at the code and have been going off my
+understanding of how it was supposed to replace rt-throttling, so I
+may be missing a subtlety.
+
+thanks
+-john
