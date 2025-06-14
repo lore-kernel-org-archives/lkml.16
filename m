@@ -1,105 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5771714C6;
-	Sat, 14 Jun 2025 10:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA8C24A061
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749898389; cv=none; b=QeCX/9O8FZn3TKY9cvzr7i5V3X+lK9cqjf6HkILnhbvUldvKYq7ksbkAe9uOu1bObN1RXbYLb9SkavEexO2nWZJu2mD/woIoE7RDHvdNnoBjzvoPXSV8u1waiPXJoYTVKRWyI5WCAL+jngzqmYUw2tbLdPpbnzt0sytCodOmlU0=
+	t=1749898564; cv=none; b=KFs67YGdzpFx0+nMBcdjZibsEOaH23OOw9F/zV4iVng9l7AqzC921SZ7SxRujCfZpYI6PziI55+9Wtwv8PDIWjJdr64b+UOn92TsvuSgoEt/jRFlU9AVWovbgocv9OoaiYP18fwu5TOBcS54lkw13djCv5Mr5XfHmdFBz0U+Raw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749898389; c=relaxed/simple;
-	bh=Eu2OSNlsIbtir4QIfKAgj6Oqne8ML7YrTT4Nm6VP84w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c+3hZlVqKvmtW4QGcsUDavBNqmCjCnr5ygYL11bSaNF+KBPQcO7LNyjiIhJochYQo6NvQcNHbPztjs39rerN2D6epyKV4Xue3b8i1FQl2BR8moQUTtT+gPuWYgROOTibMgx6YZp3U53hlSsFoILkHHMBUGIwUgJ1gmaSxZmETpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2nnUiGD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749898564; c=relaxed/simple;
+	bh=v9JAZMbAlGj+PI2KBTAH+4c6GQ22Vu0QZw0EvB4pGcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KqdofU6YJCoohE26BnFPs0bZo0TLzg74sPcPWcZEyYF7CSA9SNzv0+B7evrMJA+RynwjNCA1kFKqk/kvJhsz0IB7ihttMhsI5cZ6TNwC41XwJztPq1pkhQBdUCWt7dUgG3K9kXtO0ul6RlQNCoSQjCdRcYrwNOWa8kJKEbmQxPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fsSREzGo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2nnUiGD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD50AC4CEEB;
-	Sat, 14 Jun 2025 10:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749898388;
-	bh=Eu2OSNlsIbtir4QIfKAgj6Oqne8ML7YrTT4Nm6VP84w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P2nnUiGDKzEIGz7H2o27zlJMQMpqsz2fLSFL1+b5pgO2nkoxl1CoKkm+/y8QFxik2
-	 Mp/ohd+GEy0hYzdD0HIKw0UhQagqqKj/P+Ve1YVicIi2LaghwPPlfEpijjSluyMlhN
-	 T09wxV08Xvhfe/wf7b7lMIEYSTCdXsYWEM6o43FgBCGVclxqX4qgmYv7E4nKqBHgKB
-	 XJFblMkix/oO0TietI8sHPLdLerEhcTFDyILrMb0jINAxH7Y2HESc8ONOizPR6MKvf
-	 0LWc24ZlQgj1XiNsdOuLX6HMHdymmOlGu/uDV1gYg5BzGXzp9KK9Jzz/bUb9z5gzOq
-	 wWXe1dEHIuPqA==
-Date: Sat, 14 Jun 2025 11:52:58 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Ana-Maria Cusco <ana-maria.cusco@analog.com>,
- lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
- nuno.sa@analog.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <20250614115258.29a281c9@jic23-huawei>
-In-Reply-To: <aErMgh6AKVStF4rQ@smile.fi.intel.com>
-References: <cover.1749582679.git.marcelo.schmitt@analog.com>
-	<48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
-	<aEifWXPV1nsIyWbT@smile.fi.intel.com>
-	<aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
-	<aErMgh6AKVStF4rQ@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fsSREzGo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749898561;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q3cUmQ0MyZkdcrlxR7yc+f3znrveTY8lEdfw/tNRmdE=;
+	b=fsSREzGoYyCdfS9Rb/nHczoBb/GxJCE7TWPKxoqXc13uLdiLtcaKiuEW2qU9yfZAeLd/6U
+	Uba6GbFwB/qmT+rNS9lcnqbPCGH83v6JuV2Aqhy1Y1VdOP8IhfLCRB1QiaoQeTtsAmSsQG
+	+rXB4SOeDLfBz02Wt2H7v/OTI1549v8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-ypRNLI9eP0mJlHcLtYRiCA-1; Sat,
+ 14 Jun 2025 06:55:57 -0400
+X-MC-Unique: ypRNLI9eP0mJlHcLtYRiCA-1
+X-Mimecast-MFC-AGG-ID: ypRNLI9eP0mJlHcLtYRiCA_1749898555
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 21A86195608B;
+	Sat, 14 Jun 2025 10:55:54 +0000 (UTC)
+Received: from [10.45.224.53] (unknown [10.45.224.53])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 247F81956094;
+	Sat, 14 Jun 2025 10:55:45 +0000 (UTC)
+Message-ID: <a129e92b-6f01-4345-979f-e57e1829e506@redhat.com>
+Date: Sat, 14 Jun 2025 12:55:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 06/14] dpll: zl3073x: Fetch invariants during
+ probe
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>, netdev@vger.kernel.org
+Cc: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250612200145.774195-1-ivecera@redhat.com>
+ <20250612200145.774195-7-ivecera@redhat.com>
+ <c3400787-7279-4a50-a61a-92a100b3b4b9@linux.dev>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <c3400787-7279-4a50-a61a-92a100b3b4b9@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, 12 Jun 2025 15:48:02 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> On Wed, Jun 11, 2025 at 06:04:49PM -0300, Marcelo Schmitt wrote:
-> > On 06/11, Andy Shevchenko wrote:  
-> > > On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:  
-> 
-> ...
-> 
-> > > > +	return spi_write(st->spi, st->tx_buf, size + 2);  
-> > > 
-> > > ... + sizeof(reg) ?  
-> > 
-> > The size of the specific ADC register is stored in the size variable.
-> > The result of sizeof(reg) can be different on different machines and will
-> > probably not be equal to the size of the register in the ADC chip.  
-> 
-> Hmm... But shouldn't we have a variable type that respects the sizeof() of the
-> register in HW to keep it there? 2 is magic.
-> 
-> ...
-> 
-> > > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
-> > > > +{
-> > > > +	/*
-> > > > +	 * The use of static_assert() here is to make sure that, if
-> > > > +	 * struct ad4170_setup is ever changed (e.g. a field is added to the
-> > > > +	 * struct's declaration), the comparison below is adapted to keep
-> > > > +	 * comparing each of struct ad4170_setup fields.
-> > > > +	 */  
-> > > 
-> > > Okay. But this also will trigger the case when the field just changes the type.
-> > > So, it also brings false positives. I really think this is wrong place to put
-> > > static_assert(). To me it looks like a solving rare problem, if any.  
-> > 
-> > I think it is unlikely that struct ad4170_setup declaration will ever change.
-> > The fields match the registers that are associated with a channel setup and
-> > the their types match the size of the respective registers. So, I do agree
-> > that triggering this assert would be something rare.  
-> 
-> Yep, which thinks to me as an unneeded noise in the code, making it harder to
-> read and maintain (in _this_ case).
 
-This whole thing with static asserts was a compromise in the original drivers.
-I'm fine with just dropping it (here at least) and relying on review to pick up
-changes to these structures.
+On 13. 06. 25 9:13 odp., Vadim Fedorenko wrote:
+>> +    synth->enabled = FIELD_GET(ZL_SYNTH_CTRL_EN, synth_ctrl);
+>> +    synth->dpll = FIELD_GET(ZL_SYNTH_CTRL_DPLL_SEL, synth_ctrl);
+>> +
+>> +    dev_dbg(zldev->dev, "SYNTH%u is %s and driven by DPLL%u\n", index,
+>> +        synth->enabled ? "enabled" : "disabled", synth->dpll);
+>> +
+>> +    guard(mutex)(&zldev->multiop_lock);
+> 
+> Not a strong suggestion, but it would be good to follow netdev style
+> (same for some previous functions):
 
-Jonathan
+Hi Vadim,
+
+I'm using guard() on places (functions) where it is necessary to hold
+the lock from that place to the end of the function. Due to this
+scoped_guard() does not give any advantage. Using classic mutex_lock()
+and mutex_unlock() would only increases the risks of locking-related
+bugs. Also manual locking enforces to use mutex_unlock() or goto in
+all error paths after taking lock.
+
+> https://docs.kernel.org/process/maintainer-netdev.html#using-device- 
+> managed-and-cleanup-h-constructs
+> 
+> "Use of guard() is discouraged within any function longer than 20 lines,
+> scoped_guard() is considered more readable. Using normal lock/unlock is 
+> still (weakly) preferred."
+> 
+>> +
+>> +    /* Read synth configuration */
+>> +    rc = zl3073x_mb_op(zldev, ZL_REG_SYNTH_MB_SEM, ZL_SYNTH_MB_SEM_RD,
+>> +               ZL_REG_SYNTH_MB_MASK, BIT(index));
+>> +    if (rc)
+>> +        return rc;
+>> +
+>> +    /* The output frequency is determined by the following formula:
+>> +     * base * multiplier * numerator / denominator
+>> +     *
+>> +     * Read registers with these values
+>> +     */
+>> +    rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_BASE, &base);
+>> +    if (rc)
+>> +        return rc;
+>> +
+>> +    rc = zl3073x_read_u32(zldev, ZL_REG_SYNTH_FREQ_MULT, &mult);
+>> +    if (rc)
+>> +        return rc;
+>> +
+>> +    rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_M, &m);
+>> +    if (rc)
+>> +        return rc;
+>> +
+>> +    rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_N, &n);
+>> +    if (rc)
+>> +        return rc;
+>> +
+
+---> You have to keep the lock to here.
+
+>> +    /* Check denominator for zero to avoid div by 0 */
+>> +    if (!n) {
+>> +        dev_err(zldev->dev,
+>> +            "Zero divisor for SYNTH%u retrieved from device\n",
+>> +            index);
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    /* Compute and store synth frequency */
+>> +    zldev->synth[index].freq = div_u64(mul_u32_u32(base * m, mult), n);
+>> +
+>> +    dev_dbg(zldev->dev, "SYNTH%u frequency: %u Hz\n", index,
+>> +        zldev->synth[index].freq);
+>> +
+>> +    return rc;
+>> +} 
+
+This kind of function (above) is mailbox-read:
+1. Take lock
+2. Ask firmware to fill mailbox latch registers
+3. Read latch1
+4. ...
+5. Unlock
+
+But in later commits there are mailbox-write functions that:
+1. Take lock
+2. Ask firmware to fill mailbox latch registers
+3. Write or read-update-write latch registers
+4. ...
+5. Ask firmware to update HW from the latch registers (commit)
+6. Unlock
+
+Step 5 here is usually represented by:
+
+return zl3073x_mb_op(zldev, ZL_REG_*_MB_SEM, ZL_*_MB_SEM_RD,
+                      ZL_REG_*_MB_MASK, BIT(index));
+
+and here is an advantage of guard() that unlocks the mutex automatically
+after zl3073x_mb_op() and prior returning its return value.
+
+Thanks,
+Ivan
 
