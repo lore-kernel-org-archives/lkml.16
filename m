@@ -1,107 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952D24B26
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B1A254B03
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749897568; cv=none; b=nVAHSa7seeqoUzt7UvsPP1Jf/hMJsW3nT45rF/ZJs67b0RokDGmcvlKQkQZsNoP3E+livS+Zxkdyp4BpFwufHw1cSSNnIh+y6rpQdlasLCnKcDvosaGwg6OiBb6HLsa7ApdDn3Pg1Z9x6SVxbydIk+2mhrrmBoYxPBl1lZpYuRU=
+	t=1749897572; cv=none; b=jC17bZ4T7VYGDdjzFutpf51KSEelcD4HkBO1i3yKWvIOGfYx3XYznj8IPcvs37taiDGQ2hMUcYfr80KEBy+39BwRlrFstw+2QvHVAb1oaeMg5OqGoKDKhLXN9+vmyLK75cg0ZJ6ZXcXKjyiCkiz9GkiCp9xU0M28CKaXmyHNCVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749897568; c=relaxed/simple;
-	bh=ljuppTqyX9qOD/vtLwotTaA9fqBjfssPGpbLtG8Pjsk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D2i3b29Gy9mP/69Xh/IjQbj7HvGBNuBogW7CBl4yYflgwOdLCbv9jq7C6kgw/w8uD/KpTn23sHidjVcE8fWxqXOfgPgoh1L6havnaR8KESUPdXFADAUYu2SrLhFmPwwiKvllSxdqFt09V0uYvSGZnD9xLwelvjp6uqaKO3kBrMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZLUChVXM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749897572; c=relaxed/simple;
+	bh=neGtYlWL+rQqRl60UNqwVx8pYYCSbrpYZKEEqreHKKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozGS4MZnll3fUANepNEApkjn6g52Tjge1DIZtJ4VGNdTd1bzyEA1EQPKyU/tRcr+xcrJ4q3XvaoiTkd/P2rvdpN17Y0Z9L1TMtHYSdJsbEjdUrvSOr/XGeJg4VIJUXfwwEH3nbEZqEcIAuAO12ZjB+0f/XxoYs9r1Jb+dSHdswI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=StF1VnN/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLUChVXM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749897565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mfJRAujRjuGi7KQbNecOBzzOmJkqRWWoAoZaJP2IUfQ=;
-	b=ZLUChVXMiqWrkCyec8HRcmdi1gkuickRh6CJ+TXGSq1pnoPBApe7fg2UCelHdjCkrlKSkg
-	qlPcfwT4nPBPLk/xJNS8N5Lxl9MxvArpj6OqbGanicgN7E+YJB9/zDJ98SlV4ulukxdXLU
-	fDI3jBC/YzoQ+LTDWV+nZO7nXRGPtL8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-G2aoBe6gMUuwFE-f18DMzQ-1; Sat,
- 14 Jun 2025 06:39:22 -0400
-X-MC-Unique: G2aoBe6gMUuwFE-f18DMzQ-1
-X-Mimecast-MFC-AGG-ID: G2aoBe6gMUuwFE-f18DMzQ_1749897560
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4BA721800289;
-	Sat, 14 Jun 2025 10:39:19 +0000 (UTC)
-Received: from [10.45.224.53] (unknown [10.45.224.53])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51270180045B;
-	Sat, 14 Jun 2025 10:39:10 +0000 (UTC)
-Message-ID: <00780331-37cb-48ae-bb87-06d21a9ec4d1@redhat.com>
-Date: Sat, 14 Jun 2025 12:39:08 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="StF1VnN/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qYR+jkuSHU7Rs1PF8jTIcbOj/9F6zvOH3CGJ+OiZIjo=; b=StF1VnN/K1W6Lh/zAolQt9AcNA
+	5O2cIaUXQZxoJmfjn3+zOGkxluF7pKX89NoIWTlOW84CcjyIafcSis2VHlVH//8xDZTgS+MnBhqn1
+	RVFGL29f3gBbh2vd0rHNOx+4tfGcBa3KC3EL7K6SldfzfcODSPnhdmtkMJytQbQtfbD43P5kwvSfX
+	tJIbPMsQMaBd6nfuKMwAeV69g7LGXie/Q/Mraw8f4HdsOBz2bhCF2qdMcsGh7SnNKt8JVHo8AfZnc
+	2ImiTbCWiQPyeGwq61UllECjLbieBaUrWhUG/ME0CwDywRiW4pwnmPW4f3B3UOKjMypRFyCzYAsqn
+	EYwMyjrQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uQOI9-00000003Crm-0JzJ;
+	Sat, 14 Jun 2025 10:39:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A16333061B2; Sat, 14 Jun 2025 12:39:15 +0200 (CEST)
+Date: Sat, 14 Jun 2025 12:39:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>, jannh@google.com,
+	Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	=?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>,
+	Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH 09/13] x86/kconfig/64: Enable popular MM options in the
+ defconfig
+Message-ID: <20250614103915.GM2278213@noisy.programming.kicks-ass.net>
+References: <20250515132719.31868-1-mingo@kernel.org>
+ <20250515132719.31868-10-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 06/14] dpll: zl3073x: Fetch invariants during
- probe
-To: kernel test robot <lkp@intel.com>, netdev@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Vadim Fedorenko
- <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Prathosh Satish <Prathosh.Satish@microchip.com>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
- Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
-References: <20250612200145.774195-7-ivecera@redhat.com>
- <202506140541.KcP4ErN5-lkp@intel.com>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <202506140541.KcP4ErN5-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515132719.31868-10-mingo@kernel.org>
 
-
-
-On 13. 06. 25 11:46 odp., kernel test robot wrote:
-> Hi Ivan,
+On Thu, May 15, 2025 at 03:27:15PM +0200, Ingo Molnar wrote:
+> Since the x86 defconfig aims to be a distro kernel work-alike with
+> fewer drivers and a shorter build time, enable the following
+> MM options that are typically enabled on major Linux distributions:
 > 
-> kernel test robot noticed the following build warnings:
+> - ACPI_HOTPLUG_MEMORY, ZSWAP, SLAB hardening, MEMORY_HOTPLUG,
+>   MEMORY_HOTREMOVE, PAGE_REPORTING, KSM, higher DEFAULT_MMAP_MIN_ADDR,
+>   MEMORY_FAILURE, HWPOISON_INJECT, TRANSPARENT_HUGEPAGE,
+>   TRANSPARENT_HUGEPAGE_MADVISE, IDLE_PAGE_TRACKING, ZONE_DEVICE
+>   DEVICE_PRIVATE, ANON_VMA_NAME, USERFAULTFD, multi-gen LRU.
 > 
-> [auto build test WARNING on net-next/main]
-> 
-> url:https://github.com/intel-lab-lkp/linux/commits/Ivan-Vecera/dt-bindings- 
-> dpll-Add-DPLL-device-and-pin/20250613-041005
-> base:   net-next/main
-> patch link:https://lore.kernel.org/r/20250612200145.774195-7-ivecera%40redhat.com
-> patch subject: [PATCH net-next v9 06/14] dpll: zl3073x: Fetch invariants during probe
-> config: alpha-randconfig-r061-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140541.KcP4ErN5- 
-> lkp@intel.com/config)
-> compiler: alpha-linux-gcc (GCC) 10.5.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot<lkp@intel.com>
-> | Closes:https://lore.kernel.org/oe-kbuild-all/202506140541.KcP4ErN5-lkp@intel.com/
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
 
-Jakub, Dave, Paolo,
-should I fix this in v10 or in a follow-up in the part 2?
+> +CONFIG_KSM=y
 
-Thanks,
-Ivan
-
+Isn't this thing like a giant security fail?
