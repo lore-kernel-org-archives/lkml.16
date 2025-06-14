@@ -1,335 +1,235 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281082AE6A;
-	Sat, 14 Jun 2025 04:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749874331; cv=fail; b=AnPbZdZ/UDBxQ6AH/VxYDSfBuUMe0D0ZCcndxn734z0groO0qRDaSn7qZyuYUsCH3wiF6e89n5q7SZcrFakb5UampzzN3cpyKYPrCpHIZHfE2zvSmNp/sQHuWp8kc34bgISpbJ7Qot4h8r9X6yCzY3s7n6du5uUKYQh1ApSJ/eI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749874331; c=relaxed/simple;
-	bh=mCbjlM0Hv02Ux429CkZt7N2vIMerSKxgODchApKtdJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=b+911lBNQhB2e5tJ7mwDEazXuoEFjJ6A/mdOOzCBviH8reLM+tP3FZukN71NPR8ddWCbyoDERMt8/LMSrBoc/m/XG0qJswcxJsSZ3t+MxKiqCnrVqXksL24/zQHBFlqh4XaAZojEUC0w2lIS5VWDIlknABLivQTCySfWywams0U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Od00Clv8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=H9RuoL/F; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DDE3FFD;
+	Sat, 14 Jun 2025 04:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749874600; cv=none; b=Civbb2q0OfQ3UaoL1vVyF/0LlbtNj06kRYbZfUH38e2RXy2MHAHm7srKVoW35yGSfiu+u/9cbGJR+ojg8g5buNYuU9q9JzRCI9asUUIODOuQZvYwOLKRhd06jPsolPDzRTjR0MJwkVSpr80E0yryEjXgU4q1go8/oQ/UR4hCU94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749874600; c=relaxed/simple;
+	bh=m+KR5noHEiciaVpPiKU8xLKT0J23+CxeKqvtA8rKrJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cd379lTImQ64hDMy0HTXFvl7RT0o4l3t8YsfKf+Qggt2rdyFi0IUj+WDeAgG9/pMzvLo3q2YBgxBvef5oK3p370CkYwBYgfnjTvxs4BvPENxEKj0sxyeReYu0mtD3XauJgjGTSaHMEN/uWyYKfKV8Zvl/LVI1diBOtMJQ8+fwOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hnrDX1Mr; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Od00Clv8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="H9RuoL/F"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55E3ogOh019005;
-	Sat, 14 Jun 2025 04:11:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=ejTPu/Gj/u4kFhTVzG
-	oEDXbEKrWQcQncyXfS5DyY4b4=; b=Od00Clv8RCT93bcEUw+GsFPZs4K4hIkgwo
-	tthWwi6Tj+ubMpqYTdofK6seW9i0yqKTbDftGg8PRO7/J586G/4IDkpo3nGtu99/
-	xSp6lUUtKD8oQMHFOguau/OKa4peDgSk3K4eBAZ6ouBNJj9NBicNxqfZd7w/uAEG
-	oG7GNkcOSZVopSV0aH21SVwvCGykiTEPO1BWnmgeyoHZcDllcoN7C0JS4nxkW3A2
-	rMF4xW8xyyHYOtwoNTWXx+7g3RtQEMwbwyGe3680hR6pC0yz8fuB9aIB55jiits4
-	tz8YCI9MldQRCfTM4H2pWkRLblC4hvN/feNJz3Ve1MNVXUnyxjmQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47900er1s8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 14 Jun 2025 04:11:40 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55E1Xe2W031671;
-	Sat, 14 Jun 2025 04:11:39 GMT
-Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazon11013051.outbound.protection.outlook.com [40.93.201.51])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh621g5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 14 Jun 2025 04:11:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tND454yjK/yY7Vil6eIcdGZa4snmEYpeWt+QCgIRzyAAuT02KXrzDgs6LmsEU9SAdarL34jlQlzGImFGrlyvLwSUNaKWePZHamH9c7vWjpPxvnq0o+YaCI+0cJQR359oVYzr2/hFIpJtw4FwJOyaqY49PYGyyR6AM5UrjidvJTcTGxLKD5STaVuNn/qTa2m0ybeYN9j/QWsAlbt/12a0Wwn5oLeOKVsVZpu2OFzrRzV9kfdmBpMBDgO/esT/zFjPV8zQkiyXqfgiLTzTmQWaYMQmNGO7CMuLvWo/DblPQk/L4Cs9bo0aImDv70h2615G6D/jcbUcvhy9IuFO5EzUBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ejTPu/Gj/u4kFhTVzGoEDXbEKrWQcQncyXfS5DyY4b4=;
- b=WV9lrwGNClty0nazOSyllr3sFtsYvot1u/K4MbOInEsUuW1r9o2CYtldcOjEBX4+e4U9GCpnUOEY1YrGL/Px9yf6ymqzD/gtj/aogN0bwHSLpzeKtoQRFG9g6vgeLe+qeLzVn30Bj7RbVnxx9X2AN5+19CUvTGpoETcrYLPmY5DeZLiYaC6xofNTGZVVkkiOtLwqcWnh3b3vCjfRI3xJDqew/M7VA5HoCom8/atystkCCwM4I1r2llyVCblgltmW91eF0lgxGNA+5T+3T8FNTarlmPOiPNJonuT09jn0N85FlHRafKsV7eT2Yagzggt0tuKh9CwGG509NCfSBjkrIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnrDX1Mr"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70f862dbeaeso28077707b3.1;
+        Fri, 13 Jun 2025 21:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ejTPu/Gj/u4kFhTVzGoEDXbEKrWQcQncyXfS5DyY4b4=;
- b=H9RuoL/FZQNG6xcYtopLYkpoAUdXzyhA+S9uE3kL8Kkk2O6+h3gluXffXtgRKt3lJR9ed0hgHNsQyLczO8OkGOV9GggRNq2PeI9R0Nhvj8h0StXoJodubcW7/ihwVqn7StORFYXter/dywziwgKq5Pv1r5MiSZ/8xAdT52EwaC8=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by IA3PR10MB8137.namprd10.prod.outlook.com (2603:10b6:208:513::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Sat, 14 Jun
- 2025 04:11:36 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%6]) with mapi id 15.20.8835.018; Sat, 14 Jun 2025
- 04:11:36 +0000
-Date: Sat, 14 Jun 2025 00:11:22 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Williamson <alex.williamson@redhat.com>, Zi Yan <ziy@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>,
-        David Hildenbrand <david@redhat.com>, Nico Pache <npache@redhat.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
-Message-ID: <4rypovqoa4j6f4fyfqzrm5xeiv3dng5hc5dlfhmnehkydk6gcd@z6f3k3joaoli>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Alex Williamson <alex.williamson@redhat.com>, Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>, 
-	Nico Pache <npache@redhat.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, loongarch@lists.linux.dev, linux-mips@vger.kernel.org
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-3-peterx@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134111.469884-3-peterx@redhat.com>
-User-Agent: NeoMutt/20250404
-X-ClientProxiedBy: YQZPR01CA0067.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:88::14) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+        d=gmail.com; s=20230601; t=1749874597; x=1750479397; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sEqRCn0bK13sCXBYjTgFbWsSoj1rywXvpJYlD//fcpQ=;
+        b=hnrDX1MrNyAGQG7A/WmqrX4lK+kvEBzmbFw/OvrvdkMgLDL+Ufh059mvWQnrfXABU1
+         EaedqLoPVViD+1FIvZxpCrlf/PeU9ADSTGAOjZT8KhIXm7uWvTLi36VdQ6c3SMo5UuWL
+         vhzaql7m+PeaCA5El2peMeH7xqCpqJHRtIncet/avHAf60HHsiwVSAs0WxUQeXIqCx33
+         r/vk1H4xIFtmC7KJFpmc9MR59qDXe9YAvSbEMinDALk076oU6muhj6YVy0zzKBRc35Ah
+         roBV6127G6K3N69i/lrsDzhC0Qlwk9Xu8q0CkHDiYirov7iO6BTrkSeRkQ0LkVr2Ddb0
+         mRgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749874597; x=1750479397;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sEqRCn0bK13sCXBYjTgFbWsSoj1rywXvpJYlD//fcpQ=;
+        b=Xe6Zo0xVxPfvJWanle1XSSlJHQF6zPhXSOXtYTuCwgT/sGYgu2deLr23/dVvLLuF5S
+         CojD48qPOOCBEFwGzq/KR/YC/hZLDR8cTXvXlxNxNfh65vkt9UvHfqCNN/bJB07WWWXf
+         Qfljz9JsX6Lm3kKvKzeUBl9ADSIMToA0b7Atzczo4RgOZkdXtH4orNok9bMUFSipbF2W
+         jvO7POUx+klYRkbmkbFznKhkcqaHDSFh68IhAD8Kmj5kK4C4fbskht49qI18X0KM+9hk
+         UmktiSCbmBek3VusM6F3NB2IQpS82nsJz9npTBY988yY2KoCmETcSlhGPQL7ohbPLUV1
+         X4wA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWo/42j3oYGG/sYHWaaWkXXE7X+hwQ6J6B6XUX+DswQQYqN0Hp358aJtez4uNJzUFEKFsP2a6v+JKhkREgfW8UrQ==@vger.kernel.org, AJvYcCXLIUZW+jmtINtxvTOrlpxsB1gSEK1GKtWDycdCfXCLTOvea3apkRoCEV9CEPSp6uIJ2MggsMtq1BCYOV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdVBioQQz62pJTa/nz9Tc7x/6yOuml5cGQtFQNjlf+3b6lSLDy
+	i3aqHXT959PKORzYXVKH1+xRd27frvijwpX7DL1nXqgGaCcr2lYFnVxTlewawXY6sqIEfy5NsDF
+	ucFufqD6NRtrkANdsOkIrsx6aYY2tm2k=
+X-Gm-Gg: ASbGncusTB3uMuyuw4vxFm37q5NxIudkSh6IE80WB8boWG1e6KeJDj4B2OXggRQWxEU
+	UlfGBcJKILkEDeOTfFNn/XPIOtiup2b2jewoYym9TfqaOfwlXH7c1TvsPZWGxb4YnOYPzjQgLpm
+	4Ae4H1psMUm14GDp54/PnHzs6MpzWmphHSB9GfJwAFrw==
+X-Google-Smtp-Source: AGHT+IFybRlrb6IOvNn95HyjV7TRv+zq6LzZ23f+sKrbydMHRyLoBTqn0FaCddrmC0uKWYvQ4Q3/NvyCQj+XUpdF/qU=
+X-Received: by 2002:a05:690c:9a07:b0:703:b3b8:1ca1 with SMTP id
+ 00721157ae682-7117536e5f3mr23673627b3.5.1749874597304; Fri, 13 Jun 2025
+ 21:16:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|IA3PR10MB8137:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd8d44f2-612c-4f16-90ce-08ddaaf98dc9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?i3ZvQ4c6Uw+hQloTSU2cw34BN+PXaLCXUlmCWozBQzBaxkPEXDJJQm86/BYf?=
- =?us-ascii?Q?5bAg0a9YDcHr265/kcRgo5VR5yW56FYzKYqGEvWrxlWhL3nwoYZE6hf96b1f?=
- =?us-ascii?Q?KkCcmLTXHP82311cRMY6nfOgv9RdgqRf1UK8MhaNSQbJ4WxqwMt3WJE++7yA?=
- =?us-ascii?Q?gfy/VrvjW4toTApOOpdnCunSQMN7fZYC5wNxElB/WGdcHHF85rvJnObTHFrM?=
- =?us-ascii?Q?rhKj5acJXS4mzAoJfCrlDRrh3sSD1E8WoVHEgYapqMNL+I8fZZbQEO9RcXZu?=
- =?us-ascii?Q?BthpDZKHWBkOCDEwaxaS7k9sGX+rIsJVGOrbBpXGFrEAwj8E40JOH5J/CMpX?=
- =?us-ascii?Q?/aS692WKesqS4UoeInSw78KYGb2+CguXGFRdUn1ZZv4zjC501Zy45n6QdgaN?=
- =?us-ascii?Q?ghxvMe8TloweE0qEQm14U4G5mGq6mzcCjHAT4PVwTZS8+PUoyo0fdkysHt3o?=
- =?us-ascii?Q?bsHmCL1fQ+JlfM+7PGcCffRoCva12DOxcl4HVlYe/a0h2h7S9ZHDppQYH0SJ?=
- =?us-ascii?Q?kvzcSanc8aegxLxt6KdMpV/+I2gCO3kkQ/i+UT27xX9t1CyciKG5U6mG4/Dq?=
- =?us-ascii?Q?NzpDxq60gC3P4zy3zNvUr+PkiOZLSm4ch7lfuFxS2XHOPrObgJpgMuhWG4Fy?=
- =?us-ascii?Q?WLR/KeGXCA+mXDDPsf2syPF3PXti1HSISPFUXRnhqfN1dz0ubsPib5F1ZRw7?=
- =?us-ascii?Q?hWc2HWUJMMsCQhvnZUqp4aJU74GlPGFZW+AxN1eT+/aQEZ+byiFowyJf02k4?=
- =?us-ascii?Q?PaKKRBZ6V+oEL03BpvGo2Z4hqtTdV026icWFb+R0Gl62yfwI2VzZpJyrAa7X?=
- =?us-ascii?Q?SmBBoTRIG92RpWEC4NXfUcLIHVQz5DCfQ3f6aWC9OuXVpj3eyWjIQrGZdY8E?=
- =?us-ascii?Q?d6LCL6yClow/ooVBDvB+LPX74UsXABoogv9izGax5CDRVuGPFwtswADc6Dhi?=
- =?us-ascii?Q?zmiSQm1glZU1TvdVZf5TF3paS1slPaTnWRE3rYPOvMbIHY6pzg7iNDPZzy6P?=
- =?us-ascii?Q?PTZo3RVs9xTtYAFNqib3hoVmwuagKy9NFO0aN49cSxkYiUUy5RwxAxQYTDWM?=
- =?us-ascii?Q?hpmhWGVyVzJxXXMlyaZJheNH8xNsMRqUsjoTHYW5rGRLH783huHvRpMGE2Wa?=
- =?us-ascii?Q?s6iK8RhUamW2Is/5mgcDFSUTM+hfdMxEAn2ZpB0Xh/xsJJPvlgBywQRUoleW?=
- =?us-ascii?Q?BERhz/Oy6G2nmSFX9qFV8N0x+7qh3R1Kh9D89p+bY0iSQwgVF8/8yl5x+jfG?=
- =?us-ascii?Q?UQF7YYInYdfToqZSS1F2wdZq57buJ7gwuXF0In+1ln8SgkRpEoaZ96msr56y?=
- =?us-ascii?Q?H7zAEt8jrUEYLS+CDJAWXMLTYuAXmfPHblFd/yGEDVMvFkPOYzOCtSxbb3jj?=
- =?us-ascii?Q?+qa26lMWD65quQbmcoqzTRAZmUB1/X7Q8ShFcCERJdpO53kKYFtTMlW98dkd?=
- =?us-ascii?Q?/C+zBGSrTx4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?61a3xA1NI/e/VH+xPFW1ioEVPqEBv6Nw1eRhHNqPjJmZ4Ox5zR4s+8O9DcCC?=
- =?us-ascii?Q?0a4nKfhWFHIh3DIZ14hImZybsbTppIYqXH7TxkKKDKAvaYcJesjcEI1+eu4f?=
- =?us-ascii?Q?zDM0Ru/M9ZhJ0YPt0Vi+1clppOzB1si4FzOjjy4N/+7BtpO0OELfrb423zPW?=
- =?us-ascii?Q?LSSPMkfTTdicwgATR2KsTA7qX759BMQuckK/gwG66Rgez59f6i/+gc4jeaHt?=
- =?us-ascii?Q?Yz/JMC9BrE5m3gwvKr34SmcnLAxGZAM1fGAXRHxUik2SmVPZ8EzDtG6pqPwj?=
- =?us-ascii?Q?r2eAbd/o2id+w1IdfyXHD0W2XAi+D28WvbRcQYRAyosJtW3maqRG/HsLg8cD?=
- =?us-ascii?Q?h3WsTr2Inw0ksQSpJwERTaY0SIopLNYiY2rMBQqAPoDOkHLzS8biK8ERHLhX?=
- =?us-ascii?Q?F76Dsw9oZP7ApwkQFXb+k0fEWNOjm+5B4x/22+ebfvW6/n+h0ZMtL0EJEJqW?=
- =?us-ascii?Q?IyBp9aiGBlGtugV1wVMOv0qBHazzCgixzmmNBwIKysk9aofiNBjYM3jjafRv?=
- =?us-ascii?Q?FJ4IuXW91z93e+mfKkxuSXW1LOqn2/hQL4PU2qZlX5LgPdwPxfM9CRF21oEA?=
- =?us-ascii?Q?1l3lMvU/EzrglHzB9Nxi/5YelOGu53rEmykGutrB7g8vNsEoFxa1gGPK+4g9?=
- =?us-ascii?Q?8IQfj6oyiKFAI8xP+IlaJky3LIbGdWI3KfYIJ8TUEsDrOUJrIswPBZw4L+sW?=
- =?us-ascii?Q?9VSecb/9UD3eGSfTZvsclJkZZ4RYrKOVlzf1/GUWhPT9x+6elMoCNunZHQ2w?=
- =?us-ascii?Q?p6VdxRYqFYrHJ68XTKwwm6oBAHCXHDrytd8yud2ySYyDNSz6XOpgHlWxHS9O?=
- =?us-ascii?Q?DHYIoPwPHKPU7YI7OX06r4UyfYKKUX9q5e0RrO3JLLQShiMBPSZvTD6BaY/A?=
- =?us-ascii?Q?4l/syWkC0AFMXb+Q4kcToMwT2kbLvhaTEgLpr79vS8RJe2KAi2DHfyOO9IRv?=
- =?us-ascii?Q?0m6tgPX57FNWrVqADat+Vvm03veIBIqVF6zqYql0qEa/5pjDdVcfdxEYcCIa?=
- =?us-ascii?Q?bM7KQTXFXDp5/DzhZFXliyzB86P3ZNBTEv2IySRZk+o+WbaswkVISxJbxjXr?=
- =?us-ascii?Q?z83ozRzEi6IV4zPZaWNkHLGtyTtCXugvXpV84es1DIR7K2NnkfdtqEEvbpq6?=
- =?us-ascii?Q?drvyGJ/0JhqT+gkvDuUeBgnc1sg5gvVdIiS2szlt536OG2NcEknWwO/zF2/4?=
- =?us-ascii?Q?6Jp1vqPC0EJZ0tpaSJfxuvY05coVRPRATWFEnIkGlhTglqZiiwWblDUqOzVd?=
- =?us-ascii?Q?EXdKYTztd7GU3JleB0O1C6Oaga+6qMa3WY5oGYKOZYFKhudf6QCUWntGrY+/?=
- =?us-ascii?Q?ZBwqoUnUZPHmbbwBMKBol5prGhFf7Z+Zy2zr4NPdpXoBzV5+sIvMaM5vXLZY?=
- =?us-ascii?Q?f9XzzRVFGN02USKk5L8blTFVBrl2kFV0iT/czBKbE36yjcLdt/ij6YTtd5wl?=
- =?us-ascii?Q?jhpzbBH9jyEvAO0gnjDLQYAoVUtLAOburVpx6DNzhCSMYIAyPdyWjF0P4bj7?=
- =?us-ascii?Q?ew174rcW27Vrkdnv05lJ4A80plaFrFdM1QsPdpCbCVbJCWNuUJ0cdcvcOGv1?=
- =?us-ascii?Q?8UbSN6NPV6rvGDPaAaKXNGDeN1Oxay/gljsWWlI0?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	v6QUjrRgm8Weu/az10VbsW4fIsV8s9x2KnGlxIpHl+PLy9THwewNtsOhxpDLN6tF2SVsEYLdtzCh2hMeSl0gDCsvc2cqhsTm8tP+6waSUG9O0K1ePxRuWoFEIVI9AnozktGpV+VCFctbm4CspY439zVY2zT9oSI/yOJSJQ50mYjM1Il5nBTUq8+sp4/TwlGTw6+5Exvd77AgeIn51AEsw3FkH34H6IQ8vnRPUkYPm9BRCjpglAbjF36lodu76jea1/NuZkuYRlB6MllWOismeJ60HXwuO5MiSh6Kn6YhEZqWUwyhIYb1Tq7rImuTwlUdV8zplZL3kH81wof1YZrcjE+IZ6r/xrEdUVZcbBMUkRCyez10/mgzcqisBmmpSLtE0Ahh63rwDbQvU1sSs0Y+pqf6jAOlV0x234aJshJ+nneCQRhv9i9yt/I5wAq6DgjGRUo/xqySd27NfrjO+YKS8ce8WTXzGkKL+8e0NlfXuyGIXtIIgguG9cmroe8EYf4rL6EPNM/xgBxVRgk64MutxGSqKSmyC3+XNmmmSDBnY2ke8iUEpE8qTVPDKX2ka+perHIzX7hX8N0tZuJCOXbwCxLIMBSqvDAk2FdSYWqEBTg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd8d44f2-612c-4f16-90ce-08ddaaf98dc9
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 04:11:36.1826
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /inewvsez6KDMJub2dYWherwGylC0Xlm7hEWZh3bd2gCig/z3SBOhNhgtfz6hv1NrcyidlNOr8vok7IBU74ebg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8137
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-14_01,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506140031
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDAzMSBTYWx0ZWRfX71hIBjrRF4km 0wzF9Glp59Pb0rah+G3bY3TmDK9k90tjNkROxNeNM2a21mwOJ3MyT1raxlNZDmPNlOqc0wKjlcW PsZsoa8HDV7jgUa/Kh8MswWUIBxJKNWuwYC/ixy2eOM0i59Qraz3JpbToLZTvfczuYU/mEB4J/V
- ru1038xPBDX3WExl1hOs+mNf3MjdpUpt0DC1riF2CLw+/KH3I581hOVSnWRu7lWby/4JIPr8Jqw AYLA6Wj37ynvBQv7guYepclBz2GhUzAKGkC49GyBQCYHI+vYNctFzOEImJYzUieViNIi4xL82T9 J3VqKr5lAsNjtSImSsxSAHGGfPkOaspfhvkcbOkOOTZI+obzEtTwwgkIKaWNNLvgRfQvXMuFoHd
- 75s75AFndLzyxduty6v3daBGi0rpUfU1s0VW6uGNqUOwMYNkyFL02LNF3dDzbk1NG/L+7Mkk
-X-Proofpoint-ORIG-GUID: _ubHrjVfIFu6NnqnXDkTTUz8CXRM4SQA
-X-Authority-Analysis: v=2.4 cv=X/5SKHTe c=1 sm=1 tr=0 ts=684cf67c cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=enOvQawGAAAA:8 a=HUJ4IZbW0sMVnsjnhkUA:9 a=CjuIK1q_8ugA:10 a=OuzhcWw_GC9nAYdNdRwA:22
-X-Proofpoint-GUID: _ubHrjVfIFu6NnqnXDkTTUz8CXRM4SQA
+References: <20250614004108.1650988-1-irogers@google.com> <20250614004108.1650988-3-irogers@google.com>
+In-Reply-To: <20250614004108.1650988-3-irogers@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 13 Jun 2025 21:16:26 -0700
+X-Gm-Features: AX0GCFvZdQX9PXK28NKk2Jj5Ppi7rE_0y6bB3X8ZBDx-JeIRZ74VhUwGhNzgZRw
+Message-ID: <CAH0uvojjfOcoZmxPL+bG5NEid8xcAVth7UxOUc=aYjgF5nqs2A@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events
+ and thread
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Peter Xu <peterx@redhat.com> [691231 23:00]:
-> Only mips and loongarch implemented this API, however what it does was
-> checking against stack overflow for either len or addr.  That's already
-> done in arch's arch_get_unmapped_area*() functions, hence not needed.
+Hello Ian,
 
-I'm not as confident..
-
-> 
-> It means the whole API is pretty much obsolete at least now, remove it
-> completely.
-> 
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Muchun Song <muchun.song@linux.dev>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-mips@vger.kernel.org
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/loongarch/include/asm/hugetlb.h | 14 --------------
->  arch/mips/include/asm/hugetlb.h      | 14 --------------
->  fs/hugetlbfs/inode.c                 |  8 ++------
->  include/asm-generic/hugetlb.h        |  8 --------
->  include/linux/hugetlb.h              |  6 ------
->  5 files changed, 2 insertions(+), 48 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-> index 4dc4b3e04225..ab68b594f889 100644
-> --- a/arch/loongarch/include/asm/hugetlb.h
-> +++ b/arch/loongarch/include/asm/hugetlb.h
-> @@ -10,20 +10,6 @@
->  
->  uint64_t pmd_to_entrylo(unsigned long pmd_val);
->  
-> -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -					 unsigned long addr,
-> -					 unsigned long len)
-> -{
-> -	unsigned long task_size = STACK_TOP;
-> -
-> -	if (len > task_size)
-> -		return -ENOMEM;
-> -	if (task_size - len < addr)
-> -		return -EINVAL;
-> -	return 0;
-> -}
-> -
->  #define __HAVE_ARCH_HUGE_PTE_CLEAR
->  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
->  				  pte_t *ptep, unsigned long sz)
-> diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-> index fbc71ddcf0f6..8c460ce01ffe 100644
-> --- a/arch/mips/include/asm/hugetlb.h
-> +++ b/arch/mips/include/asm/hugetlb.h
-> @@ -11,20 +11,6 @@
->  
->  #include <asm/page.h>
->  
-> -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -					 unsigned long addr,
-> -					 unsigned long len)
-> -{
-> -	unsigned long task_size = STACK_TOP;
-
-arch/mips/include/asm/processor.h:#define STACK_TOP             mips_stack_top()
-
-
-unsigned long mips_stack_top(void)                                                                                                                                                                                                             
-{       
-        unsigned long top = TASK_SIZE & PAGE_MASK;                                                                                                                                                                                             
-        
-        if (IS_ENABLED(CONFIG_MIPS_FP_SUPPORT)) {
-                /* One page for branch delay slot "emulation" */                                                                                                                                                                               
-                top -= PAGE_SIZE;                                                                                                                                                                                                              
-        }                                                                                                                                                                                                                                      
-        
-        /* Space for the VDSO, data page & GIC user page */                                                                                                                                                                                    
-        top -= PAGE_ALIGN(current->thread.abi->vdso->size);                                                                                                                                                                                    
-        top -= PAGE_SIZE;
-        top -= mips_gic_present() ? PAGE_SIZE : 0;                                                                                                                                                                                             
-        
-        /* Space for cache colour alignment */                                                                                                                                                                                                 
-        if (cpu_has_dc_aliases)
-                top -= shm_align_mask + 1;                                                                                                                                                                                                     
-        
-        /* Space to randomize the VDSO base */                                                                                                                                                                                                 
-        if (current->flags & PF_RANDOMIZE)
-                top -= VDSO_RANDOMIZE_SIZE;                                                                                                                                                                                                    
-        
-        return top;                                                                                                                                                                                                                            
-}
-
-This seems different than TASK_SIZE.
-
-Code is from:
-commit ea7e0480a4b695d0aa6b3fa99bd658a003122113
-Author: Paul Burton <paulburton@kernel.org>
-Date:   Tue Sep 25 15:51:26 2018 -0700
-
-
-> -	if (len > task_size)
-> -		return -ENOMEM;
-> -	if (task_size - len < addr)
-> -		return -EINVAL;
-> -	return 0;
-> -}
-> -
-
-Unfortunately, the commit message for the addition of this code are not
-helpful.
-
-commit 50a41ff292fafe1e937102be23464b54fed8b78c
-Author: David Daney <ddaney@caviumnetworks.com>
-Date:   Wed May 27 17:47:42 2009 -0700
-
-... But the dates are helpful.  This code used to use:
-#define STACK_TOP      ((TASK_SIZE & PAGE_MASK) - PAGE_SIZE)
-
-It's not exactly task size either.
-
-I don't think this is an issue to remove this check because the overflow
-should be caught later (or trigger the opposite search).  But it's not
-clear why STACK_TOP was done in the first place.. Maybe just because we
-know the overflow here would be an issue later, but then we'd avoid the
-opposite search - and maybe that's the point?
-
-Either way, your comment about the same check existing doesn't seem
-correct.
-
-I haven't checked loong arch, but I'd be willing to wager this was just
-cloned mips code... because this happens so much.
-
+before:
+~~~
+$ sudo valgrind --leak-check=3Dfull /tmp/perf/perf trace --sort-events
+-e openat* --max-events=3D1 -- echo 1
+=3D=3D248676=3D=3D Memcheck, a memory error detector
+=3D=3D248676=3D=3D Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward=
+ et al.
+=3D=3D248676=3D=3D Using Valgrind-3.23.0 and LibVEX; rerun with -h for copy=
+right info
+=3D=3D248676=3D=3D Command: /tmp/perf/perf trace --sort-events -e openat*
+--max-events=3D1 -- echo 1
 ...
+=3D=3D248676=3D=3D 3,842 (256 direct, 3,586 indirect) bytes in 1 blocks are
+definitely lost in loss record 2,773 of 2,808
+=3D=3D248676=3D=3D    at 0x484FBE3: calloc (in
+/usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+=3D=3D248676=3D=3D    by 0x3634E1: thread__new (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x363BBE: threads__findnew (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x34DAB6: machine__findnew_thread (in /tmp/perf/pe=
+rf)
+=3D=3D248676=3D=3D    by 0x34E655: machine__process_comm_event (in /tmp/per=
+f/perf)
+=3D=3D248676=3D=3D    by 0x2071B1: __trace__deliver_event.isra.0 (in /tmp/p=
+erf/perf)
+=3D=3D248676=3D=3D    by 0x2072EA: ordered_events__deliver_event (in /tmp/p=
+erf/perf)
+=3D=3D248676=3D=3D    by 0x3608D2: __ordered_events__flush (in /tmp/perf/pe=
+rf)
+=3D=3D248676=3D=3D    by 0x20CB19: trace__run (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x21183D: cmd_trace (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x215E6F: run_builtin (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x21618A: handle_internal_command (in /tmp/perf/pe=
+rf)
+...
+=3D=3D248676=3D=3D 4,992 bytes in 16 blocks are definitely lost in loss rec=
+ord
+2,776 of 2,808
+=3D=3D248676=3D=3D    at 0x484FE10: realloc (in
+/usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+=3D=3D248676=3D=3D    by 0x57CCBCD: __vasprintf_internal (vasprintf.c:123)
+=3D=3D248676=3D=3D    by 0x5878152: __asprintf_chk (asprintf_chk.c:34)
+=3D=3D248676=3D=3D    by 0x31ED18: parse_events_formats_error_string (in /t=
+mp/perf/perf)
+=3D=3D248676=3D=3D    by 0x36DCA7: perf_pmu__config_terms (in /tmp/perf/per=
+f)
+=3D=3D248676=3D=3D    by 0x370CD8: perf_pmu__name_from_config (in /tmp/perf=
+/perf)
+=3D=3D248676=3D=3D    by 0x43216A: arch_is_topdown_metrics (in /tmp/perf/pe=
+rf)
+=3D=3D248676=3D=3D    by 0x432AD7: arch_evsel__must_be_in_group (in /tmp/pe=
+rf/perf)
+=3D=3D248676=3D=3D    by 0x31C657: __parse_events (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x31CD1E: parse_event (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x3A2D76: perf_can_comm_exec (in /tmp/perf/perf)
+=3D=3D248676=3D=3D    by 0x3A374F: evlist__config (in /tmp/perf/perf)
+...
+=3D=3D248676=3D=3D
+=3D=3D248676=3D=3D LEAK SUMMARY:
+=3D=3D248676=3D=3D    definitely lost: 5,248 bytes in 17 blocks
+=3D=3D248676=3D=3D    indirectly lost: 3,586 bytes in 12 blocks
+=3D=3D248676=3D=3D      possibly lost: 311,943 bytes in 5,292 blocks
+=3D=3D248676=3D=3D    still reachable: 740,220 bytes in 21,186 blocks
+=3D=3D248676=3D=3D         suppressed: 0 bytes in 0 blocks
+=3D=3D248676=3D=3D Reachable blocks (those to which a pointer was found) ar=
+e not shown.
+=3D=3D248676=3D=3D To see them, rerun with: --leak-check=3Dfull --show-leak=
+-kinds=3Dall
+=3D=3D248676=3D=3D
+=3D=3D248676=3D=3D For lists of detected and suppressed errors, rerun with:=
+ -s
+=3D=3D248676=3D=3D ERROR SUMMARY: 56 errors from 56 contexts (suppressed: 0=
+ from 0)
+~~~
+
+after:
+~~~
+$ sudo valgrind --leak-check=3Dfull /tmp/perf/perf trace --sort-events
+-e openat* --max-events=3D1 -- echo 1
+=3D=3D245044=3D=3D Memcheck, a memory error detector
+=3D=3D245044=3D=3D Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward=
+ et al.
+=3D=3D245044=3D=3D Using Valgrind-3.23.0 and LibVEX; rerun with -h for copy=
+right info
+=3D=3D245044=3D=3D Command: /tmp/perf/perf trace --sort-events -e openat*
+--max-events=3D1 -- echo 1
+=3D=3D245044=3D=3D
+--245044-- WARNING: unhandled eBPF command 36
+--245044-- WARNING: unhandled eBPF command 28
+--245044-- WARNING: unhandled eBPF command 28
+--245044-- WARNING: unhandled eBPF command 28
+--245044-- WARNING: unhandled eBPF command 28
+--245044-- WARNING: unhandled eBPF command 28
+libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+...
+=3D=3D245044=3D=3D 4,992 bytes in 16 blocks are definitely lost in loss rec=
+ord
+2,763 of 2,794
+=3D=3D245044=3D=3D    at 0x484FE10: realloc (in
+/usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+=3D=3D245044=3D=3D    by 0x57CCBCD: __vasprintf_internal (vasprintf.c:123)
+=3D=3D245044=3D=3D    by 0x5878152: __asprintf_chk (asprintf_chk.c:34)
+=3D=3D245044=3D=3D    by 0x31ED98: parse_events_formats_error_string (in /t=
+mp/perf/perf)
+=3D=3D245044=3D=3D    by 0x36DD27: perf_pmu__config_terms (in /tmp/perf/per=
+f)
+=3D=3D245044=3D=3D    by 0x370D58: perf_pmu__name_from_config (in /tmp/perf=
+/perf)
+=3D=3D245044=3D=3D    by 0x4321EA: arch_is_topdown_metrics (in /tmp/perf/pe=
+rf)
+=3D=3D245044=3D=3D    by 0x432B57: arch_evsel__must_be_in_group (in /tmp/pe=
+rf/perf)
+=3D=3D245044=3D=3D    by 0x31C6D7: __parse_events (in /tmp/perf/perf)
+=3D=3D245044=3D=3D    by 0x31CD9E: parse_event (in /tmp/perf/perf)
+=3D=3D245044=3D=3D    by 0x3A2DF6: perf_can_comm_exec (in /tmp/perf/perf)
+=3D=3D245044=3D=3D    by 0x3A37CF: evlist__config (in /tmp/perf/perf)
+...
+=3D=3D245044=3D=3D LEAK SUMMARY:
+=3D=3D245044=3D=3D    definitely lost: 4,992 bytes in 16 blocks
+=3D=3D245044=3D=3D    indirectly lost: 0 bytes in 0 blocks
+=3D=3D245044=3D=3D      possibly lost: 245,988 bytes in 5,288 blocks
+=3D=3D245044=3D=3D    still reachable: 740,211 bytes in 21,185 blocks
+=3D=3D245044=3D=3D         suppressed: 0 bytes in 0 blocks
+=3D=3D245044=3D=3D Reachable blocks (those to which a pointer was found) ar=
+e not shown.
+=3D=3D245044=3D=3D To see them, rerun with: --leak-check=3Dfull --show-leak=
+-kinds=3Dall
+=3D=3D245044=3D=3D
+=3D=3D245044=3D=3D For lists of detected and suppressed errors, rerun with:=
+ -s
+=3D=3D245044=3D=3D ERROR SUMMARY: 51 errors from 51 contexts (suppressed: 0=
+ from 0)
+~~~
+
+TL;DR: (definitely lost: 5,248 bytes in 17 blocks, 3,586 bytes in 12
+blocks) -> (definitely lost: 4,992 bytes in 16 blocks, indirectly
+lost: 0 bytes in 0 blocks), the leak of thread__new() is fixed.
+
+Thank you so much for fixing this.
+
+On Fri, Jun 13, 2025 at 5:41=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Caught by leak sanitizer running "perf trace BTF general tests".
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
-Liam
+Howard
