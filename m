@@ -1,140 +1,193 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064AB7462;
-	Sat, 14 Jun 2025 21:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864117462
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 21:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749936751; cv=none; b=rlQOW0hkjzAYYARSLoVwiUFK/56PBT+282mNP6CGS3WGo0FSXtqMG+bNXfrUlJ+OmFHCss2eJPE5WCc43OFjKMgCyDbyWi2podtH+3mTFppJeG5oSdLnkjzCA4F2vX5RzX6u2/vaqxD4qI+v5ueG6x8LsCX0SDmol9e8Roy71ts=
+	t=1749936790; cv=none; b=UaJ2GvM7AoREl3SbzyWP1sn89/70os6P3inG/gMhmxH5P6SboH5JOdScHSHnQSWWuyWbZsHJqywfUXeYrID7XsWNawXnHVcPTv0DJWQ9mSWP5TdEIqIJx7EmLYOHlGe+kxA1tF+sSrtysJlPlVqgjLVIW0mXQ2iHUKUTKI0V0Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749936751; c=relaxed/simple;
-	bh=c7Xr1RrIFGE5wjzGDdsNevrNIjfIdMNqpuDBse36Yig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SttcZPI3kvW10UGSylvu/jFdNHyrjSNQWtyP6V7HLPb62EoNQwEoQIpF3w3v1LDBJ0sFTCWaVjzcmVDe4MfJ0pkIHqEAmOIRhEcrLzAoHNtXzXn8FHbCnFXudBRYDMPtX00Ihv0WhFs2wrt/ttHzDQkoGhk5km6jwJ5Noxkuq/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nfjICEDp; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749936790; c=relaxed/simple;
+	bh=Y5w78cvgamv0Dj0NKUKDziwZnFdQqR7Nep6qV62d5dI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dRZTTnBMftIQJiszwgqs1MNngrhkT//HP72GPc1cMz0zpGvrud9RhqZAK7y51tONs81fWx8ZrWvRi0pk63YW9/l3VeWzVN7D3OeU4eP7ddMxfWYhVixHZx8mgL0oOiTdNiCL0n6umvYdDgu5eudjMM1m80lSsg/HlATxp54qLus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSxUKM9v; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nfjICEDp"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 769D15B3;
-	Sat, 14 Jun 2025 23:32:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749936737;
-	bh=c7Xr1RrIFGE5wjzGDdsNevrNIjfIdMNqpuDBse36Yig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nfjICEDpWKZ1geb9rv4DyhPhesthM5lyXX3xvFqEeHG2Jv6hn1GrvZWpOG1Fp8Xk8
-	 Lpg+0YcOg5k+uGTAFVd3QgbEmKhR6glinhjuvVrNgERP/s54c04FBZDQnlUGldEd67
-	 6kw9N79rLTrkw9pLc5VAST6pVihMczQpbijxIX8k=
-Date: Sun, 15 Jun 2025 00:32:13 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] media: rcar-vin: Check for correct capture interrupt
- event
-Message-ID: <20250614213213.GM10542@pendragon.ideasonboard.com>
-References: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se>
- <20250614141545.2860860-3-niklas.soderlund+renesas@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSxUKM9v"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so1788565f8f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 14:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749936787; x=1750541587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+dEKzcBhpakvz7JfJKuqzS94eT+Erin8X868OAONCNc=;
+        b=YSxUKM9vJaDAXLS/LmXUW5nw0CNwwP4zpeQoXZgZyB3F0XUpdjm9ITmiRN6Bxzdk8m
+         fyEUAyYfPOWTaikZRzXFMGXrILSsp3XFkemEaB/0e9RHgRjhVb8p/P8AFfQ5cEym51yn
+         I7+PCbFWPT9nsl3jGaV1jPRIme0I+/pQXvbFnXQD7hI8Ss/kxY7DhItFileIX+wcGCRB
+         TTkPs7EMUhIL0lM7vFjaNsNY5EpYU8FQPP7yZSyQNEE8Hdbko6q+MUZrgp6ME9vKjcIG
+         1vGEUB4rouYLe+mflrrlTRBioN2WHRY3ixx06yPePquNfxDXAc4K3ae3h9ow9vHlqmSZ
+         i5fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749936787; x=1750541587;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+dEKzcBhpakvz7JfJKuqzS94eT+Erin8X868OAONCNc=;
+        b=dbZPO5r8Dw05IdzGZLvrmgQZnXOwH1wAqqfnCM5RPIdptYTidv7Cw/V9mSURF2Ne3P
+         MohNllSpK+16Mhd7RxdazASSHLoJbvn3Cw96O+OqbRkC/VFbTgucwiheEfoqnNzov3OQ
+         8laIi0dpSgYO85QuY1TJgBRz387gyh/51c4KIlG1uObm/krNKT95aWJDwXGrNMu2Pr1J
+         2KTVj2bu3j/UjrqpA5iT9zRtWiUMkMtz2qLo6TboxkVAKmIjpxOCMfzzGNmqBICOAwjr
+         cYN5cSVvPue1dujQk74yeHZY4J/dEGbljy1zP1mcUBDS8VEcU+/uiqBoKvfk5TVHi9Ze
+         p0dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeb1YfGyRb36vxDJdCiC/VldtMdD9mqHZpyN4YcTWUepZWn+qL3EawFiNN3Obiw4drpdg8zjK3Q1Hg0rY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhkpxPEGvYFZDiS7llowyPDVhve2WRizxGyn2qMzU6Q5gL+W6h
+	1+9+c8s3TYUjFOm5bWAm7twCbLMfJnyuPF3ZTPrXKZcqt5yp13klrPFY
+X-Gm-Gg: ASbGncsdzKH4jEukmTJ7CaefaicZIOWjnvkMUsoaAUKzyUwIZyGgQsIlxygE0PjMkkU
+	AZ2kUVXXwzp1+ag9Ji7A5G/UfN8q7zyA8P0FqqKVZxeSGMmMPN5hGPPZM/VDgImYvqRc3Rzv/ov
+	OkfU7BLBBYfN57ZncQfn7MeQh5C4zWLEpXmaAITi83b6dUMBEX40yc2NMAmjyHE35w2ea3BP7/S
+	+dXAXNe7DaCHf6OnA2ds9t+FOLpTGHaldwdqRuM42ZMetHz0FpK/Fgxwj9E6Mg9htV3CS5yc/Y+
+	wYk4wkJFuF53tw/eW/rWa3QjZJQHcisXlQrh7BIMUKslTeDp8K5bb8gpyjJ/AjD4Jhjfyit2R3r
+	ZNWLs0qaJbBmV1kJgTL0uTGbX
+X-Google-Smtp-Source: AGHT+IHiubCjkW0rhseTDiSu95iKmDNjdBKKAGi4gqZa5riDH8Sd4o1j1gf8IBP1deQVLgkaF2nGnQ==
+X-Received: by 2002:a05:6000:18a5:b0:3a4:d994:be7d with SMTP id ffacd0b85a97d-3a57237db54mr3822983f8f.23.1749936786605;
+        Sat, 14 Jun 2025 14:33:06 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a734b5sm6249980f8f.33.2025.06.14.14.33.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 14:33:06 -0700 (PDT)
+Date: Sat, 14 Jun 2025 22:30:06 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Nicolas Pitre <npitre@baylibre.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v3 next 08/10] lib: mul_u64_u64_div_u64() Separate
+ multiply to a helper for clarity
+Message-ID: <20250614223006.20c16642@pumpkin>
+In-Reply-To: <58porr76-92os-7019-nr00-n68r74202pps@onlyvoer.pbz>
+References: <20250614095346.69130-1-david.laight.linux@gmail.com>
+	<20250614095346.69130-9-david.laight.linux@gmail.com>
+	<58porr76-92os-7019-nr00-n68r74202pps@onlyvoer.pbz>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250614141545.2860860-3-niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Niklas,
+On Sat, 14 Jun 2025 11:37:54 -0400 (EDT)
+Nicolas Pitre <npitre@baylibre.com> wrote:
 
-On Sat, Jun 14, 2025 at 04:15:44PM +0200, Niklas Söderlund wrote:
-> Depending on if the capture session deals with fields or whole frames
-> interrupts can be generated at an end of field, or end of frame event.
-> The interrupt mask is setup to generate an interrupt on one of the two
-> events depending on what is needed when the VIN is started. The end of
-> field bit is set in both cases so controlling the mask that generates an
-> interrupt have been enough to control the two use-cases.
+> On Sat, 14 Jun 2025, David Laight wrote:
 > 
-> Before extending the interrupt handler to deal with other types of
-> interrupt events it is needs to extended to "capture complete" check for
-> correct the use-case in operation. Without this the simplification in
-> the handler can result in corrupted frames when the mask on what type of
-> events can generate an interrupt generated can no longer be assumed to
-> only be an "capture complete" event.
+> > Move the 64x64 => 128 multiply into a static inline helper function
+> > for code clarity.
+> > No need for the a/b_hi/lo variables, the implicit casts on the function
+> > calls do the work for us.
+> > Should have minimal effect on the generated code.
+> > 
+> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> > ---
+> > 
+> > new patch for v3.
+> > 
+> >  lib/math/div64.c | 54 +++++++++++++++++++++++++++---------------------
+> >  1 file changed, 30 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/lib/math/div64.c b/lib/math/div64.c
+> > index 2ac7e25039a1..fb77fd9d999d 100644
+> > --- a/lib/math/div64.c
+> > +++ b/lib/math/div64.c
+> > @@ -193,42 +193,48 @@ static u64 mul_add(u32 a, u32 b, u32 c)
+> >  	return add_u64_u32(mul_u32_u32(a, b), c);
+> >  }
+> >  
+> > -u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> > -{
+> > -	if (WARN_ONCE(!d, "%s: division of (%#llx * %#llx + %#llx) by zero, returning 0",
+> > -		      __func__, a, b, c)) {
+> > -		/*
+> > -		 * Return 0 (rather than ~(u64)0) because it is less likely to
+> > -		 * have unexpected side effects.
+> > -		 */
+> > -		return 0;
+> > -	}
+> > -
+> >  #if defined(__SIZEOF_INT128__) && !defined(test_mul_u64_add_u64_div_u64)
+> > -
+> > +static inline u64 mul_u64_u64_add_u64(u64 *p_lo, u64 a, u64 b, u64 c)  
 > 
-> Which bit is checked matches which bit is enabled at configuration time
-> as which event can generate an interrupt for "capture complete". There
-> is no functional change.
-> 
-> While at it switch to use the BIT() macro to describe the bit positions
-> for the interrupt functions.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  drivers/media/platform/renesas/rcar-vin/rcar-dma.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> index 585b8b3dcfd8..85e44a00e0fc 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> @@ -115,11 +115,12 @@
->  #define VNFC_S_FRAME		(1 << 0)
->  
->  /* Video n Interrupt Enable Register bits */
-> -#define VNIE_FIE		(1 << 4)
-> -#define VNIE_EFE		(1 << 1)
-> +#define VNIE_FIE		BIT(4)
-> +#define VNIE_EFE		BIT(1)
->  
->  /* Video n Interrupt Status Register bits */
-> -#define VNINTS_FIS		(1 << 4)
-> +#define VNINTS_FIS		BIT(4)
-> +#define VNINTS_EFS		BIT(1)
->  
->  /* Video n Data Mode Register bits */
->  #define VNDMR_A8BIT(n)		(((n) & 0xff) << 24)
-> @@ -1034,7 +1035,7 @@ static void rvin_capture_stop(struct rvin_dev *vin)
->  static irqreturn_t rvin_irq(int irq, void *data)
->  {
->  	struct rvin_dev *vin = data;
-> -	u32 status, vnms;
-> +	u32 capture, status, vnms;
->  	int slot;
->  	unsigned int handled = 0;
->  	unsigned long flags;
-> @@ -1049,7 +1050,10 @@ static irqreturn_t rvin_irq(int irq, void *data)
->  	handled = 1;
->  
->  	/* Nothing to do if nothing was captured. */
-> -	if (!(status & VNINTS_FIS))
-> +	capture = vin->format.field == V4L2_FIELD_NONE ||
-> +		vin->format.field == V4L2_FIELD_ALTERNATE ?
-> +		VNINTS_FIS : VNINTS_EFS;
+> Why not move the #if inside the function body and have only one function 
+> definition?
 
-I would find
+Because I think it is easier to read with two definitions,
+especially when the bodies are entirely different.
 
-	capture = vin->format.field == V4L2_FIELD_NONE ||
-		  vin->format.field == V4L2_FIELD_ALTERNATE
-		? VNINTS_FIS : VNINTS_EFS;
+	David
 
-easier to read, but it could be just me.
+> > +{
+> >  	/* native 64x64=128 bits multiplication */
+> >  	u128 prod = (u128)a * b + c;
+> > -	u64 n_lo = prod, n_hi = prod >> 64;
+> >  
+> > -#else
+> > +	*p_lo = prod;
+> > +	return prod >> 64;
+> > +}
+> >  
+> > -	/* perform a 64x64=128 bits multiplication manually */
+> > -	u32 a_lo = a, a_hi = a >> 32, b_lo = b, b_hi = b >> 32;
+> > +#else
+> > +static inline u64 mul_u64_u64_add_u64(u64 *p_lo, u64 a, u64 b, u64 c)
+> > +{
+> > +	/* perform a 64x64=128 bits multiplication in 32bit chunks */
+> >  	u64 x, y, z;
+> >  
+> >  	/* Since (x-1)(x-1) + 2(x-1) == x.x - 1 two u32 can be added to a u64 */
+> > -	x = mul_add(a_lo, b_lo, c);
+> > -	y = mul_add(a_lo, b_hi, c >> 32);
+> > +	x = mul_add(a, b, c);
+> > +	y = mul_add(a, b >> 32, c >> 32);
+> >  	y = add_u64_u32(y, x >> 32);
+> > -	z = mul_add(a_hi, b_hi, y >> 32);
+> > -	y = mul_add(a_hi, b_lo, y);
+> > -	z = add_u64_u32(z, y >> 32);
+> > -	x = (y << 32) + (u32)x;
+> > -
+> > -	u64 n_lo = x, n_hi = z;
+> > +	z = mul_add(a >> 32, b >> 32, y >> 32);
+> > +	y = mul_add(a >> 32, b, y);
+> > +	*p_lo = (y << 32) + (u32)x;
+> > +	return add_u64_u32(z, y >> 32);
+> > +}
+> >  
+> >  #endif
+> >  
+> > +u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> > +{
+> > +	u64 n_lo, n_hi;
+> > +
+> > +	if (WARN_ONCE(!d, "%s: division of (%llx * %llx + %llx) by zero, returning 0",
+> > +		      __func__, a, b, c )) {
+> > +		/*
+> > +		 * Return 0 (rather than ~(u64)0) because it is less likely to
+> > +		 * have unexpected side effects.
+> > +		 */
+> > +		return 0;
+> > +	}
+> > +
+> > +	n_hi = mul_u64_u64_add_u64(&n_lo, a, b, c);
+> >  	if (!n_hi)
+> >  		return div64_u64(n_lo, d);
+> >  
+> > -- 
+> > 2.39.5
+> > 
+> >   
 
-Do I read it correctly that you use the "Field Interrupt" with
-V4L2_FIELD_NONE ? That seems a bit weird to me, but maybe I don't get
-how the hardware operates.
-
-> +	if (!(status & capture))
->  		goto done;
->  
->  	/* Nothing to do if not running. */
-
--- 
-Regards,
-
-Laurent Pinchart
