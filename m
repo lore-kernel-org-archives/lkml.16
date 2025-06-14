@@ -1,385 +1,178 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1FB7260E;
-	Sat, 14 Jun 2025 13:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749908301; cv=fail; b=QWaA3dgQYLSGvWBkOzmmvdPSg3IJYemPfntDnDF15xQIHog5kFpGjZc7t0QnGU5BRQOMxpo4wgcOQHJJrZzQcVtdYRbYGC2yQ4adXLQ5BVXyQ5EP/mDE3TXpSN9ETDGlD5Qg6bvQs+7J5KS7Y6VwYurdwVYSBIeoYVMLXHEnrf8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749908301; c=relaxed/simple;
-	bh=WERIeg7dewNXdmhw37tl/J/rwkI+Y3a0fJiEPUciPfY=;
-	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
-	 In-Reply-To:MIME-Version; b=TjkGqS+qOMzWh5FLkJYoyzDYv7r6GgbuEWYHef8cOFibbvUjsVFE/Dzm7btzacY7J2ptry9Q2oze//JBd0sjBdky4C8epmmAI6fOtFnaQ7X78Xkj2Lb29u30ryWogSZxMuGXjdfmFeiotfIzXCWYe/+UnKjgaA5LyGgyj+20pME=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qG9vNbKv; arc=fail smtp.client-ip=40.107.93.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA172D5C84;
+	Sat, 14 Jun 2025 13:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749908323; cv=none; b=QoLUO1sc9kEJdf6w+j9rWFuMAoW5xYJto9x9Z9UrhD+165pWlur+wfVMPvwO2jxQd0mDaY0a2U6PBiDBp/qn0VgGI36csSRRCaCsZ+flr1dCpV3L7CQQSJ8GfLenrhZ1mwpeBTGsALvqEF41Wh4Lg0m56qNXs5iCF4QgLCy8vu4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749908323; c=relaxed/simple;
+	bh=7Ozfa+ex7HK9nkvv2liN1KglsIO2+4FNzeR0rzoUHTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jYeDy6wDBn4SO5VS8I4cqM8vukxl3Amfmusco2kxsV/QEFO6/COnhN+Cx8Ix9UhyqNAKYdF+vpXT1izOEnGXXL2yKtfBloHaxQb81iN7/BGcOgENFLkyprZKZa7sYANx1mWw1zmBrURjqwAjHJ4tik6AetB8UJwwjgBPOiXzwA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JYxcvOI/; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qG9vNbKv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PXV0zeUS61Jl+c4lqAXo/QYidLqQpb+TQT69oGVsB6+3yl+qNKMnWfX0KpCL54WNUYdrX+2q44pYinTpoznQjEunUr+kISFsqJXBuJ5U0Z2HjBatVQj+64/CmhQat0Mmfg1DxFtGpegzDG5XLs2AUyrqXORIS96IRog3xbY1Q9j+D8XAyCeOugI3I+QV1OvILb4/1X4fynUlakKrH9t4Bj2THbLqKPRpBmV8fkjw1NdqtXOETZKUR2PxJ+Wyt/PLu1YQuKLy4wjXDgYAqfaiffAxnGWhUSuRdR9LaSui6VbF1EYWKnx8gfG7SEXtZDb1kvwvxHrlZPp9raOT4WkZcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UpVVcNem6mRr214B+131lfo09EGD1ZQXVbecqGRNI28=;
- b=NIuV4yYIOCwRwJvhPum69AEEZkq1kdJn4ZyFh81cOqsZoXQabA0bdWzegUk99t7UlHhxP/i7/GNJjgMT7WAMctQ/huvlUuc2Tu3NZSWGLOxXlZEKEQHhy3Bj/mFMBL9J2KmD3GdCaaR1hO5iVBZFxbTCNSU1lFZbBTFPOPaIj6VKpDfskevdWMjNWClJaRx8k7/TgcXOAvtjynVtjoMKSCjbchO1ghO3zpiuqgn95HXlpYA/uATNt+ldMz0I6Z3K4sJtEwcl3ilIhNKPRh+UyPk/zp9caRgU7CZty0qrX4iQr+fqiXJQ95Ip8BSr5+9WhEFoQk4rX+K5rar4hJaUQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UpVVcNem6mRr214B+131lfo09EGD1ZQXVbecqGRNI28=;
- b=qG9vNbKv9SYbTo78uCKA1GOh6jCTi1ggx3lxToVQLSJCtWRhF6WJsoQ7WPSDj217FIQOaZtD/z54eihy6iGw34aFBcfFjIjOKbwrZxEduL4YnKusf1WXJgFDrHAOBDv2kaJV75i7JWVtwGg4UNOX8FMj8rOCtkBhZDQ6kUG5s1B5O1chaK6jIooZ0Y2tzuM0sAGU5v2wza70tTuws1LXZepPVTNyDc9IzmRYKqRAgZ3MCTP/I+GpoWWetMAVftXfqGTqxUBZGZL67Gm/O39IkGMbZKnC7gwFOhWzoqgz4vlO7R0yGsuDanuHypNmDoJ7aJA29oXjoCEaxrJycF0NoQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by CY8PR12MB7684.namprd12.prod.outlook.com (2603:10b6:930:87::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Sat, 14 Jun
- 2025 13:38:16 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.018; Sat, 14 Jun 2025
- 13:38:16 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Jun 2025 22:38:11 +0900
-Message-Id: <DAMAPVAI3V8X.N8SAQD6KOO1Q@nvidia.com>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v6] rust: kernel: add support for bits/genmask macros
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com>
-In-Reply-To: <20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com>
-X-ClientProxiedBy: TYAPR01CA0190.jpnprd01.prod.outlook.com
- (2603:1096:404:ba::34) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYxcvOI/"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54998f865b8so2756124e87.3;
+        Sat, 14 Jun 2025 06:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749908319; x=1750513119; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AmJp+4JNsHsw1NM+e+aq3AlfBaqi9xS8EIKqS5kpKAI=;
+        b=JYxcvOI/AFJpJ0dQ6gJ1eUkPHOKleY1Fq2GqGQO7AVbiNvOGrhE/5vQKwbQuZbL6CY
+         1bI2mfBf9S4rNq/6iUwa2glt9vfgZR90QrqXNClP8KcTklPldhjAsVyPUI0GrnacPO7z
+         OaaGeSxdL4qmk8mcjpCM6vTUr/jsjDHW53+wXIGfhT4sLmqIHh0R5MK6oYi0TkKvDC69
+         uVPydLXd2j1tCw4CtqIF9q0+yOfllNVITZS8WCheFtlvkLvS4wjsSR/FxrL98L7xdgcX
+         WwN41xq/FyT5v3sQJjbyxWSNd7kdI2SSl9fVSVBvzrWcYe7ORpWLmob5rTbdl/Hp8SD2
+         oamQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749908319; x=1750513119;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AmJp+4JNsHsw1NM+e+aq3AlfBaqi9xS8EIKqS5kpKAI=;
+        b=g9BI+Z8AlJgRrlUFqhTFbHOfUACh6BrINtXVTTm88ItItk2hZePsYy4h/KagXNuH3g
+         xVHIeuQCs9xfUkewmjppZgN+1Q8OPNgoyvSo0YsBAE5lP/tnr/K81avTk5aVh74Cl5cH
+         4zgo1dMaU42PlgP7jm5RUmfxVnZHLflndIGXwyDojHtzlDjClRIldDosVJ7cGQ+OVJGK
+         /06QaN1ZSEFLwc2I1Zdb3uPqTgk6Wh1uuDpYd3UyE9u4Voz1c/D5T1hs4183Ot3QnQa1
+         Nl0akBUI3OSetuxoAx5io1Qfz0z4+ljwPcAFMPElBCgvfuKiuZgSSSWS6s4fzCYN6X9e
+         f01w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCsizix7JsB8TDjbnypwyemptY6iccTCyF1f+0H0l7yokfKtjASrHdmOcoo0GYltPiooSiY0m/Sh2F7A==@vger.kernel.org, AJvYcCUx4fkyRtx/o4G4rDHIUakx3+34O9gXe6HBVeWFx87UMjJAwa9CNuOfzNv5Ws5e+9lyzvcUhgotnzS3@vger.kernel.org, AJvYcCWYHEoN815+ICOSoV4aDzjCxrb2chI63m/wYRjWk2rmbqMG0YfLJ/e1ISX2zoGY7S69uWKATPfcmf9YKJTk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7v61SN4zd8MVNMwE/u1FY1DHLmMRczOrkMWT18viVefKzZ8hu
+	lqxKfFvWvKkTmr4Vdghl/OqW2zFc/94+yHsPyB95c06m0DiSxUG8vKLA
+X-Gm-Gg: ASbGncvJ81SFTZQIGYyPU6QoNOPe4sDXcNC0/bmjlO4BUpY8V6YKN0ejXFGumbckz1F
+	5AqhZf8UC0IRxNpP6bskWvDrrl/D5eUi5cbVPlqHltQxd0f/CnmkRcHhZIZSDXKEa5k6JfNWq+J
+	EJv7ICPpHf0IYdezvwLzPyHFuMlRMGsAnjcsNMRmVbfZLf8H+Sw/dZxHzDAjRpt63NAavjGPSka
+	A5DXApOStDfogPFGRrMdHnb7Eva1AoWrDuduL6osUQnwJCNOBpY+ZYI8r8SGNE7VfQVLHzs4kgP
+	BZsVqG5XqatOqGz2RUr1AEWogVgBiq0kID75cd49mYwhVTaHbPTToALQvsb4mZoCdI56y3+YkJc
+	=
+X-Google-Smtp-Source: AGHT+IHlwMznP1G4dk0aq6MmaRDYzsnL+CsCVLC4vzRhJtyrmCm3oOsjxbhcGrQjIOJTRKPr0riA6g==
+X-Received: by 2002:a05:6512:b0a:b0:553:522f:61bb with SMTP id 2adb3069b0e04-553b6e7d451mr730123e87.12.1749908319132;
+        Sat, 14 Jun 2025 06:38:39 -0700 (PDT)
+Received: from [192.168.0.131] ([194.183.54.57])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1fd7aesm827354e87.258.2025.06.14.06.38.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Jun 2025 06:38:38 -0700 (PDT)
+Message-ID: <851e68e1-f358-49c6-8147-912d582c6a00@gmail.com>
+Date: Sat, 14 Jun 2025 15:38:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CY8PR12MB7684:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54dacdc5-8233-4e08-485e-08ddab48b696
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|1800799024|7416014|376014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OTNMNHZpQnFoMFlwczI0cnBqZWtkNlU2ZjNMR3NDZFpCTk1GRDV3a2Rpb2NF?=
- =?utf-8?B?MDJvdUFqN0FWMENzWVVFamx2T01jUExjM0VuRU80bjcvWmduVm9KSitNQVI4?=
- =?utf-8?B?ejRQTUdWWWZhQjlMSHJuaWVscmQ5M2hmcWNiS21BQXZFQVUyeFhabmc1T2V2?=
- =?utf-8?B?MnpSV0M5NzY0LzBjSHEwNFZSbjViVTFUSHZZMExldFQzeGtPRTlZWFA2ZHgz?=
- =?utf-8?B?Q3pZeGRLV1FIU1ZneC9ZbTN0V3N6Ty81cUYrZnhxaysrcnl2Z2o2M0RtMm1Z?=
- =?utf-8?B?MGFNR0YzNjlOUEtMRDZMaWM4TEJvdkF4dGxMRm5NSU5mSXd3czlZSnlXSHdu?=
- =?utf-8?B?S1dCdk9LZWFrL29MNVVXa0pTbS9IOGlGVUZGVHVTZkp4YkQ3RDlNOFZnYXkz?=
- =?utf-8?B?bXlZblpQQjJGVHgxNmo4QmJBNWJxdVR0Z2NlZEsybU92aUhkWWFkWTRKNGw1?=
- =?utf-8?B?ZzZuVFRUZjg2UjdPQ29lWDhkaWJZY1R4cU9wOXhDaUpsS2l3K3NNOWlZNkpt?=
- =?utf-8?B?bmpVWTRpdnFTMGtzaUpOL3hvUGpOZ29rWS9NSUU4dGxPZ0ZmMDN1OGlOVWk2?=
- =?utf-8?B?Y2wvbVJxMWp4UlM3Vk5pRVRnVWtERnVmMTIzSEZmdjhKQ0Fja3haOHB1WVpR?=
- =?utf-8?B?ZnZVWGhoemJFa2lGMGIyU2M1NjZjVUVkT3JuVFFpRWh4ait0Zmk2ZGF3d0FC?=
- =?utf-8?B?RlV4ZXEzbEFEaENmOG5JaytXdTN5UUM0QStzMEkzM29tcTVRZktSNVdSQnY1?=
- =?utf-8?B?M0JtNTdxSUdOa0pSdDc4U1ByZE9mcmFJSmtrSHFRcGdYM1Nid0NIaU1LVWwx?=
- =?utf-8?B?emJoUTRlZDBpeXJNUldzeEtEMG5oRHg1MGF5b1ZFOGJvdks2NHd0cm1DbmV0?=
- =?utf-8?B?N0NZQXJ2ZlNrdmVoRlYvamtVSE5XVmlpaVl6WkI1UDhzRGJkNTA5K1FwY05n?=
- =?utf-8?B?WTI0S2VtclhEckhMYzhOUVZud2lhNHc5SEhwTlpTam51cCtMVDlZTnY3SjZU?=
- =?utf-8?B?TmxKc1p5SXJseHZBWjYyQUdPakhIQjkvbitWY3B6aTlWL0Vuby9xbExsZkUy?=
- =?utf-8?B?Yi94MEFHNGs0N2dnSnQ1U2tKRnVqa1BTYjFMbGdXODF1TTJsdEZheVBPMlcr?=
- =?utf-8?B?c1llWVhwUHczTzBUd0I4VHd4T3ZiNTRVQ1FlVXRSV1E2aHFtQVdMWVpwTEwy?=
- =?utf-8?B?Y1VYOGtON0V3b01sT0lEMzIyc1phTFZLcnNZL2VteVNSdy9DN3c0Y3dpL3Fu?=
- =?utf-8?B?K1RCUnd2czJVM25IUnI3dk0randuMkQrNXg2Qy8weUYvQ2NDNVVPN0NhRVk3?=
- =?utf-8?B?Y2VaaHR2K0J4d2RWdmlXYzNuQmVjWXZlVTdYSld6K0M4SmtVNHZ4WTNyZk9F?=
- =?utf-8?B?VVc1RVZKR1NVd0ZQSmYrUytqcTM4K0hnTERhVGZLbGduRlJUenFqME1Ha1FO?=
- =?utf-8?B?SVVsamF4Tlk4V1JwcmQrekFMRTQ2cTRONGRRM0M4YTZpSUMwN1p2S1hQL0ZX?=
- =?utf-8?B?bmFqblkySGM1amJRNE5IbXZhMkV4enoyOUhMU3V4ZWJuNzAzcFRJZG5PdzRn?=
- =?utf-8?B?VFFlQndaQnpwbU1yS3hVZnpEblZtYzhqbU5NQlRCZDhtV0VueU5JeXhpYm1M?=
- =?utf-8?B?aThta0FHbmUxTWVuUm8yMVN0elQ2TGFja0hKR2RoNllqMWpNbEIwWXlXMms1?=
- =?utf-8?B?S01QNjNabXpDY29GUnpuWmRXVU05Y0JxZVlZbjhaSTVxY3cvaWpuMzRPNEhY?=
- =?utf-8?B?QU9Uak4raWw5QmZVSzhXUjY5TkRTR3VWckdZOHA3TXFDYTVlOHJ0TFNDZFJJ?=
- =?utf-8?B?dTZJYnhnMnIwZXBlMmh4MHNtWFJOYzlCdUlkUURFQjg0QXRlcFEwRTluRXM5?=
- =?utf-8?B?c0QxNmNtZW53VjJLeTdza1AzZDR1Y1JhbE1zaEhlbHZWZVcxNlhUYXN2dUZs?=
- =?utf-8?B?YkpFQmZLcVRKZmROYkU0TWc4WXErazJReUMxNTg4Zno2WWRzT2NKTUs0ZzVy?=
- =?utf-8?B?YzFnVG5uN0NRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(7416014)(376014)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VEJxbVkybnRkMnFBV2c2T05jS2wyUXFicU8vS05iaXpMemEvT3U0RjZZeUQ5?=
- =?utf-8?B?am5mQ2t3cUhMWnYxYS8xeXdhb0haU2hkUi9rMUJLTWVpaVl6SnZ0OFVFYmlt?=
- =?utf-8?B?NkFQK1pFQzU0c0FHcHdTNUx6Q3pIWHIzTThDbG5hMk1ETTRGQXBaeW83YmVa?=
- =?utf-8?B?dndoMXBxVmh4d1phYkdBaHMxN004cHRraDNmM2lYUnFWcVFVYVVJMU5DbzM1?=
- =?utf-8?B?YVJDdnJxNmY1Skt6akJDd3JoSW1hVlQ2eG5sbU95UmxzQ2xNZ0JMRElDbVBz?=
- =?utf-8?B?V09oSURiekpCSG1kRm5ISlVqTEVUZFdyM3dyekxLL3N4QzFMQitFbU5HVStS?=
- =?utf-8?B?c1ZmdHhXMm56Y0dsSjh5S3NvZGRRN0N2dllyVEhMbXQ0TkczOFRnb3BUbEE4?=
- =?utf-8?B?RXVtU0RqUmZJeTZQUHVsczdGb1dMZUh0aDVLd3RacGNHTUdxK3BDWDY1d095?=
- =?utf-8?B?SDZxcDBYWnlqT1pUQWFCQkJTejFyZXZ5MWc4T1Q1cUh0M3kwRGtVWlgydUZa?=
- =?utf-8?B?TmhlcFFKbnVGUFAwQ2UvbzRuc2ZvVXlONW1yNkp3dDYxYW9yNkpEQ045dHF0?=
- =?utf-8?B?bjhUaTBxM3lSbG9wNkNyZHdleXRWcnZ2MGU1Vk12ckhJbnovOWlJZStMTGdE?=
- =?utf-8?B?KytjTnN6czJoVnIvN292YWdRZTRVZ0Vmb2NNeGV4Rk5YZE8zOGM4WG5pcFNO?=
- =?utf-8?B?Y2lRNDZHZXZEUmVxN1pEVUw3V3lEOTJrZWIwSzdyN0dMSytiVWhkWFNrZUVV?=
- =?utf-8?B?V0lORHJlYmpRN2hkY09DcHlOYzcxLzdQd0ZFcHVUWlVuMUlZWWo4Nm9sQ3NX?=
- =?utf-8?B?ZlRiVWphc0VhZHhxUHhMWTUwdWZPSVlRTDFyRGNreWxPa1cvbmZrSmhaQ0NB?=
- =?utf-8?B?OGE2TlhGeFJBMXdWYkg3T0hjUkU2c200R0JXK0xBT0pNcWFlVHJOWHB0SFFO?=
- =?utf-8?B?ODMrSm5hNlM3Q3lsRzVUQmtKbE5uNzRwZ0pmbEFpTlJkRHhFRkRvakNIZFE3?=
- =?utf-8?B?djIrL1dHbVhQZGE1ZkR6cUZWSFFxWUk1MVRXN0RIUThsVlFrODl5eGRFUkdQ?=
- =?utf-8?B?WmVzY3pDc2tHU0doby9YUWhPekpzcktiQVhTb1VPcElKYkFLTHIvOGtvbldF?=
- =?utf-8?B?SWFQNUdhdkpvTXgvSTkzd01yQWVlMUlKU0c3a3dGVEF0Z1RyVjZ2VGNEcTBx?=
- =?utf-8?B?VU9rR0V1MjZJVGJHWHhBRDNkZTZMUm1xQU9VNTI1TEoydGFvTVB5T2dHckFC?=
- =?utf-8?B?SGx6TFZxa0tEWTZwcmNWZEdOM1BkUWNRWlNUZWg3ZWIxTHZRNUx1Z3N4aE9W?=
- =?utf-8?B?bzl5MlVSYVA4K2Y0R1c5SUdvMi9zVHh3V0RSL0I5SXhZa3M5RFVLcjlicDdC?=
- =?utf-8?B?RWdaMWt5NEJDZmZTcEZLSWVwUmRoYWpFZEJRVFlCS2pMNG0zNk42eWhLdTdG?=
- =?utf-8?B?cFk5c3lpYjF6bzJ5Qk9Md1p1c29BVDZTZEhKdU8rNmREU0R0ZVhRL2RGREZV?=
- =?utf-8?B?MXRONUlBdmtLVlBTVEpQYmdkVTFCb2gxb1ZPRzFWUy9LUCs0dkhoemEvNkRB?=
- =?utf-8?B?VWc0TU9mQ0QycU5lUUhVWnFCcTFSaXlkUEVzSGpRMy9kNHFaVjJiR1h5Z3cw?=
- =?utf-8?B?TmFTVEowK0ZLdk9ZcWdVdndWc0habHcxVS8xdktmeG93VVBFRGF3eHh2OUN1?=
- =?utf-8?B?bE9FcFBpcUxhZ1NnMW4zYTJ1cXMxNUFBdmNvSFFCd2t5UUJuVWpuWEJsWFJM?=
- =?utf-8?B?d1poNmdYTVVxSVhDOWk1VDgxWVVlZmpyU3I5Z0MwSll1aEMvVUxadG9PSmVj?=
- =?utf-8?B?bkNUbzM5SGp2MGdIclhZU25aMVVTYVpFSnhKWTU0ZXpjQXJ2ZnhPQWljam5r?=
- =?utf-8?B?WUh6NWZpY1lpQkJuYS9wNVc5NHJLTnlicWFzK2I3cVNHSnJ0ZlFrQWZ3S2la?=
- =?utf-8?B?TDZ2ejROdXR1RWxGbnVVaFFmcjZ2RUFFVE45TXN6aS9MWmJaN1N2SzBPV3Fp?=
- =?utf-8?B?b2FyWGp0WGVweVlOZzh5bWxseUp3N1p5KytWNSt5U2wycHpMQVNiN0ZVUklY?=
- =?utf-8?B?eVlBQW5CWU5jZ1llZFc1M0xYMTFPUjhZL2JaVHFyUW1oQWdzT3o1Q1g3bnlh?=
- =?utf-8?B?VlhTamE3TlJvZXEzYU1pSURHcDc3OEdVRTVOVE5Ua0Vzdm9GbUlobCtEbkVN?=
- =?utf-8?Q?BMiHTon4CfHuvvi6S271e7/LxQqnRRoIWk7QkuvriUoj?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54dacdc5-8233-4e08-485e-08ddab48b696
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 13:38:15.9860
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QQbE6E2kb53EteDtRWciedbC/oFFSy0bPAiYhC5bNrIjI6CHvH6UK9K4bIrPnKxDoA9hejY3gbyks5JBc0PblQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7684
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 1/2] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+To: Lee Jones <lee@kernel.org>
+Cc: Johan Adolfsson <johan.adolfsson@axis.com>,
+ Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kernel@axis.com
+References: <20250526-led-fix-v4-0-33345f6c4a78@axis.com>
+ <20250526-led-fix-v4-1-33345f6c4a78@axis.com>
+ <2bb62450-df35-4063-ac5e-60bc1ef8f5e7@gmail.com>
+ <20250612105341.GC381401@google.com>
+Content-Language: en-US
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In-Reply-To: <20250612105341.GC381401@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Daniel,
+On 6/12/25 12:53, Lee Jones wrote:
+> On Mon, 26 May 2025, Jacek Anaszewski wrote:
+> 
+>> Hi Johan,
+>>
+>> On 5/26/25 16:54, Johan Adolfsson wrote:
+>>> mc_subled used for multi_index needs well defined array indexes,
+>>> to guarantee the desired result, optionally use reg for that.
+>>>
+>>> If devicetree child nodes is processed in random or reverse order
+>>> you may end up with multi_index "blue green red" instead of the expected
+>>> "red green blue".
+>>> If user space apps uses multi_index to deduce how to control the leds
+>>> they would most likely be broken without this patch if devicetree
+>>> processing is reversed (which it appears to be).
+>>>
+>>> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts has reg set
+>>> but I don't see how it can have worked without this change.
+>>>
+>>> If reg is not set, the previous behavior is kept, index will be in
+>>> the order nodes are processed.
+>>
+>> This is a bug and I don't see any value in keeping buggy code.
+>> Just expect reg to be present and make sure that all in-tree
+>> dts files using these bindings use them in a proper way.
+>>
+>> To not break existing users of stable releases, if any of them
+>> implement DT subnodes without 'reg' property, we can just not mark this
+>> commit with "Fixed" tag, so that it wasn't applied to stable releases.
+>> Although I am not sure if we should not fix it there as well.
+>> I'm leaving it to Lee.
+> 
+> We cannot assume that a patch won't end up in LTS just by omitting the
+> Fixes: tag.  Sasha's AUTOSEL tooling it still likely to pick it up if we
+> describe the commit as a fix, which we do and is correct.
+> 
+> I see no reason not to apply it.  If users are relying on broken
+> semantics, then those should be fixed also.
+> 
+> Is everyone happy with this patch as-is?
 
-On Tue Jun 10, 2025 at 11:14 PM JST, Daniel Almeida wrote:
-> In light of bindgen being unable to generate bindings for macros, and
-> owing to the widespread use of these macros in drivers, manually define
-> the bit and genmask C macros in Rust.
->
-> The *_checked version of the functions provide runtime checking while
-> the const version performs compile-time assertions on the arguments via
-> the build_assert!() macro.
+Nope, we should require presence of proper 'reg' value then.
 
-I think this is the right approach, I wish we could make the functions
-generic but that doesn't appear to be currently possible (and it
-wouldn't make their invocation shorter anyway).
+>>> If reg is out of range, an error is returned.
+>>> reg within led child nodes starts with 0, to map to the iout in each bank.
+>>>
+>>> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+>>> ---
+>>>    drivers/leds/leds-lp50xx.c | 8 +++++++-
+>>>    1 file changed, 7 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
+>>> index 02cb1565a9fb..8067aaa916bf 100644
+>>> --- a/drivers/leds/leds-lp50xx.c
+>>> +++ b/drivers/leds/leds-lp50xx.c
+>>> @@ -476,6 +476,7 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
+>>>    			return -ENOMEM;
+>>>    		fwnode_for_each_child_node(child, led_node) {
+>>> +			int multi_index = num_colors;
+>>>    			ret = fwnode_property_read_u32(led_node, "color",
+>>>    						       &color_id);
+>>>    			if (ret) {
+>>> @@ -483,8 +484,13 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
+>>>    				dev_err(priv->dev, "Cannot read color\n");
+>>>    				return ret;
+>>>    			}
+>>> +			ret = fwnode_property_read_u32(led_node, "reg", &multi_index);
+>>> +			if (ret == 0 && multi_index >= LP50XX_LEDS_PER_MODULE) {
 
-I agree with Miguel's suggestion to use paste to shorten the macro
-syntax, it would make it much easier to understand them (and most of the
-naming could be harmonized in the macro itself instead of relying on the
-invocations to use the same names).
+Here we should fail if 'reg' is not present too.
 
->
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
-> ---
-> Changes in v6:
-> Thanks, Alex {
->   - Added _checked and _unbounded versions of the functions
->   - Implemented the functions through a macro
->   - Changed the genmask logic to prevent over/underflow (hopefully)
->   - Genmask now takes a range instead of "h" and "l" arguments
->   - Made all functions #[inline]
->   - +cc Alex directly
->   - Removed all panics
-> }
-> - Link to v5: https://lore.kernel.org/r/20250326-topic-panthor-rs-genmask=
--v5-1-bfa6140214da@collabora.com
->
-> Changes in v5:
-> - Added versions for u16 and u8 in order to reduce the amount of casts
->   for callers. This came up after discussing the issue with Alexandre
->   Courbot in light of his "register" abstractions.
-> - Link to v4: https://lore.kernel.org/r/20250318-topic-panthor-rs-genmask=
--v4-1-35004fca6ac5@collabora.com
->
-> Changes in v4:
-> - Split bits into bits_u32 and bits_u64
-> - Added r-b's
-> - Rebased on top of rust-next
-> - Link to v3: https://lore.kernel.org/r/20250121-topic-panthor-rs-genmask=
--v3-1-5c3bdf21ce05@collabora.com
->
-> Changes in v3:
-> - Changed from declarative macro to const fn
-> - Added separate versions for u32 and u64
-> - Link to v2: https://lore.kernel.org/r/20241024-topic-panthor-rs-genmask=
--v2-1-85237c1f0cea@collabora.com
->
-> Changes in v2:
->
-> - Added ticks around `BIT`, and `h >=3Dl` (Thanks, Benno).
-> - Decided to keep the arguments as `expr`, as I see no issues with that
-> - Added a proper example, with an assert_eq!() (Thanks, Benno)
-> - Fixed the condition h <=3D l, which should be h >=3D l.
-> - Checked that the assert for the condition above is described in the
->   docs.
-> ---
->  rust/kernel/bits.rs | 168 ++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  rust/kernel/lib.rs  |   1 +
->  2 files changed, 169 insertions(+)
->
-> diff --git a/rust/kernel/bits.rs b/rust/kernel/bits.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..98065c8f7c94cfc3b076e041d=
-e190e942e1b4a9f
-> --- /dev/null
-> +++ b/rust/kernel/bits.rs
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Bit manipulation macros.
-> +//!
-> +//! C header: [`include/linux/bits.h`](srctree/include/linux/bits.h)
-> +
-> +use crate::build_assert;
-> +use core::ops::Range;
-> +
-> +macro_rules! impl_bit_fn {
-> +    (
-> +        $checked_name:ident, $unbounded_name:ident, $const_name:ident, $=
-ty:ty
-> +    ) =3D> {
-> +        /// Computes `1 << n` if `n` is in bounds, i.e.: if `n` is small=
-er than
-> +        /// the maximum number of bits supported by the type.
-> +        ///
-> +        /// Returns [`None`] otherwise.
-> +        #[inline]
-> +        pub fn $checked_name(n: u32) -> Option<$ty> {
-> +            (1 as $ty) .checked_shl(n)
-> +        }
-> +
-> +        /// Computes `1 << n` if `n` is in bounds, i.e.: if `n` is small=
-er than
-> +        /// the maximum number of bits supported by the type.
-> +        ///
-> +        /// Returns `0` otherwise.
-> +        ///
-> +        /// This is a convenience, as [`Option::unwrap_or`] cannot be us=
-ed in
-> +        /// const-context.
-> +        #[inline]
-> +        pub fn $unbounded_name(n: u32) -> $ty {
-> +            match $checked_name(n) {
-> +                Some(v) =3D> v,
-> +                None =3D> 0,
-> +            }
+>>> +				dev_err(priv->dev, "reg %i out of range\n", multi_index);
+>>> +				return -EINVAL;
+>>> +			}
+>>> -			mc_led_info[num_colors].color_index = color_id;
+>>> +			mc_led_info[multi_index].color_index = color_id;
+>>>    			num_colors++;
+>>>    		}
+>>>
+>>
+>> -- 
+>> Best regards,
+>> Jacek Anaszewski
+>>
+> 
 
-This could more succintly be `$checked_name(n).unwrap_or(0)` (same
-remark for `$genmask_unbounded` below).
-
-> +        }
-> +
-> +        /// Computes `1 << n` by performing a compile-time assertion tha=
-t `n` is
-> +        /// in bounds.
-> +        ///
-> +        /// This version is the default and should be used if `n` is kno=
-wn at
-> +        /// compile time.
-> +        #[inline]
-> +        pub const fn $const_name(n: u32) -> $ty {
-> +            build_assert!(n < <$ty>::BITS);
-> +            1 as $ty << n
-> +        }
-> +    };
-> +}
-> +
-> +impl_bit_fn!(checked_bit_u64, unbounded_bit_u64, bit_u64, u64);
-> +impl_bit_fn!(checked_bit_u32, unbounded_bit_u32, bit_u32, u32);
-> +impl_bit_fn!(checked_bit_u16, unbounded_bit_u16, bit_u16, u16);
-> +impl_bit_fn!(checked_bit_u8, unbounded_bit_u8, bit_u8, u8);
-> +
-> +macro_rules! impl_genmask_fn {
-> +    (
-> +        $ty:ty, $checked_bit:ident, $bit:ident, $genmask:ident, $genmask=
-_checked:ident, $genmask_unbounded:ident,
-> +        $(#[$genmask_ex:meta])*
-> +    ) =3D> {
-> +        /// Creates a compile-time contiguous bitmask for the given rang=
-e by
-> +        /// validating the range at runtime.
-> +        ///
-> +        /// Returns [`None`] if the range is invalid, i.e.: if the start=
- is
-> +        /// greater than or equal to the end.
-> +        #[inline]
-> +        pub fn $genmask_checked(range: Range<u32>) -> Option<$ty> {
-> +            if range.start >=3D range.end || range.end > <$ty>::BITS {
-> +                return None;
-> +            }
-
-From this check I assumed that you interpret `range` as non-inclusive,
-since `range.end =3D=3D 32` is valid on u32...
-
-> +            let high =3D $checked_bit(range.end)?;
-
-... however IIUC `checked_bit` will return `None` here in such a case.
-Should the argument be `range.end - 1`?
-
-Your examples do seem to interpret the range as inclusive though, so
-probably the check should be `|| range.end >=3D <$ty>::BITS`. But that
-triggers the question, is it ok to use `Range` that way, when its
-documentation specifically states that it is bounded exclusively above?
-We could use `RangeInclusive` to match the semantics, which would
-require us to write the ranges as `0..=3D7`. At least it is clear that the
-upper bound is inclusive.
-
-... or we make the methods generic against `RangeBounds` and allow both
-`Range` and `RangeInclusive` to be used. But I'm concerned that callers
-might use `0..1` thinking it is inclusive while it is not.
-
-Thoughts?
-
-> +            let low =3D $checked_bit(range.start)?;
-> +            Some((high | (high - 1)) & !(low - 1))
-> +        }
-> +
-> +        /// Creates a compile-time contiguous bitmask for the given rang=
-e by
-> +        /// validating the range at runtime.
-> +        ///
-> +        /// Returns `0` if the range is invalid, i.e.: if the start is g=
-reater
-> +        /// than or equal to the end.
-> +        #[inline]
-> +        pub fn $genmask_unbounded(range: Range<u32>) -> $ty {
-> +            match $genmask_checked(range) {
-> +                Some(v) =3D> v,
-> +                None =3D> 0,
-> +            }
-
-This could more succintly be `$genmask_checked(range).unwrap_or(0)`.
-
-> +        }
-> +
-> +        /// Creates a compile-time contiguous bitmask for the given rang=
-e by
-> +        /// performing a compile-time assertion that the range is valid.
-> +        ///
-> +        /// This version is the default and should be used if the range =
-is known
-> +        /// at compile time.
-> +        $(#[$genmask_ex])*
-> +        #[inline]
-> +        pub const fn $genmask(range: Range<u32>) -> $ty {
-> +            build_assert!(range.start < range.end);
-> +            build_assert!(range.end <=3D <$ty>::BITS);
-
-I guess this check also needs to be fixed.
+-- 
+Best regards,
+Jacek Anaszewski
 
