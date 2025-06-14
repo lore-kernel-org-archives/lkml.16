@@ -1,67 +1,66 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253792E6D0B;
-	Sat, 14 Jun 2025 18:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97562E62D9;
+	Sat, 14 Jun 2025 18:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749924911; cv=none; b=OEmyakTVdz8VnRQirqT0itLqVzHp/saU+eID/te1C6uCgFi7lbyZiwCQVN6GIkkRPwmUPwupUiGA2tZHN5WqI0+oQEDmTIirOfa4SzjxE7LZSgNvuZm0OeS9Jl1S1iunYnDCGSgDjTGFKMEeH/i9Pl7zTos/J6M4MTOfKeJDRZU=
+	t=1749924913; cv=none; b=ZbzjqE3t6pHf4nKcY/lEXgH/2mUb+6Q1Dy98DuEx/68atiSUNO+BnoF3T8ZByXs4uXKntyqDvUUiHygGwKh4YISloBhfupkbUFyNKwgSHJRJuR1Yj4C4aMXnqLQbMzlnyhq5rb82nQ+R5Id7YnziCEAZywZd3Q2WrCSuc004O6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749924911; c=relaxed/simple;
-	bh=QdElGcOzwWgLhHGEr9MDl1bHr4d6LFvNBBvG2cBo4I8=;
+	s=arc-20240116; t=1749924913; c=relaxed/simple;
+	bh=+R55JLPva4RxIrp3zXjLnnlES7uYtBgDS2XhRWk7w0Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UB+nQk5HeLySDNimeOCGRkWXUKt90DKNaqkgLo1IiZJTtHetYJu9DGlfMx3E4qZoxKW9mJBJk7gUGU7FpfK8cLtRUWilr9wyeSX1MRQs0tWkr1cXo5jP2wS3Ij8QHpaFkfLbx9jQ/xYOKQ9sqVcR52gy2otUF6W/KdHGj/lJ+vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKO7pE8z; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:To:Cc; b=jzTUd78cFaqOlrP0GERwIxAmfpcm+9aot5oGyYtaoWbTetDVd9/1Tv5+gf//G9oLIUbCZKnF2Jyc6K3JDmt/Zq7FoNbApaHXsDQtL+Aw5YS9ztaWc6SlmNwNpgVqLOGouiykMDCg7FhrblSYiZqTJZVivSni01a/p9eFbkuRMK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mX0SZZWi; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKO7pE8z"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so1898776f8f.1;
-        Sat, 14 Jun 2025 11:15:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mX0SZZWi"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441ab63a415so35093025e9.3;
+        Sat, 14 Jun 2025 11:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749924907; x=1750529707; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749924910; x=1750529710; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kotMzWZ0zLMFy7t4bMJZwNuDsod7XWhOWO/9hNBXGWI=;
-        b=GKO7pE8zBay++G3VINBxtybU8bQ8SAyREclnzktwTrg4It1duBHCGPCGb1acN/HElx
-         yE2MhduodOIztS4UjHJ77dalciBgf4FqUAwESLtIXV6FmKI2ZlPRwVwbX7odQh1W8KGg
-         YC6b2n10PBGRzRntW4FnyKPI52TjGiZOimMyYFNkkqRyDEMPpZsZVda6Ax6nDvCMC5RG
-         b45yFqBL2wOkOyKZRg7dDjjy+SzUikT9oM49lriKlDBNCOjofrwa3VI4Q0vAAW20z5l0
-         xBL93ChAFheB1Gib6ELljKXonwpSkpKTk3yi+fOqAo0UvVO9u3TX9fR2AqjChbwy4fRF
-         zJZg==
+        bh=apK2Hae7QVQW8sVcfdULJFrMHKxa3eLsLFIQMUAHMeE=;
+        b=mX0SZZWixclVBiTKvBP8QND07jtUelDBrKO0Y/gccQbaYbpcnJoFjQAkSM5KcgRq4F
+         oL8pw478VB5vGO5113sUvDBUN3jXYrtxRDnYpbuB1mNRqrgaSZMB2eBwF/06lYp18uB7
+         dmT/eGvenyKEC1Ujuvi85CxN6H2sC9X3rz78c3WHNbAM+yeNaQPgV4uMAIyaucGgdvz9
+         EtllxXhZl7PUZkfZV13c44vZ3U2Qn46HH5j5sP5Z1pkkS/yvPqIeCjhkLk/5Qr7wOzVM
+         q7gPBWp0t8PgJhswCUV/tFrAMmqZecMLNbLSSfGzmZrWandUxze6pNqrsrkW17od1t0c
+         WEgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749924907; x=1750529707;
+        d=1e100.net; s=20230601; t=1749924910; x=1750529710;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kotMzWZ0zLMFy7t4bMJZwNuDsod7XWhOWO/9hNBXGWI=;
-        b=wbhHG8mS4MEX4g1OXxjh7a9EbSwlyMzOiYvCKT/KBRtFvb4ni0mTsfUxO2SxwlAXLi
-         Cq1yGyUIs/0VGFzltEbW2bQpvyMvbeNb5KAh7S4rmzli02u42+T/JGAxZVZ4gGoWXXEB
-         7NYRFUvfS/fPbH4HIukZ2rkNTItHwdHM8O7WypTqr/STO5aLjjMKCBFnDOxjuAEl16sK
-         FzuzaJGKOv22C4sKbylqsv+mhZxVt/j0fQa3dlJeeloXyS6a6NkH/QEqnR7MHgz00Lpf
-         DtdWLEG8MGkdZ52wHsh2tbw42ZXGFRe0fGER+deCCwBXvJ+WX+aJD8erYNqGuW2zkSwR
-         F/yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSTwi6XN7ufRaTxIUwSmxcIM2o36yBv1Uvr65V8OG38bwyu7feW6m0QDs1Et15Un6wRrAiFq5edGZtD5I=@vger.kernel.org, AJvYcCXZjGA8HbAsbr2qzBOHGX8cF2/fDTm0dVXynoXJzH5id38l7sXgbnBs9YQfrSI6vdUeFvKBTnKQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCc4H1OwV0lSySHk6itzow+2BTMAeB7t1hfOQ2CPnHTH5lwURE
-	sipZGPVv5UWE5VELSj4YN1CnTNKVIxlHFma3WDU8DEnBD5GI7oZQi5JS
-X-Gm-Gg: ASbGncsN7DI3pYaqFBR/6F1avogdrFIK2lTPrWFWPHwP6CN8ahlthSKyPnDp77ESPB0
-	8bTBqubKcDcFqPK5txhtuf1F32dUtflh/+hKnbfFM0aWXbMyUgQk9XTvset0nW26iWItIMyaojK
-	hThqvrQKo5oTibzQHC+YdP4sku7TTf4mck0zXrv6glMP+Biznc9FfzwbFV6isS1j7FK2F7bZPNt
-	KyiNWGDl7jt9E3k9IcOjpkDcfRvf1htJ7lGbBs6AipPTOKPoQ+B9Mi/BZVv8AhmN4Sbdrj4MavB
-	KFFB9kinMa0TW+32siDf/hRr+FVbAamjCHu2jZe1AtazEl+VVVsIGbJemldKVY7z/U19tyL8H7l
-	fRg==
-X-Google-Smtp-Source: AGHT+IFR4cqqc2eCOz0C/iQEhfLitX2elIxGt3D3mCWCWrmmAD6CaePuepyuNfM65uKa6bxZ3sBGTQ==
-X-Received: by 2002:a5d:5c84:0:b0:3a4:f55a:4ae2 with SMTP id ffacd0b85a97d-3a572e92c50mr2925691f8f.50.1749924907228;
-        Sat, 14 Jun 2025 11:15:07 -0700 (PDT)
+        bh=apK2Hae7QVQW8sVcfdULJFrMHKxa3eLsLFIQMUAHMeE=;
+        b=pgAM5qPmExM4anzXHNXL7kSpWWftCum2cfheqn5oaC/+pJvHeAQDYrjS8hI2JbDQ99
+         xmgZO4dw83/SsIyPDp9uv+wUGtZsp27e4Un/WE4Uqa7ARxsHTYT/tbP20hXzXrChcL3i
+         u/5EeM7Mo3g5RBAicGZUR1IE8d1HIdz1ywSmadzq+rFeG8i9d6WobW6q9ZcW6F+DsP6l
+         DtT1XoOZMXtgDIRCXCM/fM3XO4bb36iKDddNenkfsehYZ6nqlVxDmj4e8WcvoV6XVfbV
+         gGAQXiYf/j9dRYuc9asbHyUZxL2wFh9Y2X8n0qG/EgbrIxs9Nbg/XVuPqlGZa3abjJiW
+         cRbw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0SJMlUmeRnIjpryGCt4FYNBPWNTljtRA/EYXDANdt47fN5VbiZhZWCfampXrimPTY2co2jM9+SsXat+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSS8gGvaQFAsMRA/myZC0OM2S8989Sa3BXCVWAWnEn/kR8qecb
+	8FR7Kow6KzSn9KwZ2piHvTlPQ4B35Hf8z6tCfRDbRGmW2cldPMZouEyUOkvwu78PR4v2kt+k
+X-Gm-Gg: ASbGnct76CVkdwQCvoyrQJqorG+sr/x5l3ygT/Yq0A6eWk79CNpQF0lMnHUoq3dX5zw
+	3utw4mDOinZC55IGjl95qI3pSWMcQTNLose//5/GBPLmvjbWcl8JUQiw0CKiERXESkMqpucKBWH
+	vztYyoxjG49hrj17woBkW1/CGCLEbSCntIIN0Tw3BAJRhpwpXkAwXiqRX4YTowZMAM5HJUs7QVX
+	dEesLfIj8prwsb5fPru0oiUgcUm6wo6737RTLkokEjNLplxMjk9RR85hV83wE1BAefvZr43xr1+
+	e8CWZLmhJYbNpUA1HxwK8q5lvQ/oA1OuydYCov50U9yf8XDkoLQpgrq7aSLBDKl7OrYzwV6Uo6m
+	Wgw==
+X-Google-Smtp-Source: AGHT+IG6q7vHN/vHBeZAA7oir6GZzQ1YYg+JHtWFX9c9V66ye3en/szawBqlTQWpbngZPIMv57Kpdw==
+X-Received: by 2002:a05:600c:1c12:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-4533ca46428mr41136945e9.4.1749924909606;
+        Sat, 14 Jun 2025 11:15:09 -0700 (PDT)
 Received: from alchark-surface.localdomain ([5.194.93.132])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c50esm88195255e9.4.2025.06.14.11.15.04
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c50esm88195255e9.4.2025.06.14.11.15.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 11:15:06 -0700 (PDT)
+        Sat, 14 Jun 2025 11:15:09 -0700 (PDT)
 From: Alexey Charkov <alchark@gmail.com>
-Date: Sat, 14 Jun 2025 22:14:33 +0400
-Subject: [PATCH v2 1/4] arm64: dts: rockchip: list all CPU supplies on
- ArmSoM Sige5
+Date: Sat, 14 Jun 2025 22:14:34 +0400
+Subject: [PATCH v2 2/4] arm64: dts: rockchip: add SDIO controller on RK3576
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250614-sige5-updates-v2-1-3bb31b02623c@gmail.com>
+Message-Id: <20250614-sige5-updates-v2-2-3bb31b02623c@gmail.com>
 References: <20250614-sige5-updates-v2-0-3bb31b02623c@gmail.com>
 In-Reply-To: <20250614-sige5-updates-v2-0-3bb31b02623c@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -78,82 +77,52 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Detlev Casanova <detlev.casanova@collabora.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Alexey Charkov <alchark@gmail.com>, stable@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+ Alexey Charkov <alchark@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749924902; l=1915;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749924902; l=1453;
  i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=QdElGcOzwWgLhHGEr9MDl1bHr4d6LFvNBBvG2cBo4I8=;
- b=cgSA57cepXZcVv6ZPbKxYOxuxZxJek5TAKiawvvBrPyXqC4Q5ALi/AvBqL7/VFcoqDr2XbqKY
- v765NdmZ2EeAAYtEnDczgPJ+i3fgGivUkqrhlv++n07kN4UzbWJxNbb
+ bh=+R55JLPva4RxIrp3zXjLnnlES7uYtBgDS2XhRWk7w0Y=;
+ b=lQ8gtAauPmLTaar8ct5JF/6gWJkN/9mNycR/7CqdRijYPpExgkmwe2W+HwUPoPvoTikFoFueB
+ xsRMyp5Pe/7C9MoPRaip4yPdcJjhUDoiRmK+1fDz1g+a4EJ1/MNNWnv
 X-Developer-Key: i=alchark@gmail.com; a=ed25519;
  pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-List both CPU supply regulators which drive the little and big CPU
-clusters, respectively, so that cpufreq can pick them up.
+RK3576 has one more SD/MMC controller than are currently listed in its
+.dtsi, with the missing one intended as an SDIO controller. Add the
+missing node (tested with the onboard WiFi module on ArmSoM Sige5 v1.2)
 
-Without this patch the cpufreq governor attempts to raise the big CPU
-frequency under high load, while its supply voltage stays at 850000 uV.
-This causes system instability and, in my case, random reboots.
-
-With this patch, supply voltages are adjusted in step with frequency
-changes from 700000-737000 uV in idle to 950000 uV under full load,
-and the system appears to be stable.
-
-While at this, list all CPU supplies for completeness.
-
-Cc: stable@vger.kernel.org
-Fixes: 40f742b07ab2 ("arm64: dts: rockchip: Add rk3576-armsom-sige5 board")
-Reviewed-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
- .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..801b40fea4e8808c3f889ddd3ed3aa875a377567 100644
---- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-@@ -211,10 +211,38 @@ &combphy0_ps {
- 	status = "okay";
- };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+index 1086482f04792325dc4c22fb8ceeb27eef59afe4..d3225d20baadd56364655fdde6b33113b65484ad 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+@@ -1695,6 +1695,22 @@ sdmmc: mmc@2a310000 {
+ 			status = "disabled";
+ 		};
  
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
++		sdio: mmc@2a320000 {
++			compatible = "rockchip,rk3576-dw-mshc";
++			reg = <0x0 0x2a320000 0x0 0x4000>;
++			clocks = <&cru HCLK_SDIO>, <&cru CCLK_SRC_SDIO>;
++			clock-names = "biu", "ciu";
++			fifo-depth = <0x100>;
++			interrupts = <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>;
++			max-frequency = <200000000>;
++			pinctrl-0 = <&sdmmc1m0_clk &sdmmc1m0_cmd &sdmmc1m0_bus4>;
++			pinctrl-names = "default";
++			power-domains = <&power RK3576_PD_SDGMAC>;
++			resets = <&cru SRST_H_SDIO>;
++			reset-names = "reset";
++			status = "disabled";
++		};
 +
-+&cpu_b1 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
-+&cpu_b2 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
-+&cpu_b3 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
- &cpu_l0 {
- 	cpu-supply = <&vdd_cpu_lit_s0>;
- };
- 
-+&cpu_l1 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l2 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l3 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
- &gmac0 {
- 	phy-mode = "rgmii-id";
- 	clock_in_out = "output";
+ 		sdhci: mmc@2a330000 {
+ 			compatible = "rockchip,rk3576-dwcmshc", "rockchip,rk3588-dwcmshc";
+ 			reg = <0x0 0x2a330000 0x0 0x10000>;
 
 -- 
 2.49.0
