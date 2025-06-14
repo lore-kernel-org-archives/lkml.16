@@ -1,134 +1,87 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787D64C6D
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D03AD5A
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749859697; cv=none; b=EgmVmvwIUQ9oa3tvZju5Dkerk77RqOacIM8QUazTl3bTn1y4D/wmDBPntBwLN/Cv8UeffR6Nte50pOz43tEHc00LKXwclxiUGt/9sE1vXS6J37Hj6DeyXKXSxQlFmpPRRsTzd3WkInt8IjcC5su1L9crptcO9vBv8No4lO9/tM4=
+	t=1749859725; cv=none; b=Z1ztcGE54SmV8DHjJud/LUimt/KiglygQaXlAIiHQiPanKuJrPM235szhsctq7HXkH8pa8l+sIXhEJkDogzvnJyqSHUfNUEUkc1ytWmQ5N6W2Oi6acdNDh+P+GQPz1y+AaYRQvGefm44r+jPOLPocPKFvJlKeYKE9UmrOQByKNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749859697; c=relaxed/simple;
-	bh=i2SJsezjKdHz4pBfByEDzI7aUH+K4JDCxAJyXh6TjAU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EIFMMYqlegNG28LoXoG5N/TM2f6kxaFpCq19hCeJgp1Iyq86bsmjFHrFJnquu9VTVf/yVp5zg/jHyENmhbnahYT5aMCuOS4wJNavHoyqR45Vms60R4cOlhfSHtp379jsb1hrntavxl2ptB4MRdJTVwrU88Ylrc9K2a9KvxOqYVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVoOJpV1; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1749859725; c=relaxed/simple;
+	bh=vuCp+799+GA2TdD3womsE4plTUsz+mVthrFC6jCIhdw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ch6rl0FNGY5+41nY7EQR87kQITAaAb3O3GMmLEjMXLyT4W8JmvSvoqN1rX17QJ1OURdF82/ItXJmBr7Dmtvf6DEUkw2BqyZHVheDIxn1Dqz7GPh04VlSdQVaqRCStXI7k5MkkVHp6qZzG6pl6uhoTEXhq9PQgBd50PiFVxnT6vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2nu2eXsv; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVoOJpV1"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74847a38e5eso1710660b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:08:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2nu2eXsv"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313b0a63c41so3272994a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:08:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749859696; x=1750464496; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EljVQcnicnDvv/Y8OcFkMX/KVGrQBJDuCPNl1ok3h0U=;
-        b=dVoOJpV1o/c5aTmM4Mq6F3aS5Tpv0LqpNVTtY0WstjjdUQg08Vk5bkWqEthhdJ1gBP
-         O4yAoMGsnH6WRD9r0Y1Cum0zWLmELDfUy4ptp6Jc1KhsDrn472k8S/ufU0rILbnHRobT
-         I5K/jGG+P6jDY81WbDOdWnEy9ozYSz9O+SmBa1i+jzVGdm/qY+rcIPY4lEsZol+0aN8w
-         34QWvjppXvIfOhHLdmtFIH+2X3m2doUUIu6SMFiyXtabEUzRzzI9LBZDhy4xPeil+Ru2
-         XBe/qTDvvRxvbVXd0IAOz/Sf86DG//qJbHsZEX2R6OYdTHy0d7cYvM1RV6EGoU6uCOn+
-         9uqQ==
+        d=google.com; s=20230601; t=1749859723; x=1750464523; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8gRBKiUS/LqVw91mdG4BB51Db6Wh9r5ixmp7H76fvHU=;
+        b=2nu2eXsvEsSCFdHixF1YPnpPXIXtmXWQGtto3WpgQoaxhZrwqHMa4F7vR8TZK7MUCL
+         aSucvRFt1fEWsW6C6xp49/xOqtBe4z9DcVMJCqK8rSpbqOg+TcogkoZ4caSmPoWPIWd/
+         vR9ArBk9MM6I1cK1518f8xb0Hp/nEQyuP09+PYOAuwZ3Vzj/uHXfNFHYn0kyV9AWM9Ph
+         tx7ADrmV+5K7suFvGeMLiKO53WJpds/q6xrnypgTf4yoRkxNbUX6rNToJkf1y7Nm8O/l
+         2973k19vi9VspB2BsEGRfcvMXyifYUhGOOCNbcIbM3Vr8XU0uTt4gmMld4bSpZaP7uuL
+         nKmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749859696; x=1750464496;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EljVQcnicnDvv/Y8OcFkMX/KVGrQBJDuCPNl1ok3h0U=;
-        b=XjJd+imqfwJNyZXoOd3/Hf+SPxq1076x9vxPVsYu6eEbTiVtfzyuVobDQQHRTWOtQ5
-         mbcxU+mq8kYZ1z7GT14dLGJza9DeBclxEqFnVi1Us7Lx9TnPtkMGljIZ5ojx0OS2kDst
-         fuUbODEoCtnhbjtVPWIQrCx3BgGuf6i5+m/qtiXbw3cD3ioQ7y5Rn6pLHGYjxg+vKmBv
-         jLXLg64tVzFIzJlVadXkZGO268TPHi6HTC1pvaAzDbb4R7DJB2GnW4sgIHdiybrudnRc
-         c4TwEDWuvjbg0CsnyBRandajXaUrAB5pjOhy7VLmXglv7pOd0jZjqyu1w5X3QSxEivFC
-         kRTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVZzQm9DAug7hxuAL0xewfE6E6PMVj1rSpv12LApjW+5B/P+PBt7+lIKb4OXYvZODW7uxxohcJQGewsm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR3g74a2P6gboCI/vEBJc3umAPDo0O4erOU3Vjyi4FIDsiwxfB
-	7wed14NCeOAVYWfl2T/ndHk8dnuj6QmIOCA2Yo+kCq+PzJAlVBZgYTfLJvblnkl5kuEhNCPqbgg
-	vsS7O32ryn7lF/YGwMY4gFl+85w==
-X-Google-Smtp-Source: AGHT+IGOv9d0N2cxkzxw1Yk+b3n0JGD4cBZckAigaeJg40gGm0MI2Gbz+6hCoB7tlaT9S+kpG8wgAlLMjDMbhztBzQ==
-X-Received: from pgar5.prod.google.com ([2002:a05:6a02:2e85:b0:b2c:4702:db0e])
- (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:512:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-21fbd686cfemr1635658637.20.1749859695780;
- Fri, 13 Jun 2025 17:08:15 -0700 (PDT)
-Date: Sat, 14 Jun 2025 00:07:54 +0000
-In-Reply-To: <20250614000754.164827-1-hramamurthy@google.com>
+        d=1e100.net; s=20230601; t=1749859723; x=1750464523;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8gRBKiUS/LqVw91mdG4BB51Db6Wh9r5ixmp7H76fvHU=;
+        b=mSHdxF4fGBmdOjg8S/Ha9cQLK2OHuvYTw3+/jufoYyPSA8LVFzDZgWTVbqRoE2J+9h
+         8e+WAGa3HfoapGadIP39A7H5jFoGOey4AaDhzPPRcDWC0533+oLUbqiDXDnH+WD4q7OV
+         5IDP/mOJ0HTq/9DpIARgJfXla3fPxqcUin36qZy9+74CZ324is6aVq6GYaro56Vj+C8I
+         Hy2WZs0rabmtVFtkRuBb94PsSKCytULGV08kacLfBMOkYGdw0w8CudElrZCG4ef+g6j5
+         3wQximxDBIfuUZ7Hye9TV9dxBoQBcnQaXK5uuj71S9GtI9m34KNU8AUFZwt+sGd6En6/
+         NwKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2OJjZZ6JmBY953/KC+N7u6JmCvwQVmPbIhkoofKP3Gkqq0Bxl//gQL6Jj10J7kgm7vaFW0X+W2oO/iIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweVnJScK/V5GlPeJxL6ZB4K4pq6qaL2YfKabepYUrEzf2uvPNp
+	EQpys1fdxjVjAVml2x+618/FFiUlWHqgW3DTrRQkmo653eRKZwH96SMuUhUhR44OUb8Ejzm2tak
+	aGlRZUg==
+X-Google-Smtp-Source: AGHT+IE6o+GDxvYYDKjM66M41eSWNOGyDPF0TERhOYuWw3vwrpms5wYhLmIqj8aM36fhlBScuEhdO5teB2c=
+X-Received: from pjzz7.prod.google.com ([2002:a17:90b:58e7:b0:2ff:84e6:b2bd])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c8d:b0:312:959:dc3c
+ with SMTP id 98e67ed59e1d1-313f1c0c004mr2437852a91.10.1749859723377; Fri, 13
+ Jun 2025 17:08:43 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:08:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250614000754.164827-1-hramamurthy@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250614000754.164827-9-hramamurthy@google.com>
-Subject: [PATCH net-next v5 8/8] gve: Advertise support for rx hardware timestamping
-From: Harshitha Ramamurthy <hramamurthy@google.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, jeroendb@google.com, hramamurthy@google.com, 
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com, 
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com, 
-	shailend@google.com, linux@treblig.org, thostet@google.com, 
-	jfraker@google.com, richardcochran@gmail.com, jdamato@fastly.com, 
-	vadim.fedorenko@linux.dev, horms@kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <20250614000828.311722-1-yuzhuo@google.com>
+Subject: [PATCH v1 0/2] crypto: Fix sha1 compile error
+From: Yuzhuo Jing <yuzhuo@google.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, 
+	Ian Rogers <irogers@google.com>, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Yuzhuo Jing <yuzhuo@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: John Fraker <jfraker@google.com>
+This is a followup patch series for an ongoing patch series to reuse
+kernel tree sha1 utils in perf tools and remove libcrypto dependency.
+This mirrors the fixes made in perf back to the kernel tree so we can
+use tools/perf/check-headers.sh to monitor future changes.
+Link: https://lore.kernel.org/lkml/aC9lXhPFcs5fkHWH@x1/t/#u
 
-Expand the get_ts_info ethtool handler with the new gve_get_ts_info
-which advertises support for rx hardware timestamping.
+This series contains two patches: one fixing signed and unsigned integer
+comparisons and another fixing function type mismatches.
 
-With this patch, the driver now fully supports rx hardware timestamping.
+Yuzhuo Jing (2):
+  crypto: Fix sha1 signed integer comparison compile error
+  crypto: Fix sha1 signed pointer comparison compile error
 
-Signed-off-by: John Fraker <jfraker@google.com>
-Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
----
- Changes in v5:
-  - Add the phc_index info into the gve_get_ts_info. (Jakub Kicinski)
----
- drivers/net/ethernet/google/gve/gve_ethtool.c | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ crypto/sha1_generic.c      | 2 +-
+ include/crypto/sha1_base.h | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
-index 6ecbcee4ec13..8dbd7639e115 100644
---- a/drivers/net/ethernet/google/gve/gve_ethtool.c
-+++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
-@@ -923,6 +923,27 @@ static int gve_set_rxfh(struct net_device *netdev, struct ethtool_rxfh_param *rx
- 	return 0;
- }
- 
-+static int gve_get_ts_info(struct net_device *netdev,
-+			   struct kernel_ethtool_ts_info *info)
-+{
-+	struct gve_priv *priv = netdev_priv(netdev);
-+
-+	ethtool_op_get_ts_info(netdev, info);
-+
-+	if (priv->nic_timestamp_supported) {
-+		info->so_timestamping |= SOF_TIMESTAMPING_RX_HARDWARE |
-+					 SOF_TIMESTAMPING_RAW_HARDWARE;
-+
-+		info->rx_filters |= BIT(HWTSTAMP_FILTER_NONE) |
-+				    BIT(HWTSTAMP_FILTER_ALL);
-+
-+		if (priv->ptp)
-+			info->phc_index = ptp_clock_index(priv->ptp->clock);
-+	}
-+
-+	return 0;
-+}
-+
- const struct ethtool_ops gve_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS,
- 	.supported_ring_params = ETHTOOL_RING_USE_TCP_DATA_SPLIT,
-@@ -951,5 +972,5 @@ const struct ethtool_ops gve_ethtool_ops = {
- 	.get_priv_flags = gve_get_priv_flags,
- 	.set_priv_flags = gve_set_priv_flags,
- 	.get_link_ksettings = gve_get_link_ksettings,
--	.get_ts_info = ethtool_op_get_ts_info,
-+	.get_ts_info = gve_get_ts_info,
- };
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
