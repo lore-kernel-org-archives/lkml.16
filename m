@@ -1,73 +1,52 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3269A6D17
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA766D17;
+	Sat, 14 Jun 2025 15:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749915118; cv=none; b=L+LpBLzJn8Z7nC7hWdQhRjdlMXVIEFVS1jW8PvO5BivfxAH+liep58teGqiJaCsP5HcJTnB7eB4XWwNbE83Ufx2xl6GSe0Y0ykmmJn3Wgeag6ZaNPIbLVFTdCWxZXpoTiPiKbXXH9jiIG94n9MGr0RWZ5iAIdUK2ATJCEDJx5b4=
+	t=1749915163; cv=none; b=uP4VMD0Yqdu0/UdTaNYrJFnZ5JkDfrBySu0IYa2+59MyvJFNYKkwt1UBty1c31gjs54MfYQz0JoGiXAqBCYq29Yh4qIzPo53DcBzfukzH3pLa7iudZ60HPPgROmVHu6Es5rX7ASSsjgIUV+EnjfKbdFeTO7uOIFRBlZy0sWXTas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749915118; c=relaxed/simple;
-	bh=5s3PbTmMFmBEqC0tp5Ogls2Sp2GfnQKPirfD9Xe+flU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BITGHEAFc6gwsAVuAD83zMYY6SVoSp2vjGbd9KhPDdA6klzxolggiLgq/UcHg6uUXz2H4j7YW2fvzv0En07tP0smySmbuLMRpizTFsyvSzyDLsZ1RpqIQvO/3g9sbuKgLclZF4ZbgO/6d0ljnCZlkfp4S6cXx1yu7CNDvi7Ily0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vOrYxsOS; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749915163; c=relaxed/simple;
+	bh=wt5VV4iKKzOPs6a/o9sxhm0l0iwSY7AAKCodzPrgKt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HZ5XhfZPX+zjQPgxk/D1lgRmGy+gOn6jSWv5bSQF1MlvwB+2IObANKxq9a+6h2Z82O2TJSJyLxmERDRHIuEL4y7gMaM2gMeASsgMr83btlUh8n6wDPyM0a30bKIALdWQbzDNs7g0gSw1O0budb4110tz93geTILtRK/8hiVeqXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEORoHrG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vOrYxsOS"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d20f79a00dso431955285a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749915114; x=1750519914; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffW3H0bnnHkzNpApn+Q0DtoWGwSGMCBvGEREk/RINPU=;
-        b=vOrYxsOS8x68NEDhGMXeGyLIZTvYnHI6J1qRCUXG0hAmhHqlNgFVyxd5eryfyjiq2e
-         p67j4miHbzdD/VkTlhCQaGvGvfZw/74KzhTtYvgeT8+bSDEGDCR3riKXAEI5lNP8i26d
-         yOJHc1nMURjmbI9XZqEqn/iVWlzoUOT7zhm7f+e2WSbJULPlfS4nu+Pn0b6bfeakIPWk
-         vorDdMm0XV0b+gQ+/32Xqy66XzVYC+QLeKmqxjVvrtXXnBNpaqO9WhNIfEvJ7WinNbTu
-         T4rFcMHmRv0hZI5pZSBwHhQKI48ks87KZ3j9KHy0kJM21cLqGK6YGZng2KjzycnwZ15f
-         HI4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749915114; x=1750519914;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffW3H0bnnHkzNpApn+Q0DtoWGwSGMCBvGEREk/RINPU=;
-        b=B4HB5pdN6TSDfeIm1meeUuse7lGpRBVxqj+XPBZuQxAxi46cZX85lsRUKCXAea6f46
-         2976VqA8fTgfCO4qmzSBUODrPTg/BWkLPFN5MTvfzkQbaJBx1JHk4PiOSJBX2rLkVAaV
-         v0lqMSL2w+FGLPHF3B4FZHJDtP5Atq/hIlBIfLsyIHF2g93tc/6vtpjD8YOTTwk2efFS
-         wsz0L/32uYXJLzdxVXfD14nSt3lweWy3VK3SSoEs5CdrL9lq5pi1h7MsRknpOvYnKv/F
-         jOB3a9HN3hHCDE1C6tVhVus+gdX8ZmASbiGZg2R15cUgBsHBKcVWjsLDMkQ3ikqOUhWJ
-         zxRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWH3jPsLQ8kZRb5ZGwx9mwabxmwUentDCm3EErh9OWAEdJYQmLXpNFLSZczibuzSMEDGvfgcikSimuKPA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4a8K0rZNcU5fYQPjLFE1XAIOQpKjKgds9uYwQEqOsVBF9t0jC
-	wBxJkoDoImcKO1o65qLba7qeeVYaOd1A7a/EvCcdbjDadgh546C2dH2Dn5eBl9/dR3w=
-X-Gm-Gg: ASbGnctnyN+QenbJm/Z0RS48a3EnxWxA6D97hXk0NOkbreBhCWrArVYFasvTJLbjUxw
-	mCW6PMPwAFoKYh9o8QSc2ra63++mzdAyHpjTy+sJaGZNhet9Ik1eZF5/nW07iRB11h/WNMpwjop
-	Tux145Uq25MraAfwH7DY2XIk8X35rZ+pqoWeF0CVgZpJrPrKWtNE12QtxEtWEG1Gx7/Y8fjd7y2
-	FNw7aa6u7vijroXPoiZxojrRXDOlbp3L2GIbdTq4YwaDJwYdNB+461ohJVrmQP8X+Dj8aQ1/89P
-	HOlWDBhLCbZ1wO1tHTLBzDwrMcqZ6iRHikda1d8qQreQLH6iPQEpzCxM93Kq31Fsj7mSQoJoXvE
-	88TYlowP2eolV8XzOMUNh424lQA==
-X-Google-Smtp-Source: AGHT+IFP52JgzSOjbmFpXqOBBvaFl6D5bJuOsTvSEnFixRA2Tu6XMQLw43LfhVyuyogbFjoxorIvyg==
-X-Received: by 2002:a05:620a:430f:b0:7ce:bd8b:2d08 with SMTP id af79cd13be357-7d3c6c094e3mr481017085a.10.1749915114067;
-        Sat, 14 Jun 2025 08:31:54 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8f272a8sm303506585a.115.2025.06.14.08.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 08:31:53 -0700 (PDT)
-Date: Sat, 14 Jun 2025 11:31:52 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 next 07/10] lib: mul_u64_u64_div_u64() optimise multiply
- on 32bit x86
-In-Reply-To: <20250614095346.69130-8-david.laight.linux@gmail.com>
-Message-ID: <rs908qr0-747n-9q5o-4soo-rr09o26o9qr3@onlyvoer.pbz>
-References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-8-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEORoHrG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE840C4CEEB;
+	Sat, 14 Jun 2025 15:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749915162;
+	bh=wt5VV4iKKzOPs6a/o9sxhm0l0iwSY7AAKCodzPrgKt4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TEORoHrGYSPL1PZ6TDYbQb+3hSK3gdnNckKqJIgbcFsh7TFztCECCuLARbk1TthE3
+	 8ju4x3PunSUqdBD5YBsVp8++WUXCEKfw5Zyw2cFpw64+bJ+em0JMx7gUMYozWesxtj
+	 cUe2RwapqfQ0BEG5G+NPpYJOgOhtsiqvcbG43BDw52s/gM1PuX6SlxWuXpBG0YZyfs
+	 tsMakaqtY6d6UinbE3LI7s7Re7iF/ZZN6u9YhOR+sRBtOAXBi3hRZQcygNS2d+A1Xw
+	 ipxps6J1LS5J0VBzsbFldM+hAj2R7wvcXMscbaPiWkj7gXXKHMGdwlb3CwMiwTrLxa
+	 4Mxd/3FC87c+Q==
+Date: Sat, 14 Jun 2025 17:32:35 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Akira Yokosawa
+ <akiyks@gmail.com>, Breno Leitao <leitao@debian.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Ignacio Encinas
+ Rubio <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>, Marco
+ Elver <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Ruben Wauters
+ <rubenru09@aol.com>, Shuah Khan <skhan@linuxfoundation.org>,
+ joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
+ linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
+ peterz@infradead.org, stern@rowland.harvard.edu
+Subject: Re: [PATCH v4 12/14] MAINTAINERS: add maintainers for
+ netlink_yml_parser.py
+Message-ID: <20250614173235.7374027a@foz.lan>
+In-Reply-To: <CAD4GDZzA5Dj84vobSdxqXdPjskBjuFm7imFkZoSmgjidbCtSYQ@mail.gmail.com>
+References: <cover.1749891128.git.mchehab+huawei@kernel.org>
+	<ba75692b90bf7aa512772ca775fde4c4688d7e03.1749891128.git.mchehab+huawei@kernel.org>
+	<CAD4GDZzA5Dj84vobSdxqXdPjskBjuFm7imFkZoSmgjidbCtSYQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,127 +54,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, 14 Jun 2025, David Laight wrote:
+Hi Donald, Jon,
 
-> gcc generates horrid code for both ((u64)u32_a * u32_b) and (u64_a + u32_b).
-> As well as the extra instructions it can generate a lot of spills to stack
-> (including spills of constant zeros and even multiplies by constant zero).
-> 
-> mul_u32_u32() already exists to optimise the multiply.
-> Add a similar add_u64_32() for the addition.
-> Disable both for clang - it generates better code without them.
-> 
-> Use mul_u32_u32() and add_u64_u32() in the 64x64 => 128 multiply
-> in mul_u64_add_u64_div_u64().
-> 
-> Tested by forcing the amd64 build of test_mul_u64_u64_div_u64.ko
-> to use the 32bit asm code.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
-> 
-> New patch for v3.
-> 
->  arch/x86/include/asm/div64.h | 14 ++++++++++++++
->  include/linux/math64.h       | 11 +++++++++++
->  lib/math/div64.c             | 18 ++++++++++++------
->  3 files changed, 37 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/div64.h b/arch/x86/include/asm/div64.h
-> index 7a0a916a2d7d..4a4c29e8602d 100644
-> --- a/arch/x86/include/asm/div64.h
-> +++ b/arch/x86/include/asm/div64.h
-> @@ -60,6 +60,7 @@ static inline u64 div_u64_rem(u64 dividend, u32 divisor, u32 *remainder)
->  }
->  #define div_u64_rem	div_u64_rem
->  
-> +#ifndef __clang__
+Em Sat, 14 Jun 2025 15:22:16 +0100
+Donald Hunter <donald.hunter@gmail.com> escreveu:
 
-Might be worth adding a comment here justifying why clang is excluded.
+> On Sat, 14 Jun 2025 at 09:56, Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> >
+> > The parsing code from tools/net/ynl/pyynl/ynl_gen_rst.py was moved
+> > to scripts/lib/netlink_yml_parser.py. Its maintainership
+> > is done by Netlink maintainers. Yet, as it is used by Sphinx
+> > build system, add it also to linux-doc maintainers, as changes
+> > there might affect documentation builds. So, linux-docs ML
+> > should ideally be C/C on changes to it.  
+> 
+> This patch can be dropped from the series when you move the library
+> code to tools/net/ynl/pyynl/lib.
+> 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  MAINTAINERS | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index a92290fffa16..2c0b13e5d8fc 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -7202,6 +7202,7 @@ F:        scripts/get_abi.py
+> >  F:     scripts/kernel-doc*
+> >  F:     scripts/lib/abi/*
+> >  F:     scripts/lib/kdoc/*
+> > +F:     scripts/lib/netlink_yml_parser.py
+> >  F:     scripts/sphinx-pre-install
+> >  X:     Documentation/ABI/
+> >  X:     Documentation/admin-guide/media/
 
->  static inline u64 mul_u32_u32(u32 a, u32 b)
->  {
->  	u32 high, low;
-> @@ -71,6 +72,19 @@ static inline u64 mul_u32_u32(u32 a, u32 b)
->  }
->  #define mul_u32_u32 mul_u32_u32
->  
-> +static inline u64 add_u64_u32(u64 a, u32 b)
-> +{
-> +	u32 high = a >> 32, low = a;
-> +
-> +	asm ("addl %[b], %[low]; adcl $0, %[high]"
-> +		: [low] "+r" (low), [high] "+r" (high)
-> +		: [b] "rm" (b) );
-> +
-> +	return low | (u64)high << 32;
-> +}
-> +#define add_u64_u32 add_u64_u32
-> +#endif
-> +
->  /*
->   * __div64_32() is never called on x86, so prevent the
->   * generic definition from getting built.
-> diff --git a/include/linux/math64.h b/include/linux/math64.h
-> index e1c2e3642cec..5e497836e975 100644
-> --- a/include/linux/math64.h
-> +++ b/include/linux/math64.h
-> @@ -158,6 +158,17 @@ static inline u64 mul_u32_u32(u32 a, u32 b)
->  }
->  #endif
->  
-> +#ifndef add_u64_u32
-> +/*
-> + * Many a GCC version also messes this up.
-> + * Zero extending b and then spilling everything to stack.
-> + */
-> +static inline u64 add_u64_u32(u64 a, u32 b)
-> +{
-> +	return a + b;
-> +}
-> +#endif
-> +
->  #if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
->  
->  #ifndef mul_u64_u32_shr
-> diff --git a/lib/math/div64.c b/lib/math/div64.c
-> index 22433e5565c4..2ac7e25039a1 100644
-> --- a/lib/math/div64.c
-> +++ b/lib/math/div64.c
-> @@ -187,6 +187,12 @@ EXPORT_SYMBOL(iter_div_u64_rem);
->  #endif
->  
->  #if !defined(mul_u64_add_u64_div_u64) || defined(test_mul_u64_add_u64_div_u64)
-> +
-> +static u64 mul_add(u32 a, u32 b, u32 c)
-> +{
-> +	return add_u64_u32(mul_u32_u32(a, b), c);
-> +}
-> +
->  u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  {
->  	if (WARN_ONCE(!d, "%s: division of (%#llx * %#llx + %#llx) by zero, returning 0",
-> @@ -211,12 +217,12 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  	u64 x, y, z;
->  
->  	/* Since (x-1)(x-1) + 2(x-1) == x.x - 1 two u32 can be added to a u64 */
-> -	x = (u64)a_lo * b_lo + (u32)c;
-> -	y = (u64)a_lo * b_hi + (u32)(c >> 32);
-> -	y += (u32)(x >> 32);
-> -	z = (u64)a_hi * b_hi + (u32)(y >> 32);
-> -	y = (u64)a_hi * b_lo + (u32)y;
-> -	z += (u32)(y >> 32);
-> +	x = mul_add(a_lo, b_lo, c);
-> +	y = mul_add(a_lo, b_hi, c >> 32);
-> +	y = add_u64_u32(y, x >> 32);
-> +	z = mul_add(a_hi, b_hi, y >> 32);
-> +	y = mul_add(a_hi, b_lo, y);
-> +	z = add_u64_u32(z, y >> 32);
->  	x = (y << 32) + (u32)x;
->  
->  	u64 n_lo = x, n_hi = z;
-> -- 
-> 2.39.5
-> 
-> 
+Adding an entry that would c/c to linux-doc for the parser is
+important, as problems there will affect documentation build,
+no matter where it is located. Perhaps one option would be to 
+create a separate MAINTAINERS entry for it, like:
+
+	YAML NETLINK (YNL) DOC GENERATOR
+	M:      Donald Hunter <donald.hunter@gmail.com>
+	M:      Jakub Kicinski <kuba@kernel.org>
+	F:      <python_lib_location>/netlink_yml_parser.py
+	L:      linux-doc@vger.kernel.org
+
+to ensure that changes to it would be C/C to linux-doc.
+
+> > @@ -27314,6 +27315,7 @@ M:      Jakub Kicinski <kuba@kernel.org>
+> >  F:     Documentation/netlink/
+> >  F:     Documentation/userspace-api/netlink/intro-specs.rst
+> >  F:     Documentation/userspace-api/netlink/specs.rst
+> > +F:     scripts/lib/netlink_yml_parser.py
+> >  F:     tools/net/ynl/
+
+With regards to the location itself, as I said earlier, it is up to
+Jon and you to decide.
+
+My preference is to have all Python libraries at the entire Kernel
+inside scripts/lib (or at some other common location), no matter where
+the caller Python command or in-kernel Sphinx extensions are located.
+
+There is also slight advantage on placing them at the same location:
+if we end adding parsers for other subsystems at parse_html.py, having
+all of them at the same directory means we don't need to do something
+like:
+
+	lib_paths = [
+		"tools/net/ynl/pyynl/lib",
+		"foo",
+		"bar",
+		...
+	]
+
+	for d in lib_paths:
+		sys.path.insert(0, os.path.join(srctree, "scripts/lib"))
+
+	from netlink_yml_parser import YnlDocGenerator        # pylint: disable=C0413
+	from foo_yml_parser import FooYamlDocGenerator        # pylint: disable=C0413
+	from bar_yml_parser import BarYamlDocGenerator        # pylint: disable=C0413
+	...
+
+
+Thanks,
+Mauro
