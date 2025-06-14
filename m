@@ -1,105 +1,201 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849C42AE6A;
-	Sat, 14 Jun 2025 05:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FE51DE2CF
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 05:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749878988; cv=none; b=P18+19DBFZGxG0A1lMMePa7Ep+c4Uq1kaW30Oj3kGqxJLGD1egKhh3opgEomMydO2vmAkFMoWSVaSJTDUhLfkEfFSyRuzkGmPbueYcwSbFPqNZoighPllPIrdmPK1hcPrdGDwp9Hsouz3yyiJ0qNof/a0yHBraLvBPkagMyN9Ns=
+	t=1749879328; cv=none; b=cERalhfIhd3SqTWWNDE2FiB29Tw0KpL9k7F56Ku407iqAzcSpqF+rzQyBxgu9RL+AWxPJR7uJJMPutgqMc070XNKh8n/7DyiYALZQyWxo9vxsl2E3yk5lnC0qohcdVMsp2KVnpNluMnPdjB0NqYl5/thtlK9wPi+3DbuG9jnr4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749878988; c=relaxed/simple;
-	bh=4m+F9CS8Kox6Z71IUBMAHYeOdZ2DV+ck3U5f1CMPmDs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ofEGIX1IR2IFEZCjqFXuf89mkXMA6lKlO5BW4jk5VUEVT8uaasOMV0JjfGl22m2Q/jXMyVhVt1V8Qd9ndzmKBNujUsMaJwKNw8DKfarW1Cw+BIHDyYxvRKrFf6OQT/NZSD/hfU6mlpOsbXSMbRz/DgA3aiul0JgvvEu1Jw936S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUCfTC1S; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749879328; c=relaxed/simple;
+	bh=Idyjm9PAvbAZs2Y85gPvsVywGKyYTgsgfoHFBDmwdd8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HI8YsMEwZsCDDH5zrvxF75NNBn3Ro8MFeHVNT314sTK2Obvf6YK6qt5aoLnLgs9VNQ7bim+E+pOAaqzTCfDg03GNcAtveZejrjNyvXQXza69mSeCC5S/bcT5OZguGCcss+uY0+/ueiPTlgjx0UaL4q7dIFI7HcWWjLt/0uwVYEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uV4lmPt9; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUCfTC1S"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-710e344bbf9so25365777b3.2;
-        Fri, 13 Jun 2025 22:29:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uV4lmPt9"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b3184712fd8so219791a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749878985; x=1750483785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KRKrDObQhMPQFf9PTLf1A+HaIc9XWYs9GuKdkW/pSkY=;
-        b=aUCfTC1S04r/MClq0JjIVsjrmIY5vUdFHrn/NrtapuoFDsJOF8itstP9antglcFQIU
-         Ciole0uIK/+AKM1Zv/5mr42vHPSAgRPdGBSQ1y9Mf0xXOYWLV4ywmLF0KPLaDkt9eJUF
-         r4cRHzzyOy/aMaS4ukU01K3TjwWYY1fR8bEq85IWG3wIauS/vh+93U44p3hiztTgv+1B
-         T9Xp7ZbJ+//KNLK6dIukuY1NH2KCmPBeC4eBXrfFP1OJayht3D2Zrlj7n5wcSgwevu7I
-         0c6DdGHr3irBQfqvNO5UXG+DadvZF/3+MxC6nfXw2AKwPoTQCHmfeTKOjkyrfFQyL7Zu
-         fkmA==
+        d=google.com; s=20230601; t=1749879327; x=1750484127; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iABuUUOZvcSitzU5/7yzeqemM2WhK22/QQ6XRhuLRhM=;
+        b=uV4lmPt9MHuZMvi27TkimycH5KePGnVjUyI4NeK/V0obWxZ38OPON0kpCMQa3QdNdN
+         U7K1mknyTY+gvpLI11p/GRkg+E6/hOoa2OnFATTRoTsbjba1h0pLuwKJhyOwoVIy1A6T
+         1QEupXh8zq9Y3YYDhCgVEsYhIPUbm+0+JjK8tssHLlfUuTNXS7t1Dwkz0BwaRjcsxvP0
+         Kig/BPVHkqR2nhbxQTKZpajVnznXqiXoogSREOXg5pOrQr9EHjz/1H7sp1Wjn3DBUlL7
+         99BgtVDo5cACSDfnUCqI569vftrABmVDWMSZkTxthr3QTHizmUoBMHvKeG7gCgjgbOa/
+         qoSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749878985; x=1750483785;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KRKrDObQhMPQFf9PTLf1A+HaIc9XWYs9GuKdkW/pSkY=;
-        b=bf6gdb/Fob1f79VYimqxu9Wz0HTBwxL45aZ/rM7NW6fS3nrxSQS77GhbAJlaaRWVHD
-         8Tin0dEF7kF4F3t0RTzM9SzWAl7rh2MJJgPJ48mh+z2y+/2E4SCXQMMkSNphnI6GMnTJ
-         nckZgmkCkxuMn/Y52dD1fB0p6HzolSuYIfAHXdXodme2V9gmFDlvTb88bJxdWwE54uFc
-         2ji1UOTQvp5QY+Xxy8D7vObPqwAOt2rOh/x3ff0w5NdPgpCstsyYPqKaYu4sBTr7jUKX
-         nlRQqSt9cApwBEUZOIpEj4MCgN9yVOfpgHmudWo5v1oLer8lfyYvbCRo73BudgyFeoQJ
-         9YSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUt+PrZPf0fiz8YDa2hbxuHNwkOA4crnn9e967BC+DVruVFWXgt2sOB0lzPjeRqHG0Tel7LtBtYrAioFhgf@vger.kernel.org, AJvYcCXFy5rC8v4oW1/bGAdisvx92xbsBmE6pg6PD6AQgOkdw5TEh+qVcVZYpgLkygd/OmVfzrANv347FAkNTw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWwavUmzYlGZ+vgyBnD5JtgkZ56Iz/0xrRYPMMAw8eJ5ewA6f1
-	Og/AsMM77E//7GGkQskUQr8RAWCP2UoEnfoLblKKr39Np7Quy/oqfUWK
-X-Gm-Gg: ASbGncuwSw4tFtTaHvL+Sl9fyMAhjEo8a3gM+eETW7xAbAVYkLeyBA6HPYtHCtm7xw3
-	1LMgmHDb8/X9Is3Px1hOvxJAINUgA3XFHq8v9XlbNPy2wUt5aDaeGgyVjuRlxnaNkCJvbUxBExI
-	8eL8TB4eBsJ862PIURwQ9Ta5DUr+UjWPc7RyAsda8+V8+MsYqzkaYTTKXBf3iMQKvEU7/GRN10n
-	09kTVRD4xAICNj23zFwyQsZL7mhbkdWPaQGu2iTyq8j3X8q3670dQnRa32MjM+j2efymWpvmXjI
-	DXeFPUaTCaOeuXfRE/1rAdSCVZwQ/1HVm3GIVNZc41G/tkf5wH6+gxd8SaNBXPKVPy+56ISyOAE
-	a
-X-Google-Smtp-Source: AGHT+IFP4qmmzvwCoLSm0orXL9x/zDHgGPO3E4RSSJPSZGS4TypQ6nZnCTxfPpGHPX4C8NHliBZi/g==
-X-Received: by 2002:a05:690c:7083:b0:6fb:9280:5bf4 with SMTP id 00721157ae682-7117544d5cfmr28014767b3.30.1749878985301;
-        Fri, 13 Jun 2025 22:29:45 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7115208b1efsm9080217b3.38.2025.06.13.22.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 22:29:45 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: deller@gmx.de
-Cc: alexguo1023@gmail.com,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fbdev: Fix potential divide by zero
-Date: Sat, 14 Jun 2025 01:29:42 -0400
-Message-Id: <20250614052942.3551870-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1749879327; x=1750484127;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iABuUUOZvcSitzU5/7yzeqemM2WhK22/QQ6XRhuLRhM=;
+        b=YWbGzUlLCCJe8Bl+40j1t36bma27g6UDB2QwyaMrzxGcxCX2oRojCRn6NMcejjdJMA
+         w8xcGjR/1pap3mm7QE2rxkqzDnA1svR2GW6NRpOGa0Y6MWe2tYl9pNnl8wlqlxQoLqOc
+         Uc4Wlr/foijdDvMasvqRDBmBmztJhnQ0HUvU/OSwGks9kAc+TQdvzgGBIMtMtyArmthN
+         IfPec9mLcLnVeD3YyNwwGeAvEJx2t4gVowCXqWFYxr3A60W2/cClf/1/8oLHIt1dCgMH
+         kTOoGbhBPbUSPAlP3tdj8zCDZQP+Tsh5MWxi2NkvssynFDs8oWr2H/bEhyHSmWSJ+j1v
+         fhzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXeHKgwKUNQ0oAvQN/TStOIgFRiMnqWp0NHgAdkNCM36HXxyQ5MNahpZdMindT8e9cpQwxf8cNXZdJjD08=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx/ied31NN/mAZK3ejhcVE8OXyqO4LkJsOwHo2z8FgfHN7LLsZ
+	9PV97mLqPCDg7qPgYSweEGp2LITauy7pw9UaTpPmxUpBCflBrvUWy4sP8n80kW4uDLG8BA6k0Fw
+	HR7zTE5O/VJMxoh57KApeDiHZ3w==
+X-Google-Smtp-Source: AGHT+IHZdjEKlVYu6FtY/GN86g3BZXJasIvErPJCytIMKyDnWUQaijewP82m/tZHk7FzU+2ABgm22Sj7Pw/O1Kz9qg==
+X-Received: from pfbfu24.prod.google.com ([2002:a05:6a00:6118:b0:746:1fcb:a9cc])
+ (user=yuyanghuang job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:e545:b0:201:8a13:f392 with SMTP id adf61e73a8af0-21fbd55a60emr2559978637.20.1749879326787;
+ Fri, 13 Jun 2025 22:35:26 -0700 (PDT)
+Date: Sat, 14 Jun 2025 14:35:22 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250614053522.623820-1-yuyanghuang@google.com>
+Subject: [PATCH net-next, v4] selftest: Add selftest for multicast address notifications
+From: Yuyang Huang <yuyanghuang@google.com>
+To: Yuyang Huang <yuyanghuang@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"=?UTF-8?q?Maciej=20=C5=BBenczykowski?=" <maze@google.com>, Lorenzo Colitti <lorenzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Variable var->pixclock can be set by user. In case it equals to
-zero, divide by zero would occur in acornfb_validate_timing.
-Similar crashes have happened in other fbdev drivers. We fix this
-by checking whether 'pixclock' is zero.
+This commit adds a new kernel selftest to verify RTNLGRP_IPV4_MCADDR
+and RTNLGRP_IPV6_MCADDR notifications. The test works by adding and
+removing a dummy interface and then confirming that the system
+correctly receives join and removal notifications for the 224.0.0.1
+and ff02::1 multicast addresses.
 
-Similar commit: commit 16844e58704 ("video: fbdev: tridentfb:
-Error out if 'pixclock' equals zero")
+The test relies on the iproute2 version to be 6.13+.
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+Tested by the following command:
+$ vng -v --user root --cpus 16 -- \
+make -C tools/testing/selftests TARGETS=3Dnet
+TEST_PROGS=3Drtnetlink_notification.sh \
+TEST_GEN_PROGS=3D"" run_tests
+
+Cc: Maciej =C5=BBenczykowski <maze@google.com>
+Cc: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: Yuyang Huang <yuyanghuang@google.com>
 ---
- drivers/video/fbdev/acornfb.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/video/fbdev/acornfb.c b/drivers/video/fbdev/acornfb.c
-index f0600f6ca254..2dc0e64137e5 100644
---- a/drivers/video/fbdev/acornfb.c
-+++ b/drivers/video/fbdev/acornfb.c
-@@ -421,6 +421,8 @@ acornfb_validate_timing(struct fb_var_screeninfo *var,
- 	 * No need to do long long divisions or anything
- 	 * like that if you factor it correctly
- 	 */
-+	if (!var->pixclock)
-+		return -EINVAL;
- 	hs = 1953125000 / var->pixclock;
- 	hs = hs * 512 /
- 	     (var->xres + var->left_margin + var->right_margin + var->hsync_len);
--- 
-2.34.1
+Changelog since v3:
+- Refactor the test to use utilities provided by lib.h.
+- Fix shellcheck warnings.
+
+Changelog since v2:
+- Move the test case to a separate file.
+
+Changelog since v1:
+- Skip the test if the iproute2 is too old.
+
+ tools/testing/selftests/net/Makefile          |  1 +
+ .../selftests/net/rtnetlink_notification.sh   | 70 +++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+ create mode 100755 tools/testing/selftests/net/rtnetlink_notification.sh
+
+diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests=
+/net/Makefile
+index ab996bd22a5f..3abb74d563a7 100644
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@ -41,6 +41,7 @@ TEST_PROGS +=3D netns-name.sh
+ TEST_PROGS +=3D link_netns.py
+ TEST_PROGS +=3D nl_netdev.py
+ TEST_PROGS +=3D rtnetlink.py
++TEST_PROGS +=3D rtnetlink_notification.sh
+ TEST_PROGS +=3D srv6_end_dt46_l3vpn_test.sh
+ TEST_PROGS +=3D srv6_end_dt4_l3vpn_test.sh
+ TEST_PROGS +=3D srv6_end_dt6_l3vpn_test.sh
+diff --git a/tools/testing/selftests/net/rtnetlink_notification.sh b/tools/=
+testing/selftests/net/rtnetlink_notification.sh
+new file mode 100755
+index 000000000000..39c1b815bbe4
+--- /dev/null
++++ b/tools/testing/selftests/net/rtnetlink_notification.sh
+@@ -0,0 +1,70 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# This test is for checking rtnetlink notification callpaths, and get as m=
+uch
++# coverage as possible.
++#
++# set -e
++
++ALL_TESTS=3D"
++	kci_test_mcast_addr_notification
++"
++
++source lib.sh
++
++kci_test_mcast_addr_notification()
++{
++	RET=3D0
++	local tmpfile
++	local monitor_pid
++	local match_result
++	local test_dev=3D"test-dummy1"
++
++	tmpfile=3D$(mktemp)
++	defer rm "$tmpfile"
++
++	ip monitor maddr > $tmpfile &
++	monitor_pid=3D$!
++	defer kill_process "$monitor_pid"
++
++	sleep 1
++
++	if [ ! -e "/proc/$monitor_pid" ]; then
++		RET=3D$ksft_skip
++		log_test "mcast addr notification: iproute2 too old"
++		return $RET
++	fi
++
++	ip link add name "$test_dev" type dummy
++	check_err $? "failed to add dummy interface"
++	ip link set "$test_dev" up
++	check_err $? "failed to set dummy interface up"
++	ip link del dev "$test_dev"
++	check_err $? "Failed to delete dummy interface"
++	sleep 1
++
++	# There should be 4 line matches as follows.
++	# 13: test-dummy1=C2=A0 =C2=A0 inet6 mcast ff02::1 scope global=C2=A0
++	# 13: test-dummy1=C2=A0 =C2=A0 inet mcast 224.0.0.1 scope global=C2=A0
++	# Deleted 13: test-dummy1=C2=A0 =C2=A0 inet mcast 224.0.0.1 scope global=
+=C2=A0
++	# Deleted 13: test-dummy1=C2=A0 =C2=A0 inet6 mcast ff02::1 scope global=
+=C2=A0
++	match_result=3D$(grep -cE "$test_dev.*(224.0.0.1|ff02::1)" "$tmpfile")
++	if [ "$match_result" -ne 4 ]; then
++		RET=3D$ksft_fail
++	fi
++	log_test "mcast addr notification: Expected 4 matches, got $match_result"
++	return $RET
++}
++
++#check for needed privileges
++if [ "$(id -u)" -ne 0 ];then
++	RET=3D$ksft_skip
++	log_test "need root privileges"
++	exit $RET
++fi
++
++require_command ip
++
++tests_run
++
++exit $EXIT_STATUS
+--=20
+2.50.0.rc1.591.g9c95f17f64-goog
 
