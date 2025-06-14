@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBA02D9ED9;
-	Sat, 14 Jun 2025 13:49:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965DB2EACFE;
+	Sat, 14 Jun 2025 13:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749908942; cv=none; b=pXXDHMnPiT0hMB5uOmme40xvvFASHw1FrRdTixKmMsFIM0aN/5fWDtwlDyttmxBf8+YqtxDv+wFJJbXCz1wpAOePOIKtVGy8vD74f3gbTemeIfUBfleqb9PrzlYng9p2hwgW7Bx7yjNCVolR0V5aguGbHwyxZ/JzwP3eKvOnH7Q=
+	t=1749908958; cv=none; b=s6VEDrYAZJGz1yl9EP6Ty15zlsNNco1yBIysl0SPUrfNABI9Z7i0SQuwPjVt/KnDUoMvYHdUT82v55WENrLZmPmrOXoa5YCZfdxrJfDg4/lxZAKUdiQZiDN3J/HcoWZOopdrzJ6HsTzKL+33ZA/vFxT4xFWiR8P/lpU6KLJo2D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749908942; c=relaxed/simple;
-	bh=O+1OzBrm5md4mNoCVi4XOBBdMV6xDhIhhMYZresewY8=;
+	s=arc-20240116; t=1749908958; c=relaxed/simple;
+	bh=G4abd4n8OMhquGl8B0vC4XK2aT/vUVMRQ4+VJ7cqekM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IMmCYhDDmP7jaXnyeMoBdmOTlkAzn3Sl+IGMFZui2lmDA1TJKRU4yeaCJPf714ovEQwDK3+eXJTc5Ldl86gr5NL240btIEDUrMp8+rR4npwTITSaHhuKuXZwB2p38jWkzljbXzyhi440OgoqCCEFiIkh9AwabGx58gvSiUpBRQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFtDpitE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EZRXJSybwak5467+zVjilCN3G/zB1Ea1p/jsAjsnTOoHWb2pIThNt2hsiZFVTcK6WGRyTinRFLjlF0mO/Njehwin6oLnxrXOpZoKX/s1xxxTktxjzpHD375+vm7pRokhS7fxdyOdRq4IMPVlk9D9IS5IwUXbUvou7XE9qmwYh4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teM5oIFY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFtDpitE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEEEC4CEF1;
-	Sat, 14 Jun 2025 13:49:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teM5oIFY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD81FC4CEEB;
+	Sat, 14 Jun 2025 13:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749908942;
-	bh=O+1OzBrm5md4mNoCVi4XOBBdMV6xDhIhhMYZresewY8=;
+	s=k20201202; t=1749908958;
+	bh=G4abd4n8OMhquGl8B0vC4XK2aT/vUVMRQ4+VJ7cqekM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rFtDpitEmBsceY/hYuXhcm+ndWCpraqKL9O71f4+fzWE12USD5/iZSAYSu6QOKTnR
-	 Sae31zvitLTvgz0DqHua6fRWjewTw7K5zIYN0BaI7HrzdQPZ4O8bQLIpupCrxeMH2q
-	 q+jGrGEaGvAPHjRwE9fSIDweVXeb2puea5dhUNbvaj7tQas6mUMC26sZYKIjTKpBB9
-	 DmnL+yjWAOzBseMRozL9B8rnh+1SyZ1CVZqyKwJKubHSRoLLuyBjZtxVYbetG2no7J
-	 ak1OTqUK2Q3pRuaJ9bQjC5i6zLNvabcFgfyu5c/pK1hF28HwlX4/MdZ2/MM2RobykD
-	 50mxqGlGbxeig==
+	b=teM5oIFYMQGExhd5Njc/ditHNtwUwxkUK17fEJfuCvrEee6KWZI+8o3jh3z6Vyp0k
+	 wz8sDtf8p0Pxd25T7WYyOIlTEsCq8lDEHmEyxA0V6n5I0ohXnE2Il6910Km0gBLxdv
+	 EHuj4eAtXxj1zlpAZ5at/SvoOf7mub+MWj/EfV4+YTEByrfxXSbq7/FZQYOM/59rNn
+	 F/hiK/zKbRRVI5cBjEwhuvf+rUo9C728jaubiOAw6LB26PqO6d3kn2acMpoTlPRhDQ
+	 +9SF6klx43sRhfjXTqe7vR4WhF0sWPLIzJTn77hjevvDsBpVT6IFYg1ptvl326m+xZ
+	 dZbwAeYU34+WQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-api@vger.kernel.org,
 	workflows@vger.kernel.org,
 	tools@kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [RFC 01/19] kernel/api: introduce kernel API specification framework
-Date: Sat, 14 Jun 2025 09:48:40 -0400
-Message-Id: <20250614134858.790460-2-sashal@kernel.org>
+Subject: [RFC 19/19] tools/kapi: Add kernel API specification extraction tool
+Date: Sat, 14 Jun 2025 09:48:58 -0400
+Message-Id: <20250614134858.790460-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250614134858.790460-1-sashal@kernel.org>
 References: <20250614134858.790460-1-sashal@kernel.org>
@@ -44,3224 +44,2271 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a comprehensive framework for formally documenting kernel APIs with
-inline specifications. This framework provides:
-
-- Structured API documentation with parameter specifications, return
-  values, error conditions, and execution context requirements
-- Runtime validation capabilities for debugging (CONFIG_KAPI_RUNTIME_CHECKS)
-- Export of specifications via debugfs for tooling integration
-- Support for both internal kernel APIs and system calls
-
-The framework stores specifications in a dedicated ELF section and
-provides infrastructure for:
-- Compile-time validation of specifications
-- Runtime querying of API documentation
-- Machine-readable export formats
-- Integration with existing SYSCALL_DEFINE macros
-
-This commit introduces the core infrastructure without modifying any
-existing APIs. Subsequent patches will add specifications to individual
-subsystems.
+The kapi tool extracts and displays kernel API specifications.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/kernel-api-spec.rst |  507 +++++++
- MAINTAINERS                                   |    9 +
- arch/um/kernel/dyn.lds.S                      |    3 +
- arch/um/kernel/uml.lds.S                      |    3 +
- arch/x86/kernel/vmlinux.lds.S                 |    3 +
- include/asm-generic/vmlinux.lds.h             |   20 +
- include/linux/kernel_api_spec.h               |  942 +++++++++++++
- include/linux/syscall_api_spec.h              |  341 +++++
- include/linux/syscalls.h                      |    1 +
- init/Kconfig                                  |    2 +
- kernel/Makefile                               |    1 +
- kernel/api/Kconfig                            |   35 +
- kernel/api/Makefile                           |    7 +
- kernel/api/kernel_api_spec.c                  | 1169 +++++++++++++++++
- 14 files changed, 3043 insertions(+)
- create mode 100644 Documentation/admin-guide/kernel-api-spec.rst
- create mode 100644 include/linux/kernel_api_spec.h
- create mode 100644 include/linux/syscall_api_spec.h
- create mode 100644 kernel/api/Kconfig
- create mode 100644 kernel/api/Makefile
- create mode 100644 kernel/api/kernel_api_spec.c
+ Documentation/admin-guide/kernel-api-spec.rst | 198 ++++++-
+ tools/kapi/.gitignore                         |   4 +
+ tools/kapi/Cargo.toml                         |  19 +
+ tools/kapi/src/extractor/debugfs.rs           | 204 ++++++++
+ tools/kapi/src/extractor/mod.rs               |  95 ++++
+ tools/kapi/src/extractor/source_parser.rs     | 488 ++++++++++++++++++
+ .../src/extractor/vmlinux/binary_utils.rs     | 130 +++++
+ tools/kapi/src/extractor/vmlinux/mod.rs       | 372 +++++++++++++
+ tools/kapi/src/formatter/json.rs              | 170 ++++++
+ tools/kapi/src/formatter/mod.rs               |  68 +++
+ tools/kapi/src/formatter/plain.rs             |  99 ++++
+ tools/kapi/src/formatter/rst.rs               | 144 ++++++
+ tools/kapi/src/main.rs                        | 121 +++++
+ 13 files changed, 2109 insertions(+), 3 deletions(-)
+ create mode 100644 tools/kapi/.gitignore
+ create mode 100644 tools/kapi/Cargo.toml
+ create mode 100644 tools/kapi/src/extractor/debugfs.rs
+ create mode 100644 tools/kapi/src/extractor/mod.rs
+ create mode 100644 tools/kapi/src/extractor/source_parser.rs
+ create mode 100644 tools/kapi/src/extractor/vmlinux/binary_utils.rs
+ create mode 100644 tools/kapi/src/extractor/vmlinux/mod.rs
+ create mode 100644 tools/kapi/src/formatter/json.rs
+ create mode 100644 tools/kapi/src/formatter/mod.rs
+ create mode 100644 tools/kapi/src/formatter/plain.rs
+ create mode 100644 tools/kapi/src/formatter/rst.rs
+ create mode 100644 tools/kapi/src/main.rs
 
 diff --git a/Documentation/admin-guide/kernel-api-spec.rst b/Documentation/admin-guide/kernel-api-spec.rst
-new file mode 100644
-index 0000000000000..3a63f6711e27b
---- /dev/null
+index 3a63f6711e27b..9b452753111ad 100644
+--- a/Documentation/admin-guide/kernel-api-spec.rst
 +++ b/Documentation/admin-guide/kernel-api-spec.rst
-@@ -0,0 +1,507 @@
-+.. SPDX-License-Identifier: GPL-2.0
+@@ -31,7 +31,9 @@ The framework aims to:
+    common programming errors during development and testing.
+ 
+ 3. **Support Tooling**: Export API specifications in machine-readable formats for
+-   use by static analyzers, documentation generators, and development tools.
++   use by static analyzers, documentation generators, and development tools. The
++   ``kapi`` tool (see `The kapi Tool`_) provides comprehensive extraction and
++   formatting capabilities.
+ 
+ 4. **Enhance Debugging**: Provide detailed API information at runtime through debugfs
+    for debugging and introspection.
+@@ -71,6 +73,13 @@ The framework consists of several key components:
+    - Type-safe parameter specifications
+    - Context and constraint definitions
+ 
++5. **kapi Tool** (``tools/kapi/``)
 +
-+======================================
-+Kernel API Specification Framework
-+======================================
++   - Userspace utility for extracting specifications
++   - Multiple input sources (source, binary, debugfs)
++   - Multiple output formats (plain, JSON, RST)
++   - Testing and validation utilities
 +
-+:Author: Sasha Levin <sashal@kernel.org>
-+:Date: June 2025
+ Data Model
+ ----------
+ 
+@@ -344,8 +353,177 @@ Documentation Generation
+ ------------------------
+ 
+ The framework exports specifications via debugfs that can be used
+-to generate documentation. Tools for automatic documentation generation
+-from specifications are planned for future development.
++to generate documentation. The ``kapi`` tool provides comprehensive
++extraction and formatting capabilities for kernel API specifications.
 +
-+.. contents:: Table of Contents
-+   :depth: 3
-+   :local:
++The kapi Tool
++=============
 +
-+Introduction
-+============
++Overview
++--------
 +
-+The Kernel API Specification Framework (KAPI) provides a comprehensive system for
-+formally documenting, validating, and introspecting kernel APIs. This framework
-+addresses the long-standing challenge of maintaining accurate, machine-readable
-+documentation for the thousands of internal kernel APIs and system calls.
++The ``kapi`` tool is a userspace utility that extracts and displays kernel API
++specifications from multiple sources. It provides a unified interface to access
++API documentation whether from compiled kernels, source code, or runtime systems.
 +
-+Purpose and Goals
-+-----------------
++Installation
++------------
 +
-+The framework aims to:
++Build the tool from the kernel source tree::
 +
-+1. **Improve API Documentation**: Provide structured, inline documentation that
-+   lives alongside the code and is maintained as part of the development process.
++    $ cd tools/kapi
++    $ cargo build --release
 +
-+2. **Enable Runtime Validation**: Optionally validate API usage at runtime to catch
-+   common programming errors during development and testing.
++    # Optional: Install system-wide
++    $ cargo install --path .
 +
-+3. **Support Tooling**: Export API specifications in machine-readable formats for
-+   use by static analyzers, documentation generators, and development tools.
++The tool requires Rust and Cargo to build. The binary will be available at
++``tools/kapi/target/release/kapi``.
 +
-+4. **Enhance Debugging**: Provide detailed API information at runtime through debugfs
-+   for debugging and introspection.
++Command-Line Usage
++------------------
 +
-+5. **Formalize Contracts**: Explicitly document API contracts including parameter
-+   constraints, execution contexts, locking requirements, and side effects.
++Basic syntax::
 +
-+Architecture Overview
-+=====================
++    kapi [OPTIONS] [API_NAME]
 +
-+Components
-+----------
++Options:
 +
-+The framework consists of several key components:
++- ``--vmlinux <PATH>``: Extract from compiled kernel binary
++- ``--source <PATH>``: Extract from kernel source code
++- ``--debugfs <PATH>``: Extract from debugfs (default: /sys/kernel/debug)
++- ``-f, --format <FORMAT>``: Output format (plain, json, rst)
++- ``-h, --help``: Display help information
++- ``-V, --version``: Display version information
 +
-+1. **Core Framework** (``kernel/api/kernel_api_spec.c``)
++Input Modes
++-----------
 +
-+   - API specification registration and storage
-+   - Runtime validation engine
-+   - Specification lookup and querying
++**1. Source Code Mode**
 +
-+2. **DebugFS Interface** (``kernel/api/kapi_debugfs.c``)
++Extract specifications directly from kernel source::
 +
-+   - Runtime introspection via ``/sys/kernel/debug/kapi/``
-+   - JSON and XML export formats
-+   - Per-API detailed information
++    # Scan entire kernel source tree
++    $ kapi --source /path/to/linux
 +
-+3. **IOCTL Support** (``kernel/api/ioctl_validation.c``)
++    # Extract from specific file
++    $ kapi --source kernel/sched/core.c
 +
-+   - Extended framework for IOCTL specifications
-+   - Automatic validation wrappers
-+   - Structure field validation
++    # Get details for specific API
++    $ kapi --source /path/to/linux sys_sched_yield
 +
-+4. **Specification Macros** (``include/linux/kernel_api_spec.h``)
++**2. Vmlinux Mode**
 +
-+   - Declarative macros for API documentation
-+   - Type-safe parameter specifications
-+   - Context and constraint definitions
++Extract from compiled kernel with debug symbols::
 +
-+Data Model
-+----------
++    # List all APIs in vmlinux
++    $ kapi --vmlinux /boot/vmlinux-5.15.0
 +
-+The framework uses a hierarchical data model::
++    # Get specific syscall details
++    $ kapi --vmlinux ./vmlinux sys_read
 +
-+    kernel_api_spec
-+    ├── Basic Information
-+    │   ├── name (API function name)
-+    │   ├── version (specification version)
-+    │   ├── description (human-readable description)
-+    │   └── kernel_version (when API was introduced)
-+    │
-+    ├── Parameters (up to 16)
-+    │   └── kapi_param_spec
-+    │       ├── name
-+    │       ├── type (int, pointer, string, etc.)
-+    │       ├── direction (in, out, inout)
-+    │       ├── constraints (range, mask, enum values)
-+    │       └── validation rules
-+    │
-+    ├── Return Value
-+    │   └── kapi_return_spec
-+    │       ├── type
-+    │       ├── success conditions
-+    │       └── validation rules
-+    │
-+    ├── Error Conditions (up to 32)
-+    │   └── kapi_error_spec
-+    │       ├── error code
-+    │       ├── condition description
-+    │       └── recovery advice
-+    │
-+    ├── Execution Context
-+    │   ├── allowed contexts (process, interrupt, etc.)
-+    │   ├── locking requirements
-+    │   └── preemption/interrupt state
-+    │
-+    └── Side Effects
-+        ├── memory allocation
-+        ├── state changes
-+        └── signal handling
++**3. Debugfs Mode**
 +
-+Usage Guide
-+===========
++Extract from running kernel via debugfs::
 +
-+Basic API Specification
-+-----------------------
++    # Use default debugfs path
++    $ kapi
 +
-+To document a kernel API, use the specification macros in the implementation file:
++    # Use custom debugfs mount
++    $ kapi --debugfs /mnt/debugfs
 +
-+.. code-block:: c
++    # Get specific API from running kernel
++    $ kapi sys_write
 +
-+    #include <linux/kernel_api_spec.h>
++Output Formats
++--------------
 +
-+    KAPI_DEFINE_SPEC(kmalloc_spec, kmalloc, "3.0")
-+    KAPI_DESCRIPTION("Allocate kernel memory")
-+    KAPI_PARAM(0, size, KAPI_TYPE_SIZE_T, KAPI_DIR_IN,
-+               "Number of bytes to allocate")
-+    KAPI_PARAM_RANGE(0, 0, KMALLOC_MAX_SIZE)
-+    KAPI_PARAM(1, flags, KAPI_TYPE_FLAGS, KAPI_DIR_IN,
-+               "Allocation flags (GFP_*)")
-+    KAPI_PARAM_MASK(1, __GFP_BITS_MASK)
-+    KAPI_RETURN(KAPI_TYPE_POINTER, "Pointer to allocated memory or NULL")
-+    KAPI_ERROR(ENOMEM, "Out of memory")
-+    KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SOFTIRQ | KAPI_CTX_HARDIRQ)
-+    KAPI_SIDE_EFFECT("Allocates memory from kernel heap")
-+    KAPI_LOCK_NOT_REQUIRED("Any lock")
-+    KAPI_END_SPEC
++**Plain Text Format** (default)::
 +
-+    void *kmalloc(size_t size, gfp_t flags)
++    $ kapi sys_read
++
++    Detailed information for sys_read:
++    ==================================
++    Description: Read from a file descriptor
++
++    Detailed Description:
++    Reads up to count bytes from file descriptor fd into the buffer starting at buf.
++
++    Execution Context:
++      - KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE
++
++    Parameters (3):
++
++    Available since: 1.0
++
++**JSON Format**::
++
++    $ kapi --format json sys_read
 +    {
-+        /* Implementation */
++      "api_details": {
++        "name": "sys_read",
++        "description": "Read from a file descriptor",
++        "long_description": "Reads up to count bytes...",
++        "context_flags": ["KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE"],
++        "since_version": "1.0"
++      }
 +    }
 +
-+System Call Specification
-+-------------------------
++**ReStructuredText Format**::
 +
-+System calls use specialized macros:
++    $ kapi --format rst sys_read
 +
-+.. code-block:: c
++    sys_read
++    ========
 +
-+    KAPI_DEFINE_SYSCALL_SPEC(open_spec, open, "1.0")
-+    KAPI_DESCRIPTION("Open a file")
-+    KAPI_PARAM(0, pathname, KAPI_TYPE_USER_STRING, KAPI_DIR_IN,
-+               "Path to file")
-+    KAPI_PARAM_PATH(0, PATH_MAX)
-+    KAPI_PARAM(1, flags, KAPI_TYPE_FLAGS, KAPI_DIR_IN,
-+               "Open flags (O_*)")
-+    KAPI_PARAM(2, mode, KAPI_TYPE_MODE_T, KAPI_DIR_IN,
-+               "File permissions (if creating)")
-+    KAPI_RETURN(KAPI_TYPE_INT, "File descriptor or -1")
-+    KAPI_ERROR(EACCES, "Permission denied")
-+    KAPI_ERROR(ENOENT, "File does not exist")
-+    KAPI_ERROR(EMFILE, "Too many open files")
-+    KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+    KAPI_SIGNAL(EINTR, "Open can be interrupted by signal")
-+    KAPI_END_SYSCALL_SPEC
++    **Read from a file descriptor**
 +
-+IOCTL Specification
-+-------------------
-+
-+IOCTLs have extended support for structure validation:
-+
-+.. code-block:: c
-+
-+    KAPI_DEFINE_IOCTL_SPEC(vidioc_querycap_spec, VIDIOC_QUERYCAP,
-+                           "VIDIOC_QUERYCAP",
-+                           sizeof(struct v4l2_capability),
-+                           sizeof(struct v4l2_capability),
-+                           "video_fops")
-+    KAPI_DESCRIPTION("Query device capabilities")
-+    KAPI_IOCTL_FIELD(driver, KAPI_TYPE_CHAR_ARRAY, KAPI_DIR_OUT,
-+                     "Driver name", 16)
-+    KAPI_IOCTL_FIELD(card, KAPI_TYPE_CHAR_ARRAY, KAPI_DIR_OUT,
-+                     "Device name", 32)
-+    KAPI_IOCTL_FIELD(version, KAPI_TYPE_U32, KAPI_DIR_OUT,
-+                     "Driver version")
-+    KAPI_IOCTL_FIELD(capabilities, KAPI_TYPE_FLAGS, KAPI_DIR_OUT,
-+                     "Device capabilities")
-+    KAPI_END_IOCTL_SPEC
-+
-+Runtime Validation
-+==================
-+
-+Enabling Validation
-+-------------------
-+
-+Runtime validation is controlled by kernel configuration:
-+
-+1. Enable ``CONFIG_KAPI_SPEC`` to build the framework
-+2. Enable ``CONFIG_KAPI_RUNTIME_CHECKS`` for runtime validation
-+3. Optionally enable ``CONFIG_KAPI_SPEC_DEBUGFS`` for debugfs interface
-+
-+Validation Modes
-+----------------
-+
-+The framework supports several validation modes:
-+
-+.. code-block:: c
-+
-+    /* Enable validation for specific API */
-+    kapi_enable_validation("kmalloc");
-+
-+    /* Enable validation for all APIs */
-+    kapi_enable_all_validation();
-+
-+    /* Set validation level */
-+    kapi_set_validation_level(KAPI_VALIDATE_FULL);
-+
-+Validation Levels:
-+
-+- ``KAPI_VALIDATE_NONE``: No validation
-+- ``KAPI_VALIDATE_BASIC``: Type and NULL checks only
-+- ``KAPI_VALIDATE_NORMAL``: Basic + range and constraint checks
-+- ``KAPI_VALIDATE_FULL``: All checks including custom validators
-+
-+Custom Validators
-+-----------------
-+
-+APIs can register custom validation functions:
-+
-+.. code-block:: c
-+
-+    static bool validate_buffer_size(const struct kapi_param_spec *spec,
-+                                     const void *value, void *context)
-+    {
-+        size_t size = *(size_t *)value;
-+        struct my_context *ctx = context;
-+
-+        return size > 0 && size <= ctx->max_buffer_size;
-+    }
-+
-+    KAPI_PARAM_CUSTOM_VALIDATOR(0, validate_buffer_size)
-+
-+DebugFS Interface
-+=================
-+
-+The debugfs interface provides runtime access to API specifications:
-+
-+Directory Structure
-+-------------------
-+
-+::
-+
-+    /sys/kernel/debug/kapi/
-+    ├── apis/                    # All registered APIs
-+    │   ├── kmalloc/
-+    │   │   ├── specification   # Human-readable spec
-+    │   │   ├── json           # JSON format
-+    │   │   └── xml            # XML format
-+    │   └── open/
-+    │       └── ...
-+    ├── summary                  # Overview of all APIs
-+    ├── validation/              # Validation controls
-+    │   ├── enabled             # Global enable/disable
-+    │   ├── level               # Validation level
-+    │   └── stats               # Validation statistics
-+    └── export/                  # Bulk export options
-+        ├── all.json            # All specs in JSON
-+        └── all.xml             # All specs in XML
++    Reads up to count bytes from file descriptor fd into the buffer...
 +
 +Usage Examples
 +--------------
 +
-+Query specific API::
++**Generate complete API documentation**::
 +
-+    $ cat /sys/kernel/debug/kapi/apis/kmalloc/specification
-+    API: kmalloc
-+    Version: 3.0
-+    Description: Allocate kernel memory
++    # Export all kernel APIs to JSON
++    $ kapi --source /path/to/linux --format json > kernel-apis.json
 +
-+    Parameters:
-+      [0] size (size_t, in): Number of bytes to allocate
-+          Range: 0 - 4194304
-+      [1] flags (flags, in): Allocation flags (GFP_*)
-+          Mask: 0x1ffffff
++    # Generate RST documentation for all syscalls
++    $ kapi --vmlinux ./vmlinux --format rst > syscalls.rst
 +
-+    Returns: pointer - Pointer to allocated memory or NULL
++    # List APIs from specific subsystem
++    $ kapi --source drivers/gpu/drm/
 +
-+    Errors:
-+      ENOMEM: Out of memory
++**Integration with other tools**::
 +
-+    Context: process, softirq, hardirq
++    # Find all APIs that can sleep
++    $ kapi --format json | jq '.apis[] | select(.context_flags[] | contains("SLEEPABLE"))'
 +
-+    Side Effects:
-+      - Allocates memory from kernel heap
++    # Generate markdown documentation
++    $ kapi --format rst sys_mmap | pandoc -f rst -t markdown
 +
-+Export all specifications::
++**Debugging and analysis**::
 +
-+    $ cat /sys/kernel/debug/kapi/export/all.json > kernel-apis.json
++    # Compare API between kernel versions
++    $ diff <(kapi --vmlinux vmlinux-5.10) <(kapi --vmlinux vmlinux-5.15)
 +
-+Enable validation for specific API::
++    # Check if specific API exists
++    $ kapi --source . my_custom_api || echo "API not found"
 +
-+    $ echo 1 > /sys/kernel/debug/kapi/apis/kmalloc/validate
-+
-+Performance Considerations
-+==========================
-+
-+Memory Overhead
-+---------------
-+
-+Each API specification consumes approximately 2-4KB of memory. With thousands
-+of kernel APIs, this can add up to several megabytes. Consider:
-+
-+1. Building with ``CONFIG_KAPI_SPEC=n`` for production kernels
-+2. Using ``__init`` annotations for APIs only used during boot
-+3. Implementing lazy loading for rarely used specifications
-+
-+Runtime Overhead
-+----------------
-+
-+When ``CONFIG_KAPI_RUNTIME_CHECKS`` is enabled:
-+
-+- Each validated API call adds 50-200ns overhead
-+- Complex validations (custom validators) may add more
-+- Use validation only in development/testing kernels
-+
-+Optimization Strategies
-+-----------------------
-+
-+1. **Compile-time optimization**: When validation is disabled, all
-+   validation code is optimized away by the compiler.
-+
-+2. **Selective validation**: Enable validation only for specific APIs
-+   or subsystems under test.
-+
-+3. **Caching**: The framework caches validation results for repeated
-+   calls with identical parameters.
-+
-+Documentation Generation
-+------------------------
-+
-+The framework exports specifications via debugfs that can be used
-+to generate documentation. Tools for automatic documentation generation
-+from specifications are planned for future development.
-+
-+IDE Integration
-+---------------
-+
-+Modern IDEs can use the JSON export for:
-+
-+- Parameter hints
-+- Type checking
-+- Context validation
-+- Error code documentation
-+
-+Testing Framework
-+-----------------
-+
-+The framework includes test helpers::
-+
-+    #ifdef CONFIG_KAPI_TESTING
-+    /* Verify API behaves according to specification */
-+    kapi_test_api("kmalloc", test_cases);
-+    #endif
-+
-+Best Practices
-+==============
-+
-+Writing Specifications
++Implementation Details
 +----------------------
 +
-+1. **Be Comprehensive**: Document all parameters, errors, and side effects
-+2. **Keep Updated**: Update specs when API behavior changes
-+3. **Use Examples**: Include usage examples in descriptions
-+4. **Validate Constraints**: Define realistic constraints for parameters
-+5. **Document Context**: Clearly specify allowed execution contexts
++The tool extracts API specifications from three sources:
 +
-+Maintenance
-+-----------
++1. **Source Code**: Parses KAPI specification macros using regular expressions
++2. **Vmlinux**: Reads the ``.kapi_specs`` ELF section from compiled kernels
++3. **Debugfs**: Reads from ``/sys/kernel/debug/kapi/`` filesystem interface
 +
-+1. **Version Specifications**: Increment version when API changes
-+2. **Deprecation**: Mark deprecated APIs and suggest replacements
-+3. **Cross-reference**: Link related APIs in descriptions
-+4. **Test Specifications**: Verify specs match implementation
++The tool supports all KAPI specification types:
 +
-+Common Patterns
-+---------------
-+
-+**Optional Parameters**::
-+
-+    KAPI_PARAM(2, optional_arg, KAPI_TYPE_POINTER, KAPI_DIR_IN,
-+               "Optional argument (may be NULL)")
-+    KAPI_PARAM_OPTIONAL(2)
-+
-+**Variable Arguments**::
-+
-+    KAPI_PARAM(1, fmt, KAPI_TYPE_FORMAT_STRING, KAPI_DIR_IN,
-+               "Printf-style format string")
-+    KAPI_PARAM_VARIADIC(2, "Format arguments")
-+
-+**Callback Functions**::
-+
-+    KAPI_PARAM(1, callback, KAPI_TYPE_FUNCTION_PTR, KAPI_DIR_IN,
-+               "Callback function")
-+    KAPI_PARAM_CALLBACK(1, "int (*)(void *data)", "data")
-+
-+Troubleshooting
-+===============
-+
-+Common Issues
-+-------------
-+
-+**Specification Not Found**::
-+
-+    kernel: KAPI: Specification for 'my_api' not found
-+
-+    Solution: Ensure KAPI_DEFINE_SPEC is in the same translation unit
-+    as the function implementation.
-+
-+**Validation Failures**::
-+
-+    kernel: KAPI: Validation failed for kmalloc parameter 'size':
-+            value 5242880 exceeds maximum 4194304
-+
-+    Solution: Check parameter constraints or adjust specification if
-+    the constraint is incorrect.
-+
-+**Build Errors**::
-+
-+    error: 'KAPI_TYPE_UNKNOWN' undeclared
-+
-+    Solution: Include <linux/kernel_api_spec.h> and ensure
-+    CONFIG_KAPI_SPEC is enabled.
-+
-+Debug Options
-+-------------
-+
-+Enable verbose debugging::
-+
-+    echo 8 > /proc/sys/kernel/printk
-+    echo 1 > /sys/kernel/debug/kapi/debug/verbose
-+
-+Future Directions
-+=================
-+
-+Planned Features
-+----------------
-+
-+1. **Automatic Extraction**: Tool to extract specifications from existing
-+   kernel-doc comments
-+
-+2. **Contract Verification**: Static analysis to verify implementation
-+   matches specification
-+
-+3. **Performance Profiling**: Measure actual API performance against
-+   documented expectations
-+
-+4. **Fuzzing Integration**: Use specifications to guide intelligent
-+   fuzzing of kernel APIs
-+
-+5. **Version Compatibility**: Track API changes across kernel versions
-+
-+Research Areas
-+--------------
-+
-+1. **Formal Verification**: Use specifications for mathematical proofs
-+   of correctness
-+
-+2. **Runtime Monitoring**: Detect specification violations in production
-+   with minimal overhead
-+
-+3. **API Evolution**: Analyze how kernel APIs change over time
-+
-+4. **Security Applications**: Use specifications for security policy
-+   enforcement
-+
-+Contributing
-+============
-+
-+Submitting Specifications
-+-------------------------
-+
-+1. Add specifications to the same file as the API implementation
-+2. Follow existing patterns and naming conventions
-+3. Test with CONFIG_KAPI_RUNTIME_CHECKS enabled
-+4. Verify debugfs output is correct
-+5. Run scripts/checkpatch.pl on your changes
-+
-+Review Criteria
-+---------------
-+
-+Specifications will be reviewed for:
-+
-+1. **Completeness**: All parameters and errors documented
-+2. **Accuracy**: Specification matches implementation
-+3. **Clarity**: Descriptions are clear and helpful
-+4. **Consistency**: Follows framework conventions
-+5. **Performance**: No unnecessary runtime overhead
-+
-+Contact
-+-------
-+
-+- Maintainer: Sasha Levin <sashal@kernel.org>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa163..7a2cb663131bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13047,6 +13047,15 @@ W:	https://linuxtv.org
- T:	git git://linuxtv.org/media.git
- F:	drivers/media/radio/radio-keene*
++- System calls (``DEFINE_KERNEL_API_SPEC``)
++- IOCTLs (``DEFINE_IOCTL_API_SPEC``)
++- Kernel functions (``KAPI_DEFINE_SPEC``)
  
-+KERNEL API SPECIFICATION FRAMEWORK (KAPI)
-+M:	Sasha Levin <sashal@kernel.org>
-+L:	linux-api@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/admin-guide/kernel-api-spec.rst
-+F:	include/linux/kernel_api_spec.h
-+F:	kernel/api/
-+F:	scripts/extract-kapi-spec.sh
-+
- KERNEL AUTOMOUNTER
- M:	Ian Kent <raven@themaw.net>
- L:	autofs@vger.kernel.org
-diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
-index a36b7918a011a..283ab11788d8c 100644
---- a/arch/um/kernel/dyn.lds.S
-+++ b/arch/um/kernel/dyn.lds.S
-@@ -102,6 +102,9 @@ SECTIONS
-   init.data : { INIT_DATA }
-   __init_end = .;
+ IDE Integration
+ ---------------
+@@ -357,6 +535,11 @@ Modern IDEs can use the JSON export for:
+ - Context validation
+ - Error code documentation
  
-+  /* Kernel API specifications in dedicated section */
-+  KAPI_SPECS_SECTION()
++Example IDE integration::
 +
-   /* Ensure the __preinit_array_start label is properly aligned.  We
-      could instead move the label definition inside the section, but
-      the linker would then create the section even if it turns out to
-diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
-index a409d4b66114f..e3850d8293436 100644
---- a/arch/um/kernel/uml.lds.S
-+++ b/arch/um/kernel/uml.lds.S
-@@ -74,6 +74,9 @@ SECTIONS
-   init.data : { INIT_DATA }
-   __init_end = .;
++    # Generate IDE completion data
++    $ kapi --format json > .vscode/kernel-apis.json
++
+ Testing Framework
+ -----------------
  
-+  /* Kernel API specifications in dedicated section */
-+  KAPI_SPECS_SECTION()
-+
-   .data    :
-   {
-     INIT_TASK_DATA(KERNEL_STACK_SIZE)
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 4fa0be732af10..8cc508adc9d51 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -173,6 +173,9 @@ SECTIONS
- 	RO_DATA(PAGE_SIZE)
- 	X86_ALIGN_RODATA_END
+@@ -367,6 +550,15 @@ The framework includes test helpers::
+     kapi_test_api("kmalloc", test_cases);
+     #endif
  
-+	/* Kernel API specifications in dedicated section */
-+	KAPI_SPECS_SECTION()
++The kapi tool can verify specifications against implementations::
 +
- 	/* Data */
- 	.data : AT(ADDR(.data) - LOAD_OFFSET) {
- 		/* Start of data section */
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index fa5f19b8d53a0..7b47736057e01 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -279,6 +279,26 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- #define TRACE_SYSCALLS()
- #endif
++    # Run consistency tests
++    $ cd tools/kapi
++    $ ./test_consistency.sh
++
++    # Compare source vs binary specifications
++    $ ./compare_all_syscalls.sh
++
+ Best Practices
+ ==============
  
-+#ifdef CONFIG_KAPI_SPEC
-+#define KAPI_SPECS()				\
-+	. = ALIGN(8);				\
-+	__start_kapi_specs = .;			\
-+	KEEP(*(.kapi_specs))			\
-+	__stop_kapi_specs = .;
-+
-+/* For placing KAPI specs in a dedicated section */
-+#define KAPI_SPECS_SECTION()			\
-+	.kapi_specs : AT(ADDR(.kapi_specs) - LOAD_OFFSET) {	\
-+		. = ALIGN(8);			\
-+		__start_kapi_specs = .;		\
-+		KEEP(*(.kapi_specs))		\
-+		__stop_kapi_specs = .;		\
-+	}
-+#else
-+#define KAPI_SPECS()
-+#define KAPI_SPECS_SECTION()
-+#endif
-+
- #ifdef CONFIG_BPF_EVENTS
- #define BPF_RAW_TP() STRUCT_ALIGN();				\
- 	BOUNDED_SECTION_BY(__bpf_raw_tp_map, __bpf_raw_tp)
-diff --git a/include/linux/kernel_api_spec.h b/include/linux/kernel_api_spec.h
+diff --git a/tools/kapi/.gitignore b/tools/kapi/.gitignore
 new file mode 100644
-index 0000000000000..04df5892bc6d6
+index 0000000000000..1390bfc12686c
 --- /dev/null
-+++ b/include/linux/kernel_api_spec.h
-@@ -0,0 +1,942 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * kernel_api_spec.h - Kernel API Formal Specification Framework
-+ *
-+ * This framework provides structures and macros to formally specify kernel APIs
-+ * in both human and machine-readable formats. It supports comprehensive documentation
-+ * of function signatures, parameters, return values, error conditions, and constraints.
-+ */
-+
-+#ifndef _LINUX_KERNEL_API_SPEC_H
-+#define _LINUX_KERNEL_API_SPEC_H
-+
-+#include <linux/types.h>
-+#include <linux/stringify.h>
-+#include <linux/compiler.h>
-+
-+#define KAPI_MAX_PARAMS		16
-+#define KAPI_MAX_ERRORS		32
-+#define KAPI_MAX_CONSTRAINTS	16
-+#define KAPI_MAX_SIGNALS	32
-+#define KAPI_MAX_NAME_LEN	128
-+#define KAPI_MAX_DESC_LEN	512
-+
-+/**
-+ * enum kapi_param_type - Parameter type classification
-+ * @KAPI_TYPE_VOID: void type
-+ * @KAPI_TYPE_INT: Integer types (int, long, etc.)
-+ * @KAPI_TYPE_UINT: Unsigned integer types
-+ * @KAPI_TYPE_PTR: Pointer types
-+ * @KAPI_TYPE_STRUCT: Structure types
-+ * @KAPI_TYPE_UNION: Union types
-+ * @KAPI_TYPE_ENUM: Enumeration types
-+ * @KAPI_TYPE_FUNC_PTR: Function pointer types
-+ * @KAPI_TYPE_ARRAY: Array types
-+ * @KAPI_TYPE_FD: File descriptor - validated in process context
-+ * @KAPI_TYPE_USER_PTR: User space pointer - validated for access and size
-+ * @KAPI_TYPE_PATH: Pathname - validated for access and path limits
-+ * @KAPI_TYPE_CUSTOM: Custom/complex types
-+ */
-+enum kapi_param_type {
-+	KAPI_TYPE_VOID = 0,
-+	KAPI_TYPE_INT,
-+	KAPI_TYPE_UINT,
-+	KAPI_TYPE_PTR,
-+	KAPI_TYPE_STRUCT,
-+	KAPI_TYPE_UNION,
-+	KAPI_TYPE_ENUM,
-+	KAPI_TYPE_FUNC_PTR,
-+	KAPI_TYPE_ARRAY,
-+	KAPI_TYPE_FD,		/* File descriptor - validated in process context */
-+	KAPI_TYPE_USER_PTR,	/* User space pointer - validated for access and size */
-+	KAPI_TYPE_PATH,		/* Pathname - validated for access and path limits */
-+	KAPI_TYPE_CUSTOM,
-+};
-+
-+/**
-+ * enum kapi_param_flags - Parameter attribute flags
-+ * @KAPI_PARAM_IN: Input parameter
-+ * @KAPI_PARAM_OUT: Output parameter
-+ * @KAPI_PARAM_INOUT: Input/output parameter
-+ * @KAPI_PARAM_OPTIONAL: Optional parameter (can be NULL)
-+ * @KAPI_PARAM_CONST: Const qualified parameter
-+ * @KAPI_PARAM_VOLATILE: Volatile qualified parameter
-+ * @KAPI_PARAM_USER: User space pointer
-+ * @KAPI_PARAM_DMA: DMA-capable memory required
-+ * @KAPI_PARAM_ALIGNED: Alignment requirements
-+ */
-+enum kapi_param_flags {
-+	KAPI_PARAM_IN		= (1 << 0),
-+	KAPI_PARAM_OUT		= (1 << 1),
-+	KAPI_PARAM_INOUT	= (1 << 2),
-+	KAPI_PARAM_OPTIONAL	= (1 << 3),
-+	KAPI_PARAM_CONST	= (1 << 4),
-+	KAPI_PARAM_VOLATILE	= (1 << 5),
-+	KAPI_PARAM_USER		= (1 << 6),
-+	KAPI_PARAM_DMA		= (1 << 7),
-+	KAPI_PARAM_ALIGNED	= (1 << 8),
-+};
-+
-+/**
-+ * enum kapi_context_flags - Function execution context flags
-+ * @KAPI_CTX_PROCESS: Can be called from process context
-+ * @KAPI_CTX_SOFTIRQ: Can be called from softirq context
-+ * @KAPI_CTX_HARDIRQ: Can be called from hardirq context
-+ * @KAPI_CTX_NMI: Can be called from NMI context
-+ * @KAPI_CTX_ATOMIC: Must be called in atomic context
-+ * @KAPI_CTX_SLEEPABLE: May sleep
-+ * @KAPI_CTX_PREEMPT_DISABLED: Requires preemption disabled
-+ * @KAPI_CTX_IRQ_DISABLED: Requires interrupts disabled
-+ */
-+enum kapi_context_flags {
-+	KAPI_CTX_PROCESS	= (1 << 0),
-+	KAPI_CTX_SOFTIRQ	= (1 << 1),
-+	KAPI_CTX_HARDIRQ	= (1 << 2),
-+	KAPI_CTX_NMI		= (1 << 3),
-+	KAPI_CTX_ATOMIC		= (1 << 4),
-+	KAPI_CTX_SLEEPABLE	= (1 << 5),
-+	KAPI_CTX_PREEMPT_DISABLED = (1 << 6),
-+	KAPI_CTX_IRQ_DISABLED	= (1 << 7),
-+};
-+
-+/**
-+ * enum kapi_lock_type - Lock types used/required by the function
-+ * @KAPI_LOCK_NONE: No locking requirements
-+ * @KAPI_LOCK_MUTEX: Mutex lock
-+ * @KAPI_LOCK_SPINLOCK: Spinlock
-+ * @KAPI_LOCK_RWLOCK: Read-write lock
-+ * @KAPI_LOCK_SEQLOCK: Sequence lock
-+ * @KAPI_LOCK_RCU: RCU lock
-+ * @KAPI_LOCK_SEMAPHORE: Semaphore
-+ * @KAPI_LOCK_CUSTOM: Custom locking mechanism
-+ */
-+enum kapi_lock_type {
-+	KAPI_LOCK_NONE = 0,
-+	KAPI_LOCK_MUTEX,
-+	KAPI_LOCK_SPINLOCK,
-+	KAPI_LOCK_RWLOCK,
-+	KAPI_LOCK_SEQLOCK,
-+	KAPI_LOCK_RCU,
-+	KAPI_LOCK_SEMAPHORE,
-+	KAPI_LOCK_CUSTOM,
-+};
-+
-+/**
-+ * enum kapi_constraint_type - Types of parameter constraints
-+ * @KAPI_CONSTRAINT_NONE: No constraint
-+ * @KAPI_CONSTRAINT_RANGE: Numeric range constraint
-+ * @KAPI_CONSTRAINT_MASK: Bitmask constraint
-+ * @KAPI_CONSTRAINT_ENUM: Enumerated values constraint
-+ * @KAPI_CONSTRAINT_CUSTOM: Custom validation function
-+ */
-+enum kapi_constraint_type {
-+	KAPI_CONSTRAINT_NONE = 0,
-+	KAPI_CONSTRAINT_RANGE,
-+	KAPI_CONSTRAINT_MASK,
-+	KAPI_CONSTRAINT_ENUM,
-+	KAPI_CONSTRAINT_CUSTOM,
-+};
-+
-+/**
-+ * struct kapi_param_spec - Parameter specification
-+ * @name: Parameter name
-+ * @type_name: Type name as string
-+ * @type: Parameter type classification
-+ * @flags: Parameter attribute flags
-+ * @size: Size in bytes (for arrays/buffers)
-+ * @alignment: Required alignment
-+ * @min_value: Minimum valid value (for numeric types)
-+ * @max_value: Maximum valid value (for numeric types)
-+ * @valid_mask: Valid bits mask (for flag parameters)
-+ * @enum_values: Array of valid enumerated values
-+ * @enum_count: Number of valid enumerated values
-+ * @constraint_type: Type of constraint applied
-+ * @validate: Custom validation function
-+ * @description: Human-readable description
-+ * @constraints: Additional constraints description
-+ * @size_param_idx: Index of parameter that determines size (-1 if fixed size)
-+ * @size_multiplier: Multiplier for size calculation (e.g., sizeof(struct))
-+ */
-+struct kapi_param_spec {
-+	char name[KAPI_MAX_NAME_LEN];
-+	char type_name[KAPI_MAX_NAME_LEN];
-+	enum kapi_param_type type;
-+	u32 flags;
-+	size_t size;
-+	size_t alignment;
-+	s64 min_value;
-+	s64 max_value;
-+	u64 valid_mask;
-+	const s64 *enum_values;
-+	u32 enum_count;
-+	enum kapi_constraint_type constraint_type;
-+	bool (*validate)(s64 value);
-+	char description[KAPI_MAX_DESC_LEN];
-+	char constraints[KAPI_MAX_DESC_LEN];
-+	int size_param_idx;	/* Index of param that determines size, -1 if N/A */
-+	size_t size_multiplier;	/* Size per unit (e.g., sizeof(struct epoll_event)) */
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_error_spec - Error condition specification
-+ * @error_code: Error code value
-+ * @name: Error code name (e.g., "EINVAL")
-+ * @condition: Condition that triggers this error
-+ * @description: Detailed error description
-+ */
-+struct kapi_error_spec {
-+	int error_code;
-+	char name[KAPI_MAX_NAME_LEN];
-+	char condition[KAPI_MAX_DESC_LEN];
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * enum kapi_return_check_type - Return value check types
-+ * @KAPI_RETURN_EXACT: Success is an exact value
-+ * @KAPI_RETURN_RANGE: Success is within a range
-+ * @KAPI_RETURN_ERROR_CHECK: Success is when NOT in error list
-+ * @KAPI_RETURN_FD: Return value is a file descriptor (>= 0 is success)
-+ * @KAPI_RETURN_CUSTOM: Custom validation function
-+ */
-+enum kapi_return_check_type {
-+	KAPI_RETURN_EXACT,
-+	KAPI_RETURN_RANGE,
-+	KAPI_RETURN_ERROR_CHECK,
-+	KAPI_RETURN_FD,
-+	KAPI_RETURN_CUSTOM,
-+};
-+
-+/**
-+ * struct kapi_return_spec - Return value specification
-+ * @type_name: Return type name
-+ * @type: Return type classification
-+ * @check_type: Type of success check to perform
-+ * @success_value: Exact value indicating success (for EXACT)
-+ * @success_min: Minimum success value (for RANGE)
-+ * @success_max: Maximum success value (for RANGE)
-+ * @error_values: Array of error values (for ERROR_CHECK)
-+ * @error_count: Number of error values
-+ * @is_success: Custom function to check success
-+ * @description: Return value description
-+ */
-+struct kapi_return_spec {
-+	char type_name[KAPI_MAX_NAME_LEN];
-+	enum kapi_param_type type;
-+	enum kapi_return_check_type check_type;
-+	s64 success_value;
-+	s64 success_min;
-+	s64 success_max;
-+	const s64 *error_values;
-+	u32 error_count;
-+	bool (*is_success)(s64 retval);
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_lock_spec - Lock requirement specification
-+ * @lock_name: Name of the lock
-+ * @lock_type: Type of lock
-+ * @acquired: Whether function acquires this lock
-+ * @released: Whether function releases this lock
-+ * @held_on_entry: Whether lock must be held on entry
-+ * @held_on_exit: Whether lock is held on exit
-+ * @description: Additional lock requirements
-+ */
-+struct kapi_lock_spec {
-+	char lock_name[KAPI_MAX_NAME_LEN];
-+	enum kapi_lock_type lock_type;
-+	bool acquired;
-+	bool released;
-+	bool held_on_entry;
-+	bool held_on_exit;
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_constraint_spec - Additional constraint specification
-+ * @name: Constraint name
-+ * @description: Constraint description
-+ * @expression: Formal expression (if applicable)
-+ */
-+struct kapi_constraint_spec {
-+	char name[KAPI_MAX_NAME_LEN];
-+	char description[KAPI_MAX_DESC_LEN];
-+	char expression[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * enum kapi_signal_direction - Signal flow direction
-+ * @KAPI_SIGNAL_RECEIVE: Function may receive this signal
-+ * @KAPI_SIGNAL_SEND: Function may send this signal
-+ * @KAPI_SIGNAL_HANDLE: Function handles this signal specially
-+ * @KAPI_SIGNAL_BLOCK: Function blocks this signal
-+ * @KAPI_SIGNAL_IGNORE: Function ignores this signal
-+ */
-+enum kapi_signal_direction {
-+	KAPI_SIGNAL_RECEIVE	= (1 << 0),
-+	KAPI_SIGNAL_SEND	= (1 << 1),
-+	KAPI_SIGNAL_HANDLE	= (1 << 2),
-+	KAPI_SIGNAL_BLOCK	= (1 << 3),
-+	KAPI_SIGNAL_IGNORE	= (1 << 4),
-+};
-+
-+/**
-+ * enum kapi_signal_action - What the function does with the signal
-+ * @KAPI_SIGNAL_ACTION_DEFAULT: Default signal action applies
-+ * @KAPI_SIGNAL_ACTION_TERMINATE: Causes termination
-+ * @KAPI_SIGNAL_ACTION_COREDUMP: Causes termination with core dump
-+ * @KAPI_SIGNAL_ACTION_STOP: Stops the process
-+ * @KAPI_SIGNAL_ACTION_CONTINUE: Continues a stopped process
-+ * @KAPI_SIGNAL_ACTION_CUSTOM: Custom handling described in notes
-+ * @KAPI_SIGNAL_ACTION_RETURN: Returns from syscall with EINTR
-+ * @KAPI_SIGNAL_ACTION_RESTART: Restarts the syscall
-+ */
-+enum kapi_signal_action {
-+	KAPI_SIGNAL_ACTION_DEFAULT = 0,
-+	KAPI_SIGNAL_ACTION_TERMINATE,
-+	KAPI_SIGNAL_ACTION_COREDUMP,
-+	KAPI_SIGNAL_ACTION_STOP,
-+	KAPI_SIGNAL_ACTION_CONTINUE,
-+	KAPI_SIGNAL_ACTION_CUSTOM,
-+	KAPI_SIGNAL_ACTION_RETURN,
-+	KAPI_SIGNAL_ACTION_RESTART,
-+};
-+
-+/**
-+ * struct kapi_signal_spec - Signal specification
-+ * @signal_num: Signal number (e.g., SIGKILL, SIGTERM)
-+ * @signal_name: Signal name as string
-+ * @direction: Direction flags (OR of kapi_signal_direction)
-+ * @action: What happens when signal is received
-+ * @target: Description of target process/thread for sent signals
-+ * @condition: Condition under which signal is sent/received/handled
-+ * @description: Detailed description of signal handling
-+ * @restartable: Whether syscall is restartable after this signal
-+ */
-+struct kapi_signal_spec {
-+	int signal_num;
-+	char signal_name[32];
-+	u32 direction;
-+	enum kapi_signal_action action;
-+	char target[KAPI_MAX_DESC_LEN];
-+	char condition[KAPI_MAX_DESC_LEN];
-+	char description[KAPI_MAX_DESC_LEN];
-+	bool restartable;
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_signal_mask_spec - Signal mask specification
-+ * @mask_name: Name of the signal mask
-+ * @signals: Array of signal numbers in the mask
-+ * @signal_count: Number of signals in the mask
-+ * @description: Description of what this mask represents
-+ */
-+struct kapi_signal_mask_spec {
-+	char mask_name[KAPI_MAX_NAME_LEN];
-+	int signals[KAPI_MAX_SIGNALS];
-+	u32 signal_count;
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_struct_field - Structure field specification
-+ * @name: Field name
-+ * @type: Field type classification
-+ * @type_name: Type name as string
-+ * @offset: Offset within structure
-+ * @size: Size of field in bytes
-+ * @flags: Field attribute flags
-+ * @constraint_type: Type of constraint applied
-+ * @min_value: Minimum valid value (for numeric types)
-+ * @max_value: Maximum valid value (for numeric types)
-+ * @valid_mask: Valid bits mask (for flag fields)
-+ * @description: Field description
-+ */
-+struct kapi_struct_field {
-+	char name[KAPI_MAX_NAME_LEN];
-+	enum kapi_param_type type;
-+	char type_name[KAPI_MAX_NAME_LEN];
-+	size_t offset;
-+	size_t size;
-+	u32 flags;
-+	enum kapi_constraint_type constraint_type;
-+	s64 min_value;
-+	s64 max_value;
-+	u64 valid_mask;
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_struct_spec - Structure type specification
-+ * @name: Structure name
-+ * @size: Total size of structure
-+ * @alignment: Required alignment
-+ * @field_count: Number of fields
-+ * @fields: Field specifications
-+ * @description: Structure description
-+ */
-+struct kapi_struct_spec {
-+	char name[KAPI_MAX_NAME_LEN];
-+	size_t size;
-+	size_t alignment;
-+	u32 field_count;
-+	struct kapi_struct_field fields[KAPI_MAX_PARAMS];
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+/**
-+ * enum kapi_side_effect_type - Types of side effects
-+ * @KAPI_EFFECT_NONE: No side effects
-+ * @KAPI_EFFECT_ALLOC_MEMORY: Allocates memory
-+ * @KAPI_EFFECT_FREE_MEMORY: Frees memory
-+ * @KAPI_EFFECT_MODIFY_STATE: Modifies global/shared state
-+ * @KAPI_EFFECT_SIGNAL_SEND: Sends signals
-+ * @KAPI_EFFECT_FILE_POSITION: Modifies file position
-+ * @KAPI_EFFECT_LOCK_ACQUIRE: Acquires locks
-+ * @KAPI_EFFECT_LOCK_RELEASE: Releases locks
-+ * @KAPI_EFFECT_RESOURCE_CREATE: Creates system resources (FDs, PIDs, etc)
-+ * @KAPI_EFFECT_RESOURCE_DESTROY: Destroys system resources
-+ * @KAPI_EFFECT_SCHEDULE: May cause scheduling/context switch
-+ * @KAPI_EFFECT_HARDWARE: Interacts with hardware
-+ * @KAPI_EFFECT_NETWORK: Network I/O operation
-+ * @KAPI_EFFECT_FILESYSTEM: Filesystem modification
-+ * @KAPI_EFFECT_PROCESS_STATE: Modifies process state
-+ */
-+enum kapi_side_effect_type {
-+	KAPI_EFFECT_NONE = 0,
-+	KAPI_EFFECT_ALLOC_MEMORY = (1 << 0),
-+	KAPI_EFFECT_FREE_MEMORY = (1 << 1),
-+	KAPI_EFFECT_MODIFY_STATE = (1 << 2),
-+	KAPI_EFFECT_SIGNAL_SEND = (1 << 3),
-+	KAPI_EFFECT_FILE_POSITION = (1 << 4),
-+	KAPI_EFFECT_LOCK_ACQUIRE = (1 << 5),
-+	KAPI_EFFECT_LOCK_RELEASE = (1 << 6),
-+	KAPI_EFFECT_RESOURCE_CREATE = (1 << 7),
-+	KAPI_EFFECT_RESOURCE_DESTROY = (1 << 8),
-+	KAPI_EFFECT_SCHEDULE = (1 << 9),
-+	KAPI_EFFECT_HARDWARE = (1 << 10),
-+	KAPI_EFFECT_NETWORK = (1 << 11),
-+	KAPI_EFFECT_FILESYSTEM = (1 << 12),
-+	KAPI_EFFECT_PROCESS_STATE = (1 << 13),
-+};
-+
-+/**
-+ * struct kapi_side_effect - Side effect specification
-+ * @type: Bitmask of effect types
-+ * @target: What is affected (e.g., "process memory", "file descriptor table")
-+ * @condition: Condition under which effect occurs
-+ * @description: Detailed description of the effect
-+ * @reversible: Whether the effect can be undone
-+ */
-+struct kapi_side_effect {
-+	u32 type;
-+	char target[KAPI_MAX_NAME_LEN];
-+	char condition[KAPI_MAX_DESC_LEN];
-+	char description[KAPI_MAX_DESC_LEN];
-+	bool reversible;
-+} __attribute__((packed));
-+
-+/**
-+ * struct kapi_state_transition - State transition specification
-+ * @from_state: Starting state description
-+ * @to_state: Ending state description
-+ * @condition: Condition for transition
-+ * @object: Object whose state changes
-+ * @description: Detailed description
-+ */
-+struct kapi_state_transition {
-+	char from_state[KAPI_MAX_NAME_LEN];
-+	char to_state[KAPI_MAX_NAME_LEN];
-+	char condition[KAPI_MAX_DESC_LEN];
-+	char object[KAPI_MAX_NAME_LEN];
-+	char description[KAPI_MAX_DESC_LEN];
-+} __attribute__((packed));
-+
-+#define KAPI_MAX_STRUCT_SPECS	8
-+#define KAPI_MAX_SIDE_EFFECTS	16
-+#define KAPI_MAX_STATE_TRANS	8
-+
-+/**
-+ * struct kernel_api_spec - Complete kernel API specification
-+ * @name: Function name
-+ * @version: API version
-+ * @description: Brief description
-+ * @long_description: Detailed description
-+ * @context_flags: Execution context flags
-+ * @param_count: Number of parameters
-+ * @params: Parameter specifications
-+ * @return_spec: Return value specification
-+ * @error_count: Number of possible errors
-+ * @errors: Error specifications
-+ * @lock_count: Number of lock specifications
-+ * @locks: Lock requirement specifications
-+ * @constraint_count: Number of additional constraints
-+ * @constraints: Additional constraint specifications
-+ * @examples: Usage examples
-+ * @notes: Additional notes
-+ * @since_version: Kernel version when introduced
-+ * @deprecated: Whether API is deprecated
-+ * @replacement: Replacement API if deprecated
-+ * @signal_count: Number of signal specifications
-+ * @signals: Signal handling specifications
-+ * @signal_mask_count: Number of signal mask specifications
-+ * @signal_masks: Signal mask specifications
-+ * @struct_spec_count: Number of structure specifications
-+ * @struct_specs: Structure type specifications
-+ * @side_effect_count: Number of side effect specifications
-+ * @side_effects: Side effect specifications
-+ * @state_trans_count: Number of state transition specifications
-+ * @state_transitions: State transition specifications
-+ */
-+struct kernel_api_spec {
-+	char name[KAPI_MAX_NAME_LEN];
-+	u32 version;
-+	char description[KAPI_MAX_DESC_LEN];
-+	char long_description[KAPI_MAX_DESC_LEN * 4];
-+	u32 context_flags;
-+
-+	/* Parameters */
-+	u32 param_count;
-+	struct kapi_param_spec params[KAPI_MAX_PARAMS];
-+
-+	/* Return value */
-+	struct kapi_return_spec return_spec;
-+
-+	/* Errors */
-+	u32 error_count;
-+	struct kapi_error_spec errors[KAPI_MAX_ERRORS];
-+
-+	/* Locking */
-+	u32 lock_count;
-+	struct kapi_lock_spec locks[KAPI_MAX_CONSTRAINTS];
-+
-+	/* Constraints */
-+	u32 constraint_count;
-+	struct kapi_constraint_spec constraints[KAPI_MAX_CONSTRAINTS];
-+
-+	/* Additional information */
-+	char examples[KAPI_MAX_DESC_LEN * 2];
-+	char notes[KAPI_MAX_DESC_LEN];
-+	char since_version[32];
-+	bool deprecated;
-+	char replacement[KAPI_MAX_NAME_LEN];
-+
-+	/* Signal specifications */
-+	u32 signal_count;
-+	struct kapi_signal_spec signals[KAPI_MAX_SIGNALS];
-+
-+	/* Signal mask specifications */
-+	u32 signal_mask_count;
-+	struct kapi_signal_mask_spec signal_masks[KAPI_MAX_SIGNALS];
-+
-+	/* Structure specifications */
-+	u32 struct_spec_count;
-+	struct kapi_struct_spec struct_specs[KAPI_MAX_STRUCT_SPECS];
-+
-+	/* Side effects */
-+	u32 side_effect_count;
-+	struct kapi_side_effect side_effects[KAPI_MAX_SIDE_EFFECTS];
-+
-+	/* State transitions */
-+	u32 state_trans_count;
-+	struct kapi_state_transition state_transitions[KAPI_MAX_STATE_TRANS];
-+} __attribute__((packed));
-+
-+/* Macros for defining API specifications */
-+
-+/**
-+ * DEFINE_KERNEL_API_SPEC - Define a kernel API specification
-+ * @func_name: Function name to specify
-+ */
-+#define DEFINE_KERNEL_API_SPEC(func_name) \
-+	static struct kernel_api_spec __kapi_spec_##func_name \
-+	__used __section(".kapi_specs") = {	\
-+		.name = __stringify(func_name),	\
-+		.version = 1,
-+
-+#define KAPI_END_SPEC };
-+
-+/**
-+ * KAPI_DESCRIPTION - Set API description
-+ * @desc: Description string
-+ */
-+#define KAPI_DESCRIPTION(desc) \
-+	.description = desc,
-+
-+/**
-+ * KAPI_LONG_DESC - Set detailed API description
-+ * @desc: Detailed description string
-+ */
-+#define KAPI_LONG_DESC(desc) \
-+	.long_description = desc,
-+
-+/**
-+ * KAPI_CONTEXT - Set execution context flags
-+ * @flags: Context flags (OR'ed KAPI_CTX_* values)
-+ */
-+#define KAPI_CONTEXT(flags) \
-+	.context_flags = flags,
-+
-+/**
-+ * KAPI_PARAM - Define a parameter specification
-+ * @idx: Parameter index (0-based)
-+ * @pname: Parameter name
-+ * @ptype: Type name string
-+ * @pdesc: Parameter description
-+ */
-+#define KAPI_PARAM(idx, pname, ptype, pdesc) \
-+	.params[idx] = {			\
-+		.name = pname,			\
-+		.type_name = ptype,		\
-+		.description = pdesc,		\
-+		.size_param_idx = -1,		/* Default: no dynamic sizing */
-+
-+#define KAPI_PARAM_FLAGS(pflags) \
-+		.flags = pflags,
-+
-+#define KAPI_PARAM_SIZE(psize) \
-+		.size = psize,
-+
-+#define KAPI_PARAM_RANGE(pmin, pmax) \
-+		.min_value = pmin,	\
-+		.max_value = pmax,
-+
-+#define KAPI_PARAM_END },
-+
-+/**
-+ * KAPI_RETURN - Define return value specification
-+ * @rtype: Return type name
-+ * @rdesc: Return value description
-+ */
-+#define KAPI_RETURN(rtype, rdesc) \
-+	.return_spec = {		\
-+		.type_name = rtype,	\
-+		.description = rdesc,
-+
-+#define KAPI_RETURN_SUCCESS(val) \
-+		.success_value = val,
-+
-+#define KAPI_RETURN_END },
-+
-+/**
-+ * KAPI_ERROR - Define an error condition
-+ * @idx: Error index
-+ * @ecode: Error code value
-+ * @ename: Error name
-+ * @econd: Error condition
-+ * @edesc: Error description
-+ */
-+#define KAPI_ERROR(idx, ecode, ename, econd, edesc) \
-+	.errors[idx] = {			\
-+		.error_code = ecode,		\
-+		.name = ename,			\
-+		.condition = econd,		\
-+		.description = edesc,		\
-+	},
-+
-+/**
-+ * KAPI_LOCK - Define a lock requirement
-+ * @idx: Lock index
-+ * @lname: Lock name
-+ * @ltype: Lock type
-+ */
-+#define KAPI_LOCK(idx, lname, ltype) \
-+	.locks[idx] = {			\
-+		.lock_name = lname,	\
-+		.lock_type = ltype,
-+
-+#define KAPI_LOCK_ACQUIRED \
-+		.acquired = true,
-+
-+#define KAPI_LOCK_RELEASED \
-+		.released = true,
-+
-+#define KAPI_LOCK_HELD_ENTRY \
-+		.held_on_entry = true,
-+
-+#define KAPI_LOCK_HELD_EXIT \
-+		.held_on_exit = true,
-+
-+#define KAPI_LOCK_DESC(ldesc) \
-+		.description = ldesc,
-+
-+#define KAPI_LOCK_END },
-+
-+/**
-+ * KAPI_CONSTRAINT - Define an additional constraint
-+ * @idx: Constraint index
-+ * @cname: Constraint name
-+ * @cdesc: Constraint description
-+ */
-+#define KAPI_CONSTRAINT(idx, cname, cdesc) \
-+	.constraints[idx] = {		\
-+		.name = cname,		\
-+		.description = cdesc,
-+
-+#define KAPI_CONSTRAINT_EXPR(expr) \
-+		.expression = expr,
-+
-+#define KAPI_CONSTRAINT_END },
-+
-+/**
-+ * KAPI_SIGNAL - Define a signal specification
-+ * @idx: Signal index
-+ * @signum: Signal number (e.g., SIGKILL)
-+ * @signame: Signal name string
-+ * @dir: Direction flags
-+ * @act: Action taken
-+ */
-+#define KAPI_SIGNAL(idx, signum, signame, dir, act) \
-+	.signals[idx] = {			\
-+		.signal_num = signum,		\
-+		.signal_name = signame,		\
-+		.direction = dir,		\
-+		.action = act,
-+
-+#define KAPI_SIGNAL_TARGET(tgt) \
-+		.target = tgt,
-+
-+#define KAPI_SIGNAL_CONDITION(cond) \
-+		.condition = cond,
-+
-+#define KAPI_SIGNAL_DESC(desc) \
-+		.description = desc,
-+
-+#define KAPI_SIGNAL_RESTARTABLE \
-+		.restartable = true,
-+
-+#define KAPI_SIGNAL_END },
-+
-+/**
-+ * KAPI_SIGNAL_MASK - Define a signal mask specification
-+ * @idx: Mask index
-+ * @name: Mask name
-+ * @desc: Mask description
-+ */
-+#define KAPI_SIGNAL_MASK(idx, name, desc) \
-+	.signal_masks[idx] = {		\
-+		.mask_name = name,	\
-+		.description = desc,
-+
-+#define KAPI_SIGNAL_MASK_ADD(signum) \
-+		.signals[.signal_count++] = signum,
-+
-+#define KAPI_SIGNAL_MASK_END },
-+
-+/**
-+ * KAPI_STRUCT_SPEC - Define a structure specification
-+ * @idx: Structure spec index
-+ * @sname: Structure name
-+ * @sdesc: Structure description
-+ */
-+#define KAPI_STRUCT_SPEC(idx, sname, sdesc) \
-+	.struct_specs[idx] = {		\
-+		.name = #sname,		\
-+		.description = sdesc,
-+
-+#define KAPI_STRUCT_SIZE(ssize, salign) \
-+		.size = ssize,		\
-+		.alignment = salign,
-+
-+#define KAPI_STRUCT_FIELD_COUNT(n) \
-+		.field_count = n,
-+
-+/**
-+ * KAPI_STRUCT_FIELD - Define a structure field
-+ * @fidx: Field index
-+ * @fname: Field name
-+ * @ftype: Field type (KAPI_TYPE_*)
-+ * @ftype_name: Type name as string
-+ * @fdesc: Field description
-+ */
-+#define KAPI_STRUCT_FIELD(fidx, fname, ftype, ftype_name, fdesc) \
-+		.fields[fidx] = {	\
-+			.name = fname,	\
-+			.type = ftype,	\
-+			.type_name = ftype_name, \
-+			.description = fdesc,
-+
-+#define KAPI_FIELD_OFFSET(foffset) \
-+			.offset = foffset,
-+
-+#define KAPI_FIELD_SIZE(fsize) \
-+			.size = fsize,
-+
-+#define KAPI_FIELD_FLAGS(fflags) \
-+			.flags = fflags,
-+
-+#define KAPI_FIELD_CONSTRAINT_RANGE(min, max) \
-+			.constraint_type = KAPI_CONSTRAINT_RANGE, \
-+			.min_value = min, \
-+			.max_value = max,
-+
-+#define KAPI_FIELD_CONSTRAINT_MASK(mask) \
-+			.constraint_type = KAPI_CONSTRAINT_MASK, \
-+			.valid_mask = mask,
-+
-+#define KAPI_FIELD_CONSTRAINT_ENUM(values, count) \
-+			.constraint_type = KAPI_CONSTRAINT_ENUM, \
-+			.enum_values = values, \
-+			.enum_count = count,
-+
-+#define KAPI_STRUCT_FIELD_END },
-+
-+#define KAPI_STRUCT_SPEC_END },
-+
-+/* Counter for structure specifications */
-+#define KAPI_STRUCT_SPEC_COUNT(n) \
-+	.struct_spec_count = n,
-+
-+/**
-+ * KAPI_SIDE_EFFECT - Define a side effect
-+ * @idx: Side effect index
-+ * @etype: Effect type bitmask (OR'ed KAPI_EFFECT_* values)
-+ * @etarget: What is affected
-+ * @edesc: Effect description
-+ */
-+#define KAPI_SIDE_EFFECT(idx, etype, etarget, edesc) \
-+	.side_effects[idx] = {		\
-+		.type = etype,		\
-+		.target = etarget,	\
-+		.description = edesc,	\
-+		.reversible = false,	/* Default to non-reversible */
-+
-+#define KAPI_EFFECT_CONDITION(cond) \
-+		.condition = cond,
-+
-+#define KAPI_EFFECT_REVERSIBLE \
-+		.reversible = true,
-+
-+#define KAPI_SIDE_EFFECT_END },
-+
-+/**
-+ * KAPI_STATE_TRANS - Define a state transition
-+ * @idx: State transition index
-+ * @obj: Object whose state changes
-+ * @from: From state
-+ * @to: To state
-+ * @desc: Transition description
-+ */
-+#define KAPI_STATE_TRANS(idx, obj, from, to, desc) \
-+	.state_transitions[idx] = {	\
-+		.object = obj,		\
-+		.from_state = from,	\
-+		.to_state = to,		\
-+		.description = desc,
-+
-+#define KAPI_STATE_TRANS_COND(cond) \
-+		.condition = cond,
-+
-+#define KAPI_STATE_TRANS_END },
-+
-+/* Counters for side effects and state transitions */
-+#define KAPI_SIDE_EFFECT_COUNT(n) \
-+	.side_effect_count = n,
-+
-+#define KAPI_STATE_TRANS_COUNT(n) \
-+	.state_trans_count = n,
-+
-+/* Helper macros for common side effect patterns */
-+#define KAPI_EFFECTS_MEMORY	(KAPI_EFFECT_ALLOC_MEMORY | KAPI_EFFECT_FREE_MEMORY)
-+#define KAPI_EFFECTS_LOCKING	(KAPI_EFFECT_LOCK_ACQUIRE | KAPI_EFFECT_LOCK_RELEASE)
-+#define KAPI_EFFECTS_RESOURCES	(KAPI_EFFECT_RESOURCE_CREATE | KAPI_EFFECT_RESOURCE_DESTROY)
-+#define KAPI_EFFECTS_IO		(KAPI_EFFECT_NETWORK | KAPI_EFFECT_FILESYSTEM)
-+
-+/* Helper macros for common patterns */
-+
-+#define KAPI_PARAM_IN		(KAPI_PARAM_IN)
-+#define KAPI_PARAM_OUT		(KAPI_PARAM_OUT)
-+#define KAPI_PARAM_INOUT	(KAPI_PARAM_IN | KAPI_PARAM_OUT)
-+#define KAPI_PARAM_OPTIONAL	(KAPI_PARAM_OPTIONAL)
-+#define KAPI_PARAM_USER_PTR	(KAPI_PARAM_USER | KAPI_PARAM_PTR)
-+
-+/* Validation and runtime checking */
-+
-+#ifdef CONFIG_KAPI_RUNTIME_CHECKS
-+bool kapi_validate_params(const struct kernel_api_spec *spec, ...);
-+bool kapi_validate_param(const struct kapi_param_spec *param_spec, s64 value);
-+bool kapi_validate_param_with_context(const struct kapi_param_spec *param_spec,
-+				       s64 value, const s64 *all_params, int param_count);
-+int kapi_validate_syscall_param(const struct kernel_api_spec *spec,
-+				int param_idx, s64 value);
-+int kapi_validate_syscall_params(const struct kernel_api_spec *spec,
-+				 const s64 *params, int param_count);
-+bool kapi_check_return_success(const struct kapi_return_spec *return_spec, s64 retval);
-+bool kapi_validate_return_value(const struct kernel_api_spec *spec, s64 retval);
-+int kapi_validate_syscall_return(const struct kernel_api_spec *spec, s64 retval);
-+void kapi_check_context(const struct kernel_api_spec *spec);
-+void kapi_check_locks(const struct kernel_api_spec *spec);
-+#else
-+static inline bool kapi_validate_params(const struct kernel_api_spec *spec, ...)
-+{
-+	return true;
-+}
-+static inline bool kapi_validate_param(const struct kapi_param_spec *param_spec, s64 value)
-+{
-+	return true;
-+}
-+static inline bool kapi_validate_param_with_context(const struct kapi_param_spec *param_spec,
-+						     s64 value, const s64 *all_params, int param_count)
-+{
-+	return true;
-+}
-+static inline int kapi_validate_syscall_param(const struct kernel_api_spec *spec,
-+					       int param_idx, s64 value)
-+{
-+	return 0;
-+}
-+static inline int kapi_validate_syscall_params(const struct kernel_api_spec *spec,
-+					       const s64 *params, int param_count)
-+{
-+	return 0;
-+}
-+static inline bool kapi_check_return_success(const struct kapi_return_spec *return_spec, s64 retval)
-+{
-+	return true;
-+}
-+static inline bool kapi_validate_return_value(const struct kernel_api_spec *spec, s64 retval)
-+{
-+	return true;
-+}
-+static inline int kapi_validate_syscall_return(const struct kernel_api_spec *spec, s64 retval)
-+{
-+	return 0;
-+}
-+static inline void kapi_check_context(const struct kernel_api_spec *spec) {}
-+static inline void kapi_check_locks(const struct kernel_api_spec *spec) {}
-+#endif
-+
-+/* Export/query functions */
-+const struct kernel_api_spec *kapi_get_spec(const char *name);
-+int kapi_export_json(const struct kernel_api_spec *spec, char *buf, size_t size);
-+int kapi_export_xml(const struct kernel_api_spec *spec, char *buf, size_t size);
-+void kapi_print_spec(const struct kernel_api_spec *spec);
-+
-+/* Registration for dynamic APIs */
-+int kapi_register_spec(struct kernel_api_spec *spec);
-+void kapi_unregister_spec(const char *name);
-+
-+/* Helper to get parameter constraint info */
-+static inline bool kapi_get_param_constraint(const char *api_name, int param_idx,
-+					      enum kapi_constraint_type *type,
-+					      u64 *valid_mask, s64 *min_val, s64 *max_val)
-+{
-+	const struct kernel_api_spec *spec = kapi_get_spec(api_name);
-+
-+	if (!spec || param_idx >= spec->param_count)
-+		return false;
-+
-+	if (type)
-+		*type = spec->params[param_idx].constraint_type;
-+	if (valid_mask)
-+		*valid_mask = spec->params[param_idx].valid_mask;
-+	if (min_val)
-+		*min_val = spec->params[param_idx].min_value;
-+	if (max_val)
-+		*max_val = spec->params[param_idx].max_value;
-+
-+	return true;
++++ b/tools/kapi/.gitignore
+@@ -0,0 +1,4 @@
++# Rust build artifacts
++/target/
++**/*.rs.bk
++
+diff --git a/tools/kapi/Cargo.toml b/tools/kapi/Cargo.toml
+new file mode 100644
+index 0000000000000..4e6bcb10d132f
+--- /dev/null
++++ b/tools/kapi/Cargo.toml
+@@ -0,0 +1,19 @@
++[package]
++name = "kapi"
++version = "0.1.0"
++edition = "2024"
++authors = ["Sasha Levin <sashal@kernel.org>"]
++description = "Tool for extracting and displaying kernel API specifications"
++license = "GPL-2.0"
++
++[dependencies]
++goblin = "0.10"
++clap = { version = "4.4", features = ["derive"] }
++anyhow = "1.0"
++serde = { version = "1.0", features = ["derive"] }
++serde_json = "1.0"
++regex = "1.10"
++walkdir = "2.4"
++
++[dev-dependencies]
++tempfile = "3.8"
+diff --git a/tools/kapi/src/extractor/debugfs.rs b/tools/kapi/src/extractor/debugfs.rs
+new file mode 100644
+index 0000000000000..91775dea223f5
+--- /dev/null
++++ b/tools/kapi/src/extractor/debugfs.rs
+@@ -0,0 +1,204 @@
++use anyhow::{Context, Result, bail};
++use std::fs;
++use std::io::Write;
++use std::path::PathBuf;
++use crate::formatter::OutputFormatter;
++
++use super::{ApiExtractor, ApiSpec, display_api_spec};
++
++/// Extractor for kernel API specifications from debugfs
++pub struct DebugfsExtractor {
++    debugfs_path: PathBuf,
 +}
 +
-+#endif /* _LINUX_KERNEL_API_SPEC_H */
++impl DebugfsExtractor {
++    /// Create a new debugfs extractor with the specified debugfs path
++    pub fn new(debugfs_path: Option<String>) -> Result<Self> {
++        let path = match debugfs_path {
++            Some(p) => PathBuf::from(p),
++            None => PathBuf::from("/sys/kernel/debug"),
++        };
++
++        // Check if the debugfs path exists
++        if !path.exists() {
++            bail!("Debugfs path does not exist: {}", path.display());
++        }
++
++        // Check if kapi directory exists
++        let kapi_path = path.join("kapi");
++        if !kapi_path.exists() {
++            bail!("Kernel API debugfs interface not found at: {}", kapi_path.display());
++        }
++
++        Ok(Self {
++            debugfs_path: path,
++        })
++    }
++
++    /// Parse the list file to get all available API names
++    fn parse_list_file(&self) -> Result<Vec<String>> {
++        let list_path = self.debugfs_path.join("kapi/list");
++        let content = fs::read_to_string(&list_path)
++            .with_context(|| format!("Failed to read {}", list_path.display()))?;
++
++        let mut apis = Vec::new();
++        let mut in_list = false;
++
++        for line in content.lines() {
++            if line.contains("===") {
++                in_list = true;
++                continue;
++            }
++
++            if in_list && line.starts_with("Total:") {
++                break;
++            }
++
++            if in_list && !line.trim().is_empty() {
++                // Extract API name from lines like "sys_read - Read from a file descriptor"
++                if let Some(name) = line.split(" - ").next() {
++                    apis.push(name.trim().to_string());
++                }
++            }
++        }
++
++        Ok(apis)
++    }
++
++    /// Parse a single API specification file
++    fn parse_spec_file(&self, api_name: &str) -> Result<ApiSpec> {
++        let spec_path = self.debugfs_path.join(format!("kapi/specs/{}", api_name));
++        let content = fs::read_to_string(&spec_path)
++            .with_context(|| format!("Failed to read {}", spec_path.display()))?;
++
++        let mut spec = ApiSpec {
++            name: api_name.to_string(),
++            api_type: "unknown".to_string(),
++            description: None,
++            long_description: None,
++            version: None,
++            context_flags: Vec::new(),
++            param_count: None,
++            error_count: None,
++            examples: None,
++            notes: None,
++            since_version: None,
++        };
++
++        // Parse the content
++        let mut collecting_multiline = false;
++        let mut multiline_buffer = String::new();
++        let mut multiline_field = "";
++
++        for line in content.lines() {
++            // Handle section headers
++            if line.starts_with("Parameters (") {
++                if let Some(count_str) = line.strip_prefix("Parameters (").and_then(|s| s.strip_suffix("):")) {
++                    spec.param_count = count_str.parse().ok();
++                }
++                continue;
++            } else if line.starts_with("Errors (") {
++                if let Some(count_str) = line.strip_prefix("Errors (").and_then(|s| s.strip_suffix("):")) {
++                    spec.error_count = count_str.parse().ok();
++                }
++                continue;
++            } else if line.starts_with("Examples:") {
++                collecting_multiline = true;
++                multiline_field = "examples";
++                multiline_buffer.clear();
++                continue;
++            } else if line.starts_with("Notes:") {
++                collecting_multiline = true;
++                multiline_field = "notes";
++                multiline_buffer.clear();
++                continue;
++            }
++
++            // Handle multiline sections
++            if collecting_multiline {
++                if line.trim().is_empty() && multiline_buffer.ends_with("\n\n") {
++                    collecting_multiline = false;
++                    match multiline_field {
++                        "examples" => spec.examples = Some(multiline_buffer.trim().to_string()),
++                        "notes" => spec.notes = Some(multiline_buffer.trim().to_string()),
++                        _ => {}
++                    }
++                    multiline_buffer.clear();
++                } else {
++                    if !multiline_buffer.is_empty() {
++                        multiline_buffer.push('\n');
++                    }
++                    multiline_buffer.push_str(line);
++                }
++                continue;
++            }
++
++            // Parse regular fields
++            if let Some(desc) = line.strip_prefix("Description: ") {
++                spec.description = Some(desc.to_string());
++            } else if let Some(long_desc) = line.strip_prefix("Long description: ") {
++                spec.long_description = Some(long_desc.to_string());
++            } else if let Some(version) = line.strip_prefix("Version: ") {
++                spec.version = Some(version.to_string());
++            } else if let Some(since) = line.strip_prefix("Since: ") {
++                spec.since_version = Some(since.to_string());
++            } else if let Some(flags) = line.strip_prefix("Context flags: ") {
++                spec.context_flags = flags.split_whitespace()
++                    .map(|s| s.to_string())
++                    .collect();
++            }
++        }
++
++        // Determine API type based on name
++        if api_name.starts_with("sys_") {
++            spec.api_type = "syscall".to_string();
++        } else if api_name.contains("_ioctl") || api_name.starts_with("ioctl_") {
++            spec.api_type = "ioctl".to_string();
++        } else {
++            spec.api_type = "function".to_string();
++        }
++
++        Ok(spec)
++    }
++}
++
++impl ApiExtractor for DebugfsExtractor {
++    fn extract_all(&self) -> Result<Vec<ApiSpec>> {
++        let api_names = self.parse_list_file()?;
++        let mut specs = Vec::new();
++
++        for name in api_names {
++            match self.parse_spec_file(&name) {
++                Ok(spec) => specs.push(spec),
++                Err(e) => eprintln!("Warning: Failed to parse spec for {}: {}", name, e),
++            }
++        }
++
++        Ok(specs)
++    }
++
++    fn extract_by_name(&self, name: &str) -> Result<Option<ApiSpec>> {
++        let api_names = self.parse_list_file()?;
++
++        if api_names.contains(&name.to_string()) {
++            Ok(Some(self.parse_spec_file(name)?))
++        } else {
++            Ok(None)
++        }
++    }
++
++    fn display_api_details(
++        &self,
++        api_name: &str,
++        formatter: &mut dyn OutputFormatter,
++        writer: &mut dyn Write,
++    ) -> Result<()> {
++        if let Some(spec) = self.extract_by_name(api_name)? {
++            display_api_spec(&spec, formatter, writer)?;
++        } else {
++            writeln!(writer, "API '{}' not found in debugfs", api_name)?;
++        }
++
++        Ok(())
++    }
++}
 \ No newline at end of file
-diff --git a/include/linux/syscall_api_spec.h b/include/linux/syscall_api_spec.h
+diff --git a/tools/kapi/src/extractor/mod.rs b/tools/kapi/src/extractor/mod.rs
 new file mode 100644
-index 0000000000000..48ad95647dd39
+index 0000000000000..bc55201152e3e
 --- /dev/null
-+++ b/include/linux/syscall_api_spec.h
-@@ -0,0 +1,341 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * syscall_api_spec.h - System Call API Specification Integration
-+ *
-+ * This header extends the SYSCALL_DEFINEX macros to support inline API specifications,
-+ * allowing syscall documentation to be written alongside the implementation in a
-+ * human-readable and machine-parseable format.
-+ */
++++ b/tools/kapi/src/extractor/mod.rs
+@@ -0,0 +1,95 @@
++use anyhow::Result;
++use std::io::Write;
++use crate::formatter::OutputFormatter;
 +
-+#ifndef _LINUX_SYSCALL_API_SPEC_H
-+#define _LINUX_SYSCALL_API_SPEC_H
++pub mod vmlinux;
++pub mod source_parser;
++pub mod debugfs;
 +
-+#include <linux/kernel_api_spec.h>
++pub use vmlinux::VmlinuxExtractor;
++pub use source_parser::SourceExtractor;
++pub use debugfs::DebugfsExtractor;
 +
-+/*
-+ * Extended SYSCALL_DEFINE macros with API specification support
-+ *
-+ * Usage example:
-+ *
-+ * SYSCALL_DEFINE_SPEC2(example,
-+ *     KAPI_DESCRIPTION("Example system call"),
-+ *     KAPI_LONG_DESC("This is a detailed description of the example syscall"),
-+ *     KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE),
-+ *
-+ *     KAPI_PARAM(0, "fd", "int", "File descriptor to operate on")
-+ *         KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+ *         KAPI_PARAM_RANGE(0, INT_MAX)
-+ *     KAPI_PARAM_END,
-+ *
-+ *     KAPI_PARAM(1, "flags", "unsigned int", "Operation flags")
-+ *         KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+ *     KAPI_PARAM_END,
-+ *
-+ *     KAPI_RETURN("long", "0 on success, negative error code on failure")
-+ *         KAPI_RETURN_SUCCESS(0, "== 0")
-+ *     KAPI_RETURN_END,
-+ *
-+ *     KAPI_ERROR(0, -EBADF, "EBADF", "fd is not a valid file descriptor",
-+ *                "The file descriptor is invalid or closed"),
-+ *     KAPI_ERROR(1, -EINVAL, "EINVAL", "flags contains invalid values",
-+ *                "Invalid flag combination specified"),
-+ *
-+ *     .error_count = 2,
-+ *     .param_count = 2,
-+ *
-+ *     int, fd, unsigned int, flags)
-+ * {
-+ *     // Implementation here
-+ * }
-+ */
++/// Common API specification information that all extractors should provide
++#[derive(Debug, Clone)]
++pub struct ApiSpec {
++    pub name: String,
++    pub api_type: String,
++    pub description: Option<String>,
++    pub long_description: Option<String>,
++    pub version: Option<String>,
++    pub context_flags: Vec<String>,
++    pub param_count: Option<u32>,
++    pub error_count: Option<u32>,
++    pub examples: Option<String>,
++    pub notes: Option<String>,
++    pub since_version: Option<String>,
++}
 +
-+/* Helper to count parameters */
-+#define __SYSCALL_PARAM_COUNT(...) __SYSCALL_PARAM_COUNT_I(__VA_ARGS__, 6, 5, 4, 3, 2, 1, 0)
-+#define __SYSCALL_PARAM_COUNT_I(_1, _2, _3, _4, _5, _6, N, ...) N
++/// Trait for extracting API specifications from different sources
++pub trait ApiExtractor {
++    /// Extract all API specifications from the source
++    fn extract_all(&self) -> Result<Vec<ApiSpec>>;
 +
-+/* Extract syscall name from parameters */
-+#define __SYSCALL_NAME(name, ...) name
++    /// Extract a specific API specification by name
++    fn extract_by_name(&self, name: &str) -> Result<Option<ApiSpec>>;
 +
-+/* Generate API spec structure name */
-+#define __SYSCALL_API_SPEC_NAME(name) __kapi_spec_sys_##name
++    /// Display detailed information about a specific API
++    fn display_api_details(
++        &self,
++        api_name: &str,
++        formatter: &mut dyn OutputFormatter,
++        writer: &mut dyn Write,
++    ) -> Result<()>;
++}
 +
-+/* Helper to count syscall parameters (pairs of type, name) */
-+#define __SYSCALL_ARG_COUNT(...) __SYSCALL_ARG_COUNT_I(__VA_ARGS__, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0)
-+#define __SYSCALL_ARG_COUNT_I(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, N, ...) N
++/// Helper function to display an ApiSpec using a formatter
++pub fn display_api_spec(
++    spec: &ApiSpec,
++    formatter: &mut dyn OutputFormatter,
++    writer: &mut dyn Write,
++) -> Result<()> {
++    formatter.begin_api_details(writer, &spec.name)?;
 +
-+/* Automatic syscall validation infrastructure */
-+#ifdef CONFIG_KAPI_RUNTIME_CHECKS
++    if let Some(desc) = &spec.description {
++        formatter.description(writer, desc)?;
++    }
 +
-+/* Helper to inject validation at the beginning of syscall */
-+#define __KAPI_SYSCALL_VALIDATE_0(name)
-+#define __KAPI_SYSCALL_VALIDATE_1(name, t1, a1) \
-+	const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+	if (__spec) { \
-+		s64 __params[1] = { (s64)(a1) }; \
-+		int __ret = kapi_validate_syscall_params(__spec, __params, 1); \
-+		if (__ret) return __ret; \
-+	}
-+#define __KAPI_SYSCALL_VALIDATE_2(name, t1, a1, t2, a2) \
-+	const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+	if (__spec) { \
-+		s64 __params[2] = { (s64)(a1), (s64)(a2) }; \
-+		int __ret = kapi_validate_syscall_params(__spec, __params, 2); \
-+		if (__ret) return __ret; \
-+	}
-+#define __KAPI_SYSCALL_VALIDATE_3(name, t1, a1, t2, a2, t3, a3) \
-+	const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+	if (__spec) { \
-+		s64 __params[3] = { (s64)(a1), (s64)(a2), (s64)(a3) }; \
-+		int __ret = kapi_validate_syscall_params(__spec, __params, 3); \
-+		if (__ret) return __ret; \
-+	}
-+#define __KAPI_SYSCALL_VALIDATE_4(name, t1, a1, t2, a2, t3, a3, t4, a4) \
-+	const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+	if (__spec) { \
-+		s64 __params[4] = { (s64)(a1), (s64)(a2), (s64)(a3), (s64)(a4) }; \
-+		int __ret = kapi_validate_syscall_params(__spec, __params, 4); \
-+		if (__ret) return __ret; \
-+	}
-+#define __KAPI_SYSCALL_VALIDATE_5(name, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5) \
-+	const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+	if (__spec) { \
-+		s64 __params[5] = { (s64)(a1), (s64)(a2), (s64)(a3), (s64)(a4), (s64)(a5) }; \
-+		int __ret = kapi_validate_syscall_params(__spec, __params, 5); \
-+		if (__ret) return __ret; \
-+	}
-+#define __KAPI_SYSCALL_VALIDATE_6(name, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6) \
-+	const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+	if (__spec) { \
-+		s64 __params[6] = { (s64)(a1), (s64)(a2), (s64)(a3), (s64)(a4), (s64)(a5), (s64)(a6) }; \
-+		int __ret = kapi_validate_syscall_params(__spec, __params, 6); \
-+		if (__ret) return __ret; \
-+	}
++    if let Some(long_desc) = &spec.long_description {
++        formatter.long_description(writer, long_desc)?;
++    }
 +
-+#else /* !CONFIG_KAPI_RUNTIME_CHECKS */
++    if let Some(version) = &spec.since_version {
++        formatter.since_version(writer, version)?;
++    }
 +
-+#define __KAPI_SYSCALL_VALIDATE_0(name)
-+#define __KAPI_SYSCALL_VALIDATE_1(name, t1, a1)
-+#define __KAPI_SYSCALL_VALIDATE_2(name, t1, a1, t2, a2)
-+#define __KAPI_SYSCALL_VALIDATE_3(name, t1, a1, t2, a2, t3, a3)
-+#define __KAPI_SYSCALL_VALIDATE_4(name, t1, a1, t2, a2, t3, a3, t4, a4)
-+#define __KAPI_SYSCALL_VALIDATE_5(name, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)
-+#define __KAPI_SYSCALL_VALIDATE_6(name, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6)
++    if !spec.context_flags.is_empty() {
++        formatter.begin_context_flags(writer)?;
++        for flag in &spec.context_flags {
++            formatter.context_flag(writer, flag)?;
++        }
++        formatter.end_context_flags(writer)?;
++    }
 +
-+#endif /* CONFIG_KAPI_RUNTIME_CHECKS */
++    if let Some(param_count) = spec.param_count {
++        formatter.begin_parameters(writer, param_count)?;
++        formatter.end_parameters(writer)?;
++    }
 +
-+/* Helper to inject validation for return values */
-+#ifdef CONFIG_KAPI_RUNTIME_CHECKS
++    if let Some(error_count) = spec.error_count {
++        formatter.begin_errors(writer, error_count)?;
++        formatter.end_errors(writer)?;
++    }
 +
-+#define __KAPI_SYSCALL_VALIDATE_RETURN(name, retval) \
-+	do { \
-+		const struct kernel_api_spec *__spec = kapi_get_spec("sys_" #name); \
-+		if (__spec) { \
-+			kapi_validate_syscall_return(__spec, (s64)(retval)); \
-+		} \
-+	} while (0)
++    if let Some(notes) = &spec.notes {
++        formatter.notes(writer, notes)?;
++    }
 +
-+/* Wrapper to validate both params and return value */
-+#define __SYSCALL_DEFINE_SPEC(name, spec_args, ...) \
-+	DEFINE_KERNEL_API_SPEC(sys_##name) \
-+		.name = "sys_" #name, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	static long __kapi_sys_##name(__MAP((__SYSCALL_ARG_COUNT(__VA_ARGS__)), __SC_DECL, __VA_ARGS__)); \
-+	SYSCALL_DEFINE##__SYSCALL_ARG_COUNT(__VA_ARGS__)(name, __VA_ARGS__) \
-+	{ \
-+		long __ret; \
-+		__KAPI_SYSCALL_VALIDATE_##__SYSCALL_ARG_COUNT(__VA_ARGS__)(name, __VA_ARGS__); \
-+		__ret = __kapi_sys_##name(__MAP((__SYSCALL_ARG_COUNT(__VA_ARGS__)), __SC_CAST, __VA_ARGS__)); \
-+		__KAPI_SYSCALL_VALIDATE_RETURN(name, __ret); \
-+		return __ret; \
-+	} \
-+	static long __kapi_sys_##name(__MAP((__SYSCALL_ARG_COUNT(__VA_ARGS__)), __SC_DECL, __VA_ARGS__))
++    if let Some(examples) = &spec.examples {
++        formatter.examples(writer, examples)?;
++    }
 +
-+#else /* !CONFIG_KAPI_RUNTIME_CHECKS */
++    formatter.end_api_details(writer)?;
 +
-+#define __SYSCALL_DEFINE_SPEC(name, spec_args, ...) \
-+	DEFINE_KERNEL_API_SPEC(sys_##name) \
-+		.name = "sys_" #name, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	SYSCALL_DEFINE##__SYSCALL_ARG_COUNT(__VA_ARGS__)(name, __VA_ARGS__)
-+
-+#endif /* CONFIG_KAPI_RUNTIME_CHECKS */
-+
-+
-+/* Convenience macros for different parameter counts */
-+#define SYSCALL_DEFINE_SPEC0(name, spec_args)				\
-+	DEFINE_KERNEL_API_SPEC(sys_##name)				\
-+		.name = "sys_" #name,					\
-+		.param_count = 0,					\
-+		spec_args						\
-+	KAPI_END_SPEC;							\
-+	SYSCALL_DEFINE0(name)
-+
-+#define SYSCALL_DEFINE_SPEC1(name, spec_args, t1, a1)			\
-+	__SYSCALL_DEFINE_SPEC(name, spec_args, t1, a1)
-+
-+#define SYSCALL_DEFINE_SPEC2(name, spec_args, t1, a1, t2, a2)		\
-+	__SYSCALL_DEFINE_SPEC(name, spec_args, t1, a1, t2, a2)
-+
-+#define SYSCALL_DEFINE_SPEC3(name, spec_args, t1, a1, t2, a2, t3, a3)	\
-+	__SYSCALL_DEFINE_SPEC(name, spec_args, t1, a1, t2, a2, t3, a3)
-+
-+#define SYSCALL_DEFINE_SPEC4(name, spec_args, t1, a1, t2, a2, t3, a3,	\
-+			     t4, a4)					\
-+	__SYSCALL_DEFINE_SPEC(name, spec_args, t1, a1, t2, a2, t3, a3, t4, a4)
-+
-+#define SYSCALL_DEFINE_SPEC5(name, spec_args, t1, a1, t2, a2, t3, a3,	\
-+			     t4, a4, t5, a5)				\
-+	__SYSCALL_DEFINE_SPEC(name, spec_args, t1, a1, t2, a2, t3, a3,	\
-+			      t4, a4, t5, a5)
-+
-+#define SYSCALL_DEFINE_SPEC6(name, spec_args, t1, a1, t2, a2, t3, a3,	\
-+			     t4, a4, t5, a5, t6, a6)			\
-+	__SYSCALL_DEFINE_SPEC(name, spec_args, t1, a1, t2, a2, t3, a3,	\
-+			      t4, a4, t5, a5, t6, a6)
-+
-+/*
-+ * Helper macros for common syscall patterns
-+ */
-+
-+/* For syscalls that can sleep */
-+#define KAPI_SYSCALL_SLEEPABLE \
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+/* For syscalls that must be atomic */
-+#define KAPI_SYSCALL_ATOMIC \
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_ATOMIC)
-+
-+/* Common parameter specifications */
-+#define KAPI_PARAM_FD(idx, desc) \
-+	KAPI_PARAM(idx, "fd", "int", desc) \
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN) \
-+		.type = KAPI_TYPE_FD, \
-+		.constraint_type = KAPI_CONSTRAINT_NONE, \
-+	KAPI_PARAM_END
-+
-+#define KAPI_PARAM_USER_BUF(idx, name, desc) \
-+	KAPI_PARAM(idx, name, "void __user *", desc) \
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_USER_PTR | KAPI_PARAM_IN) \
-+	KAPI_PARAM_END
-+
-+#define KAPI_PARAM_USER_STRUCT(idx, name, struct_type, desc) \
-+	KAPI_PARAM(idx, name, #struct_type " __user *", desc) \
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_USER | KAPI_PARAM_IN) \
-+		.type = KAPI_TYPE_USER_PTR, \
-+		.size = sizeof(struct_type), \
-+		.constraint_type = KAPI_CONSTRAINT_NONE, \
-+	KAPI_PARAM_END
-+
-+#define KAPI_PARAM_SIZE_T(idx, name, desc) \
-+	KAPI_PARAM(idx, name, "size_t", desc) \
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN) \
-+		KAPI_PARAM_RANGE(0, SIZE_MAX) \
-+	KAPI_PARAM_END
-+
-+/* Common error specifications */
-+#define KAPI_ERROR_EBADF(idx) \
-+	KAPI_ERROR(idx, -EBADF, "EBADF", "Invalid file descriptor", \
-+		   "The file descriptor is not valid or has been closed")
-+
-+#define KAPI_ERROR_EINVAL(idx, condition) \
-+	KAPI_ERROR(idx, -EINVAL, "EINVAL", condition, \
-+		   "Invalid argument provided")
-+
-+#define KAPI_ERROR_ENOMEM(idx) \
-+	KAPI_ERROR(idx, -ENOMEM, "ENOMEM", "Insufficient memory", \
-+		   "Cannot allocate memory for the operation")
-+
-+#define KAPI_ERROR_EPERM(idx) \
-+	KAPI_ERROR(idx, -EPERM, "EPERM", "Operation not permitted", \
-+		   "The calling process does not have the required permissions")
-+
-+#define KAPI_ERROR_EFAULT(idx) \
-+	KAPI_ERROR(idx, -EFAULT, "EFAULT", "Bad address", \
-+		   "Invalid user space address provided")
-+
-+/* Standard return value specifications */
-+#define KAPI_RETURN_SUCCESS_ZERO \
-+	KAPI_RETURN("long", "0 on success, negative error code on failure") \
-+		KAPI_RETURN_SUCCESS(0, "== 0") \
-+	KAPI_RETURN_END
-+
-+#define KAPI_RETURN_FD_SPEC \
-+	KAPI_RETURN("long", "File descriptor on success, negative error code on failure") \
-+		.check_type = KAPI_RETURN_FD, \
-+	KAPI_RETURN_END
-+
-+#define KAPI_RETURN_COUNT \
-+	KAPI_RETURN("long", "Number of bytes processed on success, negative error code on failure") \
-+		KAPI_RETURN_SUCCESS(0, ">= 0") \
-+	KAPI_RETURN_END
-+
-+
-+/*
-+ * Compat syscall support
-+ */
-+#ifdef CONFIG_COMPAT
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC0(name, spec_args) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 0, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE0(name)
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC1(name, spec_args, t1, a1) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 1, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE1(name, t1, a1)
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC2(name, spec_args, t1, a1, t2, a2) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 2, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE2(name, t1, a1, t2, a2)
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC3(name, spec_args, t1, a1, t2, a2, t3, a3) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 3, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE3(name, t1, a1, t2, a2, t3, a3)
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC4(name, spec_args, t1, a1, t2, a2, t3, a3, \
-+				     t4, a4) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 4, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE4(name, t1, a1, t2, a2, t3, a3, t4, a4)
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC5(name, spec_args, t1, a1, t2, a2, t3, a3, \
-+				     t4, a4, t5, a5) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 5, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE5(name, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)
-+
-+#define COMPAT_SYSCALL_DEFINE_SPEC6(name, spec_args, t1, a1, t2, a2, t3, a3, \
-+				     t4, a4, t5, a5, t6, a6) \
-+	DEFINE_KERNEL_API_SPEC(compat_sys_##name) \
-+		.name = "compat_sys_" #name, \
-+		.param_count = 6, \
-+		spec_args \
-+	KAPI_END_SPEC; \
-+	COMPAT_SYSCALL_DEFINE6(name, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6)
-+
-+#endif /* CONFIG_COMPAT */
-+
-+#endif /* _LINUX_SYSCALL_API_SPEC_H */
++    Ok(())
++}
 \ No newline at end of file
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e5603cc91963d..f2951ece2068b 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -87,6 +87,7 @@ struct xattr_args;
- #include <linux/bug.h>
- #include <linux/sem.h>
- #include <asm/siginfo.h>
-+#include <linux/syscall_api_spec.h>
- #include <linux/unistd.h>
- #include <linux/quota.h>
- #include <linux/key.h>
-diff --git a/init/Kconfig b/init/Kconfig
-index af4c2f0854554..7a15248933895 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2079,6 +2079,8 @@ config TRACEPOINTS
- 
- source "kernel/Kconfig.kexec"
- 
-+source "kernel/api/Kconfig"
-+
- endmenu		# General setup
- 
- source "arch/Kconfig"
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 32e80dd626af0..ba94ee4bb2292 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -56,6 +56,7 @@ obj-y += livepatch/
- obj-y += dma/
- obj-y += entry/
- obj-$(CONFIG_MODULES) += module/
-+obj-$(CONFIG_KAPI_SPEC) += api/
- 
- obj-$(CONFIG_KCMP) += kcmp.o
- obj-$(CONFIG_FREEZER) += freezer.o
-diff --git a/kernel/api/Kconfig b/kernel/api/Kconfig
+diff --git a/tools/kapi/src/extractor/source_parser.rs b/tools/kapi/src/extractor/source_parser.rs
 new file mode 100644
-index 0000000000000..fde25ec70e134
+index 0000000000000..8de35f5a73916
 --- /dev/null
-+++ b/kernel/api/Kconfig
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Kernel API Specification Framework Configuration
-+#
++++ b/tools/kapi/src/extractor/source_parser.rs
+@@ -0,0 +1,488 @@
++use anyhow::{Context, Result};
++use regex::Regex;
++use std::fs;
++use std::path::Path;
++use std::collections::HashMap;
++use walkdir::WalkDir;
++use std::io::Write;
++use crate::formatter::OutputFormatter;
++use super::{ApiExtractor, ApiSpec, display_api_spec};
 +
-+config KAPI_SPEC
-+	bool "Kernel API Specification Framework"
-+	help
-+	  This option enables the kernel API specification framework,
-+	  which provides formal documentation of kernel APIs in both
-+	  human and machine-readable formats.
++#[derive(Debug, Clone)]
++pub struct SourceApiSpec {
++    pub name: String,
++    pub api_type: ApiType,
++    pub parsed_fields: HashMap<String, String>,
++}
 +
-+	  The framework allows developers to document APIs inline with
-+	  their implementation, including parameter specifications,
-+	  return values, error conditions, locking requirements, and
-+	  execution context constraints.
++#[derive(Debug, Clone, PartialEq)]
++pub enum ApiType {
++    Syscall,
++    Ioctl,
++    Function,
++    Unknown,
++}
 +
-+	  When enabled, API specifications can be queried at runtime
-+	  and exported in various formats (JSON, XML) through debugfs.
++impl ApiType {
++    fn from_name(name: &str) -> Self {
++        if name.starts_with("sys_") {
++            ApiType::Syscall
++        } else if name.contains("ioctl") || name.contains("IOCTL") {
++            ApiType::Ioctl
++        } else if name.starts_with("do_") || name.starts_with("__") {
++            ApiType::Function
++        } else {
++            ApiType::Unknown
++        }
++    }
++}
 +
-+	  If unsure, say N.
++pub struct SourceParser {
++    // Regex patterns for matching KAPI specifications
++    spec_start_pattern: Regex,
++    spec_end_pattern: Regex,
++    ioctl_spec_pattern: Regex,
++}
 +
-+config KAPI_RUNTIME_CHECKS
-+	bool "Runtime API specification checks"
-+	depends on KAPI_SPEC
-+	depends on DEBUG_KERNEL
-+	help
-+	  Enable runtime validation of API usage against specifications.
-+	  This includes checking execution context requirements, parameter
-+	  validation, and lock state verification.
++impl SourceParser {
++    pub fn new() -> Result<Self> {
++        Ok(SourceParser {
++            // Match DEFINE_KERNEL_API_SPEC(function_name)
++            spec_start_pattern: Regex::new(r"DEFINE_KERNEL_API_SPEC\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\)")?,
++            // Match KAPI_END_SPEC
++            spec_end_pattern: Regex::new(r"KAPI_END_SPEC")?,
++            // Match IOCTL specifications
++            ioctl_spec_pattern: Regex::new(r#"DEFINE_IOCTL_API_SPEC\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*,\s*([^,]+)\s*,\s*"([^"]+)"\s*\)"#)?,
++        })
++    }
 +
-+	  This adds overhead and should only be used for debugging and
-+	  development. The checks use WARN_ONCE to report violations.
++    /// Parse a single source file for KAPI specifications
++    pub fn parse_file(&self, path: &Path) -> Result<Vec<SourceApiSpec>> {
++        let content = fs::read_to_string(path)
++            .with_context(|| format!("Failed to read file: {}", path.display()))?;
 +
-+	  If unsure, say N.
-diff --git a/kernel/api/Makefile b/kernel/api/Makefile
-new file mode 100644
-index 0000000000000..4120ded7e5cf1
---- /dev/null
-+++ b/kernel/api/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for the Kernel API Specification Framework
-+#
++        self.parse_content(&content, path)
++    }
 +
-+# Core API specification framework
-+obj-$(CONFIG_KAPI_SPEC)		+= kernel_api_spec.o
++    /// Parse file content for KAPI specifications
++    pub fn parse_content(&self, content: &str, _file_path: &Path) -> Result<Vec<SourceApiSpec>> {
++        let mut specs = Vec::new();
++        let lines: Vec<&str> = content.lines().collect();
++
++        // First, look for standard KAPI specs
++        for (i, line) in lines.iter().enumerate() {
++            if let Some(captures) = self.spec_start_pattern.captures(line) {
++                let api_name = captures.get(1).unwrap().as_str().to_string();
++
++                // Find the end of this specification
++                if let Some(spec_content) = self.extract_spec_block(&lines, i) {
++                    let mut spec = SourceApiSpec {
++                        name: api_name.clone(),
++                        api_type: ApiType::from_name(&api_name),
++                        parsed_fields: HashMap::new(),
++                    };
++
++                    // Parse the fields
++                    self.parse_spec_fields(&spec_content, &mut spec.parsed_fields)?;
++
++                    specs.push(spec);
++                }
++            }
++
++            // Also look for IOCTL specs
++            if let Some(captures) = self.ioctl_spec_pattern.captures(line) {
++                let spec_name = captures.get(1).unwrap().as_str().to_string();
++                let cmd = captures.get(2).unwrap().as_str().to_string();
++                let cmd_name = captures.get(3).unwrap().as_str().to_string();
++
++                // Find the end of this IOCTL specification
++                if let Some(spec_content) = self.extract_ioctl_spec_block(&lines, i) {
++                    let mut spec = SourceApiSpec {
++                        name: spec_name,
++                        api_type: ApiType::Ioctl,
++                        parsed_fields: HashMap::new(),
++                    };
++
++                    // Add IOCTL-specific fields
++                    spec.parsed_fields.insert("cmd".to_string(), cmd);
++                    spec.parsed_fields.insert("cmd_name".to_string(), cmd_name);
++
++                    // Parse other fields
++                    self.parse_spec_fields(&spec_content, &mut spec.parsed_fields)?;
++
++                    specs.push(spec);
++                }
++            }
++        }
++
++        Ok(specs)
++    }
++
++    /// Extract a complete KAPI specification block from the source
++    fn extract_spec_block(&self, lines: &[&str], start_idx: usize) -> Option<String> {
++        let mut spec_lines = Vec::new();
++        let mut brace_count = 0;
++        let mut in_spec = false;
++
++        for (_i, line) in lines.iter().enumerate().skip(start_idx) {
++            spec_lines.push(line.to_string());
++
++            // Count braces to handle nested structures
++            for ch in line.chars() {
++                match ch {
++                    '{' => {
++                        brace_count += 1;
++                        in_spec = true;
++                    }
++                    '}' => {
++                        brace_count -= 1;
++                    }
++                    _ => {}
++                }
++            }
++
++            // Check for end of spec
++            if self.spec_end_pattern.is_match(line) {
++                return Some(spec_lines.join("\n"));
++            }
++
++            // Alternative end: closing brace with semicolon
++            if in_spec && brace_count == 0 && line.contains("};") {
++                return Some(spec_lines.join("\n"));
++            }
++        }
++
++        None
++    }
++
++    /// Extract a complete IOCTL specification block
++    fn extract_ioctl_spec_block(&self, lines: &[&str], start_idx: usize) -> Option<String> {
++        let mut spec_lines = Vec::new();
++        let mut brace_count = 0;
++
++        for (i, line) in lines.iter().enumerate().skip(start_idx) {
++            spec_lines.push(line.to_string());
++
++            // Count braces
++            for ch in line.chars() {
++                match ch {
++                    '{' => brace_count += 1,
++                    '}' => brace_count -= 1,
++                    _ => {}
++                }
++            }
++
++            // Check for end patterns
++            if line.contains("KAPI_END_IOCTL_SPEC") || line.contains("KAPI_IOCTL_END_SPEC") {
++                return Some(spec_lines.join("\n"));
++            }
++
++            // Alternative end: closing brace with semicolon at top level
++            if brace_count == 0 && line.contains("};") && i > start_idx {
++                return Some(spec_lines.join("\n"));
++            }
++        }
++
++        None
++    }
++
++    /// Parse individual KAPI fields from the specification
++    fn parse_spec_fields(&self, content: &str, fields: &mut HashMap<String, String>) -> Result<()> {
++        // Parse KAPI_DESCRIPTION
++        if let Some(captures) = Regex::new(r#"KAPI_DESCRIPTION\s*\(\s*"([^"]*)"\s*\)"#)?.captures(content) {
++            fields.insert("description".to_string(), captures.get(1).unwrap().as_str().to_string());
++        }
++
++        // Parse KAPI_LONG_DESC (handle multi-line)
++        if let Some(captures) = Regex::new(r#"KAPI_LONG_DESC\s*\(\s*"([^"]*(?:\s*"[^"]*)*?)"\s*\)"#)?.captures(content) {
++            let long_desc = captures.get(1).unwrap().as_str()
++                .replace("\"\n\t\t       \"", " ")
++                .replace("\"\n\t\t    \"", " ")
++                .replace("\"\n\t\t   \"", " ")
++                .replace("\"\n\t\t  \"", " ")
++                .replace("\"\n\t\t \"", " ")
++                .replace("\"\n\t\t\"", " ");
++            fields.insert("long_description".to_string(), long_desc);
++        }
++
++        // Parse KAPI_CONTEXT
++        if let Some(captures) = Regex::new(r"KAPI_CONTEXT\s*\(([^)]+)\)")?.captures(content) {
++            fields.insert("context".to_string(), captures.get(1).unwrap().as_str().to_string());
++        }
++
++        // Parse KAPI_NOTES (handle multi-line)
++        if let Some(captures) = Regex::new(r#"KAPI_NOTES\s*\(\s*"([^"]*(?:\s*"[^"]*)*?)"\s*\)"#)?.captures(content) {
++            let notes = captures.get(1).unwrap().as_str()
++                .replace("\"\n\t\t       \"", " ")
++                .replace("\"\n\t\t    \"", " ")
++                .replace("\"\n\t\t   \"", " ")
++                .replace("\"\n\t\t  \"", " ")
++                .replace("\"\n\t\t \"", " ")
++                .replace("\"\n\t\t\"", " ")
++                .trim()
++                .to_string();
++            fields.insert("notes".to_string(), notes);
++        }
++
++        // Parse KAPI_EXAMPLES (handle multi-line)
++        if let Some(captures) = Regex::new(r#"KAPI_EXAMPLES\s*\(\s*"([^"]*(?:\s*"[^"]*)*?)"\s*\)"#)?.captures(content) {
++            let examples = captures.get(1).unwrap().as_str()
++                .replace("\\n\"\n\t\t    \"", "\n")
++                .replace("\\n\"\n\t\t   \"", "\n")
++                .replace("\\n\"\n\t\t  \"", "\n")
++                .replace("\\n\"\n\t\t \"", "\n")
++                .replace("\\n\"\n\t\t\"", "\n")
++                .replace("\\n", "\n")
++                .trim()
++                .to_string();
++            fields.insert("examples".to_string(), examples);
++        }
++
++        // Parse KAPI_SINCE_VERSION
++        if let Some(captures) = Regex::new(r#"KAPI_SINCE_VERSION\s*\(\s*"([^"]*)"\s*\)"#)?.captures(content) {
++            fields.insert("since_version".to_string(), captures.get(1).unwrap().as_str().to_string());
++        }
++
++        // Parse parameter count
++        let param_regex = Regex::new(r"KAPI_PARAM\s*\(\s*(\d+)\s*,")?;
++        let mut max_param_idx = 0;
++        for captures in param_regex.captures_iter(content) {
++            if let Ok(idx) = captures.get(1).unwrap().as_str().parse::<usize>() {
++                max_param_idx = max_param_idx.max(idx + 1);
++            }
++        }
++        if max_param_idx > 0 {
++            fields.insert("param_count".to_string(), max_param_idx.to_string());
++        }
++
++        // Parse error count
++        let error_regex = Regex::new(r"KAPI_ERROR\s*\(\s*(\d+)\s*,")?;
++        let mut max_error_idx = 0;
++        for captures in error_regex.captures_iter(content) {
++            if let Ok(idx) = captures.get(1).unwrap().as_str().parse::<usize>() {
++                max_error_idx = max_error_idx.max(idx + 1);
++            }
++        }
++        if max_error_idx > 0 {
++            fields.insert("error_count".to_string(), max_error_idx.to_string());
++        }
++
++        // Parse other counts
++        if content.contains(".error_count =") {
++            if let Some(captures) = Regex::new(r"\.error_count\s*=\s*(\d+)")?.captures(content) {
++                fields.insert("error_count".to_string(), captures.get(1).unwrap().as_str().to_string());
++            }
++        }
++
++        if content.contains(".param_count =") {
++            if let Some(captures) = Regex::new(r"\.param_count\s*=\s*(\d+)")?.captures(content) {
++                fields.insert("param_count".to_string(), captures.get(1).unwrap().as_str().to_string());
++            }
++        }
++
++        // Parse .since_version
++        if let Some(captures) = Regex::new(r#"\.since_version\s*=\s*"([^"]*)""#)?.captures(content) {
++            fields.insert("since_version".to_string(), captures.get(1).unwrap().as_str().to_string());
++        }
++
++        // Parse .notes (handle multi-line)
++        if let Some(captures) = Regex::new(r#"\.notes\s*=\s*"([^"]*(?:\s*"[^"]*)*?)""#)?.captures(content) {
++            let notes = captures.get(1).unwrap().as_str()
++                .replace("\"\n\t\t \"", " ")
++                .replace("\"\n\t\t\"", " ")
++                .replace("\"\n\t \"", " ")  // Handle single tab + space
++                .trim()
++                .to_string();
++            fields.insert("notes".to_string(), notes);
++        }
++
++        // Parse .examples (handle multi-line)
++        if let Some(captures) = Regex::new(r#"\.examples\s*=\s*"([^"]*(?:\s*"[^"]*)*?)""#)?.captures(content) {
++            let examples = captures.get(1).unwrap().as_str()
++                .replace("\\n\"\n\t\t    \"", "\n")
++                .replace("\\n", "\n");
++            fields.insert("examples".to_string(), examples);
++        }
++
++        Ok(())
++    }
++
++    /// Scan a directory tree for files containing KAPI specifications
++    pub fn scan_directory(&self, dir: &Path, extensions: &[&str]) -> Result<Vec<SourceApiSpec>> {
++        let mut all_specs = Vec::new();
++
++        for entry in WalkDir::new(dir)
++            .follow_links(true)
++            .into_iter()
++            .filter_map(|e| e.ok())
++        {
++            let path = entry.path();
++
++            // Skip non-files
++            if !path.is_file() {
++                continue;
++            }
++
++            // Check file extension
++            if let Some(ext) = path.extension() {
++                if extensions.iter().any(|&e| ext == e) {
++                    // Try to parse the file
++                    match self.parse_file(path) {
++                        Ok(specs) => {
++                            if !specs.is_empty() {
++                                all_specs.extend(specs);
++                            }
++                        }
++                        Err(e) => {
++                            eprintln!("Warning: Failed to parse {}: {}", path.display(), e);
++                        }
++                    }
++                }
++            }
++        }
++
++        Ok(all_specs)
++    }
++
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use std::io::Write;
++    use tempfile::NamedTempFile;
++
++    #[test]
++    fn test_parse_syscall_spec() {
++        let parser = SourceParser::new().unwrap();
++
++        let content = r#"
++DEFINE_KERNEL_API_SPEC(sys_mlock)
++    KAPI_DESCRIPTION("Lock pages in memory")
++    KAPI_LONG_DESC("Locks pages in the specified address range into RAM")
++    KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
++
++    KAPI_PARAM(0, "start", "unsigned long", "Starting address")
++    KAPI_PARAM_END
++
++    KAPI_PARAM(1, "len", "size_t", "Length of range")
++    KAPI_PARAM_END
++
++    .param_count = 2,
++    .error_count = 3,
++
++KAPI_END_SPEC
++"#;
++
++        let mut temp_file = NamedTempFile::new().unwrap();
++        write!(temp_file, "{}", content).unwrap();
++
++        let specs = parser.parse_content(content, temp_file.path()).unwrap();
++
++        assert_eq!(specs.len(), 1);
++        assert_eq!(specs[0].name, "sys_mlock");
++        assert_eq!(specs[0].api_type, ApiType::Syscall);
++        assert_eq!(specs[0].parsed_fields.get("description").unwrap(), "Lock pages in memory");
++        assert_eq!(specs[0].parsed_fields.get("param_count").unwrap(), "2");
++    }
++
++    #[test]
++    fn test_parse_ioctl_spec() {
++        let parser = SourceParser::new().unwrap();
++
++        let content = r#"
++DEFINE_IOCTL_API_SPEC(binder_write_read, BINDER_WRITE_READ, "BINDER_WRITE_READ")
++    KAPI_DESCRIPTION("Perform read/write operations on binder")
++    KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
++
++    KAPI_PARAM(0, "write_size", "binder_size_t", "Bytes to write")
++    KAPI_PARAM_END
++
++KAPI_END_IOCTL_SPEC
++"#;
++
++        let mut temp_file = NamedTempFile::new().unwrap();
++        write!(temp_file, "{}", content).unwrap();
++
++        let specs = parser.parse_content(content, temp_file.path()).unwrap();
++
++        assert_eq!(specs.len(), 1);
++        assert_eq!(specs[0].name, "binder_write_read");
++        assert_eq!(specs[0].api_type, ApiType::Ioctl);
++        assert_eq!(specs[0].parsed_fields.get("cmd_name").unwrap(), "BINDER_WRITE_READ");
++    }
++}
++
++// SourceExtractor implementation
++pub struct SourceExtractor {
++    specs: Vec<SourceApiSpec>,
++}
++
++impl SourceExtractor {
++    pub fn new(path: String) -> Result<Self> {
++        let parser = SourceParser::new()?;
++        let path_obj = Path::new(&path);
++
++        let specs = if path_obj.is_file() {
++            parser.parse_file(path_obj)?
++        } else if path_obj.is_dir() {
++            parser.scan_directory(path_obj, &["c", "h"])?
++        } else {
++            anyhow::bail!("Path does not exist: {}", path_obj.display())
++        };
++
++        Ok(SourceExtractor { specs })
++    }
++
++    fn convert_to_api_spec(&self, source_spec: &SourceApiSpec) -> ApiSpec {
++        ApiSpec {
++            name: source_spec.name.clone(),
++            api_type: match source_spec.api_type {
++                ApiType::Syscall => "syscall".to_string(),
++                ApiType::Ioctl => "ioctl".to_string(),
++                ApiType::Function => "function".to_string(),
++                ApiType::Unknown => "unknown".to_string(),
++            },
++            description: source_spec.parsed_fields.get("description").cloned(),
++            long_description: source_spec.parsed_fields.get("long_description").cloned(),
++            version: source_spec.parsed_fields.get("version").cloned(),
++            context_flags: source_spec.parsed_fields.get("context")
++                .map(|c| vec![c.clone()])
++                .unwrap_or_default(),
++            param_count: source_spec.parsed_fields.get("param_count")
++                .and_then(|s| s.parse::<u32>().ok()),
++            error_count: source_spec.parsed_fields.get("error_count")
++                .and_then(|s| s.parse::<u32>().ok()),
++            examples: source_spec.parsed_fields.get("examples").cloned(),
++            notes: source_spec.parsed_fields.get("notes").cloned(),
++            since_version: source_spec.parsed_fields.get("since_version").cloned(),
++        }
++    }
++}
++
++impl ApiExtractor for SourceExtractor {
++    fn extract_all(&self) -> Result<Vec<ApiSpec>> {
++        Ok(self.specs.iter()
++            .map(|s| self.convert_to_api_spec(s))
++            .collect())
++    }
++
++    fn extract_by_name(&self, name: &str) -> Result<Option<ApiSpec>> {
++        Ok(self.specs.iter()
++            .find(|s| s.name == name)
++            .map(|s| self.convert_to_api_spec(s)))
++    }
++
++    fn display_api_details(
++        &self,
++        api_name: &str,
++        formatter: &mut dyn OutputFormatter,
++        writer: &mut dyn Write,
++    ) -> Result<()> {
++        if let Some(spec) = self.specs.iter().find(|s| s.name == api_name) {
++            let api_spec = self.convert_to_api_spec(spec);
++            display_api_spec(&api_spec, formatter, writer)?;
++        }
++        Ok(())
++    }
++}
 \ No newline at end of file
-diff --git a/kernel/api/kernel_api_spec.c b/kernel/api/kernel_api_spec.c
+diff --git a/tools/kapi/src/extractor/vmlinux/binary_utils.rs b/tools/kapi/src/extractor/vmlinux/binary_utils.rs
 new file mode 100644
-index 0000000000000..29c0c84d87f7c
+index 0000000000000..02c8e3b8eda77
 --- /dev/null
-+++ b/kernel/api/kernel_api_spec.c
-@@ -0,0 +1,1169 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * kernel_api_spec.c - Kernel API Specification Framework Implementation
-+ *
-+ * Provides runtime support for kernel API specifications including validation,
-+ * export to various formats, and querying capabilities.
-+ */
++++ b/tools/kapi/src/extractor/vmlinux/binary_utils.rs
+@@ -0,0 +1,130 @@
++use anyhow::Result;
++use std::io::Write;
++use crate::formatter::OutputFormatter;
 +
-+#include <linux/kernel.h>
-+#include <linux/kernel_api_spec.h>
-+#include <linux/string.h>
-+#include <linux/slab.h>
-+#include <linux/list.h>
-+#include <linux/mutex.h>
-+#include <linux/seq_file.h>
-+#include <linux/debugfs.h>
-+#include <linux/export.h>
-+#include <linux/preempt.h>
-+#include <linux/hardirq.h>
-+#include <linux/file.h>
-+#include <linux/fdtable.h>
-+#include <linux/uaccess.h>
-+#include <linux/limits.h>
-+#include <linux/fcntl.h>
-+
-+/* Section where API specifications are stored */
-+extern struct kernel_api_spec __start_kapi_specs[];
-+extern struct kernel_api_spec __stop_kapi_specs[];
-+
-+/* Dynamic API registration */
-+static LIST_HEAD(dynamic_api_specs);
-+static DEFINE_MUTEX(api_spec_mutex);
-+
-+struct dynamic_api_spec {
-+	struct list_head list;
-+	struct kernel_api_spec *spec;
-+};
-+
-+/**
-+ * kapi_get_spec - Get API specification by name
-+ * @name: Function name to look up
-+ *
-+ * Return: Pointer to API specification or NULL if not found
-+ */
-+const struct kernel_api_spec *kapi_get_spec(const char *name)
-+{
-+	struct kernel_api_spec *spec;
-+	struct dynamic_api_spec *dyn_spec;
-+
-+	/* Search static specifications */
-+	for (spec = __start_kapi_specs; spec < __stop_kapi_specs; spec++) {
-+		if (strcmp(spec->name, name) == 0)
-+			return spec;
-+	}
-+
-+	/* Search dynamic specifications */
-+	mutex_lock(&api_spec_mutex);
-+	list_for_each_entry(dyn_spec, &dynamic_api_specs, list) {
-+		if (strcmp(dyn_spec->spec->name, name) == 0) {
-+			mutex_unlock(&api_spec_mutex);
-+			return dyn_spec->spec;
-+		}
-+	}
-+	mutex_unlock(&api_spec_mutex);
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(kapi_get_spec);
-+
-+/**
-+ * kapi_register_spec - Register a dynamic API specification
-+ * @spec: API specification to register
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+int kapi_register_spec(struct kernel_api_spec *spec)
-+{
-+	struct dynamic_api_spec *dyn_spec;
-+
-+	if (!spec || !spec->name[0])
-+		return -EINVAL;
-+
-+	/* Check if already exists */
-+	if (kapi_get_spec(spec->name))
-+		return -EEXIST;
-+
-+	dyn_spec = kzalloc(sizeof(*dyn_spec), GFP_KERNEL);
-+	if (!dyn_spec)
-+		return -ENOMEM;
-+
-+	dyn_spec->spec = spec;
-+
-+	mutex_lock(&api_spec_mutex);
-+	list_add_tail(&dyn_spec->list, &dynamic_api_specs);
-+	mutex_unlock(&api_spec_mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kapi_register_spec);
-+
-+/**
-+ * kapi_unregister_spec - Unregister a dynamic API specification
-+ * @name: Name of API to unregister
-+ */
-+void kapi_unregister_spec(const char *name)
-+{
-+	struct dynamic_api_spec *dyn_spec, *tmp;
-+
-+	mutex_lock(&api_spec_mutex);
-+	list_for_each_entry_safe(dyn_spec, tmp, &dynamic_api_specs, list) {
-+		if (strcmp(dyn_spec->spec->name, name) == 0) {
-+			list_del(&dyn_spec->list);
-+			kfree(dyn_spec);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&api_spec_mutex);
-+}
-+EXPORT_SYMBOL_GPL(kapi_unregister_spec);
-+
-+/**
-+ * param_type_to_string - Convert parameter type to string
-+ * @type: Parameter type
-+ *
-+ * Return: String representation of type
-+ */
-+static const char *param_type_to_string(enum kapi_param_type type)
-+{
-+	static const char * const type_names[] = {
-+		[KAPI_TYPE_VOID] = "void",
-+		[KAPI_TYPE_INT] = "int",
-+		[KAPI_TYPE_UINT] = "uint",
-+		[KAPI_TYPE_PTR] = "pointer",
-+		[KAPI_TYPE_STRUCT] = "struct",
-+		[KAPI_TYPE_UNION] = "union",
-+		[KAPI_TYPE_ENUM] = "enum",
-+		[KAPI_TYPE_FUNC_PTR] = "function_pointer",
-+		[KAPI_TYPE_ARRAY] = "array",
-+		[KAPI_TYPE_FD] = "file_descriptor",
-+		[KAPI_TYPE_USER_PTR] = "user_pointer",
-+		[KAPI_TYPE_PATH] = "pathname",
-+		[KAPI_TYPE_CUSTOM] = "custom",
-+	};
-+
-+	if (type >= ARRAY_SIZE(type_names))
-+		return "unknown";
-+
-+	return type_names[type];
++// Constants for all structure field sizes
++pub mod sizes {
++    pub const NAME: usize = 128;
++    pub const DESC: usize = 512;
++    pub const MAX_PARAMS: usize = 16;
++    pub const MAX_ERRORS: usize = 32;
++    pub const MAX_CONSTRAINTS: usize = 16;
 +}
 +
-+/**
-+ * lock_type_to_string - Convert lock type to string
-+ * @type: Lock type
-+ *
-+ * Return: String representation of lock type
-+ */
-+static const char *lock_type_to_string(enum kapi_lock_type type)
-+{
-+	static const char * const lock_names[] = {
-+		[KAPI_LOCK_NONE] = "none",
-+		[KAPI_LOCK_MUTEX] = "mutex",
-+		[KAPI_LOCK_SPINLOCK] = "spinlock",
-+		[KAPI_LOCK_RWLOCK] = "rwlock",
-+		[KAPI_LOCK_SEQLOCK] = "seqlock",
-+		[KAPI_LOCK_RCU] = "rcu",
-+		[KAPI_LOCK_SEMAPHORE] = "semaphore",
-+		[KAPI_LOCK_CUSTOM] = "custom",
-+	};
-+
-+	if (type >= ARRAY_SIZE(lock_names))
-+		return "unknown";
-+
-+	return lock_names[type];
++// Helper for reading data at specific offsets
++pub struct DataReader<'a> {
++    data: &'a [u8],
++    pos: usize,
 +}
 +
-+/**
-+ * return_check_type_to_string - Convert return check type to string
-+ * @type: Return check type
-+ *
-+ * Return: String representation of return check type
-+ */
-+static const char *return_check_type_to_string(enum kapi_return_check_type type)
-+{
-+	static const char * const check_names[] = {
-+		[KAPI_RETURN_EXACT] = "exact",
-+		[KAPI_RETURN_RANGE] = "range",
-+		[KAPI_RETURN_ERROR_CHECK] = "error_check",
-+		[KAPI_RETURN_FD] = "file_descriptor",
-+		[KAPI_RETURN_CUSTOM] = "custom",
-+	};
++impl<'a> DataReader<'a> {
++    pub fn new(data: &'a [u8], offset: usize) -> Self {
++        Self { data, pos: offset }
++    }
 +
-+	if (type >= ARRAY_SIZE(check_names))
-+		return "unknown";
++    pub fn read_bytes(&mut self, len: usize) -> Option<&'a [u8]> {
++        if self.pos + len <= self.data.len() {
++            let bytes = &self.data[self.pos..self.pos + len];
++            self.pos += len;
++            Some(bytes)
++        } else {
++            None
++        }
++    }
 +
-+	return check_names[type];
++    pub fn read_cstring(&mut self, max_len: usize) -> Option<String> {
++        let bytes = self.read_bytes(max_len)?;
++        if let Some(null_pos) = bytes.iter().position(|&b| b == 0) {
++            if null_pos > 0 {
++                if let Ok(s) = std::str::from_utf8(&bytes[..null_pos]) {
++                    return Some(s.to_string());
++                }
++            }
++        }
++        None
++    }
++
++    pub fn read_u32(&mut self) -> Option<u32> {
++        let bytes = self.read_bytes(4)?;
++        Some(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
++    }
++
++    pub fn skip(&mut self, len: usize) {
++        self.pos = (self.pos + len).min(self.data.len());
++    }
 +}
 +
-+/**
-+ * kapi_export_json - Export API specification to JSON format
-+ * @spec: API specification to export
-+ * @buf: Buffer to write JSON to
-+ * @size: Size of buffer
-+ *
-+ * Return: Number of bytes written or negative error
-+ */
-+int kapi_export_json(const struct kernel_api_spec *spec, char *buf, size_t size)
-+{
-+	int ret = 0;
-+	int i;
++#[allow(dead_code)]
++pub fn parse_context_flags(flags: u32, formatter: &mut dyn OutputFormatter, w: &mut dyn Write) -> Result<()> {
++    // Context flags from kernel headers
++    const KAPI_CTX_PROCESS: u32 = 1 << 0;
++    const KAPI_CTX_SOFTIRQ: u32 = 1 << 1;
++    const KAPI_CTX_HARDIRQ: u32 = 1 << 2;
++    const KAPI_CTX_NMI: u32 = 1 << 3;
++    const KAPI_CTX_USER: u32 = 1 << 4;
++    const KAPI_CTX_KERNEL: u32 = 1 << 5;
++    const KAPI_CTX_SLEEPABLE: u32 = 1 << 6;
++    const KAPI_CTX_ATOMIC: u32 = 1 << 7;
++    const KAPI_CTX_PREEMPTIBLE: u32 = 1 << 8;
++    const KAPI_CTX_MIGRATION_DISABLED: u32 = 1 << 9;
 +
-+	if (!spec || !buf || size == 0)
-+		return -EINVAL;
++    if flags & KAPI_CTX_PROCESS != 0 { formatter.context_flag(w, "Process context")?; }
++    if flags & KAPI_CTX_SOFTIRQ != 0 { formatter.context_flag(w, "Softirq context")?; }
++    if flags & KAPI_CTX_HARDIRQ != 0 { formatter.context_flag(w, "Hardirq context")?; }
++    if flags & KAPI_CTX_NMI != 0 { formatter.context_flag(w, "NMI context")?; }
++    if flags & KAPI_CTX_USER != 0 { formatter.context_flag(w, "User mode")?; }
++    if flags & KAPI_CTX_KERNEL != 0 { formatter.context_flag(w, "Kernel mode")?; }
++    if flags & KAPI_CTX_SLEEPABLE != 0 { formatter.context_flag(w, "May sleep")?; }
++    if flags & KAPI_CTX_ATOMIC != 0 { formatter.context_flag(w, "Atomic context")?; }
++    if flags & KAPI_CTX_PREEMPTIBLE != 0 { formatter.context_flag(w, "Preemptible")?; }
++    if flags & KAPI_CTX_MIGRATION_DISABLED != 0 { formatter.context_flag(w, "Migration disabled")?; }
 +
-+	ret = scnprintf(buf, size,
-+		"{\n"
-+		"  \"name\": \"%s\",\n"
-+		"  \"version\": %u,\n"
-+		"  \"description\": \"%s\",\n"
-+		"  \"long_description\": \"%s\",\n"
-+		"  \"context_flags\": \"0x%x\",\n",
-+		spec->name,
-+		spec->version,
-+		spec->description,
-+		spec->long_description,
-+		spec->context_flags);
-+
-+	/* Parameters */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  \"parameters\": [\n");
-+
-+	for (i = 0; i < spec->param_count && i < KAPI_MAX_PARAMS; i++) {
-+		const struct kapi_param_spec *param = &spec->params[i];
-+
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    {\n"
-+			"      \"name\": \"%s\",\n"
-+			"      \"type\": \"%s\",\n"
-+			"      \"type_class\": \"%s\",\n"
-+			"      \"flags\": \"0x%x\",\n"
-+			"      \"description\": \"%s\"\n"
-+			"    }%s\n",
-+			param->name,
-+			param->type_name,
-+			param_type_to_string(param->type),
-+			param->flags,
-+			param->description,
-+			(i < spec->param_count - 1) ? "," : "");
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret, "  ],\n");
-+
-+	/* Return value */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  \"return\": {\n"
-+		"    \"type\": \"%s\",\n"
-+		"    \"type_class\": \"%s\",\n"
-+		"    \"check_type\": \"%s\",\n",
-+		spec->return_spec.type_name,
-+		param_type_to_string(spec->return_spec.type),
-+		return_check_type_to_string(spec->return_spec.check_type));
-+
-+	switch (spec->return_spec.check_type) {
-+	case KAPI_RETURN_EXACT:
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    \"success_value\": %lld,\n",
-+			spec->return_spec.success_value);
-+		break;
-+	case KAPI_RETURN_RANGE:
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    \"success_min\": %lld,\n"
-+			"    \"success_max\": %lld,\n",
-+			spec->return_spec.success_min,
-+			spec->return_spec.success_max);
-+		break;
-+	case KAPI_RETURN_ERROR_CHECK:
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    \"error_count\": %u,\n",
-+			spec->return_spec.error_count);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret,
-+		"    \"description\": \"%s\"\n"
-+		"  },\n",
-+		spec->return_spec.description);
-+
-+	/* Errors */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  \"errors\": [\n");
-+
-+	for (i = 0; i < spec->error_count && i < KAPI_MAX_ERRORS; i++) {
-+		const struct kapi_error_spec *error = &spec->errors[i];
-+
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    {\n"
-+			"      \"code\": %d,\n"
-+			"      \"name\": \"%s\",\n"
-+			"      \"condition\": \"%s\",\n"
-+			"      \"description\": \"%s\"\n"
-+			"    }%s\n",
-+			error->error_code,
-+			error->name,
-+			error->condition,
-+			error->description,
-+			(i < spec->error_count - 1) ? "," : "");
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret, "  ],\n");
-+
-+	/* Locks */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  \"locks\": [\n");
-+
-+	for (i = 0; i < spec->lock_count && i < KAPI_MAX_CONSTRAINTS; i++) {
-+		const struct kapi_lock_spec *lock = &spec->locks[i];
-+
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    {\n"
-+			"      \"name\": \"%s\",\n"
-+			"      \"type\": \"%s\",\n"
-+			"      \"acquired\": %s,\n"
-+			"      \"released\": %s,\n"
-+			"      \"held_on_entry\": %s,\n"
-+			"      \"held_on_exit\": %s,\n"
-+			"      \"description\": \"%s\"\n"
-+			"    }%s\n",
-+			lock->lock_name,
-+			lock_type_to_string(lock->lock_type),
-+			lock->acquired ? "true" : "false",
-+			lock->released ? "true" : "false",
-+			lock->held_on_entry ? "true" : "false",
-+			lock->held_on_exit ? "true" : "false",
-+			lock->description,
-+			(i < spec->lock_count - 1) ? "," : "");
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret, "  ],\n");
-+
-+	/* Additional info */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  \"since_version\": \"%s\",\n"
-+		"  \"deprecated\": %s,\n"
-+		"  \"replacement\": \"%s\",\n"
-+		"  \"examples\": \"%s\",\n"
-+		"  \"notes\": \"%s\"\n"
-+		"}\n",
-+		spec->since_version,
-+		spec->deprecated ? "true" : "false",
-+		spec->replacement,
-+		spec->examples,
-+		spec->notes);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(kapi_export_json);
-+
-+/**
-+ * kapi_export_xml - Export API specification to XML format
-+ * @spec: API specification to export
-+ * @buf: Buffer to write XML to
-+ * @size: Size of buffer
-+ *
-+ * Return: Number of bytes written or negative error
-+ */
-+int kapi_export_xml(const struct kernel_api_spec *spec, char *buf, size_t size)
-+{
-+	int ret = 0;
-+	int i;
-+
-+	if (!spec || !buf || size == 0)
-+		return -EINVAL;
-+
-+	ret = scnprintf(buf, size,
-+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-+		"<kernel_api>\n"
-+		"  <name>%s</name>\n"
-+		"  <version>%u</version>\n"
-+		"  <description>%s</description>\n"
-+		"  <long_description><![CDATA[%s]]></long_description>\n"
-+		"  <context_flags>0x%x</context_flags>\n",
-+		spec->name,
-+		spec->version,
-+		spec->description,
-+		spec->long_description,
-+		spec->context_flags);
-+
-+	/* Parameters */
-+	ret += scnprintf(buf + ret, size - ret, "  <parameters>\n");
-+
-+	for (i = 0; i < spec->param_count && i < KAPI_MAX_PARAMS; i++) {
-+		const struct kapi_param_spec *param = &spec->params[i];
-+
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    <parameter>\n"
-+			"      <name>%s</name>\n"
-+			"      <type>%s</type>\n"
-+			"      <type_class>%s</type_class>\n"
-+			"      <flags>0x%x</flags>\n"
-+			"      <description><![CDATA[%s]]></description>\n"
-+			"    </parameter>\n",
-+			param->name,
-+			param->type_name,
-+			param_type_to_string(param->type),
-+			param->flags,
-+			param->description);
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret, "  </parameters>\n");
-+
-+	/* Return value */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  <return>\n"
-+		"    <type>%s</type>\n"
-+		"    <type_class>%s</type_class>\n"
-+		"    <check_type>%s</check_type>\n",
-+		spec->return_spec.type_name,
-+		param_type_to_string(spec->return_spec.type),
-+		return_check_type_to_string(spec->return_spec.check_type));
-+
-+	switch (spec->return_spec.check_type) {
-+	case KAPI_RETURN_EXACT:
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    <success_value>%lld</success_value>\n",
-+			spec->return_spec.success_value);
-+		break;
-+	case KAPI_RETURN_RANGE:
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    <success_min>%lld</success_min>\n"
-+			"    <success_max>%lld</success_max>\n",
-+			spec->return_spec.success_min,
-+			spec->return_spec.success_max);
-+		break;
-+	case KAPI_RETURN_ERROR_CHECK:
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    <error_count>%u</error_count>\n",
-+			spec->return_spec.error_count);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret,
-+		"    <description><![CDATA[%s]]></description>\n"
-+		"  </return>\n",
-+		spec->return_spec.description);
-+
-+	/* Errors */
-+	ret += scnprintf(buf + ret, size - ret, "  <errors>\n");
-+
-+	for (i = 0; i < spec->error_count && i < KAPI_MAX_ERRORS; i++) {
-+		const struct kapi_error_spec *error = &spec->errors[i];
-+
-+		ret += scnprintf(buf + ret, size - ret,
-+			"    <error>\n"
-+			"      <code>%d</code>\n"
-+			"      <name>%s</name>\n"
-+			"      <condition><![CDATA[%s]]></condition>\n"
-+			"      <description><![CDATA[%s]]></description>\n"
-+			"    </error>\n",
-+			error->error_code,
-+			error->name,
-+			error->condition,
-+			error->description);
-+	}
-+
-+	ret += scnprintf(buf + ret, size - ret, "  </errors>\n");
-+
-+	/* Additional info */
-+	ret += scnprintf(buf + ret, size - ret,
-+		"  <since_version>%s</since_version>\n"
-+		"  <deprecated>%s</deprecated>\n"
-+		"  <replacement>%s</replacement>\n"
-+		"  <examples><![CDATA[%s]]></examples>\n"
-+		"  <notes><![CDATA[%s]]></notes>\n"
-+		"</kernel_api>\n",
-+		spec->since_version,
-+		spec->deprecated ? "true" : "false",
-+		spec->replacement,
-+		spec->examples,
-+		spec->notes);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(kapi_export_xml);
-+
-+/**
-+ * kapi_print_spec - Print API specification to kernel log
-+ * @spec: API specification to print
-+ */
-+void kapi_print_spec(const struct kernel_api_spec *spec)
-+{
-+	int i;
-+
-+	if (!spec)
-+		return;
-+
-+	pr_info("=== Kernel API Specification ===\n");
-+	pr_info("Name: %s\n", spec->name);
-+	pr_info("Version: %u\n", spec->version);
-+	pr_info("Description: %s\n", spec->description);
-+
-+	if (spec->long_description[0])
-+		pr_info("Long Description: %s\n", spec->long_description);
-+
-+	pr_info("Context Flags: 0x%x\n", spec->context_flags);
-+
-+	/* Parameters */
-+	if (spec->param_count > 0) {
-+		pr_info("Parameters:\n");
-+		for (i = 0; i < spec->param_count && i < KAPI_MAX_PARAMS; i++) {
-+			const struct kapi_param_spec *param = &spec->params[i];
-+			pr_info("  [%d] %s: %s (flags: 0x%x)\n",
-+				i, param->name, param->type_name, param->flags);
-+			if (param->description[0])
-+				pr_info("      Description: %s\n", param->description);
-+		}
-+	}
-+
-+	/* Return value */
-+	pr_info("Return: %s\n", spec->return_spec.type_name);
-+	if (spec->return_spec.description[0])
-+		pr_info("  Description: %s\n", spec->return_spec.description);
-+
-+	/* Errors */
-+	if (spec->error_count > 0) {
-+		pr_info("Possible Errors:\n");
-+		for (i = 0; i < spec->error_count && i < KAPI_MAX_ERRORS; i++) {
-+			const struct kapi_error_spec *error = &spec->errors[i];
-+			pr_info("  %s (%d): %s\n",
-+				error->name, error->error_code, error->condition);
-+		}
-+	}
-+
-+	pr_info("================================\n");
-+}
-+EXPORT_SYMBOL_GPL(kapi_print_spec);
-+
-+#ifdef CONFIG_KAPI_RUNTIME_CHECKS
-+
-+/**
-+ * kapi_validate_fd - Validate that a file descriptor is valid in current context
-+ * @fd: File descriptor to validate
-+ *
-+ * Return: true if fd is valid in current process context, false otherwise
-+ */
-+static bool kapi_validate_fd(int fd)
-+{
-+	struct fd f;
-+
-+	/* Special case: AT_FDCWD is always valid */
-+	if (fd == AT_FDCWD)
-+		return true;
-+
-+	/* Check basic range */
-+	if (fd < 0)
-+		return false;
-+
-+	/* Check if fd is valid in current process context */
-+	f = fdget(fd);
-+	if (fd_empty(f)) {
-+		return false;
-+	}
-+
-+	/* fd is valid, release reference */
-+	fdput(f);
-+	return true;
++    Ok(())
 +}
 +
-+/**
-+ * kapi_validate_user_ptr - Validate that a user pointer is accessible
-+ * @ptr: User pointer to validate
-+ * @size: Size in bytes to validate
-+ * @write: Whether write access is required
-+ *
-+ * Return: true if user memory is accessible, false otherwise
-+ */
-+static bool kapi_validate_user_ptr(const void __user *ptr, size_t size, bool write)
-+{
-+	/* NULL is valid if parameter is marked optional */
-+	if (!ptr)
-+		return false;
-+
-+	/* Check if the user memory region is accessible */
-+	if (write) {
-+		return access_ok(ptr, size);
-+	} else {
-+		return access_ok(ptr, size);
-+	}
++// Structure layout definitions for calculating sizes
++pub fn param_spec_layout_size() -> usize {
++    // Packed structure
++    sizes::NAME * 2 + // name, type_name
++    4 + 4 + // type, flags
++    8 + 8 + // size, alignment
++    8 + 8 + // min_value, max_value
++    8 + // valid_mask
++    8 + // enum_values pointer
++    4 + 4 + // enum_count, constraint_type
++    8 + // validate pointer
++    sizes::DESC * 2 + // description, constraints
++    4 + 8 // size_param_idx, size_multiplier
 +}
 +
-+/**
-+ * kapi_validate_user_ptr_with_params - Validate user pointer with dynamic size
-+ * @param_spec: Parameter specification
-+ * @ptr: User pointer to validate
-+ * @all_params: Array of all parameter values
-+ * @param_count: Number of parameters
-+ *
-+ * Return: true if user memory is accessible, false otherwise
-+ */
-+static bool kapi_validate_user_ptr_with_params(const struct kapi_param_spec *param_spec,
-+						const void __user *ptr,
-+						const s64 *all_params,
-+						int param_count)
-+{
-+	size_t actual_size;
-+	bool write;
-+
-+	/* NULL is allowed for optional parameters */
-+	if (!ptr && (param_spec->flags & KAPI_PARAM_OPTIONAL))
-+		return true;
-+
-+	/* Calculate actual size based on related parameter */
-+	if (param_spec->size_param_idx >= 0 &&
-+	    param_spec->size_param_idx < param_count) {
-+		s64 count = all_params[param_spec->size_param_idx];
-+
-+		/* Validate count is positive */
-+		if (count <= 0) {
-+			pr_warn("Parameter %s: size determinant is non-positive (%lld)\n",
-+				param_spec->name, count);
-+			return false;
-+		}
-+
-+		/* Check for multiplication overflow */
-+		if (param_spec->size_multiplier > 0 &&
-+		    count > SIZE_MAX / param_spec->size_multiplier) {
-+			pr_warn("Parameter %s: size calculation overflow\n",
-+				param_spec->name);
-+			return false;
-+		}
-+
-+		actual_size = count * param_spec->size_multiplier;
-+	} else {
-+		/* Use fixed size */
-+		actual_size = param_spec->size;
-+	}
-+
-+	write = (param_spec->flags & KAPI_PARAM_OUT) ||
-+		(param_spec->flags & KAPI_PARAM_INOUT);
-+
-+	return kapi_validate_user_ptr(ptr, actual_size, write);
++pub fn return_spec_layout_size() -> usize {
++    // Packed structure
++    sizes::NAME + // type_name
++    4 + 4 + // type, check_type
++    8 + 8 + 8 + // success_value, success_min, success_max
++    8 + // error_values pointer
++    4 + // error_count
++    8 + // is_success pointer
++    sizes::DESC // description
 +}
 +
-+/**
-+ * kapi_validate_path - Validate that a pathname is accessible and within limits
-+ * @path: User pointer to pathname
-+ * @param_spec: Parameter specification
-+ *
-+ * Return: true if path is valid, false otherwise
-+ */
-+static bool kapi_validate_path(const char __user *path,
-+				const struct kapi_param_spec *param_spec)
-+{
-+	size_t len;
-+
-+	/* NULL is allowed for optional parameters */
-+	if (!path && (param_spec->flags & KAPI_PARAM_OPTIONAL))
-+		return true;
-+
-+	if (!path) {
-+		pr_warn("Parameter %s: NULL path not allowed\n", param_spec->name);
-+		return false;
-+	}
-+
-+	/* Check if the path is accessible */
-+	if (!access_ok(path, 1)) {
-+		pr_warn("Parameter %s: path pointer %p not accessible\n",
-+			param_spec->name, path);
-+		return false;
-+	}
-+
-+	/* Use strnlen_user to get the length and validate accessibility */
-+	len = strnlen_user(path, PATH_MAX + 1);
-+	if (len == 0) {
-+		pr_warn("Parameter %s: invalid path pointer %p\n",
-+			param_spec->name, path);
-+		return false;
-+	}
-+
-+	/* Check path length limit */
-+	if (len > PATH_MAX) {
-+		pr_warn("Parameter %s: path too long (exceeds PATH_MAX)\n",
-+			param_spec->name);
-+		return false;
-+	}
-+
-+	return true;
++pub fn error_spec_layout_size() -> usize {
++    // Packed structure
++    4 + // code
++    sizes::NAME + // name
++    sizes::DESC * 2 // condition, description
 +}
 +
-+/**
-+ * kapi_validate_param - Validate a parameter against its specification
-+ * @param_spec: Parameter specification
-+ * @value: Parameter value to validate
-+ *
-+ * Return: true if valid, false otherwise
-+ */
-+bool kapi_validate_param(const struct kapi_param_spec *param_spec, s64 value)
-+{
-+	int i;
-+
-+	/* Special handling for file descriptor type */
-+	if (param_spec->type == KAPI_TYPE_FD) {
-+		if (!kapi_validate_fd((int)value)) {
-+			pr_warn("Parameter %s: invalid file descriptor %lld\n",
-+				param_spec->name, value);
-+			return false;
-+		}
-+		/* Continue with additional constraint checks if needed */
-+	}
-+
-+	/* Special handling for user pointer type */
-+	if (param_spec->type == KAPI_TYPE_USER_PTR) {
-+		const void __user *ptr = (const void __user *)value;
-+		bool write = (param_spec->flags & KAPI_PARAM_OUT) ||
-+			     (param_spec->flags & KAPI_PARAM_INOUT);
-+
-+		/* NULL is allowed for optional parameters */
-+		if (!ptr && (param_spec->flags & KAPI_PARAM_OPTIONAL))
-+			return true;
-+
-+		if (!kapi_validate_user_ptr(ptr, param_spec->size, write)) {
-+			pr_warn("Parameter %s: invalid user pointer %p (size: %zu, %s)\n",
-+				param_spec->name, ptr, param_spec->size,
-+				write ? "write" : "read");
-+			return false;
-+		}
-+		/* Continue with additional constraint checks if needed */
-+	}
-+
-+	/* Special handling for path type */
-+	if (param_spec->type == KAPI_TYPE_PATH) {
-+		const char __user *path = (const char __user *)value;
-+
-+		if (!kapi_validate_path(path, param_spec)) {
-+			return false;
-+		}
-+		/* Continue with additional constraint checks if needed */
-+	}
-+
-+	switch (param_spec->constraint_type) {
-+	case KAPI_CONSTRAINT_NONE:
-+		return true;
-+
-+	case KAPI_CONSTRAINT_RANGE:
-+		if (value < param_spec->min_value || value > param_spec->max_value) {
-+			pr_warn("Parameter %s value %lld out of range [%lld, %lld]\n",
-+				param_spec->name, value,
-+				param_spec->min_value, param_spec->max_value);
-+			return false;
-+		}
-+		return true;
-+
-+	case KAPI_CONSTRAINT_MASK:
-+		if (value & ~param_spec->valid_mask) {
-+			pr_warn("Parameter %s value 0x%llx contains invalid bits (valid mask: 0x%llx)\n",
-+				param_spec->name, value, param_spec->valid_mask);
-+			return false;
-+		}
-+		return true;
-+
-+	case KAPI_CONSTRAINT_ENUM:
-+		if (!param_spec->enum_values || param_spec->enum_count == 0)
-+			return true;
-+
-+		for (i = 0; i < param_spec->enum_count; i++) {
-+			if (value == param_spec->enum_values[i])
-+				return true;
-+		}
-+		pr_warn("Parameter %s value %lld not in valid enumeration\n",
-+			param_spec->name, value);
-+		return false;
-+
-+	case KAPI_CONSTRAINT_CUSTOM:
-+		if (param_spec->validate)
-+			return param_spec->validate(value);
-+		return true;
-+
-+	default:
-+		return true;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(kapi_validate_param);
-+
-+/**
-+ * kapi_validate_param_with_context - Validate parameter with access to all params
-+ * @param_spec: Parameter specification
-+ * @value: Parameter value to validate
-+ * @all_params: Array of all parameter values
-+ * @param_count: Number of parameters
-+ *
-+ * Return: true if valid, false otherwise
-+ */
-+bool kapi_validate_param_with_context(const struct kapi_param_spec *param_spec,
-+				       s64 value, const s64 *all_params, int param_count)
-+{
-+	/* Special handling for user pointer type with dynamic sizing */
-+	if (param_spec->type == KAPI_TYPE_USER_PTR) {
-+		const void __user *ptr = (const void __user *)value;
-+
-+		/* NULL is allowed for optional parameters */
-+		if (!ptr && (param_spec->flags & KAPI_PARAM_OPTIONAL))
-+			return true;
-+
-+		if (!kapi_validate_user_ptr_with_params(param_spec, ptr, all_params, param_count)) {
-+			pr_warn("Parameter %s: invalid user pointer %p\n",
-+				param_spec->name, ptr);
-+			return false;
-+		}
-+		/* Continue with additional constraint checks if needed */
-+	}
-+
-+	/* For other types, fall back to regular validation */
-+	return kapi_validate_param(param_spec, value);
-+}
-+EXPORT_SYMBOL_GPL(kapi_validate_param_with_context);
-+
-+/**
-+ * kapi_validate_syscall_param - Validate syscall parameter with enforcement
-+ * @spec: API specification
-+ * @param_idx: Parameter index
-+ * @value: Parameter value
-+ *
-+ * Return: -EINVAL if invalid, 0 if valid
-+ */
-+int kapi_validate_syscall_param(const struct kernel_api_spec *spec,
-+				 int param_idx, s64 value)
-+{
-+	const struct kapi_param_spec *param_spec;
-+
-+	if (!spec || param_idx >= spec->param_count)
-+		return 0;
-+
-+	param_spec = &spec->params[param_idx];
-+
-+	if (!kapi_validate_param(param_spec, value)) {
-+		if (strncmp(spec->name, "sys_", 4) == 0) {
-+			/* For syscalls, we can return EINVAL to userspace */
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kapi_validate_syscall_param);
-+
-+/**
-+ * kapi_validate_syscall_params - Validate all syscall parameters together
-+ * @spec: API specification
-+ * @params: Array of parameter values
-+ * @param_count: Number of parameters
-+ *
-+ * Return: -EINVAL if any parameter is invalid, 0 if all valid
-+ */
-+int kapi_validate_syscall_params(const struct kernel_api_spec *spec,
-+				 const s64 *params, int param_count)
-+{
-+	int i;
-+
-+	if (!spec || !params)
-+		return 0;
-+
-+	/* Validate that we have the expected number of parameters */
-+	if (param_count != spec->param_count) {
-+		pr_warn("API %s: parameter count mismatch (expected %u, got %d)\n",
-+			spec->name, spec->param_count, param_count);
-+		return -EINVAL;
-+	}
-+
-+	/* Validate each parameter with context */
-+	for (i = 0; i < spec->param_count && i < KAPI_MAX_PARAMS; i++) {
-+		const struct kapi_param_spec *param_spec = &spec->params[i];
-+
-+		if (!kapi_validate_param_with_context(param_spec, params[i], params, param_count)) {
-+			if (strncmp(spec->name, "sys_", 4) == 0) {
-+				/* For syscalls, we can return EINVAL to userspace */
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kapi_validate_syscall_params);
-+
-+/**
-+ * kapi_check_return_success - Check if return value indicates success
-+ * @return_spec: Return specification
-+ * @retval: Return value to check
-+ *
-+ * Returns true if the return value indicates success according to the spec.
-+ */
-+bool kapi_check_return_success(const struct kapi_return_spec *return_spec, s64 retval)
-+{
-+	u32 i;
-+
-+	if (!return_spec)
-+		return true; /* No spec means we can't validate */
-+
-+	switch (return_spec->check_type) {
-+	case KAPI_RETURN_EXACT:
-+		return retval == return_spec->success_value;
-+
-+	case KAPI_RETURN_RANGE:
-+		return retval >= return_spec->success_min &&
-+		       retval <= return_spec->success_max;
-+
-+	case KAPI_RETURN_ERROR_CHECK:
-+		/* Success if NOT in error list */
-+		if (return_spec->error_values) {
-+			for (i = 0; i < return_spec->error_count; i++) {
-+				if (retval == return_spec->error_values[i])
-+					return false; /* Found in error list */
-+			}
-+		}
-+		return true; /* Not in error list = success */
-+
-+	case KAPI_RETURN_FD:
-+		/* File descriptors: >= 0 is success, < 0 is error */
-+		return retval >= 0;
-+
-+	case KAPI_RETURN_CUSTOM:
-+		if (return_spec->is_success)
-+			return return_spec->is_success(retval);
-+		fallthrough;
-+
-+	default:
-+		return true; /* Unknown check type, assume success */
-+	}
-+}
-+EXPORT_SYMBOL_GPL(kapi_check_return_success);
-+
-+/**
-+ * kapi_validate_return_value - Validate that return value matches spec
-+ * @spec: API specification
-+ * @retval: Return value to validate
-+ *
-+ * Return: true if return value is valid according to spec, false otherwise.
-+ *
-+ * This function checks:
-+ * 1. If the value indicates success, it must match the success criteria
-+ * 2. If the value indicates error, it must be one of the specified error codes
-+ */
-+bool kapi_validate_return_value(const struct kernel_api_spec *spec, s64 retval)
-+{
-+	int i;
-+	bool is_success;
-+
-+	if (!spec)
-+		return true; /* No spec means we can't validate */
-+
-+	/* First check if this is a success return */
-+	is_success = kapi_check_return_success(&spec->return_spec, retval);
-+
-+	if (is_success) {
-+		/* Success case - already validated by kapi_check_return_success */
-+		return true;
-+	}
-+
-+	/* Special validation for file descriptor returns */
-+	if (spec->return_spec.check_type == KAPI_RETURN_FD && is_success) {
-+		/* For successful FD returns, validate it's a valid FD */
-+		if (!kapi_validate_fd((int)retval)) {
-+			pr_warn("API %s returned invalid file descriptor %lld\n",
-+				spec->name, retval);
-+			return false;
-+		}
-+		return true;
-+	}
-+
-+	/* Error case - check if it's one of the specified errors */
-+	if (spec->error_count == 0) {
-+		/* No errors specified, so any error is potentially valid */
-+		pr_debug("API %s returned unspecified error %lld\n",
-+			 spec->name, retval);
-+		return true;
-+	}
-+
-+	/* Check if the error is in our list of specified errors */
-+	for (i = 0; i < spec->error_count && i < KAPI_MAX_ERRORS; i++) {
-+		if (retval == spec->errors[i].error_code)
-+			return true;
-+	}
-+
-+	/* Error not in spec */
-+	pr_warn("API %s returned unspecified error code %lld. Valid errors are:\n",
-+		spec->name, retval);
-+	for (i = 0; i < spec->error_count && i < KAPI_MAX_ERRORS; i++) {
-+		pr_warn("  %s (%d): %s\n",
-+			spec->errors[i].name,
-+			spec->errors[i].error_code,
-+			spec->errors[i].condition);
-+	}
-+
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(kapi_validate_return_value);
-+
-+/**
-+ * kapi_validate_syscall_return - Validate syscall return value with enforcement
-+ * @spec: API specification
-+ * @retval: Return value
-+ *
-+ * Return: 0 if valid, -EINVAL if the return value doesn't match spec
-+ *
-+ * For syscalls, this can help detect kernel bugs where unspecified error
-+ * codes are returned to userspace.
-+ */
-+int kapi_validate_syscall_return(const struct kernel_api_spec *spec, s64 retval)
-+{
-+	if (!spec)
-+		return 0;
-+
-+	if (!kapi_validate_return_value(spec, retval)) {
-+		/* Log the violation but don't change the return value */
-+		WARN_ONCE(1, "Syscall %s returned unspecified value %lld\n",
-+			  spec->name, retval);
-+		/* Could return -EINVAL here to enforce, but that might break userspace */
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kapi_validate_syscall_return);
-+
-+/**
-+ * kapi_check_context - Check if current context matches API requirements
-+ * @spec: API specification to check against
-+ */
-+void kapi_check_context(const struct kernel_api_spec *spec)
-+{
-+	u32 ctx = spec->context_flags;
-+	bool valid = false;
-+
-+	if (!ctx)
-+		return;
-+
-+	/* Check if we're in an allowed context */
-+	if ((ctx & KAPI_CTX_PROCESS) && !in_interrupt())
-+		valid = true;
-+
-+	if ((ctx & KAPI_CTX_SOFTIRQ) && in_softirq())
-+		valid = true;
-+
-+	if ((ctx & KAPI_CTX_HARDIRQ) && in_hardirq())
-+		valid = true;
-+
-+	if ((ctx & KAPI_CTX_NMI) && in_nmi())
-+		valid = true;
-+
-+	if (!valid) {
-+		WARN_ONCE(1, "API %s called from invalid context\n", spec->name);
-+	}
-+
-+	/* Check specific requirements */
-+	if ((ctx & KAPI_CTX_ATOMIC) && preemptible()) {
-+		WARN_ONCE(1, "API %s requires atomic context\n", spec->name);
-+	}
-+
-+	if ((ctx & KAPI_CTX_SLEEPABLE) && !preemptible()) {
-+		WARN_ONCE(1, "API %s requires sleepable context\n", spec->name);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(kapi_check_context);
-+
-+#endif /* CONFIG_KAPI_RUNTIME_CHECKS */
-+
-+/* DebugFS interface */
-+#ifdef CONFIG_DEBUG_FS
-+
-+static struct dentry *kapi_debugfs_root;
-+
-+static int kapi_spec_show(struct seq_file *s, void *v)
-+{
-+	struct kernel_api_spec *spec = s->private;
-+	char *buf;
-+	int ret;
-+
-+	buf = kmalloc(PAGE_SIZE * 4, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	ret = kapi_export_json(spec, buf, PAGE_SIZE * 4);
-+	if (ret > 0)
-+		seq_printf(s, "%s", buf);
-+
-+	kfree(buf);
-+	return 0;
++pub fn lock_spec_layout_size() -> usize {
++    // Packed structure
++    sizes::NAME + // name
++    4 + // lock_type
++    1 + 1 + 1 + 1 + // bools
++    sizes::DESC // description
 +}
 +
-+static int kapi_spec_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, kapi_spec_show, inode->i_private);
++pub fn constraint_spec_layout_size() -> usize {
++    // Packed structure
++    sizes::NAME + // name
++    sizes::DESC * 2 // description, expression
 +}
-+
-+static const struct file_operations kapi_spec_fops = {
-+	.open = kapi_spec_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static int kapi_list_show(struct seq_file *s, void *v)
-+{
-+	struct kernel_api_spec *spec;
-+	struct dynamic_api_spec *dyn_spec;
-+
-+	seq_printf(s, "Kernel API Specifications:\n\n");
-+
-+	/* List static specifications */
-+	seq_printf(s, "Static APIs:\n");
-+	for (spec = __start_kapi_specs; spec < __stop_kapi_specs; spec++) {
-+		seq_printf(s, "  %s (v%u): %s\n",
-+			spec->name, spec->version, spec->description);
-+	}
-+
-+	/* List dynamic specifications */
-+	seq_printf(s, "\nDynamic APIs:\n");
-+	mutex_lock(&api_spec_mutex);
-+	list_for_each_entry(dyn_spec, &dynamic_api_specs, list) {
-+		spec = dyn_spec->spec;
-+		seq_printf(s, "  %s (v%u): %s\n",
-+			spec->name, spec->version, spec->description);
-+	}
-+	mutex_unlock(&api_spec_mutex);
-+
-+	return 0;
-+}
-+
-+static int kapi_list_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, kapi_list_show, NULL);
-+}
-+
-+static const struct file_operations kapi_list_fops = {
-+	.open = kapi_list_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static int __init kapi_debugfs_init(void)
-+{
-+	struct kernel_api_spec *spec;
-+	struct dentry *spec_dir;
-+
-+	kapi_debugfs_root = debugfs_create_dir("kapi", NULL);
-+	if (!kapi_debugfs_root)
-+		return -ENOMEM;
-+
-+	/* Create list file */
-+	debugfs_create_file("list", 0444, kapi_debugfs_root, NULL,
-+			    &kapi_list_fops);
-+
-+	/* Create directory for specifications */
-+	spec_dir = debugfs_create_dir("specs", kapi_debugfs_root);
-+
-+	/* Create files for each static specification */
-+	for (spec = __start_kapi_specs; spec < __stop_kapi_specs; spec++) {
-+		debugfs_create_file(spec->name, 0444, spec_dir, spec,
-+				    &kapi_spec_fops);
-+	}
-+
-+	return 0;
-+}
-+
-+late_initcall(kapi_debugfs_init);
-+
-+#endif /* CONFIG_DEBUG_FS */
 \ No newline at end of file
+diff --git a/tools/kapi/src/extractor/vmlinux/mod.rs b/tools/kapi/src/extractor/vmlinux/mod.rs
+new file mode 100644
+index 0000000000000..5d5ca413d77a2
+--- /dev/null
++++ b/tools/kapi/src/extractor/vmlinux/mod.rs
+@@ -0,0 +1,372 @@
++use anyhow::{Context, Result};
++use goblin::elf::Elf;
++use std::fs;
++use std::io::Write;
++use crate::formatter::OutputFormatter;
++use super::{ApiExtractor, ApiSpec};
++
++mod binary_utils;
++use binary_utils::{sizes, DataReader,
++    param_spec_layout_size, return_spec_layout_size, error_spec_layout_size,
++    lock_spec_layout_size, constraint_spec_layout_size};
++
++pub struct VmlinuxExtractor {
++    kapi_data: Vec<u8>,
++    specs: Vec<KapiSpec>,
++}
++
++#[derive(Debug)]
++struct KapiSpec {
++    name: String,
++    api_type: String,
++    offset: usize,
++}
++
++impl VmlinuxExtractor {
++    pub fn new(vmlinux_path: String) -> Result<Self> {
++        let vmlinux_data = fs::read(&vmlinux_path)
++            .with_context(|| format!("Failed to read vmlinux file: {}", vmlinux_path))?;
++
++        let elf = Elf::parse(&vmlinux_data)
++            .context("Failed to parse ELF file")?;
++
++        // Find the .kapi_specs section
++        let kapi_section = elf.section_headers
++            .iter()
++            .find(|sh| {
++                if let Some(name) = elf.shdr_strtab.get_at(sh.sh_name) {
++                    name == ".kapi_specs"
++                } else {
++                    false
++                }
++            })
++            .context("Could not find .kapi_specs section in vmlinux")?;
++
++        // Find __start_kapi_specs and __stop_kapi_specs symbols
++        let mut start_addr = None;
++        let mut stop_addr = None;
++
++        for sym in &elf.syms {
++            if let Some(name) = elf.strtab.get_at(sym.st_name) {
++                match name {
++                    "__start_kapi_specs" => start_addr = Some(sym.st_value),
++                    "__stop_kapi_specs" => stop_addr = Some(sym.st_value),
++                    _ => {}
++                }
++            }
++        }
++
++        let start = start_addr.context("Could not find __start_kapi_specs symbol")?;
++        let stop = stop_addr.context("Could not find __stop_kapi_specs symbol")?;
++
++        if stop <= start {
++            anyhow::bail!("No kernel API specifications found in vmlinux");
++        }
++
++        // Calculate the offset within the file
++        let section_vaddr = kapi_section.sh_addr;
++        let file_offset = kapi_section.sh_offset + (start - section_vaddr);
++        let data_size = (stop - start) as usize;
++
++        if file_offset as usize + data_size > vmlinux_data.len() {
++            anyhow::bail!("Invalid offset/size for .kapi_specs data");
++        }
++
++        // Extract the raw data
++        let kapi_data = vmlinux_data[file_offset as usize..(file_offset as usize + data_size)].to_vec();
++
++        // Parse the specifications
++        let specs = parse_kapi_specs(&kapi_data)?;
++
++        Ok(VmlinuxExtractor {
++            kapi_data,
++            specs,
++        })
++    }
++
++}
++
++impl ApiExtractor for VmlinuxExtractor {
++    fn extract_all(&self) -> Result<Vec<ApiSpec>> {
++        // For vmlinux extractor, we return basic info only
++        // Detailed parsing happens in display_api_details
++        Ok(self.specs.iter().map(|spec| {
++            ApiSpec {
++                name: spec.name.clone(),
++                api_type: spec.api_type.clone(),
++                description: None,
++                long_description: None,
++                version: None,
++                context_flags: vec![],
++                param_count: None,
++                error_count: None,
++                examples: None,
++                notes: None,
++                since_version: None,
++            }
++        }).collect())
++    }
++
++    fn extract_by_name(&self, name: &str) -> Result<Option<ApiSpec>> {
++        Ok(self.specs.iter()
++            .find(|s| s.name == name)
++            .map(|spec| ApiSpec {
++                name: spec.name.clone(),
++                api_type: spec.api_type.clone(),
++                description: None,
++                long_description: None,
++                version: None,
++                context_flags: vec![],
++                param_count: None,
++                error_count: None,
++                examples: None,
++                notes: None,
++                since_version: None,
++            }))
++    }
++
++    fn display_api_details(
++        &self,
++        api_name: &str,
++        formatter: &mut dyn OutputFormatter,
++        writer: &mut dyn Write,
++    ) -> Result<()> {
++        if let Some(spec) = self.specs.iter().find(|s| s.name == api_name) {
++            // Parse the binary data into an ApiSpec
++            let api_spec = parse_binary_to_api_spec(&self.kapi_data, spec.offset)?;
++            // Use the common display function
++            super::display_api_spec(&api_spec, formatter, writer)?;
++        }
++        Ok(())
++    }
++}
++
++fn parse_kapi_specs(data: &[u8]) -> Result<Vec<KapiSpec>> {
++    let mut specs = Vec::new();
++
++    // The kernel_api_spec struct size in the kernel is 308064 bytes
++    // This is calculated as sizeof(struct kernel_api_spec) which includes:
++    // - Basic fields (name, version, description, etc.)
++    // - Arrays for parameters, errors, locks, constraints
++    // - Additional metadata fields
++    // TODO: This should ideally be read from kernel headers or made configurable
++    let struct_size = 308064;
++
++    let mut offset = 0;
++    while offset + struct_size <= data.len() {
++        // Try to read the name at this offset
++        if let Some(name) = read_cstring(data, offset, 128) {
++            if is_valid_api_name(&name) {
++                let api_type = if name.starts_with("sys_") {
++                    "syscall"
++                } else if name.contains("ioctl") || name.contains("IOCTL") {
++                    "ioctl"
++                } else {
++                    "other"
++                };
++
++                specs.push(KapiSpec {
++                    name: name.to_string(),
++                    api_type: api_type.to_string(),
++                    offset,
++                });
++            }
++        }
++
++        offset += struct_size;
++    }
++
++    // Handle any remaining data that might be a partial spec
++    if offset < data.len() && data.len() - offset >= 128 {
++        if let Some(name) = read_cstring(data, offset, 128) {
++            if is_valid_api_name(&name) {
++                let api_type = if name.starts_with("sys_") {
++                    "syscall"
++                } else if name.contains("ioctl") || name.contains("IOCTL") {
++                    "ioctl"
++                } else {
++                    "other"
++                };
++
++                specs.push(KapiSpec {
++                    name: name.to_string(),
++                    api_type: api_type.to_string(),
++                    offset,
++                });
++            }
++        }
++    }
++
++    Ok(specs)
++}
++
++fn read_cstring(data: &[u8], offset: usize, max_len: usize) -> Option<String> {
++    if offset + max_len > data.len() {
++        return None;
++    }
++
++    let bytes = &data[offset..offset + max_len];
++    if let Some(null_pos) = bytes.iter().position(|&b| b == 0) {
++        if null_pos > 0 {
++            if let Ok(s) = std::str::from_utf8(&bytes[..null_pos]) {
++                return Some(s.to_string());
++            }
++        }
++    }
++    None
++}
++
++fn is_valid_api_name(name: &str) -> bool {
++    if name.is_empty() || name.len() > 100 {
++        return false;
++    }
++
++    name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
++        && (name.starts_with("sys_")
++            || name.contains("ioctl")
++            || name.contains("IOCTL")
++            || name.starts_with("do_")
++            || name.starts_with("__"))
++}
++
++fn parse_binary_to_api_spec(data: &[u8], offset: usize) -> Result<ApiSpec> {
++    let mut reader = DataReader::new(data, offset);
++
++    // Read name
++    let name = reader.read_cstring(sizes::NAME)
++        .ok_or_else(|| anyhow::anyhow!("Failed to read API name"))?;
++
++    // Read version
++    let version = reader.read_u32()
++        .map(|v| v.to_string());
++
++    // Read description
++    let description = reader.read_cstring(sizes::DESC)
++        .filter(|s| !s.is_empty());
++
++    // Read long description
++    let long_description = reader.read_cstring(sizes::DESC * 4)
++        .filter(|s| !s.is_empty());
++
++    // Read context flags
++    let context_flags = if let Some(flags) = reader.read_u32() {
++        let mut flag_strings = Vec::new();
++
++        const KAPI_CTX_PROCESS: u32 = 1 << 0;
++        const KAPI_CTX_SOFTIRQ: u32 = 1 << 1;
++        const KAPI_CTX_HARDIRQ: u32 = 1 << 2;
++        const KAPI_CTX_NMI: u32 = 1 << 3;
++        const KAPI_CTX_USER: u32 = 1 << 4;
++        const KAPI_CTX_KERNEL: u32 = 1 << 5;
++        const KAPI_CTX_SLEEPABLE: u32 = 1 << 6;
++        const KAPI_CTX_ATOMIC: u32 = 1 << 7;
++        const KAPI_CTX_PREEMPTIBLE: u32 = 1 << 8;
++        const KAPI_CTX_MIGRATION_DISABLED: u32 = 1 << 9;
++
++        // Build the flag string similar to source format
++        let mut parts = Vec::new();
++        if flags & KAPI_CTX_PROCESS != 0 { parts.push("KAPI_CTX_PROCESS"); }
++        if flags & KAPI_CTX_SOFTIRQ != 0 { parts.push("KAPI_CTX_SOFTIRQ"); }
++        if flags & KAPI_CTX_HARDIRQ != 0 { parts.push("KAPI_CTX_HARDIRQ"); }
++        if flags & KAPI_CTX_NMI != 0 { parts.push("KAPI_CTX_NMI"); }
++        if flags & KAPI_CTX_USER != 0 { parts.push("KAPI_CTX_USER"); }
++        if flags & KAPI_CTX_KERNEL != 0 { parts.push("KAPI_CTX_KERNEL"); }
++        if flags & KAPI_CTX_SLEEPABLE != 0 { parts.push("KAPI_CTX_SLEEPABLE"); }
++        if flags & KAPI_CTX_ATOMIC != 0 { parts.push("KAPI_CTX_ATOMIC"); }
++        if flags & KAPI_CTX_PREEMPTIBLE != 0 { parts.push("KAPI_CTX_PREEMPTIBLE"); }
++        if flags & KAPI_CTX_MIGRATION_DISABLED != 0 { parts.push("KAPI_CTX_MIGRATION_DISABLED"); }
++
++        if !parts.is_empty() {
++            flag_strings.push(parts.join(" | "));
++        }
++        flag_strings
++    } else {
++        vec![]
++    };
++
++    // Read parameter count
++    let param_count = reader.read_u32();
++
++    // Skip parameters for now (to match source output)
++    if let Some(count) = param_count {
++        if count > 0 && count <= sizes::MAX_PARAMS as u32 {
++            reader.skip(param_spec_layout_size() * count as usize);
++            reader.skip(param_spec_layout_size() * (sizes::MAX_PARAMS - count as usize));
++        } else {
++            reader.skip(param_spec_layout_size() * sizes::MAX_PARAMS);
++        }
++    }
++
++    // Skip return spec
++    reader.skip(return_spec_layout_size());
++
++    // Read error count
++    let error_count = reader.read_u32();
++
++    // Skip errors
++    if let Some(count) = error_count {
++        if count > 0 && count <= sizes::MAX_ERRORS as u32 {
++            reader.skip(error_spec_layout_size() * count as usize);
++            reader.skip(error_spec_layout_size() * (sizes::MAX_ERRORS - count as usize));
++        } else {
++            reader.skip(error_spec_layout_size() * sizes::MAX_ERRORS);
++        }
++    }
++
++    // Skip locks
++    if let Some(lock_count) = reader.read_u32() {
++        if lock_count > 0 && lock_count <= sizes::MAX_CONSTRAINTS as u32 {
++            reader.skip(lock_spec_layout_size() * lock_count as usize);
++            reader.skip(lock_spec_layout_size() * (sizes::MAX_CONSTRAINTS - lock_count as usize));
++        } else {
++            reader.skip(lock_spec_layout_size() * sizes::MAX_CONSTRAINTS);
++        }
++    }
++
++    // Skip constraints
++    if let Some(constraint_count) = reader.read_u32() {
++        if constraint_count > 0 && constraint_count <= sizes::MAX_CONSTRAINTS as u32 {
++            reader.skip(constraint_spec_layout_size() * constraint_count as usize);
++            reader.skip(constraint_spec_layout_size() * (sizes::MAX_CONSTRAINTS - constraint_count as usize));
++        } else {
++            reader.skip(constraint_spec_layout_size() * sizes::MAX_CONSTRAINTS);
++        }
++    }
++
++    // Read examples
++    let examples = reader.read_cstring(sizes::DESC * 2)
++        .filter(|s| !s.is_empty());
++
++    // Read notes
++    let notes = reader.read_cstring(sizes::DESC)
++        .filter(|s| !s.is_empty());
++
++    // Read since_version
++    let since_version = reader.read_cstring(32)
++        .filter(|s| !s.is_empty());
++
++    // Determine API type from name
++    let api_type = if name.starts_with("sys_") {
++        "syscall"
++    } else if name.contains("ioctl") || name.contains("IOCTL") {
++        "ioctl"
++    } else {
++        "other"
++    }.to_string();
++
++    Ok(ApiSpec {
++        name,
++        api_type,
++        description,
++        long_description,
++        version,
++        context_flags,
++        param_count,
++        error_count,
++        examples,
++        notes,
++        since_version,
++    })
++}
++
++// Old display_api_details_from_binary function removed - now using parse_binary_to_api_spec + display_api_spec
+\ No newline at end of file
+diff --git a/tools/kapi/src/formatter/json.rs b/tools/kapi/src/formatter/json.rs
+new file mode 100644
+index 0000000000000..44d2bbfc91133
+--- /dev/null
++++ b/tools/kapi/src/formatter/json.rs
+@@ -0,0 +1,170 @@
++use super::OutputFormatter;
++use std::io::Write;
++use serde::Serialize;
++
++pub struct JsonFormatter {
++    data: JsonData,
++}
++
++#[derive(Serialize)]
++struct JsonData {
++    #[serde(skip_serializing_if = "Option::is_none")]
++    apis: Option<Vec<JsonApi>>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    api_details: Option<JsonApiDetails>,
++}
++
++#[derive(Serialize)]
++struct JsonApi {
++    name: String,
++    api_type: String,
++}
++
++#[derive(Serialize)]
++struct JsonApiDetails {
++    name: String,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    description: Option<String>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    long_description: Option<String>,
++    #[serde(skip_serializing_if = "Vec::is_empty")]
++    context_flags: Vec<String>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    examples: Option<String>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    notes: Option<String>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    since_version: Option<String>,
++}
++
++
++impl JsonFormatter {
++    pub fn new() -> Self {
++        JsonFormatter {
++            data: JsonData {
++                apis: None,
++                api_details: None,
++            }
++        }
++    }
++}
++
++impl OutputFormatter for JsonFormatter {
++    fn begin_document(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn end_document(&mut self, w: &mut dyn Write) -> std::io::Result<()> {
++        let json = serde_json::to_string_pretty(&self.data)?;
++        writeln!(w, "{}", json)?;
++        Ok(())
++    }
++
++    fn begin_api_list(&mut self, _w: &mut dyn Write, _title: &str) -> std::io::Result<()> {
++        self.data.apis = Some(Vec::new());
++        Ok(())
++    }
++
++    fn api_item(&mut self, _w: &mut dyn Write, name: &str, api_type: &str) -> std::io::Result<()> {
++        if let Some(apis) = &mut self.data.apis {
++            apis.push(JsonApi {
++                name: name.to_string(),
++                api_type: api_type.to_string(),
++            });
++        }
++        Ok(())
++    }
++
++    fn end_api_list(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn total_specs(&mut self, _w: &mut dyn Write, _count: usize) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_api_details(&mut self, _w: &mut dyn Write, name: &str) -> std::io::Result<()> {
++        self.data.api_details = Some(JsonApiDetails {
++            name: name.to_string(),
++            description: None,
++            long_description: None,
++            context_flags: Vec::new(),
++            examples: None,
++            notes: None,
++            since_version: None,
++        });
++        Ok(())
++    }
++
++    fn end_api_details(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++
++    fn description(&mut self, _w: &mut dyn Write, desc: &str) -> std::io::Result<()> {
++        if let Some(details) = &mut self.data.api_details {
++            details.description = Some(desc.to_string());
++        }
++        Ok(())
++    }
++
++    fn long_description(&mut self, _w: &mut dyn Write, desc: &str) -> std::io::Result<()> {
++        if let Some(details) = &mut self.data.api_details {
++            details.long_description = Some(desc.to_string());
++        }
++        Ok(())
++    }
++
++    fn begin_context_flags(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn context_flag(&mut self, _w: &mut dyn Write, flag: &str) -> std::io::Result<()> {
++        if let Some(details) = &mut self.data.api_details {
++            details.context_flags.push(flag.to_string());
++        }
++        Ok(())
++    }
++
++    fn end_context_flags(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_parameters(&mut self, _w: &mut dyn Write, _count: u32) -> std::io::Result<()> {
++        Ok(())
++    }
++
++
++    fn end_parameters(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_errors(&mut self, _w: &mut dyn Write, _count: u32) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn end_errors(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn examples(&mut self, _w: &mut dyn Write, examples: &str) -> std::io::Result<()> {
++        if let Some(details) = &mut self.data.api_details {
++            details.examples = Some(examples.to_string());
++        }
++        Ok(())
++    }
++
++    fn notes(&mut self, _w: &mut dyn Write, notes: &str) -> std::io::Result<()> {
++        if let Some(details) = &mut self.data.api_details {
++            details.notes = Some(notes.to_string());
++        }
++        Ok(())
++    }
++
++    fn since_version(&mut self, _w: &mut dyn Write, version: &str) -> std::io::Result<()> {
++        if let Some(details) = &mut self.data.api_details {
++            details.since_version = Some(version.to_string());
++        }
++        Ok(())
++    }
++}
+\ No newline at end of file
+diff --git a/tools/kapi/src/formatter/mod.rs b/tools/kapi/src/formatter/mod.rs
+new file mode 100644
+index 0000000000000..6eb42e8b404d0
+--- /dev/null
++++ b/tools/kapi/src/formatter/mod.rs
+@@ -0,0 +1,68 @@
++use std::io::Write;
++
++mod plain;
++mod json;
++mod rst;
++
++pub use plain::PlainFormatter;
++pub use json::JsonFormatter;
++pub use rst::RstFormatter;
++
++
++#[derive(Debug, Clone, Copy, PartialEq)]
++pub enum OutputFormat {
++    Plain,
++    Json,
++    Rst,
++}
++
++impl std::str::FromStr for OutputFormat {
++    type Err = String;
++
++    fn from_str(s: &str) -> Result<Self, Self::Err> {
++        match s.to_lowercase().as_str() {
++            "plain" => Ok(OutputFormat::Plain),
++            "json" => Ok(OutputFormat::Json),
++            "rst" => Ok(OutputFormat::Rst),
++            _ => Err(format!("Unknown output format: {}", s)),
++        }
++    }
++}
++
++pub trait OutputFormatter {
++    fn begin_document(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++    fn end_document(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++
++    fn begin_api_list(&mut self, w: &mut dyn Write, title: &str) -> std::io::Result<()>;
++    fn api_item(&mut self, w: &mut dyn Write, name: &str, api_type: &str) -> std::io::Result<()>;
++    fn end_api_list(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++
++    fn total_specs(&mut self, w: &mut dyn Write, count: usize) -> std::io::Result<()>;
++
++    fn begin_api_details(&mut self, w: &mut dyn Write, name: &str) -> std::io::Result<()>;
++    fn end_api_details(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++    fn description(&mut self, w: &mut dyn Write, desc: &str) -> std::io::Result<()>;
++    fn long_description(&mut self, w: &mut dyn Write, desc: &str) -> std::io::Result<()>;
++
++    fn begin_context_flags(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++    fn context_flag(&mut self, w: &mut dyn Write, flag: &str) -> std::io::Result<()>;
++    fn end_context_flags(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++
++    fn begin_parameters(&mut self, w: &mut dyn Write, count: u32) -> std::io::Result<()>;
++    fn end_parameters(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++
++    fn begin_errors(&mut self, w: &mut dyn Write, count: u32) -> std::io::Result<()>;
++    fn end_errors(&mut self, w: &mut dyn Write) -> std::io::Result<()>;
++
++    fn examples(&mut self, w: &mut dyn Write, examples: &str) -> std::io::Result<()>;
++    fn notes(&mut self, w: &mut dyn Write, notes: &str) -> std::io::Result<()>;
++    fn since_version(&mut self, w: &mut dyn Write, version: &str) -> std::io::Result<()>;
++}
++
++pub fn create_formatter(format: OutputFormat) -> Box<dyn OutputFormatter> {
++    match format {
++        OutputFormat::Plain => Box::new(PlainFormatter::new()),
++        OutputFormat::Json => Box::new(JsonFormatter::new()),
++        OutputFormat::Rst => Box::new(RstFormatter::new()),
++    }
++}
+\ No newline at end of file
+diff --git a/tools/kapi/src/formatter/plain.rs b/tools/kapi/src/formatter/plain.rs
+new file mode 100644
+index 0000000000000..4ccbfcbbc8416
+--- /dev/null
++++ b/tools/kapi/src/formatter/plain.rs
+@@ -0,0 +1,99 @@
++use super::OutputFormatter;
++use std::io::Write;
++
++pub struct PlainFormatter;
++
++impl PlainFormatter {
++    pub fn new() -> Self {
++        PlainFormatter
++    }
++}
++
++impl OutputFormatter for PlainFormatter {
++    fn begin_document(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn end_document(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_api_list(&mut self, w: &mut dyn Write, title: &str) -> std::io::Result<()> {
++        writeln!(w, "\n{}:", title)?;
++        writeln!(w, "{}", "-".repeat(title.len() + 1))
++    }
++
++    fn api_item(&mut self, w: &mut dyn Write, name: &str, _api_type: &str) -> std::io::Result<()> {
++        writeln!(w, "  {}", name)
++    }
++
++    fn end_api_list(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn total_specs(&mut self, w: &mut dyn Write, count: usize) -> std::io::Result<()> {
++        writeln!(w, "\nTotal specifications found: {}", count)
++    }
++
++    fn begin_api_details(&mut self, w: &mut dyn Write, name: &str) -> std::io::Result<()> {
++        writeln!(w, "\nDetailed information for {}:", name)?;
++        writeln!(w, "{}=", "=".repeat(25 + name.len()))
++    }
++
++    fn end_api_details(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++
++    fn description(&mut self, w: &mut dyn Write, desc: &str) -> std::io::Result<()> {
++        writeln!(w, "Description: {}", desc)
++    }
++
++    fn long_description(&mut self, w: &mut dyn Write, desc: &str) -> std::io::Result<()> {
++        writeln!(w, "\nDetailed Description:")?;
++        writeln!(w, "{}", desc)
++    }
++
++    fn begin_context_flags(&mut self, w: &mut dyn Write) -> std::io::Result<()> {
++        writeln!(w, "\nExecution Context:")
++    }
++
++    fn context_flag(&mut self, w: &mut dyn Write, flag: &str) -> std::io::Result<()> {
++        writeln!(w, "  - {}", flag)
++    }
++
++    fn end_context_flags(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_parameters(&mut self, w: &mut dyn Write, count: u32) -> std::io::Result<()> {
++        writeln!(w, "\nParameters ({}):", count)
++    }
++
++
++    fn end_parameters(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_errors(&mut self, w: &mut dyn Write, count: u32) -> std::io::Result<()> {
++        writeln!(w, "\nPossible Errors ({}):", count)
++    }
++
++    fn end_errors(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn examples(&mut self, w: &mut dyn Write, examples: &str) -> std::io::Result<()> {
++        writeln!(w, "\nExamples:")?;
++        writeln!(w, "{}", examples)
++    }
++
++    fn notes(&mut self, w: &mut dyn Write, notes: &str) -> std::io::Result<()> {
++        writeln!(w, "\nNotes:")?;
++        writeln!(w, "{}", notes)
++    }
++
++    fn since_version(&mut self, w: &mut dyn Write, version: &str) -> std::io::Result<()> {
++        writeln!(w, "\nAvailable since: {}", version)
++    }
++}
+\ No newline at end of file
+diff --git a/tools/kapi/src/formatter/rst.rs b/tools/kapi/src/formatter/rst.rs
+new file mode 100644
+index 0000000000000..96be83bf208dd
+--- /dev/null
++++ b/tools/kapi/src/formatter/rst.rs
+@@ -0,0 +1,144 @@
++use super::OutputFormatter;
++use std::io::Write;
++
++pub struct RstFormatter {
++    current_section_level: usize,
++}
++
++impl RstFormatter {
++    pub fn new() -> Self {
++        RstFormatter {
++            current_section_level: 0,
++        }
++    }
++
++    fn section_char(&self, level: usize) -> char {
++        match level {
++            0 => '=',
++            1 => '-',
++            2 => '~',
++            3 => '^',
++            _ => '"',
++        }
++    }
++}
++
++impl OutputFormatter for RstFormatter {
++    fn begin_document(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn end_document(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_api_list(&mut self, w: &mut dyn Write, title: &str) -> std::io::Result<()> {
++        writeln!(w, "\n{}", title)?;
++        writeln!(w, "{}", self.section_char(0).to_string().repeat(title.len()))?;
++        writeln!(w)
++    }
++
++    fn api_item(&mut self, w: &mut dyn Write, name: &str, api_type: &str) -> std::io::Result<()> {
++        writeln!(w, "* **{}** (*{}*)", name, api_type)
++    }
++
++    fn end_api_list(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn total_specs(&mut self, w: &mut dyn Write, count: usize) -> std::io::Result<()> {
++        writeln!(w, "\n**Total specifications found:** {}", count)
++    }
++
++    fn begin_api_details(&mut self, w: &mut dyn Write, name: &str) -> std::io::Result<()> {
++        self.current_section_level = 0;
++        writeln!(w, "\n{}", name)?;
++        writeln!(w, "{}", self.section_char(0).to_string().repeat(name.len()))?;
++        writeln!(w)
++    }
++
++    fn end_api_details(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++
++    fn description(&mut self, w: &mut dyn Write, desc: &str) -> std::io::Result<()> {
++        writeln!(w, "**{}**", desc)?;
++        writeln!(w)
++    }
++
++    fn long_description(&mut self, w: &mut dyn Write, desc: &str) -> std::io::Result<()> {
++        writeln!(w, "{}", desc)?;
++        writeln!(w)
++    }
++
++    fn begin_context_flags(&mut self, w: &mut dyn Write) -> std::io::Result<()> {
++        self.current_section_level = 1;
++        let title = "Execution Context";
++        writeln!(w, "{}", title)?;
++        writeln!(w, "{}", self.section_char(1).to_string().repeat(title.len()))?;
++        writeln!(w)
++    }
++
++    fn context_flag(&mut self, w: &mut dyn Write, flag: &str) -> std::io::Result<()> {
++        writeln!(w, "* {}", flag)
++    }
++
++    fn end_context_flags(&mut self, w: &mut dyn Write) -> std::io::Result<()> {
++        writeln!(w)
++    }
++
++    fn begin_parameters(&mut self, w: &mut dyn Write, count: u32) -> std::io::Result<()> {
++        self.current_section_level = 1;
++        let title = format!("Parameters ({})", count);
++        writeln!(w, "{}", title)?;
++        writeln!(w, "{}", self.section_char(1).to_string().repeat(title.len()))?;
++        writeln!(w)
++    }
++
++
++    fn end_parameters(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn begin_errors(&mut self, w: &mut dyn Write, count: u32) -> std::io::Result<()> {
++        self.current_section_level = 1;
++        let title = format!("Possible Errors ({})", count);
++        writeln!(w, "{}", title)?;
++        writeln!(w, "{}", self.section_char(1).to_string().repeat(title.len()))?;
++        writeln!(w)
++    }
++
++    fn end_errors(&mut self, _w: &mut dyn Write) -> std::io::Result<()> {
++        Ok(())
++    }
++
++    fn examples(&mut self, w: &mut dyn Write, examples: &str) -> std::io::Result<()> {
++        self.current_section_level = 1;
++        let title = "Examples";
++        writeln!(w, "{}", title)?;
++        writeln!(w, "{}", self.section_char(1).to_string().repeat(title.len()))?;
++        writeln!(w)?;
++        writeln!(w, ".. code-block:: c")?;
++        writeln!(w)?;
++        for line in examples.lines() {
++            writeln!(w, "   {}", line)?;
++        }
++        writeln!(w)
++    }
++
++    fn notes(&mut self, w: &mut dyn Write, notes: &str) -> std::io::Result<()> {
++        self.current_section_level = 1;
++        let title = "Notes";
++        writeln!(w, "{}", title)?;
++        writeln!(w, "{}", self.section_char(1).to_string().repeat(title.len()))?;
++        writeln!(w)?;
++        writeln!(w, "{}", notes)?;
++        writeln!(w)
++    }
++
++    fn since_version(&mut self, w: &mut dyn Write, version: &str) -> std::io::Result<()> {
++        writeln!(w, ":Available since: {}", version)?;
++        writeln!(w)
++    }
++}
+\ No newline at end of file
+diff --git a/tools/kapi/src/main.rs b/tools/kapi/src/main.rs
+new file mode 100644
+index 0000000000000..9d6533cbc7dd1
+--- /dev/null
++++ b/tools/kapi/src/main.rs
+@@ -0,0 +1,121 @@
++//! kapi - Kernel API Specification Tool
++//!
++//! This tool extracts and displays kernel API specifications from multiple sources:
++//! - Kernel source code (KAPI macros)
++//! - Compiled vmlinux binaries (.kapi_specs ELF section)
++//! - Running kernel via debugfs
++
++use anyhow::Result;
++use clap::Parser;
++use std::io::{self, Write};
++
++mod formatter;
++mod extractor;
++
++use formatter::{OutputFormat, create_formatter};
++use extractor::{ApiExtractor, VmlinuxExtractor, SourceExtractor, DebugfsExtractor};
++
++#[derive(Parser, Debug)]
++#[command(author, version, about, long_about = None)]
++struct Args {
++    /// Path to the vmlinux file
++    #[arg(long, value_name = "PATH", group = "input")]
++    vmlinux: Option<String>,
++
++    /// Path to kernel source directory or file
++    #[arg(long, value_name = "PATH", group = "input")]
++    source: Option<String>,
++
++    /// Path to debugfs (defaults to /sys/kernel/debug if not specified)
++    #[arg(long, value_name = "PATH", group = "input")]
++    debugfs: Option<String>,
++
++    /// Optional: Name of specific API to show details for
++    api_name: Option<String>,
++
++    /// Output format
++    #[arg(long, short = 'f', default_value = "plain")]
++    format: String,
++}
++
++fn main() -> Result<()> {
++    let args = Args::parse();
++
++    let output_format: OutputFormat = args.format.parse()
++        .map_err(|e: String| anyhow::anyhow!(e))?;
++
++    let extractor: Box<dyn ApiExtractor> = match (args.vmlinux, args.source, args.debugfs.clone()) {
++        (Some(vmlinux_path), None, None) => {
++            Box::new(VmlinuxExtractor::new(vmlinux_path)?)
++        }
++        (None, Some(source_path), None) => {
++            Box::new(SourceExtractor::new(source_path)?)
++        }
++        (None, None, Some(_)) | (None, None, None) => {
++            // If debugfs is specified or no input is provided, use debugfs
++            Box::new(DebugfsExtractor::new(args.debugfs)?)
++        }
++        _ => {
++            anyhow::bail!("Please specify only one of --vmlinux, --source, or --debugfs")
++        }
++    };
++
++    display_apis(extractor.as_ref(), args.api_name, output_format)
++}
++
++fn display_apis(extractor: &dyn ApiExtractor, api_name: Option<String>, output_format: OutputFormat) -> Result<()> {
++    let mut formatter = create_formatter(output_format);
++    let mut stdout = io::stdout();
++
++    formatter.begin_document(&mut stdout)?;
++
++    if let Some(api_name_req) = api_name {
++        // Use the extractor to display API details
++        if let Some(_spec) = extractor.extract_by_name(&api_name_req)? {
++            extractor.display_api_details(&api_name_req, &mut *formatter, &mut stdout)?;
++        } else if output_format == OutputFormat::Plain {
++            writeln!(stdout, "\nAPI '{}' not found.", api_name_req)?;
++            writeln!(stdout, "\nAvailable APIs:")?;
++            for spec in extractor.extract_all()? {
++                writeln!(stdout, "  {} ({})", spec.name, spec.api_type)?;
++            }
++        }
++    } else {
++        // Display list of APIs using the extractor
++        let all_specs = extractor.extract_all()?;
++        let syscalls: Vec<_> = all_specs.iter().filter(|s| s.api_type == "syscall").collect();
++        let ioctls: Vec<_> = all_specs.iter().filter(|s| s.api_type == "ioctl").collect();
++        let functions: Vec<_> = all_specs.iter().filter(|s| s.api_type == "function").collect();
++
++        if !syscalls.is_empty() {
++            formatter.begin_api_list(&mut stdout, "System Calls")?;
++            for spec in syscalls {
++                formatter.api_item(&mut stdout, &spec.name, &spec.api_type)?;
++            }
++            formatter.end_api_list(&mut stdout)?;
++        }
++
++        if !ioctls.is_empty() {
++            formatter.begin_api_list(&mut stdout, "IOCTLs")?;
++            for spec in ioctls {
++                formatter.api_item(&mut stdout, &spec.name, &spec.api_type)?;
++            }
++            formatter.end_api_list(&mut stdout)?;
++        }
++
++        if !functions.is_empty() {
++            formatter.begin_api_list(&mut stdout, "Functions")?;
++            for spec in functions {
++                formatter.api_item(&mut stdout, &spec.name, &spec.api_type)?;
++            }
++            formatter.end_api_list(&mut stdout)?;
++        }
++
++        formatter.total_specs(&mut stdout, all_specs.len())?;
++    }
++
++    formatter.end_document(&mut stdout)?;
++
++    Ok(())
++}
++
 -- 
 2.39.5
 
