@@ -1,224 +1,281 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD6F38384;
-	Sat, 14 Jun 2025 08:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FCB3D76
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749890349; cv=none; b=jVjwcRw158STzojMJEeLoGFDMbNIeDFhp6cQeomDskpsoE1/OBgyIJm1sAhbJwUJZ2ZfuL97V1EBTpJiP/gPFy7clxfuisrB+X7QtGZbNuv6QhNuaY+pcTBRddea9BTLP0l2sfO1owmlKo4om6hYGBD90eSv7ydyv0SkedPvWgk=
+	t=1749890874; cv=none; b=a8P8WaHYVNfED6hsOHAaqpZRZwjCoX59lj+JY+mNOOfJBK3wHywhpTM8DWdfVhQMlJgbuH5HLptZeN1c4l4xGlM/aER0PLgunvOi53TKz2zs4nXqL8jTAEOP1PYPvASGyt4+pAewEOIBESpuc+ydUNI5/KIlXJ+hMoOkcZLuZFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749890349; c=relaxed/simple;
-	bh=y53vcfzBA/QLo9DPgUEzYxoqQBapXTxQQEW5PJv4IwU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=KQPPUiMSqWz3OevJILpJIf/MfPzFLxxkb59kdFzYA7wFY1Fias3fy3ykPjkdUVY9M1egzV0zKwE7qFxBccamQMvYMR3U1Z9pPbgnBN8EdPfZg7r4tugVpBaFHGuWPPYmVUMgo8r9sPzFIprfFHR4CHHNzQLvJKDLF9GXhm1Js+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=b6XWLLvp; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1749890874; c=relaxed/simple;
+	bh=1zE5dRa2pTIbWgRSSsDZnGOGsw/ocPUokv7v0pIjIFw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qp2CeUnhexHBVS9An0CR+UOIkarnGAMUmZWJVk8spBnMs1fe0l4KDd3Ffm8w8vlLOpooXQDFCWITf8DDhqVcB/iMmOfDlVqSUF9MG6XPiRidWMG69yw4qGSBBUrDQEuijLEBWg2Q/LbWueW17gvaOOUZ10IsGliTSie1enVa8d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EaKnhP38; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="b6XWLLvp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1749890314; x=1750495114; i=frank-w@public-files.de;
-	bh=9TEZAlxDa5acq01LkdKBavZd5R2cJglwAlEtuKPbdhw=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=b6XWLLvpxRRTsTMRLcvZYMJgXxX7kjINssuIoBGMmhx3foxTEDx6mmFGRLLVoKCP
-	 fW2VOKo2yh3Siv/zZXZjLMWn7FdW+ZD8E8xMGgGkVB8Hctxciy4obcUoMq9uLXyEA
-	 yYGKywXSTtjwPVuCLi/O79ejcT5KRJndtwPoZH92hFVRx8H6YkodTRWyVOPhaU6w4
-	 VTiNcMrz4ftrOp99nrLnl02nYd0ylfMQFDYflYGR83Z748i7zm7HvywW4XelaOZCD
-	 xCoFjL1PxxLd7valEDwRCjBRhbsALraIR8oOeWxsJaRV3tx6EltBDgrW+iEyp5bib
-	 QqbLqFBUk1oDlCbyFQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [127.0.0.1] ([80.245.76.73]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N5mGH-1utOnC3FFr-014PR0; Sat, 14
- Jun 2025 10:38:33 +0200
-Date: Sat, 14 Jun 2025 10:38:28 +0200
-From: Frank Wunderlich <frank-w@public-files.de>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, Frank Wunderlich <linux@fw-web.de>
-CC: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- daniel@makrotopia.org
-Subject: Re: [net-next v1] net: ethernet: mtk_eth_soc: support named IRQs
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <aE0pav5c8Ji1Q7br@lore-rh-laptop>
-References: <20250613191813.61010-1-linux@fw-web.de> <aE0pav5c8Ji1Q7br@lore-rh-laptop>
-Message-ID: <E6B6CB88-4B47-455D-9554-DE9BFC209454@public-files.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EaKnhP38"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c37558eccso2123493a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 01:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749890871; x=1750495671; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UmexxkUsMlwsDUZqAJqCu3m0c/NmHuIKmfWQMr16+98=;
+        b=EaKnhP387HPxMz+v2EokKyUuVq4bU1AODHLU30fPwsjDyoe2k5Afx+6rqeZ55J0qXR
+         rRC6eo6ZElSArzfyeL/44EFOgSTD3/lx09M0JIIPFIVavok8yXzRqRJ5B/GQINzheuEg
+         CIOkXYvZQtrl9AKsEl23Nm8AmxNAqsxVOlhOgABSDR8MHt51lZdE97tq13NA50NGa9vR
+         UepjMnRC9DNG+/h4KprRw79ZECflhPPSgJvd1d0QFQFx9fmESbV/n9wBD6MP26bZWiBC
+         cKntigUIrZ60KZhTj2wcasQLN/D2p/W9EQgSlNZPQGn83WQomDi5Uq5M4eNTBZmpHPJI
+         EBwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749890871; x=1750495671;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UmexxkUsMlwsDUZqAJqCu3m0c/NmHuIKmfWQMr16+98=;
+        b=ewp2WknVxDa2hOm7mWe4JLuxGALoB6cwxdkTn9zHi+PiGn/VTCxyXvcMi5nbgEFYSO
+         Xnsoe6LFYlHzermGgJ3I9mQK6g+4gGzf2h7KFTHv9NT9dzGQMIYYQSSMi2NpVtqaBBJG
+         w1Xuz55IEeCQlGh++2XGtTDfsACDqjIA1eK3UqzSL41P3Wm1ZbHxVlCvTIrDtMERm1q9
+         nb1YgYCi/UQXL08gmbkqIncGnf/aIRW3ggf6JbcKFqOR6vlbV950hg0T/u6DGkwBG6QB
+         94cAwDNojdQbpftRe8cghBLF9pW9EgwTr/KO68U9I7dH7UAQSxk4nDoxMIupkxkjwABU
+         ou5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXxQR5cb4qjzRY0XnUezXPzzNC+1MdkF2aa0TpGXelrSEC9qjM5q7Mfkrhi2X5vrmQ0KYLuwOokN1kO40U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjIQRSwTtYMhvTGY78sM3Nw/3b+64dT9e+XyzRZdkGnGwaiCZM
+	U60b/V4cfhRkHsGpQlZ0545BBKxzTlMWJxF7hcgoM6T1PWLQxYi145rNda0o2WXaoi024tJY68a
+	Zh6bY6kd/7kioGA==
+X-Google-Smtp-Source: AGHT+IFCKUfKSAYv//yvPxISNKnOAsmR1cCjTxj8W//eQP2JArQ4PikZxQbSriVlh2ufnFQbzVsf0UUzOE9QZQ==
+X-Received: from pgqw8.prod.google.com ([2002:a65:6948:0:b0:b2f:5b01:af42])
+ (user=davidgow job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:6481:b0:21c:faa4:9ab9 with SMTP id adf61e73a8af0-21fbd631592mr3401257637.22.1749890871693;
+ Sat, 14 Jun 2025 01:47:51 -0700 (PDT)
+Date: Sat, 14 Jun 2025 16:47:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JrsbjBGKMLoUdsIVKIdsdqQcm6qpyk4B31BbV7S4fPZu//cUl8L
- bKal6c09RHgy6BMsl4qTcr4MykN42AZ5qAqgwBfze5B9g4ZtfwKwC/B2xU6xHNxpaCq8px/
- 9mLj4heIYgyGi/FqypAGm9EXPI+EX8ugIxmk5+2IUqiaHURvZuBrKNSmzS1c7ampIwXoupK
- ijiHJbP6ouhIoCa+iP1Fw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ECGvj57vr6I=;c0DD0gTvw/5BlGkR573YNjwkx+N
- 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
- OOA2lc1DIeKpK5Q3
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250614084711.2654593-2-davidgow@google.com>
+Subject: [PATCH] kunit: Adjust kunit_test timeout based on test_{suite,case} speed
+From: David Gow <davidgow@google.com>
+To: Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: Ujwal Jain <ujwaljain@google.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Am 14=2E Juni 2025 09:48:58 MESZ schrieb Lorenzo Bianconi <lorenzo@kernel=
-=2Eorg>:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> Add named interrupts and keep index based fallback for exiting devicetr=
-ees=2E
->>=20
->> Currently only rx and tx IRQs are defined to be used with mt7988, but
->> later extended with RSS/LRO support=2E
->>=20
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> ---
->>  drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec | 24 +++++++++++++------=
---
->>  1 file changed, 15 insertions(+), 9 deletions(-)
->>=20
->> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec b/drivers/ne=
-t/ethernet/mediatek/mtk_eth_soc=2Ec
->> index b76d35069887=2E=2Efcec5f95685e 100644
->> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec
->> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec
->> @@ -5106,17 +5106,23 @@ static int mtk_probe(struct platform_device *pd=
-ev)
->>  		}
->>  	}
->> =20
->> -	for (i =3D 0; i < 3; i++) {
->> -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
->> -			eth->irq[i] =3D eth->irq[0];
->> -		else
->> -			eth->irq[i] =3D platform_get_irq(pdev, i);
->> -		if (eth->irq[i] < 0) {
->> -			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
->> -			err =3D -ENXIO;
->> -			goto err_wed_exit;
->> +	eth->irq[1] =3D platform_get_irq_byname(pdev, "tx");
->> +	eth->irq[2] =3D platform_get_irq_byname(pdev, "rx");
->
->Hi Frank,
->
->doing so you are not setting eth->irq[0] for MT7988 devices but it is act=
-ually
->used in mtk_add_mac() even for non-MTK_SHARED_INT devices=2E I guess we c=
-an reduce
->the eth->irq array size to 2 and start from 0 even for the MT7988 case=2E
->What do you think?
+From: Ujwal Jain <ujwaljain@google.com>
 
-Hi Lorenzo,
+Currently, the in-kernel kunit test case timeout is 300 seconds. (There
+is a separate timeout mechanism for the whole test execution in
+kunit.py, but that's unrelated.) However, tests marked 'slow' or 'very
+slow' may timeout, particularly on slower machines.
 
-Thank you for reviewing my patch
+Implement a multiplier to the test-case timeout, so that slower tests
+have longer to complete:
+- DEFAULT -> 1x default timeout
+- KUNIT_SPEED_SLOW -> 3x default timeout
+- KUNIT_SPEED_VERY_SLOW -> 12x default timeout
 
-I had to leave flow compatible with this:
+A further change is planned to allow user configuration of the
+default/base timeout to allow people with faster or slower machines to
+adjust these to their use-cases.
 
-<https://github=2Ecom/frank-w/BPI-Router-Linux/blob/bd7e1983b9f0a69cf47cc9=
-b9631138910d6c1d72/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec#L5176>
+Signed-off-by: Ujwal Jain <ujwaljain@google.com>
+Co-developed-by: David Gow <davidgow@google.com>
+Signed-off-by: David Gow <davidgow@google.com>
+---
+ include/kunit/try-catch.h  |  1 +
+ lib/kunit/kunit-test.c     |  9 +++++---
+ lib/kunit/test.c           | 46 ++++++++++++++++++++++++++++++++++++--
+ lib/kunit/try-catch-impl.h |  4 +++-
+ lib/kunit/try-catch.c      | 29 ++----------------------
+ 5 files changed, 56 insertions(+), 33 deletions(-)
 
-Here the irqs are taken from index 1 and 2 for
- registration (!shared_int else only 0)=2E So i avoided changing the
- index,but yes index 0 is unset at this time=2E
+diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
+index 7c966a1adbd3..d4e1a5b98ed6 100644
+--- a/include/kunit/try-catch.h
++++ b/include/kunit/try-catch.h
+@@ -47,6 +47,7 @@ struct kunit_try_catch {
+ 	int try_result;
+ 	kunit_try_catch_func_t try;
+ 	kunit_try_catch_func_t catch;
++	unsigned long timeout;
+ 	void *context;
+ };
+ 
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index d9c781c859fd..387cdf7782f6 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -43,7 +43,8 @@ static void kunit_test_try_catch_successful_try_no_catch(struct kunit *test)
+ 	kunit_try_catch_init(try_catch,
+ 			     test,
+ 			     kunit_test_successful_try,
+-			     kunit_test_no_catch);
++			     kunit_test_no_catch,
++			     300 * msecs_to_jiffies(MSEC_PER_SEC));
+ 	kunit_try_catch_run(try_catch, test);
+ 
+ 	KUNIT_EXPECT_TRUE(test, ctx->function_called);
+@@ -75,7 +76,8 @@ static void kunit_test_try_catch_unsuccessful_try_does_catch(struct kunit *test)
+ 	kunit_try_catch_init(try_catch,
+ 			     test,
+ 			     kunit_test_unsuccessful_try,
+-			     kunit_test_catch);
++			     kunit_test_catch,
++			     300 * msecs_to_jiffies(MSEC_PER_SEC));
+ 	kunit_try_catch_run(try_catch, test);
+ 
+ 	KUNIT_EXPECT_TRUE(test, ctx->function_called);
+@@ -129,7 +131,8 @@ static void kunit_test_fault_null_dereference(struct kunit *test)
+ 	kunit_try_catch_init(try_catch,
+ 			     test,
+ 			     kunit_test_null_dereference,
+-			     kunit_test_catch);
++			     kunit_test_catch,
++			     300 * msecs_to_jiffies(MSEC_PER_SEC));
+ 	kunit_try_catch_run(try_catch, test);
+ 
+ 	KUNIT_EXPECT_EQ(test, try_catch->try_result, -EINTR);
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 146d1b48a096..002121675605 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -373,6 +373,46 @@ static void kunit_run_case_check_speed(struct kunit *test,
+ 		   duration.tv_sec, duration.tv_nsec);
+ }
+ 
++/* Returns timeout multiplier based on speed.
++ * DEFAULT:		    1
++ * KUNIT_SPEED_SLOW:        3
++ * KUNIT_SPEED_VERY_SLOW:   12
++ */
++static int kunit_timeout_mult(enum kunit_speed speed)
++{
++	switch (speed) {
++	case KUNIT_SPEED_SLOW:
++		return 3;
++	case KUNIT_SPEED_VERY_SLOW:
++		return 12;
++	default:
++		return 1;
++	}
++}
++
++static unsigned long kunit_test_timeout(struct kunit_suite *suite, struct kunit_case *test_case)
++{
++	int mult = 1;
++	/*
++	 * TODO: Make the default (base) timeout configurable, so that users with
++	 * particularly slow or fast machines can successfully run tests, while
++	 * still taking advantage of the relative speed.
++	 */
++	unsigned long default_timeout = 300;
++
++	/*
++	 * The default test timeout is 300 seconds and will be adjusted by mult
++	 * based on the test speed. The test speed will be overridden by the
++	 * innermost test component.
++	 */
++	if (suite->attr.speed != KUNIT_SPEED_UNSET)
++		mult = kunit_timeout_mult(suite->attr.speed);
++	if (test_case->attr.speed != KUNIT_SPEED_UNSET)
++		mult = kunit_timeout_mult(test_case->attr.speed);
++	return mult * default_timeout * msecs_to_jiffies(MSEC_PER_SEC);
++}
++
++
+ /*
+  * Initializes and runs test case. Does not clean up or do post validations.
+  */
+@@ -527,7 +567,8 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+ 	kunit_try_catch_init(try_catch,
+ 			     test,
+ 			     kunit_try_run_case,
+-			     kunit_catch_run_case);
++			     kunit_catch_run_case,
++			     kunit_test_timeout(suite, test_case));
+ 	context.test = test;
+ 	context.suite = suite;
+ 	context.test_case = test_case;
+@@ -537,7 +578,8 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+ 	kunit_try_catch_init(try_catch,
+ 			     test,
+ 			     kunit_try_run_case_cleanup,
+-			     kunit_catch_run_case_cleanup);
++			     kunit_catch_run_case_cleanup,
++			     kunit_test_timeout(suite, test_case));
+ 	kunit_try_catch_run(try_catch, &context);
+ 
+ 	/* Propagate the parameter result to the test case. */
+diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
+index 203ba6a5e740..6f401b97cd0b 100644
+--- a/lib/kunit/try-catch-impl.h
++++ b/lib/kunit/try-catch-impl.h
+@@ -17,11 +17,13 @@ struct kunit;
+ static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+ 					struct kunit *test,
+ 					kunit_try_catch_func_t try,
+-					kunit_try_catch_func_t catch)
++					kunit_try_catch_func_t catch,
++					unsigned long timeout)
+ {
+ 	try_catch->test = test;
+ 	try_catch->try = try;
+ 	try_catch->catch = catch;
++	try_catch->timeout = timeout;
+ }
+ 
+ #endif /* _KUNIT_TRY_CATCH_IMPL_H */
+diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+index 6bbe0025b079..d84a879f0a78 100644
+--- a/lib/kunit/try-catch.c
++++ b/lib/kunit/try-catch.c
+@@ -34,31 +34,6 @@ static int kunit_generic_run_threadfn_adapter(void *data)
+ 	return 0;
+ }
+ 
+-static unsigned long kunit_test_timeout(void)
+-{
+-	/*
+-	 * TODO(brendanhiggins@google.com): We should probably have some type of
+-	 * variable timeout here. The only question is what that timeout value
+-	 * should be.
+-	 *
+-	 * The intention has always been, at some point, to be able to label
+-	 * tests with some type of size bucket (unit/small, integration/medium,
+-	 * large/system/end-to-end, etc), where each size bucket would get a
+-	 * default timeout value kind of like what Bazel does:
+-	 * https://docs.bazel.build/versions/master/be/common-definitions.html#test.size
+-	 * There is still some debate to be had on exactly how we do this. (For
+-	 * one, we probably want to have some sort of test runner level
+-	 * timeout.)
+-	 *
+-	 * For more background on this topic, see:
+-	 * https://mike-bland.com/2011/11/01/small-medium-large.html
+-	 *
+-	 * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
+-	 * the task will be killed and an oops generated.
+-	 */
+-	return 300 * msecs_to_jiffies(MSEC_PER_SEC); /* 5 min */
+-}
+-
+ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ {
+ 	struct kunit *test = try_catch->test;
+@@ -85,8 +60,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 	task_done = task_struct->vfork_done;
+ 	wake_up_process(task_struct);
+ 
+-	time_remaining = wait_for_completion_timeout(task_done,
+-						     kunit_test_timeout());
++	time_remaining = wait_for_completion_timeout(
++		task_done, try_catch->timeout);
+ 	if (time_remaining == 0) {
+ 		try_catch->try_result = -ETIMEDOUT;
+ 		kthread_stop(task_struct);
+-- 
+2.50.0.rc1.591.g9c95f17f64-goog
 
-I guess the irq0 is not really used here=2E=2E=2E
-I tested the code on bpi-r4 and have traffic
- rx+tx and no crash=2E
- imho this field is not used on !shared_int
- because other irq-handlers are used and
- assigned in position above=2E
-
-It looks like the irq[0] is read before=2E=2E=2Ethere is a
- message printed for mediatek frame engine
- which uses index 0 and shows an irq 102 on
- index way and 0 on named version=2E=2E=2Ebut the
- 102 in index way is not visible in /proc/interrupts=2E
-So imho this message is misleading=2E
-
-Intention for this patch is that irq 0 and 3 on
- mt7988 (sdk) are reserved (0 is skipped on=20
-!shared_int and 3 never read) and should imho
- not listed in devicetree=2E For further cleaner
- devicetrees (with only needed irqs) and to
- extend additional irqs for rss/lro imho irq
- names make it better readable=2E
-
->Regards,
->Lorenzo
->
->> +	if (eth->irq[1] < 0 || eth->irq[2] < 0) {
->> +		for (i =3D 0; i < 3; i++) {
->> +			if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
->> +				eth->irq[i] =3D eth->irq[0];
->> +			else
->> +				eth->irq[i] =3D platform_get_irq(pdev, i);
->> +
->> +			if (eth->irq[i] < 0) {
->> +				dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
->> +				err =3D -ENXIO;
->> +				goto err_wed_exit;
->> +			}
->>  		}
->>  	}
->> +
->>  	for (i =3D 0; i < ARRAY_SIZE(eth->clks); i++) {
->>  		eth->clks[i] =3D devm_clk_get(eth->dev,
->>  					    mtk_clks_source_name[i]);
->> --=20
->> 2=2E43=2E0
->>=20
-
-
-regards Frank
