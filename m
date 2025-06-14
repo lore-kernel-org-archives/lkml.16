@@ -1,125 +1,84 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBCC54670;
-	Sat, 14 Jun 2025 19:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F5D54670;
+	Sat, 14 Jun 2025 19:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749927783; cv=none; b=raVOFtej5iJDUTOPhUf0aTwVjnR2n2BMKSB5alh2U8u3KZb6nsJSu9YR3PjiUrFb2S+MN+PG8fk7XR4ReJaa7iS6YMKgIBwGPTSwj9OeKgIJCZw8UsZJ9rVirMDA+Zro0BcoEjf98pXVAzlHxycU5Ax2pW/h2ukpAPSsyXBGXMk=
+	t=1749927938; cv=none; b=UJ9V05JI62ZX81XI7avfopjIqY5D/PKq74NvPKOQyBQzh4QQ4bZagi6fZxIJTktk3I2vJwRT9P15xGdB7e0OugsFF1VBdUqmNX7JaX4ZdVOX18QIaUM6oX2X32ssUxZwbTq/AhwJ6sbQ+A9L8SSihsqNlx/O/rSJu/GKkXSxcMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749927783; c=relaxed/simple;
-	bh=wmhIl5eNtjuRRYDprAwACUTyOPlF1TtOvf3w9eerE/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pReoRBM8VYkMRIi+TJwemdrjE+y3mJnRn8LAvIEgCwXf2vxpIMS0nMeZcHoNuRzHDPwO0e24kCZ6WlHzlZ9X+6iP8UjVRR8J8dK2q3SWE7Suqi9LNSrK02teLaRZ9Z225I7lnAPA7nUtgCWspwOSLAWjvi0nQxBX7ik5A2wvrKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMmW5sKf; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749927938; c=relaxed/simple;
+	bh=rNMQsOpEFP/cEshEeBKrjhcD7eOyHh3ocUoD9Lzrj7k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UDy4V41016y3gFe3V9cSpBIvNRQ57pJ0fPpWRiTsubaFPJah4aZkZCWFoVkXghef+/hRg66wn1cgu+p6g6O2rD/B/daN+QIlsmqUPv7exvczf1LldkiQSIHqVCErrePbuqrgvqyYbycf8Az0zhB7vqj3U0OMxOcda7Pdir4GBcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHcOLGwX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMmW5sKf"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad8a8da2376so525518666b.3;
-        Sat, 14 Jun 2025 12:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749927780; x=1750532580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TN6GkerJFD6CWH4ZgMxurVC6ip3Bfjx/2RgrJ7PlO8c=;
-        b=cMmW5sKfBblHykes7p8HKQ6uqljv6ZQiUQCEzn8UC8qgMCPoUqF8ePl0MVQvEiIJsG
-         3cBpoTw9xzOvm2DdnOVWWm2TWY64ANQHC0D1M39IGhtQUV6b6zaf8Kg+CT30a5ahtfkW
-         cvC+JsH5dAID848GMrBx8jeBEBmCf6Mbh3m5N46OuUcBeFVXq9NNkoOTg7XVm7XXfs2i
-         FRZw1UnCgvi0mbi5lyZM/arAE8G6qwvB/J/bRKV3yqVBaavQYqfkoYx5blxpev/k+4T3
-         s0KhNGHErHg8DUsmJsZrLxLqxKOkYEd+inigGvbHOJmsJtLDp7bGa/Rlfo5iRWu53/R7
-         PsBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749927780; x=1750532580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TN6GkerJFD6CWH4ZgMxurVC6ip3Bfjx/2RgrJ7PlO8c=;
-        b=fAM90u/fTlQBxF/YpfRmO6f71m4uOk9AC57an43BWo8PDn4zJlQ7on3iaoz1kVYquc
-         lbUU+FZPjYw9hM20euU/Jux0bDCZrAg/mYhl9lLUster4wgULYV2iTMhCVPLqIUKl0XN
-         YFVZayC/hRoxPRw7kOmSeyqbtbKLa+c+NlR92VZNdD3nWdeX8RKTAiaOTO+0d7xxTwF5
-         SxFSsOHSzcq6kRY1WmgTsa5lpYhLywSeIhfg8DAlPTkd+MgeeVI4mzB+7sIGWkT6+K0Z
-         unKVW3FmDHsFo9qG847DE6F9OhRdMnGU1r4sAbINvp5nOMMW2MGPW44ZgIyXysP7Q2p1
-         hIUA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9EI9Hmzozoammj5SoO+k7S5E2ctO84yH3VykkcYulNOiCXiPeaBZBXcoSnn/dzX8X1bWBA4JyIzMY@vger.kernel.org, AJvYcCUvTQ5T0zcjcJ5Ium9xDbfrd30RL3Yqj2GqWDU2zNdzBl5CVqxN486khGjPYJWJRPtNedxGK+Rwf6Y=@vger.kernel.org, AJvYcCVSbNlPqNgWwFxGwPsJEDDcoFK0QV92fPX5ef6sr7CLXX9EBIMvaaZyNpwvXEa1V27jv/x/VRg8EsG4KRUf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLfpOsTSfD3TIFpJH+Xr+6URhy71WCkV70wLSfwwFkqgZ1Xalm
-	O3fxARJdD1a9ePgHwsYL/K+qP6b3X2L8ENU5UT2aQ5ueWnY1+ybc85PZ8eO10QlCePk3+r6U3MF
-	3Hql3eCKQB68OErbULuV0i4uBu85VrLlUFv5z
-X-Gm-Gg: ASbGncuYhkTSEXl+FKVvPS/GYNucDD7q95jPubdbZOfnLqIONabO7aubQrXla0WUCo0
-	kdkp8PFxD0kSPUVjjzxnQBzdifzJ/FyWq5MFeSKEgC0n5pOXEM3UG0MA6njjydcjrNJHRVX9fQ+
-	cSeABEo9eTggUpQJBzzYlpL7k0N9Ecpd0DM23TKTK0v3Y=
-X-Google-Smtp-Source: AGHT+IF50GuhEIAA2Fh2jVWqVfwOST8iVXR0u7QFx4pqn+hMfIjvZh+1flLbwV32FocpRdiPFv+4QxpalQA5zgKUwFU=
-X-Received: by 2002:a17:906:ee89:b0:ada:99ed:67a3 with SMTP id
- a640c23a62f3a-adfad38e441mr323296266b.27.1749927779997; Sat, 14 Jun 2025
- 12:02:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHcOLGwX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58586C4CEEB;
+	Sat, 14 Jun 2025 19:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749927937;
+	bh=rNMQsOpEFP/cEshEeBKrjhcD7eOyHh3ocUoD9Lzrj7k=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OHcOLGwXf4rW482mf2Pfyvj6kK9/xF7P1pWhMGZpC6lT6rrRGj9vbVrPX293Ch11h
+	 PHalHt+EKDjc4By5QfqlXqBfPxmfkd/aRQ3k2o6dR4EFOVWZyagGXMbGK4cSRVGRqP
+	 0Ka4VOKNPK04SBiLCu2u9lK7C4s5Sol5Oi28nIGNaxyTaeFK2WKrcZfFAzQSWCHxbS
+	 0UQsbPCSgetDlsi4S0MxEpw6YLQegpa9ABKCzl6XzHIyBfdWgayrUJc8XgquC5U22W
+	 NbGsCA/C9Xg1AeSkzRIQ8Lmane5AAYZolV9aXBKXhCQy7qi+Owuf/p6gtt8QafzEpI
+	 OI08+qWB8fDfQ==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH 0/4] arm64/qcom: Drop bogus venus-en/decoder nodes
+Date: Sat, 14 Jun 2025 21:05:18 +0200
+Message-Id: <20250614-topic-encdec-v1-0-f974c3e9cb43@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610215933.84795-1-l.rubusch@gmail.com> <20250610215933.84795-9-l.rubusch@gmail.com>
- <aErE0xmlm4qBHg03@smile.fi.intel.com> <20250614145528.2fb9bf3f@jic23-huawei>
-In-Reply-To: <20250614145528.2fb9bf3f@jic23-huawei>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 14 Jun 2025 22:02:23 +0300
-X-Gm-Features: AX0GCFt88bJw5nhB_CRIf29OKUbv23Mn_mR9u2ZKikXKpJjNPiYuXpbHZ0JYHrs
-Message-ID: <CAHp75VeJg1Vi_-h+-j9Udzwf+ySv9oj7t2Kq_8irM8KgPGQDhg@mail.gmail.com>
-Subject: Re: [PATCH v9 08/11] iio: accel: adxl345: add inactivity feature
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Lothar Rubusch <l.rubusch@gmail.com>, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO7HTWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0MT3ZL8gsxk3dS85JTUZF1jQ1Pz1CQLY4tkI0sloJaCotS0zAqwcdG
+ xtbUADb7UbF4AAAA=
+X-Change-ID: 20250614-topic-encdec-3157eb838c29
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749927933; l=877;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=rNMQsOpEFP/cEshEeBKrjhcD7eOyHh3ocUoD9Lzrj7k=;
+ b=PJM5ZITOxIXrIP5SXm3TvmEx+z1vjZnvpxeHXOihVLs8cljU2iD4OLjCfc54LE+e2aGNORvRg
+ AdmNwK89FAXAO3uy//OxSCF6SiDoJq8BUTW1CJxsy49YXgfEJDrE1gP
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Sat, Jun 14, 2025 at 4:55=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
+I left the ones with clock in tact, as I *really* wasn't sure what
+the various layers of spaghetti do with them..
 
-...
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (4):
+      arm64: dts: qcom: msm8916: Drop venus-enc/decoder node
+      arm64: dts: qcom: sc7180: Drop venus-enc/decoder node
+      arm64: dts: qcom: sdm845: Drop venus-enc/decoder node
+      arm64: dts: qcom: sm8250: Drop venus-enc/decoder node
 
-> > >     if (type =3D=3D ADXL345_ACTIVITY) {
-> > >             axis_ctrl =3D ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN |
-> > >                             ADXL345_ACT_Z_EN;
-> > >     } else {
-> > > -           axis_ctrl =3D 0x00;
-> > > +           axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
-> > > +                           ADXL345_INACT_Z_EN;
-> > >     }
-> >
-> > Now this can be as simple as
-> >
-> >       axis_ctrl =3D ADXL345_ACT_X_EN;
->
-> That flag is only set in the activity case.  Confused with ADXL345_INACT_=
-X_EN?
-> (initially I thought you'd run into a bug!)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 --------
+ arch/arm64/boot/dts/qcom/sc7180.dtsi  | 8 --------
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  | 8 --------
+ arch/arm64/boot/dts/qcom/sm8250.dtsi  | 8 --------
+ 4 files changed, 32 deletions(-)
+---
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+change-id: 20250614-topic-encdec-3157eb838c29
 
-Ouch, you are right! Please, discard my above suggestion, it's indeed
-simply wrong.
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> >       if (type =3D=3D ADXL345_ACTIVITY)
-> >               axis_ctrl |=3D ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
-> >       else
-> >               axis_ctrl |=3D ADXL345_INACT_Y_EN | ADXL345_INACT_Z_EN;
-> >
-> > Yeah, I don't know how to make the diff better (it gets worse), but the=
- end
-> > result is better.
-> >
-> > One way, which I don't like much is to previously have this conditional=
- written as:
-> >
-> >       axis_ctrl =3D ADXL345_ACT_X_EN;
-> >       if (type =3D=3D ADXL345_ACTIVITY)
-> >               axis_ctrl |=3D ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
-> >       else
-> >               axis_ctrl =3D 0;
-> >
-
-
---=20
-With Best Regards,
-Andy Shevchenko
