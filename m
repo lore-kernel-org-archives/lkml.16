@@ -1,293 +1,82 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338A72C08D2
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CA21F0E58;
+	Sat, 14 Jun 2025 11:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749900901; cv=none; b=Zsa7YtmbmB+RWRnqbLjtGFVO2lT2zqJ12+xy6QtQSvCS/I8fj4upLiFp+dbccoqpcr+hYhcIcmxWodlq24f7mjyAsiwpnb2WSYogLl/pm/yH1k7nVUEkUi0+0RmV6BmimZ4H1DFCxy51TMu3tuaxX0Jur7j5rfeNxTLOEr22dh4=
+	t=1749901100; cv=none; b=nEPbyEGoBiVWarH3TIpbcDSAQy6bX5u7GwjSnMqjsmXe1hv4mmCT8tdV5ZiIzc94CmcCDou1iNo5eKFpcub24vUNmcc97qQtmTj5/DeG6U+Rzi3+dqQSf3G9q0qL98c4G5iO0cCzzgzj6P9M8RjJmW3ELqqUH/lduARZ4Zc99Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749900901; c=relaxed/simple;
-	bh=Rg3Pr0KjVpHhSuV2HAAJYJlu5JXj+HSAqOdE5nZdtKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qv+cU05aLYrq2doT6rbiFEckGfWv4tt0XEtX6+iwCjCMod4v4YCLKHkosWQorHItV+fiWRim/m84U8W1taxDhw1c4IWHz6R0LW5WzLh266jqVQ1y4oI/glNy+ZLy+fyIT7Uvk8rKp3viEeIEYnO91le8QWM8x1dEZMes1eO4GkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=oHt/WwTY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=b8HkKba5; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1749901100; c=relaxed/simple;
+	bh=fpbBffDgjhog3qXMyHUoM68Q8rOI2jUHMB121Vi9XHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dto1NfXu2KypZXBo5NT4c62V9Ef64oGwYOI1ncF3rtn09EOdzR8qOqvuTJeSnafKv78V9xaRMfFJJ3J7zdkOmwPVidwbIqwZgs3QsbcByB8nYt44ec1CKn+s0yQ12VfG4Ytuqoh5YWqoaFbVPDL3lIGxr6/sjF/8OuWoGhnEfUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGraheyN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="oHt/WwTY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b8HkKba5"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 2374C1140156;
-	Sat, 14 Jun 2025 07:34:58 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Sat, 14 Jun 2025 07:34:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1749900898; x=
-	1749987298; bh=oDfTpkSjhD1e0vY0YkSNYlxPO+dTPHYdbTXzUojYEqk=; b=o
-	Ht/WwTYSmpYYpAUlLGwl8IP/0A2HmMl3p306cNM7ZfPhBvxagvRLCxn4X6rygVYG
-	9W3fQ47sA2WmvUBEhQ/2i/MqGmKsqdJazIxqAZORVMWSig+AXAUGz1EVTfVKbJWy
-	xKOKikKfvKgLUNXcAviAqs7UDTlkwVncKwHQoEHNBHOzHgKWVR7Y9HlZ+XGMJ4Yg
-	lK50cZYSpWCFOan6csagYmKCE3exfsQgSp6srpAcViBVeDhY8vrQBLlgDuSL8gGz
-	PxXUrDqgyQrjFU9nAIuEqfcT0u75r1glZIFJW30XYlL5rNwQyW7srIhscT/mZIsl
-	WzAu+b4dmShbhWC2ex7Bg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1749900898; x=1749987298; bh=o
-	DfTpkSjhD1e0vY0YkSNYlxPO+dTPHYdbTXzUojYEqk=; b=b8HkKba5MTPBSvkp4
-	EjdXPizzsXfhR3ZIEUq5hKVb8EC7ZJ6M2mTuZ4+yr0z+CEhuf0k1l6Oa4MXcNdw0
-	fswvXW11nXWLqH2u5BppwnGagmqgXAV2FRtmcrPLieS8ZT0LhtBfN5EyyDwumAlp
-	9B0YCdAxszCcHaDcz/OO3MeYGv+/gtzu/UZblWnqODlEAnomvwg0bEQtgzU3kQnO
-	hPyrijszCLbUK6rwtfL9lan7GyjFzE37JbPOwAJ3v8oRkGWr9y7vLxUkWAfl+i4s
-	khYbz8lhzBhuaunSFdnLrs83nAQnOKqixFNiP0Epi9UVuGANR+sy1iQZJupki3ME
-	CvQ+Q==
-X-ME-Sender: <xms:YV5NaGy57C0awv1jHVt0DMEOd8V7UxAp9_GAhH1wjvfuG3xYNOx3og>
-    <xme:YV5NaCQX6Bt0iO2nFhaaNKdD4sCG_ED88JGchKokAK2Ac9fQE-z0gKYkLqy7WRxHp
-    IobYKyWaFRipm2T20A>
-X-ME-Received: <xmr:YV5NaIWKLOswCbx4gMWRsr1mbj3Hiuee41TMG9Wb6gHgn8et1NCNsx5Pn1jVYJPmcD90c4n8pF0EQgS4Co7rkq_qWBPolnR8lumuSE5w2e2->
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvtdejvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
-    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgr
-    mhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrf
-    grthhtvghrnhepvdejgfejuedvgfduudekleevtefgtdevhfdtffefiefgveeuteffiedv
-    ffekvddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjphdpnhgspghrtghpthhtohep
-    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidufeelgedquggvvh
-    gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopehlihhn
-    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:YV5NaMjk6XNSPJKr-Njxpc5t-uCmc9CXbp5LrZYZIzS0WQhUHs1Ukw>
-    <xmx:YV5NaIDdxRIhiJJz-v3Vj6XnD6vEs9f71YwsAxNYM3wxqin7r0KXCA>
-    <xmx:YV5NaNLrJnZb3XcI3fLN9cEjDMC-r9Cl-76Adwn6Tk5MBkhbr8sFyQ>
-    <xmx:YV5NaPClpjqotULJVWzgV5WZYImb_A6sPBCtPlJUn9LVSX1zwbIZyw>
-    <xmx:Yl5NaCwl1AdUUnWwcCz-EozuF6f4m4LsQM7FJz1ueCNBjkaZBPOsbApo>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 14 Jun 2025 07:34:56 -0400 (EDT)
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] firewire: ohci: use workqueue to handle events of AT request/response contexts
-Date: Sat, 14 Jun 2025 20:34:49 +0900
-Message-ID: <20250614113449.388758-4-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250614113449.388758-1-o-takashi@sakamocchi.jp>
-References: <20250614113449.388758-1-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGraheyN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16486C4CEEB;
+	Sat, 14 Jun 2025 11:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749901100;
+	bh=fpbBffDgjhog3qXMyHUoM68Q8rOI2jUHMB121Vi9XHs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BGraheyNjgq7rmP2OW6sETnjy1RJVbvX2IrD5bOtFvQE6EagmFOVc244Lm1+7CWOf
+	 BakLQuTykgIh8aaF3eFpPlVXIuQva6lg601038oVgP2YmqkiLgTKoQWwsCg/6v1NjY
+	 Gz0ei/isYqshh4xPqbH1mZNbE+kLaFeaVfVFx+h90/CRcxzN7vSPEcLXxohUeRoa6q
+	 u7IVUWpHorwViXLKdG+jCm3Euoy5Z62HdrnH1oMXpo2WyDtydi/izEMrz/z2wkswpq
+	 JIeHqWnS3PSmnhoRVaW3IVg+9Yxrrh0omYuRtJ9Eq2gz8VcWcIC/Qp0wsaZzTsYoNp
+	 +ZTTPEem4qAZw==
+Date: Sat, 14 Jun 2025 12:38:07 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Subject: Re: [PATCH v11 00/11] iio: adc: ad7768-1: Add features,
+ improvements, and fixes
+Message-ID: <20250614123807.3ded6764@jic23-huawei>
+In-Reply-To: <aEweNqhLsL_Hg_gl@smile.fi.intel.com>
+References: <cover.1749569957.git.Jonathan.Santos@analog.com>
+	<aEweNqhLsL_Hg_gl@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This commit adds a work item to handle events of 1394 OHCI AT
-request/response contexts, and queues the item to the specific
-workqueue. The call of struct fw_packet.callbaqck() is done in the
-workqueue when receiving acknowledgement to the asynchronous packet
-transferred to remote node.
+On Fri, 13 Jun 2025 15:48:54 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- drivers/firewire/net.c   |  4 ++--
- drivers/firewire/ohci.c  | 40 ++++++++++++++++++++++++----------------
- include/linux/firewire.h | 11 +++++++++--
- 3 files changed, 35 insertions(+), 20 deletions(-)
+> On Wed, Jun 11, 2025 at 08:49:34AM -0300, Jonathan Santos wrote:
+> > 
+> > This patch series introduces some new features, improvements,
+> > and fixes for the AD7768-1 ADC driver.
+> > 
+> > The goal is to support all key functionalities listed in the device
+> > datasheet, including filter mode selection, common mode voltage output
+> > configuration and GPIO support. Additionally, this includes fixes
+> > for SPI communication and for IIO interface, and also code improvements
+> > to enhance maintainability and readability.  
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> (for all except DT patches)
+> 
+> The nit-picks can be addressed either in next version (if needed) or whilst
+> applying. Up to maintainers and you.
+> 
 
-diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
-index 1bf0e15c1540..6d6446713539 100644
---- a/drivers/firewire/net.c
-+++ b/drivers/firewire/net.c
-@@ -1007,7 +1007,7 @@ static int fwnet_send_packet(struct fwnet_packet_task *ptask)
- 
- 		spin_lock_irqsave(&dev->lock, flags);
- 
--		/* If the AT tasklet already ran, we may be last user. */
-+		/* If the AT work item already ran, we may be last user. */
- 		free = (ptask->outstanding_pkts == 0 && !ptask->enqueued);
- 		if (!free)
- 			ptask->enqueued = true;
-@@ -1026,7 +1026,7 @@ static int fwnet_send_packet(struct fwnet_packet_task *ptask)
- 
- 	spin_lock_irqsave(&dev->lock, flags);
- 
--	/* If the AT tasklet already ran, we may be last user. */
-+	/* If the AT work item already ran, we may be last user. */
- 	free = (ptask->outstanding_pkts == 0 && !ptask->enqueued);
- 	if (!free)
- 		ptask->enqueued = true;
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 68317b5a64a7..a81a876819d0 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -158,7 +158,7 @@ struct context {
- 
- 	descriptor_callback_t callback;
- 
--	struct tasklet_struct tasklet;
-+	struct work_struct work;
- };
- 
- struct iso_context {
-@@ -1176,9 +1176,9 @@ static void context_retire_descriptors(struct context *ctx)
- 	}
- }
- 
--static void context_tasklet(unsigned long data)
-+static void ohci_at_context_work(struct work_struct *work)
- {
--	struct context *ctx = (struct context *) data;
-+	struct context *ctx = from_work(ctx, work, work);
- 
- 	context_retire_descriptors(ctx);
- }
-@@ -1243,7 +1243,6 @@ static int context_init(struct context *ctx, struct fw_ohci *ohci,
- 	ctx->buffer_tail = list_entry(ctx->buffer_list.next,
- 			struct descriptor_buffer, list);
- 
--	tasklet_init(&ctx->tasklet, context_tasklet, (unsigned long)ctx);
- 	ctx->callback = callback;
- 
- 	/*
-@@ -1524,13 +1523,17 @@ static int at_context_queue_packet(struct context *ctx,
- 
- static void at_context_flush(struct context *ctx)
- {
--	tasklet_disable(&ctx->tasklet);
-+        // Avoid dead lock due to programming mistake.
-+        if (WARN_ON_ONCE(current_work() == &ctx->work))
-+                return;
-+
-+	disable_work_sync(&ctx->work);
- 
--	ctx->flushing = true;
--	context_tasklet((unsigned long)ctx);
--	ctx->flushing = false;
-+	WRITE_ONCE(ctx->flushing, true);
-+	ohci_at_context_work(&ctx->work);
-+	WRITE_ONCE(ctx->flushing, false);
- 
--	tasklet_enable(&ctx->tasklet);
-+	enable_work(&ctx->work);
- }
- 
- static int handle_at_packet(struct context *context,
-@@ -1542,7 +1545,7 @@ static int handle_at_packet(struct context *context,
- 	struct fw_ohci *ohci = context->ohci;
- 	int evt;
- 
--	if (last->transfer_status == 0 && !context->flushing)
-+	if (last->transfer_status == 0 && !READ_ONCE(context->flushing))
- 		/* This descriptor isn't done yet, stop iteration. */
- 		return 0;
- 
-@@ -1576,7 +1579,7 @@ static int handle_at_packet(struct context *context,
- 		break;
- 
- 	case OHCI1394_evt_missing_ack:
--		if (context->flushing)
-+		if (READ_ONCE(context->flushing))
- 			packet->ack = RCODE_GENERATION;
- 		else {
- 			/*
-@@ -1598,7 +1601,7 @@ static int handle_at_packet(struct context *context,
- 		break;
- 
- 	case OHCI1394_evt_no_status:
--		if (context->flushing) {
-+		if (READ_ONCE(context->flushing)) {
- 			packet->ack = RCODE_GENERATION;
- 			break;
- 		}
-@@ -2239,10 +2242,10 @@ static irqreturn_t irq_handler(int irq, void *data)
- 		queue_work(ohci->card.async_wq, &ohci->ar_response_ctx.work);
- 
- 	if (event & OHCI1394_reqTxComplete)
--		tasklet_schedule(&ohci->at_request_ctx.tasklet);
-+		queue_work(ohci->card.async_wq, &ohci->at_request_ctx.work);
- 
- 	if (event & OHCI1394_respTxComplete)
--		tasklet_schedule(&ohci->at_response_ctx.tasklet);
-+		queue_work(ohci->card.async_wq, &ohci->at_response_ctx.work);
- 
- 	if (event & OHCI1394_isochRx) {
- 		iso_event = reg_read(ohci, OHCI1394_IsoRecvIntEventClear);
-@@ -2684,7 +2687,10 @@ static int ohci_cancel_packet(struct fw_card *card, struct fw_packet *packet)
- 	struct driver_data *driver_data = packet->driver_data;
- 	int ret = -ENOENT;
- 
--	tasklet_disable_in_atomic(&ctx->tasklet);
-+        // Avoid dead lock due to programming mistake.
-+        if (WARN_ON_ONCE(current_work() == &ctx->work))
-+                return 0;
-+	disable_work_sync(&ctx->work);
- 
- 	if (packet->ack != 0)
- 		goto out;
-@@ -2703,7 +2709,7 @@ static int ohci_cancel_packet(struct fw_card *card, struct fw_packet *packet)
- 	packet->callback(packet, &ohci->card, packet->ack);
- 	ret = 0;
-  out:
--	tasklet_enable(&ctx->tasklet);
-+	enable_work(&ctx->work);
- 
- 	return ret;
- }
-@@ -3765,11 +3771,13 @@ static int pci_probe(struct pci_dev *dev,
- 			   OHCI1394_AsReqTrContextControlSet, handle_at_packet);
- 	if (err < 0)
- 		return err;
-+	INIT_WORK(&ohci->at_request_ctx.work, ohci_at_context_work);
- 
- 	err = context_init(&ohci->at_response_ctx, ohci,
- 			   OHCI1394_AsRspTrContextControlSet, handle_at_packet);
- 	if (err < 0)
- 		return err;
-+	INIT_WORK(&ohci->at_response_ctx.work, ohci_at_context_work);
- 
- 	reg_write(ohci, OHCI1394_IsoRecvIntMaskSet, ~0);
- 	ohci->ir_context_channels = ~0ULL;
-diff --git a/include/linux/firewire.h b/include/linux/firewire.h
-index c55b8e30e700..cceb70415ed2 100644
---- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -308,8 +308,7 @@ struct fw_packet {
- 	 * For successful transmission, the status code is the ack received
- 	 * from the destination.  Otherwise it is one of the juju-specific
- 	 * rcodes:  RCODE_SEND_ERROR, _CANCELLED, _BUSY, _GENERATION, _NO_ACK.
--	 * The callback can be called from tasklet context and thus
--	 * must never block.
-+	 * The callback can be called from workqueue and thus must never block.
- 	 */
- 	fw_packet_callback_t callback;
- 	int ack;
-@@ -382,6 +381,10 @@ void __fw_send_request(struct fw_card *card, struct fw_transaction *t, int tcode
-  *
-  * A variation of __fw_send_request() to generate callback for response subaction without time
-  * stamp.
-+ *
-+ * The callback is invoked in the workqueue context in most cases. However, if an error is detected
-+ * before queueing or the destination address refers to the local node, it is invoked in the
-+ * current context instead.
-  */
- static inline void fw_send_request(struct fw_card *card, struct fw_transaction *t, int tcode,
- 				   int destination_id, int generation, int speed,
-@@ -411,6 +414,10 @@ static inline void fw_send_request(struct fw_card *card, struct fw_transaction *
-  * @callback_data:	data to be passed to the transaction completion callback
-  *
-  * A variation of __fw_send_request() to generate callback for response subaction with time stamp.
-+ *
-+ * The callback is invoked in the workqueue context in most cases. However, if an error is detected
-+ * before queueing or the destination address refers to the local node, it is invoked in the current
-+ * context instead.
-  */
- static inline void fw_send_request_with_tstamp(struct fw_card *card, struct fw_transaction *t,
- 	int tcode, int destination_id, int generation, int speed, unsigned long long offset,
--- 
-2.48.1
+Applied patches 1-10 (with 10 tweaked as suggested).
 
+For 11 I'll wait on answers to questions.
+
+Thanks,
+
+Jonathan
