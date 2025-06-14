@@ -1,138 +1,135 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDA542A8C;
-	Sat, 14 Jun 2025 21:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749934898; cv=none; b=I4tgh7+UeY0GGhwj/IfinUXV7JnmLbQ4+ITSORmjq2bpYwETcWLxwrAj4WhciJfLwTqVpqU5gMPWS5kcbP5f3ymcHBsUoxIkdfCGvHftqZfiqkc0h+IWh0wYkCHXwxT+o5mxMLWEbZs/thOO+/+11JjR30uyGLv0SUau5Eb2i3M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749934898; c=relaxed/simple;
-	bh=Oy6CdK35L5UqrWcqJg7mXl77gwCRN1At28m/lVEVQkk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dTGBv9Yk4XM0ZMAaaXzlknvFAR/tHiue5EqwsXMiVFsvbWgm8iW4AUCgD7/VYCIBrSjK5NJ6+/fWlZVWkALYRh91uiM1nNJkxexqmq0vH9/kcFx+jc9b6b2eSAnUXlL1PewnB3UlK3hdIgbTaQELW0FS6gzek/Hntu6e1gm5GKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=irf295p7; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCBB1DF754;
+	Sat, 14 Jun 2025 21:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749935085; cv=pass; b=LE8w7cHuUzZ84DGpMKf8rZRLB+sI52BOZwMIwQm82S1nxYASaDM6GGvJ+vTWldaevI1bteTj9nPyKQCh1+mSgwkfRxuF8/bg3k0ZJbkqlE+ipL/kKsrZ7nwaY9IHl0Kx2rqYKOjawQY9eG3pprhAwHYKPy7AlTZ8EdCFOCjM2jk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749935085; c=relaxed/simple;
+	bh=aUUaE4NhMLfYjb5tlu3Ha6V9SwZlsMYGAgxjipHxw4I=;
+	h=Message-ID:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Date; b=EteY6xWBxQmsdimNW511OSIyzswRlmoVdY0VeabLuL/G8NCHJRREC8wtZWshuRSkh/e02XdduzMsWPMW5qrwwYcJYVF3mLhHh4+qALTk7Kjgy4hWC/nO8ytQ34moOkT/Vv6QWs6wsdASZU+f4EUWVBAT+16G69TZhQr6MtWPD8w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=PYpHPuW+; arc=pass smtp.client-ip=23.83.223.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irf295p7"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so38824945e9.1;
-        Sat, 14 Jun 2025 14:01:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749934895; x=1750539695; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fxIEE+c6pUB0N6FNYktz5IvAb1U4IAe4R41rT8THtZE=;
-        b=irf295p7B2Q0vmA+DeECJ9F0jtGwFwuV99nVa+zWZ4ukU4Ju7QGlt2LW4jL9DrU6u8
-         aS384JqRRlL+CscXJffHhMD3MlIQvVQUb8+wmi8m9yHj/v4NoU/eYxAnmNTGUwww1mIZ
-         0FRrkqRd5JiuGQwFMSFx7fKGcKDssQRlx+13ul7qBmKcX9gQ9ZByp0VGFbzlxauYU+WW
-         tE/pkFOf9jOQ2dt2MILaHkTsZ5XgHu/T3KZBXluv8ACiDA8gEIk0e+AVZXYkl1mGZhw1
-         xEDgzR/WNhXRgrHruPLMPuoroNNCDr70WiNq0gJmPNFooXgK9iIZ9CNFHy80r1xUPOn5
-         6O6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749934895; x=1750539695;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fxIEE+c6pUB0N6FNYktz5IvAb1U4IAe4R41rT8THtZE=;
-        b=p28ASO1yZe+Xc3nLnFz6PWySsqnxQBf0KjJmez9Q58wZ3aJma6CMpTSQC5hyUsEgub
-         6lO596RmzsK83r1FlAXgzhhHaG1M43CHNDkxaAUEp+E+QFMWSbURShuxYwVrW11LCwbT
-         stO4gLp7/dhhCRLYKyHTiPD0h+2YNtYU8UlJaUTwT+g8PP7HHOpqhe4hzXMeN7NEbAJv
-         dgx7gxguzDjXMUjon587HS9ZSGP0YsLCIKdSWj6CQUHcEbMbKHBmtuLMS5akjnYLl/Mw
-         qYtpmXGiNsE2ZK+Tncw0KArSCWTgcq180RjGzG52I/hSu11fZazH4ke6++W8/F8/r6jR
-         Oo2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXDKy0FAPZL+dA189Od0GeKRdh0vOM0aKbaP+qvWHviX+FetWN1R+bGrAIqs+a9z2e6S6VDFli0vy+9AcAe@vger.kernel.org, AJvYcCXiemjqSA24x3TP3wqFrQHaDSAlleWrNS/6ZzqMUGHU+9aPlKZuNfsBcAFYA7AIlgiwWB2wKax8/3cP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPVGuCU89PQdHKgoIdkUF4NCwpY8sOsFqEelycJ796wJ3wJZrS
-	6XCdQcKWn7auOlUMxdMqhzNB5tcYwn4st0jJekC4IqGgD1db/smp1FpA
-X-Gm-Gg: ASbGncudz+yL+tfQzTg7VF5xv5c0TUDcZiQwkWjRoD8IZ4aVrD4+YzWLMDgZRBC20Lo
-	gszGeAg1i/lgfohsPqSh9AgVn95DYeOisVvPg4t+TdGUEy8bSC+0NTyFzRl4l1XEuKn2zaTAJ2V
-	UUsiiKYaq8EzC6oOdSZECjHEFW+qBnT02xtxT8w2tRxgYLB4tUg9YPX4K5aMnGiQDC8Mdd/xjlC
-	qcwvcvSW9tNRmS/FThy1+p5XtXGqFJbBfpX3BiAd833CkMbO4zmtMglJqcdS1KqdHGkauaMjB2g
-	VxgKf/UMTYKoL24tlloMhSrg2xDyxjPuBb5l1UBFw8/pt6kePgH+KAuYtScfK0Xx7RjbdYhp6Ta
-	ieCTuzA==
-X-Google-Smtp-Source: AGHT+IFczogrn/L57qlQe9UCB84Ov9Y9pOTc5rwLMmgD+dlRC+Fn7LKHG3fxgIt+gTTBlBv82V4M7w==
-X-Received: by 2002:a05:600c:8b48:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-4533c9c107dmr43924655e9.0.1749934894673;
-        Sat, 14 Jun 2025 14:01:34 -0700 (PDT)
-Received: from giga-mm-7.home ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224956sm92863175e9.4.2025.06.14.14.01.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 14:01:34 -0700 (PDT)
-Message-ID: <7a4ceb2e0b75848c9400dc5a56007e6c46306cdc.camel@gmail.com>
-Subject: Re: [PATCH net-next RFC 0/3] riscv: dts: sophgo: Add ethernet
- support for cv18xx
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>,  "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen
- Wang	 <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,  Richard Cochran
- <richardcochran@gmail.com>, Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille	
- <thomas.bonnefille@bootlin.com>, Ze Huang <huangze@whut.edu.cn>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, 	linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, Longbin Li	 <looong.bin@gmail.com>
-Date: Sat, 14 Jun 2025 23:01:43 +0200
-In-Reply-To: <20250611080709.1182183-1-inochiama@gmail.com>
-References: <20250611080709.1182183-1-inochiama@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="PYpHPuW+"
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 24E638282C;
+	Sat, 14 Jun 2025 20:46:49 +0000 (UTC)
+Received: from nl-srv-smtpout9.hostinger.io (100-122-111-239.trex-nlb.outbound.svc.cluster.local [100.122.111.239])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 7B43982738;
+	Sat, 14 Jun 2025 20:46:46 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749934008; a=rsa-sha256;
+	cv=none;
+	b=Huqvw8ESWMB2oV0X2shpXR8AkhjB+YXFWFGRik0klXZio/pc9Bt3wz6fJtva+/Q/ivqlff
+	nRClhpzZgxracJDDXhlOXic+BPc5uGATyURwGN4S4+XXZNaTt2XcVjXPw/2VcNaSk7nUXz
+	5tX/1RiOKiKOlPuWEzADxmXFl258BHng+AzKDbW0DHCurB5TByL2ryQeSN7rki6vUIsfzz
+	TSMZ1sqjErx+wt0iJ7kdFMenYcJkLFxcrn8ImRqNen6IOLGvhMHEHvrChOieQR6krugBDl
+	HiRmfiex5cvIaAtcocNmpP2pdU55QSRn0d7w1ch4jslBsAo9binNwcw6yEOI8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1749934008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=nc9RQbA6Qr/3xcPmMSkDvEjfC4L5GrtayuofOPkowxk=;
+	b=enkplhHldFoJZftwfAjNd0f8Ralw9Ft47qRPuZQ2zasLit/EDF+2IZBCpbyjb0jxpqs5wX
+	H/xGdThc6i4hKQTka1o61pO5Cso9/BmTUHAV8YsJqZe934U8BUGNRMjSM6lkNj0bGEG3sI
+	lHABvWFYla0Pji9gyokn2wjO+vGeFWOOP8FjjBG+rkGdw5MhXo00oCUglSBcg5JT12Nac6
+	D30drPjKrduD6RWqxnP3KiUfoLI9h9CNK6NIXVJU+xFMlsXhSIKtgBI0sVrzQJOu81k1Vz
+	duRQ3bwHWZN9Zb/oXPBtN5V/hteBA//1o7MJRiVphiVv7/z1bsLFym1wUG8UGQ==
+ARC-Authentication-Results: i=1;
+	rspamd-6c978647c4-jdf4g;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Troubled-Language: 2c94c34f46bc3083_1749934008892_1470621371
+X-MC-Loop-Signature: 1749934008892:2968209260
+X-MC-Ingress-Time: 1749934008892
+Received: from nl-srv-smtpout9.hostinger.io (nl-srv-smtpout9.hostinger.io
+ [45.87.82.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.122.111.239 (trex/7.0.3);
+	Sat, 14 Jun 2025 20:46:48 +0000
+Received: from [IPV6:2001:448a:c020:61e:a05e:28b:9589:bb9c] (unknown [IPv6:2001:448a:c020:61e:a05e:28b:9589:bb9c])
+	(Authenticated sender: linux@smankusors.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bKSwy1JtvzGY3Xw;
+	Sat, 14 Jun 2025 20:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
+	s=hostingermail-a; t=1749934004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nc9RQbA6Qr/3xcPmMSkDvEjfC4L5GrtayuofOPkowxk=;
+	b=PYpHPuW+9Sy74tyWQZMtgmwyvh/06ORmI6hY7bqGM85zVMQMsPh0zSH3IrM27BcdQTCrp5
+	cHxSvMzjrUsSquNoRamoif8Rh28HqwA1hoNtbPsaecLcrWvwd/NJ/7grLtENywaRNZUkGN
+	BRKg5KQDi4Zte5WLz2fKJ/4/ZHIBRVJjVhCrAZSAgRG0PJSoqr7VifAJlKLR+12T+ry80w
+	9GLgGSd9VCL0FnOaseJvkmYkh7o79qRMGpCHjh17Gqs/c3gnMSzxLssp/n5A4dB7aJ+VVO
+	JeeemOwsjWxfM1lJ6H9C7YhKIYr/7TgewjaAZXYDmdFM6aNI3DBz2H+fI9PJGA==
+Message-ID: <39a7153e-1a4f-4dfc-a190-3b3370646d47@smankusors.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] ARM: dts: qcom: add device tree for Sony Xperia SP
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Max Shevchenko <wctrl@proton.me>,
+ Rudraksha Gupta <guptarud@gmail.com>
+References: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
+ <20250614-msm8960-sdcard-v1-5-ccce629428b6@smankusors.com>
+ <f1284637-7650-498a-b850-b5140c47e4e0@oss.qualcomm.com>
+Content-Language: en-US
+From: Antony Kurniawan Soemardi <linux@smankusors.com>
+In-Reply-To: <f1284637-7650-498a-b850-b5140c47e4e0@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Sat, 14 Jun 2025 20:46:41 +0000 (UTC)
+X-CM-Envelope: MS4xfDeE0ELiuEu2M8UaCSNvCRotIlBz44mVrMfLIJV/xzL0WhtmdRREte1mo3Sx7wRF4/zI0iHcPkkpO9tX6JixlapXBSXzHNUPbITVtradTeFiXMKSH0MO 26G4+5tnqqUA3srLGWYPz6+A6zSu3D+rwQvKw94kw6XSEMuUC0ksxrsPrAVV3jquYs+d8XlOaH0CzxHXlFn3fQmn2HwZOg234qTeoHfpXtujfes7ZRSn4B7l +IMtpG8xj6bKIfCx07JfFw6MhgCmilP95Tn8zSRJhlsjE5gSHWD0Dk9SPXjbYfF2+xPHQDn8z0NgjAyH4yHwxViy1h40bLJabYJgtrYgwR3BULL28BClfl9k WE+895I6z/QgHBMDwEXKSTwdOv2p9WHn2kkE+Ms3O+q6nVTBBjJAjQEFIgrVCVXAFpl6Vq99H8mLKcannboLucYngMd8K13oRJQIiBeF1MXkhSnPD14TiCr3 tPohPvRoJ2nB0T7az0zymyjlY6UH/XhmmN0wxq2z5WVahKh8DdNbmqWofx/OEdvO2FhtYKS9PAPPr9+WdK0xGziMxE1MLA4D5Zmxbvpl/mNC0GjcSaXjBbxh HEcbHILtnxhtxB7u92/QZo2utpFUwzLIVFrAcTy05P5Mga9JK6zZa6UttfhzWqwUbdw=
+X-CM-Analysis: v=2.4 cv=MNgym9Zl c=1 sm=1 tr=0 ts=684ddfb4 a=9ilccl3s0Xgo97xrQrTJyQ==:617 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Gbw9aFdXAAAA:8 a=K4FVrWBemn9qIp-mdykA:9 a=QEXdDO2ut3YA:10 a=9vIz8raoGPyDa4jBFAYH:22
+X-AuthUser: linux@smankusors.com
 
-Thanks for the series Inochi!
+On 6/15/2025 1:36 AM, Konrad Dybcio wrote:
+> IIUC (and that's a 10yo range memory), SP had some eyebrow-rising boot
+> flow (some partitions were non-standard?) - could you please add a
+> paragraph about it in the commit message if that's the case, and maybe
+> include a short how-to on booting the thing?
+Is it acceptable to provide the pmOS wiki link in the commit message 
+instead?
+https://wiki.postmarketos.org/wiki/Sony_Xperia_SP_(sony-huashan)
 
-On Wed, 2025-06-11 at 16:07 +0800, Inochi Amaoto wrote:
-> Add device binding and dts for CV18XX series SoC, this dts change series
-> require both the mdio patch [1] and the reset patch [2].
->=20
-> [1] https://lore.kernel.org/all/20250611080228.1166090-1-inochiama@gmail.=
-com
-> [2] https://lore.kernel.org/all/20250611075321.1160973-1-inochiama@gmail.=
-com
->=20
-> Inochi Amaoto (3):
-> =C2=A0 dt-bindings: net: Add support for Sophgo CV1800 dwmac
-> =C2=A0 riscv: dts: sophgo: Add ethernet device for cv18xx
-> =C2=A0 riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
+Or should I include a paragraph explaining it? It might be lengthy since
+I'd need to add download links for the mkelf and the RPM blob.
 
-Taking into account, whatever MII variation is implemented in the SoC
-is always internal (and only MDIO part is multiplexed), can we add
-	phy-mode =3D "internal";
-and
-	phy-handle =3D <&internal_ephy>;
-right into cv180x.dtsi?
+But in a nutshell, concatenate the kernel with the DTB, create a SonyELF
+boot image, and then boot it.
 
-Boards can then enable the corresponding nodes if they wire RJ45 connector,
-but I see no way how they could vary the MII connection.
+> As for the code.. I don't really have comments other than please
+> keep a \n before 'status', other things seem rather in order.. If
+> the dt checker doesn't complain, I don't see any logical wrongs
+>
+> Konrad
+Thanks for the review. Going to sent the second version later.
 
->=20
-> =C2=A0.../bindings/net/sophgo,cv1800b-dwmac.yaml=C2=A0=C2=A0=C2=A0 | 113 =
-++++++++++++++++++
-> =C2=A0arch/riscv/boot/dts/sophgo/cv180x.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 70 +++++++++++
-> =C2=A02 files changed, 183 insertions(+)
-> =C2=A0create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1=
-800b-dwmac.yaml
->=20
->=20
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> prerequisite-patch-id: d5162144180458b11587ebd4ad24e5e3f62b0caf
-> prerequisite-patch-id: 9e1992d2ec3c81fbcc463ff7397168fc2acbbf1b
-> prerequisite-patch-id: ab3ca8c9cda888f429945fb0283145122975b734
-> prerequisite-patch-id: bd94f8bd3d4ce4f3b153cbb36a3896c5dc143c17
-> prerequisite-patch-id: 1b73196566058718471def62bc215d2f319513c3
-> prerequisite-patch-id: 54157303203826ccf91e985458c4ae7bcdd9b2ba
-> --
-> 2.49.0
+As for the other things... well in my opinion it's not kinda in order,
+especially the nodes ordering at qcom-msm8960.dtsi. Welp that might be
+a separate patch I think...
 
---=20
-Alexander Sverdlin.
+
+Thanks,
+Antony K. S.
