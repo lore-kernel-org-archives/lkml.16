@@ -1,95 +1,103 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC472171A1
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C6F3FB31;
+	Sat, 14 Jun 2025 00:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749862467; cv=none; b=eQMbX9el58q0AqIQiiA4MCS3a8nS8fG/bk2lenHOHVkEJbWm7+2n2ig+rULIPrREp9GPyUcrJ8aKOFLP5n+DP4axBarSeP13CmJx5ePyglqzbsMf+4TzjM/BO8LEwDkmDTY/E/G0IDt4B5hwvs8a/hIJ/dChDJDeX211JFJodiA=
+	t=1749862474; cv=none; b=N1pIEHJB0byZQX8wMVAsaldCAs4yEABMyaSzH3+bJNbypcRAELMbQXwVWEtmSanc+Kaaij4llGyfNmXyO2USkVKKpQEmXBMrQiSfhJc+ruJ/cbRKEbQFFFcE5DpjRUD4ih0qDHH7d3FOSQofqXQSd8pM9j45c77BD+VvnLzYtns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749862467; c=relaxed/simple;
-	bh=dbg3c1BYh2RqngzJb5eNWzqDUU5+7bNmKWGAXK29fkM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ejp33bup16FDIhAV6A+nt96ICTQnXjpDeolktiKsuPkAkhFeM565wKHdLP/n7RCkHq6IxMAOtoFsrAeyNy6AGVpb23mLmJUq4hm+DMKBTcvRHjWjl8+ETegRR9Zo1fJMQk+s4Nw7HF1rZxS5dFs9N+xXKbO/28dsqm+tlm4xOU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WezgbJk0; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749862474; c=relaxed/simple;
+	bh=LK2lplB20s2GTVjFH5U9EI+NAX1bonoLmUGrd/rroRA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AsSgd30SgzyVx3aA5fBGjIS+JQLaBycDdIh1LjuRrv1/GBlfvq20CwZ395SUSFttpmhV9KYH6ESlQ6W066okXB8phCWakDGb6fYB3pCmual2+jQsE8hNCkRq+CwXdCTQlxe7zzkvVmM6F3jCYMAV3QryMS0TFjFLUyZbHegyQew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgahJwml; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WezgbJk0"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235ca5eba8cso66255ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:54:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgahJwml"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e73e9e18556so2597573276.0;
+        Fri, 13 Jun 2025 17:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749862465; x=1750467265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dbg3c1BYh2RqngzJb5eNWzqDUU5+7bNmKWGAXK29fkM=;
-        b=WezgbJk0dtNUYgx24URetCr6EXq91Ga38mytsbVMSvQi3xAQnTtIvKvc1AjVq1GNEL
-         UodO33phXhFGQouhEwYlWk2BhgrbOBJMRgN9mxMdKZ97o49a0IQIJpAv4MDo5Hk46PgH
-         eAkkILbbUz1J1ezLysvMlv5ElzF6WaRVn4Ub9EiGorspTF/vytjkNvFG/RFPH4a/dRbR
-         OTs+O4QmXqsqTPt05pM5jedM8u/uvv1p79t9RGpaxjhHEbyUgIcA7i9Dx+dt28KzMK4f
-         MD9FQo+ZG+tOoahB+S1zTfA+8g/5vGIJ7v678WlCNtMvYytRYSO5WRzvrbX1mEyNiEsE
-         P+Mg==
+        d=gmail.com; s=20230601; t=1749862472; x=1750467272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6IOC5EkqQjku46aq+03ogzTal5jg93JFJeW+nRvKVJ8=;
+        b=HgahJwml/E5gXEFF3xvp19W3JQOvNAL9wgBMXdzZcs/0JTwnwTZVHiIid7gBQrq0oB
+         0HKDBNUWo33v0S023SGz6fJJWofGG4qaMbGZzBC8NCRzaGKJNcsa9Ys7p7ZGH3RGxrVR
+         0OM9swHxRaVR8g9rOHwf3GNbhg2KAzVq+Kyq9xAKlAG4pG8z8pBTdK8wb0rixkltz5GB
+         SQ4MZVSbb16gUmud4Jy/CiRE0n5hndnaGI/XDUiksiimxQcTuk8M7AEQYoIE7rZ31N0R
+         5bIYmsvypbHK4BmfGMam2mtfAq2uCVcexthHbsen16YrNKVj1kp8Z3ut2Fb7PQBWnHqL
+         mO2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749862465; x=1750467265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dbg3c1BYh2RqngzJb5eNWzqDUU5+7bNmKWGAXK29fkM=;
-        b=G0DqjIaYb3UhI7GNUPDn3SI5WBWoLD7aRJINkxfUsXOQc0Nhxy4zTsH/OuMlLKRPqE
-         C3YQhmkfoU4EbBNoJxoWtVO4KrE/xRqA1uK7hEt/pxoJcZikrZswCe2TG5Dza15WjL0c
-         dq4Is7CFnG+BLzpwKNG+SeLyyYGQauwKi3eelWvydZFN3lbxDYLqOC38E2vSzeYqk4+3
-         PDmt66+297hWcE2eSLl8tX2KpDn7542V354Tlh8hPO08hkb8mxyLwZ3HT7Vz9ie86rhK
-         2umekmaZmMFXv+7Qp7vgmWHQQH2EbEFCGyVz4im7aZA3ATzwJ7O6JkC88cRh/fW6qQSz
-         Scjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLPBZGS2Sd8OnZbHDDUcapN3MvrYZYMCNOtpeNOQ4KCPrYcenL3eW+4APOY7XepZQEuwVUwimHNd3SbdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6DbbuYak8yOuJsf2PfV4pfFPHTKnmfiDzIJo8me0z0+XSQGYK
-	VA0/M5Pfu2t9p6AvaHaLbAH/TuTuxjSAAiRo2MaonC7trpQs3K9pKNtFu2zsG+B70EN8BdCHFW4
-	/IlzIAjkTq5lbkjMp/5FW3HZ0A6NLKtniWSGJbJYD
-X-Gm-Gg: ASbGnctqOwXs0nfOwAHbUa/F+NAYz+lxtyQK3YfieFYWwnNL9x52JcG28LHu6anexO8
-	9185TKsCeuzVZ5xYEib2iSic4Pfj8I57ivPIrPN7XLxirapFAtk0XyWbLFC2g4rKLzAoebU3wYC
-	NmRcCn+/eHrXjDNxa3DuL4D15A3oHZOTEz/JpT0eNRlMO175y9BeI=
-X-Google-Smtp-Source: AGHT+IF5JrVHVbiN/102jVBcJgf8pP7Edb6rcI75OIdKcC6Rl/eoRwukBdcUmUcOznU3bQiIsNg7MVhxwBLn+Nvp0Wc=
-X-Received: by 2002:a17:903:1107:b0:234:afcf:d9de with SMTP id
- d9443c01a7336-2366f01c6f8mr325645ad.29.1749862464820; Fri, 13 Jun 2025
- 17:54:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749862472; x=1750467272;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6IOC5EkqQjku46aq+03ogzTal5jg93JFJeW+nRvKVJ8=;
+        b=TUOiH0oiJrvUYvYaPt7e5svdAV8JnEufXd0iVQNHQVZaa9n1OQT03gpY4eeNmV4z3m
+         I/f/uCXRzpZ0FopAc2TmyIxT+t9WykRm4l/+6DUcYZBGHfKZmSEmu6mxscPVuy15MFYQ
+         1Q/Bixa9ZHnaw7j8rAiFoPyPpEJRnORoacqXfp8R+LCHM/jNgheawK8BaeCbksuzpI+e
+         VvXtHuBPkpAmoTppoZw4ENewXTUd1abwaXXwEKCw0oCztbayLWKJZJEcOmy+G1zpHJyq
+         w4M8GjKebJgcSM+s+LNh/y6U8NkXYij6eRvbEk80NNcl9tUjXpU9PrpGhGVmGRusoDXL
+         nbzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVU88oaFq+6RIUWCYCKXBwC7+8M6KFZVJ+aX0E8QgtaBmeNmyHE1NEb0l0TF8VWbYMVAmLo1KnTKTrIAnil@vger.kernel.org, AJvYcCXjFFe+PaQv/JT1qFB+f9VKdEBqXfUlAeEWqEr2k9jFm82L56gbyYNtDYpWkUeZdmEpoWA5+AbVrmYayg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKnvYOvM/gyN7spNrRAYvHA0wQ9LIWwgIFfCjKmJeag9BnuGn9
+	pcpAMZuUESQMUZOUvNRPhVszLH3SASpWuP7nrybG845yc7uXeShiYLo6
+X-Gm-Gg: ASbGncvQj/IbIqteAZUb5T+GLTaBUdkIX6i3A5AgxHXbJxxPD/xQnTbcrtGNzlv0nSP
+	B0fIfqgGU0nwhNSIQgzKLa6NWCBmxwrwJNmexRbOG3XgQdF5Vid5LjwmAx3cogQXNCcI087Z6i0
+	Mnslb+feePNYa8nMYVXAgAmXr0wtC+0HW1hRL3JhV5lsPOjAl9j4aH7waSt+5PUftfQ1juPNdcl
+	fNb1JB/ZVVe19oqoRoIL9EcHqc/D8JTCmBBL4p+1EjinQO8NVl2qKRxH81NmD7SuRRwTTA5aq81
+	j/6IvBBT4FDRHF0n2idEOgSg3IGWMGoVPMmY9Mjvz8i7JRQZi/N6E4DCiKMiz/yfMG7dezoV/02
+	FUQPzZfFN9Vs=
+X-Google-Smtp-Source: AGHT+IHmyWIVsKa8zlkseIGQ7d+Nzek020p6s1DukOulLA5PqLXiuoVPhpDzKStteb5YmT4RgfC8wQ==
+X-Received: by 2002:a05:6902:a06:b0:e81:2ab1:6335 with SMTP id 3f1490d57ef6-e822abf79famr2419866276.9.1749862471672;
+        Fri, 13 Jun 2025 17:54:31 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e820e2be6bcsm1398678276.26.2025.06.13.17.54.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 17:54:31 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: deller@gmx.de,
+	FlorianSchandinat@gmx.de
+Cc: alexguo1023@gmail.com,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fbdev: via: Fix potential divide by zero
+Date: Fri, 13 Jun 2025 20:54:28 -0400
+Message-Id: <20250614005428.3112421-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609154926.1237033-2-samitolvanen@google.com> <dec42b04-b76f-4a2e-b060-9ac999fe1462@suse.com>
-In-Reply-To: <dec42b04-b76f-4a2e-b060-9ac999fe1462@suse.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Fri, 13 Jun 2025 17:53:47 -0700
-X-Gm-Features: AX0GCFvhflmbUjvvF_yAMLbU4RfChKb2aHfDzBXIK7IMhzB8uMQ9kdWUKlDyi7o
-Message-ID: <CABCJKuctMAeD0HjnH5D8ji-g1ZKoev-u6ni-UiDL3qtQhpfbZA@mail.gmail.com>
-Subject: Re: [PATCH] gendwarfksyms: Fix structure type overrides
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Giuliano Procida <gprocida@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Petr,
+Variable var->pixclock can be set by user. In case it equals to
+zero, divide by zero would occur in viafb_dvi_set_mode. Similar
+crashes have happened in other fbdev drivers. We fix this by
+checking whether 'pixclock' is zero.
 
-On Fri, Jun 13, 2025 at 12:52=E2=80=AFPM Petr Pavlu <petr.pavlu@suse.com> w=
-rote:
->
-> Nit: This code was the only user of __cache_was_expanded() and
-> __cache_mark_expanded(). It is now possible to merge
-> __cache_was_expanded() into cache_was_expanded() and
-> __cache_mark_expanded() into cache_mark_expanded().
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/video/fbdev/via/dvi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nice catch. I'll send v2 with these dropped.
+diff --git a/drivers/video/fbdev/via/dvi.c b/drivers/video/fbdev/via/dvi.c
+index 27990a73bfa3..0ba248b7b360 100644
+--- a/drivers/video/fbdev/via/dvi.c
++++ b/drivers/video/fbdev/via/dvi.c
+@@ -166,7 +166,7 @@ void viafb_dvi_set_mode(const struct fb_var_screeninfo *var,
+ 	int maxPixelClock;
+ 
+ 	maxPixelClock = viaparinfo->shared->tmds_setting_info.max_pixel_clock;
+-	if (maxPixelClock && PICOS2KHZ(var->pixclock) / 1000 > maxPixelClock) {
++	if (maxPixelClock && var->pixclock && PICOS2KHZ(var->pixclock) / 1000 > maxPixelClock) {
+ 		rb_mode = viafb_get_best_rb_mode(var->xres, var->yres, 60);
+ 		if (rb_mode)
+ 			viafb_fill_var_timing_info(&dvi_var, rb_mode);
+-- 
+2.34.1
 
-> Looks ok to me otherwise, feel free to add:
->
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-
-Thanks!
-
-Sami
