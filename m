@@ -1,106 +1,150 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A891B393C;
-	Sat, 14 Jun 2025 21:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA5D170A26;
+	Sat, 14 Jun 2025 21:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749936107; cv=none; b=FqSpobdh241N2lSqvwsQD/6uQGg1nsreSCkBWGobbjkMRukPGXDClKiDm/bU3xR9909wO2Jh/fZMjBip+9p/3+TOVdurwakXjGzXcc8dPe7rZEGCoDWcvaiQe2Ab5QivtJ8CaUwLmjv0CoogIu91D+9FjycDCrs9GOlAZyDtijU=
+	t=1749936220; cv=none; b=r6qkCKkFxksLm25dDeGHUXoXzMdv8JWq+PDxSm0pWcgPB8HQUBpbM5u0OLXFqJjay7U23TCbH1EjVHq5Oq0eLOd04+DQelUAG770rUll8SrgpJLqp/uDwt9MG+08PCYQ/Esi+c0F46A2KnVyITG8WNO5V0bqC//NW3uPPoaAIRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749936107; c=relaxed/simple;
-	bh=95m61qIV6ZpSVPIOwauck0utYq1p5pnDlxVw9fZPoUM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GcjL6r3yc/F0/33dP4HXeNezeZYftcvFLtMRJ0yjfskU6NAq6FMIWEjspx8+GvnnTmGzWyfk5zh7gkVbFQzHr4dGdaF2+ct04V/j3XbQzDANrTAnbzlor1wHT3VBE82HW6511JmfK3MeV4gkUXEe3OpRg1UU2IOYRw0wZqHwZAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGfxaQ8m; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749936220; c=relaxed/simple;
+	bh=+buu05lf5puXVyjRW6oMuYv3VcTEXEdgXl3ir+gLyOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hJjemLf1U/R3fjqxBttqibdhFinP6/ZZRbAHndzOaIcTdWU+bmiWOAz1C6OuMfB6Gsz3mJCfsK/Dx+6LVZntzVnneLpbNAW06f/wyHYy0DxyPIMYCxvujvgM3dKyA/7FhK+78JqXzAnattj55vVcou4jvuoezNzmTcTapTMSMLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UiAXShK2; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGfxaQ8m"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e80edfa06fso58810137.2;
-        Sat, 14 Jun 2025 14:21:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749936105; x=1750540905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MK467agQBl7b1tY2wypHrza4wnliO7LxjWcV6PEgN6o=;
-        b=SGfxaQ8m5MG+ziWAFDsF7YTuoP6KLlGwRh/AorcxDrJ5oTdGNx93rpqX9WShCtLkky
-         kdNWVKA86tbeNM8yaV6NAsvawI/WV+v5RxpJ1wuTSbVkLxpS6BrIgLrxBQGYB5m5P2kB
-         AOE30eXw4zuyudc5H0FNx9lG8EwJ2tFZaf9R7k4H4OgwAb/GgKlHSnpWbjJawPjIBYMn
-         XGSh0fndbyswgIfaJzNDucJMMbUyhyXQqSQJwU/4tKmIyieW7sfYwlUIiE5v7b5Q9SAB
-         XzNwHETauic4UUjVHgLXJY+hIv8uKC3mvU/657qVCvtGviwVZECITglMONx00Jx4mhoU
-         yuqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749936105; x=1750540905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MK467agQBl7b1tY2wypHrza4wnliO7LxjWcV6PEgN6o=;
-        b=fs51u+hC6sv1DtjiCPIpb82LWfZxqVo1qlI34w83aipI2Ja1u3rRG9baxOYLKDYOlP
-         VJSIvBm7PnOw00QaE6+LR+zZlXM0G/em+vsWYQ5QGUiBeiu2+6+aRjOydyyqK3NxSvFO
-         xE/x7qKKeCK6tJCTlqiZMqiBQcQ2gUTbRYFpznj22jcBuTc5jplv4XPIeKG3eJl1mukn
-         PJX0ezvfZkovmLFEWuRz7W3tBWvVgvheA3V0Nc5TQ4+S5qDF7tkVlZtsA5/cjQoJ5ONF
-         +2tPCtif5Brg1EunUixvmWrR0NZ8LJAkdrGoWwJbwBPLFUfgogK49fP+ZuP4xFQo1R/8
-         uJmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJE7YjMDq+8UO26OU2RudTFGMSaYCmReSzU1R2bctO4ZiXOh2pOjeJenCRlSRwOr9mUh8JHWEMOus=@vger.kernel.org, AJvYcCVTpwmuRL+3T5HEKRP42fYd/zcmQt/YkVtKE9rX9AB0MLQkoRsY9kP2sQqUkEzoUx2hnHIeGaerH0zx674I@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkaYP4tgtKwTbkNf9gpFDn22wRaXXUPqGbOQIGEuJ3RGmmtMLE
-	RzMcO6F824looP41RQIN5/pNGbNbXiXYZoMCBS7x+mBVMWrdpc9IXNaFbTgbOSA3tZnh9G+uwtj
-	eI3BZtfAcOrN4Mqegjbmfoouc3N4ZnZg=
-X-Gm-Gg: ASbGncvjuyFvlblqLshIq1/HLMEUd7rQyVVFtdkVnJEEjMAWVOD+KUorWSCkCgV7AkZ
-	M6VXaiTz8dxpda5fdhqaNCpslo4MwPAw2SGwCiYSBnrCUuG/vAGu5CgyWrUooqJm2YsO4lI0tSm
-	pleOOfs07nElGxNlz83x04bAu3a+ID7NpAUv3OWs2ygg/UMsKdeNZd8N+fSQ==
-X-Google-Smtp-Source: AGHT+IH0tdFLXLY6jlKXLxCkkQ5OlCmVQ9/IMNkj5MVlcXZf4aDR7L/tSB4T3vCPQaU9jj/rvROsVYOur+PnsJBnBII=
-X-Received: by 2002:a05:6102:d8f:b0:4e7:bf04:413f with SMTP id
- ada2fe7eead31-4e7f648cd19mr3019968137.18.1749936105288; Sat, 14 Jun 2025
- 14:21:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UiAXShK2"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 968C65B3;
+	Sat, 14 Jun 2025 23:23:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749936198;
+	bh=+buu05lf5puXVyjRW6oMuYv3VcTEXEdgXl3ir+gLyOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UiAXShK2K0kgB0Dbtl6oxci/XAI632Mh3JzI0WXAEfZ0gYXT9Chu+r1Wt5fs3qLH4
+	 w2ARnbvLoWF20AwvhqLq+MqHiDHtWENVzVf6hVah7Bl9jSNw0xPqa2Bj34Uv4Mfjdy
+	 kDpLPudNUdZbZyRIvyRJE9VprYPvlTSoizN1POs8=
+Date: Sun, 15 Jun 2025 00:23:14 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: rcar-vin: Fold interrupt helpers into only
+ callers
+Message-ID: <20250614212314.GL10542@pendragon.ideasonboard.com>
+References: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250614141545.2860860-2-niklas.soderlund+renesas@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611194648.18133-4-andrew.lopes@alumni.usp.br>
- <202506122309.FvJPaMhh-lkp@intel.com> <1c1c2888-be50-4578-8afd-bfbe4bd9cbae@baylibre.com>
-In-Reply-To: <1c1c2888-be50-4578-8afd-bfbe4bd9cbae@baylibre.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sat, 14 Jun 2025 18:21:34 -0300
-X-Gm-Features: AX0GCFskZ6scvwqCQ_LUPZh8XidRkwo3cx6PRXx9bYPaQ-64eMfzIP8pKcRdwss
-Message-ID: <CANZih_TWMx2d=8FGRLdHdvQDRQxoYar0v+YpeiogdQOWTnLHpQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] iio: accel: sca3000: use guard(mutex)() for
- handling mutex lock
-To: David Lechner <dlechner@baylibre.com>
-Cc: kernel test robot <lkp@intel.com>, jic23@kernel.org, oe-kbuild-all@lists.linux.dev, 
-	andrew.lopes@alumni.usp.br, gustavobastos@usp.br, nuno.sa@analog.com, 
-	andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250614141545.2860860-2-niklas.soderlund+renesas@ragnatech.se>
 
-On Thu, Jun 12, 2025 at 1:06=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
->
-> On 6/12/25 10:52 AM, kernel test robot wrote:
-> > Hi Andrew,
-...
->
-> These error messages aren't particularity helpful, but what I think
-> this is try to say is that you have to be careful with guard() in
-> switch statements.
->
-> The guard() macro is declaring a new local variable, which shouldn't
-> be done in a case: statement without enclosing it in a separate scope.
-> Some compilers complain and some don't so even if it worked for you
-> locally, we need to make it work for all supported compilers.
->
-> So the code needs to looks something like this:
->
->         case IIO_CHAN_INFO_SAMP_FREQ: {
->                 guard(mutex)(&st->lock);
->                 ret =3D sca3000_read_raw_samp_freq(st, val);
->                 return ret ? ret : IIO_VAL_INT;
->         }
-Hi, David! Thanks a lot for the explanation. I'll make this change right aw=
-ay.
+Hi Niklas,
 
-Thanks,
-Andrew
+Thank you for the patch.
+
+On Sat, Jun 14, 2025 at 04:15:43PM +0200, Niklas Söderlund wrote:
+> The call sites using the interrupt helper functions have all been
+> reworked to only one for each. Fold echo of them into the only call
+> sites left.
+> 
+> While at it rename the variable holding the current interrupt status to
+> make the code easier to read.
+> 
+> There is no functional change.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> ---
+>  .../platform/renesas/rcar-vin/rcar-dma.c      | 27 +++++--------------
+>  1 file changed, 6 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> index 5c08ee2c9807..585b8b3dcfd8 100644
+> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> @@ -912,21 +912,6 @@ static int rvin_setup(struct rvin_dev *vin)
+>  	return 0;
+>  }
+>  
+> -static void rvin_disable_interrupts(struct rvin_dev *vin)
+> -{
+> -	rvin_write(vin, 0, VNIE_REG);
+> -}
+> -
+> -static u32 rvin_get_interrupt_status(struct rvin_dev *vin)
+> -{
+> -	return rvin_read(vin, VNINTS_REG);
+> -}
+> -
+> -static void rvin_ack_interrupt(struct rvin_dev *vin)
+> -{
+> -	rvin_write(vin, rvin_read(vin, VNINTS_REG), VNINTS_REG);
+> -}
+> -
+>  static bool rvin_capture_active(struct rvin_dev *vin)
+>  {
+>  	return rvin_read(vin, VNMS_REG) & VNMS_CA;
+> @@ -1049,22 +1034,22 @@ static void rvin_capture_stop(struct rvin_dev *vin)
+>  static irqreturn_t rvin_irq(int irq, void *data)
+>  {
+>  	struct rvin_dev *vin = data;
+> -	u32 int_status, vnms;
+> +	u32 status, vnms;
+>  	int slot;
+>  	unsigned int handled = 0;
+>  	unsigned long flags;
+>  
+>  	spin_lock_irqsave(&vin->qlock, flags);
+>  
+> -	int_status = rvin_get_interrupt_status(vin);
+> -	if (!int_status)
+> +	status = rvin_read(vin, VNINTS_REG);
+> +	if (!status)
+>  		goto done;
+>  
+> -	rvin_ack_interrupt(vin);
+> +	rvin_write(vin, status, VNINTS_REG);
+
+Actually there is a functional change here. Before this change, if an
+interrupt occured between reading VNINTS_REG in
+rvin_get_interrupt_status() and reading it again in
+rvin_ack_interrupt(), it would get lost. This patch fixes a possible
+bug.
+
+With an updated commit message,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+>  	handled = 1;
+>  
+>  	/* Nothing to do if nothing was captured. */
+> -	if (!(int_status & VNINTS_FIS))
+> +	if (!(status & VNINTS_FIS))
+>  		goto done;
+>  
+>  	/* Nothing to do if not running. */
+> @@ -1417,7 +1402,7 @@ void rvin_stop_streaming(struct rvin_dev *vin)
+>  	rvin_set_stream(vin, 0);
+>  
+>  	/* disable interrupts */
+> -	rvin_disable_interrupts(vin);
+> +	rvin_write(vin, 0, VNIE_REG);
+>  
+>  	/* Return unprocessed buffers from hardware. */
+>  	for (unsigned int i = 0; i < HW_BUFFER_NUM; i++) {
+
+-- 
+Regards,
+
+Laurent Pinchart
