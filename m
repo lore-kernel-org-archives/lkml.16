@@ -1,61 +1,63 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DBE1CEE90
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477D024DCF4
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749892519; cv=none; b=XHjGPVgltvGfEJOcrHBTVD36OP0/XTmUJaLZ5GbgXYvgQNGv1jqv4aw/SgtiLpQpgVvJLb9TWwL9s9AD21y65OQFcRPw/nwQhTzgb7Zuz+/Bff4EzDWtoqXCmmpByTx797PwL1L3Wb0UNyZNZAguw+S6IemOMGguBXt8vBUwKHk=
+	t=1749892519; cv=none; b=tIquC7BxjbTWFZxgdKMkyDRTFb3CRRr1bGAqH7KFS68ui+Bfjm1mHLzYwzjSQ+qiam3OEie5H2utWjOtDZEaBh3RXsBMuAHYPb7RVw1ALIRU18rBf13JQpRXU0TbI1ypVEYgzBV41T9ywNZR3DR3Zo+tbXwfRlk9hLhcloE4Ku0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749892519; c=relaxed/simple;
-	bh=fEzpTyK11rRSKQSfcZKNPllXPlsRTxswtMprAov9nP4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lu/aZpLbA1tFDbyN0rzZQ+yH6j+sCPmGQH+3C912IxhAb2xTFfI7bauf41/jg37mmEnAR+6kqAvmM/5+P/UIvBEoZvwpU4fSg06TBbx3518vpZmZKpFS+HWDIe84anxqbZVKK5WZ87NPXYWb3ma1bfBM0A59fQ6E+NDbP19LAAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vKAKbSD1; arc=none smtp.client-ip=209.85.215.169
+	bh=O+kW0dEk97iE7ihlWeRUku6iBnu/KXC8Ng3kX0sCUJo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dLyiL7f6o75JQ9sP96JCu3AA5ERpr9kuoy6Dspw1xZq1sNX0WFCzR0wTFoh0EWN6x0YRez9P+sOnuJIBta8CY1Ts7xGplCB/WtOB3+CmRlBYY/mDRiSYKGcDmGuz7D07/q8mZn6XDf08oYckb74mwkKqJKhQH/qNIwrWlXH3jkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=U1+j0zPI; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vKAKbSD1"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso2365317a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:15:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="U1+j0zPI"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso2417229b3a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749892516; x=1750497316; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SLsiR/h0cYGLeY9xxWYE+0j/YoSK9EqZas91R3KOacM=;
-        b=vKAKbSD1ZxNyKEBT0x4N26D4sXd5wi22uGOpivx2o0rj5FApfyUZy8KGmDuyrVq41C
-         qANtP68lQr8WVNOzFeLYf4SKZAkUL0EnlNCs2/oJE06sqQ2l8HG10xAVmOLE5gLz6scZ
-         KzoupQ1OnI2kfl7HrFX3Hzdbb/nUTeprGTifrJl18/cUwUeRqeVLB4YhM4JMPc8nR2D8
-         LEHiwSIfaj37BKa8W51MxH0gBPN6O7eyczwaOhDmslCVv/sZgrfxAnkA+arATBTs41hG
-         Ou9U9MkaLe7WgIz3S2UCd8+HOaeVksqSjSbx+L7vmn951ooFHkhZrpBIunYbDA1X/j2u
-         i/0A==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749892517; x=1750497317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xAvD+1q8T/M24rLYq6SsWUhjFGHiNFVDMXIDxaXAbBM=;
+        b=U1+j0zPIqa2W68t4Zg2P1y0XWCjozo+lt2EaV0yTv8SWLXKk+jPA4RbKC/hNapVdRp
+         wJFP0c2Qk1vWHmshsosAmomF9dgz/730MKB5yOhSLaV6igBG5dsciPahMT3Vtmn9qiY9
+         S25YIZ8FlpYteDOPgx8org8LhOiLv6aLEY30dmwoSglYYL/R05ZEB0Pn00LzY8V7eWNN
+         p9lCeegG7CfWbUVzvbCcrEVl6/yQsLO0pDnTBLC+Odk02ASx5n8ScvxihJ+7UHMhT4WG
+         FCl4+yaX0VFuSraxtVBCxRcZP9ff6GweNGRHzBuD+MgiGLlT7Zg2ZizIjHtU+9di5yIL
+         Eqbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749892516; x=1750497316;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SLsiR/h0cYGLeY9xxWYE+0j/YoSK9EqZas91R3KOacM=;
-        b=rpSaaNXB1Kf2o/bhx7sx43YEa3h3lOxJUIXZMqbgMGE5Hb0xvP4Uogjd8bGlSgE4Bm
-         dcg7sV9VQdP6Inmia5b5CMnn2g6S/lyXSfzvSV90/bJNkVGLDt9CX/0YVH+JFMhk8hUt
-         jyxFKjwBSdHV7txGnj+9i3lFFmSezh/mhM3vRsU3KkTcUW5vbMAneDJq+k4YidS9n0kb
-         jZHPHV2dRbBaaDw3thtskKGBkINKcQ/MHGAOlOGTlxyLutxFLGPVteVV7HzmwhnqpKsF
-         C3BH7pQaoPJ2iSLoGBlZJ/3mPEEupcK9bpQ+/CKZbH315YfkbxnOLGwbkue2xxwm5+bS
-         3jcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWyeKYBTDG0yHd8fn+BD4oq5LcjwGjLFtLHWPYW2mY1N3YNpNcIbpaE4vHefsu1tmyYPNBs9LynoOXrDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA0FOSigAAmnag6AqlF8zwiBdimkT4XOR8QcJhAenjNtWcU8ZJ
-	I+IsG73WTMIsE2yb+gY40RPfKV3eZolam+OTbBprQs6DM7VGPyYtiIsoR4XpkYZij9o=
-X-Gm-Gg: ASbGncuQ5S5OfTT5pkWbowlI6SX8Uf1wi4M8bBT0iNnHsxKgrnzg0xLKYd+QttiEG31
-	cPi6Kt5lWoyrQsf3ywumCAKw3inqBim4OTCuUAbYHXDGb3NdOLYnnv/sbXpWj+AJCSHuwI8DRQB
-	4gt1ra0K7Eat0NQK6RVG41MfxzcPokI2ZootpS6KF1gRaZHYUyu85MXVXEG+24c5+ZRS6xmxr9E
-	EqZo0wAjw0LIhCwS64WB9x8CmoZkAA1ClojAmIJ5xlxOBTUptqxS3ZNQ0cSRAcEk7/dWF3FYuWj
-	6ou3DiEKaTrVoEVknTozXIA8bOxVrvuhuWHM6bL8HjPVWZiUflcSVWHbP95kUvTMtkqCkbtIHPM
-	HR0XRoD3cDr2lHm9Vh+zCF32g
-X-Google-Smtp-Source: AGHT+IGfTFeWO8ChJdc77XTP+ru0Ua2v0yAMFICAz+nYxX5YCpZtBt3ZVrd9mU172jDJp9dnbk5w1g==
-X-Received: by 2002:a05:6a21:69b:b0:1ee:e655:97ea with SMTP id adf61e73a8af0-21fbd68e749mr3579324637.41.1749892515696;
-        Sat, 14 Jun 2025 02:15:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749892517; x=1750497317;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xAvD+1q8T/M24rLYq6SsWUhjFGHiNFVDMXIDxaXAbBM=;
+        b=VvLrfLdxymXfenx4mjBnDqSPtPO/ly4S/3yzyHiaNSWUfuzYSr65mcr67yf4hG4orV
+         KXaRHYj/a+enk5S4MpIPxVicub5x9B4mv7UxohWw0O1i+rRzcyqZzyIKwr6D/816OQfd
+         h9SSMXv8ceVFy8DSoa4xgeMXH994uKHtpjlK1JNuRvs4RlhGFaav16n1M6p9shN1INQc
+         JhxHWZfkVKPxPnD8WRR+jwhbCUEpWIZBjwH6TzHJD8PimYDz2yAXfyQ0FHJ1aizg7VnN
+         NoeXYSxmxX9FeWlkv83I/5sovydXD1V45L8uOIArSO3t2I6Gj6GUWb3k9mD2Ff7zdF7D
+         P4iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVy2AYA9feFCOTCAZDtswltIBF9w1SwPNvcE5+ky0yMPWzgrnQQ8IivTB/mZLiNAO04uvrTZ0iD1BIh7So=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkub+hlK4t83hX5SIO99uXcvx5thAh2LB+k6VM4vl3p+5kuJSs
+	tT3zWY5mZKrP1GmKlD8wLd2m9oEEGVYYLsToRPp+vRDOzOog77KCGhTismfYoSDG4M0=
+X-Gm-Gg: ASbGncsUt6vjAezGf04/CrKPC/4Gv1n8Ndr4dvYoGX26OcXYp0jumAX7e+kMqWnftM8
+	JBcGllc/CvHCKqieDb3bx+c2SsWc2RQyaP8/5R2h2gEf6AFJZbdZR8DvupgrWmGGUvs1/Dloo/l
+	NeoTKo6KPgTSSPuVpZza9vSEyWX2Dwa31ywk9nSz5THNt8Ea6CUJPztafEtM0B+nse0knyf8mf1
+	GRUZtuIK4ZzG/ZDriENVwbEz1fVNQduJBn3QgTqk6AKxCIcQaJiC8Sg0MyzamnK9kTdu7j1fHVs
+	POK9Nh326DttwLx6MKWj+IF2s5ZtQdNLCvdRiF6RKmyPiZzHtixxV0dL7LCRF0f5BsIUPKI9EFS
+	P7lhw560uAn88mtEHkIEy/Pwb
+X-Google-Smtp-Source: AGHT+IGOG9HBWv3d+gV+f7KJlI3h3z4Kx/asseIF/i31+VU/itnDpzuPq3XTnisDhRpUkZh6dsrzow==
+X-Received: by 2002:a05:6a21:348b:b0:21f:8d4f:9e3b with SMTP id adf61e73a8af0-21fbd495049mr3668790637.7.1749892517466;
+        Sat, 14 Jun 2025 02:15:17 -0700 (PDT)
 Received: from dev-linux.. (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffeca93sm2969630b3a.20.2025.06.14.02.15.13
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffeca93sm2969630b3a.20.2025.06.14.02.15.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 02:15:15 -0700 (PDT)
+        Sat, 14 Jun 2025 02:15:16 -0700 (PDT)
 From: Sukrut Bellary <sbellary@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>,
 	David Lechner <dlechner@baylibre.com>,
@@ -70,11 +72,14 @@ Cc: Sukrut Bellary <sbellary@baylibre.com>,
 	Nishanth Menon <nm@ti.com>,
 	linux-iio@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/5] iio: adc: ti-adc128s052: Add support for adc102s051
-Date: Sat, 14 Jun 2025 02:14:59 -0700
-Message-Id: <20250614091504.575685-1-sbellary@baylibre.com>
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 1/5] dt-bindings: iio: adc: ti,adc128s052: Add adc08c and adc10c family
+Date: Sat, 14 Jun 2025 02:15:00 -0700
+Message-Id: <20250614091504.575685-2-sbellary@baylibre.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250614091504.575685-1-sbellary@baylibre.com>
+References: <20250614091504.575685-1-sbellary@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,65 +88,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The patch series adds the support for adc102s051 and family.
+The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+interface. The device family responds with 12-bit data, of which the LSB bits
+are 0 for the lower resolution devices. The unavailable bits are 0 in LSB.
+Shift is calculated per resolution and used in scaling and raw data read.
 
-The family of devices are easier to support since they all
-(no matter the resolution) seem to respond in 12-bits with the LSBs set to
-0 for the reduced resolution devices.
+I have been able to test adc102s051,
+hence adding just the missing ones in that family.
 
-Changes in v4:
-	Patch 1:
-	- No changes in dt-bindings.
+Lets reuse the binding to support the family of devices with name
+ADC<bb><c>S<sss>, where
+* bb is the resolution in number of bits (8, 10, 12)
+* c is the number of channels (1, 2, 4, 8)
+* sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+and 101 for 1 MSPS)
 
-	- Rebase on v6.16-rc1.
-	- split changes in multiple patches.
-	- Use shift and realbits.
-	- Use separate structure for each device type.
-	- cleanup - fix the order.
-	- Add lower resolution devices support.
-	- Add MAINTAINERS entry.
+Complete datasheets are available at TI's website here:
+https://www.ti.com/lit/ds/symlink/adc<bb><c>s<sss>.pdf
 
-- Link to v3:
-	https://lore.kernel.org/lkml/20250408132120.836461-1-sbellary@baylibre.com/
+Co-developed-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/iio/adc/ti,adc128s052.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes in v3:
-	Patch 1:
-	- No changes in dt-bindings
-
-	Patch 2:
-	- used be16_to_cpu() for the endian conversion.
-	- used config index enum while setting up the adc128_config[]
-
-- Link to v2:
-	https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
-
-Changes in v2:
-	Patch 1:
-	- No changes in dt-bindings
-
-	Patch 2:
-	- Arranged of_device_id and spi_device_id in numeric order.
-	- Used enum to index into adc128_config.
-	- Reorder adc128_config in alphabetical.
-	- Include channel resolution information.
-	- Shift is calculated per resolution and used in scaling and
-	raw data read.
-
-- Link to v1:
-	https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
-
-Sukrut Bellary (5):
-  dt-bindings: iio: adc: ti,adc128s052: Add adc08c and adc10c family
-  iio: adc: ti-adc128s052: Use shift and realbits
-  iio: adc: ti-adc128s052: cleanup changes
-  iio: adc: ti-adc128s052: Add lower resolution devices support
-  MAINTAINERS: maintainer for TI's ADCs' driver ti-adc128s052
-
- .../bindings/iio/adc/ti,adc128s052.yaml       |   6 +
- MAINTAINERS                                   |   1 +
- drivers/iio/adc/ti-adc128s052.c               | 184 ++++++++++++------
- 3 files changed, 133 insertions(+), 58 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml b/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
+index 775eee972b12..392b4a3e867c 100644
+--- a/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
+@@ -16,6 +16,12 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - ti,adc082s021
++      - ti,adc082s051
++      - ti,adc082s101
++      - ti,adc102s021
++      - ti,adc102s051
++      - ti,adc102s101
+       - ti,adc122s021
+       - ti,adc122s051
+       - ti,adc122s101
 -- 
 2.34.1
 
