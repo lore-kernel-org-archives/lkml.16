@@ -1,106 +1,112 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED1D2E11CC
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 14:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0652E173A;
+	Sat, 14 Jun 2025 14:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749912628; cv=none; b=LNGMpvISM5zVgq8MN2CRINhfsjJn3ER/2j3R0x+vtyFhjg3NorYGUWYaBiOKGwFjsDZHlW2CRMs87mmNVvyGRUIxD6dKR0DwwdIzLTsRQGPlFy4C820Kws0rSmUGM7wrgOl9Qc6LB3VGuN+dOEZ6sDknFFmFmxoHMpazQWOYh/o=
+	t=1749912830; cv=none; b=iUhT5Qp6BRNK/F1mA2o+5GoNSVUl8lh4rw673OkLD0XqFToZFN8MA2P+pt+UKMVtwa7DaK7IPUYSc60TzmYdjLicBa393AbULwMG0uIw4l7meyXZ+egYldAXMT0xCYVnqaCFCjVDLzflwfPiQQVUDS+tQcHsmishIVx7kuk8vE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749912628; c=relaxed/simple;
-	bh=BrM95uFQCiveXc3halmb2r0s2cwqdslus3D3PtQPrT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZGmYCN8BIIbYivolqphnJO1hSWiQrPU8Z6xsyUtx/nAtr7NaQZAo9Y7hmkjYyuK2INXg535hNPbq5D0aidzE5RYi8tv+1FhsLtz+Tza/NP3CtK0vwYHUiv2uD4Z4s4o8hjvDddhjEllRW4wWWeaKO5ki1CY+wF3SdGtFGrz5Cx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AocHFOor; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749912830; c=relaxed/simple;
+	bh=DlFlJzNv80nRDL/Xe/my3vGEb1Z6bpP84mMcgDH9Kjk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aIW0zxn1tdFN91NTR0VpmY/rgcgS/XKuepQ4/YIWDKFH9zbQE15her472PTSNs2oZjap7mbmb3kbO2COP0naRoaRppMvR0Zv4OwtYlraomGAwPS5e3BCmKBcJSR24GCPyJTpnw8GMoKfH2KCbTHjCey5wEo6ya60O8Yq4PjmRPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OnI0Y22c; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AocHFOor"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a53359dea5so1990185f8f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 07:50:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749912625; x=1750517425; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wbRMLc2DHSmY3gtRYXV6hsuWddG4eIKep4QdutNHpX4=;
-        b=AocHFOorTe5jncVOqP9XxjbfHl34vYaKuOAVIysWLHbOtOr7gaVdWoV4ICZg8w0hMK
-         zjdlqg6ZyKnTpevhjL4+Wh7Am4e/+H0x4UR3MJLdOsqMQkOhK9ShZJxN22m0S48sP0p8
-         M1/d4nlAYorpqVCjmB9zACeGyHVAGdwdeeOQRXrg5vF6Jy/9t+rsEAVqCASlFX1BPelb
-         KJG2uJIzEC0NZuG0G9T81dfJPtZpo+EhtvM99Z0FCPnrdBdjLtsf8haDwjc3oRH61nEp
-         CvbLfeiWICYxiQ0eilHO48Vh5ilkzSTGLnwDPWthTfaf/d5EqAygqUhUVg0XYfc/UZzE
-         TEXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749912625; x=1750517425;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wbRMLc2DHSmY3gtRYXV6hsuWddG4eIKep4QdutNHpX4=;
-        b=FHFSQFIImzjusE0N3FAy7yWOwrZOGpjrtHUi+QBu+Pc5jihT2P1xxvtb5lDi2OngnI
-         Hk6zaEOhfwa1u0r0ViGCKy/IOTiKBNHLUmPAiMtMBsllyZ0IDIVbZXFxKVwiB+7ao52e
-         UE2O22MarpQ9Y+ySI5vAzLi/fqT3fVJ3/ncqx2qK9RMsXeYhHwBa09NawBPxDSvxBh/q
-         Rqos5ipz3rA8CKkrlK2x5+9g2tJ7Bwpd2Uh0YpTXS/ZO3UNND//bD6yXvZ20oqzyQARZ
-         5mkokIBi8wwQ6uoLnR4W7byeXy7wGgJ5eebZ4N+IMN0XzYKo/cF8OHDne6Omdnor7Q6q
-         WqgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ11BIF/7qyizdSkqk8mH8OiR5Rs3lQ29TxCp1SYb+8HycOd/U2i7mR1VYEiGmi583pR8eME5HodPVLnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWLZNzY4/jvRrloxs/rmDLRdtSu5fn8Td8ZEgMT5u6vmAIDoFE
-	fNXzhjOUlO/Dqmxb2y01m2SIrF4kQMEfG9eSkrRZ9FW9YNNeDBYn68uy
-X-Gm-Gg: ASbGncvtwnMqbOL5AEmvWAFtHRk/+WZz3QdnAadnbmoZS2snVklzd/hptnjrvoDH1Ll
-	Cn9+aCIjRdHJ7f/v19TnSeIKNA1OFzLYdUi3BPswhu+kzIlYfJ/O4FuZOtK1jte1ZFSjgWjysj6
-	vImZ/rPAgrbhyHPeK/ZH0OmB1dYpcC/avTXTkMPhJ/DSIDE3gOlTU2g3i3LDxmrq9hNW7fs21rs
-	al4NfS0JOMUcCqvfnGKEdLJbTZdtL4NZWTJ1OrBCXd60bstZ08qQokFLJx0sbOQkA6WJmJ6T8t5
-	iYEM1Ubd+94SCyzqed4mDfY1cNtdA2ls4IeQieE42ZpjGQ8tyWbP273Z8VJGLn0owRPvbXWkca9
-	JwyZpxW4DcwazZr6DsvDdsHTBR20=
-X-Google-Smtp-Source: AGHT+IEni0696dlbfzFqWZBuZnunRZWdNQTsGCmjg9gZBYVPMKFqm2DwLd5HLiSgEdoqGRVzf1WUXQ==
-X-Received: by 2002:a05:6000:2913:b0:3a5:2257:17b4 with SMTP id ffacd0b85a97d-3a572e58fecmr3447561f8f.55.1749912624775;
-        Sat, 14 Jun 2025 07:50:24 -0700 (PDT)
-Received: from ed.ac.uk (pat-125-253.wlan.net.ed.ac.uk. [192.41.125.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a734b5sm5521753f8f.33.2025.06.14.07.50.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 07:50:24 -0700 (PDT)
-Date: Sat, 14 Jun 2025 15:50:21 +0100
-From: Karim Manaouil <kmanaouil.dev@gmail.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org,
-	david@redhat.com, catalin.marinas@arm.com, will@kernel.org,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
-	steven.price@arm.com, gshan@redhat.com,
-	linux-arm-kernel@lists.infradead.org, yang@os.amperecomputing.com,
-	ryan.roberts@arm.com, anshuman.khandual@arm.com
-Subject: Re: [PATCH v3 1/2] arm64: pageattr: Use pagewalk API to change
- memory permissions
-Message-ID: <20250614145021.7yve56wcxf3dlvwg@ed.ac.uk>
-References: <20250613134352.65994-1-dev.jain@arm.com>
- <20250613134352.65994-2-dev.jain@arm.com>
- <8077b321-8953-46aa-b06d-95c91823e6ce@lucifer.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OnI0Y22c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749912828; x=1781448828;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DlFlJzNv80nRDL/Xe/my3vGEb1Z6bpP84mMcgDH9Kjk=;
+  b=OnI0Y22c7th2q4EUX6CgtOYy8vtJLk6KdS9u5UMrzEK5pVTUAh3u3gG7
+   /sCLp7ih/ZPjLHUo7obKsFZiZ3yyf5DcUwVJzNjlshdL1mshcCGSj468N
+   WQGSCme/Dvl5Y+6aAjvqqesk6Rskdfs6sMeU/GLpKJ8bjXFyyBc6SAGkv
+   BhmEMJGbIAA8xa9c1f+TqjcqF3nb6KXGTsWYwcwx8BmG7CdsE2BU/s0qk
+   11IGwkrL+gUB/eclwVFccUcZ20PbDlFmgYlpW2quRgXyj+DlsZd0KZcLN
+   5RCBAVDlTo7Vonn/ovjizDQNEdzErR8neW1c883w3rvxjHph+LSXLE9w9
+   A==;
+X-CSE-ConnectionGUID: BX9+dIvxRCW0IJpEB5/RCQ==
+X-CSE-MsgGUID: xAD4GshdQaKO6Fq7p26j/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="63146225"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="63146225"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 07:53:48 -0700
+X-CSE-ConnectionGUID: PZKN4sXTRz69UlaIazZEIw==
+X-CSE-MsgGUID: nHSG7wIOS56x08KM67BjTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="148978611"
+Received: from tcorban-mobl1.amr.corp.intel.com (HELO [10.125.34.69]) ([10.125.34.69])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 07:53:46 -0700
+Message-ID: <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
+Date: Sat, 14 Jun 2025 07:53:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8077b321-8953-46aa-b06d-95c91823e6ce@lucifer.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
+ faux_device_destroy()
+To: Greg KH <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: Benjamin.Cheatham@amd.com, Jonathan.Cameron@huawei.com, dakr@kernel.org,
+ dan.j.williams@intel.com, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rafael.j.wysocki@intel.com, rafael@kernel.org, sudeep.holla@arm.com,
+ Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <kees@kernel.org>
+References: <2025061313-theater-surrender-944c@gregkh>
+ <20250614105037.1441029-1-ojeda@kernel.org>
+ <2025061446-wriggle-modulator-f7f3@gregkh>
+Content-Language: en-GB
+From: Marc Herbert <marc.herbert@linux.intel.com>
+In-Reply-To: <2025061446-wriggle-modulator-f7f3@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 05:27:27PM +0100, Lorenzo Stoakes wrote:
-> On Fri, Jun 13, 2025 at 07:13:51PM +0530, Dev Jain wrote:
-> > +		if (WARN_ON_ONCE((next - addr) != PGDIR_SIZE))
-> > +			return -EINVAL;
-> 
-> I guess the point here is to assert that the searched range _entirely
-> spans_ the folio that the higher order leaf page table entry describes.
-> 
-> I'm guessing this is desired.
-> 
-> But I'm not sure this should be a warning?
-> 
-> What if you happen to walk a range that isn't aligned like this?
+> the kernel relies on this not being "optimized away" by the compiler
+> in many places.
 
-My understandging is that the caller must ensure that addr is
-pud/pmd/pte-aligned. But, imho, since -EINVAL is returned, I don't think
-the WARN_ON_ONCE() is needed.
+I think "undefined behavior" is the more general topic, more important
+than null pointer checks specifically?
 
--- 
-~karim
+> the kernel relies on the compiler to be sane :)
+
+Undefined behavior is... insane by essence? I'm afraid a few custom
+compiler options can never fully address that.  While we might get away
+with -fno-delete-null-pointer-checks right here right now, who knows
+what else could happen in some future compiler version or future
+combination of flags. No one: that's why it's called "undefined"
+behavior!
+
+> If "tooling" trips over stuff like this, then we should fix the tooling
+
+Because of its old age, many quirks and limitations, C needs and has a
+pretty large number of external "tools": static and run-time analyzers,
+coding rules (CERT, MISRA,...) and what not. It's not realistic to "fix"
+them all so they all "support" undefined behaviors like this one. It's
+already hard enough for them to agree on false positives with a somewhat
+"standard" version of C. The kernel wields a massive influence but
+I'm afraid its power is not big enough to impose its own C "flavor". It
+has influence on gcc and a couple others but not on the language as a
+whole. The alternative is for the kernel to stay incompatible by choice
+with most C "tooling" available - and find fewer issues :-(
+
+(For even more diverse language mess, take a look at the Safe C++
+"standardization" attempt and at C++ "profiles". I digress)
+
+> I see a similar case with discussion at:
+> https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
+
+Thanks Miguel for these near-identical examples. While more verbose and more
+error-prone, this can indeed be fixed with pre-C99, separate definitions
+as it was done in multiple places there.
+
+This is just moving one line of code a few lines down. I think there are
+many more "interesting" and much more complex C flaws to waste time on :-)
+My 2 cents.
