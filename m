@@ -1,396 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864541FC8;
-	Sat, 14 Jun 2025 13:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F73F16A395;
+	Sat, 14 Jun 2025 13:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749907126; cv=none; b=fnHD25KFeN+yESLZ/ajwwcp7C/orUSzITWV5chcrRaGSMoourrkkuBGIiX2KIJn6g6QpF0kciEauAJWcRMRTscqHTfq00to/ReaMjKNxhiY+tf3NIY5HaIHAdd1kNxpFITJNIZCePU9+N/0UOiISRrECAR3VHQnOG65sOI3H01o=
+	t=1749907479; cv=none; b=lXn+xvU5zJLB9p+lVv56P9yrxo98DKOs4TBCNL+cssH17Tdo0hLPB+bP+z0pKDCzkITp4pFQftVNhnyyTG2KP8MU9OauF2zOWnskG81iE3G8X+kQ0K1nHMf1f1bqUQ+oJnh6C+jsiIafHcGtQ81r7dkrWmrVKfbiTjr4ebu9Qno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749907126; c=relaxed/simple;
-	bh=MkutEkey0gL89ixB0J8dofg0Dgbw8omZ7Idxb0DZGWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k8jRond1gof/XfCc7pYe5j6s5XpOjy/HBdriN+lJpkaGM5uD3J1jLF+URP2l8PPGaveFmCFbEiV43XM3cPYf4yS3bCOrTOoAsyR/9OnTRj20yMf0qUGKexLQakMrYaXZv4QPPiPtlZcC5HI9hq5PqTpmRfMYwJt7MXXkxqtd508=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io2zvua1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749907479; c=relaxed/simple;
+	bh=CYXHP4KKIhpklU5iwnybTexQYw0GxEFyWpr5CjPsKr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1RHs4GXWRH8jKSzQ9OaCpHDPNoCI7TzQJEy1dv6zrHBgRL6RA83/0mSsvXCUlLU4d7Yd0Qi6V7RlmY6o4cfdxOVWKMWOsJ6Gp3gmenHNSik+iv4DGj5yLNmq8UQs9QLNW+84pQ6qry1ilXSJch6EjwamiC2levbiwwznkMMA5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QdpU4ujh; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io2zvua1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A799C4CEEB;
-	Sat, 14 Jun 2025 13:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749907126;
-	bh=MkutEkey0gL89ixB0J8dofg0Dgbw8omZ7Idxb0DZGWo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Io2zvua1PtcxzivzpCOQSWcUe35dSfgDcNrTQerUQPEALwon8koWDlLccwU/FIffq
-	 3IqfaG8g/vD2cmD7a3A8s+NzRd6EyDgiAolkid+6x8x+htsOBN2b36T9J4PLIMjGvE
-	 8CGTtgdgpPcoldThM4K6VCCgo48avjFxTxoshblbAa/EhpQrMsAvmb1C5dRB8tXjqa
-	 8whnNKzRoYuXrxH3GVfOj/XTFqCIwKHXi5ZPIsHcKRbRetodcxixdSiYrJAi/zxeZ1
-	 szfrysMaDJA9ogLtghFeXC1SxN7zfH8GkO/MmjMoFKMWkiO0cuFH2I/n6WksoxKpnF
-	 6KRvu9eADhnFA==
-Date: Sat, 14 Jun 2025 14:18:37 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: <victor.duicu@microchip.com>
-Cc: <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
- <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <marius.cristea@microchip.com>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] iio: temperature: add support for MCP998X
-Message-ID: <20250614141837.06d6e82f@jic23-huawei>
-In-Reply-To: <20250613130207.8560-3-victor.duicu@microchip.com>
-References: <20250613130207.8560-1-victor.duicu@microchip.com>
-	<20250613130207.8560-3-victor.duicu@microchip.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QdpU4ujh"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55E31XiX026411;
+	Sat, 14 Jun 2025 13:24:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=asgOieLRu0diNOiUoZ2jXlR5JV3Qd/
+	n2DC6baSQLRnM=; b=QdpU4ujh2znmTfKyKlX4mmaJKgkxJQP5WltI8RvqMsauCi
+	D0xYclDyHiGT5WSF3VwCrWsgu9mx+Eg0IzqdzpXerpUx7hZs+Yk2o7UblXRFax2j
+	E4lBEW73KizXX3L+yOZehgIbmcuMcM1BmZ+9rZlxeKvSnGZtVx9vhzjhbsMu6acn
+	7zcRehZ0XP+l2W4e+C2M4TZdb8mPhiuelM90U8SdWQNsAlRMZ98qQIBqCqt3eXXF
+	KEdwgLK9qyRO7oNWnssXcAXuBM6QGDbbMZMBi/jFx9xxZg/pWkWA4tTo2YaG4B80
+	1kfaVdCSM7nE7DIcGUPaYUQwHOzU5f/rqDefmgnQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790tdhky3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 14 Jun 2025 13:24:27 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55E8akJ8014948;
+	Sat, 14 Jun 2025 13:24:26 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rppu2a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 14 Jun 2025 13:24:26 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55EDOOCX37618074
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 14 Jun 2025 13:24:24 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4276A20043;
+	Sat, 14 Jun 2025 13:24:24 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5B75820040;
+	Sat, 14 Jun 2025 13:24:23 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.87.143.160])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat, 14 Jun 2025 13:24:23 +0000 (GMT)
+Date: Sat, 14 Jun 2025 15:24:21 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 09/12] lib/crc/s390: migrate s390-optimized CRC code
+ into lib/crc/
+Message-ID: <aE14BfWQHvki9pW5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250607200454.73587-1-ebiggers@kernel.org>
+ <20250607200454.73587-10-ebiggers@kernel.org>
+ <aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <20250613171143.GB1284@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613171143.GB1284@sol>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: nj-5Q1qWGKzJpm-8fdR-97xdbrM1_VJ3
+X-Proofpoint-GUID: nj-5Q1qWGKzJpm-8fdR-97xdbrM1_VJ3
+X-Authority-Analysis: v=2.4 cv=c92rQQ9l c=1 sm=1 tr=0 ts=684d780b cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=fhZMs16YlvXlDsCV5c8A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDExMSBTYWx0ZWRfX9VGL3Nt2grmi XR12ZSw6bF5QzEcFwoU9YySQ7ESO7UBTeDWf9VSjgbgnS44V4zwPgmto4OmAvE7t1tkgKOgaEeJ 3KlPppY7dIwK4yNsfAdKeDH+PizbhKm6vQbc3IemUtkRykwmV4G0BRGMhkHA6dhLxnjHFmd6HiP
+ L+RgSlaiw/7V+kb0HatOVNVB5PW2cjICh51TUaxD3pR6joEKa4bQfjBYnE3u1XGX98rL0iGK5QM ipnKhdfgzrpC1RV/yKaFvLGo8vJfC7pZB2tJb9BbwcIfChRVLo/5Q0opcEhYKHgkSaKhNTruY7x KV1ti89wPc3jLoJdwJKPmWKTTNqz8wdeqQyvN8sLH2hrdXbz7R9PQSf/sXKqzKXhjKIAewJR+bY
+ NdnRQufd/o2KAEOF4Cnd4CKWD8yFSJFxKB+H54xsN950Da/R6flU9XzMmXFw5Rp0t+AS3P91
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-14_04,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=853 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506140111
 
-On Fri, 13 Jun 2025 16:02:07 +0300
-<victor.duicu@microchip.com> wrote:
-
-> From: Victor Duicu <victor.duicu@microchip.com>
+On Fri, Jun 13, 2025 at 10:11:43AM -0700, Eric Biggers wrote:
+> > Hi Eric,
+> > 
+> > With this series I am getting on s390:
+> > 
+> > alg: hash: skipping comparison tests for crc32c-s390 because crc32c-generic is unavailable
+> > 
+> > Thanks!
 > 
-> This is the driver for Microchip MCP998X/33 and MCP998XD/33D
-> Multichannel Automotive Temperature Monitor Family.
+> I think that's actually from "crypto/crc32c: register only one shash_alg"
+> (https://lore.kernel.org/linux-crypto/20250601224441.778374-3-ebiggers@kernel.org/),
+> not the patch you replied to.
 > 
-> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
-Hi Victor,
+> Those self-test warnings are expected.  But I guess they are going to confuse
+> people, so we should do something to make them go away.
+> 
+> I think we should do what I've proposed for SHA-512: stop worrying about setting
+> the cra_driver_name to something meaningful (which has never really worked
+> anyway), instead just use *-lib, and update crypto/testmgr.c accordingly.
+> 
+> I'll send out patches that do that.
 
-Some comments from me to add to what Andy called out.
-Hopefully I've avoided too much duplication!
+Thanks, Eric!
+Please, ignore my other email - I though I did not send this one.
 
-Thanks,
-
-Jonathan
-
-> diff --git a/drivers/iio/temperature/mcp9982.c b/drivers/iio/temperature/mcp9982.c
-> new file mode 100644
-> index 000000000000..b1ae77c6e691
-> --- /dev/null
-> +++ b/drivers/iio/temperature/mcp9982.c
-> @@ -0,0 +1,778 @@
-
-> +/**
-> + * struct mcp9982_features - features of a mcp9982 instance
-> + * @name:		chip's name
-> + * @phys_channels:	number of physical channels supported by the chip
-> + */
-> +struct mcp9982_features {
-> +	const char	*name;
-> +	u8		phys_channels;
-
-As below. Add a few more fields for the stuff you were getting from string
-matching.
-
-> +};
-
-> +static const unsigned int mcp9982_window_size[3] = {1, 4, 8};
-{ 1, 4, 8, };
-is style preference for IIO code and consistent with the
-rest of this driver.
-
-> +
-> +/*
-> + * (Sampling_Frequency * 1000000) / (Window_Size * 2)
-> + */
-
-Single line comment syntax 
-
-> +static unsigned int mcp9982_calc_all_3db_values(void)
-> +{
-> +	u32 denominator, remainder;
-> +	unsigned int i, j;
-> +	u64 numerator;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(mcp9982_window_size); i++)
-Coding style is a little ambiguous around what is a single statement vs multi statements
-but here I think {} for the outer loop would help readability a tiny bit.
-
-> +		for (j = 0; j <  ARRAY_SIZE(mcp9982_sampl_fr); j++) {
-> +			numerator = MICRO * mcp9982_sampl_fr[j][0];
-> +			denominator = 2 * mcp9982_window_size[i] * mcp9982_sampl_fr[j][1];
-> +			remainder = do_div(numerator, denominator);
-> +			remainder = do_div(numerator, MICRO);
-> +			mcp9982_3db_values_map_tbl[j][i][0] = numerator;
-> +			mcp9982_3db_values_map_tbl[j][i][1] = remainder;
-> +		}
-> +	return 0;
-> +}
-
-> +/**
-> + * struct mcp9992_priv - information about chip parameters
-> + * @regmap:			device register map
-> + * @num_channels		number of physical channels
-> + * @extended_temp_range		use extended temperature range or not
-> + * @recd34_enable		state of REC on channels 3 and 4
-> + * @recd12_enable		state of REC on channels 1 and 2
-> + * @beta_values			beta compensation value for external channel 1 and 2
-> + * @lock			synchronize access to driver's state members
-> + * @iio_chan			specifications of channels
-> + * @labels			labels of the channels
-> + * @ideality_value		ideality factor value for each external channel
-> + * @sampl_idx			index representing the current sampling frequency
-> + * @dev_name			name of the device
-> + * @apdd_enable			state of anti-parallel diode mode
-> + */
-> +struct mcp9982_priv {
-> +	struct regmap *regmap;
-> +	u8 num_channels;
-> +	bool extended_temp_range;
-> +	bool recd34_enable;
-> +	bool recd12_enable;
-> +	unsigned int beta_values[2];
-> +	/*
-> +	 * Synchronize access to private members, and ensure
-> +	 * atomicity of consecutive regmap operations.
-
-wrap at 80
-
-> +	 */
-> +	struct mutex lock;
-> +	struct iio_chan_spec *iio_chan;
-> +	const char *labels[MCP9982_MAX_NUM_CHANNELS];
-> +	unsigned int ideality_value[4];
-> +	unsigned int sampl_idx;
-> +	const char *dev_name;
-
-I'd store a pointer to chip in here rather than just the name.
-Particularly as there are other flags to add to it.
-
-> +	bool apdd_enable;
-> +};
-
-
-> +static int mcp9982_read_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
-> +			    int *val, int *val2, long mask)
-> +{
-> +	unsigned int index, idx, tmp_reg;
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_ONE_SHOT_ADDR, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	guard(mutex)(&priv->lock);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = regmap_read(priv->regmap, MCP9982_INT_VALUE_ADDR(chan->channel), val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* The extended temperature range is offset by 64 degrees C */
-> +		if (priv->extended_temp_range)
-> +			*val -= 64;
-
-Why is this here and in offset below?  Userspace should be doing the maths for us.
-
-> +
-> +		ret = regmap_read(priv->regmap, MCP9982_FRAC_VALUE_ADDR(chan->channel), val2);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Only the 3 MSB in fractional registers are used */
-> +		*val2 = mcp9982_fractional_values[*val2 >> 5];
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val = mcp9982_conv_rate[priv->sampl_idx][0];
-> +		*val2 = mcp9982_conv_rate[priv->sampl_idx][1];
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> +
-> +		ret = regmap_read(priv->regmap, MCP9982_RUNNING_AVG_ADDR, &tmp_reg);
-> +		if (ret)
-> +			return ret;
-> +		/*
-> +		 * In Filter Selection Register values 1 and 2
-> +		 * are mapped to the same setting.
-> +		 */
-> +		switch (tmp_reg) {
-> +		case 0:
-> +			idx = 0;
-> +			break;
-> +		case 1:
-> +		case 2:
-> +			idx = 1;
-> +			break;
-> +		default:
-> +			idx = 2;
-> +			break;
-> +		}
-> +
-> +		*val = mcp9982_3db_values_map_tbl[priv->sampl_idx][idx][0];
-> +		*val2 = mcp9982_3db_values_map_tbl[priv->sampl_idx][idx][1];
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_HYSTERESIS:
-> +		ret = regmap_read(priv->regmap, MCP9982_HYS_ADDR, &index);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val = index;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		if (priv->extended_temp_range)
-> +			*val = -64;
-
-As above. I'd expect to only see this -64 here - not in _RAW as well.
-
-> +		else
-> +			*val = 0;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-> +static int mcp9982_write_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
-> +			     int val, int val2, long mask)
-> +{
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	int ret;
-> +	unsigned int i;
-> +	unsigned int start = 0;
-> +
-> +	guard(mutex)(&priv->lock);
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		/*
-> +		 * For MCP998XD and MCP9933D sampling frequency can't
-> +		 * be set lower than 1.
-> +		 */
-> +		if (strchr(priv->dev_name, 'd'))
-
-Encode this in the features structure as a specific field.
-In general don't use string matching for this stuff as it ends up fragile
-when new device support is added over time and people don't notice this
-hiding in here.
-
-> +			start = 4;
-> +		for (i = start; i < ARRAY_SIZE(mcp9982_conv_rate); i++)
-> +			if (val == mcp9982_conv_rate[i][0] && val2 == mcp9982_conv_rate[i][1])
-> +				break;
-> +
-> +		if (i == ARRAY_SIZE(mcp9982_conv_rate))
-> +			return -EINVAL;
-> +
-> +		ret = regmap_write(priv->regmap, MCP9982_CONV_ADDR, i);
-> +		if (ret)
-> +			return ret;
-> +
-> +		priv->sampl_idx = i;
-> +		return 0;
-
-
-> +static int mcp9982_init(struct mcp9982_priv *priv)
-> +{
-> +	int ret;
-> +	unsigned int i;
-> +	u8 val;
-> +
-> +	/*
-> +	 * For chips with "D" in the name
-
-Very short wrap. Aim for 80 chars.
-
-> +	 * set the below parameters to default to
-> +	 * ensure that hardware shutdown feature
-> +	 * can't be overridden.
-> +	 */
-> +	if (strchr(priv->dev_name, 'd')) {
-
-As above. Don't match on strings - store the thing as a flag in the per
-device type features structure.
-
-> +		priv->recd12_enable = true;
-> +		priv->recd34_enable = true;
-> +		for (i = 0; i < 2; i++)
-> +			priv->beta_values[i] = 16;
-> +		for (i = 0; i < 4; i++)
-> +			priv->ideality_value[i] = 18;
-> +	}
-> +
-> +	/*
-> +	 * Set default values in registers.
-> +	 * APDD, RECD12 and RECD34 are active on 0.
-> +	 */
-> +	val = FIELD_PREP(MCP9982_CFG_MSKAL, 1) | FIELD_PREP(MCP9982_CFG_RS, 1) |
-> +	      FIELD_PREP(MCP9982_CFG_ATTHM, 1) |
-> +	      FIELD_PREP(MCP9982_CFG_RECD12, !priv->recd12_enable) |
-> +	      FIELD_PREP(MCP9982_CFG_RECD34, !priv->recd34_enable) |
-> +	      FIELD_PREP(MCP9982_CFG_RANGE, 0) | FIELD_PREP(MCP9982_CFG_DA_ENA, 0) |
-> +	      FIELD_PREP(MCP9982_CFG_APDD, !priv->apdd_enable);
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_CFG_ADDR, val);
-> +	if (ret)
-> +		return ret;
-> +	priv->extended_temp_range = false;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_CONV_ADDR, 6);
-> +	if (ret)
-> +		return ret;
-> +	priv->sampl_idx = 6;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_HYS_ADDR, 10);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_CONSEC_ALRT_ADDR, 112);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_RUNNING_AVG_ADDR, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_HOTTEST_CFG_ADDR, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set beta compensation for channels 1 and 2 */
-> +	for (i = 0; i < 2; i++) {
-> +		ret = regmap_write(priv->regmap, MCP9982_EXT_BETA_CFG_ADDR(i),
-> +				   priv->beta_values[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	/* Set ideality factor for all external channels */
-> +	for (i = 0; i < 4; i++) {
-> +		ret = regmap_write(priv->regmap, MCP9982_EXT_IDEAL_ADDR(i),
-> +				   priv->ideality_value[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-
-> +
-> +static const struct i2c_device_id mcp9982_id[] = {
-> +	{ .name = "mcp9933", .driver_data = (kernel_ulong_t)&mcp9933_chip_config },
-> +	{ .name = "mcp9933d", .driver_data = (kernel_ulong_t)&mcp9933d_chip_config },
-> +	{ .name = "mcp9982", .driver_data = (kernel_ulong_t)&mcp9982_chip_config },
-> +	{ .name = "mcp9982d", .driver_data = (kernel_ulong_t)&mcp9982d_chip_config },
-> +	{ .name = "mcp9983", .driver_data = (kernel_ulong_t)&mcp9983_chip_config },
-> +	{ .name = "mcp9983d", .driver_data = (kernel_ulong_t)&mcp9983d_chip_config },
-> +	{ .name = "mcp9984", .driver_data = (kernel_ulong_t)&mcp9984_chip_config },
-> +	{ .name = "mcp9984d", .driver_data = (kernel_ulong_t)&mcp9984d_chip_config },
-> +	{ .name = "mcp9985", .driver_data = (kernel_ulong_t)&mcp9985_chip_config },
-> +	{ .name = "mcp9985d", .driver_data = (kernel_ulong_t)&mcp9985d_chip_config },
-> +	{ }
-David mentioned the other day that there is an effort to remove the need for
-the kernel_ulong_t here but it relies on
-	{ "mcp9985d", &mcp9984d_chip_config },
-style entries.
-
-https://lore.kernel.org/all/1c7946f1-d712-4baa-8243-be6a55eec528@baylibre.com/
-
-I wasn't aware of that effort but seems sensible to me!
-
-
-> +};
-> +MODULE_DEVICE_TABLE(i2c, mcp9982_id);
-
+> - Eric
