@@ -1,208 +1,107 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7266124B26
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952D24B26
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749897545; cv=none; b=JeV7fZYSRyD/9p7UvAWg3KLL5oKID7EBT1QR2MIRcSJzwa8F9gQ7TdiHL6mlTmmMB5Nt87WBrXbSP0DXi9c+ikB1Ej4AXSNSo39QjGUcHCwalzkw40vm2RFWtAsa0WA8Zqldx/4p5e6gLDdRHHWYyfF3XhoVJzhcRepdY88H6+I=
+	t=1749897568; cv=none; b=nVAHSa7seeqoUzt7UvsPP1Jf/hMJsW3nT45rF/ZJs67b0RokDGmcvlKQkQZsNoP3E+livS+Zxkdyp4BpFwufHw1cSSNnIh+y6rpQdlasLCnKcDvosaGwg6OiBb6HLsa7ApdDn3Pg1Z9x6SVxbydIk+2mhrrmBoYxPBl1lZpYuRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749897545; c=relaxed/simple;
-	bh=pPgjRoj5orgLQLzyVoWNsFO95k32W7oj9FSd8YcExp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMMuf+YnW/aGaQmRn0JRViUwMkJNN0296RZvlL/7k+baM1+D+9at2hjHwf7Phic8PO+WN21jcs5EVSOmkmknYnIDyOKaCHwNKIa+d7Gl0JZc9tR1t1ODaE9/Bborc8HmZI2jBiaaIfWTxgipjuuiBYkZpxfQraD48STTWaUXSGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KzZd7mQt; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1749897568; c=relaxed/simple;
+	bh=ljuppTqyX9qOD/vtLwotTaA9fqBjfssPGpbLtG8Pjsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D2i3b29Gy9mP/69Xh/IjQbj7HvGBNuBogW7CBl4yYflgwOdLCbv9jq7C6kgw/w8uD/KpTn23sHidjVcE8fWxqXOfgPgoh1L6havnaR8KESUPdXFADAUYu2SrLhFmPwwiKvllSxdqFt09V0uYvSGZnD9xLwelvjp6uqaKO3kBrMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZLUChVXM; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KzZd7mQt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLUChVXM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749897541;
+	s=mimecast20190719; t=1749897565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wIANWIB6nwffMmsTBbNFHDHGCg1L4aQoyezG8SSvfNg=;
-	b=KzZd7mQtyfcqYxPtaie9BR5zQnAY/PvEUMxV5QkSI1WLAqUuwn3LTzOTa8iuXPqWwS6sIj
-	RiMU8evDiJ9cMrG0ko43JMOuNSLaXWSKW4IFZjeEEkuPdF9z9JJjMkrOs4y14045jMPuUV
-	ZLJZAboiy6Rq7SPRsXa25+f5ofZpINY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-MZjoBODsM_2_7IRauQ0D7g-1; Sat, 14 Jun 2025 06:38:58 -0400
-X-MC-Unique: MZjoBODsM_2_7IRauQ0D7g-1
-X-Mimecast-MFC-AGG-ID: MZjoBODsM_2_7IRauQ0D7g_1749897537
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450de98b28eso21562825e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 03:38:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749897537; x=1750502337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wIANWIB6nwffMmsTBbNFHDHGCg1L4aQoyezG8SSvfNg=;
-        b=v7A0Ypdj08k+NCrTXPs3w1uj+vUYGndXQLGnrexGhZk6BZC4a+8yO783/TG8LLh0im
-         F9UKMJar8eY/3pnSZp4bMXZm4Dn68+CTG913duTXUMijk10612ygTvC8ZFKjMh8JTYzI
-         X1KtP278mjS7B7h1Y/gXbaq1rmMjedae8jPTyI3cg5OGXHqj4gHyNzrI0VprorhhcrCw
-         /eMpDlPNPgMqZ+u+4iRHUikXn9DiUraaN+eSwbOZ24OAj/RGYPfyeKKWA4KphoEC2VTp
-         sN/lGsi3yuF2dzcBw0RkU2avPyk1k5aL7GT3EMgiDtpl9XJaUG3ALoXyOa8hi1Tcfr0W
-         +XZw==
-X-Forwarded-Encrypted: i=1; AJvYcCURQqgQsDhR3f4zcwnPJvtQsiDeNLs9hikB7j8GhvlGoj/SO7nc63BEpKw2HtG6bmk/LkGsHUsXgtF12wo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWrpoYPMjW6bCH0soXwo7VC6j709zh1J3uGCw+fSN7RdJJjh5h
-	i9XnXEfccC/DkQOyUqIewzSTNiRQUs6sltxxu9Uzi6HUbELoR0+0ZOLgpnxfNyhNwWe0T85t1lc
-	Ft5CgZaODURgN45jFckkvn1OIdya6glMMZVGcqDsnboJCCzlAaWuYsqW//IcYjh7ssQ==
-X-Gm-Gg: ASbGncuMQcXLIKExDOM9/vRAMjc0uAh3G9vcLkWxfaOSTTvfcBJscX/bmcsJgIclsX0
-	BG/VJAgDYnE4Y1X4DYppLBlH5X/nTE3QaesDyHujcvwAbP2UCjL9A7JcNEURlgt8un2f2cV8OpQ
-	KkGwsWjXfKmwjqr85B4wQybsBzJKWBYpND4iyHtGyp7dJjWvFVJKyDBRFO3GTqelvhTicSKRdxc
-	PfvLRQ0lH57H0hMETyp11sZGXCsVAl2+XcZMjqdrTDGINFiJltc/b1pdO3mA9Ft9yxZWszyCJqw
-	ZqQuV1xGrH4=
-X-Received: by 2002:a05:6000:1787:b0:3a4:da0e:5170 with SMTP id ffacd0b85a97d-3a56d84b061mr4246574f8f.27.1749897536728;
-        Sat, 14 Jun 2025 03:38:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHukkp3GXm05X8ih8L/6TcAy+frWDO/6fM05ksvQmhRxI5FcoJb191KQKxBwD3XgtEhegeu5Q==
-X-Received: by 2002:a05:6000:1787:b0:3a4:da0e:5170 with SMTP id ffacd0b85a97d-3a56d84b061mr4246560f8f.27.1749897536294;
-        Sat, 14 Jun 2025 03:38:56 -0700 (PDT)
-Received: from pollux ([2a00:79c0:666:b300:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e14f283sm79561175e9.27.2025.06.14.03.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 03:38:55 -0700 (PDT)
-Date: Sat, 14 Jun 2025 12:38:53 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Rob Clark <robin.clark@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
-Message-ID: <aE1RPZ_-oFyM4COy@pollux>
-References: <20250613235705.28006-1-robin.clark@oss.qualcomm.com>
- <20250613235705.28006-3-robin.clark@oss.qualcomm.com>
+	bh=mfJRAujRjuGi7KQbNecOBzzOmJkqRWWoAoZaJP2IUfQ=;
+	b=ZLUChVXMiqWrkCyec8HRcmdi1gkuickRh6CJ+TXGSq1pnoPBApe7fg2UCelHdjCkrlKSkg
+	qlPcfwT4nPBPLk/xJNS8N5Lxl9MxvArpj6OqbGanicgN7E+YJB9/zDJ98SlV4ulukxdXLU
+	fDI3jBC/YzoQ+LTDWV+nZO7nXRGPtL8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-G2aoBe6gMUuwFE-f18DMzQ-1; Sat,
+ 14 Jun 2025 06:39:22 -0400
+X-MC-Unique: G2aoBe6gMUuwFE-f18DMzQ-1
+X-Mimecast-MFC-AGG-ID: G2aoBe6gMUuwFE-f18DMzQ_1749897560
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4BA721800289;
+	Sat, 14 Jun 2025 10:39:19 +0000 (UTC)
+Received: from [10.45.224.53] (unknown [10.45.224.53])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51270180045B;
+	Sat, 14 Jun 2025 10:39:10 +0000 (UTC)
+Message-ID: <00780331-37cb-48ae-bb87-06d21a9ec4d1@redhat.com>
+Date: Sat, 14 Jun 2025 12:39:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613235705.28006-3-robin.clark@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 06/14] dpll: zl3073x: Fetch invariants during
+ probe
+To: kernel test robot <lkp@intel.com>, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Vadim Fedorenko
+ <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250612200145.774195-7-ivecera@redhat.com>
+ <202506140541.KcP4ErN5-lkp@intel.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <202506140541.KcP4ErN5-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wrote:
-> For UNMAP/REMAP steps we could be needing to lock objects that are not
-> explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
-> VAs.  These helpers handle locking/preparing the needed objects.
 
-Yes, that's a common use-case. I think drivers typically iterate through their
-drm_gpuva_ops to lock those objects.
 
-I had a look at you link [1] and it seems that you keep a list of ops as well by
-calling vm_op_enqueue() with a new struct msm_vm_op from the callbacks.
-
-Please note that for exactly this case there is the op_alloc callback in
-struct drm_gpuvm_ops, such that you can allocate a custom op type (i.e. struct
-msm_vm_op) that embedds a struct drm_gpuva_op.
-
-Given that, I think the proposed locking helpers here would make more sense to
-operate on struct drm_gpuva_ops, rather than the callbacks.
-
-Besides that, few comments below.
-
---
-
-One additional unrelated note, please don't use BUG_ON() in your default op
-switch case. Hitting this case in a driver does not justify to panic the whole
-kernel. BUG() should only be used if the machine really hits an unrecoverable
-state. Please prefer a WARN_ON() splat instead.
-
-[1] https://gitlab.freedesktop.org/robclark/msm/-/blob/sparse-newer/drivers/gpu/drm/msm/msm_gem_vma.c?ref_type=heads#L1150
-
-> Note that these functions do not strictly require the VM changes to be
-> applied before the next drm_gpuvm_sm_map_lock()/_unmap_lock() call.  In
-> the case that VM changes from an earlier drm_gpuvm_sm_map()/_unmap()
-> call result in a differing sequence of steps when the VM changes are
-> actually applied, it will be the same set of GEM objects involved, so
-> the locking is still correct.
-
-I'm not sure about this part, how can we be sure that's the case?
-
-> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/drm_gpuvm.c | 81 +++++++++++++++++++++++++++++++++++++
->  include/drm/drm_gpuvm.h     |  8 ++++
->  2 files changed, 89 insertions(+)
+On 13. 06. 25 11:46 odp., kernel test robot wrote:
+> Hi Ivan,
 > 
-> diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
-> index 0ca717130541..197066dd390b 100644
-> --- a/drivers/gpu/drm/drm_gpuvm.c
-> +++ b/drivers/gpu/drm/drm_gpuvm.c
-> @@ -2390,6 +2390,87 @@ drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm, void *priv,
->  }
->  EXPORT_SYMBOL_GPL(drm_gpuvm_sm_unmap);
->  
-> +static int
-> +drm_gpuva_sm_step_lock(struct drm_gpuva_op *op, void *priv)
-> +{
-> +	struct drm_exec *exec = priv;
-> +
-> +	switch (op->op) {
-> +	case DRM_GPUVA_OP_REMAP:
-> +		if (op->remap.unmap->va->gem.obj)
-> +			return drm_exec_lock_obj(exec, op->remap.unmap->va->gem.obj);
-> +		return 0;
-> +	case DRM_GPUVA_OP_UNMAP:
-> +		if (op->unmap.va->gem.obj)
-> +			return drm_exec_lock_obj(exec, op->unmap.va->gem.obj);
-> +		return 0;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static const struct drm_gpuvm_ops lock_ops = {
-> +	.sm_step_map = drm_gpuva_sm_step_lock,
-> +	.sm_step_remap = drm_gpuva_sm_step_lock,
-> +	.sm_step_unmap = drm_gpuva_sm_step_lock,
-> +};
-> +
-> +/**
-> + * drm_gpuvm_sm_map_lock() - locks the objects touched by a drm_gpuvm_sm_map()
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on net-next/main]
+> 
+> url:https://github.com/intel-lab-lkp/linux/commits/Ivan-Vecera/dt-bindings- 
+> dpll-Add-DPLL-device-and-pin/20250613-041005
+> base:   net-next/main
+> patch link:https://lore.kernel.org/r/20250612200145.774195-7-ivecera%40redhat.com
+> patch subject: [PATCH net-next v9 06/14] dpll: zl3073x: Fetch invariants during probe
+> config: alpha-randconfig-r061-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140541.KcP4ErN5- 
+> lkp@intel.com/config)
+> compiler: alpha-linux-gcc (GCC) 10.5.0
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot<lkp@intel.com>
+> | Closes:https://lore.kernel.org/oe-kbuild-all/202506140541.KcP4ErN5-lkp@intel.com/
 
-I think we should name this drm_gpuvm_sm_map_exec_lock() since it only makes
-sense to call this from some drm_exec loop.
+Jakub, Dave, Paolo,
+should I fix this in v10 or in a follow-up in the part 2?
 
-> + * @gpuvm: the &drm_gpuvm representing the GPU VA space
-> + * @exec: the &drm_exec locking context
-> + * @num_fences: for newly mapped objects, the # of fences to reserve
-> + * @req_addr: the start address of the range to unmap
-> + * @req_range: the range of the mappings to unmap
-> + * @req_obj: the &drm_gem_object to map
-> + * @req_offset: the offset within the &drm_gem_object
-> + *
-> + * This function locks (drm_exec_lock_obj()) objects that will be unmapped/
-> + * remapped, and locks+prepares (drm_exec_prepare_object()) objects that
-> + * will be newly mapped.
-> + *
-> + * Returns: 0 on success or a negative error code
-> + */
-> +int
-> +drm_gpuvm_sm_map_lock(struct drm_gpuvm *gpuvm,
-> +		      struct drm_exec *exec, unsigned int num_fences,
-> +		      u64 req_addr, u64 req_range,
-> +		      struct drm_gem_object *req_obj, u64 req_offset)
-> +{
-> +	if (req_obj) {
-> +		int ret = drm_exec_prepare_obj(exec, req_obj, num_fences);
-> +		if (ret)
-> +			return ret;
-> +	}
-
-Let's move this to drm_gpuva_sm_step_lock().
-
-> +
-> +	return __drm_gpuvm_sm_map(gpuvm, &lock_ops, exec,
-> +				  req_addr, req_range,
-> +				  req_obj, req_offset);
-> +
-> +}
-> +EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map_lock);
+Thanks,
+Ivan
 
