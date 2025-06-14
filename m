@@ -1,145 +1,96 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981082E6D09
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 20:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723FA11CBA
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 20:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749931868; cv=none; b=eueltvMN67uOJsudIdqmB2mzLFC7nzbvxTNeBayuhluSICqy2zj93htbuHFbVWUTc8LQvdMqZ/IGH4IvsDXt9mtdXktkTC3WZt888MLhOdNCfVsYJqSoLP1ODuWgd42Jql7N+/du6dIMhl444YP/i4cKoNAqKRMtwIsHx1tqipw=
+	t=1749932581; cv=none; b=JYNwhfTfYp5RoqJJPrNnL2AHT5il15XQj2U2mRVacFcon5sp29gy6fwOX3cKV4Qyg0BO2SbJn0O7Hs8/mT4g0/QUmZAok63/K6wppa/vi45YhzrRNbMeXhfBtX3rgEgM1zPISepv2hZEPaS+oOIiJCvk2FTry8jR8HdPcW/JwaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749931868; c=relaxed/simple;
-	bh=Lf9M7Zr6DW7RmmLY8Cgj4YgFzJGrLdOc6mEeFxy0Ouo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DGeQ3uADWDT6eVz0ADFZgo3VQv5T/s0sW+RvPW6sKK8ENmxoithp9+PgIfh37QtVXMe256lUoJTjb95Th+YE/s2Ouze1ssPR2dvgKGm8cxtUkKzKwuC77/RJDccmy3G9XKbv3Xk/POZaTFBEDHKK7AWLI7WjXAbASrahmLTOGtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ksqqlrLe; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749932581; c=relaxed/simple;
+	bh=T58bBxYsNtyvOgVpXu7+m30A5tndGn/hqOOD2wXfBkE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hwXUV+63/6SXB/5n63MPFBvJ7zmVBERLUTzOhsO36N/a8trA4mVQzbqOSr2ZN7PHtU4E1kL5jG83tpPCFZPU3uXlIGvr/C12C5F3+KuexUxGx35jXu+mdPcTpgNCT9g+2WxMjmguJd2ZuTtJWV0Dup4D3VF5MXSaMhMsnBUhov0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6vbuUtA; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ksqqlrLe"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55EJcDNv029392
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 20:11:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0jNtszeQm2L003a+S6O026ShhafqRqBRqMlvofcvflg=; b=ksqqlrLelS/xBtJ2
-	JJBd2+gV+QcROc8PTelvqKMDdMu1gkGamoh5Iz7q6rq06XbGwV2u5M4sFnDo/PG9
-	mlYKK0Y1YMYsPvsfLgV0ekY4UNdb+PSFMV4KoW7nBTXORge2jYeqPjQyxbVYnaP9
-	dZYWsnRVAVXviB63rqqazXHQnhZFK5Bc5ap+sAFi84VOzrUlaV0xIVWEYaizquNl
-	WdsJ75HbpCERM9p0CVDj76YbUW8FLH+8f1ePtjZnRuqfKsObdKfsjEVVIOAU0UVb
-	Scb4PIcQJuIqSMLuyBt/igP8HX4oOoxgczbWp7yPq6yjNr2RfstBVvmjUDXsatSU
-	R4Yz8w==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9rwqp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 20:11:04 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fafc0e703aso3616346d6.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 13:11:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6vbuUtA"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5532a30ac45so3129013e87.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 13:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749932577; x=1750537377; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7Zr0b+o2K8A2zKLdR5Tu1wVpfcW7sYJjgwLgwlDEGo8=;
+        b=V6vbuUtAwPLHHeE6qTvuPUdBHUo5l3EyzXMoxfO2VWb8aE2ms+onsozym5yzQlDqyl
+         4yM1P4JYROcoXWq5NUAESJgn+elTxaH+qxkvo9jq6iBQ/tSjmSGF9Lppx7eJkt/jfEq1
+         ZASzbpiV0oIe5gNqNmamt6k1wA0FFU77KU6RjCinkOYWZPs76GpYzCnQuG8YtRPhdv9K
+         AfQzbQmsJpwbDsIKm+Y8lZKdu84rp2k9aocgqWRJF5E9c0t+7xLx49oR9AeqHXHbr7XO
+         fH144oMrTQjCLszojXM4NQRIe7LI0qqYS3bMLeGqiOmmNhPqurgT8z2jJYfafc6pUM7w
+         wN6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749931862; x=1750536662;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1749932577; x=1750537377;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0jNtszeQm2L003a+S6O026ShhafqRqBRqMlvofcvflg=;
-        b=b1nPacMiYFeMzZSwlKQe0sTThPuCoN+ReCZX1I0Bge6m4Ll0Asz6R5z/HR69viA+Pq
-         BLbXI4R7jWfwURxXgKqCBcsrnuXX8KCx0mSpUl2tAMNcC5r7Z0xEb6yLkcewg+71V/Q9
-         mVEfGPiiZWEgS6UyNNNXVFnR99NWUQnh+sObUvz2w9FN9m/XvtDaEeV0JLU2R5veylp4
-         uQZAdNgunQGRTJ+WdxzLutGlJBkdCYvBFULKDrUczux8Z35qvFrRiMFLrQXHu6D2qMn6
-         PvB4UwoUCE7d1RsWJQt2H8cpbMeakAkp4N7SPjPSC19kjt8LqvUwYbo8ELbgLkNVDoC3
-         3POQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJB6EefhBZ4Xeyr6aPYO3dknTgpmDWdTzBm+ONFvKT4fHg+QHxDmA1u75Kxs3/IT2Opl0YoKQbuFIZuyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd7tDi63u/Bfo44rmU1L0UUgxq10FFgSNpn8KHmxkj1YpkPEJo
-	pS8KlI4HY8oOe+CPmpyjaRzJF4n1feGhREF70qLuFpdpH3PYEWTNqYajCm1JUrTWyMb6FazhMom
-	goDC9i4wEsTGS30ppOW7hxcuwumaGn3979JW6fktcbefode3Or9NZrraLWvECbKezDII=
-X-Gm-Gg: ASbGncv6Y7VeW+xfk4mou0pmN7Epd52v2En0cfq46QSLCFL7gu/uNzqDuzMbAR93Pri
-	VaJ6iwQSh+U8VlPID+Uh9X4GVHcGKGHCMx7fUPOVCeLIL9teB2dtvgD2RyOLrdiqSOCIj7AwwoF
-	r8sT6/i4uMita5tO2h/uYpiv+dJ7SGTb3QIAWgcxxgPMmzZiKXH9tkX0xpGLK1JhhqtP3g7CVgV
-	zg98+Y8Fi3zac93ltVAr8EV5cYiTmvzwgtFWK+B3ymHkU7QorBJKJa2JdcaXd6V5oxsR+XZpPr/
-	05rx0fiOMDo27+vQRslW7AwaeZl0IHgTl2BcsM7B9MUOkx3n1QAw46K2Zn2/thyEHJcwKBPNJ0T
-	QvYc=
-X-Received: by 2002:a05:6214:1d23:b0:6fa:c6c0:47dd with SMTP id 6a1803df08f44-6fb477df5d4mr21509656d6.8.1749931862560;
-        Sat, 14 Jun 2025 13:11:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFRES697/oN1AQmDhdRQilCw0Ubbzj8UpxMJ2bP9ZmoY9s77DbcZSICsQ0QM0NVB4w93RwYIg==
-X-Received: by 2002:a05:6214:1d23:b0:6fa:c6c0:47dd with SMTP id 6a1803df08f44-6fb477df5d4mr21509546d6.8.1749931862145;
-        Sat, 14 Jun 2025 13:11:02 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8158bf0sm355754266b.26.2025.06.14.13.11.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Jun 2025 13:11:01 -0700 (PDT)
-Message-ID: <74f7053c-10d6-4aca-a87a-0ac7f55c2f1f@oss.qualcomm.com>
-Date: Sat, 14 Jun 2025 22:10:59 +0200
+        bh=7Zr0b+o2K8A2zKLdR5Tu1wVpfcW7sYJjgwLgwlDEGo8=;
+        b=rVc9MpAGBhPmM447h8b7U8BZdNIW2b8qTn5wVebI9DAwBw27u5RASGUmcmZ+4BgIN3
+         ycZ9ZpUxSPNhkcEJ+sxHJ0ZXPOktyTaCWvUEScwhQq1AgoXv5QtXelCRjeMpZaMROK3d
+         jhJII8UVmzjNv/T6/MEUYAIZ6eaFZmhApmHzCN9ecQX5rw0MlzXLmFBUfAJjj9dwHqgm
+         5WGPaD28oaFHmpZd0KGNGU3970wMEPYx8LMv8C2X6tr9jLQ4Z3iKQd/2I8BUPhFkPohN
+         zxQn9CeiT/E8fMMTr05yxa7kVk6kCcViD0fmiICycRSM7B6/cYde3Hawb7TE/C3oNcS3
+         uvvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBosbNgKMEd4zQW1U3K43umM4UTq5PXVmYwSLbwWczxso5Q+kw56mYwtz0EN5VgzalWVFUNVVtJxDav5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOrX7bjBbN1LjzY7PHBT/nI7R08Hnq7ibm3K0gsAR0EvLJiaLz
+	+zUUZGjKhO9cGI8wVWLHQ5jy1gEr1XaIzR481MexkBw6U1+QEGTZNl2o
+X-Gm-Gg: ASbGncsr4Mz+w1lNI3DCG3KAUYYiZS64gzf8yO5+Pbi1COM4Oc8IqBdEv5CioGxuSsY
+	CUrhvzWlmrPZgtlej1N7mQN85BP4VMMDHm0s40u9Pjyn4XJYjYsnsbYGkJvMsDnaPRbDS9ysqtF
+	bDEPPtU/Z085YXLgv6SJn8WP4Nh9KzU0dpf/Ak4l0FIAn2hEA2ntVpIM8kKbvSGkgHxgrhSC0jS
+	EYPZMOOjqHM/3PPZJl1XYcStIjJ6ujCZtvSycaYt2cd5WUExqME67lKeVekX4UrB3ihBAcC0mUa
+	//AUXpgZ8ExexQ7IpdwZKzQUObOt9L0MnhbPBJBafrtgxmxQvZRiNscyJ/AZTL87/dWkOJTD/41
+	1RA9ZJYflATL8tZytn4rqCAwFRpRWbF403Bx59WWdV8QEvwbH3TnARaiyF/JtqPATHfgYtQ==
+X-Google-Smtp-Source: AGHT+IGNDWiVpEVRg/rBFO/WckscZ7asYdyK4nHbco14EogyIbnSRbbuy5G3CqOmQ8T93HX6uG4hmA==
+X-Received: by 2002:a05:6512:458:b0:553:b592:783a with SMTP id 2adb3069b0e04-553b59278b0mr1035022e87.27.1749932577124;
+        Sat, 14 Jun 2025 13:22:57 -0700 (PDT)
+Received: from Lappari.v6.elisa-laajakaista.fi (nzckegev6v1b7007j63-1.v6.elisa-laajakaista.fi. [2001:99a:20b9:a000:bd45:faca:fc88:8ccb])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1169efsm932996e87.45.2025.06.14.13.22.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 13:22:56 -0700 (PDT)
+Date: Sat, 14 Jun 2025 23:22:55 +0300
+From: Heikki Huttu <heissendo88@gmail.com>
+To: parthiban.veerasooran@microchip.com, christian.gromm@microchip.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: most: net: Fix typo in Kconfig help text
+Message-ID: <aE3aHx5eAYwTt-TZ@Lappari.v6.elisa-laajakaista.fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: rename bus clock to follow the
- bindings
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Mahadevan <quic_mahap@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250602-sa8775p-fix-dts-v1-1-f9f6271b33a3@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250602-sa8775p-fix-dts-v1-1-f9f6271b33a3@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: yE5SBPObYisAOAUmtMFBywP4MHbfhxWA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDE2OCBTYWx0ZWRfX3j4I4WK3hNIG
- +/EjqSVgeTDVMXhh/PV5Gm2sfHPXoSS3PW6PgVYSQi9cVdsN2V9iDR4wpJcttp9nqo49Hf1bEew
- vDfHCpzMR5th06Eu4+sHOlndw7CmR6A+t8ZXHsBEow4v1Nw4nF9eMquIxeB6puiY0CleetvxRGp
- unLO31i4IqLmcKXwEPbN+VCGyWzNsBsSqnWTZM6BMA2X5Du/ljy9Odr8J+SbEBSg10PUQeCQBnc
- neS/A8cwis/9uBjFyJI4FeHzTDbLrt4hVh3ab+/eV6P+4CFnKmA0M2kR1eFe4cuChRsWOhdjRBz
- +8uM1PH2Q294EiUSu4mIJE0h6qt+nLVW9pnRJ1MLo06Q15CyUJaBU2N4IIeDwU+NMwVeM0tqEEO
- GJEh36jkbYsqjr6gI2PPYYKk8gCmJVhI9pzR164L5uqqhHlGpGJcj014gKBU9TPho3YBBgn0
-X-Proofpoint-ORIG-GUID: yE5SBPObYisAOAUmtMFBywP4MHbfhxWA
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=684dd758 cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=3CVIpg13t1iulFfMIbsA:9
- a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-14_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=922
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506140168
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/2/25 9:23 AM, Dmitry Baryshkov wrote:
-> DT bindings for the DPU SA8775P declare the first clock to be "nrt_bus",
-> not just "bus". Fix the DT file accordingly.
-> 
-> Fixes: 2f39d2d46c73 ("arm64: dts: qcom: sa8775p: add display dt nodes for MDSS0 and DPU")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index 45f536633f6449e6ce6bb0109b5446968921f684..7eac6919b2992a3512df1e042af22d0cbad04853 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -4122,7 +4122,7 @@ mdss0_mdp: display-controller@ae01000 {
->  					 <&dispcc0 MDSS_DISP_CC_MDSS_MDP_LUT_CLK>,
->  					 <&dispcc0 MDSS_DISP_CC_MDSS_MDP_CLK>,
->  					 <&dispcc0 MDSS_DISP_CC_MDSS_VSYNC_CLK>;
-> -				clock-names = "bus",
-> +				clock-names = "nrt_bus",
+This improves readability and documentation quality for the Kconfig entry.
 
-Is it the "nrt" clock though, and not "rt"?
+Signed-off-by: Heikki Huttu <heissendo88@gmail.com>
+---
+ drivers/staging/most/net/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There used to be a split for non-/real-time use cases, but
-I have little idea about the specifics.
+diff --git a/drivers/staging/most/net/Kconfig b/drivers/staging/most/net/Kconfig
+index ed8ac7e076d1..8ddc3a522aba 100644
+--- a/drivers/staging/most/net/Kconfig
++++ b/drivers/staging/most/net/Kconfig
+@@ -8,7 +8,7 @@ config MOST_NET
+ 	depends on NET
+ 
+ 	help
+-	  Say Y here if you want to commumicate via a networking device.
++	  Say Y here if you want to communicate via a networking device.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called most_net.
+-- 
+2.47.2
 
-Konrad
