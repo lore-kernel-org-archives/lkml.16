@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18AC298CD1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D6E299928;
 	Sat, 14 Jun 2025 08:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749891378; cv=none; b=OV9fKLXoU7xnTiyvxBhvVlm8yvDD6p49h0zfuGdsqTzMhLFVLn1W+U9oDtOVeJzikL7Zb95u2JlZwqamv2cRKcE6jtT3YaS++86K83fuMCghvlbqlnHNWgpW6Oo5y+bhkYJ4GBT/iRvjI+JRQrr5aRsvEnFGrmwaWtXt5D514k8=
+	t=1749891379; cv=none; b=U+MXT60eeLqxluGpt/ihoalF7UkjDaC5A31RAcOrSXfS9179uUZGfOeDF4o6I2uKSZlhHIHXvJmMqb7+UwigtEiB/UrCRK/FHxyEv+59XT846PvYukFG3NEypyF74aljSLJI3KCuvABzRnzakXljBGv9bJt9pz/2GLXDBR6hOmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749891378; c=relaxed/simple;
-	bh=JDTK8ds5rMEZTW9f7Wpcip/tbHM6fMKUON4aC7f9ZTc=;
+	s=arc-20240116; t=1749891379; c=relaxed/simple;
+	bh=00F9KG3FuikbC/77I/aVEWzxRtC/68GGYQsrs3gqu00=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CNgSSJ2D4Pa1wATKOEFlGZzGQMfaZ8bgvgiOClGSe5AsuB7aFlY2Q12vPMAqlG2nF1B+vSwgA4GEHlG9rvl1WobIJfJaVPEbjMv5xLNepdmtm14oMXZUP0bDRmQ8VsyOYQspj5buLrEI0jD3eSmdgKsmazL/0BV+5AjiD5ltGyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jnxo2kga; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ud7aAwX/IHTstc5MesAawLTPL+Y2LypacaZZsec3evl+Ktn7huiNCSxN1raLryowpq5kVYrz2JcEq6Qmf0Aoeuzhm7jYu5x4Sc9XqWVHgplF2K7VGNG0CDfjcgYFSR1ugv4AX/TgMpyJoRxFaZOcHOsga/5vVxn6pzuKTscVvWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WrsOCRsq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jnxo2kga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793A4C116C6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WrsOCRsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A8BC4CEFE;
 	Sat, 14 Jun 2025 08:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749891378;
-	bh=JDTK8ds5rMEZTW9f7Wpcip/tbHM6fMKUON4aC7f9ZTc=;
+	bh=00F9KG3FuikbC/77I/aVEWzxRtC/68GGYQsrs3gqu00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jnxo2kgabhDXzSpfzf0kdqlxjfXWeYV1fURoZiC0VQCicHOQ5U2te0gdTHk3o9Ghd
-	 +iaOdCab93EbQ3V3PMSsF26JYOTOuz0XqNDIWWCtBY/TUNc5jKw6qpZuOGOQYIMRXu
-	 WgVIcuqRmhvWPCYM7YxMpZ/vQGEUeFVuNz9fYIqCVfzUtzgn+DJ1rYFxGyX2v/NXcH
-	 hMZuoVBRB3SLs58H7PaZN3m1jNV+1FngQcfVKuR2stYZEzncKvEi6ViR6GDKApdm82
-	 SjIMRWmXG5X7WRKZ+siT8E0DKGhWRiEcIvOzISR/vmarQaL7wzPOWiQKap07Ns03hx
-	 S3TvudT1JdLpg==
+	b=WrsOCRsq69wKZqzbM/v4hKRkiF6UJl4qiGVj1ejjEYSbVZjgDJ59mBRM/3knDFwKr
+	 wB5f4hi2a2j86U0ExnNWsZOn1GPDAF12SAx99jKz9Bc+VuB2RMR9/KopRFxyiN+hb3
+	 z++8JFza65hM6EA7H22qSVa5eCE/PkyJ4D+xag+c87NqULs+gw0Q9H8XYiWckTiXm+
+	 d1iMqSQ50AMTZqgNp7W86D6LNAhAt7P6h14Jwpz2rJoGpS7ghjiDFGq9zNleKAg2TG
+	 NijsY+UTSH1gJ1VGEuWiuYpBEmjR2FXAZE0qie7DYNJq+pnvdPENlyaFSzoeZb5bLI
+	 4DWsDFgHQXbyQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uQMgS-000000064bX-2vAc;
+	id 1uQMgS-000000064bL-2EQ1;
 	Sat, 14 Jun 2025 10:56:16 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -46,6 +46,8 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Paolo Abeni" <pabeni@redhat.com>,
 	"Ruben Wauters" <rubenru09@aol.com>,
 	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Simon Horman <mchehab+huawei@kernel.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
@@ -53,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v4 14/14] docs: conf.py: properly handle include and exclude patterns
-Date: Sat, 14 Jun 2025 10:56:08 +0200
-Message-ID: <2238d93ac08f9e6d3e88e0edfc6f58d13f5f9b68.1749891128.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v4 11/14] docs: uapi: netlink: update netlink specs link
+Date: Sat, 14 Jun 2025 10:56:05 +0200
+Message-ID: <dbc3dfd26ade24dc92c5b4003fd952f067f0fab9.1749891128.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749891128.git.mchehab+huawei@kernel.org>
 References: <cover.1749891128.git.mchehab+huawei@kernel.org>
@@ -68,105 +70,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-When one does:
-	make SPHINXDIRS="netlink/specs" htmldocs
+With the recent parser_yaml extension, and the removal of the
+auto-generated ReST source files, the location of netlink
+specs changed.
 
-the build would break because a statically-defined pattern
-like:
-
-	include_patterns = [
-		...
-		'netlink/specs/*.yaml',
-	]
-
-would be pointing to Documentation/netlink/specs/netlink/specs,
-as the path there is relative. Also, when SPHINXDIRS is used,
-the exclude_pattern = [ "output" ] is also wrong.
-
-Fix conf.py to generate relative include/exclude patterns,
-relative to the SOURCEDIR sphinx-dir parameter.
+Update uAPI accordingly.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/conf.py | 58 ++++++++++++++++++++++++++++++++++---------
- 1 file changed, 46 insertions(+), 12 deletions(-)
+ Documentation/userspace-api/netlink/index.rst | 2 +-
+ Documentation/userspace-api/netlink/specs.rst | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 62a51ac64b95..be678bdf95d4 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -17,6 +17,52 @@ import os
- import sphinx
- import shutil
+diff --git a/Documentation/userspace-api/netlink/index.rst b/Documentation/userspace-api/netlink/index.rst
+index c1b6765cc963..83ae25066591 100644
+--- a/Documentation/userspace-api/netlink/index.rst
++++ b/Documentation/userspace-api/netlink/index.rst
+@@ -18,4 +18,4 @@ Netlink documentation for users.
  
-+# Location of Documentation/ directory
-+doctree = os.path.abspath('.')
-+
-+# List of patterns that don't contain directory names, in glob format.
-+include_patterns = ['**.rst']
-+exclude_patterns = []
-+
-+# List of patterns that contain directory names in glob format.
-+dyn_include_patterns = ['netlink/specs/**.yaml']
-+dyn_exclude_patterns = ['output']
-+
-+def setup(app):
-+    """
-+    On Sphinx, all directories are relative to what it is passed as
-+    SOURCEDIR parameter for sphinx-build. Due to that, all patterns
-+    that have directory names on it need to be dynamically set, after
-+    converting them to a relative patch.
-+
-+    As Sphinx doesn't include any patterns outside SOURCEDIR, we should
-+    exclude relative patterns that start with "../".
-+    """
-+
-+    sourcedir = app.srcdir  # full path to the source directory
-+    builddir = os.environ.get("BUILDDIR")
-+
-+    # setup include_patterns dynamically
-+    for p in dyn_include_patterns:
-+        full = os.path.join(doctree, p)
-+
-+        rel_path = os.path.relpath(full, start = app.srcdir)
-+        if rel_path.startswith("../"):
-+            continue
-+
-+        app.config.include_patterns.append(rel_path)
-+
-+    # setup exclude_patterns dynamically
-+    for p in dyn_exclude_patterns:
-+        full = os.path.join(doctree, p)
-+
-+        rel_path = os.path.relpath(full, start = app.srcdir)
-+        if rel_path.startswith("../"):
-+            continue
-+
-+        app.config.exclude_patterns.append(rel_path)
-+
-+
- # helper
- # ------
+ See also:
+  - :ref:`Documentation/core-api/netlink.rst <kernel_netlink>`
+- - :ref:`Documentation/networking/netlink_spec/index.rst <specs>`
++ - :ref:`Documentation/netlink/specs/index.rst <specs>`
+diff --git a/Documentation/userspace-api/netlink/specs.rst b/Documentation/userspace-api/netlink/specs.rst
+index 1b50d97d8d7c..debb4bfca5c4 100644
+--- a/Documentation/userspace-api/netlink/specs.rst
++++ b/Documentation/userspace-api/netlink/specs.rst
+@@ -15,7 +15,7 @@ kernel headers directly.
+ Internally kernel uses the YAML specs to generate:
  
-@@ -220,18 +266,6 @@ language = 'en'
- # Else, today_fmt is used as the format for a strftime call.
- #today_fmt = '%B %d, %Y'
+  - the C uAPI header
+- - documentation of the protocol as a ReST file - see :ref:`Documentation/networking/netlink_spec/index.rst <specs>`
++ - documentation of the protocol as a ReST file - see :ref:`Documentation/netlink/specs/index.rst <specs>`
+  - policy tables for input attribute validation
+  - operation tables
  
--# List of patterns, relative to source directory, that match files and
--# directories.
--include_patterns = [
--	'**.rst',
--	'netlink/specs/*.yaml',
--]
--
--# patterns to ignore when looking for source files.
--exclude_patterns = [
--	'output',
--]
--
- # The reST default role (used for this markup: `text`) to use for all
- # documents.
- #default_role = None
 -- 
 2.49.0
 
