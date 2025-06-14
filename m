@@ -1,174 +1,160 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011013.outbound.protection.outlook.com [40.107.130.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8082E11CB
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 22:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749938672; cv=none; b=XqAKAHs2e5YBBKpfCV4oDkMmfBgub0e7plUo/Qh+HgI6hijV58Jchq1nxbaDryV610QU359kJfjgPkAxOTkhbS2DPXzcrWVxJlPp1FOeAnYQlkChI+EMgBER+e7IGQMArDiaY7fGJwEU2g28bSVAFQWdgHcH63HxhiAtj9TlmHk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749938672; c=relaxed/simple;
-	bh=6sfSlVUXgOQMyPT1nbmF4IKOHML94okR/2LMhebCFXg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bgb7fmOFD1KXdIKbfhJyJmhmiyBn3p+q4Ame6+uvHi3Qk8uOhyumDzZcCq3FGgFsMy1XnydrSFEQEgK6y9zDv+odQkkB7Klwnd3DP3MmrGYFL/9UBajN8gKq2VGbQPYk0D6ERQT9wmyVRF7dQsQlIUZqk0KsWix/zPBV/g0HYew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so78217205ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 15:04:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749938669; x=1750543469;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mogrcbZ+TiNC+9gUVOUlvySHlEjXaTgQztRk8fEDgYM=;
-        b=g3BMYVCyUT6x10jd0MjglghuM+nzoZx3Gx2I6f34GPB51yIJp+ktstAiip2YEvaMi1
-         BskmjKCsgrU+fXlyU9m1H9lPTUbM+hOf8x5II50VDEzr+Www8nKAUmXywaLwworY6eGP
-         6AlcqS36Ew7q0Uarq1Qx3fZDvglSpdTZSBTsI/P7laCx2FSXNYkLR3vc/LaL9nbTATjW
-         InM4ExJQ+pemTQQBd7oi/afBdaoRX+PD4bBbpspvUljGNZLizITbJFbAWF+J/G/6QG2y
-         7naZXqEP6HLT7EJGhr0b99kEFwq9pYO5J//9LFqsrF7jjxOoqLm47JZabTohsaeGfjzL
-         s13w==
-X-Forwarded-Encrypted: i=1; AJvYcCVwfPGTyZuyHi0iVz16l5HIgGiTV3geTRbcV/Bv376eq7yyGAQrl08ozZGXtBDzpjQ7FE32kqlyh8Kplf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb2bzpOgzosooR4+Tm7b/QEk8QypGnpdwKVN9vvGk1DQRYExsL
-	u+DVeQMQjqdkDdnLEoRQROvrt6pR5CXod0O9jdASYtqgjEAXDuaXBLUFfMZxQ8LOaKtH7AIMyGg
-	GNlWexvLB6otMAvV46voKxouULzoT6wMISc+r92K/gNZuNywZWcl9iJLXnWE=
-X-Google-Smtp-Source: AGHT+IFYSHMnsnnpeVnBEUGLMJ6cO0VDOxaCBIgjTilhI7VFTfRKV4hYrh4wiY0/wstIbswDbiz1CFy68w9x5Mdyi72nkExxp+uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8D61F4C87;
+	Sat, 14 Jun 2025 22:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749938760; cv=fail; b=iaHycj3Z6EJ3sPoIzEcZb8LRFAcUnRxZu0y8gxIppkDZLaepj8gwqzfnF6AWUOF2hGmxRt/yBaZJNDIXvv3bw9xfRN+TZylw+cvMiyMoZeV4WSVA8MvGVtc5D+g+J93cowojmq8LTDgw3NYxNO8kXklSSOJGQAuLaC+Z5RNWg8s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749938760; c=relaxed/simple;
+	bh=lw9y1RB55ovq5I5cNNsBrDVqrXJFdSmlCQj/BEr9CKY=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Qu5+SCAfNq14jEeyNNiwJRBIICpswhV3ll6SfQhN3Rr/4OSbVhJDY83Y6J/ilDwGTab1HpRmlnnw6nTeIzVuZ+8L1GfwYNY/OXvsUJx6j+gcKgh14nJWBZzFohsdci/y/Mc5i5DMVkIUHnypeMoFeX9qIFOUFd+gopMjBs0ssiQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=FMZV+Yw/; arc=fail smtp.client-ip=40.107.130.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="FMZV+Yw/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o/i+u2mOBmGMwaHfCpZUcmUWHjEyCGnYuW/pxT6BGe3JHV5EXObJmDIEjbpdiN1Go6DlpbrnFIiw1NJTE31fgOlxAJZLluKqGVt8f9RWaAACjoz+uHSZP32WnPVBWqxIFejJLp+pbn2NohB7tXaCD+rZGadZFVRwpZ+Ova/S2ynA9rKDjjnqq8EjUCsay1w0SvbnO6yitktRDsxbCf78QVybTJJUuP6osXC58yew+jAXW63SF0ogQEM+UqeeDVeUfDHyxuOlYhhj8FU2sTAV7HlHZkxibb2oFjRkNQUqqpEMUtzrAyvfwMJzVwpZ841Qc4BQn7Xsh69cpypQSYCsCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Smyir04yqryK0ieEx0BYnnQFFN1SNAENJX7sILJSthw=;
+ b=X4tbGIT7fLZ9Xf4yKRwnAl8z7gNrcKjZSAxSlJPbgs5D1ebcxJh6gKUd/NsaV8ynOBFS+JsPJ7WENC/AL3z3HRIbLOwetvNY/qyEIYbEUtatnIVU4ULZG6qRUW1AUSxhc5R2RyocS/bWWrtxOjQxW8sJKZUsSJ68kbOfPdoP3Tusu5eHaGngwV0g/4isB73RlwnNynX/166UOrJHB7lg7i2NCJ9nA5OgAg25JyuLYlrAjscaT4qby3eYFcDzjzqVop7A3o8ytY2ki6VjURrtwNWTtyrQ/S9Sng4jCjlHAan1+ZcqWELaZ1mZP0RqIbffWdI2GwvufAmZmLibe4Swfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Smyir04yqryK0ieEx0BYnnQFFN1SNAENJX7sILJSthw=;
+ b=FMZV+Yw/1TP4GhGUNju3AGvrtDnf4b9054/LXvBcjn+xW8XdHGJPvpyChVMtaHTF9sWiZbCzO3cuWU8XIE9wWtufaSjF8f9ByxeyRVrZLtqk4LcXri0trJFbirUccXSQ/gu6xBI60C0m3KwgX8u7yhuTccJ3rPfTbtL+Kat63jI=
+Received: from AM9P193CA0030.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:21e::35)
+ by PA4PR02MB7022.eurprd02.prod.outlook.com (2603:10a6:102:104::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Sat, 14 Jun
+ 2025 22:05:54 +0000
+Received: from AMS1EPF0000004E.eurprd04.prod.outlook.com
+ (2603:10a6:20b:21e:cafe::f7) by AM9P193CA0030.outlook.office365.com
+ (2603:10a6:20b:21e::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.26 via Frontend Transport; Sat,
+ 14 Jun 2025 22:05:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS1EPF0000004E.mail.protection.outlook.com (10.167.16.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Sat, 14 Jun 2025 22:05:54 +0000
+Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Sun, 15 Jun
+ 2025 00:05:53 +0200
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: Lars-Peter Clausen <lars@metafoo.de>, <kernel@axis.com>,
+	<linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
+In-Reply-To: <pndldqwiihi.fsf@axis.com> (Waqar Hameed's message of "Fri, 16
+	May 2025 19:16:25 +0200")
+References: <cover.1746802541.git.waqar.hameed@axis.com>
+	<c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
+	<20250511131432.1c6e381c@jic23-huawei> <pndldqwiihi.fsf@axis.com>
+User-Agent: a.out
+Date: Sun, 15 Jun 2025 00:05:53 +0200
+Message-ID: <pnd7c1enflq.fsf@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3c88:b0:3dd:d348:715a with SMTP id
- e9e14a558f8ab-3de07c6ac3bmr52964455ab.8.1749938669514; Sat, 14 Jun 2025
- 15:04:29 -0700 (PDT)
-Date: Sat, 14 Jun 2025 15:04:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684df1ed.a00a0220.279073.0024.GAE@google.com>
-Subject: [syzbot] [kernel?] WARNING: refcount bug in hdm_disconnect
-From: syzbot <syzbot+d175ca7205b4f18390b1@syzkaller.appspotmail.com>
-To: dakr@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS1EPF0000004E:EE_|PA4PR02MB7022:EE_
+X-MS-Office365-Filtering-Correlation-Id: 060b3cce-9ddb-4847-2e6c-08ddab8fa1ed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PPLqaHzL1cTTH9ugoPlXRD0NWYMxG6uRBum4G7EH30QJlH6ldQ2iD8Zx0eJ9?=
+ =?us-ascii?Q?fW2LCzi0dmiM1Xtcfi1z1hwd0lAUdLBHrrFeKdyFoBw4iLnpjJP7DgEa4gOE?=
+ =?us-ascii?Q?UrHCXgQeAG63VUADjIEq+f49E1g14aQv6z1TWJdfhyx1OhglG9ZvIhoZsLmm?=
+ =?us-ascii?Q?yERyzgKlb9EOlZ6QUyM5yMh93cv7b3PMsTero4libRKy0nruXlpGRhzrkouG?=
+ =?us-ascii?Q?doZLxfYHbNDKBTC8pgs79Jf1aGxYr0MXuJ2EC6G2Mo4Z+cITV65CUmGtHwKA?=
+ =?us-ascii?Q?f2AWGrm2zHi8wQU3w26ayL3g69hS3Nf1ewbb4HinF1OeacZyYhvMPrk91T3O?=
+ =?us-ascii?Q?xB/bocD9jewsRzUJ3x/v5Z2S/pdEoPNOv272lhVH5RT5qWtyERHrGSmrkHNs?=
+ =?us-ascii?Q?NiPAhrO8OD78DhwK38O7e11iyaRwhjc3dPWF5tIYjfqOChc7VO6uCUEiUK+R?=
+ =?us-ascii?Q?6COHFXRr23cdREnXaMKm3pUXjUUKgxBwiRe2oksGKjpG8ABC4PFNgVuAg8SJ?=
+ =?us-ascii?Q?fN7kvbw4ZzKRLV+7TiJXKdI5A+7ue+Y5SbZMVDzFeAn42zXHxeyYFLdQIVoV?=
+ =?us-ascii?Q?N7X6HUE01SYtkgeymG2cJVgMBLZEfS/yiGHEQLxU5HHPHoUU5VAOyHtDsX6L?=
+ =?us-ascii?Q?FDjs0wlUmnS5bn8wSdn5h4a0jlBRHa1JwCGg0Yrkz15PmuxWsAf26xE9bn+0?=
+ =?us-ascii?Q?jxm54JAOnEnwvMRUDW+EcJbzm5Q8kMYtbHb/z3K9IgcwUk2leONMjokp16XJ?=
+ =?us-ascii?Q?oaK/BehqabANNEtSS6L6lqVrZW7aINNWinjAptnjVcD/8LOfkGgv/Mykmm76?=
+ =?us-ascii?Q?Vd3LxEp1SFXDZKacJ7s1WyJzxCqgqIsrtAbz2rpAVJISuhf636yhLezvsGSJ?=
+ =?us-ascii?Q?H4TJ+w9V1O1kYJIj4lT3eEhCsSQ1CrfRVslPXfGibCAsy2EgGMoIeuDUYi9R?=
+ =?us-ascii?Q?6gxAR4AxuOmC6fHVyNEDtbBXzvPZSmeLK/9itsT39lnRaHves2TPe3xp4ZiX?=
+ =?us-ascii?Q?ZJlh43UNyZLeSNayUr4ut0bgREuHSPN3DS0vlRwyd2BYA4IF3Ei2yGFvpAKB?=
+ =?us-ascii?Q?QfzG/D/yUzFJn188pYwwF6yIWUVGNyu3Va832YzYYcbq5AmX3frPcCFgnXEy?=
+ =?us-ascii?Q?v1Am2kwZfNviQ8CXBcV5/uLUqlq1POtv+xE7sH8pnQDEno3LcNXMgwE1MYUW?=
+ =?us-ascii?Q?SKg31XCiL3rutowY9i4lNtmS8df0VImX5RaEe87ZTrNOaW8JdF3dzQagIhvs?=
+ =?us-ascii?Q?rylw6cY8pftd7KJOhP5ifyUe56m6rTY8a34KSon2SmTd5y6jLegx6Yp9FGzo?=
+ =?us-ascii?Q?Vx386kxRGC9q/Sh5f6uWpO2OA1NHR2l+j2s4Fzy66Ib4v/9BKKqN5NwCo/j1?=
+ =?us-ascii?Q?7nU+aTD7SJNg/FKRFqrhcIkEjb/Dl0HTn9S58RIRfIyIaVXZ3Ytr/6Uj97Jk?=
+ =?us-ascii?Q?H1dAdyWNHoerkcRO4Wt4qf2N0DkyVTBudxwsClvMMJr1kTnAW1Lxd+tU6odg?=
+ =?us-ascii?Q?Ul0zpn4y4Ry5VO2enroag6091wA5yWEX9RvK?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 22:05:54.1441
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 060b3cce-9ddb-4847-2e6c-08ddab8fa1ed
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS1EPF0000004E.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR02MB7022
 
-Hello,
+On Fri, May 16, 2025 at 19:16 +0200 Waqar Hameed <waqar.hameed@axis.com> wrote:
 
-syzbot found the following issue on:
+> On Sun, May 11, 2025 at 13:14 +0100 Jonathan Cameron <jic23@kernel.org> wrote:
 
-HEAD commit:    4774cfe3543a Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14b525d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=706b535f9c369932
-dashboard link: https://syzkaller.appspot.com/bug?extid=d175ca7205b4f18390b1
-compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm
+[...]
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>>> +
+>>> +/*
+>>> + * Register bitmap.
+>>> + * For some reason the first bit is denoted as F37 in the datasheet, the second
+>>> + * as F38 and so on. Note the gap between F60 and F64.
+>>> + */
+>>> +#define D3323AA_REG_BIT_SLAVEA1		0	/* F37. */
+>>> +#define D3323AA_REG_BIT_SLAVEA2		1	/* F38. */
+>>> +#define D3323AA_REG_BIT_SLAVEA3		2	/* F39. */
+>>> +#define D3323AA_REG_BIT_SLAVEA4		3	/* F40. */
+>>> +#define D3323AA_REG_BIT_SLAVEA5		4	/* F41. */
+>>> +#define D3323AA_REG_BIT_SLAVEA6		5	/* F42. */
+>>> +#define D3323AA_REG_BIT_SLAVEA7		6	/* F43. */
+>>> +#define D3323AA_REG_BIT_SLAVEA8		7	/* F44. */
+>>> +#define D3323AA_REG_BIT_SLAVEA9		8	/* F45. */
+>> Perhaps these can be represented as masks using GENMASK() rather than
+>> bits.  A lot of this will be hidden away if you follow suggesting to
+>> only expose that you are using a bitmap to bitbang in the read/write
+>> functions.
+>
+> Yes, that would be the natural thing to do when moving the bitmap stuff
+> to the read/write functions (as answered below).
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/98a89b9f34e4/non_bootable_disk-4774cfe3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cae525065b5b/vmlinux-4774cfe3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ce14ef6ecfe2/zImage-4774cfe3.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d175ca7205b4f18390b1@syzkaller.appspotmail.com
-
-usb 2-1: USB disconnect, device number 30
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 4354 at lib/refcount.c:28 refcount_warn_saturate+0x13c/0x174 lib/refcount.c:28
-refcount_t: underflow; use-after-free.
-Modules linked in:
-Kernel panic - not syncing: kernel: panic_on_warn set ...
-CPU: 0 UID: 0 PID: 4354 Comm: kworker/0:54 Not tainted 6.16.0-rc1-syzkaller #0 PREEMPT 
-Hardware name: ARM-Versatile Express
-Workqueue: usb_hub_wq hub_event
-Call trace: 
-[<80201a00>] (dump_backtrace) from [<80201afc>] (show_stack+0x18/0x1c arch/arm/kernel/traps.c:257)
- r7:00000000 r6:8282083c r5:00000000 r4:82259bd0
-[<80201ae4>] (show_stack) from [<8021fd94>] (__dump_stack lib/dump_stack.c:94 [inline])
-[<80201ae4>] (show_stack) from [<8021fd94>] (dump_stack_lvl+0x54/0x7c lib/dump_stack.c:120)
-[<8021fd40>] (dump_stack_lvl) from [<8021fdd4>] (dump_stack+0x18/0x1c lib/dump_stack.c:129)
- r5:00000000 r4:82a6dd18
-[<8021fdbc>] (dump_stack) from [<80202614>] (panic+0x120/0x374 kernel/panic.c:382)
-[<802024f4>] (panic) from [<802585b8>] (check_panic_on_warn kernel/panic.c:273 [inline])
-[<802024f4>] (panic) from [<802585b8>] (get_taint+0x0/0x1c kernel/panic.c:268)
- r3:8280c684 r2:00000001 r1:822406fc r0:822480ac
- r7:808c00f4
-[<80258544>] (check_panic_on_warn) from [<8025871c>] (__warn+0x80/0x188 kernel/panic.c:777)
-[<8025869c>] (__warn) from [<80258a0c>] (warn_slowpath_fmt+0x1e8/0x1f4 kernel/panic.c:812)
- r8:00000009 r7:822b1be4 r6:dfaa1bfc r5:85882400 r4:00000000
-[<80258828>] (warn_slowpath_fmt) from [<808c00f4>] (refcount_warn_saturate+0x13c/0x174 lib/refcount.c:28)
- r10:00000001 r9:829ca3e8 r8:858c4088 r7:858c7874 r6:84aa87b4 r5:858c7800
- r4:83d21c00
-[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (__refcount_sub_and_test include/linux/refcount.h:400 [inline])
-[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (__refcount_dec_and_test include/linux/refcount.h:432 [inline])
-[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (refcount_dec_and_test include/linux/refcount.h:450 [inline])
-[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (kref_put include/linux/kref.h:64 [inline])
-[<808bffb8>] (refcount_warn_saturate) from [<819fce88>] (kobject_put+0x158/0x1f4 lib/kobject.c:737)
-[<819fcd30>] (kobject_put) from [<80b307e8>] (put_device+0x18/0x1c drivers/base/core.c:3800)
- r7:858c7874 r6:84aa87b4 r5:858c7800 r4:84aa8000
-[<80b307d0>] (put_device) from [<81418e74>] (hdm_disconnect+0x90/0x9c drivers/most/most_usb.c:1129)
-[<81418de4>] (hdm_disconnect) from [<80e8cd04>] (usb_unbind_interface+0x84/0x2b4 drivers/usb/core/driver.c:458)
- r7:858c7874 r6:858c7830 r5:00000000 r4:858c4000
-[<80e8cc80>] (usb_unbind_interface) from [<80b38870>] (device_remove drivers/base/dd.c:569 [inline])
-[<80e8cc80>] (usb_unbind_interface) from [<80b38870>] (device_remove+0x64/0x6c drivers/base/dd.c:561)
- r10:00000001 r9:858c4088 r8:00000044 r7:858c7874 r6:829ca3e8 r5:00000000
- r4:858c7830
-[<80b3880c>] (device_remove) from [<80b39d60>] (__device_release_driver drivers/base/dd.c:1272 [inline])
-[<80b3880c>] (device_remove) from [<80b39d60>] (device_release_driver_internal+0x18c/0x200 drivers/base/dd.c:1295)
- r5:00000000 r4:858c7830
-[<80b39bd4>] (device_release_driver_internal) from [<80b39dec>] (device_release_driver+0x18/0x1c drivers/base/dd.c:1318)
- r9:858c4088 r8:8335cc40 r7:8335cc38 r6:8335cc0c r5:858c7830 r4:8335cc30
-[<80b39dd4>] (device_release_driver) from [<80b37ec4>] (bus_remove_device+0xcc/0x120 drivers/base/bus.c:579)
-[<80b37df8>] (bus_remove_device) from [<80b32220>] (device_del+0x148/0x38c drivers/base/core.c:3881)
- r9:858c4088 r8:85882400 r7:04208060 r6:00000000 r5:858c7830 r4:858c7874
-[<80b320d8>] (device_del) from [<80e8a754>] (usb_disable_device+0xd4/0x1e8 drivers/usb/core/message.c:1418)
- r10:00000001 r9:00000000 r8:00000000 r7:858c7800 r6:858c4000 r5:84899748
- r4:60000013
-[<80e8a680>] (usb_disable_device) from [<80e7f4d0>] (usb_disconnect+0xec/0x29c drivers/usb/core/hub.c:2316)
- r9:83d21600 r8:858c40cc r7:84282000 r6:858c4088 r5:858c4000 r4:60000013
-[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (hub_port_connect drivers/usb/core/hub.c:5375 [inline])
-[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (hub_port_connect_change drivers/usb/core/hub.c:5675 [inline])
-[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (port_event drivers/usb/core/hub.c:5835 [inline])
-[<80e7f3e4>] (usb_disconnect) from [<80e82190>] (hub_event+0xe78/0x194c drivers/usb/core/hub.c:5917)
- r10:00000001 r9:00000100 r8:83d03300 r7:858c4000 r6:84281800 r5:84282210
- r4:00000001
-[<80e81318>] (hub_event) from [<8027e2e8>] (process_one_work+0x1b4/0x4f4 kernel/workqueue.c:3238)
- r10:8335ce70 r9:8326f405 r8:85882400 r7:dddced40 r6:8326f400 r5:83d03300
- r4:85a6a100
-[<8027e134>] (process_one_work) from [<8027ef30>] (process_scheduled_works kernel/workqueue.c:3321 [inline])
-[<8027e134>] (process_one_work) from [<8027ef30>] (worker_thread+0x1fc/0x3d8 kernel/workqueue.c:3402)
- r10:61c88647 r9:85882400 r8:85a6a12c r7:82804d40 r6:dddced40 r5:dddced60
- r4:85a6a100
-[<8027ed34>] (worker_thread) from [<80285f5c>] (kthread+0x12c/0x280 kernel/kthread.c:464)
- r10:00000000 r9:85a6a100 r8:8027ed34 r7:dfed1e60 r6:85a6a000 r5:85882400
- r4:00000001
-[<80285e30>] (kthread) from [<80200114>] (ret_from_fork+0x14/0x20 arch/arm/kernel/entry-common.S:137)
-Exception stack(0xdfaa1fb0 to 0xdfaa1ff8)
-1fa0:                                     00000000 00000000 00000000 00000000
-1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
- r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:80285e30
- r4:853ec900
-Rebooting in 86400 seconds..
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Since `bitmap_write()` needs an offset (and size), I didn't use
+`GENMASK()` in v2 and thought it would be more clear this way. I'm still
+open for suggestions though.
