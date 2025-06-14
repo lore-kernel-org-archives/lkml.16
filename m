@@ -1,95 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0880D1E8320;
-	Sat, 14 Jun 2025 19:13:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C522F32;
+	Sat, 14 Jun 2025 19:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749928412; cv=none; b=DJJc/Vjxv4+F6irdd0oF5JaWIP43rFxMJvGHMrDtNjFtSJua3JibWD8V2rdJVaH7CSSqPhTXU9NJzDQK2Lybt/WTy1B5vailiVDpidzVm2alCGQC39j6/jstkPaWtA9Z4aPzLi73wIyd1YOoBd64F+u0L3UOiJiTcgrv77Fp04c=
+	t=1749928576; cv=none; b=b2rUXMryZQMcQShIQRPpD3SrNx5rTAhvuJ2QNUDzTzGBZcI8EudZ1OtdwxN2yzl1Fv3zT4sgbI/tVulcnNzDt9q1e5TIvWRFemFyPPEWd0pyRhEO+I2UI9wUmXsd+wZGoRk5mHIPZY8A3qGy1Uvopi5yRW2LswovYmtLUbiM9Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749928412; c=relaxed/simple;
-	bh=QcqBRvfJQvc5pYZiDg3HscRZqlrgHExx7Nb5GFswF3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MNsoQXlc8RFg4kDUi+xb17bQLH/YjVeYgGWMsgZl/yO/CqiYIZEc3T8TIwf63p8PcvDqDxxV+wWQiKhgDYtkD9mVkF12IEnNkva46+E8SpJQeFLkNkTofU6O42chBkF+kEyU43m08FQEOsz9bpQjZxUe7qSG+FWCDU8xRwZlMKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnyxLXUf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749928576; c=relaxed/simple;
+	bh=mmw5jhQLybady/7202hcLfn6hRFOBIqOFwgpzfoEdeM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=PWYZQn9CeoSXrmQ01aP0ULAfrEv8ttEgSPg/A5qER7V0Ck3ujlFq8U2Hc+py+LhkLIsOVh6hDHbpGhtP8tryShjmRBFgYWyOCC2Ibp17Li5B0RmLDTAviu1M4sfsuCmYPMRYH1Ck/6ABt/N0PMLoIsHfey6br253nciTJ1npK/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SoFx9wZI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnyxLXUf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A57C4CEEB;
-	Sat, 14 Jun 2025 19:13:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SoFx9wZI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D53CBC4CEEB;
+	Sat, 14 Jun 2025 19:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749928411;
-	bh=QcqBRvfJQvc5pYZiDg3HscRZqlrgHExx7Nb5GFswF3o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KnyxLXUfl1AnHsgjB2TzBn9DyyEqxXLUxmGeVkU9mv+wrKp8bwnlGDUxdriOpYwQj
-	 vIR5YWEaBwEa+9TnkcMfvImyNNO1S5XE91jB3WyhAZmGIzs2kIQ+2YTPGdbGdg/EkJ
-	 mjMlzfsjuPEH5Nt0scCrqob716ABX3gyBKjnh8lIVDAmAKHxOebiZiW2H5Z5Rnn36K
-	 rO0GOXqXouJKkCdT1MrQNN/gqa8rmrLPgLcacFpahFw+6p65+ubu2qI4LRjkd1Nd+i
-	 KeiWfYu5kS3gjeU67TQwA99wAbaVAsD6P9sw7nikEcgXJCnE92HD43dYuOhb5aAw3Z
-	 rlh0Px/ih05oQ==
-Date: Sat, 14 Jun 2025 12:13:29 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
- <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
- <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v13 04/13] net: pse-pd: Add support for PSE
- power domains
-Message-ID: <20250614121329.7720ff33@kernel.org>
-In-Reply-To: <20250610-feature_poe_port_prio-v13-4-c5edc16b9ee2@bootlin.com>
-References: <20250610-feature_poe_port_prio-v13-0-c5edc16b9ee2@bootlin.com>
-	<20250610-feature_poe_port_prio-v13-4-c5edc16b9ee2@bootlin.com>
+	s=k20201202; t=1749928576;
+	bh=mmw5jhQLybady/7202hcLfn6hRFOBIqOFwgpzfoEdeM=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=SoFx9wZIX1OI9wd6nGUhXheiyY3QdZlbZ5z9TdQnx/xnbda1R3j25z3Nw40owzddy
+	 sMJQkYY4+YLU1fR0J18xYq8lnNWpVYFyHOTv0vxd3MuzST8R2Yek+uqsTiG8XbZPBP
+	 FlHTc+UpfhnSQJCMh8kfuViz3RP/pYNAUPqRmZc0dlVS0h2m5nuDcRwRinM5GtW/fl
+	 mQaOu/dnKu1bdoLNXl3IhS2dd5zYxzyRAt+7pypC3XOBm1KyhhCXx1NBK0o6uT2IBX
+	 aWetXBQrRQPG56TW0XcXI9XGkLdPnaubFbcXR+i43tPVV2RqzNim1dlAxuo3OabiDI
+	 s8c/+6H60H07Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 14 Jun 2025 21:16:10 +0200
+Message-Id: <DAMHWN6ML8A1.2AUE4UWR58KR2@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v5 05/23] rust: num: add the `fls` operation
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
+In-Reply-To: <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
 
-On Tue, 10 Jun 2025 10:11:38 +0200 Kory Maincent wrote:
-> +static void __pse_pw_d_release(struct kref *kref)
-> +{
-> +	struct pse_power_domain *pw_d = container_of(kref,
-> +						     struct pse_power_domain,
-> +						     refcnt);
+On Thu Jun 12, 2025 at 4:01 PM CEST, Alexandre Courbot wrote:
+> Add an equivalent to the `fls` (Find Last Set bit) C function to Rust
+> unsigned types.
+
+Have you tried to upstream this?
+
+> It is to be first used by the nova-core driver.
+>
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  rust/kernel/num.rs | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
+> index ee0f67ad1a89e69f5f8d2077eba5541b472e7d8a..934afe17719f789c569dbd545=
+34adc2e26fe59f2 100644
+> --- a/rust/kernel/num.rs
+> +++ b/rust/kernel/num.rs
+> @@ -171,3 +171,34 @@ fn borrow(&self) -> &T {
+>          &self.0
+>      }
+>  }
 > +
-> +	regulator_put(pw_d->supply);
-> +	xa_erase(&pse_pw_d_map, pw_d->id);
+> +macro_rules! impl_fls {
+> +    ($($t:ty),+) =3D> {
+> +        $(
+> +            ::kernel::macros::paste! {
+> +            /// Find Last Set Bit: return the 1-based index of the last =
+(i.e. most significant) set
+> +            /// bit in `v`.
+> +            ///
+> +            /// Equivalent to the C `fls` function.
+> +            ///
+> +            /// # Examples
+> +            ///
+> +            /// ```
+> +            /// use kernel::num::fls_u32;
+> +            ///
+> +            /// assert_eq!(fls_u32(0x0), 0);
+> +            /// assert_eq!(fls_u32(0x1), 1);
+> +            /// assert_eq!(fls_u32(0x10), 5);
+> +            /// assert_eq!(fls_u32(0xffff), 16);
+> +            /// assert_eq!(fls_u32(0x8000_0000), 32);
+> +            /// ```
+> +            #[inline(always)]
+> +            pub const fn [<fls_ $t>](v: $t) -> u32 {
+
+Can we name this `find_last_set_bit_ $t`? When the upstream function
+lands, we should also rename this one.
+
+---
+Cheers,
+Benno
+
+> +                $t::BITS - v.leading_zeros()
+> +            }
+> +            }
+> +        )+
+> +    };
 > +}
 > +
-> +/**
-> + * pse_flush_pw_ds - flush all PSE power domains of a PSE
-> + * @pcdev: a pointer to the initialized PSE controller device
-> + */
-> +static void pse_flush_pw_ds(struct pse_controller_dev *pcdev)
-> +{
-> +	struct pse_power_domain *pw_d;
-> +	int i;
-> +
-> +	for (i = 0; i < pcdev->nr_lines; i++) {
-> +		if (!pcdev->pi[i].pw_d)
-> +			continue;
-> +
-> +		pw_d = xa_load(&pse_pw_d_map, pcdev->pi[i].pw_d->id);
-> +		if (!pw_d)
-> +			continue;
-> +
-> +		kref_put_mutex(&pw_d->refcnt, __pse_pw_d_release,
-> +			       &pse_pw_d_mutex);
-> +	}
-> +}
+> +impl_fls!(usize, u8, u16, u32, u64, u128);
 
-AFAIU the release function (__pse_pw_d_release) is supposed to release
-the mutex. 
