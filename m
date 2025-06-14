@@ -1,98 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041572AE74
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 07:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6672E17D7;
+	Sat, 14 Jun 2025 07:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749887236; cv=none; b=lpGq69qweIqY8jJodMGtTfJL85VdDld44z6/w+X1ELgKkLeznyE8MZat1KYm4df5dzT1hm7eXl6cH7/HxHYgxCzK9hPBqcs51NMMfDakhxhqp3Q+tQiL0srYrVILvNW98Tr+1aECSC/upFUsWbRxDsQK6Xc0gPE3qawzhnPSQeI=
+	t=1749887344; cv=none; b=Jz1+AXT2feIPOPgnMaVhl6RGalNDFnSQ6vzfy2UAjmORP+s9FAhn6HjMTFKNBZOR9/36qogq9F+WKzc2FJfp0j3iVGfPM60wXsX4aJwciPAfoRuDy7QMhP14I/dHYgoY9lzOCaLbS19NPFnfaIkZGz7EV1GkRvMRl1Gx7aadsB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749887236; c=relaxed/simple;
-	bh=hD69HgNr5+rpwXa4azp7eDgeIFvY5wfOsUL5MKSf6I0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hN2/9bXHvjRrn3ZEZjtjNHPMnvicrI0igLmGULCWzzo1IXZheXhRAR68UYX+mbyxDRasWI4ajL4zaaUb9hYZav6IF+Sf+8hKW4zNMK2hIRQI1ih8rOI1H+Vty6iF7zaJfTnGhif3Cl8sHDBn6Cp0uS6Be8idZV8KcRhhyZj64ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwsbOApR; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749887344; c=relaxed/simple;
+	bh=hK2ZgYosNGPjzPukbx6c+1KX8W5yyH+XoQKnOeQo9Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rOfl3qhit7T5N4pSA6wG/eV5OECl7uIFreYJ8+Hv0rzVOE5Wcf01O+ev3RcnX3kXqfmzSNidETtAQJ1qP0vGoL/rL5FMKPQmdy4EPLXQzfPPaf29+sCgJcERtvxP+b/LeXI7euYsdoPVngBu2QzM4z+6rhKNuwhxj8oG/ZAnx34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXdUj6+i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwsbOApR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749887235; x=1781423235;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=hD69HgNr5+rpwXa4azp7eDgeIFvY5wfOsUL5MKSf6I0=;
-  b=bwsbOApRCdMGAPYIg1M4Kzeqb4bnuXDVL6YXXyKgDJfq8rcDNbUEHthP
-   s9y/bjBxZZPUxa+w8ZZUk6n8OEQk9SV3KuRZwyMzcU/YAoADlawlrlg3Z
-   Q6uLNXet5cPcOC+Eaya1MZcc98fpBqt02ibcEyGfo5enDYPLaxs8sI/Ee
-   t/rTJnWGe9mLo6eb9ImRaBJN7TRIUHMwR5pRAh7XK3Rwia5bLQkcE/dxB
-   vImYqHO9WzOYYKbAj1gu68IpO6kH1/YfKsRcu47ZV7v8iFBGMTVo5Ll0i
-   umbmlq9Q6cOPYrrSUhe7Q1H2fQEr1AdaS1M/cw8XXD0DEPlljawGP7B+D
-   w==;
-X-CSE-ConnectionGUID: UWQPeiFjSXCCrvqMdncPhw==
-X-CSE-MsgGUID: jmZKzzdCRgSNEPoBu77HpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="55901344"
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="55901344"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 00:47:14 -0700
-X-CSE-ConnectionGUID: TXPiX2H5SgeDbQSsxAQwlg==
-X-CSE-MsgGUID: OBYHtrNYQd6ND21oqHzFvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="148005749"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 14 Jun 2025 00:47:12 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQLba-000DN8-1l;
-	Sat, 14 Jun 2025 07:47:10 +0000
-Date: Sat, 14 Jun 2025 15:46:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Brent Lu <brent.lu@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>
-Subject: ld.lld: error: undefined symbol: snd_soc_acpi_intel_get_codec_name
-Message-ID: <202506141543.dN0JJyZC-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXdUj6+i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C05C4CEEB;
+	Sat, 14 Jun 2025 07:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749887343;
+	bh=hK2ZgYosNGPjzPukbx6c+1KX8W5yyH+XoQKnOeQo9Do=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QXdUj6+i9UKbIc+5lo/ULhNd6+o7TktQg34mJ3+Rx9WAN54m5sw1CIrOrsdip3Abs
+	 eraOgjOZWna7CSn3lVQ2Pwe0+b6exjMDjsYCwnNcpGQcarWJJ2rZP0L4uCdbQTaLZ8
+	 kFT/ZluD9iYBxSvWxKFe8s3m8UxeodalazPX4yDd1UoR3wMoJgrZlZ+0o9fqfjsjFr
+	 udtFFunuoaGDzrYCEq6xNa4sGCI4zYqfxu9R/Luax37/6f51jxQdHnJW62d6gDQRsq
+	 0fG8KoSz1HcUk3o9FpuBi1m9Y6PFXIY6kYnogtXQIrQG7eyCbwsA68rzI2ISme8TLF
+	 NeLlNCm6A4kYw==
+Date: Sat, 14 Jun 2025 09:48:58 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, daniel@makrotopia.org
+Subject: Re: [net-next v1] net: ethernet: mtk_eth_soc: support named IRQs
+Message-ID: <aE0pav5c8Ji1Q7br@lore-rh-laptop>
+References: <20250613191813.61010-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BsiHWnyDui/cxXyo"
+Content-Disposition: inline
+In-Reply-To: <20250613191813.61010-1-linux@fw-web.de>
+
+
+--BsiHWnyDui/cxXyo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   4774cfe3543abb8ee98089f535e28ebfd45b975a
-commit: b28b23dea31497548010c248398162ef4c25cfd2 ASoC: Intel: skl_hda_dsp_generic: use common module for DAI links
-date:   9 months ago
-config: i386-randconfig-052-20250614 (https://download.01.org/0day-ci/archive/20250614/202506141543.dN0JJyZC-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506141543.dN0JJyZC-lkp@intel.com/reproduce)
+> From: Frank Wunderlich <frank-w@public-files.de>
+>=20
+> Add named interrupts and keep index based fallback for exiting devicetree=
+s.
+>=20
+> Currently only rx and tx IRQs are defined to be used with mt7988, but
+> later extended with RSS/LRO support.
+>=20
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 24 +++++++++++++--------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/et=
+hernet/mediatek/mtk_eth_soc.c
+> index b76d35069887..fcec5f95685e 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -5106,17 +5106,23 @@ static int mtk_probe(struct platform_device *pdev)
+>  		}
+>  	}
+> =20
+> -	for (i =3D 0; i < 3; i++) {
+> -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+> -			eth->irq[i] =3D eth->irq[0];
+> -		else
+> -			eth->irq[i] =3D platform_get_irq(pdev, i);
+> -		if (eth->irq[i] < 0) {
+> -			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
+> -			err =3D -ENXIO;
+> -			goto err_wed_exit;
+> +	eth->irq[1] =3D platform_get_irq_byname(pdev, "tx");
+> +	eth->irq[2] =3D platform_get_irq_byname(pdev, "rx");
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506141543.dN0JJyZC-lkp@intel.com/
+Hi Frank,
 
-All errors (new ones prefixed by >>):
+doing so you are not setting eth->irq[0] for MT7988 devices but it is actua=
+lly
+used in mtk_add_mac() even for non-MTK_SHARED_INT devices. I guess we can r=
+educe
+the eth->irq array size to 2 and start from 0 even for the MT7988 case.
+What do you think?
 
->> ld.lld: error: undefined symbol: snd_soc_acpi_intel_get_codec_name
-   >>> referenced by sof_board_helpers.c:184 (sound/soc/intel/boards/sof_board_helpers.c:184)
-   >>>               sound/soc/intel/boards/sof_board_helpers.o:(sof_intel_board_set_dai_link) in archive vmlinux.a
-   >>> referenced by sof_board_helpers.c:340 (sound/soc/intel/boards/sof_board_helpers.c:340)
-   >>>               sound/soc/intel/boards/sof_board_helpers.o:(sof_intel_board_set_dai_link) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: snd_soc_acpi_intel_detect_codec_type
-   >>> referenced by sof_board_helpers.c:754 (sound/soc/intel/boards/sof_board_helpers.c:754)
-   >>>               sound/soc/intel/boards/sof_board_helpers.o:(sof_intel_board_get_ctx) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: snd_soc_acpi_intel_detect_amp_type
-   >>> referenced by sof_board_helpers.c:755 (sound/soc/intel/boards/sof_board_helpers.c:755)
-   >>>               sound/soc/intel/boards/sof_board_helpers.o:(sof_intel_board_get_ctx) in archive vmlinux.a
+Regards,
+Lorenzo
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +	if (eth->irq[1] < 0 || eth->irq[2] < 0) {
+> +		for (i =3D 0; i < 3; i++) {
+> +			if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+> +				eth->irq[i] =3D eth->irq[0];
+> +			else
+> +				eth->irq[i] =3D platform_get_irq(pdev, i);
+> +
+> +			if (eth->irq[i] < 0) {
+> +				dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
+> +				err =3D -ENXIO;
+> +				goto err_wed_exit;
+> +			}
+>  		}
+>  	}
+> +
+>  	for (i =3D 0; i < ARRAY_SIZE(eth->clks); i++) {
+>  		eth->clks[i] =3D devm_clk_get(eth->dev,
+>  					    mtk_clks_source_name[i]);
+> --=20
+> 2.43.0
+>=20
+
+--BsiHWnyDui/cxXyo
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaE0pZgAKCRA6cBh0uS2t
+rEsYAQC/qq1Dy8AVNZxEa3E1iSwTgFoyhGkr9kvRgiXfnALDaAD/W5KJDTciKWY3
+un1QrUhybLW5YPmxfQGgFZXWKUY1fw8=
+=emYc
+-----END PGP SIGNATURE-----
+
+--BsiHWnyDui/cxXyo--
