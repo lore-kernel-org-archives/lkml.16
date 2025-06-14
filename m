@@ -1,127 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF9CAD2D
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F933D984
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749869051; cv=none; b=sUh0FPDq0G49o3TFHXtHfx46LclzmEZAvv+SobRDtPDWoZacheemwX8dAZbsrCToppUV98urZoG7LPFHmRSWHImR9NIg5/wwZtMBi45VM30sjagMxTwNf5TyBnnVyqob+OK/dOC5mTyUhuQrh0SHnIpXTLk6MUdiKuj+D2HsWSU=
+	t=1749869058; cv=none; b=JtvxIR0IGGlivzwlcJe/ICTgKhIY67QQUJ7Ksnb4KJxPBjAeg9hZrD8kB62W0CqO7qsqUvTU4yDE5X9aeCnzmSwXUVKFoipvW1k/tFs7+KMBCbbQjLwy3TpebKUBddBlImsXN6ISlbtIAkDFDP5B87+1CafaSL0HiHq7OQY8rrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749869051; c=relaxed/simple;
-	bh=YoydX6KJllF75bSQyt10iPjkEO1ww2xVJ6hbtSuGyXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ma9KdM+Uc8+gVqJrh/MZGyKfh2mQB2tWC6YaL5oO9ihZ18JjVQnUZ6D3zhjM1TrVOLB5Ggtj16dhEvcxk+JpeP81cXbDPEQykYiyCNtwWSq4aU5Gs1jOfemXkrrBy9UIWYbne4UE0q6+GgojZMwGwYT164LjwZCNs5yy/TFfEV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ATNt19zq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749869058; c=relaxed/simple;
+	bh=O4Gjahtz+bxdj0DKMQ4kZN+PrAiDLTI94bb1mdd/Cbo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EpaEmoZGJdHp7akxFNP/VUUk1lXAUPTZgwl5aLS5M9TquIl68rjd7repfaoG1yiHMuJykUWplKXcHTviwfosx/GoX5OPJkh5t/8+GdIrB1la1R2lUv7O08NfPJIvg5gyu9hB3PHJdmQLULI/sMfKhIiZtFzSA72AlITC7xnWQKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E2XxgT1H; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATNt19zq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749869048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fot5AeEWiVU6mEehA0HZNADyzIBvWxOueVJ+HmCquDQ=;
-	b=ATNt19zq+2IIGRWdYmnhptHw50Hdd5YqtGmGrL1nrr8zTiaEfKENrCLus+1eIrOPOEjM+Q
-	P6EiH0fmSfsJVBEIC0LS39b9QEdK8MdPCpaRsFqVnyqF4knoXTBX6zJjJUg+AgRJqWZHVp
-	CZ1olH0dehr4X07jFLiuhKfCImoud7M=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-aAiGCthtNGKAS6LSTCSzKA-1; Fri,
- 13 Jun 2025 22:42:01 -0400
-X-MC-Unique: aAiGCthtNGKAS6LSTCSzKA-1
-X-Mimecast-MFC-AGG-ID: aAiGCthtNGKAS6LSTCSzKA_1749868920
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E2FB19560B2;
-	Sat, 14 Jun 2025 02:41:59 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.42])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5F9EA1956094;
-	Sat, 14 Jun 2025 02:41:56 +0000 (UTC)
-Date: Sat, 14 Jun 2025 10:41:52 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jiri Bohac <jbohac@suse.cz>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
-Message-ID: <aEzhcIouq6OfJAF6@MiWiFi-R3L-srv>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
- <aEqpgDIBndZ5LXSo@dwarf.suse.cz>
- <20250612164735.76a1ea9a156cd254331ffdc4@linux-foundation.org>
- <925cdfc4-7878-4572-9a4d-9b99d149a652@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E2XxgT1H"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553b5165cf5so919940e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749869054; x=1750473854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X+VVpcsl+muuyX4iIii+C7p1j2iHR4sQbFNMEzoTLU4=;
+        b=E2XxgT1HxT7FSUpEn8ysa1zHdHbZi5M9fNCN3RbK7/WGW1e0+PC7/pGxJnls4o0UV1
+         sccHriYtwK4E6JvHhXqnZCt926LobA350QLKmu1gqM0PswAKyMQzO4Z33s8LP4/LhjPr
+         xEE1ruOc9Hh8Ef6QOVwTl60vzP3ss0ZFd15jb6JBJwUW1E8pCN/aaobHIWUHao9nKP1M
+         DLhbqKY+fMrB9WNdImUSszEcCDVsq8pkGWfp6OhvIIKJYlz7jJgV3FCbKtltH4T1cjUk
+         9HgfLs9B9Fp5Q05QE1jeqHrR8e9u1sgZDOQua6xn5yPId/wUDcgyMrCZc3BhX4AlM8AP
+         yDZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749869054; x=1750473854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X+VVpcsl+muuyX4iIii+C7p1j2iHR4sQbFNMEzoTLU4=;
+        b=hr+OxkfBIbRb/GFujzdx3Po96Ks/braXdqr2chDHL7iAB4skJn/h8ew/MGc1jCDNwt
+         T/i4lyAtNMoMK4B3zPLIUZbqxfNxaIho1sanaNQHTf0DYlXI7gtnCJRUQeSFZWQlUJQ1
+         8b6pglbCjMrquf+6Dcw069m6NZ2TzoUpaANJjaWeddZ6d/BIfSL97rvXPZySXww4vOp6
+         gHuY7eNLAZSLKk0PNi5oHGJ958uNzaiONz+7Yr/tFKDYY6JWlUFUmYhNA0MTD+35+lkJ
+         4973JpuZe9KRsYxwpU2rQ16JdBaXUJB3uuwcbenORX3cAJMFVVzyO0LO9FD8KX5e2uOl
+         1PIw==
+X-Gm-Message-State: AOJu0Yws1cPrlmkvoLfxEv5DBS9NNLsiKCoY6Rs2/6tV0BrXSolA6s17
+	IqYM/4l2jc3qWQwsKWYpfFfqdJlVMHgC8yEeyZDSu3XpVZXjIMY+YYU/FK1f3E40799AaqXtie4
+	ffWeZN4TQMHvdablnXyTYnsAsjJrIgIENKeWWVSmiejRfGuJKnElbHL2lRw==
+X-Gm-Gg: ASbGncv675f0zXOItZvok0NzGpKN/7snYuPAJ+7wiyT/TvpQAZqt7Ox2xfSfE8QJ1bV
+	M9g4wY43HIqx/nBOAfGUdH8D/dV3bAQ/t4IM4D0LYqaW6i0F/MMbmUjfvadWhbMSXfWiwKuTKki
+	NLcv7Hyb3pVpk86aMy0B/1m/ggYaxHVpef/hyCqDd8QovepdccDMxaX84wbNZBDy03/5vBAUk=
+X-Google-Smtp-Source: AGHT+IGbFFoZybtkp0Y/GQQp8/WX/yBotzfDB3op3RjVDqzFnitxh+FqmA8M91LPnefNN4doUzykzHdc6tkb9Ck/vSY=
+X-Received: by 2002:a05:6512:1110:b0:54b:117b:b54b with SMTP id
+ 2adb3069b0e04-553b6f48f9amr321300e87.54.1749869054018; Fri, 13 Jun 2025
+ 19:44:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <925cdfc4-7878-4572-9a4d-9b99d149a652@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250519082042.742926976@linutronix.de> <20250519083026.533486349@linutronix.de>
+In-Reply-To: <20250519083026.533486349@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 13 Jun 2025 19:44:02 -0700
+X-Gm-Features: AX0GCFvPx10G5uykSJcgREAWzXpCFlb93ccf244qqpPfz4iEKngJswaZ55LDR8k
+Message-ID: <CANDhNCrMBaHhyrr3=kq=nyAp2iGhkJgKMqwO8+KeeYaZdbSa3A@mail.gmail.com>
+Subject: Re: [patch V2 15/26] timekeeping: Add AUX offset to struct timekeeper
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/13/25 at 11:19am, David Hildenbrand wrote:
-> On 13.06.25 01:47, Andrew Morton wrote:
-> > On Thu, 12 Jun 2025 12:18:40 +0200 Jiri Bohac <jbohac@suse.cz> wrote:
-> > 
-> > > When re-using the CMA area for kdump there is a risk of pending DMA
-> > > into pinned user pages in the CMA area.
-> > > 
-> > > Pages residing in CMA areas can usually not get long-term pinned and
-> > > are instead migrated away from the CMA area, so long-term pinning is
-> > > typically not a concern. (BUGs in the kernel might still lead to
-> > > long-term pinning of such pages if everything goes wrong.)
-> > > 
-> > > Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
-> > > be the source or destination of a pending DMA transfer.
-> > > 
-> > > Although there is no clear specification how long a page may be pinned
-> > > without FOLL_LONGTERM, pinning without the flag shows an intent of the
-> > > caller to only use the memory for short-lived DMA transfers, not a transfer
-> > > initiated by a device asynchronously at a random time in the future.
-> > > 
-> > > Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
-> > > kernel, giving such short-lived DMA transfers time to finish before
-> > > the CMA memory is re-used by the kdump kernel.
-> > > 
-> > > Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
-> > > a huge margin for a DMA transfer, yet not increasing the kdump time
-> > > too significantly.
-> > 
-> > Oh.  10s sounds a lot.  How long does this process typically take?
-> > 
-> > It's sad to add a 10s delay for something which some systems will never
-> > do.  I wonder if there's some simple hack we can add.  Like having a
-> > global flag which gets set the first time someone pins a CMA page
+On Mon, May 19, 2025 at 1:33=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> This offset will be used in the time getters of auxiliary clocks. It is
+> added to the "monotonic" clock readout.
+>
+> As auxiliary clocks do not utilize the offset fields of the core time
+> keeper, this is just an alias for offs_tai, so that the cache line layout
+> stays the same.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  include/linux/timekeeper_internal.h |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> ---
+> --- a/include/linux/timekeeper_internal.h
+> +++ b/include/linux/timekeeper_internal.h
+> @@ -67,6 +67,7 @@ struct tk_read_base {
+>   * @offs_real:                 Offset clock monotonic -> clock realtime
+>   * @offs_boot:                 Offset clock monotonic -> clock boottime
+>   * @offs_tai:                  Offset clock monotonic -> clock tai
+> + * @offs_aux:                  Offset clock monotonic -> clock AUX
+>   * @coarse_nsec:               The nanoseconds part for coarse time gett=
+ers
+>   * @id:                                The timekeeper ID
+>   * @tkr_raw:                   The readout base structure for CLOCK_MONO=
+TONIC_RAW
+> @@ -139,7 +140,10 @@ struct timekeeper {
+>         struct timespec64       wall_to_monotonic;
+>         ktime_t                 offs_real;
+>         ktime_t                 offs_boot;
+> -       ktime_t                 offs_tai;
+> +       union {
+> +               ktime_t         offs_tai;
+> +               ktime_t         offs_aux;
+> +       };
 
-I have the same worry as Andrew. One system run off rails, we don't try
-to slam the brake, but wait 10 seconds instead to do that. Lucky we have
-noticed people the risk.
+Probably could use a clarifying comment similar to what you have in
+the commit message "auxiliary clocks do not utilize the offset fields
+of the core time keeper"
 
-> 
-> We would likely have to do that for any GUP on such a page (FOLL_GET |
-> FOLL_PIN), both from gup-fast and gup-slow.
+Otherwise,
+ Acked-by: John Stultz <jstultz@google.com>
 
-There could be such GUP page, not always? This feature is an opt-in for
-users, they can decide or tune the waiting time too?
-
-My personal opinion. I will not suggest people to use it in RHEL, while
-other people feel free to try it as the risk has been warned.
-
-> 
-> Should work, but IMHO can be optimized later, on top of this series.
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
-
+thanks
+-john
