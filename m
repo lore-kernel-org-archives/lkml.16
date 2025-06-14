@@ -1,202 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D01E2741AD;
-	Sat, 14 Jun 2025 12:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653F222F774;
+	Sat, 14 Jun 2025 12:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749904189; cv=none; b=WX1PrHNsKL4g1X0q5/WmAyAarQisUm/gGUBxMp9Y93zJ8tL64BNCY7Ujr6MRC7l/hB8ZbVtrZsClzDiQ71YZ8+7BFHjWaJhD+Bzc+Ipybrxbl0f8X99YWsthtJECueUHnmO4aHGH0Y+ftMTlYKH7T5BBQPGI+U7PLlh/VQRRFKk=
+	t=1749904441; cv=none; b=mFJMuujk+ms/Q2QtILhVcGkKA+x2oMXoblAv26deDqi88fJIcjXXfxpOfMJnn+CiUNY+wA7olo4FXt3uHMzlh7yPtCS8g56EWY8oym1OI/bG1EK+tVuMI99dBDgqB5xSBsalXBhe0JPm6xQ558OLYzBwKEzMkTw6J7ocIgLH8sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749904189; c=relaxed/simple;
-	bh=Wfcj9Z0uZC+J1XfReVkQBWAOdiJOlKthbX24fnDHccY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPChatGPlCVM827nfKRpplkfDl+dRo1Nu1XSHt3e0u0y+s5n9P4ydEk+N+kKU+lfKyljuMl3FZMVC8d2vqzm9UcwRrhuRG94sfotQM4abfjZwJsl+YTSqnB8z1k3IdmVskV5g+QGYdFPMG2xRuwtAloub3cjBh2yQkRovtgNEFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uq16Z+/L; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749904441; c=relaxed/simple;
+	bh=V/hhGxDiuKJtoDq8go0oysqODmgNazHNjVE/A1L/JQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G1J7Ic9HcxpFnD4QCwycCfZznPhVNw3Bp/wIva5/nFyW6jJR22JA0tGdm+ZDND3mZAKjbmiulECJngD69Q7o9foxAeyg+5HAsLEyE4hWLEToIcinPMWkTUv9P1OHmMPCCAA/N9hdDcFURiz09TwCjZEyrnrBIJoPGDkf0TORho0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDNbfp2Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uq16Z+/L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749904187; x=1781440187;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Wfcj9Z0uZC+J1XfReVkQBWAOdiJOlKthbX24fnDHccY=;
-  b=Uq16Z+/LqCrWXL4i5spmeS3IhNYwnuvZSsQyaNET8DDifLh7dGm6C8pv
-   xwEksJIs7AJzIsBruNY9hi9ctLRfB1fnEDVDZhPbuT6ETnGMIFajI8mX2
-   G2otIRU1RsRqeJj/3lEALAtFPLsRgAv/j6PMSYFzvD9auE9REIivzErHz
-   HqWEIyNwPWRDc0Qz3i5ZvEYPD3eUKGhluJzvLFiK1GhGj5TWZ/pvAESGc
-   etm5U0ljZ9xwbqRtBudqPAKwndFfFHHlfuY5baJ5OgaoMwKTcDyrgQCcQ
-   G9RMDB0JWpcSYMviDl31rqzq/SFANVWD3zBg72XXAmCooT2xHROIKuJno
-   A==;
-X-CSE-ConnectionGUID: IxM9ckuATp2igKjq2z3BDA==
-X-CSE-MsgGUID: pncXVvAnR26NkpoH77feyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="63460139"
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="63460139"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 05:29:47 -0700
-X-CSE-ConnectionGUID: eRUp2Z2+TQeA5wES6VPyZw==
-X-CSE-MsgGUID: ysyuDi1DR/WRKncs7Q0YCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="147943808"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 14 Jun 2025 05:29:44 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQQ10-000DVO-19;
-	Sat, 14 Jun 2025 12:29:42 +0000
-Date: Sat, 14 Jun 2025 20:28:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: James Houghton <jthoughton@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, Vipin Sharma <vipinsh@google.com>,
-	David Matlack <dmatlack@google.com>,
-	James Houghton <jthoughton@google.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] KVM: x86/mmu: Track TDP MMU NX huge pages
- separately
-Message-ID: <202506142050.kfDUdARX-lkp@intel.com>
-References: <20250613202315.2790592-2-jthoughton@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDNbfp2Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2FAC4CEEB;
+	Sat, 14 Jun 2025 12:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749904440;
+	bh=V/hhGxDiuKJtoDq8go0oysqODmgNazHNjVE/A1L/JQM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oDNbfp2Z453ar8cK7g8nF+OhDGvrDvZzFQ7JKYfS+NZfgKzFd1FglaWwkh/zZN3yE
+	 MN/qYWwIUT8hYpIyyyMUPONwtqjkQW4P2tYDeCgDU0wp4ybclhjs1DBId6drGadp9P
+	 Zv92/rp4znlqOjlwQ23uqSN2baulcDlZartEYZgI6EX9Pb34GVTP3AawuOPMw8Tp86
+	 5hLrT7ZiJ3nWL/g56igqBfQxb3TDwQFBQD/bUG+7+XW79tMqafd7bOBh0pxTg9fdO3
+	 IMELkVJablSrKZVSdny13t1vf8iZY4D1ZhjOVn2gxbBbIbqvj+uZnsoqdLJ4zDVyvP
+	 Y552g7HhHiObA==
+Date: Sat, 14 Jun 2025 13:33:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: surajsonawane0215@gmail.com
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] iio: chemical: Add driver for Sharp GP2Y1010AU0F
+Message-ID: <20250614133352.18cec415@jic23-huawei>
+In-Reply-To: <20250612100758.13241-4-surajsonawane0215@gmail.com>
+References: <20250612100758.13241-1-surajsonawane0215@gmail.com>
+	<20250612100758.13241-4-surajsonawane0215@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613202315.2790592-2-jthoughton@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi James,
+On Thu, 12 Jun 2025 15:37:46 +0530
+surajsonawane0215@gmail.com wrote:
 
-kernel test robot noticed the following build errors:
+> From: Suraj Sonawane <surajsonawane0215@gmail.com>
+>=20
+> Implement support for the Sharp GP2Y1010AU0F optical dust sensor which
+> measures particulate matter concentration using infrared scattering.
+> The sensor requires precise 320=CE=BCs LED pulses with ADC sampling at 28=
+0=CE=BCs
+> after LED activation (as specified in datasheet section 6-1).
+>=20
+> The driver provides:
+> - Raw density readings via IIO_DENSITY channel type
+> - Hardware-agnostic operation via GPIO and IIO ADC interfaces
+> - Power management through regulator framework
+> - Device Tree binding support
+>=20
+> Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet=
+/gp2y1010au_appl_e.pdf
+>=20
+> Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
+A few additional comments from me.
 
-[auto build test ERROR on 8046d29dde17002523f94d3e6e0ebe486ce52166]
+Jonathan
 
-url:    https://github.com/intel-lab-lkp/linux/commits/James-Houghton/KVM-x86-mmu-Track-TDP-MMU-NX-huge-pages-separately/20250614-042620
-base:   8046d29dde17002523f94d3e6e0ebe486ce52166
-patch link:    https://lore.kernel.org/r/20250613202315.2790592-2-jthoughton%40google.com
-patch subject: [PATCH v4 1/7] KVM: x86/mmu: Track TDP MMU NX huge pages separately
-config: i386-randconfig-003-20250614 (https://download.01.org/0day-ci/archive/20250614/202506142050.kfDUdARX-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506142050.kfDUdARX-lkp@intel.com/reproduce)
+>  obj-$(CONFIG_PMS7003) +=3D pms7003.o
+> diff --git a/drivers/iio/chemical/gp2y1010.c b/drivers/iio/chemical/gp2y1=
+010.c
+> new file mode 100644
+> index 000000000..3a8657035
+> --- /dev/null
+> +++ b/drivers/iio/chemical/gp2y1010.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Suraj Sonawane <surajsonawane0215@gmail.com>
+> + * Sharp GP2Y1010AU0F Dust Sensor Driver
+> + * Datasheet: https://global.sharp/products/device/lineup/data/pdf/datas=
+heet/gp2y1010au_appl_e.pdf
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +/* Timings based on GP2Y1010AU0F datasheet Section 6-1 */
+> +#define GP2Y1010_LED_PULSE_US     320  /* Total LED ON time (0.32 ms) */
+> +#define GP2Y1010_SAMPLE_DELAY_US  280  /* ADC sampling after LED ON (0.2=
+8 ms) */
+> +
+> +struct gp2y1010_data {
+> +	struct gpio_desc *led_gpio;
+> +	struct iio_channel *adc_chan;
+> +	int v_clean;  /* Calibration: voltage in clean air (mV) */
+> +};
+> +
+> +static int gp2y1010_read_raw(struct iio_dev *indio_dev,
+> +							 struct iio_chan_spec const *chan,
+> +							 int *val, int *val2, long mask)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506142050.kfDUdARX-lkp@intel.com/
+Odd alignment. Aim for under the s of struct. That is immediately after the=
+ bracket.
 
-All errors (new ones prefixed by >>):
+> +{
+> +	struct gp2y1010_data *data =3D iio_priv(indio_dev);
+> +	int ret, voltage_mv;
+> +
+> +	if (mask !=3D IIO_CHAN_INFO_RAW)
+> +		return -EINVAL;
+> +
+> +	gpiod_set_value(data->led_gpio, 1);
+> +	udelay(GP2Y1010_SAMPLE_DELAY_US);
+> +
+> +	ret =3D iio_read_channel_processed(data->adc_chan, &voltage_mv);
+> +
+> +	/* Wait remaining time to complete 320 =C2=B5s total LED pulse width */
+> +	udelay(GP2Y1010_LED_PULSE_US - GP2Y1010_SAMPLE_DELAY_US);
+> +	gpiod_set_value(data->led_gpio, 0);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val =3D voltage_mv;
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static const struct iio_info gp2y1010_info =3D {
+> +	.read_raw =3D gp2y1010_read_raw,
+> +};
+> +
+> +static const struct iio_chan_spec gp2y1010_channels[] =3D {
+> +	{
+> +		.type =3D IIO_DENSITY,
+> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
+> +	},
 
-   arch/x86/kvm/mmu/mmu.c: In function 'kvm_recover_nx_huge_pages':
->> arch/x86/kvm/mmu/mmu.c:7609:38: error: 'KVM_TDP_MMU' undeclared (first use in this function)
-    7609 |                 else if (mmu_type == KVM_TDP_MMU)
-         |                                      ^~~~~~~~~~~
-   arch/x86/kvm/mmu/mmu.c:7609:38: note: each undeclared identifier is reported only once for each function it appears in
+Where there is only one channel, no need to bother with an array.
+There are lots of drivers that do this, but I'm trying to discourage it
+in new drivers.
+indio_dev->channels =3D &gp271010_channel;
+indio_dev->num_channels =3D 1;
 
+is obvious enough.
 
-vim +/KVM_TDP_MMU +7609 arch/x86/kvm/mmu/mmu.c
+> +};
+> +
+> +static int gp2y1010_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct gp2y1010_data *data;
+> +	enum iio_chan_type ch_type;
+> +	int ret;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	data =3D iio_priv(indio_dev);
+> +	data->v_clean =3D 900;
+> +
+> +	data->led_gpio =3D devm_gpiod_get(dev, "led", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->led_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(data->led_gpio), "Failed to get LED =
+GPIO\n");
+> +
+> +	ret =3D devm_regulator_get_enable(dev, "vdd");
+> +	if (ret)
+> +		return ret;
+> +	udelay(100);
+> +
+> +	data->adc_chan =3D devm_iio_channel_get(dev, "dust");
+> +	if (IS_ERR(data->adc_chan))
+> +		return dev_err_probe(dev, PTR_ERR(data->adc_chan), "Failed to get ADC =
+channel\n");
+> +
+> +	ret =3D iio_get_channel_type(data->adc_chan, &ch_type);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ch_type !=3D IIO_DENSITY)
+> +		return dev_err_probe(dev, -EINVAL, "ADC channel is not density type\n"=
+);
 
-  7537	
-  7538	static void kvm_recover_nx_huge_pages(struct kvm *kvm,
-  7539					      enum kvm_mmu_type mmu_type)
-  7540	{
-  7541		unsigned long to_zap = nx_huge_pages_to_zap(kvm, mmu_type);
-  7542		struct list_head *nx_huge_pages;
-  7543		struct kvm_memory_slot *slot;
-  7544		struct kvm_mmu_page *sp;
-  7545		LIST_HEAD(invalid_list);
-  7546		bool flush = false;
-  7547		int rcu_idx;
-  7548	
-  7549		nx_huge_pages = &kvm->arch.possible_nx_huge_pages[mmu_type].pages;
-  7550	
-  7551		rcu_idx = srcu_read_lock(&kvm->srcu);
-  7552		write_lock(&kvm->mmu_lock);
-  7553	
-  7554		/*
-  7555		 * Zapping TDP MMU shadow pages, including the remote TLB flush, must
-  7556		 * be done under RCU protection, because the pages are freed via RCU
-  7557		 * callback.
-  7558		 */
-  7559		rcu_read_lock();
-  7560	
-  7561		for ( ; to_zap; --to_zap) {
-  7562			if (list_empty(nx_huge_pages))
-  7563				break;
-  7564	
-  7565			/*
-  7566			 * We use a separate list instead of just using active_mmu_pages
-  7567			 * because the number of shadow pages that be replaced with an
-  7568			 * NX huge page is expected to be relatively small compared to
-  7569			 * the total number of shadow pages.  And because the TDP MMU
-  7570			 * doesn't use active_mmu_pages.
-  7571			 */
-  7572			sp = list_first_entry(nx_huge_pages,
-  7573					      struct kvm_mmu_page,
-  7574					      possible_nx_huge_page_link);
-  7575			WARN_ON_ONCE(!sp->nx_huge_page_disallowed);
-  7576			WARN_ON_ONCE(!sp->role.direct);
-  7577	
-  7578			/*
-  7579			 * Unaccount and do not attempt to recover any NX Huge Pages
-  7580			 * that are being dirty tracked, as they would just be faulted
-  7581			 * back in as 4KiB pages. The NX Huge Pages in this slot will be
-  7582			 * recovered, along with all the other huge pages in the slot,
-  7583			 * when dirty logging is disabled.
-  7584			 *
-  7585			 * Since gfn_to_memslot() is relatively expensive, it helps to
-  7586			 * skip it if it the test cannot possibly return true.  On the
-  7587			 * other hand, if any memslot has logging enabled, chances are
-  7588			 * good that all of them do, in which case unaccount_nx_huge_page()
-  7589			 * is much cheaper than zapping the page.
-  7590			 *
-  7591			 * If a memslot update is in progress, reading an incorrect value
-  7592			 * of kvm->nr_memslots_dirty_logging is not a problem: if it is
-  7593			 * becoming zero, gfn_to_memslot() will be done unnecessarily; if
-  7594			 * it is becoming nonzero, the page will be zapped unnecessarily.
-  7595			 * Either way, this only affects efficiency in racy situations,
-  7596			 * and not correctness.
-  7597			 */
-  7598			slot = NULL;
-  7599			if (atomic_read(&kvm->nr_memslots_dirty_logging)) {
-  7600				struct kvm_memslots *slots;
-  7601	
-  7602				slots = kvm_memslots_for_spte_role(kvm, sp->role);
-  7603				slot = __gfn_to_memslot(slots, sp->gfn);
-  7604				WARN_ON_ONCE(!slot);
-  7605			}
-  7606	
-  7607			if (slot && kvm_slot_dirty_track_enabled(slot))
-  7608				unaccount_nx_huge_page(kvm, sp);
-> 7609			else if (mmu_type == KVM_TDP_MMU)
-  7610				flush |= kvm_tdp_mmu_zap_sp(kvm, sp);
-  7611			else
-  7612				kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
-  7613			WARN_ON_ONCE(sp->nx_huge_page_disallowed);
-  7614	
-  7615			if (need_resched() || rwlock_needbreak(&kvm->mmu_lock)) {
-  7616				kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
-  7617				rcu_read_unlock();
-  7618	
-  7619				cond_resched_rwlock_write(&kvm->mmu_lock);
-  7620				flush = false;
-  7621	
-  7622				rcu_read_lock();
-  7623			}
-  7624		}
-  7625		kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
-  7626	
-  7627		rcu_read_unlock();
-  7628	
-  7629		write_unlock(&kvm->mmu_lock);
-  7630		srcu_read_unlock(&kvm->srcu, rcu_idx);
-  7631	}
-  7632	
+I'm confused.  The ADC channel type providing us a measurement service (as =
+here we
+are the consumer) is going to be voltage (or maybe current) because ADCs do=
+n't measure dust.
+This driver has to do the conversion from voltage to the value needed to re=
+port a density channel.=20
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+> +	indio_dev->name =3D dev_name(dev);
+
+Hard code the part number here rather than getting it from elsewhere.  That=
+ makes
+it much easier to see that this is what we expect.
+
+> +	indio_dev->info =3D &gp2y1010_info;
+> +	indio_dev->channels =3D gp2y1010_channels;
+> +	indio_dev->num_channels =3D ARRAY_SIZE(gp2y1010_channels);
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
