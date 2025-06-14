@@ -1,137 +1,236 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from kuriko.dram.page (kuriko.dram.page [65.108.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ADF13D24D;
-	Sat, 14 Jun 2025 08:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362691F4295;
+	Sat, 14 Jun 2025 08:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749890265; cv=none; b=jog/ajBGecvTfuVHnEFtnCxU6TbEgnfckM8JZqI/HW+eCMerNSiR8U6plyhoV6Ljotijw9u7H+eKoE4zJvev6PlkLTArd0zujtUDNnb6ibXwy8VcO6TcylKvKNLYxGGmqdUlkv0RM3WOx+jvjQy/1FEFp6bap3jvF40OiTYr3xo=
+	t=1749890282; cv=none; b=p04QUbtK4SzpgwmMN6cvM86WwwMLMtK/QUCnUrL3VEyJW4G1S01JKY3f7yoPCH6SPQcyL1+Om0rb7hoX4ed+9XzgPkuR5joFVq1gCDbBVUUpb+8E7cuV2UqeP6rvCeQA0tGlW0/sGdM94oWvdckyBytMznC76c4vbZMq4i0d5LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749890265; c=relaxed/simple;
-	bh=TVquBLuNBJXr36WNR7AmdaS9D8iXaiiGBnI0U0Gk1jM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BMSrWAdzptlulqDWOc/szfoO72/bzpJhGyPqZS2hzpmthP+yHbQcyDbFs2yPt5UH7wJI5OwcGX8u5iiugelURUan7JIFDaQznmqAe+BPqR17GS/herjVngdIURHHvIuKQR7hYZLq4iVM3PhSYHJmkBSPGBmxqT0bOMXNdIo6Er4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kw9Qw7gA; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749890282; c=relaxed/simple;
+	bh=QmVJFUSgwhoO26kXAq78Til/4V6ltLSDjxI6LJFEZPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RREzOY/w75Ur/Jl8YEm8lsF7dURLYyCb8Ap/UBPUBBDTGj3P8tGaOa9aq+vMncQt8R3/CSHKAxO0JDcGMfW+HBtFR/QkQ10PUa6p+IgdFMBcbd9A15HxwHaCY2gPbINAe+l6NCPAiqLyy34/OsoLcAd0YXnGCfDNmafVhzBxUjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dram.page; spf=pass smtp.mailfrom=dram.page; dkim=pass (1024-bit key) header.d=dram.page header.i=@dram.page header.b=SPrAeDlN; arc=none smtp.client-ip=65.108.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dram.page
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dram.page
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kw9Qw7gA"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1720600f8f.2;
-        Sat, 14 Jun 2025 01:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749890262; x=1750495062; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DFHg0dGblUI1wXsyidBNRkPn8cZAl+YNomAjzoYOkwA=;
-        b=kw9Qw7gAyPiSyTmNp5AdCcfypW6jJpjZZN7stCtuvmib8LZ1pZqbgN9CoQFCpzsgU0
-         z+u4fRJfxQK9sPc6s8fffBypNWVUkufWUeoRvCskscGwBBBFMEkRmHtq2uZlNdVRPMmi
-         fHuD2EmYFW8Cp6MuqcVDUfBThlTI1S7HcDGHl0DZaIJrCHEyvjfn3q7zILuFL5k1n5oK
-         26VSmm0hW11SQd35kNSTy5hclvb0fE8mEVc1TQbWWtddS7JUERrKI+oXCyp0QuS2S/yD
-         EejuLG8SQqumAqmDukBtC1R5UJhqZu92AY3Sx7ynsUxkNKzQYYM4miqMp+9Ldcotv6ZJ
-         iW+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749890262; x=1750495062;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DFHg0dGblUI1wXsyidBNRkPn8cZAl+YNomAjzoYOkwA=;
-        b=ZyCR3HKjoCz310UyvRD25eW/2tTgZ5/NqzcHh/GARweGNNm+CEmmOHm/NNXsb96JYq
-         Crhryg4ZBRGN7vkD6x+v/dKMgMaYaNN+M0mbtSn4GG1p4zLHNJa6t2k8+VlgbUHdUEXM
-         nUGk46zIG085VdVoJZp7iDMbluROswbzhSAwQczyC4D6+cz33a6o9FzXZuIGq/GxmBwu
-         6tV75toA5vScnPfSr4PBOCVTOvJnlOwLs+teAuq494EYgBibemOe4daHAZwz2qQlpfgp
-         6u7LdIf1Pt2iMni5jWlbhJXDgxm3CcUHNqdxp6dOOajEQ7qGypngFMJCbEFOEcv5x6BB
-         jwuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQlpP9wXNC2MeP+6E0OjRN8y5Vhns13NDSPfrD4MJmTtbSP4QVnvWTVHUF1yTcPtWVfwd7N6R3HhP3DSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKGW38EPOuO7Wn2fIED70p9jRgXVTlMktSmXXz+BibCzMa+IPH
-	ht8VNso3NtPs7wo+lgsej+ZPYSZpMp8xHmqPjDMXZra89aSdEfWfKKNZOd2sdQ==
-X-Gm-Gg: ASbGnctdwA8wH2XU0A9yKa0QDIJ0VIn5xP9Km1jX46FJ+2RHBRZgCdRD8h3gV11S4ZI
-	Ob6st5cHqEyaDCKs4oO6VBWHVkxlon116iAJp5NljFplftL7KhI8p4suQ/im9+fhr+Fmjqxl3u9
-	zzrK5aNMzM15ozY74TxtIBEvC88+ghtRHUs2vMLK1tZy8xDOcIM4WST6ujUX221H2szyWiUpSeu
-	GJKvyFB6wCTPQWVWloLYgrqPd4Lau7E3ttwJNk7BB1Lbj7ClDtttkc1gEG50OVYZYb+hQETLA4v
-	yx9NyyHcr7hC05qpveWab6WZpAR42ybhU0be+qkWEHG9I1sHBxeh4rIVAe/FRpm5lI6gq5D5VHd
-	YV35oXv9tbhCGJfKRgg==
-X-Google-Smtp-Source: AGHT+IEIrW+l6vT8Io+ifa59NmDV+JtutKZYfxi1mVjhOq/sxxGD0yJDcemkj+COMxzO/M5iqsSnuA==
-X-Received: by 2002:a05:6000:402a:b0:3a5:2208:41e3 with SMTP id ffacd0b85a97d-3a572398dcfmr2312574f8f.4.1749890261594;
-        Sat, 14 Jun 2025 01:37:41 -0700 (PDT)
-Received: from masalkhi.. (pd907d170.dip0.t-ipconnect.de. [217.7.209.112])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a53f79sm4586328f8f.4.2025.06.14.01.37.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 01:37:41 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: wsa+renesas@sang-engineering.com
-Cc: linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Subject: [PATCH] i2c: core: Serialize 10-bit client instantiation with mutex
-Date: Sat, 14 Jun 2025 08:37:34 +0000
-Message-ID: <20250614083734.3385182-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=dram.page header.i=@dram.page header.b="SPrAeDlN"
+Message-ID: <2496104d-8eed-4d20-bfef-84beb8c4488f@dram.page>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dram.page; s=mail;
+	t=1749890278; bh=JfoqOGf4PRFQHFFeAQ7pJGRWNKKuIJYUM00ZQiFU31Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=SPrAeDlNXmaoNuoai8gQ+4GYWqXi7SHVmV5JLzzmw6Yf0BsBqvXfAbxy9HnnkmagZ
+	 rs86x4Sm1BQ0wmGBWtav/H7Eo6niWBKq/FW5bkzcEjx8Dcv0kO4Li4Abqbp9Z64m5p
+	 49C4Byrwroa4C8Kz7xjtQJEBAmFSvZuqkfCxaftU=
+Date: Sat, 14 Jun 2025 16:37:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH 5/8] riscv: dts: spacemit: Add dma bus and PDMA node for
+ K1 SoC
+To: Guodong Xu <guodong@riscstar.com>
+Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dlan@gentoo.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ p.zabel@pengutronix.de, drew@pdp7.com, emil.renner.berthing@canonical.com,
+ inochiama@gmail.com, geert+renesas@glider.be, tglx@linutronix.de,
+ hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
+ Ze Huang <huangze@whut.edu.cn>, elder@riscstar.com,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ spacemit@lists.linux.dev
+References: <20250611125723.181711-1-guodong@riscstar.com>
+ <20250611125723.181711-6-guodong@riscstar.com>
+ <2b17769e-2620-4f22-9ea5-f15d4adcb27b@dram.page>
+ <CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com>
+Content-Language: en-US
+From: Vivian Wang <uwu@dram.page>
+In-Reply-To: <CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add a mutex to protect against race conditions when instantiating
-10-bit address I2C clients. It serves the same purpose as the 7-bit
-address bitmap (addrs_in_instantiation), but uses a mutex instead,
-since 10-bit clients are rare and a full bitmap would unnecessarily
-increase the size of struct i2c_adapter.
+[Resent to get rid of HTML. This is my last try.]
 
-Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
----
- drivers/i2c/i2c-core-base.c | 8 +++++++-
- include/linux/i2c.h         | 3 +++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+On 6/14/25 10:53, Guodong Xu wrote:
+> On Fri, Jun 13, 2025 at 11:07 AM Vivian Wang<uwu@dram.page> wrote:
+>> Hi Guodong,
+>>
+>> On 6/11/25 20:57, Guodong Xu wrote:
+>>> <snip>
+>>>
+>>> -                     status = "disabled";
+>>> +             dma_bus: bus@4 {
+>>> +                     compatible = "simple-bus";
+>>> +                     #address-cells = <2>;
+>>> +                     #size-cells = <2>;
+>>> +                     dma-ranges = <0x0 0x00000000 0x0 0x00000000 
+>>> 0x0 0x80000000>,
+>>> +                                  <0x1 0x00000000 0x1 0x80000000 
+>>> 0x3 0x00000000>;
+>>> +                     ranges;
+>>>                };
+>> Can the addition of dma_bus and movement of nodes under it be extracted
+>> into a separate patch, and ideally, taken up by Yixun Lan without going
+>> through dmaengine? Not specifically "dram_range4", but all of these
+>> translations affects many devices on the SoC, including ethernet and
+> It was not my intention to add all the separate memory mapping buses into
+> one patch. I'd prefer to add them when there is at least one user.
+> The k1.dtsi at this moment, as I checked, has no real user beside the
+> so-called "dram_range4" in downstream vendor kernel (ie. dma_bus in this
+> patch). And that is what I did: grouping devices which share the same
+> dma address mapping as pdma0 into one single separated bus.
+>
+> The other buses, even if I add them, would be empty.
+>
+> What the SpacemiT team agreed upon so far, is the naming of these 
+> separated
+> buses. I listed them here for future reference purposes.
+>
+> If needed, I can send that in a RFC patchset, of course; or as a normal
+> PATCH, if Yixun is ok with that. However, please note, that would mean 
+> more
+> merging dependencies: PDMA dts, ethernet dts, usb dts, will have to 
+> depend
+> on this base 'buses' PATCH.
+>
+> Again, I prefer we add our own 'bus' when there is a need.
+>
+> +       soc {
+> +               storage_bus: bus@0 {
+> +                       /* USB, SDH storage controllers */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>;
+> +               };
+> +
+> +               multimedia_bus: bus@1 {
+> +                       /* VPU, GPU, DPU */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0x80000000 0x1 0x00000000
+> 0x3 0x80000000>;
+> +               };
+> +
+> +               pcie_bus: bus@2 {
+> +                       /* PCIe controllers */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0xb8000000 0x1 0x38000000
+> 0x3 0x48000000>;
+> +               };
+> +
+> +               camera_bus: bus@3 {
+> +                       /* ISP, CSI, imaging devices */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0x80000000 0x1 0x00000000
+> 0x1 0x80000000>;
+> +               };
+> +
+> +               dma_bus: bus@4 {
+> +                       /* DMA controller, and users */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x1 0x00000000 0x1 0x80000000
+> 0x3 0x00000000>;
+> +               };
+> +
+> +               network_bus: bus@5 {
+> +                       /* Ethernet, Crypto, JPU */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0x80000000 0x1 0x00000000
+> 0x0 0x80000000>;
+> +               };
+> +
+> +       }; /* soc */
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 2ad2b1838f0f..f5f53d378fff 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -929,6 +929,9 @@ int i2c_dev_irq_from_resources(const struct resource *resources,
- static int i2c_lock_addr(struct i2c_adapter *adap, unsigned short addr,
- 			 unsigned short flags)
- {
-+	if (flags & I2C_CLIENT_TEN)
-+		mutex_lock(&adap->addrs_10bit_lock);
-+
- 	if (!(flags & I2C_CLIENT_TEN) &&
- 	    test_and_set_bit(addr, adap->addrs_in_instantiation))
- 		return -EBUSY;
-@@ -939,7 +942,9 @@ static int i2c_lock_addr(struct i2c_adapter *adap, unsigned short addr,
- static void i2c_unlock_addr(struct i2c_adapter *adap, unsigned short addr,
- 			    unsigned short flags)
- {
--	if (!(flags & I2C_CLIENT_TEN))
-+	if (flags & I2C_CLIENT_TEN)
-+		mutex_unlock(&adap->addrs_10bit_lock);
-+	else
- 		clear_bit(addr, adap->addrs_in_instantiation);
- }
- 
-@@ -1538,6 +1543,7 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
- 	adap->locked_flags = 0;
- 	rt_mutex_init(&adap->bus_lock);
- 	rt_mutex_init(&adap->mux_lock);
-+	mutex_init(&adap->addrs_10bit_lock);
- 	mutex_init(&adap->userspace_clients_lock);
- 	INIT_LIST_HEAD(&adap->userspace_clients);
- 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 20fd41b51d5c..1d4d0577b5b1 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -765,6 +765,9 @@ struct i2c_adapter {
- 
- 	/* 7bit address space */
- 	DECLARE_BITMAP(addrs_in_instantiation, 1 << 7);
-+
-+	/* Lock for 10bit address instantiation */
-+	struct mutex addrs_10bit_lock;
- };
- #define to_i2c_adapter(d) container_of(d, struct i2c_adapter, dev)
- 
--- 
-2.43.0
+Ah, I didn't know the names were already decided.
 
+However, I still think we should at least separate the patch into two in 
+the same series, one adding the bus node and handling existing nodes, 
+and another adding the new node under it. This way, say someone starts 
+working on Crypto, they can simply depends on the first bus patch 
+without having to pull in the new node.
+
+I still prefer having a canonical buses patch though.
+
+If we're going to agree here on what the buses should look, I also have 
+two nitpicks, just so we get this sorted: Firstly, I think storage_bus 
+should be removed. Anything using storage_bus is already handled by 
+simply using 32-bit-only DMA, which is the default anyway. @Ze Huang: 
+Your USB controller falls under it, what do you think?
+
+Also, as suggested the node names must not have a made up unit address. 
+"bus@1" is inappropriate because they have no reg. The simple-bus schema 
+allows the node name to have a prefix like "foo-bus" [1] [2], so it 
+should be like:
+
+/* DMA controller, and users */
+dma_bus: dma-bus {
+     compatible = "simple-bus";
+     ranges;
+     #address-cells = <2>;
+     #size-cells = <2>;
+     dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+              <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
+};
+
+(Pardon the formatting; I don't know if the tabs survived Thunderbird.)
+
+[1]:https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/simple-bus.yaml 
+
+[2]:https://github.com/devicetree-org/dt-schema/commit/bab67075926b8bdc4093edbb9888aaa5bd8befd5 
+
+
+Well, that is the reason I wanted the bus things to be its own patch: I 
+think the DT maintainers should review these once and for all, not six 
+separate times as the drivers come in.
+
+>> USB3. See:
+>>
+>> https://lore.kernel.org/all/20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@whut.edu.cn/ 
+>>
+>> https://lore.kernel.org/all/20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn/ 
+>>
+>>
+>> (I haven't put eth{0,1} under dma_bus5 because in 6.16-rc1 there is
+>> none, but ideally we should fix this.)
+> So, as you are submitting the first node(s) under network_bus: bus@5, you
+> should have this added into your patchset, instead of sending out with 
+> none.
+I hope we can agree on what the bus nodes look like before we do that 
+separately.
+> The same logic goes to USB too, Ze Huang was in the same offline call, 
+> and
+> I would prefer that we move in a coordinated way.
+
+I hope so as well, but "we" here should include DT maintainers.
+
+Please consider my suggestions.
+
+Vivian "dramforever" Wang
+
+>> DMA address translation does not depend on PDMA. It would be best if we
+>> get all the possible dma-ranges buses handled in one place, instead of
+>> everyone moving nodes around.
+> No, you should do it in your patchset, when you add the eth0 and eth1 
+> nodes,
+> they will be the first in, as I said, "network_bus". I don't expect
+> any 'moving nodes around'.
+>
+>> @Ze Huang: This affects your "MBUS" changes as well. Please take a look,
+>> thanks.
+>>
+>>> gpio: gpio@d4019000 {
+>>> @@ -792,3 +693,124 @@ pwm19: pwm@d4022c00 {
+>>>                };
+>>>        };
+>>>   };
+>>> +
+>>> +&dma_bus {
+>>>
+>>> <snip>
