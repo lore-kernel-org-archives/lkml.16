@@ -1,181 +1,205 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EC31DB546;
-	Sat, 14 Jun 2025 18:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8D81DFD86
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749927030; cv=none; b=bKzBAGpa6vMpgt5A+CwfKE1HmPtb8Y3epqW8/1GqcQF8HqgtlxhCY+jMfnU1D5943tRWXbUq5uZJgpFoaIILeVaoJ8mDm/OYs6b0ReC2wwAfp8MwXRA4qRjZ7LRePp2rDPHrxtJgHIwnZVSCMSGxYsrqoFBAJ6gcrM/kckqs4Zg=
+	t=1749927046; cv=none; b=qekHAuElGEykn90GCOjEXSmfcU2mvlTjev68vqkazmq5b7edWDBmJnsutFkskFherEcQIx/HqDEqI3gO2hz6yRI6WnekPkXIbmM7sQpD8gkWSJ8mJpWDuYSj9NgCBWQvIjkoX0bFTSxh2DgsRJTcyRuNDR+ks8XoMQ450ltVYhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749927030; c=relaxed/simple;
-	bh=11C2g5Brv0G8B5ZN6rVwoIkS/7FiIUxmhoLEJtBaxQM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=BUkDzytdNgdxYXG2oDMqKPxl66r+qZbN9guLc0kCd05UhOvc3wEqoEpkJ32Zk3FIeQpG2heyaGYRFmJ+FKuP8Lc9TkGvzLs84GqcNyNojMX/zDqQvLv1mej+94bEdLjxaCiL+jcu2WYqnPxyWALinTJLOXIv+NwAq5qxYaIaMLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XO8sssex; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uy5zKkVZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749927046; c=relaxed/simple;
+	bh=zAo8PQ1kIpBM1SD/j60V6KNaG3hiL9Q7UDeeuB5Xfpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fuxRZz/dXmI+x/8HfRjr938FbOumHBevJn2+mW92AHDENfYBdTXuMwWsYY3f6+s6Ugv8YyAISpo1YF5OhuyuYHs5Ma0BdMxObSYS1tDBBQjYmDvS1vsnvJzy1KetAfD0WIy1mpVsjtZJmSZvHn9t+DU3KpbuVpfrxyhuVw9AUIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UDKuxPYn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XO8sssex";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uy5zKkVZ"
-Date: Sat, 14 Jun 2025 07:41:08 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749927027;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gku2n3QfKUDzM7OB0nQnIdNsk2wqBgBrcPjFrXQmGco=;
-	b=XO8sssexWkUKsfzSm20K/3vGKvWmH/W62ndvOIytDqZxILG1SDN2XBWSEqwb5kFGVxT4yO
-	UMgXNR9hDndg2NmZ9KcG7a1TwTmhqmupQbYGDL1foVbXGgc/mzZn6W7yxMGIFSWjuN/MI/
-	/KgFcmtJdkptZHIdNQkJ5NKDavg17N/j+a2wh81gjaRzV32weRZP/ZKZUwEeiRpcLzrmYm
-	5CD/tupBiR6/AAiZWcf8LMHKD+u+NyeBJ644URKCt3xSDKE40HEtZlIsKpuoqSVDa4kpFu
-	+85te9A4rD6GARkWoYwVG8beoQjyAo+NiFrU7HxBAEjaYwZ61sKTTeHL+6D3rQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749927027;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gku2n3QfKUDzM7OB0nQnIdNsk2wqBgBrcPjFrXQmGco=;
-	b=uy5zKkVZwtSs/4qxgKRZuM7ez5PDmXX7GSiU4KNt4vgReoJjoEfzSuk5Q0x5sYmfDX3knt
-	bycxx6ngYfPwtdBw==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/kconfig] x86/kconfig/defconfig: Enable CONFIG_DRM_FBDEV_EMULATION=y
-Cc: Michael Kelley <mhklinux@outlook.com>, Ingo Molnar <mingo@kernel.org>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- David Woodhouse <dwmw@amazon.co.uk>, "H. Peter Anvin" <hpa@zytor.com>,
- jgross@suse.com, Linus Torvalds <torvalds@linux-foundation.org>,
- Masahiro Yamada <yamada.masahiro@socionext.com>,
- Michal Marek <michal.lkml@markovi.net>, linux-kernel@vger.kernel.org,
- x86@kernel.org
-In-Reply-To: =?utf-8?q?=3CSN6PR02MB4157B1676A6284ECD21E494FD490A=40SN6PR02MB?=
- =?utf-8?q?4157=2Enamprd02=2Eprod=2Eoutlook=2Ecom?= # Discussion>
-References: =?utf-8?q?=3CSN6PR02MB4157B1676A6284ECD21E494FD490A=40SN6PR02M?=
- =?utf-8?q?B4157=2Enamprd02=2Eprod=2Eoutlook=2Ecom?= # Discussion>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UDKuxPYn"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55EBRSKa021000
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:50:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eoG6O0K3f8gZX/KII4B/go1MHyLMfczPeBlrtLSsYrM=; b=UDKuxPYnC4bK/zSP
+	qjZzLRQmMiLyjHi7cOmLs3MXUjrYKquJxPrs1f9I6+I0hl5/PETBkSTnYf2iI0jF
+	EMtozgAt/iqpMHItsXUFVjrtRt7p65SVdI/tfdQrlS/AOxyBXGxsH7GlJW+u1Sia
+	asYaodCQQCUX0TH5XsfLRozMdD6Qr9eYHOl5jUR1THq8/bD7irP7aNO8z9S7Nx3b
+	RnzVqlGiMZuMqiCXKcwEFQjE2EcTeY/F2NZFiDncMBDTxmOwGP1ACK7hGlgMNfUd
+	5dyWxRO4pE5FmLc+FB7UgReIg4t6pVw/v5os8IVPgqXnskbS3zqB4tAI+JdCFXbk
+	tYAX6w==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791crgvwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:50:43 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a5ae436badso6597871cf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:50:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749927043; x=1750531843;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eoG6O0K3f8gZX/KII4B/go1MHyLMfczPeBlrtLSsYrM=;
+        b=YKm0caKsNuJr18porUwaiK+Bx2Cn8O/XXijQSlavMUHRguCJ1MaJAl0/7gJDq8HO1c
+         xdwDYfT7EA9MM8yL+ybEMCoshEazK1JThQhnNam9cjUjR9bQk1VnXaSHEfVyk1OI5SYS
+         1l5GOPhNUOJxJV+bL8Vd0DwS81TTIlVnwt9T5OywIdL5pNw+MG/8yjEMeVbRjZCqZuxw
+         m96+7+hVnmY72I6UVtZqWyomoYlYJ0el/iNeiENw2MkSuM4IWEs2bb8cKIF96ArG2Ueb
+         mqgMpLyXSVl2eUiE73C5fCzWEi89h/5/FaRHjlDgSCTLi20YMijmlnRr4xueZeRGTeg9
+         mcZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+yHyYhmWyQwJI9SUUHcWWbBCimi5hzpGKlBf5tDfrLpGepvCUZtaiHGP6ehySZyvRuUiW4OscRbsU4g8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs0qTM56BLnyBiA7/Xsffu8YdNtqLIittsUOE1oCznr4IQm++0
+	tS1tA6obT2Lfk52/tS+Ciu9b+ly0rYISRvCBxA9GvgBXqv0CvJPC5u/gOqtVGcpmH1+1LqRX2M/
+	Tsf0odQlYMZb93uMeJMx4VehhGh9gAgNrseofT9/t8HMsYa2Poepvv63AVZd6emJlu2w=
+X-Gm-Gg: ASbGncteF1me/YvuanBax7s+Snp/HBANvuUGmKFJHGDqFtxqo4nPTTjzfNUp2B7Ikww
+	HvOjqvt58MDxHoiCnrOC1svfiHEHY//oI5Ekj1hB8gklOrOnz05sEB/j+n3MRlIGN/pyTaRakf9
+	uwro1EupyqfEQx3di/3G6VTCC1cDnSFUKIIYQEa4lYahgbqb9yeH7rcPFZzyif3SG/zw62ZEKuq
+	cUGkN4iAXJ1AqZv2LNN7fzdxRM6qOWCiPyNsu1eqwK+P0WXzOTX9P8bomFqKzmF4i8JkLH1ARc1
+	6RmYSGXJFmsC5mLvJGiowdK1JMQpKLGW3lQB4ueergw/LEyXYp9Y+gsyljHsMcaLsKHF8v+iVC8
+	sQCo=
+X-Received: by 2002:a05:622a:60e:b0:494:b869:ac06 with SMTP id d75a77b69052e-4a73c4f0986mr22004501cf.6.1749927042631;
+        Sat, 14 Jun 2025 11:50:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEx8dYFput+x1zrfRR/vwybI6ORi4SG7FUVUMwmj0jEta6iK89coF3n7ZV/SrKjJMpi0fdbrQ==
+X-Received: by 2002:a05:622a:60e:b0:494:b869:ac06 with SMTP id d75a77b69052e-4a73c4f0986mr22004301cf.6.1749927042208;
+        Sat, 14 Jun 2025 11:50:42 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adfade680d4sm186158466b.10.2025.06.14.11.50.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Jun 2025 11:50:41 -0700 (PDT)
+Message-ID: <f0483597-45b9-49f8-b316-a9cde7b98d81@oss.qualcomm.com>
+Date: Sat, 14 Jun 2025 20:50:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174988686864.406.18261837065176549919.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 01/10] clk: qcom: clk-alpha-pll: Add support for
+ dynamic update for slewing PLLs
+To: Taniya Das <quic_tdas@quicinc.com>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
+ <20250612-qcs615-mm-v9-clock-controllers-v9-1-b34dc78d6e1b@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250612-qcs615-mm-v9-clock-controllers-v9-1-b34dc78d6e1b@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: -GU1fyiEx2YpypjPxRHE4EoGt8tXcNav
+X-Authority-Analysis: v=2.4 cv=BoedwZX5 c=1 sm=1 tr=0 ts=684dc483 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=b3DFIE2h8Nkn-kLj-EYA:9
+ a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: -GU1fyiEx2YpypjPxRHE4EoGt8tXcNav
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDE1OCBTYWx0ZWRfX4yPoHjFXycH7
+ xVT6JwJJ72e/wwQ1FmkGwW9MTzijiX52l19L6emBPCw1g8eR5wR+kG4rhy75RSxQKutkaH2Z3vz
+ A0xrHXc2IhivhSq6QV0rIlBXbDhbAKXz0oQ3tmCjDrFEH8yMxwlbKY6G1+KXQZ8VkZsfFmixGky
+ tzhyb6to4tUC4gJkuY82GkOfHmTREQHIJ9ga3yniutXFBy4jphcCJPc98Io+J3NL7JKlC0FHhVt
+ fx6sh6xkgXSNDFlDnaAw98paAYKTwXYKXmaorMo5NgEMhxuxU4E+HeT3cQ22cNY9De/MjKJXgqn
+ wpsQ+UcxFCDheTwXoRSLu7rW4008ZM0a49AT3WQYCgT3Vqfgf1nd3Pq8opR+1w8KuMxt6wnPGFJ
+ TuI5DPecLV4+nG9ouRl69izCZOV1RkGMud7/occau0m6c51p4zH1V3H1dC2P3gHdLH83Cu7z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-14_07,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506140158
 
-The following commit has been merged into the x86/kconfig branch of tip:
+On 6/12/25 11:55 AM, Taniya Das wrote:
+> The alpha PLLs which slew to a new frequency at runtime would require
+> the PLL to calibrate at the mid point of the VCO. Add the new PLL ops
+> which can support the slewing of the PLL to a new frequency.
+> 
+> Reviewed-by: Imran Shaik <quic_imrashai@quicinc.com>
+> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+> ---
+>  drivers/clk/qcom/clk-alpha-pll.c | 170 +++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/qcom/clk-alpha-pll.h |   1 +
+>  2 files changed, 171 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+> index cec0afea8e446010f0d4140d4ef63121706dde47..5e4a755b849970281e7742ef83219b7eeaa406c3 100644
+> --- a/drivers/clk/qcom/clk-alpha-pll.c
+> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> @@ -2960,3 +2960,173 @@ const struct clk_ops clk_alpha_pll_regera_ops = {
+>  	.set_rate = clk_zonda_pll_set_rate,
+>  };
+>  EXPORT_SYMBOL_GPL(clk_alpha_pll_regera_ops);
+> +
+> +static int clk_alpha_pll_slew_update(struct clk_alpha_pll *pll)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll), PLL_UPDATE, PLL_UPDATE);
 
-Commit-ID:     7ce421edd9fc5a762aeb625cc682cb793ec859d7
-Gitweb:        https://git.kernel.org/tip/7ce421edd9fc5a762aeb625cc682cb793ec=
-859d7
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Sat, 14 Jun 2025 09:10:55 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 14 Jun 2025 09:30:35 +02:00
+There's an ever sweeter sugar-syntax for this case - regmap_set_bits()
 
-x86/kconfig/defconfig: Enable CONFIG_DRM_FBDEV_EMULATION=3Dy
+> +	regmap_read(pll->clkr.regmap, PLL_MODE(pll), &val);
+> +
+> +	ret = wait_for_pll_update(pll);
+> +	if (ret)
+> +		return ret;
+> +	/*
+> +	 * Hardware programming mandates a wait of at least 570ns before polling the LOCK
+> +	 * detect bit. Have a delay of 1us just to be safe.
+> +	 */
+> +	mb();
 
-Michael Kelley reported that the x86 defconfig *almost* works
-well on Hyper-V guests out of box, with the exception of
-console support:
+Since you read the value of PLL_MODE back, the barrier is unnecessary
 
- > I built and tested a Hyper-V guest with defconfig. The Hyper-V storage
- > and keyboard drivers are pulled in automatically. [...]
- >
- > But the Linux console for each Hyper-V guest is a synthetic graphics
- > console, and that didn't work with the DRM_HYPERV driver. Missing
- > the console pretty much kills any usefulness. DRM doesn't have
- > Linux console support, so it needs CONFIG_DRM_FBDEV_EMULATION
- > to be set, and defconfig doesn't have it.
+[...]
 
-So enable CONFIG_DRM_FBDEV_EMULATION.
+> +
+> +	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
+> +	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), lower_32_bits(a));
+> +	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll), upper_32_bits(a));
+> +
+> +	/* Ensure that the write above goes before slewing the PLL */
+> +	mb();
 
-Also enable the dependent CONFIG_FRAMEBUFFER_CONSOLE_ROTATION option
-(disabled by default), as all major Linux distros have it enabled,
-probably as a sysadmin quality-of-life option:
+Here however, the write may not arrive at the clock controller before you
+proceed to slew_update()
 
-	.config.distro.debian.x86_32:     CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
-	.config.distro.fedora.generic:    CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
-	.config.distro.opensuse.default:  CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
-	.config.distro.rhel.generic:      CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
-	.config.distro.ubuntu:            CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
+> +
+> +	if (clk_hw_is_enabled(hw))
+> +		return clk_alpha_pll_slew_update(pll);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Slewing plls should be bought up at frequency which is in the middle of the
+> + * desired VCO range. So after bringing up the pll at calibration freq, set it
+> + * back to desired frequency(that was set by previous clk_set_rate).
+> + */
+> +static int clk_alpha_pll_calibrate(struct clk_hw *hw)
+> +{
+> +	unsigned long calibration_freq, freq_hz;
+> +	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+> +	struct clk_hw *parent;
+> +	const struct pll_vco *vco;
+> +	u32 l;
+> +	int rc;
+> +	u64 a;
 
-There's no measurable build time impact within ~1% stddev:
+A reverse-Christmas-tree sorting would be nice 
 
-  $ perf stat --null --repeat 3 --sync --pre=3D'make clean >/dev/null' make -=
-j128 bzImage >/dev/null
-
-  Performance counter stats for 'make -j128 bzImage' (3 runs):
-
-  # before:         33.759 +- 0.286 seconds time elapsed  ( +-  0.85% )
-  # after:          33.593 +- 0.314 seconds time elapsed  ( +-  0.94% )
-
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/SN6PR02MB4157B1676A6284ECD21E494FD490A@SN6PR0=
-2MB4157.namprd02.prod.outlook.com # Discussion
----
- arch/x86/configs/i386_defconfig   | 2 ++
- arch/x86/configs/x86_64_defconfig | 3 +++
- 2 files changed, 5 insertions(+)
-
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index aeba958..39a660d 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -239,8 +239,10 @@ CONFIG_AGP=3Dy
- CONFIG_AGP_AMD64=3Dy
- CONFIG_AGP_INTEL=3Dy
- CONFIG_DRM=3Dy
-+CONFIG_DRM_FBDEV_EMULATION=3Dy
- CONFIG_DRM_VIRTIO_GPU=3Dy
- CONFIG_DRM_HYPERV=3Dy
-+CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
- CONFIG_SOUND=3Dy
- CONFIG_SND=3Dy
- CONFIG_SND_HRTIMER=3Dy
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defc=
-onfig
-index c20100d..b5dc26f 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -116,6 +116,7 @@ CONFIG_ANON_VMA_NAME=3Dy
- CONFIG_USERFAULTFD=3Dy
- CONFIG_LRU_GEN=3Dy
- CONFIG_LRU_GEN_ENABLED=3Dy
-+# CONFIG_DAMON is not set
- CONFIG_NET=3Dy
- CONFIG_PACKET=3Dy
- CONFIG_XFRM_USER=3Dy
-@@ -248,8 +249,10 @@ CONFIG_AGP=3Dy
- CONFIG_AGP_AMD64=3Dy
- CONFIG_AGP_INTEL=3Dy
- CONFIG_DRM=3Dy
-+CONFIG_DRM_FBDEV_EMULATION=3Dy
- CONFIG_DRM_VIRTIO_GPU=3Dy
- CONFIG_DRM_HYPERV=3Dy
-+CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
- CONFIG_SOUND=3Dy
- CONFIG_SND=3Dy
- CONFIG_SND_HRTIMER=3Dy
+Konrad
