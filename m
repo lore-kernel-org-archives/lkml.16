@@ -1,69 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC771C5D4E;
-	Sat, 14 Jun 2025 11:48:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C0B191F74;
+	Sat, 14 Jun 2025 11:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749901723; cv=none; b=iRKIjcCsFv5/y9G1TmKf4EOkD21d4mW2oNJteySR37t4ynTlOQh0XcCsxqgVH/gLRnXxClXwlTF1z62t62ih+pWVKhNx3Bajq9dPJi6JAn1YEetrandjL8UGWyyCWjL0sGUrUPYhfkKjfA2KKojH6YW4nlcSrCMFwmrtMfDGvwA=
+	t=1749902005; cv=none; b=nU5z2TzAJlXdpGyxuUBlY3oRqtAKrWpYzHFmZ37qkeFZSxjMuI2mdbuS/ewBmp4aUEAIlJHEOFZSPz7AsO4f+fDW0Iq8jb+tZWkQe3kCme0uTftTQutKLZsmdvquY62vqRsd8TUH+0RT4UZUBcPvjEn3FFYhdkScSlzawnjRabM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749901723; c=relaxed/simple;
-	bh=SmOaDEj2EwGdVDmk1+K6imZdiEZhNU0BJDaUw2HrJjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IiQiZCB2yLKB/EVSGP3Nxp/ww89rBNXP03INsm0TLMN6QgEQDlnhxMo5bCX3ZnKsHr0czaeTdwVD44EOO93SyRlEmNqyy2/Sxbsqn1zajfvyBD2WOerjxQLCyXD2YPDJjmfT+tphuI4Y77At8s3+PeNZUxRH/cZy8+504OsmD9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/ash5Pn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749902005; c=relaxed/simple;
+	bh=l6N+hRoEUaHWFxgmCEaWsWHq8KeFgi8XNKiOXAlGLFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dASHI0bd2DaG6fB8f3nfZrj3zMP+uV2jxzP6v2Il8SIXvOBEOSC3Ez9qz1fA+KHiPyTIN0aOItyQsRElAKi9nCdv05oh7JMtIMQ5WppDd4uCdbvqh5h4cIEsSzkL2A4t35dHsGkmwpiBJAP7avoVpJaUu18xx73lS2F8b9Naemw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cEOV3OI+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/ash5Pn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34399C4CEEB;
-	Sat, 14 Jun 2025 11:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749901723;
-	bh=SmOaDEj2EwGdVDmk1+K6imZdiEZhNU0BJDaUw2HrJjc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N/ash5PnVfbt5YhXqQ7d5r0oEkc0E2tw2e0OsMARQIoi5rC10tKyxGoDca3eZsYQj
-	 5qr5vpx2AwP33WND0roFwtBwbvWp5cWWMyicgocv7iVobsNukObJofnLDK0RnwiBn8
-	 SQQmiGOmBGPWyzBZ58ESQ36aPAGYKlTLLLgqMbA3dAIfU1qh07J4HjZrYTbWGJTYFd
-	 HcjPtNlz9XXMjNCg989iJcGuE4vYJNH+nKd9uoXbEkxlmT+9jETnJT6AmuzB/s9gS7
-	 SRqjgiNdd/7LzTuTw5z0rvAy1nSQlw8v26Ly8tCn2S3xFpSd+Lg36HyR9mH3di7pvS
-	 kTZcTW+ycmoAw==
-Date: Sat, 14 Jun 2025 12:48:38 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Ijano <andrew.ijano@gmail.com>, andrew.lopes@alumni.usp.br,
- gustavobastos@usp.br, dlechner@baylibre.com, nuno.sa@analog.com,
- andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] iio: accel: sca3000: replace error_ret labels by
- simple returns
-Message-ID: <20250614124838.02b79111@jic23-huawei>
-In-Reply-To: <aErOevItBLmKm4Jv@smile.fi.intel.com>
-References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
-	<20250611194648.18133-2-andrew.lopes@alumni.usp.br>
-	<aErOevItBLmKm4Jv@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cEOV3OI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31603C4CEEB;
+	Sat, 14 Jun 2025 11:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749902004;
+	bh=l6N+hRoEUaHWFxgmCEaWsWHq8KeFgi8XNKiOXAlGLFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cEOV3OI+liS8s0kKXZDTUzPuvEB5VrsQTDMTlnUuuNq7CwZjHzr7Rk+TXdoRQOE9h
+	 w8f4pe4WnD4cmCppLp0WpKqcFBY9br69xT4M4KQcu9iTMDJTqzSMlaU5kPt7yZxORo
+	 sHVcQFAApVSooSYIcZRzXeGcF2e2vdvNQ9CGPUeE=
+Date: Sat, 14 Jun 2025 07:53:22 -0400
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Benjamin.Cheatham@amd.com, Jonathan.Cameron@huawei.com, dakr@kernel.org,
+	dan.j.williams@intel.com, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	marc.herbert@linux.intel.com, rafael.j.wysocki@intel.com,
+	rafael@kernel.org, sudeep.holla@arm.com,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
+ faux_device_destroy()
+Message-ID: <2025061446-wriggle-modulator-f7f3@gregkh>
+References: <2025061313-theater-surrender-944c@gregkh>
+ <20250614105037.1441029-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250614105037.1441029-1-ojeda@kernel.org>
 
-On Thu, 12 Jun 2025 15:56:26 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Wed, Jun 11, 2025 at 04:39:19PM -0300, Andrew Ijano wrote:
-> > Replace usage of error_ret labels by returning directly when handling
-> > errors. Cases that do a mutex unlock were not changed.  
+On Sat, Jun 14, 2025 at 12:50:37PM +0200, Miguel Ojeda wrote:
+> On Fri, 13 Jun 2025 20:33:42 -0400 Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > Great writeup, but as Miguel says, this isn't needed at all, the kernel
+> > relies on the compiler to be sane :)
 > 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Applied this patch to the togreg branch of iio.git which is
-initially pushed out as testing.
-
-Thanks,
-
-Jonathan
-
+> We may still want to clean them up, e.g. for tooling -- Kees/Dan: do we?
+> e.g. I see a similar case with discussion at:
 > 
+>     https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
+> 
+> Which in the end was picked up as commit 2df2c0caaecf ("fbdev: au1100fb:
+> Move a variable assignment behind a null pointer check").
 
+If "tooling" trips over stuff like this, then we should fix the tooling
+as again, the kernel relies on this not being "optimized away" by the
+compiler in many places.
+
+thanks,
+
+greg k-h
