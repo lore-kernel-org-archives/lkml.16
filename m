@@ -1,160 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9F6249EB
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA43BA42;
+	Sat, 14 Jun 2025 02:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749867841; cv=none; b=s1Yifn0UxLNK2up0aP4adXw3WS/4OOd7r7Vbgb8d5s4IWDzzKIBw3JRysSLPK9VR6+jL/8KYMLjamfWSs9MsFGmtpTHe9ZGv9D8TokhvnM8MJV821NPVS15mxWng7ODcKI9PR9stYnKbOYQS3I3L9dQyOMTo5YASIcY5THYC5qg=
+	t=1749868060; cv=none; b=Mn3XNmyphX43Ubtpcf65WVXv/0gQcIibxVKn7ClScqKVdpu1sMt2o0po+KyhDX++8+ZN4JCtjx7BtDY4befvfAjCY5sNw5F51SE09IjLKa8JaDxnPpL3OJLwAn3cjwcFwJ4VZgdL2xudUL51ATes8AhK5hWQoZziY+/trxe2pvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749867841; c=relaxed/simple;
-	bh=P9zlji1nrPvLL4dw8Gx64YFlWjiC5qahbV1N8GYCo54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=SqN6sKCDJsQN48flUABejlSfhkQegAW/CfJqJqNpFaTldKZSoFdnc0HNW+RP/x6/vgKdnypY5a5RKPwNrKiIM3cHVVgPYY0lhDkEhQzlaY/VKwe41lUwmeeX6abr9ci1REtRVnqhUYPdwxqq08hwU4cwrdxvdkvAHkjay+Y5HVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bEMOo3E+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749868060; c=relaxed/simple;
+	bh=6MPxcrzvl/j0c311UlB0dF6QX2mG0TJI28/AbWapSRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XZU7Y5rO7Kr9vyJuvZv38hUbX2hFdz1mqMwMcjzaCMC0YkVJxU2skSLlzMfRDfeo08rff6UFkAsc9C7DU+FN1xqIfdnrq16TIAfOOdE7hpUmgiEGUwBMjm4qlOwok610n5C/J7rrx5gh3KJhRiZ0CquCQKouOMv45QerbjcwDB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vif7yLdZ; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEMOo3E+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749867838;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OUz9I+i5wHyxyyAJTk0830GJubFnv9VDf+gVBkAFDtY=;
-	b=bEMOo3E+Ho5tqpJ6BcamV+OZpV4n4KnOdyMyj+58UgTT2dQWgg2oZA8eLJbVDdWUn35pav
-	V1e6dho64AfogCeachMSvQFinndVgavF4fQZb2lIqUlHsQDPARAjex1oOSgPUE0FzomY27
-	C/0aULTmUb075d72vr3SgaywwqFUHhQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-9-DI_vibO8PzKwdhke3B1xbA-1; Fri,
- 13 Jun 2025 22:23:54 -0400
-X-MC-Unique: DI_vibO8PzKwdhke3B1xbA-1
-X-Mimecast-MFC-AGG-ID: DI_vibO8PzKwdhke3B1xbA_1749867833
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 58A311956080;
-	Sat, 14 Jun 2025 02:23:52 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.42])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B34A418003FC;
-	Sat, 14 Jun 2025 02:23:46 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-integrity@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	zohar@linux.ibm.com,
-	coxu@redhat.com,
-	piliu@redhat.com,
-	pmenzel@molgen.mpg.de,
-	chenste@linux.microsoft.com,
-	kexec@lists.infradead.org,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3] ima: add a knob ima= to allow disabling IMA in kdump kernel
-Date: Sat, 14 Jun 2025 10:23:42 +0800
-Message-ID: <20250614022342.5988-1-bhe@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vif7yLdZ"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad89333d603so531494366b.2;
+        Fri, 13 Jun 2025 19:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749868056; x=1750472856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6MPxcrzvl/j0c311UlB0dF6QX2mG0TJI28/AbWapSRE=;
+        b=Vif7yLdZsXnpbjgsosJOC8F84+o5jsRkGgyZJrr4bMc9IqEHMaz3zt4zMQDwX+gxSA
+         UznaJqh9ggXE2r9X4CAjBmHMhup9+m2+iI95CACjNSsOCTYvM4kFW7LBvTL4t/pfR1Rv
+         +gvP0t3XI57Tk/UDU+U13NAzXrfJrZzviuYC3EMppxMpylIkB1Q2evFweUofFLjMZ5wR
+         0GmyQgZB5fDMZM9nF+M1pbnnfZnc+hcOt4afjmYxGHqLO5OX/Ajy+hgSwOsq3Cg6eEnn
+         fD7JzkH10cKDHKpDKFp2Mq/goxr2bG7wlMqbR7tkusldcjH72NjwgjTDihlL8dGWuA7X
+         9Ygw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749868056; x=1750472856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6MPxcrzvl/j0c311UlB0dF6QX2mG0TJI28/AbWapSRE=;
+        b=O0YWxP08rIIdVxt/V3IojzQTgnmb2K0uls+n65P/Iwyzxx+HO/jmk44K0suxWdGL9t
+         hXLfOYoxUgTBY4ohNpAXxwNs2amxl/aK+FAMZFCxTac9/nGJcvk8QyY0TWKuaj/6T9aR
+         h0e/SJWREa9FUxNBChCd0hBywCf0ynWazFEAUK6WGViBHQfvdT8KIY5ccv/R9T5HVQmu
+         +M9qgdc2f9ZmSczmKaTZXfMKALgtoTWELeMRyqhGV+6YVdDWj6oZ7+Ix0BqcEoClO7LB
+         w8Mtsy5qiybKyKmuXa7NnbcAhRU7opbJ4Qfq/bcpBBkjzbKfGDHSNzB9kM8kHNCtupIQ
+         3ldQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkMZ+10xejADmpWSwI1578Fg3vWNELEnlpR7GjR841qHwoTHeEP3ZgM6+5lY4Z+OJOMR72hq3tvYUw4Kg=@vger.kernel.org, AJvYcCXTO3GE/vz4fwHlT1HRzQo7WGROfOyDQlP43w45PCv0l4KR6OobiACwp7ryJhHIA31eiPmOAwLa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKgDczgHFDxRK+oW16zOAf0p8gkH7QlZ21lZRioLdML6aO7LLc
+	72tXaMiCUem9/zqPK3SDoByem0QnxkEIElMI3pHDq9SFMd3F84O/fw+RCc70CXIwmuCpTBgOlH9
+	FUsiBdZKL5AMkQa3YkTs2yhG6qaD3NL0=
+X-Gm-Gg: ASbGncu2JCN2pbIex7oVdDta0whiTr5gTCs+3fviaomkVbCSNSk6A6Yc2LcyOMSYpkQ
+	NVJnXN4tEtcmd6rwmBZF7HCwM5ENBxwH490ZcQspfpV2VfZ3SeW82eteHSg2PxPzalMMT7WB8Ay
+	e1v37j5nToAYah6mKXgnjxVSxJFlViVnfqnzMu6WrzihU3
+X-Google-Smtp-Source: AGHT+IHSDZgUvD0qwZNlq4ENrrlQE2VqR4K9CtjsGABFFoir+MEGYeLA5t/HLsmifXnXBAbqLV5m/cTF91+KCmvaLiI=
+X-Received: by 2002:a17:906:7956:b0:ad8:9428:6a35 with SMTP id
+ a640c23a62f3a-adfad367d90mr116753966b.7.1749868056224; Fri, 13 Jun 2025
+ 19:27:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250613102014.3070898-1-liyuesong@vivo.com>
+In-Reply-To: <20250613102014.3070898-1-liyuesong@vivo.com>
+From: Taehee Yoo <ap420073@gmail.com>
+Date: Sat, 14 Jun 2025 11:27:24 +0900
+X-Gm-Features: AX0GCFtO7HPk3CZD3Wtlzh_X41p29PyqpaFeYaRdgJ7FwzPXJATvNm7kwiBt7gE
+Message-ID: <CAMArcTUJBWKftYQsVwqHQRR-cS87hMcMOOU3u2_83oa9TjzEaw@mail.gmail.com>
+Subject: Re: [PATCH net-next v1] net: amt: convert to use secs_to_jiffies
+To: Yuesong Li <liyuesong@vivo.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	opensource.kernel@vivo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
-extra memory. It would be very helpful to allow IMA to be disabled for
-kdump kernel.
+On Fri, Jun 13, 2025 at 7:20=E2=80=AFPM Yuesong Li <liyuesong@vivo.com> wro=
+te:
+>
 
-Hence add a knob ima=on|off here to allow turning IMA off in kdump
-kernel if needed.
+Hi Yuesong,
+Thanks a lot for your work!
 
-Note that this IMA disabling is limited to kdump kernel, please don't
-abuse it in other kernel and thus serious consequences are caused.
+> Since secs_to_jiffies()(commit:b35108a51cf7) has been introduced, we can
+> use it to avoid scaling the time to msec.
+>
+> Signed-off-by: Yuesong Li <liyuesong@vivo.com>
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-v2->v3:
-- Remove rdundant word 'only' and rephrase sentences in patch log code
-  comment, and rephrase patch subject, thanks to Mimi's comments.
+Reviewed-by: Taehee Yoo <ap420073@gmail.com>
 
- .../admin-guide/kernel-parameters.txt         |  5 ++++
- security/integrity/ima/ima_main.c             | 26 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b3d62f4c370a..93357fb5c03e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2214,6 +2214,11 @@
- 			different crypto accelerators. This option can be used
- 			to achieve best performance for particular HW.
- 
-+	ima=		[IMA] Enable or disable IMA
-+			Format: { "off" | "on" }
-+			Default: "on"
-+			Note that disabling IMA is limited to kdump kernel.
-+
- 	indirect_target_selection= [X86,Intel] Mitigation control for Indirect
- 			Target Selection(ITS) bug in Intel CPUs. Updated
- 			microcode is also required for a fix in IBPB.
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index f99ab1a3b0f0..cdd225f65a62 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -27,6 +27,7 @@
- #include <linux/fs.h>
- #include <linux/iversion.h>
- #include <linux/evm.h>
-+#include <linux/crash_dump.h>
- 
- #include "ima.h"
- 
-@@ -38,11 +39,30 @@ int ima_appraise;
- 
- int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
- static int hash_setup_done;
-+static int ima_disabled __ro_after_init;
- 
- static struct notifier_block ima_lsm_policy_notifier = {
- 	.notifier_call = ima_lsm_policy_change,
- };
- 
-+static int __init ima_setup(char *str)
-+{
-+	if (!is_kdump_kernel()) {
-+		pr_info("Warning: ima setup option only permitted in kdump");
-+		return 1;
-+	}
-+
-+	if (strncmp(str, "off", 3) == 0)
-+		ima_disabled = 1;
-+	else if (strncmp(str, "on", 2) == 0)
-+		ima_disabled = 0;
-+	else
-+		pr_err("Invalid ima setup option: \"%s\" , please specify ima=on|off.", str);
-+
-+	return 1;
-+}
-+__setup("ima=", ima_setup);
-+
- static int __init hash_setup(char *str)
- {
- 	struct ima_template_desc *template_desc = ima_template_desc_current();
-@@ -1186,6 +1206,12 @@ static int __init init_ima(void)
- {
- 	int error;
- 
-+	/*Note that turning IMA off is intentionally limited to kdump kernel.*/
-+	if (ima_disabled && is_kdump_kernel()) {
-+		pr_info("IMA functionality is disabled");
-+		return 0;
-+	}
-+
- 	ima_appraise_parse_cmdline();
- 	ima_init_template_list();
- 	hash_setup(CONFIG_IMA_DEFAULT_HASH);
--- 
-2.41.0
-
+Thanks,
+Taehee Yoo
