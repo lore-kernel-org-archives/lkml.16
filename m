@@ -1,93 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1D125569;
-	Sat, 14 Jun 2025 09:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700121624F7
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 09:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749893852; cv=none; b=hGRPrJQBo6STCK61FttQ/4AC45J3odHeVKkJQUyVUpJ8KdCGofJJWTB1DDUKYrV72S2hihyvMbqW6bTi0tv4K+IZ76Gf4DnB7IIi36/AxkT0ooR4NIUqxHOZRcxvTxDI1FFhuolfLBVjxbgAQLd+i6BgIyVIvaAwR4dnw63CKsg=
+	t=1749894365; cv=none; b=VSBN2lF5LJ916mb2VpYnNkyN1s9Ngg0Nmr3IoFZst6Qlyay9vCAr62NwogXd8RMfi7MwkFZTPkJipscJHrQtbedGQoPf8NjC+bFnTx51IHf+lD++cVcAK65IffSY2u5Sf/XqyU6twmFQsA+zXGVIdgWYnLSDdIKGdEfdydnO19k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749893852; c=relaxed/simple;
-	bh=IBzO0Ev69uF2qsozSaN+Lr09S7lmFhXFHMxSCnecsvI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M4yXXe9xSO8EImp7ssbfCVI2RLheFm07wMS87Wpt2CpJGZKoG3mkiHKewcLWGOg+GMMrzVwbdTs3HUDp/uKeQhnW1VnH6UqqBqLDoyJcCeEwoFK86F/ZLdGDA08G6UF4j+5NgfCQOMV2lm9X6ZMI2r5hojMiOnXx4v42fVMOgwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fe8k9UlU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fe8k9UlU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B822C4CEEB;
-	Sat, 14 Jun 2025 09:37:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749893851;
-	bh=IBzO0Ev69uF2qsozSaN+Lr09S7lmFhXFHMxSCnecsvI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fe8k9UlU+qLX6ATbgwYZ5+EeyJZxMW8KUTIe1H4f/Lb3DcWcc9ZABe0PHvUIiu2l5
-	 faN/mo28Xd4WhuOB19GI9vjdbpUoyYZCW73dpQA3o1R5SxRty+AuekUMxFa0H2yChA
-	 3GVNtkOC2Cpdeoja76Cluy8NugmVrfNbymW9NNZmYonsmIb9IIUdJPebGySpGpNV1W
-	 v7wHnB8+aAdcJNYP0YsybxbU1fna2qIVE1brON7VMbjEu1vD/802BEeOkgmhBF0h6d
-	 2QHoOf8lh7mJ1053fRqwck9pLMM8zlABB3/O+lj0FDnVRiaUHTPYUfCGZZKsj29/OX
-	 QR6uaP5JUvdxg==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Rust fixes for 6.16
-Date: Sat, 14 Jun 2025 11:36:53 +0200
-Message-ID: <20250614093653.1431306-1-ojeda@kernel.org>
+	s=arc-20240116; t=1749894365; c=relaxed/simple;
+	bh=tb9mgmjJ0ev38mvO7oF2OEZBYaMFTRwRSfPnfq0Gfn4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=n/UID4+FrwsQvdpTlRXvEgfkw4nsQdq5TsT28QnxiSVZTkMe77spQjiawEdTNTBnp0ZzrrIX40ksRq7a848jBgo3qRV/RmUJbgarGxCC9DCeBVoSZ+HXT+pkIB9/E8xNsfwXSU0vS17BdwBPNY/7dGsw8QGi96INaPMmVCsxWG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so32002415ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:46:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749894362; x=1750499162;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OOullEj6fbTIFAODytKrgDERNVpRSjN594Q2Nd4pVdg=;
+        b=r8adPlmpGJXXiJZJSXbzM6kyKjYZGuYK6ycaFReK1Hr/NqPCa7UmTyNJB6h8y2gBxp
+         Qg4457ekhFKgm8FUGc+j2mlgTOACPtH5iF4wOsRzGHTrrR4o1C8HIeU9jE+TULWuy1tU
+         iAOvtkjiNjD9okSLexlJAkCG76fgYIffiPKsaJrKCbHAeZdAXr0BbhPYG+7Kb3KWbOI4
+         4B2RBXx41pIg/kp7GqIA77JW0+Wp/UqYKrrHWFTkAMvcpiY9dtHgbuhGWRKnuVyVx27I
+         X+fnlhoODBFZblSFCc8z5EbQ0Fzi/ZeW0jVGEF8bwnxUBrhxu8+CabuOW/EshoRDmA/k
+         c6aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtbeTXShiRuY6QezljjcosF/THuM38pRI4PlEuYHKHSk23uwbxwkDWdyUfllc3lcc2KrVqrTo8/H2c3Rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuVD5OB9u6D6tb/7Y2mH/p43kHD2B812UhErLMXDccBV4049X1
+	KWMLfy8x+BXjslp0fJd5G5bmSs0Mj86SrsCX3FSQCQb0Uo/8lRbVqYhNLjJtRfZRZfGlvvMZHr6
+	KgxFwVFKPezrDpxkpPXSS5GIHNOQ/EhCauzPB03oV2dg80EzBJD9Zh4tuXZg=
+X-Google-Smtp-Source: AGHT+IEVUfA3mPXS3hA0DJoSSRV+Ghh9W3bYlbB4sUQ+RiorkpWaQkzcHee8EanONeMMSXpA5+N9R0E0c+PhDvzwN0h/7WUL0Klg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:170b:b0:3dd:bfbc:2e84 with SMTP id
+ e9e14a558f8ab-3de07cd17c6mr26890655ab.19.1749894362680; Sat, 14 Jun 2025
+ 02:46:02 -0700 (PDT)
+Date: Sat, 14 Jun 2025 02:46:02 -0700
+In-Reply-To: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684d44da.050a0220.be214.02b2.GAE@google.com>
+Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
+To: brauner@kernel.org, chao@kernel.org, djwong@kernel.org, eadavis@qq.com, 
+	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com, xiang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
+syzbot has bisected this issue to:
 
-Please pull this fix for Rust.
+commit 1d191b4ca51d73699cb127386b95ac152af2b930
+Author: Gao Xiang <hsiangkao@linux.alibaba.com>
+Date:   Mon Mar 10 09:54:58 2025 +0000
 
-It has been in linux-next for three rounds.
+    erofs: implement encoded extent metadata
 
-No conflicts expected.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1352dd70580000
+start commit:   02adc1490e6d Merge tag 'spi-fix-v6.16-rc1' of git://git.ke..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10d2dd70580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1752dd70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115f9e0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1688b10c580000
 
-I expect to send another fixes PR later in the cycle.
+Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Fixes: 1d191b4ca51d ("erofs: implement encoded extent metadata")
 
-Thanks!
-
-Cheers,
-Miguel
-
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
-
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.16
-
-for you to fetch changes up to 5b2d595efbfc9c46823bdb9ef11e1f9fa46adf9d:
-
-  rust: time: Fix compile error in impl_has_hr_timer macro (2025-06-10 20:11:36 +0200)
-
-----------------------------------------------------------------
-Rust fixes for v6.16
-
-'kernel' crate:
-
-  - 'hrtimer': fix future compile error when the 'impl_has_hr_timer!'
-    macro starts to get called.
-
-----------------------------------------------------------------
-FUJITA Tomonori (1):
-      rust: time: Fix compile error in impl_has_hr_timer macro
-
- rust/kernel/time/hrtimer.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
