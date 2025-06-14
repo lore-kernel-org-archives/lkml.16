@@ -1,73 +1,72 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871DE2C3263
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 12:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F038317588;
+	Sat, 14 Jun 2025 12:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749905987; cv=none; b=oCEiYfKzGLanOD/UdtRRzuC0+/jdFMLaH+98qBJHtLgs1sXF5JJnCSiYAFsEHgqPB/S8ZOMQL7aJof6JZEUbpc1o+VNzX0kgKoQn3rH5UMooOHLS/uVYzf4BfK14Z7Xg8jfpUgp6kHrg7qCrP0x/ZQrKo6KX02W9q2x+vCKI6Nw=
+	t=1749906000; cv=none; b=L3F6ltViV3ZYe1N16E8AdIrwH2/juGpEU0TtLIJDbNDnIDvhJrMcWHc5XwTwXDHgl3EjMIR4M3gyj5g+8daZpRZxIH9+G9V0nyZsYcPce+9oG02ug6U/idcS1Or/IN8ThC7UXRsG2MaMGxqqO7SM49OMRCmkEBsN+WLdmP5yEiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749905987; c=relaxed/simple;
-	bh=Fa1v34NYwVPURsnllxM03C1WeGFbGnvhY/Z8Ver7IqY=;
+	s=arc-20240116; t=1749906000; c=relaxed/simple;
+	bh=bU0MedFB52BY7L1hpPvsdnUO6hl4CaChlDG2T/zlm2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j3udiZaY06J/1olGKkVl1JnGpL/Yk7W1bcRb5Abkgf6ZxhxBRl0rdDjTx1xKOowoL25Yjw9B6NtpXolIbJVLSkeEjGh4bZvwg9uY5IgzPwF70vBLV0epjHmos7McMGnk1ZIMfTSriFoUKuFwzsFCMPhwiQ5yhMzL2qg1kd/4+Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=eOvIDpv9; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZ6mbTbYwaxBffnft8jQn3Bmhv/J9Y7KED3wLmUeaJUKJYp0AnC4kXbP0Q09gCvPi1moHV7btASGCQaY64VZENcNI1qpkY2Nm6cIVklWC1nUXZimIrbavOqTJPLDp2dEPjYQhEWnnuWAm+6s4fz8QxJks44avyCCzlIluyy12Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HfOEjmIA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="eOvIDpv9"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4532ff4331cso8092815e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 05:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1749905984; x=1750510784; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iPGeQJRJ+PPx0D4Yz/DGi/Ua0wsy2Tt7cdffwC5HRfY=;
-        b=eOvIDpv9Wq13jnyBO5/9sXNcGP6w9uJ9af6I4VfwGrKn/CZRF9oi3zRSmqXlrfIZNx
-         /GJibzcbK6PhUGCRIBo/91wVTPz34sEUxgS1s7zYaW3rl2SJLFgrVe0aDqKx+4+iPzRh
-         FxCjqCWP8b9BZSdErgfESyvVfo4531YmNYPMEFQOQcK9FUKhnofZ0yR7+BqVBlFZk1ER
-         qMReGgBlHUC39l/k3+1kpn/yCB7mYHDqDcjtkOd6fFlW2ehux/hrmDp9XXMC+z0tSIbT
-         X3gCey0zfkBNXWWrEVoEu1xnZgSwqgLDxdM+3Arn01tAuttBEHaL0Mtn0FyENjc2I6Dy
-         eCQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749905984; x=1750510784;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iPGeQJRJ+PPx0D4Yz/DGi/Ua0wsy2Tt7cdffwC5HRfY=;
-        b=U33veVMv9rLzij6hkbRVodpLOlw3uBaanlEgwateDbUxJ1Jzj0hNpNj5JyRlTQfQMG
-         hPgHKSFtC7BxRScSs31KtGyDq7LaVfzti1I5H5+mtVw6kx7vrP4eOlH4kUJKFqsydtIK
-         HpK80gNtH2tBDvekn1EHck3DaxM+UojuaA9+x7jjRgfjVAZAzmDJXDdE2zuqni24fIFN
-         Nr3SuXhj4YCQPaaT6Wy2u82JEX5S+HBN6VgvUzhSGCofs6qDc3ZlVO8QvAPH3/NnOUSj
-         wXhOahx92cEBIqf6Z6uAG+iUd54aG3NMSQD/gTz7F8RLO1u4Y3aCa4oASBH5lavMJCCW
-         O7Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzCjcYr5qLiirvkSwlnDDoY15IXCwisbaj+ziBHUw/cm94IVhlGb2ZnFwK2UCLmu38u7VnRRbwdrsRi2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhxPdZPIRXTobRGksfrYRudubG1m58mcMiqlrwAUKgiusnLWaP
-	F5p6Sji5cZjHTn2wYQIvlk1EDggoQcmm0QvwtCL4fC2Ie8rdAH8/xUx8g9OSQMmZ9w==
-X-Gm-Gg: ASbGncvfpTo7tYdxYLFhekj1albd2+8X3o8sC1KSs04j9qrjhDHw45A0DXbMkyZ1i5H
-	96HQpMdN8tsdRqjRI6MJukCyndtRFY896D3KfwiTQS1FWxTYDWGdxRuunB1o4ndME4D4vZ5Pf/h
-	pbjVim8in2zIxYwQFGBvBPssxG7A3YJ0FWgl4h6Hz4H0jxxjJGSD2x70qkauFbTYTvoFl2JoZnt
-	FI9xkNHq+Pmp6Kqi/j80MSEAgk0OFLPzFeQe3MSHCwgRy4bs4hiv+imXYzjAFMbkRZwJkNYPgha
-	NfyvhuCM6jQ5vGLHOKjU065oH+TVcDUtXZBj9e3TdIhQDbALidU8kXsX
-X-Google-Smtp-Source: AGHT+IERuJs7MZQq1yqXmSu8CjkmDe4S5bwq1oMBXLwNuLiCByoIGRKoAxD/eCMk/Zei3ARi2ebwpw==
-X-Received: by 2002:a05:600c:4e16:b0:450:d00d:588b with SMTP id 5b1f17b1804b1-4533ca8b428mr27724305e9.9.1749905983726;
-        Sat, 14 Jun 2025 05:59:43 -0700 (PDT)
-Received: from cyber-t14sg4 ([2a02:908:1578:7a43::64fd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2522b1sm80971175e9.25.2025.06.14.05.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 05:59:43 -0700 (PDT)
-Date: Sat, 14 Jun 2025 14:59:33 +0200
-From: Michal Gorlas <michal.gorlas@9elements.com>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	Julius Werner <jwerner@chromium.org>, marcello.bauer@9elements.com,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] firmware: coreboot: loader for Linux-owned SMI
- handler
-Message-ID: <aE1yNZ484DcWjR4h@cyber-t14sg4>
-References: <cover.1749734094.git.michal.gorlas@9elements.com>
- <6cfb5bae79c153c54da298c396adb8a28b5e785a.1749734094.git.michal.gorlas@9elements.com>
- <aEtW3e7mwjTTvfO9@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HfOEjmIA"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55EASOqZ013764;
+	Sat, 14 Jun 2025 12:59:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=GWf9Q8fhQIaK2IkjdJfjOiEYmA7IMx
+	s/QoLebp9mL84=; b=HfOEjmIABRPfZRM5N68UxC93NaUpOnZuFMdKHk7oL3/8/v
+	MEYbngBORYsLrxpKAV1Xd66apdLIWuxMX7P02e9oDJ/7He8jki3MILn40BAHpmcm
+	QBvpiDoDfl2iQCNeVn7fWH9oS5a+65FaYln0d8oQAZTgNKkoPr+PTSaeBwxGIlGX
+	X+5FI3i6a4Pa1sNg+9tYytF987xboS+24DHeCchFh4LhznrWke+haxhbA68lRoYV
+	p+OolePLs4vLc2654GR1VL33+c0hCEtqLrVenzSG4aq3kJhP2jFqSFJQPgCdEc5S
+	1gyBRDHqkZsZjN9feEXyKYe6H2VQoKf7+5Q34czg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 478ygmssfw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 14 Jun 2025 12:59:42 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55E7j8dQ015006;
+	Sat, 14 Jun 2025 12:59:41 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rpprqr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 14 Jun 2025 12:59:41 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55ECxd9q17367540
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 14 Jun 2025 12:59:39 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4DC2A20043;
+	Sat, 14 Jun 2025 12:59:39 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6AAA420040;
+	Sat, 14 Jun 2025 12:59:38 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.87.143.160])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat, 14 Jun 2025 12:59:38 +0000 (GMT)
+Date: Sat, 14 Jun 2025 14:59:36 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
+ integrated
+Message-ID: <aE1yOG2JhS86XsrK@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250607200454.73587-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,113 +75,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEtW3e7mwjTTvfO9@google.com>
+In-Reply-To: <20250607200454.73587-1-ebiggers@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDEwNyBTYWx0ZWRfX/gPO7RlVoHIq H3zfnrZ9eeNrf1eNS+pQ7Q+72lGui2nOL/FAAW3VH367zdi2lxWx2zCUw4/9+LPZ5ySP5B8gVBB BTxtRduhv73wv65mkAIr/Cd0zpNyfEXVO/UKXhUZIlsw1JOSkK3klGpVP70ojFxXrlmXy8Pm8Ci
+ fLa/ScaQZWnpdG8VK+ILf4YcLOPNr9Q2oMIGqCxM0D1RXBeOAvP1UgOeMal0Gm9FATsENBOTOnQ zA8EssuGDPn/O87HU7ArmLEIL4EK0eYH9XNiW/Ifv1aGzDgFh5Tdh+cYcoVd2O2JrS7SXTtQ4Zs N0pj3VnbilN/6ECoCV/zklRcgrjwh85j5Tl2OrwWpNeTegUWbK8Ck2da7OADC7W6OZO23vWv5JV
+ EvdxAyj+GdEOusaEWkZvk/HhuHFYj6TZ698WtgsSTAlLaJPRavGiQUR9nMbxADwS7TJ9VjaS
+X-Authority-Analysis: v=2.4 cv=fYSty1QF c=1 sm=1 tr=0 ts=684d723e cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=CxYdweyBhWEn_dVdmv8A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: MOyPwlTHSYAIS_-mVBTJ8AD1_k4DNQqq
+X-Proofpoint-GUID: MOyPwlTHSYAIS_-mVBTJ8AD1_k4DNQqq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-14_04,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ spamscore=0 mlxlogscore=422 lowpriorityscore=0 adultscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506140107
 
-On Thu, Jun 12, 2025 at 03:38:21PM -0700, Brian Norris wrote:
-> > +static int register_entry_point(struct mm_info *data, uint32_t entry_point)
-> > +{
-> > +	u64 cmd;
-> > +	u8 status;
-> > +
-> > +	cmd = data->register_mm_entry_command |
-> > +	      (PAYLOAD_MM_REGISTER_ENTRY << 8);
-> > +	status = trigger_smi(cmd, entry_point, 5);
-> > +	pr_info(DRIVER_NAME ": %s: SMI returned %x\n", __func__, status);
+On Sat, Jun 07, 2025 at 01:04:42PM -0700, Eric Biggers wrote:
+
+Hi Eric,
+
+> This series is also available at:
 > 
-> Don't print this kind of debug stuff at INFO level. If you need it, use
-> KERN_DEBUG.
-> 
-> Once this gets attached to a proper device/driver, you probably want
-> dev_dbg(), if anything.
-> 
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git lib-crc-arch-v2
 ...
-> 
-> 
-> > +	/* At this point relocations are done and we can do some cool
-> 
-> 	/*
-> 	 * Multiline comment style is like this.
-> 	 * i.e., start with "/*" on its own line.
-> 	 * You got this right most of the time.
-> 	 */
-> 
 
-Got it.
+I tried git://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git crc-next
 
-> > +	 * pointer arithmetics to help coreboot determine correct entry
-> > +	 * point based on offsets.
-> > +	 */
-> > +	entry32_offset = mm_header->mm_entry_32 - (unsigned long)shared_buffer;
-> > +	entry64_offset = mm_header->mm_entry_64 - (unsigned long)shared_buffer;
-> > +
-> > +	mm_header->mm_entry_32 = entry32_offset;
-> > +	mm_header->mm_entry_64 = entry64_offset;
-> > +
-> > +	return (unsigned long)shared_buffer;
-> > +}
-> > +
-> > +static int __init mm_loader_init(void)
-> > +{
-> > +	u32 entry_point;
-> > +
-> > +	if (!mm_info)
-> > +		return -ENOMEM;
-> 
-> Hmm, so you have two modules, mm_info and mm_loader. mm_loader depends
-> on mm_info, but doesn't actually express that dependency. Can you just
-> merge mm_loader into mm_info or vice versa? Or at least, pass the
-> necessary data directly between the two, not as some implicit ordering
-> like this.
-> 
+With s390 debug_defconfig It causes this:
 
-Yep, will do that. As long as there is only one cbtable entry (and I
-think this will stay like this), mm_info can be part of mm_loader.
+alg: hash: skipping comparison tests for crc32c-s390 because crc32c-generic is unavailable
 
-> > +
-> > +	entry_point = place_handler();
-> > +
-> > +	if (register_entry_point(mm_info, entry_point)) {
-> > +		pr_warn(DRIVER_NAME ": registering entry point for MM payload failed.\n");
-> > +		kfree(mm_info);
-> > +		mm_info = NULL;
-> > +		free_pages((unsigned long)shared_buffer, get_order(blob_size));
-> > +		return -1;
-> > +	}
-> > +
-> > +	mdelay(100);
-> 
-> Why the delay? At least use a comment to tell us. And if it's really
-> needed, use msleep(), not mdelay(). scripts/checkpatch.pl should have
-> warned you. And, please use scripts/checkpatch.pl if you aren't already
-> ;)
-> 
+No other alg complains. Is it expected?
 
-Long story short, SMIs on real hardware like to take longer from time to
-time, and the delay was a "safeguard". It is probably not the proper way
-to handle it, but locking here was not helpful at all, lock was released
-regardless of CPU being still in SMM context (I assume due to SMIs being
-invisible to whatever runs in ring-0). Have to admit though, that 100ms
-is a consequence of trial and error. I would actually use some on advice
-how to handle this properly. scripts/checkpatch.pl was not complaining
-about it. It only gave me:
+Thanks!
 
-WARNING: quoted string split across lines
-#57: FILE: drivers/firmware/google/mm_loader.c:57:
-+		     ".return_not_changed:"
-+		     "movq	%%rcx, %[status]\n\t"
-
-total: 0 errors, 1 warnings, 0 checks, 186 lines checked
-
-> > +
-> > +	kfree(mm_info);
-> > +	mm_info = NULL;
-> 
-> This is odd and racy, having one module free data provided by another,
-> where that other module might also free it. Hopefully this gets
-> simplified if you manage to combine the modules, like I suggest.
-> 
-
-Yep, got it.
-
-Best,
-Michal
