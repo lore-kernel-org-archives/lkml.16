@@ -1,154 +1,291 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4581E8320
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 19:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6F727713;
+	Sat, 14 Jun 2025 19:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749928149; cv=none; b=nCnxcluX+/y92dH3xwZ7kjie1Gsidd9CaYMULJzAyBM1nn1uRQ7kXjtbZXrX/IkHqLdIZqDIeyYXt/4XKLISxq/Q63bM3xp7PP0C9mOHKMv7TvbT5E4J6GzVS9Yl/a/9/CR3JUZEoHT3mCuxZ4sozoteblK5SYTYfaGPWRPST5A=
+	t=1749928203; cv=none; b=RfC5iljkAm0BraHFsw5dfqj+C76yJYPdv1+KJKRm7PTqQ5QitbKOLHa8LRcDjT55W8/tEPUx9h16Ydan61IdrhQeooImQ2bEvLNZmjJguBPFaY84n0gwkjOG5UHNFQ2kgp8pBSBPiikirRtaPfqwEz2DCpgV6Ldp7Qy0XVPcw/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749928149; c=relaxed/simple;
-	bh=DhUM7JyGK/Bc8k+PpjvgIjXKz9RYpDG+H2qdDaLKqqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ShUDg74afPu21FbzS1r0lbEfOnaLC7KIaCSqeDpT1hWtTKkTHGG2pzZ5Bmyg/F3ObGTc7jiC1dk/BdfqMABs2hzJ9sJxq+WMAQAOh1/+BGDpJtqk0dWF0XbrrmCScdPTxjXLBHfLEVTf2RNe6jc5z95zqQF6Muem/etxM5y736A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Me6yFP57; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749928203; c=relaxed/simple;
+	bh=bjhQYBIAmrs9fPgWYClOvqQFEvjW34DMUYRym/0xXuk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=SV+i/sviqTqf3uJRxii998BclLKURNDlMtu3vhxDB9j7Sjgy1LRXslXgw0ZNeVOXlldesaV/LhFecpN45qgrhSPr+OkYCfyGu5RkoGOPRjBg2n6Yv9WFMrxlG3MGwdBNmhNzWR+vk/LeWYF2emRg+F9lJZVy5Tj87QRo0FyR740=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmgLRGRg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Me6yFP57"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55EHkowR028785
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 19:09:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0KpeyNaWZvAaZIB4caY9JHuEJ/mF3mbWm+riygqbdpg=; b=Me6yFP57Ev5MP6T2
-	I91d0P5ocy4Iz9Q//Q9uls5ENPFSRggYssj2XOtVVfgjvir76ii+yQICC+d+dpra
-	QYHd1mguDana/9CR9LasQ54lu1TEnFGkSvgLeYqyK4t7ubfiGHv1GoyFRmJVMdGZ
-	Mbjo8rNxsZv2UkvHo1G+xOt/4eoq17+T8uT8QquiMwcPg3gFMswSi2t+WbNF1gda
-	TajBntzealFLw5xcifQZaWaX+zA32lj+IdzwVAtv3zRoHRjE8zp2NPIKNepOWIq9
-	j48at3BxPEV7Zl8CqsZsKbkgS4OHX6hHfksNd+maMVxVX3MwS84yUHRvd/0jamxE
-	R7jqBg==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791ug8vxe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 19:09:07 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a582e95d24so5487491cf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 12:09:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749928146; x=1750532946;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0KpeyNaWZvAaZIB4caY9JHuEJ/mF3mbWm+riygqbdpg=;
-        b=NxLDeYLAbj8ut1dEHzaZhB6/Vb3WmN0loCeRwjobgVtY4oWX6Q5LRp3cEHnio/ZXpd
-         /D49+7bJ1A/Qx1XXUSa5STSV+HRrDNXCH1AH7mNjW9sfkTwJ99T6p8U1B54eea/tnLWz
-         qscKywZ9fX0bwVbES2FFcVE+nH0mSn+l681dbdAi820VJv/Rw+iBekxaMhrHUUhYkj86
-         2E20vUSPHIneqj2mN/wxaPusD6l4BmGsiG+Qjji3vi3/ZPU7sEDcQk/6jsXaS09tKDqf
-         r3tzxiAwIRn5H530Wk/yo0vN0UcABgLRGNUtS7J0lreabtGE8iQO3fD2MyykRQCqMZJ5
-         C7+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUnBdvjAwdNKNVAz+u85gLb8OeLGroicL0PdM4Mm9M573lwt7XC7w9e1LwhTzuNTZ+Dfr67PeER1t1zPaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw56bamTSCZHf9+EivtAtrXLdicRAZRqp9mhvZVglrMjGNFGUQu
-	rBsX1lEKKUz27MBZdvtQD7jv7zTIw+NHC3NRfZX0sf5ZYRDdPPD/9lkJmgMeyylIM3XijPaVGVc
-	DB/Sp+YrfqVRfSiCZGds+C3F6sKEIIV5UtKPBoQfTJtyoYsz6deeacUPXO0sPUfXu5k8=
-X-Gm-Gg: ASbGncty8581OK5/h5Si8UFRQUSMu7sQZlG9OLtR33GBFp8wenoIckBMjqcYCgwMzgP
-	bxvjH4y0/FCVnahCi+WK/tsDHi0AEomyoSNTAGvoZWmJrY/JxjpKDzzs6fGa0LaU5p0l6OQvdDH
-	xkggQSj7Y+X1etj6VbSY5aX4kjww7sF4sXn+U9PkTsrjIw89IY6PSVmw5y7frOcbn6QKMWbsW6d
-	gmI6oTnVMNiI65xCnM+Cdqb9eSnuTn72N29va6383cG0FlJ+lCCdrGMlZGa2h8U5pQjylK7tZxb
-	p6SyF6g5BalhIyZSaE3hovZamSJboQ5d3LqY25SsbHnJX6JuJFstdL3fgckRzrUChcEs09ALG1b
-	ta38=
-X-Received: by 2002:a05:622a:54f:b0:474:e7de:8595 with SMTP id d75a77b69052e-4a73c619412mr21878751cf.14.1749928146256;
-        Sat, 14 Jun 2025 12:09:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvOYiWSYZiYBM1VC9TXTvoNoA6MCXtBB8myxMV9hXqAPT2FHURkrMkoJr7i/FgzC08d+aLrQ==
-X-Received: by 2002:a05:622a:54f:b0:474:e7de:8595 with SMTP id d75a77b69052e-4a73c619412mr21878571cf.14.1749928145897;
-        Sat, 14 Jun 2025 12:09:05 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8982f4esm352351666b.176.2025.06.14.12.09.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Jun 2025 12:09:05 -0700 (PDT)
-Message-ID: <09c40216-c0a2-4698-83b6-b838c28eed84@oss.qualcomm.com>
-Date: Sat, 14 Jun 2025 21:09:02 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmgLRGRg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB087C4CEEB;
+	Sat, 14 Jun 2025 19:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749928203;
+	bh=bjhQYBIAmrs9fPgWYClOvqQFEvjW34DMUYRym/0xXuk=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=LmgLRGRgImgkAbFP5aE23D9Mnm25p09TaVKJ9zqT+zbRd3MKgHb7Z1K9dmP9jqwC7
+	 yV/6kDzAOmkgICrDQwt9aswCEqh4DgkTQov3DVkY1ESAJy4psz0tc6oIBGD3VtVZa7
+	 bKff5WGCyT7PrORS7yrPCnnp+zoaxJ0+l5JLGDzOtm9jahYAzXGetAf7o1onU1fGV4
+	 dlgPTqsZPmfy3JwO2MOQC/CnRaFbB7/F306yttjk7itM4l+ak5pssywcfBpjHnEs0Q
+	 p2H4lsDM0zXPW2QVuAkKYPpDxRc3i1nSshFwsNlqdAkJLJo1Fq8kRpcq8RQEu03S6C
+	 iFvRSyLgxgbug==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 05/10] clk: qcom: dispcc-qcs615: Add QCS615 display
- clock controller driver
-To: Taniya Das <quic_tdas@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Dmitry Baryshkov <lumag@kernel.org>
-References: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
- <20250612-qcs615-mm-v9-clock-controllers-v9-5-b34dc78d6e1b@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250612-qcs615-mm-v9-clock-controllers-v9-5-b34dc78d6e1b@quicinc.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDE2MCBTYWx0ZWRfX1He+VBKathkq
- 5xGwQL2uxaDkf8evN7cuclAkhS/joYPSfLHzJ6u8M6ite7TIav5MzIY3P4UaNpkxothqPm7V5z7
- CTRaNGa1JA6GHdB5TDBmxP7ZWk+yt1ZtNG3fO3xts1mIbC9x4G8p54IDj5lhJwtadUx8Yxo40lL
- Tsu7Q1aITj0tpyNBy1Sy7SMgP6D9qAd+pRRQW3H4AGkOLuNRt43k5MhC6VMLMdMm0KmxqD2sTmJ
- 4FFGmxUBvND9b1KhFSQEhtV0JnfynYN28d82Yncxs5tMUeWkQukj8fsxyf/+vIhmCLItSFlcfWa
- O5xS408O95ueFo2LhNrdKZJQS3bGvRPkc6STwgAIyc5xyFOf2DzwXvyvNUEmYjhyXAShlXJ/2Ew
- cTkwXIB9DiBafIVbggluCOr1ztplqRihO/pmXs9v+lOopv6fAxfcXu0TMMV37BCtTnU04fca
-X-Proofpoint-GUID: eBUl7GltvWNQUjQnW9UubAe8o5uGoCn_
-X-Authority-Analysis: v=2.4 cv=NtnRc9dJ c=1 sm=1 tr=0 ts=684dc8d3 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=fbCSmPG1eNaTwHpC0zAA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: eBUl7GltvWNQUjQnW9UubAe8o5uGoCn_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-14_07,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 adultscore=0 clxscore=1015 malwarescore=0
- impostorscore=0 phishscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506140160
+Date: Sat, 14 Jun 2025 21:09:57 +0200
+Message-Id: <DAMHRVOA2T1Q.OM6T75HPFO60@kernel.org>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
+ type
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>
+X-Mailer: aerc 0.20.1
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
+In-Reply-To: <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
 
-On 6/12/25 11:55 AM, Taniya Das wrote:
-> Add support for the display clock controller for display clients to
-> be able to request for the clocks on QCS615 platform.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
+On Thu Jun 12, 2025 at 4:01 PM CEST, Alexandre Courbot wrote:
+> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..ee0f67ad1a89e69f5f8d2077e=
+ba5541b472e7d8a
+> --- /dev/null
+> +++ b/rust/kernel/num.rs
+> @@ -0,0 +1,173 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Numerical and binary utilities for primitive types.
+> +
+> +use crate::build_assert;
+> +use core::borrow::Borrow;
+> +use core::fmt::Debug;
+> +use core::hash::Hash;
+> +use core::ops::Deref;
+> +
+> +/// An unsigned integer which is guaranteed to be a power of 2.
+> +#[derive(Debug, Clone, Copy)]
+> +#[repr(transparent)]
 
-> +static int disp_cc_qcs615_probe(struct platform_device *pdev)
+Let's add a `# Safety` section with the invariant that `T` is a power of
+2.
+
+Maybe we should even have an `Int` trait for the different integer types
+that we constrain `T` to.
+
+> +pub struct PowerOfTwo<T>(T);
+> +
+> +macro_rules! power_of_two_impl {
+> +    ($($t:ty),+) =3D> {
+> +        $(
+> +            impl PowerOfTwo<$t> {
+> +                /// Validates that `v` is a power of two at build-time, =
+and returns it wrapped into
+> +                /// `PowerOfTwo`.
+> +                ///
+> +                /// A build error is triggered if `v` cannot be asserted=
+ to be a power of two.
+> +                ///
+> +                /// # Examples
+> +                ///
+> +                /// ```
+> +                /// use kernel::num::PowerOfTwo;
+> +                ///
+> +                /// let v =3D PowerOfTwo::<u32>::new(256);
+> +                /// assert_eq!(v.value(), 256);
+> +                /// ```
+> +                #[inline(always)]
+> +                pub const fn new(v: $t) -> Self {
+> +                    build_assert!(v.count_ones() =3D=3D 1);
+> +                    Self(v)
+> +                }
+
+We also probably want an `unsafe new_unchecked(v: $t) -> Self`. It can
+still use a `debug_assert!` to verify the value.
+
+> +
+> +                /// Validates that `v` is a power of two at runtime, and=
+ returns it wrapped into
+> +                /// `PowerOfTwo`.
+> +                ///
+> +                /// `None` is returned if `v` was not a power of two.
+> +                ///
+> +                /// # Examples
+> +                ///
+> +                /// ```
+> +                /// use kernel::num::PowerOfTwo;
+> +                ///
+> +                /// assert_eq!(PowerOfTwo::<u32>::try_new(16).unwrap().v=
+alue(), 16);
+> +                /// assert_eq!(PowerOfTwo::<u32>::try_new(15), None);
+> +                /// ```
+> +                #[inline(always)]
+> +                pub const fn try_new(v: $t) -> Option<Self> {
+> +                    match v.count_ones() {
+> +                        1 =3D> Some(Self(v)),
+> +                        _ =3D> None,
+> +                    }
+> +                }
+> +
+> +                /// Returns the value of this instance.
+> +                ///
+> +                /// It is guaranteed to be a power of two.
+> +                ///
+> +                /// # Examples
+> +                ///
+> +                /// ```
+> +                /// use kernel::num::PowerOfTwo;
+> +                ///
+> +                /// let v =3D PowerOfTwo::<u32>::new(256);
+> +                /// assert_eq!(v.value(), 256);
+> +                /// ```
+> +                #[inline(always)]
+> +                pub const fn value(&self) -> $t {
+
+Since this type is `Copy`, we should use `self` here instead of `&self`.
+
+
+Why not add
+
+    if !self.0.is_power_of_two() {
+        unsafe { ::core::hint::unreachable_unchecked() }
+    }
+
+here?
+
+> +                    self.0
+> +                }
+> +
+> +                /// Returns the mask corresponding to `self.value() - 1`=
+.
+> +                #[inline(always)]
+> +                pub const fn mask(&self) -> $t {
+> +                    self.0.wrapping_sub(1)
+
+And then use `self.value()` here instead?
+
+(we could even use `self.value() - 1`, since the optimizer can remove
+the overflow check: https://godbolt.org/z/nvGaozGMW but wrapping_sub is
+fine. The optimizations will most likely be more useful in other
+arithmetic with `.value()`)
+
+> +                }
+> +
+> +                /// Aligns `self` down to `alignment`.
+> +                ///
+> +                /// # Examples
+> +                ///
+> +                /// ```
+> +                /// use kernel::num::PowerOfTwo;
+> +                ///
+> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_down=
+(0x4fff), 0x4000);
+> +                /// ```
+> +                #[inline(always)]
+> +                pub const fn align_down(self, value: $t) -> $t {
+> +                    value & !self.mask()
+> +                }
+> +
+> +                /// Aligns `value` up to `self`.
+> +                ///
+> +                /// Wraps around to `0` if the requested alignment pushe=
+s the result above the
+> +                /// type's limits.
+> +                ///
+> +                /// # Examples
+> +                ///
+> +                /// ```
+> +                /// use kernel::num::PowerOfTwo;
+> +                ///
+> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_up(0=
+x4fff), 0x5000);
+> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_up(0=
+x4000), 0x4000);
+> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_up(0=
+x0), 0x0);
+> +                /// assert_eq!(PowerOfTwo::<u16>::new(0x100).align_up(0x=
+ffff), 0x0);
+> +                /// ```
+> +                #[inline(always)]
+> +                pub const fn align_up(self, value: $t) -> $t {
+> +                    self.align_down(value.wrapping_add(self.mask()))
+> +                }
+> +            }
+> +        )+
+> +    };
+> +}
+> +
+> +power_of_two_impl!(usize, u8, u16, u32, u64, u128);
+> +
+> +impl<T> Deref for PowerOfTwo<T> {
+> +    type Target =3D T;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        &self.0
+> +    }
+> +}
+> +
+> +impl<T> PartialEq for PowerOfTwo<T>
+> +where
+> +    T: PartialEq,
 > +{
-> +	struct regmap *regmap;
+> +    fn eq(&self, other: &Self) -> bool {
+> +        self.0 =3D=3D other.0
+> +    }
+> +}
 > +
-> +	regmap = qcom_cc_map(pdev, &disp_cc_qcs615_desc);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
+> +impl<T> Eq for PowerOfTwo<T> where T: Eq {}
 > +
-> +	clk_alpha_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
+> +impl<T> PartialOrd for PowerOfTwo<T>
+> +where
+> +    T: PartialOrd,
+> +{
+> +    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+> +        self.0.partial_cmp(&other.0)
+> +    }
+> +}
 > +
-> +	/* Keep some clocks always enabled */
-> +	qcom_branch_set_clk_en(regmap, 0x6054); /* DISP_CC_XO_CLK */
+> +impl<T> Ord for PowerOfTwo<T>
+> +where
+> +    T: Ord,
+> +{
+> +    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+> +        self.0.cmp(&other.0)
+> +    }
+> +}
 > +
-> +	return qcom_cc_really_probe(&pdev->dev, &disp_cc_qcs615_desc, regmap);
+> +impl<T> Hash for PowerOfTwo<T>
+> +where
+> +    T: Hash,
+> +{
+> +    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+> +        self.0.hash(state);
+> +    }
+> +}
 
-Similarly:
+Can't these traits also be implemented using the derive macros?
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Cheers,
+Benno
 
-Konrad
+> +
+> +impl<T> Borrow<T> for PowerOfTwo<T> {
+> +    fn borrow(&self) -> &T {
+> +        &self.0
+> +    }
+> +}
+
