@@ -1,34 +1,34 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C442D8836
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 01:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C89DC120
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 01:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749863034; cv=none; b=AufKgsYbMbTKmCTBwdutcqOgy7itgQhlHxIWgROmf1mq0O4xYEofxJNWThocvqdxoOGqv3KWriPmyXfbB/B/41ve1GOdye7/jfomNfXjqJSFT5vUhYb3GdGES1i25rs2+fN2qbDfdQeE+gMrPDO/YFaD5v4aXiBwKwnPo+0CU+A=
+	t=1749863035; cv=none; b=m05BFMDTFGABdHWdEr9DTeroTTg0t6VoWWo8mggb6c3DFxFwYtJf9uJtmTNmVR3SmwjpzQW9nJ11vE79t3S2OmSlHVhdo7zOwA5u31jxlHkuBzy1izM2xsHe4u22B0C1u2nzM/wT3KmpYM0kjSb/m0Wqf/0h8CkULGloXouNolQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749863034; c=relaxed/simple;
-	bh=K1inPO+DA6yjFDl2QM7VQyCmC+BnsRiszydUTaXZNtA=;
+	s=arc-20240116; t=1749863035; c=relaxed/simple;
+	bh=SWgXIIRz0D58Upia+8kw6/2PP36wAavr4rBDsxFjBQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CY7ji1Ny+f2CseXang+8Db0B/mivBam/tFv59ry0Hkb8uQBnzHPD0hAA5oaDnBEBUSc+0TCK5Tk0qp923e1kK6YK1bX9/68STx6lzoN4Y6HUXcKipugYfOYInC/LCHPMC9dCPHysQLlC4vuxV/XSLJPmMrMlFuXQvGJpvrun5Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=cMKhfvsE; arc=none smtp.client-ip=46.235.229.95
+	 MIME-Version; b=iFa4YnEyOMPbtAPshtO5jqbaPHbxNV5Pv3af3wDGKWGExKoPfX4oVSc3Q44bdBQhIPqg74zlXqlCcR+vn4V94a3Viup8mZT5C/UHxdra4nxDf6iZ963LSaCpUuMkyXZgrjYkZ5dmtgg94HiMyteOGf2Q/5zgIMqUGKGVg2LMCBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=DrsdJthz; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="cMKhfvsE"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="DrsdJthz"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=J9fms8UGgynmJkelATwVHEvwCi9WKj/UbrvYjJPuhSU=; b=cMKhfvsEofHrqGRx
-	GJx4zlEvQIovduA3TyCuD5aaiXyFXwvRQjtf0tOg4zzGbkgF8xPsZxjJgW32alV4S3uu+8aBx7255
-	8xP/ccdYdaPXDZTr8pPZ3kZzdLwrYzstk5E9DmxErvDouoPVWpHGyf75SolCU/g/2+IuK+padNaon
-	3R7mG2QeEQURRxHCF0EAorAmMaDwLY3NC4Xjzta/sWechY3snXjpBhyGJxwnPvj4HYiNiQsh416n5
-	kOmXz9MGkfnK6DPV6uBxCppUT94xGueBBxQs6lvEDtf1kfZki2FFpwonunrK8F+z120fSJ5BQQhb7
-	0O+TcA7nL81nHLGpMw==;
+	:Subject; bh=7WdCBxPVskYp7kRopvkR9iGr4Vqpwe3AAwUJf9MA79U=; b=DrsdJthz1u9FeD79
+	/Jf7l+uoWQAHXQ9ApA8eyQpwjlGWUVkYCvdZrqoLXe6W4PsRVhBqL9WflvgWs5ta80cQe08B3if6K
+	G44TUyYWex8fzegwgpA/TWbnRtn8SlvSvgr0GqhAfw8wTeceG953YeMMfzeSP5kiZeRxGX5AMZrCM
+	ydnFwBzcOTEUO2Iuzh3vUPtGB5sMahPdyPGyYBvVeGm1i+vK4xf7yLt1AttafGcfF/ibOuqsD5Hxe
+	Pg+oMBFWpWAKb113QaaEOxYXMIBufJShJ4nC0anChY3ph7AE56r3MIItcqGbdVjFat/qUMymY8O2g
+	UFLMgFYW5PvGZzljNA==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1uQFJE-009amM-18;
-	Sat, 14 Jun 2025 01:03:48 +0000
+	id 1uQFJF-009amM-0D;
+	Sat, 14 Jun 2025 01:03:49 +0000
 From: linux@treblig.org
 To: bryan-bt.tan@broadcom.com,
 	vishnu.dasa@broadcom.com
@@ -37,9 +37,9 @@ Cc: bcm-kernel-feedback-list@broadcom.com,
 	gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 1/3] misc: vmw_vmci: Remove unused vmci_ctx functions
-Date: Sat, 14 Jun 2025 02:03:42 +0100
-Message-ID: <20250614010344.636076-2-linux@treblig.org>
+Subject: [PATCH 2/3] misc: vmw_vmci: Remove unused vmci_doorbell_notify
+Date: Sat, 14 Jun 2025 02:03:43 +0100
+Message-ID: <20250614010344.636076-3-linux@treblig.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250614010344.636076-1-linux@treblig.org>
 References: <20250614010344.636076-1-linux@treblig.org>
@@ -53,112 +53,99 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-vmci_ctx_dbell_destroy_all() and vmci_ctx_pending_datagrams()
-were added in 2013 by
-commit 28d6692cd8fb ("VMCI: context implementation.")
+vmci_doorbell_notify() was added in 2013 by
+commit 83e2ec765be0 ("VMCI: doorbell implementation.")
 
-but have remained unused.
+but has remained unused.
 
-Remove them.
+Remove it.
 
 Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- drivers/misc/vmw_vmci/vmci_context.c | 54 ----------------------------
- drivers/misc/vmw_vmci/vmci_context.h |  2 --
- 2 files changed, 56 deletions(-)
+ drivers/misc/vmw_vmci/vmci_doorbell.c | 53 ---------------------------
+ include/linux/vmw_vmci_api.h          |  1 -
+ 2 files changed, 54 deletions(-)
 
-diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
-index f22b44827e92..843f98fb17f6 100644
---- a/drivers/misc/vmw_vmci/vmci_context.c
-+++ b/drivers/misc/vmw_vmci/vmci_context.c
-@@ -268,28 +268,6 @@ static int ctx_fire_notification(u32 context_id, u32 priv_flags)
+diff --git a/drivers/misc/vmw_vmci/vmci_doorbell.c b/drivers/misc/vmw_vmci/vmci_doorbell.c
+index fa8a7fce4481..53eeb9e6cb56 100644
+--- a/drivers/misc/vmw_vmci/vmci_doorbell.c
++++ b/drivers/misc/vmw_vmci/vmci_doorbell.c
+@@ -257,23 +257,6 @@ static int dbell_unlink(struct vmci_handle handle)
+ 	return vmci_send_datagram(&unlink_msg.hdr);
+ }
+ 
+-/*
+- * Notify another guest or the host.  We send a datagram down to the
+- * host via the hypervisor with the notification info.
+- */
+-static int dbell_notify_as_guest(struct vmci_handle handle, u32 priv_flags)
+-{
+-	struct vmci_doorbell_notify_msg notify_msg;
+-
+-	notify_msg.hdr.dst = vmci_make_handle(VMCI_HYPERVISOR_CONTEXT_ID,
+-					      VMCI_DOORBELL_NOTIFY);
+-	notify_msg.hdr.src = VMCI_ANON_SRC_HANDLE;
+-	notify_msg.hdr.payload_size = sizeof(notify_msg) - VMCI_DG_HEADERSIZE;
+-	notify_msg.handle = handle;
+-
+-	return vmci_send_datagram(&notify_msg.hdr);
+-}
+-
+ /*
+  * Calls the specified callback in a delayed context.
+  */
+@@ -566,39 +549,3 @@ int vmci_doorbell_destroy(struct vmci_handle handle)
  	return VMCI_SUCCESS;
  }
- 
--/*
-- * Returns the current number of pending datagrams. The call may
-- * also serve as a synchronization point for the datagram queue,
-- * as no enqueue operations can occur concurrently.
-- */
--int vmci_ctx_pending_datagrams(u32 cid, u32 *pending)
--{
--	struct vmci_ctx *context;
+ EXPORT_SYMBOL_GPL(vmci_doorbell_destroy);
 -
--	context = vmci_ctx_get(cid);
--	if (context == NULL)
+-/*
+- * vmci_doorbell_notify() - Ring the doorbell (and hide in the bushes).
+- * @dst:        The handlle identifying the doorbell resource
+- * @priv_flags: Priviledge flags.
+- *
+- * Generates a notification on the doorbell identified by the
+- * handle. For host side generation of notifications, the caller
+- * can specify what the privilege of the calling side is.
+- */
+-int vmci_doorbell_notify(struct vmci_handle dst, u32 priv_flags)
+-{
+-	int retval;
+-	enum vmci_route route;
+-	struct vmci_handle src;
+-
+-	if (vmci_handle_is_invalid(dst) ||
+-	    (priv_flags & ~VMCI_PRIVILEGE_ALL_FLAGS))
 -		return VMCI_ERROR_INVALID_ARGS;
 -
--	spin_lock(&context->lock);
--	if (pending)
--		*pending = context->pending_datagrams;
--	spin_unlock(&context->lock);
--	vmci_ctx_put(context);
+-	src = VMCI_INVALID_HANDLE;
+-	retval = vmci_route(&src, &dst, false, &route);
+-	if (retval < VMCI_SUCCESS)
+-		return retval;
 -
--	return VMCI_SUCCESS;
+-	if (VMCI_ROUTE_AS_HOST == route)
+-		return vmci_ctx_notify_dbell(VMCI_HOST_CONTEXT_ID,
+-					     dst, priv_flags);
+-
+-	if (VMCI_ROUTE_AS_GUEST == route)
+-		return dbell_notify_as_guest(dst, priv_flags);
+-
+-	pr_warn("Unknown route (%d) for doorbell\n", route);
+-	return VMCI_ERROR_DST_UNREACHABLE;
 -}
--
- /*
-  * Queues a VMCI datagram for the appropriate target VM context.
-  */
-@@ -991,38 +969,6 @@ int vmci_ctx_dbell_destroy(u32 context_id, struct vmci_handle handle)
- 	    VMCI_ERROR_NOT_FOUND : VMCI_SUCCESS;
- }
- 
--/*
-- * Unregisters all doorbell handles that were previously
-- * registered with vmci_ctx_dbell_create.
-- */
--int vmci_ctx_dbell_destroy_all(u32 context_id)
--{
--	struct vmci_ctx *context;
--	struct vmci_handle handle;
--
--	if (context_id == VMCI_INVALID_ID)
--		return VMCI_ERROR_INVALID_ARGS;
--
--	context = vmci_ctx_get(context_id);
--	if (context == NULL)
--		return VMCI_ERROR_NOT_FOUND;
--
--	spin_lock(&context->lock);
--	do {
--		struct vmci_handle_arr *arr = context->doorbell_array;
--		handle = vmci_handle_arr_remove_tail(arr);
--	} while (!vmci_handle_is_invalid(handle));
--	do {
--		struct vmci_handle_arr *arr = context->pending_doorbell_array;
--		handle = vmci_handle_arr_remove_tail(arr);
--	} while (!vmci_handle_is_invalid(handle));
--	spin_unlock(&context->lock);
--
--	vmci_ctx_put(context);
--
--	return VMCI_SUCCESS;
--}
--
- /*
-  * Registers a notification of a doorbell handle initiated by the
-  * specified source context. The notification of doorbells are
-diff --git a/drivers/misc/vmw_vmci/vmci_context.h b/drivers/misc/vmw_vmci/vmci_context.h
-index 4db8701c9781..980fdece0f7d 100644
---- a/drivers/misc/vmw_vmci/vmci_context.h
-+++ b/drivers/misc/vmw_vmci/vmci_context.h
-@@ -132,7 +132,6 @@ bool vmci_ctx_supports_host_qp(struct vmci_ctx *context);
- int vmci_ctx_enqueue_datagram(u32 cid, struct vmci_datagram *dg);
- int vmci_ctx_dequeue_datagram(struct vmci_ctx *context,
- 			      size_t *max_size, struct vmci_datagram **dg);
--int vmci_ctx_pending_datagrams(u32 cid, u32 *pending);
- struct vmci_ctx *vmci_ctx_get(u32 cid);
- void vmci_ctx_put(struct vmci_ctx *context);
- bool vmci_ctx_exists(u32 cid);
-@@ -153,7 +152,6 @@ void vmci_ctx_unset_notify(struct vmci_ctx *context);
- 
- int vmci_ctx_dbell_create(u32 context_id, struct vmci_handle handle);
- int vmci_ctx_dbell_destroy(u32 context_id, struct vmci_handle handle);
--int vmci_ctx_dbell_destroy_all(u32 context_id);
- int vmci_ctx_notify_dbell(u32 cid, struct vmci_handle handle,
- 			  u32 src_priv_flags);
- 
+-EXPORT_SYMBOL_GPL(vmci_doorbell_notify);
+diff --git a/include/linux/vmw_vmci_api.h b/include/linux/vmw_vmci_api.h
+index f28907345c80..28a3b6a9e1ca 100644
+--- a/include/linux/vmw_vmci_api.h
++++ b/include/linux/vmw_vmci_api.h
+@@ -35,7 +35,6 @@ int vmci_doorbell_create(struct vmci_handle *handle, u32 flags,
+ 			 u32 priv_flags,
+ 			 vmci_callback notify_cb, void *client_data);
+ int vmci_doorbell_destroy(struct vmci_handle handle);
+-int vmci_doorbell_notify(struct vmci_handle handle, u32 priv_flags);
+ u32 vmci_get_context_id(void);
+ bool vmci_is_context_owner(u32 context_id, kuid_t uid);
+ int vmci_register_vsock_callback(vmci_vsock_cb callback);
 -- 
 2.49.0
 
