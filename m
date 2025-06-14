@@ -1,72 +1,45 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F6323DE;
-	Sat, 14 Jun 2025 01:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E89823DE
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 01:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749863003; cv=none; b=Z6+1tmy6U8+508jCqyxzScq1Y8T0gn1xqQJywCRT4tTFb/pYgb/XO7J8IPOzOWl2lv28qM48yneyCaKJk4K7+I50TToWRujPNqGm1tEDQE+gK4WsCC1PlNo0odVt8vfhh8SgVCAXQyO2IpYOd6HmgbZ30llYm4/VU/XaYgFSp/s=
+	t=1749863033; cv=none; b=Ls3cpN1pJUf0YfxNyBhfVowmDX31evEI0UcFqYK3v5OWicsmDmEne+wqTYIPsDI1RXgHHmRSGlXjcgQG4U0jCQEa4sGYPSQRAG57EMfVcjIPhzqGQDcL+OqGzoxPePS/madieBLKMzn40uTSM5z5qS2gK7Obi4jQIkILxZ4jTqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749863003; c=relaxed/simple;
-	bh=bx9XqlOPG1HpAffebukwlXEvNCXYob8Z/P9udGMfNkM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LDDumcGUu6DgFh/2f25q8zOgzqOOfeiB4WlW0Ll9pERCXi3nAWLZqT/urqvoWXjpIIP9qykXiBwuzfe5KOmD+bBnsBaMuqgS75jNsmhH2NeazgDz2smnt0fUIzzFKd1yLfGgUCMdyVk7Uwm0iHZYge6/U2jRZ5zfjhP5rnchvRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kzIOydXi; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749863033; c=relaxed/simple;
+	bh=g2LVzuKYEPK5r4ZuJhHrZvPL/0zQBB35IpExDh7Xll0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zn1QxO8Ld9TGol+HDr88R0V6I4256n/YjUNs9UItjv73GXDfAXdir44tXoF5jyDcUix+17V2MNTZGbIiyqiqNeboK70QkMpErs837c7qm7Ts5GCEZ1fhx18HZbr9bx+IIJfDaQgWty4dLKH6uRd1jpBuekJYo3S18exDlFh56j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=BDCUNlyD; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzIOydXi"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-708d90aa8f9so26337157b3.3;
-        Fri, 13 Jun 2025 18:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749863001; x=1750467801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=45jf0gP7QjTTPLFpULqujGZqfZ7lIP0Ebdkf9ozISuA=;
-        b=kzIOydXigTBX1NH3c/452LLONv/WxtD81iVxGSh8De4dAyVqm1ccxyydYh2b3W3I1D
-         U2tRvh21zRu8i0dZ5K7NNaMJkX59f2xgcLsC+Ow/T9NowaSzdsjQwjbjzdpJssW1eubq
-         MGJsyCNN1S1k8wBKmtYC95kxHknaaoIGdQYwALjgL9O4PAUC23W25HL1ga34OLwiy5jH
-         pVYEYaYwUi93NPLbjwSV0uhXNkUjwqmf/T8xZvAJN5AaMpdxCKdRzmc7JhtiKRse7Haz
-         ALIM9LIM9JFsly7El+Aj2MlS8SvL9dT5tKMXHsmBSqLwL1oBveVUJXUTZ+u155iuuDiP
-         uzpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749863001; x=1750467801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=45jf0gP7QjTTPLFpULqujGZqfZ7lIP0Ebdkf9ozISuA=;
-        b=uPTi2xjz+8W2XV7cQ3pXecDIjJpiqzUtCqSn/LtDeDSVl7ePWC3ZIizMaKhTiPSd4u
-         geW3ROB4/GXEEJHDEvTkhwFWLsNT0XL6ho4FnX/J4phYRYdQnRctgI69MIXegIwPln1e
-         frE+S9/1CW+2hi75ioS6nBjDy8U90zEDdbC+79gDwei1eompWBAQaBrzFc4uORnp6Zz3
-         zNYi7tkAX8PTTYCXPvFHVS6ZZ03RcPU3Q4zYAffATuTry96a+zXp0EAasUZCaov6Tf6m
-         hMhy4DBZFBcsfXr+EMDqhjxeodOpfWaV+acIwpwsxVcYpDazNiMQ6vyMAKBUuJlQYApm
-         jv2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWW/tcVdyaf1VEvyVJ5wXwt+mimtOCwhrPfNECu6CFIhHVyeO9jpMXCDJn0f3LY/brhsA+BvE8VQrwkIQ==@vger.kernel.org, AJvYcCWf+abiFoqKTmhBPotGGVKBpHc4L0iS8VXDyX85QFasJ2+DrQfTBAWN0amPPlbFgrsK6UGMy7KsH8mY+Ta3@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH0+xUht1TBvxVLk2VtT2ETN6gZnkBr3zfQU/nRKklOvXuXoBd
-	7CWRmE1HdiqsIt/V+IUieFK/KpponH+jtfMRDBkKEKE7fsyRQnV9UwcJxJUJj3Bw
-X-Gm-Gg: ASbGnctLoyCgvgekEbeaY8fuzf6SmSUJwTLIaJTuzToEE1b06D4mreF/C+IKCxIvyBj
-	OQF4PBaFepLDTKKGbHnp4gZIjtwj69ikEwXBJtSQ0UByWbhNZNT36p+lbHRD4n838M8Z5Z02WHe
-	pqdDp+ILQAzD8BDEvA+65pDE8sERl94utPiYAvtfan+aYH1p9ullV4/iCrPGiR7OOQIzhBC/2Lr
-	w1IT3jT3GZQ9iWIPwztKW5yhrJSxglMn6AcaY6gFuzovq877UbIMI4tXHL228R0rkD0NZ1ntbDv
-	tJjvKVngPRSxVFipFO3rfD4wqlpEn3dBg0uHdfmgbucfv3AtOrdXUUIdinWZAPULW1g+iP4O/tO
-	S
-X-Google-Smtp-Source: AGHT+IHmXSLPMx1K6XEijZ+aaRJwCSHJWyEvchSbPlDWmGU/iFQOIYE/s39k6qttoIL7OYrx8thaZQ==
-X-Received: by 2002:a05:690c:23ca:b0:710:d950:e70c with SMTP id 00721157ae682-71175475514mr21836157b3.28.1749863000992;
-        Fri, 13 Jun 2025 18:03:20 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7117157067esm2967597b3.41.2025.06.13.18.03.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 18:03:20 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: deller@gmx.de
-Cc: FlorianSchandinat@gmx.de,
-	alexguo1023@gmail.com,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fbdev: via: hw: Fix potential divide by zero
-Date: Fri, 13 Jun 2025 21:03:18 -0400
-Message-Id: <20250614010318.3128558-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="BDCUNlyD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=eYG/P1O+JryPbUcsMux4WisbYnBxk9G918rPkmGuTzY=; b=BDCUNlyDKt5j4ZRY
+	5wvLB4IgA2SWMRQHz9dEMrYyDL+KWyMu42Ew0HPw1SwMTnUPpmhAi0e16NfXaouVVNQrcWh13aM5C
+	4RTpY+ejc5e0FjnRNvoMb5+dq1B8kc7/K7SLesIzND4ZnafIe01vWgMUT3nWsZx5VQ4srJoYsyIQS
+	WpbTM9qAWfh0GRV4OnVqSspQXnWcKdih1cZu4jnMzhJxjzY56EbWA0ozB5WsPeqnaAUAAU0yMeOn3
+	fOfBwkQh9q/uqamM0lcuzLya3bpG78wQTRllP60/6EfDTaMRHQA4WzZTvSEch1+ab2L2kuwAopjR+
+	VowjV86KerzZRrHJPg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uQFJC-009amM-2C;
+	Sat, 14 Jun 2025 01:03:46 +0000
+From: linux@treblig.org
+To: bryan-bt.tan@broadcom.com,
+	vishnu.dasa@broadcom.com
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 0/3] vmci deadcode
+Date: Sat, 14 Jun 2025 02:03:41 +0100
+Message-ID: <20250614010344.636076-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,35 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Variable var->pixclock can be set by user. In case it equals to
-zero, divide by zero would occur in viafb_fill_crtc_timing.
-Similar crashes have happened in other fbdev drivers. We fix this
-by checking whether 'pixclock' is zero.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Similar commit: commit 16844e58704 ("video: fbdev: tridentfb:
-Error out if 'pixclock' equals zero")
+Hi,
+  This is a set of deadcode removal in vmw_vmci; all of
+the removals are whole function removals for functions
+that were added in 2013 but haven't been used.
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/video/fbdev/via/hw.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Build tested only.
 
-diff --git a/drivers/video/fbdev/via/hw.c b/drivers/video/fbdev/via/hw.c
-index 66afd7be00cc..31e0cac91889 100644
---- a/drivers/video/fbdev/via/hw.c
-+++ b/drivers/video/fbdev/via/hw.c
-@@ -1488,8 +1488,9 @@ void viafb_fill_crtc_timing(const struct fb_var_screeninfo *var,
- 	if (viaparinfo->chip_info->gfx_chip_name != UNICHROME_CLE266
- 		&& viaparinfo->chip_info->gfx_chip_name != UNICHROME_K400)
- 		viafb_load_FIFO_reg(iga, var->xres, var->yres);
--
--	viafb_set_vclock(PICOS2KHZ(var->pixclock) * 1000, iga);
-+	
-+	if (var->pixclock)
-+		viafb_set_vclock(PICOS2KHZ(var->pixclock) * 1000, iga);
- }
- 
- void viafb_init_chip_info(int chip_type)
+Dave
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+
+
+Dr. David Alan Gilbert (3):
+  misc: vmw_vmci: Remove unused vmci_ctx functions
+  misc: vmw_vmci: Remove unused vmci_doorbell_notify
+  misc: vmw_vmci: Remove unused qpair functions
+
+ drivers/misc/vmw_vmci/vmci_context.c    |  54 ----------
+ drivers/misc/vmw_vmci/vmci_context.h    |   2 -
+ drivers/misc/vmw_vmci/vmci_doorbell.c   |  53 ----------
+ drivers/misc/vmw_vmci/vmci_queue_pair.c | 133 ------------------------
+ include/linux/vmw_vmci_api.h            |   7 --
+ 5 files changed, 249 deletions(-)
+
 -- 
-2.34.1
+2.49.0
 
