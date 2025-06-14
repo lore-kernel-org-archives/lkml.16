@@ -1,183 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20D424B26;
-	Sat, 14 Jun 2025 10:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C6E19F480;
+	Sat, 14 Jun 2025 10:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749897622; cv=none; b=cRZjIrd9Nqqr37AlGQHUCwy04xBRjXxPGpBZ917Tyzhr4Hv9vCZYAYr2znApY3X8TNTE9KpbUPVP8sn/4Oaa5m4DlScEcWThOLFPm7qCoGL1aNuMxtG5Jl2tasT898086lmchO9wdaaePgvN1nv7LnTNT1mY6zUf/ZlRnBgZ7O8=
+	t=1749898267; cv=none; b=eIL15bMrfFrBEP3g6DILZiAxCcMj/ew+46jLZSMA/y2br7H8ypouJQvMq5VYJnFJtBH7PcUatYheazkEvgNUGL0Kktq27ZC8BH+weAwU5Aut4sKrqvhcl/lkRsOwlgZexlBqZh3WJmK1i1jlDWeFo9UxvwtuNXB40um4z1nd6uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749897622; c=relaxed/simple;
-	bh=uDww505S1HGbYr8sg72vql83/0dLbcLju2A9OcLXSfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tRN7g19WNxGW494wfmy2veJTysvtDeej69ItGF/HjV2MFNexq1qCwgx8P7bOCRiqcIi3sDbplAgBRw55zcMdE55nRAEfEF2L5VcYT53TVhEsdNogQwOkWTiOaqK8heurFXIc2yJDlja59aoK01Bano3I2cNvudjLRlVwzfdwWSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOy/+W7L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749898267; c=relaxed/simple;
+	bh=+QjFaIiMUGSJzqiOOXTmYspLVyzPEZz6q9ARTn/uewc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qwr09yz4mZre/g1PS5+QRNbtE9VhnkL0KEY9g/iOvhutz2smdPc3RW8JXoxxJ+U5b1uIxw5+wqBNRIIBcYKaxKdvYWncT+A7K1V7jqj3GOTJxAow5V3/I5+9bI1xl2v0hm2bT2r4m3Y8wxxX1Jhbmvcs7NDq4TamPqDui3tbIac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7HMw0/H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOy/+W7L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D778C4CEEB;
-	Sat, 14 Jun 2025 10:40:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7HMw0/H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C9C2C4CEEB;
+	Sat, 14 Jun 2025 10:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749897622;
-	bh=uDww505S1HGbYr8sg72vql83/0dLbcLju2A9OcLXSfY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fOy/+W7Lk1Zmhv101PWXOVaffopiTrgESvkWklOS0Urn4UIv5nnOpgKX5VbpK+kfd
-	 sHYWqWirBVYuNDnameHOnPltYduoCQnjgwgrZysgqdF2/eNz06kUSzqroWQoVmq1Xi
-	 Z4YJNvNWSQ3TaDGH46DYBLNelKkRaBbv826NgMosEkETL26c8VryOStPtM9rHDAQ5x
-	 Pnm6jR8UtE33lOPQ1Ri830Xpq1oa6kAbbkFdK0paspOKqV62PmoHwRlHnTSekmYyeW
-	 S7Jbv2pPXUf6EtdA6YhCFqME3jFdB3plOQTHqo8qpu6UWu1FlcSWsZnCP9nf1b3YJO
-	 dqqayOOeFcL6w==
-Date: Sat, 14 Jun 2025 11:40:14 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jorge Marques <gastmaier@gmail.com>, Jorge Marques
- <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
-Message-ID: <20250614114014.6af31254@jic23-huawei>
-In-Reply-To: <20250614112544.12e6bb30@jic23-huawei>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
-	<afc85a4b-1535-406d-ad14-143049267b98@baylibre.com>
-	<gvigk6helnl3yeouy636dgvay7tqux7lnxns3256fivzz4l3er@7ts7fz7vitff>
-	<fa403d19-13c5-4845-9364-58eea1b62e61@baylibre.com>
-	<20250614112544.12e6bb30@jic23-huawei>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1749898267;
+	bh=+QjFaIiMUGSJzqiOOXTmYspLVyzPEZz6q9ARTn/uewc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=W7HMw0/HiO88n418s+oUcT09ImF2TblWw6gUPyYskfxNN8VzSlKPJq5dvSdp5B2Jq
+	 8m7GCWE+j38hvFxW7O/diRK2Lb4LpKGZxJ1VL+dLhO2jBKiZBH8t67zykFQIaQOwxu
+	 lYyu/Aih3Qyb0Yi/wE7KmlhZ7rBI/PsAXlMQIofi34XxKGyMfHe8fz56x+8YsvRkKj
+	 3Tz3jYrJmDS++jrkwr9yxPVT0lArlDvnjh/ZrBt06ECALnlu5FDST7RZ4l3H7+eAVG
+	 /r0p8rM1o45Vj/5KvcbnHETYicrDYxPHqIDeSGYBY4LeeUoiFyreCttAMb/SBgFuGJ
+	 rThaM54GH8sgg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: Benjamin.Cheatham@amd.com,
+	Jonathan.Cameron@huawei.com,
+	dakr@kernel.org,
+	dan.j.williams@intel.com,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	marc.herbert@linux.intel.com,
+	rafael.j.wysocki@intel.com,
+	rafael@kernel.org,
+	sudeep.holla@arm.com,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in faux_device_destroy()
+Date: Sat, 14 Jun 2025 12:50:37 +0200
+Message-ID: <20250614105037.1441029-1-ojeda@kernel.org>
+In-Reply-To: <2025061313-theater-surrender-944c@gregkh>
+References: <2025061313-theater-surrender-944c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 14 Jun 2025 11:25:44 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Fri, 13 Jun 2025 20:33:42 -0400 Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> Great writeup, but as Miguel says, this isn't needed at all, the kernel
+> relies on the compiler to be sane :)
 
-> On Fri, 13 Jun 2025 11:03:24 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
-> > On 6/13/25 5:02 AM, Jorge Marques wrote:  
-> > > Hi David,
-> > > On Thu, Jun 12, 2025 at 02:38:45PM -0500, David Lechner wrote:    
-> > >> On 6/10/25 2:34 AM, Jorge Marques wrote:    
-> > >>> The AD4052 family supports autonomous monitoring readings for threshold
-> > >>> crossings. Add support for catching the GPIO interrupt and expose as an IIO
-> > >>> event. The device allows to set either, rising and falling directions. Only
-> > >>> either threshold crossing is implemented.
-> > >>>
-> > >>> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> > >>> ---    
-> > >>
-> > >> ...
-> > >>    
-> > >>> +
-> > >>> +static ssize_t ad4052_events_frequency_store(struct device *dev,
-> > >>> +					     struct device_attribute *attr,
-> > >>> +					     const char *buf,
-> > >>> +					     size_t len)
-> > >>> +{
-> > >>> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> > >>> +	struct ad4052_state *st = iio_priv(indio_dev);
-> > >>> +	int ret;
-> > >>> +
-> > >>> +	if (!iio_device_claim_direct(indio_dev))
-> > >>> +		return -EBUSY;
-> > >>> +	if (st->wait_event) {
-> > >>> +		ret = -EBUSY;
-> > >>> +		goto out_release;
-> > >>> +	}    
-> > >>
-> > >> I'm wondering if we should instead have some kind of iio_device_claim_monitor_mode()
-> > >> so that we don't have to implement this manually everywhere. If monitor mode was
-> > >> claimed, then iio_device_claim_direct() and iio_device_claim_buffer_mode() would
-> > >> both return -EBUSY. If buffer mode was claimed, iio_device_claim_monitor_mode()
-> > >> would fail. If direct mode was claimed, iio_device_claim_monitor_mode() would wait.
-> > >>    
-> > > I don't think this would scale with other vendors and devices, it is a    
-> > 
-> > Why not? I've seen lots of devices that have some sort of monitor mode
-> > where they are internally continuously comparing measurements to something
-> > and only signal an interrupt when some condition is met.  
-> 
-> There are lots that support such a monitor, but I think far fewer were direct
-> accesses don't work at the same time.  The max1363 comes to mind but in that
-> case it is possible to do both monitor and direct reads it is just that the
-> data format changes and I think we never bothered implementing the handling
-> for that combination.
-> 
-> I wouldn't mind such helpers if there are at least a couple of users.
-> 
-I got this wrong.  Key here is not direct access and monitor, but rather
-monitor and buffering (which is the odd format case on the max1363 etc).
+We may still want to clean them up, e.g. for tooling -- Kees/Dan: do we?
+e.g. I see a similar case with discussion at:
 
-Anyhow, conclusion that helpers are fine is the same.
+    https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
 
-I would try to minimise what doesn't work when monitor mode is enabled though
-(as commented in review of this patch).
+Which in the end was picked up as commit 2df2c0caaecf ("fbdev: au1100fb:
+Move a variable assignment behind a null pointer check").
 
-We also have to cover the internal cases where buffer mode is claimed but
-there isn't (IIRC) a call to that particular claim function as we don't
-want to end up holding the lock - same will be true for monitor mode - there
-is a difference between temporary fixing of state where locks are fine
-and the mode running for a long period in which we don't hold the lock.
-
-> >   
-> > > limitation of ADI:ADC:SPI requiring to enter configuration mode to read    
-> > 
-> > I don't see how it could be a limitiation exclusive to this combination of
-> > vendor, sensor type and bus type.
-> >   
-> > > registers. A deep dive into the other drivers that use IIO Events is
-> > > needed.    
-> > >>> +    
-> > 
-> > ...
-> >   
-> > >>> +
-> > >>> +static int ad4052_monitor_mode_disable(struct ad4052_state *st)
-> > >>> +{
-> > >>> +	int ret;
-> > >>> +
-> > >>> +	pm_runtime_mark_last_busy(&st->spi->dev);
-> > >>> +	pm_runtime_put_autosuspend(&st->spi->dev);
-> > >>> +
-> > >>> +	ret = ad4052_exit_command(st);
-> > >>> +	if (ret)
-> > >>> +		return ret;
-> > >>> +	return regmap_write(st->regmap, AD4052_REG_DEVICE_STATUS,
-> > >>> +			    AD4052_REG_DEVICE_STATUS_MAX_FLAG |
-> > >>> +			    AD4052_REG_DEVICE_STATUS_MIN_FLAG);
-> > >>> +}
-> > >>> +    
-> > >>
-> > >> It seems like we need to make sure monitor mode is disabled when the
-> > >> driver is removed. Otherwise we could end up with unbalanced calls to
-> > >> the pm_runtime stuff and leave the chip running.
-> > >>
-> > >>    
-> > > When monitor mode is enabled, pm is already disabled (won't enter low
-> > > power). I expect the pm to handle the clean-up properly since devm is
-> > > used.
-> > > The .remove() I suggest is reg access to:
-> > > 
-> > > * Put in configuration mode, if not.
-> > > * Put on low power mode, if not.
-> > >     
-> > I was just thinking something like:
-> > 
-> > 	if (st->wait_event)
-> > 		ad4052_monitor_mode_disable(st);
-> > 
-> > Also might need to use devm_add_action_or_reset() instead of .remove
-> > to get correct ordering.  
-> 
-> 
-
+Cheers,
+Miguel
