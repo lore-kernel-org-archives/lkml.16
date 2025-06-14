@@ -1,181 +1,150 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA9C2DFA24;
-	Sat, 14 Jun 2025 14:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81EE70808;
+	Sat, 14 Jun 2025 14:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749910585; cv=none; b=uBKf0ZMMWX0dkCXg40nw0N61eaZdrq1JAxAu6k5TyWpVVnHfDzz9HEhAfX4dMPf9r8eHhrLm6pO41AYZl0crK6qGzA1FJ7kjabD2vwlXkonXjvQoAXZKUCDnTB3Tr5weNvRrMh0QQux7Xut4SQ80HTxnEH+xZeChfJkwtHxP3cg=
+	t=1749910631; cv=none; b=V7v1BcQf619ZtLFiXYCIDda6LBQFm6b94qcV8RUCGkY/U1YZJhGaC6yhQXXNXldMlIlrIwTbL6jbUmtBiOZDosHyybu3rmwDtlXNgf939qA0ctyoktXPzqJIGmJsDm6/OKAG4m299q0GlcLEWqb0K4EyUTfHz6Va4Vx31nvhDNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749910585; c=relaxed/simple;
-	bh=KGH5CSdIP2weibyL94KEuSJoXrkh/CqKUDTXEgGO40M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qxD4O1NkIl/WCno2yFLMr1+W7QU2CyCyMm52nsVXgqbo8uLizT1sVFjFQjunivEUT4pYAdt15ADoHmhepsh58gdplJsvH4SzQuWjjJSRvKF5YOPUrdoe+5CbNv5zSy4A8kRWzS0j3II355+L45FGWE4Bs6orLNM4gUm9T/oXZpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=YsFwBOgP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gW6lf5U5; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1749910631; c=relaxed/simple;
+	bh=Bjaf1tdbvAELd6/YZ7q3IKeF7gZ5dfUUOgR/rJG4v2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hkk9nssG7D3LZ0NZl9KSC0lMzeiqt7hm20eFb/AOskqefo08XtRqrhk//MGXZVqeSgxtEYJC+3AbDO7DkGxXnTXYcfR4qlRNxL2POzNrzkHzw+yvsEv7k4k6Tw9k9qDcdyvx0Z8/X7iFGJozdJ4wrcDU8CBIGE0xJjqhhF5H0wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0I+Klij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="YsFwBOgP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gW6lf5U5"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 04BD4114013B;
-	Sat, 14 Jun 2025 10:16:23 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Sat, 14 Jun 2025 10:16:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749910583;
-	 x=1749996983; bh=bq11b5Mjk9Qzjdb7PAB+0M142DvbpJs/FKBwosq60i4=; b=
-	YsFwBOgPEus+UroV/6rL7/FvXxAglKw1oviL6JyR96lgMW4zoZoJszsm7Ky0XlEp
-	is1xBY6EiDTvlZIMcJs9UFolxbfpFy9UdkyQMOHd1uLvDrmT42uvL8SO/a3SuAqk
-	KfwLzuwn5bGZTpsxDP0xL/BUvrH+9zqPDPad3VBn2GTDBukyJhGisdSApJBBJt5F
-	hatPRax3TZ0uPkVgVhZxdDKNhdBT9JXwqsobhXbkQxC1g52bKSXUDGefLgG7sQDO
-	ifOqT7TiGsjufWrcbwf4wg0Vc564U4rqfqg9k5U7fb5llbrdTpyxjmme8do9bv6g
-	E+tf7gt55bb6914NmfH3tA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749910583; x=
-	1749996983; bh=bq11b5Mjk9Qzjdb7PAB+0M142DvbpJs/FKBwosq60i4=; b=g
-	W6lf5U5ypeYkBIHyJMIKrjDfgnhAC1DUYeaRhgvGbmIZ1oy/FsuQfcwJUcz7V2xF
-	NCM6leL/TasK9TVk4K+Uk4sXJYy27mxdmZhouNiOl82eO6Mhqu9tHLVsqD3NvRxA
-	6T+QAeLXsb/M4BsR4iwi0dvlYi0caodMhWJtDBHqBGQopgnKfZ5vlCC6q+yJIDJ8
-	Da4/fI6GxgrXjv6oIVkI9oWI5VH6zY0eB9UyssgoL4dDc7Xkskr12pdvBKTmXMDh
-	7ckAglzKlv2scb3LJeqT6rmrbRmnbSQTTyHJQbTPjgSos34zAIZLQOv7UvbG5c3F
-	1DKkL64+M4ippAaq3QzJQ==
-X-ME-Sender: <xms:NoRNaK1FaZEgIoFj4GGRdQnsUBsuO39h8nV0aAbWZ9JpQRv6XdWeWQ>
-    <xme:NoRNaNE03gegmRoSFQxz5YrOfjhl35ZYEn2ejeSnAFWAytM_JeaKP6Dm6VX_hUzzm
-    iHLLvJzpZlyhDJABfo>
-X-ME-Received: <xmr:NoRNaC6bHONfpnRcuzwCr5tlSh1mzcZW6VblByRn5Guf9X7iNRj-hKj_OtgqoOPafQ1jNW2E7xMCSX1c9Hpx5Foc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvuddthecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredt
-    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
-    guvghrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgr
-    thhtvghrnhepheeigfeuveeutdefhfehgeekvedtleeuueekveefudehhffhjeffgfegff
-    elfeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    nhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtg
-    hpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlih
-    guvghrrdgsvgdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrghrthesihguvg
-    grshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqd
-    hsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhikhhlrghsrd
-    hsohguvghrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvg
-X-ME-Proxy: <xmx:NoRNaL3S5J3Ul8PVyCATpDHTk629tUTG8PNLmey5-8_m2ykeWSv90w>
-    <xmx:NoRNaNFMQzh3Jfp_afouiJvAoU5JV-OKVpl4d_UFm_ZfYMme2FIGpA>
-    <xmx:NoRNaE8XPvue_Al8P49OUjXFntgB307sbeLxofN1mIDU3586hXuVKw>
-    <xmx:NoRNaCl40jPlhlGcTNMy7biaYuhmJdZj7Rz4N4RV-4xHqo2C7a5KRA>
-    <xmx:NoRNaNTGyrxWPdf3upqb12MWWGW7Y1is0NmuKtH0pILnsG-8CyiNHOl1>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 14 Jun 2025 10:16:22 -0400 (EDT)
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-media@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 3/3] media: rcar-vin: Generate FRAME_SYNC events
-Date: Sat, 14 Jun 2025 16:15:45 +0200
-Message-ID: <20250614141545.2860860-4-niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se>
-References: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0I+Klij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F81C4CEEE;
+	Sat, 14 Jun 2025 14:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749910630;
+	bh=Bjaf1tdbvAELd6/YZ7q3IKeF7gZ5dfUUOgR/rJG4v2c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u0I+KlijanW87g35dfr0coFfXQmPh/xMlKuSXjDTJ5QBgBtXF4nztj7GQdpsLQyvW
+	 GgkzGroheCKy0kum23iHX+G24pRB362tVsQ5lBe9TdWfm2+1/N0MaI7WegVvLz9U27
+	 jRNS6sZFv065F7en3tf0qRHTzbQ7aXUx1b8DQwnMLyX6BW7L46U/5XprQiOj1zDRlN
+	 qtEQnTBzByVd8Glp79ZQ9oyTg4Q31SBYo/WAt0X9BQhvGiP13hAv+9ApdV9CgAFTcv
+	 bY7+ItsHybMKtHTUhyeRJ1FKO86JULPfDI4B4TapC5NZdbq32zrFMT1SHaRQISY6TB
+	 lPPD04J5cyetg==
+Date: Sat, 14 Jun 2025 15:17:03 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, eraretuya@gmail.com
+Subject: Re: [PATCH v9 11/11] docs: iio: add documentation for adxl345
+ driver
+Message-ID: <20250614151703.047e83fe@jic23-huawei>
+In-Reply-To: <20250610215933.84795-12-l.rubusch@gmail.com>
+References: <20250610215933.84795-1-l.rubusch@gmail.com>
+	<20250610215933.84795-12-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Enable the VSYNC Rising Edge Detection interrupt and generate a
-FRAME_SYNC event form it. The interrupt is available on all supported
-models of the VIN (Gen2, Gen3 and Gen4).
+On Tue, 10 Jun 2025 21:59:33 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- .../media/platform/renesas/rcar-vin/rcar-dma.c  | 17 +++++++++++++++++
- .../media/platform/renesas/rcar-vin/rcar-v4l2.c |  2 ++
- 2 files changed, 19 insertions(+)
+> The documentation describes the ADXL345 driver, IIO interface,
+> interface usage and configuration.
 
-diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-index 85e44a00e0fc..a1ae9c9bccc7 100644
---- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-@@ -14,6 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/pm_runtime.h>
- 
-+#include <media/v4l2-event.h>
- #include <media/videobuf2-dma-contig.h>
- 
- #include "rcar-vin.h"
-@@ -115,10 +116,14 @@
- #define VNFC_S_FRAME		(1 << 0)
- 
- /* Video n Interrupt Enable Register bits */
-+#define VNIE_VFE		BIT(17)
-+#define VNIE_VRE		BIT(16)
- #define VNIE_FIE		BIT(4)
- #define VNIE_EFE		BIT(1)
- 
- /* Video n Interrupt Status Register bits */
-+#define VNINTS_VFS		BIT(17)
-+#define VNINTS_VRS		BIT(16)
- #define VNINTS_FIS		BIT(4)
- #define VNINTS_EFS		BIT(1)
- 
-@@ -898,6 +903,8 @@ static int rvin_setup(struct rvin_dev *vin)
- 
- 	/* Progressive or interlaced mode */
- 	interrupts = progressive ? VNIE_FIE : VNIE_EFE;
-+	/* Enable VSYNC Rising Edge Detection. */
-+	interrupts |= VNIE_VRE;
- 
- 	/* Ack interrupts */
- 	rvin_write(vin, interrupts, VNINTS_REG);
-@@ -1049,6 +1056,16 @@ static irqreturn_t rvin_irq(int irq, void *data)
- 	rvin_write(vin, status, VNINTS_REG);
- 	handled = 1;
- 
-+	/* Signal Start of Frame. */
-+	if (status & VNINTS_VRS) {
-+		struct v4l2_event event = {
-+			.type = V4L2_EVENT_FRAME_SYNC,
-+			.u.frame_sync.frame_sequence = vin->sequence,
-+		};
-+
-+		v4l2_event_queue(&vin->vdev, &event);
-+	}
-+
- 	/* Nothing to do if nothing was captured. */
- 	capture = vin->format.field == V4L2_FIELD_NONE ||
- 		vin->format.field == V4L2_FIELD_ALTERNATE ?
-diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-index db091af57c19..6339de54b02b 100644
---- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-+++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-@@ -734,6 +734,8 @@ static int rvin_subscribe_event(struct v4l2_fh *fh,
- 				const struct v4l2_event_subscription *sub)
- {
- 	switch (sub->type) {
-+	case V4L2_EVENT_FRAME_SYNC:
-+		return v4l2_event_subscribe(fh, sub, 2, NULL);
- 	case V4L2_EVENT_SOURCE_CHANGE:
- 		return v4l2_event_subscribe(fh, sub, 4, NULL);
- 	}
--- 
-2.49.0
+Trivial but wrap commit descriptions at 75 chars.
 
+The main comment on this is that, when talking about datasheet terms / settings
+etc it would be good to reflect them back to the IIO controls that actually allow
+us to change them.
+
+Otherwise seems reasonable to me.
+
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+
+
+> +
+> +Sensor Events
+> +-------------
+> +
+> +Particular IIO events will be triggered by the corresponding interrupts. The
+> +sensor driver supports no or one active INT line, where the sensor has two
+> +possible INT IOs. Configure the used INT line in the devicetree. If no INT line
+> +is configured, the sensor falls back to FIFO bypass mode and no events are
+> +possible, only X, Y and Z axis measurements are possible.
+> +
+> +The following table shows the ADXL345 related device files, found in the
+> +specific device folder path ``/sys/bus/iio/devices/iio:deviceX/events``.
+> +Note, the default activity/inactivity is DC coupled. Thus only AC coupled
+> +activity and inactivity are mentioned explicitly.
+
+This paragraph probably wants to talk about the mapping of AC coupled to 'adaptive'
+I couldn't relate it directly to the table without that.
+
+> +
+> ++---------------------------------------------+---------------------------------------------+
+> +| Event handle                                | Description                                 |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_gesture_doubletap_en               | Enable double tap detection on all axis     |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_gesture_doubletap_reset_timeout    | Double tap window in [us]                   |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_gesture_doubletap_tap2_min_delay   | Double tap latent in [us]                   |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_gesture_singletap_timeout          | Single tap duration in [us]                 |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_gesture_singletap_value            | Single tap threshold value in 62.5/LSB      |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_falling_period                 | Inactivity time in seconds                  |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_falling_value                  | Inactivity threshold value in 62.5/LSB      |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_adaptive_rising_en             | Enable AC coupled activity on X axis        |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_adaptive_falling_period        | AC coupled inactivity time in seconds       |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_adaptive_falling_value         | AC coupled inactivity threshold in 62.5/LSB |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_adaptive_rising_value          | AC coupled activity threshold in 62.5/LSB   |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_rising_en                      | Enable activity detection on X axis         |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_mag_rising_value                   | Activity threshold value in 62.5/LSB        |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_x_gesture_singletap_en             | Enable single tap detection on X axis       |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_x&y&z_mag_falling_en               | Enable inactivity detection on all axis     |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_x&y&z_mag_adaptive_falling_en      | Enable AC coupled inactivity on all axis    |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_y_gesture_singletap_en             | Enable single tap detection on Y axis       |
+> ++---------------------------------------------+---------------------------------------------+
+> +| in_accel_z_gesture_singletap_en             | Enable single tap detection on Z axis       |
+> ++---------------------------------------------+---------------------------------------------+
+> +
+> +Find a detailed description of a particular functionality in the sensor
+> +datasheet.
+> +
+> +Setting the **ODR** explicitly will result in estimated adjusted default values
+
+Say how to set ODR etc in IIO terms as well perhaps?
+
+> +for the inactivity time detection, where higher frequencies shall default to
+> +longer wait periods, and vice versa. It is also possible to explicitly
+> +configure inactivity wait times, if the defaulting approach does not match
+> +application requirements. Setting 0 here, will fall back to default setting.
+
+I'm not particularly keen on that 0 aspect as it's unintuitive.  Why do we need
+a means to go back to the default? 
+
+> +
+> +The **g range** configuration also tries to estimate activity and inactivity
+> +thresholds when switching to another g range. The default range will be
+> +factorized by the relation of old range divided by new range. The value never
+> +becomes 0 and will be at least 1 and at most 255 i.e. 62.5g/LSB according to
+> +the datasheet. Nevertheless activity and inactivity thresholds can be
+> +overwritten by explicit values.
