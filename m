@@ -1,267 +1,127 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6E12E337C
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 14:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC3D101C8;
+	Sat, 14 Jun 2025 14:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749911716; cv=none; b=f5am5l15Ey4oaIjKxPG++eACBUckVAKYnDh5h7gwnT1s+t8FB19CHEz4AjF5I10HKvWPfBYdRK424jzlJe1pkZo0OFFHePlUmRYtY/lxluHjuO7eYU1eB69puUkuSPezH1xzkMmwk0T7fPkZtOdPhP1lpk3IV0k8+RQ6QTA4Z0c=
+	t=1749912423; cv=none; b=PdaD/cDWpwZDKP7tCgk5kUakwYXGjIUuG5YstkXNElzyOBxfTskJ3wyiosc4ulNaX9eHxK+/SpUeYSY+rl6pSxjbRikLTLYVlHbl2IV1tQaToV0mvPI2AnPC1Gop2eqoYst+vhLWAJhYNDLEkq4rS+eTGVEsov52kuhGwUol5fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749911716; c=relaxed/simple;
-	bh=DmYPolF3D2IG3Iz9Q5jhq3/pStdUj+Lyi/uPJ4380H8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dC+7Cdf/sT2nZjdD9LipD74GkI3VdXdvueP2IwfBN9nzDuzlZkbpg47xQU1WVWIFaSLHDE7Bpj9wniIjG3/H5Yj5sShM1RGcEyQk6X/TsXAOn7cMoeZgFQchy1POxJ7T6a2W5NoQxnhyW2KnRIizbUf5kewia8DJVOqcSapOXTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bKJdk4jmXz1d1YD;
-	Sat, 14 Jun 2025 22:32:58 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2C779180489;
-	Sat, 14 Jun 2025 22:35:05 +0800 (CST)
-Received: from localhost.huawei.com (10.90.31.46) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 14 Jun 2025 22:35:04 +0800
-From: Qinxin Xia <xiaqinxin@huawei.com>
-To: <21cnbao@gmail.com>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <xiaqinxin@huawei.com>
-Subject: [RESEND PATCH v4 2/4] dma-mapping: benchmark: modify the framework to adapt to more map modes
-Date: Sat, 14 Jun 2025 22:34:52 +0800
-Message-ID: <20250614143454.2927363-3-xiaqinxin@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250614143454.2927363-1-xiaqinxin@huawei.com>
-References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
+	s=arc-20240116; t=1749912423; c=relaxed/simple;
+	bh=yszUTL4SUmgXliViH82bafHq+QCIDg65TrpXnQFrs0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHtDuGg4cJgwDJohl/pM67gun+WgvFjD/7YXgvuOO4vTWPUqnuYsLHAk1QtDuVE4aEUbHN1GgeZgqj4uBcDbpBeZaz+T9t251I6a+TK5KaYdogCARSPknG0sSrpFHNZm8L+8zmoblneVI8QuuX5xBUM3sE+c6UxSvS+liiEsauQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dhTZ7alw; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhTZ7alw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749912422; x=1781448422;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yszUTL4SUmgXliViH82bafHq+QCIDg65TrpXnQFrs0U=;
+  b=dhTZ7alwqPuEkM3IVYAOhS4y0FQ2anVsYRME8JIWNfZLypZ83nnEP4/W
+   fmgne5p6kiHqYMTVzFTyAlXBQHghbsiPEWXm5XBCqWsZHOCxzUiIW45Vz
+   rTXTA+wa7b9J8vDD3fogpZ2z/0yEBt+bupi62nGDkcUW7QmF8XbHHjgjP
+   SzLFqyfawM2Uib/rnZLj846yvA850UaEycvUWKV5sjyHfDoTwli635x3o
+   CdhH5SKnhSW3rIYXoouqYcb/Xq3nW7+UkuJyVq4721ik+2Q4npfSuHMR1
+   SjTitrCvHHHFlEEYIspSM7woFjA7LYBr/mXKBBiijznh6FLk3kxMFBeD0
+   g==;
+X-CSE-ConnectionGUID: o1qbXmmjSPqkBoVzdeMlKg==
+X-CSE-MsgGUID: vkbkCotfQaS6f8Fnp12QdA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="74640700"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="74640700"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 07:47:01 -0700
+X-CSE-ConnectionGUID: oOtMxOXRQ6+xe094Y20BGg==
+X-CSE-MsgGUID: f+RlwJaZRj6dVdN1G84eLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="147967921"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 14 Jun 2025 07:46:58 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQS9n-000Das-1S;
+	Sat, 14 Jun 2025 14:46:55 +0000
+Date: Sat, 14 Jun 2025 22:46:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kvm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>, peterx@redhat.com
+Subject: Re: [PATCH 4/5] vfio: Introduce vfio_device_ops.get_unmapped_area
+ hook
+Message-ID: <202506142215.koMEU2rT-lkp@intel.com>
+References: <20250613134111.469884-5-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134111.469884-5-peterx@redhat.com>
 
-In some service scenarios, the performance of dma_map_sg needs to be
-tested to support different map modes for benchmarks. This patch adjusts
-the DMA map benchmark framework to make the DMA map benchmark framework
-more flexible and adaptable to other mapping modes in the future.
-By abstracting the framework into four interfaces:prepare, unprepare,
-do_map, and do_unmap.The new map schema can be introduced more easily
-without major modifications to the existing code structure.
+Hi Peter,
 
-Reviewed-by: Barry Song <baohua@kernel.org>
-Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
----
- include/linux/map_benchmark.h |   8 ++-
- kernel/dma/map_benchmark.c    | 122 +++++++++++++++++++++++++++-------
- 2 files changed, 106 insertions(+), 24 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
-index 2ac2fe52f248..020b3155c262 100644
---- a/include/linux/map_benchmark.h
-+++ b/include/linux/map_benchmark.h
-@@ -15,6 +15,11 @@
- #define DMA_MAP_TO_DEVICE       1
- #define DMA_MAP_FROM_DEVICE     2
- 
-+enum {
-+	DMA_MAP_BENCH_SINGLE_MODE,
-+	DMA_MAP_BENCH_MODE_MAX
-+};
-+
- struct map_benchmark {
- 	__u64 avg_map_100ns; /* average map latency in 100ns */
- 	__u64 map_stddev; /* standard deviation of map latency */
-@@ -27,6 +32,7 @@ struct map_benchmark {
- 	__u32 dma_dir; /* DMA data direction */
- 	__u32 dma_trans_ns; /* time for DMA transmission in ns */
- 	__u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
--	__u8 expansion[76];     /* For future use */
-+	__u8  map_mode; /* the mode of dma map */
-+	__u8 expansion[75];     /* For future use */
- };
- #endif /* _KERNEL_DMA_BENCHMARK_H */
-diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-index cc19a3efea89..05f85cf00c35 100644
---- a/kernel/dma/map_benchmark.c
-+++ b/kernel/dma/map_benchmark.c
-@@ -5,6 +5,7 @@
- 
- #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
- 
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -31,17 +32,99 @@ struct map_benchmark_data {
- 	atomic64_t loops;
- };
- 
-+struct map_benchmark_ops {
-+	void *(*prepare)(struct map_benchmark_data *map);
-+	void (*unprepare)(void *mparam);
-+	int (*do_map)(void *mparam);
-+	void (*do_unmap)(void *mparam);
-+};
-+
-+struct dma_single_map_param {
-+	struct device *dev;
-+	dma_addr_t addr;
-+	void *xbuf;
-+	u32 npages;
-+	u32 dma_dir;
-+};
-+
-+static void *dma_single_map_benchmark_prepare(struct map_benchmark_data *map)
-+{
-+	struct dma_single_map_param *params __free(kfree) = kzalloc(sizeof(*params),
-+								    GFP_KERNEL);
-+	if (!params)
-+		return NULL;
-+
-+	params->npages = map->bparam.granule;
-+	params->dma_dir = map->bparam.dma_dir;
-+	params->dev = map->dev;
-+	params->xbuf = alloc_pages_exact(params->npages * PAGE_SIZE, GFP_KERNEL);
-+	if (!params->xbuf)
-+		return NULL;
-+
-+	/*
-+	 * for a non-coherent device, if we don't stain them in the
-+	 * cache, this will give an underestimate of the real-world
-+	 * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
-+	 * 66 means evertything goes well! 66 is lucky.
-+	 */
-+	if (params->dma_dir != DMA_FROM_DEVICE)
-+		memset(params->xbuf, 0x66, params->npages * PAGE_SIZE);
-+
-+	return_ptr(params);
-+}
-+
-+static void dma_single_map_benchmark_unprepare(void *mparam)
-+{
-+	struct dma_single_map_param *params = mparam;
-+
-+	free_pages_exact(params->xbuf, params->npages * PAGE_SIZE);
-+	kfree(params);
-+}
-+
-+static int dma_single_map_benchmark_do_map(void *mparam)
-+{
-+	struct dma_single_map_param *params = mparam;
-+	int ret = 0;
-+
-+	params->addr = dma_map_single(params->dev, params->xbuf,
-+				      params->npages * PAGE_SIZE, params->dma_dir);
-+	if (unlikely(dma_mapping_error(params->dev, params->addr))) {
-+		pr_err("dma_map_single failed on %s\n", dev_name(params->dev));
-+		ret = -ENOMEM;
-+	}
-+
-+	return ret;
-+}
-+
-+static void dma_single_map_benchmark_do_unmap(void *mparam)
-+{
-+	struct dma_single_map_param *params = mparam;
-+
-+	dma_unmap_single(params->dev, params->addr,
-+			 params->npages * PAGE_SIZE, params->dma_dir);
-+}
-+
-+static struct map_benchmark_ops dma_single_map_benchmark_ops = {
-+	.prepare = dma_single_map_benchmark_prepare,
-+	.unprepare = dma_single_map_benchmark_unprepare,
-+	.do_map = dma_single_map_benchmark_do_map,
-+	.do_unmap = dma_single_map_benchmark_do_unmap,
-+};
-+
-+static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_BENCH_MODE_MAX] = {
-+	[DMA_MAP_BENCH_SINGLE_MODE] = &dma_single_map_benchmark_ops,
-+};
-+
- static int map_benchmark_thread(void *data)
- {
--	void *buf;
--	dma_addr_t dma_addr;
- 	struct map_benchmark_data *map = data;
--	int npages = map->bparam.granule;
--	u64 size = npages * PAGE_SIZE;
-+	__u8 map_mode = map->bparam.map_mode;
- 	int ret = 0;
- 
--	buf = alloc_pages_exact(size, GFP_KERNEL);
--	if (!buf)
-+	struct map_benchmark_ops *mb_ops = dma_map_benchmark_ops[map_mode];
-+	void *mparam = mb_ops->prepare(map);
-+
-+	if (!mparam)
- 		return -ENOMEM;
- 
- 	while (!kthread_should_stop())  {
-@@ -49,23 +132,10 @@ static int map_benchmark_thread(void *data)
- 		ktime_t map_stime, map_etime, unmap_stime, unmap_etime;
- 		ktime_t map_delta, unmap_delta;
- 
--		/*
--		 * for a non-coherent device, if we don't stain them in the
--		 * cache, this will give an underestimate of the real-world
--		 * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
--		 * 66 means evertything goes well! 66 is lucky.
--		 */
--		if (map->dir != DMA_FROM_DEVICE)
--			memset(buf, 0x66, size);
--
- 		map_stime = ktime_get();
--		dma_addr = dma_map_single(map->dev, buf, size, map->dir);
--		if (unlikely(dma_mapping_error(map->dev, dma_addr))) {
--			pr_err("dma_map_single failed on %s\n",
--				dev_name(map->dev));
--			ret = -ENOMEM;
-+		ret = mb_ops->do_map(mparam);
-+		if (ret)
- 			goto out;
--		}
- 		map_etime = ktime_get();
- 		map_delta = ktime_sub(map_etime, map_stime);
- 
-@@ -73,7 +143,8 @@ static int map_benchmark_thread(void *data)
- 		ndelay(map->bparam.dma_trans_ns);
- 
- 		unmap_stime = ktime_get();
--		dma_unmap_single(map->dev, dma_addr, size, map->dir);
-+		mb_ops->do_unmap(mparam);
-+
- 		unmap_etime = ktime_get();
- 		unmap_delta = ktime_sub(unmap_etime, unmap_stime);
- 
-@@ -108,7 +179,7 @@ static int map_benchmark_thread(void *data)
- 	}
- 
- out:
--	free_pages_exact(buf, size);
-+	mb_ops->unprepare(mparam);
- 	return ret;
- }
- 
-@@ -209,6 +280,11 @@ static long map_benchmark_ioctl(struct file *file, unsigned int cmd,
- 
- 	switch (cmd) {
- 	case DMA_MAP_BENCHMARK:
-+		if (map->bparam.map_mode >= DMA_MAP_BENCH_MODE_MAX) {
-+			pr_err("invalid map mode\n");
-+			return -EINVAL;
-+		}
-+
- 		if (map->bparam.threads == 0 ||
- 		    map->bparam.threads > DMA_MAP_MAX_THREADS) {
- 			pr_err("invalid thread number\n");
+[auto build test ERROR on akpm-mm/mm-everything]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Xu/mm-Deduplicate-mm_get_unmapped_area/20250613-214307
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250613134111.469884-5-peterx%40redhat.com
+patch subject: [PATCH 4/5] vfio: Introduce vfio_device_ops.get_unmapped_area hook
+config: sh-randconfig-002-20250614 (https://download.01.org/0day-ci/archive/20250614/202506142215.koMEU2rT-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506142215.koMEU2rT-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506142215.koMEU2rT-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/vfio/vfio_main.c: In function 'vfio_device_get_unmapped_area':
+>> drivers/vfio/vfio_main.c:1367:24: error: implicit declaration of function 'mm_get_unmapped_area'; did you mean 'get_unmapped_area'? [-Werror=implicit-function-declaration]
+    1367 |                 return mm_get_unmapped_area(current->mm, file, addr,
+         |                        ^~~~~~~~~~~~~~~~~~~~
+         |                        get_unmapped_area
+   cc1: some warnings being treated as errors
+
+
+vim +1367 drivers/vfio/vfio_main.c
+
+  1356	
+  1357	static unsigned long vfio_device_get_unmapped_area(struct file *file,
+  1358							   unsigned long addr,
+  1359							   unsigned long len,
+  1360							   unsigned long pgoff,
+  1361							   unsigned long flags)
+  1362	{
+  1363		struct vfio_device_file *df = file->private_data;
+  1364		struct vfio_device *device = df->device;
+  1365	
+  1366		if (!device->ops->get_unmapped_area)
+> 1367			return mm_get_unmapped_area(current->mm, file, addr,
+  1368						    len, pgoff, flags);
+  1369	
+  1370		return device->ops->get_unmapped_area(device, file, addr, len,
+  1371						      pgoff, flags);
+  1372	}
+  1373	
+
 -- 
-2.33.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
