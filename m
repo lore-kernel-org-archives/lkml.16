@@ -1,169 +1,114 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AC5BA49;
-	Sat, 14 Jun 2025 13:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B121ACED1;
+	Sat, 14 Jun 2025 13:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749908503; cv=none; b=JSxS1xFLcZSek1e3Z6jbIcirhW1+Sjq8YoZXwcVknPW19KiWvwnOrigmOe8vyDTpkxq52ZPbMq+AdENV5eAuwZj9Zi0agbCPewfpxaZ0uzLaPLjSXx9haywYMmOdmfd3mw1mOzOxA65/ZdSjUFdT+H6FDLQj9zlPXuUptoWUYPA=
+	t=1749908537; cv=none; b=YWMTvDSkdD7IMydWUV4nSVIyPVv+HT0bfU7YSWdmQaPNlNziIBfGpEBfcFPuSI8IazhulOoHHbkLJaVoqtfbYpdCWsVMe7l5o8Q3cP5wrHL3A2lH/I/LjrDZxQwt/gMgn3tiyRI8LSBOUp0tfk8brWaRvlSHwKsaZ2/Ww4fuEzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749908503; c=relaxed/simple;
-	bh=lM3IIsUYXea4p4rUOkoeGBxOVTyK/3N04efUcluzdIM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tkTugAbbZCwo/iGj17ruo0DWVfU0tk+1Cdj2q1yYRkjGFO/a6D5upEjHxKgNoO9Chk2Dr11TXKEHP28mBsOtss4/EnbHqV82zOpbEd73VSFyhc3jwb+/eFnZ3QNPQww1VSNI2+LYVOea+uTO25xId69Zf7PjvZbey6r+W1xXNm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcYAJAgf; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749908537; c=relaxed/simple;
+	bh=ECj08Ix358RPgPR1nJnTCBFkCnWnM9UmhgDu7Js3BK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b+iKrgI4SNmZktSTJ3466VpqDXn7M53FxJ6267yD2/EZnEbwtM8PrSmgQaVNGyVaty94mWZCGGPV3fvlQUhy5IXeJzEHu7t+siEjaU/FX6EkLLK+TB85n3++2ZCvaHhEL7vxhtaZeDSUtOWQZ9fApvc8XjRsl7zjla/8kCudU2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5MHX51h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcYAJAgf"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-610cbca60cdso2197934eaf.0;
-        Sat, 14 Jun 2025 06:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749908501; x=1750513301; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pPyT/NDLG21BaGCfzzI0/BaU7HLCtAjPSFvMEJen/+g=;
-        b=TcYAJAgfbSA/o2cwkYa3qwPZJftiWRnrVOxVs/KtPnTnN0MQJLt9gaqvG3mAMri/Eb
-         CGP2SiQ2Fs7bqnv3EUEOXfnfHA7NrcxEN7V6+TMcuKDAO4PkgxVlKSNSmjdYEc3c0Ih8
-         wge2T/9mNAf8xWCaEyTuiMTjd5ag+AgUYMbXKrBea0juoyQe499zCbb6MO1fIMbCbevm
-         BlMwmFU0/NyxFAJBVZW/eAyOHJQCFssirA4rLD+PRXnN3UEeyuDbDtW9j5jXxeY/Jw4b
-         s4Vw6a+n0p8pduWM7E0UrJnsZQDrVQqtH91hydd6jJ7A0KbaHcFFyqQb1XTdSvojwu60
-         LMwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749908501; x=1750513301;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pPyT/NDLG21BaGCfzzI0/BaU7HLCtAjPSFvMEJen/+g=;
-        b=lwTbwxI4q+PuFxfFy2dODqUZiu4PKLPpgmXRja16K/Do9ftRgpalEkImKNbWiTzAIa
-         cK6UTuuCcwl6BJbaQ1qwTqSFY7ru1680sjPx/0eDQ3lPfXMNxRJjWo4qhn/4VDa0RSre
-         p0x73Offe118jpPxeQXV71gW7rqrArazov7nYuQ5biqMSBd38TxBSb0ij58Ay448A3SP
-         Z4wwPUwtn6HiEHsV4BZ2SYdLAOfdpAeZrkTc05J8sVRc29JQDVtNzM2P8YCKKdYyDFyj
-         BF2UCFupjuSROpDoFp6YrCCuUpcKUuopgkTXVwYOqbC7oTSKBq9sBYUrnaLNxvcjqXOA
-         am7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXaHn7pdUOrFOp+MumsncAedgW+Zy0TKafX5sndPbU4J2xbtRLKfjO40bmHsMRrYMK+dvu7Zn0+@vger.kernel.org, AJvYcCXppXJygyp2TQNYia9PB2y87pGpKSGU8ZIds53hHy2Fm1LHqCZqirUF4/4RdiJTdfYpZoLvJKy7D86xVxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG0xaxlEEobkOK57Muqr7XpBbh5AXNUCO9iFCBxevua2vv2QfV
-	DEHTNwzlhcBirnc+sSJhomCNJ66/GX7hMO8jAtv4E7GiNISp5vT19eIxCk/hdXyaF9BeZZB7Voc
-	SNm4IaYFFDYQ87+v8rW62LSna9/Q5vNk=
-X-Gm-Gg: ASbGncu5i9Yp053DW9HqA8AaL2QBtAh1gbk7jXrePv8iXU6p567BIRcNdKimwQcACAr
-	yFrQNa3gK6h8FpnGAd1+3vBAiyHs+vcCO2HP93ZcnkLf6eBBcQ8RWhGfnIbRzSB3JH3GxwMT+hI
-	siTravojrOyxJvzsqto5E7Fq50YH4YNQtZw+Zol0WGStDN2fHtWrp8/QVKtHITo6GtWaEk3tKnm
-	g==
-X-Google-Smtp-Source: AGHT+IE2dEWG7iT8GNYJep3a6JkNJ8eV4PpXFulpLxyQDVpz9R+FS91yWKJUhBNtKFcnS5H31Csgwb8w2XbcpqjcZrM=
-X-Received: by 2002:a05:6870:5b92:b0:2e9:1143:584e with SMTP id
- 586e51a60fabf-2eaf0bf35bdmr1877905fac.39.1749908500962; Sat, 14 Jun 2025
- 06:41:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5MHX51h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4ED9C4CEEB;
+	Sat, 14 Jun 2025 13:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749908537;
+	bh=ECj08Ix358RPgPR1nJnTCBFkCnWnM9UmhgDu7Js3BK8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d5MHX51hikuBWB80uq6WzgCCcCPYca9DvSECnf8TWBgluWnIs4tF0nAJYflQx+x5f
+	 cbyTe1v6GnVTN/dFVva7uUrQ3boGWr2OmzYj2RtVw+7eweF8YwPBeph02adtjfR2xd
+	 csiWtZA0pC+Ik/MEnh4lj3Is3Hf8vhzO0J2Wt72NQ2ITDM0l0mFYe2mUx+FARcfp1O
+	 CAfQFI2NrOa1Klg3z76fJfFIhdkPR1TBPimkj/6Bsjt26azYZuDOj2q0R8tdIu3jxG
+	 T1Vy41kDPO1gCqlToIdPZxdJ8xgcVbo33h54wvVRRe0THkNu9dbtm91G6ZE0zdAM7R
+	 L4FdfLntIlRRg==
+Date: Sat, 14 Jun 2025 14:42:08 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, eraretuya@gmail.com
+Subject: Re: [PATCH v9 01/11] iio: accel: adxl345: apply scale factor to tap
+ threshold
+Message-ID: <20250614144208.363c29cf@jic23-huawei>
+In-Reply-To: <20250610215933.84795-2-l.rubusch@gmail.com>
+References: <20250610215933.84795-1-l.rubusch@gmail.com>
+	<20250610215933.84795-2-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749891128.git.mchehab+huawei@kernel.org> <3fb42a4aa79631d69041f6750dc0d55dd3067162.1749891128.git.mchehab+huawei@kernel.org>
-In-Reply-To: <3fb42a4aa79631d69041f6750dc0d55dd3067162.1749891128.git.mchehab+huawei@kernel.org>
-From: Donald Hunter <donald.hunter@gmail.com>
-Date: Sat, 14 Jun 2025 14:41:29 +0100
-X-Gm-Features: AX0GCFt_USLBH1YdqM00LqXA1QAxCvtGi6cp-lOxexZKo8IC2JWUf0FxeobXNUY
-Message-ID: <CAD4GDZwCLd0rAi-FTWZ2UEsfbMtvxbFAqcLeLtE7SfiJUB2VWg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/14] tools: ynl_gen_rst.py: make the index parser
- more generic
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Akira Yokosawa <akiyks@gmail.com>, Breno Leitao <leitao@debian.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Ignacio Encinas Rubio <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>, 
-	Marco Elver <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org, 
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org, 
-	stern@rowland.harvard.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, 14 Jun 2025 at 09:56, Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> It is not a good practice to store build-generated files
-> inside $(srctree), as one may be using O=<BUILDDIR> and even
-> have the Kernel on a read-only directory.
->
-> Change the YAML generation for netlink files to allow it
-> to parse data based on the source or on the object tree.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Tue, 10 Jun 2025 21:59:23 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
+
+> The threshold for tap detection was still not scaled. The datasheet sets
+> a scale factor of 62.5mg/LSB. Remove commit about not scaled threshold
+> for tap detection, and apply scaling to it.
+> 
+
+Given tap detection algorithms are not generally well defined and not a simple
+threshold (generally) what scaling should we be aiming for here?
+Even if it were a simple threshold, when a channel provides _raw the
+expectation is that event config is vs _raw, not the base units.
+
+So if this doesn't care about the current fullscale range (which the
+comment implied was the case) it would need to rescale when the
+IIO_INFO_SCALE changes.
+
+That comment is I think indicating we decided to gloss over the
+detail because it's going into a (potentially) non trivial algorithm anyway.
+
+Jonathan
+
+
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 > ---
->  tools/net/ynl/pyynl/ynl_gen_rst.py | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
+>  drivers/iio/accel/adxl345_core.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index 7c093c0241de..d80efb68d113 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -697,17 +697,15 @@ static int adxl345_read_event_value(struct iio_dev *indio_dev,
+>  		switch (info) {
+>  		case IIO_EV_INFO_VALUE:
+>  			/*
+> -			 * The scale factor would be 62.5mg/LSB (i.e. 0xFF = 16g) but
+> -			 * not applied here. In context of this general purpose sensor,
+> -			 * what imports is rather signal intensity than the absolute
+> -			 * measured g value.
+> +			 * Scale factor is 62.5mg/LSB i.e. 0xff = 16g
+>  			 */
+>  			ret = regmap_read(st->regmap, ADXL345_REG_THRESH_TAP,
+>  					  &tap_threshold);
+>  			if (ret)
+>  				return ret;
+> -			*val = sign_extend32(tap_threshold, 7);
+> -			return IIO_VAL_INT;
+> +			*val = 62500 * sign_extend32(tap_threshold, 7);
+> +			*val2 = MICRO;
+> +			return IIO_VAL_FRACTIONAL;
+>  		case IIO_EV_INFO_TIMEOUT:
+>  			*val = st->tap_duration_us;
+>  			*val2 = 1000000;
+> @@ -746,6 +744,7 @@ static int adxl345_write_event_value(struct iio_dev *indio_dev,
+>  	case IIO_EV_TYPE_GESTURE:
+>  		switch (info) {
+>  		case IIO_EV_INFO_VALUE:
+> +			val = DIV_ROUND_CLOSEST(val * MICRO + val2, 62500);
+>  			ret = regmap_write(st->regmap, ADXL345_REG_THRESH_TAP,
+>  					   min(val, 0xFF));
+>  			if (ret)
 
-It looks like this patch is no longer required since this script
-doesn't get run by `make htmldocs` any more.
-
-Instead, I think there is cleanup work to remove unused code like
-`generate_main_index_rst`
-
-This whole script may be unnecessary now, unless we want a simple way
-to run YnlDocGenerator separately from the main doc build.
-
->
-> diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-> index 7bfb8ceeeefc..b1e5acafb998 100755
-> --- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-> +++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-> @@ -365,6 +365,7 @@ def parse_arguments() -> argparse.Namespace:
->
->      parser.add_argument("-v", "--verbose", action="store_true")
->      parser.add_argument("-o", "--output", help="Output file name")
-> +    parser.add_argument("-d", "--input_dir", help="YAML input directory")
->
->      # Index and input are mutually exclusive
->      group = parser.add_mutually_exclusive_group()
-> @@ -405,11 +406,14 @@ def write_to_rstfile(content: str, filename: str) -> None:
->      """Write the generated content into an RST file"""
->      logging.debug("Saving RST file to %s", filename)
->
-> +    dir = os.path.dirname(filename)
-> +    os.makedirs(dir, exist_ok=True)
-> +
->      with open(filename, "w", encoding="utf-8") as rst_file:
->          rst_file.write(content)
->
->
-> -def generate_main_index_rst(output: str) -> None:
-> +def generate_main_index_rst(output: str, index_dir: str) -> None:
->      """Generate the `networking_spec/index` content and write to the file"""
->      lines = []
->
-> @@ -418,12 +422,18 @@ def generate_main_index_rst(output: str) -> None:
->      lines.append(rst_title("Netlink Family Specifications"))
->      lines.append(rst_toctree(1))
->
-> -    index_dir = os.path.dirname(output)
-> -    logging.debug("Looking for .rst files in %s", index_dir)
-> +    index_fname = os.path.basename(output)
-> +    base, ext = os.path.splitext(index_fname)
-> +
-> +    if not index_dir:
-> +        index_dir = os.path.dirname(output)
-> +
-> +    logging.debug(f"Looking for {ext} files in %s", index_dir)
->      for filename in sorted(os.listdir(index_dir)):
-> -        if not filename.endswith(".rst") or filename == "index.rst":
-> +        if not filename.endswith(ext) or filename == index_fname:
->              continue
-> -        lines.append(f"   {filename.replace('.rst', '')}\n")
-> +        base, ext = os.path.splitext(filename)
-> +        lines.append(f"   {base}\n")
->
->      logging.debug("Writing an index file at %s", output)
->      write_to_rstfile("".join(lines), output)
-> @@ -447,7 +457,7 @@ def main() -> None:
->
->      if args.index:
->          # Generate the index RST file
-> -        generate_main_index_rst(args.output)
-> +        generate_main_index_rst(args.output, args.input_dir)
->
->
->  if __name__ == "__main__":
-> --
-> 2.49.0
->
