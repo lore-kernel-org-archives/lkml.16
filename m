@@ -1,123 +1,72 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2E82E11C2;
-	Sat, 14 Jun 2025 04:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F7B145355
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 04:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749874761; cv=none; b=iuuYE/OWCwqG+DL3dpQhoxcUcbM3arpX3PylSyq4NcjlNo7iMhBc89GGOQ1EiP0znzZRmj26Zo2aj9S07ZuEG/hsmWVxLyE0N2CmoccIXtUiSIaLDda+cLMSeMd0N147IAU6RhJjuXfo4UthOLIVkQFjuzofa/aj4xVKKyKGovA=
+	t=1749875336; cv=none; b=rvKQ6gG+/EX4ESKak8n7j0O8CRvWtH7u1Ocm9mcLfKThU2HWtW+8jmd/KvIgz/oaW8OKmwd+HJPKM/rxg5132Bnd1onebm4FGEkqn961gjJYxfyIaYUS0KRIc2tL7BjJ3DA2kdnkVWgIA+7UdtgLC6OmaWPUqY/5W6dC5SpUmAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749874761; c=relaxed/simple;
-	bh=mun96Luc7WjojlHpp8F1GkkE+TO/jNykUTXsT9IPIYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oiNZB3vQmb00JxQfh3GLUJrBQQEeL73aI2V6UFwfFt5c05Mb3l/JoKnD89J9Jqh1EqVUpvQxXDlaAyZfsaPuEy4KXxwJE3f0dflWkScbZt2ZjKGMG5V2Co4lXqj73JGtkgobDcdjNhkuQs1XXf8y3wgp4yX6S7FM/l+LG8hg4xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jfQrVMnh; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749875336; c=relaxed/simple;
+	bh=mtrT1VPgmn6CqYYvUEepa4hYuKagZ1P1LX7pde0Mho0=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=Fl2rf9mDSB9nsm1Lkm7YoSyodkcPtrGWZBKHi5NjETxk9yVn3qfRV0KzboSJ8fHljJDPHk/OfANDsAbZWadjgohy3NA0okpryS5+6c27T+X0OqjZz0WVYjCoE5b0TODAIvOv6uglg7QqNEu+X4Q29VI90XE/iMmwrwJQ43uOCyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=Ae1WBIb4; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfQrVMnh"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2f645eba5dso2836728a12.1;
-        Fri, 13 Jun 2025 21:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749874759; x=1750479559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vZ5hW+QTkXwD2YGYp7qAmb/lVCnwot4fuQufFS2iflc=;
-        b=jfQrVMnhTT/m+/srmkV4D6MlkPu0zb2oVhHUr/UVwmh2Rk9wsp3tfI/JqlTJSswnc4
-         aKjUMRsRFbi18riO2MBCDQ/9ipTynFythFC7W80w8SrVSmbnMlLoTW5Oc/fjs81M6wJ6
-         BSmfRDdVqtmZ8DQF3XPHroArQp2SSHICLzE7Y3B15uO+KXH4xhV31Zl8axhY7h4KCJ1s
-         XNz0Qj9Iyc6up5xssAn0WG7xTJKzOwNUq5PFvKRIi6hxQNJHnvy8x9GTxEY3Gtv0km6e
-         OGdlvZZ7OBWpEAL02zUKJ8vb9vAjGCyexsdi7Q0LFBXU7o41zkuCfywkNcrbrHaJ/egA
-         XU3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749874759; x=1750479559;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vZ5hW+QTkXwD2YGYp7qAmb/lVCnwot4fuQufFS2iflc=;
-        b=AowpC4idaRidaybXlyDDvnJ2Lu9+wlY/R64KW43t4QpjcvIYiF94k+IIqu95sF+2MA
-         aOA7kqxzJUfUoDMwKztUff+Ch+i8Ua731xANZ8wL/z7ZQh8/s7bJpNZFsEBBfQZQ5C8a
-         GSpIukmiz9qMSLlpgdPOaOhHpdEbZkO4cKfvVN2SZ2cZGaF6faxGZPBpV+eJhtaNK5xW
-         Si7TxqRoR9UL2YHUTQXqo17cZIKDtF8RLKo0eOBDpOIg/KwB84r0VBPcyyGG5JyvU8hq
-         Kc8Mig0TRAiD6NqV5kraAJyTGRurbM3BM8l/pc8FY729SRQI0QGJRWyAk5eeBg1IUEZ4
-         JWkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvjbxDXQXw0EKzAT+aJn6U3B3avs54gU6QOPuGKotQzc0elHk2bHSWkvV+X1XYpTreuZO0qkfO02+tRV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQlZyrFRZt07Also7WLbmBS38mTeoytrya/eanohFbv98Oqu7g
-	z++ORVV9CcNjFaq/zb7BVNjmhzPS5+QJnh68BqkK8yVJ3iEXq0D6LTwxnV8jmABlfRA=
-X-Gm-Gg: ASbGncukIPhqRBfVMEqjeEopT84SjLLPPwxpYEtK9UYDPmKDl2Mp9gU848S8zkFEUe9
-	8QuozCkOCTUcrTxCR4QgzyI9hudSL1VKBQeeKkkqVQ3oSHkcfwWhAwCqQFMrcKscQLwNSXfc4Qj
-	EagKO8++SdCPcbsXaaHp03uhduaDECMch0RNpWSRoXsIgXDlNQY+VF9H9Bv/sGNYzut4dl2c6Cc
-	u5AKjADGKkBCK0UA4mcpfwtjBINnUihwUF8B1g0buXKYEcDws6vU6NypwvGBheMzAQ4Ow4kwUZA
-	PtKY0wS0Bat7A9e2zbokRojvrp3LjXqDJvgmOBOsfTb1jJgsZhM6mrgWEg1yADCxj0RyJk4gSYU
-	1mygWTBmswPuQDJJE0+kMUzVuL1pqmYr/FfoGhlU=
-X-Google-Smtp-Source: AGHT+IERadNSQgL17fWczK/sR5f0zRvR0CxcR4ZGDlmN7DonkoNDaQHAgm8UzsR0KQyT+WizdqHbuQ==
-X-Received: by 2002:a17:90b:4c09:b0:30a:3e8e:ea30 with SMTP id 98e67ed59e1d1-313e90b17a4mr4480894a91.11.1749874758864;
-        Fri, 13 Jun 2025 21:19:18 -0700 (PDT)
-Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:6f16:3f22:e287:d010])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deaa9b8sm22857885ad.165.2025.06.13.21.19.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 21:19:18 -0700 (PDT)
-From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com
-Subject: [PATCH] HCI: coredump: Use tmp buffer with dev_coredumpv
-Date: Sat, 14 Jun 2025 00:19:10 -0400
-Message-ID: <20250614041910.219584-1-ipravdin.official@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="Ae1WBIb4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
+	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=889kgIx+fvgYYJHtnU8B0jwoilI0+SgVOAvcmQTcHdM=; b=Ae1WBIb4aid+8i2Cn2l1UP99f8
+	GuKp036QfmHcFlDlYig+5/Z7Ri6Fp24OSeycMpDpX3RnumToPDy7D0NYJWO/DonFW9hb0eBND4uey
+	4L5GfoN71hc1W0XP0Oo3xoYcL9TjPBucbL8r34CwUoLxzICAf77O4HpVPDoQYbQEPj7dE1zxsEUUz
+	0F3jjxcNCDT++9IGA3e4nrAQ32DaxRRbR94f1e5qRsUbCIijA8VuNajnsDCAWNjPCm2ElggFND3he
+	DrgGxB+v9qgwgIn9i/kAHo9HAEpPPRkcRbfJyRv80qxsREldF3v+30Z0tyLYw3u29nn0gLEiT7aEo
+	7EyApoKQ==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1uQIVZ-000aIf-0B
+	for linux-kernel@vger.kernel.org;
+	Sat, 14 Jun 2025 06:28:45 +0200
+Message-ID: <a8c0d083-e15c-4402-9f7c-f25a552b377a@bit-philosophy.net>
+Date: Sat, 14 Jun 2025 06:27:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <bit-budi@bit-philosophy.net>
+Subject: Like NATIVE philosophy (was low-jitter, fair pay philosophy)
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Create and use new vmalloc'ed buffer with dev_coredumpv. From
-dev_coredumpv documentation:
+My translation of philosophy is now like NATIVE!
 
-`This function takes ownership of the vmalloc'ed data and will free
-it when it is no longer used.`
+With Eln, meaning The Tei, using a suffix instead to indicate this.
+So it is perfect. This concept is referred much in related culture. 
+Intel being an obvious one, and many more.
 
-As hdev->dump is used after dev_coredumpv, create temporary buffer to
-hold hdev->dump data.
+The related philosophy is discussed on my webpage: 
+https://bit-philosophy.net/
 
-Reported-by: syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67eaa688.050a0220.1547ec.014a.GAE@google.com
-Fixes: b257e02ecc46 ("HCI: coredump: Log devcd dumps into the monitor")
-Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
----
- net/bluetooth/coredump.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+I also have some media on 
+https://www.youtube.com/@Ram_Bitstreams_EU/playlists
 
-diff --git a/net/bluetooth/coredump.c b/net/bluetooth/coredump.c
-index 819eacb38762..1232c9a94f95 100644
---- a/net/bluetooth/coredump.c
-+++ b/net/bluetooth/coredump.c
-@@ -243,6 +243,7 @@ static void hci_devcd_handle_pkt_pattern(struct hci_dev *hdev,
- static void hci_devcd_dump(struct hci_dev *hdev)
- {
- 	struct sk_buff *skb;
-+	char *coredump;
- 	u32 size;
- 
- 	bt_dev_dbg(hdev, "state %d", hdev->dump.state);
-@@ -250,7 +251,11 @@ static void hci_devcd_dump(struct hci_dev *hdev)
- 	size = hdev->dump.tail - hdev->dump.head;
- 
- 	/* Emit a devcoredump with the available data */
--	dev_coredumpv(&hdev->dev, hdev->dump.head, size, GFP_KERNEL);
-+	coredump = vmalloc(size);
-+	if (coredump) {
-+		memcpy(coredump, hdev->dump.head, size);
-+		dev_coredumpv(&hdev->dev, coredump, size, GFP_KERNEL);
-+	}
- 
- 	/* Send a copy to monitor as a diagnostic packet */
- 	skb = bt_skb_alloc(size, GFP_ATOMIC);
--- 
-2.45.2
+Some of my own (old) stuff is also there, coupled to some humorous 
+videos, to laugh off c64 and Amiga outdatedness mostly. (I have never 
+been about these or mini versions, but Open Source.)
+
+Light!
+
+Ywe Cærlyn.
+Bit Budi.
 
