@@ -1,205 +1,105 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32D02E11D0;
-	Sat, 14 Jun 2025 08:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E842E11D0;
+	Sat, 14 Jun 2025 08:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749888801; cv=none; b=aIPm/dgILoiGem9JWiUKE9ZxNIUVDF4bAo+VziUDWiNmRRYWzgFUCZh+PJ7rCgjebdFh5XOAdItlzxx8hxPhAiCZyY2Wmxkl2TTd8BgChomxDf6AF8bk3bXWKpdpOfIwayaahI9H7/LguLQntKP3l4UTT/1XQ/iEdSAHFf8eTPA=
+	t=1749888810; cv=none; b=Gfbp++adD/fgAzJhewWXtpHwfD45TWMGlvzsqpRAFR7Yd0lJNg5Y8D10YtaQbHtc1FAA0CfGwhmYky+urU/0vhM0zBrxpjHLOSYKNWKXIUy8NqofcI4/YeSpylVpXow/3C0MOvE+tUjhAJQksEZMCxqfGyFr3PessqiL3gMKbNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749888801; c=relaxed/simple;
-	bh=pAiTp92MQbVYil/WDHprtKpovWyNqzcGwjy/D3IfNaQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EE1QNixRPVImr7CIyeujQZs1DcBkyBfPTSl5LB9Dki5CVv57u18S7AD1D0u2bMt29DHBeRklEP2pXAXzdCbvDSV/AxwmW6wdzJLljpQ6uk+Xh2jIT8MRxAuZN1/5gze6PVj+WQFI0eG0rXHfW+hOzigg7eqcvmiJa+qKg0t8lzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EloiLNS9; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1749888810; c=relaxed/simple;
+	bh=llglEbe1IKzATynDgyekVhZg6Wz9Ut1Q9FbAxtpJ+8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FvoGN3SlQwJohX1tKdmxkoLMO0l4HUNPBEEXus6kXb3XR9P4+upBGrzC+dfwJ51zgkVXRtdzznvg50BjBmpq6UY5/8j6uLm5PFdTy5TrisxB9yiAdFEDTjKwy5dopXK4Q+v5als5SeGOHj6MJDHwEbDdNKd5Ur3xSOUBkwUVbLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enjWRwKX; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EloiLNS9"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235f9e87f78so30771055ad.2;
-        Sat, 14 Jun 2025 01:13:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enjWRwKX"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2351227b098so24354055ad.2;
+        Sat, 14 Jun 2025 01:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749888799; x=1750493599; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V725DdxLAoSNvGdG5GbooEBhwiSKBKZ8moj9zUpl6sI=;
-        b=EloiLNS9LoKoNXqzSi8ELOQt7sVTkMvrrB/tQcSpu29vLVQHiVg2M2QkWsoEmMwTxc
-         4u5D2T0Xsc73OwKq+hdA8dvIpLDTptfg5wuD/W3o9hs9RA6CfoeM0wsVxwfYUPtnz9V4
-         8cHSENKYiMtNQnqUcu4o9EWZZZHsPcBvX5gNWJyLmMS0SfOw1icm/jKlZrOk40cSdEzW
-         VUCW94Heg/43II5pIM8TvhajjWuNHom8JGiCaz0evx3HfcT4TQq1VWLLsQcBUBbtCRQd
-         7wrYtj6T+Z6XpQ9GwNv4xtfTYj6/m1pE/RTeOEdWEk/655XICR0+4W7icv/mUFjH7sCs
-         sTqw==
+        d=gmail.com; s=20230601; t=1749888808; x=1750493608; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=csr9FmfIKsBQXGHzbBBq7oCudKRycvxUUNB9J2auubg=;
+        b=enjWRwKXFTK/yvjztl+E4t3IhjRKBjWLKMRcoVaTwhwLNle5tAgX5LN3q7YiWe5r9k
+         sX63CVa5pF+hQbz4J4WcvshplU+a5vjAyb/lafh6Qtbvl5dlSEHUDHsGRClK79kfRLz+
+         YycIvgi2X160xq2DFte+Gi37E26NCJyWl80RklE9jPoCErHh5tg6EB2w+UiTycOh3wvP
+         UNIbGaRrRyFZ2QKs/piV3STjWWJ4NtM6z3vZm36PlgJ2ktURCXzgO2tQght2Qw8am8tZ
+         YQ43TAMYgOA6PKsydjrBjCfuqhSTsMJbMbheLYxavVnlx8vN1reEgqpYefNxXdpTkItv
+         04pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749888799; x=1750493599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V725DdxLAoSNvGdG5GbooEBhwiSKBKZ8moj9zUpl6sI=;
-        b=aqKmeUZd51fL3nojL7joJjxdnC5gDhgA5+a/mm6u/dKTN+5ds6QBieWeX0tWLqGd0S
-         ak/79i3Np9evdELRU4kr4qTGpI2sHSNpDHz7insNlb892EntPZ8gDfMmv0nn8vlOWTF2
-         oQdqbfD6auta/zR2Q7eqE3KWzr2Ez4Ju58m/9Ge6zFEoUz889BXwWHXvp1Ix5heDjufc
-         bWxWSUxwXY91NYi6vY18FieSadMUQZQN7wRSRQPHp5rA5b7J2hrbRnzer2GdMvBNNzzD
-         bfbSdi0X+ziYK8IpGWLZmyut9CJknCOLV1V022iLk8iZPtF4+UIlonccdBrcZEhQJF/K
-         s6/Q==
-X-Gm-Message-State: AOJu0Yz+6svwMoJjhbgx6eqCz7W19IPHxSwOaC9gjxSTgKcabN6lFxeq
-	A5Enz223uQlv66C840y5BQIcbJJkuZ3iCFQSxgurTgKpTr4LPMG4DKoZRm2awl68AVs=
-X-Gm-Gg: ASbGncs/lTmzA1PKymdJz88kheaKqodpEEhphNCLgnz3JBE7F2Biu3EKKhhrdjJepv+
-	JBDT7mjV7ktYwo06iRlIRQeyoz+yS9Pkme9an8MiY8imDNNjn7+eX4d2qgiuHd+3sL120RJFYgs
-	U4J4w88ZYFppUrnQ2dgWFlXyOCgYLM5sxNz6oXKjbgoaIFsu8fVy/6QLHUkp6IhiRsWWalKp7pt
-	dnLPtEyK5yXOIQ3mDQvh98oTun4gIu74FU1mCFkT+HpYW+ApvdwTBuXxEYq0m03dRzEDqWLkiZC
-	qP5KIRJ3LKvLfnR4TryjZOpqYeutl5xlU5XkuVSuY+MKvlQkJ37QvOx06nUsdbtVfC1kB6w3SdV
-	UIR8U7T8=
-X-Google-Smtp-Source: AGHT+IGTDfwbb8Jj9/Kca8uImi41QpK5Q4z7fnPnVUyoxzabdMSwGDEnzkJRJ3o2/teQeIn0gOxpFQ==
-X-Received: by 2002:a17:902:e94c:b0:234:df51:d16c with SMTP id d9443c01a7336-2366b149ff4mr35830625ad.45.1749888798574;
-        Sat, 14 Jun 2025 01:13:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749888808; x=1750493608;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=csr9FmfIKsBQXGHzbBBq7oCudKRycvxUUNB9J2auubg=;
+        b=PMOUDx7Wnj2j/OkW9KpzyF9POQuPbXfjjCnnvnw5OmoOQXU0dwj+Lz0UL630fqqvPd
+         tJVYNBfxBsOzkccx4vOt4Nenaz6rO7JgdqrkSwrPuXbOzo8n7NeIHOYqW4EMwW7OLqbp
+         XinOyCysqgHQ1Lxm0krcRTIzFNn6gopc/UiZl1lEVSPWAruaieN0Yr1hg0MnKwgL9TWM
+         zbqVOLBYrFOTuFAND9NienS/1va354EesK94qWeIpXwFZW4HWMRInn0SWre3FqKT3f53
+         QV2EP2QDGf5uKR9+8uBHkWteQeOfBqa6675Gi8IBsCvtrVHSSow/grXSjH4Ihf2YUVFu
+         PW+w==
+X-Gm-Message-State: AOJu0YwrLsD0np/I3TL5bfRrZDq90IQRo1CNQAXOceiui1nmqM308iCv
+	wuv78yEMvYfo4QJIScs6pg8O6/oxheggHnhge6RSogqfI6dKlY7g4e8eKX2qm0TJ4ZA=
+X-Gm-Gg: ASbGncsKtmq5QM4HPHrVVV40ZnFC+FNIJqEJoeqiOfQMPLRYzOoarD0BtW4zFUIeZr/
+	ysPk3G/IU8XW9jbsJvQwNewTL9FFCQwEN+WnKDDETejdJxqTohBYGVAQ+L9kZxR5SMh63+S461F
+	Yb3Bsum2gWJ95rpnNHhH/rhIhsm2J0ojBCDBeHGHI+nUSxF+B4fxUXSZOGXVYNWkcQTo4DWte2r
+	eGL46MC99vzDtSpQSarwxK73j7u3yfqveiN1LY0CRmRA/7Db6EV5kGVv7GZ6GSzeweOXJkIAj+f
+	qJwrg+4qLcypBfn/JuNyVnLUNDBSs1t8XIkk67Ycq/ilK6IXWX92WfeFOjzofJrldLN/dpJF
+X-Google-Smtp-Source: AGHT+IHgXp3qMY/T0xTpNLwkJILbuetpRfSQISq9NlGFyqYXicJG+7XkeAaxoXRKJKo5bMh+qh4DFA==
+X-Received: by 2002:a17:902:ce81:b0:234:f4da:7ecf with SMTP id d9443c01a7336-2366b316adbmr27207855ad.8.1749888807811;
+        Sat, 14 Jun 2025 01:13:27 -0700 (PDT)
 Received: from localhost.localdomain ([220.85.17.103])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781b1sm26170055ad.89.2025.06.14.01.13.16
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781b1sm26170055ad.89.2025.06.14.01.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 01:13:18 -0700 (PDT)
+        Sat, 14 Jun 2025 01:13:27 -0700 (PDT)
 From: Eunsoo Eun <ewhk9887@gmail.com>
 To: rust-for-linux@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
-	Eunsoo Eun <naturale@hufs.ac.kr>,
-	Benno Lossin <benno.lossin@proton.me>
-Subject: [PATCH 1/2] rust: macros: allow optional trailing comma in module!
-Date: Sat, 14 Jun 2025 17:13:09 +0900
-Message-ID: <20250614081312.763606-1-ewhk9887@gmail.com>
+	Thangaraj Samynathan <thangaraj.s@microchip.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH 1/2] spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine
+Date: Sat, 14 Jun 2025 17:13:10 +0900
+Message-ID: <20250614081312.763606-2-ewhk9887@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250614081312.763606-1-ewhk9887@gmail.com>
+References: <20250614081312.763606-1-ewhk9887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Eunsoo Eun <naturale@hufs.ac.kr>
+From: Thangaraj Samynathan <thangaraj.s@microchip.com>
 
-Make the `module!` macro syntax more flexible by allowing an optional
-trailing comma after the last field. This makes it consistent with
-Rust’s general syntax patterns where trailing commas are allowed in
-structs, arrays, and other comma-separated lists.
+Removes MSI-X from the interrupt request path, as the DMA engine used by
+the SPI controller does not support MSI-X interrupts.
 
-For example, these are now all valid:
-
-    module! {
-        type: MyModule,
-        name: "mymodule",
-        license: "GPL"  // No trailing comma
-    }
-
-    module! {
-        type: MyModule,
-        name: "mymodule",
-        license: "GPL",  // With trailing comma
-    }
-
-This change also allows optional trailing commas in array fields like
-`authors`, `alias`, and `firmware`:
-
-    module! {
-        type: MyModule,
-        name: "mymodule",
-        authors: ["Author 1", "Author 2"],  // No trailing comma
-        license: "GPL"
-    }
-
-    module! {
-        type: MyModule,
-        name: "mymodule",
-        authors: ["Author 1", "Author 2",], // With trailing comma
-        license: "GPL"
-    }
-
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Link: https://github.com/Rust-for-Linux/linux/issues/1172
-Signed-off-by: Eunsoo Eun <naturale@hufs.ac.kr>
+Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
+Link: https://patch.msgid.link/20250612023059.71726-1-thangaraj.s@microchip.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- rust/macros/concat_idents.rs |  9 ++++++++
- rust/macros/module.rs        | 42 ++++++++++++++++++++++++++++++------
- 2 files changed, 45 insertions(+), 6 deletions(-)
+ drivers/spi/spi-pci1xxxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/macros/concat_idents.rs b/rust/macros/concat_idents.rs
-index 7e4b450f3a50..c139e1658b4a 100644
---- a/rust/macros/concat_idents.rs
-+++ b/rust/macros/concat_idents.rs
-@@ -17,6 +17,15 @@ pub(crate) fn concat_idents(ts: TokenStream) -> TokenStream {
-     let a = expect_ident(&mut it);
-     assert_eq!(expect_punct(&mut it), ',');
-     let b = expect_ident(&mut it);
-+    
-+    // Check for optional trailing comma
-+    if let Some(TokenTree::Punct(punct)) = it.clone().next() {
-+        if punct.as_char() == ',' {
-+            // Consume the trailing comma
-+            it.next();
-+        }
-+    }
-+    
-     assert!(it.next().is_none(), "only two idents can be concatenated");
-     let res = Ident::new(&format!("{a}{b}"), b.span());
-     TokenStream::from_iter([TokenTree::Ident(res)])
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index 2ddd2eeb2852..d37492457be5 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -13,10 +13,27 @@ fn expect_string_array(it: &mut token_stream::IntoIter) -> Vec<String> {
-     while let Some(val) = try_string(&mut it) {
-         assert!(val.is_ascii(), "Expected ASCII string");
-         values.push(val);
--        match it.next() {
--            Some(TokenTree::Punct(punct)) => assert_eq!(punct.as_char(), ','),
--            None => break,
--            _ => panic!("Expected ',' or end of array"),
-+
-+        // Check for optional trailing comma
-+        match it.clone().next() {
-+            Some(TokenTree::Punct(punct)) if punct.as_char() == ',' => {
-+                // Consume the comma
-+                it.next();
-+                // Check if there's another string after the comma
-+                if it.clone().next().is_none() {
-+                    // Trailing comma at end of array is allowed
-+                    break;
-+                }
-+            }
-+            Some(TokenTree::Literal(_)) => {
-+                // Next item is a string literal, comma was required
-+                panic!("Expected ',' between array elements");
-+            }
-+            None => {
-+                // End of array, no comma needed
-+                break;
-+            }
-+            Some(_) => panic!("Expected ',' or end of array"),
-         }
-     }
-     values
-@@ -143,9 +160,22 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
-                 _ => panic!("Unknown key \"{key}\". Valid keys are: {EXPECTED_KEYS:?}."),
-             }
+diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
+index 9112d8a1a0c8..e27642c4dea4 100644
+--- a/drivers/spi/spi-pci1xxxx.c
++++ b/drivers/spi/spi-pci1xxxx.c
+@@ -762,7 +762,7 @@ static int pci1xxxx_spi_probe(struct pci_dev *pdev, const struct pci_device_id *
+ 				return -EINVAL;
  
--            assert_eq!(expect_punct(it), ',');
--
-             seen_keys.push(key);
-+
-+            // Check for optional trailing comma
-+            match it.clone().next() {
-+                Some(TokenTree::Punct(punct)) if punct.as_char() == ',' => {
-+                    // Consume the comma
-+                    it.next();
-+                }
-+                Some(TokenTree::Ident(_)) => {
-+                    // Next item is an identifier, comma was required
-+                    panic!("Expected ',' between module properties");
-+                }
-+                _ => {
-+                    // End of input or closing brace, comma is optional
-+                }
-+            }
-         }
- 
-         expect_end(it);
+ 			num_vector = pci_alloc_irq_vectors(pdev, 1, hw_inst_cnt,
+-							   PCI_IRQ_ALL_TYPES);
++							   PCI_IRQ_INTX | PCI_IRQ_MSI);
+ 			if (num_vector < 0) {
+ 				dev_err(&pdev->dev, "Error allocating MSI vectors\n");
+ 				return num_vector;
 -- 
 2.49.0
 
