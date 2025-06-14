@@ -1,182 +1,179 @@
-Received: from mx4.sberdevices.ru (mx5.sberdevices.ru [95.181.183.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20D61BD9C1;
-	Sat, 14 Jun 2025 20:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.181.183.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCC41BD9C1;
+	Sat, 14 Jun 2025 20:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749931484; cv=none; b=n+sEtdN9kUcSl3Y1aFX9wWI+L3LPgRmwxfEqbIrEwjeR2JvKjATfNdBzso7vYpXOdUuyAU7qFfLSdGcboXgbWOG6gEMzSvdR7/dbd999w2tvIcd1MidJ28NkgBOaTW1xcnuVeAzQkM7leJhWIQt1Tp1gjTfim9f4PyJqIMzWyg8=
+	t=1749931521; cv=none; b=IRAv2citeY85WdPv7PRHR0zcqXj6IsGN5bAUDor5wJN+nU6nl0RLDy5yeloi4neP+weRBKbw4FfbwkzLVPrOuDS45TxA1/vd7NGnwC0dGIINjEJP6mChNA/edTUvze6CaIhbx96vd/nVcipiaToFUoBesKtwSRGK16+tc6ZVo3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749931484; c=relaxed/simple;
-	bh=xDyiDkqI+6Jh4dg7snH1KiCvSL7d1xKQq1jnCxP4SlU=;
-	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=UtnpzzFrw+9LG5ZVKBKQbONuUHFY3+uZ/CS+9puQYtfd3MRJL5kN34l74ecGoVDPCXtO45K7PThh2g7CvvIGJNSlRPAJGttd2AZDeuMS6WTmXfoP1AtG2Rsvqbdw342efaXEu8Uk7YGZtRCKSpfOyJ3HlGGEBIP0JHu7INJb7sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=hFx2L96U; arc=none smtp.client-ip=95.181.183.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1749931521; c=relaxed/simple;
+	bh=slRsPvk4x7D7++RNJlqHaH2v5niYKW6vSDS25QC8uAY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ctYrwoVBPQ9sl4oEVS1usAiPoximU1r6Pn/AM1Ve2On5M07sHjPGpojG+lkXddZzO7UqVeljqXfKm2rp2NQUq53Y2XYDP4UiyLefqPiQ5D/NlZHS8NUlASX+NsLBKO6qX3sobfhBkmvKCwLCT3FPcXE5veorItz8uaY8Bnh7vcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1JBFg5R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="hFx2L96U"
-Received: from p-antispam-ksmg-gc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx4.sberdevices.ru (Postfix) with ESMTP id 1C037240003;
-	Sat, 14 Jun 2025 22:58:32 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx4.sberdevices.ru 1C037240003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=post; t=1749931112;
-	bh=UG4CF9q1j/oRpKNMhpMazbWB8ZDUb6oPscWBiNgiuCI=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type:From;
-	b=hFx2L96UfC6dRiBb2ILhrWl39vaTfJrDSuidVGlgcvYITA5OPUTRmGxgvJtG3CoYP
-	 +KJIMS7cegVJCmoGwDgIrpl8uL7Zv3W+yExuN/NHyk4bFjV3ahs4+eus2RWBRX2Byp
-	 jjfROX9So/2+Td9BN0jkYg8QezeYAsQSUD5g00WUQf1hjy+B7xWlVkyal+NNSWS9aV
-	 cUmYkKUaEI7xSXklR/Vsin6wA4VkP8mKCAyfQwP/JgF26M5TdZN/C+L/sZ+twjw4LY
-	 DPHsM8hnh5sXk9uiuCHhTDEOuCE/fh2vHjnaYPSyhjcAHazBdWGBC6uwlzAJs71WEB
-	 s2a/LM8+nVREQ==
-Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "sberdevices.ru", Issuer "R11" (verified OK))
-	by mx4.sberdevices.ru (Postfix) with ESMTPS;
-	Sat, 14 Jun 2025 22:58:31 +0300 (MSK)
-Message-ID: <4d554466-f862-f465-f0e8-e4b749050319@salutedevices.com>
-Date: Sat, 14 Jun 2025 22:58:24 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1JBFg5R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80BAC4CEEB;
+	Sat, 14 Jun 2025 20:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749931521;
+	bh=slRsPvk4x7D7++RNJlqHaH2v5niYKW6vSDS25QC8uAY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=k1JBFg5R/IQN3bNpA6vRdIxHOha+XRAas3nx9mmLWUTjzZInsRqx2PPVRL9AIDheu
+	 CIIti5roiN960cJHRNUKzvHuHebEACfvMqAQ95tQQ3zypNnwY0ADyb6t+cdwBHRZhM
+	 6v30iijqyvLiigSEYcLjR0Ea07kY82mYqD0GHvHAdf88V15TZiSkmIQTwYd1ovkEKr
+	 zLDMtO2NibjudGnO8/T9+qYFV8/ExoEm3Pu38Qu1hwOiutWK577mBVsst5X97Rl2eh
+	 KZE+WCMohnAhD2twsDQl0UajR8+hquUgL1epTMLI/3f8HZUVg5g0JOw4GPtH22A38F
+	 sfG1BLjVvfIJQ==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Sat, 14 Jun 2025 22:05:09 +0200
+Subject: [PATCH] media: dt-bindings: qcom,venus: Allow OPP specifics
+ universally
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Content-Language: en-US
-To: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>
-CC: <oxffffaa@gmail.com>, <linux-bluetooth@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Subject: [PATCH v2] Bluetooth: hci_sync: fix double free in,
- 'hci_discovery_filter_clear()'
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-exch-cas-a-m2.sberdevices.ru (172.24.201.210) To
- p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Info: LuaCore: 62 0.3.62 e2af3448995f5f8a7fe71abf21bb23519d0f38c3, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 194041 [Jun 14 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/06/14 19:37:00 #27565334
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 5
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250614-topic-venus_opp-v1-1-5ec6f64f395d@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAPTVTWgC/x3MQQqAIBBA0avErBMsrKSrRITZWLNR0ZJAvHvS8
+ i3+zxAxEEaYmwwBE0VytqJrG9CXsicyOqqh5/3Ax06w23nSLKF94ua8Z4YLZSYpj31CqJUPaOj
+ 9j8taygdoYGusYQAAAA==
+X-Change-ID: 20250614-topic-venus_opp-f04af788db7e
+To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+ Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749931517; l=4350;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=k/9QSJMm1AvzFa3EOIGbiuIbb9WoAR1TLb3OICDsOUA=;
+ b=cnGVtCTeKaFK28FxSnvTX5qHxtYHP8F87l5w8Xr52+C/ygT3fpOE3A6U0BjvPFJQk8zvM1EgA
+ hLTEfaknoXgDVeWa8zehab2O+T/laNrjSOhQOTcrnPc0qdFR4C4DqWA
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Function 'hci_discovery_filter_clear()' frees 'uuids' array and then
-sets it to NULL. There is a tiny chance of the following race:
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-'hci_cmd_sync_work()'
+All venus hardware has a number of OPPs, so it only makes sense to
+commonize the allowing of operating-points-v2/opp-table. Do so.
 
- 'update_passive_scan_sync()'
-
-   'hci_update_passive_scan_sync()'
-
-     'hci_discovery_filter_clear()'
-       kfree(uuids);
-
-       <-------------------------preempted-------------------------------->
-                                           'start_service_discovery()'
-
-                                             'hci_discovery_filter_clear()'
-                                               kfree(uuids); // DOUBLE FREE
-
-       <-------------------------preempted-------------------------------->
-
-      uuids = NULL;
-
-To fix it let's add locking around 'kfree()' call and NULL pointer
-assignment. Otherwise the following backtrace fires:
-
-[ ] ------------[ cut here ]------------
-[ ] kernel BUG at mm/slub.c:547!
-[ ] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-[ ] CPU: 3 UID: 0 PID: 246 Comm: bluetoothd Tainted: G O 6.12.19-kernel #1
-[ ] Tainted: [O]=OOT_MODULE
-[ ] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ ] pc : __slab_free+0xf8/0x348
-[ ] lr : __slab_free+0x48/0x348
-...
-[ ] Call trace:
-[ ]  __slab_free+0xf8/0x348
-[ ]  kfree+0x164/0x27c
-[ ]  start_service_discovery+0x1d0/0x2c0
-[ ]  hci_sock_sendmsg+0x518/0x924
-[ ]  __sock_sendmsg+0x54/0x60
-[ ]  sock_write_iter+0x98/0xf8
-[ ]  do_iter_readv_writev+0xe4/0x1c8
-[ ]  vfs_writev+0x128/0x2b0
-[ ]  do_writev+0xfc/0x118
-[ ]  __arm64_sys_writev+0x20/0x2c
-[ ]  invoke_syscall+0x68/0xf0
-[ ]  el0_svc_common.constprop.0+0x40/0xe0
-[ ]  do_el0_svc+0x1c/0x28
-[ ]  el0_svc+0x30/0xd0
-[ ]  el0t_64_sync_handler+0x100/0x12c
-[ ]  el0t_64_sync+0x194/0x198
-[ ] Code: 8b0002e6 eb17031f 54fffbe1 d503201f (d4210000) 
-[ ] ---[ end trace 0000000000000000 ]---
-
-Fixes: ad383c2c65a5 ("Bluetooth: hci_sync: Enable advertising when LL privacy is enabled")
-Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- Changelog v1->v2:
- * Don't call 'hci_dev_lock()' in 'update_passive_scan_sync()' as it
-   triggers deadlock. Instead of that - add spinlock which protects
-   freeing code.
+ Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 4 ----
+ Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml    | 4 ----
+ Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 4 ----
+ Documentation/devicetree/bindings/media/qcom,sm8250-venus.yaml    | 4 ----
+ Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml     | 5 -----
+ Documentation/devicetree/bindings/media/qcom,venus-common.yaml    | 4 ++++
+ 6 files changed, 4 insertions(+), 21 deletions(-)
 
- include/net/bluetooth/hci_core.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 54bfeeaa09959..f8eeb15acdcfa 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -29,6 +29,7 @@
- #include <linux/idr.h>
- #include <linux/leds.h>
- #include <linux/rculist.h>
-+#include <linux/spinlock.h>
+diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+index bfd8b1ad473128c974bce84639cb0aff59d8c2cc..e5c05b9c1e914a618a71b86a75ff5516556d55ef 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+@@ -61,10 +61,6 @@ properties:
+       - const: video-mem
+       - const: cpu-cfg
  
- #include <net/bluetooth/hci.h>
- #include <net/bluetooth/hci_sync.h>
-@@ -92,6 +93,7 @@ struct discovery_state {
- 	u16			uuid_count;
- 	u8			(*uuids)[16];
- 	unsigned long		name_resolve_timeout;
-+	spinlock_t		lock;
- };
+-  operating-points-v2: true
+-  opp-table:
+-    type: object
+-
+   video-decoder:
+     type: object
  
- #define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
-@@ -878,6 +880,7 @@ static inline void iso_recv(struct hci_conn *hcon, struct sk_buff *skb,
+diff --git a/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
+index 413c5b4ee6504ba1d5fe9f74d5be04ad8c90c318..0a3b3cd525678b13c201f417f418de4927ea1d8d 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
+@@ -54,10 +54,6 @@ properties:
+       - const: cpu-cfg
+       - const: video-mem
  
- static inline void discovery_init(struct hci_dev *hdev)
- {
-+	spin_lock_init(&hdev->discovery.lock);
- 	hdev->discovery.state = DISCOVERY_STOPPED;
- 	INIT_LIST_HEAD(&hdev->discovery.all);
- 	INIT_LIST_HEAD(&hdev->discovery.unknown);
-@@ -892,8 +895,11 @@ static inline void hci_discovery_filter_clear(struct hci_dev *hdev)
- 	hdev->discovery.report_invalid_rssi = true;
- 	hdev->discovery.rssi = HCI_RSSI_INVALID;
- 	hdev->discovery.uuid_count = 0;
+-  operating-points-v2: true
+-  opp-table:
+-    type: object
+-
+   video-decoder:
+     type: object
+ 
+diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+index c839cb1ebc0999e10b865f4bb43ea76ffa2bf46d..c177c96d6bd1d4e10de816a330b4e7b1c6e3f3dc 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+@@ -56,10 +56,6 @@ properties:
+       - const: video-mem
+       - const: cpu-cfg
+ 
+-  operating-points-v2: true
+-  opp-table:
+-    type: object
+-
+   video-core0:
+     type: object
+ 
+diff --git a/Documentation/devicetree/bindings/media/qcom,sm8250-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sm8250-venus.yaml
+index da54493220c9dc90e7d9f5fcfce7590acb241c85..89db76817be4c6a8d10e46b95546397e85481988 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sm8250-venus.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sm8250-venus.yaml
+@@ -51,10 +51,6 @@ properties:
+       - const: cpu-cfg
+       - const: video-mem
+ 
+-  operating-points-v2: true
+-  opp-table:
+-    type: object
+-
+   resets:
+     maxItems: 2
+ 
+diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+index c79bf2101812d83b99704f38b7348a9f728dff44..c2076e80bb5c5f976384875f0406bbfa2cd6f100 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+@@ -69,11 +69,6 @@ properties:
+ 
+   dma-coherent: true
+ 
+-  operating-points-v2: true
+-
+-  opp-table:
+-    type: object
+-
+ required:
+   - compatible
+   - power-domain-names
+diff --git a/Documentation/devicetree/bindings/media/qcom,venus-common.yaml b/Documentation/devicetree/bindings/media/qcom,venus-common.yaml
+index 3153d91f9d18a327559dd750f152332cdc652ac4..67f0e0f78c72756e9d4ccc34def3da1402b7aa38 100644
+--- a/Documentation/devicetree/bindings/media/qcom,venus-common.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,venus-common.yaml
+@@ -47,6 +47,10 @@ properties:
+     minItems: 1
+     maxItems: 4
+ 
++  operating-points-v2: true
++  opp-table:
++    type: object
 +
-+	spin_lock(&hdev->discovery.lock);
- 	kfree(hdev->discovery.uuids);
- 	hdev->discovery.uuids = NULL;
-+	spin_unlock(&hdev->discovery.lock);
- }
- 
- bool hci_discovery_active(struct hci_dev *hdev);
+   video-firmware:
+     type: object
+     additionalProperties: false
+
+---
+base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+change-id: 20250614-topic-venus_opp-f04af788db7e
+
+Best regards,
 -- 
-2.30.1
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
