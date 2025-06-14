@@ -1,140 +1,154 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F882AE99;
-	Sat, 14 Jun 2025 06:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A3A2AE99;
+	Sat, 14 Jun 2025 06:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749883658; cv=none; b=IY6cJtzW/MksQfFLuhkzVRiszYzQc4FOyjUZOBwRkDUlP7lAPDmBbG3oly/+QLzRiIfvBWK57oP6iRZvTbzqYRgiX74rPxSPbTsHSlnAxZ1eQgElOPcwwKqan2Ww2SNHPydo5cdijpq+jdD7AmXIcd0kiaG1I/fg6BOfBX1l19w=
+	t=1749883837; cv=none; b=Cb7IGHkvfvMhBJgbFTYCrFnQUw5GDb6N8MsTb1wU/pVNwQ14ZC5g08pNVJa6jElhgWmwpZeNi0/plraQ9glSg5e6wiN/pjJjrHSLcBwi5hp7O313WG0cF767tqQfcNzfGQOMf7z7jFFJeV37fAxS1dErf81S9AwdVKBpoZJ/yWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749883658; c=relaxed/simple;
-	bh=c9aLFkS7uYUN5AL2JbojVvkXL0o0tJER4HjUA+ljhRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F80YpJPtGb8rjhIXiUFRJIfxZYvG8EJU6VcXpr/IR/YogxAg1cROHgUtXqDuGriNpVs63SaURjmF/wT0DKiRFfOSMzvCNH1SK4g6uDmyG8NwCrh8l4igx/6LFfYyHiqhCoa74Qh6+KscuZDl+sx6sZg0ECmJD+N5bnq6g/JVjAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=CJtZWBrc; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="CJtZWBrc"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 7C4A51C00A4; Sat, 14 Jun 2025 08:47:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1749883645;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Nq2VMzusQXJdAZDR0PVqMFoxiMFSHB1Zq1d1MUyO7/M=;
-	b=CJtZWBrchouIXzaomFU7ufFekRA9oTEVUBcRxPh1aGCtkolSl3PPeUm6Vdy4Zi/qq+BbIL
-	y2+ONs7eJB1n3//ZNGV+92vplpiqJ2BlqPTy1sNLOONnGZeMEAgOBFJnqxNXIKKVm7uBAk
-	4iLfWoLwa540gktZliYA0g8h3ffD41Y=
-Date: Sat, 14 Jun 2025 08:47:25 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	David Lechner <dlechner@baylibre.com>,
-	linux-rockchip@lists.infradead.org,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	kernel@pengutronix.de, Oleksij Rempel <o.rempel@pengutronix.de>,
-	Roan van Dijk <roan@protonic.nl>,
-	Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-	Andreas Klinger <ak@it-klinger.de>,
-	Petre Rodan <petre.rodan@subdimension.ro>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 00/28] iio: zero init stack with { } instead of memset()
-Message-ID: <aE0a/Y9qVByfA2vI@duo.ucw.cz>
-References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
- <aEqbQPvz0FsLXt0Z@duo.ucw.cz>
- <2243943.irdbgypaU6@workhorse>
- <aEsiTy++yKGe1p9W@duo.ucw.cz>
- <aEsmDyc44P8amm5p@smile.fi.intel.com>
+	s=arc-20240116; t=1749883837; c=relaxed/simple;
+	bh=b+ZNK9H+MGbconJey2jD2y8seac9nVP4q217lbRq7W4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qa0fvy9ozrM7TPxTmEz5WRZ62e/6CGsN/9CzTrRki1iLSpgC3+kpV6PIrvlb5GwV9uOmZUxEhpqihcE55u+G/O+rhhftav7Gb88WL2rceEIrJo6IBwMyGEM8HLm432hrvvz/Be9XS7l/SJSJ5lTLkaqUONTIwbwNHYeM9zwxn2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bK6Cz2hnVz9t0K;
+	Sat, 14 Jun 2025 08:43:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id nzJiJVWnwwT0; Sat, 14 Jun 2025 08:43:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bK6Cz1jFTz9t0H;
+	Sat, 14 Jun 2025 08:43:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 353E18B77B;
+	Sat, 14 Jun 2025 08:43:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id rpo6pN8d7mWZ; Sat, 14 Jun 2025 08:43:27 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id BCE058B769;
+	Sat, 14 Jun 2025 08:43:22 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v3 0/4] ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to user_access_begin/user_access_end()
+Date: Sat, 14 Jun 2025 08:43:13 +0200
+Message-ID: <cover.1749883041.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8EN7Mf+Ky8207VFl"
-Content-Disposition: inline
-In-Reply-To: <aEsmDyc44P8amm5p@smile.fi.intel.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749883393; l=4713; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=b+ZNK9H+MGbconJey2jD2y8seac9nVP4q217lbRq7W4=; b=LKyYrK0DlNR6aTIHoEmvIpc7BaxFRlaNMYY0kH7LUAkeVzoBPw3szJ7OXhhUT2gm5Q8dXeypn 3cQAAhKIJHODOeBk8pkfFhNys5NCZKJe05ts30wOinxe70bTLJqipIi
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
+This series converts all variants of SNDRV_PCM_IOCTL_SYNC_PTR to 
+user_access_begin/user_access_end() in order to reduce the CPU load
+measured in function snd_pcm_ioctl.
 
---8EN7Mf+Ky8207VFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With the current implementation, "perf top" reports a high load in
+snd_pcm_iotcl(). Most calls to that function are SNDRV_PCM_IOCTL_SYNC_PTR.
 
-On Thu 2025-06-12 22:10:07, Andy Shevchenko wrote:
-> On Thu, Jun 12, 2025 at 08:54:07PM +0200, Pavel Machek wrote:
-> > > On Thursday, 12 June 2025 11:17:52 Central European Summer Time Pavel=
- Machek wrote:
-> > > >=20
-> > > > > Jonathan mentioned recently that he would like to get away from u=
-sing
-> > > > > memset() to zero-initialize stack memory in the IIO subsystem. An=
-d we
-> > > > > have it on good authority that initializing a struct or array wit=
-h =3D { }
-> > > > > is the preferred way to do this in the kernel [1]. So here is a s=
-eries
-> > > > > to take care of that.
-> > > >=20
-> > > > 1) Is it worth the churn?
-> > > >=20
-> > > > 2) Will this fail to initialize padding with some obscure compiler?
-> > >=20
-> > > as of right now, the only two C compilers that are supported are
-> > > GCC >=3D 8.1, and Clang >=3D 13.0.1. If anyone even manages to get the
-> > > kernel
-> >=20
-> > Well... I'm pretty sure parts of this would make it into -stable as a
-> > dependency, or because AUTOSEL decides it is a bugfix. So..
-> >=20
-> > GNU C                  4.9              gcc --version
-> > Clang/LLVM (optional)  10.0.1           clang --version
->=20
-> Even though, what the kernel versions are you referring to? I am sure the=
-re
-> plenty of cases with {} there.
+    14.20%  test_perf           [.] engine_main
+==> 12.86%  [kernel]            [k] snd_pcm_ioctl
+    11.91%  [kernel]            [k] finish_task_switch.isra.0
+     4.15%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+     4.07%  libc.so.6           [.] __ioctl_time64
+     3.58%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+     3.37%  [kernel]            [k] sys_ioctl
+     2.96%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+     2.73%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+     2.58%  [kernel]            [k] system_call_exception
+     1.93%  libasound.so.2.0.0  [.] sync_ptr1
+     1.85%  libasound.so.2.0.0  [.] snd_pcm_unlock
+     1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
+     1.83%  libasound.so.2.0.0  [.] bad_pcm_state
+     1.68%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+     1.67%  libasound.so.2.0.0  [.] snd_pcm_avail_update
 
-5.10, for example. I'm sure they are, uninitialized padding is a
-security hole, but rather hard to detect if they are not specifically
-looking.
+A tentative was done with going via intermediaire structs on stack to
+replace the multiple get_user() and put_user() with copy_from_user()
+and copy_to_user(). But copy_from_user() calls _copy_from_user() and
+copy_to_user() calls _copy_to_user(). Both then call __copy_tofrom_user().
+In total it is 16.4% so it is worse than before.
 
-BR,
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+    14.47%  test_perf           [.] engine_main
+    12.00%  [kernel]            [k] finish_task_switch.isra.0
+==>  8.37%  [kernel]            [k] snd_pcm_ioctl
+     5.44%  libc.so.6           [.] __ioctl_time64
+     5.03%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+==>  4.86%  [kernel]            [k] __copy_tofrom_user
+     4.62%  [kernel]            [k] sys_ioctl
+     3.22%  [kernel]            [k] system_call_exception
+     2.42%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
+     2.31%  [kernel]            [k] fdget
+     2.23%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+     2.19%  [kernel]            [k] syscall_exit_prepare
+     1.92%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+     1.86%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+     1.68%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+==>  1.67%  [kernel]            [k] _copy_from_user
+     1.66%  libasound.so.2.0.0  [.] bad_pcm_state
+==>  1.53%  [kernel]            [k] _copy_to_user
+     1.40%  libasound.so.2.0.0  [.] sync_ptr1
 
---8EN7Mf+Ky8207VFl
-Content-Type: application/pgp-signature; name="signature.asc"
+With this series which uses unsafe_put_user() and unsafe_get_user(),
+the load is significantly reduced:
 
------BEGIN PGP SIGNATURE-----
+    17.46%  test_perf           [.] engine_main
+     9.14%  [kernel]            [k] finish_task_switch.isra.0
+==>  4.92%  [kernel]            [k] snd_pcm_ioctl
+     3.99%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+     3.71%  libc.so.6           [.] __ioctl_time64
+     3.61%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+     2.72%  libasound.so.2.0.0  [.] sync_ptr1
+     2.65%  [kernel]            [k] system_call_exception
+     2.46%  [kernel]            [k] sys_ioctl
+     2.43%  [kernel]            [k] __rseq_handle_notify_resume
+     2.34%  [kernel]            [k] do_epoll_wait
+     2.30%  libasound.so.2.0.0  [.] __snd_pcm_mmap_commit
+     2.14%  libasound.so.2.0.0  [.] __snd_pcm_avail
+     2.04%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+     1.89%  libasound.so.2.0.0  [.] snd_pcm_lock
+     1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+     1.76%  libasound.so.2.0.0  [.] __snd_pcm_avail_update
+     1.61%  libasound.so.2.0.0  [.] bad_pcm_state
+     1.60%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+     1.49%  libasound.so.2.0.0  [.] query_status_data
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaE0a/QAKCRAw5/Bqldv6
-8s8GAJwP0O7BqJu50EUbwvpDrfK4gyMKdACfahroIQZ2mLJdQs4CjH06C6Xtr0Q=
-=2Vk7
------END PGP SIGNATURE-----
+Since v2:
+- Fix macros to skip user_read_access_end() when user_read_access_begin() failed
+- Fix some tabulations for properly aligning backslashes
 
---8EN7Mf+Ky8207VFl--
+Since RFC:
+- Added a cover letter to summarize some of the measurements done on and around the RFC
+- Fixed relevant checkpatch feedback
+- Split last patch in two
+
+Christophe Leroy (4):
+  ALSA: pcm: refactor copy from/to user in SNDRV_PCM_IOCTL_SYNC_PTR
+  ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to
+    user_access_begin/user_access_end()
+  ALSA: pcm: Replace [audio_]tstamp_[n]sec by struct __snd_timespec in
+    struct snd_pcm_mmap_status32
+  ALSA: pcm: Convert snd_pcm_sync_ptr() to
+    user_access_begin/user_access_end()
+
+ sound/core/pcm_compat.c | 14 +-----
+ sound/core/pcm_native.c | 98 ++++++++++++++++++++++++++---------------
+ 2 files changed, 64 insertions(+), 48 deletions(-)
+
+-- 
+2.47.0
+
