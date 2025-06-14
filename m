@@ -1,736 +1,126 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EF31E3DF4;
-	Sat, 14 Jun 2025 14:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569B92E336C
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 14:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749912961; cv=none; b=ZkSQIsopSs4eWamizyCICcAIsTGXsMSHvQtIqNRXPu/t1SXlD+FCa2xYe5U94mqDTHQ2fStwDjY8I0P2sb5QI1Cj5zoN1QRae1BPktxQ7T3Hpa6/FiDBKA4cHod9akvFN5j+lfCHycN+7J52IrD07NRC+7ySXUN++W4rb4zPhYc=
+	t=1749912967; cv=none; b=VuVo5mfjCaaHEFCF3CN3aAHtoiSU77TQk4SUQ/fyT7e+z3ZRMMfZ5Lyrwp97AiA/RVPZs/gGyzgeaWoeYAKVKIGMdeZVj4sJKkRf6r3UR7GKGisRSMS3m3QYmtqS6zwo06BdEQV8JoVrwcebc9iJDXNOKoXM8lSYCQwX/0sSR8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749912961; c=relaxed/simple;
-	bh=4GnXQa4Caq5tcsnUiZDjRLY2OqmIhas13r4xmEdGsck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T/OArGRUgtcnYa3HX+eI3rlRZmIJXYumfzhJ3aFQRYslv5MvGPJqkaMr3gxafoIweJHyI+ip6RnYuZHGjtO6dx/AqTZ7X/dl2tsMF6V5JYWh/cm7AqpUrQd8goM0aUSu14ldqU24yVxgJRPoDIlNEBzeCWvBonvSt8FCUphYmQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ByUGdGbM; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749912967; c=relaxed/simple;
+	bh=V2dnmXkpmQkFeGJ0/9lY8APfUTddRrtiX6o9oiKsl98=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g9Ce0wTLM9TO4ZBdhZysYGC3MO/7TztEgyayNgYoPzUw432k7Vi01pS9m+CvKQJwDLCwCz2OewL2o0TR7mOog2iRcvB2lyfGk4jvFkasz0565J2zDiQprwtQw3DQYwRHWL0Aow9q0Kd2qTAijpv4Vkf5QhlxIfFG74sq8wIeMKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.ntu.edu.tw; spf=pass smtp.mailfrom=csie.ntu.edu.tw; dkim=pass (2048-bit key) header.d=csie.ntu.edu.tw header.i=@csie.ntu.edu.tw header.b=ALwt8DzE; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.ntu.edu.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csie.ntu.edu.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ByUGdGbM"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 51772741;
-	Sat, 14 Jun 2025 16:55:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749912945;
-	bh=4GnXQa4Caq5tcsnUiZDjRLY2OqmIhas13r4xmEdGsck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ByUGdGbMOsoivws7ooO0U4G6gKgCd+xzJUfkyngG2A6jInn+/PkjBVcSity7ymnwH
-	 57+FayPwMLy+YpyFZ1XhqDGitYGxEt1BpJnNHRNyFB7FSro6ZtEnsPSXt4VMAH9Rfp
-	 jXBA27yPYWRytrN06k+RiKWrBjiy0lPMzC7pcDq0=
-Date: Sat, 14 Jun 2025 17:55:40 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v8] media: vsp1: Add VSPX support
-Message-ID: <20250614145540.GB14438@pendragon.ideasonboard.com>
-References: <20250502-b4-vspx-v8-1-b2a7592668dd@ideasonboard.com>
- <20250502202644.GF20093@pendragon.ideasonboard.com>
- <ptjenvbcovfzj5oukqriu7qx7qqz22r4h6sfmctpsdghwz3so3@naiwhbqwexn6>
+	dkim=pass (2048-bit key) header.d=csie.ntu.edu.tw header.i=@csie.ntu.edu.tw header.b="ALwt8DzE"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-748a42f718aso260196b3a.2
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 07:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=csie.ntu.edu.tw; s=google; t=1749912963; x=1750517763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FdwgAOcCxW8xP65CJHYSviC4hBZAI2hMwMKg/94ld5s=;
+        b=ALwt8DzEZRYrpIjqupKdSvRIV1lr8zb1lu0pHwop5YDaUZ39/DyyiVib/e1tJxFXUV
+         lnMvljOhl55SIikGtgK4yHpFfBrNfLmlRGxjIoyayNpjsTyw2ioAj8dPzF+IWqNP1lme
+         L/Cifi0MeWstecSm5bYg4V5JOIMEXekjBHrvP+Cm4tBcB/ufa9yeQpD0iGl184ddfq4Z
+         V5JF6IEPKAgJoXbdfVhjQCLmsGsN7AKiCA2F6I6TpGHTgftczc2JVsk1Yny/OAnz49v1
+         72N61MGSe+fSAdw2OW6BMlvHoqyeam1a6VdkdiarediF2jD9yPBYCsQVFFfpG7TG6FTA
+         n5Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749912963; x=1750517763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FdwgAOcCxW8xP65CJHYSviC4hBZAI2hMwMKg/94ld5s=;
+        b=qYdl8ccEpxMCS4X93qhGaQcHTy88k8v/ihcrkp4V6hfsIoJeDlcb03Wfy6ciEGEdsX
+         X/ILZTpKqZ92Mzy8TaKWGvJxtf/4NYVgQ6vbCE19FVL86Se9BRppJGwPJB9hamzw5ttL
+         ftzbu4uFQMZJoVkRZQ+vmkAOAwOCrrZqULH1yOREduxMN7exOLfV6c9Viv/U5jtqJRLo
+         aUKiaqKH7EONg27pgjh5YNkORI2AuWZoWCdotkQloYxcqpcOGFG4yqUarLyvUwqcOVIL
+         +g7bWQlZrrZaysRllzU5YvXTFiENb5CdTp2xKpMEV+4ixwt2bD78eoamHdV5mCmuyrZF
+         4oiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzqOKakXGQ3vMKy5I9Nu6s/UOkzV2shp04BJw/Ovqfjwnkxh3QGv9uMY5PjEqRWmmjAbhwLQdAeAJ8Tng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSYdYmEJYpjlo6Ujjv5lFYCJrbRMTrZyS1SENiAFnEnJAcjFJq
+	WDFChtlgqUEvTdAFTKijSsAiq3L3PcxAjFQ54YbYdpOy6OSjv3ihQX51xwf8gwGsEiShka3c33+
+	/jO2OY0jowvEIVdc/CpUTfvl9KpQn41qsvZVZD4kIOxXMN/hPRAxKFoEqDRA=
+X-Gm-Gg: ASbGncsXHrn3Uo7GiiDZhH4g3MqU16bQZRmPF+Ich2WA+IJ1orG0ETQP4RQggiB+l8r
+	3nFqUPsC5osln3s0hrv7D5yt8shB6SV03zSyp8w1xFjyzNnIsgtSZbCcSixLx7BB53q/0PzCoVs
+	h/tGPaH/x7YLQSwupPiPNYkUorLbe2GyX0pPw1IhGj/YNewaPk/LgfPPhLZskbXNBOjhmo8O3Da
+	RD7XTIRS25cxYJjBwMW7UGNcrwzjvMZwH92tC3XIo5FUm/6WV0CGAOYySsuwFN69DyKScPXmUHZ
+	UUsHSuHOW8eDsXWix88jFap0IOgldg3jG7Q1jFfMgSoe0jr2UQCK0cexBPCURI1nji+IXgK40Nh
+	WdVvMXqNWJ9ERsfRWbM3AY3nqpPe0FlZc4a3Il/ntszs=
+X-Google-Smtp-Source: AGHT+IEEnn/ufz6mqS8sNhhi17+pqZj6OB0ZO/xLcIsqqzhVrA8tKi9dLivhuV4/wirpHZNz/ivObw==
+X-Received: by 2002:a05:6a00:3e10:b0:72d:9cbc:730d with SMTP id d2e1a72fcca58-7489cffbf39mr4211820b3a.11.1749912963480;
+        Sat, 14 Jun 2025 07:56:03 -0700 (PDT)
+Received: from localhost.localdomain (36-228-20-239.dynamic-ip.hinet.net. [36.228.20.239])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890006059sm3565303b3a.55.2025.06.14.07.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 07:56:02 -0700 (PDT)
+From: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+To: linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Wei-Lin Chang <r09922117@csie.ntu.edu.tw>,
+	Will Deacon <will@kernel.org>,
+	Jintack Lim <jintack@cs.columbia.edu>,
+	Christoffer Dall <christoffer.dall@arm.com>
+Subject: [PATCH] KVM: arm64: nv: Fix s_cpu_if->vgic_lr[] indexing in vgic_v3_put_nested()
+Date: Sat, 14 Jun 2025 22:57:21 +0800
+Message-ID: <20250614145721.2504524-1-r09922117@csie.ntu.edu.tw>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ptjenvbcovfzj5oukqriu7qx7qqz22r4h6sfmctpsdghwz3so3@naiwhbqwexn6>
+Content-Transfer-Encoding: 8bit
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 
-Hi Jacopo,
+s_cpu_if->vgic_lr[] is filled continuously from index 0 to
+s_cpu_if->used_lrs - 1, but vgic_v3_put_nested() is indexing it using
+the positions of the set bits in shadow_if->lr_map. So correct it.
 
-I realize I haven't replied to this e-mail. Sorry about that. I've added
-a few comments below related to issues that I think are still relevant
-to v10.
+Signed-off-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+---
+ arch/arm64/kvm/vgic/vgic-v3-nested.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-On Mon, May 05, 2025 at 10:19:57AM +0200, Jacopo Mondi wrote:
-> On Fri, May 02, 2025 at 11:26:44PM +0300, Laurent Pinchart wrote:
-> > On Fri, May 02, 2025 at 03:23:10PM +0200, Jacopo Mondi wrote:
-> > > Add support for VSPX, a specialized version of the VSP2 that
-> > > transfers data to the ISP. The VSPX is composed of two RPF units
-> > > to read data from external memory and an IIF instance that performs
-> > > transfer towards the ISP.
-> > >
-> > > The VSPX is supported through a newly introduced vsp1_vspx.c file that
-> > > exposes two interfaces: vsp1_vspx interface, declared in vsp1_vspx.h
-> > > for the vsp1 core to initialize and cleanup the VSPX, and a vsp1_isp
-> > > interface, declared in include/media/vsp1.h for the ISP driver to
-> > > control the VSPX operations.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> > > ---
-> > > The VSPX is a VSP2 function that reads data from external memory using
-> > > two RPF instances and feed it to the ISP.
-> > >
-> > > The VSPX includes an IIF unit (ISP InterFace) modeled in the vsp1 driver
-> > > as a new, simple, entity type.
-> > >
-> > > IIF is part of VSPX, a version of the VSP2 IP specialized for ISP
-> > > interfacing. To prepare to support VSPX, support IIF first by
-> > > introducing a new entity and by adjusting the RPF/WPF drivers to
-> > > operate correctly when an IIF is present.
-> > >
-> > > Changes in v8:
-> > > - Remove patches already collected by Laurent in
-> > >   [GIT PULL FOR v6.16] Renesas media drivers changes
-> > >
-> > > - Rebased on
-> > >   https://gitlab.freedesktop.org/linux-media/users/pinchartl.git #renesas-next
-> > >
-> > > - Changes to the VSPX interface towards the ISP
-> > >   - Split start/stop_streaming
-> > >   - Add vsp1_isp_jobs_release() to release pending jobs
-> > >   - Add vsp1_isp_free_buffer()
-> > >   - Remove vsp1_isp_configure() and compute partitions on job creation
-> > >
-> > > - Driver changes
-> > >   - Drop irq-driver flow
-> > >     The VSPX used to schedule new jobs as soon as processing the last
-> > >     one is done. This doesn't work well with the R-Car ISP design
-> > >     for two reasons:
-> > >     - The ISP needs per-job registers programming
-> > >     - The ISP and VSPX job queues have to stay in sync
-> > >
-> > > - Minors
-> > >   - Remove the jobs_lock as a single lock is fine
-> > >   - Protect against VSPX/ISP irq races in job_run() by checking the
-> > >     VSPX 'busy' register and remove the 'processing' flag
-> > >   - Manually set the pipeline state to STOPPED before scheduling a new
-> > >     job without waiting for frame_end
-> > >
-> > > Changes in v7:
-> > > - Include VSPX driver in the series
-> > > - Use existing VSP1 formats and remove patches extending formats on RPF
-> > > - Rework VSPX driver to split jobs creation and scheduling in two
-> > >   different API entry points
-> > > - Fix VSPX stride using the user provided bytesperline and using the
-> > >   buffer size for ConfigDMA buffers
-> > > - Link to v6: https://lore.kernel.org/r/20250321-v4h-iif-v6-0-361e9043026a@ideasonboard.com
-> > >
-> > > Changes in v6:
-> > > - Little cosmetic change as suggested by Laurent
-> > > - Collect tags
-> > > - Link to v5: https://lore.kernel.org/r/20250319-v4h-iif-v5-0-0a10456d792c@ideasonboard.com
-> > >
-> > > Changes in v5:
-> > > - Drop additional empty line 5/6
-> > > - Link to v4: https://lore.kernel.org/r/20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com
-> > >
-> > > Changes in v4:
-> > > - Fix SWAP bits for RAW10, RAW12 and RAW16
-> > > - Link to v3: https://lore.kernel.org/r/20250317-v4h-iif-v3-0-63aab8982b50@ideasonboard.com
-> > >
-> > > Changes in v3:
-> > > - Drop 2/6 from v2
-> > > - Add 5/7 to prepare for a new implementation of 6/7
-> > > - Individual changelog per patch
-> > > - Add 7/7
-> > > - Link to v2: https://lore.kernel.org/r/20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com
-> > >
-> > > Changes in v2:
-> > > - Collect tags
-> > > - Address review comments from Laurent, a lot of tiny changes here and
-> > >   there but no major redesign worth an entry in the patchset changelog
-> >
-> > You've come a long way since v1, I think we're getting close to a good
-> > implementation.
-> 
-> Thank you and Niklas for reviews and testing
-> 
-> > > ---
-> > >  drivers/media/platform/renesas/vsp1/Makefile    |   1 +
-> > >  drivers/media/platform/renesas/vsp1/vsp1.h      |   1 +
-> > >  drivers/media/platform/renesas/vsp1/vsp1_drv.c  |  13 +-
-> > >  drivers/media/platform/renesas/vsp1/vsp1_regs.h |   1 +
-> > >  drivers/media/platform/renesas/vsp1/vsp1_vspx.c | 664 ++++++++++++++++++++++++
-> > >  drivers/media/platform/renesas/vsp1/vsp1_vspx.h |  16 +
-> > >  include/media/vsp1.h                            |  75 +++
-> > >  7 files changed, 770 insertions(+), 1 deletion(-)
-
-[snip]
-
-> > > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_vspx.c b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
-> > > new file mode 100644
-> > > index 000000000000..6edb5e4929d9
-> > > --- /dev/null
-> > > +++ b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
-> > > @@ -0,0 +1,664 @@
-
-[snip]
-
-> > > +static int vsp1_vspx_rpf0_configure(struct vsp1_device *vsp1,
-> > > +				    dma_addr_t addr, u32 isp_fourcc,
-> > > +				    unsigned int width, unsigned int height,
-> > > +				    unsigned int stride,
-> > > +				    unsigned int iif_sink_pad,
-> > > +				    struct vsp1_dl_list *dl,
-> > > +				    struct vsp1_dl_body *dlb)
-> > > +{
-> > > +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
-> > > +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
-> > > +	struct vsp1_rwpf *rpf0 = pipe->inputs[0];
-> > > +	int ret;
-> > > +
-> > > +	ret = vsp1_vspx_rwpf_set_subdev_fmt(vsp1, rpf0, isp_fourcc, width,
-> > > +					    height);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = vsp1_vspx_rwpf_set_subdev_fmt(vsp1, pipe->output, isp_fourcc,
-> > > +					    width, height);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	vsp1_pipeline_calculate_partition(pipe, &pipe->part_table[0],
-> > > +					  width, 0);
-> > > +
-> >
-> > You should also set rwpf->format.num_planes to 1 here.
-> 
-> ack
-> 
-> > > +	rpf0->format.plane_fmt[0].bytesperline = stride;
-> > > +
-> > > +	/*
-> > > +	 * Connect RPF0 to the IIF sink pad corresponding to the config or image
-> > > +	 * path.
-> > > +	 */
-> > > +	rpf0->entity.sink_pad = iif_sink_pad;
-> > > +
-> > > +	pipe->part_table[0].rpf[0].width = width;
-> > > +	pipe->part_table[0].rpf[0].height = height;
-> >
-> > Isn't this handled by vsp1_pipeline_calculate_partition() ?
-> 
-> I don't see it happening in the vsp1_pipeline_calculate_partition()
-> call chain...
-> 
-> vsp1_pipeline_calculate_partition() calls
-> vsp1_pipeline_propagate_partition() which calls the 'partition' op on
-> entities in the pipeline.
-> 
-> The RPF implementation of the 'partition' op however initializes the
-> crop retangles on the entity, but not the part_table[].
-
-The RPF .partition() handler is implemented as
-
-static void rpf_partition(struct vsp1_entity *entity,
-			  struct v4l2_subdev_state *state,
-			  struct vsp1_pipeline *pipe,
-			  struct vsp1_partition *partition,
-			  unsigned int partition_idx,
-			  struct v4l2_rect *window)
-{
-	struct vsp1_rwpf *rpf = to_rwpf(&entity->subdev);
-	struct v4l2_rect *rpf_rect = &partition->rpf[rpf->entity.index];
-
-	/*
-	 * Partition Algorithm Control
-	 *
-	 * The partition algorithm can split this frame into multiple slices. We
-	 * must adjust our partition window based on the pipe configuration to
-	 * match the destination partition window. To achieve this, we adjust
-	 * our crop to provide a 'sub-crop' matching the expected partition
-	 * window.
-	 */
-	*rpf_rect = *v4l2_subdev_state_get_crop(state, RWPF_PAD_SINK);
-
-	if (pipe->partitions > 1) {
-		rpf_rect->width = window->width;
-		rpf_rect->left += window->left;
-	}
-}
-
-The partition argument to the function is &pipe->part_table[0], so
-rpf_rect is pipe->part_table[0].rpf[0].
-
-Could you check if the values of pipe->part_table[0].rpf[0].width and
-pipe->part_table[0].rpf[0].height match width and height after you call
-vsp1_pipeline_calculate_partition() ?
-
-> To be honest that partition part is still a bit obscure to me, so I
-> might be missing something indeed
-> 
-> > > +
-> > > +	rpf0->mem.addr[0] = addr;
-> > > +	rpf0->mem.addr[1] = 0;
-> > > +	rpf0->mem.addr[2] = 0;
-> > > +
-> > > +	vsp1_entity_route_setup(&rpf0->entity, pipe, dlb);
-> > > +	vsp1_entity_configure_stream(&rpf0->entity, rpf0->entity.state, pipe,
-> > > +				     dl, dlb);
-> > > +	vsp1_entity_configure_partition(&rpf0->entity, pipe,
-> > > +					&pipe->part_table[0], dl, dlb);
-> > > +
-> > > +	return 0;
-> > > +}
-
-[snip]
-
-> > > +/**
-> > > + * vsp1_isp_start_streaming - Start processing VSPX jobs
-> > > + *
-> > > + * Start the VSPX and prepare for accepting buffer transfer job requests.
-> > > + *
-> > > + * @dev: The VSP1 struct device
-> > > + * @frame_end: The frame end callback description
-> > > + *
-> > > + * Return: %0 on success or a negative error code on failure
-> > > + */
-> > > +int vsp1_isp_start_streaming(struct device *dev,
-> > > +			     struct vsp1_vspx_frame_end *frame_end)
-> > > +{
-> > > +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> > > +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
-> > > +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
-> > > +	unsigned long flags;
-> > > +	u32 value;
-> > > +	int ret;
-> > > +
-> > > +	spin_lock_irqsave(&vspx_pipe->vspx_lock, flags);
-> >
-> > Can this function ever be called with interrupts disabled ? If no, you
-> > can use spin_lock_irq().
-> 
-> I think the question here should rather be: do we need to disable
-> local interrupts at all when calling this function ? As the VSPX
-> workflow is now driven by ISP and there are no contentions between any
-> of the driver functions and the VSPX interrupt handler I guess I can
-> use spin_lock() and spin_unlock() everywhere and replace the
-> irqsave/irqrestore versions ?
-
-It depends what the spinlock protects.
-
-The point of the _irq and _irqsave variants is to prevent deadlocks. If
-a code section protected by a spinlock is interrupted by an IRQ handler
-on the same CPU, and the IRQ handler tries to take the same lock, a
-deadlock will occur: the IRQ handler will spin on the lock to wait until
-it gets released, but the lock will never get released as the code that
-took it has been preempted by the IRQ handler. Note that such an IRQ
-handler running on a different CPU is not an issue, it will spin on the
-lock, but the lock will be released by the first CPU running in parallel
-to the IRQ handler.
-
-To solve that problem, the spin_lock_irq() and spin_unlock_irq()
-functions respectively disable and enable local interrupts (i.e.
-interrupts on the same CPU, not interrupts on other CPUs). They should
-be called in contexts where interrupts are enabled (so not in an IRQ
-handler, and not in a section covered by another spin_lock_irq() call or
-uby other calls that disable local interrupts), and will ensure that no
-IRQ handler can preempt the CPU.
-
-Sometimes, you don't know if your code is running in a context where
-interrupts are enabled or not. This is the case for instance in helper
-functions that can be used in either contects. Using spin_lock_irq() is
-safe there (disabling local interrupts when they are already disabled is
-a no-op), but spin_unlock_irq() will enable local interrupts, which
-would lead to problems. For these cases, spin_lock_irqsave() will save
-the state of local interrupts and disable them, and
-spin_unlock_irqrestore() will restore the local interrupts state to what
-it was before spin_lock_irqsave().
-
-It is safe to use spin_lock_irqsave() and spin_unlock_irqrestore()
-unconditionally, but it has a performance impact. Using the right
-variants isn't very difficult. Once you identify the data protected by
-the lock, you need to look at where the data is accessed.
-
-- If the data is accessed only in non-interrupt context, or only in
-  interrupt context, use spin_lock() and spin_unlock() everywhere.
-
-- If the data is accessed in both contexts, use
-
-  - spin_lock() and spin_unlock() in code that runs only in contexts
-    where local interrupts are disabled
-
-  - spin_lock_irq() and spin_unlock_irq() in code that runs only in
-    contexts where local interrupts are enabled
-
-  - spin_lock_irqsave() and spin_unlock_irqrestore() in code that can
-    run in either context
-
-The vspx_lock is documented as "protect access to the VSPX configuration
-and the jobs queue". That's quite vague, so the first thing you'll have
-to do is to list the exact pieces of data that the lock protects, and
-then decide on the locking scheme.
-
-> > > +
-> > > +	if (vspx_pipe->enabled) {
-> > > +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> > > +		return 0;
-> >
-> > Shouldn't this be an error ?
-> 
-> Should it ? I don't think it's an error conceptually, as the ISP
-> driver is currently designed however a single call to this function
-> should happen, so I can flag this as an error.
-> 
-> However, as S_STREAM(1) is called on every video node, I would not
-> rule out a design where each video dev tries to start the VSPX. The
-> ones that arrive late will just hit a nop.
-
-The API exposed by the vsp driver to the ISP driver needs to be designed
-and clearly documented. There are different design options, but the API
-should not rely on a particular call pattern from the ISP driver without
-documenting it. As the documentation above doesn't indicate what the
-call pattern is, I can't tell if the design is good or not.
-
-This being said, if there are multiple userspace-facing devices that all
-need to be started, someone will have to reference-count the VSP
-start/stop state. Doing so in the vsp driver seems to add complexity
-without any real benefit. I think that handling this in the ISP driver
-would be better. I recommend making calling vsp1_isp_start_streaming()
-on an already enabled VSP instance invalid, and returning an error. Same
-when stopping the VSP, the ISP driver should decide when the VSP should
-be stopped, and should not call vsp1_isp_stop_streaming() on an already
-stopped instance.
-
-> > > +	}
-> > > +
-> > > +	if (!frame_end) {
-> >
-> > You can move this check before taking the lock.
-> 
-> True that
-> 
-> > > +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	vspx_pipe->vspx_frame_end = frame_end->vspx_frame_end;
-> > > +	vspx_pipe->frame_end_data = frame_end->frame_end_data;
-> >
-> > Move this just before setting ->enabled to true, so you won't override
-> > the values if the function returns an error in the checks below.
-> >
-> > > +
-> > > +	/* Make sure VSPX is not active. */
-> >
-> > This should never happen unless there's a serious bug in the driver,
-> > right ? I would make that explicit in the comment:
-> >
-> > 	/*
-> > 	 * Make sure VSPX is not active. This should never happen in normal
-> > 	 * usage.
-> > 	 */
-> 
-> ok
-> 
-> > > +	value = vsp1_read(vsp1, VI6_CMD(0));
-> > > +	if (value & VI6_CMD_STRCMD) {
-> > > +		dev_err(vsp1->dev,
-> > > +			"%s: Starting of WPF0 already reserved\n", __func__);
-> > > +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> > > +		return -EBUSY;
-> > > +	}
-> > > +
-> > > +	value = vsp1_read(vsp1, VI6_STATUS);
-> > > +	if (value & VI6_STATUS_SYS_ACT(0)) {
-> > > +		dev_err(vsp1->dev,
-> > > +			"%s: WPF0 has not entered idle state\n", __func__);
-> > > +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> > > +		return -EBUSY;
-> > > +	}
-> > > +
-> > > +	vspx_pipe->enabled = true;
-> > > +
-> > > +	spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> >
-> > and close the guarded scope here
-> >
-> > 	}
-> 
-> I found it to be less readable because of the increased scoping.
-> 
-> > > +
-> > > +	/* Enable the VSP1 and prepare for streaming. */
-> > > +	vsp1_pipeline_dump(pipe, "VSPX job");
-> > > +
-> > > +	ret = vsp1_device_get(vsp1);
-> >
-> > This should be done before you read the registers.
-> 
-> Ah right. I guess this function should be then re-designed.
-> 
-> > > +	if (ret < 0) {
-> > > +		guard(spinlock_irqsave)(&vspx_pipe->vspx_lock);
-> > > +		vspx_pipe->enabled = false;
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(vsp1_isp_start_streaming);
-> > > +
-> > > +/**
-> > > + * vsp1_isp_stop_streaming - Stop the VSPX
-> > > + *
-> > > + * @dev: The VSP1 struct device
-> > > + */
-> > > +void vsp1_isp_stop_streaming(struct device *dev)
-> > > +{
-> > > +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> > > +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
-> > > +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
-> > > +	unsigned long flags;
-> > > +
-> > > +	spin_lock_irqsave(&vspx_pipe->vspx_lock, flags);
-> > > +
-> > > +	if (!vspx_pipe->enabled) {
-> > > +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> > > +		return;
-> > > +	}
-> >
-> > 	scoped_guard(spinlock_irqsave)(&vspx_pipe->vspx_lock, flags) {
-> > 		if (!vspx_pipe->enabled)
-> > 			return;
-> >
-> > 		...
-> >
-> > (or spinlock_irq, see comment in vsp1_isp_start_streaming()).
-> 
-> Am I mistaken that the _irq version you suggest still disables
-> local interrupts, which is something I shouldn't need
-> 
-> -------------------------------------------------------------------------------
-> From "Documentation/kernel-hacking/locking.rst"
-> 
-> If a hardware irq handler shares data with a softirq, you have two
-> concerns. Firstly, the softirq processing can be interrupted by a
-> hardware interrupt, and secondly, the critical region could be entered
-> by a hardware interrupt on another CPU. This is where
-> spin_lock_irq() is used. It is defined to disable
-> interrupts on that cpu, then grab the lock.
-> spin_unlock_irq() does the reverse.
-> -------------------------------------------------------------------------------
-> 
-> I guess I should simply use spin_lock/spin_unlock
-
-See above.
-
-> > > +
-> > > +	vspx_pipe->enabled = false;
-> > > +
-> > > +	pipe->state = VSP1_PIPELINE_STOPPED;
-> > > +	vsp1_pipeline_stop(pipe);
-> >
-> > You can't call this with a spin lock held. We can look together at how
-> > to handle locking in this driver, and use a mutex instead of a spinlock
-> > (I know you went the other way around).
-> 
-> Actually my only concern with mutexes is that they can't be called by
-> the ISP driver while it holds a spinlock. With this new version the
-> only function that would need to be called with a spinlock taken is
-> vsp1_isp_job_run() and vsp1_isp_jobs_release() which only contends the
-> jobs_queue with the rest of the functions of the VSPX driver.
-> 
-> I could use a mutex as a main lock here and a spinlock to protect the
-> jobs queue.
-
-I think you'll need to do that, using a mutex to protect the whole
-start/stop functions, and a spinlock inside for specific fields of the
-vsp1_vspx_pipeline structure that are also accessed in the interrupt
-handler. Looking at v10, there's a race condition between start and stop
-due to not covering the whole functions with a mutex.
-
-> Or I could simply call the vsp1_pipeline_stop() outside of the
-> critical section here.
-> 
-> > > +	vspx_pipe->vspx_frame_end = NULL;
-> > > +	vsp1_dlm_reset(pipe->output->dlm);
-> > > +
-> > > +	spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
-> >
-> > 	}
-> >
-> > > +
-> > > +	vsp1_device_put(vsp1);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(vsp1_isp_stop_streaming);
-> > > +
-> > > +/**
-> > > + * vsp1_vspx_job_prepare - Prepare a new buffer transfer job
-> > > + *
-> > > + * Prepare a new buffer transfer job by populating a display list that will be
-> > > + * later executed by a call to vsp1_isp_job_run().
-> > > + *
-> > > + * The newly created job is appended to the queue of pending jobs. All pending
-> > > + * jobs must be released after stopping the streaming operations with a call
-> > > + * to vsp1_isp_jobs_release().
-> > > + *
-> > > + * @dev: The VSP1 struct device
-> > > + * @job: The job description
-> > > + *
-> > > + * Return: %0 on success or a negative error code on failure
-> > > + */
-> > > +int vsp1_isp_job_prepare(struct device *dev,
-> > > +			 const struct vsp1_isp_job_desc *desc)
-> > > +{
-> > > +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> > > +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
-> > > +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
-> > > +	const struct v4l2_pix_format_mplane *pix_mp;
-> > > +	struct vsp1_dl_list *second_dl = NULL;
-> > > +	struct vsp1_vspx_job *job;
-> > > +	struct vsp1_dl_body *dlb;
-> > > +	struct vsp1_dl_list *dl;
-> > > +	int ret;
-> > > +
-> > > +	/* Memory will be released when the job is consumed. */
-> > > +	job = kmalloc(sizeof(*job), GFP_KERNEL);
-> > > +	if (!job)
-> > > +		return -ENOMEM;
-> >
-> > Hmmm... I think this can be improved. I would need to see how the ISP
-> > driver uses this API, but I'm thinking the job data could be stored in
-> > vsp1_isp_job_desc, without adding the job to a queue in this function.
-> > The job would then be passed to the run function, which would queue it.
-> > I think the resulting API would be cleaner. You will need an extra
-> > function to delete/destroy/cleanup a job that hasn't been queued (the
-> > counterpart of this function, essentially).
-> 
-> I'm not sure I got this to be honest.
-> 
-> A VSPX job is basically just a display list + a list handle.
-> Are you suggesting add the display list to vsp1_isp_job_desc and keep
-> a queue of jobs on the ISP side only ? Then pass the dl in to
-> vsp1_isp_job_run() ? This would avoid maintaing a queue of jobs on the
-> VSPX side at all most probably and save me the hassle to cleanup the
-> jobs queue on the VSPX side.
-> 
-> I'll see how this could look.
-
-The implementation in v10 looks nicer.
-
-> > > +
-> > > +	/*
-> > > +	 * Transfer the buffers described in the job: an optional ConfigDMA
-> > > +	 * parameters buffer and a RAW image.
-> > > +	 */
-> > > +
-> > > +	job->dl = vsp1_dl_list_get(pipe->output->dlm);
-> > > +	if (!job->dl) {
-> > > +		ret = -ENOMEM;
-> > > +		goto error_free_job;
-> > > +	}
-> > > +
-> > > +	dl = job->dl;
-> > > +	dlb = vsp1_dl_list_get_body0(dl);
-> > > +
-> > > +	/* Disable RPF1. */
-> > > +	vsp1_dl_body_write(dlb, vsp1->rpf[1]->entity.route->reg,
-> > > +			   VI6_DPR_NODE_UNUSED);
-> >
-> > The route is disabled in vsp1_device_init(), and we never use RPF1. I
-> > think this can be dropped.
-> 
-> ack
-> 
-> > > +
-> > > +	/* Configure IIF routing and enable IIF function */
-> >
-> > s/function/function./
-> >
-> > > +	vsp1_entity_route_setup(pipe->iif, pipe, dlb);
-> > > +	vsp1_entity_configure_stream(pipe->iif, pipe->iif->state, pipe,
-> > > +				     dl, dlb);
-> > > +
-> > > +	/* Configure WPF0 to enable RPF0 as source*/
-> >
-> > s/source/source. /
-> >
-> > > +	vsp1_entity_route_setup(&pipe->output->entity, pipe, dlb);
-> > > +	vsp1_entity_configure_stream(&pipe->output->entity,
-> > > +				     pipe->output->entity.state, pipe,
-> > > +				     dl, dlb);
-> >
-> > I'm kind of tempting to call route_setup, configure_stream,
-> > configure_frame and configure_partition by iterating over the entities
-> > in the pipe, as done by vsp1_du_pipeline_configure(). The code would be
-> > more generic, at the cost of a few calls being duplicated between the
-> > config DMA and image configurations. What do you think ?
-> 
-> The fact that the RPF0 is optionally configurable for ConfigDMA
-> 
-> > > +
-> > > +	if (desc->config.pairs) {
-> 
-> here
-> 
-> makes it hard for me to see how this could be done cleanly.
-> 
-> To be honest, the pipeline is fixed (rpf->iif->wpf) so I don't see
-> much benefits here
-
-Agreed.
-
-> > > +		/*
-> > > +		 * Configure RPF0 for config data. Transfer the number of
-> > > +		 * configuration pairs plus 2 words for the header.
-> > > +		 */
-> > > +		ret = vsp1_vspx_rpf0_configure(vsp1, desc->config.mem,
-> > > +					       V4L2_META_FMT_GENERIC_8,
-> > > +					       desc->config.pairs * 2 + 2, 1,
-> > > +					       desc->config.pairs * 2 + 2,
-> > > +					       VSPX_IIF_SINK_PAD_CONFIG,
-> > > +					       dl, dlb);
-> > > +		if (ret)
-> > > +			goto error_put_dl;
-> > > +
-> > > +		second_dl = vsp1_dl_list_get(pipe->output->dlm);
-> > > +		if (!second_dl) {
-> > > +			ret = -ENOMEM;
-> > > +			goto error_put_dl;
-> > > +		}
-> > > +
-> > > +		dl = second_dl;
-> > > +		dlb = vsp1_dl_list_get_body0(dl);
-> > > +	}
-> > > +
-> > > +	/* Configure RPF0 for RAW image transfer. */
-> > > +	pix_mp = &desc->img.fmt.fmt.pix_mp;
-> > > +	ret = vsp1_vspx_rpf0_configure(vsp1, desc->img.mem,
-> > > +				       pix_mp->pixelformat,
-> > > +				       pix_mp->width, pix_mp->height,
-> > > +				       pix_mp->plane_fmt[0].bytesperline,
-> > > +				       VSPX_IIF_SINK_PAD_IMG, dl, dlb);
-> > > +	if (ret)
-> > > +		goto error_put_dl;
-> > > +
-> > > +	if (second_dl)
-> > > +		vsp1_dl_list_add_chain(job->dl, second_dl);
-> > > +
-> > > +	scoped_guard(spinlock_irqsave, &vspx_pipe->vspx_lock) {
-> > > +		list_add_tail(&job->job_queue, &vspx_pipe->jobs);
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +
-> > > +error_put_dl:
-> > > +	if (second_dl)
-> > > +		vsp1_dl_list_put(second_dl);
-> > > +	vsp1_dl_list_put(job->dl);
-> > > +error_free_job:
-> > > +	kfree(job);
-> > > +	return ret;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(vsp1_isp_job_prepare);
-
-[snip]
-
+diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/vgic-v3-nested.c
+index 4f6954c30674..29741e3f077b 100644
+--- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
++++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
+@@ -343,7 +343,7 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
+ 	struct shadow_if *shadow_if = get_shadow_if();
+ 	struct vgic_v3_cpu_if *s_cpu_if = &shadow_if->cpuif;
+ 	u64 val;
+-	int i;
++	int i, index = 0;
+ 
+ 	__vgic_v3_save_vmcr_aprs(s_cpu_if);
+ 	__vgic_v3_deactivate_traps(s_cpu_if);
+@@ -368,10 +368,11 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
+ 		val = __vcpu_sys_reg(vcpu, ICH_LRN(i));
+ 
+ 		val &= ~ICH_LR_STATE;
+-		val |= s_cpu_if->vgic_lr[i] & ICH_LR_STATE;
++		val |= s_cpu_if->vgic_lr[index] & ICH_LR_STATE;
+ 
+ 		__vcpu_sys_reg(vcpu, ICH_LRN(i)) = val;
+-		s_cpu_if->vgic_lr[i] = 0;
++		s_cpu_if->vgic_lr[index] = 0;
++		index++;
+ 	}
+ 
+ 	shadow_if->lr_map = 0;
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
