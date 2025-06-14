@@ -1,281 +1,108 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FCB3D76
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 08:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634181E5B9E;
+	Sat, 14 Jun 2025 08:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749890874; cv=none; b=a8P8WaHYVNfED6hsOHAaqpZRZwjCoX59lj+JY+mNOOfJBK3wHywhpTM8DWdfVhQMlJgbuH5HLptZeN1c4l4xGlM/aER0PLgunvOi53TKz2zs4nXqL8jTAEOP1PYPvASGyt4+pAewEOIBESpuc+ydUNI5/KIlXJ+hMoOkcZLuZFI=
+	t=1749891378; cv=none; b=JLL2CP3XoqUUij2d3mzi/hLKugkmbGK85weoIaBX/qG7jeMYRL7In17NH69LT2dIK8R+EhbaERDj+jnJE2AnRFL/0t+aETxx7xyTKvlou3LZPE3mEiMcm/2/O/WftZhEBNn5gnBmkHvDlSeBis9OOXNJgJbPhJ0WXxuR89GX+5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749890874; c=relaxed/simple;
-	bh=1zE5dRa2pTIbWgRSSsDZnGOGsw/ocPUokv7v0pIjIFw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qp2CeUnhexHBVS9An0CR+UOIkarnGAMUmZWJVk8spBnMs1fe0l4KDd3Ffm8w8vlLOpooXQDFCWITf8DDhqVcB/iMmOfDlVqSUF9MG6XPiRidWMG69yw4qGSBBUrDQEuijLEBWg2Q/LbWueW17gvaOOUZ10IsGliTSie1enVa8d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EaKnhP38; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	s=arc-20240116; t=1749891378; c=relaxed/simple;
+	bh=5GdVV6A8bXN64ovkNLx7Xdx5aR1iPXnV/yeu24lgmqI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CtTRnhzzx+kZS9ULlsCZCrf3NnxcHgvV1SGcImUXwg1L5fxaTGY54yPPRchoRNIxBoMFH9lDQcdSWYnjSrlWjDdvkek9aloH8OKBQaLDFTBdZx2NMxooElB1+l740w9RfA9ZlPKKr7Aus1RPLB0m7wWsnLqqlQ7XIgJI81ROxdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSKpp81l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EaKnhP38"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c37558eccso2123493a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 01:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749890871; x=1750495671; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UmexxkUsMlwsDUZqAJqCu3m0c/NmHuIKmfWQMr16+98=;
-        b=EaKnhP387HPxMz+v2EokKyUuVq4bU1AODHLU30fPwsjDyoe2k5Afx+6rqeZ55J0qXR
-         rRC6eo6ZElSArzfyeL/44EFOgSTD3/lx09M0JIIPFIVavok8yXzRqRJ5B/GQINzheuEg
-         CIOkXYvZQtrl9AKsEl23Nm8AmxNAqsxVOlhOgABSDR8MHt51lZdE97tq13NA50NGa9vR
-         UepjMnRC9DNG+/h4KprRw79ZECflhPPSgJvd1d0QFQFx9fmESbV/n9wBD6MP26bZWiBC
-         cKntigUIrZ60KZhTj2wcasQLN/D2p/W9EQgSlNZPQGn83WQomDi5Uq5M4eNTBZmpHPJI
-         EBwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749890871; x=1750495671;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UmexxkUsMlwsDUZqAJqCu3m0c/NmHuIKmfWQMr16+98=;
-        b=ewp2WknVxDa2hOm7mWe4JLuxGALoB6cwxdkTn9zHi+PiGn/VTCxyXvcMi5nbgEFYSO
-         Xnsoe6LFYlHzermGgJ3I9mQK6g+4gGzf2h7KFTHv9NT9dzGQMIYYQSSMi2NpVtqaBBJG
-         w1Xuz55IEeCQlGh++2XGtTDfsACDqjIA1eK3UqzSL41P3Wm1ZbHxVlCvTIrDtMERm1q9
-         nb1YgYCi/UQXL08gmbkqIncGnf/aIRW3ggf6JbcKFqOR6vlbV950hg0T/u6DGkwBG6QB
-         94cAwDNojdQbpftRe8cghBLF9pW9EgwTr/KO68U9I7dH7UAQSxk4nDoxMIupkxkjwABU
-         ou5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXxQR5cb4qjzRY0XnUezXPzzNC+1MdkF2aa0TpGXelrSEC9qjM5q7Mfkrhi2X5vrmQ0KYLuwOokN1kO40U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjIQRSwTtYMhvTGY78sM3Nw/3b+64dT9e+XyzRZdkGnGwaiCZM
-	U60b/V4cfhRkHsGpQlZ0545BBKxzTlMWJxF7hcgoM6T1PWLQxYi145rNda0o2WXaoi024tJY68a
-	Zh6bY6kd/7kioGA==
-X-Google-Smtp-Source: AGHT+IFCKUfKSAYv//yvPxISNKnOAsmR1cCjTxj8W//eQP2JArQ4PikZxQbSriVlh2ufnFQbzVsf0UUzOE9QZQ==
-X-Received: from pgqw8.prod.google.com ([2002:a65:6948:0:b0:b2f:5b01:af42])
- (user=davidgow job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:6481:b0:21c:faa4:9ab9 with SMTP id adf61e73a8af0-21fbd631592mr3401257637.22.1749890871693;
- Sat, 14 Jun 2025 01:47:51 -0700 (PDT)
-Date: Sat, 14 Jun 2025 16:47:11 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSKpp81l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFBFBC4CEED;
+	Sat, 14 Jun 2025 08:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749891377;
+	bh=5GdVV6A8bXN64ovkNLx7Xdx5aR1iPXnV/yeu24lgmqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FSKpp81lQ0MUsTOKq4LT3MWqv+ebKW7/olXbn6+7/BhJwyga0wPYoUQv9GDecCoWC
+	 bR4tFN043An72M8yE8pqrHkgyRcaK2lC92xapRoRNoFJlMHpXdcJSnBPkMTbaGMH62
+	 cM9kHuJTp2RilU5XMZxgXgDYJyUrYhN3NLDuPsfGHOTNN8XCb5R3ZwsWTv+v10DmsF
+	 v5WHZQaZGvR5Wxcol4g1SmDhRzo7yNA/ZjnPkVacbURdMVJP6WOyYGoWqqAGY62BUc
+	 uspLo1bhL8x+s3QixbXcnrC+l2vC5KOk9vj1178/JYcXUPH0OMuCh7lle4K1HfdM6c
+	 MJuHzjjIYiHpA==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uQMgR-000000064al-49Nk;
+	Sat, 14 Jun 2025 10:56:15 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Akira Yokosawa" <akiyks@gmail.com>,
+	"Breno Leitao" <leitao@debian.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Donald Hunter" <donald.hunter@gmail.com>,
+	"Eric Dumazet" <edumazet@google.com>,
+	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
+	"Jan Stancek" <jstancek@redhat.com>,
+	"Marco Elver" <elver@google.com>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	"Paolo Abeni" <pabeni@redhat.com>,
+	"Ruben Wauters" <rubenru09@aol.com>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Simon Horman <mchehab+huawei@kernel.org>,
+	joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lkmm@lists.linux.dev,
+	netdev@vger.kernel.org,
+	peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: [PATCH v4 02/14] docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
+Date: Sat, 14 Jun 2025 10:55:56 +0200
+Message-ID: <4d46b08e43e37403afc09412692cb5eb295019b6.1749891128.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1749891128.git.mchehab+huawei@kernel.org>
+References: <cover.1749891128.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250614084711.2654593-2-davidgow@google.com>
-Subject: [PATCH] kunit: Adjust kunit_test timeout based on test_{suite,case} speed
-From: David Gow <davidgow@google.com>
-To: Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: Ujwal Jain <ujwaljain@google.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-From: Ujwal Jain <ujwaljain@google.com>
+Having :doc: references with relative paths doesn't always work,
+as it may have troubles when O= is used. So, replace them by
+Sphinx cross-reference tag that are now created by ynl_gen_rst.py.
 
-Currently, the in-kernel kunit test case timeout is 300 seconds. (There
-is a separate timeout mechanism for the whole test execution in
-kunit.py, but that's unrelated.) However, tests marked 'slow' or 'very
-slow' may timeout, particularly on slower machines.
-
-Implement a multiplier to the test-case timeout, so that slower tests
-have longer to complete:
-- DEFAULT -> 1x default timeout
-- KUNIT_SPEED_SLOW -> 3x default timeout
-- KUNIT_SPEED_VERY_SLOW -> 12x default timeout
-
-A further change is planned to allow user configuration of the
-default/base timeout to allow people with faster or slower machines to
-adjust these to their use-cases.
-
-Signed-off-by: Ujwal Jain <ujwaljain@google.com>
-Co-developed-by: David Gow <davidgow@google.com>
-Signed-off-by: David Gow <davidgow@google.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- include/kunit/try-catch.h  |  1 +
- lib/kunit/kunit-test.c     |  9 +++++---
- lib/kunit/test.c           | 46 ++++++++++++++++++++++++++++++++++++--
- lib/kunit/try-catch-impl.h |  4 +++-
- lib/kunit/try-catch.c      | 29 ++----------------------
- 5 files changed, 56 insertions(+), 33 deletions(-)
+ Documentation/userspace-api/netlink/netlink-raw.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-index 7c966a1adbd3..d4e1a5b98ed6 100644
---- a/include/kunit/try-catch.h
-+++ b/include/kunit/try-catch.h
-@@ -47,6 +47,7 @@ struct kunit_try_catch {
- 	int try_result;
- 	kunit_try_catch_func_t try;
- 	kunit_try_catch_func_t catch;
-+	unsigned long timeout;
- 	void *context;
- };
+diff --git a/Documentation/userspace-api/netlink/netlink-raw.rst b/Documentation/userspace-api/netlink/netlink-raw.rst
+index 31fc91020eb3..aae296c170c5 100644
+--- a/Documentation/userspace-api/netlink/netlink-raw.rst
++++ b/Documentation/userspace-api/netlink/netlink-raw.rst
+@@ -62,8 +62,8 @@ Sub-messages
+ ------------
  
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index d9c781c859fd..387cdf7782f6 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -43,7 +43,8 @@ static void kunit_test_try_catch_successful_try_no_catch(struct kunit *test)
- 	kunit_try_catch_init(try_catch,
- 			     test,
- 			     kunit_test_successful_try,
--			     kunit_test_no_catch);
-+			     kunit_test_no_catch,
-+			     300 * msecs_to_jiffies(MSEC_PER_SEC));
- 	kunit_try_catch_run(try_catch, test);
+ Several raw netlink families such as
+-:doc:`rt-link<../../networking/netlink_spec/rt-link>` and
+-:doc:`tc<../../networking/netlink_spec/tc>` use attribute nesting as an
++:ref:`rt-link<netlink-rt-link>` and
++:ref:`tc<netlink-tc>` use attribute nesting as an
+ abstraction to carry module specific information.
  
- 	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-@@ -75,7 +76,8 @@ static void kunit_test_try_catch_unsuccessful_try_does_catch(struct kunit *test)
- 	kunit_try_catch_init(try_catch,
- 			     test,
- 			     kunit_test_unsuccessful_try,
--			     kunit_test_catch);
-+			     kunit_test_catch,
-+			     300 * msecs_to_jiffies(MSEC_PER_SEC));
- 	kunit_try_catch_run(try_catch, test);
+ Conceptually it looks as follows::
+@@ -162,7 +162,7 @@ then this is an error.
+ Nested struct definitions
+ -------------------------
  
- 	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-@@ -129,7 +131,8 @@ static void kunit_test_fault_null_dereference(struct kunit *test)
- 	kunit_try_catch_init(try_catch,
- 			     test,
- 			     kunit_test_null_dereference,
--			     kunit_test_catch);
-+			     kunit_test_catch,
-+			     300 * msecs_to_jiffies(MSEC_PER_SEC));
- 	kunit_try_catch_run(try_catch, test);
- 
- 	KUNIT_EXPECT_EQ(test, try_catch->try_result, -EINTR);
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 146d1b48a096..002121675605 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -373,6 +373,46 @@ static void kunit_run_case_check_speed(struct kunit *test,
- 		   duration.tv_sec, duration.tv_nsec);
- }
- 
-+/* Returns timeout multiplier based on speed.
-+ * DEFAULT:		    1
-+ * KUNIT_SPEED_SLOW:        3
-+ * KUNIT_SPEED_VERY_SLOW:   12
-+ */
-+static int kunit_timeout_mult(enum kunit_speed speed)
-+{
-+	switch (speed) {
-+	case KUNIT_SPEED_SLOW:
-+		return 3;
-+	case KUNIT_SPEED_VERY_SLOW:
-+		return 12;
-+	default:
-+		return 1;
-+	}
-+}
-+
-+static unsigned long kunit_test_timeout(struct kunit_suite *suite, struct kunit_case *test_case)
-+{
-+	int mult = 1;
-+	/*
-+	 * TODO: Make the default (base) timeout configurable, so that users with
-+	 * particularly slow or fast machines can successfully run tests, while
-+	 * still taking advantage of the relative speed.
-+	 */
-+	unsigned long default_timeout = 300;
-+
-+	/*
-+	 * The default test timeout is 300 seconds and will be adjusted by mult
-+	 * based on the test speed. The test speed will be overridden by the
-+	 * innermost test component.
-+	 */
-+	if (suite->attr.speed != KUNIT_SPEED_UNSET)
-+		mult = kunit_timeout_mult(suite->attr.speed);
-+	if (test_case->attr.speed != KUNIT_SPEED_UNSET)
-+		mult = kunit_timeout_mult(test_case->attr.speed);
-+	return mult * default_timeout * msecs_to_jiffies(MSEC_PER_SEC);
-+}
-+
-+
- /*
-  * Initializes and runs test case. Does not clean up or do post validations.
-  */
-@@ -527,7 +567,8 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
- 	kunit_try_catch_init(try_catch,
- 			     test,
- 			     kunit_try_run_case,
--			     kunit_catch_run_case);
-+			     kunit_catch_run_case,
-+			     kunit_test_timeout(suite, test_case));
- 	context.test = test;
- 	context.suite = suite;
- 	context.test_case = test_case;
-@@ -537,7 +578,8 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
- 	kunit_try_catch_init(try_catch,
- 			     test,
- 			     kunit_try_run_case_cleanup,
--			     kunit_catch_run_case_cleanup);
-+			     kunit_catch_run_case_cleanup,
-+			     kunit_test_timeout(suite, test_case));
- 	kunit_try_catch_run(try_catch, &context);
- 
- 	/* Propagate the parameter result to the test case. */
-diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
-index 203ba6a5e740..6f401b97cd0b 100644
---- a/lib/kunit/try-catch-impl.h
-+++ b/lib/kunit/try-catch-impl.h
-@@ -17,11 +17,13 @@ struct kunit;
- static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
- 					struct kunit *test,
- 					kunit_try_catch_func_t try,
--					kunit_try_catch_func_t catch)
-+					kunit_try_catch_func_t catch,
-+					unsigned long timeout)
- {
- 	try_catch->test = test;
- 	try_catch->try = try;
- 	try_catch->catch = catch;
-+	try_catch->timeout = timeout;
- }
- 
- #endif /* _KUNIT_TRY_CATCH_IMPL_H */
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 6bbe0025b079..d84a879f0a78 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -34,31 +34,6 @@ static int kunit_generic_run_threadfn_adapter(void *data)
- 	return 0;
- }
- 
--static unsigned long kunit_test_timeout(void)
--{
--	/*
--	 * TODO(brendanhiggins@google.com): We should probably have some type of
--	 * variable timeout here. The only question is what that timeout value
--	 * should be.
--	 *
--	 * The intention has always been, at some point, to be able to label
--	 * tests with some type of size bucket (unit/small, integration/medium,
--	 * large/system/end-to-end, etc), where each size bucket would get a
--	 * default timeout value kind of like what Bazel does:
--	 * https://docs.bazel.build/versions/master/be/common-definitions.html#test.size
--	 * There is still some debate to be had on exactly how we do this. (For
--	 * one, we probably want to have some sort of test runner level
--	 * timeout.)
--	 *
--	 * For more background on this topic, see:
--	 * https://mike-bland.com/2011/11/01/small-medium-large.html
--	 *
--	 * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
--	 * the task will be killed and an oops generated.
--	 */
--	return 300 * msecs_to_jiffies(MSEC_PER_SEC); /* 5 min */
--}
--
- void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- {
- 	struct kunit *test = try_catch->test;
-@@ -85,8 +60,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	task_done = task_struct->vfork_done;
- 	wake_up_process(task_struct);
- 
--	time_remaining = wait_for_completion_timeout(task_done,
--						     kunit_test_timeout());
-+	time_remaining = wait_for_completion_timeout(
-+		task_done, try_catch->timeout);
- 	if (time_remaining == 0) {
- 		try_catch->try_result = -ETIMEDOUT;
- 		kthread_stop(task_struct);
+-Many raw netlink families such as :doc:`tc<../../networking/netlink_spec/tc>`
++Many raw netlink families such as :ref:`tc<netlink-tc>`
+ make use of nested struct definitions. The ``netlink-raw`` schema makes it
+ possible to embed a struct within a struct definition using the ``struct``
+ property. For example, the following struct definition embeds the
 -- 
-2.50.0.rc1.591.g9c95f17f64-goog
+2.49.0
 
