@@ -1,100 +1,151 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827202F5B
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C757B175A5;
+	Sat, 14 Jun 2025 10:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749897084; cv=none; b=aqnuH/ILCBXJUU11jFbWUovyqt/bZzG9ZuVyXpXOJhzPY+lfXQvZf6cJgPtWvKxd55MZhep4i3oc1b9x4uYDJrC2bp24ncef8jypXAmNEtTh3CtCaDcfmMckdDoB6gpadnDdUOFyf008xED6KU0wkVQQJfKXSaXCv1vAMXNSZKw=
+	t=1749897385; cv=none; b=Il118XBUfOU67Bk3wqUB7qgk44R1lrsdHbYC9Z1I9BDuaFn7Lb9UZpLMhZP7ru1+BxQKsWdSJ3LL2449uhXztpnLN0DRjjYaiJE6xzre+ek8/cxRtzheT6M6zws8R9O28DH6wbUjo+CC6/+YOGDRJ+aEP7n/3lRUwlqzwaTUUuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749897084; c=relaxed/simple;
-	bh=GHZr9093QeshnhSDllbnn6G3qWrBPLKcJ9kM6t4B/tI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tUjclpSxapkE2Rdwajh4gcoaWQsVOFXs5wEWoc+/paM8zTwztV+ItywALhEkF+DlchVtUo5VKFbZF3xdsij5iWKfeRwmWa8mVJN/Ggs6wWJ1hGyF6tkpjxIVFUdZ8EjF8v9fHcbLrqY035jEZUKWeQKoujibWN49HAKiOntCX4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iUr6cRq8; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749897385; c=relaxed/simple;
+	bh=as6jP1DxC+RFLBHeiO5K9WM7RCKivV22V+29vSgyenA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AqZyUkUECIySbq7QHggjUAxxNzE+lGR2JWMmLwOiRk6/z4BNjVzGNhTFleLT75OCVwiWdrcp0eNPgLfFk90Os6ndcnS9TecXTBBkaB0ACdTUwhy47EgrlJ56jQy0XTN+FcFkjgjFA2bBdKaTB9fkXWqzyr0qsuGC3qg7U+T9+BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xt+mCH+h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iUr6cRq8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=j9ZlmHkHpHkgI0wdIPO3WaEDIJyQiEupsW66Cgr5TmA=; b=iUr6cRq8RNtTAcCQneJoHKkJK9
-	7xDM48jzD1qyRs8c/jHKQ8fBRhKP2G/tb1+2ff4NlIb8bQdcRR7RIBM5/aR6Trcs58NFh/fmkihqo
-	NUplvjck2e6sGcwk9rZ4u9C644c0Gt56LOGntWSjaHobof495ijJmG5oXP6w+SoHjPD4mgJycAhz1
-	K/ABABa1hx8YBhh2XNJ5jqBO6dW+mNKJWBNIH7AEenXPgJu3rYmEfCA7DCM88ZFMpLXravHEg4OiQ
-	3Uq4zPMQa7aQkJ68j3k9TmeB3IiBRGl8CzE0pB+DEZN+hqpB5GPwYbj4ydP2BB9A9WX+nrmnmJ64U
-	/pWa+/tg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQOA6-00000003Coy-07M3;
-	Sat, 14 Jun 2025 10:30:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A1D753018AA; Sat, 14 Jun 2025 12:30:55 +0200 (CEST)
-Date: Sat, 14 Jun 2025 12:30:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	=?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Carlos Bilbao <carlos.bilbao@kernel.org>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Fei Li <fei1.li@intel.com>, Jan Kiszka <jan.kiszka@siemens.com>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH 07/13] x86/kconfig/64: Enable more virtualization guest
- options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX
- and Hyper-V
-Message-ID: <20250614103055.GL2278213@noisy.programming.kicks-ass.net>
-References: <20250515132719.31868-1-mingo@kernel.org>
- <20250515132719.31868-8-mingo@kernel.org>
- <SN6PR02MB4157B1676A6284ECD21E494FD490A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xt+mCH+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23AA3C4CEEB;
+	Sat, 14 Jun 2025 10:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749897385;
+	bh=as6jP1DxC+RFLBHeiO5K9WM7RCKivV22V+29vSgyenA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Xt+mCH+haSeQ4kUW2plHlus8Xzir9ynuAnKPyUJqmQa7b4YpLa1Yeh1RPJX8qnjO0
+	 +2Jd8cJVFf/bFhvjHmgFdQtyWNj+z8BkKQ7K690rMFer7BA4VvrrQol73HrP0Aad7V
+	 d8728DhRcb958HVLkROag4TGXaqIEaaIbaLizlfsgSnS99xClSPMKqSq7+HGeCfkTB
+	 vwZCjFOCBeFG/IMJAQvlLqBoSFZGX8yhbuhXk/Cb5Fo6Mu0MiIPzvLSf0skp+/iCXn
+	 pDYjkJzTkjSh9Db/mjPROb9E4CUhF6FYN9tr+crM+PrJyeyT697mQF2qouxHapy13s
+	 upLB0MIad5K+Q==
+Date: Sat, 14 Jun 2025 11:36:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <ukleinek@kernel.org>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
+Message-ID: <20250614113616.4663269f@jic23-huawei>
+In-Reply-To: <20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+	<20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157B1676A6284ECD21E494FD490A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 11:40:06PM +0000, Michael Kelley wrote:
-> From: Ingo Molnar <mingo@kernel.org> Sent: Thursday, May 15, 2025 6:27 AM
-> > 
-> > Since the x86 defconfig aims to be a distro kernel work-alike with
-> > fewer drivers and a shorter build time, refresh all the virtualization
-> > guest Kconfig features, enabling paravirt spinlocks, and
-> > enabling the guest support code for the following guests:
-> > 
-> >  - Xen
-> >  - Xen_PVH
-> >  - Jailhouse
-> >  - ACRN
-> >  - Intel TDX
-> >  - Hyper-V
+On Tue, 10 Jun 2025 09:34:41 +0200
+Jorge Marques <jorge.marques@analog.com> wrote:
+
+> The AD4052 family supports autonomous monitoring readings for threshold
+> crossings. Add support for catching the GPIO interrupt and expose as an IIO
+> event. The device allows to set either, rising and falling directions. Only
+> either threshold crossing is implemented.
 > 
-> I built and tested a Hyper-V guest with defconfig. The Hyper-V storage
-> and keyboard drivers are pulled in automatically, so my previous
-> comment about them being "missing" is moot.
-> 
-> But the Linux console for each Hyper-V guest is a synthetic graphics
-> console, 
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+Hi Jorge,
 
-So clearly I'm a caveman like creature, but surely those things have
-serial console, right? I mean, that's how I access all my test boxes,
-serial console and ssh. What more does one really need :-)
+A few comments inline.
 
-/me crawls back into his cave.
+Jonathan
+
+>
+> +
+> +static int ad4052_write_event_config(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     enum iio_event_type type,
+> +				     enum iio_event_direction dir,
+> +				     bool state)
+> +{
+> +	struct ad4052_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +	if (st->wait_event == state) {
+> +		ret = 0;
+
+Feels like a case where init ret at declaration would be reasonable.
+
+> +		goto out_release;
+> +	}
+> +
+> +	if (state)
+> +		ret = ad4052_monitor_mode_enable(st);
+> +	else
+> +		ret = ad4052_monitor_mode_disable(st);
+> +
+> +	if (!ret)
+> +		st->wait_event = state;
+> +
+> +out_release:
+> +	iio_device_release_direct(indio_dev);
+> +	return ret;
+> +}
+
+> +
+> +static int ad4052_read_event_value(struct iio_dev *indio_dev,
+> +				   const struct iio_chan_spec *chan,
+> +				   enum iio_event_type type,
+> +				   enum iio_event_direction dir,
+> +				   enum iio_event_info info, int *val,
+> +				   int *val2)
+> +{
+> +	struct ad4052_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +
+> +	if (st->wait_event) {
+> +		ret = -EBUSY;
+> +		goto out_release;
+
+Not being able to read event parameters whilst monitoring them seems
+very restrictive.  Can't we cache the values?  Either play games to ensure
+we get them from the regmap cache or just cache these few values in st.
+
+Checking what you are monitoring for feels like the sort of thing
+userspace might well do.
+
+Even blocking changing the monitoring parameters is unusually strict.
+Why not just drop out of monitor mode, update them and go back in?
+
+
+> +	}
+> +
+> +	switch (info) {
+> +	case IIO_EV_INFO_VALUE:
+> +		ret = __ad4052_read_event_info_value(st, dir, val);
+> +		break;
+> +	case IIO_EV_INFO_HYSTERESIS:
+> +		ret = __ad4052_read_event_info_hysteresis(st, dir, val);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +out_release:
+> +	iio_device_release_direct(indio_dev);
+> +	return ret ? ret : IIO_VAL_INT;
+> +}
