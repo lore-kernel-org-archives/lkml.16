@@ -1,189 +1,207 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115B92E7F3A;
-	Sat, 14 Jun 2025 18:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F812E7626;
+	Sat, 14 Jun 2025 18:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749924918; cv=none; b=TNAHUi8jM0nymyCJs84bSh0KRoqz7MqRiugNxvLjmG6A1fweoV3K7S3N9jNnka4XAf4LU1jURlIRUbgOKJ/EsvIIPXDJ8nSVhtNldOx0qreixNTonbFSRVu6clw0KwuIJCG7MQ7KFjrzvO9zA8YcUcf0ERsYC9kGck/EUNJU7sY=
+	t=1749924927; cv=none; b=cdaesJ75bROPnYBxX+AYU5AWa/fwpBe3yV/SGvzYIcqIJ3WkxaIdejQUxJ0UaohoRwDHQWgphA60LC5oc6Bb/Oz+QrAY67ol+l3AbopVYITF+LTBUYAT4FsHY1/RjpQz6AnFeJ2Lza3gPBsB+2eEbFjs0orYfH8HbcXTkZ8GKH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749924918; c=relaxed/simple;
-	bh=EFL42CJiaQOiXrGt6/pdixsIsoXZFU3sPb2V2UplPlE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=suobZ2dQplz99QN2679qQRzAQXGeD8bThhN9Sp+ez+EEEskR93ZG99CFYdiP33f0jWhCjszSb/M50fIylJ4qByCs4pE6fcH3cQr1zNuw7lZrbT6H+1PiW+Jmju1SvwtcuFwyu10e7cWNcMFhFA+mOXnjMXbWdkD2OepT2Alo1qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amPozZR3; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749924927; c=relaxed/simple;
+	bh=hP+WRwN6pCkW1c53+y6PCRIZplyK8iIirUqkqpATSdc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Joqkm+Hi45GUM4EUMoYor9T3HCEv/Vc5xx6N0OFSh/qL5HTRHikYKtgVNK80o1h/gQ1ZZo/fcNAajhZni3JZ4fjs9y9+csUVDYy9UtuFIpO7IEu7QeiMRj9TxT4J7gkoShIBpz1nOOVBfogmRedg8OqsSmn7wwRn7Pw5hLYY8uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfXC7D3c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amPozZR3"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so2761123f8f.3;
-        Sat, 14 Jun 2025 11:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749924914; x=1750529714; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k0Bs6c37/y07phySGIaMXCLcTr8q9NO06Gh+4XGoKB8=;
-        b=amPozZR3eKow8NQK175BOdXBAqQlnwK3aReIuhcQYBjBL5G4WPknSnnbwfq18FN552
-         xQGWU0s66I8Aig5iddxU5fohzujf94ru+lXSqH9ehRqNWDX2m/ejjSVYoZR4oSFHnjW8
-         ukZ/Tc0SxZhHKAgipuU/f3FCLOANK1KSiRfMrbZSWIsHQwqvkp0yHgme2iquNdGe98to
-         HwKB7GGwjsMasGFRigpKS0MOrI12TIQdwWYHIcWm5KamvXJvdlI71JGCdEkQU0MzmQpv
-         anpJl4awDjZNKGfNJkHy0BomhPFIvKzYhnwGRRjChdA5chJe0yqWlf+I6Tz9j0HeogJl
-         749w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749924914; x=1750529714;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k0Bs6c37/y07phySGIaMXCLcTr8q9NO06Gh+4XGoKB8=;
-        b=v6bffyWfFjC2Y1zQDubronC+zx/EYMGsqbmXEEHPY2YjgNms4sF3SLwrLKRg1M+FX9
-         3Lwmzvub/ucEb1UTyYmE2BKfrfVS355etkKmcZlWv8tL9pR+ekS2NlTWm4TC6kepsTYW
-         o2Ty+4G0M4/iQmyx0KlbdQi/VpE468l/METW7TVFQdRRKdNs/WMdhO6g6p3Cnt3N77j/
-         hMaZPl+Uin9fQGDFW4Q1JlTl4sfLjiHtOKZrrMva8FczHMhsDfvLyKWCvNcN9t1N9Bzu
-         jYLz6WuwOTfICCHQGMA0TRzQhO9RgRT0S9xJ7zSlb/e4TNxzZf5phosiDfBY9Fhtp8vy
-         qsDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWxlqV4lOcbr1blzPyjKGcuBr+qSTIoaV7jh/XIuLrdBwCTraI5ihR2sKYitAdEY/03ILr7wgfFkng5Bto=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy99ys0OJ05JQLsT/omQ8JGg/NczJb6Qge4XqtCwXlTwIciY/e8
-	OTVwjbGbVciMPwsO5U57E/l+5GI45gv3F9JUD3DTjq2RLaISb8rw516x
-X-Gm-Gg: ASbGncuh0IhncpNuldcfE5ncsOkwcKkmmSJRRpysnLX/BkhT7saSwVvDk4XSSXgYySP
-	DpSjT0KYqXWU/hZtRccZu0NUBwYA3sXkxgOsw6uLUjygm17MQbKtETuEP9KJKmB/IaWpO5lLH/w
-	ts5yYIG1Anmh/6nExA1GVn9WsKKr/jwcXaF/uF82n0hoYIdtGZ9lJBR0RVJ6t6vq1ngJ3XqxUnc
-	qpgkz/zOFy+LHiybNqgg1Xs9bRFG4ekFtdF6LUSNiWa7eKkLqW7XnD6lJo7fT6ybiH11+DwCHB7
-	G7ai+T675CnE3TFByBOGL66WcoKAVk/s/nf6Cj5FY/q4CZVvLyjNaFRHQZGbRqQ/zYOwFKZ2yOk
-	v2Q==
-X-Google-Smtp-Source: AGHT+IG5rFauCOueVdM2iXEQWzdE2SfWJbIG/lvF5F894+FF1XVgY2tgRSBxiioBxzB/96rT9zK44w==
-X-Received: by 2002:a05:6000:1881:b0:3a4:e5fa:73f0 with SMTP id ffacd0b85a97d-3a572397846mr3775795f8f.20.1749924914431;
-        Sat, 14 Jun 2025 11:15:14 -0700 (PDT)
-Received: from alchark-surface.localdomain ([5.194.93.132])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c50esm88195255e9.4.2025.06.14.11.15.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 11:15:14 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Sat, 14 Jun 2025 22:14:36 +0400
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: add overlay for the WiFi/BT
- module on Sige5 v1.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfXC7D3c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF907C4CEEB;
+	Sat, 14 Jun 2025 18:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749924926;
+	bh=hP+WRwN6pCkW1c53+y6PCRIZplyK8iIirUqkqpATSdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RfXC7D3cjcOuRXOFNSIEdDzG/E9CjefrNQNb4MnMvgItM3GqNfPUHHMgdGy3pbWYd
+	 Eeln4Rz5OYAAC+H6uMJoiTXTepRjrtkq7hcRyJoCdI7OegDzsJSdoi4uvrl4AZa9EM
+	 AaHACRYNDlHolh6QK9+nDywlTtbm0FvZe+dM0zrMJMyzUXfqTLPWbO43KMq0CAgrd9
+	 FG/0fm8dCIDIdu/V4stgh3xPOTuSs+3Ehwfcmym1RS/2j86ietEGD30oiN996xBqO0
+	 yJXzNIrxv1UfTLY+ue3lC21wW5fcXeD+2tmfZ8FnaxORjcUh8nGQ7T267IMeBkXLL6
+	 5/r0cQTc7YE1g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250614-sige5-updates-v2-4-3bb31b02623c@gmail.com>
-References: <20250614-sige5-updates-v2-0-3bb31b02623c@gmail.com>
-In-Reply-To: <20250614-sige5-updates-v2-0-3bb31b02623c@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Detlev Casanova <detlev.casanova@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749924902; l=3898;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=EFL42CJiaQOiXrGt6/pdixsIsoXZFU3sPb2V2UplPlE=;
- b=YfwVvAfQQ0bYQttXHGd+f/0IXgDcOU1tVo0HYaR34VuKkZq7NKdZWXwTmc/z2ybOD877W5oXS
- EjW7JI6YLZYCjDF5xMJJ4cXS3R2+/oITH6nGhdnZRpmiBy5Q6OOoLx5
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 14 Jun 2025 20:15:24 +0200
+Message-Id: <DAMGM426FUU1.2IESY59SPIIHN@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Eunsoo Eun" <ewhk9887@gmail.com>, <rust-for-linux@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, "Eunsoo Eun" <naturale@hufs.ac.kr>,
+ "Benno Lossin" <benno.lossin@proton.me>
+Subject: Re: [PATCH 1/2] rust: macros: allow optional trailing comma in
+ module!
+X-Mailer: aerc 0.20.1
+References: <20250614081312.763606-1-ewhk9887@gmail.com>
+In-Reply-To: <20250614081312.763606-1-ewhk9887@gmail.com>
 
-Add support for the Broadcom based WiFi/Bluetooth module (BW3752-50B1)
-found in ArmSoM Sige5 boards version 1.2. This includes SDIO connected
-WiFi with OOB interrupt support, as well as UART connected Bluetooth
-with its respective interrupts.
+I didn't get the second patch advertised in the subject, did something
+go wrong when sending the patch?
 
-PCM support for Bluetooth SCO audio is left out for now. It is connected
-to SAI2 in M0 pin mode in case someone needs to enable it.
+On Sat Jun 14, 2025 at 10:13 AM CEST, Eunsoo Eun wrote:
+> From: Eunsoo Eun <naturale@hufs.ac.kr>
+>
+> Make the `module!` macro syntax more flexible by allowing an optional
+> trailing comma after the last field. This makes it consistent with
+> Rust=E2=80=99s general syntax patterns where trailing commas are allowed =
+in
+> structs, arrays, and other comma-separated lists.
+>
+> For example, these are now all valid:
+>
+>     module! {
+>         type: MyModule,
+>         name: "mymodule",
+>         license: "GPL"  // No trailing comma
+>     }
+>
+>     module! {
+>         type: MyModule,
+>         name: "mymodule",
+>         license: "GPL",  // With trailing comma
+>     }
+>
+> This change also allows optional trailing commas in array fields like
+> `authors`, `alias`, and `firmware`:
+>
+>     module! {
+>         type: MyModule,
+>         name: "mymodule",
+>         authors: ["Author 1", "Author 2"],  // No trailing comma
+>         license: "GPL"
+>     }
+>
+>     module! {
+>         type: MyModule,
+>         name: "mymodule",
+>         authors: ["Author 1", "Author 2",], // With trailing comma
+>         license: "GPL"
+>     }
+>
+> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1172
+> Signed-off-by: Eunsoo Eun <naturale@hufs.ac.kr>
+> ---
+>  rust/macros/concat_idents.rs |  9 ++++++++
+>  rust/macros/module.rs        | 42 ++++++++++++++++++++++++++++++------
+>  2 files changed, 45 insertions(+), 6 deletions(-)
+>
+> diff --git a/rust/macros/concat_idents.rs b/rust/macros/concat_idents.rs
+> index 7e4b450f3a50..c139e1658b4a 100644
+> --- a/rust/macros/concat_idents.rs
+> +++ b/rust/macros/concat_idents.rs
+> @@ -17,6 +17,15 @@ pub(crate) fn concat_idents(ts: TokenStream) -> TokenS=
+tream {
+>      let a =3D expect_ident(&mut it);
+>      assert_eq!(expect_punct(&mut it), ',');
+>      let b =3D expect_ident(&mut it);
+> +   =20
+> +    // Check for optional trailing comma
+> +    if let Some(TokenTree::Punct(punct)) =3D it.clone().next() {
 
-Note that v1.1 boards used a Realtek based module which is incompatible
-with these DT nodes, so v1.1 would need a different overlay.
+Please avoid cloning the iterator, as that is inefficient. Instead use
+`peekable()` to create an iterator with a `peek` function.
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> +        if punct.as_char() =3D=3D ',' {
+> +            // Consume the trailing comma
+> +            it.next();
+> +        }
+
+This allows any kind of trailing token in concat_idents, but only a
+comma should be allowed.
+
+> +    }
+> +   =20
+>      assert!(it.next().is_none(), "only two idents can be concatenated");
+>      let res =3D Ident::new(&format!("{a}{b}"), b.span());
+>      TokenStream::from_iter([TokenTree::Ident(res)])
+> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+> index 2ddd2eeb2852..d37492457be5 100644
+> --- a/rust/macros/module.rs
+> +++ b/rust/macros/module.rs
+> @@ -13,10 +13,27 @@ fn expect_string_array(it: &mut token_stream::IntoIte=
+r) -> Vec<String> {
+>      while let Some(val) =3D try_string(&mut it) {
+>          assert!(val.is_ascii(), "Expected ASCII string");
+>          values.push(val);
+> -        match it.next() {
+> -            Some(TokenTree::Punct(punct)) =3D> assert_eq!(punct.as_char(=
+), ','),
+> -            None =3D> break,
+> -            _ =3D> panic!("Expected ',' or end of array"),
+> +
+> +        // Check for optional trailing comma
+> +        match it.clone().next() {
+
+Please avoid cloning the iterator, as that is inefficient. Instead use
+`peekable()` to create an iterator with a `peek` function.
+
+> +            Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D ',' =
+=3D> {
+> +                // Consume the comma
+> +                it.next();
+> +                // Check if there's another string after the comma
+> +                if it.clone().next().is_none() {
+> +                    // Trailing comma at end of array is allowed
+> +                    break;
+> +                }
+> +            }
+> +            Some(TokenTree::Literal(_)) =3D> {
+> +                // Next item is a string literal, comma was required
+> +                panic!("Expected ',' between array elements");
+> +            }
+> +            None =3D> {
+> +                // End of array, no comma needed
+> +                break;
+> +            }
+> +            Some(_) =3D> panic!("Expected ',' or end of array"),
+>          }
+>      }
+>      values
+> @@ -143,9 +160,22 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
+>                  _ =3D> panic!("Unknown key \"{key}\". Valid keys are: {E=
+XPECTED_KEYS:?}."),
+>              }
+> =20
+> -            assert_eq!(expect_punct(it), ',');
+> -
+>              seen_keys.push(key);
+> +
+> +            // Check for optional trailing comma
+> +            match it.clone().next() {
+> +                Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D =
+',' =3D> {
+> +                    // Consume the comma
+> +                    it.next();
+> +                }
+> +                Some(TokenTree::Ident(_)) =3D> {
+> +                    // Next item is an identifier, comma was required
+> +                    panic!("Expected ',' between module properties");
+> +                }
+> +                _ =3D> {
+> +                    // End of input or closing brace, comma is optional
+
+This also could be a new opening group or other punctuation, which would
+be wrong.
+
 ---
- arch/arm64/boot/dts/rockchip/Makefile              |  5 +++
- .../rockchip/rk3576-armsom-sige5-v1.2-wifibt.dtso  | 49 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+Cheers,
+Benno
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 4bf84622db473696f64b157ba94560f476d4f52f..26533be1dd865972b681d133aad6fbbbf4e64bce 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -143,6 +143,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-display-vz.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-io-expander.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-armsom-sige5.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-armsom-sige5-v1.2-wifibt.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-evb1-v10.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-rock-4d.dtb
-@@ -225,6 +226,10 @@ rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
- 	rk3568-wolfvision-pf5-display-vz.dtbo \
- 	rk3568-wolfvision-pf5-io-expander.dtbo
- 
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-armsom-sige5-v1.2-wifibt.dtb
-+rk3576-armsom-sige5-v1.2-wifibt-dtbs := rk3576-armsom-sige5.dtb \
-+	rk3576-armsom-sige5-v1.2-wifibt.dtbo
-+
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-wifi.dtb
- rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
- 	rk3588-edgeble-neu6a-wifi.dtbo
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5-v1.2-wifibt.dtso b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5-v1.2-wifibt.dtso
-new file mode 100644
-index 0000000000000000000000000000000000000000..6985c3b22ebe4efcc7e7b7370f527838a557cf2b
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5-v1.2-wifibt.dtso
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * DT-overlay to enable the onboard WiFi and Bluetooth module present in v1.2
-+ * boards. Note that v1.1 boards use a different module, so this probably won't
-+ * work there.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+
-+&sdio {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+        wifi@1 {
-+                compatible = "brcm,bcm4329-fmac";
-+                reg = <1>;
-+                clock-names = "lpo";
-+                clocks = <&hym8563>;
-+                interrupt-names = "host-wake";
-+                interrupt-parent = <&gpio0>;
-+                interrupts = <RK_PB0 IRQ_TYPE_LEVEL_HIGH>;
-+                pinctrl-0 = <&wifi_wake_host>;
-+                pinctrl-names = "default";
-+        };
-+};
-+
-+&uart4 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clock-names = "lpo";
-+		clocks = <&hym8563>;
-+		device-wakeup-gpios = <&gpio1 RK_PD7 GPIO_ACTIVE_HIGH>;
-+		interrupt-names = "host-wakeup";
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PB1 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-0 = <&bt_reg_on>, <&bt_wake_host>, <&host_wake_bt>;
-+		pinctrl-names = "default";
-+		shutdown-gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-+		vbat-supply = <&vcc_3v3_s3>;
-+		vddio-supply = <&vcc_1v8_s3>;
-+	};
-+};
-
--- 
-2.49.0
+> +                }
+> +            }
+>          }
+> =20
+>          expect_end(it);
 
