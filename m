@@ -1,157 +1,105 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B535623DE
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D25175A5
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 02:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749867563; cv=none; b=t7QndO8TlVO96y88dGQ3UvEt0MeVWXcN1TmSDsvbyHOLL/sGp5OnMtijjb0luLAri4R8NXdLFw1JRqnRlDPYdy8c6NTYG2JpHy3+dIPbux9gVDETizJXeuU/24WkZkth4UVYBEEGRpcFuJ4CAY722AEL6wDL6gzeDpynXchpF/c=
+	t=1749867641; cv=none; b=oKRo38rOgj4mOG5zoHgqMnAgMJcEoXe39QxnZN5oHbcJbcq9lHflHZx4XSnPhKEhLX1fditRLIFJofSOPxNqxLglnkq+iBFC6cuknmDQFTHvpbWL9hcKcnsNslERGCeqkoyJAFogN3WevxNWIFmRdamGAQ+XpFxiKnS0heHM2zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749867563; c=relaxed/simple;
-	bh=AJuRSop8QkkGDZ8RIYWjeGO7mDVPmBvjRxvlq1diPXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IQMt4qzLryGUd7i9AstJJ/rHeNTzRL2O6/LqNVNAFjIwPHgbNeAqlowu0hylsZLIhL9QR59kt0UGV2IRmMVzprvy12OHcmIDTuYz1h+pFSaZsQujLWudtXbw/05kBtpXj8UgoRZImhY3Vhe61Sxe+EP4kJjV85jYjYBsAvvjBiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xo7VZeOu; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749867641; c=relaxed/simple;
+	bh=qnHnh/eh5pvaU9wU23V4kDzRq5bjKim08WvNI6Fua80=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DoOeiwIMZzNpchHPBdra5XGk83TMdLNez9SIFLxmXSIbBGUNTl41qEeHOAvQ83eB+YvqPXUHU2yrP4HviAoC9k6Ghafy7nzz5MCUKp53x2qxbAwj27+5WuwYvdNH5CBHE/qoiNaDRU/kfpDnIgdEPydx6v7MqjYK6YSrWoaiqb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=XUAPZz+f; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xo7VZeOu"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235e389599fso89255ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:19:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="XUAPZz+f"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso2574705a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749867561; x=1750472361; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gn7hQ4tKQxqRQgt1sWefNjIs0nazm1nLsrkpL0FkOCs=;
-        b=xo7VZeOudDM4r+wd5+/fzdH81NYY+LWRalknQIWQvKTM/W341oJaoA/bbu6P6K4053
-         Q4V/4RpKLufIV03VXq4YzjwetNrswpvBFfOmqRTe2n/mlx6gfb/B9p9fUNe1CyOR5O49
-         nesQD97Lqz8rhPiCNX+XV2jvIIX/QBLXSNyYkZ31GOTQInKtxEI1KBRor02j6FTw1lmz
-         BvPBdREaNo/ZR6mPr96/cAv8yCl3t7ZJkK/VbIerCDtjZ0ogPS8mZWnFsxZxahi1e7zp
-         Ir/3NV+BK9rfbPXR5UE8rrEYKtQ5Op5Qi8CeQlUKoPRJZR5Ffalufbzrh/Q7SS+x7b+f
-         73OQ==
+        d=wbinvd.org; s=wbinvd; t=1749867638; x=1750472438; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0TCpdrHqvVyx+/z5RHafQUI6EpwCZP78GRIUPCgFN0w=;
+        b=XUAPZz+fCjAAYwbBxybGVle8xhbZ+qZnaYwujspfZSJoFOcd3rNK2KVRxXn7k79Sco
+         iHbo1mDNkqPKqbdPRgHvuWpQKSce3ZigMkAXApyjjrtYHySHlX4aauMLC5/ErKCDkTVC
+         oyzbgAjye/YNV4L34tZoJktnLtibvfRfVhVOiKcvda7eBjvxaMwK7+JmdmB3gYJsS7IO
+         I6zelS0R8Wk8JJViLUReXGVAdLVpab2zJPyIEkfkbI8u/KsYW4gnjGJO+ePUbLdrDRMi
+         OyPGe6jcbsOSo3PA1J/rOCfT98N+Hub+74UQgYn3aJ79KWqUHGCrzrPG7XOacpw28f+v
+         NACw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749867561; x=1750472361;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gn7hQ4tKQxqRQgt1sWefNjIs0nazm1nLsrkpL0FkOCs=;
-        b=MPSpjti/bCO2TSYunwb30KOV0OvgnfpHS9+8b5yO5koG31MDj66YialTqouJF/R1U1
-         b2G08stJ7+e8tibfJlC28m87HDwPeFKYz+19eyE7TTtjQ1dz/RJAOT+o8yWk8oVfrOnh
-         1qhkfX7b5ixtgiUoUj3+7lBbzB77jvfenPseeC+4EZSuTImDfhi0VU1VK9H6vzrTnAyZ
-         JqKnE2f7FjBGN/1n7RAd7Rpd9B+5rZkHVncrwoJTStDOqNOiHDK2x95UkQKRsuHwtghJ
-         YcqaRrQqOMzgA+KJoAd2MQwsFg4s4tGELKaJRbSXfanvNnzxchCi7ZrbapjTFC43/zBu
-         +rRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkzvvMynyaCP3Pa18Eq+NsFweQ4hu8ejdZj1934HCJ+M1sYhHI29e/9TNNnOC/eycQIjKDlr7SBgBz91U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytkFWTAYZb7AJgLY9BA6XhBsgGj8dDPZavnMDcmO08yV/es9iq
-	7gjPjX1IdVon4GPbsALC/tgPU9YGKiJ0ff8qkW7KyqDAPO5nUpHlxMcQMFz9MnzSe1x4XR2QLc5
-	6mSo86sp06mNFT/8oGwLIJ50454LiQ6OeZfENRtrl
-X-Gm-Gg: ASbGncuwwlR7OrVskNFO7j78a+wGUb8x46GDGvgdoQfxRidMuQ00ILbBQlHzIMNONii
-	tb3rp+Lxea5xeRECU16Wd50bOt3fnq01MxJemcM1D3NLyLI/USACUsEOTyKv9iqCHG/uVvMkzBs
-	pYh2Y6DPztuSTSur4gFe9oSAMTKv1PbTisGIHebP+DEIQu
-X-Google-Smtp-Source: AGHT+IGYdXYi+poo/RbTJj3aTyp+thNZAzJ5yQqSIcmi+S8nbDQIjlrXV7TRD/xqSf9eS1uYlnMXOLt+1LwilFumYxA=
-X-Received: by 2002:a17:902:ef08:b0:215:65f3:27ef with SMTP id
- d9443c01a7336-2366c5a25dfmr1048025ad.12.1749867560457; Fri, 13 Jun 2025
- 19:19:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749867638; x=1750472438;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0TCpdrHqvVyx+/z5RHafQUI6EpwCZP78GRIUPCgFN0w=;
+        b=tr8Kjp1gfiLp7yRXgKN6y3cR1e92CSmnemGPRq3W5xXf0Vs1c4VkkXMGxKkItWXSgP
+         TOh5dCHD0c3Gh5VNzhTyg8ode4jwt0X4oHrIVPQqtnWPKKkQTDuNiKBk3cv7frziEDH6
+         AC/55CHZpgDzsrIiRQY7k3VspLSl6kFFDw/fwxmOENPEiHehQBql90CsyWsTwKES80Fk
+         RnoFyLGcaqZECm1Hy6OtP6WmS+zj/pQ2kx/+WIz+0OUOMK+rSKorSaTtuaTmOaGYYvZz
+         7WPGGoRg5rsbr+kqfn3cwhjKoLMZBRBlFyD6CrsCskAL45jXxkBIbVZzWfk4oeQEx0eD
+         6B7A==
+X-Gm-Message-State: AOJu0YwcfdE+a8zKhNmVW7Oqv/Xg+0oKVmHHtojNnK90bwohuOumdjXv
+	g/dNFXV+nv9k+rr6l5Vs4lDOA8ljvlsvy8v2KsJP2jOCTS5jX/NenIQYFzh0RimARkWyfr1srNq
+	7oAZf
+X-Gm-Gg: ASbGncukfUh1d7w80rl14P0RpZITlOKj9YuWmBjy8SAVesyITCcdWLZh8b0ZV6YlkNL
+	Dw5Tea0aaf6jA+8FdTg7btFw/SAxT42+3D/QV7abLirvEOenAWm6xDab/QhMPr3CuC+7hesbbDJ
+	c+0jc9niy55bRxoH+gaJIiIqD8w+mYH1vMB/jZUgqNp9zcUq3KVrOIrW0AsYR+zRntFKJg+FYZt
+	dQM5xmkNG29413v5S5mFw1MFhN1xg4PFhRVLjbuTCs+xDj5c8pcIZZeXU3eip3DAkrra6la7jNG
+	3813sRIGnEwk87D3Vmpbn7GIpqxPeha+oG0d6IqL3uJ0Z3rzoqVB9AtROwuu/yX5IHjS59KNByY
+	xcyDoL90N39j15Eqe2NE44bf3sATUOtk=
+X-Google-Smtp-Source: AGHT+IGO/t+Jv/rmdF2kqCa8WUSlji+mz6WDWVoeL7ZLdOjABOPGoI//E1v0p8MAykSAF3XJd20QAw==
+X-Received: by 2002:a17:90b:586b:b0:2fc:3264:3666 with SMTP id 98e67ed59e1d1-313f1e129cdmr2206003a91.30.1749867638329;
+        Fri, 13 Jun 2025 19:20:38 -0700 (PDT)
+Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19cd3cbsm4132857a91.11.2025.06.13.19.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 19:20:37 -0700 (PDT)
+From: Calvin Owens <calvin@wbinvd.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH] tools/power turbostat: Fix MSRs with CONFIG_MULTIUSER=n
+Date: Fri, 13 Jun 2025 19:20:28 -0700
+Message-ID: <81f4c402d1fda7c2419aac1148061a0789112e76.1749849645.git.calvin@wbinvd.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609043225.77229-1-byungchul@sk.com> <20250609043225.77229-2-byungchul@sk.com>
- <20250609123255.18f14000@kernel.org> <20250610013001.GA65598@system.software.com>
- <20250611185542.118230c1@kernel.org> <20250613011305.GA18998@system.software.com>
-In-Reply-To: <20250613011305.GA18998@system.software.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 13 Jun 2025 19:19:07 -0700
-X-Gm-Features: AX0GCFuFHl8rGE_NSTG6eYqMKv1bvWBwteyyrelqyPJ0hyn_uDtWnwn8gbn2YYg
-Message-ID: <CAHS8izMsKaP66A1peCHEMxaqf0SV-O6uRQ9Q6MDNpnMbJ+XLUA@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/9] netmem: introduce struct netmem_desc
- mirroring struct page
-To: Byungchul Park <byungchul@sk.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, willy@infradead.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
-	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 6:13=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
-rote:
->
-> On Wed, Jun 11, 2025 at 06:55:42PM -0700, Jakub Kicinski wrote:
-> > On Tue, 10 Jun 2025 10:30:01 +0900 Byungchul Park wrote:
-> > > > What's the intended relation between the types?
-> > >
-> > > One thing I'm trying to achieve is to remove pp fields from struct pa=
-ge,
-> > > and make network code use struct netmem_desc { pp fields; } instead o=
-f
-> > > sturc page for that purpose.
-> > >
-> > > The reason why I union'ed it with the existing pp fields in struct
-> > > net_iov *temporarily* for now is, to fade out the existing pp fields
-> > > from struct net_iov so as to make the final form like:
-> >
-> > I see, I may have mixed up the complaints there. I thought the effort
-> > was also about removing the need for the ref count. And Rx is
-> > relatively light on use of ref counting.
-> >
-> > > > netmem_ref exists to clearly indicate that memory may not be readab=
-le.
-> > > > Majority of memory we expect to allocate from page pool must be
-> > > > kernel-readable. What's the plan for reading the "single pointer"
-> > > > memory within the kernel?
-> > > >
-> > > > I think you're approaching this problem from the easiest and least
-> > >
-> > > No, I've never looked for the easiest way.  My bad if there are a bet=
-ter
-> > > way to achieve it.  What would you recommend?
-> >
-> > Sorry, I don't mean that the approach you took is the easiest way out.
-> > I meant that between Rx and Tx handling Rx is the easier part because
-> > we already have the suitable abstraction. It's true that we use more
-> > fields in page struct on Rx, but I thought Tx is also more urgent
-> > as there are open reports for networking taking references on slab
-> > pages.
-> >
-> > In any case, please make sure you maintain clear separation between
-> > readable and unreadable memory in the code you produce.
->
-> Do you mean the current patches do not?  If yes, please point out one
-> as example, which would be helpful to extract action items.
->
+Handle ENOSYS from cap_get_proc() in check_for_cap_sys_rawio(), so
+turbostat can display temperatures when running on kernels compiled
+without multiuser support.
 
-I think one thing we could do to improve separation between readable
-(pages/netmem_desc) and unreadable (net_iov) is to remove the struct
-netmem_desc field inside the net_iov, and instead just duplicate the
-pp/pp_ref_count/etc fields. The current code gives off the impression
-that net_iov may be a container of netmem_desc which is not really
-accurate.
+Signed-off-by: Calvin Owens <calvin@wbinvd.org>
+---
+ tools/power/x86/turbostat/turbostat.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-But I don't think that's a major blocker. I think maybe the real issue
-is that there are no reviews from any mm maintainers? So I'm not 100%
-sure this is in line with their memdesc plans. I think probably
-patches 2->8 are generic netmem-ifications that are good to merge
-anyway, but I would say patch 1 and 9 need a reviewed by from someone
-on the mm side. Just my 2 cents.
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 925556b90770..f7d665913a52 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -6496,8 +6496,13 @@ int check_for_cap_sys_rawio(void)
+ 	int ret = 0;
+ 
+ 	caps = cap_get_proc();
+-	if (caps == NULL)
++	if (caps == NULL) {
++		/* Support CONFIG_MULTIUSER=n */
++		if (errno == ENOSYS)
++			return 0;
++
+ 		return 1;
++	}
+ 
+ 	if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE, &cap_flag_value)) {
+ 		ret = 1;
+-- 
+2.47.2
 
-Btw, this series has been marked as changes requested on patchwork, so
-it is in need of a respin one way or another:
-
-https://patchwork.kernel.org/project/netdevbpf/list/?series=3D&submitter=3D=
-byungchul&state=3D*&q=3D&archive=3D&delegate=3D
-
-https://docs.kernel.org/process/maintainer-netdev.html#patch-status
-
---=20
-Thanks,
-Mina
