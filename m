@@ -1,131 +1,97 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459B0566A
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433D2566A
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749861371; cv=none; b=itD0enx23gdfQ9BwxyXNdUrseH/mw+dGaukEHHtdVXa9rH3OjqEEzYgrH6Raq8Ju6yg4amy4nYOiONtrN7PVvkUmkz9ievTBEfVZ9AUhXPJoSrxBOcDP23GCp1oLlT8zIqxxHQVdWMin4Y8M9cZkfUR9lvXhKD1BMKpIAVL7t3c=
+	t=1749861577; cv=none; b=sHxCW+Q+9nCmgerwy4CRZMzDQUg0MG6y35d3XoDpxaI9G60xYwYZ03hF7PoctXNQx4h3pMZ26JEHF8W4D/778+fFGL1+hohqMo7bEGQ9tTOS3z4XA6tV+Cdvpir/MAp0iQZnB9lLXi9asku0LHPHyq20b0ki7QNXMgV43QGT5VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749861371; c=relaxed/simple;
-	bh=V3gKkZyJoVLU65p1MmuPCnNPvMxWcutqGk8WIWwz7m8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fHacH7/44IYRZImkCIQcHtOZcpO8J2OJ5BmygT2jFf7ocAnHhtt4/lZOHTWnYjvcd/ZODR0cSKHEoST96XWHLtcoo5mnfgm+9quyScaIM+eWmPEqoT2/YbQFaaEVFVpSsda9Lulo3UjJOCOUhEVBb82aRyWtRQEJF9mhQLK8dtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4y9B6t6Q; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com
+	s=arc-20240116; t=1749861577; c=relaxed/simple;
+	bh=Ol+DV7UzCHCV8gUSVT+9EkYL+s4LiRzd1eA9g589cGI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=NON9N6BQjJ/SvK8p2L/ywAzJMztiVQrnu/xDqUAxmu+gxz4IOxwOYUJFE8ZRp9PxKMBPaqitET2+c2GByrBA5sjkPFNNfYoXkspMdfj8hmMYu37+jP8c0jBOPm4md8tlMogDovJJIVCX21uMP76kdktVs7j/37dd/7kRjyeGt+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cFC5Ubaq; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4y9B6t6Q"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748269c6516so2235553b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749861369; x=1750466169; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LsGNwzjJybqThQOT8fD0kBJYces/xSpMR2ULC69ZMTA=;
-        b=4y9B6t6Q9QRB+bX6ChsQ1onqtRetAZofIy8BLMZl4Upr6sUjmbho4FkxxSzTX8L7UV
-         Pqho483hAUA2HXab6BO84FraPAPaNpox8LgvA1bdlhdZT3gTclHPcD/6jgh3NRFSTDDd
-         HGUPlwMEeoMuNZTIzYNzhl7wTE9mdNKuhkBRkRyYktJ13yHM1H7im8EhWkXICGJOmHrv
-         LAhh/ICS+OBtcUrKzW+Yp79IwC9wGHZlUqDzZZA/nWZgs+GJavGPhV+Gv1BipYZv4wbK
-         H8dDjuEIvJuZzh8Zcf8gD/GQ1aMCZQqeWXUMn7W4jckDkSu6Oan91MB035Ll6fm11ieI
-         MdAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749861369; x=1750466169;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LsGNwzjJybqThQOT8fD0kBJYces/xSpMR2ULC69ZMTA=;
-        b=btJYD+A+YBShsxHieMpzZ5kxDy/V8LFUfYKg4XQDbWszYGcHCMkVTEEQdX0SP6BL5w
-         eBsCrwX0ya9iGqUSMZiKgoAe/6dBK7ihZquTTRUAMvVR9QZxpevKsL6HY8IUP8EqMl+c
-         NobpZmB+Wg4c3EFBKh4mOBzOAbcZ73cBVswKBxnlcuhzJHHikTjkAn1ZdGwbVt2jRnSr
-         LrfZ44DOiGFdRaGUw5yw5Rmk+7xY7U5WhGdYKfURzbjNTRABenmAZqisVyxUxSRWFgbf
-         Qx9K1kEMcubripnjfbrV1Mdn4ih+OrHA+mXc6/KKzXFAKM7pMxK6qGD5HnIuQlQBiyXB
-         lKnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtZFagbL/oAMM4C9Afc+ta8cc9U7eRzMemLDfmifgNvfUnmRm6jIE5PIlib7BcfqPzX28H2aflDQhkHd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIhUXZK66FSyT19ecC5yVJV6yCMQJmsovFSj32U5rL97cQIvzJ
-	0Sr49Qys8SAe+HrIiyEJaqfMQLXikdh030tWg5Nl+vhPJyEJPtVIP9LZQ+5AxPd5Vrxu5j9u6Y7
-	y0TYBaUqdCw==
-X-Google-Smtp-Source: AGHT+IHqLoqmlxmqsh8euk0ITwAFXpQgXFZ8FKMEePf+KFc9sgQ9UBMVfeleItXZeZXM4tzmvg+uVOzwHQRt
-X-Received: from pfbef24.prod.google.com ([2002:a05:6a00:2c98:b0:746:223d:ebdc])
- (user=pmalani job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:230d:b0:742:a7e3:7c84
- with SMTP id d2e1a72fcca58-7489cf97bf8mr1624147b3a.13.1749861369622; Fri, 13
- Jun 2025 17:36:09 -0700 (PDT)
-Date: Sat, 14 Jun 2025 00:35:26 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cFC5Ubaq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749861576; x=1781397576;
+  h=date:from:to:cc:subject:message-id;
+  bh=Ol+DV7UzCHCV8gUSVT+9EkYL+s4LiRzd1eA9g589cGI=;
+  b=cFC5UbaqVl9tyDUN9mtuwzop461CRhNgnQVxZfH6N7no6uwMF2uAykvw
+   AnYsiD0iiOWTcn1KARK90Nf7e+k4bMuuxRrK5Aa6ceaXzq6PKdXZqMn8Q
+   j2myN0mYJcrpOc97boILzJf00jnCLLqCCmURXUAby0r5PjrYZAsJx+3JQ
+   chWwJJF5ll6cfK/su9C4tC81F2TuKS7ZAwoIY+rTZWISD1K/3YZsavTlx
+   uFd5Vzbth50rh/mnCSF1m70py/6SSpGha7cRZPVtXVryP6QTRg0Z9hH2O
+   dfrMli89JLezfdojNU05vSmAtArM4Taq7RpDA5pCNScQAw6nsXOJ4Ywf7
+   w==;
+X-CSE-ConnectionGUID: MCu6bLwuSYiizPkE7SMSWQ==
+X-CSE-MsgGUID: SqLiYNicQOWPqfqP2ilBeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="55886826"
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="55886826"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 17:39:35 -0700
+X-CSE-ConnectionGUID: X6Z60iWbQZKZjsTZLmpwaQ==
+X-CSE-MsgGUID: JobFPKxrR8y1IK+ZfP9J9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="171156990"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 13 Jun 2025 17:39:35 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQEvl-000D7Y-0B;
+	Sat, 14 Jun 2025 00:39:33 +0000
+Date: Sat, 14 Jun 2025 08:38:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:perf/urgent] BUILD SUCCESS
+ b0823d5fbacb1c551d793cbfe7af24e0d1fa45ed
+Message-ID: <202506140848.J9EvGAaL-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250614003601.1600784-1-pmalani@google.com>
-Subject: [PATCH] cpufreq: CPPC: Dont read counters for idle CPUs
-From: Prashant Malani <pmalani@google.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Prashant Malani <pmalani@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-AMU performance counters tend to be inaccurate when measured on idle CPUs.
-On an idle CPU which is programmed to 3.4 GHz (verified through firmware),
-here is a measurement and calculation of operating frequency:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/urgent
+branch HEAD: b0823d5fbacb1c551d793cbfe7af24e0d1fa45ed  perf/x86/intel: Fix crash in icl_update_topdown_event()
 
-t0: ref=3D899127636, del=3D3012458473
-t1: ref=3D899129626, del=3D3012466509
-perf=3D40
+elapsed time: 1014m
 
-For reference, when we measure the same CPU with stress-ng running, we have
-a more accurate result:
-t0: ref=3D30751756418, del=3D104490567689
-t1: ref=3D30751760628, del=3D104490582296
-perf=3D34
+configs tested: 20
+configs skipped: 126
 
-(t0 and t1 are 2 microseconds apart)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-In the above, the prescribed method[1] of calculating frequency from CPPC
-counters was used.
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250613    gcc-12
+i386    buildonly-randconfig-002-20250613    gcc-11
+i386    buildonly-randconfig-003-20250613    gcc-12
+i386    buildonly-randconfig-004-20250613    clang-20
+i386    buildonly-randconfig-005-20250613    clang-20
+i386    buildonly-randconfig-006-20250613    gcc-12
+i386                            defconfig    clang-20
+x86_64                        allnoconfig    clang-20
+x86_64                       allyesconfig    clang-20
+x86_64  buildonly-randconfig-001-20250613    clang-20
+x86_64  buildonly-randconfig-002-20250613    gcc-12
+x86_64  buildonly-randconfig-003-20250613    gcc-12
+x86_64  buildonly-randconfig-004-20250613    gcc-12
+x86_64  buildonly-randconfig-005-20250613    clang-20
+x86_64  buildonly-randconfig-006-20250613    gcc-12
+x86_64                          defconfig    gcc-11
+x86_64                      rhel-9.4-rust    clang-18
 
-The follow-on effect is that the inaccurate frequency is stashed in the
-cpufreq policy struct when the CPU is brought online. Since CPUs are mostly
-idle when they are brought online, this means cpufreq has an inaccurate
-view of the programmed clock rate.
-
-Consequently, if userspace tries to actually set the frequency to the
-previously erroneous rate (4 GHz in the above example), cpufreq returns
-early without calling in to the CPPC driver to send the relevant PCC
-command; it thinks the CPU is already at that frequency.
-
-Update the CPPC get_rate() code to skip sampling counters if we know a CPU
-is idle, and go directly to the fallback response of returning the
-=E2=80=9Cdesired=E2=80=9D frequency. The code intends to do that anyway if =
-the counters
-happen to return an =E2=80=9Cidle=E2=80=9D reading.
-
-[1] https://docs.kernel.org/admin-guide/acpi/cppc_sysfs.html#computing-aver=
-age-delivered-performance
-
-Signed-off-by: Prashant Malani <pmalani@google.com>
----
- drivers/cpufreq/cppc_cpufreq.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.=
-c
-index b7c688a5659c..9bc2546fb4a7 100644
---- a/drivers/cpufreq/cppc_cpufreq.c
-+++ b/drivers/cpufreq/cppc_cpufreq.c
-@@ -753,6 +753,10 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int=
- cpu)
-=20
- 	cpufreq_cpu_put(policy);
-=20
-+	/* Idle CPUs have unreliable counters, so skip to the end. */
-+	if (idle_cpu(cpu))
-+		goto out_invalid_counters;
-+
- 	ret =3D cppc_get_perf_ctrs_sample(cpu, &fb_ctrs_t0, &fb_ctrs_t1);
- 	if (ret) {
- 		if (ret =3D=3D -EFAULT)
---=20
-2.50.0.rc1.591.g9c95f17f64-goog
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
