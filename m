@@ -1,63 +1,63 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E9F2E7F32;
-	Sat, 14 Jun 2025 20:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B1F2E7F11;
+	Sat, 14 Jun 2025 20:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749932669; cv=none; b=MuWbo93Lo/5QWqXCm5fzShRQi1K8po0ZnOmfW7U1LcXCgaqwDhwA2SPXfNFk+/L5A1jyKFPiem8/AUTh6bkU0LnI6CJmYd+Km5VqU83ReM9IU74Ts80WNYsr4R/6342qu/eK4UiC/aJncR6Hh2ktGCa/k/LFlw9CuaJvLOXlGhI=
+	t=1749932675; cv=none; b=mkXriSITcwm3HglnPrJb6TwaEfWBAmBOffhI2zCgA+Q2kuCwOpymnM6nqYjlhboHaAz+RsRAwa9RgMZEg40v4fnVJPOwxRpClO0x7W3Pec8+eX0Rs72bw50WT2AbywfPGeTBaAShJUXKslMYlNyGHBLoRynihz3RV8vLqMIu8zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749932669; c=relaxed/simple;
-	bh=FF7UNhexBfgyailB1LL46EeXTPxhK/Q0SjOBKHX9JMo=;
+	s=arc-20240116; t=1749932675; c=relaxed/simple;
+	bh=/nPUNYT0M9vpqDN2YDJhl+LtGIFZwutUWruPsgjSrZk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F+fl3iUt1oS23NbW/jjBSCiruPJlkrq4eZsbOrFw3ijR8DwvFMaFgRYPoxTogfW1JV4kka794bPQuQYSrQoggCbD+SSUTPjzZCDPYZBWvQeKp3sj66Xjy1T1N0p3b5/2POTxj66Cd4PNyFF4xcEAm9HFQYrhKGB0/H7x9Z8JeCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNPvHjlD; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=WSi8NhxI/GeJh/mxRm9hgI5/Xb54sUJuFS8yMY6saNDDqTH5eSbS0VhOs9qWACdqtAKiEDlNxJcR/hOdSy9we3zTLhDHudvaRsTKn/HeKmTPIv6+jucOF01xk26CyibUSvP5oayIPJGfLAucK6aSjPO5sAMEe7l/a15s1TJky1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQShtxQp; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNPvHjlD"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7489dfb71a8so745335b3a.1;
-        Sat, 14 Jun 2025 13:24:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQShtxQp"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7489dfb71a8so745357b3a.1;
+        Sat, 14 Jun 2025 13:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749932667; x=1750537467; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749932673; x=1750537473; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DPUx8acHfFHm+lWLzhnb5FfTKvzuEm/rpMZ61FlXfd0=;
-        b=kNPvHjlDIW3h+YD4mrq8DeqdSaSSYNjPJjTTe2fh2U1LfCA4GUAM8ykENs4P5q0aG+
-         2fm6cEN1PWkSaxrLgF9tl7xIWdg6xfr6rh4RniRlVZ9oevzks/TQ5CvUWJBnl0/nIr+0
-         wr3FCQAushIx2C4q1bEBgOJur3jY50U6EOI+SwCN+41bMqSdoR3ahbuPmvU/kh/gDZoQ
-         nZWgMpH2/RXOBYfaySLKQd/6Fz1k8989S/JWGrRV2ul8m4BiQFjW19NydqtVYJZC45OG
-         2kQXYERjvqNDi6AocOQscCz21ySnMWzU4x1KYIaWYl8Qgh9rMU9nffhequL0z2/ne1st
-         ruxQ==
+        bh=BeLfvqj/4d+vVfQI829QhhRWfMlVlhJ0oopKK5Rq8XM=;
+        b=MQShtxQpH1bX/qrZKnIPRpsBg5/Q4YBHR1EVC0qmx1xYO7tfMKEQ9QW9fiWMuXnpsv
+         LVLLnnX3w+L4SHIztjrwJG3eNeFrT9dfUDupn/e1IQOJf2sFi6BUHRaRPmR/PjznW616
+         rXiMS+8xYs9MntkAwXqrbShHlRt+oOjZAAK9W6VC8ahlyPR58TqQkEPwsK7I/bLdGaND
+         SmdY+BlZ6Ha+QXn2z8juGapoYE2T8rHAjhFgjJZnG5Je4PgIcW8reb54/fMsoluFQGQx
+         oxsAAVPo01qR5DknBKeOR5npSl8klIwErijsvkYM/fNe8Knhyd0Ba3hiR9K/phlA9Ff9
+         FaJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749932667; x=1750537467;
+        d=1e100.net; s=20230601; t=1749932673; x=1750537473;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DPUx8acHfFHm+lWLzhnb5FfTKvzuEm/rpMZ61FlXfd0=;
-        b=bnmiu8TA+lRVjX46NQ+YEFV3RS15fGH8+z15R0VWmq4JV20mXA9A8wqABmY4SC8s+M
-         pqUXU/X6gBUY0kkZ3kHSB+xjwAUBtoWFBjo+Dk0Yl474ofGDcXOBwzoJzAJp0D9Jd+kx
-         zsV2m4QP7y8DvdMBK4xlYs2TdN3sIjrhvkkr5zRBsUX04UYQyiAio0wxpDs/lJt5MR06
-         SLypEuRJ0NDWQf0DeEt1VqKIFcQ14MdR1M6nKLAJbIHjkMvqaLRIb7eA+tMK9xqeaX17
-         45AVSRp23F4iWCG7BYZEUDl4NPW6xvtMDe6nxeyrUeGpZiV2UzHuZxEa9TdhnjgF02cP
-         JPPg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0o0fFVCTwYe4Oq9pwoLdi/YF01cwOi48oKrNix+AN2VTymWAj38vPjEL/l9dNBZUTbdERXNA1@vger.kernel.org, AJvYcCXM2gAtJLmngJ1l/VzfOkhPHXPeEd8n4yyo2ksFj10GnMvhqprRHyAxgF55J0XNLMWDhSCXn74YEMLCIeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6ScqGcPmNqBkbauceh/kMOKNwkLcMOR0hauZWp2efP97Tv5RI
-	Mmbt7EfMCmssnHB4lq872lkcM+GeXF0oCEAsVMEKk9Jdxdw8N9MXbNyN
-X-Gm-Gg: ASbGncuy6xplSFRsdVRB3xN7tGL/soTybFqrUCXNpYDSTUZJDtP2Eyt9M5weJCXvsaG
-	uIpmc9MKVxNNN4dGn2jFHkfrrFEokvopakHBKXbemOEdiHV0UMTrFtHwLZVY5ZxfiMc5czUYpFc
-	Uw4yWN6kaRl9naQvIZSZcrjwGuhszQzDwo4Hue1JKhNuvg3R1DvLyqnLM/E1NqvlrAWKyudn8Wv
-	mTLOZhCaX3I4t/OEGqJCel8g3ipJhtb5zHr/F2gSR0S/eCldzjVTb4eprnwYXE4JLbZtJKaN/3B
-	2GjS+qTyfpEEFnuus/MFwslYnQnAcfZAb9tF8B0LPJHzwOaoKq1z/U+qr2nT6ThQBm3AGCRbqBz
-	8T74nz3WvSGN1mJxCLa98wpBk7H4=
-X-Google-Smtp-Source: AGHT+IEUHsbrfOzRtJglTfXRv1dpILfhMUwCxuSEBswBFdDJupTBkHF2+V+10vsD7S3I7QtPnCxt/g==
-X-Received: by 2002:a05:6a00:13a9:b0:740:9c57:3907 with SMTP id d2e1a72fcca58-7489d175260mr5215603b3a.19.1749932666778;
-        Sat, 14 Jun 2025 13:24:26 -0700 (PDT)
+        bh=BeLfvqj/4d+vVfQI829QhhRWfMlVlhJ0oopKK5Rq8XM=;
+        b=xOBtdUtwXLs0AI/yabb8oC6d0nI5D97VCthrzNYncgmyzHJZUmBBSMTmejHJJXEfIJ
+         ecei9bXlJwpQMJshEGKBWLnHYsPLDdyiRoKD0e3mtMlfuRPJ0m0vVLB+i6I71LcQnkhB
+         IygzYc0eA2Gr5m6zA8tHmGzfQJ9Y1Ov8xnKV9EIESIrIa/xdCbC7o5p3nZkK4LEAMZZ6
+         3okcC9F8fAEdMm3Xsw2rF+SUHgAM78OdrSygezVskb2hfLVHejucdLiZ63R+22L9FGVH
+         QGnxjHv8AWSNepppZhsas3aPEgCudMJtowsHcvWQuGlowfV0dOxnB/bi/KxgKG7oQNpT
+         LBWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1duL68Qzbq8vwqFuX5MCKHuuJhhUVYmotgCUoFLD4qzPfuvdQE9GvAOOPAyITeBcpyV8nIp/AEOIZUjk=@vger.kernel.org, AJvYcCWFeuR2OuNjaSYrxe5ONgYjyAuB5RSxIGtKqgML00RtXnZdLOUAoAMLTTQ9+R+d0yhle60If9pZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjFTrAJXuC+rEfEMTt6v3eoXtM4QO8Pih7MRCB7oxckmPzEFDO
+	srhBp5mEEXR1WwlWpiQX6o3MwtUc14ZDkehF8YMAScHtYj14e9WTUzvr
+X-Gm-Gg: ASbGncszHPbcSHmvMWnEGRSOZSfm7WyylZyoEGRi40esyrbeAUwC17vaxAdb7Sz79fx
+	wQmiv34AGzTBp1tCuQZ03Un5HRBZVK7kuTKTzSYu32Lk+az4Z8VHV4pUtm1Zg/sV3iZ9EDhCRwR
+	h1Jn5tW3q7IiuSUgTkzap4TUrl30ZFNuRvt1BaE1nHzgMZEZHOuNdyRd9dvjD3kZbS+pree152I
+	kQwI61ziZWTmfe4futE9B6K43r3AbPHFDdoEj5i+UQFUelnPjiznB8K0J3/SoC6K8Hu6YEKWNPu
+	xnrXVqudg8sn7MssDR7fj3koQVnkHFZeG+RDRtZtIF2HxE1vPRAXArWxGklxiG+HlEl4ipb0dbH
+	s6Lnn4Q2Wz04j/y0Eq1W8ZHLyuHg=
+X-Google-Smtp-Source: AGHT+IEX1VdCB0tSnpuHFmmxai4lc5c2Hfil5CzoES0bMZ28X1GSLrHf67e2/uSKtVP7/y6myFqe/w==
+X-Received: by 2002:a05:6a00:2186:b0:748:33f3:8da8 with SMTP id d2e1a72fcca58-7489cfc2976mr4323401b3a.5.1749932673105;
+        Sat, 14 Jun 2025 13:24:33 -0700 (PDT)
 Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d738esm3863351b3a.177.2025.06.14.13.24.24
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d738esm3863351b3a.177.2025.06.14.13.24.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 13:24:26 -0700 (PDT)
+        Sat, 14 Jun 2025 13:24:32 -0700 (PDT)
 From: Kuan-Wei Chiu <visitorckw@gmail.com>
 To: akpm@linux-foundation.org,
 	colyli@kernel.org,
@@ -68,9 +68,9 @@ Cc: linux-kernel@vger.kernel.org,
 	jserv@ccns.ncku.edu.tw,
 	Kuan-Wei Chiu <visitorckw@gmail.com>,
 	stable@vger.kernel.org
-Subject: [PATCH v2 1/3] Revert "bcache: update min_heap_callbacks to use default builtin swap"
-Date: Sun, 15 Jun 2025 04:23:51 +0800
-Message-Id: <20250614202353.1632957-2-visitorckw@gmail.com>
+Subject: [PATCH v2 3/3] bcache: Remove unnecessary select MIN_HEAP
+Date: Sun, 15 Jun 2025 04:23:53 +0800
+Message-Id: <20250614202353.1632957-4-visitorckw@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250614202353.1632957-1-visitorckw@gmail.com>
 References: <20250614202353.1632957-1-visitorckw@gmail.com>
@@ -82,20 +82,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 3d8a9a1c35227c3f1b0bd132c9f0a80dbda07b65.
+After reverting the transition to the generic min heap library, bcache
+no longer depends on MIN_HEAP. The select entry can be removed to
+reduce code size and shrink the kernel's attack surface.
 
-Although removing the custom swap function simplified the code, this
-change is part of a broader migration to the generic min_heap API that
-introduced significant performance regressions in bcache.
+This change effectively reverts the bcache-related part of commit
+92a8b224b833 ("lib/min_heap: introduce non-inline versions of min heap
+API functions").
+
+This is part of a series of changes to address a performance
+regression caused by the use of the generic min_heap implementation.
 
 As reported by Robert, bcache now suffers from latency spikes, with
 P100 (max) latency increasing from 600 ms to 2.4 seconds every 5
 minutes. These regressions degrade bcache's effectiveness as a
 low-latency cache layer and lead to frequent timeouts and application
 stalls in production environments.
-
-This revert is part of a series of changes to restore previous
-performance by undoing the min_heap transition.
 
 Link: https://lore.kernel.org/lkml/CAJhEC05+0S69z+3+FB2Cd0hD+pCRyWTKLEOsc8BOmH73p1m+KQ@mail.gmail.com
 Fixes: 866898efbb25 ("bcache: remove heap-related macros and switch to generic min_heap")
@@ -105,142 +107,21 @@ Closes: https://lore.kernel.org/linux-bcache/CAJhEC06F_AtrPgw2-7CvCqZgeStgCtitbD
 Cc: stable@vger.kernel.org
 Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 ---
- drivers/md/bcache/alloc.c    | 11 +++++++++--
- drivers/md/bcache/bset.c     | 14 +++++++++++---
- drivers/md/bcache/extents.c  | 10 +++++++++-
- drivers/md/bcache/movinggc.c | 10 +++++++++-
- 4 files changed, 38 insertions(+), 7 deletions(-)
+ drivers/md/bcache/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 8998e61efa40..da50f6661bae 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -189,16 +189,23 @@ static inline bool new_bucket_min_cmp(const void *l, const void *r, void *args)
- 	return new_bucket_prio(ca, *lhs) < new_bucket_prio(ca, *rhs);
- }
- 
-+static inline void new_bucket_swap(void *l, void *r, void __always_unused *args)
-+{
-+	struct bucket **lhs = l, **rhs = r;
-+
-+	swap(*lhs, *rhs);
-+}
-+
- static void invalidate_buckets_lru(struct cache *ca)
- {
- 	struct bucket *b;
- 	const struct min_heap_callbacks bucket_max_cmp_callback = {
- 		.less = new_bucket_max_cmp,
--		.swp = NULL,
-+		.swp = new_bucket_swap,
- 	};
- 	const struct min_heap_callbacks bucket_min_cmp_callback = {
- 		.less = new_bucket_min_cmp,
--		.swp = NULL,
-+		.swp = new_bucket_swap,
- 	};
- 
- 	ca->heap.nr = 0;
-diff --git a/drivers/md/bcache/bset.c b/drivers/md/bcache/bset.c
-index 68258a16e125..bd97d8626887 100644
---- a/drivers/md/bcache/bset.c
-+++ b/drivers/md/bcache/bset.c
-@@ -1093,6 +1093,14 @@ static inline bool new_btree_iter_cmp(const void *l, const void *r, void __alway
- 	return bkey_cmp(_l->k, _r->k) <= 0;
- }
- 
-+static inline void new_btree_iter_swap(void *iter1, void *iter2, void __always_unused *args)
-+{
-+	struct btree_iter_set *_iter1 = iter1;
-+	struct btree_iter_set *_iter2 = iter2;
-+
-+	swap(*_iter1, *_iter2);
-+}
-+
- static inline bool btree_iter_end(struct btree_iter *iter)
- {
- 	return !iter->heap.nr;
-@@ -1103,7 +1111,7 @@ void bch_btree_iter_push(struct btree_iter *iter, struct bkey *k,
- {
- 	const struct min_heap_callbacks callbacks = {
- 		.less = new_btree_iter_cmp,
--		.swp = NULL,
-+		.swp = new_btree_iter_swap,
- 	};
- 
- 	if (k != end)
-@@ -1149,7 +1157,7 @@ static inline struct bkey *__bch_btree_iter_next(struct btree_iter *iter,
- 	struct bkey *ret = NULL;
- 	const struct min_heap_callbacks callbacks = {
- 		.less = cmp,
--		.swp = NULL,
-+		.swp = new_btree_iter_swap,
- 	};
- 
- 	if (!btree_iter_end(iter)) {
-@@ -1223,7 +1231,7 @@ static void btree_mergesort(struct btree_keys *b, struct bset *out,
- 		: bch_ptr_invalid;
- 	const struct min_heap_callbacks callbacks = {
- 		.less = b->ops->sort_cmp,
--		.swp = NULL,
-+		.swp = new_btree_iter_swap,
- 	};
- 
- 	/* Heapify the iterator, using our comparison function */
-diff --git a/drivers/md/bcache/extents.c b/drivers/md/bcache/extents.c
-index 4b84fda1530a..a7221e5dbe81 100644
---- a/drivers/md/bcache/extents.c
-+++ b/drivers/md/bcache/extents.c
-@@ -266,12 +266,20 @@ static bool new_bch_extent_sort_cmp(const void *l, const void *r, void __always_
- 	return !(c ? c > 0 : _l->k < _r->k);
- }
- 
-+static inline void new_btree_iter_swap(void *iter1, void *iter2, void __always_unused *args)
-+{
-+	struct btree_iter_set *_iter1 = iter1;
-+	struct btree_iter_set *_iter2 = iter2;
-+
-+	swap(*_iter1, *_iter2);
-+}
-+
- static struct bkey *bch_extent_sort_fixup(struct btree_iter *iter,
- 					  struct bkey *tmp)
- {
- 	const struct min_heap_callbacks callbacks = {
- 		.less = new_bch_extent_sort_cmp,
--		.swp = NULL,
-+		.swp = new_btree_iter_swap,
- 	};
- 	while (iter->heap.nr > 1) {
- 		struct btree_iter_set *top = iter->heap.data, *i = top + 1;
-diff --git a/drivers/md/bcache/movinggc.c b/drivers/md/bcache/movinggc.c
-index 45ca134cbf02..d6c73dd8eb2b 100644
---- a/drivers/md/bcache/movinggc.c
-+++ b/drivers/md/bcache/movinggc.c
-@@ -190,6 +190,14 @@ static bool new_bucket_cmp(const void *l, const void *r, void __always_unused *a
- 	return GC_SECTORS_USED(*_l) >= GC_SECTORS_USED(*_r);
- }
- 
-+static void new_bucket_swap(void *l, void *r, void __always_unused *args)
-+{
-+	struct bucket **_l = l;
-+	struct bucket **_r = r;
-+
-+	swap(*_l, *_r);
-+}
-+
- static unsigned int bucket_heap_top(struct cache *ca)
- {
- 	struct bucket *b;
-@@ -204,7 +212,7 @@ void bch_moving_gc(struct cache_set *c)
- 	unsigned long sectors_to_move, reserve_sectors;
- 	const struct min_heap_callbacks callbacks = {
- 		.less = new_bucket_cmp,
--		.swp = NULL,
-+		.swp = new_bucket_swap,
- 	};
- 
- 	if (!c->copy_gc_enabled)
+diff --git a/drivers/md/bcache/Kconfig b/drivers/md/bcache/Kconfig
+index d4697e79d5a3..b2d10063d35f 100644
+--- a/drivers/md/bcache/Kconfig
++++ b/drivers/md/bcache/Kconfig
+@@ -5,7 +5,6 @@ config BCACHE
+ 	select BLOCK_HOLDER_DEPRECATED if SYSFS
+ 	select CRC64
+ 	select CLOSURES
+-	select MIN_HEAP
+ 	help
+ 	Allows a block device to be used as cache for other devices; uses
+ 	a btree for indexing and the layout is optimized for SSDs.
 -- 
 2.34.1
 
