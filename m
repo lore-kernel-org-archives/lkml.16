@@ -1,73 +1,81 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F1813AA3E
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F59C30100;
+	Sat, 14 Jun 2025 18:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749926167; cv=none; b=InG8iuUL07cYesUnIWP9TtN1fbGnfIEX/1y4l9Ivef7K4Fo1kxXSXeN4POud4ONcJmF16aCRVQqmoP9YTeg+Lx86zpz/W0UyzTB8/AJuQhULdwQEA7bOog0dEgVQLpsfrq2etaAfKXNnjNhSvSIlbXGxAtF10ItZTJe4Bt6M/5o=
+	t=1749926182; cv=none; b=hVQMnQsX2MFjgusgK+bjexSBGdiqDxzXIePUNYgT5EYptwtrdMuteZ1OqGQYdDrdGOklZZpICwysEUQ0Bd+Es4UDw+i2TSWFrhijn2IGas2Y3HGw/7pQnZb/rHIvhW0pHsWq+3SWfUTrkp+nBz6LGLqvt2ALeD5sEgTJ6tVPXsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749926167; c=relaxed/simple;
-	bh=9zhqtvH20PGTQFl/hJ3B+6N3YFln0ELk3qsUhL0t/JI=;
+	s=arc-20240116; t=1749926182; c=relaxed/simple;
+	bh=3dzdX4kZV66YVSeT4KnMyTAL6dUXfb3O9U7JJ4FkODI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jNhigVmOfNwYbQRLpfwE+/+PO4wT4F/leAnNfjrIs3kVMg8THkM/ckClr/qVKyhLv/q5aXXbFQtVFZE/CoUd7y0cVwyqO0YE2KrAVk7jMMEUFdf947SwkJv7kXwmNOqfLkqjiWjQ1E86lCDPGYyj07G3NC3Cgq7n6/xAsnNBzAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LB9SfVIH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=JQwqo+xZROm6Dz2mS8YawzGB9UHo996fcpAULQKaPide5MLUokaIlWeljx/AUOqOZ8+0qzvFztHeXcfrZnffYq/Uw5jiqG5u/6WSHafnxsJS/OomMcvguU4OLyaEbgi24xBi4E3c3vojc3/GPd4DUQa5yNoaof8fboXxSALgMFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=FnP5KKZg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AAnyZL0n; arc=none smtp.client-ip=103.168.172.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LB9SfVIH"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55EFTOY3008789
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:36:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Fr3V+vnTlTkucnr/sMeFG9g9yGVUJcjlGidQWTV9CK4=; b=LB9SfVIHQjCfUJff
-	ZXNcuH+jp9A8oVaghTkr/F7Hf9V11zJG2b/PBlIsKZD9J5W5Q4Cn14uriNm46/G9
-	WRaXAUrlwDwLLd4ryuQKpgeC8Uoxq4KYO4WeKlL9ilYSPjYwSQ6wDG1vwS0XfFVD
-	vwPlpLYdQgf9u8pGa2wvF9bWI/nuJIwul9OlMGthZbmsDwnFA9gkPprtVJcVjlvy
-	0NIPOV+sf2x8Q33zQJ5cXmaWM0hlf0MS++oHKqo3r3eDXS/6dxfx8AsQ6T6LEpj1
-	pb2xeZAG++Ofa4Yb0/VD0t8c3RSJoIroJ4/e+97G+ehse2unQsMWNW1XB7+udOET
-	nMJ0fA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791en8vyr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 18:36:04 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d0976a24ceso98313985a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 11:36:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749926163; x=1750530963;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fr3V+vnTlTkucnr/sMeFG9g9yGVUJcjlGidQWTV9CK4=;
-        b=fIteTCu16z3ok7AMlIieeYUkoDy0YfiYgGWZnylMKxWSU4weOkzDyz6EL+15ZhP5es
-         26ap0ivWvhwiwBqhQ57nfrKPhYcSaYtX1v+TK/w+8EmmG7ge/cmR9s3v0i6gfr1dKo6x
-         9Joaif16QxLWAqAOT2xYpZAbFVlt/vn7Vp9ReY7v/OHKWL6l37Qe/hb96b2gVG7PdmVq
-         z4TFaKCC7LYRm/2CvcC+kt9+fy9KFv87Q+S2c2jm/Nci1985g/toKBA15Kgi/pNQIwFX
-         qj02cnGaOn7tjZwn7t1olhJIKz4KqyfkS7zw5gu2hmEYfYWeetqpoeQUUf9vRm16A8ZK
-         noTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmbpmY2BvPOMc9qzDgCwv1zMs+UB7I3ijSHN650dYx78T1bAekiCZlP3+lymdICV9ei5n+HUZYvx2VE2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZwiIQBPlfhBhzOdaMP1YkjP56vXtDj0w7H8YZq3hG+EZ3VnY2
-	Qu1M/iIdewy0JyJC1AtQ6Z7iF9JZC3E7sOz8SHkk9zx1j90eopelTAqh8Bgcedkhwx798v+/qSg
-	A98LgK1WWBUjjTTFUMFHc0UdfJlNig9Zn1V7RbxwWlge40AHoT8ggV41DVs9d7L4T/ZU=
-X-Gm-Gg: ASbGncsWXBwdPTpOpETwkzhNiGbrLlO8R5CQMHlDYJWkS95nUBzr8WHkRDKca07Q1ec
-	Vdi4QotpjvNkEEcNyqlZPhEURHj/y40A3eE4eG4qzyAEJkl+QRzMTaWotSVmRz5DmVjLu2llRIe
-	bn2he3dyN3rTwQL70QR/VMNp99OoDg8MRWQM3pW+i13vq5pjbtdrRsrhnZIvuB12MSLZENo5PFh
-	OgZW/wY0L52I1XBCH6rVuB1sHVsBGr+PfUXaRTXg4ZM9eIh7ap+MXZp45E4J3ukUZNSg+hsvi+6
-	ayhKUxueGwcR3+cb5sPjVbF2ZEWoyecpFEq/p3mjpYoT0oV42n2l0SqQBYC7gYivG0gvf9GnQe4
-	6k6E=
-X-Received: by 2002:a05:622a:316:b0:47a:ecc3:296c with SMTP id d75a77b69052e-4a73c394653mr23248811cf.0.1749926163467;
-        Sat, 14 Jun 2025 11:36:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGB04Fgqt4Kek4mgzb5bvMAWqJLI+/i0iRXx7obd5FsMMu74P3dH5pzCOJqmQmFoouzm+D9ug==
-X-Received: by 2002:a05:622a:316:b0:47a:ecc3:296c with SMTP id d75a77b69052e-4a73c394653mr23248681cf.0.1749926163112;
-        Sat, 14 Jun 2025 11:36:03 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88fe531sm346355766b.108.2025.06.14.11.36.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Jun 2025 11:36:02 -0700 (PDT)
-Message-ID: <f1284637-7650-498a-b850-b5140c47e4e0@oss.qualcomm.com>
-Date: Sat, 14 Jun 2025 20:36:00 +0200
+	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="FnP5KKZg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AAnyZL0n"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailflow.phl.internal (Postfix) with ESMTP id A3A5F2003C8;
+	Sat, 14 Jun 2025 14:36:19 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Sat, 14 Jun 2025 14:36:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1749926179;
+	 x=1749933379; bh=/gO+W1y6nHMFbF2yimL+ciEfWt1+14MU/pwHIvdjUTo=; b=
+	FnP5KKZgNUO6leHMMDdBy5FsnNZ0mI2GJbe6suSh8QUGaJgPVt8kAxIUvRBMDQaU
+	6NAIB46tv9axMeSbGSZV4xXzjrG1YNqbEqa2rcewXhK40QbXNrr1v348X1U4IA+S
+	Vr8w2N595iO8zB6lQJLRo2gW/a73Ei/U7AeJmApTT5/Zm243XGvqTV4vP0A6QhjC
+	m4vcWHRCugp9JUnouEcDfQMEB9HzUWjtHZOzwj7Di3IwjP7C/EEDVntcvXMhNWEi
+	273qzJ4OXi0sEhL3tpWGsowriLljF9eCKZxqNIhawspA+9kIom9Qqid9H0tB0i5U
+	CdxasjgRXpGz0RsnwEfFfQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749926179; x=
+	1749933379; bh=/gO+W1y6nHMFbF2yimL+ciEfWt1+14MU/pwHIvdjUTo=; b=A
+	AnyZL0n1w+zeXR3mJrlqmLGJMNrDi7nNsjfJmh20Fz6jrgSo+J9pF63dJyG50ArR
+	ebfQp7L0rFkKVcV1duOywEog8RywIWqMQ6GuuetvNR5KZ/sP7359M1RkJ33o5Ss5
+	ZQmxH7rhdFH54YuF9Qzkv1ZXbIO4+cQ7Ed0kU9Az5jL+hDPBkPaxvzLeyCcFgX0F
+	UppWtrmyVjGzH9hPDNGFVupU5r58DUX3kHBi8OgWTmprGDRZrwBdhzMyDH4k/l5G
+	TdMfOVrsFf+bm5LeCMlKOuOp1TC3lfi9e6xpOkF1eznmflU8c/eeLXBbAEY2859A
+	p9hfJEXRhLwuHxEIzlHQw==
+X-ME-Sender: <xms:IsFNaDeD_Gi8NTqZZoLTfGIl8E-UInpCPgU5zj_jj_xoYikxdsTEBg>
+    <xme:IsFNaJNkEYJKFSRHeRwJ9QHgdZr54AQTyiCMenNPdL1YlF6pZyMKu8_zhTyRSQ2Mf
+    Hao6TFr-j6cZvJ_QPI>
+X-ME-Received: <xmr:IsFNaMg8qCp_49ecAFGvkePn9VQ78V8EU1DzRNld7ENDLt_MP6QhAQ_BivbZqmCn9sb0VfeOZ6xOd0wlRgGFFSU6>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvudehiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddv
+    jeenucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqe
+    enucggtffrrghtthgvrhhnpeefvdehleeutdfhlefgvedvgfeklefgleekgedtvdehvdfg
+    tdefieelhfdutefgudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvdefpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
+    uhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehkvghrnhgvlhdqthgvrghmsehmvghtrgdrtghomhdprhgtphht
+    thhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguugihiiekje
+    esghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:IsFNaE_9gA1qCS1kON1G0tE7Kg3KeSJc93s1s96OxSF86eJyd_4iSA>
+    <xmx:IsFNaPuYmOZb8mS0aRSECHqRJduSLv8uihtnOEV1xxAMx3GwhEsIjg>
+    <xmx:IsFNaDFBtXoougFzwushMdUiIpXEaTbvjM99FVPdzCegKWNYk_ozTw>
+    <xmx:IsFNaGNZiCFf13m5XeErDqKW5SWqnrzvKbHqvqZ7yBr273mB4McuVg>
+    <xmx:I8FNaIWExtNumH1iBKrzaUemEDpeMiyc5znla2aSxmqTcWMeJbnGB0wY>
+Feedback-ID: i580e4893:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 14 Jun 2025 14:36:15 -0400 (EDT)
+Message-ID: <75ea3f6b-cf5b-4e97-9214-cbd3f299008c@maowtm.org>
+Date: Sat, 14 Jun 2025 19:36:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,73 +83,183 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] ARM: dts: qcom: add device tree for Sony Xperia SP
-To: Antony Kurniawan Soemardi <linux@smankusors.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Max Shevchenko <wctrl@proton.me>,
-        Rudraksha Gupta <guptarud@gmail.com>
-References: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
- <20250614-msm8960-sdcard-v1-5-ccce629428b6@smankusors.com>
+Subject: Re: [PATCH v4 bpf-next 1/5] namei: Introduce new helper function
+ path_walk_parent()
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
+ mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
+ jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net,
+ gnoack@google.com, neil@brown.name
+References: <20250611220220.3681382-1-song@kernel.org>
+ <20250611220220.3681382-2-song@kernel.org>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250614-msm8960-sdcard-v1-5-ccce629428b6@smankusors.com>
+From: Tingmao Wang <m@maowtm.org>
+In-Reply-To: <20250611220220.3681382-2-song@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: bM1xugpEyzkPBwFVtcmZvo1T7v1f3Ukg
-X-Authority-Analysis: v=2.4 cv=D6RHKuRj c=1 sm=1 tr=0 ts=684dc114 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=wxLWbCv9AAAA:8 a=BdDXOLcz4J6SvvgUVR8A:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=QJY96suAAestDpCc5Gi9:22
-X-Proofpoint-GUID: bM1xugpEyzkPBwFVtcmZvo1T7v1f3Ukg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE0MDE1NiBTYWx0ZWRfXyhQyy4/zOEKQ
- S8zRyOiC9CIO3jr/TSCUMIXoKrFIQDcMRo8SdU5plGKhJJ7nzpoEzr9By6rVvRI+MyB77K4oCkB
- qIHDBnBCS2CVsThqcsXcT/9wnGlI57IStIMILkp2p0cqzE75wBQpxtPr9l+nEfS+woDLfyB8kld
- IuJRlo4doBbKJHVBLy5bezS01QnNWo6VNbrAtP701yzbVBHOmZPuAslWEh/yAtjvReJ6NWm4eXG
- zAq1CVo0JOvTEFgy4f60IsTias0K6dduOjoITZDoeY7NaFMgAuTJByEiEJoGDDo7DwrZX1sW29v
- YYntIUluwUbT4of+m27lCJ1Iq3miZaHL5ASABSRgob/d6vzOG7bSehx1SKDwBZJynaI06Z32nIW
- mAaQAPw/wEzCyhHNl6pXSe6KinIMP/p7v3KX+dozMbdbnt+Lrt1KkrTgRnU4eRjGYh4ploAM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-14_07,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506140156
 
-On 6/13/25 7:51 PM, Antony Kurniawan Soemardi wrote:
-> Add initial device tree support for the Sony Xperia SP (codename:
-> sony-huashan), a smartphone based on the Qualcomm MSM8960T SoC.
+On 6/11/25 23:02, Song Liu wrote:
+> This helper walks an input path to its parent. Logic are added to handle
+> walking across mount tree.
 > 
-> There are two variants of the Xperia SP, one without LTE and one with
-> LTE. This device tree should work for both variants, though it has only
-> been tested on the non-LTE variant.
-
-IIUC (and that's a 10yo range memory), SP had some eyebrow-rising boot
-flow (some partitions were non-standard?) - could you please add a
-paragraph about it in the commit message if that's the case, and maybe
-include a short how-to on booting the thing?
-
+> This will be used by landlock, and BPF LSM.
 > 
-> The following are currently supported:
-> - Serial console support via gsbi8
-> - GPIO keys for volume up/down buttons
-> - PM8921 keypad with camera focus/capture keys
-> - eMMC (sdcc1) and micro SD card (sdcc3) support
-> - USB OTG support
-> 
-> Other hardware features are not yet implemented.
-> 
-> Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
+> Suggested-by: Neil Brown <neil@brown.name>
+> Signed-off-by: Song Liu <song@kernel.org>
 > ---
+>  fs/namei.c            | 99 +++++++++++++++++++++++++++++++++++++------
+>  include/linux/namei.h |  2 +
+>  2 files changed, 87 insertions(+), 14 deletions(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 4bb889fc980b..bc65361c5d13 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2048,36 +2048,107 @@ static struct dentry *follow_dotdot_rcu(struct nameidata *nd)
+>  	return nd->path.dentry;
+>  }
+>  
+> -static struct dentry *follow_dotdot(struct nameidata *nd)
+> +/**
+> + * __path_walk_parent - Find the parent of the given struct path
+> + * @path  - The struct path to start from
+> + * @root  - A struct path which serves as a boundary not to be crosses.
+> + *        - If @root is zero'ed, walk all the way to global root.
+> + * @flags - Some LOOKUP_ flags.
+> + *
+> + * Find and return the dentry for the parent of the given path
+> + * (mount/dentry). If the given path is the root of a mounted tree, it
+> + * is first updated to the mount point on which that tree is mounted.
+> + *
+> + * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a new
+> + * mount, the error EXDEV is returned.
+> + *
+> + * If no parent can be found, either because the tree is not mounted or
+> + * because the @path matches the @root, then @path->dentry is returned
+> + * unless @flags contains %LOOKUP_BENEATH, in which case -EXDEV is returned.
+> + *
+> + * Returns: either an ERR_PTR() or the chosen parent which will have had
+> + * the refcount incremented.
+> + */
+> +static struct dentry *__path_walk_parent(struct path *path, const struct path *root, int flags)
+>  {
+>  	struct dentry *parent;
+>  
+> -	if (path_equal(&nd->path, &nd->root))
+> +	if (path_equal(path, root))
+>  		goto in_root;
+> -	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
+> -		struct path path;
+> +	if (unlikely(path->dentry == path->mnt->mnt_root)) {
+> +		struct path new_path;
+>  
+> -		if (!choose_mountpoint(real_mount(nd->path.mnt),
+> -				       &nd->root, &path))
+> +		if (!choose_mountpoint(real_mount(path->mnt),
+> +				       root, &new_path))
+>  			goto in_root;
+> -		path_put(&nd->path);
+> -		nd->path = path;
+> -		nd->inode = path.dentry->d_inode;
+> -		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+> +		path_put(path);
+> +		*path = new_path;
+> +		if (unlikely(flags & LOOKUP_NO_XDEV))
+>  			return ERR_PTR(-EXDEV);
+>  	}
+>  	/* rare case of legitimate dget_parent()... */
+> -	parent = dget_parent(nd->path.dentry);
+> -	if (unlikely(!path_connected(nd->path.mnt, parent))) {
+> +	parent = dget_parent(path->dentry);
+> +	if (unlikely(!path_connected(path->mnt, parent))) {
 
-As for the code.. I don't really have comments other than please
-keep a \n before 'status', other things seem rather in order.. If
-the dt checker doesn't complain, I don't see any logical wrongs
+This is checking path_connected here but also in follow_dotdot,
+path_connected is checked again. Is this check meant to be here?  It will
+also change the landlock behaviour right?
 
-Konrad
+(For some reason patch 2 rejects when I tried to apply it on v6.16-rc1, so
+I haven't actually tested this patch to see if this is really an issue)
+
+>  		dput(parent);
+>  		return ERR_PTR(-ENOENT);
+>  	}
+>  	return parent;
+>  
+>  in_root:
+> -	if (unlikely(nd->flags & LOOKUP_BENEATH))
+> +	if (unlikely(flags & LOOKUP_BENEATH))
+>  		return ERR_PTR(-EXDEV);
+> -	return dget(nd->path.dentry);
+> +	return dget(path->dentry);
+> +}
+> +
+> +/**
+> + * path_walk_parent - Walk to the parent of path
+> + * @path: input and output path.
+> + * @root: root of the path walk, do not go beyond this root. If @root is
+> + *        zero'ed, walk all the way to real root.
+> + *
+> + * Given a path, find the parent path. Replace @path with the parent path.
+> + * If we were already at the real root or a disconnected root, @path is
+> + * released and zero'ed.
+> + *
+> + * Returns:
+> + *  true  - if @path is updated to its parent.
+> + *  false - if @path is already the root (real root or @root).
+> + */
+> +bool path_walk_parent(struct path *path, const struct path *root)
+> +{
+> +	struct dentry *parent;
+> +
+> +	parent = __path_walk_parent(path, root, LOOKUP_BENEATH);
+> +
+> +	if (IS_ERR(parent))
+> +		goto false_out;
+> +
+> +	if (parent == path->dentry) {
+> +		dput(parent);
+> +		goto false_out;
+> +	}
+> +	dput(path->dentry);
+> +	path->dentry = parent;
+> +	return true;
+> +
+> +false_out:
+> +	path_put(path);
+> +	memset(path, 0, sizeof(*path));
+> +	return false;
+> +}
+> +
+> +static struct dentry *follow_dotdot(struct nameidata *nd)
+> +{
+> +	struct dentry *parent = __path_walk_parent(&nd->path, &nd->root, nd->flags);
+> +
+> +	if (IS_ERR(parent))
+> +		return parent;
+> +	if (unlikely(!path_connected(nd->path.mnt, parent))) {
+> +		dput(parent);
+> +		return ERR_PTR(-ENOENT);
+> +	}
+> +	nd->inode = nd->path.dentry->d_inode;
+> +	return parent;
+>  }
+>  
+>  static const char *handle_dots(struct nameidata *nd, int type)
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 5d085428e471..cba5373ecf86 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -85,6 +85,8 @@ extern int follow_down_one(struct path *);
+>  extern int follow_down(struct path *path, unsigned int flags);
+>  extern int follow_up(struct path *);
+>  
+> +bool path_walk_parent(struct path *path, const struct path *root);
+> +
+>  extern struct dentry *lock_rename(struct dentry *, struct dentry *);
+>  extern struct dentry *lock_rename_child(struct dentry *, struct dentry *);
+>  extern void unlock_rename(struct dentry *, struct dentry *);
+
