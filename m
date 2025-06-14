@@ -1,155 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404B72C15AC;
-	Sat, 14 Jun 2025 14:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB2722F774;
+	Sat, 14 Jun 2025 14:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749910212; cv=none; b=OFixCgnWo9S6FdEBNlmFdVOCY+9/41SbzWj0qYM8Onx6+HVwFXHE1kAYpIRrGNJvOCVzfPn1dldaUVTRCw3zD4a5BYE54h3LQ9O5PiE+xKnqRKMNrq6w2u3KHv7M3Cs/txazrkEewyc0zaFPZ9z//8UCWZ0m7cfrVxR5ZUkWupI=
+	t=1749910286; cv=none; b=LaqtnmcsumGxqQGd3BtdrtXL3yGq+D4b4nnKAZ4LRNY0hE7Pyymfu3c/c/tK84JTQyHHQOVRmGbwSkmJUGaL60L1CTdEV2REY6bEXEmBeNTaEhzrcsKtZ1ZMoXpC8SgsVQqf0v9bxXi6vsPplDYXobQk/JcO+mVsUIDV2DGlT1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749910212; c=relaxed/simple;
-	bh=hz1NwYRfhK1h1DV+M51iQjyhNlTu+VaCgtOWpAxOBmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vFGmzUjLRWMrXs0R0uNjYEqbGEFMCH4PneergUvKtrQqMGdS1PwX0eP+Hwb3IbT/dDTwBntek+UPRALbJNowbeUgk7U7CeWJdSqr9mpacsf/oFTgSRXFa/i1BbK0T1lhFL57+eg4G1SJe8AYFUDkIzFRsLotAPrZXdaR1xt6gms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWiHo3cV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749910286; c=relaxed/simple;
+	bh=POxwkq0O0GbjEOLATg9Cms4ibuGIWc/rbmDVdyXvrOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a6vlC9Se6sOAw2anJNKTqG3iqueCBCe/DzU7NZIAaqvDgWbz/6GD8ACFAcUuG6tQ+ch2GG77bAoOuEs4tN8L/2bYHnwEmNB2TjbHWeMA4G1ffXCRSwrhuIKUQjI8XuSaGY+sVC8/pXxqkbJn3xv0AIi9FS62HZtjNLUlQPV2NlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X8KVy+wB; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWiHo3cV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73D2C4CEEB;
-	Sat, 14 Jun 2025 14:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749910211;
-	bh=hz1NwYRfhK1h1DV+M51iQjyhNlTu+VaCgtOWpAxOBmQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YWiHo3cVySEuFTA4XL3mfmpCuEE9UyJRk21tT36bE7DyadJa+iTi+i9t08Exm86se
-	 4k6JKqB+wGkGXCeRH/0pmrK5/Oypb4sv14fXOiqfXsNpdGWPcVdkbQSvNc6K9Wdtuv
-	 HxoVYAu8RnwZx38+q2dZHje9TdKE63Nm3RQ4sSlngVy5mZUYJC3Busy+fVa8CRVWHB
-	 xLPmODLMwXGD6/q5oeQm8A+N2QH612I2Tjoj5e3lf0cHDE636w+ef5PW6dMLOlwkEZ
-	 1ahMWnO/yn4aQP4bKMsCN7TjBykFE8+0kmAdGCqYYUsR8mK+T39HUJrakt9CdnnPeB
-	 6ao3KRdDTMZkg==
-Date: Sat, 14 Jun 2025 15:10:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, eraretuya@gmail.com
-Subject: Re: [PATCH v9 10/11] iio: accel: adxl345: extend inactivity time
- for less than 1s
-Message-ID: <20250614151002.1582c732@jic23-huawei>
-In-Reply-To: <20250610215933.84795-11-l.rubusch@gmail.com>
-References: <20250610215933.84795-1-l.rubusch@gmail.com>
-	<20250610215933.84795-11-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8KVy+wB"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-610cbca60cdso2211518eaf.0;
+        Sat, 14 Jun 2025 07:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749910284; x=1750515084; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eiB96bAhSJ6/e3F5OHXMtztFQ+Tpw8+eBOtaWFUgd08=;
+        b=X8KVy+wBzSEkmRHrr1aq9eYs22hJGdfGV9lNXVhSOxofqvF7dOUhTxVlO54bAKIGc3
+         6KkQGDFKoukXOsFjFvFHJXcfvxduPy6651mjZATfyBkm5Qo9OKk5wd1YMlScJZnPlaGR
+         8xWkPqvMVAa+2dcRzkuAGZNzrvhe8alQofHy/AtEU4+5Kc6rbozqgesrox9bG0+kVkRK
+         JgbZN7Fsq0Ue+HA8/wxdKPJCGxUS/j3l0YHIFg2HTO8QFMI+HVbmlTXqEg6f7MZdGsFw
+         7/ijywAcGoZ6J3rqt9dHHAVEuRxfRf93dk3jDNiRxGKIM2i4PjJZNPbINr6Of5ToNlcD
+         g8WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749910284; x=1750515084;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eiB96bAhSJ6/e3F5OHXMtztFQ+Tpw8+eBOtaWFUgd08=;
+        b=Jc/AjEppAtpDCa3ehj0GXU/qZ9t+3rTY8fxQT5Er8nom/O1XxjQIVt2qk/9FgfGwMs
+         imrPc5SE5+9wpymdGyTWV5y/B+qGM4cdPBuRBCvInjpCLrXnPLSuOXtmzJSuQeRsP3fd
+         /NeXtiHO9zPUsvrPZ8xKZFDexxgJHKlgg4C2fJh++zIRabLHvvZhpGcgLE5fw1r83aM7
+         5EUAH3+rrDbzCHerRern1QOpX7mNE7wYEReFq/uKguvjin4T4dlCGygxA61CzpOoJpg/
+         +PpBK9HNFIbzT0hluYOVFZx2lMOvF+6nHJFjZEuo4Bl1nYorCwSNvVT49yFYWui8sSIP
+         ygcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDVzj7tGeVS/shEjCUSI01XzVlhRGcKl/JsPTN+xZSO5TSp4Dru2BZ1dUu0/07jtPDCtD8BPbk3vkoAQw=@vger.kernel.org, AJvYcCWFWjQKp+PTsLQDpX4N561ZxWSw2OFgI/fZInTqjsaoaPEhKvEyUb5X5a62ewBdhZz0bq1mIQDy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOirqL+CgIUeKiXeJtQshQf2M5PkitXJ/oJG1k//JuPxi774y/
+	uZHBwX/HWKW9lVy9ea8I9mUAdAZBGos7JmbH8SO4RKXUAJY2vi4Hwydt4bGwjGMip2xMt78Q6k1
+	YJsa0CXrStHaE+bSCQg6VhZHBRJ4RjwU=
+X-Gm-Gg: ASbGncu0KxNM2AspCDTnWVAk/C8zeFxsRCAH1ghKhadkgdU+R1JHRoO/xs6Zw9C0E0W
+	iXS+PqmPR4F5sHc/4fc5gnTQhC3SbjVn3h1+NToMoYH0kFOi7NWc55qB6xNkERHc0oUKQrxKYXJ
+	RS2yphUi1eBHsRA2XEB7JxLuRNf9P2puU9HtMmVPo2zw//QHGWdo+btgyciJ4fEPIrjFLGARJpW
+	MXDPO8rqyZ3
+X-Google-Smtp-Source: AGHT+IHL7vBY1W2DXQlT9x8BW0qpd0hTAvVSmZdjIqU45TpVWU75wLX2Cpkv4JMTdfmuBXHS0Fns4/kCOE/Hp9HqVZY=
+X-Received: by 2002:a05:6871:4318:b0:2c2:260:d77b with SMTP id
+ 586e51a60fabf-2eaf07f4bfdmr2374938fac.5.1749910284303; Sat, 14 Jun 2025
+ 07:11:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1749891128.git.mchehab+huawei@kernel.org> <9b22975b17bf42210f8432cf0832323c03b1c567.1749891128.git.mchehab+huawei@kernel.org>
+In-Reply-To: <9b22975b17bf42210f8432cf0832323c03b1c567.1749891128.git.mchehab+huawei@kernel.org>
+From: Donald Hunter <donald.hunter@gmail.com>
+Date: Sat, 14 Jun 2025 15:11:13 +0100
+X-Gm-Features: AX0GCFsfuit4DJaOo6O24z_9KMPmudpwemZmcUivmVYluqb8vmkzFkeOZF2nLLs
+Message-ID: <CAD4GDZxj0YXKdmZiWiLhn==Krg8_EjoUWjLn5Mz5Q=JHNC86_Q@mail.gmail.com>
+Subject: Re: [PATCH v4 06/14] scripts: lib: netlink_yml_parser.py: use classes
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Akira Yokosawa <akiyks@gmail.com>, Breno Leitao <leitao@debian.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Ignacio Encinas Rubio <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>, 
+	Marco Elver <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org, 
+	stern@rowland.harvard.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 10 Jun 2025 21:59:32 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On Sat, 14 Jun 2025 at 09:56, Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> As we'll be importing netlink parser into a Sphinx extension,
+> move all functions and global variables inside two classes:
+>
+> - RstFormatters, containing ReST formatter logic, which are
+>   YAML independent;
+> - NetlinkYamlParser: contains the actual parser classes. That's
 
-> Inactivity event and free-fall event are actually the same type of sensor
-> events. Hence, inactivity detection using a period of 1 to 255s can be
-> extended to be used for lower periods than 1s for covering free-fall
-> detection.
-> 
-> When lower periods are defined, the driver automatically will setup
-> threshold and period on the free-fall register, while using the
-> inactivity threshold and period for periods above 1s. Using the
-> free-fall register, no link bit will be set, and therefore no auto-sleep
-> can be set in cases where also activity will be enabled.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Please update the commit description to match the code.
 
-Approach seems reasonable.  One comment on the code below.
-
->  /**
->   * adxl345_set_inact_time - Configure inactivity time explicitly or by ODR.
->   * @st: The sensor state instance.
-> - * @val_s: A desired time value, between 0 and 255.
-> + * @val_int: The inactivity time, integer part.
-> + * @val_fract: The inactivity time, fractional part when val_int is 0.
->   *
-> - * Inactivity time can be configured between 1 and 255 sec. If a val_s of 0
-> + * Inactivity time can be configured between 1 and 255 sec. If a val_s of 0.00
->   * is configured by a user, then a default inactivity time will be computed.
->   *
->   * In such case, it should take power consumption into consideration. Thus it
-> @@ -355,16 +381,18 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
->   *
->   * Return: 0 or error value.
->   */
-> -static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
-> +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_int,
-> +				  u32 val_fract)
->  {
->  	unsigned int max_boundary = 255;
->  	unsigned int min_boundary = 10;
-> -	unsigned int val = min(val_s, max_boundary);
-> +	unsigned int val;
->  	enum adxl345_odr odr;
->  	unsigned int regval;
->  	int ret;
->  
-> -	if (val == 0) {
-> +	if (val_int == 0 && val_fract == 0) {
-> +		/* Generated inactivity time based on ODR */
->  		ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
->  		if (ret)
->  			return ret;
-> @@ -373,9 +401,41 @@ static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
->  
->  		val = (adxl345_odr_tbl[odr][0] > max_boundary)
->  			? min_boundary : max_boundary -	adxl345_odr_tbl[odr][0];
-> +
-> +		st->inact_time_ms = MILLI * val;
-> +
-> +		/* Inactivity time in s */
-> +		ret = regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> +		if (ret)
-> +			return ret;
-> +
-
-Perhaps return in the good path here.
-
-> +	} else if (val_int == 0 && val_fract > 0) {
-> +		/* time < 1s, free-fall */
-> +
-> +		/*
-> +		 * Datasheet max. value is 255 * 5000 us = 1.275000 seconds.
-> +		 *
-> +		 * Recommended values between 100ms and 350ms (0x14 to 0x46)
-> +		 */
-> +		st->inact_time_ms = DIV_ROUND_UP(val_fract, MILLI);
-> +
-> +		ret = regmap_write(st->regmap, ADXL345_REG_TIME_FF,
-> +				   DIV_ROUND_CLOSEST(val_fract, 5));
-> +		if (ret)
-> +			return ret;
-and here
-
-> +	} else if (val_int > 0) {
-> +		/* Time >= 1s, inactivity */
-> +		st->inact_time_ms = MILLI * val_int;
-> +
-> +		ret = regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val_int);
-> +		if (ret)
-> +			return ret;
-and here.
-
-> +	} else {
-Or given this covers any case where val_int > 0 do it first
-and error out early?
-
-> +		/* Do not support negative or wrong input. */
-> +		return -EINVAL;
->  	}
->  
-> -	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> +	return 0;
->  }
-
+>   the only class that needs to be imported by the script or by
+>   a Sphinx extension.
+>
+> With that, we won't pollute Sphinx namespace, avoiding any
+> potential clashes.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
