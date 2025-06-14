@@ -1,291 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6F727713;
-	Sat, 14 Jun 2025 19:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E37427713;
+	Sat, 14 Jun 2025 19:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749928203; cv=none; b=RfC5iljkAm0BraHFsw5dfqj+C76yJYPdv1+KJKRm7PTqQ5QitbKOLHa8LRcDjT55W8/tEPUx9h16Ydan61IdrhQeooImQ2bEvLNZmjJguBPFaY84n0gwkjOG5UHNFQ2kgp8pBSBPiikirRtaPfqwEz2DCpgV6Ldp7Qy0XVPcw/g=
+	t=1749928378; cv=none; b=olakcwHPJgOocY+UMQK5YSzTyMEObUfIzRGwLCy3VFi6TK1o4h0t4bFwUDDHsUJ8UueM70Pmw7VFtmmlybbvTblLg3LI44AQdT2PPI6UgLqQSseePBroLoH09blqP0UooM2ICdQQLvDT3CYHQL4757836sBytIXzGiIas8OK5Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749928203; c=relaxed/simple;
-	bh=bjhQYBIAmrs9fPgWYClOvqQFEvjW34DMUYRym/0xXuk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=SV+i/sviqTqf3uJRxii998BclLKURNDlMtu3vhxDB9j7Sjgy1LRXslXgw0ZNeVOXlldesaV/LhFecpN45qgrhSPr+OkYCfyGu5RkoGOPRjBg2n6Yv9WFMrxlG3MGwdBNmhNzWR+vk/LeWYF2emRg+F9lJZVy5Tj87QRo0FyR740=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmgLRGRg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749928378; c=relaxed/simple;
+	bh=ie1xKg/UtpXBXk9HFVQ5BkITewKeLpU4WpBX5jWp7Sc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bpJoaWFiSE8uj2MMKtUw6+b+144ujR9rL52SgPwxgb17brNBEbHibi/TIU1PmvNHk/iNodgvoYFP+75cNkDOmdrxw5ZiaCQqNARt1Dd4Mknr+zuPGSLRBBkaS7Gbu7pWLHAajl0YbNpOZkS/GR6KW9kTaEx18yUbLyvquZbxbEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfzVjVBp; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmgLRGRg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB087C4CEEB;
-	Sat, 14 Jun 2025 19:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749928203;
-	bh=bjhQYBIAmrs9fPgWYClOvqQFEvjW34DMUYRym/0xXuk=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=LmgLRGRgImgkAbFP5aE23D9Mnm25p09TaVKJ9zqT+zbRd3MKgHb7Z1K9dmP9jqwC7
-	 yV/6kDzAOmkgICrDQwt9aswCEqh4DgkTQov3DVkY1ESAJy4psz0tc6oIBGD3VtVZa7
-	 bKff5WGCyT7PrORS7yrPCnnp+zoaxJ0+l5JLGDzOtm9jahYAzXGetAf7o1onU1fGV4
-	 dlgPTqsZPmfy3JwO2MOQC/CnRaFbB7/F306yttjk7itM4l+ak5pssywcfBpjHnEs0Q
-	 p2H4lsDM0zXPW2QVuAkKYPpDxRc3i1nSshFwsNlqdAkJLJo1Fq8kRpcq8RQEu03S6C
-	 iFvRSyLgxgbug==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfzVjVBp"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7fc3309f2so182364137.2;
+        Sat, 14 Jun 2025 12:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749928375; x=1750533175; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ie1xKg/UtpXBXk9HFVQ5BkITewKeLpU4WpBX5jWp7Sc=;
+        b=XfzVjVBpgxFI8GdCCM/P6YW39r1cxAQI5MUTen0Y2d0lYTxsDJyHv9qhrEiUfc6j/A
+         CO/eoYbijgDW+XCMnS+cssUearNvTJyFY+xsp9bLax8XWXnW+v3f2XHKf9vOh33QDAeE
+         aAU/J/xjJRhB+zbT9BYRLeHndryJA3GjAI9UI78v7W8VWpUBltlvcMcim0PbqIvp6e8q
+         rZJ4KkzP+j43HN1755JkQZ6Dy4I3mggbXkhutcXsJKYwVkNyjk58SA44XKSyqn0ZLJ+J
+         Ng+hP/Tnr1mPKYXIQ015jOT870PpRH9X/C39GSG3+/BxeRdolx5vEMuQifVtgRWi7BSR
+         oNFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749928375; x=1750533175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ie1xKg/UtpXBXk9HFVQ5BkITewKeLpU4WpBX5jWp7Sc=;
+        b=tXALPTkMteHi2a6vmdIfDYzA9cvqKf8aWVdpjLKxi1OX+cHwyIKy302kZTetCdg16H
+         WBEjoNbrLpTX5I9pGqIbPsA0gmBhxDFhJff5ENyAe4Gv92CCcTVEdXPU6Twl7J6WqMmD
+         PAiXJsdZzBUvCxoGq9AeFLVVGMtw8uLtB2r1L2JI/fTlWqeXsgMos8m9NukQOqSPHGus
+         bVtzFvcqILnzuFU9Yg2OtQjNgQT1RVcq2FAT0CVvsDm+9VW8UmEI5nCiy7V8ODpOyqf1
+         66FMtu5a9uowEEJMj7MA6tgBrTasn/E9K+TOA9Ta6pCxXUk2L9cPJhFrTWkK3qe5fcSq
+         UeEA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8M1Ww+Gun6DfIA1hQ8xGIyl1a61aJer0lDG45CpRCWqxeoYRD1bgca4GUWQl5CRaYdB3mv0TGHR0=@vger.kernel.org, AJvYcCW8+fHTIEIU/L6ova4C6Fnch/9S8DHJJExiYJ9JPWgFhppOrgQuHgQpMO1JKtuFyzNY8DvqgMf5DoyTSwDo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLGK5hl5W5QUiYIX3o1Uxr4NDlHD8Y0RpO/3LKLum877HeRePr
+	dlbcAQ8giWa6VB4miNzGw05+OjKBiySbtxjaxgZvJMZWMkbGGtjXBvSP9rjbLiTKnAqYdSUaSw0
+	WklFKqUJzvMA6IudTIUJvqNxkvWg1rDM=
+X-Gm-Gg: ASbGncub6UUr2rXLxO3TZ32TxhaDtGKR5rkqj2ulmqSkVNsvY42tRMWz+pe+u0QnulR
+	3wuO1lkRe5fT6FGdiEkZDCn3aSh2rlrW1DNneIRc5XqcFlwPAgpmCfihuMedIGMck3HwJgvRlpE
+	ieWkwYd886DUOxsV5bg6ru47CUNbJMMgp80kGzsW+bvE10DiiBT0YiP6+GHw==
+X-Google-Smtp-Source: AGHT+IEPRbX+mT4mLF/i558EU1A8TO9/DESjBfNeOOB1QljPfD3umD752IkNHxopKpwloIC2+FWMwR1E7nJNVMMAvLU=
+X-Received: by 2002:a05:6102:32c5:b0:4de:81a:7d42 with SMTP id
+ ada2fe7eead31-4e7f629e258mr2889479137.1.1749928375315; Sat, 14 Jun 2025
+ 12:12:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
+ <20250611194648.18133-2-andrew.lopes@alumni.usp.br> <028710c4e4494285bee82ae811147b03cfa612f2.camel@gmail.com>
+ <304d3bcef438a78564650edd52f7570f0bd30c95.camel@gmail.com>
+In-Reply-To: <304d3bcef438a78564650edd52f7570f0bd30c95.camel@gmail.com>
+From: Andrew Ijano <andrew.ijano@gmail.com>
+Date: Sat, 14 Jun 2025 16:12:44 -0300
+X-Gm-Features: AX0GCFvu2eskhM69f-64kJTapHSW24adtvK184XSYArLhYx_s1wEFS8eqlN6PvE
+Message-ID: <CANZih_TOQXvHSLg5GQ2NPE+Zp0P3Fm1MBff_2wKEfOOEOQMjVw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] iio: accel: sca3000: replace error_ret labels by
+ simple returns
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Jun 2025 21:09:57 +0200
-Message-Id: <DAMHRVOA2T1Q.OM6T75HPFO60@kernel.org>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
- type
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>
-X-Mailer: aerc 0.20.1
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
-In-Reply-To: <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
 
-On Thu Jun 12, 2025 at 4:01 PM CEST, Alexandre Courbot wrote:
-> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ee0f67ad1a89e69f5f8d2077e=
-ba5541b472e7d8a
-> --- /dev/null
-> +++ b/rust/kernel/num.rs
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Numerical and binary utilities for primitive types.
-> +
-> +use crate::build_assert;
-> +use core::borrow::Borrow;
-> +use core::fmt::Debug;
-> +use core::hash::Hash;
-> +use core::ops::Deref;
-> +
-> +/// An unsigned integer which is guaranteed to be a power of 2.
-> +#[derive(Debug, Clone, Copy)]
-> +#[repr(transparent)]
+On Thu, Jun 12, 2025 at 4:41=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
+>
+...
+> >
+> > Code looks good. But since you're doing this you could cleanup some of =
+the switch()
+> > cases. Some return in every case statement while other don't (even thin=
+k I saw one
+> > one place where 'return' in the end was not needed). IIRC, there's pref=
+erence for
+> > returning in place.
+> >
+>
+> I see the above could be a bit cumbersome in cases there's locking (which=
+ get's
+> cleaned up in patch 3). So, nevermind the above. If there's any leftover,=
+ you can
+> send a follow up patch or introduce a new patch if you need to re-spin.
+>
+Great! That's the idea, I addressed these cases in patch #3, but I'll
+double check if there is any leftover!
 
-Let's add a `# Safety` section with the invariant that `T` is a power of
-2.
-
-Maybe we should even have an `Int` trait for the different integer types
-that we constrain `T` to.
-
-> +pub struct PowerOfTwo<T>(T);
-> +
-> +macro_rules! power_of_two_impl {
-> +    ($($t:ty),+) =3D> {
-> +        $(
-> +            impl PowerOfTwo<$t> {
-> +                /// Validates that `v` is a power of two at build-time, =
-and returns it wrapped into
-> +                /// `PowerOfTwo`.
-> +                ///
-> +                /// A build error is triggered if `v` cannot be asserted=
- to be a power of two.
-> +                ///
-> +                /// # Examples
-> +                ///
-> +                /// ```
-> +                /// use kernel::num::PowerOfTwo;
-> +                ///
-> +                /// let v =3D PowerOfTwo::<u32>::new(256);
-> +                /// assert_eq!(v.value(), 256);
-> +                /// ```
-> +                #[inline(always)]
-> +                pub const fn new(v: $t) -> Self {
-> +                    build_assert!(v.count_ones() =3D=3D 1);
-> +                    Self(v)
-> +                }
-
-We also probably want an `unsafe new_unchecked(v: $t) -> Self`. It can
-still use a `debug_assert!` to verify the value.
-
-> +
-> +                /// Validates that `v` is a power of two at runtime, and=
- returns it wrapped into
-> +                /// `PowerOfTwo`.
-> +                ///
-> +                /// `None` is returned if `v` was not a power of two.
-> +                ///
-> +                /// # Examples
-> +                ///
-> +                /// ```
-> +                /// use kernel::num::PowerOfTwo;
-> +                ///
-> +                /// assert_eq!(PowerOfTwo::<u32>::try_new(16).unwrap().v=
-alue(), 16);
-> +                /// assert_eq!(PowerOfTwo::<u32>::try_new(15), None);
-> +                /// ```
-> +                #[inline(always)]
-> +                pub const fn try_new(v: $t) -> Option<Self> {
-> +                    match v.count_ones() {
-> +                        1 =3D> Some(Self(v)),
-> +                        _ =3D> None,
-> +                    }
-> +                }
-> +
-> +                /// Returns the value of this instance.
-> +                ///
-> +                /// It is guaranteed to be a power of two.
-> +                ///
-> +                /// # Examples
-> +                ///
-> +                /// ```
-> +                /// use kernel::num::PowerOfTwo;
-> +                ///
-> +                /// let v =3D PowerOfTwo::<u32>::new(256);
-> +                /// assert_eq!(v.value(), 256);
-> +                /// ```
-> +                #[inline(always)]
-> +                pub const fn value(&self) -> $t {
-
-Since this type is `Copy`, we should use `self` here instead of `&self`.
-
-
-Why not add
-
-    if !self.0.is_power_of_two() {
-        unsafe { ::core::hint::unreachable_unchecked() }
-    }
-
-here?
-
-> +                    self.0
-> +                }
-> +
-> +                /// Returns the mask corresponding to `self.value() - 1`=
-.
-> +                #[inline(always)]
-> +                pub const fn mask(&self) -> $t {
-> +                    self.0.wrapping_sub(1)
-
-And then use `self.value()` here instead?
-
-(we could even use `self.value() - 1`, since the optimizer can remove
-the overflow check: https://godbolt.org/z/nvGaozGMW but wrapping_sub is
-fine. The optimizations will most likely be more useful in other
-arithmetic with `.value()`)
-
-> +                }
-> +
-> +                /// Aligns `self` down to `alignment`.
-> +                ///
-> +                /// # Examples
-> +                ///
-> +                /// ```
-> +                /// use kernel::num::PowerOfTwo;
-> +                ///
-> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_down=
-(0x4fff), 0x4000);
-> +                /// ```
-> +                #[inline(always)]
-> +                pub const fn align_down(self, value: $t) -> $t {
-> +                    value & !self.mask()
-> +                }
-> +
-> +                /// Aligns `value` up to `self`.
-> +                ///
-> +                /// Wraps around to `0` if the requested alignment pushe=
-s the result above the
-> +                /// type's limits.
-> +                ///
-> +                /// # Examples
-> +                ///
-> +                /// ```
-> +                /// use kernel::num::PowerOfTwo;
-> +                ///
-> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_up(0=
-x4fff), 0x5000);
-> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_up(0=
-x4000), 0x4000);
-> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_up(0=
-x0), 0x0);
-> +                /// assert_eq!(PowerOfTwo::<u16>::new(0x100).align_up(0x=
-ffff), 0x0);
-> +                /// ```
-> +                #[inline(always)]
-> +                pub const fn align_up(self, value: $t) -> $t {
-> +                    self.align_down(value.wrapping_add(self.mask()))
-> +                }
-> +            }
-> +        )+
-> +    };
-> +}
-> +
-> +power_of_two_impl!(usize, u8, u16, u32, u64, u128);
-> +
-> +impl<T> Deref for PowerOfTwo<T> {
-> +    type Target =3D T;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        &self.0
-> +    }
-> +}
-> +
-> +impl<T> PartialEq for PowerOfTwo<T>
-> +where
-> +    T: PartialEq,
-> +{
-> +    fn eq(&self, other: &Self) -> bool {
-> +        self.0 =3D=3D other.0
-> +    }
-> +}
-> +
-> +impl<T> Eq for PowerOfTwo<T> where T: Eq {}
-> +
-> +impl<T> PartialOrd for PowerOfTwo<T>
-> +where
-> +    T: PartialOrd,
-> +{
-> +    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
-> +        self.0.partial_cmp(&other.0)
-> +    }
-> +}
-> +
-> +impl<T> Ord for PowerOfTwo<T>
-> +where
-> +    T: Ord,
-> +{
-> +    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
-> +        self.0.cmp(&other.0)
-> +    }
-> +}
-> +
-> +impl<T> Hash for PowerOfTwo<T>
-> +where
-> +    T: Hash,
-> +{
-> +    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
-> +        self.0.hash(state);
-> +    }
-> +}
-
-Can't these traits also be implemented using the derive macros?
-
----
-Cheers,
-Benno
-
-> +
-> +impl<T> Borrow<T> for PowerOfTwo<T> {
-> +    fn borrow(&self) -> &T {
-> +        &self.0
-> +    }
-> +}
-
+Thanks,
+Andrew
