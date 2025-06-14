@@ -1,113 +1,291 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D63815853B
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 17:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AF51547C9
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 17:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749921532; cv=none; b=CsnVW7eVJwhLWJzhGCivDG9kWMEs+9o31s+sfc6hdwrW59dlDp6GWDA4SDEjtIdy5Iw4Y7M6Z+uE0GNJ3g4oaIhFQqGepX6W1yOE8NfkrBe9rqZJBuIkEwYeAv+oEU7mMXsM4QHncSWvPKJQ/XurCgMnGb7Y9jNEaB7G/WNRbNc=
+	t=1749922052; cv=none; b=SdQvS9iH8cLqnqtqb1aCxwi4ZzrOVO3Z89hWnO0wWTW8sOJ3BBKgxLU7Tfw1ZEfI2vRdqhT8AURrsC3SVEh83ZD0ficuE44m9rPIKxSBq4TVfVmzwbziyS5bM24g/9rLZPenS+KgRhv+j1F+oA+W2NdNiFX0ady+M3O05Ii7Ia8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749921532; c=relaxed/simple;
-	bh=MgXrU5xm51U7Ppw0MWnlwn0lJVHz+qdiz6snWUeylxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fr9crau0Oo2OVuDa9V4rGQlatqrVH5soZpaks0MocZblZXnR4AFWiqCklX1aJ8F+Vf5JphVB81u9fDXV7xaEI13L6CIZ28DDD2pqPR34qJ5jjU+CEc11SPNDNvH+P9u+2FMEkFURWanrrOCOLopERalrfAXFYHu0DP4UH6Nw+bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=U23/ErKX; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="U23/ErKX"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-adb2bd27c7bso471096866b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1749921528; x=1750526328; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PAJ4VP570mgPuvMDN0jXTjFYhyjECowU+9L45Sn0oyM=;
-        b=U23/ErKXpkWxFh06Iq/YGHvKEy0PALsgV/+Yfu+QQL7R3y68p21aKNHd5hCAd/nlW2
-         UP578Nk7ga6zH7NWurCnhApTGOHNSI9VDUbtv35ZyjXpKpMILN3HaAXZiBdpsAVpyO0V
-         y7G72F5VXGAWuPWlbGjqD/5enQoZa2S03TWi0=
+	s=arc-20240116; t=1749922052; c=relaxed/simple;
+	bh=OMV+dj18jJuR59ozeFXeVREZP5IeqWoSo3IVpvbsY5Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=F46hazktnqE95AajGq23X7fgPxLHjY1x83+CUZb8JjyPlYbJJM6rWLuwoWJn6hZ8EopYdgbSjxaa4bLGrFP7MfiASwXmM8+E5HelOdOTTPUw5IVoent6L/xPWulnd2mYDuCQ3aCsL8hM/ORu838MGJ7jq6ISapurdd3w5Grv7Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-873fd6e896bso261735039f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:27:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749921528; x=1750526328;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PAJ4VP570mgPuvMDN0jXTjFYhyjECowU+9L45Sn0oyM=;
-        b=LaWq7pP1Hk1f0fSh+xiUAULJW6DjlZJITYr1wlj54hEVxH8m0sl2SxvBJTIWy55Bmk
-         9L+c0Smn+EnJTy0zoEKzaRWkwqOxOng5DQVip0C6dVsydZaqKmATRKI44V18uoH2gH5r
-         XlKm69jA47gGX1Q8TAUNMocSvUgdgByYPZQtqJrKx4b9iyQSp36acTBgmFKK4675gJSH
-         FQxmiw0rtnwaZ1Qtjv8pRIM5CXhgrXwkN2bblIrvh/sogc8W++wh2mVjbbBBpsPVFy08
-         JGlSe0tIiuQRZYN72FtVY7j9/BdYQvC0yywqK1ro9pTV10/mj9wXYL6ccAEHWEbtlHgP
-         TlmQ==
-X-Gm-Message-State: AOJu0YwNIvddf/YrE7ty7+mNLtk3MjgeKAi8WMImUxalQNBaQn9eG8mb
-	tLQoTQgGBUJrgGOxmH8FH5YX3q9bvPIuafjZuvBtUaro2DKdy6lN3dcxid85cSUt01zuj394r/m
-	xFusfdyY=
-X-Gm-Gg: ASbGncvT4vQ1JeXXJ/z093woDD3slAUGDjqSB6OX7U/x8UueRkx2OSsbCPrikV32AEl
-	BTSz4gBviMokjmL0y0oThV+qj3IpAe0TSK10OrM0iJmLe4wTvUZBbNQKgTm9lOyIQLnPTRphmkW
-	ztSH6KR9n9Q/DNtaJiJoq81Q6oOiriu4KsqAG9GrQ0yQsfxBnBFeNCr3oN5Eu2uBtIHKSbB7IcH
-	dkmWB6EJ101UHWjj2RtixGqt12BlnnZ/ZAaA7fSdNWu9nETzEKUiFT0i9S775/dzM+70AFJ+Z+z
-	MFOgl15n27iesZqUJnqAxyo4uJYvtozPd1TTW6ChTXrOPwD3Yo7o2estZ8bmwVtbP02NL0/cs8x
-	PzqbNZl65jO+eu8OeZEf+FdIL4wNSBA1aq/b2
-X-Google-Smtp-Source: AGHT+IH225ACL3p5MyI+NYOthhiTDqlYxHco3qA9m0MoYWaKg9I8TmkL+N3qOl040Z78NVmwecnWOA==
-X-Received: by 2002:a17:907:7e92:b0:ad8:97d8:a52e with SMTP id a640c23a62f3a-adfad4f40f1mr326811566b.55.1749921528378;
-        Sat, 14 Jun 2025 10:18:48 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892ab29sm331200366b.114.2025.06.14.10.18.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Jun 2025 10:18:45 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ade326e366dso559695366b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:18:45 -0700 (PDT)
-X-Received: by 2002:a17:906:9f88:b0:ad8:96d2:f3e with SMTP id
- a640c23a62f3a-adfad326d9cmr282110066b.22.1749921525142; Sat, 14 Jun 2025
- 10:18:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749922049; x=1750526849;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bxQK89TiP52wIVVgAlIDZlErZzGp2qYEW4rabAFXJbI=;
+        b=CwA7qe7HUUrME2dAa2HvJcnhp3DYspTr9nxcastKKbShUiEphCQGhQz2N+IM3EFJmi
+         9LYtUb91qlj/QU+VhepSpC8+a4uDHW5rte3LclVXF8sIqcX7/eTzbPTOt1BJeBiRNPr+
+         nGfPN7SaVa9uGnC5b7SROS7/YQJKvEjfJAoUGedGYw5E/OY56xcIlSKRUTEsn3Ea+1rn
+         W5jXuPcGJEyO8bz4FdRvvHhZPf2zmxSMLQF3zXEMdwPohYIFx1cyI6OM87/MeBeUZO9o
+         I4iVmcdYZRJkxYLkr0N1kcVlUPbiX3ng/nZJEa92V4MQZyD/CmYRPopgsKf8XSkYPcpz
+         77DA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4xJR/VhiijHBZe5CtJZFdSf2ldBS9Zha3RY+2R5ntDAiFrbAqA2VaQy0XqG9OSkYkXCB/t/ayfXJx9D0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKaQp6bg0svR8nqeRv5+D7t0/qeRZBiyItXm06On+PzqyZly7H
+	NC52UWh7F9u4teqqo/p7f4Saj2QBFz3Qpni1vyrZeh7eQ2buvIRfaQGtA5GwIjWvmceRMo0MnC1
+	dsN6CMBxhLzpA4QuGVJVEvMgEAGNuohtWpzmLY/bjZgsYU3ZRlsqE80jSYdU=
+X-Google-Smtp-Source: AGHT+IFfkrbvL5AxMNCVMPBQzvcO3UUWBTuXuCQUOeRwmsLZFYW/I8KL4fnDlCAntNCUvbDb/szV/lgVQfjH29uZxuy4qr+8Y8My
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515132719.31868-1-mingo@kernel.org> <20250515132719.31868-10-mingo@kernel.org>
-In-Reply-To: <20250515132719.31868-10-mingo@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 14 Jun 2025 10:18:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=winzTt3SCzv8BWGMm0fzrXS0gb59gK0h4dAe0L6hj3X_w@mail.gmail.com>
-X-Gm-Features: AX0GCFvLeoqujhii4Ghj58PyM2_2xgYsSIaR_l1hGq5najRN3yK5ufy78Pt-Teg
-Message-ID: <CAHk-=winzTt3SCzv8BWGMm0fzrXS0gb59gK0h4dAe0L6hj3X_w@mail.gmail.com>
-Subject: Re: [PATCH 09/13] x86/kconfig/64: Enable popular MM options in the defconfig
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	=?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw@amazon.co.uk>, 
-	Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, 
-	Rik van Riel <riel@surriel.com>
+X-Received: by 2002:a92:b70e:0:b0:3dd:bfba:ff9c with SMTP id
+ e9e14a558f8ab-3de07d686f0mr29705265ab.11.1749922049441; Sat, 14 Jun 2025
+ 10:27:29 -0700 (PDT)
+Date: Sat, 14 Jun 2025 10:27:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684db101.a00a0220.279073.0020.GAE@google.com>
+Subject: [syzbot] [block?] possible deadlock in pcpu_alloc_noprof (2)
+From: syzbot <syzbot+91771b3fb86ec2dd7227@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 15 May 2025 at 06:28, Ingo Molnar <mingo@kernel.org> wrote:
->
-> Since the x86 defconfig aims to be a distro kernel work-alike with
-> fewer drivers and a shorter build time, enable the following
-> MM options that are typically enabled on major Linux distributions:
+Hello,
 
-Ingo, PLEASE STOP.
+syzbot found the following issue on:
 
-This whole "enable random crap that distros enable" is completely pointless.
+HEAD commit:    f09079bd04a9 Merge tag 'powerpc-6.16-2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=127be9d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e24211089078d6c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=91771b3fb86ec2dd7227
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c9260c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11decd70580000
 
-If you want a distro config, then USE the distro config, for chrissake!
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-f09079bd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ef68cb3d29a3/vmlinux-f09079bd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1cc9431b9a15/bzImage-f09079bd.xz
 
-The defconfig should be some sane configuration for NORMAL :PEOPLE.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+91771b3fb86ec2dd7227@syzkaller.appspotmail.com
 
-Not for cloud providers - get rid of the stipid cloud virt stuff.
+======================================================
+WARNING: possible circular locking dependency detected
+6.16.0-rc1-syzkaller-00003-gf09079bd04a9 #0 Not tainted
+------------------------------------------------------
+syz-executor187/5931 is trying to acquire lock:
+ffffffff8e72fa68 (pcpu_alloc_mutex){+.+.}-{4:4}, at: pcpu_alloc_noprof+0xb4c/0x1470 mm/percpu.c:1782
 
-Not for distros - get rid of the silly "distros enable this".
+but task is already holding lock:
+ffff888027d9c520 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave block/blk-mq.c:205 [inline]
+ffff888027d9c520 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:4993 [inline]
+ffff888027d9c520 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_update_nr_hw_queues+0x275/0xcb0 block/blk-mq.c:5043
 
-For NORMAL people. People who don't know what they should do without a
-default config. People who just have a random machine that they want
-to run Linux on and need an initial config for.
+which lock already depends on the new lock.
 
-This whole "enable random things just because a distro has bad taste
-and enables them" is BROKEN.
 
-            Linus
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&q->q_usage_counter(io)#49){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x175/0x290 block/blk-mq.c:4396
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4443
+       nbd_dev_add+0x4a0/0xbc0 drivers/block/nbd.c:1933
+       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
+       do_one_initcall+0x120/0x6e0 init/main.c:1273
+       do_initcall_level init/main.c:1335 [inline]
+       do_initcalls init/main.c:1351 [inline]
+       do_basic_setup init/main.c:1370 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1583
+       kernel_init+0x1c/0x2b0 init/main.c:1473
+       ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #1 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:4045 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4059
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       prepare_alloc_pages+0x162/0x610 mm/page_alloc.c:4727
+       __alloc_frozen_pages_noprof+0x18b/0x23f0 mm/page_alloc.c:4948
+       __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:4993
+       __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
+       alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
+       pcpu_alloc_pages mm/percpu-vm.c:95 [inline]
+       pcpu_populate_chunk+0x110/0xb00 mm/percpu-vm.c:285
+       pcpu_alloc_noprof+0x86a/0x1470 mm/percpu.c:1870
+       iommu_dma_init_fq_percpu drivers/iommu/dma-iommu.c:320 [inline]
+       iommu_dma_init_fq+0x202/0x8a0 drivers/iommu/dma-iommu.c:346
+       iommu_dma_init_domain drivers/iommu/dma-iommu.c:709 [inline]
+       iommu_setup_dma_ops+0x1336/0x1700 drivers/iommu/dma-iommu.c:2106
+       bus_iommu_probe+0x23e/0x530 drivers/iommu/iommu.c:1911
+       iommu_device_register+0x1af/0x280 drivers/iommu/iommu.c:277
+       intel_iommu_init+0x25e7/0x3780 drivers/iommu/intel/iommu.c:3143
+       pci_iommu_init+0x2e/0x90 arch/x86/kernel/pci-dma.c:174
+       do_one_initcall+0x120/0x6e0 init/main.c:1273
+       do_initcall_level init/main.c:1335 [inline]
+       do_initcalls init/main.c:1351 [inline]
+       do_basic_setup init/main.c:1370 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1583
+       kernel_init+0x1c/0x2b0 init/main.c:1473
+       ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (pcpu_alloc_mutex){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain kernel/locking/lockdep.c:3911 [inline]
+       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+       lock_acquire kernel/locking/lockdep.c:5871 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+       pcpu_alloc_noprof+0xb4c/0x1470 mm/percpu.c:1782
+       init_alloc_hint lib/sbitmap.c:16 [inline]
+       sbitmap_init_node+0x2fd/0x770 lib/sbitmap.c:126
+       sbitmap_queue_init_node+0x41/0x560 lib/sbitmap.c:438
+       bt_alloc block/blk-mq-tag.c:542 [inline]
+       blk_mq_init_tags+0x12d/0x2b0 block/blk-mq-tag.c:565
+       blk_mq_alloc_rq_map block/blk-mq.c:3538 [inline]
+       blk_mq_alloc_map_and_rqs+0x237/0xf60 block/blk-mq.c:4094
+       __blk_mq_alloc_map_and_rqs block/blk-mq.c:4116 [inline]
+       __blk_mq_alloc_map_and_rqs+0x128/0x1f0 block/blk-mq.c:4107
+       blk_mq_realloc_tag_set_tags block/blk-mq.c:4755 [inline]
+       __blk_mq_update_nr_hw_queues block/blk-mq.c:4995 [inline]
+       blk_mq_update_nr_hw_queues+0x4ab/0xcb0 block/blk-mq.c:5043
+       nbd_start_device+0x172/0xcd0 drivers/block/nbd.c:1476
+       nbd_genl_connect+0x120e/0x1c20 drivers/block/nbd.c:2201
+       genl_family_rcv_msg_doit+0x206/0x2f0 net/netlink/genetlink.c:1115
+       genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+       genl_rcv_msg+0x55c/0x800 net/netlink/genetlink.c:1210
+       netlink_rcv_skb+0x155/0x420 net/netlink/af_netlink.c:2534
+       genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x53d/0x7f0 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:712 [inline]
+       __sock_sendmsg net/socket.c:727 [inline]
+       ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+       ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+       __sys_sendmsg+0x16d/0x220 net/socket.c:2652
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  pcpu_alloc_mutex --> fs_reclaim --> &q->q_usage_counter(io)#49
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->q_usage_counter(io)#49);
+                               lock(fs_reclaim);
+                               lock(&q->q_usage_counter(io)#49);
+  lock(pcpu_alloc_mutex);
+
+ *** DEADLOCK ***
+
+7 locks held by syz-executor187/5931:
+ #0: ffffffff903f1390 (cb_lock){++++}-{4:4}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffffffff903f1448 (genl_mutex){+.+.}-{4:4}, at: genl_lock net/netlink/genetlink.c:35 [inline]
+ #1: ffffffff903f1448 (genl_mutex){+.+.}-{4:4}, at: genl_op_lock net/netlink/genetlink.c:60 [inline]
+ #1: ffffffff903f1448 (genl_mutex){+.+.}-{4:4}, at: genl_op_lock net/netlink/genetlink.c:57 [inline]
+ #1: ffffffff903f1448 (genl_mutex){+.+.}-{4:4}, at: genl_rcv_msg+0x577/0x800 net/netlink/genetlink.c:1209
+ #2: ffff888027e74230 (&nbd->config_lock){+.+.}-{4:4}, at: nbd_genl_connect+0xa1a/0x1c20 drivers/block/nbd.c:2111
+ #3: ffff888027e74188 (&set->update_nr_hwq_lock){++++}-{4:4}, at: blk_mq_update_nr_hw_queues+0x32/0xcb0 block/blk-mq.c:5041
+ #4: ffff888027e740d8 (&set->tag_list_lock){+.+.}-{4:4}, at: blk_mq_update_nr_hw_queues+0x45/0xcb0 block/blk-mq.c:5042
+ #5: ffff888027d9c520 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave block/blk-mq.c:205 [inline]
+ #5: ffff888027d9c520 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:4993 [inline]
+ #5: ffff888027d9c520 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_update_nr_hw_queues+0x275/0xcb0 block/blk-mq.c:5043
+ #6: ffff888027d9c558 (&q->q_usage_counter(queue)){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave block/blk-mq.c:205 [inline]
+ #6: ffff888027d9c558 (&q->q_usage_counter(queue)){+.+.}-{0:0}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:4993 [inline]
+ #6: ffff888027d9c558 (&q->q_usage_counter(queue)){+.+.}-{0:0}, at: blk_mq_update_nr_hw_queues+0x275/0xcb0 block/blk-mq.c:5043
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 5931 Comm: syz-executor187 Not tainted 6.16.0-rc1-syzkaller-00003-gf09079bd04a9 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
+ check_prev_add kernel/locking/lockdep.c:3168 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+ validate_chain kernel/locking/lockdep.c:3911 [inline]
+ __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+ lock_acquire kernel/locking/lockdep.c:5871 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+ __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+ __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+ pcpu_alloc_noprof+0xb4c/0x1470 mm/percpu.c:1782
+ init_alloc_hint lib/sbitmap.c:16 [inline]
+ sbitmap_init_node+0x2fd/0x770 lib/sbitmap.c:126
+ sbitmap_queue_init_node+0x41/0x560 lib/sbitmap.c:438
+ bt_alloc block/blk-mq-tag.c:542 [inline]
+ blk_mq_init_tags+0x12d/0x2b0 block/blk-mq-tag.c:565
+ blk_mq_alloc_rq_map block/blk-mq.c:3538 [inline]
+ blk_mq_alloc_map_and_rqs+0x237/0xf60 block/blk-mq.c:4094
+ __blk_mq_alloc_map_and_rqs block/blk-mq.c:4116 [inline]
+ __blk_mq_alloc_map_and_rqs+0x128/0x1f0 block/blk-mq.c:4107
+ blk_mq_realloc_tag_set_tags block/blk-mq.c:4755 [inline]
+ __blk_mq_update_nr_hw_queues block/blk-mq.c:4995 [inline]
+ blk_mq_update_nr_hw_queues+0x4ab/0xcb0 block/blk-mq.c:5043
+ nbd_start_device+0x172/0xcd0 drivers/block/nbd.c:1476
+ nbd_genl_connect+0x120e/0x1c20 drivers/block/nbd.c:2201
+ genl_family_rcv_msg_doit+0x206/0x2f0 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x55c/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x155/0x420 net/netlink/af_netlink.c:2534
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x53d/0x7f0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg net/socket.c:727 [inline]
+ ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+ ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+ __sys_sendmsg+0x16d/0x220 net/socket.c:2652
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbf950b9499
+Code: 48 83 c4 28 c3 e8 e7 18 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff9e5881a8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fff9e588378 RCX: 00007fbf950b9499
+RDX: 0000000000000040 RSI: 0000200000000980 RDI: 0000000000000003
+RBP: 00007fbf9512c610 R08: 0000000000000005 R09: 00007fff9e588378
+R10: 000000000000000c R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff9e588368 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+nbd0: detected capacity change from 0 to 2
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
