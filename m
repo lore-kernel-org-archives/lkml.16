@@ -1,140 +1,131 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CB47462;
-	Sat, 14 Jun 2025 21:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099757462;
+	Sat, 14 Jun 2025 21:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749937008; cv=none; b=HuFhba1URnxE7DQ8fKjL2NWj3AAE6CiXKwICYD6j7S0mB+B2yLwy+0kp74Efkx4DC1j/TCn6/qcsmdyNPYrisSYQYyTqlSQlXdbQyHTmv05wO0K76TBcMtXp1ruxw2oAZ0Skj1IGUA52QsXQaOBXN7AM11e/mC1HZBtHGFzvnoM=
+	t=1749937228; cv=none; b=FncfmUM1SFXZw9Kiq+/IRh7GDCgofnl/qK0CXN2IIzp7RZgig3hoQEQ8mjCVCZScEZZ/a5Jr9s4jXGDg6H+AsXB9mWxhYbwEMeBg1VsutRFU2U8ixHcbTWYZ8UacJETxxn6RifsEB7DN1LgBkSkQr0j23egoY5e+/Sn14fU2yXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749937008; c=relaxed/simple;
-	bh=19AIx2vJd2qqofzE7+LN1Q/t9umkB+UMkwyVaa3RVPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kVePXZnl+bF6ZSoUeBfWqyYD3dZLNvjWYgmumacBIelJP31BKjqn6hHWn74HnzgoVcwvao20GsnMTrG86KlKWHzn8Du4AZhxEHROk0gj+3YXdasyHlpPvXa8RLtsAfiFjrFFgRtlh62LS4rWMWmCvpoC8KM/hYZiKZ0vVmRmmvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tmwiXE9v; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749937228; c=relaxed/simple;
+	bh=kd3743nSEbDXUiz922RGfFIOoObfj1ILzw9dt0uTHak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G2ozNwlvCfjD9w0cL5LuGmt9x3XvMFJMHSl4NIefNWUvWUFZ5+YJcP/bQZBTBCYTUet1CjEFEskCLbwjqq7MKHB6Uw4VWr4n2P+psHxphAgAli5yZtk0d6sdpoHIUCmkifQMDAmwtDDm3iE1JBsSc4+zyk7RCnFNTFOO/M4mc+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZfRckyEf; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tmwiXE9v"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1FB015B3;
-	Sat, 14 Jun 2025 23:36:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749936994;
-	bh=19AIx2vJd2qqofzE7+LN1Q/t9umkB+UMkwyVaa3RVPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tmwiXE9vIu3Tq9lWfhiUjYUBlVV6Dgh4vqY2lKG1EFWPbsnR6n1jH5WKL9xMFvac3
-	 DgpBcGO7aMdyRA0F66xRovWShWiVusZXWM9K51/7iNSLBVlYmuUDTXJovHcGdCk7MA
-	 fCjETq67bhq5UVFXwtRrHhppRGdkWknmrGhNBHLo=
-Date: Sun, 15 Jun 2025 00:36:29 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] media: rcar-vin: Generate FRAME_SYNC events
-Message-ID: <20250614213629.GN10542@pendragon.ideasonboard.com>
-References: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se>
- <20250614141545.2860860-4-niklas.soderlund+renesas@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfRckyEf"
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4e80d19c7ebso285323137.3;
+        Sat, 14 Jun 2025 14:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749937226; x=1750542026; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gs3ud56tPhQ21R7sW4xLVk6AP0PKjqKuPxbE8YEes4E=;
+        b=ZfRckyEfh6Bh3wwcgtIb1AIz45XjwMB5MGLXiHODA2FTMG8CmxW/tOkUXPJEfKtbis
+         rrcOSzMUC/ldn0Bn3IYe2iCk72tNtWWvN+UmE/cARgECxaR4wdntneECgW94ZZ7pmZiH
+         MPMuJ8vapfDS2u8TKNnajh/p0BGeOL/LyMGzMzwcRlgxi58wrlmNNy8zfWJisBbWWK5s
+         N5h2pZ/AjrfYOnW/9Vh6ZtTrstjKfBEROfgxVCmxU2xRYb2y2KDVkN74SjcLFLwl3Jye
+         8gAf8DqHgmNfeNx0ooc0S5bwN8z4NsgYo6CdszK9apygYGinoNAKmJ7c0X6pNjso/mog
+         IA7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749937226; x=1750542026;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gs3ud56tPhQ21R7sW4xLVk6AP0PKjqKuPxbE8YEes4E=;
+        b=NEzKk+IBBR49GI8eiDWw66XOluS7NvZZfPDbk5uDt5Q8JyMWXOhjMUURXaMBku04JI
+         /6UW4CkqorBca4cmFsIYfdMtA3L5aRwclP8msT3XDwQPdwsuyKiKBzSvvDI/KTNaP5ae
+         IuYpRDyR2RW1ofwhkUUnVJlMcB13J6b3a3v3+VIT/IU8ofoOxgmfM2F6SKNHjIIlhvFL
+         Im2N64KN4+N5yKKmt8fhjjQbcHQIVuepge1MRIZ1g7G4Z0a2THKHQ6PjCw7BYhOMONKr
+         XM4NKKZQc+AWTR4lSpByk/pzmZ+GFdL50XH3UGGPHZcRFFZzfjNVaUw4jq7zQUVe1XK5
+         P03w==
+X-Forwarded-Encrypted: i=1; AJvYcCVvHVqV8iasG6HgS7lwq8NBftIVtDqN0LlFNC6aslZWHYFii7JbGA9Ojcf137msjpdroNopTXSIzI4GvYFw@vger.kernel.org, AJvYcCXUENgzEic1JKNQAfVrAtTs7Gl13WZqAqn3kJEcwt4t1P2EXL/6KcLXfkxxrYHqPlk1HkLhA34fh2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1Fo3Y3XMZFOHXB2qMIR1QGJgOQWXX/vexfCPuKfFdlKmHMzoK
+	+Qh/LapG1uZZdE20+Yx4A9XwGJx/UfDoUL2IRu6RJfxvGria8Ksj6mfm+nPRMyeLz9Y3KJATr4z
+	XegShZlHCDZtkNSI2nqBHrnYdR1p4vQc=
+X-Gm-Gg: ASbGncuY853y6uJkYZRGdZeMzN4Rj9/NGpIc/8VD4LuZoVyl3dgaBVC6EDKglZ2hW0/
+	c7PoAN08XBJGgY9bJ2w27hwFz/TgLrcIsmCdBjArUvwyptUOES7tTDNzG8v5nuhiBicZQBDTQFM
+	+nQY9qSdDiNDF8hBQ4lPaO87GEo3ntYc1YTRx/S4VOmQqBw7z+0GOQ2PVmdA==
+X-Google-Smtp-Source: AGHT+IGIoZF5Ii5VWn9QWYYh/i5PeesWca3iK1OQzLB51j0/8zYJriLJXADUm8mHtJ33L0IXABVdu5gLyquUP5f+DC8=
+X-Received: by 2002:a05:6102:2c09:b0:4dd:b259:ef34 with SMTP id
+ ada2fe7eead31-4e7f611b1c9mr3811485137.10.1749937225911; Sat, 14 Jun 2025
+ 14:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250614141545.2860860-4-niklas.soderlund+renesas@ragnatech.se>
+References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
+ <20250611194648.18133-4-andrew.lopes@alumni.usp.br> <20250614130132.220f5f16@jic23-huawei>
+In-Reply-To: <20250614130132.220f5f16@jic23-huawei>
+From: Andrew Ijano <andrew.ijano@gmail.com>
+Date: Sat, 14 Jun 2025 18:40:14 -0300
+X-Gm-Features: AX0GCFuex5943y7wWsKY2jBWOErHaftMtOPudcJYALbHWj_W09DVG4zVa2y4rZA
+Message-ID: <CANZih_RErpueDYAC--XUnq=wUY72WWDsC9mj0n1bfqC0aiRHYg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] iio: accel: sca3000: use guard(mutex)() for
+ handling mutex lock
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Niklas,
+On Sat, Jun 14, 2025 at 9:01=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Wed, 11 Jun 2025 16:39:21 -0300
+> Andrew Ijano <andrew.ijano@gmail.com> wrote:
+>
+> > Use guard(mutex)(&st->lock) for handling mutex lock instead of
+> > manually locking and unlocking the mutex. This prevents forgotten
+> > locks due to early exits and remove the need of gotos.
+> >
+> > Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
+> > Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
+> > Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
+> > Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> > ---
+> > For this one, there are two cases where the previous implementation
+> > was a smalllocking portion of the code and now it's locking the whole
+> > function. I don't know if this is a desired behavior.
+>
+> I'd call out more specifically that you are going from
+>
+> lock
+> stuff
+> unlock
+> call which contains lock over whole useful scope
+>
+> to
+> lock
+> stuff
+> call with lock no longer done inside
+> unlock
+>
+> In at least one case.  Looks cleaner to me. I'd guess this is a silly
+> bit of code evolution that you are tidying up as that lock dance looks
+> pointless to me.
 
-Thank you for the patch.
+Yes! That's something I noticed when making this change and it looked
+like a clean up for me too.
+What bothered me were cases where we originally had a lock /
+spi_w8r8() / unlock and then several operations like iio_push_event()
+or sprintf(). I found these cases in sca3000_event_handler() and
+sca3000_read_av_freq().
 
-On Sat, Jun 14, 2025 at 04:15:45PM +0200, Niklas Söderlund wrote:
-> Enable the VSYNC Rising Edge Detection interrupt and generate a
-> FRAME_SYNC event form it. The interrupt is available on all supported
-> models of the VIN (Gen2, Gen3 and Gen4).
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Maybe this isn't as problematic as I'm making them up to be, but it
+seems that applying the suggestion of Nino to use scoped_guard()
+instead in these cases would already solve this problem.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>
+> Otherwise just the {} for cases thing needs fixing up.
 
-> ---
->  .../media/platform/renesas/rcar-vin/rcar-dma.c  | 17 +++++++++++++++++
->  .../media/platform/renesas/rcar-vin/rcar-v4l2.c |  2 ++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> index 85e44a00e0fc..a1ae9c9bccc7 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> @@ -14,6 +14,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/pm_runtime.h>
->  
-> +#include <media/v4l2-event.h>
->  #include <media/videobuf2-dma-contig.h>
->  
->  #include "rcar-vin.h"
-> @@ -115,10 +116,14 @@
->  #define VNFC_S_FRAME		(1 << 0)
->  
->  /* Video n Interrupt Enable Register bits */
-> +#define VNIE_VFE		BIT(17)
-> +#define VNIE_VRE		BIT(16)
->  #define VNIE_FIE		BIT(4)
->  #define VNIE_EFE		BIT(1)
->  
->  /* Video n Interrupt Status Register bits */
-> +#define VNINTS_VFS		BIT(17)
-> +#define VNINTS_VRS		BIT(16)
->  #define VNINTS_FIS		BIT(4)
->  #define VNINTS_EFS		BIT(1)
->  
-> @@ -898,6 +903,8 @@ static int rvin_setup(struct rvin_dev *vin)
->  
->  	/* Progressive or interlaced mode */
->  	interrupts = progressive ? VNIE_FIE : VNIE_EFE;
-> +	/* Enable VSYNC Rising Edge Detection. */
-> +	interrupts |= VNIE_VRE;
->  
->  	/* Ack interrupts */
->  	rvin_write(vin, interrupts, VNINTS_REG);
-> @@ -1049,6 +1056,16 @@ static irqreturn_t rvin_irq(int irq, void *data)
->  	rvin_write(vin, status, VNINTS_REG);
->  	handled = 1;
->  
-> +	/* Signal Start of Frame. */
-> +	if (status & VNINTS_VRS) {
-> +		struct v4l2_event event = {
-> +			.type = V4L2_EVENT_FRAME_SYNC,
-> +			.u.frame_sync.frame_sequence = vin->sequence,
-> +		};
-> +
-> +		v4l2_event_queue(&vin->vdev, &event);
-> +	}
-> +
->  	/* Nothing to do if nothing was captured. */
->  	capture = vin->format.field == V4L2_FIELD_NONE ||
->  		vin->format.field == V4L2_FIELD_ALTERNATE ?
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-> index db091af57c19..6339de54b02b 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-> @@ -734,6 +734,8 @@ static int rvin_subscribe_event(struct v4l2_fh *fh,
->  				const struct v4l2_event_subscription *sub)
->  {
->  	switch (sub->type) {
-> +	case V4L2_EVENT_FRAME_SYNC:
-> +		return v4l2_event_subscribe(fh, sub, 2, NULL);
->  	case V4L2_EVENT_SOURCE_CHANGE:
->  		return v4l2_event_subscribe(fh, sub, 4, NULL);
->  	}
+Great! I'll fix that too.
 
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Andrew
