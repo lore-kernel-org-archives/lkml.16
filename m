@@ -1,143 +1,222 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from kuriko.dram.page (kuriko.dram.page [65.108.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D087462;
-	Sat, 14 Jun 2025 08:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCADC274FE1;
+	Sat, 14 Jun 2025 08:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749889293; cv=none; b=uLFKwSuraSvssKd3f6d8Bf5T15QywsUH9C6ITWLbNBjO7NBGDynahTgRXfuLqTxMlzXCecNPsXcgSvSvWBVbr+c3imJl6mnxxRZL7SZP90+v/E6VYUjWZVKmFFrs4vQ/ov0V/YgEeFbZPlvInDHXq7/keLOs0rL6+kSMBOyY6t4=
+	t=1749889808; cv=none; b=YIAT69RiI5ZjvfNein+kui4SloioJdA/Vyx3sscFKSl+QoXIkcJ2wY98YVSrBB0zpuizz+fz25+hYaCpmzR51v0rD5CPzH+rTD6XzRElvwaCpSzwK2SVyASQz0yh/E3gyEVtFK3hrb650h2W5QoAiBHzmdmgYoIVMAahnqEwl8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749889293; c=relaxed/simple;
-	bh=YaufHfeWzU0HA/Ggs1QU36NKrWELGNq4xJuUxE8JU8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fqXX2a7yIVh1b7QlhaFjTHoZX7vYUIcu7R03SgtKX8/que5eq3gu4UR8RFb4om8uQuJyYRII5mkgUNhQt7MW7cMJbeleDwpaBa503526UKRAO3ULIGPYtUrPp6mA7uA36eG63G5050bREkRrI9fEeGu8dykyVy6P1KqJtL8R6ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMF+PbvL; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749889808; c=relaxed/simple;
+	bh=8nGDx9EBdJD5Q7S0nu+h3c/M/InGy+ZQ6FInoRIY0JY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
+	 In-Reply-To:Content-Type; b=kvFOAg5VZqztRzPFthFbbpVQ04GR9SiZIjNPRhDEUOMH3wyORtxXu7Dgp/uLUb+T0utwpN5e7BxvNgK4O4mp2QkDFTi8NAnUqenSXoOF25wgVdL35PqAjmwEWosWvebtGuHfp19rRfPFZSj7M54xJSOuRO9c1IRA9znpUd5MNRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dram.page; spf=pass smtp.mailfrom=dram.page; dkim=pass (1024-bit key) header.d=dram.page header.i=@dram.page header.b=AsAFH9tr; arc=none smtp.client-ip=65.108.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dram.page
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dram.page
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMF+PbvL"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so2446355f8f.2;
-        Sat, 14 Jun 2025 01:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749889290; x=1750494090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=khQAtLGRfdfFU200904AKJuOIJ0Mgpia0c+Uit2sjiw=;
-        b=eMF+PbvLcjE1CIWWM3QvGcr7Ze7BbZOZyCSnWNPcJYu0ZtmLoLfREbcnq6vGmHjtha
-         2yos5sKK7joSwpZqm4oR2Kzl7Fdk6ZpuCObed/NKBiS6wpQ9291qhYJld33TbcGPp3iv
-         EzoMZVJSGDnLxIw7xPdPnPcynek5e0tCDjnkiByyQoGuSiX4+99iw8laaQOtUCv57YQm
-         K0hT5CmWVsOAYaGQEXVRATqTrku6bcUtoKKLvGWaE6WhKH9DQ9iuKffcNqmz7wA7YPnu
-         EdHE2nDCTj9nHwgE9zVypRX+EGtTo9r0REZSq4sJEWYfF7NXfueZ/pKI7NT1yRF8mlt/
-         L1ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749889290; x=1750494090;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=khQAtLGRfdfFU200904AKJuOIJ0Mgpia0c+Uit2sjiw=;
-        b=IzV6kP4ruZJUeAvFU9+mQKt5fVz1fQuf3fpeaHbYf5L/heraTjolXMjHcljAM44jQ+
-         zxQiJ/5cz1ol9eDIlVw/P1elwfh5ci2HMHOZDSAgxhCSOnV0DBuu6B/rCLmLL5VggcDZ
-         kdMdIC/vBobzpe4cvo/vKmdBNfCe59jZPXmPhZ6+tHBn7hmd6dRPxd0H/eJEzLgMaRP4
-         lPZnxfbCL/Cs/Zhoom8KHoqEmxvdchTk8B6F+O5jWhXiilIHWmcw9ZbFo5fy9GKWcaFt
-         VIE1Pb3a/F3N9BusCHV7CJf+RXWusvboWlR8qmjcbxhzMsA2eeso8CuTvtd0O2XO66Z3
-         EvWw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7EtH2dXm3QMi6HFxoikAIlSuIbk4ygiCWnElWtQE/wj29k8TZbSVZl/LInWYCQ0SyJcKyP4GfRCksGNc=@vger.kernel.org, AJvYcCXa5yVnuLIyfB1SBOF9QW6dkfBuSA7Jtd0rIML2GVFeQFppSwHM2RyUwp8C8GIcEqnt4kItIbAW9N0WmQo44m8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4ycaJ++Q6CSFpQwpsVxZ5cEVjrOy8MrffIr2rLF9gws6b+3VQ
-	37vwLeORgIz6c36fLGu07BrhzDTTJiWuuDkmx/PCpsjn30iIKIcJk2oo
-X-Gm-Gg: ASbGncvatn8Rj/YRok8b21n0l7ZqMdUIzCsxqNeRcWxN6YRehKPmwTCWYRwMI1YfNIq
-	mkjydO4jtZjtghg6YQJAkSjekKGzWK1UWNUreQJ9JnKX4emP2Ot4lix5HqihtHUQI72hjYCfwyp
-	OxWZEfHNn/hc+6UhnvhdCzNS2UZ5jEiyIWoy3bvVAiTByNPJsUcmhz0vAFoVFMsTlA/Y3t6lW8V
-	YtuDB+e655Q4lwLOyrPJRxCT61LyGK0v018wY7NDbfCDyAtvaQO9ehWYSuwgHqfYjqzE85Uz0kF
-	uGV3Xz7AmoKWy+kq+d4EIU5Et0FF5NJKy/9iBz1ZoTTSmsrbQkAJOIFAvfvx5qdv/LvD+Fxk+pb
-	HEC/J+uHpgi5h9xnCNVZFr3fF
-X-Google-Smtp-Source: AGHT+IGXya6evQbx+npRyXK/BYu4agcTZbFXolHKNmcRHxagzN5k8f3w4llMoFQXFX24jjBzI7XlTA==
-X-Received: by 2002:a05:6000:400b:b0:3a4:f2ed:217e with SMTP id ffacd0b85a97d-3a5723af786mr2391555f8f.42.1749889290096;
-        Sat, 14 Jun 2025 01:21:30 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4cc7bsm4529830f8f.86.2025.06.14.01.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 01:21:29 -0700 (PDT)
-Date: Sat, 14 Jun 2025 09:21:17 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Anders Roxell <anders.roxell@linaro.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
- miriam.rachel.korenblit@intel.com, dan.carpenter@linaro.org, arnd@arndb.de,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Linux Kernel
- Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH] wifi: iwlwifi: pcie: ensure RX_QUEUE_CB_SIZE fits
- bitfield for gcc-8|9
-Message-ID: <20250614092117.355e45c7@pumpkin>
-In-Reply-To: <aEsrmH7sDVvsmgLs@monster>
-References: <20250612130719.3878754-1-anders.roxell@linaro.org>
-	<d2ea3f77ea2737aafc879f4fc291dee097867b61.camel@sipsolutions.net>
-	<aEsrmH7sDVvsmgLs@monster>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=dram.page header.i=@dram.page header.b="AsAFH9tr"
+Message-ID: <e29c10c1-4428-468a-a3c1-eb52a8927eab@dram.page>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dram.page; s=mail;
+	t=1749889804; bh=fy3ZmGP0DBFmKLLDiN1icstbFc46RNNPFWa0SQDVLqI=;
+	h=Date:From:Subject:References:Reply-To:To:Cc:In-Reply-To;
+	b=AsAFH9trt6/fHdQ0BLcRUSBvuwGiWr9qfoEEJL0jlXyoAr9wDQQDCcThRjSVDgj6v
+	 eRJwx8MN3++wmsDzjioVhG+BoF/9na4NMQC00kZugHO1Vm49+uJu5KBUCtLjYnoHSV
+	 CLXmqu50kKCWJBDbfBFb/5Rdg3av8O/RZYR6viso=
+Date: Sat, 14 Jun 2025 16:29:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Vivian Wang <uwu@dram.page>
+Subject: [PATCH 5/8] riscv: dts: spacemit: Add dma bus and PDMA node for K1
+ SoC
+References: <f65586d7-6b27-409f-b0f1-d0a746d83521@dram.page>
+Content-Language: en-US
+Reply-To: Vivian Wang <uwu@dram.page>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: Guodong Xu <guodong@riscstar.com>, vkoul@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, dlan@gentoo.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com,
+ emil.renner.berthing@canonical.com, inochiama@gmail.com,
+ geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com,
+ joel@jms.id.au, duje.mihanovic@skole.hr, Ze Huang <huangze@whut.edu.cn>,
+ elder@riscstar.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ spacemit@lists.linux.dev
+In-Reply-To: <f65586d7-6b27-409f-b0f1-d0a746d83521@dram.page>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Jun 2025 21:33:44 +0200
-Anders Roxell <anders.roxell@linaro.org> wrote:
+[resent to get rid of HTML]
 
-> On 2025-06-12 17:21, Johannes Berg wrote:
-> > > 
-> > > diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
-> > > index cb36baac14da..1854d071aff2 100644
-> > > --- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
-> > > +++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
-> > > @@ -204,9 +204,10 @@ int iwl_pcie_ctxt_info_init(struct iwl_trans *trans,
-> > >  
-> > >  	WARN_ON(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) > 12);
-> > >  	control_flags = IWL_CTXT_INFO_TFD_FORMAT_LONG;
-> > > -	control_flags |=
-> > > -		u32_encode_bits(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)),
-> > > -				IWL_CTXT_INFO_RB_CB_SIZE);
-> > > +	/* This should just be u32_encode_bits() but gcc-8 and gcc-9 fail to build */
-> > > +	control_flags |= FIELD_PREP(IWL_CTXT_INFO_RB_CB_SIZE,
-> > > +		RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) &
-> > > +		FIELD_MAX(IWL_CTXT_INFO_RB_CB_SIZE));
-> > >   
-> > 
-> > The coding style is really confusing now though - what are arguments to
-> > the macro and all that.  
-> 
-> Would it help if I indent like this?
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
-> index cb36baac14da..5bb81ed7db79 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
-> @@ -204,9 +204,10 @@ int iwl_pcie_ctxt_info_init(struct iwl_trans *trans,
->  
->  	WARN_ON(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) > 12);
->  	control_flags = IWL_CTXT_INFO_TFD_FORMAT_LONG;
-> -	control_flags |=
-> -		u32_encode_bits(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)),
-> -				IWL_CTXT_INFO_RB_CB_SIZE);
-> +	/* This should just be u32_encode_bits() but gcc-8 and gcc-9 fail to build */
-> +	control_flags |= FIELD_PREP(IWL_CTXT_INFO_RB_CB_SIZE,
-> +				    RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) &
-> +				    FIELD_MAX(IWL_CTXT_INFO_RB_CB_SIZE));
+On 6/14/25 10:53, Guodong Xu wrote:
+> On Fri, Jun 13, 2025 at 11:07 AM Vivian Wang<uwu@dram.page> wrote:
+>> Hi Guodong,
+>>
+>> On 6/11/25 20:57, Guodong Xu wrote:
+>>> <snip>
+>>>
+>>> -                     status = "disabled";
+>>> +             dma_bus: bus@4 {
+>>> +                     compatible = "simple-bus";
+>>> +                     #address-cells = <2>;
+>>> +                     #size-cells = <2>;
+>>> +                     dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+>>> +                                  <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
+>>> +                     ranges;
+>>>                };
+>> Can the addition of dma_bus and movement of nodes under it be extracted
+>> into a separate patch, and ideally, taken up by Yixun Lan without going
+>> through dmaengine? Not specifically "dram_range4", but all of these
+>> translations affects many devices on the SoC, including ethernet and
+> It was not my intention to add all the separate memory mapping buses into
+> one patch. I'd prefer to add them when there is at least one user.
+> The k1.dtsi at this moment, as I checked, has no real user beside the
+> so-called "dram_range4" in downstream vendor kernel (ie. dma_bus in this
+> patch). And that is what I did: grouping devices which share the same
+> dma address mapping as pdma0 into one single separated bus.
+>
+> The other buses, even if I add them, would be empty.
+>
+> What the SpacemiT team agreed upon so far, is the naming of these separated
+> buses. I listed them here for future reference purposes.
+>
+> If needed, I can send that in a RFC patchset, of course; or as a normal
+> PATCH, if Yixun is ok with that. However, please note, that would mean more
+> merging dependencies: PDMA dts, ethernet dts, usb dts, will have to depend
+> on this base 'buses' PATCH.
+>
+> Again, I prefer we add our own 'bus' when there is a need.
+>
+> +       soc {
+> +               storage_bus: bus@0 {
+> +                       /* USB, SDH storage controllers */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>;
+> +               };
+> +
+> +               multimedia_bus: bus@1 {
+> +                       /* VPU, GPU, DPU */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0x80000000 0x1 0x00000000
+> 0x3 0x80000000>;
+> +               };
+> +
+> +               pcie_bus: bus@2 {
+> +                       /* PCIe controllers */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0xb8000000 0x1 0x38000000
+> 0x3 0x48000000>;
+> +               };
+> +
+> +               camera_bus: bus@3 {
+> +                       /* ISP, CSI, imaging devices */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0x80000000 0x1 0x00000000
+> 0x1 0x80000000>;
+> +               };
+> +
+> +               dma_bus: bus@4 {
+> +                       /* DMA controller, and users */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x1 0x00000000 0x1 0x80000000
+> 0x3 0x00000000>;
+> +               };
+> +
+> +               network_bus: bus@5 {
+> +                       /* Ethernet, Crypto, JPU */
+> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
+> 0x0 0x80000000>,
+> +                                    <0x0 0x80000000 0x1 0x00000000
+> 0x0 0x80000000>;
+> +               };
+> +
+> +       }; /* soc */
 
-I would always indent the 'continued' part of an arithmetic expression.
-Otherwise it looks (in this case) like another argument to FIELD_PREP().
-(Not helped by the coding style requiring the '&' on the end of the line
-rather than the start of the continuation line.)
+Ah, I didn't know the names were already decided.
 
-	David
+However, I still think we should at least separate the patch into two in 
+the same series, one adding the bus node and handling existing nodes, 
+and another adding the new node under it. This way, say someone starts 
+working on Crypto, they can simply depends on the first bus patch 
+without having to pull in the new node.
 
+I still prefer having a canonical buses patch though.
 
->  	control_flags |= u32_encode_bits(rb_size, IWL_CTXT_INFO_RB_SIZE);
->  	ctxt_info->control.control_flags = cpu_to_le32(control_flags);
->  
-> 
-> Cheers,
-> Anders
-> 
+If we're going to agree here on what the buses should look, I also have 
+two nitpicks, just so we get this sorted: Firstly, I think storage_bus 
+should be removed. Anything using storage_bus is already handled by 
+simply using 32-bit-only DMA, which is the default anyway. @Ze Huang: 
+Your USB controller falls under it, what do you think?
 
+Also, as suggested the node names must not have a made up unit address. 
+"bus@1" is inappropriate because they have no reg. The simple-bus schema 
+allows the node name to have a prefix like "foo-bus" [1] [2], so it 
+should be like:
+
+/* DMA controller, and users */
+dma_bus: dma-bus {
+	compatible = "simple-bus";
+	ranges;
+	#address-cells = <2>;
+	#size-cells = <2>;
+	dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+		     <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
+};
+
+(Pardon the formatting; I don't know if the tabs survived Thunderbird.)
+
+[1]:https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/simple-bus.yaml
+[2]:https://github.com/devicetree-org/dt-schema/commit/bab67075926b8bdc4093edbb9888aaa5bd8befd5
+
+Well, that is the reason I wanted the bus things to be its own patch: I 
+think the DT maintainers should review these once and for all, not six 
+separate times as the drivers come in.
+
+>> USB3. See:
+>>
+>> https://lore.kernel.org/all/20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@whut.edu.cn/
+>> https://lore.kernel.org/all/20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn/
+>>
+>> (I haven't put eth{0,1} under dma_bus5 because in 6.16-rc1 there is
+>> none, but ideally we should fix this.)
+> So, as you are submitting the first node(s) under network_bus: bus@5, you
+> should have this added into your patchset, instead of sending out with none.
+I hope we can agree on what the bus nodes look like before we do that 
+separately.
+> The same logic goes to USB too, Ze Huang was in the same offline call, and
+> I would prefer that we move in a coordinated way.
+
+I hope so as well, but "we" here should include DT maintainers.
+
+Please consider my suggestions.
+
+Vivian "dramforever" Wang
+
+>> DMA address translation does not depend on PDMA. It would be best if we
+>> get all the possible dma-ranges buses handled in one place, instead of
+>> everyone moving nodes around.
+> No, you should do it in your patchset, when you add the eth0 and eth1 nodes,
+> they will be the first in, as I said, "network_bus". I don't expect
+> any 'moving nodes around'.
+>
+>> @Ze Huang: This affects your "MBUS" changes as well. Please take a look,
+>> thanks.
+>>
+>>>                gpio: gpio@d4019000 {
+>>> @@ -792,3 +693,124 @@ pwm19: pwm@d4022c00 {
+>>>                };
+>>>        };
+>>>   };
+>>> +
+>>> +&dma_bus {
+>>>
+>>> <snip>
