@@ -1,162 +1,164 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132A0256D
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 03:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1802E11CC
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 03:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749871423; cv=none; b=cztSMlKVZwjk/nf6yAoCWx4kL948Z+mgvImKP9sHgNEcfjbsAGZTA+T0TgoFDwmKo/yOriTN38OkTuqBOAPRB5bE6cgftqYWUu4n95Og8H8kzakEYLWxk0To+HhCCnPoleTILtCuwSW/03Ab9io+UYDe5Rkz2ykynHsgavCD9OA=
+	t=1749872002; cv=none; b=X7+WKqnRZVFTdsd4yPoAdngXeD4gznqVpNeOWLfuiz9gRjnctt2UFB4OkP7K/uSK639avun0PzU1KTs8cOgQtJ4J5H3uUCpLpZXzPUhkjqblmG28pvcSGcG2SeVHw1vLpWE4t2VHfrLxnBsmWpNw/yR4GyzArrb9y0iB3q/Nucc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749871423; c=relaxed/simple;
-	bh=ks+qgcinxfP2t0Ff5arUdhpbKGhmd/HNmuw7bvh83zw=;
+	s=arc-20240116; t=1749872002; c=relaxed/simple;
+	bh=5zj1CCPqCqbanv6cOh5uOvtbh/D95b0Hh1gqZskXSVE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkGlVg7CFlEtsOw9eUtfxtK/4stYMRfid+vCBkCcT6K34tVWroW9ee1f18kwgwZ5U0zBC4gpzB/X0V6Fm/+HOTJFBkEsczASZuUKmHMrfnfLvzR6xDruCau5xiopwhyuqSkGcUOfFg90f2NLEJ/W+my7/lYLiaIDMgLLT4SFEIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M9YfK+Jl; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=PMYWcus8LonSlXxF9KgOQzd2tTAL58OoOQWDGdOUFNCc6m1cMbWyQRD6UUchQ46+/u3BRj3EGoi2fmO/8xHYMUNaelGm5JrL2Ri8a/OfI7i96Vq0Eu2CT3dWA48shn9F8HqkM4OYVihJpsdOb5oBezTfsYXRyVBLNDLEr7e9BDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Nh2WYqgO; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9YfK+Jl"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddc2aabcb4so05ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:23:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Nh2WYqgO"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-7086dcab64bso24497117b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749871421; x=1750476221; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749872000; x=1750476800; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yMC1RgubSI8jxz91HSzJ6Iomy1CrrH+KUaf8/z5C7uM=;
-        b=M9YfK+JluehVwcqaR7x5IvlFJiuEsbFNnux4limO89c4+tdeohTFk14wbPMMlS110w
-         J3xhKPwFlpaIc0ppy1jgLv+hJK1lP9sgh6z0Cgfju7Wsrn41/MeyzERwLoWB1HhRwCCl
-         g/KJnc7yr+Rq8HXDZ2EAYcuZBV5OcRGkMhqo4UBF5sw6APyiBmCMETFC0vGpWNgco0Wf
-         B4814TIi8sAvf57Bl0cAx41wtsfokeh1lD7IvrxW0R9Hx85v+b26gw414I2REXLYEuon
-         QNSs65LWghJEl8IeyaYyiDKoclGQJQ0jogPHDKAJz+vjv/Sz5WpaFKvvMC0WPGolFWpH
-         Am+A==
+        bh=jJcrqi5pwJ9wED2HFmauPlfgqPYzc6rbhv7dX2NmqNc=;
+        b=Nh2WYqgOGd+zdvSTbYg/MDff3AMkawkNu4B+RdlTQCy2QZmxd+T/WLujMmiPuOuoJN
+         3w++h5wdnrNOUOwBiOjG3mi8XJW0ZtJx3F38YUIkWvS1SLjmpBfdgzlv2ns6jbEnOw9G
+         J2CjT5YunT5AbZaWhRIq+LtD7DZ2BYmWcGV8ClTxuxfLl2I9D98C/LRB0fnfOV+ETSoN
+         dTiE4TPxCNSYV4uSewfyhkrJKY1Lw8dSiYQtQw5ALRHQAe8AkZZ9gxkzjgbp/msN+Tyn
+         IQFYjFgg/E6am66PHeLX5VAEY6GOAUhE6v/J0b1fOfvNzfU+jXGPUiPDnITkX02qy1XB
+         cCfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749871421; x=1750476221;
+        d=1e100.net; s=20230601; t=1749872000; x=1750476800;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yMC1RgubSI8jxz91HSzJ6Iomy1CrrH+KUaf8/z5C7uM=;
-        b=WYvJQ5fYNVlaRJ9NQwY3pMZvRSs0BcoRvBKBpSOx2zd9Zl2fksmDHPm9e3Ncj5U+jP
-         mh2C8IMwhxScXGPoPcPK11CZkZ2m0XbMUOI8fEQTx+QFM+4BabJJ6e9QvnLJimnaZVVC
-         05ozF3hPzqF7p1XYR7Yrt7Ovvu2ud58fuQYwHNZIozQrpZz34BeYJfZOTnQmKhJNVb/1
-         aMG6Re//iBfJor/jUWXhLtJ9w1sioYQNc31r2pIkUxxcxRdZxlZ54mFkEaph7MxLIteB
-         jVfyoNIId41z2NAcxdceAwBPR+HEaqOjwHfGD2iIUJ0SSQxcEhpnMn9iBEJlb/OloDQE
-         1O0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVoj8YC+nVByGdG6CBU7eBU+IzDA8wl3TNfJBoBjZVNT2OKxWDH21UqirF/Ds9gUHzGoUbHjlIRD6c26D4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjjAelL+1a7UKf/IkkOJx3ENQCVyt7AzNY2dbkaBrrzqrmLErl
-	RMPApZxVzJRTUdVF1JOv5u8l9Qm6LJGwfUtY+KpvKs7NeEGqw0lpYNS1LgnnfuAMky76WXpZqjg
-	txWyqrQ8GJTVJQDli4WlnssxXnyGoDY65jOYtuKBC
-X-Gm-Gg: ASbGncusipbDMT1lzk3CaKl8fLVXposwYZe2ECR30JFCXgWvJlyJ8oe3Eu2vRKP38o0
-	8+t72cQ1PjLfAZvtcnc6kPnt5xrLH8l+zv1jdvt55qjpfqq9Jlp0Uz6P07XXESm9Fw4Qz169yCR
-	KG4AKUmjhcIYSSh0K0jGSx+FWY87v/Q+zfpWs3rmPefVaU5P6NaGzUhKKCZFW7iaXopH1Vvb/lt
-	iF/
-X-Google-Smtp-Source: AGHT+IGlo6uYJF3Gn+pJN5jxgxVqy47hoLKB0YLDiznhdZSCh4GpZSc2oGthgnIZd8sYwsSUIl4f1nc2rSzZ3zzdsK4=
-X-Received: by 2002:a05:6e02:2506:b0:3d9:3ee7:a75b with SMTP id
- e9e14a558f8ab-3de0817db53mr1219875ab.1.1749871420405; Fri, 13 Jun 2025
- 20:23:40 -0700 (PDT)
+        bh=jJcrqi5pwJ9wED2HFmauPlfgqPYzc6rbhv7dX2NmqNc=;
+        b=PXuilbG5+BuOC7USu5yjcBCvpIpI9VRoz/aXml1lrYE8gLLFLlifyMCVmCkjwYEIq1
+         WXpXenE5K/WRtBNc/mTgL97x9HiaiXXO4abs6Ymn315Lk01qTY/Xf7ZOg+5HKPDA7LAV
+         FjsmWGAcpZB0hb/ahPTYhGndaSWk1YOrxwaJZp9bni64C9+yrbp2yq5ziQ1dMjNLwcWh
+         Qh2LToU+3jZEH1rzi6vr8Gme6bycQpwTe7u+tA6SURKWMkyAUkeWBwK1O+FOKUrIa61y
+         PosaGmav9t/OaaDzAtaNQHXQDDXdCmOXeF5zT1ikdTn4J68BgFnGPRu9xMEkNPbSx9Qw
+         QpTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHO+xM6nUo81vw5ILUgMiL0Nn+dLB2+bZSd9p9mntVQMoLY+1mFETmm8/NirVDwXiqq1R0AAA8izdkBO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb3OMav8uQ8iUPc6T6TQZ57dnXcGbUv7gBXtRV5s8h6N+OCnUR
+	9EO8Lgj8wi3Tb7q+Eb9aLb5+K7mIJqoG76NXwJQE0JGbBTSUCl1mJ3KHNXvaU3q4sz+fDok5TOq
+	7j+AunNHjOldrjl+uQ6uoUIGWXeX0Mm6oO8+4vqL9Ew==
+X-Gm-Gg: ASbGnct5kyzKqhMPyDJnxt9IqzSPr4QvVwtV/+muoJpxApRD1xjDKFlrSpQS2Qx1+TZ
+	8+DhQJA/HHz/txOzZMKnUL482LqgnoBJFjpQoHNx++rsFtP8uB4QCcqWUsqkqRDotHTfIsJQHWh
+	RIvtpDwY+PjZ3R80XpypfC/bXCQMpmgieYMPg5Xqw4Oi8Z
+X-Google-Smtp-Source: AGHT+IH1Y42tC9WOhyorVoIVUzg4d8lEv7srElHPGs2Vyxp0TjD0IOF4Ys3G9cHs3FqdWdAWUdm5wif9bNpbqowU6iM=
+X-Received: by 2002:a05:690c:892:b0:70f:6ec6:62b5 with SMTP id
+ 00721157ae682-7117547d163mr25767887b3.38.1749871999806; Fri, 13 Jun 2025
+ 20:33:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612020514.2542424-1-yuyanghuang@google.com> <20250613172941.6c454992@kernel.org>
-In-Reply-To: <20250613172941.6c454992@kernel.org>
-From: Yuyang Huang <yuyanghuang@google.com>
-Date: Sat, 14 Jun 2025 12:23:03 +0900
-X-Gm-Features: Ac12FXxi5jeP--oHy4Yft2q1FN2un7YHLfDbIUoTs8jLrWX9Uvhk2nC5jLxyXBc
-Message-ID: <CADXeF1HJ7dyw5gp7sKZvRgf_WLuEJatqfKmfxzpWtLibB=e9rg@mail.gmail.com>
-Subject: Re: [PATCH net-next, v3] selftest: Add selftest for multicast address notifications
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>, 
-	Lorenzo Colitti <lorenzo@google.com>
+References: <20250611125723.181711-1-guodong@riscstar.com> <20250611125723.181711-6-guodong@riscstar.com>
+ <2b17769e-2620-4f22-9ea5-f15d4adcb27b@dram.page> <20250613132227-GYB135173@gentoo>
+In-Reply-To: <20250613132227-GYB135173@gentoo>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Sat, 14 Jun 2025 11:33:08 +0800
+X-Gm-Features: AX0GCFvaqH-7lH0Zx6WGwcqUhaG1iGpayA9xWNyPAE7sjxcXfPy8V2aaJ994Vr0
+Message-ID: <CAH1PCMa8DukTxxRoWBUV22zTFnSa-4pLkZjffXO2Z9s8dtpiMg@mail.gmail.com>
+Subject: Re: [PATCH 5/8] riscv: dts: spacemit: Add dma bus and PDMA node for
+ K1 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Vivian Wang <uwu@dram.page>, vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
+	emil.renner.berthing@canonical.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	joel@jms.id.au, duje.mihanovic@skole.hr, Ze Huang <huangze@whut.edu.cn>, 
+	elder@riscstar.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for the suggestion.
+Hi, Yixun
 
->Perhaps move these to lib.sh as a separate commit?
->They seem generic.
-
-I am looking at the existing test cases, and it seems that each case
-is doing its own way of handling the end_test()/run_cmd(). It's
-non-trivial to unify everything into lib.sh, and it seems to be a huge
-refactor if we want to do it this way. I can also imagine each test
-case might want to customize the behavior a little bit differently.
-
-On the other hand, it seems some of the helper functions I copied over
-can be simplified. I will refactor the code a little bit to reduce the
-duplication.
-
-Thanks,
-Yuyang
-
-
-On Sat, Jun 14, 2025 at 9:29=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
+On Fri, Jun 13, 2025 at 9:22=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
 >
-> On Thu, 12 Jun 2025 11:05:14 +0900 Yuyang Huang wrote:
-> > +VERBOSE=3D0
-> > +PAUSE=3Dno
-> > +PAUSE_ON_FAIL=3Dno
-> > +
-> > +source lib.sh
-> > +
-> > +# set global exit status, but never reset nonzero one.
-> > +check_err()
-> > +{
-> > +     if [ $ret -eq 0 ]; then
-> > +             ret=3D$1
-> > +     fi
-> > +     [ -n "$2" ] && echo "$2"
-> > +}
-> > +
-> > +run_cmd_common()
-> > +{
-> > +     local cmd=3D"$*"
-> > +     local out
-> > +     if [ "$VERBOSE" =3D "1" ]; then
-> > +             echo "COMMAND: ${cmd}"
-> > +     fi
-> > +     out=3D$($cmd 2>&1)
-> > +     rc=3D$?
-> > +     if [ "$VERBOSE" =3D "1" -a -n "$out" ]; then
-> > +             echo "    $out"
-> > +     fi
-> > +     return $rc
-> > +}
-> > +
-> > +run_cmd() {
-> > +     run_cmd_common "$@"
-> > +     rc=3D$?
-> > +     check_err $rc
-> > +     return $rc
-> > +}
-> > +
-> > +end_test()
-> > +{
-> > +     echo "$*"
-> > +     [ "${VERBOSE}" =3D "1" ] && echo
-> > +
-> > +     if [[ $ret -ne 0 ]] && [[ "${PAUSE_ON_FAIL}" =3D "yes" ]]; then
-> > +             echo "Hit enter to continue"
-> > +             read a
-> > +     fi;
-> > +
-> > +     if [ "${PAUSE}" =3D "yes" ]; then
-> > +             echo "Hit enter to continue"
-> > +             read a
-> > +     fi
-> > +
-> > +}
+> Hi Vivian, Guodong,
 >
-> Perhaps move these to lib.sh as a separate commit?
-> They seem generic.
+> On 11:06 Fri 13 Jun     , Vivian Wang wrote:
+> > Hi Guodong,
+> >
+> > On 6/11/25 20:57, Guodong Xu wrote:
+> > > <snip>
+> > >
+> > > -                   status =3D "disabled";
+> > > +           dma_bus: bus@4 {
+> > > +                   compatible =3D "simple-bus";
+> > > +                   #address-cells =3D <2>;
+> > > +                   #size-cells =3D <2>;
+> > > +                   dma-ranges =3D <0x0 0x00000000 0x0 0x00000000 0x0=
+ 0x80000000>,
+> > > +                                <0x1 0x00000000 0x1 0x80000000 0x3 0=
+x00000000>;
+> > > +                   ranges;
+> > >             };
+> >
+> > Can the addition of dma_bus and movement of nodes under it be extracted
+> > into a separate patch, and ideally, taken up by Yixun Lan without going
+> > through dmaengine? Not specifically "dram_range4", but all of these
+> > translations affects many devices on the SoC, including ethernet and
+> > USB3. See:
+> Right, we've had an offline discussion, and agreed on this - have *bus
+> patches separated and let other patches depend on it.
 >
-> Please fix the shellcheck warnings. The "info"-level messages
-> are up you, SC2317 can be ignored.
+> But seems Guodong failed to do this or just sent out an old version
+> of the PDMA patch?
+
+Hi, Yixun
+
+I realized that there is some sort of discrepancy between our understanding
+from the offline discussion. With the information I put in the other email
+earlier today, do you still think we should submit one patch which
+covers all 6 seperated memory mapping buses for k1.dtsi?
+
+Let me know what do you think. Thank you.
+
+BR,
+Guodong
+
+>
+> >
+> > https://lore.kernel.org/all/20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@wh=
+ut.edu.cn/
+> > https://lore.kernel.org/all/20250613-net-k1-emac-v1-0-cc6f9e510667@isca=
+s.ac.cn/
+> >
+> > (I haven't put eth{0,1} under dma_bus5 because in 6.16-rc1 there is
+> > none, but ideally we should fix this.)
+> >
+> > DMA address translation does not depend on PDMA. It would be best if we
+> > get all the possible dma-ranges buses handled in one place, instead of
+> > everyone moving nodes around.
+> >
+> I agree
+>
+> > @Ze Huang: This affects your "MBUS" changes as well. Please take a look=
+,
+> > thanks.
+> >
+> > >
+> > >             gpio: gpio@d4019000 {
+> > > @@ -792,3 +693,124 @@ pwm19: pwm@d4022c00 {
+> > >             };
+> > >     };
+> > >  };
+> > > +
+> > > +&dma_bus {
+> > >
+> > > <snip>
+> >
+>
 > --
-> pw-bot: cr
+> Yixun Lan (dlan)
