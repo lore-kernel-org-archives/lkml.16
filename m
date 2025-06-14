@@ -1,320 +1,388 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE453FFD
-	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 10:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B531C1E7648;
+	Sat, 14 Jun 2025 10:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749895887; cv=none; b=as5w78SGshLVhnDPV8oWtDeawbO/hMlhkptngqPewbTAcDW7YfEUtgsGGWNGsGjiIkQBPp7Flm1wya7Y6ZfRpwkgcYNgSAJt5mkryMCywI8XmYTe7/VzOQhjhAaRml5FGIIovsmCdPeCwA13QGT+eqHBKgc+6b0h1XF6/hrD+Dk=
+	t=1749896104; cv=none; b=aLMZMz6ZzAX0HIKBMRiZHAafBibsBndGD12DxfQAyY9uoPKg7rlmKZvJJbVcaNqQ4kAOzAPqKg8Tq4YSfOtTTo464jvJtuyR0+nIMXdbl0ZqZt35WlToPKHZPKo30cZABo3rbuCxzFgAtXVcGw8854ms+amC1WxXhODA6XJQ+gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749895887; c=relaxed/simple;
-	bh=24QEuLw9QBKMOAnRsnCqCurlGb4oKSzyUqwAvONigCA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=pxhFwoyLypOtjE69c4pMVVkGLiOhDloS3LpIs18Up2cRBSWMs052p+DHq9KgOMq9+De75GII8Wr5GooQNzmil9EVSSLvWdxfTtoP35Vl/l5oANAyvxCelxxdzRbrUWXpJECdoPqSTzLo1RO2JacIAaN2Y0upul0EaYa34fLW01E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bGkMZeSJ; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749896104; c=relaxed/simple;
+	bh=GHTvmES2P7gY68VtoLjCEKKwS3lD28L0xNpH8WBRu4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ON+ppAMnPp9QFIJFmCl52JjGE0Y6PrFsY554qhtyMyODABlSSi7Aak6QMaDEgjBEEMWjAKoFmEr8c0tNRze/09bAzPU4lTI9ouUukFE0H9u7boExE9sWczuzkKEb5NEviNJM5bro5XaUP3MWjOe3RTJmRr1vsxM0zsLQGwFOBuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czfn4TiI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bGkMZeSJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749895885; x=1781431885;
-  h=date:from:to:cc:subject:message-id;
-  bh=24QEuLw9QBKMOAnRsnCqCurlGb4oKSzyUqwAvONigCA=;
-  b=bGkMZeSJJo5fyyxQx5S/HjLzt6zRmhdxWcd532wuVeN7p1U8Sm3i2VJ2
-   bD30yTF/V/J9DDjByDIc8pKWRspXDjiUBJsXBzF7zLlp4jIsTsv1lJ67x
-   /1tfUQT/Rwfec/sEjkMiJnNPGu0JuywgL4pxF2pA0aiLwIPRWvP8unx67
-   qFygtQybSjF/ywsFORsJhj0cQUbQTUgzp61NNYaBG6NGXHVW3TGKi4yOJ
-   P9XRik189ri3umMN0sK3ogTboMs+8fAyPI3V36AfeRw2BT4AgTF78In8Q
-   olfkNJn3m2OTdmtzKanbnxb9NuGSX7K26s20Knon7hQ7adWQ40RTZri61
-   A==;
-X-CSE-ConnectionGUID: +oZC6lt1S9apzq4rjB2M4g==
-X-CSE-MsgGUID: qhRwaZSbTlmMw+kUYHy/6Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51821444"
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="51821444"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 03:11:25 -0700
-X-CSE-ConnectionGUID: gJwcOljZRk+hFYeadR9KXQ==
-X-CSE-MsgGUID: GzLZmIuGRxCpDRy4I6zOvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
-   d="scan'208";a="185284500"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 14 Jun 2025 03:11:23 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQNr6-000DQm-2i;
-	Sat, 14 Jun 2025 10:11:20 +0000
-Date: Sat, 14 Jun 2025 18:11:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:smp/core] BUILD SUCCESS
- 09735f0624b494c0959f3327af009283567af320
-Message-ID: <202506141852.laUgIf1p-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czfn4TiI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F91AC4CEEB;
+	Sat, 14 Jun 2025 10:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749896104;
+	bh=GHTvmES2P7gY68VtoLjCEKKwS3lD28L0xNpH8WBRu4M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=czfn4TiIjdN2/g8LC8p6UzlpBRZ5VwNkn3WBEa+Eoja6+lvGw+fJ4TANNMxwDktXy
+	 SoBdqwokvBQyRnXqza2Goxal/s9rjuPnfLcSYOJ3oan+urEpsQcv6h1CTptEeo/dHy
+	 aj+qJ4pwZveRqMxQ99WsNaPnfFYnqAQMerhxpXcKT3ngs/pmmyrIu0L+/7xH0+ffWY
+	 yV1rn7ppHZnxrlvYI0vUD2I+I7tCcXym2jz8CGGw9nkYzgM1w/sFOV419XljDWkzim
+	 EYnORK9uBVdZBOpqwDT+6YxczWQJHIgDcCrMc/Z4iZAikOlXd2c98+k/GMJ2hJTjzQ
+	 r6zaAlK0N0NCQ==
+Date: Sat, 14 Jun 2025 11:14:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Jorge Marques
+ <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] dt-bindings: iio: adc: Add adi,ad4052
+Message-ID: <20250614111454.25741044@jic23-huawei>
+In-Reply-To: <5lr5sqwtj52dy5n73ti2jszbybx5dpww33jceehdqehklr2hbm@zxickou2odcb>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+	<20250610-iio-driver-ad4052-v3-2-cf1e44c516d4@analog.com>
+	<20250611181818.14d147c7@jic23-huawei>
+	<xqkr3rq6ikuiz5wcbxmto4gp7wnccmmogklf2ux2edauotufim@pcuhddxdzjxi>
+	<ef0d4038-b665-4ef0-9e7b-7ad2ce154c50@baylibre.com>
+	<zd4fvyjbfurgsp3rpslo2ubpxzxn7bh5b2vh5j4j7outxdrcd7@firxlr6bfkic>
+	<5130be5d-b769-41aa-af2f-b1e16a91e569@baylibre.com>
+	<5lr5sqwtj52dy5n73ti2jszbybx5dpww33jceehdqehklr2hbm@zxickou2odcb>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp/core
-branch HEAD: 09735f0624b494c0959f3327af009283567af320  smp: Fix typo in comment for raw_smp_processor_id()
+On Fri, 13 Jun 2025 13:17:46 +0200
+Jorge Marques <gastmaier@gmail.com> wrote:
 
-elapsed time: 1230m
+> Hi David,
+> On Thu, Jun 12, 2025 at 03:20:40PM -0500, David Lechner wrote:
+> > On 6/12/25 2:42 PM, Jorge Marques wrote:  
+> > > Hi David,
+> > > 
+> > > thank you for chiming in
+> > > 
+> > > On Thu, Jun 12, 2025 at 10:03:37AM -0500, David Lechner wrote:  
+> > >> On 6/12/25 5:11 AM, Jorge Marques wrote:  
+> > >>> On Wed, Jun 11, 2025 at 06:18:18PM +0100, Jonathan Cameron wrote:  
+> > >>>> On Tue, 10 Jun 2025 09:34:35 +0200
+> > >>>> Jorge Marques <jorge.marques@analog.com> wrote:
+> > >>>>  
+> > >>
+> > >> ...
+> > >>  
+> > >>>>> +  trigger-sources:
+> > >>>>> +    minItems: 1
+> > >>>>> +    maxItems: 2
+> > >>>>> +    description:
+> > >>>>> +      Describes the output pin and event associated.  
+> > >>
+> > >> trigger-sources would be an input pin connected to an external trigger.
+> > >> For example, the CNV pin could be connected to a trigger-source
+> > >> provider to trigger a conversion. But there aren't any other digital
+> > >> inputs, so I don't know what the 2nd source would be here.
+> > >>
+> > >> As an example, see [1]. We could potentially use the same gpio
+> > >> trigger-source for the conversion pin here. There is already
+> > >> a similar binding for pwm triggers, so we could drop the separate
+> > >> pwms binding as well an just have a single trigger-sources
+> > >> property for the CNV pin that works for both gpio and pwm.
+> > >>
+> > >> [1]: https://lore.kernel.org/linux-iio/cover.1749569957.git.Jonathan.Santos@analog.com/
+> > >>  
+> > > 
+> > > Quick summary to familiarize myself with this part and driver.
+> > > 
+> > > On ad7768-1:
+> > > ad7768-1.SYNC_OUT is a digital output, ad7768-1.SYNC_IN input, and
+> > > ad7768-1.GPIO3 (START) configured as input. ad7768-1.GPIO[0..3] are
+> > > configurable GPIO, GPIO3 as START, or in PIN control mode, the input
+> > > GPIO[3:0] sets the power mode and modulator freq (MODEx).
+> > > 
+> > > On that thread:
+> > > https://lore.kernel.org/linux-iio/8abca580f43cb31d7088d07a7414b5f7efe91ead.1749569957.git.Jonathan.Santos@analog.com/
+> > > exposes GPIO[0..3] through gpio_chip if gpio-controller in dt.
+> > > 
+> > > https://lore.kernel.org/linux-iio/713fd786010c75858700efaec8bb285274e7057e.1749569957.git.Jonathan.Santos@analog.com/
+> > > trigger-sources-cells: the cell define the type of signal but *not* its
+> > > origin, because {DRDY, SYNC_OUT, GPIO3(START)} are dedicated pins, *so
+> > > there is no need to do so*.
+> > >   
+> > >>>>> +
+> > >>>>> +  "#trigger-source-cells":
+> > >>>>> +    const: 2
+> > >>>>> +    description: |
+> > >>>>> +      Output pins used as trigger source.
+> > >>>>> +
+> > >>>>> +      Cell 0 defines the event:
+> > >>>>> +      * 0 = Data ready
+> > >>>>> +      * 1 = Min threshold
+> > >>>>> +      * 2 = Max threshold
+> > >>>>> +      * 3 = Either threshold
+> > >>>>> +      * 4 = CHOP control
+> > >>>>> +      * 5 = Device enable
+> > >>>>> +      * 6 = Device ready (only GP1)  
+> > >>>>
+> > >>>> Hmm. I'm a bit dubious on why 'what the offload trigger is'
+> > >>>> is a DT thing?  Is that because the IP needs to comprehend
+> > >>>> this?  I guess only data ready is actually supported in
+> > >>>> practice?   
+> > >>>
+> > >>> A trigger can be connected to trigger something other than a spi
+> > >>> offload, it is in the DT because it describes how the device is
+> > >>> connected. When using spi offload, the trigger-source at the spi handle
+> > >>> describes which gpio and event is routed to the offload trigger input.
+> > >>> At the ADC node, trigger-source-cells describe the source gpio and event
+> > >>> for the device driver.
+> > >>>
+> > >>> In practice, in this series, one gpio is Data ready, triggering offload
+> > >>> when buffer enabled, and raw reads, when disabled. And the other is
+> > >>> Either threshold, propagated as an IIO event. Fancy logic can be added
+> > >>> to the driver in future patches to allow other combinations.
+> > >>>
+> > >>> It is also worth to mention that the trigger-source is duplicated for
+> > >>> each node that uses it, as seen in the second dts example:
+> > >>>
+> > >>>    &adc AD4052_TRIGGER_EVENT_DATA_READY AD4052_TRIGGER_PIN_GP1
+> > >>>
+> > >>> Is repeated on both adc and spi node.  
+> > >>
+> > >> That sounds wrong. This would only make sense if an output of the
+> > >> ADC was wired back to itself. 
+> > >>  
+> > > 
+> > > The issue is the lack of way of describing to the driver the function of
+> > > each gpio, when configurable. Perhaps it is better to use
+> > > trigger-source-cells to only describe the topology at that node
+> > > receiving the trigger, e.g.
+> > > 
+> > >   trigger-sources = <&adc AD4052_TRIGGER_PIN_GP0>;
+> > > 
+> > > Below I continue the discussion.  
+> > >>>
+> > >>> One last thing, on the driver, for v3, I should handle -ENOENT:
+> > >>>
+> > >>>   ret = of_parse_phandle_with_args(np, "trigger-sources",
+> > >>>   				   "#trigger-source-cells", i,
+> > >>>   				   &trigger_sources);
+> > >>>   if (ret)
+> > >>>   	return ret == -ENOENT ? 0 : ret;
+> > >>>
+> > >>> To assert only when present, since the nodes are not required.
+> > >>> Or, in the driver,
+> > >>> require AD4052_TRIGGER_PIN_GP0 if irq_get_byname finds gp0, and
+> > >>> require AD4052_TRIGGER_PIN_GP1 if irq_get_byname finds gp1?
+> > >>> (I would go with the first option).  
+> > >>>>  
+> > >>
+> > >> ,,,
+> > >>  
+> > >>>>> +examples:
+> > >>>>> +  - |
+> > >>>>> +    #include <dt-bindings/gpio/gpio.h>
+> > >>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+> > >>>>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > >>>>> +
+> > >>>>> +    spi {
+> > >>>>> +        #address-cells = <1>;
+> > >>>>> +        #size-cells = <0>;
+> > >>>>> +
+> > >>>>> +        adc@0 {
+> > >>>>> +            compatible = "adi,ad4052";
+> > >>>>> +            reg = <0>;
+> > >>>>> +            vdd-supply = <&vdd>;
+> > >>>>> +            vio-supply = <&vio>;
+> > >>>>> +            ref-supply = <&ref>;
+> > >>>>> +            spi-max-frequency = <83333333>;
+> > >>>>> +
+> > >>>>> +            #trigger-source-cells = <2>;
+> > >>>>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP0
+> > >>>>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP1>;  
+> > >>
+> > >> This doesn't make sense for the reason given above. These outputs
+> > >> aren't wired back to inputs on the ADC. They are wired to interrupts
+> > >> on the MCU, which is already described below.
+> > >>  
+> > > Below.  
+> > >>>>> +            interrupt-parent = <&gpio>;
+> > >>>>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > >>>>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > >>>>> +            interrupt-names = "gp0", "gp1";
+> > >>>>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > >>>>> +        };
+> > >>>>> +    };
+> > >>>>> +  - |
+> > >>>>> +    #include <dt-bindings/gpio/gpio.h>
+> > >>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+> > >>>>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > >>>>> +
+> > >>>>> +    rx_dma {
+> > >>>>> +            #dma-cells = <1>;
+> > >>>>> +    };
+> > >>>>> +
+> > >>>>> +    spi {
+> > >>>>> +        #address-cells = <1>;
+> > >>>>> +        #size-cells = <0>;
+> > >>>>> +
+> > >>>>> +        dmas = <&rx_dma 0>;
+> > >>>>> +        dma-names = "offload0-rx";  
+> > >>
+> > >> The dmas aren't related to the ADC, so can be left out of the example.
+> > >>  
+> > > Ack.  
+> > >>>>> +        trigger-sources = <&adc AD4052_TRIGGER_EVENT_DATA_READY
+> > >>>>> +                                AD4052_TRIGGER_PIN_GP1>;
+> > >>>>> +
+> > >>>>> +        adc@0 {
+> > >>>>> +            compatible = "adi,ad4052";
+> > >>>>> +            reg = <0>;
+> > >>>>> +            vdd-supply = <&vdd>;
+> > >>>>> +            vio-supply = <&vio>;
+> > >>>>> +            spi-max-frequency = <83333333>;
+> > >>>>> +            pwms = <&adc_trigger 0 10000 0>;
+> > >>>>> +
+> > >>>>> +            #trigger-source-cells = <2>;
+> > >>>>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP0
+> > >>>>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP1>;  
+> > >>
+> > >> Same as above - the GP pins aren't wired back to the ADC itself.
+> > >>  
+> > >>>>> +            interrupt-parent = <&gpio>;
+> > >>>>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > >>>>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > >>>>> +            interrupt-names = "gp0", "gp1";
+> > >>>>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > >>>>> +        };
+> > >>>>> +    };  
+> > > 
+> > > Considering the discussion above. As is, in this series GP0 is event
+> > > Either threshold and GP1 Data ready. A future series would aim to make
+> > > it truly configurable.
+> > > 
+> > > For this series then, do we then drop the second cell of trigger cell
+> > > and do not provide a way of describing the function of each gpio? e.g.  
+> > 
+> > The bindings can't be changed later, so no, don't drop the 2nd cell
+> > if we are going to add it back later.
+> > 
+> > But considering Jonathan's feedback, I am now questioning if we need
+> > the 2nd cell at all. The way trigger-source consumers work currently
+> > is that they request a trigger of a certain generic type, like "data
+> > ready". So this information could be used to determine what function
+> > needs to be assigned to the pin without having to define that in the
+> > devicetree.
+> >   
+> Useful for assertion. It is odd to be used for requesting of a certain
+> type (gpio role) instead of telling how things are wired.
+> > > 
+> > >   - |
+> > >     #include <dt-bindings/gpio/gpio.h>
+> > >     #include <dt-bindings/interrupt-controller/irq.h>
+> > >     #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > >   
+> > >     rx_dma {
+> > >             #dma-cells = <1>;
+> > >     };
+> > >   
+> > >     spi {
+> > >         #address-cells = <1>;
+> > >         #size-cells = <0>;
+> > >   
+> > >         trigger-sources = <&adc AD4052_TRIGGER_PIN_GP0>;
+> > >   
+> > >         adc@0 {
+> > >             compatible = "adi,ad4052";
+> > >             reg = <0>;
+> > >             vdd-supply = <&vdd>;
+> > >             vio-supply = <&vio>;
+> > >             spi-max-frequency = <83333333>;
+> > >             pwms = <&adc_trigger 0 10000 0>;
+> > >   
+> > >             // --- Other thought ------
+> > >             //adi,gpio-role = <AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > >             //                 AD4052_TRIGGER_EVENT_DATA_READY>;
+> > >             // ------------------------
+> > >             interrupt-parent =  <&gpio>;
+> > >             interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > >                          <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > >             interrupt-names = "gp0", "gp1";
+> > >             cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > >         };
+> > >     };
+> > > 
+> > > Other thought is to add an "adi,gpio-role" property to define gpio
+> > > function (as commented in the example above, matched with index of
+> > > interrupts-names). If no interrupt-name.gp0 but trigger-source.GP0,
+> > > assume role Data ready (no irq for raw read, only buffer offload).
+> > > 
+> > > What is your opinion on this?  
+> > 
+> > 
+> > Usually, we just have the devicetree describe how things are wired up.
+> > Then the driver looks at how things are wired up and decides how to
+> > best make use of the available resources. I.e. in the driver add some
+> > variables in the driver state struct that keeps track of the function
+> > assigned to each GP pin and use that to make decisions.
+> > 
+> > In the driver, we would want to make sure to handle triggers first
+> > since those are less flexible (so set up SPI offload first). This
+> > would cause one of the GP pins to be assigned to the /RDY function.
+> > It doesn't matter which one.
+> >   
+> I will default drdy_gp to g0, until offload request overwrites it,
+> either gp0 or gp1.
+> > Then later, parse the interrupts property. If we see that one of
+> > the GP pins is already assigned to /RDY, then we know we have to
+> > use that pin for the /RDY interrupt as well. If both pins are still
+> > available, then an arbitrary one can be assigned for /RDY.  
+> based on drdy_gp, set that gp as drdy, and the remaining is threshold
+> either. the interrupt is optional, but setup device gp regardless, since
+> the irq may be consumed by other device.
+> > 
+> > Then if there is still an unused GP pin left that is actually
+> > wired up to an interrupt, that can be used for the events interrupt.
+> > 
+> > Or we could even consider to have everything on one pin since the
+> > /RDY signal would never be needed at the same time as events as long
+> > as the events are only ever used in monitor mode.
+> >  
+> 
+> The threshold event occurs on the rising edge, the data ready on the
+> falling edge (it is actually BUSY). Mixing both has a lot of nuances
+> involved.
 
-configs tested: 243
-configs skipped: 4
+Ok. Mixing them might not make sense - but overall the decision on what
+to do with any line that is just wired device to host interrupt is
+a driver problem.   If it's also wired to another device (including
+offload engine) and that requires a specific setting (e.g. data ready)
+then that is fair enough to have in DT.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I think that's roughly where this discussion ended up but just wanted
+to confirm that.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250613    gcc-12.4.0
-arc                   randconfig-001-20250614    gcc-8.5.0
-arc                   randconfig-002-20250613    gcc-12.4.0
-arc                   randconfig-002-20250614    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                                 defconfig    gcc-15.1.0
-arm                        multi_v7_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250613    clang-21
-arm                   randconfig-001-20250614    gcc-8.5.0
-arm                   randconfig-002-20250613    clang-20
-arm                   randconfig-002-20250614    gcc-8.5.0
-arm                   randconfig-003-20250613    gcc-8.5.0
-arm                   randconfig-003-20250614    gcc-8.5.0
-arm                   randconfig-004-20250613    clang-21
-arm                   randconfig-004-20250614    gcc-8.5.0
-arm                           spitz_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250613    gcc-15.1.0
-arm64                 randconfig-001-20250614    gcc-8.5.0
-arm64                 randconfig-002-20250613    clang-21
-arm64                 randconfig-002-20250614    gcc-8.5.0
-arm64                 randconfig-003-20250613    clang-21
-arm64                 randconfig-003-20250614    gcc-8.5.0
-arm64                 randconfig-004-20250613    gcc-15.1.0
-arm64                 randconfig-004-20250614    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250613    gcc-15.1.0
-csky                  randconfig-001-20250614    clang-21
-csky                  randconfig-002-20250613    gcc-15.1.0
-csky                  randconfig-002-20250614    clang-21
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-15.1.0
-hexagon               randconfig-001-20250613    clang-21
-hexagon               randconfig-001-20250614    clang-21
-hexagon               randconfig-002-20250613    clang-21
-hexagon               randconfig-002-20250614    clang-21
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250613    gcc-12
-i386        buildonly-randconfig-001-20250614    clang-20
-i386        buildonly-randconfig-002-20250613    gcc-11
-i386        buildonly-randconfig-002-20250614    clang-20
-i386        buildonly-randconfig-003-20250613    gcc-12
-i386        buildonly-randconfig-003-20250614    clang-20
-i386        buildonly-randconfig-004-20250613    clang-20
-i386        buildonly-randconfig-004-20250614    clang-20
-i386        buildonly-randconfig-005-20250613    clang-20
-i386        buildonly-randconfig-005-20250614    clang-20
-i386        buildonly-randconfig-006-20250613    gcc-12
-i386        buildonly-randconfig-006-20250614    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250614    clang-20
-i386                  randconfig-002-20250614    clang-20
-i386                  randconfig-003-20250614    clang-20
-i386                  randconfig-004-20250614    clang-20
-i386                  randconfig-005-20250614    clang-20
-i386                  randconfig-006-20250614    clang-20
-i386                  randconfig-007-20250614    clang-20
-i386                  randconfig-011-20250614    clang-20
-i386                  randconfig-012-20250614    clang-20
-i386                  randconfig-013-20250614    clang-20
-i386                  randconfig-014-20250614    clang-20
-i386                  randconfig-015-20250614    clang-20
-i386                  randconfig-016-20250614    clang-20
-i386                  randconfig-017-20250614    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250613    gcc-15.1.0
-loongarch             randconfig-001-20250614    clang-21
-loongarch             randconfig-002-20250613    gcc-15.1.0
-loongarch             randconfig-002-20250614    clang-21
-m68k                             alldefconfig    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                            mac_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                  cavium_octeon_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250613    gcc-11.5.0
-nios2                 randconfig-001-20250614    clang-21
-nios2                 randconfig-002-20250613    gcc-11.5.0
-nios2                 randconfig-002-20250614    clang-21
-openrisc                          allnoconfig    clang-21
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-21
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250613    gcc-8.5.0
-parisc                randconfig-001-20250614    clang-21
-parisc                randconfig-002-20250613    gcc-13.3.0
-parisc                randconfig-002-20250614    clang-21
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc                      arches_defconfig    gcc-15.1.0
-powerpc                 linkstation_defconfig    gcc-15.1.0
-powerpc               mpc834x_itxgp_defconfig    gcc-15.1.0
-powerpc                  mpc866_ads_defconfig    gcc-15.1.0
-powerpc                       ppc64_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250613    clang-21
-powerpc               randconfig-001-20250614    clang-21
-powerpc               randconfig-002-20250613    gcc-8.5.0
-powerpc               randconfig-002-20250614    clang-21
-powerpc               randconfig-003-20250613    gcc-9.3.0
-powerpc               randconfig-003-20250614    clang-21
-powerpc                        warp_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250613    gcc-8.5.0
-powerpc64             randconfig-001-20250614    clang-21
-powerpc64             randconfig-002-20250613    gcc-8.5.0
-powerpc64             randconfig-002-20250614    clang-21
-powerpc64             randconfig-003-20250613    gcc-10.5.0
-powerpc64             randconfig-003-20250614    clang-21
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250613    gcc-8.5.0
-riscv                 randconfig-001-20250614    gcc-14.3.0
-riscv                 randconfig-002-20250613    clang-21
-riscv                 randconfig-002-20250614    gcc-14.3.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                          debug_defconfig    gcc-15.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250613    clang-21
-s390                  randconfig-001-20250614    gcc-14.3.0
-s390                  randconfig-002-20250613    clang-21
-s390                  randconfig-002-20250614    gcc-14.3.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250613    gcc-15.1.0
-sh                    randconfig-001-20250614    gcc-14.3.0
-sh                    randconfig-002-20250613    gcc-15.1.0
-sh                    randconfig-002-20250614    gcc-14.3.0
-sh                          rsk7269_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250613    gcc-10.3.0
-sparc                 randconfig-001-20250614    gcc-14.3.0
-sparc                 randconfig-002-20250613    gcc-13.3.0
-sparc                 randconfig-002-20250614    gcc-14.3.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250613    gcc-15.1.0
-sparc64               randconfig-001-20250614    gcc-14.3.0
-sparc64               randconfig-002-20250613    gcc-8.5.0
-sparc64               randconfig-002-20250614    gcc-14.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250613    gcc-12
-um                    randconfig-001-20250614    gcc-14.3.0
-um                    randconfig-002-20250613    gcc-12
-um                    randconfig-002-20250614    gcc-14.3.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250613    clang-20
-x86_64      buildonly-randconfig-001-20250614    clang-20
-x86_64      buildonly-randconfig-002-20250613    gcc-12
-x86_64      buildonly-randconfig-002-20250614    clang-20
-x86_64      buildonly-randconfig-003-20250613    gcc-12
-x86_64      buildonly-randconfig-003-20250614    clang-20
-x86_64      buildonly-randconfig-004-20250613    gcc-12
-x86_64      buildonly-randconfig-004-20250614    clang-20
-x86_64      buildonly-randconfig-005-20250613    clang-20
-x86_64      buildonly-randconfig-005-20250614    clang-20
-x86_64      buildonly-randconfig-006-20250613    gcc-12
-x86_64      buildonly-randconfig-006-20250614    clang-20
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250614    clang-20
-x86_64                randconfig-002-20250614    clang-20
-x86_64                randconfig-003-20250614    clang-20
-x86_64                randconfig-004-20250614    clang-20
-x86_64                randconfig-005-20250614    clang-20
-x86_64                randconfig-006-20250614    clang-20
-x86_64                randconfig-007-20250614    clang-20
-x86_64                randconfig-008-20250614    clang-20
-x86_64                randconfig-071-20250614    clang-20
-x86_64                randconfig-072-20250614    clang-20
-x86_64                randconfig-073-20250614    clang-20
-x86_64                randconfig-074-20250614    clang-20
-x86_64                randconfig-075-20250614    clang-20
-x86_64                randconfig-076-20250614    clang-20
-x86_64                randconfig-077-20250614    clang-20
-x86_64                randconfig-078-20250614    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-18
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                generic_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250613    gcc-8.5.0
-xtensa                randconfig-001-20250614    gcc-14.3.0
-xtensa                randconfig-002-20250613    gcc-15.1.0
-xtensa                randconfig-002-20250614    gcc-14.3.0
+Jonathan
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > If we find that there is some case though where the driver really
+> > can't figure out what to do with the available information, then
+> > we could probably justify adding a property like you suggested.
+> > It seems like we could possibly do without it at this point though.  
+> 
+> With the proposed above, I don't need the cell 0 of trigger-sources. But
+> I will keep for assertion since we are inferring
+> has?trigger-sources-> -then-> drdy.
+> 
+> Best regards,
+> Jorge
+
