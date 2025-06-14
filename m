@@ -1,102 +1,95 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08129F50F;
-	Sat, 14 Jun 2025 00:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC472171A1
+	for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 00:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749862265; cv=none; b=TPM/vyvYxz0cBxTUfHnOv+9UUO9DK+4HA3W5Dbh94kGRESPiLKaSGegmLYOqkgtT4c6pl+1rtHfG6AFIqQrkAkH3HBYBqF26gx8aStPv+TsdVNRLxVMJmAFrEJBmv/s231L0keebBwSw4hzIe4APThE/9Y4eiEi17nGm4r+xW5c=
+	t=1749862467; cv=none; b=eQMbX9el58q0AqIQiiA4MCS3a8nS8fG/bk2lenHOHVkEJbWm7+2n2ig+rULIPrREp9GPyUcrJ8aKOFLP5n+DP4axBarSeP13CmJx5ePyglqzbsMf+4TzjM/BO8LEwDkmDTY/E/G0IDt4B5hwvs8a/hIJ/dChDJDeX211JFJodiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749862265; c=relaxed/simple;
-	bh=QjxExhgrl9lF8XR8OVzaUuJbjCmCwGrqDlGqJiLGARQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lhWSIRBtPrF0uSNfmchMkKqRxnBrlVHXkpLumTD6UDzAtkBwJTWsQg55OLBqi/WU6JUIP+OHrl4LuROfxCOiKWK5sa9KFZSr9uirsgZ0n296iM8AufybU/BHDuU2O5gDBD8/K/t9Dt28uqTJxiGbT1dQc52PyRrYfg0Vji0WQ/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eN94EsOA; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749862467; c=relaxed/simple;
+	bh=dbg3c1BYh2RqngzJb5eNWzqDUU5+7bNmKWGAXK29fkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ejp33bup16FDIhAV6A+nt96ICTQnXjpDeolktiKsuPkAkhFeM565wKHdLP/n7RCkHq6IxMAOtoFsrAeyNy6AGVpb23mLmJUq4hm+DMKBTcvRHjWjl8+ETegRR9Zo1fJMQk+s4Nw7HF1rZxS5dFs9N+xXKbO/28dsqm+tlm4xOU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WezgbJk0; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eN94EsOA"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81877c1ed6so3546750276.0;
-        Fri, 13 Jun 2025 17:51:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WezgbJk0"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235ca5eba8cso66255ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:54:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749862263; x=1750467063; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q4BvcwXUpYpF53aglFHdWaMYuKTVfMzFy1gAx/zcHH8=;
-        b=eN94EsOAW64HvqSQZEErJW6JklMCQDfrSW1xFwUCKdZb1lOq4FOafejWCjWDjrhtJE
-         61xJcjPkY2Kb+mwpPCP/INOkWL9qzJksMIhlYiy7i05uQEn63HKDXKOXQowvo+g7Hl1a
-         cxK4GZpjwVSdYMyr5kcvh5CC2GiGk3S+7CVNAp7WJ7khNgnqmIjsgYVOIMrg4GTNHi8a
-         Bv5nJN92O1DmyKP/lf3tPTJZ0zzNUwl5ggTRQKmP846Yzi2giv5BkbXgx8WDR//r2+n/
-         6mNJUBmXJY+CNLCG54ZL2T4PztDIwcVY7CJ9WoIoYXO+xzvhWXwhj6spiulRFc1iyvMJ
-         hHGA==
+        d=google.com; s=20230601; t=1749862465; x=1750467265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dbg3c1BYh2RqngzJb5eNWzqDUU5+7bNmKWGAXK29fkM=;
+        b=WezgbJk0dtNUYgx24URetCr6EXq91Ga38mytsbVMSvQi3xAQnTtIvKvc1AjVq1GNEL
+         UodO33phXhFGQouhEwYlWk2BhgrbOBJMRgN9mxMdKZ97o49a0IQIJpAv4MDo5Hk46PgH
+         eAkkILbbUz1J1ezLysvMlv5ElzF6WaRVn4Ub9EiGorspTF/vytjkNvFG/RFPH4a/dRbR
+         OTs+O4QmXqsqTPt05pM5jedM8u/uvv1p79t9RGpaxjhHEbyUgIcA7i9Dx+dt28KzMK4f
+         MD9FQo+ZG+tOoahB+S1zTfA+8g/5vGIJ7v678WlCNtMvYytRYSO5WRzvrbX1mEyNiEsE
+         P+Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749862263; x=1750467063;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q4BvcwXUpYpF53aglFHdWaMYuKTVfMzFy1gAx/zcHH8=;
-        b=e01qX6HUJGgi+nLTFOSe4vpJq8ICuni0aynU3Le58TeQoyM+5rZLkB6pXezrfDh1iD
-         e0G6x0f/tXaHToqi3TIs1CNU0J8BlovdLHAktt2xXdYdmGKc195C1DoQl0uw0er32rTt
-         btIGRU+Us2uEeShv+eysHWdn67ixgDB+p4zp8VbbCXetCs7l5VYQOmLJ/KYB5so8aY6v
-         uNPrmOwATrmBxYUZcYW6Txgyhpr9t47gfWiZbKTuGwdwpDetwS4HD559knDS+JckLiHH
-         Hk4w5/aYpNk8WrWsH4GUDc6XnIOFJJbkeCCHymNOfBwRCfV8yX5DJZ65CiG8IpnIDddk
-         bcnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTgpHDAJnZDPCPs7LI1PgHVhHlTWG3Jo7Vgs2EtGjJttO1lJ6cpyhWagJ0KTSBb1O3w2VEn/uX8mlKRA==@vger.kernel.org, AJvYcCXmQHjDjWkpMDQS5vH0FcFnPX7Eh4reMNSFLmU+EvBpmwykPcg9G7G/g9lonz9vVTehz5n/6a5IPZTob8P5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm0ysd1e9jl5NHBOZznABmLObttgcAauxBfd2DuCnJH/rZpKEt
-	fPtjPtNG4XR3H73bpMJRJYPBY7fVCJe8KDjxMCLrHQwVWUxQF4yt9K0T
-X-Gm-Gg: ASbGncvgag3EXW8b+NYxTDVI/wWqaLAUBqGScuzno7vB7oIhe6AoiXzeA0CHWt/ZB0C
-	wwE8oJ3DQRanVsotAxSX2UQNiMmmHw5t5+C7Q4NZrNtcXFLdIcTXbAGbCa63ffHUW/rpwAOCBmV
-	0eGsLb/JTAEL7TguG3JPT+EPIycEGZe6UFfJnN5MMw8EPX7dF15nh6tRPviAF3V7kkjHMgR6TAd
-	8jDRwHVk28niGLdyKE2WcZKTZETh3fDhI3XTsCXgiLv9skKKSvziQIFOFqUA7+gRwDBBqiQ70eW
-	nYn473K3wAhN1VmdiNmOOhZhV5q/vy0JsThcF14iZq0VIxGw3cEwnpt9FlAfps9hv7mpShDnuKa
-	FkBnmiSxU0A8=
-X-Google-Smtp-Source: AGHT+IESW6urO3WUlGFtx1OVEKIz7u5UMPmvMN/XKB+gqkytA6iQPBFo0Ygy9Q8aFIp9XHXF40d4YA==
-X-Received: by 2002:a05:6902:2186:b0:e81:b5c8:3d71 with SMTP id 3f1490d57ef6-e82281be2b4mr3513048276.17.1749862262905;
-        Fri, 13 Jun 2025 17:51:02 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e820e09b464sm1409902276.20.2025.06.13.17.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 17:51:02 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: deller@gmx.de
-Cc: alexguo1023@gmail.com,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fbdev: sstfb: Fix potential divide by zero
-Date: Fri, 13 Jun 2025 20:50:59 -0400
-Message-Id: <20250614005059.3108265-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1749862465; x=1750467265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dbg3c1BYh2RqngzJb5eNWzqDUU5+7bNmKWGAXK29fkM=;
+        b=G0DqjIaYb3UhI7GNUPDn3SI5WBWoLD7aRJINkxfUsXOQc0Nhxy4zTsH/OuMlLKRPqE
+         C3YQhmkfoU4EbBNoJxoWtVO4KrE/xRqA1uK7hEt/pxoJcZikrZswCe2TG5Dza15WjL0c
+         dq4Is7CFnG+BLzpwKNG+SeLyyYGQauwKi3eelWvydZFN3lbxDYLqOC38E2vSzeYqk4+3
+         PDmt66+297hWcE2eSLl8tX2KpDn7542V354Tlh8hPO08hkb8mxyLwZ3HT7Vz9ie86rhK
+         2umekmaZmMFXv+7Qp7vgmWHQQH2EbEFCGyVz4im7aZA3ATzwJ7O6JkC88cRh/fW6qQSz
+         Scjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLPBZGS2Sd8OnZbHDDUcapN3MvrYZYMCNOtpeNOQ4KCPrYcenL3eW+4APOY7XepZQEuwVUwimHNd3SbdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6DbbuYak8yOuJsf2PfV4pfFPHTKnmfiDzIJo8me0z0+XSQGYK
+	VA0/M5Pfu2t9p6AvaHaLbAH/TuTuxjSAAiRo2MaonC7trpQs3K9pKNtFu2zsG+B70EN8BdCHFW4
+	/IlzIAjkTq5lbkjMp/5FW3HZ0A6NLKtniWSGJbJYD
+X-Gm-Gg: ASbGnctqOwXs0nfOwAHbUa/F+NAYz+lxtyQK3YfieFYWwnNL9x52JcG28LHu6anexO8
+	9185TKsCeuzVZ5xYEib2iSic4Pfj8I57ivPIrPN7XLxirapFAtk0XyWbLFC2g4rKLzAoebU3wYC
+	NmRcCn+/eHrXjDNxa3DuL4D15A3oHZOTEz/JpT0eNRlMO175y9BeI=
+X-Google-Smtp-Source: AGHT+IF5JrVHVbiN/102jVBcJgf8pP7Edb6rcI75OIdKcC6Rl/eoRwukBdcUmUcOznU3bQiIsNg7MVhxwBLn+Nvp0Wc=
+X-Received: by 2002:a17:903:1107:b0:234:afcf:d9de with SMTP id
+ d9443c01a7336-2366f01c6f8mr325645ad.29.1749862464820; Fri, 13 Jun 2025
+ 17:54:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250609154926.1237033-2-samitolvanen@google.com> <dec42b04-b76f-4a2e-b060-9ac999fe1462@suse.com>
+In-Reply-To: <dec42b04-b76f-4a2e-b060-9ac999fe1462@suse.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Fri, 13 Jun 2025 17:53:47 -0700
+X-Gm-Features: AX0GCFvhflmbUjvvF_yAMLbU4RfChKb2aHfDzBXIK7IMhzB8uMQ9kdWUKlDyi7o
+Message-ID: <CABCJKuctMAeD0HjnH5D8ji-g1ZKoev-u6ni-UiDL3qtQhpfbZA@mail.gmail.com>
+Subject: Re: [PATCH] gendwarfksyms: Fix structure type overrides
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Giuliano Procida <gprocida@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Variable var->pixclock can be set by user. In case it equals to
- zero, divide by zero would occur in sstfb_check_var. Similar
-crashes have happened in other fbdev drivers. We fix this by
-checking whether 'pixclock' is zero.
+Hi Petr,
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/video/fbdev/sstfb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Jun 13, 2025 at 12:52=E2=80=AFPM Petr Pavlu <petr.pavlu@suse.com> w=
+rote:
+>
+> Nit: This code was the only user of __cache_was_expanded() and
+> __cache_mark_expanded(). It is now possible to merge
+> __cache_was_expanded() into cache_was_expanded() and
+> __cache_mark_expanded() into cache_mark_expanded().
 
-diff --git a/drivers/video/fbdev/sstfb.c b/drivers/video/fbdev/sstfb.c
-index 2ea947f57efb..fd387ca8401b 100644
---- a/drivers/video/fbdev/sstfb.c
-+++ b/drivers/video/fbdev/sstfb.c
-@@ -359,7 +359,7 @@ static int sstfb_check_var(struct fb_var_screeninfo *var,
- 	int tiles_in_X, real_length;
- 	unsigned int freq;
- 
--	if (sst_calc_pll(PICOS2KHZ(var->pixclock), &freq, &par->pll)) {
-+	if (var->pixclock && sst_calc_pll(PICOS2KHZ(var->pixclock), &freq, &par->pll)) {
- 		printk(KERN_ERR "sstfb: Pixclock at %ld KHZ out of range\n",
- 				PICOS2KHZ(var->pixclock));
- 		return -EINVAL;
--- 
-2.34.1
+Nice catch. I'll send v2 with these dropped.
 
+> Looks ok to me otherwise, feel free to add:
+>
+> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+
+Thanks!
+
+Sami
