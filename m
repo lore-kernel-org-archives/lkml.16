@@ -1,106 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11415383;
-	Sun, 15 Jun 2025 16:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE7F35947
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 16:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750003272; cv=none; b=uVGMhMivS3s9GPKe73CUzqjAGWSuyGMWNWM+/NqqsJoNJ1XYqkHj4DZyJ98Z+lhIn65lqbcJRMZeJRSQzQpb4fT5QZSZiTzKdCOj9kxkTw4eKd7Lg3COexQ/Jzw6zRB4QW6wdu+9sPjAME5YyNueZPyC/Jt2FiI8pbjGYSNc38I=
+	t=1750003526; cv=none; b=Oqjx1KUwU6mpZOSoKRHm3GaRy3wmglQH2GnLf+wT8Lu6X8HxTbGLsw8ZKYFdIPuSAy96iI9xiCZjWgmzFKaHoGfuvtQ1J2rwE9Sm5Z8WYv2AoUDj2hyyuZbRB74d3xu970I+v3az+zgeK9b0MGUAtUq8a+ldeSvqeTYJG7q8Jq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750003272; c=relaxed/simple;
-	bh=iei+Rbi1EMsM3VoJTS+GLsvIcopbRLAxDDDRUGZbLlo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NsBrS+g7xCb8FJjxlcj6CfyVsxYXRAEowGLFFI9tfgqO1flU6BIF0P6d40/Ju/qdUZimreTyLyVP5cAcT11s4pZWzWeFOFnWxD2EEZv9IJVA2d8/eseZ7/JzkrF2c8i0RB6RWTNblr24/6GEvQsWdT+Mz+dvXYfw43YySkTjl5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwMg58Vy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750003526; c=relaxed/simple;
+	bh=fIvay9xLyX/NWF4lX2vHQs13c8n2lD9h76kkaOi/uhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ansql/oetteDf3cmSM/t7yJrELA/hyIybSE/ylrku9+vTKHGPUyWN3KxhA5CTjPdor9mgl977nxEYhgzHTVjROD2j6XEcBUFUR/Ggvd3Yd7CUUuEcW00nO7GjvTVUrhJ0oUvWgl/W0ljOCR7MVWVEfFYvltRHqloQgNVHyhyAJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eb5xFic0; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwMg58Vy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 62194C4CEE3;
-	Sun, 15 Jun 2025 16:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750003271;
-	bh=iei+Rbi1EMsM3VoJTS+GLsvIcopbRLAxDDDRUGZbLlo=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=LwMg58VyykYKgijDs9VvqD0l3vO45uUoCAVQHiwY5atNJP4KtA8Uk27Iyt/hj14ZV
-	 yIyBTUp/pQ7pm+K+GkZ7Ok3AAUPWLlbvqacfSbYFdpyyR9yN1ZdzBRP84bNpMZ/xsj
-	 unGOFF4Hi4OH2UdHXT7wZsA92WgurjZgFe8eR4z+BdFnxGN83B3Ox1MQEzvcByKYlq
-	 l1DQ3oP28YUQiTKtjMuPKG2UmWYFvIVLErXutNBAQlvhtnpFFlCsKCsu7lJIlvFH55
-	 hw2WgIKCo5VYHR6J7NU1nQb8ZTgBS2i8zkM+f9myvUGptMGN3/zONLedsVUHFx0ogs
-	 ztzHNSJ8b3D+A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DDFC61CE8;
-	Sun, 15 Jun 2025 16:01:11 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Mon, 16 Jun 2025 00:01:10 +0800
-Subject: [PATCH] i2c: qup: jump out of the loop in case of timeout
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eb5xFic0"
+Date: Sun, 15 Jun 2025 12:05:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750003520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Hgn6R4b9LLUSEv1FAPxA4416olKaWNCaPHmrL00OGs=;
+	b=eb5xFic0d0VYZfPWOT//vD5drVCZEiFvfE769zyFbXItUs3s3llR9QVwGXT8qqE2uC+cO7
+	VtXU2Ix56qteF+4taeyPyzNTteSzUaUvTCILSDTS4LRn4CHLUwn+cTRopmcxddhvr31suT
+	O1FG59yjtfe8ymgICwhF6sksr0ARPKU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
+	syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com
+Subject: Re: [PATCH] bcachefs: don't return early from __btree_err for bad or
+ incompatible node read errors
+Message-ID: <tqzma4qfw7ppu56mqucmekmuhtqs5raos6wrzddf7fjouaeb6g@himxw7j544tb>
+References: <20250614185743.657564-1-bharadwaj.raju777@gmail.com>
+ <bwga4jheevnhuwwpopfwbzsjsxvmte4mtybevkfgssem4zftjo@anj44i6sfyd4>
+ <CAPZ5DTEtsqJ_z7OtRVKDqb+LkvS=UfNvCTUqnY2Pu6qGVs+PEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-qca-i2c-v1-1-2a8d37ee0a30@outlook.com>
-X-B4-Tracking: v=1; b=H4sIAEbuTmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0NT3cLkRN1Mo2TdFBPDpCQzw8REU8tUJaDqgqLUtMwKsEnRsbW1ACh
- PBhNZAAAA
-To: Andi Shyti <andi.shyti@kernel.org>, 
- Stephan Gerhold <stephan.gerhold@kernkonzept.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750003271; l=1276;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=7A4MyX2wBo/3swedAnLq8MA5y/hamSq89OQJdzuf1oA=;
- b=TYce6RfqS10iEeMra5WRsEso/JZvK/1nNmpkB8vrnFU1IEaN1FN/sM8Acao00LTn63aEfJj7x
- M/7eiwbqmFDAE+0bJ6f3myfi92GEKMeyGL+3pN2T7gKsicrMi3I+wvc
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received: by B4 Relay for forbidden405@outlook.com/20230724 with
- auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: forbidden405@outlook.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPZ5DTEtsqJ_z7OtRVKDqb+LkvS=UfNvCTUqnY2Pu6qGVs+PEQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-From: Yang Xiwen <forbidden405@outlook.com>
+On Sun, Jun 15, 2025 at 01:42:22PM +0530, Bharadwaj Raju wrote:
+> On Sun, Jun 15, 2025 at 5:49 AM Kent Overstreet
+> <kent.overstreet@linux.dev> wrote:
+> >
+> > On Sun, Jun 15, 2025 at 12:27:40AM +0530, Bharadwaj Raju wrote:
+> > > After cd3cdb1ef706 ("Single err message for btree node reads"),
+> > > all errors caused __btree_err to return BCH_ERR_fsck_fix no matter what
+> > > the actual error type was if the recovery pass was scanning for btree
+> > > nodes. This lead to the code continuing despite things like bad node
+> > > formats when they earlier would have caused a jump to fsck_err, because
+> > > btree_err only jumps when the return from __btree_err does not match
+> > > fsck_fix. Ultimately this lead to undefined behavior by attempting to
+> > > unpack a key based on an invalid format.
+> >
+> > Hang on, -BCH_ERR_fsck_fix should've caused us to fix fixable errors,
+> > not cause undefined behaviour.
+> 
+> -BCH_ERR_fsck_fix in btree_err (as _ret from __btree_err) prevents a jump
+> to fsck_err, so if that is the case, the code afterwards continues
+> as normal. That's where the UB in this bug comes from.
+> 
+> I think I should explain the path of the bug:
+> 1. bch2_btree_node_read_done calls validate_bset, with a jump to
+> fsck_err if it returns an error.
+> 2. validate_bset has btree_err_on(bch2_bkey_format_invalid(...), ...),
+> but in the bug case we were in btree-node-scan so __btree_err returns
+> fsck_fix, which means ret isn't modified and we don't jump to
+> fsck_err.
+> 3. validate_bset doesn't return an error code, so
+> bch2_btree_node_read_done goes ahead and sets the invalid format --
+> and then UB happens when trying to unpack keys based on it.
+> 
+> > Or is the issue that we're returning -BCH_ERR_fsck_fix for non-fixable
+> > errors?
+> >
+> > Glancing at the code, I think the bug might not be limited to btree node
+> > scan; we now seem to be passing FSCK_CAN_FIX for all errors in the
+> > non-btree-node-scan case, and I don't think that's right for
+> > BCH_ERR_btree_node_read_err_must_retry cases.
+> >
+> > But I'll have to go digging through the git history to confirm that, and
+> > it sounds like you've already looked - does that sound like it?
+> 
+> Isn't the bch2_fsck_err_opt(c, FSCK_CAN_FIX, err_type) call only in
+> the node_read_err_fixable case?
 
-Original logic only sets the return value but doesn't jump out of the
-loop if the bus is kept active by a client. This is not expected. A
-malicious or buggy i2c client can hang the kernel in this case and
-should be avoided. This is observed during a long time test with a
-PCA953x GPIO extender.
+You're right, it is. Ok, so it's just the scan_for_btree_nodes path
+that's busted.
 
-Fix it by changing the logic to not only sets the return value, but also
-jumps out of the loop and return to the caller with -ETIMEDOUT.
+But then you're calling __bch2_topology_error()? When we're in
+scan_for_btree_nodes we're just checking if the node is readable, we
+shouldn't be doing anything that flags errors/recovery passes elsewhere.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
----
- drivers/i2c/busses/i2c-qup.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I think the correct fix would be more like
 
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index 3a36d682ed57..5b053e51f4c9 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -452,8 +452,10 @@ static int qup_i2c_bus_active(struct qup_i2c_dev *qup, int len)
- 		if (!(status & I2C_STATUS_BUS_ACTIVE))
- 			break;
- 
--		if (time_after(jiffies, timeout))
-+		if (time_after(jiffies, timeout)) {
- 			ret = -ETIMEDOUT;
-+			break;
-+		}
- 
- 		usleep_range(len, len * 2);
- 	}
+if (scan_for_btree_nodes)
+	return ret == -BCH_ERR_btree_node_read_err_fixable
+		? bch_err_throw(c, fsck_fix)
+		: ret; /* or -BCH_ERR_btree_node_read_err_bad_node? */
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250615-qca-i2c-d41bb61aa59e
-
-Best regards,
--- 
-Yang Xiwen <forbidden405@outlook.com>
-
-
+The error codes feel pretty awkward here, we're converting between
+different classes of error codes more than we should be which makes
+things hard to follow - this is code that predates modern errcode.h
+errcodes and was converted from a private enum, I think I could've done
+that better - but I think either way works.
