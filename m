@@ -1,107 +1,82 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1890113D51E
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 21:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAE82E11C1;
+	Sun, 15 Jun 2025 21:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750022292; cv=none; b=pGpLpwsyiEqFLfma3W1aR5vinClaUdIj2HMFuhRNEPOqIKDWxtfYtPZuRQRykYNhTSsQOTUfCRroj2E/Ct4a4Yp6QvdEY4y9MKm3q0/JKpQfVbvPqyl2AIip+RBF/oGIqI7N2on9ZszdUBdGmxtiCT+fElZ5djXAZyXUyAzHcvM=
+	t=1750022411; cv=none; b=HHqg3rwfmd/xUg5EjJW/FOGgnuI3Pp2YYGHfF8BbW5LHTKoLgsTAx++t8Hg25r/RSNhABC8ca+cZIZPMqtQlZI9d19WAXonc4C9jbovzABGQkJuKMTxRV6j64wou232DKU0C8ju7SAztGgiZmFakjHgF5CZ0WW6LUZf3Nk7j9FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750022292; c=relaxed/simple;
-	bh=Ky35e52EIfbhV8BPsYNhSX7ybhbD4Ajlg+RXV253gFs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBQ9clxPRXwrVtrlfgdTTkwKvTzMQ0mEDCXNi3VqYohpu3hrIzb06IL1gGbj1Q2mRLckhrKcsGEaQjQiCvhCis/mGyl8e2S8Wk5A1gZJDtnOGkvdU8Q/Y6CdAJmAsLDcrff3br8/1wgVY2YBQrq5X2swJmr3rwsnhxNHxBDAPBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YWCcHxZ8; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750022411; c=relaxed/simple;
+	bh=pF+VDK1lSRfixNDioJbH2C3rL1LTsFMEIzBiMO47TWI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KcWdNh2Auor8pL1TYnElrIwAvSe1ewnxPWlUPOXJoSpLTXnYvf43uzM+CPi8RDXxJbZF43AMrzt5hjiL1AzqF/MjyiI7XQIDqV2JrvdG6p0kzmcju2q4XgH5LSWI1BPVp2sFFs9bKQCVi1VmOT2oSdJNV5Ky963QVd1RVebdOFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=UnsLciyz; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWCcHxZ8"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47e9fea29easo363411cf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750022290; x=1750627090; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbXAdW4yCyx3+5ff6ebsyeCYa7wKjRonHdL8V4+kCCc=;
-        b=YWCcHxZ8atzCI5ecWCHOUeIwWx3aPtslb7EAS7U5v6jNEQ9YzfN/I9T70B/OWDku+H
-         IMjB9Mue4tTNvBxZEIFh1mU+VUsslQG21fatGbOSIN+SdaZbt9kCYysMPHtdwSSUXErF
-         hy9Rs0gGQjMHHUIL8V0EwJfEq5plS3P5IuLsDhBHtTsU3VVC3eICZqJPumS7+ORejsuB
-         LGDUXU57IpTkmeM76GCelUlmUFs3EjSL+MA1aFMzQS2NN8mklz73Z5J2+GEVPSEwTcA7
-         DxBa9xKacsxMI9xwG/kpP0QocTWx58LtfLnlLBQrwBOPSul7iHAOMtj1xIdeBQHcVxBh
-         /+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750022290; x=1750627090;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kbXAdW4yCyx3+5ff6ebsyeCYa7wKjRonHdL8V4+kCCc=;
-        b=pWSaIKiR23WHeJ0crHxcwj2rrXevF9wmVc9zsZPIH17aQLYGP4P0UD+3WRRt6YzyXc
-         zoUFDVe3/NwoquK9vqegWR7mhp3b1b6L+bgphy/UYwEIFSo2F219KbjgZmoBLSo3vm0C
-         Q21Z4zhKYp/J0xm7brC3y1q8iVHUuHRsrsfiMNZmocOJrUz9WS84kxdjBQaeSuZ6CZUB
-         t8Z6JThG5X12XWHGHgscnlx4GM84shgeE1lv+DniqEcIqzFzieER5IZKSRMPVdabrbYW
-         uLXPIRR9wHiLeERop+SA9gzhJve54L3aPH1lEELGSL72b2n8bTyGQuHgfQul6IO/1cw/
-         vB2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVdytUEYFPUe157dgN7tF5/Exi1QCIqwjOcaUGpfD2mVqQZqsbkMoRtPXu+NpB2NkTi17vafjAfkm3gS2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFsFPjXWE0Svnl5w9HmPa+4KBAVdk/DqXGUuhCub/aOxpeEQiY
-	ZsXm/378QA8Y5nF328StudT/c3TBiP9Bpkhd8Eye3ol7oWrxpXGxva3jKkexIQ2ZkcFcOiAhDcG
-	9JkHRg1XdjvBy5+ffLqQKY7YKdp9eDRN1xn4IiJv4
-X-Gm-Gg: ASbGncualysq/UmqSAydu+Dc6wkX2wAxkNQgaOZ8bR+O7GiNrgwa/6uIJhgx/0d+7dz
-	01HZdQcaweN7cT9nYhRp8VC0ZR25/x4p5ZozNM2Rie6cKWWnQ+50rnQhpesWzMJrzuOp9TKF3JT
-	C2sdzAyu47xiBTWlcM6CkO27RV/sDIjmlM204cfUvylTSmM+r+qELN
-X-Google-Smtp-Source: AGHT+IHyI/giLHDVc/7oPe4Y25Gt2jV0dsA6547ZDZPHEOCQg32XugU1twVIDGD6RTN+indIRIvFdvKPkx2AFVBIUl4=
-X-Received: by 2002:a05:622a:14:b0:4a5:9af6:8f84 with SMTP id
- d75a77b69052e-4a73d63d94bmr3695771cf.14.1750022289596; Sun, 15 Jun 2025
- 14:18:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="UnsLciyz"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uQulf-005JRR-6V; Sun, 15 Jun 2025 23:19:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=jg26rz8Cov6nRtFe2RUQWQxJ0BOrZ21SgyWVv8qLzC4=; b=UnsLciyz3Dm6k462gQVv4fHbKX
+	r5TreUK1T6Ayt0Lhc3L+Ie4reAKTSh6J274aCho9bt+eCZ+SUUsHfzn4H/b4jsAEVHff2iDjcfXQq
+	bLnGUsGFtnjyNufY8yiWMEhMqFoQf8EA+q98NAEK9PVXkZzvpxY6XbEDKPhb8QvJZopMDHhQek7qv
+	LHauQf/SfBVaMcUkRigD/BGXLLofbBXRK0a/wvmQX0jwbdjDjaPmMDha9UTt4KL0vAT21A1hGe3t5
+	zsr/IfZQ6haspVwSFmm9j40EppQ7Xyn6BTh/ieuBzoDQey7Q1GxHFG9uDFzj+Tw2plK5Iz8rwDlPw
+	s+0efCXA==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uQule-0004SV-C3; Sun, 15 Jun 2025 23:19:54 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uQulX-000Hqv-Iv; Sun, 15 Jun 2025 23:19:47 +0200
+Message-ID: <972af569-0c90-4585-9e1f-f2266dab6ec6@rbox.co>
+Date: Sun, 15 Jun 2025 23:19:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614003601.1600784-1-pmalani@google.com> <202506152245.BJAubGbp-lkp@intel.com>
-In-Reply-To: <202506152245.BJAubGbp-lkp@intel.com>
-From: Prashant Malani <pmalani@google.com>
-Date: Sun, 15 Jun 2025 14:17:57 -0700
-X-Gm-Features: AX0GCFuTWLHc2ZNlsl7lAd0ZY_hlZfWYDoaHvW8UG6RUWnh-8TbmHsZbKEHTaNY
-Message-ID: <CAFivqmL4BPX3seUykFiSpehME13OdwKBoefnxw=owJyvggw30Q@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: CPPC: Dont read counters for idle CPUs
-To: kernel test robot <lkp@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: Drop unused @sk of
+ __skb_try_recv_from_queue()
+To: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ David Ahern <dsahern@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 15 Jun 2025 at 07:28, kernel test robot <lkp@intel.com> wrote:
->
-> Hi Prashant,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on rafael-pm/linux-next]
-> [also build test ERROR on rafael-pm/bleeding-edge linus/master v6.16-rc1 next-20250613]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Prashant-Malani/cpufreq-CPPC-Dont-read-counters-for-idle-CPUs/20250614-083659
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-> patch link:    https://lore.kernel.org/r/20250614003601.1600784-1-pmalani%40google.com
-> patch subject: [PATCH] cpufreq: CPPC: Dont read counters for idle CPUs
-> config: riscv-defconfig (https://download.01.org/0day-ci/archive/20250615/202506152245.BJAubGbp-lkp@intel.com/config)
-> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250615/202506152245.BJAubGbp-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202506152245.BJAubGbp-lkp@intel.com/
->
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
->
-> >> ERROR: modpost: "idle_cpu" [drivers/cpufreq/cppc_cpufreq.ko] undefined!
+On 4/7/25 21:01, Michal Luczaj wrote:
+> __skb_try_recv_from_queue() deals with a queue, @sk is never used.
+> Remove sk from function parameters, adapt callers.
+> 
+> No functional change intended.
 
-Looks like my compilation .config included the header implicitly, but
-it got missed here.
-I'll add it in v2, once there is consensus on this change.
+Looking at datagram.c, it's a similar story with skb_free_datagram(): its
+@sk is unused since commit 4890b686f408 ("net: keep sk->sk_forward_alloc as
+small as possible").
 
-Best regards,
+All this function does is `consume_skb(skb)`. Would it be worth dropping
+the `sk` parameter? Or making callers directly invoke consume_skb()?
+
+$ git grep skb_free_datagram | wc -l
+52
+
+Thanks,
+Michal
+
