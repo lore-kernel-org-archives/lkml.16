@@ -1,200 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43155101C8
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 11:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAFB2AF0E
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 11:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749985311; cv=none; b=lBuBLe9MGzemnN/2pFrhcykyXZUyIKRwiLXdFMhbBPapyPrTVZ4LwtbdSYPW1t3W4yrm4qtIx4w5UNAHYigzluWmob6QX3vwgqkCYQ3U6HFOHKZikZJgcHoTzxqEeHljx+5wrLQr8Qhiko/voZg+iAYNnaxF4RbIcBleL6MHSVc=
+	t=1749986074; cv=none; b=vBGkKy/mAup4sBnHDKBiMQNgKPNIP39aJVzhbOj2yJT6Zk7DY/jchhvTOMHQs9BWZJNe5pj1XEXhin4swVYRd5cBvyNgzqYsUCk83JZNEv+Atai3KYauKOxZ4QWz01rbl78JTI2KHRKA0VuQT4M0WXSAND18P5CbvxBCurAdvaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749985311; c=relaxed/simple;
-	bh=ShYjDmRhDuyDUBLCl65nzoU7Z7r6ZL6+weJbx9+y4z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBUG7QqyoXaXkkCBnGYqFpjhrxMVwND7Tz/Jub4d14y9P59le430v7P6L5OhSFMBG25DMRL5Oeb13QvzoaoLm7D9tux0WL2+9AApZUa5jrWrKTbag78le/18VXw1D/1nutwHIZvQDQ8Q6SviyXdmYuyBE+L20b/r1MI2IXZjmoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MC7Jfqa4; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749986074; c=relaxed/simple;
+	bh=FgBydRHocshlTeyq0EgxHNiBGU1sSwQ3LhYsVJmwca0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dz6I9NgQJZS69scfyVKQ5J2MbSfEd6cSwgK/Eh1moUZU4XWZnLTdWP4NbGsRaJuwLYGcREsnZaz9PWfQSRvTbXclTN7XApIsXv1U5JW4IHE0VrVomtee1gWdk6UqTYJPe8m0FV0wSztOJ1SjW7ceB+fQNrn3rst7rSq5f4SC4is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XnFTzL6Y; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MC7Jfqa4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749985309; x=1781521309;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ShYjDmRhDuyDUBLCl65nzoU7Z7r6ZL6+weJbx9+y4z4=;
-  b=MC7Jfqa46pBrtsnavNf8ue+RGWDh+qmZqZLT8fHguXkz/pJhDF7il7ul
-   mYgooy+xyg3fruvcgVaOlAm7D7WsjCMzgrblh5kTHN91TZ/oLf7f59REP
-   NINWLxqhqgn48s9ZpzIibyRIAhM17yoakj8a18csbv/kt2Cp1JOtAho+j
-   GccD0Z5tS1A+SBxfZrAt4rHchewsCNH5asg7+fSBeWxIP8WKH+QkJ5rWu
-   0nWCbw0GwHV0LLSpH5qinw/TWRU2f67oZzQpKVeQzi7w9mrUZGbwvVoTQ
-   aWXNFgfEBMs6Hv1g7rLtexsgavUhE482MptyqHXCcX+bVDfRSRRMBWGG2
-   Q==;
-X-CSE-ConnectionGUID: X/gungmBQ3mNofZ1R3vMtQ==
-X-CSE-MsgGUID: HiwRR8lOSTicm6bq4veSnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="52014252"
-X-IronPort-AV: E=Sophos;i="6.16,239,1744095600"; 
-   d="scan'208";a="52014252"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 04:01:48 -0700
-X-CSE-ConnectionGUID: wRWLPTNqRMGyfMfyD8/7xA==
-X-CSE-MsgGUID: Ss0Zx9mdTaeVePw6WwXenw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,239,1744095600"; 
-   d="scan'208";a="152995807"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 04:01:43 -0700
-Date: Sun, 15 Jun 2025 14:01:40 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v7 2/5] drm: Create a task info option for wedge events
-Message-ID: <aE6oFOBbQ_3oRwtB@black.fi.intel.com>
-References: <20250613184348.1761020-1-andrealmeid@igalia.com>
- <20250613184348.1761020-3-andrealmeid@igalia.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XnFTzL6Y"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749986062; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=x8P/eQrzTlQYqpos4YBZX8g3SFUnmIqtpEpLS+GA/Wo=;
+	b=XnFTzL6YW+1CXGj02GVbxOgpFD8HniBGPm0JilZqPHh0iL8qZJYDe+mYZkdr6gGSucsxSFzPTrWxLANvdfnc2cAfCk1bMhS2XFxHbt+ZRAmEE8lUsGBG+Of7A7esRzy1CYKVxvzFh/GSw3RJoooCBgpekgJSh+1FXV+VwOFllrM=
+Received: from 30.39.221.146(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdpiC5g_1749986061 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 15 Jun 2025 19:14:21 +0800
+Message-ID: <2d175a55-84e3-489f-8c93-66bedaa859a6@linux.alibaba.com>
+Date: Sun, 15 Jun 2025 19:14:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250613184348.1761020-3-andrealmeid@igalia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: huge_memory: fix the check for allowed huge orders in
+ shmem
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
+ Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <529affb3220153d0d5a542960b535cdfc33f51d7.1749804835.git.baolin.wang@linux.alibaba.com>
+ <c7e64411-1c07-401e-8503-928184ca22f6@lucifer.local>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <c7e64411-1c07-401e-8503-928184ca22f6@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 03:43:45PM -0300, André Almeida wrote:
-> When a device get wedged, it might be caused by a guilty application.
-> For userspace, knowing which task was involved can be useful for some
-> situations, like for implementing a policy, logs or for giving a chance
-> for the compositor to let the user know what task was involved in the
-> problem.  This is an optional argument, when the task info is not
-> available, the PID and TASK string won't appear in the event string.
+
+
+On 2025/6/13 19:16, Lorenzo Stoakes wrote:
+> On Fri, Jun 13, 2025 at 05:12:19PM +0800, Baolin Wang wrote:
+>> Shmem already supports mTHP, and shmem_allowable_huge_orders() will return
+>> the huge orders allowed by shmem. However, there is no check against the
+>> 'orders' parameter passed by __thp_vma_allowable_orders(), which can lead
+>> to incorrect check results for __thp_vma_allowable_orders().
+>>
+>> For example, when a user wants to check if shmem supports PMD-sized THP
+>> by thp_vma_allowable_order(), if shmem only enables 64K mTHP, the current
+>> logic would cause thp_vma_allowable_order() to return true, implying that
+>> shmem allows PMD-sized THP allocation, which it actually does not.
+>>
+>> I don't think this will cause a significant impact on users, and this will
+>> only have some impact on the shmem THP collapse. That is to say, even though
+>> the shmem sysfs setting does not enable the PMD-sized THP, the
+>> thp_vma_allowable_order() still indicates that shmem allows PMD-sized collapse,
+>> meaning it might successfully collapse into THP, or it might not (for example,
+>> thp_vma_suitable_order() check failed in the collapse process). However, this
+>> still does not align with the shmem sysfs configuration, fix it.
 > 
-> Sometimes just the PID isn't enough giving that the task might be already
-> dead by the time userspace will try to check what was this PID's name,
-> so to make the life easier also notify what's the task's name in the user
-> event.
+> Can you explain why?
 > 
-> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> (for i915 and xe)
-> Reviewed-by: Krzysztof Karas <krzysztof.karas@intel.com>
-> Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+> It's a bit painful to trace through the code paths, but why do you think only
+> MADV_COLLAPSE will be impacted? Surely everywhere that checks this is?
 
-Although I'm okay with this version, a few aesthetic nits below.
+For shmem, thp_vma_allowable_order() and its wrapper are only used in 
+show_smap() and shmem collapse (which includes khugepaged and 
+madvise_collapse()). For shmem collapse, as I mentioned, the impact 
+might not be very significant. For show_smap(), since it will use the 
+'THP_ORDERS_ALL', it will not affect the results of show_smap().
 
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-
-...
-
-> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-> index 56dd61f8e05a..eba99a081ec1 100644
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -538,10 +538,15 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->  	}
->  }
->  
-> +#define WEDGE_STR_LEN 32
-> +#define PID_STR_LEN 15
-> +#define COMM_STR_LEN (TASK_COMM_LEN + 5)
-
-Align the values using tabs for readability, and since you're using
-TASK_COMM_LEN here please include sched.h instead of relying on
-intermediate header which may not guarantee it for other archs and
-randconfigs.
-
-> +
->  /**
->   * drm_dev_wedged_event - generate a device wedged uevent
->   * @dev: DRM device
->   * @method: method(s) to be used for recovery
-> + * @info: optional information about the guilty task
->   *
->   * This generates a device wedged uevent for the DRM device specified by @dev.
->   * Recovery @method\(s) of choice will be sent in the uevent environment as
-> @@ -554,13 +559,13 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   *
->   * Returns: 0 on success, negative error code otherwise.
->   */
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_task_info *info)
->  {
->  	const char *recovery = NULL;
->  	unsigned int len, opt;
-> -	/* Event string length up to 28+ characters with available methods */
-> -	char event_string[32];
-> -	char *envp[] = { event_string, NULL };
-> +	char event_string[WEDGE_STR_LEN], pid_string[PID_STR_LEN], comm_string[COMM_STR_LEN];
-> +	char *envp[] = { event_string, NULL, NULL, NULL };
-
-Let's make this reverse xmas order and be consistent with other helpers
-in this file.
-
->  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
->  
-> @@ -582,6 +587,13 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
->  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
->  		 "but recovered through reset" : "needs recovery");
->  
-> +	if (info && (info->comm[0] != '\0') && (info->pid >= 0)) {
-> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> +		snprintf(comm_string, sizeof(comm_string), "TASK=%s", info->comm);
-> +		envp[1] = pid_string;
-> +		envp[2] = comm_string;
-> +	}
-> +
->  	return kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE, envp);
->  }
->  EXPORT_SYMBOL(drm_dev_wedged_event);
-
-...
-
-> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
-> index e2f894f1b90a..729e1c6da138 100644
-> --- a/include/drm/drm_device.h
-> +++ b/include/drm/drm_device.h
-> @@ -30,6 +30,14 @@ struct pci_controller;
->  #define DRM_WEDGE_RECOVERY_REBIND	BIT(1)	/* unbind + bind driver */
->  #define DRM_WEDGE_RECOVERY_BUS_RESET	BIT(2)	/* unbind + reset bus device + bind */
->  
-> +/**
-> + * struct drm_wedge_task_info - information about the guilty task of a wedge dev
-> + */
-> +struct drm_wedge_task_info {
-> +	pid_t pid;
-> +	char comm[TASK_COMM_LEN];
-
-Ditto for sched.h.
-
-Raag
-
-> +};
-> +
->  /**
->   * enum switch_power_state - power state of drm device
->   */
-> diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
-> index 63b51942d606..3f76a32d6b84 100644
-> --- a/include/drm/drm_drv.h
-> +++ b/include/drm/drm_drv.h
-> @@ -487,7 +487,8 @@ void drm_put_dev(struct drm_device *dev);
->  bool drm_dev_enter(struct drm_device *dev, int *idx);
->  void drm_dev_exit(int idx);
->  void drm_dev_unplug(struct drm_device *dev);
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method);
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_task_info *info);
->  
->  /**
->   * drm_dev_is_unplugged - is a DRM device unplugged
-> -- 
-> 2.49.0
+>> Fixes: 26c7d8413aaf ("mm: thp: support "THPeligible" semantics for mTHP with anonymous shmem")
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 > 
+> I can't see how this can be incorrect, as we really should be restricting
+> ourselves to the orders requested.
+> 
+> So:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
+Thanks.
+
+> 
+>> ---
+>> Note: this general change is suitable to be split out as a bugfix patch
+>> based on the discussions in the previous thread[1].
+>>
+>> [1] https://lore.kernel.org/all/86bf2dcd-4be9-4fd9-98cc-da55aea52be0@lucifer.local/
+>> ---
+>>   mm/huge_memory.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index d3e66136e41a..a8cfa37cae72 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>   	 * own flags.
+>>   	 */
+>>   	if (!in_pf && shmem_file(vma->vm_file))
+>> -		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>> +		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>>   						   vma, vma->vm_pgoff, 0,
+> 
+> I mean this seems correct to me, but what a massive oversight.
+> 
+> I wish we had a sensible way of testing this...
+
+It might not be easy to write test cases because it requires dynamically 
+toggling the mTHP sysfs setting for shmem. However, as khugepaged 
+supports mTHP collapse in the future, we can try to add more tests.
+
+>>   						   !enforce_sysfs
+> This whole code path is entirely indicative of what a complete mess this whole
+> thing is.
+> 
+> The fact shmem separately calls this function is just ugh. I'm talking myself
+> into some mega refactoring here :)
+
+Yes, Shmem has its own separate mTHP sysfs interfaces, with more complex 
+logic :)
