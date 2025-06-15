@@ -1,130 +1,101 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F59C28EB;
-	Sun, 15 Jun 2025 03:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5DC2F22
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 03:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749957720; cv=none; b=k3S1w6FOtBg9NOPrd/qor14pMTTyd/mRFlYSsxe3HLlA969DkcQQx1PIdxlWUpJRVRLp5Rwzxt850BueL2wU8Ra7zNtuZiYq+FV2qmIdcZtvjtPm5p0SM5GymHWYlqh5Roz6PEdOdmOyTAWfbbOnG02B/lc6pjBtDiV+Ry5v+5Y=
+	t=1749958330; cv=none; b=S0aZZEevM8FbVxqmxbPXBUG2CGRSJjoSUUWQ4MVCZtbPaF6qHPI7W4j2OOMyAcS/FB7JAmWimskgb0LgEgIJoIi/IBwg6PL1AJDpv0l9l17QQ73AO5/UyxHnxogsbkYwlig31Nb4lpjpsptVSyPp+TwSn9Qccas+wruCyqvp+Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749957720; c=relaxed/simple;
-	bh=xwhgC4f93t0za700nReXFXsEK1k+n2mQmbFJupW7dVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lQGerh4bPQ+kXfyJztYzYAuM1dnoEpbwHvyAONfobikp1OAm7ij8tAqDBWaxrkNS0OJkkYBMYPyLF4TvngA58to0hln1fe1x+bwGRZDAQIHSGWMnfACcHr/Q9VEPSifHejiDhRq0Nn4VkvNoJuovzwpsUf0JVmsTb54JpXq5Sug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+zycXJQ; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749958330; c=relaxed/simple;
+	bh=yJdEo2RwwU5YxOyGj4vX9lpiXjzlz7Kp0hPfWc+U1GI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Q4zQjOJm+UQDvg/NcauyrQQazlBwrXzu/jJq5EF8gZu6PGeozwMSbGhodb8hx85Oz2ddPSDdPWxKGgxw+TBeRNYDzKRVjci/O7hEVAcnvLohT32sfimSdcGJdBg5S72HcxfpuAZzOQb6WGQCBQUXJURX7wSPeUj9ofQ3fZjlnS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Ssq1peip; arc=none smtp.client-ip=203.205.221.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+zycXJQ"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e7ade16082so1002581137.1;
-        Sat, 14 Jun 2025 20:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749957718; x=1750562518; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wExD0cpW6EK/Bucskg373M+fWDTA7/mApFOQNklxIsE=;
-        b=W+zycXJQ6kZe+7jWXXdBmRHi9y+YtnDaqOzVFSwcjYftifwb4BS+ahVoHPrjJtbXSj
-         9qXBad1nWXUc9D4sn+jXz2zzbxoRsdukblG39sNpF9T2eTZTQtZrQ0o7C2JE7Uq8rj59
-         75VY6ZnZhkPjrPeCFFClbmp6/pURN5kAzlFJj6PCFH+1XDfzZDRjftzTE5Ew4YsP1nIF
-         5r0YR7ANN00XvAXKDnyYX1jJLk7irOhgofa/yZnv1mswvan0qNtL1FgNfWMFt9YYuX6K
-         j6K+GDKZoPJahssBviok+lZzgZ0kK/U6tI1S/og1bLN1YBuqtksatPG/iydh7VrDkq9P
-         +iJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749957718; x=1750562518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wExD0cpW6EK/Bucskg373M+fWDTA7/mApFOQNklxIsE=;
-        b=wfCIMm3K9TJmgQw5t/Dp0PLuQBsRkBgbB8ITmzag3+5Cq0Rq5k+U5hTFy5HHactjFD
-         RXuWOOSxCLaxssy+wPIqMjswa4Nhfxbue87H7JJUMZL8109CXWOIbYN8T0PbFcIhrBoJ
-         8oIqDt0LQO3V+OOrenoV0CYBLzFZ4g/W8Ap/89srX17wg9jF5ajaY6Fd6WgFNfIIDwO7
-         Qebg8tcwK4P+/5WRSQsGkD/NkzwDgKIqbJJUFlVZ35YEAfL4Cf5kaS4Pnveu1JVN16W+
-         hDSQlBFbbj5dB7X7ncR5/W/vcrEBLTFLXxZb/s+5dkH5eRcF72DeYUU8f4wXAA9RoKDV
-         OW/A==
-X-Forwarded-Encrypted: i=1; AJvYcCX+Z94WyCb/TtoFVWWa19PkKqLpsWxHJrnX4YI6x09EEWs9V2N1lsYH1j0J2nS5od1IqlkCvwBQ01E=@vger.kernel.org, AJvYcCXaIywDw/WpyviSgTUh4Q2tZj9TX6KMHlCjrxmbqgECG9U3zRZGBnqcrTI9nly3c3/LMh1mhAsFuq60b+Y9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwNauiPLWKS1Wiw+MiDSOjX0e7KF8ITcfZxDP4JaJyPt7lT4co
-	Me0pdmj7HtCmTgOMU3CjCO8w+LSg1J5sdVMzTVarRfqwLAtKipYziqOu5jGOUvWyy6UXO9eTtKX
-	QmVFM8YNwzvUN8ikYslDT99gM8xXr/fw=
-X-Gm-Gg: ASbGnctWPzj/b/0GQinGD60efuEhiMCaVO3ZpdwRmkfo+u2cKuRExiuQ2AL+n6pkCkQ
-	iBm0b6PSV6Ari1UI+A2XU3K93Ule/+txJe9MRQbM46ds+3gTmd+ltclWJSE0yXSgG0jYsWPQkHP
-	mqjhxMQuYHBmjytcAyTm7Zqg07xL0Kd2RRghZBxwSHzOMQeCNHJmDYmC9ASA==
-X-Google-Smtp-Source: AGHT+IHjzK0oPQ1W70Jp9lc1Z8gKz5hkYXGV/pqRXygc65iXD6dzOVkVFLNXnwpmF1LOLpBAGyP3rJin9Y3QiDQok+Y=
-X-Received: by 2002:a05:6102:4bcd:b0:4e2:ecd8:a27 with SMTP id
- ada2fe7eead31-4e7f632330fmr3284379137.4.1749957718008; Sat, 14 Jun 2025
- 20:21:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Ssq1peip"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1749958015; bh=fGNptaSBMebz9/PxbjyWCc+j4SRqV+ip4ZzV+bpFo58=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Ssq1peipTg1MdwkbJoTQW2WqxUp3oFN5fY+cWAuoOAPlVmXIJHm6eWVf8HyblVvHd
+	 WEbxMRbOr9Bo2wERhrmjuVPizDpDsEPWP11edWJhP7avjjvOUB0bTnUBVEITgxZN8Q
+	 yF2n+6icBSCDZcTIdmNN7ap7f/i5ZiQD/45CzkBg=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id 6B6026DC; Sun, 15 Jun 2025 11:26:54 +0800
+X-QQ-mid: xmsmtpt1749958014t2wgbx76p
+Message-ID: <tencent_E8D075F57739678A3C9D3726965E37FA4A09@qq.com>
+X-QQ-XMAILINFO: NG7xP+P+sy64HU4KwG9RFvxjQ1c0kfiV2TFFph/KLRJOHx/CM75VaooDoomjf9
+	 9v0yRkTr0624H5jm4SyQnYEhze4vqNH2AYfoL2BQQqONAVBkZICrks1CV8Uae7j2uav2iEBimNpd
+	 8xmPbJCJTLbSCeNZwTf2HPacT7FeAjJ57sKL1g1JKAMmW+ca7G7hbC9B4bKqubH6NZkdqTOn92ej
+	 jq0jpLbC3ZGa75Jy1U7taQLntNdVbQyKwBGHUc3mHn8Cg7MYlYqXmsa/ejjrIhB4vxuuh5ZY6CyM
+	 JJwe9vvGXYr+Q5zcT3OjH5LmZe0BQat8U4WlkH6ekwYoTUD4UcMb+nE7297ofgPY+C6yWCBZdgjU
+	 F0hV6V3+UmAWYeyMU/I16PDgxWF4GPptkzcAac6w2TB9B4pDlxv1Je71flLDjKvJvhFZQ9TO5QGQ
+	 ZzrXiJZy0yFDFW5Zp8i3MjDTvz5odw6iodQnL2Mvry/UjLGImLSsWfaA7doyiXSijf5RzHvye8XS
+	 /RwQpbOnRbNKk14qoXClqTlrlmrbwyaeWMxp/AwnLozLMslMrjOxxa9dpNQ4WSRkmrKDxt91RLd4
+	 TaOWt1wjvADjZ3H5cRv/SFEjRsa2xJRiUs77/idHFwNoQD8+U7uTj46u3OEMSjIxz1GpWz3lYJ2f
+	 Yn4Wu6YqsSSunGe1AYSceudh56dtpTo6dEbSVTIWWsqpm/t0nFvhjA4ggOay4EPRaosugcrYessf
+	 tI2YO2SlhWCIHBKe3nUAhCi9yo3SYF70YuWwBi6H9s41wccW5EQLAQ1AQsGBExC5XIF4V3N9nGDi
+	 9kb98xc7P/GgRsN90Kmk8xp1RlP3MQrm412glq+X9F1ia/9lANQraPfS0KEGMpl9E2ouyDWDiwEI
+	 nuL62c1KSogsxMa8xBUD7dqVZodTfAD3As30zXcALEBXaAJ9wkmLHYx/jq1YGccrbC0hCdruAeqp
+	 PWxW+Vb5Y=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+Date: Sun, 15 Jun 2025 11:26:49 +0800
+X-OQ-MSGID: <20250615032648.3634452-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
+References: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
- <20250611194648.18133-3-andrew.lopes@alumni.usp.br> <aErUqzdFL9nG6Bxc@smile.fi.intel.com>
- <CANZih_RTtcHHP80rtJ5gGkmkL1ohoctUBaGm-2Z2=Xo9VvT-Aw@mail.gmail.com> <CAHp75VfXw++C859kq58QOEcC5c4z1YdF0yBH1v4vJYujUPT75A@mail.gmail.com>
-In-Reply-To: <CAHp75VfXw++C859kq58QOEcC5c4z1YdF0yBH1v4vJYujUPT75A@mail.gmail.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sun, 15 Jun 2025 00:21:47 -0300
-X-Gm-Features: AX0GCFulQmotUJKswjZcbyCcuA8cl9dJtWHUgFy3L3Fwx47Bynyc5TnE2FRTM9U
-Message-ID: <CANZih_SG9agcQJ=VP-u5FAAkj1L1-pWmA4UzkSU_UcM+LZ14Zg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] iio: accel: sca3000: replace usages of internal
- read data helpers by spi helpers
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, jic23@kernel.org, 
-	andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com, 
-	nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 14, 2025 at 6:50=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Jun 15, 2025 at 12:06=E2=80=AFAM Andrew Ijano <andrew.ijano@gmail=
-.com> wrote:
-> > On Thu, Jun 12, 2025 at 10:22=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
->
-> ...
->
-> > > Moreover, the function  should be switched to sysfs_emit_at() if this=
- is part
-> > > of ABI.
-> >
-> > Great! I didn't know that.
-> >
-> > In this case, sca3000_read_av_freq() is described as a "sysfs function
-> > to get available frequencies", so I guess it's the case, right?
-> > Is your suggestion to replace cases of sprintf() by sysfs_emit_at()
-> > then? If so, I could do that in a following patch, it seems that
-> > sca3000_show_available_3db_freqs() is also using sprintf().
->
-> Yes. This is written in the Documentation.
+#syz test
 
-Nice! I'll try to make a new patch later to address that then.
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 14ea47f954f5..c96907850c56 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -686,6 +686,16 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		vi->z_tailextent_headlcn = 0;
+ 		goto done;
+ 	}
++
++	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
++	    vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
++			    Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
++		erofs_err(sb, "per-inode big pcluster without sb feature for nid %llu",
++			  vi->nid);
++		err = -EFSCORRUPTED;
++		goto out_put_metabuf;
++	}
++
+ 	vi->z_advise = le16_to_cpu(h->h_advise);
+ 	vi->z_lclusterbits = sb->s_blocksize_bits + (h->h_clusterbits & 15);
+ 	if (vi->datalayout == EROFS_INODE_COMPRESSED_FULL &&
+@@ -711,14 +721,6 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		goto out_put_metabuf;
+ 	}
+ 
+-	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
+-	    vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
+-			    Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
+-		erofs_err(sb, "per-inode big pcluster without sb feature for nid %llu",
+-			  vi->nid);
+-		err = -EFSCORRUPTED;
+-		goto out_put_metabuf;
+-	}
+ 	if (vi->datalayout == EROFS_INODE_COMPRESSED_COMPACT &&
+ 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
+ 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
 
-...
-
-> > > >               }, {
-> > > >                       .len =3D len,
-> > > > -                     .rx_buf =3D rx,
-> > > > +                     .rx_buf =3D st->rx,
-> > > >               }
-> > > >       };
-> > >
-> > > > -
-> > >
-> > > Stray change. Doesn't checkpatch complain on this?
-> >
-> > I don't recall getting any warning from checkpatch but I can check
-> > again for this next version.
->
-> The problem here is the absence of a blank line between the definition
-> block (where variables are declared/defined) and the first line of the
-> actual code.
-
-Thanks for the explanation. I double checked and checkpatch doesn't
-seem to warn about that, but I fixed it anyway.
-
-Thanks,
-Andrew
