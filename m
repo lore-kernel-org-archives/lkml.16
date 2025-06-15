@@ -1,116 +1,153 @@
-Received: from smtp.smtpout.orange.fr (smtp-76.smtpout.orange.fr [80.12.242.76])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AAC194A60
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A64038FB9
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749998628; cv=none; b=pAWHBsDt/JxRObHx3ZnfsdetCnmx0cX+uy/mXwVDgV2uLKzM52joPt38NA62qjxcVeU3/6CLDCKcaPmgLqWe6UUzVYupNu2b5l0r1TLw0l62cLPY4CuI6VaEmudLewiiRVB8YsiTKuSb3BgrNQxIiwiCxd3ZR1q27bJ2sRbBNB0=
+	t=1749998698; cv=none; b=AznDnv4k8uP4U+GeEF1Ub8Q/3YqZyP5X3ww0jYeC55t6UQYvgeqn4jz99N3U5fTO2lt646gyC4yXhHwLZqWHO35d4qilMCQmJCOpLXzcRHeGxYxEpgdyNLh6C+HO1oFY/u6h2kRn6Qs6rfx9/b7bMtezVtJHlbxYUVbmPQUOi0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749998628; c=relaxed/simple;
-	bh=XdId1Ksl8i8oMowatgaQaHL/wH3H03NmiVks0tax8fQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ETItdQa1tep22JODIbsuWoBwZf2mepUrP74iQF7VuiqLX950segHfcgYOr655DW7o+3IG1+j7enmK+UYkq7ol0G3FbB/TOx6O2Q7kkYxwEGDvusD0JPbdxp4AmAMBjD/UyN679ja02oIGVxYqrsSpEus+lEh7rK1QKM6oKtipRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=AHaZoSLs; arc=none smtp.client-ip=80.12.242.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1749998698; c=relaxed/simple;
+	bh=yns/HdK/KDP3W8qk7tnplSuGwOShe1QOJEKByBbubuk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kMFJPkuGaQmIyj2OGln18cWXgIOI5bIFUstovjGHhPuYk/LX5HvqPdeJXaaUzxJYAYU7V9AEiemzGLfxEPyt0CJF+BmJd814TN3+eW+PJISacTAcZ8dIgsvgu+oj/B3KwdqupJzWzAjLrVhJ1oOv58RftzXxopEtFQ6i0hya8ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hg7SUhYe; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="AHaZoSLs"
-Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id QoZ6uGCgjmPDOQoZFuOjAS; Sun, 15 Jun 2025 16:42:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1749998562;
-	bh=esOjXohqvupssHw1wcuvrTlVeI2AopS0pXECcAzGJJg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=AHaZoSLs8p2VA9+5ZY3KCPMHTrmGDf7amDnCnAIW7wky/6kaYDPQ6baCQEm8sK+cL
-	 dV9yAu9QPXcrrg0qUNqM+W28qP0348Jr7tJveRm7dtLiPSe/k8IWQmwK3Hz5mRR5AH
-	 g37EP2+n/F72AymSE5QKhyIGIYKdHo2nu5BFhOMB+JWwWioNVUcuhAet2AjsnLX5Tr
-	 qQh+FSdGc+IhwjT9K01ORyIOoGVjJe71kFeBNSdFJ2pUyKQL4TSGr0Oqw3q0sEJLTh
-	 yJdQBfeZMgX3voXUGaVa9l/X6vNyvhTOOe+XNhKFyQ9WYdfRIZAg9MVjf1HOtNQkRY
-	 ZKokaDblLK7NQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 15 Jun 2025 16:42:42 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: aaro.koskinen@iki.fi,
-	andreas@kemnade.info,
-	khilman@baylibre.com,
-	rogerq@kernel.org,
-	tony@atomide.com,
-	Lee Jones <lee@kernel.org>
-Cc: linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 3/3] mfd: tps65219: Remove another unused field from 'struct tps65219'
-Date: Sun, 15 Jun 2025 16:42:19 +0200
-Message-ID: <410d08b7043f8c724d0dee29c06b7029fb933a47.1749998382.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <c4abceb95665e4363937a1f41588772f38c47411.1749998382.git.christophe.jaillet@wanadoo.fr>
-References: <c4abceb95665e4363937a1f41588772f38c47411.1749998382.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hg7SUhYe"
+Message-ID: <fb6c6cc5-aa19-4f10-baf7-e20f021553ab@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749998691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kxUQCc0gvo7bthO+iU82/CFSIOIRFWx8jjfAItn3Hks=;
+	b=hg7SUhYe2InS7a+5i/3VIomSWd88ohx/jPKsoHh8kbPN00wFHfzO/IIHS8dzy3Xb21oHUR
+	x8fCC3Ykzok8WPbunz8lx3+7a2iQI3peMohvw+PrhAXl8ofsyV6BXAWLqDCHYsiFFeqbpp
+	i8pY2nqp6Jc2Wj1BC52fMcyB5FQpyks=
+Date: Sun, 15 Jun 2025 07:44:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH net 1/9] net/mlx5: Ensure fw pages are always allocated on
+ same NUMA
+To: Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>
+Cc: saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
+ Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250610151514.1094735-1-mbloch@nvidia.com>
+ <20250610151514.1094735-2-mbloch@nvidia.com>
+ <1688e772-3067-4277-ad45-6564b4fbbddf@linux.dev>
+ <524cf976-a734-4d30-915b-2480a6139e27@nvidia.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <524cf976-a734-4d30-915b-2480a6139e27@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The 'chip_id' field from 'struct tps65219' is unused.
-Remove it.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
----
- drivers/mfd/tps65219.c       | 5 +++--
- include/linux/mfd/tps65219.h | 2 --
- 2 files changed, 3 insertions(+), 4 deletions(-)
+在 2025/6/14 22:55, Moshe Shemesh 写道:
+>
+>
+> On 6/13/2025 7:22 PM, Zhu Yanjun wrote:
+>> 在 2025/6/10 8:15, Mark Bloch 写道:
+>>> From: Moshe Shemesh <moshe@nvidia.com>
+>>>
+>>> When firmware asks the driver to allocate more pages, using event of
+>>> give_pages, the driver should always allocate it from same NUMA, the
+>>> original device NUMA. Current code uses dev_to_node() which can result
+>>> in different NUMA as it is changed by other driver flows, such as
+>>> mlx5_dma_zalloc_coherent_node(). Instead, use saved numa node for
+>>> allocating firmware pages.
+>>
+>> I'm not sure whether NUMA balancing is currently being considered or 
+>> not.
+>>
+>> If I understand correctly, after this commit is applied, all pages will
+>> be allocated from the same NUMA node — specifically, the original
+>> device's NUMA node. This seems like it could lead to NUMA imbalance.
+>
+> The change is applied only on pages allocated for FW use. Pages which 
+> are allocated for driver use as SQ/RQ/CQ/EQ etc, are not affected by 
+> this change.
+>
+> As for FW pages (allocated for FW use), we did mean to use only the 
+> device close NUMA, we are not looking for balance here. Even before 
+> the change, in most cases, FW pages are allocated from device close 
+> NUMA, the fix only ensures it.
 
-diff --git a/drivers/mfd/tps65219.c b/drivers/mfd/tps65219.c
-index 62669041e0d9..cc6121fd0ec3 100644
---- a/drivers/mfd/tps65219.c
-+++ b/drivers/mfd/tps65219.c
-@@ -477,6 +477,7 @@ static int tps65219_probe(struct i2c_client *client)
- {
- 	struct tps65219 *tps;
- 	const struct tps65219_chip_data *pmic;
-+	unsigned int chip_id;
- 	bool pwr_button;
- 	int ret;
- 
-@@ -487,8 +488,8 @@ static int tps65219_probe(struct i2c_client *client)
- 	i2c_set_clientdata(client, tps);
- 
- 	tps->dev = &client->dev;
--	tps->chip_id = (uintptr_t)i2c_get_match_data(client);
--	pmic = &chip_info_table[tps->chip_id];
-+	chip_id = (uintptr_t)i2c_get_match_data(client);
-+	pmic = &chip_info_table[chip_id];
- 
- 	tps->regmap = devm_regmap_init_i2c(client, &tps65219_regmap_config);
- 	if (IS_ERR(tps->regmap)) {
-diff --git a/include/linux/mfd/tps65219.h b/include/linux/mfd/tps65219.h
-index 690002932377..55234e771ba7 100644
---- a/include/linux/mfd/tps65219.h
-+++ b/include/linux/mfd/tps65219.h
-@@ -437,14 +437,12 @@ enum tps65219_irqs {
-  *
-  * @dev: MFD device
-  * @regmap: Regmap for accessing the device registers
-- * @chip_id: Chip ID
-  * @irq_data: Regmap irq data used for the irq chip
-  */
- struct tps65219 {
- 	struct device *dev;
- 	struct regmap *regmap;
- 
--	unsigned int chip_id;
- 	struct regmap_irq_chip_data *irq_data;
- };
- 
+Thanks a lot. I’m fine with your explanations.
+
+In the past, I encountered a NUMA-balancing issue where memory 
+allocations were dependent on the mlx5 device. Specifically, memory was 
+allocated only from the NUMA node closest to the mlx5 device. As a 
+result, during the lifetime of the process, more than 100GB of memory 
+was allocated from that single NUMA node, while other NUMA nodes saw no 
+significant allocations. This led to a NUMA imbalance problem.
+
+According to your commit, SQ/RQ/CQ/EQ are not affected—only the firmware 
+(FW) pages are. These FW pages include Memory Region (MR) and On-Demand 
+Paging (ODP) pages. ODP pages are freed after use, and the amount of MR 
+pages remains fixed throughout the process lifecycle. Therefore, in 
+theory, this commit should not cause any NUMA imbalance. However, since 
+production environments can be complex, I’ll monitor for any NUMA 
+balancing issues after this commit is deployed in production.
+
+In short, I’m fine with both this commit and your explanations.
+
+Thanks,
+
+Yanjun.Zhu
+
+>
+>>
+>> By using dev_to_node, it appears that pages could be allocated from
+>> other NUMA nodes, which might help maintain better NUMA balance.
+>>
+>> In the past, I encountered a NUMA balancing issue caused by the mlx5
+>> NIC, so using dev_to_node might be beneficial in addressing similar
+>> problems.
+>>
+>> Thanks,
+>> Zhu Yanjun
+>>
+>>>
+>>> Fixes: 311c7c71c9bb ("net/mlx5e: Allocate DMA coherent memory on 
+>>> reader NUMA node")
+>>> Signed-off-by: Moshe Shemesh <moshe@nvidia.com>
+>>> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+>>> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+>>> ---
+>>>   drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c b/ 
+>>> drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
+>>> index 972e8e9df585..9bc9bd83c232 100644
+>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
+>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
+>>> @@ -291,7 +291,7 @@ static void free_4k(struct mlx5_core_dev *dev, 
+>>> u64 addr, u32 function)
+>>>   static int alloc_system_page(struct mlx5_core_dev *dev, u32 function)
+>>>   {
+>>>       struct device *device = mlx5_core_dma_dev(dev);
+>>> -     int nid = dev_to_node(device);
+>>> +     int nid = dev->priv.numa_node;
+>>>       struct page *page;
+>>>       u64 zero_addr = 1;
+>>>       u64 addr;
+>>
+>
 -- 
-2.49.0
+Best Regards,
+Yanjun.Zhu
 
