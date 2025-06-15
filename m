@@ -1,135 +1,103 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB426193077;
-	Sun, 15 Jun 2025 20:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364A0189F56
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750017735; cv=none; b=t9qZyFqZm55ih2ObyqgOBuJ6WReJAbma8uxobf1CDTBjbKjACURlTvbhl0I1UrVzYoiGwyxM/L2be3+JrdMSOyqwscLAq5R+JqakMj2pmnco7X/FwLDMLXWJaJtHymV2ohbfbmlm35XhLlKS/63qZySboxDB0OgMqdVmI41j10Y=
+	t=1750017863; cv=none; b=nNZSJgrRELYN8G4iPBX4C5M5frrehmrMViSqH/5EvVTO/W/w/yAT0+6K7s4jMXzPegENyP9n2h9xd5jslgsjdZQqEZbSOlAaaEfm5ythFrc6Jt6S89Tz07e/QTR5lhMazrwmk+yg1IaMG6VupFDos9JILFacLXpqvW9AeZbm6aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750017735; c=relaxed/simple;
-	bh=vs8jb1PU/vxkiHvNerIZ+GtkHQLrmz7zneV497xt+aA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=L9a/DftrJNw2GleVupBQQEfY29FqrXEHcbBdcGXq4hlICqRd4vSMzwsh3xbrKMJh6H8WDFgWARks8SJZcGUlNyHTwycUek1fpBGhK1+e4eR02s7E1s9qFos33/cpaMaK+ov+jRYMSpGM0Mz6fcUOEH4iLDLN0NubysLtdIqvfdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=SnQIebM+; arc=none smtp.client-ip=134.0.28.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1750017863; c=relaxed/simple;
+	bh=7u3biifVEkBYK3aFrDxMpRni1k3cCbUKAsXpAfdGZUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aGCG84uwdCSUVygNv30WyNWxyY9sFZVKUTTkU8NkSc+2zeBxygYnCkqWME/JVYa6BHNQgVvpDd9XxcJz7Ix00B2eYtQ73S6qRvqwYtUIYc7BKZuYkfuH7oifuY3G/tdZZDHGyTwbMElA/f8AgeSh4yxKoy9wA5+EZxLz7WEbDgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEhPPvWT; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="SnQIebM+"
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout3.routing.net (Postfix) with ESMTP id 6324E6022C;
-	Sun, 15 Jun 2025 20:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1750017729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+pAFU9AytArnIwqdWcPlCccdu0jBWh6uQ/wP44N9Jo=;
-	b=SnQIebM+9MKdNtdv9x3At12yoE/FHiYKjhbH68HfMwBOlmVkpOuzTKRvB1Z24RYj+BPSef
-	HI+Riy+dj13SXZnMnoiCOcJHPXyn7WeqyA0HQpENSV3rHU2e/aTFyDa/Yiza/xi8bAPU+V
-	5kLMeS8lrn3noh0JkNEIu+18Og2Hv2o=
-Received: from [127.0.0.1] (fttx-pool-217.61.157.124.bambit.de [217.61.157.124])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 84A6C8034B;
-	Sun, 15 Jun 2025 20:02:08 +0000 (UTC)
-Date: Sun, 15 Jun 2025 22:02:08 +0200
-From: Frank Wunderlich <linux@fw-web.de>
-To: Daniel Golle <daniel@makrotopia.org>
-CC: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5Bnet-next_v3_3/3=5D_net=3A_ethernet=3A_mtk=5Feth=5F?=
- =?US-ASCII?Q?soc=3A_change_code_to_skip_first_IRQ_completely?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aE8ja1fbAtvWx2GN@pidgin.makrotopia.org>
-References: <20250615150333.166202-1-linux@fw-web.de> <20250615150333.166202-4-linux@fw-web.de> <aE8ja1fbAtvWx2GN@pidgin.makrotopia.org>
-Message-ID: <B8138460-D6EA-4142-B0D9-14C93B15D5B8@fw-web.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEhPPvWT"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so2964844b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750017861; x=1750622661; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dkJW2AWqMDnCc0DNw5u/T8JdewTSagS4cvGMq5FVa/E=;
+        b=QEhPPvWT2BN1DnumqVKkAiexr6IW9udHv6zQstB8tXpgz9oInOCb/VnWS+7Q0VZqj6
+         /s0yYzpD6TcOnyu8lRMN2yhIl2I29eyyFVp0nTaP9bgl7ZFunP2/bhRCPsUs7Uk3McJ2
+         erYD5YvznjPvALvFXWcitQzsqETOh58UzqAtrUHlpio10kxFLC1lB9gqAUcdYX+f2/E4
+         euoWYzhIAgANT1Rn146vz4Op2SNfvOj8TnDcbIiaISC7ba4zXGt8EkVzALDv5Pn5hkaR
+         F0Wx4e43Y5K0QxWzaRu6LiKrpfNk6BvEtQFUTfTJjAAcBdBZ43RdNviPIrYXFx9vee2e
+         8NOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750017861; x=1750622661;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dkJW2AWqMDnCc0DNw5u/T8JdewTSagS4cvGMq5FVa/E=;
+        b=b2Z+ONhZB5KRCjDLLSlAlSQcG9AOy6D0kM/yUGYey1i3Hfhcd0uavIKiII2gIWti6J
+         adKD8+QPAZIfpaF2eCaQHIu7svrqO3twPMqEu+t3giBXMzkwJoUEcPhXXxfjpU7JhIdb
+         LwEX7HsCJ2CUflHgDGYz+DX/ddULSblw7O2YXkmnn5Y8QpB6zJbQK71FX6HhfhR8Xc+X
+         MsCzj3tTu7RsxDhsiqd7CTasXb9E48omZR0s7dNxbbjIXo86TgnOja6pdCUUDU9X7zdO
+         pTPmMI34Pnslr5Ab1hdiTYRRpEGqcTp1xDDyLIxoxqkMH8bhg4L12NwUzCp1Y8N2c2yt
+         Wgjg==
+X-Gm-Message-State: AOJu0Yw9kM1cvvhgLWivGm0ooEPO6EXe8UTqFygDLE8CsTFiyny7yiR4
+	pomrZaru4SaXzsYuEZQwbTBtMu92p8doKsG9ydBCJ4pG29ZzHlSApABRZbxJyOrqZ2Q=
+X-Gm-Gg: ASbGncvcMmBKH+B5wQ4n1XldDf77luaucpohsba3xL1AWWqMXFV92w6PeKRgWe4zmJT
+	Y/2WUiro9882YVlblk3Tb1H9UmDVkoFTbP3tX6VxNEbMItun3y44IDaitt8Z6vmq9jCUPIcpDqT
+	3csbodNGZe2vLlG3BXKTJuspdJip/f1WBLCvhDv1jKA7DQMGCI9vWrT9iePhN40dBgY8xGovkXU
+	94HeO8TxuYd46mdb9GIZt7USqiGQLzB0Vn0xJVjSZNlpMeCukvAGcjgG3UN/DkN/QiyJBxzKqua
+	vG6hU7M8f35IDqjI2Kq7h1Gvz+wsPnWnl5JBmXJdhcULqd/FDEqMFYwuWOvf8ybxvCmKqxrpKit
+	aJWhlVwNJhFq8BgGZOptLeppr33sODwoiEYE9UYKTdRbyJc0=
+X-Google-Smtp-Source: AGHT+IG862mpefWPDeWJY0YoLaAc8CbrNqadoNo5XfFmf13Uv/7ssd6iPT1dXMxgbPSznss1GKSM+A==
+X-Received: by 2002:a05:6a00:9181:b0:748:a0b9:f873 with SMTP id d2e1a72fcca58-748a0b9f8d2mr7273244b3a.9.1750017861140;
+        Sun, 15 Jun 2025 13:04:21 -0700 (PDT)
+Received: from eric-acer.tail151456.ts.net (36-225-71-230.dynamic-ip.hinet.net. [36.225.71.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7489008303fsm5209655b3a.79.2025.06.15.13.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 13:04:20 -0700 (PDT)
+From: Cheng-Yang Chou <yphbchou0911@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com,
+	changwoo@igalia.com,
+	jserv@ccns.ncku.edu.tw,
+	yphbchou0911@gmail.com
+Subject: [PATCH] sched_ext: Return NULL in llc_span
+Date: Mon, 16 Jun 2025 04:04:14 +0800
+Message-ID: <20250615200414.42827-1-yphbchou0911@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mail-ID: 9b720d70-be23-44b8-94ac-4f9468184a23
+Content-Transfer-Encoding: 8bit
 
-Am 15=2E Juni 2025 21:49:43 MESZ schrieb Daniel Golle <daniel@makrotopia=2E=
-org>:
->On Sun, Jun 15, 2025 at 05:03:18PM +0200, Frank Wunderlich wrote:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> On SoCs without MTK_SHARED_INT capability (mt7621 + mt7628) the first
->> IRQ (eth->irq[0]) was read but never used=2E Skip reading it now too=2E
->>=20
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> ---
->>  drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec | 11 ++++++++---
->>  drivers/net/ethernet/mediatek/mtk_eth_soc=2Eh |  4 ++--
->>  2 files changed, 10 insertions(+), 5 deletions(-)
->>=20
->> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec b/drivers/ne=
-t/ethernet/mediatek/mtk_eth_soc=2Ec
->> index 9aec67c9c6d7=2E=2E4d7de282b940 100644
->> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec
->> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc=2Ec
->> @@ -3346,10 +3346,15 @@ static int mtk_get_irqs(struct platform_device =
-*pdev, struct mtk_eth *eth)
->>  		return 0;
->> =20
->>  	for (i =3D 0; i < MTK_ETH_IRQ_MAX; i++) {
->> -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
->> -			eth->irq[i] =3D eth->irq[MTK_ETH_IRQ_SHARED];
->> +		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
->> +			if (i =3D=3D 0)
->> +				eth->irq[MTK_ETH_IRQ_SHARED] =3D platform_get_irq(pdev, i);
->> +			else
->> +				eth->irq[i] =3D eth->irq[MTK_ETH_IRQ_SHARED];
->> +		} else if (i < 2)  //skip the 1st and 4th IRQ on !MTK_SHARED_INT
->
->Please use conformant comment style, ie=2E do not use '//' but always use
->'/* =2E=2E=2E */' instead, on a dedicated line=2E
+Use NULL instead of 0 to signal no LLC domain, matching numa_span() and
+the function comment.
 
-Ok,not sure if the comment should stay :)
-It was a comment for me and i forgot to remove it=2E
+No functional change.
 
->> +			eth->irq[i] =3D platform_get_irq(pdev, i + 1);
->>  		else
->> -			eth->irq[i] =3D platform_get_irq(pdev, i);
->> +			continue;
->> =20
->>  		if (eth->irq[i] < 0) {
->>  			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
->> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc=2Eh b/drivers/ne=
-t/ethernet/mediatek/mtk_eth_soc=2Eh
->> index 6b1208d05f79=2E=2Eff2ae3c80179 100644
->> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc=2Eh
->> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc=2Eh
->> @@ -643,8 +643,8 @@
->>  #define MTK_MAC_FSM(x)		(0x1010C + ((x) * 0x100))
->> =20
->>  #define MTK_ETH_IRQ_SHARED	0
->> -#define MTK_ETH_IRQ_TX		1
->> -#define MTK_ETH_IRQ_RX		2
->> +#define MTK_ETH_IRQ_TX		0
->> +#define MTK_ETH_IRQ_RX		1
->>  #define MTK_ETH_IRQ_MAX		3
->
->Shouldn't MAX be 1 now?
+Signed-off-by: Cheng-Yang Chou <yphbchou0911@gmail.com>
+---
+ kernel/sched/ext_idle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No as we still need to loop over the first 3 irqs
-on the older devicetrees=2E Or was the MAX
-intented for anything else (e=2Eg=2E array size for
-storing the sw irqs - not changed this yet,but
-imho thi should be 2 now if SHARED_INT does
-not need 3 entries)?
+diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
+index b79cbdb7999a..dfacb0ad9b6f 100644
+--- a/kernel/sched/ext_idle.c
++++ b/kernel/sched/ext_idle.c
+@@ -249,7 +249,7 @@ static struct cpumask *llc_span(s32 cpu)
+ 
+ 	sd = rcu_dereference(per_cpu(sd_llc, cpu));
+ 	if (!sd)
+-		return 0;
++		return NULL;
+ 
+ 	return sched_domain_span(sd);
+ }
+-- 
+2.48.1
 
-
-regards Frank
