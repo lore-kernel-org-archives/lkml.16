@@ -1,106 +1,114 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D4B280026
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C2F29A2;
+	Sun, 15 Jun 2025 20:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750019724; cv=none; b=CXiRuALsFvrqwo43jIFAC4zWibKwGdTHzeNlt1pVuROIsW1u0jAO8/WxXZFOL9PN34btWKdGGiXJcUaXJHPP9DNQ6q5gQWGQg8s4FtWyjU66PpRMEAKHPeP+NGge9nnw3f4LUl0JYRoZeOROvwERhEQCXmNLPj14ztKCNPvPwUo=
+	t=1750019750; cv=none; b=eGkja5ZMu74rHINySrQQ6HBP0wwZsziJDXKiIXIpCKYM4HpPGMe4JdP1/1v5WKXEwXqzGhrvOZJ63o9W/6EzRb2qJz+n3DksckUB0oi4T4LwL3uFhqvbMMljUiD3Zl2h5V0Yiv8rx7ZvsHI6+AeVJwQdFdqlsS0+1XXMn3KYdNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750019724; c=relaxed/simple;
-	bh=eefalO3G4OiFpVeK1OhrV+zsNM6sg42ryjlzlayMM5Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u/uJw98GywScgdOxhg1tA21QUtKVB7yQUbyt5PJaXibYCqL+LWYr/hxnfR2A1dshyFSAoPpe6hXuY3QwxJzeuUno7fTVVciKoMh8Nd/dVaC0Ziq4e00apC6n/PP4K3GiMHrpK3nSUbQKlJyENqreqkvKqXCx7k8bcWywQXmeI9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=drVlCNEw; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1750019750; c=relaxed/simple;
+	bh=SBC2qdWRPcC2wPKUJVvs1+BF12UOwaCCeZuIbZRDQZg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hJZDVmA+AH0ESKZwwccjHOeiHtPWSkY/CCo+BQm9nVXSG+X3oRCGquLTCqw0tztWpfU/8US07R/G9X+2N2dY/ljYMgrxrmFh84eedFl81ZD4mHlmrHHG2Zl7J6ywS/gHNK2Yn2C5v9SwNoMP10EldkIWHxw5BXP9rY/ywKJfQTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7ArhAgM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="drVlCNEw"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c37558eccso2765499a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750019722; x=1750624522; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9bzv7JyOJ1NSTMXlUhkU8Ue0cotpcV0fiBdvuBI6fY=;
-        b=drVlCNEwi+aYMU3RtEU8vAfLv9hy77IXNTlyCUuyTUC0Ud+f0agJHYSkNecNI440qo
-         sv2EmLPzUkwBVAzgbU+O5FlwG+UR6QSgK6rZfVTBvObPSFWC7lDWyYKVtRfhv7i98vUx
-         ZAOynYmeFYsBX8MpDm2GeqLICj92sMOKQWfliJjRn4JVi+SF4A9G6JgGUfEYt/7UmM/X
-         kVlXG40zYaiSxQMUR6TryBH1L+5wkNWTO7u9sCTW03BA2ONxZHs5cQAyEY/HKHB0MQFn
-         MSCu9iemzu8RH0cDC8vunU13AFIDYqW6zVILby2M3b8R3PJro2j38KeEO2VUhXOHUjKr
-         wf3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750019722; x=1750624522;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9bzv7JyOJ1NSTMXlUhkU8Ue0cotpcV0fiBdvuBI6fY=;
-        b=kBaXaXHaHh3RBoliIe6XtXWLFYtYk5jUohIQrl4vGo54vEC/iMea1kpy/RvolAzInw
-         iXmB5SmCx9l0a1B3rw81+10EFCyMvProXnMDKWMMw2ol5t/49m22qL6J9X5xOvh20PTf
-         pWszJZgCl+Ho9gWeko0K8ofg0t5jymufJb7B0Si7nC8RZvwhwSDinj5CpG+2YHn6iLHm
-         q/SdObEhdSa5jMSPfAUwR/o6flQnc0EphXKMPkMCOashW9AbQXCwX2zCKcAs7rLOFusl
-         F3hiJOtP8/9bPzq33pM0dditKOlWtLpXhI00povzR806KUdKsi7DS7SVfNLqcBTsl2bb
-         o6ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXsitcCZ22nqSJrREb9N9XlXgHtacq3A1+ZNP5oBlVqweML/R79BzDkfHhsgNP/1JEsYGmCm8RvuMbvQyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXR1A1BvwX5B6+1FsE+9g5YDPd+z3p0QON6xb4H7aMeoZwsHNF
-	SzN8BEHPtRWBhhQ6nU6BXwXCvsEG3cnfuc94sfAoFcPUO0RZ44XRJSks89idnSwLU7SNxdvC7Zg
-	0ByGv0HLBJpIxMCidQ7k79lcO9A==
-X-Google-Smtp-Source: AGHT+IEt/qXb9jMNJY8IcGPlKUWlFpMJOPx3Fz4X3s17m2n9/LIeU/6tW+VwfxsFfR76tm79sgQHIjNEQ26ycUgA6A==
-X-Received: from pfbhd18.prod.google.com ([2002:a05:6a00:6592:b0:747:adac:b0dd])
- (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:6e4a:b0:21f:5409:32f4 with SMTP id adf61e73a8af0-21fbd50a6a9mr10345731637.8.1750019722372;
- Sun, 15 Jun 2025 13:35:22 -0700 (PDT)
-Date: Sun, 15 Jun 2025 20:35:11 +0000
-In-Reply-To: <20250615203511.591438-1-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7ArhAgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 44EA1C4CEE3;
+	Sun, 15 Jun 2025 20:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750019749;
+	bh=SBC2qdWRPcC2wPKUJVvs1+BF12UOwaCCeZuIbZRDQZg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=j7ArhAgMJq/WhC8y5Xwvuvw6YwMNI+p0TA+QDk9V9zWiYMMnVTyah5mMwCn+8Yqob
+	 9GUtoH9sTQJVGE2wQZ0c+1nW8gA/kEfM/tYV/jNIYLhBUBbIpw5a9E04mO7ImUy7Dg
+	 eTXejvho+/Bfx/QuSELev+u5v0P6IETG25ORS/yd16K25wUR7bAZUY3zZbsatztiEJ
+	 9hPrDvLt7OckVVPvAjbAWnVay0tyMUOiOmK71kd4+Wn3Gp6snQBO1KBj5zXGo2ojyW
+	 65cnirzfwkAA9CH1HmEquz7wlGvH7ZVOaKy/dqEhCUtNz3bRJ1gNBSNP4Ob0Z3i8XL
+	 j1AgRIIyPkQ6A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BD2C71151;
+	Sun, 15 Jun 2025 20:35:49 +0000 (UTC)
+From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
+Subject: [PATCH v2 0/4] arm64: dts: qcom: msm8976-longcheer-l9360: Add
+ initial device tree
+Date: Sun, 15 Jun 2025 22:35:02 +0200
+Message-Id: <20250615-bqx5plus-v2-0-72b45c84237d@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250615203511.591438-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250615203511.591438-3-almasrymina@google.com>
-Subject: [PATCH net-next v2 3/3] selftests: devmem: add ipv4 support to chunks test
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Joe Damato <jdamato@fastly.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHYuT2gC/0XMQQ6CMBCF4auQWVvTDkKNK+9hWEAZZBID2IEGJ
+ b27lcS4/F9evg2EPJPAJdvAU2DhcUiBhwxcXw93UtymBtRY6NKgap5rMT0WUa1FMqYrztY6SPf
+ JU8frTt2q1D3LPPrXLgfzXX9I/keCUVph47A95VbburzWE89vcf2RFqhijB9P0WBxogAAAA==
+X-Change-ID: 20250612-bqx5plus-d72e11f5877c
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750019747; l=1306;
+ i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
+ bh=SBC2qdWRPcC2wPKUJVvs1+BF12UOwaCCeZuIbZRDQZg=;
+ b=OHSlQmNFjvIRKLd4dGtpIC39Fiza3MjyiAjR8nEKqyJxjjXzYoNLnhhxuEosVwmXYi/LozfHd
+ 1wDqJ3NJr3CD60afO8lKntyR2bmhTs/sgS5PhM5WTaPz8nINmB8XCFu
+X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
+ pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
+X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
+ auth_id=142
+X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Reply-To: git@apitzsch.eu
 
-Add ipv4 support to the recently added chunks tests, which was added as
-ipv6 only.
+This dts adds support for BQ Aquaris X5 Plus (Longcheer L9360) released
+in 2016.
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
+Add a device tree with initial support for:
+
+- GPIO keys
+- NFC
+- SDHCI
+- Status LED
+- Touchscreen
+
+Signed-off-by: André Apitzsch <git@apitzsch.eu>
+---
+Changes in v2:
+- Add Fixes and R-b tag
+- Move sdc2 GPIO definitions into msm8976.dtsi (new patch)
+- Remove comments from rmi4 nodes
+- Don't touch tz-app memory region. Currently, the bigger size seems
+  not necessary.
+- Link to v1: https://lore.kernel.org/r/20250613-bqx5plus-v1-0-2bc2d43707a6@apitzsch.eu
 
 ---
- tools/testing/selftests/drivers/net/hw/devmem.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+André Apitzsch (4):
+      arm64: dts: qcom: msm8976: Make blsp_dma controlled-remotely
+      dt-bindings: arm: qcom: Add MSM8976 BQ Aquaris X5 Plus
+      arm64: dts: qcom: msm8976: Add sdc2 GPIOs
+      arm64: dts: qcom: msm8976-longcheer-l9360: Add initial device tree
 
-diff --git a/tools/testing/selftests/drivers/net/hw/devmem.py b/tools/testing/selftests/drivers/net/hw/devmem.py
-index 7947650210a0..baa2f24240ba 100755
---- a/tools/testing/selftests/drivers/net/hw/devmem.py
-+++ b/tools/testing/selftests/drivers/net/hw/devmem.py
-@@ -51,15 +51,14 @@ def check_tx(cfg) -> None:
- 
- @ksft_disruptive
- def check_tx_chunks(cfg) -> None:
--    cfg.require_ipver("6")
-     require_devmem(cfg)
- 
-     port = rand_port()
--    listen_cmd = f"socat -U - TCP6-LISTEN:{port}"
-+    listen_cmd = f"socat -U - TCP{cfg.addr_ipver}-LISTEN:{port}"
- 
-     with bkg(listen_cmd, exit_wait=True) as socat:
-         wait_port_listen(port)
--        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifname} -s {cfg.addr_v['6']} -p {port} -z 3", host=cfg.remote, shell=True)
-+        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifname} -s {cfg.addr} -p {port} -z 3", host=cfg.remote, shell=True)
- 
-     ksft_eq(socat.stdout.strip(), "hello\nworld")
- 
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   5 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../boot/dts/qcom/msm8976-longcheer-l9360.dts      | 490 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8976.dtsi              |  38 ++
+ 4 files changed, 534 insertions(+)
+---
+base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
+change-id: 20250612-bqx5plus-d72e11f5877c
+
+Best regards,
 -- 
-2.50.0.rc1.591.g9c95f17f64-goog
+André Apitzsch <git@apitzsch.eu>
+
 
