@@ -1,123 +1,154 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522A927AC3E;
-	Sun, 15 Jun 2025 15:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89298189F56;
+	Sun, 15 Jun 2025 15:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750001954; cv=none; b=P01ZOzwh3uv1g4gIun9vad32jL5ilQqbcLL2up0u5W1cxCjXT9U3R4RxqISwNuf16UJ9v7/24KL2zGMTAHWZnswcm5KnU8ZHEu/sJjiskmPl2/Um5NbdD2DqipM39N+NAxCf0aqbn9XcqZVCMxmQV7s/fXaFMnCFYRxg4Hdt06g=
+	t=1750002069; cv=none; b=iqc9Wvhn1GA4mvBUe9vGAOG+3NJ2nmV0i9Lpg76Sxr4EwhPZHXDPBw/Xre4r9nXKcId8JzkPKhqGtq5pBk7+H2tXh0M+c1H7nmIWeFFh2Gq8Ol+peHtMc6AdnMtqFKlaRUoVi3XVqdGpCFnytXUmPS3zCR+Ma/MgP/B6JXuubdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750001954; c=relaxed/simple;
-	bh=m6LP38QwVoEaHLyw8YxufwF/MJQu9Kb3/FKUtYP05hk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qrKXdfaeSLn0LFQiUZd3Q1JffR98P8Ibs3HfdPGdd7nqhTY5NLzjzavSoBgg+Z/9P3iUUPvZoTnas1GTtTKKoX2x1yRpgSo1ZkqXK8auPX0hqJDW5SPlmAARg9L61jUthtbxCN8IY1m8OhT1Le/tCdxeZhpApQJpRO5xNoBtljg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2I6XrGx; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750002069; c=relaxed/simple;
+	bh=ACD2c5XiMTl1/8iV/BJSYXEzFUIUhxeP9UcdzQGkmlY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afAVjyeYyJuPJBkfYyoLbXQu3az8+mBGv1dtTjDuks9IjrbnlkRJ2mEodLNhs9nd2JVXx/VIsNKNmxNvGLjOwQcjiKS4o2fBm6NIvnds6AiRY9ApwqCiQGX+zVx8WFb5LKumsODOWL+vsznB4JJWO4C5yvFuiWGtzNE60ckjpos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=R3Gilx35; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2I6XrGx"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45310223677so30314795e9.0;
-        Sun, 15 Jun 2025 08:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750001951; x=1750606751; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=q7ElqBBxYK8zwqSy2KMj1EAXRpTMg0e1y6o6qhKBrfY=;
-        b=N2I6XrGx41rGqvtbpEuLBRMLQabJXVHDPOjuKe90INXbClGdrxHNgMLszyyXxmJpod
-         Pvnybc+3Ue1L9vYoo1QzQmCywvmqmJxAxm271RW0VS0bxhsJ9dN1uwycT/PUp5CuoEfc
-         MDjH2HnomoVtYeB+yb0m/ukmPkMjswK7oT/qxc+EOMplhmHEHWfnTbPvfP28C5Izxegp
-         AP2nBsBuhUi0t0NRy2oSuSiR16Ne6XoNieYe+mEkEIvqxGo/G5H2Ubi+sBUo1j3//Yls
-         nNM/JUwYKG2/Uc1lgK/FrDvsSJnAE38NN9ppiJlDj7rHrGp7K16UZT/WQKNyVBLa+RJR
-         S9FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750001951; x=1750606751;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q7ElqBBxYK8zwqSy2KMj1EAXRpTMg0e1y6o6qhKBrfY=;
-        b=Z9M6iqJWaDsfmb/BpRjPsUF5L0j9INy42tLo/YD+MNuSU6DJBdArjuRXrfOMlng+7h
-         jF2yfo2UEtwk7zlvwUUanbu4vFQrLlUK1OMlr6MyM0magvr5mUl+8ev+kOQ2BITGY+bR
-         VbVH7GSotkyywwFPVCs4QJKr3hCJQ1z+z/0Rr6faFIeTiLR4Wxg+IJU5HP61IZjog3SB
-         5s7KN9xHt3QSnRhIa7xfL19yusDi6nV4czrGWF+MaOYVU3uB8tZVzZFsIiUvaXHW+rER
-         JfzrsAtvu0I1tH+TLbupm+4XLFa3JasP4mVjTqE2hARBpE6/JDq+mKJmXk8q4xN6Isp7
-         QEPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVz8r4WSGku0X6ZjNDyJye2pTh80rn72m7lfl1wh0350UBCXxxUUdNTttvLy/5MLH8UBdwA1y/U12cGmJOI@vger.kernel.org, AJvYcCWaB32xyPy5RtzbAyePMfWg43kgRbNqvXOaKsxlznSESKODdikRm44YavBPkxsF6UCl2g3ucx9Dn8eD@vger.kernel.org, AJvYcCWtGMZHY+p4s37wRGSLPz3F6SZwb5RPjIJDs4VkbCOqnfd8J5XhtE71ilt9BmEYpKbpgxrv8Z34GoAy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN8U2MpqSmFbkEX0ShjW+LEwtwJmSDcOb4ta1GXcAE4T7ot+j+
-	1Nv6q7qWnKAQjt561VGyaLgvxUt9mvlSlcJ0k27v2tUH8rAWQoaIrLDn
-X-Gm-Gg: ASbGncs5VpxyaVfOmX7/aL5zYpvspgB9oHCPuEEmKnP7RBjblWygvolboM45Kk8nxn4
-	b5qVbU6PxWOc+bOcVCq6I0DqdPK0WSTuAeT1gq/kM9kwCUukXEUEqY1qAlck6EiEn507/XD6nnK
-	impSrMKkjCnfChYmb5pF5RSQIRdsfv8UabHRU2O5nybinwFaGwGfTMrN9gRItEJRWuyXcWtcyxu
-	RvG4hMP8fZeg6i8ZdxDLjUphtt5C4bOSjZA+JK2/+lK3TqiOScYkkX2Jv0VHl1zjibM5b56WSYK
-	REmbpqfkypg4Tr0gp0pf9dpQBdFUg0cQfIClDeZv8msnHXU12FdZxe4/6I7fczLnAjLVbs6H5Gd
-	0b5wg+GckXphPlimV
-X-Google-Smtp-Source: AGHT+IE3Nn2aP/qP3xfmKvxxE4Tm9DNlDreyA9eo2JAN2p1efPcWJyOTkPDySsjd3i0sSEsHjflkPQ==
-X-Received: by 2002:a05:600c:3b17:b0:442:ff8e:11ac with SMTP id 5b1f17b1804b1-4533caa3473mr60153345e9.12.1750001950395;
-        Sun, 15 Jun 2025 08:39:10 -0700 (PDT)
-Received: from giga-mm-7.home ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c2d2sm116082625e9.1.2025.06.15.08.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 08:39:09 -0700 (PDT)
-Message-ID: <fe84a75aa6d91bc8de7610660e861f1f60fdf9ef.camel@gmail.com>
-Subject: Re: [PATCH v3 2/4] reset: simple: add support for Sophgo CV1800B
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, Philipp Zabel
- <p.zabel@pengutronix.de>,  Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,  Chen
- Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt	 <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti	 <alex@ghiti.fr>, Vinod Koul <vkoul@kernel.org>, Yu Yuan
- <yu.yuan@sjtu.edu.cn>,  Ze Huang <huangze@whut.edu.cn>, Thomas Bonnefille
- <thomas.bonnefille@bootlin.com>
-Cc: Junhui Liu <junhui.liu@pigmoral.tech>, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org, Yixun Lan
-	 <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Date: Sun, 15 Jun 2025 17:39:20 +0200
-In-Reply-To: <20250611075321.1160973-3-inochiama@gmail.com>
-References: <20250611075321.1160973-1-inochiama@gmail.com>
-	 <20250611075321.1160973-3-inochiama@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R3Gilx35"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FFVssV015280;
+	Sun, 15 Jun 2025 15:40:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=FD71qapWxgJ5exCy9LbY8g0+dUBto
+	c+BFfSsKBmZ3DI=; b=R3Gilx35vzMgmM75fbGusgR41/GnI2ziMxdbUTtbCiCm6
+	8x7dELZFaAarA0OUOm+9v2UYFxpmSBBx41TuhaxAjSJ9ypLh7ncuJJOX+PJYOvY2
+	apnk2G8QVPTjBHPyjV5jQvEhNsfEjw6fnM9GWbvJGMpETTSOYpUpWLN+0Un9ZfcS
+	sjWX3qkjxAwVcTnPDAQ1aKoe7VjD1ItU6bcjzGQJ74Q+BpqORzMCNS8GH8aJYTCX
+	Ew5WQcC9hRUddsZp9727ZSXPJbDGjHRJ73WMS9SXw4djhng+sEX8FWe9o2qnY2Xa
+	6Eo9uVMv4NWyki/SRbyZtFDmim7DFGSP/06b6K67Q==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479q8r0ddt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 15 Jun 2025 15:40:56 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55FBS88w000818;
+	Sun, 15 Jun 2025 15:40:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yh73wwk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 15 Jun 2025 15:40:56 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55FFetgA028210;
+	Sun, 15 Jun 2025 15:40:55 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yh73ww6-1;
+	Sun, 15 Jun 2025 15:40:55 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: netdev@vger.kernel.org, michael.chan@broadcom.com,
+        pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] bnxt_en: Improve comment wording and error return code
+Date: Sun, 15 Jun 2025 08:40:40 -0700
+Message-ID: <20250615154051.1365631-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-15_07,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506150115
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE1MDExNSBTYWx0ZWRfX74AnHnA6vFYi KlXrZwTASZWnCMEJy5bNsobfK0yAfE3pLENFa6ZRaYmTipPQpC7hC/fc/BEUpIeqppNNsYEx+Qd QG8xaM4yhy2wM6cHh5IODwFdaOOGOfvWtILp53u1da977g0bKZwf7nZhNcSm53hbOSTs25M4mvC
+ Vvtzu0q+wTv+TPBwCV9kSJqfofu2cCWZxwkef5oLLDADM9DR3PJqip17aut4nvnRcda8xG8cssw 7JhHhs7Xh8qf6DsfzBxzjIeyWBHbP9GHMMwCf/ZvUr5xGUEFvHqLdkKzH0+uyfnN2QfdP6Oz2da wy+yoIqBIDlaPjOlHUgRuZwFj1I8MjAvuMVrvsO6IIPhq/M8ilD6oA9woz2F1iCEVsbslo9eRYO
+ 69Yd3ptMS4jnB1C1qMGTYc4O/ZVNgoHJpGuuG1iMP5b6qAE+EDN9mE9QB4vx96NQXPN4S0NI
+X-Proofpoint-GUID: 1txj7uUi4vwW8BOU4C_S-2Cp62koCfOT
+X-Proofpoint-ORIG-GUID: 1txj7uUi4vwW8BOU4C_S-2Cp62koCfOT
+X-Authority-Analysis: v=2.4 cv=dvLbC0g4 c=1 sm=1 tr=0 ts=684ee989 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=I_VNuqamIqGh25PhsTgA:9 cc=ntf awl=host:13206
 
-Thanks for the patch, Inochi!
+Improved wording and grammar in several comments for clarity.
+  "the must belongs" -> "it must belong"
+  "mininum" -> "minimum"
+  "fileds" -> "fields"
 
-On Wed, 2025-06-11 at 15:53 +0800, Inochi Amaoto wrote:
-> Reuse reset-simple driver for the Sophgo CV1800B reset generator.
->=20
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> Reviewed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Replaced return -1 with -EINVAL in hwrm_ring_alloc_send_msg()
+to return a proper error code.
 
-Successfully tested with USB series in host mode on Milk-V Duo Module 01 EV=
-B:
+These changes enhance code readability and consistent error handling.
 
-Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c       | 4 ++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c | 2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c    | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-> ---
-> =C2=A0drivers/reset/reset-simple.c | 2 ++
-> =C2=A01 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-> index 276067839830..79e94ecfe4f5 100644
-> --- a/drivers/reset/reset-simple.c
-> +++ b/drivers/reset/reset-simple.c
-> @@ -151,6 +151,8 @@ static const struct of_device_id reset_simple_dt_ids[=
-] =3D {
-> =C2=A0	{ .compatible =3D "snps,dw-high-reset" },
-> =C2=A0	{ .compatible =3D "snps,dw-low-reset",
-> =C2=A0		.data =3D &reset_simple_active_low },
-> +	{ .compatible =3D "sophgo,cv1800b-reset",
-> +		.data =3D &reset_simple_active_low },
-> =C2=A0	{ .compatible =3D "sophgo,sg2042-reset",
-> =C2=A0		.data =3D &reset_simple_active_low },
-> =C2=A0	{ /* sentinel */ },
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 869580b6f70d..00a60b2b90c4 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1810,7 +1810,7 @@ static struct net_device *bnxt_get_pkt_dev(struct bnxt *bp, u16 cfa_code)
+ {
+ 	struct net_device *dev = bnxt_get_vf_rep(bp, cfa_code);
+ 
+-	/* if vf-rep dev is NULL, the must belongs to the PF */
++	/* if vf-rep dev is NULL, it must belong to the PF */
+ 	return dev ? dev : bp->dev;
+ }
+ 
+@@ -7116,7 +7116,7 @@ static int hwrm_ring_alloc_send_msg(struct bnxt *bp,
+ 	default:
+ 		netdev_err(bp->dev, "hwrm alloc invalid ring type %d\n",
+ 			   ring_type);
+-		return -1;
++		return -EINVAL;
+ 	}
+ 
+ 	resp = hwrm_req_hold(bp, req);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+index 5ddddd89052f..bc0d80356568 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+@@ -823,7 +823,7 @@ static int bnxt_sriov_enable(struct bnxt *bp, int *num_vfs)
+ 	int tx_ok = 0, rx_ok = 0, rss_ok = 0;
+ 	int avail_cp, avail_stat;
+ 
+-	/* Check if we can enable requested num of vf's. At a mininum
++	/* Check if we can enable requested num of vf's. At a minimum
+ 	 * we require 1 RX 1 TX rings for each VF. In this minimum conf
+ 	 * features like TPA will not be available.
+ 	 */
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+index d2ca90407cce..0599d3016224 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+@@ -1316,7 +1316,7 @@ static int bnxt_tc_get_decap_handle(struct bnxt *bp, struct bnxt_tc_flow *flow,
+ 
+ 	/* Check if there's another flow using the same tunnel decap.
+ 	 * If not, add this tunnel to the table and resolve the other
+-	 * tunnel header fileds. Ignore src_port in the tunnel_key,
++	 * tunnel header fields. Ignore src_port in the tunnel_key,
+ 	 * since it is not required for decap filters.
+ 	 */
+ 	decap_key->tp_src = 0;
+@@ -1410,7 +1410,7 @@ static int bnxt_tc_get_encap_handle(struct bnxt *bp, struct bnxt_tc_flow *flow,
+ 
+ 	/* Check if there's another flow using the same tunnel encap.
+ 	 * If not, add this tunnel to the table and resolve the other
+-	 * tunnel header fileds
++	 * tunnel header fields
+ 	 */
+ 	encap_node = bnxt_tc_get_tunnel_node(bp, &tc_info->encap_table,
+ 					     &tc_info->encap_ht_params,
+-- 
+2.47.1
 
---=20
-Alexander Sverdlin.
