@@ -1,61 +1,61 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F76420C46F
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 12:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6046B1F5EA
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 12:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749991119; cv=none; b=gnbQBQOqyLJ5GQEBZtPhaQMwlYSxVgLz5jqcLuT0tyZrFtnRZAqJoVx7E5rwH8EXBFc2Z+OkfuTxQw27beIN7Phi1qw4I1MXcxHYbpJn0WwYfcKaBLx8W3+CkellQq1c/ddTJwnjVpibnfUzLkniQQw2nQRfooY7kXSrezr1nMI=
+	t=1749991149; cv=none; b=ukRau0+5ED++cg/Xx/gFlbpid/WchHi3sPALv7M4Jp6fuWhg2pFbM+5Uw+prHrWPMGCGbLxpwwtZ36EdHRMQlRt0lyJ+aZTj8D5yG9uhLJdKam1pESO031KZSGfc/1Ol6/1/8o5DWKy91buOqciCC+uUEMdqeTD9iJ3KTPq8KdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749991119; c=relaxed/simple;
-	bh=zCpM8u32JjhOs6PMJ9xZWAk2We8vLNbjqa3BjVGQbNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ECRGvbR/OdUnnAhIuwkmd3m62DPHReJiW2AoJyJP2ajg5LxD72QQhDKnTHxKm3IhJfHpNgyOdstz/8d7PuYKqcPC4N27wxcVW8jxk09JhiPE4rg7La7pLMZPeAY/nerHNCxY6LYixXaNBC1Tkk5PwuHVco2QQdorwVvywKLBq5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJdGw2X0; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1749991149; c=relaxed/simple;
+	bh=OOG8A1lJB6QxMnOCdKGKRFFp+tIssrE/n52zH7SzpSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hwl2vKqDcZKKKKpS275qhVGBiEgovWgJvA9nPvKSj23fvssQXgHk8c26dy176nuqHLaa+l4Q0PnrTHno8LeJqZ5BmBRRq2Xw50l6NaC83ro+6dOjRcgQ9SOuW27FmJhZzpgxGhr3JTsvdM8uEjaFzjZqmnA4zPrmt60b4hXIKJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYBCfqoP; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJdGw2X0"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so7616083a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 05:38:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYBCfqoP"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-607c5715ef2so6066183a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 05:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749991116; x=1750595916; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749991146; x=1750595946; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A1lyYH5dgz4O9nxSSDkMzO4nLPBm8AKyF96f85wOh8w=;
-        b=fJdGw2X0ilw3Sz0ylnwdpRpVKQsg3MaG6TirbXzJCsUDyr6lUNAOmaoetE+AIQ8ZiJ
-         +fJDsw3rrD+qRHOAwCfRzRCueWT8kH/O3PINxFGbKrwGcTwGeHCylgAklX5180dSmckT
-         H4YBbh16DRt3QVuOB6y1NFMBIr4Tk1mKfrEPEng47/NZHCYgThUANueFyPQukUhUT6qP
-         J8RSwNiMUeaIlZGGxh6saIqkUpnXqm6jR0C9lcGLyjngJN/+mgHIm24L1LzVt8RNQNMC
-         D68cP15QIxrIGNFF9DH2MVJBx8tEMwlV8vyz777273HzglcDzwg+VXu3WTfoUwTGPS32
-         91tw==
+        bh=ht0vsGzBZHXOYe14xnyI7/iCiRETWINgnDHOAHnZ/+U=;
+        b=OYBCfqoPCXPrYfnjXx+/PjGwaQwNgVC3IsGt8t1maWWIybfw/DSxDFO+VVgN8MIFpQ
+         M5PyZMNsqvU05qfX8PtY8iYJ1wqtT6MdSQARmF6r2UnSbH/cExRG33Q4AbUTlttC/r9D
+         Hkxzj+K/Ptd8ShalGRxgvjDz/RG5Cjv4ci/D1Rzl85P6dEN6epWkfxtVlvnjKz6MzUpV
+         qxuVlz/1t2GXVb+9GFRdvtR/FjxE9K9q9pxWWyyRWbgNMVkIKlIR7cUinsMgSnVGkMHj
+         7nx8YQJgJ8T2moJH6vzD+Sxn8foJlU6n25qi+ougs+iUxqHCFm/pWa0qytYKhPyDd1jw
+         6yxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749991116; x=1750595916;
+        d=1e100.net; s=20230601; t=1749991146; x=1750595946;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=A1lyYH5dgz4O9nxSSDkMzO4nLPBm8AKyF96f85wOh8w=;
-        b=nMBuJ/T7eI9HsXszUWKF/kBiNPTndHF3FKHPzkdQOdiuU8+8td1MhnE5LggiPMcUyf
-         hpWTQeCkZj05vV5bZJL7EWVO7C7BH7GpI16ezFHHybgqYnm/1L6wzhidsF2F/fRX0kul
-         nOx59VaHKD6T7dvE3MQwmu33FyRm+Ywt86SzuBfGmalSpVD9I5/CH2soC8q+WJBbECEk
-         cRXTrNd43sE3F0uCGg0hdQf612ffKXuqF4tWHMSujs+oa3hDvb1w0y/H1LsFg/W371C7
-         hv8Nzd4mBaN+PccbITXdSoZXyXFuAwMQYsZqxLt3ZRKxnPqCgMOha7JciALTdA8zs71c
-         5G6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtDSkAmbWtfTCxmNGZYmvoYb1E/nVRzBW2NH1sZt02y43Wog1+/yt98XHxD3ajGIEe30SFxcDbLjiFm4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+9j/ZvYUn7cal+HB0LJEBfYI2r1Dg1Ecojgqbe+dJMNke895u
-	GuOlrIxwJEFHolWeGZNR6zSPkerfUbmx7FtwhmFs4VNiI95iy3o7nPpv
-X-Gm-Gg: ASbGncsmUvyMmAW4zUXYhHpSsfu/C56CsYYdE2m3MQZC78SBX703ZEDYasri0i9BNol
-	6M4CFPZRuEQj/S4AQvTQ2Afbj7tcv+sP7VSrKOhUPpqQCXjwu80wUbzf2+3Grx1y8fGBPysX5Kg
-	bl/FT9EouZUD4vQ2n4pkB3TwFs8TZMtvzf2MIf4cbuE8CQPqAjOF7uJfUFUDG9a7FShJ+F+SZQv
-	P7A+vtm94ZWEROdwofgKU2Infknjr+P6JePCFlYRic+afEPD1qgHzo1SoAqhW/7PAfe2wta/CTz
-	HckI0uy1qfPBmsqorC96GbEZdyLkGjZMHdX7d9yeaVQLNyvWRHJkYTMYgak5/o6PskaiUT8uPNX
-	43L8=
-X-Google-Smtp-Source: AGHT+IGWiIs6KS4FG0Jk7Jef925QLqUG8UW94EXbeHSg0NO748ouelzY1GlkJxSwF5z99yEJnTzHxw==
-X-Received: by 2002:a05:6402:d0b:b0:608:a7a0:48 with SMTP id 4fb4d7f45d1cf-608d097b3d4mr5018070a12.28.1749991115480;
-        Sun, 15 Jun 2025 05:38:35 -0700 (PDT)
+        bh=ht0vsGzBZHXOYe14xnyI7/iCiRETWINgnDHOAHnZ/+U=;
+        b=QFPSoUq+9vdQkxrnlfp805wkyXj6/7Ev4k5ZibfkQxdTY5NNkLIDHvanUJYTkuIkz7
+         MkH1LYqY1KYJjozzo2QWbp370H+fEwq+HcSWz3xDK65HAgixyuBAXghXY1oo4LRnZiHv
+         1sJkgAkfoxlMB+xcibA2XfCAGVQrkBnyR9xQO5e1u/5YFWjYMVzlUlqmiEzqMkkESysX
+         75C/9c1d/SIhwJaZMVcZoRx+Fb8iku2BiIcKmDCF9TBBT40wqY5wBepEGNRNbHd7o46j
+         GU2CspxybNA9lQ/hb6FYEUT+iDNha6rgP8Bp96MK7GHTWf95ZBQPj7ACxPShJiyVz+A5
+         CREQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOvthSSLsstHxhByliil3YWXYQ6/aT+7klx7NA5SwGavCSfywBpD8pUb9h0+YXJmiT/ZNin6yoZEMCr6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9b0nNqcQVeJOZjmRjVGVPwmU5TgLWhQ/Mq/66x319SHNESQfY
+	pvkWwXeO94OP2Uu8juSUBp9A27rY1sYjElRDw5EBdJuOnagqwsnRAPcn
+X-Gm-Gg: ASbGnctQBcpau5UuHnUz5hcaE9wtJTlbkS7mZCX7W8d6ert4fexlW7ozAVf1YDvFjWk
+	k27FFvlsIcbrvJJ//o/hOZYlv/+hUOuK4GA6x0+HO3W/aHpv1YNt8qFM/h287O+Us1gMxfMr9yl
+	P2MgjMObKZcqG9et8P+di+W7jjAyb1cEsZcV+asFvqyH/gVDxrKJ4KpEPwwjSX/BiAdBX6p+epi
+	KamAkX7pbzzggSJ1bmiikeCMpp1kX1XBPKQzReMa4Jv+p0jRvVjPUk8At8H5RHQvDxWzgvJI8/H
+	ppN8zeUInNGwtAoqbFQyK8e2B95KaaN6oO1xelFA9opzvIjSMbnGoOdWQ573vcFZvs8qcmjV29f
+	I1goeXYR9TCXabA==
+X-Google-Smtp-Source: AGHT+IEVMECVXr20Usoe4/zdCvMUe9SrxO0WUwD6EbhR+37C/PSr/kSVuwEjB1/Jha7qJMztNqRh+g==
+X-Received: by 2002:a17:906:c103:b0:ad8:a41a:3cba with SMTP id a640c23a62f3a-adfad43c58fmr626913066b.43.1749991145504;
+        Sun, 15 Jun 2025 05:39:05 -0700 (PDT)
 Received: from localhost.localdomain ([95.90.184.233])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892e523sm479239466b.146.2025.06.15.05.38.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec897ac3dsm473478866b.155.2025.06.15.05.39.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 05:38:35 -0700 (PDT)
+        Sun, 15 Jun 2025 05:39:05 -0700 (PDT)
 From: Michael Straube <straube.linux@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: hdegoede@redhat.com,
@@ -63,9 +63,9 @@ Cc: hdegoede@redhat.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: remove return from void function
-Date: Sun, 15 Jun 2025 14:37:58 +0200
-Message-ID: <20250615123758.41869-1-straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8723bs: remove some 5 GHz code
+Date: Sun, 15 Jun 2025 14:38:59 +0200
+Message-ID: <20250615123859.41922-1-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,42 +75,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove exit label and return statement from a void function.
-After the exit label no cleanup is done, so it is safe to remove it
-and return early in the only place where the label is used.
-This simplifies the code and clears a checkpatch warning.
+Chips that use this driver are 2.4 GHz only. Remove some code that is
+executed only for 5 GHz (channel > 14) . This addresses the following
+TODO item:
 
-WARNING: void function return statements are not generally useful
+- find and remove any code for other chips that is left over
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8723bs/os_dep/os_intfs.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Compile tested only, due to lack of hardware.
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-index 0248dff8f2aa..3cbfc305ede3 100644
---- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-+++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-@@ -1112,7 +1112,7 @@ void rtw_suspend_common(struct adapter *padapter)
+ drivers/staging/rtl8723bs/core/rtw_ap.c        |  9 ++-------
+ drivers/staging/rtl8723bs/core/rtw_mlme.c      | 18 ++++--------------
+ drivers/staging/rtl8723bs/core/rtw_wlan_util.c |  9 ++-------
+ 3 files changed, 8 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index 383a6f7c06f4..b2e7e7267aa4 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -741,13 +741,8 @@ void start_bss_network(struct adapter *padapter)
+ 	if (p && ie_len) {
+ 		pht_info = (struct HT_info_element *)(p + 2);
  
- 	if ((!padapter->bup) || (padapter->bDriverStopped) || (padapter->bSurpriseRemoved)) {
- 		pdbgpriv->dbg_suspend_error_cnt++;
--		goto exit;
-+		return;
+-		if (cur_channel > 14) {
+-			if ((pregpriv->bw_mode & 0xf0) > 0)
+-				cbw40_enable = 1;
+-		} else {
+-			if ((pregpriv->bw_mode & 0x0f) > 0)
+-				cbw40_enable = 1;
+-		}
++		if ((pregpriv->bw_mode & 0x0f) > 0)
++			cbw40_enable = 1;
+ 
+ 		if ((cbw40_enable) &&	 (pht_info->infos[0] & BIT(2))) {
+ 			/* switch to the 40M Hz mode */
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+index 1d23ea7d6f59..0b0ee023a239 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+@@ -2252,13 +2252,8 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
  	}
- 	rtw_ps_deny(padapter, PS_DENY_SUSPEND);
  
-@@ -1134,10 +1134,6 @@ void rtw_suspend_common(struct adapter *padapter)
+ 	/* to disable 40M Hz support while gd_bw_40MHz_en = 0 */
+-	if (channel > 14) {
+-		if ((pregistrypriv->bw_mode & 0xf0) > 0)
+-			cbw40_enable = 1;
+-	} else {
+-		if ((pregistrypriv->bw_mode & 0x0f) > 0)
+-			cbw40_enable = 1;
+-	}
++	if ((pregistrypriv->bw_mode & 0x0f) > 0)
++		cbw40_enable = 1;
  
- 	netdev_dbg(padapter->pnetdev, "rtw suspend success in %d ms\n",
- 		   jiffies_to_msecs(jiffies - start_time));
--
--exit:
--
--	return;
- }
+ 	if ((cbw40_enable == 1) && (operation_bw == CHANNEL_WIDTH_40)) {
+ 		ht_capie.cap_info |= cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH);
+@@ -2366,13 +2361,8 @@ void rtw_update_ht_cap(struct adapter *padapter, u8 *pie, uint ie_len, u8 channe
+ 		/* todo: */
+ 	}
  
- static int rtw_resume_process_normal(struct adapter *padapter)
+-	if (channel > 14) {
+-		if ((pregistrypriv->bw_mode & 0xf0) > 0)
+-			cbw40_enable = 1;
+-	} else {
+-		if ((pregistrypriv->bw_mode & 0x0f) > 0)
+-			cbw40_enable = 1;
+-	}
++	if ((pregistrypriv->bw_mode & 0x0f) > 0)
++		cbw40_enable = 1;
+ 
+ 	/* update cur_bwmode & cur_ch_offset */
+ 	if ((cbw40_enable) &&
+diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+index 73c70b016f00..0c6072d08661 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
++++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+@@ -854,13 +854,8 @@ static void bwmode_update_check(struct adapter *padapter, struct ndis_80211_var_
+ 
+ 	pHT_info = (struct HT_info_element *)pIE->data;
+ 
+-	if (pmlmeext->cur_channel > 14) {
+-		if ((pregistrypriv->bw_mode & 0xf0) > 0)
+-			cbw40_enable = 1;
+-	} else {
+-		if ((pregistrypriv->bw_mode & 0x0f) > 0)
+-			cbw40_enable = 1;
+-	}
++	if ((pregistrypriv->bw_mode & 0x0f) > 0)
++		cbw40_enable = 1;
+ 
+ 	if ((pHT_info->infos[0] & BIT(2)) && cbw40_enable) {
+ 		new_bwmode = CHANNEL_WIDTH_40;
 -- 
 2.49.0
 
