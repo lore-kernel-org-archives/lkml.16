@@ -1,99 +1,119 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFE91FBCBE
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 22:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC861F09AD;
+	Sun, 15 Jun 2025 22:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750028039; cv=none; b=q5lkBTlN0jG0lah5vbAG5pG59WIr/rRYkseYxZrF3Dj16hd5GUDHdLSuiF958MX5IjDcd1uqE9ENo0OR14sK1xdjFUq4RvW1pxXPr3FmTPQQYf4IwK6e9wDvS1ARKpZRNoaT6j3Aya2UCKyw2VJFQglWFjPKfS3uf1SjGv2a66g=
+	t=1750028393; cv=none; b=ZH+89kPu/JPi6g1gjjENMUAR9KfjcU2SC1+0jUjqvjpsICtTTmufatzr5y2SH46Xfew86IPwDWUt9nn39c+jp5/oMtHMKF8WRFlLOlxx1BVsreD8EQSQ0k8ER0Efi30qdflVZRqoCZ8xE3II4pF6yh52/XJNzk1S32YG3wt7lWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750028039; c=relaxed/simple;
-	bh=fJric2xuz/D7KmQiBryCjvqCKImRal40258ZoI4kmdE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kz5ml0JRnsDBfEsEmhKIWhitNMFXh/fk8x1zOmoKvoc7+lsx+D3jLySJ3jh8kmvKOBfLvZtd/GDf9RUg2axFIYLbOHA8d0bJEDMosIBBaMtTv4mTqaL/uSANg2P3n+qgbWHYiGp7p0XnsNQBlDIVw+aZpJD8AYpcrtleCPYwxDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=JMkbaykr; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1750028393; c=relaxed/simple;
+	bh=YR3upt6a7NIgFrhsrnVSjKhZGYJ8tzeA4EEKjyuJIa4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EuLNwlyxJLIafJqJ+jf1xOfLdKxTxyVYkMMoR7tjL+lmQEUTTlrHKu07bmEVbh47AmXyY53ioUcYrUj5KYyRfPNY1CW5Na9Ee4+WpMvn0bhLhmOfXx3B9whhzArIZ37V4KzYhmh659egM0F5xzRavKF4T9lVvFoSNvzpgbhsHyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BoWUDO59; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="JMkbaykr"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id CDFAA240101
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:53:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
-	s=1984.ea087b; t=1750028034;
-	bh=fJric2xuz/D7KmQiBryCjvqCKImRal40258ZoI4kmdE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
-	b=JMkbaykrVVKtI5b6bPvljsCIZ++v/233NE2h4ZHwsZOHYTVQneI1Em2kapIX9Jny5
-	 yhiK3ZA3Rx7qXjfpa/K6xrtHO0vXSiPVjmtkdnkWq2/C7bpPQMfmahtkzqPAxpEu2U
-	 FH482o+Eg5s049jJJGKv1OxPh+v/Tm2+8flONGZy6kbT7WPUfBdKhHcWYQNBsANjQx
-	 IKrhbb4XRTSANki2u7tBe37ZLIJX1zRu9WAKQRLsWjgT71pzv4+m2Hg7YeoCN4E/kR
-	 GW1EajIOaPPq1gycrBFHAzIykg3cVmAs5SWaDeD2zmFIVCmb8QLXFNj6R0kocLTgs6
-	 5xrlM0c//1xTPu/EqpJy7O+szA1HuO8UErxhFJJgjvkh6fhm3pDne3IDAGQWzsv67s
-	 UAElpjfTiD6t/s3/NUQrI/VTjvJ/Kv/vlkJ7U42TYIv9TAbtNZwos0nQ6tQqonXrtp
-	 GY52Xy1ZlB+0d7owVrP3gyKxlIMUjO6JZf+YtG/wdZ8c41bM2TF
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4bL7jF2ZZxz9rxF;
-	Mon, 16 Jun 2025 00:53:53 +0200 (CEST)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-Date: Sun, 15 Jun 2025 22:51:53 +0000
-Subject: [PATCH v2] docs: filesystems: vfs: remove broken resource link
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BoWUDO59"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb79177so23606095e9.0;
+        Sun, 15 Jun 2025 15:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750028390; x=1750633190; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=asoSzLl/Wq1XUSwb4kGRQ/8z2OWVCrEll4V7xShXbq8=;
+        b=BoWUDO594vdfJSiLmW0Oy1NlJL8vofO1OTJxSVHI3Qrap/Ogv+Ewjb1YnURs/AMf8Y
+         E0nv7GDzbzB2n3zAepENkkE2GYTvZEobOh2h2OVu7v4Y3UWD+5aG5kgoPki8pQ2Fxuoo
+         wWJ1DJ2Vv/b9Ab6o5cQIILUUZnet0MA6mDTfcQMHiqTqbmRARv3BTBo4RaV5SUCTMHDZ
+         fSvuMD1rm19Hn5vlfs7F759DhRykHMpgZwZpkfkBmrjg6PMOeBuKYUTM6YIr+ZKsbMYB
+         pON6ML3Gu+gA2RIpWItVtMCwTIXMT+L/ie3H+XDSZ9N9M6099WrQnYzmbt8TxvPZokVm
+         ONOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750028390; x=1750633190;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=asoSzLl/Wq1XUSwb4kGRQ/8z2OWVCrEll4V7xShXbq8=;
+        b=WIudIcAPsXgqAf5PsdiClCUYkphSp4y939jOcdOIZ5n7Aio3rMiU9If1wzVguIupfx
+         blNbbrUU6JUXylFxapvVQrbGRLM1JH0a2U/cRpODisJei8gfx4s+fgG7Nznskq+X1uT5
+         IbsMVaXWayDeQbiUpfWIjB+xqqKFvIv3m+w2FsJ4GDPh832IXPJT1HmliENlN58xuTMi
+         YGo3VgAR6zdgDjDaZKI1PUaU54Wl9t3s4hHjFS82JmC8YlsjMsDrSGrQw/ukEHqan6UR
+         JVIbhhha5i2R9nVSR1J3OWzjcwAr248heOMMyFyrkW3Uo40Dmg0DLe+OZFkbrjz/v1KS
+         jhzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgj0s8HKJB0daT+gjF5OAsC0TJ0Oezkc0p8290pMoehP0bvccA8pWBGchhoDgJERS7P34hCJg/@vger.kernel.org, AJvYcCWDrsEXjjWCERfsHv+4T0fzopqimx79bD8yWa7efzsH6XW6jexVnbwzkpUzkvc4vwLd+2rgbptt6XK5dpXA@vger.kernel.org, AJvYcCXVAbFoEn9b05CWjAYPzNogJh6gJAzSD4FiI51+9KFARvldAtZM5ZXo7XvUQtYvsq6SFPCzi0eezkDoYA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfypS0wknXZuvvNRfvcOKfNVGp9sMp8jhmoyKxEr+1EnGxX91G
+	XZvPyioZZITeyfE4HGP1gC01PQOUMmEieV7A3W12N0lGw7aUC6mWTCPB
+X-Gm-Gg: ASbGncueq4hgxznxTaAq3BR0KYiv7wO5ggToLN/p979VS0I8FVp/GB7d4bTJsPfuo0x
+	Kj2djLUgm6pVEMjvZwJfELfb3hLzswQKwPS1b0aqnYJ5+c8KbpJFortk8DaoQJ3KiQxCO+eHhkQ
+	oX3j8e6yLY6Av67mvsdhRzWaoyrhIByDeQXvjXKU6fdYMNWK/78qHkf54nOyHY7xj7t/VLNO6DO
+	ApsNlrmL9hDjYqqEwo0/oE4Alzxql6pZKJ2Yo/mFupAhVH/W9fcau9Tne0BaM4s4DFm38IbwZfc
+	DgoPQ1u548YHebz4Eej8F1+TQs3X92Lqva9HcGNOh2TMoiQxhSQhYMm6tCsuzg==
+X-Google-Smtp-Source: AGHT+IGVXFqrvjaIKJKycIaXRqAwg7yGhm/Jk1Fyt/0+B+0jhnfHEEyUyGQ43RFeYdaDIAYuTGjz2A==
+X-Received: by 2002:a05:600c:4fc3:b0:441:b3f0:e5f6 with SMTP id 5b1f17b1804b1-4533caecda9mr59334065e9.25.1750028390367;
+        Sun, 15 Jun 2025 15:59:50 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:f4f0:900:e9f2:3619:31b7:c717])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e13d009sm124887155e9.20.2025.06.15.15.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 15:59:49 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: gargaditya08@live.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] HID: appletb-kbd: fix "appletb_backlight" backlight device reference counting
+Date: Sun, 15 Jun 2025 23:59:41 +0100
+Message-Id: <20250615225941.18320-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-vfs-docs-v2-1-70b82fbabdbe@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAIhOT2gC/0XMywrCMBCF4VcpszaSDLZeVr6HdJHLxGaTlEwIS
- sm7Gwvi8j8cvg2YciCG27BBpho4pNgDDwPYRccnieB6A0oc5aRGUT0LlywLoyVqg/aqTh76fc3
- kw2unHnPvJXBJ+b3LVX3XHzL9kaqEEtJdzt5YqY3F+5q4UDpGKjC31j7wTOICoQAAAA==
-X-Change-ID: 20250615-vfs-docs-ba02ab2c914f
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Jonathan Corbet <corbet@lwn.net>, neil@brown.name
-Cc: linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Charalampos Mitrodimas <charmitro@posteo.net>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750028010; l=1228;
- i=charmitro@posteo.net; s=20250526; h=from:subject:message-id;
- bh=fJric2xuz/D7KmQiBryCjvqCKImRal40258ZoI4kmdE=;
- b=5zh7zA2RZutpTFQHg8S5OGUNE7swOo+Wd6Cqn5D47Xrt/Ieowfte+DKQxVXALtZkbJQq3cAoo
- mQCxXoB94h2CACCuHi5eGKOUtlEiaUVEDWToiJC0Z5Cvmhol2vJysby
-X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
- pk=PNHEh5o1dcr5kfKoZhfwdsfm3CxVfRje7vFYKIW0Mp4=
+Content-Transfer-Encoding: 8bit
 
-The referenced link is no longer accessible. Since an alternative
-source is not available, removing it entirely.
+During appletb_kbd_probe, probe attempts to get the backlight device
+by name. When this happens backlight_device_get_by_name looks for a
+device in the backlight class which has name "appletb_backlight" and
+upon finding a match it increments the reference count for the device
+and returns it to the caller. However this reference is never released 
+leading to a reference leak.
 
-Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+Fix this by decrementing the backlight device reference count on removal
+via put_device and on probe failure.
+
+Fixes: 93a0fc489481 ("HID: hid-appletb-kbd: add support for automatic brightness control while using the touchbar")
+Cc: stable@vger.kernel.org
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
 ---
-Changes in v2:
-- Removed "so" from the patch description
-- Link to v1: https://lore.kernel.org/r/20250616-vfs-docs-v1-1-0d87fbc0abc2@posteo.net
----
- Documentation/filesystems/vfs.rst | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/hid/hid-appletb-kbd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index fd32a9a17bfb34e3f307ef6281d1114afe4fbc66..a90cba73b26c18344c3d34fdb78acb4ff6f14ae8 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -1549,9 +1549,6 @@ Resources
- Creating Linux virtual filesystems. 2002
-     <https://lwn.net/Articles/13325/>
+diff --git a/drivers/hid/hid-appletb-kbd.c b/drivers/hid/hid-appletb-kbd.c
+index ef51b2c06872..e06567886e50 100644
+--- a/drivers/hid/hid-appletb-kbd.c
++++ b/drivers/hid/hid-appletb-kbd.c
+@@ -438,6 +438,8 @@ static int appletb_kbd_probe(struct hid_device *hdev, const struct hid_device_id
+ 	return 0;
  
--The Linux Virtual File-system Layer by Neil Brown. 1999
--    <http://www.cse.unsw.edu.au/~neilb/oss/linux-commentary/vfs.html>
--
- A tour of the Linux VFS by Michael K. Johnson. 1996
-     <https://www.tldp.org/LDP/khg/HyperNews/get/fs/vfstour.html>
+ close_hw:
++	if (kbd->backlight_dev)
++		put_device(&kbd->backlight_dev->dev);
+ 	hid_hw_close(hdev);
+ stop_hw:
+ 	hid_hw_stop(hdev);
+@@ -453,6 +455,9 @@ static void appletb_kbd_remove(struct hid_device *hdev)
+ 	input_unregister_handler(&kbd->inp_handler);
+ 	timer_delete_sync(&kbd->inactivity_timer);
  
-
----
-base-commit: 4774cfe3543abb8ee98089f535e28ebfd45b975a
-change-id: 20250615-vfs-docs-ba02ab2c914f
-
-Best regards,
++	if (kbd->backlight_dev)
++		put_device(&kbd->backlight_dev->dev);
++
+ 	hid_hw_close(hdev);
+ 	hid_hw_stop(hdev);
+ }
 -- 
-Charalampos Mitrodimas <charmitro@posteo.net>
+2.39.5
 
