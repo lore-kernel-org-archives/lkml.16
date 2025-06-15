@@ -1,120 +1,117 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E3113B5B3;
-	Sun, 15 Jun 2025 16:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3011311AC;
+	Sun, 15 Jun 2025 16:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750005740; cv=none; b=XjV2NFaWJpdcG2WY43pyffyMnovFdSzBK7ZG1z6VR8zCxmvradudAJM7aqwtdOI4Hj97py8zP2wMOUCU+m91ov1+DPQoKGCJwbijWuY2/AD8FIRe4Q2hmDEQME2p6kiB/zo/bnBsClnOs1BNHn7T13b/idUsY00g49myVrnhG9c=
+	t=1750006001; cv=none; b=cQV4XKcYt4ursEFaoPLOegKNZEMvrgT8mq//6prNSnTq92XoviD++4qN1W6JLRQCPoV/2MPFOUixwtTD47Tglv7Qi8ibUfCk9HTJnuMz5mCKwxRAseMJ2t5vGzTqrykJkOe8fJiJ460HVLP58qufYpx1ULnCgU/Jkd+YtkD6LEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750005740; c=relaxed/simple;
-	bh=QKcZxZXwwFGx6k0XrSFLjyB45TJX1o/2X8RQBqjF5Nc=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=TV7WIC8EhlvZ+SsoBwZWILRe9J3L8GmXdIxNOFOin1GJw7ngEP0sXIEO5EfNwmTvwGOJTEW549Qc8EMwod+eQXgZ//FKhq/uOIZHWiBFvLNhoBdUOKv9PVUkuu7FES2jjiIJwvOgSGIzLryTfe/MkiBQkiSIojzfgqWmRHyyU7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=JSf5ARVj; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1750006001; c=relaxed/simple;
+	bh=q2nxxF8EAq7o49j+77+PCK6HtmLE+7HtQ93eW9eAVmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I1hgqY/keOL26WqK7+3u7uxIOWukwsiclz7KCz83xjenYZcP6z2QUaGMsqU5lnFqO7gm6SuEtwoSeUB5PsLcj29tiFPcdnFEhXhkGSaTKqTZ6jTUkzvY3caBe+Bv+TZOCctmerO37Lj0/GN7l8Vki2MThwHMiV1hg1qSHrryj3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tz3qZ950; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="JSf5ARVj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1750005735; x=1750610535; i=frank-w@public-files.de;
-	bh=QKcZxZXwwFGx6k0XrSFLjyB45TJX1o/2X8RQBqjF5Nc=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=JSf5ARVjN2H1oqrX4p34XAxsluXp3Lm3SsqU3/lhMnJmdfHjIE+8YeUrieR19GP9
-	 tcmfgrKzGMzMw9/02lvJcABgJBtLLOOP4+W8oxL160yXHT4lIqxVNqRlrj69GmkYt
-	 CyOMKngbiC62hZRBCXGSQN6/W6BclDDls1TEh6nHKt30GYg1Y7Ng+Q9badilN+JJr
-	 KGL0uSLn74MjiU39zhoPqSBqhldKpmgje5EQDb15tPp8V1oGLT+/2/umehLpk91hE
-	 9QmDbkkGaTjANkAjkRWtDm/MqPmVVZyDt+ikCbJ10ppzRb6ghDmp83DB1t+UGWLqm
-	 peNg1Ty0WjwPOub1GA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [100.71.3.253] ([100.71.3.253]) by
- trinity-msg-rest-gmx-gmx-live-847b5f5c86-84n87 (via HTTP); Sun, 15 Jun 2025
- 16:42:15 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz3qZ950"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73972a54919so3180599b3a.3;
+        Sun, 15 Jun 2025 09:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750005999; x=1750610799; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ibEFxJXBoB+iT4DQuUV/VzD7OboriX5WpdV9GnZMpc0=;
+        b=Tz3qZ9506t70KI9kZ2BqDkRTqZSxWQfTMrjwbR1dcM5ohM0RlSk4b7whWe77f6a8sF
+         ZqMOIwuSeWA8Z4Gr8sPoCXo+TJ4ytEU5xMe3b+AQE4ABdX6up9AscOPjyUzhLdg32Ul+
+         jgi3slatdcoQwtyWofr51GJsKKUQxruDFDOuOm8tmGZBCMScjIdnsHPoHqf689Uq5N/p
+         d3CpKrIYCbhLB7VJd+J24e3Didj0JEocOLUsIc1EIW4pG1681kgMxanuNQrWL4zDh7lu
+         wgz9wbf3Zlz+f2pKYcY6x2iz8yS2V4T5rUE82EfvcgU1k5o0nvOImhXmXHuu9r0b3g5Y
+         vbGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750005999; x=1750610799;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ibEFxJXBoB+iT4DQuUV/VzD7OboriX5WpdV9GnZMpc0=;
+        b=VyK4zZvC+30jAfRZulNjwOzZpxo7PlY24yROGLHxqcVG5OnM0drURjzL9Y4hzqcMmT
+         njetVSOE6KkF9VUvdS22FwlgdxhbTPrGMes5+aO0tvepxeTVjXTDS/vNMGar4uUiNSEG
+         0VLPUBMljKbmpgWcDxHzQ6QfuRQXT360n+VudvJj3qqKODrKocwpwIJ4zEct0aZr0JT6
+         SMslDAu0q/d1KczWLqrLPK+hF0IZhPwlEqn7mk/may0odIH3PhTQq6p8T68k5xpFQmcF
+         N8TwyTdaIvxF5HrnSQdQNs4KxwGdA50clvdM2dUtV/dTirE9h7wM6yD/+/BNCqu9FOnu
+         vlmw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+UIVdczmuboivWlMIA5RJOYiwjIcNWMFi62bbQibWmfw/+JOFvRH/EUgkZYmporXOOLQ0udlNGntnhEwM@vger.kernel.org, AJvYcCXCD1iKeZCd8p/BLTDN47aT5bLilH0SJSHc7tPEn+TJyrybSCIQhJDy3h5fM7wWKF15PY5xcmXdCZcIX22Dvw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBhOg6lj2qtsIoXT3MfRqmEnRc3TnOLd7HZAiiyEYQgXD3A9JB
+	lfmQQrukAu8Exk3tLZs5dSwSwACoAeO1u7lWAtM3VkUs3Mkc63neomxMUXiSTmd8N3Q=
+X-Gm-Gg: ASbGncteCC3YcpR17d8H56URAEYw5lO2hvoJUt6IYyZ+HcJkSxs+6oNh1Ti8UUGPY07
+	apKsGciblb4SGoRyIUkJ7S4DO9WYVlzMtHmBL74byYeu9iYsdr5p8/NySE4Bmu7QzxzfSFEnXXc
+	beO+uSNCyArx5+WyW3Pg3KcCdIWBHC4P7tK2uIs1nf5yhprq0GhW2+oNMyaf4tk7eXjyK/LV2xz
+	tFZtmKuTTCZ6ZS35uhOkU2OOXh2w+544+joupHDpTjCdLs6oGLavo8xmYWbCDwkDj7myNqthaFr
+	Uwv8hAdmmfzmZdsWzXBUR0Oz+XI+JZh5PgFZEpoQdoYfPZ0VkErYKf8C65Q+NJrHBqS9fIdUc+r
+	84AG2WeBuJbw=
+X-Google-Smtp-Source: AGHT+IGw3WEeq1IegtvXBbQUHIc1MttDbgq2J09zuF57yiEiqxFXoWyS2xx1d8cXCyVf7frzjI88cQ==
+X-Received: by 2002:a05:6a00:1781:b0:742:a77b:8c4 with SMTP id d2e1a72fcca58-7489cf6a9ebmr8371431b3a.3.1750005998875;
+        Sun, 15 Jun 2025 09:46:38 -0700 (PDT)
+Received: from localhost.localdomain ([122.174.173.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b2c1asm5233378b3a.143.2025.06.15.09.46.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 09:46:38 -0700 (PDT)
+From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+To: kent.overstreet@linux.dev
+Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
+	linux-bcachefs@vger.kernel.org,
+	shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com
+Subject: [PATCH v2] bcachefs: don't return fsck_fix for unfixable node errors in __btree_err
+Date: Sun, 15 Jun 2025 22:15:38 +0530
+Message-ID: <20250615164547.11900-1-bharadwaj.raju777@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-eafa403a-1d9f-4842-a65c-84badd4fa6ee-1750005734980@trinity-msg-rest-gmx-gmx-live-847b5f5c86-84n87>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: linux@fw-web.de, nbd@nbd.name, sean.wang@mediatek.com,
- lorenzo@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- horms@kernel.org, daniel@makrotopia.org
-Subject: Aw: [net-next v3 0/3] rework IRQ handling in mtk_eth_soc
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 15 Jun 2025 16:42:15 +0000
-In-Reply-To: <20250615150333.166202-1-linux@fw-web.de>
-References: <20250615150333.166202-1-linux@fw-web.de>
-X-UI-CLIENT-META-MAIL-DROP: W10=
-X-Provags-ID: V03:K1:gfzxyuXSRRAJZTS3O6R2MPK4ZqeDCQnmkhoEmwuunLO3iPNh65Ny1QVJsiAyB7EOpPrXt
- fmmdFXLL4sHsZVzMO3zK0qjMiYeWlcV8CyAn0KzerScECnEOn7GGWtzkIls3N+Hf1JMMnylZya4K
- GuH7SrsB5b8q4gwM+gXO4FcV7p29qRSTcmPDL2odUCPo+Ekb5BO6enXTUwyxUzgOsIGBFlWK/ck/
- qAwIyB21HxT6T596Bdbz4SwUOpDW4VedeugLlWSJ+iv67YCmXpOIS+lplBywVrMHpirIi+vvqNuE
- 7RM8IbHuKlCtiWkaxDNP40Y7RcbJ8aqTHjRbU62rs27fM4QlK3vCFanVb9v9hkv140=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:z46WAXs0WfU=;0KChdF0K4ur9LAkuyndxm1pe2yZ
- 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
- zl9I91XGrtZFECMjJRAMdJd1bxow==
+Content-Transfer-Encoding: 8bit
 
-> Gesendet: Sonntag, 15. Juni 2025 um 17:03
-> Von: "Frank Wunderlich" <linux@fw-web.de>
+After cd3cdb1ef706 ("Single err message for btree node reads"),
+all errors caused __btree_err to return -BCH_ERR_fsck_fix no matter what
+the actual error type was if the recovery pass was scanning for btree
+nodes. This lead to the code continuing despite things like bad node
+formats when they earlier would have caused a jump to fsck_err, because
+btree_err only jumps when the return from __btree_err does not match
+fsck_fix. Ultimately this lead to undefined behavior by attempting to
+unpack a key based on an invalid format.
 
-sorry, missed the changelog:
+Make only errors of type -BCH_ERR_btree_node_read_err_fixable cause
+__btree_err to return -BCH_ERR_fsck_fix when scanning for btree nodes.
 
-v3:
-added patches
-- #2 (add constants for irq index)
-- #3 (skip first IRQ on ! MTK_SHARED_INT)
-to the v2 non-series patch
+Reported-by: syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com
+Fixes: cd3cdb1ef706 ("bcachefs: Single err message for btree node reads")
+Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+---
+v2: Return the given ret for all errors which are not btree_node_read_err_fixable when in scan_for_btree_nodes
 
-https://patchwork.kernel.org/project/netdevbpf/patch/20250615084521.32329-1-linux@fw-web.de/
+ fs/bcachefs/btree_io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Tested on BPI-R4/mt7988 with IRQ names and BPI-R2/mt7623 and BPI-R3/mt7986 with upstreamed
-dts via index-mode.
-I do not have any MTK_SHARED_INT (mt7621/mt7628) boards to testing.
+diff --git a/fs/bcachefs/btree_io.c b/fs/bcachefs/btree_io.c
+index d8f3c4c65e90..940f7ce2e33e 100644
+--- a/fs/bcachefs/btree_io.c
++++ b/fs/bcachefs/btree_io.c
+@@ -557,7 +557,9 @@ static int __btree_err(int ret,
+ 		       const char *fmt, ...)
+ {
+ 	if (c->recovery.curr_pass == BCH_RECOVERY_PASS_scan_for_btree_nodes)
+-		return bch_err_throw(c, fsck_fix);
++		return ret == -BCH_ERR_btree_node_read_err_fixable
++			? bch_err_throw(c, fsck_fix)
++			: ret;
+ 
+ 	bool have_retry = false;
+ 	int ret2;
+-- 
+2.49.0
+
