@@ -1,93 +1,102 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF4F261388;
-	Sun, 15 Jun 2025 18:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE08257D;
+	Sun, 15 Jun 2025 18:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750012623; cv=none; b=hs5DCdyWbEjZDGv2VswIsNRfWy7kPkW/MpHl7hUvzDP+BwmmVBeJ2nOgTJcSJfdSqbP3s8LErRsKnQgxNQB3tA0A6ecODHPej2nEThL+lN6glpfI4CDnmoTZ97C/3dlp4FvG+H8yt5wH7pgjnYTYlbP0FpcD1ByiPYmoyESUMvE=
+	t=1750013225; cv=none; b=EDsy+pjZm8FkDYn70PINwq73k4plkhAYagVebxOBrQNlmycwjWVJf/X3VI4WsADiZ/J+WfPPuRmYEibJ1W/MzDzB9YUdqYg/LHIutbnOr+4FLHchPKxspFYmy3fGlZ1I2N8NRcjDAiAMyNAzRtNewWbIEVyFJrgfha26GKhyeig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750012623; c=relaxed/simple;
-	bh=XQMKv+8Ij0F6buYkfRuRLQkC1Su8tTx1szV1QCNicYc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=riuoFKREqfMS3lvTyOcZY0Xkt/YmAgumRrxODPEI/dbxJdTzL/9x5HvoJycDNbwzX/JESVLis7pMnyRUdADDN86zNdo18sYhbGD9Zr2uDuS6PsCryTU6/Hxc9Y0Kqyo1y+KPYKBj3xuuKbgboMwF03NR3Yc2GH/lqNenFU3FB2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BJFxof5e; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1750013225; c=relaxed/simple;
+	bh=FHLY/oMp3IbDogGka+5YygLDwtn/U071IQdBMIgMTN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lw7AP05FLkShpI119iRvrvi2Sqq5cDMJPn4kudlcdKHS0y3GVBNK2T6CU5PBf8Rmm3T8g/kc4/Owr9OhuELGTgcQEZYn315+Cvo5LXRfDXC+fro0bm33xHm1lKoKUBpnbnsZSx6VUBuo5LVqdo153SNLpcxw3mLl/ajH13fzo9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ckRe+Ui0; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BJFxof5e"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ckRe+Ui0"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=RVAZvd/zLDzaceTSC6FoHp8KiZ3t/hEM3+Zjok0zqoY=; b=BJFxof5eXTLmFGzFh0cuzXi5Sv
-	4OBY5pUBDwl52+UqPOuW6nkC1AcmQQ3uGIdUXbzY7Chp0O2frvaIQ12lPgW84RlRDTgxprWGADhXY
-	0hErHzxqLuytqcNlrh7sY+lEfvw6Om2g93hoTCAxIROVYYnrMf7yzZfo1JK+WYw1gt9aB6N/6SpgD
-	8HVjZGzmatcFwGxEApwXDLREmO+dJm6Q/KTsqs1+Xs6g/3h8MMtvPMFg8x+nKaUUK3ZjBHbV7ApD4
-	jWFiPZ8s+KkYHUVBZubs8CCa5l94uHllXeEno/vPuTLkBIEHFR7dOwG+7Qnp0c8/jkwS5zReFGCri
-	jxO9cFFw==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQsE0-00000002jpL-2lkw;
-	Sun, 15 Jun 2025 18:37:00 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Jim Cromie <jim.cromie@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH] i2c: scx200_acb: add depends on HAS_IOPORT
-Date: Sun, 15 Jun 2025 11:36:58 -0700
-Message-ID: <20250615183659.902110-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=s+3d1Jo34P9+huBHWpOnk8Ivu5q7A15Y3NLn06vskQU=; b=ckRe+Ui0gvZ3vwl/ITrGaSezTc
+	RlabZgRufDQqnWuULDeVTdi6ghgBUm+/0BLiaYpSe78QK3IEqIMb5m3BXhA3a6vZkD8ylUcejzGTI
+	EVTJi3YU1bR6IaiAaY3BuISVBnMJTti39tHPmzFTwNyL4ZLwD5xB25MoVz3NlyFHT5vJlJh6GORXA
+	672CDKAj6kEfAbvgw40nSgQ8YRM5UJIqDDb+8LIpgHL4mRapZiyxNKfaRfEtOFyHa7BleMw6bi3oK
+	rtsYoFOPllPHhiUrN6HCB1oi1Ae70bZn6DnPJ/YsKYKpO5ZBb6YcrzMv6Hi86IOIMABdokv4ZJWEx
+	PXiw4pBw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uQsNS-0000000F8x6-1kAH;
+	Sun, 15 Jun 2025 18:46:46 +0000
+Message-ID: <6e39ff76-b32b-4fc2-8747-ce6884524e41@infradead.org>
+Date: Sun, 15 Jun 2025 11:46:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ wse@tuxedocomputers.com, ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-2-W_Armin@gmx.de>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250615175957.9781-2-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-The scx200_acb driver uses inb()/outb() without depending on HAS_IOPORT,
-which leads to build errors since kernel v6.13-rc1:
-commit 6f043e757445 ("asm-generic/io.h: Remove I/O port accessors
-for HAS_IOPORT=n")
+Hi-
 
-Add the HAS_IOPORT dependency to prevent the build errors.
+On 6/15/25 10:59 AM, Armin Wolf wrote:
+> Add a new driver for handling WMI events on Uniwill laptops.
+> The driver sadly cannot use the WMI GUID for autoloading since Uniwill
+> just copied it from the Windows driver example.
+> 
+> The driver is reverse-engineered based on the following information:
+> - https://github.com/pobrn/qc71_laptop
+> - https://github.com/tuxedocomputers/tuxedo-drivers
+> - various OEM software
+> 
+> Reported-by: cyear <chumuzero@gmail.com>
+> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
+> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
 
-(Found in ARCH=um allmodconfig builds)
+> diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/uniwill/Kconfig
+> new file mode 100644
+> index 000000000000..5f1ea3e9e72f
+> --- /dev/null
+> +++ b/drivers/platform/x86/uniwill/Kconfig
+> @@ -0,0 +1,32 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +#
+> +# Uniwill X86 Platform Specific Drivers
+> +#
+> +
+> +menuconfig X86_PLATFORM_DRIVERS_UNIWILL
+> +	bool "Uniwill X86 Platform Specific Device Drivers"
+> +	depends on X86_PLATFORM_DEVICES
+> +	help
+> +	  Say Y here to get to see options for device drivers for various
 
-drivers/i2c/busses/scx200_acb.c: In function ‘scx200_acb_reset’:
-include/asm-generic/io.h:596:15: error: call to ‘_outb’ declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+	  Say Y here to see options ...
 
-drivers/i2c/busses/scx200_acb.c:224:26: note: in expansion of macro ‘inb’
-include/asm-generic/io.h:542:14: error: call to ‘_inb’ declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-  224 |                 status = inb(ACBST);
+> +	  Uniwill X86 platforms, including many OEM laptops originally
+> +	  manufactured by Uniwill.
+> +	  This option alone does not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped and disabled.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Arnd Bergmann <arnd@kernel.org>
-Cc: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Jim Cromie <jim.cromie@gmail.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org
----
- drivers/i2c/busses/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- lnx-616-rc1.orig/drivers/i2c/busses/Kconfig
-+++ lnx-616-rc1/drivers/i2c/busses/Kconfig
-@@ -1530,7 +1530,7 @@ config I2C_XGENE_SLIMPRO
- 
- config SCx200_ACB
- 	tristate "Geode ACCESS.bus support"
--	depends on X86_32 && PCI
-+	depends on X86_32 && PCI && HAS_IOPORT
- 	help
- 	  Enable the use of the ACCESS.bus controllers on the Geode SCx200 and
- 	  SC1100 processors and the CS5535 and CS5536 Geode companion devices.
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494 # v6.16-rc1
+-- 
+~Randy
+
