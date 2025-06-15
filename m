@@ -1,80 +1,80 @@
 Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C7F27A460;
-	Sun, 15 Jun 2025 15:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E80827B4F9;
+	Sun, 15 Jun 2025 15:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750001933; cv=none; b=fQGrin9ExcjTvRVdrtHr78EGZleG5cH/G1uvclkuCXcKJDRzYErqjP0x5f+Uid04Asv7rKskJgjHCKa/PQWmfQcr7EqZLh2ze5FRaN4h5NDVXR4CEy+Hdzz7Gbd23WILqMJxuAa0ULabd3ZqHb0OD/qCQeU2Tv5naP20e+VD3v8=
+	t=1750001937; cv=none; b=cdJwBVF6z7dKcuC0jdZ7evc/9s1mndkT1ebZ4/pLdOecTlCiYH5uiyyaopPbrLTDbshfWi4rY/9dh1C+KINlrodHItWKyyDbgKJ/ZeQdyeWluwKVg5DvT4OHLU4yupoM/ItL6uILlfx/wCQ6U5k6NDO2rPudAE6E1IaDc2v5R5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750001933; c=relaxed/simple;
-	bh=skC6593jz8Qp2NsHpKrIAnI67OLxHbPapnUj8QQBRmI=;
+	s=arc-20240116; t=1750001937; c=relaxed/simple;
+	bh=Qe6Shilu7HNdH7Cf+5SwJEQwPbJdRgtKIZLinXtUYwU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IXmRdNWfD+1mB/N2kMMkPiXxXOeNp5T32Vm4Ajb7kk0nzP4ZyigXktTPJgHvBjF1UuWqfB/R3lDYS116SvAeRWFkdDVLL4BYcih4ZcBRplSENHirsmXZzbgvSjeo+MDOI81NJFDM9pmAcPNNzztoNqpY8jKGmr1kSDNZlDmp/hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hr9eX2fO; arc=none smtp.client-ip=209.85.128.43
+	 Content-Type:MIME-Version; b=XNuVOkdzmfS9n73ywVcbkmnDWu403LERc1xP1RaD7SMhLt4L1BgqcEm1++INmJ2tv4YIOxg7mCFmmlmcIt1RNVJRIUTIwe/uASP/q/ox5kZ7WW3CQo2lw3L5YfgODE3rpJXbLwRlch1gYHXuYQSIPYIfWPIyG3BdC3fv0yR8gC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=djDKeMJf; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hr9eX2fO"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-453066fad06so27126805e9.2;
-        Sun, 15 Jun 2025 08:38:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djDKeMJf"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cf214200so31064695e9.1;
+        Sun, 15 Jun 2025 08:38:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750001930; x=1750606730; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750001934; x=1750606734; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=FMkRqL2nxrCdwWJa8/yANGr1OdyPoFDin5WjJhsL30k=;
-        b=Hr9eX2fOsbc6dgkcX+jzJH1ZDxY8LYCooUjCv21FJa6z5TSPn5P9HwDV3gaDA+V21J
-         Dk17hGsJFRlnzt2ogfC/1qb7Lg91sqWqKOfQmBgLXQOeXJk4GQs7eTcoDQ8eiuV3EPwy
-         9vr8qtYcTzKT8ZhseOsnhOZjwODt5nyG1CAh/bXlnRmfaWOrI66oVCVAnwwU+kjLP26B
-         QMZrzZQfyN8EQGwjC4d9Niawrme/0iTSIFcNae1gbQZXhTGCQOxTgBhU5Vm/Jeg07Bew
-         piSn8j3zPwH3W8G5/+ebIiOLe4bwYtULPHjkVGueRTQ4+DINDXJdPeTtSLVsADzsaAn8
-         tC2w==
+        bh=Qe6Shilu7HNdH7Cf+5SwJEQwPbJdRgtKIZLinXtUYwU=;
+        b=djDKeMJfrRs6djWWX5wAnBdumD8fjlHik75C1X2Jkk0xnH7jNcW7N6DJTV8QTlRxVe
+         NIwJAcAEBVcf/BTaxhbZbxJpte0TSC05hKwMGJ8BjuKwG6uHt9cE7jVGi60dYwb6JyTq
+         RDWNWl9g1Zd82+WPGqZtBZAgD4oYYNUQXz0fBPx9rxHlLF+TqGQ/jrZG8nvJ0KMSa9jE
+         zEDuT63VWjtisgFJTnfj0Isf6X89dhd09obaKEekD2pkAX8G/TMRYKtPfRTUizNRzQln
+         4cRKXyxGbGZe2r8OMg8niS0GtPSOQTfmeoaGNINDWHL+ktxcffbFse4QREyommf7D6tJ
+         aoUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750001930; x=1750606730;
+        d=1e100.net; s=20230601; t=1750001934; x=1750606734;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FMkRqL2nxrCdwWJa8/yANGr1OdyPoFDin5WjJhsL30k=;
-        b=SWlmtfu1S5s2MAXw+bLj9bljw77Yz14IXIlQBgDuFpQXE5kVLedCq+ykecn6javOig
-         P5leXZNhIw5QAB8pQCXFeKyjdrWalS7GtJvmzv2WxeNx2nHUjTyZFa9jbjW3QBre1T2I
-         4hTKugAWEVUg+7Pvv9OQQBnT8l3JzNc8ncBhZZbETAXGibn5YwJkx08wYyxUP3SBCheX
-         deS6mCM8Z4caHP5rXYbC/5HY3SV1uSIpIzH94xEb8v7ahU4rW7yOcDutotp2Om+8r8mD
-         0gQWxvSraWpqGdmtO52OEyg/00RQJRXFMgtM0uILsdX8UMw7wMClhblCa7P83Wiu4BZR
-         xJqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwRkJga7M03QTcxxuW4qHgyy65DHKpP/7cWzKl110WWFkZJy2XlyagpVY86U6WMfb2fewHPaHLiRlw5jQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMEEp297svEJj1cwEJSDTK6aiX1bk2EY4sZ/QIj5HB0RU6Lunj
-	+b1D4fR4M47ecUeF0ePbCBC9U+Htb4FLDqf0pVISSMlUo3Xs4EvNLDKO
-X-Gm-Gg: ASbGnctftKHsrYPoqXG/udRAkFETFYunY7dCzB+3DCF1REpz9D3UCuyYtg4qqeReJU8
-	twmrRfTkD7b8myPPbd44tW0PcxSMACJ2Y4VEHyv+Z4rZbD/Ohp+UXu81G4DAhJBVgyRgVANKntL
-	hThTW6cnxg/Ooj711P65wtNtPUm5PWCiyrPBqYNNfU6xckAwaPJvEmgQ9MdbOsYvJ5z/JPQsGJF
-	X+Z3ehV1xJGTyjdCh9rUHPE3ryvu5Pj3DhBk/Kz4UJ/yt/ZuW6mm2ZnsHFwfs8XexUb2Tuww3V0
-	sbZedDihh4ZWAgCUXnQWEV2QRxVOt8F3OlACiPDAETRjW2DMdm9yv9LDP6lIaqlLQaL77bX7SI9
-	XjXCd5Q==
-X-Google-Smtp-Source: AGHT+IHq8I3l0fYXwdm0ToztfHAms4IMFhN9WcmIcQ8Gnw+CeqvwulyWE63yVmbbovDyVZ8tPZqcTA==
-X-Received: by 2002:a05:600c:5248:b0:43c:f81d:34 with SMTP id 5b1f17b1804b1-4533ca4fa68mr56483445e9.9.1750001929862;
-        Sun, 15 Jun 2025 08:38:49 -0700 (PDT)
+        bh=Qe6Shilu7HNdH7Cf+5SwJEQwPbJdRgtKIZLinXtUYwU=;
+        b=NgixPS6dKJkSQvnra029yzZJ5KTZf192NAlScSDp/rZ9jcxlJnTRd3zA9EL0IWJ0+Q
+         NLDjzUCGjaOuRco88b48Jfy1BjWI8XHc9xQhNAKDBMsaykJNONIvqxBB9hFYqw/fpEuW
+         rqk28L05mIRvI97AYbfVyGlbcb7mbUc0r6zz/HkhWKyJXmEkFb/HlEpfD+a5M2uT12y2
+         qMBzWSE+kS6e6+CkNa0ewOLOiFg6wf2bnMuLK56dg6VXkiClTy7dsyIsU61msAjCGiDO
+         L/4zmaeeNv5shzBSQROS6m22Qp8oXn8ZvBTvFns09ILGeywt9CP//wHlAuHq8P0dfrim
+         xHNg==
+X-Forwarded-Encrypted: i=1; AJvYcCURw1frScXCgNkzmJL1tnyzwEyk99CZyR2BXLIC+q+IyzR33020Xy3j0YeZ6c+h0MmFd6Oosteo3M/Qi9H5@vger.kernel.org, AJvYcCWce4hJafVXWN3AkvTkDewDlklpNyT5JjhE71aEyJja2nSUtc392IRMb+1dCf+qK4Shx3OTxCW/OdB2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1D6cXTASCxyqQUvM5klzq9Bwukq14JiYZbLKhR8Zoev3BI8AY
+	k1ZvTvo0/kqKKrYCQ0dHDKmYUe+QCu6MLqsVEzw/eXwNnRoz0Z/nXNRI
+X-Gm-Gg: ASbGnct/ZTzYseH5QNKYw42VE21TO7P6Et5f6wu8b9RtZj8Br7Ej9zQUgp/YmKo0Iqu
+	tewnggwH1ZUVldCmIWEuoGhM0qRNsMoqLkF8by36tWibwbe+pHwfJdSjqQ7N+65Uqf2RjuWeZYA
+	jlxqWFZQUO1MiuBSPSfou09teJaoFNA8Rafroi4txb2Cs09mQWuY17Gy+PIV/9Xqqp9E9Fdvwon
+	uZpBf1Fbjve+ZTz5oM6/VgUNA7VlhbijqYTbC9upShHj/BLO8idBpYfDIUS69gkoGFLYOONuQGL
+	WqfKDrTMzfO+OjStvqvzHWbQrB1Q2PeGBh6DadyFCxUkHTyMz7L+Tc6xxb6HYXO4zVP1LSkwsNf
+	FtCgS4w==
+X-Google-Smtp-Source: AGHT+IGM1N0DYCxpTEmsEntEQYJyHGWXdzg0ibk6tQMpo/pKHCYqDtPWIrJWX2KzhfQvaFKskAJ3Jg==
+X-Received: by 2002:a05:600c:46cb:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-4533ca5f35emr60057845e9.4.1750001934191;
+        Sun, 15 Jun 2025 08:38:54 -0700 (PDT)
 Received: from giga-mm-7.home ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b74313sm8116792f8f.96.2025.06.15.08.38.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e232b68sm111179995e9.10.2025.06.15.08.38.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 08:38:49 -0700 (PDT)
-Message-ID: <16c8dc85cbbfb4d4e1528261f464eee64ed6362d.camel@gmail.com>
-Subject: Re: [PATCH RFC 2/3] riscv: dts: sophgo: Add syscon node for cv18xx
+        Sun, 15 Jun 2025 08:38:53 -0700 (PDT)
+Message-ID: <efce5e1909ead19a46c87fa36652be70e9233161.camel@gmail.com>
+Subject: Re: [PATCH v14 2/2] dmaengine: add driver for Sophgo CV18XX/SG200X
+ dmamux
 From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen Wang	 <unicorn_wang@outlook.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,  Yu Yuan
- <yu.yuan@sjtu.edu.cn>, Yixun Lan <dlan@gentoo.org>, Ze Huang
- <huangze@whut.edu.cn>,  Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Longbin Li
+To: Inochi Amaoto <inochiama@gmail.com>, Vinod Koul <vkoul@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley	 <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, Paul
+ Walmsley	 <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou	 <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, Longbin Li
 	 <looong.bin@gmail.com>
-Date: Sun, 15 Jun 2025 17:39:01 +0200
-In-Reply-To: <20250611082452.1218817-3-inochiama@gmail.com>
-References: <20250611082452.1218817-1-inochiama@gmail.com>
-	 <20250611082452.1218817-3-inochiama@gmail.com>
+Date: Sun, 15 Jun 2025 17:39:06 +0200
+In-Reply-To: <20250611081000.1187374-3-inochiama@gmail.com>
+References: <20250611081000.1187374-1-inochiama@gmail.com>
+	 <20250611081000.1187374-3-inochiama@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.1 
@@ -87,54 +87,28 @@ MIME-Version: 1.0
 
 Thanks for the patch, Inochi!
 
-On Wed, 2025-06-11 at 16:24 +0800, Inochi Amaoto wrote:
-> Add top syscon node and all subdevice nodes for cv18xx series SoC.
+On Wed, 2025-06-11 at 16:09 +0800, Inochi Amaoto wrote:
+> Sophgo CV18XX/SG200X use DW AXI CORE with a multiplexer for remapping
+> its request lines. The multiplexer supports at most 8 request lines.
+>=20
+> Add driver for Sophgo CV18XX/SG200X DMA multiplexer.
 >=20
 > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
 
-Successfully tested in host mode on Milk-V Duo Module 01 EVB:
+Successfully tested with USB series in host mode on Milk-V Duo Module 01 EV=
+B:
 
 Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 
 > ---
-> =C2=A0arch/riscv/boot/dts/sophgo/cv180x.dtsi | 26 +++++++++++++++++++++++=
+> =C2=A0drivers/dma/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0=C2=A0 9 ++
+> =C2=A0drivers/dma/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/dma/cv1800b-dmamux.c | 259 ++++++++++++++++++++++++++++++++=
 +++
-> =C2=A01 file changed, 26 insertions(+)
->=20
-> diff --git a/arch/riscv/boot/dts/sophgo/cv180x.dtsi b/arch/riscv/boot/dts=
-/sophgo/cv180x.dtsi
-> index 929864ba1b26..65eceaa5d2f8 100644
-> --- a/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-> @@ -25,6 +25,32 @@ soc {
-> =C2=A0		#size-cells =3D <1>;
-> =C2=A0		ranges;
-> =C2=A0
-> +		syscon: syscon@3000000 {
-> +			compatible =3D "sophgo,cv1800b-top-syscon",
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "syscon", "simple-mfd";
-> +			reg =3D <0x03000000 0x1000>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +
-> +			usbphy: phy@48 {
-> +				compatible =3D "sophgo,cv1800b-usb2-phy";
-> +				reg =3D <0x48 0x4>;
-> +				#phy-cells =3D <0>;
-> +				clocks =3D <&clk CLK_USB_125M>,
-> +					 <&clk CLK_USB_33K>,
-> +					 <&clk CLK_USB_12M>;
-> +				clock-names =3D "app", "stb", "lpm";
-> +				resets =3D <&rst RST_COMBO_PHY0>;
-> +			};
-> +
-> +			dmamux: dma-router@154 {
-> +				compatible =3D "sophgo,cv1800b-dmamux";
-> +				reg =3D <0x154 0x8>, <0x298 0x4>;
-> +				#dma-cells =3D <2>;
-> +				dma-masters =3D <&dmac>;
-> +			};
-> +		};
+> =C2=A03 files changed, 269 insertions(+)
+> =C2=A0create mode 100644 drivers/dma/cv1800b-dmamux.c
 
 --=20
 Alexander Sverdlin.
