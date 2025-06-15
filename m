@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C7D188715;
-	Sun, 15 Jun 2025 18:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907AD27CB34;
+	Sun, 15 Jun 2025 18:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750010420; cv=none; b=glKLcAZKPCEvlBRdw2UTz+fgnNwA4JIkstnJ0BR8ZhP+3bZQAhKmIbjYEZK4+H4zNt1vOdhgGbCqTsDJoHgF2hhig8ouetoqZDzYvOWrfyf1nla4eloDgu1I8yv+sz0ZPHUilciNr6tnf+a06v+KKFPNawCg0MRKDbFOHXIvxgQ=
+	t=1750010427; cv=none; b=bRlBesCjZcFEdmwgZcS+qF17LFeis+h6roiAYFFZsVGORMzGHvQDxlU+WFIS0D9rc19RBUtn0yUqSY15H8pUEgDaHwUAKNb5F7MxNHRnXrQPRoHyrYr6GgQ43zoGcdhEIRBfvzw3Zv+8Kkldln5rghYI5CGxTmWJh9UOuFkRwfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750010420; c=relaxed/simple;
-	bh=6+SGGsJqMO9Y0jKgTBJ1Rl4Kv9h3wCU60l7jijWw68A=;
+	s=arc-20240116; t=1750010427; c=relaxed/simple;
+	bh=NolHWbALg3zLTKBRVQrJRfmueZ379LRJLk7yYnSPC7s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FSlAVbr8aZtXbYNP21yLOSLkeC0jgKsRoCGcdhEUEo04k/t34PNDADQV9HDY0jFR63Szn7eqR+tvMsya0viMy7zKnzzpk5VgvZAMgiZyjSME8eEOrvcJ2iK83/UL9Hj74lWqefy2ZdnhyvD2yUIrYgBaW1RZ2zxXoqMGsfuBCcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RGfkC9/7; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=e+Fbj2b1kA8Td5JbLuBKytlphNH6Ht2TW5TPjsGxmJrGCRhA5kBHecaisWAM4xoM5gG33EF+4MAcQbDm4olHRHNKuSbnGOTKZwOQy7x70BjnywK3hQ9LEbLxoisNmOXbhq8e/WGrMK+Pp4krVMzcOvPYWrZ4jh0mQDDkbBM7+0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=O24iTfzZ; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RGfkC9/7"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="O24iTfzZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750010413; x=1750615213; i=w_armin@gmx.de;
-	bh=R8EHtwlXSsYnvN4JeeBCejzuqDlbIGhbiszDubXtuhM=;
+	s=s31663417; t=1750010412; x=1750615212; i=w_armin@gmx.de;
+	bh=rY1SZR0SXcbDi7r/Xq4aVGkeUAfIaJwwf2n+V38AgEo=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=RGfkC9/7fJ03JgBCBXgDyxaOS0kACxaBlLeEWE6YZoK+v6dOmfrSSB4HrMoCNoPE
-	 KirHuzA0e8y6BB9XBf5WfM9WOVE+gqshe+V8XXhXA4NNaDVoXnsUcCDptRkPOxBZK
-	 E9TT8MsfcSUrugMEJb5vO7eAftQZalp8dVDhCoRsAVn3SkSMmutUIV1R2ctdI9ocT
-	 xso1TvceAHeOIo4c0Da1yTBigR+6gfjE+7gH6pfDlsSmG9E28NT1xxeKr/0J6eKu2
-	 hxcAQdxm0dZ78PXADO68/cw/auLRQ7ZUfTzwrok313T/m5XS9ed775n9DeXaiE4QA
-	 b38EsDFDQDglMlEq4Q==
+	b=O24iTfzZIPkZBf1Wt9J6SLdHZN26dZxExRofHprZIKoxhjCUiPKHS03m0iNuHSyC
+	 9QbIwb0zVD7r03tCAd6NcoFe1eEDxquJNw0tHIuMf7RW73DSEpUvWipmwhIjjOoOL
+	 /l8ZTZ2D9BLddWKiIN2rRB5oHRsg1I7qyScvPj/dXE7Yxt+u+aIdykoSEqExAATVg
+	 0u45XIJAshWLmzY+k2BNm2j3p/PEYfmCCPsqOCC/3aZFcsbuX2Nd2Vwc4SRpJ4/2l
+	 ygW84CvBKLpCr57ydNSAfmwbhLt08urwjSxpZ2YjLwPqjeJ2jBuVPRoXfxNx8UFmQ
+	 DqYElFJTX9m+D007MQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
  (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MrhUE-1vCM4v2376-00qT7T; Sun, 15 Jun 2025 20:00:13 +0200
+ 1MPXhA-1uDCQ52OKg-00OEi2; Sun, 15 Jun 2025 20:00:11 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: ilpo.jarvinen@linux.intel.com,
 	hdegoede@redhat.com,
@@ -44,9 +44,9 @@ To: ilpo.jarvinen@linux.intel.com,
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
-Date: Sun, 15 Jun 2025 19:59:56 +0200
-Message-Id: <20250615175957.9781-3-W_Armin@gmx.de>
+Subject: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
+Date: Sun, 15 Jun 2025 19:59:55 +0200
+Message-Id: <20250615175957.9781-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250615175957.9781-1-W_Armin@gmx.de>
 References: <20250615175957.9781-1-W_Armin@gmx.de>
@@ -57,193 +57,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZBCP1qjJvATGWfwVht9fhHjv/H/XF76lGdZsHx+TiaU3eCxmILu
- 4icnvwgNEpB2JCplzBrzyV+BLNsHvIzHANELeLrx7V3nZ9Bn3IUdgutqV82HhSLCCOkPXZ/
- tPq/D1Gv/s7N0p4dv/jFhMBrURMJVPgBDH3NT6nb7vH+DRvqAd1V615h/6LtrlWB5EKb6i/
- 1eePXEtm98PlFltyg6lFw==
+X-Provags-ID: V03:K1:am2M34eNJIROjDY67Y9N8kNCSXKkqyIX9ZXh8CKYSBBkNrXraz3
+ 7xknbm+vl487S22ZSWEm8FpzTSvo/hxHf9Tp40uLnWSfeSoL7p9oHQuZfcH9QAXyhDGlaY6
+ crsx949gDr8UFFxZGtQ7VeSs3HzNsfdZJloJF7NLW7lkJNKS/j9om8rqJ7sUgHYvuqt+Uli
+ 30FduTAEF4JtgHLj4iKAA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SfTMnRXaAEU=;8Heiw6tKzLGR7JXOlUsSff1UMPG
- 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
- OTYcIHo5njfdCT0i
+UI-OutboundReport: notjunk:1;M01:P0:mtE439L3U4U=;RqDUGKbjWZC5oDP+sD7aaxS55Ic
+ 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
+ FJlJeVx9gGWFN7Oe
 
-Add a new driver for Uniwill laptops. The driver uses a ACPI WMI
-interface to talk with the embedded controller, but relies on a
-DMI whitelist for autoloading since Uniwill just copied the WMI
-GUID from the Windows driver example.
+Add a new driver for handling WMI events on Uniwill laptops.
+The driver sadly cannot use the WMI GUID for autoloading since Uniwill
+just copied it from the Windows driver example.
 
 The driver is reverse-engineered based on the following information:
-- OEM software from intel
 - https://github.com/pobrn/qc71_laptop
 - https://github.com/tuxedocomputers/tuxedo-drivers
-- https://github.com/tuxedocomputers/tuxedo-control-center
-
-The underlying EC supports various features, including hwmon sensors,
-battery charge limiting, a RGB lightbar and keyboard-related controls.
+- various OEM software
 
 Reported-by: cyear <chumuzero@gmail.com>
 Closes: https://github.com/lm-sensors/lm-sensors/issues/508
 Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- .../ABI/testing/sysfs-driver-uniwill-laptop   |   53 +
- Documentation/wmi/devices/uniwill-laptop.rst  |  109 ++
- MAINTAINERS                                   |    8 +
- drivers/platform/x86/uniwill/Kconfig          |   17 +
- drivers/platform/x86/uniwill/Makefile         |    1 +
- drivers/platform/x86/uniwill/uniwill-laptop.c | 1477 +++++++++++++++++
- drivers/platform/x86/uniwill/uniwill-wmi.c    |    3 +-
- 7 files changed, 1667 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-uniwill-laptop
- create mode 100644 Documentation/wmi/devices/uniwill-laptop.rst
- create mode 100644 drivers/platform/x86/uniwill/uniwill-laptop.c
+ Documentation/wmi/devices/uniwill-wmi.rst  |  52 ++++++
+ MAINTAINERS                                |   8 +
+ drivers/platform/x86/Kconfig               |   2 +
+ drivers/platform/x86/Makefile              |   3 +
+ drivers/platform/x86/uniwill/Kconfig       |  32 ++++
+ drivers/platform/x86/uniwill/Makefile      |   7 +
+ drivers/platform/x86/uniwill/uniwill-wmi.c | 177 +++++++++++++++++++++
+ drivers/platform/x86/uniwill/uniwill-wmi.h | 122 ++++++++++++++
+ 8 files changed, 403 insertions(+)
+ create mode 100644 Documentation/wmi/devices/uniwill-wmi.rst
+ create mode 100644 drivers/platform/x86/uniwill/Kconfig
+ create mode 100644 drivers/platform/x86/uniwill/Makefile
+ create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.c
+ create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.h
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Docum=
-entation/ABI/testing/sysfs-driver-uniwill-laptop
+diff --git a/Documentation/wmi/devices/uniwill-wmi.rst b/Documentation/wmi=
+/devices/uniwill-wmi.rst
 new file mode 100644
-index 000000000000..a4781a118906
+index 000000000000..232fa8349611
 =2D-- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-@@ -0,0 +1,53 @@
-+What:		/sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/fn_l=
-ock
-+Date:		Juni 2025
-+KernelVersion:	6.17
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+		Allows userspace applications to enable/disable the FN lock feature
-+		of the integrated keyboard by writing "enable"/"disable" into this file=
-.
-+
-+		Reading this file returns the current enable status of the FN lock func=
-tionality.
-+
-+What:		/sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/supe=
-r_key_lock
-+Date:		Juni 2025
-+KernelVersion:	6.17
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+                Allows userspace applications to enable/disable the super=
- key functionality
-+                of the integrated keyboard by writing "enable"/"disable" =
-into this file.
-+
-+		Reading this file returns the current enable status of the super key fu=
-nctionality.
-+
-+What:		/sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/touc=
-hpad_toggle
-+Date:		Juni 2025
-+KernelVersion:	6.17
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+		Allows userspace applications to enable/disable the touchpad toggle fun=
-ctionality
-+		of the integrated touchpad by writing "enable"/"disable" into this file=
-.
-+
-+		Reading this file returns the current enable status of the touchpad tog=
-gle
-+		functionality.
-+
-+What:		/sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/rain=
-bow_animation
-+Date:		Juni 2025
-+KernelVersion:	6.17
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+		Forces the integrated lightbar to display a rainbow animation when the =
-machine
-+		is not suspended. Writing "enable"/"disable" into this file enables/dis=
-ables
-+		this functionality.
-+
-+		Reading this file returns the current status of the rainbow animation f=
-unctionality.
-+
-+What:		/sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/brea=
-thing_in_suspend
-+Date:		Juni 2025
-+KernelVersion:	6.17
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+		Causes the integrated lightbar to display a breathing animation when th=
-e machine
-+		has been suspended and is running on AC power. Writing "enable"/"disabl=
-e" into
-+		this file enables/disables this functionality.
-+
-+		Reading this file returns the current status of the breathing animation
-+		functionality.
-diff --git a/Documentation/wmi/devices/uniwill-laptop.rst b/Documentation/=
-wmi/devices/uniwill-laptop.rst
-new file mode 100644
-index 000000000000..2be598030a5e
-=2D-- /dev/null
-+++ b/Documentation/wmi/devices/uniwill-laptop.rst
-@@ -0,0 +1,109 @@
++++ b/Documentation/wmi/devices/uniwill-wmi.rst
+@@ -0,0 +1,52 @@
 +.. SPDX-License-Identifier: GPL-2.0-or-later
 +
 +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+Uniwill WMI Notebook driver (uniwill-laptop)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++Uniwill WMI event driver (uniwill-wmi)
 +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
 +Introduction
 +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
 +Many notebooks manufactured by Uniwill (either directly or as ODM) provid=
 e an WMI-based
-+EC interface for controlling various platform settings like sensors and f=
-an control.
-+This interface is used by the ``uniwill-laptop`` driver to map those feat=
-ures onto standard
-+kernel interfaces.
++event interface for various platform events like hotkeys. This interface =
+is used by the
++``uniwill-wmi`` driver to react to hotkey presses.
 +
 +WMI interface description
 +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
@@ -256,35 +174,13 @@ ures onto standard
 +::
 +
 +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),
-+   Description("Class used to operate methods on a ULong"),
-+   guid("{ABBC0F6F-8EA1-11d1-00A0-C90629100000}")]
-+  class AcpiTest_MULong {
++   Description("Class containing event generated ULong data"),
++   guid("{ABBC0F72-8EA1-11d1-00A0-C90629100000}")]
++  class AcpiTest_EventULong : WmiEvent {
 +    [key, read] string InstanceName;
 +    [read] boolean Active;
 +
-+    [WmiMethodId(1), Implemented, read, write, Description("Return the co=
-ntents of a ULong")]
-+    void GetULong([out, Description("Ulong Data")] uint32 Data);
-+
-+    [WmiMethodId(2), Implemented, read, write, Description("Set the conte=
-nts of a ULong")]
-+    void SetULong([in, Description("Ulong Data")] uint32 Data);
-+
-+    [WmiMethodId(3), Implemented, read, write,
-+     Description("Generate an event containing ULong data")]
-+    void FireULong([in, Description("WMI requires a parameter")] uint32 H=
-ack);
-+
-+    [WmiMethodId(4), Implemented, read, write, Description("Get and Set t=
-he contents of a ULong")]
-+    void GetSetULong([in, Description("Ulong Data")] uint64 Data,
-+                     [out, Description("Ulong Data")] uint32 Return);
-+
-+    [WmiMethodId(5), Implemented, read, write,
-+     Description("Get and Set the contents of a ULong for Dollby button")=
-]
-+    void GetButton([in, Description("Ulong Data")] uint64 Data,
-+                   [out, Description("Ulong Data")] uint32 Return);
++    [WmiDataId(1), read, write, Description("ULong Data")] uint32 ULong;
 +  };
 +
 +Most of the WMI-related code was copied from the Windows driver samples, =
@@ -292,71 +188,23 @@ which unfortunately means
 +that the WMI-GUID is not unique. This makes the WMI-GUID unusable for aut=
 oloading.
 +
-+WMI method GetULong()
-+---------------------
++WMI event data
++--------------
 +
-+This WMI method was copied from the Windows driver samples and has no fun=
-ction.
++The WMI event data contains a single 32-bit value which is used to indica=
+te various platform events.
++Many non-hotkey events are not directly consumed by the driver itself, bu=
+t are instead handled by
++the ``uniwill-laptop`` driver.
 +
-+WMI method SetULong()
-+---------------------
-+
-+This WMI method was copied from the Windows driver samples and has no fun=
-ction.
-+
-+WMI method FireULong()
-+----------------------
-+
-+This WMI method allows to inject a WMI event with a 32-bit payload. Its p=
-rimary purpose seems
-+to be debugging.
-+
-+WMI method GetSetULong()
-+------------------------
-+
-+This WMI method is used to communicate with the EC. The ``Data`` argument=
- hold the following
-+information (starting with the least significant byte):
-+
-+1. 16-bit address
-+2. 16-bit data (set to ``0x0000`` when reading)
-+3. 16-bit operation (``0x0100`` for reading and ``0x0000`` for writing)
-+4. 16-bit reserved (set to ``0x0000``)
-+
-+The first 8 bits of the ``Return`` value contain the data returned by the=
- EC when reading.
-+The special value ``0xFEFEFEFE`` is used to indicate a communication fail=
-ure with the EC.
-+
-+WMI method GetButton()
-+----------------------
-+
-+This WMI method is not implemented on all machines and has an unknown pur=
-pose.
-+
-+Reverse-Engineering the Uniwill WMI interface
++Reverse-Engineering the Uniwill WMI event interface
 +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
 +
-+.. warning:: Randomly poking the EC can potentially cause damage to the m=
-achine and other unwanted
-+             side effects, please be careful.
-+
-+The EC behind the ``GetSetULong`` method is used by the OEM software supp=
-lied by the manufacturer.
-+Reverse-engineering of this software is difficult since it uses an obfusc=
-ator, however some parts
-+are not obfuscated.
-+
-+The EC can be accessed under Windows using powershell (requires admin pri=
-vileges):
-+
-+::
-+
-+  > $obj =3D Get-CimInstance -Namespace root/wmi -ClassName AcpiTest_MULo=
-ng | Select-Object -First 1
-+  > Invoke-CimMethod -InputObject $obj -MethodName GetSetULong -Arguments=
- @{Data =3D <input>}
++The driver logs debug messages when receiving a WMI event. Thus enabling =
+debug messages will be
++useful for finding unknown event codes.
 +
 +Special thanks go to github user `pobrn` which developed the
 +`qc71_laptop <https://github.com/pobrn/qc71_laptop>`_ driver on which thi=
@@ -366,1535 +214,270 @@ s driver is partly based.
 kage which also served as
 +a foundation for this driver.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 53876ec2d111..5b12cc498d56 100644
+index c14614613377..53876ec2d111 100644
 =2D-- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -25496,6 +25496,14 @@ L:	linux-scsi@vger.kernel.org
  S:	Maintained
  F:	drivers/ufs/host/ufs-renesas.c
 =20
-+UNIWILL LAPTOP DRIVER
++UNIWILL WMI DRIVER
 +M:	Armin Wolf <W_Armin@gmx.de>
 +L:	platform-driver-x86@vger.kernel.org
 +S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-+F:	Documentation/wmi/devices/uniwill-laptop.rst
-+F:	drivers/platform/x86/uniwill/uniwill-laptop.c
++F:	Documentation/wmi/devices/uniwill-wmi.rst
++F:	drivers/platform/x86/uniwill/uniwill-wmi.c
++F:	drivers/platform/x86/uniwill/uniwill-wmi.h
 +
- UNIWILL WMI DRIVER
- M:	Armin Wolf <W_Armin@gmx.de>
- L:	platform-driver-x86@vger.kernel.org
+ UNSORTED BLOCK IMAGES (UBI)
+ M:	Richard Weinberger <richard@nod.at>
+ R:	Zhihao Cheng <chengzhihao1@huawei.com>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 43055df44827..ba9d65f01332 100644
+=2D-- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -65,6 +65,8 @@ config HUAWEI_WMI
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called huawei-wmi.
+=20
++source "drivers/platform/x86/uniwill/Kconfig"
++
+ config UV_SYSFS
+ 	tristate "Sysfs structure for UV systems"
+ 	depends on X86_UV
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 0530a224bebd..1549c56ced91 100644
+=2D-- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -107,6 +107,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+=3D toshiba-wmi.o
+ # before toshiba_acpi initializes
+ obj-$(CONFIG_ACPI_TOSHIBA)	+=3D toshiba_acpi.o
+=20
++# Uniwill
++obj-y				+=3D uniwill/
++
+ # Inspur
+ obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+=3D inspur_platform_profile.o
+=20
 diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/u=
 niwill/Kconfig
-index 5f1ea3e9e72f..57f9f88c757c 100644
-=2D-- a/drivers/platform/x86/uniwill/Kconfig
+new file mode 100644
+index 000000000000..5f1ea3e9e72f
+=2D-- /dev/null
 +++ b/drivers/platform/x86/uniwill/Kconfig
-@@ -16,6 +16,23 @@ menuconfig X86_PLATFORM_DRIVERS_UNIWILL
-=20
- if X86_PLATFORM_DRIVERS_UNIWILL
-=20
-+config UNIWILL_LAPTOP
-+	tristate "Uniwill Laptop Extras"
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++#
++# Uniwill X86 Platform Specific Drivers
++#
++
++menuconfig X86_PLATFORM_DRIVERS_UNIWILL
++	bool "Uniwill X86 Platform Specific Device Drivers"
++	depends on X86_PLATFORM_DEVICES
++	help
++	  Say Y here to get to see options for device drivers for various
++	  Uniwill X86 platforms, including many OEM laptops originally
++	  manufactured by Uniwill.
++	  This option alone does not add any kernel code.
++
++	  If you say N, all options in this submenu will be skipped and disabled=
+.
++
++if X86_PLATFORM_DRIVERS_UNIWILL
++
++config UNIWILL_WMI
++	tristate "Uniwill WMI Event Driver"
 +	default m
 +	depends on ACPI_WMI
-+	depends on ACPI_BATTERY
-+	depends on UNIWILL_WMI
-+	depends on REGMAP
-+	depends on HWMON
-+	depends on LEDS_CLASS_MULTICOLOR
-+	depends on DMI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
 +	help
-+	  This driver adds support for various extra features found on Uniwill l=
-aptops,
-+	  like the lightbar and hwmon sensors. It also supports many OEM laptops
++	  This driver adds support for various hotkey events on Uniwill laptops,
++	  like rfkill and other special buttons. It also supports many OEM lapto=
+ps
 +	  originally manufactured by Uniwill.
 +
 +	  If you have such a laptop, say Y or M here.
 +
- config UNIWILL_WMI
- 	tristate "Uniwill WMI Event Driver"
- 	default m
++endif
 diff --git a/drivers/platform/x86/uniwill/Makefile b/drivers/platform/x86/=
 uniwill/Makefile
-index a5a300be63f3..b55169a49e1e 100644
-=2D-- a/drivers/platform/x86/uniwill/Makefile
-+++ b/drivers/platform/x86/uniwill/Makefile
-@@ -4,4 +4,5 @@
- # Uniwill X86 Platform Specific Drivers
- #
-=20
-+obj-$(CONFIG_UNIWILL_LAPTOP)	+=3D uniwill-laptop.o
- obj-$(CONFIG_UNIWILL_WMI)	+=3D uniwill-wmi.o
-diff --git a/drivers/platform/x86/uniwill/uniwill-laptop.c b/drivers/platf=
-orm/x86/uniwill/uniwill-laptop.c
 new file mode 100644
-index 000000000000..7dc630ea0d74
+index 000000000000..a5a300be63f3
 =2D-- /dev/null
-+++ b/drivers/platform/x86/uniwill/uniwill-laptop.c
-@@ -0,0 +1,1477 @@
++++ b/drivers/platform/x86/uniwill/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++#
++# Makefile for linux/drivers/platform/x86/uniwill
++# Uniwill X86 Platform Specific Drivers
++#
++
++obj-$(CONFIG_UNIWILL_WMI)	+=3D uniwill-wmi.o
+diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.c b/drivers/platform=
+/x86/uniwill/uniwill-wmi.c
+new file mode 100644
+index 000000000000..b95a0d68ce6a
+=2D-- /dev/null
++++ b/drivers/platform/x86/uniwill/uniwill-wmi.c
+@@ -0,0 +1,177 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Linux driver for Uniwill notebooks.
++ * Linux hotkey driver for Uniwill notebooks.
 + *
 + * Copyright (C) 2025 Armin Wolf <W_Armin@gmx.de>
 + */
 +
-+#define pr_format(fmt) KBUILD_MODNAME ": " fmt
-+
 +#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/debugfs.h>
 +#include <linux/device.h>
-+#include <linux/device/driver.h>
-+#include <linux/dmi.h>
 +#include <linux/errno.h>
-+#include <linux/fixp-arith.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/kstrtox.h>
-+#include <linux/leds.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/limits.h>
-+#include <linux/list.h>
-+#include <linux/minmax.h>
++#include <linux/export.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/mutex.h>
 +#include <linux/notifier.h>
-+#include <linux/pm.h>
 +#include <linux/printk.h>
-+#include <linux/regmap.h>
-+#include <linux/string.h>
-+#include <linux/string_choices.h>
-+#include <linux/sysfs.h>
++#include <linux/slab.h>
 +#include <linux/types.h>
-+#include <linux/unaligned.h>
-+#include <linux/units.h>
 +#include <linux/wmi.h>
-+
-+#include <acpi/battery.h>
 +
 +#include "uniwill-wmi.h"
 +
-+#define EC_ADDR_BAT_POWER_UNIT_1	0x0400
-+
-+#define EC_ADDR_BAT_POWER_UNIT_2	0x0401
-+
-+#define EC_ADDR_BAT_DESIGN_CAPACITY_1	0x0402
-+
-+#define EC_ADDR_BAT_DESIGN_CAPACITY_2	0x0403
-+
-+#define EC_ADDR_BAT_FULL_CAPACITY_1	0x0404
-+
-+#define EC_ADDR_BAT_FULL_CAPACITY_2	0x0405
-+
-+#define EC_ADDR_BAT_DESIGN_VOLTAGE_1	0x0408
-+
-+#define EC_ADDR_BAT_DESIGN_VOLTAGE_2	0x0409
-+
-+#define EC_ADDR_BAT_STATUS_1		0x0432
-+#define BAT_DISCHARGING			BIT(0)
-+
-+#define EC_ADDR_BAT_STATUS_2		0x0433
-+
-+#define EC_ADDR_BAT_CURRENT_1		0x0434
-+
-+#define EC_ADDR_BAT_CURRENT_2		0x0435
-+
-+#define EC_ADDR_BAT_REMAIN_CAPACITY_1	0x0436
-+
-+#define EC_ADDR_BAT_REMAIN_CAPACITY_2	0x0437
-+
-+#define EC_ADDR_BAT_VOLTAGE_1		0x0438
-+
-+#define EC_ADDR_BAT_VOLTAGE_2		0x0439
-+
-+#define EC_ADDR_CPU_TEMP		0x043E
-+
-+#define EC_ADDR_GPU_TEMP		0x044F
-+
-+#define EC_ADDR_MAIN_FAN_RPM_1		0x0464
-+
-+#define EC_ADDR_MAIN_FAN_RPM_2		0x0465
-+
-+#define EC_ADDR_SECOND_FAN_RPM_1	0x046C
-+
-+#define EC_ADDR_SECOND_FAN_RPM_2	0x046D
-+
-+#define EC_ADDR_DEVICE_STATUS		0x047B
-+#define WIFI_STATUS_ON			BIT(7)
-+/* BIT(5) is also unset depending on the rfkill state (bluetooth?) */
-+
-+#define EC_ADDR_BAT_ALERT		0x0494
-+
-+#define EC_ADDR_BAT_CYCLE_COUNT_1	0x04A6
-+
-+#define EC_ADDR_BAT_CYCLE_COUNT_2	0x04A7
-+
-+#define EC_ADDR_PROJECT_ID		0x0740
-+
-+#define EC_ADDR_AP_OEM			0x0741
-+#define	ENABLE_MANUAL_CTRL		BIT(0)
-+#define ITE_KBD_EFFECT_REACTIVE		BIT(3)
-+#define FAN_ABNORMAL			BIT(5)
-+
-+#define EC_ADDR_SUPPORT_5		0x0742
-+#define FAN_TURBO_SUPPORTED		BIT(4)
-+#define FAN_SUPPORT			BIT(5)
-+
-+#define EC_ADDR_CTGP_DB_CTRL		0x0743
-+#define CTGP_DB_GENERAL_ENABLE		BIT(0)
-+#define CTGP_DB_DB_ENABLE		BIT(1)
-+#define CTGP_DB_CTGP_ENABLE		BIT(2)
-+
-+#define EC_ADDR_CTGP_OFFSET		0x0744
-+
-+#define EC_ADDR_TPP_OFFSET		0x0745
-+
-+#define EC_ADDR_MAX_TGP			0x0746
-+
-+#define EC_ADDR_LIGHTBAR_AC_CTRL	0x0748
-+#define LIGHTBAR_APP_EXISTS		BIT(0)
-+#define LIGHTBAR_POWER_SAVE		BIT(1)
-+#define LIGHTBAR_S0_OFF			BIT(2)
-+#define LIGHTBAR_S3_OFF			BIT(3)	// Breathing animation when suspended
-+#define LIGHTBAR_WELCOME		BIT(7)	// Rainbow animation
-+
-+#define EC_ADDR_LIGHTBAR_AC_RED		0x0749
-+
-+#define EC_ADDR_LIGHTBAR_AC_GREEN	0x074A
-+
-+#define EC_ADDR_LIGHTBAR_AC_BLUE	0x074B
-+
-+#define EC_ADDR_BIOS_OEM		0x074E
-+#define FN_LOCK_STATUS			BIT(4)
-+
-+#define EC_ADDR_MANUAL_FAN_CTRL		0x0751
-+#define FAN_LEVEL_MASK			GENMASK(2, 0)
-+#define FAN_MODE_TURBO			BIT(4)
-+#define FAN_MODE_HIGH			BIT(5)
-+#define FAN_MODE_BOOST			BIT(6)
-+#define FAN_MODE_USER			BIT(7)
-+
-+#define EC_ADDR_PWM_1			0x075B
-+
-+#define EC_ADDR_PWM_2			0x075C
-+
-+/* Unreliable */
-+#define EC_ADDR_SUPPORT_1		0x0765
-+#define AIRPLANE_MODE			BIT(0)
-+#define GPS_SWITCH			BIT(1)
-+#define OVERCLOCK			BIT(2)
-+#define MACRO_KEY			BIT(3)
-+#define SHORTCUT_KEY			BIT(4)
-+#define SUPER_KEY_LOCK			BIT(5)
-+#define LIGHTBAR			BIT(6)
-+#define FAN_BOOST			BIT(7)
-+
-+#define EC_ADDR_SUPPORT_2		0x0766
-+#define SILENT_MODE			BIT(0)
-+#define USB_CHARGING			BIT(1)
-+#define RGB_KEYBOARD			BIT(2)
-+#define CHINA_MODE			BIT(5)
-+#define MY_BATTERY			BIT(6)
-+
-+#define EC_ADDR_TRIGGER			0x0767
-+#define TRIGGER_SUPER_KEY_LOCK		BIT(0)
-+#define TRIGGER_LIGHTBAR		BIT(1)
-+#define TRIGGER_FAN_BOOST		BIT(2)
-+#define TRIGGER_SILENT_MODE		BIT(3)
-+#define TRIGGER_USB_CHARGING		BIT(4)
-+#define RGB_APPLY_COLOR			BIT(5)
-+#define RGB_LOGO_EFFECT			BIT(6)
-+#define RGB_RAINBOW_EFFECT		BIT(7)
-+
-+#define EC_ADDR_SWITCH_STATUS		0x0768
-+#define SUPER_KEY_LOCK_STATUS		BIT(0)
-+#define LIGHTBAR_STATUS			BIT(1)
-+#define FAN_BOOST_STATUS		BIT(2)
-+#define MACRO_KEY_STATUS		BIT(3)
-+#define MY_BAT_POWER_BAT_STATUS		BIT(4)
-+
-+#define EC_ADDR_RGB_RED			0x0769
-+
-+#define EC_ADDR_RGB_GREEN		0x076A
-+
-+#define EC_ADDR_RGB_BLUE		0x076B
-+
-+#define EC_ADDR_ROMID_START		0x0770
-+#define ROMID_LENGTH			14
-+
-+#define EC_ADDR_ROMID_EXTRA_1		0x077E
-+
-+#define EC_ADDR_ROMID_EXTRA_2		0x077F
-+
-+#define EC_ADDR_BIOS_OEM_2		0x0782
-+#define FAN_V2_NEW			BIT(0)
-+#define FAN_QKEY			BIT(1)
-+#define FAN_TABLE_OFFICE_MODE		BIT(2)
-+#define FAN_V3				BIT(3)
-+#define DEFAULT_MODE			BIT(4)
-+
-+#define EC_ADDR_PL1_SETTING		0x0783
-+
-+#define EC_ADDR_PL2_SETTING		0x0784
-+
-+#define EC_ADDR_PL4_SETTING		0x0785
-+
-+#define EC_ADDR_FAN_DEFAULT		0x0786
-+#define FAN_CURVE_LENGTH		5
-+
-+#define EC_ADDR_KBD_STATUS		0x078C
-+#define KBD_WHITE_ONLY			BIT(0)	// ~single color
-+#define KBD_SINGLE_COLOR_OFF		BIT(1)
-+#define KBD_TURBO_LEVEL_MASK		GENMASK(3, 2)
-+#define KBD_APPLY			BIT(4)
-+#define KBD_BRIGHTNESS			GENMASK(7, 5)
-+
-+#define EC_ADDR_FAN_CTRL		0x078E
-+#define FAN3P5				BIT(1)
-+#define CHARGING_PROFILE		BIT(3)
-+#define UNIVERSAL_FAN_CTRL		BIT(6)
-+
-+#define EC_ADDR_BIOS_OEM_3		0x07A3
-+#define FAN_REDUCED_DURY_CYCLE		BIT(5)
-+#define FAN_ALWAYS_ON			BIT(6)
-+
-+#define EC_ADDR_BIOS_BYTE		0x07A4
-+#define FN_LOCK_SWITCH			BIT(3)
-+
-+#define EC_ADDR_OEM_3			0x07A5
-+#define POWER_LED_MASK			GENMASK(1, 0)
-+#define POWER_LED_LEFT			0x00
-+#define POWER_LED_BOTH			0x01
-+#define POWER_LED_NONE			0x02
-+#define FAN_QUIET			BIT(2)
-+#define OVERBOOST			BIT(4)
-+#define HIGH_POWER			BIT(7)
-+
-+#define EC_ADDR_OEM_4			0x07A6
-+#define OVERBOOST_DYN_TEMP_OFF		BIT(1)
-+#define TOUCHPAD_TOGGLE_OFF		BIT(6)
-+
-+#define EC_ADDR_CHARGE_CTRL		0x07B9
-+#define CHARGE_CTRL_MASK		GENMASK(6, 0)
-+#define CHARGE_CTRL_REACHED		BIT(7)
-+
-+#define EC_ADDR_UNIVERSAL_FAN_CTRL	0x07C5
-+#define SPLIT_TABLES			BIT(7)
-+
-+#define EC_ADDR_AP_OEM_6		0x07C6
-+#define ENABLE_UNIVERSAL_FAN_CTRL	BIT(2)
-+#define BATTERY_CHARGE_FULL_OVER_24H	BIT(3)
-+#define BATTERY_ERM_STATUS_REACHED	BIT(4)
-+
-+#define EC_ADDR_CHARGE_PRIO		0x07CC
-+#define CHARGING_PERFORMANCE		BIT(7)
-+
-+/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
-+#define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
-+
-+#define EC_ADDR_LIGHTBAR_BAT_RED	0x07E3
-+
-+#define EC_ADDR_LIGHTBAR_BAT_GREEN	0x07E4
-+
-+#define EC_ADDR_LIGHTBAR_BAT_BLUE	0x07E5
-+
-+#define EC_ADDR_CPU_TEMP_END_TABLE	0x0F00
-+
-+#define EC_ADDR_CPU_TEMP_START_TABLE	0x0F10
-+
-+#define EC_ADDR_CPU_FAN_SPEED_TABLE	0x0F20
-+
-+#define EC_ADDR_GPU_TEMP_END_TABLE	0x0F30
-+
-+#define EC_ADDR_GPU_TEMP_START_TABLE	0x0F40
-+
-+#define EC_ADDR_GPU_FAN_SPEED_TABLE	0x0F50
-+
-+/*
-+ * Those two registers technically allow for manual fan control,
-+ * but are unstable on some models and are likely not meant to
-+ * be used by applications.
-+ */
-+#define EC_ADDR_PWM_1_WRITEABLE		0x1804
-+
-+#define EC_ADDR_PWM_2_WRITEABLE		0x1809
-+
-+#define DRIVER_NAME	"uniwill"
-+#define UNIWILL_GUID	"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
-+
-+#define PWM_MAX			200
-+#define FAN_TABLE_LENGTH	16
-+
-+#define LED_CHANNELS		3
-+#define LED_MAX_BRIGHTNESS	200
-+
-+#define UNIWILL_FEATURE_FN_LOCK		BIT(0)
-+#define UNIWILL_FEATURE_SUPER_KEY_LOCK	BIT(1)
-+#define UNIWILL_FEATURE_TOUCHPAD_TOGGLE BIT(2)
-+#define UNIWILL_FEATURE_LIGHTBAR	BIT(3)
-+#define UNIWILL_FEATURE_BATTERY		BIT(4)
-+#define UNIWILL_FEATURE_HWMON		BIT(5)
-+
-+enum uniwill_method {
-+	UNIWILL_GET_ULONG	=3D 0x01,
-+	UNIWILL_SET_ULONG	=3D 0x02,
-+	UNIWILL_FIRE_ULONG	=3D 0x03,
-+	UNIWILL_GET_SET_ULONG	=3D 0x04,
-+	UNIWILL_GET_BUTTON	=3D 0x05,
++#define DRIVER_NAME		"uniwill-wmi"
++#define UNIWILL_EVENT_GUID	"ABBC0F72-8EA1-11D1-00A0-C90629100000"
++
++struct uniwill_wmi_data {
++	struct mutex input_lock;	/* Protects input sequence during notify */
++	struct input_dev *input_device;
 +};
 +
-+struct uniwill_method_buffer {
-+	__le16 address;
-+	__le16 data;
-+	__le16 operation;
-+	__le16 reserved;
-+} __packed;
++static BLOCKING_NOTIFIER_HEAD(uniwill_wmi_chain_head);
 +
-+struct uniwill_data {
-+	struct wmi_device *wdev;
-+	struct regmap *regmap;
-+	struct acpi_battery_hook hook;
-+	unsigned int last_charge_ctrl;
-+	struct mutex battery_lock;	/* Protects the list of currently registered =
-batteries */
-+	unsigned int last_switch_status;
-+	struct mutex super_key_lock;	/* Protects the toggling of the super key l=
-ock state */
-+	struct list_head batteries;
-+	struct led_classdev_mc led_mc_cdev;
-+	struct mc_subled led_mc_subled_info[LED_CHANNELS];
-+	struct notifier_block nb;
++static const struct key_entry uniwill_wmi_keymap[] =3D {
++	/* Reported via keyboard controller */
++	{ KE_IGNORE,	UNIWILL_OSD_CAPSLOCK,			{ KEY_CAPSLOCK }},
++	{ KE_IGNORE,	UNIWILL_OSD_NUMLOCK,			{ KEY_NUMLOCK }},
++
++	/* Reported when the user locks/unlocks the super key */
++	{ KE_IGNORE,	UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE,	{ KEY_UNKNOWN }},
++	{ KE_IGNORE,	UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE,	{ KEY_UNKNOWN }},
++
++	/* Reported in manual mode when toggling the airplane mode status */
++	{ KE_KEY,	UNIWILL_OSD_RFKILL,			{ KEY_RFKILL }},
++
++	/* Reported when user wants to cycle the platform profile */
++	{ KE_IGNORE,	UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,	{ KEY_UNKNOWN }},
++
++	/* Reported when the user wants to toggle the microphone mute status */
++	{ KE_KEY,	UNIWILL_OSD_MIC_MUTE,			{ KEY_MICMUTE }},
++
++	/* Reported when the user locks/unlocks the Fn key */
++	{ KE_IGNORE,	UNIWILL_OSD_FN_LOCK,			{ KEY_FN_ESC }},
++
++	/* Reported when the user wants to toggle the brightness of the keyboard=
+ */
++	{ KE_KEY,	UNIWILL_OSD_KBDILLUMTOGGLE,		{ KEY_KBDILLUMTOGGLE }},
++
++	/* FIXME: find out the exact meaning of those events */
++	{ KE_IGNORE,	UNIWILL_OSD_BAT_CHARGE_FULL_24_H,	{ KEY_UNKNOWN }},
++	{ KE_IGNORE,	UNIWILL_OSD_BAT_ERM_UPDATE,		{ KEY_UNKNOWN }},
++
++	/* Reported when the user wants to toggle the benchmark mode status */
++	{ KE_IGNORE,	UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,	{ KEY_UNKNOWN }},
++
++	{ KE_END }
 +};
 +
-+struct uniwill_battery_entry {
-+	struct list_head head;
-+	struct power_supply *battery;
-+};
-+
-+static bool force;
-+module_param_unsafe(force, bool, 0);
-+MODULE_PARM_DESC(force, "Force loading without checking for supported dev=
-ices\n");
-+
-+/* Feature bitmask since the associated registers are not reliable */
-+static uintptr_t supported_features;
-+
-+/*
-+ * "disable" is placed on index 0 so that the return value of sysfs_match=
-_string()
-+ * directly translates into a boolean value.
-+ */
-+static const char * const uniwill_enable_disable_strings[] =3D {
-+	[0] =3D "disable",
-+	[1] =3D "enable",
-+};
-+
-+static const char * const uniwill_temp_labels[] =3D {
-+	"CPU",
-+	"GPU",
-+};
-+
-+static const char * const uniwill_fan_labels[] =3D {
-+	"Main",
-+	"Secondary",
-+};
-+
-+static int uniwill_get_set_ulong(struct wmi_device *wdev, struct uniwill_=
-method_buffer *input,
-+				 u32 *output)
++int uniwill_wmi_register_notifier(struct notifier_block *nb)
 +{
-+	struct acpi_buffer out =3D { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer in =3D {
-+		.length =3D sizeof(*input),
-+		.pointer =3D input,
-+	};
-+	union acpi_object *obj;
-+	acpi_status status;
-+	int ret =3D 0;
++	return blocking_notifier_chain_register(&uniwill_wmi_chain_head, nb);
++}
++EXPORT_SYMBOL_NS_GPL(uniwill_wmi_register_notifier, "UNIWILL");
 +
-+	status =3D wmidev_evaluate_method(wdev, 0x0, UNIWILL_GET_SET_ULONG, &in,=
- &out);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
++int uniwill_wmi_unregister_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&uniwill_wmi_chain_head, nb);
++}
++EXPORT_SYMBOL_NS_GPL(uniwill_wmi_unregister_notifier, "UNIWILL");
 +
-+	obj =3D out.pointer;
-+	if (!obj)
-+		return -ENODATA;
++static void devm_uniwill_wmi_unregister_notifier(void *data)
++{
++	struct notifier_block *nb =3D data;
 +
-+	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-+		ret =3D -ENOMSG;
-+		goto free_obj;
-+	}
-+
-+	if (obj->buffer.length < sizeof(*output)) {
-+		ret =3D -EPROTO;
-+		goto free_obj;
-+	}
-+
-+	*output =3D get_unaligned_le32(obj->buffer.pointer);
-+
-+free_obj:
-+	kfree(obj);
-+
-+	return ret;
++	uniwill_wmi_unregister_notifier(nb);
 +}
 +
-+static int uniwill_ec_reg_write(void *context, unsigned int reg, unsigned=
- int val)
-+{
-+	struct uniwill_method_buffer input =3D {
-+		.address =3D cpu_to_le16(reg),
-+		.data =3D cpu_to_le16(val & U8_MAX),
-+		.operation =3D 0x0000,
-+	};
-+	struct uniwill_data *data =3D context;
-+	u32 output;
-+	int ret;
-+
-+	ret =3D uniwill_get_set_ulong(data->wdev, &input, &output);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (output =3D=3D 0xFEFEFEFE)
-+		return -ENXIO;
-+
-+	return 0;
-+}
-+
-+static int uniwill_ec_reg_read(void *context, unsigned int reg, unsigned =
-int *val)
-+{
-+	struct uniwill_method_buffer input =3D {
-+		.address =3D cpu_to_le16(reg),
-+		.data =3D 0x0000,
-+		.operation =3D cpu_to_le16(0x0100),
-+	};
-+	struct uniwill_data *data =3D context;
-+	u32 output;
-+	int ret;
-+
-+	ret =3D uniwill_get_set_ulong(data->wdev, &input, &output);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (output =3D=3D 0xFEFEFEFE)
-+		return -ENXIO;
-+
-+	*val =3D (u8)output;
-+
-+	return 0;
-+}
-+
-+static const struct regmap_bus uniwill_ec_bus =3D {
-+	.reg_write =3D uniwill_ec_reg_write,
-+	.reg_read =3D uniwill_ec_reg_read,
-+	.reg_format_endian_default =3D REGMAP_ENDIAN_LITTLE,
-+	.val_format_endian_default =3D REGMAP_ENDIAN_LITTLE,
-+};
-+
-+static bool uniwill_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case EC_ADDR_AP_OEM:
-+	case EC_ADDR_LIGHTBAR_AC_CTRL:
-+	case EC_ADDR_LIGHTBAR_AC_RED:
-+	case EC_ADDR_LIGHTBAR_AC_GREEN:
-+	case EC_ADDR_LIGHTBAR_AC_BLUE:
-+	case EC_ADDR_BIOS_OEM:
-+	case EC_ADDR_TRIGGER:
-+	case EC_ADDR_OEM_4:
-+	case EC_ADDR_CHARGE_CTRL:
-+	case EC_ADDR_LIGHTBAR_BAT_CTRL:
-+	case EC_ADDR_LIGHTBAR_BAT_RED:
-+	case EC_ADDR_LIGHTBAR_BAT_GREEN:
-+	case EC_ADDR_LIGHTBAR_BAT_BLUE:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case EC_ADDR_CPU_TEMP:
-+	case EC_ADDR_GPU_TEMP:
-+	case EC_ADDR_MAIN_FAN_RPM_1:
-+	case EC_ADDR_MAIN_FAN_RPM_2:
-+	case EC_ADDR_SECOND_FAN_RPM_1:
-+	case EC_ADDR_SECOND_FAN_RPM_2:
-+	case EC_ADDR_BAT_ALERT:
-+	case EC_ADDR_PROJECT_ID:
-+	case EC_ADDR_AP_OEM:
-+	case EC_ADDR_LIGHTBAR_AC_CTRL:
-+	case EC_ADDR_LIGHTBAR_AC_RED:
-+	case EC_ADDR_LIGHTBAR_AC_GREEN:
-+	case EC_ADDR_LIGHTBAR_AC_BLUE:
-+	case EC_ADDR_BIOS_OEM:
-+	case EC_ADDR_PWM_1:
-+	case EC_ADDR_PWM_2:
-+	case EC_ADDR_TRIGGER:
-+	case EC_ADDR_SWITCH_STATUS:
-+	case EC_ADDR_OEM_4:
-+	case EC_ADDR_CHARGE_CTRL:
-+	case EC_ADDR_LIGHTBAR_BAT_CTRL:
-+	case EC_ADDR_LIGHTBAR_BAT_RED:
-+	case EC_ADDR_LIGHTBAR_BAT_GREEN:
-+	case EC_ADDR_LIGHTBAR_BAT_BLUE:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case EC_ADDR_CPU_TEMP:
-+	case EC_ADDR_GPU_TEMP:
-+	case EC_ADDR_MAIN_FAN_RPM_1:
-+	case EC_ADDR_MAIN_FAN_RPM_2:
-+	case EC_ADDR_SECOND_FAN_RPM_1:
-+	case EC_ADDR_SECOND_FAN_RPM_2:
-+	case EC_ADDR_BAT_ALERT:
-+	case EC_ADDR_PWM_1:
-+	case EC_ADDR_PWM_2:
-+	case EC_ADDR_TRIGGER:
-+	case EC_ADDR_SWITCH_STATUS:
-+	case EC_ADDR_CHARGE_CTRL:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config uniwill_ec_config =3D {
-+	.reg_bits =3D 16,
-+	.val_bits =3D 8,
-+	.writeable_reg =3D uniwill_writeable_reg,
-+	.readable_reg =3D uniwill_readable_reg,
-+	.volatile_reg =3D uniwill_volatile_reg,
-+	.can_sleep =3D true,
-+	.max_register =3D 0xFFFF,
-+	.cache_type =3D REGCACHE_MAPLE,
-+	.use_single_read =3D true,
-+	.use_single_write =3D true,
-+};
-+
-+static ssize_t fn_lock_store(struct device *dev, struct device_attribute =
-*attr, const char *buf,
-+			     size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D sysfs_match_string(uniwill_enable_disable_strings, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret)
-+		value =3D FN_LOCK_STATUS;
-+	else
-+		value =3D 0;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATU=
-S, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t fn_lock_show(struct device *dev, struct device_attribute *=
-attr, char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_BIOS_OEM, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%s\n", str_enable_disable(value & FN_LOCK_STATUS=
-));
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock);
-+
-+static ssize_t super_key_lock_store(struct device *dev, struct device_att=
-ribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D sysfs_match_string(uniwill_enable_disable_strings, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	guard(mutex)(&data->super_key_lock);
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * We can only toggle the super key lock, so we return early if the sett=
-ing
-+	 * is already in the correct state.
-+	 */
-+	if (ret =3D=3D !(value & SUPER_KEY_LOCK_STATUS))
-+		return count;
-+
-+	ret =3D regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_K=
-EY_LOCK,
-+				TRIGGER_SUPER_KEY_LOCK);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t super_key_lock_show(struct device *dev, struct device_attr=
-ibute *attr, char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%s\n", str_enable_disable(!(value & SUPER_KEY_LO=
-CK_STATUS)));
-+}
-+
-+static DEVICE_ATTR_RW(super_key_lock);
-+
-+static ssize_t touchpad_toggle_store(struct device *dev, struct device_at=
-tribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D sysfs_match_string(uniwill_enable_disable_strings, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret)
-+		value =3D 0;
-+	else
-+		value =3D TOUCHPAD_TOGGLE_OFF;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_OEM_4, TOUCHPAD_TOGGLE_=
-OFF, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t touchpad_toggle_show(struct device *dev, struct device_att=
-ribute *attr, char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%s\n", str_enable_disable(!(value & TOUCHPAD_TOG=
-GLE_OFF)));
-+}
-+
-+static DEVICE_ATTR_RW(touchpad_toggle);
-+
-+static ssize_t rainbow_animation_store(struct device *dev, struct device_=
-attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D sysfs_match_string(uniwill_enable_disable_strings, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret)
-+		value =3D LIGHTBAR_WELCOME;
-+	else
-+		value =3D 0;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHT=
-BAR_WELCOME, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGH=
-TBAR_WELCOME, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t rainbow_animation_show(struct device *dev, struct device_a=
-ttribute *attr, char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%s\n", str_enable_disable(value & LIGHTBAR_WELCO=
-ME));
-+}
-+
-+static DEVICE_ATTR_RW(rainbow_animation);
-+
-+static ssize_t breathing_in_suspend_store(struct device *dev, struct devi=
-ce_attribute *attr,
-+					  const char *buf, size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D sysfs_match_string(uniwill_enable_disable_strings, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret)
-+		value =3D 0;
-+	else
-+		value =3D LIGHTBAR_S3_OFF;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHT=
-BAR_S3_OFF, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t breathing_in_suspend_show(struct device *dev, struct devic=
-e_attribute *attr,
-+					 char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%s\n", str_enable_disable(!(value & LIGHTBAR_S3_=
-OFF)));
-+}
-+
-+static DEVICE_ATTR_RW(breathing_in_suspend);
-+
-+static struct attribute *uniwill_attrs[] =3D {
-+	/* Keyboard-related */
-+	&dev_attr_fn_lock.attr,
-+	&dev_attr_super_key_lock.attr,
-+	&dev_attr_touchpad_toggle.attr,
-+	/* Lightbar-related */
-+	&dev_attr_rainbow_animation.attr,
-+	&dev_attr_breathing_in_suspend.attr,
-+	NULL
-+};
-+
-+static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct attri=
-bute *attr, int n)
-+{
-+	if (attr =3D=3D &dev_attr_fn_lock.attr) {
-+		if (supported_features & UNIWILL_FEATURE_FN_LOCK)
-+			return attr->mode;
-+	}
-+
-+	if (attr =3D=3D &dev_attr_super_key_lock.attr) {
-+		if (supported_features & UNIWILL_FEATURE_SUPER_KEY_LOCK)
-+			return attr->mode;
-+	}
-+
-+	if (attr =3D=3D &dev_attr_touchpad_toggle.attr) {
-+		if (supported_features & UNIWILL_FEATURE_TOUCHPAD_TOGGLE)
-+			return attr->mode;
-+	}
-+
-+	if (attr =3D=3D &dev_attr_rainbow_animation.attr ||
-+	    attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-+		if (supported_features & UNIWILL_FEATURE_LIGHTBAR)
-+			return attr->mode;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct attribute_group uniwill_group =3D {
-+	.is_visible =3D uniwill_attr_is_visible,
-+	.attrs =3D uniwill_attrs,
-+};
-+
-+static const struct attribute_group *uniwill_groups[] =3D {
-+	&uniwill_group,
-+	NULL
-+};
-+
-+static int uniwill_read(struct device *dev, enum hwmon_sensor_types type,=
- u32 attr, int channel,
-+			long *val)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	unsigned int value;
-+	__be16 rpm;
-+	int ret;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		switch (channel) {
-+		case 0:
-+			ret =3D regmap_read(data->regmap, EC_ADDR_CPU_TEMP, &value);
-+			break;
-+		case 1:
-+			ret =3D regmap_read(data->regmap, EC_ADDR_GPU_TEMP, &value);
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+
-+		if (ret < 0)
-+			return ret;
-+
-+		*val =3D value * 1000;
-+		return 0;
-+	case hwmon_fan:
-+		switch (channel) {
-+		case 0:
-+			ret =3D regmap_bulk_read(data->regmap, EC_ADDR_MAIN_FAN_RPM_1, &rpm,
-+					       sizeof(rpm));
-+			break;
-+		case 1:
-+			ret =3D regmap_bulk_read(data->regmap, EC_ADDR_SECOND_FAN_RPM_1, &rpm,
-+					       sizeof(rpm));
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+
-+		if (ret < 0)
-+			return ret;
-+
-+		*val =3D be16_to_cpu(rpm);
-+		return 0;
-+	case hwmon_pwm:
-+		switch (channel) {
-+		case 0:
-+			ret =3D regmap_read(data->regmap, EC_ADDR_PWM_1, &value);
-+			break;
-+		case 1:
-+			ret =3D regmap_read(data->regmap, EC_ADDR_PWM_2, &value);
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+
-+		*val =3D fixp_linear_interpolate(0, 0, PWM_MAX, U8_MAX, value);
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int uniwill_read_string(struct device *dev, enum hwmon_sensor_type=
-s type, u32 attr,
-+			       int channel, const char **str)
-+{
-+	switch (type) {
-+	case hwmon_temp:
-+		*str =3D uniwill_temp_labels[channel];
-+		return 0;
-+	case hwmon_fan:
-+		*str =3D uniwill_fan_labels[channel];
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static const struct hwmon_ops uniwill_ops =3D {
-+	.visible =3D 0444,
-+	.read =3D uniwill_read,
-+	.read_string =3D uniwill_read_string,
-+};
-+
-+static const struct hwmon_channel_info * const uniwill_info[] =3D {
-+	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL),
-+	HWMON_CHANNEL_INFO(pwm,
-+			   HWMON_PWM_INPUT,
-+			   HWMON_PWM_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info uniwill_chip_info =3D {
-+	.ops =3D &uniwill_ops,
-+	.info =3D uniwill_info,
-+};
-+
-+static int uniwill_hwmon_init(struct uniwill_data *data)
-+{
-+	struct device *hdev;
-+
-+	if (!(supported_features & UNIWILL_FEATURE_HWMON))
-+		return 0;
-+
-+	hdev =3D devm_hwmon_device_register_with_info(&data->wdev->dev, "uniwill=
-", data,
-+						    &uniwill_chip_info, NULL);
-+
-+	return PTR_ERR_OR_ZERO(hdev);
-+}
-+
-+static const unsigned int uniwill_led_channel_to_bat_reg[LED_CHANNELS] =
-=3D {
-+	EC_ADDR_LIGHTBAR_BAT_RED,
-+	EC_ADDR_LIGHTBAR_BAT_GREEN,
-+	EC_ADDR_LIGHTBAR_BAT_BLUE,
-+};
-+
-+static const unsigned int uniwill_led_channel_to_ac_reg[LED_CHANNELS] =3D=
- {
-+	EC_ADDR_LIGHTBAR_AC_RED,
-+	EC_ADDR_LIGHTBAR_AC_GREEN,
-+	EC_ADDR_LIGHTBAR_AC_BLUE,
-+};
-+
-+static int uniwill_led_brightness_set(struct led_classdev *led_cdev, enum=
- led_brightness brightness)
-+{
-+	struct led_classdev_mc *led_mc_cdev =3D lcdev_to_mccdev(led_cdev);
-+	struct uniwill_data *data =3D container_of(led_mc_cdev, struct uniwill_d=
-ata, led_mc_cdev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret =3D led_mc_calc_color_components(led_mc_cdev, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (int i =3D 0; i < LED_CHANNELS; i++) {
-+		/* Prevent the brightness values from overflowing */
-+		value =3D min(LED_MAX_BRIGHTNESS, data->led_mc_subled_info[i].brightnes=
-s);
-+		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], va=
-lue);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[i], v=
-alue);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (brightness)
-+		value =3D 0;
-+	else
-+		value =3D LIGHTBAR_S0_OFF;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHT=
-BAR_S0_OFF, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGHT=
-BAR_S0_OFF, value);
-+}
-+
-+#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S=
-3_OFF | LIGHTBAR_WELCOME)
-+
-+static int uniwill_led_init(struct uniwill_data *data)
-+{
-+	struct led_init_data init_data =3D {
-+		.devicename =3D DRIVER_NAME,
-+		.default_label =3D "multicolor:" LED_FUNCTION_STATUS,
-+		.devname_mandatory =3D true,
-+	};
-+	unsigned int color_indices[3] =3D {
-+		LED_COLOR_ID_RED,
-+		LED_COLOR_ID_GREEN,
-+		LED_COLOR_ID_BLUE,
-+	};
-+	unsigned int value;
-+	int ret;
-+
-+	if (!(supported_features & UNIWILL_FEATURE_LIGHTBAR))
-+		return 0;
-+
-+	/*
-+	 * The EC has separate lightbar settings for AC and battery mode,
-+	 * so we have to ensure that both settings are the same.
-+	 */
-+	ret =3D regmap_read(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	value |=3D LIGHTBAR_APP_EXISTS;
-+	ret =3D regmap_write(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * The breathing animation during suspend is not supported when
-+	 * running on battery power.
-+	 */
-+	value |=3D LIGHTBAR_S3_OFF;
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGH=
-TBAR_MASK, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	data->led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_MULTI;
-+	data->led_mc_cdev.led_cdev.max_brightness =3D LED_MAX_BRIGHTNESS;
-+	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
-+	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led_brigh=
-tness_set;
-+
-+	if (value & LIGHTBAR_S0_OFF)
-+		data->led_mc_cdev.led_cdev.brightness =3D 0;
-+	else
-+		data->led_mc_cdev.led_cdev.brightness =3D LED_MAX_BRIGHTNESS;
-+
-+	for (int i =3D 0; i < LED_CHANNELS; i++) {
-+		data->led_mc_subled_info[i].color_index =3D color_indices[i];
-+
-+		ret =3D regmap_read(data->regmap, uniwill_led_channel_to_ac_reg[i], &va=
-lue);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * Make sure that the initial intensity value is not greater than
-+		 * the maximum brightness.
-+		 */
-+		value =3D min(LED_MAX_BRIGHTNESS, value);
-+		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], va=
-lue);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[i], v=
-alue);
-+		if (ret < 0)
-+			return ret;
-+
-+		data->led_mc_subled_info[i].intensity =3D value;
-+		data->led_mc_subled_info[i].channel =3D i;
-+	}
-+
-+	data->led_mc_cdev.subled_info =3D data->led_mc_subled_info;
-+	data->led_mc_cdev.num_colors =3D LED_CHANNELS;
-+
-+	return devm_led_classdev_multicolor_register_ext(&data->wdev->dev, &data=
-->led_mc_cdev,
-+							 &init_data);
-+}
-+
-+static int uniwill_get_property(struct power_supply *psy, const struct po=
-wer_supply_ext *ext,
-+				void *drvdata, enum power_supply_property psp,
-+				union power_supply_propval *val)
-+{
-+	struct uniwill_data *data =3D drvdata;
-+	union power_supply_propval prop;
-+	unsigned int regval;
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		ret =3D power_supply_get_property(psy, POWER_SUPPLY_PROP_PRESENT, &prop=
-);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (!prop.intval) {
-+			val->intval =3D POWER_SUPPLY_HEALTH_NO_BATTERY;
-+			return 0;
-+		}
-+
-+		ret =3D power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &prop)=
-;
-+		if (ret < 0)
-+			return ret;
-+
-+		if (prop.intval =3D=3D POWER_SUPPLY_STATUS_UNKNOWN) {
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNKNOWN;
-+			return 0;
-+		}
-+
-+		ret =3D regmap_read(data->regmap, EC_ADDR_BAT_ALERT, &regval);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (regval) {
-+			/* Charging issue */
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+
-+		val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
-+		return 0;
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		ret =3D regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, &regval);
-+		if (ret < 0)
-+			return ret;
-+
-+		val->intval =3D clamp_val(FIELD_GET(CHARGE_CTRL_MASK, regval), 0, 100);
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int uniwill_set_property(struct power_supply *psy, const struct po=
-wer_supply_ext *ext,
-+				void *drvdata, enum power_supply_property psp,
-+				const union power_supply_propval *val)
-+{
-+	struct uniwill_data *data =3D drvdata;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		if (val->intval < 1 || val->intval > 100)
-+			return -EINVAL;
-+
-+		return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, CHARGE_CTR=
-L_MASK,
-+					  val->intval);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int uniwill_property_is_writeable(struct power_supply *psy,
-+					 const struct power_supply_ext *ext, void *drvdata,
-+					 enum power_supply_property psp)
-+{
-+	if (psp =3D=3D POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD)
-+		return true;
-+
-+	return false;
-+}
-+
-+static const enum power_supply_property uniwill_properties[] =3D {
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
-+};
-+
-+static const struct power_supply_ext uniwill_extension =3D {
-+	.name =3D DRIVER_NAME,
-+	.properties =3D uniwill_properties,
-+	.num_properties =3D ARRAY_SIZE(uniwill_properties),
-+	.get_property =3D uniwill_get_property,
-+	.set_property =3D uniwill_set_property,
-+	.property_is_writeable =3D uniwill_property_is_writeable,
-+};
-+
-+static int uniwill_add_battery(struct power_supply *battery, struct acpi_=
-battery_hook *hook)
-+{
-+	struct uniwill_data *data =3D container_of(hook, struct uniwill_data, ho=
-ok);
-+	struct uniwill_battery_entry *entry;
-+	int ret;
-+
-+	entry =3D kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	ret =3D power_supply_register_extension(battery, &uniwill_extension, &da=
-ta->wdev->dev, data);
-+	if (ret < 0) {
-+		kfree(entry);
-+		return ret;
-+	}
-+
-+	scoped_guard(mutex, &data->battery_lock) {
-+		entry->battery =3D battery;
-+		list_add(&entry->head, &data->batteries);
-+	}
-+
-+	return 0;
-+}
-+
-+static int uniwill_remove_battery(struct power_supply *battery, struct ac=
-pi_battery_hook *hook)
-+{
-+	struct uniwill_data *data =3D container_of(hook, struct uniwill_data, ho=
-ok);
-+	struct uniwill_battery_entry *entry, *tmp;
-+
-+	scoped_guard(mutex, &data->battery_lock) {
-+		list_for_each_entry_safe(entry, tmp, &data->batteries, head) {
-+			if (entry->battery =3D=3D battery) {
-+				list_del(&entry->head);
-+				kfree(entry);
-+				break;
-+			}
-+		}
-+	}
-+
-+	power_supply_unregister_extension(battery, &uniwill_extension);
-+
-+	return 0;
-+}
-+
-+static int uniwill_battery_init(struct uniwill_data *data)
++int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifie=
+r_block *nb)
 +{
 +	int ret;
 +
-+	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
-+		return 0;
-+
-+	ret =3D devm_mutex_init(&data->wdev->dev, &data->battery_lock);
++	ret =3D uniwill_wmi_register_notifier(nb);
 +	if (ret < 0)
 +		return ret;
 +
-+	INIT_LIST_HEAD(&data->batteries);
-+	data->hook.name =3D "Uniwill Battery Extension";
-+	data->hook.add_battery =3D uniwill_add_battery;
-+	data->hook.remove_battery =3D uniwill_remove_battery;
-+
-+	return devm_battery_hook_register(&data->wdev->dev, &data->hook);
++	return devm_add_action_or_reset(dev, devm_uniwill_wmi_unregister_notifie=
+r, nb);
 +}
++EXPORT_SYMBOL_NS_GPL(devm_uniwill_wmi_register_notifier, "UNIWILL");
 +
-+static int uniwill_notifier_call(struct notifier_block *nb, unsigned long=
- action, void *dummy)
++static void uniwill_wmi_notify(struct wmi_device *wdev, union acpi_object=
+ *obj)
 +{
-+	struct uniwill_data *data =3D container_of(nb, struct uniwill_data, nb);
-+	struct uniwill_battery_entry *entry;
-+
-+	switch (action) {
-+	case UNIWILL_OSD_BATTERY_ALERT:
-+		scoped_guard(mutex, &data->battery_lock) {
-+			list_for_each_entry(entry, &data->batteries, head) {
-+				power_supply_changed(entry->battery);
-+			}
-+		}
-+
-+		return NOTIFY_OK;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
-+static int uniwill_notifier_init(struct uniwill_data *data)
-+{
-+	data->nb.notifier_call =3D uniwill_notifier_call;
-+
-+	return devm_uniwill_wmi_register_notifier(&data->wdev->dev, &data->nb);
-+}
-+
-+static void uniwill_disable_manual_control(void *context)
-+{
-+	struct uniwill_data *data =3D context;
-+
-+	regmap_clear_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CTRL);
-+}
-+
-+static int uniwill_ec_init(struct uniwill_data *data)
-+{
-+	unsigned int value;
++	struct uniwill_wmi_data *data =3D dev_get_drvdata(&wdev->dev);
++	u32 value;
 +	int ret;
 +
-+	ret =3D regmap_read(data->regmap, EC_ADDR_PROJECT_ID, &value);
-+	if (ret < 0)
-+		return ret;
++	if (obj->type !=3D ACPI_TYPE_INTEGER)
++		return;
 +
-+	dev_dbg(&data->wdev->dev, "Project ID: %u\n", value);
++	value =3D obj->integer.value;
 +
-+	ret =3D regmap_set_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CTRL=
-);
-+	if (ret < 0)
-+		return ret;
++	dev_dbg(&wdev->dev, "Received WMI event %u\n", value);
 +
-+	return devm_add_action_or_reset(&data->wdev->dev, uniwill_disable_manual=
-_control, data);
++	ret =3D blocking_notifier_call_chain(&uniwill_wmi_chain_head, value, NUL=
+L);
++	if (ret =3D=3D NOTIFY_BAD)
++		return;
++
++	mutex_lock(&data->input_lock);
++	sparse_keymap_report_event(data->input_device, value, 1, true);
++	mutex_unlock(&data->input_lock);
 +}
 +
-+static int uniwill_probe(struct wmi_device *wdev, const void *context)
++static int uniwill_wmi_probe(struct wmi_device *wdev, const void *context=
+)
 +{
-+	struct uniwill_data *data;
-+	struct regmap *regmap;
++	struct uniwill_wmi_data *data;
 +	int ret;
 +
 +	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
 +	if (!data)
 +		return -ENOMEM;
 +
-+	data->wdev =3D wdev;
++	ret =3D devm_mutex_init(&wdev->dev, &data->input_lock);
++	if (ret < 0)
++		return ret;
++
 +	dev_set_drvdata(&wdev->dev, data);
 +
-+	regmap =3D devm_regmap_init(&wdev->dev, &uniwill_ec_bus, data, &uniwill_=
-ec_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
++	data->input_device =3D devm_input_allocate_device(&wdev->dev);
++	if (!data->input_device)
++		return -ENOMEM;
 +
-+	data->regmap =3D regmap;
-+	ret =3D devm_mutex_init(&wdev->dev, &data->super_key_lock);
++	ret =3D sparse_keymap_setup(data->input_device, uniwill_wmi_keymap, NULL=
+);
 +	if (ret < 0)
 +		return ret;
 +
-+	ret =3D uniwill_ec_init(data);
-+	if (ret < 0)
-+		return ret;
++	data->input_device->name =3D "Uniwill WMI hotkeys";
++	data->input_device->phys =3D "wmi/input0";
++	data->input_device->id.bustype =3D BUS_HOST;
 +
-+	ret =3D uniwill_battery_init(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_led_init(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_hwmon_init(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	return uniwill_notifier_init(data);
++	return input_register_device(data->input_device);
 +}
-+
-+static void uniwill_shutdown(struct wmi_device *wdev)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(&wdev->dev);
-+
-+	regmap_clear_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CTRL);
-+}
-+
-+static int uniwill_suspend_keyboard(struct uniwill_data *data)
-+{
-+	if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_LOCK))
-+		return 0;
-+
-+	/*
-+	 * The EC_ADDR_SWITCH_STATUS is maked as volatile, so we have to restore=
- it
-+	 * ourself.
-+	 */
-+	return regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &data->last_swit=
-ch_status);
-+}
-+
-+static int uniwill_suspend_battery(struct uniwill_data *data)
-+{
-+	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
-+		return 0;
-+
-+	/*
-+	 * Save the current charge limit in order to restore it during resume.
-+	 * We cannot use the regmap code for that since this register needs to
-+	 * be declared as volatile due to CHARGE_CTRL_REACHED.
-+	 */
-+	return regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, &data->last_charge=
-_ctrl);
-+}
-+
-+static int uniwill_suspend(struct device *dev)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret =3D uniwill_suspend_keyboard(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_suspend_battery(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	regcache_cache_only(data->regmap, true);
-+	regcache_mark_dirty(data->regmap);
-+
-+	return 0;
-+}
-+
-+static int uniwill_resume_keyboard(struct uniwill_data *data)
-+{
-+	unsigned int value;
-+	int ret;
-+
-+	if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_LOCK))
-+		return 0;
-+
-+	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	if ((data->last_switch_status & SUPER_KEY_LOCK_STATUS) =3D=3D (value & S=
-UPER_KEY_LOCK_STATUS))
-+		return 0;
-+
-+	return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_KE=
-Y_LOCK,
-+				 TRIGGER_SUPER_KEY_LOCK);
-+}
-+
-+static int uniwill_resume_battery(struct uniwill_data *data)
-+{
-+	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
-+		return 0;
-+
-+	return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, CHARGE_CTRL=
-_MASK,
-+				  data->last_charge_ctrl);
-+}
-+
-+static int uniwill_resume(struct device *dev)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	int ret;
-+
-+	regcache_cache_only(data->regmap, false);
-+
-+	ret =3D regcache_sync(data->regmap);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_resume_keyboard(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	return uniwill_resume_battery(data);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, uniwill_=
-resume);
 +
 +/*
 + * We cannot fully trust this GUID since Uniwill just copied the WMI GUID
@@ -1902,101 +485,156 @@ resume);
 + *
 + * Because of this we cannot use this WMI GUID for autoloading.
 + */
-+static const struct wmi_device_id uniwill_id_table[] =3D {
-+	{ UNIWILL_GUID, NULL },
++static const struct wmi_device_id uniwill_wmi_id_table[] =3D {
++	{ UNIWILL_EVENT_GUID, NULL },
 +	{ }
 +};
 +
-+static struct wmi_driver uniwill_driver =3D {
++static struct wmi_driver uniwill_wmi_driver =3D {
 +	.driver =3D {
 +		.name =3D DRIVER_NAME,
-+		.dev_groups =3D uniwill_groups,
 +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-+		.pm =3D pm_sleep_ptr(&uniwill_pm_ops),
 +	},
-+	.id_table =3D uniwill_id_table,
-+	.probe =3D uniwill_probe,
-+	.shutdown =3D uniwill_shutdown,
++	.id_table =3D uniwill_wmi_id_table,
++	.probe =3D uniwill_wmi_probe,
++	.notify =3D uniwill_wmi_notify,
 +	.no_singleton =3D true,
 +};
-+
-+static const struct dmi_system_id uniwill_dmi_table[] __initconst =3D {
-+	{
-+		.ident =3D "Intel NUC x15",
-+		.matches =3D {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel(R) Client Systems"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "LAPAC71H"),
-+		},
-+		.driver_data =3D (void *)(UNIWILL_FEATURE_FN_LOCK |
-+					UNIWILL_FEATURE_SUPER_KEY_LOCK |
-+					UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-+					UNIWILL_FEATURE_BATTERY |
-+					UNIWILL_FEATURE_HWMON),
-+	},
-+	{
-+		.ident =3D "Intel NUC x15",
-+		.matches =3D {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel(R) Client Systems"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "LAPKC71F"),
-+		},
-+		.driver_data =3D (void *)(UNIWILL_FEATURE_FN_LOCK |
-+					UNIWILL_FEATURE_SUPER_KEY_LOCK |
-+					UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-+					UNIWILL_FEATURE_LIGHTBAR |
-+					UNIWILL_FEATURE_BATTERY |
-+					UNIWILL_FEATURE_HWMON),
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(dmi, uniwill_dmi_table);
-+
-+static int __init uniwill_init(void)
-+{
-+	const struct dmi_system_id *id;
-+
-+	id =3D dmi_first_match(uniwill_dmi_table);
-+	if (!id) {
-+		if (!force)
-+			return -ENODEV;
-+
-+		/* Assume that the device supports all features */
-+		supported_features =3D UINTPTR_MAX;
-+		pr_warn("Loading on a potentially unsupported device\n");
-+	} else {
-+		supported_features =3D (uintptr_t)id->driver_data;
-+	}
-+
-+	return wmi_driver_register(&uniwill_driver);
-+}
-+module_init(uniwill_init);
-+
-+static void __exit uniwill_exit(void)
-+{
-+	wmi_driver_unregister(&uniwill_driver);
-+}
-+module_exit(uniwill_exit);
++module_wmi_driver(uniwill_wmi_driver);
 +
 +MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
-+MODULE_DESCRIPTION("Uniwill notebook driver");
++MODULE_DESCRIPTION("Uniwill notebook hotkey driver");
 +MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("UNIWILL");
-diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.c b/drivers/platform=
-/x86/uniwill/uniwill-wmi.c
-index b95a0d68ce6a..759bad155099 100644
-=2D-- a/drivers/platform/x86/uniwill/uniwill-wmi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-wmi.c
-@@ -153,7 +153,8 @@ static int uniwill_wmi_probe(struct wmi_device *wdev, =
-const void *context)
-  * We cannot fully trust this GUID since Uniwill just copied the WMI GUID
-  * from the Windows driver example, and others probably did the same.
-  *
-- * Because of this we cannot use this WMI GUID for autoloading.
-+ * Because of this we cannot use this WMI GUID for autoloading. The uniwi=
-ll-laptop
-+ * driver will instead load this module as a dependency.
-  */
- static const struct wmi_device_id uniwill_wmi_id_table[] =3D {
- 	{ UNIWILL_EVENT_GUID, NULL },
+diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platform=
+/x86/uniwill/uniwill-wmi.h
+new file mode 100644
+index 000000000000..41662ece0675
+=2D-- /dev/null
++++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+@@ -0,0 +1,122 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Linux hotkey driver for Uniwill notebooks.
++ *
++ * Copyright (C) 2025 Armin Wolf <W_Armin@gmx.de>
++ */
++
++#ifndef UNIWILL_WMI_H
++#define UNIWILL_WMI_H
++
++#define UNIWILL_OSD_CAPSLOCK			0x01
++#define UNIWILL_OSD_NUMLOCK			0x02
++#define UNIWILL_OSD_SCROLLLOCK			0x03
++
++#define UNIWILL_OSD_TOUCHPAD_ON			0x04
++#define UNIWILL_OSD_TOUCHPAD_OFF		0x05
++
++#define UNIWILL_OSD_SILENT_MODE_ON		0x06
++#define UNIWILL_OSD_SILENT_MODE_OFF		0x07
++
++#define UNIWILL_OSD_WLAN_ON			0x08
++#define UNIWILL_OSD_WLAN_OFF			0x09
++
++#define UNIWILL_OSD_WIMAX_ON			0x0A
++#define UNIWILL_OSD_WIMAX_OFF			0x0B
++
++#define UNIWILL_OSD_BLUETOOTH_ON		0x0C
++#define UNIWILL_KEY_BLUETOOTH_OFF		0x0D
++
++#define UNIWILL_OSD_RF_ON			0x0E
++#define UNIWILL_OSD_RF_OFF			0x0F
++
++#define UNIWILL_OSD_3G_ON			0x10
++#define UNIWILL_OSD_3G_OFF			0x11
++
++#define UNIWILL_OSD_WEBCAM_ON			0x12
++#define UNIWILL_OSD_WEBCAM_OFF			0x13
++
++#define UNIWILL_OSD_BRIGHTNESSUP		0x14
++#define UNIWILL_OSD_BRIGHTNESSDOWN		0x15
++
++#define UNIWILL_OSD_RADIOON			0x1A
++#define UNIWILL_OSD_RADIOOFF			0x1B
++
++#define UNIWILL_OSD_POWERSAVE_ON		0x31
++#define UNIWILL_OSD_POWERSAVE_OFF		0x32
++
++#define UNIWILL_OSD_MENU			0x34
++
++#define UNIWILL_OSD_MUTE			0x35
++#define UNIWILL_OSD_VOLUMEDOWN			0x36
++#define UNIWILL_OSD_VOLUMEUP			0x37
++
++#define UNIWILL_OSD_MENU_2			0x38
++
++#define UNIWILL_OSD_LIGHTBAR_ON			0x39
++#define UNIWILL_OSD_LIGHTBAR_OFF		0x3A
++
++#define UNIWILL_OSD_KB_LED_LEVEL0		0x3B
++#define UNIWILL_OSD_KB_LED_LEVEL1		0x3C
++#define UNIWILL_OSD_KB_LED_LEVEL2		0x3D
++#define UNIWILL_OSD_KB_LED_LEVEL3		0x3E
++#define UNIWILL_OSD_KB_LED_LEVEL4		0x3F
++
++#define UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE	0x40
++#define UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE	0x41
++
++#define UNIWILL_OSD_MENU_JP			0x42
++
++#define UNIWILL_OSD_CAMERA_ON			0x90
++#define UNIWILL_OSD_CAMERA_OFF			0x91
++
++#define UNIWILL_OSD_RFKILL			0xA4
++
++#define UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED	0xA5
++
++#define UNIWILL_OSD_LIGHTBAR_STATE_CHANGED	0xA6
++
++#define UNIWILL_OSD_FAN_BOOST_STATE_CHANGED	0xA7
++
++#define UNIWILL_OSD_LCD_SW			0xA9
++
++#define UNIWILL_OSD_FAN_OVERTEMP		0xAA
++
++#define UNIWILL_OSD_DC_ADAPTER_CHANGED		0xAB
++
++#define UNIWILL_OSD_BAT_HP_OFF			0xAC
++
++#define UNIWILL_OSD_FAN_DOWN_TEMP		0xAD
++
++#define UNIWILL_OSD_BATTERY_ALERT		0xAE
++
++#define UNIWILL_OSD_TIMAP_HAIERLB_SW		0xAF
++
++#define UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE	0xB0
++
++#define UNIWILL_OSD_KBDILLUMDOWN		0xB1
++#define UNIWILL_OSD_KBDILLUMUP			0xB2
++
++#define UNIWILL_OSD_BACKLIGHT_LEVEL_CHANGE	0xB3
++#define UNIWILL_OSD_BACKLIGHT_POWER_CHANGE	0xB4
++
++#define UNIWILL_OSD_MIC_MUTE			0xB7
++
++#define UNIWILL_OSD_FN_LOCK			0xB8
++#define UNIWILL_OSD_KBDILLUMTOGGLE		0xB9
++
++#define UNIWILL_OSD_BAT_CHARGE_FULL_24_H	0xBE
++
++#define UNIWILL_OSD_BAT_ERM_UPDATE		0xBF
++
++#define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE	0xC0
++
++#define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
++
++struct notifier_block;
++
++int uniwill_wmi_register_notifier(struct notifier_block *nb);
++int uniwill_wmi_unregister_notifier(struct notifier_block *nb);
++int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifie=
+r_block *nb);
++
++#endif /* UNIWILL_WMI_H */
 =2D-=20
 2.39.5
 
