@@ -1,94 +1,126 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A9127BF76
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 18:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEC418C00;
+	Sun, 15 Jun 2025 19:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750013949; cv=none; b=MmVgZqzWCgyrX2Bf4YrdFRabdGASiWj4KBgn9Y6A8amTIMvX/KapPtfqCkCH4s8uXo0CNdrCiuPkYC0RXuu4sqjRuwX7capvSsXrXe/vKg63HAYAhq0cAtE2Z4igWmPfFAVqhROLJPvddKy2tg/gjkCly0EZ9t6RaVuIWJdKdWQ=
+	t=1750014060; cv=none; b=h8vyaw6uUi11HZGoaGZMJQ6TqhoVflnxeWXAiYqvY0J3PrLY13Ew4omqPSVcHTWZjNiEfmZmrB228BaDD1Kxb0fBbrlBPkdA1NHGDXeSfbh1Gu6ScbI9Sd7597UqjqMy8jy1hjz9cJcWMvjHwP0mMe9UcCICd9ZbqWj8dFaQoBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750013949; c=relaxed/simple;
-	bh=zps3z4rZEjYVsg/2iOnltpeS3ysiLc7KW6u7xBIWzzM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FQvHSLX/UsQmrijid6eg+/W5XFegXAr3qvoSd3bKvzUp1fiV82pcSeeAzumbzzxnJtU+23Wz3a/fUL1BHUu4UGLZLNOi/3qQi73xU9SA19rqo4C7M0j4NCs3t74D7yH4Ez53rKUVu3tKVMOgMFSuQxtlIeiQhEfVnoKXQRLp7wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=1dd+z6FZ; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1750014060; c=relaxed/simple;
+	bh=5eIfI1c3nRawIwoZMxaH4jWEB+QWg4eyuvjPQnrf54M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ubEtwSKnC1LxvQL0xf7yqHTz4FlXkLgBY3eS+6pSKn9eNVD3UuYx3fF3RWexEd75HLBC4kVpz4i68JaFJvc/uUqU5HUtYkSqJs6+USuz6T3jdIyiMFOvmiy3Fp4r8gIQ1VD4hscu9XKYRmChoTlF9ddKKdnyFBpT2gbolVNSY9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gozXfa2s; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="1dd+z6FZ"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3ddd6f2d911so13309795ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 11:59:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750013947; x=1750618747; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s6vBhuyNqqMpO+p7DESnvw4+ewrqQnOmhISSnScK1Ak=;
-        b=1dd+z6FZZHbmxK5yEfCMRMcTjekeAc4ZKIBJLL2MhL5/xXY4N2O5JpFcIkygBBcyof
-         LRYZGzZwR2wMMqaT26hGRRDDijUFJlKnfCGhevn/c5gxrDvBjpLdSJJwqT8xByPd7Dn7
-         AV2y3sFHQwHUlpM3lCDu50Stf8DytgXXejdEQ5vPwZU81ePaTBTltcLNQNbFasFhfj1f
-         9AigOwnFF01JiILpCWKpegT2IngmATAxJeFTAeSYmFQIcvkh7L6Al1fU8q0VxzVB+SQP
-         HYJ/H6tGE2Z1irQGKjHpQqq4pgiByQDGdLphNRB9WjOymirMdRjubdjxMcgC5NctjDLT
-         3iBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750013947; x=1750618747;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s6vBhuyNqqMpO+p7DESnvw4+ewrqQnOmhISSnScK1Ak=;
-        b=kmJ/4TDyog3p4vOgCdnBFygDWB3alVzgg2qhxhkPOYlUFRdNUKhHtK87Y5xSRSIguL
-         kaR0oelMPow9sywUeL9uYTSJasnu866OEMAoyKPfY3g5kTi5L8KY1ylAY8dy0DDPmRwY
-         WrNKG6k8XZCL7xUp8pUthkXzAe6nnyAzJGb+Dbubc+EV5pZ6ZCCISnhj9aQpk0m2P7uM
-         ipvMz9hijs+C38q3nbaL1Hy8Qg1cEwHz98w1I56fiEE9XLlfa7Oy+M/Jmj29GDtQyeNg
-         J90S/ODF7KX8PNhE7jkaGalrubRiyZY9/6xPRBCuDzy01i+b4+oovF4Lc1QkTKjFHMIY
-         uypg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHh8P2bb5PezXYTqmkL1dJ9wPp3O25Ickf82sZFIEiM7B7nxAxnn+HFp1W884I4dqY5yqns7M9tEj91zM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYs1SLRH6G4yh3X23OBRkWIuwebfFgVDCts5znF7WxZCyjJY9+
-	NhmX4YevoymI6p/f9Z7b6+mtaTtcuiTHmLgIcDUA839XJs5lQnJROTLp/0G54hNblUA=
-X-Gm-Gg: ASbGnct27tqWDA7MonQKriBM7NIFEvc+1rxiMHWhtut3ozpYDQ5N5Uj3rBIOnDmcwi9
-	4bZ3nOEUex+EPhG7aYUDM/awrbFfe/fmDuft6KEMoWSUz2BXNWdDSG28Ccns3MqqdpCPfEa0vwW
-	q7u1pKPwSJjkesCJ3BTyeNJKXW3bR/R/QpeY6lsvN1ziQFpboXppxQUjYYT7zA+jjYzeWxWl/J5
-	7RKGztocuP96SzWy9KslDOhNALtPr/nFZzI88hV9E3ufaFldMaMLKXflWxAQiUjtelu3CPSQpuY
-	TSUxLqNlZdFxqRCmvOdd8JapnUI1SfmXkrsUwZZ61e62XIMGthnSiQ==
-X-Google-Smtp-Source: AGHT+IGMD1ZxRhn0WxOw5HWc31CsgILQ4psiy349+t0GSX98tbi4y5aEPFYXnE6TWZ3++iluyfig5g==
-X-Received: by 2002:a05:6e02:1a2b:b0:3dd:b762:ed1b with SMTP id e9e14a558f8ab-3de07d7ae51mr70044305ab.16.1750013946960;
-        Sun, 15 Jun 2025 11:59:06 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de01a501desm15354325ab.62.2025.06.15.11.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 11:59:06 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250615163906.2367-1-superman.xpt@gmail.com>
-References: <20250615163906.2367-1-superman.xpt@gmail.com>
-Subject: Re: [PATCH] io_uring: fix task leak issue in io_wq_create()
-Message-Id: <175001394597.940677.9152762979973400635.b4-ty@kernel.dk>
-Date: Sun, 15 Jun 2025 12:59:05 -0600
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gozXfa2s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=1rYE6Uz0rxLEhZw0w2nC3melU9arsuScDwg5zjXt8Y0=; b=gozXfa2sJtFcl0ebEq9Xmy1I2C
+	VpmWwI8+jZ0MQZfbjT7pmkAk5LP14frpEqrGUvU4oMEu4lNA2rJ4NAqqQ8YNn6ChZj4/fD0xF+ol5
+	csBYEhmu1WXiT1y7JpSlfqPZshBXRCXcx3MphqY1RJvkbzDoIJUKtvJk4DNCnIGMyzeIYwjdAgz8l
+	JU2TmFdDJmFlljWYfe5ZZaZBzEkc7cji63td0+fJ6tsRiAxHHN615w9iG4zZfXVOHeyGsr8h8B2Iw
+	wuKX7+EQbae8OmyoT0rJw2hWoDDCNjAvQJYsthBDdadATWBXWLKFeogtgbaLtey4p0ElxQIIjWqoh
+	Ey84rJkg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uQsb7-0000000F9bM-06J0;
+	Sun, 15 Jun 2025 19:00:53 +0000
+Message-ID: <02d7f827-3bfc-4cf8-944b-5ec257a5b22c@infradead.org>
+Date: Sun, 15 Jun 2025 12:00:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ wse@tuxedocomputers.com, ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-3-W_Armin@gmx.de>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250615175957.9781-3-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-d7477
 
+Hi,
 
-On Sun, 15 Jun 2025 09:39:06 -0700, Penglei Jiang wrote:
-> Add missing put_task_struct() in the error path
+On 6/15/25 10:59 AM, Armin Wolf wrote:
+> Add a new driver for Uniwill laptops. The driver uses a ACPI WMI
+> interface to talk with the embedded controller, but relies on a
+> DMI whitelist for autoloading since Uniwill just copied the WMI
+> GUID from the Windows driver example.
 > 
+> The driver is reverse-engineered based on the following information:
+> - OEM software from intel
+> - https://github.com/pobrn/qc71_laptop
+> - https://github.com/tuxedocomputers/tuxedo-drivers
+> - https://github.com/tuxedocomputers/tuxedo-control-center
 > 
+> The underlying EC supports various features, including hwmon sensors,
+> battery charge limiting, a RGB lightbar and keyboard-related controls.
+> 
+> Reported-by: cyear <chumuzero@gmail.com>
+> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
+> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
 
-Applied, thanks!
+> diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/uniwill/Kconfig
+> index 5f1ea3e9e72f..57f9f88c757c 100644
+> --- a/drivers/platform/x86/uniwill/Kconfig
+> +++ b/drivers/platform/x86/uniwill/Kconfig
+> @@ -16,6 +16,23 @@ menuconfig X86_PLATFORM_DRIVERS_UNIWILL
+>  
+>  if X86_PLATFORM_DRIVERS_UNIWILL
+>  
+> +config UNIWILL_LAPTOP
+> +	tristate "Uniwill Laptop Extras"
+> +	default m
+> +	depends on ACPI_WMI
+> +	depends on ACPI_BATTERY
+> +	depends on UNIWILL_WMI
+> +	depends on REGMAP
 
-[1/1] io_uring: fix task leak issue in io_wq_create()
-      commit: 89465d923bda180299e69ee2800aab84ad0ba689
+REGMAP is usually selected instead of being a dependency.
+There is one other REGMAP dependency in the kernel tree vs. 131 selects.
+Also, there is no user prompt for the REGMAP symbol so users aren't able
+to enable it directly.
 
-Best regards,
+Or maybe you could select a more specific REGMAP_xyz and then it will
+enable REGMAP:
+
+config REGMAP
+	bool
+	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SOUNDWIRE_MBQ || REGMAP_SCCB || REGMAP_I3C || REGMAP_SPI_AVMM || REGMAP_MDIO || REGMAP_FSI)
+
+
+
+> +	depends on HWMON
+> +	depends on LEDS_CLASS_MULTICOLOR
+> +	depends on DMI
+> +	help
+> +	  This driver adds support for various extra features found on Uniwill laptops,
+> +	  like the lightbar and hwmon sensors. It also supports many OEM laptops
+> +	  originally manufactured by Uniwill.
+> +
+> +	  If you have such a laptop, say Y or M here.
+> +
+>  config UNIWILL_WMI
+>  	tristate "Uniwill WMI Event Driver"
+>  	default m
+
+
 -- 
-Jens Axboe
-
-
+~Randy
 
