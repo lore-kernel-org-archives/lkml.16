@@ -1,152 +1,120 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAA213B5B3
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 16:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E3113B5B3;
+	Sun, 15 Jun 2025 16:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750005704; cv=none; b=U7TEjfS+WQNJBUFxolsHF4+Zu22swccmt0HTFAePFz5GH1/wOroecCWgllW32rhs32hdUC+G4UtRrvjs8DF2mN/VoRHIq5xX7k4sd6tVRkPzng2K/wZoObneAVd3Anj29ZzZWd7zmTuVLLvu5llCUHYMEXDFTjDLVCEEsXzznfA=
+	t=1750005740; cv=none; b=XjV2NFaWJpdcG2WY43pyffyMnovFdSzBK7ZG1z6VR8zCxmvradudAJM7aqwtdOI4Hj97py8zP2wMOUCU+m91ov1+DPQoKGCJwbijWuY2/AD8FIRe4Q2hmDEQME2p6kiB/zo/bnBsClnOs1BNHn7T13b/idUsY00g49myVrnhG9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750005704; c=relaxed/simple;
-	bh=z/CpNbOdsmoDylhW7PVXWk5oSPDUAohEfmIHx29Xnlo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oe2+wPAmD1aYf9A8ew9HlbtNduC9y8DVwqliXOK+VKP1PXZbXn64Xi9jm2236szQjSHAc7FmNYUsn9aBbqB25Y44FJg+EUxTK5wD05vtxD6C52s6+nT424/DJegFULIyn1qw+/ez3WX0CP8wOlaBiUK6hNCsIrPETD5VVGhfakg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fx5mWoVv; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750005740; c=relaxed/simple;
+	bh=QKcZxZXwwFGx6k0XrSFLjyB45TJX1o/2X8RQBqjF5Nc=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=TV7WIC8EhlvZ+SsoBwZWILRe9J3L8GmXdIxNOFOin1GJw7ngEP0sXIEO5EfNwmTvwGOJTEW549Qc8EMwod+eQXgZ//FKhq/uOIZHWiBFvLNhoBdUOKv9PVUkuu7FES2jjiIJwvOgSGIzLryTfe/MkiBQkiSIojzfgqWmRHyyU7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=JSf5ARVj; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fx5mWoVv"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b2d60f8caso30232911fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 09:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750005701; x=1750610501; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R72aa+JhDIZd18QK74EtTt7kDoRODu1smPr1ewB8XeU=;
-        b=fx5mWoVvH4igE293aJaN/OCsKGIngecihJdl1252GG/q/iiYWqUfM/SXKsFRKjoi/9
-         jbNzNYpRXXB3gu94HI8RayAyCnEVXxp3iWMEALOZiVo6pE2Z6Jr+LRN8yge3d+PQjNx2
-         b+tm4ba9gOtdGQeP1BcHeM585o1fy7Lfje7i3FqrrgOJoXzQDQ5164T94X4TQKoBop96
-         zDJCRiPJhhC3MeGKiTsfqcAk1a3vI76LZdGBGS3/4sZQpErAq4KYBEIoRhgKAk1oEiFO
-         Lycfr/zgnXGoC7vH1kJxgiJdqwtPHXfpYcOo+RCm3GgcfuqTXhkOOukHWqi5mWMANxvJ
-         fltA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750005701; x=1750610501;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R72aa+JhDIZd18QK74EtTt7kDoRODu1smPr1ewB8XeU=;
-        b=P6SZIW2enyfdPI2OS/YQZrDNSVTBuGKeZTBwAE5OmLc9/y8LYh91RmDAqDwDDVi6DE
-         bxwtigObKmSKb+u9jAWK5MHn+v68SI4nNxHF9uBwSdxbwCvoOGmweuvc6yXgPbhVOuug
-         oPbxFoDEn8v1ISfcf23OjlK+GbWbIb2O5YeHOQvEBg3QbyPs/sWRGyq6OJrm1cu5r87E
-         nvuLCtG68OjLxPFUe6qyZhIzI6IqxPH3TXcEXmmzCJLmpSkQTQ7BeyH3DH9bQsPG5ULj
-         PlT1Wj2fKS7SSMKhpZcxGc3ZU/7DVpQlrPnehanhz7NGs/6oem4JoDlkq1Jq/KIuiCxv
-         lB9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4zQSl+ST/1bE0XdKhPW/ENdPKibZwUlgQ4Zr6AGSmM3gNsIvJVh9d4ATvVPfEpk4I7jpNsJwXXkk6+4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYymLtYwNTz6rujqSpi7dwIpZcIVXtiU0hl1pt48q1i7ODFSkk
-	UDXD7qp8cZSc1o1c6RVTUrVxBef1MWJMmmWghjoJOjk0tenK9LOsldtfDqE41E9e6tYzAuy/gha
-	Jiz/n+oNI6xRkaGgDIQoNVLAaaNh6kXs=
-X-Gm-Gg: ASbGncvx24ClaEZrwXZ1sQbGAU7YWhW30xgf4xJBmUFqxFU4SeUkSysj+ysXQqq5jwS
-	GM/uAHEOlCYa8io+9OsqL5yo/f4PYOH1oCMYn+dmsUboZpC7ZoIRR1uc7YE8XJjaIOL5vVDAikS
-	av9FggcSGoIoEUqwe4MbcvMTmcQ2wZw3fbvfDV1kWGA6o=
-X-Google-Smtp-Source: AGHT+IFOBUk7tQxrKsqxu+5loPyv8wIPOop2Qh3qq/wvAwdoEzAMR6L/9cPplUgT1x7Voq58B3JB6uJ15UsoKbZXieI=
-X-Received: by 2002:a05:6512:1396:b0:553:2f27:e96b with SMTP id
- 2adb3069b0e04-553b6e7135dmr1340248e87.2.1750005700421; Sun, 15 Jun 2025
- 09:41:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="JSf5ARVj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1750005735; x=1750610535; i=frank-w@public-files.de;
+	bh=QKcZxZXwwFGx6k0XrSFLjyB45TJX1o/2X8RQBqjF5Nc=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=JSf5ARVjN2H1oqrX4p34XAxsluXp3Lm3SsqU3/lhMnJmdfHjIE+8YeUrieR19GP9
+	 tcmfgrKzGMzMw9/02lvJcABgJBtLLOOP4+W8oxL160yXHT4lIqxVNqRlrj69GmkYt
+	 CyOMKngbiC62hZRBCXGSQN6/W6BclDDls1TEh6nHKt30GYg1Y7Ng+Q9badilN+JJr
+	 KGL0uSLn74MjiU39zhoPqSBqhldKpmgje5EQDb15tPp8V1oGLT+/2/umehLpk91hE
+	 9QmDbkkGaTjANkAjkRWtDm/MqPmVVZyDt+ikCbJ10ppzRb6ghDmp83DB1t+UGWLqm
+	 peNg1Ty0WjwPOub1GA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [100.71.3.253] ([100.71.3.253]) by
+ trinity-msg-rest-gmx-gmx-live-847b5f5c86-84n87 (via HTTP); Sun, 15 Jun 2025
+ 16:42:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605164733.737543-1-mjguzik@gmail.com> <20250605190054.GH30486@noisy.programming.kicks-ass.net>
- <CAFULd4b1dQO3biWvRoHfpyE-Bot0urmWDzxfO0dEverzuQOpdA@mail.gmail.com>
- <CAFULd4Zito-1VasojoL7qZdu_yggDgQL_0qMSv6ZBrtMe3i1zA@mail.gmail.com>
- <20250606072029.GI30486@noisy.programming.kicks-ass.net> <20250609220901.5059217c@pumpkin>
-In-Reply-To: <20250609220901.5059217c@pumpkin>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 15 Jun 2025 18:41:28 +0200
-X-Gm-Features: AX0GCFtFIar3gKTlZnrXZoZWPpJRM32wSp590IJafCfgC5_WrIggr37-0JMM6eU
-Message-ID: <CAFULd4bz1KvrcO14c8JouhpriNt2KudcwcWccuXD-b7yQ8rARw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	torvalds@linux-foundation.org, mingo@redhat.com, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <trinity-eafa403a-1d9f-4842-a65c-84badd4fa6ee-1750005734980@trinity-msg-rest-gmx-gmx-live-847b5f5c86-84n87>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: linux@fw-web.de, nbd@nbd.name, sean.wang@mediatek.com,
+ lorenzo@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ horms@kernel.org, daniel@makrotopia.org
+Subject: Aw: [net-next v3 0/3] rework IRQ handling in mtk_eth_soc
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 15 Jun 2025 16:42:15 +0000
+In-Reply-To: <20250615150333.166202-1-linux@fw-web.de>
+References: <20250615150333.166202-1-linux@fw-web.de>
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:gfzxyuXSRRAJZTS3O6R2MPK4ZqeDCQnmkhoEmwuunLO3iPNh65Ny1QVJsiAyB7EOpPrXt
+ fmmdFXLL4sHsZVzMO3zK0qjMiYeWlcV8CyAn0KzerScECnEOn7GGWtzkIls3N+Hf1JMMnylZya4K
+ GuH7SrsB5b8q4gwM+gXO4FcV7p29qRSTcmPDL2odUCPo+Ekb5BO6enXTUwyxUzgOsIGBFlWK/ck/
+ qAwIyB21HxT6T596Bdbz4SwUOpDW4VedeugLlWSJ+iv67YCmXpOIS+lplBywVrMHpirIi+vvqNuE
+ 7RM8IbHuKlCtiWkaxDNP40Y7RcbJ8aqTHjRbU62rs27fM4QlK3vCFanVb9v9hkv140=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:z46WAXs0WfU=;0KChdF0K4ur9LAkuyndxm1pe2yZ
+ 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
+ zl9I91XGrtZFECMjJRAMdJd1bxow==
 
-On Mon, Jun 9, 2025 at 11:09=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Fri, 6 Jun 2025 09:20:29 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > On Fri, Jun 06, 2025 at 08:27:39AM +0200, Uros Bizjak wrote:
-> > > On Fri, Jun 6, 2025 at 8:13=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com=
-> wrote:
-> > > >
-> > > > On Thu, Jun 5, 2025 at 9:00=E2=80=AFPM Peter Zijlstra <peterz@infra=
-dead.org> wrote:
-> > > > >
-> > > > > On Thu, Jun 05, 2025 at 06:47:33PM +0200, Mateusz Guzik wrote:
-> > > > > > gcc is over eager to use rep movsq/stosq (starts above 40 bytes=
-), which
-> > > > > > comes with a significant penalty on CPUs without the respective=
- fast
-> > > > > > short ops bits (FSRM/FSRS).
-> > > > >
-> > > > > I don't suppose there's a magic compiler toggle to make it emit p=
-refix
-> > > > > padded 'rep movs'/'rep stos' variants such that they are 5 bytes =
-each,
-> > > > > right?
-> > > > >
-> > > > > Something like:
-> > > > >
-> > > > >    2e 2e 2e f3 a4          cs cs rep movsb %ds:(%rsi),%es:(%rdi)
-> > > >
-> > > > This won't fly, because gas complains:
-> > > >
-> > > > z.s: Assembler messages:
-> > > > z.s:1: Error: same type of prefix used twice
-> > >
-> > > However, it is possible to use " cs ; cs ; cs ; rep movsb".
-> >
-> > Heh, the way I encoded it was:
-> >
-> >       .byte 0x2e, 0x2e, 0x2e
-> >       rep movsb %ds:(%rsi), %es:(%rdi)
-> >
-> > GCC compiled it, and then objdump grokked it (although it outputs one C=
-S
-> > too few). Your variant is much nicer though.
-> >
-> > > We can add a compile flag to the compiler, and it will be able to emi=
-t
-> > > the desired sequence.
->
-> You want the compiler to use 'rep movsw', 'rep movsl' or 'rep movsq' if i=
-t knows
-> the size is a multiple of 2, 4 or 8.
-> Then you can substitute a suitable function.
-> But replacing the 'rep movsb' with a call is much more flexible.
->
-> You do need to allow for the REX prefix (rep movsq is f3 48 a5).
->
-> I also suspect it would be neater to repeat the 'rep' prefix instead of
-> using the 'cs' prefix.
->
-> >
-> > Thanks; Linus, this would be acceptable?
->
-> Any compiler change isn't going to be useful in the short term.
-> (Unless the kernel sources start including gcc.)
+> Gesendet: Sonntag, 15. Juni 2025 um 17:03
+> Von: "Frank Wunderlich" <linux@fw-web.de>
 
-The discussion is moved to gcc mailing lists. Can please interested
-parties continue the discussion at [1]?
+sorry, missed the changelog:
 
-[1] https://gcc.gnu.org/pipermail/gcc-patches/2025-June/686813.html
+v3:
+added patches
+- #2 (add constants for irq index)
+- #3 (skip first IRQ on ! MTK_SHARED_INT)
+to the v2 non-series patch
 
-Uros.
+https://patchwork.kernel.org/project/netdevbpf/patch/20250615084521.32329-1-linux@fw-web.de/
+
+Tested on BPI-R4/mt7988 with IRQ names and BPI-R2/mt7623 and BPI-R3/mt7986 with upstreamed
+dts via index-mode.
+I do not have any MTK_SHARED_INT (mt7621/mt7628) boards to testing.
