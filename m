@@ -1,187 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7624C2E11CF
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 04:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270B41BC3F;
+	Sun, 15 Jun 2025 04:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749962476; cv=none; b=Ofn9JpGrt9gPRz92Dq0xGBGHMRn50tTNr/ArVvWoYL24Rb/evmjN5sDiuicjEF7yPLc1DCBYwnDWWwdtexCpRqWD4+qMWf6c5+cpXOQZP50qes/0xfojEF12ETdja9aLXu2/xlRLA4EI56j+nnhnntkzndp7p9tRj2eEvhKFxIk=
+	t=1749963226; cv=none; b=P9fC6RKlZ6sgvT+5vmgc+pPweoe9ME9oIKjZXprGqKm/vlyF1j2AknBF7mEE/LO/nsnHG2lTVYm9MkUZS+4Bl24qDnd7PSyarEiCQGQ/bRXyeYvK42jUXkN/SkOKOQ39Hkgcg40l1c3sKNhObuXcx+jp0bXvldXDoXCZDTU04ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749962476; c=relaxed/simple;
-	bh=uAJ4QgkwFFGOKo6ABM/6pQ8iv1h3bR2Ci7AlGNWib/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QUU3tiDQM73NO6m+JB2Q4vfqCv9aydLcT18zP7Iw6Fxdpno4Y58xZzq/0VXuOwjdn2xvmzmyM4F2KKsi0oyVxTaPwbhraFQDIYY2rNdDpSvA3xxiec5+xiKiDgNkcuCept8H/zswnm3NK38dTL/2oaGPNhs44y6yx0O+wKAFTU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hV/dBsQf; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749963226; c=relaxed/simple;
+	bh=jKskpqcoXOguF1H1TjZ0pWmBZVDnOT0/xNqcoD0cSAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cop3fA0Y+VmkDss/3wxik55bKeBb8btHH/9XKnr48c0Ck0d+935PoyeOiRkdJHqwqDHT1YTH2on5ZpOnpZzwPD7/sh/u7nEGrCk0RW/6xM6W7z5LuT6J2/c4UetT9i0PXF3QYTb2CBcfG6mgpGXwtgoxsw8ftpN9yzEMvtNftDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ho4jYYIK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hV/dBsQf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749962475; x=1781498475;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uAJ4QgkwFFGOKo6ABM/6pQ8iv1h3bR2Ci7AlGNWib/0=;
-  b=hV/dBsQfZhbWm1fqmfgK2D/ge11Yx0qmawhrO3LPy6SFozvufvGV+jB1
-   AGsj90uvf0Aa4xXwshY9ppPKivzjVVvZNg2ZcGsu5FEpr7J3D0TjO7fpd
-   XLS8G/g8VzJxgFtJE27UVRPguuibWRyftbg0vhpObIvDXLg8f8webxing
-   wYxsZY6OgZY5nFHdbIcMOEEd6sQvWyImRauTuKDtf0oHdv5CjMUUdppGs
-   MgEokowSfoefzShoAA7x/9C8YaKH4xHD4d24ydKVWUYb0Brcn/SMulv1z
-   uWI3CnWbsUTnYvtEi1sBWNyAhIaKrE9xe2Qjs3dZkcdYtPGw2cjH2W3s6
-   g==;
-X-CSE-ConnectionGUID: FbaeSMZVTG6JBM5EWZzWlA==
-X-CSE-MsgGUID: A7Arl8qUQFmy6nJyMdxjrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="52005030"
-X-IronPort-AV: E=Sophos;i="6.16,238,1744095600"; 
-   d="scan'208";a="52005030"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 21:41:14 -0700
-X-CSE-ConnectionGUID: m8XS1YMMTY+Af9smRSozMQ==
-X-CSE-MsgGUID: HxQRaCY5RtueyQJLMJ5LMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,238,1744095600"; 
-   d="scan'208";a="148029888"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 14 Jun 2025 21:41:12 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQfB8-000E7Y-02;
-	Sun, 15 Jun 2025 04:41:10 +0000
-Date: Sun, 15 Jun 2025 12:40:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	linux1394-devel@lists.sourceforge.net
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] firewire: core: allocate workqueue for AR/AT
- request/response contexts
-Message-ID: <202506151242.vncWEzlc-lkp@intel.com>
-References: <20250614113449.388758-2-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ho4jYYIK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560C4C4CEE3;
+	Sun, 15 Jun 2025 04:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749963225;
+	bh=jKskpqcoXOguF1H1TjZ0pWmBZVDnOT0/xNqcoD0cSAE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ho4jYYIKxZ5jOqawvrhaEPBhEZPCrM8ChRozSncyaAqNV+riPwKkyanQnMEwAdbVm
+	 /XRV6xyzV0raa/vd5Vhy6VpZ8GrTZtwKLpy7aNs7hKsQojtsMYvTe4DMgacX8pDInr
+	 a0nfAZcxldXCif58iYfsInWiFqV6glddb5yOs9caUGyMCurbwn84kg4SOsvfVqmUGB
+	 Wo3qxBpEPl9p0JEvf41ii0/lxxoogeSXHuFEhDZ2/SG3fUxUxujR9c7exo5bBPUZzE
+	 GPlWpZSiPtJDcT+Br/m9zwgcOyyBKtPXd8G/lx6adWU0CoQnHdvVGNZu/NSTRtgW+q
+	 /J7vgLI1jS06A==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-fscrypt@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	ceph-devel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] fscrypt: don't use problematic non-inline crypto accelerators
+Date: Sat, 14 Jun 2025 21:51:45 -0700
+Message-ID: <20250615045145.224567-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250614113449.388758-2-o-takashi@sakamocchi.jp>
+Content-Transfer-Encoding: 8bit
 
-Hi Takashi,
+From: Eric Biggers <ebiggers@google.com>
 
-kernel test robot noticed the following build errors:
+Make fscrypt no longer use Crypto API drivers for non-inline crypto
+accelerators, even when the Crypto API prioritizes them over CPU-based
+code (which unfortunately it often does).  These drivers tend to be
+really problematic, especially for fscrypt's synchronous workload.
 
-[auto build test ERROR on ieee1394-linux1394/for-next]
-[also build test ERROR on linus/master v6.16-rc1 next-20250613]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Specifically, exclude drivers that have CRYPTO_ALG_KERN_DRIVER_ONLY or
+CRYPTO_ALG_ALLOCATES_MEMORY set.  (Later, CRYPTO_ALG_ASYNC should be
+excluded too.  That's omitted for now to keep this commit backportable,
+since until recently some CPU-based code had CRYPTO_ALG_ASYNC set.)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Takashi-Sakamoto/firewire-core-allocate-workqueue-for-AR-AT-request-response-contexts/20250614-194424
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git for-next
-patch link:    https://lore.kernel.org/r/20250614113449.388758-2-o-takashi%40sakamocchi.jp
-patch subject: [PATCH 1/3] firewire: core: allocate workqueue for AR/AT request/response contexts
-config: x86_64-buildonly-randconfig-004-20250615 (https://download.01.org/0day-ci/archive/20250615/202506151242.vncWEzlc-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250615/202506151242.vncWEzlc-lkp@intel.com/reproduce)
+There are two major issues with these drivers: bugs and performance.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506151242.vncWEzlc-lkp@intel.com/
+First, these drivers tend to be buggy.  They're fundamentally much more
+error-prone and harder to test than the CPU-based code, and they often
+don't get tested before kernel releases.  Released drivers have
+en/decrypted data incorrectly.  These bugs cause real issues for fscrypt
+users who often didn't even want to use these drivers, for example:
 
-All errors (new ones prefixed by >>):
+- https://github.com/google/fscryptctl/issues/32
+- https://github.com/google/fscryptctl/issues/9
+- https://lore.kernel.org/r/PH0PR02MB731916ECDB6C613665863B6CFFAA2@PH0PR02MB7319.namprd02.prod.outlook.com
 
->> drivers/firewire/core-card.c:611:3: error: cannot jump from this goto statement to its label
-     611 |                 goto err_isoc;
-         |                 ^
-   drivers/firewire/core-card.c:618:2: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     618 |         guard(mutex)(&card_mutex);
-         |         ^
-   include/linux/cleanup.h:338:15: note: expanded from macro 'guard'
-     338 |         CLASS(_name, __UNIQUE_ID(guard))
-         |                      ^
-   include/linux/compiler.h:166:29: note: expanded from macro '__UNIQUE_ID'
-     166 | #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-         |                             ^
-   include/linux/compiler_types.h:84:22: note: expanded from macro '__PASTE'
-      84 | #define __PASTE(a,b) ___PASTE(a,b)
-         |                      ^
-   include/linux/compiler_types.h:83:23: note: expanded from macro '___PASTE'
-      83 | #define ___PASTE(a,b) a##b
-         |                       ^
-   <scratch space>:71:1: note: expanded from here
-      71 | __UNIQUE_ID_guard795
-         | ^
-   1 error generated.
+These drivers have also caused issues for dm-crypt users, including data
+corruption and deadlocks.  Since Linux v5.10, dm-crypt has disabled most
+of these drivers by excluding CRYPTO_ALG_ALLOCATES_MEMORY.
 
+Second, the CPU-based crypto tends to be faster, often *much* faster.
+This may seem counterintuitive, but benchmarks clearly show it.  There's
+a *lot* of overhead associated with going to a hardware driver, off the
+CPU, and back again.  Measuring synchronous AES-256-XTS encryption of
+4096-byte messages (fscrypt's workload) on two platforms with non-inline
+crypto accelerators that I have access to:
 
-vim +611 drivers/firewire/core-card.c
+  Intel Emerald Rapids server:
 
-   573	
-   574	int fw_card_add(struct fw_card *card, u32 max_receive, u32 link_speed, u64 guid,
-   575			unsigned int supported_isoc_contexts)
-   576	{
-   577		int ret;
-   578	
-   579		// This workqueue should be:
-   580		//  * != WQ_BH			Sleepable.
-   581		//  * == WQ_UNBOUND		Any core can process data for isoc context. The
-   582		//				implementation of unit protocol could consumes the core
-   583		//				longer somehow.
-   584		//  * != WQ_MEM_RECLAIM		Not used for any backend of block device.
-   585		//  * == WQ_FREEZABLE		Isochronous communication is at regular interval in real
-   586		//				time, thus should be drained if possible at freeze phase.
-   587		//  * == WQ_HIGHPRI		High priority to process semi-realtime timestamped data.
-   588		//  * == WQ_SYSFS		Parameters are available via sysfs.
-   589		//  * max_active == n_it + n_ir	A hardIRQ could notify events for multiple isochronous
-   590		//				contexts if they are scheduled to the same cycle.
-   591		card->isoc_wq = alloc_workqueue("firewire-isoc-card%u",
-   592						WQ_UNBOUND | WQ_FREEZABLE | WQ_HIGHPRI | WQ_SYSFS,
-   593						supported_isoc_contexts, card->index);
-   594		if (!card->isoc_wq)
-   595			return -ENOMEM;
-   596	
-   597		// This workqueue should be:
-   598		//  * != WQ_BH			Sleepable.
-   599		//  * == WQ_UNBOUND		Any core can process data for asynchronous context.
-   600		//  * == WQ_MEM_RECLAIM		Used for any backend of block device.
-   601		//  * == WQ_FREEZABLE		The target device would not be available when being freezed.
-   602		//  * == WQ_HIGHPRI		High priority to process semi-realtime timestamped data.
-   603		//  * == WQ_SYSFS		Parameters are available via sysfs.
-   604		//  * max_active == 4		A hardIRQ could notify events for a pair of requests and
-   605		//				response AR/AT contexts.
-   606		card->async_wq = alloc_workqueue("firewire-async-card%u",
-   607						 WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI | WQ_SYSFS,
-   608						 4, card->index);
-   609		if (!card->async_wq) {
-   610			ret = -ENOMEM;
- > 611			goto err_isoc;
-   612		}
-   613	
-   614		card->max_receive = max_receive;
-   615		card->link_speed = link_speed;
-   616		card->guid = guid;
-   617	
-   618		guard(mutex)(&card_mutex);
-   619	
-   620		generate_config_rom(card, tmp_config_rom);
-   621		ret = card->driver->enable(card, tmp_config_rom, config_rom_length);
-   622		if (ret < 0)
-   623			goto err_async;
-   624	
-   625		list_add_tail(&card->link, &card_list);
-   626	
-   627		return 0;
-   628	err_async:
-   629		destroy_workqueue(card->async_wq);
-   630	err_isoc:
-   631		destroy_workqueue(card->isoc_wq);
-   632		return ret;
-   633	}
-   634	EXPORT_SYMBOL(fw_card_add);
-   635	
+     xts-aes-vaes-avx512:  16171 MB/s  [CPU-based, Vector AES]
+     xts(ecb(aes-generic)):  305 MB/s  [CPU-based, generic C code]
+     qat_aes_xts:            289 MB/s  [Offload, Intel QuickAssist]
 
+  Qualcomm SM8650 HDK:
+
+     xts-aes-ce:            4301 MB/s  [CPU-based, ARMv8 Crypto Extensions]
+     xts(ecb(aes-generic)):  265 MB/s  [CPU-based, generic C code]
+     xts-aes-qce:             73 MB/s  [Offload, Qualcomm Crypto Engine]
+
+So, using the "accelerators" is over 50 times slower than just using the
+CPU.  Not only that, it's even slower than the generic C code, which
+suggests that even on platforms whose CPUs lack AES instructions the
+performance benefit of any accelerator would be marginal at best.
+
+The usefulness of the accelerators could be improved with a different
+software architecture that allows blocks to be efficiently en/decrypted
+in parallel.  But fscrypt does not do that today, and even the async
+support in the Crypto API isn't really all that efficient.  And even if
+the accelerator was used perfectly efficiently, it seems unlikely to
+help on small I/O requests, for which latency is really important.
+
+As of this writing, the Crypto API prioritizes qat_aes_xts over
+xts-aes-vaes-avx512.  Therefore, this commit greatly improves fscrypt
+performance on Intel servers that have QAT and the QAT driver enabled.
+qat_aes_xts is going to be deprioritized in the Crypto API (like I did
+for xts-aes-qce recently too).  But as this seems to be a common pattern
+with all the "accelerators", fscrypt should just disable all of them.
+
+An argument that has been given in favor of non-inline crypto
+accelerators is that they can protect keys in hardware.  But fscrypt
+does not take advantage of that, so it is irrelevant.  (Also, it would
+be quite difficult for fscrypt to do that.)
+
+Note that fscrypt does support inline encryption engines, using raw or
+hardware-wrapped keys.  These actually do work well and are widely used.
+These do not use the "Crypto API" and are unaffected by this commit.
+
+Fixes: b30ab0e03407 ("ext4 crypto: add ext4 encryption facilities")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+
+Changed in v2:
+- Improved commit message and comment
+- Dropped CRYPTO_ALG_ASYNC from the mask, to make this patch
+  backport-friendly
+- Added Fixes and Cc stable
+
+ fs/crypto/fscrypt_private.h | 16 ++++++++++++++++
+ fs/crypto/hkdf.c            |  2 +-
+ fs/crypto/keysetup.c        |  3 ++-
+ fs/crypto/keysetup_v1.c     |  3 ++-
+ 4 files changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
+index c1d92074b65c5..0e95c7a095d49 100644
+--- a/fs/crypto/fscrypt_private.h
++++ b/fs/crypto/fscrypt_private.h
+@@ -43,10 +43,26 @@
+  * hardware-wrapped keys has made it misleading as it's only for raw keys.
+  * Don't use it in kernel code; use one of the above constants instead.
+  */
+ #undef FSCRYPT_MAX_KEY_SIZE
+ 
++/*
++ * This mask is passed as the third argument to the crypto_alloc_*() functions
++ * to prevent fscrypt from using the Crypto API drivers for non-inline crypto
++ * accelerators.  Those drivers have been problematic for fscrypt.  fscrypt
++ * users have reported hangs and even incorrect en/decryption with these
++ * drivers.  Since going to the driver, off CPU, and back again is really slow,
++ * such drivers can be over 50 times slower than the CPU-based code for
++ * fscrypt's synchronous workload.  Even on platforms that lack AES instructions
++ * on the CPU, any performance benefit is likely to be marginal at best.
++ *
++ * Note that fscrypt also supports inline encryption engines.  Those don't use
++ * the Crypto API and work much better than non-inline accelerators.
++ */
++#define FSCRYPT_CRYPTOAPI_MASK \
++	(CRYPTO_ALG_ALLOCATES_MEMORY | CRYPTO_ALG_KERN_DRIVER_ONLY)
++
+ #define FSCRYPT_CONTEXT_V1	1
+ #define FSCRYPT_CONTEXT_V2	2
+ 
+ /* Keep this in sync with include/uapi/linux/fscrypt.h */
+ #define FSCRYPT_MODE_MAX	FSCRYPT_MODE_AES_256_HCTR2
+diff --git a/fs/crypto/hkdf.c b/fs/crypto/hkdf.c
+index 0f3028adc9c72..5b9c21cfe2b45 100644
+--- a/fs/crypto/hkdf.c
++++ b/fs/crypto/hkdf.c
+@@ -56,11 +56,11 @@ int fscrypt_init_hkdf(struct fscrypt_hkdf *hkdf, const u8 *master_key,
+ 	struct crypto_shash *hmac_tfm;
+ 	static const u8 default_salt[HKDF_HASHLEN];
+ 	u8 prk[HKDF_HASHLEN];
+ 	int err;
+ 
+-	hmac_tfm = crypto_alloc_shash(HKDF_HMAC_ALG, 0, 0);
++	hmac_tfm = crypto_alloc_shash(HKDF_HMAC_ALG, 0, FSCRYPT_CRYPTOAPI_MASK);
+ 	if (IS_ERR(hmac_tfm)) {
+ 		fscrypt_err(NULL, "Error allocating " HKDF_HMAC_ALG ": %ld",
+ 			    PTR_ERR(hmac_tfm));
+ 		return PTR_ERR(hmac_tfm);
+ 	}
+diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
+index 0d71843af9469..d8113a7196979 100644
+--- a/fs/crypto/keysetup.c
++++ b/fs/crypto/keysetup.c
+@@ -101,11 +101,12 @@ fscrypt_allocate_skcipher(struct fscrypt_mode *mode, const u8 *raw_key,
+ 			  const struct inode *inode)
+ {
+ 	struct crypto_skcipher *tfm;
+ 	int err;
+ 
+-	tfm = crypto_alloc_skcipher(mode->cipher_str, 0, 0);
++	tfm = crypto_alloc_skcipher(mode->cipher_str, 0,
++				    FSCRYPT_CRYPTOAPI_MASK);
+ 	if (IS_ERR(tfm)) {
+ 		if (PTR_ERR(tfm) == -ENOENT) {
+ 			fscrypt_warn(inode,
+ 				     "Missing crypto API support for %s (API name: \"%s\")",
+ 				     mode->friendly_name, mode->cipher_str);
+diff --git a/fs/crypto/keysetup_v1.c b/fs/crypto/keysetup_v1.c
+index b70521c55132b..158ceae8a5bce 100644
+--- a/fs/crypto/keysetup_v1.c
++++ b/fs/crypto/keysetup_v1.c
+@@ -50,11 +50,12 @@ static int derive_key_aes(const u8 *master_key,
+ {
+ 	int res = 0;
+ 	struct skcipher_request *req = NULL;
+ 	DECLARE_CRYPTO_WAIT(wait);
+ 	struct scatterlist src_sg, dst_sg;
+-	struct crypto_skcipher *tfm = crypto_alloc_skcipher("ecb(aes)", 0, 0);
++	struct crypto_skcipher *tfm =
++		crypto_alloc_skcipher("ecb(aes)", 0, FSCRYPT_CRYPTOAPI_MASK);
+ 
+ 	if (IS_ERR(tfm)) {
+ 		res = PTR_ERR(tfm);
+ 		tfm = NULL;
+ 		goto out;
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
