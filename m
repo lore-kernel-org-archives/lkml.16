@@ -1,73 +1,109 @@
-Received: from baidu.com (mx24.baidu.com [111.206.215.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F13E1BC07A;
-	Sun, 15 Jun 2025 13:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FB31F5EA;
+	Sun, 15 Jun 2025 13:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749993753; cv=none; b=U7AOGkumcfIrwYRS709Zd1V5/E0xlEwmWKH4UrcUapLABEdPmT9Rx2YwvEkM1M4n+e3qnyq5eHKIIhtFKDU48d7vMmF1jkG9OKCs17uT3OvXOTDPwdC9lKClrY2398NBxvZeyFTj1doMP0hyhI47ylNRZZE8t6lta5lo0RLY3+w=
+	t=1749993956; cv=none; b=TbuTtYmuNCjFtiToG5qdDSGJ1kXSfPyW3Bn57SYqTBYBGm6mJ7bFHytU3NAheOP1aIV67vFWXUzhw+PcsDduw4XJjkrivNOGphc2RI6A/06dZgK7ceWz7XLOTcp9eD+0bpbPLp10li9etjP91lkZKGL56sq0U6J0uMufmFCsXo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749993753; c=relaxed/simple;
-	bh=bm9j9HkN3DmglJ1pTLJS9Rx8RMb/Sg5+HWlI77noIqk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DOOkO+YLcORjcAMlgjLoc67V5//ttlRpe1laLSmRocH+PRXGiARb97JtNBL9SlbaHM3RoYjgWeVYKhTM01mqoAudSq46zGAgOzOPE8nOO+CF60tqpsKhmgUTs+OSp2ttYgQuzbnYKtjv4MRLB0SLUOmQn3bK0zoowne07vmS82M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: lirongqing <lirongqing@baidu.com>
-To: <vgoyal@redhat.com>, <stefanha@redhat.com>, <miklos@szeredi.hu>,
-	<eperezma@redhat.com>, <virtualization@lists.linux.dev>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Li RongQing <lirongqing@baidu.com>
-Subject: [PATCH][v2] virtio_fs: Remove redundant spinlock in virtio_fs_request_complete()
-Date: Sun, 15 Jun 2025 21:20:39 +0800
-Message-ID: <20250615132039.2051-1-lirongqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1749993956; c=relaxed/simple;
+	bh=l5OH9PCzejWxmwiCg2oZBKE4xaj2vEtEDn1R9hGp/JI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LTotx/X2L9ghaJmIyaUkha7wGHANjtvV3+m+/d22aE97lCyynkQs0kkYC5UWX4f+ez1GI1/MKRbytsvJWW0pEWlVqxEyaGdESTA6ZHakKywXdwq+C9RwK+sLARrlzu+2X3CszQehHFdBw1CuWpOO/toW5mJ5zcJHhF9LPMdxuC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lEEY8is9; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEEY8is9"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-31308f52248so601468a91.2;
+        Sun, 15 Jun 2025 06:25:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749993955; x=1750598755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FSZZSMDBPFtEVqKeoNqHLJlRKfMjtGjyva/WaUGres8=;
+        b=lEEY8is9Z7csvX8BroiiCPtd4n+Va5yLcp2nH2ZnC7Hv06KvFQSE5IlSnOTog2PbaA
+         aMtaHfr/DVe2ISiNx2XIKO7bUKQCPwgkp92I4+Boqf5ETzJ6KYfUj8AXJfXzfTmCs4KT
+         2LHcnWDVEhycJkEnQtoPnHfQtODVMCUlYiRjBsl/Wt8VRQ1gaWpF3aj/Bj8yKTDYjf2I
+         XFIH+0wmE1xNMiR0a0TukPkj3O03Zrxio/GkMa/CLwbA3kBVE7HnSMaHS1wBvWmZORTM
+         v1cShomyeDXrxXWxwmn2OsY8XS3M46IQE2nX3eulVqXyzzABo1UoqqbPkYp+QxmtYHv4
+         eH6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749993955; x=1750598755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FSZZSMDBPFtEVqKeoNqHLJlRKfMjtGjyva/WaUGres8=;
+        b=aae1JV9Ncxyc5K2TOvbcQDjONT9lDasg3MX2IKzbpQOILXRN2CsJAm1UOwZyPY1n/q
+         FqRJQpSE3MT4VSotTPjyAtKTIQWCuq6DKSrgz4kae5MdYCh0yIwG5CYRvKzWeYzCdLt9
+         5056/jb8/c5BoD2hr2XmCDqHJ14DDoGbLQwqfWJ6MT35AHThMUHYr4uj/zyJXLn9QA0Z
+         vhWV7xN4xKz1I+kRDxXliOJgrPUfvSL7qO8YPS7YAafMsYWN2OMvHmuJtNhfGpkxFvO5
+         MIVL4lSa6qLx5It31E3IkKZUEpsYSsRXVSAEp3fv6tOd6p2TFCz0vwywYCgAZhBAYua6
+         HSyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVs9vsvyq9Itt5rHUVUgeZwbHu3iXSNAe8C3RFfQk79AVS92vrtyPOrfJZ98EBtK2CDvoh5JEdC+y1ypTcBr8Q=@vger.kernel.org, AJvYcCWsJY3Ci6o8hTSIdtDa1Aeh82a1JxC43gmpyAIW+LOBGzsF3WRnlYhFuLTLl8ePAON6nnSPJ6qonDLc0F4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLiMVX49AwPdrxLfLXJbjj1sS8dFTjuNMgTXbw63G5b6DolXXP
+	PZsjDzg9MzApHnhe1Be0I/4JoLEbYMQfRUi5j2zq0EtjOKOCD0aGOWSRGWxWNz1Yi2DqTk+zjTh
+	uURKK7vjpXiPbAe8mRD50JI84iAWOYXM=
+X-Gm-Gg: ASbGnctweWMjW3gmQnZzLPrrjGPJpul1/1tEWZYWGPd5HlCG+TCfPsMj3gqYd42Zidw
+	jYi8WfqB8B/f4OUa2hXyncqcOZ/vR6sgb79uQLNgurY9sZ94e9a3hDeH9AncsKaqH/A0d2DuARL
+	mC50YpkxSALjpTzNHaVOQG+P/HUNNo7/H2kot0nJVkEas=
+X-Google-Smtp-Source: AGHT+IHL489+Ip7x87tr3uBuoh4+FL6dhvUV+iEgTRFzqe+7NJzeg4yWPgNk3PpSOcE1u2TzipBmgzEfpVIaZmoYc0Q=
+X-Received: by 2002:a17:90b:4c45:b0:313:2bfc:94c with SMTP id
+ 98e67ed59e1d1-313f1e70849mr3454988a91.8.1749993954821; Sun, 15 Jun 2025
+ 06:25:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: bjkjy-exc3.internal.baidu.com (172.31.50.47) To
- bjkjy-exc3.internal.baidu.com (172.31.50.47)
-X-FEAS-Client-IP: 172.31.50.42
-X-FE-Policy-ID: 52:10:53:SYSTEM
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com> <CANiq72=3nDR=J2OXu9nWwZW_kcWfZ4KhZ3aS12_dcB=1EP2icQ@mail.gmail.com>
+ <DAN1SGG5DPVE.UUW0B523LQHO@nvidia.com> <DAN1XS7Z0AFO.3S7PRNH5FWWV4@nvidia.com>
+In-Reply-To: <DAN1XS7Z0AFO.3S7PRNH5FWWV4@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 15 Jun 2025 15:25:42 +0200
+X-Gm-Features: AX0GCFtthC9dPN0SJASTPTNnA5ujZZS706Vksi3r_Hn7M7E3IClaBsBN60VbcoY
+Message-ID: <CANiq72mpFX2pSuy7JU+Xb_6fCkEA96er6Rsg0bVv+wBBO5OqUw@mail.gmail.com>
+Subject: Re: [PATCH v5 05/23] rust: num: add the `fls` operation
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Benno Lossin <lossin@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Li RongQing <lirongqing@baidu.com>
+On Sun, Jun 15, 2025 at 12:58=E2=80=AFPM Alexandre Courbot <acourbot@nvidia=
+.com> wrote:
+>
+> Also, although this will work nicely for `impl_fls!` which is a single
+> function, I'm afraid this won't scale well for `power_of_two_impl!`,
+> which defines 6 functions per type... Any suggestions for this case?
 
-Since clear_bit is an atomic operation, the spinlock is redundant and
-can be removed, reducing lock contention is good for performance.
+We can always generate the same "cases", i.e. sharing as much as
+possible the lines, and just passing the values (numbers) that
+actually differ, which you then plug into the example line
+concatenating.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
-Diff with v1: remove unused variable "fpq"
+The standard library does that for their integer macros, e.g.
 
- fs/fuse/virtio_fs.c | 3 ---
- 1 file changed, 3 deletions(-)
+    https://doc.rust-lang.org/src/core/num/int_macros.rs.html#3639-3644
 
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 53c2626..b8a99d3 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -762,7 +762,6 @@ static void copy_args_from_argbuf(struct fuse_args *args, struct fuse_req *req)
- static void virtio_fs_request_complete(struct fuse_req *req,
- 				       struct virtio_fs_vq *fsvq)
- {
--	struct fuse_pqueue *fpq = &fsvq->fud->pq;
- 	struct fuse_args *args;
- 	struct fuse_args_pages *ap;
- 	unsigned int len, i, thislen;
-@@ -791,9 +790,7 @@ static void virtio_fs_request_complete(struct fuse_req *req,
- 		}
- 	}
- 
--	spin_lock(&fpq->lock);
- 	clear_bit(FR_SENT, &req->flags);
--	spin_unlock(&fpq->lock);
- 
- 	fuse_request_end(req);
- 	spin_lock(&fsvq->lock);
--- 
-2.9.4
+If that happened to be too onerous for some reason, then we could
+ignore it for the time being (i.e. we don't need to delay things just
+for that), or we could put them as `#[test]`s to at least have them as
+tests.
 
+Cheers,
+Miguel
