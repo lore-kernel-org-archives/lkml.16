@@ -1,211 +1,87 @@
-Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392701802B;
-	Sun, 15 Jun 2025 08:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1C627713
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 08:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749976517; cv=none; b=RoLOMgIX/LxOuUvZ+kviONE9VCavrO8pTWZTWXrlev4EHR0VXWrS6xggTzhBcTSY8RWHotVNH6M9SMvN6GXhm3OK3GYLIBsJ4SU1M47Wc3Bcw2KpFq+yjNakSNiiiYDwl6Cm1P2kyVWu3AHqnajBW7F40LfSQIpI/6dN0o0rxmM=
+	t=1749976857; cv=none; b=DYYLQA8++yUq44oEI4d/6SjGzT7nBIZYvDmC+TX4rRMxA+cWpyWzsOVLPIb4Xryjv2yrpXqRaIqbquH/V73T2GrZYvmUO6E5AmqipEARXQroxhYD1I2YGoQF/BRLiOF8Tb0TcWMbGfnVFs0XOlszJLGfnP8gYxMmZLuCufI4iIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749976517; c=relaxed/simple;
-	bh=RJZhrE7PzCL8Zpa7mp4JGUU29v+ACkiAF9wEYA3Zd8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WazoxmY8SRgXbSUBcvhY7j1kkVYZ0BFf3U+cliwe9OsUURPNj1qMl8v4UKWU+WxxmaQaMrVMnC8twC199Eu3muVGgnSUHXELk1sIE63kkygzHcqlSXTNqpasemSSbSVlpimiDGfhiWuZ69wUvtvRshr7cfL9AWgrL7btbAXi7BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5DzX/bu; arc=none smtp.client-ip=209.85.219.196
+	s=arc-20240116; t=1749976857; c=relaxed/simple;
+	bh=xNtkeHyYn8cM4F5InM5NhdON4TpjZSQpR4gZOdJus64=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CnhTKugq0W/dlZCU2S5pOzXbKDUVZe7Tj5iyPxoG4x9ZOLoRnXVf4tqIwUFS+sfxOkY7NrgTeN9qN2LzoPpGKUilFM6UvTkPPKYcOvdDoPXr32nwRbIONK6zbp8brXkR4XZtjC8yZ/fskUtS60cg4Us3uMxZfWNqGmQE46u1/Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e1uvyX+Y; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5DzX/bu"
-Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e819ebc3144so2768885276.0;
-        Sun, 15 Jun 2025 01:35:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1uvyX+Y"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so7361048a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 01:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749976515; x=1750581315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zKr92vC3q/gNbrOJr8Myyh2yxu/kwv/3TMILmmjx3tQ=;
-        b=E5DzX/bu7SOs0T/FxExk/J60eGoIEGWIXK61RS4/zATinr1mNE50nLxRPIUuJdMctm
-         QKkNz1BfBSqp6louxYG/SApEiBKX0P4ME5Bi4bzWd5i9IRW9zvmQCfJafwqIkEdgYMVz
-         pT0KS2xJzORhptGlKIVuADP8H9fUnZQhokDy4iVXwLrflognNDqzcM8wwjVTAYjvBMbn
-         Y0CUfcDFTuB7whbueLid42g0KJQgtn7NrvtmDaxG3hmT36Fvut4S3aHMAWmaat4mLeco
-         9jjiVeDIx19McVHfnwXP7o5Ha1aAXb9xj7M90CtMGxosugKIPGcFmqN52eMm7n81A0P8
-         u3Lw==
+        d=gmail.com; s=20230601; t=1749976854; x=1750581654; darn=vger.kernel.org;
+        h=content-transfer-encoding:eference:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bf/f9V1uaGYy+ir778Ex6srRAmyrzkkdLjjrL7nO11M=;
+        b=e1uvyX+Yn2TkL3bdSO0bTH4emxbHA1bhrx4D03ds7iUZI641jK3Ix/L8kVAgz7AHDX
+         PpmHxmm3MTbiVmOlmTCEgvoOSuc973nlTd/Xli/mHtUMLxtUeoEOASThq3ZDXtq6qzoS
+         IcxDSCBl6/DV4wvjHk5QH1nXLE4NHGJ/nZQ6P4BVCYwRyI5kMbXl8TKMBaht7I3N3LDq
+         COHDAxeO5dZPkKvb7K6w1X6YYHSaetkvA93Vz57oAn8+u+yirIHWY3ZrHD83ES3AqKJt
+         WviURwA46klc1Q2RuLL3Ij/T9GmKd+aOlyzRcX6XNbOMi3OTkO7CuO1Vuv6dp8LjpP5Q
+         dIsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749976515; x=1750581315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zKr92vC3q/gNbrOJr8Myyh2yxu/kwv/3TMILmmjx3tQ=;
-        b=GZaKA8WC7zCcnEUL88bJM5d9lA3K/XGTaajP/l++0IqUaaRe6Qum0wi+kqkpCMKS57
-         GH5rT6FnLDsU5fJN+tEjGxXkWigoA1JlvBqlmFeOSkY3AUbkHmMxFntLFNB7gb20MO2C
-         L73rvbKi2795RetGlM8ZobR5kOLWYyJN7PZqFTIAlc/eb2JZH65ULU25aTF/uGIu6CZL
-         WS4Z8Dm/M54oF4cbj7FEwR3Ub+guQj+hWA0znAEglOIrgK+d3923TyL0Uz8x42f8c+Rn
-         xNyXpqA3+hW2vFTrdUEmdjQj4WxWnQEO3O+7oF0t29wUKiR1xDUSuebdHs1JNNEiiRjA
-         8E9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVkDqOrpvKGc2lH2kh432ggznJMBfAwFBrIK/5VBVC7Qs+NjasnEkOvfW8FjqnjF54wlRY=@vger.kernel.org, AJvYcCW5YnetBJXc8QmeyWfF8YcuHpT8VlDiXXEd8lrEN14hiPFoiMwPS+2of66KWJVAlBBJHIxINeSqOewI9+3j@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUrdP184np+dUgVjqUgi38ZGNbDBTcfOKKl6gD2hWePDXvgU53
-	DmPg0cFxZ38O8LAcq155oYcHQB0A+P4LTTpCcd55owyLXK1XneMlCTGp2xZUZ9dddy+zhZRkbNL
-	FMSWdnqed9B/Pywx8j0nZzpk3uXVp0lk=
-X-Gm-Gg: ASbGncsuXDI6aXPlS1wVK55UarvQTqRxA1Mb3Wr6rCFa4SclmcC4PJ4ndnexXleFBwx
-	Tw/7lYFjNt77WMesL8/svjldz6MLIOMyAUP2gnhkQFG8VEQ9yRb356YS7MDAs3kG9pCIH8XQR9k
-	0acao8wjZb64KNxUocsZHJpm3dQNjqAZyDIOndMk/Y9jw=
-X-Google-Smtp-Source: AGHT+IGnZs26f3l+TS+oC6Nr/Qk1KQ6ClZAppxMi6biNcH13pA5jD3NrjEDgQof/+5Q8+W+6mkAtCmUzYTiltKw6tyU=
-X-Received: by 2002:a05:6902:2387:b0:e81:9e01:3db3 with SMTP id
- 3f1490d57ef6-e822ac716ebmr7725518276.22.1749976515049; Sun, 15 Jun 2025
- 01:35:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749976854; x=1750581654;
+        h=content-transfer-encoding:eference:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bf/f9V1uaGYy+ir778Ex6srRAmyrzkkdLjjrL7nO11M=;
+        b=GAfy11d+pn2WZvT9FNM2UWXae8H4hnYA8NXS20Ri2fi1lMUQUA0XBmHwILVZoXb5W9
+         KJStlUe/XHUIG29XtxoAy71qnjs2QsL9/wslhT+AOUjalj58rXMIL6Sw28EK029CnzcA
+         LcIVgrqdgrXkZONoa8qAfvMew4mFSf/87IMIzIyxkkliRsHlR45n9HhxvzxZgnaa5Eoj
+         jRO2RkNPJaA5M5qaSPldlTXPz2S7O2OdGeotZLC/W/ophelWoeHslObRmkrjFa3hwD+S
+         geAyrUbUnBRZq51+GDE/kL+A52bvfsGrjc30+xX5P9HbBYgS5syRmigXyviUtc6Ff6Si
+         /83A==
+X-Gm-Message-State: AOJu0YyjpHwRByX6pZpwYdttz1BN4CPuBRZa2y5ohvZO7eJIhb50cVDQ
+	/6mybpjmpIW7bp39tU2LHIzO48dv6cwWO/9Epp0cXB/N28ZD006lW/s2CaRCZw==
+X-Gm-Gg: ASbGnct8Vq7O0ZNLGUfEAFhDrpLh4TVoaW5zOibboXTIdWca5KRa6/hP0KAlRAzkkGZ
+	iQuvuIntSFKzI/ddeJxFfnxLtUu9UhThkMpF+MZebkClIPfvsQfnqUHCd+0SBFX6ZBBTSrQN9mn
+	os4l9kzhijzDTt6/Y9M0DX6JeK08cFxy33b+CFzGcEFDMOdkIlbx1VbBxeGUjd/C45FWCdrWFt+
+	YkOTbLFSJYo3eIafxsk83OjggGur1XHPqGrCsS9ta9k1osC/gpHDsD+J/gxund0B2J2XOOMu053
+	4tbq50HfaVbNdp21EMSk3GKF7atBAReLpq+9dDc9VSGr+c8F4QW8YHFKRsvNvG85ruwBdhV3/J7
+	NvCdZxiPDklcy
+X-Google-Smtp-Source: AGHT+IGE3OjFugy+ySq8fCIsyECdl+DbD3YCssU9A6tKEeWgOn/AZmlElFxPDKKyswciNvMuhcluAQ==
+X-Received: by 2002:a17:906:c144:b0:ad4:8ec1:8fcf with SMTP id a640c23a62f3a-adfad59abbdmr452198666b.46.1749976853713;
+        Sun, 15 Jun 2025 01:40:53 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8929371sm444949466b.117.2025.06.15.01.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 01:40:53 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	luto@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/entry: Remove some redundancy checks on syscall 
+Date: Sun, 15 Jun 2025 08:39:57 +0000
+Message-ID: <20250615084009.906-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <87frg2q1w7.ffs@tglx>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
- <CAADnVQ+G+mQPJ+O1Oc9+UW=J17CGNC5B=usCmUDxBA-ze+gZGw@mail.gmail.com>
- <CADxym3YhE23r0p31xLE=UHay7mm3DJ8+n6GcaP7Va8BaKCxRfA@mail.gmail.com>
- <CAADnVQ+Qn5H7idVv-ae84NSMpPHKyKRYbrn30bVRoq=nnPq-pw@mail.gmail.com>
- <CADxym3bK503vi+rGxHm5hj814b8aaxbQW17=vwLYszFncXMXhQ@mail.gmail.com> <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
-In-Reply-To: <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Sun, 15 Jun 2025 16:35:05 +0800
-X-Gm-Features: AX0GCFtBHKw3u4LU2zqVND1zBq0eKpDnOUkq_AowY5AP3USSeo4RssglTYaWg5s
-Message-ID: <CADxym3Z20MUDRuhAyJKeNSJ0Es5nBh6abGaQ3tE590xmwjrh0w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 00/25] bpf: tracing multi-link support
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Menglong Dong <dongml2@chinatelecom.cn>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+eference: <87frg2q1w7.ffs@tglx>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 8:58=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Wed, Jun 11, 2025 at 5:07=E2=80=AFPM Menglong Dong <menglong8.dong@gma=
-il.com> wrote:
-> >
-> > Hi Alexei, thank you for your explanation, and now I realize the
-> > problem is my hash table :/
-> >
-> > My hash table made reference to ftrace and fprobe, whose
-> > max budget length is 1024.
-> >
-> > It's interesting to make the hash table O(1) by using rhashtable
-> > or sizing up the budgets, as you said. I suspect we even don't
-> > need the function padding part if the hash table is random
-> > enough.
->
-> I suggest starting with rhashtable. It's used in many
-> performance critical places, and when rhashtable_params are
-> constant the compiler optimizes everything nicely.
-> lookup is lockless and only needs RCU, so safe to use
-> from fentry_multi.
+Since there were no much objection here i think we agreed with that, so i sent v2 
+for this one. Could you please redirect our conversasion there. This patch was wrong 
+so i took your last suggestion and improved it.
 
-Hi, Alexei. Sorry to bother you. I have implemented the hash table
-with the rhashtable and did the bench testing with the existing
-framework.
+Thanks for your patience,
+Khalid Ali
 
-You said that "fm_single has to be within couple percents of fentry"
-before, and I think it's a little difficult if we use the hashtable without
-the function padding mode.
-
-The extra overhead of the global trampoline can be as follows:
-1. addition hash lookup. The rhashtable is O(1), but the hash key
-compute and memory read can still have a slight overhead.
-2. addition function call to kfunc_md_get_noref() in the asm, which is
-used to get the function metadata. We can make it inlined in the
-function padding mode in the asm, but it's hard if we are using the
-rhashtable.
-3. extra logic in the global trampoline. For example, we save and
-restore the reg1 to reg6 on the stack for the function args even if
-the function we attached to doesn't have any args.
-
-following is the bench result in rhashtable mode, and the performance
-of fentry_multi is about 77.7% of fentry:
-
-  usermode-count :  893.357 =C2=B1 0.566M/s
-  kernel-count   :  421.290 =C2=B1 0.159M/s
-  syscall-count  :   21.018 =C2=B1 0.165M/s
-  fentry         :  100.742 =C2=B1 0.065M/s
-  fexit          :   51.283 =C2=B1 0.784M/s
-  fmodret        :   55.410 =C2=B1 0.026M/s
-  fentry-multi   :   78.237 =C2=B1 0.117M/s
-  fentry-multi-all:   80.090 =C2=B1 0.049M/s
-  rawtp          :  161.496 =C2=B1 0.197M/s
-  tp             :   70.021 =C2=B1 0.015M/s
-  kprobe         :   54.693 =C2=B1 0.013M/s
-  kprobe-multi   :   51.481 =C2=B1 0.023M/s
-  kretprobe      :   22.504 =C2=B1 0.011M/s
-  kretprobe-multi:   27.221 =C2=B1 0.037M/s
-
-(It's weird that the performance of fentry-multi-all is a little higher
-than fentry-multi, but I'm sure that the bpf prog is attached to all the
-kernel functions in the fentry-multi-all testcase.)
-
-The overhead of the part 1 can be eliminated with using the
-function padding mode, and following is the bench result:
-
-  usermode-count :  895.874 =C2=B1 2.472M/s
-  kernel-count   :  423.882 =C2=B1 0.342M/s
-  syscall-count  :   20.480 =C2=B1 0.009M/s
-  fentry         :  105.191 =C2=B1 0.275M/s
-  fexit          :   52.430 =C2=B1 0.050M/s
-  fmodret        :   56.130 =C2=B1 0.062M/s
-  fentry-multi   :   88.114 =C2=B1 0.108M/s
-  fentry-multi-all:   86.988 =C2=B1 0.024M/s
-  rawtp          :  145.488 =C2=B1 0.043M/s
-  tp             :   73.386 =C2=B1 0.095M/s
-  kprobe         :   55.294 =C2=B1 0.046M/s
-  kprobe-multi   :   50.457 =C2=B1 0.075M/s
-  kretprobe      :   22.414 =C2=B1 0.020M/s
-  kretprobe-multi:   27.205 =C2=B1 0.044M/s
-
-The performance of fentry_multi now is 83.7% of fentry. Next
-step, we make the function metadata inlined in the asm, and
-the performance of fentry_multi is 89.7% of the fentry, which is
-close to "be within couple percents of fentry":
-
-  usermode-count :  886.836 =C2=B1 0.300M/s
-  kernel-count   :  419.962 =C2=B1 1.252M/s
-  syscall-count  :   20.715 =C2=B1 0.022M/s
-  fentry         :  102.783 =C2=B1 0.166M/s
-  fexit          :   52.502 =C2=B1 0.014M/s
-  fmodret        :   55.822 =C2=B1 0.038M/s
-  fentry-multi   :   92.201 =C2=B1 0.027M/s
-  fentry-multi-all:   89.831 =C2=B1 0.057M/s
-  rawtp          :  158.337 =C2=B1 4.918M/s
-  tp             :   72.883 =C2=B1 0.041M/s
-  kprobe         :   54.963 =C2=B1 0.013M/s
-  kprobe-multi   :   50.069 =C2=B1 0.079M/s
-  kretprobe      :   22.260 =C2=B1 0.012M/s
-  kretprobe-multi:   27.211 =C2=B1 0.011M/s
-
-For the overhead of the part3, I'm thinking of introducing a
-dynamic global trampoline. We create different global trampoline
-for the functions that have different features, and the features
-can be:
-* function arguments count
-* if bpf_get_func_ip() is ever called in the bpf progs
-* if FEXIT and MODIFY_RETURN progs existing
-* etc.
-
-Then, we can generate a global trampoline for the function with
-minimum instructions. According to my estimation, the performance
-of the fentry_multi should be above 95% of the fentry with
-function padding, function metadata inline and dynamic global
-trampoline.
-
-In fact, I implemented the first version of this series with the dynamic
-global trampoline.However, that makes the series very very complex.
-So I think it's not a good idea to mention it in this series.
-
-All in all, the performance of the fentry_multi can't be within a couple
-percents of fentry if we use rhashtable only according to my testing,
-and I'm not sure if I should go ahead :/
-
-BTW, the Kconfig I used in the testing comes from "make tinyconfig", and
-I enabled some config to make the tools/testing/selftests/bpf can be compil=
-ed
-successfully. I would appreciate it if someone can offer a better and
-authoritative Kconfig for the testing :/
-
-Thanks, have a nice weekend!
-Menglong Dong
