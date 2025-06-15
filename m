@@ -1,131 +1,125 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A439C26AD0
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 08:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE06326AD0;
+	Sun, 15 Jun 2025 08:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749975107; cv=none; b=U4Dzp0BkNRRJ33imGZuhYfDVD89j/GIKvKPRXPPmg28Z172PApy5r7fkAyIOHBJbecNzfA+4qHML4od/9xkj7pLLEvdfrdztfQcDx0fdCB61+1/97cj8gtb4UwtibaCGp1m6CqdklBRbqxm8nd7cG6OYK4aRyJ4LaEFAFZBGe50=
+	t=1749975180; cv=none; b=SlpqmdG7HvUTsLLU3pb37wXkOSKHJinUTCsnn/fCA4M7dvhfLrVXwwQLAiCn6/6CQ3g7QYsaeGkflgd9b6NY4jjz7+BhsIFJfJwc6F4zyqiCv0ByxS4wuWwlXckfaCCwod+kqFJmM5+mbkK/pFXuYlvSZVQicDfh2wuFjDgyo38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749975107; c=relaxed/simple;
-	bh=9CazTd5wS+HK0yBoeUMtHxJDFiS9hWu7YYvjO0MyWcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aBBEXALnSVpfPzzowQaybxGo2Ryo/+drhmqzccgPKw0JiiQ/Jxt/p+iLe4KLtvxHlUfCuRbL031MsBsXrwDFeyTFzwO68bojJv53HAxbeYSgSVCTUztpuSKMu1JghfgS+3ky6scbaxJHjtStsuwJ9KdUkg/RsLQfBw/qHXc0fbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NyeDI4Ph; arc=none smtp.client-ip=209.85.221.49
+	s=arc-20240116; t=1749975180; c=relaxed/simple;
+	bh=pmdzSLfzz4NJSGkzCeH65VWIRKJh/IdzZWPJQwgCcdk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VclPO9zax/iOQkks7gn9HVytA2+DZjlVob/sW5pXzpx6HZzmL/21UQafft2YeCHPquEcNUdOAOBmhUqAQnsImerE0YM6QpQBg8u41Gq8VU1VXrAfe0l59QLTrEpV5YweMimmPOYP+OpEvbgvN3blwCQZrh9IXl4QDxscitIeTWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GHRvQ19o; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyeDI4Ph"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so179033f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 01:11:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GHRvQ19o"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-311d5fdf1f0so3401898a91.1;
+        Sun, 15 Jun 2025 01:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749975104; x=1750579904; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749975178; x=1750579978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xQC1l4hed+jDjvcuzyYn26zmXocSEaoHbFMpdpPVTZE=;
-        b=NyeDI4PhnkgkmWA7dEvZDKKmo+hO6FLZRBhHDVNwN/GiJknYTaUhGis9oer8nbRiaN
-         EHsW4pZ6HGB43nO4yYJvzF2KpurUMkj6LucJLfXbvGMEslEDtYJuQ7llUIF25F4zdF2Y
-         qCX+NJZzsZikq/2kVdGlb1QleNewFjo3aHPaNEk+jehXULZ7CZp/5b7palhd5V8cJ4XK
-         Red/VMi+xm/NjqqpJRxdyFmBdak/T7BxdUCQXPGs5Uv14ey+1ydKTeHz/s1dV6WAuxfV
-         w6o492922D5XcF+KfjKMlz4miY95BQ4WZfpFmW9+rNAaMom2BoO0exDSt0wqMJ8E1PKz
-         zFNw==
+        bh=pmdzSLfzz4NJSGkzCeH65VWIRKJh/IdzZWPJQwgCcdk=;
+        b=GHRvQ19oQoTiZujBeuL9nks4O1/F+63/vkzRhe9BOLESlM6JQCM2ImRtbkx5dYqUxJ
+         MY5eKRaz1tZKvr0/rUcVQ1Ba46KqInk69j0BWLPHm3zPYfDwPITn07qDt6oJ2apmg2Lp
+         Fd26zhEtNE9erUQNPCMgwHlsNyDNZOAyOxLbBt4xGJyOduD93n2OtqKFBD7NqnOlgroY
+         mOR3aZjFwmRLaPgB1zGTu2QixuQcIS2RHUTdAPr92Wf5JyA6Wm3MX1LThLbW11MtZW7w
+         sDXj5I2WY3YKWVsZIymBXmTvyzaYARuVEZWUmJuBG+Fr2rJdjEmAfZBH0aepE4Dd2zLV
+         bKYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749975104; x=1750579904;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749975178; x=1750579978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xQC1l4hed+jDjvcuzyYn26zmXocSEaoHbFMpdpPVTZE=;
-        b=lgJP6B+tfhuxVU+2cUuT+fJg51ouvHPVkmelspGEeJp3xk6MVGjQlpPmyNrcapc3xY
-         HbwQUGhuDhg2/nTb9g52+NZ5U8WJnSoto/oDwbEiTlqutfJp2iMdXy0qZUiP9eYU67i7
-         a8EG6a30877bLfClOcVlQ/44src0YJ4JALBCftJSwWzyhRFBKH0WGxgWQBSh1595RGTZ
-         pfu7hjg6fh7zrr0jnD+ZiAnG+q8vdGJhi2Xph0aBInq7OPaUrPIpOME6dPAy91QY8pfP
-         pDbulutyonvlK3DnVKQ4k79bUh2iqWNPmpJ7QLKiuWOPG14vATwoJAt5CEYYb53soOSD
-         Kt6A==
-X-Forwarded-Encrypted: i=1; AJvYcCW4SNBl4I+dgyTdPCelWbE1g7wanIkvM6wj8UKMK6NIF/QoEE7Fw+zNFtN667tbEpsFzy4AR8EKXf9z/VI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbtRxGUsjOlRajExTswYJPG9Gaz+yDj/psxMVpqPawDwvswA1b
-	jMzmGbsfzomxRnHfwyQQZ1PYpsIZC2YXbmVJNhb7u38dk4iDBUPp77we
-X-Gm-Gg: ASbGncuwkh/KXmm1SEpSSbofpnI0ue51RcCfCyn3TT1kdqt79bIUcHgPVM0+v5FttP5
-	dPYTz6ojtURciSpdYNhb/dEmq6sPM9AZDTp9VXp1XNjwauwkpetHVTbhUh4LNPgJoO+nKPF7LLs
-	IBYO1x6oqLrodVrLvBdXzif7OfStFy2i4dgc0ZflxfDw5O+7hHKJ72IIngznawHPT/NV+ObZdvr
-	PTiuzM03Ij5XNdZA3tc51MIsjC4kM63PDnBlpgfs50VyNzhqcU4ShkTmAuegiIc4lnHUvqhFbqK
-	m10DNWHygmiNIShkSI0cEuU+jz9HIHAwLWGcctJLkn3CuDFDiQ3H578RhTiqr9CWxVHq/DCFnE5
-	i8y4tfUDh7Drr/TOHVL8mqBUeIwcb9YbwY60=
-X-Google-Smtp-Source: AGHT+IEt4MLx5qWRx8zxKdVal8i4gp60/oEWaofVvMwCZilpflG+8Y3YcJjDCPeWX2cDAdi54HxY8A==
-X-Received: by 2002:a05:6000:188b:b0:3a4:ef0d:e614 with SMTP id ffacd0b85a97d-3a572e79d24mr4433375f8f.33.1749975103785;
-        Sun, 15 Jun 2025 01:11:43 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a72cd3sm7231201f8f.32.2025.06.15.01.11.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 01:11:43 -0700 (PDT)
-Date: Sun, 15 Jun 2025 09:11:42 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Ilya Leoshkevich <iii@linux.ibm.com>, oe-kbuild-all@lists.linux.dev,
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Linux Memory Management List <linux-mm@kvack.org>, Alexander Potapenko
- <glider@google.com>
-Subject: Re: mm/kmsan/hooks.c:269:14: sparse: sparse: cast removes address
- space '__user' of expression
-Message-ID: <20250615091142.3c9520d9@pumpkin>
-In-Reply-To: <202506131242.qB8fUSlP-lkp@intel.com>
-References: <202506131242.qB8fUSlP-lkp@intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=pmdzSLfzz4NJSGkzCeH65VWIRKJh/IdzZWPJQwgCcdk=;
+        b=goMQhV/o4VfJnxdyO7lFMSj5FlWCCh+lZ0L3hX0QyRswYyU3Xdz69rriQ5g8IvennG
+         jrfKCOxEiyqKnd81QjC7HTa7Bi/fGJNxi5E8q5kmyHTpVZGYkLEK6KXeBD5rzxBsU5Pz
+         xDlJrkvN8YGhfnil4GAGaGwvj+dJsQEoHZL0YmLL5RWEjGB8mnygH9SJrwhe88VCMldJ
+         ocrg7PjJXpMTto3I/6DIZnGu2p37HA7poVBjRNEdyb2t8dw64sFtfQyghgLBCB2GwwcJ
+         sv7/fsCUdCKkpwm0Ud8tEprqc43F2uhMPUX3cL94Q2V4fOKkuAiC11dgcLA3Z8EGc3q/
+         W/QA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQD7WX7AL3WZcd8FPjjMYKBlQeIkx9nyt2H0ujaAJv0veUYSdNtykmNm1vd0IaFDbt8iO/+xpW1Z1NQWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYiOWdnMGzKS4ZGf30aG1V+DwIUjJ5EQfeOqn3g6D7Wxztfl1H
+	gECI1uuKhlHJwnAcMIFXaACd3Lst4+n3MAJske7DU1YIMjEbfgZrGx1AKvHtx0967sSBiKUs8r4
+	mJhjc2lueZ+MK/x0P80Y0zF1JaRvJbvQ=
+X-Gm-Gg: ASbGnct9H/XYenvmOB5+2wIR+BJY1eAlo76S67FSPHfzNELlYPexzw6ycoXHq+vJrYG
+	CbjzZsoAwEc5SFMYVqvBPiY7FNq36GLaLxNykZYSrH/oyMBUivjbiV7ZcXpGrODVAy/0pPsoBqp
+	7iPKQOx4Dfy2uRiBpKv+aXMJ+PhWOnCplfuUNLPrPngwur
+X-Google-Smtp-Source: AGHT+IEsnfJNoeGV0RBNht4K15BTOJBtctaMTJTk0KKCmh27yXWO6d7sAjMAr6HGafs/GiijObboLKEuq0WCnxjZnhg=
+X-Received: by 2002:a17:90b:268a:b0:313:283e:e881 with SMTP id
+ 98e67ed59e1d1-313f1cc5abbmr8371614a91.11.1749975177964; Sun, 15 Jun 2025
+ 01:12:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250614185743.657564-1-bharadwaj.raju777@gmail.com> <bwga4jheevnhuwwpopfwbzsjsxvmte4mtybevkfgssem4zftjo@anj44i6sfyd4>
+In-Reply-To: <bwga4jheevnhuwwpopfwbzsjsxvmte4mtybevkfgssem4zftjo@anj44i6sfyd4>
+From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Date: Sun, 15 Jun 2025 13:42:22 +0530
+X-Gm-Features: AX0GCFuFY-S2D2fUnnHdP_B9uSG3e9P4KroojRUUPxsfHHXiZ0eYnoVubBoBns4
+Message-ID: <CAPZ5DTEtsqJ_z7OtRVKDqb+LkvS=UfNvCTUqnY2Pu6qGVs+PEQ@mail.gmail.com>
+Subject: Re: [PATCH] bcachefs: don't return early from __btree_err for bad or
+ incompatible node read errors
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
+	syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 13 Jun 2025 12:28:55 +0800
+On Sun, Jun 15, 2025 at 5:49=E2=80=AFAM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Sun, Jun 15, 2025 at 12:27:40AM +0530, Bharadwaj Raju wrote:
+> > After cd3cdb1ef706 ("Single err message for btree node reads"),
+> > all errors caused __btree_err to return BCH_ERR_fsck_fix no matter what
+> > the actual error type was if the recovery pass was scanning for btree
+> > nodes. This lead to the code continuing despite things like bad node
+> > formats when they earlier would have caused a jump to fsck_err, because
+> > btree_err only jumps when the return from __btree_err does not match
+> > fsck_fix. Ultimately this lead to undefined behavior by attempting to
+> > unpack a key based on an invalid format.
+>
+> Hang on, -BCH_ERR_fsck_fix should've caused us to fix fixable errors,
+> not cause undefined behaviour.
 
-Not directly related but...
+-BCH_ERR_fsck_fix in btree_err (as _ret from __btree_err) prevents a jump
+to fsck_err, so if that is the case, the code afterwards continues
+as normal. That's where the UB in this bug comes from.
 
-....
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  267  	ua_flags = user_access_save();
-> f926e9326f3a79 Ilya Leoshkevich    2024-06-21  268  	if (!IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) ||
-> f926e9326f3a79 Ilya Leoshkevich    2024-06-21 @269  	    (u64)to < TASK_SIZE) {
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  270  		/* This is a user memory access, check it. */
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  271  		kmsan_internal_check_memory((void *)from, to_copy - left, to,
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  272  					    REASON_COPY_TO_USER);
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  273  	} else {
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  274  		/* Otherwise this is a kernel memory access. This happens when a
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  275  		 * compat syscall passes an argument allocated on the kernel
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  276  		 * stack to a real syscall.
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  277  		 * Don't check anything, just copy the shadow of the copied
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  278  		 * bytes.
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  279  		 */
+I think I should explain the path of the bug:
+1. bch2_btree_node_read_done calls validate_bset, with a jump to
+fsck_err if it returns an error.
+2. validate_bset has btree_err_on(bch2_bkey_format_invalid(...), ...),
+but in the bug case we were in btree-node-scan so __btree_err returns
+fsck_fix, which means ret isn't modified and we don't jump to
+fsck_err.
+3. validate_bset doesn't return an error code, so
+bch2_btree_node_read_done goes ahead and sets the invalid format --
+and then UB happens when trying to unpack keys based on it.
 
-Isn't that comment just wrong?
-Compat syscalls just don't do that any more.
-They might have done it in the past before setfs(KERNEL_DS) got nuked.
-So the 'else' clause can never happen and the test nuked.
+> Or is the issue that we're returning -BCH_ERR_fsck_fix for non-fixable
+> errors?
+>
+> Glancing at the code, I think the bug might not be limited to btree node
+> scan; we now seem to be passing FSCK_CAN_FIX for all errors in the
+> non-btree-node-scan case, and I don't think that's right for
+> BCH_ERR_btree_node_read_err_must_retry cases.
+>
+> But I'll have to go digging through the git history to confirm that, and
+> it sounds like you've already looked - does that sound like it?
 
-So anything here is always 'user' (or will have failed access_ok()).
-I think that also means the test can be done before the copy_to_user() itself
-since, contrary to the earlier comment (trimmed) all of the kernel memory
-that might be copied needs to have valid data.
+Isn't the bch2_fsck_err_opt(c, FSCK_CAN_FIX, err_type) call only in
+the node_read_err_fixable case?
+In the must_retry case we return bad_node. But I'm not really familiar
+with all this, so I think it'll be best if you do
+take a look.
 
-(Unlike copy_from_user() when only the written part need to be marked
-as containing valid data.)
-
-	David
-
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  280  		kmsan_internal_memmove_metadata((void *)to, (void *)from,
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  281  						to_copy - left);
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  282  	}
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  283  	user_access_restore(ua_flags);
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  284  }
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  285  EXPORT_SYMBOL(kmsan_copy_to_user);
-> 75cf0290271bf6 Alexander Potapenko 2022-09-15  286  
-> 
-> :::::: The code at line 269 was first introduced by commit
-> :::::: f926e9326f3a79f7e01ac790e2361f44d8ca8320 kmsan: fix kmsan_copy_to_user() on arches with overlapping address spaces
-> 
-> :::::: TO: Ilya Leoshkevich <iii@linux.ibm.com>
-> :::::: CC: Andrew Morton <akpm@linux-foundation.org>
-> 
-
+Thanks!
