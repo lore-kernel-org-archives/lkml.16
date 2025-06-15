@@ -1,55 +1,55 @@
 Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C661BC07A
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05F72638AF
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:33:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749994383; cv=none; b=mxlu83qgBJX0XAjyfNqI8cWzTSGXNao+fZ+nCKPZvfBiH8iSctlifXLGPSdo5MIJHx36NWvvB0F6ahTDZJAVoOklampF/cIfuO0mI5xjr0+s/kV4PknZeUmcSL7tBptpHhNnvc3wzFwqK1jRrfeUHtba7BwN6IrPX/oXH65DaZo=
+	t=1749994384; cv=none; b=dZ6KMXH98luwF1675rIYn07AIW/XiDm5gle3Gb+YFUrBTxitL4t1g9Io0OJXjKQG+YHwweoV+PO6mcN3Jg9br5taDxKT+rwthVhPRWk+X9Bv1Fc89mVvldUuT4tk1+Tyekx66L/Meb4V92MRHkwIxnEfruLZuUt9widEQX3kSzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749994383; c=relaxed/simple;
-	bh=zTHKar8gQcQgQ/8Bbae0V50BJ9kXFhlYDUd+lTUcckI=;
+	s=arc-20240116; t=1749994384; c=relaxed/simple;
+	bh=ITbtmPf4cpk3X83sE0SP/sCMpsGJGN4Oib1B9xSOsRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nXq2tGHZsBLslohboSSPWlzqss5pabgIkNc6ObO2tpgkyc5mcjdyFEbBT82DwLoVKswdUxQcNr3MwgjKYWhlGQcQ3CKZNirbym0CxEC+p4x3nL7aBfmWt6pQotCKaScARLosQCYCya4L+P3l1lGnv8J2jaS5q5YynOD7dRa7aJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=grbhd0iO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PSJgIP2j; arc=none smtp.client-ip=103.168.172.159
+	 MIME-Version; b=AtD74bVI4rcDNYd4/UtLkQCet3foDl+ovNiUjo6ej/UZw5VZildl0ECwuCD/G1ILSzEWgDifJ+ufijX2IhZPxwxCEjqRT0NpsrLfW5eAPyWwEvwziBFiIj8pczKe6UD5bf5tWOoEWe4RXCNgDZ+3QbwRxW3Cs9o3l/YTsAy0uH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=TYx+XqQD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MiNymviJ; arc=none smtp.client-ip=103.168.172.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="grbhd0iO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PSJgIP2j"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 5228111400E4;
-	Sun, 15 Jun 2025 09:33:00 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="TYx+XqQD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MiNymviJ"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id ADD2F11400CA;
+	Sun, 15 Jun 2025 09:33:01 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Sun, 15 Jun 2025 09:33:00 -0400
+  by phl-compute-05.internal (MEProxy); Sun, 15 Jun 2025 09:33:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1749994380; x=
-	1750080780; bh=7XKP+PnrLFVclC5u7hONL2ciFO44TegrPitUkyB2ifg=; b=g
-	rbhd0iOURs7p4kUhGn/cWqUAU3lbq4kQouX2g1HyeKqjfe2X6bywSbyue6v+xgxY
-	O/fKyEXooQchINaqMU6kJkWTi+Juzj4AiRJzHn1LginSNB16A2OAIPfDDnuKhblK
-	4JF4ko6QL2kD1ZHh/Z2PwOjFiqwpkMxQOPEcPKHS0dbFKTpkOQy7N0Zfra3L1/FQ
-	HlTsVYbiaaHMga+89onDefXzJfWL8O0oCfOuSlavayaJwlvdBu4QpcsZ3X7DNbut
-	4r0L68HcGY+vJ29BeCCng6xh7akL93YlslV8mtvFwM5CMSRolgDKnsRv51RBE0sO
-	Ne+PZ11t4Guf2oNzIyTrw==
+	:reply-to:subject:subject:to:to; s=fm1; t=1749994381; x=
+	1750080781; bh=s0mnxanqQ2wO103H6uaQ4iaNpdz2HeEAgNvMawAzuog=; b=T
+	Yx+XqQDkNA1d0fNk+GET5cNRh8dcrgtANydQ8wI3JXsrP8IwOSEEIAQbJK7YKEpt
+	HAZcwQRkArpaOCg8C4OLcfjeub5XqNgF+Q/DA/z9thlIo6PSFHvRnzp9JQfiqR/V
+	YLceItY2fBNYtf97rB39NMVYWPxKZyXqPJRvyHt+S9RJL/rMiIVCeSRppfZD+B2V
+	k5fE19zRp0TsICzyX8e2rpNJNM+ohL3EhzutCqjN2ObVmT0ITEc6zFMPDnX6zXNy
+	mTzFgTBcBVcMTHUQ2HryKe9WFWa4H+x8vOJmSlADALrFzuGU+hcFhuNzsO5cHJJL
+	op76J6QDchbl5aV1uxcLg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1749994380; x=1750080780; bh=7
-	XKP+PnrLFVclC5u7hONL2ciFO44TegrPitUkyB2ifg=; b=PSJgIP2jXhdkSUccK
-	3JxCLCrK1pButSUVh+DGp/0ikOYsHwiSVwjwKKTStI0vnZyhV3mVJBCzEU1W5SUe
-	q7ihE7lyCfJiYYB8XMRxc1P/wfH4h5ic+lkfMhJbSMyq5rMsHozh/vDBtiYItIdT
-	vFfKeA1a8fDcDwuZ92CJ4TNzWzkJQ3jce8DxMdz20ZP4pNj8TSGxB0+NAcRtdFKI
-	Y7jIBVs5wwtCpNt+CzXGe+Rl4PxeNpQRpXYRf2TrWMv0XybniFGTQUSCqwOziiIi
-	hmUvda3OFzt6IGknMP8kRxPgBgXUGnTJ1JInvWGJi47xKtavQx+HNSFkmF6WbvKp
-	FgsXQ==
-X-ME-Sender: <xms:jMtOaD4JfC-SNiRywqegkeS9rIjEXOE81ParefWATyjGaFpk-sOszw>
-    <xme:jMtOaI6_OzlGPvk0vw5yhEn0fy9CiugXEdLsGvF_Npif6_HbeZyxOh8AVuj4Mt2rp
-    -XfbU_d6TvoSNX3mJ8>
-X-ME-Received: <xmr:jMtOaKd70r7wnCXB-zI9gPefSInKvlytPCu7hhCpKggg-y5sudays8qc5ontSXmOEae9o5o0x0CLIPxhjZVWIpzb5mKU_Juj2un7jUhntelt9A>
+	:x-me-sender:x-sasl-enc; s=fm1; t=1749994381; x=1750080781; bh=s
+	0mnxanqQ2wO103H6uaQ4iaNpdz2HeEAgNvMawAzuog=; b=MiNymviJDC+UG8E7A
+	ynk4F//JysZmGvIB7LjdKHBuPd+h6tJOBuyGhNBhju1XvRmJFbRCIB7oAMuM2oL7
+	eqWy0i1QknLpxx7yMuDFyHhPVsJXReE1VHNtqgcf6ftMpvKB+nkZep/Wq+Fxt3QJ
+	Q9Wu7rQYKm7vnHZhkTErF2PYOqdxWXxGsZw3K7mEiZdqHBqgX0WWxkfjDVH1Mq8X
+	5/9oZBcDf8Em/it1VRT/Pukx5AVAEJokNnbrcjZvMPslf0JtJ9S2VNVidlR+J58V
+	HWuvGF8evU/g+r6s+n7c0ne/kqe6nd5RwmYMX6J30PDARpOswpWnHrZAwfIy4D4V
+	hTLkA==
+X-ME-Sender: <xms:jctOaFVnuQ4gylQL8nSFIMI-Ivk2omRwIh2q68KPDDb1n9pAkm5ABQ>
+    <xme:jctOaFl5GRjovdr_i8goz2NUmAC41AD35bHZGTL_YD1gs0jLmQyI2pWeMviuIuLoT
+    QQVsschLAG1mTzJN68>
+X-ME-Received: <xmr:jctOaBb5Sili3hVK4XxPl-NZtU_ts5LK5uJiTjZeIQB8vx-NUWaHn0gIjCAiONEbVhE2DyOySoS3NPOicFWdR8whcqRy_E3QKmgJ82H16wLVsQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvfeekfecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
@@ -61,20 +61,20 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvfeekfecutefuodetgg
     vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidufeelgedquggvvh
     gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopehlihhn
     uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:jMtOaEIcjm-DmXTp6nuBIGqAaxBvN2lE_a_ODkQbVNm8xzJv_PNHQw>
-    <xmx:jMtOaHIYAbK59VHULEAkuoB7bDpHxwq0Kcs9hIjyNgQy04N_Tigs1g>
-    <xmx:jMtOaNxwbKx_F_rbxTLDGjID28tEJR1XbY3egxcandN18x4DXCx-dA>
-    <xmx:jMtOaDJH_xwX8HLRYTOTISUvppWq6WhgNObraboQT-VJWVfBqo3FQA>
-    <xmx:jMtOaA71QcpPShGVfZZ-am5QrL0cZwoJe6uiI9cNl00yfCGaEww1NDzq>
+X-ME-Proxy: <xmx:jctOaIU-4el0qGjo5ZZhVL--iyofDNNDRPBPZCc8Pk6bizMGM8nKcg>
+    <xmx:jctOaPng8id6MYNKeJlWPiA4Qmw0raVSHJAVppSnDfIdRtMdkvoDLQ>
+    <xmx:jctOaFcc_AxSDzLA6IiZqRjfuGU_b1acBcBOnCz0U5w7Y8vcjtpLqA>
+    <xmx:jctOaJHMnw1-JRzl5OTYWl6DzlbMKaelCwVOP5AkKlzupam3qK9APA>
+    <xmx:jctOaB3DiDRQMmTZDm60udxrQuNJYjpK8oiR5nl-oGiZSGn98SRB39ei>
 Feedback-ID: ie8e14432:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 15 Jun 2025 09:32:59 -0400 (EDT)
+ 15 Jun 2025 09:33:00 -0400 (EDT)
 From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: linux1394-devel@lists.sourceforge.net
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] firewire: core: allocate workqueue for AR/AT request/response contexts
-Date: Sun, 15 Jun 2025 22:32:51 +0900
-Message-ID: <20250615133253.433057-2-o-takashi@sakamocchi.jp>
+Subject: [PATCH v2 2/3] firewire: ohci: use workqueue to handle events of AR request/response contexts
+Date: Sun, 15 Jun 2025 22:32:52 +0900
+Message-ID: <20250615133253.433057-3-o-takashi@sakamocchi.jp>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250615133253.433057-1-o-takashi@sakamocchi.jp>
 References: <20250615133253.433057-1-o-takashi@sakamocchi.jp>
@@ -86,146 +86,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some tasklets (softIRQs) are still used as bottom-halves to handle
-events for 1394 OHCI AR/AT contexts. However, using softIRQs for IRQ
-bottom halves is generally discouraged today.
-
-This commit adds a per-fw_card workqueue to accommodate the behaviour
-specified by the 1394 OHCI specification.
-
-According to the 1394 OHCI specification, system memory pages are
-reserved for each asynchronous DMA context. This allows concurrent
-operation across contexts. In the 1394 OHCI PCI driver implementation,
-the hardware generates IRQs either upon receiving asynchronous packets
-from other nodes (incoming) or after completing transmission to them
-(outgoing). These independent events can occur in the same transmission
-cycle, therefore the max_active parameter for the workqueue is set to the
-total number of AR/AT contexts (=4). The WQ_UNBOUND flag is used to
-allow the work to be scheduled on any available core, since there is
-little CPU cache affinity benefit for the data.
-
-Each DMA context uses a circular descriptor list in system memory,
-allowing deferred data processing in software as long as buffer overrun
-are avoided. Since the overall operation is sleepable except for small
-atomic regions, WQ_BH is not used. As the descriptors contain
-timestamps, WQ_HIGHPRI is specified to support semi-real-time
-processing.
-
-The asynchronous context is also used by the SCSI over IEEE 1394
-protocol implementation (sbp2), which can be part of memory reclaim paths.
-Therefore, WQ_MEM_RECLAIM is required.
-
-To allow uses to adjust CPU affinity according to workload, WQ_SYSFS is
-specified so that workqueue attributes are exposed to user space.
+This commit adds a work item to handle events of 1394 OHCI AR
+request/response contexts, and queues the item to the specific workqueue.
+The call of struct fw_address_handler.address_callback() is done in the
+workqueue when receiving any requests from the remove nodes. Additionally,
+the call of struct fw_packet.callback() is done in the workqueue too when
+receiving acknowledge to the asynchronous packet for the response
+subaction of split transaction to the remote nodes.
 
 Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
- drivers/firewire/core-card.c | 48 +++++++++++++++++++++++++-----------
- include/linux/firewire.h     |  1 +
- 2 files changed, 35 insertions(+), 14 deletions(-)
+ drivers/firewire/core-transaction.c |  7 ++++---
+ drivers/firewire/ohci.c             | 27 +++++++++++----------------
+ 2 files changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
-index 2b6ad47b6d57..b3e48ca516fe 100644
---- a/drivers/firewire/core-card.c
-+++ b/drivers/firewire/core-card.c
-@@ -574,7 +574,6 @@ EXPORT_SYMBOL(fw_card_initialize);
- int fw_card_add(struct fw_card *card, u32 max_receive, u32 link_speed, u64 guid,
- 		unsigned int supported_isoc_contexts)
- {
--	struct workqueue_struct *isoc_wq;
- 	int ret;
- 
- 	// This workqueue should be:
-@@ -589,29 +588,48 @@ int fw_card_add(struct fw_card *card, u32 max_receive, u32 link_speed, u64 guid,
- 	//  * == WQ_SYSFS		Parameters are available via sysfs.
- 	//  * max_active == n_it + n_ir	A hardIRQ could notify events for multiple isochronous
- 	//				contexts if they are scheduled to the same cycle.
--	isoc_wq = alloc_workqueue("firewire-isoc-card%u",
--				  WQ_UNBOUND | WQ_FREEZABLE | WQ_HIGHPRI | WQ_SYSFS,
--				  supported_isoc_contexts, card->index);
--	if (!isoc_wq)
-+	card->isoc_wq = alloc_workqueue("firewire-isoc-card%u",
-+					WQ_UNBOUND | WQ_FREEZABLE | WQ_HIGHPRI | WQ_SYSFS,
-+					supported_isoc_contexts, card->index);
-+	if (!card->isoc_wq)
- 		return -ENOMEM;
- 
-+	// This workqueue should be:
-+	//  * != WQ_BH			Sleepable.
-+	//  * == WQ_UNBOUND		Any core can process data for asynchronous context.
-+	//  * == WQ_MEM_RECLAIM		Used for any backend of block device.
-+	//  * == WQ_FREEZABLE		The target device would not be available when being freezed.
-+	//  * == WQ_HIGHPRI		High priority to process semi-realtime timestamped data.
-+	//  * == WQ_SYSFS		Parameters are available via sysfs.
-+	//  * max_active == 4		A hardIRQ could notify events for a pair of requests and
-+	//				response AR/AT contexts.
-+	card->async_wq = alloc_workqueue("firewire-async-card%u",
-+					 WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI | WQ_SYSFS,
-+					 4, card->index);
-+	if (!card->async_wq) {
-+		ret = -ENOMEM;
-+		goto err_isoc;
-+	}
-+
- 	card->max_receive = max_receive;
- 	card->link_speed = link_speed;
- 	card->guid = guid;
- 
--	guard(mutex)(&card_mutex);
-+	scoped_guard(mutex, &card_mutex) {
-+		generate_config_rom(card, tmp_config_rom);
-+		ret = card->driver->enable(card, tmp_config_rom, config_rom_length);
-+		if (ret < 0)
-+			goto err_async;
- 
--	generate_config_rom(card, tmp_config_rom);
--	ret = card->driver->enable(card, tmp_config_rom, config_rom_length);
--	if (ret < 0) {
--		destroy_workqueue(isoc_wq);
--		return ret;
-+		list_add_tail(&card->link, &card_list);
- 	}
- 
--	card->isoc_wq = isoc_wq;
--	list_add_tail(&card->link, &card_list);
--
- 	return 0;
-+err_async:
-+	destroy_workqueue(card->async_wq);
-+err_isoc:
-+	destroy_workqueue(card->isoc_wq);
-+	return ret;
- }
- EXPORT_SYMBOL(fw_card_add);
- 
-@@ -744,6 +762,7 @@ void fw_core_remove_card(struct fw_card *card)
- 	dummy_driver.stop_iso		= card->driver->stop_iso;
- 	card->driver = &dummy_driver;
- 	drain_workqueue(card->isoc_wq);
-+	drain_workqueue(card->async_wq);
- 
- 	scoped_guard(spinlock_irqsave, &card->lock)
- 		fw_destroy_nodes(card);
-@@ -753,6 +772,7 @@ void fw_core_remove_card(struct fw_card *card)
- 	wait_for_completion(&card->done);
- 
- 	destroy_workqueue(card->isoc_wq);
-+	destroy_workqueue(card->async_wq);
- 
- 	WARN_ON(!list_empty(&card->transaction_list));
- }
-diff --git a/include/linux/firewire.h b/include/linux/firewire.h
-index b632eec3ab52..c55b8e30e700 100644
---- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -136,6 +136,7 @@ struct fw_card {
- 	__be32 maint_utility_register;
- 
- 	struct workqueue_struct *isoc_wq;
-+	struct workqueue_struct *async_wq;
+diff --git a/drivers/firewire/core-transaction.c b/drivers/firewire/core-transaction.c
+index 2bd5deb9054e..d28477d84697 100644
+--- a/drivers/firewire/core-transaction.c
++++ b/drivers/firewire/core-transaction.c
+@@ -557,9 +557,10 @@ const struct fw_address_region fw_unit_space_region =
+  *
+  * region->start, ->end, and handler->length have to be quadlet-aligned.
+  *
+- * When a request is received that falls within the specified address range,
+- * the specified callback is invoked.  The parameters passed to the callback
+- * give the details of the particular request.
++ * When a request is received that falls within the specified address range, the specified callback
++ * is invoked.  The parameters passed to the callback give the details of the particular request.
++ * The callback is invoked in the workqueue context in most cases. However, if the request is
++ * initiated by the local node, the callback is invoked in the initiator's context.
+  *
+  * To be called in process context.
+  * Return value:  0 on success, non-zero otherwise.
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 40313a3ec63e..68317b5a64a7 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -101,7 +101,7 @@ struct ar_context {
+ 	void *pointer;
+ 	unsigned int last_buffer_index;
+ 	u32 regs;
+-	struct tasklet_struct tasklet;
++	struct work_struct work;
  };
  
- static inline struct fw_card *fw_card_get(struct fw_card *card)
+ struct context;
+@@ -1016,9 +1016,9 @@ static void ar_recycle_buffers(struct ar_context *ctx, unsigned int end_buffer)
+ 	}
+ }
+ 
+-static void ar_context_tasklet(unsigned long data)
++static void ohci_ar_context_work(struct work_struct *work)
+ {
+-	struct ar_context *ctx = (struct ar_context *)data;
++	struct ar_context *ctx = from_work(ctx, work, work);
+ 	unsigned int end_buffer_index, end_buffer_offset;
+ 	void *p, *end;
+ 
+@@ -1026,23 +1026,19 @@ static void ar_context_tasklet(unsigned long data)
+ 	if (!p)
+ 		return;
+ 
+-	end_buffer_index = ar_search_last_active_buffer(ctx,
+-							&end_buffer_offset);
++	end_buffer_index = ar_search_last_active_buffer(ctx, &end_buffer_offset);
+ 	ar_sync_buffers_for_cpu(ctx, end_buffer_index, end_buffer_offset);
+ 	end = ctx->buffer + end_buffer_index * PAGE_SIZE + end_buffer_offset;
+ 
+ 	if (end_buffer_index < ar_first_buffer_index(ctx)) {
+-		/*
+-		 * The filled part of the overall buffer wraps around; handle
+-		 * all packets up to the buffer end here.  If the last packet
+-		 * wraps around, its tail will be visible after the buffer end
+-		 * because the buffer start pages are mapped there again.
+-		 */
++		// The filled part of the overall buffer wraps around; handle all packets up to the
++		// buffer end here.  If the last packet wraps around, its tail will be visible after
++		// the buffer end because the buffer start pages are mapped there again.
+ 		void *buffer_end = ctx->buffer + AR_BUFFERS * PAGE_SIZE;
+ 		p = handle_ar_packets(ctx, p, buffer_end);
+ 		if (p < buffer_end)
+ 			goto error;
+-		/* adjust p to point back into the actual buffer */
++		// adjust p to point back into the actual buffer
+ 		p -= AR_BUFFERS * PAGE_SIZE;
+ 	}
+ 
+@@ -1057,7 +1053,6 @@ static void ar_context_tasklet(unsigned long data)
+ 	ar_recycle_buffers(ctx, end_buffer_index);
+ 
+ 	return;
+-
+ error:
+ 	ctx->pointer = NULL;
+ }
+@@ -1073,7 +1068,7 @@ static int ar_context_init(struct ar_context *ctx, struct fw_ohci *ohci,
+ 
+ 	ctx->regs        = regs;
+ 	ctx->ohci        = ohci;
+-	tasklet_init(&ctx->tasklet, ar_context_tasklet, (unsigned long)ctx);
++	INIT_WORK(&ctx->work, ohci_ar_context_work);
+ 
+ 	for (i = 0; i < AR_BUFFERS; i++) {
+ 		ctx->pages[i] = dma_alloc_pages(dev, PAGE_SIZE, &dma_addr,
+@@ -2238,10 +2233,10 @@ static irqreturn_t irq_handler(int irq, void *data)
+ 	}
+ 
+ 	if (event & OHCI1394_RQPkt)
+-		tasklet_schedule(&ohci->ar_request_ctx.tasklet);
++		queue_work(ohci->card.async_wq, &ohci->ar_request_ctx.work);
+ 
+ 	if (event & OHCI1394_RSPkt)
+-		tasklet_schedule(&ohci->ar_response_ctx.tasklet);
++		queue_work(ohci->card.async_wq, &ohci->ar_response_ctx.work);
+ 
+ 	if (event & OHCI1394_reqTxComplete)
+ 		tasklet_schedule(&ohci->at_request_ctx.tasklet);
 -- 
 2.48.1
 
