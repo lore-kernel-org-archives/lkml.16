@@ -1,164 +1,79 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB59322A;
-	Sun, 15 Jun 2025 09:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25237264617
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 09:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749981259; cv=none; b=bsqh2Pt0SwRoHNAvwoOkDgEnQeklySZBi9yipsT7PCYsUFEbyk6+3+SEAPBQvoGBwwoWiXjmO9En4ZDYYtPqCDjE52uuqojkaEj3xmC0UruIYs7iMq6K/sBLCiEP9ZLMoWg/5Bukmip8aEZ03LKHGRogGHa8W8eTB/cQpJzp3NU=
+	t=1749981366; cv=none; b=PfDq0PsLp/h1C4vEfnaWvNtGmoz8+mKRJNyT5eRiBWyY5fboKaV1We5bPZeYlIF3drvx3B0/Qh25h/MUTqtrbovPj8WSQXvXKbmavF8OavwOi1xt7aNCJwtIuGFSLXrYkHedio0fBSYSABRS1dVK0O6OEfC4rO92QgmafwSDOgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749981259; c=relaxed/simple;
-	bh=8rrS+or7l6CfX8D5YgB8ofUfRZo0S5lNd/tMNkLoMOQ=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=LGhKKVqxGpOtjt2+SVX5ckdvZ3HSSudYkglUxlKO1cQEh5wUiLVFNMqx5uZSFc2phbScgfnyRaGU8Ggi4Owb8NmAAl25UrRdPDYjWxYMY//y7qffUwmdyvTvNDV82evLKTebxUExk08QmrsQkmE6KcMl6yiD5B9rKqTLY87RAPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=fwHJ5W9q; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="fwHJ5W9q"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout4.routing.net (Postfix) with ESMTP id 2F25E1005FD;
-	Sun, 15 Jun 2025 09:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1749981254;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qR3qMDQo9TdMbJqkibA/Cdr7B5FwdnAlAIEIskS1oHs=;
-	b=fwHJ5W9qptWu4Q4AAnsMj141YfE9G8B8ltvngjlidjrkzljURVbuJo4fi7hwgqv6eHmayJ
-	vqfgII+I9Uq6rxYaZltp9jJpziEj+L+5tTASyh1NGH/5jkCcAhPYsmrMWc0/C+lhDfNnmr
-	xDhpCPZcU9v6AAf4iFIJ3cZGdD0FN2E=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 5862A3601E7;
-	Sun, 15 Jun 2025 09:54:13 +0000 (UTC)
+	s=arc-20240116; t=1749981366; c=relaxed/simple;
+	bh=dZIhcLUob/yE99krHJIG/yTSjf70smLK4p8/iQjCoPE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=GHz5mZ2S6X24x4GWS/0jiVxsx0HU7Bg+PznDv7JV/nOS8gKl19dHXFSKk6OusSLH5xfhBaKJ5BUsNZ0R3xqvrgjiWy/e1AUomrwExqU/Ts3oTQdyhFLW7X/hV+vH3KI3WOV+wY9VtA4SSts5A8Ug6VJzga4HaJ19VZYe0B7XowQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd045bb28so28801665ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 02:56:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749981364; x=1750586164;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ocLTJRY+fhwTjCrhxf4nK0M6rGEU4j+JnFi0dOpX+ow=;
+        b=m4m8n8Wj00UMH+VTvNrlyUyn6U8t+BTafFTCse8JLSVs3ICrT+vCI2dkfpYuNc8iAn
+         yRATLF5fuJaDfg974B+Ipi8lGVXmLhgSHAawCtqObrzvMCVKNyDC7IBkmYAUkyts0knp
+         JGnmEjy1pfowrp29ckAqPmxJZkywrmUdbBZYR88wt3LkW+OEsUunEo6KZEMpjej+ztUy
+         e5o0zbwwaVBbKJ6b9si/tFueK7KwJrsl5Fy8lUWVl7FN9s14YCXdGpIs2QVhMnnySszS
+         3tcEVAfJKB7hlBXgY48yB5yJ9bzPfiHRBnHxEhjGuG9XQbrtYc0mwUXRUmc1grXJvujF
+         cIkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmX3SNxsGQ/QAZrUqGvLU33ySeF0Crm/8Ko0D8WbTVXMCpuNuMs1sFFcPbpHxFRMDOAAE+IrVC063Xats=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYqXbK5Vtw+c8AfEsoLDtM72Haa7vaBLCVji3gTrakA+CYF30L
+	wVBFSzwjs21wngrysaVejMXENYFwCBmm2RLJrRoKKxIxFNJHaRvcE28gH0wZQsrStcR+F1SCTuB
+	2lc6fEDYJOfD2a4/NVbWzvNADkkpVSkZLx/72ZTrb2AUQI/k1YrHLs9DNzx8=
+X-Google-Smtp-Source: AGHT+IEgPdrA2IM9OWgw6N/hK3nuguJZrWn9t3hAUZqWQkF7lKWgmWhh4O4vCROHhhDs8bphPbTlJovLhvktfgyPBoq6myrdvO2n
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 15 Jun 2025 11:54:13 +0200
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Golle
- <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank
- Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v2] net: ethernet: mtk_eth_soc: support named IRQs
-In-Reply-To: <aE6K-d0ttAnBzcNg@lore-desk>
-References: <20250615084521.32329-1-linux@fw-web.de>
- <aE6K-d0ttAnBzcNg@lore-desk>
-Message-ID: <d4781d559e3f72b0bcde88e6b04ed8e5@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mail-ID: 8416b7ea-d84c-44e8-bd86-b50db1b64538
+X-Received: by 2002:a05:6e02:160b:b0:3dd:bb7e:f1af with SMTP id
+ e9e14a558f8ab-3de07cedfc2mr57014685ab.20.1749981364287; Sun, 15 Jun 2025
+ 02:56:04 -0700 (PDT)
+Date: Sun, 15 Jun 2025 02:56:04 -0700
+In-Reply-To: <684c5575.a00a0220.279073.0012.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684e98b4.a00a0220.279073.002b.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] KASAN: use-after-free Read in poly1305_update
+From: syzbot <syzbot+bfaeaa8e26281970158d@syzkaller.appspotmail.com>
+To: bp@alien8.de, dave.hansen@linux.intel.com, davem@davemloft.net, 
+	herbert@gondor.apana.org.au, hpa@zytor.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, mmpgouride@gmail.com, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Am 2025-06-15 10:57, schrieb Lorenzo Bianconi:
->> From: Frank Wunderlich <frank-w@public-files.de>
->> 
->> Add named interrupts and keep index based fallback for exiting 
->> devicetrees.
->> 
->> Currently only rx and tx IRQs are defined to be used with mt7988, but
->> later extended with RSS/LRO support.
->> 
->> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->> Reviewed-by: Simon Horman <horms@kernel.org>
-> 
-> Hi Frank,
-> 
-> I guess my comments on v1 apply even in v2. Can you please take a look?
+syzbot has bisected this issue to:
 
-adding your comments (and mine as context) from v1 here:
+commit d97de0d017cde0d442c3d144b4f969f43064cc0f
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Tue Aug 13 01:31:25 2024 +0000
 
-Am 2025-06-15 10:57, schrieb Lorenzo Bianconi:
->> From: Frank Wunderlich <frank-w@public-files.de>
+    bcachefs: Make bkey_fsck_err() a wrapper around fsck_err()
 
->> I had to leave flow compatible with this:
->> 
->> <https://github.com/frank-w/BPI-Router-Linux/blob/bd7e1983b9f0a69cf47cc9b9631138910d6c1d72/drivers/net/ethernet/mediatek/mtk_eth_soc.c#L5176>
-> 
-> I guess the best would be to start from 0 even here (and wherever it is
-> necessary) and avoid reading current irq[0] since it is not actually 
-> used for
-> !shared_int devices (e.g. MT7988).  Agree?
-> 
->> 
->> Here the irqs are taken from index 1 and 2 for
->>  registration (!shared_int else only 0). So i avoided changing the
->>  index,but yes index 0 is unset at this time.
->> 
->> I guess the irq0 is not really used here...
->> I tested the code on bpi-r4 and have traffic
->>  rx+tx and no crash.
->>  imho this field is not used on !shared_int
->>  because other irq-handlers are used and
->>  assigned in position above.
-> 
-> agree. I have not reviewed the code in detail, but this is why
-> I think we can avoid reading it.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1683290c580000
+start commit:   02adc1490e6d Merge tag 'spi-fix-v6.16-rc1' of git://git.ke..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1583290c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1183290c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=bfaeaa8e26281970158d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1555310c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12810e82580000
 
-i areee, but imho it should be a separate patch because these are 2 
-different changes
+Reported-by: syzbot+bfaeaa8e26281970158d@syzkaller.appspotmail.com
+Fixes: d97de0d017cd ("bcachefs: Make bkey_fsck_err() a wrapper around fsck_err()")
 
->> It looks like the irq[0] is read before...there is a
->>  message printed for mediatek frame engine
->>  which uses index 0 and shows an irq 102 on
->>  index way and 0 on named version...but the
->>  102 in index way is not visible in /proc/interrupts.
->> So imho this message is misleading.
->> 
->> Intention for this patch is that irq 0 and 3 on
->>  mt7988 (sdk) are reserved (0 is skipped on
->> !shared_int and 3 never read) and should imho
->>  not listed in devicetree. For further cleaner
->>  devicetrees (with only needed irqs) and to
->>  extend additional irqs for rss/lro imho irq
->>  names make it better readable.
-> 
-> Same here, if you are not listing them in the device tree, you can 
-> remove them
-> in the driver too (and adjust the code to keep the backward 
-> compatibility).
-
-afaik i have no SHARED_INT board (only mt7621, mt7628) so changing the 
-index-logic will require testing on such boards too.
-
-i looked a bit into it and see mt7623 and mt7622 have 3 IRQs defined 
-(!SHARED_INT) and i'm not 100% sure if the first is also skipped (as far 
-as i understood code it should always be skipped).
-
-In the end i would change the irq-index part in separate patch once this 
-is accepted to have clean changes and not mixing index with names (at 
-least to allow a revert of second in case of regression).
-
-Am 2025-06-15 11:26, schrieb Daniel Golle:
-> In addition to Lorenzo's comment to reduce the array to the actually 
-> used
-> IRQs, I think it would be nice to introduce precompiler macros for the 
-> irq
-> array index, ie. once the array is reduce to size 2 it could be 
-> something
-> like
-> 
-> #define MTK_ETH_IRQ_SHARED 0
-> #define MTK_ETH_IRQ_TX 0
-> #define MTK_ETH_IRQ_RX 1
-> #define __MTK_ETH_IRQ_MAX MTK_ETH_IRQ_RX
-> 
-> That would make all the IRQ code more readable than having to deal with
-> numerical values.
-
-makes sense, i will take this into the second patch.
-
-I hope you can agree my thoughts about not mixing these 2 parts :)
-
-regards Frank
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
