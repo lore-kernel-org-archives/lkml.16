@@ -1,306 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5851C19F422
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E394265603
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749996454; cv=none; b=kFo3qZYpyy5uorluRnml6dangNJTWwXReVZtmvA3MLUaYFBh/rGWhzU3wqhslMTSu4dkowSo/JRZQqPQAhkaQlCkj46+i4BKaUPYl/zejUfd0ZDfAO8wbvfAcoNk77HRgcdjqQqGm5jEHQRamLizp3or5eKjU6UOwZU87hXywcs=
+	t=1749996492; cv=none; b=OlNlf4w8mY/uBke3EKZ5Qwb/+B9JBcx/W9aoYXPk38RPbtsO8YHNNWcl3MRG46thsivi7xrmSY9Msyi8zEo5iY/6bqPWm1vmcO5G2UP8Hg8PapJ7L3WmasmRc+uguiADcm45h/4QxQSOau3sHlnZpa319I6WrOG9xqbtSDZIz1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749996454; c=relaxed/simple;
-	bh=jepLbbOJGxCtAqyma/HZzE4xJ9rkrsv4QZicL7bfPcw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IJDB/J6+wseeE5CM2gE1HpljjXU8aRo1lif+0UZKl9/43nLrh3kCKz/Fof4rClgA7a89J0LXrciRaSurq2HWcLB07SS2l+5/gKzTU51neB1SzJIpOtcaHVR3PFZDBmj+pVN6JweLqUKdQASdwm5A3Xv65IIBN0Lydaj8HP0PTiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XlzopJKf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749996492; c=relaxed/simple;
+	bh=CcL2R9L1qSAoAE6fzuBvMZlTzcPa+YWzy/4ZbcilH78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a/7PQbXSA4snI/JHA6ufduKdwntyaHBM1sBM/ZC+aZHVCNmmbZWQ5wLisGNlKWGBxZvmY3Pr+z4HpnoWgB0SiU/q9pIqWRx0RizCxjahXCXrEsLJNIpO9Gkv27stTYxUCL229EDznMCVs+LBY/0s4zjoOFMFFtu4sByNqmXZz+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=UK+pMT03; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XlzopJKf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749996451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpvfPquWEoPv1qftMnP3EaVgh/vM8Dl1IeS2VTYnWq8=;
-	b=XlzopJKf2KCNoJJGmvZY3lyv1wtr9QXPa3DigoPZjP7m1tjOyuuS6y1rdJNZ4In72GR1/E
-	wQplwqoey/5nsPBsC8QkU/z+20Is4X7WrwVmFWNDwjfDxGrrscaNycy3Ii698pO7htda6S
-	9PCr5R7SUQ/ZuMNhIlTMLouNl22eGt8=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-345-9riIoy3GOBOMYs_NJha2Cg-1; Sun, 15 Jun 2025 10:07:29 -0400
-X-MC-Unique: 9riIoy3GOBOMYs_NJha2Cg-1
-X-Mimecast-MFC-AGG-ID: 9riIoy3GOBOMYs_NJha2Cg_1749996449
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7cf6c53390eso354623385a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:07:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="UK+pMT03"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-86cf9f7abc4so301041639f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749996488; x=1750601288; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ev2ncarzcapzq2egHLqNpb8FWb96CW9+NpRTLqU6sro=;
+        b=UK+pMT03aN/yT4oo2cwII4ivoIEx6dJpqE96eNDKlCxXn4bbvgs+k00YhXQ4nwNbS6
+         bytk8rbqH8S9D2t+s8ELpN4COTaD0f+KdUR3r8hvHzfF7m5sY84FLfP0S+o3HT31+NkJ
+         P0IzZMWP3YcAcrPGpwG/Shtxu01wNZ8uQGVxDGwALPbQsQLmWvwIXYw7EAN40gANgB92
+         WTAq+KAHmTYp4b3Fn0/aZuCXtz+eoMRDFABQXdNrdjC7iDo27QFmry6dH4gCF3qVfyU3
+         iqzXZ90uF1or6wf1BKKVHChE5QS6gKImJaGUcsJFDn0Wt3lA65sl8z4KMbvIi2o31O5P
+         dpFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749996449; x=1750601249;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cpvfPquWEoPv1qftMnP3EaVgh/vM8Dl1IeS2VTYnWq8=;
-        b=uK8tIRiHOAR3+dBA5QsWxfP8zerSmsPUyxlLYhyYBXjukDbdG4uu+6RrG/gc2G6VVH
-         EojwSJbNAg6GiM+36NUTt9FYe9q2XxHZbQ+1tytzZUgDTapVB700vRe0Lt3UC2vvpaxl
-         wr8Qg4mml0Ac/qGTa06ou9aSKWUzn3aelCW1L6mID5FvOjEx17GO/CCAHaJXyj4eZWRr
-         Y2OlpAyXt6IC49hgpTgNNjtAyYws80yGkhtKyJWgkQJCO+ux0cECe3GeA8WEZ7Yr/HAq
-         1Vk1j9ioXqmyzrlfjC6aKY8tqNptG1M4cdTgyEw+kjDgXySGknW5mLCDXszu+HSrt20G
-         rFhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVF5djw/0jkLdD8e/k8NwJGdhw2L1UeqRlr+VwpKlkRLXJpt/aJzT5Vk5KM5K1ArCxs6aEqNRO814HxvVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMaCK7E0QRHC3dLx18p71lzrpzaQyP0gUbt2LxXbyYKtHf80LX
-	j09m/jktpUdaE37KK70LH0vQ9liSnXOnWf5oGKZ3gLuNQltbXAnoiAK+tpvbYqVOnOhHRMUed0I
-	xqjfbsNxWUwhAHkNeVZlV37FY8qHxKXF1k/v2hD8LhEsSZix6DT7Xy+XOKBEejxt6vm3ahuO2cF
-	oqbncsh1lGJFubiG4YKv3ShMFPseom5hsnJClGdYsw
-X-Gm-Gg: ASbGncuRcI0Jfhe9XNGwCj/yL/01vWKTybfmTzvkuv81UXCHVILHlJfrvBP4PN/6dnx
-	/8hAROP8uLkgs0GfxyudReVWAdgv+R3iT70HFXN3LjESFmMPpLi/z79hlNkvlRQshmh4Z9BEbqJ
-	4xTcMw
-X-Received: by 2002:a05:620a:370f:b0:7c5:6678:ab18 with SMTP id af79cd13be357-7d3c6cf11efmr684336985a.42.1749996448792;
-        Sun, 15 Jun 2025 07:07:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQfd3Jg+za2A2otcwQoRQPivaXBv48NJhSap+53dPBVNEvIqD8CTtK5u8X5NDCCMNb0CRWiye3EoWlyPRqsDE=
-X-Received: by 2002:a05:620a:370f:b0:7c5:6678:ab18 with SMTP id
- af79cd13be357-7d3c6cf11efmr684333885a.42.1749996448345; Sun, 15 Jun 2025
- 07:07:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749996488; x=1750601288;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ev2ncarzcapzq2egHLqNpb8FWb96CW9+NpRTLqU6sro=;
+        b=etTx5WofITFfInJJCCR9vdYPeZmYW42ooJr2Ed1SYitRiLatdH6WL45ptt0TiDF5Eh
+         AXPjZkzacmiS9tJzJEGEtSgov/g753isoesiJtx8D29qq82bOXSmw5i4/8BmmPP3vffo
+         ndZyfv0HmsZm7UoDyziPYUlaJzPNBh7pYMgFqwcp1L/Em11vHhED+XPJ/vMhwdJcZGTo
+         MPq14+5lHGAil8dQdR6x8DseuLA/7mz+mo7aIaT89O+eDot/DtVdpRR6YoE39q+fvplJ
+         5pdV7udVfnAKtQMohxhv4S2vU1XZeg/SSWtAXxJAzeKPcRu/SZMC5B7BINbqwmAnkd4/
+         ffgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZVVmnoL6K2KlxOEnoXXhhd7GpRrslxwH9VZPK2hTItASYA7+aOeh1qo1/EsDdUMHIXzgKgYwcBDj6BcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt5TK4k/LzcT6UkGFMA8EAfpjhKQmvmYWHodkpJ7bn0M6yEf73
+	Fv19sD7cg/zHTq5kTRr9dncg7NpTUokgp2nIKG6BoM9HTt55liP/UCxuzRxwZMcfkq0=
+X-Gm-Gg: ASbGnctBQJyL/9j1SyAT7hKYZBWzQU4/Nzgq7OJx5eQNBCgEdIKhUUJFhYN5RWo5hoq
+	0GPH9CN4PJ27oePMTK6zUzqvfJUa7qXVKkNi4LZk9SiLcn36zcU7UBnCZ0UvM4kAf22eQwC3V5u
+	N8TjPA5F1ObXxwGVqN5iBkztfJsogUAkBuTia5LkksCInqCvNUxDlNk0MFwwi2/ukojYk1bsjmX
+	PfuQ0B19bM5Mbzeobef48rYFSHBeCtt4SlDnXyXEGVKEehdmX8IQaSkiyFief+tr/moyt59AROu
+	2tP2eDtBqH4Fv1nC722qnf6jAtr+tQr8ohmF7yHdDGJ6PZlww2GlBt1j50M=
+X-Google-Smtp-Source: AGHT+IErB8q9zdosjAiGP3Jl++mmQSh6Dlt7tVdsOt8nIx8SP2s3DHMmWgKfGAaatM16VWyTNNFHDw==
+X-Received: by 2002:a05:6602:1513:b0:86d:5f:aef4 with SMTP id ca18e2360f4ac-875dec75b32mr657114939f.0.1749996488205;
+        Sun, 15 Jun 2025 07:08:08 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149c68bc2sm1268818173.80.2025.06.15.07.08.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Jun 2025 07:08:07 -0700 (PDT)
+Message-ID: <7103fcd2-904d-42ac-b5f4-e821697b72f0@kernel.dk>
+Date: Sun, 15 Jun 2025 08:08:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609073430.442159-1-lulu@redhat.com> <20250609073430.442159-4-lulu@redhat.com>
- <20250612022053-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20250612022053-mutt-send-email-mst@kernel.org>
-From: Cindy Lu <lulu@redhat.com>
-Date: Sun, 15 Jun 2025 22:06:51 +0800
-X-Gm-Features: AX0GCFuavf4F9QSSduL1i-CbZH_0D6GbiTWvUTGYMpPvjCVBJlOzCw6TvLbCB5c
-Message-ID: <CACLfguVUnpxCczJ5NdtWdiDVSsYDNG6XPFGdjqdgwncX4y74UA@mail.gmail.com>
-Subject: Re: [PATCH v11 3/3] vhost: Add configuration controls for vhost
- worker's mode
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: jasowang@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [io-uring?] WARNING in io_register_clone_buffers
+To: syzbot <syzbot+cb4bf3cb653be0d25de8@syzkaller.appspotmail.com>,
+ asml.silence@gmail.com, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <684e77bd.a00a0220.279073.0029.GAE@google.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <684e77bd.a00a0220.279073.0029.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 2:31=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
->
-> On Mon, Jun 09, 2025 at 03:33:09PM +0800, Cindy Lu wrote:
-> > This patch introduces functionality to control the vhost worker mode:
-> >
-> > - Add two new IOCTLs:
-> >   * VHOST_SET_FORK_FROM_OWNER: Allows userspace to select between
-> >     task mode (fork_owner=3D1) and kthread mode (fork_owner=3D0)
-> >   * VHOST_GET_FORK_FROM_OWNER: Retrieves the current thread mode
-> >     setting
-> >
-> > - Expose module parameter 'fork_from_owner_default' to allow system
-> >   administrators to configure the default mode for vhost workers
-> >
-> > - Add KConfig option CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL to
-> >   control the availability of these IOCTLs and parameter, allowing
-> >   distributions to disable them if not needed
-> >
-> > - The VHOST_NEW_WORKER functionality requires fork_owner to be set
-> >   to true, with validation added to ensure proper configuration
-> >
-> > Signed-off-by: Cindy Lu <lulu@redhat.com>
->
->
-> getting there. yet something to improve.
->
-> > ---
-> >  drivers/vhost/Kconfig      | 17 +++++++++++++++
-> >  drivers/vhost/vhost.c      | 44 ++++++++++++++++++++++++++++++++++++++
-> >  include/uapi/linux/vhost.h | 25 ++++++++++++++++++++++
-> >  3 files changed, 86 insertions(+)
-> >
-> > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> > index 020d4fbb947c..49e1d9dc92b7 100644
-> > --- a/drivers/vhost/Kconfig
-> > +++ b/drivers/vhost/Kconfig
-> > @@ -96,3 +96,20 @@ config VHOST_CROSS_ENDIAN_LEGACY
-> >         If unsure, say "N".
-> >
-> >  endif
-> > +
-> > +config CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
-> > +     bool "Enable CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL"
-> > +     default n
-> > +     help
-> > +       This option enables two IOCTLs: VHOST_SET_FORK_FROM_OWNER and
-> > +       VHOST_GET_FORK_FROM_OWNER. These allow userspace applications
-> > +       to modify the vhost worker mode for vhost devices.
-> > +
-> > +       Also expose module parameter 'fork_from_owner_default' to allow=
- users
-> > +       to configure the default mode for vhost workers.
-> > +
-> > +       By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL` is set to =
-`n`,
-> > +       which disables the IOCTLs and parameter.
-> > +       When enabled (y), users can change the worker thread mode as ne=
-eded.
-> > +
-> > +       If unsure, say "N".
-> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > index 37d3ed8be822..903d9c3f6784 100644
-> > --- a/drivers/vhost/vhost.c
-> > +++ b/drivers/vhost/vhost.c
-> > @@ -43,6 +43,11 @@ module_param(max_iotlb_entries, int, 0444);
-> >  MODULE_PARM_DESC(max_iotlb_entries,
-> >       "Maximum number of iotlb entries. (default: 2048)");
-> >  static bool fork_from_owner_default =3D true;
->
-> Add empty lines around ifdef to make it clear what code do they
-> delimit.
->
->
-> > +#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
-> > +module_param(fork_from_owner_default, bool, 0444);
-> > +MODULE_PARM_DESC(fork_from_owner_default,
-> > +              "Set task mode as the default(default: Y)");
-> > +#endif
-> >
-> >  enum {
-> >       VHOST_MEMORY_F_LOG =3D 0x1,
-> > @@ -1019,6 +1024,13 @@ long vhost_worker_ioctl(struct vhost_dev *dev, u=
-nsigned int ioctl,
-> >       switch (ioctl) {
-> >       /* dev worker ioctls */
-> >       case VHOST_NEW_WORKER:
-> > +             /*
-> > +              * vhost_tasks will account for worker threads under the =
-parent's
-> > +              * NPROC value but kthreads do not. To avoid userspace ov=
-erflowing
-> > +              * the system with worker threads fork_owner must be true=
-.
-> > +              */
-> > +             if (!dev->fork_owner)
-> > +                     return -EFAULT;
->
-> An empty line here would make the code clearer.
->
-> >               ret =3D vhost_new_worker(dev, &state);
-> >               if (!ret && copy_to_user(argp, &state, sizeof(state)))
-> >                       ret =3D -EFAULT;
-> > @@ -1136,6 +1148,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev,=
- struct vhost_iotlb *umem)
-> >
-> >       vhost_dev_cleanup(dev);
-> >
-> > +     dev->fork_owner =3D fork_from_owner_default;
-> >       dev->umem =3D umem;
-> >       /* We don't need VQ locks below since vhost_dev_cleanup makes sur=
-e
-> >        * VQs aren't running.
-> > @@ -2289,6 +2302,37 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsign=
-ed int ioctl, void __user *argp)
-> >               goto done;
-> >       }
-> >
-> > +#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
-> > +     u8 fork_owner;
->
-> Do not declare variables in the middle of a scope please.
-> This one is not needed in this scope, so just move it down
-> to within if (yes you will repeat the declaration twice then).
->
->
->
-> > +
-> > +     if (ioctl =3D=3D VHOST_SET_FORK_FROM_OWNER) {
-> > +             /*fork_owner can only be modified before owner is set*/
->
-> bad comment style.
->
-> > +             if (vhost_dev_has_owner(d)) {
-> > +                     r =3D -EBUSY;
-> > +                     goto done;
-> > +             }
-> > +             if (copy_from_user(&fork_owner, argp, sizeof(u8))) {
->
-> get_user is a better fit for this. In particular, typesafe.
->
->
-> > +                     r =3D -EFAULT;
-> > +                     goto done;
-> > +             }
-> > +             if (fork_owner > 1) {
->
-> so 0 and 1 are the only legal values?
-> maybe add an enum or defines in the header then.
->
->
-> > +                     r =3D -EINVAL;
-> > +                     goto done;
-> > +             }
-> > +             d->fork_owner =3D (bool)fork_owner;
->
->                 !!fork_owner is shorter and idiomatic.
->
-> > +             r =3D 0;
-> > +             goto done;
-> > +     }
-> > +     if (ioctl =3D=3D VHOST_GET_FORK_FROM_OWNER) {
-> > +             fork_owner =3D d->fork_owner;
-> > +             if (copy_to_user(argp, &fork_owner, sizeof(u8))) {
->
-> put_user
->
-Thanks, Micheal. I'll address all above comments and send a revised version=
-.
-Thanks
-cindy
-> > +                     r =3D -EFAULT;
-> > +                     goto done;
-> > +             }
-> > +             r =3D 0;
-> > +             goto done;
-> > +     }
-> > +#endif
-> >       /* You must be the owner to do anything else */
-> >       r =3D vhost_dev_check_owner(d);
-> >       if (r)
-> > diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> > index d4b3e2ae1314..e51d6a347607 100644
-> > --- a/include/uapi/linux/vhost.h
-> > +++ b/include/uapi/linux/vhost.h
-> > @@ -235,4 +235,29 @@
-> >   */
-> >  #define VHOST_VDPA_GET_VRING_SIZE    _IOWR(VHOST_VIRTIO, 0x82,       \
-> >                                             struct vhost_vring_state)
-> > +
-> > +/**
-> > + * VHOST_SET_FORK_FROM_OWNER - Set the fork_owner flag for the vhost d=
-evice,
-> > + * This ioctl must called before VHOST_SET_OWNER.
-> > + * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=3Dy
-> > + *
-> > + * @param fork_owner: An 8-bit value that determines the vhost thread =
-mode
-> > + *
-> > + * When fork_owner is set to 1(default value):
-> > + *   - Vhost will create vhost worker as tasks forked from the owner,
-> > + *     inheriting all of the owner's attributes.
-> > + *
-> > + * When fork_owner is set to 0:
-> > + *   - Vhost will create vhost workers as kernel threads.
-> > + */
-> > +#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
-> > +
-> > +/**
-> > + * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhos=
-t device.
-> > + * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=3Dy
-> > + *
-> > + * @return: An 8-bit value indicating the current thread mode.
-> > + */
-> > +#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x84, __u8)
-> > +
-> >  #endif
-> > --
-> > 2.45.0
->
+On 6/15/25 1:35 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13db6682580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cb4bf3cb653be0d25de8
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> userspace arch: arm64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15cab60c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c9a60c580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+cb4bf3cb653be0d25de8@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 6488 at mm/slub.c:5024 __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 6488 Comm: syz-executor312 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024
+> lr : __do_kmalloc_node mm/slub.c:-1 [inline]
+> lr : __kvmalloc_node_noprof+0x3b4/0x640 mm/slub.c:5012
+> sp : ffff80009cfd7a90
+> x29: ffff80009cfd7ac0 x28: ffff0000dd52a120 x27: 0000000000412dc0
+> x26: 0000000000000178 x25: ffff7000139faf70 x24: 0000000000000000
+> x23: ffff800082f4cea8 x22: 00000000ffffffff x21: 000000010cd004a8
+> x20: ffff0000d75816c0 x19: ffff0000dd52a000 x18: 00000000ffffffff
+> x17: ffff800092f39000 x16: ffff80008adbe9e4 x15: 0000000000000005
+> x14: 1ffff000139faf1c x13: 0000000000000000 x12: 0000000000000000
+> x11: ffff7000139faf21 x10: 0000000000000003 x9 : ffff80008f27b938
+> x8 : 0000000000000002 x7 : 0000000000000000 x6 : 0000000000000000
+> x5 : 00000000ffffffff x4 : 0000000000400dc0 x3 : 0000000200000000
+> x2 : 000000010cd004a8 x1 : ffff80008b3ebc40 x0 : 0000000000000001
+> Call trace:
+>  __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024 (P)
+>  kvmalloc_array_node_noprof include/linux/slab.h:1065 [inline]
+>  io_rsrc_data_alloc io_uring/rsrc.c:206 [inline]
+>  io_clone_buffers io_uring/rsrc.c:1178 [inline]
+>  io_register_clone_buffers+0x484/0xa14 io_uring/rsrc.c:1287
+>  __io_uring_register io_uring/register.c:815 [inline]
+>  __do_sys_io_uring_register io_uring/register.c:926 [inline]
+>  __se_sys_io_uring_register io_uring/register.c:903 [inline]
+>  __arm64_sys_io_uring_register+0x42c/0xea8 io_uring/register.c:903
+>  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+>  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+>  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+>  el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+>  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> irq event stamp: 370
+> hardirqs last  enabled at (369): [<ffff8000801fc600>] local_daif_restore+0x1c/0x3c arch/arm64/include/asm/daifflags.h:75
+> hardirqs last disabled at (370): [<ffff80008adb9eb8>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:511
+> softirqs last  enabled at (294): [<ffff8000803cf71c>] softirq_handle_end kernel/softirq.c:425 [inline]
+> softirqs last  enabled at (294): [<ffff8000803cf71c>] handle_softirqs+0xaf8/0xc88 kernel/softirq.c:607
+> softirqs last disabled at (289): [<ffff800080020efc>] __do_softirq+0x14/0x20 kernel/softirq.c:613
+> ---[ end trace 0000000000000000 ]---
 
+Max buffer count is validated, but buffer count + offset is not.
+That can lead to attempting to do a big alloc, below should
+fix it.
+
+
+diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+index c592ceace97d..94a9db030e0e 100644
+--- a/io_uring/rsrc.c
++++ b/io_uring/rsrc.c
+@@ -1177,6 +1177,8 @@ static int io_clone_buffers(struct io_ring_ctx *ctx, struct io_ring_ctx *src_ctx
+ 		return -EINVAL;
+ 	if (check_add_overflow(arg->nr, arg->dst_off, &nbufs))
+ 		return -EOVERFLOW;
++	if (nbufs > IORING_MAX_REG_BUFFERS)
++		return -EINVAL;
+ 
+ 	ret = io_rsrc_data_alloc(&data, max(nbufs, ctx->buf_table.nr));
+ 	if (ret)
+
+-- 
+Jens Axboe
