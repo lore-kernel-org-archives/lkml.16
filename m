@@ -1,149 +1,110 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBE23595A
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 23:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CB517548;
+	Sun, 15 Jun 2025 23:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750030860; cv=none; b=dcjibPLDbpGrotoReYqxIG1uRqGhi+7iwGOMEpjI+xZMvBLAb74qYywITyb26J+llZ4BwcflrQCCvaCN60B8ua4mhBK5DOlG5eLZQpQSj5aDscoXcOdFlqKPHXKEQWjUZIoD1faMhvAWwAAXfud2NGN112KPEcwvcHtzioQNw1o=
+	t=1750031365; cv=none; b=ewskm0b/iGwBN1+xXbv0p5TruluWHga20CWscEJKSirjBek3lJQB/qd1ywD02Ujx5MVrdRdDvHb9eLpwyt80gJ0vroqo4arxOkKZEJGfhLvsYP/Jg/9tf4b0V03FF6iiq3V7AUKKuqfxEGITZ9aDuPXWFdlgn6V2fqKr1vOISR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750030860; c=relaxed/simple;
-	bh=KpJP0dy117AMxckG49vmRlF23+PVI63MeKxWPlYCMVc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O8iXurcnmbvrdXEhFULsrF2mzHn3sif8+/gMvNd4X97i9JOJ72Uy30hPpD04nlaqITET7ndgEBbksOG5IU2cU/YpC81JuAwetyKHwSij9eN6KHYi/pNFRriz6StmCPg7W5nQrbn7irtLFr5xSE4GdyiW2j/pxyz1hmoBJL5yEK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cXy8f06J; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750031365; c=relaxed/simple;
+	bh=ZR+Ka9Q5bmbaVz87WlLOGojTRue5vQwJT551+M25uYw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PwcQnK204ahuBcArvg7RxnHrIuwOvf0VBQY72E/hZUnCNMvbrmoPx9JPAlBT1TvWsy8cpWzmM7AtzDc3s+WBMgXgbY3SJSrS80T2svX3l5CqsAYhMTbPeXkTyXYbG98swRzqaAQhA+fW1ypO/GMT0spLXML4J602rQXEob3ol6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCOaUztH; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cXy8f06J"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so210585ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 16:40:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCOaUztH"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7086dcab64bso33484047b3.1;
+        Sun, 15 Jun 2025 16:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750030856; x=1750635656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HpBHuz/HEp/6nWlgBYT+qLfKH0s7nFem8lXkvyO+wos=;
-        b=cXy8f06Ja5PgFWGKPhzaoMGgIoWP1Hp6n9oqdHboPRsB/pCIjaHBMirWNdYNnncf9X
-         7dTdB3up9lZH+fa3DhHWicLj3ttRogCIHay1Mcz+AitgJ+UJn7CK0tLrVUiXvv6YXxiR
-         kgNKSWgBsCswRfZXyJni1L3ooaFkZXcdVlhk5i4vNTMWkbe+uR2/8j3Jq1J8KWED/WwA
-         k7lQc1xdkCpkPF4OQrQD9192pIMonDDiHF/e9n3b2IiRDQD8XIEzaVwL3sFcs9YOTw7w
-         txaX5wDclLrLwl11xdyF195XbtYN5iZm9S+fWQOHRdR20Z+ws5T00NPs3JOVMnPDlRek
-         sysQ==
+        d=gmail.com; s=20230601; t=1750031363; x=1750636163; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZG9HUyM6bW1tFji2hu6a2hM7CvhozNYb72MSFTw02W4=;
+        b=LCOaUztHpHgVi95XtiYPM9Q9LPwYjVmPXTOSza2hQ5w2B54ts36xijKUh6bR8d5WU/
+         FtWeEzPaleOLjCPpAkVJ4kqCanHTvMeYhPbqApnDY3PVfe2mjhvAik4XJH34lO63O5ZH
+         Bn0Mu2jzPaU9wx0Hv4dlKzWwZmGJR5ccftusz0V0DV22W9vn8tOya2LYyVe6aWNEORlb
+         OTfuOO6s/+iYegmG9U+yBkMY2XoFIG+rYzTllgUOUf5z1Y5M/WPoAlw6xYoHEfy5Kq6D
+         /yCPNe8x3xJRB0VdXrZs4w5OAEuu2QbYqWGwRS+yNrDdmX9uMsZNKidYyq6VcEb1g2td
+         NoaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750030856; x=1750635656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HpBHuz/HEp/6nWlgBYT+qLfKH0s7nFem8lXkvyO+wos=;
-        b=Qk8rMKEBNGuCQxcAPtZ1BHA7mXg6iEmmPoPuqBBR7jHs23xGDi7juz1kxsf3sOwVwy
-         5TvBFYNHImwVA2Bt1XHSaogJ3iDYUoM0P7e5S+E68qLcbSU4DLdA65hNuRulSrudrDv8
-         AV3YqQ+hHumOL7mFoPWIY3lRT3uE3htwrS6wpyZSRdFRduT93P3FR5xyF3AGSRJjTbpw
-         gr8jwG5rxpq1DYslzcr7Q3GYN8Q4BP/+axT9koRrjCufoKZ2go9uP64xn3gxX/9wyLjQ
-         R34rgfoR8P5SgcqZGWM9BIyycWA0KyTCWNUinE4qfuA75pd7XX2iL2Kf8FAgYRsfNVSS
-         ErOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrrJF4tozrYUvUe9BynKO95/VxZntJcViQwleRFJBqp6zEdb523AzqiXUYTxoWlSwLUZsZAfpp+Tysp4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxxWtndfsrNHXqRdg124MoCUxiaSCnycUMKfy2cEf0NwR3JiNP
-	XJZdox4sQ/+Stwh86N6Tn8KHgjPsD5GB9I7B/BtbI3EgaenhQdiZR4Geg3fXf+5IvgJGr/Zsa4k
-	whwMzGJq5y87ZeyscvDJXnzQv45/J8gHipEa1/zgg
-X-Gm-Gg: ASbGnctcn30CjuOVi7opBez9Z7rnlBuaSZIpZLVAGm/eV9CDmZ9hCyuaFcHOza5wQyu
-	OVw8i74Bt1BfNU1DQZuBFDrEhvjKyy2kLqRhhT9/7rad6WXbGiRU5w4EIxxOpSkowULEl3yHDVZ
-	CtXr+ry7uGgdH1lkmkxxkyejD9T35zrQxTjGDar2EFU7E9wuUw30oR3rc=
-X-Google-Smtp-Source: AGHT+IGbsWpvnH6DVDc7fRN926+vMrf4dYRBE2E8qWEIOI/xPmLfRYxbCN31rxqcXeuGTdXjzHz8ieXI1gb0wwej/PQ=
-X-Received: by 2002:a05:6e02:18ce:b0:3dd:c9c2:820e with SMTP id
- e9e14a558f8ab-3de09fc2fd5mr2507345ab.23.1750030856387; Sun, 15 Jun 2025
- 16:40:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750031363; x=1750636163;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZG9HUyM6bW1tFji2hu6a2hM7CvhozNYb72MSFTw02W4=;
+        b=wtFUwPPuh5W7i+yD3KwFD3djLvBlJMUfI5+VT/E+hB3eIdtLUN+47Q5NUDVi/uZ9DP
+         OoknYqleYisBuspobYUEpg1rC7RqdVCwj3Z1hoGIFF8kqYJhX7vgrNkJXg77hT+7DVRW
+         Yzx/Z2/JL++kh66+5oHx+m3hHJxqV3cXdFjU9t3s1bQHRNDA7MlArgEQtmigSVQ2UziA
+         AHp/FjP/XGyRUo01h60nNRedY22s93m/ahjBrhMNLswbzZQrLe3tDUz4wUGOJ8aVbDcV
+         1Tgo21xgqf2f/sMlHNMFohPc2v/DVh/jPoOECgs81OxZo3cSqvvo1qZKaqk0wIMsHc43
+         +sSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+NsplrtmkqzkkrbssCT5zmMQKImDyB7pk307XE99OtvveRlC3BJoq6+MdWkBqbZa4sJk2jk0JRI7e2fZq@vger.kernel.org, AJvYcCXaKoe+kXgNYHkZ3wPp5HFuOcpbpzywHMct6t35SrTwZJQQFbqUIEVwrTqimiDwahtvQhAosfM0+cg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf+DOBiLBUoy3gRuYvZfIMLoRnl6tRb1r9dqSiFNb9WCicwHH0
+	s2ogRNszqwKjmH9xMjXt+3Q00HHO+xDmPllPVks2Ox8tJSkoUAfWj2kZ
+X-Gm-Gg: ASbGncv2Jn46bWJyznt6UQqDvBSlg8j/C+YJwdEETA7XJYt9wNZO/CUhFj9Ktuf1Lu+
+	N+dbmjJxh1JRnUi5GpQckv0+w2glz6q8NwaBsFBysoVkMp5fK+fKoR8hu/dCPlirlDaAUxK4hyV
+	SjHyqp4uBb+ojm0mAtcKnfJ48YHf2jy4KwAuIA555e+Et4DBRHk9XYakklmhkZk1AeezPjWfYhC
+	eKD4KVwrtwE1+YZXThHUVR3MZ50jGcwdiF/BJoK7JH1N7Yj7S63rJOWAP51hZX2bANmdHWijJEb
+	No0CAx3xjwsA6AChLZ2l7/NweMyBx0do5NkSGw28ehE5B38gi2KXjahvLVmlGGgyyBtlRToBN53
+	X
+X-Google-Smtp-Source: AGHT+IHXglmGtVcHuPiRpWw41+NQ5ucgQ2jLPsoEFv34seFMTXSXLhbF2JBJp5LIoDqgsY2+4f1BPg==
+X-Received: by 2002:a05:690c:7481:b0:70c:a5c2:cef8 with SMTP id 00721157ae682-7117542acd4mr106912707b3.19.1750031363289;
+        Sun, 15 Jun 2025 16:49:23 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7118ab6aa0esm3416187b3.11.2025.06.15.16.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 16:49:23 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: conor.dooley@microchip.com
+Cc: alexguo1023@gmail.com,
+	daire.mcnamara@microchip.com,
+	andi.shyti@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: busses: Fix out-of-bounds bug in mchp_corei2c_smbus_xfer
+Date: Sun, 15 Jun 2025 19:49:19 -0400
+Message-Id: <20250615234919.525431-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614044133.660848-1-ebiggers@kernel.org> <20250614044133.660848-2-ebiggers@kernel.org>
-In-Reply-To: <20250614044133.660848-2-ebiggers@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 15 Jun 2025 16:40:45 -0700
-X-Gm-Features: AX0GCFt2OyNR7onsva6LNhdJ12BmP893yyuUxD4l1css5JXoQNvR9w2phvtqFdk
-Message-ID: <CAP-5=fXLCAN_8PpPRYcLpLXG0oPDqGMzn8VwuxPdg63+zFNTUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf build: enable -fno-strict-aliasing
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Yuzhuo Jing <yuzhuo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 9:43=E2=80=AFPM Eric Biggers <ebiggers@kernel.org> =
-wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> perf pulls in code from kernel headers that assumes it is being built
-> with -fno-strict-aliasing, namely put_unaligned_*() from
-> <linux/unaligned.h> which write the data using packed structs that lack
-> the may_alias attribute.  Enable -fno-strict-aliasing to prevent
-> miscompilations in sha1.c which would otherwise occur due to this issue.
+The data->block[0] variable comes from user. Without proper check,
+the variable may be very large to cause an out-of-bounds bug.
 
-Wow, good catch! I wonder if -fsanitize=3Dtype could be used to capture
-when perf's code is broken like this? Perhaps we should just remove
-linux/unaligned.h in tools because of this, the alternative of using
-memcpy doesn't look particularly burdensome. Given the memcpys are of
-a known/fixed size I'd expect the compiler to be able to optimize
-things just as well. Perhaps we should rewrite unaligned.h in tools
-but perhaps the kernel too. Something like:
+Fix this bug by checking the value of data->block[0] first.
 
-#define __get_unaligned_t(type, ptr) ({
-                 \
-        const struct { type x; } __packed * __get_pptr =3D
-(typeof(__get_pptr))(ptr);     \
-        __get_pptr->x;
-                 \
-})
+Similar commit:
+1. commit 39244cc7548 ("i2c: ismt: Fix an out-of-bounds bug in
+ismt_access()")
+2. commit 92fbb6d1296 ("i2c: xgene-slimpro: Fix out-of-bounds
+bug in xgene_slimpro_i2c_xfer()")
 
-becomes:
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/i2c/busses/i2c-microchip-corei2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-#define __get_unaligned_t(type, ptr) ({
-                 \
-        type __get_val; memcpy(&__get_val, ptr, sizeof(__get_val));     \
-        __get_val;
-             \
-})
+diff --git a/drivers/i2c/busses/i2c-microchip-corei2c.c b/drivers/i2c/busses/i2c-microchip-corei2c.c
+index 492bf4c34722..a79d4d327f20 100644
+--- a/drivers/i2c/busses/i2c-microchip-corei2c.c
++++ b/drivers/i2c/busses/i2c-microchip-corei2c.c
+@@ -492,6 +492,8 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
+ 		if (read_write == I2C_SMBUS_WRITE) {
+ 			int data_len;
+ 
++			if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
++				return -EINVAL;
+ 			data_len = data->block[0];
+ 			msgs[CORE_I2C_SMBUS_MSG_WR].len = data_len + 2;
+ 			for (int i = 0; i <= data_len; i++)
+-- 
+2.34.1
 
-Thanks,
-Ian
-
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  tools/perf/Makefile.config | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d1ea7bf449647..1691b47c4694c 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -17,10 +17,14 @@ detected     =3D $(shell echo "$(1)=3Dy"       >> $(O=
-UTPUT).config-detected)
->  detected_var =3D $(shell echo "$(1)=3D$($(1))" >> $(OUTPUT).config-detec=
-ted)
->
->  CFLAGS :=3D $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNIN=
-GS))
->  HOSTCFLAGS :=3D $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->
-> +# This is required because the kernel is built with this and some of the=
- code
-> +# borrowed from kernel headers depends on it, e.g. put_unaligned_*().
-> +CFLAGS +=3D -fno-strict-aliasing
-> +
->  # Enabled Wthread-safety analysis for clang builds.
->  ifeq ($(CC_NO_CLANG), 0)
->    CFLAGS +=3D -Wthread-safety
->  endif
->
-> --
-> 2.49.0
->
