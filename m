@@ -1,105 +1,159 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DEC2AEED
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7C8282EE
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750018093; cv=none; b=o0TbK/sc2smnSMpXG/I5WrUhcYQamAtxz2EeIfyWL00/2sYO8IDMDvg61dxxDoCb777Zl14wrNQ/kkwayBSgJeY1gwKjhemWw/HKiy/5AFT7Lo7IQ5v3oZYBHCGRMu9vp5x6XKgt7YxdbHeAG4eYi11Rfk1G8BfqrNLSl6nkrYM=
+	t=1750018365; cv=none; b=TBbdX061jGM75DuMS3BEVmVlvOiipD//eDSV3JhLvTVHsGvjcqyZ4sHWB4HKDyO2bRB8MT0cDQWKhiM9xdyWjCWd3F2zbw6B7KFicRf0H42vYwcM9tE7w0AoWkdc+ySQWxBzdpODIY/W2qMUkAY/HGOGftjttG1IGQvBHHhR5gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750018093; c=relaxed/simple;
-	bh=uMOPMEFm6zkUEwkTzRTS07bcGtVy0E9xLhozA2iAlG8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ik71vtOEaS+IjH9QL5E/LAxO68u6jsBfHTIRm9YBhThgXOpC+CEhYQpU+bsTKYCHV+/40VsaNZVxk98cmr1pOS9TiwcHh3Zl6lFyLKKzSq0CZw41o8xOhDoYd3upfm2n25pX3B+u5lPfnUo6hCOFzzNyptc83XjNNo5LVDrH0oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r00YtgYa; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1750018365; c=relaxed/simple;
+	bh=tWExRFroJUbV1gBcwbH+1djsdx6lJrpRJB9dBe6L6NE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J56p4KIXYK1IMVL5qlXVgeFZVn/O50sylGSEcDmPYn5//Y87PznjhOp1EYEE+1SaxVCpnFqSA7T1BIS5KVmm1j7Ta1zIU0TfrGDSWfH72B0ZKeixbcikAG7Ky/vdKw+YY5ERMMQkSqjnPt4lihqsDleLDZVa++ncO/oIDIZ2g98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Li4/sqEA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r00YtgYa"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b115383fcecso2450117a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750018091; x=1750622891; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/A+Xw7FOtOaP2Wv05uKtCUa//XsXy8YvXBf7/4De0I4=;
-        b=r00YtgYa/O4OWV7QmEG2L+PU9WgnC8BmKVurGH9XYUkx5YP4q72NZk3n/mqbRBW+yN
-         Fvlzf4CjBSuPeFx9M40vZNmfYT5pQ7mvDTBSjfcekIIBZxZfAH5GKPAOjNOn0mvcKnGk
-         ErNYzN/jAH0sYOLD6Ob0Pt3UGLS/73PKWWaItIytvXeQ2bXfrgs/plCG4VsJDmZ2qLTH
-         Tkt1tsYgniYym/y80WswPSgv8rXoZgX3fZ0ov54c/gQCAhkmVIPXrZK1QT6xhe6SYwrU
-         YFTwOXeG05k7payRYEJKTtTKeQFmtGo+FcmWTaL9OFS2Yp+iWqwFxlYXcd1delysI1Zh
-         Zjew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750018091; x=1750622891;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/A+Xw7FOtOaP2Wv05uKtCUa//XsXy8YvXBf7/4De0I4=;
-        b=rcdZ1wtVyGUMyBh4Fob0luV/NXnNqnbm0Qvm9rYXhndMsxFUKtCWP+xkaASC0jMcT4
-         iLqEnyVyO8f9Mpht2jWjcK4fGO0VGT3wWsxF2bDmvkyymkgUSgPBMw5+MzhxPbjvbtKj
-         69IZCawYwf5qF8xHquOCBuNWcUL16UmsX65CiEmnZNP0F33wOLZoMnwJHl5IU8VpaaDY
-         LhS8Ul+MVHSux2+cQ+5mORIhA4lZ5pP4dXIMWmJf7ku2NCYwMwKHUWzm2m+Hejvz/L7Q
-         WFyyH+jsZFs/FzWSvkMZivDzqZjuitZcJw0pO0vQ08W1Bg8oJjAXhNo1K2WUKbki9AB5
-         vr/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWcAp00/pdikf2l2u2xHtLJ05gO0t0Kfehj8m4KgcwxLH+7rdUs6LE/mY2xPZlUhug9r6Vu5yKohURPIuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvlK3aG3V8OC9UMXN2kb2z/TOXV7FuXubq/bGAGm9TFLXGLlT2
-	/+xws/fcrU1XHZdVo3dkMlMicEruw+0nGeIuX8nG5PO8FcegEIm2vfcEpzN+4p8gSTOA5NDZ+Up
-	DWfdAbLfoxGB2HTN9RQEymb9gOA==
-X-Google-Smtp-Source: AGHT+IF23fHiZFDqsUkUJTe5Jy6SuSLB12ZzYWCujHdrS7T08CwiXfZM3+F+UZSGHgkckhnF3DgNgir4mq+nA4nJCA==
-X-Received: from pgg12.prod.google.com ([2002:a05:6a02:4d8c:b0:b1f:dd75:de2a])
- (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:258e:b0:21f:a6c9:34d with SMTP id adf61e73a8af0-21fbd473bcemr10025937637.1.1750018091208;
- Sun, 15 Jun 2025 13:08:11 -0700 (PDT)
-Date: Sun, 15 Jun 2025 20:07:33 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Li4/sqEA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750018361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Xr+gpFXzM4wh3Cz5mie7JbHQetEfhOzTIahUWOoCnLw=;
+	b=Li4/sqEA2AraAev+uoedPqbu1u2vF50I34Xb606dLwsEibP5HznbX3R87XwMo0DUOY/pQr
+	TBRcqsKeKMn1mVOKvTwm0nNmRU6uWJidhn00pnbTCX/9MU/PIG5OuPlOdivrtaulRw5SkM
+	EuvS8Itw6nYOQFac3L06TZHpDXXHhpY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-533-JpH55DfhMBKfn9-qvYA-3Q-1; Sun,
+ 15 Jun 2025 16:12:38 -0400
+X-MC-Unique: JpH55DfhMBKfn9-qvYA-3Q-1
+X-Mimecast-MFC-AGG-ID: JpH55DfhMBKfn9-qvYA-3Q_1750018355
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 75BC619560AA;
+	Sun, 15 Jun 2025 20:12:34 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.45.224.53])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DF07B180045B;
+	Sun, 15 Jun 2025 20:12:24 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v10 00/14] Add Microchip ZL3073x support (part 1)
+Date: Sun, 15 Jun 2025 22:12:09 +0200
+Message-ID: <20250615201223.1209235-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250615200733.520113-1-almasrymina@google.com>
-Subject: [PATCH net v1] net: netmem: fix skb_ensure_writable with unreadable skbs
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, willemb@google.com, sdf@fomichev.me, 
-	asml.silence@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-skb_ensure_writable should succeed when it's trying to write to the
-header of the unreadable skbs, so it doesn't need an unconditional
-skb_frags_readable check. The preceding pskb_may_pull() call will
-succeed if write_len is within the head and fail if we're trying to
-write to the unreadable payload, so we don't need an additional check.
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the core functionality and basic DPLL support.
 
-Removing this check restores DSCP functionality with unreadable skbs as
-it's called from dscp_tg.
+The next part of the series will bring additional DPLL functionality
+like eSync support, phase offset and frequency offset reporting and
+phase adjustments.
 
-Cc: willemb@google.com
-Cc: sdf@fomichev.me
-Cc: asml.silence@gmail.com
-Fixes: 65249feb6b3d ("net: add support for skbs with unreadable frags")
-Signed-off-by: Mina Almasry <almasrymina@google.com>
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
+
 ---
- net/core/skbuff.c | 3 ---
- 1 file changed, 3 deletions(-)
+Changelog:
+v10:
+Usage of str_enabled_disabled() where possible.
+v9:
+After discussion with Jakub Kicinski we agreed that it would be better
+to implement whole functionality in a single driver without touching
+MFD sub-system. Besides touching multiple sub-systems by single device
+there are also some technical issues that are easier resolvable
+in a single driver. Additionally the firmware flashing functionality
+would bring more than 1000 lines of code with previous approach to
+the MFD driver - it is not something the MFD maintainers would like
+to see.
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 85fc82f72d26..d6420b74ea9c 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -6261,9 +6261,6 @@ int skb_ensure_writable(struct sk_buff *skb, unsigned int write_len)
- 	if (!pskb_may_pull(skb, write_len))
- 		return -ENOMEM;
- 
--	if (!skb_frags_readable(skb))
--		return -EFAULT;
--
- 	if (!skb_cloned(skb) || skb_clone_writable(skb, write_len))
- 		return 0;
- 
+Ivan Vecera (14):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  dpll: Add basic Microchip ZL3073x support
+  dpll: zl3073x: Add support for devlink device info
+  dpll: zl3073x: Protect operations requiring multiple register accesses
+  dpll: zl3073x: Fetch invariants during probe
+  dpll: zl3073x: Add clock_id field
+  dpll: zl3073x: Read DPLL types and pin properties from system firmware
+  dpll: zl3073x: Register DPLL devices and pins
+  dpll: zl3073x: Implement input pin selection in manual mode
+  dpll: zl3073x: Add support to get/set priority on input pins
+  dpll: zl3073x: Implement input pin state setting in automatic mode
+  dpll: zl3073x: Add support to get/set frequency on input pins
+  dpll: zl3073x: Add support to get/set frequency on output pins
 
-base-commit: 5466491c9e3309ed5c7adbb8fad6e93fcc9a8fe9
+ .../devicetree/bindings/dpll/dpll-device.yaml |   76 +
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |   45 +
+ .../bindings/dpll/microchip,zl30731.yaml      |  115 ++
+ Documentation/networking/devlink/index.rst    |    1 +
+ Documentation/networking/devlink/zl3073x.rst  |   37 +
+ MAINTAINERS                                   |   10 +
+ drivers/Kconfig                               |    4 +-
+ drivers/dpll/Kconfig                          |    6 +
+ drivers/dpll/Makefile                         |    2 +
+ drivers/dpll/zl3073x/Kconfig                  |   36 +
+ drivers/dpll/zl3073x/Makefile                 |   10 +
+ drivers/dpll/zl3073x/core.c                   |  967 +++++++++++
+ drivers/dpll/zl3073x/core.h                   |  371 ++++
+ drivers/dpll/zl3073x/dpll.c                   | 1494 +++++++++++++++++
+ drivers/dpll/zl3073x/dpll.h                   |   42 +
+ drivers/dpll/zl3073x/i2c.c                    |   95 ++
+ drivers/dpll/zl3073x/prop.c                   |  358 ++++
+ drivers/dpll/zl3073x/prop.h                   |   34 +
+ drivers/dpll/zl3073x/regs.h                   |  206 +++
+ drivers/dpll/zl3073x/spi.c                    |   95 ++
+ 20 files changed, 4002 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 Documentation/networking/devlink/zl3073x.rst
+ create mode 100644 drivers/dpll/zl3073x/Kconfig
+ create mode 100644 drivers/dpll/zl3073x/Makefile
+ create mode 100644 drivers/dpll/zl3073x/core.c
+ create mode 100644 drivers/dpll/zl3073x/core.h
+ create mode 100644 drivers/dpll/zl3073x/dpll.c
+ create mode 100644 drivers/dpll/zl3073x/dpll.h
+ create mode 100644 drivers/dpll/zl3073x/i2c.c
+ create mode 100644 drivers/dpll/zl3073x/prop.c
+ create mode 100644 drivers/dpll/zl3073x/prop.h
+ create mode 100644 drivers/dpll/zl3073x/regs.h
+ create mode 100644 drivers/dpll/zl3073x/spi.c
+
 -- 
-2.50.0.rc1.591.g9c95f17f64-goog
+2.49.0
 
