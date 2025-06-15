@@ -1,139 +1,78 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AF625D21B;
-	Sun, 15 Jun 2025 15:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57319136672;
+	Sun, 15 Jun 2025 15:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750000490; cv=none; b=bYpJ3t6HN1pejR8slsQ5nWM7QcLRS5d27ZCKCb6kTj6d3fw0LemtwHAw3iHzgtMv3LWs3FLeLq9L497P2fYcs/inz71RVK44kFacFhnOBhQMAieDh/aKpRxuOrg9KUiRCoQdK4DD8PSUfFXdPbS5k6rVsgmIJl0m79W9CQRbbbY=
+	t=1750001324; cv=none; b=OTvYJHWqIlHk8l/R2J0JESBPmAzRFjHweENwbFxOsohh3BK0VmL0/1sDUSCqhd8YUMRhDfhK7tRXXJargv6IpGbZ+RZakfuouTv+NVqdPiTxD6LKbZm7LeJoB6NyumregxRh4F1bcYutm3EaoXL92Zh60d/T77upZNziqRzX3kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750000490; c=relaxed/simple;
-	bh=HVGg2b4dETfvRRMS1KObnnYIH8VqBEDJ75o3UiizCng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aQGaeakgq1XbIVnrvwerHTCUD9Pp+s51pquVNO/wQPC+WIXv00XSJqti6h4WrMb7mD0dVC6G7bcODfHZq63WzMjM+/Q9e6zTnEJ/DyhPUKKnzbUtLiveO+jDhWMevcBNj93z1BcJ7rVpgZQbGl2RXu80s//dN/+leM6U6m710z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=euCHD4Vv; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750001324; c=relaxed/simple;
+	bh=xA5mHmkrGZu71u+vktnRJRhjOmvF6LkGoK+B9WLTl/k=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=EJf97oiGGxnf6nmMvsfZHf2me+SW8BtaBpJl3ysVFkEgVIxKqlpqljm02AQczz2FZk12dC6UDV8hZimCGukn03359MGDyaUFbeaSrLYk350y/rjRn5J/y64usiy0b0mLfKmZht4Ny8WY8X3CG6nCM2HrJNFjE1d0OABDReUjhc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KB69Db8X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euCHD4Vv"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-742c035f2afso2449364b3a.2;
-        Sun, 15 Jun 2025 08:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750000488; x=1750605288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q2XHfduxkI50goUmbRh0tLs3//lxjQzHdD0tvUgOrco=;
-        b=euCHD4Vvzxn2H/1vH7GtH78H4Rg7sqhLxlaRT4QQCrIsNRkTZ51MNMrxdG7SEsJ1Jr
-         DRvu8MYJDHbYdYQDGSfOLFduiJBph4rIcc1NN2rXn/ha3iK8CqXPK8GEu5Cy4UlxS0Je
-         kRJOC9z4haB9Toeuhc/wU3y/QjlsG0Ex3wUEZAdhlZs7HEJ6jp5LwWNmrB6gjtnuR8tI
-         Tfs0bfJexCAH+qoCdTocy+58l7DCEIH8INf/mLozQYgG0ZBtJBVLq1q7gYIKo/LYMPGq
-         3hDqflA9XyYsLMQ6hH+MI7VCbMp9OyCs6RGqnOX8jbhdB4fzqsy7ElBsHVmm1uBikRvG
-         rPxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750000488; x=1750605288;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q2XHfduxkI50goUmbRh0tLs3//lxjQzHdD0tvUgOrco=;
-        b=q7TujhO7uXSpxqMcyE3kQxMrYXf91G43kVAdovKazTNuJ+bpZ/G8gIob/YzBIyP1qc
-         TrwXaIxY4L0821fqaCW1b8xS1bW57+3iulG8C786tO7vEgvNkjbMkR9akMf0e0CSCucO
-         wUWwTMjS2i8sMOmvRWziQudQjAKwiGDbaKpbog09xztG1s3xge5Aj2AcD/Hq3QOgfh42
-         +CCd8s70MvZgQSNb0Bgz7F492SYMOzv5A4JYuwS9U1oBbLlntzF2T+9E9od9FyW3uuph
-         f0C0Mf1oeklbL+xwSoeAGwqQMTUem8vZmU0a8/b7Csohs+op9Z1vPJU3o+74M5bq9F8c
-         xi7g==
-X-Forwarded-Encrypted: i=1; AJvYcCU8dap7hsELoPfSHNY/6CuYUK5SD0tsvoKzLgjiCsZHx8AAeTIAPbgtl0T0+RsO5Acx4DokeHX8zFFfU7vJ@vger.kernel.org, AJvYcCVFfnRmXEGx7rpPcjvfr0ujiOm7/TJK9S+OhDu24ST9Q8lE3mW4/9h1ECG6VzP/4sTOxd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzp0ZwzJH1L6b/uxnBc3kNfTpWDjZ+sbk2+PlN5zp+65lh9fYh
-	y1QCuACr32sPiWTws3fY9mpCDNfmI5anDI6Es1glP32LYcRrMFLsbwKHfB6a2g==
-X-Gm-Gg: ASbGncv5c13SI20L0PgsYGsj5A52NR7QDNVXysBcg0cPuv11Fq8CBDw+C+nMGGSwC7V
-	POn1hbtX2MpH6YNSGmbuHGVSVTPFKHbgJYvcnavZnMNUdyQ45zO5f8TEhr5pr173o3QjGlmJQR2
-	6g/QNhMNGudzN9xqFAK1EWd/ElW5yIC3q4rKxyt/FhqvP9OagPJaDIvartwqIBm0COT7054/5GD
-	Ok2HCA6GXNv0FvpBTk/8J9y2xKlTK8zmUuGMwBKRM3lxwMECvN4K3DLY5SrAsXbwPqZCu7ABKKV
-	HsPf1QwOJIdKZky2pbhtHNMYIdTYmAp7nnhc25FJDjUOYTXidgNy8DMFvhFRLrAc+UWBasl84Pj
-	A+Q==
-X-Google-Smtp-Source: AGHT+IGq1OjC4mhUydkSvko7Z0RIr7FJnfDd6BfxHT+hxc75Ge2cUYCLom9mvffce4tass46LGxFYg==
-X-Received: by 2002:a05:6a00:b8b:b0:747:b043:41e5 with SMTP id d2e1a72fcca58-7489cfc785cmr9029961b3a.16.1750000487602;
-        Sun, 15 Jun 2025 08:14:47 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:482b:a929:1381:df12])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-748900b219csm4950022b3a.129.2025.06.15.08.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 08:14:47 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net 2/2] virtio-net: xsk: rx: move the xdp->data adjustment to buf_to_xdp()
-Date: Sun, 15 Jun 2025 22:13:33 +0700
-Message-ID: <20250615151333.10644-3-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250615151333.10644-1-minhquangbui99@gmail.com>
-References: <20250615151333.10644-1-minhquangbui99@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KB69Db8X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1B7C4CEE3;
+	Sun, 15 Jun 2025 15:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750001323;
+	bh=xA5mHmkrGZu71u+vktnRJRhjOmvF6LkGoK+B9WLTl/k=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=KB69Db8Xsbz4gEFfsi4ad0VvHdReNiB3hA0X3NHwDYLhrtYjfAVLj9tv5d9zxaXd+
+	 Wec4eKxTW5glhsALUpY6c9Ilv0s9F5HmPaDZp/q84bjtwcFPinASD3BUkkdzqBnY2r
+	 3LdfZSWIT8I02Wl4fgR+6aH9sDmBFn/D2CyytNnBoOAOtwxpY6kbVnwIKxbYWfrE1d
+	 d3u7u8HE2YOoJljUl5bz4kknafxLAuRoYPTbQaq7TcbK1zu09EpHQ/mm0z+SorEJP+
+	 sEvCUbQLStJEMJ1yK2EtuDUcG94QUipDgmsjtLQXZmoZyLjb7LRABFzSDtmYrc8/+y
+	 w+03PnkfOJRmw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 15 Jun 2025 17:28:39 +0200
+Message-Id: <DAN7OZOVQE9O.278A4DZTGOT9B@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] rust: alloc: implement `Borrow` and `BorrowMut`
+ for `Vec`
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>, "Alexandre Courbot"
+ <acourbot@nvidia.com>
+X-Mailer: aerc 0.20.1
+References: <20250613-borrow_impls-v2-0-6120e1958199@nvidia.com>
+ <20250613-borrow_impls-v2-1-6120e1958199@nvidia.com>
+ <DAMHZIN35QQ9.3N5WSB58J4WG9@kernel.org>
+ <DAN417QCDAVJ.1TNY82G9ZVDYF@nvidia.com>
+ <CANiq72mEpM1vyuFEue12aDHdheXCZ2oWiuzXkN6-D-KkHHhuBw@mail.gmail.com>
+In-Reply-To: <CANiq72mEpM1vyuFEue12aDHdheXCZ2oWiuzXkN6-D-KkHHhuBw@mail.gmail.com>
 
-This commit does not do any functional changes. It moves xdp->data
-adjustment for buffer other than first buffer to buf_to_xdp() helper so
-that the xdp_buff adjustment does not scatter over different functions.
+On Sun Jun 15, 2025 at 3:16 PM CEST, Miguel Ojeda wrote:
+> On Sun, Jun 15, 2025 at 2:36=E2=80=AFPM Alexandre Courbot <acourbot@nvidi=
+a.com> wrote:
+>>
+>> That's fine by me, I was just a bit nervous to start a doccomment
+>> directly with the examples, but in this context it appears to make
+>> sense.
+>
+> Yeah, that may be my fault by emphasizing a lot the "title is used as
+> short description by `rustdoc`" thing :)
 
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+I also do that pretty often :)
+
+> Here that does not apply, and I agree that (at least the title here)
+> is not really conveying anything.
+
+Might be something for our "how to write rust docs" documentation :)
+
 ---
- drivers/net/virtio_net.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 7c9cf5ed1827..678502aefddd 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -1167,7 +1167,19 @@ static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
- 		return NULL;
- 	}
- 
--	xsk_buff_set_size(xdp, len);
-+	if (first_buf) {
-+		xsk_buff_set_size(xdp, len);
-+	} else {
-+		/* This is the same as xsk_buff_set_size but with the adjusted
-+		 * xdp->data.
-+		 */
-+		xdp->data = xdp->data_hard_start + XDP_PACKET_HEADROOM;
-+		xdp->data -= vi->hdr_len;
-+		xdp->data_meta = xdp->data;
-+		xdp->data_end = xdp->data + len;
-+		xdp->flags = 0;
-+	}
-+
- 	xsk_buff_dma_sync_for_cpu(xdp);
- 
- 	return xdp;
-@@ -1292,7 +1304,7 @@ static int xsk_append_merge_buffer(struct virtnet_info *vi,
- 			goto err;
- 		}
- 
--		memcpy(buf, xdp->data - vi->hdr_len, len);
-+		memcpy(buf, xdp->data, len);
- 
- 		xsk_buff_free(xdp);
- 
--- 
-2.43.0
-
+Cheers,
+Benno
