@@ -1,85 +1,72 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E468F26528E;
-	Sun, 15 Jun 2025 03:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1750257D
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 04:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749959919; cv=none; b=r+a5cElkhvl+YcfpYs/1cIrD8Vh2Yjmj3Oa4doyOQKNKcl8/Q13Xwl0a/w+JOmaZD73j70HdQ/Yx9BQcIhCncelLbqiG7suk3N+Z51BqAqH3zf07hfsReN3+Fkvl+AvDsildlKYDZiwq8x8dW8merZBEQfUyGnZVc71yt6Dk7q4=
+	t=1749960124; cv=none; b=q7Vy6Zt5O5240LDuY7Cxi0Dd7QoIHbteEXDYRyLnF2CZ0OEiGeKNVhlM+6AVVD9sh9kH503Sfl1T3aLHvu+rlEmIojE4TqpfbeczC2d2bqk2uCmhDR/3bJprvYk565zhBmJ/Uqy52KOJmu3HaDQ/34IyghZUiPBkh30lzgMLqMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749959919; c=relaxed/simple;
-	bh=lSminI9thQ4D1Cmx3meEA7cWQlap1VEYZBL1D6u9zH0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MVwSi+vihrnq4ToRMynWKvNTgy5yGeyVunGL2buxRjfJyzWir8WzQSnWnFbnnWrbevURfABgQQ7xYhXWDzdr61Makf/BixLB4zF4EtV/Tz5qFs6b0ZZLsBGEqlvds0m1ezylhCXcU8qSRoJl0W6QQBDA9WpGB1yDcnGt+2IUwZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Sun, 15 Jun
- 2025 11:58:04 +0800
-Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Sun, 15 Jun 2025 11:58:04 +0800
-From: Cool Lee <cool_lee@aspeedtech.com>
-To: <andrew@codeconstruct.com.au>, <adrian.hunter@intel.com>,
-	<ulf.hansson@linaro.org>, <joel@jms.id.au>, <p.zabel@pengutronix.de>,
-	<linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
-	<linux-mmc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 8/8] mmc: sdhci-of-aspeed: Add sdr50 support
-Date: Sun, 15 Jun 2025 11:58:03 +0800
-Message-ID: <20250615035803.3752235-9-cool_lee@aspeedtech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
-References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
+	s=arc-20240116; t=1749960124; c=relaxed/simple;
+	bh=ZP1bJNJcNnb7l99z5r/bJYQnfEHmhbkP5pJU++7SdJw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=o40gSVwWy7nYlY6vz3x/FEqIwVK6ExY1yNhqYL1ZUdjg0d8HEWTS48jLZpzs+06kovNN7dJFm1fk4slJM9B3I6VIWD4lrWZGBL6l6J/e3v2IdJZk90+1z5rSDkQgFPkJhDSDb4OGkj62cZRgC60RYJYQM4LIQBPiYoLuI9PhfU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86463467dddso371852539f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 21:02:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749960122; x=1750564922;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=skIiczAq1NkJyTS3mmGkz1leJMCO5pTpUyZ75go4uqg=;
+        b=ttukCA0MKaLqDT+Eqr9wCW8OmljTmFdbyp1ab2OlqAN92NLh/ih0/mrYq+lRu3noLs
+         P4mR9nljJAHlywoUAqS/nmvE9ZZnYoZSRHvp0bloXm65Vw5XrPhzFJMM5SpR4HESsgFW
+         KTuo0WWAhUvAUL5yS1reebRMl64nQXtIWE1rRf48D4T96QRFiK2q2hD7E2YXtfJKasdd
+         +3wUDJ2WA7CplHKjHGEERB3vKznwgUuhQZ2n95FmEiprX03QOSHa0ssougGPZdzNFosS
+         dn6+hLo1k1CtA1za7W6d9fDhgkR/ZabQZWc6EISjQGf9a1QdnJl9ApWuTNhyQ3EQe3Wm
+         ZcTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvSOI0oYswEKqMuzmbCK4d2+R72qmyATjvigQBjmDfDt1//BDbN1NT6xa8QwySabhtoZ6UejJY8Ur31/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR3U4F6jWnTIGKHpQqyFv16axDxpSEexG+1C13BMrVwfAhLueR
+	5dMrTTJCYJAUw7Z5+F4Au4oYNuD72kvGy69MAaqrtDvbwjqdZU6V1Nv987g+QtWrNeqiyv3Vyet
+	TZiP4rHkCNo/rO5+YpZMzlIm30EavPKTfFbv0fhXoLQOOLDRVRkiWslR30ZA=
+X-Google-Smtp-Source: AGHT+IHBmq7qDSN75o1pZE1NEkE6/cz5aYGaMeGi99hYD7SWqxaOo4sZ+QUIeOHmNsFnFymQT22JqFZAK8X62qCXK/zfN90kFvQh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:1aa3:b0:3dc:8b57:b770 with SMTP id
+ e9e14a558f8ab-3de07cc20a6mr47409815ab.11.1749960122027; Sat, 14 Jun 2025
+ 21:02:02 -0700 (PDT)
+Date: Sat, 14 Jun 2025 21:02:02 -0700
+In-Reply-To: <tencent_E8D075F57739678A3C9D3726965E37FA4A09@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684e45ba.050a0220.be214.02b9.GAE@google.com>
+Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for SDR50 mode in the Aspeed SDHCI driver by setting
-capability shadow register.
+Hello,
 
-Signed-off-by: Cool Lee <cool_lee@aspeedtech.com>
----
- drivers/mmc/host/sdhci-of-aspeed.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-index 365c02215273..ec6833295b6a 100644
---- a/drivers/mmc/host/sdhci-of-aspeed.c
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -41,6 +41,7 @@
- #define ASPEED_SDC_CAP1_1_8V           (0 * 32 + 26)
- /* SDIO{14,24} */
- #define ASPEED_SDC_CAP2_SDR104         (1 * 32 + 1)
-+#define ASPEED_SDC_CAP2_SDR50		(1 * 32 + 0)
- 
- struct aspeed_sdc {
- 	struct clk *clk;
-@@ -427,11 +428,17 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
- 	sdhci_get_of_property(pdev);
- 
- 	if (of_property_read_bool(np, "mmc-hs200-1_8v") ||
-+	    of_property_read_bool(np, "sd-uhs-sdr50") ||
- 	    of_property_read_bool(np, "sd-uhs-sdr104")) {
- 		aspeed_sdc_set_slot_capability(host, dev->parent, ASPEED_SDC_CAP1_1_8V,
- 					       true, slot);
- 	}
- 
-+	if (of_property_read_bool(np, "sd-uhs-sdr50")) {
-+		aspeed_sdc_set_slot_capability(host, dev->parent, ASPEED_SDC_CAP2_SDR50,
-+					       true, slot);
-+	}
-+
- 	if (of_property_read_bool(np, "sd-uhs-sdr104")) {
- 		aspeed_sdc_set_slot_capability(host, dev->parent, ASPEED_SDC_CAP2_SDR104,
- 					       true, slot);
--- 
-2.34.1
+Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Tested-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         8c6bc74c Merge tag 'v6.16-rc1-smb3-client-fixes' of gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169cbd70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16b5f10c580000
+
+Note: testing is done by a robot and is best-effort only.
