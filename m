@@ -1,73 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F31E288AD
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 11:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6714372608;
+	Sun, 15 Jun 2025 11:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749986952; cv=none; b=XnJgzds7uoJ1Mus3MIztffzH8AIo6Iqo0oKT9R2OcyjlmL2MJUmqvL9e9A9MbAd5uYSvx6/H7IJY7uIuHdRRe9MT3iGBlJjpXv8FTVPiXxfH8OD4wQb4f/gxK3d28/mvP3RoBoRRBnLw4dZcGceu99lsxi7Rj6s7TqYuY/Uu84s=
+	t=1749987268; cv=none; b=GxO6cHyloeXLq2w9r+388ZeitcASeJkoe2JZxv8I6QQJSy36FmmBl9DiCNy1zRPNiy0gOmkdCpa04K0yfOcR6Fp8PHQGrS+ggA7SG+KJ9ESUsQDaJhKbtmfEf+7tEydPMuUPoMLTQB13Vz3q/zFj6ddd50JqX23uYuaJ32WmAeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749986952; c=relaxed/simple;
-	bh=G/+e21hifaP8bhyvW07D9vm1h5vZCD5r+TCtnsCQB9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQIl0zxemOI5r1X/T59HykRzoS19Ea4WJE5OmTfyogDxC2Yvj/JXD1tKKcLUPwJSCkmPeK27ThN920LHU6+irAblEEw0o6tkwiyWeHeuEGS7/gNV2R4tM2I7QFaDpOzBl24kacQx+e0b2V3e/h7HZWWKb8c/mWo2cA3NuGZXWqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lu7omQCR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749987268; c=relaxed/simple;
+	bh=MacYbavYNz1W2ltzSnxcACSBdNDdF6JtM+xzGCJsEeA=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=ihgAdGwbp6H2RvalG0c5YcH0p70kf7b8GDmMV62hIYyWpO9xkr4clZZygbwg3yebTa+EuHXtJ2GcIJ38JB4AHMPzZU++tl2JpNC2c6bvSMSxN0cFOQcoVXTVdRoIWhax9HZjrS99qMbBSmbUZApPpnEQR9M1VbUi/7VdilxHvU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=18bUvjrR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uZyVA3Fo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lu7omQCR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A1AC4CEE3;
-	Sun, 15 Jun 2025 11:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749986951;
-	bh=G/+e21hifaP8bhyvW07D9vm1h5vZCD5r+TCtnsCQB9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lu7omQCRuu3H/9WR2H0tGuUpYwPXnMmEDTwdZ8nVfjLj9jKsMYJ+WlVg3gMS+dHsY
-	 S7fRAOtJ6o11LXFMxYg3X+yu+bnIZp/dJxvYQCKfAmYVhgWy4BAqXmNErOwJ+WERSa
-	 AmP8tavuqRMge++iCzatLJkJhbC8x/f/ul9R9CZy5dw4sm6jRC7hY8U9FZDj8TFf5z
-	 T6paCFzO3tHYqUmvCFPuihJKLGYeklZh6DxH7WaiUJ8jeAfO+BRS6nq8CsMkR8Mgs9
-	 8eSmAq21Lt13ade8v7G5/4G0woYjRzrI5+6XpTvqRTILVew+09nXBKuhCxDWbahSnW
-	 pH8g03qt8g61Q==
-Date: Sun, 15 Jun 2025 13:29:06 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	=?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>,
-	Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH 09/13] x86/kconfig/64: Enable popular MM options in the
- defconfig
-Message-ID: <aE6ughh6UCgRPFqq@gmail.com>
-References: <20250515132719.31868-1-mingo@kernel.org>
- <20250515132719.31868-10-mingo@kernel.org>
- <CAHk-=winzTt3SCzv8BWGMm0fzrXS0gb59gK0h4dAe0L6hj3X_w@mail.gmail.com>
- <aE6tFoBkF3tl9aeH@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="18bUvjrR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uZyVA3Fo"
+Date: Sun, 15 Jun 2025 11:34:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749987264;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qw5pDrYqD0EvEzP2/lkwtqDjFaiYp8P6jbtK5TPeAiQ=;
+	b=18bUvjrRmMGuKRTqgXA76WBSy9VTohJKLS0gpm6Mp/tvYjUKPuoOYsBNgybMd+K5d566qF
+	bKEqkBcQQA6EI6760/wGhx9TTNuwaEHOS6K9sfsJgYtyrPCj3njcc5HNardBxp9un6xj4i
+	HVp7AL+QaHoFpZTAsFxAW8/CXWLUkcNTyRAcQRyY9sBo5crItg1s7CstgUCv6NemS3f99C
+	paru3MXsWyMKrKge08BpVQpqmYKPUwh9cDd1B5vsKbYzlzcKkIAVQNT3HxSloVeLrrqySw
+	t/LJGgne9a+mmy0XunN9fiWF3d7Kag0vqpQ+qR+0MIniiHL9FAnPjtetjeBiKw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749987264;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qw5pDrYqD0EvEzP2/lkwtqDjFaiYp8P6jbtK5TPeAiQ=;
+	b=uZyVA3FoEQz+7ibilzRjIdB2UcY3Z9Opoz2oyTW6/cDDkyJVNaFpODCYVJDTW/o699L540
+	RghayDHH27r9B0Aw==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/kconfig] x86/tools: insn_sanity.c: Emit standard build
+ success messages
+Cc: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw@amazon.co.uk>,
+ "H. Peter Anvin" <hpa@zytor.com>, jgross@suse.com,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Masahiro Yamada <yamada.masahiro@socionext.com>,
+ Michal Marek <michal.lkml@markovi.net>, Peter Zijlstra <peterz@infradead.org>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250515132719.31868-6-mingo@kernel.org>
+References: <20250515132719.31868-6-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aE6tFoBkF3tl9aeH@gmail.com>
+Message-ID: <174998726275.406.9585779903946499168.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+The following commit has been merged into the x86/kconfig branch of tip:
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Commit-ID:     1dbc32c1928d5a775df8e2953a2debae3054e11e
+Gitweb:        https://git.kernel.org/tip/1dbc32c1928d5a775df8e2953a2debae305=
+4e11e
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Thu, 15 May 2025 15:27:11 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 15 Jun 2025 13:24:39 +02:00
 
->    That a 'stupid' or 'broken' kernel option is default-disabled in 
->    practice has almost no relevance and doesn't help in filtering good 
->    kernel options from bad ones: almost all new kernel options, even 
->    useful ones we'd like distros to disable, are default-disabled, and 
-                                        ^--- enable
->    stay so even if all distributions end up enabling it.
+x86/tools: insn_sanity.c: Emit standard build success messages
 
-Thanks,
+The standard 'success' output of insn_decoder_test spams build logs with:
 
-	Ingo
+  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random ins=
+tructions with 0 errors (seed:0x2e263877)
+
+Prefix the message with the standard '  ' (two spaces) used by kbuild
+to denote regular build messages, making it easier for tools to
+filter out warnings and errors.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Link: https://lore.kernel.org/r/20250515132719.31868-6-mingo@kernel.org
+---
+ arch/x86/tools/insn_sanity.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/tools/insn_sanity.c b/arch/x86/tools/insn_sanity.c
+index 213f35f..e743f0e 100644
+--- a/arch/x86/tools/insn_sanity.c
++++ b/arch/x86/tools/insn_sanity.c
+@@ -253,9 +253,9 @@ int main(int argc, char **argv)
+ 	}
+=20
+ 	fprintf((errors) ? stderr : stdout,
+-		"%s: %s: decoded and checked %d %s instructions with %d errors (seed:0x%x)=
+\n",
++		"  %s: %s: Decoded and checked %d %s instructions with %d errors (seed:0x%=
+x)\n",
+ 		prog,
+-		(errors) ? "Failure" : "Success",
++		(errors) ? "failure" : "success",
+ 		insns,
+ 		(input_file) ? "given" : "random",
+ 		errors,
