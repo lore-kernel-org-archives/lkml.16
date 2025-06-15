@@ -1,72 +1,102 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1750257D
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 04:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3708460
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 04:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749960124; cv=none; b=q7Vy6Zt5O5240LDuY7Cxi0Dd7QoIHbteEXDYRyLnF2CZ0OEiGeKNVhlM+6AVVD9sh9kH503Sfl1T3aLHvu+rlEmIojE4TqpfbeczC2d2bqk2uCmhDR/3bJprvYk565zhBmJ/Uqy52KOJmu3HaDQ/34IyghZUiPBkh30lzgMLqMI=
+	t=1749960315; cv=none; b=fSkjUko4sZB7SJMiQqR+/c87SQ+GWQE6um3lhTVE65wIKfhlrKh7l99C58zqPHRONV/4+eVoUSo3yqD0JY3TY8iDOi910kYqv/MM+42FnqmN0sVFm18GGQgf01beskEpKDFt+aEH+dIeXnREJC5UH0tIFT9EfEVfzjvyNFskrwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749960124; c=relaxed/simple;
-	bh=ZP1bJNJcNnb7l99z5r/bJYQnfEHmhbkP5pJU++7SdJw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=o40gSVwWy7nYlY6vz3x/FEqIwVK6ExY1yNhqYL1ZUdjg0d8HEWTS48jLZpzs+06kovNN7dJFm1fk4slJM9B3I6VIWD4lrWZGBL6l6J/e3v2IdJZk90+1z5rSDkQgFPkJhDSDb4OGkj62cZRgC60RYJYQM4LIQBPiYoLuI9PhfU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86463467dddso371852539f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Jun 2025 21:02:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749960122; x=1750564922;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=skIiczAq1NkJyTS3mmGkz1leJMCO5pTpUyZ75go4uqg=;
-        b=ttukCA0MKaLqDT+Eqr9wCW8OmljTmFdbyp1ab2OlqAN92NLh/ih0/mrYq+lRu3noLs
-         P4mR9nljJAHlywoUAqS/nmvE9ZZnYoZSRHvp0bloXm65Vw5XrPhzFJMM5SpR4HESsgFW
-         KTuo0WWAhUvAUL5yS1reebRMl64nQXtIWE1rRf48D4T96QRFiK2q2hD7E2YXtfJKasdd
-         +3wUDJ2WA7CplHKjHGEERB3vKznwgUuhQZ2n95FmEiprX03QOSHa0ssougGPZdzNFosS
-         dn6+hLo1k1CtA1za7W6d9fDhgkR/ZabQZWc6EISjQGf9a1QdnJl9ApWuTNhyQ3EQe3Wm
-         ZcTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvSOI0oYswEKqMuzmbCK4d2+R72qmyATjvigQBjmDfDt1//BDbN1NT6xa8QwySabhtoZ6UejJY8Ur31/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR3U4F6jWnTIGKHpQqyFv16axDxpSEexG+1C13BMrVwfAhLueR
-	5dMrTTJCYJAUw7Z5+F4Au4oYNuD72kvGy69MAaqrtDvbwjqdZU6V1Nv987g+QtWrNeqiyv3Vyet
-	TZiP4rHkCNo/rO5+YpZMzlIm30EavPKTfFbv0fhXoLQOOLDRVRkiWslR30ZA=
-X-Google-Smtp-Source: AGHT+IHBmq7qDSN75o1pZE1NEkE6/cz5aYGaMeGi99hYD7SWqxaOo4sZ+QUIeOHmNsFnFymQT22JqFZAK8X62qCXK/zfN90kFvQh
+	s=arc-20240116; t=1749960315; c=relaxed/simple;
+	bh=g91+xGSs2y3BXnr+hvFkKS4a7U41TWjLqzVhaX39URI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=dZHZK90LacaXDmf0TX2ccv6sHPzeHIcXKmuY89IpG1APhyU9FqtZ6Lv1ZhfclunIwefqFbDGj9imS13PX67NWqrkF45qdGun/pPLSLxNS47hTF09mqXgIKEKYcg3LfDC0lS5Njomvcq0ZfiwHPq5NWTeTbN4dnc2FRA3p2iA7QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=FPbfMXa3; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="FPbfMXa3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1749960301; bh=qrJLJFV7Q/Oa/aDPJBoKSBOfqrsyIwvhwuDGB5DV2Xk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=FPbfMXa3kaX1fUok1/zDGP8lIvuZsnumtlSqC5QiEx9rPxFRxoGU2w9xX/E7+8835
+	 qgR3NKypv0DbVQKAq1xfIko3j8G7FiU/9cEF45GKaG3iZWSGf7Ngx5HHsRUOOa/Pjn
+	 ez7ZF2DlCV7xdpBmBF7TYyOmUzJ/DPgZ0nwggxjU=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id E29316D0; Sun, 15 Jun 2025 11:56:41 +0800
+X-QQ-mid: xmsmtpt1749959801tp549q9iz
+Message-ID: <tencent_70C092DB0661498AEEF56EC78C90E7CA0606@qq.com>
+X-QQ-XMAILINFO: NDz66ktblfzJ1QXUyq4GmO7xLJ0oefUnSn39sPbbmK7qFu56LsEfTOeYA3NZIJ
+	 cwqC5hi1Myt4LE+JBXRo1WpcEVmUqzIGTeoZxgBkP5nAFeC0uVWC3ReQ1m6OZaplb/4MoCs0GISu
+	 LGikRf+bIN3t+hOrINNyYYSz4UxTGYVOLl19cgeVHJyI7/6k5ka0vaQc74+Scg5uS6e2OrxZLbEJ
+	 1gXGgDM1VMPC0t/kb/f40Eh2XcJwEANj6VFWiMoNf58xkSwagfiLKgW+PpXxDOFwAjELuvgKv9PZ
+	 PRWMy7l6hDSmFZYel9XBJt1DpWbkck1rW+7CHYEyooWZM+M/iXdEsaFPNAiNJdnR/NcJfAv+lamK
+	 XMhs1f93p5W6TrJoPa+TV07Z6AshLOv7MIaVm93Ym2qqodzXSsj6YFGoAXf0M6S2ILJDIVgN7ubh
+	 fO/Xv9l63KsmaA8tvraLuyDj7MUgzDBALwSchdhvi1O9dcK0tXCBx0tfXsl82khTdLGHdBm4CnB9
+	 BD3E04JoDFI3lbs7cIX/Ddv/RSdosmLNTK4D7yovX/LRq7gRPmCWQp+ubva5IcLEu2IskaO68P4B
+	 i92swAv3ORtxGOb0VjBF6EiarbxpEzUMC3WxqwVXZ/xcGFU3WcfT9FSoCMXfR2RhZan/GrdAL8WF
+	 5rX/GS6FetyPJsJi4rHD+y7zdRwSVTnI1ktpAvZsmJA0d6/IuUlNSPc5stkiIRpX1NR223k9Lcfg
+	 91R2xi2//8ZZtUQLVieLXtatvx1LmVVMnd+fzbwPKFTWhsFVHMfxrcpAUzJhVehvaacvjkY84aD4
+	 vJv1hXMS8O/dth72tf7XEronxKwfLpLkXGIM55O1TU35nlgIw3UgfwYjJ2oiQZ6DEEprABpQdE5x
+	 TSJsgfEUOrhHtZQ/lEEKxI5zTePVo9v6vf+RAni/2OBDwCWI0donJlD0nkNfEwu8BPjYt7a4AzNc
+	 E+2x7DBZDtuaLJAhzHOy2Y/8TKrf6z
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+Date: Sun, 15 Jun 2025 11:56:41 +0800
+X-OQ-MSGID: <20250615035640.3660441-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
+References: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1aa3:b0:3dc:8b57:b770 with SMTP id
- e9e14a558f8ab-3de07cc20a6mr47409815ab.11.1749960122027; Sat, 14 Jun 2025
- 21:02:02 -0700 (PDT)
-Date: Sat, 14 Jun 2025 21:02:02 -0700
-In-Reply-To: <tencent_E8D075F57739678A3C9D3726965E37FA4A09@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684e45ba.050a0220.be214.02b9.GAE@google.com>
-Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
-From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+#syz test
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 14ea47f954f5..664611cca689 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -686,7 +686,17 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		vi->z_tailextent_headlcn = 0;
+ 		goto done;
+ 	}
++
+ 	vi->z_advise = le16_to_cpu(h->h_advise);
++	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
++	    vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
++			    Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
++		erofs_err(sb, "per-inode big pcluster without sb feature for nid %llu",
++			  vi->nid);
++		err = -EFSCORRUPTED;
++		goto out_put_metabuf;
++	}
++
+ 	vi->z_lclusterbits = sb->s_blocksize_bits + (h->h_clusterbits & 15);
+ 	if (vi->datalayout == EROFS_INODE_COMPRESSED_FULL &&
+ 	    (vi->z_advise & Z_EROFS_ADVISE_EXTENTS)) {
+@@ -711,14 +721,6 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		goto out_put_metabuf;
+ 	}
+ 
+-	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
+-	    vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
+-			    Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
+-		erofs_err(sb, "per-inode big pcluster without sb feature for nid %llu",
+-			  vi->nid);
+-		err = -EFSCORRUPTED;
+-		goto out_put_metabuf;
+-	}
+ 	if (vi->datalayout == EROFS_INODE_COMPRESSED_COMPACT &&
+ 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
+ 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
 
-Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
-Tested-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         8c6bc74c Merge tag 'v6.16-rc1-smb3-client-fixes' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=169cbd70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
-dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16b5f10c580000
-
-Note: testing is done by a robot and is best-effort only.
