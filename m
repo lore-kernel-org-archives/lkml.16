@@ -1,108 +1,115 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4261DA53;
-	Sun, 15 Jun 2025 23:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22144CA6B;
+	Sun, 15 Jun 2025 23:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750030391; cv=none; b=IdQOKQdm3wbpm591tzX3JSLHeSY/p3iCBAOeymrFqlCz5Ohvli+qX9HSGBVgyI+l6tMmwTBP1CmwJ1WBVzSZoXY7gDEXNYbhejcHYKH+hQGUv+l0bfA0gnKt6UNILXseAZQRFu9K+g4pgKEqgpMHIGw9rElzFYG7LTnjiaLrmN0=
+	t=1750030724; cv=none; b=t0biA4ypz2CBCKqngFeY7y6lUo7EUKOUcr3YYzsVbt1YRT86yKcY+UctVCJI7EzXNXUYydqcMnRFYIgYrMMnhZqKXhRm88wXDI054wp4248YpYl+iQTbouqBxGSYNy2E7+nWgkpvRpXakyhJ9uRViNlgfkXwC7TGeDuzHTmKfJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750030391; c=relaxed/simple;
-	bh=YlPQk7j80QqOkmbUSSCmLcsvgr1t5V3zGkq/indYuZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LktmEj0Lky0MbFKQmUo2iLqMXpkq4fm6ik2Dkl7uE/SBRCc7DFa4hsV7oOGfYiPIYDef26lbB1lB7pM/AaNHvnJtZaLRsgibvXe7/ar+iqayOu7y0Wxy8AfpgeUki5755eI8sV5r6sSHpNt+JQa0W742Cw5LZI3fDfhAgWvzNAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXQEznYB; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750030724; c=relaxed/simple;
+	bh=xLncOc3CFTq3kolmyxZbpzaSBIPFm4F1dTZw7krqanw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=i2CoUC+akaTl5ucOXEu4VbFmWMKNW7CgLJxeFw7RRE4zcr5L8EBZMtNlHqcBjhCmIJ9Cp/a8MHxBuWO9vaxjScN1H0BbwjUjuZatSzLPRUN3iaAwyaiWzQmVp4Gcoc2vggN5w55i2igjyjQSt1D0zgBhk+ueagY4TopVXyXfnlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Cj9rv2oe; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXQEznYB"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-711756ae8c9so13270677b3.3;
-        Sun, 15 Jun 2025 16:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750030389; x=1750635189; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsOR1EWstSUkJeN0xRWqZ1f8fpAyKGGlNEK9p2YjE5M=;
-        b=FXQEznYBAFvnSsW0JKbaodPA/UP1T1wIlm0ZySccNhET9HfBSL/3mBvC3Rtw0fYcx7
-         bKZb0YVahsZ8kVi33pmzFH8iZStdHW0DP4UkQZZbXGQjakWCuY0UnzuQjRhdQPqE/TaV
-         WCs/EyEAdDI7Vu1oZtoOv8jX4ywNY+FsWa6San8UGlNU6CBOr+fe/nfuC/0AibMpFmS/
-         JoNFthLqNhwHBDtpqaIr1zsAc5kCrkXkLKDmRNdLHKj4LCpGcUUred0qBgIfrs/KeuzG
-         t7XRSdQCsLqS+yX1KmT1Ig6iHsAEdtz8wk+s/AC+z8HbwPV9jAUjQqcQhWwe2gr1xtZK
-         jBow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750030389; x=1750635189;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NsOR1EWstSUkJeN0xRWqZ1f8fpAyKGGlNEK9p2YjE5M=;
-        b=gn5037whnkD4IUgbevdqvoVQRZDil5brAe70LcZ8iRBlPyngzfTeq/ZtYSjFdZzua2
-         /mTZmpj+1199EB6JGyGj3lrZ0Deq4K7s4QcvuT5bavoe3yY4De8JmYRVqBhuatSmwemi
-         fH/cfUGFp10Kk8U930W69VjBmOm3+dQsUqYyxebwALmZAGAvwgV8Wf6pe449yCQwrFw0
-         lXj+L3/1hI4z9taGzMxSinLfBNWCXtoBGvLqcUZ+TkVbmVBZJ9KTnnf+rCQTzH+oV66S
-         qydGDV9xRArB+rKKXsDTwya/COJ8qc4lwo7WewRS3KbINOxwsqbUs57vGnyreigxE9sq
-         f2Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvjUBylkxgSueo9O8QQTqzQax1VnmAmq/MUN2euTV+GKJLe4nk3fR1CfLe6aCMfeSTANE9ckdmaWM=@vger.kernel.org, AJvYcCWlcDYeSajT2WFm/q6Agdt1j+cgH2Jex9uYS6Kj7aemKaMSqmxurd4LJpVLv7B/KXceHMaiLuozIh2PfxCc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUujtlv4GASbh5UWSqxFQjuMc/TpNORj5WQi9VNki8/7xIOlTm
-	4cXJujpyiHKnHX2ZYjnrHxPVGszZiLnH8y4rLEoVdWO66VGQU1QYaWX3
-X-Gm-Gg: ASbGncsr4CYqH9a0E+5gufoByOpOVkiBEPh+OU9zccgInUIP9MkOizAoOkLMAT/lKvm
-	GyKZBfAbslS9h4eXZQW6IcQM5ECpm3n+y+U9r+buLdjOeADAhErDfPooqhJjTlFQB2ifmsxeKov
-	QjJTy/fbv8GS0v2Y6ZSrJpn2R2nJ06yH5hksQQ4m68RfSj50k7xttAlp6QngyPXxOjOHUtfD/RJ
-	U1Oxun3q4V3kyOkgtCZRt/mEzy+QisWl6dxy+wiY7dy4z/pP+yjSNlEmewmg5rosnvM/gHI9eDX
-	it+MyRTd832m5lraPAkoIywftIk1fHejUzlR0GJhp5K/Tt9EZKUsbhqFVGbIOJ7N3TF05PBfanT
-	0
-X-Google-Smtp-Source: AGHT+IE9GWdR36dFWzvR7zPclik2YU1bmIJCP2VuSSYLadb4oaCAbUyr3nD9XTV6Bof8zz4xwIzIBw==
-X-Received: by 2002:a05:690c:4483:b0:70e:2881:2f5f with SMTP id 00721157ae682-71175432eebmr99852127b3.20.1750030389047;
-        Sun, 15 Jun 2025 16:33:09 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7116e12f614sm10108647b3.105.2025.06.15.16.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 16:33:08 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: jdelvare@suse.com
-Cc: alexguo1023@gmail.com,
-	andi.shyti@kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: i801: Fix out-of-bounds bug in i801_block_transaction _byte_by_byte
-Date: Sun, 15 Jun 2025 19:33:06 -0400
-Message-Id: <20250615233306.498536-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cj9rv2oe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750030711;
+	bh=Ehb24vgBhJ2eyVQDbn3/HiwyeCmitsSp6RcfjVuw8vM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Cj9rv2oeEoA/6ZhcPRKKZnGtRzQwRqwSH2M1k2CCtcuVXKYXRzydcv503yrsQ8VdD
+	 ueQ1NSpTnbCSiJ0e7FrlLL9MIMotGxlTz+dtsSPRWTHDKh4pgFy69hnJkd+RqDM2V2
+	 7Qxe/DJyCC4IuXHVdi2rEr8PyaoCc5wZwBi7e6ssSReM1dUYQ6Hqa3PznwPrVLeYM5
+	 7X5ofxX61Rk8zAYkjAiBJhqaNNRm2YS9Zi8MZxbJbf4ViHoBLp08OHphZgfBDEMFaS
+	 IBwetHpToC8x0cB59Q6y/5/XUaHQrCiTCB06MYM5ZhV4PtzftR2SuGhN3HODmfNEu+
+	 Jr/p1TNPn3jLg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bL8hl1XYdz4wcn;
+	Mon, 16 Jun 2025 09:38:30 +1000 (AEST)
+Date: Mon, 16 Jun 2025 09:38:30 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Subject: linux-next: manual merge of the driver-core.current tree with
+ Linus' tree
+Message-ID: <20250616093830.49011634@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/TVlESwlCST/P23V_l28_jia";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The data->block[0] variable comes from user. Without proper check,
-the variable may be very large to cause an out-of-bounds bug.
+--Sig_/TVlESwlCST/P23V_l28_jia
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fix this bug by checking the value of data->block[0] first.
+Hi all,
 
-Similar commit:
-1. commit 39244cc7548 ("i2c: ismt: Fix an out-of-bounds bug in
-ismt_access()")
-2. commit 92fbb6d1296 ("i2c: xgene-slimpro: Fix out-of-bounds
-bug in xgene_slimpro_i2c_xfer()")
+Today's linux-next merge of the driver-core.current tree got a conflict
+in:
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/i2c/busses/i2c-i801.c | 2 ++
- 1 file changed, 2 insertions(+)
+  rust/helpers/helpers.c
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index 7503418be39a..aed4473fb9ba 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -678,6 +678,8 @@ static int i801_block_transaction_byte_by_byte(struct i801_priv *priv,
- 		return -EOPNOTSUPP;
- 
- 	len = data->block[0];
-+	if (len < 1 || len > I2C_SMBUS_BLOCK_MAX)
-+		return -EINVAL;
- 
- 	if (read_write == I2C_SMBUS_WRITE) {
- 		iowrite8(len, SMBHSTDAT0(priv));
--- 
-2.34.1
+between commit:
 
+  c7f005f70d22 ("rust: cpu: Add CpuId::current() to retrieve current CPU ID=
+")
+
+from Linus' tree and commit:
+
+  1b56e765bf89 ("rust: completion: implement initial abstraction")
+
+from the driver-core.current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc rust/helpers/helpers.c
+index 16fa9bca5949,6451cfd94a8d..000000000000
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@@ -13,7 -13,7 +13,8 @@@
+  #include "build_assert.c"
+  #include "build_bug.c"
+  #include "clk.c"
++ #include "completion.c"
+ +#include "cpu.c"
+  #include "cpufreq.c"
+  #include "cpumask.c"
+  #include "cred.c"
+
+--Sig_/TVlESwlCST/P23V_l28_jia
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhPWXYACgkQAVBC80lX
+0Gw2qAf+JG0BK4zbVDN29kPNhvIBS5BQb8ORguycNmS3Y5AnSkoBsjL4pJiIXiW1
+IJBta/ivXbeHazuHPHhIyt1ReWBz0k3iEZBLrVJPOjpiDLSMWX/KqUV1cTmlppSO
+gUccVCpxfBw4kZfo1DLt2lx3g4b0dGMDtFDcxyDf7mLMpSqugMnNLw/u2sq3loqA
+dTVifVvkuG64sXR/JXjiNhZdniAQ9gK160jLP56v/z7GRycXL3l6V3DM62Iyx3OR
+JwAdHArwxIz82vvJ1yI3UvSZ8m2xYT93XqAZF8ayXDnZhkFpyAFeP2+tw0xB3oEK
+2Yn+VMlFx9jM7/mdksyxENFsix7ekg==
+=nL+P
+-----END PGP SIGNATURE-----
+
+--Sig_/TVlESwlCST/P23V_l28_jia--
