@@ -1,114 +1,118 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECF11EEE6;
-	Sun, 15 Jun 2025 12:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9A01BC3F
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 12:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749988952; cv=none; b=sC4ejhYer+IiXqufAptJrNf7EVQZAHRlaQ+Dg1enRlDKIybDu+QuXqEzjAhFhBq+ZknaUQ6ulB0NRD/nVnNDI4N6KTFoiRWHfvP497d9LMgql8uM+mVHFPjbwvZlUEQQi+XPivwqr28wP7KbzbTUBeWGbYAldYoVOhICsL2hs2E=
+	t=1749989117; cv=none; b=YFcqxyQH/rv9qDYEpLiCSTKt/99Yl9BfAvfZzyYXkQG1NEJCgYwb1c0wt/LCZbatCwZ72AfqchT3325/pQNxxR67JZ1JN3hv7w1QCGyVwvn6l6IIYWsM4GAXj2hj7UK/IVea0beEbdw62KhzeVWbC0U4BmdLcznNjnR0Et8odkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749988952; c=relaxed/simple;
-	bh=+Wo241f5iLEF9A9MW15cxNuSp/Ymag6/MqvwK180/Eo=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=pxABRioUFFhuX5ivdNSm1mig9EmDEUVt4SAx5hWGI8LeHpR3y5AsqHcbTtnGIcJ89wGxoa6iWn0dKi2nX+PMANH/z0P4xQYshvLHd4BJiv/cTfddF7Q6/bLxgDO6zqC0JKCTPWfmGhXlqFz+Yesvc0hogIdWVODSLC7WS/SoNCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=FlBhO5D2; arc=none smtp.client-ip=134.0.28.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1749989117; c=relaxed/simple;
+	bh=BFQom8CRsfX5+9eMLCdrsz8BwecPF8NjpitltozJt90=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J7DUNcb/Eh1DqbOt4+xktvtnZo8kQ5R4VVSEYzwxZ0MHhbcdg71NolCi+XgDPs2M3s13AVuhr3H/KqTrvtwjP/m9yZGugCyKstSjgUGsp9lI1Vqq55NvZqEOmIvZr8yx6dZ21xwncbvnYzN8UDCCEcfJO9BXATemcLJO8VxFeeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+47ggTK; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="FlBhO5D2"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout3.routing.net (Postfix) with ESMTP id D1E5F6028B;
-	Sun, 15 Jun 2025 12:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1749988942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XRcdvBt0CthVJmnj/dbaqQtXhJV7sGdCW7ml88MPC1U=;
-	b=FlBhO5D2z9tg6W1gK4eedfxgObCDzADaUVoNpqI4mUbuJo2B9TDQMwJHp5qyUby+9IaLjC
-	7CqRrCj/VLERiAuYikxrK8EwdtpC7gdJu+ZGVSZ+EsTQKM+CKTRd1KNvrH+aEqrbvr2AgO
-	EwwRI18V5VA9KByMltAqfQujCGs6WMU=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id EDB97100506;
-	Sun, 15 Jun 2025 12:02:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+47ggTK"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso6215458a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 05:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749989114; x=1750593914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Lv+MSsgBNOJHMMndsvJGs/aVKU1C3SCJjVTZh90PrQ=;
+        b=W+47ggTKnykjhlmtB0zo9jfWnR6BMD8fjkVpmU/SefUMCWcWqxabFbLA4U0tXdx28w
+         BwwDBF4y9IOdxaIZE7HtQJCsXwO4QNlq+Ml5mrg3LU9nGtIRiTsk7ToaHS73kW5LfkTa
+         5D1TMdwmR04NHGoRZrDyfUeG5zswzzhUxcg/hqTwatHMAYTuWreSnsGC3KWG80Aj0yIN
+         +UnItEk7Tx/YGBI20ZQn3zojy7QrPs+iwefU/ssYLjktvAcmuhw3rqy3AyG/NbXfztfx
+         otDTY0T6UnvQuJ+xbHZMwj4sz/hLBnemAd9Q4Hck0Nl61k15Sc3eR5gis8On8tLu6Ttc
+         gg3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749989114; x=1750593914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+Lv+MSsgBNOJHMMndsvJGs/aVKU1C3SCJjVTZh90PrQ=;
+        b=wTQ/v4Zug1hlcPqVsQi2VYK3WoMvTUf83mDV0SfXGQFYlJVCPdd14PprvyJRTfjdus
+         pO/4W4yaVQPt2w8VfZVgipBepYdqZOUdtWR/0251/tJ/qleqgePeecVZabgIp6gbbHhb
+         MxaeSO2PWWFhxOz22wjYEA7NJvFrz2UcfUx+7c1i2/LHYQyKonqbW30lvN/IzJ61ezMJ
+         dA7XEb5ej5k1SgHRwLX+ORmrbMV1EEV2ex0o0S9b+nYaxD1iHFHuBZdN4Z/lvAtp4Kb3
+         p0mj41qiOms8Nyzm9GaHrbs0FF9WyCCsD2bAWnnyUUJi5UgOJdVaXv0AJAJOB2719M2h
+         cA+Q==
+X-Gm-Message-State: AOJu0Yw14qXnb0L6fRgPg98Ze2+q20QwHvvrnPYorHqhHs5XX16odjqY
+	H3auK0eywrI4UtX4t+2udQItQKE5FCEoQUye8R/OknxryrApOOAsxxZC
+X-Gm-Gg: ASbGncsWteK1cyJJiKBSwpeQq+Eb1SlKWk0nCuGZpXhH4YxrIIETpWoLwKNDAZeigXU
+	VPEAtBPgXMjq1VFX2+Eoddi3fm1YezRm6Acgq02Dxkxx8VWsq/tuP7nEniJBtHNShnNcG0Uuw39
+	q730ajat+8najGKPLG3BQJzz8+Un3tkDahQYGDzewss5AuOBr7zuIKn6S74qeGbSzFtu6fS3wW+
+	9JSExp5L8yEuITUIYWtM/yHzQBC3fAEMtRjxRVYBPitrsN7zgCC5e4p91jrdHKY8CUxFxKbGsVg
+	UNJIYzix7225Zn1DdSLYo6F00b00SiwWQ5vSVSB9y+F7w8jgcjo2iY39C0H5apnE8kJpKtM2VGQ
+	SgnAR6z/lSxy7
+X-Google-Smtp-Source: AGHT+IEz2BRhj2e2JFOilbrIz3NUtIlZ/4xtR9DWHFx0KVc2OSxb4tij3Q4MxiGTj9FLayHQqs8NMA==
+X-Received: by 2002:a17:907:3da0:b0:adf:7741:ba61 with SMTP id a640c23a62f3a-adfad31f820mr552625966b.14.1749989114227;
+        Sun, 15 Jun 2025 05:05:14 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892b63fsm464279566b.128.2025.06.15.05.05.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 05:05:13 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	luto@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH] kernel/entry: Remove duplicate function documentation
+Date: Sun, 15 Jun 2025 12:04:26 +0000
+Message-ID: <20250615120429.1496-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 15 Jun 2025 14:02:20 +0200
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Daniel Golle <daniel@makrotopia.org>, Felix Fietkau <nbd@nbd.name>, Sean
- Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Frank Wunderlich
- <frank-w@public-files.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v2] net: ethernet: mtk_eth_soc: support named IRQs
-In-Reply-To: <aE6cyHC39IV27PcF@lore-desk>
-References: <20250615084521.32329-1-linux@fw-web.de>
- <aE6K-d0ttAnBzcNg@lore-desk> <d4781d559e3f72b0bcde88e6b04ed8e5@fw-web.de>
- <aE6cyHC39IV27PcF@lore-desk>
-Message-ID: <ed6cd7a2e489e89352322f77af1ddd89@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mail-ID: 982a129f-54e7-4806-9863-06e9150fd816
+Content-Transfer-Encoding: 8bit
 
-Am 2025-06-15 12:13, schrieb Lorenzo Bianconi:
->> Am 2025-06-15 10:57, schrieb Lorenzo Bianconi:
->> > > From: Frank Wunderlich <frank-w@public-files.de>
->> > >
->> > Hi Frank,
->> >
->> > I guess my comments on v1 apply even in v2. Can you please take a look?
-> 
-> sure
+Move exit_to_user_mode_loop() documentation to "entry-common.h",
+above function prototype for consistency and remove duplicate
+function doc.
 
-:)
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ include/linux/entry-common.h | 2 ++
+ kernel/entry/common.c        | 5 -----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
->> Am 2025-06-15 10:57, schrieb Lorenzo Bianconi:
->> > > From: Frank Wunderlich <frank-w@public-files.de>
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index f94f3fdf15fc..dad1f257e3dd 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -302,6 +302,8 @@ void arch_do_signal_or_restart(struct pt_regs *regs);
+ 
+ /**
+  * exit_to_user_mode_loop - do any pending work before leaving to user space
++ * @regs:	Pointer to pt_regs on entry stack
++ * @ti_work:	TIF work flags as read by the caller
+  */
+ unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 				     unsigned long ti_work);
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index 3e9f2d40230f..67df77732fd2 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -81,11 +81,6 @@ noinstr void syscall_enter_from_user_mode_prepare(struct pt_regs *regs)
+ /* Workaround to allow gradual conversion of architecture code */
+ void __weak arch_do_signal_or_restart(struct pt_regs *regs) { }
+ 
+-/**
+- * exit_to_user_mode_loop - do any pending work before leaving to user space
+- * @regs:	Pointer to pt_regs on entry stack
+- * @ti_work:	TIF work flags as read by the caller
+- */
+ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 						     unsigned long ti_work)
+ {
+-- 
+2.49.0
 
-> I am fine to have it in a separate patch but I would prefer to have 
-> this patch
-> in the same series, I think it is more clear.
-
-I added changes for your and daniels comments to my repo (top 2 
-commits):
-
-https://github.com/frank-w/BPI-Router-Linux/commits/6.16-mt7988upstream/
-
-i would squash daniels suggestions in this patch here (MAX without __ 
-and fixed
-value of 3 to use for the loop - i guess this was intended for this 
-purpose) and
-then the change for index in second patch.
-
->> > Same here, if you are not listing them in the device tree, you can
->> > remove them
->> > in the driver too (and adjust the code to keep the backward
->> > compatibility).
-
-i plan to use named IRQs on mt7988 without the reserved ones (only rx+tx 
-+ RSS IRQs),
-and loading not index based.
-
->> afaik i have no SHARED_INT board (only mt7621, mt7628) so changing the
->> index-logic will require testing on such boards too.
-> 
-> I think the change will not heavily impact SHARED_INT devices.
-
-I hope so ;)
-
-> Regards,
-> Lorenzo
-
-regards Frank
