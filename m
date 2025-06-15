@@ -1,113 +1,108 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56E91E4BE;
-	Sun, 15 Jun 2025 23:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D8C14F98;
+	Sun, 15 Jun 2025 23:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750029230; cv=none; b=LEvItq1pWFJbntZ+YIy1WipeCaBUhU+2PNxg/xp/gVaZIJ5Z+XDEr6aQGSNPTZsrH8IgBSipryCIDqHed42ZJfYeAyEoH+yxCtQ810W5x/Ix313UaAewZw9MzfLcusHH1JfaioFC2zrO64ftTki8JrxaIRhDr0FXu0bN/v7ja0Y=
+	t=1750030142; cv=none; b=fxSIQr9uNGFXnEFLlU/LB8kRtHSt+a1RlKbOjs0ffmPMhRu5NzmFrgVYlzhSL516n5P8ED0N1qzhDhozM9EMIo5kLh6Xe5846fOviYEyNbAfx39qK8/VCwWygySKYxI/DPIMlyCx3U3McZmYlJ4TVdH60uXUdilwsL2G37CfwQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750029230; c=relaxed/simple;
-	bh=5toCBH4bcEJPuw3IRfCjhudOj5I05Qfb62ssPo0moHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdcjZC7Bup1KVPsolDFWpIuixg693mVLdnLUxswOwKStV/zKLrESwXHDbs8uCsfXnZSF3ICu7dSY/P9nRGlxO1A4pXcvBmcjtkuH4TtrGnNvopBEqUklsvLU4zVUG/HTzQf/x1NSOrhsv53GIGnk5a7aN5C1ifXQVuyWCXo+Sq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/WSP6C9; arc=none smtp.client-ip=209.85.215.178
+	s=arc-20240116; t=1750030142; c=relaxed/simple;
+	bh=DWimgH8rMKjuf4vMr5NxaUQb9aQLnmXc2cKfvKmOYjs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Qy4w12PC47BJwoZtO2wkQDAnZvLgpof2XgtONBapm35za/Xlp/wzgaOPOBhYgHTvb/zsYavZMuTUZelNGAEh5BB84JAJeErr26w3LI67WbkxPitr5Gbn5xgGGnsWFlfem0qGmuNxKUHwtnKoSoDUGizXI4h/NdTVem+s2Z2YnMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjbcZWdi; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/WSP6C9"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b2c49373c15so2875962a12.3;
-        Sun, 15 Jun 2025 16:13:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjbcZWdi"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e64b430daso38456887b3.3;
+        Sun, 15 Jun 2025 16:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750029228; x=1750634028; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HLyMK5ruol9+9iNwat5WrtKnD5+vG87HPazjSYbAGP4=;
-        b=S/WSP6C9hUG6yiUZdmOl9wigZ7ZrMbcx2IiijFH9ho0lwxI21ehMM3ocCxhA9tZiFp
-         KhnWozTLI7J+S3auZ4OesIsBrsjtr8t/qR9zcSt/RKbvEMBmcSTEnGaPoUM1lalE6CHs
-         ZDdYLBPqK+ngmELklyENBUlYu0+s7GTfDpFgjeRYHks6S4svWRC4Ii1fL+EQAHueiKLZ
-         fy6mMwN6eAIhrCRNa3zUKIZvmwFa8cfzzlHY/0/x6GcH9tLMD3s5F6+wkQS3DjO2lV8Z
-         YQkg9dVmx570auLYQbu44vRsXe6sdVg3eiLlcfqqCzJ9uHO79Btx+jjAZWsTZTDBZm3Y
-         Sedw==
+        d=gmail.com; s=20230601; t=1750030140; x=1750634940; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U4L1oIP7Q7C4H/Wk40XbdL60soYz2tCkmxujds9z+l8=;
+        b=TjbcZWdi5DWOdlX8fbljloepGMuJnFNKRgCFBDsS2tID9r1o1HV1+VbT43N3L78u6y
+         cez/pT092W5A8yi6PTtGQyPK4BS37n6ZjUICYN1mKRqVRythwjySyDgm+s3xsxbfEixS
+         Z1XpjHxp+Ro3t06Ht7gSubZKDvTX+QUxzjHW+tIQM9p6kXguN1JVfd8CCAAslWChF+TR
+         G+IQhbM3NtVUb9wiMDDQ9Ub/zowor9ZRWm22UO1mCIPAf6y3/kFDrCnl+sXP1HHNfwPj
+         ww3Hsy4ezm2qpLUCspi69u1ayKyICYmuaUElu90Y0rY3dXRN9EDhtqtABhYYPrZu7hEX
+         tZGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750029228; x=1750634028;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HLyMK5ruol9+9iNwat5WrtKnD5+vG87HPazjSYbAGP4=;
-        b=ZU8KrXmNovsEvHUpEINEvk/T7GzNgLNpkD905gbwUhgOjEtEZK0Lujzxs7hn7QzW2q
-         tZZqLn8hs+FiVasiEuiQsNjmhi9B8LfcLc6lI62h3SSdkQtjrS+t/gqBgR+8LIsriqlx
-         yEZPhoUNXKAF7Qu1OTt6ZSM3SpgYI68f4VHmIt/ZPYOyaXcZhPY5Jfe6r194IC92eo6N
-         sPFbfQkt1hovtEsQ/Hq3URewIleLgrmkosXfPen9MEJ75wgr0eQctwbejYNx8Pa1/Zj5
-         lt8UaHk/IDv8pK4qIecVZHIFu2ACp3Wxv8itMRb/N5nft0THtFkbiy0RoPDpvV6pa0NH
-         Uxaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmEFcuJ06rklaobh76QH2TEORQ6QuuhMHawtiaKWrOdM/F1uB1rxxBqGQJhvR/dI3d/Mv8X5B//LLyoNEB@vger.kernel.org, AJvYcCW0QP40araeX8U82pFbmf+PXoxEc3rWW8PlRaGp1tRC05Bqqb+RRicxBXDM98B8J6S/wZG86E1oy0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkXqJ3fZPEJ0mNXNgQOZ1+mlJaqiKXClFz2gSHtq1qKX/jU1Jp
-	gd3r/P6txqxQOH5egrMcbMvSLAP2dTu885R1IalnYvONP8VtY539gqqE
-X-Gm-Gg: ASbGncsBD0QdAPvkyiD0/A7jqiGBApOYsTmSH08wJm8EofEf9rpzOhFYgYvK3IQavNK
-	gVXQphTS2tcgAwDTqtLziT5NShDxcm7eOtud6Iw7lYi8CLS7cvs5IUvXfBL9wyp89xBFOZXwBgU
-	V0LfYjWeZIFigL68VnGFPzN7hgDhs5DuQbn/pLpPP/duhSiRXxvabYskru5WdYknoAaTKMwTx60
-	GBZkuUxodhZcxgwXv+swgufmC/+71OwthEA5ghrQWfpHfhvUPo0z/2MHxB3kokqcpuyTT+cbmaU
-	l41IdxA+p9MSJHtFpEvO/pXNPf6lXaJFS6si+o8GWdc/jZBYlmQifG/cw6lxgg==
-X-Google-Smtp-Source: AGHT+IFEcPND5vwsqcSU5ddfDn6hXExeR+v39v06YQSQLuc8wHY+pdRuzg8eS8K4pOem5pussUPHDA==
-X-Received: by 2002:a17:90b:5847:b0:312:1dc9:9f67 with SMTP id 98e67ed59e1d1-313f1c7c54amr11291125a91.2.1750029227901;
-        Sun, 15 Jun 2025 16:13:47 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c61f60sm8140069a91.42.2025.06.15.16.13.46
+        d=1e100.net; s=20230601; t=1750030140; x=1750634940;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U4L1oIP7Q7C4H/Wk40XbdL60soYz2tCkmxujds9z+l8=;
+        b=nRubw+cHRKB6sKattnUHMDjlK6R0Z/464DzAEEPsr3y3fWG5/MpE8JbL25xvrpBAm/
+         X/mlRB/ki9Li9u1MyeSWp82MixiPByeRzcwHULNYpDhmDzC9bw30G9i9HD6VehndxJeg
+         M6k4hUqujEu1HAuR4fWIfmEeDoxWmqxWoATqCV4xiGJR3V05Av8IOEvRB6mDOHgatXBS
+         xNKJRmF143mSzjs/7jrkksHjZeblCZz6Thf79K3chJgg70H0GCUEKTZEzRGu2hpgJTcd
+         7fmW+EfPK1i+RmbgzGoZ0+XeVC8SzaICjZW/xvptp5JEcrao2yc/XLnzUliP/GVYp391
+         ecCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUp2y2oa8ySk0v3ds/ZziJZflG8vqtFRm06k3Ismg/9t4CEFfJcqL4Mt71jNQIGKBGTaLQ1D7uI0ew=@vger.kernel.org, AJvYcCXM154j+U3rEMZfARzR/N/bz8Iy2Pzr8d03konFLDCHF+YVJRsbwwZOIJx2rJXqJa92nEqDwGHct8Yxzjqa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTNUJ3Uw8I7nOz+JH7nM3i0P9BK/YI8RkWZ3sFFJBrkF2JOHci
+	lTFS946MzJH9lVH27DKpjP4ReBUulQ+/L++PurhbE95K+1UjZN2Dvn4G
+X-Gm-Gg: ASbGnctF7J1tDaqb/qBDxauYCKpD7YbkKGMDw82WqWHRjPZa8vm+Nje6SbUMunCNlge
+	VpupaLRR9OY/hXj/gs9EfPgbKjXbBtbpUgkXgh0vJHz2XrCO4mR4bNgIntrYWvZ7P0MvtdqiSyD
+	tHVCrRzdoNZhL06XpqNBFLat/hnRi0NsNH+ElZRVXE4t4ULGAzqfz99APw3CGNVF91O/DnHlQrD
+	Xr5Pte4J/nyDoIC0lTsp0rlKs+oGcRPx6fHLc3BwejTXZBpNmzwX1Xa5aADvhs+wGjzCJlglwKt
+	xm3UvCtB8/bh3F2qgZxYt3bQ8YklyyyGe/Sf21f/yBo6oQt52azNRSee5IFbC4m9BNqKX+559Iw
+	g
+X-Google-Smtp-Source: AGHT+IEI55Gr516Y+UUPmCbRzJEcva3gfImFqYXM9qu30jqtB/Ym8lYr/p6NbruMNk+/HrEyoc/eOw==
+X-Received: by 2002:a05:690c:4983:b0:70e:16a3:ce75 with SMTP id 00721157ae682-71175235ba6mr104360107b3.0.1750030140039;
+        Sun, 15 Jun 2025 16:29:00 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71152059c2dsm14946487b3.2.2025.06.15.16.28.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 16:13:46 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id B5BA941F5620; Mon, 16 Jun 2025 06:13:44 +0700 (WIB)
-Date: Mon, 16 Jun 2025 06:13:44 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Charalampos Mitrodimas <charmitro@posteo.net>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>, neil@brown.name
-Cc: linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Sun, 15 Jun 2025 16:28:59 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: jdelvare@suse.com
+Cc: alexguo1023@gmail.com,
+	andi.shyti@kernel.org,
+	linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: filesystems: vfs: remove broken resource link
-Message-ID: <aE9TqJdq397XIMOl@archie.me>
-References: <20250616-vfs-docs-v2-1-70b82fbabdbe@posteo.net>
+Subject: [PATCH] i2c: i801: Fix out-of-bounds bug
+Date: Sun, 15 Jun 2025 19:28:57 -0400
+Message-Id: <20250615232857.491602-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bkwiZNqO9JFU4qbW"
-Content-Disposition: inline
-In-Reply-To: <20250616-vfs-docs-v2-1-70b82fbabdbe@posteo.net>
+Content-Transfer-Encoding: 8bit
 
+The data->block[0] variable comes from user. Without proper check,
+the variable may be very large to cause an out-of-bounds bug.
 
---bkwiZNqO9JFU4qbW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fix this bug by checking the value of data->block[0] first.
 
-On Sun, Jun 15, 2025 at 10:51:53PM +0000, Charalampos Mitrodimas wrote:
-> -The Linux Virtual File-system Layer by Neil Brown. 1999
-> -    <http://www.cse.unsw.edu.au/~neilb/oss/linux-commentary/vfs.html>
+Similar commit:
+1. commit 39244cc7548 ("i2c: ismt: Fix an out-of-bounds bug in
+ismt_access()")
+2. commit 92fbb6d1296 ("i2c: xgene-slimpro: Fix out-of-bounds
+bug in xgene_slimpro_i2c_xfer()")
 
-It's archived in Wayback Machine [1].
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/i2c/busses/i2c-i801.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks.
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index a7f89946dad4..7503418be39a 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -527,6 +527,8 @@ static int i801_block_transaction_by_block(struct i801_priv *priv,
+ 
+ 	if (read_write == I2C_SMBUS_WRITE) {
+ 		len = data->block[0];
++		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX)
++			return -EINVAL;
+ 		iowrite8(len, SMBHSTDAT0(priv));
+ 		ioread8(SMBHSTCNT(priv));	/* reset the data buffer index */
+ 		iowrite8_rep(SMBBLKDAT(priv), data->block + 1, len);
+-- 
+2.34.1
 
-[1]: https://web.archive.org/web/20071101000000*/http://www.cse.unsw.edu.au=
-/~neilb/oss/linux-commentary/vfs.html
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---bkwiZNqO9JFU4qbW
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaE9TowAKCRD2uYlJVVFO
-o2dLAP46bAAm5O1wzccUknNgMoA9EZgSOR1d94cSqzVeCPOifgEAprXdhpr6PYzU
-eBIWTc6sNJDICH4rgD8DUJg7Fj6Vhg4=
-=Nukv
------END PGP SIGNATURE-----
-
---bkwiZNqO9JFU4qbW--
