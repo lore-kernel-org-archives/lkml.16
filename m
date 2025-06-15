@@ -1,102 +1,115 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE08257D;
-	Sun, 15 Jun 2025 18:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C1127BF95;
+	Sun, 15 Jun 2025 18:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750013225; cv=none; b=EDsy+pjZm8FkDYn70PINwq73k4plkhAYagVebxOBrQNlmycwjWVJf/X3VI4WsADiZ/J+WfPPuRmYEibJ1W/MzDzB9YUdqYg/LHIutbnOr+4FLHchPKxspFYmy3fGlZ1I2N8NRcjDAiAMyNAzRtNewWbIEVyFJrgfha26GKhyeig=
+	t=1750013226; cv=none; b=nQBKTC5rc6Kk+M+QzUWUM6Ug9p6LJ3fiqkqd03pbnBca/5pB7iNXmqxPtiCTeFjh3vD6PmDQDgYecXjTOulj99KpMeBDMP4AWBWTOopOHgkbNaSCr4CPtv3orxz9exSZ3+ZeU+2EJyqATkmUk6obyVPPwaidoHjs1WL5XyEfgZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750013225; c=relaxed/simple;
-	bh=FHLY/oMp3IbDogGka+5YygLDwtn/U071IQdBMIgMTN8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lw7AP05FLkShpI119iRvrvi2Sqq5cDMJPn4kudlcdKHS0y3GVBNK2T6CU5PBf8Rmm3T8g/kc4/Owr9OhuELGTgcQEZYn315+Cvo5LXRfDXC+fro0bm33xHm1lKoKUBpnbnsZSx6VUBuo5LVqdo153SNLpcxw3mLl/ajH13fzo9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ckRe+Ui0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750013226; c=relaxed/simple;
+	bh=5b3uNryP074LRzS0e8lRw21Ibl8znCFGJk8dG32zXQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2w4MYW2vJCtPQcnzMs8C37/SmewTwzXzd6Sd6TVE89eHo4yzn8VS6qFmYA+TqZ9vU2iiqn/ks+oUR7AbCZxjpAaua8eTLNAfcPZ4S8XQLn0QkbNZS74amdp/p6Zh4VV4TmHcK6hFAxC6ltVLxX1CNcwrzmGhGWrM1Delb+Ldk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBPtFxhS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ckRe+Ui0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=s+3d1Jo34P9+huBHWpOnk8Ivu5q7A15Y3NLn06vskQU=; b=ckRe+Ui0gvZ3vwl/ITrGaSezTc
-	RlabZgRufDQqnWuULDeVTdi6ghgBUm+/0BLiaYpSe78QK3IEqIMb5m3BXhA3a6vZkD8ylUcejzGTI
-	EVTJi3YU1bR6IaiAaY3BuISVBnMJTti39tHPmzFTwNyL4ZLwD5xB25MoVz3NlyFHT5vJlJh6GORXA
-	672CDKAj6kEfAbvgw40nSgQ8YRM5UJIqDDb+8LIpgHL4mRapZiyxNKfaRfEtOFyHa7BleMw6bi3oK
-	rtsYoFOPllPHhiUrN6HCB1oi1Ae70bZn6DnPJ/YsKYKpO5ZBb6YcrzMv6Hi86IOIMABdokv4ZJWEx
-	PXiw4pBw==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQsNS-0000000F8x6-1kAH;
-	Sun, 15 Jun 2025 18:46:46 +0000
-Message-ID: <6e39ff76-b32b-4fc2-8747-ce6884524e41@infradead.org>
-Date: Sun, 15 Jun 2025 11:46:42 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBPtFxhS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA633C4CEE3;
+	Sun, 15 Jun 2025 18:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750013226;
+	bh=5b3uNryP074LRzS0e8lRw21Ibl8znCFGJk8dG32zXQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dBPtFxhSJMUXxmaT/KxQ35nsgIcXL/g9ImLlDTQb++SUrhRAv5BrYEyhMzlivQTnA
+	 b5r6qgTgn/HKGqJKv8iIJZIrBrbSU8quRUHzUx02dyadCT/fXANUmLE4BYuuyerOk5
+	 syWDFFmKz8D7g32RagfLqYXxRSTC1HcHir74l/R1J5sHSjE1peKYYs60gZCL3eQPFb
+	 cTq1v0r+DKJnH6n9ApPtKk3wepQy940tpEOG1qlya7EY3CViKAzbLFJr2wnU1AGoVG
+	 WMCEPfl0m7mcUWeu5p5Yg2rrbz49hc8W2AJ7VRhT2wOOyNch3zWfyN/nLXRv7u5Cna
+	 suPZqRSuvlvJQ==
+Date: Sun, 15 Jun 2025 11:46:38 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Jason@zx2c4.com, torvalds@linux-foundation.org
+Subject: Re: [PATCH] crypto: ahash - Stop legacy tfms from using the set_virt
+ fallback path
+Message-ID: <20250615184638.GA1480@sol>
+References: <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
+ <20250611033957.GA1484147@sol>
+ <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
+ <20250611035842.GB1484147@sol>
+ <20250613053624.GA163131@sol>
+ <aEu5cyDOMcKteW_b@gondor.apana.org.au>
+ <20250613055439.GB163131@sol>
+ <aEvmmr0huGGd2Psv@gondor.apana.org.au>
+ <20250615031807.GA81869@sol>
+ <CAMj1kXGd93Kg0Vs8ExLhK=fxhRBASU9sOPfgYUogv+rwVqgUsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
-To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- wse@tuxedocomputers.com, ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
- <20250615175957.9781-2-W_Armin@gmx.de>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250615175957.9781-2-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGd93Kg0Vs8ExLhK=fxhRBASU9sOPfgYUogv+rwVqgUsg@mail.gmail.com>
 
-Hi-
-
-On 6/15/25 10:59 AM, Armin Wolf wrote:
-> Add a new driver for handling WMI events on Uniwill laptops.
-> The driver sadly cannot use the WMI GUID for autoloading since Uniwill
-> just copied it from the Windows driver example.
+On Sun, Jun 15, 2025 at 09:22:51AM +0200, Ard Biesheuvel wrote:
+> On Sun, 15 Jun 2025 at 05:18, Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> ...
+> > After disabling the crypto self-tests, I was then able to run a benchmark of
+> > SHA-256 hashing 4096-byte messages, which fortunately didn't encounter the
+> > recursion bug.  I got the following results:
+> >
+> >     ARMv8 crypto extensions: 1864 MB/s
+> >     Generic C code: 358 MB/s
+> >     Qualcomm Crypto Engine: 55 MB/s
+> >
+> > So just to clarify, you believe that asynchronous hash drivers like the Qualcomm
+> > Crypto Engine one are useful, and the changes that you're requiring to the
+> > CPU-based code are to support these drivers?
+> >
 > 
-> The driver is reverse-engineered based on the following information:
-> - https://github.com/pobrn/qc71_laptop
-> - https://github.com/tuxedocomputers/tuxedo-drivers
-> - various OEM software
+> And this offload engine only has one internal queue, right? Whereas
+> the CPU results may be multiplied by the number of cores on the soc.
+> It would still be interesting how much of this is due to latency
+> rather than limited throughput but it seems highly unlikely that there
+> are any message sizes large enough where QCE would catch up with the
+> CPUs. (AIUI, the only use case we have in the kernel today for message
+> sizes that are substantially larger than this is kTLS, but I'm not
+> sure how well it works with crypto_aead compared to offload at a more
+> suitable level in the networking stack, and this driver does not
+> implement GCM in the first place)
 > 
-> Reported-by: cyear <chumuzero@gmail.com>
-> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
-> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
+> On ARM socs, these offload engines usually exist primarily for the
+> benefit of the verified boot implementation in mask ROM, which
+> obviously needs to be minimal but doesn't have to be very fast in
+> order to get past the first boot stages and hand over to software.
+> Then, since the IP block is there, it's listed as a feature in the
+> data sheet, even though it is not very useful when running under the
+> OS.
 
-> diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/uniwill/Kconfig
-> new file mode 100644
-> index 000000000000..5f1ea3e9e72f
-> --- /dev/null
-> +++ b/drivers/platform/x86/uniwill/Kconfig
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Uniwill X86 Platform Specific Drivers
-> +#
-> +
-> +menuconfig X86_PLATFORM_DRIVERS_UNIWILL
-> +	bool "Uniwill X86 Platform Specific Device Drivers"
-> +	depends on X86_PLATFORM_DEVICES
-> +	help
-> +	  Say Y here to get to see options for device drivers for various
+With 1 MiB messages, I get 1913 MB/s with ARMv8 CE and 142 MB/s with QCE.
 
-	  Say Y here to see options ...
+(BTW, that's single-buffer ARMv8 CE.  My two-buffer code is over 3000 MB/s.)
 
-> +	  Uniwill X86 platforms, including many OEM laptops originally
-> +	  manufactured by Uniwill.
-> +	  This option alone does not add any kernel code.
-> +
-> +	  If you say N, all options in this submenu will be skipped and disabled.
+I then changed my benchmark code to take full advantage of the async API and
+submit as many requests as the hardware can handle.  (This would be a best-case
+scenario for QCE; in many real use cases this is not possible.)  Result with QCE
+was 58 MB/s with 4 KiB messages or 155 MB/s for 1 MiB messages.
 
+So yes, QCE seems to have only one queue, and even that one queue is *much*
+slower than just using the CPU.  It's even slower than the generic C code.
 
--- 
-~Randy
+And until I fixed it recently, the Crypto API defaulted to using QCE instead of
+ARMv8 CE.
 
+But this seems to be a common pattern among the offload engines.
+I noticed a similar issue with Intel QAT, which I elaborate on in this patch:
+https://lore.kernel.org/r/20250615045145.224567-1-ebiggers@kernel.org
+
+- Eric
