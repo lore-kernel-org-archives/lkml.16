@@ -1,105 +1,128 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1A7E1;
-	Sun, 15 Jun 2025 23:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A467E1;
+	Sun, 15 Jun 2025 23:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750031841; cv=none; b=q6q/17TSSQP/9QSbqR8FiaMkXmLkE88K04G12ldKWFWSTQ7M1q2Z1PiNzfrZkfWdpDCwn6UKVZz0GpYab6tZuGGc8SO1/gCFe6tqvK8XNbDlLuB1LwI04gq08ZhGRzWh7vA8jAi5Mm1VkET1Py0AkFuucZt2kLsWbiR9h69KVsk=
+	t=1750031889; cv=none; b=r1gQLFIDes4F7MggYrjHldEiTLSEjLdJkPswRCyA3x/NbzQT9jWCcPoEuCU6xETasftn5vkgFUKEv2eACkXTkxuWo/hlBN9hWwg9ET39o0KT46VABaOdOvRHqN2qabXTq/1Pjw1sb+2yK3roCuXFvQNfTWbeRjDXo83oeZC6Eew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750031841; c=relaxed/simple;
-	bh=byX1f1dZRbl29B8BdxYZupOapNpkLCC/0FnbdlTcNsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p8ZjvjVpqc2EtJfBpiocTKdCEmq8w8EbMn5xVZaB9qt2PtGFD1VR9Edobm+7x6a2TxPGGO8t/lxmI5dLBZu/0FSrIT4ymeNfvyl6iNBwe7esi7UTBB3bQpCiOD7zWTWcWvN/gJYeGjgNhFDvCJXi9jgzSWdHFwJDK8Od3VrMssE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=QZjcwLlI; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1750031889; c=relaxed/simple;
+	bh=ycDr9t/o4pQyF8qbk1WqIGmx4S876Agu45tOFN2b79g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qxNyHSOoCSXwinqfSizLrnvPuC6xn/dGh0SO9lLyLg8NMBI9Kx7lTBAU/MDESHgbxOnuj59KM+bC+Zx8xTrSlvzDIQo3WuFQCWjbaPNS/QZg1X3/vfxa9JubgNLUhElQE4TUwBE63Sh71eRKrpda7tuuvX9FQs2aFLP8AVH/2uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=Up4jD0U3; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="QZjcwLlI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FhOAn+uY6L2AKbDaoJUOAfIvUBSz9ordgDTmYEGaNJE=; b=QZjcwLlI+ui6Vmjs2MoEYz0N5d
-	uXI34zi9S5ZJEhbmg3HRtpnZYidcwSRziEKnrV0NZoZlZ7YLFvrUGmemP11F7FMD8iywd7zKuGojU
-	+DL2bj5suZ6k3Wb86QBfnp8v8rMa0StuY/uGXOxnWUyozHYu5DA+vsR00LYzKGlq9dzA2TlEaNggo
-	DR4mTqA5C8SOkyqpg/uPJpzSkMhgeFHkWSNN3BA225z1Z+4uSgWwHewyt0GN0BiRvuj236QQeWQq8
-	L9XBx4fjzTiiBmcshN/nSh5xdKeH2y2ohHWt6XkXf2we3pZdr0Rq/KEcuPukxgKMtNq0UY9+ivn+L
-	hGKUnuaQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQxDu-00000008gXo-3si5;
-	Sun, 15 Jun 2025 23:57:15 +0000
-Date: Mon, 16 Jun 2025 00:57:14 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: NeilBrown <neil@brown.name>
-Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
-	linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing
- ->sysctl
-Message-ID: <20250615235714.GG1880847@ZenIV>
-References: <175002843966.608730.14640390628578526912@noble.neil.brown.name>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="Up4jD0U3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=fQfa7b+m7gkk9M9nS0dfih58s9XnvLRpKTofPLeCjqw=; b=Up4jD0U3gqP7n+LU
+	XF9/gckadBXC1T3+E+37/qQNil8Fy5mONp334qVIF0Z+gXy8MIBObZ9BDbdi7/Cl2ML3IgkYQat5A
+	sGT2j+RpIK8urnT7fkHy76wMCP9I45uoM3NAlN0lT4VIGQ7jAnciyRzjE1UHVz6tRQzhoLLkSkMR8
+	WeWo+iyea8WNp8U40dt6nz1y4J8l+Phs2Ffy0myZpOtBN7uwl6WBNCnnSLy2lt/h6WMZlEvm/3sTa
+	sYvwOvm9XpnSz2E11ThKYqBNyVOwqvDcROno6JeilhWslgr4AlQqWfUSjolYey59EoN0de20i4xdh
+	qgK42+aQi4uyU/yDYg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uQxEg-009kNM-1C;
+	Sun, 15 Jun 2025 23:58:02 +0000
+From: linux@treblig.org
+To: bparrot@ti.com,
+	mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] media: platform: ti: Remove unused vpdma_update_dma_addr
+Date: Mon, 16 Jun 2025 00:58:01 +0100
+Message-ID: <20250615235801.148049-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <175002843966.608730.14640390628578526912@noble.neil.brown.name>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 09:00:39AM +1000, NeilBrown wrote:
-> 
-> The rcu_dereference() call in proc_sys_compare() is problematic as
-> ->d_compare is not guaranteed to be called with rcu_read_lock() held and
-> rcu_dereference() can cause a warning when used without that lock.
-> 
-> Specifically d_alloc_parallel() will call ->d_compare() without
-> rcu_read_lock(), but with ->d_lock to ensure stability.  In this case
-> ->d_inode is usually NULL so the rcu_dereference() will normally not be
-> reached, but it is possible that ->d_inode was set while waiting for
-> ->d_lock which could lead to the warning.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Huh?
+vpdma_update_dma_addr() was added in 2016 as part of
+commit 2f88703a0bfd ("[media] media: ti-vpe: vpdma: Add multi-instance and
+multi-client support")
 
-There are two call sites of d_same_name() in d_alloc_parallel() - one
-in the loop (under rcu_read_lock()) and another after the thing we
-are comparing has ceased to be in-lookup.  The latter is under ->d_lock,
-stabilizing everything (and it really can't run into NULL ->d_inode
-for /proc/sys/ stuff).
+but has remained unused.
 
-->d_compare() instances are guaranteed dentry->d_lock or rcu_read_lock();
-in the latter case we'll either recheck or validate on previously sampled
-->d_seq.  And the second call in d_alloc_parallel() is just that - recheck
-under ->d_lock.
+Remove it.
 
-Just use rcu_dereference_check(...., spin_is_locked(&dentry->d_lock)) and
-be done with that...
+I did see that there was a VIP driver submitted in 2020 that
+doesn't seem to have got merged which did use this (and a bunch
+of other unused functions).
 
-The part where we have a somewhat wrong behaviour is not the second call
-in d_alloc_parallel() - it's the first one.  Something like this
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ drivers/media/platform/ti/vpe/vpdma.c | 32 ---------------------------
+ drivers/media/platform/ti/vpe/vpdma.h |  3 ---
+ 2 files changed, 35 deletions(-)
 
-static int proc_sys_compare(const struct dentry *dentry,
-		unsigned int len, const char *str, const struct qstr *name)
-{
-	struct ctl_table_header *head;
-	struct inode *inode;
+diff --git a/drivers/media/platform/ti/vpe/vpdma.c b/drivers/media/platform/ti/vpe/vpdma.c
+index da90d7f03f82..bb8a8bd7980c 100644
+--- a/drivers/media/platform/ti/vpe/vpdma.c
++++ b/drivers/media/platform/ti/vpe/vpdma.c
+@@ -552,38 +552,6 @@ EXPORT_SYMBOL(vpdma_submit_descs);
+ 
+ static void dump_dtd(struct vpdma_dtd *dtd);
+ 
+-void vpdma_update_dma_addr(struct vpdma_data *vpdma,
+-	struct vpdma_desc_list *list, dma_addr_t dma_addr,
+-	void *write_dtd, int drop, int idx)
+-{
+-	struct vpdma_dtd *dtd = list->buf.addr;
+-	dma_addr_t write_desc_addr;
+-	int offset;
+-
+-	dtd += idx;
+-	vpdma_unmap_desc_buf(vpdma, &list->buf);
+-
+-	dtd->start_addr = dma_addr;
+-
+-	/* Calculate write address from the offset of write_dtd from start
+-	 * of the list->buf
+-	 */
+-	offset = (void *)write_dtd - list->buf.addr;
+-	write_desc_addr = list->buf.dma_addr + offset;
+-
+-	if (drop)
+-		dtd->desc_write_addr = dtd_desc_write_addr(write_desc_addr,
+-							   1, 1, 0);
+-	else
+-		dtd->desc_write_addr = dtd_desc_write_addr(write_desc_addr,
+-							   1, 0, 0);
+-
+-	vpdma_map_desc_buf(vpdma, &list->buf);
+-
+-	dump_dtd(dtd);
+-}
+-EXPORT_SYMBOL(vpdma_update_dma_addr);
+-
+ void vpdma_set_max_size(struct vpdma_data *vpdma, int reg_addr,
+ 			u32 width, u32 height)
+ {
+diff --git a/drivers/media/platform/ti/vpe/vpdma.h b/drivers/media/platform/ti/vpe/vpdma.h
+index 393fcbb3cb40..e4d7941c6207 100644
+--- a/drivers/media/platform/ti/vpe/vpdma.h
++++ b/drivers/media/platform/ti/vpe/vpdma.h
+@@ -222,9 +222,6 @@ void vpdma_free_desc_list(struct vpdma_desc_list *list);
+ int vpdma_submit_descs(struct vpdma_data *vpdma, struct vpdma_desc_list *list,
+ 		       int list_num);
+ bool vpdma_list_busy(struct vpdma_data *vpdma, int list_num);
+-void vpdma_update_dma_addr(struct vpdma_data *vpdma,
+-	struct vpdma_desc_list *list, dma_addr_t dma_addr,
+-	void *write_dtd, int drop, int idx);
+ 
+ /* VPDMA hardware list funcs */
+ int vpdma_hwlist_alloc(struct vpdma_data *vpdma, void *priv);
+-- 
+2.49.0
 
-	if (name->len != len)
-		return 1;
-	if (memcmp(name->name, str, len))
-		return 1;
-
-	// false positive is fine here - we'll recheck anyway
-	if (d_in_lookup(dentry))
-		return 0;
-
-	inode = d_inode_rcu(dentry);
-	// we just might have run into dentry in the middle of __dentry_kill()
-	if (!inode)
-		return 1;
-	head = rcu_dereference_check(PROC_I(inode)->sysctl,
-				     spin_is_locked(&dentry->d_lock));
-	return !head || !sysctl_is_seen(head);
-}
