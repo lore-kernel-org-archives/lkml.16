@@ -1,293 +1,186 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2063.outbound.protection.outlook.com [40.107.223.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367FE2690C0
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749994386; cv=none; b=RYJIRSEne9NKDrGpR1c1oquPCJjcNhd1Yi5aM/hl9Is8VciTv7thqNMScdIOHEdMPEVLBdaGHkgdVLRpIP1HNbWGoeJNz7QauTFZCNgfilDwK8Gv3+ClDYQJ6aiSzzXkTcpRm1MXxQ8J07Tb+r8kFZbWo5qjdOv33FW3O7AGXf0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749994386; c=relaxed/simple;
-	bh=gZs20G00kWnTVvttn/XzXMFcJlBjC2WkYOX7QQyQQaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MZ6P5qqoyh9q7tXGBvPKKDuYi7d1w/GWCKS24zLglDKAfAb9FiCqm2kfQ3X+5dbr+XeEb3Mw0LopQD7nheY8yELct3WKBL5uHOSxcfBwjPKAE2dq+WLJfx6Rf7v8jE4mBk+BSclo6CISeiz5tNMzdtiFywgoPu9bkMO79EM+MUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=LwYjpCfN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NYQwR4uc; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B841E89C;
+	Sun, 15 Jun 2025 13:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749995292; cv=fail; b=s2EC5uswVYHuvHLk5VF83isVLczlS5pzJmHDbCiyEUxy/VWsbxXF6BOUxPs1BO4XtMHwtILcAmoG7xFT62iHXtOVZSFO0yTTOE+oNU45S94W2ZgUGWT47zBRHPNSE6U/RXb+dXx22qJAUi4RrKZhsI6a0lF1O+0UxFVQ9tMg1yI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749995292; c=relaxed/simple;
+	bh=gJQbTrx0GWcoyravP1UTIuGnTX1SwjYQiuunty+O60g=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=IKEl6Z9832illAdgIzW/osySSxZatS0+i/DTjtNNAB3T2tnk5Yn6qY9/VbEotlgkznIIz6O+XX4xcOzaq4MlnGZ6yAB5kQisYsDv2hqGCXXRvlLuIi8QhTacw4GHvDyltja0eHcx8XvGWOPXo22oSFzmfifKI78CnUKdavM+GPw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ePDgglE6; arc=fail smtp.client-ip=40.107.223.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="LwYjpCfN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NYQwR4uc"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 22CF71380188;
-	Sun, 15 Jun 2025 09:33:03 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Sun, 15 Jun 2025 09:33:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1749994383; x=
-	1750080783; bh=4qud8jmEtOTX4kDeERAsVvKE8Z1CqqTiqHJxRoQRN8g=; b=L
-	wYjpCfNrD0Vj1z4oAOV7W3WXX++DdedSKobnwg5neVwSBnbSFi5+hm/ZMCMDM32s
-	7bWeN6+g6XPOYo3DxUVi4BOYY8+RBczQ3wI7TVMwO7MOm+MgVUx2lpTBhjpZQERR
-	Lwl1qZZ54Y1baV/w5/vhQlPQ7x0ySGxzR42m1mWqE6/x0aunA3gWO9ublBKdTRPK
-	floAcZJbZzdN2DYxRci+QcnRAu5ZayHNd7wduXaQtkWdU0PXptJSfQDGuh6/A+do
-	qQwmYyXvLKrCy27M//i4S0feP9ayoYc8noDieBoTJxIjiVh/md1Z56jFHDUfnwIY
-	0y9eqV29PYvv+sUP3r+8A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1749994383; x=1750080783; bh=4
-	qud8jmEtOTX4kDeERAsVvKE8Z1CqqTiqHJxRoQRN8g=; b=NYQwR4ucAf3dy6Sp/
-	4axpxcONa/chYTbesaPsdp7QUyaroiBEztUEPqYfe87vBaMf2EPEzMYS73A5GmMC
-	7VGZ/mOU/tR7IiDC6InVH3+DwuTAgMTxjiz/fuXlmWt/YY/mG1ywcl/pjfWPqYhh
-	sxvQ3EhW+EEH/ZE2ajoww7C4TFMsPQW02KFdY15UyEc5MLMQI1P7wb+ia8MXp9G4
-	swZgmE7IOlAP/xs8St+6Ff4MVPoOlsvfz1Ut4CICAffj6Y8Xsckrfsj5o4mBliKb
-	FOS9HSkI6y0wv6puc1T00duCGIswcofs/1dpzdsdm+L+l3GTQSiDehQhGpyO1HAq
-	VF+5A==
-X-ME-Sender: <xms:jstOaKnvTvOq7S7wH1ucO4Uoq_j4lesXBGRR4o5FPl7atHtx1LE9IA>
-    <xme:jstOaB39r0nyVN-7oQiAVOG-t_IjPanSmTrEFcOzHOKnrlFyaxF2Lm_Tuz2KkmuiV
-    uK0LWC1sFpO-RO9FY4>
-X-ME-Received: <xmr:jstOaIorc_GxEPoRtVJUctQ34naMb1QWFN3T9Jxb3HS4VUESpZiq1ajQqFUIBT20cQZtmg004CBIrJc68ebD2IlKmPC5lm0K9LL3tbmcCiIjHA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvfeekfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
-    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgr
-    mhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrf
-    grthhtvghrnhepvdejgfejuedvgfduudekleevtefgtdevhfdtffefiefgveeuteffiedv
-    ffekvddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjphdpnhgspghrtghpthhtohep
-    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidufeelgedquggvvh
-    gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopehlihhn
-    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:jstOaOnxQltxB6aqwKEyxcWOUkaS9Jqk-kBAB9LTEGZSs-VRcPsMkg>
-    <xmx:jstOaI0a6E0__Jv1wFwSH_lzfiRUBqO3KB3_t8Bk8o5XHjZTjWjrsA>
-    <xmx:jstOaFuYkPSzXLauVV075UKDHy4qIsKhgyeO0Et97Ry6JQie5tq8cg>
-    <xmx:jstOaEUy9NpG8KJWZlrskkl7t3ZJ0LkxgybjwRy5mxBlfotzGx4IIQ>
-    <xmx:j8tOaBF1nhFrIav4CcIdT2fdfCbDwFUZIbGXKMuRjC_Uffog15O7vk7I>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 15 Jun 2025 09:33:01 -0400 (EDT)
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] firewire: ohci: use workqueue to handle events of AT request/response contexts
-Date: Sun, 15 Jun 2025 22:32:53 +0900
-Message-ID: <20250615133253.433057-4-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250615133253.433057-1-o-takashi@sakamocchi.jp>
-References: <20250615133253.433057-1-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ePDgglE6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ADh3Vy6doVX6wbcp4bJhZfC2dKCjexLjKF3AMVwK3E6pvUASVPWneTSrBIy9m+bNbuA+vuD7Venp4JvkNlvhtLwSRJRH9m9ZjFG8dzo5DtzTs9/S1zHgtiuatJr4+5PelSWbK9Sr0+aNHAn9iA/Z8hibIgFwHj7dbFPAI+Vd1j2liHEWXRVSiNb0WyR0mqIMUCcdB0qIIO9OnqXGCYFLZdUr1g5/CepoRBOhCUqr7+1OthcFV99S68ALSejfTG4KR/9RTE0nK1AxBeOWEg6CF/e2/+X3BgCaZy+MEdjctQpfhLnpQ334zRWVFNMkEacGBZ5MdkXNMrLS30RX9VWZRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gJQbTrx0GWcoyravP1UTIuGnTX1SwjYQiuunty+O60g=;
+ b=HW/QfqkSnyUCgH5X9Fku5JpLNyO9nxxqo9FfwdnS4kT90B2U5m0pe11wSVgl7u0cqeCs3kRonSlkx5reZwpuOoUWLhNlTqdD57VdReMbM1np7O/tiHFq2eyGY4dgzXjDmT60YySQcescxgPz78SyK4eYk7jQW8GwnwOObLFgkFGJgYHXiIj9T9gACI+8TWi4GiwtPWVe0BO1unlPOi7WNio7ofGUk/FCcb5X/5AC6PGuGb2iQ8fPHKpvnKR7oMPXcaclV1p64b4QQdE+Il/QQBOnCrEp/QmG4kC4Dnfkr2MOMbsTB774dkZW6KIfHxCwYwE5ul3c+EpBnPP/ujg7IQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gJQbTrx0GWcoyravP1UTIuGnTX1SwjYQiuunty+O60g=;
+ b=ePDgglE6J5Fzb0ZIYH+jyeVzIf8x7eg33zpxmxOW5rQSS2q5bvio3C0PW28omUJXmB+6WQSxK5muYfZWHL8O47itNlxe0c2GijSIB4o9MJAr9TH5MtcpFF6HHgzcftYBmzimy+D1V11NzmlMwO9ewDeWzW3rer606qtGCm5dyApysHD8dytfu/pwn8O5pDH0Z3T4ALmRRUB/IoQUukSrbBi+iZhGrTHpLgGPdK7fzmMYWL98VMq2IutXjzMOO6b/39Uqor8wDWAA/zVp8AUrIYQmYp1mas3fnghoirzRTkjzCaIiLi3CBBieq/g8ema9JIenhGK9//JDVhd8xQjFCA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DS0PR12MB9424.namprd12.prod.outlook.com (2603:10b6:8:1b4::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Sun, 15 Jun
+ 2025 13:48:09 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.027; Sun, 15 Jun 2025
+ 13:48:08 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 15 Jun 2025 22:48:05 +0900
+Message-Id: <DAN5JZIZEIIR.3DJEY70B1TZJT@nvidia.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] rust: str: implement `Borrow` and `BorrowMut`
+ for `CString`
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250615-borrow_impls-v3-0-621736de7f29@nvidia.com>
+ <20250615-borrow_impls-v3-4-621736de7f29@nvidia.com>
+ <CANiq72kmN1iK=AD0yzj5TyMGJowaFzGMZjEXfUM3TCSRJkYuNQ@mail.gmail.com>
+In-Reply-To: <CANiq72kmN1iK=AD0yzj5TyMGJowaFzGMZjEXfUM3TCSRJkYuNQ@mail.gmail.com>
+X-ClientProxiedBy: TYCP286CA0114.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:29c::12) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DS0PR12MB9424:EE_
+X-MS-Office365-Filtering-Correlation-Id: f15472ef-3168-4194-221b-08ddac1342ce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ekxseTBFNVZnT3hGTms1MW1YbjlSUjhhM3BpKzBZa1haWkRuOXNXRE9XcUs4?=
+ =?utf-8?B?aEpLK2p6TVJmMWErcUxqK1k5eDVhY3lldERQa2drNjdkVjJuYkhZWmEyYktM?=
+ =?utf-8?B?MUhpUGZYN2NEMlVpMDBCaFFyT0NuVyt5bTdvellMR1czZmhkcTlmbSs4NlNn?=
+ =?utf-8?B?KzcyQ2hEaDlmQzFmNjZRY1ZZRlV6bGhNSFRBM01nY2t0Q3ZENkdXTVpsMXRr?=
+ =?utf-8?B?aldST3ZhVE11YzRaWGtTeWQ4bm5oRGlJTGViejFVWTNhdnZTam1sMFhiM1ph?=
+ =?utf-8?B?U2FpU2RJZHUzQTdVTks3YWNkUnFZUmFkU1Rra1pzVEFLSzc3OTNFLzdvNTV4?=
+ =?utf-8?B?Smg4MUt2dDIrK0FnNDFmR01mTFduUEFKcnByeWszRGNaTU05U09uSTdQOTZE?=
+ =?utf-8?B?MitNUlVpOEJyQlVlM2tkL2ZqaHJ0enNQWHFZeXpQVmdEcE5KeUNwaVpabWFw?=
+ =?utf-8?B?emthMk5wTWRFWjEyVXJPMG42MVdoMTVOOHp5dVhZc0NPalV0WjFSTEgxU0o0?=
+ =?utf-8?B?MHhITENKSjJqZnpiS3luSVlqdHp5ZWlKbmVYRS9oaHljMkJaTXRaZWpMK1BN?=
+ =?utf-8?B?TGw5ZjMwdTdVbytlcDBnTW1ESlRud3lpL1IwR291bU11ZVVVdlI1TTdZcHo0?=
+ =?utf-8?B?V0tEcGpEQlFaVUpzbmdUK0VBRG53alpVRVRXZm55bU5VUUhaemJVNjEvbWNq?=
+ =?utf-8?B?b2hnODgvaTdUQ1ZTbjd0S0pJNC85VUkyT3N0Y3NEV0J4bVBTQ1k2d2xJREo0?=
+ =?utf-8?B?ZU8yYjZhb1ZKbGN6OHI4c3JGYThUbjMyeUx1Qktwd3ZhUkJkTnRaU25TZng1?=
+ =?utf-8?B?bGl4NjJLcDJvUkdrRDdPMjlnWDZ3Wm5CUUJxUitvNjdXSEovZmx6RG5ZM0t3?=
+ =?utf-8?B?ZFZQUVptNDM1MlZ1RHNOSnlzaEFTT1A3REFycm5RdmpJbkVWS2xyWWI0bVZo?=
+ =?utf-8?B?QUlTOFVuc1JMdWlEU3FUa1drcWFMU0JYNExwT2NTQnNnZmpaOFVBYWhUbFJR?=
+ =?utf-8?B?MlJUZzQ4T1VwYXpNR2o1ejIzV2NKcE8zM2dwVlJGQ2tDeU9CMnFvUnRXemQ5?=
+ =?utf-8?B?eFNlQjZZZEtuUGFURFQ5cEEzcWxQM1hlVHdQWnZibnY5NlVRY3FoaFhZQ204?=
+ =?utf-8?B?OUNuVk1oMWNCa2RvaXYxWThySWFnck1XeUlBTTdITmJiaENXSGxDclZ3SVMw?=
+ =?utf-8?B?YWJqczZxd2pHZ29DamFLaWtTazIzZTZFU1QyRkw5bm84MnQvQkVJQkVsVFlR?=
+ =?utf-8?B?bldzWDllcG42WGc2eDljZXlTRGZrNWE5cU1RUXF6Q2VvM0hZZVVZbE1yV05X?=
+ =?utf-8?B?Wnk2WkQ3eU1UOUMvSElHUUFmeWtYcGpoL0NlWTFqZU9peUZqOG1lczRGUXFV?=
+ =?utf-8?B?bk52cWFiK0U4VU0xdTZnN2dYYkFGNmJQOG55aGpMNE5Udkw0M3A0V1puckxJ?=
+ =?utf-8?B?d0tIMUE3SXdHdGg0dmFXcnJEV25KSDJFMWM0VllxQUlqb3lyRmJqblRnU21O?=
+ =?utf-8?B?K3J1dkVXNFFQdmxDV1IxSVJvT29vUkRVKzkwOFF5SjVZK1F2RDRSRGFETEpy?=
+ =?utf-8?B?aUhPLzlJL3JzWWlHTmkzeFJkMXk3MjV5UExRUU9RTDN2czdlYnB3MGlPVmVj?=
+ =?utf-8?B?M0Q2VzZOcUs2bWpoaEJub0RHY1NJazFRUHF5ZmtyekhzL1Y0eGR1eEVLM0tU?=
+ =?utf-8?B?eDhKRlBId1JoLzl2dDVvaTZ0cFpPUUdManF1dXZ0N0g3R2NhaXJGekc2aEVy?=
+ =?utf-8?B?OU1qeXV5RmxVcjdNOU5TQWIwZTNLRVdKVkV6bDdvWFJxNFF6ZEVCbG9TTmtG?=
+ =?utf-8?B?b1NWNnZyYW9jejk0N3cwQ285Y0lFcXlMTGMrdVdZcC8xcHhZRG5SWkhjbllq?=
+ =?utf-8?B?VWJpZjhFRENVMWFNRmJ3cGQvTHdZTVVQb3JhUlBnd0dFQ2VLRXM5dXR4eHZQ?=
+ =?utf-8?Q?rZhJTHoE+F4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bExvUkxGYjJTcEdrMHJ3WTFQellRNEJGQi9KTUlmUzZ2dTdHRUZ3SVpWbUFK?=
+ =?utf-8?B?M2pTMGxCZVlsemgyNXhUdGdkZDB4LzBnK0xEdFUzSWF2TEc1VUxrQjMxWHUr?=
+ =?utf-8?B?aE16dC9uQjFQNTVPM1gzcnVOUE40aWI4a0YyNFdkTFlITk0xNThHRjdzaXRr?=
+ =?utf-8?B?ZUFhMU9TdXJWZjNGL2tPaTJYRHFsMy9MZCtJYUM2enlNVnpjNXhlTmFiMFgr?=
+ =?utf-8?B?bEFDU1FHNUhEb0JPVGlIaHZCN3M0LzAyWWZTMTYycGNHS1FmVFVZVjZTRE5n?=
+ =?utf-8?B?aTFWQTh5K0tLampTL3QwMTRZK3k5TzcxWWpQektiWEpKcW1BalpqTkltVkZV?=
+ =?utf-8?B?MG5keGNFZDludTRqT05qcE5YNkR6bGRXT2xTUlk1K25BUHVzZmlUNEZNTkFU?=
+ =?utf-8?B?UkJ0RUJTWVJCQ3NlVDBxdXhzckwvVCtSMWUxVk1tbGZqaG1za3dnb1JwZ1Fo?=
+ =?utf-8?B?a3FKQ3RQbG45U1U2MnAzWEwvM3g1UE9HMUszMElkWFRiaEtWTWZ5bFR4QjJn?=
+ =?utf-8?B?bk5qWXRjdlM4SDFSQ0tVa2taUHBpc0c5NktvZEZzU2s5cTVFU1JKMitoTko3?=
+ =?utf-8?B?UXlneFpHZG9RdHdoR1M1dUM3TEF6MUpOeSt1VndVR0hrdHIyOWZ1bjNESG1n?=
+ =?utf-8?B?cXYxNm9mSjUrYTViVHVwSmlTUFF5Uk82OUF2RVFtYmQ1bFRFQ21JT2NiY3lZ?=
+ =?utf-8?B?Qjd2ckpFaGtoK2dpTDVWUHIvVGV2YS9Hck5XUjlPWW83cUhpUGUzU0FqWm1n?=
+ =?utf-8?B?Mk5mcXdhckhwWlJwK3lEdW9TcDFpN3hSWlVDcitzTStnTTBwUnBkODRDdlZZ?=
+ =?utf-8?B?VXpaVis4MndmU216UlFuN1hOTjVhZUhWTkc1dUc4bXFOS01EK2xZYzBFQXhs?=
+ =?utf-8?B?Ri9MQW56bEVYdXJNbVpuSmxOR2h0c1ZQOFU4QTdWc3RFSmhUaHZVdkV4TkFN?=
+ =?utf-8?B?UTg5SjZmZjAyL2REYUpsRUtEdUxqdUREckxwYm52RytPSkhMaGo1elpabjZh?=
+ =?utf-8?B?Yis3eTBRbHhlUnFib3FJaVJHUkFkY3ptR3AyYmtWcW9rU0RrL3JkTFB0bDJW?=
+ =?utf-8?B?dGNwaklZMG91RjU2VzF2Wm5ENmdTQy95WjdKZ1lVakVOZ3cyMHlvVkIrcENv?=
+ =?utf-8?B?dTgydzVRRGk1Tlg2dTU0MzRBcHNvclJYMEp2bm94Ti9Ua1lXU09ibSs0TTlI?=
+ =?utf-8?B?VTIzNTZFbnA2M2hEMkl5eUttc3Bsd2VyZHJMNW11K2JkUkRab0NORXhjZWNU?=
+ =?utf-8?B?ZUlWdEEyRFgwU0JhZEZmNU9ZaDRqNURUWUhMb2FkcTFqMkpyc1o5OXlXMmNZ?=
+ =?utf-8?B?TEVBU1UwQ2xWQnNoZU1kdU5mV2liUGxEcG9hNi9TNVdCa3BMeWc3K2xRMWl4?=
+ =?utf-8?B?aGZjM3MzTEM3WW9sZ0Qyemd0WjVIQmV3TG9SL2k5MHhLdVppNTdGUnVMZ0Nw?=
+ =?utf-8?B?djJBMk01aTN5QUF5WUtxQy9WN2RvRVpxUkdSTFNoN2ZCbEdTQkJOdFBwcGN5?=
+ =?utf-8?B?T3Z4ZjhlVkVTOUZWeVptREo2MjVyUnQ3WlZ2SnphUUFwRkYzdS9oRDdCcURk?=
+ =?utf-8?B?U1YxRnUyMU1wajlyVHlEdDVnSkh5WlJ1b1RqVUloMWQxU3cvQkZoaHFCM0Qx?=
+ =?utf-8?B?VWdQR3NIS0M3WlUySlRjNEhkZGJmRDdDcERIQTNQQVJqV1Y1RS9YU0ppRjZD?=
+ =?utf-8?B?M0N3YXVCMlpQMmZZSDRWYSt1VkFlbE1Ta3ZZelQ4dTRHVnNRWnRvZDZXRnJw?=
+ =?utf-8?B?MHc5RGY1cUo4bGNqcGZyQUtsTXNDdldtQXl3ZU9HR1lUWCtvUC9Ld05sWUxr?=
+ =?utf-8?B?L1VwMXRsVTVJSSs4cGphRlhVdjMvRVYzQm9EU3I1bURhYWNVSTNxMVFYWSts?=
+ =?utf-8?B?Uk5XRFV0djF0KzMrMFdnRkQ3S2tRam83M3RHSXFOaUliQ3FHT0xJYWFYOWZW?=
+ =?utf-8?B?ZFcxdXFMVEl6cHQyYnd5V20zYlk5ckZuL3NEMWVSSE5saG9LMmRwSmQ2TzNZ?=
+ =?utf-8?B?aXJqck5KZGZJa2NTejJoMGNPQ3JuekY3ZTg2WERac3ZuazlKZzlmUCthTEhQ?=
+ =?utf-8?B?L3lPUWNRalh2S21OLzJXYzl6THBub1ViRUMvNXEwdmtoY1A2L1JJYmNEM3Fn?=
+ =?utf-8?B?dlhUTE9hYzQ3QUpTY2xhWllBVW5yU0RGeFNYMUw0NDZCM1R0NG1SeXBYYkdX?=
+ =?utf-8?Q?phu1cBOUFmE1OCeuqgI1j1Sj1UsItCeoLzv7P04sNrUi?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f15472ef-3168-4194-221b-08ddac1342ce
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2025 13:48:08.2726
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wmu2+rk1nr9d/ATgW4uCM4olObZvm5U3KzcpFXMLQAD813bgk2157DWodtj8Lsz1he9Cb1fXl0ixwveZbqxoIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9424
 
-This commit adds a work item to handle events of 1394 OHCI AT
-request/response contexts, and queues the item to the specific
-workqueue. The call of struct fw_packet.callbaqck() is done in the
-workqueue when receiving acknowledgement to the asynchronous packet
-transferred to remote node.
+On Sun Jun 15, 2025 at 10:15 PM JST, Miguel Ojeda wrote:
+> On Sun, Jun 15, 2025 at 2:37=E2=80=AFPM Alexandre Courbot <acourbot@nvidi=
+a.com> wrote:
+>>
+>> +/// // Borrowed from `str_data`.
+>> +/// let foo_borrowed =3D Foo(unsafe { CStr::from_bytes_with_nul_uncheck=
+ed_mut(&mut str_data) });
+>
+> We will need a `// SAFETY:` comment -- Clippy should complain.
 
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- drivers/firewire/net.c   |  4 ++--
- drivers/firewire/ohci.c  | 40 ++++++++++++++++++++++++----------------
- include/linux/firewire.h | 11 +++++++++--
- 3 files changed, 35 insertions(+), 20 deletions(-)
+I thought I could get away with it since it is in a test, and clippy
+does not seem to complain about it, but...
 
-diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
-index 1bf0e15c1540..6d6446713539 100644
---- a/drivers/firewire/net.c
-+++ b/drivers/firewire/net.c
-@@ -1007,7 +1007,7 @@ static int fwnet_send_packet(struct fwnet_packet_task *ptask)
- 
- 		spin_lock_irqsave(&dev->lock, flags);
- 
--		/* If the AT tasklet already ran, we may be last user. */
-+		/* If the AT work item already ran, we may be last user. */
- 		free = (ptask->outstanding_pkts == 0 && !ptask->enqueued);
- 		if (!free)
- 			ptask->enqueued = true;
-@@ -1026,7 +1026,7 @@ static int fwnet_send_packet(struct fwnet_packet_task *ptask)
- 
- 	spin_lock_irqsave(&dev->lock, flags);
- 
--	/* If the AT tasklet already ran, we may be last user. */
-+	/* If the AT work item already ran, we may be last user. */
- 	free = (ptask->outstanding_pkts == 0 && !ptask->enqueued);
- 	if (!free)
- 		ptask->enqueued = true;
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 68317b5a64a7..709a714fd5c8 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -158,7 +158,7 @@ struct context {
- 
- 	descriptor_callback_t callback;
- 
--	struct tasklet_struct tasklet;
-+	struct work_struct work;
- };
- 
- struct iso_context {
-@@ -1176,9 +1176,9 @@ static void context_retire_descriptors(struct context *ctx)
- 	}
- }
- 
--static void context_tasklet(unsigned long data)
-+static void ohci_at_context_work(struct work_struct *work)
- {
--	struct context *ctx = (struct context *) data;
-+	struct context *ctx = from_work(ctx, work, work);
- 
- 	context_retire_descriptors(ctx);
- }
-@@ -1243,7 +1243,6 @@ static int context_init(struct context *ctx, struct fw_ohci *ohci,
- 	ctx->buffer_tail = list_entry(ctx->buffer_list.next,
- 			struct descriptor_buffer, list);
- 
--	tasklet_init(&ctx->tasklet, context_tasklet, (unsigned long)ctx);
- 	ctx->callback = callback;
- 
- 	/*
-@@ -1524,13 +1523,17 @@ static int at_context_queue_packet(struct context *ctx,
- 
- static void at_context_flush(struct context *ctx)
- {
--	tasklet_disable(&ctx->tasklet);
-+	// Avoid dead lock due to programming mistake.
-+	if (WARN_ON_ONCE(current_work() == &ctx->work))
-+		return;
- 
--	ctx->flushing = true;
--	context_tasklet((unsigned long)ctx);
--	ctx->flushing = false;
-+	disable_work_sync(&ctx->work);
- 
--	tasklet_enable(&ctx->tasklet);
-+	WRITE_ONCE(ctx->flushing, true);
-+	ohci_at_context_work(&ctx->work);
-+	WRITE_ONCE(ctx->flushing, false);
-+
-+	enable_work(&ctx->work);
- }
- 
- static int handle_at_packet(struct context *context,
-@@ -1542,7 +1545,7 @@ static int handle_at_packet(struct context *context,
- 	struct fw_ohci *ohci = context->ohci;
- 	int evt;
- 
--	if (last->transfer_status == 0 && !context->flushing)
-+	if (last->transfer_status == 0 && !READ_ONCE(context->flushing))
- 		/* This descriptor isn't done yet, stop iteration. */
- 		return 0;
- 
-@@ -1576,7 +1579,7 @@ static int handle_at_packet(struct context *context,
- 		break;
- 
- 	case OHCI1394_evt_missing_ack:
--		if (context->flushing)
-+		if (READ_ONCE(context->flushing))
- 			packet->ack = RCODE_GENERATION;
- 		else {
- 			/*
-@@ -1598,7 +1601,7 @@ static int handle_at_packet(struct context *context,
- 		break;
- 
- 	case OHCI1394_evt_no_status:
--		if (context->flushing) {
-+		if (READ_ONCE(context->flushing)) {
- 			packet->ack = RCODE_GENERATION;
- 			break;
- 		}
-@@ -2239,10 +2242,10 @@ static irqreturn_t irq_handler(int irq, void *data)
- 		queue_work(ohci->card.async_wq, &ohci->ar_response_ctx.work);
- 
- 	if (event & OHCI1394_reqTxComplete)
--		tasklet_schedule(&ohci->at_request_ctx.tasklet);
-+		queue_work(ohci->card.async_wq, &ohci->at_request_ctx.work);
- 
- 	if (event & OHCI1394_respTxComplete)
--		tasklet_schedule(&ohci->at_response_ctx.tasklet);
-+		queue_work(ohci->card.async_wq, &ohci->at_response_ctx.work);
- 
- 	if (event & OHCI1394_isochRx) {
- 		iso_event = reg_read(ohci, OHCI1394_IsoRecvIntEventClear);
-@@ -2684,7 +2687,10 @@ static int ohci_cancel_packet(struct fw_card *card, struct fw_packet *packet)
- 	struct driver_data *driver_data = packet->driver_data;
- 	int ret = -ENOENT;
- 
--	tasklet_disable_in_atomic(&ctx->tasklet);
-+	// Avoid dead lock due to programming mistake.
-+	if (WARN_ON_ONCE(current_work() == &ctx->work))
-+		return 0;
-+	disable_work_sync(&ctx->work);
- 
- 	if (packet->ack != 0)
- 		goto out;
-@@ -2703,7 +2709,7 @@ static int ohci_cancel_packet(struct fw_card *card, struct fw_packet *packet)
- 	packet->callback(packet, &ohci->card, packet->ack);
- 	ret = 0;
-  out:
--	tasklet_enable(&ctx->tasklet);
-+	enable_work(&ctx->work);
- 
- 	return ret;
- }
-@@ -3765,11 +3771,13 @@ static int pci_probe(struct pci_dev *dev,
- 			   OHCI1394_AsReqTrContextControlSet, handle_at_packet);
- 	if (err < 0)
- 		return err;
-+	INIT_WORK(&ohci->at_request_ctx.work, ohci_at_context_work);
- 
- 	err = context_init(&ohci->at_response_ctx, ohci,
- 			   OHCI1394_AsRspTrContextControlSet, handle_at_packet);
- 	if (err < 0)
- 		return err;
-+	INIT_WORK(&ohci->at_response_ctx.work, ohci_at_context_work);
- 
- 	reg_write(ohci, OHCI1394_IsoRecvIntMaskSet, ~0);
- 	ohci->ir_context_channels = ~0ULL;
-diff --git a/include/linux/firewire.h b/include/linux/firewire.h
-index c55b8e30e700..cceb70415ed2 100644
---- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -308,8 +308,7 @@ struct fw_packet {
- 	 * For successful transmission, the status code is the ack received
- 	 * from the destination.  Otherwise it is one of the juju-specific
- 	 * rcodes:  RCODE_SEND_ERROR, _CANCELLED, _BUSY, _GENERATION, _NO_ACK.
--	 * The callback can be called from tasklet context and thus
--	 * must never block.
-+	 * The callback can be called from workqueue and thus must never block.
- 	 */
- 	fw_packet_callback_t callback;
- 	int ack;
-@@ -382,6 +381,10 @@ void __fw_send_request(struct fw_card *card, struct fw_transaction *t, int tcode
-  *
-  * A variation of __fw_send_request() to generate callback for response subaction without time
-  * stamp.
-+ *
-+ * The callback is invoked in the workqueue context in most cases. However, if an error is detected
-+ * before queueing or the destination address refers to the local node, it is invoked in the
-+ * current context instead.
-  */
- static inline void fw_send_request(struct fw_card *card, struct fw_transaction *t, int tcode,
- 				   int destination_id, int generation, int speed,
-@@ -411,6 +414,10 @@ static inline void fw_send_request(struct fw_card *card, struct fw_transaction *
-  * @callback_data:	data to be passed to the transaction completion callback
-  *
-  * A variation of __fw_send_request() to generate callback for response subaction with time stamp.
-+ *
-+ * The callback is invoked in the workqueue context in most cases. However, if an error is detected
-+ * before queueing or the destination address refers to the local node, it is invoked in the current
-+ * context instead.
-  */
- static inline void fw_send_request_with_tstamp(struct fw_card *card, struct fw_transaction *t,
- 	int tcode, int destination_id, int generation, int speed, unsigned long long offset,
--- 
-2.48.1
+>
+> Or to add a safe `from_bytes_with_nul_mut`, I guess.
+
+... as penance (and for symmetry with `from_bytes_with_nul`), let me
+implement that so we don't need a safety block at all. :)
 
