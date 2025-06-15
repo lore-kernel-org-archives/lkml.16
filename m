@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890F8381C4;
-	Sun, 15 Jun 2025 16:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDA127C84F;
+	Sun, 15 Jun 2025 16:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750006330; cv=none; b=GWGlh1lU9lIKP7s7COrmaEQ6uw2pWWeWnVEM3Hr1vJQbSXFRqsA/nZtbtUd+wntKNh302mc9HnfqeM1NV8DSgxqJ9YFdvfN2jNPk/fmEKMp76hRNQT++AnQpLzGSbdDBh6XJ9SBBJZv2A1r8pmu+8Pzp8IKNcB5q2jG7iUVFsgI=
+	t=1750006332; cv=none; b=AEYXELd1M1j0mRGQGPudqqaIgWhNuAxd6d/lARXG9vpxw8JTKTx0rnbBEdSLTiSoW3ocEMRibXjKSy1RILvuFh60r5TJREbSTxQryNgx/FHg+wT97XJxMSjo1Bplu2H0P5eUKpNaynCxWu/P5b9ExEnc5jLuWJJ8hV4w5xly2sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750006330; c=relaxed/simple;
-	bh=l/fGt3Zz/3ZUxPCveJXSuMJcWc2tzptxBmmNZmFRBqk=;
+	s=arc-20240116; t=1750006332; c=relaxed/simple;
+	bh=mijlUDV/jgZDSVDW216PIW1ZCR6wyRfjOlPnIPkNLlg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oqK0GQAwKAWxHEwwq/veqMUr7Uwk6YXOynvwBb/N9NOUngjVxRjddfPKvkYaL8Y/wBgZeYqcfia1jjeYPH83IOIX7lMK8EtcEb/P7kmFtdh0RpP8N1z8kxd0GjlfqnB8V3ZXHgPFZsvfcwlTzrAxv7raAMWSUY3lq4jiTrxggns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP5jYylc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=EpKYeU6cBvV52ij4I4cW9zwwFUvptfN0cdliO1qI9QSsyYddU9PX2HJRnG4KFsE87pH8kmGptgkEsUp6QfO2owroYNZQniWR2vyZ8phD5OLyN6tqp6XQ0rGcimP5ZBCptue9vS9l1caGSRNWeVeuAjyiFtlIPbAKgWXIP774Rmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=httPnnPA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP5jYylc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD49C4CEEF;
-	Sun, 15 Jun 2025 16:52:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="httPnnPA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93266C4CEE3;
+	Sun, 15 Jun 2025 16:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750006329;
-	bh=l/fGt3Zz/3ZUxPCveJXSuMJcWc2tzptxBmmNZmFRBqk=;
+	s=k20201202; t=1750006331;
+	bh=mijlUDV/jgZDSVDW216PIW1ZCR6wyRfjOlPnIPkNLlg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=YP5jYylcUkG7aEJrMeOvZkqIxxQElInVpAhhRQbwPmlIjZK40iv6coxEFYMM4lJoM
-	 zX4iH1OzbgLpKp3LdR0vp1ppFKmd23IGLbvNYRDKUMJImYviyE04t6lvETQoxnk4fS
-	 5Fd+kARy2kvbrEkehDI8Zc6HKu8cO82fNLHlsVbVYCPsI9x+/z7qrigBEJohE907NY
-	 FqPKRlde3tr3Swxr0vU/H6WNiVf+9whfA5ZhUs9CthKxlIYXEzzDUjbnEM9MzImI23
-	 B369fdHtqwOpPWmEcf3mFk72XDHisdgVsmHsVko9FPR/SbvLPu+n+DOAEB/lbxV1gm
-	 5HDR3m2I9DrmA==
+	b=httPnnPAwmZoCek9wtrkG0ODf/wyRtOgr9hMWHFBhpVuR5rD/p8KJWHtp1su3YYZZ
+	 HJSaXm20t/ywqqfHB8QtgYTiJsW6XI5wlwNaVIlblRZxmIX+3jHOhO7d0C8n3q6tb0
+	 LDfJnknInLON+K89WRN/8kFFyn+7VeJGOQJ7SYk2WOFDWRW6O2MNkhsM/Dbko5BLCx
+	 kE+Ru+Tylv3z/ZFS4TQNyNNKQxMIhmT97xz0FJ69hWQhvnGofdcvxCR4HAxnxwBHWg
+	 zFcLifzeUTr5qBjp5f9o5y8XlAxX9dSYIE/I7QFiqcD4V5X5UhpmSsLOfPAdLpF5W4
+	 CBkuxoc/kPa+g==
 From: Vinod Koul <vkoul@kernel.org>
-To: jckuo@nvidia.com, kishon@kernel.org, thierry.reding@gmail.com, 
- jonathanh@nvidia.com, Wayne Chang <waynec@nvidia.com>
-Cc: linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20250502092606.2275682-1-waynec@nvidia.com>
-References: <20250502092606.2275682-1-waynec@nvidia.com>
-Subject: Re: [PATCH 1/1] phy: tegra: xusb: Fix unbalanced regulator disable
- in UTMI PHY mode
-Message-Id: <175000632608.1180789.15034099318224353632.b4-ty@kernel.org>
-Date: Sun, 15 Jun 2025 22:22:06 +0530
+To: Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Abel Vesa <abel.vesa@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
+In-Reply-To: <20250605-phy-subinit-v3-1-1e1e849e10cd@oss.qualcomm.com>
+References: <20250605-phy-subinit-v3-1-1e1e849e10cd@oss.qualcomm.com>
+Subject: Re: [PATCH v3] phy: use per-PHY lockdep keys
+Message-Id: <175000632923.1180789.17293154013004418524.b4-ty@kernel.org>
+Date: Sun, 15 Jun 2025 22:22:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,21 +49,23 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 02 May 2025 17:26:06 +0800, Wayne Chang wrote:
-> When transitioning from USB_ROLE_DEVICE to USB_ROLE_NONE, the code
-> assumed that the regulator should be disabled. However, if the regulator
-> is marked as always-on, regulator_is_enabled() continues to return true,
-> leading to an incorrect attempt to disable a regulator which is not
-> enabled.
+On Thu, 05 Jun 2025 14:25:49 +0300, Dmitry Baryshkov wrote:
+> If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
+> repeaters are represented as PHYs), then it would trigger the following
+> lockdep splat because all PHYs use a single static lockdep key and thus
+> lockdep can not identify whether there is a dependency or not and
+> reports a false positive.
 > 
-> This can result in warnings such as:
+> Make PHY subsystem use dynamic lockdep keys, assigning each driver a
+> separate key. This way lockdep can correctly identify dependency graph
+> between mutexes.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] phy: tegra: xusb: Fix unbalanced regulator disable in UTMI PHY mode
-      commit: cefc1caee9dd06c69e2d807edc5949b329f52b22
+[1/1] phy: use per-PHY lockdep keys
+      commit: cf0233491b3a15933234a26efd9ecbc1c0764674
 
 Best regards,
 -- 
