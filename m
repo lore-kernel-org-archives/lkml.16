@@ -1,98 +1,74 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FE98F4A;
-	Sun, 15 Jun 2025 16:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4749D381C4;
+	Sun, 15 Jun 2025 16:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750006003; cv=none; b=gECJhG8qmJYvZ5P6oQF11ABxT4cswOe86whHJRm4oSwqu7ZH5BlOYnkSbtXFy8C9OPIUYy3aufAiIvYrCyq4MhFTO27Rcbovcb8FHbXEDWx3ao8mKV8rYYMPswfZRsw/WrHerZnpi2150XjRtlii6cSW6VUNUVn6/APKB22CRuE=
+	t=1750006327; cv=none; b=sU8xnij3JmyvEbizwmQkzblg5Ehskjun/XzZQ6DFphVgMtO9TfwrcHz4lNxUJ9CUUS9guNQM170xr2Dnl88WXqrvVc0OQN5AbKBhCBKl0XFSNJkzucy+B25h4AohMCIAfWQ2o96izTpEptyoqhE8GdUKKjeYI2ZtHKVvLvOnT2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750006003; c=relaxed/simple;
-	bh=SOWk6TIG82iLlaUhAgD9pKP2ZNabz8ANg/PmP0hCsz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c9jiLRixzIAmNgE/FDH5G7yKihTAvrbVitoBpYxzdWp+IYSj0sMgTvbtMq6jh14LsItv+vKTTJY62bCb7jpTk9+emb+wq+9ya8ZrAbb1rEfj/y3C2Q5Uhp6nuIa5B8ucA+r1R3qqgvpDYyiq6OJVtgsmNHotGrxMVFZwHNN3ll4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvPodzUt; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750006327; c=relaxed/simple;
+	bh=eQhy7wTqmA7Th7Sg0Iuj5eoKYhPZYEf/yoxdoGc0Wkk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=boC5tYsgwTRouP/lgCJFJPH6V1wcDf4kawXWnd56A6mBcw9fuRCOlxlORgDBEhbQmme/N6OmWeUBq23FgsnM3BKcxL5bxDOQS7hIS+7FIfdKiD0b5kE4Ky1Wala33B/Ko/ljYPl+9LTTfe2jIIEjPJ1mU3YteXB0lD6tsLypDY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/qzwb0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvPodzUt"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso2852235a12.3;
-        Sun, 15 Jun 2025 09:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750005996; x=1750610796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MSY0daWpyZ03oAMbhCydcP6cPAqTJy9hG8mK7fwbpX8=;
-        b=DvPodzUtzwcEiKBnZ2zONbiA+Z7lGxZvvR4v+gdzt7AfQinaRKVfPOIfpvxbrltEAb
-         FwCEoC/PwyGcnshKomltmvAyXbs/0BaSFUi3/qEa3XopLKeYXmZlr0fflzRFyKVp+oHD
-         qpUju76vM416mzWgwV/2IN2MSdDQp9//vHuPQmQRYhDesEcKXsPj8XI0UAgQ2LQKivRX
-         BSaypZn90sNs7LPCBK2LAEiPe9tgEZpVIV7Kems4KgFOnEH9eRhH7Ty78tCpfPaWIbJb
-         d9cNZ+tCjjxWgGyq588o1plgrTuDzZ/2jZaF8FUwpAeJBpdBwt3hfB7LXPyyD01VGtOT
-         sx2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750005996; x=1750610796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MSY0daWpyZ03oAMbhCydcP6cPAqTJy9hG8mK7fwbpX8=;
-        b=vKUW1gTHyi7ez0I8DjAAOh7leUsHvkdvP3+wpevZIsuLMLGU6WsAUOKC+2g14lfoKF
-         wE1DOwGSfLPWJ1ULVnGNgiF8Umh06YwfmgFZ7BJhIJVLBZPrrz/FNWDRUzKM0KSJVX2F
-         kkJwKbZAGG0BE/Yl2FoN5QqAyZF1IQ/Qn4zJ3sBzqZJXRdLdQDE/5CAC/MnnivMDOW6E
-         txLLdUjOZ9SsrGuDRsftS73yzlz1N8O5YdBJTKDVWONT6l8p/v86DPEaapQ3rV95thUp
-         2MSnhnbs1esQNgJb7sahB0M5k3d4ywBNirzuQtfOBdMUszPOofEsVlzwUdoeDzbrlngm
-         laLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBQkHRbmyULbMxuqtSJl1sc55FP/54PhQT2gGPFOhAvlZfUT75XIv8YtIInxnHPggWDu76rXZZQLr6xos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT0oMtwgxtgB999ECqZL7Se7oI7jvWcsUsM0aEz0PEk4cNtIa8
-	xBqqqgOv13IgvO08y4ZpHxXuAovoDyAnXVa9ZccJ7x4dz6M0jLzoyda6m4kqpXKnaJEquaNn7VJ
-	dZ0jplOtFcp1j/69bhN9rn4PAnphcgc4=
-X-Gm-Gg: ASbGncu7sS6cw1i/oaPbDY4fzqaOs7WXyeJqRvaNSBbqUIVjB1SQICPcgTtBz3QYoLl
-	AR6mAYHM+gOS+y61cwM7/1OhjHG4o4ZjnZ/Ghp1mSs79YO7jR3r85own4fNHjMRTUxBkiOWRj37
-	anXl5x0om3pPJG5Q6AtgVzIW/cHcWvKQLsJNJtkJKPsbJgUw==
-X-Google-Smtp-Source: AGHT+IHmFkN9t/ayfwW/2pRyDteHB4ds9y+n4OojpVIGKCmqVciCOQGygF8jZOaEtov35uzZK/fl8xhGTsPY5KgKxaw=
-X-Received: by 2002:a17:90b:3d48:b0:313:f775:d381 with SMTP id
- 98e67ed59e1d1-313f775d61amr9021269a91.18.1750005996430; Sun, 15 Jun 2025
- 09:46:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/qzwb0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C14C4CEE3;
+	Sun, 15 Jun 2025 16:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750006325;
+	bh=eQhy7wTqmA7Th7Sg0Iuj5eoKYhPZYEf/yoxdoGc0Wkk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=C/qzwb0D5z/ffIt3Pa/cpHVflVJPIsj0Lg0ZUyQ47dblRO4RqLI0lkkR72hoETsSE
+	 qKvTAaXjLFfLHTCUb95YqfbhqY0xxKckdCMTyQ58NR4+y2s2rGl5DLoWDSN1B7uQrY
+	 mEIXNojUZLFYMkR7ZpbwYbaYKleB9Q3AwHFvzgbikUKPsxLRRChTgpCxMHjk/XxYT1
+	 Z7doCzYxKMzdksPTxciYyS1fkJfuVW7UMlQCuXPxPZIzdxrXesUtpaP4FH3RRh5NIm
+	 s0GDV5I4w7dWpBLklDG2RUVxxDeoYmVCo3MqJo40/O12nWtOL1IQecq3c5mhIcFB2b
+	 Vir1aVL+h04iA==
+From: Vinod Koul <vkoul@kernel.org>
+To: jckuo@nvidia.com, kishon@kernel.org, thierry.reding@gmail.com, 
+ jonathanh@nvidia.com, Wayne Chang <waynec@nvidia.com>
+Cc: linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250519090929.3132456-1-waynec@nvidia.com>
+References: <20250519090929.3132456-1-waynec@nvidia.com>
+Subject: Re: [PATCH V2 0/2] Disable periodic tracking on Tegra234
+Message-Id: <175000632281.1180789.12546166906023856282.b4-ty@kernel.org>
+Date: Sun, 15 Jun 2025 22:22:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614185743.657564-1-bharadwaj.raju777@gmail.com>
- <bwga4jheevnhuwwpopfwbzsjsxvmte4mtybevkfgssem4zftjo@anj44i6sfyd4>
- <CAPZ5DTEtsqJ_z7OtRVKDqb+LkvS=UfNvCTUqnY2Pu6qGVs+PEQ@mail.gmail.com> <tqzma4qfw7ppu56mqucmekmuhtqs5raos6wrzddf7fjouaeb6g@himxw7j544tb>
-In-Reply-To: <tqzma4qfw7ppu56mqucmekmuhtqs5raos6wrzddf7fjouaeb6g@himxw7j544tb>
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Date: Sun, 15 Jun 2025 22:16:09 +0530
-X-Gm-Features: AX0GCFsRX6NUr6vHSoY0j6jt3eTCfaK4V36fjjW-QrtFNGcCKr9KidwSRNaQcA8
-Message-ID: <CAPZ5DTFoUAfgUwn_nqjTPUDhZ74=reuVZiX0d0fGPt=7LU07UQ@mail.gmail.com>
-Subject: Re: [PATCH] bcachefs: don't return early from __btree_err for bad or
- incompatible node read errors
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
-	syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Sun, Jun 15, 2025 at 9:35=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
-> But then you're calling __bch2_topology_error()? When we're in
-> scan_for_btree_nodes we're just checking if the node is readable, we
-> shouldn't be doing anything that flags errors/recovery passes elsewhere.
 
-Right, that makes sense. I originally put that in because the old
-codepath would unset silent (which was set when in
-scan_for_btree_nodes) only if __bch2_topology_error returned nonzero
-in the case of bad_node.
+On Mon, 19 May 2025 17:09:27 +0800, Wayne Chang wrote:
+> Decouple CYA_TRK_CODE_UPDATE_ON_IDLE from trk_hw_mode and disable
+> periodic tracking on Tegra234
+> 
+> Haotien Hsu (1):
+>   phy: tegra: xusb: Disable periodic tracking on Tegra234
+> 
+> Wayne Chang (1):
+>   phy: tegra: xusb: Decouple CYA_TRK_CODE_UPDATE_ON_IDLE from
+>     trk_hw_mode
+> 
+> [...]
 
-> I think the correct fix would be more like
->
-> if (scan_for_btree_nodes)
->         return ret =3D=3D -BCH_ERR_btree_node_read_err_fixable
->                 ? bch_err_throw(c, fsck_fix)
->                 : ret; /* or -BCH_ERR_btree_node_read_err_bad_node? */
->
+Applied, thanks!
 
-Got it. I'll send the PATCH v2 then, thanks for the guidance!
+[1/2] phy: tegra: xusb: Decouple CYA_TRK_CODE_UPDATE_ON_IDLE from trk_hw_mode
+      commit: 24c63c590adca310e0df95c77cf7aa5552bc3fc5
+[2/2] phy: tegra: xusb: Disable periodic tracking on Tegra234
+      commit: 7be54870e9bf5ed0b4fe2a23b41a630527882de5
+
+Best regards,
+-- 
+~Vinod
+
+
