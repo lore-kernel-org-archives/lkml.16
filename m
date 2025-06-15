@@ -1,114 +1,92 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1411221348;
-	Sun, 15 Jun 2025 23:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4152E11A4;
+	Sun, 15 Jun 2025 23:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750028452; cv=none; b=UdNf5E8Euz07jvgWx+9E4I0dztLBda9YaEasyxU6jGJQlR+EbcvxGmSwedAz2YbQ8Az2kitmfGM4ncuFjhXMawkvmbtHPp+o/ZBCez4txT4vBDZmVb4Rk8pCAQCzAsTZ1gYGIAL+lU3k/4e8ql2DTSChK0MyFnvxGmYhA2efYa4=
+	t=1750028670; cv=none; b=K2/v8+7RqDhhgq7KYtV5LhhwQbxuX76CdiLtdfx9USOQFP1H0vAV1xrfKpKDY9GLRF/UkMKE7xhTE/Zx2ZmzFRrIK8x3Z5Dcrdm3wKUkL1513gYk72CTchXiTCAypr+fArAkL7D5aw1N+FEWvTBYLaeH7gr2UEwmYWpGW6d7S8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750028452; c=relaxed/simple;
-	bh=0+Eq7imDVhtyA4ah3U8MoUmMelbIy7qZo1J48iHgxsk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=L0VHgpDiAfG7/CfItREJ9GrwQY3Pnhfwqc744Zx1VpNZddtPlh/Q3iPkZGjG+r1BpbG0kbSriPCHT2jNvYDcUy6W4vqRfVOyY3+9TFgG5nXRTATYyZ1saaWgZpgbJ2MTugfbZCYWl6+FsXFWrDQr+vQtI8UZQ+1i8T/QMI2Ma4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uQwLA-00FKsE-U4;
-	Sun, 15 Jun 2025 23:00:40 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1750028670; c=relaxed/simple;
+	bh=MUzV4QvgL/T0hZ5LuphwlOKq9ko09iUKupOWDLLwFdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uafPeHMfauOp6jE8vA4K2MAszUArEiqcjRe68vuLdSlPhTFAy5E/1ynM2LxlxZYQN5LXmoo9DPSRU+k/MNxUyO1hdiMyyhWuHq3nxVltyCX2XY3Cd481wqa3lMWHgzjUaLCDymE7ULMP1/uXMU62rsjgkOSOq0S+FVKTlNCdg4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XECMpmN9; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XECMpmN9"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2351227b098so30713195ad.2;
+        Sun, 15 Jun 2025 16:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750028668; x=1750633468; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O1UYljVVIvdRNWnZ6ZSoJ3bvuQPajx5wqRHKGCv/vWE=;
+        b=XECMpmN9L8IUmGn53V3HZuSbmnqLxdZWelytwuivVWfaFweYa7qMtM9OwbZyDrxURB
+         fcMNAbMXS1CpMx+qJ1FZRiNtjDBqKpvFo6GbgvXULLy6hm4h5vxmgdfuq0u+Fh4hr8Ve
+         ggS5qq520nTM/FoBYNMYiDm/7xRMUo2gcF3bsTNaDWT2xCke95Bw4q84HHXAXzZvbvgt
+         spOeFyvkT+S6YgnesijSVvVuT7gtlnnfbqsdzaevRalyeCGdXdEMIMem6QPrBOSoKJCy
+         OKZ85pdzSKv6JsogDAZCVnG2uturmAuTaUQdbLEnxg3euVD9idubAMS4AHfGUyxYHfn7
+         QHXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750028668; x=1750633468;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O1UYljVVIvdRNWnZ6ZSoJ3bvuQPajx5wqRHKGCv/vWE=;
+        b=YTXseAQu/WVTH5y8XW4E/iLtN7HEKBpX6nNVbcVMQ2Pwst+xB/ce4OP/C+shHvwSdI
+         aqnD19bHSLwN22xjHR35zOfz9ecrpME352C0G7ZUeaaqSzjYgpe+zk9Jxki9GPeC3KmC
+         mPMS7e01+JVRILwftdAwfkVUDFG5V2xkZEExNbDOVBa1DF0c3pYgiC7fbh5zUX+oZDxi
+         hsrhSE0t2MzeZ8jZ77xUNh0XkUWIrdGKoF9fBhzS9KFlZoR2xIvARxCTmebQNgmQqwEJ
+         kcFLCl8SrXL3Wbcv90smdOm6KKDzZqIA/PRDxuvo4nJhGz+u9eX5FooZqDXL7q8gCNvU
+         Iqrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVP9hnahZJ3tjRwLyqCGN40q3d5bPePuwLDYtGqloAM9N41sJu4tIEsPERAprqx03hrxTmERdiLsUecNw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoTcHZULFiD13JvIpX7alJ0U1e97Vf0b+qRXLNjVNJF1tY6CTP
+	Z35njec/pOTBpnHogOz04y1xfjqCS1bMH99UcInj1taIf/bGDi8rMWbj
+X-Gm-Gg: ASbGncsY3WA2A3fGsHdKRq68HLVUd7wAE9RqNBZrs1KsiPJ6awhD5E94KexGyRykX4j
+	cWcI9TTOP3YENmYxZ5GOmLRNK8ILYKcTRfioEzigHN2UZM52ndoSvMwmYtiGQRINMa+S3/za1n7
+	rkCBZ8sUTqMUsja0CFDie+g+9+ktPXwdjPxhGgOq8GhEMSFuRXsPg5SLAMZZel11icNapDSRiV6
+	HAErKsAliGiQ/JbTZF2ZKl0K6BA+zrjaLb9mFx9rDlNdjjY6R6TQXpWCa6P2XW1ebR7vjr+j3BI
+	f4a5jFe7O+OJTSq2SRgNInPfohT9lXjvx46sqVN9k4CQtiIwOy9vfvzBzlVNtQj53xUIHhZa3u4
+	=
+X-Google-Smtp-Source: AGHT+IEidJw/8Vsty7+T08Mhq9L0wQHa3hDZzNZli1mr6LvhwcMJ9N0P7xbO/SBYUtO1pD6fck6tNw==
+X-Received: by 2002:a17:903:440f:b0:235:60e:3704 with SMTP id d9443c01a7336-2366b32ccafmr113498215ad.12.1750028668356;
+        Sun, 15 Jun 2025 16:04:28 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb4e27sm48987565ad.176.2025.06.15.16.04.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 16:04:27 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sun, 15 Jun 2025 16:04:26 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Qiushi Wu <qiushi@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, jdelvare@suse.com,
+	linux-hwmon@vger.kernel.org, zohar@linux.ibm.com, qiushi.wu@ibm.com
+Subject: Re: [PATCH v2] hwmon: ibmaem: match return type of
+ wait_for_completion_timeout
+Message-ID: <d02c8830-3db4-4200-8df3-a2de48b19f73@roeck-us.net>
+References: <20250613182413.1426367-1-qiushi@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: Al Viro <viro@zeniv.linux.org.uk>, Kees Cook <kees@kernel.org>,
- Joel Granados <joel.granados@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject:
- [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing ->sysctl
-Date: Mon, 16 Jun 2025 09:00:39 +1000
-Message-id: <175002843966.608730.14640390628578526912@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613182413.1426367-1-qiushi@linux.ibm.com>
 
+On Fri, Jun 13, 2025 at 02:24:13PM -0400, Qiushi Wu wrote:
+> Return type of wait_for_completion_timeout is unsigned long not int.
+> Check its return value inline instead of introducing a throw-away
+> variable.
+> 
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Qiushi Wu <qiushi@linux.ibm.com>
 
-The rcu_dereference() call in proc_sys_compare() is problematic as
-->d_compare is not guaranteed to be called with rcu_read_lock() held and
-rcu_dereference() can cause a warning when used without that lock.
+Applied.
 
-Specifically d_alloc_parallel() will call ->d_compare() without
-rcu_read_lock(), but with ->d_lock to ensure stability.  In this case
-->d_inode is usually NULL so the rcu_dereference() will normally not be
-reached, but it is possible that ->d_inode was set while waiting for
-->d_lock which could lead to the warning.
-
-The rcu_dereference() isn't really needed - ->sysctl isn't used in a
-pattern which normally requires RCU protection.  In particular it is
-never updated.  It is assigned a value in proc_sys_make_inode() before
-the inode is generally visible, and the value is freed (using
-rcu_free()) only after any possible access to the inode must have
-completed.
-
-Even though the value stored at ->sysctl is not freed, the ->sysctl
-pointer itself is set to NULL in proc_evict_inode().  This necessitates
-proc_sys_compare() taking care, reading the pointer with READ_ONCE()
-(currently via rcu_dereference()) and checking for NULL.  If we drop the
-assignment to NULL, this care becomes unnecessary.
-
-This patch removes the assignment of NULL in proc_evict_inode() so that
-for the entire (public) life of a proc_sysctl inode, the ->sysctl
-pointer is stable and points to a valid value.  It then changes
-proc_sys_compare() to simply use ->sysctl without any concern for it
-changing or being NULL.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/proc/inode.c       | 4 +---
- fs/proc/proc_sysctl.c | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index a3eb3b740f76..e0f984c44523 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -41,10 +41,8 @@ static void proc_evict_inode(struct inode *inode)
- 		proc_pid_evict_inode(ei);
- 
- 	head = ei->sysctl;
--	if (head) {
--		RCU_INIT_POINTER(ei->sysctl, NULL);
-+	if (head)
- 		proc_sys_evict_inode(inode, head);
--	}
- }
- 
- static struct kmem_cache *proc_inode_cachep __ro_after_init;
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index cc9d74a06ff0..5358327ee640 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -915,7 +915,6 @@ static int sysctl_is_seen(struct ctl_table_header *p)
- static int proc_sys_compare(const struct dentry *dentry,
- 		unsigned int len, const char *str, const struct qstr *name)
- {
--	struct ctl_table_header *head;
- 	struct inode *inode;
- 
- 	/* Although proc doesn't have negative dentries, rcu-walk means
-@@ -928,8 +927,7 @@ static int proc_sys_compare(const struct dentry *dentry,
- 		return 1;
- 	if (memcmp(name->name, str, len))
- 		return 1;
--	head = rcu_dereference(PROC_I(inode)->sysctl);
--	return !head || !sysctl_is_seen(head);
-+	return !sysctl_is_seen(PROC_I(inode)->sysctl);
- }
- 
- static const struct dentry_operations proc_sys_dentry_operations = {
--- 
-2.49.0
-
+Thanks,
+Guenter
