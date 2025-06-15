@@ -1,151 +1,188 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6233E1DA21;
-	Sun, 15 Jun 2025 17:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A20190692;
+	Sun, 15 Jun 2025 18:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750009185; cv=none; b=pm+JwNYBEIHO6ZGgC/aS8CY6WdrsAHhq//0UUBvH9QUrd0YkxuY4VF7fsETsvwoxSP2hjiR5e6xWc9qVgby1a7jejQjSsrljE9/21kQkTbPHDFVLlVMW91X2tKyQzuzg/q/Qrk0Iv1QB7APcI/79TpOAVA8UEmCzv+ccCS7lTt0=
+	t=1750010421; cv=none; b=lI6VJ4fS2AjfjovxGNTyz7F4OxL6GCg7M9INkgnCnKoUcmmB10pkJIjsML6CpyTwY2+GA2g1/ET9+X+KuLvDjqKp8wHrvjZiTdcjfkaCweRO5rgoFXmKzqGpgG0TcpMUtBYkrihhYB0iS+A0NkA2hQtRFz7dj165FCUtK8/sOVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750009185; c=relaxed/simple;
-	bh=UBe7ZI2S/I2GLHGBNylfL8K9GtWYxlCEE1bt1BngSGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aAzpjLhdj85VYebRTZM1vRVznOF9UA8DAWm8L/hJjQHuEo//YX76gHoOTdY9bV3kt9hen5+ktqwudRJdKpZUyZXQeqt4cUvZszSUTDA0FREKGbx03XMhWBAxIrdKXFjQe4WSWEvZBM0jOkCOIKGC4axaPN8/aUp6uSmzEMkO098=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kXqGAMrZ; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1750010421; c=relaxed/simple;
+	bh=ot8uIteUOAnwSh605l4urrVUFkFF6SddtMFsgpG1W8E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RaSyO5Fj6ufZRW+XI9L+4QcJ+9XyMP75N6zNB+PSgYuUboY210ZE83dQ4rDrVTb/YhNYf3AgieIianzGhknXSXtUUmVhOHJvxbxTvY6VtXFUH84mnjLZ94Lt5M3bQBMVfAH8yLYNPugFkAbrjRzZl6ZsXw4jtt6CIjZe9fckaus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hMgbqJv+; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kXqGAMrZ"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FFF1Tr010054;
-	Sun, 15 Jun 2025 17:39:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=NCs7c1l7MM/8D4zXiWpe0mT4C5cvI
-	JZJSbDPhF+plTs=; b=kXqGAMrZ6uFDmlCdCrnm8vRzXVT3oRQYvtbKH8N2+h1km
-	U3ckhJ2PVzqbmAokxLt7tEfTtgc2184I/SvwlEJl7iwQv5Bm0oVGVpk8khEBqKvt
-	K+529QwQ7CdEwzQd/fPHxLFxltxa5Y4ZKpW66KrMHEUNqpalU8FU9gWzHgzLY15a
-	mrdwb7CZejHUb2dXzQ4k1GsvSXNbhPBsJHTojlCsolY3Ofc1sUFLDaKz/bUduC1h
-	MP0o5kUkUyj9msIwxauuB+I1/5AarqyfExpuOWW9rjOBxuqGMuNCupWRQSud4MbQ
-	GiosvyOAcRhN/Nr3EiuyI+tnV6mFYFIOU9a+e85Tw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47900es9bt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 15 Jun 2025 17:39:38 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55FBhFpM036275;
-	Sun, 15 Jun 2025 17:39:36 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhdn9uy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 15 Jun 2025 17:39:36 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55FHdZpL026728;
-	Sun, 15 Jun 2025 17:39:36 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhdn9un-1;
-	Sun, 15 Jun 2025 17:39:35 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux.dev
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] vhost: Fix typos in comments and clarity on alignof usage
-Date: Sun, 15 Jun 2025 10:39:11 -0700
-Message-ID: <20250615173933.1610324-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hMgbqJv+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1750010409; x=1750615209; i=w_armin@gmx.de;
+	bh=PZn8SH59LZb0DLM0g7DFC/+47l9qd5T4BVNH0SSVyXw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=hMgbqJv+TqN288PbCnTF6n8U3+g+IIuJSt9Xm5Ld1GNB8s9+geqZMgna9dIlOp4k
+	 XvgXFYsNWxU1gGHhSs3qn0FSP1b4f1eemX72URfXkaqZco1mYTiyGD7rfMWmTQNnm
+	 uhpy1MvZTkBsLe6fWE4zA/1j4BAK1X1xEa2R4v7+Sa9TGF44Wjcq4Jnknfv+z9Tct
+	 qPpL8N+lchNfxdgjJfp9xhXEUlo/73WCw6xEzvj/UVSVEUbRnHZBuUpg2FUlBpOd1
+	 WZdPiLVqy0heR/Mg+RvW/v5GrJAKGvhogl6nf36GuwSbym3BF0teNuvjlod7DZuG7
+	 kDp6eexpxAKl4E5EBQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MUowV-1uHtVI0SOX-00TAJz; Sun, 15 Jun 2025 20:00:09 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	chumuzero@gmail.com,
+	corbet@lwn.net,
+	cs@tuxedo.de,
+	wse@tuxedocomputers.com,
+	ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [RFC PATCH 0/3] platform/x86: Add support for Uniwill laptop features
+Date: Sun, 15 Jun 2025 19:59:54 +0200
+Message-Id: <20250615175957.9781-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-15_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506150131
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE1MDEzMSBTYWx0ZWRfXyrsi7S/cKvRM IDSDCgDoI3blZmJq84JL229WHFtuhtXw9eq+39qRkUF0/KShdU3yBrPVx3ycVSTKsN0gf1ejVyS Xc7Dt4q+txWjoBz3ZAK++vjGOickbGKLS7DHZEUCRW46OsK2GWecUvvwSfoSdULCI5SN60Uwh6A
- Eo+tRsmZXXGKQWHdtXANP6ZBXbsR1lDPWtmrjNbOVsCZMY62A7R6qtEBmgUuly8LLPPqtJCKccH GLVdMpwLwDJBlokr/64iTrg4F7yqvHid4DMz08zEuwscfhmkykTh+NR7alFOoUFPuO2xe4Jfnhn yJ2jTkYL/61njwlUuVvAa0weQscdTi2CREiOMmmFKwYudT/sSiYjMPAcfrCegZvV/rt7Frbvzr4
- SI3gLDEMaxg3vzUXrrSV4gvT3vp1cndyGAycQeVG9rtxlrrFqvjq0g2kcneMsfAnOVDRxTYS
-X-Proofpoint-ORIG-GUID: 2C7unwbj5qbUvxCBi2komyuRMmOih1Jf
-X-Authority-Analysis: v=2.4 cv=X/5SKHTe c=1 sm=1 tr=0 ts=684f055a b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=yfRN1CPU6vwYn5W2bpUA:9 cc=ntf awl=host:14714
-X-Proofpoint-GUID: 2C7unwbj5qbUvxCBi2komyuRMmOih1Jf
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JG1aL1ItmR9iA1mL9TIl/CusRLK8Hp/6zdhq45pBmnmR7pNbi0j
+ GCuKg97L8tPGVZtvkmaoxUyh4u33v/r7TFKj3Vre4iNvOcmSfVkPcCilzSyrlO/Y8zQhgvR
+ 3M9AZSg/znoYEvmTNGCWmzUf4SNTdbV9RFKAwJ32vcgTBeACS4RLowzAAVbpvlskUDEnTL3
+ XFHguHhfD8ylVdm1DwmRA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1HjlbNrzGg8=;itZQeUIE3EHRcJLQX4REk0F4ku3
+ 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
 
-This patch fixes multiple typos and improves comment clarity across
-vhost.c.
-- Correct spelling errors: "thead" -> "thread", "RUNNUNG" -> "RUNNING"
-  and "available".
-- Improve comment by replacing informal comment ("Supersize me!")
-  with a clear description.
-- Use __alignof__ correctly on dereferenced pointer types for better
-  readability and alignment with kernel documentation.
+This patch series adds support for the various features found on
+laptops manufactured by Uniwill. Those features are:
 
-These changes enhance code readability and maintainability.
+ - battery charge limiting
+ - RGB lightbar control
+ - hwmon support
+ - improved hotkey support
+ - keyboard-related settings
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/vhost/vhost.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+This patch series is based on the following out-of-tree drivers:
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 3a5ebb973dba..0227c123c0e0 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -594,10 +594,10 @@ static void vhost_attach_mm(struct vhost_dev *dev)
- 	if (dev->use_worker) {
- 		dev->mm = get_task_mm(current);
- 	} else {
--		/* vDPA device does not use worker thead, so there's
--		 * no need to hold the address space for mm. This help
-+		/* vDPA device does not use worker thread, so there's
-+		 * no need to hold the address space for mm. This helps
- 		 * to avoid deadlock in the case of mmap() which may
--		 * held the refcnt of the file and depends on release
-+		 * hold the refcnt of the file and depends on release
- 		 * method to remove vma.
- 		 */
- 		dev->mm = current->mm;
-@@ -731,7 +731,7 @@ static void __vhost_vq_attach_worker(struct vhost_virtqueue *vq,
- 	 * We don't want to call synchronize_rcu for every vq during setup
- 	 * because it will slow down VM startup. If we haven't done
- 	 * VHOST_SET_VRING_KICK and not done the driver specific
--	 * SET_ENDPOINT/RUNNUNG then we can skip the sync since there will
-+	 * SET_ENDPOINT/RUNNING then we can skip the sync since there will
- 	 * not be any works queued for scsi and net.
- 	 */
- 	mutex_lock(&vq->mutex);
-@@ -1898,8 +1898,8 @@ static long vhost_vring_set_addr(struct vhost_dev *d,
- 		return -EFAULT;
- 
- 	/* Make sure it's safe to cast pointers to vring types. */
--	BUILD_BUG_ON(__alignof__ *vq->avail > VRING_AVAIL_ALIGN_SIZE);
--	BUILD_BUG_ON(__alignof__ *vq->used > VRING_USED_ALIGN_SIZE);
-+	BUILD_BUG_ON(__alignof__(*vq->avail) > VRING_AVAIL_ALIGN_SIZE);
-+	BUILD_BUG_ON(__alignof__(*vq->used) > VRING_USED_ALIGN_SIZE);
- 	if ((a.avail_user_addr & (VRING_AVAIL_ALIGN_SIZE - 1)) ||
- 	    (a.used_user_addr & (VRING_USED_ALIGN_SIZE - 1)) ||
- 	    (a.log_guest_addr & (VRING_USED_ALIGN_SIZE - 1)))
-@@ -2840,7 +2840,7 @@ void vhost_signal(struct vhost_dev *dev, struct vhost_virtqueue *vq)
- }
- EXPORT_SYMBOL_GPL(vhost_signal);
- 
--/* And here's the combo meal deal.  Supersize me! */
-+/* Add to used ring and signal guest. */
- void vhost_add_used_and_signal(struct vhost_dev *dev,
- 			       struct vhost_virtqueue *vq,
- 			       unsigned int head, int len)
-@@ -2860,7 +2860,7 @@ void vhost_add_used_and_signal_n(struct vhost_dev *dev,
- }
- EXPORT_SYMBOL_GPL(vhost_add_used_and_signal_n);
- 
--/* return true if we're sure that avaiable ring is empty */
-+/* return true if we're sure that available ring is empty */
- bool vhost_vq_avail_empty(struct vhost_dev *dev, struct vhost_virtqueue *vq)
- {
- 	int r;
--- 
-2.47.1
+ - https://github.com/pobrn/qc71_laptop
+ - https://github.com/tuxedocomputers/tuxedo-drivers
+
+Additionally the OEM software of the Intel Nuc x15 was
+reverse-engineered to have a better understanding about the underlying
+hardware interface.
+
+The first patch introduces the uniwill-wmi driver used for handling
+WMI events on Uniwill devices. Due to a grave design error inside the
+underlying WMI firmware interface (the WMI GUID was copied from the
+Windows driver samples and is thus not unique) the driver cannot be
+autoloaded. Instead drivers using this module will load it as an
+module dependency.
+
+The second patch introduces the uniwill-laptop driver that does the
+majority of the work. This driver talks to the embedded controller
+yet another WMI interface to control the various features. Sadly this
+WMI firmware interfaces suffers from the exact same issue (the WMI
+GUID is not unique) and thus a DMI whitelist has to be used for
+loading the driver.
+
+The last patch finally adds some documentation for configuring and
+using both drivers.
+
+Special thanks go to:
+
+ - github user cyear for bring up this topic on the lm-sensors issue
+   tracker and being the tester for various prototype versions
+ - github user dumingqiao for testing the battery, lightbar and
+   keyboard-related features
+ - Tuxedo computers for giving advice on how to design the userspace
+   interface
+
+I send this series as an RFC to gather feedback and to request any
+involved developers if they want to have their Co-developed-by tags
+on the final patch series.
+
+Armin Wolf (3):
+  platform/x86: Add Uniwill WMI driver
+  platform/x86: Add Uniwill laptop driver
+  Documentation: laptops: Add documentation for uniwill laptops
+
+ .../ABI/testing/sysfs-driver-uniwill-laptop   |   53 +
+ Documentation/admin-guide/laptops/index.rst   |    1 +
+ .../admin-guide/laptops/uniwill-laptop.rst    |   68 +
+ Documentation/wmi/devices/uniwill-laptop.rst  |  109 ++
+ Documentation/wmi/devices/uniwill-wmi.rst     |   52 +
+ MAINTAINERS                                   |   17 +
+ drivers/platform/x86/Kconfig                  |    2 +
+ drivers/platform/x86/Makefile                 |    3 +
+ drivers/platform/x86/uniwill/Kconfig          |   49 +
+ drivers/platform/x86/uniwill/Makefile         |    8 +
+ drivers/platform/x86/uniwill/uniwill-laptop.c | 1477 +++++++++++++++++
+ drivers/platform/x86/uniwill/uniwill-wmi.c    |  178 ++
+ drivers/platform/x86/uniwill/uniwill-wmi.h    |  122 ++
+ 13 files changed, 2139 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+ create mode 100644 Documentation/admin-guide/laptops/uniwill-laptop.rst
+ create mode 100644 Documentation/wmi/devices/uniwill-laptop.rst
+ create mode 100644 Documentation/wmi/devices/uniwill-wmi.rst
+ create mode 100644 drivers/platform/x86/uniwill/Kconfig
+ create mode 100644 drivers/platform/x86/uniwill/Makefile
+ create mode 100644 drivers/platform/x86/uniwill/uniwill-laptop.c
+ create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.c
+ create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.h
+
+=2D-=20
+2.39.5
 
