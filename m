@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDA127C84F;
-	Sun, 15 Jun 2025 16:52:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C08627A93D;
+	Sun, 15 Jun 2025 16:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750006332; cv=none; b=AEYXELd1M1j0mRGQGPudqqaIgWhNuAxd6d/lARXG9vpxw8JTKTx0rnbBEdSLTiSoW3ocEMRibXjKSy1RILvuFh60r5TJREbSTxQryNgx/FHg+wT97XJxMSjo1Bplu2H0P5eUKpNaynCxWu/P5b9ExEnc5jLuWJJ8hV4w5xly2sM=
+	t=1750006344; cv=none; b=GWgGwHk5Sn4NUxmGd15/DAP0EDkvMyymPurAZijK5fht8v0Quv6KI2rwJRHbZSdp0vFfXFyPYse/hI2I+6cqGKLfbPyriWUpXZtWvxNIm8JcWIsdAsovvL2jfpgfH5VvoRYm+s/Bp4qXEmnHK7t3baX3shJo6gDlJL3xCvJDj1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750006332; c=relaxed/simple;
-	bh=mijlUDV/jgZDSVDW216PIW1ZCR6wyRfjOlPnIPkNLlg=;
+	s=arc-20240116; t=1750006344; c=relaxed/simple;
+	bh=bAvi/hc899Xx4wJEJHPJhi4z7oQVc3CAWG5FfnZi+Yo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=EpKYeU6cBvV52ij4I4cW9zwwFUvptfN0cdliO1qI9QSsyYddU9PX2HJRnG4KFsE87pH8kmGptgkEsUp6QfO2owroYNZQniWR2vyZ8phD5OLyN6tqp6XQ0rGcimP5ZBCptue9vS9l1caGSRNWeVeuAjyiFtlIPbAKgWXIP774Rmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=httPnnPA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=R7AC6xgrQJmL5HTHRK07u3i7bVU1XLKUD4do2bTfFCFe12dA1/+T+T94lU26aGHob/dYoAqLF6L/xFojtKy0B3rYmUkP/xcDZhQux6GHpT6mf+MPXQc8U9XEHS/1OtcAGYBLU1C4c78wYi2J5gyxROamriQgUWyMOUJdPPGffFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFi+H/B7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="httPnnPA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93266C4CEE3;
-	Sun, 15 Jun 2025 16:52:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFi+H/B7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B69C4CEE3;
+	Sun, 15 Jun 2025 16:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750006331;
-	bh=mijlUDV/jgZDSVDW216PIW1ZCR6wyRfjOlPnIPkNLlg=;
+	s=k20201202; t=1750006343;
+	bh=bAvi/hc899Xx4wJEJHPJhi4z7oQVc3CAWG5FfnZi+Yo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=httPnnPAwmZoCek9wtrkG0ODf/wyRtOgr9hMWHFBhpVuR5rD/p8KJWHtp1su3YYZZ
-	 HJSaXm20t/ywqqfHB8QtgYTiJsW6XI5wlwNaVIlblRZxmIX+3jHOhO7d0C8n3q6tb0
-	 LDfJnknInLON+K89WRN/8kFFyn+7VeJGOQJ7SYk2WOFDWRW6O2MNkhsM/Dbko5BLCx
-	 kE+Ru+Tylv3z/ZFS4TQNyNNKQxMIhmT97xz0FJ69hWQhvnGofdcvxCR4HAxnxwBHWg
-	 zFcLifzeUTr5qBjp5f9o5y8XlAxX9dSYIE/I7QFiqcD4V5X5UhpmSsLOfPAdLpF5W4
-	 CBkuxoc/kPa+g==
+	b=NFi+H/B7gtAN8b/2kL0xOSpZpe9+o725fPZ0S2gYt7fLbupKVdwUq4484g5M37VAk
+	 ZYHqnF0N6wD7GfSWM28thiPG5ySFTOGlvRlc5bFntTpHmRfngf7pqHceayBszIi83u
+	 4JH5agtj0tPwNz31Jwhu533LNML/kF0wTP6AQZYxiy2qm0gRwnKNgLVrp6veep/50E
+	 kMkSN2upTbNSqpfKQD+16EHCvmzw+xyP28J8ztnZVHbeneclVRmy21WFz02n+04HHS
+	 bSZs/I+F86vWp3VeSBXopaayFOsAenZ17EVrA/5yEIX7RpKAs79X67Vn744jtGGJIu
+	 /9S8K7io7+DQw==
 From: Vinod Koul <vkoul@kernel.org>
 To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Abel Vesa <abel.vesa@linaro.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-In-Reply-To: <20250605-phy-subinit-v3-1-1e1e849e10cd@oss.qualcomm.com>
-References: <20250605-phy-subinit-v3-1-1e1e849e10cd@oss.qualcomm.com>
-Subject: Re: [PATCH v3] phy: use per-PHY lockdep keys
-Message-Id: <175000632923.1180789.17293154013004418524.b4-ty@kernel.org>
-Date: Sun, 15 Jun 2025 22:22:09 +0530
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20250214-exynos990-dwusb-v1-0-d68282c51ba8@mentallysanemainliners.org>
+References: <20250214-exynos990-dwusb-v1-0-d68282c51ba8@mentallysanemainliners.org>
+Subject: Re: [PATCH 0/2] USB PHY support for Exynos990 SoCs
+Message-Id: <175000633955.1180927.15897677423516410884.b4-ty@kernel.org>
+Date: Sun, 15 Jun 2025 22:22:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,23 +53,25 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Thu, 05 Jun 2025 14:25:49 +0300, Dmitry Baryshkov wrote:
-> If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
-> repeaters are represented as PHYs), then it would trigger the following
-> lockdep splat because all PHYs use a single static lockdep key and thus
-> lockdep can not identify whether there is a dependency or not and
-> reports a false positive.
+On Fri, 14 Feb 2025 18:21:06 +0100, Igor Belwon wrote:
+> This patchset adds support for the USB 2.0 PHY of the Exynos990 SoC.
+> This SoC has a combo PHY that supports highspeed, superspeed USB and
+> DisplayPort, however due to my inability to test the superspeed part of
+> the combo phy (device always enumerated as high-speed, even on the
+> vendor kernels/bootloaders) only the highspeed part is brought up.
 > 
-> Make PHY subsystem use dynamic lockdep keys, assigning each driver a
-> separate key. This way lockdep can correctly identify dependency graph
-> between mutexes.
+> These changes have been tested and confirmed working (with the USB_ETH
+> gadget and telnet/ssh in a ramdisk) on a device from the hubble family
+> (x1s) and also a device from the canvas family (c1s).
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] phy: use per-PHY lockdep keys
-      commit: cf0233491b3a15933234a26efd9ecbc1c0764674
+[1/2] dt-bindings: phy: samsung,usb3-drd-phy: Add exynos990 compatible
+      commit: 9f77d234c1f41e78a99f124bf6fee59dc2e3d46f
+[2/2] phy: exynos5-usbdrd: Add support for the Exynos990 usbdrd phy
+      commit: 385a766bed48c5bcf620061f24e864dafeca671a
 
 Best regards,
 -- 
