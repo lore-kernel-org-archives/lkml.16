@@ -1,192 +1,134 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A63C1DE8B3;
-	Sun, 15 Jun 2025 20:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F4A1DE8B3;
+	Sun, 15 Jun 2025 20:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750020117; cv=none; b=iDx0KEixg4Q4tesCNK4tezhOlYzFViVtNFlHf5DYsYtBT7/u/XJAJl6BauCZafyLGAC1lZqKKQf7pwitWLygKhNVP0rBlU71FTkhQGCyZXatjtGwJ0GqmEVboB66ogPkdKZARETz1wVlso2vH/39V7EEpir8hQs8kJ1PW9s0QKM=
+	t=1750020224; cv=none; b=cVs8LeIzKwz8fjkt4UvXGuRzS2OtA5ofsXoFxUwmPe1ELda8SUYB03hubqcpnsuFwjPP0wBDPT/AIE1Mj1fbgWh5gT9IEeVis6wP0+juxUEAItp1qy4wqtu3PrklWaFrtExhGSovJKdtndbSW3sANhwgJRsu8Ku6+FayrYhbA7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750020117; c=relaxed/simple;
-	bh=a4gyRtdEznwSU6cfA3mXkQrTb8MEPimItIe4DbY/b/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bf/Q/KWXUCGENMO4mT3wFlNjtzIePebsh+CTSLEjOLEmSXt2xJblee7V5bbIZXspbhlL7W6sLZN1TSqel9q9AruJTcEgKy9wKn5To8+ro/1oIn7tAT7YDkCuoTB6rX+fTL2JtomhN68AeP5JSSpviO3WnFVY/4/8U6mFtbHxC9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOH9mKX7; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750020224; c=relaxed/simple;
+	bh=BK+l2HO6viJZW2r4pfwwcFEhEL6waRkz7dHP6HyzD94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KN1N9J/GBWXhMAPYd0IHCkFouay7n0InaVOnxd4yhihNGLniabYBcQz1e5NAWNfxNIxIS19zHOIZ+TVuWhezZQQQO7PHA4z2lUuRaICzmdDzuvVcDSPDLwUpcolL9QIY1Mgd+C94kzvClzDTZKhvw4aXk4VlAxMhDhsaUjaTMBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=aAALW427; arc=none smtp.client-ip=212.227.126.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOH9mKX7"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32ac42bb4e4so34195381fa.0;
-        Sun, 15 Jun 2025 13:41:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="aAALW427"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750020114; x=1750624914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m8tUEHrU+aAiCA1wzd/2v+KwHHK/16tsTm7dd1xb+Qw=;
-        b=gOH9mKX7RycUlzhO7U+MdAkiUFx58GZOpJTAPsXvRl2+hb2L+qgXqkApg4/aTnO6bi
-         FLx6hBm3wDSi2vGVpPeTPo5Gu0hzLjxAGWnP3TOVzB/BKiD6ldyYb/DgPddGTZrEy8RQ
-         5Gbo2ChmUCzSs6XDPv3wxS+ETp2KU7Dzkvac2o/i8t8Khcv7ZlfPKdiSug4uA+MdXI0A
-         06vm9ynKfZGUqArnQOxgMx0rzrJUEikSENafDTPm8UP5u3Xvh4hFBv14nuJFEZHxfHw5
-         pCC0OBHRo/m+kEw+aPoX8Q+eiCsR0YUlig0roHTFkn8q85TIEipnT2WsNx3pfJPCWOcH
-         abbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750020114; x=1750624914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m8tUEHrU+aAiCA1wzd/2v+KwHHK/16tsTm7dd1xb+Qw=;
-        b=Srao99apaGx55OAHPMCVx22STgxqBp7F7nStobWZOZGAnsf6qL/gClz3a/4LnCMuIO
-         CXbThHKvHRPATwoTsPozZBrj5rlQ3eqm2g/uyfiLpg+4jvo73/sLFpF5Vv3O+qSQTwM0
-         UTcv6yZ7D31+YXuOt5hOv/LiDWY0oFzgp/SAzQNghyhJIzf7m5TUloDKYqhZMh1mlcfc
-         eeHChFR1NmtpSfnKhvm+qSDXpKlS3vcgnMy0j/TGtxbfkDB9SKhoBmDpWsZxMTQG7kgk
-         tK3PCaNY5X0Y1d2uWFafcbOXd8INZ0803G/xvUowUgS+9S5unjtyKmcZ9VVHvHnl0YAN
-         P/Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGzcyhSK4VaUjx/VqJ+OjDPOEf0bpHRZZ/WnQRdLdC7RkmfH+Z+7Yy+t5fR3TIW4QvfoFRzMLvi+gWMlBp@vger.kernel.org, AJvYcCVCFey7PtXPa33QEDTQZfGbM+YE/Q7d21xk3Dy3dKkv2cN1lfAMtDiSI73Hg/Xiizetgrt5cuW/fV22@vger.kernel.org, AJvYcCW4K787SXjJlZ1crxnyDmDXijPRVm6QmtZBHYVvEt9VpSkxQNnOVSVH6a8BgmVRrwafOYae1PO2dP7f@vger.kernel.org, AJvYcCW8zjFdV8dodHghcEMde/5aGoKsEIUigB5WaURFgKOlEp2j8o6gUbtj5U2mdBZ4azTnNQ1lr+NB@vger.kernel.org, AJvYcCWu6dxmMWxLrJZek2hlxjmyHAxJzGFSCXMT9jRblNJn9puAs54E4YBZc2fbllhXh/VUzNVRVz13r52riFmp@vger.kernel.org, AJvYcCXRj0D2ceSyj0aaqgeCCYRpfVQiKaWWSj42/8xf03DL5ORhSqo016F/lklgDlb6u3xN44iKUJ3aKre1ZqM=@vger.kernel.org, AJvYcCXvcWRGPESO98hPKmWc1BCjwny9VohD9sTPKPiS3HtrTSVNz3CEZKY/8Uu1CBobmvaSCeteq97J3Pf1fwJzp0EK@vger.kernel.org, AJvYcCXxpqgfl0myLRXY1WGqeWHVm0tkBh0hTfI2V2tGa6d37ZxOZ6MLdBgPyupzT/VWUhnsBRIHG7QHN9swDRwHsZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPC24ZMGdId1eMXAe6Xjnznr14A6BRW9lDT+OCYUlzG9TVoPPa
-	4MqWoO4FtLPr4j9uhr3VuYzWHBIYWlzK9FSDFM29oQM+cD/ONlTLo5jv+YlAY4VqYiXaE7s498l
-	QTEYpHxLB4hq52NlWkE8X8ayuiKvBAcU=
-X-Gm-Gg: ASbGnctJT+ocTEKoM242H3DSen76/sHTd2slTCBzDotWBE+l6smcSHcBSqlrSuvpLw+
-	HfYXErO9vpk5QY+sMYXtKvKVgR7bL3kl1T2nVZgyNNMH9n1nqzgJLJpq/hIGnfoYr5+qAGECB9B
-	EgXyiH3eU/fhyEmfSW+E92A7a1t7tnWsDDhtYCrHf77l0RoqHusB4K8AxNQBZOYJbaY8HIAB10O
-	cfMLg==
-X-Google-Smtp-Source: AGHT+IF17qm+FSbVV14Pg7FJ215dDeNSyp0hu+3UB0vAUnPJ/I/b7hzjcOF97wvz/4vYu6TXyZ0HeK2zzMOU3xxjgxE=
-X-Received: by 2002:a05:651c:507:b0:32b:3cf5:2ff3 with SMTP id
- 38308e7fff4ca-32b4a5a5c9cmr14597681fa.22.1750020113944; Sun, 15 Jun 2025
- 13:41:53 -0700 (PDT)
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1750020173; x=1750624973;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=onUUPi4Wsm0wWvtRzn7J1Is1tHETTLIUY7qL9YrjcWs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=aAALW427wCiTHK39cJJv2kjo5O3E9Pc5agRqdW8bWA+LeGPYnK0+OoD+wSPbGNMs
+	 a/bk8C+aLobCM408Blc7Y+YD5VqacRjTkSU24zOz9Kj5FHMA/mBtMhhmoQbGycgrk
+	 tKEeGeP/NKcAmVjNZfpC4fpqsfyRFYhs4rWuQp+UByzpEVnljo4K7AOdFLRFnWr4t
+	 t6VM5dzTGFyvp9zXYR2gRfAsS9DAy018Smyej00I3g/f9rUEYo8dt0lKNPVputYfC
+	 ikij9RCwlYOlkf75sF5x9wMkSszH2JPLwnx/doEdtr0cKa/MO9PS2ePMRT6wa+pgE
+	 /TjBIkhEtH8JRwbEXQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.174] ([62.226.41.128]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MqsGv-1vD7Bk1UkT-00lJbT; Sun, 15 Jun 2025 22:42:53 +0200
+Message-ID: <df125ce9-c271-4cd2-b9ee-798d7b1c8648@oldschoolsolutions.biz>
+Date: Sun, 15 Jun 2025 22:42:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com> <CANiq72m1ZWxPgCda1C-8X5XOvEq9Z9JfJZqhU4ZUzZ64=N+2fQ@mail.gmail.com>
-In-Reply-To: <CANiq72m1ZWxPgCda1C-8X5XOvEq9Z9JfJZqhU4ZUzZ64=N+2fQ@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 15 Jun 2025 16:41:17 -0400
-X-Gm-Features: AX0GCFsBQDbpDdusKYtZ8m3QzN_wjkIx6XFjpQUGjjmQDdCD-7AoaM2XitZK-IE
-Message-ID: <CAJ-ks9=eWA-CCJn32cVQZhBnz=dgjPTt6av0Uw2m+_nfRXYcbA@mail.gmail.com>
-Subject: Re: [PATCH v11 0/6] rust: reduce `as` casts, enable related lints
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 0/4] Support for Adreno X1-45 GPU
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+ Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-pm@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
+ <0e6fd97d-9a56-426b-8b98-dc8aa50d02d2@oldschoolsolutions.biz>
+ <036e739c-54e4-4252-b6f0-c8eed5557d15@oss.qualcomm.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <036e739c-54e4-4252-b6f0-c8eed5557d15@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:NPypNcwQLw4G4JWfH5eQewUs1fAhXA4gnmLwZKj+YXP2JQCVDLw
+ hHHaFiRxV8yKAi8HhsY8i7ZxODi73S6CjKM9nVFccdGkPhfkB5pOrBOyVW9yaBNN4b0H+Ns
+ dg9kfLxx2wyWiBgoyv/B9zEcXS+CPe57RHvxQpv2+5cF8Zfq1sB+eFs/1EV0GqXTBh6gg++
+ +pqFx1RAv2flOXyJR+vlg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:klnQglAAmwE=;E6ZFj467byVMRokAgVi3n9DEdRR
+ N1m/VSAojUu+ULxgCdZ4o+cCjlVmxVqa/sFULgrw6SEKsIo2NNWw35rUEyudvLLsVmQK4Z3p9
+ 591we6xn+bjnbhuu92332R/BK6nyJg75u8PVumSroAKebZIVkhWrNbtqyL4RCzEamfJlIsHg3
+ Q1An5m81MgIKuU59h6/exUcKN3r0iMrAs50XrEeUQeLDrYY9E+53WzWLlq2fC6NA2KjrX8JaC
+ gZOw95SRi5w/ifsbqET4WItvnvvSPuEniYP4n5heEBpB1vHXrmElJhhtN4BRiuBwL5OqFEdS5
+ NZGYR1ut3tvw4AaLB72JrG5VlIpTo+opklz68zFKwM38VZx/MabOGpv/umwEkMfcNvjlG/pjo
+ rESxS3yShxjydsx9s2Ns/tZz/8gc+ikVEQCYyq6vk1pUaooWxZA5vMJjMuHKEdyw4e498DCor
+ WG8X17Pi3eXakotXfmGvHB6AWJRWKIsHNC8+vOWJfSm8Y4m/O0PtuZnhnvWyD92CVMeKu4XQF
+ yWCK++uPU1Zm3TDk0tEHCewFA9Vq52o7yywfM9/S3tlTZykC614j+z6R1DJ1RNyJc4dEqZmtg
+ B+OwBWNJiShSqxaPQlg/6oeuujHaFFfz++nU6Xf0pOEMWPpPqsxzoAzAkIyafeZyrk/Q5rmFr
+ 1fRo+JJIAzSVVyyc6MvlIMvA1u5sdgT94lJaiEXBl+R1PMa/fCs/7GRVfH/MUNhQewq1pHxNO
+ tJivuh+YxIiRvz/HgkfbrSG8gK4MycVAiN8T+rRFG5+0rM+fKbjaDyxWo++mucpT3G75rGtq2
+ wfdXKfA4euhbu8XN8lEpe7XQJu2zkNy8NlzZgBApFiw6EtuGXAEZZp85P6AKyZ8ExF4/HQaKd
+ xZ9fgizegncf77vAwsnWhBykpNH6a9whTFOhRp4TwiRIzfEOb+IshEj9XF++voXK44mQhwOZF
+ 6tdBL0StGxlPuziwMhDjfSaoDaTY8xTVMgIaefvlBhHIHOpQJHicXlZPGLsnspzpzrgDcZ32/
+ sFOGfjHxA5lPFtseLVEaLrZQzK9OSDEheJNc9hd85+vCHwr2zqnWFaAa88Xa/NEyvK1De3A3G
+ hRlpE1fkiCpoaee8Qw9jJxHHBBwi3uCZYkrkLH4XBA67ydVj5WK7MEDsw7UVe0O/aY35bq4Mw
+ rlvKdCFwtLAtvqOnIfYj6NslmMJTqHS3655lLfIILocFlIl83vmvO8HYdyzB8Ywr4IqPEwq+N
+ oXYgPcyehI67+KnUBn2wkBNlBUhy/Jk4/5BtEEhmfnj+nbYP42HYRGD3g6VRB1iher4rXqrjf
+ HGT7hQ349cRxaVSkYw9HPNyXbw0MV7fBQmGZBd1w1+0/SDtHhcaca40bKnvADp28METqZVpa0
+ XzZAMSDylIKBf0zvqJe7mfrDIev7ODjahDP1ZNbB+/b1VZcgienlG8PIOp
 
-On Fri, Jun 13, 2025 at 2:14=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On 12.06.25 23:19, Akhil P Oommen wrote:
+> Hi Jens,
 >
-> On Wed, Jun 11, 2025 at 12:23=E2=80=AFPM Tamir Duberstein <tamird@gmail.c=
-om> wrote:
-> >
-> > This series depends on "rust: retain pointer mut-ness in
-> > `container_of!`"[1].
+> Could you please try the below patch?
 >
-> Not anymore! :)
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> index 2db748ce7df5..7748f92919b8 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> @@ -1510,7 +1510,8 @@ static const struct adreno_info a7xx_gpus[] =3D {
+>                          { 0,   0 },
+>                          { 294, 1 },
+>                          { 263, 2 },
+> -                       { 141, 3 },
+> +                       { 233, 3 },
+> +                       { 141, 4 },
+>                  ),
+>          }
+>   };
 >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> With this, you should see 1107Mhz as the GPU Fmax.
 >
-> Thanks for rebasing, Tamir, I appreciate it.
->
-> This has a bunch of hits in configfs, cpufreq and Nova [1]. I guess
-> you built without those enabled.
->
-> Could you please fix those? Since this affects other maintainers that
-> we need to ask the Acked-by to, let's try to at least give them the
-> final state.
+jglathe@tb16-jg:~$ cat /sys/class/devfreq/*gpu*/available_frequencies
+280000000 380000000 550000000 666000000 720000000 825000000 940000000=20
+1014000000 1107000000
 
-Oops, I missed this email! I will send v12 shortly with these fixed.
-Is there an easy way to enable all the relevant rust configs?
+Looking good. Thanks!
 
->
-> Thanks!
->
-> Cheers,
-> Miguel
->
-> [1]
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:429:9
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:467:9
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:479:9
->
-> warning: `as` casting between raw pointers without changing their constne=
-ss
->    --> rust/kernel/configfs.rs:564:48
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:721:39
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:764:35
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:783:35
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:764:35
->
-> warning: reference as raw pointer
->    --> rust/kernel/configfs.rs:783:35
->
-> warning: using `as _` conversion
->    --> rust/kernel/cpufreq.rs:650:45
->
-> warning: `as` casting between raw pointers without changing their constne=
-ss
->    --> rust/kernel/cpufreq.rs:650:45
->
-> warning: using `as _` conversion
->   --> drivers/gpu/nova-core/driver.rs:22:64
->
-> warning: casts from `u8` to `u32` can be expressed infallibly using `From=
-`
->    --> drivers/gpu/nova-core/regs/macros.rs:267:26
->
-> warning: casts from `u8` to `u32` can be expressed infallibly using `From=
-`
->    --> drivers/gpu/nova-core/regs/macros.rs:267:26
->
-> warning: casts from `u8` to `u32` can be expressed infallibly using `From=
-`
->    --> drivers/gpu/nova-core/regs/macros.rs:267:26
->
-> warning: casts from `u8` to `u32` can be expressed infallibly using `From=
-`
->    --> drivers/gpu/nova-core/regs/macros.rs:267:26
->
-> warning: casts from `u8` to `u32` can be expressed infallibly using `From=
-`
->    --> drivers/gpu/nova-core/regs/macros.rs:267:26
->
-> warning: casts from `u8` to `u32` can be expressed infallibly using `From=
-`
->   --> drivers/gpu/nova-core/regs.rs:35:65
+Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+
+with best regards
+
+Jens
+
