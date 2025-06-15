@@ -1,50 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF39727C16A;
-	Sun, 15 Jun 2025 16:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146FD27BF86;
+	Sun, 15 Jun 2025 16:53:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750006373; cv=none; b=o5bAqFO9OKNmDBZtnrf2WfDXmXjnVbSbMZD62eiZ4kYspsnt4YZfNzmiGfBcAsomaBfxINSUymQuUrDbO61reb2ZyRFocu677JqK39ZA3HeM0s9OGmqqT/bPKomPaGmvxgCa5SJyBZSIwyUn6vaLnK48LGHuS3MHMMQxE4kTnNk=
+	t=1750006380; cv=none; b=b/nUSsD6DpTZ4TTo5ePEoFMLcEYa7UuQxeTrtjyrZwLTMCfLLLnefGDyFzdd+Hz8ud7uHbrg0mJLNVH8qJCB27kFu0feWlod3FKeCmuz+OtIDfEPjDHw5vY+Y4qQLzkm/miq8aL2A6IL7PgF5tin5442mhceJenrAgUd8qIbw94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750006373; c=relaxed/simple;
-	bh=TqLr/OCBktBZQpeIStq66n7a03Pl9cTeFHgLsL3jA5Y=;
+	s=arc-20240116; t=1750006380; c=relaxed/simple;
+	bh=vX5HGgA8fC7YjZ06YgAI2G0Iz9bLuEWdLseKSEem3jM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=uKZYhGUQYXklCWq95cHC6ZCHVp3/wkBNedBEVvj097u2U9XNRM8A2i0ow1YVMxSrad/RP/pie3PvZf6miVOcBo92QvkNSx6UqFYvbVfj1sAjfZiZq0aYl7r2MXKUB/KUW2zOnXumHQ6NG6qgZJ+LERCP2tEfQ6nQVF7IFkTQn2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUy74Sp5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=g7bUHL9IxprNRJgHI6L5et/FAbONWJyojYqm3LsVqLqhaK+TIkUoE1qIF7cyqDqIbLRx5ky4wiIjQctNRxsC5Y8L5yv1F33uj38Gm1PCU5eupSqSRm1S4pQdBGjZjhy16Eu4Jxh/ZBtTgoatXHIXbH3pMk5EDNBGyhthaULoG6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIbhoEGu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUy74Sp5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DD8C4CEE3;
-	Sun, 15 Jun 2025 16:52:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIbhoEGu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F86C4CEE3;
+	Sun, 15 Jun 2025 16:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750006373;
-	bh=TqLr/OCBktBZQpeIStq66n7a03Pl9cTeFHgLsL3jA5Y=;
+	s=k20201202; t=1750006379;
+	bh=vX5HGgA8fC7YjZ06YgAI2G0Iz9bLuEWdLseKSEem3jM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kUy74Sp5/YdI9tbwp3MmfXvHsGNeh91SLmRJp+dX5BoAZggUkRJriagL1FJe6s7G7
-	 Mpo4gho07NrQfQvNOp0tFHFwUG+JR76cKnjI4dnzn5j14BU5MNyvS52b9WT+JWSwT9
-	 6Johrp3AyysxuWhtfCeX1hCG01y9XkjF2JIPij+tC8rWfckKoylyPfj0NGM251yMgw
-	 HAeOrF/3KgT/sC3uJ7oGfWirhNRqoj9gkg7W85lL0LvtaHI3ae2nrpdbPYlc2YUf0A
-	 lQUKmrspkUn7iDeIT33F41YG3CGKSwvEZyum6NsBXKvDbc3LjxXyu2Vx0NUY/o8ImK
-	 xAURId6iywE1Q==
+	b=dIbhoEGu2cJUWtgIefClLundN6NQBYR/s6XRyLA5x6eah5qTnoOufS8JJ0A0r/GTH
+	 3554rdwXsHPEWfc1MtI6iG/OffR4J+2kTwQOZGc7RT0Rv6SRJexDL3CkGG0m4UJOb6
+	 Bs5hZUm1is6XIp5UlWmLbpnhRLmrbwKcSI64eo2uReEUdrv3rb2m3J/MgT+dqMGn31
+	 a53L01h7MYNpUzIwTZ83mL8l+gqQUz1xS4nxpJmkD1aqdl5MdCDJ8VP4msh6Ff4UAm
+	 15n+2fvR+jVBMHc3rELXtjDspjemffNThae+AAH/EAVb4FGRy0Jx03XLlqUIi4sgGQ
+	 4IHN6T7TVDVVA==
 From: Vinod Koul <vkoul@kernel.org>
 To: Kishon Vijay Abraham I <kishon@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Prabhakar <prabhakar.csengg@gmail.com>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- Biju Das <biju.das.jz@bp.renesas.com>, 
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH] dt-bindings: phy: renesas,usb2-phy: Document RZ/V2N
- SoC support
-Message-Id: <175000636867.1180927.12382475104046951897.b4-ty@kernel.org>
-Date: Sun, 15 Jun 2025 22:22:48 +0530
+ Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Melody Olvera <melody.olvera@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>
+In-Reply-To: <20250527-sm8750_usb_master-v6-0-d58de3b41d34@oss.qualcomm.com>
+References: <20250527-sm8750_usb_master-v6-0-d58de3b41d34@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v6 00/10] phy: qcom: Introduce USB support for
+ SM8750
+Message-Id: <175000637361.1180927.2580740047031375607.b4-ty@kernel.org>
+Date: Sun, 15 Jun 2025 22:22:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,20 +60,22 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Wed, 28 May 2025 14:38:58 +0100, Prabhakar wrote:
-> Document support for the USB2.0 phy found on the Renesas RZ/V2N
-> (R9A09G056) SoC. The USB2.0 phy is functionally identical to that on the
-> RZ/V2H(P) SoC, so no driver changes are needed. The existing
-> `renesas,usb2-phy-r9a09g057` compatible will be used as a fallback
-> for the RZ/V2N SoC.
+On Tue, 27 May 2025 14:04:36 -0700, Melody Olvera wrote:
+> Add support for the PHYs and controllers used for USB on SM8750 SoCs.
 > 
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: phy: renesas,usb2-phy: Document RZ/V2N SoC support
-      commit: 00399bbe02d2bb6fd8d6eb90573ec305616449f4
+[01/10] dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp-phy: Add SM8750 to QMP PHY
+        commit: 439cdb309c3cf630b11661872ace09e1a7c5d630
+[02/10] dt-bindings: phy: Add the M31 based eUSB2 PHY bindings
+        commit: 1166a2ca0900beafbe5b6d1bb357bc26a87490f1
+[04/10] phy: qcom: qmp-combo: Add new PHY sequences for SM8750
+        commit: c4364048baf4878c270e94aa224bb114b445704d
+[05/10] phy: qcom: Update description for QCOM based eUSB2 repeater
+        commit: b0d8d731b4b0fc83bb4826a2c805f4c877c98cc1
+[06/10] phy: qcom: Add M31 based eUSB2 PHY driver
+        commit: 9c8504861cc4102463f31fe1f5e120a6deb15c15
 
 Best regards,
 -- 
