@@ -1,168 +1,180 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E394265603
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B4426B2A1
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749996492; cv=none; b=OlNlf4w8mY/uBke3EKZ5Qwb/+B9JBcx/W9aoYXPk38RPbtsO8YHNNWcl3MRG46thsivi7xrmSY9Msyi8zEo5iY/6bqPWm1vmcO5G2UP8Hg8PapJ7L3WmasmRc+uguiADcm45h/4QxQSOau3sHlnZpa319I6WrOG9xqbtSDZIz1U=
+	t=1749996498; cv=none; b=LRPTmm6MgCeU31xHVVxr91lQIE+qVXMcsnQJPc5N0JUKcnIi71ngrn1hwknqJ5sEgdUFNpC/+IlTEnp0tLUoJqqn9CEe1tmNBbbT0vvpG6vc0ua+fF9j/sY5BfuOBq5AB6ZotAoi/amKXL0GDwg4oxXAiwsfj/JU6ahiLRFhwdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749996492; c=relaxed/simple;
-	bh=CcL2R9L1qSAoAE6fzuBvMZlTzcPa+YWzy/4ZbcilH78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a/7PQbXSA4snI/JHA6ufduKdwntyaHBM1sBM/ZC+aZHVCNmmbZWQ5wLisGNlKWGBxZvmY3Pr+z4HpnoWgB0SiU/q9pIqWRx0RizCxjahXCXrEsLJNIpO9Gkv27stTYxUCL229EDznMCVs+LBY/0s4zjoOFMFFtu4sByNqmXZz+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=UK+pMT03; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1749996498; c=relaxed/simple;
+	bh=ZMkuY8utSlgX4E1TJgbabBifoab9L056uppzdIxIscI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EcED/lUpCkku7hpzeBLbImEc2N0YJUKlCKICKbrr7rppbYVCT1FKpbcB4x5jWIuHhPKWmo3rKmAtnIcbabYLc8cod6wGWFzJDL3Ln+ywIbwRz1hbeB8FWmOb67o5mAMJWfqHgqkHr/PSz0EAB3mpFgUe+1qemoU3g0YJ3LjNWtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V48fO4Qf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="UK+pMT03"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-86cf9f7abc4so301041639f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749996488; x=1750601288; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ev2ncarzcapzq2egHLqNpb8FWb96CW9+NpRTLqU6sro=;
-        b=UK+pMT03aN/yT4oo2cwII4ivoIEx6dJpqE96eNDKlCxXn4bbvgs+k00YhXQ4nwNbS6
-         bytk8rbqH8S9D2t+s8ELpN4COTaD0f+KdUR3r8hvHzfF7m5sY84FLfP0S+o3HT31+NkJ
-         P0IzZMWP3YcAcrPGpwG/Shtxu01wNZ8uQGVxDGwALPbQsQLmWvwIXYw7EAN40gANgB92
-         WTAq+KAHmTYp4b3Fn0/aZuCXtz+eoMRDFABQXdNrdjC7iDo27QFmry6dH4gCF3qVfyU3
-         iqzXZ90uF1or6wf1BKKVHChE5QS6gKImJaGUcsJFDn0Wt3lA65sl8z4KMbvIi2o31O5P
-         dpFQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V48fO4Qf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749996493;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x5F9RD1nifDmIVXEq5JzNevYty30dQQi6BLivh0kLXI=;
+	b=V48fO4QfWtcUvSEhdmitTSvVSNskna/VkYzmUAWjEe7y8XvHRpDplaMkhBNA9AzIKUEHK4
+	XORtwIBlWRwr1aKu4ooRiw4T59yWWPFPIq3AYqsk9HfARNbAKQmVnucM5tCyUzWSP6Q032
+	srbhV3YS2SbrhSZDcstIz9Rq5iXDgys=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-690-Iv84DjtcNDeSWPK_pHHM6A-1; Sun, 15 Jun 2025 10:08:12 -0400
+X-MC-Unique: Iv84DjtcNDeSWPK_pHHM6A-1
+X-Mimecast-MFC-AGG-ID: Iv84DjtcNDeSWPK_pHHM6A_1749996492
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c7c30d8986so1292800485a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:08:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749996488; x=1750601288;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ev2ncarzcapzq2egHLqNpb8FWb96CW9+NpRTLqU6sro=;
-        b=etTx5WofITFfInJJCCR9vdYPeZmYW42ooJr2Ed1SYitRiLatdH6WL45ptt0TiDF5Eh
-         AXPjZkzacmiS9tJzJEGEtSgov/g753isoesiJtx8D29qq82bOXSmw5i4/8BmmPP3vffo
-         ndZyfv0HmsZm7UoDyziPYUlaJzPNBh7pYMgFqwcp1L/Em11vHhED+XPJ/vMhwdJcZGTo
-         MPq14+5lHGAil8dQdR6x8DseuLA/7mz+mo7aIaT89O+eDot/DtVdpRR6YoE39q+fvplJ
-         5pdV7udVfnAKtQMohxhv4S2vU1XZeg/SSWtAXxJAzeKPcRu/SZMC5B7BINbqwmAnkd4/
-         ffgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZVVmnoL6K2KlxOEnoXXhhd7GpRrslxwH9VZPK2hTItASYA7+aOeh1qo1/EsDdUMHIXzgKgYwcBDj6BcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt5TK4k/LzcT6UkGFMA8EAfpjhKQmvmYWHodkpJ7bn0M6yEf73
-	Fv19sD7cg/zHTq5kTRr9dncg7NpTUokgp2nIKG6BoM9HTt55liP/UCxuzRxwZMcfkq0=
-X-Gm-Gg: ASbGnctBQJyL/9j1SyAT7hKYZBWzQU4/Nzgq7OJx5eQNBCgEdIKhUUJFhYN5RWo5hoq
-	0GPH9CN4PJ27oePMTK6zUzqvfJUa7qXVKkNi4LZk9SiLcn36zcU7UBnCZ0UvM4kAf22eQwC3V5u
-	N8TjPA5F1ObXxwGVqN5iBkztfJsogUAkBuTia5LkksCInqCvNUxDlNk0MFwwi2/ukojYk1bsjmX
-	PfuQ0B19bM5Mbzeobef48rYFSHBeCtt4SlDnXyXEGVKEehdmX8IQaSkiyFief+tr/moyt59AROu
-	2tP2eDtBqH4Fv1nC722qnf6jAtr+tQr8ohmF7yHdDGJ6PZlww2GlBt1j50M=
-X-Google-Smtp-Source: AGHT+IErB8q9zdosjAiGP3Jl++mmQSh6Dlt7tVdsOt8nIx8SP2s3DHMmWgKfGAaatM16VWyTNNFHDw==
-X-Received: by 2002:a05:6602:1513:b0:86d:5f:aef4 with SMTP id ca18e2360f4ac-875dec75b32mr657114939f.0.1749996488205;
-        Sun, 15 Jun 2025 07:08:08 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149c68bc2sm1268818173.80.2025.06.15.07.08.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Jun 2025 07:08:07 -0700 (PDT)
-Message-ID: <7103fcd2-904d-42ac-b5f4-e821697b72f0@kernel.dk>
-Date: Sun, 15 Jun 2025 08:08:06 -0600
+        d=1e100.net; s=20230601; t=1749996492; x=1750601292;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x5F9RD1nifDmIVXEq5JzNevYty30dQQi6BLivh0kLXI=;
+        b=B/5FAFYGyyhwiAqFeCJwfl2ntGGVm3HArh1T3vq8rl/zqeGCb5BRMhGi4qf+YqXXp1
+         CpQngG5xcH8dhZsGPVvZYu3nST+bT4TDzelv4M7H3L0sdQnbq/7b9NEjA4unvqMXL8dZ
+         d1hDRfKUf0s9nnQW9A0tqRzyZdmKt5ACNeFxJvOfZ4rhpshTDoBOUKtCeytykCcBpeno
+         POLVSV699U1fSNkaO042MVKczJOfGs01aAnjxnCJr2S3Nltqz3dyJ/32iAdQPHCbBQ7w
+         ZUnuUkSeTo4elZy1g58fbZK7wX0HM5wRF2e3I17u610fmnGf5VQclomVXCn8fOm7bCQs
+         LFEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHYYVP/AB63rRR2iSxZMo0oes6x0vtyTCozAjDsnSB8xy7ciPPPWCxGWcLuqE/E5XRhE3Xa7MjZ9uuje0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2oKOSyuNrxv0T7E6dAV6osWwpZDyi3OIVyHYXfGwCL9xQGK03
+	bSlXTwUBp6tSKqMx2Xfqz0Q7ma1uFvbmHqZB9HxoetzcyvvfppltucY6lDrVbydP0jhdQqfEkPy
+	knlOesoPspNNBEJ1bMz1pnVw+KKo8Wk9vqNkEf0ak/pwRi1HWq7qAUZQrVo89rVWWNOYDOLGVel
+	jz7WNzoEcaAyQfhlPKNlqroOXfjbrJRGuTt8CZB5kY
+X-Gm-Gg: ASbGncvLW4t7Oze8De5iNSjMJSvxdxNRhgrFVV2zy/z6lQH7b87t2WGQPrrJuVHKPKG
+	MKSYEh0hY5Slq0xSHmyHWEIgoD38i2vabczlZ4Kwxpb3P5VlFSbxLD89r6vZJyXObp+VsxDBLHI
+	7mnRmh
+X-Received: by 2002:a05:620a:424b:b0:7c5:562d:ccf4 with SMTP id af79cd13be357-7d3c6c04a42mr976767485a.4.1749996491839;
+        Sun, 15 Jun 2025 07:08:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGx0K+fxFSP4BqeDRz0y+o/8CQcKF4SvXSEuhhUCRwUNvz+In8dyZXZqILXiqwaViRTlSKW5mWNGj/EecyaUpU=
+X-Received: by 2002:a05:620a:424b:b0:7c5:562d:ccf4 with SMTP id
+ af79cd13be357-7d3c6c04a42mr976764285a.4.1749996491522; Sun, 15 Jun 2025
+ 07:08:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [io-uring?] WARNING in io_register_clone_buffers
-To: syzbot <syzbot+cb4bf3cb653be0d25de8@syzkaller.appspotmail.com>,
- asml.silence@gmail.com, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <684e77bd.a00a0220.279073.0029.GAE@google.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <684e77bd.a00a0220.279073.0029.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250609073430.442159-1-lulu@redhat.com> <20250612022012-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20250612022012-mutt-send-email-mst@kernel.org>
+From: Cindy Lu <lulu@redhat.com>
+Date: Sun, 15 Jun 2025 22:07:34 +0800
+X-Gm-Features: AX0GCFswiCco_DauL--0e2ckwRlj1O7zbAgJChjHQQatloXrMYTxWULtZX6JYno
+Message-ID: <CACLfguVOmz5dzvX+08X_0bBQP1iEoxjX=eh=id3mWGtjSodSrQ@mail.gmail.com>
+Subject: Re: [PATCH v11 0/3] vhost: Add support of kthread API
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: jasowang@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/15/25 1:35 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13db6682580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cb4bf3cb653be0d25de8
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> userspace arch: arm64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15cab60c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c9a60c580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+cb4bf3cb653be0d25de8@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 6488 at mm/slub.c:5024 __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 6488 Comm: syz-executor312 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-> pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024
-> lr : __do_kmalloc_node mm/slub.c:-1 [inline]
-> lr : __kvmalloc_node_noprof+0x3b4/0x640 mm/slub.c:5012
-> sp : ffff80009cfd7a90
-> x29: ffff80009cfd7ac0 x28: ffff0000dd52a120 x27: 0000000000412dc0
-> x26: 0000000000000178 x25: ffff7000139faf70 x24: 0000000000000000
-> x23: ffff800082f4cea8 x22: 00000000ffffffff x21: 000000010cd004a8
-> x20: ffff0000d75816c0 x19: ffff0000dd52a000 x18: 00000000ffffffff
-> x17: ffff800092f39000 x16: ffff80008adbe9e4 x15: 0000000000000005
-> x14: 1ffff000139faf1c x13: 0000000000000000 x12: 0000000000000000
-> x11: ffff7000139faf21 x10: 0000000000000003 x9 : ffff80008f27b938
-> x8 : 0000000000000002 x7 : 0000000000000000 x6 : 0000000000000000
-> x5 : 00000000ffffffff x4 : 0000000000400dc0 x3 : 0000000200000000
-> x2 : 000000010cd004a8 x1 : ffff80008b3ebc40 x0 : 0000000000000001
-> Call trace:
->  __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024 (P)
->  kvmalloc_array_node_noprof include/linux/slab.h:1065 [inline]
->  io_rsrc_data_alloc io_uring/rsrc.c:206 [inline]
->  io_clone_buffers io_uring/rsrc.c:1178 [inline]
->  io_register_clone_buffers+0x484/0xa14 io_uring/rsrc.c:1287
->  __io_uring_register io_uring/register.c:815 [inline]
->  __do_sys_io_uring_register io_uring/register.c:926 [inline]
->  __se_sys_io_uring_register io_uring/register.c:903 [inline]
->  __arm64_sys_io_uring_register+0x42c/0xea8 io_uring/register.c:903
->  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
->  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
->  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
->  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
->  el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
->  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
->  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-> irq event stamp: 370
-> hardirqs last  enabled at (369): [<ffff8000801fc600>] local_daif_restore+0x1c/0x3c arch/arm64/include/asm/daifflags.h:75
-> hardirqs last disabled at (370): [<ffff80008adb9eb8>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:511
-> softirqs last  enabled at (294): [<ffff8000803cf71c>] softirq_handle_end kernel/softirq.c:425 [inline]
-> softirqs last  enabled at (294): [<ffff8000803cf71c>] handle_softirqs+0xaf8/0xc88 kernel/softirq.c:607
-> softirqs last disabled at (289): [<ffff800080020efc>] __do_softirq+0x14/0x20 kernel/softirq.c:613
-> ---[ end trace 0000000000000000 ]---
+On Thu, Jun 12, 2025 at 2:20=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Mon, Jun 09, 2025 at 03:33:06PM +0800, Cindy Lu wrote:
+> > In this series, a new UAPI is implemented to allow
+> > userspace applications to configure their thread mode.
+>
+>
+> > Changelog v2:
+> >  1. Change the module_param's name to enforce_inherit_owner, and the de=
+fault value is true.
+> >  2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
+> >
+> > Changelog v3:
+> >  1. Change the module_param's name to inherit_owner_default, and the de=
+fault value is true.
+> >  2. Add a structure for task function; the worker will select a differe=
+nt mode based on the value inherit_owner.
+> >  3. device will have their own inherit_owner in struct vhost_dev
+> >  4. Address other comments
+> >
+> > Changelog v4:
+> >  1. remove the module_param, only keep the UAPI
+> >  2. remove the structure for task function; change to use the function =
+pointer in vhost_worker
+> >  3. fix the issue in vhost_worker_create and vhost_dev_ioctl
+> >  4. Address other comments
+> >
+> > Changelog v5:
+> >  1. Change wakeup and stop function pointers in struct vhost_worker to =
+void.
+> >  2. merging patches 4, 5, 6 in a single patch
+> >  3. Fix spelling issues and address other comments.
+> >
+> > Changelog v6:
+> >  1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
+> >  2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FR=
+OM_OWNER
+> >  3. reuse the function __vhost_worker_flush
+> >  4. use a ops sturct to support worker relates function
+> >  5. reset the value of inherit_owner in vhost_dev_reset_owner.
+> >
+> > Changelog v7:
+> >  1. add a KConfig knob to disable legacy app support
+> >  2. Split the changes into two patches to separately introduce the ops =
+and add kthread support.
+> >  3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
+> >  4. Rebased on the latest kernel
+> >  5. Address other comments
+> >
+> > Changelog v8:
+> >  1. Rebased on the latest kernel
+> >  2. Address some other comments
+> >
+> > Changelog v9:
+> >  1. Rebased on the latest kernel.
+> >  2. Squashed patches 6=E2=80=917.
+> >  3. Squashed patches 2=E2=80=914.
+> >  4. Minor fixes in commit log
+> >
+> > Changelog v10:
+> >  1.Add support for the module_param.
+> >  2.Squash patches 3 and 4.
+> >  3.Make minor fixes in the commit log.
+> >  4.Fix the mismatched tabs in Kconfig.
+> >  5.Rebase on the latest kernel.
+> >
+> > Changelog v11:
+> >  1.make the module_param under Kconfig
+> >  2.Make minor fixes in the commit log.
+> >  3.change the name inherit_owner to fork_owner
+> >  4.add NEW ioctl VHOST_GET_FORK_FROM_OWNER
+> >  5.Rebase on the latest kernel
+> >
+> > Tested with QEMU with kthread mode/task mode/kthread+task mode
+> >
+> > Cindy Lu (3):
+> >   vhost: Add a new parameter in vhost_dev to allow user select kthread
+> >   vhost: Reintroduce kthread mode support in vhost
+> >   vhost: Add configuration controls for vhost worker's mode
+>
+>
+> All of this should be squashed in a single patch.
+>
+Sure will do
+Thanks
+cindy
+> >
+> >  drivers/vhost/Kconfig      |  17 +++
+> >  drivers/vhost/vhost.c      | 234 ++++++++++++++++++++++++++++++++++---
+> >  drivers/vhost/vhost.h      |  22 ++++
+> >  include/uapi/linux/vhost.h |  25 ++++
+> >  4 files changed, 280 insertions(+), 18 deletions(-)
+> >
+> > --
+> > 2.45.0
+>
 
-Max buffer count is validated, but buffer count + offset is not.
-That can lead to attempting to do a big alloc, below should
-fix it.
-
-
-diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index c592ceace97d..94a9db030e0e 100644
---- a/io_uring/rsrc.c
-+++ b/io_uring/rsrc.c
-@@ -1177,6 +1177,8 @@ static int io_clone_buffers(struct io_ring_ctx *ctx, struct io_ring_ctx *src_ctx
- 		return -EINVAL;
- 	if (check_add_overflow(arg->nr, arg->dst_off, &nbufs))
- 		return -EOVERFLOW;
-+	if (nbufs > IORING_MAX_REG_BUFFERS)
-+		return -EINVAL;
- 
- 	ret = io_rsrc_data_alloc(&data, max(nbufs, ctx->buf_table.nr));
- 	if (ret)
-
--- 
-Jens Axboe
