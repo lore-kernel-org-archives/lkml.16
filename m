@@ -1,113 +1,155 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830B527CB2A
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 18:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5223B25776;
+	Sun, 15 Jun 2025 18:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750010617; cv=none; b=FlNjQr7ae4zTQsp1gMSY28eUuSdbV/TDq7/Sr1LBH18oIR0TrIQ2VZac/Gr22IvwrhzVbW1u9LgfNtpnW94PHDbb8ykA0gA24hRqyYiDOGnc1pf11nznoeH0yaRh+TmZfebiBdZHO6Vu/ezHoobCH2onUYe1wbb8WIXenyDjp6Y=
+	t=1750012154; cv=none; b=WeGQd4WeHD/fLxGkv82s05tRfK/pjRppSSr4f/FlJGcJxRImD9+70Su6kMVFWaoSAlmc0TgoHYV8qniZ/WPyIt7YSYZHzKku++fFP1qWgeDa96lU2VAz5BGe/KQSHxO00H0QpAR169cTIxvK36y3BJ/Hpg4XgsjLZ4E8NRWce2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750010617; c=relaxed/simple;
-	bh=PlRTCFIaktTJrwTM9zdMzdYJh30vVq7axGeMrc1YG9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=KkSgcdxBZ809SsZQiCJQRNqofK1IaTugPHXzFdyUjgQoJwP2FmgCIG3Bs344mhiJicnf3rfO1+U+rp5viMh7ph/gRG5iueKfVgenpWSToMHS1MBe+M+RRI5lRmwiGDb8yMIDHubtLvjPE4dNRg8W3nTo0UWlglcdnf4Ijud8apk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=noa-labs.com; spf=pass smtp.mailfrom=noa-labs.com; dkim=pass (2048-bit key) header.d=noa-labs.com header.i=@noa-labs.com header.b=U1MDZ4zN; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=noa-labs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=noa-labs.com
+	s=arc-20240116; t=1750012154; c=relaxed/simple;
+	bh=C3lOkzqrABff39iJT4/2npmJrwhUW+QYorbNRbYTHBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AJQLikW5AeAowzj35YURo++B1cHoDNh56xayrD6v0lYbZVNr0uxPO+gPKS82m9dxBadGZZepySAr9Xvrr980MSUj1Q1R7vx91PyRNO1/zoQXeX4H5IHrVjs46aCtKBeERYsEEFdAxAk5igoGkYLorQLTTc531LnZ3A8QKIdR1D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIh+KBm8; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=noa-labs.com header.i=@noa-labs.com header.b="U1MDZ4zN"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7cad6a4fae4so745912985a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 11:03:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIh+KBm8"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso3728053f8f.1;
+        Sun, 15 Jun 2025 11:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=noa-labs.com; s=google; t=1750010614; x=1750615414; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pJzJWiAUcXoGUufc25EqKcGHZSJBHVOqDRbtVmrlin4=;
-        b=U1MDZ4zNL/H8CMDpGIdJHYTqHrq0E7Bv+bDKpmkHDExiFvuKTeDYcS3GXTa4dRIvTg
-         gb3EY5GQKLXZI+m3azZa5sdxVAhUjHpQ/E2mZy6iElCqIzTWo7dQRAfwngVY0mamEweB
-         F8Pf5iEU8Ssev0mOwM8jdoe2bePCNF+7iEROiE/oWyb0d+9b0WrbBW2Dh4vFPASwqSS5
-         wIme8GRTBmWIpTs4/0aMOduEiFcdkbYzDKGe21iM1lNm47UW6I3l3D3oFQXBToOOvMSL
-         8pmHZ9UJQw3qg8eSkbqlKnVabR1LRcHvHZELIw6WDxZvYFqCXjyuDjHo18A357KEfaGv
-         tyrQ==
+        d=gmail.com; s=20230601; t=1750012150; x=1750616950; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=foMShdEYfYc8JBQ1H9qjE5Pp7YV/FWiy7YlvAva/c1Q=;
+        b=YIh+KBm8z9zZMjlOKcE2DjKyeIM2AFIWGQWD0E2NSd15lca6GyXvkvVKriNzpJBQuR
+         AvMkystGQMHuVkNZwBuJj/VltNCKmLpiDzw9AmiZqAVSICjK14OMAHpxlD4MahklfWyX
+         u/Bp70DpnjMGw0DOX1HTGe/5tcq89BlipZ1BTmjj0JGxDdjZLPc+qrY8Y7zFQdZ3RGGM
+         ZYh0CtFqxt/8VTlINktdcM9PwhQXim3i/kgnA6Rv+tdXCXxV8voLEbZPX7omAFjGt5uU
+         5/qjTtOrqz0e6xAAK5CVU3Fw3Pr/IzRkvcMn7eeOhejRoJJY9wIsDqK5OLsXwqe3kIxk
+         4VtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750010614; x=1750615414;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pJzJWiAUcXoGUufc25EqKcGHZSJBHVOqDRbtVmrlin4=;
-        b=Lv6p8b1QhiRKs+qd4PIK73T9VcImhAszl6KYgBHem9MyE2CiTjOD321nywyDCeiZab
-         iwwPMW8/D3Wx1dxI+W1iV0xHGJeUrpNi4xM3smXlMfNbxkTCWO1mP3w2+Vttaoq/YW+V
-         dRg/7X3dMt+4/jK2ugaFQyZfPwQ8nCF/rnBYTPLyIgS/B96trVUIy+goEA1N0TJr8ZNX
-         WWMQ1ngnOc22f1/AreH3EIXv4e5TlLxCQx7xza3UJHFG7lLWRYugDCzUx5Z8eHPE75CI
-         V7asrKSQt1QK3PWdcab5b8B0cYW8gaGBhp7w8xE42cVikAlJEYdYwLxgWDMc3xqK66nw
-         WoqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUH72IRVP9mSujdx8cMlox4NnMXG687xdaWrppSWplZazECSkvTgdJOTcWo22EbSUXlyH2jXx/61h/07w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgRi70ByUnpLALlXuhWHhBXcYqHJNjhA172zYRM3FGwHQ97Wh9
-	ta6ue6rZDap1hc8NWHD1So/kk5Fw3H9TH+5/BTFCipb4GbFGgvxHeX13awpSSyNQvNofqmvJ78u
-	9UyAlVRWhWu7gCbTPt752JdPk1HpN8+Jhg3V9frAHfcxGD7D9vcYb1caSYgrt
-X-Gm-Gg: ASbGncup0xqKyJGnblqVRBhGiec5ZxolmiOvc0dMxi9KEyiaGnd6SVObkof3FRCPn7b
-	vIvEO7QPjdOXk9+o5qBklQ+Tg/F699cbhCPrtXT0k4hJWQR6knBqOZ8wrHHlA8JmzB/Re/zpIkd
-	znlzQ8NCd/jOYI6H0beAsN8nUB5CfqIpfJ7KR2O9Ccsw==
-X-Google-Smtp-Source: AGHT+IHOdM0tFaPGlKuBpxxcBaNQZgl/tLp0WzYy1mmPLjEcUufeWBRfHXaQNDnJQFtgO9AF5n/mz803UFZs7w6NFhA=
-X-Received: by 2002:a05:620a:1714:b0:7d3:b8d2:8790 with SMTP id
- af79cd13be357-7d3c6ce4ec2mr993841585a.44.1750010614442; Sun, 15 Jun 2025
- 11:03:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750012150; x=1750616950;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=foMShdEYfYc8JBQ1H9qjE5Pp7YV/FWiy7YlvAva/c1Q=;
+        b=niXRbSA+Ba/xorTsOEEJFD9Sm8eAWozfDOK063YIr9v8V+gb6lRZG3y4VL5WO7MHbU
+         574F+43BMhRrpR2CRHC/ezNNxR/RpVP1KtyEbMMfrbzjlUft/5gzhGDRA6Z4NdxFu4tK
+         yMs/Nn4VkHBew+crv70+FR/avWG4HFGpLx8DkdpFLqzqYhUGy0/A7NErUnBtQBoTSo2K
+         AavFPcGueKdzU4QzV3mgNDDBzVbLKn3UiwCn6XUylqVBOOmkgIx5VzbmaOGlcP0U8bnZ
+         D0FVTPkQOwfo/oqLaVbtb9gcpLnjjH2rEsoCVW/wzDoL5YleVvefiymw4NQ6uhLBKY5v
+         4aVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUucov2lmIjGLwCXkWy2lf39hzLj7+tYXuzscYpb/SqGcVA9DwErsiRszhATg+MgoBozYo23gMWr7gaUmxZ8A==@vger.kernel.org, AJvYcCVoeWwE3R3eCizDJdjcytZmTpjuAPssoxoWcUBN1QdhfvB9UyXQ/xxL+5r1gpB1h+64AR1yzm8CHtrZ@vger.kernel.org, AJvYcCWQuppP6QFfT8jCHQ/59cEUPgXt4YA5CgVbMFuOXhK9BliyMFvu6EgEniFjR5SHC7UrJICgQQEQNPn9He2T@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8yBKrKCfjU10pjb71OR7iEvmGVIDXoUIf4KMGlJ84OhFfcmNh
+	dCQAnn2BhM0k8oEdwtUJjwPTC0np9pZEoVyKGPTmvq+KmHmEqEDnMpI=
+X-Gm-Gg: ASbGncsq3twla81MxjCf2EI9XyfeBJ3+O+D3uhbvUnzQ5HwIx6vEzT+GIW1K2fv9P27
+	BnWpuP53MGNQjfwg6eMZ61z7tsHhwHNfcuUV1+9TfJBs8J+nqaOk19xODoxGVSzfeNCAKX/jtEA
+	Z7EiHB2Q3rSJRk6tYD/Dqmr8Ns324XCLTLVB3V4YJVKsLMNRFY3PasxVxH0ptUQannsmRtxz8Ky
+	FE8h2dUjwv5iByj28Od5PD5nwKnV3jZsrUiRq0cquvXOTM6hEWG66KBP4OncEfGoYwQSEjaDy7x
+	yQKI9S1rIvcJe1rkxdxe3AnNRusJbIMgrwSLpgxTgj5SVDQxOKIdnWQ0Hw1L6/dwIlrdkMv9qSA
+	=
+X-Google-Smtp-Source: AGHT+IHzcr/OQUl46bEd3VZNisBnnNoyG1XYdc0O5SgHL7n17Rwe1f1L0hLWYYhUTLp21maBk1d3UQ==
+X-Received: by 2002:a5d:64ee:0:b0:3a4:e75f:53f5 with SMTP id ffacd0b85a97d-3a5723a26f8mr5623912f8f.35.1750012149242;
+        Sun, 15 Jun 2025 11:29:09 -0700 (PDT)
+Received: from [192.168.20.104] ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a6389esm8351124f8f.27.2025.06.15.11.29.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Jun 2025 11:29:08 -0700 (PDT)
+Message-ID: <d2eabc30-f1d2-47d8-82f9-86f6f7a705bb@gmail.com>
+Date: Sun, 15 Jun 2025 20:29:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMuHMdUyX-7Qh7RcdrFPmL++OSVFuUqXks6NArsssQvHX_Epog@mail.gmail.com>
- <20250614123139.16634-1-pavel@noa-labs.com>
-In-Reply-To: <20250614123139.16634-1-pavel@noa-labs.com>
-From: Pavel Nikulin <pavel@noa-labs.com>
-Date: Sun, 15 Jun 2025 22:03:38 +0400
-X-Gm-Features: AX0GCFsRiW12EPy-LfD0r_TEr1K5nekWbKpDM0M_9ocR-T6s_SVWlIPbM2-GMh0
-Message-ID: <CAG-pW8F7MPc2SMBto_XturSMz3MSULHjZn=_dH7EMHSzkQ_7HQ@mail.gmail.com>
-Subject: Re: [PATCH] Fonts: Adding all Terminus fronts from 12 to 32 in bold,
- and normal versions
-To: Jocelyn Falempe <jfalempe@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-dell-xps13-9345: Disable
+ PM8010
+To: Bjorn Andersson <andersson@kernel.org>,
+ Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: bjorn.andersson@oss.qualcomm.com, Konrad Dybcio <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>, laurentiu.tudor1@dell.com
+References: <20250318-xps13-no-pm8010-v1-1-c46236d96428@oss.qualcomm.com>
+ <Z9qXFLmnae86_GT9@linaro.org>
+ <a7zyhmv5lqxl2l5rdg2x5g55wokm6ztwvzwrfkyeignwdromjr@afpe7zwsmkt2>
+Content-Language: en-US
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+In-Reply-To: <a7zyhmv5lqxl2l5rdg2x5g55wokm6ztwvzwrfkyeignwdromjr@afpe7zwsmkt2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 3, 2025 at 12:53=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
+
+On 3/19/25 15:00, Bjorn Andersson wrote:
+> On Wed, Mar 19, 2025 at 11:06:12AM +0100, Stephan Gerhold wrote:
+>> On Tue, Mar 18, 2025 at 10:17:02PM -0500, Bjorn Andersson via B4 Relay wrote:
+>>> From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+>>>
+>>> The Qualcomm X Elite reference design uses the PM8010 PMIC for camera
+>>> use cases, but the Dell XPS13 doesn't. Disable this PMIC to avoid the
+>>> error in the kernel log caused by an attempt to access it during boot.
+>>>
+>>> Fixes: f5b788d0e8cd ("arm64: dts: qcom: Add support for X1-based Dell XPS 13 9345")
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+>> Usually we do the opposite: disable nodes by default that may or may not
+>> be there and enable them where needed. E.g. for the 4 SMB2360 instances
+>> in x1e80100-pmics.dtsi.
+>>
+>> I think the same approach would also be preferable here. You shouldn't
+>> get an error in the log just because you didn't go through all of your
+>> DT includes and checked if you really have all of the components listed
+>> there. I think it's okay to enable PMICs that are more or less
+>> guaranteed to be there, but clearly this is not the case for PM8010.
+>>
+> That's reasonable. Have there been reports of this error from anyone
+> else, or should I go ahead and enable &pm8010 on all !xps13 devices?
+
+
+Hi all,
+
+
+Revisiting this change in context of Dell XPS 9345 and now Lenovo 
+ThinkBook 16 [1] (and upcoming Lenovo Ideapad 5) as these do not have 
+pm8010.
+
+
+Perhaps safest and easiest is to simply disable pm8010 in 
+`x1e80100-pmics.dtsi` as proposed and _not_ enable it on any devices, 
+since its known to not be used anywhere _yet_? As its a camera PMIC, the 
+only submitted upstream (did not land yet) change that utilizes pm8010 
+on X1/X1E is Bryan's CAMSS series that enables camera on CRD [2]. There 
+are a few other laptops that have patches to enable the camera (my 
+Zenbook, Bryan's branch on Gitlab for few more laptops) but those were 
+not submitted yet, so can be easily changed to explicitly enable pm8010 
+before submission. This way we could simplify this change and not have 
+to figure out which of the upstream devices do in fact have pm8010 onboard.
+
+
+On XPS 9345 specifically failure to probe pm8010 leads to power button's 
+short press not working for shutdown/suspend (only long press kill 
+laptop power), which is a minor but not irrelevant detail, hence 
+bringing this up.
+
+
+Thanks,
+
+Alex
+
+
+[1] 
+https://lore.kernel.org/all/20250607-tb16-dt-v6-4-61a31914ee72@oldschoolsolutions.biz/
+
+[2] 
+https://lore.kernel.org/all/20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-5-3fd4124cf35a@linaro.org/
+
 >
-> converted
-
-Fixed
-
-
-> > --- a/lib/fonts/Makefile
-> > +++ b/lib/fonts/Makefile
-> > @@ -14,7 +14,23 @@ font-objs-$(CONFIG_FONT_PEARL_8x8) +=3D font_pearl_8=
-x8.o
-> >  font-objs-$(CONFIG_FONT_ACORN_8x8) +=3D font_acorn_8x8.o
-> >  font-objs-$(CONFIG_FONT_MINI_4x6)  +=3D font_mini_4x6.o
-> >  font-objs-$(CONFIG_FONT_6x10)      +=3D font_6x10.o
-> > -font-objs-$(CONFIG_FONT_TER16x32)  +=3D font_ter16x32.o
-> > +font-objs-$(CONFIG_FONT_TER6x12N)  +=3D font_ter-112n.o
-> > +font-objs-$(CONFIG_FONT_TER8x14B)  +=3D font_ter-114b.o
-> > +font-objs-$(CONFIG_FONT_TER8x14N)  +=3D font_ter-114n.o
-> > +font-objs-$(CONFIG_FONT_TER8x16B)  +=3D font_ter-116b.o
-> > +font-objs-$(CONFIG_FONT_TER8x16N)  +=3D font_ter-116n.o
-> > +font-objs-$(CONFIG_FONT_TER10x18B)  +=3D font_ter-118b.o
-> > +font-objs-$(CONFIG_FONT_TER10x18N)  +=3D font_ter-118n.o
-> > +font-objs-$(CONFIG_FONT_TER10x20B)  +=3D font_ter-120b.o
-> > +font-objs-$(CONFIG_FONT_TER10x20N)  +=3D font_ter-120n.o
-> > +font-objs-$(CONFIG_FONT_TER11x22B)  +=3D font_ter-122b.o
-> > +font-objs-$(CONFIG_FONT_TER11x22N)  +=3D font_ter-122n.o
-> > +font-objs-$(CONFIG_FONT_TER12x24B)  +=3D font_ter-124b.o
-> > +font-objs-$(CONFIG_FONT_TER12x24N)  +=3D font_ter-124n.o
-> > +font-objs-$(CONFIG_FONT_TER14x28B)  +=3D font_ter-128b.o
-> > +font-objs-$(CONFIG_FONT_TER14x28N)  +=3D font_ter-128n.o
-> > +font-objs-$(CONFIG_FONT_TER16x32B)  +=3D font_ter-132b.o
-> > +font-objs-$(CONFIG_FONT_TER16x32N)  +=3D font_ter-132n.o
+> Regards,
+> Bjorn
 >
-> Please use descriptive names for the font files, matching the
-> font names.
-
-Adjusted
