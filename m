@@ -1,122 +1,149 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF48835979
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 02:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03362CCDB;
+	Sun, 15 Jun 2025 02:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749955202; cv=none; b=Jxk69lDM9O3PnmgncWKWXb4TZWrvQRXq1IiAdP9UBP7q2jSwF9vU7NHSr9B/Te0Lpqm2fRTqWKZ+07bzHCBln9GQEto4lYzztPIRdUJpO/cxZjnyVpMtfqwZiiEp7iQ+aKJ28q9vefEEzlocJgygd8sMovZxftLvq/Uv8D6QiQg=
+	t=1749955277; cv=none; b=iedtHIqFxoNxCdUqrCqnCrOLSWxGn73ne7yZn7t3e2Km6591GHr9Qe95e5Vyn2ra/iog8llcgyGryeXn8QUrcM+DHbASry+XxvKwXuwnPAgTwk0mqJKHaFCGNEVzUvArTjMwT+xLhr9Fbv6bWN11RbrQmMHCk7WqpzyFaA/iNpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749955202; c=relaxed/simple;
-	bh=qJ1VnWCotHhWxHbfyKtE3MZu1GnsNsg8IMEtv65WTYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r18+J5Ga6vTzMcggsz4ZxWZ/Vv4zTJWtkFe0SrrRqlknuPwX2dyRYG3s4yMeRd5+Ap4nw8xPFbGi3FnECDxuLmv6Fme25Xcsao8BJbvx3Z56dpmqdgEbOmV1hEEC97w8nQAwzRGKFTS5sxbteZT+zupmaVrx0akBz1g+UrMfLqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KbMrHXAR; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KbMrHXAR"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ENQbku001713;
-	Sun, 15 Jun 2025 02:39:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hUGjMA
-	UYy4wu8n0OUXNcHylAwMp7JmMIoslQdQbE/Yg=; b=KbMrHXARhOooDP9Aiy92gb
-	sodxmXeE6GilY2dML2VN8cUwW0TjeahsdA8C6E9E0AfA3T1qo/xaCJv+0TlETlIw
-	/e1nQxjsG4PtrjobuxhxnBSyO3jondyIXwPTXnDigslOS1KpQ3QtM++GMnZIaRX2
-	B/ScQ5p7YcVxwWrsik3DyUsoCbwhOTR2/hBBxLKwnGLUJpKnI46zI+U4mV/0e/Sh
-	RnDa6iRoszVsIIlcWjlmWiD92esf6GwqZlunOPD3SOssrer2Dyz92gmlqN2GyfAf
-	BXE3q48oI/JP92vjX97Hom/fPAephEQqCqwQs9p9uYnuzfDVG+rfe2WqC7KzaqUg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 478ygmurs3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jun 2025 02:39:30 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55F2dTfY013396;
-	Sun, 15 Jun 2025 02:39:29 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 478ygmurs0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jun 2025 02:39:29 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55F1rM7d005481;
-	Sun, 15 Jun 2025 02:39:29 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479mwkr52q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jun 2025 02:39:28 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55F2dPxg43975104
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 15 Jun 2025 02:39:25 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 107E42004B;
-	Sun, 15 Jun 2025 02:39:25 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1AF8A20043;
-	Sun, 15 Jun 2025 02:39:18 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.64.23])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 15 Jun 2025 02:39:17 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: mahesh@linux.ibm.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        Narayana Murty N <nnmlinux@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, oohall@gmail.com, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org,
-        gwshan@linux.vnet.ibm.com, benh@kernel.crashing.org, agraf@suse.de,
-        vaibhav@linux.ibm.com
-Subject: Re: [PATCH v1] powerpc/eeh: Fix missing PE bridge reconfiguration during VFIO EEH recovery
-Date: Sun, 15 Jun 2025 08:09:15 +0530
-Message-ID: <174995502358.107804.15093806320062799032.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250508062928.146043-1-nnmlinux@linux.ibm.com>
-References: <20250508062928.146043-1-nnmlinux@linux.ibm.com>
+	s=arc-20240116; t=1749955277; c=relaxed/simple;
+	bh=42hHEKic1VacB13vV/becXEpEt+H8TRWfpKTXWoQMV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hRhvDZ6fksH6K5JDjaNGLjsH+3OyNGbfFQ7tkhDpe0GCXY2JtfCOQ5miObe5nBfXedWObjjXbj+dwcwwZhQHd3ienYRDdtyNyqfRkinXbWWNDptp7zhNWrdh+WPWmcfzvIMipLknLq0rl5QXmnGNQlG2cPfVchN2b+kRcXOHAps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 69D87BE48A;
+	Sun, 15 Jun 2025 02:41:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 420FE20018;
+	Sun, 15 Jun 2025 02:41:08 +0000 (UTC)
+Date: Sat, 14 Jun 2025 22:41:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 07/11] perf: Support deferred user callchains for
+ per CPU events
+Message-ID: <20250614224107.5dfc9f9b@batman.local.home>
+In-Reply-To: <20250614024716.798086123@goodmis.org>
+References: <20250614024605.597728558@goodmis.org>
+	<20250614024716.798086123@goodmis.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE1MDAxMiBTYWx0ZWRfX9vAKVCGVL9TX hAc/KyA1ai4sGX0cQw6WaQlVyrAuFZnaeCACtHbLgK6swZbYZ9hqGep7xnrXA/1R62MpCokKvD3 sTDSQLIz2hGWcU2g894HBsz0UaNkdBeFyR7PamuoKkd2S4lmKwJQE28pr64DCb2T6+Iv/kkDnJ+
- QeVsq+EDKx5aQsODNc5i02VbpDhjIYo48f0ilfLCJ9y9n+ObRzWKFIdnp9A0OSTt3TqfJ1aQsEy p4GsZ6YLWsSvZfQKKABzaMYeG0njUmGsp8Lg6bZvvP7rNYapUUpArecHeNhWmXVjJV2l/GRiRcI EyEDjn+rowclylK0MLUxx4EfPTXbwJi8gbf2JXTA8KzAQTK91LmjxBvaVxSNQcw2QdkljxsAB+o
- b4DOj/XP5bDUcLADQK+IeUyi1jA345f4IYvzAfRVB39zhbJPJZp9TttZLjvtS8Z+dhikgiF6
-X-Authority-Analysis: v=2.4 cv=fYSty1QF c=1 sm=1 tr=0 ts=684e3262 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=giJ742wZMMcE2DLqPy8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 2uUB5_iAxcxn8AqaFhb8WcrvLTioQNus
-X-Proofpoint-GUID: Q51RZxXKa5-8m08omSAXjP2Tav_LF4Tr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-15_01,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 adultscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 phishscore=0 clxscore=1011 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506150012
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 420FE20018
+X-Stat-Signature: gagcigm6c7ynt17aaadxay7m3th34881
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/AgC/Hg0NQSm/NY+yVWvFc6hNX64fqZ10=
+X-HE-Tag: 1749955268-571584
+X-HE-Meta: U2FsdGVkX18lCD0oF62pyZw65mwLuJAHMAhN67MmLhqV6ghsR1XZJaO2RJjn5MfYCfzjG3xQkpp8R+VjIANl1rkY2OgB9NDggp8itSnBCvlQNUX2DXl2mfr1nzsy2uUEsnF538nURAmf2Cgh43IAEqHQ5mc+fOijY3PHg+eQuo/nsCR5PCFM6+BjaSVOClrpihmGvS0HweJhfXFEay0VPUjRR0LOpKdcCfukBv0nPNahLvAZza4zdys0a6aVF/Va8N9dpHTWmc7rH1EBmCwJFknEjpFXzwdxhKucVCC8lL8BBoQYMMl+PUEwj04mSmmHjW66XJIGKsajDHfiKsLVFhgDwiVX7tmTAFjMvET3CzR+XHERyecXHzsbVRAXeEhM
 
-On Thu, 08 May 2025 02:29:28 -0400, Narayana Murty N wrote:
-> VFIO EEH recovery for PCI passthrough devices fails on PowerNV and pseries
-> platforms due to missing host-side PE bridge reconfiguration. In the
-> current implementation, eeh_pe_configure() only performs RTAS or OPAL-based
-> bridge reconfiguration for native host devices, but skips it entirely for
-> PEs managed through VFIO in guest passthrough scenarios.
-> 
-> This leads to incomplete EEH recovery when a PCI error affects a
-> passthrough device assigned to a QEMU/KVM guest. Although VFIO triggers the
-> EEH recovery flow through VFIO_EEH_PE_ENABLE ioctl, the platform-specific
-> bridge reconfiguration step is silently bypassed. As a result, the PE's
-> config space is not fully restored, causing subsequent config space access
-> failures or EEH freeze-on-access errors inside the guest.
-> 
-> [...]
+On Fri, 13 Jun 2025 22:46:12 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Applied to powerpc/fixes.
+> +/*
+> + * Deferred unwinding callback for per CPU events.
+> + * Note, the request for the deferred unwinding may have happened
+> + * on a different CPU.
+> + */
+> +static void perf_event_deferred_cpu(struct unwind_work *work,
+> +				    struct unwind_stacktrace *trace, u64 timestamp)
+> +{
+> +	struct perf_unwind_deferred *defer =
+> +		container_of(work, struct perf_unwind_deferred, unwind_work);
+> +	struct perf_unwind_cpu *cpu_events, *cpu_unwind;
+> +	struct perf_event *event;
+> +	int cpu;
+> +
+> +	guard(rcu)();
+> +	guard(preempt)();
+> +
+> +	cpu = smp_processor_id();
+> +	cpu_events = rcu_dereference(defer->cpu_events);
+> +	cpu_unwind = &cpu_events[cpu];
+> +
+> +	WRITE_ONCE(cpu_unwind->processing, 1);
+> +	/*
+> +	 * Make sure the above is seen before the event->unwind_deferred
+> +	 * is checked. This matches the mb() in rcuwait_rcu_wait_event() in
+> +	 * perf_remove_unwind_deferred().
+> +	 */
+> +	smp_mb();
+> +
+> +	list_for_each_entry_rcu(event, &cpu_unwind->list, unwind_list) {
+> +		/* If unwind_deferred is NULL the event is going away */
+> +		if (unlikely(!event->unwind_deferred))
+> +			continue;
+> +		perf_event_callchain_deferred(event, trace, timestamp);
+> +		/* Only the first CPU event gets the trace */
+> +		break;
+> +	}
+> +
 
-[1/1] powerpc/eeh: Fix missing PE bridge reconfiguration during VFIO EEH recovery
-      https://git.kernel.org/powerpc/c/33bc69cf6655cf60829a803a45275f11a74899e5
+Hmm, I think I need a smp_mb() here too.
 
-Thanks
+> +	WRITE_ONCE(cpu_unwind->processing, 0);
+> +	rcuwait_wake_up(&cpu_unwind->pending_unwind_wait);
+> +}
+
+The first smp_mb() is for synchronizing removing of the event from
+perf_remove_unwind_deferred() that has:
+
+	event->unwind_deferred = NULL;
+
+	/*
+	 * Make sure perf_event_deferred_cpu() is done with this event.
+	 * That function will set cpu_unwind->processing and then
+	 * call smp_mb() before iterating the list of its events.
+	 * If the event's unwind_deferred is NULL, it will be skipped.
+	 * The smp_mb() in that function matches the mb() in
+	 * rcuwait_wait_event().
+	 */
+	rcuwait_wait_event(&cpu_unwind->pending_unwind_wait,
+				   !cpu_unwind->processing, TASK_UNINTERRUPTIBLE);
+
+
+So that the unwind_deferred setting to NULL is seen before the
+cpu_unwind->processing is checked. But I think, in theory, without the
+smp_mb() before the clearing of the cpu_unwind->procssing that it can
+be seen before the unwind_deferred is read.
+
+  CPU 0                                    CPU 1
+  -----                                    -----
+read event->unwind_deferred
+
+                                        write NULL > event->unwind_deferre
+                                        smp_mb() (in rcuwait)
+
+CPU writes 0 > cpu_unwind->processing (re-ordered)
+
+                                        reads cpu_unwind->processing == 0
+                                        Starts to free event
+
+Executes perf_event_callchain_deferred()
+
+
+I'll add another smp_mb() to be safe in v11.
+
+-- Steve
+
+
+
+
