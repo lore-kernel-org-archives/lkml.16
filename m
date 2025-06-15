@@ -1,99 +1,152 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A8713B5B3;
-	Sun, 15 Jun 2025 16:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAA213B5B3
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750005555; cv=none; b=c3RfsV/aSjdWNvVyf3txEiU0V5vgu0vEutFFygss27P+Qi68DFgmKnuXvafu2442TqytwtVWurFUN6O1q6D3vmMTlEW/Bz4E4zhDK7O0Xf68xiuyDHLLEUr35mS8KmXxRIfJLoiiS+yOtoDbZ0wqDdRdifgIvdSqlEnD3J4+lT8=
+	t=1750005704; cv=none; b=U7TEjfS+WQNJBUFxolsHF4+Zu22swccmt0HTFAePFz5GH1/wOroecCWgllW32rhs32hdUC+G4UtRrvjs8DF2mN/VoRHIq5xX7k4sd6tVRkPzng2K/wZoObneAVd3Anj29ZzZWd7zmTuVLLvu5llCUHYMEXDFTjDLVCEEsXzznfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750005555; c=relaxed/simple;
-	bh=GK0jzvLSit00bW/3EYnb7wXg+pv6N9OjVA7Bns8y3fQ=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=bUg+4WXapDEfU2brI7+Pdk9j/yGhKBMNUUxVEqML16vKIFKIC+37U+Wh5aX9cefQ6qAuR/sVJVF3CZtQ8upDj//6gc+yLsIz7hLghq7o93AoUKQSmMft7ynXKDRmSfcuheI051EOKMYx5ksB9I8bWPk02/MA51udkwLxv6lQpFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFSiZbA/; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1750005704; c=relaxed/simple;
+	bh=z/CpNbOdsmoDylhW7PVXWk5oSPDUAohEfmIHx29Xnlo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oe2+wPAmD1aYf9A8ew9HlbtNduC9y8DVwqliXOK+VKP1PXZbXn64Xi9jm2236szQjSHAc7FmNYUsn9aBbqB25Y44FJg+EUxTK5wD05vtxD6C52s6+nT424/DJegFULIyn1qw+/ez3WX0CP8wOlaBiUK6hNCsIrPETD5VVGhfakg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fx5mWoVv; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFSiZbA/"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3134c67a173so4222956a91.1;
-        Sun, 15 Jun 2025 09:39:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fx5mWoVv"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b2d60f8caso30232911fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 09:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750005553; x=1750610353; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750005701; x=1750610501; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FZBAMogNz4ko4MNKtThLToU4GYVVb482Gm5l6Ugs708=;
-        b=lFSiZbA/5UzhagzITENbUS2zIwnVb6VFBTP9jozu7FsSsU+KwE4fziap5rqkPCkZwB
-         sYdlHKMA53StaduvfJyrvWoqyI48qC1pi1mbZ/AoHVeD8ztvWJRu7M3K81lXrDYP0n8C
-         a3+FdIVuVuh1x/ch7noVhb6SUFb+exldr8U7fX5fwQmfGk1EIJIkcOqKNZ+gn4glzo9s
-         kA26rAJtD/cn5M7bq3EfZQkwyyjF0jv6F/cGP4X5ybIzR2RDzOP443mqQD9vUSefToQW
-         iI6WnVA9Z+eVU5B8yH2r+ku+6FKMx6EAy2PGRmJwldRu8q4ZRTS0WX7/25pRc9Nds38E
-         H1pg==
+        bh=R72aa+JhDIZd18QK74EtTt7kDoRODu1smPr1ewB8XeU=;
+        b=fx5mWoVvH4igE293aJaN/OCsKGIngecihJdl1252GG/q/iiYWqUfM/SXKsFRKjoi/9
+         jbNzNYpRXXB3gu94HI8RayAyCnEVXxp3iWMEALOZiVo6pE2Z6Jr+LRN8yge3d+PQjNx2
+         b+tm4ba9gOtdGQeP1BcHeM585o1fy7Lfje7i3FqrrgOJoXzQDQ5164T94X4TQKoBop96
+         zDJCRiPJhhC3MeGKiTsfqcAk1a3vI76LZdGBGS3/4sZQpErAq4KYBEIoRhgKAk1oEiFO
+         Lycfr/zgnXGoC7vH1kJxgiJdqwtPHXfpYcOo+RCm3GgcfuqTXhkOOukHWqi5mWMANxvJ
+         fltA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750005553; x=1750610353;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750005701; x=1750610501;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FZBAMogNz4ko4MNKtThLToU4GYVVb482Gm5l6Ugs708=;
-        b=M0YPYX8LaBTLDg6Zc4lI915Uj7iwahcANg9fMwtrG8ZwIpYopoP7j8RHjVpLc2Gt+z
-         q9xAiFBBwxMGLhRl99ZFm3F3turL0g4HW5pp5AEiOK7B05SnJX4QJyVxd7kQWQVM9sst
-         SyP4JrQ3Y3FrMWTPSGd9P3deNpaFP3F8wTB7XUNs1tXI0xxR+O2sfJ1n5Ca+bcdO9fPp
-         sRMEX+g+nWF9xCycn0ouU3USLHaQaI2U6gqdKv1QVZ5yLXcESRdBPLlTGzsASZ7vCzFi
-         MR4iEUCz4EHWWkYL0i+eMkyVnSpisFjf4/jrZOr6ZCODBF/SKk/L9CLRwPbWqgsW80VO
-         6Ksw==
-X-Forwarded-Encrypted: i=1; AJvYcCXB1xbQfGjoVgnkRtmAQ3Xq+ncaImN4AjVDYCQkpLJN4uxLg7BFA6iNIHVO1XMUR7Hh38+PAi6u9EE/0wk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmY/VDfjtpAbhIL2aZD6rrrc5kCbXk7yPPirRic27Cf4EGOewQ
-	C0OU1ibGCARGDweRPwB2sYSKI18VRpi3ABKc4rouxN6wpi78icUrOu7U
-X-Gm-Gg: ASbGncu5GVaOrjZi7o9g7Ae09zbEEQTnP3Ar1AfgmrzduRU3wCNPdoJt/6Z7Qzn1Ux8
-	WvnMihISBKmdzub62JE8hJZcYXZ9xHql9N2D8ZEnPs5SWwm8yO5X0Myb9STspn61oPJckAvDafo
-	Vixd+u6ESweTbUaSVDb12xN9Xnlbk3a/ExVQrlL3/tTzyQ1oYQpL5v0WUMbl+/QYABXjyrqkYrx
-	xyt85i7PgIywiQVC1oRHWTqObHkMI6lxiclee6CFfy3IL8tyVu28noW1KSll6toTCYDesBVM00x
-	vscRGIO/Qt6Sfw5ytdFwZ5+E0MpUmqe3EpLhPCeckCWsQmBwqWZ8xWjoO95GqA8iAzuWeW+iaUy
-	0uPs82WU=
-X-Google-Smtp-Source: AGHT+IG33NHllH9NHfk5VE6wMn8kpLXKQbrwTfekdbkuaTq2eHIydpa7Z3b1UgsRYvS4qDCEwKtsSQ==
-X-Received: by 2002:a17:90b:48cc:b0:311:a4d6:30f8 with SMTP id 98e67ed59e1d1-313f1c098b9mr9406216a91.13.1750005553528;
-        Sun, 15 Jun 2025 09:39:13 -0700 (PDT)
-Received: from ubuntu.localdomain ([39.86.156.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a1fafsm46242775ad.70.2025.06.15.09.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 09:39:12 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: axboe@kernel.dk
-Cc: io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Penglei Jiang <superman.xpt@gmail.com>
-Subject: [PATCH] io_uring: fix task leak issue in io_wq_create()
-Date: Sun, 15 Jun 2025 09:39:06 -0700
-Message-Id: <20250615163906.2367-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        bh=R72aa+JhDIZd18QK74EtTt7kDoRODu1smPr1ewB8XeU=;
+        b=P6SZIW2enyfdPI2OS/YQZrDNSVTBuGKeZTBwAE5OmLc9/y8LYh91RmDAqDwDDVi6DE
+         bxwtigObKmSKb+u9jAWK5MHn+v68SI4nNxHF9uBwSdxbwCvoOGmweuvc6yXgPbhVOuug
+         oPbxFoDEn8v1ISfcf23OjlK+GbWbIb2O5YeHOQvEBg3QbyPs/sWRGyq6OJrm1cu5r87E
+         nvuLCtG68OjLxPFUe6qyZhIzI6IqxPH3TXcEXmmzCJLmpSkQTQ7BeyH3DH9bQsPG5ULj
+         PlT1Wj2fKS7SSMKhpZcxGc3ZU/7DVpQlrPnehanhz7NGs/6oem4JoDlkq1Jq/KIuiCxv
+         lB9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV4zQSl+ST/1bE0XdKhPW/ENdPKibZwUlgQ4Zr6AGSmM3gNsIvJVh9d4ATvVPfEpk4I7jpNsJwXXkk6+4M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYymLtYwNTz6rujqSpi7dwIpZcIVXtiU0hl1pt48q1i7ODFSkk
+	UDXD7qp8cZSc1o1c6RVTUrVxBef1MWJMmmWghjoJOjk0tenK9LOsldtfDqE41E9e6tYzAuy/gha
+	Jiz/n+oNI6xRkaGgDIQoNVLAaaNh6kXs=
+X-Gm-Gg: ASbGncvx24ClaEZrwXZ1sQbGAU7YWhW30xgf4xJBmUFqxFU4SeUkSysj+ysXQqq5jwS
+	GM/uAHEOlCYa8io+9OsqL5yo/f4PYOH1oCMYn+dmsUboZpC7ZoIRR1uc7YE8XJjaIOL5vVDAikS
+	av9FggcSGoIoEUqwe4MbcvMTmcQ2wZw3fbvfDV1kWGA6o=
+X-Google-Smtp-Source: AGHT+IFOBUk7tQxrKsqxu+5loPyv8wIPOop2Qh3qq/wvAwdoEzAMR6L/9cPplUgT1x7Voq58B3JB6uJ15UsoKbZXieI=
+X-Received: by 2002:a05:6512:1396:b0:553:2f27:e96b with SMTP id
+ 2adb3069b0e04-553b6e7135dmr1340248e87.2.1750005700421; Sun, 15 Jun 2025
+ 09:41:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250605164733.737543-1-mjguzik@gmail.com> <20250605190054.GH30486@noisy.programming.kicks-ass.net>
+ <CAFULd4b1dQO3biWvRoHfpyE-Bot0urmWDzxfO0dEverzuQOpdA@mail.gmail.com>
+ <CAFULd4Zito-1VasojoL7qZdu_yggDgQL_0qMSv6ZBrtMe3i1zA@mail.gmail.com>
+ <20250606072029.GI30486@noisy.programming.kicks-ass.net> <20250609220901.5059217c@pumpkin>
+In-Reply-To: <20250609220901.5059217c@pumpkin>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 15 Jun 2025 18:41:28 +0200
+X-Gm-Features: AX0GCFtFIar3gKTlZnrXZoZWPpJRM32wSp590IJafCfgC5_WrIggr37-0JMM6eU
+Message-ID: <CAFULd4bz1KvrcO14c8JouhpriNt2KudcwcWccuXD-b7yQ8rARw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Mateusz Guzik <mjguzik@gmail.com>, 
+	torvalds@linux-foundation.org, mingo@redhat.com, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add missing put_task_struct() in the error path
+On Mon, Jun 9, 2025 at 11:09=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Fri, 6 Jun 2025 09:20:29 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > On Fri, Jun 06, 2025 at 08:27:39AM +0200, Uros Bizjak wrote:
+> > > On Fri, Jun 6, 2025 at 8:13=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com=
+> wrote:
+> > > >
+> > > > On Thu, Jun 5, 2025 at 9:00=E2=80=AFPM Peter Zijlstra <peterz@infra=
+dead.org> wrote:
+> > > > >
+> > > > > On Thu, Jun 05, 2025 at 06:47:33PM +0200, Mateusz Guzik wrote:
+> > > > > > gcc is over eager to use rep movsq/stosq (starts above 40 bytes=
+), which
+> > > > > > comes with a significant penalty on CPUs without the respective=
+ fast
+> > > > > > short ops bits (FSRM/FSRS).
+> > > > >
+> > > > > I don't suppose there's a magic compiler toggle to make it emit p=
+refix
+> > > > > padded 'rep movs'/'rep stos' variants such that they are 5 bytes =
+each,
+> > > > > right?
+> > > > >
+> > > > > Something like:
+> > > > >
+> > > > >    2e 2e 2e f3 a4          cs cs rep movsb %ds:(%rsi),%es:(%rdi)
+> > > >
+> > > > This won't fly, because gas complains:
+> > > >
+> > > > z.s: Assembler messages:
+> > > > z.s:1: Error: same type of prefix used twice
+> > >
+> > > However, it is possible to use " cs ; cs ; cs ; rep movsb".
+> >
+> > Heh, the way I encoded it was:
+> >
+> >       .byte 0x2e, 0x2e, 0x2e
+> >       rep movsb %ds:(%rsi), %es:(%rdi)
+> >
+> > GCC compiled it, and then objdump grokked it (although it outputs one C=
+S
+> > too few). Your variant is much nicer though.
+> >
+> > > We can add a compile flag to the compiler, and it will be able to emi=
+t
+> > > the desired sequence.
+>
+> You want the compiler to use 'rep movsw', 'rep movsl' or 'rep movsq' if i=
+t knows
+> the size is a multiple of 2, 4 or 8.
+> Then you can substitute a suitable function.
+> But replacing the 'rep movsb' with a call is much more flexible.
+>
+> You do need to allow for the REX prefix (rep movsq is f3 48 a5).
+>
+> I also suspect it would be neater to repeat the 'rep' prefix instead of
+> using the 'cs' prefix.
+>
+> >
+> > Thanks; Linus, this would be acceptable?
+>
+> Any compiler change isn't going to be useful in the short term.
+> (Unless the kernel sources start including gcc.)
 
-Fixes: 0f8baa3c9802 ("io-wq: fully initialize wqe before calling cpuhp_state_add_instance_nocalls()")
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
----
- io_uring/io-wq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The discussion is moved to gcc mailing lists. Can please interested
+parties continue the discussion at [1]?
 
-diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
-index cd1fcb115739..be91edf34f01 100644
---- a/io_uring/io-wq.c
-+++ b/io_uring/io-wq.c
-@@ -1259,8 +1259,10 @@ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
- 	atomic_set(&wq->worker_refs, 1);
- 	init_completion(&wq->worker_done);
- 	ret = cpuhp_state_add_instance_nocalls(io_wq_online, &wq->cpuhp_node);
--	if (ret)
-+	if (ret) {
-+		put_task_struct(wq->task);
- 		goto err;
-+	}
- 
- 	return wq;
- err:
--- 
-2.17.1
+[1] https://gcc.gnu.org/pipermail/gcc-patches/2025-June/686813.html
 
+Uros.
