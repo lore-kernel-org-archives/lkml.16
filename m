@@ -1,87 +1,140 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1C627713
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 08:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD1ED530;
+	Sun, 15 Jun 2025 08:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749976857; cv=none; b=DYYLQA8++yUq44oEI4d/6SjGzT7nBIZYvDmC+TX4rRMxA+cWpyWzsOVLPIb4Xryjv2yrpXqRaIqbquH/V73T2GrZYvmUO6E5AmqipEARXQroxhYD1I2YGoQF/BRLiOF8Tb0TcWMbGfnVFs0XOlszJLGfnP8gYxMmZLuCufI4iIw=
+	t=1749977186; cv=none; b=C2jtKXQW+V5khkR6omuIIqzV/2ICmCdZ0ou0WaT7VN2lo/vsu6xwyi7ouA0bZwcUywzMBWxXf1E+uunElLhxEelFkUb3ykPIkNHt1zVeUd08sLmcLg6DlDF+RqvuizOWXzDBLgeGDWLpS8Kr6MXE4QeujTVU0jz2aSiyPLtuik8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749976857; c=relaxed/simple;
-	bh=xNtkeHyYn8cM4F5InM5NhdON4TpjZSQpR4gZOdJus64=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CnhTKugq0W/dlZCU2S5pOzXbKDUVZe7Tj5iyPxoG4x9ZOLoRnXVf4tqIwUFS+sfxOkY7NrgTeN9qN2LzoPpGKUilFM6UvTkPPKYcOvdDoPXr32nwRbIONK6zbp8brXkR4XZtjC8yZ/fskUtS60cg4Us3uMxZfWNqGmQE46u1/Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e1uvyX+Y; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749977186; c=relaxed/simple;
+	bh=AftlQEL6Khk/DC4qbPUaIfYSZ4Qv4tGnW7qwvZaILKc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YjUQyvqefFhBgP0uREGZUN9x4VqGGfwWyK1peyGtCMGr6Z4j+NdYSG6UonUaFILdHAQFAyHDylClxI9U0di5BUwT6M8RH7wQAjZxsRJD0WHwCsPiOpzowmMAoI+8E9uDBZy72MwJNJSaqufP28T/UryNeIohCMUusy92yXVRZCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=imNgtVcC; arc=none smtp.client-ip=134.0.28.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1uvyX+Y"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so7361048a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 01:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749976854; x=1750581654; darn=vger.kernel.org;
-        h=content-transfer-encoding:eference:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bf/f9V1uaGYy+ir778Ex6srRAmyrzkkdLjjrL7nO11M=;
-        b=e1uvyX+Yn2TkL3bdSO0bTH4emxbHA1bhrx4D03ds7iUZI641jK3Ix/L8kVAgz7AHDX
-         PpmHxmm3MTbiVmOlmTCEgvoOSuc973nlTd/Xli/mHtUMLxtUeoEOASThq3ZDXtq6qzoS
-         IcxDSCBl6/DV4wvjHk5QH1nXLE4NHGJ/nZQ6P4BVCYwRyI5kMbXl8TKMBaht7I3N3LDq
-         COHDAxeO5dZPkKvb7K6w1X6YYHSaetkvA93Vz57oAn8+u+yirIHWY3ZrHD83ES3AqKJt
-         WviURwA46klc1Q2RuLL3Ij/T9GmKd+aOlyzRcX6XNbOMi3OTkO7CuO1Vuv6dp8LjpP5Q
-         dIsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749976854; x=1750581654;
-        h=content-transfer-encoding:eference:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bf/f9V1uaGYy+ir778Ex6srRAmyrzkkdLjjrL7nO11M=;
-        b=GAfy11d+pn2WZvT9FNM2UWXae8H4hnYA8NXS20Ri2fi1lMUQUA0XBmHwILVZoXb5W9
-         KJStlUe/XHUIG29XtxoAy71qnjs2QsL9/wslhT+AOUjalj58rXMIL6Sw28EK029CnzcA
-         LcIVgrqdgrXkZONoa8qAfvMew4mFSf/87IMIzIyxkkliRsHlR45n9HhxvzxZgnaa5Eoj
-         jRO2RkNPJaA5M5qaSPldlTXPz2S7O2OdGeotZLC/W/ophelWoeHslObRmkrjFa3hwD+S
-         geAyrUbUnBRZq51+GDE/kL+A52bvfsGrjc30+xX5P9HbBYgS5syRmigXyviUtc6Ff6Si
-         /83A==
-X-Gm-Message-State: AOJu0YyjpHwRByX6pZpwYdttz1BN4CPuBRZa2y5ohvZO7eJIhb50cVDQ
-	/6mybpjmpIW7bp39tU2LHIzO48dv6cwWO/9Epp0cXB/N28ZD006lW/s2CaRCZw==
-X-Gm-Gg: ASbGnct8Vq7O0ZNLGUfEAFhDrpLh4TVoaW5zOibboXTIdWca5KRa6/hP0KAlRAzkkGZ
-	iQuvuIntSFKzI/ddeJxFfnxLtUu9UhThkMpF+MZebkClIPfvsQfnqUHCd+0SBFX6ZBBTSrQN9mn
-	os4l9kzhijzDTt6/Y9M0DX6JeK08cFxy33b+CFzGcEFDMOdkIlbx1VbBxeGUjd/C45FWCdrWFt+
-	YkOTbLFSJYo3eIafxsk83OjggGur1XHPqGrCsS9ta9k1osC/gpHDsD+J/gxund0B2J2XOOMu053
-	4tbq50HfaVbNdp21EMSk3GKF7atBAReLpq+9dDc9VSGr+c8F4QW8YHFKRsvNvG85ruwBdhV3/J7
-	NvCdZxiPDklcy
-X-Google-Smtp-Source: AGHT+IGE3OjFugy+ySq8fCIsyECdl+DbD3YCssU9A6tKEeWgOn/AZmlElFxPDKKyswciNvMuhcluAQ==
-X-Received: by 2002:a17:906:c144:b0:ad4:8ec1:8fcf with SMTP id a640c23a62f3a-adfad59abbdmr452198666b.46.1749976853713;
-        Sun, 15 Jun 2025 01:40:53 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8929371sm444949466b.117.2025.06.15.01.40.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 01:40:53 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	peterz@infradead.org,
-	luto@kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/entry: Remove some redundancy checks on syscall 
-Date: Sun, 15 Jun 2025 08:39:57 +0000
-Message-ID: <20250615084009.906-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <87frg2q1w7.ffs@tglx>
-References: 
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="imNgtVcC"
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+	by mxout4.routing.net (Postfix) with ESMTP id B7DF910075B;
+	Sun, 15 Jun 2025 08:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1749977174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=O65L2t9W8ZXWygRCA4KnSeEpTHiZlvT4O3mUer1lJck=;
+	b=imNgtVcCO4Vp3y3WVt/v3OiKo0YQxYEuqOKRxNtOhTHIOLUPCoANNKaLdPJI0L7zlXnbt0
+	gAD0C5S5iLdnKXnsoVBnS2O1/8XR657NZhREwQ+foJURHJrKir4TbK5lAQFHU4sNu82qtY
+	lZ534FVtYZdVs9GuLROpILnABI0YeUs=
+Received: from frank-u24.. (fttx-pool-217.61.157.124.bambit.de [217.61.157.124])
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 772AF1226B2;
+	Sun, 15 Jun 2025 08:46:14 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Simon Horman <horms@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>
+Subject: [PATCH v2] net: ethernet: mtk_eth_soc: support named IRQs
+Date: Sun, 15 Jun 2025 10:45:19 +0200
+Message-ID: <20250615084521.32329-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-eference: <87frg2q1w7.ffs@tglx>
 Content-Transfer-Encoding: 8bit
 
-Since there were no much objection here i think we agreed with that, so i sent v2 
-for this one. Could you please redirect our conversasion there. This patch was wrong 
-so i took your last suggestion and improved it.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Thanks for your patience,
-Khalid Ali
+Add named interrupts and keep index based fallback for exiting devicetrees.
+
+Currently only rx and tx IRQs are defined to be used with mt7988, but
+later extended with RSS/LRO support.
+
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v2:
+- move irqs loading part into own helper function
+- reduce indentation
+- place mtk_get_irqs helper before the irq_handler (note for simon)
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 39 +++++++++++++++------
+ 1 file changed, 28 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index b76d35069887..81ae8a6fe838 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -3337,6 +3337,30 @@ static void mtk_tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 	schedule_work(&eth->pending_work);
+ }
+ 
++static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
++{
++	int i;
++
++	eth->irq[1] = platform_get_irq_byname(pdev, "tx");
++	eth->irq[2] = platform_get_irq_byname(pdev, "rx");
++	if (eth->irq[1] >= 0 && eth->irq[2] >= 0)
++		return 0;
++
++	for (i = 0; i < 3; i++) {
++		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
++			eth->irq[i] = eth->irq[0];
++		else
++			eth->irq[i] = platform_get_irq(pdev, i);
++
++		if (eth->irq[i] < 0) {
++			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
++			return -ENXIO;
++		}
++	}
++
++	return 0;
++}
++
+ static irqreturn_t mtk_handle_irq_rx(int irq, void *_eth)
+ {
+ 	struct mtk_eth *eth = _eth;
+@@ -5106,17 +5130,10 @@ static int mtk_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < 3; i++) {
+-		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+-			eth->irq[i] = eth->irq[0];
+-		else
+-			eth->irq[i] = platform_get_irq(pdev, i);
+-		if (eth->irq[i] < 0) {
+-			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
+-			err = -ENXIO;
+-			goto err_wed_exit;
+-		}
+-	}
++	err = mtk_get_irqs(pdev, eth);
++	if (err)
++		goto err_wed_exit;
++
+ 	for (i = 0; i < ARRAY_SIZE(eth->clks); i++) {
+ 		eth->clks[i] = devm_clk_get(eth->dev,
+ 					    mtk_clks_source_name[i]);
+-- 
+2.43.0
 
