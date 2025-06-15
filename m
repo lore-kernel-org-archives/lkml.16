@@ -1,92 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4FC2E11DB
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B8516FF44
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749972784; cv=none; b=Wer3VsI02V50r9m8EmVTxXo5XiZI+eNzMlGBuOTUVqHDOUrpjXIZRQ5LEX9WBOUkH2bhICUHybRHhTBFAd6paxnEOhyssdjL7fZ07lTJZWAeH1+ASMTzvY+4tJQspFjybUbBTyN49MDrG/C3ramNw+CUj4KWlqj9TtG8IYnyEmY=
+	t=1749972938; cv=none; b=UrXFqiGiZDI2DfWdCvSPOMI/TlEJ/gx6xHFOU33awnXbNUcmsU2fuwnK4AORYZXYb6A5cVrMpRQbo7V2c1PbRNBkP0zWLg8p7YaAumDHSlCyXlWutYDlHNwele0rkNuetfVpsRympi/N8+PsM12dLzdFRLxfky7m3MRhHgTZ6Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749972784; c=relaxed/simple;
-	bh=ykudC0+no0iilN4butkJwk8mXZbTEnB+zY/KM0JFPEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUpFhgaLtA6EwY/79u9zoCXB2Fqw1P7dhclc4XOAzzJFLu/0Hc00O2UYGAxEUGZNGBQp525mFBtGtAx4DB0kfu6Q0Yg0oCSFyWUiy1s49A2u6olJGbMfL18c88JR52NmnhDXwG26hCLY2tETwgf1DHWlidUy9tN1O1Ta0Y445q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJuElzMU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJuElzMU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208D4C4CEE3;
-	Sun, 15 Jun 2025 07:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749972783;
-	bh=ykudC0+no0iilN4butkJwk8mXZbTEnB+zY/KM0JFPEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IJuElzMUTv8SfPQxgLvhjHzJ3f9fOBrzL+zteUNVUtl4xBR8FZL2lgfNDLQBXGMQ7
-	 0zUJt93LVEtexmyyc26exBRT/Zznt3xjQXl6o4d4xYLYriKfRdzKIWZ9vEm7lZeqeC
-	 9NSHNEz0c59zdQUgFm9u3ThPQjXn+bSmqIoKhgvSv/OcAwoH/XW4R5nJtW5BMIwJiv
-	 TVd8mkbVwEERuR6VGAHcnhdcMVJuxy9C3VUfLcm4dH4PAb499sl/yY/RkpGnI7TROa
-	 Aplxjxbgav6cylupbND1LduzSHFqAkZsKqpc6M1gsxOVr0e1Oan/l4lHkxYtI7yc2g
-	 ZtNUkhSSPzK7Q==
-Date: Sun, 15 Jun 2025 10:32:54 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, catalin.marinas@arm.com,
-	will@kernel.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, surenb@google.com,
-	mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	suzuki.poulose@arm.com, steven.price@arm.com, gshan@redhat.com,
-	linux-arm-kernel@lists.infradead.org, yang@os.amperecomputing.com,
-	ryan.roberts@arm.com, anshuman.khandual@arm.com
-Subject: Re: [PATCH v3 1/2] arm64: pageattr: Use pagewalk API to change
- memory permissions
-Message-ID: <aE53Jp7ZGgTxtxwG@kernel.org>
-References: <20250613134352.65994-1-dev.jain@arm.com>
- <20250613134352.65994-2-dev.jain@arm.com>
+	s=arc-20240116; t=1749972938; c=relaxed/simple;
+	bh=TYmktIn3n42QmKClhXVRANX3DvcuuNc5Z1BB/nALABE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=a52TbjVhR1Ubc/83rAVlhEN7G7tJBfYyco1obHqiOhp9wfE/7y4DTKb/zkP9TOjeU4X1yEJkjoKkt7mzjuRrG5Dn4/iJGG12noryvgy+reLInCYA0AHZGztGNOyYWGXOEFe7kCKF/E87tr0fEuO8rZEmZY794XKU5LbbHZYNHvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-8730f2293fcso327407039f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 00:35:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749972926; x=1750577726;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1pL33sSdNVTBaRKS6axTdFjtZlV8CPQhJ68btPDVGWE=;
+        b=mMOg3tzpPNeriwjxxDRhaAXzxrKNwhh4Ob7KTPN7B1ZyzqIduCLFTGkxf3MOUXX/EI
+         /R56wFTIa6z9Bpf8efm/UVFkVESLEX06odZdi1nlnLTy5Q/6vPlyZlPkuyhLrVi+4hiz
+         YC2fX5WZSCS5eY8kzdVX0IujmY3PpgfJ4oQ/d9qeIFtM/vpATPaSzarftMTAsGQNUIj/
+         eTCiZYG6kMftIN6L9eb07CAAENWYDFCoOIQ184V/gumPMRxL4RLPPvUqep8S2vFBsyyS
+         p9gOWt3Si2KI9N9fu4WfxuonikGkZadPvqQvsAG8V9wz+IU3MKPKvmQWmonEKVhMg3Wj
+         3z4g==
+X-Forwarded-Encrypted: i=1; AJvYcCW4Ik28Q8C68i697KFEpEbOgnamLEAdHGr0gLHCAsiWFFwQGeyEI6OhNJvu0//9Gr1yramvboTcxmSdyho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFXqQJSt6u2/xrYrkTrs0jW9/JrhyyWV21NC/aGNEvqlNr5fli
+	vCdp36ktDs+C7XEFKDB4litiLvf9Ic3PUf1PKjNBlnXo9SP0IYht9EOA4Q39bDxDwQudRSDGZGT
+	W9rcBRmC/thn+O/OVOBstL05OoZ42aLA7lasre1uuQ7PSS1i0VVEslJkU3d8=
+X-Google-Smtp-Source: AGHT+IGZ6G6rWLQPm9EnDsDTE/vfF8hfk3f+woSQ7LIYkk9YPylE7ceTkRXzM7W/s3eBQSb29xa7Z+n23J0/kb6VAFfD8Ec8wvwd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134352.65994-2-dev.jain@arm.com>
+X-Received: by 2002:a05:6602:341b:b0:866:217f:80a with SMTP id
+ ca18e2360f4ac-875ded3ea30mr594685939f.7.1749972925788; Sun, 15 Jun 2025
+ 00:35:25 -0700 (PDT)
+Date: Sun, 15 Jun 2025 00:35:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684e77bd.a00a0220.279073.0029.GAE@google.com>
+Subject: [syzbot] [io-uring?] WARNING in io_register_clone_buffers
+From: syzbot <syzbot+cb4bf3cb653be0d25de8@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 13, 2025 at 07:13:51PM +0530, Dev Jain wrote:
-> -/*
-> - * This function assumes that the range is mapped with PAGE_SIZE pages.
-> - */
-> -static int __change_memory_common(unsigned long start, unsigned long size,
-> +static int ___change_memory_common(unsigned long start, unsigned long size,
->  				pgprot_t set_mask, pgprot_t clear_mask)
->  {
->  	struct page_change_data data;
-> @@ -61,9 +140,28 @@ static int __change_memory_common(unsigned long start, unsigned long size,
->  	data.set_mask = set_mask;
->  	data.clear_mask = clear_mask;
->  
-> -	ret = apply_to_page_range(&init_mm, start, size, change_page_range,
-> -					&data);
-> +	arch_enter_lazy_mmu_mode();
-> +
-> +	/*
-> +	 * The caller must ensure that the range we are operating on does not
-> +	 * partially overlap a block mapping. Any such case should either not
-> +	 * exist, or must be eliminated by splitting the mapping - which for
-> +	 * kernel mappings can be done only on BBML2 systems.
-> +	 *
-> +	 */
-> +	ret = walk_kernel_page_table_range_lockless(start, start + size,
-> +						    &pageattr_ops, NULL, &data);
+Hello,
 
-x86 has a cpa_lock for set_memory/set_direct_map to ensure that there's on
-concurrency in kernel page table updates. I think arm64 has to have such
-lock as well.
+syzbot found the following issue on:
 
-> +	arch_leave_lazy_mmu_mode();
-> +
-> +	return ret;
-> +}
+HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=13db6682580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb4bf3cb653be0d25de8
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15cab60c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c9a60c580000
 
--- 
-Sincerely yours,
-Mike.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cb4bf3cb653be0d25de8@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6488 at mm/slub.c:5024 __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024
+Modules linked in:
+CPU: 0 UID: 0 PID: 6488 Comm: syz-executor312 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024
+lr : __do_kmalloc_node mm/slub.c:-1 [inline]
+lr : __kvmalloc_node_noprof+0x3b4/0x640 mm/slub.c:5012
+sp : ffff80009cfd7a90
+x29: ffff80009cfd7ac0 x28: ffff0000dd52a120 x27: 0000000000412dc0
+x26: 0000000000000178 x25: ffff7000139faf70 x24: 0000000000000000
+x23: ffff800082f4cea8 x22: 00000000ffffffff x21: 000000010cd004a8
+x20: ffff0000d75816c0 x19: ffff0000dd52a000 x18: 00000000ffffffff
+x17: ffff800092f39000 x16: ffff80008adbe9e4 x15: 0000000000000005
+x14: 1ffff000139faf1c x13: 0000000000000000 x12: 0000000000000000
+x11: ffff7000139faf21 x10: 0000000000000003 x9 : ffff80008f27b938
+x8 : 0000000000000002 x7 : 0000000000000000 x6 : 0000000000000000
+x5 : 00000000ffffffff x4 : 0000000000400dc0 x3 : 0000000200000000
+x2 : 000000010cd004a8 x1 : ffff80008b3ebc40 x0 : 0000000000000001
+Call trace:
+ __kvmalloc_node_noprof+0x520/0x640 mm/slub.c:5024 (P)
+ kvmalloc_array_node_noprof include/linux/slab.h:1065 [inline]
+ io_rsrc_data_alloc io_uring/rsrc.c:206 [inline]
+ io_clone_buffers io_uring/rsrc.c:1178 [inline]
+ io_register_clone_buffers+0x484/0xa14 io_uring/rsrc.c:1287
+ __io_uring_register io_uring/register.c:815 [inline]
+ __do_sys_io_uring_register io_uring/register.c:926 [inline]
+ __se_sys_io_uring_register io_uring/register.c:903 [inline]
+ __arm64_sys_io_uring_register+0x42c/0xea8 io_uring/register.c:903
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+irq event stamp: 370
+hardirqs last  enabled at (369): [<ffff8000801fc600>] local_daif_restore+0x1c/0x3c arch/arm64/include/asm/daifflags.h:75
+hardirqs last disabled at (370): [<ffff80008adb9eb8>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:511
+softirqs last  enabled at (294): [<ffff8000803cf71c>] softirq_handle_end kernel/softirq.c:425 [inline]
+softirqs last  enabled at (294): [<ffff8000803cf71c>] handle_softirqs+0xaf8/0xc88 kernel/softirq.c:607
+softirqs last disabled at (289): [<ffff800080020efc>] __do_softirq+0x14/0x20 kernel/softirq.c:613
+---[ end trace 0000000000000000 ]---
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
