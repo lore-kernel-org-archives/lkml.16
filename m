@@ -1,80 +1,84 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3EE4A33
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510354A33;
+	Sun, 15 Jun 2025 20:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750019250; cv=none; b=mvm1uywod/dDhvqW2Oiezt+tpR7GBhsv4SjNols7k6UKD++HaJjaU33pJeJ0MgHmPmf7on/XOWDn77e/tpR8BRbBK6IEEhYYVUIULHGP2Y8mjhJZ0TjicVfWhoQIjBRhjP//gbFvE8NBf7gE7wnRuNAzrTLN8LkoHRxU90KA7n8=
+	t=1750019539; cv=none; b=MysIKgXOjg6Puqx79dUCkDH0suCmlDPWcJAXN4mteeerJLUwl8HCvj3i+wej9O4VHV3z/SHRoUtmZwycVgEsXsvULj/wAgw2V4J1QVFXKdYi+2ggt+AEjVTIwdpzwOAfu0DIESMc3hFKrai2Zou+exhuC7RMMv9vzXw8dRq+P/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750019250; c=relaxed/simple;
-	bh=Wfh/moJTmOO8BK4r3ZQ9P3PYtYv1MH0lQsApvw6w1lM=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=C3EP9cXclBS53pdLQHWNETqwTqVIZeXj5g627uifNDvgSP9KvHaN43MrszKSvUUxurnAwOcAvm9CQRiWR1Q107MXZYHpx+VPQbqzQi/JqMvgxVW3kzGaZ80xL94Vj4VemO2JNRaVu6g/GJWW2f2IAnDX5ddY3JmzCRH+oOtdWP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=h/3Jn5iZ; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1750019539; c=relaxed/simple;
+	bh=ipOLP6LLsrl4oKuhTrsXI2JwHthOndb/e7QX0jG2D7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f3Un6Fpi3RUY5h3zoORsTR7Q/hxFv4ShYzcJsI8G5aHiYK53cjhRJNx+i8as08HICiZ4BM3Q8H20RPsxTGLi6iRqH9YZ8VPhaQ/sxbHCIGkMW+N6OdFjTssQ7yOmqMU22JYGs8yCsD/L0zYDiPpu/bZz2TQ0d2Vas6LVGavdQoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cWX7SIHv; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="h/3Jn5iZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:subject:message-id:mime-version;
-  bh=abfaKeyevw9Ay5KmTa0AYQDgjodet9O1nCta6ElJx/U=;
-  b=h/3Jn5iZHDTTA3Jr5ibOIBQ70fIeYsJjIdrGJd/nXnkwsvnak9W7unzK
-   X0rQ1poXR5ZJnBkKMhjTyt7p4xHD6Vu1U0+7Q86eHpoMLFppFCeKZhPGe
-   IXjrnnKf9UawsT7/Gloa8irvgKLl7TMePHnFYMcgImhKXRp7pnv5nIgLz
-   c=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.16,239,1744063200"; 
-   d="scan'208";a="227251113"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 22:26:17 +0200
-Date: Sun, 15 Jun 2025 22:26:17 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-    Vincent Guittot <vincent.guittot@linaro.org>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org
-Subject: has_idle_core
-Message-ID: <alpine.DEB.2.22.394.2506152216150.3463@hadrien>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cWX7SIHv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=36hN1hq1+Wf5IthuRmh5VmMSvRMked2DbK5JEoEMcys=; b=cWX7SIHvgsHsqd3nj4FhTC8epZ
+	JhPDYH5KDwPe/fxzFsgmwc+IjFvZWjgKEWFz3HV7txe4Ierz1+8vU8zGXBPh9dpf5e1BYRrpQPwaJ
+	YGZgmfyi3qVIx4JViW3qzjEySEE1gDmojKoNT0HHpsXio9q5gRJZc879MJSJvkjgqwkbrxai1WFr3
+	6CzmyFPAff3CLSGplqy1ADmF+q3g5jfgmdLsO3wrX7mf+yoKC2xdvtO6c5kVSWNBYmVFX5ZBQxolv
+	tqQhq8uuqURaE6cqqP0wD6KVgNdeNqgbEdGg6vUpyEuwzUNlKBtflTSla6jUSnhG7Ti0VaFcTSe24
+	PqkjvFPg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uQu1Q-0000000FDVS-299m;
+	Sun, 15 Jun 2025 20:32:09 +0000
+Message-ID: <d86a489c-8895-43c2-9968-1c0c6972c828@infradead.org>
+Date: Sun, 15 Jun 2025 13:32:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ wse@tuxedocomputers.com, ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-2-W_Armin@gmx.de>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250615175957.9781-2-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-I wonder about the following code in select_idle_cpu:
 
-        for_each_cpu_wrap(cpu, cpus, target + 1) {
-                if (has_idle_core) {
-                        i = select_idle_core(p, cpu, cpus, &idle_cpu);
-                        if ((unsigned int)i < nr_cpumask_bits)
-                                return i;
+On 6/15/25 10:59 AM, Armin Wolf wrote:
+> diff --git a/Documentation/wmi/devices/uniwill-wmi.rst b/Documentation/wmi/devices/uniwill-wmi.rst
+> new file mode 100644
+> index 000000000000..232fa8349611
+> --- /dev/null
+> +++ b/Documentation/wmi/devices/uniwill-wmi.rst
+> @@ -0,0 +1,52 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +======================================
+> +Uniwill WMI event driver (uniwill-wmi)
+> +======================================
+> +
+> +Introduction
+> +============
+> +
+> +Many notebooks manufactured by Uniwill (either directly or as ODM) provide an WMI-based
 
-                } else {
-                        if (--nr <= 0)
-                                return -1;
-                        idle_cpu = __select_idle_cpu(cpu, p);
-                        if ((unsigned int)idle_cpu < nr_cpumask_bits)
-                                break;
-                }
-        }
+                                                                              a WMI-based
 
-        if (has_idle_core)
-                set_idle_cores(target, false);
+> +event interface for various platform events like hotkeys. This interface is used by the
+> +``uniwill-wmi`` driver to react to hotkey presses.
 
-set/test_idle_cores works at the LLC level.  But the mask cpus in
-for_each_cpu_wrap depends on the set of cores on which the task to be
-placed can run.  So can't the placement of one task that is pinned to a
-small set of busy cores prevent the search for an idle core for subsequent
-less restricted waking tasks, until the idle cores flag is reset?
 
-For the moment, this is a purely theoretical question.  I don't have a
-concrete example that illustrates the problem.
+-- 
+~Randy
 
-thanks,
-julia
