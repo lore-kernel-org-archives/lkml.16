@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380C27B50C;
-	Sun, 15 Jun 2025 16:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF39727C16A;
+	Sun, 15 Jun 2025 16:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750006368; cv=none; b=YUgJpw6Az8giFqhENlY0EbTCf1gwskwTVs0qs8KFa7OkoFh30Ah0DQwtBXDYN9YtjMCwFRTDl/k7aCmDuOc5mBBPxRUvkSo8Ns2WrlUVGbPDnRfmGSc+rRHyo6cZVIyW8rIt4IMNKHPUADUVBU1E48dQnOSe4fpEXUlxULLWAo8=
+	t=1750006373; cv=none; b=o5bAqFO9OKNmDBZtnrf2WfDXmXjnVbSbMZD62eiZ4kYspsnt4YZfNzmiGfBcAsomaBfxINSUymQuUrDbO61reb2ZyRFocu677JqK39ZA3HeM0s9OGmqqT/bPKomPaGmvxgCa5SJyBZSIwyUn6vaLnK48LGHuS3MHMMQxE4kTnNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750006368; c=relaxed/simple;
-	bh=waeTw7yWy3QuYQKUy1k68cPCqMP3I5rcjAEUx2QJeG4=;
+	s=arc-20240116; t=1750006373; c=relaxed/simple;
+	bh=TqLr/OCBktBZQpeIStq66n7a03Pl9cTeFHgLsL3jA5Y=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mpz7aEAnHzgsmolEo2h+jL30pAGNiV3EAq86p0gZekv31NXpSA/Oe6Z2M+rlcOHVTrKXXQfoVqjvyV4+HphVNHrXri8ilyWZbKdamxyKev4Yep0KftWKMFm410UQUeVQxEJJ9zt+f1T0b1r7bTz19jsh17ILwHxioJ8mx6uSz0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+iBhysC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uKZYhGUQYXklCWq95cHC6ZCHVp3/wkBNedBEVvj097u2U9XNRM8A2i0ow1YVMxSrad/RP/pie3PvZf6miVOcBo92QvkNSx6UqFYvbVfj1sAjfZiZq0aYl7r2MXKUB/KUW2zOnXumHQ6NG6qgZJ+LERCP2tEfQ6nQVF7IFkTQn2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUy74Sp5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+iBhysC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE042C4CEEF;
-	Sun, 15 Jun 2025 16:52:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUy74Sp5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DD8C4CEE3;
+	Sun, 15 Jun 2025 16:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750006368;
-	bh=waeTw7yWy3QuYQKUy1k68cPCqMP3I5rcjAEUx2QJeG4=;
+	s=k20201202; t=1750006373;
+	bh=TqLr/OCBktBZQpeIStq66n7a03Pl9cTeFHgLsL3jA5Y=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=T+iBhysCWjCL/En2CtxuNZazQkAcLvlnMf/PQK1HES5XFuVFPEp7kWgG8o218Qfco
-	 AWmzJCWZOSAfM2A+4+xN9lJP/8clwbQ+JxLeLsSpNQklVOlBqkPJ1PRCQdQlzoPwuM
-	 9drcFqUuI864wmXoZnSaGPQn3QZ5QnGlLPSp73Id5nwpy5YKJcqrVj1KSPwnYqkirO
-	 T8ae4aYVVQlm92aYABY/DutM+TBxCQcbiXWZsT8T+s7ayla2RV9dIJjpohskmNXPaN
-	 nOkQF0/lcayj9DXqRq4pckwedCyIFozMGoUTlFT+yUT/OKZh5SM2rfqX5n/Qj70iBe
-	 +4SQsq6CCN0+w==
+	b=kUy74Sp5/YdI9tbwp3MmfXvHsGNeh91SLmRJp+dX5BoAZggUkRJriagL1FJe6s7G7
+	 Mpo4gho07NrQfQvNOp0tFHFwUG+JR76cKnjI4dnzn5j14BU5MNyvS52b9WT+JWSwT9
+	 6Johrp3AyysxuWhtfCeX1hCG01y9XkjF2JIPij+tC8rWfckKoylyPfj0NGM251yMgw
+	 HAeOrF/3KgT/sC3uJ7oGfWirhNRqoj9gkg7W85lL0LvtaHI3ae2nrpdbPYlc2YUf0A
+	 lQUKmrspkUn7iDeIT33F41YG3CGKSwvEZyum6NsBXKvDbc3LjxXyu2Vx0NUY/o8ImK
+	 xAURId6iywE1Q==
 From: Vinod Koul <vkoul@kernel.org>
 To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Prabhakar <prabhakar.csengg@gmail.com>
 Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250607212609.743346-1-robh@kernel.org>
-References: <20250607212609.743346-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: phy: Convert Marvell MVEBU PHYs to DT
- schema
-Message-Id: <175000636547.1180927.9393502709140378980.b4-ty@kernel.org>
-Date: Sun, 15 Jun 2025 22:22:45 +0530
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ Biju Das <biju.das.jz@bp.renesas.com>, 
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: phy: renesas,usb2-phy: Document RZ/V2N
+ SoC support
+Message-Id: <175000636867.1180927.12382475104046951897.b4-ty@kernel.org>
+Date: Sun, 15 Jun 2025 22:22:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,16 +56,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Sat, 07 Jun 2025 16:26:07 -0500, Rob Herring (Arm) wrote:
-> Convert the Marvell Armada-375 USB and MVEBU SATA PHY binding to DT
-> schema format. It's a straight forward conversion.
+On Wed, 28 May 2025 14:38:58 +0100, Prabhakar wrote:
+> Document support for the USB2.0 phy found on the Renesas RZ/V2N
+> (R9A09G056) SoC. The USB2.0 phy is functionally identical to that on the
+> RZ/V2H(P) SoC, so no driver changes are needed. The existing
+> `renesas,usb2-phy-r9a09g057` compatible will be used as a fallback
+> for the RZ/V2N SoC.
 > 
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: phy: Convert Marvell MVEBU PHYs to DT schema
-      commit: 4dcf1632d617262f16608f3bd0f6dc00eede8d4e
+[1/1] dt-bindings: phy: renesas,usb2-phy: Document RZ/V2N SoC support
+      commit: 00399bbe02d2bb6fd8d6eb90573ec305616449f4
 
 Best regards,
 -- 
