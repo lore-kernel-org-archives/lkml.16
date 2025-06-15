@@ -1,91 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from baidu.com (mx24.baidu.com [111.206.215.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDF42609E1;
-	Sun, 15 Jun 2025 02:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441362AD25
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 03:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749956107; cv=none; b=Z7GZBf5HTejSAm1wY9Kc6GlG7oqCBar8YntXRHv2AQr2ZyUQnaGbbhUOjhTrIBSDOfVHgpejC1hDJoeUW5dhdKNCoVnzHMDD5XAT1Mp0R+0xDEcpwdKd1/pQSTZFtNqnm18/asx4+VVr3eq6yCbnRSVLhnbAvUAuFokj3tEN2EA=
+	t=1749957036; cv=none; b=bAzqLwZtsw2/HZ31tdOC3W54dRTdl3PXQSBXssn9PGAbvDQSXL3DLAdwPwBQjQzelH8p/0dbzkmlTBGV53ZdncwF5Tjg51KrTtM5SE/XtldnwLrnOVXuesLZZ8FNJZbEODo7W9jwlSNUOULWf6UTDSJs9Ib/O+bDPCBkIuNAqTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749956107; c=relaxed/simple;
-	bh=lP+M1tHC6k+ERpDkYV+GZRpVMaVufRE54fR5PaAN/Tk=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=TVk14u6s26sjzPJojJKSmAdf6zlYY36D8V6MD0HlAM73jGVpo1YWtIZpSLv+sgRGHF8v8ZYkiPj5xZ/6RZeLL2g8I3QD5BTBukjmsQrG8U8km4XPXLNXUoh5e3m8KvIwnvDx/t3YqEPKTlPeo/UAjskQVOWFzBMA/+TGfq4VPF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cjph3Bkv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cjph3Bkv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C39BC4CEED;
-	Sun, 15 Jun 2025 02:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749956106;
-	bh=lP+M1tHC6k+ERpDkYV+GZRpVMaVufRE54fR5PaAN/Tk=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Cjph3BkvQf+7BHCYIZcnzzDty7AqnGdjDZGfxRK8Ktn4CttdRumzhp14Nxa4RDPfh
-	 kUO29FG7DHY2Qa4mURoW7utlBws42aiL+LrDzYBZgKEJWvPaUqgTmX3ZTDexPXo4kT
-	 vaJX4M0adv0vHgK8M1qza8/6EZZuNuEejMokXCyXd7F7F5LY8FqCjmoCple6aFX0xA
-	 w1T/5IQKr9xf8eCQdsSIdeyKHBtMD2E/ttYnBnIqFKsC6mToTsGYj/DhiEpHMJl5aM
-	 nEsotaBiKfyZAMkL/xhzQzqNTLQeoen5oNvDrE/mVGNllfhX68nnUDIJyBWAedmWDM
-	 ogWO7WmH4me5w==
-Date: Sat, 14 Jun 2025 21:55:05 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1749957036; c=relaxed/simple;
+	bh=KfHW9rm2SVk63FWRRM417YEjh43An5AKzWmrKUsZZPc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qZ/stD0hsBiI5I6FZB9ZmVxI21DqwRJhcSMgIpw3HGOCyc18g84am7xqwAV51qjTP9MajoIeK9ALu8JWq0NKJkk4LK8zLez9W7kuIrDE3bv0V7BPzwv0salvx8+uz3MQ0bSr3YhRpa2f8kKQtHLRsgKs1xLYb7csTuTxl2i4xiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: Fushuai Wang <wangfushuai@baidu.com>
+To: <oleg@redhat.com>, <brauner@kernel.org>, <akpm@linux-foundation.org>,
+	<mjguzik@gmail.com>
+CC: <mhocko@suse.com>, <andrii@kernel.org>, <pasha.tatashin@soleen.com>,
+	<linux-kernel@vger.kernel.org>, Fushuai Wang <wangfushuai@baidu.com>
+Subject: [PATCH] exit: fix misleading comment in forget_original_parent()
+Date: Sun, 15 Jun 2025 11:09:30 +0800
+Message-ID: <20250615030930.58051-1-wangfushuai@baidu.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, soc@lists.linux.dev, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To: Harshit Shah <hshah@axiado.com>
-In-Reply-To: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-3-327ab344c16d@axiado.com>
-References: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-0-327ab344c16d@axiado.com>
- <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-3-327ab344c16d@axiado.com>
-Message-Id: <174995610418.3364372.5364960681855010915.robh@kernel.org>
-Subject: Re: [PATCH 3/6] dt-bindings: gpio: gpio-cdns: convert to YAML
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc7.internal.baidu.com (172.31.3.17) To
+ bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
+X-FEAS-Client-IP: 172.31.50.16
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
+The commit 482a3767e508 ("exit: reparent: call forget_original_parent()
+under tasklist_lock") moved the comment from exit_notify() to
+forget_original_parent(). However, the forget_original_parent() only
+handles (A), while (B) is handled in kill_orphaned_pgrp(). So remove
+the unrelated part.
 
-On Sat, 14 Jun 2025 18:12:49 -0700, Harshit Shah wrote:
-> Convert Cadence family GPIO controller bindings to DT schema.
-> 
-> Changes during conversion:
->    - update the naming as per the other files.
->    - add gpio maintainers
-> 
-> Signed-off-by: Harshit Shah <hshah@axiado.com>
-> ---
->  .../devicetree/bindings/gpio/cdns,gpio.txt         | 43 ------------
->  .../devicetree/bindings/gpio/gpio-cdns.yaml        | 81 ++++++++++++++++++++++
->  2 files changed, 81 insertions(+), 43 deletions(-)
-> 
+Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+---
+ kernel/exit.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-3-327ab344c16d@axiado.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/kernel/exit.c b/kernel/exit.c
+index bd743900354c..a7ba9178fe34 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -692,12 +692,7 @@ static void reparent_leader(struct task_struct *father, struct task_struct *p,
+ }
+ 
+ /*
+- * This does two things:
+- *
+- * A.  Make init inherit all the child processes
+- * B.  Check to see if any process groups have become orphaned
+- *	as a result of our exiting, and if they have any stopped
+- *	jobs, send them a SIGHUP and then a SIGCONT.  (POSIX 3.2.2.2)
++ * Make init inherit all the child processes
+  */
+ static void forget_original_parent(struct task_struct *father,
+ 					struct list_head *dead)
+-- 
+2.36.1
 
