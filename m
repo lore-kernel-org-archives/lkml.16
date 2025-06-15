@@ -1,79 +1,196 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25237264617
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 09:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBC845C0B;
+	Sun, 15 Jun 2025 10:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749981366; cv=none; b=PfDq0PsLp/h1C4vEfnaWvNtGmoz8+mKRJNyT5eRiBWyY5fboKaV1We5bPZeYlIF3drvx3B0/Qh25h/MUTqtrbovPj8WSQXvXKbmavF8OavwOi1xt7aNCJwtIuGFSLXrYkHedio0fBSYSABRS1dVK0O6OEfC4rO92QgmafwSDOgo=
+	t=1749982411; cv=none; b=L5pbvOKF1THempCKEdjApkksLl/7zwhkCoCEK7iG+4QzeVtW4EB43QHI3moLiPlkwPEJHgTHqXBNDQohWB7BHuz6HXwD45qfHfHjQKH6AEUhQNj9oRHi3eGR+Xm+P6RIjCnu7ZyISc6QVK4SnP0o7koYh9mZMW4pCZERsytx9xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749981366; c=relaxed/simple;
-	bh=dZIhcLUob/yE99krHJIG/yTSjf70smLK4p8/iQjCoPE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=GHz5mZ2S6X24x4GWS/0jiVxsx0HU7Bg+PznDv7JV/nOS8gKl19dHXFSKk6OusSLH5xfhBaKJ5BUsNZ0R3xqvrgjiWy/e1AUomrwExqU/Ts3oTQdyhFLW7X/hV+vH3KI3WOV+wY9VtA4SSts5A8Ug6VJzga4HaJ19VZYe0B7XowQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd045bb28so28801665ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 02:56:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749981364; x=1750586164;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ocLTJRY+fhwTjCrhxf4nK0M6rGEU4j+JnFi0dOpX+ow=;
-        b=m4m8n8Wj00UMH+VTvNrlyUyn6U8t+BTafFTCse8JLSVs3ICrT+vCI2dkfpYuNc8iAn
-         yRATLF5fuJaDfg974B+Ipi8lGVXmLhgSHAawCtqObrzvMCVKNyDC7IBkmYAUkyts0knp
-         JGnmEjy1pfowrp29ckAqPmxJZkywrmUdbBZYR88wt3LkW+OEsUunEo6KZEMpjej+ztUy
-         e5o0zbwwaVBbKJ6b9si/tFueK7KwJrsl5Fy8lUWVl7FN9s14YCXdGpIs2QVhMnnySszS
-         3tcEVAfJKB7hlBXgY48yB5yJ9bzPfiHRBnHxEhjGuG9XQbrtYc0mwUXRUmc1grXJvujF
-         cIkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmX3SNxsGQ/QAZrUqGvLU33ySeF0Crm/8Ko0D8WbTVXMCpuNuMs1sFFcPbpHxFRMDOAAE+IrVC063Xats=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYqXbK5Vtw+c8AfEsoLDtM72Haa7vaBLCVji3gTrakA+CYF30L
-	wVBFSzwjs21wngrysaVejMXENYFwCBmm2RLJrRoKKxIxFNJHaRvcE28gH0wZQsrStcR+F1SCTuB
-	2lc6fEDYJOfD2a4/NVbWzvNADkkpVSkZLx/72ZTrb2AUQI/k1YrHLs9DNzx8=
-X-Google-Smtp-Source: AGHT+IEgPdrA2IM9OWgw6N/hK3nuguJZrWn9t3hAUZqWQkF7lKWgmWhh4O4vCROHhhDs8bphPbTlJovLhvktfgyPBoq6myrdvO2n
+	s=arc-20240116; t=1749982411; c=relaxed/simple;
+	bh=zKQku6o0q3P5txBFLBWiKo5vZY670ZgyClTPpDf7UPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRFyfsBE/VMgSH0esFY2HD8CDrrQw/oh+dpIILtxQYK7Wetzw8BWaXjBnwr8kVIKpTy3td6z+jgTs99TQtEAAAPMJqIsEHksuTigyoBatnok8p+LgI+lfyWB5cvP0evEghD12T7878uXFg18aLf8kQzl1fZ5/ajSNxD9XjUp0AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSZsaBJH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSZsaBJH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38415C4CEE3;
+	Sun, 15 Jun 2025 10:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749982410;
+	bh=zKQku6o0q3P5txBFLBWiKo5vZY670ZgyClTPpDf7UPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oSZsaBJH/SwcdVwN5JSUFt/uwKkNCS6OeUhMpChIg+g/2XonSDPRvp+sY/E9AQGdH
+	 LPiPK4AyqVOLC802DHBeORVSqX75WeYJLhOPeiU8SpYpYlavEo9s+UMDgimcODNWdh
+	 QycYFNr17FOIT8ruJ5EEBreENjAA/otDqruFOWJY1L+QTQUXUayU1pby9L7vxHqhaX
+	 9XbZdzibohYDYRnaTPNCPJBb8MgF4wANCakWqZCFrvl+l4fdeP6InV/TLz1K4r5PBU
+	 0XrOE94MrDy/+Mb3tnNcRgGpaiGlzarOl+7YBxZv/oMX8sTFuHH+1SdcxyEuZfd9g0
+	 FdpnXndUwsuLg==
+Date: Sun, 15 Jun 2025 12:13:28 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: "Frank Wunderlich (linux)" <linux@fw-web.de>
+Cc: Daniel Golle <daniel@makrotopia.org>, Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH v2] net: ethernet: mtk_eth_soc: support named IRQs
+Message-ID: <aE6cyHC39IV27PcF@lore-desk>
+References: <20250615084521.32329-1-linux@fw-web.de>
+ <aE6K-d0ttAnBzcNg@lore-desk>
+ <d4781d559e3f72b0bcde88e6b04ed8e5@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:160b:b0:3dd:bb7e:f1af with SMTP id
- e9e14a558f8ab-3de07cedfc2mr57014685ab.20.1749981364287; Sun, 15 Jun 2025
- 02:56:04 -0700 (PDT)
-Date: Sun, 15 Jun 2025 02:56:04 -0700
-In-Reply-To: <684c5575.a00a0220.279073.0012.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684e98b4.a00a0220.279073.002b.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] KASAN: use-after-free Read in poly1305_update
-From: syzbot <syzbot+bfaeaa8e26281970158d@syzkaller.appspotmail.com>
-To: bp@alien8.de, dave.hansen@linux.intel.com, davem@davemloft.net, 
-	herbert@gondor.apana.org.au, hpa@zytor.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oVrPlAnEQ6cDmmnL"
+Content-Disposition: inline
+In-Reply-To: <d4781d559e3f72b0bcde88e6b04ed8e5@fw-web.de>
 
-syzbot has bisected this issue to:
 
-commit d97de0d017cde0d442c3d144b4f969f43064cc0f
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Tue Aug 13 01:31:25 2024 +0000
+--oVrPlAnEQ6cDmmnL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    bcachefs: Make bkey_fsck_err() a wrapper around fsck_err()
+> Am 2025-06-15 10:57, schrieb Lorenzo Bianconi:
+> > > From: Frank Wunderlich <frank-w@public-files.de>
+> > >=20
+> > > Add named interrupts and keep index based fallback for exiting
+> > > devicetrees.
+> > >=20
+> > > Currently only rx and tx IRQs are defined to be used with mt7988, but
+> > > later extended with RSS/LRO support.
+> > >=20
+> > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > > Reviewed-by: Simon Horman <horms@kernel.org>
+> >=20
+> > Hi Frank,
+> >=20
+> > I guess my comments on v1 apply even in v2. Can you please take a look?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1683290c580000
-start commit:   02adc1490e6d Merge tag 'spi-fix-v6.16-rc1' of git://git.ke..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1583290c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1183290c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
-dashboard link: https://syzkaller.appspot.com/bug?extid=bfaeaa8e26281970158d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1555310c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12810e82580000
+sure
 
-Reported-by: syzbot+bfaeaa8e26281970158d@syzkaller.appspotmail.com
-Fixes: d97de0d017cd ("bcachefs: Make bkey_fsck_err() a wrapper around fsck_err()")
+>=20
+> adding your comments (and mine as context) from v1 here:
+>=20
+> Am 2025-06-15 10:57, schrieb Lorenzo Bianconi:
+> > > From: Frank Wunderlich <frank-w@public-files.de>
+>=20
+> > > I had to leave flow compatible with this:
+> > >=20
+> > > <https://github.com/frank-w/BPI-Router-Linux/blob/bd7e1983b9f0a69cf47=
+cc9b9631138910d6c1d72/drivers/net/ethernet/mediatek/mtk_eth_soc.c#L5176>
+> >=20
+> > I guess the best would be to start from 0 even here (and wherever it is
+> > necessary) and avoid reading current irq[0] since it is not actually
+> > used for
+> > !shared_int devices (e.g. MT7988).  Agree?
+> >=20
+> > >=20
+> > > Here the irqs are taken from index 1 and 2 for
+> > >  registration (!shared_int else only 0). So i avoided changing the
+> > >  index,but yes index 0 is unset at this time.
+> > >=20
+> > > I guess the irq0 is not really used here...
+> > > I tested the code on bpi-r4 and have traffic
+> > >  rx+tx and no crash.
+> > >  imho this field is not used on !shared_int
+> > >  because other irq-handlers are used and
+> > >  assigned in position above.
+> >=20
+> > agree. I have not reviewed the code in detail, but this is why
+> > I think we can avoid reading it.
+>=20
+> i areee, but imho it should be a separate patch because these are 2
+> different changes
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+I am fine to have it in a separate patch but I would prefer to have this pa=
+tch
+in the same series, I think it is more clear.
+
+>=20
+> > > It looks like the irq[0] is read before...there is a
+> > >  message printed for mediatek frame engine
+> > >  which uses index 0 and shows an irq 102 on
+> > >  index way and 0 on named version...but the
+> > >  102 in index way is not visible in /proc/interrupts.
+> > > So imho this message is misleading.
+> > >=20
+> > > Intention for this patch is that irq 0 and 3 on
+> > >  mt7988 (sdk) are reserved (0 is skipped on
+> > > !shared_int and 3 never read) and should imho
+> > >  not listed in devicetree. For further cleaner
+> > >  devicetrees (with only needed irqs) and to
+> > >  extend additional irqs for rss/lro imho irq
+> > >  names make it better readable.
+> >=20
+> > Same here, if you are not listing them in the device tree, you can
+> > remove them
+> > in the driver too (and adjust the code to keep the backward
+> > compatibility).
+>=20
+> afaik i have no SHARED_INT board (only mt7621, mt7628) so changing the
+> index-logic will require testing on such boards too.
+
+I think the change will not heavily impact SHARED_INT devices.
+
+Regards,
+Lorenzo
+
+>=20
+> i looked a bit into it and see mt7623 and mt7622 have 3 IRQs defined
+> (!SHARED_INT) and i'm not 100% sure if the first is also skipped (as far =
+as
+> i understood code it should always be skipped).
+>=20
+> In the end i would change the irq-index part in separate patch once this =
+is
+> accepted to have clean changes and not mixing index with names (at least =
+to
+> allow a revert of second in case of regression).
+>=20
+> Am 2025-06-15 11:26, schrieb Daniel Golle:
+> > In addition to Lorenzo's comment to reduce the array to the actually
+> > used
+> > IRQs, I think it would be nice to introduce precompiler macros for the
+> > irq
+> > array index, ie. once the array is reduce to size 2 it could be
+> > something
+> > like
+> >=20
+> > #define MTK_ETH_IRQ_SHARED 0
+> > #define MTK_ETH_IRQ_TX 0
+> > #define MTK_ETH_IRQ_RX 1
+> > #define __MTK_ETH_IRQ_MAX MTK_ETH_IRQ_RX
+> >=20
+> > That would make all the IRQ code more readable than having to deal with
+> > numerical values.
+>=20
+> makes sense, i will take this into the second patch.
+>=20
+> I hope you can agree my thoughts about not mixing these 2 parts :)
+>=20
+> regards Frank
+
+--oVrPlAnEQ6cDmmnL
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaE6cxwAKCRA6cBh0uS2t
+rJJ0AQCF7N7EGGGmdCWiswfJnsbpS1FE5H/ZMgT6lUi1gJ/XqAD/YbauPgAy5ONu
+BTFp/8Gr6q73o9av+Tuz8j8d7KQ6Mg4=
+=tSdA
+-----END PGP SIGNATURE-----
+
+--oVrPlAnEQ6cDmmnL--
