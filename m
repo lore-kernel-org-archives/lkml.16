@@ -1,310 +1,789 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1A6283144
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED5C283FC6
+	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750018414; cv=none; b=NzThA26i+srqhroz7Ka9vdmsde9xunt7Oy9gLeWSKx2+nBg5k1d7cDrLxBflIZlzDA/63N2T3ARYzxB6ltu/RHabsUiO6akGAgMFIArnjaObE9G8WZWV23pKdmjChNtNqt6GEJAbVpKHebpgp/CaGmmMJEuph5ZD/lzi6xt8zPw=
+	t=1750018420; cv=none; b=q3j2oLfGasNVpkKvISE10mlrzfKulKfshRW/3c7waI5i3odNOMt1iSGpvlCMhWFNZv8JBm9KCcUHjiOtHK03T103ksk0XtHZEJ5iroMwUaBoLmGHUypiEZ9z0XHiNsVCyKBkKfZChVKUBc3vsvBJM+uPzEzrxOrQAHQyvDH58Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750018414; c=relaxed/simple;
-	bh=MKniLpCDwhbmrO/I0fj2QwvHLgMovvFWsaopjarRReE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XNeyT3NiahI5lP4PLqHA26xd8jUi3VimDL8OgZ4lVfxe7791OR9aZtsBNe/ahHZhi2w0bDajwwNhMzw/0Udg0OlDQiga569l+M0YcYmL3ngtsthxdwdIeSoLHw094V2vTmqjFpBCk+dFCpl86yuW88pVRwwtkU2Sgob72xX2J4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86cf74e8b87so618248339f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 13:13:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750018411; x=1750623211;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=APoc7MBnEICN7+nM4RYPtq8BlhTLNhS8RXtzVSBPA48=;
-        b=ckFb/OeZZhqtvuLvcnspOsxJUIT3a5PcmNNuNN9H76Tq1LtUwf4LHxMbCLHhvxTK1j
-         WrWXfdeVFmpIZAxe2E+dsTn955mLbn9nl2rFhXxnnU1LFLyrjWfVoL4gqoyfQeh9K0oj
-         iP4pDFQdoN9yil3muLYvoMbVbuu3EOUpIVepFF2ygstu0iGNyOZECued+Oa4clGD17j+
-         wdwjmczTPZMpdjfpm3dBS5o5bpXzIo+4Qnzu8g90p8WDwcTjFrpAulLz97K6btgHD1/v
-         1zJOl7jTHsaCVwZYzEFzGFNwcOYxFTohZOtuqAmK0h4NLP4V1UMFLLjvhaI+51TJrQiG
-         AGSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXA12W4xE8nEgIm9UzZUvdx9XjSOG7GjZfUFFKfomgIJnSs+G1xu4lCBp3uPEZY/gsWNmyHolcfhl0gJyc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx02yrC6o0YcQuOrHveE41RJeY9cai9L1TpCCGJo2+Fl16dOTM1
-	QAwzf0O8V2Lf53QfVjPsRuOBv0zYMMm+/HMbOkMe9Yl8NYToPvlbT5hBESfp/ZmYdGrEmJ+HIYM
-	UwDczCbbNdn3rnv+1380uRDoMCJ02tOEfP5A8AdXxtTT/aZ5Y9+M9Ks1Sv8I=
-X-Google-Smtp-Source: AGHT+IEfduYzJCu15I2ttz/tOQ9bEvf01/H5zsj3bby1baRB70GqhhVQaifU/eQKabUXMlqJg2+FFoxMppp9hZQusHKIusQc7VMO
+	s=arc-20240116; t=1750018420; c=relaxed/simple;
+	bh=ZGNB9siAAJP9Gl4k6gsSjNt6d1f1Hoy+OxtR8RzTr/g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FZlqARXCBJjR+sNPtCz40wLz4aSS3ubg21lAZwMPzGsnnB2ewIeu63U5xtVOpaBDVck2N3QL21z8jdU2S5IR8KIF0TIw/DeP1NnmlhtSDiK1f+k0+uwzTaFzUJaTSjYLHeiRKS29fiEiZlvqpclIgbVHdom0RUbsSTS+lajseso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ad1qvFBn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ad1qvFBn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750018415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lf1ZL6+uvUlQBeKMMUfxqte2ezhtxfs68umwc2PZoA4=;
+	b=ad1qvFBnNTXLla5Sn5EZeE8+O1p5p0nvoqx8IVD3XadiGSw5ZNnXogXGH9U0NVsaxy/uut
+	1XJN31P16ZYomTPioKsmYYLYu8bX7Jl6BC+iWhEkV658Y1O9LbqK8BlnsMU/DsQ7yHRgGS
+	MmTzsHchavQMm7XAsjSpLbHFWvF7adI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-97-gU-tFUluPE-UAmde7yRjPA-1; Sun,
+ 15 Jun 2025 16:13:31 -0400
+X-MC-Unique: gU-tFUluPE-UAmde7yRjPA-1
+X-Mimecast-MFC-AGG-ID: gU-tFUluPE-UAmde7yRjPA_1750018408
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97CEE180136B;
+	Sun, 15 Jun 2025 20:13:28 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.45.224.53])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4AB43180045C;
+	Sun, 15 Jun 2025 20:13:20 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v10 06/14] dpll: zl3073x: Fetch invariants during probe
+Date: Sun, 15 Jun 2025 22:12:15 +0200
+Message-ID: <20250615201223.1209235-7-ivecera@redhat.com>
+In-Reply-To: <20250615201223.1209235-1-ivecera@redhat.com>
+References: <20250615201223.1209235-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:178f:b0:3dd:79e6:3ba4 with SMTP id
- e9e14a558f8ab-3de07c4164cmr71970555ab.9.1750018411508; Sun, 15 Jun 2025
- 13:13:31 -0700 (PDT)
-Date: Sun, 15 Jun 2025 13:13:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684f296b.a00a0220.279073.0033.GAE@google.com>
-Subject: [syzbot] [cgroups?] WARNING in NUM (2)
-From: syzbot <syzbot+ee0ddd3c79cac08cd4f6@syzkaller.appspotmail.com>
-To: cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
-	mkoutny@suse.com, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hello,
+Several configuration parameters will remain constant at runtime,
+so we can load them during probe to avoid excessive reads from
+the hardware.
 
-syzbot found the following issue on:
+Read the following parameters from the device during probe and store
+them for later use:
 
-HEAD commit:    19272b37aa4f Linux 6.16-rc1
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1005b682580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8409c4d4e51ac27
-dashboard link: https://syzkaller.appspot.com/bug?extid=ee0ddd3c79cac08cd4f6
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+* enablement status and frequencies of the synthesizers and their
+  associated DPLL channels
+* enablement status and type (single-ended or differential) of input pins
+* associated synthesizers, signal format, and enablement status of
+  outputs
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/92d22b0c6493/disk-19272b37.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3fb0142bb63a/vmlinux-19272b37.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3d5f3836ae42/Image-19272b37.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ee0ddd3c79cac08cd4f6@syzkaller.appspotmail.com
-
-ODEBUG: object 0000000005ba7bd0 is on stack 000000007a4ecf0e, but NOT annotated.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7772 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-WARNING: CPU: 0 PID: 7772 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-WARNING: CPU: 0 PID: 7772 at lib/debugobjects.c:655 __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-Modules linked in:
-CPU: 0 UID: 0 PID: 7772 Comm: bch-copygc/loop Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-pc : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-pc : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-lr : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-lr : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-lr : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-sp : ffff80009dce7700
-x29: ffff80009dce7700 x28: 0000000000000000 x27: dfff800000000000
-x26: ffff800097589000 x25: ffff0000f7badba0 x24: 0000000000000000
-x23: ffff0000f55ff1c0 x22: 0000000000000000 x21: ffff8000974ba208
-x20: ffff80008af00de0 x19: ffff80009dce7bb0 x18: 00000000ffffffff
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.16.0-rc1-syzkaller-g19272b37aa4f #0 Not tainted
-------------------------------------------------------
-bch-copygc/loop/7772 is trying to acquire lock:
-ffff0000c943a848 (&p->pi_lock){-.-.}-{2:2}, at: class_raw_spinlock_irqsave_constructor include/linux/spinlock.h:557 [inline]
-ffff0000c943a848 (&p->pi_lock){-.-.}-{2:2}, at: try_to_wake_up+0x68/0xdf0 kernel/sched/core.c:4226
-
-but task is already holding lock:
-ffff8000974ba228 (&obj_hash[i].lock){-.-.}-{2:2}, at: __debug_object_init+0x6c/0x40c lib/debugobjects.c:741
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&obj_hash[i].lock){-.-.}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x5c/0x7c kernel/locking/spinlock.c:162
-       debug_object_assert_init+0xa0/0x2c8 lib/debugobjects.c:1007
-       debug_timer_assert_init kernel/time/timer.c:803 [inline]
-       debug_assert_init kernel/time/timer.c:848 [inline]
-       __mod_timer+0x5c/0xd00 kernel/time/timer.c:1025
-       add_timer_global+0x88/0xc0 kernel/time/timer.c:1283
-       __queue_delayed_work+0x218/0x2c8 kernel/workqueue.c:2526
-       queue_delayed_work_on+0xe4/0x194 kernel/workqueue.c:2561
-       queue_delayed_work include/linux/workqueue.h:677 [inline]
-       schedule_delayed_work include/linux/workqueue.h:817 [inline]
-       psi_group_change+0xd50/0x12e4 kernel/sched/psi.c:873
-       psi_task_change+0xec/0x244 kernel/sched/psi.c:912
-       psi_enqueue kernel/sched/stats.h:166 [inline]
-       enqueue_task+0x250/0x2f4 kernel/sched/core.c:2086
-       activate_task kernel/sched/core.c:2126 [inline]
-       wake_up_new_task+0x324/0x990 kernel/sched/core.c:4891
-       kernel_clone+0x440/0x7a0 kernel/fork.c:2630
-       user_mode_thread+0xc8/0x11c kernel/fork.c:2677
-       rest_init+0x30/0x2f4 init/main.c:709
-       start_kernel+0x450/0x4ac init/main.c:1101
-       __primary_switched+0x8c/0x94 arch/arm64/kernel/head.S:246
-
--> #1 (&rq->__lock){-.-.}-{2:2}:
-       _raw_spin_lock_nested+0x50/0x6c kernel/locking/spinlock.c:378
-       raw_spin_rq_lock_nested kernel/sched/core.c:606 [inline]
-       raw_spin_rq_lock kernel/sched/sched.h:1532 [inline]
-       task_rq_lock+0xc4/0x33c kernel/sched/core.c:708
-       cgroup_move_task+0x9c/0x454 kernel/sched/psi.c:1161
-       css_set_move_task+0x69c/0x8bc kernel/cgroup/cgroup.c:918
-       cgroup_post_fork+0x160/0x5cc kernel/cgroup/cgroup.c:6754
-       copy_process+0x2e48/0x31ec kernel/fork.c:2413
-       kernel_clone+0x1d8/0x7a0 kernel/fork.c:2599
-       user_mode_thread+0xc8/0x11c kernel/fork.c:2677
-       rest_init+0x30/0x2f4 init/main.c:709
-       start_kernel+0x450/0x4ac init/main.c:1101
-       __primary_switched+0x8c/0x94 arch/arm64/kernel/head.S:246
-
--> #0 (&p->pi_lock){-.-.}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain kernel/locking/lockdep.c:3911 [inline]
-       __lock_acquire+0x1774/0x30a4 kernel/locking/lockdep.c:5240
-       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5871
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x5c/0x7c kernel/locking/spinlock.c:162
-       class_raw_spinlock_irqsave_constructor include/linux/spinlock.h:557 [inline]
-       try_to_wake_up+0x68/0xdf0 kernel/sched/core.c:4226
-       wake_up_process kernel/sched/core.c:4475 [inline]
-       wake_up_q+0x70/0x9c kernel/sched/core.c:1081
-       up+0x100/0x170 kernel/locking/semaphore.c:235
-       __up_console_sem kernel/printk/printk.c:343 [inline]
-       __console_unlock+0x88/0xc4 kernel/printk/printk.c:2885
-       __console_flush_and_unlock kernel/printk/printk.c:3287 [inline]
-       console_unlock+0xfc/0x288 kernel/printk/printk.c:3325
-       vprintk_emit+0x298/0x430 kernel/printk/printk.c:2450
-       vprintk_default+0x54/0x80 kernel/printk/printk.c:2465
-       vprintk+0x90/0x128 kernel/printk/printk_safe.c:82
-       _printk+0xd0/0x118 kernel/printk/printk.c:2475
-       __show_regs+0x294/0x2dc arch/arm64/kernel/process.c:241
-       show_regs+0x20/0x44 arch/arm64/kernel/process.c:247
-       __warn+0x1d0/0x658 kernel/panic.c:775
-       __report_bug lib/bug.c:195 [inline]
-       report_bug+0x288/0x568 lib/bug.c:215
-       bug_handler+0x50/0x1fc arch/arm64/kernel/traps.c:1002
-       call_break_hook arch/arm64/kernel/debug-monitors.c:315 [inline]
-       brk_handler+0x1d8/0x288 arch/arm64/kernel/debug-monitors.c:325
-       do_debug_exception+0x1e4/0x38c arch/arm64/mm/fault.c:1002
-       el1_dbg+0x64/0x80 arch/arm64/kernel/entry-common.c:513
-       el1h_64_sync_handler+0x40/0xcc arch/arm64/kernel/entry-common.c:559
-       el1h_64_sync+0x6c/0x70 arch/arm64/kernel/entry.S:595
-       debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-       lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-       __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-       debug_object_init+0x20/0x2c lib/debugobjects.c:779
-       __init_work+0x58/0x68 kernel/workqueue.c:677
-       rhashtable_init_noprof+0x734/0xa10 lib/rhashtable.c:1085
-       bch2_copygc_thread+0xec/0xd40 fs/bcachefs/movinggc.c:353
-       kthread+0x5fc/0x75c kernel/kthread.c:464
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
-other info that might help us debug this:
-
-Chain exists of:
-  &p->pi_lock --> &rq->__lock --> &obj_hash[i].lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&obj_hash[i].lock);
-                               lock(&rq->__lock);
-                               lock(&obj_hash[i].lock);
-  lock(&p->pi_lock);
-
- *** DEADLOCK ***
-
-1 lock held by bch-copygc/loop/7772:
- #0: ffff8000974ba228 (&obj_hash[i].lock){-.-.}-{2:2}, at: __debug_object_init+0x6c/0x40c lib/debugobjects.c:741
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 7772 Comm: bch-copygc/loop Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2046
- check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain kernel/locking/lockdep.c:3911 [inline]
- __lock_acquire+0x1774/0x30a4 kernel/locking/lockdep.c:5240
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5871
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x5c/0x7c kernel/locking/spinlock.c:162
- class_raw_spinlock_irqsave_constructor include/linux/spinlock.h:557 [inline]
- try_to_wake_up+0x68/0xdf0 kernel/sched/core.c:4226
- wake_up_process kernel/sched/core.c:4475 [inline]
- wake_up_q+0x70/0x9c kernel/sched/core.c:1081
- up+0x100/0x170 kernel/locking/semaphore.c:235
- __up_console_sem kernel/printk/printk.c:343 [inline]
- __console_unlock+0x88/0xc4 kernel/printk/printk.c:2885
- __console_flush_and_unlock kernel/printk/printk.c:3287 [inline]
- console_unlock+0xfc/0x288 kernel/printk/printk.c:3325
- vprintk_emit+0x298/0x430 kernel/printk/printk.c:2450
- vprintk_default+0x54/0x80 kernel/printk/printk.c:2465
- vprintk+0x90/0x128 kernel/printk/printk_safe.c:82
- _printk+0xd0/0x118 kernel/printk/printk.c:2475
- __show_regs+0x294/0x2dc arch/arm64/kernel/process.c:241
- show_regs+0x20/0x44 arch/arm64/kernel/process.c:247
- __warn+0x1d0/0x658 kernel/panic.c:775
- __report_bug lib/bug.c:195 [inline]
- report_bug+0x288/0x568 lib/bug.c:215
- bug_handler+0x50/0x1fc arch/arm64/kernel/traps.c:1002
- call_break_hook arch/arm64/kernel/debug-monitors.c:315 [inline]
- brk_handler+0x1d8/0x288 arch/arm64/kernel/debug-monitors.c:325
- do_debug_exception+0x1e4/0x38c arch/arm64/mm/fault.c:1002
- el1_dbg+0x64/0x80 arch/arm64/kernel/entry-common.c:513
- el1h_64_sync_handler+0x40/0xcc arch/arm64/kernel/entry-common.c:559
- el1h_64_sync+0x6c/0x70 arch/arm64/kernel/entry.S:595
- debug_object_is_on_stack lib/debugobjects.c:-1 [inline] (P)
- lookup_object_or_alloc lib/debugobjects.c:688 [inline] (P)
- __debug_object_init+0x364/0x40c lib/debugobjects.c:743 (P)
- debug_object_init+0x20/0x2c lib/debugobjects.c:779
- __init_work+0x58/0x68 kernel/workqueue.c:677
- rhashtable_init_noprof+0x734/0xa10 lib/rhashtable.c:1085
- bch2_copygc_thread+0xec/0xd40 fs/bcachefs/movinggc.c:353
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-x17: ffff800093215000 x16: ffff80008ae5617c x15: 0000000000000001
-x14: 1ffff00013b9ce58 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff700013b9ce59 x10: 0000000000ff0100 x9 : 83cd6914eae67d00
-x8 : 83cd6914eae67d00 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff80009dce7098 x4 : ffff80008f657060 x3 : ffff8000807bb744
-x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000050
-Call trace:
- debug_object_is_on_stack lib/debugobjects.c:-1 [inline] (P)
- lookup_object_or_alloc lib/debugobjects.c:688 [inline] (P)
- __debug_object_init+0x364/0x40c lib/debugobjects.c:743 (P)
- debug_object_init+0x20/0x2c lib/debugobjects.c:779
- __init_work+0x58/0x68 kernel/workqueue.c:677
- rhashtable_init_noprof+0x734/0xa10 lib/rhashtable.c:1085
- bch2_copygc_thread+0xec/0xd40 fs/bcachefs/movinggc.c:353
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-irq event stamp: 18
-hardirqs last  enabled at (17): [<ffff800083e501f4>] get_random_u32+0x2d4/0x540 drivers/char/random.c:554
-hardirqs last disabled at (18): [<ffff80008ae77604>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (18): [<ffff80008ae77604>] _raw_spin_lock_irqsave+0x2c/0x7c kernel/locking/spinlock.c:162
-softirqs last  enabled at (0): [<ffff8000803aab44>] copy_process+0x1134/0x31ec kernel/fork.c:2114
-softirqs last disabled at (0): [<0000000000000000>] 0x0
----[ end trace 0000000000000000 ]---
-bcachefs (loop6): Detected missing backpointers in bucket 34, now have 1/128 with missing
-  running recovery pass check_extents_to_backpointers (17), currently at check_dirents (31)
-
-
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v10:
+* using str_enabled_disabled() where possible
+---
+ drivers/dpll/zl3073x/core.c | 249 +++++++++++++++++++++++++++++++
+ drivers/dpll/zl3073x/core.h | 286 ++++++++++++++++++++++++++++++++++++
+ drivers/dpll/zl3073x/regs.h |  65 ++++++++
+ 3 files changed, 600 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
+index 60344761545d8..9d9d1403645f3 100644
+--- a/drivers/dpll/zl3073x/core.c
++++ b/drivers/dpll/zl3073x/core.c
+@@ -6,10 +6,12 @@
+ #include <linux/dev_printk.h>
+ #include <linux/device.h>
+ #include <linux/export.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/netlink.h>
+ #include <linux/regmap.h>
+ #include <linux/sprintf.h>
++#include <linux/string_choices.h>
+ #include <linux/unaligned.h>
+ #include <net/devlink.h>
+ 
+@@ -376,6 +378,25 @@ int zl3073x_poll_zero_u8(struct zl3073x_dev *zldev, unsigned int reg, u8 mask)
+ 					ZL_POLL_SLEEP_US, ZL_POLL_TIMEOUT_US);
+ }
+ 
++int zl3073x_mb_op(struct zl3073x_dev *zldev, unsigned int op_reg, u8 op_val,
++		  unsigned int mask_reg, u16 mask_val)
++{
++	int rc;
++
++	/* Set mask for the operation */
++	rc = zl3073x_write_u16(zldev, mask_reg, mask_val);
++	if (rc)
++		return rc;
++
++	/* Trigger the operation */
++	rc = zl3073x_write_u8(zldev, op_reg, op_val);
++	if (rc)
++		return rc;
++
++	/* Wait for the operation to actually finish */
++	return zl3073x_poll_zero_u8(zldev, op_reg, op_val);
++}
++
+ /**
+  * zl3073x_devlink_info_get - Devlink device info callback
+  * @devlink: devlink structure pointer
+@@ -484,6 +505,229 @@ struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev)
+ }
+ EXPORT_SYMBOL_NS_GPL(zl3073x_devm_alloc, "ZL3073X");
+ 
++/**
++ * zl3073x_ref_state_fetch - get input reference state
++ * @zldev: pointer to zl3073x_dev structure
++ * @index: input reference index to fetch state for
++ *
++ * Function fetches information for the given input reference that are
++ * invariant and stores them for later use.
++ *
++ * Return: 0 on success, <0 on error
++ */
++static int
++zl3073x_ref_state_fetch(struct zl3073x_dev *zldev, u8 index)
++{
++	struct zl3073x_ref *input = &zldev->ref[index];
++	u8 ref_config;
++	int rc;
++
++	/* If the input is differential then the configuration for N-pin
++	 * reference is ignored and P-pin config is used for both.
++	 */
++	if (zl3073x_is_n_pin(index) &&
++	    zl3073x_ref_is_diff(zldev, index - 1)) {
++		input->enabled = zl3073x_ref_is_enabled(zldev, index - 1);
++		input->diff = true;
++
++		return 0;
++	}
++
++	guard(mutex)(&zldev->multiop_lock);
++
++	/* Read reference configuration */
++	rc = zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
++			   ZL_REG_REF_MB_MASK, BIT(index));
++	if (rc)
++		return rc;
++
++	/* Read ref_config register */
++	rc = zl3073x_read_u8(zldev, ZL_REG_REF_CONFIG, &ref_config);
++	if (rc)
++		return rc;
++
++	input->enabled = FIELD_GET(ZL_REF_CONFIG_ENABLE, ref_config);
++	input->diff = FIELD_GET(ZL_REF_CONFIG_DIFF_EN, ref_config);
++
++	dev_dbg(zldev->dev, "REF%u is %s and configured as %s\n", index,
++		str_enabled_disabled(input->enabled),
++		input->diff ? "differential" : "single-ended");
++
++	return rc;
++}
++
++/**
++ * zl3073x_out_state_fetch - get output state
++ * @zldev: pointer to zl3073x_dev structure
++ * @index: output index to fetch state for
++ *
++ * Function fetches information for the given output (not output pin)
++ * that are invariant and stores them for later use.
++ *
++ * Return: 0 on success, <0 on error
++ */
++static int
++zl3073x_out_state_fetch(struct zl3073x_dev *zldev, u8 index)
++{
++	struct zl3073x_out *out = &zldev->out[index];
++	u8 output_ctrl, output_mode;
++	int rc;
++
++	/* Read output configuration */
++	rc = zl3073x_read_u8(zldev, ZL_REG_OUTPUT_CTRL(index), &output_ctrl);
++	if (rc)
++		return rc;
++
++	/* Store info about output enablement and synthesizer the output
++	 * is connected to.
++	 */
++	out->enabled = FIELD_GET(ZL_OUTPUT_CTRL_EN, output_ctrl);
++	out->synth = FIELD_GET(ZL_OUTPUT_CTRL_SYNTH_SEL, output_ctrl);
++
++	dev_dbg(zldev->dev, "OUT%u is %s and connected to SYNTH%u\n", index,
++		str_enabled_disabled(out->enabled), out->synth);
++
++	guard(mutex)(&zldev->multiop_lock);
++
++	/* Read output configuration */
++	rc = zl3073x_mb_op(zldev, ZL_REG_OUTPUT_MB_SEM, ZL_OUTPUT_MB_SEM_RD,
++			   ZL_REG_OUTPUT_MB_MASK, BIT(index));
++	if (rc)
++		return rc;
++
++	/* Read output_mode */
++	rc = zl3073x_read_u8(zldev, ZL_REG_OUTPUT_MODE, &output_mode);
++	if (rc)
++		return rc;
++
++	/* Extract and store output signal format */
++	out->signal_format = FIELD_GET(ZL_OUTPUT_MODE_SIGNAL_FORMAT,
++				       output_mode);
++
++	dev_dbg(zldev->dev, "OUT%u has signal format 0x%02x\n", index,
++		out->signal_format);
++
++	return rc;
++}
++
++/**
++ * zl3073x_synth_state_fetch - get synth state
++ * @zldev: pointer to zl3073x_dev structure
++ * @index: synth index to fetch state for
++ *
++ * Function fetches information for the given synthesizer that are
++ * invariant and stores them for later use.
++ *
++ * Return: 0 on success, <0 on error
++ */
++static int
++zl3073x_synth_state_fetch(struct zl3073x_dev *zldev, u8 index)
++{
++	struct zl3073x_synth *synth = &zldev->synth[index];
++	u16 base, m, n;
++	u8 synth_ctrl;
++	u32 mult;
++	int rc;
++
++	/* Read synth control register */
++	rc = zl3073x_read_u8(zldev, ZL_REG_SYNTH_CTRL(index), &synth_ctrl);
++	if (rc)
++		return rc;
++
++	/* Store info about synth enablement and DPLL channel the synth is
++	 * driven by.
++	 */
++	synth->enabled = FIELD_GET(ZL_SYNTH_CTRL_EN, synth_ctrl);
++	synth->dpll = FIELD_GET(ZL_SYNTH_CTRL_DPLL_SEL, synth_ctrl);
++
++	dev_dbg(zldev->dev, "SYNTH%u is %s and driven by DPLL%u\n", index,
++		str_enabled_disabled(synth->enabled), synth->dpll);
++
++	guard(mutex)(&zldev->multiop_lock);
++
++	/* Read synth configuration */
++	rc = zl3073x_mb_op(zldev, ZL_REG_SYNTH_MB_SEM, ZL_SYNTH_MB_SEM_RD,
++			   ZL_REG_SYNTH_MB_MASK, BIT(index));
++	if (rc)
++		return rc;
++
++	/* The output frequency is determined by the following formula:
++	 * base * multiplier * numerator / denominator
++	 *
++	 * Read registers with these values
++	 */
++	rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_BASE, &base);
++	if (rc)
++		return rc;
++
++	rc = zl3073x_read_u32(zldev, ZL_REG_SYNTH_FREQ_MULT, &mult);
++	if (rc)
++		return rc;
++
++	rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_M, &m);
++	if (rc)
++		return rc;
++
++	rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_N, &n);
++	if (rc)
++		return rc;
++
++	/* Check denominator for zero to avoid div by 0 */
++	if (!n) {
++		dev_err(zldev->dev,
++			"Zero divisor for SYNTH%u retrieved from device\n",
++			index);
++		return -EINVAL;
++	}
++
++	/* Compute and store synth frequency */
++	zldev->synth[index].freq = div_u64(mul_u32_u32(base * m, mult), n);
++
++	dev_dbg(zldev->dev, "SYNTH%u frequency: %u Hz\n", index,
++		zldev->synth[index].freq);
++
++	return rc;
++}
++
++static int
++zl3073x_dev_state_fetch(struct zl3073x_dev *zldev)
++{
++	int rc;
++	u8 i;
++
++	for (i = 0; i < ZL3073X_NUM_REFS; i++) {
++		rc = zl3073x_ref_state_fetch(zldev, i);
++		if (rc) {
++			dev_err(zldev->dev,
++				"Failed to fetch input state: %pe\n",
++				ERR_PTR(rc));
++			return rc;
++		}
++	}
++
++	for (i = 0; i < ZL3073X_NUM_SYNTHS; i++) {
++		rc = zl3073x_synth_state_fetch(zldev, i);
++		if (rc) {
++			dev_err(zldev->dev,
++				"Failed to fetch synth state: %pe\n",
++				ERR_PTR(rc));
++			return rc;
++		}
++	}
++
++	for (i = 0; i < ZL3073X_NUM_OUTS; i++) {
++		rc = zl3073x_out_state_fetch(zldev, i);
++		if (rc) {
++			dev_err(zldev->dev,
++				"Failed to fetch output state: %pe\n",
++				ERR_PTR(rc));
++			return rc;
++		}
++	}
++
++	return rc;
++}
++
+ static void zl3073x_devlink_unregister(void *ptr)
+ {
+ 	devlink_unregister(ptr);
+@@ -551,6 +795,11 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
+ 		return dev_err_probe(zldev->dev, rc,
+ 				     "Failed to initialize mutex\n");
+ 
++	/* Fetch device state */
++	rc = zl3073x_dev_state_fetch(zldev);
++	if (rc)
++		return rc;
++
+ 	/* Register the device as devlink device */
+ 	devlink = priv_to_devlink(zldev);
+ 	devlink_register(devlink);
+diff --git a/drivers/dpll/zl3073x/core.h b/drivers/dpll/zl3073x/core.h
+index 1a77a69f85a26..0d052c02065e5 100644
+--- a/drivers/dpll/zl3073x/core.h
++++ b/drivers/dpll/zl3073x/core.h
+@@ -6,19 +6,70 @@
+ #include <linux/mutex.h>
+ #include <linux/types.h>
+ 
++#include "regs.h"
++
+ struct device;
+ struct regmap;
+ 
++/*
++ * Hardware limits for ZL3073x chip family
++ */
++#define ZL3073X_NUM_REFS	10
++#define ZL3073X_NUM_OUTS	10
++#define ZL3073X_NUM_SYNTHS	5
++
++/**
++ * struct zl3073x_ref - input reference invariant info
++ * @enabled: input reference is enabled or disabled
++ * @diff: true if input reference is differential
++ */
++struct zl3073x_ref {
++	bool	enabled;
++	bool	diff;
++};
++
++/**
++ * struct zl3073x_out - output invariant info
++ * @enabled: out is enabled or disabled
++ * @synth: synthesizer the out is connected to
++ * @signal_format: out signal format
++ */
++struct zl3073x_out {
++	bool	enabled;
++	u8	synth;
++	u8	signal_format;
++};
++
++/**
++ * struct zl3073x_synth - synthesizer invariant info
++ * @freq: synthesizer frequency
++ * @dpll: ID of DPLL the synthesizer is driven by
++ * @enabled: synth is enabled or disabled
++ */
++struct zl3073x_synth {
++	u32	freq;
++	u8	dpll;
++	bool	enabled;
++};
++
+ /**
+  * struct zl3073x_dev - zl3073x device
+  * @dev: pointer to device
+  * @regmap: regmap to access device registers
+  * @multiop_lock: to serialize multiple register operations
++ * @ref: array of input references' invariants
++ * @out: array of outs' invariants
++ * @synth: array of synths' invariants
+  */
+ struct zl3073x_dev {
+ 	struct device		*dev;
+ 	struct regmap		*regmap;
+ 	struct mutex		multiop_lock;
++
++	/* Invariants */
++	struct zl3073x_ref	ref[ZL3073X_NUM_REFS];
++	struct zl3073x_out	out[ZL3073X_NUM_OUTS];
++	struct zl3073x_synth	synth[ZL3073X_NUM_SYNTHS];
+ };
+ 
+ enum zl3073x_chip_type {
+@@ -46,6 +97,8 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
+  * Registers operations
+  **********************/
+ 
++int zl3073x_mb_op(struct zl3073x_dev *zldev, unsigned int op_reg, u8 op_val,
++		  unsigned int mask_reg, u16 mask_val);
+ int zl3073x_poll_zero_u8(struct zl3073x_dev *zldev, unsigned int reg, u8 mask);
+ int zl3073x_read_u8(struct zl3073x_dev *zldev, unsigned int reg, u8 *val);
+ int zl3073x_read_u16(struct zl3073x_dev *zldev, unsigned int reg, u16 *val);
+@@ -56,4 +109,237 @@ int zl3073x_write_u16(struct zl3073x_dev *zldev, unsigned int reg, u16 val);
+ int zl3073x_write_u32(struct zl3073x_dev *zldev, unsigned int reg, u32 val);
+ int zl3073x_write_u48(struct zl3073x_dev *zldev, unsigned int reg, u64 val);
+ 
++static inline bool
++zl3073x_is_n_pin(u8 id)
++{
++	/* P-pins ids are even while N-pins are odd */
++	return id & 1;
++}
++
++static inline bool
++zl3073x_is_p_pin(u8 id)
++{
++	return !zl3073x_is_n_pin(id);
++}
++
++/**
++ * zl3073x_input_pin_ref_get - get reference for given input pin
++ * @id: input pin id
++ *
++ * Return: reference id for the given input pin
++ */
++static inline u8
++zl3073x_input_pin_ref_get(u8 id)
++{
++	return id;
++}
++
++/**
++ * zl3073x_output_pin_out_get - get output for the given output pin
++ * @id: output pin id
++ *
++ * Return: output id for the given output pin
++ */
++static inline u8
++zl3073x_output_pin_out_get(u8 id)
++{
++	/* Output pin pair shares the single output */
++	return id / 2;
++}
++
++/**
++ * zl3073x_ref_is_diff - check if the given input reference is differential
++ * @zldev: pointer to zl3073x device
++ * @index: input reference index
++ *
++ * Return: true if reference is differential, false if reference is single-ended
++ */
++static inline bool
++zl3073x_ref_is_diff(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->ref[index].diff;
++}
++
++/**
++ * zl3073x_ref_is_enabled - check if the given input reference is enabled
++ * @zldev: pointer to zl3073x device
++ * @index: input reference index
++ *
++ * Return: true if input refernce is enabled, false otherwise
++ */
++static inline bool
++zl3073x_ref_is_enabled(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->ref[index].enabled;
++}
++
++/**
++ * zl3073x_synth_dpll_get - get DPLL ID the synth is driven by
++ * @zldev: pointer to zl3073x device
++ * @index: synth index
++ *
++ * Return: ID of DPLL the given synthetizer is driven by
++ */
++static inline u8
++zl3073x_synth_dpll_get(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->synth[index].dpll;
++}
++
++/**
++ * zl3073x_synth_freq_get - get synth current freq
++ * @zldev: pointer to zl3073x device
++ * @index: synth index
++ *
++ * Return: frequency of given synthetizer
++ */
++static inline u32
++zl3073x_synth_freq_get(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->synth[index].freq;
++}
++
++/**
++ * zl3073x_synth_is_enabled - check if the given synth is enabled
++ * @zldev: pointer to zl3073x device
++ * @index: synth index
++ *
++ * Return: true if synth is enabled, false otherwise
++ */
++static inline bool
++zl3073x_synth_is_enabled(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->synth[index].enabled;
++}
++
++/**
++ * zl3073x_out_synth_get - get synth connected to given output
++ * @zldev: pointer to zl3073x device
++ * @index: output index
++ *
++ * Return: index of synth connected to given output.
++ */
++static inline u8
++zl3073x_out_synth_get(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->out[index].synth;
++}
++
++/**
++ * zl3073x_out_is_enabled - check if the given output is enabled
++ * @zldev: pointer to zl3073x device
++ * @index: output index
++ *
++ * Return: true if the output is enabled, false otherwise
++ */
++static inline bool
++zl3073x_out_is_enabled(struct zl3073x_dev *zldev, u8 index)
++{
++	u8 synth;
++
++	/* Output is enabled only if associated synth is enabled */
++	synth = zl3073x_out_synth_get(zldev, index);
++	if (zl3073x_synth_is_enabled(zldev, synth))
++		return zldev->out[index].enabled;
++
++	return false;
++}
++
++/**
++ * zl3073x_out_signal_format_get - get output signal format
++ * @zldev: pointer to zl3073x device
++ * @index: output index
++ *
++ * Return: signal format of given output
++ */
++static inline u8
++zl3073x_out_signal_format_get(struct zl3073x_dev *zldev, u8 index)
++{
++	return zldev->out[index].signal_format;
++}
++
++/**
++ * zl3073x_out_dpll_get - get DPLL ID the output is driven by
++ * @zldev: pointer to zl3073x device
++ * @index: output index
++ *
++ * Return: ID of DPLL the given output is driven by
++ */
++static inline
++u8 zl3073x_out_dpll_get(struct zl3073x_dev *zldev, u8 index)
++{
++	u8 synth;
++
++	/* Get synthesizer connected to given output */
++	synth = zl3073x_out_synth_get(zldev, index);
++
++	/* Return DPLL that drives the synth */
++	return zl3073x_synth_dpll_get(zldev, synth);
++}
++
++/**
++ * zl3073x_out_is_diff - check if the given output is differential
++ * @zldev: pointer to zl3073x device
++ * @index: output index
++ *
++ * Return: true if output is differential, false if output is single-ended
++ */
++static inline bool
++zl3073x_out_is_diff(struct zl3073x_dev *zldev, u8 index)
++{
++	switch (zl3073x_out_signal_format_get(zldev, index)) {
++	case ZL_OUTPUT_MODE_SIGNAL_FORMAT_LVDS:
++	case ZL_OUTPUT_MODE_SIGNAL_FORMAT_DIFF:
++	case ZL_OUTPUT_MODE_SIGNAL_FORMAT_LOWVCM:
++		return true;
++	default:
++		break;
++	}
++
++	return false;
++}
++
++/**
++ * zl3073x_output_pin_is_enabled - check if the given output pin is enabled
++ * @zldev: pointer to zl3073x device
++ * @id: output pin id
++ *
++ * Checks if the output of the given output pin is enabled and also that
++ * its signal format also enables the given pin.
++ *
++ * Return: true if output pin is enabled, false if output pin is disabled
++ */
++static inline bool
++zl3073x_output_pin_is_enabled(struct zl3073x_dev *zldev, u8 id)
++{
++	u8 output = zl3073x_output_pin_out_get(id);
++
++	/* Check if the whole output is enabled */
++	if (!zl3073x_out_is_enabled(zldev, output))
++		return false;
++
++	/* Check signal format */
++	switch (zl3073x_out_signal_format_get(zldev, output)) {
++	case ZL_OUTPUT_MODE_SIGNAL_FORMAT_DISABLED:
++		/* Both output pins are disabled by signal format */
++		return false;
++
++	case ZL_OUTPUT_MODE_SIGNAL_FORMAT_1P:
++		/* Output is one single ended P-pin output */
++		if (zl3073x_is_n_pin(id))
++			return false;
++		break;
++	case ZL_OUTPUT_MODE_SIGNAL_FORMAT_1N:
++		/* Output is one single ended N-pin output */
++		if (zl3073x_is_p_pin(id))
++			return false;
++		break;
++	default:
++		/* For other format both pins are enabled */
++		break;
++	}
++
++	return true;
++}
++
+ #endif /* _ZL3073X_H */
+diff --git a/drivers/dpll/zl3073x/regs.h b/drivers/dpll/zl3073x/regs.h
+index 08bf595935ea1..753b42d8b2093 100644
+--- a/drivers/dpll/zl3073x/regs.h
++++ b/drivers/dpll/zl3073x/regs.h
+@@ -72,4 +72,69 @@
+ #define ZL_REG_FW_VER				ZL_REG(0, 0x05, 2)
+ #define ZL_REG_CUSTOM_CONFIG_VER		ZL_REG(0, 0x07, 4)
+ 
++/***********************************
++ * Register Page 9, Synth and Output
++ ***********************************/
++
++#define ZL_REG_SYNTH_CTRL(_idx)						\
++	ZL_REG_IDX(_idx, 9, 0x00, 1, ZL3073X_NUM_SYNTHS, 1)
++#define ZL_SYNTH_CTRL_EN			BIT(0)
++#define ZL_SYNTH_CTRL_DPLL_SEL			GENMASK(6, 4)
++
++#define ZL_REG_OUTPUT_CTRL(_idx)					\
++	ZL_REG_IDX(_idx, 9, 0x28, 1, ZL3073X_NUM_OUTS, 1)
++#define ZL_OUTPUT_CTRL_EN			BIT(0)
++#define ZL_OUTPUT_CTRL_SYNTH_SEL		GENMASK(6, 4)
++
++/*******************************
++ * Register Page 10, Ref Mailbox
++ *******************************/
++
++#define ZL_REG_REF_MB_MASK			ZL_REG(10, 0x02, 2)
++
++#define ZL_REG_REF_MB_SEM			ZL_REG(10, 0x04, 1)
++#define ZL_REF_MB_SEM_WR			BIT(0)
++#define ZL_REF_MB_SEM_RD			BIT(1)
++
++#define ZL_REG_REF_CONFIG			ZL_REG(10, 0x0d, 1)
++#define ZL_REF_CONFIG_ENABLE			BIT(0)
++#define ZL_REF_CONFIG_DIFF_EN			BIT(2)
++
++/*********************************
++ * Register Page 13, Synth Mailbox
++ *********************************/
++
++#define ZL_REG_SYNTH_MB_MASK			ZL_REG(13, 0x02, 2)
++
++#define ZL_REG_SYNTH_MB_SEM			ZL_REG(13, 0x04, 1)
++#define ZL_SYNTH_MB_SEM_WR			BIT(0)
++#define ZL_SYNTH_MB_SEM_RD			BIT(1)
++
++#define ZL_REG_SYNTH_FREQ_BASE			ZL_REG(13, 0x06, 2)
++#define ZL_REG_SYNTH_FREQ_MULT			ZL_REG(13, 0x08, 4)
++#define ZL_REG_SYNTH_FREQ_M			ZL_REG(13, 0x0c, 2)
++#define ZL_REG_SYNTH_FREQ_N			ZL_REG(13, 0x0e, 2)
++
++/**********************************
++ * Register Page 14, Output Mailbox
++ **********************************/
++#define ZL_REG_OUTPUT_MB_MASK			ZL_REG(14, 0x02, 2)
++
++#define ZL_REG_OUTPUT_MB_SEM			ZL_REG(14, 0x04, 1)
++#define ZL_OUTPUT_MB_SEM_WR			BIT(0)
++#define ZL_OUTPUT_MB_SEM_RD			BIT(1)
++
++#define ZL_REG_OUTPUT_MODE			ZL_REG(14, 0x05, 1)
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT		GENMASK(7, 4)
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_DISABLED	0
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_LVDS	1
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_DIFF	2
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_LOWVCM	3
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2		4
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_1P		5
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_1N		6
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2_INV	7
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2_NDIV	12
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2_NDIV_INV	15
++
+ #endif /* _ZL3073X_REGS_H */
+-- 
+2.49.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
