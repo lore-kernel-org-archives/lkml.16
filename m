@@ -1,98 +1,112 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B657D31A60
-	for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 14:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE8B1E89C;
+	Sun, 15 Jun 2025 14:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749996707; cv=none; b=dFOJxf1NjihoYG8+zMfOhLAxt3hoPuld8zMq+RUCCFhfKBpALNI+UPTiSCWftIcH8q9gGEhuq2q/1wACxWT4+uswm/NqjaAVryuSy4djKEG7w+0eS1nYrPOf9+/UBgTb1d/jERXDdm7hsf17SFHJf0GIzwC78LinvmFU4AXTMNs=
+	t=1749997685; cv=none; b=s+PASfGdVU4+Uapia5zp0YcRM/PxLNPznQi8RjUT0iZyN5Hpa1a569LHAfMGTzA+1l1r53bLXAl3Q85mU7uTh9nZZCC6WBJARFgEbct5EKlrI/lMAXvjipGfaaJAP7eVHcHCqjwyPWzL97dqvBDfnfl7Ne0aJz2oRim8nPx39dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749996707; c=relaxed/simple;
-	bh=j09xSvhYvcfJYpTTYoVZvzPhGa2m5l1X1PCJL7zKBBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i54K4PCa04AmyIXB/SemPHfopuoc01L7cBrhuvN/MMo5NvJDmKH+AsBzB4Xr2jx2uI0ZOEKLP2UEWCdzSuuAW7E6jlTzZlOk4akGXobZL9UItmm3gDlf5+jryvQQ+entSceFMLV1Y3ff0SQV8Oumpjj/TxsxkB3mlv/1NVAdBzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313290ea247so669793a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 07:11:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749996705; x=1750601505;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LGYFIbfhwG/ewJSvY1vT2DTH4BojWvMhmzCrf4rviWI=;
-        b=ivQKIHjM+7rwsTv1+dQ6ew5u2/7aIoMocVLR3D5Yxpe/JC9DVwt4PLiSOOtqByCHuZ
-         Ij/ShxXBIIeVKUvTX52b5T7jO0BN+Xt6QxpyRqGnnLmMbvtvjhZqOj0DDMSLlXPjPmC1
-         Q4ZEo+LSiD+FeEi6vntvr8SIKug3lIhUeqn07YiBhpZQrdOf248EVIWOjja08mAC3BTp
-         El3dmOVo9cM96hHgxpNdTeiMwUc85eog1DNInUJUi60mFodZWN01NdvLkz36GUJ/aZkT
-         jq2+s+4ApKJ7X32jm1OlywgXcSLpvVxkK7Jn5cqT8ThRZMx0LgvFj7NLGrFJ2ne8ZlQj
-         paQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXc4SmOLzNWdr+hITZsEt2TJdaGlXT6kw8S9JvoUQN5p/d7/i4zEUwrcUQ3grFTEszjnmaXtF9g31NvW9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQNSkI1fxMwBvX+Qceqpx6RKhxXPy6wsaiJDInF6hPThFh6i6H
-	9Ku/sDfrL0z5OK4YqowzjI3IvkbpWdrO44t+JJ83yfw/escBuA8UQiiN
-X-Gm-Gg: ASbGnct05BVrD69ZhvRxGL2w8N0BCjLV8A1UvjkPVEAQE0jw0liRiBmcWPB5+sALOqY
-	7ey73WhY0XkdHHXOKCeUsG7w2XznnFLbTj3Lq9odoGXNyEHKvat3ha0N6B/YU2qna+KiV/JvARH
-	r0ZgmaZY5ysC7af6xVQ9NrZPXYJcx9WWF+7591HZn4rnc0zHYK/VmcJfzTbyb3jSowYE2Zz4Af5
-	IwrFOxwK5k5JJTFFNdn75CR/BgYooiX+nu4i2g2ylcgXHSu8wXiTvTSVSH7r1auRUBqPBcJy22e
-	eorrbpguWjsqiKcNvJPc3SGgr8xlmzJpQp14dKuFmptda0BTIlaZvgT7hUOspLDqBnNG
-X-Google-Smtp-Source: AGHT+IGGa9UpaHH1Yj95UONqu/2rdm8o9/Vcg4vz+0U3koVu0uwN1twEJ1XBEWaDhjWWABQPAGIbfg==
-X-Received: by 2002:a17:90b:540d:b0:312:1d2d:18f8 with SMTP id 98e67ed59e1d1-313f1e50e63mr3448982a91.7.1749996705027;
-        Sun, 15 Jun 2025 07:11:45 -0700 (PDT)
-Received: from localhost.localdomain ([218.152.98.97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de783a8sm44233375ad.99.2025.06.15.07.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 07:11:44 -0700 (PDT)
-From: Yunseong Kim <ysk@kzalloc.com>
-To: Russell King <linux@armlinux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yunseong Kim <ysk@kzalloc.com>
-Subject: [PATCH] arm/probes/uprobes: Remove redundant preempt_disable/enable around kmap_atomic
-Date: Sun, 15 Jun 2025 14:11:30 +0000
-Message-ID: <20250615141129.653384-2-ysk@kzalloc.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1749997685; c=relaxed/simple;
+	bh=6ObUhH6Z/DbZj7sOOb180am+Eh1jhL7E4Y+59Wc7eWw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b3d3AXAIf4i8aqekt4rGH3B2OiPXdKH6GhweEbbUhxV3GuNi6DF+2HnV0EUIHOxhXrcMJlUKAc4iN5GGY22RHSWK0HPzT5K0xL84OdSJgkcqCWydJYca+P9JVnWz4H7LkQTCI0ILn6k4QrnN5Mu4Q70Vq5/Yt8oMqJdc93dDs6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8aKpADm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8aKpADm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A5AC4CEE3;
+	Sun, 15 Jun 2025 14:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749997685;
+	bh=6ObUhH6Z/DbZj7sOOb180am+Eh1jhL7E4Y+59Wc7eWw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=i8aKpADmE4Sjf7WdJ0NTmMUp/9aqxQs4nDfcWsIZ6Os/KgLHrADOH42FYAK6EMuUP
+	 hwZKMHxvN9yHZ3d91CMsR+9CpkHeIUX3XyfU1fcxUHSd1dH0ySTX89kIp7wGQJ1gVY
+	 TyEaYcPs3tPprtBTmIgtCDJw/tnhzy3at8TWeQ3hPUXj/k/5b6I6V04TssUss3Tmfr
+	 HkFtPYf6QaKUj0iBHETKwtZxyEK9ElSiW0As/k/5jfVBAsThNxP8vhUsrPaVEwPbxb
+	 WUubaIYz/0Lcij/eNEJrxKLbW+AxjJGoAyC6r2TWIslrf8VGTOVt2mBnaOvxrCCpwb
+	 tXwLf8Ji5YLvw==
+From: William Breathitt Gray <wbg@kernel.org>
+Date: Sun, 15 Jun 2025 23:27:47 +0900
+Subject: [PATCH] counter: Alphabetize component_id sysfs attributes
+ Documentation list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250615-alphabetize-component_id-doc-v1-1-4c5943b41198@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAGLYTmgC/x3MQQrCMBAF0KuUWTuQlMZSryIicfLbDmgSkiJi6
+ d0NLt/m7VRRFJUu3U4Fb62aYoM9dSSrjwtYQzP1pnfmbB37Z179A5t+wZJeOUXE7a6BQxK2Mgw
+ TRmucGGpFLpj18++vt+P4AT+SSsxuAAAA
+X-Change-ID: 20250615-alphabetize-component_id-doc-1c449e7105c0
+To: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>, 
+ William Breathitt Gray <wbg@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3028; i=wbg@kernel.org;
+ h=from:subject:message-id; bh=6ObUhH6Z/DbZj7sOOb180am+Eh1jhL7E4Y+59Wc7eWw=;
+ b=owGbwMvMwCW21SPs1D4hZW3G02pJDBl+N0p09vx+NKn91f4KLlu9PWHJf9+7vp0pfL+lN0Qls
+ HX9nj6mjlIWBjEuBlkxRZZe87N3H1xS1fjxYv42mDmsTCBDGLg4BWAipssYGRrPPm/Zy8jg5+k5
+ Z0/Likcf6nf9P1yV/PxCep2o+RG5e+yMDDeX9vIXNTw/Kljj32lofdGtIKRdcOb1GTquKmzP3T4
+ zsQEA
+X-Developer-Key: i=wbg@kernel.org; a=openpgp;
+ fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
 
-The 'kmap_atomic' API implicitly disables preemption for the duration
-of its use. It merely cleans up the code by removing unnecessary
-operations, making it clearer and efficient.
+Prefer alphabetical order for the component_id sysfs attributes list in
+the Counter ABI Documentation file. This should make it easier for users
+to locate a component_id attribute in the list and its respective
+Documentation entry.
 
-Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+Suggested-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: William Breathitt Gray <wbg@kernel.org>
 ---
- arch/arm/probes/uprobes/core.c | 4 ----
- 1 file changed, 4 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-counter | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
-index 885e0c5e8c20..ebd17af0d865 100644
---- a/arch/arm/probes/uprobes/core.c
-+++ b/arch/arm/probes/uprobes/core.c
-@@ -116,16 +116,12 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 	void *xol_page_kaddr = kmap_atomic(page);
- 	void *dst = xol_page_kaddr + (vaddr & ~PAGE_MASK);
+diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/ABI/testing/sysfs-bus-counter
+index 3e8259e56d384225ec6e952b6d5d75208f185736..3e7eddd8aff3def02f1611e96ae638e415b64ae5 100644
+--- a/Documentation/ABI/testing/sysfs-bus-counter
++++ b/Documentation/ABI/testing/sysfs-bus-counter
+@@ -309,26 +309,26 @@ Description:
  
--	preempt_disable();
--
- 	/* Initialize the slot */
- 	memcpy(dst, src, len);
- 
- 	/* flush caches (dcache/icache) */
- 	flush_uprobe_xol_access(page, vaddr, dst, len);
- 
--	preempt_enable();
--
- 	kunmap_atomic(xol_page_kaddr);
- }
- 
+ What:		/sys/bus/counter/devices/counterX/cascade_counts_enable_component_id
+ What:		/sys/bus/counter/devices/counterX/external_input_phase_clock_select_component_id
+-What:		/sys/bus/counter/devices/counterX/countY/compare_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/capture_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/ceiling_component_id
+-What:		/sys/bus/counter/devices/counterX/countY/floor_component_id
++What:		/sys/bus/counter/devices/counterX/countY/compare_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/count_mode_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/direction_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/enable_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/error_noise_component_id
++What:		/sys/bus/counter/devices/counterX/countY/floor_component_id
++What:		/sys/bus/counter/devices/counterX/countY/num_overflows_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/prescaler_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/preset_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/preset_enable_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/signalZ_action_component_id
+-What:		/sys/bus/counter/devices/counterX/countY/num_overflows_component_id
+ What:		/sys/bus/counter/devices/counterX/signalY/cable_fault_component_id
+ What:		/sys/bus/counter/devices/counterX/signalY/cable_fault_enable_component_id
+ What:		/sys/bus/counter/devices/counterX/signalY/filter_clock_prescaler_component_id
++What:		/sys/bus/counter/devices/counterX/signalY/frequency_component_id
+ What:		/sys/bus/counter/devices/counterX/signalY/index_polarity_component_id
+ What:		/sys/bus/counter/devices/counterX/signalY/polarity_component_id
+ What:		/sys/bus/counter/devices/counterX/signalY/synchronous_mode_component_id
+-What:		/sys/bus/counter/devices/counterX/signalY/frequency_component_id
+ KernelVersion:	5.16
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250615-alphabetize-component_id-doc-1c449e7105c0
+
+Best regards,
 -- 
-2.48.1
+William Breathitt Gray <wbg@kernel.org>
 
