@@ -1,85 +1,68 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683C53D76;
-	Sun, 15 Jun 2025 01:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923B17548;
+	Sun, 15 Jun 2025 02:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749952482; cv=none; b=Yd5G2qdT2YEJQGWtj+6t4bsQ7zwchvywtUFsAW0xtkwDn3GrQtfWg5qygAJYdrpm3qGwfFHAqTvu6uDGg73nJWkJII+aDPRCxjQIX+kK+YaTEGecSjrrXd1GVoutjy3gJB8eWyR+3AT18dHgFcwool+fzIN1Zw8Tg+UjkXiwXgY=
+	t=1749954366; cv=none; b=IkSFKqp/uKDMCXyKgern+NbaE+nChr8YYr6Rp0xNXa+vav7qrG1fevUuUlFHCrO8aAdXNcqjWXd3HvbDaxKLKV419R+hBtygTSEdoqwMtfKKCyp7nQb0Dmf3swtkdz+3m1+a525SnohaIdP+IW9kN2N22CJPJg0PuXMZsGMsHZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749952482; c=relaxed/simple;
-	bh=6C2RDlJPH4hHsu7KG3FoXJp08o/U2CrlZ7oO+N9gI/o=;
+	s=arc-20240116; t=1749954366; c=relaxed/simple;
+	bh=iB4cIatf5tEhkaxazedaZKJ8PlFwYKX8Qrc7cvws45k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CrrdhYYRSl1c4TBIUpzjt5ST2oeZvFUdadvN59uP5Uz3WJ/TjSyBF5id0QucbfuzcdtjShjmWKMpKWnNBaZq+WUg9/JMDSLgUa2/gWP9uhPsY2P4dX5y/sKf/5Nz3qKJm3Ck3MjL+3lKWTY4wH2v2I9QcDAYuZNJm9qDvrSRdCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvQXn4Rt; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AEoYjPG3bhKQvjUXQ57ef2l9Boi7DiMLFz2EnyJ89DL3i42h8bP+NFU206APvxLknUl+XRLdsp79U7uUHDqzkpVE63PkayIHLMadld/tXQJAvWw/rwp13MC9lFeIWqw3+z01LsthUZEwW2ixuCfHdgkV3kHH49tH1K6mrnl5UkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRFEje/2; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvQXn4Rt"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-747e41d5469so3623147b3a.3;
-        Sat, 14 Jun 2025 18:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749952481; x=1750557281; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m6qcLpg2zNBg5kLLZmOuaMXSNL8jEGcJ0sEklYczzuM=;
-        b=hvQXn4RtMnKgtW/a7MEp7UkaB5o91IOVG/CEAv63mkLWs+8ZEvgWL+Zn076NwxLvhM
-         S1rwG7s7t7h+cRHrqXgD1rl2/H9OlI3E7bcyUajVntpV7XSlJ0iBQtu0BSkm9WsyaV/y
-         E3syaZNGGlq463KbdHbTeDR9RXzYiqMcWQbzEs7LN08eiXFmVL1CKb7BsBbkzA/I8Mcg
-         O9fQy+bs6DFK6q8g54RjfGL7Crwf6idcEcvBO2uGOyKZqJ7ZV/g3KEV6g5GiGeVtpMY6
-         vU4jem7u5ZQvJiYhrOmnS42vDIFJOqztLiZ9ETcAq91ZmjSH5tEAmwXJc+FTOiVV9iQq
-         lfOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749952481; x=1750557281;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m6qcLpg2zNBg5kLLZmOuaMXSNL8jEGcJ0sEklYczzuM=;
-        b=KJpU09tWBqbD+FLGvBl3J+veJElPv4n+p9aLczWvw5YNgUsezOsQ5thRAl4oWxFyc0
-         z2Vap+fa2Z27PMBO36jtTFczJ5pUPstII1o/h0Iyezx3pUgXVN/5z4QZiIQLA5jXOPYZ
-         0QaJ/kDsqxIU9G4eNhszSHGfQtSgFf51H/qtHjG4tb/irDRtKc6MuBEDIkOl0aAgTIIT
-         Be4q7gtsDhHSaOZbBB3rjuJYxKQs5wkhUimhLgK2FTTPJXYueo5o8/uKYzk55SLb0n5W
-         xKJ17dZ8SbcwxtBgh44Udeio9frw7+3VpkFIRfPMu3h1gKOoYSP7qNune1PUSQP5FpfP
-         7ajw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6lIYJCj96I7zadvmKFEWm0BFMFGHAvp5Q64b3D8Sfo0X/K3Ke+E9bWVLdCBuae29pc9lbQ2oj8/Fo@vger.kernel.org, AJvYcCUwIEuAzf0jjyB3fjdTg4t67r4Vk6pTIY+WZNQAaL6ctj03lsIkRjIEC/b4byOcBsZUX9Nzs+va@vger.kernel.org, AJvYcCXPi5oifw9g1oBStYH8Gm3okR82GAnUbM9idsQmCKJO1X2zS3/Uxcu9XCTdzcOlcMm2IkMzEAsweQ7dJD5E@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbG7YcFVwbRbmr2Hxfv9rDM+ffJzpamCZysJgwok8W490WoDWu
-	CAIQc6Z+KHG1I7hktLbn1A2z08OyMk3ncRJXtwZz3/iSZ6p73D5ZzCQe
-X-Gm-Gg: ASbGncvS7I683jdhNuh7WI1izwoO9EWMnJjy9LC2uElFTCmcOzuU6wiT/KyXKvJXjp8
-	r/7OxgY75zx7s6T907qfzhnKdO9WfG/qdiIk4BqTynvOA1xJZodGOZeuQY0BU1j1YsnyFjaMbbg
-	VFYrj5+BXZ/z9ktJOjYUuzkhXptgydRrwuEgCy5z/c4glgF/Ruj6ewt+dVi2+xVEOnVYegQ+osj
-	s/qpWVAfp4Gr3LHvztMVGXISd1VkW+0OUG3MA9/aw8pdUIZ/8AZdrc9u/ZhxKMUEJWm/mtbmI1s
-	3z5CCgJhFp2UaU+Mw4Qv2g7uP5fKiFqx8Yy9ayYMm8lyifJhMmN0GKnRPma5Dg==
-X-Google-Smtp-Source: AGHT+IEfbkfcZRq4LtMkAB1ieDknj+ZtHn8ASi39Vjkgb0xAmI76H9GASGCBjwsfab0bMI2SVyGiQw==
-X-Received: by 2002:a05:6a21:328c:b0:1fa:9819:c0a5 with SMTP id adf61e73a8af0-21fbd55aeefmr6746644637.11.1749952480676;
-        Sat, 14 Jun 2025 18:54:40 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2fe15bb83asm3467761a12.0.2025.06.14.18.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 18:54:40 -0700 (PDT)
-Date: Sun, 15 Jun 2025 09:53:27 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Andrew Lunn <andrew@lunn.ch>
-Cc: Inochi Amaoto <inochiama@gmail.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Richard Cochran <richardcochran@gmail.com>, 
-	Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
-	Ze Huang <huangze@whut.edu.cn>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH net-next RFC 0/3] riscv: dts: sophgo: Add ethernet
- support for cv18xx
-Message-ID: <risysfu5twua4won3jajotsg36ua6gpevoqnsawny3m2n5bj3g@srls6h24kmw5>
-References: <20250611080709.1182183-1-inochiama@gmail.com>
- <7a4ceb2e0b75848c9400dc5a56007e6c46306cdc.camel@gmail.com>
- <e84c95fa52ead5d6099950400aac9fd38ee1574e.camel@gmail.com>
- <05194937-8db3-4d90-9d03-9836c734fce1@lunn.ch>
- <55df35f66eeb8580b21337e4b2738801117c125a.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRFEje/2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749954364; x=1781490364;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iB4cIatf5tEhkaxazedaZKJ8PlFwYKX8Qrc7cvws45k=;
+  b=kRFEje/2GVAxsXWrBpmDjuUN2iIVhA5KdHGAkdLc8v47EStNAlfOxY66
+   c4FJp/LYUp3AuIeohA3+ZwXl9eXYMLktlq1wF7/H/MHiBwV5LHoOUuUX/
+   YEBlqpW9DRsRptkuMzt2D3eYQzHyUofQ9fl/ub6hlpGLm0T4QvWZnEc23
+   CKJ/qLE34ZMw2JOr4MfZAIy0s6gLsLfZT0DVv0OV+KaqQpHLbxKw7xOpp
+   cebrhUYq3j0jqE9NeNVD666aDpvuNDNZ/Tbj71ZuxVF/6c6B5IUaV+obA
+   wbGbkYSNpKr+bWAwYURPc5AwBL5ubdjV0UMGdLFfmhCS99kZpX0LbF0+Z
+   g==;
+X-CSE-ConnectionGUID: 8bkK/YYrSy2H8569FjMBXw==
+X-CSE-MsgGUID: 9fAMr8q/QAitrNVpqm9R/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="69706488"
+X-IronPort-AV: E=Sophos;i="6.16,238,1744095600"; 
+   d="scan'208";a="69706488"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 19:26:04 -0700
+X-CSE-ConnectionGUID: zSZDeOGPREKgcK3eXK8pQA==
+X-CSE-MsgGUID: jbqnQ90ZRt+wXFI4LRD4jA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,238,1744095600"; 
+   d="scan'208";a="153045407"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 14 Jun 2025 19:26:01 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQd4I-000E3Y-2T;
+	Sun, 15 Jun 2025 02:25:58 +0000
+Date: Sun, 15 Jun 2025 10:25:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, soc@lists.linux.dev,
+	Harshit Shah <hshah@axiado.com>
+Subject: Re: [PATCH 6/6] MAINTAINERS: Add entry for AXIADO
+Message-ID: <202506151027.IduXJqR2-lkp@intel.com>
+References: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-6-327ab344c16d@axiado.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,58 +71,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55df35f66eeb8580b21337e4b2738801117c125a.camel@gmail.com>
+In-Reply-To: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-6-327ab344c16d@axiado.com>
 
-On Sun, Jun 15, 2025 at 12:34:24AM +0200, Alexander Sverdlin wrote:
-> Sorry for confusion Andrew,
-> 
-> On Sun, 2025-06-15 at 00:20 +0200, Andrew Lunn wrote:
-> > > Also ethtool seems to be incompatible with mdio muxes :(
-> > 
-> > Please could you expand on that, because i don't know of a problem
-> > with mdio muxes and ethtool.
-> 
-> everything seems to be fine with ethtool and mdio mux!
-> (I accidentally mixed up host and target consoles)
-> 
-> # ethtool eth0
-> Settings for eth0:
->         Supported ports: [ TP MII ]
->         Supported link modes:   10baseT/Half 10baseT/Full 
->                                 100baseT/Half 100baseT/Full 
->         Supported pause frame use: Symmetric Receive-only
->         Supports auto-negotiation: Yes
->         Supported FEC modes: Not reported
->         Advertised link modes:  10baseT/Half 10baseT/Full 
->                                 100baseT/Half 100baseT/Full 
->         Advertised pause frame use: Symmetric Receive-only
->         Advertised auto-negotiation: Yes
->         Advertised FEC modes: Not reported
->         Link partner advertised link modes:  10baseT/Half 10baseT/Full 
->                                              100baseT/Half 100baseT/Full 
->         Link partner advertised pause frame use: Symmetric Receive-only
->         Link partner advertised auto-negotiation: Yes
->         Link partner advertised FEC modes: Not reported
->         Speed: 100Mb/s
->         Duplex: Full
->         Port: MII
->         PHYAD: 0
->         Transceiver: external
->         Auto-negotiation: on
->         Supports Wake-on: d
->         Wake-on: d
->         Current message level: 0x0000003f (63)
->                                drv probe link timer ifdown ifup
->         Link detected: yes
-> 
-> But we do have some troubles with the internal PHY with Inochi's patches
-> on SG2000, the above "Link detected: yes" is actually without cable
-> inserted.
-> 
+Hi Harshit,
 
-Interesting, I have tested this on my Huashan Pi. The link detected
-switch to "no" after I pull out the cable. I wonder the test step
-on your board.
+kernel test robot noticed the following build warnings:
 
-Regards,
-Inochi
+[auto build test WARNING on 8c6bc74c7f8910ed4c969ccec52e98716f98700a]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Harshit-Shah/dt-bindings-vendor-prefixes-Add-Axiado-Corporation/20250615-091516
+base:   8c6bc74c7f8910ed4c969ccec52e98716f98700a
+patch link:    https://lore.kernel.org/r/20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-6-327ab344c16d%40axiado.com
+patch subject: [PATCH 6/6] MAINTAINERS: Add entry for AXIADO
+reproduce: (https://download.01.org/0day-ci/archive/20250615/202506151027.IduXJqR2-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506151027.IduXJqR2-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/translations/zh_CN/how-to.rst references a file that doesn't exist: Documentation/xxx/xxx.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/axiado/
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+   Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
+   Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+   Using alabaster theme
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
