@@ -1,931 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8432F28C02C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B613428A1D9
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750102632; cv=none; b=NwR49PFbJ+JmlDdUt6GAb8pVk21nApq2+3hhhQQTPeImHB8nfSG5mfDKMG62hwLcrNh+b5zW9c/Pl3z1pthiz0wIDxvApcj9+7RPJc5e72+sPsvF+SBEj9cgplUuR24gdlnLJFX9vCWmCUa/BIqBqrPGZD/zw9zSXPe4yZUuBs4=
+	t=1750102667; cv=none; b=kHSZSGeKpCkHZCM1bC0Hdjm1X3kE52OKPb1NtttFyKq89ZG4c+qYlKBo9eRujhKSBwsUh0BiUCBcFngp7j3yYf720xSfgZdHrkchRP7jSbS3PJsfrS6LfS/xOL4NyrIPeXhNSxwyjDhwUSs57IyrWL78BIh09C9nF29sBziqt+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750102632; c=relaxed/simple;
-	bh=ORwbfL+jIEXWeReM6kk1P2eyrhTLNQfYkHXsnnN+UvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DWCFoTXLsz8WMHW35f9DNSV41r/i8pTgelA6rRKaxp7MbO1uhqbJZSbce7nomAO+yH+pLb8BFadT/+hI0njAS13YnZ+CiNUjlzuh3WKb0iaNnsb1bXBi2r8WlqcQbwEeUuMKH/QsciMoyk9WZdFRCiPbdN1EwwYYGMDbrKNWl50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04EFFC4CEEA;
-	Mon, 16 Jun 2025 19:37:10 +0000 (UTC)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: linux-m68k@lists.linux-m68k.org
-Cc: linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: defconfig: Update defconfigs for v6.16-rc2
-Date: Mon, 16 Jun 2025 21:37:07 +0200
-Message-ID: <365889e04f7289fdcb393911c18639486a0d3e73.1750102111.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750102667; c=relaxed/simple;
+	bh=MzrFurt+HBpg9fZltfNFjomT7VYJETh208VSpb61j2M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aLmcN/81VmBkhpl1vIP8ighbafloN+R5iarXyJoPQV4MfvpxlevBe8H4WYhDPSMFTfbyQhbhwvbGavJckRe318DCe2GaVQ3DFrzOaawAl+WrwKfNwGf2FQSOntXau7lzzMPdAG6XS/bLedwidEgs+NuiYC1HQPXhBJaiKP9S1HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca; spf=pass smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=gTIirC8b; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="gTIirC8b"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d21cecc11fso947740685a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1750102664; x=1750707464; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O2YgCoNVubGpzpwZU+Tpj9HlgT+VclFnu+kN+9dMbq0=;
+        b=gTIirC8b0Ea1vcCA3zC9IYL0lklFYs3aOuRar7F2auuw0p7ubJShZKLmqiXPeNj5fr
+         wSGJloGBxxPvZhBCF+8f7rxqNaDwJs4BKKGVZ3VDaK7v0al+ZcaCIJ7riwngmB+klYXz
+         2GbfbsUeZn08GkG8m6Rt2p5y+RFerKjZc/UI13gOXV+sLzmdfOoYnG9uQVtalo3w4ivD
+         z+7anlevFM7ll5kOd9MWVnwuzPd1D3h4vxZ8F9t344QcHVhpNgUm77CW/t09od4C1KpJ
+         OBJLA6ZQGS/V7UHQOAlMhWXdSr4g/oAjycU14wFN2EETaNkRqyYyvhNxL82FE1UViOWT
+         4uyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750102664; x=1750707464;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O2YgCoNVubGpzpwZU+Tpj9HlgT+VclFnu+kN+9dMbq0=;
+        b=JvHWQTjIHc8Dgamw5lcFcCvl3OBdXIl4AGVm90jCccKo7WDpu+tCb8f1rsiuhC6HnH
+         9htk7+BH8PJb3ixG/t0aYXv/Fh0lObryTk+0QBGp2MhY0zrQmTDT0/+ypY/OgyRn5PRU
+         jYB/GtlvQY3hiqDVGdWdCitCZDV3qN7klmZm5F7JZ38uxsnORmMyGcZtVxL5dlcLqoMJ
+         +pKmBRfOmPOTM3mZfGW59mIMEDnj1gzPg3Cfk18QEatn+isIPIGPq2T9WO/arCFREe24
+         66vPIazLTA/ZRtuh2HebSYH3B692lN2LClAKeYjwjwsroelui411RsDI9Z9v1vDsrlEO
+         AI7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXN7DtzB4InuBolAeJk7vWjlVyL+OWl/MQ548APmrPeQ4At+YWeOEXRfo7/jy9hxK1K7SXKDPYW2vpXIlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz41WgsTLm+oF/dKGaMYDVXu2DB4YqJBBg88qGL8kodnvehddPE
+	DS7B+mOaPGIDE/ewkdIQW3VdYEF5B0w7vicqhL8NmDX26DWKw+WOddup8msi2/Wnsfc=
+X-Gm-Gg: ASbGnctmkEjLJN4LvqICnPsyyPN52W8uC/LS5OINYjKu6wOcZP+iYzc7FJPV+0TJgge
+	SMCrJYi1N5HTZM8PrDzsM2ukj6PMHFIjPKMiTNZRT5MGSvAwhfwe8xPqWrp+FtsUTIny1yYWWT6
+	T8FKMgKxjSKOp/joqyUXjGXJ1Z9sjcqfAcLJSpqmXkGBL5tSBtDBohZhiZWOeE8becKIvYt+gFI
+	rixNkvbwt/Xp3Grjjkdsp5UYPS8EQGQSQGdQ7A92ADG6AS5Fz9KweDN94UzSDjeC9KQm+akwN29
+	4Us3dcu/OF6QtFW6dnQHRm8NTsNYCXX30uVc6FUc3ink7ta0tXZTwXztD3gpRvAqAq0t3WAeWnC
+	AUg==
+X-Google-Smtp-Source: AGHT+IGN5ofvK1QLhB3Iq9ZsAFvdbt7jcq5u8oDxQ3gRMavs2JTZOTHJjHcBA7M6zkSdgURMsiy7Cg==
+X-Received: by 2002:a05:620a:2a03:b0:7d3:8df8:cc04 with SMTP id af79cd13be357-7d3c6cc98efmr1651311785a.35.1750102664586;
+        Mon, 16 Jun 2025 12:37:44 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b699::c41? ([2606:6d00:17:b699::c41])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ed6630sm559553685a.89.2025.06.16.12.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 12:37:43 -0700 (PDT)
+Message-ID: <3d08da09653034128c48e97c1f6fad59c2ff5f35.camel@ndufresne.ca>
+Subject: Re: [PATCH v7 3/5] media: venus: Remove timeperframe from inst
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Ricardo Ribalda <ribalda@chromium.org>, Vikash Garodia	
+ <quic_vgarodia@quicinc.com>, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Stanimir Varbanov	 <stanimir.varbanov@linaro.org>,
+ Hans Verkuil <hans.verkuil@cisco.com>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 16 Jun 2025 15:37:42 -0400
+In-Reply-To: <20250616-test-v7-3-b8c0f98494fa@chromium.org>
+References: <20250616-test-v7-0-b8c0f98494fa@chromium.org>
+	 <20250616-test-v7-3-b8c0f98494fa@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-  - Enable modular build of the SCTP network protocol (no longer
-    auto-enabled since now commit 6f8b4788266c7df3 ("dlm: drop SCTP
-    Kconfig dependency")),
-  - Enable modular build of OpenVPN data channel offload,
-  - Enable modular build of Btrfs and XFS filesystem support, and
-    Universal TUN/TAP device driver support (no longer auto-enabled
-    since commit 92f3c5a0051d2b56 ("lib/test_kmod: do not
-    hardcode/depend on any filesystem")),
-  - Enable modular build of Null crypto algorithms (no longer
-    auto-enabled since commit 0c08c72980ea8218 ("crypto: krb5enc - do
-    not select CRYPTO_NULL")),
-  - Drop CONFIG_CRYPTO_CHACHA20POLY1305=m (selected by OVPN),
-  - Enable modular build of the simple prime number generator for
-    testing (no longer auto-enabled since commit 3f2925174f8bd811
-    ("lib/prime_numbers: KUnit test should not select PRIME_NUMBERS")),
-  - Enable the benchmark in the (modular) KUnit tests for CRC functions.
+Hi Ricardo,
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-To be queued in the m68k tree for v6.17.
+Le lundi 16 juin 2025 =C3=A0 15:29 +0000, Ricardo Ribalda a =C3=A9crit=C2=
+=A0:
+> The driver only cares about whole fps. We can infer the timeperframe
+> from the fps field. Remove the redundant field.
 
-I deliberately waited with this update until rc2, as commit
-28615e6eed152f2f ("mm/damon/Kconfig: enable CONFIG_DAMON by default"))
-was going to be reverted by commit aef17cb3d3c43854 ("Revert
-"mm/damon/Kconfig: enable CONFIG_DAMON by default"").
+I do have reserved about this change. Video standards commonly uses fractio=
+nal
+rates for videos. If my memory is correct, venus uses Q16 ... So with this =
+change,
+we now round all frame rate passed to encoders to an integer, which will in=
+troduce
+error in the resulting bitrate.
 
-CONFIG_NETFILTER_XT_MATCH_DCCP is no longer auto-enabled since commit
-2a63dd0edf388802 ("net: Retire DCCP socket."), but became a bit useless,
-and will probably be scheduled for deprecation[1], so I think there is
-no point in re-enabling it.
+Perhaps it was already broken, but if so, it should be fixed instead ?
 
-[1] "[PATCH nf-next] netfilter: conntrack: remove DCCP protocol support"
-    https://lore.kernel.org/20250521210011.194983-1-pablo@netfilter.org
----
- arch/m68k/configs/amiga_defconfig    | 9 ++++++++-
- arch/m68k/configs/apollo_defconfig   | 9 ++++++++-
- arch/m68k/configs/atari_defconfig    | 9 ++++++++-
- arch/m68k/configs/bvme6000_defconfig | 9 ++++++++-
- arch/m68k/configs/hp300_defconfig    | 9 ++++++++-
- arch/m68k/configs/mac_defconfig      | 9 ++++++++-
- arch/m68k/configs/multi_defconfig    | 9 ++++++++-
- arch/m68k/configs/mvme147_defconfig  | 9 ++++++++-
- arch/m68k/configs/mvme16x_defconfig  | 9 ++++++++-
- arch/m68k/configs/q40_defconfig      | 9 ++++++++-
- arch/m68k/configs/sun3_defconfig     | 9 ++++++++-
- arch/m68k/configs/sun3x_defconfig    | 9 ++++++++-
- 12 files changed, 96 insertions(+), 12 deletions(-)
+regards,
+Nicolas
 
-diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-index d05690289e330ba3..fa20abd069929d1e 100644
---- a/arch/m68k/configs/amiga_defconfig
-+++ b/arch/m68k/configs/amiga_defconfig
-@@ -267,6 +267,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -356,6 +357,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -375,6 +377,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_A2065=y
- CONFIG_ARIADNE=y
-@@ -448,8 +451,10 @@ CONFIG_RTC_DRV_RP5C01=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -548,6 +553,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -580,7 +586,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -600,6 +605,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -631,6 +637,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
-index a1747fbe23fb3c3b..3151ce39661c547b 100644
---- a/arch/m68k/configs/apollo_defconfig
-+++ b/arch/m68k/configs/apollo_defconfig
-@@ -263,6 +263,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -336,6 +337,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -355,6 +357,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_PPP=m
- CONFIG_PPP_BSDCOMP=m
-@@ -405,8 +408,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -505,6 +510,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -537,7 +543,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -557,6 +562,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -588,6 +594,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
-index 74293551f66bb110..6a52463d778ae550 100644
---- a/arch/m68k/configs/atari_defconfig
-+++ b/arch/m68k/configs/atari_defconfig
-@@ -270,6 +270,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -351,6 +352,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -370,6 +372,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_ATARILANCE=y
- CONFIG_NE2000=y
-@@ -425,8 +428,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -525,6 +530,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -557,7 +563,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -577,6 +582,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -608,6 +614,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
-index 419b13ae950a84ba..cdaeb4f648242108 100644
---- a/arch/m68k/configs/bvme6000_defconfig
-+++ b/arch/m68k/configs/bvme6000_defconfig
-@@ -260,6 +260,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -334,6 +335,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -353,6 +355,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_BVME6000_NET=y
- CONFIG_PPP=m
-@@ -397,8 +400,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -497,6 +502,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -529,7 +535,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -549,6 +554,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -580,6 +586,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
-index 4c81d756587c40d1..cb966cc46774792a 100644
---- a/arch/m68k/configs/hp300_defconfig
-+++ b/arch/m68k/configs/hp300_defconfig
-@@ -262,6 +262,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -335,6 +336,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -354,6 +356,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_HPLANCE=y
- CONFIG_PPP=m
-@@ -407,8 +410,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -507,6 +512,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -539,7 +545,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -559,6 +564,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -590,6 +596,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
-index daa01d7fb462b77d..97b6b07b003a358b 100644
---- a/arch/m68k/configs/mac_defconfig
-+++ b/arch/m68k/configs/mac_defconfig
-@@ -261,6 +261,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -347,6 +348,7 @@ CONFIG_MAC_EMUMOUSEBTN=y
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -366,6 +368,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_MACMACE=y
- CONFIG_MAC89x0=y
-@@ -424,8 +427,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -524,6 +529,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -556,7 +562,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -576,6 +581,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -607,6 +613,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
-index 641ca22eb3b20e28..ab76d6d0e6e603d9 100644
---- a/arch/m68k/configs/multi_defconfig
-+++ b/arch/m68k/configs/multi_defconfig
-@@ -281,6 +281,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -390,6 +391,7 @@ CONFIG_MAC_EMUMOUSEBTN=y
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -409,6 +411,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_A2065=y
- CONFIG_ARIADNE=y
-@@ -511,8 +514,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -611,6 +616,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -643,7 +649,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -663,6 +668,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -694,6 +700,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
-index f98ffa7a16406ce0..09c1c30a2ee8fbb0 100644
---- a/arch/m68k/configs/mvme147_defconfig
-+++ b/arch/m68k/configs/mvme147_defconfig
-@@ -259,6 +259,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -333,6 +334,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -352,6 +354,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_MVME147_NET=y
- CONFIG_PPP=m
-@@ -397,8 +400,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -497,6 +502,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -529,7 +535,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -549,6 +554,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -580,6 +586,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
-index 2bfc3f4b48f9bb04..983a512f99c0605c 100644
---- a/arch/m68k/configs/mvme16x_defconfig
-+++ b/arch/m68k/configs/mvme16x_defconfig
-@@ -260,6 +260,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -334,6 +335,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -353,6 +355,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_MVME16x_NET=y
- CONFIG_PPP=m
-@@ -398,8 +401,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -498,6 +503,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -530,7 +536,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -550,6 +555,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -581,6 +587,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
-index 2bd46cbcca2abd2d..edaf7f7b355e21a6 100644
---- a/arch/m68k/configs/q40_defconfig
-+++ b/arch/m68k/configs/q40_defconfig
-@@ -261,6 +261,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -340,6 +341,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -359,6 +361,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_NE2000=y
- CONFIG_PLIP=m
-@@ -414,8 +417,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -514,6 +519,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -546,7 +552,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -566,6 +571,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -597,6 +603,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
-index dc7fc94fc6695d1c..512686fb75d1c5fe 100644
---- a/arch/m68k/configs/sun3_defconfig
-+++ b/arch/m68k/configs/sun3_defconfig
-@@ -256,6 +256,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -330,6 +331,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -349,6 +351,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_SUN3LANCE=y
- CONFIG_SUN3_82586=y
-@@ -395,8 +398,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -495,6 +500,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -527,7 +533,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -547,6 +552,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -577,6 +583,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
-index b026a54867f5006c..28a8c35ece7e39d3 100644
---- a/arch/m68k/configs/sun3x_defconfig
-+++ b/arch/m68k/configs/sun3x_defconfig
-@@ -257,6 +257,7 @@ CONFIG_BRIDGE_EBT_REDIRECT=m
- CONFIG_BRIDGE_EBT_SNAT=m
- CONFIG_BRIDGE_EBT_LOG=m
- CONFIG_BRIDGE_EBT_NFLOG=m
-+CONFIG_IP_SCTP=m
- CONFIG_SCTP_COOKIE_HMAC_SHA1=y
- CONFIG_RDS=m
- CONFIG_RDS_TCP=m
-@@ -331,6 +332,7 @@ CONFIG_TCM_PSCSI=m
- CONFIG_NETDEVICES=y
- CONFIG_DUMMY=m
- CONFIG_WIREGUARD=m
-+CONFIG_OVPN=m
- CONFIG_EQUALIZER=m
- CONFIG_NET_TEAM=m
- CONFIG_NET_TEAM_MODE_BROADCAST=m
-@@ -350,6 +352,7 @@ CONFIG_PFCP=m
- CONFIG_MACSEC=m
- CONFIG_NETCONSOLE=m
- CONFIG_NETCONSOLE_DYNAMIC=y
-+CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_SUN3LANCE=y
- CONFIG_PPP=m
-@@ -395,8 +398,10 @@ CONFIG_RTC_DRV_GENERIC=m
- CONFIG_DAX=m
- CONFIG_EXT4_FS=y
- CONFIG_JFS_FS=m
-+CONFIG_XFS_FS=m
- CONFIG_OCFS2_FS=m
- # CONFIG_OCFS2_DEBUG_MASKLOG is not set
-+CONFIG_BTRFS_FS=m
- CONFIG_BCACHEFS_FS=m
- CONFIG_FANOTIFY=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
-@@ -495,6 +500,7 @@ CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
- CONFIG_CRYPTO_USER=m
-+CONFIG_CRYPTO_NULL=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_BENCHMARK=m
- CONFIG_CRYPTO_RSA=m
-@@ -527,7 +533,6 @@ CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
-@@ -547,6 +552,7 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- # CONFIG_CRYPTO_HW is not set
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_XZ_DEC_TEST=m
- CONFIG_GLOB_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
-@@ -578,6 +584,7 @@ CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
- CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_CRC_BENCHMARK=y
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
+>=20
+> Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+> =C2=A0drivers/media/platform/qcom/venus/core.h |=C2=A0 2 --
+> =C2=A0drivers/media/platform/qcom/venus/vdec.c | 15 ++++++++-------
+> =C2=A0drivers/media/platform/qcom/venus/venc.c | 16 ++++++++--------
+> =C2=A03 files changed, 16 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/pla=
+tform/qcom/venus/core.h
+> index 5b1ba1c69adba14c3560a4bc6d09435529f295a6..9cfb860e01e752bf9856a3550=
+f59c8c7b43647d2 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -413,7 +413,6 @@ enum venus_inst_modes {
+> =C2=A0 * @tss:		timestamp metadata
+> =C2=A0 * @payloads:		cache plane payload to use it for clock/BW scaling
+> =C2=A0 * @fps:		holds current FPS
+> - * @timeperframe:	holds current time per frame structure
+> =C2=A0 * @fmt_out:	a reference to output format structure
+> =C2=A0 * @fmt_cap:	a reference to capture format structure
+> =C2=A0 * @num_input_bufs:	holds number of input buffers
+> @@ -484,7 +483,6 @@ struct venus_inst {
+> =C2=A0	struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
+> =C2=A0	unsigned long payloads[VIDEO_MAX_FRAME];
+> =C2=A0	u64 fps;
+> -	struct v4l2_fract timeperframe;
+> =C2=A0	const struct venus_format *fmt_out;
+> =C2=A0	const struct venus_format *fmt_cap;
+> =C2=A0	unsigned int num_input_bufs;
+> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/pla=
+tform/qcom/venus/vdec.c
+> index fca27be61f4b869840904cc0577949635bc63cab..7d6612234d18a49573dc502d4=
+8ee61a900b63194 100644
+> --- a/drivers/media/platform/qcom/venus/vdec.c
+> +++ b/drivers/media/platform/qcom/venus/vdec.c
+> @@ -471,10 +471,12 @@ static int vdec_s_parm(struct file *file, void *fh,=
+ struct v4l2_streamparm *a)
+> =C2=A0		return -EINVAL;
+> =C2=A0
+> =C2=A0	memset(cap->reserved, 0, sizeof(cap->reserved));
+> -	if (!timeperframe->denominator)
+> -		timeperframe->denominator =3D inst->timeperframe.denominator;
+> -	if (!timeperframe->numerator)
+> -		timeperframe->numerator =3D inst->timeperframe.numerator;
+> +
+> +	if (!timeperframe->numerator || !timeperframe->denominator) {
+> +		timeperframe->numerator =3D 1;
+> +		timeperframe->denominator =3D inst->fps;
+> +	}
+> +
+> =C2=A0	cap->readbuffers =3D 0;
+> =C2=A0	cap->extendedmode =3D 0;
+> =C2=A0	cap->capability =3D V4L2_CAP_TIMEPERFRAME;
+> @@ -487,7 +489,8 @@ static int vdec_s_parm(struct file *file, void *fh, s=
+truct v4l2_streamparm *a)
+> =C2=A0	fps =3D min(VENUS_MAX_FPS, fps);
+> =C2=A0
+> =C2=A0	inst->fps =3D fps;
+> -	inst->timeperframe =3D *timeperframe;
+> +	timeperframe->numerator =3D 1;
+> +	timeperframe->denominator =3D inst->fps;
+> =C2=A0
+> =C2=A0	return 0;
+> =C2=A0}
+> @@ -1622,8 +1625,6 @@ static void vdec_inst_init(struct venus_inst *inst)
+> =C2=A0	inst->out_width =3D frame_width_min(inst);
+> =C2=A0	inst->out_height =3D frame_height_min(inst);
+> =C2=A0	inst->fps =3D 30;
+> -	inst->timeperframe.numerator =3D 1;
+> -	inst->timeperframe.denominator =3D 30;
+> =C2=A0	inst->opb_buftype =3D HFI_BUFFER_OUTPUT;
+> =C2=A0}
+> =C2=A0
+> diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/pla=
+tform/qcom/venus/venc.c
+> index b9ccee870c3d1238e04cef5e9344bd992d86d737..4979392aa20b6dc94895c7089=
+878531b92b57754 100644
+> --- a/drivers/media/platform/qcom/venus/venc.c
+> +++ b/drivers/media/platform/qcom/venus/venc.c
+> @@ -401,10 +401,10 @@ static int venc_s_parm(struct file *file, void *fh,=
+ struct v4l2_streamparm *a)
+> =C2=A0
+> =C2=A0	memset(out->reserved, 0, sizeof(out->reserved));
+> =C2=A0
+> -	if (!timeperframe->denominator)
+> -		timeperframe->denominator =3D inst->timeperframe.denominator;
+> -	if (!timeperframe->numerator)
+> -		timeperframe->numerator =3D inst->timeperframe.numerator;
+> +	if (!timeperframe->numerator || !timeperframe->denominator) {
+> +		timeperframe->numerator =3D 1;
+> +		timeperframe->denominator =3D inst->fps;
+> +	}
+> =C2=A0
+> =C2=A0	out->capability =3D V4L2_CAP_TIMEPERFRAME;
+> =C2=A0
+> @@ -416,8 +416,9 @@ static int venc_s_parm(struct file *file, void *fh, s=
+truct v4l2_streamparm *a)
+> =C2=A0	do_div(fps, us_per_frame);
+> =C2=A0	fps =3D min(VENUS_MAX_FPS, fps);
+> =C2=A0
+> -	inst->timeperframe =3D *timeperframe;
+> =C2=A0	inst->fps =3D fps;
+> +	timeperframe->numerator =3D 1;
+> +	timeperframe->denominator =3D inst->fps;
+> =C2=A0
+> =C2=A0	return 0;
+> =C2=A0}
+> @@ -431,7 +432,8 @@ static int venc_g_parm(struct file *file, void *fh, s=
+truct v4l2_streamparm *a)
+> =C2=A0		return -EINVAL;
+> =C2=A0
+> =C2=A0	a->parm.output.capability |=3D V4L2_CAP_TIMEPERFRAME;
+> -	a->parm.output.timeperframe =3D inst->timeperframe;
+> +	a->parm.output.timeperframe.numerator =3D 1;
+> +	a->parm.output.timeperframe.denominator =3D inst->fps;
+> =C2=A0
+> =C2=A0	return 0;
+> =C2=A0}
+> @@ -1454,8 +1456,6 @@ static void venc_inst_init(struct venus_inst *inst)
+> =C2=A0	inst->out_width =3D 1280;
+> =C2=A0	inst->out_height =3D 720;
+> =C2=A0	inst->fps =3D 15;
+> -	inst->timeperframe.numerator =3D 1;
+> -	inst->timeperframe.denominator =3D 15;
+> =C2=A0	inst->hfi_codec =3D HFI_VIDEO_CODEC_H264;
+> =C2=A0}
+> =C2=A0
