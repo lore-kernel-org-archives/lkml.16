@@ -1,146 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42CD69D2B;
-	Mon, 16 Jun 2025 20:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B806D19DF7A;
+	Mon, 16 Jun 2025 20:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750104062; cv=none; b=OAFKhK2dwusAsaI9I92YGmgUbfBMYO8ToH6mSxLnpGw85SZ4ISzuOyG9odnflyU60nDL+mHI9o2hq3HnmMiWJQoPnvV/iQf68xJapFUgZu5IzV2pvdKGd5sJ7WUlLeK6n1i3OdvDMcJS0ix3LCQ5LIQSnKmNBROQlBojoHwM3qA=
+	t=1750104230; cv=none; b=TuhFo1wAIWDlpZVYOKBGqeiahzTb9DltAppDtV5PRNpluL9+OT4kG4sm4j/CP1VkvrOBcmmbTHahcKOppM8S7hUnE3moS9mdbxCUNqKfBKU+9gN6D6b3PuchMTwa4ZDvoM+Hhvkkakgf0J05dprTRndwI+1XtU3wxmFTnbOPAoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750104062; c=relaxed/simple;
-	bh=63g4BFyDRQ9zPpgQi+aKRKc8QZqr403zshqDeyAnLYU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=jIc2r6LRBQWcnqoBcRYMje1JBF1wpMfBaJ9IJDGtv5E3BNw6b1fQMYrYTPc0Ki/OJUQI4q+W+mVf98FcrbXSdnoD8LwLXfSjO4uopwW1NE1Az3erIrSgTPcfbUj2oeXqZu7rkJNpmGY1Ah6kR1307S3uP4u7Apa/GQXYTflahFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIbLmxFk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750104230; c=relaxed/simple;
+	bh=JGrS1c9ZdMeBoubO6dQIr+rlJWSwYE9f3Ait9kKN8dE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qNsmx7bl5krOHSbRRdfDXVpz8pNC9eJB2GmceZOfPbQVXitAKA2cf8mXlEjj4L0/te4A5L2VCU+PRnL48kMjR9E18IIGTqmskxAz+pNobOTUFcBR01PRAGqLGEjtY92Rkagky8bA3AwXS3n1zpaIlyE9UwynRuGXiPbcku2TWbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJtVAMvs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIbLmxFk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC77AC4CEEA;
-	Mon, 16 Jun 2025 20:01:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJtVAMvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58D5FC4CEEA;
+	Mon, 16 Jun 2025 20:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750104061;
-	bh=63g4BFyDRQ9zPpgQi+aKRKc8QZqr403zshqDeyAnLYU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=MIbLmxFkQvDlWahGwOzhitZt0cSzoXdhWUHu8g8OkqZLAupve4SlpvOS2uS1ZEWmj
-	 UwQ2s8yA8tAesX44zSYXdwSfJqH8TXAO82zH05g97Z/1UOjr1700+pmtNnzQBgsvl8
-	 4ex7UC260hPMrrevOuoNx+ItcoPEWmxAHO8kKS0LskJGXsmB+Lw+lBdLI7AmEbxTyi
-	 Xaylvf43oG7bbuZKo2MFBbk3fvcCNc7E3lsmsbzOnTEhXlMNNdjS9szSMRmncYZuuz
-	 cV+XE+08Pnq5bgJ/0F99pB6Ea9gbVg9z6nnYTpH3+D1YHFBxVujigA5wdVTvZ/xroj
-	 anLaWnk5pcMew==
-Date: Mon, 16 Jun 2025 13:01:00 -0700
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-CC: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>,
- David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>,
- Marc Dionne <marc.dionne@auristor.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi <miklos@szeredi.hu>,
- Amir Goldstein <amir73il@gmail.com>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- "Tigran A . Aivazian" <aivazian.tigran@gmail.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
- Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
- coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
- Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
- Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>,
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
- Viacheslav Dubeyko <slava@dubeyko.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
- David Woodhouse <dwmw2@infradead.org>, Dave Kleikamp <shaggy@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Ryusuke Konishi <konishi.ryusuke@gmail.com>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>,
- Mike Marshall <hubcap@omnibond.com>,
- Martin Brandenburg <martin@omnibond.com>, Steve French <sfrench@samba.org>,
- Paulo Alcantara <pc@manguebit.org>,
- Ronnie Sahlberg <ronniesahlberg@gmail.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Bharath SM <bharathsm@microsoft.com>, Zhihao Cheng <chengzhihao1@huawei.com>,
- Hans de Goede <hdegoede@redhat.com>, Carlos Maiolino <cem@kernel.org>,
- Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>,
- Johannes Thumshirn <jth@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-afs@lists.infradead.org, linux-aio@kvack.org,
- linux-unionfs@vger.kernel.org, linux-bcachefs@vger.kernel.org,
- linux-mm@kvack.org, linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org,
- linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
- linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
- ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
- linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_03/10=5D_fs=3A_consistently_u?=
- =?US-ASCII?Q?se_file=5Fhas=5Fvalid=5Fmmap=5Fhooks=28=29_helper?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <b68145b609532e62bab603dd9686faa6562046ec.1750099179.git.lorenzo.stoakes@oracle.com>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com> <b68145b609532e62bab603dd9686faa6562046ec.1750099179.git.lorenzo.stoakes@oracle.com>
-Message-ID: <E0284B4E-A675-4855-87C8-CD13979710D6@kernel.org>
+	s=k20201202; t=1750104230;
+	bh=JGrS1c9ZdMeBoubO6dQIr+rlJWSwYE9f3Ait9kKN8dE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bJtVAMvsJUl0P4ra2MFaqGVdnZ9utODvPyoEd9oF1U4KupAs+4q1FaM+ZbI7BgBwq
+	 AQ75D0hO7PUMk3GqWagTlVNsGhUdENwZl3Wve7tcHz1g8Dc/RWAGC7W8LPLAhgb7aT
+	 WwYHCa7r6/C+KZGCO7To73OrmBTxCyyvSpN2er+wxuY7uskytRJ16iULtAo2g0YNot
+	 Mklcb8sjcIgz5RHoDEJm4Ro6KFpT9b42UvPNG0leqbg3klSqxSyDeASy+6d1H8KJBa
+	 jj0Jf2yYxovMZDMNxJ472UNnGWs2qJvPlIAAbTpeXiHIWS/0+Z0tQ7STGRD3N0OfY9
+	 iujzIqjMeTg9Q==
+Date: Mon, 16 Jun 2025 22:03:43 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
+	viresh.kumar@linaro.org, alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: Re: [PATCH v6 1/6] rust: acpi: add `acpi::DeviceId` abstraction
+Message-ID: <aFB4n-0_gTc3CAf4@pollux>
+References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
+ <20250613133842.1230254-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613133842.1230254-1-igor.korotin.linux@gmail.com>
 
+On Fri, Jun 13, 2025 at 02:38:42PM +0100, Igor Korotin wrote:
+> +impl DeviceId {
+> +    const ACPI_ID_LEN: usize = 16;
+> +
+> +    /// Create a new device id from an ACPI 'id' string.
+> +    pub const fn new(id: &'static CStr) -> Self {
+> +        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
 
+Please use build_assert!() for this check.
 
-On June 16, 2025 12:33:22 PM PDT, Lorenzo Stoakes <lorenzo=2Estoakes@oracl=
-e=2Ecom> wrote:
->Since commit c84bf6dd2b83 ("mm: introduce new =2Emmap_prepare() file
->callback"), the f_op->mmap() hook has been deprecated in favour of
->f_op->mmap_prepare()=2E
->
->Additionally, commit bb666b7c2707 ("mm: add mmap_prepare() compatibility
->layer for nested file systems") permits the use of the =2Emmap_prepare() =
-hook
->even in nested filesystems like overlayfs=2E
->
->There are a number of places where we check only for f_op->mmap - this is
->incorrect now mmap_prepare exists, so update all of these to use the
->general helper file_has_valid_mmap_hooks()=2E
->
->Most notably, this updates the elf logic to allow for the ability to
->execute binaries on filesystems which have the =2Emmap_prepare hook, but
->additionally we update nested filesystems=2E
->
->Signed-off-by: Lorenzo Stoakes <lorenzo=2Estoakes@oracle=2Ecom>
->---
-> fs/backing-file=2Ec     | 2 +-
-> fs/binfmt_elf=2Ec       | 4 ++--
-> fs/binfmt_elf_fdpic=2Ec | 2 +-
-
-Thanks for the refactoring!
-
-Acked-by: Kees Cook<kees@kernel=2Eorg>
-
-
---=20
-Kees Cook
+> +        let src = id.as_bytes_with_nul();
+> +        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
+> +        // SAFETY: FFI type is valid to be zero-initialized.
+> +        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
+> +        let mut i = 0;
+> +        while i < src.len() {
+> +            acpi.id[i] = src[i];
+> +            i += 1;
+> +        }
+> +
+> +        Self(acpi)
+> +    }
+> +}
