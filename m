@@ -1,132 +1,90 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5565C1A23A9
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85921E2312;
+	Mon, 16 Jun 2025 19:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750100573; cv=none; b=D5J0NKWDL4Mb5Mg4rSVxIDXFUII2mInPFzTPJyL9vRX8CFpERfE0a1zH/ymaBvDKZ9uJmPcLbsVKvpVV7IOAmxHNJlU5/gWKgtgDLManvQ3PByDDDma14YgRY3VekvIV5Ok+xd/Lw0NJZHy285D3vkECII32CiUZmDWzdxImasI=
+	t=1750100590; cv=none; b=lcn/LNQXD1A74AqfTuv9Y4RRSHudQLJm8e9/3M2XPEEnmkphA/lv99vSzx+q0ZVDKr2KGd7zLL1lr8itRPdpYyDtgglf4MmsW0JGGDH0IN83lGoByJGD1Xi4/pEjZD0P/97ktyPKXjggABTvO4Ly5N7XAxOLS/AcriHeVFLn7TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750100573; c=relaxed/simple;
-	bh=6+hoqbF7qU3gB6hPBCrL3ucYUOOv3ajc9wz+ntu6F1g=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ybj6b+qPN9NYO2mvyOHj3WgnMGaE/zhDyVSZHeJwPkh1y1HWQxmRkwVX1LMaOTj0IXMnpxu6uGLXVtUqxLVqlAfd2eQHP/FDHQ4ssyYBbJhhFgcn+5KXDDlmMPRL/A1rA9OpRNmVF+0PFW0BPDnRSYMkyyHpCAErZns6zjYrSV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=H+JE2fC3; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750100590; c=relaxed/simple;
+	bh=TiGn5vLTbl/cgQnK+m/xLhluHVT+QlPWoPVKqHQbM7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CBPmnsZc92IsaVAGfHpszBsNUMvhr5ok9o4+4FiJayVP9u3ltMWBG92lejCd/31SmLPYe9ljoSziMy1G5QcCndmaH1wxVnv2Rg8M9l1pfjQN81ZWNAK/FdFjBy1BPrfA/JH7V90ZwkDfvvdCvugvZJSXlwxfrowFq0YWZIHcIqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QhhiY1he; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="H+JE2fC3"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a440a72584so48118921cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750100569; x=1750705369; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI9wxfdohUcaRkceGSkpPvsSG7L6Cg48O4vTLDe4N7A=;
-        b=H+JE2fC3AYonTkMe14kXBMIV7G6fdDiK7+w0gQPWIn9k5kcjbKjkGvowbc0DjRa3Ca
-         ILPaF/qpD1ZEx9cy+TsfFDozx38QhhOmcTWz9K9QE1qPXJaKVDcNRrqRMfW3SdzdG/DV
-         ndw6qSWEHPeAPrbex4aArBdvxiz7tWfdYbEGS6ENQxLDCI6lkJr8+aryzfo+Kdlhujlm
-         br5WbsI0Ewl6CGBBacrvTKWqtbrXf68XbfHFyd404UNNt6ugRY7T++BRZrhZ1KAftTdw
-         92eHcx5jrZJVxSG285wiSzG3STE9RHrSrADKsmGQh5drPG4rVls0gp6DdA8GcIqIN5Eo
-         vrpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750100569; x=1750705369;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI9wxfdohUcaRkceGSkpPvsSG7L6Cg48O4vTLDe4N7A=;
-        b=xHvgtoSYh9JdWsaKgfRksHTlaxKcY/NVz79XS+DdCWj+tGaOfKq44KGHoU+SBhS5sK
-         zrG5KnXIqA5nU55z5EoAeaMgzL1fawFqOuCUDw8BVhIQwGH+bLxvGlnonWGF2qjYlqFj
-         2Y0monbJY+J9SQAvuXG8X7uv5K1IzR8wEX6mdJQI29njpaes1z018xmqNDp4/+OmT7OE
-         dXAQ/W+zbtOn5yUQ0PFc0Z9RoJhrACi6v3b6r8MY2b8JP2o8UHwznLxDgbF8mB53eQJT
-         RkrxcvcYi5Ins6aVzuHpwny+OiMDu+kBgzR++2wipoPe7XvQ4CCJDVZOp+MuJpE85W9m
-         Ny1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVAh6SqCFESZp8G3Yq7n4Bt4ilA2gvnR3jMm7gemuilTu9SuatyQnYI7LNgMOnnHXhAANzCzlOC6B3Hgn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6CWb/1kDREgR7pY/eM1if7MOmgDPJRevbGBOu73ALUsMvQ4bJ
-	kmKHpVQH6KHZA9Y0r+u1DlvRpMk7u7N9m23ck84sxdF1SjkQjSN//bi5XXAxMppgBlg=
-X-Gm-Gg: ASbGncs5k1INuNWH/HqewcM/PyB7MugDvKOnRWklylzDzrAMH1hiGVz75Ic3+ynHe4G
-	2wrXuF9Gkv0FfndHeEfEp7H05yDl9sWhgE605lUuMYVmgtHgVN12r0LNP/PPWUzVsLQn8EBWolC
-	9KaaYtRqSKPMPoPs/yZps77wJkp+uR5rG8zWTFS+HFa2k30v19prowC1ygBxN7AjzJxFvNqLtAF
-	MSyarxDbs2L2XVtSVYbIx7ATlBN9SRTfpdLZHMQig5JGpesPXi2vczjAenMIXqK0+Adn79nL0ug
-	nAgYIYhr5pB90IAXVNxxtOuoeiCMKQTiklRLgRF3gZLoMyO+iXmbdVPuryQIjgkZM6vLBF2oFl4
-	Wq6+JGc1K3AjRbYtpdMawuu6E6w==
-X-Google-Smtp-Source: AGHT+IGH1k7/kfQPsaNlU5APqCbpKu79g9Wmdgx0D/D/dqeH2i3+cbiUArmrWmkRhN5wTAe0Ot8Vlg==
-X-Received: by 2002:a05:622a:2d5:b0:4a2:719b:122e with SMTP id d75a77b69052e-4a73c53b18dmr167480441cf.18.1750100569165;
-        Mon, 16 Jun 2025 12:02:49 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a31716bsm52491081cf.35.2025.06.16.12.02.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 12:02:48 -0700 (PDT)
-Date: Mon, 16 Jun 2025 15:02:47 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>
-cc: Andrew Morton <akpm@linux-foundation.org>, 
-    David Laight <david.laight.linux@gmail.com>, 
-    Oleg Nesterov <oleg@redhat.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mul_u64_u64_div_u64: fix the division-by-zero behavior
-In-Reply-To: <f256c2d1-6f35-447d-9f21-30d0c4a2419a@t-8ch.de>
-Message-ID: <8s7595q6-208q-r756-qsrs-4ononrp3n7o0@onlyvoer.pbz>
-References: <q2o7r916-5601-11pn-30pn-8n5ns6p079o7@onlyvoer.pbz> <f256c2d1-6f35-447d-9f21-30d0c4a2419a@t-8ch.de>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QhhiY1he"
+Received: from [100.65.32.75] (unknown [20.236.11.185])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3B9562115DDF;
+	Mon, 16 Jun 2025 12:03:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B9562115DDF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750100588;
+	bh=Ms/yjK19i4V4dUp6b/HkFTJmVTcWiMdjhEutCQP1Ui4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QhhiY1he/OSRHCqghlsYJW44c9cGf3ubQZ/wSbYDD1hPk4sbD0mV+0ZYfHFBuO+cq
+	 ypYC7Mav5mJpnlUW3yk/q5qkT/7envmc6VsrgWSNAdyRmr/Yj1GfYxOXD7Xy14i36S
+	 Tte9h9EuH+I2E/VnpnTpf3+4avI24JhfLv2AA93c=
+Message-ID: <56b926e8-4b5c-45a8-882e-7c6be0e2fd26@linux.microsoft.com>
+Date: Mon, 16 Jun 2025 12:02:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463781375-202099526-1750100568=:1551"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Niklas Cassel <cassel@kernel.org>,
+ linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com, code@tyhicks.com,
+ Okaya@kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org
+References: <20250613153304.GA959741@bhelgaas>
+Content-Language: en-US
+From: Graham Whyte <grwhyte@linux.microsoft.com>
+In-Reply-To: <20250613153304.GA959741@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
----1463781375-202099526-1750100568=:1551
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
 
-On Mon, 16 Jun 2025, Thomas Weißschuh wrote:
-
-> On 2025-06-16 14:48:44-0400, Nicolas Pitre wrote:
-> > The current implementation forces a compile-time 1/0 division, which
-> > generates an undefined instruction (ud2 on x86) rather than a proper 
-> > runtime division-by-zero exception.
-> > 
-> > Change to trigger an actual div-by-0 exception at runtime, consistent
-> > with other division operations. Use a non-1 dividend to prevent the
-> > compiler from optimizing the division into a comparison.
-> > 
-> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> > 
-> > diff --git a/lib/math/div64.c b/lib/math/div64.c
-> > index 5faa29208bdb..eaa0c7e8b974 100644
-> > --- a/lib/math/div64.c
-> > +++ b/lib/math/div64.c
-> > @@ -212,12 +212,13 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-> >  
-> >  #endif
-> >  
-> > -	/* make sure c is not zero, trigger exception otherwise */
-> > -#pragma GCC diagnostic push
-> > -#pragma GCC diagnostic ignored "-Wdiv-by-zero"
-> > -	if (unlikely(c == 0))
-> > -		return 1/0;
-> > -#pragma GCC diagnostic pop
-> > +	/* make sure c is not zero, trigger runtime exception otherwise */
-> > +	if (unlikely(c == 0)) {
-> > +		unsigned long zero = 0;
-> > +
-> > +		asm ("" : "+r" (zero)); /* hide actual value from the compiler */
+On 6/13/2025 8:33 AM, Bjorn Helgaas wrote:
+> On Thu, Jun 12, 2025 at 09:41:45AM -0700, Graham Whyte wrote:
+>> On 6/11/2025 11:31 PM, Christoph Hellwig wrote:
+>>> On Wed, Jun 11, 2025 at 01:08:21PM -0700, Graham Whyte wrote:
+>>>> We can ask our HW engineers to implement function readiness but we need
+>>>> to be able to support exiting products, hence why posting it as a quirk.
+>>>
+>>> Your report sounds like it works perfectly fine, it's just that you
+>>> want to reduce the delay.  For that you'll need to stick to the standard
+>>> methods instead of adding quirks, which are for buggy hardware that does
+>>> not otherwise work.
+>>
+>> Bjorn, what would you recommend as next steps here?
 > 
-> This is OPTIMIZER_HIDE_VAR().
-
-Excellent! I thought I'd seen that somewhere but couldn't remember it.
-
-
+> This is a tough call and I don't pretend to have an obvious answer.  I
+> understand the desire to improve performance.  On the other hand, PCI
+> has been successful over the long term because devices adhere to
+> standardized ways of doing things, which makes generic software
+> possible.  Quirks degrade that story, of course, especially when there
+> is an existing standardized solution that isn't being used.  I'm not
+> at all happy about vendors that decide against the standard solution
+> and then ask OS folks to do extra work to compensate.
 > 
-> > +		return ~0UL/zero;
-> > +	}
-> >  
-> >  	int shift = __builtin_ctzll(c);
-> >  
-> 
----1463781375-202099526-1750100568=:1551--
+> Bjorn
+
+Hi Bjorn,
+
+Should someone want to implement readiness time reporting down the road,
+they'll need to do the same work as patch 1 in this series (making the
+flr delay a configurable parameter). This change lays the groundwork for
+that work, while also supporting devices that can't use readiness time
+reporting.
+
+Alternatively could we use a sysfs file to make this parameter
+configurable via the user space application? Similar to switching between
+d3hot and d3cold by writing to /sys/bus/pci/slots/$DEVICE/power.
+
+Thanks,
+Graham
+
