@@ -1,210 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B273A2BF016;
-	Mon, 16 Jun 2025 18:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11C52BF016
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750097448; cv=none; b=MDxoc9+DKzKTZhxis/k6rKpfyyX2tAerkd/lunsOfHAAjnauOenPZuZBMgvs6XN7Ewk+QVgPbLxGWEPWqngWenGLux01rrL3Iej8fp6AyQi8ESZuXa6L9lNO3wfPqYlEwdVA+42ythJdgnyNXwSeEHyxM0gu0cnGEfVSFFQBUNk=
+	t=1750097507; cv=none; b=sliGJ5qL29OtlOkKpk204lXmNb78/WNUut4cdQS3J4/m4in/b8rody4pEJYVvtJRTBUDvzPyJVxSxk/xP49qEjBacL/lJ1pwbTFLauNhGKkn8cnMpMvQ7KaCwXDnUoYzciH8ph4nGrvfY8SWsOdvUHlYfGUI6ta6xx+DOUfVb/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750097448; c=relaxed/simple;
-	bh=zcp3hWxFI7bS6tJM2iENzfDvEXGjKBN6nai3nvOKFZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SgLS1yCmgVDzqNj5sYJRWPTIsw45yVUTUqVKZ3jOEKd/qHS1IuJQfPDJAPeqkXPVQiOgJsZXEZCOkpTMmmdxSEoZ/yjhhGjVC3azhjBtpl1gstUvokL7vAseIMtmGZhB2wqL1Efq6r8AmUoziHnIZemgOkBSszc+KJLYaedYTdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6brB4q8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750097507; c=relaxed/simple;
+	bh=GcubAK2X5FhvX3lKn31wF5WScXm/MYVsYGhQM9zkOGI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mMvv7i4+TqFwhf8W0Tu1U4ymJSzhBeAWCfHdRzMWtXCWiviUiq7aQ/IAKJcg9NU0g2W8toJrjgK612aTQ17fpLTTONAiAtQBbO7AChbtamI/yiEXA8TcND0Bxg3IysL5PQwse3fyFgi6WrFfUXNHPo7Ohm/VvaMUn3J+pIxa5nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zEPEQBKd; arc=none smtp.client-ip=209.85.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6brB4q8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AF9CC4CEEA;
-	Mon, 16 Jun 2025 18:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750097448;
-	bh=zcp3hWxFI7bS6tJM2iENzfDvEXGjKBN6nai3nvOKFZ4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=O6brB4q8wPVw8z58AEOHqUKdrCd1b3HuM7igj6aJqfRhklOIN64o+cGfnyiPppmcs
-	 i+TLKqEn1nS0Fgw9mXY0UItkNj0wQ2dB6vmZ2FQkjeTl856L67k15NsdOyWiP50bS8
-	 Zzl3MyjclOJVTx5dtHrJBvODChOKgk+c5wVy1ethxL3+rCDr/qDklQitV2KUfuulLg
-	 zHBRcDVbmiQDaqYnRjWtWsBR3aEOmu/u7ZOONg7lVWwZekNS4wWGptIO4heYPajVAV
-	 ANMvzKsFTyeX2gbCcDpFCbmIxIl6XSpfwzDseIBeSTGcV601JcbGdoUwji8QUeO67x
-	 k7Ep8UVakl+bw==
-Date: Mon, 16 Jun 2025 08:10:47 -1000
-From: Tejun Heo <tj@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, David Ahern <dsahern@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jason Xing <kerneljasonxing@gmail.com>
-Subject: [PATCH v3 net-next] net: tcp: tsq: Convert from tasklet to BH
- workqueue
-Message-ID: <aFBeJ38AS1ZF3Dq5@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zEPEQBKd"
+Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-52af857ae54so1253124e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750097505; x=1750702305; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pigkyW7BcI5mVhb+n24BJs2W1x6DRYe3DJp6TE42oBU=;
+        b=zEPEQBKdr1Kkvc66JXmCRnuvjhgen1eYdEDfc0i9VLLbIrTQoHENRxpf5tRrIKkrOi
+         vxFIJiHSRgfazvIJZ+zNDLUuwTpDylKWNX9gt4pI/B4nqoTicOimCwYYHkVqwMM0dZFS
+         Glt4t6ZajPeRL/KiO9jhvqc9HRhUKQmF35hE7j/46+xuC6LTg+mJJcR/E3kCYnOPtmZ1
+         fyyWM60AXmX7teAoHMSq1qfM/z5L1pkcRpKaADz6NF4lZvn+gUeEhylZ4NDNCy1pt1pA
+         +rYrLV7ZEx6J6IW7SBkPurkZA8c5+EtA2+GjOejOszxN0Nx/CYEem/+hSAoiTbsqHS+8
+         gkQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750097505; x=1750702305;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pigkyW7BcI5mVhb+n24BJs2W1x6DRYe3DJp6TE42oBU=;
+        b=GmoVfSVplByvMdHvN+GeFoB5Tpcu+qqFUmK7thU2z964ICUYMJbUJFMKDwvhxoeltK
+         3K6Z0A1M9TBH6Q/gtp2AEADLImqtP3qY+BpMGdzlRgTC0jSugcgJNS3VxawZ1fkPiMmi
+         RIjHPlbOmNYMwftwqvpg7dRmYGc30oe/94gO575EDXpc1l+9V4nvtJoSSzF6BJLuMMwn
+         wRYirsmypidQKlyPB5+KhHN6jrV03lpWv7zDEhiKZeuGIreNATSqy+TBI44gJU13BVpD
+         0kGYyC+GWJtStagtDt/cQ6iimcoTgcDxv1QRs2C1lMIClghVrzzNp6XZqe3ADYTbpVeK
+         PDGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWycSFCr+B7ESSUdqfiR+KPBaHYNc1tuMcq6Aze2lEj95FP1LqSy/NLPnH6cVVhEf5+yrauAioBXLQ5bJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/z4reT6sXkO3XeC6MxrfPONJu2zh9ABMd3eNjCcb4i0G69wct
+	wUQhmiB4/X/7aOjXaFvm1zrz3N+A2XzacQXM7HkopaDYWudoP6oUS5JVfWwQv/ruL3zgBOainyy
+	GvRQFma/t+nrFToMWr3T2nA==
+X-Google-Smtp-Source: AGHT+IFZXqypOEwxBtiFkSoL0Ikspp8t9OtsymhRtCWrWcv9rJUKo8igKv++c/FKV95j2ID8qgoztEyOhECx1j5T
+X-Received: from vkbej10.prod.google.com ([2002:a05:6122:270a:b0:530:2c3a:a725])
+ (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6122:1b06:b0:531:172b:afe9 with SMTP id 71dfb90a1353d-53149927135mr7044462e0c.2.1750097504989;
+ Mon, 16 Jun 2025 11:11:44 -0700 (PDT)
+Date: Mon, 16 Jun 2025 18:11:44 +0000
+In-Reply-To: <202506142129.ClBlxdtW-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <202506142129.ClBlxdtW-lkp@intel.com>
+X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
+Message-ID: <20250616181144.2874709-1-jthoughton@google.com>
+Subject: Re: [PATCH v4 3/7] KVM: x86/mmu: Recover TDP MMU NX huge pages using
+ MMU read lock
+From: James Houghton <jthoughton@google.com>
+To: lkp@intel.com, pbonzini@redhat.com, seanjc@google.com
+Cc: dmatlack@google.com, jthoughton@google.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	oe-kbuild-all@lists.linux.dev, vipinsh@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-The only generic interface to execute asynchronously in the BH context is
-tasklet; however, it's marked deprecated and has some design flaws. To
-replace tasklets, BH workqueue support was recently added. A BH workqueue
-behaves similarly to regular workqueues except that the queued work items
-are executed in the BH context.
+> All errors (new ones prefixed by >>):
+> 
+>    arch/x86/kvm/mmu/mmu.c:7570:28: error: use of undeclared identifier 'KVM_TDP_MMU'
+>     7570 |         bool is_tdp = mmu_type == KVM_TDP_MMU;
+>          |                                   ^
+> >> arch/x86/kvm/mmu/mmu.c:7594:25: error: no member named 'tdp_mmu_pages_lock' in 'struct kvm_arch'
+>     7594 |                         spin_lock(&kvm->arch.tdp_mmu_pages_lock);
+>          |                                    ~~~~~~~~~ ^
+>    arch/x86/kvm/mmu/mmu.c:7597:28: error: no member named 'tdp_mmu_pages_lock' in 'struct kvm_arch'
+>     7597 |                                 spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
+>          |                                              ~~~~~~~~~ ^
+>    arch/x86/kvm/mmu/mmu.c:7617:27: error: no member named 'tdp_mmu_pages_lock' in 'struct kvm_arch'
+>     7617 |                         spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
+>          |                                      ~~~~~~~~~ ^
+>    4 errors generated.
 
-This patch converts TCP Small Queues implementation from tasklet to BH
-workqueue.
+Fixup for this below.
 
-Semantically, this is an equivalent conversion and there shouldn't be any
-user-visible behavior changes. While workqueue's queueing and execution
-paths are a bit heavier than tasklet's, unless the work item is being queued
-every packet, the difference hopefully shouldn't matter.
+I also realized that the variable name `is_tdp` is bad/misleading, so I've
+changed it to `is_tdp_mmu` as part of this fixup too. Sean/Paolo, let me know
+if I should just go ahead and post the fixed series, given the size of this
+fixup.
 
-My experience with the networking stack is very limited and this patch
-definitely needs attention from someone who actually understands networking.
+I don't really like having to #ifdef all the places where we take
+tdp_mmu_pages_lock, but I couldn't find a way to avoid that. Even doing
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING [IPv4/IPv6])
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org> (maintainer:NETWORKING [GENERAL])
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org (open list:NETWORKING [TCP])
----
-v3: Refreshed on top of net-next/main (8909f5f4ecd5 ("net: stmmac:
-qcom-ethqos: add ethqos_pcs_set_inband()")).
+  #ifndef CONFIG_X86_64
+  #define is_tdp_mmu false
+  #endif
 
- include/net/tcp.h     |    2 +-
- net/ipv4/tcp.c        |    2 +-
- net/ipv4/tcp_output.c |   36 ++++++++++++++++++------------------
- 3 files changed, 20 insertions(+), 20 deletions(-)
+didn't work. :(
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 5078ad868fee..feb7ac89a67c 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -321,7 +321,7 @@ extern struct proto tcp_prot;
- #define TCP_DEC_STATS(net, field)	SNMP_DEC_STATS((net)->mib.tcp_statistics, field)
- #define TCP_ADD_STATS(net, field, val)	SNMP_ADD_STATS((net)->mib.tcp_statistics, field, val)
- 
--void tcp_tasklet_init(void);
-+void tcp_tsq_work_init(void);
- 
- int tcp_v4_err(struct sk_buff *skb, u32);
- 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index f64f8276a73c..d84e8d5ff5e4 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -5243,6 +5243,6 @@ void __init tcp_init(void)
- 	tcp_v4_init();
- 	tcp_metrics_init();
- 	BUG_ON(tcp_register_congestion_control(&tcp_reno) != 0);
--	tcp_tasklet_init();
-+	tcp_tsq_work_init();
- 	mptcp_init();
+Anyway, here's the fixup:
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 10ba328b664d7..7df1b4ead705b 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -7564,10 +7564,10 @@ static bool kvm_mmu_sp_dirty_logging_enabled(struct kvm *kvm,
  }
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 3ac8d2d17e1f..a39275dad489 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1066,15 +1066,15 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
-  * needs to be reallocated in a driver.
-  * The invariant being skb->truesize subtracted from sk->sk_wmem_alloc
-  *
-- * Since transmit from skb destructor is forbidden, we use a tasklet
-+ * Since transmit from skb destructor is forbidden, we use a BH work item
-  * to process all sockets that eventually need to send more skbs.
-- * We use one tasklet per cpu, with its own queue of sockets.
-+ * We use one work item per cpu, with its own queue of sockets.
-  */
--struct tsq_tasklet {
--	struct tasklet_struct	tasklet;
-+struct tsq_work {
-+	struct work_struct	work;
- 	struct list_head	head; /* queue of tcp sockets */
- };
--static DEFINE_PER_CPU(struct tsq_tasklet, tsq_tasklet);
-+static DEFINE_PER_CPU(struct tsq_work, tsq_work);
  
- static void tcp_tsq_write(struct sock *sk)
+ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+-				      enum kvm_mmu_type mmu_type)
++				      const enum kvm_mmu_type mmu_type)
  {
-@@ -1104,14 +1104,14 @@ static void tcp_tsq_handler(struct sock *sk)
- 	bh_unlock_sock(sk);
- }
- /*
-- * One tasklet per cpu tries to send more skbs.
-- * We run in tasklet context but need to disable irqs when
-+ * One work item per cpu tries to send more skbs.
-+ * We run in BH context but need to disable irqs when
-  * transferring tsq->head because tcp_wfree() might
-  * interrupt us (non NAPI drivers)
-  */
--static void tcp_tasklet_func(struct tasklet_struct *t)
-+static void tcp_tsq_workfn(struct work_struct *work)
- {
--	struct tsq_tasklet *tsq = from_tasklet(tsq,  t, tasklet);
-+	struct tsq_work *tsq = container_of(work, struct tsq_work, work);
- 	LIST_HEAD(list);
- 	unsigned long flags;
- 	struct list_head *q, *n;
-@@ -1181,15 +1181,15 @@ void tcp_release_cb(struct sock *sk)
- }
- EXPORT_IPV6_MOD(tcp_release_cb);
+ 	unsigned long to_zap = nx_huge_pages_to_zap(kvm, mmu_type);
+-	bool is_tdp = mmu_type == KVM_TDP_MMU;
++	bool is_tdp_mmu = mmu_type == KVM_TDP_MMU;
+ 	struct list_head *nx_huge_pages;
+ 	struct kvm_mmu_page *sp;
+ 	LIST_HEAD(invalid_list);
+@@ -7577,7 +7577,7 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 	nx_huge_pages = &kvm->arch.possible_nx_huge_pages[mmu_type].pages;
  
--void __init tcp_tasklet_init(void)
-+void __init tcp_tsq_work_init(void)
- {
- 	int i;
+ 	rcu_idx = srcu_read_lock(&kvm->srcu);
+-	if (is_tdp)
++	if (is_tdp_mmu)
+ 		read_lock(&kvm->mmu_lock);
+ 	else
+ 		write_lock(&kvm->mmu_lock);
+@@ -7590,11 +7590,15 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 	rcu_read_lock();
  
- 	for_each_possible_cpu(i) {
--		struct tsq_tasklet *tsq = &per_cpu(tsq_tasklet, i);
-+		struct tsq_work *tsq = &per_cpu(tsq_work, i);
+ 	for ( ; to_zap; --to_zap) {
+-		if (is_tdp)
++#ifdef CONFIG_X86_64
++		if (is_tdp_mmu)
+ 			spin_lock(&kvm->arch.tdp_mmu_pages_lock);
++#endif
+ 		if (list_empty(nx_huge_pages)) {
+-			if (is_tdp)
++#ifdef CONFIG_X86_64
++			if (is_tdp_mmu)
+ 				spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
++#endif
+ 			break;
+ 		}
  
- 		INIT_LIST_HEAD(&tsq->head);
--		tasklet_setup(&tsq->tasklet, tcp_tasklet_func);
-+		INIT_WORK(&tsq->work, tcp_tsq_workfn);
- 	}
- }
+@@ -7613,8 +7617,10 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
  
-@@ -1203,11 +1203,11 @@ void tcp_wfree(struct sk_buff *skb)
- 	struct sock *sk = skb->sk;
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	unsigned long flags, nval, oval;
--	struct tsq_tasklet *tsq;
-+	struct tsq_work *tsq;
- 	bool empty;
+ 		unaccount_nx_huge_page(kvm, sp);
  
- 	/* Keep one reference on sk_wmem_alloc.
--	 * Will be released by sk_free() from here or tcp_tasklet_func()
-+	 * Will be released by sk_free() from here or tcp_tsq_workfn()
- 	 */
- 	WARN_ON(refcount_sub_and_test(skb->truesize - 1, &sk->sk_wmem_alloc));
+-		if (is_tdp)
++#ifdef CONFIG_X86_64
++		if (is_tdp_mmu)
+ 			spin_unlock(&kvm->arch.tdp_mmu_pages_lock);
++#endif
  
-@@ -1229,13 +1229,13 @@ void tcp_wfree(struct sk_buff *skb)
- 		nval = (oval & ~TSQF_THROTTLED) | TSQF_QUEUED;
- 	} while (!try_cmpxchg(&sk->sk_tsq_flags, &oval, nval));
- 
--	/* queue this socket to tasklet queue */
-+	/* queue this socket to BH workqueue */
- 	local_irq_save(flags);
--	tsq = this_cpu_ptr(&tsq_tasklet);
-+	tsq = this_cpu_ptr(&tsq_work);
- 	empty = list_empty(&tsq->head);
- 	list_add(&tp->tsq_node, &tsq->head);
- 	if (empty)
--		tasklet_schedule(&tsq->tasklet);
-+		queue_work(system_bh_wq, &tsq->work);
- 	local_irq_restore(flags);
- 	return;
- out:
-@@ -2639,7 +2639,7 @@ static bool tcp_small_queue_check(struct sock *sk, const struct sk_buff *skb,
- 	if (refcount_read(&sk->sk_wmem_alloc) > limit) {
- 		/* Always send skb if rtx queue is empty or has one skb.
- 		 * No need to wait for TX completion to call us back,
--		 * after softirq/tasklet schedule.
-+		 * after softirq schedule.
- 		 * This helps when TX completions are delayed too much.
+ 		/*
+ 		 * Do not attempt to recover any NX Huge Pages that are being
+@@ -7624,7 +7630,7 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 		 * logging is disabled.
  		 */
- 		if (tcp_rtx_queue_empty_or_single_skb(sk))
+ 		if (!kvm_mmu_sp_dirty_logging_enabled(kvm, sp)) {
+-			if (is_tdp)
++			if (is_tdp_mmu)
+ 				flush |= kvm_tdp_mmu_zap_possible_nx_huge_page(kvm, sp);
+ 			else
+ 				kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
+@@ -7637,7 +7643,7 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 			kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+ 			rcu_read_unlock();
+ 
+-			if (is_tdp)
++			if (is_tdp_mmu)
+ 				cond_resched_rwlock_read(&kvm->mmu_lock);
+ 			else
+ 				cond_resched_rwlock_write(&kvm->mmu_lock);
+@@ -7650,7 +7656,7 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 
+ 	rcu_read_unlock();
+ 
+-	if (is_tdp)
++	if (is_tdp_mmu)
+ 		read_unlock(&kvm->mmu_lock);
+ 	else
+ 		write_unlock(&kvm->mmu_lock);
