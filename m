@@ -1,218 +1,183 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEAB288513
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F0320C030
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091859; cv=none; b=bWWvCCdZGddFW6w7v8w00vRBB8likTRceZuF5nYW6NTSydFUqvVJBHc5+MkoH5l7NYk5YOoxrblNAIgvT9iuIfilcGJ6CHnFVnyECcaNAVgYAdZ8DFkwFNFh+RD1tT/NH3qIH+/5VeUFTz4/Qnd4R+YxdL5Ego62+D5vQpGN6Vo=
+	t=1750091900; cv=none; b=QSOa2+wYyoDhmH8hurOw9MvmFQGU1S0nJoVj+tiQLoJCqJDJIaa4oobWLFzPimS//K4QyQIcUgt/V46xZPrpd2PfNZkPXt55JNeTs+Kg6dDFQSLZLNhAJN2qp0LseXBf2zurVp+GhqruhBf+aoek31xhrFmmREH6ZBcs1xzC0ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091859; c=relaxed/simple;
-	bh=jW5HfvATi5Z8ZW87FpgOlN8bPYgpvBt6HYlAd7dl/Jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sstNWmqjzQmbvm7A0BG8L6YcBOpd0U0bwAE6UFv/IllOC2pUL6E+17eyqJpEts+3iydGWt5zoCvL1IJYghuGGHlTCBKjQaCo0DEavvS4zSzpDpqM9X67K0CbhPJpbbHCo+Jhwk2HaWGYprnZ5GoDSSFnZJy9PWfjDltlEbEzrqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U7HrwPZD; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750091900; c=relaxed/simple;
+	bh=VdMj41CG/GoyQ4OV5XmdOE4S5q9Mz3+ag815Parhci4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DsLKRJmy7fw6uOoJGOuVx4Gsns18YMBGJR4/w+ol6pmNEP6zZrgKEcxcWh8XU+F4IFNgfQjYRQgbemy94X3sGPfk6Lv3W3YDzsp+I9oybL8hhgV/9AUZ44s85DGK4UJfxtDyJHUw9Uen3+k2+xNCtBkCQfq3ajtqGqqDQabMe5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwB3kfEf; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U7HrwPZD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=l62OyoozhHfO7aZJMMaI9qB/kdyK7mbhb+vJUobYbZs=; b=U7HrwPZDjR1h8G4o1bU/2WLgya
-	ptr37m1n/kqIVkq+iTt7UmeJpJ2mNnZRpB22cwNtRkM/DMwQGg9UXMeqHeSREplPPAB6zVWq855wN
-	K/94oPqM/8FBuXXZxyj4A2LHutWUnDYcqUWUAqCMMZA9t8+s4ktwdowfXJW0kqJ3FGZiy4kc/oxwf
-	oZfuuVrLW8PDJd+8Unlow2IZzdxnpNwC7iBh1TyNUyiBin1DEzFtFn7ZxRfY0AnYovJZS4xG5kCml
-	3bxpEEuGtEzXh8CF8PRlHWD5pNBEfVKClJ6xQWReSVtFXRxDyKp9WYnCn1nPDhEYBv5lvp+2FwweT
-	sxwveNqQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRCpt-0000000GA2f-2yTW;
-	Mon, 16 Jun 2025 16:37:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0B64B30D551; Mon, 16 Jun 2025 18:37:28 +0200 (CEST)
-Date: Mon, 16 Jun 2025 18:37:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-Message-ID: <20250616163728.GB1613633@noisy.programming.kicks-ass.net>
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.984171377@infradead.org>
- <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
- <20250616120125.GB1613200@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwB3kfEf"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451d54214adso36958545e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750091897; x=1750696697; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MVOgHFnjJbaqD7diLL14lAkNgZLvbg+9Qxk9fcigUoo=;
+        b=KwB3kfEftSHD4i2ychXQKmyIO1PNzkQc38fsOO3BVYDfjBnxSiCttx0OuKh9AjSWBv
+         KMr235wLXghfj9FGw8eRH3HkDojWj+pznEy23S5dFBMqLqOicGo0u/G1Xmh8kM31IAvr
+         urIZ4o2456km+xvM2ETzKCuFkkeH0wrHm+ricMVgi4POI4hTj2fYVr41WdZqJi2Cxccx
+         J4ZJ6Q0FkUys2zHd3CB9DBdXRSQMSxwEZJPiNesGHv8bLS0Xibk1QUN/GL1aXXHL0f8C
+         ewPVoO5v25r9aBR/fZB7wg1pGQmfguuUL7DobWwZFykhsBhoUib0nBuyRjqBIOvEtxgt
+         yhzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750091897; x=1750696697;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MVOgHFnjJbaqD7diLL14lAkNgZLvbg+9Qxk9fcigUoo=;
+        b=gwmBHYgJsci6I9BjkW/52EAn3PJ496KdxG6pPxHMTOV6vNTz4NR8x5FBQ4LRXbR45D
+         vGs4CXwVZ/Qjt+I8OVQ397IvNGZXp+LZihuJagBlXJ7quzpFlzVZ/64xLDKKQzrOmLpr
+         jpNVo9RU221GYFWCPG+9rIQloKVmyoIUERBnW9hhhN96uQPfZXfWDQe+spyTPa4OdloT
+         6EiGlqiK4Cit84U6QqgvuSTxJsIfqptgExBL0aKrSODt1JZe4GVKmxVE3faFb2uZD1hc
+         FzziSZKrlF1pdysFXiDxVSO/9AlMe/GJ13W6nN9R9XEXIO0/bX4sZtmRye/z6ER6Ma6I
+         es1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUcvaL7LKDLcZpzJN1utN5ESarFb7qBzf8s0wVIGHBbslOUoc1ouLhunuqWfykTzPbeb136mCgMIaBE1w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd4H9Qfse4xxq/6soyuj6rs3rbzAs2tpNfl0PTeXqVKKDgYQHj
+	lphqP0Z+4YyXTFR/VQKF7FX9AlreMMwJmiGpc97PWwkdMSduLw3iE/0F
+X-Gm-Gg: ASbGncsvU7mWrOOlzF6GK2v0dVvcHc8hDonyp/VKYYANtHSDvL5ALW09UlqlnUTYc9n
+	qhdmuD89KRC+ntdhozoY4cPf5kOPFyCxOGvYV827zwArRP1OL2pxnSvemwdv6c4zzP1brfgEm1Y
+	Rn7wQtL4vdaleoSO6DI2xQk5dskFNt58/QIB6q67ENGk0pqKIgP4a+95GCtGV6TLg896zOvoEhg
+	HYoZnqyji72zK2sB8FlxBOwMET2Eh91RFrXQdDFXUixlMAIfusOjkHJrQKBD7DC8Teqrg86iK9O
+	YJmXTDBk7myJmrAEY2RfX3HfsbTFF9NUJzHetYMrs9rN6BVSngt1vehL5XpTG1EXFoMIj0WjrM1
+	0HOHWFdNkBFA=
+X-Google-Smtp-Source: AGHT+IEQDiZywIsXkW6ShknHqUsaYVDHo6ekrrWnpwL3ayETYiM2Qs7R99o4HPioFiT8g3kaKRocng==
+X-Received: by 2002:a05:600c:358b:b0:450:6b55:cf91 with SMTP id 5b1f17b1804b1-4533ca4681amr94620725e9.6.1750091896326;
+        Mon, 16 Jun 2025 09:38:16 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e09c2ffsm147725575e9.18.2025.06.16.09.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:38:15 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH v2] x86/boot: Don't return encryption mask from __startup_64()
+Date: Mon, 16 Jun 2025 16:36:12 +0000
+Message-ID: <20250616163704.849-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616120125.GB1613200@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 02:01:25PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 06, 2025 at 05:03:36PM +0200, Vincent Guittot wrote:
-> > On Tue, 20 May 2025 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > One of the things lost with introduction of DELAY_DEQUEUE is the
-> > > ability of TTWU to move those tasks around on wakeup, since they're
-> > > on_rq, and as such, need to be woken in-place.
-> > 
-> > I was thinking that you would call select_task_rq() somewhere in the
-> > wake up path of delayed entity to get a chance to migrate it which was
-> > one reason for the perf regression (and which would have also been
-> > useful for EAS case) but IIUC, 
-> 
-> FWIW, the trivial form of all this is something like the below. The
-> problem is that performance sucks :/ For me it is worse than not doing
-> it. 
+Avoid returning the SME encryption mask from __startup_64(), and instead
+let the function handle encryption directly as needed. The encryption
+mask is already available to callers and can be accessed via
+sme_get_me_mask() in C code, or directly through the sme_me_mask symbol
+in assembly, if CONFIG_AMD_MEM_ENCRYPT is enabled.
 
-And because I was poking at the thing, I had to try the complicated
-version again... This seems to survive long enough for a few benchmark
-runs, and its not bad.
+This change aligns with how secondary_startup_64_no_verify handles SME
+and keeps the behavior consistent. For Intel CPUs, SME is not relevant,
+so there is no need to retrieve the mask unless CONFIG_AMD_MEM_ENCRYPT
+is enabled.
 
-It very much burns after a while though :-( So I'll have to poke more at
-this. Clearly I'm missing something (again!).
-
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
 ---
-Index: linux-2.6/include/linux/sched.h
-===================================================================
---- linux-2.6.orig/include/linux/sched.h
-+++ linux-2.6/include/linux/sched.h
-@@ -994,6 +994,7 @@ struct task_struct {
- 	 * ->sched_remote_wakeup gets used, so it can be in this word.
- 	 */
- 	unsigned			sched_remote_wakeup:1;
-+	unsigned			sched_remote_delayed:1;
- #ifdef CONFIG_RT_MUTEXES
- 	unsigned			sched_rt_mutex:1;
- #endif
-Index: linux-2.6/kernel/sched/core.c
-===================================================================
---- linux-2.6.orig/kernel/sched/core.c
-+++ linux-2.6/kernel/sched/core.c
-@@ -3844,6 +3849,50 @@ static int ttwu_runnable(struct task_str
+ arch/x86/boot/startup/map_kernel.c | 11 +++--------
+ arch/x86/include/asm/setup.h       |  2 +-
+ arch/x86/kernel/head_64.S          | 12 +++++-------
+ 3 files changed, 9 insertions(+), 16 deletions(-)
+
+diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
+index 332dbe6688c4..6fdb340e9147 100644
+--- a/arch/x86/boot/startup/map_kernel.c
++++ b/arch/x86/boot/startup/map_kernel.c
+@@ -30,7 +30,7 @@ static inline bool check_la57_support(void)
+ 	return true;
  }
  
- #ifdef CONFIG_SMP
-+static void __ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags);
-+
-+static inline bool ttwu_do_migrate(struct task_struct *p, int cpu)
-+{
-+	if (task_cpu(p) == cpu)
-+		return false;
-+
-+	if (p->in_iowait) {
-+		delayacct_blkio_end(p);
-+		atomic_dec(&task_rq(p)->nr_iowait);
-+	}
-+
-+	psi_ttwu_dequeue(p);
-+	set_task_cpu(p, cpu);
-+	return true;
-+}
-+
-+static int ttwu_delayed(struct rq *rq, struct task_struct *p, int wake_flags)
-+{
-+	int cpu = task_cpu(p);
-+
-+	/*
-+	 * Notably it is possible for on-rq entities to get migrated -- even
-+	 * sched_delayed ones.
-+	 */
-+	if (unlikely(cpu_of(rq) != cpu)) {
-+		/* chase after it */
-+		__ttwu_queue_wakelist(p, cpu, wake_flags | WF_DELAYED);
-+		return 1;
-+	}
-+
-+	if (task_on_rq_queued(p))
-+		dequeue_task(rq, p, DEQUEUE_NOCLOCK | DEQUEUE_SLEEP | DEQUEUE_DELAYED);
-+
-+	cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
-+	if (!ttwu_do_migrate(p, cpu))
-+		return 0;
-+
-+	wake_flags |= WF_MIGRATED;
-+	/* shoot it to the other CPU */
-+	__ttwu_queue_wakelist(p, cpu, wake_flags);
-+	return 1;
-+}
-+
- void sched_ttwu_pending(void *arg)
+-static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
++static void __head sme_postprocess_startup(struct boot_params *bp,
+ 						    pmdval_t *pmd,
+ 						    unsigned long p2v_offset)
  {
- 	struct llist_node *llist = arg;
-@@ -3857,39 +3906,12 @@ void sched_ttwu_pending(void *arg)
- 	update_rq_clock(rq);
- 
- 	llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
--		struct rq *p_rq = task_rq(p);
--		int ret;
--
--		/*
--		 * This is the ttwu_runnable() case. Notably it is possible for
--		 * on-rq entities to get migrated -- even sched_delayed ones.
--		 */
--		if (unlikely(p_rq != rq)) {
--			rq_unlock(rq, &guard.rf);
--			p_rq = __task_rq_lock(p, &guard.rf);
--		}
--
--		ret = __ttwu_runnable(p_rq, p, WF_TTWU);
--
--		if (unlikely(p_rq != rq)) {
--			if (!ret)
--				set_task_cpu(p, cpu_of(rq));
--
--			__task_rq_unlock(p_rq, &guard.rf);
--			rq_lock(rq, &guard.rf);
--			update_rq_clock(rq);
--		}
--
--		if (ret)
--			continue;
--
--		/*
--		 * This is the 'normal' case where the task is blocked.
--		 */
--
- 		if (WARN_ON_ONCE(p->on_cpu))
- 			smp_cond_load_acquire(&p->on_cpu, !VAL);
- 
-+		if (p->sched_remote_delayed && ttwu_delayed(rq, p, WF_TTWU))
-+			continue;
-+
- 		ttwu_do_activate(rq, p, p->sched_remote_wakeup ? WF_MIGRATED : 0, &guard.rf);
+@@ -68,11 +68,6 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
+ 		}
  	}
  
-@@ -3933,6 +3955,7 @@ static void __ttwu_queue_wakelist(struct
- 	struct rq *rq = cpu_rq(cpu);
+-	/*
+-	 * Return the SME encryption mask (if SME is active) to be used as a
+-	 * modifier for the initial pgdir entry programmed into CR3.
+-	 */
+-	return sme_get_me_mask();
+ }
  
- 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
-+	p->sched_remote_delayed = !!(wake_flags & WF_DELAYED);
+ /*
+@@ -84,7 +79,7 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
+  * the 1:1 mapping of memory. Kernel virtual addresses can be determined by
+  * subtracting p2v_offset from the RIP-relative address.
+  */
+-unsigned long __head __startup_64(unsigned long p2v_offset,
++void __head __startup_64(unsigned long p2v_offset,
+ 				  struct boot_params *bp)
+ {
+ 	pmd_t (*early_pgts)[PTRS_PER_PMD] = rip_rel_ptr(early_dynamic_pgts);
+@@ -213,5 +208,5 @@ unsigned long __head __startup_64(unsigned long p2v_offset,
+ 	for (; i < PTRS_PER_PMD; i++)
+ 		pmd[i] &= ~_PAGE_PRESENT;
  
- 	WRITE_ONCE(rq->ttwu_pending, 1);
- 	__smp_call_single_queue(cpu, &p->wake_entry.llist);
-@@ -4371,17 +4394,8 @@ int try_to_wake_up(struct task_struct *p
- 		 * their previous state and preserve Program Order.
- 		 */
- 		smp_cond_load_acquire(&p->on_cpu, !VAL);
+-	return sme_postprocess_startup(bp, pmd, p2v_offset);
++	 sme_postprocess_startup(bp, pmd, p2v_offset);
+ }
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 692af46603a1..29ea24bb85ff 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -50,7 +50,7 @@ extern unsigned long acpi_realmode_flags;
+ 
+ extern void reserve_standard_io_resources(void);
+ extern void i386_reserve_resources(void);
+-extern unsigned long __startup_64(unsigned long p2v_offset, struct boot_params *bp);
++extern void __startup_64(unsigned long p2v_offset, struct boot_params *bp);
+ extern void startup_64_setup_gdt_idt(void);
+ extern void startup_64_load_idt(void *vc_handler);
+ extern void early_setup_idt(void);
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 3e9b3a3bd039..8b50bdd90927 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -106,18 +106,16 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 
+ 	/*
+ 	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
+-	 * the kernel and retrieve the modifier (SME encryption mask if SME
+-	 * is active) to be added to the initial pgdir entry that will be
+-	 * programmed into CR3.
+-	 */
++	 * the kernel.
++	 /
+ 	movq	%r15, %rsi
+ 	call	__startup_64
+ 
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+-	leaq	early_top_pgt(%rip), %rcx
+-	addq	%rcx, %rax
 -
--		if (task_cpu(p) != cpu) {
--			if (p->in_iowait) {
--				delayacct_blkio_end(p);
--				atomic_dec(&task_rq(p)->nr_iowait);
--			}
--
-+		if (ttwu_do_migrate(p, cpu))
- 			wake_flags |= WF_MIGRATED;
--			psi_ttwu_dequeue(p);
--			set_task_cpu(p, cpu);
--		}
- #else
- 		cpu = task_cpu(p);
- #endif /* CONFIG_SMP */
++	leaq	early_top_pgt(%rip), %rax
++	
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
++	addq	sme_me_mask(%rip), %rax
+ 	mov	%rax, %rdi
+ 
+ 	/*
+-- 
+2.49.0
+
