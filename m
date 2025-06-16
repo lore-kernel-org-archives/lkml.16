@@ -1,72 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E2B2BF017;
-	Mon, 16 Jun 2025 14:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A0214F98;
+	Mon, 16 Jun 2025 14:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084034; cv=none; b=QlTEYjWFshZrhgyt721Elx/2ph+WlmteXr4KNEZcFRrnJxxOojV0FfLoh1nyoFg7j/v4pDSwq5Ixsmxu1kylM9MCdShD+I0Ndw/SWy/30Q3YqU4jo3D+mqdvNA5oRazeLl/amei47LAlQBtg73NnaLAQTlirZF9LpAsr/iSuqk4=
+	t=1750084044; cv=none; b=CESF8mw/j3f0psaYNvgR2GLWyzX/qxCflOsyht0Aak2uKpOERUjW7GT5zuGhmWoyz89Ac69wiyJhtAwUU92TPwabffOBozBUXmDRVWnuoIff1zxsZtVhO3TOxSDsiEN0xG/xiUP9PlL+aw+2xAh9Q016ZZNDDoiUReWHRGTGJ8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084034; c=relaxed/simple;
-	bh=27LBzjkFKC0MWbPlUQj6Tt4KZ0Jk3l3sGSDRRlvA7Qg=;
+	s=arc-20240116; t=1750084044; c=relaxed/simple;
+	bh=uVv7MVHl65v5TQ5atsNpH/OqOcoy86TyB38oIyuB9Gs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhqpd05+UhJQEADLxrAhSAapzJgcZXVebK45QjJlK94hmpzaxc/fRZnN1M+UsdySERbhtToGCRSGHuq2yXg8dOWjHKsYdGubF7GDLKyqY2pQM1jqKSFKYHebLQBfn+XXsfp8Lu8fSZCWo8O6STI+N98YHF3lZQKLUc8b5uMMA4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NTVakR5S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0YFZDm17srCUptvQOJuPFde77adp9nqG2JgJsVUszy7sLtTd7um3LFLDG8wlwTo2R3GFm3kLuFH9xhXARzI82t5m3IDTyA5piLwBfJuijTRTQ83k4n9WBiZJ8tx7MDXw6yxMHzoj6bOWCExzcgjDxvmGdNqCmeZgqvdPBMJPkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3rR1IJ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NTVakR5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F3D8C4CEEA;
-	Mon, 16 Jun 2025 14:27:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3rR1IJ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A18EC4CEEA;
+	Mon, 16 Jun 2025 14:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750084034;
-	bh=27LBzjkFKC0MWbPlUQj6Tt4KZ0Jk3l3sGSDRRlvA7Qg=;
+	s=k20201202; t=1750084044;
+	bh=uVv7MVHl65v5TQ5atsNpH/OqOcoy86TyB38oIyuB9Gs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NTVakR5SXYu6c0BR4in/xtNji5OdDLRcOb+1S6kRPnlTkxHPWFuXHEYB2XKVOnV5V
-	 XKW8fuD7PUAxa0hc9pOLobc3bi0uPxw+HNln+mqm/IAkPNktMrm+/b1hQwe4msPHOt
-	 /RBrG+An7Q7/xCH/oFBha8sLE7asffKwinvo7s0gsMMJkwqWOFFVu1jWoUz0qVEXqh
-	 8nYbEvxVezT7bLn6rjAKCURMMss27siUxZLadBGHlsr1LHHNUVo8hPE4huYEBXn5E5
-	 fAacJRg0Mlzep6Qt2V5d4o+LEnwopKyEIQ5mGnZXFdLg6Twux+PSTbq1SyQ5q+r4bW
-	 c85QZmNSdOsqg==
-Date: Mon, 16 Jun 2025 16:27:07 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-fsdevel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org, dm-devel@lists.linux.dev, 
-	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, hch@lst.de, tytso@mit.edu, djwong@kernel.org, 
-	john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com, 
-	shinichiro.kawasaki@wdc.com, yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH 00/10] fallocate: introduce FALLOC_FL_WRITE_ZEROES flag
-Message-ID: <20250616-wasser-replizieren-c47bcfaa418a@brauner>
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
- <yq17c1k74jd.fsf@ca-mkp.ca.oracle.com>
+	b=m3rR1IJ5Z5MLV/cpapI9lGaiRVfRkzWtMkjIeTAvF839NaO/kONUVEoSEargbvt0g
+	 ijZRzVoyBwgcbpuJEgSdEcDfdBX5IQl73mEoVRlKeablQoA5rxJhmZM689Zb5T8ToB
+	 fdCwx3t8geYkoZrjO9ZGRZuG0cLuHVjdJuB9QRkFvypSEOY+zubQ6nX4XYLYsTpeC6
+	 Xr+75TddJ5YYQv+Ql9NHQi03Snbt6rUPNCXf3p60MBOMoY7rB/kZOPb5VPUG+imr/r
+	 GOHB1ZdDvzKneYlYz/jRpDmTL/0w0uwl8FwTKCST4fbcLlz1vwVz4OFsjw8VznQl2C
+	 c5IFXgTwtfqZw==
+Date: Mon, 16 Jun 2025 09:27:23 -0500
+From: Rob Herring <robh@kernel.org>
+To: Xueqi Zhang <xueqi.zhang@mediatek.com>
+Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	Ning li <ning.li@mediatek.com>, linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 1/8] dt-bindings: iommu: mediatek: Add mt8196 support
+Message-ID: <20250616142723.GA515421-robh@kernel.org>
+References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
+ <20250616025628.25454-2-xueqi.zhang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yq17c1k74jd.fsf@ca-mkp.ca.oracle.com>
+In-Reply-To: <20250616025628.25454-2-xueqi.zhang@mediatek.com>
 
-On Mon, Jun 09, 2025 at 09:47:13PM -0400, Martin K. Petersen wrote:
+On Mon, Jun 16, 2025 at 10:56:07AM +0800, Xueqi Zhang wrote:
+> 1. Mediatek has its own implementation for wrapper interrupts and
+> power management. Add the SoC specific compatible for MT8196
+> implementing arm,smmu-v3.
+> 2. APU SMMU need wait until its power is ready, thus add a phandle
+> smmu-mediatek-parents to its power node.
 > 
-> Zhang,
+> Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
+> ---
+>  .../bindings/iommu/arm,smmu-v3.yaml           | 24 ++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
 > 
-> > Changes since RFC v4:
-> >  - Rebase codes on 6.16-rc1.
-> >  - Add a new queue_limit flag, and change the write_zeroes_unmap sysfs
-> >    interface to RW mode. User can disable the unmap write zeroes
-> >    operation by writing '0' to it when the operation is slow.
-> >  - Modify the documentation of write_zeroes_unmap sysfs interface as
-> >    Martin suggested.
-> >  - Remove the statx interface.
-> >  - Make the bdev and ext4 don't allow to submit FALLOC_FL_WRITE_ZEROES
-> >    if the block device does not enable the unmap write zeroes operation,
-> >    it should return -EOPNOTSUPP.
-> 
-> This looks OK to me as long as the fs folks agree on the fallocate()
-> semantics.
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> index 75fcf4cb52d9..c9a99e54de69 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> @@ -20,7 +20,12 @@ properties:
+>    $nodename:
+>      pattern: "^iommu@[0-9a-f]*"
+>    compatible:
+> -    const: arm,smmu-v3
+> +    - description: MediaTek SoCs implementing "arm,smmu-v3"
+> +      items:
+> +        - enum:
+> +            - mediatek,mt8196-apu-smmu
+> +            - mediatek,mt8196-mm-smmu
+> +        - const: arm,smmu-v3
+>  
+>    reg:
+>      maxItems: 1
+> @@ -69,11 +74,28 @@ properties:
+>        register access with page 0 offsets. Set for Cavium ThunderX2 silicon that
+>        doesn't support SMMU page1 register space.
+>  
+> +  mediatek,smmu-parents:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      A phandle to the SMMU's power node. The SMMU should wait until its power
+> +      is ready
 
-That looks overall fine. Should I queue this up in the vfs tree?
+What's wrong with the power-domains binding? Don't add vendor specific 
+properties to a common IP block.
+
+Rob
