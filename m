@@ -1,183 +1,91 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A0D38FB0;
-	Mon, 16 Jun 2025 15:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087883; cv=pass; b=uSqh0G2ADeKUWDFrhr8B+20dI97uPNhZZdgcWP0/9Ezb9K6yXZD486wDWYAb4XZi1wDKL8MaIFTeXIfnbq7hAaPXUIGD7C/YwoYdZb2JPTlpCaCrhDIh4nQHb5w/oeN47xbdnk0uiidRRheYiod3JlN44UccDrIqN7cCvLusn9E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087883; c=relaxed/simple;
-	bh=IyNyE4rK4hkY3z7uAZZgkVqTnSDkDqzal28PUmVRGsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q6Faip4G97I632KhZ8NwHK/aOtgujaCI4+aYoW3ZgbvcsJ6CX3HTckPap9ltugckGZQ+t5AZSQfHGK24mgTYw/MXgERX3smwmqLPHLlf45sGWB3/vNPtHTGYfVvFlgIhZ4cMt/wua4xjjzZJF+nhM7l7xE51HM7jfu2zWKHLl+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=SWU8ZoOV; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B617207A26
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750087909; cv=none; b=t04R2IQncNMjGGT/Rpnq1mn7+6D2GrvzEw6j8rB6zZaIZI1msjGlRkh0h/GW7MxxC391Ga2LFZ3Lm6voFvM0GIdCMjUGtBwt6Ixmo820GDQMjsemmXQCRFlatvNmEFF71FbVhGFZ9dLeJnXDa6hK+YJlSrnhmD0NtYN4PKVCXmQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750087909; c=relaxed/simple;
+	bh=7CzTvyLE6DTblQzfw3RD6ogEwZk8s+fdfmjdEcIpXoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJMjs3gesdMgZ0gUaSeEJ5cvSDwiP+SS/1b2vBHvqfLSEGh6IIE5dbLPJEdaIDCivenkrKNF945a5wb6KYRA4nAWZ0U5s0knjLH45USFoSA/MW+ZBC0cHtVfXyWRSMYY2LHutaInB0CiDFyhb/Ba5SX+M8oGmNBf+wFkIp4YTEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aiNhe1Z6; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="SWU8ZoOV"
-ARC-Seal: i=1; a=rsa-sha256; t=1750087851; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Cgga3I8jF2zVzJLMOxq+Vn/77I5PkLmkTEtFZ7zNvJouifQS8tbvClE2MYxzRvqgv5KVzPwkMsKX2c8dbRw5aHEE/3p6BawvJT7ELQd2A/dXTwS/Q232zAh7k72IfEqxMWj/wct0nfysdOtrsy6wmTBOQ1YWREv9UelFbSUtMMk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750087851; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0BL+aG/UNNGLP1x4xgnCt14zsxQCcrfboSBpn0n95Mc=; 
-	b=dNmPhDbLjmWo3vNDqZAV9EaDNH0C+Nd6EWaKjh/gurcELJAgpGBk3PZFA3qlTTe9rbCGWjQHk9g5ZmMoK1gP/8stAwxj+jZv7f9YjMebrb1NxZXxPxGUcya6gQHqL98FvYUFoIJOBgFVMeycR6esHS9i3XNPYNIsO5Bha0wQpgI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
-	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750087851;
-	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=0BL+aG/UNNGLP1x4xgnCt14zsxQCcrfboSBpn0n95Mc=;
-	b=SWU8ZoOVqPfce4bWTOatjItj8sFTpIKwVX2258AwFPU8OkUv2qfeu9ySMT7l9ZJU
-	hOApFkMODZXMLbz4r7F2gtSRAFjq/z0WgTx1z/VEEVumTMuhTO23GeTEzAmQRhghH5a
-	DDVTRNOSby77h75bM5LvF0eCcqcswZ36jcaAHcnw=
-Received: by mx.zohomail.com with SMTPS id 1750087849499697.6715293869444;
-	Mon, 16 Jun 2025 08:30:49 -0700 (PDT)
-Message-ID: <5c971c09-c398-40a3-9ed5-ec38b6645e1d@collabora.com>
-Date: Mon, 16 Jun 2025 17:30:44 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aiNhe1Z6"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5FB0440E0184;
+	Mon, 16 Jun 2025 15:31:36 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id feiBQzKPPwPP; Mon, 16 Jun 2025 15:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750087885; bh=Coru9JF9ixy58nWJOrrolucTaNma61psdrk8eIxWJqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aiNhe1Z6M5zmgNL1sN/371PvhAjXustsg00lnce50ukxmlUN8xmNcXdXIWjq2ovCw
+	 Z7a3Jv+x/sUXreCluXbTo72cTuLb9mnohwDnAFnX7Wsx6rL2YFNR/eR/52lCLnjbQS
+	 YBZHCNDcR3AIuUvVccx5MjEkKkYM7SA/KNMWAyYAo6AmIbZ2BsxZPvsKLtORuBj6Ks
+	 01Mv+CFg0/+Jky2HlSMLYSY2U/T0XhTKs3Epbld9P3FRAQR2gpDakEV62yghMts6la
+	 FWrJwwu91V7WC/YgDXBT+0mKU+27gOz2w7/xmheHb6v8+VB93x3R7trYLAQWso5VPy
+	 E1mkohKmAVyb7D/tHr0wA17oCvUf3wNAb+IzXGGBOhMW7BMsrGTx+aP5I3gijJhECP
+	 y/6yZy/PTz8K/gz6QnJfeM9WAXxRxBfvUK2iM+rVHAxL7dp3rG4El2WYh66IIa0QfY
+	 FsUVWrOJpR+avjUk2qyZOK9Wf4gkHnZtRTc84qYvG1YbFV1rFJYR23+aERmXdDSzaO
+	 IyiPPhjdLA0htozAjkX1pq+sMSdkb8wTsgQTBIHzRJBFzlhHbqOCLNpExYf/J5lAcu
+	 hnq/AH0+DYE3tsHJTYG7pyEYO9EXn8lxVVBl2yCjCoVYvYLucOmsVznQ/q8l5rSxdk
+	 LR1V9Cx1dE0Ru8Rj4gMF8CfA=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E6F1240E016A;
+	Mon, 16 Jun 2025 15:31:17 +0000 (UTC)
+Date: Mon, 16 Jun 2025 17:31:11 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Khalid Ali <khaliidcaliy@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/startup: Let the caller retrieve encryption mask
+Message-ID: <20250616153111.GAaFA4v85VGWp9qIrY@fat_crate.local>
+References: <20250616123605.927-1-khaliidcaliy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: iommu: verisilicon: Add binding for VSI
- IOMMU
-To: Conor Dooley <conor@kernel.org>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
- nicolas.dufresne@collabora.com, p.zabel@pengutronix.de, mchehab@kernel.org,
- iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
- kernel@collabora.com
-References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
- <20250616145607.116639-3-benjamin.gaignard@collabora.com>
- <20250616-winter-strict-db98f85db22d@spud>
-Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20250616-winter-strict-db98f85db22d@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250616123605.927-1-khaliidcaliy@gmail.com>
 
+On Mon, Jun 16, 2025 at 12:34:13PM +0000, Khalid Ali wrote:
+> From: Khalid Ali <khaliidcaliy@gmail.com>
+> 
+> Don't return encryption mask . This makes __startup_64() to handle
+> doing the actual work including encrypting the kernel. The caller has
+> already access to encryption mask and can directly retrieve it. On C
+> code, the caller can call sme_get_me_mask() and include /arch/x86/include/asm/mem_encrypt.h
+> directly while on assembly functions like startup_64 the "sme_me_mask"
+> is directly accessible to them if CONFIG_AMD_MEM_ENCRYPT is set. This
+> also makes consistent with the way secondary_startup_64_no_verify label
+> is handled. On intel CPUs this is not even neccessary, so we should
+> retrieve the mask only if CONFIG_AMD_MEM_ENCRYPT is set.
 
-Le 16/06/2025 à 17:14, Conor Dooley a écrit :
-> On Mon, Jun 16, 2025 at 04:55:50PM +0200, Benjamin Gaignard wrote:
->> Add a device tree binding for the Verisilicon (VSI) IOMMU. This IOMMU sits
->> in front of hardware encoder and decoder blocks on SoCs using Verisilicon IP,
->> such as the Rockchip RK3588.
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
->> ---
->>   .../bindings/iommu/verisilicon,iommu.yaml     | 71 +++++++++++++++++++
->>   1 file changed, 71 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
->> new file mode 100644
->> index 000000000000..acef855fc61d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
->> @@ -0,0 +1,71 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iommu/verisilicon,iommu.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Verisilicon IOMMU
->> +
->> +maintainers:
->> +  - Benjamin Gaignard <benjamin.gaignard@collabora.com>
->> +
->> +description: |+
->> +  A Versilicon iommu translates io virtual addresses to physical addresses for
->> +  its associated video decoder.
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - items:
->> +          - const: verisilicon,iommu
-> You're missing a soc-specific compatible at the very least here, but is
-> there really no versioning on the IP at all? I'd be surprised if
-> verisilicon only produced exactly one version of an iommu IP.
+What Thomas told you about structuring commit messages:
 
-I only aware this version of the iommu for the moment.
-Does adding verisilicon,rk3588-iommu sound good for you ?
+https://lore.kernel.org/r/875xgziprs.ffs@tglx
 
->
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: Core clock
->> +      - description: Interface clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: aclk
->> +      - const: iface
-> Why "aclk" rather than core, to match the description?
+Do it please and then send patches.
 
-I will change that, the driver doesn't care of the clock name anyway
+Thx.
 
->
->> +
->> +  "#iommu-cells":
->> +    const: 0
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - clock-names
->> +  - "#iommu-cells"
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    bus {
->> +      #address-cells = <2>;
->> +      #size-cells = <2>;
->> +
->> +      vsi_mmu: iommu@fdca0000 {
-> The "vsi_mmu" label can be dropped here, it has no users.
+-- 
+Regards/Gruss,
+    Boris.
 
-ok.
-
-Thanks,
-Benjamin
-
->
-> Cheers,
-> Conor.
->
->> +        compatible = "verisilicon,iommu";
->> +        reg = <0x0 0xfdca0000 0x0 0x600>;
->> +        interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH 0>;
->> +        clocks = <&cru ACLK_AV1>, <&cru PCLK_AV1>;
->> +        clock-names = "aclk", "iface";
->> +        #iommu-cells = <0>;
->> +      };
->> +    };
->> -- 
->> 2.43.0
->>
+https://people.kernel.org/tglx/notes-about-netiquette
