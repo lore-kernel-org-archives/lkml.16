@@ -1,109 +1,111 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0837E1E1C36
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47FB35972;
+	Mon, 16 Jun 2025 14:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084440; cv=none; b=eGQmuOpJEgoE1QWg5wS6wNl1qhhhKgfdPAl/Pk1V5c102AWbxpI1oP/Bam7zFdKKsEIFoORxTzzQPF7AHE2RIOJj4Qm5I8gniVb0dtBP7zeyzgTtEdg+uC36ppcb9SMugYoqDvaP18+vsZu80cbLZmp/IQBbMwYeomIIsNN7txw=
+	t=1750084476; cv=none; b=FZSbWPeTGC0KLgoXoY1MlyFeg4Py7xYTsm6uAr8/y8ButCvSsJmNbENTkB47Vgh4ymJXXw/e7S04gtRj2J4UjxT/6PUtZV2q1nECiiRsy0jvJAKlNQnrVQDJAg4+RiuxKJlmvvdTk1Sr9esP+CqfflcIruwkoOQiIvk+oH9jHdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084440; c=relaxed/simple;
-	bh=4xNh2lhTG0rhBmyIj3i75Ktf9mjebgJlLZdNho8P3uE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EypFQmmDwP5UIiJ4FegSxQtm/a9ZLRy87bJrT3D4+Ssy7UTkOIyd37va47P4Xg+2PYWoMXP/9spmTOuLGHEo6NqH41JM9bGZ3+BsCzgeTS9OYoeEvmRPNpLWnjhdhk1Cb7P4IBjlKZjNAAJb+TQIqsO8eHDpIDiH8j3byFIJ1RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Soi7IpU6; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750084476; c=relaxed/simple;
+	bh=DFEXvJMtFPiUA+aGNpImiZasR8ptYJA6aCBipSdg4vQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KMODWONIKTFw2oP6bxm0fMzGZYGXxYaojLevy+40oJ5uk8qtjkuuS9Qh1YhACr4YPQo+Y/Zls6W4Zc+vAzF7OUKfrSfVsRvV1Q+25ate0diX4BSyMldHFRZnIr57pL+KamZp0RiTr5P9JBcJzYdZNaJoWBvt8O0PH/CZ+KlY9wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BL+W6iUS; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Soi7IpU6"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4533a53a6efso11138445e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:33:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BL+W6iUS"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so705470766b.2;
+        Mon, 16 Jun 2025 07:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750084436; x=1750689236; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bjYWwMAn574NDA8zKjETWNZDW1d4gxcRMlquZ/twLmI=;
-        b=Soi7IpU6wPZnUR6vS8qRQfzVUEZGKCgFZNiF47mYK7DM8ocSdijI6VHF4Inct1dmUL
-         THX1XIkRHTBGuhjTdxGXg+R+EWkpVTwQuC5v34A5B5wioQjFN9zkqm9TwUun/GK9+lqD
-         1BZ/BYUxEQnuWgTxpAtQAfvkFb06hyBMigEa20TIwfTPDb86PmNGS100TTUdsgIkHhJA
-         W8E2vxoQFVC0Yb7uJ/3Da9feLpUYjL6CflSS28+p2mC6a9jAx3q7sZKbmjLvlFA0/xGQ
-         gZOOg+nF0b8g/yiOE4pH22eB1WGGhum9mgFBSs/LOsxvv6nn9MKEp57CkQ2O8qNRnW4d
-         QXAA==
+        d=gmail.com; s=20230601; t=1750084473; x=1750689273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DFEXvJMtFPiUA+aGNpImiZasR8ptYJA6aCBipSdg4vQ=;
+        b=BL+W6iUSJBl63UvCBPkHzN8AoNmXwrgH53qNqK09Eq+neW/qdp2C68cA4ZP4oRM8Rl
+         PwVOe3LsiXRjwZxeJTuZKi9ABhgHV/38xfr1nZ1t2r8f2mX0aIyeE5qTzOBm9OVlYbAn
+         snS+SmG9mYDyF1w4+zQYux0hqnadIoPiD4eQyYgCEgc0ABhOtowmA4DcLzYEbwxXaogC
+         /w1Kb9pFL5ZZxo0tl1EfMePGNDhIwtmQBdTTwTSew8ICBZnLrtI5vKznnvW+xVKBjb84
+         qlh0bcR/qqALNjqpjiVP4KzKU8svSa6MxbXCeqTqLGHo7P7OLqGvKsJEEh6dUCigb4A2
+         +t/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750084436; x=1750689236;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bjYWwMAn574NDA8zKjETWNZDW1d4gxcRMlquZ/twLmI=;
-        b=XWvAk9Xpv/lZFiqFg+03JJON0rlgj4idCCnY+SqIpVzLCHkP0OpUDiNp/nW6+dv5HK
-         ZYRLjgx5EBaBhpvIWZe35hdKKq6LqUjYSHrJXG+ZSMvKJ9iAy8N/sCZXKTFFhJboqLuq
-         OpdcYR0xt/PilureKXrx3dk+8nLLp/arlRIOFGcNT4hcTFu5u1O8JsET1Opbd9LhRsrR
-         2umnajTC/02J8nnx82aOQ3jEOQyyEBorBvb8Up4oYpzltHPQxmF3I1TQsKk2R5WKFQmX
-         K1/V7z3m/zTW8L7XbHNsPdjmQ3ImoZOz7HAYFqJrQYevCJBbAxrupn8Q5Q9Yvi74EG6+
-         6FUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXM1jXRH+6QKEv1pDciEqYafjz7iMYZ6anMyDM5xNDKUP5Bno4QcWy+VwTcXC69hMNFThzYIZgC3eoy5PI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2nt3L/iWjEaNpXb8MwzipXivski8LrQDrv7anFOiNg+iAeNAL
-	8KinC2oaLJ3H+t+RCW3/vVBjwnOTPzYmBWQ8hwM6snawSIuRpiswwwX5jVB3HUfmbro=
-X-Gm-Gg: ASbGncuDyJ1SEPF7UneLJCEAUtoCUBn7opo0ZdBYrFOMdn4Ooijmr9XnAy4yCsrMjp5
-	cSY9/qhuQR+gj2YthsX/OBmeyNksdrG2uBP5x3pIR5hJP+5nnnJJ2uzH/JH9WxfNFJJISpG1kA8
-	KV+krAit0gtAbbw/CN516FaTEW3KTZEpcwaHIxg4Ni7nNcCWFlnWZWJI8QWkDh54YtP03+rRPRD
-	cFDjHInLWYiO2/OU1TdA8rJX1cb9vGhD/r83iP4gOlSCpjqHDg1Vdi0HJc4gu4YTj4gytMX7pCF
-	m7eIEHK9tqQl+wyh/CK7RZ9Z2MbdX7ns2TT8G8F9/pc3u/FMZla8NwmR/P+gEw==
-X-Google-Smtp-Source: AGHT+IEkKlsjTJOZ7xD1hvpkJ6pL/BYV7+Qy4hoDku5ob31YSgbW7jPZbexdLG5gWcjm4pcq4o+6/g==
-X-Received: by 2002:a05:600c:5013:b0:453:10c1:cb21 with SMTP id 5b1f17b1804b1-4533c8fe4b1mr97134035e9.8.1750084436289;
-        Mon, 16 Jun 2025 07:33:56 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4238:f8a4:c034:8590])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4533fc6578csm77862345e9.19.2025.06.16.07.33.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 07:33:55 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: add debug UART pins to reserved GPIO ranges on RB2
-Date: Mon, 16 Jun 2025 16:33:41 +0200
-Message-ID: <20250616143341.51944-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1750084473; x=1750689273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DFEXvJMtFPiUA+aGNpImiZasR8ptYJA6aCBipSdg4vQ=;
+        b=gw/jEpJT9M3ybyZUCsRTZAz0wSYkinULE0z5/eeQmG85WiZ9S2hu0MxKodQCMrAkzP
+         VdQbV85ED1RcPveJCpR+JuYUmVkTKdZack6QLffNxq4mQH/KlCs3dbabM+A4ogXgcDoO
+         JeX0fraJewGWpiLpTShvs0l/AjhdpmKUeR3XKW4JVX5m4BiyiEXkbOBrK0K60E/MfspW
+         fn+xzMAZFJM1Qi3bcTrscpJ19qNRZC5ubRXJb33Gbc8nTF7Vw1+H+jWk9iuANWbwwrN1
+         pT6KqY/xWpwBd/LeB18pg/Y89xkf5xbLPDI/WR5H0JrM495i9oihhfFVIU856MtGXyu9
+         nAGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBF9BQiHzelCiYCrjiatDtLlL1UTuO3cmtGQuOuww2+7boQWNvGX0Ilrlx8kQ7kdLJmtNOIxHJE9ultjnS@vger.kernel.org, AJvYcCXPTU98vOsv7aq51WGRZfxXBdp5RkYnkz6nxnTZvd3+gDjdG5tcNcZpyp/wLecXO7GVss7vIDiwFrs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo5TBVXtIKAhdslSeU5emUbBqfo0c3unVTYHl36t6AWug9cojg
+	MUUymxGRfAZ1PAD2/A5HdQAY01tU+FMznK2PcqjKXFVg5YpRHORXMWUvPHvvPDza9+yi2Qcg5bR
+	oQ/13h4Q1EQ93ldYN6pHQVWl8DgdsgQM=
+X-Gm-Gg: ASbGnctvd3A71LNmr/9GHV+QJ1ILX9q2tke399XPEAp8sFFWMUIwYmszSXm7qNJRPaZ
+	KghgQRywFWqGgoD+T3prJr3GR8lUJ0/Jq3aNFLWeTpd1aBn/xsaYsWIY39Uq7jY2WQzcrdh3Eni
+	UI+pGVduGv0SSv2Kd0TgimnvNjqg9zcAPhySLKQU161V+jzA==
+X-Google-Smtp-Source: AGHT+IExi7rlu4eVG9zpxRbZ1THysuegiIITJYtBdFpKDFG2wGo7gG26X02JFiwRtTaboWxl+UKcwdmPYJBC/gNcfsc=
+X-Received: by 2002:a17:907:9491:b0:ade:348f:384b with SMTP id
+ a640c23a62f3a-adfad32be97mr893727566b.20.1750084472996; Mon, 16 Jun 2025
+ 07:34:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250616090423.575736-1-andriy.shevchenko@linux.intel.com> <FR3P281MB1757C6A610D39EA737A19EFBCE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+In-Reply-To: <FR3P281MB1757C6A610D39EA737A19EFBCE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 16 Jun 2025 17:33:56 +0300
+X-Gm-Features: AX0GCFuIWjdQL_-Qmm6mFok5HZqwKNNtREbEjPA3yJABbs35ebxLxjCIJQd2S8k
+Message-ID: <CAHp75Ve68H448v3Tgv930yoMYCCKVC3kefuP+Rermj7SaiP41g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] iio: imu: inv_icm42600: Convert to uXX and sXX
+ integer types
+To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 16, 2025 at 5:16=E2=80=AFPM Jean-Baptiste Maneyrol
+<Jean-Baptiste.Maneyrol@tdk.com> wrote:
 
-GPIO12 and GPIO13 are used for the debug UART and must not be available
-to drivers or user-space. Add them to the gpio-reserved-ranges.
+> thanks a lot for having done all the work.
 
-Fixes: 8d58a8c0d930c ("arm64: dts: qcom: Add base qrb4210-rb2 board dts")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Please, avoid top-posting!
 
-diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-index a37860175d273..384427e98dfbd 100644
---- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-@@ -606,9 +606,8 @@ &sleep_clk {
- };
- 
- &tlmm {
--	gpio-reserved-ranges = <43 2>, <49 1>, <54 1>,
--			       <56 3>, <61 2>, <64 1>,
--			       <68 1>, <72 8>, <96 1>;
-+	gpio-reserved-ranges = <12 2>, <43 2>, <49 1>, <54 1>, <56 3>,
-+			       <61 2>, <64 1>, <68 1>, <72 8>, <96 1>;
- 
- 	uart3_default: uart3-default-state {
- 		cts-pins {
--- 
-2.48.1
+> Do you think it is possible to add a fixes tag so it can be backported to=
+ ease automatic backport of further patches?
+> Otherwise for sure all further fixes will have to be backported manually.
 
+The idea behind the series that it may depend on some kind of
+cleanups. In such a case (according to Greg KH) no need to have Fixes
+tag on a cleanup, because it's confusing. On the contrary the
+infrastructure for stable kernels will catch this up. You need to
+follow the Documentation on how to submit for stable (basically the
+main hint is to use stable@ in the Cc line _inside_ the commit
+message, as a tag).
+
+> The driver code is full of intXX_t and uintXX_t types which is
+> not the pattern we use in the IIO subsystem. Switch the driver
+> to use kernel internal types for that. No functional changes.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>
+> As noted before the pattern is used in less than 10% files in IIO,
+> So it's safe to assume that IIO prefers uXX/sXX types over C99 ones.
+
+--=20
+With Best Regards,
+Andy Shevchenko
