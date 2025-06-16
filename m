@@ -1,144 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F3B5A79B;
-	Mon, 16 Jun 2025 06:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25051C2335
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750053958; cv=none; b=VAASN7cq15m8R9oZO21ys+usHsvpGTMhxCyM6GwEVQShafT4oQKBrhLwlKRB84SFkeh1o4B9w9TaaYUmNIzVm+r9+GP0pFj9XGtfbzISHZ3nqyuHVcP7NFiNdT3C1Tt2yu6IpfkGUnGk53LQc6tT90xNaNczlfxpjcXH/hJBe3g=
+	t=1750053972; cv=none; b=UakHWVvQOeSgFKjUIrKSMYWMjXxZn0li53daD2bBo/1b9yierQqmMat3x+aMgfoFsChk+398q2ZL/sNx2nlw2y2uOlO888sKPsJ8KjmDscQJfV3Snj0T2gvN8kHhuSjBC/caxQd2vH3WwCPenmPr70EW4XBOPjXNhmUhfDrNrM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750053958; c=relaxed/simple;
-	bh=TzpmtX/vUICVRU32l59Sc0Qk3sBx7l2J4vSns0iJ/Lo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y901svnNNwYYRDk/U57tTQSsKgUQcw+4i4YsPbJsp3ZafKT/JFlI/C9yZ4gspLh6EDBFOj8byWIKqbxdvEk6P9RLhBFpg4l+g3FUlHbAfs26uVJU9gixM9e0Bpu3Tgt0umnUrTPrvPrpCORNcXUTm5m+uTeAIiKxE8BlaV3AUUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSEJ/cIW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750053972; c=relaxed/simple;
+	bh=WoYUkXX5dEjpc4Q8CoOZKqyAvikm7ooh9iJLKMzKBh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNe4eR2pmZUL236XnoHvCRqhv6z9Ybk/SkRFD4I4rjdpM7Z8Uzx/HFrfM05rSdM1lQaoOloTbexVOYxtPbw48+QmPf5JeNZQcbhjeQG5POTf6qwvud38wQ2xKksgPfRKSMt5BC9H2x2HwAhh7ROYbGETamaSG+OuOYmUp8FBk2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hofiwx60; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSEJ/cIW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D44C4CEEA;
-	Mon, 16 Jun 2025 06:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750053956;
-	bh=TzpmtX/vUICVRU32l59Sc0Qk3sBx7l2J4vSns0iJ/Lo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SSEJ/cIWWt8cawrwMkBQSkK05+pWBeBtXPg4a0NRoAIkecAIiL+P90ytHza2oX1sM
-	 KdQsXwMgmUKrGk2dHYyeC/0cy8RJPRDsHhKgcjRC4GiAEXlchVaeJq5ujEUyM5ZRI2
-	 MSeTkvrqpuEQVk4VSgqqtVY6g8re+iwXamKxHp9NJToVzTTiXusmxLy6epRQ67ydgA
-	 P2jTgB7ayPVxUgOADNly30Z1j/nBW7N41Ibcu24ljHQx+mN91MFp0mV1jtdEr1tLKq
-	 9c8W/VXZkm5njtgXHwbodNPAQxx9D4foQcr6hpJmRbgB47Bkea9M80MWizFb12nmGH
-	 CvqECjFZZoXiA==
-Message-ID: <f4430b9a-3275-405e-becf-ff62ae16f23c@kernel.org>
-Date: Mon, 16 Jun 2025 08:05:51 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hofiwx60"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750053971; x=1781589971;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WoYUkXX5dEjpc4Q8CoOZKqyAvikm7ooh9iJLKMzKBh0=;
+  b=hofiwx60WZvOLHzpElIUoiCv9FTx7+fAAXovp0jLFHq5qfpnDcmn16ld
+   qq1ccvAoVqAA2dQ/32k6vzWQGSf/Ua+6u9QyNx94VBT0eUY1h0ffRf4Pv
+   lJSDpLIDFYXOdENgVKeSXXL8URw1HsgHqnaGj5aiw+pPYVILjp4BM620s
+   4ituuuKu5vUIrbjFXWoch7NDyl0phDmwEbGuerP6TctOviXD7uH60BLc0
+   ELPLJOY7lAtqsabewlvK9oyKPw8l4hqjTLiCGqO6h0dmJro2ZyTMecKvI
+   7660auQs3x4reeD4Dx0iSlGzREV2PsVlLmyZ59y/gsp5smMhr9PnyxCr0
+   w==;
+X-CSE-ConnectionGUID: YbcF3Wf+TAuTqepb3PZBsQ==
+X-CSE-MsgGUID: A3n7/r93Q/OpDhEL5hJpaw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52054631"
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="52054631"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 23:06:10 -0700
+X-CSE-ConnectionGUID: A/Rc44HlRnaa603Q+EDAWA==
+X-CSE-MsgGUID: +ApACYJ3RIiM6TTrple6+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="148839611"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa010.fm.intel.com with ESMTP; 15 Jun 2025 23:06:08 -0700
+Date: Mon, 16 Jun 2025 13:58:58 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH] iommufd: Destroy vdevice on device unbind
+Message-ID: <aE+yopQb5T8VWk0i@yilunxu-OptiPlex-7050>
+References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
+ <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <yq5a8qlstht5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] dt-bindings: arm: axiado: add AX3000 EVK
- compatible strings
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- soc@lists.linux.dev
-References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-2-341502d38618@axiado.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-2-341502d38618@axiado.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5a8qlstht5.fsf@kernel.org>
 
-On 16/06/2025 06:31, Harshit Shah wrote:
-> Add device tree binding schema for Axiado platforms, specifically the
-> AX3000 SoC and its associated evaluation board. This binding will be
-> used for the board-level DTS files that support the AX3000 platforms.
+> While vdevice objects can still be explicitly destroyed using
+> iommufd_destroy(), with this patch, if the idevice is still bound,
+> attempting to destroy the vdevice will return EBUSY.
+
+I didn't get the necessity of this restriction. A vdev could not
+outlive idev, but it could be ended earlier than idev, isn't it?
+
 > 
-> Signed-off-by: Harshit Shah <hshah@axiado.com>
-> ---
->  .../devicetree/bindings/arm/axiado/axiado.yaml     | 23 ++++++++++++++++++++++
-
-Just arm/axiado.yaml
-
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/axiado/axiado.yaml b/Documentation/devicetree/bindings/arm/axiado/axiado.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f323162b7c3cf973754a3539b94a7534111886cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/axiado/axiado.yaml
-> @@ -0,0 +1,23 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/axiado/axiado.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Axiado Platforms
-> +
-> +maintainers:
-> +  - Harshit Shah <hshah@axiado.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: AX3000 based boards
-> +        items:
-> +          - enum:
-> +              - axiado,ax3000_evk       # Axiado AX3000 Evaluation Board
-
-No underscores in compatibles (just look at any other example).
-
-
-
-Best regards,
-Krzysztof
+> In effect, the change ensures that once a vdevice is created, its
+> lifecycle is tied to that of the idevice.
