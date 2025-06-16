@@ -1,42 +1,42 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83ED20D4F8
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745D202C50;
+	Mon, 16 Jun 2025 09:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750064996; cv=none; b=faHq6tAQ9m0OpP0RwGiUbHKkCzCD//2PyGyCFiHmXYw/BX1cvZYP6jii1ILYnXix5yxzDYK32i4P/onUwdIFQOxyUnROTBrxjh2dPBgLViDSukH4WGWqd50Dkq9nXCr9RFunz3D9e5yi/thMrUrfqdxG46J9JeKw9XTrG9zJg8w=
+	t=1750065022; cv=none; b=gF5RtiDU1IiXYB7XsU8Y9dIqvB6Rl4BNcXASvE7R5PJ1Mln/f+fWQtzvbFu+HYYt4YZMex64XvZ+fqWCX+uTTyeGbJCd9LxrM7oqt+i92hpoO68L6xDFnWJXwEWz0VE+9Kim/51qTnOkKffNhKD4+oUMBQ0t+YBYrUjV4WmJtlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750064996; c=relaxed/simple;
-	bh=3rrLsFGRkgwqakiZkwY9lo4QrXlqLwVthtdYujqyOVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=YUQAFOFebW4IkPz5EcwnDROpfFrouJDuvYoegx7aXSQ4K2aMYPiys1XTfSnhDOSOrpHJxIbbx9vq3SIaUUf1qGcmm6vwZuLq7J41rPI9xSaTTwAjv+9y1nw07jq0LGpieYMnhY2YbvTzgVbO5YQ6BfBCitepilARvOv+VIL3VM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=NJjjWtui; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750065022; c=relaxed/simple;
+	bh=Ab/azGHZAN5imCLvzke6FrRFhZsJl1QU6kgQsGu6z18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WNL0qhPFiuXmE3vd40uLorv+xVNHuehkHSPxJ+7CElHawwpQo8iRhsbCuBQHezW27rtr+xrHAL4egADBj6vPqfs4rQYN48vTOzqLMV8Dd/9OIzV9K8yD4PqS6z/M+pvuJ7e0Rr0ZE/Wvqrn7VW696OrgBC9IN/SoukbQAWcqeqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=xSBkN1Af; arc=none smtp.client-ip=212.227.126.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NJjjWtui"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250616090945euoutp0249071111059cc782053f64af467de364~JetTtoya11953619536euoutp02z
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:09:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250616090945euoutp0249071111059cc782053f64af467de364~JetTtoya11953619536euoutp02z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750064985;
-	bh=Z0yVDNlBuUeI2U5G9pnG88sUo+3LU8vld6YvrIkhECY=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=NJjjWtuiH8rQP1rLO+Qn29ldm7aH/ChlGrzo5voO7FGEzkE4eRwYtrAghrMJ1qEdP
-	 pYXMDPXEvc2SPnERO/SvJoRqMWNMp9pPt5+Fk5/14cuWB2tFCkCnyX/0IA0ziX3vRw
-	 E3glhShhovdXx4zJ4e/ZUFX1+Bhtz2spsF/SNLmQ=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250616090944eucas1p1ffc6fcf91024df239946d55f78cd73ab~JetTDE54A2755827558eucas1p16;
-	Mon, 16 Jun 2025 09:09:44 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250616090943eusmtip1582353473f82f3f625b89a1041e9e149~JetR4HUmp2738727387eusmtip1M;
-	Mon, 16 Jun 2025 09:09:43 +0000 (GMT)
-Message-ID: <9765c970-55cc-4413-9fd0-5e0cdfa900fa@samsung.com>
-Date: Mon, 16 Jun 2025 11:09:42 +0200
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="xSBkN1Af"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1750065018; x=1750669818;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=Ab/azGHZAN5imCLvzke6FrRFhZsJl1QU6kgQsGu6z18=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=xSBkN1AfEEtMEcgvvZ/bUfDrElxWGO4lHiVJfduxQyBf4lRe2XkT/+j90unZ1PTG
+	 V4FKNFIrNgG6RaFveuHeinzSDX5G1CtoRoky0dKhY5NLPRrC70dU82vZJ//mbDOqY
+	 JvK9WnkG0RTOr+F56qZtflomu1frtMf677lOD8GN/Mbgc6mrFufgj34qLGD6zxZyL
+	 SIYPRflsbyBJvdSG5SdR4b5gojDrfnNnmIJ3nbNA1VOBW72zD2v1+gjG6qdE9C117
+	 Lke+F58Q64Wwe6MaDDI2ln+2kS9zds0G4StGKAnwNwJCojcD6WzCTgtvmqAvS3kiA
+	 9oe/9gle4d1LYNZ7Ag==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.107] ([62.226.41.128]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N336L-1unjU43iov-00wUjJ; Mon, 16 Jun 2025 11:04:57 +0200
+Message-ID: <3d449803-1880-46df-aacb-b42e757f90ab@oldschoolsolutions.biz>
+Date: Mon, 16 Jun 2025 11:04:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,77 +44,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 8/8] drm/imagination: Enable PowerVR driver for
- RISC-V
-To: kernel test robot <lkp@intel.com>, Drew Fustini <drew@pdp7.com>, Guo Ren
-	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
-	<matt.coster@imgtec.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
-	Szyprowski <m.szyprowski@samsung.com>
-Cc: Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran
-	<fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2] dt: arm64: qcom: sc8280xp-x13s: amend usb0-sbu-mux
+ enable gpio
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>
+References: <20250610-x13s-usb0-mux-v2-1-598454e6ad64@oldschoolsolutions.biz>
+ <aEffYQND8eUgJbua@hovoldconsulting.com>
+ <64d963bd-b38c-4f14-bb1d-f7e89dad999a@oldschoolsolutions.biz>
+ <aE_cejDMmmU48jMp@hovoldconsulting.com>
 Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <202506151839.IKkZs0Z0-lkp@intel.com>
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <aE_cejDMmmU48jMp@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250616090944eucas1p1ffc6fcf91024df239946d55f78cd73ab
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250615105256eucas1p21dba29a1450757d9201b2a9c7f0e34e8
-X-EPHeader: CA
-X-CMS-RootMailID: 20250615105256eucas1p21dba29a1450757d9201b2a9c7f0e34e8
-References: <20250614-apr_14_for_sending-v4-8-8e3945c819cd@samsung.com>
-	<CGME20250615105256eucas1p21dba29a1450757d9201b2a9c7f0e34e8@eucas1p2.samsung.com>
-	<202506151839.IKkZs0Z0-lkp@intel.com>
+X-Provags-ID: V03:K1:9n3JJbsirUUTnyIWevxVAiWuOHNYigcxz+SL06SugMshZXOjIiV
+ 453xsIWJL6OFGFydTArw3j7+8lS7o5zlQej4L/HIrYlhSI4UGbBDK613IcVCOh0oYQFSsTm
+ gOCv4dgAUGnpfeYTPaAtqxFPWN1Lk+NmZ/qCUpqqvmgTN8rU7tU55tsqwce6TeRCp/Hj22n
+ zzIyv5Jt2o0fSq62YCI/Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:cuZjWuahtNg=;xzMFAAhf5qPzgZEqeXX/sUeuZFB
+ UwIH1oC4TX3N0ucQW1rpI4M0tGbh6L1u7pvPz5iz4ui5iY7peuwMGkR4Moy9Kg/BXJUxkkWCA
+ IBZnwjCqgmLE3ApwcBE5q8oDZUERhR6eJNAhxoS6el9tpn220DuO73Z+RAOcHeqMwJspQPhyu
+ Unz2raRiRVW4OQvsE3hs6vHTTp9Uf377eMbsM6IJV1gDEn+t555tv2irHkJMRfz+saTXxgKqZ
+ s9Y8CTeawhvFqCjVajIojbh0qirJHDXELjt4d1FxexwoooCgY0Cs6udLdbjdwou2zNv81ZQjm
+ Td2V8nlyXTMsDpLyz8khFWMHpBcbFOOETAHossNfCB+keYS8+XthSFScy9iauNQyo4G/LJwYe
+ UJDrJ3C0OiHNcjsXwTnxTg/Q7Hok5fVPMZzkHwp7E8vWS7txR7YeFXJ46ObKiCVcZIuajmrnm
+ wExo89uVkTNgDRndnuYsjLUL+pTS+DM6rs8en7Eua5gwLn3QCtAsPNIqXfNNBm5h2clPVszyb
+ HHLNfmTpI5L6YkZ0iItSdLUkPK15B2IRMvdXvWbalmon5j0LSTZuYUnx5QnrRb118rX5mQYJv
+ w/TD+tiw/NZLOmOWwNN2sQ+XA2vCxlqZCvUmDN3Hx3h4nY+017ttCmq7t41voPcpmC/RJResE
+ 916LAkg+nyXl2VF0tY/hksfb7H5UFWeei97xFfqt18b16EILeo7XryCamIlX1ymZgJTolYFdL
+ biD21MBx7UkYmmKSD14EfHXZZ7umC0AM18nhun/P5KDGYAY7QRkLQM/HA0hund5ecRn9K6YZs
+ kbXMtPMuT+1t5HETB6TR0pwObUlF8yzSuEUEy4cmtDhq1AQzi/o+Ps9WHnvfEg2OqEFvg+Cql
+ DUt3mj0UrD+dHjonkwMRYqct9DAq15MbiFPi4jOjRIzyh7kYs6tTQQic+HcPHKzJf99aKynFX
+ 0oZ8Mx0vEihhrw+pxbWoQlBsE3jlKG06+zkMSaTTsGI45/YAMasqsHOCzuqBZCwj8kQ7vgQFJ
+ 1Vbls3MvqIF7GtmPMXcQOupqjK7jd3k33+Hj04dfXjJz8e5CtttgIGm/I/Eyc1tmZE8CccTJC
+ +wPijOc2RxL7xtvSV70+KPPtLFpU6/0YJINnJtDjyGIgHy/yHrsiGITzFudDxeh0zLUVJAVXS
+ VT24TjZmaDTxGvc9O0nOz/2jo0boVYtG2InALThxDVlJAq0sdFb5AVqdTlTI6UINHCOB1K623
+ R3H3QEcuOvyDzAIQWhxq+hdqkY6Zxmawj4QpwR+RKpe3UNmKtH+qjVOCz7IDp3wbWXtAAYscN
+ zOLLORCPCijwmd9KIG4gK0g+0W/Ep3u/MIqXlvE1lGGiGH/VuNKztZFufpUZBUQ/z/CLEIqVr
+ r//BldTiemqSuDJWrsrLzBJV0LcMfATyOHqCtiAOcRAbpAaZIFlnD/SniP
 
+On 16.06.25 10:57, Johan Hovold wrote:
+> No, this patch should not be picked up now.
+>
+> But you may want to revisit the other related patches for other boards
+> that you sent in case they too are based on some misunderstanding.
+>
+> Johan
 
+That, I did. No changes except for this one.
 
-On 6/15/25 12:51, kernel test robot wrote:
-> Hi Michal,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on 4774cfe3543abb8ee98089f535e28ebfd45b975a]
-> 
-> url:    https://protect2.fireeye.com/v1/url?k=6c3bc994-0cd954c9-6c3a42db-000babd9f1ba-30c2378fa012fc4a&q=1&e=c39c960c-4d5f-44d7-aed7-0097394dfc81&u=https%3A%2F%2Fgithub.com%2Fintel-lab-lkp%2Flinux%2Fcommits%2FMichal-Wilczynski%2Fpower-sequencing-Add-T-HEAD-TH1520-GPU-power-sequencer-driver%2F20250615-021142
-> base:   4774cfe3543abb8ee98089f535e28ebfd45b975a
-> patch link:    https://lore.kernel.org/r/20250614-apr_14_for_sending-v4-8-8e3945c819cd%40samsung.com
-> patch subject: [PATCH v4 8/8] drm/imagination: Enable PowerVR driver for RISC-V
-> config: riscv-kismet-CONFIG_DRM_GEM_SHMEM_HELPER-CONFIG_DRM_POWERVR-0-0 (https://download.01.org/0day-ci/archive/20250615/202506151839.IKkZs0Z0-lkp@intel.com/config)
-> reproduce: (https://download.01.org/0day-ci/archive/20250615/202506151839.IKkZs0Z0-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202506151839.IKkZs0Z0-lkp@intel.com/
-> 
-> kismet warnings: (new ones prefixed by >>)
->>> kismet: WARNING: unmet direct dependencies detected for DRM_GEM_SHMEM_HELPER when selected by DRM_POWERVR
->    WARNING: unmet direct dependencies detected for DRM_GEM_SHMEM_HELPER
->      Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && MMU [=n]
+with best regards
 
-I believe this is triggered because RISC-V can be compiled without MMU
-support, while MMU support is mandatory for ARM64.
+Jens
 
-Would an acceptable fix be to require an explicit dependency on the MMU,
-like so?
-
-depends on (ARM64 || RISCV) && MMU
-
->      Selected by [y]:
->      - DRM_POWERVR [=y] && HAS_IOMEM [=y] && (ARM64 || RISCV [=y]) && DRM [=y] && PM [=y]
-> 
-
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
