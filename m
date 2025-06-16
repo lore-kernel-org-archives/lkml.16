@@ -1,231 +1,157 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B931C2BEFFA;
-	Mon, 16 Jun 2025 14:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085266; cv=fail; b=sZ8/APXsaRHhAsDQa9nnEqrgL83ZlkeZEgQrVXrRTXU/5gNFUxAsz5v6ec/GFM+CGFNdGiMms3bMR5v6PGsYl94Tno1/X0u6pPJIij02ji//q+ocTZqMgZ4ANOMufv8D93XGgqV0F0Q0aU5O7pxweFNOS5BoF8YAKEuoNGBoMEs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085266; c=relaxed/simple;
-	bh=6Fqv0OKuRgG41PthjWkE9dKJkVEWb2xiyvuSsZlc4Wc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QRvLLxlkAt5Y3c/B/bpNDqCSPZFnqHW1A+lRTkp8hfaDfE8IK0MTng05uIIy06FUyn8AXNGg/Pl05ramCclGO879unl7g4Hr2rtLMnhJWy+jk/2ILovmgIzqGO0N6nrHcnk2kE3rFTPzZcF2w7q2crVQFBhBfp6BVH+4wV0GdbE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w0RPWDLR; arc=fail smtp.client-ip=40.107.220.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A449C1B4248
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750085293; cv=none; b=gBW6hc/ZOGywC6wifDQurhU1hTEVf4IELiq3J7AgPWn8tzCmaEpw5STCUwzJvO9L7wd0f0L3wJQW/c4GORcBQIhM4w+2C8TaWfx0/zBmVjIoIp5TNNpxvRD1JREPD4j7eV2gD80Pqp7OdIUdkSiGodHqxKM+yM7G/RM6aYfDG0g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750085293; c=relaxed/simple;
+	bh=2RoQWtrD3+9A8zs6Jp07O7FoDMcSwSU+sIAiBRj5tcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qQxLhcNjxNZfGi9SXW+Qty0XdOQelslU8r1C1HtDQSI6Vmvd8qElLgG5Ry2pMUt3TbL7gtafIw6jDrcWzRdFPXBVEeZKvsno2aCyn61d/kdlDd/yqHOHjV312/3hSs/KNNP4DXuTqaF2hMXyJrN2ixenBDiXMno61NvOOhZIwh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sl0pftrP; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w0RPWDLR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=spiQL7f/sh57RVYcVWcd3gdDteek8siAFrKsa/otV88OXJqELBWqY5d7HhKXsokZk/pLoKBf384lvf8HEwAQMP1QOWQGYGIdjmX4wUhmCOr+uyPZijf2lAmTDyTXp8WL/X4r2AjnTrr5zypZ9xHAc2Uw1iKoMDubhI8/OeQvxRv3z7fnZTtjv2GtkCbBLcV9YYWniA8Owat74iGEt8nLadmIsYF0sbdwEtZb31KXcdhuP/3kgQzLvjWE8m3fkbSHW7CDFUuQGDSbZjEcFcZ80wNDnq9x8BHDk7gsKGihGotQT3zW6Ys+tcL5QGyLDqfY0qU8lX1hX/DnmqGb9je4Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WDuoEEsXBeULc0lmQdm1lAI/aWpd9KHGF0pXIEU5/TY=;
- b=kYn/QlqrKjc/+ph5lsGvFsh80azx4/GaR97pOAfH1EAAgj7z3R2dTo2m7Afhd8UWAixg5dOTgZokUeFZEQdEdgjAi9iRJ8fY7ezIpye/FEYmZg6Fu5sq2OpG46YRfgbtCeTEnjgGOLw4P60Bk7lqirBLsBgybDF/DU2au+wKVUL0I9gQJZOvdi3zDhre0E6zFsdkUhITgMJ13a4dLZkujQ54DEim4D+UIaV1aOlKjOqgOMiR+HI/qSb++bW9NOanGxHWRtl0RMkuOMcFsF7HpVJt6OdeqzY7+MvTbnlqTCoATM4zw6vXYjjmxqaWltIU4hePcLjdIze8ccMjdCXqeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WDuoEEsXBeULc0lmQdm1lAI/aWpd9KHGF0pXIEU5/TY=;
- b=w0RPWDLRya6wDlYAQVAATpj6Iz1KqFowlUEKZTEXmK2W79VeXeawQfDwgaQKqa6CkZLUtaMUG7k2WUhhQHaJk0t7Z4cDRx2MfCyKUxyqPvpt8wXzFFFL8eKzz6Uga4sVhI/GDOacCL8xbsVUy5J5sKsi89tF+YEop9qb5OSeP+M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by PH0PR12MB8773.namprd12.prod.outlook.com (2603:10b6:510:28d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 14:47:41 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8835.026; Mon, 16 Jun 2025
- 14:47:41 +0000
-Message-ID: <d50ce593-a324-4b08-ae13-2264a41ebc6b@amd.com>
-Date: Mon, 16 Jun 2025 09:47:35 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: RE: [PATCH v14 00/32] fs,x86/resctrl: Support AMD Assignable
- Bandwidth Monitoring Counters (ABMC)
-To: "Luck, Tony" <tony.luck@intel.com>, "corbet@lwn.net" <corbet@lwn.net>,
- "Chatre, Reinette" <reinette.chatre@intel.com>,
- "Dave.Martin@arm.com" <Dave.Martin@arm.com>,
- "james.morse@arm.com" <james.morse@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "paulmck@kernel.org" <paulmck@kernel.org>,
- "thuth@redhat.com" <thuth@redhat.com>, "ardb@kernel.org" <ardb@kernel.org>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "seanjc@google.com" <seanjc@google.com>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
- "manali.shukla@amd.com" <manali.shukla@amd.com>,
- "perry.yuan@amd.com" <perry.yuan@amd.com>, "Huang, Kai"
- <kai.huang@intel.com>, "peterz@infradead.org" <peterz@infradead.org>,
- "Li, Xiaoyao" <xiaoyao.li@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "mario.limonciello@amd.com" <mario.limonciello@amd.com>,
- "Li, Xin3" <xin3.li@intel.com>,
- "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
- "xin@zytor.com" <xin@zytor.com>, "Bae, Chang Seok"
- <chang.seok.bae@intel.com>, "fenghuay@nvidia.com" <fenghuay@nvidia.com>,
- "peternewman@google.com" <peternewman@google.com>,
- "Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
- "Eranian, Stephane" <eranian@google.com>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sl0pftrP"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-452f9735424so14743355e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750085290; x=1750690090; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SHwYQwMYD8HGhfcGJAzl5DofcsNW/ioN3W1s5s1o62U=;
+        b=Sl0pftrPVCAtTdnZuJte6FSEEYDXuQzcyb6mTN3Hs2F9SvYGf0C8IuHx7PIcr11ddU
+         NZLUYB35VEYq4l4BNcQSD9JH+CxbVO99oePrKhMyReBu9lfCkWBli18NxtKgDlK3CXcG
+         CFtvV9IwTz0KisL9lH4Tqbb+OCI9okdTuH1KBJMn1QyW9E2RoyRX7A7JUMTMy5RRY24I
+         k6psFn905ij2Nc9TmBuaoD7ONROCKa9x1pEVI6F/Y7HZLNNi7eAhJArMKZn5CtxbVa/d
+         Jef1BuvmqrO+zkGewaBmNY2Lv4vpkS1AwzQl+/O0rcL1pMVwPz/t41iuvvEWJACNt6DT
+         cITQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750085290; x=1750690090;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SHwYQwMYD8HGhfcGJAzl5DofcsNW/ioN3W1s5s1o62U=;
+        b=iHZKa0CiUnE77kNSuQHcB++UW5IYC96kcC/QCpXxTTdCfX62NSKkBNWmzIagbsZoZd
+         4rsg0o8Wdt7OJFNz6CoQfPPgMl6hK1Vu7kCMXWhzM5iYwO82v344/vb7cR1xCGNH4frk
+         F4NSUbYRPUrPs5nfJBVJCJb+5rXzffwCKSJflIPUlZoZI+35h0UJKK7Jib94hRYkwfOc
+         emS4VmW3LKeEVTTmFNOEXrTEaAo269lw01sqqJG2iq2aJ4L1nW1j03rncH+WQRcPrizk
+         XgHo/nq/BzjOJS3YCPmmg8TslUig+Fk7mum1Qoq2l2MK1VIxhzNm03wWOmaMqwl5IeYs
+         K+ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPh7ZyA89xlwWVlHRdur+j8z3gJOouI5x3irGPfmSl7vczAVxMxDs3iPY2ZTkGjM9hqqTwTgI8HwtbujM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqe8bcbNmAWk+ZIivFXVcLOej8rWD3Nb60x09+j1sWJU79tMtS
+	DUGxuPAr1ZaTtURkBDpKhjHiazvWHuVvje4g1L/E8NJbgpIQUSps0DJI
+X-Gm-Gg: ASbGnct1qsoZnsQKhoemfZBrmzszraqAHZU3w0t79UAz0OdRdrKom1TC4uZPFtoZ3pa
+	+oxBhr1MsYzWKosCsdfx4Va2B3/VllbVb7SY+zGH4U90x1yRMY7iLK8bBqmfNxRuJEObFrcfJwc
+	6PeAEMnFfsqSjysnniVtvbKFaLoTnEt6g22uDwz/FaTb0pVPrWShT/h840wK+3Uig+jK1GNNGuH
+	SLbhVPI5NWbq6GOo5k9Tzqi8JEa9hRSClEUJWhx9ic7eRBfAT/u6aj1fpZW8pSYVl/T/8P1gM9u
+	Wiv5/qHAdRYcXwpJ6YI9b3NgGlcUKV+rqWKGs+/4VGAXmHbv3fyeLoaK1wLP9XDie48aAVpmpgO
+	3CSAsxKvs5Cem2lFzjXjhx+E0
+X-Google-Smtp-Source: AGHT+IGrESMPemQqzhzf8+kQ86JE7GA/KnfhXCDSlB46zrZnG+xzF3XuZVSki/BGNsmLPz8iIo783Q==
+X-Received: by 2002:a05:600c:4e87:b0:442:d5dd:5b4b with SMTP id 5b1f17b1804b1-4533cac57efmr102304595e9.31.1750085289657;
+        Mon, 16 Jun 2025 07:48:09 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08e21sm11408981f8f.52.2025.06.16.07.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 07:48:09 -0700 (PDT)
+Date: Mon, 16 Jun 2025 15:48:01 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: "Li,Rongqing" <lirongqing@baidu.com>, "mingo@redhat.com"
+ <mingo@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>,
+ "juri.lelli@redhat.com" <juri.lelli@redhat.com>, "dietmar.eggemann@arm.com"
+ <dietmar.eggemann@arm.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ "bsegall@google.com" <bsegall@google.com>, "mgorman@suse.de"
+ <mgorman@suse.de>, "vschneid@redhat.com" <vschneid@redhat.com>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1749848714.git.babu.moger@amd.com>
- <SJ1PR11MB6083DAFE4FD5A6D2712C088BFC77A@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <SJ1PR11MB6083DAFE4FD5A6D2712C088BFC77A@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0110.namprd13.prod.outlook.com
- (2603:10b6:806:24::25) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+Subject: Re: [PATCH] sched/cputime: Fix a mostly theoretical divide by zero
+Message-ID: <20250616154801.0dc94c1f@pumpkin>
+In-Reply-To: <CAKfTPtBKm7WgwcUHcMXnH3PL3KFSniy02mb6Ag4eQ1fA3e+H3g@mail.gmail.com>
+References: <20250604110442.8251-1-lirongqing@baidu.com>
+	<54c4aa198131420d9c77542bad5d27e7@baidu.com>
+	<CAKfTPtBKm7WgwcUHcMXnH3PL3KFSniy02mb6Ag4eQ1fA3e+H3g@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|PH0PR12MB8773:EE_
-X-MS-Office365-Filtering-Correlation-Id: c88b8313-d928-4f0a-68f3-08ddace4be91
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Tlp4bHVscmhlY1FPNkg1WE1wMXhVSUFmWGxyUHdDOUtyVEZCTnRyV1l3d3hk?=
- =?utf-8?B?T0Y5SmM1Vlc3ZElsZUxhdUlONXVETjVmMHdMZVBSNm85YjlGUi9ONVRGbS9B?=
- =?utf-8?B?TlVZeHRlUFlFdFBYSGNHUjUzRGpXMW9Wd3NMNXJaMWl1QVc4TWdtdExlMmhB?=
- =?utf-8?B?UFlwWnhXcXhnMGpZdEYwQUtHZjhaem5ZL1REbTJxOEpkSGI0VHRGQStQZWxO?=
- =?utf-8?B?ODZhQUZubldPSVpJZGk5SEdrYyt5RnJDUmhlWlZBVkluN3RZUk52R2R5Wjk0?=
- =?utf-8?B?TjVHUXZLN2d1d2NaaU44U084ZFZkK3FKcnJTK3dEMVVoVUVPQVE5RTRUL3ov?=
- =?utf-8?B?R1lMUTVrN1BvajdtdXpXaG9nNm1aWDB5M0V3YTZDVlhsSlB0N3JvRU1yQjdK?=
- =?utf-8?B?VmEyM0RxVFF5ZHNzcDF0bm4zZlRmWU5GdWJ4TGVheEtPOUJyTVBjR3J0bFN6?=
- =?utf-8?B?cXNHT1FyYXc0VlZ4TU5JR2pmR0gzZnhxRklVQjJINWZXMGRUMzZGTHc3bEZQ?=
- =?utf-8?B?WUhYYndPR3hkS0JPdFdkWElNRzY5Y2hzbEROMWNjYUN2Q3J3SDFiVnVsUHBI?=
- =?utf-8?B?UERRUitQV1NGRkF3VHZ0MytMayszWFpRSDNZTFh1eTVYMno5SXpEYXZ1WTUx?=
- =?utf-8?B?ZjJOOEN3TjkxOUNWczhGRFVoZXkwbXNTMXdvaUlUdVl1amNZQkVPWnB1MWY3?=
- =?utf-8?B?YnFlNUZVdkI2R1VZclJmV295SmJFaUdNR3hYT0ZROGl4T3BvK3ZTR1FnZXp4?=
- =?utf-8?B?RVdYSkNPQnorTnlpOEJUNExUNTF6N1dUaXNaaHpaRkZEdTJ5a2drWk1NZkV6?=
- =?utf-8?B?M0pnVmxpL21qZmFWNU1WRktDS1Buazd5TW5mUEI4TGhGT3RoWE11T1RPZlZs?=
- =?utf-8?B?ODBnbmExbkY0cXkrT2s4cnVwb2NVaGFPMUFiL1ZZVjhrYlF2Q3NpUVlTY085?=
- =?utf-8?B?OU1ZZWcreWYzakZneUxNa0RXemtlU1QxUTVXWkdMazE1SzZRT1VqVjFmc25z?=
- =?utf-8?B?a0creHM5K1VpMEw3eGVsNm5IRFB2WWwvZVk5dWhtNWNSQ1owM2hMNzM3WFpp?=
- =?utf-8?B?elVCZnQ0U0xNeVZsSitZYmE5NXcvak5mZERLRmxSSmZTSEtwOVJTQUxvRFdB?=
- =?utf-8?B?RmlTdGIyUzdFN2xXUnNpZG85Q3FHREhHUy9VbzRBQzV5dGw0dEtyRURKNlZ3?=
- =?utf-8?B?dml5Qk9QdmtzalFvZzhNUW1Tei9PRDN2WHdlMTZYWDR1T1RlTTZnaXJWQ2lZ?=
- =?utf-8?B?dnJmRFZmbGVFVVQ3citUbTJQK1llaFRlZnBJRDhvUGUvNVljNUJwNHdTSlBZ?=
- =?utf-8?B?ckh5ejFXeGxEdEJOcy8vWmJ2RjFFb0c2M3FjQWtaODB3TTJMSmM3TGcxRzl1?=
- =?utf-8?B?TkduR0wramNNdVlpSzlnMHFkMWNkV1laSngrOEsvcmJuWCtxZ2w5K2F0WVlY?=
- =?utf-8?B?aUhMMXRZQUJyeWhhMC9tSHZzc0dyNDFzYkd0MFA0MTR3d0d0T2x1U2N2MHp4?=
- =?utf-8?B?YnkwajJ4Ym9VdXNyRTQyQ1ZtTy9CL200aG1XcVBpUlhrek5mNTV5bm9oenRR?=
- =?utf-8?B?RnNvSzY2ZkYyd0xrSU1IMG5jdk1rbU9ibWg5U1NjYnU4MXdWVXpmYkdsR2xz?=
- =?utf-8?B?ejBPclNkbVFiMkxLUlBPS0E1TzJIRFJoUTQyZGZmZ2hxY29PL3dYUkhGSXB0?=
- =?utf-8?B?eE1FL1drYm85WUwvU2xZb1FNL2NSYjhtNXRNM3B0UDBuY0w2Mi9ISnpGSWNt?=
- =?utf-8?B?VEtIc1NYRHRPRmpRY3o4azF4M1R3MENFaUV4dDUvejhKaDl3aUFNWmttcnpG?=
- =?utf-8?B?a0VDenc5NWF2QzhZWjdCSzQ5dWIwNFFCZnVSZDB2ZWVBd2pJdTVDME5Nb1Jn?=
- =?utf-8?B?WEplV0J0a0k1ZnhwZGg3ei9lZVNzVktmNkNpblRoL0NtMFRQdGJCbk1scDJi?=
- =?utf-8?B?WVZqY2hvOWVvOGx0TVVxeDlhbWhVcnNMMlY5SlhXR014ZzNndm1VMDRMU1pI?=
- =?utf-8?B?RzVOd3MzZG1nPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?czh2Ty9vbGM0TGpEQVROUXNqd1JwMmtHMVEzRE9xYUJsQUxvd3lzTXZIVmFU?=
- =?utf-8?B?aUkvaFM1OUU1NDJHU2ZyLzVPTjdHVWorUGt6NllkYm0rOWdUazVDRkNhd3Za?=
- =?utf-8?B?bkI3T0NTakR0am9xTklOeDd6dlN6VmNzNmdqclFnS1MvSm5ZdERTalFPSlBP?=
- =?utf-8?B?MzJxTExzb2M5QnAzc3lNL2d6N0NESHRLdUZQVU5LZnZpZHVPbngvRFNjSUli?=
- =?utf-8?B?eEtHNzlaQnQ0QXAyaWdCWmpOcW5Qa1ZpU2RYei9ZK2drb2hvWUE2TFNyWjR2?=
- =?utf-8?B?MWVtRGo0TnpkTGJmcTF0YkdOOWFmUkpMaUJOWklyRHhLcnpWQlNKb2hGeDcv?=
- =?utf-8?B?Q0krNUVtTFMwZm85VEhDSHVKV1hLNW04SFNHZzl5eGRUN2s1cW9OS2NWR3Bp?=
- =?utf-8?B?UUFaQ295UnlXOWgrVzArQ2Z2S2czM2cwUGU0UmoyRkVZd0hRSWxwQmFpUEM4?=
- =?utf-8?B?MmFadERZWjN2aGwrQkQzVkxoOWJ1alU4R2h2aFJrSmszQjVjNVBRS1FDMEdZ?=
- =?utf-8?B?M1R3RFloVkMvYkJBMWRBdUtpUnBtSTlyTHhTK081Sjh1Y0dVV2hEWUhCMTUr?=
- =?utf-8?B?MUwrV3VyWncwdjZmc0JKa3VOdC9mb3RFaFY2S1hPa0MvaU9iTkM4dHFqQTFj?=
- =?utf-8?B?bXByV0FUSzg3bDcyV2ZETEtMYWVrR2gyazdYdlVid1h3NzhwN2tFaW5xcHpv?=
- =?utf-8?B?MEVYM0htYUxhK2FBNlBqV0xvUGVBYmpVNnBUYlM1UCtMT2F6WHRucENES0lS?=
- =?utf-8?B?aUpGdGpodStQc3ZrNHlod1dvSEFIcnVIb0QreFczUDRhM05oMHV4V3B0eUJj?=
- =?utf-8?B?bnlrV3l6ZVlzZ1M5cEVSdmR3MGh6OWptcEdFTjM2eWRsb2prTGkwWlZXblo2?=
- =?utf-8?B?TlhrNXNUNXc0ODZicHFweThMenFodVRvbXVIR3dMQUxsRjVkVWRBOGw5WTNr?=
- =?utf-8?B?RUttZys5RXVVV0JHdFBTWk9HRTVqN1JhOFN0UWgzZHNyZ24xTGhyMko5c3R2?=
- =?utf-8?B?YVZ1dXFPYTMvd1VCVlptWnN5RnNwRmtPYTlmU0wwaEQyYm0xV3JYbjZGVUpr?=
- =?utf-8?B?K2tIaWZKYXNkTjhqZG5HY1Q3WHJnbmdDc21ldnY5RU5wMk93OVFqb0Y2ZDBO?=
- =?utf-8?B?cHptVDhDcmtpSVlKVnYzNjNPVXhLWC80QTdmcTBDTlY3bFJYelg0Ny9PZFAw?=
- =?utf-8?B?bDlNN1RsUkVrdGM3cC9HSVZkTGxpMEl5UVRQV0VkOG1VL2sxUTB5R3RaTTJ3?=
- =?utf-8?B?Sm54TStFV1p3ODkzcmZaYlpSanU2R0l1R09TdFl1UFVyTExnQkozT0lGYTZ1?=
- =?utf-8?B?N1hSeE9xbXc3RnM1RTlEVWQvU25NRVoyVmtSMU1FaThTNUhBZENNYmhXNnZF?=
- =?utf-8?B?eU1hbG8zeDlseGhsV3BYekxleUQ1eXlZMTJHb0FSZ0dxTnRUNFpNZ1NSQU1Q?=
- =?utf-8?B?YVJaNnRUdzJrYmtFcE1ONEJQS3orVUliRG03ZjgyN3lybmtkdHhPRGpXbFgw?=
- =?utf-8?B?UVE4SjFRMjdKNVNXUjNpaGdyRFZ4V2lVTGhzbVNkRFpKMkpBTkxvV2o0OHJa?=
- =?utf-8?B?K3drUTZsazllWG5PTjd1OGJZaXhmT1o5cDJRMHlMaTlPSTBBeFZMUWcyd1h6?=
- =?utf-8?B?V1hLQ1dQMmozM2FBTnMxNWN3Q1NvcDFJM2FNbVlVajFTZk5BS0xWN1Q3d3hK?=
- =?utf-8?B?bW54Z1R0WGNNbWw1MUxZMk55bnlneHZwc2dpanBkMUY5dm9UenR5QXByb1Ex?=
- =?utf-8?B?RXltbEprZnEycW91ejhMbFJkd3ZxVXZxbDE5aFE4RExKakF4bE4rTDZXRWRS?=
- =?utf-8?B?enYvTlBwYktwTGZCM1dpMDE3VzBCWUhCY29sU1I0b09RNzhLV0s5bG9mbmtw?=
- =?utf-8?B?NnU4ZVFHRUtvdFFzUjBKclBRNXd2Uy9rQWtYcjZVNEVKc25hSnp2Mlk3OVlh?=
- =?utf-8?B?RURTZ0F2c1BjcFNSbmZnZGZwTmpZby9SSEFpMDJjU0VTODVVVTdOQjZHU21o?=
- =?utf-8?B?YVljczhjL3pLZWpUaVU2ZER3RzgvNXc5TXZGTjNCd1ZmQml5S2dINFhYbity?=
- =?utf-8?B?TFAwZUhoZHJTbzR3UUZaMTlNN0lreldkdUErNldsR1JWYXppYXI1WjdFdGRO?=
- =?utf-8?Q?VthE=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c88b8313-d928-4f0a-68f3-08ddace4be91
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 14:47:40.9561
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Twdu4OPyHj6r68+gbyvWrZp4t9BN+xuNnhijq2KBij8MuzCITaDc/+2O38DQtUQO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8773
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Tony,
+On Mon, 16 Jun 2025 14:51:56 +0200
+Vincent Guittot <vincent.guittot@linaro.org> wrote:
 
-On 6/13/25 16:41, Luck, Tony wrote:
-> Babu,
+> On Mon, 16 Jun 2025 at 13:46, Li,Rongqing <lirongqing@baidu.com> wrote:
+> >  
+> > >
+> > > Sum of utime and stime can overflow to 0, when a process with many threads
+> > > run over total 2^64 ns  
 > 
-> Compiling with "make W=1" you have several kerneldoc comments on new functions
-> that do not describe their parameters.
+> Theoretical is the right word; If all 2^32 possible threads belong to
+> the process, we can get an overflow to 0 after ~4sec run time of each
+> thread. But then how long will it take to have those 2^32 threads run
+> 4sec on a system ...
 > 
-> E.g.
-> 
-> /**
->  * resctrl_config_cntr() - Configure the counter ID for the event, RMID pair in
->  * the domain.
->  *
->  * Assign the counter if @assign is true else unassign the counter. Reset the
->  * associated non-architectural state.
->  */
-> static void resctrl_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
->                                 enum resctrl_event_id evtid, u32 rmid, u32 closid,
->                                 u32 cntr_id, bool assign)
-> 
-> 
-> Warning: fs/resctrl/monitor.c:984 function parameter 'r' not described in 'resctrl_config_cntr'
-> Warning: fs/resctrl/monitor.c:984 function parameter 'd' not described in 'resctrl_config_cntr'
-> Warning: fs/resctrl/monitor.c:984 function parameter 'evtid' not described in 'resctrl_config_cntr'
-> Warning: fs/resctrl/monitor.c:984 function parameter 'rmid' not described in 'resctrl_config_cntr'
-> Warning: fs/resctrl/monitor.c:984 function parameter 'closid' not described in 'resctrl_config_cntr'
-> Warning: fs/resctrl/monitor.c:984 function parameter 'cntr_id' not described in 'resctrl_config_cntr'
-> Warning: fs/resctrl/monitor.c:984 function parameter 'assign' not described in 'resctrl_config_cntr'
->
+> It would be good to get number to show how realistic or not it could
+> be to reach this value
 
-Yes. I noticed several of them.
-Warning goes away after replacing "/**" with "/*".
+I did wonder when re-writing mul_u64_u64_div_u64() how common this path
+is and whether both stime and utime could be zero.
 
-Now I am not sure if we fix it with replacing with "/*"  or adding
-definitions for each of these parameters. There will be too many
-repetitions. All these functions take r, d, eventid, and rmid as
-parameters. Also these are static functions.
--- 
-Thanks
-Babu Moger
+The current mul_u64_u64_div_u64() is particularly horrid on 32bit.
+(Note that it no longer generates an approximate result.)
+On 32bit x86 the worst case (lots of 1 bits in the result) is ~900 clocks,
+my new version takes ~130 for pretty much all (large) values.
+
+That is in userspace with cmov, without cmov it will be worse.
+I also think the kernel has one less register to play with - %epb.
+
+Other architectures are likely to be worse, sh[rl]d makes double
+length shifts less painful - especially when combined with cmov.
+
+See: https://www.spinics.net/lists/kernel/msg5723178.html
+
+	David
+
+
+> 
+> > >
+> > > Signed-off-by: Li RongQing <lirongqing@baidu.com>  
+> >
+> >
+> > Ping
+> >
+> > Thanks
+> >
+> > -Li
+> >  
+> > > ---
+> > >  kernel/sched/cputime.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c index
+> > > 6dab4854..c35fc4c 100644
+> > > --- a/kernel/sched/cputime.c
+> > > +++ b/kernel/sched/cputime.c
+> > > @@ -579,7 +579,8 @@ void cputime_adjust(struct task_cputime *curr, struct
+> > > prev_cputime *prev,
+> > >               goto update;
+> > >       }
+> > >
+> > > -     stime = mul_u64_u64_div_u64(stime, rtime, stime + utime);
+> > > +     if (likely(stime + utime))
+> > > +             stime = mul_u64_u64_div_u64(stime, rtime, stime + utime);
+> > >       /*
+> > >        * Because mul_u64_u64_div_u64() can approximate on some
+> > >        * achitectures; enforce the constraint that: a*b/(b+c) <= a.
+> > > --
+> > > 2.9.4  
+> >  
+> 
+
