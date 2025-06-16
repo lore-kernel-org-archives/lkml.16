@@ -1,136 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A771E501C;
-	Mon, 16 Jun 2025 15:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018961EF0BE;
+	Mon, 16 Jun 2025 15:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087318; cv=none; b=gzTjynAKqYpUi9Y14cmIuGcvZXXu0B7B/I51BE+IOQ7HxqhJQSfdZ7vruZzHj0Gi2F3FSNAZHhzaHaI0QG7lfF/MAHskf+PmyYX1Eo70W70+MthlfHiY/UJCjEK0E0o6X/ilORexX23z0gY7xRBPZfzwcALGt1VwU5AOAuOSVOk=
+	t=1750087364; cv=none; b=Vs1GnIG5Gqmnkc/MeyTmP2MW/KL5lSnwcrb4QL510PFjSBe/ppA1CYFQiNiQRa4jmLZHO+baowzNxT1jBndoBs6Jc61DHJpQbMV/E8Ys6jCqbt0j7JwBEYyoO8PfbtgeFV7zfObZHm0GOLe2y0jsFyxLm/SywPvV0bkPJfiLrhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087318; c=relaxed/simple;
-	bh=F/QyudQDY/anQvkRN0MCoaO7t8IhTLucluA7Fcylo0Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GTfoQ7SF87pC0/sgNTxF0YXmK0cxhZOZc4jM5N6oNv2ay3Ls5X2gEooViqIJszF8T4axIIJCVYqMDUoumKD/RfPiYVn0ouLtFaFkf5WCUKyUDGX8aXyrzayQd6Ns63+YaiXxFIZJuIijhxxEWmPa9LKV15ZL9Wb6HPiAuasnV8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyaUN2wQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750087364; c=relaxed/simple;
+	bh=vRLtpV6xPP+B6AxFTz+Sr3ngOEYkgh/3g9N+V/VZ1oQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pTYHLfcDMm7JzhJccmspLpNLmauykQ5jQ9sBOcymWW6+jR+NobRdF+p/MFXJbEZwuqktXhSwjekUCSLqNlKilhwqG6MSvPNY2CMjjjOltWaOjkl+BaP6HuEYwOQBQysedQWp1akZcz9ixhnzvg7Ky/eWy/OESpYu40N3KC55xN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aQjKy0Ki; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyaUN2wQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C703C4CEEA;
-	Mon, 16 Jun 2025 15:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750087318;
-	bh=F/QyudQDY/anQvkRN0MCoaO7t8IhTLucluA7Fcylo0Y=;
-	h=From:Date:Subject:To:Cc:From;
-	b=HyaUN2wQUnvOmZj06/ZeoyJY0N8JQOKU8TwCyxXPEu9e4mSBG+JOffhb7m1PWDD3r
-	 JdbTuYCAKkT9Q0jw5gaBI4yco6Xj4u5IuzpTrNrj6KhYTa61/2ZzgV5mUbKOpyTDpg
-	 z81uQHC3ElzB4UY8M1TDIS+9tI5fVfsrxLT3EdEhI+PWm0hkh/9l3t35WYhMfx4GnI
-	 7nnlQnqyGSx/pJrikNehMBNzbkd2Gh1OZyeFryN34Wyy9HTnqV6Tz3rc9Z5yME7Dmc
-	 jIaMvSXbCWVfQMnQZhIBPpai/P2wLfTd8Bp/+WIQCvRqtuQT1MuV479EdzbmuWKyFP
-	 hxOtBqthEu6Bw==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Mon, 16 Jun 2025 17:21:46 +0200
-Subject: [PATCH v2] Documentation: dma-buf: heaps: Add naming guidelines
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aQjKy0Ki"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750087362; x=1781623362;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vRLtpV6xPP+B6AxFTz+Sr3ngOEYkgh/3g9N+V/VZ1oQ=;
+  b=aQjKy0KizTh6pJgskAlz+u5BDsS5kNo+QX1MjdbLWIrsB2TLgR/SMKNe
+   lFHEJMxYZ4MTobJn1bDBiyaplql45KU4MFQKrCIHo63cv8bi4vBJ3NM15
+   lfNhCodCPbrlhJsvFvvyRs/5uP8bXkZ8xGxP8jAGnW7nGzNt+PFj9wpHR
+   HRLVhLbXpoZCL6t/HHLCC85AmmXUJGN28YdFUd0TFmXTKL6E3UpNibiEg
+   x5kf9mX6/4X1TqQv9utO+Q6SwCjd9itG/JkWhmv8hwvDP2hNtXCtG6Utp
+   7WPYWCCEiU3gLFtBRrqkzoC7EoQKflrSzSTTyeYVopLRX5dxW8vTT9Tyd
+   w==;
+X-CSE-ConnectionGUID: puBNPgTCSUiHOeYnWlhsnA==
+X-CSE-MsgGUID: jXprkqmASSmTOiRge0lK7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52326902"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="52326902"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 08:22:41 -0700
+X-CSE-ConnectionGUID: SPGY4daRQ42d0Nn/YgJ6rw==
+X-CSE-MsgGUID: 1uQBuZioSBils3tRu9LGcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="179395028"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.27]) ([10.125.108.27])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 08:22:41 -0700
+Message-ID: <b4de4547-84ed-4d3d-9102-ccb878f6016b@intel.com>
+Date: Mon, 16 Jun 2025 08:22:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-dma-buf-heap-names-doc-v2-1-8ae43174cdbf@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIk2UGgC/4WNTQ6CMBBGr0Jm7Zi2CP6svIdhMZQpbZSWtEo0p
- He3cgGX7yXf+1ZIHB0nuFQrRF5ccsEXULsKtCU/MrqhMCihGtEogcNE2L8MWqYZPU2ccAgaa6l
- aSSS04RbKeI5s3HsL37rC1qVniJ/tZ5E/+ze5SJRIfS3N8XASZ+brnaPnxz7EEbqc8xceLSYKv
- QAAAA==
-X-Change-ID: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
-To: Sumit Semwal <sumit.semwal@linaro.org>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
- "T.J. Mercier" <tjmercier@google.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jared Kangas <jkangas@redhat.com>, 
- Mattijs Korpershoek <mkorpershoek@kernel.org>, 
- Bagas Sanjaya <bagasdotme@gmail.com>, Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3203; i=mripard@kernel.org;
- h=from:subject:message-id; bh=F/QyudQDY/anQvkRN0MCoaO7t8IhTLucluA7Fcylo0Y=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBkBZpMuGPxdwfn04PlNCc0vnt5KLJi0N0WrOZFHdNc1v
- c+rHiws7pjKwiDMySArpsjyRCbs9PL2xVUO9it/wMxhZQIZwsDFKQATKTjD2LB7cvExg2L+mYve
- 7jDX3zlhDdvGXDlmu1s3DbqOz36kv9M4xV9IVSSuzfnX3k+zyq7trmSslVL+tuqtbqvTNm7t5Xe
- eOazxXBj46YvhTVnR1pzrixXs7wZfzv9aOrn/6JrOfx8nb/3tDAA=
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
+ enable and reset paths
+To: Shuai Xue <xueshuai@linux.alibaba.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
+ vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+ <20250522063329.51156-2-xueshuai@linux.alibaba.com>
+ <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+ <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
+ <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
+ <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
+ <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
+ <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
+ <343f6719-598a-453b-9903-21632bc6b623@intel.com>
+ <97e52eb0-d531-4464-bbb7-1dffa5d8d74e@linux.alibaba.com>
+ <d4d61f9a-e73d-4689-bef2-7b9c583e1b32@intel.com>
+ <83916c62-6069-4ed1-9856-b6c21363b137@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <83916c62-6069-4ed1-9856-b6c21363b137@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-We've discussed a number of times of how some heap names are bad, but
-not really what makes a good heap name.
 
-Let's document what we expect the heap names to look like.
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
-Changes in v2:
-- Added justifications for each requirement / suggestions
-- Added a mention and example of buffer attributes
-- Link to v1: https://lore.kernel.org/r/20250520-dma-buf-heap-names-doc-v1-1-ab31f74809ee@kernel.org
----
- Documentation/userspace-api/dma-buf-heaps.rst | 38 +++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+On 6/15/25 6:54 PM, Shuai Xue wrote:
+> 
+> 
+> 在 2025/6/6 22:32, Dave Jiang 写道:
+>>
+>>
+>> On 6/5/25 12:40 AM, Shuai Xue wrote:
+>>>
+>>>
+>>> 在 2025/6/4 22:19, Dave Jiang 写道:
+>>>>
+>>>>
+>>>> On 6/4/25 1:55 AM, Shuai Xue wrote:
+>>>>>
+>>>>>
+>>>>> 在 2025/6/3 22:32, Dave Jiang 写道:
+>>>>>>
+>>>>>>
+>>>>>> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
+>>>>>>> Shuai Xue <xueshuai@linux.alibaba.com> writes:
+>>>>>>>
+>>>>>>>> 在 2025/5/23 22:54, Dave Jiang 写道:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
+>>>>>>>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
+>>>>>>>>>>>> is being enabled, it can cause a mismatch between the software and hardware
+>>>>>>>>>>>> states.
+>>>>>>>>>>>>
+>>>>>>>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
+>>>>>>>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
+>>>>>>>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
+>>>>>>>>>>>> ensure consistency between the software and hardware states.
+>>>>>>>>>>>>
+>>>>>>>>>>>> However, a race condition exists between the WQ enable path and the
+>>>>>>>>>>>> reset/recovery path. For example:
+>>>>>>>>>>>>
+>>>>>>>>>>>> A: WQ enable path                   B: Reset and recovery path
+>>>>>>>>>>>> ------------------                 ------------------------
+>>>>>>>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
+>>>>>>>>>>>>                                         b1. issue IDXD_CMD_RESET_DEVICE
+>>>>>>>>>>>>                                         b2. clear wq->state
+>>>>>>>>>>>>                                         b3. check wq_enable_map bit, not set
+>>>>>>>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
+>>>>>>>>>>>> a3. set wq_enable_map
+>>>>>>>>>>>>
+>>>>>>>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
+>>>>>>>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
+>>>>>>>>>>>> leading to an inconsistency between wq->state (software) and the actual
+>>>>>>>>>>>> hardware state (IDXD_WQ_DISABLED).
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
+>>>>>>>>>>>
+>>>>>>>>>>> DJ
+>>>>>>>>>>
+>>>>>>>>>> Yep, how about add a spin lock to enable wq and reset device path.
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+>>>>>>>>>> index 38633ec5b60e..c0dc904b2a94 100644
+>>>>>>>>>> --- a/drivers/dma/idxd/device.c
+>>>>>>>>>> +++ b/drivers/dma/idxd/device.c
+>>>>>>>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
+>>>>>>>>>>      }
+>>>>>>>>>>      EXPORT_SYMBOL_GPL(idxd_wq_enable);
+>>>>>>>>>>      +/*
+>>>>>>>>>> + * This function enables a WQ in hareware and updates the driver maintained
+>>>>>>>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
+>>>>>>>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
+>>>>>>>>>> + * otherwise disable the WQ without the driver's state being properly
+>>>>>>>>>> + * updated.
+>>>>>>>>>> + *
+>>>>>>>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
+>>>>>>>>>> + * called after the WQ has been explicitly disabled, so no concurrency
+>>>>>>>>>> + * issues arise.
+>>>>>>>>>> + */
+>>>>>>>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
+>>>>>>>>>> +{
+>>>>>>>>>> +       struct idxd_device *idxd = wq->idxd;
+>>>>>>>>>> +       int ret;
+>>>>>>>>>> +
+>>>>>>>>>> +       spin_lock(&idxd->dev_lock);
+>>>>>>>>>
+>>>>>>>>> Let's start using the new cleanup macro going forward:
+>>>>>>>>> guard(spinlock)(&idxd->dev_lock);
+>>>>>>>>>
+>>>>>>>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
+>>>>>>>>> guard(device)(idxd_confdev(idxd));
+>>>>>>>>
+>>>>>>>> Then we need to replace the lock from spinlock to mutex lock?
+>>>>>>>
+>>>>>>> We still need a (spin) lock that we could hold in interrupt contexts.
+>>>>>>>
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
+>>>>>>>>> guard(device)(wq_confdev(wq));
+>>>>>>>>>
+>>>>>>>>> If you are up for it that is.
+>>>>>>>>
+>>>>>>>> We creates a hierarchy: pdev -> idxd device -> wq device.
+>>>>>>>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
+>>>>>>>>
+>>>>>>>>         (wq_confdev(wq))->parent = idxd_confdev(idxd);
+>>>>>>>>
+>>>>>>>> Is it safe to grap lock of idxd_confdev(idxd) under hold
+>>>>>>>> lock of wq_confdev(wq)?
+>>>>>>>>
+>>>>>>>> We have mounts of code use spinlock of idxd->dev_lock under
+>>>>>>>> hold of wq->wq_lock.
+>>>>>>>>
+>>>>>>>
+>>>>>>> I agree with Dave that the locking could be simplified, but I don't
+>>>>>>> think that we should hold this series because of that. That
+>>>>>>> simplification can be done later.
+>>>>>>
+>>>>>> I agree. Just passing musing on the current code.
+>>>>>
+>>>>> Got it, do I need to send a separate patch for Patch 2?
+>>>>
+>>>> Not sure what you mean. Do you mean if you need to send patch 2 again?
+>>>
+>>> Yep, the locking issue is more complicate and can be done later.
+>>> (I could split patch 2 from this patch set if you prefer a new patch.)
+>>
+>> Yes split it out and send it ahead if it can go independently.
+> 
+> Hi, Dave,
+> 
+> I split patch 2 out.
+> 
+> As for this race issue between WQ enable and reset paths, do you have any plan
+> or idea?
 
-diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentation/userspace-api/dma-buf-heaps.rst
-index 535f49047ce6450796bf4380c989e109355efc05..835ad1c3a65bc07b6f41d387d85c57162909e859 100644
---- a/Documentation/userspace-api/dma-buf-heaps.rst
-+++ b/Documentation/userspace-api/dma-buf-heaps.rst
-@@ -21,5 +21,43 @@ following heaps:
-    usually created either through the kernel commandline through the
-    `cma` parameter, a memory region Device-Tree node with the
-    `linux,cma-default` property set, or through the `CMA_SIZE_MBYTES` or
-    `CMA_SIZE_PERCENTAGE` Kconfig options. Depending on the platform, it
-    might be called ``reserved``, ``linux,cma``, or ``default-pool``.
-+
-+Naming Convention
-+=================
-+
-+``dma-buf`` heaps name should meet a number of constraints:
-+
-+- That name must be stable, and must not change from one version to the
-+  other. Userspace identifies heaps by their name, so if the names ever
-+  changes, we would be likely to introduce regressions.
-+
-+- That name must describe the memory region the heap will allocate from,
-+  and must uniquely identify it in a given platform. Since userspace
-+  applications use the heap name as the discriminant, it must be able to
-+  tell which heap it wants to use reliably if there's multiple heaps.
-+
-+- That name must not mention implementation details, such as the
-+  allocator. The heap driver will change over time, and implementation
-+  details when it was introduced might not be relevant in the future.
-+
-+- The name should describe properties of the buffers that would be
-+  allocated. Doing so will make heap identification easier for
-+  userspace. Such properties are:
-+
-+  - ``cacheable`` / ``uncacheable`` for buffers with CPU caches enabled
-+    or disabled;
-+
-+  - ``contiguous`` for physically contiguous buffers;
-+
-+  - ``protected`` for encrypted buffers not accessible the OS;
-+
-+- The name may describe intended usage. Doing so will make heap
-+  identification easier for userspace applications and users.
-+
-+For example, assuming a platform with a reserved memory region located
-+at the RAM address 0x42000000, intended to allocate video framebuffers,
-+physically contiguous, and backed by the CMA kernel allocator. Good
-+names would be ``memory@42000000-cacheable-contiguous`` or
-+``video@42000000``, but ``cma-video`` wouldn't.
+Need a lock to protect the paths. Maybe a patch to use the existing wq lock for now and somebody can clean up the locking after that? I don't work on this driver anymore. So either you can propose a locking cleanup or if Vinicius has time maybe he can take a look. 
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
-
-Best regards,
--- 
-Maxime Ripard <mripard@kernel.org>
+> 
+> 
+>>
+>>>
+>>>>>
+>>>>> Thanks.
+>>>>> Shuai
+>>>
+>>>
+> 
 
