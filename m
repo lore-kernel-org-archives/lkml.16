@@ -1,69 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BBC2BF007;
-	Mon, 16 Jun 2025 14:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A850842A99;
+	Mon, 16 Jun 2025 14:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750083091; cv=none; b=n5OUhx2NuQKGHR2daAkDNQ5XFlcBfbo5SKhYirFO/EDgNAA0J+8/IBCOieG/AgNHPNgszoNZn+GbSOMRBSx4Jke9czBM/RJs2cwe5koxj4IavYuWlXIv3zb6W+jOhbMGE01XUYzLtJXaYm5nJKkPWdAdQC90muxmima2XGUwW+8=
+	t=1750083194; cv=none; b=Vq9HqksIg8TLA96YeiooN6Xv+MoSlvQEpp7Be7xzXH5Vvh0Ct+Z7WI3jMviL18AP+3x4Y4scFc3GWeQ9T3SIKN1+22Fxaw28nn82SxdxMcb+aca7/KzZufhA8M3AVjOd14+jPmCWVcku2J/p1DzAQrx5plL6FQJZvTQW5JIuOLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750083091; c=relaxed/simple;
-	bh=IUP7heul8CdkK3GwLu1iEDAC2mYsBEpFuxgs8jQf/7c=;
+	s=arc-20240116; t=1750083194; c=relaxed/simple;
+	bh=K9lGYE1jC13GQlRKSFKfI1egBgg+0AaxtQyIvBUOSSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NPKh6A+n4EFRg6K4kyAznk51kGLmDS6jiwyaaZjdqSsblysPV14tY+l6uVlg3xFKxoJ8G8FVmCIhs/4gcz8dyb/RA++XR/rohfh6mhXSt97yFO/8k0fDnukzvASGIw/kM5fXYH11N5VNnlEorqQmJzLsqTIG+ouXcLIg7jALdic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4go/7/6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jP7q62dW1LMeRTamqmot9wE77T+kmVqtYnPKpoCLHdLIKV0BxyRV61KaEiK6pNlvOdAXVJ8dDddkHOoQXIMPHRh5tK+xhyqa1qQmMEWsVRnvdp+yyFj3ZZ7JVb7Q2XkSg62oK5uVChExToczbQhwFjvxSG2Ad83iZbhmgDlz93I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfJ2D+YM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4go/7/6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EABDC4CEEA;
-	Mon, 16 Jun 2025 14:11:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfJ2D+YM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12393C4CEEA;
+	Mon, 16 Jun 2025 14:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750083091;
-	bh=IUP7heul8CdkK3GwLu1iEDAC2mYsBEpFuxgs8jQf/7c=;
+	s=k20201202; t=1750083194;
+	bh=K9lGYE1jC13GQlRKSFKfI1egBgg+0AaxtQyIvBUOSSM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K4go/7/62bOhPvaSrgfaMLFg/oTDqUXfRXcM4FmLSxr9R1utmnA34V006NQP/dvkn
-	 lMoh4vhnkIXWGSFmd7novw3e7eKyWauYVOItgd+Tx3oXipBS+ENNlR5/k+oTKrpMLN
-	 FOIT9MuxDJxXNYh/HWHLJKBIA5n70ai1WHH9rm9ob03ZKwDokRUT1nnLIpo5RisKC8
-	 w5k9sCW6956mVdKZDJ+sLjmdl5ErRN+Ohot1cDJ5E2Mt+TfPNb1NPUXDKAEofSW4Xd
-	 tBbDhPq5i5+SF1+1Sm0Q5ZKPFHUJZXW5UmsCH31bKJh77bPGBG8SI9Vbzdb2HBVvHT
-	 n/bGYbccj1FiQ==
-Date: Mon, 16 Jun 2025 15:11:27 +0100
-From: Simon Horman <horms@kernel.org>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: netdev@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] net: bcmgenet: update PHY power down
-Message-ID: <20250616141127.GB6918@horms.kernel.org>
-References: <20250614025817.3808354-1-florian.fainelli@broadcom.com>
+	b=CfJ2D+YM+/jAdZB7kow/k66QuxCaiA+KCGIIKdTXAScDkWBvkf8euzyYoAkXXmvI7
+	 0ZSy1McdEnIfG0vu1Prz3YVK8s82g8UvKp/jyZzlb/P7hJ9F7VcpUGtP+AVWXDNj+z
+	 ki4CpttRg2hw8I0zmq0rgMQz1kFDX5mU+G0nOfitIdZj+EQTXtZJ3IUn2DQdN5Tl1C
+	 4V3b7v3o1aSanESBDIXG96bOFRft3hWUgF7OgjqwiCRFag50WI5cSALvf/saEWDogn
+	 gpXvMOc10qkFuDSsZtDSP5LNnsKde+Pb2pAedkEWi5n0UBpfcTxzg3YAOuU4f3xALm
+	 AsCXz1KkoizWg==
+Date: Mon, 16 Jun 2025 16:13:09 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Collin Funk <collin.funk1@gmail.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-kernel@vger.kernel.org, selinux@vger.kernel.org, 
+	eggert@cs.ucla.edu, bug-gnulib@gnu.org
+Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list()
+Message-ID: <20250616-flitzen-barmherzigen-e30c63f9e8ba@brauner>
+References: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
+ <CAHC9VhQ-f-n+0g29MpBB3_om-e=vDqSC3h+Vn_XzpK2zpqamdQ@mail.gmail.com>
+ <CAHC9VhRUqpubkuFFVCfiMN4jDiEhXQvJ91vHjrM5d9e4bEopaw@mail.gmail.com>
+ <87plfhsa2r.fsf@gmail.com>
+ <CAHC9VhRSAaENMnEYXrPTY4Z4sPO_s4fSXF=rEUFuEEUg6Lz21Q@mail.gmail.com>
+ <20250611-gepunktet-umkurven-5482b6f39958@brauner>
+ <CAHC9VhTWEWq_rzZnjbYrS6MCb5_gSBDAjUoYQY4htQ5MaY2o_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250614025817.3808354-1-florian.fainelli@broadcom.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhTWEWq_rzZnjbYrS6MCb5_gSBDAjUoYQY4htQ5MaY2o_w@mail.gmail.com>
 
-On Fri, Jun 13, 2025 at 07:58:16PM -0700, Florian Fainelli wrote:
-> From: Doug Berger <opendmb@gmail.com>
+On Mon, Jun 16, 2025 at 10:03:52AM -0400, Paul Moore wrote:
+> On Wed, Jun 11, 2025 at 6:05 AM Christian Brauner <brauner@kernel.org> wrote:
+> > On Tue, Jun 10, 2025 at 07:50:10PM -0400, Paul Moore wrote:
+> > > On Fri, Jun 6, 2025 at 1:39 AM Collin Funk <collin.funk1@gmail.com> wrote:
+> > > > Paul Moore <paul@paul-moore.com> writes:
+> > > > >> <stephen.smalley.work@gmail.com> wrote:
+> > > > >> >
+> > > > >> > commit 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always
+> > > > >> > include security.* xattrs") failed to reset err after the call to
+> > > > >> > security_inode_listsecurity(), which returns the length of the
+> > > > >> > returned xattr name. This results in simple_xattr_list() incorrectly
+> > > > >> > returning this length even if a POSIX acl is also set on the inode.
+> > > > >> >
+> > > > >> > Reported-by: Collin Funk <collin.funk1@gmail.com>
+> > > > >> > Closes: https://lore.kernel.org/selinux/8734ceal7q.fsf@gmail.com/
+> > > > >> > Reported-by: Paul Eggert <eggert@cs.ucla.edu>
+> > > > >> > Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2369561
+> > > > >> > Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always include security.* xattrs")
+> > > > >> >
+> > > > >> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > > > >> > ---
+> > > > >> >  fs/xattr.c | 1 +
+> > > > >> >  1 file changed, 1 insertion(+)
+> > > > >>
+> > > > >> Reviewed-by: Paul Moore <paul@paul-moore.com>
+> > > > >
+> > > > > Resending this as it appears that Stephen's original posting had a
+> > > > > typo in the VFS mailing list.  The original post can be found in the
+> > > > > SELinux archives:
+> > > > >
+> > > > > https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.smalley.work@gmail.com/
+> > > >
+> > > > Hi, responding to this message since it has the correct lists.
+> > > >
+> > > > I just booted into a kernel with this patch applied and confirm that it
+> > > > fixes the Gnulib tests that were failing.
+> > > >
+> > > > Reviewed-by: Collin Funk <collin.funk1@gmail.com>
+> > > > Tested-by: Collin Funk <collin.funk1@gmail.com>
+> > > >
+> > > > Thanks for the fix.
+> > >
+> > > Al, Christian, are either of you going to pick up this fix to send to
+> > > Linus?  If not, any objection if I send this up?
+> >
+> > It's been in vfs.fixes for some time already and it'll go out with the
+> > first round of post -rc1 fixes this week.
 > 
-> The disable sequence in bcmgenet_phy_power_set() is updated to
-> match the inverse sequence and timing (and spacing) of the
-> enable sequence. This ensures that LEDs driven by the GENET IP
-> are disabled when the GPHY is powered down.
-> 
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Checking on the status of this patch as we are at -rc2 and I don't see
+> it in Linus' tree?
 
-Thanks Doug and Florian,
-
-I agree that the code does what it says on the wrapper.
-Although I have no way to test it's effect on real hardware.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+Sent this morning with some other fixes.
