@@ -1,241 +1,183 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2040.outbound.protection.outlook.com [40.107.223.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087F4218AB4
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088101; cv=fail; b=KdNrXgBG4QfncwT+VPA4T2UHJ1ZK+cFZ1AZnu2mXiev/cGsAd5gncvVSC7CyST4aPhGZKJiZd3RRU+bLDlnRbMTHtvZOO6KANX/j+EYVCEayRtjJpIMx5myePq7ICCUaOzisvsFfvISoPO4S9z07PlPnlTTvHjJoo+kRO0WfH24=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088101; c=relaxed/simple;
-	bh=qSo1fRXGR7mChC0dkPOBNxg4ID908HlHPWNDYHWLpLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AvzZ13Kup1lfWIpFQl8dH1dKiO3cJQ1qYsOtq1ofkr7a86OS+Fq2bHrzgL7pWCbW2eJUKEc8kxRwc+JjylUtzMJy6gsz5C7VPpSReA2sxwbZdrf1JmynX1yr/E6jfLVlT1TP3XglrEaS6zfCX7EwJAsYHfXcFBhINS7jG/Zl/dM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Mo7L5JSP; arc=fail smtp.client-ip=40.107.223.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02904214A94;
+	Mon, 16 Jun 2025 15:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750088148; cv=none; b=NvdqY4+7K3IyBqJ+NMtRo+vAiRXp3p11Pqm1GWTSCJstg16guFEfVsolH5/gW222709EtH8K+2/Dd+B+QBJ/AKymj9l5xUPOzZvWhh5KO8FtvF90CFBldGojFpxjc3kNa/d26cYI9S84bH5jXuYVybxFSa+Purkr6rAjkr4B7UE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750088148; c=relaxed/simple;
+	bh=wyqcm4yLFb4zJVbqbZ+q1/zy0wFmRhuu32ZyoGJEm1w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TojDn1/EltXeRMHpaQ2E/eNZtZV1HLaeKdw9pCRgdEF0eBTW8B1+4GPL3Ns5qdL/wSFBleABVH7hF9JJD4HyTuQQA3bL+cCFrfvnFS2GjHWbvR+RQwKH7wSTPb/wPUUB19mEAeiB19KK7Pqphkl0n5RVO4RIg5B796vt+CDt5+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3bZOHKZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Mo7L5JSP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p08S05+GoXMiwkrrUXuaHAD/FBYh8sDfX51Iy01T1gTLWJClGpMi6m8mBiFRsMdaqaDzlaZx6f1kRLEcb7Ua4jSlDxZndX1ASSD7J3Wv8GiumMMCPIjx1YGULUrG3R4yLDh7o6Ye/RuEwLjizNZUUehFQOekfXCreH0uTiH/ntPO6TkM9NgnIIRiogkcyj3WkS302JftlCiUGxyg1ZKg6lMK4fR6kBUrbyanzcfQmFYm2zVmqqKZupnqmLnO4Pm5wWsQfAsJbO4pQ7UO4QpOXFmZIWN695q4qysQkqfm1jUJrgN3l63yQ3aOYzZwI3yUQi/xmPC6K6A+GZtDbOCg/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pU6y5FqjvMxOjd7vl5oxHCFRlKQuK0cWh0UgpDYtwiY=;
- b=Njy0XF15LbH75NpkqJHcujmlHvqrBerIcXa198OrAlWJ0qwSSHpvE8fq5hy004u8wM2KDcy05k7Za6UUNLGL/f5oMjDADhPimpF3rG8bp4DoGaOrfpg81WGN70iuFCyVNGw8eO6eZw2sy5D7DlripAOJmf5aNwbmF2UFqKbQY/sBeXWZep9wRS6p9Wlq/zRg5Wt0Vojoi6w6f9x4jhsAd/y6xukgQtGgb6Dic9zzkD+vEw1J9uA4B8GxYMVzDwNQCibFQOFfwj4SXXztBumVvlGXXed3J71BBQSU8dyp7ZXku49KmKWfvol8LCVEX3meCGppAwrO9B7K3eu/8ckaQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pU6y5FqjvMxOjd7vl5oxHCFRlKQuK0cWh0UgpDYtwiY=;
- b=Mo7L5JSPVh92EY44qRhITzrA0NAoKS4Cq2YvMLOpbcgX3+Jtz5zgtsZFLbc+k7wccrye9CqnxqO29QWND9hGAGuw+N9x+x14mKlHQVLBwyyNhNcvFtmdYHdGaUiRVmWapNXLryyyEP1C6u0b/KsVSlqhSW7NMZ/1f43cfOEkdAjO8RAIEQ/Vt1czRUUC9H1j9nxVLmg7+/BN8tVLNNvwl0dcHd7GYbFVYM6B/ZWnbCILVOvHT79UtkLTrjw+c/jYS161zRZkTw5wYmLsxCRITS89E6QrXMkWo8Va2NHQ85k/ITibv1pfl4u6DD/S8coEjh0lzZf/ALwy5rcB1o+/fQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SN7PR12MB8001.namprd12.prod.outlook.com (2603:10b6:806:340::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.41; Mon, 16 Jun
- 2025 15:34:57 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
- 15:34:57 +0000
-Date: Mon, 16 Jun 2025 12:34:55 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Jacob Pan <jacob.pan@linux.microsoft.com>, linux-kernel@vger.kernel.org,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"Liu, Yi L" <yi.l.liu@intel.com>, Zhang Yu <zhangyu1@microsoft.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Subject: Re: [PATCH v2 2/2] vfio: Fix unbalanced vfio_df_close call in
- no-iommu mode
-Message-ID: <20250616153455.GK1174925@nvidia.com>
-References: <20250603152343.1104-1-jacob.pan@linux.microsoft.com>
- <20250603152343.1104-2-jacob.pan@linux.microsoft.com>
- <20250613163103.3bca27cd.alex.williamson@redhat.com>
- <20250614001555.GR1174925@nvidia.com>
- <20250616084708.5a94ead7.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616084708.5a94ead7.alex.williamson@redhat.com>
-X-ClientProxiedBy: YT3PR01CA0020.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:86::15) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3bZOHKZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F203C4CEF3;
+	Mon, 16 Jun 2025 15:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750088147;
+	bh=wyqcm4yLFb4zJVbqbZ+q1/zy0wFmRhuu32ZyoGJEm1w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=n3bZOHKZoHcqds6WdwLDyCh3eGecUSnALkzpuA6RI2FELJ0DG8RzDRcPyzsFnI4Ab
+	 ZN4TgdtH68jdmFSKH1v4IEWLcNeGY5IGxIWYLylzvIdcpzqWQsJHUjBDhxKnqffsuA
+	 9lQ2Ab3Sm2gIeJFCkShIkyDnsUFHgIUh5OSbS1VAGeL7udBfn4zwunNF9IiYoCyanx
+	 q+9Tp/HH1rZdCnr+paz7eIpDktBTVHAbDfaMrB1RYh5x77mLUDUjEiQ60AW4dtxn+e
+	 arDHNiEC8SwPHl7laJtMdGyaPFqIFI1lqOZs/U1Pg0W+m+OkFDB9RrtwCLe9b7+e6L
+	 H+lO6Oxh40Mow==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54e7967cf67so4774161e87.0;
+        Mon, 16 Jun 2025 08:35:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVkw1rpKVr8+9/zdzHaTr7UuDfpr5Kpz1ZDYGiBoTRPIBomoOk6uPYvwTAtIU6vp3d7yvmJsF1LPbo@vger.kernel.org, AJvYcCVLhkAUHLvSdeVoJ+f2vLzLqQcsVRhuOgA0O58+UVHz6GHqYXjql3gFKvcdy1d0V1rAigbdFe+m7Zw=@vger.kernel.org, AJvYcCWkqu6A5nFQ2d5DBuTMznURN2JvkzJKX/hI+o6aEtIH1Gs3KYYnnp6gikxvkP0SMjbXu49ZsoD//VPZa2Xv@vger.kernel.org, AJvYcCX603D6nx86jL7VRowUjoaoycjmDWZAHS5dciekGEPHP+/0fqYJCev0H3Is6o+jLTHT4FAHnoDkJ4udxMB2@vger.kernel.org, AJvYcCXcB3UO4cfZiwZB+EWcNdAMY+W2lnKBKguX5uj9fypr8gw6F+UNUcKgRdvcu0vj/rs02fv5YPfUJeU1qebKFg8/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZX4OPcDuTNQwQbzk56+qTP60FOqT9otKyLVIoBu5f6C3etL8Z
+	nRmODZ7jVhJq7CKNpfYT5KvPIrjsuP+L015PcKe+o/ZeOtWqinSt9G15qpbTtiGjSWpYYnjIwOi
+	NwciWkqpODyNEHoECMe8/3S8DA80Cqkc=
+X-Google-Smtp-Source: AGHT+IFbOeYossnraAyxlskXcqKyhhi56Nq19OyIZS4QGfWlkeawL/vDS4Zr+c6sgGu0d5OcjxKjLTWl/KyJOsqacys=
+X-Received: by 2002:a05:6512:3096:b0:553:2f8c:e631 with SMTP id
+ 2adb3069b0e04-553b6e6898bmr2461277e87.9.1750088146062; Mon, 16 Jun 2025
+ 08:35:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SN7PR12MB8001:EE_
-X-MS-Office365-Filtering-Correlation-Id: 87ba762e-f5a5-4cc2-6250-08ddaceb5913
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YHD9YplAK5217RMq6314TawXMvEmaNpwCUCaHLj/HUN4Il1m0EKedVZmahQv?=
- =?us-ascii?Q?GyBL6vpfPfg13IzO0J3BnhqwkNYT6tPhAd57xYh8Xs13YW6Z0eC6cFkB/IVO?=
- =?us-ascii?Q?YRj/O5w5cTJxKaOtsZX39bOtnCdzU7uhKPkgeXuO/m3tMzcHQrUbYGa2Rofg?=
- =?us-ascii?Q?MeNHG86sPkT4W7z+XlZvxq876su49pmdme2C0ByliqYEPGAvwcKq8trkm0pv?=
- =?us-ascii?Q?rLj+LCuECSOwevAt+R2XCMm4bu9LTf7dYlpoFrcI4UeEhCQI9uyz7oXUtGSP?=
- =?us-ascii?Q?j4GWkgFdmcFxQW4+UVcNAqz/lhtzDxlK6fSQ413Xc+8kHRHhgBV9rNmbe7lU?=
- =?us-ascii?Q?dAZd9nQVBRTmV7dFGB91FA02ij98xYjhthn9RiYkc0QbdkS71g2fbUfjnJEQ?=
- =?us-ascii?Q?6YI0JIT+9tHOm8kkHPM15VinjQeWdRNomNYA7qmng1CJaiby51Wy0yE0Onbq?=
- =?us-ascii?Q?Bf2VeZx1n8Oi9RuGNsyKA/yWs2yJffv5s2lQ6YAMhnVAcznifS3a+ylZNu+M?=
- =?us-ascii?Q?yf66VizfMV8983kWXBrAJx30a3Rs9QB6l1JG+/F4jtsNG1DyMwnaUrK6U2zL?=
- =?us-ascii?Q?cg0mfJ2JH6HFTeNSKU4mYSsNK9P5bktNm6Ow/s3pqRKHhi9DHw0RNBKyQsfc?=
- =?us-ascii?Q?/bP50nGttdoFu50Xt/KClF3heOVwVKcfmNOoDJV1FPhgAg1kgwFfEzRckYjr?=
- =?us-ascii?Q?NHxs0QGz6jwCtTKDz4di8OFiTesJd2HUKkGPefzhzz1ZXXiExuH2aOLA1od0?=
- =?us-ascii?Q?r5g4XHxQ0rgAUnwSFIPIJeRGwPhgK/BFw01E/Py7mLUktw2FfwKRSLWoZa6N?=
- =?us-ascii?Q?jGlOVfF7n0xeFpnWqShBPzh1a1gl3w+W2TGTiPZyP+4bR2BgrjN0MpvhRo59?=
- =?us-ascii?Q?+T3hr4wGgt0Qy3PeAaWrud7gBBzRpl55ZRV8aqCPeH3Ast2IzeGocvuuN5Pn?=
- =?us-ascii?Q?Dr/1OxnxOuJ6JXY+NAJtgYqc05jNK0smetuH6y8xQun0tlk56/XRuGk/yX7W?=
- =?us-ascii?Q?usJniDklGe6bQ1TBZLIoITXOJ0SJgzEGyhTCHILY4qI9+oZ2ZGNcH3qd116f?=
- =?us-ascii?Q?4M2XwhAzWRCY7/yPJ1YabNXeRqNP/9W855ACH9flNY2tNVaQGbRyhi+yPLPd?=
- =?us-ascii?Q?rIQiU4zE+wCJBY3OFhLOfqF4wdwyHFccJNf38/3a7mvtoKLwNt+XXl9Fk+9/?=
- =?us-ascii?Q?K0LpoEghZlDE+ArdKB0x9Mc/i894es2bEaTHDx4pwCQU6kpNKFNrtdzoiaJ+?=
- =?us-ascii?Q?v8Ba3L4W357IidBkbxR44wCVT3vh7MA03/5AjkCdhLoO3noImRCbv7eJCwMl?=
- =?us-ascii?Q?9kpfiVkttUkXNV1M0T21FFD9hxWeXv/u3Ye+nHeD7OFMXjbko7Ba5mlsUsz1?=
- =?us-ascii?Q?ZR1wlBlezKiwJ8nzH11h+rO6ChEAkLvkJ7FKx4LMU4usnV7i4tcFQlodwbpR?=
- =?us-ascii?Q?tB45SxQAlUI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vKSB3HFC/5crmGooDx5PwA3bogUIDVEw1/lwj4i+X9dB+m5xHl+Q+iCnR9b1?=
- =?us-ascii?Q?HP2EITK/EmlxXSAkCW4E7EbqqtjaLtqdzn+7IrPOfmRljWqUFDglDUFbjldg?=
- =?us-ascii?Q?/QwGe5a28M3Wu0AZYJ0aiTW6BEZcw6XJlpyvYWlq709HaqHVR4LQXXf9Ga1Q?=
- =?us-ascii?Q?vcEveCalKFiyni/Y7WZ0elfyWh2/TocsJ6OYPpMt+npKgcAwqKru2LbdbPu+?=
- =?us-ascii?Q?ARvFLOTtUy3A5eOgkp+RHx0CbyNEn49X+PgaUqiqpL9Va9g87gdd0OuNr+fN?=
- =?us-ascii?Q?jhAEj/e9SIKNl6LIdVAJVoCvSMw6a6mb7JkzIYG+Jh2DlwBl4Pss1aPPW8dW?=
- =?us-ascii?Q?SrHVno8I2iRu/nNmRii/26sYyeHxQRzILziyCi1m15aGoiOrt0+G2R+ZrF8Q?=
- =?us-ascii?Q?9qjbqtGUyDbu9D83kUqYlwCD+jOED/Hr5N3dDMVgRsbIUvypJNk9uaXgKXvB?=
- =?us-ascii?Q?yjN7jCmNv7ARIBxOvcMesbBwECygVCVo97peB5tcsHXVEGenxf+saD0Hxf8X?=
- =?us-ascii?Q?/f2qNvXL+CGs+dEi3/YLYfL4pB2EXNjTgCrxuwv3CZjpnnKg2me2k92inKoY?=
- =?us-ascii?Q?NWiTQ3fFcNM7+sHCPZs3NWIwdoYT5ZDgOHPrbbFYN8B9IQXnIrfq16MYSjc+?=
- =?us-ascii?Q?WPI06IZHVBd47Rp3+t/g2pK337L1+h5d4NeXJeIU6uJGnZqf1ma8oBU+nn1Y?=
- =?us-ascii?Q?mOILv+C1N8a27qDZRdd7w3A85WoxSgoprRkRAa0OszjnhY/V1UqIBe8zMc+A?=
- =?us-ascii?Q?OVKCLOu0ovodcvFEiAk6WYy6bJkFUmX2CYMDxxRDWs1b3ra9SNu69GeVaCFE?=
- =?us-ascii?Q?FnMEH3iekOdK+n3vPOsluvzd951MW5QN23m+gcLWox7cX5WtWd23OJHeQkvD?=
- =?us-ascii?Q?KgiFVEpmzjC/uG89wEQkQ+G7goxdMeHJq5gGYJ8oUYdrIRNAMEIl+UFc37k8?=
- =?us-ascii?Q?3RZFlKdAfEwYDegUrTMin+3DnvlKmJmn+lgT84SkrpGzMB171rcY9qk4/sZT?=
- =?us-ascii?Q?UUo1ofPpBXWH5JYBNAinVHlOIWe1iaUjb+7+Jj84r488ZepR3s7WdKRNAbBm?=
- =?us-ascii?Q?WfJpqRVapYaHpsXq7QZPGWADtgmeo9yLbhFE3EZV08+So2bXQDPIBWa1wd+u?=
- =?us-ascii?Q?8TCMHKnAkzCRY9Idq4JV1szqxpWalFm9mSstECAT/ZY8AFSMbpM75KlVsciq?=
- =?us-ascii?Q?7nmpeoIqquoYZ7D2096YBLSRbKhwsu+iHF6FrVd0z4GsnUDLeQGmRUGJGbrx?=
- =?us-ascii?Q?Wm60JVAQ8Fb7muyo4uXUDXMf0TlIwzTOCpGqUKwG9CS3I1exXMeIJotE0mNA?=
- =?us-ascii?Q?jYQmzdt/mlElrG0s3K2DKeGiOlDkKN6pPyFxeb/VttSN+tgSI9wjdjJnEFKP?=
- =?us-ascii?Q?laH5t1Pj9HlKrFyTRisBthg964WF6/unOQHWP3ZBpxsSHQyI5iHDfRsXlv4M?=
- =?us-ascii?Q?Zd7nD87VFnpH3R/WWkHAeOhHTQtnU3y0bmvbA82Sygu7EFqd6TEL99SyaF1s?=
- =?us-ascii?Q?lyqbwAxhAREEi3T+ajAoFpW81Jgp9Oknw/o8ftvMi5ESMUV+47lKbfModo3h?=
- =?us-ascii?Q?IurS6Sr/mBK5ihy/CEA5sJnQ6iP9JhPbl0+0D+oL?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87ba762e-f5a5-4cc2-6250-08ddaceb5913
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 15:34:57.1925
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dhd8Dl3NoaPyoEuINM9GKDrENcR1YxFrwq+w1O5sOYZAntXm/gkvczwzwfW4uKQ5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8001
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de> <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
+In-Reply-To: <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 17 Jun 2025 00:35:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
+X-Gm-Features: AX0GCFsBbQd8edKmRItTPTAmU_9r7N84LVB4bZhJmBSwwSeK_bPp6ZeS2KFUAXQ
+Message-ID: <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
+Subject: Re: [PATCH v3 04/16] kbuild: userprogs: add nolibc support
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	workflows@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 08:47:08AM -0600, Alex Williamson wrote:
-> On Fri, 13 Jun 2025 21:15:55 -0300
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
-> 
-> > On Fri, Jun 13, 2025 at 04:31:03PM -0600, Alex Williamson wrote:
-> > > On Tue,  3 Jun 2025 08:23:43 -0700
-> > > Jacob Pan <jacob.pan@linux.microsoft.com> wrote:
-> > >   
-> > > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > > 
-> > > > For devices with no-iommu enabled in IOMMUFD VFIO compat mode, the group
-> > > > open path skips vfio_df_open(), leaving open_count at 0. This causes a
-> > > > warning in vfio_assert_device_open(device) when vfio_df_close() is called
-> > > > during group close.
-> > > > 
-> > > > The correct behavior is to skip only the IOMMUFD bind in the device open
-> > > > path for no-iommu devices. Commit 6086efe73498 omitted vfio_df_open(),
-> > > > which was too broad. This patch restores the previous behavior, ensuring
-> > > > the vfio_df_open is called in the group open path.
-> > > > 
-> > > > Fixes: 6086efe73498 ("vfio-iommufd: Move noiommu compat validation out of vfio_iommufd_bind()")
-> > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > Tested-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> > > > Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> > > > ---
-> > > > v2: Use a fix from Jason
-> > > > ---
-> > > >  drivers/vfio/group.c     | 10 +++++-----
-> > > >  drivers/vfio/iommufd.c   |  3 ---
-> > > >  drivers/vfio/vfio_main.c | 26 ++++++++++++++++----------
-> > > >  3 files changed, 21 insertions(+), 18 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-> > > > index c321d442f0da..8f5fe8a392de 100644
-> > > > --- a/drivers/vfio/group.c
-> > > > +++ b/drivers/vfio/group.c
-> > > > @@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
-> > > >  		 * implies they expected translation to exist
-> > > >  		 */
-> > > >  		if (!capable(CAP_SYS_RAWIO) ||
-> > > > -		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
-> > > > +		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
-> > > >  			ret = -EPERM;
-> > > > -		else
-> > > > -			ret = 0;
-> > > > -		goto out_put_kvm;
-> > > > +			goto out_put_kvm;
-> > > > +		}
-> > > >  	}
-> > > >  
-> > > >  	ret = vfio_df_open(df);
-> > > >  	if (ret)
-> > > >  		goto out_put_kvm;
-> > > >  
-> > > > -	if (df->iommufd && device->open_count == 1) {
-> > > > +	if (df->iommufd && device->open_count == 1 &&
-> > > > +	    !vfio_device_is_noiommu(device)) {  
-> > > 
-> > > Why do we need this?  
-> > 
-> > What I was trying to do is put all the logic about noiommu into only
-> > vfio_df..open/close functions instead of sprikling it into a bunch of
-> > other functions. That seemed to be the right point to make this cut.
-> 
-> Alternatively we could be consistent about breaking out of the
-> vfio/iommufd.c functions that aren't relevant to noiommu.  The
-> container side handles noiommu internally, why should iommufd push
-> handling up to the device file layer?  We're really just missing the
-> bind path.
+On Wed, Jun 11, 2025 at 4:38=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> Userprogs are built with the regular kernel compiler $CC.
+> A kernel compiler does not necessarily contain a libc which is required
+> for a normal userspace application.
+> However the kernel tree does contain a minimal libc implementation
+> "nolibc" which can be used to build userspace applications.
+>
+> Introduce support to build userprogs against nolibc instead of the
+> default libc of the compiler, which may not exist.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+>
+> ---
+> This could probably be moved out of the generic kbuild makefiles.
+> I think the ergonimics would suffer and this functionality could be
+> used by other users of userprogs.
+>
+> Also this does currently not support out-of-tree builds.
+> For that tools/include/nolibc/*.h and usr/include/*.h would need to be
+> installed into the build directory.
+> ---
+>  Documentation/kbuild/makefiles.rst | 13 +++++++++++++
+>  scripts/Makefile.userprogs         | 13 ++++++++++---
+>  2 files changed, 23 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/ma=
+kefiles.rst
+> index 8aef3650c1f32b6b197e0dc777e26775d371a081..4cc7a1b89f1803857a4723284=
+613111e9ad71d92 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -974,6 +974,19 @@ When linking bpfilter_umh, it will be passed the ext=
+ra option -static.
+>
+>  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` w=
+ill also be used.
+>
+> +Building userprogs against nolibc
+> +---------------------------------
+> +
+> +Not all kernel toolchains provide a libc.
+> +Simple userprogs can be built against a very simple libc call "nolibc" p=
+rovided
+> +by the kernel source tree.
+> +This requires ``CONFIG_HEADERS_INSTALL=3Dy``.
+> +
+> +Example::
+> +
+> +  # lib/kunit/Makefile
+> +  uapi-preinit-nolibc :=3D $(CONFIG_ARCH_HAS_NOLIBC)
+> +
+>  When userspace programs are actually built
+>  ------------------------------------------
+>
+> diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
+> index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..b1633a9de6c86a023c70a717b=
+ac0b80b89d01431 100644
+> --- a/scripts/Makefile.userprogs
+> +++ b/scripts/Makefile.userprogs
+> @@ -16,10 +16,17 @@ user-csingle        :=3D $(addprefix $(obj)/, $(user-=
+csingle))
+>  user-cmulti    :=3D $(addprefix $(obj)/, $(user-cmulti))
+>  user-cobjs     :=3D $(addprefix $(obj)/, $(user-cobjs))
+>
+> +user_nolibc_ccflags :=3D -nostdlib -nostdinc -static -fno-ident -fno-asy=
+nchronous-unwind-tables \
+> +                     -ffreestanding -fno-stack-protector \
+> +                     -isystem $(objtree)/usr/include -include $(srctree)=
+/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
 
-Broadly what I was going for was to just remove the iommufd stuff
-entirely from the DF layer rather than to half pretend there is an
-iommufd layer below it. This should ideally go as far as not having an
-iommufd_ctx at all. So things start to look really weird calling
-iommufd functions without an iommufd ctx.
+The tools/ directory is a different world, and Kbuild scripts do not know
+anything about it.
 
-> > With this patch we move toward the vfio_df..open/close functions being
-> > symmetrical in their decision making.
-> 
-> But is it?  We special case all the iommufd paths to filter out noiommu
-> but it's inconsistent with the legacy paths.  Thanks,
+And, you do not need to implement this in scripts/Makefile.userprogs
+because you can move this to lib/kunit/Makefile.kunit-uapi or somewhere.
 
-The container still exists in noiommu mode and internally does things,
-eg it has a container->noiommu indicationm and the vfio-noiommu ops to
-manage this.
 
-The iommufd should not exist and should never be used. They are
-different cases.
 
-If Jacob eventually does what I suggested in another email then we
-would have a noiommu special mode inside iommufd and it would look
-more like the container.
 
-Jason
+
+
+
+
+
+> +user_nolibc_ldflags :=3D -nostdlib -nostdinc -static
+> +
+>  user_ccflags   =3D -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflag=
+s) \
+> -                       $($(target-stem)-userccflags)
+> -user_ldflags   =3D $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)=
+-userldflags)
+> -user_ldlibs    =3D $(userldlibs) $($(target-stem)-userldlibs)
+> +                       $($(target-stem)-userccflags) $(if $($(target-ste=
+m)-nolibc),$(user_nolibc_ccflags))
+> +user_ldflags   =3D $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)=
+-userldflags) \
+> +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldfla=
+gs))
+> +user_ldlibs    =3D $(userldlibs) $($(target-stem)-userldlibs) \
+> +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldlib=
+s))
+>
+>  # Create an executable from a single .c file
+>  quiet_cmd_user_cc_c =3D CC [U]  $@
+>
+> --
+> 2.49.0
+>
+>
+
+
+--
+Best Regards
+Masahiro Yamada
