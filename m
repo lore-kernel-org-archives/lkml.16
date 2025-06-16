@@ -1,173 +1,113 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B555383;
-	Mon, 16 Jun 2025 21:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750110663; cv=fail; b=njkxtaJ1z7CuocN6uLpsXZAd8cQPDa2OKreXm3SJN36JGWSS7EdaAy3Vh+tCuZXkve0+2eJMVRGHidhR1ly2hNyDmDorKFzzgIabfd7fuordkfI4/8laUDf4he2YFvLx6LEhM88Ys+XosmCmUwHnSxSbHG2DluDZtsolXj8N0mY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750110663; c=relaxed/simple;
-	bh=he3OyxiBjC3Vn0gi2AVj3z8c9PfQerR07/CirYU5jM0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R1cPAcI56ZCDk8tK9fZlsaIZi/NlzOCRtBkTtBvRQaXTsKxl14JS14ybYcVVMh9kp7CGYvuJr8um2P2UVl9iNrsOxX6KS1Ph2k0xblevmFdQdyt9zgnb/owP4S8ZuPPsu4mYm+UXbQX+Rit7Jc1shH/OdEYl8qGQB1BkpmFqdwc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LbS+ePmw; arc=fail smtp.client-ip=40.107.93.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9122221280
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750110880; cv=none; b=bBVscHCoLv4PGIEL3trIA87UwBbvzhIfT9ZS2DK7mSB2e5ybkByNbI5bKq42w/0jEqJU63z4zEnWLB0J//Bq1Vl0MZJY6QXObp8XYZW/yG9UqpJnCKCKaD0NKo2E+WvGOcWR5wwV4kYrNm2tJKIsJI8yGFBEfsC6Nc6XKvnHesc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750110880; c=relaxed/simple;
+	bh=UMxDd6TnJEodZHq8r8FH5cpU2eWgBOYMp6Xmzp/bWro=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sGLIPppZqcVY2XJ1iaXKwGxkJnl5W8v9yx0f9qcJ/eKSdsZRHR2qtvvYhpOMlCN16TYc45t4hfcpbUil+FN7XvfUQjo4TJdh0w1BQIgje3KLZ7GPYRywj9qzdDYM7b5+mdvouCWj1aUsHh+gENyMqEePgVwQPP+hvHdL21gn8PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hr9T15sQ; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LbS+ePmw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=annZ9QHYI7yWLY4qRdLmkWwoZQC10C2Llx/CUorGZmmYJ42MQESOQEPlbJ0AE9gDMgMs2QQ/18hVJFE5i1GG0mPkxvoHSAzoUOzdvNg9E+kUro7Pis1bGAo1LfselbMLYSWVA6Uz/N62LIJ3ErApVu+4owrMjfoNObWy45okuGVxy9kSfiBilpNQJZwE0VtHugnf4S2F4hROx5mH4T8E4HZPqyP1d4Ohcq8wOTNQzAoGy8BY+yui6rtZuQwfz4xrSwHIu32Bo8OKrQNHKcCjC1V8aYvrUR6RR9aRLvJdP59UY01CHa1G5mL+CZKGWBANVsyIkLohXQ+Ju46erRSu2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7xJLt1qnW3D8r2S5TxL5ehkEX6NMByn66ChfX/Jl0vQ=;
- b=JIjB75VIDBh49ngHThrze7sKmGAfL1oOBIB99DCeRa5eg7TFUUCxsLNJXRrhGyz1C13YsPIMVf1hMZwp7jQYSIowD3pJoEOnja51RqTevEEMfWF0WOcRL8OWrnE0hXk/3fJd07WSpCPECR9AlkL69I3GqSlnWuGJJl7BXeZxtGgP4Pe5O+vJRcPLJXCvjuSWjziKXz00h11NzPBhHj/X6b6huFk/LOb65PEmmwc2lzYZH+0aLZsmyJMVGvGfYYOwAQKuwAeO14OrkrIKvCdzAx9sau8wPSzK+JBsRkA0J1gDoKffin/topQeqBuCkWETexZpGWBjBKHD9AOk8ipLSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gondor.apana.org.au smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7xJLt1qnW3D8r2S5TxL5ehkEX6NMByn66ChfX/Jl0vQ=;
- b=LbS+ePmwS1SxM0Uo623p5gBIAuCP3etoNiRwa/PIbpcK9Fjd2z+TSxLdYCFqLQiM5zUvBEtERqGWnMUBV0pEFASzDQ2SXwr2KBOBdcyeKiAt+fh7DDnxy/IHpgdr0Wbu8n8vaBvhlp+E6cbV3ZzMvLIk+OsHyPazgwJfttJRxak=
-Received: from MW4PR03CA0192.namprd03.prod.outlook.com (2603:10b6:303:b8::17)
- by BL4PR12MB9721.namprd12.prod.outlook.com (2603:10b6:208:4ed::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
- 2025 21:50:55 +0000
-Received: from SJ5PEPF00000208.namprd05.prod.outlook.com
- (2603:10b6:303:b8:cafe::34) by MW4PR03CA0192.outlook.office365.com
- (2603:10b6:303:b8::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Mon,
- 16 Jun 2025 21:50:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000208.mail.protection.outlook.com (10.167.244.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 21:50:54 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
- 2025 16:50:53 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <thomas.lendacky@amd.com>, <john.allen@amd.com>,
-	<herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC: <aik@amd.com>, <dionnaglaze@google.com>, <michael.roth@amd.com>,
-	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: [RESEND PATCH v3] crypto: ccp: Fix SNP panic notifier unregistration
-Date: Mon, 16 Jun 2025 21:50:27 +0000
-Message-ID: <20250616215027.68768-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hr9T15sQ"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d3dd14a7edso102405485a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750110876; x=1750715676; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R9z+O6suy7npEsAFN8NS41uuImBr9J+t5Uf3lp/zXoo=;
+        b=hr9T15sQLqi6ZEZ9+WsGsTOIR0Ru7TRJce6qNRuGTuc6NseLBHvd+iU3BxKBXC1Kin
+         aWhC1jgqLhiWGSru+VehVu0K1/8rp+AH9UmcQjFzy97g+r+FPyMxOfbZXzuDzAA6G0RZ
+         5jFN8NOU9uKWXSeKYzMMM0Zfy8GX1S7+WrqZM+LT9jS8HisQ3ZINGRvdE7dF3xLC+C/e
+         r5IAFwNHqr2QqNGL8FFZNX98OOpNSe2YDOXwtyWgwaHdjxiy2rg8qKlMusIjza10CAip
+         mL8XqlzjN64BCtcpinizP/5SbGCHbEU0/VO2lKFKdFsDJApvlWD7qUi10ax8EU9PZQ8O
+         gVIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750110876; x=1750715676;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R9z+O6suy7npEsAFN8NS41uuImBr9J+t5Uf3lp/zXoo=;
+        b=pfnYEqSUar1Et1mPbaNT9ocg1ArOTzTqa7Nhh2SZ2WIQJzFhgenogy8XyvP0AmvmE2
+         CCHH1UiNLJdRiDss2HzcLz2QPupnpJFc+KvsXZodyhTOnCyte9cifkMdJO+3zW+TwJnA
+         CeSro6Hi5ARiQf0YFC8pi6Ko0ixYuKnrdfsOq1abDofAzEHlDUK/RrbQ2F32qSBpNTfU
+         uq0R0QfXr+AxeAXM6ldtLSB8cn9ll/MCNCTnukL4SH+UE/QJA9t6NHZGqBlIpThXpEkI
+         qZC6WxZYklN3XuL55SsFIp5hFQdUVgVrvmjd9vJWDPWjlbA77+LlWC6Y7phrR47sNin7
+         lsaA==
+X-Forwarded-Encrypted: i=1; AJvYcCX85MNuNos8YZWdqkO18Bt+ucCto6VojyvNatpkpSHUpq2i5sXXbO1kPBE3mRL+/QVGzIK8k/WlmUdPJQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjdCdyRrLhjsEp8iwRwQyegM6Vko1OI9S9i0QOmDsQguhyB83x
+	/BTjz3Ggmh8q78188g6pf6eOhrG9wl0a/bjl6v7T1KxpFIYgaY/JRMYDqK51Uewr82k=
+X-Gm-Gg: ASbGncvrmUMsw/CjJnc41ba2VqEU4iojLDssKsS8OeJoPr4N0TYtCkuBStpsLqtgJMP
+	WaJPqa2c4bEWhmT51UZTwnPCSVW0gO3xaZAZnMWKdrUJ0YM++yFKKGDw5CckuYwd/zxZj4bTL54
+	7YFHCmjs1csLKqpx6wIfwoYLsCes5AmzmSE0cVksxOC5D+Z6bplxjBggpcWCjlO6YybxvgO/rHj
+	jVSkiAWQJ4u4bRX8Pw+L4ocUh42uI6RDB/7/7YiwszQmsN0ODTUkYNyGL54sQsxVKfHfIkydZNp
+	KIi5LAX0TokMleuVCaW/HZofRREFAhcROD1LNb68ptXBOHu0AUj3nK/H+YyJxxI60JzFf2XoAYC
+	csgwk9Uqwi8LCJDC1ckvzWc+4Ag==
+X-Google-Smtp-Source: AGHT+IEd1meUmn7TOmA8y5gcSl4goeQRArpgpkKCGdvuk6JRqg9Hfn09w3mafxkqGOEbTR5TFphuCQ==
+X-Received: by 2002:a05:620a:2909:b0:7c5:9a09:cb73 with SMTP id af79cd13be357-7d3c6c1b541mr1694163785a.23.1750110876546;
+        Mon, 16 Jun 2025 14:54:36 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dfec10sm576210585a.33.2025.06.16.14.54.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 14:54:36 -0700 (PDT)
+Date: Mon, 16 Jun 2025 17:54:34 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    Oleg Nesterov <oleg@redhat.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org, 
+    Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] mul_u64_u64_div_u64: fix the division-by-zero
+ behavior
+In-Reply-To: <20250616222629.620830f6@pumpkin>
+Message-ID: <8s09r460-1523-728p-33pn-p7nn3655so4o@onlyvoer.pbz>
+References: <q246p466-1453-qon9-29so-37105116009q@onlyvoer.pbz> <20250616222629.620830f6@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000208:EE_|BL4PR12MB9721:EE_
-X-MS-Office365-Filtering-Correlation-Id: 974e4f8d-96b1-4126-745b-08ddad1fdeba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TxZZPdljW7cAaR7z/Xj0UI7qSzLZc8Z9Heww3zIcyAGDMvV5eOyFGtoIP6nx?=
- =?us-ascii?Q?PQZ16dIYJmfI7pGFMYhQjVJPsto3TY5hvaHsG5TxIQSXOl/+rF1fh3sM2iiR?=
- =?us-ascii?Q?Uf7YcwLtmx/eRAugCQui5DQow9BmssltzJoFlpEfdS+cz28zz3YOv53HGQsR?=
- =?us-ascii?Q?dG7Xum5NZg28mSA8f26VmR1HNoedKKOy+2SvCRlCb/JvMZIsSoPC0yTv4RPC?=
- =?us-ascii?Q?hopvhuociNyYDRZXB6DcfR+b7w7PGSYt+68wIb5dEDXdrRFsjnCZ8zktHkaN?=
- =?us-ascii?Q?7EvYkIkzrSu0hfQT8dzW7hBOt3XZhmeg6rI1Le+MDH0wB80eDebnHOxNA/YC?=
- =?us-ascii?Q?aGmh2xfYowXvrYaG+EsJUNY+6KOg6SgNyVUAr1aeCwV+TupkxIuqMyD/18oo?=
- =?us-ascii?Q?fV3BZsFcgxtFODOtZXX7xlnK5eXH4RZgGI4jqyG/S7DWVD+Er0KluziQ58bF?=
- =?us-ascii?Q?LRjB2SaVVGOiFu9CVww7ng4wnyx7aEuqBGQsHMiaTNuqBYxtD6REDd0KLogz?=
- =?us-ascii?Q?42k2Ll0EuPF7XphyV24ydY1m6tWXtwhkVcD6OeNhM/os/1k3/gmV/bUOJlQV?=
- =?us-ascii?Q?zJCxVMan3rzahGtV5/IAdmlKcdLAa+uL/2gDv7KqPp8iWtACx+Q0inTMm//b?=
- =?us-ascii?Q?McawPxYjULQkn/k6DP3/GXw/OVmgIdIRqn4YQTLCIb8XkeWQXCPou7KUxBmS?=
- =?us-ascii?Q?usT41AO4BPg+Kru2hxqg0viOf3JqlTayZug/0KDyMWgF+/dJjtxaFDORxHo+?=
- =?us-ascii?Q?4mAvvLmBOsDNShZEmWb1JETLRVBv2crQnsYwIl+M3unboS8dSjqr2MjxiDcm?=
- =?us-ascii?Q?2ZA67FYixzzLSqhxbD0bG7y0peONhlCTLLj2JJNhlRQUZV7HLO9vlJqhd0k7?=
- =?us-ascii?Q?WvFa4cLmylDZecFf6D95M4Eq1olybLphiZ/vxPFvbgAXu2Q8tXsGceZkhpC/?=
- =?us-ascii?Q?1H+XyUp1YEeLmVfD8oMxpgl/n3FROF6SE9pkl4VvSSJnGhBLPco1pOAsn3B1?=
- =?us-ascii?Q?GtWbfLbe3hVf3TBRwZLD6WS/4bGgJSuidKxA+3MtTwLXMF8vaWOWQJBPFs7U?=
- =?us-ascii?Q?m/4fSxFdQ6YR4qn3kHvre2SouMcziSwCn8BvN5WkIX0FW6iqhBNxUMzEzIXg?=
- =?us-ascii?Q?wz+gYQ8Dshsg+xkliVS4KOTnow8VJwSUWn80iLaOaYzW7pgDr6OyHIhXIKEw?=
- =?us-ascii?Q?k7RIKhcNDWvoKZnzwMNMprbGjMRm78MYvMQhCcGTTaWqG3qVoScyn9sqYKVD?=
- =?us-ascii?Q?iel5Oj+yrsakYEjqEGHXXbS82qv/BSCieW6rtdX9uL0X8wgl2CK994aRiSuX?=
- =?us-ascii?Q?qcZokOxHeiXKktTSXoFxDwZfU2cYsWA4KB6dhqUGuhLPcfK+D6ECEIU5s1Rb?=
- =?us-ascii?Q?OgAoJSTgt10hMEhRjk/YnLsvpCEXzz/sSY5rnlR+XkBGTOWEvXxoBklgsMsw?=
- =?us-ascii?Q?p/q2+V1seGkl1XdHcgmW/bZraE8rq3ouas1lf4+2Pa5LXWtcDiUaiLTAO4OJ?=
- =?us-ascii?Q?rW1dU/jh4yiueRMXylCpR7xbXnqwq4dRaOex?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 21:50:54.7381
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 974e4f8d-96b1-4126-745b-08ddad1fdeba
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000208.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9721
+Content-Type: text/plain; charset=US-ASCII
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Mon, 16 Jun 2025, David Laight wrote:
 
-Panic notifiers are invoked with RCU read lock held and when the
-SNP panic notifier tries to unregister itself from the panic
-notifier callback itself it causes a deadlock as notifier
-unregistration does RCU synchronization.
+> On Mon, 16 Jun 2025 15:22:44 -0400 (EDT)
+> Nicolas Pitre <npitre@baylibre.com> wrote:
+> 
+> > The current implementation forces a compile-time 1/0 division, which
+> > generates an undefined instruction (ud2 on x86) rather than a proper
+> > runtime division-by-zero exception.
+> > 
+> > Change to trigger an actual div-by-0 exception at runtime, consistent
+> > with other division operations. Use a non-1 dividend to prevent the
+> > compiler from optimizing the division into a comparison.
+> 
+> Given there is a definite 'plan' to avoid adding more BUG() to code
+> I'm not at all sure generating UB here is right at all.
+> 
+> I don't know the best solution though.
 
-Code flow for SNP panic notifier:
-snp_shutdown_on_panic() ->
-__sev_firmware_shutdown() ->
-__sev_snp_shutdown_locked() ->
-atomic_notifier_chain_unregister(.., &snp_panic_notifier)
+The best solution is to be coherent with all the other divisions. They 
+have well known behaviors, people are ready for them, debuggers are 
+ready for them. If a given architecture doesn't trap and returns zero 
+then with this patch we'll return zero too. If another arch raises an FP 
+exception then we'll raise an FP exception. Coherency is the key.
 
-Fix SNP panic notifier to unregister itself during SNP shutdown
-only if panic is not in progress.
+> To my mind returning zero for divide by zero and ~0 for overflow is least
+> likely to cause real grief later on in the called code.
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: stable@vger.kernel.org
-Fixes: 19860c3274fb ("crypto: ccp - Register SNP panic notifier only if SNP is enabled")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- drivers/crypto/ccp/sev-dev.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Maybe. But that would be unexpected for some. Plenty of raw divisions 
+without helper wrappers are out there. They won't all just produce 0.
 
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index 8fb94c5f006a..17edc6bf5622 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -1787,8 +1787,14 @@ static int __sev_snp_shutdown_locked(int *error, bool panic)
- 	sev->snp_initialized = false;
- 	dev_dbg(sev->dev, "SEV-SNP firmware shutdown\n");
- 
--	atomic_notifier_chain_unregister(&panic_notifier_list,
--					 &snp_panic_notifier);
-+	/*
-+	 * __sev_snp_shutdown_locked() deadlocks when it tries to unregister
-+	 * itself during panic as the panic notifier is called with RCU read
-+	 * lock held and notifier unregistration does RCU synchronization.
-+	 */
-+	if (!panic)
-+		atomic_notifier_chain_unregister(&panic_notifier_list,
-+						 &snp_panic_notifier);
- 
- 	/* Reset TMR size back to default */
- 	sev_es_tmr_size = SEV_TMR_SIZE;
--- 
-2.34.1
 
+Nicolas
