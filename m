@@ -1,47 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604F22E427E;
-	Mon, 16 Jun 2025 13:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707C5285CB8;
+	Mon, 16 Jun 2025 13:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079110; cv=none; b=oNUxwvS21ooAv7KQDGTtr+E6a3XjQVVFPrVo54lN0GVOKFVW2TCI8LaXEwE/rWfdnk0+gKVtE2xanfJMaSDGxebjaP3V/jhhUCDpN478J1ZCylXgqehoC3bdeT4+NAIvwJYnV35uzqaQFiWLabyTAemQS91VWo44RXtU3nYQgks=
+	t=1750079128; cv=none; b=mRMeqe/nEqaYKhkJtvCV75CiCYY/v84hz5uCIskPOMwwzmglmKoJ+xcHZgG6L9W3FQ9MxKDFRV5DLOGCOnkEQl9XaRS+BFuUtfX0ECP6TsqJqKMOfqPJ3K1FIktpGMQjJceeSwKb7iWKLBfcNXj1noMXwlyQonB8OJ3DNqxJ+E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079110; c=relaxed/simple;
-	bh=p9UNTMaBmHcquvnIIemy7Zc3tStstt+Pet1h/xmyfCc=;
+	s=arc-20240116; t=1750079128; c=relaxed/simple;
+	bh=hlXoLqIubEHuZDtkWfEeyo3ISIxZabXewxqNrV7WhWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAOP5QaSnpiU/3mz2kPaHmEsEDogOJO9wEYBZrsRT4EFoctNmJqaPkMck+OTDxbaOQjdt36/FSOHeXl56gD3Lv7zDzKPKcxlL7uxNhMQ3Tzv0MtjSoSDcnzvj9GOJu0xuO5TCorvrcaTvTzCFVBi4hbqpHNoKFriySYije1MWRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/1VsAXr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPlXOCyUE2EJ8Q7f3ZqldiebZ/8eCQrIyBduC1J8HzPgs5KSnL6zQpr/LinqL4JGtX6n9sYKeq5dCYJZSaewGUxMffMqkxtXoY1sm3e5C4/TY+xEKqORE1pDEHikqZU+4cJDqkzyhuudJaA+OTow9GLbQ5w4dO9/G9v4VEITo1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOL6S8Ou; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/1VsAXr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96899C4CEEA;
-	Mon, 16 Jun 2025 13:05:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOL6S8Ou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC56C4CEEA;
+	Mon, 16 Jun 2025 13:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750079110;
-	bh=p9UNTMaBmHcquvnIIemy7Zc3tStstt+Pet1h/xmyfCc=;
+	s=k20201202; t=1750079128;
+	bh=hlXoLqIubEHuZDtkWfEeyo3ISIxZabXewxqNrV7WhWE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K/1VsAXrUHpFrGw7C3tjH2DZILOL5PVMsfkPIiv45tcChmIlNdlARfdPUD1KizYI9
-	 HC9zwlFSM5BZ682p1oJo/WHQuoh4/7rgJ5SoVwiaJp4Erl61Lzg6wgn95q20+lBhZj
-	 7snyGHqLtHMsn1V4D7xX0KeXWsYsqWUueg4CcTx3qKsbEf9yv+S2jH75Z+RSdT/BxS
-	 L4yYRRZjZTXv8yP4+A4xfH56ikHJctme+PSGBNYUQbh2A/fbOPQhfTzvT0o7IsqgDM
-	 gf9xz8rWcDnmokzwJnUsS/QC+741Nyi7nv2MI8g1iANUi67wkIFEl0VDMsnaihVQLi
-	 R2vwNnvIIqlmg==
-Date: Mon, 16 Jun 2025 15:05:07 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v8 0/2] riscv: pwm: sophgo: add pwm support for CV1800
-Message-ID: <cr6gtizsg5qk5ggpnlbjxon4rph4c2g6wboem4e7bbjhmxxifm@v5kqrwr4i76a>
-References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
- <sfqdke7xkxg3sr2acber6kjzbcnoay6bnu3enda2xe5wzdi6id@eqiqmkdeovlb>
- <uy4idpkmmyswci3o5dul3xwees7azrs2dhorjgb5lxipi4bllb@7lbldfrwdsj7>
- <r65g6xww45zdnsuusobnzfg4pszjzkscg7t464e5eas2ycikzx@xed62astc3az>
+	b=fOL6S8OunfMzUd2zYLxAwgeta518GX7IkolJTcswwYEOb5AzVx3O5OYAn5YtG30kU
+	 1mOov0QUE5f+L5zsOnevBC9SItzNoPQb3xiVJiTR/mtroR9RQNMl1PHJ5VlWEBpKai
+	 YZcdcgKPn2KzwcO3hO9Ur/5fH4oXzKtwHO0oLukEeSvZbSyh2/w4Pt3WiLEol2Ff85
+	 2e4qBQ0MLZgvNTHFCxxHv3x01gKU2M6N7lPWredcXNtS6k4v2pOZC+AahMeuiMQP7L
+	 uxD/GYrdhXdxv4Oa2NQfPE8a1lrSse68kf3DJpReOEuqzW3HRCBPwnPJQ7uc7Vh+Kg
+	 sD4/84xmnRndA==
+Date: Mon, 16 Jun 2025 14:05:22 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: James Clark <james.clark@linaro.org>, olteanv@gmail.com,
+	oe-kbuild-all@lists.linux.dev, arnd@arndb.de,
+	larisa.grigore@nxp.com, Frank.li@nxp.com, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
+Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
+Message-ID: <e4aa4d6d-0e84-42a8-bf63-f8d132619432@sirena.org.uk>
+References: <202506160036.t9VDxF6p-lkp@intel.com>
+ <20250616111749.316413-1-james.clark@linaro.org>
+ <20250616112927.GA21689@lst.de>
+ <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
+ <20250616120832.GA24959@lst.de>
+ <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk>
+ <20250616121444.GA25443@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,65 +52,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="unotalrfmjcf6gmo"
+	protocol="application/pgp-signature"; boundary="HzW9hrF3tGvJKQdx"
 Content-Disposition: inline
-In-Reply-To: <r65g6xww45zdnsuusobnzfg4pszjzkscg7t464e5eas2ycikzx@xed62astc3az>
+In-Reply-To: <20250616121444.GA25443@lst.de>
+X-Cookie: Keep out of the sunlight.
 
 
---unotalrfmjcf6gmo
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--HzW9hrF3tGvJKQdx
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 0/2] riscv: pwm: sophgo: add pwm support for CV1800
-MIME-Version: 1.0
 
-Hello,
+On Mon, Jun 16, 2025 at 02:14:44PM +0200, Christoph Hellwig wrote:
+> On Mon, Jun 16, 2025 at 01:11:49PM +0100, Mark Brown wrote:
+> > already tied to a platform that needs DMA needing to add the dependency
+> > which nobody is going to notice without doing build testing for
+> > randconfigs or similar non-useful configs - it's not a productive use of
+> > time.
 
-On Tue, May 27, 2025 at 06:43:06AM +0800, Inochi Amaoto wrote:
-> On Mon, May 26, 2025 at 06:31:42PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Fri, May 09, 2025 at 08:14:57PM +0800, Inochi Amaoto wrote:
-> > > On Fri, May 09, 2025 at 11:45:42AM +0200, Thomas Bonnefille wrote:
-> > > > The Sophgo CV1800 chip provides a set of four independent
-> > > > PWM channel outputs.
-> > > > This series adds PWM controller support for Sophgo cv1800.
-> > > >=20
-> > > > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > > > [Thomas since v8]
-> > > > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-> > > > ---
-> > >=20
-> > > As now we have pwm support for SG2042, I suggest sharing driver code =
-and
-> > > binding file with SG2042.
-> >=20
-> > How does the two relate? Is CV1800 the same as SG2042? I'd like to know
-> > before I spend time reviewing a driver that is better spent elsewhere.
-> >=20
->=20
-> IIRC the pwm SG2044 is based on it on CV1800. And they both share some
-> common logic with SG2042, like setting PERIOD register. So I request a
-> merge for it.
+> Stop your unproductive whining and just fix your dependencies.
 
-To make this explict: Without having looked into the details, I agree
-and so will discard this patch set from the set of waiting patches in
-patchwork.
+That is not a constructive way to talk to people, especially not when
+misdirected.
 
-Best regards
-Uwe
-
---unotalrfmjcf6gmo
+--HzW9hrF3tGvJKQdx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhQFoAACgkQj4D7WH0S
-/k7yjwf/Zo2r6RNQmdAcJ6yRylPUmBOTp0jeMCrB2Snmibeqi6ksw/xe7nn1M+Ry
-NFveA+kGgf4KgkgqMmsFbz6rujAsGxO21yCccYnl7VEZdeDseumfpBXLhg0AcZaU
-FXjX2eSq4a40pprupD/mVGuaJXIfv/AoLheL9ZNKNTL2wh96L1M77so4lj4EdMRH
-nPmbe6uIWlJSs7nJf6JoQBQYiWkHjwnwoL6XOkVHSVtpnKaT5hJawAM8x+Cr0sLa
-wpY2gRdu60WMkvcZiq0xmFqxHPSzGCGnY6fMjTFlk+7Yy0MjIo/Zryu9aZZDJBau
-GmzJHvPv6T+KeYygk0M5jcNirLQ4xg==
-=HFc4
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhQFpIACgkQJNaLcl1U
+h9CF1gf/aUf6tghdUHlSErF6ZxtSN/tICNpSXbRPkh89hWQnclV5NEy1MYNlIBrs
+W8uJO5scYd79vCrwfH6Fl74v8nlCBCsVw9zfWl+aOG4SeofRFdOfzZeVVN/tk7bJ
+VhnXnqorAEMTVvBHf1ByLhstPFbON0o0XcWXSU/kIqN5NAUjVOOOVC7dLoBZo2ps
+kAL8jV4pC11dD47Zwz89Ke/7rUqlT0bTSKwb0uDgCoEbWwFq4JHU+7Ju/z2lPd/S
+lBZQryv/5QuRzE67BlUjzTh6VwOSci9yJHocjJGjFeFUdtJjPgln1wOjOxNEbIV3
+G5chNOTNrNth/XOvrg0ARyC63M58AA==
+=GOim
 -----END PGP SIGNATURE-----
 
---unotalrfmjcf6gmo--
+--HzW9hrF3tGvJKQdx--
