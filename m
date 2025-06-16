@@ -1,39 +1,67 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505B6292B3D;
-	Mon, 16 Jun 2025 12:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010A8292B3A;
+	Mon, 16 Jun 2025 12:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078799; cv=none; b=fiHzan1WZOG91o6Rm4Pllq2wQHxrCfmqGbORjasdE8HDPGWKLZ5MePUYwC2SZ9KCy6s73gPvqSRIShMS9QfoYgneo95+S/Qcv3lS0iG6bmr6/9xB6wot1nJrr2QXPA4/hR+eXtoQWNbmPKtqskoUk8Y6kGaNTyCPgF4H84Cm0J0=
+	t=1750078798; cv=none; b=h3A81V4+0VWcZlNEt+N2K4/bhXjHcFTtbj82PiB2Um7U2hfgStY637RkwswrDVetDQmQpwSMw6d2aR0r4TnKPNS6NuEwotiCk8lCQyXsFXihhiECCbsgVPK4cgvmJn6A22IuQiciaOH9OsnuVW6Ae5R91jBZbIxY8YvlnzzA2tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078799; c=relaxed/simple;
-	bh=6l+7fWDupKPx1PUKtngix+Asbt9XDd+GPScH8eDOZbI=;
+	s=arc-20240116; t=1750078798; c=relaxed/simple;
+	bh=azXkGLujEcM8p9tFvJASu5yNWqbKO8jdKB5FTpSa5nU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oPMIMHOBU6sYuLBWX/4QbKHXMbSXskrmWeJ1x2GFFJ/hmI0UsdfCazW5m/1xk0LKodcz5vCIuj3BPSYIbzojSz8vpu/vQEnOgAiy9pJ2J7l2ELpKFY0t9sFZxTGXs7ymArunkkWwU1NZTveM+9/Bq/fhuQiV84Tg7D7889LK/48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Z0DmCtsq; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	 In-Reply-To:Content-Type; b=BkeuHx3ueNAbrI/T5Ziz5BM0royTtGC6JhkeDG18d+WomTDFgZu4WnAFeVWniTEOcQx3T3yMDKrtjOQ/LWoBp/ELrib0tUdxvqzTFkUrFH8mB/Ys/qwbxxusv8zcd7+SqkIpRMLeEPH3pqbr1oxsxUHMoch3I0ht7uI55YUIBWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c1IB1hjX; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Z0DmCtsq"
-Received: from [192.168.42.116] (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id AF5022FC0059;
-	Mon, 16 Jun 2025 14:59:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1750078792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bOS4yfJw7ZHsR6k3jAVfS8tq+SMQ7zP/6jth4m1s9qg=;
-	b=Z0DmCtsqd/SfZwstPDE7axeeYVE03ZwMDIFPDbChTXAxhqH0Qt+cyKmIY+uxOFvTdjoxkh
-	loaFFTORxGNcYUvHjhDiHQ45cG+E1gDF4oQ61eqK49NxUWGendg/5rv+nE4VTajHGjDiO1
-	BcalKN8iB7ddZdSGnQRzThccjnnZASc=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <50c4d166-0254-4f5e-b006-85aef8d9dd02@tuxedocomputers.com>
-Date: Mon, 16 Jun 2025 14:59:52 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1IB1hjX"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso3956786a91.0;
+        Mon, 16 Jun 2025 05:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750078796; x=1750683596; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=1NKZCgqJI+Fhm0RriV4E/Lv8oSm/XQzalPIr9Js8t7c=;
+        b=c1IB1hjXSmQwy7kQwZyU112NzDU1c+mdOP66Fn5Jd2hWkKtIEcWl2o2uF4BCV5oOdx
+         49Ht5X/LXzF+xF9Dib7cWg14xGeoUwcSeYiEImMSg/aZ480K9TP2TLF8CfewicK0zoxD
+         UkMS5/w+8kWsLDMxrtVaXA72xL0RljihsqadWCmH9EJ6zQXs08gFk4NJpsWh9g1/9YS9
+         p4LMHOzdjjGS+EZjSBCCu/N/IAAaSjBglGIipyqLVq42KLUokaHaTjOnxMN0pbm/3hsO
+         15m/OAit3lpAM1FxkLjf/NpDFSIqiaDHagtK52elHOPlh9mH8tzLdzIzCZutWnBgNUYw
+         Gdxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750078796; x=1750683596;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1NKZCgqJI+Fhm0RriV4E/Lv8oSm/XQzalPIr9Js8t7c=;
+        b=vICsuIfIrFCdPwgmH0PnsOH19XEh8EFeESCzpgiR1Lgm3+5Y8fqZCSgx0B9HShL4Ow
+         kXI3xSEvdQ2R3dq6LQEyKLnIGKxb75ZXst22egDdaOp6imEukeiGlYMkK/XDdqqEB38Q
+         Hw+Nq72vbfj7ICVb1POxfw8V/RX0a6vR0uE+4WSlOy5VLkVJQuBErvjDWYnsvw9mazgb
+         BiPwn2knKRPPY4Gq07t2dlgUQjtAM9L8FC16ZKPzYv8bjXYaa1efa59PW5FAMTQCdhJE
+         8nRzyDJR7rJMkiTeBLiAnNcA0ir7nCe+j+l+vztWM6GkahVlYAzk8e3CsnJzaGCWlnBv
+         D50A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcY5627pAe1mEA/rhzEv9yU1FVzCtQQmZWHRhTSYRZa+G1K/RR5B7Ua1Phlbj0mtt3+d+hjlVYhL9Ww3qS@vger.kernel.org, AJvYcCXjROJ8u7DM40/xZjzojdDmcwrnVo7loaXpLEICSWrxAPL+1wLljMTYq7G4zhvIKufitYyNDap/Pnq/Vg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXwOh65GK0xUa5ZR0n9Ofg3a6JSGzARP70jdpqVHhsX52IYTS2
+	TgyXYivRwfc8FybwBBg9z9oWJ5A3ncLn2W5NdFCAZDKA/cuuvG8bfyNMfny2PA==
+X-Gm-Gg: ASbGncs93zNW2ielprdxwj8oQTBwiDSTMxVaapvysdDZSVq2cZcIDCwe5znOzHaWXES
+	O0lQ4/LF9RXQ1MQJTI4sefiORKnpips2/6oU5M3PpEBHzIiiqC66vnaIxu80XMEmoA0YzfTxiUW
+	9aAU+6t7ebtp14/IeJrilakH8cogFeXuWEmGLnipDUedUQ7rMsTbl9OADeKPeeGLU+9vFawQjH7
+	z9DBnFNkdTmTQmhkm8QP1CNni7m8ukOckSly730/fdo9UPwxtsMW9zeFF7xIPSw7o/kGiQaeP5r
+	JFgP/W/S21bixK+CL+7MohrTgKkIT3fK5nqBtyV2NK+C53mnRFF05JP4DLSR4asptS17OPFCU9f
+	6Tk5gTtdHOUIyvXatbI/whHlThlIqPv4otjo=
+X-Google-Smtp-Source: AGHT+IFh1PI8kIXBm+Qvyrboq5xS/gbU+TeRM7OmNfUaUn1DATftPe1r/wy6ZxEMJDWb1rgSypzFvA==
+X-Received: by 2002:a17:90b:4c8d:b0:2ee:d371:3227 with SMTP id 98e67ed59e1d1-313f1d580e2mr16370671a91.17.1750078796214;
+        Mon, 16 Jun 2025 05:59:56 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1bca4c7sm8510574a91.3.2025.06.16.05.59.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 05:59:55 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <5f774072-9d85-41d1-acf0-cb95450a16fb@roeck-us.net>
+Date: Mon, 16 Jun 2025 05:59:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,114 +69,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/3] platform/x86: Add support for Uniwill laptop
- features
-To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2 1/1] hwmon: (isl28022) Fix current reading calculation
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Yikai Tsai <yikai.tsai.wiwynn@gmail.com>
+Cc: patrick@stwcx.xyz, =?UTF-8?Q?Carsten_Spie=C3=9F?=
+ <mail@carsten-spiess.de>, Jean Delvare <jdelvare@suse.com>,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519084055.3787-1-yikai.tsai.wiwynn@gmail.com>
+ <20250519084055.3787-2-yikai.tsai.wiwynn@gmail.com>
+ <CAMuHMdVX0risng0cgUp7uOycv2wUNsZ3SgCX8sq=14j6NXjNBw@mail.gmail.com>
 Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20250615175957.9781-1-W_Armin@gmx.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <CAMuHMdVX0risng0cgUp7uOycv2wUNsZ3SgCX8sq=14j6NXjNBw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Armin,
+On 6/10/25 05:27, Geert Uytterhoeven wrote:
+> Hi Yikai,
+> 
+> On Mon, 19 May 2025 at 10:48, Yikai Tsai <yikai.tsai.wiwynn@gmail.com> wrote:
+>> According to the ISL28022 datasheet, bit15 of the current register is
+>> representing -32768. Fix the calculation to properly handle this bit,
+>> ensuring correct measurements for negative values.
+>>
+>> Signed-off-by: Yikai Tsai <yikai.tsai.wiwynn@gmail.com>
+> 
+> 
+>> --- a/drivers/hwmon/isl28022.c
+>> +++ b/drivers/hwmon/isl28022.c
+>> @@ -154,6 +154,7 @@ static int isl28022_read_current(struct device *dev, u32 attr, long *val)
+>>          struct isl28022_data *data = dev_get_drvdata(dev);
+>>          unsigned int regval;
+>>          int err;
+>> +       u16 sign_bit;
+>>
+>>          switch (attr) {
+>>          case hwmon_curr_input:
+>> @@ -161,8 +162,9 @@ static int isl28022_read_current(struct device *dev, u32 attr, long *val)
+>>                                    ISL28022_REG_CURRENT, &regval);
+>>                  if (err < 0)
+>>                          return err;
+>> -               *val = ((long)regval * 1250L * (long)data->gain) /
+>> -                       (long)data->shunt;
+>> +               sign_bit = (regval >> 15) & 0x01;
+>> +               *val = (((long)(((u16)regval) & 0x7FFF) - (sign_bit * 32768)) *
+>> +                       1250L * (long)data->gain) / (long)data->shunt;
+> 
+> Isn't this complex operation to convert the 16-bit register value to
+> a two-complement signed number equivalent to a simple cast?
+> 
+>      (s16)regval
+> 
+> isl28022_read_in() has similar code, but as the sign bit is not always
+> the MSB, it needs two additional shifts:
+> 
+>      ((s16)(regval << shift)) >> shift
+> 
 
-Am 15.06.25 um 19:59 schrieb Armin Wolf:
-> This patch series adds support for the various features found on
-> laptops manufactured by Uniwill. Those features are:
->
->   - battery charge limiting
->   - RGB lightbar control
->   - hwmon support
->   - improved hotkey support
->   - keyboard-related settings
->
-> This patch series is based on the following out-of-tree drivers:
->
->   - https://github.com/pobrn/qc71_laptop
->   - https://github.com/tuxedocomputers/tuxedo-drivers
-Better use https://gitlab.com/tuxedocomputers/development/packages/tuxedo-drivers
->
-> Additionally the OEM software of the Intel Nuc x15 was
-> reverse-engineered to have a better understanding about the underlying
-> hardware interface.
->
-> The first patch introduces the uniwill-wmi driver used for handling
-> WMI events on Uniwill devices. Due to a grave design error inside the
-> underlying WMI firmware interface (the WMI GUID was copied from the
-> Windows driver samples and is thus not unique) the driver cannot be
-> autoloaded. Instead drivers using this module will load it as an
-> module dependency.
->
-> The second patch introduces the uniwill-laptop driver that does the
-> majority of the work. This driver talks to the embedded controller
-> yet another WMI interface to control the various features. Sadly this
-> WMI firmware interfaces suffers from the exact same issue (the WMI
-> GUID is not unique) and thus a DMI whitelist has to be used for
-> loading the driver.
->
-> The last patch finally adds some documentation for configuring and
-> using both drivers.
->
-> Special thanks go to:
->
->   - github user cyear for bring up this topic on the lm-sensors issue
->     tracker and being the tester for various prototype versions
->   - github user dumingqiao for testing the battery, lightbar and
->     keyboard-related features
->   - Tuxedo computers for giving advice on how to design the userspace
->     interface
->
-> I send this series as an RFC to gather feedback and to request any
-> involved developers if they want to have their Co-developed-by tags
-> on the final patch series.
+Yes, I know. This could all be simplified using sign_extend32(), but I really
+wanted to be able to apply it. If someone sends me a register map, maybe I can
+write unit test code and use it to simplify the driver.
 
-Afaik most of the initial uniwill module in tuxedo-drivers was written by 
-Christoffer, he is currently on holiday, but I will ask him when he is back. I 
-also did later added to it later.
+Guenter
 
-Since this driver is a complete rewrite I'm not sure if a Co-developed by for 
-Christoffer and me is appropriate, but we would ofc be happy about it. Maybe for 
-finding out the EC register meanings that you probably at least partially copied 
-over from tuxedo-drivers?
-
-Or do you see another label more fitting?
-
-Best regards,
-
-Werner
-
->
-> Armin Wolf (3):
->    platform/x86: Add Uniwill WMI driver
->    platform/x86: Add Uniwill laptop driver
->    Documentation: laptops: Add documentation for uniwill laptops
->
->   .../ABI/testing/sysfs-driver-uniwill-laptop   |   53 +
->   Documentation/admin-guide/laptops/index.rst   |    1 +
->   .../admin-guide/laptops/uniwill-laptop.rst    |   68 +
->   Documentation/wmi/devices/uniwill-laptop.rst  |  109 ++
->   Documentation/wmi/devices/uniwill-wmi.rst     |   52 +
->   MAINTAINERS                                   |   17 +
->   drivers/platform/x86/Kconfig                  |    2 +
->   drivers/platform/x86/Makefile                 |    3 +
->   drivers/platform/x86/uniwill/Kconfig          |   49 +
->   drivers/platform/x86/uniwill/Makefile         |    8 +
->   drivers/platform/x86/uniwill/uniwill-laptop.c | 1477 +++++++++++++++++
->   drivers/platform/x86/uniwill/uniwill-wmi.c    |  178 ++
->   drivers/platform/x86/uniwill/uniwill-wmi.h    |  122 ++
->   13 files changed, 2139 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-driver-uniwill-laptop
->   create mode 100644 Documentation/admin-guide/laptops/uniwill-laptop.rst
->   create mode 100644 Documentation/wmi/devices/uniwill-laptop.rst
->   create mode 100644 Documentation/wmi/devices/uniwill-wmi.rst
->   create mode 100644 drivers/platform/x86/uniwill/Kconfig
->   create mode 100644 drivers/platform/x86/uniwill/Makefile
->   create mode 100644 drivers/platform/x86/uniwill/uniwill-laptop.c
->   create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.c
->   create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.h
->
