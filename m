@@ -1,142 +1,210 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D06D2BF016;
-	Mon, 16 Jun 2025 17:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D0B2BEFE1;
+	Mon, 16 Jun 2025 17:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750093821; cv=none; b=AgiEXP2OYCUg2WiP5PbuDRi78/WSxuSATDIsv1b//Dz+r+U+Ws07c+VE33CPHbZE8LdCXeiz7kdMbz1CkN8q0IChhkp0yhuFXN8LmY+F0jC1AGa9BP0IyncXSOpRnJqqPLzo7rGyQ9GnKWkXQwqVbTfefeeJDaMoJGyvjcAOdYY=
+	t=1750094052; cv=none; b=GRrYIye+WHa9dzVGJByIIatD2uvzNQFDK/gjiFKlxISJeX41or3SwyIUin2czbhAipaL25EGfyNcqq5BtvpXGgCQ/ucnbicK6BNUK8pzSqb0POKTbhO+oc9FsN51lZXzqb+7v3q9jOve3mGcwn7tPEXYjH+nTzXMH8Fvt8qVFeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750093821; c=relaxed/simple;
-	bh=1fykyusYVro73+SkCEdouTI5VeesZrBsX99TGTggxRY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EHA3RuQfpUvREYZZapmnC7VODeKLmQcQbJ/YR7tCtEDtlK2XCL2DvqJ0dBfOjAuqdnWFeZhe5wZzrYfRfugw8Z0IvYIvpsHyU3HpuKcwyTpcXY0sLGpZOorGKek0J1sgKKbll1Tr7fdZj5m7T321LdAikN34WMHCc5eTI0Usu80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ims2SCYu; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750094052; c=relaxed/simple;
+	bh=UwjggO9gJnjfl6+Ixw0I0bYEyFGok+qYdoeeLeS+z8M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BAQwlskrTwQuJPWZUi69WSkFH53mqvv4/CCP/2anw0ldL6jy5AWnr4BBbJrFLc7TogZhPZMT3oQ/IvU8OX1NQydFTpXYb2NmsxrkkNV68CpwT2kAYXJRsJz1fEqwuc0V+2b0YEoAsjFOCsgwKizMYtyRqRDR6lgFdqMxDENPY6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVB2KOSi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ims2SCYu"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d20ff236c5so103280985a.2;
-        Mon, 16 Jun 2025 10:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750093815; x=1750698615; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZnKjnGPQVsYruwW26IKQXjP4KtQDe+H/2EepWEDvdH4=;
-        b=ims2SCYuni7gGXtPV4Gv3S8d6ijEGdPb6Eu91dihf7+zWnhmAcg/dVHfHkc1dXH7Gz
-         EJeGlTBq7Uh+X8bkOzwP/7wL97O8wQV4cGmUu0jwfMutpAwMTaCnBka8WDViywmoRL0A
-         ur8OGCxSDfmcGRC4v1MQ/5gFQcAq8knYZvZRPv3hrEmeSqwnfOqi7J8ykvuS0aZURpW6
-         azpgK27KqH9FM2KLBXNk4MIEkjLAskhDWEl2nkqEThjkeZC6i7p4OWSuM2U/GW7+lYEy
-         9vOVgwPJT2QCgVaJW+IJ7Z6/Mxs1gBRqqTBu7oofDTqnWPE003urkdJi5vKNHbj9sGuQ
-         72Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750093815; x=1750698615;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZnKjnGPQVsYruwW26IKQXjP4KtQDe+H/2EepWEDvdH4=;
-        b=M4GtTmKjWCGO/T6mar73xjIgvSyvhW2Bp2XeiQS9UMZXaSgu8yXw6UXEfdLzu7CVXY
-         mB6tcM7FZ2XbDFJM9mDq0zmNRqVggcjx2GDhtpfNuMkb2gek+hVmunjFQZxvB3CaZCgt
-         6YM+COgp+3doZwOZ6TSh2rh8tJ52wtLz0d77nHhkFTEvIhVWCuaMKSBKwhkk+Y6tWue3
-         XyyyYYfFA82Uav/xActQceuA2LIVweGH+3rhSdrICTZ65mQ6/Cam2kdyHuFoJdndfxYp
-         oU1yAIevKccorhaYiCPJaYsMPpg6K1GrpiphpMLmqIRA5AHGz9RF9nlv34g/Vy/X1S9J
-         YY4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU3paDD3YEjfD/q/+jey1LosMwoXIBrNX6eiWbMkWgvVaMYfeYJhpYLiul8nUHUrKrMUqccnM7uh7I=@vger.kernel.org, AJvYcCUjsm8dXB2g1gKXOXSyZuKSSBj1NmAVJS1/Rx8ViEycI29JF2L++Y6JbxRnCsSpZd7eWnvC4AZ2AFMjkFq+mWUk@vger.kernel.org, AJvYcCWbe5F9zeZ/yVfTYLDPfo4+163nYuQ0IobkfchxoqCwAwXQozsk5m4rcTpk1mKf6D+ee+1tGWN6HgMkAe0H@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6DwBD1G1nj1YxCRxGRIVYlnXAHPKjwCIUnH4G70z34YwUNsNk
-	FXs7ABGhvo+/kiemXOGJYbaAeoF6Vw6IA8nJU11O/xubXVC6i9GSfSQ1
-X-Gm-Gg: ASbGncuJ2k5WQv7gOWSpMKIZ73gDWXTXNL7PeJVetry9MfjmxFO0dGHd4pSMUeWEJ6R
-	kiWGaFiuywuXrxUV7dOQnx1fZHyjuvZwWhtXJyC/7/f2Od0uwgVYdBh2DjRC/N/dE9Y4HWh50u9
-	o5Dl4sd88E11GeuQYKDiH1pgg2wW1lL3TjlOxzqnOq4LnztRyHiRgNpykQPY6soFUhCOLPz/SoL
-	GdRR7s3kF6xqSiO+1EF0JFHE4FIPrI9IjaVWM+3jgojwoHYU9sswLt2ERxMZBuqvIBGfI0/g/yv
-	vFapvbAnLWiblHfySGoTyulvZyk+7zszCHB07QIUwzFLeidg0HPCDHDd
-X-Google-Smtp-Source: AGHT+IHsQ9BByXp5pGeWBYEn81TAB7iyvrQOQoiCKdS5unwxLUFClfS9eLO2YORgalJfCQUKj/cW6g==
-X-Received: by 2002:a05:620a:414a:b0:7cd:4a08:ea12 with SMTP id af79cd13be357-7d3dddd3dcamr28146185a.0.1750093814938;
-        Mon, 16 Jun 2025 10:10:14 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:73::])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e1cf5esm546463585a.49.2025.06.16.10.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 10:10:14 -0700 (PDT)
-From: Gustavo Luiz Duarte <gustavold@gmail.com>
-Date: Mon, 16 Jun 2025 10:08:39 -0700
-Subject: [PATCH net-next v3 5/5] docs: netconsole: document msgid feature
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVB2KOSi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A775FC4CEED;
+	Mon, 16 Jun 2025 17:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750094051;
+	bh=UwjggO9gJnjfl6+Ixw0I0bYEyFGok+qYdoeeLeS+z8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UVB2KOSimzOXfYnK2DRr3Ybka3oheq7ROCKbXhmFgrLmwNKXVLA614nnhOtP6gCB+
+	 mFAtxrXm0otuAZ2m4j9NFVmQFDjAijl1VkmIK48MMw2jl2APkRgaONYEvlvIKwxtTE
+	 TXEJZzYvos9YuW/VF2u4xVRSYuO9GWrKAmb+DgTdVXdDWGFv4bPm5QGpMjqnAM8BpG
+	 uuVua5/nv57MzBWuwBeEktAOxxvWwj/JohPYLG8n7/bgOshDzstyCP8jVHVpa5RctG
+	 3RowQkKQIFEh/d6G0eU2eajlcbN8CwnMw+EoY5K1mcjqi7Uw5wJX/zvxoEzyzhHdZk
+	 /ITGJv5lNK6Wg==
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-408d7e2ad03so3135668b6e.1;
+        Mon, 16 Jun 2025 10:14:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3t/fG+cvN/TcZvOqng4+Wv6QXrK6ks9sdEtaFOpasMF+lj5InryyZhIFHP8sFsR6b2mDgn9GOY+73FGJw1071Irg=@vger.kernel.org, AJvYcCVYbSG55lRNxkBmaAOo+ve0U7g0ETDEzS3g6l/MDQEXo/BvYjT/8TT16qmn7wJ+HmezbcbILdI4/d8=@vger.kernel.org, AJvYcCW18bkU9bhL9xGZeS01HS9DLRPmZE5lcpnhbc8yISPDkFztgLdCym+XYE1JtY9jfHEuJglskp73dRw=@vger.kernel.org, AJvYcCXgwzW1yRDpknj6hy1dgcMk1c+RGvb+mnGTO9jg+9wgPJ8fTlVLf1DY/LShXbySBr9nnSGwr8i3eavi+XhC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9Rje4MyR6dt1JttrnEDVAnwaeTGXMTmAZbQ6UKI1sI6pdEeUW
+	ErF/0sbkPT2K4aBoDi3DqlHeWMVjTvn02+Fd8Cbm2wL31zKAioZziHh7GoSjcqJv3UNtI7JCV79
+	v1hP64PeQ78IZ3SYEnSmZsMhiis/D+pY=
+X-Google-Smtp-Source: AGHT+IENdHN3S0+/AJ48hd1G5VfOrsAlSi1xyptiND94+qyMdvtUbI3fcqFn659eFO6cyHDU4A3F9NLax2NQGrFUZdg=
+X-Received: by 2002:a05:6808:690b:b0:401:cae9:4dc3 with SMTP id
+ 5614622812f47-40a7c13a8b6mr6692272b6e.8.1750094050962; Mon, 16 Jun 2025
+ 10:14:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-netconsole-msgid-v3-5-4d2610577571@gmail.com>
-References: <20250616-netconsole-msgid-v3-0-4d2610577571@gmail.com>
-In-Reply-To: <20250616-netconsole-msgid-v3-0-4d2610577571@gmail.com>
-To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
- Gustavo Luiz Duarte <gustavold@gmail.com>
-X-Mailer: b4 0.13.0
+References: <20250616135357.3929441-1-claudiu.beznea.uj@bp.renesas.com> <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 16 Jun 2025 19:14:00 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
+X-Gm-Features: AX0GCFs4MChoTlgVHYwMUsgHoWrzBXwH3xptS7eJ6TN2twbvPobpEJ4Vzj_inP8
+Message-ID: <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] PM: domains: Detach on device_unbind_cleanup()
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
+	len.brown@intel.com, pavel@kernel.org, ulf.hansson@linaro.org, 
+	jic23@kernel.org, daniel.lezcano@linaro.org, dmitry.torokhov@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com, 
+	geert@linux-m68k.org, linux-iio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add documentation explaining the msgid feature in netconsole.
+On Mon, Jun 16, 2025 at 3:54=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+>
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The dev_pm_domain_attach() function is typically used in bus code alongsi=
+de
+> dev_pm_domain_detach(), often following patterns like:
+>
+> static int bus_probe(struct device *_dev)
+> {
+>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+>     struct bus_device *dev =3D to_bus_device(_dev);
+>     int ret;
+>
+>     // ...
+>
+>     ret =3D dev_pm_domain_attach(_dev, true);
+>     if (ret)
+>         return ret;
+>
+>     if (drv->probe)
+>         ret =3D drv->probe(dev);
+>
+>     // ...
+> }
+>
+> static void bus_remove(struct device *_dev)
+> {
+>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+>     struct bus_device *dev =3D to_bus_device(_dev);
+>
+>     if (drv->remove)
+>         drv->remove(dev);
+>     dev_pm_domain_detach(_dev);
+> }
+>
+> When the driver's probe function uses devres-managed resources that depen=
+d
+> on the power domain state, those resources are released later during
+> device_unbind_cleanup().
+>
+> Releasing devres-managed resources that depend on the power domain state
+> after detaching the device from its PM domain can cause failures.
+>
+> For example, if the driver uses devm_pm_runtime_enable() in its probe
+> function, and the device's clocks are managed by the PM domain, then
+> during removal the runtime PM is disabled in device_unbind_cleanup() afte=
+r
+> the clocks have been removed from the PM domain. It may happen that the
+> devm_pm_runtime_enable() action causes the device to be runtime-resumed.
+> If the driver specific runtime PM APIs access registers directly, this
+> will lead to accessing device registers without clocks being enabled.
+> Similar issues may occur with other devres actions that access device
+> registers.
+>
+> Add detach_power_off member to struct dev_pm_info, to be used later in
+> device_unbind_cleanup() as the power_off argument for
+> dev_pm_domain_detach(). This is a preparatory step toward removing
+> dev_pm_domain_detach() calls from bus remove functions. Since the current
+> PM domain detach functions (genpd_dev_pm_detach() and acpi_dev_pm_detach(=
+))
+> already set dev->pm_domain =3D NULL, there should be no issues with bus
+> drivers that still call dev_pm_domain_detach() in their remove functions.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> Changes in v4:
+> - save dev->power.detach_power_off in dev_pm_domain_attach() and use
+>   it in device_unbind_cleanup() when detaching
+> - adjusted patch description
+>
+> Changes in v3:
+> - dropped devm_pm_domain_detach_off(), devm_pm_domain_detach_on()
+>   and use a single function devm_pm_domain_detach()
+>
+> Changes in v2:
+> - none; this patch is new
+>
+>  drivers/base/dd.c           | 2 ++
+>  drivers/base/power/common.c | 3 +++
+>  include/linux/pm.h          | 1 +
+>  3 files changed, 6 insertions(+)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index b526e0e0f52d..13ab98e033ea 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/kthread.h>
+>  #include <linux/wait.h>
+>  #include <linux/async.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pinctrl/devinfo.h>
+>  #include <linux/slab.h>
+> @@ -552,6 +553,7 @@ static void device_unbind_cleanup(struct device *dev)
+>         dev->dma_range_map =3D NULL;
+>         device_set_driver(dev, NULL);
+>         dev_set_drvdata(dev, NULL);
+> +       dev_pm_domain_detach(dev, dev->power.detach_power_off);
+>         if (dev->pm_domain && dev->pm_domain->dismiss)
+>                 dev->pm_domain->dismiss(dev);
+>         pm_runtime_reinit(dev);
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index 781968a128ff..a8f302ed27a5 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -111,6 +111,9 @@ int dev_pm_domain_attach(struct device *dev, bool pow=
+er_on)
+>         if (!ret)
+>                 ret =3D genpd_dev_pm_attach(dev);
+>
+> +       if (dev->pm_domain)
+> +               dev->power.detach_power_off =3D power_on;
 
-This feature appends unique id to the userdata dictionary. The message
-ID is populated from a per-target 32 bit counter which is incremented
-for each message sent to the target. This allows a target to detect if
-messages are dropped before reaching the target.
+I'm assuming that you have checked all of the users of
+dev_pm_domain_attach() and verified that the "power off" value is the
+same as the "power on" one for all of them.
 
-Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
----
- Documentation/networking/netconsole.rst | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+> +
+>         return ret < 0 ? ret : 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index f0bd8fbae4f2..dcbe2c1ef59b 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -720,6 +720,7 @@ struct dev_pm_info {
+>         struct pm_subsys_data   *subsys_data;  /* Owned by the subsystem.=
+ */
+>         void (*set_latency_tolerance)(struct device *, s32);
+>         struct dev_pm_qos       *qos;
+> +       bool                    detach_power_off:1;
 
-diff --git a/Documentation/networking/netconsole.rst b/Documentation/networking/netconsole.rst
-index a0076b542e9c..59cb9982afe6 100644
---- a/Documentation/networking/netconsole.rst
-+++ b/Documentation/networking/netconsole.rst
-@@ -340,6 +340,38 @@ In this example, the message was sent by CPU 42.
-       cpu=42    # kernel-populated value
- 
- 
-+Message ID auto population in userdata
-+--------------------------------------
-+
-+Within the netconsole configfs hierarchy, there is a file named `msgid_enabled`
-+located in the `userdata` directory. This file controls the message ID
-+auto-population feature, which assigns a numeric id to each message sent to a
-+given target and appends the ID to userdata dictionary in every message sent.
-+
-+The message ID is generated using a per-target 32 bit counter that is
-+incremented for every message sent to the target. Note that this counter will
-+eventually wrap around after reaching uint32_t max value, so the message ID is
-+not globally unique over time. However, it can still be used by the target to
-+detect if messages were dropped before reaching the target by identifying gaps
-+in the sequence of IDs.
-+
-+It is important to distinguish message IDs from the message <sequnum> field.
-+Some kernel messages may never reach netconsole (for example, due to printk
-+rate limiting). Thus, a gap in <sequnum> cannot be solely relied upon to
-+indicate that a message was dropped during transmission, as it may never have
-+been sent via netconsole. The message ID, on the other hand, is only assigned
-+to messages that are actually transmitted via netconsole.
-+
-+Example::
-+
-+  echo "This is message #1" > /dev/kmsg
-+  echo "This is message #2" > /dev/kmsg
-+  13,434,54928466,-;This is message #1
-+   msgid=1
-+  13,435,54934019,-;This is message #2
-+   msgid=2
-+
-+
- Extended console:
- =================
- 
+Please put the new flag under #ifdef CONFIG_PM after memalloc_noio and
+comment it as "Owned by the driver core".
 
--- 
-2.47.1
+Otherwise LGTM.
 
+>  };
+>
+>  extern int dev_pm_get_subsys_data(struct device *dev);
+> --
+> 2.43.0
+>
