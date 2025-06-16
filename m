@@ -1,257 +1,293 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902A28DB3;
-	Mon, 16 Jun 2025 07:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45F81F869F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750059095; cv=none; b=r9MIf4MIJcBsy9iMt87eweQFEDR3RcNtM4H6bjvIcz4iq2Vr0zi0wK5nQzH9waThMoo4B8gu0BIOaG9JesUUHVJJ7ocwDX0c4z11FKaZT3qqCPUMbMlYXtpmHKKv3qP5GF9SZh/nS2KhcU+s5e442u8ypiAxrRA34TZGcKY8U+s=
+	t=1750059106; cv=none; b=FHL+jbAmyfjkL2WfxJ/+aCIU1oMfqZv/NxIs4tV9XhCyrylH3jf2KaFW9CreBwtdvK6lHHEBdfF+Pc5c9iwsTTksHgAPVXGC4oFG+JrTlrCW8USj9YthysgCPtB0dRyc4W+VlQCKY25K3ljn9VfwQty4b80l2FAJJmVgv4YVWRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750059095; c=relaxed/simple;
-	bh=CC2u6t8b2P27zNjKytlH9ljQiyUGr9cS7LkfcKVQLrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gzt92mDxckDQImDccIY4Bi3IJTUfb14HepHLDFPEg0BtM3iW5WDADw4vbgjnYYGqgTA9wLvjdAjutx4gLC9I1kizJ1RpJH7KTheRT3Bqfup+Bc19ua3ldCvYNUvGrW1lYyKLLQfzFqn4ksV7lHxwa6FKC5H7wKw4dVYK9ws/n6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SeNopabm; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750059106; c=relaxed/simple;
+	bh=ee5HiIoIsa3WDFCUyUGDDZltzjB7Oew/byuJhXXlAlI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nSfrxKtpBdsBKChkNVn40UrCAYC+m3lHZ5hMcqnwEU3rSC0UqkxVoCxLZsh96esZSlMH4mY4ip5GoR9d3h4dgicDyJphJwSHFB4L1h/xSUAqWDpVJXQ+gRb0LXqlqZTBJZz5ytryhMVNlI0sU/G6Qg9Js20wTqqPpTeV+wi+MgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=DC1i+2um; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SeNopabm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750059094; x=1781595094;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CC2u6t8b2P27zNjKytlH9ljQiyUGr9cS7LkfcKVQLrI=;
-  b=SeNopabmqOxK5p/zKuHftEZ8bPrGbBYup5ZskOZlEtUeidrJe4nEV3Dm
-   B2W5t5O+tyYCT4yolh1JANFjYxQlVc7BBxbFvtn3yGBwv6tJAigTiFsQw
-   0n/Pj5+W2BoLXIY8pzJfToZIML7WzMG3QrZNLcAL6UigCF+Whs2FIEvl1
-   Ucfnb7EnofoYpxkjaW1B00t7MYwJQRxKTTzgA5N1bUFlwN5906LkqsrK6
-   SqSfht0DsEc6HFKRe4lYecqRuC1T+JrQIFX2OW4aJj72RntdWsYlmIiUd
-   l6RGM7VEjrMnT6HesW9MZrXq6j7hdvmabKPZjFiOMm1UnCcLbCTfa0y5B
-   w==;
-X-CSE-ConnectionGUID: 9P1gil6FRRmuD97Sc0nrOg==
-X-CSE-MsgGUID: Fkr5Q5MPRPKcTRI6cOssOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52063957"
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="52063957"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 00:31:32 -0700
-X-CSE-ConnectionGUID: 2R1HK90pTPyR8ptpWi9rJA==
-X-CSE-MsgGUID: lFzR4X3TSY+XV4s9MRfJHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="171614010"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 16 Jun 2025 00:31:29 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uR4JT-000EpQ-0u;
-	Mon, 16 Jun 2025 07:31:27 +0000
-Date: Mon, 16 Jun 2025 15:30:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yunshui Jiang <jiangyunshui@kylinos.cn>, alexander.deucher@amd.com,
-	chriistian.koenig@amd.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yunshui Jiang <jiangyunshui@kylinos.cn>
-Subject: Re: [PATCH] drm/amdgpu: use kmalloc_array() instead of kmalloc()
-Message-ID: <202506161547.VMAIYY21-lkp@intel.com>
-References: <20250616025559.2766331-1-jiangyunshui@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DC1i+2um"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3de18fdeab0so5127155ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1750059103; x=1750663903; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EQxXH/0dmAKUHVoHoL5MncVmJUg8FbHf/SfAogCBA2o=;
+        b=DC1i+2umUVfKRl3dV5GPu22ngrs1sm0QAx+hY6GxzRuTxJz2aEVXBVY21zCsxxxAb3
+         xQ7OnZYKqww37y7xbgOG9IasDUprZUWYFUg0EZ4MElZo6BmPrlMHfFMz5ewViqQiXtWr
+         /+kx131zxEmT0q/ZfGhXZmZzXXUWLkGa88xBOnl1w1EhoTa9j0IhgDRIKQKB+e2cHZaE
+         +dJ//AYrH56dqdU2azxMFshlEHAKGit9qUbhCcCEVP/Tbj5P5zE1/M4AtQ7TENXxPDBt
+         Wsj+Oref7Aunzg2G6havYh6dekCCPT/Diu8Z8ZalOmwWyhPA2KJHD+yvV/aEF/B2yHpy
+         yAcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750059103; x=1750663903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EQxXH/0dmAKUHVoHoL5MncVmJUg8FbHf/SfAogCBA2o=;
+        b=HaX8cxgmP5iMOSw0CxQwng/pW4nDSwNdqerQw+8XbjPBZlmP3w48YeRFw3UnldfMid
+         lsb1GbvKpIEYCKxRJDHxuCdyqTRK28jtn6yCGuV99xHr2/lwXJkRjV8b2/hO6VTTypQ4
+         xrDGvYzN4H/nfja+7Jas9Iu2wZRl45AxGqFl5D/vqiPmlX+Ux96h57M4TE1gF9AjnI8p
+         0CaUqg7HiUpk4HHasLeakWTO98bEt7iN/qUAWQT/1VDSnDlzzeXA0z4rItWWiftUdhNW
+         3YKoQ/FAdEScGylLGUeH09vm3xs6KgJNUgGewX85qDFTyMH+i87ubDP2gb2MFpZ+ad1A
+         fskg==
+X-Forwarded-Encrypted: i=1; AJvYcCWetrEYVaKMJMKO6OfJIS++N6AVQVfx4+Ss8bNE5+moVG0LCFY2udeKuVU88BnAJepA11cEV4k/AyUSQj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsPBuHiCYCVupWNzCZ1+UQRl42wcqueVQuCPlgpmHBHGltjU0S
+	yLQMWaX6zz4XKqs6wBM58SbrwbeFtqWf89JNRCuqQp9l5kdK+hfIR4zLqn+gWF1u9N/2AdG1ew/
+	TLdUO/58BJrnbdxGtPSAlWxp57CD06dP2wqBQHMHdtA==
+X-Gm-Gg: ASbGncutK6twj7usny6L24CMK4d58TbjgL+40u5ZhGEJmur+ybW/H1eJ9ZJDJdaZ9Cy
+	UtNkg/RTT8/2vlin9jxuoe0z7mg/Lyp68UR23EVVaJYrxMZ8WrPT4B/McAYAl9IVXNMEgZ+b65r
+	q3we3hxIXMijtVfoaUaFyLK80kHCBO3j30aJfp2O/yqlhqnA==
+X-Google-Smtp-Source: AGHT+IEjHI16GxKyLasfzKkpzXfv5K8fdxEJHSmO2c+vsZ5EW3jLub+wreQ1LSFrfqb50SzP3xXNNY/tkYcEG9qkkXQ=
+X-Received: by 2002:a05:6e02:1445:b0:3dc:87c7:a5b5 with SMTP id
+ e9e14a558f8ab-3de07c2710fmr92538565ab.3.1750059102855; Mon, 16 Jun 2025
+ 00:31:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616025559.2766331-1-jiangyunshui@kylinos.cn>
+References: <20250604-v5_user_cfi_series-v17-0-4565c2cf869f@rivosinc.com> <20250604-v5_user_cfi_series-v17-15-4565c2cf869f@rivosinc.com>
+In-Reply-To: <20250604-v5_user_cfi_series-v17-15-4565c2cf869f@rivosinc.com>
+From: Zong Li <zong.li@sifive.com>
+Date: Mon, 16 Jun 2025 15:31:31 +0800
+X-Gm-Features: AX0GCFv07zIy78CxiGqhmmuXUJ1bc3WRbaeMC8WS8lGUU29aYh3F-BEq_8IQZZA
+Message-ID: <CANXhq0pRXX_OMW2g2ui-k7Z_ZT+5a8Sra8oE28nBh5B9K2L5bQ@mail.gmail.com>
+Subject: Re: [PATCH v17 15/27] riscv/traps: Introduce software check exception
+ and uprobe handling
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Christian Brauner <brauner@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, alistair.francis@wdc.com, 
+	richard.henderson@linaro.org, jim.shu@sifive.com, andybnac@gmail.com, 
+	kito.cheng@sifive.com, charlie@rivosinc.com, atishp@rivosinc.com, 
+	evan@rivosinc.com, cleger@rivosinc.com, alexghiti@rivosinc.com, 
+	samitolvanen@google.com, broonie@kernel.org, rick.p.edgecombe@intel.com, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yunshui,
+On Thu, Jun 5, 2025 at 1:17=E2=80=AFAM Deepak Gupta <debug@rivosinc.com> wr=
+ote:
+>
+> zicfiss / zicfilp introduces a new exception to priv isa `software check
+> exception` with cause code =3D 18. This patch implements software check
+> exception.
+>
+> Additionally it implements a cfi violation handler which checks for code
+> in xtval. If xtval=3D2, it means that sw check exception happened because=
+ of
+> an indirect branch not landing on 4 byte aligned PC or not landing on
+> `lpad` instruction or label value embedded in `lpad` not matching label
+> value setup in `x7`. If xtval=3D3, it means that sw check exception happe=
+ned
+> because of mismatch between link register (x1 or x5) and top of shadow
+> stack (on execution of `sspopchk`).
+>
+> In case of cfi violation, SIGSEGV is raised with code=3DSEGV_CPERR.
+> SEGV_CPERR was introduced by x86 shadow stack patches.
+>
+> To keep uprobes working, handle the uprobe event first before reporting
+> the CFI violation in software-check exception handler. Because when the
+> landing pad is activated, if the uprobe point is set at the lpad
+> instruction at the beginning of a function, the system triggers a softwar=
+e
+> -check exception instead of an ebreak exception due to the exception
+> priority, then uprobe can't work successfully.
+>
+> Co-developed-by: Zong Li <zong.li@sifive.com>
+> Reviewed-by: Zong Li <zong.li@sifive.com>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/asm-prototypes.h |  1 +
+>  arch/riscv/include/asm/entry-common.h   |  2 ++
+>  arch/riscv/kernel/entry.S               |  3 ++
+>  arch/riscv/kernel/traps.c               | 51 +++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 57 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include=
+/asm/asm-prototypes.h
+> index cd627ec289f1..5a27cefd7805 100644
+> --- a/arch/riscv/include/asm/asm-prototypes.h
+> +++ b/arch/riscv/include/asm/asm-prototypes.h
+> @@ -51,6 +51,7 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_u);
+>  DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
+>  DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
+>  DECLARE_DO_ERROR_INFO(do_trap_break);
+> +DECLARE_DO_ERROR_INFO(do_trap_software_check);
+>
+>  asmlinkage void handle_bad_stack(struct pt_regs *regs);
+>  asmlinkage void do_page_fault(struct pt_regs *regs);
+> diff --git a/arch/riscv/include/asm/entry-common.h b/arch/riscv/include/a=
+sm/entry-common.h
+> index b28ccc6cdeea..34ed149af5d1 100644
+> --- a/arch/riscv/include/asm/entry-common.h
+> +++ b/arch/riscv/include/asm/entry-common.h
+> @@ -40,4 +40,6 @@ static inline int handle_misaligned_store(struct pt_reg=
+s *regs)
+>  }
+>  #endif
+>
+> +bool handle_user_cfi_violation(struct pt_regs *regs);
+> +
+>  #endif /* _ASM_RISCV_ENTRY_COMMON_H */
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 978115567bca..8d25837a9384 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -474,6 +474,9 @@ SYM_DATA_START_LOCAL(excp_vect_table)
+>         RISCV_PTR do_page_fault   /* load page fault */
+>         RISCV_PTR do_trap_unknown
+>         RISCV_PTR do_page_fault   /* store page fault */
+> +       RISCV_PTR do_trap_unknown /* cause=3D16 */
+> +       RISCV_PTR do_trap_unknown /* cause=3D17 */
+> +       RISCV_PTR do_trap_software_check /* cause=3D18 is sw check except=
+ion */
+>  SYM_DATA_END_LABEL(excp_vect_table, SYM_L_LOCAL, excp_vect_table_end)
+>
+>  #ifndef CONFIG_MMU
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index 8ff8e8b36524..64388370e1ad 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -354,6 +354,57 @@ void do_trap_ecall_u(struct pt_regs *regs)
+>
+>  }
+>
+> +#define CFI_TVAL_FCFI_CODE     2
+> +#define CFI_TVAL_BCFI_CODE     3
+> +/* handle cfi violations */
+> +bool handle_user_cfi_violation(struct pt_regs *regs)
+> +{
+> +       unsigned long tval =3D csr_read(CSR_TVAL);
+> +       bool is_fcfi =3D (tval =3D=3D CFI_TVAL_FCFI_CODE && cpu_supports_=
+indirect_br_lp_instr());
+> +       bool is_bcfi =3D (tval =3D=3D CFI_TVAL_BCFI_CODE && cpu_supports_=
+shadow_stack());
+> +
+> +       /*
+> +        * Handle uprobe event first. The probe point can be a valid targ=
+et
+> +        * of indirect jumps or calls, in this case, forward cfi violatio=
+n
+> +        * will be triggered instead of breakpoint exception.
+> +        */
+> +       if (is_fcfi && probe_breakpoint_handler(regs))
+> +               return true;
 
-kernel test robot noticed the following build errors:
+Hi  Deepak,
+Sorry for missing something earlier. I think we would like to clear
+sstatus.SPELP in the uprobe handling case. For example:
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.16-rc2 next-20250613]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index c2ea999c1167..e8492bb57e09 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -349,8 +349,10 @@ bool handle_user_cfi_violation(struct pt_regs *regs)
+        bool is_fcfi =3D (tval =3D=3D CFI_TVAL_FCFI_CODE &&
+cpu_supports_indirect_br_lp_instr());
+        bool is_bcfi =3D (tval =3D=3D CFI_TVAL_BCFI_CODE &&
+cpu_supports_shadow_stack());
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yunshui-Jiang/drm-amdgpu-use-kmalloc_array-instead-of-kmalloc/20250616-105830
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250616025559.2766331-1-jiangyunshui%40kylinos.cn
-patch subject: [PATCH] drm/amdgpu: use kmalloc_array() instead of kmalloc()
-config: arm64-randconfig-002-20250616 (https://download.01.org/0day-ci/archive/20250616/202506161547.VMAIYY21-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250616/202506161547.VMAIYY21-lkp@intel.com/reproduce)
+-       if (is_fcfi && probe_breakpoint_handler(regs))
++       if (is_fcfi && probe_breakpoint_handler(regs)) {
++               regs->status =3D regs->status & ~SR_ELP;
+                return true;
++       }
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506161547.VMAIYY21-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/percpu.h:5,
-                    from arch/arm64/include/asm/arch_timer.h:18,
-                    from arch/arm64/include/asm/timex.h:8,
-                    from include/linux/timex.h:67,
-                    from include/linux/time32.h:13,
-                    from include/linux/time.h:60,
-                    from include/linux/stat.h:19,
-                    from include/linux/fs.h:11,
-                    from include/linux/debugfs.h:15,
-                    from drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:24:
-   drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c: In function 'amdgpu_ras_realloc_eh_data_space':
->> include/linux/slab.h:911:61: error: too many arguments to function 'kmalloc_noprof'; expected 2, have 3
-     911 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-         |                                                             ^~~~~~~~~~~~~~
-   include/linux/alloc_tag.h:239:16: note: in definition of macro 'alloc_hooks_tag'
-     239 |         typeof(_do_alloc) _res;                                         \
-         |                ^~~~~~~~~
-   include/linux/slab.h:911:49: note: in expansion of macro 'alloc_hooks'
-     911 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-         |                                                 ^~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2722:21: note: in expansion of macro 'kmalloc'
-    2722 |         void *bps = kmalloc(align_space, sizeof(*data->bps), GFP_KERNEL);
-         |                     ^~~~~~~
-   In file included from include/linux/fs.h:46:
-   include/linux/slab.h:896:46: note: declared here
-     896 | static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
-         |                                              ^~~~~~~~~~~~~~
->> include/linux/slab.h:911:61: error: too many arguments to function 'kmalloc_noprof'; expected 2, have 3
-     911 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-         |                                                             ^~~~~~~~~~~~~~
-   include/linux/alloc_tag.h:243:24: note: in definition of macro 'alloc_hooks_tag'
-     243 |                 _res = _do_alloc;                                       \
-         |                        ^~~~~~~~~
-   include/linux/slab.h:911:49: note: in expansion of macro 'alloc_hooks'
-     911 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-         |                                                 ^~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2722:21: note: in expansion of macro 'kmalloc'
-    2722 |         void *bps = kmalloc(align_space, sizeof(*data->bps), GFP_KERNEL);
-         |                     ^~~~~~~
-   include/linux/slab.h:896:46: note: declared here
-     896 | static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
-         |                                              ^~~~~~~~~~~~~~
->> include/linux/slab.h:911:61: error: too many arguments to function 'kmalloc_noprof'; expected 2, have 3
-     911 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-         |                                                             ^~~~~~~~~~~~~~
-   include/linux/alloc_tag.h:246:24: note: in definition of macro 'alloc_hooks_tag'
-     246 |                 _res = _do_alloc;                                       \
-         |                        ^~~~~~~~~
-   include/linux/slab.h:911:49: note: in expansion of macro 'alloc_hooks'
-     911 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-         |                                                 ^~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2722:21: note: in expansion of macro 'kmalloc'
-    2722 |         void *bps = kmalloc(align_space, sizeof(*data->bps), GFP_KERNEL);
-         |                     ^~~~~~~
-   include/linux/slab.h:896:46: note: declared here
-     896 | static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
-         |                                              ^~~~~~~~~~~~~~
+        if (is_fcfi || is_bcfi) {
+                do_trap_error(regs, SIGSEGV, SEGV_CPERR, regs->epc,
 
 
-vim +/kmalloc_noprof +911 include/linux/slab.h
+When a user mode CFI violation occurs, the ELP state should be 1, and
+the system traps into supervisor mode. During this trap, sstatus.SPELP
+is set to 1, and the ELP state is reset to 0. If we don=E2=80=99t clear
+sstatus.SPELP, the ELP state will become 1 again after executing the
+sret instruction. As a result, the system might trigger another
+forward CFI violation upon executing the next instruction in the user
+program, unless it happens to be a lpad instruction.
 
-67f2df3b82d091 Kees Cook             2024-07-01  815  
-a0a44d9175b349 Vlastimil Babka       2024-05-27  816  /*
-a0a44d9175b349 Vlastimil Babka       2024-05-27  817   * The following functions are not to be used directly and are intended only
-a0a44d9175b349 Vlastimil Babka       2024-05-27  818   * for internal use from kmalloc() and kmalloc_node()
-a0a44d9175b349 Vlastimil Babka       2024-05-27  819   * with the exception of kunit tests
-a0a44d9175b349 Vlastimil Babka       2024-05-27  820   */
-a0a44d9175b349 Vlastimil Babka       2024-05-27  821  
-a0a44d9175b349 Vlastimil Babka       2024-05-27  822  void *__kmalloc_noprof(size_t size, gfp_t flags)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  823  				__assume_kmalloc_alignment __alloc_size(1);
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  824  
-67f2df3b82d091 Kees Cook             2024-07-01  825  void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  826  				__assume_kmalloc_alignment __alloc_size(1);
-a0a44d9175b349 Vlastimil Babka       2024-05-27  827  
-a0a44d9175b349 Vlastimil Babka       2024-05-27  828  void *__kmalloc_cache_noprof(struct kmem_cache *s, gfp_t flags, size_t size)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  829  				__assume_kmalloc_alignment __alloc_size(3);
-7bd230a26648ac Suren Baghdasaryan    2024-03-21  830  
-a0a44d9175b349 Vlastimil Babka       2024-05-27  831  void *__kmalloc_cache_node_noprof(struct kmem_cache *s, gfp_t gfpflags,
-a0a44d9175b349 Vlastimil Babka       2024-05-27  832  				  int node, size_t size)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  833  				__assume_kmalloc_alignment __alloc_size(4);
-7bd230a26648ac Suren Baghdasaryan    2024-03-21  834  
-a0a44d9175b349 Vlastimil Babka       2024-05-27  835  void *__kmalloc_large_noprof(size_t size, gfp_t flags)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  836  				__assume_page_alignment __alloc_size(1);
-a0c3b940023eef Harry Yoo             2022-08-17  837  
-a0a44d9175b349 Vlastimil Babka       2024-05-27  838  void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  839  				__assume_page_alignment __alloc_size(1);
-a0c3b940023eef Harry Yoo             2022-08-17  840  
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  841  /**
-838de63b101147 Vlastimil Babka       2022-11-10  842   * kmalloc - allocate kernel memory
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  843   * @size: how many bytes of memory are required.
-838de63b101147 Vlastimil Babka       2022-11-10  844   * @flags: describe the allocation context
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  845   *
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  846   * kmalloc is the normal method of allocating memory
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  847   * for objects smaller than page size in the kernel.
-7e3528c3660a2e Randy Dunlap          2013-11-22  848   *
-59bb47985c1db2 Vlastimil Babka       2019-10-06  849   * The allocated object address is aligned to at least ARCH_KMALLOC_MINALIGN
-59bb47985c1db2 Vlastimil Babka       2019-10-06  850   * bytes. For @size of power of two bytes, the alignment is also guaranteed
-ad59baa3169591 Vlastimil Babka       2024-07-03  851   * to be at least to the size. For other sizes, the alignment is guaranteed to
-ad59baa3169591 Vlastimil Babka       2024-07-03  852   * be at least the largest power-of-two divisor of @size.
-59bb47985c1db2 Vlastimil Babka       2019-10-06  853   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  854   * The @flags argument may be one of the GFP flags defined at
-e9d198f2be851f Thorsten Scherer      2023-03-12  855   * include/linux/gfp_types.h and described at
-01598ba6b1a863 Mike Rapoport         2018-11-11  856   * :ref:`Documentation/core-api/mm-api.rst <mm-api-gfp-flags>`
-7e3528c3660a2e Randy Dunlap          2013-11-22  857   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  858   * The recommended usage of the @flags is described at
-2370ae4b1d5aa7 Mauro Carvalho Chehab 2020-04-10  859   * :ref:`Documentation/core-api/memory-allocation.rst <memory_allocation>`
-7e3528c3660a2e Randy Dunlap          2013-11-22  860   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  861   * Below is a brief outline of the most useful GFP flags
-7e3528c3660a2e Randy Dunlap          2013-11-22  862   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  863   * %GFP_KERNEL
-01598ba6b1a863 Mike Rapoport         2018-11-11  864   *	Allocate normal kernel ram. May sleep.
-7e3528c3660a2e Randy Dunlap          2013-11-22  865   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  866   * %GFP_NOWAIT
-01598ba6b1a863 Mike Rapoport         2018-11-11  867   *	Allocation will not sleep.
-7e3528c3660a2e Randy Dunlap          2013-11-22  868   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  869   * %GFP_ATOMIC
-01598ba6b1a863 Mike Rapoport         2018-11-11  870   *	Allocation will not sleep.  May use emergency pools.
-7e3528c3660a2e Randy Dunlap          2013-11-22  871   *
-7e3528c3660a2e Randy Dunlap          2013-11-22  872   * Also it is possible to set different flags by OR'ing
-7e3528c3660a2e Randy Dunlap          2013-11-22  873   * in one or more of the following additional @flags:
-7e3528c3660a2e Randy Dunlap          2013-11-22  874   *
-838de63b101147 Vlastimil Babka       2022-11-10  875   * %__GFP_ZERO
-838de63b101147 Vlastimil Babka       2022-11-10  876   *	Zero the allocated memory before returning. Also see kzalloc().
-838de63b101147 Vlastimil Babka       2022-11-10  877   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  878   * %__GFP_HIGH
-01598ba6b1a863 Mike Rapoport         2018-11-11  879   *	This allocation has high priority and may use emergency pools.
-7e3528c3660a2e Randy Dunlap          2013-11-22  880   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  881   * %__GFP_NOFAIL
-01598ba6b1a863 Mike Rapoport         2018-11-11  882   *	Indicate that this allocation is in no way allowed to fail
-7e3528c3660a2e Randy Dunlap          2013-11-22  883   *	(think twice before using).
-7e3528c3660a2e Randy Dunlap          2013-11-22  884   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  885   * %__GFP_NORETRY
-01598ba6b1a863 Mike Rapoport         2018-11-11  886   *	If memory is not immediately available,
-7e3528c3660a2e Randy Dunlap          2013-11-22  887   *	then give up at once.
-7e3528c3660a2e Randy Dunlap          2013-11-22  888   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  889   * %__GFP_NOWARN
-01598ba6b1a863 Mike Rapoport         2018-11-11  890   *	If allocation fails, don't issue any warnings.
-7e3528c3660a2e Randy Dunlap          2013-11-22  891   *
-01598ba6b1a863 Mike Rapoport         2018-11-11  892   * %__GFP_RETRY_MAYFAIL
-01598ba6b1a863 Mike Rapoport         2018-11-11  893   *	Try really hard to succeed the allocation but fail
-dcda9b04713c3f Michal Hocko          2017-07-12  894   *	eventually.
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  895   */
-7bd230a26648ac Suren Baghdasaryan    2024-03-21  896  static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  897  {
-6fa57d78aa7f21 Kees Cook             2022-11-17  898  	if (__builtin_constant_p(size) && size) {
-cc252eae85e095 Vlastimil Babka       2018-10-26  899  		unsigned int index;
-3bf019334fbbb5 Kees Cook             2022-11-17  900  
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  901  		if (size > KMALLOC_MAX_CACHE_SIZE)
-a0a44d9175b349 Vlastimil Babka       2024-05-27  902  			return __kmalloc_large_noprof(size, flags);
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  903  
-cc252eae85e095 Vlastimil Babka       2018-10-26  904  		index = kmalloc_index(size);
-a0a44d9175b349 Vlastimil Babka       2024-05-27  905  		return __kmalloc_cache_noprof(
-3c615294058429 GONG, Ruiqi           2023-07-14  906  				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  907  				flags, size);
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  908  	}
-7bd230a26648ac Suren Baghdasaryan    2024-03-21  909  	return __kmalloc_noprof(size, flags);
-f1b6eb6e6be149 Christoph Lameter     2013-09-04  910  }
-7bd230a26648ac Suren Baghdasaryan    2024-03-21 @911  #define kmalloc(...)				alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-ce6a50263d4dde Christoph Lameter     2013-01-10  912  
+The previous patch was tested on QEMU, but QEMU does not set the
+sstatus.SPELP bit to 1 when a forward CFI violation occurs. Therefore,
+I suspect that QEMU might also require some fixes.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+
+> +
+> +       if (is_fcfi || is_bcfi) {
+> +               do_trap_error(regs, SIGSEGV, SEGV_CPERR, regs->epc,
+> +                             "Oops - control flow violation");
+> +               return true;
+> +       }
+> +
+> +       return false;
+> +}
+> +
+> +/*
+> + * software check exception is defined with risc-v cfi spec. Software ch=
+eck
+> + * exception is raised when:-
+> + * a) An indirect branch doesn't land on 4 byte aligned PC or `lpad`
+> + *    instruction or `label` value programmed in `lpad` instr doesn't
+> + *    match with value setup in `x7`. reported code in `xtval` is 2.
+> + * b) `sspopchk` instruction finds a mismatch between top of shadow stac=
+k (ssp)
+> + *    and x1/x5. reported code in `xtval` is 3.
+> + */
+> +asmlinkage __visible __trap_section void do_trap_software_check(struct p=
+t_regs *regs)
+> +{
+> +       if (user_mode(regs)) {
+> +               irqentry_enter_from_user_mode(regs);
+> +
+> +               /* not a cfi violation, then merge into flow of unknown t=
+rap handler */
+> +               if (!handle_user_cfi_violation(regs))
+> +                       do_trap_unknown(regs);
+> +
+> +               irqentry_exit_to_user_mode(regs);
+> +       } else {
+> +               /* sw check exception coming from kernel is a bug in kern=
+el */
+> +               die(regs, "Kernel BUG");
+> +       }
+> +}
+> +
+>  #ifdef CONFIG_MMU
+>  asmlinkage __visible noinstr void do_page_fault(struct pt_regs *regs)
+>  {
+>
+> --
+> 2.43.0
+>
