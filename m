@@ -1,118 +1,190 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33071285C88;
-	Mon, 16 Jun 2025 12:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE7120E31C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750077433; cv=none; b=CAsNOKNqikIpwkgMyqhHbZOmwuCIjiFIDxHFpIq/q9MEcamze5aTiWKLw02z1WKA/h6Ott/lZN8kf7MsKmCoJSeY0AQSoFwh2wDV6++bfwMJJ7ni4M3XtAxhmitkx1MSS7VvCBo6I/a79eTuLkrCML9hDfwjWghoICuOycpx+a4=
+	t=1750077466; cv=none; b=VEbia+wk70IebLTdnEJFtAOOH3xC3YMZK9tk0pE5HbqfglLA7Kwt2WIKFMvIBbv82Z72T163ljTMHJwabI3v0yBsOMufiAhgD4+TEpIflooNIdhF55U5yziyWfRaVczFSmosAFRy2jYjG8rjgR1ZtVSPWF2eCRi5pWjx0+L/EEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750077433; c=relaxed/simple;
-	bh=ZeP7tjC/ZhNCZ3i6ehT8hX7C0+VGcUECL26rGy8Kgm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=umXIfXGaSPPLlZBRP2G4yBw2YMrwxpWD1y93KzXvajW5vIdNXVm29PbOxeOQ0jIEqUrmqyPfm4TYk5HQxTyuqAe51QNnTIkXNYjWHDy1hi01dqFI/bJ3ppi+Kfg8ZO/nao08DcN8CkNCxnjQElJpmCm335pmEt+rdxo/tD2l8jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mQZcCmKq; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750077466; c=relaxed/simple;
+	bh=cqkDN3GUuX2FaPIrSwbqOjePFPNUERNeI8nnFqYPemU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y6SDY1dLjvZeWUJ1PJRYs68I96X00hD/ultGOFjpJpwlaEMzG9DzPQfyfUirj2YIrl7HtQ1/bQwzjDnM80c7aiB52+YY5VuoRg+xZlDpD4TPnALhPuQe36tLFHf2DjGcEKLbxePfa0enbbfFZcE3yGq1NAQX65V/ABgvkoUV7x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IWrnUnYy; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mQZcCmKq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6114F443D2;
-	Mon, 16 Jun 2025 12:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750077423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kG3QipumXVsgRC4HVgkiBiGQuTdDWQuhKnssOVQC3/Y=;
-	b=mQZcCmKq8vupYDAfa3gPiIL9kiqYFRpFCvdRUHZ/B+32xQJa/gwrTMGv8oSnkwr3k86MPC
-	XkGEapMDGYuj+hMt2t4YusO7Xx2llW+Ct3eHDvGylDNPjT5kcTLk42bM+lbfY70arP8Z92
-	l1jxM1yfdrYqvEW9p8hfXVNCpvK26hG3dA1gREmUae9II6ug2VAhykDTB0toYrXcoGhWcr
-	Tm86JSNlKIprxGN2pWxxCypMxRvmkrLYucTfzaT1fm1ilBjWun7XsI2IGhaCyRdRB4MEeY
-	j+06koYoplIyAQNXGOAuj/WXq9UC6V3EYaQNstnlWsiRb5pSoe6zGNRnRHaVzw==
-Date: Mon, 16 Jun 2025 14:37:00 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
- <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
- <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v13 04/13] net: pse-pd: Add support for PSE
- power domains
-Message-ID: <20250616143700.6740fa59@kmaincent-XPS-13-7390>
-In-Reply-To: <20250614121329.7720ff33@kernel.org>
-References: <20250610-feature_poe_port_prio-v13-0-c5edc16b9ee2@bootlin.com>
-	<20250610-feature_poe_port_prio-v13-4-c5edc16b9ee2@bootlin.com>
-	<20250614121329.7720ff33@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IWrnUnYy"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ade326e366dso809124166b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750077462; x=1750682262; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AKXfMgFBpLTv+1KEKqm8RR6erCZ7uyeZC3q8q9iWRPM=;
+        b=IWrnUnYyXjr3dq0nUfX+enVBaOrm3J8xz284pHToB+f6UFYVHFyp9pPxOcMeSAGgi0
+         nnGeUa9GgvyzfHXMxwHrjnJ2HvgCii7/0wTgPUtym3l9+iiy59rAIxRFvaQLnociqWNY
+         +gHTy+IybOqiaZKr6xtGqOGiTyKZWGtSRYnSkQiid6zn54KLgkjaXfHQI/Gu1X4iJx3d
+         1PasqWLUKic3LWKMefec3PiqDEWV3+jeSs0BRAPcUihanJOFf9VFHxQelxsu5T1QTVCS
+         JutoyOH1KAmSSxaw6O2bZshSgZ7b7Sf40goO1D+qzMzeblkC1JegD/FkM+dwhSoqJMdo
+         Ec1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750077462; x=1750682262;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AKXfMgFBpLTv+1KEKqm8RR6erCZ7uyeZC3q8q9iWRPM=;
+        b=AIsZptVSlhaKSuvTluwFKeJsB195Im/yKRgUR+h0cY5C+K43krOb4ETBq3iJtjcgNw
+         5+SwpjzyYIDh2NrOx3gUt3MgQ1j+r5SljuT+1scYrMjd5hjR/92GGmtLncfx02JXf9dg
+         sRSql62s7bJ31fx70xsVtI3ah4xneKiIrxbQJAVieu/OlBQlD5E1uTjSAfYSaLtMicL2
+         C1NJvZRGL/aGAoyH274HzjERGRJzDnHpR7IXYXzozWzy+bfO0KdcIrfWI+niHdSN1Ecn
+         qzoQxPxgvhiMQkPdB1oT5pDuvinyYO1eiI/CP3B5wdAvbqsMv2JbI3zvhh+b4d9eES5n
+         F+qA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUbnNK8A3yKzr96X/7XsH40f3EV6gz9FcIiqtz3sl5/r8stA/mnu1PTFytIqdj3unvJYcY2j1xDQhmUR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgowVPiL4HpfTIYt2RSKqur+C7vAma7JKZFUh2lWzP5FPbG+Mq
+	aBndzpkqQcBdH/hy3StHU3ekpTIhaZHM7sscFJBqK7gQX9QxhTOCRYuCi0qLonlD7CMIy82CVgV
+	JfxYl8M5e4gDeRlEEV6EQnHHsEPPP8dLvnM57ShQMew==
+X-Gm-Gg: ASbGncs5Sg7stXb8y3HqbyLzZ199U2YAcmyjPeibY9dN81U1iu4F8znTbARHh6QaA4y
+	vXoBeIi7RsohUVWaVDL1Sg/RYxgD0zPORqcjlPK8G79XQSMvtjZ9R4xkX0k9msjQ/A0STYppap7
+	8jaAujHY2klxqfKzEGNNLLPxia8yuXyO0fwRgoJnqTYQHvUhL+MrYNF15YH5a1Mg2HuJgFu9E=
+X-Google-Smtp-Source: AGHT+IF4vL1eRRR+V7Fh0uYHlKCVaEmUVmIQOZqeLNTj+BqKo1UBYNYmNL45zdj/TOshi/bBZdLrN7e3F7+0+1KsZqs=
+X-Received: by 2002:a17:907:da3:b0:adb:23e0:9290 with SMTP id
+ a640c23a62f3a-adfad29758amr916720166b.4.1750077462526; Mon, 16 Jun 2025
+ 05:37:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieeitdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiiv
- ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+References: <20250613140514.2781138-1-vincent.guittot@linaro.org>
+ <20250613140514.2781138-4-vincent.guittot@linaro.org> <aDL3YCahMtyzYFS7MCqCyLoUruq24dC-oYxqdVFYuTN6yOd-qDT-x84Qab63lblcfdAjzof0PY68xNw3s19PXrh9plszZxiavmEjnyBuPGg=@gianis.ca>
+In-Reply-To: <aDL3YCahMtyzYFS7MCqCyLoUruq24dC-oYxqdVFYuTN6yOd-qDT-x84Qab63lblcfdAjzof0PY68xNw3s19PXrh9plszZxiavmEjnyBuPGg=@gianis.ca>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 16 Jun 2025 14:37:30 +0200
+X-Gm-Features: AX0GCFvVhg_116liKgqU63fMc36ZKNXpZYAkdtkAxQIS1bg3xgVwNd6VhVjPh-M
+Message-ID: <CAKfTPtC-EuQ65OzmTp1HeUf8YsdMGLVbf94GRG+aa6B1BD4F5A@mail.gmail.com>
+Subject: Re: [PATCH 3/4] sched/fair: Limit run to parity to the min slice of
+ enqueued entities
+To: dhaval@gianis.ca
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Le Sat, 14 Jun 2025 12:13:29 -0700,
-Jakub Kicinski <kuba@kernel.org> a =C3=A9crit :
+On Sat, 14 Jun 2025 at 00:53, <dhaval@gianis.ca> wrote:
+>
+>
+>
+>
+>
+>
+> On Friday, June 13th, 2025 at 7:16 AM, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>
+> >
+> >
+> > Run to parity ensures that current will get a chance to run its full
+> > slice in one go but this can create large latency for entity with shorter
+> > slice that has alreasy exausted its slice and wait to run the next one.
+>
+> "already exhausted"
+>
+> >
+> > Clamp the run to parity duration to the shortest slice of all enqueued
+> > entities.
+> >
+> > Signed-off-by: Vincent Guittot vincent.guittot@linaro.org
+> >
+> > ---
+> > kernel/sched/fair.c | 19 ++++++++++++++-----
+> > 1 file changed, 14 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 479b38dc307a..d8345219dfd4 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -917,23 +917,32 @@ struct sched_entity *__pick_first_entity(struct cfs_rq cfs_rq)
+> > }
+> >
+> > /
+> > - * HACK, stash a copy of deadline at the point of pick in vlag,
+> > - * which isn't used until dequeue.
+> > + * HACK, Set the vruntime, up to which the entity can run before picking
+> > + * another one, in vlag, which isn't used until dequeue.
+> > + * In case of run to parity, we use the shortest slice of the enqueued
+> > + * entities.
+> > */
+>
+> I am going to admit - I don't have a good intuitive sense on how this will affect the functionality. Maybe you can help me think of a test case to explicitly write out this assumption in behavior?
 
-> On Tue, 10 Jun 2025 10:11:38 +0200 Kory Maincent wrote:
-> > +static void __pse_pw_d_release(struct kref *kref)
-> > +{
-> > +	struct pse_power_domain *pw_d =3D container_of(kref,
-> > +						     struct
-> > pse_power_domain,
-> > +						     refcnt);
-> > +
-> > +	regulator_put(pw_d->supply);
-> > +	xa_erase(&pse_pw_d_map, pw_d->id);
-> > +}
-> > +
-> > +/**
-> > + * pse_flush_pw_ds - flush all PSE power domains of a PSE
-> > + * @pcdev: a pointer to the initialized PSE controller device
-> > + */
-> > +static void pse_flush_pw_ds(struct pse_controller_dev *pcdev)
-> > +{
-> > +	struct pse_power_domain *pw_d;
-> > +	int i;
-> > +
-> > +	for (i =3D 0; i < pcdev->nr_lines; i++) {
-> > +		if (!pcdev->pi[i].pw_d)
-> > +			continue;
-> > +
-> > +		pw_d =3D xa_load(&pse_pw_d_map, pcdev->pi[i].pw_d->id);
-> > +		if (!pw_d)
-> > +			continue;
-> > +
-> > +		kref_put_mutex(&pw_d->refcnt, __pse_pw_d_release,
-> > +			       &pse_pw_d_mutex);
-> > +	}
-> > +} =20
->=20
-> AFAIU the release function (__pse_pw_d_release) is supposed to release
-> the mutex.=20
+Run to parity minimizes the number of context switches to improve
+throughput by letting an entity run its full slice before picking
+another entity. When all entities have the same and default
+sysctl_sched_base_slice, the latter can be assumed to also be the
+quantum q (although this is not really true as the entity can be
+preempted during its quantum in our case). In such case, we still
+comply with the theorem:
+        -rmax < lagk (d) < max(rmax ; q); rmax being the max slice
+request of the task k
 
-Yes indeed thanks!
+When entities have different slices duration, we will break this rule
+which becomes
+       -rmax < lagk (d) < max(max of r ; q); 'max of r' being the
+maximum slice of all entities
 
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+In order to come back to the 1st version, we can't wait for the end of
+the slice of the current task but align with shorter slice
+
+When run to parity is disabled, we can face a similar problem because
+we don't enforce a resched periodically. In this case (patch 5), we
+use the 0.7ms value as the quantum q.
+
+So I would say that checking -rmax < lagk (d) < max(rmax ; q); when a
+task is dequeued should be a good test. We might need to use -(rmax +
+tick period) < lagk (d) < max(rmax ; q) + tick period; because of the
+way we trigger  resched
+
+
+>
+> Dhaval
+>
+> > static inline void set_protect_slice(struct sched_entity *se)
+> > {
+> > - se->vlag = se->deadline;
+> >
+> > + u64 min_slice;
+> > +
+> > + min_slice = cfs_rq_min_slice(cfs_rq_of(se));
+> > +
+> > + if (min_slice != se->slice)
+> >
+> > + se->vlag = min(se->deadline, se->vruntime + calc_delta_fair(min_slice, se));
+> >
+> > + else
+> > + se->vlag = se->deadline;
+> >
+> > }
+> >
+> > static inline bool protect_slice(struct sched_entity *se)
+> > {
+> > - return se->vlag == se->deadline;
+> >
+> > + return ((s64)(se->vlag - se->vruntime) > 0);
+> >
+> > }
+> >
+> > static inline void cancel_protect_slice(struct sched_entity *se)
+> > {
+> > if (protect_slice(se))
+> > - se->vlag = se->deadline + 1;
+> >
+> > + se->vlag = se->vruntime;
+> >
+> > }
+> >
+> > /*
+> > --
+> > 2.43.0
+>
+>
