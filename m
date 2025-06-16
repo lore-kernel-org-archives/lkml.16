@@ -1,191 +1,137 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908F27F001
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E94D27F016
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750068342; cv=none; b=QtWrujQzfkbV8MG5GRJgNA9LMbUt28P8PQe3/rj6x3KOxQDjr+CUudrEoEyK5JQKd7JCYdCAvqYgMdtjMu9nHUcSuOlO3uNrGk31fmHNuaIwXmim5OwhCeOhXv6hsFMWSgUw1/glkE5INMNndLjb/R7F8lEdNjS441pQ/8VLwKw=
+	t=1750068444; cv=none; b=kl9veiuMnyCqmFvVzQ0YbuSyniScTiYXZpSqawL3qWkXiNBjzjarffOfHFRbrcOg3Ssb+Pdas10mtQXGKbqxonGkeljPwdo451f1AwOEl+ttuCVjy6tstMKGG0FqgcHF4sDnA7a084LA/uIYRBV32ZKa3qnqF8TAUmBCL7WPZWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750068342; c=relaxed/simple;
-	bh=K5ZyQ77aDKtscOMkjMS4b1nCdU/hnoiOTCcV27+ejFI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KKxfZY1xH/JXaoai1aRJckh4EFx3jaDLbjzPHTEjzCj5xxdXsv+My3SO3d6IhO59i61EnYUkvFtZtX2hKg/VNzDebOEewNHPBeQObMfoTy97LhyjtVC0knucML2Bbzt/Pv1LFWCmzNo/4jXhpLupNMlEFcxbiA1xRDW4uPnocF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bLQW308QJz6L5fj;
-	Mon, 16 Jun 2025 18:01:03 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 68C94140157;
-	Mon, 16 Jun 2025 18:05:36 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 16 Jun
- 2025 12:05:35 +0200
-Date: Mon, 16 Jun 2025 11:05:34 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Qinxin Xia <xiaqinxin@huawei.com>
-CC: <21cnbao@gmail.com>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-	<yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<prime.zeng@huawei.com>, <fanghao11@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: Re: [RESEND PATCH v4 2/4] dma-mapping: benchmark: modify the
- framework to adapt to more map modes
-Message-ID: <20250616110534.000022b0@huawei.com>
-In-Reply-To: <20250614143454.2927363-3-xiaqinxin@huawei.com>
-References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
-	<20250614143454.2927363-3-xiaqinxin@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750068444; c=relaxed/simple;
+	bh=Lq8cqU8VINtW1dQLGxAYS6afiJNutTYBDkfPOaltG2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QMApZ3t636tEV76mnVC1xE6ZHUXgZv2Bj5H8Cctbf7xmn3PFJBO8xVUOPyQQscXcJDraz67JkrMEKz2xgFL7VJZe7+/XQnFITR3Z2sIm+aOY3+UmJ4qHDYzjc7hJ401dvaI30R5pgLShAsuEEzPATfjPU3o3bw35a/itxlhLKMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AoX6/She; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AoX6/She"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8RdQC011453;
+	Mon, 16 Jun 2025 10:06:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UWZKq+facjiaX5VfIZfoLXvS21EBNXNgcqPrsZk1JJM=; b=AoX6/ShezdTds7wN
+	yxpRHPu32orf1q3lL+KUAAiRIBWKh1zpp6fok/TRhDb0pja9VsVyQ9RBNUrZY+rV
+	EvuGGSc5maMpBIF3X2pZyoe3p4PaihhJArw+0ykn6kHjXHnX+12DDbibTc1S+vSY
+	eyl1uFFJJSxa6MzUpiaX32KQQAoSZsL09vNPpE5XsGeZ/gkrRl7B8rKKgUbTXRxy
+	q10OaE90DHdyrsY7sQXohkxVC5AnRrfbYyDl2pA02M9Qayb0UK1jEFmh6Bn9KhjX
+	8AmNt9UnLESAPGeU0OudDKXm8uCC5QlzOIzOsDRLUWtWzf5W9HrNEI3yuhZ/XwFz
+	yDaGzQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 479qp5jnbg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:06:44 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GA6itq030847
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:06:44 GMT
+Received: from [10.253.8.97] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 03:06:39 -0700
+Message-ID: <0c0a9c7a-f36e-4500-bbea-3a22a04431b3@quicinc.com>
+Date: Mon, 16 Jun 2025 18:06:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] Add FIELD_MODIFY() helper
+To: Marc Zyngier <maz@kernel.org>
+CC: Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        "Nicolas
+ Palix" <nicolas.palix@imag.fr>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+        "Joey
+ Gouly" <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <cocci@inria.fr>, <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.linux.dev>, <andrew@lunn.ch>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
+        <quic_leiwei@quicinc.com>, <quic_suruchia@quicinc.com>,
+        <quic_pavir@quicinc.com>
+References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+ <86sek5cane.wl-maz@kernel.org>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <86sek5cane.wl-maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9SYfzjF3RGzccne1WkjDRTBZRqXR4qMQ
+X-Proofpoint-ORIG-GUID: 9SYfzjF3RGzccne1WkjDRTBZRqXR4qMQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2NCBTYWx0ZWRfX7UrecK1eCq0L
+ 8jXrAGXhthDm1V6AVytgr3qliiXHjBZaL76sRZ3phJrAmJasaSNIHGzGBFhBFi9o5IyFk+xr73/
+ IhE0N4gFcbqzn7S0S7Y52KjoBgJTd6vDBFJ3S0u8Ezjm7BywP5onFsmIJfz5KtGQHVhXmdvLKDh
+ HhVLEaxXzBMod9Q38nM1Mu16s4l1HX+23Cpf2phN6fdQqmVOmOQE77cCrvquRNryXNGm2E0cfrJ
+ YsohgekeAGt6tReiCse3CCm8omb3spIjoUQVI38+9g6ghiU4z1+Vb7SKKDrKHKR/oxWt1t89JMq
+ Y7xkqAqi8zKGKRpOOG+X+UF8egA/sye8lBvBpkwGGcAPhX1Ivjfo7H2hFERpSSFfMKN+oAUW6CB
+ cjdJ4ljTU/jmgXd3d51GgsVlOh8j6vcM2f64dVA3ksVJFgMn0VPWdcBpNXSVQsIQoxGFMit0
+X-Authority-Analysis: v=2.4 cv=fMc53Yae c=1 sm=1 tr=0 ts=684fecb4 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=r701-TsZq3b5Q2E7mLQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160064
 
-On Sat, 14 Jun 2025 22:34:52 +0800
-Qinxin Xia <xiaqinxin@huawei.com> wrote:
 
-> In some service scenarios, the performance of dma_map_sg needs to be
-> tested to support different map modes for benchmarks. This patch adjusts
-> the DMA map benchmark framework to make the DMA map benchmark framework
-> more flexible and adaptable to other mapping modes in the future.
-> By abstracting the framework into four interfaces:prepare, unprepare,
-> do_map, and do_unmap.The new map schema can be introduced more easily
-> without major modifications to the existing code structure.
+
+On 6/12/2025 10:11 PM, Marc Zyngier wrote:
+> On Thu, 12 Jun 2025 14:46:07 +0100,
+> Luo Jie <quic_luoj@quicinc.com> wrote:
+>>
+>> Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
+>> macros. It is functionally similar as xxx_replace_bits(), but adds
+>> the compile time checking to catch incorrect parameter type errors.
+>>
+>> This series also converts the four instances of opencoded FIELD_MODIFY()
+>> that are found in the core kernel files, to instead use the new
+>> FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
+>> the script field_modify.cocci.
+>>
+>> The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 > 
-> Reviewed-by: Barry Song <baohua@kernel.org>
-> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+> I already indicated that the *pre-existing* set of helpers are enough
+> for what we want to do, that we *already* use them for KVM/arm64, and
+> that I didn't need nor want two ways to do the same thing in the same
+> code base.
+> 
+> My opinion hasn't changed on that front, and I don't see a point in
+> these patches.
+> 
+> 	M.
+> 
 
-There is what looks like an accidental change in behavior for loops
-after the first one.  I think the cache lines will end up clean so
-any flush will be just dropping them.  Prior to this patch they
-were probably dirty.
-
-Jonathan
-
->  #endif /* _KERNEL_DMA_BENCHMARK_H */
-> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-> index cc19a3efea89..05f85cf00c35 100644
-> --- a/kernel/dma/map_benchmark.c
-> +++ b/kernel/dma/map_benchmark.c
-> @@ -5,6 +5,7 @@
-
-> +static void *dma_single_map_benchmark_prepare(struct map_benchmark_data *map)
-> +{
-> +	struct dma_single_map_param *params __free(kfree) = kzalloc(sizeof(*params),
-> +								    GFP_KERNEL);
-Trivial: I'd split this slightly differently.
-
-	struct dma_single_map_param *params __free(kfree) =
-		kzalloc(sizeof(*params), GFP_KERNEL);
-
-
-> +}
-
-> +
-> +static int dma_single_map_benchmark_do_map(void *mparam)
-> +{
-> +	struct dma_single_map_param *params = mparam;
-> +	int ret = 0;
-> +
-> +	params->addr = dma_map_single(params->dev, params->xbuf,
-> +				      params->npages * PAGE_SIZE, params->dma_dir);
-> +	if (unlikely(dma_mapping_error(params->dev, params->addr))) {
-> +		pr_err("dma_map_single failed on %s\n", dev_name(params->dev));
-
-dev_err() seems more appropriate than passing in the dev to a pr_err.
-
-> +		ret = -ENOMEM;
-		return -ENOMEM;
-Or better still don't assume the error return of dma_mapping_error()
-(even though it is currently only -ENOMEM)
-
-> +	}
-> +
-	return 0;
-
-
-would be neater and avoid need for the local variable.
-If you add stuff here later in the series then fine to ignore this comment.
-
-
-> +	return ret;
-> +}
-
->  static int map_benchmark_thread(void *data)
->  {
-> -	void *buf;
-> -	dma_addr_t dma_addr;
->  	struct map_benchmark_data *map = data;
-> -	int npages = map->bparam.granule;
-> -	u64 size = npages * PAGE_SIZE;
-> +	__u8 map_mode = map->bparam.map_mode;
->  	int ret = 0;
->  
-> -	buf = alloc_pages_exact(size, GFP_KERNEL);
-> -	if (!buf)
-> +	struct map_benchmark_ops *mb_ops = dma_map_benchmark_ops[map_mode];
-> +	void *mparam = mb_ops->prepare(map);
-> +
-> +	if (!mparam)
->  		return -ENOMEM;
->  
->  	while (!kthread_should_stop())  {
-> @@ -49,23 +132,10 @@ static int map_benchmark_thread(void *data)
->  		ktime_t map_stime, map_etime, unmap_stime, unmap_etime;
->  		ktime_t map_delta, unmap_delta;
->  
-> -		/*
-> -		 * for a non-coherent device, if we don't stain them in the
-> -		 * cache, this will give an underestimate of the real-world
-> -		 * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
-> -		 * 66 means evertything goes well! 66 is lucky.
-> -		 */
-> -		if (map->dir != DMA_FROM_DEVICE)
-> -			memset(buf, 0x66, size);
-
-This seems to change the behavior form memset every time to only once
-in the prepare call above.  If that has no affect on what is being benchmarked,
-then add a comment on it to the patch description.
-
-
-> -
->  		map_stime = ktime_get();
-> -		dma_addr = dma_map_single(map->dev, buf, size, map->dir);
-> -		if (unlikely(dma_mapping_error(map->dev, dma_addr))) {
-> -			pr_err("dma_map_single failed on %s\n",
-> -				dev_name(map->dev));
-> -			ret = -ENOMEM;
-> +		ret = mb_ops->do_map(mparam);
-> +		if (ret)
->  			goto out;
-> -		}
->  		map_etime = ktime_get();
->  		map_delta = ktime_sub(map_etime, map_stime);
->  
-> @@ -73,7 +143,8 @@ static int map_benchmark_thread(void *data)
->  		ndelay(map->bparam.dma_trans_ns);
->  
->  		unmap_stime = ktime_get();
-> -		dma_unmap_single(map->dev, dma_addr, size, map->dir);
-> +		mb_ops->do_unmap(mparam);
-> +
->  		unmap_etime = ktime_get();
->  		unmap_delta = ktime_sub(unmap_etime, unmap_stime);
->  
-> @@ -108,7 +179,7 @@ static int map_benchmark_thread(void *data)
->  	}
->  
->  out:
-> -	free_pages_exact(buf, size);
-> +	mb_ops->unprepare(mparam);
->  	return ret;
->  }
-
+OK. I will drop the ARM64 patches and only keep the coccinelle script
+patch in the next version.
