@@ -1,170 +1,113 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8152E427E;
-	Mon, 16 Jun 2025 13:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604F22E427E;
+	Mon, 16 Jun 2025 13:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079105; cv=none; b=sqviGhnSVziTg8GJEkA0sMYVzIqqZi7WvklB3zAz5m0mAzHvAzUiV/PyZ6gfLBcBI7hfUGyQFldQ6haXvoWdCUWaGvYvXuFkhT+VK/R7p5RcQyb0jteSh6q7ROA4emr8I9fJmiOQ/HieOvjzRYUko5fhcnzB2FqrETZNm2Pxvkc=
+	t=1750079110; cv=none; b=oNUxwvS21ooAv7KQDGTtr+E6a3XjQVVFPrVo54lN0GVOKFVW2TCI8LaXEwE/rWfdnk0+gKVtE2xanfJMaSDGxebjaP3V/jhhUCDpN478J1ZCylXgqehoC3bdeT4+NAIvwJYnV35uzqaQFiWLabyTAemQS91VWo44RXtU3nYQgks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079105; c=relaxed/simple;
-	bh=siv3Ien97FCkgAjG2Q1suDpHQa4tobCL+W3T5TCoEj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AHdpWQOIGO8O8AU+Vh9IDZ4QfPfoMiPY0cvR06/Rrh3ED7jvQwL3zzWbaumdsOK2tfnbuwkI3fO6kl4/cocOa3ugImcPKH08o3stp5LIdTvteYF+VSRi09BZYmi4yzq+COzG0OK25w3uzYFgW73jlus64yTA6IsGXN7egYgCFqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOVoHjGu; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750079110; c=relaxed/simple;
+	bh=p9UNTMaBmHcquvnIIemy7Zc3tStstt+Pet1h/xmyfCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uAOP5QaSnpiU/3mz2kPaHmEsEDogOJO9wEYBZrsRT4EFoctNmJqaPkMck+OTDxbaOQjdt36/FSOHeXl56gD3Lv7zDzKPKcxlL7uxNhMQ3Tzv0MtjSoSDcnzvj9GOJu0xuO5TCorvrcaTvTzCFVBi4hbqpHNoKFriySYije1MWRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/1VsAXr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOVoHjGu"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23602481460so40202995ad.0;
-        Mon, 16 Jun 2025 06:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750079103; x=1750683903; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GUTXDzJTms5RZMMJbgvvc42mrXG+pZ1XuTEHVE/rMMo=;
-        b=WOVoHjGu8O8duegrNKas8XFo8SpB9kFi1Yp4O5T7e1jGuMWKoS8SKOvIMFB7gDqV8i
-         l45khUvkjVDKp4OsHETIgNqzD5Bb0RCKuFRoTaC3aMtrPZ+q1f9xPBnOp4TVG384I+Vt
-         R4+Phd39IqtL3s9KK2164crpaqtRsXbPS4hAIhbX4zWLfH3Win/nNpvgqDCg1SIzLQbn
-         /I/9oHVXHAfJGPLFOFWPdGHCgm4MlxOfg5ZvaPfDN4p3FjhL01UzuIu7ovtI/xnEFCdc
-         GGZWdSNIf3WHUj6DYG0sDRKDSP5PPQ3NFtftnkeQ0xhkCEBbv+q+FHfJ3H/5ksaoCeWy
-         Geog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750079103; x=1750683903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GUTXDzJTms5RZMMJbgvvc42mrXG+pZ1XuTEHVE/rMMo=;
-        b=gQ+ZMRPq+R0jWwA26KNMUx1+m6WGsPhQ+Xk5ULQo6Puyu9Rg5fLtm+z+Ny0/l9YrrT
-         Uq7KHqpVJPe7gPCDBnrw3ZwfKLRccF30DK0XTjfgVqlStg9lRiI6WGGA6PH3mYVDF08i
-         +IN8/dVST93cM7ZvWmsgbayrKKz0VeLivnzRBe3U2Egt7a5ax0Dhrp6fyBBGmA+hDLo2
-         utI0RzqK7QAjZZx1PN4otfC9rXSwiudZRP0IVWsYrnOdCRfsfYqT/JI/21oRnp3VsGqB
-         TNeiKvpNc/7zgVAf29xORSpJFt3sORtGO7y4Xa39cYwJ8Ccg1jpELh6UZa01y6RfKN/6
-         jxog==
-X-Forwarded-Encrypted: i=1; AJvYcCURz2yv3AyIfaS2iqgB5OAg5v7Z1/20aID48BFlG2z4p004rmLSkHTmufwHKltkvgIkSQ9BQqerW+ac@vger.kernel.org, AJvYcCXHnLopgPiM7UJpy+RQ6DYB5U/re922TDn3UZC8IfxxNqFp5fd9MYbg/jg8kEsB+llPGlh5T48dqFIV324gp53+Og==@vger.kernel.org, AJvYcCXONbM1x68MoYntZyKoxctqbEqZSANooLuSbSiLCPuxsqRpPYnd1oSr8U9qxY5uQ2RYjUVPmn6+aPK2O2KS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOCu/hYwXjRex9eF92gfsEY1xkKA1bYo0UAP930RJ4h5z6GGvB
-	XdQ1i9AjIcWUusQyhjDNqnvIYCd9ZW2vACxHGZ9uHV1kD9qN9jpt/hM3kadAEZbm7X2YWUMfHO5
-	Whinu1RAnMWG9W9WLfRgP9qLSgDT18fw=
-X-Gm-Gg: ASbGnctGLQ2jkfljyZtJZzvs3ATY3qq4zNgV1z9LXypjoZ0jShU53sUSuntzEA9cWpq
-	d9mpVjO5QjZsMpu3yAz647qpjRQxfVCQKtXM5IbOr6eBTvV/rXglIRvEdADNP6T3BD45srKBhKy
-	nJFAof6bE3mXfbjolaY6zksixTxtVvdiLNhrNrqP13
-X-Google-Smtp-Source: AGHT+IGIA/B2yzj9kVtPTV819XunUr+pzfOmCuEtfwePf361QYYolQtgx4s3tdeFt0KKKXYZVrT1BQRfBwQae0le85A=
-X-Received: by 2002:a17:902:ce91:b0:224:76f:9e4a with SMTP id
- d9443c01a7336-2366afe7bfdmr139261545ad.14.1750079103282; Mon, 16 Jun 2025
- 06:05:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/1VsAXr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96899C4CEEA;
+	Mon, 16 Jun 2025 13:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750079110;
+	bh=p9UNTMaBmHcquvnIIemy7Zc3tStstt+Pet1h/xmyfCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K/1VsAXrUHpFrGw7C3tjH2DZILOL5PVMsfkPIiv45tcChmIlNdlARfdPUD1KizYI9
+	 HC9zwlFSM5BZ682p1oJo/WHQuoh4/7rgJ5SoVwiaJp4Erl61Lzg6wgn95q20+lBhZj
+	 7snyGHqLtHMsn1V4D7xX0KeXWsYsqWUueg4CcTx3qKsbEf9yv+S2jH75Z+RSdT/BxS
+	 L4yYRRZjZTXv8yP4+A4xfH56ikHJctme+PSGBNYUQbh2A/fbOPQhfTzvT0o7IsqgDM
+	 gf9xz8rWcDnmokzwJnUsS/QC+741Nyi7nv2MI8g1iANUi67wkIFEl0VDMsnaihVQLi
+	 R2vwNnvIIqlmg==
+Date: Mon, 16 Jun 2025 15:05:07 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v8 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Message-ID: <cr6gtizsg5qk5ggpnlbjxon4rph4c2g6wboem4e7bbjhmxxifm@v5kqrwr4i76a>
+References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
+ <sfqdke7xkxg3sr2acber6kjzbcnoay6bnu3enda2xe5wzdi6id@eqiqmkdeovlb>
+ <uy4idpkmmyswci3o5dul3xwees7azrs2dhorjgb5lxipi4bllb@7lbldfrwdsj7>
+ <r65g6xww45zdnsuusobnzfg4pszjzkscg7t464e5eas2ycikzx@xed62astc3az>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-imx95-rproc-1-v2-0-a2bd64438be9@nxp.com> <20250606-imx95-rproc-1-v2-1-a2bd64438be9@nxp.com>
-In-Reply-To: <20250606-imx95-rproc-1-v2-1-a2bd64438be9@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Mon, 16 Jun 2025 16:07:02 +0300
-X-Gm-Features: AX0GCFsHX-yp69BTpUbkYuCgM8eD072u2RLLllJxgon-4nc2mIU3mnAX1gZC5_Q
-Message-ID: <CAEnQRZCQj5b9GSb=i2cTn4YKtAsQPTwJ6DkiqaZjmrmboim-8A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: remoteproc: fsl,imx-rproc: Add
- support for i.MX95
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Iuliana Prodan <iuliana.prodan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="unotalrfmjcf6gmo"
+Content-Disposition: inline
+In-Reply-To: <r65g6xww45zdnsuusobnzfg4pszjzkscg7t464e5eas2ycikzx@xed62astc3az>
+
+
+--unotalrfmjcf6gmo
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+MIME-Version: 1.0
 
-On Fri, Jun 6, 2025 at 4:57=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> i.MX95 has a System Manager(SM) core runs the System Control Management
-> Interface(SCMI) firmware. Vendor extenions are implemented in the
-> firmware, Logical Machine Management(LMM) protocol to manage
-> Logical Machines and CPU protocol to manage cores. The documentation
-> could be found in file drivers/firmware/arm_scmi/vendors/imx/imx95.rst.
->
-> Add below to support i.MX95
->  - compatible string for i.MX95 M7
->  - fsl,lmm-id to indicate the LMM ID of M7 LM
->  - fsl,cpu-id to indicate the CPU ID of M7
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../bindings/remoteproc/fsl,imx-rproc.yaml         | 27 ++++++++++++++++=
-++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.y=
-aml b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
-> index 57d75acb0b5e52ca49d1361176fdebc18a0bf7a2..a3ffab60df52be6f1d7cf4846=
-ca5ba1c40f03bde 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
-> +++ b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
-> @@ -28,6 +28,7 @@ properties:
->        - fsl,imx8qxp-cm4
->        - fsl,imx8ulp-cm33
->        - fsl,imx93-cm33
-> +      - fsl,imx95-cm7
->
->    clocks:
->      maxItems: 1
-> @@ -68,6 +69,12 @@ properties:
->        Indicate whether need to load the default firmware and start the r=
-emote
->        processor automatically.
->
-> +  fsl,cpu-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      This property is to specify the CPU ID of the remote processor
-> +      in SoC which supports System Manager
-> +
->    fsl,entry-address:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description:
-> @@ -78,6 +85,12 @@ properties:
->      description:
->        Phandle to IOMUXC GPR block which provide access to CM7 CPUWAIT bi=
-t.
->
-> +  fsl,lmm-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      This property is to specify the Logical Machine ID of the remote p=
-rocessor
-> +      in SoC which supports System Manager
-> +
->    fsl,resource-id:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description:
-> @@ -114,6 +127,20 @@ allOf:
->        properties:
->          power-domains: false
->
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: fsl,imx95-cm7
-> +    then:
-> +      required:
-> +        - fsl,lmm-id
-> +        - fsl,cpu-id
-> +    else:
-> +      properties:
-> +        fsl,lmm-id: false
-> +        fsl,cpu-id: false
+Hello,
 
-Hi Peng,
+On Tue, May 27, 2025 at 06:43:06AM +0800, Inochi Amaoto wrote:
+> On Mon, May 26, 2025 at 06:31:42PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Fri, May 09, 2025 at 08:14:57PM +0800, Inochi Amaoto wrote:
+> > > On Fri, May 09, 2025 at 11:45:42AM +0200, Thomas Bonnefille wrote:
+> > > > The Sophgo CV1800 chip provides a set of four independent
+> > > > PWM channel outputs.
+> > > > This series adds PWM controller support for Sophgo cv1800.
+> > > >=20
+> > > > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> > > > [Thomas since v8]
+> > > > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> > > > ---
+> > >=20
+> > > As now we have pwm support for SG2042, I suggest sharing driver code =
+and
+> > > binding file with SG2042.
+> >=20
+> > How does the two relate? Is CV1800 the same as SG2042? I'd like to know
+> > before I spend time reviewing a driver that is better spent elsewhere.
+> >=20
+>=20
+> IIRC the pwm SG2044 is based on it on CV1800. And they both share some
+> common logic with SG2042, like setting PERIOD register. So I request a
+> merge for it.
 
-Can you remind me why do we need the else branch here?
+To make this explict: Without having looked into the details, I agree
+and so will discard this patch set from the set of waiting patches in
+patchwork.
 
-I mean if the compatible is not fsl,imx95-cm7 then the properties
-fsl,lmm-id and fsl,cpu-id are not required and I think that's fine.
+Best regards
+Uwe
+
+--unotalrfmjcf6gmo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhQFoAACgkQj4D7WH0S
+/k7yjwf/Zo2r6RNQmdAcJ6yRylPUmBOTp0jeMCrB2Snmibeqi6ksw/xe7nn1M+Ry
+NFveA+kGgf4KgkgqMmsFbz6rujAsGxO21yCccYnl7VEZdeDseumfpBXLhg0AcZaU
+FXjX2eSq4a40pprupD/mVGuaJXIfv/AoLheL9ZNKNTL2wh96L1M77so4lj4EdMRH
+nPmbe6uIWlJSs7nJf6JoQBQYiWkHjwnwoL6XOkVHSVtpnKaT5hJawAM8x+Cr0sLa
+wpY2gRdu60WMkvcZiq0xmFqxHPSzGCGnY6fMjTFlk+7Yy0MjIo/Zryu9aZZDJBau
+GmzJHvPv6T+KeYygk0M5jcNirLQ4xg==
+=HFc4
+-----END PGP SIGNATURE-----
+
+--unotalrfmjcf6gmo--
