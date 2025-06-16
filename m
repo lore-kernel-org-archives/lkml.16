@@ -1,98 +1,146 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5732F1DB377
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5430322B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750092294; cv=none; b=qOgmrVdcVkVwNlpc2PhODdScXen8w2iH99d1WAmUlVwbc1Cbtix3MKYGNjyHW0C45bNeb+9IRiKt/x9QAhenLkzwBi6dl1FTutYrcCLoq5rLRlu8FWPIrEU26G+0t6BC3dA9rstCQYvxpO38pS8/PYURotg/1hzXwnGymZUz5gw=
+	t=1750092375; cv=none; b=BcYlrAwdPPBqETlHlmuL2kQ+pGG57aqzJEmNOhaFCRRpYFHBfC42urzMzPAJdZ6+Lj2AqadIqlT7GYhwVJsz5D+MYhPAglT8uZDX9vHw/PGbDdp2hcEwEaQt17gtdPhCNLFoDixY/dkUkbnWsrFhdyQUJ6TbtaWh82bqUv7yCWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750092294; c=relaxed/simple;
-	bh=2TD0i2ana8y+qF9gsd/rS8HjMtpUN8ygxUF8OFmPzsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZRup8GNGa9rrNmq0f853TuxvvRRFWSJi0yinI9pUbDbasSc3zPAy+i61e1ebgGD20+GDnEaVXmIEgZSgUehyGFQ1+yj0ZxJrNoLvv3GkpcyseSM0E6EoTSq9yxUAmWAMnq5CxnQVPAUbyxW0umQhQ9g8o0nmwQO0seGGegjx5TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzxXmFWr; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750092375; c=relaxed/simple;
+	bh=E5U1yP4hQA8QXwz6fW4Z68bO+TMhLlGp8Tk/+yKLwYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HkNTFjcaY23tnu70AE+C+VIdPloZNVuvijoN9ZANyWoizcmCBGErdpfTRZKBgQEjYGDmNwEIEv9ZCLBtDgbcCWnNH91e2A1H79WbG63R6vqUmD8sys1/fDNqgUPNNA37RiW4qkeDYkdg2S/Q/tfjhAeErUlHT7Qw8FEoXSC9tOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L7QgsVvh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzxXmFWr"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-addcea380eeso756994466b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:44:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750092291; x=1750697091; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ApXU2JCKiCyQJdj/JMLowQ6Yg0sLWVVznw6X8Toq4o=;
-        b=OzxXmFWrf8YNn85psl67aCexyjzveVQs6Jj5uAJ2pO9EEDNT6W7at43pKsPkhPtdkw
-         28EBxWRdRJXWeU3kn9F3Yynwjgm5/w3HzncZPP1RoZFiTJzAvL4duvocwSYUEqJeMrhN
-         3BrMEZxKA/wEggI6RxqN1SAS3OxZmjKzJp020rCsYwJogrD08cYDrCjBipGAfB1esLYp
-         fcDlU7Bzdgyr/ilm74RN3lNST+2mYv4eRyy6puckJjDowdiPqHhlMB96alxbI1fBSO1M
-         C2aSLxpdkVt4dtGVvL6vFY1mKgaAGl8ClUDACzOJRQzQKDMqNQSluVRbLV8xMACuulRK
-         E51g==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L7QgsVvh"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GGgDdm010987
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:46:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	j+PyABmtYdCmM1nxKezq910pWxD+orgLkSJMDq63LKk=; b=L7QgsVvhZBDl2eQC
+	+GokdLhoxKlJpcuAC99EOczeMBgps4eqj/FkE4SV+hfH2ZkdghpLUEKBshAVU3zH
+	Fvj0Co2hqEMPc+EApeYjImqgI6x21mpXtIFaQsW9y8uJ5ghLr9RL2cPuKRo6Cp1r
+	mI3Up+ZZqI90yEjsTmT11063TZ7BsJXGddJYbrN5qCwX5Tus2RfH/3tGq/bmz6sY
+	B5j1DDyeVSgWHRYXCoy6qeLS6N55DhxY4WKbcFJj8uy5HcGdTRuUdO0flNelVZ2g
+	4CTBV+D3HU8xEOkByVp4dvkq9GeQo1stHrj09qeIY1+1Amys5rmnyVAUrsn2qm+q
+	eyIgpA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 479qp5kvb8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:46:12 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d2038aae69so30427185a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:46:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750092291; x=1750697091;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ApXU2JCKiCyQJdj/JMLowQ6Yg0sLWVVznw6X8Toq4o=;
-        b=SYn8sJmAZLsXHHC6I0gL5IcoGNglIM3aXJm4AvAW1GYAr1wP6n/SM2VNiag5D/2dAe
-         P0Lc2wXvu+F/BhVk5oyRO2pfSqdLjNM7aX/x29hOfRdG6euRSUXZx955hTL42ZR6iwGw
-         +CdWTVPL+EPttalxTromH5fbGs1QVHsVFxyycAk6Zm41OYal02ihYQiVgenrWVrzNCT9
-         96zD1jRcvJSDPK8XE0QXfnWhTmmi8tnLGNvLa52PrMYzOOjkDxGiw8q3zSJDIudDYc+e
-         3aHzyhDNQlZ499NpAJtrqUJDwaTA88qqEeSBlqpca5/tb2CGzkBsP4HqudyQSoTWrulT
-         9z/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUaZ1pTvbBJe7dP464RDo92XsS5fWaoy+hEw6s6SGlYjCQ5CLKwUyCokMsjVsIQIrsk6bh5xF6oIks2ZnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz4jvKQ2yfX7c7jnaoTgd54qZMIeSWG4UzYX/sbPMhFp6uA9QX
-	Mr33ziHbL2gnacUvz7fG0gqqXd8TeEh8/Ziz2m2X3rjXXxte2OukWgWr
-X-Gm-Gg: ASbGnctB1PZ4vmJ1oXndiBvwKOpmaEi3q626M/Bz4yRSccUpPVrAnSyQALoe4CteYZT
-	EPpQMi+UGpfVeYW9wgdAgQvi1Ll0ws+PyHDFrMaDtZOp1Fd0JHMEz2MClt4iSoav0qB8tPn4tma
-	UyH/lJjVgcwXGRPP+eZVgcMju4nbJGO+jSLxhqMq39NPOByyuSyDm967ogtPjpEcPBJ0rKwus5U
-	2z40CIMCBiBaMWv4r0mGXWyTfM+72oAZd45UZ6aue4UMRkTYjQ5idajmprzzhUJj5quxRP0ydHR
-	RfeQ1sZxTTxCZ+il/LMb3eDgVPOwR4NRw2rBbIBXWm1q+s0da3R0GEFMkkqG8KjkMSmEcvOkzIW
-	JdFlmEkoXZ3k=
-X-Google-Smtp-Source: AGHT+IF+57xX1n/ra5g/CQaBFBx4UgdBiS9Nwy9eIBGYf/AwZ/BvkEMIPnPe1+JOfN2PQsuQz3jVIg==
-X-Received: by 2002:a17:906:c154:b0:ade:2e4b:50d1 with SMTP id a640c23a62f3a-adfad415a59mr1002985066b.29.1750092291309;
-        Mon, 16 Jun 2025 09:44:51 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adfb53b3f5csm483311566b.142.2025.06.16.09.44.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 09:44:51 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: bp@alien8.de
-Cc: dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	khaliidcaliy@gmail.com,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [PATCH] x86/startup: Let the caller retrieve encryption mask
-Date: Mon, 16 Jun 2025 16:43:52 +0000
-Message-ID: <20250616164404.879-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616153111.GAaFA4v85VGWp9qIrY@fat_crate.local>
-References: <20250616153111.GAaFA4v85VGWp9qIrY@fat_crate.local>
+        d=1e100.net; s=20230601; t=1750092371; x=1750697171;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j+PyABmtYdCmM1nxKezq910pWxD+orgLkSJMDq63LKk=;
+        b=RYocshD3TvH8LntwWw7jLdojWJjHYMVGXYdPsb85hrj+2GO91j8N9Asq0gr1dSDqXc
+         UpLGNquia8bp7DlXumVYNDIVzH6aIVCYQMWYmw4qFhblm9L/jMeqz2LH32fDjnNMnsnK
+         0AzTRuSqEPSBbpfSMPb0SN0yEp1nnkNNmyvSXX6UNlYJBH6bTk4iRrb9+RA0QuoagOJZ
+         boiLxVw9NnOiGhpBDAc0mekXIdDrICc4im8BBwhZx7WbNxRMrtqeuMXZoHEkrC11AQNm
+         c9CqmFtwo4nhpUsCLTDMFR8eFpWphxvypoRfqk6FYwN++1j4zWI/wgSlagDIXTD5kA7W
+         9mLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQpI1UgT9Yp1QKYwSvg2bOjNuVx3A6i3Xxj1CdXeZcGXiUVj5WYKjlRIIIk966is5IIEhh7MNi7AQ2b4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlztiPTlbyXZK4bpC7WdFZs+bfppRqmW44O03ufquKRTvjN6U0
+	RBvZdpiA7ZB0cN3kftoBP41ZO1zJEhbq1SIEFQPZX372WvGVnmhu9xmG/6b4APA6N0a39WzCtpV
+	RLdJTf557cSVFG0Tp9Qmf6p3F6RkBnLXVEKb65iq1NKG+408HESMM+3i2rmGf1XDOhxY=
+X-Gm-Gg: ASbGncu9nqach3XORu/DULTwAhrN23wgM/Wr3RUrdlBO5kTb8Zqkt4EtkdQAEAi/VR4
+	9qLHjYLcyRQ/zFxF4trqYLFmwzlVy/JduzedJF0FckOeZUOgmCacRlwFoU2saXJO/zfyRuNMZXn
+	aozLooTNhoDUZi8JbYhxvS1IdilxFHaW32utGK7HzBfdOBkwcrh9NR9ajA1W/czk1bYyNb4lWjc
+	nIFyY8/04l619CwYyhx2sfyyDOQuVW4e4S/U5m5Zh8LqgUh6CPXED0wsuLo2TipovnUmCLJagph
+	QhvVLOnzO8n7Su8HwA/HWQhw2tFhmS/1wUphrhg75lGEalNmjF1jDTrAIBrf7Q1p/RTjOO/ATGB
+	NC68=
+X-Received: by 2002:a05:620a:1a94:b0:7c0:b3cd:9be0 with SMTP id af79cd13be357-7d3c6ccbab0mr534393985a.10.1750092370758;
+        Mon, 16 Jun 2025 09:46:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECa0uf5zdXNpzOvYXV4+oB5gSMav8jAoDEuKhXiLul1U3ZDZicZ9s9ALB+gnNdoxN0MV5wcQ==
+X-Received: by 2002:a05:620a:1a94:b0:7c0:b3cd:9be0 with SMTP id af79cd13be357-7d3c6ccbab0mr534391285a.10.1750092370218;
+        Mon, 16 Jun 2025 09:46:10 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adecdcae670sm666104066b.184.2025.06.16.09.46.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 09:46:09 -0700 (PDT)
+Message-ID: <e211630b-09ff-4267-9507-4d67d58a9257@oss.qualcomm.com>
+Date: Mon, 16 Jun 2025 18:46:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: add debug UART pins to reserved GPIO
+ ranges on RB2
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250616143341.51944-1-brgl@bgdev.pl>
+ <713cd518-935f-4501-9753-d33c9ea6aef7@oss.qualcomm.com>
+ <CAMRc=MceV-HgyFFvqytXAiuY+y10PQbdPBxuvd57NCeSLVLXCg@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CAMRc=MceV-HgyFFvqytXAiuY+y10PQbdPBxuvd57NCeSLVLXCg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 1OPLQ-14pC2XHDIfpnOTwzp5u4cSGJ0M
+X-Proofpoint-ORIG-GUID: 1OPLQ-14pC2XHDIfpnOTwzp5u4cSGJ0M
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDExMSBTYWx0ZWRfXz7wCl7MgpdGY
+ Ujdy4Wcfo2d02Wc9g+KOsyuC6Aijong2IKAvy4mc12ULKx/6jRxtX15rWNHTQnmr2ufK7szPdLS
+ pHPVtxQxbxzopzAGwyfkdeKpjat4A7QV3IPo32X3pybaaSvSUQw5oUHg4Gd1Y2GanFO1ZixR6H0
+ 1hSNjz4wS+KZAHzdhSlvA2SiworEzQgVSou96KqFhHXxd0wWP69qezrGJvgNUVesWTkIclU35H1
+ 0sKnWOqndsg6OlN3wzO8zkqU/xHPak58hEjkuVYWzDqKvxzi82f/yYL5ixuzcuqQ+WK4VKR2Xsu
+ GV2a8l0X0QyHues/jZPZmfWSs5lzDliseQBNzC5fWSKIaEtylmbILljqSXCvaqAAyf4yOa3g38K
+ 2gXzsvIU2tQcxsdQ0om6CJP6xF8kD1HL5/6dBJ/cjaS/zT2kbFa+hYdm5/FjXqqkxtJ+vRbU
+X-Authority-Analysis: v=2.4 cv=fMc53Yae c=1 sm=1 tr=0 ts=68504a54 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
+ a=znVqVWsdYbECHmFFIgkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=879 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160111
 
-> What Thomas told you about structuring commit messages:
->
-> https://lore.kernel.org/r/875xgziprs.ffs@tglx
->
-> Do it please and then send patches.
->
-> Thx.
+On 6/16/25 6:43 PM, Bartosz Golaszewski wrote:
+> On Mon, Jun 16, 2025 at 6:20 PM Konrad Dybcio
+> <konrad.dybcio@oss.qualcomm.com> wrote:
+>>
+>> On 6/16/25 4:33 PM, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>
+>>> GPIO12 and GPIO13 are used for the debug UART and must not be available
+>>> to drivers or user-space. Add them to the gpio-reserved-ranges.
+>>>
+>>> Fixes: 8d58a8c0d930c ("arm64: dts: qcom: Add base qrb4210-rb2 board dts")
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>> ---
+>>
+>> That also makes them unavailable to the kernel though, no?
+>>
+> 
+> Yes. They could only be used by QUP - I2C or SPI #4 - on sm6115 but
+> none of these are used on RB2. I just noticed that my console froze
+> when I accidentally requested GPIO12 and figured that it makes sense
+> to make them unavailable. Let me know if this should be dropped.
 
-I apologies, i was aware, however English isn't my native language. 
-I was grasping the doc as best i could. I sent v2 already.
+We usually carry an active/sleep pair of pinctrl configs - would they
+be affected by these changes?
 
-Thanks
-Khalid Ali
-
+Konrad
