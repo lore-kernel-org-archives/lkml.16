@@ -1,186 +1,216 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0EA2877C3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE712E06C1
 	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080804; cv=none; b=Fmi3/d2ao5StZ+a61guV+/BieY+fqivu0Oazi12CMucRVF+9Kh+v4kRe99QcJQ4q/Qkbsbq+Z1DcT7yF3M9MoBB0PXiRyz1AuliMG/+ZmSkumgInl/7Jn6r/vK7Tw6ui2Ian3DZS2HHYjTETNgXlhAke9K1kMydCk/w6MRKHuc8=
+	t=1750080805; cv=none; b=qJyHHnzvSEyLIVP+JDfzYSYslF0zbyxm0e6gZvEQ6YzMyyfT5F16k33vQrKGXMBHIQMm3dwqcm1Yv0ToIi2Y3ViyUla2BJzZ7MHDoNgqtgtgdjJIim6Aqq6fIMO1miaso/rXVAnL/f0/RWoSZTIkUZ0U22U3R4o7oCYCvKoSvvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080804; c=relaxed/simple;
-	bh=0PHI8c4cGupy6mr00/69MtbHFn0M40BQMFD2F7JuKUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NKgLT4EFAp9vL8geiKeh4e5teYGneSxJgg1Bh6r9XtaJhZ368k57oXpztHHUjvqg1O9D+Ry613xNTAx76qgxulUqJa7YSdnE78xRMxHGfZmdc31Kynksso12Tw7ogZXJUk2QFJmJqjbr9ReHUNH+oL4upxj/24i33ialChZUyQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VGrkzcjH; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750080805; c=relaxed/simple;
+	bh=h61zvk86mIy6HFIKb44/uFTca5tTMXV0Nl9/b3obT20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CudieebF4FrhoofRP5wAWqJ4beHhRKbRNtBAsJrnN8PXrrM/u7Nnlb2xXqLwNxDarIyZANyk55gRpB6aPagFqOPHf/PLtQBOohodcLOnYRh1LS2cmyfgvQCfW9JQFtN+JkdC+IJz3+TjCGz7WEoo43GGMIWjpqClFDXUNJGLrw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=01dFRPvR; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VGrkzcjH"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso7859647a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:33:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="01dFRPvR"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453066fad06so33896635e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:33:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750080801; x=1750685601; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1750080800; x=1750685600; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zhqvBCRWi83ljiiFIoIKKjzL3JwEFntoAes/MRvHbvg=;
-        b=VGrkzcjHJcxoKsVJO/hC0a5HRDzdSXGHs+xUtbV+PUKcnazteRKOU0/azSgJN7RpfK
-         pp6D8TdJ/tYgGBJibvmMEIYYnBUAlU9lI7b2llWcotjEk1LeUS40amFJBWGGZQWdCYQm
-         CgziL5y2yVh33bW8QCckwfwZKuQMruphZJlsU=
+        bh=+6b4Beq/LXHyQVf4U43/pXx65WWNeVARph73idBSy/s=;
+        b=01dFRPvRfjuiD/kMP6K9WP1ziaLZSfdzf4KDPxS0sYi3lY9NFi780B/ohCVUM2mxuc
+         secpGGeHJzmOOOQ0lb3N++T5OVfyZ/QweF0Uil238b7sqWzcytNWtv2ZTTvNLvA62Vjc
+         gZ4+ilK2nuGkmEpJIh9vUzODYF1LkKdAu9RxKzbzSTPSsbZANNSLYLx5gKpjapef5z0s
+         bRhh6nzG4I2BESq8DjX7+N5c/L6fFTrWXA5kad4IvTEQZeSN1Fha9EyVnkAAZQVdEcfH
+         393/Fmtg7luiVx/+dHFL6bdI/vqtRgNPahyULOFvjiYZh23EU1gBrR77XTUCmyTn3dTs
+         tI2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750080801; x=1750685601;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750080800; x=1750685600;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zhqvBCRWi83ljiiFIoIKKjzL3JwEFntoAes/MRvHbvg=;
-        b=HXw4DiJ14B8FPoJDfgS+KXNy9BeL7ETJ2IyG8tMdRKBLnu6gk/b2uxbKnYkUO7oEX5
-         6IdM//vmT/OlZqQYyv+gGx7DN4uUPKq9hsf4ZijqADf3+ZtnXqJLDZgoF/Jd+/S23RoY
-         Ks1VIVaNjkzG5dRJTlNVPBZgafc14Rs8hIOEk6+GRcoPQW0RJXzqsk7gOqzYSGOwyQ9N
-         mZl5pKAUueuZekTx7hy+rsIpPx8Ncl4NOyrUJpABaNxlyrr2W2xF9HefjsX8GCxMtd9R
-         Ld0G21w0aMpVIEVTDjhsGLR0+kfF/rwVV92fSOwBtfKe3iKQVo5NDBHj0hzBX/5k+zuf
-         DBVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpLGRZLgmem8Hrwwf+2GqjqkWHI4//tEJXn1v3hqXbNRHKgzs4PwHiKdj4byP9/f8qWR08ZVcrVdpygDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoHsj/8KE9AG8yWXBPNUjAgIPfD/J98/8oqtx7m1PrlinJjPP6
-	tC1/NYkVxV+IBvNU1/fUr3xw7ThOnm17+858/lHH8uugHw6iDL4l7mAHukqmogcUsg==
-X-Gm-Gg: ASbGncvWZJ3HyczHpxdRPUE6omwM77j4OBx/PRJy2+qzF7cHrudjCes44uOFNt2GZuY
-	A1q3bmFe4e5cXRgj1bY9tZJYITFpNPKqpgoTXMr4YZx/MA3bvOV1iqL74p/Y1ossUaBQotbJggD
-	L+Wgaq9ENJarmT8ujFm+EYqQLTR3yMLHFLBvd5GnLYr/IOQ89j7fC8SvUtC5ha2sgCK3Emqy4We
-	ShvC0HkGwnF/yQ5C0E9Lv825gstKk2f3WZ/Q+rrW23r0FqqZC0R8zUrKQr7SeD7BJjzue45EeUg
-	uyffcR8/96/RE7ZfW3EitVsDj9cnsRpb9Hq+yVAMg1tD4L5ThIP2p+asYaZVUbXxSG6WkieJVJr
-	JgoKeGVkrCmbyoE8zgfEU3mLUS/rqEtH866pJG08VtwaYyb34BJEl1xMQTsgglEC1km00
-X-Google-Smtp-Source: AGHT+IHfbJubtALYX705aMPJAZLadxG+o3H7c51K1HROrB1vOE0jaYQjb3BtZP2Tk8Y8fXZXY/12hQ==
-X-Received: by 2002:a05:6402:13d4:b0:606:e754:62bb with SMTP id 4fb4d7f45d1cf-608d09e3938mr8395397a12.28.1750080800769;
-        Mon, 16 Jun 2025 06:33:20 -0700 (PDT)
-Received: from akuchynski.c.googlers.com.com (244.175.141.34.bc.googleusercontent.com. [34.141.175.244])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a94ce7sm6036664a12.58.2025.06.16.06.33.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 06:33:20 -0700 (PDT)
-From: Andrei Kuchynski <akuchynski@chromium.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Pooja Katiyar <pooja.katiyar@intel.com>,
-	Badhri Jagan Sridharan <badhri@google.com>,
-	RD Babiera <rdbabiera@google.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	Andrei Kuchynski <akuchynski@chromium.org>
-Subject: [PATCH 07/10] usb: typec: Report altmode entry status via callback
-Date: Mon, 16 Jun 2025 13:31:44 +0000
-Message-ID: <20250616133147.1835939-8-akuchynski@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-In-Reply-To: <20250616133147.1835939-1-akuchynski@chromium.org>
-References: <20250616133147.1835939-1-akuchynski@chromium.org>
+        bh=+6b4Beq/LXHyQVf4U43/pXx65WWNeVARph73idBSy/s=;
+        b=dijR/rhS7mkglawgw5Cz4YvgEh/dF2pC1U7XElpwXvikH7Wh9FOhqjRzTXr5+oDfyf
+         WW7eogmWpXz5f5s2ut4GPVYKGXKrhbrSz6oUdlPaSzjX/WDfoQpBc4DcwDJn4U0wnk/T
+         0uR0AvTnN6i8P9IsNci5P0uHVwxJDHf23W1fhTb5XV4R3sruCa+nljmkmImxlM8Tx4Pl
+         p9/YM2s5OeTBeAikZdow7f55/aNzFqvVh5qqi5kLdbPNZszvgFv7GC6PBkge41bxedet
+         GA+hdWbVtOLIPO+qa1+pyXKG+Z0wuhd/k+oxbRYIoc2Nq4uj2T8tensotbAElTzkn5rU
+         fMrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCRTqcKupnZDFp9LCuNxGbLgfFpdz0dWCNXk6LSARI2kJlROXIaUeds7jOX7hW3DuiRvGr82FygB13Fjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj5j7sM8zCXD/CFkIHyoAx6NzdgS6k+cdCwoWoHDHTG+R4NPyn
+	PFjeb44ikJrvDdJXaYXv91woPvW/15JZvTti4T3+k5rgQEL+76s7QAY5uMAZ0bPxgD/L4lOcYBj
+	R0/mZwqaiHYekohPyaDfSnYlb5iczNM74ygRUfYuf
+X-Gm-Gg: ASbGncuk202z2VWuXhCAYePpUsWlV//LUm0gInwgLN7d/jCNxYJWN91xUmTGyBAA4PL
+	1eXumS/6bXYhLacEWk+RwM9eGTXtFW6lUYCQ0kNEiffaTP8al/eibc38iTjrm3uwdsRjzXRTDMD
+	OhtbLML/TuT4QLOT52i2/ZpL3UAINWck9f9i+yncAN273u
+X-Google-Smtp-Source: AGHT+IHoHIQWUh1tsB7VdpSgBe+HOR1+wnpYotOSJnim3yodaLfcWb+HX61Di4FQcFN8L/suGwt1uoWH/7fAgVfvJZs=
+X-Received: by 2002:a05:600c:1d9e:b0:453:7bd:2e30 with SMTP id
+ 5b1f17b1804b1-4533cac455fmr88605775e9.29.1750080800258; Mon, 16 Jun 2025
+ 06:33:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux> <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+ <aEckTQ2F-s1YfUdu@pollux.localdomain>
+In-Reply-To: <aEckTQ2F-s1YfUdu@pollux.localdomain>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 16 Jun 2025 15:33:06 +0200
+X-Gm-Features: AX0GCFugHkgwu-8fmEBsdYNx2iQ--FaKirwILvqXSQM0todMUtf7WPLfkCI54O0
+Message-ID: <CAH5fLgj+za85ajgNwJepoa7PSFkMm+3J2wJJVJ24m6YZoFVmVw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and handlers
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Type-C mode selection logic requires feedback on the result of an
-alternate mode entry attempt.
-Call the `typec_mode_selection_altmode_complete()` callback to provide
-this final success or failure status.
+On Mon, Jun 9, 2025 at 8:13=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> On Mon, Jun 09, 2025 at 01:24:40PM -0300, Daniel Almeida wrote:
+> > > On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
+> > >> +#[pin_data]
+> > >> +pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
+> > >> +    inner: Devres<RegistrationInner>,
+> > >> +
+> > >> +    #[pin]
+> > >> +    handler: T,
+> > >> +
+> > >> +    /// Pinned because we need address stability so that we can pas=
+s a pointer
+> > >> +    /// to the callback.
+> > >> +    #[pin]
+> > >> +    _pin: PhantomPinned,
+> > >> +}
+> > >
+> > > Most of the code in this file is a duplicate of the non-threaded regi=
+stration.
+> > >
+> > > I think this would greatly generalize with specialization and an Hand=
+lerInternal
+> > > trait.
+> > >
+> > > Without specialization I think we could use enums to generalize.
+> > >
+> > > The most trivial solution would be to define the Handler trait as
+> > >
+> > > trait Handler {
+> > >   fn handle(&self);
+> > >   fn handle_threaded(&self) {};
+> > > }
+> > >
+> > > but that's pretty dodgy.
+> >
+> > A lot of the comments up until now have touched on somehow having threa=
+ded and
+> > non-threaded versions implemented together. I personally see no problem=
+ in
+> > having things duplicated here, because I think it's easier to reason ab=
+out what
+> > is going on this way. Alice has expressed a similar view in a previous =
+iteration.
+> >
+> > Can you expand a bit more on your suggestion? Perhaps there's a clean w=
+ay to do
+> > it (without macros and etc), but so far I don't see it.
+>
+> I think with specialization it'd be trivial to generalize, but this isn't
+> stable yet. The enum approach is probably unnecessarily complicated, so I=
+ agree
+> to leave it as it is.
+>
+> Maybe a comment that this can be generalized once we get specialization w=
+ould be
+> good?
 
-Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
----
- drivers/usb/typec/altmodes/displayport.c | 13 +++++++++++--
- drivers/usb/typec/altmodes/thunderbolt.c |  6 ++++++
- include/linux/usb/typec_tbt.h            |  3 +++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+Specialization is really far out. I don't think we should try to take
+it into account when designing things today. I think that the
+duplication in this case is perfectly acceptable and trying to
+deduplicate makes things too hard to read.
 
-diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-index ac84a6d64c2f..946f61b57fa0 100644
---- a/drivers/usb/typec/altmodes/displayport.c
-+++ b/drivers/usb/typec/altmodes/displayport.c
-@@ -274,16 +274,20 @@ static void dp_altmode_work(struct work_struct *work)
- 		header = DP_HEADER(dp, svdm_version, DP_CMD_STATUS_UPDATE);
- 		vdo = 1;
- 		ret = typec_altmode_vdm(dp->alt, header, &vdo, 2);
--		if (ret)
-+		if (ret) {
- 			dev_err(&dp->alt->dev,
- 				"unable to send Status Update command (%d)\n",
- 				ret);
-+			typec_mode_selection_altmode_complete(dp->alt, ret);
-+		}
- 		break;
- 	case DP_STATE_CONFIGURE:
- 		ret = dp_altmode_configure_vdm(dp, dp->data.conf);
--		if (ret)
-+		if (ret) {
- 			dev_err(&dp->alt->dev,
- 				"unable to send Configure command (%d)\n", ret);
-+			typec_mode_selection_altmode_complete(dp->alt, ret);
-+		}
- 		break;
- 	case DP_STATE_CONFIGURE_PRIME:
- 		ret = dp_altmode_configure_vdm_cable(dp, dp->data_prime.conf);
-@@ -397,6 +401,9 @@ static int dp_altmode_vdm(struct typec_altmode *alt,
- 			dp->data.conf = 0;
- 			ret = dp_altmode_configured(dp);
- 			break;
-+		case DP_CMD_STATUS_UPDATE:
-+			ret = *(int *)vdo;
-+			break;
- 		default:
- 			break;
- 		}
-@@ -407,6 +414,8 @@ static int dp_altmode_vdm(struct typec_altmode *alt,
- 
- 	if (dp->state != DP_STATE_IDLE)
- 		schedule_work(&dp->work);
-+	else if (ret || cmd == DP_CMD_CONFIGURE)
-+		typec_mode_selection_altmode_complete(dp->alt, ret);
- 
- err_unlock:
- 	mutex_unlock(&dp->lock);
-diff --git a/drivers/usb/typec/altmodes/thunderbolt.c b/drivers/usb/typec/altmodes/thunderbolt.c
-index 6eadf7835f8f..697ab6060652 100644
---- a/drivers/usb/typec/altmodes/thunderbolt.c
-+++ b/drivers/usb/typec/altmodes/thunderbolt.c
-@@ -242,6 +242,9 @@ static int tbt_altmode_vdm(struct typec_altmode *alt,
- 			else if (tbt->plug[TYPEC_PLUG_SOP_P])
- 				tbt->state = TBT_STATE_SOP_P_EXIT;
- 			break;
-+		case TBT_CMD_STATUS_UPDATE:
-+			typec_mode_selection_altmode_complete(alt, 0);
-+			break;
- 		}
- 		break;
- 	case CMDT_RSP_NAK:
-@@ -249,6 +252,9 @@ static int tbt_altmode_vdm(struct typec_altmode *alt,
- 		case CMD_ENTER_MODE:
- 			dev_warn(&alt->dev, "Enter Mode refused\n");
- 			break;
-+		case TBT_CMD_STATUS_UPDATE:
-+			typec_mode_selection_altmode_complete(alt, *(int *)vdo);
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/include/linux/usb/typec_tbt.h b/include/linux/usb/typec_tbt.h
-index 55dcea12082c..57cbda5292bb 100644
---- a/include/linux/usb/typec_tbt.h
-+++ b/include/linux/usb/typec_tbt.h
-@@ -24,6 +24,9 @@ struct typec_thunderbolt_data {
- 	u32 enter_vdo;
- };
- 
-+/* TBT3 alt mode specific commands */
-+#define TBT_CMD_STATUS_UPDATE		VDO_CMD_VENDOR(0)
-+
- /* TBT3 Device Discover Mode VDO bits */
- #define TBT_MODE			BIT(0)
- #define TBT_ADAPTER(_vdo_)		FIELD_GET(BIT(16), _vdo_)
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+> > >> +impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
+> > >> +    /// Registers the IRQ handler with the system for the given IRQ=
+ number.
+> > >> +    pub(crate) fn register<'a>(
+> > >> +        dev: &'a Device<Bound>,
+> > >> +        irq: u32,
+> > >> +        flags: Flags,
+> > >> +        name: &'static CStr,
+> > >> +        handler: T,
+> > >> +    ) -> impl PinInit<Self, Error> + 'a {
+> > >
+> > > What happens if `dev`  does not match `irq`? The caller is responsibl=
+e to only
+> > > provide an IRQ number that was obtained from this device.
+> > >
+> > > This should be a safety requirement and a type invariant.
+> >
+> > This iteration converted register() from pub to pub(crate). The idea wa=
+s to
+> > force drivers to use the accessors. I assumed this was enough to make t=
+he API
+> > safe, as the few users in the kernel crate (i.e.: so far platform and p=
+ci)
+> > could be manually checked for correctness.
+> >
+> > To summarize my point, there is still the possibility of misusing this =
+from the
+> > kernel crate itself, but that is no longer possible from a driver's
+> > perspective.
+>
+> Correct, you made Registration::new() crate private, such that drivers ca=
+n't
+> access it anymore. But that doesn't make the function safe by itself. It'=
+s still
+> unsafe to be used from platform::Device and pci::Device.
+>
+> While that's fine, we can't ignore it and still have to add the correspon=
+ding
+> safety requirements to Registration::new().
+>
+> I think there is a way to make this interface safe as well -- this is als=
+o
+> something that Benno would be great to have a look at.
+>
+> I'm thinking of something like
+>
+>         /// # Invariant
+>         ///
+>         /// `=C4=9Brq` is the number of an interrupt source of `dev`.
+>         struct IrqRequest<'a> {
+>            dev: &'a Device<Bound>,
+>            irq: u32,
+>         }
+>
+> and from the caller you could create an instance like this:
+>
+>         // INVARIANT: [...]
+>         let req =3D IrqRequest { dev, irq };
+>
+> I'm not sure whether this needs an unsafe constructor though.
 
+The API you shared would definitely work. It pairs the irq number with
+the device it matches. Yes, I would probably give it an unsafe
+constructor, but I imagine that most methods that return an irq number
+could be changed to just return this type so that drivers do not need
+to use said unsafe.
+
+Alice
