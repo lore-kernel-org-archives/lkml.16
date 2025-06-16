@@ -1,95 +1,152 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D7D1EB9FA;
-	Mon, 16 Jun 2025 21:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD91E9B08;
+	Mon, 16 Jun 2025 21:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750109325; cv=none; b=BkLa/v8xHin+VaUdF6kHD1JBzs70+Y8rKfk0S5k760ByKmfbMyS/hb4eiG904EEKZpDFUV2KwjZxJEhkfGFfAgszIZTccfS9VgR13XgDGLuIP2Il0VDMuYIyYmwJTy5naRkMG6YrWc7NRAy56hXHnax8dByZTWOozmAq1Flt7/U=
+	t=1750109400; cv=none; b=rNT5lLOxhj2CiJmUV3oAUBsBBV+o14RpBBquFa0GxPX5xtwNY+3FYg+2nQXHC9YyEHh6vpGAs2wSruiFtWiHNuRL3VJMKv0Z3x9xb3AmIS/jgJQFmv2zCWM6vD1HM6n2KLw4uG9kcRU7hB+rInRmgGypkN7oT1I14evl8FDOG+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750109325; c=relaxed/simple;
-	bh=tHvZkL3b841MNEO9/DdSITMV0vDLxLNrNJMk62HpFVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h+Lk41FImRm9lyTFhSgLbWPrZgBMbviOYApa2Hfjfr5TjQfBGflPM0JlTg7YnKuXkf7taeYye7ZYzDwbxdmmXgRxSGtYGlcEnoCutQP9BZuT1seHdhZ1iZLN2XbUhekZnY5THHYnhXeHesHNphb0qQlwpBmsFT5EMOHHeDbAlYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lBaKC4ZL; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1750109400; c=relaxed/simple;
+	bh=5VNEAsouBPOdh+XbkYS939nzg7JPX/5s9z7ACizdbBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q5+annkF8wmBGxm344GxBAbijAIVqMSwk9b/5CXBVCIQEW8NNJVBCrAcJqUmbwFijb1LohAi26yvv2OVBLISiTeHQWet2g7t1+74+2XVyqlDDsyD/w8whTMDzjjp4MFNAHSVrvTzkOudIQeEkzhxb1aCqzI58coHMianx6pEaZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jiyJ9D4I; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBaKC4ZL"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-312a806f002so833881a91.3;
-        Mon, 16 Jun 2025 14:28:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiyJ9D4I"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55351af2fc6so5534055e87.0;
+        Mon, 16 Jun 2025 14:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750109324; x=1750714124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tHvZkL3b841MNEO9/DdSITMV0vDLxLNrNJMk62HpFVE=;
-        b=lBaKC4ZLcwVOMgjqjL8DaTg/eNgYnAWsY1N2tz7bV9c0HUWVeRgQRk0OXmwVn+br/d
-         EkgzZ0tfym4B6nF2jmvyoqQ+OS2n9TnqSIqSKZXz9MmCcVUmF+J6JCQ5jjOEJbuvQvKH
-         02FvbCwG+QULBi2h6rkUHVsg3aZHnON5RgijJvnGEfIXWiLLMSgghuZjBfzs2tUu2mZv
-         3HDKFksxPapJ+3qDW8sOVM0b9SlhIckCBqNa8jaU+QTg2eyuQ8x0JkDZRb58faMMDk+f
-         MfLUjQH1BXXi2BLmJWibjBiVwj6HNTD72kEQBnfY6V9csknVLLW+E8pnjy3UMzj7uLzB
-         /BiQ==
+        d=gmail.com; s=20230601; t=1750109396; x=1750714196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Do1hnaS0CtOsHIBnhi/95bfarKr7zXabMa9k9C0FL1k=;
+        b=jiyJ9D4IHVCLjtzlMyijudRVRx+fUz1mxS4wdCCIG6v4O0+ZIChu1b0t6Fub6AMRpn
+         U8xElmIoXvjftpSHUIanOgAM2bR/3i4381wKCf5YP1rw+LQ+ARS7eQAHLe5giSRbUUdh
+         V++oK/cfr/oWqKY/rYoPiwelVd4+jT3nFTPFak9lGmuO2P5tdgqAOP7uEb2IaL0s8pEm
+         LA+tcYLtrbblyP+XNfBzeXSfgGQAK3L9ydigvCTyFrrbWOCpLDoIBdQd1uERqIIxNNMe
+         tW0tzwH3UAIvzhc2hqG+5z1xAxTujoD3viT6gcc8PffMhQtiiuTvXl02sy0a3aL/+bRO
+         AOsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750109324; x=1750714124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tHvZkL3b841MNEO9/DdSITMV0vDLxLNrNJMk62HpFVE=;
-        b=vg0Zwh8doM8wBRw/V4e+bzFcX+ekI4WtC5ODMoGqUAWAVdZ8ZZ3b5XLf7jcD2FSxiY
-         XEmdvwWkA6hgcBcKB3RPIGKZKuPUiiTY/O5c0yePImkTwQvhZIeKQGYd0P4KKonvP5WM
-         nnUQIlo7OYAUNtSUaXeMG/QbxfowrHllusSEztf1GbXCCeg6o6lzYb2BafTEpGg1runH
-         tiilBZL13wbNzXNdoGzrIkG7g3rGjoHoPlz+iT1rqGqSQmKkykNAQjkpWSwyPii2kDUv
-         8F0v9lgatnr2zoKJcMq/FKdmjIJuwmK4dfUxywK3VKkdgR5MRNSi3kJxAYkq3VJBNUX/
-         Ww5g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3OLIih02rVfW9DTVFmKEHwRu80So1XiKtXqhgEK/sw5eBHpoxI4p/G90mTOJ7+VKHmbRaJhUodW45j3//mA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8XthJx7lcd9qVYu77wrv6xpwnWgwX/uIhNJG70kYpamg0ttOp
-	jw6MHKzmosetC4ed/czf8wLi3rPshOBl9GetA3FgGdiyy6l7W/ZdzbHWSJXeXGtcjjiQbFqrKWp
-	uFARLS1W7pGXBRU192ZXIeMS1pmsKtOW/ob4M
-X-Gm-Gg: ASbGncuc8OCKsKi4AkFX+zQ/Zini9icQ3LbpGp/ogWM3Z4gneOnQzibxm5/76LbZO61
-	HTjgfS48vF7d1/KUeFkOZ4ML4EbmTmftUTi79m2QxTxfq9aJlQF2ObmlZ1/DOVOR2qz5lvPMB+b
-	dR8WmWs7OJ3dMev2yDyhB7G+74DhxhgGRdfMwFsAmAPSI=
-X-Google-Smtp-Source: AGHT+IFpeYpl22BIjz3gujyrkdt7SBYSAPG2/B7ertdSdDyvPD9lzSXyH4tJedlNbF4lFCbNR5qtS+JKwgj6IfoWHPA=
-X-Received: by 2002:a17:90a:ec84:b0:311:e9a6:332e with SMTP id
- 98e67ed59e1d1-313f1b312d5mr6208943a91.0.1750109323846; Mon, 16 Jun 2025
- 14:28:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750109396; x=1750714196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Do1hnaS0CtOsHIBnhi/95bfarKr7zXabMa9k9C0FL1k=;
+        b=Qwi3yBOXoH+Ys3Yw7hBsD8aVrwv2l6wRpcfTjKtit3k8oxWxTlIwM8r/kBegXbFBKu
+         qEwDQJZyDNqDhIm1rqYzrjykZaxJp/1jUhNcGIcsGr59kB3F7J4qdaOKjJhuYBNrxU3b
+         azJ3lw7K4YjltrBHk8sPK8SashCJFNUGiDxnkmaV3aSB2v/Zx4fCQR8CFPvjHxoam6fM
+         gKY8BlPsK1vpJKu71zkfqwIW+kcteZwKnB1k1eZz8Etm7EnTXDCuj2zG4hhpCJZ9jjAE
+         kjDfHzwgiQ5StdMq0IkavUy0tdmyk9y0AuwtVQzNW/plAwklfXNK9vauQmFkD2HLydQN
+         bELw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4TWv9FSpqEPJjxGWqCIP2f5JiQ6uin2MVEdrTCZOQV7VTcJCUbxf0Su9Uy7Jq0goZmNEbqnS4FcWR8Z6y@vger.kernel.org, AJvYcCXsXFU9YmuynY5NOoxr+APOIgh9lv9Ovpq+B9DwByemuCUJbBdM6oN88XUsAbRKoxAagWhyr0UGevMX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Ow6jkycZEBMmcOxv8cfGXLONwxE4P7P+YRr+vp+oNO4nZAXC
+	B4t2fGpqs4IadIoHvkElPcZtsupKM0d6JJnlPkDu6ijxwZrg1VUOwACv5EXcrg==
+X-Gm-Gg: ASbGncvl6/FZw5zo/XB5p6lse4L9DoqBOeGV8KdiVEItEJcsjfqFSOfNZngbVh2Z2p7
+	LBLGFRApqSW7CecZCiGubG3TluyGRfcCqR4/o9OxQWN1qaQn0dgaa0erjwxONNs+2xSUfffcpUh
+	kywq3KzQ7amMX4QLrCww5zAQjeG1ZKrXjIunczvva8CKuQZbzC+Y95i2zsrQIW0Z68OmLgrNPKg
+	YBrYimNxsiU0DhG0EtEVqbzz/zmy9ItPj3651TIzvEEEzBBcA6Ezw8SKz3VbXRX2x+gxmcz3PZx
+	rNTRlPdpLpAkfOY7drxqjaus8oVwF23gWb/Og7mlkANjrNeyZl+NwRjkPpNyNB3+iKhMmhtBTtI
+	=
+X-Google-Smtp-Source: AGHT+IGhwIZMcrkhFiRHEIrnrhxRgJNzXCaRo1/fa29XUEToVqntPMdQrO6BrBhWFHdNRTJJyM8K2g==
+X-Received: by 2002:a05:6512:3092:b0:549:8675:c388 with SMTP id 2adb3069b0e04-553b6f5fa33mr2870026e87.52.1750109396075;
+        Mon, 16 Jun 2025 14:29:56 -0700 (PDT)
+Received: from [192.168.0.131] ([194.183.54.57])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac11ff47sm1671073e87.25.2025.06.16.14.29.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 14:29:54 -0700 (PDT)
+Message-ID: <eb8c858d-fde8-4916-b36c-f386242b10c4@gmail.com>
+Date: Mon, 16 Jun 2025 23:29:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616153604.49418-1-boqun.feng@gmail.com> <20250616153604.49418-3-boqun.feng@gmail.com>
-In-Reply-To: <20250616153604.49418-3-boqun.feng@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 16 Jun 2025 23:28:31 +0200
-X-Gm-Features: AX0GCFtsVkSsb9r-Et1SiuSY4RT6eaG72b8XtmUQN8OOVG598eWPzfBSVVitO-g
-Message-ID: <CANiq72mES+dPBuhsdh0-hJcV69AO74j6W5vhCeo+yV5S-Zp+yg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] rust: task: Add Rust version of might_sleep()
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com, 
-	fujita.tomonori@gmail.com, mingo@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+To: Johan Adolfsson <johan.adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kernel@axis.com
+References: <20250616-led-fix-v6-0-b9df5b63505d@axis.com>
+ <20250616-led-fix-v6-1-b9df5b63505d@axis.com>
+Content-Language: en-US
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In-Reply-To: <20250616-led-fix-v6-1-b9df5b63505d@axis.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 5:36=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> +/// Equivalent to the C side [`might_sleep()`], this function serves as
+Hi Johan,
 
-I am always pleased to see intra-doc links, but wouldn't this one
-point to the Rust item? :) i.e. we need to add the link, right?
+On 6/16/25 13:25, Johan Adolfsson wrote:
+> mc_subled used for multi_index needs well defined array indexes,
+> to guarantee the desired result, use reg for that.
+> 
+> If devicetree child nodes is processed in random or reverse order
+> you may end up with multi_index "blue green red" instead of the expected
+> "red green blue".
+> If user space apps uses multi_index to deduce how to control the leds
+> they would most likely be broken without this patch if devicetree
+> processing is reversed (which it appears to be).
+> 
+> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts has reg set
+> but I don't see how it can have worked without this change.
+> 
+> If reg is not set, an error is returned,
+> If reg is out of range, an error is returned.
+> reg within led child nodes starts with 0, to map to the iout in each bank.
+> 
+> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+> ---
+>   drivers/leds/leds-lp50xx.c | 11 ++++++++++-
+>   1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
+> index 02cb1565a9fb..344791b6c575 100644
+> --- a/drivers/leds/leds-lp50xx.c
+> +++ b/drivers/leds/leds-lp50xx.c
+> @@ -476,6 +476,7 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
+>   			return -ENOMEM;
+>   
+>   		fwnode_for_each_child_node(child, led_node) {
+> +			int multi_index = num_colors;
 
-I would normally ask for an example of typical usage, but do we have
-some good C docs on that already that we could link otherwise?
+Any specific reason for initializing this to num_colors?
 
-Thanks!
+>   			ret = fwnode_property_read_u32(led_node, "color",
+>   						       &color_id);
+>   			if (ret) {
+> @@ -483,8 +484,16 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
+>   				dev_err(priv->dev, "Cannot read color\n");
+>   				return ret;
+>   			}
+> +			ret = fwnode_property_read_u32(led_node, "reg", &multi_index);
+> +			if (ret != 0) {
+> +				dev_err(priv->dev, "reg must be set\n");
+> +				return -EINVAL;
+> +			} else if (multi_index >= LP50XX_LEDS_PER_MODULE) {
+> +				dev_err(priv->dev, "reg %i out of range\n", multi_index);
+> +				return -EINVAL;
+> +			}
+>   
+> -			mc_led_info[num_colors].color_index = color_id;
+> +			mc_led_info[multi_index].color_index = color_id;
+>   			num_colors++;
+>   		}
+>   
+> 
 
-Cheers,
-Miguel
+
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+
+-- 
+Best regards,
+Jacek Anaszewski
+
