@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E46D270ED9;
-	Mon, 16 Jun 2025 15:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD1326463A
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089050; cv=none; b=TR/3teeBAdODfeABsNNbrI31hcYwo1cpFlOC5rAo4FzchCt6jEXYsDw+Ic+qlvQgUIxeqWiuB2B3iLrCw1jMCeeSCbd5G2PX5Dpt5+evOi4M/a3W6cY1kc033eywKwJE5J47aOcCAphAdut1/CciRxYf3MXRsjE4XgfNV2PXiIY=
+	t=1750089060; cv=none; b=UFi+IFonyooGQ1InexIGDcMHrfdhvckWXy8AqbrtAUJLs4V01Qe9fAAWgnpchKEadeHMoxlrSJVVdGXQkXga1A/pGW+rELF77oPFG5uBfQobZywNHa//Jo6pU1REb75V9ix+DLzmoJ3NhFEA+4FF5qCbWTKFcneMXmxLDAuWd5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089050; c=relaxed/simple;
-	bh=p0CsQj+JFgFHyyG8R5T1UyGdGPB6JdHYfKB71eu7m7w=;
+	s=arc-20240116; t=1750089060; c=relaxed/simple;
+	bh=puAp8vVie1YZJSKL4nqENUKM1UhshsrnW2fbHlvQVD4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=H4wjxAdI2m9JTTiQNvyTKyIqnTNDNTXuEUW4v/eTfe52jeOaqOj8u/ao6Nyo2dk2ShGlmRBCSauh6OQxjlbYQMYZFRj/HorKqvoE4/wd+5sOXRRbjr6Y1guqkpayRKHtLqbI+8MF6eRffeGI7d/UVJtfQ0EDEfHwUCwTzykt15E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnHhMc85; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=geZ1CMxEtozgiWG1eRgSbjj6pxZBCHtd5fqOjS+CxlAv6K+qcmlfj/2rOe3eWJGQDQ3byVRji+pdVeG2Ke0U4ebheDKFx6L2Pvy3wdGja70y5Qo5YC5Zfo7YaPcYFsOoXCQpPeWAblVHaq3VMhOmpMCsNR8K00N4rVTgjspj/f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwApcJfx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnHhMc85"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47D81C4CEEA;
-	Mon, 16 Jun 2025 15:50:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwApcJfx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D43C4CEEA;
+	Mon, 16 Jun 2025 15:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750089050;
-	bh=p0CsQj+JFgFHyyG8R5T1UyGdGPB6JdHYfKB71eu7m7w=;
+	s=k20201202; t=1750089060;
+	bh=puAp8vVie1YZJSKL4nqENUKM1UhshsrnW2fbHlvQVD4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=BnHhMc85D/L5aWnMZAg7Bh3FvFDxaNEIUoQbGnFf6jWZC6YXcg2r2iWd8Q5ZNck5J
-	 cVfVaF29IYQBcfPQyKGOyY37bdtladaLiUMjJXtyWXANea6gIRiaKzI5JeXWC9kFnt
-	 Kmj5bORpzwcTTvLUJu0QS993dH/H/w6n+EvI5Jln/SAGHHt9iw0Fa+iQm+yr/F9A9L
-	 zjWIyh0t2HHkeZCd4/dWulzWwjDa4ao91/MdYOB9a6LBEwt5TjF80Pd2lXO5qfH+0I
-	 aPUrDJBXHrCqYpAVw4htjpbToT2ccgorGBsrTBii3diqmglNqFoGwN8NtIsSnceBlS
-	 IA64uxIqLIRMA==
+	b=gwApcJfxXI5EecMPOvsLEHPdVVOG7C8bWtQgMkHX4nPQsMF6CA6rXkttMhYZB6dG7
+	 bvpWVQvYni0/EIJ3aK8AwJtTvGmMXrMqYVVbOpVMMsiUNa3Im31e0/k3YTlElbD8Tx
+	 9hM+23C7wHExMxkwATc2Cn+RB0RBS/4VLJKpvizBiHQOgt+LrFOsR6skj7GNBQWWzp
+	 auISFRscYFITRcuTB+Uzf60R+Ysr7o05hYXNA1ChGZN0iLZANbIqIP1vjjcl09YAjW
+	 ua+UWgZ45k6FZqPdpobK5OeMVmJWvGj4X4nnrgRjfIalXTzQ/k1lWnW2HvQqJCNezv
+	 71F4HTc6TsCzw==
 From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20250616103052.66537-1-rf@opensource.cirrus.com>
-References: <20250616103052.66537-1-rf@opensource.cirrus.com>
-Subject: Re: [PATCH RESEND] firmware: cs_dsp: Remove unused struct
- list_head from cs_dsp_coeff_ctl
-Message-Id: <175008904904.262284.5050695266640590092.b4-ty@kernel.org>
-Date: Mon, 16 Jun 2025 16:50:49 +0100
+To: lgirdwood@gmail.com, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, wens@kernel.org, quentin.schulz@cherry.de
+In-Reply-To: <20250606190418.478633-1-heiko@sntech.de>
+References: <20250606190418.478633-1-heiko@sntech.de>
+Subject: Re: [PATCH] regulator: fan53555: add enable_time support and
+ soft-start times
+Message-Id: <175008905873.262451.9164441451650062773.b4-ty@kernel.org>
+Date: Mon, 16 Jun 2025 16:50:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,29 +45,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-08c49
 
-On Mon, 16 Jun 2025 11:30:52 +0100, Richard Fitzgerald wrote:
-> Remove two unused pointers from struct cs_dsp_coeff_ctl by taking the
-> struct list_head out of struct cs_dsp_alg_region. On a x86_64 build
-> this saves 16 bytes per control.
+On Fri, 06 Jun 2025 21:04:18 +0200, Heiko Stuebner wrote:
+> The datasheets for all the fan53555 variants (and clones using the same
+> interface) define so called soft start times, from enabling the regulator
+> until at least some percentage of the output (i.e. 92% for the rk860x
+> types) are available.
 > 
-> Each cs_dsp_coeff_ctl instance needs to keep information about the
-> algorithm region it refers to. This is done by embedding an instance
-> of struct cs_dsp_alg_region. But cs_dsp_alg_region was also used to
-> store entries in a list of algorithm regions, and so had a struct
-> list_head object for that purpose. This list_head object is not used
-> with the embedded object in struct cs_dsp_alg_region so was just
-> wasted bytes.
+> The regulator framework supports this with the enable_time property
+> but currently the fan53555 driver does not define enable_times for any
+> variant.
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] firmware: cs_dsp: Remove unused struct list_head from cs_dsp_coeff_ctl
-      commit: e7af416aebb36e6681b9c6950d0f6352aee7c084
+[1/1] regulator: fan53555: add enable_time support and soft-start times
+      commit: 8acfb165a492251a08a22a4fa6497a131e8c2609
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
