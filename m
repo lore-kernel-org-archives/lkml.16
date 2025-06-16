@@ -1,164 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAC01F91C7
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292691F8676
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084243; cv=none; b=FO/ZcuQhOjBXZUAs/owtHlxsYINBz8taluuSYXe6YsfdXPaqTOFUyis5u2CuWjhh7giq0UtsEF0wVGuJedpYdtZYQ+kRvjb4zeWrZLdHcv9XVdcvV1zejXbfDQuWuCxE9/9sbL+24lHier/ggNzTDZmHQxjrrNe/hmYRdWS9yOo=
+	t=1750084269; cv=none; b=nnlzk83OxoBr1y7f/de3EycbUEF8z8mRnBrIEuq1mR4E34ZMGLgUltECdR+uLXYP2T5xgSMKAXmUc0eWq4v1ZwARhoO8mBJpN7lZ4qswU5I+U9zWu5BTt0EHGjQqjq8K4KhXuMwKRM8z+E3airlzMhI4pPZLiJLTS5vz0COt+dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084243; c=relaxed/simple;
-	bh=cBkQGq+aQh2WGhSROw87npSAa+GCGQe8VqIRgDN9+3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+2p73NbWua36e9a7JIofR3R4mumC0juC4fY+QCRXo5j0xeg+vBWDGY+3ST07degt+t8c6lL5knDuqbKAUUKItCGmV8cWsgCJIjN1SjnLIasmVBxRn6mMfzux6Bi67pwI3aNvuvUgPy70LAF6y0YscytUIFl1Tig2LJdFtoj+60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4hfXkHn; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1750084269; c=relaxed/simple;
+	bh=WY7TMC0YD5SLaqCBW6qQAvqETF7LdjtfZJS61Ye2nOY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ttsC+7Equ/ocYo6gbHtHyBneGOEBOMVI/FW4SVWuqvYEHVxSHx76WzSOT+DwqD8QLgPv4oM73thrFYZnZ4GG6PUlMZtwNIUoDsUrUBt0A6FySX0ajwZLvwB1860AMJaSBXaWuCLlRMA4LpLrsinrOZ3xUXK13w8nSDl4VZUHhtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M2CFf3IT; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4hfXkHn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M2CFf3IT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750084240;
+	s=mimecast20190719; t=1750084267;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b122cq18cIxKAeDyocwvAGBr6eAjHnsn2f9gGHRU4ls=;
-	b=F4hfXkHnVDbTjLCqeAmrIyVFBdh2NOs2lOXBEg4ViYeuys7qTAdos+sJfd34RKO5uJLKVw
-	6IiS2YJBigmnjuXUGNFRhYaWRDP1+4pxe9h5K0pCTXKCktbXO/2ur5s5RjKiSEM5OJtoMX
-	x7mQaGR1F5mODCEHdYEQiLrlER1IwKU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3yx/GlXI4gE/cHH11+XdNmVkS6ZqwwbEDl6FH6aGzNc=;
+	b=M2CFf3IT/Sxu0scXPCgPAgADyAL6EzEJaAqv9/NwHNo26M0TlSCAeRSqu5z/3Me4Z5k/Cx
+	2m7CZV3O1WyajLHwPhFjX8nM1NJtnw8OXirWVgEVgHjIXovOL4/6NzVex9kbsfyWMEDS1s
+	Cuvn+RAV2yWONgdIifdqT7S+SMXzxPM=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-201-GPbyLhFZP4uHpDoo1rID7g-1; Mon, 16 Jun 2025 10:30:38 -0400
-X-MC-Unique: GPbyLhFZP4uHpDoo1rID7g-1
-X-Mimecast-MFC-AGG-ID: GPbyLhFZP4uHpDoo1rID7g_1750084236
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f6cc5332so2674212f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:30:37 -0700 (PDT)
+ us-mta-634-BTyf4i5lP2Cw7Q5Y_FMfcg-1; Mon, 16 Jun 2025 10:31:05 -0400
+X-MC-Unique: BTyf4i5lP2Cw7Q5Y_FMfcg-1
+X-Mimecast-MFC-AGG-ID: BTyf4i5lP2Cw7Q5Y_FMfcg_1750084264
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a579058758so651780f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:31:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750084236; x=1750689036;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b122cq18cIxKAeDyocwvAGBr6eAjHnsn2f9gGHRU4ls=;
-        b=Xms1tNe1v0gb7WmF8uMq6G/zc2CbuUkZ+VR0qatGLk4Q0hZ7bPLvO2RUvas4mVtIYH
-         nO7XZ8dw+hGCSus1Sr9cs9wmVeOWd8CEvBY3wQM06vTpm9xmHvHBQcGpQq3dxvYUIPpP
-         z6cSH60bXUzk6ronq0iI3wWuMW9/ZuYsg5pF48VbaAwMsqPfuqAmFGz1DQgljnrUE4Nj
-         vyoFit1RT45SfD+IOmbX1FRX7KGoI74JslPHMuFEHDh6eEQPUqLx3hWbkFVkWPPruXCK
-         RtXG3YNPxtpKzB9PMkb5r0GqyTNNitSyefMV23ORBK3iadwaUkrQFp77DZf49b7zCBue
-         tMWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHS1QrLE2dDMjK3Q++EsiBry0Xbin8Kam2yCG6dPtNk2OK4XrnLF4Qug82uCxMSTZAnGuXb8qtymeLT2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIozID1lzhhZ8R1HtVCtXWilPjgOJE6woAZBPMtBGoKMhRczOr
-	8i/Hp+kUFCnT31+7W2qV8ZO9Nr2928oB1NpVDfThxzeenazruCG4Fd3Zy/H6pSeKlqJXVHECbha
-	/+38yuqUhbLp6UBL3lmkELqsnokU1swBVu6Jpsl2qpFM0SswOFgn+keGdNucUu/Zulw==
-X-Gm-Gg: ASbGnctkHg6fkEMY0bbQh2Ev+KaylMwKwQpaVmn9j1aV7Y33+M8dIYOzvQN+rjzYGRr
-	iGmFCIh1WfamlKmoPdvTHbwTnD+Mymi4KdWM3JTrGczbio/SmzOHJJ8QkgFqsfgAmxvceSLD7m7
-	PaYNNMg7QYqTdFPmFqXXFLzhlIFWrILEWFxAO0vzJ/IFCWtMOy1d17SB8KPmlkdLBZxZTYIGtqF
-	NAOx5FhClg6eJnohU5Um4nWutyQ9PEOIes+NTOuLprJwPAF/gYHDnQ0D+il25vFfZ308+lT5ET/
-	wsdKzKnW/YbZIz+Us3k6U6CkZM4=
-X-Received: by 2002:a05:6000:4211:b0:3a4:dc42:a0ac with SMTP id ffacd0b85a97d-3a572e4b6eemr8077944f8f.49.1750084235911;
-        Mon, 16 Jun 2025 07:30:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsnkYIGAr+qs47yOUuIjHINelBcn/kxEeTN9OXZQ0z3+Yj1yvrInii/mr9eol6osEokceKog==
-X-Received: by 2002:a05:6000:4211:b0:3a4:dc42:a0ac with SMTP id ffacd0b85a97d-3a572e4b6eemr8077892f8f.49.1750084235405;
-        Mon, 16 Jun 2025 07:30:35 -0700 (PDT)
-Received: from leonardi-redhat ([176.206.17.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b2371bsm11346666f8f.70.2025.06.16.07.30.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 07:30:35 -0700 (PDT)
-Date: Mon, 16 Jun 2025 16:30:32 +0200
-From: Luigi Leonardi <leonardi@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: sgarzare@redhat.com, mst@redhat.com, pabeni@redhat.com, 
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, davem@davemloft.net, 
-	netdev@vger.kernel.org, stefanha@redhat.com, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com, 
-	Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Subject: Re: [PATCH net-next v2 1/3] vsock: Add support for SIOCINQ ioctl
-Message-ID: <mrib74zhrw47v4juifp67phnm6tffb7qgfm3xmtcuw5maminlv@4i7z36hg3554>
-References: <20250613031152.1076725-1-niuxuewei.nxw@antgroup.com>
- <20250613031152.1076725-2-niuxuewei.nxw@antgroup.com>
- <2bsvomi4vmkfn3w6ej4x3lafueergftigs32gdn7letgroffsf@huncf2veibjy>
+        d=1e100.net; s=20230601; t=1750084264; x=1750689064;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3yx/GlXI4gE/cHH11+XdNmVkS6ZqwwbEDl6FH6aGzNc=;
+        b=oWyf38Stn9V8NhMQzKIKd7dmQstxiuZQxkPCFI/6wteDFnkbFH0uBFiIgAeB4m1qsp
+         D+so186lbfOBSnij3iPLEV/PpZPGSOjiburd5q1dLFVdil62458rlkPwVKX1ZSC+jS8b
+         mKnWt30exrQ0SXM/pmBDJy2ZNsX5b0ywgrIdGLjm6PMwSOGxn0jQIUCe4miQDjSlIz5N
+         kMksQDaEMzQd7zaHZW8KfQK7QJa0XOq1/wttJ4Osj1UGzQlbBc48lfJRQF0E0Kex+ifh
+         XLuoCLTdsC4NzKlEB4ZD0jV0vM4amCE/kmq2mrRxocFBJHiaHHAo/Az95ETgeg+kw0yy
+         ebQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqF48hgv+lFrdMgiUueXSXmg+qfAMxcdnk/tM+fdRFkRJ5ueOrbi2ztu9DjOkfdf4q75mQM0DUf8vtVp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5CBsQjUsxYcSJHwfg0FeFW3vwFFckeHgWe4/Cd2qDq597LtE7
+	ZdKFnKtGcyzJPHuX2dhmGXPDCGpn8LeA8yDy8JBOylhR55b9vgnzcqNPkn/ib70JCJl7URYRhy6
+	FV7NHdIaqyexl072dFBRzrp6UOj9V/mugrDFwweU5ufSV6kzf+9I/8haJ+9SU71Xqcw==
+X-Gm-Gg: ASbGncsrBq2RoF2yUH4YsIUWNg15s+5gcbf5/CmPnxlEBwks7o0+gnAsWxX7WN5H3C7
+	sYPJ4WBMGiiUC0xLIbEmnper2WO9s5H81vd3UotR+VPjIpTVnWfchsqSZ2RmZz955n+VZf8g8vF
+	YHnDeDVOSNpwrPGA8PCu19Uvc6m5rbV514kcTiIh0IHaWY8m60P8h63iJSQ2zlezfMimklZzZIE
+	w9XbC/+PAZC1KClFtEEOvPze4vYX9B0Dm3NQ2m4JXHO3o6OBBqkyL9Lgim1KMDo4jkHlAVXtrzU
+	J4HvNFC0akU/DdLNjuDKRUIOyIHu31L63HKUqxMQV98E4rTDoqak7HCrNSvyPpKCFTd7nMqHdPI
+	b7pI55Fs001mt159dFIyTvjUSMuj2QITF3WzWLiSKq302ztg=
+X-Received: by 2002:a05:6000:2385:b0:3a4:c9d4:2fb2 with SMTP id ffacd0b85a97d-3a572e8e0e4mr9137968f8f.46.1750084264126;
+        Mon, 16 Jun 2025 07:31:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmDD1V2O1gmVqK1FNmzOHzBPWo+7H3PAjsCtD2upIkFpndQBwdRtwbtCpw/ctuX2/yAltmnQ==
+X-Received: by 2002:a05:6000:2385:b0:3a4:c9d4:2fb2 with SMTP id ffacd0b85a97d-3a572e8e0e4mr9137899f8f.46.1750084263448;
+        Mon, 16 Jun 2025 07:31:03 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a800d9sm11122212f8f.45.2025.06.16.07.31.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 07:31:03 -0700 (PDT)
+Message-ID: <b975179e-ae53-4752-9521-4dedaa21f31d@redhat.com>
+Date: Mon, 16 Jun 2025 16:31:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <2bsvomi4vmkfn3w6ej4x3lafueergftigs32gdn7letgroffsf@huncf2veibjy>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/11] mm,memory_hotplug: Implement numa node notifier
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250616135158.450136-1-osalvador@suse.de>
+ <20250616135158.450136-4-osalvador@suse.de>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250616135158.450136-4-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 03:42:53PM +0200, Luigi Leonardi wrote:
->On Fri, Jun 13, 2025 at 11:11:50AM +0800, Xuewei Niu wrote:
->>This patch adds support for SIOCINQ ioctl, which returns the number of
->>bytes unread in the socket.
->>
->>Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->>---
->>include/net/af_vsock.h   |  2 ++
->>net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
->>2 files changed, 24 insertions(+)
->>
->>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
->>index d56e6e135158..723a886253ba 100644
->>--- a/include/net/af_vsock.h
->>+++ b/include/net/af_vsock.h
->>@@ -171,6 +171,8 @@ struct vsock_transport {
->>
->>	/* SIOCOUTQ ioctl */
->>	ssize_t (*unsent_bytes)(struct vsock_sock *vsk);
->>+	/* SIOCINQ ioctl */
->>+	ssize_t (*unread_bytes)(struct vsock_sock *vsk);
->>
->>	/* Shutdown. */
->>	int (*shutdown)(struct vsock_sock *, int);
->>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->>index 2e7a3034e965..466b1ebadbbc 100644
->>--- a/net/vmw_vsock/af_vsock.c
->>+++ b/net/vmw_vsock/af_vsock.c
->>@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
->>	vsk = vsock_sk(sk);
->>
->>	switch (cmd) {
->>+	case SIOCINQ: {
->>+		ssize_t n_bytes;
->>+
->>+		if (!vsk->transport || !vsk->transport->unread_bytes) {
->>+			ret = -EOPNOTSUPP;
->>+			break;
->>+		}
->>+
->>+		if (sock_type_connectible(sk->sk_type) &&
->>+		    sk->sk_state == TCP_LISTEN) {
->>+			ret = -EINVAL;
->>+			break;
->>+		}
->>+
->>+		n_bytes = vsk->transport->unread_bytes(vsk);
->>+		if (n_bytes < 0) {
->>+			ret = n_bytes;
->>+			break;
->>+		}
->>+		ret = put_user(n_bytes, arg);
->>+		break;
->>+	}
->>	case SIOCOUTQ: {
->>		ssize_t n_bytes;
->>
->>-- 
->>2.34.1
->>
->
->Reviewed-by: Luigi Leonardi <leonardi@redhat.com>
+On 16.06.25 15:51, Oscar Salvador wrote:
+> There are at least six consumers of hotplug_memory_notifier that what they
+> really are interested in is whether any numa node changed its state, e.g: going
+> from having memory to not having memory and vice versa.
+> 
+> Implement a specific notifier for numa nodes when their state gets changed,
+> which will later be used by those consumers that are only interested
+> in numa node state changes.
+> 
+> Add documentation as well.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
 
-Stefano is totally right, reusing `virtio_transport_unread_bytes` is a 
-good idea.
+Thanks Oscar!
 
-nit: commit message should use 'imperative' language [1]. "This patch 
-adds" should be avoided.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Sorry for the confusion.
+-- 
+Cheers,
 
-Thanks,
-Luigi
-
-[1]https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+David / dhildenb
 
