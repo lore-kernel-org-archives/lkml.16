@@ -1,50 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD44F1DED70
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3FE1DED70
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084553; cv=none; b=fcD1iWQ/6D/vuIpDhjS+KcatpAb8ZltGlHWeyNqRXhOGvs0z2FO1mUQBh7gEPR8kZk2PPZ6FFo9ePd0RXqBIJnGoNMiwC3+sqjm9bqrEXv4r9L6gSUN9LU3Ef8/qgg0k5J6cpxVVRczZ9zuw1/tT4za4JxulCORVQBT0tKDWBwQ=
+	t=1750084566; cv=none; b=fg979gVdxUWpoiAcUgUlc9f04iHauVrD3kpRg3cy0qk5VaXmgI8mjbfxDHvhIsnJ8iBkWNz13uetVTWLdNLyLCKFDo0ayjofYJXHHjJzcZxS0rCRbmncDqeaBJd1UwwpHyf0aIv6k2oiXe30+NTz75PWh/NPkLGwlZaxaGwsEFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084553; c=relaxed/simple;
-	bh=2/I7pMzYXm5DZZAxEoNW/kDOBKIaP9ZGqcqzI2qOH6g=;
+	s=arc-20240116; t=1750084566; c=relaxed/simple;
+	bh=lkkn5j7H4sLb0NDyrQUhe3JZh/b0R5tBG6NCHDSKDxA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SMAmzIXjhVLE1yuYnuJ8T2SN7+Zlufd1Qk7kPZodqZ3TiauKHDG9274kxlAsCaC510/sLjynM66N/YiiKBfZ59Zs4OZe2j+jYkekqASBmMEoCIc+9tKbWGIkE9K1cbzEOwOSnS+qw1xH9XX5zBnnlySBWZH/4OB/S4kBzMXpufQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OOjLaU4l; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=hVQxeACB9qtFlLyuGmYdjF6tNyEHLnVQNbtB/NXeL6BbesjZ4sjCF4ViRk/wy5XVdEI9JZ3UdKqXO5YFvTt6AsZK1vufbmVng2/IPrRcGT+xmypCBcnG2A/SaX7TVyrkA0sY/B8sIMlgBXYewXPGfl13OuAN6uBigTttw/Eqt4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N4J4Rtgu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OOjLaU4l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750084551; x=1781620551;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2/I7pMzYXm5DZZAxEoNW/kDOBKIaP9ZGqcqzI2qOH6g=;
-  b=OOjLaU4lagDWsYLNpOSWVN0q4KXcEczN3ZpoxUt4iiCpXxiL6u4LkmPG
-   lJIb0RuZrexMGa2ByPJr+JZh7DhGcgf8wMVzMkC+T0zwlxGOfhkbcO87d
-   YpYsq3yTv2wNHGT+5cIXN+25B6wegfphdKf7D7GLiiqKgxZp+eaJJoiNK
-   5F6XFaBKhW3FtP4tXEghCyE8dD7LCWj6cA2ZWOg/1sHKW/0X6Lt50+Qmp
-   Wv0ERhxLd7mV/hlumRNIislWOMEMy7EZ1/vWKYdR9pLia7EZspPtyxJyN
-   YSYJr7fqRMBCV3LCELnShrrnpb93I3xxEeyaq3Bf7dbyagll7pk4/cdHG
-   g==;
-X-CSE-ConnectionGUID: h0LHsCkBT4CgYr0Dc/PmEg==
-X-CSE-MsgGUID: Uw/SnIhPRy6Y0AN7ObDSKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="39838639"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="39838639"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 07:35:50 -0700
-X-CSE-ConnectionGUID: 7PLTTM50R2+KvNynGxlxbQ==
-X-CSE-MsgGUID: vhpZlixnR3qEbKQKZotZMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="179486859"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.25]) ([10.125.108.25])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 07:35:49 -0700
-Message-ID: <b53d59de-1aba-41f0-a908-e574f3db5958@intel.com>
-Date: Mon, 16 Jun 2025 07:35:48 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4J4Rtgu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750084563;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8P6C3VOyWCSr/Pw6J8JHTXM1e6kPxEGsyDCYoqRWzKY=;
+	b=N4J4RtguSJeYPdptpQdXF4/nGxmbRdw453KpfUgTJeFIj5MsAdDmXrsK3OwlhEIqL/F03y
+	A7qZW68KRwRtA6gCFeuKI9IHu3c42pWgFv8mRh710mIWxsqtdI9jirb/WZ0P0I4i/zulGb
+	veCzvv/7xqHsGQJ7E5jJjF1iK9mTvD4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-10-A0YSDCDRPDWKqA_PIVDCKg-1; Mon,
+ 16 Jun 2025 10:35:46 -0400
+X-MC-Unique: A0YSDCDRPDWKqA_PIVDCKg-1
+X-Mimecast-MFC-AGG-ID: A0YSDCDRPDWKqA_PIVDCKg_1750084543
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 660351809C82;
+	Mon, 16 Jun 2025 14:35:43 +0000 (UTC)
+Received: from [10.22.64.24] (unknown [10.22.64.24])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 68AEE195608F;
+	Mon, 16 Jun 2025 14:35:40 +0000 (UTC)
+Message-ID: <6cf23067-de70-45b9-ad83-90e96c5ea189@redhat.com>
+Date: Mon, 16 Jun 2025 10:35:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,138 +51,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/13] x86/mm: Simplify clear_page_*
-To: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-Cc: akpm@linux-foundation.org, bp@alien8.de, dave.hansen@linux.intel.com,
- hpa@zytor.com, mingo@redhat.com, mjguzik@gmail.com, luto@kernel.org,
- peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
- tglx@linutronix.de, willy@infradead.org, jon.grimm@amd.com, bharata@amd.com,
- raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-References: <20250616052223.723982-1-ankur.a.arora@oracle.com>
- <20250616052223.723982-11-ankur.a.arora@oracle.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v4 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link
+ down
+To: "Karan Tilak Kumar (kartilak)" <kartilak@cisco.com>,
+ "Sesidhar Baddela (sebaddel)" <sebaddel@cisco.com>
+Cc: "Arulprabhu Ponnusamy (arulponn)" <arulponn@cisco.com>,
+ "Dhanraj Jhawar (djhawar)" <djhawar@cisco.com>,
+ "Gian Carlo Boffa (gcboffa)" <gcboffa@cisco.com>,
+ "Masa Kai (mkai2)" <mkai2@cisco.com>,
+ "Satish Kharat (satishkh)" <satishkh@cisco.com>,
+ "Arun Easi (aeasi)" <aeasi@cisco.com>,
+ "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "revers@redhat.com" <revers@redhat.com>,
+ "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250612221805.4066-1-kartilak@cisco.com>
+ <20250612221805.4066-4-kartilak@cisco.com>
+ <7a33bd90-7f1b-49ad-b24c-1808073f7f5e@redhat.com>
+ <SJ0PR11MB589646EBDF785F570E35E774C377A@SJ0PR11MB5896.namprd11.prod.outlook.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250616052223.723982-11-ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+From: John Meneghini <jmeneghi@redhat.com>
+Organization: RHEL Core Storge Team
+In-Reply-To: <SJ0PR11MB589646EBDF785F570E35E774C377A@SJ0PR11MB5896.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 6/15/25 22:22, Ankur Arora wrote:
-> clear_page_rep() and clear_page_erms() are wrappers around "REP; STOS"
-> variations. Inlining gets rid of the costly call/ret (for cases with
-> speculative execution related mitigations.)
+Sounds good to me. Please make these changes in your v5 patch series and I'll approve.
 
-Could you elaborate a bit on which "speculative execution related
-mitigations" are so costly with these direct calls?
+/John
 
-
-> -	kmsan_unpoison_memory(page, PAGE_SIZE);
-> -	alternative_call_2(clear_page_orig,
-> -			   clear_page_rep, X86_FEATURE_REP_GOOD,
-> -			   clear_page_erms, X86_FEATURE_ERMS,
-> -			   "=D" (page),
-> -			   "D" (page),
-> -			   "cc", "memory", "rax", "rcx");
-
-I've got to say, I don't dislike the old code. It's utterly clear from
-that code what's going on. It's arguable that it's not clear that the
-rep/erms variants are just using stosb vs. stosq, but the high level
-concept of "use a feature flag to switch between three implementations
-of clear page" is crystal clear.
-
-> +	kmsan_unpoison_memory(page, len);
-> +	asm volatile(ALTERNATIVE_2("call memzero_page_aligned_unrolled",
-> +				   "shrq $3, %%rcx; rep stosq", X86_FEATURE_REP_GOOD,
-> +				   "rep stosb", X86_FEATURE_ERMS)
-> +			: "+c" (len), "+D" (page), ASM_CALL_CONSTRAINT
-> +			: "a" (0)
-> +			: "cc", "memory");
->  }
-
-This is substantially less clear. It also doesn't even add comments to
-make up for the decreased clarity.
-
->  void copy_page(void *to, void *from);
-> diff --git a/arch/x86/lib/clear_page_64.S b/arch/x86/lib/clear_page_64.S
-> index a508e4a8c66a..27debe0c018c 100644
-> --- a/arch/x86/lib/clear_page_64.S
-> +++ b/arch/x86/lib/clear_page_64.S
-> @@ -6,30 +6,15 @@
->  #include <asm/asm.h>
->  
->  /*
-> - * Most CPUs support enhanced REP MOVSB/STOSB instructions. It is
-> - * recommended to use this when possible and we do use them by default.
-> - * If enhanced REP MOVSB/STOSB is not available, try to use fast string.
-> - * Otherwise, use original.
-> + * Zero page aligned region.
-> + * %rdi	- dest
-> + * %rcx	- length
->   */
-
-That comment was pretty useful, IMNHO.
-
-How about we add something like this above it? I think it explains the
-whole landscape, including the fact that X86_FEATURE_REP_GOOD is
-synthetic and X86_FEATURE_ERMS is not:
-
-Switch between three implementation of page clearing based on CPU
-capabilities:
-
- 1. memzero_page_aligned_unrolled(): the oldest, slowest and universally
-    supported method. Uses a for loop (in assembly) to write a 64-byte
-    cacheline on each loop. Each loop iteration writes to memory using
-    8x 8-byte MOV instructions.
- 2. "rep stosq": Really old CPUs had crummy REP implementations.
-    Vendor CPU setup code sets 'REP_GOOD' on CPUs where REP can be
-    trusted. The instruction writes 8 bytes per REP iteration but CPUs
-    internally batch these together and do larger writes.
- 3. "rep stosb": CPUs that enumerate 'ERMS' have an improved STOS
-    implementation that is less picky about alignment and where STOSB
-    (1 byte at a time) is actually faster than STOSQ (8 bytes at a
-    time).
-
+On 6/13/25 5:59 PM, Karan Tilak Kumar (kartilak) wrote:
+> On Friday, June 13, 2025 1:29 PM, John Meneghini <jmeneghi@redhat.com> wrote:
+>>
+>> Hi Karan.
+>>
+>> You've got two patches in this series with the same Fixes: tag.
+>>
+>> [PATCH v4 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
+>> Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
+>>
+>> [PATCH v4 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
+>> Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
+>>
+>> both of these patches modify the same file:
+>>
+>> drivers/scsi/fnic/fdls_disc.c
+>>
+>> So I recommend you squash patch 4/5 and patch 2/5 into one.
+>>
+>> Thanks,
+>>
+>> /John
+> 
+> Thanks for your proposal, John.
+> 
+> I'm a bit hesitant to squash them into one since each patch fixes unrelated bugs.
+> The reason they have the same fixes tag is because we found two separate issues in the same commit.
+> 
+> I get your concern, however. What do you think about the following?
+> 
+> Move this patch to the beginning and increment driver version to 1.8.0.1:
+> [PATCH v4 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
+> 
+> Move this patch to the next and increment driver version to 1.8.0.2:
+> [PATCH v4 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
+> 
+> Move this patch to the next:
+> [PATCH v4 3/5] scsi: fnic: Add and improve logs in FDMI and FDMI ABTS paths
+> 
+> Ideally, I would have liked to squash this above patch with the first patch in this series, since it's easier to debug if and when an issue occurs in that path.
+> I separated them since it would be easier to review. I could add a Fixes tag here as well, but I'm not sure about that since they are just log messages,
+> and they are not really fixes.
+> 
+> Move this patch to the end:
+> [PATCH v4 1/5] scsi: fnic: Set appropriate logging level for log message
+> 
+> Regards,
+> Karan
+> 
 
