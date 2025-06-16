@@ -1,234 +1,526 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2041.outbound.protection.outlook.com [40.107.100.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E0B273814
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065256; cv=none; b=HdMxW5Tjvkjz0hCFoalSgwxc6fLK3IEkHuI9lR0ekA3jvsvac61ilYMO5wYniHhp2Hz0ep20kW308H15bE9vY7+FRQgy/LnZr21rIfC+CSDkhZaf94SVWca4yBCwAbSIGHl5p8Wrbqu+Kj3bRS3dq/72ZkT4FhE3wgLnf3YzyCs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065256; c=relaxed/simple;
-	bh=aHvslj4u0YmVjl6caLmXcxjAEu5IMNlDH3uwp1kYvck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PXIiRWZgv7e7blZbuy8e25VC9Yxs9J5+vV55ijZDS8Z4sdwlJJo6L9+fFTr1g+ga1yOeFX0M43XFWRhNkj/57CR+aEDaCyYmBfRMcdPEtgZpkC15qOFCLTSPPH1X0OMGLUybeVgU7NI0vHLbSTXg1sbtYYmXDgNpm/sjNQ4TUfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K0s57Of2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294B62737E1
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750065292; cv=fail; b=Ev9Z56nTO6zc/dptZMv0/dDF2iZ0knBRuMw6AVcauW+4f2vwWDuTTZ7wKbmN1pciHpozPdxukjyHdyDYSRNSuMtwdk1rDLoVQOqbhogD2ZeHEHzAR2BiacRM4KJPTuoSCfSRCQ2Ui/s52ntEpo1gQJeQWjkUBCl6dkPtDDtezc4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750065292; c=relaxed/simple;
+	bh=VvvR7JCZBtN+P/fj7VSnch8NYJlV2hTxG/QMxoW+0vk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BOr93+X0q5Jc9tdjDHu87ujTW4932akMz3ewGVP6dtt1fwqeJsIjwTFRYpMN7JPb0mbdhzpqY3vQmeS8onJEVt38w2t2kV692s9qhgLJlyHaL8aOyqXuIugvsH+OBR+iT5/RzmVSZOplyak65dNeX77lkb/e1D2DJ5hGfEKSFJI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=apJXT+fN; arc=fail smtp.client-ip=40.107.100.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K0s57Of2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750065253;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Wuv2mA62fcjoUn35N/C8umkBOU3qJG3E1wudHQl3vVY=;
-	b=K0s57Of2TEEBxM2VMJ+kz4AadYSVfFRKe8ZQZG4mZTYWDFN4bkCRFnu1C6roorSp0MJD9M
-	SCB8c526SkvkxFLFrrqTOw+c8O+SmmUuV/9b18NB5bIL1pkaB2Y2MXDRvqaXzS1wrFGhNN
-	RY1aqALBkuP2kfuxt7ANGvI4gdbiTP4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-166-XL8Z716XOiGrz90OESncWA-1; Mon, 16 Jun 2025 05:14:12 -0400
-X-MC-Unique: XL8Z716XOiGrz90OESncWA-1
-X-Mimecast-MFC-AGG-ID: XL8Z716XOiGrz90OESncWA_1750065251
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a579728319so477904f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:14:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750065251; x=1750670051;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Wuv2mA62fcjoUn35N/C8umkBOU3qJG3E1wudHQl3vVY=;
-        b=Fahrh3PJ8fIcgqqRuB/iTxfpisANCEetX6uq340Wq4TUk08t/tGpxvtrYnD3cyYUzu
-         vtgsn9EN39cRsFeF8VhRo9wumd0/JNHNNrwiA51EOUDbxTSYzBJ2uBcU5i7/Hb0tS5OL
-         0PxRz43FpGhefQ16+7dluAqgHSCpEed0lQzzTUFrzeb2J5wYLR5Ourz/mESOLzp2Y3pj
-         bCGRbCtMqOgsb9Sxus/QhA+y+xeN5bBPvdMn5vhmdw17bcOc8QBJbOINKMLhqU7lhPjT
-         2Hq5mnCNwc4k5KdPMTonD4xgYkyehOW/augZ0vOj1xJD5bdP7X3vIVBeU6lyfJPSkuVT
-         hmFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVn/DgWUXzA7aitmDNYdVJydNB2X2aTJU2w9T6UlAfUyYN+SYYgBfSv+5omNat4neB8gboS3MIydSeurDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYNTCceGUfOefdKNYForJf7IlP4E72VIqpVmI0AoZ5aOV8TY/g
-	ZKjZZGwN+bW7DgIC0jAePVYEBR96zjuer3rmLH3ceJxl0XDioJvVq6gCWmFWylVI1f0mjltDasN
-	pFhyI0+RkAFHvl0/79NtGOqbAaAc2IQWfQh7XKS/V/y/c9B/PCqRWv2rDojc8nOYF6Q==
-X-Gm-Gg: ASbGnct6eSJoo3uTFtkY3YCauP8f5tguTlQgXIjZhdfONC9Y/jwXcpD34UgdfKVEyty
-	5OataTyw90SQW3aVU6e3aZQ3A9IR1HSPfoW11U5orp8E0tBH37G9R+kcsIztNY0a1cZu/NqzBkn
-	ojNQcM5V4d49Sb36ZguG6syAjbpRhqoD4PEfAVLgJRHzuf+RJXfnS6HEuoORwO/N8rLPiUWkGsr
-	5ro1r0O1Fk2KmgZAEgMDBE+xDSG2ianFNXPT8be+qVujISvexC7Js3qVHbXkH2tDj3K23jNYB2b
-	w2Frd+Bl3ucppk6gpWEinMEwgN1sF9h7ZRkX+2t9vbAes58KHR0OVprNzAUyzKqeuIhdhqw27pp
-	lqsp0SDSESsRThicNxNHS0KC//5WLSywdi5h8U1ZuYhWKQeQ=
-X-Received: by 2002:a05:6000:22c1:b0:3a5:276b:1ec0 with SMTP id ffacd0b85a97d-3a572e8c5dbmr6274575f8f.45.1750065250775;
-        Mon, 16 Jun 2025 02:14:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1eku5C1wKEWMA/zLh1Kb+dGj72gg4ERn3ZZ3O6rewQsnKxfuyXv1A1iI5gYDDemL/53xxLg==
-X-Received: by 2002:a05:6000:22c1:b0:3a5:276b:1ec0 with SMTP id ffacd0b85a97d-3a572e8c5dbmr6274538f8f.45.1750065250350;
-        Mon, 16 Jun 2025 02:14:10 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7f8f9sm10462943f8f.42.2025.06.16.02.14.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 02:14:09 -0700 (PDT)
-Message-ID: <a65ee315-23b7-4058-895a-69045829bd01@redhat.com>
-Date: Mon, 16 Jun 2025 11:14:07 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="apJXT+fN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q1a6TqwDICMuK5QJNLTVZZxZEG0aEmgkTnLlJiY3T+4TU5ODjbNYYeynGcP14qK+SbMty2RqaeSq8i82MJiIG8blBt2w9tkFiB+euM9wrjC88fbmkOxoqDPdSTCjQnmqDHco/i+t5CQ2WpIE07Mj8OJ7NYmPb2GWV18BMrcYBkGCGmn1NeScpW/A+YVvJF7vBUpbSQEbHgEErwgB0PC9OYqX370hOH5rIhndkkQWtUJL/nEk6erezfckguXj8lUL0WY8b0qfmyZbCps7rhvc+dWyN7SCxwAF07UHsTNFFhYNdIqsIuY03sORNKl9dL72GGcB2t0EM4/wHXj49o57qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nMiS6JPe9/ZICImY7BJtnRmjcb07tL0z+4sWPztZvnM=;
+ b=nJXEdJ1mcT5Ay4NSVr0wpGz2OQ3+2gjDybfJg41ovhEa5d7McH/dumko5ZoC/8A6ERw/47VO9vRFHMtxJ6yl1Gz0yjuLy08ekOHK3hu0YWAHMCedYGU9jXRPbOYyWCDnCdDPUJsJkxWhVuTxMT6pBYrWbDobMXm5s2V4rwhIg+lG5ca2BrGE7Li3i3OaCcOBBEhZ3tGtOyqx8J9HgcpL5Ucjt1tsgp9pgjQcuo0pzY7xrPtxkplYvbIhIgoU6HKMcbVoG+20cZnQXw7LrJFME06Sinr6UNen2FMOuDZslbqFRFl9WDQh/14cDYpJ0yd1YIVllnJNFJJl4akRLSyzWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nMiS6JPe9/ZICImY7BJtnRmjcb07tL0z+4sWPztZvnM=;
+ b=apJXT+fNrtolKzFN15yZDG6W9Ox18+fL/O3+iG6RTRTEqDB1sf72/A7PDkNGF/HLF9uHesdN/fHrdv8TjGpGWLuRV1a2UhPhAato0xn5mSbSgRuEuvCeLWrwy0E0xXS1ApmgMSMsdZCrBHlgPrUfk7ya1AcZkzcBh2qHGhV1aO4=
+Received: from SN7PR04CA0170.namprd04.prod.outlook.com (2603:10b6:806:125::25)
+ by CH1PPFDB1826343.namprd12.prod.outlook.com (2603:10b6:61f:fc00::628) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Mon, 16 Jun
+ 2025 09:14:45 +0000
+Received: from SA2PEPF0000150B.namprd04.prod.outlook.com
+ (2603:10b6:806:125:cafe::29) by SN7PR04CA0170.outlook.office365.com
+ (2603:10b6:806:125::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Mon,
+ 16 Jun 2025 09:14:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF0000150B.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 09:14:44 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
+ 2025 04:14:43 -0500
+Received: from xsjlizhih51.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 16 Jun 2025 04:14:43 -0500
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: <ogabbay@kernel.org>, <quic_jhugo@quicinc.com>,
+	<jacek.lawrynowicz@linux.intel.com>, <dri-devel@lists.freedesktop.org>
+CC: Lizhi Hou <lizhi.hou@amd.com>, <linux-kernel@vger.kernel.org>,
+	<max.zhen@amd.com>, <min.ma@amd.com>, <sonal.santan@amd.com>,
+	<mario.limonciello@amd.com>
+Subject: [PATCH V1] accel/amdxdna: Revise device bo creation and free
+Date: Mon, 16 Jun 2025 02:14:16 -0700
+Message-ID: <20250616091418.2605476-1-lizhi.hou@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] mm: add mm_get_static_huge_zero_folio() routine
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Dave Hansen <dave.hansen@intel.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>,
- Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
- x86@kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
- gost.dev@samsung.com, hch@lst.de
-References: <20250612105100.59144-1-p.raghav@samsung.com>
- <20250612105100.59144-5-p.raghav@samsung.com>
- <e3075e27-93d2-4a11-a174-f05a7497870e@intel.com>
- <cglmujb275faqkpqmb75mz4tt5dtruvhntpe5t4qyzjr363qyr@vluzyx4hukap>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <cglmujb275faqkpqmb75mz4tt5dtruvhntpe5t4qyzjr363qyr@vluzyx4hukap>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF0000150B:EE_|CH1PPFDB1826343:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9aa06b8f-0322-48c9-9703-08ddacb63be1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3d6cXxtbe3etvnWdMKKk9+xhp+9bo9cWD/TC7NjT9OWMkK+GcPEs5f+SPHu2?=
+ =?us-ascii?Q?FcCDxD/tvrOb+BFb0dhf4sJwWIuPLXxipyrVoguqhUgbkBMg8y0LsSX32Yp7?=
+ =?us-ascii?Q?xR6d9mLE0HPL7E6/eoclIg7UXW/HS0JsT0RrCs4K+T9sHJ7MRUf+zvNCHLur?=
+ =?us-ascii?Q?WVLWGAFaBZPzv0l4CrMWI1phP6jXWVj9nSO7RRmW7H17m8Viqir539LYrBlU?=
+ =?us-ascii?Q?VbC3AXiQOQ6mRtQjwPXVLeQ9oQxHDyjI3qMYGrWw02kLgCV9W2VPMcYhNouW?=
+ =?us-ascii?Q?J8a//fMpVEquQRDR7VcflVPVBoezKGESMMLJIVDpc/19QSa69vlBdOqtVTA9?=
+ =?us-ascii?Q?d9dotFmebaZYj+hqEfyTaX5b9fSAEmiCHmEAIodQRl072H2vLwTuiPy/pV0f?=
+ =?us-ascii?Q?Jf+QwwPMkesj3cz15zn/20iGVGnPrZrUYZPKW+KngQcjtLMBkfinZH21Gqls?=
+ =?us-ascii?Q?2uFT0vZxrtFhVyzutx5e6U0/m2y7Wmm7Q1A3semPZnVu4Mi1zqqrUj8WTcqF?=
+ =?us-ascii?Q?Mo9e1IyR2qDzAQGjFS6ci48CN5TTzgPoLfks2TwDiXgBsjhqtEjBdH7UI1cb?=
+ =?us-ascii?Q?xn5n3AYq/8mD6PP7Jnk2oK3o3IIe39iRw5OYfZ2SDXAVs0SMc8bhtVGu03KP?=
+ =?us-ascii?Q?46ht9TWTLqyy6eIuAAer4DOtBnuIEQk6we/rygclJcfYUJk1nSy8dlk4Y7r6?=
+ =?us-ascii?Q?b+WZ2yTkjOy6rP1LTIxU0Tom4YgtIGKcSTsaQ9mqJimAf/K/hC1pHaSIVNGr?=
+ =?us-ascii?Q?1XShzpVj8rHUSUrrKesggl0vfACLFaTwe9vEQFAYUy4zPYS6EDSmO0STKU9K?=
+ =?us-ascii?Q?Yb9a9RLGNcy4yeTr3kHIUVgiXROusi22aY6Wlb7r8cSDhtCXgcinSd7jFyoX?=
+ =?us-ascii?Q?05TdS2OAFK583lNniU6RHXlc/e/1ZGTRZPOGO15SVgHxjqiFlaDcX2gzH3rN?=
+ =?us-ascii?Q?NvjxJ8+Kv7POgQgzPL7ei9CJLeP4AMHY77L85XGoew4CoQz25ELEv1MA3vvn?=
+ =?us-ascii?Q?SBvLVwnwv9iSN5igqkQLDZUNuQc6Ce7f0ZHqVs5zTKQe7VYPWj1N1Gmw1k+R?=
+ =?us-ascii?Q?9Ok9BF1C6cbnAqKwUVW6ebbEj8UHrY38PXwUJL5mwgPY9gZPjMmknJK4z5ov?=
+ =?us-ascii?Q?/u0okFKqQa0qivfLkqf0Jg7D9uhmyF6ixjkZ9MCqQMM1MwLzJZwFKSuh4RXA?=
+ =?us-ascii?Q?MBQQ91ga/tdG1xfEq02GJT8n5AHFyDvJ6JwX6Oh2u1P1fUXGJFTxEHbJFrdh?=
+ =?us-ascii?Q?vpBzPJcj7zN8uztPeSwHCVLEOJh70P7GtBVXccyUeHtdXZPFlR/14qxPWMRP?=
+ =?us-ascii?Q?fZ2JNrzwlqg8YdlkLVfHc5srVxN4tH4UvPWOxsP5JbD1BvJglnDMIeiMyaGR?=
+ =?us-ascii?Q?BhsqPZVpGm+hhySsn2oPgw/PzfrC4pYiluphLNcRaYSHod42yZLdPQtZgjYx?=
+ =?us-ascii?Q?2Gh4mf/gSyU3Q9f8lS3LYOa1CFrMA2cDIpgtlp93IlXVHPxD0v2kls8KQZVa?=
+ =?us-ascii?Q?IsJ+qkQXT9mw5bOTzIMTxzZng4WwGs4z1sy1?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 09:14:44.4387
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9aa06b8f-0322-48c9-9703-08ddacb63be1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF0000150B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFDB1826343
 
-On 12.06.25 22:54, Pankaj Raghav (Samsung) wrote:
-> On Thu, Jun 12, 2025 at 07:09:34AM -0700, Dave Hansen wrote:
->> On 6/12/25 03:50, Pankaj Raghav wrote:
->>> +/*
->>> + * mm_get_static_huge_zero_folio - Get a PMD sized zero folio
->>
->> Isn't that a rather inaccurate function name and comment?
-> I agree. I also felt it was not a good name for the function.
-> 
->>
->> The third line of the function literally returns a non-PMD-sized zero folio.
->>
->>> + * This function will return a PMD sized zero folio if CONFIG_STATIC_PMD_ZERO_PAGE
->>> + * is enabled. Otherwise, a ZERO_PAGE folio is returned.
->>> + *
->>> + * Deduce the size of the folio with folio_size instead of assuming the
->>> + * folio size.
->>> + */
->>> +static inline struct folio *mm_get_static_huge_zero_folio(void)
->>> +{
->>> +	if(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
->>> +		return READ_ONCE(huge_zero_folio);
->>> +	return page_folio(ZERO_PAGE(0));
->>> +}
->>
->> This doesn't tell us very much about when I should use:
->>
->> 	mm_get_static_huge_zero_folio()
->> vs.
->> 	mm_get_huge_zero_folio(mm)
->> vs.
->> 	page_folio(ZERO_PAGE(0))
->>
->> What's with the "mm_" in the name? Usually "mm" means "mm_struct" not
->> Memory Management. It's really weird to prefix something that doesn't
->> take an "mm_struct" with "mm_"
-> 
-> Got it. Actually, I was not aware of this one.
-> 
->>
->> Isn't the "get_" also a bad idea since mm_get_huge_zero_folio() does its
->> own refcounting but this interface does not?
->>
-> 
-> Agree.
-> 
->> Shouldn't this be something more along the lines of:
->>
->> /*
->>   * pick_zero_folio() - Pick and return the largest available zero folio
->>   *
->>   * mm_get_huge_zero_folio() is preferred over this function. It is more
->>   * flexible and can provide a larger zero page under wider
->>   * circumstances.
->>   *
->>   * Only use this when there is no mm available.
->>   *
->>   * ... then other comments
->>   */
->> static inline struct folio *pick_zero_folio(void)
->> {
->> 	if (IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
->> 		return READ_ONCE(huge_zero_folio);
->> 	return page_folio(ZERO_PAGE(0));
->> }
->>
->> Or, maybe even name it _just_: zero_folio()
-> 
-> I think zero_folio() sounds like a good and straightforward name. In
-> most cases it will return a ZERO_PAGE() folio. If
-> CONFIG_STATIC_PMD_ZERO_PAGE is enabled, then we return a PMD page.
+The device bo is allocated from the device heap memory. (a trunk of
+memory dedicated to device)
 
-"zero_folio" would be confusing I'm afraid.
+Rename amdxdna_gem_insert_node_locked to amdxdna_gem_heap_alloc
+and move related sanity checks into it.
 
-At least with current "is_zero_folio" etc.
+Add amdxdna_gem_dev_obj_free and move device bo free code into it.
 
-"largest_zero_folio" or sth. like that might make it clearer that the 
-size we are getting back might actually differ.
+Calculate the kernel virtual address of device bo by the device
+heap memory address and offset.
 
+Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+---
+ drivers/accel/amdxdna/aie2_ctx.c    |   2 +-
+ drivers/accel/amdxdna/amdxdna_gem.c | 193 +++++++++++++++-------------
+ drivers/accel/amdxdna/amdxdna_gem.h |   3 +-
+ 3 files changed, 106 insertions(+), 92 deletions(-)
+
+diff --git a/drivers/accel/amdxdna/aie2_ctx.c b/drivers/accel/amdxdna/aie2_ctx.c
+index 3e38a5f637ea..f20999f2d668 100644
+--- a/drivers/accel/amdxdna/aie2_ctx.c
++++ b/drivers/accel/amdxdna/aie2_ctx.c
+@@ -566,7 +566,7 @@ int aie2_hwctx_init(struct amdxdna_hwctx *hwctx)
+ 			.size = MAX_CHAIN_CMDBUF_SIZE,
+ 		};
+ 
+-		abo = amdxdna_drm_alloc_dev_bo(&xdna->ddev, &args, client->filp, true);
++		abo = amdxdna_drm_alloc_dev_bo(&xdna->ddev, &args, client->filp);
+ 		if (IS_ERR(abo)) {
+ 			ret = PTR_ERR(abo);
+ 			goto free_cmd_bufs;
+diff --git a/drivers/accel/amdxdna/amdxdna_gem.c b/drivers/accel/amdxdna/amdxdna_gem.c
+index 26831ec69f89..51b3310dfd4d 100644
+--- a/drivers/accel/amdxdna/amdxdna_gem.c
++++ b/drivers/accel/amdxdna/amdxdna_gem.c
+@@ -24,40 +24,79 @@
+ MODULE_IMPORT_NS("DMA_BUF");
+ 
+ static int
+-amdxdna_gem_insert_node_locked(struct amdxdna_gem_obj *abo, bool use_vmap)
++amdxdna_gem_heap_alloc(struct amdxdna_gem_obj *abo)
+ {
+ 	struct amdxdna_client *client = abo->client;
+ 	struct amdxdna_dev *xdna = client->xdna;
+ 	struct amdxdna_mem *mem = &abo->mem;
++	struct amdxdna_gem_obj *heap;
+ 	u64 offset;
+ 	u32 align;
+ 	int ret;
+ 
++	mutex_lock(&client->mm_lock);
++
++	heap = client->dev_heap;
++	if (!heap) {
++		ret = -EINVAL;
++		goto unlock_out;
++	}
++
++	if (heap->mem.userptr == AMDXDNA_INVALID_ADDR) {
++		XDNA_ERR(xdna, "Invalid dev heap userptr");
++		ret = -EINVAL;
++		goto unlock_out;
++	}
++
++	if (mem->size == 0 || mem->size > heap->mem.size) {
++		XDNA_ERR(xdna, "Invalid dev bo size 0x%lx, limit 0x%lx",
++			 mem->size, heap->mem.size);
++		ret = -EINVAL;
++		goto unlock_out;
++	}
++
+ 	align = 1 << max(PAGE_SHIFT, xdna->dev_info->dev_mem_buf_shift);
+-	ret = drm_mm_insert_node_generic(&abo->dev_heap->mm, &abo->mm_node,
++	ret = drm_mm_insert_node_generic(&heap->mm, &abo->mm_node,
+ 					 mem->size, align,
+ 					 0, DRM_MM_INSERT_BEST);
+ 	if (ret) {
+ 		XDNA_ERR(xdna, "Failed to alloc dev bo memory, ret %d", ret);
+-		return ret;
++		goto unlock_out;
+ 	}
+ 
+ 	mem->dev_addr = abo->mm_node.start;
+-	offset = mem->dev_addr - abo->dev_heap->mem.dev_addr;
+-	mem->userptr = abo->dev_heap->mem.userptr + offset;
+-	mem->pages = &abo->dev_heap->base.pages[offset >> PAGE_SHIFT];
+-	mem->nr_pages = mem->size >> PAGE_SHIFT;
+-
+-	if (use_vmap) {
+-		mem->kva = vmap(mem->pages, mem->nr_pages, VM_MAP, PAGE_KERNEL);
+-		if (!mem->kva) {
+-			XDNA_ERR(xdna, "Failed to vmap");
+-			drm_mm_remove_node(&abo->mm_node);
+-			return -EFAULT;
+-		}
+-	}
++	offset = mem->dev_addr - heap->mem.dev_addr;
++	mem->userptr = heap->mem.userptr + offset;
++	mem->kva = heap->mem.kva + offset;
+ 
+-	return 0;
++	drm_gem_object_get(to_gobj(heap));
++
++unlock_out:
++	mutex_unlock(&client->mm_lock);
++
++	return ret;
++}
++
++static void
++amdxdna_gem_destroy_obj(struct amdxdna_gem_obj *abo)
++{
++	mutex_destroy(&abo->lock);
++	kfree(abo);
++}
++
++static void
++amdxdna_gem_heap_free(struct amdxdna_gem_obj *abo)
++{
++	struct amdxdna_gem_obj *heap;
++
++	mutex_lock(&abo->client->mm_lock);
++
++	drm_mm_remove_node(&abo->mm_node);
++
++	heap = abo->client->dev_heap;
++	drm_gem_object_put(to_gobj(heap));
++
++	mutex_unlock(&abo->client->mm_lock);
+ }
+ 
+ static bool amdxdna_hmm_invalidate(struct mmu_interval_notifier *mni,
+@@ -213,6 +252,20 @@ static int amdxdna_hmm_register(struct amdxdna_gem_obj *abo,
+ 	return ret;
+ }
+ 
++static void amdxdna_gem_dev_obj_free(struct drm_gem_object *gobj)
++{
++	struct amdxdna_dev *xdna = to_xdna_dev(gobj->dev);
++	struct amdxdna_gem_obj *abo = to_xdna_obj(gobj);
++
++	XDNA_DBG(xdna, "BO type %d xdna_addr 0x%llx", abo->type, abo->mem.dev_addr);
++	if (abo->pinned)
++		amdxdna_gem_unpin(abo);
++
++	amdxdna_gem_heap_free(abo);
++	drm_gem_object_release(gobj);
++	amdxdna_gem_destroy_obj(abo);
++}
++
+ static int amdxdna_insert_pages(struct amdxdna_gem_obj *abo,
+ 				struct vm_area_struct *vma)
+ {
+@@ -374,19 +427,6 @@ static void amdxdna_gem_obj_free(struct drm_gem_object *gobj)
+ 	if (abo->pinned)
+ 		amdxdna_gem_unpin(abo);
+ 
+-	if (abo->type == AMDXDNA_BO_DEV) {
+-		mutex_lock(&abo->client->mm_lock);
+-		drm_mm_remove_node(&abo->mm_node);
+-		mutex_unlock(&abo->client->mm_lock);
+-
+-		vunmap(abo->mem.kva);
+-		drm_gem_object_put(to_gobj(abo->dev_heap));
+-		drm_gem_object_release(gobj);
+-		mutex_destroy(&abo->lock);
+-		kfree(abo);
+-		return;
+-	}
+-
+ 	if (abo->type == AMDXDNA_BO_DEV_HEAP)
+ 		drm_mm_takedown(&abo->mm);
+ 
+@@ -402,7 +442,7 @@ static void amdxdna_gem_obj_free(struct drm_gem_object *gobj)
+ }
+ 
+ static const struct drm_gem_object_funcs amdxdna_gem_dev_obj_funcs = {
+-	.free = amdxdna_gem_obj_free,
++	.free = amdxdna_gem_dev_obj_free,
+ };
+ 
+ static const struct drm_gem_object_funcs amdxdna_gem_shmem_funcs = {
+@@ -527,6 +567,7 @@ amdxdna_drm_create_dev_heap(struct drm_device *dev,
+ 			    struct drm_file *filp)
+ {
+ 	struct amdxdna_client *client = filp->driver_priv;
++	struct iosys_map map = IOSYS_MAP_INIT_VADDR(NULL);
+ 	struct amdxdna_dev *xdna = to_xdna_dev(dev);
+ 	struct drm_gem_shmem_object *shmem;
+ 	struct amdxdna_gem_obj *abo;
+@@ -553,18 +594,26 @@ amdxdna_drm_create_dev_heap(struct drm_device *dev,
+ 
+ 	shmem->map_wc = false;
+ 	abo = to_xdna_obj(&shmem->base);
+-
+ 	abo->type = AMDXDNA_BO_DEV_HEAP;
+ 	abo->client = client;
+ 	abo->mem.dev_addr = client->xdna->dev_info->dev_mem_base;
+ 	drm_mm_init(&abo->mm, abo->mem.dev_addr, abo->mem.size);
+ 
++	ret = drm_gem_vmap(to_gobj(abo), &map);
++	if (ret) {
++		XDNA_ERR(xdna, "Vmap heap bo failed, ret %d", ret);
++		goto release_obj;
++	}
++	abo->mem.kva = map.vaddr;
++
+ 	client->dev_heap = abo;
+ 	drm_gem_object_get(to_gobj(abo));
+ 	mutex_unlock(&client->mm_lock);
+ 
+ 	return abo;
+ 
++release_obj:
++	drm_gem_object_put(to_gobj(abo));
+ mm_unlock:
+ 	mutex_unlock(&client->mm_lock);
+ 	return ERR_PTR(ret);
+@@ -573,58 +622,32 @@ amdxdna_drm_create_dev_heap(struct drm_device *dev,
+ struct amdxdna_gem_obj *
+ amdxdna_drm_alloc_dev_bo(struct drm_device *dev,
+ 			 struct amdxdna_drm_create_bo *args,
+-			 struct drm_file *filp, bool use_vmap)
++			 struct drm_file *filp)
+ {
+ 	struct amdxdna_client *client = filp->driver_priv;
+ 	struct amdxdna_dev *xdna = to_xdna_dev(dev);
+ 	size_t aligned_sz = PAGE_ALIGN(args->size);
+-	struct amdxdna_gem_obj *abo, *heap;
++	struct amdxdna_gem_obj *abo;
+ 	int ret;
+ 
+-	mutex_lock(&client->mm_lock);
+-	heap = client->dev_heap;
+-	if (!heap) {
+-		ret = -EINVAL;
+-		goto mm_unlock;
+-	}
+-
+-	if (heap->mem.userptr == AMDXDNA_INVALID_ADDR) {
+-		XDNA_ERR(xdna, "Invalid dev heap userptr");
+-		ret = -EINVAL;
+-		goto mm_unlock;
+-	}
+-
+-	if (args->size > heap->mem.size) {
+-		XDNA_ERR(xdna, "Invalid dev bo size 0x%llx, limit 0x%lx",
+-			 args->size, heap->mem.size);
+-		ret = -EINVAL;
+-		goto mm_unlock;
+-	}
+-
+ 	abo = amdxdna_gem_create_obj(&xdna->ddev, aligned_sz);
+-	if (IS_ERR(abo)) {
+-		ret = PTR_ERR(abo);
+-		goto mm_unlock;
+-	}
++	if (IS_ERR(abo))
++		return abo;
++
+ 	to_gobj(abo)->funcs = &amdxdna_gem_dev_obj_funcs;
+ 	abo->type = AMDXDNA_BO_DEV;
+ 	abo->client = client;
+-	abo->dev_heap = heap;
+-	ret = amdxdna_gem_insert_node_locked(abo, use_vmap);
++
++	ret = amdxdna_gem_heap_alloc(abo);
+ 	if (ret) {
+ 		XDNA_ERR(xdna, "Failed to alloc dev bo memory, ret %d", ret);
+-		goto mm_unlock;
++		amdxdna_gem_destroy_obj(abo);
++		return ERR_PTR(ret);
+ 	}
+ 
+-	drm_gem_object_get(to_gobj(heap));
+ 	drm_gem_private_object_init(&xdna->ddev, to_gobj(abo), aligned_sz);
+ 
+-	mutex_unlock(&client->mm_lock);
+ 	return abo;
+-
+-mm_unlock:
+-	mutex_unlock(&client->mm_lock);
+-	return ERR_PTR(ret);
+ }
+ 
+ static struct amdxdna_gem_obj *
+@@ -632,10 +655,10 @@ amdxdna_drm_create_cmd_bo(struct drm_device *dev,
+ 			  struct amdxdna_drm_create_bo *args,
+ 			  struct drm_file *filp)
+ {
++	struct iosys_map map = IOSYS_MAP_INIT_VADDR(NULL);
+ 	struct amdxdna_dev *xdna = to_xdna_dev(dev);
+ 	struct drm_gem_shmem_object *shmem;
+ 	struct amdxdna_gem_obj *abo;
+-	struct iosys_map map;
+ 	int ret;
+ 
+ 	if (args->size > XDNA_MAX_CMD_BO_SIZE) {
+@@ -692,7 +715,7 @@ int amdxdna_drm_create_bo_ioctl(struct drm_device *dev, void *data, struct drm_f
+ 		abo = amdxdna_drm_create_dev_heap(dev, args, filp);
+ 		break;
+ 	case AMDXDNA_BO_DEV:
+-		abo = amdxdna_drm_alloc_dev_bo(dev, args, filp, false);
++		abo = amdxdna_drm_alloc_dev_bo(dev, args, filp);
+ 		break;
+ 	case AMDXDNA_BO_CMD:
+ 		abo = amdxdna_drm_create_cmd_bo(dev, args, filp);
+@@ -724,20 +747,13 @@ int amdxdna_gem_pin_nolock(struct amdxdna_gem_obj *abo)
+ 	struct amdxdna_dev *xdna = to_xdna_dev(to_gobj(abo)->dev);
+ 	int ret;
+ 
++	if (abo->type == AMDXDNA_BO_DEV)
++		abo = abo->client->dev_heap;
++
+ 	if (is_import_bo(abo))
+ 		return 0;
+ 
+-	switch (abo->type) {
+-	case AMDXDNA_BO_SHMEM:
+-	case AMDXDNA_BO_DEV_HEAP:
+-		ret = drm_gem_shmem_pin(&abo->base);
+-		break;
+-	case AMDXDNA_BO_DEV:
+-		ret = drm_gem_shmem_pin(&abo->dev_heap->base);
+-		break;
+-	default:
+-		ret = -EOPNOTSUPP;
+-	}
++	ret = drm_gem_shmem_pin(&abo->base);
+ 
+ 	XDNA_DBG(xdna, "BO type %d ret %d", abo->type, ret);
+ 	return ret;
+@@ -747,9 +763,6 @@ int amdxdna_gem_pin(struct amdxdna_gem_obj *abo)
+ {
+ 	int ret;
+ 
+-	if (abo->type == AMDXDNA_BO_DEV)
+-		abo = abo->dev_heap;
+-
+ 	mutex_lock(&abo->lock);
+ 	ret = amdxdna_gem_pin_nolock(abo);
+ 	mutex_unlock(&abo->lock);
+@@ -759,12 +772,12 @@ int amdxdna_gem_pin(struct amdxdna_gem_obj *abo)
+ 
+ void amdxdna_gem_unpin(struct amdxdna_gem_obj *abo)
+ {
++	if (abo->type == AMDXDNA_BO_DEV)
++		abo = abo->client->dev_heap;
++
+ 	if (is_import_bo(abo))
+ 		return;
+ 
+-	if (abo->type == AMDXDNA_BO_DEV)
+-		abo = abo->dev_heap;
+-
+ 	mutex_lock(&abo->lock);
+ 	drm_gem_shmem_unpin(&abo->base);
+ 	mutex_unlock(&abo->lock);
+@@ -855,10 +868,12 @@ int amdxdna_drm_sync_bo_ioctl(struct drm_device *dev,
+ 
+ 	if (is_import_bo(abo))
+ 		drm_clflush_sg(abo->base.sgt);
+-	else if (abo->type == AMDXDNA_BO_DEV)
+-		drm_clflush_pages(abo->mem.pages, abo->mem.nr_pages);
+-	else
++	else if (abo->mem.kva)
++		drm_clflush_virt_range(abo->mem.kva + args->offset, args->size);
++	else if (abo->base.pages)
+ 		drm_clflush_pages(abo->base.pages, gobj->size >> PAGE_SHIFT);
++	else
++		WARN(1, "Can not get flush memory");
+ 
+ 	amdxdna_gem_unpin(abo);
+ 
+diff --git a/drivers/accel/amdxdna/amdxdna_gem.h b/drivers/accel/amdxdna/amdxdna_gem.h
+index aee97e971d6d..ae29db94a9d3 100644
+--- a/drivers/accel/amdxdna/amdxdna_gem.h
++++ b/drivers/accel/amdxdna/amdxdna_gem.h
+@@ -41,7 +41,6 @@ struct amdxdna_gem_obj {
+ 
+ 	/* Below members is uninitialized when needed */
+ 	struct drm_mm			mm; /* For AMDXDNA_BO_DEV_HEAP */
+-	struct amdxdna_gem_obj		*dev_heap; /* For AMDXDNA_BO_DEV */
+ 	struct drm_mm_node		mm_node; /* For AMDXDNA_BO_DEV */
+ 	u32				assigned_hwctx;
+ 	struct dma_buf			*dma_buf;
+@@ -72,7 +71,7 @@ amdxdna_gem_prime_import(struct drm_device *dev, struct dma_buf *dma_buf);
+ struct amdxdna_gem_obj *
+ amdxdna_drm_alloc_dev_bo(struct drm_device *dev,
+ 			 struct amdxdna_drm_create_bo *args,
+-			 struct drm_file *filp, bool use_vmap);
++			 struct drm_file *filp);
+ 
+ int amdxdna_gem_pin_nolock(struct amdxdna_gem_obj *abo);
+ int amdxdna_gem_pin(struct amdxdna_gem_obj *abo);
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
