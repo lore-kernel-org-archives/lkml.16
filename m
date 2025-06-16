@@ -1,82 +1,80 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766E326C3B7
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E5B285CBA
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750077728; cv=none; b=XgdP+J+/mbgCVukpResxFuPDa03V4iqF829255WAXxP1Mc6bxpOchPVl3++KURqQU2pFhPRggixkK7R8d+9X+9SPkaSgw/v+syfbad3U8QZULSF8gdKcHWCkLeionUZA5XRye12kFZ9V1lWglksQ/ZjlpsuLKeLF50SuEErzneo=
+	t=1750077730; cv=none; b=fHySh5Z2UQo1jkfsp4wO8hc4Y6ac2MBbtfvXd/XO3oGUb2Hu8vEjPoU0GiKowCHuLfdaUKWA8eo1Q8hStw5sRDH5Al3OeF2oHBEdYKxrLb2mnjnVLCMMhbvP0rhKMuhTqNfS5XTQ5tuM2+zod5knA25YQ1z8ZlbXN7YjNYQNyl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750077728; c=relaxed/simple;
-	bh=l0IfWgiC1RDybrnOEoQW7eDnm5A7asHn+JBveZVapL8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aMmPzVIJSCFfiUhTh0JlbcAKKx5GSXqxQ7X/c+WIg5RYejF3qJa0esKCfdk3Z/VnJKqm9IP7HFMoMNZIM+uttWqtin710obyoHLG2Os2ZJM9PXW4+/2JbERGXmdW6BLNz/ol9CxZcePTJa1zNqzP/vcjNmtxildPa/IXF5xxv8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UFG8V4bX; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1750077730; c=relaxed/simple;
+	bh=eisJelsbzbgz5PauR9t6Qqmq85k3CBf47pI1tIcqyIU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VVrr6TW9eGgkMeerNF20paV5ioWKr0LVJmGvv1CrN0GwwriO5+2Soxogpw7OLj1bayg5NmgUtmR6agphEOpkL9+RAYGg2wE257+0zVBhsZlNhSos0TJMlWiTj1SI5+eKfyCN+skb86CjX0Jwq2QiBmtE1p09u3LideBmQZ7Mqwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ly1dA9TS; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UFG8V4bX"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-450787c8626so33761265e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:42:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ly1dA9TS"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d5600a54so36888735e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750077725; x=1750682525; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+5z0oKDYfCpIh/kdNigaGjh6Kp7N8Hqa3cxmtm6IWyc=;
-        b=UFG8V4bXd18u1Us2hm/K8dz0KgWnOA+nAmjuAKgbKrkGny5OiU6BNt50ORKAi2Ez+J
-         bO2YNVA38JxC95r4BDB/jSVVTNDeukp+pg937HgBvM80LTQPdrVKqxVCDlZfKXYN99vr
-         bLfafftc6207Y/Xs1sxTFYqzRvfTDVQzMwnwvgLioFxcoxYapcR2QDja87EGdA5KTDg6
-         hRiIss1W147rFAWsUvCspV3ZePKykzMFWICElWNMiPfpkxvA7LSMcRWIJRUe+voNYjEf
-         VWSL/MZg02ocB+Y4mAJIOtwVtyQVfxGzQPZUyH6zbN27bIZnXovvlMmVszpBNuWVmllJ
-         do6g==
+        d=google.com; s=20230601; t=1750077727; x=1750682527; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4iPsvC3FNImEIyla9KrHgTvmi5udSzFWrqAjBfWFnic=;
+        b=Ly1dA9TSaM/5sY/uCnMQQwNN1IeJfaBdXzrL1MtpL0eDfd1MgN3OhFVx6nFbwvHZfA
+         G81o9Ush3IJRhQDXzUAepcJXv+r953sx+z+k7SiKU+pb8w4vo8owxio5lnT7mCwZJYbi
+         ljMgBaRdV3UP7OYTvGJbsNWdSWZ6KppjsU7Ih9Z5y5pn+wnaxyNhM8Vk+jwGGc50fHd+
+         dZ//rHDSFN0t/FNbaiOJgDCjaetrOeWwarQt89+i+JM9jVRaPTcn7LtdtG8fAyANsC6k
+         vSSzmTvQ37pm7l24gMn1kvUXx3gjCNEvkPQkZxCDTT4V0t5oz+MSKP5iQelVAsMDZBG3
+         hZnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750077725; x=1750682525;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+5z0oKDYfCpIh/kdNigaGjh6Kp7N8Hqa3cxmtm6IWyc=;
-        b=qXbyiZC2MC76zdGjuLQUoFZ1V4/WJrBgSWk6Us44ooZP7ztA4eLZUtuHdSMXHT8IN0
-         JEVAaR11oAvxOzKK+5tChr/b1k0rEiHBN64t4VPSTcH85dKQePCUH6eq5qxzDaie2W+D
-         zrVjpgB5bwDkyTUAtegde6PlSkV4tg91q6LTGHs4ANLAmyk90I522cAaKXsNPZrS+Wk+
-         MMTGW27Yfz/JvtIP3NT/5WyRdAgY68pC7X8MeBWl1xBZHpN80lNa7CRIwAcSJFrJCIwC
-         eOLULJANShia6bSMktUm4ujrWCZ6AHXUFXGpZDC36SG8M9L9ghcL1aM9xLM5g4LoUmgQ
-         X1xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGPtSVwwGtFVC7y3/zAbqNrZtMrvQbixTGPYduaM294dQ4mj0f20b3X90cyrUps4QUEndPKXd1lHjz5U8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvpmm3SkcdD+UCy2jSjm5t3GXM//XKpJMz6ZRIVYAKLNLoOkzD
-	Igug5oENiOmzoSol5V1lPxkU+fNhklATdOQGUhlF3n0vztnSKMe0NcUxi/OWbiPOoPHp2ECpi0k
-	vyoAc116Zu7lIU2wTVA==
-X-Google-Smtp-Source: AGHT+IG5sfSFZ8L8kfMsi/4oYjDJ+R4nfvhpz2iKjAilvb66ZwuKZobcJbblafgXW9BFR0o3Zn90rPcQckMZiJY=
-X-Received: from wmbfa7.prod.google.com ([2002:a05:600c:5187:b0:450:d244:bd2e])
+        d=1e100.net; s=20230601; t=1750077727; x=1750682527;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4iPsvC3FNImEIyla9KrHgTvmi5udSzFWrqAjBfWFnic=;
+        b=Pyu3CfQlOgkTnl4gEVU2jOE5bUl040jOEVG8WBJAWKMwgRdgEB3rK5mfUNdLpNr4YA
+         BVxLhy3F9Gp2ZYA6oJDXaW9aJ6zKJ+QOO8e6KsZNMwviGYGY53tsNP+2u7jAcqFhlRUj
+         B00mss3ZqXJM5VY9ZDhiUzgQBKPqvg2lsyFUYTZeYEIg8MaQb3KLGbzbDE93IgqQ1T6h
+         byCwsUy8EvOY6Xn8kfOWWYbtqyX8NE4f1OLLpxQ+Ph52HP8kilbyWqW1vNGkFs5SniH9
+         z+PK6ZsduAAYfL4VIkEAldymOHAchPefl2oxOQJjvc94mKGrq6XT8ETw6+LVb3pMbcrp
+         euYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0XfAsNCMpXImmWA1dzuBE3sICfgbN237xcYlwgZbOdT0oifUllCT6Xy90G+sLcgBm1Hg6gmmMHpJ2+gk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTB3NCGLBe5umDwGxEkMepxezIAjuw9tEbGFDdsCPBQLOPD9O7
+	4A9MfaIHgXZtgMuCvK7sWlHykFjy+CPE3maA4GSs4bXL9ikeksCYMFrREvyHY3aYVdG0ITOknni
+	pGqkqWkOwcSsihn8jgw==
+X-Google-Smtp-Source: AGHT+IFFEgIkgx+6TKashi0el2hVGOtC2gAVnRdLv6IfE63TCVZAam6vLTu09ppRDIqAw3h1TDUJsf/jVtAg1X0=
+X-Received: from wmth13.prod.google.com ([2002:a05:600c:8b6d:b0:451:edc8:7816])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8710:b0:44a:775d:b5e8 with SMTP id 5b1f17b1804b1-4533cadf840mr76709585e9.1.1750077724978;
- Mon, 16 Jun 2025 05:42:04 -0700 (PDT)
-Date: Mon, 16 Jun 2025 12:41:46 +0000
+ 2002:a05:600c:3584:b0:451:df07:f437 with SMTP id 5b1f17b1804b1-4533cac908fmr84778685e9.30.1750077727306;
+ Mon, 16 Jun 2025 05:42:07 -0700 (PDT)
+Date: Mon, 16 Jun 2025 12:41:47 +0000
+In-Reply-To: <20250616-strncpy-from-user-v5-0-2d3fb0e1f5af@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAoRUGgC/33PwQrCMAwG4FeRno20WbdunnwP8TDbZBZ0lVaHI
- nt3Oy8qDsnpD/xfyEMkip6SWC8eItLgkw99DuVyIeyh7TsC73IWKLGUGjWkS+zt+Q4cwwmuuQ2
- K0clqL61zJHLvHIn97WVudzkffLqEeH+dGNS0/acNChRwUxdMqKq6bDddCN2RVjacxMQN+Ek0c
- wSCBEMVt7a1cs/yhyjeRJ45oshEXdrKGHaaG/VD6A8CzRyhJ2L6QRvptMEvYhzHJ3emoMx8AQA A
-X-Change-Id: 20250424-strncpy-from-user-1f2d06b0cdde
+References: <20250616-strncpy-from-user-v5-0-2d3fb0e1f5af@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2342; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=l0IfWgiC1RDybrnOEoQW7eDnm5A7asHn+JBveZVapL8=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoUBERNjki0T9QSTrrcNbKyN1cLsTXvuokYPFen
- wlYwMIM5myJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaFAREQAKCRAEWL7uWMY5
- RvGXD/9utwUpEcXq6uMeLT9zKHXTAYO3R40ctB550vDi+vkM1LMxCeACuU6Hr6YAnYmXd89huli
- V6gLSkwcEWhKwCbYGSpOEaZUfIXMFI/5IPLewBM6cHf44oTFp2o75v5f4V+yGHk5iHgY0VfsyNh
- c38mjcChtXbVlK12L8+aafb27TOjk9g30hFa97wBhPEJb/RqvVMltjTPhDfoNjQPhVlwfaGNVVZ
- UyqslZKsqLc0lL7TKJiYll40PPwIBpld2fPg54zAWopVkBP188yYApQkdNlYKI3jNVqTqIw+24u
- tnM+o8q6DKIwzBHPAwN2tZKOwy92gzEK9Lv7GGaGqUulhcGnVDrJ52ALVtpBfsXXCOe0zwHqSQV
- w6ih7H3SK6VbUhmcqVFY+drXwDbsrsTYNtjJCrLRYdHWffIVGpjp6ovkzT/Q8I3k3KpMz6JdsK0
- QY1rmEIpO2+a1X2GgC3h8p+yI1+Vv+PcD/RZ7Ix+76Rrg0Nj9qow/wxlc22ec8vcnoeHZZ4I8pN
- J/nzl2090oyRJ7p3JoRW8p/9lTkOl57J3aEvUVupQbGDx94aj8snFGrkj7KhMEF/7vX08KhrwAm
- N05+x89gemZ5gfv6+VySUjByFX5fgQEguROEpCUTWno49HMZTZ88nBSjJ1BL5B5gNZK4FKPwtYF L/taJnm/3+rrLdQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2881; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=eisJelsbzbgz5PauR9t6Qqmq85k3CBf47pI1tIcqyIU=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoUBEawPXeuRCgQ5wZKLaXtuHVvRNKHSlpd0hBk
+ 5Vk8HVeBKeJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaFARGgAKCRAEWL7uWMY5
+ RlmRD/4q1ndgbZsarygiYRaLLFiGWz2nYIpLwtNtRb7vaFqFiEI/KP/W6NZx+yWhdfc9qshRXeE
+ WjvBOCwBkezCJ9SBY+wRcl7EzEcTHBp2vXxFVRXP5h+8dY+lolSZqcoGWMUKfBtpB0NoNvFlrw6
+ 9i5zdHF5cjt8KiXVHn1qXxB90QyYcvVMZQ4CE6HaQFYmXczn/w3OSYPrLKKaRUJSD8nSk6yoa/i
+ nv8t29nKfTp0CD3k2AvoY1PvF3ykQHK7qcaB0n5liFITOApLSb0VFrkKvyuZ1Y4eaaC07Y9C2SJ
+ ByMc1Kjb/thT6fcsodupNIFryztcYhauKvnGL1dvdnexrzO+plvxDTij1aV77R1UoEqmDfLUoco
+ r3/fohtiNTJ5RpdRnxgbJ6r6AbSJWv4oYQQ8Re02eW5yhEU1eHdB+/TgPni9wi5pvVW9buYDi8P
+ RYkzvgyhdNsffkUqv+eEHCAfoRk6n/8rQK1Qzf5ElVTSKL5fynOBl6iMI5XNGiCbSxKT3c13L1B
+ 0oBB6nc5h4Hnte76G3pV/TeK7Jhzlu/pJbEhvb6SeVEpSHm+kouvOjadWpypYVteq1xY64EVAUW
+ /NQE95Rje3CtXs0HOnlFybvvw84R+tjggZu9QXKQMaQXNkofAs8vZw3kY/sl4wlwL5scRn4tKI2 DILR09TojH2ZqOg==
 X-Mailer: b4 0.14.2
-Message-ID: <20250616-strncpy-from-user-v5-0-2d3fb0e1f5af@google.com>
-Subject: [PATCH v5 0/2] strncpy_from_user for Rust
+Message-ID: <20250616-strncpy-from-user-v5-1-2d3fb0e1f5af@google.com>
+Subject: [PATCH v5 1/2] uaccess: rust: add strncpy_from_user
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
 	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -86,61 +84,76 @@ Cc: Boqun Feng <boqun.feng@gmail.com>, Benno Lossin <lossin@kernel.org>, Gary Gu
 	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-There is currently no easy way to read NUL-terminated strings from
-userspace. Trying to use the ordinary read function on an array of the
-maximum length doesn't work because it could fail with EFAULT when the C
-string is shorter than the maximum length. In this case,
-strncpy_from_user is better because it doesn't return EFAULT even if it
-encounters a page fault on bytes that are after the NUL-terminator but
-before the maximum length.
+This patch adds a direct wrapper around the C function of the same name.
+It's not really intended for direct use by Rust code since
+strncpy_from_user has a somewhat unfortunate API where it only
+nul-terminates the buffer if there's space for the nul-terminator. This
+means that a direct Rust wrapper around it could not return a &CStr
+since the buffer may not be a cstring. However, we still add the method
+to build more convenient APIs on top of it, which will happen in
+subsequent patches.
 
-I don't see a clear owner of uaccess in MAINTAINERS, so I suggest that
-it lands through Miguel's tree.
-
+Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
-Changes in v5:
-- Add comment about not updating self.length.
-- Add `` in "This implies that len == buf.len()."
-- Update guarantees for raw_strncpy_from_user.
-- Add Reviewed-by for Benno.
-- Link to v4: https://lore.kernel.org/r/20250527-strncpy-from-user-v4-0-82168470d472@google.com
+ rust/kernel/uaccess.rs | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-Changes in v4:
-- Swap order of arguments to raw_strncpy_from_user, and rename buf to
-  dst.
-- Update safety comment on CStr::from_bytes_with_nul_unchecked.
-- Add `` in "This implies that len == dst.len() < buf.len()."
-- Pick up Reviewed-by tags.
-- Link to v3: https://lore.kernel.org/r/20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com
+diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+index 6d70edd8086a9f1ce38f78d312d6a7cfc03141a1..635a03e0989f3fe99be80987aa47763782de1d3f 100644
+--- a/rust/kernel/uaccess.rs
++++ b/rust/kernel/uaccess.rs
+@@ -8,7 +8,7 @@
+     alloc::{Allocator, Flags},
+     bindings,
+     error::Result,
+-    ffi::c_void,
++    ffi::{c_char, c_void},
+     prelude::*,
+     transmute::{AsBytes, FromBytes},
+ };
+@@ -367,3 +367,37 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+         Ok(())
+     }
+ }
++
++/// Reads a nul-terminated string into `dst` and returns the length.
++///
++/// This reads from userspace until a NUL byte is encountered, or until `dst.len()` bytes have been
++/// read. Fails with [`EFAULT`] if a read happens on a bad address (some data may have been
++/// copied). When the end of the buffer is encountered, no NUL byte is added, so the string is
++/// *not* guaranteed to be NUL-terminated when `Ok(dst.len())` is returned.
++///
++/// # Guarantees
++///
++/// When this function returns `Ok(len)`, it is guaranteed that the first `len` bytes of `dst` are
++/// initialized and non-zero. Furthermore, if `len < dst.len()`, then `dst[len]` is a NUL byte.
++#[inline]
++#[expect(dead_code)]
++fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> Result<usize> {
++    // CAST: Slice lengths are guaranteed to be `<= isize::MAX`.
++    let len = dst.len() as isize;
++
++    // SAFETY: `dst` is valid for writing `dst.len()` bytes.
++    let res = unsafe {
++        bindings::strncpy_from_user(dst.as_mut_ptr().cast::<c_char>(), src as *const c_char, len)
++    };
++
++    if res < 0 {
++        return Err(Error::from_errno(res as i32));
++    }
++
++    #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
++    assert!(res <= len);
++
++    // GUARANTEES: `strncpy_from_user` was successful, so `dst` has contents in accordance with the
++    // guarantees of this function.
++    Ok(res as usize)
++}
 
-Changes in v3:
-- Remove pub from raw_strncpy_from_user.
-- Mention that some data may have been copied on EFAULT.
-- Add more comments to strcpy_into_buf about tricky cases.
-- Rewrite documentation of strcpy_into_buf.
-- Add documentation alias.
-- Pick up Reviewed-by tags.
-- Link to v2: https://lore.kernel.org/r/20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com
-
-Changes in v2:
-- Rename the raw wrapper around strncpy_from_user to raw_strncpy_from_user.
-- Add a more convenient helper on top that adds the missing
-  NUL-terminator when necessary.
-- Link to v1: https://lore.kernel.org/r/20250424-strncpy-from-user-v1-1-f983fe21685a@google.com
-
----
-Alice Ryhl (2):
-      uaccess: rust: add strncpy_from_user
-      uaccess: rust: add UserSliceReader::strcpy_into_buf
-
- rust/kernel/uaccess.rs | 94 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 93 insertions(+), 1 deletion(-)
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250424-strncpy-from-user-1f2d06b0cdde
-
-Best regards,
 -- 
-Alice Ryhl <aliceryhl@google.com>
+2.50.0.rc2.692.g299adb8693-goog
 
