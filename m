@@ -1,783 +1,198 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-007b0c01.pphosted.com (mx0b-007b0c01.pphosted.com [205.220.177.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014F220FAA4;
-	Mon, 16 Jun 2025 16:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090886; cv=none; b=AnMnVUknBhyW8oLdL2MRMGthPYyv4li2WBzChjNsEE7cTqq3bxOa7bH0Xig7DqqgczffWzvSmNtIMGDbqzZLCsVT1wtWgVilOVHU8NciJ2JVVUHNuK3cHlJwxB621J1ROnG89f8/HpSRQ8ZWMKXaxX7/VNheD0dakOwSlB+bBJM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090886; c=relaxed/simple;
-	bh=KY6IiRl6p2PlEPEvdZnbvsSCfFOcMhrTRPlkAhtYd20=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=betKugUmLR9vZPBXL4140IVQQj+phBQv5G+/1V0ZUXWdyDHIp2+yXFJQ4uFv6BfPY/Ulk8BKgs08mj3tM6+rwuFK8cE+KtBHoGPuv42KtPN/nAk8CMFyFxb48t2jMc50srQIEM3t77fkzSX7k1LJS6yJgBK42REL7YaNkqs+M6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifz+QRt0; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88EA20FAA4;
+	Mon, 16 Jun 2025 16:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750090903; cv=fail; b=EKI3c5rF458bHfs3QmRjoWbTIW+oB3xMCh/wb4+m76AzO1QHY/oJO9jUHuglc7+LU+CHRbt14fvSwp7TzJSTvyualQuFrOkSx8qM5Wxvxcb1/i/1iBDp9mWwXPmgeEC1IWLgQ4FEay9NcoT5eoEWOn2gxTSBPNOoUl/rwR4gN+M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750090903; c=relaxed/simple;
+	bh=OGAaE8OaKbi+AyyBIrvuPej0uuYtas/eGeFEAgRNoo8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pDCnWSATioHWtR+jZSC+e0gbHESv4r+NqjADYVt/Nh6YOkZEVc4EJ0orK54IERVkkbdasaVG/FXGDs29Rr+YRHjD/hfleiGmBpPjdArMrxhretiKibU7pYs/m/BVveaq49niQJD6nKWNK/geymQBfgfZkpmUbxo6RauZiwl787o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=OJnxSFdU; arc=fail smtp.client-ip=205.220.177.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifz+QRt0"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235ea292956so42141295ad.1;
-        Mon, 16 Jun 2025 09:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750090883; x=1750695683; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eEUUsHlzqWUQPhx/paAUd1ykUlSo8UWhiWmoQqL46tk=;
-        b=ifz+QRt0ZzkZVuWF6atohIrGyBhsqVBAkUbrcCxrbJE9lXLf0U1GviDt9nMkC6b9ya
-         WEqP4MVjNNWO1lt/5746bnxRyriVEbLpqpOQAHJ2Uxw/HsQOXHiLXqtzepHpx3y3Zy8G
-         NnxznBLO//OnpFT5dyBw4hsUUEabLuZ1UFA//vwde8RXFnTW5f7duslKOWQlKRMBYMVd
-         I3Xv0ibSBnh6r3Y2TzxLmvPsCUi4zup2l/exeEfhzcgInFaZpmBeDPORp8OmO9TdWVel
-         Fjjo3R3eh+smCeKV4KiEjPUttgArGaC0imOKYBendBGsaukPc9wg7kWiZIDTQh5OkGJR
-         WrMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090883; x=1750695683;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eEUUsHlzqWUQPhx/paAUd1ykUlSo8UWhiWmoQqL46tk=;
-        b=b7G5IH/8norVPRkRzumSjv3kITANIlKVjNjMrYzu+NVEeNiy/li/U+pMrNzDt5POdN
-         8DY3fao6Qsizbtjppa0KFSLKKfef2aK/dDEv/iCTFcq+d/Mzkego6n/aDBs44vnDyE3K
-         wkz0OmP/SUmYWVI30KYIY/jFVpmROklXc0JUWqSLcDMZsz1ZIlDhxMuv6WGHVgLUHvYf
-         brZpbt3oNoupuD4iBocp9RT0MafDfnGw3k8gBBahTh20dTchmcIZFqcaluRKfZMk1SvB
-         fUHo3xnRrQc3/xneE4biCIlYCrbhkCmDJPrg8Ff9jK3xCMXDFcAf9oJgtDxc1oKYO2dD
-         igRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBNGwECDy9qIAx9mS7gxXeXieT1MDKf3AFFJmeJMJ4BZcErTao/8Q/rlye5Cgjk4iTEVArMD4GNUUhejNmHiyA@vger.kernel.org, AJvYcCUpCKmQjXGZ9zrhGc9bd4FYwV6sUkL8U/Q039ZusZ0ia94CvM9KShOLxSKOdGg1AkDY9xHKf4LHsofLifM=@vger.kernel.org, AJvYcCX7TyYRBJYq4EHi25vei+7DTrcLxBAPzNC7u9Vx1IbagiXVwbkPa/NuDUS4NwdBfYmN7kztKQL0rCPcPw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH2M5ntLS4oz/ztxPmHfOFrekdroKlL2w8yTJPQpsdGbUyci/e
-	w7k3zYm57/6LEJ/KfEtxYqyuCCK+tafxFtGWNyYCFfwQbuQqG1LkFyg/cFdc
-X-Gm-Gg: ASbGncvM7iv3qyys0QuvY18DRhzFN7j1SM28LGFqoP8rog4X2iIuxy/UMZz28M9yshp
-	lECujsz8/DrmjRCTYTe4XcLxi4A9DOf+y87bD+QwhfcCXEtOh7sY8rq7HsujUdTp9xm2qxsm1ol
-	2qDv1Z8ifC8YGfHdzz21nKeFpjtAzD3QryZ04ZQK4GQ/9bT1JoOMlRC0Dmn0GptfWLF+0fxXxBT
-	kw6fT4cngKaslva+GOgjnPffSRdJl1N9Jk5knOvOwXHA0XQzfHXxovPNV2SpRholk/BWz/TJ21r
-	HIA+xbBX4/DaJ/no78M3fajl971m5ZPp8qgCQbYOXfVn3mioxWmMgwY4Ta3LqAoJmxuxhrpZXcj
-	UIUGG5LGGBjlmQCGprUMS2DM=
-X-Google-Smtp-Source: AGHT+IFVtwHur230ABZ+F3dpDob/8VZnaMCzxdgSsvSbg8eDNxQGKmLOd+byj774QWmhx80wWzGP2w==
-X-Received: by 2002:a17:902:e54a:b0:235:ef67:b5a0 with SMTP id d9443c01a7336-2366b14e37amr154528915ad.36.1750090882657;
-        Mon, 16 Jun 2025 09:21:22 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365dea88desm63131615ad.150.2025.06.16.09.21.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 09:21:22 -0700 (PDT)
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	skalluru@marvell.com,
-	manishc@marvell.com,
-	andrew+netdev@lunn.ch,
-	michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com,
-	ajit.khaparde@broadcom.com,
-	sriharsha.basavapatna@broadcom.com,
-	somnath.kotur@broadcom.com,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	tariqt@nvidia.com,
-	saeedm@nvidia.com,
-	louis.peens@corigine.com,
-	shshaikh@marvell.com,
-	GR-Linux-NIC-Dev@marvell.com,
-	ecree.xilinx@gmail.com,
-	horms@kernel.org,
-	dsahern@kernel.org,
-	shuah@kernel.org,
-	tglx@linutronix.de,
-	mingo@kernel.org,
-	ruanjinjie@huawei.com,
-	idosch@nvidia.com,
-	razor@blackwall.org,
-	petrm@nvidia.com,
-	kuniyu@google.com,
-	sdf@fomichev.me,
-	linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org,
-	oss-drivers@corigine.com,
-	linux-net-drivers@amd.com,
-	linux-kselftest@vger.kernel.org,
-	leon@kernel.org
-Subject: [PATCH net-next v5 3/6] udp_tunnel: remove rtnl_lock dependency
-Date: Mon, 16 Jun 2025 09:21:14 -0700
-Message-ID: <20250616162117.287806-4-stfomichev@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616162117.287806-1-stfomichev@gmail.com>
-References: <20250616162117.287806-1-stfomichev@gmail.com>
+	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="OJnxSFdU"
+Received: from pps.filterd (m0316044.ppops.net [127.0.0.1])
+	by mx0b-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G9xHFU026144;
+	Mon, 16 Jun 2025 11:21:21 -0500
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2047.outbound.protection.outlook.com [40.107.220.47])
+	by mx0b-007b0c01.pphosted.com (PPS) with ESMTPS id 479r3mxnw1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:21:20 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mF7sVi+Atle7vnEi5FeRI1MYQtVikO2W4UTv/R4DDaZbz/3+CoU7D1QMI4zQFBZ8CHoSxczapQDlvaQH2hk61kQJcK2RgMcidLYBVriyVNqAdTKcUIGE+mnqslUeGOku3uYRkaQotFe6BXh18ePLIYhaXCkestni+vniRe0HjzeTIpwAv5UAWmGuLEQLPIJqXEbxzaZmtIcGjQWKsM9fweEKMfMn5c0RJD1/cyX1T0ZE1F0K8sGN8i4bUkFJw/SBgKVyVCvwTxMBmQdTjiUpN9pLCV+46OjM2kNijXqt097NjftDJdamrDst7DHDmpjmqMuyya04kkVLbuv+R6681A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XBPNDlqk/0RPWmHq/WeQOtDPphwEPFt4OFdsO4KZwNo=;
+ b=i6najaP/l00EBLGHKjHd9jrBUsmNCNgOU//5VzbuCwqpADqYnfmy9So+uyF8d0z/jYQFcjohl7QzNMm6p2i5rvb7/APkrSynstYBySFBqDGBc23P8fpEUmzYYs28LTCFsgKBpRNEic+9FO/eggVaBuYuykFUjPJJ7f7Wx0kiCyP1BOc9wcAtYXyRlM1NecP+Lsn/GdvpTEZecS0E8UlblwQP9vQVBsay1X786MczUwKItzu4MTDxD+9W7vtR8xrMP96sz4ToD8vGxjveiMgFlyGoAJ+g5IHrODsF7EgLegLrAkVr2mcTzW/Xvt55nFnhcX959mClBjQDVLe0Du+x6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
+ dkim=pass header.d=cs.wisc.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XBPNDlqk/0RPWmHq/WeQOtDPphwEPFt4OFdsO4KZwNo=;
+ b=OJnxSFdUJ6BTCSGoBFZ2NVZ9PREsVlJD4jCN3T4Q3IjgMhoiSG69az3f6LEqbUf86ly4rN8jGUvt0xYLgONcknjU3EsNENbbN/U4Ygnm1ZxIBmOh7L4g0wYk1NUXbXJ+N7sWwoDGBjSHUQBirDZ/DV7Zujc3vnrHUb9DTt1+MLWr4deeBeDlsME8YVHX1HiYwAUrwPRhmjrOZuDVeYwcpFUkyC70YYxUfN9NM2VVrNQFhyAdxHxdz0YNUvyKICcDOmH1bnEvqMnT7tVH7eaEsJW09cMW+lChqv1AwAobi4KtNC+hr2A9ASHh2X9InFoRj5BOkvF5XcQgFfOATYp0/Q==
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
+ by MWHPR06MB10248.namprd06.prod.outlook.com (2603:10b6:303:27f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 16:21:18 +0000
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c%7]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 16:21:18 +0000
+Message-ID: <f3eb815b-8c47-4001-b6e6-ec47ae10b288@cs.wisc.edu>
+Date: Mon, 16 Jun 2025 11:21:17 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] docs/vfs: update references to i_mutex to i_rwsem
+To: Jan Kara <jack@suse.cz>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>
+References: <666eabb6-6607-47f4-985a-0d25c764b172@cs.wisc.edu>
+ <fd087bc3-879f-4444-b4ad-601a3632d138@cs.wisc.edu>
+ <fduatokkcmrhtndxbmkcarycto5su7gb7jfkcb53gvzflj5o5a@itnis2jwtdt6>
+Content-Language: en-US
+From: Junxuan Liao <ljx@cs.wisc.edu>
+In-Reply-To: <fduatokkcmrhtndxbmkcarycto5su7gb7jfkcb53gvzflj5o5a@itnis2jwtdt6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR17CA0012.namprd17.prod.outlook.com
+ (2603:10b6:610:53::22) To DS7PR06MB6808.namprd06.prod.outlook.com
+ (2603:10b6:5:2d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|MWHPR06MB10248:EE_
+X-MS-Office365-Filtering-Correlation-Id: eede4652-bf3d-4d73-e1c2-08ddacf1d322
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|41320700013|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Mjl6T3dkUEptb3VpSCtzaTJaY0syQ1QvSFpYcDFwZHJKTWxVWEZBUFlYU1U4?=
+ =?utf-8?B?OTdiOTVEMDRMMHgwUXlPUmRBSWdBU2Y1Z015cFdFeU1oZ2RBSC9Vdjc5b0RD?=
+ =?utf-8?B?bDUwVkRTeDBCNTEzV3p3VnN0QmRYTWFaTndSeC91MlhuZlZJa2hSSE1jc2xz?=
+ =?utf-8?B?V2NMTDRGMUo3WHNHMlRCQ2tRU0pyaFp2WXQrcjBRSUVhUVBjOUJGTC9SSDBn?=
+ =?utf-8?B?Y3FISTBHMkdwRXVNd2M2WGQ5RDNGWFZBR2oreDBNNldZdzdJVDFyVmkwd2R3?=
+ =?utf-8?B?RExmMVVCcjRVdTVLZ1NIaEc3RFdWN0hLNVhNNWo1L2xvTitJTkE0N3V5ZUda?=
+ =?utf-8?B?ZE95cmdVRVVrZ0lCc2ZrVDB5ekhvVjBWSGZMTFVBQ1F3VEh2ZWhFV0pheUd5?=
+ =?utf-8?B?RXJYR3lucE5TVlZGK2V3RnlLVVZGM2E1eGpmaFIwVU9UZWxIWm4wQ0IzNGFH?=
+ =?utf-8?B?T1lITDF6UEZ3NnFKRmo0NUFBTE81QVlXaXN2dVJ0QUVWUUk3cUxEZWlyQndP?=
+ =?utf-8?B?VFJieVhnSWJsdVl6cEJHSXgxZ0twRkVSZmpVS1k3T1gwamx3QzFMb21xTVRx?=
+ =?utf-8?B?RHZVSFloeG83UU9ra21EbDV5dDFDcWdteFNMdUlBc1pWRnpUdm1mVy8yNWNS?=
+ =?utf-8?B?V1lRNzNSenU0NGZZRVdQbFROcGRXNGNHcjBnVFhiODRKMFZMbnVBMzdQTzFS?=
+ =?utf-8?B?bU9id3ZMZnlucmFIWU0zUjMyWWlKbzNLdVRhaHhvVE8yWXBwVXUxSGdqUlVV?=
+ =?utf-8?B?YS93VmNBa2NFMC9zb2V6TU5rMkp6bnUrYk1tMEdON2RTSG9jTGFKWGVJZ285?=
+ =?utf-8?B?S2M4bXV5L05vTHdsZm05N1lSN3cxM1JNbEFpSkNvdUtTc1ZSVHNjc3NJTEts?=
+ =?utf-8?B?c291cXUxNlp4YURLUzJVcTBUVlZSTU1ocTJ3WFFDSjd0cEhVWjBWVzRmdEJk?=
+ =?utf-8?B?c2hUUEluTUc0cTh2ck83Q3Q0Rnd3K1Q5dXNPb0NYSkRyZzhzL2w0MGpGOUZp?=
+ =?utf-8?B?eVEwR0VkMmxzWWF1TVRSKzRKSURSNW53ZEQ5YUhEVXVrK1ROaE9XVVAxQnkz?=
+ =?utf-8?B?aWtuQlM1ekJHd2M4ZGtNazZ4bWJQTlVYRUNVV054bUZzMHR4MU85bVNUeVJ4?=
+ =?utf-8?B?cXdDYmtqTGpXTW00QjNIN2Q0ZzBTdytMRmVXOTlENThVelR2MWZDczhiTUJq?=
+ =?utf-8?B?R1l4UTJFNFl0YVE4dVcxUE9sSmNJcmxIaVN2TkYvTzVUZnowRDFmRTRNNW4x?=
+ =?utf-8?B?WmVFbmpERXRydElwbzNNK3JxdEpHRHlaWVZoMGdXNG5xeTRYYkc1NlRaTEJu?=
+ =?utf-8?B?bDIwUFVFcy9wbndDNnplOUJEd0NGMiswbTZMQldDa3FSbDg4VmpDT2NqN3dX?=
+ =?utf-8?B?NFYydUFrNGlBK3ByVVQ5VzVJOENLYmdKZEJPdGlrc1A3d2dvNitJSUpxelN0?=
+ =?utf-8?B?S3A2Z2FhU0NWcWtOZ3F0RGg3MFJQL1hHSkhIV3I1R2dNdGFUQ2ZFRytUTXdn?=
+ =?utf-8?B?M3kzRXhzbGdYRHBkNUlGMzV6ZzRzZ1RiRG5raWhmN1NHeDBQV00xTWU0N3Qw?=
+ =?utf-8?B?R20xOWkrQmFadzZaZXhiNVFpZEN0TnBmQlVnRmI4aWNtcGZ4YXZ6SmNWM0VG?=
+ =?utf-8?B?K3pPMzk1eVZldlVPSHQzbE9NRnFScHlpb1dSVFBKZlZpamlsMDFHeEc0Sm1D?=
+ =?utf-8?B?d3dCWFgxL1A5ZDFoVlRYZTh1UXBHbUJBSXhzZlNCRFo5aWJ6VzN0NHlXU0Ri?=
+ =?utf-8?B?andTejYrZzB4QmFET1FUZGFvb2RVYjdFQVJnUmwwVHk5dUFLb1d5RVQ1RzFI?=
+ =?utf-8?B?VDg2cUFBWTl3ek82ODZHNWpCeGF0cGhaeFZEZnlXUUtVOTFCOWUyWmI0MXFi?=
+ =?utf-8?B?dnJpV3R6c2kyZDdVR1lDN1hYZmtxTGlLZUxPaWdKdEtBN25oQkdqU205Uy82?=
+ =?utf-8?Q?8864o1bfX6k=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(41320700013)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dWVoYldYcGZWYXFtNGI5OE44TGFnQUFoM2FDMzhpcUxDcHpzQ3BNem9hZ0Rk?=
+ =?utf-8?B?ck94bDVZNE5UeDN2dFFhMHZnOVUzNmo1TFVTSUsvenoyR0FEOWFGSndoSVVZ?=
+ =?utf-8?B?UnRGR3VlTEtzcy9vNGdueUZvbStEaForNWpiUW5ibDZYdnJhUm5sN0swVkdT?=
+ =?utf-8?B?MjdrQy9NYU9SaFFrREc4VUlIRzgzWThyNFY4R2E2dUhBMzRWb0xGWXpRWWJv?=
+ =?utf-8?B?clhySkRiWG9qemU1MnVMSGs0ek9LVnN2R2hxczR6MGVGRHpxemV3dmZzalpu?=
+ =?utf-8?B?RnF3NkFtdkJJb0FqaERHZkFKdUk5SkNjZUFqQUNUYytYVlNTQkVzdGdFdFdO?=
+ =?utf-8?B?RnZ1Qi9JR0ZYWTFqMkpPQnNyMUxJL3ZKOTlDakdWOFdsdHppNkhvM0xsSEFR?=
+ =?utf-8?B?MGprMGllZlFNZFgzNVRLNG5yOE9MQWNqOGhYRjh4MWxvU1NpRnZCZ3ZiYWdB?=
+ =?utf-8?B?cVdBTzUweWE3WmxVOW9tejE0NTNFZnhlU0Q2OXlCRnM1T0FTR3JXbUxxeVlk?=
+ =?utf-8?B?eHI3T1NlZEVMdHh1MXY0cXlETklQeGVjckRrd295UWJvNkkyTHZxSzFsb29i?=
+ =?utf-8?B?dmpFR244d2ZWRHg4dWoxRU1IUjA2T1JNTk9pU0RzQTVBYkNJTHVyWC9hWVpZ?=
+ =?utf-8?B?UDh3MXRIUnFYdVE0N2hGcm13aGh2b3lnLysySUdRTHlNSTBBV3ZNdTM4MzNn?=
+ =?utf-8?B?MFlTWFRiMVQxaEQyK3dvTmhHZEFYVXhDdFZ5VVlSdVBNNmpqVkJlb3lNSDI2?=
+ =?utf-8?B?clJDZVlCemQ5bzdydm03VUd0SklPOW8ydlR1aGJYaStONlEwb0lmanJDNEpH?=
+ =?utf-8?B?UDVjejkxdExwa1N6VlY3N1JkK2h2YWZkSmJTaXhqNFdiU0JyYldXaTI1REFJ?=
+ =?utf-8?B?dWNSOW5BaUZkR1c1UFhkcCtBeGlMdHZiNmRWS3NkV2lOTWQ2eFY0UXRqMGV3?=
+ =?utf-8?B?djVsVnl4TkZDeEFRaWxkTVl1RWlxQzN4NzVxTDdtV25uZ0pJZUF3RjNnbm1K?=
+ =?utf-8?B?ZXMwMGZVQUo2RldGbUR1blp1YUJkeUZHc29RMlRoZUk5RTF3cENpU2xSSHVZ?=
+ =?utf-8?B?amgwM1JvNmNFV2xmVitRWHgxYjFyUEtWT1NOYThLWldSQUdKZFA5S1RMeWdY?=
+ =?utf-8?B?ai9MZ2pGUC90YzBsOEZRcmt0Y2M5R2pwb0NycWpOYXNYSTJ5L2xxdnhOSVdh?=
+ =?utf-8?B?ZGJYbzZIa0lvWGUxMExINzZaSjRXTW9acFhjS0ZUTUxlb1Mxd1EwM3hCRFJN?=
+ =?utf-8?B?LzBkUEcybGpBekhSL2ZpMEN4UnBsS0lpNlhpUkNHd2ovamZFMjhHQS8yMFEy?=
+ =?utf-8?B?YzZjS2h4bTIrRVl4K1EvNWhSNEg0UWxQa2lUYndXTFJOREJCNEhObFFoM1d2?=
+ =?utf-8?B?a2VOVXovK1NIaU1oM0lUUVZjSWo4NzhOMnJ5K2cvbzcrZ2x1WXh6eTVlcHBG?=
+ =?utf-8?B?OElEVFJaMnNUR1hrb0ZnVU1sd1ZkMXd0UUllU1JVWnRvc2ZOQzhEbVVhaW42?=
+ =?utf-8?B?NWlySXI0WEQvR0lUQXRXM3MwOWZxLzd2dkR5OGJZS2krK3UrZ0xKTWg2bzJJ?=
+ =?utf-8?B?WmJ1RmtwZE5VejVYaHZHVTY1UUtXQ29ZaVhFMHRRb2QvT2ZCMkJreTQ0Q25W?=
+ =?utf-8?B?RWxOcFZxcitSMjAxZGhndUNvUGJjSktkY3JBWkFxaTZIK2M4Nm5BVHQrRC9T?=
+ =?utf-8?B?SWhZN1B0QnBlbkhLRktPbFo2S0toWDBjV3hTQlFLRFliWHpkNG9obzZnSFhu?=
+ =?utf-8?B?QklSL0JSZ2hrV0dSVUE5cklkYUVHaFlQbmtFQ0ZuWEZaYzNySjYzQ1BZQTZw?=
+ =?utf-8?B?N3JsU1JjaDhLRmVtYmF1TGk5eFloZVdNVURYQXoyVVcvcitzVmZNZit5WnVN?=
+ =?utf-8?B?KzJhTzRpcXNXRnMyMGIvUm54Ly9oWnFRcHBWWTdXZDQ4WWplQzFCQXRrTmlk?=
+ =?utf-8?B?aXBqSngyVGdibnhuWktINWFUbS93ZTB2UnFBN216RUJ5eUhBQkFKSk5ROG5w?=
+ =?utf-8?B?cklLb3d1UjN4b0N3NGJOM2RlWU5KNCtvWWQwKzh4Q2p2NFFUNXc5ODZxaDRy?=
+ =?utf-8?B?citFb0o5bFpGRU1kQkhUeEU0V3pKdUdSYTRXSGdldmx3M0JHK3hHckxYNXlp?=
+ =?utf-8?B?bVpuR0x5SlluT3RwcEFhdXpadlVtNXhORlFVZW90K3VNd04ySmNGS0ZZUVJF?=
+ =?utf-8?Q?q2yBAF3VOgrqfp8IkcYCzn2/Axq22faP0N/kzOHhxUJ2?=
+X-OriginatorOrg: cs.wisc.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: eede4652-bf3d-4d73-e1c2-08ddacf1d322
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 16:21:18.7354
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5F8Xxfo/1wpFcJOKuuuhgaiiIblAuRhlBq388ZJ+ThPO2/sEBjv0AFq4aP9814Ko+CmBtQDH70CCPvJmQxpKYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR06MB10248
+X-Authority-Analysis: v=2.4 cv=AvDu3P9P c=1 sm=1 tr=0 ts=68504480 cx=c_pps a=YTCy/NNc/GbGYbKR6UHGQw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=3-xYBkHg-QkA:10 a=1E0aQHB0DHgRhcW9lg4A:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
+X-Proofpoint-GUID: WMUGXZgA1nYSSCk59tpKNUq3GQC4PSy7
+X-Proofpoint-ORIG-GUID: WMUGXZgA1nYSSCk59tpKNUq3GQC4PSy7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNiBTYWx0ZWRfXxXlkkJRGEUn1 gyEUmWbhhc4HRm/q0wE65NbNiUe314ivyfiHhfr9YyCTTb+NZbWpb98qw5E7kXWJREakUFRgpmA bKtaLCnn+pmChqlSZpM8hPnPOBQ4A8rdu09vmvqDBUppFNUWFWC1rf8SJ+b4T3F332aK623MJ3q
+ UJs4ESI3k1+IIRrfDHwAo1JezVXpCyatqrpOhf1Wv7m5BrWB4csmh5qBTfajqh/KOLzr+jgNmEg R5AfxizHDa8CJMSZ8HlBt3qK4e3gKcj0UP7YJzaHECxeyn19p9gYRjW7HiM+H/X3etMIhHI12cY Qiqpr7xoUifvrYQTBCShFvbzasDgwvXUxxzWttkwVvC2LGRaKlWWhdX2lwuawTKuWj4vmBJeT3i
+ sEcY7HwsVDDXasNi27gwi4Gurjubds+FF+1QUl6K14yUkquocTKuIUdclxeKiqQZwYqoBUTI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=900
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0 mlxscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160106
 
-Drivers that are using ops lock and don't depend on RTNL lock
-still need to manage it because udp_tunnel's RTNL dependency.
-Introduce new udp_tunnel_nic_lock and use it instead of
-rtnl_lock. Drop non-UDP_TUNNEL_NIC_INFO_MAY_SLEEP mode from
-udp_tunnel infra (udp_tunnel_nic_device_sync_work needs to
-grab udp_tunnel_nic_lock mutex and might sleep).
 
-Cover more places in v4:
 
-- netlink
-  - udp_tunnel_notify_add_rx_port (ndo_open)
-    - triggers udp_tunnel_nic_device_sync_work
-  - udp_tunnel_notify_del_rx_port (ndo_stop)
-    - triggers udp_tunnel_nic_device_sync_work
-  - udp_tunnel_get_rx_info (__netdev_update_features)
-    - triggers NETDEV_UDP_TUNNEL_PUSH_INFO
-  - udp_tunnel_drop_rx_info (__netdev_update_features)
-    - triggers NETDEV_UDP_TUNNEL_DROP_INFO
-  - udp_tunnel_nic_reset_ntf (ndo_open)
+On 6/16/25 5:10 AM, Jan Kara wrote:
+> Otherwise the changes look good to me.
 
-- notifiers
-  - udp_tunnel_nic_netdevice_event, depending on the event:
-    - triggers NETDEV_UDP_TUNNEL_PUSH_INFO
-    - triggers NETDEV_UDP_TUNNEL_DROP_INFO
+Thanks! Just for clarification, is the __d_move comment accurate? i.e.
+Does it assume the two i_rwsem's are locked in shared mode?
 
-- ethnl_tunnel_info_reply_size
-- udp_tunnel_nic_set_port_priv (two intel drivers)
-
-Cc: Michael Chan <michael.chan@broadcom.com>
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
----
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  6 +-
- drivers/net/ethernet/emulex/benet/be_main.c   |  3 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c   |  1 -
- drivers/net/ethernet/intel/ice/ice_main.c     |  1 -
- .../net/ethernet/mellanox/mlx4/en_netdev.c    |  3 +-
- .../net/ethernet/mellanox/mlx5/core/en_main.c |  3 +-
- .../ethernet/netronome/nfp/nfp_net_common.c   |  3 +-
- .../net/ethernet/qlogic/qede/qede_filter.c    |  3 -
- .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  |  1 -
- drivers/net/ethernet/sfc/ef10.c               |  1 -
- drivers/net/netdevsim/udp_tunnels.c           |  4 -
- include/net/udp_tunnel.h                      | 87 ++++++++++++++-----
- net/core/dev.c                                |  2 +
- net/ipv4/udp_tunnel_core.c                    | 16 ++--
- net/ipv4/udp_tunnel_nic.c                     | 78 +++++++++++++----
- 16 files changed, 142 insertions(+), 73 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index c9a1a1d504c0..3ee4b848ef53 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -10219,8 +10219,7 @@ static int bnx2x_udp_tunnel_sync(struct net_device *netdev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info bnx2x_udp_tunnels = {
- 	.sync_table	= bnx2x_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 869580b6f70d..7946586802af 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -15573,8 +15573,7 @@ static int bnxt_udp_tunnel_unset_port(struct net_device *netdev, unsigned int ta
- static const struct udp_tunnel_nic_info bnxt_udp_tunnels = {
- 	.set_port	= bnxt_udp_tunnel_set_port,
- 	.unset_port	= bnxt_udp_tunnel_unset_port,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
-@@ -15582,8 +15581,7 @@ static const struct udp_tunnel_nic_info bnxt_udp_tunnels = {
- }, bnxt_udp_tunnels_p7 = {
- 	.set_port	= bnxt_udp_tunnel_set_port,
- 	.unset_port	= bnxt_udp_tunnel_unset_port,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
-diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
-index 3d2e21592119..f49400ba9729 100644
---- a/drivers/net/ethernet/emulex/benet/be_main.c
-+++ b/drivers/net/ethernet/emulex/benet/be_main.c
-@@ -4031,8 +4031,7 @@ static int be_vxlan_unset_port(struct net_device *netdev, unsigned int table,
- static const struct udp_tunnel_nic_info be_udp_tunnels = {
- 	.set_port	= be_vxlan_set_port,
- 	.unset_port	= be_vxlan_unset_port,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN, },
- 	},
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 1156a5b3055c..3b4f59d978a5 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -15895,7 +15895,6 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	pf->udp_tunnel_nic.set_port = i40e_udp_tunnel_set_port;
- 	pf->udp_tunnel_nic.unset_port = i40e_udp_tunnel_unset_port;
--	pf->udp_tunnel_nic.flags = UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
- 	pf->udp_tunnel_nic.shared = &pf->udp_tunnel_shared;
- 	pf->udp_tunnel_nic.tables[0].n_entries = I40E_MAX_PF_UDP_OFFLOAD_PORTS;
- 	pf->udp_tunnel_nic.tables[0].tunnel_types = UDP_TUNNEL_TYPE_VXLAN |
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 7959a65c0903..f8ef80069e3d 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -4767,7 +4767,6 @@ int ice_init_dev(struct ice_pf *pf)
- 
- 	pf->hw.udp_tunnel_nic.set_port = ice_udp_tunnel_set_port;
- 	pf->hw.udp_tunnel_nic.unset_port = ice_udp_tunnel_unset_port;
--	pf->hw.udp_tunnel_nic.flags = UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
- 	pf->hw.udp_tunnel_nic.shared = &pf->hw.udp_tunnel_shared;
- 	if (pf->hw.tnl.valid_count[TNL_VXLAN]) {
- 		pf->hw.udp_tunnel_nic.tables[0].n_entries =
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-index 281b34af0bb4..d2071aff7b8f 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-@@ -2670,8 +2670,7 @@ static int mlx4_udp_tunnel_sync(struct net_device *dev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info mlx4_udp_tunnels = {
- 	.sync_table	= mlx4_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_IPV4_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_IPV4_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN, },
- 	},
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index ea822c69d137..ccde53f94045 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -5303,8 +5303,7 @@ void mlx5e_vxlan_set_netdev_info(struct mlx5e_priv *priv)
- 
- 	priv->nic_info.set_port = mlx5e_vxlan_set_port;
- 	priv->nic_info.unset_port = mlx5e_vxlan_unset_port;
--	priv->nic_info.flags = UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--				UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN;
-+	priv->nic_info.flags = UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN;
- 	priv->nic_info.tables[0].tunnel_types = UDP_TUNNEL_TYPE_VXLAN;
- 	/* Don't count the space hard-coded to the IANA port */
- 	priv->nic_info.tables[0].n_entries =
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-index 932f59d70f41..132626a3f9f7 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-@@ -2394,8 +2394,7 @@ static int nfp_udp_tunnel_sync(struct net_device *netdev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info nfp_udp_tunnels = {
- 	.sync_table     = nfp_udp_tunnel_sync,
--	.flags          = UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags          = UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables         = {
- 		{
- 			.n_entries      = NFP_NET_N_VXLAN_PORTS,
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index 985026dd816f..7e341e026489 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -987,20 +987,17 @@ static int qede_udp_tunnel_sync(struct net_device *dev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info qede_udp_tunnels_both = {
- 	.sync_table	= qede_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
- 	},
- }, qede_udp_tunnels_vxlan = {
- 	.sync_table	= qede_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 	},
- }, qede_udp_tunnels_geneve = {
- 	.sync_table	= qede_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
- 	},
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-index eb69121df726..53cdd36c4123 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-@@ -486,7 +486,6 @@ static int qlcnic_udp_tunnel_sync(struct net_device *dev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info qlcnic_udp_tunnels = {
- 	.sync_table	= qlcnic_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN, },
- 	},
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index 47349c148c0c..fcec81f862ec 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -3985,7 +3985,6 @@ static int efx_ef10_udp_tnl_unset_port(struct net_device *dev,
- static const struct udp_tunnel_nic_info efx_ef10_udp_tunnels = {
- 	.set_port	= efx_ef10_udp_tnl_set_port,
- 	.unset_port	= efx_ef10_udp_tnl_unset_port,
--	.flags          = UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables         = {
- 		{
- 			.n_entries = 16,
-diff --git a/drivers/net/netdevsim/udp_tunnels.c b/drivers/net/netdevsim/udp_tunnels.c
-index 640b4983a9a0..10cbbf1c584b 100644
---- a/drivers/net/netdevsim/udp_tunnels.c
-+++ b/drivers/net/netdevsim/udp_tunnels.c
-@@ -112,12 +112,10 @@ nsim_udp_tunnels_info_reset_write(struct file *file, const char __user *data,
- 	struct net_device *dev = file->private_data;
- 	struct netdevsim *ns = netdev_priv(dev);
- 
--	rtnl_lock();
- 	if (dev->reg_state == NETREG_REGISTERED) {
- 		memset(ns->udp_ports.ports, 0, sizeof(ns->udp_ports.__ports));
- 		udp_tunnel_nic_reset_ntf(dev);
- 	}
--	rtnl_unlock();
- 
- 	return count;
- }
-@@ -181,8 +179,6 @@ int nsim_udp_tunnels_info_create(struct nsim_dev *nsim_dev,
- 		info->sync_table = NULL;
- 	}
- 
--	if (ns->udp_ports.sleep)
--		info->flags |= UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
- 	if (nsim_dev->udp_ports.open_only)
- 		info->flags |= UDP_TUNNEL_NIC_INFO_OPEN_ONLY;
- 	if (nsim_dev->udp_ports.ipv4_only)
-diff --git a/include/net/udp_tunnel.h b/include/net/udp_tunnel.h
-index 2df3b8344eb5..0106e2dc2af1 100644
---- a/include/net/udp_tunnel.h
-+++ b/include/net/udp_tunnel.h
-@@ -130,22 +130,6 @@ void udp_tunnel_drop_rx_port(struct net_device *dev, struct socket *sock,
- void udp_tunnel_notify_add_rx_port(struct socket *sock, unsigned short type);
- void udp_tunnel_notify_del_rx_port(struct socket *sock, unsigned short type);
- 
--static inline void udp_tunnel_get_rx_info(struct net_device *dev)
--{
--	ASSERT_RTNL();
--	if (!(dev->features & NETIF_F_RX_UDP_TUNNEL_PORT))
--		return;
--	call_netdevice_notifiers(NETDEV_UDP_TUNNEL_PUSH_INFO, dev);
--}
--
--static inline void udp_tunnel_drop_rx_info(struct net_device *dev)
--{
--	ASSERT_RTNL();
--	if (!(dev->features & NETIF_F_RX_UDP_TUNNEL_PORT))
--		return;
--	call_netdevice_notifiers(NETDEV_UDP_TUNNEL_DROP_INFO, dev);
--}
--
- /* Transmit the skb using UDP encapsulation. */
- void udp_tunnel_xmit_skb(struct rtable *rt, struct sock *sk, struct sk_buff *skb,
- 			 __be32 src, __be32 dst, __u8 tos, __u8 ttl,
-@@ -221,19 +205,17 @@ static inline void udp_tunnel_encap_enable(struct sock *sk)
- #define UDP_TUNNEL_NIC_MAX_TABLES	4
- 
- enum udp_tunnel_nic_info_flags {
--	/* Device callbacks may sleep */
--	UDP_TUNNEL_NIC_INFO_MAY_SLEEP	= BIT(0),
- 	/* Device only supports offloads when it's open, all ports
- 	 * will be removed before close and re-added after open.
- 	 */
--	UDP_TUNNEL_NIC_INFO_OPEN_ONLY	= BIT(1),
-+	UDP_TUNNEL_NIC_INFO_OPEN_ONLY	= BIT(0),
- 	/* Device supports only IPv4 tunnels */
--	UDP_TUNNEL_NIC_INFO_IPV4_ONLY	= BIT(2),
-+	UDP_TUNNEL_NIC_INFO_IPV4_ONLY	= BIT(1),
- 	/* Device has hard-coded the IANA VXLAN port (4789) as VXLAN.
- 	 * This port must not be counted towards n_entries of any table.
- 	 * Driver will not receive any callback associated with port 4789.
- 	 */
--	UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN	= BIT(3),
-+	UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN	= BIT(2),
- };
- 
- struct udp_tunnel_nic;
-@@ -324,6 +306,9 @@ struct udp_tunnel_nic_ops {
- 	size_t (*dump_size)(struct net_device *dev, unsigned int table);
- 	int (*dump_write)(struct net_device *dev, unsigned int table,
- 			  struct sk_buff *skb);
-+	void (*assert_locked)(struct net_device *dev);
-+	void (*lock)(struct net_device *dev);
-+	void (*unlock)(struct net_device *dev);
- };
- 
- #ifdef CONFIG_INET
-@@ -352,8 +337,29 @@ static inline void
- udp_tunnel_nic_set_port_priv(struct net_device *dev, unsigned int table,
- 			     unsigned int idx, u8 priv)
- {
--	if (udp_tunnel_nic_ops)
-+	if (udp_tunnel_nic_ops) {
-+		udp_tunnel_nic_ops->lock(dev);
- 		udp_tunnel_nic_ops->set_port_priv(dev, table, idx, priv);
-+		udp_tunnel_nic_ops->unlock(dev);
-+	}
-+}
-+
-+static inline void udp_tunnel_nic_assert_locked(struct net_device *dev)
-+{
-+	if (udp_tunnel_nic_ops)
-+		udp_tunnel_nic_ops->assert_locked(dev);
-+}
-+
-+static inline void udp_tunnel_nic_lock(struct net_device *dev)
-+{
-+	if (udp_tunnel_nic_ops)
-+		udp_tunnel_nic_ops->lock(dev);
-+}
-+
-+static inline void udp_tunnel_nic_unlock(struct net_device *dev)
-+{
-+	if (udp_tunnel_nic_ops)
-+		udp_tunnel_nic_ops->unlock(dev);
- }
- 
- static inline void
-@@ -395,17 +401,50 @@ static inline void udp_tunnel_nic_reset_ntf(struct net_device *dev)
- static inline size_t
- udp_tunnel_nic_dump_size(struct net_device *dev, unsigned int table)
- {
-+	size_t ret;
-+
- 	if (!udp_tunnel_nic_ops)
- 		return 0;
--	return udp_tunnel_nic_ops->dump_size(dev, table);
-+
-+	udp_tunnel_nic_ops->lock(dev);
-+	ret = udp_tunnel_nic_ops->dump_size(dev, table);
-+	udp_tunnel_nic_ops->unlock(dev);
-+
-+	return ret;
- }
- 
- static inline int
- udp_tunnel_nic_dump_write(struct net_device *dev, unsigned int table,
- 			  struct sk_buff *skb)
- {
-+	int ret;
-+
- 	if (!udp_tunnel_nic_ops)
- 		return 0;
--	return udp_tunnel_nic_ops->dump_write(dev, table, skb);
-+
-+	udp_tunnel_nic_ops->lock(dev);
-+	ret = udp_tunnel_nic_ops->dump_write(dev, table, skb);
-+	udp_tunnel_nic_ops->unlock(dev);
-+
-+	return ret;
-+}
-+
-+static inline void udp_tunnel_get_rx_info(struct net_device *dev)
-+{
-+	ASSERT_RTNL();
-+	if (!(dev->features & NETIF_F_RX_UDP_TUNNEL_PORT))
-+		return;
-+	udp_tunnel_nic_assert_locked(dev);
-+	call_netdevice_notifiers(NETDEV_UDP_TUNNEL_PUSH_INFO, dev);
- }
-+
-+static inline void udp_tunnel_drop_rx_info(struct net_device *dev)
-+{
-+	ASSERT_RTNL();
-+	if (!(dev->features & NETIF_F_RX_UDP_TUNNEL_PORT))
-+		return;
-+	udp_tunnel_nic_assert_locked(dev);
-+	call_netdevice_notifiers(NETDEV_UDP_TUNNEL_DROP_INFO, dev);
-+}
-+
- #endif
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 5baa4691074f..43f56b44f351 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10771,12 +10771,14 @@ int __netdev_update_features(struct net_device *dev)
- 			 * *before* calling udp_tunnel_get_rx_info,
- 			 * but *after* calling udp_tunnel_drop_rx_info.
- 			 */
-+			udp_tunnel_nic_lock(dev);
- 			if (features & NETIF_F_RX_UDP_TUNNEL_PORT) {
- 				dev->features = features;
- 				udp_tunnel_get_rx_info(dev);
- 			} else {
- 				udp_tunnel_drop_rx_info(dev);
- 			}
-+			udp_tunnel_nic_unlock(dev);
- 		}
- 
- 		if (diff & NETIF_F_HW_VLAN_CTAG_FILTER) {
-diff --git a/net/ipv4/udp_tunnel_core.c b/net/ipv4/udp_tunnel_core.c
-index 2326548997d3..433283dd0e70 100644
---- a/net/ipv4/udp_tunnel_core.c
-+++ b/net/ipv4/udp_tunnel_core.c
-@@ -134,15 +134,17 @@ void udp_tunnel_notify_add_rx_port(struct socket *sock, unsigned short type)
- 	struct udp_tunnel_info ti;
- 	struct net_device *dev;
- 
-+	ASSERT_RTNL();
-+
- 	ti.type = type;
- 	ti.sa_family = sk->sk_family;
- 	ti.port = inet_sk(sk)->inet_sport;
- 
--	rcu_read_lock();
--	for_each_netdev_rcu(net, dev) {
-+	for_each_netdev(net, dev) {
-+		udp_tunnel_nic_lock(dev);
- 		udp_tunnel_nic_add_port(dev, &ti);
-+		udp_tunnel_nic_unlock(dev);
- 	}
--	rcu_read_unlock();
- }
- EXPORT_SYMBOL_GPL(udp_tunnel_notify_add_rx_port);
- 
-@@ -154,15 +156,17 @@ void udp_tunnel_notify_del_rx_port(struct socket *sock, unsigned short type)
- 	struct udp_tunnel_info ti;
- 	struct net_device *dev;
- 
-+	ASSERT_RTNL();
-+
- 	ti.type = type;
- 	ti.sa_family = sk->sk_family;
- 	ti.port = inet_sk(sk)->inet_sport;
- 
--	rcu_read_lock();
--	for_each_netdev_rcu(net, dev) {
-+	for_each_netdev(net, dev) {
-+		udp_tunnel_nic_lock(dev);
- 		udp_tunnel_nic_del_port(dev, &ti);
-+		udp_tunnel_nic_unlock(dev);
- 	}
--	rcu_read_unlock();
- }
- EXPORT_SYMBOL_GPL(udp_tunnel_notify_del_rx_port);
- 
-diff --git a/net/ipv4/udp_tunnel_nic.c b/net/ipv4/udp_tunnel_nic.c
-index b6d2d16189c0..ff66db48453c 100644
---- a/net/ipv4/udp_tunnel_nic.c
-+++ b/net/ipv4/udp_tunnel_nic.c
-@@ -29,6 +29,7 @@ struct udp_tunnel_nic_table_entry {
-  * struct udp_tunnel_nic - UDP tunnel port offload state
-  * @work:	async work for talking to hardware from process context
-  * @dev:	netdev pointer
-+ * @lock:	protects all fields
-  * @need_sync:	at least one port start changed
-  * @need_replay: space was freed, we need a replay of all ports
-  * @work_pending: @work is currently scheduled
-@@ -41,6 +42,8 @@ struct udp_tunnel_nic {
- 
- 	struct net_device *dev;
- 
-+	struct mutex lock;
-+
- 	u8 need_sync:1;
- 	u8 need_replay:1;
- 	u8 work_pending:1;
-@@ -298,22 +301,11 @@ __udp_tunnel_nic_device_sync(struct net_device *dev, struct udp_tunnel_nic *utn)
- static void
- udp_tunnel_nic_device_sync(struct net_device *dev, struct udp_tunnel_nic *utn)
- {
--	const struct udp_tunnel_nic_info *info = dev->udp_tunnel_nic_info;
--	bool may_sleep;
--
- 	if (!utn->need_sync)
- 		return;
- 
--	/* Drivers which sleep in the callback need to update from
--	 * the workqueue, if we come from the tunnel driver's notification.
--	 */
--	may_sleep = info->flags & UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
--	if (!may_sleep)
--		__udp_tunnel_nic_device_sync(dev, utn);
--	if (may_sleep || utn->need_replay) {
--		queue_work(udp_tunnel_nic_workqueue, &utn->work);
--		utn->work_pending = 1;
--	}
-+	queue_work(udp_tunnel_nic_workqueue, &utn->work);
-+	utn->work_pending = 1;
- }
- 
- static bool
-@@ -554,12 +546,12 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
- 	struct udp_tunnel_nic *utn;
- 	unsigned int i, j;
- 
--	ASSERT_RTNL();
--
- 	utn = dev->udp_tunnel_nic;
- 	if (!utn)
- 		return;
- 
-+	mutex_lock(&utn->lock);
-+
- 	utn->need_sync = false;
- 	for (i = 0; i < utn->n_tables; i++)
- 		for (j = 0; j < info->tables[i].n_entries; j++) {
-@@ -569,7 +561,7 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
- 
- 			entry->flags &= ~(UDP_TUNNEL_NIC_ENTRY_DEL |
- 					  UDP_TUNNEL_NIC_ENTRY_OP_FAIL);
--			/* We don't release rtnl across ops */
-+			/* We don't release utn lock across ops */
- 			WARN_ON(entry->flags & UDP_TUNNEL_NIC_ENTRY_FROZEN);
- 			if (!entry->use_cnt)
- 				continue;
-@@ -579,6 +571,8 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
- 		}
- 
- 	__udp_tunnel_nic_device_sync(dev, utn);
-+
-+	mutex_unlock(&utn->lock);
- }
- 
- static size_t
-@@ -643,6 +637,33 @@ __udp_tunnel_nic_dump_write(struct net_device *dev, unsigned int table,
- 	return -EMSGSIZE;
- }
- 
-+static void __udp_tunnel_nic_assert_locked(struct net_device *dev)
-+{
-+	struct udp_tunnel_nic *utn;
-+
-+	utn = dev->udp_tunnel_nic;
-+	if (utn)
-+		lockdep_assert_held(&utn->lock);
-+}
-+
-+static void __udp_tunnel_nic_lock(struct net_device *dev)
-+{
-+	struct udp_tunnel_nic *utn;
-+
-+	utn = dev->udp_tunnel_nic;
-+	if (utn)
-+		mutex_lock(&utn->lock);
-+}
-+
-+static void __udp_tunnel_nic_unlock(struct net_device *dev)
-+{
-+	struct udp_tunnel_nic *utn;
-+
-+	utn = dev->udp_tunnel_nic;
-+	if (utn)
-+		mutex_unlock(&utn->lock);
-+}
-+
- static const struct udp_tunnel_nic_ops __udp_tunnel_nic_ops = {
- 	.get_port	= __udp_tunnel_nic_get_port,
- 	.set_port_priv	= __udp_tunnel_nic_set_port_priv,
-@@ -651,6 +672,9 @@ static const struct udp_tunnel_nic_ops __udp_tunnel_nic_ops = {
- 	.reset_ntf	= __udp_tunnel_nic_reset_ntf,
- 	.dump_size	= __udp_tunnel_nic_dump_size,
- 	.dump_write	= __udp_tunnel_nic_dump_write,
-+	.assert_locked	= __udp_tunnel_nic_assert_locked,
-+	.lock		= __udp_tunnel_nic_lock,
-+	.unlock		= __udp_tunnel_nic_unlock,
- };
- 
- static void
-@@ -710,11 +734,15 @@ static void udp_tunnel_nic_device_sync_work(struct work_struct *work)
- 		container_of(work, struct udp_tunnel_nic, work);
- 
- 	rtnl_lock();
-+	mutex_lock(&utn->lock);
-+
- 	utn->work_pending = 0;
- 	__udp_tunnel_nic_device_sync(utn->dev, utn);
- 
- 	if (utn->need_replay)
- 		udp_tunnel_nic_replay(utn->dev, utn);
-+
-+	mutex_unlock(&utn->lock);
- 	rtnl_unlock();
- }
- 
-@@ -730,6 +758,7 @@ udp_tunnel_nic_alloc(const struct udp_tunnel_nic_info *info,
- 		return NULL;
- 	utn->n_tables = n_tables;
- 	INIT_WORK(&utn->work, udp_tunnel_nic_device_sync_work);
-+	mutex_init(&utn->lock);
- 
- 	for (i = 0; i < n_tables; i++) {
- 		utn->entries[i] = kcalloc(info->tables[i].n_entries,
-@@ -821,8 +850,11 @@ static int udp_tunnel_nic_register(struct net_device *dev)
- 	dev_hold(dev);
- 	dev->udp_tunnel_nic = utn;
- 
--	if (!(info->flags & UDP_TUNNEL_NIC_INFO_OPEN_ONLY))
-+	if (!(info->flags & UDP_TUNNEL_NIC_INFO_OPEN_ONLY)) {
-+		udp_tunnel_nic_lock(dev);
- 		udp_tunnel_get_rx_info(dev);
-+		udp_tunnel_nic_unlock(dev);
-+	}
- 
- 	return 0;
- }
-@@ -832,6 +864,8 @@ udp_tunnel_nic_unregister(struct net_device *dev, struct udp_tunnel_nic *utn)
- {
- 	const struct udp_tunnel_nic_info *info = dev->udp_tunnel_nic_info;
- 
-+	udp_tunnel_nic_lock(dev);
-+
- 	/* For a shared table remove this dev from the list of sharing devices
- 	 * and if there are other devices just detach.
- 	 */
-@@ -841,8 +875,10 @@ udp_tunnel_nic_unregister(struct net_device *dev, struct udp_tunnel_nic *utn)
- 		list_for_each_entry(node, &info->shared->devices, list)
- 			if (node->dev == dev)
- 				break;
--		if (list_entry_is_head(node, &info->shared->devices, list))
-+		if (list_entry_is_head(node, &info->shared->devices, list)) {
-+			udp_tunnel_nic_unlock(dev);
- 			return;
-+		}
- 
- 		list_del(&node->list);
- 		kfree(node);
-@@ -852,6 +888,7 @@ udp_tunnel_nic_unregister(struct net_device *dev, struct udp_tunnel_nic *utn)
- 		if (first) {
- 			udp_tunnel_drop_rx_info(dev);
- 			utn->dev = first->dev;
-+			udp_tunnel_nic_unlock(dev);
- 			goto release_dev;
- 		}
- 
-@@ -862,6 +899,7 @@ udp_tunnel_nic_unregister(struct net_device *dev, struct udp_tunnel_nic *utn)
- 	 * from the work which we will boot immediately.
- 	 */
- 	udp_tunnel_nic_flush(dev, utn);
-+	udp_tunnel_nic_unlock(dev);
- 
- 	/* Wait for the work to be done using the state, netdev core will
- 	 * retry unregister until we give up our reference on this device.
-@@ -910,12 +948,16 @@ udp_tunnel_nic_netdevice_event(struct notifier_block *unused,
- 		return NOTIFY_DONE;
- 
- 	if (event == NETDEV_UP) {
-+		udp_tunnel_nic_lock(dev);
- 		WARN_ON(!udp_tunnel_nic_is_empty(dev, utn));
- 		udp_tunnel_get_rx_info(dev);
-+		udp_tunnel_nic_unlock(dev);
- 		return NOTIFY_OK;
- 	}
- 	if (event == NETDEV_GOING_DOWN) {
-+		udp_tunnel_nic_lock(dev);
- 		udp_tunnel_nic_flush(dev, utn);
-+		udp_tunnel_nic_unlock(dev);
- 		return NOTIFY_OK;
- 	}
- 
 -- 
-2.49.0
-
+Junxuan
