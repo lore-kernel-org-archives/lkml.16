@@ -1,39 +1,33 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974851ABEC5
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001AD292B50
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078216; cv=none; b=tKz8nWnUc//Svbjv45m1jIfsgznkVMCTuYwWEF/cT+u6LLg0fBvhF9RdUFQ6AcosLNoDQ9IJyQ6q4HCowqXgEJ5wY/mu54pfmYqp2D92LfFdHD+VLmWwDzIZW6IE5Ex6qVRTe7YdoZLNAcuPcp28OJVD0AyyruNC4xLimVArUtw=
+	t=1750078218; cv=none; b=txPt2UvwU6REec165zM5FmV7uHShUcVTHvXtWbimbrp51OcvnPOI/jHG+tT5f4k9kqUaH0p2lSUKmIUniPkrQbOBfGARBHdHRr9jCigsAdDhiFuYwOn+lZiPvksOiY18dmC9ybP7lg/0yR1RsW+HZW+NjJ0KRutbb/PC4DZqHGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078216; c=relaxed/simple;
-	bh=E+ttJdI5yaCBbGqFHD7OiO1ZHTr8GaYuztd2ZHLkUWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QhqcvXGjyxLbJUoMvCv/2wEfdie01ticJk5VSDToSsXfd6XGnW2hBLxEDn5z8t/9Y9C9gLRTJWfutMN/guumfd66pFVWt+oKa8oaZK9LoeuygDWHPUbMK6w1VOKdSygBfEEB1S2JJUqH0jKIg02WfWtRmbKWA5m1SIhJJ95l7ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=EiFM4CND; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1750078218; c=relaxed/simple;
+	bh=5B0GDypy6woAYzSY9aHY7htf77d3A3ENXwrDkuTjJK8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q7mVaGywN5Zqw1390TpzH5DMt5fVqrzOqjD2Arr6J1dV2xJ8KOPHRsD59Ji7c2SKTQdzlZCXOt+Tuu1xHaxiPdRVjEpIYy+RJU1g+DENSYHvSEqh7wmlWvNm4a4d99Y2nL3ZnpggTOlvqTH6+yuY+k6p1mrdX1DZWl0OvZoIoHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao/+Im09; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="EiFM4CND"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eIkFfeMbzZxfXsdFYX5mejSvBGxyoEn4a8get3UI44E=; b=EiFM4CND85ctD5Q49w0JEdueIH
-	rSSCv+SgAO6+hr/wNTzZIxpcg82zzmqaHJ6kpIVhFQuXiafDzCnXDCjISvhcZtWd0zcN243Udeku3
-	KBhBhsfJpCBw9MPKR/r497GPjhfxhcWDUFQ9q9wEq1UfpTV5Gt308wNWTPBbTnzONT6ZPsYby3EG5
-	y/C2PUJSRnp+QL9nvjVyacXpluIm16surIfpvUeIAB7k5ccVbPBzwi+o5o2P18mPiW2zfa8o2jwmF
-	fzg7ZjBSJ+nuuf9o/r59qvnBqQesfPC842g8wrhzPi8fcr1pFRtJBq82SJ+99zULXtuWPRQYMDsI/
-	IzYXpy/w==;
-Received: from [189.7.87.79] (helo=[192.168.0.7])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uR9Hd-0047Wr-O1; Mon, 16 Jun 2025 14:49:54 +0200
-Message-ID: <723c98e2-cf75-4565-b78b-711b3022d44d@igalia.com>
-Date: Mon, 16 Jun 2025 09:49:46 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao/+Im09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6142EC4CEEA;
+	Mon, 16 Jun 2025 12:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750078217;
+	bh=5B0GDypy6woAYzSY9aHY7htf77d3A3ENXwrDkuTjJK8=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Ao/+Im09ikS3XYNJif4IPzCZVPI1rLzBr2hkK5fQi5W+mQhbzAjuFoCmdVYUus5G5
+	 iAsrj9MC5DiaqctCBweLZ9P0wrywMKO9w1CHFmM4gQoV2uSfqzAptfRc1AIAcUL6Am
+	 zuKvJC4174ktQCdROvzMsSLvGQ5D/+FG6qNiTRRMRjCTTEBe9WR0hrf9mp5qgi0xNn
+	 gYvmNk805qMhSUBPKNt7+uDd5FszJx+mmK+hWdE189GL2AUw722N7SYEpthsERw0R/
+	 OgLPmJQ8j6iL7tVXud3Epilgoybkzl1tmYP/KqpPBZJb9LUNpiqmBuvLi/IZAsyVSs
+	 myTmzPYTwBwlg==
+Message-ID: <c8389c1a-16d2-4de4-bc3f-7a5e4ccdbc34@kernel.org>
+Date: Mon, 16 Jun 2025 20:50:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,67 +35,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/sched/tests: Make timedout_job callback a better role
- model
-To: Danilo Krummrich <dakr@kernel.org>,
- Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: Philipp Stanner <phasta@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250605134154.191764-2-phasta@kernel.org>
- <e1b65491-781c-48f7-9368-58d7ede91b12@igalia.com> <aE_8lDuMFFhJBeUY@pollux>
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] f2fs: use ioprio hint for hot and pinned files
+To: Daniel Lee <chullee@google.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250615144235.1836469-1-chullee@google.com>
+ <20250615144235.1836469-3-chullee@google.com>
 Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <aE_8lDuMFFhJBeUY@pollux>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250615144235.1836469-3-chullee@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Danilo,
-
-On 16/06/25 08:14, Danilo Krummrich wrote:
-> On Mon, Jun 16, 2025 at 11:57:47AM +0100, Tvrtko Ursulin wrote:
->> Code looks fine, but currently nothing is broken and I disagree with the
->> goal that the _mock_^1 components should be role models. The idea is to
->> implement as little in the mock components as it is required to exercise the
->> tested functionality.
+On 6/15/25 22:42, Daniel Lee wrote:
+> Apply the `ioprio_hint` to set `F2FS_IOPRIO_WRITE` priority
+> on files identified as "hot" at creation and on files that are
+> pinned via ioctl.
 > 
-> No, please consider the following.
+> Signed-off-by: Daniel Lee <chullee@google.com>
+> ---
+>  fs/f2fs/f2fs.h  | 19 +++++++++++++++++++
+>  fs/f2fs/file.c  |  3 +++
+>  fs/f2fs/namei.c | 11 +++++++----
+>  3 files changed, 29 insertions(+), 4 deletions(-)
 > 
->    1) When we write tests for common infrastructure we should be testing things
->       as close as possible to how we intend real code to use this infrastructure.
->       Relying on internals in creative ways is likely to underrun this testing.
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 3e02687c1b58..0c4f52892ff7 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3440,6 +3440,25 @@ static inline void set_file(struct inode *inode, int type)
+>  	f2fs_mark_inode_dirty_sync(inode, true);
+>  }
+>  
+> +static inline int get_ioprio(struct inode *inode)
+> +{
+> +	return F2FS_I(inode)->ioprio_hint;
+> +}
+> +
+> +static inline void set_ioprio(struct inode *inode, int level)
+> +{
+> +	if (get_ioprio(inode) == level)
+> +		return;
+> +	F2FS_I(inode)->ioprio_hint = level;
+> +}
+> +
+> +static inline void clear_ioprio(struct inode *inode)
+> +{
+> +	if (get_ioprio(inode) == 0)
+> +		return;
+> +	F2FS_I(inode)->ioprio_hint = 0;
+> +}
+> +
+>  static inline void clear_file(struct inode *inode, int type)
+>  {
+>  	if (!is_file(inode, type))
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 3eb40d7bf602..a18fb7f3d019 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3496,6 +3496,7 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
+>  
+>  	if (!pin) {
+>  		clear_inode_flag(inode, FI_PIN_FILE);
+> +		clear_ioprio(inode);
 
-Regarding unit testing (and KUnit is a unit testing framework), the core
-principle is that individual components of the code should be tested in
-isolation to validate that they perform as expected.
+I guess there are more places clearing FI_PIN_FILE? we need to cover
+them all?
 
-The "units" should be tested independently and we use those mocks to
-simulate dependencies, ensuring that the test focuses solely on the unit
-under scrutiny.
+>  		f2fs_i_gc_failures_write(inode, 0);
+>  		goto done;
+>  	} else if (f2fs_is_pinned_file(inode)) {
+> @@ -3529,6 +3530,8 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
+>  	}
+>  
+>  	set_inode_flag(inode, FI_PIN_FILE);
+> +	file_set_hot(inode);
 
-If we introduce more things into the mock, we end up losing the
-isolation. The mock scheduler, from what I understand, is not suppose to
-be a reference design or even something close to a driver.  It should
-remain just a mock, a minimal interface to test the scheduler's
-internals.
+Unnecessary file_set_hot() invoking? Or am I missing anything?
 
-Best Regards,
-- Maíra
+Thanks,
 
-> 
->    2) Being close to a reference design is a good thing, why wouldn't we want
->       that? The reality is that people *will* look at this code for reference.
-> 
->> Also, there are various ways drivers use the scheduler API. Trying to make
->> the mock scheduler a reference driver implementation would only be able to
->> make it a reference for one possible use.
-> 
-> Why? Nothing prevents us from covering all of them eventually.
-> 
-> If for now, we just implement one of them, that's better than none, so why not?
+> +	set_ioprio(inode, F2FS_IOPRIO_WRITE);
+>  	ret = F2FS_I(inode)->i_gc_failures;
+>  done:
+>  	f2fs_update_time(sbi, REQ_TIME);
+> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+> index 07e333ee21b7..0f96a0b86c40 100644
+> --- a/fs/f2fs/namei.c
+> +++ b/fs/f2fs/namei.c
+> @@ -191,9 +191,10 @@ static void set_compress_new_inode(struct f2fs_sb_info *sbi, struct inode *dir,
+>  }
+>  
+>  /*
+> - * Set file's temperature for hot/cold data separation
+> + * Set file's temperature (for hot/cold data separation) and
+> + * I/O priority, based on filename extension
+>   */
+> -static void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
+> +static void set_file_temp_prio(struct f2fs_sb_info *sbi, struct inode *inode,
+>  		const unsigned char *name)
+>  {
+>  	__u8 (*extlist)[F2FS_EXTENSION_LEN] = sbi->raw_super->extension_list;
+> @@ -212,8 +213,10 @@ static void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
+>  
+>  	if (i < cold_count)
+>  		file_set_cold(inode);
+> -	else
+> +	else {
+>  		file_set_hot(inode);
+> +		set_ioprio(inode, F2FS_IOPRIO_WRITE);
+> +	}
+>  }
+>  
+>  static struct inode *f2fs_new_inode(struct mnt_idmap *idmap,
+> @@ -317,7 +320,7 @@ static struct inode *f2fs_new_inode(struct mnt_idmap *idmap,
+>  		set_inode_flag(inode, FI_INLINE_DATA);
+>  
+>  	if (name && !test_opt(sbi, DISABLE_EXT_IDENTIFY))
+> -		set_file_temperature(sbi, inode, name);
+> +		set_file_temp_prio(sbi, inode, name);
+>  
+>  	stat_inc_inline_xattr(inode);
+>  	stat_inc_inline_inode(inode);
 
