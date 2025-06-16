@@ -1,164 +1,868 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2052.outbound.protection.outlook.com [40.107.101.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B17292B4C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078194; cv=fail; b=q5xE3Kbw3b0MLReKe490jrMoXYlxm5jCPqqMoX4kUbs/GaIdkGaYcVyE4s3CsNJgaMyvsqiUU4+zqfSCnw96JVdyyLV4y9DWjH6TJOxl6fu4/Gv5yN64f8C3eUt7yF8ZdjOGXOL7+xcDg1qSXROnhX/TRvR8DAxeGF85wuLfd+0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078194; c=relaxed/simple;
-	bh=KzHiSLW8+7RWGGw2CtSIhmO1mkKYrEwLQstzLk1CGV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VaRC0d2v93c4qK7Qgl134SjFVm3MKbjm5LXtIvmxR4mg6iaVXfsxua+LJ2u6G2Sc+NUIWq/bjiqHXEgrpO7LsjTDccgGQAl/rVE/fUL7AjxiRzVg7Jtjrdg+TE/gO0h8kL8OziSUVZld6dmMChMC+whxu0cRyZPm0zXw4So1L2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JGVHJc8R; arc=fail smtp.client-ip=40.107.101.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27909285CB6;
+	Mon, 16 Jun 2025 12:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750078190; cv=none; b=aA8vswqQakX7ZtBx35K7FYTBzhmD7OIEt1cSu8f5n+e2rIsHgbIJvTA9jvJ+zncZOmVGxesrdTgFNwgaVS8DPp1Z0/glk9anZCLudeaThswFr1RNFPonIwFQNg7GaTC11aSXNV8UN94OsM8+IGyweVat37eJNdnpItS6aYGwZ5U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750078190; c=relaxed/simple;
+	bh=PVH7oSQek3ZCRIx6GQ9sGhtiBySF4G5tszUr8UDSB9E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SLjiCL4pAN7KryQY2KKXuotxusyVV2FB2DrTOojd+WGus+Ta6MO4fIiBeeeF3R9dvTTfp9fFNsV6ztzrjzqmz6UgtZ1PjPrErWAw24P3X4+CRLiZZtLP3l8ytYtt4tvpbH9znqhLQY1O8EPrKfB+78/OsAhzOwYTnOJxN7gnLBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dvdSKAe8; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JGVHJc8R"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z5IRp9HSk04To9iDPpBWzPn8fNl/+xAdSS5J2qXJKV9QRJ3wmcNgiVEhOhOfvRobe0e0jcmIeOZPyKaA12AzN1XMcwMB5VFtlwXhCBIC5qmwqgJG1ItSY+NQUmPN21m26xSoty8dmcc0DA6r4WOHst6/61w2Ogo3jutzzUyLwr7Rapws36Wao26UHUkSCPBxShkYrNurfTJHY/WGZFPl1cgA6UL/Uod+utIA2cxsXipXEcjvha3KRyGRadJtEGw72eeSGQNAabMTXtlZsvoQozOP7whmAM6y4USOKVEW/xg/sgMzBzoxsoR5/MUweDUyo+rNsyD317cwpD6wFUPoHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+bBsPf46nEX05Uqb0GW8aVVLHRkYK+jBcbzGVBU/M9A=;
- b=T5keuX0U/sYSMsVkpv6UDmkP4Vuq4RNStubD7d/WVR3WMDXORJvI+zTQV8WjMlUlV+dbLnfutCo/2il+fOijyP2TmJKOTaSr6fOXxDlqs4dN4ujT+rj0bOuH56BkGUOzOepV0Afvn5A+rDv7mz/1jO+N19Bh+uVAZuXXby0aWNiMgc6537CiDn+LBqbWWmO6XMkROgqTIxQg0hVTdzEGHEExbAwu0sILQenkJLzXXepcKmI5DhxjyYbqix4yJLmhRCOwSFLKHlniSkQWlpsx0oJRBlgO1XeRzMvWzZ68BNYSQ6l8V/0ZZFGl1Wa900haukwXW2RSrOvo4pnAGukR8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+bBsPf46nEX05Uqb0GW8aVVLHRkYK+jBcbzGVBU/M9A=;
- b=JGVHJc8Rmun69xWnBabuC8dP25z3lN4GSTg6yCAA+AS7YOCNv1ROZSkdP1TvnyGFoKUctftgrJVo8LvrDp8W+71z9O8LlhE9HjZLIiUbhzMXDY2q5hO43mtB2BYm6J0GJHHd7Fm363Dokv6TLuJfrOHkOx9D67Gh4dMQL1GaxmduEU+Pe/KsR4jXAjN+i8IeGLilYHyACWeeNMmL5TRxieh5Ud+NDnUmgEdeYVO2otA9FEGn4ZBZYGpvSqpzlYdannTIs75lKJmDXFIZ+JihDrcMqY0J8RKCp9gkgtZPAOIvSBTd5DcymqFpXIOq0e9ghmF3VjyMYHFpYYv4M3PS5g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by MN0PR12MB6295.namprd12.prod.outlook.com (2603:10b6:208:3c0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 12:49:50 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
- 12:49:50 +0000
-Date: Mon, 16 Jun 2025 09:49:48 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, will@kernel.org, robin.murphy@arm.com,
-	joro@8bytes.org, praan@google.com, yi.l.liu@intel.com,
-	peterz@infradead.org, jsnitsel@redhat.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 11/14] iommu: Deprecate viommu_alloc op
-Message-ID: <20250616124948.GA1174925@nvidia.com>
-References: <cover.1749882255.git.nicolinc@nvidia.com>
- <5b32d4499d7ed02a63e57a293c11b642d226ef8d.1749882255.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b32d4499d7ed02a63e57a293c11b642d226ef8d.1749882255.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: YT4PR01CA0288.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:109::16) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvdSKAe8"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b9eb2299so1433905e87.0;
+        Mon, 16 Jun 2025 05:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750078186; x=1750682986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ui3Eg3YPo4Sz5gpGhV9i5VQHF+fgty9/bBQfNlf1In4=;
+        b=dvdSKAe8/vB+J6YH848aHFQIFvBxZC6xoJwgMKOwopV2hHZtmLZFpEc39GoHN4xv2Q
+         d+lZ7HufcF6QncXVUjmv2BRyz7hAjIRJbXPEdVoSX31X/Wl958X1+LzW17S3qBGvPH3a
+         sq+eNsEkjLWYdpyEkCPC963vjNYV4f7SQbKgHt06cRE/cWCydxerc/vmrfmP66X1SL8W
+         l/6r4oH2QfxQS1tLBaQ+ZW1++5g4XpI9JV35Ek6PCjMQ5ns5tlLx7bl8gIFFFysDQsDY
+         1TDX02NAk0jQd3MysHvlPvDkGsnb3PEXnZw5H2iKwx7uP1zfjRX3mQyt7pIPBVx34PJm
+         Qwxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750078186; x=1750682986;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ui3Eg3YPo4Sz5gpGhV9i5VQHF+fgty9/bBQfNlf1In4=;
+        b=RqI7h+BvViJGzfQ00gA3syAO0aRBGkWFp8imxhmvvPxZbT9CDRp17mXi5wW/BE0NFW
+         UYSbL8nCIkN100wTOrtFLi+nS3jYuCVYELmn4GaFiN3q6tvub9KQypaphcu7GKKmL/ZJ
+         zq08wuqkaRa5usZLXuO7i7/4DtwVyXnJXTyEVZFavduv5WK6S+W/aizW5ed8nclb06NZ
+         3hdDJpp/ZZN2AXlHAoDhhkycfbLB7TUHHcGmopZ7lsWueMz8YMbnXefTcG5SlNOwSXPu
+         dveLLEiGsUMhvmc82qoy7YL3ov7XOaX9ScH0fWRAahV4TMZCfTwVg8Mggaq/ma5KSVR2
+         f5jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFcnH6VxOg1MDp4a6MrgzJIXhyJSbt4BP7tYc4YGiQLXsO7D5VDBcL7f8u1kz7g+OfjG2AsIM1CnTnWgcw@vger.kernel.org, AJvYcCUReDlkg1FQQkIinlZWsmc0nHkHyEB0Hlpa+SFlsn+j12YGhUXTdI2nghx9ijF76V6md5a2ZxN++Og=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6rAU1Nezp9VjsoVzQFJ4G7OWJ637PDW9Px7azJbEqbskioAG6
+	PJHxyqg+cvIbA2Q3IpYbdmtQNyBjPsD3o8WorcxqcBa/aMfimoASnVOP
+X-Gm-Gg: ASbGncvpFMA23LIR6AQ9curZraZG9sdVrj04O4uKZMogHwpa/Ld7WUl24ZLRDEQB/+N
+	eRTducVku2jNPO7JsKjW1/hdACstdU9kj6AWVlJy9lDwypTPZuI/Tdv53TcxnUno6YwW1deYsWw
+	VdXeyYQSb2juu+eFrSVMfWkgBNjVLJVHZaolaVcp+j5EOlI5QFGVvk7uUSNIql9eTpdr9EXo0sv
+	DEiYCB6w6CEbj0SSqCg7sifZ9bVyOGSXF7Sp1hdroMVpqKGR+uwrnFcdO9pmMbdVDZT4PGJhQ3o
+	fHTCOzjW2ecGkSSktZRRE25DaX8fDk7pFdrFc3Ixw1uXtsYgkES8r6P+wI/n19MK30tR8Areo5o
+	PJSJkCQ==
+X-Google-Smtp-Source: AGHT+IG+spp6v3ThCD2+B6F1+keYuin6qSc4uuvcZeQdZQNPG9KWoBfqbiBqsKT7wr7LsDt7l1zlig==
+X-Received: by 2002:a05:6512:3e0c:b0:553:2159:8716 with SMTP id 2adb3069b0e04-553b68ccda0mr2396464e87.26.1750078185795;
+        Mon, 16 Jun 2025 05:49:45 -0700 (PDT)
+Received: from ubuntu-2404-1.lintech.local ([80.87.144.137])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac116968sm1529733e87.32.2025.06.16.05.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 05:49:45 -0700 (PDT)
+From: Alexander Kochetkov <al.kochet@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nishad Saraf <nishads@amd.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	=?UTF-8?q?Am=C3=A9lie=20Delaunay?= <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Amit Vadhavana <av2082000@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Alexander Kochetkov <al.kochet@gmail.com>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Subject: [PATCH v2 1/2] dmaengine: virt-dma: convert tasklet to BH workqueue for callback invocation
+Date: Mon, 16 Jun 2025 12:48:03 +0000
+Message-ID: <20250616124934.141782-2-al.kochet@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250616124934.141782-1-al.kochet@gmail.com>
+References: <20250616124934.141782-1-al.kochet@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB6295:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d866390-4ba8-4461-452f-08ddacd44803
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/bU6oHI39LDxvsnw0itYmaqIbPrcn+1OtQAtuTOsIsIrXVEJuRazFMdmIf3R?=
- =?us-ascii?Q?6HDDJedZaV07FKl9Y9dmY40MfG698i5Pc3W5LYIO3ajYFKmKlCQkDewWAJVx?=
- =?us-ascii?Q?6DLisanZLtEV50MB7SxtRTVEYiU1lQrGe24lQHuem1X9JQRaE8lzh2pFSISG?=
- =?us-ascii?Q?6BQTFevUrxZ/HHta73Vusez5JVOe2lOTQBbtqjdkWb0rNS1nxRrNPduVAPZC?=
- =?us-ascii?Q?FI5ZA+v1Lsnn5cwdZKzXuD0QAviy25VL3GNkHpi0BPRlT6/sQcXUAg7dBOV/?=
- =?us-ascii?Q?DpOF3bBOY1tqo1i6/iYfdd5e5NXLrCu4mHbOCcqEIkit4kDX5RqoFDOPkof7?=
- =?us-ascii?Q?FU2KOZ3x+ZF4gaL/fSncHe1aPAkoQ2pl0UFGOshjKoWADFinHQ/OvAPvlBwn?=
- =?us-ascii?Q?V5I1hTxKDhzaRbK2o4DjOleN46SL3lnnyOKkPUxhea2pNCyKdadOSCgRYUf4?=
- =?us-ascii?Q?x06YbpQT5wDWPOMHhvCXRHGF2RADl581DZIdcVGgK1h5ZHLZrk8dG/8GT9hv?=
- =?us-ascii?Q?x/TFJSSJhrqoF0prVRiXxeJUFQfOmiIF7mSUKk9YlI3V61Jkm+9hEKXsiZ2O?=
- =?us-ascii?Q?KdHKx3lDfrl9rTQcunou7ibYLl3R+uI/IxBWfwiFEFSN0Wbpj6pFguuA4zwp?=
- =?us-ascii?Q?IIuowAA9VfDSUbmDwXEgmUADXgt6uogDyG/OAYz8ttGZG65EFzP5s3Bdb9I1?=
- =?us-ascii?Q?jED05uG1+25S7WQDiHKu2i/1zAqlVGhUpIZSZR7LE/0GV1LKd+Zs/D6Gfr7S?=
- =?us-ascii?Q?LTp6wx0VqkykO21+TzvnI4ZWE0wiBOV5MgsrtyzO4+Ahwhn5D9rnHd/gt/7L?=
- =?us-ascii?Q?BCjTLbzFeQvNiMiD6wdc4oLDdtBjzPVA0XzoCmcB3wUl2r+a3qldcRMyBALj?=
- =?us-ascii?Q?9ubiRCbhNWnoIBq9M1zZ9ezWdMsLdu8/JD3V/c/jHr0HcCjyJfkuZ2J2ANa+?=
- =?us-ascii?Q?kMxfmZo38EPnTNphTmNjNFXZMoAcSoNRN9xbb0QkJbcnT0MhHhtUa6MfDfZp?=
- =?us-ascii?Q?KC2ECCCSJN7obkXvQ0V9cLVysvJulEFzkhGaUpZcAah/SiTKbxRKxsvZOTkM?=
- =?us-ascii?Q?ayJqmGtkgxkKkn/2JqzJtb0tn6jg+HlBFQNts0Bx75hOip7DkT/f7xvErZoN?=
- =?us-ascii?Q?2nvZMJgh15vflKHCXdy5OcDaYrCQMgziVIQ2YzMWaQ02h7jmULVbQbTGxiAU?=
- =?us-ascii?Q?8dTx3MpdPTsHQZF1Y1JpM0DeLricXPKKBtsb9tQkQ9J97QA5MEtU6xH+u0EK?=
- =?us-ascii?Q?QDgIALZWcItXMUZ3WUeKN8zeL7J8TdsY3qI7JcdV4ivBT7J7ANtphIo8mMIq?=
- =?us-ascii?Q?SYHv9x4awjvlbxnfPNECWX3DOkxmM7o068eXk/SdCi7O0hZKrCE+YbBjZKwa?=
- =?us-ascii?Q?fonFDpLIhQ2bUVurLiaaLzb0d4d0bTgmTt7/8fIRFj8GIYh6Fz277c+Ofqxm?=
- =?us-ascii?Q?5eVdUkPUPDk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g1VqdsKMX7AZHedWTc2GbHseS7xx5GGkJZY9/3jKzaQlT7e9QergAskhkm8F?=
- =?us-ascii?Q?m0kUFKXxMKv+sycMNrc16mcN1UdRkOlafNw/UGjbqlnloaCVWbDoSyPJTqrs?=
- =?us-ascii?Q?n58JPp9/lTiZa/IaMOarpLfULgSzk/iWNybjv/dMAIdaMK1vfSvILrVSBBVQ?=
- =?us-ascii?Q?z+elMN/X2Dip3H7bAViw5cc+D6wBgasNrZTzEHKx3Kq6zsapsCeb06KY7ON0?=
- =?us-ascii?Q?YURxwpfd7K6VmKQp/dKISsBoeShi+O/Mc0tb5p2PPqAjBdAhsUeM30qbnIc6?=
- =?us-ascii?Q?EkEMYLUY6Uu5tK2ft5J31xLxByL83YPA2gKAtgmk2u2WJq3J59cqTAucXxa5?=
- =?us-ascii?Q?ns3Bg6KCkyrAZBLL4X9FuhFXC2HvW2ErUICEjkcnPz6CZPplQd7CLpKp8LF3?=
- =?us-ascii?Q?COEjWwnbpx9KWBrwWcoRYoSuwBeI7JMzPPTJm4IKBGBk07owz38lEXMItF4c?=
- =?us-ascii?Q?CrUvb6l4fADJgZkPkGT2NFSH70rvq7XqEzsfVQVp4laCzyCsrtWSKONsGzws?=
- =?us-ascii?Q?h61MhgJyKD7H0XqSoGGSe9Gf4s5VPoaCTBI9Flct4csUB2IAvlzxW+H9paGA?=
- =?us-ascii?Q?Pju+xhAQ9j0Ky8FGE/okGZIji8paDLMSYcTWPyhSFu8D2S2zLzj+8zDOKIEa?=
- =?us-ascii?Q?UIIeZefv663TzmqZdPbFYYIOvfUzgP56e1zwEd+el53pqkW6BfJlrLlqnRKo?=
- =?us-ascii?Q?tKKT7hwD2iY590rXVT5fjETBHxBI323k7Wd4cZtZdyGkCEmG/xsXoJmoWTQi?=
- =?us-ascii?Q?YNfEZzQVIuJd+Xk5EWYm5LXh8STEtlH2mvcfpDEeU9BCrJVJzDz+g6pC1Fc2?=
- =?us-ascii?Q?fL+nTUgkdpmYiOMW+rwKnHDUYjzotoF54Mp3C8U13HW/r45RnLjqvTVcsZBN?=
- =?us-ascii?Q?GRFjIHj18wO0P0mR+KhHsOLUko5eji/i9umTHFiSLFY0Pz/y4DcE2t4e2qA9?=
- =?us-ascii?Q?TfAEPPAOCfCKfltAXIIKgdc2440RaTqxwMKWn+Lz6p0Ku55I13Qg/7+jTEV2?=
- =?us-ascii?Q?cTrrFRj21beQmey2KmKp5u/lLYBYt+p6OPX8SttQ6e5k4L+iy+ZJvz4Mmj+c?=
- =?us-ascii?Q?C6pw/sdksoGzagvC6CXi1v6UwfhowL0b13DaYydC6ODI+fUkCTEWJ4gQjpBO?=
- =?us-ascii?Q?cny5DxmKXamv6SNmvx3atTfotg7+oV72rhV4u6Pe/B62IN+/MTX25IPRXT8U?=
- =?us-ascii?Q?iaAKoKcGGdDt+08/CTh+5q9D6lof9V+Bh6XZFOjtsVTZgv46lwoLoUgzs7B2?=
- =?us-ascii?Q?VSdCRpAsKYhTb1lUwPJC3lyq0aWUL8roIySTXy+COhFVCamoaLhE3Oj0ct1c?=
- =?us-ascii?Q?Ykh/HVvdOY4RSCwLksbV/vdGro26CCHqOly2+S0IS5EGLUukcOZW51sT5Kyd?=
- =?us-ascii?Q?7O9DMXX+CkG7BrP26msZjvylpxIPPg0irC2xXUvcAtoz9q/FZE5K9aYts8h8?=
- =?us-ascii?Q?LhnggJjRDL1SrpYYb5koe0DOdemsbR/RQmF7SkflD7tioxscVhoaBZufl8Ng?=
- =?us-ascii?Q?K88VLzM51YYALm1KCHtK252EzYCptOdWJ834VbO20f2OGqB8PX0HADexUL3m?=
- =?us-ascii?Q?vRkHGkkHHSVMOU3HL9fVhdj4zwFh96BXar7lsCQY?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d866390-4ba8-4461-452f-08ddacd44803
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 12:49:50.1211
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YA3C8qWRCNsxXuPsrEqAt2GMavEBoZ2X5YAOgMfkkMyhL/NDGf/SolPROSsCKswT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6295
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 11:35:23PM -0700, Nicolin Chen wrote:
-> To ease the for-driver iommufd APIs, get_viommu_size and viommu_init ops
-> are introduced. Now, those existing vIOMMU supported drivers implemented
-> these two ops, replacing the viommu_alloc one. So, there is no use of it.
-> 
-> Remove it from the headers and the viommu core.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommu.h          | 11 -----------
->  include/linux/iommufd.h        | 18 ------------------
->  drivers/iommu/iommufd/viommu.c | 20 +++++---------------
->  3 files changed, 5 insertions(+), 44 deletions(-)
+Currently DMA callbacks are called from tasklet. However the tasklet is
+marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
+are executed either in the Soft IRQ context or from ksoftirqd thread. BH
+workqueue work items are executed in the BH context. Changing tasklet to
+BH workqueue improved DMA callback latencies.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+The commit changes virt-dma driver and all of its users:
+- tasklet is replaced to work_struct, tasklet callback updated accordingly
+- kill_tasklet() is replaced to cancel_work_sync()
+- added include of linux/interrupt.h where necessary
 
-Jason
+Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
+drivers are changed similarly and tested for compilation.
+
+Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+---
+ drivers/dma/amd/qdma/qdma.c                    |  1 +
+ drivers/dma/arm-dma350.c                       |  1 +
+ drivers/dma/bcm2835-dma.c                      |  2 +-
+ drivers/dma/dma-axi-dmac.c                     |  8 ++++----
+ drivers/dma/dma-jz4780.c                       |  2 +-
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  2 +-
+ drivers/dma/dw-edma/dw-edma-core.c             |  2 +-
+ drivers/dma/fsl-edma-common.c                  |  2 +-
+ drivers/dma/fsl-edma-common.h                  |  1 +
+ drivers/dma/fsl-qdma.c                         |  3 ++-
+ drivers/dma/hisi_dma.c                         |  2 +-
+ drivers/dma/hsu/hsu.c                          |  2 +-
+ drivers/dma/idma64.c                           |  3 ++-
+ drivers/dma/img-mdc-dma.c                      |  2 +-
+ drivers/dma/imx-sdma.c                         |  2 +-
+ drivers/dma/k3dma.c                            |  2 +-
+ drivers/dma/loongson1-apb-dma.c                |  2 +-
+ drivers/dma/mediatek/mtk-cqdma.c               |  2 +-
+ drivers/dma/mediatek/mtk-hsdma.c               |  3 ++-
+ drivers/dma/mediatek/mtk-uart-apdma.c          |  4 ++--
+ drivers/dma/owl-dma.c                          |  2 +-
+ drivers/dma/pxa_dma.c                          |  2 +-
+ drivers/dma/qcom/bam_dma.c                     |  4 ++--
+ drivers/dma/qcom/gpi.c                         |  1 +
+ drivers/dma/qcom/qcom_adm.c                    |  2 +-
+ drivers/dma/sa11x0-dma.c                       |  2 +-
+ drivers/dma/sf-pdma/sf-pdma.c                  |  3 ++-
+ drivers/dma/sprd-dma.c                         |  2 +-
+ drivers/dma/st_fdma.c                          |  2 +-
+ drivers/dma/stm32/stm32-dma.c                  |  1 +
+ drivers/dma/stm32/stm32-dma3.c                 |  1 +
+ drivers/dma/stm32/stm32-mdma.c                 |  1 +
+ drivers/dma/sun6i-dma.c                        |  2 +-
+ drivers/dma/tegra186-gpc-dma.c                 |  2 +-
+ drivers/dma/tegra210-adma.c                    |  3 ++-
+ drivers/dma/ti/edma.c                          |  2 +-
+ drivers/dma/ti/k3-udma.c                       | 10 +++++-----
+ drivers/dma/ti/omap-dma.c                      |  2 +-
+ drivers/dma/uniphier-xdmac.c                   |  1 +
+ drivers/dma/virt-dma.c                         |  8 ++++----
+ drivers/dma/virt-dma.h                         | 10 +++++-----
+ 41 files changed, 62 insertions(+), 49 deletions(-)
+
+diff --git a/drivers/dma/amd/qdma/qdma.c b/drivers/dma/amd/qdma/qdma.c
+index 8fb2d5e1df20..538aa49c6a5f 100644
+--- a/drivers/dma/amd/qdma/qdma.c
++++ b/drivers/dma/amd/qdma/qdma.c
+@@ -8,6 +8,7 @@
+ #include <linux/bitops.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
+index 9efe2ca7d5ec..9e87856ab559 100644
+--- a/drivers/dma/arm-dma350.c
++++ b/drivers/dma/arm-dma350.c
+@@ -5,6 +5,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
++#include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/module.h>
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 0117bb2e8591..24411d7ac895 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -846,7 +846,7 @@ static void bcm2835_dma_free(struct bcm2835_dmadev *od)
+ 	list_for_each_entry_safe(c, next, &od->ddev.channels,
+ 				 vc.chan.device_node) {
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 	}
+ 
+ 	dma_unmap_page_attrs(od->ddev.dev, od->zero_page, PAGE_SIZE,
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 36943b0c6d60..181ba12b3ad4 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -1041,9 +1041,9 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
+ 	return 0;
+ }
+ 
+-static void axi_dmac_tasklet_kill(void *task)
++static void axi_dmac_cancel_work_sync(void *work)
+ {
+-	tasklet_kill(task);
++	cancel_work_sync(work);
+ }
+ 
+ static void axi_dmac_free_dma_controller(void *of_node)
+@@ -1146,8 +1146,8 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	 * Put the action in here so it get's done before unregistering the DMA
+ 	 * device.
+ 	 */
+-	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_tasklet_kill,
+-				       &dmac->chan.vchan.task);
++	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_cancel_work_sync,
++				       &dmac->chan.vchan.work);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 100057603fd4..90edd8286730 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -1019,7 +1019,7 @@ static void jz4780_dma_remove(struct platform_device *pdev)
+ 	free_irq(jzdma->irq, jzdma);
+ 
+ 	for (i = 0; i < jzdma->soc_data->nb_channels; i++)
+-		tasklet_kill(&jzdma->chan[i].vchan.task);
++		cancel_work_sync(&jzdma->chan[i].vchan.work);
+ }
+ 
+ static const struct jz4780_dma_soc_data jz4740_dma_soc_data = {
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index b23536645ff7..3acf095c3994 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -1649,7 +1649,7 @@ static void dw_remove(struct platform_device *pdev)
+ 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
+ 			vc.chan.device_node) {
+ 		list_del(&chan->vc.chan.device_node);
+-		tasklet_kill(&chan->vc.task);
++		cancel_work_sync(&chan->vc.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index c2b88cc99e5d..a613b2c64e8a 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -1005,7 +1005,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+ 	dma_async_device_unregister(&dw->dma);
+ 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
+ 				 vc.chan.device_node) {
+-		tasklet_kill(&chan->vc.task);
++		cancel_work_sync(&chan->vc.work);
+ 		list_del(&chan->vc.chan.device_node);
+ 	}
+ 
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 4976d7dde080..9a498c14471a 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -894,7 +894,7 @@ void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
+ 	list_for_each_entry_safe(chan, _chan,
+ 				&dmadev->channels, vchan.chan.device_node) {
+ 		list_del(&chan->vchan.chan.device_node);
+-		tasklet_kill(&chan->vchan.task);
++		cancel_work_sync(&chan->vchan.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 205a96489094..1bd80d68f5ec 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -7,6 +7,7 @@
+ #define _FSL_EDMA_COMMON_H_
+ 
+ #include <linux/dma-direction.h>
++#include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+ #include "virt-dma.h"
+ 
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 823f5c6bc2e1..bab0bb9fd986 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
+ #include <linux/dma-mapping.h>
++#include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+ 
+ #include "virt-dma.h"
+@@ -1261,7 +1262,7 @@ static void fsl_qdma_cleanup_vchan(struct dma_device *dmadev)
+ 	list_for_each_entry_safe(chan, _chan,
+ 				 &dmadev->channels, vchan.chan.device_node) {
+ 		list_del(&chan->vchan.chan.device_node);
+-		tasklet_kill(&chan->vchan.task);
++		cancel_work_sync(&chan->vchan.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+index 25a4134be36b..0cddb4949051 100644
+--- a/drivers/dma/hisi_dma.c
++++ b/drivers/dma/hisi_dma.c
+@@ -720,7 +720,7 @@ static void hisi_dma_disable_qps(struct hisi_dma_dev *hdma_dev)
+ 
+ 	for (i = 0; i < hdma_dev->chan_num; i++) {
+ 		hisi_dma_disable_qp(hdma_dev, i);
+-		tasklet_kill(&hdma_dev->chan[i].vc.task);
++		cancel_work_sync(&hdma_dev->chan[i].vc.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
+index af5a2e252c25..4ea3f18a20ac 100644
+--- a/drivers/dma/hsu/hsu.c
++++ b/drivers/dma/hsu/hsu.c
+@@ -500,7 +500,7 @@ int hsu_dma_remove(struct hsu_dma_chip *chip)
+ 	for (i = 0; i < hsu->nr_channels; i++) {
+ 		struct hsu_dma_chan *hsuc = &hsu->chan[i];
+ 
+-		tasklet_kill(&hsuc->vchan.task);
++		cancel_work_sync(&hsuc->vchan.work);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index d147353d47ab..fd8d30a02153 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -12,6 +12,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/dmapool.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -624,7 +625,7 @@ static void idma64_remove(struct idma64_chip *chip)
+ 	for (i = 0; i < idma64->dma.chancnt; i++) {
+ 		struct idma64_chan *idma64c = &idma64->chan[i];
+ 
+-		tasklet_kill(&idma64c->vchan.task);
++		cancel_work_sync(&idma64c->vchan.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/img-mdc-dma.c b/drivers/dma/img-mdc-dma.c
+index fd55bcd060ab..4fea332497a8 100644
+--- a/drivers/dma/img-mdc-dma.c
++++ b/drivers/dma/img-mdc-dma.c
+@@ -1031,7 +1031,7 @@ static void mdc_dma_remove(struct platform_device *pdev)
+ 
+ 		devm_free_irq(&pdev->dev, mchan->irq, mchan);
+ 
+-		tasklet_kill(&mchan->vc.task);
++		cancel_work_sync(&mchan->vc.work);
+ 	}
+ 
+ 	pm_runtime_disable(&pdev->dev);
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 02a85d6f1bea..37a3b60a7b3f 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -2427,7 +2427,7 @@ static void sdma_remove(struct platform_device *pdev)
+ 	for (i = 0; i < MAX_DMA_CHANNELS; i++) {
+ 		struct sdma_channel *sdmac = &sdma->channel[i];
+ 
+-		tasklet_kill(&sdmac->vc.task);
++		cancel_work_sync(&sdmac->vc.work);
+ 		sdma_free_chan_resources(&sdmac->vc.chan);
+ 	}
+ 
+diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
+index acc2983e28e0..6ff3dd252aa2 100644
+--- a/drivers/dma/k3dma.c
++++ b/drivers/dma/k3dma.c
+@@ -981,7 +981,7 @@ static void k3_dma_remove(struct platform_device *op)
+ 
+ 	list_for_each_entry_safe(c, cn, &d->slave.channels, vc.chan.device_node) {
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 	}
+ 	tasklet_kill(&d->task);
+ 	clk_disable_unprepare(d->clk);
+diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson1-apb-dma.c
+index 255fe7eca212..f5a1c3efad62 100644
+--- a/drivers/dma/loongson1-apb-dma.c
++++ b/drivers/dma/loongson1-apb-dma.c
+@@ -552,7 +552,7 @@ static void ls1x_dma_chan_remove(struct ls1x_dma *dma)
+ 
+ 		if (chan->vc.chan.device == &dma->ddev) {
+ 			list_del(&chan->vc.chan.device_node);
+-			tasklet_kill(&chan->vc.task);
++			cancel_work_sync(&chan->vc.work);
+ 		}
+ 	}
+ }
+diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+index 47c8adfdc155..a659484a4ecc 100644
+--- a/drivers/dma/mediatek/mtk-cqdma.c
++++ b/drivers/dma/mediatek/mtk-cqdma.c
+@@ -895,7 +895,7 @@ static void mtk_cqdma_remove(struct platform_device *pdev)
+ 		vc = &cqdma->vc[i];
+ 
+ 		list_del(&vc->vc.chan.device_node);
+-		tasklet_kill(&vc->vc.task);
++		cancel_work_sync(&vc->vc.work);
+ 	}
+ 
+ 	/* disable interrupt */
+diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
+index fa77bb24a430..dea6dd61b71f 100644
+--- a/drivers/dma/mediatek/mtk-hsdma.c
++++ b/drivers/dma/mediatek/mtk-hsdma.c
+@@ -13,6 +13,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
++#include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+@@ -1020,7 +1021,7 @@ static void mtk_hsdma_remove(struct platform_device *pdev)
+ 		vc = &hsdma->vc[i];
+ 
+ 		list_del(&vc->vc.chan.device_node);
+-		tasklet_kill(&vc->vc.task);
++		cancel_work_sync(&vc->vc.work);
+ 	}
+ 
+ 	/* Disable DMA interrupt */
+diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/mtk-uart-apdma.c
+index 08e15177427b..2e8e8c698fe3 100644
+--- a/drivers/dma/mediatek/mtk-uart-apdma.c
++++ b/drivers/dma/mediatek/mtk-uart-apdma.c
+@@ -312,7 +312,7 @@ static void mtk_uart_apdma_free_chan_resources(struct dma_chan *chan)
+ 
+ 	free_irq(c->irq, chan);
+ 
+-	tasklet_kill(&c->vc.task);
++	cancel_work_sync(&c->vc.work);
+ 
+ 	vchan_free_chan_resources(&c->vc);
+ 
+@@ -463,7 +463,7 @@ static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+ 			struct mtk_chan, vc.chan.device_node);
+ 
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index 57cec757d8f5..36e5a7c1d993 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -1055,7 +1055,7 @@ static inline void owl_dma_free(struct owl_dma *od)
+ 	list_for_each_entry_safe(vchan,
+ 				 next, &od->dma.channels, vc.chan.device_node) {
+ 		list_del(&vchan->vc.chan.device_node);
+-		tasklet_kill(&vchan->vc.task);
++		cancel_work_sync(&vchan->vc.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+index 249296389771..0db0ad5296e7 100644
+--- a/drivers/dma/pxa_dma.c
++++ b/drivers/dma/pxa_dma.c
+@@ -1218,7 +1218,7 @@ static void pxad_free_channels(struct dma_device *dmadev)
+ 	list_for_each_entry_safe(c, cn, &dmadev->channels,
+ 				 vc.chan.device_node) {
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index bbc3276992bb..b45fa2e6910a 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -1373,7 +1373,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	dma_async_device_unregister(&bdev->common);
+ err_bam_channel_exit:
+ 	for (i = 0; i < bdev->num_channels; i++)
+-		tasklet_kill(&bdev->channels[i].vc.task);
++		cancel_work_sync(&bdev->channels[i].vc.work);
+ err_tasklet_kill:
+ 	tasklet_kill(&bdev->task);
+ err_disable_clk:
+@@ -1399,7 +1399,7 @@ static void bam_dma_remove(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < bdev->num_channels; i++) {
+ 		bam_dma_terminate_all(&bdev->channels[i].vc.chan);
+-		tasklet_kill(&bdev->channels[i].vc.task);
++		cancel_work_sync(&bdev->channels[i].vc.work);
+ 
+ 		if (!bdev->channels[i].fifo_virt)
+ 			continue;
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index b1f0001cc99c..865d3b35d4e6 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -8,6 +8,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_dma.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/dma/qcom/qcom_adm.c b/drivers/dma/qcom/qcom_adm.c
+index 6be54fddcee1..c60a5bc17d99 100644
+--- a/drivers/dma/qcom/qcom_adm.c
++++ b/drivers/dma/qcom/qcom_adm.c
+@@ -919,7 +919,7 @@ static void adm_dma_remove(struct platform_device *pdev)
+ 		/* mask IRQs for this channel/EE pair */
+ 		writel(0, adev->regs + ADM_CH_RSLT_CONF(achan->id, adev->ee));
+ 
+-		tasklet_kill(&adev->channels[i].vc.task);
++		cancel_work_sync(&adev->channels[i].vc.work);
+ 		adm_terminate_all(&adev->channels[i].vc.chan);
+ 	}
+ 
+diff --git a/drivers/dma/sa11x0-dma.c b/drivers/dma/sa11x0-dma.c
+index dc1a9a05252e..619430fcb2f4 100644
+--- a/drivers/dma/sa11x0-dma.c
++++ b/drivers/dma/sa11x0-dma.c
+@@ -893,7 +893,7 @@ static void sa11x0_dma_free_channels(struct dma_device *dmadev)
+ 
+ 	list_for_each_entry_safe(c, cn, &dmadev->channels, vc.chan.device_node) {
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 		kfree(c);
+ 	}
+ }
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 7ad3c29be146..09ea2e27df44 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/dma-mapping.h>
++#include <linux/interrupt.h>
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
+ #include <linux/slab.h>
+@@ -603,7 +604,7 @@ static void sf_pdma_remove(struct platform_device *pdev)
+ 		devm_free_irq(&pdev->dev, ch->txirq, ch);
+ 		devm_free_irq(&pdev->dev, ch->errirq, ch);
+ 		list_del(&ch->vchan.chan.device_node);
+-		tasklet_kill(&ch->vchan.task);
++		cancel_work_sync(&ch->vchan.work);
+ 		tasklet_kill(&ch->done_tasklet);
+ 		tasklet_kill(&ch->err_tasklet);
+ 	}
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 187a090463ce..ac8fd7dd63eb 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1253,7 +1253,7 @@ static void sprd_dma_remove(struct platform_device *pdev)
+ 	list_for_each_entry_safe(c, cn, &sdev->dma_dev.channels,
+ 				 vc.chan.device_node) {
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 	}
+ 
+ 	of_dma_controller_free(pdev->dev.of_node);
+diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
+index c65ee0c7bfbd..ccedcb744dc5 100644
+--- a/drivers/dma/st_fdma.c
++++ b/drivers/dma/st_fdma.c
+@@ -733,7 +733,7 @@ static void st_fdma_free(struct st_fdma_dev *fdev)
+ 	for (i = 0; i < fdev->nr_channels; i++) {
+ 		fchan = &fdev->chans[i];
+ 		list_del(&fchan->vchan.chan.device_node);
+-		tasklet_kill(&fchan->vchan.task);
++		cancel_work_sync(&fchan->vchan.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
+index 917f8e922373..280ea4c32340 100644
+--- a/drivers/dma/stm32/stm32-dma.c
++++ b/drivers/dma/stm32/stm32-dma.c
+@@ -16,6 +16,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/jiffies.h>
+ #include <linux/list.h>
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index 0c6c4258b195..1b2bd9ec8a0a 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -12,6 +12,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/dmapool.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
+index e6d525901de7..dc933851b448 100644
+--- a/drivers/dma/stm32/stm32-mdma.c
++++ b/drivers/dma/stm32/stm32-mdma.c
+@@ -18,6 +18,7 @@
+ #include <linux/dmapool.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/jiffies.h>
+ #include <linux/list.h>
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 2215ff877bf7..3f7cb334feb2 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -1073,7 +1073,7 @@ static inline void sun6i_dma_free(struct sun6i_dma_dev *sdev)
+ 		struct sun6i_vchan *vchan = &sdev->vchans[i];
+ 
+ 		list_del(&vchan->vc.chan.device_node);
+-		tasklet_kill(&vchan->vc.task);
++		cancel_work_sync(&vchan->vc.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+index 4d6fe0efa76e..9b98966444fa 100644
+--- a/drivers/dma/tegra186-gpc-dma.c
++++ b/drivers/dma/tegra186-gpc-dma.c
+@@ -1279,7 +1279,7 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+ 	tegra_dma_terminate_all(dc);
+ 	synchronize_irq(tdc->irq);
+ 
+-	tasklet_kill(&tdc->vc.task);
++	cancel_work_sync(&tdc->vc.work);
+ 	tdc->config_init = false;
+ 	tdc->slave_id = -1;
+ 	tdc->sid_dir = DMA_TRANS_NONE;
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index fad896ff29a2..13d31458afcf 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -793,7 +794,7 @@ static void tegra_adma_free_chan_resources(struct dma_chan *dc)
+ 
+ 	tegra_adma_terminate_all(dc);
+ 	vchan_free_chan_resources(&tdc->vc);
+-	tasklet_kill(&tdc->vc.task);
++	cancel_work_sync(&tdc->vc.work);
+ 	free_irq(tdc->irq, tdc);
+ 	pm_runtime_put(tdc2dev(tdc));
+ 
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 3ed406f08c44..43b59af82753 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2560,7 +2560,7 @@ static void edma_cleanupp_vchan(struct dma_device *dmadev)
+ 	list_for_each_entry_safe(echan, _echan,
+ 			&dmadev->channels, vchan.chan.device_node) {
+ 		list_del(&echan->vchan.chan.device_node);
+-		tasklet_kill(&echan->vchan.task);
++		cancel_work_sync(&echan->vchan.work);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index aa2dc762140f..d08766e08182 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4042,12 +4042,12 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
+ }
+ 
+ /*
+- * This tasklet handles the completion of a DMA descriptor by
++ * This workqueue handles the completion of a DMA descriptor by
+  * calling its callback and freeing it.
+  */
+-static void udma_vchan_complete(struct tasklet_struct *t)
++static void udma_vchan_complete(struct work_struct *w)
+ {
+-	struct virt_dma_chan *vc = from_tasklet(vc, t, task);
++	struct virt_dma_chan *vc = from_work(vc, w, work);
+ 	struct virt_dma_desc *vd, *_vd;
+ 	struct dmaengine_desc_callback cb;
+ 	LIST_HEAD(head);
+@@ -4112,7 +4112,7 @@ static void udma_free_chan_resources(struct dma_chan *chan)
+ 	}
+ 
+ 	vchan_free_chan_resources(&uc->vc);
+-	tasklet_kill(&uc->vc.task);
++	cancel_work_sync(&uc->vc.work);
+ 
+ 	bcdma_free_bchan_resources(uc);
+ 	udma_free_tx_resources(uc);
+@@ -5628,7 +5628,7 @@ static int udma_probe(struct platform_device *pdev)
+ 			return -ENOMEM;
+ 		vchan_init(&uc->vc, &ud->ddev);
+ 		/* Use custom vchan completion handling */
+-		tasklet_setup(&uc->vc.task, udma_vchan_complete);
++		INIT_WORK(&uc->vc.work, udma_vchan_complete);
+ 		init_completion(&uc->teardown_completed);
+ 		INIT_DELAYED_WORK(&uc->tx_drain.work, udma_check_tx_completion);
+ 	}
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index 8c023c6e623a..ad80cd5e1820 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1521,7 +1521,7 @@ static void omap_dma_free(struct omap_dmadev *od)
+ 			struct omap_chan, vc.chan.device_node);
+ 
+ 		list_del(&c->vc.chan.device_node);
+-		tasklet_kill(&c->vc.task);
++		cancel_work_sync(&c->vc.work);
+ 		kfree(c);
+ 	}
+ }
+diff --git a/drivers/dma/uniphier-xdmac.c b/drivers/dma/uniphier-xdmac.c
+index ceeb6171c9d1..d8b2e819580a 100644
+--- a/drivers/dma/uniphier-xdmac.c
++++ b/drivers/dma/uniphier-xdmac.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/bitfield.h>
++#include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
+index 7961172a780d..5a4d221e54b8 100644
+--- a/drivers/dma/virt-dma.c
++++ b/drivers/dma/virt-dma.c
+@@ -77,12 +77,12 @@ struct virt_dma_desc *vchan_find_desc(struct virt_dma_chan *vc,
+ EXPORT_SYMBOL_GPL(vchan_find_desc);
+ 
+ /*
+- * This tasklet handles the completion of a DMA descriptor by
++ * This workqueue handles the completion of a DMA descriptor by
+  * calling its callback and freeing it.
+  */
+-static void vchan_complete(struct tasklet_struct *t)
++static void vchan_complete(struct work_struct *work)
+ {
+-	struct virt_dma_chan *vc = from_tasklet(vc, t, task);
++	struct virt_dma_chan *vc = from_work(vc, work, work);
+ 	struct virt_dma_desc *vd, *_vd;
+ 	struct dmaengine_desc_callback cb;
+ 	LIST_HEAD(head);
+@@ -131,7 +131,7 @@ void vchan_init(struct virt_dma_chan *vc, struct dma_device *dmadev)
+ 	INIT_LIST_HEAD(&vc->desc_completed);
+ 	INIT_LIST_HEAD(&vc->desc_terminated);
+ 
+-	tasklet_setup(&vc->task, vchan_complete);
++	INIT_WORK(&vc->work, vchan_complete);
+ 
+ 	vc->chan.device = dmadev;
+ 	list_add_tail(&vc->chan.device_node, &dmadev->channels);
+diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
+index 59d9eabc8b67..d44ca74d8b7f 100644
+--- a/drivers/dma/virt-dma.h
++++ b/drivers/dma/virt-dma.h
+@@ -8,7 +8,7 @@
+ #define VIRT_DMA_H
+ 
+ #include <linux/dmaengine.h>
+-#include <linux/interrupt.h>
++#include <linux/workqueue.h>
+ 
+ #include "dmaengine.h"
+ 
+@@ -21,7 +21,7 @@ struct virt_dma_desc {
+ 
+ struct virt_dma_chan {
+ 	struct dma_chan	chan;
+-	struct tasklet_struct task;
++	struct work_struct work;
+ 	void (*desc_free)(struct virt_dma_desc *);
+ 
+ 	spinlock_t lock;
+@@ -106,7 +106,7 @@ static inline void vchan_cookie_complete(struct virt_dma_desc *vd)
+ 		 vd, cookie);
+ 	list_add_tail(&vd->node, &vc->desc_completed);
+ 
+-	tasklet_schedule(&vc->task);
++	queue_work(system_bh_wq, &vc->work);
+ }
+ 
+ /**
+@@ -137,7 +137,7 @@ static inline void vchan_cyclic_callback(struct virt_dma_desc *vd)
+ 	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
+ 
+ 	vc->cyclic = vd;
+-	tasklet_schedule(&vc->task);
++	queue_work(system_bh_wq, &vc->work);
+ }
+ 
+ /**
+@@ -223,7 +223,7 @@ static inline void vchan_synchronize(struct virt_dma_chan *vc)
+ 	LIST_HEAD(head);
+ 	unsigned long flags;
+ 
+-	tasklet_kill(&vc->task);
++	cancel_work_sync(&vc->work);
+ 
+ 	spin_lock_irqsave(&vc->lock, flags);
+ 
+-- 
+2.43.0
+
