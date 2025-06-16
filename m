@@ -1,157 +1,147 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBE913D8A3
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E340F27380B;
+	Mon, 16 Jun 2025 13:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079002; cv=none; b=aUwNRAVw2Oo9uxjaDxo2tZNlddJuhCT9Z+umyjWdl7l74mn0gK0x0sjMkbFU20umfM3k8YOGg37Nk0U+/gmPx23smB38bocghS8neeMIfOTsNjZoZ7GxdXr8gIiE3laYZkv/9gGkyCUqid6PtilyLivs42C6D+nmKiKIGBFOKQo=
+	t=1750079020; cv=none; b=IZc5+LefEk9O98+X+VdmdvbNcl8/Sb4MpNsvQhl+QdACyuSu4EpDxTmP1Q6c+KY1Sz7AouWzTYMcnINcDuuGCyd4AIFlzL1Tr6l3NSsm0ffKwx+m4YkqrIYnyTgV5T2HLZGAwySXHjXqyc1Ok2Ns3q+67IzdbxCr9hg6Le6ccgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079002; c=relaxed/simple;
-	bh=YDdt2a9xy/4INarcQaMrArBFeqy3/Ue9LuaTqFLYAK0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=satyNmfJLub24THQuVXZ39ZLdkjhNtJTXKKaLLq7lIsg4JiVQaIu6D5KItngb8zwW8anbjXRfYu8eGrmMeHopSlMxBc0dRIpMFklBAXbtKaClv+U/kiyKzV8DsnOuUpqH+veiq0o83ghgHLkcgSNDiZkB+HQPbcu6M9tw0kFOLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rOoehX0s; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750079020; c=relaxed/simple;
+	bh=a7j27RQuAyvZnCvRGb4L4XPkG2jx93P21IQMnptuauU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8fZgzS2y1snqE33S8iZ/wJNLkG/ACpALbIz8HutQqxXBc7vRF7jeNWUI6TUxnEOkQdCvw5D8Fw+WAzVlI1UQr9pXuu1HN2I5+JWjPAWupoPbU2ihB4P0UgKaji22/Vn5WC/HNkMMRiljfgD8Ehw1FEfqmrFPHGDvVEyiYk+o/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbCdWXIC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rOoehX0s"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750078978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Eubdnz44eJHj7tXfj3/2tAprEgJBgR4lupu93+abiDA=;
-	b=rOoehX0sU7Frhgcz8UBT13xk6wjZchspa3Ko8wehdCZ0ZwM8CN2OxOiqzVlJ003ytlkgYU
-	Z5jEbgg0ZxSKzHq58K7mBMLPBMzYX6S9Jx1u1CeV0W4K/0wwHxx1t/O6zE/FWYcy4FStLe
-	dKipLGWX4vngnzt5EGgsCumYTfyhvOU=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v3 1/2] bpf: Add show_fdinfo for uprobe_multi
-Date: Mon, 16 Jun 2025 21:02:32 +0800
-Message-ID: <20250616130233.451439-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbCdWXIC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD64CC4CEEA;
+	Mon, 16 Jun 2025 13:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750079019;
+	bh=a7j27RQuAyvZnCvRGb4L4XPkG2jx93P21IQMnptuauU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qbCdWXICAoHbASkv2kppLcyRQQ6+aYqV7jEI2SspphRpmjFSXmRaAHbscPyOf27+p
+	 vib9dZYkbzP1B0oxXG4d3QbJkXWHo6aMXpOzbqRLfgG+BFVbh1goeHmihfmGw0cXan
+	 z+HD8WKupg2opOlUu+S+re67Q/s2Jv5tmCCHhxj70dvkKuzN4Py5VzF7j5/g710Vjh
+	 s7F4pove0fhUsgVqtZ17TrOJ+RtSr0qlblAQgTBNvRQDXiX97VrbgPOON2z+Po5zby
+	 Fnk29kIHu6BhwrRI6Gvk4YUturpgSMUOhORTkRTY0Oi+0axDDOveKR3/KPVKiObNzB
+	 YZERVv/rLzA5g==
+Date: Mon, 16 Jun 2025 15:03:36 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, 
+	Brian Norris <briannorris@chromium.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, kernel@collabora.com, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
+Message-ID: <nf5bpi3sv5rrlvjg7q2ehyck6brmm3bzmzw4zclirwtiy7vrjp@yzsiao7krnt7>
+References: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t53uq6jf7edocakw"
+Content-Disposition: inline
+In-Reply-To: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
 
-Show uprobe_multi link info with fdinfo, the info as follows:
 
-link_type:	uprobe_multi
-link_id:	9
-prog_tag:	e729f789e34a8eca
-prog_id:	39
-type:	uprobe_multi
-uprobe_cnt:	3
-pid:	0
-path:	/home/dylane/bpf/tools/testing/selftests/bpf/test_progs
-offset           ref_ctr_offset   cookie
-0xa69f13         0x0              3
-0xa69f1e         0x0              1
-0xa69f29         0x0              2
+--t53uq6jf7edocakw
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
+MIME-Version: 1.0
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/trace/bpf_trace.c | 47 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+Hello Nico,
 
-Change list:
-  v2 -> v3:
-    - show info in one line for multi events.(Jiri)
-  v2:
-  https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux.dev 
+On Thu, May 22, 2025 at 09:26:44PM +0200, Nicolas Frattaroli wrote:
+> With CONFIG_PWM_DEBUG=3Dy, the rockchip PWM driver produces warnings like
+> this:
+>=20
+>   rockchip-pwm fd8b0010.pwm: .apply is supposed to round down
+>   duty_cycle (requested: 23529/50000, applied: 23542/50000)
+>=20
+> This is because the driver chooses ROUND_CLOSEST for idempotency
+> reasons. However, it's possible to keep idempotency while always
+> rounding down in .apply.
 
-  v1 -> v2:
-    - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
-    - print func name is more readable and security for kprobe_multi.(Alexei)
-  v1:
-  https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
+Note that rounding nearest is difficult for idempotency. Consider a PWM
+can implement the following period lengths:
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 24b94870b50..2d422f897ac 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3157,10 +3157,57 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
- 	return err;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static void bpf_uprobe_multi_show_fdinfo(const struct bpf_link *link,
-+					 struct seq_file *seq)
-+{
-+	struct bpf_uprobe_multi_link *umulti_link;
-+	char *p, *buf;
-+
-+	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
-+
-+	buf = kmalloc(PATH_MAX, GFP_KERNEL);
-+	if (!buf)
-+		return;
-+
-+	p = d_path(&umulti_link->path, buf, PATH_MAX);
-+	if (IS_ERR(p)) {
-+		kfree(buf);
-+		return;
-+	}
-+
-+	seq_printf(seq,
-+		   "type:\t%s\n"
-+		   "uprobe_cnt:\t%u\n"
-+		   "pid:\t%u\n"
-+		   "path:\t%s\n",
-+		   umulti_link->flags == BPF_F_UPROBE_MULTI_RETURN ?
-+					 "uretprobe_multi" : "uprobe_multi",
-+		   umulti_link->cnt,
-+		   umulti_link->task ? task_pid_nr_ns(umulti_link->task,
-+			   task_active_pid_ns(current)) : 0,
-+		   p);
-+
-+	seq_printf(seq, "%-16s %-16s %-16s\n", "offset", "ref_ctr_offset", "cookie");
-+	for (int i = 0; i < umulti_link->cnt; i++) {
-+		seq_printf(seq,
-+			   "%#-16llx %#-16lx %-16llu\n",
-+			   umulti_link->uprobes[i].offset,
-+			   umulti_link->uprobes[i].ref_ctr_offset,
-+			   umulti_link->uprobes[i].cookie);
-+	}
-+
-+	kfree(buf);
-+}
-+#endif
-+
- static const struct bpf_link_ops bpf_uprobe_multi_link_lops = {
- 	.release = bpf_uprobe_multi_link_release,
- 	.dealloc_deferred = bpf_uprobe_multi_link_dealloc,
- 	.fill_link_info = bpf_uprobe_multi_link_fill_link_info,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = bpf_uprobe_multi_show_fdinfo,
-+#endif
- };
- 
- static int uprobe_prog_run(struct bpf_uprobe *uprobe,
--- 
-2.48.1
+	20.61, 21.4, 22.19
 
+First if you use round-nearest you cannot set 21.4 because if you
+request 21 you get 20.61 and if you request 22 you get 22.19. So if the
+hardware still runs at 21.4, obviously apply =E2=9A=AC get_state cannot be
+idempotent. If you round down in apply and up in get_state (or
+vice-versa) you get idempotency. So using ROUND_CLOSEST for idempotency
+is based on a wrong intuition.
+
+> Do this by making get_state always round up, and making apply always
+> round down. This is done with u64 maths, and setting both period and
+> duty to U32_MAX (the biggest the hardware can support) if they would
+> exceed their 32 bits confines.
+>=20
+> Fixes: 12f9ce4a5198 ("pwm: rockchip: Fix period and duty cycle approximat=
+ion")
+> Fixes: 1ebb74cf3537 ("pwm: rockchip: Add support for hardware readout")
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+> This fix may need some careful testing from others before definitely
+> being applied and backported. While I did test it myself of course,
+> making sure to try a combination of periods and duty cycles, I really
+> don't want to accidentally undo someone else's fix.
+
+I like it apart from a small nitpick, see below. I think the danger of
+breaking something is small and I tend to apply your patch.
+
+> Some of the u64 math is a bit overkill, but I don't want to assume
+> prescalers will never get larger than 4, which is where we start needing
+> the 64-bit prescaled NSECS_PER_SEC value. clk_rate could also
+> comfortably fit within u32 for any expected clock rate, but unsigned
+> long can fit more depending on architecture, even if nobody is running
+> the PWM hardware at 4.294967296 GHz.
+> ---
+> [...]
+> @@ -103,8 +106,9 @@ static void rockchip_pwm_config(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+>  			       const struct pwm_state *state)
+>  {
+>  	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+> -	unsigned long period, duty;
+> -	u64 clk_rate, div;
+> +	u64 prescaled_ns =3D (u64)pc->data->prescaler * NSEC_PER_SEC;
+> +	u64 clk_rate, tmp;
+> +	u32 period, duty;
+
+These hold the period and duty in ticks, so I'd call them period_ticks
+and duty_ticks respectively.
+
+>  	u32 ctrl;
+> =20
+>  	clk_rate =3D clk_get_rate(pc->clk);
+> @@ -114,12 +118,15 @@ static void rockchip_pwm_config(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+
+Best regards
+Uwe
+
+--t53uq6jf7edocakw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhQFiUACgkQj4D7WH0S
+/k6RIggAsLLr/RA5R0kZBQiL6qGYpa0dMKd4CntzFu4LMeuLZsSWcXFKnP5RdvO0
+2ysAsVZCJLejyUxDn9VjSDFwpSgw4LoP/hnKbGguh9h/zGozMq/A1E0dYPXqSfPD
+BePTzoZkw7qfzHVMrvR/dY2wTIOuzQHiBSi02eSiO0ye1CfuDIJ0CUQfT86SQ5ju
+VpBfoU63QPjF+o6Ewp/ewIomFgw3J+xytch2HT15kJcrwRibobH2j6ZyDriMt3jh
+ak0utCjLsxnJLXTlGTb0Z/DROUMXnHsCrSutyDFcAa057c0/zas+cwS+PErlW53s
+RdAGcmvcBnvbX+vNuqTSO5f11T0zfQ==
+=ljjR
+-----END PGP SIGNATURE-----
+
+--t53uq6jf7edocakw--
