@@ -1,320 +1,565 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11621101FF
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFFD101FF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750060537; cv=none; b=T6TIKMnB0t2JzqFbBCH2or+Jp8+x+bc8EVFHKsmmPwptLzBs5NlQYHnu1zHMgKZupIzVCmR8jhp3EKaHqcoKglGlZpy17E5WOL+h+xjVqe7QtRgf7LJwWqT1qGCk+frCYuditwZ/nNFw+kV05gD3y7IN1REflo5TNy37iZq/DN4=
+	t=1750060625; cv=none; b=gxce4R4hrEn5FLMbwkQnKCbLqrzWQhNvdikIMqHlJstYyUFNpys74OY0jJvohTLQpRSk87mPQqGuufFz53lErcvKFrfzGooh9OHUeGWInk60W56Cr56DBSw+hJr0dwaFB+Nu6+26m9Cwk2i4rvi7gfVZDO2an6K6JwCp5McweGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750060537; c=relaxed/simple;
-	bh=lWcVgpq1d0Ll5/wPccLN5cqT48b1mcZq9BCoeahdvnw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bng3VIBPikneaWzR7tbsDVck5lGG5tPq07AQVs7sA8BwA2ACF/4QS3uyOBiryOr4qGn7hnvS07c0xZKKD57bOS76LG+mNrn7KbpfRH20mbKOAKjpafLyRH/7ifTq6Ve2UMteVdUpXC15jj4vlCAEcntgRGwOPQHKHRAJj9xjkO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nGW2j2s6; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nGW2j2s6"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so3204707f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750060533; x=1750665333; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tMwajpkh+cocbCYaaz8/qUrjRzZXU+QpHIECzhBSBHk=;
-        b=nGW2j2s6RIrvAAjJsMxyAyZhlMDuexgsCAPDrNs+mQeuc7nJrbZFDep5BQt6u9TS5n
-         OVI5lS3uBwqQyaZPFMdRs2D2aczq1B513prS8fuRAVfGWeBHHMb0jPbp9LD035ReFaCc
-         kR9z41RFgHyTnjacD4MvIl5WrlvbpRhjME3nhfpFn5Sdbsqh+XqmzJw81XfCvt1ff034
-         yScdzicEL8YydE2kHASR1gnhnBkDIozXh3oslSyTGQD9aB3pO9iz9QbaVyjHt/ZSjNCf
-         XcAy+HdPcTWVy4K8FFiLlX5UjSI7Rp/n5dngFHA7XzyIKTRxN7IYT7tg1c5r/KjBO4mJ
-         jX/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750060533; x=1750665333;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tMwajpkh+cocbCYaaz8/qUrjRzZXU+QpHIECzhBSBHk=;
-        b=N+TSHgjJwZDSqhHhbwEHj+n4xFOihIwWdHDwYOZCPbojxGQjFmT+9xwUQbS+RlCEys
-         WpbcKUs61SViM55qNnjiMD4j/rPInEouRA4Prapfo5AJtsqpT+UNJKT/0gb+DMYWEXmZ
-         LyGGxeLOMKRuEAe4zkxdPiXNxOs19Jt6J7cp6ID8vM5wDkyeF67vteaiFyhfHAYMque2
-         p9MTl5IV5eY+n+xfVBkmR2dnnrcJIuvhdTJM/YdkDzj1iOGWEc1YyKfatYtU7Qi4icGp
-         NfW2uDY/Xaz8uvAn+EsduLHTfg7dRoASJzv/WRDX0WMjbQGmjdPXY/WllArWc1GBwjR3
-         5Ltw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6byNomp+Ndxqo5DBGoAnBPTauwWIVunNulMoFtd8TZ0nOTrf8ejuf59L5wXTMn8XdQCUckeQvaMb6CHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytx7pS8VFncHqx02dyiVy05y7aIrpowu2VOH1l1Pzq+xm0Uo35
-	k9RMPzCQCYn1u3J+kca0Zz1KahTNpTtQkp2EZyIqGozKcis28QNnBQQr6udxQN/vCLE=
-X-Gm-Gg: ASbGncvv/jBXuNZ+qyTlia+P5YYMBqrWANCJOLZLJM4yNU8PJuwnAhAvf7I1F5Z+3Kk
-	cPZBvDi6uOI9sgiDg5VptDt+Vgo4Kh82rK6q1TFu56FqSHP4+FmfhFh9H6kt8ip0Zk2Z7DmNcP3
-	Rl00XZ8EXXnjdVCCMpZ4ZsfxEALnJTWli03lBtxDEgjlRYaA4KvXSFrac16SXva5Ax+zJq9rI+r
-	LKqIO2k2mK28lxfdF/iuh24C3+mqtYH4GrhQslkjecGWb64X6k+NGhPooS8IyDaXNAVS2hpPTbt
-	04AJXHa93kgRL4latIhcc4x38b3nfNIkNfka8xdqI6111lgqaLGS1gTveCBI/mt7UatbvRmx1ui
-	hljz9/e3ukVy41rSGJUd7Yxj97Q4I+0ALqGAW
-X-Google-Smtp-Source: AGHT+IEzv7xWCPYmEuD5fShuCcU8yTtYgmqv0LOPzcLIsCFnP+f3v0+HNVLzzFTb9xkPa5IzUplKRQ==
-X-Received: by 2002:a5d:64ed:0:b0:3a4:d452:fff with SMTP id ffacd0b85a97d-3a5723a15c1mr5994610f8f.17.1750060533317;
-        Mon, 16 Jun 2025 00:55:33 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:6c7:97de:65a8:488a? ([2a01:e0a:3d9:2080:6c7:97de:65a8:488a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e1838e4sm138959705e9.40.2025.06.16.00.55.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 00:55:32 -0700 (PDT)
-Message-ID: <6e52204c-3d79-41c9-8b25-b1a6d7db129c@linaro.org>
-Date: Mon, 16 Jun 2025 09:55:32 +0200
+	s=arc-20240116; t=1750060625; c=relaxed/simple;
+	bh=+M677mgd/sSsdVkhH54Lqj1MBC357vHJ5VTrVt2r70o=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gOHnUuG2umdymAflHDW2/+S4X6ssvsz+dJ48BTzfENF9+zWMbPql9gf7ORSNJaVU9iUc3UZQwMPjJpR5s/oI3IYD1498k/yIzwOKhmISBr93o8ATdCEeDsgiJ3GySgr9SWdqf+B6knC6NBqQ3rdeCt/L3CLWIyQVxZTS/M5gD0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bLMjQ39Hlz1d1gq;
+	Mon, 16 Jun 2025 15:54:50 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 36B5F1402F3;
+	Mon, 16 Jun 2025 15:56:59 +0800 (CST)
+Received: from kwepemq200018.china.huawei.com (7.202.195.108) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 16 Jun 2025 15:56:59 +0800
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemq200018.china.huawei.com (7.202.195.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 16 Jun 2025 15:56:58 +0800
+CC: Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>, Will Deacon
+	<will@kernel.org>, James Morse <james.morse@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Jinqian Yang <yangjinqian1@huawei.com>, "Douglas
+ Anderson" <dianders@chromium.org>, Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, "Ian
+ Rogers" <irogers@google.com>, James Clark <james.clark@linaro.org>, Jiri Olsa
+	<jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim
+	<namhyung@kernel.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Shameerali Kolothum Thodi
+	<shameerali.kolothum.thodi@huawei.com>, Yicong Yang
+	<yangyicong@hisilicon.com>
+Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <aEyGg98z-MkcClXY@x1>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
+Date: Mon, 16 Jun 2025 15:56:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v4 3/4] phy: rockchip: usbdp: reset USB3 and reinit on
- orientation switch
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Kever Yang <kever.yang@rock-chips.com>,
- Frank Wang <frank.wang@rock-chips.com>
-Cc: Alexey Charkov <alchark@gmail.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250610-rk3576-sige5-usb-v4-0-7e7f779619c1@collabora.com>
- <20250610-rk3576-sige5-usb-v4-3-7e7f779619c1@collabora.com>
- <49eb73df-9a15-436e-a05c-72dd3aa36bf8@linaro.org>
- <4115444.Lt9SDvczpP@workhorse>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <4115444.Lt9SDvczpP@workhorse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <aEyGg98z-MkcClXY@x1>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemq200018.china.huawei.com (7.202.195.108)
 
-On 13/06/2025 15:21, Nicolas Frattaroli wrote:
-> On Friday, 13 June 2025 10:55:43 Central European Summer Time neil.armstrong@linaro.org wrote:
->> Hi,
->>
->> On 10/06/2025 16:07, Nicolas Frattaroli wrote:
->>> Until now, super speed on Type-C only worked in one orientation. This is
->>> because on an orientation switch, the UDPHY was never reinitialised.
->>>
->>> Heiko presented a patch to do this[1], but there were concerns over the
->>> correctness of it[2]. Experimentally using Heiko's patch on RK3576 did
->>> make me run into issues, though they seemed to be related to the
->>> orientation switch actually happening while a clock driving a GRF
->>> register was disabled.
->>>
->>> The key issue is that the hardware wants the USB 3 controller to be held
->>> in reset while the PHY is being reconfigured, otherwise we may run into
->>> hard-to-catch race conditions.
->>>
->>> Either way, this patch implements the required ordering in a somewhat
->>> unpleasant way: we get the USB 3 controller from the DT, and use runtime
->>> power management to forcibly suspend it while the UDPHY is being
->>> reconfigured, and then forcibly resume it later. As an added pain in the
->>> rear, the suspend/resume of the USB 3 controller also tries fiddling
->>> with the USB 3 PHY part of the UDPHY, which means we introduce an atomic
->>> flag to skip suspending/resuming the UDPHY if we're resetting the USB 3
->>> controller. We may just need to skip trying to acquire the mutex again,
->>> but both ways work for me in practice.
->>>
->>> This solution may in fact be complete rubbish, but it works to get USB 3
->>> Super Speed working in both cable orientations on my board.
->>
->> Yeah this is kind of a hack, and we have a similar situation on Qualcomm platforms
->> when dealing with USB2-only and DP-only altmodes, where we need the DWC3 to
->> disable the usb3 path. Hopefully on Qcom combo PHYs we can switch lanes without
->> disable the USB3 PHY.
->>
->> So the proper solution would have the dwc3 driver to also react to mux and
->> orientation events and disable the usb3 path to allow the phy to reconfigure
->> itself.
->>
->> We don't have any concrete proposal yet, but we will get something soonish.
-> 
-> Thanks you for the additional insight, I do agree that having the
-> controller be in charge of this is the better solution. That way, the PHY
-> doesn't need to know its controller, and the controller driver is in charge
-> of ordering the resets and reconfigure right, which means the ugly reset
-> loop breaking in this patch isn't needed.
-> 
-> If you do end up sending a patch series with a proposal, please +Cc me,
-> so that I can see if it also works for Rockchip.
++ linux-arm-kernel
 
-Of course I'll add you in CC if this happens
-Neil
+On 2025/6/14 4:13, Arnaldo Carvalho de Melo wrote:
+> Hi,
+> 
+> tools/perf (and other tools/ living code) uses a file from the kernel, a
+> copy, so that we don't break its build when something changes in the
+> kernel that tooling uses.
+> 
+> There is this tools/perf/check-headers.sh that does the "copy coherency
+> check", while trying to act on such a warning I stumbled on the report
+> below.
+> 
+> More details at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+> 
+> 
+> If you could please take a look at this that would be great, the initial
+> copy was made at:
+> 
+> commit 1314376d495f2d79cc58753ff3034ccc503c43c9
+> Author: Ali Saidi <alisaidi@amazon.com>
+> Date:   Thu Mar 24 18:33:20 2022 +0000
+> 
+>     tools arm64: Import cputype.h
+>     
+>     Bring-in the kernel's arch/arm64/include/asm/cputype.h into tools/
+>     for arm64 to make use of all the core-type definitions in perf.
+>     
+>     Replace sysreg.h with the version already imported into tools/.
+>     
+>     Committer notes:
+>     
+>     Added an entry to tools/perf/check-headers.sh, so that we get notified
+>     when the original file in the kernel sources gets modified.
+>     
+>     Tester notes:
+>     
+>     LGTM. I did the testing on both my x86 and Arm64 platforms, thanks for
+>     the fixing up.
+>     
+>     Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+>     Tested-by: Leo Yan <leo.yan@linaro.org>
+> 
+> - Arnaldo
+> 
+> ⬢ [acme@toolbx perf-tools]$ m
+> rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
+> make: Entering directory '/home/acme/git/perf-tools/tools/perf'
+>   BUILD:   Doing 'make -j32' parallel build
+> Warning: Kernel ABI header differences:
+>   diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+>   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>   INSTALL libsubcmd_headers
+>   INSTALL libperf_headers
+>   INSTALL libapi_headers
+>   INSTALL libsymbol_headers
+>   INSTALL libbpf_headers
+>   INSTALL binaries
+>   INSTALL tests
+>   INSTALL libperf-jvmti.so
+>   INSTALL libexec
+>   INSTALL perf-archive
+>   INSTALL perf-iostat
+>   INSTALL perl-scripts
+>   INSTALL python-scripts
+>   INSTALL dlfilters
+>   INSTALL perf_completion-script
+>   INSTALL perf-tip
+> make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+>  18: 'import perf' in python                                         : Ok
+> ⬢ [acme@toolbx perf-tools]$ cp arch/arm64/include/asm/cputype.h tools/arch/arm64/include/asm/cputype.h
+> ⬢ [acme@toolbx perf-tools]$ m
+> rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
+> make: Entering directory '/home/acme/git/perf-tools/tools/perf'
+>   BUILD:   Doing 'make -j32' parallel build
+> Warning: Kernel ABI header differences:
+>   diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>   INSTALL libsubcmd_headers
+>   INSTALL libperf_headers
+>   INSTALL libapi_headers
+>   INSTALL libsymbol_headers
+>   INSTALL libbpf_headers
+>   CC      /tmp/build/perf-tools/util/arm-spe.o
+> util/arm-spe.c: In function ‘arm_spe__synth_ds’:
+> util/arm-spe.c:885:43: error: passing argument 1 of ‘is_midr_in_range_list’ makes pointer from integer without a cast [-Wint-conversion]
+>   885 |                 if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
+>       |                                           ^~~~
+>       |                                           |
+>       |                                           u64 {aka long unsigned int}
+> In file included from util/arm-spe.c:37:
+> util/../../arch/arm64/include/asm/cputype.h:306:53: note: expected ‘const struct midr_range *’ but argument is of type ‘u64’ {aka ‘long unsigned int’}
+>   306 | bool is_midr_in_range_list(struct midr_range const *ranges);
+>       |                            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+> util/arm-spe.c:885:21: error: too many arguments to function ‘is_midr_in_range_list’; expected 1, have 2
+>   885 |                 if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
+>       |                     ^~~~~~~~~~~~~~~~~~~~~       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> util/../../arch/arm64/include/asm/cputype.h:306:6: note: declared here
+>   306 | bool is_midr_in_range_list(struct midr_range const *ranges);
+>       |      ^~~~~~~~~~~~~~~~~~~~~
+> make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:85: /tmp/build/perf-tools/util/arm-spe.o] Error 1
+> make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:142: util] Error 2
+> make[2]: *** [Makefile.perf:798: /tmp/build/perf-tools/perf-util-in.o] Error 2
+> make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> make: *** [Makefile:119: install-bin] Error 2
+> make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+> ⬢ [acme@toolbx perf-tools]$ 
+> 
+> 
 
-> 
-> If the hack isn't acceptable to be merged until then, then I'll drop
-> this patch from future revisions of the series to get the other parts
-> in.
-> 
->>
->> Neil
-> 
-> Best regards,
-> Nicolas Frattaroli
-> 
->>
->>>
->>> Link: https://lore.kernel.org/all/20250226103810.3746018-3-heiko@sntech.de/ [1]
->>> Link: https://lore.kernel.org/linux-rockchip/h57ok2hw6os7bcafqkrqknfvm7hnu25m2oe54qmrsuzdwqlos3@m4och2fcdm7s/ [2]
->>> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->>> ---
->>>    drivers/phy/rockchip/phy-rockchip-usbdp.c | 54 +++++++++++++++++++++++++++++++
->>>    1 file changed, 54 insertions(+)
->>>
->>> diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
->>> index fff54900feea601c8fe6bf4c7123dfebc5661a15..5cd6bbc367f69bca15c2a94a07e72f850b381ae3 100644
->>> --- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
->>> +++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
->>> @@ -200,6 +200,10 @@ struct rk_udphy {
->>>    	/* PHY devices */
->>>    	struct phy *phy_dp;
->>>    	struct phy *phy_u3;
->>> +
->>> +	/* USB 3 controller device */
->>> +	struct device *ctrl_u3;
->>> +	atomic_t ctrl_resetting;
->>>    };
->>>    
->>>    static const struct rk_udphy_dp_tx_drv_ctrl rk3588_dp_tx_drv_ctrl_rbr_hbr[4][4] = {
->>> @@ -1255,6 +1259,9 @@ static int rk_udphy_usb3_phy_init(struct phy *phy)
->>>    	struct rk_udphy *udphy = phy_get_drvdata(phy);
->>>    	int ret = 0;
->>>    
->>> +	if (atomic_read(&udphy->ctrl_resetting))
->>> +		return 0;
->>> +
->>>    	mutex_lock(&udphy->mutex);
->>>    	/* DP only or high-speed, disable U3 port */
->>>    	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs) {
->>> @@ -1273,6 +1280,9 @@ static int rk_udphy_usb3_phy_exit(struct phy *phy)
->>>    {
->>>    	struct rk_udphy *udphy = phy_get_drvdata(phy);
->>>    
->>> +	if (atomic_read(&udphy->ctrl_resetting))
->>> +		return 0;
->>> +
->>>    	mutex_lock(&udphy->mutex);
->>>    	/* DP only or high-speed */
->>>    	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs)
->>> @@ -1401,10 +1411,31 @@ static struct phy *rk_udphy_phy_xlate(struct device *dev, const struct of_phandl
->>>    	return ERR_PTR(-EINVAL);
->>>    }
->>>    
->>> +static struct device_node *rk_udphy_to_controller(struct rk_udphy *udphy)
->>> +{
->>> +	struct device_node *np;
->>> +
->>> +	for_each_node_with_property(np, "phys") {
->>> +		struct of_phandle_iterator it;
->>> +		int ret;
->>> +
->>> +		of_for_each_phandle(&it, ret, np, "phys", NULL, 0) {
->>> +			if (it.node != udphy->dev->of_node)
->>> +				continue;
->>> +
->>> +			of_node_put(it.node);
->>> +			return np;
->>> +		}
->>> +	}
->>> +
->>> +	return NULL;
->>> +}
->>> +
->>>    static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
->>>    				 enum typec_orientation orien)
->>>    {
->>>    	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
->>> +	int ret;
->>>    
->>>    	mutex_lock(&udphy->mutex);
->>>    
->>> @@ -1420,6 +1451,18 @@ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
->>>    	rk_udphy_set_typec_default_mapping(udphy);
->>>    	rk_udphy_usb_bvalid_enable(udphy, true);
->>>    
->>> +	if (udphy->status != UDPHY_MODE_NONE && udphy->ctrl_u3) {
->>> +		atomic_set(&udphy->ctrl_resetting, 1);
->>> +		pm_runtime_force_suspend(udphy->ctrl_u3);
->>> +
->>> +		ret = rk_udphy_setup(udphy);
->>> +		if (!ret)
->>> +			clk_bulk_disable_unprepare(udphy->num_clks, udphy->clks);
->>> +
->>> +		pm_runtime_force_resume(udphy->ctrl_u3);
->>> +		atomic_set(&udphy->ctrl_resetting, 0);
->>> +	}
->>> +
->>>    unlock_ret:
->>>    	mutex_unlock(&udphy->mutex);
->>>    	return 0;
->>> @@ -1430,12 +1473,22 @@ static void rk_udphy_orien_switch_unregister(void *data)
->>>    	struct rk_udphy *udphy = data;
->>>    
->>>    	typec_switch_unregister(udphy->sw);
->>> +	put_device(udphy->ctrl_u3);
->>>    }
->>>    
->>>    static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
->>>    {
->>> +	struct device_node *ctrl = rk_udphy_to_controller(udphy);
->>>    	struct typec_switch_desc sw_desc = { };
->>>    
->>> +	if (ctrl) {
->>> +		udphy->ctrl_u3 = bus_find_device_by_of_node(udphy->dev->bus, ctrl);
->>> +		of_node_put(ctrl);
->>> +	}
->>> +
->>> +	if (!udphy->ctrl_u3)
->>> +		dev_info(udphy->dev, "couldn't find this PHY's USB3 controller\n");
->>> +
->>>    	sw_desc.drvdata = udphy;
->>>    	sw_desc.fwnode = dev_fwnode(udphy->dev);
->>>    	sw_desc.set = rk_udphy_orien_sw_set;
->>> @@ -1499,6 +1552,7 @@ static int rk_udphy_probe(struct platform_device *pdev)
->>>    		return ret;
->>>    
->>>    	mutex_init(&udphy->mutex);
->>> +	atomic_set(&udphy->ctrl_resetting, 0);
->>>    	platform_set_drvdata(pdev, udphy);
->>>    
->>>    	if (device_property_present(dev, "orientation-switch")) {
->>>
->>
->>
-> 
-> 
-> 
-> 
-> 
+The changes should be introduced by arm64's errata management on live migration[1], specifically:
+- commit e3121298c7fc ("arm64: Modify _midr_range() functions to read MIDR/REVIDR internally")
+  which changed the implementation of is_midr_in_range() that the MIDR to
+  test is always read on the current CPU. This isn't true in perf since
+  the MIDR is acquired from the perf.data.
+- commit c8c2647e69be ("arm64: Make  _midr_in_range_list() an exported function")
+  which moves the implementation out of the header file.
+
+Below patch should keep the copy coherency of cputype.h to implement the _midr_in_range_list()
+as before.
+
+[1] https://lore.kernel.org/all/20250221140229.12588-1-shameerali.kolothum.thodi@huawei.com/
+
+Thanks.
+
+From 44900e7d3d9fa34c817396275f55a2aab611cd32 Mon Sep 17 00:00:00 2001
+From: Yicong Yang <yangyicong@hisilicon.com>
+Date: Mon, 16 Jun 2025 15:18:11 +0800
+Subject: [PATCH] arm64: cputype: Allow copy coherency on cputype.h between
+ tools/ and arch/
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+arch/arm64/include/asm/cputype.h is copied from arch/arm64 and used
+by perf to parsing vendor specific SPE packets according to the MIDR.
+The header diverge after errata management handling for VM live
+migration merged [1]:
+- commit e3121298c7fc ("arm64: Modify _midr_range() functions to read MIDR/REVIDR internally")
+  which changed the implementation of is_midr_in_range() that the MIDR to
+  test is always read on the current CPU. This isn't true in perf since
+  the MIDR is acquired from the perf.data.
+- commit c8c2647e69be ("arm64: Make  _midr_in_range_list() an exported function")
+  which moves the implementation out of the header file.
+
+In order to allow copy coherency on cputype.h [2], implement
+is_midr_in_range_list() as before [1]. Introduce is_cpuid_in_range_list()
+for kernel space to test the MIDR of current running CPU is within the
+target MIDR ranges. Move cpu_errata_set_target_impl() and
+is_cpuid_in_range_list() to cpufeature.h since they're only used by
+errata management in the kernel space and don't needed by tools/.
+
+No funtional changes intended.
+
+[1] https://lore.kernel.org/all/20250221140229.12588-1-shameerali.kolothum.thodi@huawei.com/
+[2] https://lore.kernel.org/lkml/aEyGg98z-MkcClXY@x1/#t
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ arch/arm64/include/asm/cpufeature.h           | 11 +++++
+ arch/arm64/include/asm/cputype.h              | 40 +++++++++++--------
+ arch/arm64/kernel/cpu_errata.c                | 30 +++++---------
+ arch/arm64/kernel/cpufeature.c                |  6 +--
+ arch/arm64/kernel/proton-pack.c               | 20 +++++-----
+ arch/arm64/kvm/vgic/vgic-v3.c                 |  2 +-
+ drivers/clocksource/arm_arch_timer.c          |  2 +-
+ .../coresight/coresight-etm4x-core.c          |  2 +-
+ 8 files changed, 60 insertions(+), 53 deletions(-)
+
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index c4326f1cb917..ba2d474fb393 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -1048,6 +1048,17 @@ static inline bool cpu_has_lpa2(void)
+ #endif
+ }
+
++struct target_impl_cpu {
++	u64 midr;
++	u64 revidr;
++	u64 aidr;
++};
++
++bool cpu_errata_set_target_impl(u64 num, void *impl_cpus);
++
++/* Different from is_midr_in_range() on using the MIDR of current CPU */
++bool is_cpuid_in_range_list(struct midr_range const *ranges);
++
+ #endif /* __ASSEMBLY__ */
+
+ #endif
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index 661735616787..89fd197e2f03 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -251,16 +251,6 @@
+
+ #define read_cpuid(reg)			read_sysreg_s(SYS_ ## reg)
+
+-/*
+- * The CPU ID never changes at run time, so we might as well tell the
+- * compiler that it's constant.  Use this function to read the CPU ID
+- * rather than directly reading processor_id or read_cpuid() directly.
+- */
+-static inline u32 __attribute_const__ read_cpuid_id(void)
+-{
+-	return read_cpuid(MIDR_EL1);
+-}
+-
+ /*
+  * Represent a range of MIDR values for a given CPU model and a
+  * range of variant/revision values.
+@@ -296,14 +286,30 @@ static inline bool midr_is_cpu_model_range(u32 midr, u32 model, u32 rv_min,
+ 	return _model == model && rv >= rv_min && rv <= rv_max;
+ }
+
+-struct target_impl_cpu {
+-	u64 midr;
+-	u64 revidr;
+-	u64 aidr;
+-};
++static inline bool is_midr_in_range(u32 midr, struct midr_range const *range)
++{
++	return midr_is_cpu_model_range(midr, range->model,
++				       range->rv_min, range->rv_max);
++}
+
+-bool cpu_errata_set_target_impl(u64 num, void *impl_cpus);
+-bool is_midr_in_range_list(struct midr_range const *ranges);
++static inline bool
++is_midr_in_range_list(u32 midr, struct midr_range const *ranges)
++{
++	while (ranges->model)
++		if (is_midr_in_range(midr, ranges++))
++			return true;
++	return false;
++}
++
++/*
++ * The CPU ID never changes at run time, so we might as well tell the
++ * compiler that it's constant.  Use this function to read the CPU ID
++ * rather than directly reading processor_id or read_cpuid() directly.
++ */
++static inline u32 __attribute_const__ read_cpuid_id(void)
++{
++	return read_cpuid(MIDR_EL1);
++}
+
+ static inline u64 __attribute_const__ read_cpuid_mpidr(void)
+ {
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 59d723c9ab8f..531ae67c7086 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -27,38 +27,28 @@ bool cpu_errata_set_target_impl(u64 num, void *impl_cpus)
+ 	return true;
+ }
+
+-static inline bool is_midr_in_range(struct midr_range const *range)
++bool is_cpuid_in_range_list(struct midr_range const *ranges)
+ {
++	u32 midr = read_cpuid_id();
+ 	int i;
+
+ 	if (!target_impl_cpu_num)
+-		return midr_is_cpu_model_range(read_cpuid_id(), range->model,
+-					       range->rv_min, range->rv_max);
++		return is_midr_in_range_list(midr, ranges);
+
+-	for (i = 0; i < target_impl_cpu_num; i++) {
+-		if (midr_is_cpu_model_range(target_impl_cpus[i].midr,
+-					    range->model,
+-					    range->rv_min, range->rv_max))
++	for (i = 0; i < target_impl_cpu_num; i++)
++		if (is_midr_in_range_list(midr, ranges))
+ 			return true;
+-	}
+-	return false;
+-}
+
+-bool is_midr_in_range_list(struct midr_range const *ranges)
+-{
+-	while (ranges->model)
+-		if (is_midr_in_range(ranges++))
+-			return true;
+ 	return false;
+ }
+-EXPORT_SYMBOL_GPL(is_midr_in_range_list);
++EXPORT_SYMBOL_GPL(is_cpuid_in_range_list);
+
+ static bool __maybe_unused
+ __is_affected_midr_range(const struct arm64_cpu_capabilities *entry,
+ 			 u32 midr, u32 revidr)
+ {
+ 	const struct arm64_midr_revidr *fix;
+-	if (!is_midr_in_range(&entry->midr_range))
++	if (!is_midr_in_range(midr, &entry->midr_range))
+ 		return false;
+
+ 	midr &= MIDR_REVISION_MASK | MIDR_VARIANT_MASK;
+@@ -92,7 +82,7 @@ is_affected_midr_range_list(const struct arm64_cpu_capabilities *entry,
+ 			    int scope)
+ {
+ 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+-	return is_midr_in_range_list(entry->midr_range_list);
++	return is_cpuid_in_range_list(entry->midr_range_list);
+ }
+
+ static bool __maybe_unused
+@@ -244,7 +234,7 @@ has_neoverse_n1_erratum_1542419(const struct arm64_cpu_capabilities *entry,
+ 	const struct midr_range range = MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1);
+
+ 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+-	return is_midr_in_range(&range) && has_dic;
++	return is_cpuid_in_range_list(&range) && has_dic;
+ }
+
+ static const struct midr_range impdef_pmuv3_cpus[] = {
+@@ -276,7 +266,7 @@ static bool has_impdef_pmuv3(const struct arm64_cpu_capabilities *entry, int sco
+ 	if (pmuver != ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+ 		return false;
+
+-	return is_midr_in_range_list(impdef_pmuv3_cpus);
++	return is_cpuid_in_range_list(impdef_pmuv3_cpus);
+ }
+
+ static void cpu_enable_impdef_pmuv3_traps(const struct arm64_cpu_capabilities *__unused)
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index b34044e20128..e89bed0e7358 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1807,7 +1807,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 	char const *str = "kpti command line option";
+ 	bool meltdown_safe;
+
+-	meltdown_safe = is_midr_in_range_list(kpti_safe_list);
++	meltdown_safe = is_cpuid_in_range_list(kpti_safe_list);
+
+ 	/* Defer to CPU feature registers */
+ 	if (has_cpuid_feature(entry, scope))
+@@ -1877,7 +1877,7 @@ static bool has_nv1(const struct arm64_cpu_capabilities *entry, int scope)
+
+ 	return (__system_matches_cap(ARM64_HAS_NESTED_VIRT) &&
+ 		!(has_cpuid_feature(entry, scope) ||
+-		  is_midr_in_range_list(nv1_ni_list)));
++		  is_cpuid_in_range_list(nv1_ni_list)));
+ }
+
+ #if defined(ID_AA64MMFR0_EL1_TGRAN_LPA2) && defined(ID_AA64MMFR0_EL1_TGRAN_2_SUPPORTED_LPA2)
+@@ -2082,7 +2082,7 @@ static bool cpu_has_broken_dbm(void)
+ 		{},
+ 	};
+
+-	return is_midr_in_range_list(cpus);
++	return is_cpuid_in_range_list(cpus);
+ }
+
+ static bool cpu_can_use_dbm(const struct arm64_cpu_capabilities *cap)
+diff --git a/arch/arm64/kernel/proton-pack.c b/arch/arm64/kernel/proton-pack.c
+index edf1783ffc81..144441ad2aed 100644
+--- a/arch/arm64/kernel/proton-pack.c
++++ b/arch/arm64/kernel/proton-pack.c
+@@ -172,7 +172,7 @@ static enum mitigation_state spectre_v2_get_cpu_hw_mitigation_state(void)
+ 		return SPECTRE_UNAFFECTED;
+
+ 	/* Alternatively, we have a list of unaffected CPUs */
+-	if (is_midr_in_range_list(spectre_v2_safe_list))
++	if (is_cpuid_in_range_list(spectre_v2_safe_list))
+ 		return SPECTRE_UNAFFECTED;
+
+ 	return SPECTRE_VULNERABLE;
+@@ -331,7 +331,7 @@ bool has_spectre_v3a(const struct arm64_cpu_capabilities *entry, int scope)
+ 	};
+
+ 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+-	return is_midr_in_range_list(spectre_v3a_unsafe_list);
++	return is_cpuid_in_range_list(spectre_v3a_unsafe_list);
+ }
+
+ void spectre_v3a_enable_mitigation(const struct arm64_cpu_capabilities *__unused)
+@@ -475,7 +475,7 @@ static enum mitigation_state spectre_v4_get_cpu_hw_mitigation_state(void)
+ 		{ /* sentinel */ },
+ 	};
+
+-	if (is_midr_in_range_list(spectre_v4_safe_list))
++	if (is_cpuid_in_range_list(spectre_v4_safe_list))
+ 		return SPECTRE_UNAFFECTED;
+
+ 	/* CPU features are detected first */
+@@ -864,7 +864,7 @@ static bool is_spectre_bhb_safe(int scope)
+ 	if (scope != SCOPE_LOCAL_CPU)
+ 		return all_safe;
+
+-	if (is_midr_in_range_list(spectre_bhb_safe_list))
++	if (is_cpuid_in_range_list(spectre_bhb_safe_list))
+ 		return true;
+
+ 	all_safe = false;
+@@ -917,17 +917,17 @@ static u8 spectre_bhb_loop_affected(void)
+ 		{},
+ 	};
+
+-	if (is_midr_in_range_list(spectre_bhb_k132_list))
++	if (is_cpuid_in_range_list(spectre_bhb_k132_list))
+ 		k = 132;
+-	else if (is_midr_in_range_list(spectre_bhb_k38_list))
++	else if (is_cpuid_in_range_list(spectre_bhb_k38_list))
+ 		k = 38;
+-	else if (is_midr_in_range_list(spectre_bhb_k32_list))
++	else if (is_cpuid_in_range_list(spectre_bhb_k32_list))
+ 		k = 32;
+-	else if (is_midr_in_range_list(spectre_bhb_k24_list))
++	else if (is_cpuid_in_range_list(spectre_bhb_k24_list))
+ 		k = 24;
+-	else if (is_midr_in_range_list(spectre_bhb_k11_list))
++	else if (is_cpuid_in_range_list(spectre_bhb_k11_list))
+ 		k = 11;
+-	else if (is_midr_in_range_list(spectre_bhb_k8_list))
++	else if (is_cpuid_in_range_list(spectre_bhb_k8_list))
+ 		k =  8;
+
+ 	return k;
+diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
+index b9ad7c42c5b0..852f8d769244 100644
+--- a/arch/arm64/kvm/vgic/vgic-v3.c
++++ b/arch/arm64/kvm/vgic/vgic-v3.c
+@@ -632,7 +632,7 @@ static const struct midr_range broken_seis[] = {
+ static bool vgic_v3_broken_seis(void)
+ {
+ 	return ((kvm_vgic_global_state.ich_vtr_el2 & ICH_VTR_EL2_SEIS) &&
+-		is_midr_in_range_list(broken_seis));
++		is_cpuid_in_range_list(broken_seis));
+ }
+
+ /**
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 981a578043a5..c881ceb76ec2 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -842,7 +842,7 @@ static u64 __arch_timer_check_delta(void)
+ 		{},
+ 	};
+
+-	if (is_midr_in_range_list(broken_cval_midrs)) {
++	if (is_cpuid_in_range_list(broken_cval_midrs)) {
+ 		pr_warn_once("Broken CNTx_CVAL_EL1, using 31 bit TVAL instead.\n");
+ 		return CLOCKSOURCE_MASK(31);
+ 	}
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 42e5d37403ad..2ea5ca6708d2 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -1280,7 +1280,7 @@ static void etm4_fixup_wrong_ccitmin(struct etmv4_drvdata *drvdata)
+ 	 * recorded value for 'drvdata->ccitmin' to workaround
+ 	 * this problem.
+ 	 */
+-	if (is_midr_in_range_list(etm_wrong_ccitmin_cpus)) {
++	if (is_cpuid_in_range_list(etm_wrong_ccitmin_cpus)) {
+ 		if (drvdata->ccitmin == 256)
+ 			drvdata->ccitmin = 4;
+ 	}
+-- 
+2.24.0
+
 
