@@ -1,106 +1,127 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0256748D;
-	Mon, 16 Jun 2025 04:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D21872607;
+	Mon, 16 Jun 2025 04:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750047120; cv=none; b=KtxucJqmtgHLmaWbjYo1T6eQ/9j5u9AruShCgbrCQk6jusvpPApAoO834ShtjoSX8OMdnQQTOEXbaFIi4lLyEUTtgj5GzdLGmsBPyGanuSUvueyon2MH6/2LKXywDHB6A2mZoAsV0GJOatq3PskDAOrcneoyawZzn/kbsKsm00s=
+	t=1750047237; cv=none; b=Ip8N8ScoezQTjNWHDzEVunvzrfPQykGJ37QZToBy8tpGzFDIzeywbJzh0PKDeeIi+baZAqvXtPCIQeuO4hMhWlgWgdrsXKVtis36CODv++23jr6x6TkyVvFp7h5maDCAUPZVKLfRzepu5wNhUU+yho/9/sVPtv7blofVvT1cXfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750047120; c=relaxed/simple;
-	bh=BdyC90Qn1wdecaLVG79GIGZDrfU2hK8l5KTPBf/l2t0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L2ZDNxLIjKRfPlruxFbkbYko7RmtfNvWIXL5ndL/kAgn3XK9czPiVMmJTY3UTN5EBfiu5arVyPUxi995+zKjXJ4XBSJstp01/o759xFD1EJwdFNM4wRg/t/C5LX8lbL+g1U3Sg3SHigbbTOTRwcEcdcYoARBSWYgq/s97OnMpN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LNEIIpBD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750047237; c=relaxed/simple;
+	bh=+q0guN9PwSiS5EAbareskBIti2BmPJU9JVXqOz/iUbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vuyp6S2u3v3H5/PU2GDg6UFgZ5vZV/CfJxDIRodOq6tczErvWOj3MBOOZE+r/igLibwD4GuVZWcxMdRsLaYGJNMCQYT34P2rWa5fhxW4ChkS75RfSj5eDGLPtieeWul+pNzHut4cxna8a531wlmR+UyjJUSSWd79vvkZatDjqmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J3Fxlm0E; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LNEIIpBD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750047112;
-	bh=jfUtfepG9hGzFcULcP6CDM0WszwuNUz6BqXP9BIm0NI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=LNEIIpBDkAqJh3XAFaetWHFxjZtEle1YpteMFnVWQEVDL0XQyA54Y9zi4BlOZV1Hr
-	 c1FBI+j/UzxxCzJgs8qBKiL4Mi0cS86viVkwuFlIByK0PDYX7yKdEKYu+b95p6S/x5
-	 t30OAiVcfqFGVHHrLj/rkgwRPiujqo3KKcPcEM0OgwQnY1M9KOoXK8ESnzobJhNbct
-	 Zd4p8OisM5raCFEOvQ20vX26fIi7lDJYREXU+C7LqaIbn/+EGqxh0aUSHm1JRxkX87
-	 PGtaFpQbdnZh2mPWvQG9/9iU/kNA5HgcHn3vty5TchhN71qu7VEZaBWrmL3HJl7M+/
-	 oo1xN1Na/g1Mg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bLGm80p3nz4wb0;
-	Mon, 16 Jun 2025 14:11:52 +1000 (AEST)
-Date: Mon, 16 Jun 2025 14:11:51 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Wu Hao
- <hao.wu@intel.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Xu Yilun
- <yilun.xu@linux.intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the fpga tree
-Message-ID: <20250616141151.64eb59e0@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3Fxlm0E"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c7a52e97so3316202b3a.3;
+        Sun, 15 Jun 2025 21:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750047235; x=1750652035; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P80b7O3kBzCHZeyPaqEFw3rG2WMhfBLYf+jpLfD2cC0=;
+        b=J3Fxlm0EKALYEBLHNAI6MTCGq9uYYKTCI0hHyVU9MtknUDeOLc9FDj4qAirVKclS5V
+         yok0r5bw4tGiPRNnI/4w1B84m6lQ+SEnRN6VeoVrowHm0J5ALmD6LPeIf+STvkEwcqSs
+         Xw1lQAWoC8mKa/ci0KY6SLazGXBnRgYu5k4+3yX8SJPFmAi0L6CNs3G8ILl6lK6DYU4e
+         pE7O4lIBUCsX29whQqZJbp8jWtts6SihIRcrXATOHK75rKWSSMHYMrnbcTQepTVOvIGC
+         RrwlLUwu7UD8e/q2i0b8Wr/7BqCX/USrRnnMLF1dt4NDNK+pkRcObF9VI0doaS5BHByJ
+         VbXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750047235; x=1750652035;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P80b7O3kBzCHZeyPaqEFw3rG2WMhfBLYf+jpLfD2cC0=;
+        b=dfSU6RyV8zlkJT7fzQz1OJR7p8AUF1Rqg++y/78PpB344wIf7gF5Nn/FOz2WAKEnWM
+         DCq9zhvWp1bUI6Zd1PR/h9ZvDOoXA2M97sZwVY1RnVXyEPWYQdHXCToiUu4Idj+/AJ/Z
+         Lvg7pnxFm8ChuizHtc6H+PAml61UDxUtKiA4Z6DJ4JckgeB2VXMLS0n5NqTkDHfuS+17
+         xs1tJauFnF/5C791EiL8Uw/6FFSrjlXpDu6ecOudLhvUfAf6BMMpIUfANDW7UKJBruFo
+         mjlrAOhRN8oruDmC+V992/IWLK4uv1Ikg0Y5vTkRQh/TWIa0p6WDI/sN/yCX1Ni/rmRA
+         lOWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVK/jxl4Vc5dvzIStz2WZCrgg0iI1lWg/YTICMbn3F/QZuUWkMK0vs3GlOMeUgXReo6buvBWSIIjNAWeA==@vger.kernel.org, AJvYcCW9/vP5SQ1jfTnkLdTMwSqw3QMWlm1zFL6n+cvdWYmauKY/Fu960T+UBGKWNRtVmVZg6PqZkqyF2UM=@vger.kernel.org, AJvYcCXi/AhJLqfJQl8jiW/JACqP/AJdVX866wYq6JFjx4V6b3I5FRyzUn5s0dnPCoOAB2B7GItWeuKSOZI3oPWT@vger.kernel.org, AJvYcCXpTx0NlOuTCnDqHjZPMLUgVdttNVCZi3gnCNW3/+GWuYkq8dzOdVR4dR5d9GcxAicdsS3hJISR1wo4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOLHY3i9JzxsL1MrhSbOvgFTo1RBh/3LiHiGSYN8bB6k3i2oVh
+	4V4bd7GcoWKDSYQAtqMdSiQmtqUz5Px8AA7FGPTCvMm07/+9gEJYklgU
+X-Gm-Gg: ASbGncvwhPeWVbT2+rcfspyb1s1K7kP0zKeUeM1uiAlm8cOJ//UxqCTjUMWlxcyaPPc
+	PLY6rhfHXgqFbjlY+MhceofbhpCX3N/Qdu4/mcIKBgUtSNa9NpzNI2v31GkrNTBkYJB14nXPKZx
+	zMf25JZ5twZ6j/SFMAQSpHyKydKHCR635aRP7ncLuqTtSYNftGO29IFQXbJm6iggszqb8WtBdIa
+	cV06nDx+gnXxnOU+9POmH6rvUIj3nZtVEB3IGhgp/tkXhQHqs2eIM7K6FHYgUeSpkoxnH0KVnEP
+	aqk+a7GEKvr4FVhZIUOelgnGwLFk2j93MaucFCMYyEoswaBPVQck/K0ixZWEhGjK+SXV+KUg0wj
+	R7rwu3rXb
+X-Google-Smtp-Source: AGHT+IGj8afwiQBWMnNFiO8CZX12Uzqm0farJp4iABQXPdiIhq7hSOMuLQDUrIeTYhq1s+E7XXHTwA==
+X-Received: by 2002:a05:6a00:21c1:b0:748:323f:ba21 with SMTP id d2e1a72fcca58-7489cf5c8c2mr11015493b3a.1.1750047235481;
+        Sun, 15 Jun 2025 21:13:55 -0700 (PDT)
+Received: from [10.89.152.134] (wf121-134.ust.hk. [175.159.121.134])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890006059sm5937252b3a.55.2025.06.15.21.13.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Jun 2025 21:13:55 -0700 (PDT)
+Message-ID: <7297d4b1-84a2-4bb1-8a33-29c827247df7@gmail.com>
+Date: Mon, 16 Jun 2025 12:13:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/R+e/CqPHcGl6RkRsKZ+h6xs";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 07/10] power: reset: macsmc-reboot: Add driver for
+ rebooting via Apple SMC
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
+ Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
+ <20250610-smc-6-15-v7-7-556cafd771d3@kernel.org>
+Content-Language: en-MW
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <20250610-smc-6-15-v7-7-556cafd771d3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/R+e/CqPHcGl6RkRsKZ+h6xs
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the fpga tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+On 10/6/2025 23:29, Sven Peter wrote:
+> From: Hector Martin <marcan@marcan.st>
+> 
+> This driver implements the reboot/shutdown support exposed by the SMC
+> on Apple Silicon machines, such as Apple M1 Macs.
+> 
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Reviewed-by: Neal Gompa <neal@gompa.dev>
+> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Signed-off-by: Sven Peter <sven@kernel.org>
+> ---
+>  MAINTAINERS                         |   1 +
+>  drivers/power/reset/Kconfig         |   9 ++
+>  drivers/power/reset/Makefile        |   1 +
+>  drivers/power/reset/macsmc-reboot.c | 290 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 301 insertions(+)
+[...]
 
-drivers/fpga/zynq-fpga.c: In function 'zynq_fpga_ops_write':
-drivers/fpga/zynq-fpga.c:409:13: error: too few arguments to function 'dma_=
-map_sgtable'
-  409 |             dma_map_sgtable(mgr->dev.parent, sgt, DMA_TO_DEVICE);
-      |             ^~~~~~~~~~~~~~~
-In file included from drivers/fpga/zynq-fpga.c:13:
-include/linux/dma-mapping.h:126:5: note: declared here
-  126 | int dma_map_sgtable(struct device *dev, struct sg_table *sgt,
-      |     ^~~~~~~~~~~~~~~
-drivers/fpga/zynq-fpga.c:481:9: error: too few arguments to function 'dma_u=
-nmap_sgtable'
-  481 |         dma_unmap_sgtable(mgr->dev.parent, sgt, DMA_TO_DEVICE);
-      |         ^~~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:504:20: note: declared here
-  504 | static inline void dma_unmap_sgtable(struct device *dev, struct sg_=
-table *sgt,
-      |                    ^~~~~~~~~~~~~~~~~
+It seems that the reboot driver still probes even without the smc_reboot node in the smc node:
 
-Caused by commit
+[    0.994942] macsmc 236000100.smc: RTKit: Initializing (protocol version 12)
+[    1.002862] macsmc-gpio macsmc-gpio: First GPIO key: gP01 (0x67503031)
+[    1.013156] macsmc-reboot: Failed to locate of_node [id: -1]
+[    1.048188] macsmc-reboot macsmc-reboot: Missing NVMEM cell shutdown_flag (-2)
+[    1.055359] macsmc-reboot macsmc-reboot: Missing NVMEM cell boot_stage (-2)
+[    1.062332] macsmc-reboot macsmc-reboot: Missing NVMEM cell boot_error_count (-2)
+[    1.069799] macsmc-reboot macsmc-reboot: Missing NVMEM cell panic_count (-2)
+[    1.076902] macsmc-reboot macsmc-reboot: Handling reboot and poweroff requests via SMC
 
-  f9b5ee4364ed ("fpga: zynq-fpga: use sgtable-based scatterlist wrappers")
+Best regards,
+Nick Chan
 
-I have used the fpga tree from next-20250613 for today.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/R+e/CqPHcGl6RkRsKZ+h6xs
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhPmYcACgkQAVBC80lX
-0GyZtwf415FIfPYDn85dQujwHy+88OhCy/fOJn1HF1hqjEsMPVf2o8Wb1UD/Fu2G
-UFdRuDxXfufIzUjiko2HU+I4CKMBxfeUwH8Fnv/2MRkLOs4BNcGZJsfK+ENNaqGN
-gavyh3Q8sJujyoIOi8AInFN26VOP+AfHvLxSpcCb2upbM4g+1gyvnJPm7ihbDY8b
-8O5EOcwc9ziATf3jLzpoEylVtI31+VNDctXFkGGrjtMm7oHCUhmE3hv3VAuAcyGW
-tmsCVH+cWP2Yic8SwmjIVgoBx43TP/XoNxsBULj4RAeOu/h4ZHLtYoRfuD+OxMgE
-i8qx82NQ6PlAdHJFOmW4IqbsnGru
-=xnqg
------END PGP SIGNATURE-----
-
---Sig_/R+e/CqPHcGl6RkRsKZ+h6xs--
