@@ -1,124 +1,151 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4343E1DFE1
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAD9273806
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070194; cv=none; b=IkPXRcPeF2ien+yUazUZezb0GixZ7mPplCsVSzXbA+piA1KlRDRlTXA+UswYNCEqkg7pHQX8j+8SmiZYbGfvAX+mwUGLVtpmwhAO1mQ/RyvMLuWbPmmHMRl1oGsbw92rEQGt54k92hjYlGHPPIw0k6F9PXh1V1lcWfJ5oRKWZF0=
+	t=1750070311; cv=none; b=Nv9cP1b7JVelo6n8gpZdUmjWExk/l75o0Gx57RvBD4YS4U/Hms1dBn71ObNIBmdWAftdOz5ROjmlU2pNucBnQR8kFrRWLS20tX2UwSBFzXAdpuJ3Gn++tlMnquhC2GaEYqPacK5EWmmHrE3kDKELX9IsipXxWrFFc5XuMYFp5PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070194; c=relaxed/simple;
-	bh=gVihsEkhSJhiI2pYujACptGOSQXIKNBWtFSmOiUqkgE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XjkGiqYt9uie5v4M8p2YbrZILEX1FDZzmjZyXEVfqlfGFZbPACMVYO+iaWTGBoxYGjX6AbwdwjhNjmEDR/GF9BIkTw9PtfM8cai2/CWfnpGGol96P6LYHpfvSuBMzMtjP6vPa2Vm4GaFVkxNUtJ3+7vaoHIuTMySdadkhDoIytY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=koiWb6UH; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1750070311; c=relaxed/simple;
+	bh=++eG27sdjNKGmba1eHbJfrIWJAqcB4ygjN6cif1GOJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F37If8DqtiT6mzoI28SiR/ap7eQZTpmdTREMeHXzNM1lVi+AfUwy7aDNjdkg755Lkyz2vsxyE4KwMhzp6pV+gUeOXVdoGnZytjUMVmpPktsiIdkR25Jh40NBR3I9BeprC8is5lCfbTH5mDFpvtQTYgAmgZ7/poRbRiAdW56+NLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SLaYQj5F; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koiWb6UH"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d7de4ae3so28157515e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750070191; x=1750674991; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hiss5ihr37HezsXrsEfI4Lz996ZbeuImgyLoj8wVpjc=;
-        b=koiWb6UHoybjVzm4GYUprZO88ditHuIrR/AiZMtzBDGwqHXDB+NQGcATFbpycHZzNH
-         OSPwKQure84esI6Ofj5f2ejP6soqoKRvVK2cVX3iUboGFceaz+gmLyzkSaHyEjALNHo9
-         KlGQzS6ZRZdu92Y96zLYwvOqqS2o4wf4DYwz7XYsqlse19QpfgEHFJlHuOYe+y1VSJbt
-         x6xnmwnDL5BSGcm6fZ1Hszoe+QNhdDwOCdJawhhfkha8jaY6Hbe/5YfxVM7D/KtBImQm
-         2OpdYbU+rnoVmcbm7cgxe5+LtB24iWLhcvKkz4pC+4VgMEQjUrBtFHmwjOCPIgyFYscB
-         mA8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750070191; x=1750674991;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hiss5ihr37HezsXrsEfI4Lz996ZbeuImgyLoj8wVpjc=;
-        b=OAOgpW7xDuSxJuIeWE9xwCASLda8nnq7fFQov6q9NApenRb6i7qB8Qa77ZRFrLWb1W
-         n4c9mBZLkQqDcYrNeWdzz0sob/hQPsQg8GUUycMxml6V0DjOKoxlH5M6c9gc4Z+iO/ix
-         iv5ILjez0qG1kaVf64AZGioGhjs2fyItLGDs8w/xLHKShU9qCK4hPIJ2Bu5xEEnTR7Oc
-         GCSNdLvsbt3D+pqOt2qZugarawZuzNFWIoCNB8LA//X+rRqbiIVot56IJpnmgw004I/4
-         /RRdq68BOH2LmvGf4XEI3J1DOnV8YcMr9tSersgSgKrEep5ThiZmX8Aywu7RHFRcXtYx
-         ufNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWi2w3K5JnQNQOsBM2wj/o0TijtxTZTTueFSPRMeJUKXjKPsAXRTb8ubq+azmIV40TOeAiItktUGzhgS9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxtG+N9bdEWfIbvHH0hP7p9zq94qaIzHsU5GSeYWZTe/TcVIE9
-	BqSKX+pIbQc7xelc0wClQqsD9bRfIaMnp3FeGA2HyjNzoGkHuNu6kNHLTYH4COcxAYHvY0pHBCb
-	r3iFbto7f8uoO36Klkg==
-X-Google-Smtp-Source: AGHT+IEe+NGRwyzIVBGaOXJd+JjEOsMuYq2wMo43vhSk6WwVZAZFAeSvsdAvoGMLbOd64OXop7r7LShg+AbCX80=
-X-Received: from wmbfa7.prod.google.com ([2002:a05:600c:5187:b0:450:d244:bd2e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1c12:b0:450:b9c0:c7d2 with SMTP id 5b1f17b1804b1-4533ca8b101mr82056445e9.11.1750070191808;
- Mon, 16 Jun 2025 03:36:31 -0700 (PDT)
-Date: Mon, 16 Jun 2025 10:36:21 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SLaYQj5F"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8RcXP025023;
+	Mon, 16 Jun 2025 10:37:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0ISiqlgdeklg0xXzY7P5H11qqfuhoLzTN1XNx0iDv88=; b=SLaYQj5FwcUd7Fkz
+	nVcDL4oy7JsNIk8h4D4ljzLxsZeqaGlKMyWIRvgaUgIbaIv9ms7RUw7iJ90t9AEs
+	nSyDP9zqEsUX1FsXKYQv3yDfziMvz+AY1F6QgqNXnH0d2aEQhDoEv9XYcD+DFer8
+	oeGoF/eX96okIzWFF1oXmIO6yaTXVAelFLcOUnVuuny4XaK+GPNVIftYlEMcJCfd
+	eNJM/1Te4p7V00LmEQV0VWkKuEPFKR+eVYCjN4ublb5u2sp99HVWZdlBtkPRilAw
+	MVqzDXiePL6+j1TRF7NjE+GdNlW2Jx9aU60jSz2ncxrPRmgnK47nMhsf/b/60io1
+	Viq74w==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791f745ac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:37:51 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GAboPm025787
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:37:50 GMT
+Received: from [10.253.8.97] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 03:37:44 -0700
+Message-ID: <94b40ff2-9e9e-4eea-8a66-87d8976aeb70@quicinc.com>
+Date: Mon, 16 Jun 2025 18:37:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKTzT2gC/x2MywqAIBAAf0X2nKCCkv1KdEhbaw89WCWK6N+Tj
- jMw80BGJszQiQcYT8q0bxV0IyAu4zajpKkyGGWsctpJDoWx2ixxPcotTZusTjEG70eo1cGY6Pq P/fC+H6K2N5hhAAAA
-X-Change-Id: 20250616-rbtree-is-empty-28f51fccb99a
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1249; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=gVihsEkhSJhiI2pYujACptGOSQXIKNBWtFSmOiUqkgE=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoT/Oogfg8E3752+/euiuXrXoPJHL0ZgbsNy5x/
- F1qFs7ZlvKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaE/zqAAKCRAEWL7uWMY5
- RkMRD/4iLYBvlMGfISSHIit0SZMEpEPRnlDk9Ek63xEsF1Ec31pyvDYMIJzSDitHUd3YD9ZI6TM
- cfJqGzx8ZsmrQyBf46GYCdKt98Gkycu/llmGdsEQwl7lY15KlWErw3vgS36yVpdKY/XQBwT/R8S
- tuKHrathiY0tps3WfcCg00gPaxLH4Eaf6WjLJq0VCd/3uHl3fP3OBtr4rq0LXGIdalsKBl0Hslk
- NYEnKpmsjCV+IcRcNgJf4NAFIDCeqgCZT9GJkPwwm/o90yYd5iHwFHr/nTt8GMYWgrWpx4sRR5a
- yfNfixnw9cgxkpSnOWERJqGYQ5dDJTZsrSQ9krUEf/H35aEmo9wN0uggxHDm47QOgnRorIRKLuy
- srlaPd1pWhPWYyXu9hAaMRP5ITMh7uI1MZYRYjHOqUp8ycx3zZxm/rTfLy5GhV/D12RTGeBompS
- etDWclOtQHxhHqwS9DfdaIhC/+Q1Dom2tt56NwCgEGPvpPf/1PFNhmxbwLLwL1uejJn7/v03qVk
- ciBKx+/IwMxhfeEAJsam+Q5WESZ+ji8cpa+PltOZrCBrjwM9+rQfg68O9M9SX0Wflze5AT3wVsy
- 52WTDCfYmZIMvDzU8XD9PUbp4wHrM/4FeTDUI/Ri3NbPDmStLb9GGlM6zn0RAz635lv36qNOIDh Iv/HGtUgJMH3qeQ==
-X-Mailer: b4 0.14.2
-Message-ID: <20250616-rbtree-is-empty-v1-1-61f7cfb012e3@google.com>
-Subject: [PATCH] rbtree: rust: add RBTree::is_empty
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [cocci] [PATCH v4 2/5] arm64: tlb: Convert the opencoded field
+ modify
+To: Markus Elfring <Markus.Elfring@web.de>, <cocci@inria.fr>
+CC: LKML <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+        Andrew Lunn
+	<andrew@lunn.ch>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Joey Gouly
+	<joey.gouly@arm.com>, Julia Lawall <Julia.Lawall@inria.fr>,
+        Kiran Kumar C.S.K
+	<quic_kkumarcs@quicinc.com>,
+        Lei Wei <quic_leiwei@quicinc.com>, Marc Zyngier
+	<maz@kernel.org>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Oliver Upton
+	<oliver.upton@linux.dev>,
+        Pavithra R <quic_pavir@quicinc.com>,
+        "Rasmus
+ Villemoes" <linux@rasmusvillemoes.dk>,
+        Suruchi Agarwal
+	<quic_suruchia@quicinc.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        "Will
+ Deacon" <will@kernel.org>, Yury Norov <yury.norov@gmail.com>,
+        Zenghui Yu
+	<yuzenghui@huawei.com>, <quic_linchen@quicinc.com>
+References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+ <20250612-field_modify-v4-2-ae4f74da45a6@quicinc.com>
+ <3537a4ce-b5e8-44d5-a884-70a81562068d@web.de>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <3537a4ce-b5e8-44d5-a884-70a81562068d@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2NiBTYWx0ZWRfXxL04GAagHQk/
+ iEBZ6i5zu1j3cfjMK3KLHbVCqeDrf9/G3eQRUWTa19X7cTJXtW8z2nJIt9FPHw4MpLCdb+ZNbj6
+ 0xvZY710scyODKuCUU7fg166gB922eWjk2Ja904dbfhGzZnQfq9LpC9XH14esfAa6NQTLH0NSGg
+ aP7qk4r6+3Npd7hld/6BaK7Sg9PGsqGAgnp5J9jyObQZgaK3vd2KwnLsEQ+HgRs2HKXJ8Ejrcwp
+ c9/QC24nqe8dMQnkFnSOp3luLJsaU1zIaAaE9InlzlhUif9cwGyamJEBghnotr1/ExSEHnkgV0b
+ ETz/4V2QaCtZSiflKcBnn69YZR61zRrj6Ape/lHYj7Z9sQFOvI/ur7TH5z7/tF26Nl4xJyqYVw+
+ V9UCAFEgOjl0Ucmg25eMosVMn2Xs3tCGrymwDYob3i7SrT79VzWhKK2oZbpYoUZuqkHCllv/
+X-Proofpoint-GUID: yVUHwgEeVxAwRXZvEU52f2yZasbGvHsw
+X-Proofpoint-ORIG-GUID: yVUHwgEeVxAwRXZvEU52f2yZasbGvHsw
+X-Authority-Analysis: v=2.4 cv=FrIF/3rq c=1 sm=1 tr=0 ts=684ff3ff cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=YgwN3AOMAAAA:8
+ a=wkcNY_LD72BEM5X7UyUA:9 a=QEXdDO2ut3YA:10 a=ztR1XV6QG-NWxUt1dNgd:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160066
 
-In Rust Binder I need to be able to determine whether a red/black tree
-is empty. Thus, add a method for that operation to replace
 
-	rbtree.iter().next().is_none()
 
-This is terrible, so add a method for this purpose. We do not add a
-RBTree::len method because computing the number of elements requires
-iterating the entire tree, but checking whether it is empty can be done
-cheaply.
+On 6/13/2025 4:15 AM, Markus Elfring wrote:
+> I see further refinement possibilities for such a change description.
+> 
+> 
+>> Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+>> - reg &= ~MASK;
+>> - reg |= FIELD_PREP(MASK, val);
+> 
+> * How do you think about to omit leading minus characters?
+> 
+> * Subsequent blank line?
+> 
+> 
+>> More information about semantic patching is available at
+>> http://coccinelle.lip6.fr/
+> 
+> I suggest to omit this information here (and in similar patches).
+> 
+> Regards,
+> Markus
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/rbtree.rs | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thank you for your suggestions. The current commit message was generated
+by the following patch mode command:
+```
+make coccicheck MODE=patch 
+COCCI=scripts/coccinelle/misc/field_modify.cocci V=1
+```
+However, as I understand, the discussion on the ARM patches (between
+Russel/Marc/Yury) has concluded that the ARM arch changes may not be
+adding value over the current code, so I will drop the ARM patches
+in the next version.
 
-diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-index 8d978c8967475cc2631b50721798f7e8cd1551fd..9457134eb3afdf7a214a28fcbe2e6b8065cc9a86 100644
---- a/rust/kernel/rbtree.rs
-+++ b/rust/kernel/rbtree.rs
-@@ -191,6 +191,12 @@ pub fn new() -> Self {
-         }
-     }
- 
-+    /// Returns true if this tree is empty.
-+    #[inline]
-+    pub fn is_empty(&self) -> bool {
-+        self.root.rb_node.is_null()
-+    }
-+
-     /// Returns an iterator over the tree nodes, sorted by key.
-     pub fn iter(&self) -> Iter<'_, K, V> {
-         Iter {
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250616-rbtree-is-empty-28f51fccb99a
-
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
+I will review the generated message to improve the formatting as you
+suggested, the next time I use it.
 
