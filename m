@@ -1,507 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A631991CD;
-	Mon, 16 Jun 2025 09:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E8C1991CD
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750064672; cv=none; b=GmA3c69A4HKLWcstppwgC46srXMqq4LRmVSoGw8q77BezkSdAwZFEh6bd2Zvwmy7OkwIxcR01TGVCg7eF36Ha8bk75Pu9pG9EKofjU2fk1OVBc+jaX39oWwxGu6uJHI/b50hO1180RBh/WTdNtY5MvgaOF/aDniZvMjqFyQZtFg=
+	t=1750064956; cv=none; b=DfRbl+wmVQUoVdF8lU37gkEmghOkFVzOv5ioQAMcM8chDGp8PGC+mwq0PuUQyQ+A/tHRA8zGjrqdYt1vEEOpA1veQtOlyGVndoUhovrPfAT0sqNADEZ0c2OjTgPNoVU5rxeMZUosyr/Mq9029h1a+0YvnTY5Ejr7urdsAXLYXCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750064672; c=relaxed/simple;
-	bh=lS+tDPP9HtrmCc+gMnERVt58Izq/Exmd8oTX0TyOivI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P82PGh6TRhNIQEuLxTOJ5HzNy3snoWWSJqod1bs7bVVxRgRATH5/n0vVW6h+g7FuBrCK5leTbKpH6+h6RzJXN036W5oUJwl15i1o4qIeQAytDSPLVvWOGyHdoDic2XFJ8QSDvv/mVkudVXA+sYT00wX/maPT+Oiz/bUE0waxcl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N6WmfoiB; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N6WmfoiB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750064671; x=1781600671;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lS+tDPP9HtrmCc+gMnERVt58Izq/Exmd8oTX0TyOivI=;
-  b=N6WmfoiBrn/ZNQ+xLuQUGsTE+vTh6D4Y3bee9jHckr1zyLZcgvkv9Kde
-   OTaGdJhNveifOTolUmsTIx2O9dk1rJtD0JdBqCcFx6Eo/0kAENUP7IJVZ
-   r/WTcqYR84QrQpZzX2MevSX+eydvSVLwcc7hZETIN+86GHxC2TLahThS6
-   Yp+cmXYyX2GSegYy/kmU0H2CZIAOxXZ77HaLquLuBsqvu2cLRbrYC4Iwz
-   gQLuE47rf9euzDQCMzWA8LqSxvzsufmZAFGeo7ep3ItQ5DqtviseEihO0
-   0fGCfxBPH5XCGl0PRn+SOGKg7dYhCrLkKMWMvzgKyahLMaQRhyr0GVelB
-   g==;
-X-CSE-ConnectionGUID: VvO98BSnTxGYoe1m89Mjog==
-X-CSE-MsgGUID: ondb1fioSrKO//d4JY6N8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="63616778"
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="63616778"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 02:04:30 -0700
-X-CSE-ConnectionGUID: 2olP2E60RSaa2eRVAtQrBA==
-X-CSE-MsgGUID: T+wW8xF6Q6mewIt59EZTKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="149295827"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 16 Jun 2025 02:04:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 60BA9197; Mon, 16 Jun 2025 12:04:25 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Subject: [PATCH v1 1/1] iio: imu: inv_icm42600: Convert to uXX and sXX integer types
-Date: Mon, 16 Jun 2025 12:03:21 +0300
-Message-ID: <20250616090423.575736-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1750064956; c=relaxed/simple;
+	bh=zT73XYobToycpwXDErF+Wmjj06h1ZgWA81Y4XST7Cpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MITdiYrus8fhKdPt1ZcUHNxrDpX35ZJ0IXlElwXx58JEDhzlpiv2q9/fGJZX4lwUlFC/euPfrqN86xOO4JBLk4ZyOzkngfdCLmXzitEFgDTV0Nf9BleGIpL6pEkaNFhDwpsjLscgNMWrHaQKngO6SwVXSw3oYQB/6xeHODaLTpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80EA2150C;
+	Mon, 16 Jun 2025 02:08:51 -0700 (PDT)
+Received: from [10.57.84.117] (unknown [10.57.84.117])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A98F83F673;
+	Mon, 16 Jun 2025 02:09:11 -0700 (PDT)
+Message-ID: <5491098f-5508-4665-a8dc-b91a950bbc02@arm.com>
+Date: Mon, 16 Jun 2025 10:09:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v4 PATCH 0/4] arm64: support FEAT_BBM level 2 and large block
+ mapping when rodata=full
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
+ <47adeebf-9997-45fa-8607-67e219c2ed17@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <47adeebf-9997-45fa-8607-67e219c2ed17@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The driver code is full of intXX_t and uintXX_t types which is
-not the pattern we use in the IIO subsystem. Switch the driver
-to use kernel internal types for that. No functional changes.
+On 13/06/2025 18:21, Yang Shi wrote:
+> Hi Ryan,
+> 
+> Gently ping... any comments for this version?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+Hi Yang, yes sorry for slow response - It's been in my queue. I'm going to start
+looking at it now and plan to get you some feedback in the next couple of days.
 
-As noted before the pattern is used in less than 10% files in IIO,
-So it's safe to assume that IIO prefers uXX/sXX types over C99 ones.
+> 
+> It looks Dev's series is getting stable except some nits. I went through his
+> patches and all the call sites for changing page permission. They are:
+>   1. change_memory_common(): called by set_memory_{ro|rw|x|nx}. It iterates
+> every single page mapped in the vm area then change permission on page basis. It
+> depends on whether the vm area is block mapped or not if we want to change
+>      permission on block mapping.
+>   2. set_memory_valid(): it looks it assumes the [addr, addr + size) range is
+> mapped contiguously, but it depends on the callers pass in block size (nr > 1).
+> There are two sub cases:
+>      2.a kfence and debugalloc just work for PTE mapping, so they pass in single
+> page.
+>      2.b The execmem passes in large page on x86, arm64 has not supported huge
+> execmem cache yet, so it should still pass in singe page for the time being. But
+> my series + Dev's series can handle both single page mapping and block mapping well
+>          for this case. So changing permission for block mapping can be
+> supported automatically once arm64 supports huge execmem cache.
+>   3. set_direct_map_{invalid|default}_noflush(): it looks they are page basis.
+> So Dev's series has no change to them.
+>   4. realm: if I remember correctly, realm forces PTE mapping for linear address
+> space all the time, so no impact.
 
- drivers/iio/imu/inv_icm42600/inv_icm42600.h   |  8 ++---
- .../iio/imu/inv_icm42600/inv_icm42600_accel.c | 30 ++++++++--------
- .../imu/inv_icm42600/inv_icm42600_buffer.c    | 22 ++++++------
- .../imu/inv_icm42600/inv_icm42600_buffer.h    | 10 +++---
- .../iio/imu/inv_icm42600/inv_icm42600_core.c  |  6 ++--
- .../iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 36 +++++++++----------
- .../iio/imu/inv_icm42600/inv_icm42600_temp.c  |  6 ++--
- 7 files changed, 59 insertions(+), 59 deletions(-)
+Yes for realm, we currently force PTE mapping - that's because we need page
+granularity for sharing certain portions back to the host. But with this work I
+think we will be able to do the splitting on the fly and map using big blocks
+even for realms.
 
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-index f893dbe69965..55ed1ddaa8cb 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-@@ -164,11 +164,11 @@ struct inv_icm42600_state {
- 	struct inv_icm42600_suspended suspended;
- 	struct iio_dev *indio_gyro;
- 	struct iio_dev *indio_accel;
--	uint8_t buffer[2] __aligned(IIO_DMA_MINALIGN);
-+	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
- 	struct inv_icm42600_fifo fifo;
- 	struct {
--		int64_t gyro;
--		int64_t accel;
-+		s64 gyro;
-+		s64 accel;
- 	} timestamp;
- };
- 
-@@ -410,7 +410,7 @@ const struct iio_mount_matrix *
- inv_icm42600_get_mount_matrix(const struct iio_dev *indio_dev,
- 			      const struct iio_chan_spec *chan);
- 
--uint32_t inv_icm42600_odr_to_period(enum inv_icm42600_odr odr);
-+u32 inv_icm42600_odr_to_period(enum inv_icm42600_odr odr);
- 
- int inv_icm42600_set_accel_conf(struct inv_icm42600_state *st,
- 				struct inv_icm42600_sensor_conf *conf,
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
-index e6cd9dcb0687..550eaa5a2ea7 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
-@@ -177,7 +177,7 @@ static const struct iio_chan_spec inv_icm42600_accel_channels[] = {
-  */
- struct inv_icm42600_accel_buffer {
- 	struct inv_icm42600_fifo_sensor_data accel;
--	int16_t temp;
-+	s16 temp;
- 	aligned_s64 timestamp;
- };
- 
-@@ -241,7 +241,7 @@ static int inv_icm42600_accel_update_scan_mode(struct iio_dev *indio_dev,
- 
- static int inv_icm42600_accel_read_sensor(struct iio_dev *indio_dev,
- 					  struct iio_chan_spec const *chan,
--					  int16_t *val)
-+					  s16 *val)
- {
- 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
- 	struct inv_icm42600_sensor_state *accel_st = iio_priv(indio_dev);
-@@ -284,7 +284,7 @@ static int inv_icm42600_accel_read_sensor(struct iio_dev *indio_dev,
- 	if (ret)
- 		goto exit;
- 
--	*val = (int16_t)be16_to_cpup(data);
-+	*val = (s16)be16_to_cpup(data);
- 	if (*val == INV_ICM42600_DATA_INVALID)
- 		ret = -EINVAL;
- exit:
-@@ -492,11 +492,11 @@ static int inv_icm42600_accel_read_offset(struct inv_icm42600_state *st,
- 					  int *val, int *val2)
- {
- 	struct device *dev = regmap_get_device(st->map);
--	int64_t val64;
--	int32_t bias;
-+	s64 val64;
-+	s32 bias;
- 	unsigned int reg;
--	int16_t offset;
--	uint8_t data[2];
-+	s16 offset;
-+	u8 data[2];
- 	int ret;
- 
- 	if (chan->type != IIO_ACCEL)
-@@ -550,7 +550,7 @@ static int inv_icm42600_accel_read_offset(struct inv_icm42600_state *st,
- 	 * result in micro (1000000)
- 	 * (offset * 5 * 9.806650 * 1000000) / 10000
- 	 */
--	val64 = (int64_t)offset * 5LL * 9806650LL;
-+	val64 = (s64)offset * 5LL * 9806650LL;
- 	/* for rounding, add + or - divisor (10000) divided by 2 */
- 	if (val64 >= 0)
- 		val64 += 10000LL / 2LL;
-@@ -568,10 +568,10 @@ static int inv_icm42600_accel_write_offset(struct inv_icm42600_state *st,
- 					   int val, int val2)
- {
- 	struct device *dev = regmap_get_device(st->map);
--	int64_t val64;
--	int32_t min, max;
-+	s64 val64;
-+	s32 min, max;
- 	unsigned int reg, regval;
--	int16_t offset;
-+	s16 offset;
- 	int ret;
- 
- 	if (chan->type != IIO_ACCEL)
-@@ -596,7 +596,7 @@ static int inv_icm42600_accel_write_offset(struct inv_icm42600_state *st,
- 	      inv_icm42600_accel_calibbias[1];
- 	max = inv_icm42600_accel_calibbias[4] * 1000000L +
- 	      inv_icm42600_accel_calibbias[5];
--	val64 = (int64_t)val * 1000000LL + (int64_t)val2;
-+	val64 = (s64)val * 1000000LL + (s64)val2;
- 	if (val64 < min || val64 > max)
- 		return -EINVAL;
- 
-@@ -671,7 +671,7 @@ static int inv_icm42600_accel_read_raw(struct iio_dev *indio_dev,
- 				       int *val, int *val2, long mask)
- {
- 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
--	int16_t data;
-+	s16 data;
- 	int ret;
- 
- 	switch (chan->type) {
-@@ -899,9 +899,9 @@ int inv_icm42600_accel_parse_fifo(struct iio_dev *indio_dev)
- 	ssize_t i, size;
- 	unsigned int no;
- 	const void *accel, *gyro, *timestamp;
--	const int8_t *temp;
-+	const s8 *temp;
- 	unsigned int odr;
--	int64_t ts_val;
-+	s64 ts_val;
- 	struct inv_icm42600_accel_buffer buffer;
- 
- 	/* parse all fifo packets */
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
-index aae7c56481a3..00b9db52ca78 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
-@@ -26,28 +26,28 @@
- #define INV_ICM42600_FIFO_HEADER_ODR_GYRO	BIT(0)
- 
- struct inv_icm42600_fifo_1sensor_packet {
--	uint8_t header;
-+	u8 header;
- 	struct inv_icm42600_fifo_sensor_data data;
--	int8_t temp;
-+	s8 temp;
- } __packed;
- #define INV_ICM42600_FIFO_1SENSOR_PACKET_SIZE		8
- 
- struct inv_icm42600_fifo_2sensors_packet {
--	uint8_t header;
-+	u8 header;
- 	struct inv_icm42600_fifo_sensor_data accel;
- 	struct inv_icm42600_fifo_sensor_data gyro;
--	int8_t temp;
-+	s8 temp;
- 	__be16 timestamp;
- } __packed;
- #define INV_ICM42600_FIFO_2SENSORS_PACKET_SIZE		16
- 
- ssize_t inv_icm42600_fifo_decode_packet(const void *packet, const void **accel,
--					const void **gyro, const int8_t **temp,
-+					const void **gyro, const s8 **temp,
- 					const void **timestamp, unsigned int *odr)
- {
- 	const struct inv_icm42600_fifo_1sensor_packet *pack1 = packet;
- 	const struct inv_icm42600_fifo_2sensors_packet *pack2 = packet;
--	uint8_t header = *((const uint8_t *)packet);
-+	u8 header = *((const u8 *)packet);
- 
- 	/* FIFO empty */
- 	if (header & INV_ICM42600_FIFO_HEADER_MSG) {
-@@ -100,7 +100,7 @@ ssize_t inv_icm42600_fifo_decode_packet(const void *packet, const void **accel,
- 
- void inv_icm42600_buffer_update_fifo_period(struct inv_icm42600_state *st)
- {
--	uint32_t period_gyro, period_accel, period;
-+	u32 period_gyro, period_accel, period;
- 
- 	if (st->fifo.en & INV_ICM42600_SENSOR_GYRO)
- 		period_gyro = inv_icm42600_odr_to_period(st->conf.gyro.odr);
-@@ -204,8 +204,8 @@ int inv_icm42600_buffer_update_watermark(struct inv_icm42600_state *st)
- {
- 	size_t packet_size, wm_size;
- 	unsigned int wm_gyro, wm_accel, watermark;
--	uint32_t period_gyro, period_accel, period;
--	uint32_t latency_gyro, latency_accel, latency;
-+	u32 period_gyro, period_accel, period;
-+	u32 latency_gyro, latency_accel, latency;
- 	bool restore;
- 	__le16 raw_wm;
- 	int ret;
-@@ -459,7 +459,7 @@ int inv_icm42600_buffer_fifo_read(struct inv_icm42600_state *st,
- 	__be16 *raw_fifo_count;
- 	ssize_t i, size;
- 	const void *accel, *gyro, *timestamp;
--	const int8_t *temp;
-+	const s8 *temp;
- 	unsigned int odr;
- 	int ret;
- 
-@@ -550,7 +550,7 @@ int inv_icm42600_buffer_hwfifo_flush(struct inv_icm42600_state *st,
- 	struct inv_icm42600_sensor_state *gyro_st = iio_priv(st->indio_gyro);
- 	struct inv_icm42600_sensor_state *accel_st = iio_priv(st->indio_accel);
- 	struct inv_sensors_timestamp *ts;
--	int64_t gyro_ts, accel_ts;
-+	s64 gyro_ts, accel_ts;
- 	int ret;
- 
- 	gyro_ts = iio_get_time_ns(st->indio_gyro);
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
-index f6c85daf42b0..ffca4da1e249 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
-@@ -28,7 +28,7 @@ struct inv_icm42600_state;
- struct inv_icm42600_fifo {
- 	unsigned int on;
- 	unsigned int en;
--	uint32_t period;
-+	u32 period;
- 	struct {
- 		unsigned int gyro;
- 		unsigned int accel;
-@@ -41,7 +41,7 @@ struct inv_icm42600_fifo {
- 		size_t accel;
- 		size_t total;
- 	} nb;
--	uint8_t data[2080] __aligned(IIO_DMA_MINALIGN);
-+	u8 data[2080] __aligned(IIO_DMA_MINALIGN);
- };
- 
- /* FIFO data packet */
-@@ -52,7 +52,7 @@ struct inv_icm42600_fifo_sensor_data {
- } __packed;
- #define INV_ICM42600_FIFO_DATA_INVALID		-32768
- 
--static inline int16_t inv_icm42600_fifo_get_sensor_data(__be16 d)
-+static inline s16 inv_icm42600_fifo_get_sensor_data(__be16 d)
- {
- 	return be16_to_cpu(d);
- }
-@@ -60,7 +60,7 @@ static inline int16_t inv_icm42600_fifo_get_sensor_data(__be16 d)
- static inline bool
- inv_icm42600_fifo_is_data_valid(const struct inv_icm42600_fifo_sensor_data *s)
- {
--	int16_t x, y, z;
-+	s16 x, y, z;
- 
- 	x = inv_icm42600_fifo_get_sensor_data(s->x);
- 	y = inv_icm42600_fifo_get_sensor_data(s->y);
-@@ -75,7 +75,7 @@ inv_icm42600_fifo_is_data_valid(const struct inv_icm42600_fifo_sensor_data *s)
- }
- 
- ssize_t inv_icm42600_fifo_decode_packet(const void *packet, const void **accel,
--					const void **gyro, const int8_t **temp,
-+					const void **gyro, const s8 **temp,
- 					const void **timestamp, unsigned int *odr);
- 
- extern const struct iio_buffer_setup_ops inv_icm42600_buffer_ops;
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-index 63d46619ebfa..0bf696ba35ed 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-@@ -103,7 +103,7 @@ const struct regmap_config inv_icm42600_spi_regmap_config = {
- EXPORT_SYMBOL_NS_GPL(inv_icm42600_spi_regmap_config, "IIO_ICM42600");
- 
- struct inv_icm42600_hw {
--	uint8_t whoami;
-+	u8 whoami;
- 	const char *name;
- 	const struct inv_icm42600_conf *conf;
- };
-@@ -188,9 +188,9 @@ inv_icm42600_get_mount_matrix(const struct iio_dev *indio_dev,
- 	return &st->orientation;
- }
- 
--uint32_t inv_icm42600_odr_to_period(enum inv_icm42600_odr odr)
-+u32 inv_icm42600_odr_to_period(enum inv_icm42600_odr odr)
- {
--	static uint32_t odr_periods[INV_ICM42600_ODR_NB] = {
-+	static u32 odr_periods[INV_ICM42600_ODR_NB] = {
- 		/* reserved values */
- 		0, 0, 0,
- 		/* 8kHz */
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
-index b4d7ce1432a4..6ad15866c201 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
-@@ -77,7 +77,7 @@ static const struct iio_chan_spec inv_icm42600_gyro_channels[] = {
-  */
- struct inv_icm42600_gyro_buffer {
- 	struct inv_icm42600_fifo_sensor_data gyro;
--	int16_t temp;
-+	s16 temp;
- 	aligned_s64 timestamp;
- };
- 
-@@ -139,7 +139,7 @@ static int inv_icm42600_gyro_update_scan_mode(struct iio_dev *indio_dev,
- 
- static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
- 					 struct iio_chan_spec const *chan,
--					 int16_t *val)
-+					 s16 *val)
- {
- 	struct device *dev = regmap_get_device(st->map);
- 	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
-@@ -179,7 +179,7 @@ static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
- 	if (ret)
- 		goto exit;
- 
--	*val = (int16_t)be16_to_cpup(data);
-+	*val = (s16)be16_to_cpup(data);
- 	if (*val == INV_ICM42600_DATA_INVALID)
- 		ret = -EINVAL;
- exit:
-@@ -399,11 +399,11 @@ static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
- 					 int *val, int *val2)
- {
- 	struct device *dev = regmap_get_device(st->map);
--	int64_t val64;
--	int32_t bias;
-+	s64 val64;
-+	s32 bias;
- 	unsigned int reg;
--	int16_t offset;
--	uint8_t data[2];
-+	s16 offset;
-+	u8 data[2];
- 	int ret;
- 
- 	if (chan->type != IIO_ANGL_VEL)
-@@ -457,7 +457,7 @@ static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
- 	 * result in nano (1000000000)
- 	 * (offset * 64 * Pi * 1000000000) / (2048 * 180)
- 	 */
--	val64 = (int64_t)offset * 64LL * 3141592653LL;
-+	val64 = (s64)offset * 64LL * 3141592653LL;
- 	/* for rounding, add + or - divisor (2048 * 180) divided by 2 */
- 	if (val64 >= 0)
- 		val64 += 2048 * 180 / 2;
-@@ -475,9 +475,9 @@ static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
- 					  int val, int val2)
- {
- 	struct device *dev = regmap_get_device(st->map);
--	int64_t val64, min, max;
-+	s64 val64, min, max;
- 	unsigned int reg, regval;
--	int16_t offset;
-+	s16 offset;
- 	int ret;
- 
- 	if (chan->type != IIO_ANGL_VEL)
-@@ -498,11 +498,11 @@ static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
- 	}
- 
- 	/* inv_icm42600_gyro_calibbias: min - step - max in nano */
--	min = (int64_t)inv_icm42600_gyro_calibbias[0] * 1000000000LL +
--	      (int64_t)inv_icm42600_gyro_calibbias[1];
--	max = (int64_t)inv_icm42600_gyro_calibbias[4] * 1000000000LL +
--	      (int64_t)inv_icm42600_gyro_calibbias[5];
--	val64 = (int64_t)val * 1000000000LL + (int64_t)val2;
-+	min = (s64)inv_icm42600_gyro_calibbias[0] * 1000000000LL +
-+	      (s64)inv_icm42600_gyro_calibbias[1];
-+	max = (s64)inv_icm42600_gyro_calibbias[4] * 1000000000LL +
-+	      (s64)inv_icm42600_gyro_calibbias[5];
-+	val64 = (s64)val * 1000000000LL + (s64)val2;
- 	if (val64 < min || val64 > max)
- 		return -EINVAL;
- 
-@@ -577,7 +577,7 @@ static int inv_icm42600_gyro_read_raw(struct iio_dev *indio_dev,
- 				      int *val, int *val2, long mask)
- {
- 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
--	int16_t data;
-+	s16 data;
- 	int ret;
- 
- 	switch (chan->type) {
-@@ -803,9 +803,9 @@ int inv_icm42600_gyro_parse_fifo(struct iio_dev *indio_dev)
- 	ssize_t i, size;
- 	unsigned int no;
- 	const void *accel, *gyro, *timestamp;
--	const int8_t *temp;
-+	const s8 *temp;
- 	unsigned int odr;
--	int64_t ts_val;
-+	s64 ts_val;
- 	struct inv_icm42600_gyro_buffer buffer;
- 
- 	/* parse all fifo packets */
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
-index 988f227f6563..8b15afca498c 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
-@@ -13,7 +13,7 @@
- #include "inv_icm42600.h"
- #include "inv_icm42600_temp.h"
- 
--static int inv_icm42600_temp_read(struct inv_icm42600_state *st, int16_t *temp)
-+static int inv_icm42600_temp_read(struct inv_icm42600_state *st, s16 *temp)
- {
- 	struct device *dev = regmap_get_device(st->map);
- 	__be16 *raw;
-@@ -31,7 +31,7 @@ static int inv_icm42600_temp_read(struct inv_icm42600_state *st, int16_t *temp)
- 	if (ret)
- 		goto exit;
- 
--	*temp = (int16_t)be16_to_cpup(raw);
-+	*temp = (s16)be16_to_cpup(raw);
- 	if (*temp == INV_ICM42600_DATA_INVALID)
- 		ret = -EINVAL;
- 
-@@ -48,7 +48,7 @@ int inv_icm42600_temp_read_raw(struct iio_dev *indio_dev,
- 			       int *val, int *val2, long mask)
- {
- 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
--	int16_t temp;
-+	s16 temp;
- 	int ret;
- 
- 	if (chan->type != IIO_TEMP)
--- 
-2.47.2
+> 
+> So it looks like just #1 may need some extra work. But it seems simple. I should
+> just need advance the address range in (1 << vm's order) stride. So there should
+> be just some minor changes when I rebase my patches on top of Dev's, mainly
+> context changes. It has no impact to the split primitive and repainting linear
+> mapping.
+
+I haven't looked at your series yet, but I had assumed that the most convenient
+(and only) integration point would be to call your split primitive from dev's
+___change_memory_common() (note 3 underscores at beginning). Something like this:
+
+___change_memory_common(unsigned long start, unsigned long size, ...)
+{
+	// This will need to return error for case where splitting would have
+	// been required but system does not support BBML2_NOABORT
+	ret = split_mapping_granularity(start, start + size)
+	if (ret)
+		return ret;
+
+	...
+}
+
+> 
+> Thanks,
+> Yang
+> 
+> 
+> On 5/30/25 7:41 PM, Yang Shi wrote:
+>> Changelog
+>> =========
+>> v4:
+>>    * Rebased to v6.15-rc4.
+>>    * Based on Miko's latest BBML2 cpufeature patch (https://lore.kernel.org/
+>> linux-arm-kernel/20250428153514.55772-4-miko.lenczewski@arm.com/).
+>>    * Keep block mappings rather than splitting to PTEs if it is fully contained
+>>      per Ryan.
+>>    * Return -EINVAL if page table allocation failed instead of BUG_ON per Ryan.
+>>    * When page table allocation failed, return -1 instead of 0 per Ryan.
+>>    * Allocate page table with GFP_ATOMIC for repainting per Ryan.
+>>    * Use idmap to wait for repainting is done per Ryan.
+>>    * Some minor fixes per the discussion for v3.
+>>    * Some clean up to reduce redundant code.
+>>
+>> v3:
+>>    * Rebased to v6.14-rc4.
+>>    * Based on Miko's BBML2 cpufeature patch (https://lore.kernel.org/linux-
+>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
+>>      Also included in this series in order to have the complete patchset.
+>>    * Enhanced __create_pgd_mapping() to handle split as well per Ryan.
+>>    * Supported CONT mappings per Ryan.
+>>    * Supported asymmetric system by splitting kernel linear mapping if such
+>>      system is detected per Ryan. I don't have such system to test, so the
+>>      testing is done by hacking kernel to call linear mapping repainting
+>>      unconditionally. The linear mapping doesn't have any block and cont
+>>      mappings after booting.
+>>
+>> RFC v2:
+>>    * Used allowlist to advertise BBM lv2 on the CPUs which can handle TLB
+>>      conflict gracefully per Will Deacon
+>>    * Rebased onto v6.13-rc5
+>>    * https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-
+>> yang@os.amperecomputing.com/
+>>
+>> v3: https://lore.kernel.org/linux-arm-kernel/20250304222018.615808-1-
+>> yang@os.amperecomputing.com/
+>> RFC v2: https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-
+>> yang@os.amperecomputing.com/
+>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
+>> yang@os.amperecomputing.com/
+>>
+>> Description
+>> ===========
+>> When rodata=full kernel linear mapping is mapped by PTE due to arm's
+>> break-before-make rule.
+>>
+>> A number of performance issues arise when the kernel linear map is using
+>> PTE entries due to arm's break-before-make rule:
+>>    - performance degradation
+>>    - more TLB pressure
+>>    - memory waste for kernel page table
+>>
+>> These issues can be avoided by specifying rodata=on the kernel command
+>> line but this disables the alias checks on page table permissions and
+>> therefore compromises security somewhat.
+>>
+>> With FEAT_BBM level 2 support it is no longer necessary to invalidate the
+>> page table entry when changing page sizes.  This allows the kernel to
+>> split large mappings after boot is complete.
+>>
+>> This patch adds support for splitting large mappings when FEAT_BBM level 2
+>> is available and rodata=full is used. This functionality will be used
+>> when modifying page permissions for individual page frames.
+>>
+>> Without FEAT_BBM level 2 we will keep the kernel linear map using PTEs
+>> only.
+>>
+>> If the system is asymmetric, the kernel linear mapping may be repainted once
+>> the BBML2 capability is finalized on all CPUs.  See patch #4 for more details.
+>>
+>> We saw significant performance increases in some benchmarks with
+>> rodata=full without compromising the security features of the kernel.
+>>
+>> Testing
+>> =======
+>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB memory and
+>> 4K page size + 48 bit VA.
+>>
+>> Function test (4K/16K/64K page size)
+>>    - Kernel boot.  Kernel needs change kernel linear mapping permission at
+>>      boot stage, if the patch didn't work, kernel typically didn't boot.
+>>    - Module stress from stress-ng. Kernel module load change permission for
+>>      linear mapping.
+>>    - A test kernel module which allocates 80% of total memory via vmalloc(),
+>>      then change the vmalloc area permission to RO, this also change linear
+>>      mapping permission to RO, then change it back before vfree(). Then launch
+>>      a VM which consumes almost all physical memory.
+>>    - VM with the patchset applied in guest kernel too.
+>>    - Kernel build in VM with guest kernel which has this series applied.
+>>    - rodata=on. Make sure other rodata mode is not broken.
+>>    - Boot on the machine which doesn't support BBML2.
+>>
+>> Performance
+>> ===========
+>> Memory consumption
+>> Before:
+>> MemTotal:       258988984 kB
+>> MemFree:        254821700 kB
+>>
+>> After:
+>> MemTotal:       259505132 kB
+>> MemFree:        255410264 kB
+>>
+>> Around 500MB more memory are free to use.  The larger the machine, the
+>> more memory saved.
+>>
+>> Performance benchmarking
+>> * Memcached
+>> We saw performance degradation when running Memcached benchmark with
+>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
+>> With this patchset we saw ops/sec is increased by around 3.5%, P99
+>> latency is reduced by around 9.6%.
+>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
+>> MPKI is reduced by 28.5%.
+>>
+>> The benchmark data is now on par with rodata=on too.
+>>
+>> * Disk encryption (dm-crypt) benchmark
+>> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
+>> encryption (by dm-crypt with no read/write workqueue).
+>> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
+>>      --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
+>>      --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
+>>      --name=iops-test-job --eta-newline=1 --size 100G
+>>
+>> The IOPS is increased by 90% - 150% (the variance is high, but the worst
+>> number of good case is around 90% more than the best number of bad case).
+>> The bandwidth is increased and the avg clat is reduced proportionally.
+>>
+>> * Sequential file read
+>> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
+>> The bandwidth is increased by 150%.
+>>
+>>
+>> Yang Shi (4):
+>>        arm64: cpufeature: add AmpereOne to BBML2 allow list
+>>        arm64: mm: make __create_pgd_mapping() and helpers non-void
+>>        arm64: mm: support large block mapping when rodata=full
+>>        arm64: mm: split linear mapping if BBML2 is not supported on secondary
+>> CPUs
+>>
+>>   arch/arm64/include/asm/cpufeature.h |  26 +++++++
+>>   arch/arm64/include/asm/mmu.h        |   4 +
+>>   arch/arm64/include/asm/pgtable.h    |  12 ++-
+>>   arch/arm64/kernel/cpufeature.c      |  30 ++++++--
+>>   arch/arm64/mm/mmu.c                 | 505 ++++++++++++++++++++++++++++++++++
+>> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>> +---------------
+>>   arch/arm64/mm/pageattr.c            |  37 +++++++--
+>>   arch/arm64/mm/proc.S                |  41 ++++++++++
+>>   7 files changed, 585 insertions(+), 70 deletions(-)
+>>
+> 
 
