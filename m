@@ -1,97 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABAC35957
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49AB7081E;
+	Mon, 16 Jun 2025 00:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750035241; cv=none; b=VKlO33SqI7ufr5qzlYnLTYm1mVYOkkIllqkB+1Hq/GVwuWGhWD9w0s8JfgNx8w2qKIm83ueHppM+PghWVqfX5Z4JEPEn4KI16lmc8VQoW+OmHP6H9TP5LXRJouEbWyredhASQu91SbFNlLEIXiLS17H29OkPh0xjwiCGjNH774k=
+	t=1750035424; cv=none; b=lxO/+n/DX3krV1HNo7RaX5QTG7jo2s/18zOQ/uatmHlFxz/1zD9EjGV8hGigPJ+gxLp0CloSuZ6jHuEIPqu3QgfKLl/sJkidMBFleI4gNEZxrFuxPEx3Jz9XMSZWD7qzPQmyk+h0YGMR61c7ZvpW1h/Kc3W+TLSJp1KPXesRoyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750035241; c=relaxed/simple;
-	bh=PvJZcc9f0qVYHBF6plE+brYDB6HOviMos5hReD6az60=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=U9ajjKBzMBVmKL+28CQLwjSLV1JdWwGiNINCQfxZ/B1dw7bg7EbxBnYrPrIbvM7/AeLXw80zfcxLDZjqyvX/gu0+CsJJB140QmFy/Oa+DFY4clR9GypBXe/QEPBQM+7ad+/zHLcS2p7mgijgTSioV5kku1Q+zLaA7qLEuQIF1Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X2in1O/A; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750035424; c=relaxed/simple;
+	bh=+E84oN7ceFHfRJbWHpZhLPyDdbHv3VBZ8qaE/QVREiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfQv5Ec5HqGDm47Tsloa30G0T2zUfwN1/ShEtVz9A2zTp0TF4CqD3uJO8I6n+//E71R1uBNTypTwVFwjwSXD5jWRnGkFpOJnXP/nk9Y21a7aPIFEYvWZCJn4ndy1oKeFi01CLf6FM+b6z8xggAQclmv5Rg/OEJEvT47n8EuFKCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IM2OdW+7; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X2in1O/A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750035240; x=1781571240;
-  h=date:from:to:cc:subject:message-id;
-  bh=PvJZcc9f0qVYHBF6plE+brYDB6HOviMos5hReD6az60=;
-  b=X2in1O/AbuBfZM8lx7UdDXKmgbi1P3mMJKFBpX30+//giMXDWjEnj4iz
-   mioXKlC5GXABhQjht3XEm8Ovz4QHy0PEMXJtdOHiROOTrh3pY2gldowuU
-   f0oDaYJQPDl1TQZYzaTo1X7C9BVk90o3LVOtb5R/u2ndV6uMvQTQOVqLB
-   Bg3tjGyeR89QZH8hLwsZfn9zQW+SyktI6rt/XoSu64EyMfv5fEZ+UdJ1O
-   CQt05eZxolz7fxIrdxr9JGU27K7hgCn2mWaNStkg/1uY9yrHRBsBVVAoe
-   aP6BSBj2wi9p6NOYb/TTez1eXRccHN+1aUma2DagwThLdRxUSmgM37MR7
-   Q==;
-X-CSE-ConnectionGUID: 24SP77PVRxWqScOHAh0DIQ==
-X-CSE-MsgGUID: ResB6ggyRYSJB3dRBeKWOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52152521"
-X-IronPort-AV: E=Sophos;i="6.16,239,1744095600"; 
-   d="scan'208";a="52152521"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 17:53:59 -0700
-X-CSE-ConnectionGUID: BFG0fyr4QzG+r7AeIpmPdw==
-X-CSE-MsgGUID: fiJY78aHRjC7jybQP0lJaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,239,1744095600"; 
-   d="scan'208";a="153094341"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 15 Jun 2025 17:53:58 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQy6l-000Ecu-38;
-	Mon, 16 Jun 2025 00:53:55 +0000
-Date: Mon, 16 Jun 2025 08:53:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/kconfig] BUILD SUCCESS
- 1dbc32c1928d5a775df8e2953a2debae3054e11e
-Message-ID: <202506160837.bf591cww-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IM2OdW+7"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3138d31e40aso3931296a91.1;
+        Sun, 15 Jun 2025 17:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750035422; x=1750640222; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oT/gl9ntzgnLVv3Iy2roEt0j1rQ3Tf60S9oriE2bToo=;
+        b=IM2OdW+7T/tqeVPrzKxkP25IlkrYUDcdRlRAV1OzdphMWTRbIiVTbYgc36mQsMeW1O
+         l2JVccU6O9zb2wKLpdpbhhYTiQPU3+DwLrqf0PJmERfTcu2On7fHL2wBy8LSsuPrWLoA
+         Ww43Yn29toVh5cKX4a3LgmcYwXMqCKVbhxrOYUnH/NsLnPE9yNFHw+TolPFQYRd0D0J/
+         XUr/7TFWAiyNXRQy4IpaDf2QPcdF5T1lc6bUSXUqK92RVq4+q+7r/MOjAeBYpqUy3k4f
+         /p33PzC5Jx1FmNp5sUp9Cu7t97x47OxL7xTqqU50P1cnsllO2o8QNVVgrbGguOtujcGx
+         ssVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750035422; x=1750640222;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oT/gl9ntzgnLVv3Iy2roEt0j1rQ3Tf60S9oriE2bToo=;
+        b=maT3bLxB4iBy9imJt2tW/c7Q+mNllgoSgrNeOd0NTxYxYcSkO/lCbHdtSUzhsiEoJu
+         8VuwuJZLIHrxWYuatb4Yy1NOb0LIOLaU0l8NMRcPymQXGePkQT/D8sd4KtUxCQj3J4u2
+         Ydko0kM84tKDjHh2eJ9e2JmUFDvEUUte5ZQCerZr40DnuZo01VG0/hClZnyIU9EDBH6u
+         ngRpDS4HDqXQg2xm9uvNbxV09TIFLSUC6mjqYiVuwFTWFyU3GYw5XAkJxuSCU6pFN4ZB
+         Ii9Ajz1F6ifhjCx630QZzEeFU1icZII/qSfqpmrbklqumab3T8EHg9OCmrKv0te6jSj2
+         NJjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvO5lRBGz3syAmLUC5GqYY3w0I+1uGjjkITUxyZN5EroAKQKDSS+SGR8NwOHBg/bUJV+ntWd4q7gavtBrN@vger.kernel.org, AJvYcCVqsaPqGR3D5LTyrU+ENy5oV9RLSHFTB79g1CI04Zqk96WQ3z203VkbTdy+KuHhb5cGV7p6jVUxqGYY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAK4sGx+ZN3hZwin+wpjVcSlvXXmrLbqdyOcUzTKRQAk0QDS3h
+	DQm1/D3HKb3DTiBxopmmj/RB+reh5jRBb0Izxt2oDPHkue+2R3XTWR9k
+X-Gm-Gg: ASbGncvK/3UuPjWyPg02rVAM6psvD35WXcwwJPm3jw/bf0GKX0qzpq5nc9jXhjPLAng
+	mlejTGzUEUersG9Pz6LYogzRb0AChfjeCPufvcWUbvpCoXEY3GguaXUsz4pZ0kbywcG+Rk9BB4b
+	hUW7VlyEuN35vj1zk5lbi0hdFSXoZlntLa+bOyUoEdmHgnGyRHbvuTouSjXQC75WLM4CZk8Mpa/
+	eMsbdUJrzCZ2YcDQh1bihcUN6wVHBB7bjg1aipIR8i/MO5RvayW8wjQ5p28yo62fPKm8gRc7euA
+	jVGMXmCL6N/LZ11Sb7stXqmXzxXcxYVmWtnJpU0CQ0U4mONbTUpMFDZhot2CWw==
+X-Google-Smtp-Source: AGHT+IEJZx+RvcW/dbXwya7QUE7sY7JBiNDXSGJnioj+9AXE7S+LvtvlFoRF1iJqrMM91idUaTWYJw==
+X-Received: by 2002:a17:90b:3805:b0:311:ea13:2e70 with SMTP id 98e67ed59e1d1-313f1cfa1afmr13643569a91.14.1750035421829;
+        Sun, 15 Jun 2025 17:57:01 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365d8a17e4sm49582235ad.56.2025.06.15.17.57.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 17:57:01 -0700 (PDT)
+Date: Mon, 16 Jun 2025 08:55:47 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Richard Cochran <richardcochran@gmail.com>, 
+	Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+	Ze Huang <huangze@whut.edu.cn>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH net-next RFC 0/3] riscv: dts: sophgo: Add ethernet
+ support for cv18xx
+Message-ID: <dex2g5mafop6vtc5qdkdlunk5te53u7xxntcz6sjhwldhah6hl@gs6inqeuzlo2>
+References: <20250611080709.1182183-1-inochiama@gmail.com>
+ <d3b20a9ce58fa296034fe3aa8b60ecde4c4192f4.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d3b20a9ce58fa296034fe3aa8b60ecde4c4192f4.camel@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/kconfig
-branch HEAD: 1dbc32c1928d5a775df8e2953a2debae3054e11e  x86/tools: insn_sanity.c: Emit standard build success messages
+On Sat, Jun 14, 2025 at 11:19:34PM +0200, Alexander Sverdlin wrote:
+> Hi Inochi!
+> 
+> On Wed, 2025-06-11 at 16:07 +0800, Inochi Amaoto wrote:
+> > Add device binding and dts for CV18XX series SoC, this dts change series
+> > require both the mdio patch [1] and the reset patch [2].
+> > 
+> > [1] https://lore.kernel.org/all/20250611080228.1166090-1-inochiama@gmail.com
+> > [2] https://lore.kernel.org/all/20250611075321.1160973-1-inochiama@gmail.com
+> > 
+> > Inochi Amaoto (3):
+> >   dt-bindings: net: Add support for Sophgo CV1800 dwmac
+> >   riscv: dts: sophgo: Add ethernet device for cv18xx
+> >   riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
+> 
+> Have you noticed any problems on the board you are testing on?
+> I've added the patchset + pre-requisited + the following into my board DT
+> for Milk-V Duo Module 01 EVB:
+> 
+> &mdio {
+>        status = "okay";
+> };
+> 
+> &gmac0 {
+>        phy-mode = "internal";
+>        phy-handle = <&internal_ephy>;
+>        status = "okay";
+> };
+> 
+> And the PHY is being detected and the Ethernet controller is being instantiated,
+> but the PHY behaves really strange: LEDs blinking wildly, link status is bogus
+> 100FULL UP even without cable insterted and the real traffic starts to travel
+> only roughly a minute after the cable has been plugged in.
+> 
 
-elapsed time: 724m
+This is true and may be related to a wrong pinctrl setting or the
+phy setting. But I am not sure the right configuration is at now.
+IIRC the phy is inited in the uboot and the kernel does not touch
+its custom part.
 
-configs tested: 20
-configs skipped: 126
+Regards,
+Inochi
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-i386                         allmodconfig    gcc-12
-i386                          allnoconfig    gcc-12
-i386                         allyesconfig    gcc-12
-i386    buildonly-randconfig-001-20250615    gcc-12
-i386    buildonly-randconfig-002-20250615    gcc-12
-i386    buildonly-randconfig-003-20250615    gcc-12
-i386    buildonly-randconfig-004-20250615    clang-20
-i386    buildonly-randconfig-005-20250615    gcc-12
-i386    buildonly-randconfig-006-20250615    gcc-12
-i386                            defconfig    clang-20
-x86_64                        allnoconfig    clang-20
-x86_64                       allyesconfig    clang-20
-x86_64  buildonly-randconfig-001-20250615    clang-20
-x86_64  buildonly-randconfig-002-20250615    clang-20
-x86_64  buildonly-randconfig-003-20250615    gcc-12
-x86_64  buildonly-randconfig-004-20250615    clang-20
-x86_64  buildonly-randconfig-005-20250615    clang-20
-x86_64  buildonly-randconfig-006-20250615    clang-20
-x86_64                          defconfig    gcc-11
-x86_64                      rhel-9.4-rust    clang-18
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
