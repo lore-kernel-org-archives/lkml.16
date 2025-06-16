@@ -1,118 +1,96 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EDB27FB10;
-	Mon, 16 Jun 2025 10:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B35295D8F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070986; cv=none; b=YLAZlh96tdPQS0iNzbVVm+8M4V1NqGWFP2uFgtI9foeMaZmM6N1wNEW9+9pn10eNvhio5X0flFnGE9j5DXXCh/vuoUU30r6Mqmou5FnRi+AZz3iIQGRwNLo900wG/GU8pngKFoP8z5cQRW5r0lTLw7f9oOPxjwYoCU0YPL07pNQ=
+	t=1750070996; cv=none; b=mwh30ktQORnfenoZjtDBJeatqHQ70SWLDqv0umrrxidwpYCUuBDUf5gAzx5hbgG/1ofAJC0ZqBgyaY2I7fey2UDJI4XgtcXp+tsm6a3mp0GsUnoA3ipAHzzOBbSpUGVPNYan1Yxuk+ZLSG4U2FRwnMZ/Y8Qia7iuBJO5SpnXCVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070986; c=relaxed/simple;
-	bh=dTq/ijg9wAiLDDvYi5+KhFq6NE1kLb9RMnNwHLT6zAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOKHVGbSTLTAQhCLd9u1kzBNhCdL1sT2yzIjON8IPlFFZhAMXjt/eBZrG4h3XXdI57eJDHxskX0HSBnwQVIzOVV5okQYXeoSMaa6+NsPO5My08HhRv6gIoihCzETxskxEUx9cAVtnq0LKk03w+YE0FralqkPprcZvuStQTznQXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=JbX1CR8R; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1750070996; c=relaxed/simple;
+	bh=fgAbH+bqMDdFSxa5Nsg900AieTB/XPyHcssZQxwzQvc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kt8DR9IFCU9giHu3Sg9dA1wwLti0T973Z28owBKBUWUt8PqOI9QAqeFWGoo7EvMI5ilLuJQ9+8UhkF4I0Lhrops/IHSIlydlrhrd5R63chZ5a2j0eMqPdBZXjn+vin2ajnuxghQ+/auIi0yJzw92Vlbnh8BN0f6k5g6eTveSCZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OBcnlKMa; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="JbX1CR8R"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bLRb2549Vz9sQV;
-	Mon, 16 Jun 2025 12:49:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1750070974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XY8QmFX6C/sGkVxyzcatdwuMOackSJD85Ys2cJrlHdU=;
-	b=JbX1CR8RBtgCBQt8jaWY9VXnIednZIJjOtAvoib1pnvZYtCrjr7WedGKILsmrbjHc5Ejk1
-	U+EYALUUEEX7ioXOI0+f8htJlHxdiyPInM69QH9+x/zQ9MGxC/PYi1zKomi2BzPQ+ryMgM
-	LWBw4qAe5jDrzf2wJNd56YTxKrpD5t+Nr9QYUhJnBmX3C3Qd8H3J9THwBFFDwS5ccAnMAY
-	b6qdhL6RV5rmJCmXJv+c3mSrO2OVMeCWO6CN+ZTHSWd9Ne1KohY8T48fiOHT6/Jy5pikcV
-	D12PQCDwZVtg6fZKx7tvUb43RvI0lMB8MnmpErrcoKnSAoVyj+TX4ORp6a1K/g==
-Date: Mon, 16 Jun 2025 12:49:27 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, 
-	Pankaj Raghav <p.raghav@samsung.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
-	gost.dev@samsung.com, hch@lst.de
-Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
-Message-ID: <vmc7bu6muygheuepfltjvbbio6gvjemxostq4rjum66s4ok2f7@x7l3y7ot7mf4>
-References: <20250612105100.59144-1-p.raghav@samsung.com>
- <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
- <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
- <76a48d80-7eb0-4196-972d-ecdcbd4ae709@intel.com>
- <jpuz2xprvhklazsziqofy6y66pjxy5eypj3pcypmkp6c2xkmpt@bblq4q5w7l7h>
- <b128d1de-9ad5-4de7-8cd7-1490ae31d20f@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OBcnlKMa"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so779264f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750070993; x=1750675793; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=noASFFqKv9QR1JcSSNjGq2HTnkr+7eqAct6g0x+3TVU=;
+        b=OBcnlKMaqNC2WOlTeGBmZbP1DYtdgWbUgbvF446lFQZV+9M1F/mYJPw4jjhK0i38hT
+         2sLxaBiWaGUUL+azGAhFL7zgpJvqn5g74oULrWoFX3gtf6CISW11jNPRkOtgJ+YL5dAV
+         wcgQ5dlzJw/fuWqug4MpRYDfVU5sujAiDB6TiwUhrIvrO1xrTmZyr4YPQ2NwiKQ5YRze
+         KvuBYvuveubzHWWKXUJ7PnnhsfMTrwNTDAfrznQCyInKOh0+ZV4HaaBwgJ3B/QLcHB8W
+         JuLA/mbHQAsZoeDgxrt8BoBZ/4AlYLfflvevd0kKUgd3Wvk9BMSTxul1yaTSB53Njf9V
+         BfPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750070993; x=1750675793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=noASFFqKv9QR1JcSSNjGq2HTnkr+7eqAct6g0x+3TVU=;
+        b=niOG6Oq9dmx6yvhOr0yMd45Kku2vSUq5dwFMCCvecbhf5nApdXmp+97wfJq0zh+w7l
+         Ez8QS7XW8MQA+N0Y2+JA9oDaK1jo+wOSOvvUQkZJ/q4Hm1G8JAJArmf36QW/6myfD3HR
+         9/u2HoKUYEkDFi/p0eV1O7cqeGetewzSmKX5PuaFUs6XQ7rBMnJNsLo137Di81J+8emg
+         iPdzVxRkuny95wvqg8owYa5l5Aen2+kqotBaF+38sFsM/Vx//deu0+lnHXmc0Uy1VAqm
+         dY94isJhSNLKb860A0qH4wbTHCcI/jmNdxzJ7swthALv3Fj1vYg5dI1QnzgNqgsYMPTG
+         tKLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxBC1h53pAknGFxwwwG/VJNEypCjfR7mV9KSx+WZWBUfruKygy5Z5/1IOmUKLc8N6E781n0bRK0Q4oKEQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySYhn68h/P2ePAiHQJx7JDRMQODRGGwOWtbDnzNTZ+ViM+VtpC
+	HvSm4fn8+CsjkO5N5xKAFZ40J6rhtw85FVkMitP8FD4Ytmmdrk9inTW9mGsmpCYyJwFTJ6FMmWS
+	xLnQVf0n3X/5S2+STfpxCRBX40Yv15K6FvTrOfvpz
+X-Gm-Gg: ASbGnctX0Kft5+arKWQyxDSDfEfJe34gIdTngQ8z/VlqxkbGQ39CuUIw7/pHzEjTW88
+	KnrBng0xFvZueI2Lhl2Og6RSlTooSH9gznIX/Jc2hxaa1QTiVHn5H7eZuTEetxwdR0YTNUHUdPj
+	SW1PC3NIhf8lljx4zJASqOU5fc8hikLqXSWzY3yLnUhaBjqsBH/c8nHFs=
+X-Google-Smtp-Source: AGHT+IF5tKVn0HH4+Er7S+XZNod2FyfrS9dHKNqy5QhSTc4SSiK6Xgx8ZEz8Nlngk9yhomQM63HB2J6yh0gSTliC484=
+X-Received: by 2002:a05:6000:188b:b0:3a4:ef0d:e614 with SMTP id
+ ffacd0b85a97d-3a572e79d24mr7089351f8f.33.1750070992846; Mon, 16 Jun 2025
+ 03:49:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b128d1de-9ad5-4de7-8cd7-1490ae31d20f@redhat.com>
+References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
+In-Reply-To: <20250611194840.877308-4-bqe@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 16 Jun 2025 12:49:40 +0200
+X-Gm-Features: AX0GCFuTb5n8MBWBEa5YiiJmxDs0pB6vkofAmmHr2Oh2WDSvt3-JtKcoydHZXtM
+Message-ID: <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com>
+Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > > 
-> > > The mm is a nice convenient place to stick an mm but there are other
-> > > ways to keep an efficient refcount around. For instance, you could just
-> > > bump a per-cpu refcount and then have the shrinker sum up all the
-> > > refcounts to see if there are any outstanding on the system as a whole.
-> > > 
-> > > I understand that the current refcounts are tied to an mm, but you could
-> > > either replace the mm-specific ones or add something in parallel for
-> > > when there's no mm.
-> > 
-> > But the whole idea of allocating a static PMD page for sane
-> > architectures like x86 started with the intent of avoiding the refcounts and
-> > shrinker.
-> > 
-> > This was the initial feedback I got[2]:
-> > 
-> > I mean, the whole thing about dynamically allocating/freeing it was for
-> > memory-constrained systems. For large systems, we just don't care.
-> 
-> For non-mm usage we can just use the folio refcount. The per-mm refcounts
-> are all combined into a single folio refcount. The way the global variable
-> is managed based on per-mm refcounts is the weird thing.
-> 
-> In some corner cases we might end up having multiple instances of huge zero
-> folios right now. Just imagine:
-> 
-> 1) Allocate huge zero folio during read fault
-> 2) vmsplice() it
-> 3) Unmap the huge zero folio
-> 4) Shrinker runs and frees it
-> 5) Repeat with 1)
-> 
-> As long as the folio is vmspliced(), it will not get actually freed ...
-> 
-> I would hope that we could remove the shrinker completely, and simply never
-> free the huge zero folio once allocated. Or at least, only free it once it
-> is actually no longer used.
-> 
+On Wed, Jun 11, 2025 at 9:48=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
+> +impl core::ops::DerefMut for Bitmap {
+> +    fn deref_mut(&mut self) -> &mut CBitmap {
+> +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> +            // SAFETY: Bitmap is represented inline.
+> +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
+> +        } else {
+> +            // SAFETY: Bitmap is represented as array of `unsigned long`=
+.
+> +            unsafe { self.repr.ptr.as_mut() }
 
-Thanks for the explanation, David.
+Nit: You want NonNull::as_mut_ptr() here.
 
-But I am still a bit confused on how to proceed with these patches.
-
-So IIUC, our eventual goal is to get rid of the shrinker.
-
-But do we still want to add a static PMD page in the .bss or do we take
-an alternate approach here?
-
---
-Pankaj
+Alice
