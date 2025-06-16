@@ -1,137 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA5C283FC4;
-	Mon, 16 Jun 2025 16:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B50259C9F;
+	Mon, 16 Jun 2025 16:24:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091003; cv=none; b=B7OaG2KFhB5WaaenKbkNlT8gJ3IZzvldhdidhT6tLwWsa60tHbF8T1ZEcWdPB9yBAHXbdD+jcVgCNFhYGEFEXcD6o5FuVICObnIIBgMH/WbV9c4jn2VNTlrJ0NZauHXoSrN4UdHmrweOCA3aeSJRhith17Lf0dBv+lffPlTHg40=
+	t=1750091068; cv=none; b=htUIMdVgcYmlek5Z0tX53/CJHSyUfcJQlY/aK4u840dvjRx6I/4j8ihc6Rb56JVqAF7W1ovnBqZe8kOdU8FcbQh+Q7A5C4AkPn2eQ82lX5Q0hOfgVmC0T2mP58icePoQj7YlzwT2n2LlkkSGShMX+kzQAeAEQ6DeqD+zpvKmYQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091003; c=relaxed/simple;
-	bh=qFpotMY7tq4ADsoi3DUebAKJTMXci31UD1MWqzHTu7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EoaMTLNOMWT5gtD80QD77zVQ3IIn3vjO28lJ+abfRMJqVGzobZ2anUMvboNXI8ZSWnqxXXhL2yo02dOXpWbHigT6kgvxkRi9cLmI5+asevoCZ96K7xUSxkSIckhSsKetfTO6kSoD+DcMp6Z6srU0GO9sf49P6tpmLaj1bw0XHLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0xwSQyx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750091068; c=relaxed/simple;
+	bh=ssHje7B9A7JzdKBxlmrv4L2ZZs2OmLATdFQs7jJnjv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VXxH5rrORLLh6EaNEqPCfSbu0WPJZkeW3J7tFwYUKLBGrNt+sryCaLr4TxdIHsh8pCKzCtvaXD4LbEP3PCSZviQ7n4FudlpM6UCqxHj8X797IwQqlF5BF+d54TFUJSQcqEqTeDjMFNqIZZHZVMp8OS/dKpCNFpjoccYTwIPE8bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qy7Ma7SX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0xwSQyx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA8BC4CEEA;
-	Mon, 16 Jun 2025 16:23:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qy7Ma7SX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2CA8C4CEEA;
+	Mon, 16 Jun 2025 16:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750091003;
-	bh=qFpotMY7tq4ADsoi3DUebAKJTMXci31UD1MWqzHTu7k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p0xwSQyxC2/YKKvq1zomzh/UTxDXOFM6cVT6l1b81FM0GIBkoShWmbGUYidAcGE+j
-	 zfVSJQo1GCdcunPqJQfcPBxaOHq1L+RdnYOshC1XZl5vvDzq9wvN6YgzunP7b+23hp
-	 540L+dO1091AvjzZUeoWPgpECDob7HscFfF3brQEAaxMNqrHoogCRAVXath9tSJaW1
-	 SgEnPBizK5nWto+5YkBcnaFCnDYf4MkgjwdCMTO4bJRWui0AmHMY0Uj5X27ksgTTwV
-	 3a8xJJLDUOvfQz8ibVFjZ9u2mpaEGgEFwsHBYdLOmCUoy6jGt57FRp9IpvKNcT1IbS
-	 M1Je5K0XDbICA==
-Message-ID: <48e6cc62-ffb0-4ca7-80c8-9e510db505db@kernel.org>
-Date: Mon, 16 Jun 2025 18:23:18 +0200
+	s=k20201202; t=1750091068;
+	bh=ssHje7B9A7JzdKBxlmrv4L2ZZs2OmLATdFQs7jJnjv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qy7Ma7SX375nPIIslo9tQceoWvQeA3MGd/6WhYb3vA36GodaKOa+QsSlWRI7P4WsQ
+	 O/wVEjYzu764zUel6GRX0zMLZBdd/9dvwdQUqBljZxnCKUPhaRF8dOTCBTBbCiHxO8
+	 y/Wxs4ofBW4VtgvLvzv+t3H4G4fBAiBeENEoViPBpmIeu4SZLfuccTmX3VhzPFAk/u
+	 gZOJ0863QmnHtIMF/KaJLzDM1jn7f59ifioWfxi7C5pm4JIlol4LMUkT72cc2CgjBz
+	 knnnP25lmYjhWsnt1bSPQFBqs2fciTqeo1I1k8uwpcYwvmPo5WesqTFvUA9bcaDCn+
+	 SDyPFGgckrjHg==
+Date: Mon, 16 Jun 2025 13:24:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] perf evsel: Missed close when probing hybrid core
+ PMUs
+Message-ID: <aFBFOBUhHnF87R9q@x1>
+References: <20250614004108.1650988-1-irogers@google.com>
+ <20250614004108.1650988-2-irogers@google.com>
+ <CAP-5=fUz6ViPHDdS9GCAEYUN39L4MpAnRR4CzJWggg0S8vn39A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: media: venus: Add qcm2290 dt schema
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-Cc: quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
- bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, stanimir.varbanov@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250613140402.3619465-1-jorge.ramirez@oss.qualcomm.com>
- <20250613140402.3619465-2-jorge.ramirez@oss.qualcomm.com>
- <6f4e715f-1c73-450e-b7eb-92781b7fa050@kernel.org> <aFATp3zoSgkrj3YX@trex>
- <a76789cf-afe1-4d91-afdf-65c3af5ad11f@kernel.org> <aFBDzWLkKC9MWGoC@trex>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aFBDzWLkKC9MWGoC@trex>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUz6ViPHDdS9GCAEYUN39L4MpAnRR4CzJWggg0S8vn39A@mail.gmail.com>
 
-On 16/06/2025 18:18, Jorge Ramirez wrote:
-> On 16/06/25 16:41:44, Krzysztof Kozlowski wrote:
->> On 16/06/2025 14:52, Jorge Ramirez wrote:
->>>>
->>>>> +  The Venus AR50_LITE IP is a video encode and decode accelerator present
->>>>> +  on Qualcomm platforms
->>>>> +
->>>>> +allOf:
->>>>> +  - $ref: qcom,venus-common.yaml#
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    const: qcom,qcm2290-venus
->>>>> +
->>>>> +  power-domains:
->>>>> +    minItems: 2
->>>>> +    maxItems: 3
->>>>> +
->>>>> +  power-domain-names:
->>>>> +    minItems: 2
->>>>
->>>> Why is this flexible? Either you have two or three. Not mixed.
->>>
->>> please check 5b380f242f360256c96e96adabeb7ce9ec784306
->>
->> This does not explain why this is optional HERE. You cannot use for a
->> new platform an argument that some existing platform was changed in
->> ABI-preserving way.
-> 
-> thanks for quick the follow up.
-> 
-> but bear with me please because I dont follow - why can the same logic
-> be used - it being applicable - and therefore result in a definition
-> similar to those other platforms?
+On Mon, Jun 16, 2025 at 09:04:41AM -0700, Ian Rogers wrote:
+> On Fri, Jun 13, 2025 at 5:41 PM Ian Rogers <irogers@google.com> wrote:
+> > Add missing close to avoid leaking perf events. In past perfs this
+> > mattered little as the function was just used by perf list. As the
+> > function is now used to detect hybrid PMUs leaking the perf event is
+> > somewhat more painful.
+ 
+> Given this leads to leaking perf events on hybrid systems it would be
+> nice to land this 1 liner in the next v6.15 rc pull request fixes if
+> possible.
 
-Because this platform either has 2 or 3, not both. Unless that's not
-true, but then please share some arguments.
+Sure.
 
-Best regards,
-Krzysztof
+Just one nit: while looking at:
+
+void evsel__close(struct evsel *evsel)
+{
+        if (evsel__is_retire_lat(evsel))
+                evsel__tpebs_close(evsel);
+        perf_evsel__close(&evsel->core);
+        perf_evsel__free_id(&evsel->core);
+}
+
+And then:
+
+void evsel__delete(struct evsel *evsel)
+{       
+        if (!evsel)
+                return;
+
+        evsel__exit(evsel);
+        free(evsel);
+}
+
+and:
+
+void evsel__exit(struct evsel *evsel)
+{       
+        assert(list_empty(&evsel->core.node));
+        assert(evsel->evlist == NULL);
+        if (evsel__is_retire_lat(evsel))
+                evsel__tpebs_close(evsel);
+<SNIP>
+
+I think that tpebs_close could be done just at evsel__close(), no?
+
+The way it works I think there is no problem with calling it now twice,
+but it fits better in evsel__close().
+
+- Arnaldo
