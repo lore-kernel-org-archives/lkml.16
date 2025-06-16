@@ -1,120 +1,124 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5F21DDC0F
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B2C1DB92A;
+	Mon, 16 Jun 2025 09:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750066459; cv=none; b=fKJtPkMsPyjm/03b+VzbLA7HEwpEb6tzplBvzmK9rmYu8cWpdWjRklVS0hwln6dYowChGa/cmQ1UChnN2sEW4SkI9fCEW057JUZKoBXbkw1nW5Qw7mAEkQbcf6Hc2aqpQoZ528LTzKIweofSBlHGYj7tHctWQi6FmdMPKnNRC94=
+	t=1750066576; cv=none; b=rYAaY54UVEPbMVwB9UUZRe2zVS0cn049ADkYo6K+z9U3ZqT/Pibc0zFytCqZP72A7zxsn0CUcQvP3tK+z1OA5VNs+Cg78xDzZXZsdOj+94pTjseqFqlYucPj49OR1h2EF2h0b03Yn2Ip+KC1KmTFl9V022mxVnVNu8/78wbY8rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750066459; c=relaxed/simple;
-	bh=yWuVND4T3UIjH81QGhsgSpvTzpQOmi6MbpEzktgkuI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lxHi/5Donv0EaQP+wUfqfRH0TrtGR3qkwL9Mdykrj5v/mkyALyIRb1BARIeHCtDcuevBan9pBRMH+2uDy1lZ04/14cTv03qj767bKObcx96i2eZDe8M40TCXMIAfnEhjheUWBS90eNlk8fTWrvlvHEsXsiUWHF5R/idbRpjrv6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MFidEgOK; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750066576; c=relaxed/simple;
+	bh=8ZZNaS1EQOzMN3b0pdHsmdCs8AmTvHGhRO2jOKK6SAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oKSQXB+wPzSGbCvS6aHa65wtjRdqPSA134tLboqgxIy1ftMbiofwsN4nvOtiH4BFSuV/KUY/23nu8Eh5GK7q6TQvJnK4WZwZjYkhuUozSioGmM2YG896xFZiJtjzpg4wLNHelm9ikN2xecMYn5ABxWcn14h3g+X+YrI+2V/vKeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RDk62leu; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MFidEgOK"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a365a6804eso2998670f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:34:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDk62leu"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-adb47e0644dso749490966b.0;
+        Mon, 16 Jun 2025 02:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750066456; x=1750671256; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t9CmXx7Jox2MTWDj8UZuRJKz6FA45h7DTh7MdX7eUyU=;
-        b=MFidEgOKkpw4Z9O7KVk0KUuUoWwhFn/l6i4WUoKLxlApenc/ehCs3ENMT8hJZW/5sp
-         s/6SrY22821PTS/QPYyc1teFOUQ71TodgN73+Ga+bCbHLMKY0DnJaEj2DgDVPLRvDUbY
-         4pFdELkO8z7K3jArSU5t6ZvHf8Ay6W23Skp/St87bxPTEoGQNoxvoMgAbbSGt073Dp8I
-         Ro6YqzOAN7+vLVc6EUqzxw4VNJBJSEJ3px9MnrhQH5ET9XMRBGwG2KbG7oQ2FUlktDUU
-         C35LdAqQEiiUhe0s2LI68DBMIWZEYLE7SWgWLsATa6BfwNslDhuxQpzYmdid+r5KUK2D
-         EI/Q==
+        d=gmail.com; s=20230601; t=1750066573; x=1750671373; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hK148dPBVhVoGpVehFIEtiNr6qK0xvYB43T1Ml3zQOk=;
+        b=RDk62leukyOGbqpUI7h9n6bxSDobqJi7tMoyOkGYur9HjYTp3PWxCEVCbDKbUF1tAX
+         c+NwqJNHLfkXjNihns2b45IVNRhlezJv6ZIq5Gw3Zzn+uIG206KYfukpJVzSrHhAWDg/
+         0ox2jexRBVhBXIxPXfOhk5fMoUwbjbum7kmuOdb2tT2rT9cAyRM8EAsozU2mRUlA1VLN
+         eESQNWL8jPlUTHWW2O1dSfsGHaqWs46kmtQb/mMFOwfYCyhNhICMWhIsV/YgyXH5iuQm
+         w0pSuIGyU8z8X7hXRVNIgDyvecKMpqVqz89OpXNPBJksogbYOU6KcVDYRVoIRKwufsWZ
+         y5SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750066456; x=1750671256;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t9CmXx7Jox2MTWDj8UZuRJKz6FA45h7DTh7MdX7eUyU=;
-        b=ciapKuZxOuBEvdK2rutMB5bQ43gZ6KuvZ1p0k2nOFLMi3jfFs/V36hf+GI5OLxZgX5
-         y0Z9LObqQAE8UF+kbc0nVu6/T6pssqbfuXOuJXNvbE3gCqn1RoXVVDpjMMZ6z4xErBlb
-         4EjWp9GAJW0RnG8MsBDQoGwkkor1AQMWYz/TOEQySOrzL21bHbVlGn5frJB9yRJ3/+3P
-         I39AB1msFDcHFSDlACBjaXVi4dRins0/h4MDyy7whITax3hiUkq3LTtnsAVykM56MWe+
-         WQgA4Gsj+1lHl8EicOPWuAfDkgXHE4JdsCeaKkiH8wWs470y0fGiXmXHpUh0Q+naKkAI
-         9Gzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVetZ/Z6k3CCkLx5nEyAWiMKl45yPIZ8orqTRtwmKLs/Uh94RhhqgveIgGRp2Hlb8m//iYxPjsoHue79Cs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjgBO4ZwYukyFBG28mulylBkYl3yYaAGg1KnSeY6848CU8MgAz
-	+NVOBHzcxuLXmOsxLDmItqkmAybvNETnvbwhUlE3ATgQvqAD7e7HTju7/QFPkwkDGKE=
-X-Gm-Gg: ASbGncsRNoTzFFj56ZrZ8bzl4ZQ0GMb2aZaV/OCD5xY5NUMrfuwlp5vOPoguIawGBzJ
-	+QyakTAswix5z+WIz9AqnRpUe6NZ6l75+jscOkLpp8OzNFsfo38j47+Ahj+vluxtuj4lLcVfLT1
-	StHjcPXJLWbTzYh8gC6OeGDVHyVzTQSbjB+/85LqOyr7/KOXN8EEa5230BkoCBD+ifJDxRYpO0D
-	Uk9HkS+3rLlR2uy4rRV1sfvxgxUke5U4Z7HHkg8TVCKweO+GjwPbQFgToDvJjukwF2pudndODwv
-	rVoTo+/3QR1gYYL1vFzw+ZSARy7+2X7j91homol8GfOBqtOUXlfI4M7PKQdSK12i323vX1rDAMs
-	WYA==
-X-Google-Smtp-Source: AGHT+IH2eCAan9hr2z5r64aFmnkOfZ0VQQsGBIwNUvdyfgouIqWaqapfX02p+ntb3Jt3ejJMX+pmLw==
-X-Received: by 2002:a5d:5f8d:0:b0:3a5:5270:a52c with SMTP id ffacd0b85a97d-3a57189727dmr7228368f8f.0.1750066456498;
-        Mon, 16 Jun 2025 02:34:16 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b403b4sm10327273f8f.80.2025.06.16.02.34.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 02:34:16 -0700 (PDT)
-Message-ID: <9af5522e-02e3-4a82-a9df-20c71ebb3875@linaro.org>
-Date: Mon, 16 Jun 2025 10:34:15 +0100
+        d=1e100.net; s=20230601; t=1750066573; x=1750671373;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hK148dPBVhVoGpVehFIEtiNr6qK0xvYB43T1Ml3zQOk=;
+        b=Mfen3oqG2ph90W8ZyopmDEN6X2XEReZqh0X0LJr1KC4VXtjcT95cOY5buYbo9qeR1f
+         0QDZioskNHu/GRZPbZpLBpJVsodMYReMOb6mlmgu0z39cq+XkrBrR1iiYpALcfweXu9r
+         SfQL1+JTX7G4gMgmC1wfvYAQ5Twu5B2y45ZHiFCqMQ1maOx26GMeTeUm7/inM1oDWLSc
+         ZWjRMiRVwh/YcS6QG+m2rULkemv2/BAWMTD+5E1P+uroxUNsC+U3rDSPh2rKSyllzdnn
+         w5c9RxXdzalUy2jUUNdnXCRX1we/N1oefRQ4DQu1DyXwR5ZZLUsRbDy9uE0IGks8YAkI
+         xKZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV8uDSVbtzdCNvyARFNsQSoHRojxMoihir6ms8DY+xQe37O8++tOgnL0wK/+QA2MNeWl1ycje9EMcWl@vger.kernel.org, AJvYcCVoXxfc9/2oKZXaNbIVDAmFCvu7eMTArGczeTMUKnvu8ChLlybkaf2LYcxVuDbfzO/0Milw1bZk6DE=@vger.kernel.org, AJvYcCVtXvKubJVbxT6ciRbZ88cmgHsxQyjNs6aL9+EBb9jbbgClro9s9nrK8UUPEbnZG62chnhg6iLGqx+6Q40u@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4TLxF1zYqVpwy5b4k+qN8fFQtcFQhz/3O7Y/QlQQ9rZhxEjfy
+	VQS96fQFdpxepEz8232/LB0fxNWlnJlr21iQLIn10K+y2kKQ+3Q/UJvgsYbqvbvTDP6UQ3RPppT
+	+sF4XM47PBtjrACPAtbiZznOE5eZG/rU=
+X-Gm-Gg: ASbGncuXN0B8MdSUAWrEa1ieWnsLzK9Bdti5IHZ1lXQcVgfIQS+UXoMU+uB5fqqN3gY
+	q/rcH+3euw41/th9b/Z0kbCNBquvPd/3oyWgsjN0LLEEg1KiAa1rq4japRPG7rDlj+BGWacpTrI
+	MBZlJKVNIE79L8dR5frb6KSLKAbKqbc2iTe3DpW2ycPiaFLQ==
+X-Google-Smtp-Source: AGHT+IHS2jVdEw2lFKPrriN00IFvHK0HPmKNab5n4Aj3sgFfyqvoLxbfUMt5O5cFBNEG65or8nvquSAWfJQf2axo7dI=
+X-Received: by 2002:a17:907:3d45:b0:ad8:89c2:423f with SMTP id
+ a640c23a62f3a-adf4c73201amr987734966b.7.1750066571900; Mon, 16 Jun 2025
+ 02:36:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Revert unintended dependency change in
- config SPI_FSL_DSPI
-To: Lukas Bulwahn <lbulwahn@redhat.com>, Mark Brown <broonie@kernel.org>,
- Ciprian Marian Costea <ciprianmarian.costea@nxp.com>,
- Larisa Grigore <Larisa.Grigore@nxp.com>,
- Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>, linux-spi@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lukas Bulwahn <lukas.bulwahn@redhat.com>
-References: <20250616091955.20547-1-lukas.bulwahn@redhat.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250616091955.20547-1-lukas.bulwahn@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250615222258.117771-1-l.rubusch@gmail.com> <20250615222258.117771-5-l.rubusch@gmail.com>
+In-Reply-To: <20250615222258.117771-5-l.rubusch@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 16 Jun 2025 12:35:35 +0300
+X-Gm-Features: AX0GCFuHlPxYSGvUObbMJmIjrtTBb7TtEbQMx7iAhD6LZKz8e4G03Z6dHqiZJWA
+Message-ID: <CAHp75VcOFK03k=apXhqyd1-V_wt5WpQR=NXiTAQQ6gYmMGH-yg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] iio: accel: adxl313: add activity sensing
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 16, 2025 at 1:23=E2=80=AFAM Lothar Rubusch <l.rubusch@gmail.com=
+> wrote:
+>
+> Add support for configuring an activity detection threshold. Extend the
+> interrupt handler to process activity-related interrupts, and provide
+> functions to set the threshold as well as to enable or disable activity
+> sensing. Additionally, introduce a virtual channel that represents the
+> logical AND of the x, y, and z axes in the IIO channel.
+>
+> This patch serves as a preparatory step; some definitions and functions
+> introduced here are intended to be extended later to support inactivity
+> detection.
 
+...
 
-On 16/06/2025 10:19 am, Lukas Bulwahn wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> 
-> Commit 9a30e332c36c ("spi: spi-fsl-dspi: Enable support for S32G
-> platforms") reworks the dependencies of config SPI_FSL_DSPI, but introduces
-> a typo changing the dependency to M5441x to a dependency on a non-existing
-> config M54541x.
-> 
-> Revert the unintended change to depend on the config M5441x.
-> 
-> Fixes: 9a30e332c36c ("spi: spi-fsl-dspi: Enable support for S32G platforms")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> ---
->   drivers/spi/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 60eb65c927b1..f2d2295a5501 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -647,7 +647,7 @@ config SPI_FSL_SPI
->   config SPI_FSL_DSPI
->   	tristate "Freescale DSPI controller"
->   	select REGMAP_MMIO
-> -	depends on ARCH_MXC || ARCH_NXP || M54541x || COMPILE_TEST
-> +	depends on ARCH_MXC || ARCH_NXP || M5441x || COMPILE_TEST
->   	help
->   	  This enables support for the Freescale DSPI controller in master
->   	  mode. S32, VF610, LS1021A and ColdFire platforms uses the controller.
+> +static int adxl313_is_act_inact_en(struct adxl313_data *data,
+> +                                  enum adxl313_activity_type type)
+> +{
+> +       unsigned int axis_ctrl;
+> +       unsigned int regval;
+> +       int axis_en, ret;
+> +
+> +       ret =3D regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axi=
+s_ctrl);
+> +       if (ret)
+> +               return ret;
+> +
+> +       axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
 
-How did that get there... Sorry for the breakage
+> +
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Remove this blank line. If needed, can be added later.
 
+> +       if (!axis_en)
+> +               return false;
+> +
+> +       /* Check if specific interrupt is enabled */
+> +       ret =3D regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval=
+);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return adxl313_act_int_reg[type] & regval;
+> +}
+
+--=20
+With Best Regards,
+Andy Shevchenko
