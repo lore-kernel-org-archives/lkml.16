@@ -1,632 +1,171 @@
-Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0614654BC6
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEF92CA6;
+	Mon, 16 Jun 2025 07:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750058585; cv=none; b=toauhW6OSup1oot6tlAXXa84ANZf2vvgFaJDvbejkFbHWOxUHkiIAdvavsPDGX74nwvGlTeoFiA28vyXvgFREfUyobvD+5YSWYnlY4mKjVkQ+VBs1pmN/ki13qEafFshSEutWmoJXnozjhGmkRaSUaKSiSSRXzaelqAXuwyExhM=
+	t=1750058624; cv=none; b=kDZSJY1VnnVEnU5I6gp65zfBFc4i7ABPPdBX0X9ssJEkBtbsCPOfQxK3NuNiArJWrHzf5Ew0l8yEMGLyJZzy3wpmQ//fwa9lYzMG0niq2u7vrTDntATHp9K6mJ/X9XlBZaP8irCGw/E/Os0urBy9pLNI4qY53l9dQei59sYRTis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750058585; c=relaxed/simple;
-	bh=Do+yg2iCYskJKxUibD5C5iQE02k0C0vdSuU4K5doVCA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=CJw5G9rVUXC14ySUH9D7Wm3oLH1Uepa7K26phdSfVXKYVBsKyILv8jBo5qvN8f8vlLT/aqKy2iS3P5msDA1GAwr8vkQQMMiB408G+c7WSDX29RkBFz9ahRZjikTMD6Ac+RDTDx1MIm8TWxArzwEQp2lAtduzFV9OjY57GNZjGRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LSmSeH+I; arc=none smtp.client-ip=209.85.219.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750058624; c=relaxed/simple;
+	bh=b9h7zpBbrRZhTHEHtZrUPxpbmzF8I65Zuhh72vAlq3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MkJzUREYEoSt4vlpP4EciRPSwAoCnGJc50g7hMicAb5aylftO+l6yXN5yzw5HSt1I7nt3YwrcBkUsopph+TDapFurVOP/tCg1+c3lSp+4ya1MlEeuYEmKka3Oei5sCQqv0bPJT9Gk0MX9jRyT5v4+1EzkMbUr2m4x/+2Gzii0oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxhZQWxa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSmSeH+I"
-Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e81a7d90835so3692677276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750058582; x=1750663382; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+2nLI9huw6b6KbjZK5CWQHRad1r294pIX0EEkCgRgkg=;
-        b=LSmSeH+Il8iiCddpUV3DCFgCYNnjKeUHCUONbbEdhXezFgP0eONLs84jZQs/Yy1ZyX
-         Wzj4nmtQ5W7VKZGPq4gzE3poyJSwETOO22KMPs83D4Q2Vl76M2T+zB8scxLs9ZaFx20I
-         dB/I0UFRfkJq1LFwLgj5W0GdkP9P6hDbM2TIq1A7TuV6i0BpBfyKtPPh7OkRSmYWtpzd
-         Mnf5YKfuBKXJw8KY+a7/GnPKk6oqe9l/VEdJ6JBt+/wB7Oafgzuh65wdC4mkXHhs5VMm
-         SPPRN1othkScrn44w8a7ChEs7p95JW/AWhxxnDujqMOo7vIde4wJBRfCdc+hT+ZdruPB
-         6VkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750058582; x=1750663382;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+2nLI9huw6b6KbjZK5CWQHRad1r294pIX0EEkCgRgkg=;
-        b=pbSvQqORrvSYnFTFC8lq7pVFaC0L4zT01gwo7ZhXb/loI/mQMdvk/DeZy35eD8Yzep
-         uQhVhFsMvEIhnBD/3pUL+LFynqh5pEaLhLktgICgHS7zeFTDGjiEtUIFzwYNJ1eU2w0B
-         KONJkdBjUNs9Ab9inQv6+CMmzhOuRF99ntrK8Sz/fxZMtDvvkbYMHXfl/JH7LfwHr+1h
-         7OpoZjmHE8eryWCiPr3QYFWquEfeoMYiZFEv9lF8R3r2tV2O94HQ455DXBmpZaZf3RoY
-         RrfFhwz4kB7Mu2EshsTM3Le2laGSbqVGJNIyxzY+Fgtu3bWgNJmKlGUqnRbjksQ8TET8
-         FRig==
-X-Gm-Message-State: AOJu0Yx8e+GDiGz2FJvqxoj/IasUX8nadQMskhDLnn/W0aU8KGJcKm4S
-	eLCdivQ8019ToFQO+3zj5uiKAOtzl9JRMPpDJYzSg1ZuDpkCK72eAtRT8EUcKsCZknf6ZuejbUB
-	vz5ySRQ0XkYiIkjhAQKsTJNXMNYg3T7NGtOHWdWMJJQ==
-X-Gm-Gg: ASbGncu7vFwpz1UuymNm8luVzKb7QroLKeVZzQ7c5DC76KZDgxwbBztopZKex8XorWc
-	7iGv3ZR5uHqB9MPpipVFpd0Bq9fhT8ZvTYJo/Cj3KNAyu2Xshow7XDYimHyt1jzDfIeCAOhndXJ
-	rOZZnm+PR+kDMGhVxB7er5SDcyxQWqy4bAuwqlhaFBDBXn6dKqJRisKnt1IlcS7pNmlOZExvSu0
-	xqIaw==
-X-Google-Smtp-Source: AGHT+IGZ90eKfTF2xR04KDF9GIdlT1sUVq9qSUIZnSo/kKuMtCng66iiq5T/RZCFsV44Kev1fOCujilhfS74UtGt6Ks=
-X-Received: by 2002:a05:6902:1387:b0:e81:87df:2178 with SMTP id
- 3f1490d57ef6-e822acac6bemr10881738276.8.1750058581623; Mon, 16 Jun 2025
- 00:23:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxhZQWxa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E984C4CEEA;
+	Mon, 16 Jun 2025 07:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750058624;
+	bh=b9h7zpBbrRZhTHEHtZrUPxpbmzF8I65Zuhh72vAlq3Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uxhZQWxa8PaxXzrGspetZXp7H0rjB85XIpI/59HnhkqZat7owbtKeGGZdAXksx7Ab
+	 aakiNlhE9bUR5c2Zd/EByoQ6GZwl12tz7taYVgeTV9fTktlwOjge4GnBDDEMW/MxcS
+	 hGF9SzrCwgHCSWuJrNoh6UNfQgxWmKb9q+h/p+HON4vw9fxBJhIeOndNH6eAMF4+31
+	 Vn+ZfvGxf/iYZK90ck2Ckf45RTF7WP28tQ0z5knAvG2cd3mXJnVBieQ/dHCAvNH0Mo
+	 KBpC1OHyiXb3KHVxog3kvrNANBY8zTmqkDSY6KIp9ag57Pvj1W/cXQ9134FGiW3au/
+	 IZbu1dG1VBZ9Q==
+Message-ID: <73a94b93-6c7d-464c-8fb8-a8e1004e67a8@kernel.org>
+Date: Mon, 16 Jun 2025 09:23:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Amit <amitchoudhary0523@gmail.com>
-Date: Mon, 16 Jun 2025 12:52:49 +0530
-X-Gm-Features: AX0GCFvUh44WtEoSqCfApz7OubQwBHBvXoUX_jh5PdGTx8XmDAJzRJbUvdObGH8
-Message-ID: <CAFf+5zgGuaQG=v+Fs5qgqbcfq+rAbuaz3OZm=mqLK6VpCQMsZw@mail.gmail.com>
-Subject: Concatenate multiple strings (Four files: str_join.c, str_join.h,
- test_str_join.c, and ReadMe.txt).
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Concatenate multiple strings (Four files: str_join.c, str_join.h,
-test_str_join.c, and ReadMe.txt).
-
--------------
-str_join.c
--------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#include "str_join.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
-
-char *str_join(int skip_null_and_empty_strings, const char *delim,
-               int num_args, ...)
-{
-
-    va_list valist;
-    int i = 0;
-    size_t iica = 0; // iica - index into character array
-    size_t len = 0;
-    size_t delim_len = 0;
-    size_t total_len = 0;
-    int num_delim_to_concat = -1;
-    char *new_char_array = NULL;
-    char *temp = NULL;
-
-    if (num_args <= 0) {
-        return NULL;
-    }
-
-    if (delim) {
-        delim_len = strlen(delim);
-    }
-
-    va_start(valist, num_args);
-    for (i = 0; i < num_args; i++) {
-
-        temp = va_arg(valist, char *);
-
-        if (skip_null_and_empty_strings) {
-            if ((!temp) || (!*temp)) {
-                continue;
-            }
-        }
-
-        if ((!temp) || (!*temp)) {
-            len = 0;
-        } else {
-            len = strlen(temp);
-        }
-
-        total_len = total_len + len;
-        num_delim_to_concat = num_delim_to_concat + 1;
-        if (num_delim_to_concat > 0) {
-            total_len = total_len + delim_len;
-        }
-
-    }
-    va_end(valist);
-
-    if (total_len == 0) {
-        return NULL;
-    }
-
-    total_len = total_len + 1; // 1 extra for terminating null byte
-
-    new_char_array = malloc(total_len);
-    if (!new_char_array) {
-        return NULL;
-    }
-
-    va_start(valist, num_args);
-    for (i = 0; i < num_args; i++) {
-
-        temp = va_arg(valist, char *);
-
-        if (skip_null_and_empty_strings) {
-            if ((!temp) || (!*temp)) {
-                continue;
-            }
-        }
-
-        if ((!temp) || (!*temp)) {
-            len = 0;
-        } else {
-            len = strlen(temp);
-        }
-
-        memmove(&(new_char_array[iica]), temp, len);
-        iica = iica + len;
-
-        if (num_delim_to_concat > 0) {
-            memmove(&(new_char_array[iica]), delim, delim_len);
-            iica = iica + delim_len;
-            num_delim_to_concat = num_delim_to_concat - 1;
-        }
-
-    }
-    va_end(valist);
-
-    new_char_array[iica] = 0;
-
-    return new_char_array;
-
-} // end of function str_join()
-
--------------
-str_join.h
--------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#ifndef _STR_JOIN_H_
-#define _STR_JOIN_H_
-
-/*
- * char *str_join(int skip_null_and_empty_strings, const char *delim,
- *                int num_args, ...):
- *
- * Function str_join() concatenates all the strings passed to it. If 'delim' is
- * not NULL and not empty then the 'delim' is concatenated between every two
- * strings.
- *
- * Argument 'num_args' is the total number of strings passed to this function.
- *
- * This function expects that all arguments after 'num_args' should be either
- * pointers to null-terminated strings or a mix of null-terminated strings,
- * NULL, and empty strings. Any other type(s) of argument may make this function
- * behave strangely and this function may even crash also.
- *
- * If 'skip_null_and_empty_strings' is true then this means that NULL/empty
- * strings should be considered valid strings for the purpose of concatenating
- * 'delim' string - this means that if there is a NON-NULL/non-empty string in
- * the variable arguments list which is then followed or preceded by a
- * NULL/empty string then one 'delim' string will be concatenated between
- * NON-NULL/non-empty string and NULL/empty string. This can be useful in case
- * columns of a database are concatenated to form a record which will then be
- * written in a file - so here, a column containing NULL/empty value will be
- * represented as empty by having two consecutive 'delim' strings.
- *
- * If 'skip_null_and_empty_strings' is not true then this means that
- * NULL/empty strings should be skipped and no 'delim' string should be
- * concatenated for them.
- *
- * This function allocates a new character array whose size is equal to the sum
- * of the lengths of all strings passed to it plus 1 (extra 1 for the
- * terminating null character). It then concatenates all the strings passed to
- * it (these strings are separated by 'delim' string but please see above for
- * NULL/empty strings) into the newly allocated character array and then returns
- * the pointer to the newly allocated character array. If memory allocation
- * fails then NULL is returned.
- *
- * It is necessary to check the return value of this function for NULL before
- * proceeding ahead.
- *
- * The memory for the returned string is allocated using malloc(), so it is the
- * user's responsibility to free this memory.
- */
-char *str_join(int skip_null_and_empty_strings, const char *delim,
-               int num_args, ...);
-
-#endif
-
--------------------
-test_str_join.c
--------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#include "str_join.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-static int mystrcmp(const char *result, const char *expected);
-static void verify_result(char *result, const char *expected, int line_num,
-                          const char *file_name);
-
-int main(void)
-{
-
-    char *result = NULL;
-    char *expected = NULL;
-
-    printf("\n");
-    printf("-----------------------------\n");
-    printf("Running automated test cases.\n");
-    printf("-----------------------------\n");
-
-    result = str_join(0, "-", 0);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 0, "abc");
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 0, "");
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 0, NULL);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 1, "abc");
-    expected = "abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 1, "");
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 1, NULL);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 2, "abc", "123");
-    expected = "abc-123";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 2, "abc", "");
-    expected = "abc-";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 2, NULL, "abc");
-    expected = "-abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 2, "", NULL);
-    expected = "-";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, "abc", "123", "fgh");
-    expected = "abc-123-fgh";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, "", "123", "fgh");
-    expected = "-123-fgh";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, "abc", NULL, "fgh");
-    expected = "abc--fgh";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, "abc", "123", "");
-    expected = "abc-123-";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, NULL, "NULL", "");
-    expected = "-NULL-";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, "abc", "", NULL);
-    expected = "abc--";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-", 3, "", NULL, "abc");
-    expected = "--abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-?-", 4, "a", "b", "cd", "e");
-    expected = "a-?-b-?-cd-?-e";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-?-", 4, "a", NULL, "cd", "e");
-    expected = "a-?--?-cd-?-e";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-?-", 4, "a", "", "cd", "");
-    expected = "a-?--?-cd-?-";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "-?-", 10, "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                      "10");
-    expected = "1-?-2-?-3-?-4-?-5-?-6-?-7-?-8-?-9-?-10";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "", 4, "a", "b", "cd", "e");
-    expected = "abcde";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, NULL, 4, "a", NULL, "cd", "e");
-    expected = "acde";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, NULL, 4, "a", "", "cd", "");
-    expected = "acd";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(0, "", 10, "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                      "10");
-    expected = "12345678910";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 0);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 0, "abc");
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 0, "");
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 0, NULL);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 1, "abc");
-    expected = "abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 1, "");
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 1, NULL);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 2, "abc", "123");
-    expected = "abc-123";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 2, "abc", "");
-    expected = "abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 2, NULL, "abc");
-    expected = "abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 2, "", NULL);
-    expected = NULL;
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, "abc", "123", "fgh");
-    expected = "abc-123-fgh";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, "", "123", "fgh");
-    expected = "123-fgh";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, "abc", NULL, "fgh");
-    expected = "abc-fgh";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, "abc", "123", "");
-    expected = "abc-123";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, NULL, "NULL", "");
-    expected = "NULL";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, "abc", "", NULL);
-    expected = "abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-", 3, "", NULL, "abc");
-    expected = "abc";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-?-", 4, "a", "b", "cd", "e");
-    expected = "a-?-b-?-cd-?-e";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-?-", 4, "a", NULL, "cd", "e");
-    expected = "a-?-cd-?-e";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-?-", 4, "a", "", "cd", "");
-    expected = "a-?-cd";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "-?-", 10, "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                      "10");
-    expected = "1-?-2-?-3-?-4-?-5-?-6-?-7-?-8-?-9-?-10";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "", 4, "a", "b", "cd", "e");
-    expected = "abcde";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, NULL, 4, "a", NULL, "cd", "e");
-    expected = "acde";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, NULL, 4, "a", "", "cd", "");
-    expected = "acd";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    result = str_join(1, "", 10, "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                      "10");
-    expected = "12345678910";
-    verify_result(result, expected, __LINE__, __FILE__);
-
-    printf("\n------------------------------------\n");
-    printf("Success: All test cases have passed.\n");
-    printf("------------------------------------\n\n");
-
-    return 0;
-
-} // end of function main()
-
-static int mystrcmp(const char *result, const char *expected)
-{
-
-    if ((!result) && (!expected)) {
-        return 0;
-    } else if ((!result) || (!expected)) {
-        return 1;
-    }
-
-    return strcmp(result, expected);
-
-} // end of function mystrcmp()
-
-static void verify_result(char *result, const char *expected, int line_num,
-                          const char *file_name)
-{
-
-    int ret_val = -1;
-
-    printf("\n");
-
-    if (result) {
-        printf("Result = \"%s\"\n", result);
-    } else {
-        printf("Result = NULL\n");
-    }
-
-    if (expected) {
-        printf("Expected = \"%s\"\n", expected);
-    } else {
-        printf("Expected = NULL\n");
-    }
-
-    ret_val = mystrcmp(result, expected);
-
-    free(result);
-
-    if (ret_val != 0) {
-        printf("Test case failed. Check the test case just before the line"
-               " number %d in the file \"%s\".\n", line_num, file_name);
-        printf("\nExiting ..\n\n");
-        exit(1);
-    } else {
-        printf("Test case passed.\n");
-    }
-
-    return;
-
-} // end of function verify_result()
-
-----------------
-ReadMe.txt
-----------------
-
-File "str_join.c" implements a function called str_join() that concatenates all
-the strings passed to it. The signature of this function is:
-
-        char *str_join(int skip_null_and_empty_strings, const char *delim,
-                       int num_args, ...)
-
-Function str_join() concatenates all the strings passed to it. If 'delim' is not
-NULL and not empty then the 'delim' is concatenated between every two strings.
-
-Argument 'num_args' is the total number of strings passed to this function.
-
-This function expects that all arguments after 'num_args' should be either
-pointers to null-terminated strings or a mix of null-terminated strings, NULL,
-and empty strings. Any other type(s) of argument may make this function behave
-strangely and this function may even crash also.
-
-If 'skip_null_and_empty_strings' is true then this means that NULL/empty strings
-should be considered valid strings for the purpose of concatenating 'delim'
-string - this means that if there is a NON-NULL/non-empty string in the variable
-arguments list which is then followed or preceded by a NULL/empty string then
-one 'delim' string will be concatenated between NON-NULL/non-empty string and
-NULL/empty string. This can be useful in case columns of a database are
-concatenated to form a record which will then be written in a file - so here, a
-column containing NULL/empty value will be represented as empty by having two
-consecutive 'delim' strings.
-
-If 'skip_null_and_empty_strings' is not true then this means that NULL/empty
-strings should be skipped and no 'delim' string should be concatenated for them.
-
-This function allocates a new character array whose size is equal to the sum of
-the lengths of all strings passed to it plus 1 (extra 1 for the terminating null
-character). It then concatenates all the strings passed to it (these strings are
-separated by 'delim' string but please see above for NULL/empty strings) into
-the newly allocated character array and then returns the pointer to the newly
-allocated character array. If memory allocation fails then NULL is returned.
-
-It is necessary to check the return value of this function for NULL before
-proceeding ahead.
-
-The memory for the returned string is allocated using malloc(), so it is the
-user's responsibility to free this memory.
-
----- End of ReadMe ----
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: gpio-xilinx: Mark clocks as
+ required property
+To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+ Srinivas Neeli <srinivas.neeli@amd.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/ZYNQ ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <8407ef56b11632c1a7abfce8a4534ed8a8ed56cc.1749809570.git.michal.simek@amd.com>
+ <cbde9b9e2b0f9d12fdd1ba24fddb1543159357aa.1749809570.git.michal.simek@amd.com>
+ <2fb10aee-6610-43f4-9d12-88a97e0f66e5@kernel.org>
+ <9dc04095-e397-4a51-a75c-8a5577be197e@amd.com>
+ <1fced39f-1077-4af7-9294-affb99860984@kernel.org>
+ <765a606b-3b87-4a08-8630-69a3c52ed138@amd.com>
+ <1dfb2bbc-4ad5-454c-b046-b721500fbb91@kernel.org>
+ <8c5ac938-6e58-4ff3-bc0c-d639b0c9ac14@kernel.org>
+ <ccec896b-d639-40f5-8c5b-3527caf17d0c@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <ccec896b-d639-40f5-8c5b-3527caf17d0c@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 16/06/2025 09:18, Michal Simek wrote:
+> 
+> 
+> On 6/16/25 09:13, Krzysztof Kozlowski wrote:
+>> On 16/06/2025 09:10, Krzysztof Kozlowski wrote:
+>>> On 16/06/2025 08:51, Michal Simek wrote:
+>>>> Hi,
+>>>>
+>>>> On 6/16/25 08:41, Krzysztof Kozlowski wrote:
+>>>>> On 13/06/2025 13:26, Michal Simek wrote:
+>>>>>>>> Based on discussion at
+>>>>>>>> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+>>>>>>>>
+>>>>>>>> Actually this shouldn't be only targetting GPIO but also for example
+>>>>>>>> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+>>>>>>>> before starting to check other bindings.
+>>>>>>>
+>>>>>>> IIUC, patch #1 is a prerequisite, so you need to squash them. Otherwise
+>>>>>>> dt_binding_check is not bisectable and we want it to be bisectable.
+>>>>>>
+>>>>>> No issue with squash if necessary. I sent it as series to be applied together
+>>>>>> which won't break bisectability of tree and no new error is going to be reported.
+>>>>>
+>>>>> You did not say anything about dependencies and merging strategy, to
+>>>>> this would go via different trees. Sending something in one patchset
+>>>>> does not mean that there is a dependency.
+>>>>
+>>>> No offense but I don't think I can agree with this. The main purpose of patchset
+>>>> is to show sequence how things should go one after each other and series should
+>>>> go via single tree.
+>>>
+>>> Go through all patchsets on DT list touching different subsystems. You
+>>> will find only 1% of patchsets having above expectation implied (when
+>>> not explicitly stated).
+>>>
+>>> Really. 99% of patchsets on DT list targeting different subsytems, have
+>>> opposite, so implied rule they go INDEPENDENTLY to separate subsystems.
+>>>
+>>> And above (so implied rule of splitting things) is even documented in DT
+>>> submitting patches.
+>>>
+>> One more thought: That was from submitter point of view. But from
+>> maintainers point of view, EVERY MONTH there is around one patchset on
+>> DT list which has implied merging like you described (but not explicitly
+>> stated) and MAINTAINERS pick them up independently causing breaks, so
+>> some or many MAINTAINERS also have such reasoning as I said.
+>>
+>> They will pick up individual bits from patchset unless told otherwise.
+> 
+> What do you want me to do?
+We just discuss about the process. You disagreed with me, I responded.
+If you ask in general how to solve such problems: either squash such
+patches or document the dependency/merging strategy.
+
+General kernel submitting patches also asks about this:
+
+https://elixir.bootlin.com/linux/v6.16-rc1/source/Documentation/process/submitting-patches.rst#L186
+
+(which is third argument against your implied dependency within patchset).
+
+Best regards,
+Krzysztof
