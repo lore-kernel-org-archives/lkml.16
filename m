@@ -1,48 +1,80 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAC01B4247;
-	Mon, 16 Jun 2025 14:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740E81A3142
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750083034; cv=none; b=aoFvyD7jjZjyYIMDiO1f7oqp0397PzaIAG1rcxKn66DMQU1eUXI5jfp1m6L2Se0SlNWS/e/0Xmp3rWtAtAJQon42I9gUiF4SiUu3A3ZXOt1sTmSG5VC6fRlSIJh7ArWXGLY/cW6bSXRTQX8pjq0YiqLQ9DgXLGSBIOQf6HXMiVo=
+	t=1750083049; cv=none; b=kKupJNiYFinpWbqfNo59SwOYyrItxmQko2QQURB5oBn9ciIE/zMxjv3IBKWwXPz7uWYXgAXSjg5eNVOvVdzUA2HfiFVDjc93AouEzanW6CI5aS97O1PeDJ3pj6n//gZ4OwxND5HQ0uyE2KpWNNCY7cxU/79wmcm8N0OvcIxXyeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750083034; c=relaxed/simple;
-	bh=Bx8zcMsYegqQnWM91/tCWYQSJ7bOt/2LvQ/cVDhU4E8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NuKj70ft4Ny55XoF39/dBZZxEGlKdeLQO96EMZNg+3JpHvdvzkh4E108a4LSxSXqyEmfS3e65TqmO5PUG0AJ4zMoh0kAq2KZaPsZwtmvtoToWAE7N93Hale8RYByJD9j5fI4iAQaOtWcrQ8v85RWHVmEUFHpmDdeRbniobQUIpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fsx6JKKH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750083049; c=relaxed/simple;
+	bh=tZQNTAFb0RgI8Axkya+HR9XuebZC0Wk3IaBZRpHDbhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kuIb0NuEEguBGfW9S+Nmtj1uprhL3RrNi74ZAxMnaWxOeL3PoZsqLAGgGkayvm/SYfzD1Jqh8V4QCwvWuYsqpTyq8uYvEGRzHRLzVzPGrkBE3agCcscYYPtbHH178RPucUsB33AEx1WCs7LW2YYNRMVGr60go9zwZ9QQJxK60l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cLrKKGdf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dny4tXlS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g3VRNMnF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tOk6EJwq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fsx6JKKH"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8rY72010383;
-	Mon, 16 Jun 2025 14:09:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JFCSxPWzNm72ZO3a4BzUOSaOnTEeSDoThP1lf1mE/H8=; b=fsx6JKKH6WbsBXBG
-	K9KQpEHVVLmnxWx/zCrU/ZDLqD0M/xYPTTyKCyQaOOzx+hqcTLOHfQf2OsywgMoL
-	5wAlNw5uVXpv4tssix+t1Ea6QTQiytDAzbBoq3bQwGko0rAcBaV9NCXT9Cp+SOWW
-	DamOg6FEZ0O7L8r8xJqfqekbVbjctecAM12/0sBswDyILQxRBhdZJZwLTqBdOD//
-	Uqe0r7/k+JipNZz9LZgkj1psfWl2Ux4pOBmqD6HaOCNA5AcD/8lOmXLwM6gW7Bzj
-	+s0Mxhdmlt/I7+xsjgSCKmMYbefjHxJv+boMCYN5gUdUgBtNQ5DjJkYK1Ld8ivKZ
-	6N7aRw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9vrby-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 14:09:11 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GE9AHW026876
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 14:09:10 GMT
-Received: from [10.64.68.119] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 07:09:07 -0700
-Message-ID: <35527541-30dc-44dd-a108-79f599ace831@quicinc.com>
-Date: Mon, 16 Jun 2025 22:09:01 +0800
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cLrKKGdf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dny4tXlS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g3VRNMnF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tOk6EJwq"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BBF422118F;
+	Mon, 16 Jun 2025 14:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750083045; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gvIC/uuDHCtY1vVb5K1eQEc7EXM23z+t5pvf9m+AhSQ=;
+	b=cLrKKGdfazuK4Qsukb+W30iaMebUpZwmGcHBCODU8QlPw2sGSsAGCWuCP1j/u4IDPpF2ET
+	OK05y/aNcjg1kQTGXig6zW1VXgNvQZjQU98gqo/c2b94ojdV5Zqhlr1FPpBqKU0qDUr5/r
+	0ZBtHGHlaNToPDVcFSjsjmkpIP7Oi4U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750083045;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gvIC/uuDHCtY1vVb5K1eQEc7EXM23z+t5pvf9m+AhSQ=;
+	b=dny4tXlS0p6cvIpZ3qa22iOHOnwh/W933JFxtg1ZB+XpFFp1lApUVb+aC7FQhwZ/9HvcsI
+	A7Q4iQejoxV4OXDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750083040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gvIC/uuDHCtY1vVb5K1eQEc7EXM23z+t5pvf9m+AhSQ=;
+	b=g3VRNMnFsV2vpdwTe3cGuOXifgTf2FfpdE1rZIRFPWSL3GI5QjO++smsP4a7JNEl5523nL
+	MenhZkK0wh7D3vkWSKzAbsy9yl8JJf/vUE+W0iMvnEoZEC6BVTAQFbvIxL6lWjo8WSQQ29
+	Q/7yL3lzmi0BN1fb6MqRzT3/RMAPbUY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750083040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gvIC/uuDHCtY1vVb5K1eQEc7EXM23z+t5pvf9m+AhSQ=;
+	b=tOk6EJwqEhGC67oaMTTzj0WMn9JCX+ZBx3ZaIpb2DuC1HJE2OP1fOcZ9/QLj4zBlzg3H68
+	hEDgeLSCNHZgYNDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A747A13A6D;
+	Mon, 16 Jun 2025 14:10:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7r6UKOAlUGjxTAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 16 Jun 2025 14:10:40 +0000
+Message-ID: <830729b1-dbe8-4569-89fb-4ada13ec7bc2@suse.cz>
+Date: Mon, 16 Jun 2025 16:11:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,444 +82,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 29/38] drm/msm/dp: add connector abstraction for DP MST
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
- <20250609-msm-dp-mst-v2-29-a54d8902a23d@quicinc.com>
- <bmzte2ywtlygl4rru73efnfb4vpi3vkveeq32jhonrmxbogp5h@kqaukhzvcxx3>
- <2ab43ae7-12b6-4d41-9ffd-dbea70e2a662@quicinc.com>
- <njz3apifgcv2k3kzlmti5rjgqpl43v5yvjqpu6qhpe2kw3bzlu@pqvnrh6ff2um>
+Subject: Re: [PATCH v7 11/11] mm,memory_hotplug: Drop status_change_nid
+ parameter from memory_notify
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250616135158.450136-1-osalvador@suse.de>
+ <20250616135158.450136-12-osalvador@suse.de>
+From: Vlastimil Babka <vbabka@suse.cz>
 Content-Language: en-US
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-In-Reply-To: <njz3apifgcv2k3kzlmti5rjgqpl43v5yvjqpu6qhpe2kw3bzlu@pqvnrh6ff2um>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: wpoTIoH1LFO88GMCdF1TfUf5oHvYFWmy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA4OSBTYWx0ZWRfX8mWghePDKlRX
- SNPjdhaep5orHdivSV031bPSrn1Lspw9cCJ2mTGqul+5byqcdd+ROrDvn9lBATh5Jef37iG0OQZ
- JsMkv7TiQHzyne5W+XUQkbWNuUKv+/G70BB36m/y0ioblKxs1efHZg58GW3RU2aj475eLGyV/PV
- XK6x20e8fTbPZA+qY7GE2x3RYLsF8jjj4N3QDqmpIfCjAfvImqaNwRIhuJ88azA2ozNjMuNrQWV
- BK+4VajIlMXQq5WW2CSatO1XJ4qAHqCJhlWW4e0DQK7GvkeUig7gZRdcnqcy03iDoaR1/OxscZ9
- cZFvgBJcPkmbafRs0zHozhGT0grAkdfYQFON2aG0phPErhv9xYovhgoau4KlgTCXp2iSRIaM4RB
- kxFK9unA9pE2c4d5PdOWmc4Hsf9BG5g8ugv12MsJActhdIXyOAHTV74kbWaL/G/jwpiQ3wbf
-X-Proofpoint-ORIG-GUID: wpoTIoH1LFO88GMCdF1TfUf5oHvYFWmy
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=68502587 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=_-UQ7pn0oDaBgY36-1QA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_06,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160089
+In-Reply-To: <20250616135158.450136-12-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-6.80 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -6.80
 
+On 6/16/25 3:51 PM, Oscar Salvador wrote:
+> There no users left of status_change_nid, so drop it from memory_notify
+> struct.
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 2025/6/11 22:31, Dmitry Baryshkov wrote:
-> On Wed, Jun 11, 2025 at 08:06:28PM +0800, Yongxing Mou wrote:
->>
->>
->> On 2025/6/9 23:44, Dmitry Baryshkov wrote:
->>> On Mon, Jun 09, 2025 at 08:21:48PM +0800, Yongxing Mou wrote:
->>>> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
->>>>
->>>> Add connector abstraction for the DP MST. Each MST encoder
->>>> is connected through a DRM bridge to a MST connector and each
->>>> MST connector has a DP panel abstraction attached to it.
->>>>
->>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
->>>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
->>>> ---
->>>>    drivers/gpu/drm/msm/dp/dp_mst_drm.c | 515 ++++++++++++++++++++++++++++++++++++
->>>>    drivers/gpu/drm/msm/dp/dp_mst_drm.h |   3 +
->>>>    2 files changed, 518 insertions(+)
->>>
->>> It generally feels liks 80% of this patch is a generic code. Please
->>> extract generic DP MST connector and push it under drm/display. Other DP
->>> MST drivers should be able to use it.
->>>
->>>>
->>>> diff --git a/drivers/gpu/drm/msm/dp/dp_mst_drm.c b/drivers/gpu/drm/msm/dp/dp_mst_drm.c
->>>> index a3ea34ae63511db0ac920cbeebe30c4e2320b8c4..489fa46aa518ff1cc5f4769b2153fc5153c4cb41 100644
->>>> --- a/drivers/gpu/drm/msm/dp/dp_mst_drm.c
->>>> +++ b/drivers/gpu/drm/msm/dp/dp_mst_drm.c
->>>> @@ -25,8 +25,12 @@
->>>>     * OF THIS SOFTWARE.
->>>>     */
->>>> +#include <drm/drm_edid.h>
->>>> +#include <drm/drm_managed.h>
->>>>    #include "dp_mst_drm.h"
->>>> +#define MAX_DPCD_TRANSACTION_BYTES 16
->>>> +
->>>>    static struct drm_private_state *msm_dp_mst_duplicate_bridge_state(struct drm_private_obj *obj)
->>>>    {
->>>>    	struct msm_dp_mst_bridge_state *state;
->>>> @@ -79,6 +83,61 @@ static int msm_dp_mst_find_vcpi_slots(struct drm_dp_mst_topology_mgr *mgr, int p
->>>>    	return num_slots;
->>>>    }
->>>> +static int msm_dp_mst_get_mst_pbn_div(struct msm_dp_panel *msm_dp_panel)
->>>> +{
->>>> +	struct msm_dp_link_info *link_info;
->>>> +
->>>> +	link_info = &msm_dp_panel->link_info;
->>>> +
->>>> +	return link_info->rate * link_info->num_lanes / 54000;
->>>> +}
->>>> +
->>>> +static int msm_dp_mst_compute_config(struct drm_atomic_state *state,
->>>> +				      struct msm_dp_mst *mst, struct drm_connector *connector,
->>>> +				      struct drm_display_mode *mode)
->>>> +{
->>>> +	int slots = 0, pbn;
->>>> +	struct msm_dp_mst_connector *mst_conn = to_msm_dp_mst_connector(connector);
->>>> +	int rc = 0;
->>>> +	struct drm_dp_mst_topology_state *mst_state;
->>>> +	int pbn_div;
->>>> +	struct msm_dp *dp_display = mst->msm_dp;
->>>> +	u32 bpp;
->>>> +
->>>> +	bpp = connector->display_info.bpc * 3;
->>>> +
->>>> +	pbn = drm_dp_calc_pbn_mode(mode->clock, bpp << 4);
->>>
->>> Is this going to change if DSC is in place? Will it bring fractional BPP
->>> here?
->>>
->> Actually, in this patch series, MST not support DSC. So we just don't
->> consider this scenario.
+> ---
+>  Documentation/core-api/memory-hotplug.rst | 7 -------
+>  include/linux/memory.h                    | 1 -
+>  mm/memory_hotplug.c                       | 4 ----
+>  3 files changed, 12 deletions(-)
 > 
-> But you still can answer the question.
-> 
-> 
-> [...]
-> 
-1.Emm, for my current understanding, if DSC is enabled, the BPP should 
-change and recaculated.
-Will it bring fractional BPP here?
- >>>I'm not entirely sure about this answer. I checked how other drivers 
-call this function, and they all use bpp << 4, so can we assume that 
-this way of calling it is valid?
->>>> +
->>>> +	return msm_dp_display_mode_valid(dp_display, &dp_display->connector->display_info, mode);
->>>> +}
->>>> +
->>>> +static struct drm_encoder *
->>>> +msm_dp_mst_atomic_best_encoder(struct drm_connector *connector, struct drm_atomic_state *state)
->>>
->>> Do we need this callback? Don't we have a fixed relationship between
->>> connectors and encoders?
-> 
-> This was left unanswered.
-> 
-Sorry, I didn't mean to skip any questions — I just planned to reply a 
-bit later. Apologies for the confusion.
-For this question, yes , we don't have the fixed relationship between 
-them. Under the current codes, the Connector selects the available 
-encoder and bridge in order from index 0 to 4 (up to max_streams) when 
-the connector's status changes to 'connected'.
->>>
->>>> +{
->>>> +	struct msm_dp_mst_connector *mst_conn = to_msm_dp_mst_connector(connector);
->>>> +	struct msm_dp *dp_display = mst_conn->msm_dp;
->>>> +	struct msm_dp_mst *mst = dp_display->msm_dp_mst;
->>>> +	struct drm_encoder *enc = NULL;
->>>> +	struct msm_dp_mst_bridge_state *bridge_state;
->>>> +	u32 i;
->>>> +	struct drm_connector_state *conn_state = drm_atomic_get_new_connector_state(state,
->>>> +										    connector);
->>>> +
->>>
-> 
-> [...]
-> 
->>>> +	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
->>>> +		if (WARN_ON(!old_conn_state->best_encoder)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		drm_bridge = drm_bridge_chain_get_first_bridge(old_conn_state->best_encoder);
->>>
->>> This really looks like this should be a bridge's callback.
-> 
-> And this one
-> 
-Emm, the bridge does not implement atomic_check(). All MST-related 
-checks (such as drm_dp_atomic_release_time_slots, 
-drm_dp_mst_atomic_check, or others) are performed in the connector's 
-atomic_check function. I believe this is because both num_slots and pbn 
-are stored in the bridge, and we call this to get the drm_bridge..
->>>
->>>> +		if (WARN_ON(!drm_bridge)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>> +		bridge = to_msm_dp_mst_bridge(drm_bridge);
->>>> +
->>>> +		bridge_state = msm_dp_mst_br_priv_state(state, bridge);
->>>> +		if (IS_ERR(bridge_state)) {
->>>> +			rc = PTR_ERR(bridge_state);
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		if (WARN_ON(bridge_state->connector != connector)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		slots = bridge_state->num_slots;
->>>> +		if (slots > 0) {
->>>> +			rc = drm_dp_atomic_release_time_slots(state,
->>>> +							      &mst->mst_mgr,
->>>> +							      mst_conn->mst_port);
->>>> +			if (rc) {
->>>> +				DRM_ERROR("failed releasing %d vcpi slots %d\n", slots, rc);
->>>> +				goto end;
->>>> +			}
->>>> +			vcpi_released = true;
->>>> +		}
->>>> +
->>>> +		if (!new_conn_state->crtc) {
->>>> +			/* for cases where crtc is not disabled the slots are not
->>>> +			 * freed by drm_dp_atomic_release_time_slots. this results
->>>> +			 * in subsequent atomic_check failing since internal slots
->>>> +			 * were freed but not the dp mst mgr's
->>>> +			 */
->>>> +			bridge_state->num_slots = 0;
->>>> +			bridge_state->connector = NULL;
->>>> +			bridge_state->msm_dp_panel = NULL;
->>>> +
->>>> +			drm_dbg_dp(dp_display->drm_dev, "clear best encoder: %d\n", bridge->id);
->>>> +		}
->>>> +	}
->>>
->>> This looks like there are several functions fused together. Please
->>> unfuse those into small and neat code blocks.
-> 
-> And this :-D
-> 
-Got it.. this code only do one thing, check and try to release 
-time_slots.. we can try to package it into small functions..
->>>
->>>> +
->>>> +mode_set:
->>>> +	if (!new_conn_state->crtc)
->>>> +		goto end;
->>>> +
->>>> +	crtc_state = drm_atomic_get_new_crtc_state(state, new_conn_state->crtc);
->>>> +
->>>> +	if (drm_atomic_crtc_needs_modeset(crtc_state) && crtc_state->active) {
->>>
->>> Use of crtc_state->active doesn't look correct.
-> 
-> 
-> ...
-> 
-Sorry, I'm still not quite sure where the issue is. Could you please 
-help point it out? Thanks~~
->>>
->>>> +		if (WARN_ON(!new_conn_state->best_encoder)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		drm_bridge = drm_bridge_chain_get_first_bridge(new_conn_state->best_encoder);
->>>> +		if (WARN_ON(!drm_bridge)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>> +		bridge = to_msm_dp_mst_bridge(drm_bridge);
->>>> +
->>>> +		bridge_state = msm_dp_mst_br_priv_state(state, bridge);
->>>> +		if (IS_ERR(bridge_state)) {
->>>> +			rc = PTR_ERR(bridge_state);
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		if (WARN_ON(bridge_state->connector != connector)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>
->>> Can all of this actually happen?
-> 
-> ...
-> 
-Actually not, I haven't encountered it yet. I'm not sure how to trigger 
-it, but it might occur under race conditions? Or we just remove it 
-untill some case it really happen..
->>>
->>>> +
->>>> +		/*
->>>> +		 * check if vcpi slots are trying to get allocated in same phase
->>>> +		 * as deallocation. If so, go to end to avoid allocation.
->>>> +		 */
->>>> +		if (vcpi_released) {
->>>> +			drm_dbg_dp(dp_display->drm_dev,
->>>> +				   "skipping allocation since vcpi was released in the same state\n");
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		if (WARN_ON(bridge_state->num_slots)) {
->>>> +			rc = -EINVAL;
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		slots = msm_dp_mst_compute_config(state, mst, connector, &crtc_state->mode);
->>>> +		if (slots < 0) {
->>>> +			rc = slots;
->>>> +			goto end;
->>>> +		}
->>>> +
->>>> +		bridge_state->num_slots = slots;
->>>> +	}
->>>> +
->>>> +end:
->>>> +	drm_dbg_dp(dp_display->drm_dev, "mst connector:%d atomic check ret %d\n",
->>>> +		   connector->base.id, rc);
->>>> +	return rc;
->>>> +}
->>>> +
->>>> +static void dp_mst_connector_destroy(struct drm_connector *connector)
->>>> +{
->>>> +	struct msm_dp_mst_connector *mst_conn = to_msm_dp_mst_connector(connector);
->>>> +
->>>> +	drm_connector_cleanup(connector);
->>>> +	drm_dp_mst_put_port_malloc(mst_conn->mst_port);
->>>> +}
->>>> +
->>>> +/* DRM MST callbacks */
->>>> +static const struct drm_connector_helper_funcs msm_dp_drm_mst_connector_helper_funcs = {
->>>> +	.get_modes =    msm_dp_mst_connector_get_modes,
->>>> +	.detect_ctx =   msm_dp_mst_connector_detect,
->>>> +	.mode_valid =   msm_dp_mst_connector_mode_valid,
->>>> +	.atomic_best_encoder = msm_dp_mst_atomic_best_encoder,
->>>> +	.atomic_check = msm_dp_mst_connector_atomic_check,
->>>> +};
->>>> +
->>>> +static const struct drm_connector_funcs msm_dp_drm_mst_connector_funcs = {
->>>> +	.reset = drm_atomic_helper_connector_reset,
->>>> +	.destroy = dp_mst_connector_destroy,
->>>> +	.fill_modes = drm_helper_probe_single_connector_modes,
->>>> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
->>>> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->>>> +};
->>>> +
->>>> +static struct drm_connector *
->>>> +msm_dp_mst_add_connector(struct drm_dp_mst_topology_mgr *mgr,
->>>> +			 struct drm_dp_mst_port *port, const char *pathprop)
->>>> +{
->>>> +	struct msm_dp_mst *dp_mst;
->>>> +	struct drm_device *dev;
->>>> +	struct msm_dp *dp_display;
->>>> +	struct msm_dp_mst_connector *mst_connector;
->>>> +	struct drm_connector *connector;
->>>> +	int rc, i;
->>>> +
->>>> +	dp_mst = container_of(mgr, struct msm_dp_mst, mst_mgr);
->>>> +
->>>> +	dp_display = dp_mst->msm_dp;
->>>> +	dev = dp_display->drm_dev;
->>>> +
->>>> +	mst_connector = devm_kzalloc(dev->dev, sizeof(*mst_connector), GFP_KERNEL);
->>>
->>> This shows that somebody doesn't understand the reason for drmm and the
->>> difference between devm and drmm and the lifetime of the objects. Do you
->>> see two issues in this line?
->>>
->>> Let me help you. Please use normal (non-managed) memory here. It is the
->>> only correct way to allocate memory for MST connectors.
->>>
->> Thanks for point it.. it will lead to mem leak.. so we need to use
->> kzalloc()...
-> 
-> - Did you understand why devm is unsuitable here?
-> - Why drmm is also unsutable?
-> - What is the implication of using kzalloc() here?
-> 
-For my understanding, memory allocated with devm_kzalloc is released 
-when the device is removed, while memory allocated with drmm_kzalloc is 
-released when the DRM device is unregistered. I believe this is because 
-the allocation and release of connectors happen during hotplug events, 
-which have a different lifecycle from other devices. If we use 
-kzalloc(), we would need to manually free the memory.
->>>> +
->>>> +	drm_modeset_lock_all(dev);
->>>> +
->>>> +	rc = drm_connector_dynamic_init(dev, &mst_connector->connector,
->>>> +					&msm_dp_drm_mst_connector_funcs,
->>>> +					DRM_MODE_CONNECTOR_DisplayPort, NULL);
->>>> +	if (rc) {
->>>> +		drm_modeset_unlock_all(dev);
->>>> +		return NULL;
->>>> +	}
->>>> +
->>>> +	mst_connector->dp_panel = msm_dp_display_get_panel(dp_display);
->>>> +	if (!mst_connector->dp_panel) {
->>>> +		DRM_ERROR("failed to get dp_panel for connector\n");
->>>> +		drm_modeset_unlock_all(dev);
->>>> +		return NULL;
->>>> +	}
->>>> +
->>>> +	mst_connector->dp_panel->connector = &mst_connector->connector;
->>>> +	mst_connector->msm_dp = dp_display;
->>>> +	connector = &mst_connector->connector;
->>>> +	drm_connector_helper_add(&mst_connector->connector, &msm_dp_drm_mst_connector_helper_funcs);
->>>> +
->>>> +	if (connector->funcs->reset)
->>>> +		connector->funcs->reset(connector);
->>>> +
->>>> +	/* add all encoders as possible encoders */
->>>> +	for (i = 0; i < dp_mst->max_streams; i++) {
->>>> +		rc = drm_connector_attach_encoder(&mst_connector->connector,
->>>> +						  dp_mst->mst_bridge[i].encoder);
->>>> +		if (rc) {
->>>> +			DRM_ERROR("failed to attach encoder to connector, %d\n", rc);
->>>> +			drm_modeset_unlock_all(dev);
->>>> +			return NULL;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	mst_connector->mst_port = port;
->>>> +	drm_dp_mst_get_port_malloc(mst_connector->mst_port);
->>>> +
->>>> +	drm_object_attach_property(&mst_connector->connector.base,
->>>> +				   dev->mode_config.path_property, 0);
->>>> +	drm_object_attach_property(&mst_connector->connector.base,
->>>> +				   dev->mode_config.tile_property, 0);
->>>
->>> subconnector? Or do we report the subconnector only for the main DP
->>> port?
-> 
-> 
-> ...
-> 
-Sorry, I'm not quite sure what 'subconnector' means in this context... 
-Could you please help explain it a bit more? From what I’ve seen in 
-other drivers, these two properties are registered for each MST connector.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/i915/display/intel_dp_mst.c?h=v6.16-rc2#n1618
->>>
->>>> +
->>>> +	drm_modeset_unlock_all(dev);
->>>> +
+> diff --git a/Documentation/core-api/memory-hotplug.rst b/Documentation/core-api/memory-hotplug.rst
+> index fb84e78968b2..8fc97c2379de 100644
+> --- a/Documentation/core-api/memory-hotplug.rst
+> +++ b/Documentation/core-api/memory-hotplug.rst
+> @@ -59,17 +59,10 @@ The third argument (arg) passes a pointer of struct memory_notify::
+>  	struct memory_notify {
+>  		unsigned long start_pfn;
+>  		unsigned long nr_pages;
+> -		int status_change_nid;
+>  	}
+>  
+>  - start_pfn is start_pfn of online/offline memory.
+>  - nr_pages is # of pages of online/offline memory.
+> -- status_change_nid is set node id when N_MEMORY of nodemask is (will be)
+> -  set/clear. It means a new(memoryless) node gets new memory by online and a
+> -  node loses all memory. If this is -1, then nodemask status is not changed.
+> -
+> -  If status_changed_nid* >= 0, callback should create/discard structures for the
+> -  node if necessary.
+>  
+>  It is possible to get notified for MEM_CANCEL_ONLINE without having been notified
+>  for MEM_GOING_ONLINE, and the same applies to MEM_CANCEL_OFFLINE and
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index a9ccd6579422..de8b898ada3f 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -109,7 +109,6 @@ struct memory_notify {
+>  	unsigned long altmap_nr_pages;
+>  	unsigned long start_pfn;
+>  	unsigned long nr_pages;
+> -	int status_change_nid;
+>  };
+>  
+>  struct notifier_block;
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e8ccfe4cada2..bfaa570c0685 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1153,7 +1153,6 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>  	struct memory_notify mem_arg = {
+>  		.start_pfn = pfn,
+>  		.nr_pages = nr_pages,
+> -		.status_change_nid = NUMA_NO_NODE,
+>  	};
+>  	struct node_notify node_arg = {
+>  		.nid = NUMA_NO_NODE,
+> @@ -1181,7 +1180,6 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>  	if (!node_state(nid, N_MEMORY)) {
+>  		/* Adding memory to the node for the first time */
+>  		node_arg.nid = nid;
+> -		mem_arg.status_change_nid = nid;
+>  		ret = node_notify(NODE_ADDING_FIRST_MEMORY, &node_arg);
+>  		ret = notifier_to_errno(ret);
+>  		if (ret)
+> @@ -1905,7 +1903,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>  	struct memory_notify mem_arg = {
+>  		.start_pfn = start_pfn,
+>  		.nr_pages = nr_pages,
+> -		.status_change_nid = NUMA_NO_NODE,
+>  	};
+>  	struct node_notify node_arg = {
+>  		.nid = NUMA_NO_NODE,
+> @@ -1976,7 +1973,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>  	 */
+>  	if (nr_pages >= pgdat->node_present_pages) {
+>  		node_arg.nid = node;
+> -		mem_arg.status_change_nid = node;
+>  		ret = node_notify(NODE_REMOVING_LAST_MEMORY, &node_arg);
+>  		ret = notifier_to_errno(ret);
+>  		if (ret)
 
