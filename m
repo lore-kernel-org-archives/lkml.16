@@ -1,123 +1,163 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F851FDA
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0393E18E025
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750067442; cv=none; b=WOCNwxTPZr0rGw6hJzCMCgtzFd1D09xbJCuwaAbGNjHPxBCyQg/bFHNX5FZKffYsAq4miEBhy4IeroRQ/JsmL5g7D026QMMvSzRKJwbLenXy4STyg2n+SnVCuUN05Ag0il7+nvjvWKEUTjTaC3xXbHKr9Ac/E53nTIOa6jE1XcI=
+	t=1750067484; cv=none; b=klxBu0wxxHP09PG37mcm6K94chraUUfaipiSx4j672x0QLJPSQboDKmgn+N+/qaZFZQDmiLBX3SRgvBpPxwJXKF7YC8Tz7ycdvsIDmfwka65ASjPwbn9Z0M7BLMBfgl/+hRk/E5PHvIiVgMAJEBw4+r1LXXXDZWs0tTzEbnj++g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750067442; c=relaxed/simple;
-	bh=OOG5iMHi/k5zVMR0uHcC6fQDYggSaTTtgcJHQxEmyEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FHvTYa+NrqRIAC+j7O2kbCNwKarNoKKTvDRCatuMPqGcxwfaLU2JP04Jse9kgSKQTrOAsUV7HFknK56gFGshr0z9W/okANVokLKE5xNmId9jnjlZWQK41UQ6ftIZWwP47Kmt+eppZjm9hKdt5wTDkcErVILJkwENHHajxXaiLNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=F3yOuq+N; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750067484; c=relaxed/simple;
+	bh=/cCLZZs4x4Z540xQpODHsqkmEQTBmUNmJ9FJi3TCVXo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=HrxrYxKO4iWwMbh9uXOvhZoJXMiOKsfV+xaVjRQKB9dPcfIHJW7sU1NqbhNf5foxgNR6UxYEMxTzr0Ax4zkNhaRTcH9IefMRuLMN2TqeYpyVJiR6Xe1NXMTmpHMcLq/ImsxrpyhVfh+6+/WHp8slrSdLNZUTm39dIn2nQ7BojE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tog76yPz; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="F3yOuq+N"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a510432236so3189747f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750067438; x=1750672238; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KT4SJEgr+yJM/5To9E7jMtsPro3qEIycq7sf6iASXss=;
-        b=F3yOuq+N9MbR0VCk4fQGOoXugaF4j55ofQX/6vfvxt8FB1OaHuD+5B87nzzccPPSOy
-         ilnT0MH5TLVz6JuxsuTBaPIbp4nasYytegKeSiFE2T/890CPa7o94WbsGfHyW4iDtdAD
-         QrOtjE1ilHTzfXEGEUFIHi7F8v0qMfCA7Ho3BYLurpT2absrbQKvR+0es6Cg41LORHti
-         RX249AYd87ZaFaDeTS9lkGKjVi4xfpcQVv0hghqGZwqEq5a2Td6mi27KKr+bT5JDqFqU
-         5xXXPjo0VUmd+LqIrKRI7u7rDhbDpqfZbTEaz6Sc+vHdzROnB0RltvRgRJmAiHWvz9I7
-         Oo3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750067438; x=1750672238;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KT4SJEgr+yJM/5To9E7jMtsPro3qEIycq7sf6iASXss=;
-        b=DQvyt6ITaabKRaYfH8m8i28PD6Shw0vaPJYLQGN4hL6aB58x7s03l5TyZocUZun/D5
-         hw4V2USpFmK30qdjFlWyg7IBj5+5HYAq/Q3vUz01/nDBnKvtF+YUWHuXxHH9MQA+PyQ/
-         5MJrNrMs6VOFpRo8w9ssM0TrNjSnt60E8mumDDeRas3RJNOr7qKplooq4HQEk4Kr0JiU
-         mZY1JIHzmAeYyShjmNBw2Nyn7ECo2WxBgO256p7VAQBnVpjhv4PHPaxKGWJi0ZKQSbl7
-         wE0fDCDGhHTlrTkG5yVpT/LKMv9mU+kTlHB+xf88oHtyGcBSN/5pSzaU+T8J/4AtH20o
-         zzZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm9jstNQeB+o+pYAKzUU9IoKpE1uqCBrIvt1/vQzDnUtWQX1fLveiKbrSWeBrtlq/QRtAGeT1vV1ZZ1Eg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2lHrFmLSnDJS2acQhjwEpgqxHRdoPivITbpr8Agmwg5icxXf2
-	UsD//sq3wNyMKx0/NpyYOYYJPwYPTM1yZe3rr5wUFeWN7+KYZn61pz8okKNy4ggwL0c=
-X-Gm-Gg: ASbGnctpextc0/Vw7V9LkHIZK+Ss5xx5L8fNtz7tTAgxV8ft+h+9E+lokruT0qv08bk
-	IIpecYgxtgALHZBiqH16INOdze3gDIlRqyZ426Qz9dQuuvuy6e3Th0nIEq47ZzJ3YmbQr3rsBKD
-	zwqP8YArpJ6NMFv3BBQYdx5t4g40iMvKv7hg4tw3mEQeO39MpdzWQSYdZrzYS9GuZH63QRKAMs+
-	wigN+lhGtr/qbvMEADzdDPVJ2V6QHeKhIv0KWutzVpDxvGrdSLWVQIdFY1J/Dn3QEt9gdhfnMnm
-	t+0acCFjJRCMYIwc1xTIpHpMMd70Wl3X57faK+x2vH42cpiuphXXUbq2/FXlrWmXzIHtqVlI1oM
-	=
-X-Google-Smtp-Source: AGHT+IGJoH3CoR0C1wAJmPGCe9Q9cF6rrj3mMWyWKCCCXojMC3Bwc0iRoP+woifFDqkYzLWN5XaV7A==
-X-Received: by 2002:a05:6000:2f88:b0:3a4:f8e9:cef2 with SMTP id ffacd0b85a97d-3a572e6be35mr6708882f8f.36.1750067438307;
-        Mon, 16 Jun 2025 02:50:38 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b5c372sm10342111f8f.89.2025.06.16.02.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 02:50:37 -0700 (PDT)
-Date: Mon, 16 Jun 2025 11:50:36 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: syzbot <syzbot+b4529efee5bf3751bc06@syzkaller.appspotmail.com>
-Cc: cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Subject: Re: [syzbot] [cgroups?] possible deadlock in try_to_wake_up (8)
-Message-ID: <yo75qoe44ltntzu6qcyscsj2nluae52mfr52gap2uypqtpn4qk@jvfbspevdavp>
-References: <684d16c0.050a0220.be214.02ad.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tog76yPz"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G32qrk016045;
+	Mon, 16 Jun 2025 09:50:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=98MNDMpqZTSUPDBDmSnnEsdlpYfJ
+	x/Fn3bMpLgmmmYU=; b=Tog76yPz3YHUDAJiCbFxWSaAbn0HDoszUroBjHdjEtdY
+	oxTwQbpUm1HCJi4XkohCfiu4zoTf/KI7wTLTEM6K6W8XsNwK3wlaOR97ijJDggGv
+	ArTHONTUozLlwIjcBT3CJTPuLGS7p0BVnl2yGxEHd2aeNrhssbhxIr84uGa5OJsI
+	+X1qInagSw05Xlu7y/+EFszZIgqXGqDmYdAkW8io4INQQbFYGSg6sPQqu+Lwv99y
+	iYIndI+GdgGc6a4m32Nw5/7eFuZWIxShsa3PSuNigDjnooL3kd/hQgEnT7rOpnPX
+	NeksWbPeLRQ2fh60VOcrYYINUpR6nnwPrUNF/oI7mw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790tds2xu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 09:50:55 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55G9YD7p008557;
+	Mon, 16 Jun 2025 09:50:54 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790tds2xp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 09:50:54 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55G7XTXv010817;
+	Mon, 16 Jun 2025 09:50:53 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 479kdt5qq3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 09:50:53 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55G9orDV10879740
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 09:50:53 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3AD95805B;
+	Mon, 16 Jun 2025 09:50:52 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E98CE5805C;
+	Mon, 16 Jun 2025 09:50:49 +0000 (GMT)
+Received: from [9.204.206.207] (unknown [9.204.206.207])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 16 Jun 2025 09:50:49 +0000 (GMT)
+Message-ID: <81e04fa6-2870-4b0e-82aa-602f9435a848@linux.ibm.com>
+Date: Mon, 16 Jun 2025 15:20:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qfzwo6z7cqxn7cu3"
-Content-Disposition: inline
-In-Reply-To: <684d16c0.050a0220.be214.02ad.GAE@google.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, j.ne@posteo.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        nnmlinux@linux.ibm.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.16-3 tag
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zFH7w9_vervdXEVUb4kQuu2nEypuXHIZ
+X-Proofpoint-GUID: V5JGqvKaX-sx4vZbGCZ62RJ1yrPyFTRu
+X-Authority-Analysis: v=2.4 cv=c92rQQ9l c=1 sm=1 tr=0 ts=684fe8ff cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=BtL6d0wylExIv2mDCBkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2MiBTYWx0ZWRfX5h13Ve8iySnl LIJLhbagCLJ6jViKG4qUqZ6DSlVlIa8VXUcgrEoIXFiCYbEo27pmR4BoHVNz8Fwf7WnqEor5LL5 o9rfsjMoXv0KJdis1drKkQ/A9CkR0slEfboEXJ8IL4LsEPneInogaJcPRCkGEfWMTim43HjIFZ5
+ ek4hoKSczkKMMoZVJ0elYPgMF7XgwoGTnZcmES9j+Y2yNftiBnT4Pyoqfa8BLBKA99ljGXXnuVn iAOVZ0khxc1VBC/OArJEPj9Src4af0qg3ZhrgA/qZD/ArZW7lFWnsV4OawfN/WlbwA16myWiBbK 56aupHyYcbeWIEpSNAXAEykKUUpz5pBg+Wg14X2/dI//iUFTnsBuugIdwwwmVyNQ7XE8JFlBs67
+ QUeBzYce7VAWeIt+4Nt3/1KXd5dpJRuBtG5kCwTva8FeKanVGzS3OMOb2eMVyyJFB+QMoQuJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=939 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160062
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Hi Linus,
+
+Please pull powerpc fixes for 6.16:
+
+The following changes since commit 0d67f0dee6c9176bc09a5482dd7346e3a0f14d0b:
+
+  powerpc/vas: Return -EINVAL if the offset is non-zero in mmap() (2025-06-10 07:56:41 +0530)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.16-3
+
+for you to fetch changes up to ab107276607af90b13a5994997e19b7b9731e251:
+
+  powerpc: Fix struct termio related ioctl macros (2025-06-13 22:18:50 +0530)
+
+- ------------------------------------------------------------------
+powerpc fixes for 6.16 #3
+
+ - Fix to handle VDSO32 with pcrel
+ - Couple of dts fixes in microwatt and mpc8315erdb
+ - Fix to handle PE bridge reconfiguration in VFIO EEH recovery path
+ - Fix ioctl macros related to struct termio
+
+Thanks to: Christophe Leroy, Ganesh Goudar, J. Neuschäfer, Justin M. Forbes, Michael Ellerman, Narayana Murty N, Tulio Magno, Vaibhav Jain
+
+- ------------------------------------------------------------------
+Christophe Leroy (1):
+      powerpc/vdso: Fix build of VDSO32 with pcrel
+
+J. Neuschäfer (2):
+      powerpc/microwatt: Fix model property in device tree
+      powerpc: dts: mpc8315erdb: Add GPIO controller node
+
+Madhavan Srinivasan (1):
+      powerpc: Fix struct termio related ioctl macros
+
+Narayana Murty N (1):
+      powerpc/eeh: Fix missing PE bridge reconfiguration during VFIO EEH recovery
 
 
---qfzwo6z7cqxn7cu3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [syzbot] [cgroups?] possible deadlock in try_to_wake_up (8)
-MIME-Version: 1.0
-
-On Fri, Jun 13, 2025 at 11:29:20PM -0700, syzbot <syzbot+b4529efee5bf3751bc=
-06@syzkaller.appspotmail.com> wrote:
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    39dfc971e42d arm64/ptrace: Fix stack-out-of-bounds read i=
-n..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux=
-=2Egit for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D12fcb10c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D941e423b930a3=
-2dc
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Db4529efee5bf375=
-1bc06
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e0775=
-7-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> userspace arch: arm64
-
-This looks very equal to
-	Subject: [syzbot] [cgroups?] WARNING in NUM (2)
-	Message-ID: <684f296b.a00a0220.279073.0033.GAE@google.com>
-
-Michal
-
---qfzwo6z7cqxn7cu3
-Content-Type: application/pgp-signature; name="signature.asc"
-
+ arch/powerpc/boot/dts/microwatt.dts    |  2 +-
+ arch/powerpc/boot/dts/mpc8315erdb.dts  | 10 ++++++++++
+ arch/powerpc/include/asm/ppc_asm.h     |  2 +-
+ arch/powerpc/include/uapi/asm/ioctls.h |  8 ++++----
+ arch/powerpc/kernel/eeh.c              |  2 ++
+ arch/powerpc/kernel/vdso/Makefile      |  2 +-
+ 6 files changed, 19 insertions(+), 7 deletions(-)
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaE/o6gAKCRB+PQLnlNv4
-CKRzAQCXHzhTb/oX0XnF+BgBqEfxvr6jPevJgCIOeAn40LGmKAD9EPPkwHPuI01n
-rcvuTpV4m/mLHSZYdfq0bMNHxOt6fgk=
-=Z/80
+iQIzBAEBCAAdFiEEqX2DNAOgU8sBX3pRpnEsdPSHZJQFAmhP6CgACgkQpnEsdPSH
+ZJQocg/9Edbt09ToMZMdk2R5CXxDlzeGliFX7bdKV2Q4jwEqyjHMc4J3PqCNGymO
+3GmP2yemB18a4ujl36KQet6CsbRtSPd4RX9yXUyyPTZAEuyo3sNIsrJEYmD2HV4B
+fErrE8xln+/l21HNBlPWQ0EN4m3c4bY6c6K3VaY8dMoxg11A79SGIRY/3cr93tYA
+zjYdbWnCz4rxpgffKmfdM2xu17DmMO2Molq4lfsRp1vkfDBUq+sGGMYvn/njCCMb
+W5I9/CN5xJrhF2iKBwP4U0wl2GsQ1DSgqp2RNvKv3wnuiKt5dUiYg6FswAsM2nQ/
+89YTNgBhjtZsO9rLSX2jk1tmf8o5lJ7CGvByQgXMr35AWt1XhMe5dC+XXIXsU2YQ
+fbK81Eiyf2NMFdfKN77hwwo3SfpdZqP1FC/4bjfsJ8JzsTZPrVfFfVXTV3rIAJsG
+TNIioFauZAz/wlrwHkTyLqkXp77TJXtVsl9dHbvr2tpqblyb1k3b24qgwckWvf1t
+XDc90Y478bdblBN+PThaxUm2AVFhWZSNxLzo2DiltetbtTmC5qeIyzl5PkgdJALr
+Kqxqe2dg2ZkGXhi+FFNWWxicdleEbV8+zKQeY4K/tPnsPdUqe5DoQaqjPoMytRAF
+l5RN5lqxNOY9odAH9gkgJSUlhWXI7+SSSIq2xF1ci6JnWBH+izE=
+=NMl4
 -----END PGP SIGNATURE-----
-
---qfzwo6z7cqxn7cu3--
