@@ -1,183 +1,101 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2070.outbound.protection.outlook.com [40.107.102.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E262248BA;
-	Mon, 16 Jun 2025 22:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750113904; cv=fail; b=hkEPANlzQqXYv8ktIW9q/KydnFjaE3AzjcghulqdE86yKP5JZS2McznyJlJUeCj/DF44aVDF2EAbb9MocKrqRWCd16rElXPEncUohsYDcereRmBW1H5BDLCvaSGd694lenhLwi7LSFVU/0WrqZTtL5FWYK+fJe70MzKFbHoihmo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750113904; c=relaxed/simple;
-	bh=PFlRVb1dp1AWKuEWC+mwTj6mdqUKGZi60NK2sHpp6LM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KKwIxp4YtwxBbjA0VcUeiBbhCZOhmIXa4ZrygnbNieKWfQ/zG9VZVbuOMaPHOodeNE8PVC61ffZzY+rrDH/Y+1Z9+wbc5S8B3xSJC0F7EpH9YNZwyTLXkkc8vYxPMwi+EUMwPI+fsWGvhmh/JcmJaRXRiqd1ZyROFcG98kK4TgU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wk6OgJK7; arc=fail smtp.client-ip=40.107.102.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A365C21CC62
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750113981; cv=none; b=Sh7bQuJzg+t4oT5nzBWtPiPnVPG/3L6XJfAdHeUmaraeKqyBCPXjelfl1dnDnzt/jcp0x0glR8Dghc1oNyBBpBz0ulqNxaXs4e2ocTF4HQbjEzmLWv85wptCNETicr5gMX/F0GAOZn6JU7AWqYbf7HsmmGTprAneAtL3LSlZG78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750113981; c=relaxed/simple;
+	bh=KrYOke53fZhaOdyqNU6WsSDo4eyk49qxBayckScAUt0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYkDCuhMesJ6GPRafg1pL0AaD64HGtTKs7AWNy1J7aI0t35djrCRIehl6DTWX0LIdAe6VRWBOkFqpF6wfms8cVXKkD9puFSzhkE+OcnzK1x9H0jtjaWP5uVGMngUJ2ocBJcO74x09kQsm94SbGj79sNksVf8+Y0lsr+6uM+TrMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kgLIT0uq; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wk6OgJK7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p66x/ZiIc9Kcs1gOz+Yzv+fIY2CC5xF/facB+ZKistZ3hMhc3Iz+Hprvb5IshuJ1PzmELtBCY8+gShe2b1SVRSKYzARAVfysoJmJkhMLwT5TaVjLbSalgcGfB+RummyBULUCqdqdtbiQzlaC4m/nd9HqcVSmcW+zsjKP6Rivss/mx85rLLV9gw7rjtVZOuDbGFrPuT7cizoyBvQgf8xvFn0ssbqKbfbbqHH0RxhzQ0YuTzF9yfkQ9+5vXAT+Eots0zPqEU4qgXVwbx/OqzxjGfVvHq0/e3oFxeDS4/+x9ttjvuIp3VQ2dGzOLC0y2UPPPsXcJ2GgP791xXymi2fy/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MklNlaOpnO+58a5YDxiYCqEgTuBB4F3pzrukERE9unY=;
- b=CzW00zD/S6+zClkUOXOvUgTrS/DvgTTL7++jQjCo9xbEJQloWN5qHZRN6LF9h/PIMefzJdXELa532TfnL/CF22KoVsYfeyEtPvdFK3F+xW39Fcs9aIfwNgc44Hq4WbF0xxHTtThNsC/pz4cCMwPYuhmyDSGjkwOcqhGLmUXqFbcvMQWNdIXFYeFLOo/fpkx0ll/THbOJuqoWEv/Imo5QeHPjqHFkTTNQxlrh1TjuEz25pPt+kJ661BnBdxu17LmzdAxLNJulG44QjlPs/ElmQksYNVl8nNge/kpaBD+f+BOxiHQR4Pk+8jJvp2ZDVX100JjiPil2PbFV5jdnMFvD5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MklNlaOpnO+58a5YDxiYCqEgTuBB4F3pzrukERE9unY=;
- b=wk6OgJK7C0CEnhfJdZUUb8v+HbWB94oEbr6R2C2CGwYmwL3oSNkG4mg5KhYmCQyc56jw5xrh4RS4pippsgTzHfo5924SCs1wGvRyEmEKo5j8WT+zxFpUsW7bDkX7YqrEnmkMI8RQBGwQvW4sPLPNf33cgZcWvtC5v6zeonXZTQo=
-Received: from BN8PR16CA0022.namprd16.prod.outlook.com (2603:10b6:408:4c::35)
- by CH2PR12MB4229.namprd12.prod.outlook.com (2603:10b6:610:a5::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
- 2025 22:45:00 +0000
-Received: from BN1PEPF00004687.namprd05.prod.outlook.com
- (2603:10b6:408:4c:cafe::25) by BN8PR16CA0022.outlook.office365.com
- (2603:10b6:408:4c::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.23 via Frontend Transport; Mon,
- 16 Jun 2025 22:44:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00004687.mail.protection.outlook.com (10.167.243.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 22:44:59 +0000
-Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
- 2025 17:44:58 -0500
-From: Shannon Nelson <shannon.nelson@amd.com>
-To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <brett.creeley@amd.com>, Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH] MAINTAINERS: Remove Shannon Nelson from MAINTAINERS file
-Date: Mon, 16 Jun 2025 15:44:37 -0700
-Message-ID: <20250616224437.56581-1-shannon.nelson@amd.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kgLIT0uq"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235ca5eba8cso64855ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750113977; x=1750718777; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L4d+8ZjXH9zZ77lKYUp6/tF7Z8I85twtKvurv24F7nU=;
+        b=kgLIT0uqLNbuQNTRfUxPhUc2GoQvJ91IimE0ryNr//1pVbrKsbR+NtlLIuhKfJyDig
+         +ZUWqZKSU1cqLmRDDw8T3T0H9Gdenq3rO0NIWFZ/45V8k7Ql6KUXDrIX9FAR2A/dCAPp
+         M052u2iN6WPDp9P3NuIFwfcZl/VQxjWxDaYDQV01lzcggEXOiZqe4vWC7PQCNqfmQ9tQ
+         jLdSDw78wDVSE8d+gGz9YLUlMsJ58O1W71L/WFezbQZDc67WZLkNpKBPwpwR0ztR44yW
+         bfXKMHmvd1b15EtS2w0X4TdpXMMD6B7Ckhl4CIsFfMaG5LUzYTfHa4B7nqS2TO2Omg6X
+         nz7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750113977; x=1750718777;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L4d+8ZjXH9zZ77lKYUp6/tF7Z8I85twtKvurv24F7nU=;
+        b=cu5KsAoY885IQiX3K4L/BFUZgTVNcQhlj11UAxvBvJh7LF+eC1QjpqtNDprK5jCO27
+         m9VA1ApHnuKzfUYjYnkfwn4sReZCL9b2N/+XhfTSPOWCyt2uekOZuKUvi7wVJaDJCZEi
+         rT3dYIBVZlWg79kawVW5owP2bsmCLlYO0/VivWN/vzu7hRoV3kVZS6jH3sR0wZzGuBRA
+         vA031TcdXTrqRaT8xQYocs1IGNZMfYPXYjhnMPitokC1lcgFxeA6MI8qQqu+Paps9SOp
+         1AtDBd0KwVhW7jfUbX5nHLLeXgnrOcxtBTIE2UdLYRYQDKF+ysu8wH7gOFC7PdsegP8I
+         32lg==
+X-Forwarded-Encrypted: i=1; AJvYcCUj4UV5pcu66RyZhIa3ay7twoG74cKog0+Xxx+RRySp/WQukJaoX7/wM8NiStPluKxujrwDwctzOAvomaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoYaJ1GS92PEEW3orz3w+/CM4Ejj5VlIzUdUJNUe/9ZREmM5S+
+	uTS2JkTfs2+giIII6cFLAn+XdrVIIjIojyqdAHTsitISAwrLj5a8Lv+09riQGQylzQ==
+X-Gm-Gg: ASbGnctnS+Dp4BCY1n9zIguJwICPceSf2uh+6Gf6e5XaYDQwHVvUU9B0n5N2/tOAX5t
+	JcMyreQzhWlrf95qBkQJqO/ALhhtBQ43Jhtkus3NK/nB+Mmbkduk6PUQzi0TTH0j1gJArHjJk6H
+	KX1OMQfCA0zSDR5xQCGaUs+4l/Jejxath+c01IrMXAsy0urcq1scZfsnIJ3K1Upc0QdrvLvDaaj
+	UPJLJVg9mU4Pkg1IidsTp+d999IPHh9Vesktsyq8NRBfHqsdZGvgdzu+uJET6nMjRhR5O+QTkkD
+	gjX0GhZkafxR+e5MMJ4OED9O8QGvn8i672OPF8xRoytPRWlG/R4TyTd2+anwkHZtxR/e2QaG9+k
+	pN4eITQCma0ECSrAjNn+N
+X-Google-Smtp-Source: AGHT+IHbp2l3BN8cw3PKIKwKBRH+mwq9oeWC2v6BaROwnYe7V6Peft6fYvtgkHe+hYIr4hoxzIvQpg==
+X-Received: by 2002:a17:903:b45:b0:234:b2bf:e67f with SMTP id d9443c01a7336-2366eef0269mr5944675ad.9.1750113976583;
+        Mon, 16 Jun 2025 15:46:16 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890082a7esm7656250b3a.100.2025.06.16.15.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 15:46:16 -0700 (PDT)
+Date: Mon, 16 Jun 2025 22:46:07 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, will@kernel.org,
+	robin.murphy@arm.com, joro@8bytes.org, yi.l.liu@intel.com,
+	peterz@infradead.org, jsnitsel@redhat.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	baolu.lu@linux.intel.com
+Subject: Re: [PATCH v2 11/14] iommu: Deprecate viommu_alloc op
+Message-ID: <aFCerw6zMXkyYKax@google.com>
+References: <cover.1749882255.git.nicolinc@nvidia.com>
+ <5b32d4499d7ed02a63e57a293c11b642d226ef8d.1749882255.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004687:EE_|CH2PR12MB4229:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c0e71a2-790f-4059-e3a8-08ddad276ccd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?s5ZZSPSOaoOev2m+Rh4bjRotGcJn6UXnMklP6r+aE3QZTEplBN2eG2Oin1Ed?=
- =?us-ascii?Q?D2Hf4yBXsHHUX5K+cLfgkwBBV5z9A79k+B+oM4/rltjrAMmPFz/dxt+4dJn3?=
- =?us-ascii?Q?8ykk1A4eoYUohR/TMeJXITDB2okzR1fmwBK/y75kHUTg60RfvOw0hlbLnzaU?=
- =?us-ascii?Q?3AY1cu8NrQuGCu59iFh5gh4vQLvMmD9I2/4Z8g1AMghbYoD5tfH3KEX8VlyL?=
- =?us-ascii?Q?JYa5nwoD4HbdKW+of1QNdLWXy2b9GkN67cxp92ZiqqjXHm437w6Hmrxt9hiN?=
- =?us-ascii?Q?Jg5K22AAtbbKtotune6zjVloY2b35c09IVOeaMhJzD+Odl+VkRLxKCQQ/72J?=
- =?us-ascii?Q?jYFv2UiNV6YN5OB7pYkIgG1bF2ycbjHWM7+LhxEG3phlGInpZkrvsMgw1FaB?=
- =?us-ascii?Q?TlKn6IMY9WnUQlXesSBxboOYLO3HphJwIesmCf8uqHrTLdUjj2u+MdzVfL8r?=
- =?us-ascii?Q?V/XzcSCT4Iz+SHjc56WSRJYKGTBmDMgHYg8rIqSK72Y8XMZ9rNSiFJibN8uu?=
- =?us-ascii?Q?RPLEbYzT5BmE2cRjZjgR99CXcS21IvSMwjE0k3wX77/QLgyQmvWJTIri1sTk?=
- =?us-ascii?Q?lY9N24LSFDPdc0U1LFlWgk0IP+lBFtYDc8gFkWqD2/AXsQcnT6G2KwF1k0w1?=
- =?us-ascii?Q?naM91hii3/I7SWExI/S8ZvJfquyo+LXqsK2tHEYGkxK1ESSivNVHBD2K2FJu?=
- =?us-ascii?Q?KQiZW0bF4XCPZivTH9el8F9J9GOvmM7X4WHsKT+s+GW4sMl7ldUUT3mK/S05?=
- =?us-ascii?Q?AgnYsuBPLJi+ic8czBK6hBM0nJ1K+7dcrw9a0uA0ZbMKfB8SZBWOrORJ/hFP?=
- =?us-ascii?Q?WxeUo+FQ+suhZ+61T3jEj9ohIQjh0/UN7+ywreJ0nk+NIg67uRh6bQNQSKtS?=
- =?us-ascii?Q?wbioT3tWtJZZLSiAUFGLc+arGJhByFHhOldDbyMWVpajCqevjTMm/ZJMXCIh?=
- =?us-ascii?Q?UuRMdz2UZkYnNP/8Zw0LRCZ1y+IlIKFNGEVs1LbxSUYGVRM7xj/o1r8tz2dD?=
- =?us-ascii?Q?hR/NJHMTjTAOwYk7BKrJE5SEbTnqAbOFw5G4UdbB9p2tZmqp4QNP9AEio0q9?=
- =?us-ascii?Q?+B4WLrz+gRuPfYRQpLqjN433JXgOU4YgdLy38R3XA2B95gkxzOTxfsT5ttF/?=
- =?us-ascii?Q?+gPOAI+aag7tWyuqt1gCNQhuwZkBdzOAD7xcv4YOaWRy8BrI2HFPR1E229NH?=
- =?us-ascii?Q?Y+NIa4DI+S5FPs/u1iXXEh3uVib+dGhj0KWJAF318WZTczQPJrbklUeu4Of4?=
- =?us-ascii?Q?WDe6tzf45Ec0e6ITqc2cGvQCFvB4XOrRz1EgztPi4afdhSyWmi9KnXA6Bh2y?=
- =?us-ascii?Q?QvvJgKniOJRVqwZJc3MYWVyfljvMU/fdGPmf3igif2tp/fgu/RyuGG6Sj88E?=
- =?us-ascii?Q?kFdkGzPm2wJVbbFzVWNg+EUw7i/Wtq4tqxAWdIFiKnAMu2pUAcf/TFd8eOP6?=
- =?us-ascii?Q?gw1/fFyUS3EfourH6GqLIxBh5ezJ6DdLcF7RnWHT8KH7LMkJFNH7UH6iXQs3?=
- =?us-ascii?Q?TwlyNetfq4OQGDhmQvtTndnqOrSSkPQoAgAz?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 22:44:59.6814
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c0e71a2-790f-4059-e3a8-08ddad276ccd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004687.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4229
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b32d4499d7ed02a63e57a293c11b642d226ef8d.1749882255.git.nicolinc@nvidia.com>
 
-Brett Creeley is taking ownership of AMD/Pensando drivers while I wander
-off into the sunset with my retirement this month.  I'll still keep an
-eye out on a few topics for awhile, and maybe do some free-lance work in
-the future.
+On Fri, Jun 13, 2025 at 11:35:23PM -0700, Nicolin Chen wrote:
+> To ease the for-driver iommufd APIs, get_viommu_size and viommu_init ops
+> are introduced. Now, those existing vIOMMU supported drivers implemented
+> these two ops, replacing the viommu_alloc one. So, there is no use of it.
+> 
+> Remove it from the headers and the viommu core.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  include/linux/iommu.h          | 11 -----------
+>  include/linux/iommufd.h        | 18 ------------------
+>  drivers/iommu/iommufd/viommu.c | 20 +++++---------------
+>  3 files changed, 5 insertions(+), 44 deletions(-)
+> 
 
-Meanwhile, thank you all for the fun and support and the many learning
-opportunities :-).
-
-Special thanks go to DaveM for merging my first patch long ago, the big
-ionic patchset a few years ago, and my last patchset last week.
-
-Cheers,
-sln
-
-Signed-off-by: Brett Creeley <brett.creeley@amd.com>
-Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
----
- MAINTAINERS | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 99fbde007792..437381aeaa71 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1157,7 +1157,6 @@ F:	arch/x86/include/asm/amd/node.h
- F:	arch/x86/kernel/amd_node.c
- 
- AMD PDS CORE DRIVER
--M:	Shannon Nelson <shannon.nelson@amd.com>
- M:	Brett Creeley <brett.creeley@amd.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
-@@ -9941,7 +9940,6 @@ F:	drivers/fwctl/mlx5/
- 
- FWCTL PDS DRIVER
- M:	Brett Creeley <brett.creeley@amd.com>
--R:	Shannon Nelson <shannon.nelson@amd.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	drivers/fwctl/pds/
-@@ -19377,7 +19375,7 @@ F:	crypto/pcrypt.c
- F:	include/crypto/pcrypt.h
- 
- PDS DSC VIRTIO DATA PATH ACCELERATOR
--R:	Shannon Nelson <shannon.nelson@amd.com>
-+R:	Brett Creeley <brett.creeley@amd.com>
- F:	drivers/vdpa/pds/
- 
- PECI HARDWARE MONITORING DRIVERS
-@@ -19399,7 +19397,6 @@ F:	include/linux/peci-cpu.h
- F:	include/linux/peci.h
- 
- PENSANDO ETHERNET DRIVERS
--M:	Shannon Nelson <shannon.nelson@amd.com>
- M:	Brett Creeley <brett.creeley@amd.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--- 
-2.17.1
-
+Much cleaner now IMO.
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
