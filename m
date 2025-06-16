@@ -1,391 +1,247 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A75241547C9;
-	Mon, 16 Jun 2025 01:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750036515; cv=none; b=nudtRxQPO9MJuyDOCr23AGFFXFCR1mc0VjRRRhBVaGLLmYohGDxXau9kBW/dDd0dT+Bkrwz/qIws+Ewgot3IfMVKXV+9OT2k6kH5ACXXM7xSq7/7u7bEM1ph4OFfWSLMu8KFjiunub+dxPUbHas8XMukxjY1Q5HJaslPVr/ukTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750036515; c=relaxed/simple;
-	bh=dvTGtxAknQfEoc4zbDY1V7wwkCrQM97z3Atd+/H9l4g=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=faKtu9yOH/piR8rpkUAK7rD1cbUaFvRm+BxRUsk6cNwLwe4uF8rGPhpU6pTaROLqEadmGvAL9GE+OL0sdeeTorfHi29iqQYD0OS4oZkG13QmReKISXXPtSjO98wdje38fjOifOCHKWWl5cp+UJ7tr7olpOI9uSurw5wYpd0A6eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxnOIVcE9owWYXAQ--.19204S3;
-	Mon, 16 Jun 2025 09:15:01 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxH+UGcE9oJlYcAQ--.19628S3;
-	Mon, 16 Jun 2025 09:14:49 +0800 (CST)
-Subject: Re: [PATCH 4/8] KVM: Move include/kvm/iodev.h to include/linux as
- kvm_iodev.h
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Anish Ghulati <aghulati@google.com>, Colton Lewis <coltonlewis@google.com>,
- Thomas Huth <thuth@redhat.com>
-References: <20250611001042.170501-1-seanjc@google.com>
- <20250611001042.170501-5-seanjc@google.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <50a32984-f2ed-249a-c055-81ad35e1fa51@loongson.cn>
-Date: Mon, 16 Jun 2025 09:13:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6C512DDA1;
+	Mon, 16 Jun 2025 01:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750036532; cv=fail; b=DNDfd1bM/um5uLfEpNLUvTsa/Fhjs8UulHMUH4sLorftjVzcdDEmi57VHJfixxfhwg0d/uMT150dyPao+s94cuvQl7+tQV8NH56ptq7FKUQkvzjAu3tzld/gwc420tnSnbguRSVl2qYC9w9SnMYUis997y0L9/M4wIIBxMi+uq0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750036532; c=relaxed/simple;
+	bh=ZA3rHm/g9NbcJ0j7tTl/Q7VHl+kaFFV2yvkRncD5ubY=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=o3uTUZMZXW0pqVKT9m3gF640Stwdt5kkPaIprujtfXj2JjjyKGb5L9dE2DmIpJdyn+EZT6Jlfan5T/FrvK30Lm2diTWdWH4KdZyNJcLME6Eqp/N227bbnvbqOJFQuCeqZfjTpqK1hLJXfzmyikKQ1SrkVE7Hvq36lsz+4TTjdX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=GqRvAHT1; arc=fail smtp.client-ip=40.107.223.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="GqRvAHT1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Dm6biHJzItnJBghdsiRU/v+ZbKEmPmqpmHftWF6B9GKqT/2MbUoSrPR18lD9jnVBioIefw/enaQjOcbpGFOzP1uxirUrzXP8NiXPKHvIh23MvmkQqOn/im3J2ou2JxepoDWjOczm/YUJgnCZ4KbSzuUoNpAUcMsVW11DJq8kFbyDCdHlYcn0rzd7jaqCP8xwQrmiv+aW4KzPtI5lcMdeb58cvfzgX2dd5iUe9omATm2EyQfLgRjQ2MLyj0zkd4cqmD+OpJJy1DFsaU6S+m06T/Z9gn/+Gc8msAUwq4mvxM4p4Yz0PvGrqqcVnEkeQOl9wAKzmZlGwSBitdF/eQXbyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OrURzx/lMSJW4sWCGkn6aeSRCGytJMetVMCpzKVVTes=;
+ b=io8mJ+JKQunD6SkEuSzQUdO1jKmHCKjAPmi674Q/dFf25f0Y/B623v4HmgOHI3NwlCcoMveiEKJXp7GCzMTT4y7xJInoLPA46TMLRBFy47Q983naiMFLV4ucqVVcLVWShtI/dIu20ZyWkWGUVDuwAug5fUSfHttwp4i+LpNTiac/8t/Xqetc/QI4GWWAgAPHqGxgS/DerGcYeYcSJBikBbnZ7m6uBB1qLOmino1vKRxuW8ua6E7VWd3AIGAyHUtQ+P3elxdD+3UiRJdoUe5pllgUk80Ij7XVKxFYn74N/H4CJEpR191m69p5Iv1n4OBmnc43KMpogrFpUSHUBeq+NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OrURzx/lMSJW4sWCGkn6aeSRCGytJMetVMCpzKVVTes=;
+ b=GqRvAHT1zAMlJnQSR/93y3oat4YuuANnrnDaPchGKEC2Aeh8s65bXkRYXde3tT6iROFBgNIzu0pG91P7rL494AD7u1nj1x6R15L80ao0Xb5gCZ0MImekvgdi9x5swINXLGH9+2gaLw1nX0z3XpZt9LalfdJCo8ekHR0P6Q6xvroewtX7VAecoSXQU1t4GJYJIuoKq88ht9PqSR4WwTnfYXPZwS0tEMdlcCJYSSbqcml4BnzwkWA/m9mXSS+kt4j03JFUMhNFMwFSof7XTnby1uqkPQxeSVXdQQeRwfP2TANWkup1bKOUl7g2+cvMLVlEu/Vr52EDTrJkwnFC7nwxWw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from DM6PR03MB5017.namprd03.prod.outlook.com (2603:10b6:5:1ee::21)
+ by CH0PR03MB6148.namprd03.prod.outlook.com (2603:10b6:610:d3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Mon, 16 Jun
+ 2025 01:15:28 +0000
+Received: from DM6PR03MB5017.namprd03.prod.outlook.com
+ ([fe80::2898:accd:c6dc:2168]) by DM6PR03MB5017.namprd03.prod.outlook.com
+ ([fe80::2898:accd:c6dc:2168%5]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 01:15:28 +0000
+From: khairul.anuar.romli@altera.com
+To: Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list),
+	Matthew Gerlach <matthew.gerlach@altera.com>,
+	Khairul Anuar Romli <khairulanuar.romli@altera.com>
+Subject: [PATCH v3 1/1] spi: spi-cadence-quadspi: Fix pm runtime unbalance
+Date: Mon, 16 Jun 2025 09:13:53 +0800
+Message-Id: <4e7a4b8aba300e629b45a04f90bddf665fbdb335.1749601877.git.khairul.anuar.romli@altera.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <cover.1749601877.git.khairul.anuar.romli@altera.com>
+References: <cover.1749601877.git.khairul.anuar.romli@altera.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0220.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::15) To DM6PR03MB5017.namprd03.prod.outlook.com
+ (2603:10b6:5:1ee::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250611001042.170501-5-seanjc@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxH+UGcE9oJlYcAQ--.19628S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWfGr4rtr1fJrW8Cr1ktFW3XFc_yoWDAFWxpF
-	4DCF4kAr43Cr18JF9Fy3ZIvFyUXws5Kr1UKa4UuFWUAw1aqr1kXw4vkrn8tFn5Aayvqa10
-	gFWagF15Zw4UX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUJ529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUShiSDU
-	UUU
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR03MB5017:EE_|CH0PR03MB6148:EE_
+X-MS-Office365-Filtering-Correlation-Id: e4402711-372c-4091-1c62-08ddac73477e
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UGpMOGRnbldWQTRQNGpzRVN6a3lodC9RVGRsakt3TEMzSDkxaHpuT2llL1ZZ?=
+ =?utf-8?B?OFRLQzRGU2tHaHFWWVd5WEdtNHVWeUNFVTFGdDllQ2FzQkpYeWRlbWhoc3Vw?=
+ =?utf-8?B?VUs2SDZJTk9rajJrNzllQTRNTWJnRm5JTWlwdGpZRmR5dGx5bXdZR205SnBo?=
+ =?utf-8?B?bkU1TmE0NU04REJVUUJ6WmI1NnpWbEMvWThWZ1F4eHppb1NncFRlZ0ttU3FS?=
+ =?utf-8?B?SWFFVVRJQzJLNFVnaXRLTkV5ajZkVEl2TUc0UFpzNXdLb2tyWHdGQ2NOR1Nj?=
+ =?utf-8?B?WXdmNkh2Sng4Tm5UdVdLZHlpNlZWMzFSdXBiUFpBQ1ZieUlHcUtaS1dSM1BG?=
+ =?utf-8?B?SEtURGM0OGR0V05IRlBqMlhHeEp1b2ZBL1NMY1A2V1MyWVlNeU1CWk9WKzFG?=
+ =?utf-8?B?eEp5bjRGRjRCMGVtZFgvSC9BSXR0aXhMK1d2UUd0aWtzaDV4c29FUW5BNEVX?=
+ =?utf-8?B?VTE4dmlPSXFpYU8xQUlNcFZsL29CRGdxTU41cHlFZUtwazVvNVd1ajFsMU1U?=
+ =?utf-8?B?NlFuRWltd1M3eXhsaFBQalN1ekVIdU9ad05ydDdQOTd1dWV0dDA5VmNMdWNq?=
+ =?utf-8?B?SGhOTjU4NVZLTGxiRGFUdUF5WmVZelNDQlRwNm5vODNoUWVwa0dTakdJTzF4?=
+ =?utf-8?B?ak5laTJBbEdqVnJzZnQrWlNWSHZUKzdFZFpReGZhMXgyTDZVbVVkSk5PKzF6?=
+ =?utf-8?B?ZGhtV2xnTVNjYlA1cnB4YVlEUFFMb2lpSzl0cFBPczBJdFRWQ0g3OTh3NVhi?=
+ =?utf-8?B?b2dGMzdiVkFRd3FjWmFGc1ZpK3VzV3prMmR4bDVWSDRGZXFxNStsYmNGQjY3?=
+ =?utf-8?B?U3J0aXhwWDVucW9ibFMzTlRYUVZUUzVEMWs2RGZOTXZleVdEOWpDUFMyTWZu?=
+ =?utf-8?B?QnUzWkkwTG50dTFIY2NxaGp3dnh1T24yVjB5eEd3ZFd2eHVFNlQyaXoyd2hC?=
+ =?utf-8?B?K0paTDJnQjB6L1RZamJ3Qko3eEdSdjFZU01XTjVtV0IyOWdHenptU3RLaWN6?=
+ =?utf-8?B?Z2hKalhCejc4djhPY1FmMFlHaUhObXgzb1lGSGxlTVpsUHBMVU1JaVJobnA4?=
+ =?utf-8?B?YlRWUVltbG5WUVQ5WGR6KzVNQUtZaE5yWkx3K2M2Qk1uSFNPRzMxRm1VWlha?=
+ =?utf-8?B?TjJVL0NoZ204NjBwWkF0NXVoclJDdXdaK0ltL2hubUpFVHRsTEJYSjhBQXdP?=
+ =?utf-8?B?bzlMZUptMjZOTlAxa29NVnc2WnV5Y1NnbkY1NHlLTi9aaDc2MEFjcExmN1lH?=
+ =?utf-8?B?cXlWOVkwTG50WjcrellKdEhmUnZrMmJ4QnM4U05PU1NTcHJRWmhPbnNLOU9j?=
+ =?utf-8?B?Ym81WjZSNER0VkZ6ZWR0YklXRi9zNldoREoyYWl2cXRlZVIvTkNHZHduMW13?=
+ =?utf-8?B?Y2pSckZLSjBSeUZrcTRPUHhtek9lMnNGcnlFUXFXSUZGemxJaTh3WkVFcjRN?=
+ =?utf-8?B?aUxmMS96Z2YwTDdDWjZnZmVieFRjNk13WXVxYmdZZjdqZ1IzRDhaZHloSzJ3?=
+ =?utf-8?B?bmtTbGVxc1poSVJrNm9EcTBkZ1lVbVhpZW4zWHRHT1ltWTVsYWJJQXdvbEVB?=
+ =?utf-8?B?aWx2TmVJY3d3TnRJM1ozQkozbk0vL0lXaFFzS0FUdDBaazZCV0t6blFlT0p3?=
+ =?utf-8?B?RFBURmwyUTBsYXIrSXlUUko4U1FCWlk4RDZGc3cySU1JbFgrQXZILzVNQzRN?=
+ =?utf-8?B?MHQrb0VSRzJLcnh2YTN4dFlHRXF5RU5KRmJweTUzd3lJa2RSTlppaHFvZkJS?=
+ =?utf-8?B?a2hQUk1tRFphdmY0ZzRKd1pwRldTRW1SM3N0c2RFY09QNWdEbXRWWCtDaW1L?=
+ =?utf-8?B?ZXdrRWxvYytTVjlRQTl3YW5lSWtzdWR4SVo2ZHJpQ3BoVVR5Nm9JWmZkV21s?=
+ =?utf-8?B?N0VxaGxmWng1Z20xM3JHNFJUVGV1ZncwTHV5NU16VStndmp6M01pbk8wZXVo?=
+ =?utf-8?Q?9pJjTbKtN5k=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB5017.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dEI0cTBZMUNzNU9xemdTUVd3c0RIaGFSSitpNEM3T2ltRUJjaTlrNWN2NGxz?=
+ =?utf-8?B?aTAzdktrK01xZWxLYmh4MnlpU2YzSm15WVBhd1dadVVYZTVFYzVxbEdBNG5t?=
+ =?utf-8?B?a0dtTWsrNldDTUNyYXhmYTVBQ09FbGpNaFQ5ZmJwdElpNzNQNHlRZjVOQk9J?=
+ =?utf-8?B?NzlGNXhQcGR6SktCaDNuUzUxNG1GZVd0QlR0eTJzZVFKbEVIVm02Rm9WcU9y?=
+ =?utf-8?B?ZHJNOU5CVnlZSmZnL3RJTVFRNWJKUEN4ZVdJS1lKVHdSSFRXL2JERDRubWNh?=
+ =?utf-8?B?TGRaWnY2SWltbkFEQUdrelNmSVVVUTRsb3E4WXNQRjRuL1pyN2RUY3Z5cDZ0?=
+ =?utf-8?B?a0poVk4rUzhwblN4TytkaGQvalp0OFhiVFBPRVQ0TGVXdVN1K0NqQTc5VnhV?=
+ =?utf-8?B?YmdXT3ZJVzR3cEdIbHZYQzB0VUVpMlV5dW1HWkVubzZEd2d3WWlYTEJyNXlI?=
+ =?utf-8?B?VlF3R1ErVWFkN0FkY3B5akdOWjdaVlVpbEJURkdhR0gzSWR2WU5IYTVDUXlL?=
+ =?utf-8?B?ODdWM2VFUk8ySDRBeVNuaTFiYXRSazIwRDMzNU11dnVJdmZsSzdYNVYycG5S?=
+ =?utf-8?B?NkN1MFV2MUZEVExMSytFSThjTERKQ1ZWT0NrZ1hJYUhvU2lCZ2c4R0E5RGZF?=
+ =?utf-8?B?bXdETWtDRTUrSmYzRklNTnplSGkrdjFrVE5tNG9kMEV2MXo0dGdDbXVzYk8x?=
+ =?utf-8?B?SHhhaXhoVDVVRHBLTGIySkVJaXNsQ21ZZFRrZmNhMXVNR0srb3o4SVZhc0RS?=
+ =?utf-8?B?SUt0SlVWbGZUb2N6RlV4MzJ6cnpURVg5amxCWmN3S2ZxOStLZm40MC9Xejdn?=
+ =?utf-8?B?Z3hTR24xNi96ZFF1ZU1lRCtxNzkrRXNRREF6MHo5MVB0V1BIQXAyS01ma3pT?=
+ =?utf-8?B?YlJDNUh4ZzR1anI4QWFTQ0NoektwdSsvMnRra1RSaDlHRUtmNS9DSllDZUdE?=
+ =?utf-8?B?RmpRakUxUTlnY2RiSGJ2NXpLdmJVRU4wWUxSVE1ZVU93Q0FaOXM0VkkrbmtD?=
+ =?utf-8?B?NmxrUTl2RFpzbFhwSnZqUjJDVEs2TE9UdjdlMy9ZWS9xUit3a1V1TUo5bklX?=
+ =?utf-8?B?K0pSVE4vNXllNEpPK0hHWVJKSDMybm82YmlqM3BhVWFUSURZMkQyRnNVOThB?=
+ =?utf-8?B?UVBHSmNyVlpWUmErMy81MTVNSkVjWDgwWTgyTG9PY1I3NjViZVlkYWJxUGlD?=
+ =?utf-8?B?VDFLZTRZVlRTUWtZZTN5RWNrS281Z285VXd0cVpVaTVMcXUwOHEvS2lvcVJz?=
+ =?utf-8?B?c3Fpckk4OWRvNDVsOEU2WjJvTWNhV2pUN0hTNlU0Nkt6SFF3ZGVsUGhDQ0dq?=
+ =?utf-8?B?eXc0T1k0T21tT2Q2MkpvTlQ1QVNzTk9ZaTZrdXpDRWV1L3NjQ2lPZkZnTFJD?=
+ =?utf-8?B?NlFDbk45L3d0V0RGQklIbmxRMDhjZFlvd0JtSFBaT1VOd1MvWWc2bS9vbjVa?=
+ =?utf-8?B?elF2ZkJIZ25BdC9WL2QxY29GbFlzWHFzU2NOSHZRemFKYmNBcDhkRVJqWHdt?=
+ =?utf-8?B?SEFLdlpXWkphQ1ljZllQQlR3UWdoanI4UGd6VlFTZUZPMEYva24vbU9idFJj?=
+ =?utf-8?B?M010b2crVnpqUUc0bkZWNGZhR2MyUFI0VE1HaWVpQlh2Q2dPWXNld0NlaHox?=
+ =?utf-8?B?dzM4eXRVRW5TMEcra1Zla2Z2dXNYdjFkVDBuaU1GZ3JjeVRFenE2QnZYMDJ2?=
+ =?utf-8?B?VmVZc1NYT1l2Z3RGeGhqajNUVDdrL2pTZm15MGJMa3Zhb2ZNb1d4WkFRcjNv?=
+ =?utf-8?B?aWtjQURsUUlxRnVQQ01PSVpSN3l6MHRyajFSQlRybC9Jb1plQnFYaEVyb2hU?=
+ =?utf-8?B?S3l6dTUwT3pKZXNvK3p3YzhJdzAvTVpJYlhpKzVzWUp3VFFsc2dtSEFxbjBp?=
+ =?utf-8?B?SklpVmFOUjhFRk9rWFRiRnB6OGU1N3U5Q1FOQTdldUtheE9vaVdFSTV1V2FS?=
+ =?utf-8?B?dHBJellKcGVMRmQvd0dnMTJDYUNLWlJtWGpiU0M2V3YrbXNvbVRwVkd5Myth?=
+ =?utf-8?B?eU9ic0QrVyttZXpsamkvM2hOdkJWVVZISGw3dzFuelk5N1VnZ2U0b2RuODRu?=
+ =?utf-8?B?aHdkaFFyeVkySU52VEwyT1pQdUw1R0RzOVN1UHBFcGlOMDhGYkNTc3hCVUJm?=
+ =?utf-8?B?aGVmNEtOd3c0SmNHSlRnRlNPUXhnNTFKZFZLOGdVWWQxaHZkbHNndlhqSFFl?=
+ =?utf-8?B?VkE9PQ==?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4402711-372c-4091-1c62-08ddac73477e
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB5017.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 01:15:28.0546
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hNVUrtgeCzXebr9eHy9egafQ2YeK6I6z3RzafdqCGkrekSqJr5te24cKjG9r5ZPJGf43QwN5eAxEFDHvG4xbBpzg8ja2+phrD9Y0ejdQ6lk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR03MB6148
 
+From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
 
+Having PM put sync in remove function is causing PM underflow during
+remove operation. This is caused by the function, runtime_pm_get_sync,
+not being called anywhere during the op. Ensure that calls to
+pm_runtime_enable()/pm_runtime_disable() and
+pm_runtime_get_sync()/pm_runtime_put_sync() match.
 
-On 2025/6/11 上午8:10, Sean Christopherson wrote:
-> Move iodev.h, the last remaining holdout in include/kvm, to the standard
-> include/linux directory as kvm_iodev.h and delete include/kvm.
-> 
-> Acked-by: Anup Patel <anup@brainfault.org>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   MAINTAINERS                                | 1 -
->   arch/arm64/include/asm/kvm_vgic.h          | 2 +-
->   arch/arm64/kvm/vgic/vgic-mmio-v2.c         | 2 +-
->   arch/arm64/kvm/vgic/vgic-mmio-v3.c         | 2 +-
->   arch/arm64/kvm/vgic/vgic-mmio.c            | 2 +-
->   arch/loongarch/include/asm/kvm_eiointc.h   | 2 +-
->   arch/loongarch/include/asm/kvm_ipi.h       | 2 +-
->   arch/loongarch/include/asm/kvm_pch_pic.h   | 2 +-
->   arch/mips/include/asm/kvm_host.h           | 3 +--
->   arch/powerpc/kvm/mpic.c                    | 2 +-
->   arch/riscv/kvm/aia_aplic.c                 | 2 +-
->   arch/riscv/kvm/aia_imsic.c                 | 2 +-
->   arch/x86/kvm/i8254.h                       | 2 +-
->   arch/x86/kvm/ioapic.h                      | 2 +-
->   arch/x86/kvm/irq.h                         | 2 +-
->   arch/x86/kvm/lapic.h                       | 2 +-
->   include/{kvm/iodev.h => linux/kvm_iodev.h} | 0
->   virt/kvm/coalesced_mmio.c                  | 3 +--
->   virt/kvm/eventfd.c                         | 2 +-
->   virt/kvm/kvm_main.c                        | 3 +--
->   20 files changed, 18 insertions(+), 22 deletions(-)
->   rename include/{kvm/iodev.h => linux/kvm_iodev.h} (100%)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 10cf54c8f727..a2cd432273e5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13011,7 +13011,6 @@ W:	http://www.linux-kvm.org
->   T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
->   F:	Documentation/virt/kvm/
->   F:	include/asm-generic/kvm*
-> -F:	include/kvm/iodev.h
->   F:	include/linux/kvm*
->   F:	include/trace/events/kvm.h
->   F:	include/uapi/asm-generic/kvm*
-> diff --git a/arch/arm64/include/asm/kvm_vgic.h b/arch/arm64/include/asm/kvm_vgic.h
-> index 4a34f7f0a864..09d7f628fa3b 100644
-> --- a/arch/arm64/include/asm/kvm_vgic.h
-> +++ b/arch/arm64/include/asm/kvm_vgic.h
-> @@ -14,7 +14,7 @@
->   #include <linux/static_key.h>
->   #include <linux/types.h>
->   #include <linux/xarray.h>
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/list.h>
->   #include <linux/jump_label.h>
->   
-> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v2.c b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-> index d00c8a74fad6..889440a8b129 100644
-> --- a/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-> @@ -6,9 +6,9 @@
->   #include <linux/irqchip/arm-gic.h>
->   #include <linux/kvm.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/nospec.h>
->   
-> -#include <kvm/iodev.h>
->   #include <asm/kvm_vgic.h>
->   
->   #include "vgic.h"
-> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-> index 505d4e389885..db95d3ccbd14 100644
-> --- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-> @@ -7,8 +7,8 @@
->   #include <linux/irqchip/arm-gic-v3.h>
->   #include <linux/kvm.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/interrupt.h>
-> -#include <kvm/iodev.h>
->   
->   #include <asm/kvm_emulate.h>
->   #include <asm/kvm_arm.h>
-> diff --git a/arch/arm64/kvm/vgic/vgic-mmio.c b/arch/arm64/kvm/vgic/vgic-mmio.c
-> index ec1b13abc728..de689e0e881f 100644
-> --- a/arch/arm64/kvm/vgic/vgic-mmio.c
-> +++ b/arch/arm64/kvm/vgic/vgic-mmio.c
-> @@ -9,7 +9,7 @@
->   #include <linux/irq.h>
->   #include <linux/kvm.h>
->   #include <linux/kvm_host.h>
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   #include <asm/kvm_arch_timer.h>
->   #include <asm/kvm_vgic.h>
->   
-> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
-> index a3a40aba8acf..0049b0b79477 100644
-> --- a/arch/loongarch/include/asm/kvm_eiointc.h
-> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
-> @@ -6,7 +6,7 @@
->   #ifndef __ASM_KVM_EIOINTC_H
->   #define __ASM_KVM_EIOINTC_H
->   
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   
->   #define EIOINTC_IRQS			256
->   #define EIOINTC_ROUTE_MAX_VCPUS		256
-> diff --git a/arch/loongarch/include/asm/kvm_ipi.h b/arch/loongarch/include/asm/kvm_ipi.h
-> index 060163dfb4a3..3956b230f087 100644
-> --- a/arch/loongarch/include/asm/kvm_ipi.h
-> +++ b/arch/loongarch/include/asm/kvm_ipi.h
-> @@ -6,7 +6,7 @@
->   #ifndef __ASM_KVM_IPI_H
->   #define __ASM_KVM_IPI_H
->   
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   
->   #define LARCH_INT_IPI			12
->   
-> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
-> index e6df6a4c1c70..4b37e3134e52 100644
-> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
-> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-> @@ -6,7 +6,7 @@
->   #ifndef __ASM_KVM_PCH_PIC_H
->   #define __ASM_KVM_PCH_PIC_H
->   
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   
->   #define PCH_PIC_SIZE			0x3e8
->   
-> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-> index c14b10821817..0d7dd89ca5bf 100644
-> --- a/arch/mips/include/asm/kvm_host.h
-> +++ b/arch/mips/include/asm/kvm_host.h
-> @@ -16,6 +16,7 @@
->   #include <linux/interrupt.h>
->   #include <linux/types.h>
->   #include <linux/kvm.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/kvm_types.h>
->   #include <linux/threads.h>
->   #include <linux/spinlock.h>
-> @@ -24,8 +25,6 @@
->   #include <asm/inst.h>
->   #include <asm/mipsregs.h>
->   
-> -#include <kvm/iodev.h>
-> -
->   /* MIPS KVM register ids */
->   #define MIPS_CP0_32(_R, _S)					\
->   	(KVM_REG_MIPS_CP0 | KVM_REG_SIZE_U32 | (8 * (_R) + (_S)))
-> diff --git a/arch/powerpc/kvm/mpic.c b/arch/powerpc/kvm/mpic.c
-> index 23e9c2bd9f27..b25a03251544 100644
-> --- a/arch/powerpc/kvm/mpic.c
-> +++ b/arch/powerpc/kvm/mpic.c
-> @@ -26,6 +26,7 @@
->   #include <linux/slab.h>
->   #include <linux/mutex.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/errno.h>
->   #include <linux/fs.h>
->   #include <linux/anon_inodes.h>
-> @@ -33,7 +34,6 @@
->   #include <asm/mpic.h>
->   #include <asm/kvm_para.h>
->   #include <asm/kvm_ppc.h>
-> -#include <kvm/iodev.h>
->   
->   #define MAX_CPU     32
->   #define MAX_SRC     256
-> diff --git a/arch/riscv/kvm/aia_aplic.c b/arch/riscv/kvm/aia_aplic.c
-> index f59d1c0c8c43..bf163724aec5 100644
-> --- a/arch/riscv/kvm/aia_aplic.c
-> +++ b/arch/riscv/kvm/aia_aplic.c
-> @@ -9,10 +9,10 @@
->   
->   #include <linux/irqchip/riscv-aplic.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/math.h>
->   #include <linux/spinlock.h>
->   #include <linux/swab.h>
-> -#include <kvm/iodev.h>
->   
->   struct aplic_irq {
->   	raw_spinlock_t lock;
-> diff --git a/arch/riscv/kvm/aia_imsic.c b/arch/riscv/kvm/aia_imsic.c
-> index 29ef9c2133a9..ae3c0807baa9 100644
-> --- a/arch/riscv/kvm/aia_imsic.c
-> +++ b/arch/riscv/kvm/aia_imsic.c
-> @@ -11,10 +11,10 @@
->   #include <linux/bitmap.h>
->   #include <linux/irqchip/riscv-imsic.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/math.h>
->   #include <linux/spinlock.h>
->   #include <linux/swab.h>
-> -#include <kvm/iodev.h>
->   #include <asm/csr.h>
->   
->   #define IMSIC_MAX_EIX	(IMSIC_MAX_ID / BITS_PER_TYPE(u64))
-> diff --git a/arch/x86/kvm/i8254.h b/arch/x86/kvm/i8254.h
-> index a768212ba821..4de7a0b88e4f 100644
-> --- a/arch/x86/kvm/i8254.h
-> +++ b/arch/x86/kvm/i8254.h
-> @@ -4,7 +4,7 @@
->   
->   #include <linux/kthread.h>
->   
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   
->   struct kvm_kpit_channel_state {
->   	u32 count; /* can be 65536 */
-> diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
-> index aa8cb4ac0479..cb36c36affd3 100644
-> --- a/arch/x86/kvm/ioapic.h
-> +++ b/arch/x86/kvm/ioapic.h
-> @@ -3,7 +3,7 @@
->   #define __KVM_IO_APIC_H
->   
->   #include <linux/kvm_host.h>
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   #include "irq.h"
->   
->   struct kvm;
-> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-> index 76d46b2f41dd..b21b03aa2ee7 100644
-> --- a/arch/x86/kvm/irq.h
-> +++ b/arch/x86/kvm/irq.h
-> @@ -13,9 +13,9 @@
->   #include <linux/mm_types.h>
->   #include <linux/hrtimer.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/spinlock.h>
->   
-> -#include <kvm/iodev.h>
->   #include "lapic.h"
->   
->   #define PIC_NUM_PINS 16
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index 4ce30db65828..43ffbded5f72 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -2,7 +2,7 @@
->   #ifndef __KVM_X86_LAPIC_H
->   #define __KVM_X86_LAPIC_H
->   
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   
->   #include <linux/kvm_host.h>
->   
-> diff --git a/include/kvm/iodev.h b/include/linux/kvm_iodev.h
-> similarity index 100%
-> rename from include/kvm/iodev.h
-> rename to include/linux/kvm_iodev.h
-> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-> index 375d6285475e..d0f84e3611da 100644
-> --- a/virt/kvm/coalesced_mmio.c
-> +++ b/virt/kvm/coalesced_mmio.c
-> @@ -9,8 +9,7 @@
->    *
->    */
->   
-> -#include <kvm/iodev.h>
-> -
-> +#include <linux/kvm_iodev.h>
->   #include <linux/kvm_host.h>
->   #include <linux/slab.h>
->   #include <linux/kvm.h>
-> diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-> index 11e5d1e3f12e..35786d59b233 100644
-> --- a/virt/kvm/eventfd.c
-> +++ b/virt/kvm/eventfd.c
-> @@ -26,7 +26,7 @@
->   #include <linux/irqbypass.h>
->   #include <trace/events/kvm.h>
->   
-> -#include <kvm/iodev.h>
-> +#include <linux/kvm_iodev.h>
->   
->   #ifdef CONFIG_HAVE_KVM_IRQCHIP
->   
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index eec82775c5bf..a401ba32ecaa 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -10,9 +10,8 @@
->    *   Yaniv Kamay  <yaniv@qumranet.com>
->    */
->   
-> -#include <kvm/iodev.h>
-> -
->   #include <linux/kvm_host.h>
-> +#include <linux/kvm_iodev.h>
->   #include <linux/kvm.h>
->   #include <linux/module.h>
->   #include <linux/errno.h>
-> 
-About modification with LoongArch specific.
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+echo 108d2000.spi > /sys/bus/platform/drivers/cadence-qspi/unbind
+[   49.644256] Deleting MTD partitions on "108d2000.spi.0":
+[   49.649575] Deleting u-boot MTD partition
+[   49.684087] Deleting root MTD partition
+[   49.724188] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+
+Continuous bind/unbind will result in an "Unbalanced pm_runtime_enable" error.
+Subsequent unbind attempts will return a "No such device" error, while bind
+attempts will return a "Resource temporarily unavailable" error.
+
+[   47.592434] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+[   49.592233] cadence-qspi 108d2000.spi: detected FIFO depth (1024) different from config (128)
+[   53.232309] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+[   55.828550] cadence-qspi 108d2000.spi: detected FIFO depth (1024) different from config (128)
+[   57.940627] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+[   59.912490] cadence-qspi 108d2000.spi: detected FIFO depth (1024) different from config (128)
+[   61.876243] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+[   61.883000] platform 108d2000.spi: Unbalanced pm_runtime_enable!
+[  532.012270] cadence-qspi 108d2000.spi: probe with driver cadence-qspi failed1
+
+Also, change clk_disable_unprepare() to clk_disable() since continuous
+bind and unbind operations will trigger a warning indicating that the clock is
+already unprepared.
+
+Fixes: 4892b374c9b7 ("mtd: spi-nor: cadence-quadspi: Add runtime PM support")
+cc: stable@vger.kernel.org # 6.6+
+Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
+---
+Changes in v3:
+    - v2 was sent without a "Changes in v2" section.
+
+Changes in v2:
+    - Remove the runtime_pm variable from the struct, as it’s not needed for the fix.
+---
+ drivers/spi/spi-cadence-quadspi.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index c90462783b3f..506a139fbd2c 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -1958,10 +1958,10 @@ static int cqspi_probe(struct platform_device *pdev)
+ 			goto probe_setup_failed;
+ 	}
+ 
+-	ret = devm_pm_runtime_enable(dev);
+-	if (ret) {
+-		if (cqspi->rx_chan)
+-			dma_release_channel(cqspi->rx_chan);
++	pm_runtime_enable(dev);
++
++	if (cqspi->rx_chan) {
++		dma_release_channel(cqspi->rx_chan);
+ 		goto probe_setup_failed;
+ 	}
+ 
+@@ -1981,6 +1981,7 @@ static int cqspi_probe(struct platform_device *pdev)
+ 	return 0;
+ probe_setup_failed:
+ 	cqspi_controller_enable(cqspi, 0);
++	pm_runtime_disable(dev);
+ probe_reset_failed:
+ 	if (cqspi->is_jh7110)
+ 		cqspi_jh7110_disable_clk(pdev, cqspi);
+@@ -1999,7 +2000,8 @@ static void cqspi_remove(struct platform_device *pdev)
+ 	if (cqspi->rx_chan)
+ 		dma_release_channel(cqspi->rx_chan);
+ 
+-	clk_disable_unprepare(cqspi->clk);
++	if (pm_runtime_get_sync(&pdev->dev) >= 0)
++		clk_disable(cqspi->clk);
+ 
+ 	if (cqspi->is_jh7110)
+ 		cqspi_jh7110_disable_clk(pdev, cqspi);
+-- 
+2.35.3
 
