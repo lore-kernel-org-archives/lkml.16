@@ -1,197 +1,258 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AD326E179
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E5D270577
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750066593; cv=none; b=kiOwaozM0G8zD7yUgZi0SnW84UBo0f9i38yoJIy/SUj2hxU/pVkqceUXSbDpKbv58Z65LcHV+JeNB9AYnQBb6752JVkU4ZV1g6dxvhzjgsv+LNb3bbbtqV8O8DGUqpfsfnjh/yJzZX5E0gCsVTSRgRzowiLJU43cxVrOX9WBCkM=
+	t=1750066668; cv=none; b=sTAzO79iBaRIyKedZRZp//LyQP7BQ7vgJmYczLWJx7jpD2atGxOvhl+rxSyUVxfVxQi2nO6zXlmJS83pZ0OPZuDNst6XT9gRFwYq0YzJmVLDacsu1jUB5tyAehF3RylGoWNnLkv/10CHbv+zrebBNPMKDcOacRK1wBGhkwKN1jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750066593; c=relaxed/simple;
-	bh=KrCADh/e0/WAi5hLjFQkisYAiS/EbVbwctSXmQc5IJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SpOHGv923hti5rCeFBeAxhSR6H3nk1lGCOeq+AE58XK4Br4viOOgmlDIXZIBwhRk7aNR5X3bljuycIREeJyrPKlAwOpQ864F83EDvKDxyzEFZfSO753Wfz/UrIBByF/QocWHxjQaGvzKBGrhy9ZvspIRHDNE0JmglsbFld+dyas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AgeuWH36; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750066668; c=relaxed/simple;
+	bh=v7iwsXmtI/7HuEw8E5jMH8gjGCJ/PmdbDct0UukEscI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CRAu8vK3HMLkVs8H62G2N8ric3liLWmr/9D/5gZI5VOSODL4u+CvtHKS2ZIoL8Vb3QzTtJ1UB81Qya6kXRoJmbWMNgxD7fcDHdap0lrOm8mf28yJvGiKBOMSmXkVFI/ciYXGT+OyEio+SxIL5UMMkmwWT20UHohqUpqWudx22kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=W7+MozSm; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AgeuWH36"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so331095ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:36:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="W7+MozSm"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso7528470a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750066590; x=1750671390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QyIJw42bLVYC1qcn4Rgc4aSobkAPjVXS0kJvM4KjVSE=;
-        b=AgeuWH36/S/w6lvERPFuvIgYYlOW7M13U7e1XqpRV22kEsjwjZkwqLcPGY5symc2Y3
-         Hc8L66kAlZ5NINflcocMLzyV/mjhvbLpLh+ribsfw//cxOK8W4YtoRQiGe3VD3IWwoWX
-         oGSVabmJ3z946fA76V4PFrxavtyo+eyXc/um63hn6NXDcjBAEmXXgAwoMl1tgnw42Ox3
-         sz/tSQwtYSXV70NrPEffvgKvNuo9eVlt7bv+/V6cqOXsjpdh0ghHrWzyE+D0yvWSSU71
-         czlKKZqXnfahJks0C0ZUgiS9vFubQF65CLaEN9W/45mm/TrrZ+Ix0dEbXoTmLJRht3Wm
-         kArw==
+        d=tuxon.dev; s=google; t=1750066664; x=1750671464; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dfP8v62XGv6w7z/ZmGpzfijGDXvy28lSonmS90eMeCc=;
+        b=W7+MozSmJ0KttRNUxdO2NaTes8jsh6mtJkE40GPIZHfMhgoWxq2VW7+1KnpgkdA933
+         bY8dZsdRaZck6xWd/OnGzO+o2NR+cJ+Nx25Mz+OrDcekVJf6zgrAedgZRPV6Tf+FUtDZ
+         xrwLb+8K3BvFq5a0SAywDWXOT75BAc+vVTo7a2uHxTA09UixEhyQFRteBTYH6TmIWfaJ
+         St/CGkf8CZtkZLD5RvoVIz7Y3y0T5JYxd8AfKeK98PDDW6zL1kj+nZYicAa9qERwKJfV
+         UVTwTCUy1RT+Yy9XM32X9TmqVQrFxLb/ik9wd1YqDxyzuyEC242Y5ZJNTBlxp1HgbuZF
+         F/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750066590; x=1750671390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QyIJw42bLVYC1qcn4Rgc4aSobkAPjVXS0kJvM4KjVSE=;
-        b=l3E1umS1rkdXaDV3WgpATULAA2zI//kHi3fZB+4pNeGBq3MGkVgvEEakTuiRI7yv2w
-         6ELJp0AuJJi7ISqiN53LOTC9ML0IaL7oiOMMSl3ytO/TysmvPZ5tuIXjJ/+RUfaHVNx1
-         UzlixpRnu8edNBTb+3A1HH7XUaYhyyJXHapAFhcch4RFUCcFEP5hLNnSZoiftiwAw+w/
-         fZv7gjj2fFlqNw3oghTb4n7HnIvtytv9lHj5kdyqUznAdj3eR7CNgHfNE0ijmgmD2lV+
-         I/DHwchLXc2XmwyyxiScN1/yJVDqu4CCa8h/xHSCiFKben/RqwEZcYHasPfuIaDbb0qw
-         AZ0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWVTg+9QpiC/xTIa0R+x6S95t4MYZfRgAjBPGH3FrqXRUvTivdfbRTdy9kfFSqyi+eMniz/gZWA7spyebk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjMnqe4YnN0ZCfrgfKAhNzS0ow+F4Ee3Z6zuvtqchwNB4iVsqk
-	IJO9DUIUun4QrfFQBv6H2dmMHYL7V+tlYRN23vssWkzF/ph5xPgqSExNys6jhs7n4Pod160lCD3
-	CwAEo4+rMI2LFSBzGVTD2YEsirJhTILAUiwxnunR0TB/P7uRO7N/MWGmm
-X-Gm-Gg: ASbGncuge5T9E+rQUqdmwaEiMrsTbCGatYEdLpo9y5q+aCJIztmXrIuDdzmhw9Yj/zF
-	nEHNliRU2pctTc/jnmd1T7tBvpt8gzeg6PzG1lXxRClJre7qs5D3h8Gkig3Fqb6gVzayks9N9Fx
-	anvlJbIAyrtibgXwEpMOgrIENJcqF/P0TUJ2h8wF7c8RFS1927HV+KMfU=
-X-Google-Smtp-Source: AGHT+IExfs1Lq6bAplJAKpnyknLozpvmj2f++NKi/uCJl7EYtWLFqXP60HhaEqVs4L7q3T5Sh2zeIsfSjUd+hwvQ/JE=
-X-Received: by 2002:a05:6e02:1d9b:b0:3dd:a4b7:c737 with SMTP id
- e9e14a558f8ab-3de09fc2b9emr4321945ab.19.1750066589976; Mon, 16 Jun 2025
- 02:36:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750066664; x=1750671464;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dfP8v62XGv6w7z/ZmGpzfijGDXvy28lSonmS90eMeCc=;
+        b=jFmUMWg3RJ7kQTEIm5MVwm2G+09bFQCC8dLP+q71EP0lBoeakq0UnukqWre2+ommTc
+         RmE7YwnD/P7ko7B7IiKXHRw+IEtOZLjv8hJ+9m5eoCURw4P1z70Z8IwjHwzS6A8poc5D
+         HG4UwX8bnSMF3HA0Zy103kMwpF/DgsbxC2o/9PuXWZNSuGj18sBAJLJYDWN0UaE0aUtL
+         E0rtFiUikl0CwBnB3kbnt2593tBy590ouz13fcOG+bGRBwv3O2Xohy4yDpj+FeIDlecD
+         9UOUjbWDM0didUoiuNLWjCFwOYWtl5tDocBo9uTQxWQePiaxV6xuRp25g5IATI/C4YmF
+         aPHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVQVDvX0dBkZvoWEtuYab4pKgkM+3+6RnaGKzCgb1ypwrcjRG+oF7X88fbc6nerN26mBFGWZrQxBQKwJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJwqYO68HZmELcLlrP6Nk53vLycvZYoTtm6qv/dqwBS8Rn/gN9
+	JcXzuF03mOmL/4Vsqx1nP/vSNEfGevifPHl6UzJ9fWalcHZWfEJrJC0rOOQDdr2zWSw=
+X-Gm-Gg: ASbGncuPVARydJzYkHCeRkQ9eQi1GjLFw5RBRjhkELcgJYN8I31a6IYBoqBa8Sxac1+
+	yNSWp+oRfk5l/YWXOjoVaqCMs+RztBRrf8nRaC7x9NSo2irUyP6ZBgvDpmPRcXzZDoZ+c7uYx+R
+	VeghTeDKANwnSOUjkpCRQGd2f4kh1ihCs2qB7yktBv/FPx0TDLcxgCxJH+bfshBJqs4v6qMZX4/
+	ztuDsEYzp6VGhSGUE94pnHZXsAYCMZ+Ax3teoQ4QqcOnibK1KSHR2f/PffGLeIedUU1TzRb5rp4
+	s2bXhgFLjXIdeKlEbBNoJIf4kkln+Vi0C1eYh+1uVlQKUkQd8ZvuAAVKprF/D4PKDtyiAnp5a/X
+	3cyVtFg==
+X-Google-Smtp-Source: AGHT+IGstgDvCZ7kkheENEgwtKA2GsdZiS2gQeWTudsZRkiraVvavy0/6m9lYQPhBNBoWFt98BlCYg==
+X-Received: by 2002:a17:906:9f88:b0:ad8:96d2:f3e with SMTP id a640c23a62f3a-adfad326d9cmr714122866b.22.1750066663863;
+        Mon, 16 Jun 2025 02:37:43 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.110])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adfddc96709sm126821866b.134.2025.06.16.02.37.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 02:37:43 -0700 (PDT)
+Message-ID: <4360ee7a-d85a-4fa0-a1d6-d09a3b9d57c0@tuxon.dev>
+Date: Mon, 16 Jun 2025 12:37:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
-In-Reply-To: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 16 Jun 2025 02:36:18 -0700
-X-Gm-Features: AX0GCFtd-Ymhas6vUanWJK_PcvegJqPI2_88M-JzDIHqHHA6qrjOwNHCJCZ3ZL4
-Message-ID: <CAP-5=fXSwgxMc+uh=PBAFh4Zm96tL5RDyKPOJ8Q40O4s=EaArA@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple A7-A11,
- T2 SoC support
-To: Nick Chan <towinchenmi@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for
+ dev_pm_domain_attach()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, gregkh@linuxfoundation.org,
+ dakr@kernel.org, len.brown@intel.com, pavel@kernel.org,
+ ulf.hansson@linaro.org, daniel.lezcano@linaro.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com,
+ geert@linux-m68k.org, linux-iio@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
+ <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
+ <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
+ <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
+ <20250607140600.76e87ea5@jic23-huawei>
+ <CAJZ5v0jqZ6gYKb85dpR-X5RwFeUBcbbcJ_b-AOe+JypBXod-MA@mail.gmail.com>
+ <486a1110-5336-42fd-82b8-a7b1452bad65@tuxon.dev>
+ <CAJZ5v0hqBm4L2V9aUjB0tmW67eRRCnM7FScgdJQ=ihnpAZuMfA@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <CAJZ5v0hqBm4L2V9aUjB0tmW67eRRCnM7FScgdJQ=ihnpAZuMfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 15, 2025 at 6:32=E2=80=AFPM Nick Chan <towinchenmi@gmail.com> w=
-rote:
->
-> This series adds support for the CPU PMU in the older Apple A7-A11, T2
-> SoCs. These PMUs may have a different event layout, less counters, or
-> deliver their interrupts via IRQ instead of a FIQ. Since some of those
-> older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
-> be enabled by the driver where applicable.
->
-> Patch 1 adds the DT bindings.
-> Patch 2-7 prepares the driver to allow adding support for those
-> older SoCs.
-> Patch 8-12 adds support for the older SoCs.
-> Patch 13-21 are the DT changes.
->
-> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+Hi, Rafael,
 
-Hi Nick,
+On 13.06.2025 13:02, Rafael J. Wysocki wrote:
+> On Fri, Jun 13, 2025 at 9:39 AM Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>>
+>> Hi, Rafael,
+>>
+>> On 09.06.2025 22:59, Rafael J. Wysocki wrote:
+>>> On Sat, Jun 7, 2025 at 3:06 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>>>>
+>>>> On Fri, 6 Jun 2025 22:01:52 +0200
+>>>> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+>>>>
+>>>> Hi Rafael,
+>>>>
+>>>>> On Fri, Jun 6, 2025 at 8:55 PM Dmitry Torokhov
+>>>>> <dmitry.torokhov@gmail.com> wrote:
+>>>>>>
+>>>>>> On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki wrote:
+>>>>>>> On Fri, Jun 6, 2025 at 1:18 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>>>>>>>>
+>>>>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>>
+>>>>>>>> The dev_pm_domain_attach() function is typically used in bus code alongside
+>>>>>>>> dev_pm_domain_detach(), often following patterns like:
+>>>>>>>>
+>>>>>>>> static int bus_probe(struct device *_dev)
+>>>>>>>> {
+>>>>>>>>     struct bus_driver *drv = to_bus_driver(dev->driver);
+>>>>>>>>     struct bus_device *dev = to_bus_device(_dev);
+>>>>>>>>     int ret;
+>>>>>>>>
+>>>>>>>>     // ...
+>>>>>>>>
+>>>>>>>>     ret = dev_pm_domain_attach(_dev, true);
+>>>>>>>>     if (ret)
+>>>>>>>>         return ret;
+>>>>>>>>
+>>>>>>>>     if (drv->probe)
+>>>>>>>>         ret = drv->probe(dev);
+>>>>>>>>
+>>>>>>>>     // ...
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> static void bus_remove(struct device *_dev)
+>>>>>>>> {
+>>>>>>>>     struct bus_driver *drv = to_bus_driver(dev->driver);
+>>>>>>>>     struct bus_device *dev = to_bus_device(_dev);
+>>>>>>>>
+>>>>>>>>     if (drv->remove)
+>>>>>>>>         drv->remove(dev);
+>>>>>>>>     dev_pm_domain_detach(_dev);
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> When the driver's probe function uses devres-managed resources that depend
+>>>>>>>> on the power domain state, those resources are released later during
+>>>>>>>> device_unbind_cleanup().
+>>>>>>>>
+>>>>>>>> Releasing devres-managed resources that depend on the power domain state
+>>>>>>>> after detaching the device from its PM domain can cause failures.
+>>>>>>>>
+>>>>>>>> For example, if the driver uses devm_pm_runtime_enable() in its probe
+>>>>>>>> function, and the device's clocks are managed by the PM domain, then
+>>>>>>>> during removal the runtime PM is disabled in device_unbind_cleanup() after
+>>>>>>>> the clocks have been removed from the PM domain. It may happen that the
+>>>>>>>> devm_pm_runtime_enable() action causes the device to be runtime-resumed.
+>>>>>>>
+>>>>>>> Don't use devm_pm_runtime_enable() then.
+>>>>>>
+>>>>>> What about other devm_ APIs? Are you suggesting that platform drivers
+>>>>>> should not be using devm_clk*(), devm_regulator_*(),
+>>>>>> devm_request_*_irq() and devm_add_action_or_reset()? Because again,
+>>>>>> dev_pm_domain_detach() that is called by platform bus_remove() may shut
+>>>>>> off the device too early, before cleanup code has a chance to execute
+>>>>>> proper cleanup.
+>>>>>>
+>>>>>> The issue is not limited to runtime PM.
+>>>>>>
+>>>>>>>
+>>>>>>>> If the driver specific runtime PM APIs access registers directly, this
+>>>>>>>> will lead to accessing device registers without clocks being enabled.
+>>>>>>>> Similar issues may occur with other devres actions that access device
+>>>>>>>> registers.
+>>>>>>>>
+>>>>>>>> Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach() and
+>>>>>>>> dev_pm_domain_detach() in bus probe and bus remove, it ensures that the
+>>>>>>>> device is detached from its PM domain in device_unbind_cleanup(), only
+>>>>>>>> after all driver's devres-managed resources have been release.
+>>>>>>>>
+>>>>>>>> For flexibility, the implemented devm_pm_domain_attach() has 2 state
+>>>>>>>> arguments, one for the domain state on attach, one for the domain state on
+>>>>>>>> detach.
+>>>>>>>
+>>>>>>> dev_pm_domain_attach() is not part driver API and I'm not convinced at
+>>>>>>
+>>>>>> Is the concern that devm_pm_domain_attach() will be [ab]used by drivers?
+>>>>>
+>>>>> Yes, among other things.
+>>>>
+>>>> Maybe naming could make abuse at least obvious to spot? e.g.
+>>>> pm_domain_attach_with_devm_release()
+>>>
+>>> If I'm not mistaken, it is not even necessary to use devres for this.
+>>>
+>>> You might as well add a dev_pm_domain_detach() call to
+>>> device_unbind_cleanup() after devres_release_all().  There is a slight
+>>> complication related to the second argument of it, but I suppose that
+>>> this can be determined at the attach time and stored in a new device
+>>> PM flag, or similar.
+>>>
+>>
+>> I looked into this solution. I've tested it for all my failure cases and
+>> went good.
+> 
+> OK
+> 
+>>> Note that dev->pm_domain is expected to be cleared by ->detach(), so
+>>> this should not cause the domain to be detached twice in a row from
+>>> the same device, but that needs to be double-checked.
+>>
+>> The genpd_dev_pm_detach() calls genpd_remove_device() ->
+>> dev_pm_domain_set(dev, NULL) which sets the dev->pm_domain = NULL. I can't
+>> find any other detach function in the current code base.
+> 
+> There is also acpi_dev_pm_detach() which can be somewhat hard to find,
+> but it calls dev_pm_domain_set(dev, NULL) either.
+> 
+>> The code I've tested for this solution is this one:
+>>
+>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>> index b526e0e0f52d..5e9750d007b4 100644
+>> --- a/drivers/base/dd.c
+>> +++ b/drivers/base/dd.c
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/kthread.h>
+>>  #include <linux/wait.h>
+>>  #include <linux/async.h>
+>> +#include <linux/pm_domain.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/pinctrl/devinfo.h>
+>>  #include <linux/slab.h>
+>> @@ -552,8 +553,11 @@ static void device_unbind_cleanup(struct device *dev)
+>>         dev->dma_range_map = NULL;
+>>         device_set_driver(dev, NULL);
+>>         dev_set_drvdata(dev, NULL);
+>> -       if (dev->pm_domain && dev->pm_domain->dismiss)
+>> -               dev->pm_domain->dismiss(dev);
+>> +       if (dev->pm_domain) {
+>> +               if (dev->pm_domain->dismiss)
+>> +                       dev->pm_domain->dismiss(dev);
+>> +               dev_pm_domain_detach(dev, dev->pm_domain->detach_power_off);
+> 
+> I would do the "detach" before the "dismiss" to retain the current ordering.
 
-This is substantial work and it looks good to me. Do you know why
-there's been little progress on landing these patches? Buggy Apple ARM
-PMU support in the kernel has led to reworking the perf tool. It seems
-best that we can have the best drivers possible.
+I applied on my local development branch all your suggestions except this
+one because genpd_dev_pm_detach() as well as acpi_dev_pm_detach() set
+dev->pm_domain = NULL.
 
-Thanks,
-Ian
+Due to this I would call first ->dismiss() then ->detach(), as initially
+proposed. Please let me know if you consider it otherwise.
 
-> ---
-> Changes in v7:
-> - Fix a W=3D1 compile warning in apple_pmu_get_event_idx() as appearently=
- using GENMASK()
-> in a function prototype causes a warning in GCC.
-> - Link to v6: https://lore.kernel.org/r/20250407-apple-cpmu-v6-0-ae8c2f22=
-5c1f@gmail.com
->
-> Changes in v6:
-> - Rebased on top of v6.15-rc1 (Conflict with FEAT_PMUv3 support for KVM o=
-n Apple Hardware)
-> - Add patch to skip initialization of PMUv3 remap in EL1 even though not =
-strictly needed
-> - Include DT patches
-> - Link to v5: https://lore.kernel.org/r/20250228-apple-cpmu-v5-0-9e124cd2=
-8ed4@gmail.com
->
-> Changes in v5:
-> - Slightly change "drivers/perf: apple_m1: Add Apple A11 Support", to kee=
-p things in
-> chronological order.
-> - Link to v4: https://lore.kernel.org/r/20250214-apple-cpmu-v4-0-ffca0e45=
-147e@gmail.com
->
-> Changes in v4:
-> - Support per-implementation event attr group
-> - Fix Apple A7 event attr groups
-> - Link to v3: https://lore.kernel.org/r/20250213-apple-cpmu-v3-0-be7f8ade=
-d81f@gmail.com
->
-> Changes in v3:
-> - Configure PMC8 and PMC9 for 32-bit EL0
-> - Remove redundant _common suffix from shared functions
-> - Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b36193=
-2e88@gmail.com
->
-> Changes in v2:
-> - Remove unused flags parameter from apple_pmu_init_common()
-> - Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac=
-1743@gmail.com
->
-> ---
-> Nick Chan (21):
->       dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
->       drivers/perf: apple_m1: Only init PMUv3 remap when EL2 is available
->       drivers/perf: apple_m1: Support per-implementation event tables
->       drivers/perf: apple_m1: Support a per-implementation number of coun=
-ters
->       drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
->       drivers/perf: apple_m1: Support per-implementation PMU startup
->       drivers/perf: apple_m1: Support per-implementation event attr group
->       drivers/perf: apple_m1: Add Apple A7 support
->       drivers/perf: apple_m1: Add Apple A8/A8X support
->       drivers/perf: apple_m1: Add A9/A9X support
->       drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
->       drivers/perf: apple_m1: Add Apple A11 Support
->       arm64: dts: apple: s5l8960x: Add CPU PMU nodes
->       arm64: dts: apple: t7000: Add CPU PMU nodes
->       arm64: dts: apple: t7001: Add CPU PMU nodes
->       arm64: dts: apple: s800-0-3: Add CPU PMU nodes
->       arm64: dts: apple: s8001: Add CPU PMU nodes
->       arm64: dts: apple: t8010: Add CPU PMU nodes
->       arm64: dts: apple: t8011: Add CPU PMU nodes
->       arm64: dts: apple: t8012: Add CPU PMU nodes
->       arm64: dts: apple: t8015: Add CPU PMU nodes
->
->  Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
->  arch/arm64/boot/dts/apple/s5l8960x.dtsi        |   8 +
->  arch/arm64/boot/dts/apple/s800-0-3.dtsi        |   8 +
->  arch/arm64/boot/dts/apple/s8001.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t7000.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t7001.dtsi           |   9 +
->  arch/arm64/boot/dts/apple/t8010.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t8011.dtsi           |   9 +
->  arch/arm64/boot/dts/apple/t8012.dtsi           |   8 +
->  arch/arm64/boot/dts/apple/t8015.dtsi           |  24 +
->  arch/arm64/include/asm/apple_m1_pmu.h          |   3 +
->  drivers/perf/apple_m1_cpu_pmu.c                | 807 +++++++++++++++++++=
-++++--
->  12 files changed, 871 insertions(+), 35 deletions(-)
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250211-apple-cpmu-5a5a3da39483
->
-> Best regards,
-> --
-> Nick Chan <towinchenmi@gmail.com>
->
->
+Thank you,
+Claudiu
