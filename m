@@ -1,240 +1,142 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257121C860C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F321C860C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750107261; cv=none; b=kWgnf5xiLiSkAqWDwAs24xACONR1cahmQYfF4OV0+BmuSQSZJc6cSuRvHGJaX/HlCPjT0No5L9B+rMAnOBeq2x/Stb5FlbOsDUt7nJwT4GWnfVF1Zr2Gp7yOG/C46uQ98QmZO+Z/Hdc+WG5EVhhxZbJKr+1BpGD1bSGeschZ1YU=
+	t=1750107294; cv=none; b=nHX//vXUIeHnBeuhdPpFSBwVEKknGv7kaPxUBwWJQW6RRfKCwrl4xlfuxGl5pAFy+pswybUFBTfo6tXdSxFuxH53MCPckEbGrmag3BfEX4qlpbIg5AZUHSLTaPQn0bavpS0WIgAiizkADhE2d9G4fTK09GaeqmHaWEOc9cVDKJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750107261; c=relaxed/simple;
-	bh=d/MoWHZ5e+lhoKDdKuybDi6aTjfFIDhV5u0kgLlN9P8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dl0NFM2+fTTT3Zksjw+VeXVEKc1D7AbKuv93B5jk4svKR3VxJ5Sf65hLMeXmQySYeOMuxHuK6ZRAJ1yDrxeaO+15HPSmygdHwem+zgN2aO2wcVQ3vpCLueUSMN1T1toqFTfZtIlnI3Nke7pkIv1OlDSsflwRhO23MfaIY+3CJqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JK4qjfA0; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750107294; c=relaxed/simple;
+	bh=X2pSs0C3diN4/CYI1z3qmfpbrRBX4z7sKZPJQQfItaU=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
+	 References:In-Reply-To; b=BFd6YLCsIeSFHpoJEQhzd4UsS6TK1XFzcKZtv2HGuBECQgEg+6q/TdaHlkLcr458b6YdihUNLINXg9LL+Qnh+ODXp5FNjlo6JWbxABKyLZ3qjg3w8NF4BdIh+IvofPI0sBEQMrc8kCx2YntthruVWDYenfHxe+4Znxib2uQrDYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=C/sfawuN; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JK4qjfA0"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-235ca5eba8cso49755ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:54:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="C/sfawuN"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5b8d13f73so555735985a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750107259; x=1750712059; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bylXQEyRsEC9se7T35uUhgi7mwDCmJDoSYBlOu6gy74=;
-        b=JK4qjfA0nXcKe3PPPsbBphrpLj5W9yCNSWpgRWPDVygo4Pf+NZeJw9uh/sUW7A6v+f
-         B1B3007Vj/20KhYl49PUgJHgq4ujYxITt829vNBfYozOREDrK0zg9gnWoHxAo9bld/Ux
-         4Q7cB4rf0QbneM9I1eB7SkKFAnBMyyuJBhhXE8cFMjBrNI/diBJGQJYNUUWfAy581PRZ
-         tVJhuaCRmgQMEWv4MGmLWr8tYKRCr7jgrW6iFdjq/gI2UxjUD1db/TYQKOS2deJr5wA+
-         ekNxm395zejSx9n7Ec5CL0IhGqQC5x4R32Nmmrt434HmEcrZGWdcQrroMmnUZ0Alrhb2
-         9AAQ==
+        d=paul-moore.com; s=google; t=1750107291; x=1750712091; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dRiTjLRwP8mNs38+mxGVbvKyz+mUaqj8oEBwJ01ezWs=;
+        b=C/sfawuNBOl7I0AtgN0u1S0TkyesKp3oqhQRNKgL7S/lz+POYkm8hc44ws4kqqpZx1
+         1grXg82XNhVsG8PCnCeyUT5/ye+qDkx5iw6ExgyxzF7o443+xg9UANm3V4AJiHsWd7mc
+         0WeTRA2Kahkx5pRgwdC6+Ufl9kAlfKSrOnQRx4xtm+HlvTgl8B1p1BMQSUUpyzW4Ojeb
+         Sjj+HikY0AxQTj/d4Jlvr5HJc4Fa1PJPYYDrq70eQ8rQaagNMCb8f6ZsSMgplaLBnJDa
+         rTalBAAg4UE4NJXX9BJZ8ZajZkzqTLc2T6IaOVvbE3CMncS64QSeRhFbshYJEe/Y95i0
+         seKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750107259; x=1750712059;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bylXQEyRsEC9se7T35uUhgi7mwDCmJDoSYBlOu6gy74=;
-        b=Di3RmvRWPPluyd0iAYAQiZD++V2N5WMaHMT8HS/vraDnDLp810k3DCt/nxRqwob0kU
-         SmdMWje7mm6Ck5JYdg65/eTSh+IQw/J+FHcTeWbCOAm87KBLnCVUv1h/jb58LHlXhkkd
-         TnTyGYeaUs1npLG5B+PTfJct1g8oN1T3H+qiaejd+xpFXmbUfYpaaAW7qsIrPryrPI/G
-         aglZDG8CcUr29j643ajTDNBmUyYQOTbkf8Ojci0TnmRcBRf0MVAugs3Q45a79AK3oKWl
-         DDr7dnfat/53gS4HQPO7Br5J9ISTUIU8j2l36wwnuLZyZ1UbgTaLABSYT/5zwBPlNMrz
-         LVrA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7y/wN08J4PZnqAHySenL+PVd4bTzOVo0e7QbqZK6QiY0Xazwc8Oqkc/8g4MMwFssuMv5dZ3yqewjQGh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWTDnvmwOCYPY20rX+TvXdqVKuVCamicmsGMKUbq7625T2kEUu
-	fnfCscetHkZmpviQh8z3O/aty3WTtyOs3OoxnBhA4EZGuoL6ew4RaskVQFnjdmRqJQ==
-X-Gm-Gg: ASbGncsNjpg2Gz4wwmngNn5wgF6ZRWWZGPuKYznRbSLr0qB+IW2p0PT2//xdjjOa2+Y
-	y58YyEFiteb76nLN+YulOdyJQAaLnFSZ7hR1WM9hnZ+kDdnuzDXAhV3UytMHu6U65OiCUCiMiJz
-	kbL21lfqdRdc/bS3BjICGulMWRSpoXuIZD2831nTGPlqpZ8CMuJ9cYwigTzZ0wqWTeOFLmNI+iQ
-	qNUYtjRiLx1DzoW0CD9UxHw9O/zQi+KijR/qNaKbfndPVaclegoTOKEuW0TjcyT5SrWG+ZTFxHv
-	AqfMmF+jfS69elfBQ0BEFXBvCUY0XjORub+qoMITgbEGBipA8VTaJw2PzarJKhW0jQMTvUlpkdN
-	yBgJBTcnL7hMAFzsV4hDE
-X-Google-Smtp-Source: AGHT+IF85pxVw9iF4idB17Pc9J6nncgf4wJ2a0JAQZ7KU8U2NL+V9q0BdH+v8rwfWv0L8lWMxivrUQ==
-X-Received: by 2002:a17:902:e54f:b0:22c:3cda:df11 with SMTP id d9443c01a7336-2366c5bfaaamr6196145ad.10.1750107259136;
-        Mon, 16 Jun 2025 13:54:19 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083bb2sm7561368b3a.94.2025.06.16.13.54.13
+        d=1e100.net; s=20230601; t=1750107291; x=1750712091;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dRiTjLRwP8mNs38+mxGVbvKyz+mUaqj8oEBwJ01ezWs=;
+        b=GFMr1xTJhS76kC9Xf9EWfPjm80cwrgJY1uu4946FLnBgdfalt6GTj8NBqTE0gH1FwA
+         Dn2aAIfX79CIvCZ5+JoJYKK8DftXO6EQwesseA6Z/8nhJUvwqC1YJdJ89C3p5Dc1ewjV
+         KiSWrTLjeLwmQ6X1Muxm9ZB0SSZTmkR5OQUWIoqYLzNONwEGFi+VxY3xRR4iC/l0WTcY
+         R/qXriP74XmpjTSesfSuq0cdBL+xFsSkeYHTUDhNvl+kQnezqYN2vRhZP9aaSgNfHyIu
+         aNSyP+y5uuHdd+b4JDZpRFlLskNg1uRYPxJ5OhnIxs3nFEfyRdWnQVts+XoRFiOxGycG
+         l3/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXnwFrx1kYMl5LdyCR24KbVaLHeZLa3y/UrUMtX2ibWYHmHDy72t7Qq4ZROZ4sodlEPB73dddX/FILLbcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCEijQElEHTNnMh+7RvfocTCD7bbBzHhW+2skUJvEN9uxrQBOH
+	Bt/qXwH3qmHMbRsKai2DT8jtF+WU/ZTpLj9hwQsM92tNUy9ZHLPgEp/S2pbQ58gxIw==
+X-Gm-Gg: ASbGnctunh0WkzXJS1E9lx6XSFkPq5/1cUe+tnxH1JTyg12TH6kfBlbivvXLzEQbScc
+	kzONRPv//TKNVAfpdFyz4pKtojMnG7zFYT1p0J9FK1CLNAxWbSQv8lTQYkQRJwIeTdGxv13bme/
+	WPKlvMKkfz+XifDAkzaQaFqH5qO0sjd9/+Egps1Q1z7Vw/5C3DuuLfuXLJ6AEheUkzLjWxIbhDX
+	N8bMzfMBcRnOWqBo82SC/UjfdTFBpoQjr0nYj2ccwxTxVi6fUDKt9L4kn0Y6h78clRtEa4mClWG
+	N1201Bq0OWQ8z5F6Wy1zXD4+r8y1pLliiB+vbNVnSBj0vL7euJkvvJXBDv91CVU18EWnXOhiCFI
+	yqiTr8C76vzNspgux1yKE6TvL3e4+VLJhyWOiOu3jew==
+X-Google-Smtp-Source: AGHT+IHy8NfV/ifN7iD3vcgxXUiPWI4gYwnzg71q0uhFQn8iB4iMvSADwxPFz9kofNSVBcfX1gHoLw==
+X-Received: by 2002:a05:620a:4883:b0:7d2:139b:a994 with SMTP id af79cd13be357-7d3c6ce1169mr1509959185a.34.1750107291067;
+        Mon, 16 Jun 2025 13:54:51 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d3b8dc92e8sm572879285a.5.2025.06.16.13.54.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 13:54:16 -0700 (PDT)
-Date: Mon, 16 Jun 2025 20:54:07 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Xueqi Zhang <xueqi.zhang@mediatek.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Project_Global_Chrome_Upstream_Group@mediatek.com,
-	Ning li <ning.li@mediatek.com>, linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 7/8] iommu/arm-smmu-v3: Invoke rpm operation before
- accessing the hw
-Message-ID: <aFCEb744WpRpcDxM@google.com>
-References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
- <20250616025628.25454-8-xueqi.zhang@mediatek.com>
+        Mon, 16 Jun 2025 13:54:50 -0700 (PDT)
+Date: Mon, 16 Jun 2025 16:54:50 -0400
+Message-ID: <b6295394c101221e5a4aacd0abf021ce@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616025628.25454-8-xueqi.zhang@mediatek.com>
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20250616_1212/pstg-lib:20250616_1001/pstg-pwork:20250616_1212
+From: Paul Moore <paul@paul-moore.com>
+To: Casey Schaufler <casey@schaufler-ca.com>, casey@schaufler-ca.com, eparis@redhat.com, linux-security-module@vger.kernel.org, audit@vger.kernel.org
+Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] LSM: security_lsmblob_to_secctx module selection
+References: <20250607005134.10488-3-casey@schaufler-ca.com>
+In-Reply-To: <20250607005134.10488-3-casey@schaufler-ca.com>
 
-On Mon, Jun 16, 2025 at 10:56:13AM +0800, Xueqi Zhang wrote:
-
-Hi Xueqi,
-
-> Invoke rpm operation before accessing the SMMU hw.
+On Jun  6, 2025 Casey Schaufler <casey@schaufler-ca.com> wrote:
 > 
-> Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
+> Add a parameter lsmid to security_lsmblob_to_secctx() to identify which
+> of the security modules that may be active should provide the security
+> context. If the value of lsmid is LSM_ID_UNDEF the first LSM providing
+> a hook is used. security_secid_to_secctx() is unchanged, and will
+> always report the first LSM providing a hook.
+> 
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 > ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 84 ++++++++++++++++++++-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  3 +
->  2 files changed, 85 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index 154417b380fa..88912b0f8132 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -122,6 +122,22 @@ static void parse_driver_options(struct arm_smmu_device *smmu)
->  	} while (arm_smmu_options[++i].opt);
->  }
->  
-> +static int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
-> +{
-> +	if (smmu && smmu->impl && smmu->impl->smmu_power_get)
-> +		return smmu->impl->smmu_power_get(smmu);
-> +
-> +	return 0;
-> +}
-> +
-> +static int arm_smmu_rpm_put(struct arm_smmu_device *smmu)
-> +{
-> +	if (smmu && smmu->impl && smmu->impl->smmu_power_put)
-> +		return smmu->impl->smmu_power_put(smmu);
-> +
-> +	return 0;
-> +}
-> +
+>  include/linux/security.h     |  6 ++++--
+>  kernel/audit.c               |  4 ++--
+>  kernel/auditsc.c             |  8 +++++---
+>  net/netlabel/netlabel_user.c |  3 ++-
+>  security/security.c          | 13 +++++++++++--
+>  5 files changed, 24 insertions(+), 10 deletions(-)
 
-I've been working on enabling PM runtime for arm-smmu-v3 for a while, 
-I just posted the RFCv3 for that series [1]. I see that you need some
-implementation specific rpm calls too, I think it would be nice if we
-could align on this?
+...
 
-Perhaps, you could rebase this on top of my series OR we can collaborate
-for the runtime PM series where you can contribute only the rpm patches
-from this series to handle your implmentation? 
-Let me know what you think! 
+> diff --git a/security/security.c b/security/security.c
+> index 2b9dde02f4de..306860434200 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -3774,6 +3774,7 @@ EXPORT_SYMBOL(security_ismaclabel);
+>   * security_secid_to_secctx() - Convert a secid to a secctx
+>   * @secid: secid
+>   * @cp: the LSM context
+> + * @lsmid: which security module to report
+>   *
+>   * Convert secid to security context.  If @cp is NULL the length of the
+>   * result will be returned, but no data will be returned.  This
 
->  /* Low-level queue manipulation functions */
->  static bool queue_has_space(struct arm_smmu_ll_queue *q, u32 n)
+You're updating the comment block for the wrong function.
+
+> @@ -3800,9 +3801,17 @@ EXPORT_SYMBOL(security_secid_to_secctx);
+>   *
+>   * Return: Return length of data on success, error on failure.
+>   */
+
+Since you need to update the patch to fix the problem above, it would
+probably be a good thing to explain the LSM_ID_UNDEF handling in the
+function's comment block as you did in the commit description.
+
+> -int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp)
+> +int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp,
+> +			       int lsmid)
 >  {
-> @@ -2082,23 +2098,35 @@ static irqreturn_t arm_smmu_gerror_handler(int irq, void *dev)
->  static irqreturn_t arm_smmu_combined_irq_thread(int irq, void *dev)
->  {
->  	struct arm_smmu_device *smmu = dev;
-> +	int ret;
+> -	return call_int_hook(lsmprop_to_secctx, prop, cp);
+> +	struct lsm_static_call *scall;
 > +
-> +	ret = arm_smmu_rpm_get(smmu);
-> +	if (ret)
-> +		return IRQ_NONE;
->  
->  	arm_smmu_evtq_thread(irq, dev);
->  	if (smmu->features & ARM_SMMU_FEAT_PRI)
->  		arm_smmu_priq_thread(irq, dev);
->  
-> +	arm_smmu_rpm_put(smmu);
->  	return IRQ_HANDLED;
+> +	lsm_for_each_hook(scall, lsmprop_to_secctx) {
+> +		if (lsmid != LSM_ID_UNDEF && lsmid != scall->hl->lsmid->id)
+> +			continue;
+> +		return scall->hl->hook.lsmprop_to_secctx(prop, cp);
+> +	}
+> +	return LSM_RET_DEFAULT(lsmprop_to_secctx);
 >  }
+>  EXPORT_SYMBOL(security_lsmprop_to_secctx);
 >  
->  static irqreturn_t arm_smmu_combined_irq_handler(int irq, void *dev)
->  {
-> +
-> +	ret = arm_smmu_rpm_get(smmu);
-> +	if (ret)
-> +		return IRQ_WAKE_THREAD;
->  
->  	arm_smmu_gerror_handler(irq, dev);
->  
->  	if (smmu->impl && smmu->impl->combined_irq_handle)
->  		smmu->impl->combined_irq_handle(irq, smmu);
->  
-> +	arm_smmu_rpm_put(smmu);
->  	return IRQ_WAKE_THREAD;
->  }
->  
-> @@ -2255,6 +2283,11 @@ static void arm_smmu_tlb_inv_context(void *cookie)
->  	struct arm_smmu_domain *smmu_domain = cookie;
->  	struct arm_smmu_device *smmu = smmu_domain->smmu;
->  	struct arm_smmu_cmdq_ent cmd;
-> +	int ret;
-> +
-> +	ret = arm_smmu_rpm_get(smmu);
-> +	if (ret)
-> +		return;
->  
->  	/*
->  	 * NOTE: when io-pgtable is in non-strict mode, we may get here with
-> @@ -2271,6 +2304,8 @@ static void arm_smmu_tlb_inv_context(void *cookie)
->  		arm_smmu_cmdq_issue_cmd_with_sync(smmu, &cmd);
->  	}
->  	arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
-> +
-> +	arm_smmu_rpm_put(smmu);
->  }
->  
->  static void __arm_smmu_tlb_inv_range(struct arm_smmu_cmdq_ent *cmd,
-> @@ -2353,6 +2388,11 @@ static void arm_smmu_tlb_inv_range_domain(unsigned long iova, size_t size,
->  			.leaf	= leaf,
->  		},
->  	};
-> +	int ret;
-> +
-> +	ret = arm_smmu_rpm_get(smmu_domain->smmu);
-> +	if (ret)
-> +		return;
-
-I'm afraid we aren't going for a hard rpm_get in such functions in our
-design as per the the discussions in the rpm series[1]. It would be 
-great if you could review that too and drop some comments there, I'd be
-happy to understand and collaborate to meet your requirements as well :)
-
-[...]
-
->  static const struct of_device_id arm_smmu_of_match[] = {
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> index f45c4bf84bc1..cd96ff9cbc54 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> @@ -792,6 +792,7 @@ struct arm_smmu_device {
->  
->  	struct rb_root			streams;
->  	struct mutex			streams_mutex;
-> +
->  	const struct arm_smmu_v3_impl	*impl;
->  };
->  
-> @@ -1004,6 +1005,8 @@ struct arm_smmu_v3_impl {
->  	int (*combined_irq_handle)(int irq, struct arm_smmu_device *smmu_dev);
->  	int (*smmu_evt_handler)(int irq, struct arm_smmu_device *smmu_dev,
->  				u64 *evt, struct ratelimit_state *rs);
-> +	int (*smmu_power_get)(struct arm_smmu_device *smmu);
-> +	int (*smmu_power_put)(struct arm_smmu_device *smmu);
->  };
->  
->  struct arm_smmu_device *arm_smmu_v3_impl_init(struct arm_smmu_device *smmu);
 > -- 
-> 2.46.0
-> 
+> 2.47.0
 
-Thanks,
-Praan
-
-[1] https://lore.kernel.org/all/20250616203149.2649118-1-praan@google.com/
+--
+paul-moore.com
