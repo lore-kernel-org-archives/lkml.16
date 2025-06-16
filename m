@@ -1,125 +1,163 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120131E25EB
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B0189F56
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750062662; cv=none; b=nYU3rm7qRsXV9e5cBJEFmqGnhMLQXyX4KLP7/97IUN/r7A/A68kqb7urKIgh5LSTJ9vQfJkEyNDSVdP+sA1BjXMfFUaHJ+/eP2JbOXYaJp6c9RggpGRit1KAd2Kc1ssBqoCCN82pTLkggu3pD/cWrIpHAxCgaJGPyPzlgK4Q6To=
+	t=1750062924; cv=none; b=FoK3E+10ArhH5GJX+qsjtaKSLPiM3ID1NuMQfjfb3GTB4vJ8vNR6NCa7xp9mtx98t5vEO8Ipg5CMj/qQsao67pZnH2I72reakCgSJTIjC3LUoY5Qvzd0haMbqbOwxlVbehn15wg/x6RsmtQeYa+G0NuHWFjFrIZ5pbBfaSIeGpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750062662; c=relaxed/simple;
-	bh=2/Z4r18vsY0SX4W4/zyu97SlBTjtJ9U8SMkKx61jbSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QfuIa+sBJOVYK8Wv6lnel/Ep3tj7iQIMMICUbFP/OKsSCwFUtZKcPR5q2xW4qOvg1Y7WWRO7NpwnNza+Jt/pkfc5OJSl+f+jL60vmBAD2NVOTOZACo1v+Z4oIX52MsrQEbC7raKs8Bo9jz+BIESmLPSWfUSvhjT4CbZsjtFYnL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddBkUSnc; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750062924; c=relaxed/simple;
+	bh=jaVBmfhiO/gMUJCxr4WGTf3k2pGJTYD8tBDjkUnbMjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TX0Q8rKSUI48FzSZAYiGl9MlUJMIUL+tlIpZuJdTpgY/usv2JDvLg2mTCCPRGcaW2OOhTnHcy4ufI51ao5MTc6zG85gX7tWwlTE1RePnjmk3iDNCvX7F5lF1NDsmYoVSHrILH6GxYy60mn6ZTx1bCaB05wzHqnmHLDGY4nTmwi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n9s1izY1; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddBkUSnc"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso35050015e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750062659; x=1750667459; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjVy9U5cCHfPCLkIztlHvZcD6jwKLBifr0CRV+MLuWg=;
-        b=ddBkUSnc8e5vMtxJvxBVk3aURwNsygEbWYhbLWMLy0v0M4H5lmJBXnjeZsl8QSrjxv
-         DYKe4f47zfTl6KRdGkkSkHUzVEDyOQ2WRF32C2+iaqgLi/Qt+REjzHnU/2dYavWuOI88
-         K9Gz1/vdOlu5XNU9+5TYH3jMin5OxwCCuf3EgqP+nYNV3+Xxk9QIu3BYvWF13hCz/mno
-         zzzHQyJX5/1K3lc0YKHfZsBATjTRsPgfttWYIpZkX/PDDIcIOwnxz/RJ3FHy/qYbb3Sm
-         NYk/ydQzjKUrgGfKKGVnlpwXJoUXX3OzvhY0IDQXJJ9kWu7Ih7wxM0A8qkiHv9QgjqvU
-         Nhig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750062659; x=1750667459;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CjVy9U5cCHfPCLkIztlHvZcD6jwKLBifr0CRV+MLuWg=;
-        b=m6pUhXNjlL/TEwxAEEPkS8plEPH6B4FV/nanJ45YTFX2kwb25tQM7BlqwA8Nm/6eXU
-         S68SjyiZmOELYytcW6ZYvf1OInhv1YS0H7kF6sJGVmIveBoCRyEYDnkUsqyyd7Fz4Xvk
-         5BebSz9o2Ab8MvvyYDQ6spL+5jX9nC/D9udBQ8EJg/T28Db7ZzFWD8qZYq45CzKVN+82
-         T95S0CwfwZkUsQEsMPhsGneSA3KqLXGw3bRXOT3EgnVHPwUHfxIR8eCLmXeeYOAa4EIJ
-         axMpiz/2SSpSshWRMWW1j5W9OOJ5zO5qhtdIEqNzhlwR9BNNUHxi7vcXXfIeBPLq+gnA
-         d46w==
-X-Forwarded-Encrypted: i=1; AJvYcCVsmRXkZiKNKJWPfOJZ804u1Z3pSAMNhZq1qEVjFJcWSq37kapUy7YDjgQreo1+5hgkeyS12gSQsKfnaMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhkp+fNeLggvl0HlYiJZxmoBbgb/dY45yEA3nfg78Y3e289G4S
-	hIlldWgXk478yQOBtuS5qOvS7LApHLrcqlGacMA4bC/0cCZ5yGhSKMks
-X-Gm-Gg: ASbGncu5beAEWKWVRGIG7+QHdEFsv/tOlDoWyehj0zUyF8YRFH/4QfYXUPfA9it0x02
-	4ENMtyyx2lNTV9FW7eAqAXesprEeBnxespss9QYBhwVlzSNbo8Wpz9OMIROwe3BJWJIg3CfX07T
-	Poly5hYbEl0FACT7aOlq0WXyMu9Dc09RpcSDNviW/f1XVxpQdRXsZ+TYxDVeIR/fRisCkfdQG26
-	86rdDd5dQsHyhoeu6SIiaJS1gT7649aksY290g9zxSpRpt1e7N3vOyCF3Uu7szLT7HJUa5nfu77
-	cC+gX3UZmLUEbeZQCZ/7NC1h2PrITwrcIxgIOmBySV0CJxXStX7PbQ==
-X-Google-Smtp-Source: AGHT+IFhoddjnbRB+Yj//UnTop550KeuR1B2yCI8OKQE7qzsxeHpqo1UpQ670wVoWROSY/sPoY36BA==
-X-Received: by 2002:a05:6000:4028:b0:3a4:f379:65b6 with SMTP id ffacd0b85a97d-3a5723af4e8mr7039560f8f.46.1750062659214;
-        Mon, 16 Jun 2025 01:30:59 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm10329580f8f.26.2025.06.16.01.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 01:30:58 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.ort,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/idle: Use MONITORX and MWAITX mnemonics in <asm/mwait.h>
-Date: Mon, 16 Jun 2025 10:30:41 +0200
-Message-ID: <20250616083056.157460-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n9s1izY1"
+Message-ID: <d4a28883-2aff-42dd-afe4-c5a42447ed0e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750062907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QKgw0q/b2wsEMiS8v+UPXQrLZWDcU2TmDlxSNErwZhE=;
+	b=n9s1izY1DgFXeYapdxjJWy2Y9bElYZA4F9H+Gw2gUs+VgMyWEytAWbwxpfwCN3BQUo06j5
+	kugONuIW0EAqmK1xABumKKsn2773yVZ0U5cj6Vd4vkybXCdsnYqlwR+Wy8fFYE4E8qs4l4
+	D0h+6ZUHdkmGxDVeN51DAqfhJYVJxzY=
+Date: Mon, 16 Jun 2025 16:34:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next v2 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: song@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, sdf@fomichev.me, haoluo@google.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20250615150514.418581-1-chen.dylane@linux.dev>
+ <20250615150514.418581-2-chen.dylane@linux.dev> <aE_KaH3DAo4-Yq7m@krava>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <aE_KaH3DAo4-Yq7m@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Current minimum required version of binutils is 2.30,
-which supports MONITORX and MWAITX instruction mnemonics.
+在 2025/6/16 15:40, Jiri Olsa 写道:
+> On Sun, Jun 15, 2025 at 11:05:14PM +0800, Tao Chen wrote:
+>> Show kprobe_multi link info with fdinfo, the info as follows:
+>>
+>> link_type:	kprobe_multi
+>> link_id:	3
+>> prog_tag:	e8225cbcc9cdffef
+>> prog_id:	29
+>> type:	kprobe_multi
+>> kprobe_cnt:	8
+>> missed:	0
+>> func:	bpf_fentry_test1+0x0/0x20
+>> cookie:	1
+>> func:	bpf_fentry_test2+0x0/0x20
+>> cookie:	7
+>> func:	bpf_fentry_test3+0x0/0x20
+>> cookie:	2
+>> func:	bpf_fentry_test4+0x0/0x20
+>> cookie:	3
+>> func:	bpf_fentry_test5+0x0/0x20
+>> cookie:	4
+>> func:	bpf_fentry_test6+0x0/0x20
+>> cookie:	5
+>> func:	bpf_fentry_test7+0x0/0x20
+>> cookie:	6
+>> func:	bpf_fentry_test8+0x0/0x10
+>> cookie:	8
+>>
+>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>> ---
+>>   kernel/trace/bpf_trace.c | 33 +++++++++++++++++++++++++++++++++
+>>   1 file changed, 33 insertions(+)
+>>
+>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+>> index 9a8ca8a8e2b..d060c61e4e4 100644
+>> --- a/kernel/trace/bpf_trace.c
+>> +++ b/kernel/trace/bpf_trace.c
+>> @@ -2623,10 +2623,43 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>>   	return err;
+>>   }
+>>   
+>> +#ifdef CONFIG_PROC_FS
+>> +static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
+>> +					 struct seq_file *seq)
+>> +{
+>> +	struct bpf_kprobe_multi_link *kmulti_link;
+>> +	char sym[KSYM_NAME_LEN];
+>> +
+>> +	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+>> +
+>> +	seq_printf(seq,
+>> +		   "type:\t%s\n"
+>> +		   "kprobe_cnt:\t%u\n"
+>> +		   "missed:\t%lu\n",
+>> +		   kmulti_link->flags == BPF_F_KPROBE_MULTI_RETURN ? "kretprobe_multi" :
+>> +					 "kprobe_multi",
+>> +		   kmulti_link->cnt,
+>> +		   kmulti_link->fp.nmissed);
+>> +
+>> +	for (int i = 0; i < kmulti_link->cnt; i++) {
+>> +		sprint_symbol(sym, kmulti_link->addrs[i]);
+> 
+> I think you could use specifier to do the translation for you,
+> check Documentation/core-api/printk-formats.rst:
+> 
+>          %pS     versatile_init+0x0/0x110 [module_name]
+> 
 
-Replace the byte-wise specification of MONITORX and
-MWAITX with these proper mnemonics.
+I'll refer to that, thanks!
 
-No functional change intended.
+> 
+> 
+>> +		seq_printf(seq,
+>> +			  "func:\t%s\n"
+>> +			  "cookie:\t%llu\n",
+>> +			  sym,
+>> +			  kmulti_link->cookies[i]
+>> +			  );
+> 
+> bracket should be on the previous line
+> 
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/mwait.h | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+will fix it in v3, thanks.
 
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index dd2b129b0418..d4bcbe59626d 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -36,9 +36,7 @@ static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
- 
- static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
- {
--	/* "monitorx %eax, %ecx, %edx" */
--	asm volatile(".byte 0x0f, 0x01, 0xfa"
--		     :: "a" (eax), "c" (ecx), "d"(edx));
-+	asm volatile("monitorx" :: "a" (eax), "c" (ecx), "d"(edx));
- }
- 
- static __always_inline void __mwait(u32 eax, u32 ecx)
-@@ -82,9 +80,7 @@ static __always_inline void __mwaitx(u32 eax, u32 ebx, u32 ecx)
- {
- 	/* No MDS buffer clear as this is AMD/HYGON only */
- 
--	/* "mwaitx %eax, %ebx, %ecx" */
--	asm volatile(".byte 0x0f, 0x01, 0xfb"
--		     :: "a" (eax), "b" (ebx), "c" (ecx));
-+	asm volatile("mwaitx" :: "a" (eax), "b" (ebx), "c" (ecx));
- }
- 
- /*
+> jirka
+> 
+> 
+>> +	}
+>> +}
+>> +#endif
+>> +
+>>   static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
+>>   	.release = bpf_kprobe_multi_link_release,
+>>   	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
+>>   	.fill_link_info = bpf_kprobe_multi_link_fill_link_info,
+>> +#ifdef CONFIG_PROC_FS
+>> +	.show_fdinfo = bpf_kprobe_multi_show_fdinfo,
+>> +#endif
+>>   };
+>>   
+>>   static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
+>> -- 
+>> 2.48.1
+>>
+
+
 -- 
-2.49.0
-
+Best Regards
+Tao Chen
