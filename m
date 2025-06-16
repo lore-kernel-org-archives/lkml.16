@@ -1,67 +1,86 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A230721CC62
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45011D90DD;
+	Mon, 16 Jun 2025 14:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085911; cv=none; b=amPSpIOg+zAlbTMqSty9znaxzy/R42v3bnlGW8PgYyIuhNNZ7k7+TIp2xHj9oP3TCJYgKzDmzsJYH9G/9XHSSZlhd2BfWW5h4hJ0Qune/rESslcDNwXFdX5ZiCd0C13ttVtzphVyyJiaQ+gQQOEFf3zH68J1siTZ2proBbzzjdY=
+	t=1750085919; cv=none; b=oCls0aTg7O4z9PNOFmfCN2HnJviXLFmzT9cdpUnl1uKRsVzLLNbgp66iXlgBz7YPGmWWrsxbwKTb7bJajEAh49XgGtDDH1exrJema0RCXaAtOyrFdNxViwfjkjf7MsrYiwTUnLwVPN4ZfIOVr6rkfymXBD9hKhIEEeeIhCh1INE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085911; c=relaxed/simple;
-	bh=mwKKLHRDWleY5Bx+V9PkDR0ezRaFRqXe2spQND4s/r8=;
+	s=arc-20240116; t=1750085919; c=relaxed/simple;
+	bh=46VI5kI7DARz6nHBYySD64FMtN5SGMQUkOWuVytVrXk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpXzqXWci4ALvRh9wHkBICY6/u1ddg1TKbbDLmuadI9EUguWbWM9GQMgON0yRZuOa+91kh+eWxkf/VUX/7B7mH4v9WSjj/fY6pbDDox8qgsuwSWC4Q8GRdN6x1X3vRfnqRM5H3PvPA5/Zjze7MD4cMd+Ld59rbjKlhzEjMOf/74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hLmnDTsM; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=urbuH6WkQU8I63AYAlNj95qyIC+iVhZGM/wzfByrwzdrWOBW1oOL0pxkNDzatKBmozcJ7w+HAcfBZ7ybfKg9iJjcW6VPtDRoWsJPFLwAeX2nYx8hoVrsLDEKNqG5r8Y7wyfBo00362V+6fJYntZrwk53Ju5lNQ6jf7pNySaXbgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiZE7a6+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hLmnDTsM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dyBQUAInGU3lGevMO5dRke5gOvctTg4sbZdLaGpdqLI=; b=hLmnDTsM7ylDVncjqFVj63Zv/G
-	vv7T3Wn3v4VhSf/MtxkiYEnBGINjpkmOuyjKX5AnSfJTUpw+ea99J1HD8vE+9yCEgOPqbpW8RlCZi
-	C5aLJ65+OwhJNB7QGsPdYauFWdhPEwJyRgreCAQXPh3CUJrhHixuD2qZfMCItfkI+AAKWtFbQahWt
-	X03chMj/j3ciI7+oQKAZued0wsGqcLF3o3kdFyHWeOzz5UHtx0/jUdEQ17owIxcV//MYOwVFCfwwv
-	4Aw8OVELkID4sva7HTd3+robjn6w2tV/rV4o7dqbKSpPWA5M+GUMN9QYbF/KH6lHCT4hUPpKGfMqW
-	wcOXjg/Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRBI1-0000000G4hW-2yuW;
-	Mon, 16 Jun 2025 14:58:25 +0000
-Date: Mon, 16 Jun 2025 15:58:25 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org, akpm@linux-foundation.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	mingo@redhat.com, mjguzik@gmail.com, luto@kernel.org,
-	peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
-	tglx@linutronix.de, jon.grimm@amd.com, bharata@amd.com,
-	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH v4 13/13] x86/folio_zero_user: Add multi-page clearing
-Message-ID: <aFAxEdZCW_uQpfqN@casper.infradead.org>
-References: <20250616052223.723982-1-ankur.a.arora@oracle.com>
- <20250616052223.723982-14-ankur.a.arora@oracle.com>
- <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiZE7a6+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC04BC4CEEA;
+	Mon, 16 Jun 2025 14:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750085919;
+	bh=46VI5kI7DARz6nHBYySD64FMtN5SGMQUkOWuVytVrXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MiZE7a6+q/GsIslhl70mP/J8IrMeR55PETwqoVObqI42VN9ygAKPpurXpMyg7ltMi
+	 NSp5vThbbmRt23amO1B4nR/h9wT5OfJbYJTwfQBrzy8ReX7s3sD51LeWfQK86gndm8
+	 jmSmscaqmNm+o+jZGKCGpxAshtTC4OtparBXGjZAJlzP+Xv1WRI/6GhjrTpdehub31
+	 9QCXaEsIynLHSBMLTc6A15NycKv5ZpZxI3uEG2HnovSHQ1vG3Y/wm7B2nnfQGKobOC
+	 ABHMIFcyAEZILSjwuq6LU+MHfrjo9HwVbXw5wPzYdhOF9OfC23Ioq3YoKVH5N0PE2W
+	 0jBc3poySiyBQ==
+Date: Mon, 16 Jun 2025 15:58:34 +0100
+From: Conor Dooley <conor@kernel.org>
+To: yassine.ouaissa@allegrodvt.com
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Tretter <m.tretter@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nicolas Dufresne <nicolas@ndufresne.ca>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] dt-bindings: vendor-prefixes: Update the
+ description of allegro prefix
+Message-ID: <20250616-dragging-lego-ff264b3edcb6@spud>
+References: <20250616-allegro_dvt_al300_dec_driver-v3-0-7d746cb9e5f9@allegrodvt.com>
+ <20250616-allegro_dvt_al300_dec_driver-v3-3-7d746cb9e5f9@allegrodvt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="92GXpTHi+dETNUEw"
 Content-Disposition: inline
-In-Reply-To: <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
+In-Reply-To: <20250616-allegro_dvt_al300_dec_driver-v3-3-7d746cb9e5f9@allegrodvt.com>
 
-On Mon, Jun 16, 2025 at 07:44:13AM -0700, Dave Hansen wrote:
-> To me multi-page means "more than one 'struct page'". But this series is
-> clearly using multi-page clearing to mean clearing >PAGE_SIZE in one
-> clear. But oh well.
 
-I'm not sure I see the distinction you're trying to draw.  struct page
-refers to a PAGE_SIZE aligned, PAGE_SIZE sized chunk of memory.  So
-if you do something to more than PAGE_SIZE bytes, you're doing something
-to multiple struct pages.
+--92GXpTHi+dETNUEw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 16, 2025 at 01:12:14PM +0000, Yassine Ouaissa via B4 Relay wrot=
+e:
+> From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+>=20
+> Add SAS (Soci=E9t=E9 par actions simplifi=E9e) to the allegro of vendor
+> prefixe description to include French simplified joint-stock company
+> legal structure.
+>=20
+> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--92GXpTHi+dETNUEw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFAxGgAKCRB4tDGHoIJi
+0pe7AQCCAy/NM7p1ATskCojxMrDBWbbWKo9pJJCx6Dx5ekBNpQD+NfWNjp1D+GEx
+Wsn4ri9kcmt6thxJqpWmk/7juUafGwQ=
+=gDpX
+-----END PGP SIGNATURE-----
+
+--92GXpTHi+dETNUEw--
