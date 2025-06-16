@@ -1,155 +1,363 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
+Received: from rcdn-iport-3.cisco.com (rcdn-iport-3.cisco.com [173.37.86.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA90286887;
-	Mon, 16 Jun 2025 16:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091182; cv=fail; b=Q6V0vgj2KV1j65pHZtO194/p38u8NyelvWaJ+NAYiXiiVCR7wMo/vL7ZBNMDlmrJV6+XKbl++1hyFMcLUczys+pDZU5pia3nA7VTkhcrBSvZySm7teyip7lpq4inWNGS2cb66TI3Dhb661apJOs9QUhfGmTeNWLKI484Uft3XeE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091182; c=relaxed/simple;
-	bh=uu8C2979avexos+6maFq3yWopzpItWA+o7fBqz+7+Ow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ftOlC8ORsURd4ON6ZNhlUIsl9al/93GyYwIH84hfeYb86RwtoHK1H56ADs4jbFp74Zoq3WfVE/crkMt1OTSzGjZmBMHllu+8l5o1Qoq6AkHrTtTfccc1ifrmpsvSBQaa3lnQ2vn/z60TBWU3EZRmlq6LbcP8Vl55SrCWknweJVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mbtrBEUR; arc=fail smtp.client-ip=40.107.244.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C49F286420;
+	Mon, 16 Jun 2025 16:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750091212; cv=none; b=a5VpwQiCPZ5NMm3NL5nZLuRcNrV4uweXnQq7ZFoaOc9M1o8I5DQKXekWNslgHrB26Hs3U21ezkZkF9+VFvIvi1sRw3qTznS0d4ify1bSCpHdZBP31V8WaA3zscxDqeUvxlEqZ56OIflXfqVWdg42eHvn0KEFMaMK4G9jJZK7KuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750091212; c=relaxed/simple;
+	bh=7WCvVsFVAs3Pts1yTdYrBtaaz8uRDAE02yu3N/rQzHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qwN3R+347pnlSa1a1rJQz0KGI5gXkxAjRXSbCOYeP85JF7JvVQcTlC5IZXhgWf44m6IF+bKuukn1YDqj1VaQR5UN8hoMr5Ja3AnSXiPBybeyLdJdAUpfwOrD+l6uxIkoDmU8kg+H93wnWxkV+ZVxY+WclCibrub9FAXFRv6zERs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=kILqOUjP; arc=none smtp.client-ip=173.37.86.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mbtrBEUR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VGbl8oYHXtIwBkcDcd0vbbciVdlOWlo+3CdVwy9+CJqOwuO/9XPaHKTND0c6cg5D8Xnr4iNWgGudR9AdoqflP8tpZuTZ1WnZd15hFr6RUPJq2nvziJHdh2oODuR0EpdfdwOp/DKPrb8xR/8ZfX6cJdmAmATFP8Vn2mv5Kw0MiBL4d7dhkXB3xSa5TZTiDB3s36CewpEcgR3cxolQwTstr1mv696cv90Ou8pTOrZp8RUkX8kZkEG2xFl83wN7DAdR0rBtC6Ge7l/Rm56Yj3k7z5wmZ5xrLBVR3Rr7uWNiA/r0QXzUift2yBd1BQoD7antaaqRGdEVZbQqqy7kZ1kt9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CoEXKiAr0AmzakssUFmdRGwC0NPrbZITo9PbTU5LmT0=;
- b=J55rEue+DCnVdU/r3E14PoEXVjr/QBy2MjTe0Zp2apwXvPV6keMq6elz3nVgv6P5+XdLOEUw2cxT3nGHA/Of4h1vpC9lA/vXsAKnLAmVkeFEozZIpCs9SnSzE9qeYaIXr0An/qWto5EtWkJ44zuc6cj+5fOl8YmCnwg0M8J10XN/JBV6WRH6INriPw/RBC2U35YkLVyPr6urZZOySoI8uaCvmYCXyv2SLH/Tieokd4Ou7DJx1B+qeHNlvOzfxdPYHmbC3Bb9gh1X3RD3+dQTV1fqKoQ3rDmcrcyHAeI5lXy5go7Fn8ofsMR4x56joP9yMnI+5rxh9c9jkqNaYWLj1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CoEXKiAr0AmzakssUFmdRGwC0NPrbZITo9PbTU5LmT0=;
- b=mbtrBEUR1onLekY6igQMRVh769u29UP3QRTaX2eJmhhi2hd1Mg49z9RObd+fmnxZelzsF/KDs15YS1EZZeNWXcqNXzxCAgz+j9qm9jZgV/n56zNxtD+KF/coWasSeEpF7WNU8rBR+01Bbflgq6rwluaHyl7cDpnro2M4R8tW5a+3mlnAA5ALFmVRzQ3aJ9LrNiA5DWWtma5oNRNSHAipsktCP/PwiuNlQFcwiwbib0tJB1w5gAaHV8qGlczgjNxhq7LZXqC8o0xudcFWu6M5LH/OdG1IEhtfAjGA0bEzaOH0t10bZFupdDPAsj29skd3fnnDhGHE4wjZk+J92F2u0Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by IA1PR12MB6650.namprd12.prod.outlook.com (2603:10b6:208:3a1::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 16:26:19 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
- 16:26:18 +0000
-Date: Mon, 16 Jun 2025 13:26:17 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, shuah@kernel.org, joao.m.martins@oracle.com,
-	steven.sistare@oracle.com, iommu@lists.linux.dev,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.weissschuh@linutronix.de
-Subject: Re: [PATCH rc 3/4] iommufd/selftest: Add asserts testing global mfd
-Message-ID: <20250616162617.GP1174925@nvidia.com>
-References: <cover.1750049883.git.nicolinc@nvidia.com>
- <03ad77076f50a1931b08cdaa37c3a0e11038a934.1750049883.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03ad77076f50a1931b08cdaa37c3a0e11038a934.1750049883.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: YT4P288CA0040.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d3::21) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="kILqOUjP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=8875; q=dns/txt;
+  s=iport01; t=1750091210; x=1751300810;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LZBefISLNxlMTXcI9HDRamNoc0YJWBxxvph3ZbnTNKc=;
+  b=kILqOUjPwKaOWcBuQnXaCgA5GQeQM/46BeL0RiSOtlJSVkY7fztEZy4f
+   hogea1dhd87jS6DY1KovQgyiMZkZrHWdUjdDZyvZK6eJAMgT70haOst5e
+   gbJNjM4MhSaDkFHCWaIOpPQ8fiDpPqOjV8dIZa/HdGZ7iTyCfPX9bz7JB
+   UFNw2dVoTv3x6/eROp6wKyot+TjuMtN7G8t1NnVR1P4DQp2wipJJ1ePEZ
+   nPtsiVBa9sxTkPPWwRmC8LJrRKgJ2tRcLYu9hKI46n9C8x9YFqtROMM3M
+   8FiqeBs2kZuA2Je3QZ151J6tz0ryp8uwLBa6vHTW/mQ0YtI6wkxgsh7ff
+   w==;
+X-CSE-ConnectionGUID: MV0U0DCrQNKbeENoTiEJxA==
+X-CSE-MsgGUID: cIsuJpv3T0OxzPlJaSVMXg==
+X-IPAS-Result: =?us-ascii?q?A0AnAACbRFBo/5QQJK1aHAEBAQEBAQcBARIBAQQEAQGBf?=
+ =?us-ascii?q?wcBAQsBgkqBUkMZMIxwhzSCIZg9hVyBJQNXDwEBAQ9RBAEBhQeLaAImNAkOA?=
+ =?us-ascii?q?QIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBDhOGCIZdKwsBRoFQg?=
+ =?us-ascii?q?wKCbwOveIF5M4EB3jeBboFJAY1NcIR3JxUGgUlEgRWDaIFSiTUEgzqQIIRDU?=
+ =?us-ascii?q?ItwSIEeA1ksAVUTDQoLBwWBYwM1DAsuFTI8Mh2CDYUZghKLCIRJK0+FIYUFJ?=
+ =?us-ascii?q?HEPBk9AAwsYDUgRLDcUGwY+bgeYC4J2dQeBDxOCFRYBHguTG5I8gTWfVoQlo?=
+ =?us-ascii?q?VMaM6phLodlkHGpOIFoPIFZMxoIGxWDIlIZD44tFrtTJjI8AgcLAQEDCZF8A?=
+ =?us-ascii?q?QE?=
+IronPort-Data: A9a23:LUZ6kaq5JmHPZBLoq7n7wjTTKe5eBmLwZBIvgKrLsJaIsI4StFCzt
+ garIBmHb6vZMWHxe9xwbdzno0oO78CAyoBiTQJv/Hs3ES8b9ePIVI+TRqvS04x+DSFioGZPt
+ Zh2hgzodZhsJpPkjk7zdOCn9z8ljPvgqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
+ T/Ji5OZYQHNNwJcaDpOtvrd8U035pwehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
+ 86r5K255G7Q4yA2AdqjlLvhGmVSKlIFFVHT4pb+c/HKbilq/kTe4I5iXBYvQRs/ZwGyojxE4
+ I4lWapc5useFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpfh660GMa04AWEX0sNJWVwW2
+ dcCERYuZB2uoeWKwZ+ZWsA506zPLOGzVG8eknhkyTecCbMtRorOBvyTo9RZxzw3wMtJGJ4yZ
+ eJANmEpN0qGOkMJYwtHYH49tL/Aan3XcDRCtFORrKkf6GnIxws327/oWDbQUofbHpoNwx7J/
+ goq+UzyIwoHFsSBkgbd1WK+vuvtlBjFfbIdQejQGvlCxQf7KnYoIBEfUx2wqOOhh0iiVsh3L
+ 00S8zAp668o+ySDTNT/VTW8oXiZrlgdUd8WGOo/gCmIw7DI4gDfHmUYQyRaZdoOs9U/Tjgnk
+ FSOmrvBBzlitrCaSXO17LqYrTqufyMSKAcqfyIaQBEey8PurIE6klTESdMLOKq0iMDlXDL92
+ TaHqAAgiLgJy80GzaO2+RbAmT3EjpzISBMlox7cRWON8Ax0fsimapau5Fyd6uxPRK6CUlCLu
+ HUshceT9qYNAIuLmSjLR/8CdIxF/N6MNDnaxFoqFJ47+nH0ojiofJtb53d1I0IB3ts4RAIFq
+ XT74Wt5jKK/9lPwBUOrS+pd0/gX8JU=
+IronPort-HdrOrdr: A9a23:AzqlFKBiXeSi7yPlHemf55DYdb4zR+YMi2TDGXocdfUzSL37qy
+ nAppomPHPP4gr5O0tQ+uxoWpPgfZq0z/ccirX5Vo3MYOCJggaVBbAnxZf+wjHmBi31/vNQ2O
+ NdaaRkYeeAaGSS9fyb3OF9eOxQp+VuN8uT9IPj80s=
+X-Talos-CUID: 9a23:j7LYkmOy1HEyhu5DfRc/yRY4MdocVF7XwVr2JHO5JER5YejA
+X-Talos-MUID: 9a23:ygUMUwQzEt0OPcI/RXTnpSp/Ft92uJj2L1AfqZEksvK6EBx/bmI=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.16,241,1744070400"; 
+   d="scan'208";a="393705090"
+Received: from alln-l-core-11.cisco.com ([173.36.16.148])
+  by rcdn-iport-3.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 16 Jun 2025 16:26:43 +0000
+Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kartilak@cisco.com)
+	by alln-l-core-11.cisco.com (Postfix) with ESMTPSA id B43C6180001EE;
+	Mon, 16 Jun 2025 16:26:41 +0000 (GMT)
+From: Karan Tilak Kumar <kartilak@cisco.com>
+To: sebaddel@cisco.com
+Cc: arulponn@cisco.com,
+	djhawar@cisco.com,
+	gcboffa@cisco.com,
+	mkai2@cisco.com,
+	satishkh@cisco.com,
+	aeasi@cisco.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jmeneghi@redhat.com,
+	revers@redhat.com,
+	dan.carpenter@linaro.org,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v5 1/4] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
+Date: Mon, 16 Jun 2025 09:26:29 -0700
+Message-ID: <20250616162632.4835-1-kartilak@cisco.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB6650:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1bea0082-b0f6-49d6-dcd3-08ddacf285e0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0B+Mq5V7jfxg/uDye+/K7NA0Gwn0lKPigt/XCgcdIGcDJKLQJy+C0YJWq6U1?=
- =?us-ascii?Q?e9boelPJ/4g0XTomhRNnXnjJvJ8luLLdFbgQ9Hao9mybZxFNvxLOnQk07O2o?=
- =?us-ascii?Q?mfAA/nS79XZ/9RvZMbWHfNPFas4qJX4hel7HSXtzGxgyezSo0ZP3u37q9/pH?=
- =?us-ascii?Q?+NVy1ilRahtakAUh9JShRdJUdXPaALCmYRUPhvHH1L9+iQ0zIwGLXSNxw8Ud?=
- =?us-ascii?Q?zKXIAeVAfG/3vEAOEb0Z6TcvPZc6lBEuG0rdS4bHD605nV7Kr2cXuLMwSqFh?=
- =?us-ascii?Q?eSAeNyIqSoPRKjaYZ5T6RLX48m0nXxG7gDjCTL4SkzCy1QZIKoF3ETo0L5ny?=
- =?us-ascii?Q?aJHEVsSZ2u8dat56SD4tE1a5YuHxZu7u1mF4REeQC/9eResIL33XmyxICiLT?=
- =?us-ascii?Q?O1sLm4FYJgSG8xMdya9d0KN8NJoJQX0sK0qGhrYHtp/MHD2/yLopA6+KMjaj?=
- =?us-ascii?Q?HRStovNYMf4S4dcT4GCWD5vHL83fr8jVaoBoZoyJMf5WOIBB4GwaaCMICMqv?=
- =?us-ascii?Q?FHWv+BmmHpvH6BiF7PJaaNvzAnhtL2Vz5Ye0ppJmLf5S68oWA3jMHcmk8Hsw?=
- =?us-ascii?Q?EXiU0AiQYywAr3Ep88ssarrO9J1qC8QrnxsTJ1y3ZAIIp1RHvSI+I8fMLT49?=
- =?us-ascii?Q?VSjkJEVvvmL/USIJ3zFtUO/c1fservBcmmjVW2pzAykBbSFp9r0a/UfiHA6n?=
- =?us-ascii?Q?M435hcYL7J1I/eneChjhUrBxISr4yh2CqletDuusckdcuSHU2sgAg7NqY8G0?=
- =?us-ascii?Q?/4J2j4cnWfKdI58KOA2r2VLILkcs6KyHQ3cQOSgBlmnIlUz/vSeEcEncNiqw?=
- =?us-ascii?Q?JmxMwrEqv76Rix2tIQFp4d+8b6+g7up1qb9V4UNAKXDrp3DofWegUKiX+6rf?=
- =?us-ascii?Q?Jm+PIKLT9+6Qi4iqYAoxFVklYpXfGAovbzcfQuiASEyUVwAo/PLr9UezrZ4p?=
- =?us-ascii?Q?vKuhEnb8g6CApJrSI0Zynp2v4A6LvN0f3Xue234IGzitaQeVB4x5WZflcoyF?=
- =?us-ascii?Q?SHiKS2b38T7wA/ny2qqO3QjtduFuyIDkIFEzZBQ4iwzpdCDCR4n3xGpgZPyA?=
- =?us-ascii?Q?mvyF01nIl+Fmr0tsIe+R2X3lH/cSVvdFvqX385yDfS26Ee9YbCYZjRZVy5/H?=
- =?us-ascii?Q?NVEACsOS40A19iuHA+UQI3l7Jz2lXjg0PeZRsroVAjyUJa3bEEcJiwXXAljx?=
- =?us-ascii?Q?c0jfnEcPCxCy0e7o2AL8ybggKQhi7vtnt+RU/J153M7rHMuGAF1HRiUBQBVY?=
- =?us-ascii?Q?/AaznpZMS3A/wWitmPHU6mNmXHayZs96m24N6wQyBWgjg7VZNwPo7/Br3WYc?=
- =?us-ascii?Q?uX4BMPZo0LCd2EZlepjrwUrOgEkJGVgb375hmzYpdv+zDsDXN5EWTjUtqmZv?=
- =?us-ascii?Q?q8IP6gKhdE1uZsXfaESpIja6beL0UVVO/dMwbf15RREFC5cMYw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VIq802oghu5Zy6iTYWUUnBnujZbgdFUNSYqlZ+XeeYCa8E/4t7sWPPAelyuP?=
- =?us-ascii?Q?ZJEuVE7Wvrmoqd4cnpd4e2Uw4z3tlw+rnGZyaBH74i0V96JiUOVu7IGAhiH3?=
- =?us-ascii?Q?pt7SsQ6LEJex4A3abpiV3mK3zc3O3+zfVLRInGdmP3hkBmp5y9bOrALQkAPw?=
- =?us-ascii?Q?VU/j+TavKMRwO/06yJbKBGA6ke0FUOKZSnr8Dz/BC7c0kToTbJBjA/Qhdot/?=
- =?us-ascii?Q?tkzI8Qc50Pe4S7nGXch+RuVl9K36zeQGqeBD3MzRd0BcUjnjrLReMxirijiv?=
- =?us-ascii?Q?NwhiOjmCL3GBbcvowNxhRdPIzG6JdSNC3ACfEnuUUjJMLzsPVsj1OGwure05?=
- =?us-ascii?Q?j7Ozl/x0fA1vhZhaVnOyCOPbr/Fzqo/hxt6bFuZZ5JWYijswKrARP4M3Ze2q?=
- =?us-ascii?Q?tHUuztK0AWT3PkDbdEPlx2PWokA4wJ1/D6HMSU4igWUDTxTeDu1PMLBa2Mey?=
- =?us-ascii?Q?Ds8KkT8u+aKkKQ//pvxq01hMYmVwAILsx4104xGg5o2itfbiuATIFdKgyikq?=
- =?us-ascii?Q?VfwYl0IpcZaDcp+h7fbL1QhVXmrfQ/DRcCbpy2caLK8ywFb1jXHyiIM6eF+C?=
- =?us-ascii?Q?DfiM4qVPpm5K4Qi8yYGjKM6qgdDk0GGsE+zEtzyZlPHH1JvAjbl6P/31kB3s?=
- =?us-ascii?Q?G5nuLiC/f/Q6xx0cuA3CeeCSk0Y26+4lXrsGXlyU8EhEned0OV9dPIlyq6t7?=
- =?us-ascii?Q?zekZ6CzkBkB6fp0FjM/UhRk3iKWy8R19TZZG9rszuYgMAj9zNEbeiDUzLVVY?=
- =?us-ascii?Q?Q81p5NkO+5sabYWCzOgF+8f7NrUyjNiObJ8fIXcInFVDKml23KczAWQH81fq?=
- =?us-ascii?Q?rZDTIxDQPsn2Q4NI+7wEg1y81IlWfPnuusZ2DCVi7Vxyf70hkzgiHrsGlyeW?=
- =?us-ascii?Q?xsZ3/srLG2GxpWUdyl2yhCr4nSct5M1b3ahsL9bU0V84ua7FEWnxkFFC05Zr?=
- =?us-ascii?Q?kMaUCGl3OZU2548CjXmSvEdDqh6sU6z//RKJg7Sne5AC07xyBSYpbCt1wjVX?=
- =?us-ascii?Q?TPcBAZswzAFiCUchPdsEPWWQL8WRVfJIO5LJf6S66mzn7GvoIAIaIkAPv10L?=
- =?us-ascii?Q?SqAlkRt6Az/S/EcKxrQlA6XFM8K9z0zdSnwDsHzkJ1ElPpsB06Z+vQKbT2p5?=
- =?us-ascii?Q?XtAyh3ayOq9bpRNQV1lAfhCCTDN3w/F210hi+gxXAkxwS8J0IZgkzl4BP78P?=
- =?us-ascii?Q?cHtyQ+McXWWIBhlgsUXes0BaFUz/UKNPnSu1Jtjl6CQyUKEHRg72bF8ClJ8k?=
- =?us-ascii?Q?Xd7wJyA7saYlHQCGMrEL5jzGZsd6bvuCHlX/OXO9l1QMGiw0O7GXbGhE278P?=
- =?us-ascii?Q?WvoVLgvOeGjS63XDtbyU+GyGiqkkyRPYoegUOfW4noDm94Q1W4jVjey3Zhb5?=
- =?us-ascii?Q?nnhoFm4h2HKhanBuYkOOCM15U8A+nfF8GCJo/AEorAAtgYDawLFVj5jkFAwh?=
- =?us-ascii?Q?45jty8yEaVF3SCzS03HCy7iR1FDQqsIh4Nul4y/hRe5+cTgd5toW/CteHpgS?=
- =?us-ascii?Q?7p0CQlTsO9e25cWTqzvhvZ9ZojVy0SUQXU7yXRCpj3SLng7s1bXmmL4m+6wW?=
- =?us-ascii?Q?leP3uD7cfkDSfWhEqsZm9L94kQCgYiTngZcjRzDg?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bea0082-b0f6-49d6-dcd3-08ddacf285e0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 16:26:18.8715
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iQDS7chjz6r+WmmscVZeosTVU0evz0F7F7NCFd6MlejQfr2I1a8I/ZD7VbyMB5Yy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6650
+Content-Transfer-Encoding: 8bit
+X-Authenticated-User: kartilak@cisco.com
+X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
+X-Outbound-Node: alln-l-core-11.cisco.com
 
-On Sun, Jun 15, 2025 at 10:02:05PM -0700, Nicolin Chen wrote:
-> The mfd and mfd_buffer will be used in the tests directly without an extra
-> check. Test them in setup_sizes() to ensure they are safe to use.
-> 
-> Fixes: 0bcceb1f51c7 ("iommufd: Selftest coverage for IOMMU_IOAS_MAP_FILE")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  tools/testing/selftests/iommu/iommufd.c | 2 ++
->  1 file changed, 2 insertions(+)
+When both the RHBA and RPA FDMI requests time out, fnic reuses a frame
+to send ABTS for each of them. On send completion, this causes an
+attempt to free the same frame twice that leads to a crash.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Fix crash by allocating separate frames for RHBA and RPA,
+and modify ABTS logic accordingly.
 
-Jason
+Tested by checking MDS for FDMI information.
+Tested by using instrumented driver to:
+Drop PLOGI response
+Drop RHBA response
+Drop RPA response
+Drop RHBA and RPA response
+Drop PLOGI response + ABTS response
+Drop RHBA response + ABTS response
+Drop RPA response + ABTS response
+Drop RHBA and RPA response + ABTS response for both of them
+
+Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
+Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+Tested-by: Arun Easi <aeasi@cisco.com>
+Co-developed-by: Arun Easi <aeasi@cisco.com>
+Signed-off-by: Arun Easi <aeasi@cisco.com>
+Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+---
+Changes between v4 and v5:
+    - Incorporate review comments from John:
+	- Refactor patches
+
+Changes between v3 and v4:
+    - Incorporate review comments from Dan:
+	- Remove comments from Cc tag
+
+Changes between v2 and v3:
+    - Incorporate review comments from Dan:
+	- Add Cc to stable
+
+Changes between v1 and v2:
+    - Incorporate review comments from Dan:
+        - Add Fixes tag
+---
+ drivers/scsi/fnic/fdls_disc.c | 113 +++++++++++++++++++++++++---------
+ drivers/scsi/fnic/fnic.h      |   2 +-
+ drivers/scsi/fnic/fnic_fdls.h |   1 +
+ 3 files changed, 87 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
+index c2b6f4eb338e..0ee1b74967b9 100644
+--- a/drivers/scsi/fnic/fdls_disc.c
++++ b/drivers/scsi/fnic/fdls_disc.c
+@@ -763,47 +763,69 @@ static void fdls_send_fabric_abts(struct fnic_iport_s *iport)
+ 	iport->fabric.timer_pending = 1;
+ }
+ 
+-static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
++static uint8_t *fdls_alloc_init_fdmi_abts_frame(struct fnic_iport_s *iport,
++		uint16_t oxid)
+ {
+-	uint8_t *frame;
++	struct fc_frame_header *pfdmi_abts;
+ 	uint8_t d_id[3];
++	uint8_t *frame;
+ 	struct fnic *fnic = iport->fnic;
+-	struct fc_frame_header *pfabric_abts;
+-	unsigned long fdmi_tov;
+-	uint16_t oxid;
+-	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
+-			sizeof(struct fc_frame_header);
+ 
+ 	frame = fdls_alloc_frame(iport);
+ 	if (frame == NULL) {
+ 		FNIC_FCS_DBG(KERN_ERR, fnic->host, fnic->fnic_num,
+ 				"Failed to allocate frame to send FDMI ABTS");
+-		return;
++		return NULL;
+ 	}
+ 
+-	pfabric_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
++	pfdmi_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
+ 	fdls_init_fabric_abts_frame(frame, iport);
+ 
+ 	hton24(d_id, FC_FID_MGMT_SERV);
+-	FNIC_STD_SET_D_ID(*pfabric_abts, d_id);
++	FNIC_STD_SET_D_ID(*pfdmi_abts, d_id);
++	FNIC_STD_SET_OX_ID(*pfdmi_abts, oxid);
++
++	return frame;
++}
++
++static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
++{
++	uint8_t *frame;
++	unsigned long fdmi_tov;
++	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
++			sizeof(struct fc_frame_header);
+ 
+ 	if (iport->fabric.fdmi_pending & FDLS_FDMI_PLOGI_PENDING) {
+-		oxid = iport->active_oxid_fdmi_plogi;
+-		FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++		frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_plogi);
++		if (frame == NULL)
++			return;
++
+ 		fnic_send_fcoe_frame(iport, frame, frame_size);
+ 	} else {
+ 		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
+-			oxid = iport->active_oxid_fdmi_rhba;
+-			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++			frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_rhba);
++			if (frame == NULL)
++				return;
++
+ 			fnic_send_fcoe_frame(iport, frame, frame_size);
+ 		}
+ 		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
+-			oxid = iport->active_oxid_fdmi_rpa;
+-			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++			frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_rpa);
++			if (frame == NULL) {
++				if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING)
++					goto arm_timer;
++				else
++					return;
++			}
++
+ 			fnic_send_fcoe_frame(iport, frame, frame_size);
+ 		}
+ 	}
+ 
++arm_timer:
+ 	fdmi_tov = jiffies + msecs_to_jiffies(2 * iport->e_d_tov);
+ 	mod_timer(&iport->fabric.fdmi_timer, round_jiffies(fdmi_tov));
+ 	iport->fabric.fdmi_pending |= FDLS_FDMI_ABORT_PENDING;
+@@ -2244,6 +2266,21 @@ void fdls_fabric_timer_callback(struct timer_list *t)
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ }
+ 
++void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport)
++{
++	struct fnic *fnic = iport->fnic;
++
++	iport->fabric.fdmi_pending = 0;
++	/* If max retries not exhausted, start over from fdmi plogi */
++	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
++		iport->fabric.fdmi_retry++;
++		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
++					 "Retry FDMI PLOGI. FDMI retry: %d",
++					 iport->fabric.fdmi_retry);
++		fdls_send_fdmi_plogi(iport);
++	}
++}
++
+ void fdls_fdmi_timer_callback(struct timer_list *t)
+ {
+ 	struct fnic_fdls_fabric_s *fabric = from_timer(fabric, t, fdmi_timer);
+@@ -2289,14 +2326,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
+ 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+ 		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
+ 
+-	iport->fabric.fdmi_pending = 0;
+-	/* If max retries not exhaused, start over from fdmi plogi */
+-	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
+-		iport->fabric.fdmi_retry++;
+-		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+-					 "retry fdmi timer %d", iport->fabric.fdmi_retry);
+-		fdls_send_fdmi_plogi(iport);
+-	}
++	fdls_fdmi_retry_plogi(iport);
+ 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+ 		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+@@ -3714,11 +3744,32 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
+ 	switch (FNIC_FRAME_TYPE(oxid)) {
+ 	case FNIC_FRAME_TYPE_FDMI_PLOGI:
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_plogi);
++
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_PLOGI_PENDING;
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
+ 		break;
+ 	case FNIC_FRAME_TYPE_FDMI_RHBA:
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_REG_HBA_PENDING;
++
++		/* If RPA is still pending, don't turn off ABORT PENDING.
++		 * We count on the timer to detect the ABTS timeout and take
++		 * corrective action.
++		 */
++		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING))
++			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
++
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rhba);
+ 		break;
+ 	case FNIC_FRAME_TYPE_FDMI_RPA:
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_RPA_PENDING;
++
++		/* If RHBA is still pending, don't turn off ABORT PENDING.
++		 * We count on the timer to detect the ABTS timeout and take
++		 * corrective action.
++		 */
++		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING))
++			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
++
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rpa);
+ 		break;
+ 	default:
+@@ -3728,10 +3779,16 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
+ 		break;
+ 	}
+ 
+-	timer_delete_sync(&iport->fabric.fdmi_timer);
+-	iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
+-
+-	fdls_send_fdmi_plogi(iport);
++	/*
++	 * Only if ABORT PENDING is off, delete the timer, and if no other
++	 * operations are pending, retry FDMI.
++	 * Otherwise, let the timer pop and take the appropriate action.
++	 */
++	if (!(iport->fabric.fdmi_pending & FDLS_FDMI_ABORT_PENDING)) {
++		timer_delete_sync(&iport->fabric.fdmi_timer);
++		if (!iport->fabric.fdmi_pending)
++			fdls_fdmi_retry_plogi(iport);
++	}
+ }
+ 
+ static void
+diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
+index 6c5f6046b1f5..86e293ce530d 100644
+--- a/drivers/scsi/fnic/fnic.h
++++ b/drivers/scsi/fnic/fnic.h
+@@ -30,7 +30,7 @@
+ 
+ #define DRV_NAME		"fnic"
+ #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
+-#define DRV_VERSION		"1.8.0.0"
++#define DRV_VERSION		"1.8.0.1"
+ #define PFX			DRV_NAME ": "
+ #define DFX                     DRV_NAME "%d: "
+ 
+diff --git a/drivers/scsi/fnic/fnic_fdls.h b/drivers/scsi/fnic/fnic_fdls.h
+index 8e610b65ad57..531d0b37e450 100644
+--- a/drivers/scsi/fnic/fnic_fdls.h
++++ b/drivers/scsi/fnic/fnic_fdls.h
+@@ -394,6 +394,7 @@ void fdls_send_tport_abts(struct fnic_iport_s *iport,
+ bool fdls_delete_tport(struct fnic_iport_s *iport,
+ 		       struct fnic_tport_s *tport);
+ void fdls_fdmi_timer_callback(struct timer_list *t);
++void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport);
+ 
+ /* fnic_fcs.c */
+ void fnic_fdls_init(struct fnic *fnic, int usefip);
+-- 
+2.47.1
+
