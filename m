@@ -1,132 +1,167 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A292857FA
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA00845C0B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090422; cv=none; b=XCJTb6OM4KFZ5vKj3e3daqYJW+bV94jasM9sKtp4js7TIJ/wOuImcSBTFSTFxTs6wrqcdoYSbd2wV63i6DnzE7iayM1ovs5E5f4E3IvpeHZgfjOP1RGlit6m0s9nSXgm5P1DiYlhSMyig0BQ6dABiNdUtTiUVKYGUot4xDkfmPQ=
+	t=1750090466; cv=none; b=FUqYFvM3+rxOHbTgNVlETTkWzz0+njvCLX+pKhk6lXSxjjx9zc8Ef1wzvXLJBbUOhsibWxjOCNJRfCYs9fFfRGzgusP+K6gLV56rfyE6i6Eos0KADrKpLg3Df8gmt7BeS882X4YCg1S8DDsxlFE/TSvYH6ja0lAvifhAXdMfomY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090422; c=relaxed/simple;
-	bh=HpE/pDLZnJwXNmha50ska3/wWNk6nXBAIt8OfLs0uko=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jGqPDIP0P4aoffgHcjbkDv59+48iyz94m3ZX8NjO+lOfkilKC+H5ejYWOYqROvxX70ioC5cVlYaGuJcgCn5a+waq4YWUrww/eCZ6yXuzQzMmkuKvaZdhANpuCeglufSI1e4DqtTEHy6IZjaNRZmKb4QKu7QcEYZFWW+NMJChkew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AmW5RMKV; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750090466; c=relaxed/simple;
+	bh=acU0hO3gSblMdOQUcDRa9v2QPgNEdUMTTJ/Uaq4j+o8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oKO1cdAHcrhFTMT3bIdKC6KDiPgje2eGQpgL/ImRttHoR+angUwoXU5nuYQhqkp5e/0VvNmqwJVNiKK8BRw8Ithgb9Eu3oJWRAyoWs2UZg3Fi/Lv4YZdugKBbaPlkygygUKhOuRgRR3Gr29d7sj3vPNaAyxisgjilZAqQVLx7X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=byUvZqoK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wx12I/II; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BNkb4E1f; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PuiVYcCT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmW5RMKV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso3187967f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750090419; x=1750695219; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=99SgOTZRzrg5GY1SDbLEkgEMAQ6XuzTJfRbX4aCiC8A=;
-        b=AmW5RMKVzkl65Jk6/Nify15j+icAnXwQAZs22vP0r9vK802obVI8snVMdUiEvKMQsP
-         Zd3CSnj7pO6Mw+BKmgGcKecJV0VsSmyguFaoGt9B6rsboV9opmKaGQ0ocg6cAFmlcl8U
-         fJSJN84aW1bfj+ZbmR5FY/t1Ij95E+Ieu/x9qjfEUnzaWtndrm7Dv4rPvexMRPpOntyH
-         EljX48UcU3EebrJmr/579SgFDPwUI2AMFzOhv1SNeuqMUy6klaclE5n2WYFdrg1pjjfr
-         K/xcux3u5WBAAe0P1nNyQpx4Uk2Q7uJZn1qICWFBfOnIz0qsvYfSyKZL+8uy87+FqmWQ
-         uTkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090419; x=1750695219;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=99SgOTZRzrg5GY1SDbLEkgEMAQ6XuzTJfRbX4aCiC8A=;
-        b=jQSjENOl+IKnOq00p1+yJj6AmU7bw8aTOiwi7P0bnWM5CHO4LQZvuR4eDtTn6vw5EJ
-         lMSI2IEfj6hTl9HM7uHY6rauiGA4rI75iTz0cq/8lFHtF0T7T6D9uJFZ1Ry0bQFEuEuh
-         5FzqjISC2K+moR0/aRuwGk6uIhxQhAEVhZDFeQFYGG/ydKT8lnUTo8TFrQ6CxEIMywZq
-         sl/xr/T9RuR1ASLWCWZJv/4iwJHzJisZOpaElSPzXikVDLi5c29puLN9MIdQllNx/3LC
-         pjp6Pf3Z8xgUNxLzn+0TckHA2h3dORq0qIjfqd899LQc/YM64oDHE7/TXIvP0cFWk7y1
-         hmTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEwIY3JNrh5TwPnWHCc8FuPB72w5tJQEq4c6oykwWMVkFjHLB41sXyvjKw9q55FcrDkv4a0h893oZarE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBLxaJqRevb8Osb/QgVGCRJrxc2iINCEXBJxtxggyNUzBktmIY
-	ynTwplUcqiId/ajZQFLIbavhsToBDRJM10ZPL3EqMwgAap9w5U5+gJIEIuB64XONmYY=
-X-Gm-Gg: ASbGncuVbmA2t/LZY/7+Ej/9zPQcNwfPmQA+oYvm/pNrotVmCE/w0rxNnnNNXFbhjGg
-	4rD2znWESRB6X0u7KjBlkwq5KRtqqObu17kMyU0KcxnJxQOCsncZwmH1gHjdJsPfRE5soXl4y8y
-	XrtR9vMuJhOQOeTNylQjTj2od71rJrmNJzgYD1dHPc4zxpSfEFHyB68aejQc69hFYC1xMEmtXIf
-	I1fY+FvOaz5SSe2+YWDdpOlmnZiibbirp9xVkWp5ATy/lCkJ5Uq8yZ39eb96px6wjAl6FbyiLTK
-	zw/wCY4nG7ggXcDaMf32axfpvZMytUgcUMHQeeyaogxlvFLc8OjNUQueuwhK+jOjq6oNmW3P1BM
-	KpMAYjbwVYPQWcecK9gbGd3f7/qLHPXLpPft1
-X-Google-Smtp-Source: AGHT+IG4DpXuO0yRjlobR/oruI8mfncT7fekLlNeBTCV8c8EentzOqtU302pXbxayRLtEJaxzybOJA==
-X-Received: by 2002:a05:6000:144e:b0:3a5:3b14:1ba3 with SMTP id ffacd0b85a97d-3a572e58cc9mr8196351f8f.49.1750090419360;
-        Mon, 16 Jun 2025 09:13:39 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:6c7:97de:65a8:488a? ([2a01:e0a:3d9:2080:6c7:97de:65a8:488a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2324c6sm146860555e9.12.2025.06.16.09.13.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 09:13:39 -0700 (PDT)
-Message-ID: <3beb5a02-8a2c-495b-b5a8-ae5e90ae6a63@linaro.org>
-Date: Mon, 16 Jun 2025 18:13:38 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="byUvZqoK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wx12I/II";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BNkb4E1f";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PuiVYcCT"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id F0433211B3;
+	Mon, 16 Jun 2025 16:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750090458; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=xAZ1pS7ZVkemVnWAlaPyAiw28HCsnl//HdEVKNU0pFM=;
+	b=byUvZqoKcvNI4OtYtUETdKqbjIubMAECBN8ZQz1MBOUQJOBCMkh0Pgh4NToKdzHNbYPBB9
+	YMBidXI1ViENS8HSC1YmGn21+stZzHo+0zt9ILiepxfV1x3OuhEAMR4MfLXVL9j2Eqe9rz
+	THzDve4Pc0McO/0VO/FQ7oEVWTb4TSA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750090458;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=xAZ1pS7ZVkemVnWAlaPyAiw28HCsnl//HdEVKNU0pFM=;
+	b=wx12I/IIGB2p+cRkCCdtA/UsWRoRB9eeHcdM8JHsImKlwPBYpGJADlgDj41aBc53MVd5or
+	F+b6jK9BtVdwP2Cw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750090452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=xAZ1pS7ZVkemVnWAlaPyAiw28HCsnl//HdEVKNU0pFM=;
+	b=BNkb4E1fKWvOXyfEO1NJh8Uet284lPoICAjAWCaf1AobT0AhkayLxZbPh8dVGYpQyCRscP
+	IiSb0Xqdz42BU7XWz2upe87DIgP9Z2hdhYWGZTuaP9FOukoT6yf4T8EMr+A8hP7jyeSE1V
+	H4Fgc4tDSyVLkAC0twGV57Sxqm5lBJE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750090452;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=xAZ1pS7ZVkemVnWAlaPyAiw28HCsnl//HdEVKNU0pFM=;
+	b=PuiVYcCT33LVz8d+IlYcJkGVaORZ6zUzoeZKOrk7WA+odiczzCOXlf7FwMHH/l1pKDGEP8
+	0X/vR4qP3zCjCcCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B812013A6B;
+	Mon, 16 Jun 2025 16:14:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id K3cvK9RCUGgTcwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 16 Jun 2025 16:14:12 +0000
+From: Takashi Iwai <tiwai@suse.de>
+To: Gabriel Somlo <somlo@cmu.edu>,
+	"Michael S . Tsirkin" <mst@redhat.com>
+Cc: Fabian Vogt <fvogt@suse.de>,
+	linux-kernel@vger.kernel.org,
+	qemu-devel@nongnu.org
+Subject: [PATCH RESEND] firmware: qemu_fw_cfg: Do not hard depend on CONFIG_HAS_IOPORT_MAP
+Date: Mon, 16 Jun 2025 18:14:06 +0200
+Message-ID: <20250616161408.26748-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 26/28] interconnect: qcom: sm8650: convert to dynamic IDs
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Georgi Djakov <djakov@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250616-rework-icc-v1-0-bc1326294d71@oss.qualcomm.com>
- <20250616-rework-icc-v1-26-bc1326294d71@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250616-rework-icc-v1-26-bc1326294d71@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-On 16/06/2025 02:28, Dmitry Baryshkov wrote:
-> Stop using fixed and IDs and covert the platform to use dynamic IDs for
-> the interconnect. This gives more flexibility and also allows us to drop
-> the .num_links member, saving from possible errors related to it being
-> not set or set incorrectly.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/interconnect/qcom/sm8650.c | 676 +++++++++++++++++--------------------
->   drivers/interconnect/qcom/sm8650.h | 144 --------
->   2 files changed, 309 insertions(+), 511 deletions(-)
-> 
+From: Fabian Vogt <fvogt@suse.de>
 
-Runtime tested by comparing the interconnect graph before and after, the
-ids are now dynamic and the labels have the node name, apart that the graph
-is the same on both runs!
+Some platforms require CONFIG_NO_IOPORT_MAP=y but would also support
+qemu_fw_cfg over MMIO. Currently the qemu_fw_cfg module can't be built for
+those as it needs HAS_IOPORT_MAP=y for ioport remapping.
 
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on QRD8650
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on HDK8650
+This patch allows to build the qemu_fw_cfg in those cases. If
+CONFIG_HAS_IOPORT_MAP=n, qemu_fw_cfg is built without support for ioport
+based access.
 
-Thanks,
-Neil
+Signed-off-by: Fabian Vogt <fvogt@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+
+Resent, as the original submission seems overlooked:
+ https://lore.kernel.org/2294036.ElGaqSPkdT@linux-e202.suse.de/
+The patch has been on openSUSE / SUSE kernels already for years.
+
+ drivers/firmware/Kconfig       | 1 -
+ drivers/firmware/qemu_fw_cfg.c | 5 +++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index bbd2155d8483..91442f85f0f0 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -122,7 +122,6 @@ config RASPBERRYPI_FIRMWARE
+ config FW_CFG_SYSFS
+ 	tristate "QEMU fw_cfg device support in sysfs"
+ 	depends on SYSFS && (ARM || ARM64 || PARISC || PPC_PMAC || RISCV || SPARC || X86)
+-	depends on HAS_IOPORT_MAP
+ 	default n
+ 	help
+ 	  Say Y or M here to enable the exporting of the QEMU firmware
+diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+index 2615fb780e3c..e15116f84a70 100644
+--- a/drivers/firmware/qemu_fw_cfg.c
++++ b/drivers/firmware/qemu_fw_cfg.c
+@@ -258,6 +258,7 @@ static int fw_cfg_do_platform_probe(struct platform_device *pdev)
+ 			return -EFAULT;
+ 		}
+ 	} else {
++#ifdef CONFIG_HAS_IOPORT_MAP
+ 		if (!request_region(fw_cfg_p_base,
+ 				    fw_cfg_p_size, "fw_cfg_io"))
+ 			return -EBUSY;
+@@ -266,6 +267,10 @@ static int fw_cfg_do_platform_probe(struct platform_device *pdev)
+ 			release_region(fw_cfg_p_base, fw_cfg_p_size);
+ 			return -EFAULT;
+ 		}
++#else
++		dev_err(&pdev->dev, "IO region given but CONFIG_HAS_IOPORT_MAP=n");
++		return -EINVAL;
++#endif
+ 	}
+ 
+ 	/* were custom register offsets provided (e.g. on the command line)? */
+-- 
+2.49.0
+
