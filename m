@@ -1,120 +1,110 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F2B277C98
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF88277C98;
+	Mon, 16 Jun 2025 10:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070452; cv=none; b=aCOIcWq4Wl56ZzPsXKwVB1QoyweP0+ecgkK8qfzVXhmu+Qp1nG4/4+UTBUo1n6CMhKMO0UHKeiLXIyOJ8krJj9L4tSN1ehsG6aElGz/Y8O7vw4xMHOV/q7KXsduZetAwqHi85a9SxvuuPojjOZqesDFi1lLFt9OXnW6vGdo6W1Y=
+	t=1750070478; cv=none; b=N3o6jGiaN9eQa5udAVcg4rRoBogjuAv4zvYJF/Kg3GeDSIdBrzjdSmDa8QHpagqgFccjtbr6163W0K1xxCBM/LMdbnra8Yf+nXdG3u1xYnrfDC25lzHUBNwSnt3777MveS6ynnhJAj5+P5fCv1Vu+in1RDJQSZqXy5KrMOxKpBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070452; c=relaxed/simple;
-	bh=8XMWvcD5dIXEwocCT7V0Ty4mO1xZ8Yq21hFRXXg+GQA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JdaTvkGFbDfOi4ggKXGFohKtEAsEJ/zFqq+DQD0jOJV8gmKn/HSLPGRrxKeZpXQTIgClHwEWU857pOZhLbc1TXSfKt2ozQcv2uf+IBfPGoQcFeFdb2c1c2hfsQhdV3VDaQkx5+ZWPEvL1YZub71Xn+7yiDL5cuo+oelDBvbKaWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZUy84jMq; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750070478; c=relaxed/simple;
+	bh=pg18VEj3ZOXpTjNRyCe0pJvFJwwasJGT6wPYPZGNhSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWuLPdJZnO6vme+vLIbBPQE9rv8KFq+M5Z/GUcPeOqHUoxF0EFwmyctn7mio3o2e+odo6WuKCpt/68DuRgi87TLtvjfe/qpoJsOQ02K/hFTyMknxJnOWgzBSJiO11oeqe3jEeIq41nDtgorSqBX+s4huh1fhxFpHSm/iDYfalNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8PzwpYA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUy84jMq"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e7949d9753so1420598137.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750070449; x=1750675249; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yKcJBSl+Htuh3i5x90yiqO0jHstMNoYTds6WpGdMy9c=;
-        b=ZUy84jMqExXoMlUwDXrFbzIY4UZeeFI3eQM+eDEAEbcojd2/bD1cJfN/TbfHJ63X7T
-         60tX9W07Lkxpejp4e1K6co4mIAiKaMEQBdi0eZK1BLThlVdkXhz0YAWkbWzGTa3LJH7q
-         /FH1rOdISvz89jYiVQm61p9dLyckJ2cJ3So+AJgA8Pkdh8kQklZ3Zf1fHLx6jz+I0Cal
-         pwDKsRS7WlorN551ReiDASKc0TxBqleRBimwyIYlOMOv3me8C2h22rblNODnZ3abZ9YJ
-         UimX0SJ+KHIrGpEfbLm3nycq6BSUNldhMa35xrqyT0IL0MtQbjcp+DYLvdo+sV8ecnmB
-         LCnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750070449; x=1750675249;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yKcJBSl+Htuh3i5x90yiqO0jHstMNoYTds6WpGdMy9c=;
-        b=DWpwKVotrGMEpLmb1QwBHcTE6PWkdhhst2njUPNVQu/bR60w/x4w8Zqs7SQ6nnY+tT
-         r+zORY2/e87BTNKnK79uaTTZecOr1/QJtmvKocbu6kF8cFIyGeYs0nKKoloFXFkrWsXt
-         n3QGp1dnnO1522adHL5sMKqGPJcf9A6r2q0fnPXtpbHA3VprX1Arr3bLQh6FH/X1x5pS
-         DjUkziORBIZ22hnUdynVaBFcw8kV1GKW87OLbHc0/E5gDxBpLrkK3L0y5+1J0v4XyV5g
-         PP/qhQ15F7iKv1U8DUu0e6YovyOSns6ejlPKjcucaahHBZZ+TpjLTHl6zBAjzvJ+hlPl
-         R5Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlmke1AUZ4NmeZAtDRGagCQW1DqD/xvZsWthx9uIEo90CmsLkihHSE1bBkiaGg3DeMCwrwfyrzhaccylY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxfj09k7A7rBEMvUZy/TG9XzLJAUPxrirgqRfZtLqcJWwU/sm/
-	o/BWr+4wrKNyPv4RaI3HnjolSQHhzBhM8yzATTcTj/xsJi6OVXHiH+V7H9TnB36HRoOUazKG1I0
-	kIgzt2uR9pgnLG0rV8aLQYHkwuw2DQu1d5j1O
-X-Gm-Gg: ASbGncsNmNHWVrrpr9Jh3rw3I8oxiH94cFit3TPGOdMp0CfSi3XXpNrzTOO8Otv39F2
-	EfdF+hzyPJ23cdwWcrMtu7FSa7bIQfoljzpEuDv8F/IMqhXjUecHxKPbelZHqAwxC56FYIY5+re
-	Oco77EIQeOB/8qOTpqyDTKdGeVrihx2img0RM6jsE+1tUe
-X-Google-Smtp-Source: AGHT+IGyrVuaJSujsaH/Gb6IqSn1XaIFzPww+xgJhL0qSz46P+E9FU9vcP3CXBQsbgaUwh0W0CRlwO5C49KfqNRF7ss=
-X-Received: by 2002:a05:6102:4bc5:b0:4e6:eaed:7e2 with SMTP id
- ada2fe7eead31-4e7f6188746mr5750214137.5.1750070449393; Mon, 16 Jun 2025
- 03:40:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8PzwpYA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB6BC4CEEA;
+	Mon, 16 Jun 2025 10:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750070476;
+	bh=pg18VEj3ZOXpTjNRyCe0pJvFJwwasJGT6wPYPZGNhSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U8PzwpYAvDvaIa7H1kNw9v61ca9f8UyaoWqOiWCr14p/pj0VRYYDKk/NL7ypvwgWF
+	 Hdjp9nIqIgTS1GDoKSo4mLh9wr/IncyFNGWVkBnnVmWsInaTdPwISrakcvJtlxQW8Z
+	 FBHrt2KNsPgl9LM75hIMTnsXvakjUusHfNfrthp68AsBUOtNPJC4NXX+og9QpN8kC2
+	 HAm//f+0EZ0ggJ6xKQEC+Q2j27G3ghCOGxLKay0gVPOG8Rvpvw756AwQZ0TWlL3MFw
+	 vkUnzXCf+HHnYY/KjmtHGIrikcbbtkm888u/qAOMalZTORXYBBymwfPjlSthf9ovr+
+	 wwnzsS1ShO3eA==
+Date: Mon, 16 Jun 2025 11:41:09 +0100
+From: Will Deacon <will@kernel.org>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, cocci@inria.fr,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	Andrew Lunn <andrew@lunn.ch>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	"Kiran Kumar C.S.K" <quic_kkumarcs@quicinc.com>,
+	Lei Wei <quic_leiwei@quicinc.com>, Marc Zyngier <maz@kernel.org>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Pavithra R <quic_pavir@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Suruchi Agarwal <quic_suruchia@quicinc.com>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, quic_linchen@quicinc.com
+Subject: Re: [cocci] [PATCH v4 2/5] arm64: tlb: Convert the opencoded field
+ modify
+Message-ID: <20250616104109.GA17500@willie-the-truck>
+References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+ <20250612-field_modify-v4-2-ae4f74da45a6@quicinc.com>
+ <3537a4ce-b5e8-44d5-a884-70a81562068d@web.de>
+ <94b40ff2-9e9e-4eea-8a66-87d8976aeb70@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
- <20250614143454.2927363-2-xiaqinxin@huawei.com> <20250616105318.00001132@huawei.com>
-In-Reply-To: <20250616105318.00001132@huawei.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Mon, 16 Jun 2025 22:40:38 +1200
-X-Gm-Features: AX0GCFuFgGB6vPgX23Rf-5Mt2x4mXZwQlCu1ReuAWrQ4w8qJcActIkO0Jlw_fYo
-Message-ID: <CAGsJ_4wOB+cmGzuzzacwJGeUYgGLuKg94wuWC+mA-_=r0TVuhQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 1/4] dma-mapping: benchmark: Add padding to
- ensure uABI remained consistent
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Qinxin Xia <xiaqinxin@huawei.com>, m.szyprowski@samsung.com, robin.murphy@arm.com, 
-	yangyicong@huawei.com, hch@lst.de, iommu@lists.linux.dev, 
-	prime.zeng@huawei.com, fanghao11@huawei.com, linux-kernel@vger.kernel.org, 
-	linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94b40ff2-9e9e-4eea-8a66-87d8976aeb70@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jun 16, 2025 at 9:53=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Sat, 14 Jun 2025 22:34:51 +0800
-> Qinxin Xia <xiaqinxin@huawei.com> wrote:
->
-> > The padding field in the structure was previously reserved to
-> > maintain a stable interface for potential new fields, ensuring
-> > compatibility with user-space shared data structures.
-> > However,it was accidentally removed by tiantao in a prior commit,
-> > which may lead to incompatibility between user space and the kernel.
-> >
-> > This patch reinstates the padding to restore the original structure
-> > layout and preserve compatibility.
-> >
-> > Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header f=
-ile for map_benchmark definition")
-> > Cc: stable@vger.kernel.org
-> > Acked-by: Barry Song <baohua@kernel.org>
-> > Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->
-> FWIW I checked the patch above indeed accidentally dropped the padding an=
-d the structure
-> is copied to userspace so this fix is correct.  Given it's not in a uapi =
-header this
-> only really affects the selftest I think this is mostly a case of there p=
-ossibly being
-> out of tree tools with a local copy of this structure definition.
+On Mon, Jun 16, 2025 at 06:37:41PM +0800, Luo Jie wrote:
+> 
+> 
+> On 6/13/2025 4:15 AM, Markus Elfring wrote:
+> > I see further refinement possibilities for such a change description.
+> > 
+> > 
+> > > Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+> > > - reg &= ~MASK;
+> > > - reg |= FIELD_PREP(MASK, val);
+> > 
+> > * How do you think about to omit leading minus characters?
+> > 
+> > * Subsequent blank line?
+> > 
+> > 
+> > > More information about semantic patching is available at
+> > > http://coccinelle.lip6.fr/
+> > 
+> > I suggest to omit this information here (and in similar patches).
+> > 
+> > Regards,
+> > Markus
+> 
+> Thank you for your suggestions. The current commit message was generated
+> by the following patch mode command:
+> ```
+> make coccicheck MODE=patch COCCI=scripts/coccinelle/misc/field_modify.cocci
+> V=1
+> ```
+> However, as I understand, the discussion on the ARM patches (between
+> Russel/Marc/Yury) has concluded that the ARM arch changes may not be
+> adding value over the current code, so I will drop the ARM patches
+> in the next version.
 
-Somehow, I feel we have placed
-tools/testing/selftests/dma/dma_map_benchmark.c in the wrong location.
-As a selftest, it should have a mechanism to check kernel dependencies,
-start properly and automatically, and report pass or fail.
+Well, hang on a second. From what I can tell, the objections haven't
+been specific to arch/arm{,64}/. You haven't really explained why this
+new helper is needed and what value it brings over the existing set of
+functionality.
 
-dma_map_benchmark.c seems more like a tool that belongs in tools/dma,
-rather than a test.
+So maybe start there, rather than dropping the parts that attracted the
+comments to start with?
 
->
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-Thanks
-Barry
+Will
