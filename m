@@ -1,147 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E340F27380B;
-	Mon, 16 Jun 2025 13:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDDA292B3A
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079020; cv=none; b=IZc5+LefEk9O98+X+VdmdvbNcl8/Sb4MpNsvQhl+QdACyuSu4EpDxTmP1Q6c+KY1Sz7AouWzTYMcnINcDuuGCyd4AIFlzL1Tr6l3NSsm0ffKwx+m4YkqrIYnyTgV5T2HLZGAwySXHjXqyc1Ok2Ns3q+67IzdbxCr9hg6Le6ccgQ=
+	t=1750079022; cv=none; b=SZOBfzqGGMIOkXgiorRhNnjDVfpYPOgHb9gl7wtwxp09KJwOQWccvSkDk7s9cLiq7NoZbhuMRnnf31zVJbTtK4lWIHLaCmzUrDM2DMmB2WR0LXrmQWSxI9VUqlITyKMn0ZklrE+WR7wxvzXLDjh9TVKHiXbWWnu3HeTAwncN4us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079020; c=relaxed/simple;
-	bh=a7j27RQuAyvZnCvRGb4L4XPkG2jx93P21IQMnptuauU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8fZgzS2y1snqE33S8iZ/wJNLkG/ACpALbIz8HutQqxXBc7vRF7jeNWUI6TUxnEOkQdCvw5D8Fw+WAzVlI1UQr9pXuu1HN2I5+JWjPAWupoPbU2ihB4P0UgKaji22/Vn5WC/HNkMMRiljfgD8Ehw1FEfqmrFPHGDvVEyiYk+o/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbCdWXIC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750079022; c=relaxed/simple;
+	bh=p5RbUZDdBP9GJ45EushgzCm7+amW2nhZBxekb5kEaaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gq7DXSbK4fTD2hWe9wgDLJm7frXwjmq9Q+T4B+8mEg7rH892FGebZQmt2YanSlOVdGUy6nYMgISatrX43kG26jBAWBjKhvbNnH80aOxt+PVjK6wmd+vay3gsswYLqQf/qJpBxFirRWswrZAnIaIhJCP8H6r9dpakEvjCKD+ygzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mXqX5g0O; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbCdWXIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD64CC4CEEA;
-	Mon, 16 Jun 2025 13:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750079019;
-	bh=a7j27RQuAyvZnCvRGb4L4XPkG2jx93P21IQMnptuauU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qbCdWXICAoHbASkv2kppLcyRQQ6+aYqV7jEI2SspphRpmjFSXmRaAHbscPyOf27+p
-	 vib9dZYkbzP1B0oxXG4d3QbJkXWHo6aMXpOzbqRLfgG+BFVbh1goeHmihfmGw0cXan
-	 z+HD8WKupg2opOlUu+S+re67Q/s2Jv5tmCCHhxj70dvkKuzN4Py5VzF7j5/g710Vjh
-	 s7F4pove0fhUsgVqtZ17TrOJ+RtSr0qlblAQgTBNvRQDXiX97VrbgPOON2z+Po5zby
-	 Fnk29kIHu6BhwrRI6Gvk4YUturpgSMUOhORTkRTY0Oi+0axDDOveKR3/KPVKiObNzB
-	 YZERVv/rLzA5g==
-Date: Mon, 16 Jun 2025 15:03:36 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, 
-	Brian Norris <briannorris@chromium.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, kernel@collabora.com, linux-pwm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
-Message-ID: <nf5bpi3sv5rrlvjg7q2ehyck6brmm3bzmzw4zclirwtiy7vrjp@yzsiao7krnt7>
-References: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mXqX5g0O"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750079014;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DA4HDcoQwAsvy+FAZ9s9PfK2YKDSvcnxpI2xo5wCIxE=;
+	b=mXqX5g0OBZq0XRkexyW2HXYyD81frodp818ARkJ6Su1YUldK/pBBLJCLo6/hh86FNw0m7B
+	6vxIAZxgDwONHbmzsgf0HLlfZ2vk/PKuln1LW2uPfu4ba9fKf2GLmR62Gx4ItbQ8HNFjkO
+	YOaxUqbbFrVtoW8XJASPOJq5iRjGdP0=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v3 2/2] bpf: Add show_fdinfo for kprobe_multi
+Date: Mon, 16 Jun 2025 21:02:33 +0800
+Message-ID: <20250616130233.451439-2-chen.dylane@linux.dev>
+In-Reply-To: <20250616130233.451439-1-chen.dylane@linux.dev>
+References: <20250616130233.451439-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t53uq6jf7edocakw"
-Content-Disposition: inline
-In-Reply-To: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Show kprobe_multi link info with fdinfo, the info as follows:
 
---t53uq6jf7edocakw
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
-MIME-Version: 1.0
+link_type:	kprobe_multi
+link_id:	1
+prog_tag:	a15b7646cb7f3322
+prog_id:	21
+type:	kprobe_multi
+kprobe_cnt:	8
+missed:	0
+cookie           func
+1                bpf_fentry_test1
+7                bpf_fentry_test2
+2                bpf_fentry_test3
+3                bpf_fentry_test4
+4                bpf_fentry_test5
+5                bpf_fentry_test6
+6                bpf_fentry_test7
+8                bpf_fentry_test8
 
-Hello Nico,
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/trace/bpf_trace.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-On Thu, May 22, 2025 at 09:26:44PM +0200, Nicolas Frattaroli wrote:
-> With CONFIG_PWM_DEBUG=3Dy, the rockchip PWM driver produces warnings like
-> this:
->=20
->   rockchip-pwm fd8b0010.pwm: .apply is supposed to round down
->   duty_cycle (requested: 23529/50000, applied: 23542/50000)
->=20
-> This is because the driver chooses ROUND_CLOSEST for idempotency
-> reasons. However, it's possible to keep idempotency while always
-> rounding down in .apply.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 2d422f897ac..fcf19e233b5 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2623,10 +2623,42 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_PROC_FS
++static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
++					 struct seq_file *seq)
++{
++	struct bpf_kprobe_multi_link *kmulti_link;
++	char sym[KSYM_NAME_LEN];
++
++	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
++
++	seq_printf(seq,
++		   "type:\t%s\n"
++		   "kprobe_cnt:\t%u\n"
++		   "missed:\t%lu\n",
++		   kmulti_link->flags == BPF_F_KPROBE_MULTI_RETURN ? "kretprobe_multi" :
++					 "kprobe_multi",
++		   kmulti_link->cnt,
++		   kmulti_link->fp.nmissed);
++
++	seq_printf(seq, "%-16s %-16s\n", "cookie", "func");
++	for (int i = 0; i < kmulti_link->cnt; i++) {
++		sprint_symbol_no_offset(sym, kmulti_link->addrs[i]);
++		seq_printf(seq,
++			   "%-16llu %-16s\n",
++			   kmulti_link->cookies[i],
++			   sym);
++	}
++}
++#endif
++
+ static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
+ 	.release = bpf_kprobe_multi_link_release,
+ 	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
+ 	.fill_link_info = bpf_kprobe_multi_link_fill_link_info,
++#ifdef CONFIG_PROC_FS
++	.show_fdinfo = bpf_kprobe_multi_show_fdinfo,
++#endif
+ };
+ 
+ static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
+-- 
+2.48.1
 
-Note that rounding nearest is difficult for idempotency. Consider a PWM
-can implement the following period lengths:
-
-	20.61, 21.4, 22.19
-
-First if you use round-nearest you cannot set 21.4 because if you
-request 21 you get 20.61 and if you request 22 you get 22.19. So if the
-hardware still runs at 21.4, obviously apply =E2=9A=AC get_state cannot be
-idempotent. If you round down in apply and up in get_state (or
-vice-versa) you get idempotency. So using ROUND_CLOSEST for idempotency
-is based on a wrong intuition.
-
-> Do this by making get_state always round up, and making apply always
-> round down. This is done with u64 maths, and setting both period and
-> duty to U32_MAX (the biggest the hardware can support) if they would
-> exceed their 32 bits confines.
->=20
-> Fixes: 12f9ce4a5198 ("pwm: rockchip: Fix period and duty cycle approximat=
-ion")
-> Fixes: 1ebb74cf3537 ("pwm: rockchip: Add support for hardware readout")
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
-> This fix may need some careful testing from others before definitely
-> being applied and backported. While I did test it myself of course,
-> making sure to try a combination of periods and duty cycles, I really
-> don't want to accidentally undo someone else's fix.
-
-I like it apart from a small nitpick, see below. I think the danger of
-breaking something is small and I tend to apply your patch.
-
-> Some of the u64 math is a bit overkill, but I don't want to assume
-> prescalers will never get larger than 4, which is where we start needing
-> the 64-bit prescaled NSECS_PER_SEC value. clk_rate could also
-> comfortably fit within u32 for any expected clock rate, but unsigned
-> long can fit more depending on architecture, even if nobody is running
-> the PWM hardware at 4.294967296 GHz.
-> ---
-> [...]
-> @@ -103,8 +106,9 @@ static void rockchip_pwm_config(struct pwm_chip *chip=
-, struct pwm_device *pwm,
->  			       const struct pwm_state *state)
->  {
->  	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
-> -	unsigned long period, duty;
-> -	u64 clk_rate, div;
-> +	u64 prescaled_ns =3D (u64)pc->data->prescaler * NSEC_PER_SEC;
-> +	u64 clk_rate, tmp;
-> +	u32 period, duty;
-
-These hold the period and duty in ticks, so I'd call them period_ticks
-and duty_ticks respectively.
-
->  	u32 ctrl;
-> =20
->  	clk_rate =3D clk_get_rate(pc->clk);
-> @@ -114,12 +118,15 @@ static void rockchip_pwm_config(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
-
-Best regards
-Uwe
-
---t53uq6jf7edocakw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhQFiUACgkQj4D7WH0S
-/k6RIggAsLLr/RA5R0kZBQiL6qGYpa0dMKd4CntzFu4LMeuLZsSWcXFKnP5RdvO0
-2ysAsVZCJLejyUxDn9VjSDFwpSgw4LoP/hnKbGguh9h/zGozMq/A1E0dYPXqSfPD
-BePTzoZkw7qfzHVMrvR/dY2wTIOuzQHiBSi02eSiO0ye1CfuDIJ0CUQfT86SQ5ju
-VpBfoU63QPjF+o6Ewp/ewIomFgw3J+xytch2HT15kJcrwRibobH2j6ZyDriMt3jh
-ak0utCjLsxnJLXTlGTb0Z/DROUMXnHsCrSutyDFcAa057c0/zas+cwS+PErlW53s
-RdAGcmvcBnvbX+vNuqTSO5f11T0zfQ==
-=ljjR
------END PGP SIGNATURE-----
-
---t53uq6jf7edocakw--
