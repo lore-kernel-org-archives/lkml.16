@@ -1,37 +1,33 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12D7296176;
-	Mon, 16 Jun 2025 03:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E75B1C27;
+	Mon, 16 Jun 2025 03:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750043111; cv=none; b=UmGGJzdKD4hFnPjsGEuHF1KByXaBn9Hc6Uit5se2VLAHofIpMVhpR7cODxKpx3gN1D/EB1fAHYcpVgSE2FF80gkGgbxCVcafqWSqJP/6gfjaVk9npBR3N0E1qneylk7yd0DyJ4Y3hZtGvGMOjFBtcysSHf9F4Xs7FAaYPQUTJkc=
+	t=1750043270; cv=none; b=YYj3O8GzuYt86f3sGZdo9PNNV9rMoQjoXLSLud7tj030ydGTHEv6lxI5P3fqEGFmxhQZ3tFIcqxbo6XaqhLy7YJTa/MaNK315SQva7OAQWhF3h0t+QFp8k/NPQrRGkYUmchgBHPA0/YmWFqN0wsDWhL88Oks2NaQPz5lj9WHxi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750043111; c=relaxed/simple;
-	bh=VDYWpN/qtYIrFTNt93vXPpHqVDdhjSGG017lJvkwh7Y=;
+	s=arc-20240116; t=1750043270; c=relaxed/simple;
+	bh=bjRNAwejvi/pkSblMCe8b7ZKY/fm9CLxTviorz8zlvU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LfhINLprLk6Kz7SqLW6IjfTcBci2iw5YrkEKJFAGGFvaN3WsAIW7om4YuFetJfRziG6DldDbFQu1Oe0hXp3vPliOeN0NnJdNdEdJYv+qbSRed97Ik2ydym5olKCey4HufZxyBeaSpO7AkL0ZNrv/3DgK94miLv4RXwEeDrgSxIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JGgWzD73; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=f2oFPXCfOkPe8H4dTidovmQOPfDSFueLAwyia7kkYH8OANId5OtsSsgH7e2RY9N3vg6eDIOcOAc7ziwYUyZ+eQZH64vz712Rrm6Z1KbeCazInE3J8XUOfCAeKZqagjfeF8qNkEx1UgMYlyj41WVqa5izKMBUE1XPRoqykWc62t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQT9nbsI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JGgWzD73"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=r39SR+iYOnU6Tptcpr3GxcMEhIdvdrMkRtTp26UKitU=; b=JGgWzD73KSGpQXt23KGBF6q05e
-	JTM2DsY2r5Dy65wbPP69S5cW7pDc3DnU4qzOAjp6rErRjhrMvLj/k5Uz8Xk1pY5PnbfD8uvbdD8MG
-	TN0Lc1nTibAv04NAfHPM5/H/tmOASQ4c1OoNWsTFmphmp5fSLJSmHafFXXceUuohQRAwKRckWyNIp
-	nc3k7T1/reqWlk+IYnMGuvNn/nfxQM8MidZwPqMVOfehR/V7oAfBQU9i6H4no02FkkG1WLShdJISJ
-	RQEpM5YnyJbtxg6j9jDZQITiOfYfe9JbzgwDxoPnDnKL6QXRPKMhUs5OSj8ozS4TOve44UTgzoTIN
-	ubdsa7lA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uR09b-0000000FUVX-1sBg;
-	Mon, 16 Jun 2025 03:04:59 +0000
-Message-ID: <217e3774-8a28-4adc-b2df-a31b6ba5a382@infradead.org>
-Date: Sun, 15 Jun 2025 20:04:56 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQT9nbsI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE38C4CEE3;
+	Mon, 16 Jun 2025 03:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750043270;
+	bh=bjRNAwejvi/pkSblMCe8b7ZKY/fm9CLxTviorz8zlvU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CQT9nbsI8d9vBZ/Qx4cKvcNDaOk2CN4rNQCGYPx9b8PdND0NEG2DhUclJggIQkrhW
+	 XjOmxEPFl9Vy0B5MriWGPBIS/n4U0qAkolAkfov0MNtpX1kx8DVYcSMZhA0z74QC+m
+	 85VXICr0CcRQybSfCby+vGCHyzsHorApRTudIkpl+UPTQ7mQ79eWApaTCQepIx1Dfv
+	 7xVah+CAhlZQo2R+8wYhfr6Y4W9NZv7vkIBVt0CS57B1doDoOlGXrs+wN7s0C8DF+g
+	 VY7PL4tVdzsK/qM2t10YQU8UXyr/o8Yb0TK2b3A+JgwsSRxtBTJ8uXWzNOYvlNV24D
+	 BFR96KsYIpcjA==
+Message-ID: <9002cafb-4517-43be-9949-e09101a453ba@kernel.org>
+Date: Mon, 16 Jun 2025 12:07:47 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,54 +35,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: nouveau: remove invalid kernel-doc reference to
- r535.c
-To: HyeonSu Jeon <dev.hyeonsu.jeon@gmail.com>,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
- simona@ffwll.ch, corbet@lwn.net
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250616021742.8304-1-dev.hyeonsu.jeon@gmail.com>
+Subject: Re: [PATCH RFC v2 5/5] blk-mq-sched: support request batch
+ dispatching for sq elevator
+To: Yu Kuai <yukuai1@huaweicloud.com>, ming.lei@redhat.com,
+ yukuai3@huawei.com, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com
+References: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
+ <20250614092528.2352680-6-yukuai1@huaweicloud.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250616021742.8304-1-dev.hyeonsu.jeon@gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20250614092528.2352680-6-yukuai1@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 6/15/25 7:17 PM, HyeonSu Jeon wrote:
-> The file drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c does not exist
-> in the tree, but is referenced in gsp.rst via a kernel-doc directive.
-> This causes an error during the documentation build
+On 6/14/25 18:25, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
 > 
-> Removing this refernce resolves the error
+> Before this patch, each context will hold a global lock to dispatch one
+> request at a time, which introduce intense lock competition:
+
+How so ? If there is only a single context issuing IOs, there will not be any
+contention on the lock.
+
+> lock
+> ops.dispatch_request
+> unlock
 > 
-> Signed-off-by: HyeonSu Jeon <dev.hyeonsu.jeon@gmail.com>
+> Hence support dispatch a batch of requests while holding the lock to
+> reduce lock contention.
 
-Thanks for your patch.
-A previous patch has already been applied to drm-misc-fixes:
+Lock contention would happen only if you have multiple processes issuing I/Os.
+For a single context case, this simply reduces the overhead of dispatching
+commands by avoiding the lock+unlock per request. So please explain that clearly.
 
-https://lore.kernel.org/linux-doc/20250611020805.22418-2-bagasdotme@gmail.com/
-
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 > ---
->  Documentation/gpu/nouveau.rst | 3 ---
->  1 file changed, 3 deletions(-)
+>  block/blk-mq-sched.c | 55 ++++++++++++++++++++++++++++++++++++++++----
+>  block/blk-mq.h       | 21 +++++++++++++++++
+>  2 files changed, 72 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/gpu/nouveau.rst b/Documentation/gpu/nouveau.rst
-> index b8c801e0068c..cab4a8eda850 100644
-> --- a/Documentation/gpu/nouveau.rst
-> +++ b/Documentation/gpu/nouveau.rst
-> @@ -25,8 +25,5 @@ providing a consistent API to upper layers of the driver stack.
->  GSP Support
->  ------------------------
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index 990d0f19594a..d7cb88c8e8c7 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -101,6 +101,49 @@ static bool elevator_can_dispatch(struct sched_dispatch_ctx *ctx)
+>  	return true;
+>  }
 >  
-> -.. kernel-doc:: drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> -   :doc: GSP message queue element
-> -
->  .. kernel-doc:: drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h
->     :doc: GSP message handling policy
+> +static void elevator_dispatch_requests(struct sched_dispatch_ctx *ctx)
+> +{
+> +	struct request *rq;
+> +	int budget_token[BUDGET_TOKEN_BATCH];
+> +	int count;
+> +	int i;
+
+These 2 can be declared on the same line.
+
+> +
+> +	while (true) {
+> +		if (!elevator_can_dispatch(ctx))
+> +			return;
+> +
+> +		count = blk_mq_get_dispatch_budgets(ctx->q, budget_token);
+> +		if (count <= 0)
+> +			return;
+> +
+> +		elevator_lock(ctx->e);
+> +		for (i = 0; i < count; ++i) {
+> +			rq = ctx->e->type->ops.dispatch_request(ctx->hctx);
+> +			if (!rq) {
+> +				ctx->run_queue = true;
+> +				goto err_free_budgets;
+> +			}
+> +
+> +			blk_mq_set_rq_budget_token(rq, budget_token[i]);
+> +			list_add_tail(&rq->queuelist, &ctx->rq_list);
+> +			ctx->count++;
+> +			if (rq->mq_hctx != ctx->hctx)
+> +				ctx->multi_hctxs = true;
+> +
+> +			if (!blk_mq_get_driver_tag(rq)) {
+> +				i++;
+> +				goto err_free_budgets;
+> +			}
+> +		}
+> +		elevator_unlock(ctx->e);
+> +	}
+> +
+> +err_free_budgets:
+> +	elevator_unlock(ctx->e);
+> +	for (; i < count; ++i)> +		blk_mq_put_dispatch_budget(ctx->q, budget_token[i]);
+> +}
+
 
 -- 
-~Randy
-
+Damien Le Moal
+Western Digital Research
