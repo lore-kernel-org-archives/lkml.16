@@ -1,74 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248E726C3BE
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4C726C3BF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750062426; cv=none; b=hctYFzwqrFYsu4SWCHM0aa/38XVPoWQbizjAqVcXGS2F5AMtZpv3Kaa4XtT7JmQlXyYsbwfjg/B53umTtjmy522lk6DUx36x8N9kWpqTgwepBomaiey7t1n/AfLNpz3GDDgry7szRM2+YY7OtCzpEfu42Shae52iBNt2J6UGoys=
+	t=1750062458; cv=none; b=IhGVLswC73713HXc0F8TrPy2M+cHtNwKdDwvVFJDgSfPE8+Zdwv1wnVwwzsSqPj2HedlT/JCuXD+UTSmFWi7ITDQM/Ts749Ardw5+ol/h1Vh1FPQrx3ixVcZW2jpK0ur5NTZGXHejRFocaeYAht/x7glUhrQiqYE36/i7GLN6I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750062426; c=relaxed/simple;
-	bh=3p8JnVC59Axce3ey1C4bHo+o0k4d9kC42u2K1gtGQhw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Xfkh9629TW1+2ndM/Cw4TqI3k6QuGrxqDaF1SJR7b/JxT7PGHFLG+oe9suwbPZfVSmjkhR5GikhYazYRpkbZW54+GBZ8jxW7mnroLaROTqUe7+61r6edQjre87vUU84SeZtB1AAH+hObnZqwspEhrM9W0XTCDnae1JtBH7Nw5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T7pS/9Vv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750062458; c=relaxed/simple;
+	bh=Gi0PXTIT4cUit+lVlw4RmGfNXjLtAFBAHuiIpbgKRl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Khf4ul0Hqs/DWYKSiydn/NRTi9kzuhgBdlM3SWuwAQH0wOzjeptigvJzPMOOzQC/w+DsYb6/KoTDEoKIaOLSU+Il+5dx1ndBZAmYg+mcXD6E2tHuLGb+1UXhp8m8qLouOfkLmNkPSV91ejtJIAvw987HMnWTt0GaXJ53HbLpaZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=fail smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I15S/F8U; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7pS/9Vv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750062424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=S3r6tcF/8sUOM4JJUK08ZCgx8v60UgNdJX131lcRrgw=;
-	b=T7pS/9VvThsy/OddgBpvLjcWLbDrVGpg2Z2AjnN6SlQgPeZa1F0SKac9+y/dIf0GyhAinS
-	m+43hjam6K9h70Hg0Oz/9Gf5APX+e4h0q1l6WSmWbhoF+1hzVsBWPH9KIAxev+LK8Z1L5W
-	eSgNdRqSuBmAt0U5XmlDG2UTd4tkh4I=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-KtIz7RuUNJ-B5V6Caozc2Q-1; Mon, 16 Jun 2025 04:27:03 -0400
-X-MC-Unique: KtIz7RuUNJ-B5V6Caozc2Q-1
-X-Mimecast-MFC-AGG-ID: KtIz7RuUNJ-B5V6Caozc2Q_1750062422
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d50eacafso25770055e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:27:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750062422; x=1750667222;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=S3r6tcF/8sUOM4JJUK08ZCgx8v60UgNdJX131lcRrgw=;
-        b=IXurzsp5yRA0stjrCVM4yr3tmi/ZBPIwCEwuIAjmhSgjP6fFS1gc+rvwzsQdLBKPI2
-         sGUrbS6najGO6fnuAzOoNAFrBArqRmHKSFi2r/jIGqKv7XP/3cMxsfqED52/XjeIfw/o
-         n8+nmwMOAOJ4cNHxuHWryBIwLB5m1ElZBShyY5ViXHhFiDDvFPaxW7DewBojuazv0Fzn
-         xQGD7z6ndwm/Iywo/k8uCeu3jE5HIXoI+BDaCRoFBiZytFB9/fBqhK3xop27l/LVHbon
-         5U5xZLdIcFLtIRHS0izK0CqGuMolARlZ4l15VBPL1am1mmOvNm1p2dkY8xm7KP+mnjaO
-         arkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrr6BiB/o1kS0TENYAm4gs+lYVS6AyTQICh4+2+FNrdFeJnKWMg3reqSkXuBPJm0hF3/OAN4nX2dhCVZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHeMYWwBfAHXgvS/lxuhlZg029KTKofrOUQgSyo3CLJC6fOzYj
-	ldcaR2CccElAi2YZ6Xla6gnduiNcecPRVN9/Lix2XgiULHUMQjh64kVr1RHCm4x9WNhdUlsFKS9
-	lXeRIsC1JYo9pZyaJP+8bnTvyXmgeSB7h5WOq6CbjV5ISREj6lYWygOVsSbjdCw5LTcPYWYXH0w
-	==
-X-Gm-Gg: ASbGnctFVRZLOENyST8oW9VD2CL+a3Sxuu6htEzXr6gcYNHkr7ZG7CEn/q/mM8zSHrz
-	H76pzHgIL5jTkjwEHtA3scRGOO59VgB5ZNDgTs3Nyc8KShZaNn+Hx0hgL3TwmYeV/KdYjvVzNop
-	5x3S1e+Wx+rY5b8W4CVZr9WFReLKlozT4RoB+THgQ8LhP1+LBjYCSTTUgdIWYnzpSybclFhyLZT
-	l/OPjF7p7aGVEbflOC9GCueV+2CQOJ5mY+8AqIeZk1ByVox6ChzwNtSsyWXwSPMOGzQjHFpJfA0
-	Pg4a8ehB2lWvl6nSqcw1xFgkRZTvficxfMXA7/lKvdyg12cgcGXnnCU7K+s4IcB821hdvrc6F0V
-	qVE3dKB34cCPO13YHMkHJjqvYL2KC7N0P+Fq4/xUxrriMlfU=
-X-Received: by 2002:a05:6000:22c1:b0:3a4:e65d:5d8c with SMTP id ffacd0b85a97d-3a572e8bfa1mr6071712f8f.40.1750062421702;
-        Mon, 16 Jun 2025 01:27:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+M+jQb0Xm3oaWQ7WNYNXfojT/2tgpVvG95fbwzgYBLLiBn8Ck7Q9Uvf6CA0/WL9XO9noU6w==
-X-Received: by 2002:a05:6000:22c1:b0:3a4:e65d:5d8c with SMTP id ffacd0b85a97d-3a572e8bfa1mr6071697f8f.40.1750062421294;
-        Mon, 16 Jun 2025 01:27:01 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b090b0sm10343419f8f.46.2025.06.16.01.27.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 01:27:00 -0700 (PDT)
-Message-ID: <2933056a-1f4d-49bd-ae62-5571a222c223@redhat.com>
-Date: Mon, 16 Jun 2025 10:27:00 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I15S/F8U"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55G8RGIZ3770403;
+	Mon, 16 Jun 2025 03:27:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750062436;
+	bh=d1hOW9dceKTqmRm+uiJj5sI96rGsu8GOnh4oj9JKeD8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=I15S/F8Uzmew56XFF9Vd30J7ff+Un/z/Kl7xE/c8B0mbeE7aVwTxIRPAydktUjnqs
+	 AQ5AmeAGhzYf7OBClBd4O4meaFAZDyNN4B3SMJrnQ4IubWtnRj+nqFlEs++3MJcUqK
+	 fzZ/9/FPuRJUbKmZ51nZnzR67UkO9VLS/J9dnOjk=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55G8RG2J1681408
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 16 Jun 2025 03:27:16 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 16
+ Jun 2025 03:27:15 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 16 Jun 2025 03:27:16 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55G8RDfR3938375;
+	Mon, 16 Jun 2025 03:27:13 -0500
+Message-ID: <3c2b9fb5-5ad5-4db7-81ee-9defbdf7b4f3@ti.com>
+Date: Mon, 16 Jun 2025 13:57:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,197 +50,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] vfio/type1: optimize vfio_unpin_pages_remote() for
- large folio
-From: David Hildenbrand <david@redhat.com>
-To: lizhe.67@bytedance.com, alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterx@redhat.com
-References: <20250616075251.89067-1-lizhe.67@bytedance.com>
- <20250616075251.89067-3-lizhe.67@bytedance.com>
- <753caff4-58d6-4d23-ae69-4b909a99aa16@redhat.com>
+Subject: Re: [PATCH] arm: multi_v7_defconfig: Enable more OMAP related configs
+To: Krzysztof Kozlowski <krzk@kernel.org>, <linux@armlinux.org.uk>,
+        <arnd@arndb.de>
+CC: <afd@ti.com>, <u-kumar1@ti.com>, <praneeth@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250611074925.1155547-1-b-padhi@ti.com>
+ <d0831ff9-c26f-40bc-892c-b391eb48ea25@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <753caff4-58d6-4d23-ae69-4b909a99aa16@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <d0831ff9-c26f-40bc-892c-b391eb48ea25@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 16.06.25 10:14, David Hildenbrand wrote:
-> On 16.06.25 09:52, lizhe.67@bytedance.com wrote:
->> From: Li Zhe <lizhe.67@bytedance.com>
+
+On 11/06/25 15:52, Krzysztof Kozlowski wrote:
+> On 11/06/2025 09:49, Beleswar Padhi wrote:
+>> From: Sinthu Raja <sinthu.raja@ti.com>
 >>
->> When vfio_unpin_pages_remote() is called with a range of addresses that
->> includes large folios, the function currently performs individual
->> put_pfn() operations for each page. This can lead to significant
->> performance overheads, especially when dealing with large ranges of pages.
+>> This allows us to use various peripherals in the TI OMAP family devices
+> Which ones for example? Explain which upstream boards use which devices
+> needing these.
+>
+>> using the multi-v7 config, instead of only with the OMAP specific
+> multi_v7
+>
+>> defconfigs.
 >>
->> This patch optimize this process by batching the put_pfn() operations.
->>
->> The performance test results, based on v6.15, for completing the 16G VFIO
->> IOMMU DMA unmapping, obtained through unit test[1] with slight
->> modifications[2], are as follows.
->>
->> Base(v6.15):
->> ./vfio-pci-mem-dma-map 0000:03:00.0 16
->> ------- AVERAGE (MADV_HUGEPAGE) --------
->> VFIO MAP DMA in 0.047 s (338.6 GB/s)
->> VFIO UNMAP DMA in 0.138 s (116.2 GB/s)
->> ------- AVERAGE (MAP_POPULATE) --------
->> VFIO MAP DMA in 0.280 s (57.2 GB/s)
->> VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
->> ------- AVERAGE (HUGETLBFS) --------
->> VFIO MAP DMA in 0.052 s (308.3 GB/s)
->> VFIO UNMAP DMA in 0.139 s (115.1 GB/s)
->>
->> Map[3] + This patchset:
->> ------- AVERAGE (MADV_HUGEPAGE) --------
->> VFIO MAP DMA in 0.027 s (598.2 GB/s)
->> VFIO UNMAP DMA in 0.049 s (328.7 GB/s)
->> ------- AVERAGE (MAP_POPULATE) --------
->> VFIO MAP DMA in 0.289 s (55.3 GB/s)
->> VFIO UNMAP DMA in 0.303 s (52.9 GB/s)
->> ------- AVERAGE (HUGETLBFS) --------
->> VFIO MAP DMA in 0.032 s (506.8 GB/s)
->> VFIO UNMAP DMA in 0.049 s (326.7 GB/s)
->>
->> For large folio, we achieve an approximate 64% performance improvement
->> in the VFIO UNMAP DMA item. For small folios, the performance test
->> results appear to show no significant changes.
->>
->> [1]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
->> [2]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
->> [3]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
->>
->> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>> Signed-off-by: Sinthu Raja <sinthu.raja@ti.com>
+>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
 >> ---
->>    drivers/vfio/vfio_iommu_type1.c | 55 +++++++++++++++++++++++++++------
->>    1 file changed, 46 insertions(+), 9 deletions(-)
+>>  arch/arm/configs/multi_v7_defconfig | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
 >>
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index e952bf8bdfab..09ecc546ece8 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -469,17 +469,28 @@ static bool is_invalid_reserved_pfn(unsigned long pfn)
->>    	return true;
->>    }
->>    
->> -static int put_pfn(unsigned long pfn, int prot)
->> +static inline void _put_pfns(struct page *page, int npages, int prot)
->>    {
->> -	if (!is_invalid_reserved_pfn(pfn)) {
->> -		struct page *page = pfn_to_page(pfn);
->> +	unpin_user_page_range_dirty_lock(page, npages, prot & IOMMU_WRITE);
->> +}
->>    
->> -		unpin_user_pages_dirty_lock(&page, 1, prot & IOMMU_WRITE);
->> -		return 1;
->> +/*
->> + * The caller must ensure that these npages PFNs belong to the same folio.
->> + */
->> +static inline int put_pfns(unsigned long pfn, int npages, int prot)
->> +{
->> +	if (!is_invalid_reserved_pfn(pfn)) {
->> +		_put_pfns(pfn_to_page(pfn), npages, prot);
->> +		return npages;
->>    	}
->>    	return 0;
->>    }
->>    
->> +static inline int put_pfn(unsigned long pfn, int prot)
->> +{
->> +	return put_pfns(pfn, 1, prot);
->> +}
->> +
->>    #define VFIO_BATCH_MAX_CAPACITY (PAGE_SIZE / sizeof(struct page *))
->>    
->>    static void __vfio_batch_init(struct vfio_batch *batch, bool single)
->> @@ -806,11 +817,37 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
->>    				    bool do_accounting)
->>    {
->>    	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
->> -	long i;
->>    
->> -	for (i = 0; i < npage; i++)
->> -		if (put_pfn(pfn++, dma->prot))
->> -			unlocked++;
->> +	while (npage) {
->> +		long nr_pages = 1;
->> +
->> +		if (!is_invalid_reserved_pfn(pfn)) {
->> +			struct page *page = pfn_to_page(pfn);
->> +			struct folio *folio = page_folio(page);
->> +			long folio_pages_num = folio_nr_pages(folio);
->> +
->> +			/*
->> +			 * For a folio, it represents a physically
->> +			 * contiguous set of bytes, and all of its pages
->> +			 * share the same invalid/reserved state.
->> +			 *
->> +			 * Here, our PFNs are contiguous. Therefore, if we
->> +			 * detect that the current PFN belongs to a large
->> +			 * folio, we can batch the operations for the next
->> +			 * nr_pages PFNs.
->> +			 */
->> +			if (folio_pages_num > 1)
->> +				nr_pages = min_t(long, npage,
->> +					folio_pages_num -
->> +					folio_page_idx(folio, page));
->> +
->> +			_put_pfns(page, nr_pages, dma->prot);
-> 
-> 
-> This is sneaky. You interpret the page pointer a an actual page array,
-> assuming that it would give you the right values when advancing nr_pages
-> in that array.
+>> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+>> index c79495e113c8..10ad7026bb4d 100644
+>> --- a/arch/arm/configs/multi_v7_defconfig
+>> +++ b/arch/arm/configs/multi_v7_defconfig
+>> @@ -166,6 +166,7 @@ CONFIG_BT_MRVL_SDIO=m
+>>  CONFIG_BT_QCOMSMD=m
+>>  CONFIG_CFG80211=m
+>>  CONFIG_MAC80211=m
+>> +CONFIG_IWLWIFI=m
+>>  CONFIG_RFKILL=y
+>>  CONFIG_RFKILL_INPUT=y
+>>  CONFIG_RFKILL_GPIO=y
+>> @@ -788,6 +789,7 @@ CONFIG_FRAMEBUFFER_CONSOLE=y
+>>  CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+>>  CONFIG_SOUND=m
+>>  CONFIG_SND=m
+>> +CONFIG_SND_SOC_OMAP_HDMI=m
+>>  CONFIG_SND_HDA_TEGRA=m
+>>  CONFIG_SND_HDA_INPUT_BEEP=y
+>>  CONFIG_SND_HDA_PATCH_LOADER=y
+>> @@ -1095,6 +1097,7 @@ CONFIG_TEGRA_IOMMU_SMMU=y
+>>  CONFIG_EXYNOS_IOMMU=y
+>>  CONFIG_QCOM_IOMMU=y
+>>  CONFIG_REMOTEPROC=y
+>> +CONFIG_WKUP_M3_RPROC=m
+>>  CONFIG_OMAP_REMOTEPROC=m
+>>  CONFIG_OMAP_REMOTEPROC_WATCHDOG=y
+>>  CONFIG_KEYSTONE_REMOTEPROC=m
+>> @@ -1102,6 +1105,7 @@ CONFIG_QCOM_Q6V5_MSS=m
+>>  CONFIG_QCOM_SYSMON=m
+>>  CONFIG_QCOM_WCNSS_PIL=m
+>>  CONFIG_ST_REMOTEPROC=m
+>> +CONFIG_OMAP_REMOTEPROC=m
+>>  CONFIG_RPMSG_CHAR=m
+>>  CONFIG_RPMSG_CTRL=m
+>>  CONFIG_RPMSG_QCOM_SMD=y
+>> @@ -1127,6 +1131,8 @@ CONFIG_ARCH_TEGRA_3x_SOC=y
+>>  CONFIG_ARCH_TEGRA_114_SOC=y
+>>  CONFIG_ARCH_TEGRA_124_SOC=y
+>>  CONFIG_SOC_TI=y
+>> +CONFIG_AMX3_PM=m
+>> +CONFIG_WKUP_M3_IPC=m
+>>  CONFIG_KEYSTONE_NAVIGATOR_QMSS=y
+>>  CONFIG_KEYSTONE_NAVIGATOR_DMA=y
+>>  CONFIG_RASPBERRYPI_POWER=y
+>> @@ -1138,11 +1144,13 @@ CONFIG_TI_SCI_PM_DOMAINS=y
+>>  CONFIG_ARM_EXYNOS_BUS_DEVFREQ=m
+>>  CONFIG_ARM_TEGRA_DEVFREQ=m
+>>  CONFIG_DEVFREQ_EVENT_EXYNOS_NOCP=m
+>> +CONFIG_EXTCON_PALMAS=m
+>>  CONFIG_EXTCON_MAX14577=m
+>>  CONFIG_EXTCON_MAX77693=m
+>>  CONFIG_EXTCON_MAX8997=m
+>>  CONFIG_EXTCON_USB_GPIO=y
+>>  CONFIG_TI_AEMIF=y
+>> +CONFIG_TI_EMIF_SRAM=m
+>>  CONFIG_STM32_FMC2_EBI=y
+>>  CONFIG_EXYNOS5422_DMC=m
+>>  CONFIG_IIO=y
+>> @@ -1287,6 +1295,7 @@ CONFIG_CRYPTO_AES_ARM=m
+>>  CONFIG_CRYPTO_AES_ARM_BS=m
+>>  CONFIG_CRYPTO_AES_ARM_CE=m
+>>  CONFIG_CRYPTO_CHACHA20_NEON=m
+>> +CONFIG_CRYPTO_XCBC=m
+> Why this is needed?
+>
+>>  CONFIG_CRYPTO_DEV_SUN4I_SS=m
+>>  CONFIG_CRYPTO_DEV_FSL_CAAM=m
+>>  CONFIG_CRYPTO_DEV_EXYNOS_RNG=m
+>> @@ -1300,6 +1309,10 @@ CONFIG_CRYPTO_DEV_QCOM_RNG=m
+>>  CONFIG_CRYPTO_DEV_ROCKCHIP=m
+>>  CONFIG_CRYPTO_DEV_STM32_HASH=m
+>>  CONFIG_CRYPTO_DEV_STM32_CRYP=m
+>> +CONFIG_CRYPTO_DEV_OMAP=m
+>> +CONFIG_CRYPTO_DEV_OMAP_SHAM=m
+>> +CONFIG_CRYPTO_DEV_OMAP_AES=m
+>> +CONFIG_CRYPTO_DEV_OMAP_DES=m
+>>  CONFIG_CMA_SIZE_MBYTES=64
+>>  CONFIG_PRINTK_TIME=y
+>>  CONFIG_DEBUG_KERNEL=y
+>> @@ -1307,3 +1320,5 @@ CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+>>  CONFIG_DEBUG_INFO_REDUCED=y
+>>  CONFIG_MAGIC_SYSRQ=y
+>>  CONFIG_DEBUG_FS=y
+>> +CONFIG_CAN_C_CAN=m
+>> +CONFIG_CAN_C_CAN_PLATFORM=m
+> Does not look like placed according to Kconfig.
 
-Just to add to this: unpin_user_page_range_dirty_lock() is not 
-universally save in the hugetlb scenario I described.
 
--- 
-Cheers,
+Thank you for the review.. Using savedefconfig eliminated some redundant configs.
 
-David / dhildenb
+I have addresses all comments in v2:
+
+https://lore.kernel.org/all/20250616082038.3241346-1-b-padhi@ti.com/
 
