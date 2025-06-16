@@ -1,195 +1,783 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA42D20F09A
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A9820F09A;
+	Mon, 16 Jun 2025 15:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088452; cv=none; b=JdlzuzIkH9uR7PMQ1BJz5KgVOzBSOZocDxJMJUoI9Qh7hozzsj+FFG04zUHKozZw63j/CFWnH5Gx+vHug0rHXQSXK28LfKxmx3Hac4mGecyfWARj9+ZXNF+bi+Mu8dM8v/DkuF+k1avKXcv0BYnCZoyZOCNf606/MaCSbfA15AM=
+	t=1750088467; cv=none; b=Oa5kJBetq7ipP7ppSg14vMGsy04GJjpDPcA09zYrDBLC2uYAjp5mL0H9zYFP9H0Pwe14cE9kRA65H8a4NncDdaHwIvZcLRky/cHTXu8SDz4TQbSCDIoCkRc9a4KwUaUkzOxQUnuAGuFhdGToL5yv/u2f/Bznvu2Q/pyiHRNbFRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088452; c=relaxed/simple;
-	bh=GulDPnHNMOiMPgHTzF8enV28qBP0ODLdaQ7945icZi4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R0f3tEvKpCT1TcWkAUtsKWG1KhxPnj+LmO2OyvmAYb2B+OeSp6RPJ1P+Qf/nvC+e8tPyXetjGMDyIUhUd5PzIZ7AzhtXpS1fZXYrcE2n5ZeZP10DioRrJQ1QnuGhVF6SuQ1AHfPnPeNvM3csx1Sh50wLUxmDDEJ/a2xp0U+/cRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=noZrMPIv; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750088467; c=relaxed/simple;
+	bh=73D40RyWswHRMfPg2+CFpm+821Lhm+ns1xPGi1i5jDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rM01dd9/ZHlc1+qIpODekYx74gFaIl5fLVSycPJ1N0reo5UaxQdvR5rbowrtwPzKYSgqkZ2PfvEZKlMw0x5WgbfxxIJGVKoEMR37nrMqF9gnfCr53bnvNe2bd5LilzpK1kp4LK1bMTKnwqxx4AKFI2j78TUV2CSwGRwUxBBL2gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJVlYQl/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="noZrMPIv"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3498E346;
-	Mon, 16 Jun 2025 17:40:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750088437;
-	bh=GulDPnHNMOiMPgHTzF8enV28qBP0ODLdaQ7945icZi4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=noZrMPIvU1Mank2i1vNQ1njqr3BZcLasIJ/CeoC6r4lIf4aaFNBgUIwGph6QhREUU
-	 TawlYtLpGkIRhqZ7bVPnboTszbxRWX5DKyFiKZ+UTvcqjttmf2onKP2D/A45VAgtDV
-	 EZwApC+JoEms1Br9jXFhzeWLbfIWK2QyOzWh0nBk=
-Message-ID: <3adb1d12-7cd5-4beb-9978-c3cae702f338@ideasonboard.com>
-Date: Mon, 16 Jun 2025 18:40:44 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJVlYQl/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60D9C4CEEA;
+	Mon, 16 Jun 2025 15:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750088467;
+	bh=73D40RyWswHRMfPg2+CFpm+821Lhm+ns1xPGi1i5jDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EJVlYQl/WwPgF3RPueT2lPUir/VzWRbExLeg2qMd8C12kiiP8kS+TlEAERAfCYhjF
+	 ZdsH54Ayo2+hcAeCO74CREJSPquwN4sKef8jhbte8ddxIF1pJCV4prkeZjmCWEBXdk
+	 tmr5/GtaTKfNzWgq8Uf5eSzEfh6FYb6WzwhktVXajZ2sdZqFQiyN+idtgyp/ykTmD3
+	 0jGE/I5MLVtAOL86hc27wPDe3IOhMYgHG6CzEtl7CKuP1SXZiMBjTotyK2ovUhZOR3
+	 urlpgT98ttoFlSd+Dm5nWDQ4MoiZAi7Wx+vNu46t5sCtlIFKSHhoi5BaqJe+fh3RUi
+	 s1QDYIxrH17VQ==
+Date: Mon, 16 Jun 2025 16:41:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v5 01/11] dt-bindings: iio: adc: Add AD4170
+Message-ID: <20250616-neurology-explicit-ec2a829bd718@spud>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <4df9d4d0de83090300b6870afc8ae7b22279cd22.1749582679.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>, Nishanth Menon
- <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- Alexander Sverdlin <alexander.sverdlin@siemens.com>,
- Dmitry Baryshkov <lumag@kernel.org>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
- <20250605171524.27222-4-aradhya.bhatia@linux.dev>
- <CGME20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19@eucas1p2.samsung.com>
- <2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
- <306f142f-f9c9-44ab-a5b9-c71db76b2b80@ideasonboard.com>
- <b4d8c5b2-3ad7-4327-9985-d097d095ccb5@samsung.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <b4d8c5b2-3ad7-4327-9985-d097d095ccb5@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Q50QzP2eWs4lR+kQ"
+Content-Disposition: inline
+In-Reply-To: <4df9d4d0de83090300b6870afc8ae7b22279cd22.1749582679.git.marcelo.schmitt@analog.com>
 
-Hi,
 
-On 12/06/2025 09:31, Marek Szyprowski wrote:
-> On 12.06.2025 07:49, Tomi Valkeinen wrote:
->> On 11/06/2025 13:45, Marek Szyprowski wrote:
->>> On 05.06.2025 19:15, Aradhya Bhatia wrote:
->>>> From: Aradhya Bhatia <a-bhatia1@ti.com>
->>>>
->>>> Move the bridge pre_enable call before crtc enable, and the bridge
->>>> post_disable call after the crtc disable.
->>>>
->>>> The sequence of enable after this patch will look like:
->>>>
->>>> 	bridge[n]_pre_enable
->>>> 	...
->>>> 	bridge[1]_pre_enable
->>>>
->>>> 	crtc_enable
->>>> 	encoder_enable
->>>>
->>>> 	bridge[1]_enable
->>>> 	...
->>>> 	bridge[n]_enable
->>>>
->>>> And, the disable sequence for the display pipeline will look like:
->>>>
->>>> 	bridge[n]_disable
->>>> 	...
->>>> 	bridge[1]_disable
->>>>
->>>> 	encoder_disable
->>>> 	crtc_disable
->>>>
->>>> 	bridge[1]_post_disable
->>>> 	...
->>>> 	bridge[n]_post_disable
->>>>
->>>> The definition of bridge pre_enable hook says that,
->>>> "The display pipe (i.e. clocks and timing signals) feeding this bridge
->>>> will not yet be running when this callback is called".
->>>>
->>>> Since CRTC is also a source feeding the bridge, it should not be enabled
->>>> before the bridges in the pipeline are pre_enabled. Fix that by
->>>> re-ordering the sequence of bridge pre_enable and bridge post_disable.
->>>>
->>>> While at it, update the drm bridge API documentation as well.
->>>>
->>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>>> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
->>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
->>>> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
->>> This patch landed in today's linux-next as commit c9b1150a68d9
->>> ("drm/atomic-helper: Re-order bridge chain pre-enable and
->>> post-disable"). In my tests I found that it breaks booting of Samsung
->>> Exynos 5420/5800 based Chromebooks (Peach-Pit and Peach-Pi). Both of
->>> them use Exynos DRM with Exynos_DP sub-driver (Analogix DP) and EDP
->>> panel. Booting stops at '[drm] Initialized exynos 1.1.0 for exynos-drm
->>> on minor 0' message. On the other hand, the Samsung Exynos5250 based
->>> Snow Chromebook boots fine, but it uses dp-lvds nxp,ptn3460 bridge and
->>> lvds panel instead of edp panels. This looks like some sort of deadlock,
->>> because if I disable FBDEV emulation, those boards boots fine and I'm
->>> able to run modetest and enable the display. Also the DRM kernel logger
->>> seems to be working fine, although I didn't check the screen output yet,
->>> as I only have a remote access to those boards. I will investigate it
->>> further and let You know.
->> Thanks for the report. I was trying to understand the pipeline, but I'm
->> a bit confused. Above you say Peach-Pit uses DP and EDP panel, but if I
->> look at arch/arm/boot/dts/samsung/exynos5420-peach-pit.dts, it connects
->> a dp->lvds bridge (parade,ps8625). Peach-Pi seems to connect to an eDP
->> panel.
->>
->> Is the above correct? Do both Peach-Pi and Peach-Pit fail?
-> 
-> Yes, sorry, my fault. I much have checked the same (peach-pi) dts 2 
-> times. Both Peach-Pi and Peach-Pit fails, while Snow works fine. All 
-> three use the same Exynos DP (based on analogix dp) driver. I will try 
-> to play a bit more with those boards in the afternoon, hopefully getting 
-> some more hints where the issue is.
+--Q50QzP2eWs4lR+kQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Did you get a chance to test this more? Any hints what happens will help =)
+On Tue, Jun 10, 2025 at 05:31:04PM -0300, Marcelo Schmitt wrote:
+> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
+> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+> Change log v4 -> v5
+> - Dropped interrupt maxItems constraint.
+> - Spelled out RC acronym in reference-buffer description.
+> - Require to specify interrupt-names when using interrupts.
+> - Added interrupt-names to the examples.
+> - Made adi,excitation-pin properties identical to adi,ad4130.
+> - Removed interrupt-parent props from the examples.
+>=20
+> Proposing new types and ways of describing hardware for weigh scale load =
+cells
+> and related sensors external to ADCs can lead to potential better descrip=
+tion of
+> how those components connect to the ADC. However, we must use what already
+> exists for properties documenting features that are the same across diffe=
+rent
+> devices.=20
+>=20
+> Maybe, we could use generic defs to define adi,excitation-current-n-micro=
+amp and
+> adi,excitation-pin and avoid repetition with those. Though, that triggers=
+ a
+> dt_binding_check warning. Also, having mixed notation (some prop declarat=
+ions
+> using defines and others not) seems to not be desirable.
+>=20
+> It looks like the only option left is making adi,excitation-pin properties
+> identical to adi,ad4130.
+>=20
+> On one hand, dropping adi,excitation-pin defs and making those properties
+> identical to adi,ad4130 preserves their syntax and semantics accross
+> dt-bindings. OTOH, we end up with more text repetition in the doc.
+>=20
+>=20
+>  .../bindings/iio/adc/adi,ad4170.yaml          | 564 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 571 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> new file mode 100644
+> index 000000000000..e3249ec56a14
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> @@ -0,0 +1,564 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4170 and similar Analog to Digital Converters
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converte=
+rs.
+> +  Specifications can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4170-4.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4190-4.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4195-4.pdf
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +$defs:
+> +  reference-buffer:
+> +    description: |
+> +      Enable precharge buffer, full buffer, or skip reference buffering =
+of
+> +      the positive/negative voltage reference. Because the output impeda=
+nce
+> +      of the source driving the voltage reference inputs may be dynamic,
+> +      resistive/capacitive combinations of those inputs can cause DC gain
+> +      errors if the reference inputs go unbuffered into the ADC. Enable
+> +      reference buffering if the provided reference source has dynamic h=
+igh
+> +      impedance output. Note the absolute voltage allowed on REFINn+ and=
+ REFINn-
+> +      inputs is from AVSS - 50 mV to AVDD + 50 mV when the reference buf=
+fers are
+> +      disabled but narrows to AVSS to AVDD when reference buffering is e=
+nabled
+> +      or in precharge mode. The valid options for this property are:
+> +      0: Reference precharge buffer.
+> +      1: Full reference buffering.
+> +      2: Bypass reference buffers (buffering disabled).
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1, 2]
+> +    default: 1
 
- Tomi
+Why make this property a uint32, rather than a string where you can use
+something like "precharge", "full" and "bypass" (or "disabled")? The
+next similar device could use something slightly different then the
+binding becomes pretty clunky.
+Can you explain why this is a dt property rather than something
+adjustable at runtime?
 
+Otherwise, what you have here looks sane enough to me - but I'd like to
+see some comments from Jonathan or David etc about your approach to the
+excitation properties.
+
+Cheers,
+Conor.
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4170
+> +      - adi,ad4190
+> +      - adi,ad4195
+> +
+> +  avss-supply:
+> +    description:
+> +      Reference voltage supply for AVSS. If provided, describes the magn=
+itude
+> +      (absolute value) of the negative voltage supplied to the AVSS pin.=
+ Since
+> +      AVSS must be =E2=88=922.625V minimum and 0V maximum, the declared =
+supply voltage
+> +      must be between 0 and 2.65V. If not provided, AVSS is assumed to b=
+e at
+> +      system ground (0V).
+> +
+> +  avdd-supply:
+> +    description:
+> +      A supply of 4.75V to 5.25V relative to AVSS that powers the chip (=
+AVDD).
+> +
+> +  iovdd-supply:
+> +    description: 1.7V to 5.25V reference supply to the serial interface =
+(IOVDD).
+> +
+> +  refin1p-supply:
+> +    description: REFIN+ supply that can be used as reference for convers=
+ion.
+> +
+> +  refin1n-supply:
+> +    description: REFIN- supply that can be used as reference for convers=
+ion. If
+> +      provided, describes the magnitude (absolute value) of the negative=
+ voltage
+> +      supplied to the REFIN- pin.
+> +
+> +  refin2p-supply:
+> +    description: REFIN2+ supply that can be used as reference for conver=
+sion.
+> +
+> +  refin2n-supply:
+> +    description: REFIN2- supply that can be used as reference for conver=
+sion. If
+> +      provided, describes the magnitude (absolute value) of the negative=
+ voltage
+> +      supplied to the REFIN2- pin.
+> +
+> +  spi-cpol: true
+> +
+> +  spi-cpha: true
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt for signaling the completion of conversion results. The =
+data
+> +      ready signal (RDY) used as interrupt is by default provided on the=
+ SDO
+> +      pin. Alternatively, it can be provided on the DIG_AUX1 pin in whic=
+h case
+> +      the chip disables the RDY function on SDO. Thus, there can be only=
+ one
+> +      data ready interrupt enabled at a time.
+> +
+> +  interrupt-names:
+> +    description:
+> +      Specify which pin should be configured as Data Ready interrupt.
+> +    enum:
+> +      - sdo
+> +      - dig_aux1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      Optional external clock source. Can specify either an external clo=
+ck or
+> +      external crystal.
+> +
+> +  clock-names:
+> +    enum:
+> +      - ext-clk
+> +      - xtal
+> +    default: ext-clk
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  clock-output-names:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +    description: |
+> +      The first cell is for the GPIO number: 0 to 3.
+> +      The second cell takes standard GPIO flags.
+> +
+> +  ldac-gpios:
+> +    description:
+> +      GPIO connected to DIG_AUX2 pin to be used as LDAC toggle to contro=
+l the
+> +      transfer of data from the DAC_INPUT_A register to the DAC.
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  adi,vbias-pins:
+> +    description: Analog inputs to apply a voltage bias of (AVDD =E2=88=
+=92 AVSS) / 2 to.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 1
+> +    maxItems: 9
+> +    items:
+> +      minimum: 0
+> +      maximum: 8
+> +
+> +allOf:
+> +  # Some devices don't have integrated DAC
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - adi,ad4190
+> +              - adi,ad4195
+> +    then:
+> +      properties:
+> +        ldac-gpios: false
+> +
+> +  # Require to specify the interrupt pin when using interrupts
+> +  - if:
+> +      required:
+> +        - interrupts
+> +    then:
+> +      required:
+> +        - interrupt-names
+> +
+> +  # If an external clock is set, the internal clock cannot go out and vi=
+ce versa
+> +  - oneOf:
+> +      - required: [clocks]
+> +        properties:
+> +          '#clock-cells': false
+> +      - required: ['#clock-cells']
+> +        properties:
+> +          clocks: false
+> +
+> +patternProperties:
+> +  "^channel@[0-9a-f]$":
+> +    $ref: /schemas/iio/adc/adc.yaml#
+> +    unevaluatedProperties: false
+> +    description:
+> +      Represents the external channels which are connected to the ADC.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          The channel number.
+> +        minimum: 0
+> +        maximum: 15
+> +
+> +      diff-channels:
+> +        description: |
+> +          This property is used for defining the inputs of a differential
+> +          voltage channel. The first value is the positive input and the=
+ second
+> +          value is the negative input of the channel.
+> +
+> +          Besides the analog input pins AIN0 to AIN8, there are special =
+inputs
+> +          that can be selected with the following values:
+> +          17: Internal temperature sensor
+> +          18: (AVDD-AVSS)/5
+> +          19: (IOVDD-DGND)/5
+> +          20: DAC output
+> +          21: ALDO
+> +          22: DLDO
+> +          23: AVSS
+> +          24: DGND
+> +          25: REFIN+
+> +          26: REFIN-
+> +          27: REFIN2+
+> +          28: REFIN2-
+> +          29: REFOUT
+> +          For the internal temperature sensor, use the input number for =
+both
+> +          inputs (i.e. diff-channels =3D <17 17>).
+> +        items:
+> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, =
+24, 25,
+> +                 26, 27, 28, 29]
+> +
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on the
+> +          specific channel. Valid values are:
+> +          0: REFIN+/REFIN-
+> +          1: REFIN2+/REFIN2=E2=88=92
+> +          2: REFOUT/AVSS (internal reference)
+> +          3: AVDD/AVSS
+> +          If not specified, REFOUT/AVSS is used.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1, 2, 3]
+> +        default: 1
+> +
+> +      adi,positive-reference-buffer:
+> +        $ref: '#/$defs/reference-buffer'
+> +
+> +      adi,negative-reference-buffer:
+> +        $ref: '#/$defs/reference-buffer'
+> +
+> +      adi,sensor-type:
+> +        description:
+> +          The AD4170 and similar designs have features to aid interfacin=
+g with
+> +          load cell weigh scale, RTD, and thermocouple sensors. Each of =
+those
+> +          sensor types requires either distinct wiring configuration or
+> +          external circuitry for proper sensor operation and can use dif=
+ferent
+> +          ADC chip functionality on their setups. A key characteristic o=
+f those
+> +          external sensors is that they must be excited either by voltag=
+e supply
+> +          or by ADC chip excitation signals. The sensor can then be read=
+ through
+> +          a pair of analog inputs. This property specifies which particu=
+lar
+> +          sensor type is connected to the ADC so it can be properly setu=
+p and
+> +          handled. Omit this property for conventional (not weigh scale,=
+ RTD, or
+> +          thermocouple) ADC channel setups.
+> +        $ref: /schemas/types.yaml#/definitions/string
+> +        enum: [ weighscale, rtd, thermocouple ]
+> +
+> +      adi,excitation-pin-0:
+> +        description:
+> +          Analog input to apply excitation current to while the channel
+> +          is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 20
+> +        default: 0
+> +
+> +      adi,excitation-pin-1:
+> +        description:
+> +          Analog input to apply excitation current to while the channel
+> +          is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 20
+> +        default: 0
+> +
+> +      adi,excitation-pin-2:
+> +        description:
+> +          Analog input to apply excitation current to while the channel
+> +          is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 20
+> +        default: 0
+> +
+> +      adi,excitation-pin-3:
+> +        description:
+> +          Analog input to apply excitation current to while the channel
+> +          is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 20
+> +        default: 0
+> +
+> +      adi,excitation-current-0-microamp:
+> +        description:
+> +          Excitation current in microamperes to be applied to pin specif=
+ied in
+> +          adi,excitation-pin-0 while this channel is active.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +        default: 0
+> +
+> +      adi,excitation-current-1-microamp:
+> +        description:
+> +          Excitation current in microamperes to be applied to pin specif=
+ied in
+> +          adi,excitation-pin-1 while this channel is active.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +        default: 0
+> +
+> +      adi,excitation-current-2-microamp:
+> +        description:
+> +          Excitation current in microamperes to be applied to pin specif=
+ied in
+> +          adi,excitation-pin-2 while this channel is active.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +        default: 0
+> +
+> +      adi,excitation-current-3-microamp:
+> +        description:
+> +          Excitation current in microamperes to be applied to pin specif=
+ied in
+> +          adi,excitation-pin-3 while this channel is active.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +        default: 0
+> +
+> +      adi,excitation-ac:
+> +        type: boolean
+> +        description:
+> +          Whether the external sensor has to be AC or DC excited. When o=
+mitted,
+> +          it is DC excited.
+> +
+> +    allOf:
+> +      - oneOf:
+> +          - required: [single-channel, common-mode-channel]
+> +            properties:
+> +              diff-channels: false
+> +          - required: [diff-channels]
+> +            properties:
+> +              single-channel: false
+> +              common-mode-channel: false
+> +      # Usual ADC channels don't need external circuitry excitation.
+> +      - if:
+> +          not:
+> +            required:
+> +              - adi,sensor-type
+> +        then:
+> +          properties:
+> +            adi,excitation-pin-0: false
+> +            adi,excitation-pin-1: false
+> +            adi,excitation-pin-2: false
+> +            adi,excitation-pin-3: false
+> +            adi,excitation-current-0-microamp: false
+> +            adi,excitation-current-1-microamp: false
+> +            adi,excitation-current-2-microamp: false
+> +            adi,excitation-current-3-microamp: false
+> +            adi,excitation-ac: false
+> +      # Weigh scale bridge AC excited with one pair of predefined signal=
+s.
+> +      - if:
+> +          allOf:
+> +            - properties:
+> +                adi,sensor-type:
+> +                  contains:
+> +                    const: weighscale
+> +            - required:
+> +                - adi,excitation-ac
+> +                - adi,excitation-pin-2
+> +                - adi,excitation-pin-3
+> +            - not:
+> +                required:
+> +                  - adi,excitation-current-2-microamp
+> +                  - adi,excitation-current-3-microamp
+> +        then:
+> +          properties:
+> +            adi,excitation-pin-2:
+> +              const: 19
+> +            adi,excitation-pin-3:
+> +              const: 20
+> +      # Weigh scale bridge AC excited with two pairs of predefined signa=
+ls.
+> +      - if:
+> +          allOf:
+> +            - properties:
+> +                adi,sensor-type:
+> +                  contains:
+> +                    const: weighscale
+> +            - required:
+> +                - adi,excitation-ac
+> +                - adi,excitation-pin-0
+> +                - adi,excitation-pin-1
+> +                - adi,excitation-pin-2
+> +                - adi,excitation-pin-3
+> +            - not:
+> +                required:
+> +                  - adi,excitation-current-0-microamp
+> +                  - adi,excitation-current-1-microamp
+> +                  - adi,excitation-current-2-microamp
+> +                  - adi,excitation-current-3-microamp
+> +        then:
+> +          properties:
+> +            adi,excitation-pin-0:
+> +              const: 17
+> +            adi,excitation-pin-1:
+> +              const: 18
+> +            adi,excitation-pin-2:
+> +              const: 19
+> +            adi,excitation-pin-3:
+> +              const: 20
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - avdd-supply
+> +  - iovdd-supply
+> +  - spi-cpol
+> +  - spi-cpha
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        adc@0 {
+> +            compatible =3D "adi,ad4170";
+> +            reg =3D <0>;
+> +            spi-max-frequency =3D <20000000>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            avdd-supply =3D <&avdd>;
+> +            iovdd-supply =3D <&iovdd>;
+> +            clocks =3D <&clk>;
+> +            clock-names =3D "xtal";
+> +            interrupts =3D <0 IRQ_TYPE_EDGE_FALLING>;
+> +            interrupt-names =3D "dig_aux1";
+> +            adi,vbias-pins =3D <7>;
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <0>;
+> +
+> +            // Sample AIN0 with respect to DGND throughout AVDD/DGND inp=
+ut range
+> +            // Pseudo-differential unipolar
+> +            channel@0 {
+> +                reg =3D <0>;
+> +                single-channel =3D <0>;
+> +                common-mode-channel =3D <24>;
+> +                adi,reference-select =3D <3>;
+> +            };
+> +            // Weigh scale sensor
+> +            channel@1 {
+> +                reg =3D <1>;
+> +                bipolar;
+> +                diff-channels =3D <1 2>;
+> +                adi,reference-select =3D <0>;
+> +                adi,positive-reference-buffer =3D <0>;
+> +                adi,negative-reference-buffer =3D <0>;
+> +                adi,sensor-type =3D "weighscale";
+> +                adi,excitation-pin-2 =3D <19>;
+> +                adi,excitation-pin-3 =3D <20>;
+> +                adi,excitation-ac;
+> +            };
+> +            // RTD sensor
+> +            channel@2 {
+> +                reg =3D <2>;
+> +                bipolar;
+> +                diff-channels =3D <3 4>;
+> +                adi,reference-select =3D <0>;
+> +                adi,sensor-type =3D "rtd";
+> +                adi,excitation-pin-0 =3D <5>;
+> +                adi,excitation-pin-1 =3D <6>;
+> +                adi,excitation-current-0-microamp =3D <500>;
+> +                adi,excitation-current-1-microamp =3D <500>;
+> +                adi,excitation-ac;
+> +            };
+> +            // Thermocouple sensor
+> +            channel@3 {
+> +                reg =3D <3>;
+> +                bipolar;
+> +                diff-channels =3D <7 8>;
+> +                adi,reference-select =3D <0>;
+> +                adi,sensor-type =3D "thermocouple";
+> +                adi,excitation-pin-0 =3D <18>;
+> +                adi,excitation-current-0-microamp =3D <500>;
+> +            };
+> +        };
+> +    };
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        adc@0 {
+> +            compatible =3D "adi,ad4170";
+> +            reg =3D <0>;
+> +            spi-max-frequency =3D <20000000>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            avdd-supply =3D <&avdd>;
+> +            iovdd-supply =3D <&iovdd>;
+> +            #clock-cells =3D <0>;
+> +            clock-output-names =3D "ad4170-clk16mhz";
+> +            interrupts =3D <0 IRQ_TYPE_EDGE_FALLING>;
+> +            interrupt-names =3D "dig_aux1";
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <0>;
+> +
+> +            // Sample AIN0 with respect to AIN1 throughout AVDD/AVSS inp=
+ut range
+> +            // Differential bipolar. If AVSS < 0V, differential true bip=
+olar
+> +            channel@0 {
+> +                reg =3D <0>;
+> +                bipolar;
+> +                diff-channels =3D <0 1>;
+> +                adi,reference-select =3D <3>;
+> +            };
+> +            // Sample AIN2 with respect to DGND throughout AVDD/DGND inp=
+ut range
+> +            // Pseudo-differential unipolar
+> +            channel@1 {
+> +                reg =3D <1>;
+> +                single-channel =3D <2>;
+> +                common-mode-channel =3D <24>;
+> +                adi,reference-select =3D <3>;
+> +            };
+> +            // Sample AIN3 with respect to 2.5V throughout AVDD/AVSS inp=
+ut range
+> +            // Pseudo-differential bipolar
+> +            channel@2 {
+> +                reg =3D <2>;
+> +                bipolar;
+> +                single-channel =3D <3>;
+> +                common-mode-channel =3D <29>;
+> +                adi,reference-select =3D <3>;
+> +            };
+> +            // Sample AIN4 with respect to DGND throughout AVDD/AVSS inp=
+ut range
+> +            // Pseudo-differential bipolar
+> +            channel@3 {
+> +                reg =3D <3>;
+> +                bipolar;
+> +                single-channel =3D <4>;
+> +                common-mode-channel =3D <24>;
+> +                adi,reference-select =3D <3>;
+> +            };
+> +            // Sample AIN5 with respect to 2.5V throughout AVDD/AVSS inp=
+ut range
+> +            // Pseudo-differential unipolar (AD4170 datasheet page 46 ex=
+ample)
+> +            channel@4 {
+> +                reg =3D <4>;
+> +                single-channel =3D <5>;
+> +                common-mode-channel =3D <29>;
+> +                adi,reference-select =3D <3>;
+> +            };
+> +            // Sample AIN6 with respect to 2.5V throughout REFIN+/REFIN-=
+ input range
+> +            // Pseudo-differential bipolar
+> +            channel@5 {
+> +                reg =3D <5>;
+> +                bipolar;
+> +                single-channel =3D <6>;
+> +                common-mode-channel =3D <29>;
+> +                adi,reference-select =3D <0>;
+> +            };
+> +            // Weigh scale sensor
+> +            channel@6 {
+> +                reg =3D <6>;
+> +                bipolar;
+> +                diff-channels =3D <7 8>;
+> +                adi,reference-select =3D <0>;
+> +                adi,sensor-type =3D "weighscale";
+> +                adi,excitation-pin-0 =3D <17>;
+> +                adi,excitation-pin-1 =3D <18>;
+> +                adi,excitation-pin-2 =3D <19>;
+> +                adi,excitation-pin-3 =3D <20>;
+> +                adi,excitation-ac;
+> +            };
+> +        };
+> +    };
+> +...
+> +
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index abfd5ded8735..44735314a43e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1392,6 +1392,13 @@ F:	Documentation/ABI/testing/sysfs-bus-iio-adc-ad4=
+130
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
+>  F:	drivers/iio/adc/ad4130.c
+> =20
+> +ANALOG DEVICES INC AD4170 DRIVER
+> +M:	Marcelo Schmitt <marcelo.schmitt@analog.com>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Supported
+> +W:	https://ez.analog.com/linux-software-drivers
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> +
+>  ANALOG DEVICES INC AD4695 DRIVER
+>  M:	Michael Hennerich <michael.hennerich@analog.com>
+>  M:	Nuno S=C3=A1 <nuno.sa@analog.com>
+> --=20
+> 2.47.2
+>=20
+
+--Q50QzP2eWs4lR+kQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFA7DQAKCRB4tDGHoIJi
+0qZIAQCMKi3jOcmI4QEYQFk76p51IIFxk85ft/4pZkmWQaKSWgD9HpOUoUNx4Itb
+Amh2FQrF1e9uvxVmzKfmTXRCT3e8QQg=
+=7R+w
+-----END PGP SIGNATURE-----
+
+--Q50QzP2eWs4lR+kQ--
