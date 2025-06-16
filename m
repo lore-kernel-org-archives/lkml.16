@@ -1,28 +1,28 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2102.outbound.protection.outlook.com [40.107.220.102])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2118.outbound.protection.outlook.com [40.107.243.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273A41C1741;
-	Mon, 16 Jun 2025 04:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5577B1C2335;
+	Mon, 16 Jun 2025 04:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.118
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750048316; cv=fail; b=COEUK0l8dVIUTAy3jifwxuxg8tnP8qBOiE2YT5jyJnYTzdUOWsMHR5QjP+NNwggbxOXBPZ3EbYh9Ku/gkOk2XPDvSJ7B0Y59wZUJxkKPgCJe47Udwrmj4/0l4Zd9yg47OM4C+e6HqKgMh8wF/9I4RY4ib5rcqtZzyGgt7EDSa/Q=
+	t=1750048317; cv=fail; b=I2fBCAegH1CMxYEbkZlLR8okTJh562x1Dq+xRtc0+WGkGDyE80WpXckkZcU7zl1HzBjRxzPy3D4m5Dlls7xiom/fl2UZB+cj91kFXnd9z+j010lZs0F+TcTibbwln1Ix3JkSjf5kPaPNjH9Cc+5x2avpAUcdk7LTH2myL2QkWdA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750048316; c=relaxed/simple;
-	bh=W2+dR9YDi2vH4QRD0vNtxQgk03X54wuYNgbB1HGy6Aw=;
+	s=arc-20240116; t=1750048317; c=relaxed/simple;
+	bh=/vBIx0PvaTFGH1SIpT+R3QSDPnyJ6rpvlbvJSic5q1k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lCaPoNdDvw1xGLg9VdiqbcybuYpx5XUWcJQ7CWmwVMeMrV13TERyCmVAnb6t8TQLEVVcLJqnyqE6wx9cjhDf795mDiVOdLOVdeehYDRi77uHXXOgeq7h99y4NJ/9iSngtXXs3NlAe3u8EP4jCMDc2p+TFsCXj7qIBFkkk4be1mU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=lMl/UCnK; arc=fail smtp.client-ip=40.107.220.102
+	 In-Reply-To:To:Cc; b=AvHb5QLGceX+/y9Fu4l8dW3uRSeh095RRnjGyPiu6LlbiN6HjZuHyxvnKKNuRr4dmYKGxgkS03JBrmzx177KqYHb9sBtRwImv0xZ0aeUtObjtiLgBRF4MRiw5uhKhlyzxfrRHCVLv1x0FDfekvHR9TaeFSzjMZ2ojeTmz/ShnHA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=W1bhSgVt; arc=fail smtp.client-ip=40.107.243.118
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axiado.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="lMl/UCnK"
+	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="W1bhSgVt"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HHgKdlQ6Gh5NydaKh7f0JuOak2OargqmlWLuuG6ySYIFimiJxWCvcfpoEeqe62g8NWtZNl4Q47wyF7cnKgWg4iB5kOljEmBol+Htt3pn4CK1o85oRaeu2cyX3LmChzk5ShLgUoaZwuTdKfgtzTTkAnk0vZE4YupzhgU7mQNe0T1pijD6WGoXNcQwIYEp08E3mJ5FWb51Vo5gT24+IfPnrDg6fB+Y7XBPo/tnCWxtA5Dphor/Uuz9e1mBxbNFRtcwcZaUhFuCAf8TbsqJZnzLkGZ853ymeaslDVR7EGdxt5VvT2zDjnMN8Hvf4Y0mWOkraSKwl2uNvqSen/cFpyV1YA==
+ b=sQcgY4CCC0U8syu3WD0PLGB8zsTPjE+ybruIzJvv+QGUqDtDH97qmWYNrXdaCjwHAgaIfUwZMWwAcdMlc+TyTbr8Ldk3lH3kssngmz3MIiGPSF1Ky0tSLQsdUSvVpTaxEcXYAys4gXnWEuZLmT1QcTTStQGdewWAlxAiyBfmd0/hpijXmnapWR5MOvIjmdK1sdGWitGuGoB/iyUV3p9gSoyxNg8HfaZpbn6ERVob7zYUKukIKJ3h3snFM5hE8za2BFGs1x7YlvLbGVlLruRWGr6fZkt2+lFqhE0yW+qtyEidwqZQ0a1+pDGn4RF5Atk5/9x4pHnAfl+c6kZAQpSjGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bcZQ33YtoDnKL7sgOWF8I7ZiTpmL/obVvISsHWgYkus=;
- b=FRh11Zr9s27i5W+qYlGhpTnykH7TcM9h8d0CLa+IuUnVqMMhL/8C+fR0i5gw7ro6wawIMPjc7zngfwub8P20qvXYoJ/YQLSNcLR2VCj4w+rHM9MelcvrVog3EfDrXbTohvq1MAdPjcv+WJDomwMqSWGP03fP5yl5Hp/g26TIv1WBxmALArHlXFxp3s8jlxooTCRH3CSyw1tlPHMM32O++jI+d7ma1gNRg3EZmG4c9TXGCkhxBNGTjkgXPU8tXG+b+HIA8UH2NQj6hunTG/Q5D+UN0nbO4T0DiXO5MQ0gQ4uo45Pv7d7zQw6T1Q2U0jUS2T3o5TKq05chdmeJAslt4A==
+ bh=9H3iMIVw76XdEFkS0pIFzApQRXQlkWuRuscTZnf8wLw=;
+ b=T2s5wBsGizVaIBHK2FFauxUt1Th56eSw5RMnaf831Gb/ukKQFjVK1M07/VaeQIjgPsvwNfZOzVdhWntB2uCzAOjvCSgzEau09MN/Ml+kVXhN+TXOrYWIB+GoKKTJPW3EZH4XqORHEENeKY9fQ2hwVLFtpkbnRbBM84wQ0cKj1nUKzB0+TwKFRSM29FOOevWrRtKTpCewMENi90cqxPvkDL0fJXm2EMYN9YGnGav7mNvujFwwlGla88gZosAsMr85ieCGqZtaOyMUhNTRfHmuP6pJVh/j3hFqnuSnH2c6umbWvP8gXj3035zAp+WKDo6cU5hbcWoAmCWns8xlr1iJhA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  50.233.182.194) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=axiado.com;
  dmarc=none action=none header.from=axiado.com; dkim=none (message not
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axiado.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bcZQ33YtoDnKL7sgOWF8I7ZiTpmL/obVvISsHWgYkus=;
- b=lMl/UCnKYjjq4fFDQQRU4G7SSHk1YRDBWfcuK6fpZm09ubNT5lib/9DRiIBzLWHCU82OAjcrXrDjZACjwDArHajRb8f5uyt+Q03Wyodjea1Cc9r4b4AOiGQ5lD+keCtccCKqAjDK2sh/UuVedNajQPJZjrCDGmwi54byimRm6dxWHGplsOCCguKHhyiohAmdYUUoh+PhRlVnCs0RzR8nZgPtEIv8HB4Y6mVR8/t0KEdcfjYli9bZZViZ+klr5IQscMRgJEGRyalaJuupdqKpOSqWGLMG/OuLMnZZvvrBT6GCcKhub7tIgp8JjroyMfNmqwJRn5Wk4bXre+jeGQGISw==
-Received: from MW4PR03CA0076.namprd03.prod.outlook.com (2603:10b6:303:b6::21)
- by LV3PR18MB5662.namprd18.prod.outlook.com (2603:10b6:408:1a5::16) with
+ bh=9H3iMIVw76XdEFkS0pIFzApQRXQlkWuRuscTZnf8wLw=;
+ b=W1bhSgVt0FbfxpRa55xyM2jUCHjjIV22MRmw2IywXPvbym+8SiNUKJq65i0NnM7rM2lwOYB+N//ZmP1oGpdYefJ/HaI57Jy1izqT7wnYUd+E2MApxCXJbKYeomAf36RaGdSGw1TIJ+vg5XvUlYGnHw1Rp/t8B+HDy93BUALJ1qVO6DsKdUYZI0imRoK0ooTC4SxwOmPWiaqrpMVKsZWpqQfzuMmOrBAXRuyJMOmB9kYgk6mKqPDbOOCMBjvD/Hakla88xmQgkfojGPC5Z6N8PqHr+cy2yiZkfzAgsgyjgZ+bTQ5fqITevdLTQBitXpERq/lmjOdACI5tDV2nhqVs4A==
+Received: from MW4PR03CA0064.namprd03.prod.outlook.com (2603:10b6:303:b6::9)
+ by CO1PR18MB4617.namprd18.prod.outlook.com (2603:10b6:303:e0::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 04:31:52 +0000
+ 2025 04:31:50 +0000
 Received: from SJ1PEPF00002327.namprd03.prod.outlook.com
- (2603:10b6:303:b6:cafe::ac) by MW4PR03CA0076.outlook.office365.com
- (2603:10b6:303:b6::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Mon,
- 16 Jun 2025 04:31:51 +0000
+ (2603:10b6:303:b6:cafe::1b) by MW4PR03CA0064.outlook.office365.com
+ (2603:10b6:303:b6::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
+ 16 Jun 2025 04:31:50 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 50.233.182.194)
  smtp.mailfrom=axiado.com; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=axiado.com;
@@ -51,10 +51,10 @@ Received-SPF: Fail (protection.outlook.com: domain of axiado.com does not
 Received: from [127.0.0.1] (50.233.182.194) by
  SJ1PEPF00002327.mail.protection.outlook.com (10.167.242.90) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Mon, 16 Jun 2025 04:31:51 +0000
+ via Frontend Transport; Mon, 16 Jun 2025 04:31:49 +0000
 From: Harshit Shah <hshah@axiado.com>
-Date: Sun, 15 Jun 2025 21:31:38 -0700
-Subject: [PATCH v2 5/6] arm64: add support for ARCH_AXIADO
+Date: Sun, 15 Jun 2025 21:31:36 -0700
+Subject: [PATCH v2 3/6] dt-bindings: gpio: gpio-cdns: convert to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-5-341502d38618@axiado.com>
+Message-Id: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-3-341502d38618@axiado.com>
 References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
 In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -75,115 +75,224 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
  soc@lists.linux.dev, Harshit Shah <hshah@axiado.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1281; i=hshah@axiado.com;
- h=from:subject:message-id; bh=W2+dR9YDi2vH4QRD0vNtxQgk03X54wuYNgbB1HGy6Aw=;
- b=owEB7QES/pANAwAKAfFYcxGhMtX7AcsmYgBoT54xOQJIPZiuO9AoQ96LJVbTKQg/fQAXxM5wD
- df2ksurz8SJAbMEAAEKAB0WIQRO3pC/7SkLS2viWOvxWHMRoTLV+wUCaE+eMQAKCRDxWHMRoTLV
- +/aJC/9vO5eV4h/+Mj0YpsVN0uOZCNODTwd38wlfbbSc98xZC38OZPhGO+eeUpSveoIphBe6Ic5
- dxacJnDq9y7CuRkB8hskMcs+dnVObY+YSxgHjt6GMALSb6O7n7fFxaIsoMXmpbfy+PEOwXOOkAa
- /s8Dt1xr6yOTZWiXnYxP9bzIbDl0kw5Qb4bdeQnj+E1vaw6iPOeB4cOp2jqnq6vOPmADDwhbabk
- UcrXcYXRgj+VRDQuMPiZA2KE5zNONE39CJJNvzen/ZeSssHrVwIO1L2zQix9JVDxq3DYI+Tw0T7
- Y+LMelF7RyHPFTKkkTTYkHK4RpPX26UftjlOD3tyVhIMxkq/oDi52bxaIXV5Ps3Rr4201UIC2bJ
- 8xnfH/U/KgIPtQjf7oJKj9vHc6QMEAizwxHkAJ8vMJIhYOFWMaTZGlzHcYzZhRAdAgEi3CiXOgX
- 8E1guF+6bycbwg9BJvL0IEV+WBzYF3DcP0UTYL/ISNIs9HKKuf8EejcIVhnr3zZNZaN6k=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4491; i=hshah@axiado.com;
+ h=from:subject:message-id; bh=/vBIx0PvaTFGH1SIpT+R3QSDPnyJ6rpvlbvJSic5q1k=;
+ b=owEB7QES/pANAwAKAfFYcxGhMtX7AcsmYgBoT54wW9p2n848NY0SxfvKKWAgml738gKNqTFxh
+ nwLPjEUNWCJAbMEAAEKAB0WIQRO3pC/7SkLS2viWOvxWHMRoTLV+wUCaE+eMAAKCRDxWHMRoTLV
+ ++4nC/oDMAIsqqvCvKnPOnivoVxRBrD7Ews9mDw1ypV/l25o4W7aXHfh3WO7TOLM2b5GxCe6vAq
+ ZYQNspz0lb+zzU6mb37waGxSKIJk1adb4YdQFAP8Er/dlgUJhM7mkuZGGsZkHORywdwbmFrz4s6
+ x9TBFoqHf2F9Mn4s9WGI9u54mZNVf6RTaH9uRJlnhAVIrT+8js5HqY1NodQxH4sxQEUsu2e/0AP
+ S4ZjbEqAJRbim4RJ8ZDBuCOogtOcCuCmxivpEy50gtik7zW219vEy8rrboOyHsRrQQtVfSrjUyL
+ ptMRb0eo2HWAzV1JFI/JVdfwOduKXfXOrLZbfMXQ2MTVvR/oWpyecXMswu926jlrlonJOt01TBS
+ iLzMdq8h2LYdTkwL/9RsFXzHO/OxLNazeN3kYWRaFoHWrQy7hjee+WAdUb5thzZkMysXS4Ri2I5
+ BDz7ynhEtq0Os4LPPHsblnvKdwz8Xqc02Cu/v0Bb5bjAaTXC1UoQVJToltYN2qp7zBT+w=
 X-Developer-Key: i=hshah@axiado.com; a=openpgp;
  fpr=4EDE90BFED290B4B6BE258EBF1587311A132D5FB
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002327:EE_|LV3PR18MB5662:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4a345d2-95a4-4326-d9f8-08ddac8eb756
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002327:EE_|CO1PR18MB4617:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57bcd786-8e7d-448c-760d-08ddac8eb645
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024;
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OWFxcXRxU0g0dW1mNnkwYkw1ZUJ4dnhqY01JWkdDS3hFdGRpbExveHFMYWNN?=
- =?utf-8?B?MUdiS2lGSUZwMEpMRmFFWVpuSC93cGV6eG16S2loQXNjeDRvc3ZzcTFLYy9V?=
- =?utf-8?B?Y0VhQzFBbE5QTG1NdHFrTUkvTkFFd3R2bDIrVHVtdFF4Y25VUEhDSWx0Q3NT?=
- =?utf-8?B?NGdpQ29MaDZ6eFYwSkxiblBiMmczSTZscnEvVXlvS2tzaUcxdU1iMUlTWWlI?=
- =?utf-8?B?YXl4OEZiUHBFaUxoRVIvM1BVT1EyNC9KYUd1eXZTUUljdys2ZlZITjVaNjk2?=
- =?utf-8?B?MkJYdWJWZ21BTTFncUFtcUxxNmxrMnVtelhrWmJBSFZLWlZHNEdyS2poTURv?=
- =?utf-8?B?MXRmZFF3VWxZNEVBSjZGTWQ0WVVGd25DVDN5S2ZUL0IzT1ZCc2F5NnFZWHl0?=
- =?utf-8?B?ZlhHWjlaK3VKMTZ1ZDlFZGRJM21GbWY4MC96S3B5N3AvajBwRGNpOWxTbWpN?=
- =?utf-8?B?KzArM2RHd0JOZEovNW1sRmdBd2JhSG53NG15NVRHc2l2bjkyUjFjcWJJRUx5?=
- =?utf-8?B?V2Vpa29SQ0svc2E1ZWlZNk1VWVlXaEZmektRNzVQVUFiOGJ4eEZjRWpGZUVX?=
- =?utf-8?B?bllZNW4vS3lJdDNDVmcwMTdUNjdIZWE2b3cwMmk4MmYrTUJVdHpjMzVoWVhH?=
- =?utf-8?B?NmtaSTN4Yk4yemNRcDIwQktMN21idlR5ZW1jd2d3L2RmVk1jNWpwWllGM29z?=
- =?utf-8?B?SWdGUWVQWHRibU9KekdwNWhYSDBYbFdNSFZ0WU1YYnZycmNZN0NSbWYwZFlM?=
- =?utf-8?B?RkRMTW5kWFFDQmhKQTZmcUE2MUNyb0g0eW5DNVlCM0tubXl5ZExqQWc1eXo2?=
- =?utf-8?B?VU5oaDRZb2lxVk5Md1FGQmJqMEpPRzVxRXVNQU03azhxa3ZCUXV4TkRlcGFm?=
- =?utf-8?B?UjhDTDZQT3JDcFVKTnQyOUpnWmhwdmFTUURzZlNiNDhEVEx2Nlo1T0xVUm9o?=
- =?utf-8?B?UFhmK3VHRGJ3M1NnSFdyVDB2VlBYRFNQYmJmaS9vRGZ0SGdpSCtDVk9MY3hZ?=
- =?utf-8?B?Y09GZWsyYmdDd2VWVytaNUtnMVZIU2xHaHpLZzRjYXphTnZHajdLZ2JoMHJ6?=
- =?utf-8?B?azNrb1FHemVYOHNxOWZyWEFNMFNnQmxVYlhiMHdiWThXWXVMN1gzYStNWWQ3?=
- =?utf-8?B?QWVZSzRpS1Q4RTl3b1VINjlKeUNXUmhrbzVWZTY5ZnRjWjA4U3ZVV0svMWtF?=
- =?utf-8?B?SHViVnBnbDRNMEc3algvWkR0bkNUMCtZeThmNkZDNHZNTC94ZStrN2hCbjBT?=
- =?utf-8?B?S0tOSmxnOGo5YlkvVHp0QlM0ZGs2dnQwOVlOejVBTDc3d0xMWFQ2SnkzcEFU?=
- =?utf-8?B?L0EyRnVIR1RBRkRKYjErTGNaRWtxV2xFL1FhSzlMVEVNekNKQ2xPMXFISEtl?=
- =?utf-8?B?NGJqVGsxNCtYeFBwSFMwdzhUQWFjV3RsTTRxZU5hblpzMTBpWUVBNzI3cGF6?=
- =?utf-8?B?V3N3QjUxRlJKSFhuMmFPV3hRNjcyRFBZbkFuMmtoODVmT1AxczFXRkJlNHFZ?=
- =?utf-8?B?dkFSSlpSOWx0cDFjbXZJY0JyR1E2Mm9lWWZMRFB0MVZGSmtObGhzVXQ2UlRG?=
- =?utf-8?B?dTVxNnRzQmFYZnVNUzAvUXgzdlZQdkpISVBETVR2MHlpWGQ5WGgzMEVteXcz?=
- =?utf-8?B?bnNPQStwODZZTS9zZENtTmNrY0prTmttWE1VbWxLQkZudUVQa0hKcnc0Z25C?=
- =?utf-8?B?cENESFNyNHlEUExxRldNSVpsZHVVUDJzeS9FUUFzTHV2ZDl2bW82NjJtK2Nh?=
- =?utf-8?B?ajhva2VIbFk3d1pCYjhxM3F0Y28rVEk1OStnMHRhWE84OFJsTUF2TVlBZ2pY?=
- =?utf-8?B?RzhmZ1o2MC9lR1UxbDJ3M2pPVGJsMnFOY3JjZ0YraDFNbjRILzBqaGhZVlFm?=
- =?utf-8?B?NVlWSkVMcWU2Tk0zcHpXUlZhbTRiQ0dmbUY1d2lwR0pPTTZsRU9Ea3ppcm1S?=
- =?utf-8?B?TVFFL0pPK1JTU2xVUW52UERKTFZyWVRTNkt3U2VYbExsVlFlYUZic0w0Q3NR?=
- =?utf-8?B?Y3kyY3BsSnhkY28wUGFpKzRqU2J4SVpuNHJzc0cyc1Q0d0VNWW04M0R3Rzdy?=
- =?utf-8?Q?8HpEKx?=
+	=?utf-8?B?bVI1cFkxNDBtYWt2YjlLZVdlV3FnZ3puNWZDcU4yV3ZlclpBaFY3dG8vSTFx?=
+ =?utf-8?B?eU1jVmVLdEM4MExvakJYT0pYdXVLU2FzaHhQdnI3UTlla1RDdGsxcExReWZ1?=
+ =?utf-8?B?NW1ZT2U2dHp0NG9ZbVhFY09iVFQzcW5PMFd4dFJ1enI0OHZNZGpqQ0lMR01t?=
+ =?utf-8?B?WWZLdjcyWDZNWk5KUHF1VFBCcTZKbHZqN2lKOUVKZEFzcEd2bnhzelM3dVdT?=
+ =?utf-8?B?RC96eCtKeVZRdUJ4UERkOE9ZdHJwNEljdTRNNTBoRDdqS3g2bC93aU92MnU2?=
+ =?utf-8?B?MFJ2QUIzYXJyV21La29UMTRSNnZLTkFMdjRObFB6ekpyVjFUdkZkUHFXT0lJ?=
+ =?utf-8?B?V3FLZTVoek16NzErVUpkRkVaaUQ5VWN0aXdubDFIcTN6czFVWVQzbFQ2OWc1?=
+ =?utf-8?B?ZEhpVDJ6ekJBVXBqcTcxb3JLVW9Hbndhd2NKekpXNFJsT3UyZXBXbERmc3BS?=
+ =?utf-8?B?WkFobWg5bkpnZ0tySHNDMUgvMWJRR0tDVjNVSHJSS0hHSHNFTUxJRTZPR3VQ?=
+ =?utf-8?B?YzN6Y2l5eURJcHVtNlU3UFlCMmVwMWRCcGRWZXV0OHlGSDNsdUJSbkdvZXFr?=
+ =?utf-8?B?REN4cU4vOGlMYndVcjFTWVBKd2NPcWF4Q0tFOWdVNTNxMVZmRzJmcFBjVmpy?=
+ =?utf-8?B?eWsyeUMxajgrWEVkS3o4ek5SdmxLUTZMTkFLRDR1UFZQZHFYdVl4QTRpYVpC?=
+ =?utf-8?B?NGVyR1RpN0hPRTJUdGVwRWtIOGFWNXZXZDNrMGFBQ1pHK2dTbHM4ajVXUFha?=
+ =?utf-8?B?V1EzTXREOUtLOFFodkRZaW55RG9ZQ1FrZGRMVGJlTnZnSG45bHI4VlZOUGg1?=
+ =?utf-8?B?NW1lNDJLL0hCcDllMmtMUVBXRXNaM0NqYms1empoQlVSMWRoRmpTaStHU1Iv?=
+ =?utf-8?B?ZUI2cXVCU3FoamNrNHRHNU5BQ0x3NFMyejJDQjhMNVoxSjRkKy9LM1BsTWgr?=
+ =?utf-8?B?RkNxSDg0OXRndU81bk5ZbjYvTzc3bUkwRUl0amE5VnBBclRwZkNNU2FvQXpM?=
+ =?utf-8?B?VGVVYXpObzBvTGd2Nk52TWNzY21uKzJvR3U3bjFGTGNaSWJKQ3VkZWtGOERq?=
+ =?utf-8?B?NjVLMkZDS2JHMG9TY3lyczZKSXJoUjkyaEJXYUJwRTVTdkpITm5GWTBIakFo?=
+ =?utf-8?B?c29PR2NMbzliSHRZbTdvakZ5eGFOS1lnUkdxZUhDYk5LOTFDRXRzODhWa1o2?=
+ =?utf-8?B?cnVHQzBwY1Z0Q2h1RUNBN0lwSjBrM0MvbHBnWmY4OHFPbUpIek9mMklTOURJ?=
+ =?utf-8?B?eFRCM283cFBSeGxrWVU5RDFOdGV1aEpuQkgraU9uOUFMTlFKYzJyUVFvcWN0?=
+ =?utf-8?B?cENvWkhhN25PRkp2NGpnV3F3ZEdsMDVNRDRYVXBHWDNsWkNDSE84UkJjak9y?=
+ =?utf-8?B?bTdDSXFvQ0xXM044aEtWQjhJaE83TXU0aDJZNTVPalNxdVNydFB3d1EwVTRk?=
+ =?utf-8?B?V0ppNzhNNmFwNlJuVEgveWJqamQ2QlR5dlVNQVEreHY1SldGWkJrdTg5VUln?=
+ =?utf-8?B?TTVCMmNadnlHV2d0azkvSkRsU0tZRk1BeXZmTmdyRmVnS1VrSnhaWVl4MHI0?=
+ =?utf-8?B?dXBPTHp6cHhqZi85cm5jWDQ2MnA0ejF3bmZ5enZ2ckZaQ2wwTkJPbGdYYUU3?=
+ =?utf-8?B?djRGK3V4QmhpUWtKRDU3QmRNMWlyRm8yVVFHM3J6Y2dVcXRRSmFjekZuNElq?=
+ =?utf-8?B?UHRPQklPYnBMUmdSRE9YazZxbVBHd0JuQXBIR0gyQVIyQ1ljQk5zUm1MV0Ft?=
+ =?utf-8?B?b0xVOUhSNTRMblRrYmR1Y2F2aWhibjZTZmxRdDlQWU4xY3JXcldtYlNLdGsr?=
+ =?utf-8?B?ZVEzRkxCMHllSHZXZS9mMlpwUDllSjUyeFFzV0dBL0xyMDZxSEpRTGtvMUw3?=
+ =?utf-8?B?L0xFRktWTFYrSEdia1JTMGtjdTlNNVdMcjBmcUkvRmdoZmppdko2emU5N2la?=
+ =?utf-8?B?VmxZN3FHa0J3bEljNkZ4ZEpUNmRieDhodG9yb2FMTXR6bmNCNWVCSU4vajhV?=
+ =?utf-8?B?M29rMm13aTNBPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:[127.0.0.1];PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
+	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:[127.0.0.1];PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026)(13003099007);DIR:OUT;SFP:1102;
 X-OriginatorOrg: axiado.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 04:31:51.7211
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 04:31:49.9278
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4a345d2-95a4-4326-d9f8-08ddac8eb756
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57bcd786-8e7d-448c-760d-08ddac8eb645
 X-MS-Exchange-CrossTenant-Id: ff2db17c-4338-408e-9036-2dee8e3e17d7
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=ff2db17c-4338-408e-9036-2dee8e3e17d7;Ip=[50.233.182.194];Helo=[[127.0.0.1]]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ1PEPF00002327.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR18MB5662
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR18MB4617
 
-Add support for ARCH_AXIADO in existing arm64 list and add
-the same for defconfig
+Convert Cadence family GPIO controller bindings to DT schema.
+
+Changes during conversion:
+   - update the naming as per the other files.
+   - add gpio maintainers
 
 Signed-off-by: Harshit Shah <hshah@axiado.com>
 ---
- arch/arm64/Kconfig.platforms | 6 ++++++
- arch/arm64/configs/defconfig | 1 +
- 2 files changed, 7 insertions(+)
+ .../devicetree/bindings/gpio/cdns,gpio.txt         | 43 ------------
+ .../devicetree/bindings/gpio/gpio-cdns.yaml        | 81 ++++++++++++++++++++++
+ 2 files changed, 81 insertions(+), 43 deletions(-)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a541bb029aa4e1bee095ab3f44e3a52294905616..e998e1aff0fec4aca5e3bf2d0410f2578e25cb1d 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -40,6 +40,12 @@ config ARCH_APPLE
- 	  This enables support for Apple's in-house ARM SoC family, such
- 	  as the Apple M1.
- 
-+config ARCH_AXIADO
-+	bool "Axiado SoC Family"
-+	select GPIOLIB
-+	help
-+	  This enables support for Axiado SoC family like AX3000
+diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+deleted file mode 100644
+index 706ef00f5c64951bb29c79a5541db4397e8b2733..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-Cadence GPIO controller bindings
+-
+-Required properties:
+-- compatible: should be "cdns,gpio-r1p02".
+-- reg: the register base address and size.
+-- #gpio-cells: should be 2.
+-	* first cell is the GPIO number.
+-	* second cell specifies the GPIO flags, as defined in
+-		<dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
+-		and GPIO_ACTIVE_LOW flags are supported.
+-- gpio-controller: marks the device as a GPIO controller.
+-- clocks: should contain one entry referencing the peripheral clock driving
+-	the GPIO controller.
+-
+-Optional properties:
+-- ngpios: integer number of gpio lines supported by this controller, up to 32.
+-- interrupts: interrupt specifier for the controllers interrupt.
+-- interrupt-controller: marks the device as an interrupt controller. When
+-	defined, interrupts, interrupt-parent and #interrupt-cells
+-	are required.
+-- interrupt-cells: should be 2.
+-	* first cell is the GPIO number you want to use as an IRQ source.
+-	* second cell specifies the IRQ type, as defined in
+-		<dt-bindings/interrupt-controller/irq.h>.
+-		Currently only level sensitive IRQs are supported.
+-
+-
+-Example:
+-	gpio0: gpio-controller@fd060000 {
+-		compatible = "cdns,gpio-r1p02";
+-		reg =<0xfd060000 0x1000>;
+-
+-		clocks = <&gpio_clk>;
+-
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
+-
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e71f0137912f88e69fb3fa20f096e1572211591c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-cdns.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- menuconfig ARCH_BCM
- 	bool "Broadcom SoC Support"
- 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 897fc686e6a91b79770639d3eb15beb3ee48ef77..96268ade08aff844ad833c18397932a059db5499 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -38,6 +38,7 @@ CONFIG_ARCH_AIROHA=y
- CONFIG_ARCH_SUNXI=y
- CONFIG_ARCH_ALPINE=y
- CONFIG_ARCH_APPLE=y
-+CONFIG_ARCH_AXIADO=y
- CONFIG_ARCH_BCM=y
- CONFIG_ARCH_BCM2835=y
- CONFIG_ARCH_BCM_IPROC=y
++title: Cadence GPIO Controller
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++  - Bartosz Golaszewski <brgl@bgdev.pl>
++
++properties:
++  compatible:
++    const: cdns,gpio-r1p02
++
++  reg:
++    minItems: 1
++
++  clocks:
++    maxItems: 1
++
++  ngpios:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Number of GPIO lines supported, maximum 32.
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++    description: |
++      - First cell is the GPIO line number.
++      - Second cell is flags as defined in <dt-bindings/gpio/gpio.h>,
++        only GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW supported.
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++    description: |
++      - First cell is the GPIO line number used as IRQ.
++      - Second cell is the trigger type, as defined in
++        <dt-bindings/interrupt-controller/irq.h>.
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - gpio-controller
++  - "#gpio-cells"
++
++if:
++  required: [interrupt-controller]
++then:
++  required:
++    - interrupts
++    - "#interrupt-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    gpio0: gpio-controller@fd060000 {
++        compatible = "cdns,gpio-r1p02";
++        reg = <0xfd060000 0x1000>;
++        clocks = <&gpio_clk>;
++
++        interrupt-parent = <&gic>;
++        interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++    };
 
 -- 
 2.25.1
