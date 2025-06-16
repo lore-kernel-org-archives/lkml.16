@@ -1,147 +1,118 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE5F223DD5
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 23:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE19205AB6;
+	Mon, 16 Jun 2025 23:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750115441; cv=none; b=FdRnHbvRYGBMzPZ15pEQSM/0/V1AAaJlY6BXjoHykewX+83rcvtnY+VFzSvC5jdVce617+V3jZHPPCnBlOqfHd3mk+1H9C35FXviyZsQQz/LWjPzMQ5vogpxEgyAJCnUdpFn8VYeh4Q4vg9tpkzq9XKxG+chnkcwAFvmm7nuFBs=
+	t=1750115476; cv=none; b=GncoBJRdHtDu5X4cJGfuGoB2zMc4WXxC86VfJEG7dtpgcTaU2Su9knIEw2uMe/oK2TOzkqjx05dOZqYaJTurzWh3+6LJvrHqGHoszw7qAp1uevwWVyaTMg75CH0ekNN4R4QCdPMtfQP841IB1lUYbQTpirIpz+2DO3DCJkNHaBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750115441; c=relaxed/simple;
-	bh=Sg/Zeim155lPoBlFzQfHz+7xJEIx+3K9aJFJCsa+t9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oH1ryCtlUAq3gnNOE5Sih+bfxY7MAsX1Y9TGKPHpdrgtXGhjqdNhlgz5CHkWThdwwccKKPA5k3n0gsYqvTRJRJIlrsjjDwKi7T1/wzPl3z0Pi+SkpYenXOhQyM/PN2IZwACestBEg2KbqNOcTj0i5MvFvYHay7GoWelK2doPGic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jINVkrGZ; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750115476; c=relaxed/simple;
+	bh=f92kylcTcgjxPjPuigrD0gWIhxIBT4jMyjAYbJx2fgU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=t7b+OkJcPMiEQGDhqz9AqiWiS6Q0qYtmxphteaWcxrXDyt4S0Iyo9kxmTVX3EgXT4sHI7SQsJN3g6+3kKoySsr4Q1GmeepUlRYn2geSieCQRJaBn/zXFz6s6BKB4Yi13C66ghrXjKhEQFuavQjak38gRCQeXdso9C9SUGCpfR1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZWFIShO/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jINVkrGZ"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7382a999970so3333779a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750115438; x=1750720238; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZhqwSDdN0As9EP8iCCAnsHFrVsuS6BmzZLRtm9F+Ab4=;
-        b=jINVkrGZBWazZCfJTImqGL6jTnWdvwBZ+0zBKRsaphS95mW8HkhAXJGBuVf3nqR5VJ
-         B+09AiZPh+XRbbkKVNbCzrvnvFSpU+Qj6yy7SQVUapFXBupuIoQBtTFd740OwN2uofSA
-         33zLhZf/YGbx3iH6wyxxoSF1NqngJ83IXCS5aqin5SEy4OqG8C/dVlwUuaSgcSOXbuIs
-         iSL+CcL5OQ+2tdMUXTevIJxB7hI1ziXD2Au1rUUqU+ttKkp5r2+mncYvp5tU/zyzYtJl
-         eRtZ7qzQhx0VqYcQtzSrlTlwlyXdxS2GNROl1qK/BdI5Vx3zlztjVkJEOwekR4+xGdiX
-         HelA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750115438; x=1750720238;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZhqwSDdN0As9EP8iCCAnsHFrVsuS6BmzZLRtm9F+Ab4=;
-        b=VAaSxuGcmT8G4LqAVn4FaK0j/I9PBKb6C4cksCalqpmijOLraPisEYbIPiZMF8i1RG
-         5uURA2J4d+iUT3jUbPsK1rCc3Pu1JjhSofAonljj5+SjFReSDW3XmXxC5nfi0LIAFpfm
-         WY3CJBvQuiqC65NsKap/0Y/6+RL+QTC6yWXL3X5QL+ia8HsQ+/GIcJh4HFwJ8L7DAz5L
-         oWPpyrvr+wSt3JMAd0tYn7fJpaWXXbEuOBsQmhVTcGnhNTdgixNtPkLMl0ApU5XU9ng0
-         cR5POXfteZf7lOD4Ubo6j0KJG+F1snBmkmsN29TzoUuOaAqxs4ddfsp71T4pi4gwrTkZ
-         EI6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVMLceiQQ+tpkITTc7zDq++LYH7hwBiuxG2MsSQ7UrRwjJ1bpL17hGxz5ahWXBni+vlQP3IJtG/EMXgfo0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo1R2QYBnKt6kCuBHc4QwMbqZvhtYgYcrZSBFNSQYuRJ6SQIgS
-	7qxnc7qtjQ31VUpJ4I2JYAWo9goppnZSAWfPj869kwHesvARnS/lN2fgSymX0fHIwuk=
-X-Gm-Gg: ASbGncuSvJ9/ZV6SBDCoBztr1kgMeQt2LTjoK551NSH2XgM0uJ6kPTqn+lN9/FVyMjt
-	pMN+hXwj3snnsZ20lnTkahDdBT6toWLSsKBfYnwHNVZrHA4Z18BmuC2dQRam5jJ+EQnbq2Hpim9
-	IQPbdlU9lOsa/Lrng0u9nqZYgJ/P3/9Ve0rMVIU1mZLE+qNipPYAE3clM+36eZkQ2NUbano1aWS
-	4YbyQBid72tsZ0C5rEjUTg+Mrpmed97sM9+5Vu976N8twimVGGdKadCkTSA723h9F5gUvrFVy9G
-	IzVrpx5frWVC7F0SfXvRjBJQC1choXtHB40aJ8CDNQFOIPknTVvfFQLoscq7DHFpMr0mMtQ9V7d
-	RNZWbn4glCVg8NESYzAm44Q2RMzkXAr8iAp08p20=
-X-Google-Smtp-Source: AGHT+IEWczTOKpxrX7Kq4OJFYfDdAA9v5c0yaK836ViXrpfcsn3PHuwhhvfHdkmxcH18lsKBAQA0YA==
-X-Received: by 2002:a05:6830:2908:b0:739:fe04:7aec with SMTP id 46e09a7af769-73a363ed869mr7767099a34.26.1750115438134;
-        Mon, 16 Jun 2025 16:10:38 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a28554581sm1377254a34.61.2025.06.16.16.10.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 16:10:37 -0700 (PDT)
-Message-ID: <e4d80845-ddf4-487a-8ad4-c9429eccea4c@baylibre.com>
-Date: Mon, 16 Jun 2025 18:10:36 -0500
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZWFIShO/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210E3C4CEEA;
+	Mon, 16 Jun 2025 23:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750115475;
+	bh=f92kylcTcgjxPjPuigrD0gWIhxIBT4jMyjAYbJx2fgU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZWFIShO/XryFzSpjTSsOpPReKk7MGg3LaJS+8VXbd/Sv0l3pkMferPDaEDw5h7t/5
+	 TXCAWyMhImwvLfVbY+RFN3BVnPd8HICJ3ykvMXc1pH9OWRmJr7YNN1rWZZcClmJua5
+	 wc8/ODhsb5I7ekSoYglMpTbL4//+BGhwsrmpxvDU=
+Date: Mon, 16 Jun 2025 16:11:11 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe
+ <axboe@kernel.dk>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas
+ Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Eric Van
+ Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
+ <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, David Howells
+ <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi
+ <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>, "Tigran A . Aivazian"
+ <aivazian.tigran@gmail.com>, Kees Cook <kees@kernel.org>, Chris Mason
+ <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, Xiubo Li
+ <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Jan Harkes
+ <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, Gao
+ Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu
+ <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, Namjae
+ Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
+ Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>, Andreas
+ Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA
+ Hirofumi <hirofumi@mail.parknet.co.jp>, Viacheslav Dubeyko
+ <slava@dubeyko.com>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, Richard
+ Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Mikulas Patocka
+ <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>,
+ Dave Kleikamp <shaggy@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Ryusuke Konishi
+ <konishi.ryusuke@gmail.com>, Konstantin Komarov
+ <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>,
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Bob Copeland <me@bobcopeland.com>, Mike Marshall <hubcap@omnibond.com>,
+ Martin Brandenburg <martin@omnibond.com>, Steve French <sfrench@samba.org>,
+ Paulo Alcantara <pc@manguebit.org>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom
+ Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, Zhihao Cheng
+ <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>, Carlos
+ Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Naohiro
+ Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, Dan
+ Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro
+ Falcato <pfalcato@suse.de>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-aio@kvack.org, linux-unionfs@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-mm@kvack.org,
+ linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org,
+ linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+ linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH 00/10] convert the majority of file systems to
+ mmap_prepare
+Message-Id: <20250616161111.74e10321c4c421674f78d689@linux-foundation.org>
+In-Reply-To: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/9] spi: zynqmp-gqspi: Support multiple buses
-To: Sean Anderson <sean.anderson@linux.dev>, Mark Brown <broonie@kernel.org>,
- Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-References: <20250616220054.3968946-1-sean.anderson@linux.dev>
- <20250616220054.3968946-6-sean.anderson@linux.dev>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250616220054.3968946-6-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 6/16/25 5:00 PM, Sean Anderson wrote:
-> Currently, selection of the upper/lower buses is determined by the
-> chipselect. Decouple this by allowing explicit bus selection through the
-> spi-buses property.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
-> Changes in v2:
-> - New
-> 
->  drivers/spi/spi-zynqmp-gqspi.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
-> index 595b6dc10845..add5eea12153 100644
-> --- a/drivers/spi/spi-zynqmp-gqspi.c
-> +++ b/drivers/spi/spi-zynqmp-gqspi.c
-> @@ -465,13 +465,13 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
->  	genfifoentry |= GQSPI_GENFIFO_MODE_SPI;
->  
->  	if (!is_high) {
-> -		if (!spi_get_chipselect(qspi, 0)) {
-> -			xqspi->genfifobus = GQSPI_GENFIFO_BUS_LOWER;
-> +		xqspi->genfifobus =
-> +			FIELD_PREP(GQSPI_GENFIFO_BUS_MASK, qspi->buses);
-> +		if (!spi_get_chipselect(qspi, 0))
->  			xqspi->genfifocs = GQSPI_GENFIFO_CS_LOWER;
-> -		} else {
-> -			xqspi->genfifobus = GQSPI_GENFIFO_BUS_UPPER;
-> +		else
->  			xqspi->genfifocs = GQSPI_GENFIFO_CS_UPPER;
-> -		}
-> +
+On Mon, 16 Jun 2025 20:33:19 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-We could possibly drop adding the SPI_CONTROLLER_DEFAULT_BUS_IS_CS flag
-and handle the fallback here instead. Like this:
+> I am basing this on the mm-new branch in Andrew's tree, so let me know if I
+> should rebase anything here. Given the mm bits touched I did think perhaps
+> we should take it through the mm tree, however it may be more sensible to
+> take it through an fs tree - let me know!
 
-	/*
-	 * If spi-buses was not provided in devicetree, assume bus is
-	 * the same as chipselect (needed for backwards compatibility).
-	 */
-	if (qspi->buses)
-		xqspi->genfifobus =
-			FIELD_PREP(GQSPI_GENFIFO_BUS_MASK, qspi->buses);
-	else if (spi_get_chipselect(qspi, 0) == 0)
-		xqspi->genfifocs = GQSPI_GENFIFO_BUS_LOWER;
-	else
-		xqspi->genfifocs = GQSPI_GENFIFO_BUS_UPPER;
+It's more fs/ than mm/ purely from a footprint point of view.  But is
+there any expectation that there will be additional patches which build
+on this?
 
->  		genfifoentry |= xqspi->genfifobus;
->  		genfifoentry |= xqspi->genfifocs;
->  		genfifoentry |= GQSPI_GENFIFO_CS_SETUP;
-> @@ -1316,6 +1316,8 @@ static int zynqmp_qspi_probe(struct platform_device *pdev)
->  		ctlr->num_chipselect = num_cs;
->  	}
->  
-> +	ctlr->num_buses = 2;
-> +	ctlr->flags = SPI_CONTROLLER_DEFAULT_BUS_IS_CS;
->  	ctlr->bits_per_word_mask = SPI_BPW_MASK(8);
->  	ctlr->mem_ops = &zynqmp_qspi_mem_ops;
->  	ctlr->mem_caps = &zynqmp_qspi_mem_caps;
+I'll scoop it into mm-new for now, see what happens.
 
+Minus all the cc's.  Sorry ;)
