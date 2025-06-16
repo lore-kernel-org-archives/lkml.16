@@ -1,76 +1,277 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AE01FF1C4
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4247F1DF982;
+	Mon, 16 Jun 2025 08:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750064021; cv=none; b=a4gUKd8FB96IWU+JWIuKs2oVK/OKtIXarAF2HYnm6eDWW7ENFTLzuC3qPLPM/ZgiCbsLr4rmZe+XFyxK5hKHz0pVcAoXzIK52l3U8ApLIzx39uQSKSj8sNvASzUw1vpuEcIAv6YCfmc+k4R2z3rVyJxyAC/ezAXBaPxv8+xrRXk=
+	t=1750064069; cv=none; b=AGR3XjFBk4duRh58trVLOp2odeBnxj8xD6egHjJOtvw5xROXwGuPbRFMJWkiN4scl+lP47bsbAYYZHyCBE7btNTMF84lVvPtgewBzRTDTTrKur8bme/RWzMhql5+hT3NrNOpTY2YXty0SieVIMKmKuilBMB3cQAaHdBTxBgkBII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750064021; c=relaxed/simple;
-	bh=2CzM/huwLy795YELRXwr9MKHcZzbxMKXswGC1tP508g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gDhx/FTLGU2WjANZLjNvyrGGGzvCoVBa7ds18x3UKW3YbZ/DdlWls4Gg9IP3OUPnSBkW2KV/HztSeHnsknii87g9NW25Z4b6Ul2s8L3p77WQ9NuTVdJcCO1fiMVnTEiBx6ux8UqCw2kfFQIBiSvjVkqDmAX8rH2umt95b8vHNPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VbPiEL9K; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750064069; c=relaxed/simple;
+	bh=0sK2IqIUF90Xkw+eg8fHYE2r+HmIedr0OxTN7qBf0IQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SKep4xazQxxiYOQ5/2RtDIWAzw6Z7QSq1O4uYGi/fHM0pxNEm4jY4NnjRgH6/uvYqZmBK15Sqhw+Q4nyHh9JLz23tEJFgEtit7a30KdCH29PtEDlHldGvlQOvQxnA42KgB2cHLPdEMIPXXrDEu52R1+jXZhBzBEdM8Prr19nonc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FcWf700r; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VbPiEL9K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=0GTF0zHAJo6j+2EKbFdmXlbmn7T0fWV+dKJyj+XLkNk=; b=VbPiEL9K0hXv3lF3GdgGZanHXz
-	KD2+y7iJoDdmAaDA9KHEZGnMgn58+7i6Mmwuq/IXvjU6Dv7IfPNPECQPpZl/Gwc2HmOWqkardh8pY
-	hYOCDdngm1vWACFx/qBzi9YLWqXSNp0uMMCZup2+kqnZXmNxPtMGTRV2rOEMWe9/kSKiMHgq51uy6
-	Gx5THP4h5OHcX6fKKxhc+IiD2VBJiDU+cTBq6wUBID6IG8UkXmfc2Zq9ls8pj6HLRS9slwtigQ0Jg
-	OXb+H0VSFBdWRy88Yx+Z7NnW+6L0m2brVahoEcR0zJ8kp8uKHMNiGfJcN0mQsb3/jMiJ8VyudRfsD
-	lV/ZMSNA==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uR5av-0000000Fl4w-3D15;
-	Mon, 16 Jun 2025 08:53:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9C0F4304A2A; Mon, 16 Jun 2025 10:53:32 +0200 (CEST)
-Date: Mon, 16 Jun 2025 10:53:32 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/asm: Use RDPKRU and WRPKRU mnemonics in
- <asm/special_insns.h>
-Message-ID: <20250616085332.GD1613376@noisy.programming.kicks-ass.net>
-References: <20250616083611.157740-1-ubizjak@gmail.com>
- <20250616083944.GC1613376@noisy.programming.kicks-ass.net>
- <CAFULd4YQe=xb2-GH8EHLyiNQL=uCBZ7QAqmasyroT9ZhPoRRwg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FcWf700r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750064068; x=1781600068;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0sK2IqIUF90Xkw+eg8fHYE2r+HmIedr0OxTN7qBf0IQ=;
+  b=FcWf700r+zTcbVUzUvz8mF4YZz6BY1FUErW11drwSdEBNzMTjOo8aQ/7
+   KRvsRySlXiAvjLSKoB7oi2Nl1PmcM5/joB/xmEKVdwCDbWpmCH6W9fVKs
+   GMRGQKhVDISXA+28eyd96VcCHWCaRq7RpGgq0Vlxi9GUi9PMz2zWa0N5P
+   ZvPMPs7rnWcD5MkOitTA1oHlu0GbSqi4DrOoHHMkHpPyJl1/K/olZSFQ2
+   cjIwDtfzepudz33z8fYaty8PsFydYCMJulnNMcTg7TA2SutPkFpL0YLlh
+   6ldQTPrHhRAbAbB7s+VLhkcmLfkQOJBOZX6m46589/Kz12uox77KJ7Fs+
+   A==;
+X-CSE-ConnectionGUID: UJnARSh+QO6C1hVuawim3A==
+X-CSE-MsgGUID: 1Wk4PcXIRqyK1Ha/wHQIqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52344527"
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="52344527"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:54:27 -0700
+X-CSE-ConnectionGUID: l12QMg5bSt69F5k63wQc2w==
+X-CSE-MsgGUID: 5PiU8XmyS1C8z5MdYYM5hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="148245544"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.107])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:54:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [RFC PATCH v1 1/2] kselftest/resctrl: L3 CAT resctrl FS functional tests
+Date: Mon, 16 Jun 2025 11:24:52 +0300
+Message-Id: <20250616082453.3725-2-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250616082453.3725-1-ilpo.jarvinen@linux.intel.com>
+References: <20250616082453.3725-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFULd4YQe=xb2-GH8EHLyiNQL=uCBZ7QAqmasyroT9ZhPoRRwg@mail.gmail.com>
 
-On Mon, Jun 16, 2025 at 10:47:58AM +0200, Uros Bizjak wrote:
-> On Mon, Jun 16, 2025 at 10:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Jun 16, 2025 at 10:35:57AM +0200, Uros Bizjak wrote:
-> > > Current minimum required version of binutils is 2.30,
-> > > which supports RDPKRU and WRPKRU instruction mnemonics.
-> > >
-> > > Replace the byte-wise specification of RDPKRU and
-> > > WRPKRU with these proper mnemonics.
-> >
-> > What about the minimal clang version and their integrated assembler?
-> 
-> Yes, it works with the minimum required clang version 13.0.1.
+Resctrl CAT selftests have been limited to mainly testing performance.
+In order to validate the kernel side behavior better, add a functional
+test that validates .../tasks file content while performing moves of
+the task to different control groups.
 
-Excellent!
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ tools/testing/selftests/resctrl/cat_test.c    | 84 +++++++++++++++++++
+ tools/testing/selftests/resctrl/resctrl.h     |  2 +
+ .../testing/selftests/resctrl/resctrl_tests.c |  1 +
+ tools/testing/selftests/resctrl/resctrlfs.c   | 48 +++++++++++
+ 4 files changed, 135 insertions(+)
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
+index 94cfdba5308d..78cb9ac90bb1 100644
+--- a/tools/testing/selftests/resctrl/cat_test.c
++++ b/tools/testing/selftests/resctrl/cat_test.c
+@@ -376,6 +376,82 @@ static bool noncont_cat_feature_check(const struct resctrl_test *test)
+ 	return resource_info_file_exists(test->resource, "sparse_masks");
+ }
+ 
++static int cat_ctrlgrp_tasks_test(const struct resctrl_test *test,
++				  const struct user_params *uparams)
++{
++	cpu_set_t old_affinity;
++	pid_t bm_pid;
++	int ret;
++
++	bm_pid = getpid();
++
++	ret = resctrl_grp_has_task(NULL, bm_pid);
++	if (ret < 0)
++		return ret;
++	if (!ret) {
++		ksft_print_msg("PID not found in the root group\n");
++		return 1;
++	}
++
++	/* Taskset benchmark to specified CPU */
++	ret = taskset_benchmark(bm_pid, uparams->cpu, &old_affinity);
++	if (ret)
++		return ret;
++	ret = resctrl_grp_has_task(NULL, bm_pid);
++	if (ret < 0)
++		goto reset_affinity;
++	if (!ret) {
++		ksft_print_msg("PID not found in the root group\n");
++		ret = 1;
++		goto reset_affinity;
++	}
++
++	ret = write_bm_pid_to_resctrl(bm_pid, "c1", NULL);
++	if (ret)
++		goto reset_affinity;
++	ret = resctrl_grp_has_task("c1", bm_pid);
++	if (ret < 0)
++		goto reset_affinity;
++	if (!ret) {
++		ksft_print_msg("PID not found in the control group\n");
++		ret = 1;
++		goto reset_affinity;
++	}
++	ret = resctrl_grp_has_task(NULL, bm_pid);
++	if (ret < 0)
++		goto reset_affinity;
++	if (ret) {
++		ksft_print_msg("PID duplicate remains in the root group\n");
++		ret = 1;
++		goto reset_affinity;
++	}
++
++	ret = write_bm_pid_to_resctrl(bm_pid, "c2", NULL);
++	if (ret)
++		goto reset_affinity;
++	ret = resctrl_grp_has_task("c2", bm_pid);
++	if (ret < 0)
++		goto reset_affinity;
++	if (!ret) {
++		ksft_print_msg("PID not found in the new control group\n");
++		ret = 1;
++		goto reset_affinity;
++	}
++	ret = resctrl_grp_has_task("c1", bm_pid);
++	if (ret < 0)
++		goto reset_affinity;
++	if (ret) {
++		ksft_print_msg("PID duplicate remains in the old control group\n");
++		ret = 1;
++		goto reset_affinity;
++	}
++
++reset_affinity:
++	taskset_restore(bm_pid, &old_affinity);
++
++	return ret;
++}
++
+ struct resctrl_test l3_cat_test = {
+ 	.name = "L3_CAT",
+ 	.group = "CAT",
+@@ -400,3 +476,11 @@ struct resctrl_test l2_noncont_cat_test = {
+ 	.feature_check = noncont_cat_feature_check,
+ 	.run_test = noncont_cat_run_test,
+ };
++
++struct resctrl_test cat_grp_tasks_test = {
++	.name = "CAT_GROUP_TASKS",
++	.group = "CAT",
++	.resource = "L3",
++	.feature_check = test_resource_feature_check,
++	.run_test = cat_ctrlgrp_tasks_test,
++};
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index cd3adfc14969..d25f83d0a54d 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -174,6 +174,7 @@ bool resctrl_mon_feature_exists(const char *resource, const char *feature);
+ bool resource_info_file_exists(const char *resource, const char *file);
+ bool test_resource_feature_check(const struct resctrl_test *test);
+ char *fgrep(FILE *inf, const char *str);
++int resctrl_grp_has_task(const char *grp, pid_t bm_pid);
+ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
+ int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
+ int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
+@@ -241,6 +242,7 @@ static inline unsigned long cache_portion_size(unsigned long cache_size,
+ extern struct resctrl_test mbm_test;
+ extern struct resctrl_test mba_test;
+ extern struct resctrl_test cmt_test;
++extern struct resctrl_test cat_grp_tasks_test;
+ extern struct resctrl_test l3_cat_test;
+ extern struct resctrl_test l3_noncont_cat_test;
+ extern struct resctrl_test l2_noncont_cat_test;
+diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
+index 5154ffd821c4..71b7cd846dc1 100644
+--- a/tools/testing/selftests/resctrl/resctrl_tests.c
++++ b/tools/testing/selftests/resctrl/resctrl_tests.c
+@@ -18,6 +18,7 @@ static struct resctrl_test *resctrl_tests[] = {
+ 	&mbm_test,
+ 	&mba_test,
+ 	&cmt_test,
++	&cat_grp_tasks_test,
+ 	&l3_cat_test,
+ 	&l3_noncont_cat_test,
+ 	&l2_noncont_cat_test,
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index 195f04c4d158..0bc92eee0080 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -601,6 +601,54 @@ static int create_grp(const char *grp_name, char *grp, const char *parent_grp)
+ 	return 0;
+ }
+ 
++/*
++ * resctrl_grp_has_task - Check if group tasks include a PID
++ * @grp:	Name of the group (use NULL for root group)
++ * @bm_id:	PID that should be checked
++ *
++ * Return: 1 if PID is a task in @grp, 0 if not, and <0 on error.
++ */
++int resctrl_grp_has_task(const char *grp, pid_t bm_pid)
++{
++	unsigned long tasks_pid;
++	char tasks[PATH_MAX];
++	int ret = 0;
++	FILE *fp;
++
++	if (grp)
++		snprintf(tasks, sizeof(tasks), "%s/%s/tasks", RESCTRL_PATH, grp);
++	else
++		snprintf(tasks, sizeof(tasks), "%s/tasks", RESCTRL_PATH);
++
++	fp = fopen(tasks, "r");
++	if (!fp) {
++		ksft_print_msg("Error opening %s: %m\n", tasks);
++		return -EIO;
++	}
++	while (1) {
++		ret = fscanf(fp, "%lu", &tasks_pid);
++		if (ret == EOF) {
++			if (errno) {
++				ksft_print_msg("Error reading %s: %m\n", tasks);
++				ret = -EIO;
++			} else {
++				ret = 0;
++			}
++			break;
++		}
++		if (!ret)
++			break;
++
++		if (tasks_pid == bm_pid) {
++			ret = 1;
++			break;
++		}
++	}
++
++	fclose(fp);
++	return ret;
++}
++
+ static int write_pid_to_tasks(char *tasks, pid_t pid)
+ {
+ 	FILE *fp;
+-- 
+2.39.5
+
