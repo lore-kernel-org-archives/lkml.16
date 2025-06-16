@@ -1,89 +1,151 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993874A33;
-	Mon, 16 Jun 2025 09:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43012270EBD
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065753; cv=none; b=dITGGBEFByWs2w79Uvdl8GqE6FyiQpmEha91EqIqK7/3Gl9r0XPXeBJgu2C9IBdvXrbMv/Sny5xoAoqtGS+Z2KYBS6u+sEt9eOnMr9Iar8m9xVsRFONkF4Xv4PtroDDdg7BSZzsdol/0hjiXrAS+fhW2WA5XhcEc4A6zn94yEtY=
+	t=1750065768; cv=none; b=MkDgtNPI9s2LoAf6Y8Z9AiaZx68SzihdLKCcewOoQYVRukSfhMN6OzNRn5s2GcljriY+jm07v9nJxJqf7iErlMw8XLunkM2afBKOtVCrRd8vxXNPvwVsxQC7zqiTWmAKNdV+ZYMCEkdudQ5hptGLF/l9c5G/vDcre0rf5ffkEp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065753; c=relaxed/simple;
-	bh=sj0mm9m1O/8U8lkwTNwKNR/K+6FyXlt+/zWXc6yk2UM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=S9IQYM5vM4iXjgVpfRs/oypLpNRiO1CI0/xAubPoj5dmBjFJWGfGkI+sH6ibXjksqXNzvTz46IOw9kJpY/t4299hP2Dajh5X4uXdI+3ndRFkYbz7NpQ1NlegjzHkYiU/j63MV4NOfcMS2oaBfGpkcXqRjsjbRG63lk6zWk/Exv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 55G9LOLC071378;
-	Mon, 16 Jun 2025 17:21:24 +0800 (+08)
-	(envelope-from Zhengxu.Zhang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bLPYW2Cy6z2P49JG;
-	Mon, 16 Jun 2025 17:18:07 +0800 (CST)
-Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX01.spreadtrum.com
- (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 16 Jun
- 2025 17:21:23 +0800
-Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
- BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
- 15.00.1497.048; Mon, 16 Jun 2025 17:21:22 +0800
-From: =?utf-8?B?5byg5pS/5petIChaaGVuZ3h1IFpoYW5nKQ==?=
-	<Zhengxu.Zhang@unisoc.com>
-To: "Yuezhang.Mo@sony.com" <Yuezhang.Mo@sony.com>,
-        Cixi Geng
-	<cixi.geng@linux.dev>,
-        "linkinjeon@kernel.org" <linkinjeon@kernel.org>,
-        "sj1557.seo@samsung.com" <sj1557.seo@samsung.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?546L55qTIChIYW9faGFvIFdhbmcp?= <Hao_hao.Wang@unisoc.com>,
-        =?utf-8?B?5byg5pS/5petIChaaGVuZ3h1IFpoYW5nKQ==?= <Zhengxu.Zhang@unisoc.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGV4ZmF0OiBmZGF0YXN5bmMgZmxhZyBzaG91bGQg?=
- =?utf-8?B?YmUgc2FtZSBsaWtlIGdlbmVyaWNfd3JpdGVfc3luYygp?=
-Thread-Topic: [PATCH] exfat: fdatasync flag should be same like
- generic_write_sync()
-Thread-Index: AQHb3CvF3g+Nw35RCU+Et+rOGeRoJrQA2ySngASsErA=
-Date: Mon, 16 Jun 2025 09:21:22 +0000
-Message-ID: <ebba6e12af06486cafa5e16a284b7d7e@BJMBX01.spreadtrum.com>
-References: <20250613062339.27763-1-cixi.geng@linux.dev>
- <PUZPR04MB6316E8048064CB15DACDDE1B8177A@PUZPR04MB6316.apcprd04.prod.outlook.com>
-In-Reply-To: <PUZPR04MB6316E8048064CB15DACDDE1B8177A@PUZPR04MB6316.apcprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1750065768; c=relaxed/simple;
+	bh=boaYqs6W2Ch9MV7MIDV7tFHWVXlXvSTuE+SZQidgsAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BzgIk12FWTpHYKNzksIRhpIifNdxBTrFHvENEfd/4EMimVbdoBym7OoCWu8KQKd6KoKpp/hpY7TG9INiVr1fxatWbd8YJUOHkPos7Trg9L0bvS3ugME2DvtrvdB0scDrYV65Po03izKR4Kkm+fmaIs2g3Kx6H+LrYHXKX9SoGx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i6fPRhjn; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i6fPRhjn"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso1126807e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750065764; x=1750670564; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L4clW0hfNM59uFuEpnawSRjVBJDyxSvonnhwsOilymQ=;
+        b=i6fPRhjnQZjdK8HXqHfTZaEscbWr/UIPbqEg7J++f3Hq1vFi70kq0wIxLaECCi8xXp
+         itBZMq26Hs4HGhrOOJvdVaT/CQPAS07WrfQeD6LAYLF/qU0WSoaujeeYFW0j2tUCXcSt
+         4pMptEtGAzaHx0T7CVq7Iv552TK7/d04NcR/1YfUSqCJwnsSP/rtW7NftW5ROs/p8yFO
+         LTMgI+j+2FJf39hQpYgpR6GFIvw158JH20qFvMg0l93hgXNf+ZXU1BEvoitePGvkcdhJ
+         AsBzBYPQPLNr0OVbPeOHiS0+dIoW78P1Ot20qFvhG9tRGQ4eifcxQgcevJyXeH45C4pv
+         xidw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750065764; x=1750670564;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L4clW0hfNM59uFuEpnawSRjVBJDyxSvonnhwsOilymQ=;
+        b=je3t4eThMaDxhi5fJGyYd7Q3zu5dyxr3cqfUFR6rZHCmH2a2YzVhuXIPnEFBecer+f
+         EBDOUMZW3TcVKnU9ZX6kOUjHxw0UIKTnHQ2qzTC92rvH55Qph/tnoJxI6FTnSVvAEVps
+         4GPS/FoGSb75+4Qn3LKQS1FUZyfSchYS6/IjCGvSFbPahJrHYJZNKmYgoSYRxd4R9ARJ
+         ais2mzWia9dA9yWzJjBKle5PiOWjULiEGuKyWToZwk9oqKjzNmpK8Oh7DSoRnBbG7dmn
+         OZMtgdv3v1tiRHpHFwaqLRpAMzcVSVeLxxR/MQbmsevJBquP0PdIA6Pg0eDra6bCt9nV
+         yFTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqWyTFHSnjqacAaTfpNA8FfTAEPP4yg7lEfbSBwQnFWE1Nb3RDLFQKe8Kkbkgx/MlNcZrLV3wbJbnrwfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8TEqA0/eR3+JAzUT+Tk3z9PhBUjHSOomyxkQjeZfLHbqnAD2Y
+	lKzaOpQB7oJCH2pcwvoKWME6ACG2HLCloOWCKzwHtsIdmLTlGI5Boa/6thmqDUn6lC6aq6acVoh
+	clcmKOxj35KwD4Jl0My5UMc7d2/nMIEMI+uW6Vh4oqA==
+X-Gm-Gg: ASbGnct+VX86FbWk+A6gztIbIQAnJin7bPduyg2bWwoJuJYFOma6+URFXpcYqE17Bju
+	+2y9F57adzFbeJi06VYmQe40prgR6opvvn+2379Ipfoe39bBr82wc0WlodrbHewAwz+KzES7gHj
+	u1v4+yc/ire7WiD45CdXhy8EW+tOc8YHdYCbh0cXBLHEBqKjDoZ1qKa7R8dieMbqyDoa/ZkgwaM
+	VU=
+X-Google-Smtp-Source: AGHT+IEsBvyH0Zky97WuBrKbbjvEScgzySvzxn3rYYtDfdyw86suCq566xBi9HBUjAShIE2Mm9O+XZUWm2PEcQ1RjmQ=
+X-Received: by 2002:a05:6512:12ca:b0:553:2ed2:15b4 with SMTP id
+ 2adb3069b0e04-553b6f4d916mr2068254e87.57.1750065764330; Mon, 16 Jun 2025
+ 02:22:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MAIL:SHSQR01.spreadtrum.com 55G9LOLC071378
+References: <20250614-apr_14_for_sending-v4-8-8e3945c819cd@samsung.com>
+ <CGME20250615105256eucas1p21dba29a1450757d9201b2a9c7f0e34e8@eucas1p2.samsung.com>
+ <202506151839.IKkZs0Z0-lkp@intel.com> <9765c970-55cc-4413-9fd0-5e0cdfa900fa@samsung.com>
+In-Reply-To: <9765c970-55cc-4413-9fd0-5e0cdfa900fa@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 16 Jun 2025 11:22:32 +0200
+X-Gm-Features: AX0GCFvGdfEg2CPyKVWjNTkacG-9vOyaV6LbrgzY6YJIQBzVINyrlmiwiBnsQKI
+Message-ID: <CAMRc=MeG40TxMj3ezeC0iUBBo8w99RXQWOQBsfG4ZAJdbA+dYg@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] drm/imagination: Enable PowerVR driver for RISC-V
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: kernel test robot <lkp@intel.com>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran <fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFl1ZXpoYW5nLk1vQHNv
-bnkuY29tIDxZdWV6aGFuZy5Nb0Bzb255LmNvbT4NCj4g5Y+R6YCB5pe26Ze0OiAyMDI15bm0Nuac
-iDEz5pelIDE4OjE0DQo+IOaUtuS7tuS6ujogQ2l4aSBHZW5nIDxjaXhpLmdlbmdAbGludXguZGV2
-PjsgbGlua2luamVvbkBrZXJuZWwub3JnOw0KPiBzajE1NTcuc2VvQHNhbXN1bmcuY29tDQo+IOaK
-hOmAgTogbGludXgtZnNkZXZlbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IOW8oOaUv+aXrQ0KPiAoWmhlbmd4dSBaaGFuZykgPFpoZW5neHUuWmhhbmdAdW5p
-c29jLmNvbT4NCj4g5Li76aKYOiBSZTogW1BBVENIXSBleGZhdDogZmRhdGFzeW5jIGZsYWcgc2hv
-dWxkIGJlIHNhbWUgbGlrZSBnZW5lcmljX3dyaXRlX3N5bmMoKQ0KPiANCj4gDQo+IA0KPiA+IGdl
-bmVyaWNfZmlsZV93cml0ZV9pdGVyKCksIHdoZW4gY2FsbGluZyBnZW5lcmljX3JpdGVfc3luYygp
-IGFuZA0KPiANCj4gcy9fcml0ZS9fd3JpdGUNCj4NCkkgd2lsbCBmaXggdGhpcyBieSBuZXh0IHBh
-dGNoLg0KPiA+IC0tLSBhL2ZzL2V4ZmF0L2ZpbGUuYw0KPiA+ICsrKyBiL2ZzL2V4ZmF0L2ZpbGUu
-Yw0KPiA+IEBAIC02MjUsNyArNjI1LDcgQEAgc3RhdGljIHNzaXplX3QgZXhmYXRfZmlsZV93cml0
-ZV9pdGVyKHN0cnVjdCBraW9jYiAqaW9jYiwNCj4gc3RydWN0IGlvdl9pdGVyICppdGVyKQ0KPiA+
-DQo+ID4gICAgICAgIGlmIChpb2NiX2lzX2RzeW5jKGlvY2IpICYmIGlvY2ItPmtpX3BvcyA+IHBv
-cykgew0KPiA+ICAgICAgICAgICAgICAgICBzc2l6ZV90IGVyciA9IHZmc19mc3luY19yYW5nZShm
-aWxlLCBwb3MsIGlvY2ItPmtpX3BvcyAtIDEsDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBpb2NiLT5raV9mbGFncyAmIElPQ0JfU1lOQyk7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAoaW9jYi0+a2lfZmxhZ3MgJiBJT0NCX1NZTkMpID8gMCA6IDEpOw0K
-PiANCj4gSG93IGFib3V0IGNhbGxpbmcgZ2VuZXJpY193cml0ZV9zeW5jKCkgaW5zdGVhZCBvZiB2
-ZnNfZnN5bmNfcmFuZ2UoKSwgbGlrZSBpbg0KPiBnZW5lcmljX2ZpbGVfd3JpdGVfaXRlcigpPw0K
-VGhlIHNlY29uZCBhcmcgb2YgdmZzX2ZzeW5jX3JhbmdlICJwb3MiIG1heWJlIGNoYW5nZWQgYnkg
-dmFsaWRfc2l6ZSAoaWYgcG9zID4gdmFsaWRfc2l6ZSkuIA0KSXQgY2FuIG5vdCByZXBsYWNlIGJ5
-IGlvY2ItPmtpX3BvcyAtIHJldCAocmV0IGJ5IF9fZ2VuZXJpY19maWxlX3dyaXRlX2l0ZXIpLg0K
-U28gY3VycmVudCB3YXkgbWF5YmUgYmV0dGVyLg0K
+On Mon, Jun 16, 2025 at 11:09=E2=80=AFAM Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+>
+>
+> On 6/15/25 12:51, kernel test robot wrote:
+> > Hi Michal,
+> >
+> > kernel test robot noticed the following build warnings:
+> >
+> > [auto build test WARNING on 4774cfe3543abb8ee98089f535e28ebfd45b975a]
+> >
+> > url:    https://protect2.fireeye.com/v1/url?k=3D6c3bc994-0cd954c9-6c3a4=
+2db-000babd9f1ba-30c2378fa012fc4a&q=3D1&e=3Dc39c960c-4d5f-44d7-aed7-0097394=
+dfc81&u=3Dhttps%3A%2F%2Fgithub.com%2Fintel-lab-lkp%2Flinux%2Fcommits%2FMich=
+al-Wilczynski%2Fpower-sequencing-Add-T-HEAD-TH1520-GPU-power-sequencer-driv=
+er%2F20250615-021142
+> > base:   4774cfe3543abb8ee98089f535e28ebfd45b975a
+> > patch link:    https://lore.kernel.org/r/20250614-apr_14_for_sending-v4=
+-8-8e3945c819cd%40samsung.com
+> > patch subject: [PATCH v4 8/8] drm/imagination: Enable PowerVR driver fo=
+r RISC-V
+> > config: riscv-kismet-CONFIG_DRM_GEM_SHMEM_HELPER-CONFIG_DRM_POWERVR-0-0=
+ (https://download.01.org/0day-ci/archive/20250615/202506151839.IKkZs0Z0-lk=
+p@intel.com/config)
+> > reproduce: (https://download.01.org/0day-ci/archive/20250615/2025061518=
+39.IKkZs0Z0-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
+rsion of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202506151839.IKkZs0Z0-l=
+kp@intel.com/
+> >
+> > kismet warnings: (new ones prefixed by >>)
+> >>> kismet: WARNING: unmet direct dependencies detected for DRM_GEM_SHMEM=
+_HELPER when selected by DRM_POWERVR
+> >    WARNING: unmet direct dependencies detected for DRM_GEM_SHMEM_HELPER
+> >      Depends on [n]: HAS_IOMEM [=3Dy] && DRM [=3Dy] && MMU [=3Dn]
+>
+> I believe this is triggered because RISC-V can be compiled without MMU
+> support, while MMU support is mandatory for ARM64.
+>
+> Would an acceptable fix be to require an explicit dependency on the MMU,
+> like so?
+>
+> depends on (ARM64 || RISCV) && MMU
+>
+
+I'd put them on separate lines. While at it: how about enabling build
+with COMPILE_TEST to extend build coverage too?
+
+Bart
+
+> >      Selected by [y]:
+> >      - DRM_POWERVR [=3Dy] && HAS_IOMEM [=3Dy] && (ARM64 || RISCV [=3Dy]=
+) && DRM [=3Dy] && PM [=3Dy]
+> >
+>
+> Best regards,
+> --
+> Michal Wilczynski <m.wilczynski@samsung.com>
