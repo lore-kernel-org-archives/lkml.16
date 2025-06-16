@@ -1,124 +1,95 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F82DBF5B;
-	Mon, 16 Jun 2025 13:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BB32DBF45;
+	Mon, 16 Jun 2025 13:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080352; cv=none; b=fWx35q/kopet3zvWsVD1GE+m6428N/Sz5DNoy/gR4oG2EG/PAhUJbfmggeo/k5KfbVqoPkwKv6ucTR/tC3D4I3v7rDQfSSrxfHFtYTUpqtfrkRD3p7UD+ldHoLlcrHXNzJxfqcllGcZ2sQpu8xyFR4igT4zUkshsKNlL1ICodMU=
+	t=1750080359; cv=none; b=B7WKYT1Cg7RA3LvGvjgc40HGoNIOPrIWogNBXOJJIjamHs8G0VAZzstaXk3N/ttiBx5e6UfsN2U2zjL+jL90Q6Ila7GThQotz1PVAD44cj8JwyUvVO2k4rKq1wUiSn7nThCvEzGBAPQTDDU/UoJVTQ70E/mdMnlKxlsF9WxMgvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080352; c=relaxed/simple;
-	bh=td7khtP98l7Q2qh50OlQWBKZ7UZjfxc2FqvRip6lP7A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DATvBFFDmDkcBVJn39f2QdhzNmnrMgjyls85SgWvsWxMYg023h+JBJXcJ2kvXoU3rdIEqEkFfEKBVa8BBpZ3aREHfKRcjD9SOA9+G0p/dFWc0ByZrmS57DIDdl86hYAy0tbZboECrsigELmZMjG/K3rp79DuNfZj0l0PUygDzVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XShyaIPv; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750080359; c=relaxed/simple;
+	bh=kK2Vz4P5l+EAGPswcRexlePDdTbNhMuqAdi5ThpTaQI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=grxqcZZioPGq5QYjrN7MI4AYwhCQUtjIp7uJHlV+hMv/DlmXphyFwquhQmSqqhGbZiattZBHJYlYgePmAeMo0IEXQ7frQtf2z4q4endrJsYjA2417gAuNOZffNcwbLnsAG5+pKtxKdRDaEnc7OK/1s6OrU0db+Wl9vCjTSU29OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMw/dSYw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XShyaIPv"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7485bcb8b7cso3541467b3a.1;
-        Mon, 16 Jun 2025 06:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750080350; x=1750685150; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zPykcaldmChQZHEMlm465r/ktpDt3VnqSSRAnP0PM/8=;
-        b=XShyaIPvNRM8Y2D6HDn7WEJxwP5n9mFlRhyC8p+8PebSKKfpMeqOzNQJjRZWM5T8o4
-         461gTWfJEheFT/wj/aGJImHJjdrKB/HSnwrKt4kPnGwyLRXeuktLomjINshrZtReZBNY
-         2ECCht29r5fBoV4eavAt9EaH8osgTxpez08yLqFr16kAX5UKyKHwbsRxpzT/Ir/e7rKs
-         mphliHojSwAe9Sg9fFRT0w2mO619ul0jnJyVx7QOVMjaYE8xfKHSEwTVEN0XubTi12u6
-         ct5wQvmMcrO78LZZwvunIpoB0KVfyGx/EISp0yLQvpPsnBHXkb/kSP0US//Dd8gK3oFm
-         +9/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750080350; x=1750685150;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zPykcaldmChQZHEMlm465r/ktpDt3VnqSSRAnP0PM/8=;
-        b=WwnoHsHRkmrXs3ozbvJ0jvpxD4iMgnXiAsHRg1+/mTJMBCbpDvo8GJIMUteby9XGED
-         +U/5cEjLXbWt/fvFPTFmfhJdaB+uI8/Tu+LKa3gsUzhVnx7TBHMFVkuKmZCneJtq5JzC
-         DT37b2IyKk0XG2m1SqiWHnVNG06pbJdEsfR+YcH/aYs2k9PEwHsAoFw6YlHxvskGv9UJ
-         BNKdBlJ/Ab6dDpNreYPsUIlH4ge7K0QFTZ/lqvu7OfaUrxqFWlWEjzBjTXHaSh/Qp+mg
-         1LfX+aTVa5p+MGlvLV2f0Pw706TE3523tocJhI2Thwgswk859jM7wem4EUDX8qq2ltAE
-         rY2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWM4aGlMWmjNDpTrOrnGx+2rsvta5C7/41uqj3tuSmIkil+v0ADaDjPOSRUGT6bREgNrAo0+TLCbRPRBBc=@vger.kernel.org, AJvYcCX2Zome2nyOxoE4qQoMRXgp0RT/qokn61WzuiUKoetBwVcR0UJ/TE5udEC1/QPx1AmsRSbzBaby@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjBqHka7Mrm40Wq5I4kxfnCU1+48wTWIOg0xa8GimZFcg+oPSK
-	VecBoaLCnFYph7+4dU811Zy7ZInG5lO+64Oam96WFYpBAvkED9jN0tYT
-X-Gm-Gg: ASbGncsW2jQKQ3vnaoLh/ZYSJVaB6ldwsdc3uRv8Te/E+9Qv2UJBhUJfeNG/DrXgRKY
-	mFBlcCkvn/ml1EAGuSXrHfb6mU5XPdDxWu7TINnU9zA0M3k0hs+EtYa3hm3tgqvDUCdDXrzcX+A
-	o07tqC8EgWNY47EpaK1hAZW6NVyMsePu8Vjpmdlz2qZznyTPubh/nlx8gob45d8Zi4iXF88YgQd
-	TskPfNjC0iAlS9av4EWrGU6I2g0qckK7nLdTpiibEvRwTKuj/MgDdTHXDnbkFfdtv2OjsKQSWVl
-	MSKBZoxex0LX198xz+WBuy8f+NK2JS+uvhb0fvkB0e7mRpdWXxnAyUrm6zHXpGz7JUiN6g==
-X-Google-Smtp-Source: AGHT+IGGC0yG9eWTrvC96f40RZCC+M7NlH4ZHN5h3TAKdLDn6BgEURju/EiL6fGQTx8qNnzcyUZCzQ==
-X-Received: by 2002:a05:6a00:846:b0:73e:1e21:b653 with SMTP id d2e1a72fcca58-7489cf5a90fmr12310846b3a.5.1750080350538;
-        Mon, 16 Jun 2025 06:25:50 -0700 (PDT)
-Received: from localhost ([42.120.103.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffec9c6sm6750467b3a.9.2025.06.16.06.25.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 06:25:50 -0700 (PDT)
-From: Yuhao Jiang <danisjiang@gmail.com>
-To: ericvh@kernel.org,
-	lucho@ionkov.net,
-	asmadeus@codewreck.org
-Cc: linux_oss@crudebyte.com,
-	v9fs@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	security@kernel.org,
-	stable@vger.kernel.org,
-	Yuhao Jiang <danisjiang@gmail.com>
-Subject: [PATCH] net/9p: Fix buffer overflow in USB transport layer
-Date: Mon, 16 Jun 2025 21:25:39 +0800
-Message-ID: <20250616132539.63434-1-danisjiang@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMw/dSYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E44C4CEEA;
+	Mon, 16 Jun 2025 13:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750080358;
+	bh=kK2Vz4P5l+EAGPswcRexlePDdTbNhMuqAdi5ThpTaQI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MMw/dSYwphEO2gU5X3BpmelGP1uamo1SIeM+qt+L8emZ1io6KHRKsD0rP/ej5ony6
+	 reXqWJnNMrpqOxYZXxuAT8tCT0oq4naDWLcDaDYgcKxfe1cwVy0d8tsUdSx/VdZUfv
+	 qopXW+Z/U3u+g8hrBIu6G3VBevu+R8Ia9Q+mwwzoKUns+v+URq8XJlPxFdxw4s6o56
+	 szhqV+WW39cjWRcHsDBgn+DcOHmpw86GjOva9Dr05cd71HKfBSArmH4bUZPjveUWD3
+	 sU7fIlG+HBCnsp1Q+LbCQVNQiAg/5EURgarSMFtovcaPSHOYC7zX+qrBeW5zshA7hm
+	 QdS4+08nqq2LA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Mon, 16 Jun 2025 15:23:51 +0200
+Subject: [PATCH 1/9] rust: block: remove trait bound from `mq::Request`
+ definition
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250616-rnull-up-v6-16-v1-1-a4168b8e76b2@kernel.org>
+References: <20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org>
+In-Reply-To: <20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=855; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=kK2Vz4P5l+EAGPswcRexlePDdTbNhMuqAdi5ThpTaQI=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoUBsKzk0UeqCgYRE3RGq6EsAzP7CLTqhCaQ8nP
+ aHIyYFu/U2JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaFAbCgAKCRDhuBo+eShj
+ d/9OD/0ehczKDfXNxl50GSB+zKd5SB9+uUN/lpE30CxCfq0uwOX6LiiIfLiJ1f4H7rq14NSwzhC
+ LEv5QXzjFcFHPDTZGhoQOnB4N5u9mH2tpj+++AK4v9HQHFLyG7mzz7c/W4mUNq/7lz5UaL0MZWy
+ Iy4IPizWNnRAIilqch3z2ZX4u0y69WzO/ej+KCnv5wrOeqVex/waeqPOr7d2e74ZRBKciyUdqwk
+ ONVPflnUZwQA7eYWNkAiiYdG87alZ7WnbTU+pRQb0F95xuoiL454otSjmqISGGkepgOzWgVcqEF
+ nZAwdgybzzy0JPQg7brkOXZC6BcxTG8U3lckDJK7drAP+djBC1JvTkqQuSbTv6O+9JJ9bSbPjv6
+ tPbswn0Ri02mu1o1u+ZeflkHB89guNKnb4mdqpx2hRqLIPNAwnj17eWfwpXeAotJ+e6kS7NbPWC
+ buAE/hQ/IF2rle1aM+ldi2XMA5k+aYPsLJOeelp/eTUi/SN+2sni+rUkIR8u80+TjYl2VUB/duQ
+ o3fxFjK5z/PVfvDkgErXAJ01ZyZk/RId/pLlZgBDCs3CnZyRS6wmMCsNio9sp0TaJbfYBEJGKrH
+ 5XQHPooEXX1ZyzYmkeHfQcY51PZnkmcr3f8wfjsYQyIeWH/YJJENH+PRAn6QpxwJtIcq4qocJy6
+ COZG6ti+yB9IVWQ==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-A buffer overflow vulnerability exists in the USB 9pfs transport layer
-where inconsistent size validation between packet header parsing and
-actual data copying allows a malicious USB host to overflow heap buffers.
+Remove the trait bound `T:Operations` from `mq::Request`. The bound is not
+required, so remove it to reduce complexity.
 
-The issue occurs because:
-- usb9pfs_rx_header() validates only the declared size in packet header
-- usb9pfs_rx_complete() uses req->actual (actual received bytes) for memcpy
-
-This allows an attacker to craft packets with small declared size (bypassing
-validation) but large actual payload (triggering overflow in memcpy).
-
-Add validation in usb9pfs_rx_complete() to ensure req->actual does not
-exceed the buffer capacity before copying data.
-
-Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-Fixes: a3be076dc174 ("net/9p/usbg: Add new usb gadget function transport")
-Cc: stable@vger.kernel.org
-Signed-off-by: Yuhao Jiang <danisjiang@gmail.com>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- net/9p/trans_usbg.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ rust/kernel/block/mq/request.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/trans_usbg.c b/net/9p/trans_usbg.c
-index 6b694f117aef..047a2862fc84 100644
---- a/net/9p/trans_usbg.c
-+++ b/net/9p/trans_usbg.c
-@@ -242,6 +242,15 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
- 	if (!p9_rx_req)
- 		return;
+diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+index 4a5b7ec914ef..2d14a6261a31 100644
+--- a/rust/kernel/block/mq/request.rs
++++ b/rust/kernel/block/mq/request.rs
+@@ -53,7 +53,7 @@
+ /// [`struct request`]: srctree/include/linux/blk-mq.h
+ ///
+ #[repr(transparent)]
+-pub struct Request<T: Operations>(Opaque<bindings::request>, PhantomData<T>);
++pub struct Request<T>(Opaque<bindings::request>, PhantomData<T>);
  
-+	/* Validate actual received size against buffer capacity */
-+	if (req->actual > p9_rx_req->rc.capacity) {
-+		dev_err(&cdev->gadget->dev,
-+			"received data size %u exceeds buffer capacity %zu\n",
-+			req->actual, p9_rx_req->rc.capacity);
-+		p9_req_put(usb9pfs->client, p9_rx_req);
-+		return;
-+	}
-+
- 	memcpy(p9_rx_req->rc.sdata, req->buf, req->actual);
- 
- 	p9_rx_req->rc.size = req->actual;
+ impl<T: Operations> Request<T> {
+     /// Create an [`ARef<Request>`] from a [`struct request`] pointer.
+
 -- 
-2.43.0
+2.47.2
+
 
