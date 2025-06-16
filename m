@@ -1,108 +1,197 @@
-Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940F7288C9B;
-	Mon, 16 Jun 2025 18:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E855C21D585
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750099787; cv=none; b=YKhy4NF+tqAPf4uDUjLJde5PM3usUZbwGvFfTqLzonoQdS7shwgq5ImI6K0bqd8s7miyw3vBJ0JbMCHPOuTDFGsUUr0bOs2hKM2p/avagq3XDy7XQmMBw6b+llozHjnw3IRzElbQP9XprHZXuiRoWM9C2aY81MJuErUSzvkeMSw=
+	t=1750099849; cv=none; b=aGvi4OGnMW+wMe7f9IFUd/DyvZOJnNTYyRl0gQjsQiFC/N2oXuG91xZI5ctTZZyDzpbkBYq57A6P8/MCDlm+y1JNl6Lm9N7gmfqk/XaqbT7bJNCXyx6qqYOhFTADwjSujvzLoKSOqxtRtYzx5y+nk6C6y4RCVJGLEOanKcSujvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750099787; c=relaxed/simple;
-	bh=OMwpx2UzF1222p82UqqWw/zlTrQ89HflkXcd7N8UDnI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MphJzwWBfT3I6NOnTpJoiKpmqQjdf8X4rK5VqOFK0SvRnRUqOKCdHCIRsIr5iq8XtIhOeXja3pqm/nJgRinvmfH17u28vxKsfxceRElrrikVahAj3vgEfUdggOK6B4IFxraRZlw7g5kMpI0ObmsVWQeJLwfuMmZHbtzWPH+R4n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=bGOrSVhv; arc=none smtp.client-ip=168.119.26.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+	s=arc-20240116; t=1750099849; c=relaxed/simple;
+	bh=0j/zmiRTNVg7EOV9uK1BI3IIyRKsfZk1bKAGOLuyWQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=f17PEDpz9iitUcElP1nX5F0e2rthyB0XtwY/1BkEBFH7vzOrCjXW1gs+CVwX9pAMaBc3FSaMEHaJvIGxJQzlWi8QRg8Cs+6iiQFs1Z2ythBF1lYSnhD/Eo9mmgcYR/Vo9LXUsWvwS7qV5H2aP9PlHq21ZnlBI3cLS9vgfsifcd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HXgtuKYU; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="bGOrSVhv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
-	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=OMwpx2UzF1222p82UqqWw/zlTrQ89HflkXcd7N8UDnI=; b=bGOrSVhveR0ZZLDXU8QBM6Ke1M
-	cOUX9kGt5d7GGPJbJwAKrt88NEwvKA6a3aK0mX00TAJFHofxfFWQm7ZPjkHjpQJYHctBhy+U1oP5J
-	rFMGZg6XTSNR6HGlM2hBaEHOlTdyaFWNyjvpRijbYsvfxzLMKKc0Fe/LGcjDtDYjsm9BVtKD5vwU0
-	fuMgrX3WPOzrBCqLNslgMjxhN8qfqaihClbY4W8azUTXFgJKVrBmsebrkY4olpspeQiJs4yHfCZxu
-	MZccTUnwrFrKO0V8+HUEmuVT3Q/Nohpueovsfy55X7RIs0hqGFqbzwiyn8JSU9N6dyVyoGwVK7rn4
-	gkQLRh2A==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <git@apitzsch.eu>)
-	id 1uREY9-000G55-1B;
-	Mon, 16 Jun 2025 20:27:17 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <git@apitzsch.eu>)
-	id 1uREY8-0005mb-2X;
-	Mon, 16 Jun 2025 20:27:16 +0200
-Message-ID: <a16e6aec51c5bc8dbbf82ccc56c65fa093b8b4b1.camel@apitzsch.eu>
-Subject: Re: [PATCH v2 0/4] arm64: dts: qcom: msm8976-longcheer-l9360: Add
- initial device tree
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Bjorn Andersson	
- <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, AngeloGioacchino Del Regno	
- <angelogioacchino.delregno@collabora.com>, Marijn Suijten	
- <marijn.suijten@somainline.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Krzysztof Kozlowski
-	 <krzysztof.kozlowski@linaro.org>
-Date: Mon, 16 Jun 2025 20:27:15 +0200
-In-Reply-To: <90be390b-d69f-4862-8f24-b692f41f9bf5@oss.qualcomm.com>
-References: <20250615-bqx5plus-v2-0-72b45c84237d@apitzsch.eu>
-	 <90be390b-d69f-4862-8f24-b692f41f9bf5@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HXgtuKYU"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250616185045euoutp01019fadcdba2dbf5bfcfe675cb6c55146~Jmolz3Duv1582515825euoutp01K
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:50:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250616185045euoutp01019fadcdba2dbf5bfcfe675cb6c55146~Jmolz3Duv1582515825euoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750099845;
+	bh=RpP2wDPoANn6hbq6/IU7H6R4ymwfkUd1lBtxRssgpxg=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=HXgtuKYUh8YOQyQo91vA+qT4El3cb+jVPyP21y2ZTw42FifSSk8p2Duc4xvwAuyE+
+	 K1bHEQ+MjXyRTuM+mUFJt5q7AUR5lq1rzfclPDjZlNux/bNkGGmkf0bBXIsOKd0Wnv
+	 pvUpmbMiiOYc9Khw/cK57CgCrGso0q81WWVlcCVE=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250616185043eucas1p19d2115087823eac1a2fa36fdb6c7cfca~Jmokc0_PY2023320233eucas1p1A;
+	Mon, 16 Jun 2025 18:50:43 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250616185042eusmtip251ec7824b4cba255d6ebe61eb60deb26~JmojYMGUT3160031600eusmtip2J;
+	Mon, 16 Jun 2025 18:50:42 +0000 (GMT)
+Message-ID: <6176cae6-012e-4dc7-9445-058478bfe758@samsung.com>
+Date: Mon, 16 Jun 2025 20:50:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27670/Mon Jun 16 10:37:08 2025)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/8] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Matt Coster
+	<matt.coster@imgtec.com>, Frank Binns <frank.binns@imgtec.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
+	<matt.coster@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CAMRc=MfdBd6HBwM4F1TcjDvwbOJ03kxgRk4hJQ8HFK7Wz2XBAg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250616185043eucas1p19d2115087823eac1a2fa36fdb6c7cfca
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250614180911eucas1p16c9fb4a8160253c253f623bec2529f70
+X-EPHeader: CA
+X-CMS-RootMailID: 20250614180911eucas1p16c9fb4a8160253c253f623bec2529f70
+References: <CGME20250614180911eucas1p16c9fb4a8160253c253f623bec2529f70@eucas1p1.samsung.com>
+	<20250614-apr_14_for_sending-v4-0-8e3945c819cd@samsung.com>
+	<20250614-apr_14_for_sending-v4-4-8e3945c819cd@samsung.com>
+	<CAMRc=MfdBd6HBwM4F1TcjDvwbOJ03kxgRk4hJQ8HFK7Wz2XBAg@mail.gmail.com>
 
-Am Montag, dem 16.06.2025 um 13:46 +0200 schrieb Konrad Dybcio:
-> On 6/15/25 10:35 PM, Andr=C3=A9 Apitzsch via B4 Relay wrote:
-> > This dts adds support for BQ Aquaris X5 Plus (Longcheer L9360)
-> > released
-> > in 2016.
-> >=20
-> > Add a device tree with initial support for:
-> >=20
-> > - GPIO keys
-> > - NFC
-> > - SDHCI
-> > - Status LED
-> > - Touchscreen
-> >=20
-> > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > ---
-> > Changes in v2:
-> > - Add Fixes and R-b tag
-> > - Move sdc2 GPIO definitions into msm8976.dtsi (new patch)
-> > - Remove comments from rmi4 nodes
-> > - Don't touch tz-app memory region. Currently, the bigger size
-> > seems
-> > =C2=A0 not necessary.
->=20
-> You may want to run the kernel memtest, which accesses all non-
-> reserved regions. If the device doesn't kaboom, we're likely gtg
->=20
-> To do so, enable CONFIG_MEMTEST and boot with "memtest=3D1" in cmdline,
-> boot may take noticeably longer than usual.
->=20
-> Konrad
 
-Hi Konrad,
 
-thanks for the hint. The memtest runs without problems.
+On 6/16/25 11:40, Bartosz Golaszewski wrote:
+> On Sat, Jun 14, 2025 at 8:09 PM Michal Wilczynski
+> <m.wilczynski@samsung.com> wrote:
+>>
+>> Update the Imagination PVR DRM driver to leverage the pwrseq framework
+>> for managing the power sequence of the GPU on the T-HEAD TH1520 SoC.
+>>
+>> To cleanly handle the TH1520's specific power requirements in the
+>> generic driver, this patch implements the "driver match data" pattern. A
+>> has_pwrseq flag in a new pvr_soc_data struct is now associated with
+>> thead,th1520-gpu compatible string in the of_device_id table.
+>>
+>> At probe time, the driver checks this flag. If true, it calls
+>> devm_pwrseq_get("gpu-power"), requiring a valid sequencer and deferring
+>> probe on failure. In this mode, all power and reset control is delegated
+>> to the pwrseq provider. If the flag is false, the driver skips this
+>> logic and falls back to its standard manual power management. Clock
+>> handles are still acquired directly by this driver in both cases for
+>> other purposes like devfreq.
+>>
+>> The runtime PM callbacks, pvr_power_device_resume() and
+>> pvr_power_device_suspend(), are modified to call pwrseq_power_on() and
+>> pwrseq_power_off() respectively when the sequencer is present.  A helper
+>> function, pvr_power_off_sequence_manual(), is introduced to encapsulate
+>> the manual power-down logic.
+>>
+>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> ---
+> 
+> [snip]
+> 
+>>
+>> +static int pvr_power_off_sequence_manual(struct pvr_device *pvr_dev)
+>> +{
+>> +       int err;
+>> +
+>> +       err = reset_control_assert(pvr_dev->reset);
+>> +
+>> +       clk_disable_unprepare(pvr_dev->mem_clk);
+>> +       clk_disable_unprepare(pvr_dev->sys_clk);
+>> +       clk_disable_unprepare(pvr_dev->core_clk);
+>> +
+>> +       return err;
+>> +}
+>> +
+>>  int
+>>  pvr_power_device_suspend(struct device *dev)
+>>  {
+>> @@ -252,11 +266,10 @@ pvr_power_device_suspend(struct device *dev)
+>>                         goto err_drm_dev_exit;
+>>         }
+>>
+>> -       clk_disable_unprepare(pvr_dev->mem_clk);
+>> -       clk_disable_unprepare(pvr_dev->sys_clk);
+>> -       clk_disable_unprepare(pvr_dev->core_clk);
+>> -
+>> -       err = reset_control_assert(pvr_dev->reset);
+>> +       if (pvr_dev->pwrseq)
+>> +               err = pwrseq_power_off(pvr_dev->pwrseq);
+>> +       else
+>> +               err = pvr_power_off_sequence_manual(pvr_dev);
+>>
+>>  err_drm_dev_exit:
+>>         drm_dev_exit(idx);
+>> @@ -276,44 +289,55 @@ pvr_power_device_resume(struct device *dev)
+>>         if (!drm_dev_enter(drm_dev, &idx))
+>>                 return -EIO;
+>>
+>> -       err = clk_prepare_enable(pvr_dev->core_clk);
+>> -       if (err)
+>> -               goto err_drm_dev_exit;
+>> +       if (pvr_dev->pwrseq) {
+>> +               err = pwrseq_power_on(pvr_dev->pwrseq);
+>> +               if (err)
+>> +                       goto err_drm_dev_exit;
+>> +       } else {
+>> +               err = clk_prepare_enable(pvr_dev->core_clk);
+>> +               if (err)
+>> +                       goto err_drm_dev_exit;
+>>
+>> -       err = clk_prepare_enable(pvr_dev->sys_clk);
+>> -       if (err)
+>> -               goto err_core_clk_disable;
+>> +               err = clk_prepare_enable(pvr_dev->sys_clk);
+>> +               if (err)
+>> +                       goto err_core_clk_disable;
+>>
+>> -       err = clk_prepare_enable(pvr_dev->mem_clk);
+>> -       if (err)
+>> -               goto err_sys_clk_disable;
+>> +               err = clk_prepare_enable(pvr_dev->mem_clk);
+>> +               if (err)
+>> +                       goto err_sys_clk_disable;
+>>
+> 
+> In order to decrease the number of if-elses, would it make sense to
+> put the "manual" and "pwrseq" operations into their own separate
+> functions and then store addresses of these functions in the device
+> match data struct as function pointers (instead of the has_pwrseq
+> flag)? This way we'd just call them directly.
+
+Hi Bartosz,
+
+Thanks for the suggestion. That sounds good. I can rework the patch to
+use function pointers instead of the flag. 
+
+Matt, as the maintainer of this code, do you have a preference on this?
+Let me know what you think.
+
+> 
+> Bart
+> 
 
 Best regards,
-Andr=C3=A9
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
