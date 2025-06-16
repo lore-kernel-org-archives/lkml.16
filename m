@@ -1,114 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3169482FF;
-	Mon, 16 Jun 2025 15:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0893482FF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088340; cv=none; b=dfmEYV+cIlTML12wRgSO9OiO6dv3bhHVGZ3E5mGFRe7iWeF2n2i3DjOZEgi3EAyCG2DAFbA+zXfob4Vfl03IRKKYjvT2iigyqtkMmYUPeCDIFdluoEXpoQtPlJ5kAaP3Xfg3UVlKj47YhK01QB7dyS0qcLvjP8Ho8lprIE3tYHA=
+	t=1750088439; cv=none; b=gBwlqJLKUg3EvF9b6XPgBT+lpKnCwlCE1L3k9RsQa5dAtCVAzaiiGy3wWjEdvqTg5H7Ld0nwrQ6WXN5LW517Qs43pwlKe4HOjrRFyiVsIN+vQfB8369Q0raigj69Fa9HBzhRVvSqkizZkzcKMMu+d/W/PUwFbd4I4DQKlJUMqiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088340; c=relaxed/simple;
-	bh=F8BcwaM+WtE8oZEsemH+lZITn+Dw3YFdoAc5CYBdnNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TH0jP/djQ8ETNdghJpxdMTpPItkwxrQBxVX2C6nypnIOsjFnkxInn8XAmOkVGfzUUkcD58++BH2eTNB80PFHnSShWFNUax6rbTwpq+ZUb3/ewC/P8vdilQh5iIPBKUD9qNfNSVtF6tPx1Ba/kxv7iiszF7NFCy0lBZTGnmYybnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY6g8jwg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750088439; c=relaxed/simple;
+	bh=y8LWt9HRv7KyRtBYLPqa8+GDokQcV8+yboEXU+KwbIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DdmWvzk8Qn+XR6b0SkP3pUpiQr1I5ej42+F8l4mWsHbZXBFn5KXgfT+Gqf9rFkZkKcApTuRDdTqOSMpzEhfi/sXldI8/7LfOcujKz6N1X+HpH8hDHY8lMpmTya0mcWqr/Dju8OyIx9ulspvYrNzSX1BkOtLLbblz26FZNi5r63k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=d4F405nB; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=VK38iCyK; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY6g8jwg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75272C4CEED;
-	Mon, 16 Jun 2025 15:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750088339;
-	bh=F8BcwaM+WtE8oZEsemH+lZITn+Dw3YFdoAc5CYBdnNE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GY6g8jwgBkalDRzhuY6Q7GoyO/bK8noe5AsFFZJQ7QZTjKrP3+zAxpbGtx+e+A93c
-	 fL8cH0GciSbiWBveHx8K0E23kBGiRZcUQyFIImWyNTgKZ8okKyIEtIVvX8H5UPP1mF
-	 7f24hRRGWkgmGqAhBdPXEp4l1zpssO9s1XHbrxk1Vqk7zRxMZ4S3/qdw6uUHryhysD
-	 g3da3XEQ9egt6qr/Ept1i6nYSPu4t49uN90tTirtRnju6S1a8aIgUM9xHsuETT5H+F
-	 iWvcxexMypYWygOAqXEYNoeNmlLLjXgQHrLDQoEILQIUNMR/z8rW9tQDh3lrfyVdH+
-	 OJY9hp5tW9OqQ==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5533a86a134so4091329e87.3;
-        Mon, 16 Jun 2025 08:38:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNniLXmBTvhe8h4niXogvzA8QWp09CR7U5SgWwt144FxFqcvczcSzS7dPDHmEh4FK/hfbfmAiAWUNW@vger.kernel.org, AJvYcCX2GzlY1WZH1m0iWVvkS7vuxave5eAU5HJpWTwM6K+MPj/Y3E1uvamS6QPg2J0eIez69vTcwr8xzk0oAT0jg6Q5@vger.kernel.org, AJvYcCX7HPP6BlfrupB1ZBNfWh6YREEIJbatmFotSB6H0JL9Ld5OplSSyBdNSxHuoEm2ol/AAn1CLVc4LmU=@vger.kernel.org, AJvYcCXQ6QxeXsgvYbW3OCDwY6NboUHu8W8KPMsBDYuyb2ukmGItFKUT+v468STrt42Ia3/k92a1WGc2eWHr1eVQ@vger.kernel.org, AJvYcCXYXDDcX1/zd9CFi1KxxTozqOGtUHChBnpWPMxMhNngG/RIEvPES5Z1pKdWmsvMvxRNl4wIgFPAdxSSa+Rh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE2XLvY1Rs47JT8prTFZbmfaMnVyGfGR5tvSpeKZsS5OdIiTdH
-	oJL/1uWbcwYmPv0idegPcoQiat1hbRXgbPqYpENs8kTZE7ZFA1IYCId1f3ZCBvfkIo3rogBZNJA
-	XJ1/HW3qClSr8OGKFhxkNvB5/Q5C4H5k=
-X-Google-Smtp-Source: AGHT+IEi914yNdf7ItDxIuKSAhzqs66BT0pQ2P1yp+Fi9zjJkYGAgGwLeuM43Lf6chAvKr1xpfz1JcNzMuKSRXlMjL4=
-X-Received: by 2002:a05:6512:b9e:b0:553:28f1:66ec with SMTP id
- 2adb3069b0e04-553b6f2a05fmr2377754e87.31.1750088338110; Mon, 16 Jun 2025
- 08:38:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="d4F405nB";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="VK38iCyK"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bLZ2q4xzmz9spn;
+	Mon, 16 Jun 2025 17:40:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750088435;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=i0dyI4MRX18W1XQPVub/atygkpPpTT9XkNbCtuNLz8U=;
+	b=d4F405nBtgaidEOWwt0/9Ijnres1SntnusICovssYK/05rh985VqVC5tSbhcmmUGY+V/fB
+	sVq19pyBzBfSh7jOkhXiNzq9y5lA6pGqHOKgzSrilewfT5Wye90YLP7AA3dJzEjvc5fmhD
+	/4FSb0Z8Ywt/VLDMjahcnCTnEaFfbux/nCIFZpPjWGtHmdJ2vrfHj3HoCeR7NbezZRYTup
+	ICHIqdao5mUaALCxihA/0oG++809d/mH+xoyiknb11WnWZ/JPeQFHt8yTLUeFbaCo5Mtdj
+	IbTeZZlch9i840NYZ8++jkmEMzxTbBPn25kiYoXBPhbWXtrKl37DPfJEPYaa4Q==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750088433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=i0dyI4MRX18W1XQPVub/atygkpPpTT9XkNbCtuNLz8U=;
+	b=VK38iCyKphvhZzQkyIYlP7iil1wpU9+Y6B1UoGLZZ+W+aKmm+ZM0mtbrXq3yqAvzV1oxE3
+	bwU93R6S5CAcnchdt+ZMFx2hNogebMJbYZB4iJHhtLPewPF3/Q9ZkAag9zRCcJ/pGWkXcR
+	xpqp2NXdp0JF0XZ/arh4x+TCmqMhIbnTQMlji4I5Iwjt0GH8CKwIqUa/wr4qlAohuqM0no
+	KHMpQddpXi64Ci+yHV9ikJBjkdyi6sU0lTVEo4QIwxZoEroX6c9qrUCHzRtQ9Y4fBRhwtk
+	zt79AHZ6RWTbWbPPX4uK/Y6euHgVPbTa2CE9GWJUtLp+Nn7Us/cW7DjCQdcYmA==
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: rpi-panel-v2: Add shutdown hook
+Date: Mon, 16 Jun 2025 17:40:07 +0200
+Message-ID: <20250616154018.430004-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de> <20250611-kunit-kselftests-v3-7-55e3d148cbc6@linutronix.de>
-In-Reply-To: <20250611-kunit-kselftests-v3-7-55e3d148cbc6@linutronix.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 17 Jun 2025 00:38:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARYXKq9KyCczcY_VjwQG3QWEufV1McayHDnavvuU+JEhQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuUsGD9ADF5sHGYl1AePploex53t0fNoReQCDpmZEypT0Ao3cb2BMm8rbs
-Message-ID: <CAK7LNARYXKq9KyCczcY_VjwQG3QWEufV1McayHDnavvuU+JEhQ@mail.gmail.com>
-Subject: Re: [PATCH v3 07/16] kbuild: introduce blob framework
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	workflows@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: izkkms45zo414kq375membxy8gh3oueu
+X-MBO-RS-ID: db10599e07852c9faa4
 
-On Wed, Jun 11, 2025 at 4:38=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Various subsystems embed non-code build artifacts into the kernel,
-> for example the initramfs, /proc/config.gz, vDSO image, etc.
-> Currently each user has their own implementation for that.
->
-> Add a common "blob" framework to provide this functionality.
-> It provides standard kbuild and C APIs to embed and later access non-code
-> build artifacts into the kernel image or modules.
->
-> Reviewed-by: Nicolas Schier <n.schier@avm.de>
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Kbuild provides only a small set of syntaxes, yet it's flexible enough
-to allow each Makefile to implement what it needs.
-I aim to keep Kbuild scripts as simple as possible and avoid over-engineeri=
-ng.
+Add shutdown hook so that the panel gets powered off with the system.
 
-Instead, you can implement this in lib/kunit/Makefile.kunit-uapi or somewhe=
-re.
-That way, I do not have to be worried about what you do.
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+---
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/regulator/rpi-panel-v2-regulator.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Also, your separate blob approach looks questionable to me.
-In your approach, the blob (kunit-example-uapi.blob.o)
-and the entry point (kunit-example-test.o) can be separate modules.
-The entry point would be a small amount of boilerplate.
-I would keep the user-program blob and its entry point in the same C file.
-(and I may consider writing a macro for populating a blob + knit entry)
+diff --git a/drivers/regulator/rpi-panel-v2-regulator.c b/drivers/regulator/rpi-panel-v2-regulator.c
+index c506fd699d57..30b78aa75ee3 100644
+--- a/drivers/regulator/rpi-panel-v2-regulator.c
++++ b/drivers/regulator/rpi-panel-v2-regulator.c
+@@ -89,9 +89,19 @@ static int rpi_panel_v2_i2c_probe(struct i2c_client *i2c)
+ 	if (ret)
+ 		return dev_err_probe(&i2c->dev, ret, "Failed to create gpiochip\n");
+ 
++	i2c_set_clientdata(i2c, regmap);
++
+ 	return devm_pwmchip_add(&i2c->dev, pc);
+ }
+ 
++static void rpi_panel_v2_i2c_shutdown(struct i2c_client *client)
++{
++	struct regmap *regmap = i2c_get_clientdata(client);
++
++	regmap_write(regmap, REG_PWM, 0);
++	regmap_write(regmap, REG_POWERON, 0);
++}
++
+ static const struct of_device_id rpi_panel_v2_dt_ids[] = {
+ 	{ .compatible = "raspberrypi,touchscreen-panel-regulator-v2" },
+ 	{ },
+@@ -105,6 +115,7 @@ static struct i2c_driver rpi_panel_v2_regulator_driver = {
+ 		.of_match_table = rpi_panel_v2_dt_ids,
+ 	},
+ 	.probe = rpi_panel_v2_i2c_probe,
++	.shutdown = rpi_panel_v2_i2c_shutdown,
+ };
+ 
+ module_i2c_driver(rpi_panel_v2_regulator_driver);
+-- 
+2.47.2
 
-
-
-> ---
-> Due to its closeness to kbuild this is currently added to its MAINTAINER =
-entry.
-> But I can also maintain it on its own.
-
-Or, maybe do not add this.
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
