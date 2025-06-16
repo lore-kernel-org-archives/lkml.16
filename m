@@ -1,78 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AA31BF33F;
-	Mon, 16 Jun 2025 08:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88FF01F55FA
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750061824; cv=none; b=SR4k24q+tAzL/6SMMdzAJm2ADbjHNl8GeYK7wTPpsADGg/qfhsZTSX1uNQsEeKL7jMUz9GxMR+IRfhXMtv4tPMxtQjiakoEboO7yNKy2R+qNYLyVbkAAx1KzvgzuOORJMq+Nwl0McH8octSRlmlnN/4lmd9TYkhRmL3vp9QPmEo=
+	t=1750061843; cv=none; b=BpoNy347W9Ewn9LMFI2DW02pv8lBLnqoWHxfUrJx/vi8YjOl4abO5pE8PlWuUuuclm5qBLhdB9JaVxjZx95zMlWD0174TjpsJWPdEGV/PJDNNf3hj2LXNDFywtftsBfTUF/D9A4GR8XAxIoUKv3TyyhOtNlWSn3jBgAz+9X8NXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750061824; c=relaxed/simple;
-	bh=Pv+qRkMsv9lRRwPOjtQx71ZyCSusRSw8Q6iZKmn358g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHsNmkGBrFAb9A6tIJ7JVPbqkDJTr/EUF7vv/rDnq/yDi11F9UFs2IvhCNIaos3j3+FwuypwKiArNGap6tLIOzjRmNDdl65slPMTbqIULzzjowov5AfZlwxhnsoX5kvhZ3DbBxOYMpYgQKvM4HqfiV/tajre9T0i+0zaDPr5sGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhV+NdKf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhV+NdKf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF3AC4CEEA;
-	Mon, 16 Jun 2025 08:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750061823;
-	bh=Pv+qRkMsv9lRRwPOjtQx71ZyCSusRSw8Q6iZKmn358g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fhV+NdKfZ+tv9iKOkcX2Fd/stsEHXlDLgbZZ1aubgk+935jgjOEEqSk2W9BrwD/OR
-	 6teDMlggVHffNW4Jm5wlNJ2W4lhC+fBpKnDcwBn8gUMp25sUGGYvJwssbLFIMaldEh
-	 rBM1XkrKFROhYfMBBWfssLhA8im15DlDYFes0JdtdhE3TaoKU5s7MVHi11hRDTSlYt
-	 wM1rgqK1Z1MctNHjdj8mX6nB2323Z8utUD4RFbt4pGX3Md9S5aDGam+S6vASYAZyXn
-	 8/WtLhVc3Aobu9fB1lf3fA9TzR5henk8IPvX1zTD2Q0+2VeM3rMmGQcsIINcksIkuT
-	 U+K5g7h9GRLdA==
-Date: Mon, 16 Jun 2025 10:17:00 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, 
-	andre.draszik@linaro.org, peter.griffin@linaro.org, kauschluss@disroot.org, 
-	ivo.ivanov.ivanov1@gmail.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, 
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com, 
-	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com, 
-	selvarasu.g@samsung.com
-Subject: Re: [PATCH v3 5/9] phy: exyons5-usbdrd: support HS combo phy for
- ExynosAutov920
-Message-ID: <20250616-proud-statuesque-polecat-616eaf@kuoka>
-References: <20250613055613.866909-1-pritam.sutar@samsung.com>
- <CGME20250613055053epcas5p377269bcc2c8567c00a2298d86c0d26a4@epcas5p3.samsung.com>
- <20250613055613.866909-6-pritam.sutar@samsung.com>
+	s=arc-20240116; t=1750061843; c=relaxed/simple;
+	bh=b/i6D772U4j88mAXG9LkCWQ2SgkzM9Y41IoqieHTauo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWrCoATb3bBZTricGFgkoN+4HiHDR1xaxuXV+c+gHkJR0mXU6Jn0kJMlAhprcgax3GfYozyI5junL271M/l0SRlDSSCuMRVtMOimpipCl/A0yHrOxhcebPDjNjoLPXeCVsQ6cRyOA27TEHc/wf5202+2L5flcZ+8n83SXjEimSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DE7414BF;
+	Mon, 16 Jun 2025 01:16:53 -0700 (PDT)
+Received: from [192.168.178.71] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDA7A3F58B;
+	Mon, 16 Jun 2025 01:17:13 -0700 (PDT)
+Message-ID: <99643c17-80ba-4910-8238-3674d583c401@arm.com>
+Date: Mon, 16 Jun 2025 10:16:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250613055613.866909-6-pritam.sutar@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
+References: <20250520094538.086709102@infradead.org>
+ <20250520101727.984171377@infradead.org>
+ <64ae41a7-2c06-4082-a4d6-0db5b635ea01@arm.com>
+ <20250613095119.GH2278213@noisy.programming.kicks-ass.net>
+ <20250613104644.GB2273450@noisy.programming.kicks-ass.net>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20250613104644.GB2273450@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 11:26:09AM GMT, Pritam Manohar Sutar wrote:
-> +static const struct
-> +exynos5_usbdrd_phy_config usbdrd_hsphy_cfg_exynosautov920[] = {
-> +	{
-> +		.id		= EXYNOS5_DRDPHY_UTMI,
-> +		.phy_init	= exynosautov920_usbdrd_utmi_init,
-> +	},
-> +};
-> +
-> +static const struct exynos5_usbdrd_phy_drvdata exynosautov920_usbdrd_hsphy = {
-> +	.phy_cfg		= usbdrd_hsphy_cfg_exynosautov920,
-> +	.phy_ops		= &exynosautov920_usb31drd_phy_ops,
-> +	.clk_names		= exynos5_clk_names,
-> +	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
-> +	.core_clk_names		= exynos5_core_clk_names,
-> +	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
-> +};
+On 13/06/2025 12:46, Peter Zijlstra wrote:
+> On Fri, Jun 13, 2025 at 11:51:19AM +0200, Peter Zijlstra wrote:
+>> On Fri, Jun 13, 2025 at 09:34:22AM +0200, Dietmar Eggemann wrote:
+>>> On 20/05/2025 11:45, Peter Zijlstra wrote:
 
-Same questions: where are all other fields and resources?
+[...]
 
-Best regards,
-Krzysztof
+>>> I always get this fairly early with TTWU_QUEUE_DELAYED enabled, related
+>>> to p->pi_lock not held in wakeup from interrupt.
+>>>
+>>> [   36.175285] WARNING: CPU: 0 PID: 162 at kernel/sched/core.c:679 __task_rq_lock+0xf8/0x128
+>>
+>> Thanks, let me go have a look.
+> 
+> I'm thinking this should cure things.
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -677,7 +677,12 @@ struct rq *__task_rq_lock(struct task_st
+>  {
+>  	struct rq *rq;
+>  
+> -	lockdep_assert_held(&p->pi_lock);
+> +	/*
+> +	 * TASK_WAKING is used to serialize the remote end of wakeup, rather
+> +	 * than p->pi_lock.
+> +	 */
+> +	lockdep_assert(p->__state == TASK_WAKING ||
+> +		       lockdep_is_held(&p->pi_lock) != LOCK_STATE_NOT_HELD);
+>  
+>  	for (;;) {
+>  		rq = task_rq(p);
+
+Yes, it does. I assume we can only end up in sched_ttwu_pending()'s 'if
+(unlikely(p_rq != rq))' when ttwu_queue_wakelist() is called from
+ttwu_runnable(), i.e. for sched_delayed tasks.
 
