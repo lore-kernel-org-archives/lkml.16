@@ -1,99 +1,169 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352B62BF017;
-	Mon, 16 Jun 2025 14:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084090; cv=pass; b=apcdMDMmxWLgStdgAosbYydTZB2zt+vaKmHDS4Sh3yHHGGjSS+5p01qQFSTlaWZjDFLyrxqej2TAlfj8fbRZejoJxA1ItcJp6jBKtc19rducgjp3I4VrB8HvWbbVS5z71ghHJknuGutOCT//79cUEHAZTot8EnC7D+eQMZ1vSCs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084090; c=relaxed/simple;
-	bh=0pRvbSGRt3AQQuVD8byNb+NP8wTfFRltOpXxdOxPygM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=uyU85zrLHx6AQT1Iexlul2L88i3rg00GLVVDlW/glUIAPt2RLzIrJk9Jye5jpaSQQa/FWnS3tl8LpvRIEIUfUWnyG4NOZwHoSBIo1EFABCELcwUVnZd2yZRQtXGhnlfA8hE6wb/MtJ0UJh4CWg4s9KvdDnoVumSF8OgXjfEU6oU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=R1iM/nD5; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694F41ACEDC;
+	Mon, 16 Jun 2025 14:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750084121; cv=none; b=RL2hgn6nEcXSf+uyObUtZfoOOPh8WgLXronFEkedXABXMTGxOFxpYmGQRLw9KlUZpxqlNRXGUjQNW7HeXldjZSEhbaWWrkblOAo1C8Vyv1f1vOz8rD8A7ISH3UJy2/JUFuldfPjlL8Ig43aXJVgFx6pPRcoRb/w+t5SnfPCLddM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750084121; c=relaxed/simple;
+	bh=D51oDNoeO5PvOntYeAXdoXiXYLEN+Mk2DDfBb1UO+3Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uoSnDoB3g4z9VMWvTUAjfJtFQPIOY7KdU7LS4Z1a76+vWLPqFABouOqPzZJbvR1p4+qY1eV1jLNmNFvRDWD2HsTa4xu0N2hyMAbBi3Z/uVyooWjL0qTTwwN9TtjlenuXqaKV3ExsrLkALMKzJw8aMuAp0M83c90utwvn0qOV/do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dAfM83/z; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="R1iM/nD5"
-ARC-Seal: i=1; a=rsa-sha256; t=1750084062; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=gUuvqIuNqTbaW3jIsupm/x6BMKSjBN8V1Qa+R8EKU3M18KmEX9z5l8aD436t03tc3F0JKiudq1IFqrqwi9Bit2JejojbKdoEE3attzfN5+CYKdGkLZEjVpqJr6gHqybL0GwoKHrykiACwYi9HuP2tOXQmTmZ2QGGID71KCgGqmA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750084062; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=F8bXUy3Bo9HR5kOOZmrCShKyAkBT2AWqhHDEKbHnNPE=; 
-	b=mxPmI9wpM/PUKBeCYO8dIAqwYgS0vGRTqC45B8FYJj8uAXlSg8nNDD6lC8fDEcpEprS+Z5WojWVeTipVSZdNMX5sSkhyaNNe/YyCznTVET/YOeMwgEZycUsO43slXAJjPWzHG6Z5iLRdlKNQFSLpBcNzzlJ+vsfMPmmudJqDRJ0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750084062;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=F8bXUy3Bo9HR5kOOZmrCShKyAkBT2AWqhHDEKbHnNPE=;
-	b=R1iM/nD5R9vmIB5/xoH98JZa5lYGfY7NrMwwoFYAj4nXDPcqCj+IihBscWDkX8Sh
-	jY1sm0kVdOBwcj/AxsD1KYhQVQPLw4EhyQ7RJztAhbm/KqWbQKqs0EXuauL/FcIV+ow
-	CcVPUV7JJeIVbkqXE6ZvS6U+gWGjUr9B0hlkcLe8=
-Received: by mx.zohomail.com with SMTPS id 1750084061109357.29402544373875;
-	Mon, 16 Jun 2025 07:27:41 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAfM83/z"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235e1d4cba0so39640745ad.2;
+        Mon, 16 Jun 2025 07:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750084119; x=1750688919; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xX+bi5Hgmn9NrTEaY/oPghRXm3i2VfhEfvJkderRFkA=;
+        b=dAfM83/zxwB01boM5INbTgx9SwrFnyU9YuwV3gIJgKm6e5vvB9pmWNYH+K8NwedB3E
+         MkRkJkwMpxx+EfXYFA3FT8YhFmkZDkACU5HV7UuNkFbzpQQUggR0TMaNIysKfYTkmpN7
+         YQGLp0XIH9H+kWkk4T3YtOBEPGxZ1G+U5eZpML9ZCiYOonHbvrJg2L8lkLuK9Rv2R2Qd
+         hyQPnePGwoJot8u6kPrhfEYrI1TFPE0M5qmaXONtAToGgsYGVBtdXmT53PZJm+kUO4x9
+         WuO1aF2eXIpDQRd/CK8Lh+9J5UU0ckQTZqYzndR+g3C4MUS/Hj6dyy+74qNpZgv4RR+C
+         cd/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750084119; x=1750688919;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xX+bi5Hgmn9NrTEaY/oPghRXm3i2VfhEfvJkderRFkA=;
+        b=EMy8EfJmQr2lv/pWnYdCBa01wh5hjxf9yGDPYjNZ0dOGMevDjjyBHtY6S8OfygcSyQ
+         cQwtkPJSbzkykQQA03QSONxMkew0/y5Q+fNo/LMvZFDxd4d0zkoiWWQ6T5GXO9lcaBvk
+         0Z/0elUUeSRDVdeFdqYhLDAN184gXGnD/bZK2lDpBNHW96aStLZ+1ZbfKueDUvQsNrkc
+         RIQl1EuxvXlhtrMsl7cO7kPDZvIZz7r/GoufCNwTqmhwbe3ell56oKNKDFlgIFNwZ4Rc
+         fgpKN9WePpfKhBdxEfgtDDNYjVJf/rw0+scZehZLkFSvtlwh1gZTWVsFY8p0eqRPeZAM
+         uKow==
+X-Forwarded-Encrypted: i=1; AJvYcCVMhPeW3qYHLVjWX21uQy0QtHGoWR0WNQFmGxfkp8gUaXmOKGwsNKH+cth7GFrfvMZhDawSCWFN@vger.kernel.org, AJvYcCVSlxHquQdpAXBfwRo596hXLU6ums0uyrz6g3InjxbqDFS9gBX9xKghVhMUAaDifJRTGiKvp7xVTiEMeTtM@vger.kernel.org, AJvYcCVZBQkRI5jXagC51pzwjofTqSj7+NRRQbTOc3DV/O9U7n1uJiqc7Zz+1Am/04rJIdQYva0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWhfzmLZoOSojIyHVafrAdQZ44Wk925/s70cRHmlLNDS6PU9UT
+	jNDxvAELe3wKrLfVl0CtL5FXIrks762dT4rbpDizRa8SFLfILdCK/ufI
+X-Gm-Gg: ASbGnctHE8eA38Q3rO+e1Vlgw3uToZ7fEUzHfsrCtHVtiGCpxvIlpjBp1/okPUSiYcp
+	ENTMZoqPjAyo7iyfO35j/ayQ8p+quQ8jNYfz/2TxMj74lWflVzMY9WyTm83OwU+nKMD5bZ2Nk6T
+	MAFZ6HdXXHSgpGIGtYJrV5xhw0yczTBjkGhNyNi46kQqK4OxTkIU+KJTrZO5Bg8kaUR1MRyaM+h
+	Mug0Ud1uI/GBsB3NPjSDy4ZQNypPfCuYq6PYCihZVJuvpgalcYQSDrRMQoczOOVDg9bpK5d1ALs
+	GX55JUgeT24t6gbQ2Hq7PrITuTjd8hmqhGLMiEYacoh1T3qO/7H9TogVSMV0IhHBXKFZ07WPkV2
+	2yuDlKseo
+X-Google-Smtp-Source: AGHT+IEiUlcugSM6imRNfKRXtWTfhUz3HfPDFOqCZEki+4pDVZ1e5ScBdgWJBhYp+4nuJn/5v4VLWg==
+X-Received: by 2002:a17:903:32c5:b0:234:adce:3ece with SMTP id d9443c01a7336-2366afe9924mr140921925ad.11.1750084118202;
+        Mon, 16 Jun 2025 07:28:38 -0700 (PDT)
+Received: from devant.antgroup-inc.local ([47.89.83.0])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deaa9f7sm61494905ad.168.2025.06.16.07.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 07:28:37 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+To: sgarzare@redhat.com
+Cc: davem@davemloft.net,
+	fupan.lfp@antgroup.com,
+	jasowang@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mst@redhat.com,
+	netdev@vger.kernel.org,
+	niuxuewei.nxw@antgroup.com,
+	niuxuewei97@gmail.com,
+	pabeni@redhat.com,
+	stefanha@redhat.com,
+	virtualization@lists.linux.dev,
+	xuanzhuo@linux.alibaba.com
+Subject: Re: [PATCH net-next v2 1/3] vsock: Add support for SIOCINQ ioctl
+Date: Mon, 16 Jun 2025 22:28:22 +0800
+Message-Id: <20250616142822.1183736-1-niuxuewei.nxw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <xshb6hrotqilacvkemcraz3xdqcdhuxp3co6u3jz3heea3sxfi@eeys5zdpcfxb>
+References: <xshb6hrotqilacvkemcraz3xdqcdhuxp3co6u3jz3heea3sxfi@eeys5zdpcfxb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v4] rust: regulator: add a bare minimum regulator
- abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <db5fd836-6fa2-41eb-841c-98cd54f21687@sirena.org.uk>
-Date: Mon, 16 Jun 2025 11:27:25 -0300
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6A5766B8-EF9A-41EA-AE55-D29C5184A9DB@collabora.com>
-References: <20250609-topics-tyr-regulator-v4-1-b4fdcf1385a7@collabora.com>
- <DAN57NVEBNIF.270U4DKHZC13P@nvidia.com>
- <db5fd836-6fa2-41eb-841c-98cd54f21687@sirena.org.uk>
-To: Mark Brown <broonie@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Mark,
+> On Fri, Jun 13, 2025 at 11:11:50AM +0800, Xuewei Niu wrote:
+> >This patch adds support for SIOCINQ ioctl, which returns the number of
+> >bytes unread in the socket.
+> >
+> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+> >---
+> > include/net/af_vsock.h   |  2 ++
+> > net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
+> > 2 files changed, 24 insertions(+)
+> >
+> >diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> >index d56e6e135158..723a886253ba 100644
+> >--- a/include/net/af_vsock.h
+> >+++ b/include/net/af_vsock.h
+> >@@ -171,6 +171,8 @@ struct vsock_transport {
+> >
+> > 	/* SIOCOUTQ ioctl */
+> > 	ssize_t (*unsent_bytes)(struct vsock_sock *vsk);
+> >+	/* SIOCINQ ioctl */
+> >+	ssize_t (*unread_bytes)(struct vsock_sock *vsk);
+> 
+> Instead of adding a new callback, can we just use 
+> `vsock_stream_has_data()` ?
+>
+> Maybe adjusting it or changing something in the transports, but for 
+> virtio-vsock, it seems to me it does exactly what the new 
+> `virtio_transport_unread_bytes()` does, right?
 
-The current patch implements different strategies to handle regulators. =
-By
-=E2=80=98dynamic regulator=E2=80=99 he means the one that implements the =
-current C
-behavior.
+Sorry, I forgot to update this.
 
-> I'm not sure what you mean by a "dynamic regulator" here but as
-> previously outlined we currently take a very conservative approach and
-> don't do things without being explicitly told to do so since getting
-> things wrong can result in physical damage to the system.
->=20
-> Please delete unneeded context from mails when replying.  Doing this
-> makes it much easier to find your reply in the message, helping ensure
-> it won't be missed by people scrolling through the irrelevant quoted
-> material.
+I am curious that is there a plan to implement dgram support in
+virtio-vsock? If yes, adding a new callback is the right way to go. I
+deadly hope to see that feature. If no, will do in the next.
 
-Ok, no worries, this current version of the binding is already =
-implemented as
-you said, so we won=E2=80=99t have any problems there.
+Thanks,
+Xuewei
 
-=E2=80=94 Daniel=
+> Thanks,
+> Stefano
+> 
+> >
+> > 	/* Shutdown. */
+> > 	int (*shutdown)(struct vsock_sock *, int);
+> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >index 2e7a3034e965..466b1ebadbbc 100644
+> >--- a/net/vmw_vsock/af_vsock.c
+> >+++ b/net/vmw_vsock/af_vsock.c
+> >@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
+> > 	vsk = vsock_sk(sk);
+> >
+> > 	switch (cmd) {
+> >+	case SIOCINQ: {
+> >+		ssize_t n_bytes;
+> >+
+> >+		if (!vsk->transport || !vsk->transport->unread_bytes) {
+> >+			ret = -EOPNOTSUPP;
+> >+			break;
+> >+		}
+> >+
+> >+		if (sock_type_connectible(sk->sk_type) &&
+> >+		    sk->sk_state == TCP_LISTEN) {
+> >+			ret = -EINVAL;
+> >+			break;
+> >+		}
+> >+
+> >+		n_bytes = vsk->transport->unread_bytes(vsk);
+> >+		if (n_bytes < 0) {
+> >+			ret = n_bytes;
+> >+			break;
+> >+		}
+> >+		ret = put_user(n_bytes, arg);
+> >+		break;
+> >+	}
+> > 	case SIOCOUTQ: {
+> > 		ssize_t n_bytes;
+> >
+> >-- 
+> >2.34.1
+> >
