@@ -1,118 +1,100 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F9D285C80
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67BD295DAA;
+	Mon, 16 Jun 2025 13:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079445; cv=none; b=iZbizuOfSjdirj872KQFfQVSkoL7g68WIT2Xowow6/sF/2xOtf/TDadXmKfYc7J+8+F86ckHqkYB1KEYQLvYq0ThR9nJFiS2SUoyZQOm24rle7JIBXfUhkTBUN7fOkf/SBu1HQW+eNtfiCeuexvZix19bKiWfRFtlqnTK+GOTJA=
+	t=1750079552; cv=none; b=LIW6YRhpWQAmnqbZPXzV6BAqGzrkz+hGRk7DMqMo4G8/ZS0w6hvvno4a+///fsi++6GZqz7GiV8HCyp2b1VRXMj9l9u70ayO+dowb1nZs3SFu4VwSw9rnbfmAPcrgUjiGbqNntL0nY3RzTuAkivUyAoJr7auwBExRfMSeFlZD28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079445; c=relaxed/simple;
-	bh=pFqG/js0pAlqzBZAvPKECVmOa3/ZW9gFrsfeSebvWj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g1i6msGSo/LEFtYmYgMZXxE4jl6ELr/yUEPaPaI2FKKqojtGqPUNVs6lCkjoInA/6/wlObukuQoohCsg3Pmim5GGzk9WUYO53NMsmWcjut+DvINJTg/rzJbwdmpUrO2rDiwgzKM+kvgZO+5OkbJbPagsjPby/haD2/+FnW74zro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T9RQ2btZ; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750079552; c=relaxed/simple;
+	bh=YXwjkRwHTteqV9ZERu+QJt1U/5y/bTSlS41CFa701/E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TaJ8KzBCQ7AxMeoDd68L2BWGTf7pCiKJobJ7yV3tC5FhHMBSsMhINeCslCHBlwwVjLMTJnF7GCKBOAvoRqhmuixqtxd6bCwY0QNpAjursA37FIaBDkuihd9wMoVZDkJYL9ocYhgTfnimU5Z3lAH03Z4HOpP8r33MGzN+i8MlDCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eAoqiq+3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T9RQ2btZ"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so3901157f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750079442; x=1750684242; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x1cp+4QPv/1PUyqDV9F6cY2KZxx/RBlLdAVmrPE1MfI=;
-        b=T9RQ2btZgx+EAZpkOtkYQEPfrBSmU5Fu9FRQLS0vcfsZzDvM29PG0/KCu3UFR0cWO1
-         89CEPTRzHf2ulCOc8wfAeNMFXCOC8zHpsmzilFulmp4kYQ0rDtBrBWjFtQN5My6aiyoQ
-         B+aGx/rjh7VA7zyjFzvFaSvUD7BQJklEJC8NtGENk27FFKccQrl5xY8aoza7pi+s4Zdy
-         1ddjI0cFXOb7ycUjigQzfB8WrlzKR+Aa9oGmiE2WgpXi0O6OE1a5osvPXuhncSCnaJd8
-         4ZHM82kGbgeu01O87AUaX2CZOFEl81ACul3KsAmTsuf3dXaVuKHT5TFoJFB6et2+ql1I
-         7yTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750079442; x=1750684242;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x1cp+4QPv/1PUyqDV9F6cY2KZxx/RBlLdAVmrPE1MfI=;
-        b=CBKTyam7H827IazGVGc5El4gUSQJ6hTjorM0L9YNbyw3mLE5E8waui6OCF6hRUiXwr
-         ukX1jZPa3RKQIFyvfX5ruAsBTd3aCTgpKZwOICNowVfk3g3KJF+hCodJv041exlCNqnK
-         IceTYZEqPcsMkDskCFEVv+eKTnMS0ykL1IL/38CsN2SMf7aokB4ablq2RNu9L4odF5DY
-         xS1cE3u9+57KE+c1U6ARgzGwATb9/fnh9Az4LjQaTBTSV1244+0SQuCr97VTWGfub8rT
-         toBai88pLKhGvJh6PjtV9wl2J447Jgqabl/bdv6nNF430RT/NPSYaUlqBAUQuvwVon/i
-         KnGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1o1wrWGdfRsOiP6iJzjkm3cKYCzyBaR4A/b2khYSTN4Wbkm2AlPelhfnXWnowiPR5zVcYHU4fSZVlIa8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWMKN/LTCBnxkL1izNF4ErXqjBuTsxkfPvPIDSxrgQqbcMDq5m
-	T6MupkzsVrD/INzefKaveMprBjtnSPCeZZzUgEvjGkR/FO/KZhpppLuon8oubI9kvB1agZasd6Z
-	yNiU9
-X-Gm-Gg: ASbGncvaceInf0vzHrxf1WxlUJsKuQ+ez5Bc5mkYQLPBV2guvPzKwUqEELW/46QSvQm
-	WpZag++ZzlEJAPb5cDzBMEmfvfS03tgFuykT/+RwNRGP2+3W6/zM7vj2U5jKP0jH+BXF0lP8W5Q
-	OZ74MCHJ5xMerlu8Y6hruprStQ14VPolRVj3xnHddH9Q4Mq5+CINcTNaksx3MnSGZnEQJgGhApp
-	UyKcBK41IJzYgJI6u0AnjDTLf3sfKJg7MwUNciMSalHyf/NMivcrsu71NCEFS5F8/C8IR0/H2sf
-	Y9/+8jy02OCulOiF8eIRROCs3Q+hckJJFHDv34Vc92ezjfGdWbEOMMCzJK4VhLJUMJkH01ESS38
-	0dQ==
-X-Google-Smtp-Source: AGHT+IFNHg0hyF1PNKI8qLbgZNCoz4YroOmMfvQ93hu1uR9eCFCC/xZl5Wbo20JN2FbWxFzP2HZ79A==
-X-Received: by 2002:a05:6000:4284:b0:3a4:e6e6:a026 with SMTP id ffacd0b85a97d-3a572e6bb83mr7546401f8f.28.1750079441882;
-        Mon, 16 Jun 2025 06:10:41 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54aeasm11271121f8f.14.2025.06.16.06.10.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 06:10:41 -0700 (PDT)
-Message-ID: <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org>
-Date: Mon, 16 Jun 2025 14:10:40 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eAoqiq+3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 90D1DC4CEED;
+	Mon, 16 Jun 2025 13:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750079551;
+	bh=YXwjkRwHTteqV9ZERu+QJt1U/5y/bTSlS41CFa701/E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=eAoqiq+3BIiTXBQsf+iy6lbuldwoEn1VGVEc/MFL0cJUFkXH2Oj2RAd0VLz8iDcBU
+	 4zLuIPHqi7gPXBlIGYyYxYHVHCGnNXOm7ee3O7cQcDGf/91bmKj2kY14CFbiKLdj0r
+	 26/evmTtSwpYYq+5+/BUAfxfRASslpyJE1+hxouyNJQI2p45vf9WQ87bliaHyfjgBS
+	 lVjX4kd95PGe9BxCUFU3k0UAg3+xbKy8JxEjAn/CF6Ueqpu3D/kQi9ID/76NDKMeXW
+	 YSGyvs48n7n6XXaKDR7vgOaHTXpBKVhbDszip8OHFCjIJN2NA7lvwFpJOkSpAKv0wj
+	 wrmst8AWtZ2PQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85121C7115B;
+	Mon, 16 Jun 2025 13:12:31 +0000 (UTC)
+From: Yassine Ouaissa via B4 Relay <devnull+yassine.ouaissa.allegrodvt.com@kernel.org>
+Date: Mon, 16 Jun 2025 13:12:14 +0000
+Subject: [PATCH v3 3/4] dt-bindings: vendor-prefixes: Update the
+ description of allegro prefix
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
-To: Christoph Hellwig <hch@lst.de>, Mark Brown <broonie@kernel.org>
-Cc: olteanv@gmail.com, oe-kbuild-all@lists.linux.dev, arnd@arndb.de,
- larisa.grigore@nxp.com, Frank.li@nxp.com, linux-spi@vger.kernel.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel test robot <lkp@intel.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
-References: <202506160036.t9VDxF6p-lkp@intel.com>
- <20250616111749.316413-1-james.clark@linaro.org>
- <20250616112927.GA21689@lst.de>
- <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
- <20250616120832.GA24959@lst.de>
- <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk>
- <20250616121444.GA25443@lst.de>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250616121444.GA25443@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250616-allegro_dvt_al300_dec_driver-v3-3-7d746cb9e5f9@allegrodvt.com>
+References: <20250616-allegro_dvt_al300_dec_driver-v3-0-7d746cb9e5f9@allegrodvt.com>
+In-Reply-To: <20250616-allegro_dvt_al300_dec_driver-v3-0-7d746cb9e5f9@allegrodvt.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Michael Tretter <m.tretter@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>, 
+ Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=986;
+ i=yassine.ouaissa@allegrodvt.com; h=from:subject:message-id;
+ bh=wcArLg2XJHwE9gH/4U6ZLF2AB9JyotUnB2d5qn8XXFU=;
+ b=owGbwMvMwCV2oHftXqU9jLMZT6slMWQESNiK52VITvYp/mj/JOtaM8vZ81dufTzm9imp582Js
+ zl3E0U+dpSyMIhxMciKKbJ8MFj67Atbjc+MFrb5MHNYmUCGMHBxCsBEZG8z/I8q+TPx4ORsW39G
+ q98Gufvehj5h2yXSqXas8UOBhMXntOuMDHNOcSdYODpbTNkl87FVbf0plbB+1piXyQsTFbfbrk4
+ MYQUA
+X-Developer-Key: i=yassine.ouaissa@allegrodvt.com; a=openpgp;
+ fpr=B0CE218FC8E89064DAED6179042F935CFB3AD0CC
+X-Endpoint-Received: by B4 Relay for yassine.ouaissa@allegrodvt.com/default
+ with auth_id=423
+X-Original-From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+Reply-To: yassine.ouaissa@allegrodvt.com
 
+From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
 
+Add SAS (Société par actions simplifiée) to the allegro of vendor
+prefixe description to include French simplified joint-stock company
+legal structure.
 
-On 16/06/2025 1:14 pm, Christoph Hellwig wrote:
-> On Mon, Jun 16, 2025 at 01:11:49PM +0100, Mark Brown wrote:
->> already tied to a platform that needs DMA needing to add the dependency
->> which nobody is going to notice without doing build testing for
->> randconfigs or similar non-useful configs - it's not a productive use of
->> time.
-> 
-> Stop your unproductive whining and just fix your dependencies.
+Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The change introduces consistency with the existing declarations in 
-dma-mapping.h. Surely there is value in consistency and it doesn't do 
-any harm to define new ones with stubs the same as the other ones. That 
-way when you change an existing device that has DMA stuff to use a new 
-part of the API you don't have to predict that it will behave 
-differently to another part of the API.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5d2a7a8d3ac6c666c8b557c2ef385918e5e97bf9..827fa988c5af4b59cf71e4cf47163e38eb1aa4c9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -82,7 +82,7 @@ patternProperties:
+   "^alfa-network,.*":
+     description: ALFA Network Inc.
+   "^allegro,.*":
+-    description: Allegro DVT
++    description: Allegro DVT, SAS.
+   "^allegromicro,.*":
+     description: Allegro MicroSystems, Inc.
+   "^alliedvision,.*":
 
-I suppose it is possible to #ifdef out the DMA stuff in this driver, but 
-IMO it would be quite messy, and I don't think randomly not stubbing out 
-some functions is the right way to move towards fixing all the 
-dependencies in all drivers. We should continue with the stubs for now 
-and fix whole drivers one by one as a proper effort.
+-- 
+2.30.2
 
-Thanks
-James
 
