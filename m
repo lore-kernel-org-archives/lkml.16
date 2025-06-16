@@ -1,272 +1,213 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01757111AD;
-	Mon, 16 Jun 2025 06:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6D913632B;
+	Mon, 16 Jun 2025 06:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750053815; cv=none; b=bEhEKzxvt73L0ykOQIOaLTBvei9d1PRkrZnnntBy9ELMo7LePXtnYu0JGdTQsPkuXy2XocOfLQkm0WrN7owtTG/uZbT0O7QH1TZc82JRz5ZEJEIPYnQUxdUE9jOobS+AAyFolpupSWcLiZr8K/hMgHF/o2tem6hLN9GK6Szljqk=
+	t=1750053912; cv=none; b=LN7ZEdyTs+Wp9PT7iU3GohvCLt6MFzRBcIWa8/KKnUNFqPzHMT6Q28BClo3Upfkxwe3He8pdJ8D61o5ue+6Oh0M/iRBI0/9NtrG5nPuxfINMeqRdLlU9XG2IYlXRgsp4a0l/HXPbOudMoJF6zE/IPf1LoaRzC8wEe1vBRH6iOJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750053815; c=relaxed/simple;
-	bh=mAkQKMb5DZzKW1NS7hwLN9n3+aIz8ZE8fCjPohcXpTs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aPFwgQA0nQTqIDxOkgtho8oMLQuBsfiiO8D72BpYE7pSwyCRs2g0uuNqTisb2cK3I2vC4xJMlrDMVc+PGA4TSHeK0uDRhpm+FnDivGU02paM/HlYRqN04pEqM3PmxoW2N9aSZOUNNQno2eWCdjVlwoSb1OvRiQdr9Ihov9+RfSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Gok1gYV8; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1750053912; c=relaxed/simple;
+	bh=5BWz9FwN7V7x8vxN27g1twvyHPy+fK9jsrn1dGHbs8E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CsLDjjPqR28y/wpCXTG0YaB+sMQYLXVgTi7mr4uFlVJ1fCAhHtbvSpI0oQh2bnHZ8hJ7vki8EX7qApQ42auXYhORlT5vQXEBr9TcW+Hs7LG2o8IvcU8roSnv/PduApH0kF2EzQMAubknhJNqXbIcVif47kZsdsAvudFcHaOYg2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzUuj5EL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Gok1gYV8"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FNV4XC027502;
-	Sun, 15 Jun 2025 23:03:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=qY9gN4ReLVhh52McRvfekNpNc
-	9LC3gIc4VvlDUL6AF4=; b=Gok1gYV897q5mSB5qRQPhxqtsmah/wCMjJ+jmjwt/
-	1ws6nQY5OmfS+RBLh5YphIksg7kEtQ53Ha7cu/e4Nu8icVoG04+npPXFWb6mcEfd
-	Fmy2ILwfK90ovq+aA/l6HSeZ/KEu6AqeHSVX6KsfjTq62e8HAiV6HhpFc67Dq10I
-	zdt7ejtUos+tEfBZaQaHbitMvVeNvLgoH4bJuc90jjVNdG1h5cYMcy+lYFe4bCfk
-	vFAU0D8cAX2XDEjyR91Qn37DS4yZfku7liHfE4jKIwkjofq/vhZvugN6ajvwmzKk
-	yz17JiHbjNakOf7y5Fs/0Olad/UiX3lx8cW8no4XkGr1A==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 47a7w70hnj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jun 2025 23:03:08 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Sun, 15 Jun 2025 23:03:07 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Sun, 15 Jun 2025 23:03:07 -0700
-Received: from 31f81e0f6c72 (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id C0EA15E688C;
-	Sun, 15 Jun 2025 23:03:04 -0700 (PDT)
-Date: Mon, 16 Jun 2025 06:03:02 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Jun Miao <jun.miao@intel.com>
-CC: <kuba@kernel.org>, <oneukum@suse.com>, <netdev@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <qiang.zhang@linux.dev>
-Subject: Re: [PATCH v4] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-Message-ID: <aE-zljYFebNksxw3@31f81e0f6c72>
-References: <20250615015315.2535159-1-jun.miao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzUuj5EL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3643FC4CEEA;
+	Mon, 16 Jun 2025 06:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750053910;
+	bh=5BWz9FwN7V7x8vxN27g1twvyHPy+fK9jsrn1dGHbs8E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KzUuj5ELcLWrhCKWYAXP63RPq7giIHUlOjkVIxjpKX9+l7+dP1O4hROiNXWW+Z5l/
+	 dUXydJt+tW23f+r+SAljsgDRLc1qOF90aPNZ8+sM6s+2Z4apAVl0n+YV4nhGWX50vC
+	 Vit5Ium2lvwX5LsRrNgJTbowkU/oPaRzGcX/6rtQ5ek6sOAQzc3c1LIhD7S4BXxVoD
+	 vHohpvzI62G17mR43joZLiZmkR2Jd9vahCC56U4Iq4Oz3BxPOEdipgrgOfsbZ8g+IZ
+	 qxMv+yO0+GzNfz3d2P6c1bb/tIwwtujwGDXttUQ9tn/DAM1/yJ0nRd7ZkzdWZXze5n
+	 XFgUI78WZp7vQ==
+Message-ID: <67b1a8d3-e695-4ea6-8405-1a8563cbf5f2@kernel.org>
+Date: Mon, 16 Jun 2025 08:05:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250615015315.2535159-1-jun.miao@intel.com>
-X-Authority-Analysis: v=2.4 cv=BIyzrEQG c=1 sm=1 tr=0 ts=684fb39c cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=QyXUC8HyAAAA:8 a=M5GUcnROAAAA:8 a=5IwCtlCqhDlfZ9k7iu4A:9 a=CjuIK1q_8ugA:10
- a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDAzOCBTYWx0ZWRfX4XIN+aeWnhe6 wJnWgb5UPkiUFrGvp2E6GsJY0cVVhejewRoSTkeI7wWBW0uSSkpqlVSm/ImZeMUoq67+ThNF5Sp 5WRELYIMPQHv4BMtYXNPwheryKovGLbNoGdxyBOi6Cnf95i4ayBMbK0SsCEQhuAwalXpgUkZvmI
- EAGB2Vg7Qu4Jea6u3ENi6WiJwm/bNGfkyMSb1/VxF3pWg+wTgTQmiJrXgaQNx98Hq/afPFQvB0m Vce7QHlteyCs0AMkYP4q4uEa1P11zV16H3hyyDP/XfZ7sWSvOUGcvDbBTFoyBc2DTozk6Q8TPpj iOSuIxMB2wfqZViCnz9nTs6Op1YvBSrUSytA5gnKTXrml2bDmoS7Tb3Q/rubxhW8ZbcOoi91G+2
- aF/mrOy1BywboyoeaRn09k1w4aAfsyU5G3Pb97y9VvLO8Z/IoD3ZhQFjiC30oAbZIqIlw2fO
-X-Proofpoint-ORIG-GUID: 4hpwubIaS66VmsY7WNHek6WY6_quThoP
-X-Proofpoint-GUID: 4hpwubIaS66VmsY7WNHek6WY6_quThoP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_02,2025-06-13_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] dt-bindings: gpio: gpio-cdns: convert to YAML
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ soc@lists.linux.dev
+References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
+ <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-3-341502d38618@axiado.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-3-341502d38618@axiado.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-15 at 01:53:15, Jun Miao (jun.miao@intel.com) wrote:
-> Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-> replaces all occurrences of tasklet usage with the appropriate workqueue
-> APIs throughout the usbnet driver. This transition ensures compatibility
-> with the latest design and enhances performance.
+On 16/06/2025 06:31, Harshit Shah wrote:
+> Convert Cadence family GPIO controller bindings to DT schema.
 > 
-> Signed-off-by: Jun Miao <jun.miao@intel.com>
+> Changes during conversion:
+>    - update the naming as per the other files.
 
- Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
+You made it entirely different than every other file and review.
 
- Thanks,
- Sundeep
+>    - add gpio maintainers
 
+Not really, you need to find someone interested in that hardware, not
+subsystem maintainers.
+
+> 
+> Signed-off-by: Harshit Shah <hshah@axiado.com>
 > ---
-> v1->v2:
->     Check patch warning, delete the more spaces.
-> v2->v3:
->     Fix the kernel test robot noticed the following build errors:
->     >> drivers/net/usb/usbnet.c:1974:47: error: 'struct usbnet' has no member named 'bh'
-> v3->v4:
-> 	Keep "GFP_ATOMIC" flag as it is.
-> 	If someone want to change the flags (which Im not sure is correct) it should be a separate commit.
+>  .../devicetree/bindings/gpio/cdns,gpio.txt         | 43 ------------
+>  .../devicetree/bindings/gpio/gpio-cdns.yaml        | 81 ++++++++++++++++++++++
+
+Previous filename was correct.
+
+>  2 files changed, 81 insertions(+), 43 deletions(-)
 > 
-> ---
->  drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
->  include/linux/usb/usbnet.h |  2 +-
->  2 files changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-> index c04e715a4c2a..7d3791366509 100644
-> --- a/drivers/net/usb/usbnet.c
-> +++ b/drivers/net/usb/usbnet.c
-> @@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
-> 
->  	__skb_queue_tail(&dev->done, skb);
->  	if (dev->done.qlen == 1)
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	spin_unlock(&dev->done.lock);
->  	spin_unlock_irqrestore(&list->lock, flags);
->  	return old_state;
-> @@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
->  		default:
->  			netif_dbg(dev, rx_err, dev->net,
->  				  "rx submit, %d\n", retval);
-> -			tasklet_schedule (&dev->bh);
-> +			queue_work(system_bh_wq, &dev->bh_work);
->  			break;
->  		case 0:
->  			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-> @@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
->  		num++;
->  	}
-> 
-> -	tasklet_schedule(&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
-> 
->  	netif_dbg(dev, rx_status, dev->net,
->  		  "paused rx queue disabled, %d skbs requeued\n", num);
-> @@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
->  {
->  	if (netif_running(dev->net)) {
->  		(void) unlink_urbs (dev, &dev->rxq);
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	}
->  }
->  EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-> @@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
->  	/* deferred work (timer, softirq, task) must also stop */
->  	dev->flags = 0;
->  	timer_delete_sync(&dev->delay);
-> -	tasklet_kill(&dev->bh);
-> +	disable_work_sync(&dev->bh_work);
->  	cancel_work_sync(&dev->kevent);
-> 
->  	/* We have cyclic dependencies. Those calls are needed
->  	 * to break a cycle. We cannot fall into the gaps because
->  	 * we have a flag
->  	 */
-> -	tasklet_kill(&dev->bh);
-> +	disable_work_sync(&dev->bh_work);
->  	timer_delete_sync(&dev->delay);
->  	cancel_work_sync(&dev->kevent);
-> 
-> @@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
->  	clear_bit(EVENT_RX_KILL, &dev->flags);
-> 
->  	// delay posting reads until we're fully open
-> -	tasklet_schedule (&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  	if (info->manage_power) {
->  		retval = info->manage_power(dev, 1);
->  		if (retval < 0) {
-> @@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
->  		 */
->  	} else {
->  		/* submitting URBs for reading packets */
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	}
-> 
->  	/* hard_mtu or rx_urb_size may change during link change */
-> @@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
->  		} else {
->  			clear_bit (EVENT_RX_HALT, &dev->flags);
->  			if (!usbnet_going_away(dev))
-> -				tasklet_schedule(&dev->bh);
-> +				queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
-> 
-> -	/* tasklet could resubmit itself forever if memory is tight */
-> +	/* workqueue could resubmit itself forever if memory is tight */
->  	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
->  		struct urb	*urb = NULL;
->  		int resched = 1;
-> @@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
->  fail_lowmem:
->  			if (resched)
->  				if (!usbnet_going_away(dev))
-> -					tasklet_schedule(&dev->bh);
-> +					queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
-> 
-> @@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
->  	struct usbnet		*dev = netdev_priv(net);
-> 
->  	unlink_urbs (dev, &dev->txq);
-> -	tasklet_schedule (&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  	/* this needs to be handled individually because the generic layer
->  	 * doesn't know what is sufficient and could not restore private
->  	 * information if a remedy of an unconditional reset were used.
-> @@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
-> 
->  /*-------------------------------------------------------------------------*/
-> 
-> -// tasklet (work deferred from completions, in_irq) or timer
-> +// workqueue (work deferred from completions, in_irq) or timer
-> 
->  static void usbnet_bh (struct timer_list *t)
->  {
-> @@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
->  					  "rxqlen %d --> %d\n",
->  					  temp, dev->rxq.qlen);
->  			if (dev->rxq.qlen < RX_QLEN(dev))
-> -				tasklet_schedule (&dev->bh);
-> +				queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  		if (dev->txq.qlen < TX_QLEN (dev))
->  			netif_wake_queue (dev->net);
->  	}
->  }
-> 
-> -static void usbnet_bh_tasklet(struct tasklet_struct *t)
-> +static void usbnet_bh_workqueue(struct work_struct *work)
->  {
-> -	struct usbnet *dev = from_tasklet(dev, t, bh);
-> +	struct usbnet *dev = from_work(dev, work, bh_work);
-> 
->  	usbnet_bh(&dev->delay);
->  }
-> @@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
->  	skb_queue_head_init (&dev->txq);
->  	skb_queue_head_init (&dev->done);
->  	skb_queue_head_init(&dev->rxq_pause);
-> -	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-> +	INIT_WORK(&dev->bh_work, usbnet_bh_workqueue);
->  	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
->  	init_usb_anchor(&dev->deferred);
->  	timer_setup(&dev->delay, usbnet_bh, 0);
-> @@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
-> 
->  			if (!(dev->txq.qlen >= TX_QLEN(dev)))
->  				netif_tx_wake_all_queues(dev->net);
-> -			tasklet_schedule (&dev->bh);
-> +			queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
-> 
-> diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-> index 0b9f1e598e3a..208682f77179 100644
-> --- a/include/linux/usb/usbnet.h
-> +++ b/include/linux/usb/usbnet.h
-> @@ -58,7 +58,7 @@ struct usbnet {
->  	unsigned		interrupt_count;
->  	struct mutex		interrupt_mutex;
->  	struct usb_anchor	deferred;
-> -	struct tasklet_struct	bh;
-> +	struct work_struct	bh_work;
-> 
->  	struct work_struct	kevent;
->  	unsigned long		flags;
-> --
-> 2.27.0
-> 
+> diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+> deleted file mode 100644
+> index 706ef00f5c64951bb29c79a5541db4397e8b2733..0000000000000000000000000000000000000000
+> --- a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+> +++ /dev/null
+> @@ -1,43 +0,0 @@
+> -Cadence GPIO controller bindings
+> -
+
+
+...
+
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e71f0137912f88e69fb3fa20f096e1572211591c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-cdns.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cadence GPIO Controller
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +  - Bartosz Golaszewski <brgl@bgdev.pl>
+> +
+> +properties:
+> +  compatible:
+> +    const: cdns,gpio-r1p02
+> +
+> +  reg:
+> +    minItems: 1
+
+Why this is min and unconstrained...
+
+> +
+> +  clocks:
+> +    maxItems: 1
+
+But this is max?
+
+maxItems: 1 in both cases (so clocks are correct, but why writing
+similar things entirely different?).
+
+> +
+> +  ngpios:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Number of GPIO lines supported, maximum 32.
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +    description: |
+> +      - First cell is the GPIO line number.
+> +      - Second cell is flags as defined in <dt-bindings/gpio/gpio.h>,
+> +        only GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW supported.
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description: |
+> +      - First cell is the GPIO line number used as IRQ.
+> +      - Second cell is the trigger type, as defined in
+> +        <dt-bindings/interrupt-controller/irq.h>.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +
+> +if:
+> +  required: [interrupt-controller]
+> +then:
+> +  required:
+> +    - interrupts
+> +    - "#interrupt-cells"
+
+Drop last one, core schema requires it.
+
+
+Best regards,
+Krzysztof
