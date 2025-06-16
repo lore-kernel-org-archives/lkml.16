@@ -1,67 +1,67 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB253205ABF
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FAF8488;
+	Mon, 16 Jun 2025 16:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090497; cv=none; b=FsWtpWHXK30HUL9dOvwFO5eLonokOePSUAMFi4BVfY+wEaNwatayabxJ+smhPzWIZkcINn1LMYH/rQxutA/EKuwP/t7JjH8d7pOjcajQaKzqZZG9pA19fm9arsrzoEOnMzYBLVZyeyl/m+vZqHc+b123aHpEHFq3xuV2qvJffjc=
+	t=1750090548; cv=none; b=MSFDrOXWpjXmoW8pElQ8ZAPDFrRiUYwu50CNidEWjl6bJwSJ5BeVet4Ieg2ktOlpHlXLqr4LGYZTyn5Y7Rrn/oXupiwEEPEi2ekwynTcpU9d7Aj20kJxj/Fou3lgXJgwe+eAKeCKnYVXnjrhhNHhb3MqJpGH+mtPPo1L2vuQYYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090497; c=relaxed/simple;
-	bh=z439W5Ak0AIQ4ZXFqNztHbJlyRGwss0RRsUcYjTyWOk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jYiRQaPWRPD4vMC8MFCU56hH5rwatPVyIAwdFMla/CjYlgtgmcdHxJpUrBF9dkjjT3BBQnZZYydnk1NHsBbEtRYJjxTp4pBkZYObrbPYVzU3jx0LLEFzm67hd7G2lstTsBVfBL/hSqsID2wxjC9YR8rmhyNB6zA5Q3LOazrF+rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JNCL0Pl7; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750090548; c=relaxed/simple;
+	bh=935zNcaJcGG7oMJzxUyjQsMg/Nx8dBJNpeLAEjg7A8c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FNIPKCyQ2BwT/wdVM4HWVK6naFUww2ydFmPR0GyS8CzHy7ETjveMpvXavaO00LB2zdO6gH+ZojBNWUuwKmXrQw2rhsEtJNNtwMXI3mEqLJ+fEmlU+uYIA1rhQFTLt96E35y0WfRSbmwK7//du7F2/+Ljya9QNnxOCGVf+DyJFoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSToxyCB; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNCL0Pl7"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d54214adso36741905e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:14:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSToxyCB"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d4cba0so41308725ad.2;
+        Mon, 16 Jun 2025 09:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750090494; x=1750695294; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T6ibnzdhEbpwMjSrCwWztiKo4mjian3JWQr5b7BDJBQ=;
-        b=JNCL0Pl7wdkuKSQk9CBHiPDTjh+4d3b8wnIua7jG2CU4N+rLCSWGVFPRojdAMNynQX
-         d8CucZN80xB+Jls8HUNdgvzoxz/ufGm5ZV84adAb8oHwTpsIa+HLnC8nStiaYKdkw+hv
-         eWForqgLXeRPRG3B8brB0Mrlp39ndThlKyu4EhDVjEwftI7RXmvg5sfe697orWcZUFD8
-         vvRNiPYvKVdccZ4FvJrn8FmQKcDzCC+cVzBg43j9YnTujLaUbyBcg6hQtYpj+hXeTHZt
-         fHWv3ajTaQiVrTLtUKtBjtnrQc0izLfNveBHESgEA1RclJKSJjChxdA5ih5hWoZT0006
-         MthA==
+        d=gmail.com; s=20230601; t=1750090546; x=1750695346; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=0uTrBAG2kfrUAaLMnOEIfmT4aWIhMhsYQt4NXevwF/c=;
+        b=nSToxyCBnNPM8Vqlp3S7E+OsRlUPMVCzRc2hR2qqprhIhZzf3qmPtpTOofQYlxEx7g
+         Pp+tVu/D3/eJwknff+LS2pVprSArSMA+Ctr/hviUG8/jjOeXwgs771ve4YvzmI/a0YYG
+         Ma5m03Sat7NCNpoPd3CgiMUoBPisAYu18ILZ3Rh1WuCGElXg/Q9Z4Vee0vS0o4C+yBpV
+         zRUGXpdRXd2AXx6OgRs1a6PE6R3TuJGr4U2pzsMQ5DIx3QyxobTM2HjCKfEPQb/N197x
+         zVIUo4QvRzLtrqp9pi/3Ksf7RrneonOtLxzSiy6xgkrpH9l7m8hOw5/yW2Cbs8jCnRfQ
+         BamQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090494; x=1750695294;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=T6ibnzdhEbpwMjSrCwWztiKo4mjian3JWQr5b7BDJBQ=;
-        b=jPDzcYC1MgcuRfCFVxirwyNiFBQNWYplA14j87JWXWifz9/yCbchIoNSJYM0x3HyQq
-         VyyCeJ70YdlUEo9JJU+4kCev/AcR8xhTp+J1rhUANJfZ6OJbvk3RnnvFg/pCUDB69Wt2
-         yiyapIao+7fRMipDFsJuKxpycJ4XuWSP9z+S0lGjgJujOxstmObfDW2AOeRY5oRknSha
-         a47jq2cv0DArpmOyJ/7EGxnPo0+K9eoZNSOC2aNJZLEwvG+3CvbE5REs8F3de7S61oTk
-         165I0wac+rL9rpzAwzSTgxePoPfljZ3xZDsn/cr/yVC4RBZ4fzL8IlBP5mTxqFwBQepx
-         vGng==
-X-Forwarded-Encrypted: i=1; AJvYcCUMvLXFex4yXJoMJsHAgANka9zWFr8jeEJTUfdVqaAD9LkgYlr5D7bKmijZuUwFAZrH10fZacEiqPkzTsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHsEeIk5OvPfLPIr4hsAvyFrM8Q9ggLCK/t+bSStujp16jjojb
-	jHR7Iq2yJ6K4OVStOQ/h0hwFFgYrxPTUjEWm8wy7OGUnQLuFQrON7DRku260jkwvYnY=
-X-Gm-Gg: ASbGncv8PHPvJjERkYeAKjdxr9rQ/nC1ExhiuQwbQm+UH1g6xbYRvh7oeXXPEuREndG
-	shbPxGMXGDfFDqlrGvDBo4SblBDgm4fNzNh4v0fZPE4jAyT8pZO0UHwhVc/hBAPooH93Bus1buk
-	N1VVTkW5iJnUwUQetnT6qB/CNazhOaQm87/PH8t/AeXGQKABgls8spWJ42kQiKGxjlHqhrlsPZH
-	XuWkwRE0HNmT+mLK6Ti29CqpQmhTGp5gP0VnF3j4YHU42hjnwRz9yRwdG9k8AIh3V60pRty+Qza
-	M1ahPFi1efT6ltKpA0gM+j8IJuS1kaDVMfF/CVzxffP0rU5QM5EuNyOACX8ftWMaOvW/51w3KZp
-	ZPbke9xxDjYdxBywg/Mw5yJ3zp76rzQBcQDEt
-X-Google-Smtp-Source: AGHT+IEPIO5Rqt/93HylwQWU87OlnErReHGRzssV5WREAarN4Bu7nuprotM72PiFJu5jYscm3o2rqw==
-X-Received: by 2002:a05:600c:4e02:b0:453:c39:d0c2 with SMTP id 5b1f17b1804b1-4533cab541amr86940715e9.24.1750090494145;
-        Mon, 16 Jun 2025 09:14:54 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:6c7:97de:65a8:488a? ([2a01:e0a:3d9:2080:6c7:97de:65a8:488a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea1cc5sm153416565e9.16.2025.06.16.09.14.53
+        d=1e100.net; s=20230601; t=1750090546; x=1750695346;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0uTrBAG2kfrUAaLMnOEIfmT4aWIhMhsYQt4NXevwF/c=;
+        b=CroCSpMRHaEtW+xpFYtDx5Gbi/GNnuxBAkVPw93laaIzU7jLS8wFaAA38d18cAcIjq
+         jJQenCKm7meeSSPnJWjBgl96ZplgGWuRP2vwDxsvkdanPv63J2mI4/RaLU4MEJ77HB61
+         JsB59wKltKqPCmJfIoMOZhhoAJvGVvRB6bulZPd0Ib0RooPyD6rwXkuDmowsRBdf3F9U
+         1pG0z9yusE95b71QELSAE1oP/N/EnsOwPVa5F+NIMslkk4Qs3E9GY0M/SG0FaHjPi0r2
+         PrukJ8zlzEFcQETavThsigZoyoCdpQ5yvZEgNUQuoWuumO6Xgdzy2G5Wfe/X5ECGTVNV
+         2NVA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7mjO2YfDhX+NJPVKOTxnTwilgZvkmfYMfke6ldzdzU4BZHKIfvb2LDc4RuJHQL8mCn+kzGQhP48g=@vger.kernel.org, AJvYcCVtt5ZEuC/W2UIN8YacOMiQCWC89eriwoKMrBE8F1lfHenyCRccZfVA+TNpM8ak5V+MejAEiEJUzRdOLDC1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA09SbeAIgC6DxYhIpG/cv+ra/VfkrBJ8IDkFvJeed/c/qYgin
+	SFGv/TZDnAw+Q0gsLLNhqTjg5TatmM18pjbuF2EXsc+oA1xQTLqtbXp73LUcPQ==
+X-Gm-Gg: ASbGnctxG4WNIQVhPj3UjNz0WRPAqTRsDhGLCOdrGOr7oJj8+umqHirslRAnTlD/2cf
+	p2ZW/8kZk5Inl5Oa6SE0t1CUsAaPjnJqZ4eN+IJZn6y5nIlo0AvNo+ESHzHPdzjNUIzYr/vYaRC
+	1cPcO0kP6UkWur6WuVzFSUZrvPISG2Tzf82mm8QU/3vVwIePgswaXcvRyYESj0LOiRHN8V7eHjL
+	A5XPf/IQrUwD0Dz0rlN2Scl895GORSQfzL29V8ZPTqCVeH9C3S3vcnRDBmbdBWrttO9dQtjOj2I
+	xWaFQRcun+8b9FzQJrcFL3lrPq4zgiKLGDnvYnLaLyeL4FbzrmfArV5uKwZIilxVLsOcGilYIvE
+	FcXmVQ4Wlo7FqDwSEoPaKUIC6/UqtsNXEQFA=
+X-Google-Smtp-Source: AGHT+IE3tA7AOwwFFvjHA9hJdPQ7s1oXsnxKqkEoFfrcTl0NZisx9y/jSj/aqeB4j77TJbzdQQgPFQ==
+X-Received: by 2002:a17:902:fc8f:b0:235:6e7:8df2 with SMTP id d9443c01a7336-2366b14e74cmr163962135ad.41.1750090545628;
+        Mon, 16 Jun 2025 09:15:45 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78565sm63031435ad.124.2025.06.16.09.15.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 09:14:53 -0700 (PDT)
-Message-ID: <346f0fbe-5bf7-492e-9e00-0fafbf02899e@linaro.org>
-Date: Mon, 16 Jun 2025 18:14:53 +0200
+        Mon, 16 Jun 2025 09:15:45 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <b278e83a-473f-46ee-b353-3f8c14d03aaf@roeck-us.net>
+Date: Mon, 16 Jun 2025 09:15:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,168 +69,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 00/28] interconnect: qcom: icc-rpmh: use NULL-terminated
- arrays and drop static IDs
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Georgi Djakov <djakov@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250616-rework-icc-v1-0-bc1326294d71@oss.qualcomm.com>
- <786e3337-4c14-4281-932e-6a93aac53cf8@linaro.org>
- <8af6ce19-7aa3-4fc7-a963-d8ab0cd22b02@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <8af6ce19-7aa3-4fc7-a963-d8ab0cd22b02@oss.qualcomm.com>
+Subject: Re: [PATCH v9 2/2] hwmon: (pmbus/tps53679) Add support for TPS53685
+To: Chiang Brian <chiang.brian@inventec.com>, Jean Delvare
+ <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20250610102556.236300-1-chiang.brian@inventec.com>
+ <20250610102556.236300-3-chiang.brian@inventec.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <20250610102556.236300-3-chiang.brian@inventec.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 17:53, Dmitry Baryshkov wrote:
-> On 16/06/2025 18:51, neil.armstrong@linaro.org wrote:
->> Hi,
->>
->> On 16/06/2025 02:28, Dmitry Baryshkov wrote:
->>> Qualcomm interconnect code has been using .num_foo fields together with
->>> the arrays embedded in the structure, which results in hard-to-notice
->>> mistakes if .num_foo gets omitted or incorrect.
->>>
->>> Rework RPMh interconnect code to use NULL-terminated arrays for the
->>> dynamic IDs case (as now all the arrays contain only pointers) and,
->>> while we are at it, rework all the drivers to use dynamic IDs and drop
->>> static IDs code.
->>>
->>> This series touches only RPMh interconnect drivers. Corresponding series
->>> for RPM drivers will follow up shortly.
->>
->> Can you specify on which base thie patchset applies ?
->>
->> I tried v6.15, v6.16-rc1, v6.16-rc2, next-20250613 & next-20250616 and they all fail to
->> apply on patch 5.
-> 
-> I'm sorry, I forgot to mention https://lore.kernel.org/linux-arm-msm/20250613-sc7280-icc-pcie1-fix-v1-1-0b09813e3b09@radxa.com/
+On 6/10/25 03:25, Chiang Brian wrote:
+...
+> @@ -263,6 +282,10 @@ static int tps53679_probe(struct i2c_client *client)
+>   		info->identify = tps53681_identify;
+>   		info->read_word_data = tps53681_read_word_data;
+>   		break;
+> +	case tps53685:
+> +	    info->pages = TPS53679_PAGE_NUM;
+> +	    info->identify = tps53685_identify;
+> +		break;
 
-This does the trick, thx!
+0-day rightfully complains about the bad alignment above.
 
-Neil
+If you want this patch to be applied for the next kernel release,
+I would suggest to copy the hardware monitoring list on the first patch
+of the series. Without it, I get
 
-> 
->>
->> Thanks,
->> Neil
->>
->>>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->>> ---
->>> Dmitry Baryshkov (28):
->>>        interconnect: qcom: sc8280xp: specify num_links for qnm_a1noc_cfg
->>>        interconnect: qcom: sc8180x: specify num_nodes
->>>        interconnect: qcom: rpmh: make nodes a NULL_terminated array
->>>        interconnect: qcom: rpmh: make link_nodes a NULL_terminated array
->>>        interconnect: qcom: sc7280: convert to dynamic IDs
->>>        interconnect: qcom: sc8180x: convert to dynamic IDs
->>>        interconnect: qcom: sc8280xp: convert to dynamic IDs
->>>        interconnect: qcom: sdm845: convert to dynamic IDs
->>>        interconnect: qcom: sm8250: convert to dynamic IDs
->>>        interconnect: qcom: x1e80100: convert to dynamic IDs
->>>        interconnect: qcom: qcs615: convert to dynamic IDs
->>>        interconnect: qcom: qcs8300: convert to dynamic IDs
->>>        interconnect: qcom: qdu1000: convert to dynamic IDs
->>>        interconnect: qcom: sar2130p: convert to dynamic IDs
->>>        interconnect: qcom: sc7180: convert to dynamic IDs
->>>        interconnect: qcom: sdm670: convert to dynamic IDs
->>>        interconnect: qcom: sdx55: convert to dynamic IDs
->>>        interconnect: qcom: sdx65: convert to dynamic IDs
->>>        interconnect: qcom: sdx75: convert to dynamic IDs
->>>        interconnect: qcom: sm6350: convert to dynamic IDs
->>>        interconnect: qcom: sm7150: convert to dynamic IDs
->>>        interconnect: qcom: sm8150: convert to dynamic IDs
->>>        interconnect: qcom: sm8350: convert to dynamic IDs
->>>        interconnect: qcom: sm8450: convert to dynamic IDs
->>>        interconnect: qcom: sm8550: convert to dynamic IDs
->>>        interconnect: qcom: sm8650: convert to dynamic IDs
->>>        interconnect: qcom: sm8750: convert to dynamic IDs
->>>        interconnect: qcom: icc-rpmh: drop support for non-dynamic IDS
->>>
->>>   drivers/interconnect/qcom/bcm-voter.c |    4 +-
->>>   drivers/interconnect/qcom/icc-rpmh.c  |   20 +-
->>>   drivers/interconnect/qcom/icc-rpmh.h  |   13 +-
->>>   drivers/interconnect/qcom/qcs615.c    |  713 ++++++++-----------
->>>   drivers/interconnect/qcom/qcs615.h    |  128 ----
->>>   drivers/interconnect/qcom/qcs8300.c   |  911 +++++++++++-------------
->>>   drivers/interconnect/qcom/qcs8300.h   |  177 -----
->>>   drivers/interconnect/qcom/qdu1000.c   |  470 ++++++------
->>>   drivers/interconnect/qcom/qdu1000.h   |   95 ---
->>>   drivers/interconnect/qcom/sa8775p.c   |  493 ++++++-------
->>>   drivers/interconnect/qcom/sar2130p.c  |  795 ++++++++-------------
->>>   drivers/interconnect/qcom/sc7180.c    |  892 +++++++++++------------
->>>   drivers/interconnect/qcom/sc7180.h    |  149 ----
->>>   drivers/interconnect/qcom/sc7280.c    |  840 ++++++++++------------
->>>   drivers/interconnect/qcom/sc7280.h    |  154 ----
->>>   drivers/interconnect/qcom/sc8180x.c   | 1013 +++++++++++++-------------
->>>   drivers/interconnect/qcom/sc8180x.h   |  179 -----
->>>   drivers/interconnect/qcom/sc8280xp.c  | 1257 +++++++++++++++ +-----------------
->>>   drivers/interconnect/qcom/sc8280xp.h  |  209 ------
->>>   drivers/interconnect/qcom/sdm670.c    |  712 +++++++++----------
->>>   drivers/interconnect/qcom/sdm670.h    |  128 ----
->>>   drivers/interconnect/qcom/sdm845.c    |  986 ++++++++++++--------------
->>>   drivers/interconnect/qcom/sdm845.h    |  140 ----
->>>   drivers/interconnect/qcom/sdx55.c     |  611 ++++++++--------
->>>   drivers/interconnect/qcom/sdx55.h     |   70 --
->>>   drivers/interconnect/qcom/sdx65.c     |  577 +++++++--------
->>>   drivers/interconnect/qcom/sdx65.h     |   65 --
->>>   drivers/interconnect/qcom/sdx75.c     |  498 ++++++-------
->>>   drivers/interconnect/qcom/sdx75.h     |   97 ---
->>>   drivers/interconnect/qcom/sm6350.c    |  838 +++++++++++-----------
->>>   drivers/interconnect/qcom/sm6350.h    |  139 ----
->>>   drivers/interconnect/qcom/sm7150.c    |  860 +++++++++++-----------
->>>   drivers/interconnect/qcom/sm7150.h    |  140 ----
->>>   drivers/interconnect/qcom/sm8150.c    |  930 ++++++++++++------------
->>>   drivers/interconnect/qcom/sm8150.h    |  152 ----
->>>   drivers/interconnect/qcom/sm8250.c    |  977 ++++++++++++-------------
->>>   drivers/interconnect/qcom/sm8250.h    |  168 -----
->>>   drivers/interconnect/qcom/sm8350.c    |  901 ++++++++++++-----------
->>>   drivers/interconnect/qcom/sm8350.h    |  158 -----
->>>   drivers/interconnect/qcom/sm8450.c    |  823 ++++++++++-----------
->>>   drivers/interconnect/qcom/sm8450.h    |  169 -----
->>>   drivers/interconnect/qcom/sm8550.c    |  683 ++++++++----------
->>>   drivers/interconnect/qcom/sm8550.h    |  138 ----
->>>   drivers/interconnect/qcom/sm8650.c    |  713 ++++++++-----------
->>>   drivers/interconnect/qcom/sm8650.h    |  144 ----
->>>   drivers/interconnect/qcom/sm8750.c    |  779 ++++++++------------
->>>   drivers/interconnect/qcom/x1e80100.c  |  819 ++++++++++-----------
->>>   drivers/interconnect/qcom/x1e80100.h  |  192 -----
->>>   48 files changed, 8655 insertions(+), 13464 deletions(-)
->>> ---
->>> base-commit: 410f15dcfe222c06f0d6379adec630061e88dc72
->>> change-id: 20250613-rework-icc-0d3b7276a798
->>>
->>> Best regards,
->>
-> 
-> 
+WARNING: DT compatible string "ti,tps53685" appears un-documented -- check ./Documentation/devicetree/bindings/
+#296: FILE: drivers/hwmon/pmbus/tps53679.c:316:
++	{.compatible = "ti,tps53685", .data = (void *)tps53685},
+
+Since I am not copied on the first patch of the series, that patch has to be applied
+through a different maintainer tree, and I have to wait until that is the case.
+Not that I understand the logic behind it, but I mentioned that before, so I assume
+this is on purpose.
+
+Guenter
 
