@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2FF215787;
-	Mon, 16 Jun 2025 21:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71301220685;
+	Mon, 16 Jun 2025 21:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750110413; cv=none; b=aVcSDf9Jk1XpqJzSLfjc3taGQ2Qqa/jjSAD6Le4Zc53iLjCzOJZdk/d/wN5gEcv27ttF+RTCJhAsbkV5vUfwBAJlZkuDRVZKtX2G3n1tYsSew/sWxlk6nH+K/CVk4Z3KEKeKhO34BH+LhpnYv/6zUlNE4GFsO2pO5cvGH0oNG48=
+	t=1750110414; cv=none; b=SOMsyiIKrTf+IKTksMld7cygb07jz/RjiwR/1YcmX6xkCKcDrOEBJso0U8WsJCsKU0+zBnoRpY1y5kKhIvgNZxHGcy1eSBNGQx+ublbt5t5uOrx0ZLrtP07zKiqznTwwpHzTHLtYzJaah7SWl7EL83eVeBlRc5DDU+VA0Xb06TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750110413; c=relaxed/simple;
-	bh=P+l1gSKaL1N/vyV+DOT1UrSQ4fffm5IIUx8ooXOed1E=;
+	s=arc-20240116; t=1750110414; c=relaxed/simple;
+	bh=JAcWr9Lih1V6trC/l9AqcHpRyK4rtZChF4W18X2kJtw=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=DB8zfgLzek1N7+HyPPb/VpjsC8/uTc/wouqm0Gq6Wvp9cGW2zTFvPpDEM2EfDfW1BkDAC12fcY0YKSPCKu3TdRmHBsaNRmBFlw2w8BgTISYN6xf7tH9Ro2H/oTbI49pAVWOZB3t7VcYJyTE9YK3D404kY2QdLMIV6edwxhoj9n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Szj//WWW; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=O5hmOD6jbEX5hnyWAFvdx2pnjCmcpC+kPllXEXrWzBX2JqrXd3KEITtzDUqpTlQFcM8FFeP8VFtoFG1QSnj3jfHadA3MzgNY01y+ihEAiH1W4V4wCZwCoP+qAj7NXqa7nW+Di28ZIm+j3CY5yiigOGiNQsSm69GFidSipdEinjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZ7oP5ex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Szj//WWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0563C4CEEA;
-	Mon, 16 Jun 2025 21:46:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZ7oP5ex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F29C4CEEF;
+	Mon, 16 Jun 2025 21:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750110412;
-	bh=P+l1gSKaL1N/vyV+DOT1UrSQ4fffm5IIUx8ooXOed1E=;
+	s=k20201202; t=1750110414;
+	bh=JAcWr9Lih1V6trC/l9AqcHpRyK4rtZChF4W18X2kJtw=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Szj//WWWSX7Egy9IV2n6oWiSAnYoeR2NqgHnX6qjBNb51Cg9RQjsjbFnJ3zztDe8I
-	 mSliIgqysC/frhCJncjVf5IjJfwL3+RFTyNYEoeTZc9iZytlm25WR5L3oiIcwRLE+L
-	 14FRqZkbLm985wPGnXuwRIHuqcqLEwognK039s6OIv+JrYUbBhHvCSNXBgy4fxshrG
-	 v2VW/RkUuYvSAMdeiUXbcGOsntoaKQb+er/qIT3+19KN0J1w518JKZ1TbLzHQR/svV
-	 PjoC8pLV80/inUonAbTvUn4eebPmKkQqh0MMu6Bz8+PE0wAREEtES8s7Y5EeJF8Jvf
-	 7ov4q6jsw2+jw==
-Date: Mon, 16 Jun 2025 16:46:51 -0500
+	b=LZ7oP5exlRpixAW6HVjAqfY+3PptnMakliboKTugLspswvoEDL/EukMV2JsfYOT5/
+	 w57Fhfhl0LySHKbwvConyb5AY76ec7Fggrh3gNEenDMX504qP0ZIoe9U3ctUURG26m
+	 3dDP7uVBb44FRvIqSTyWk6y5aXxuV6vGCfOSWL/9zNrLa80D6KY2oS7JmG02eR24yx
+	 3OZ4RsepWa7iXOZN1onUHDOhlhGbuJep56coCNxRilnLrrlRr3wagwmqsiAzq5IVfm
+	 Dw23FOMsjP0WG/MDPvSGbhC95gL61NBnQpy9tBar52S1rZOf6US23NECnenujSEpWT
+	 mg3uO/8AT9f2Q==
+Date: Mon, 16 Jun 2025 16:46:52 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,116 +36,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: rosa.pila@samsung.com, s.nawrocki@samsung.com, 
- linux-samsung-soc@vger.kernel.org, conor+dt@kernel.org, 
- linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
- linux-phy@lists.infradead.org, vkoul@kernel.org, krzk+dt@kernel.org, 
- faraz.ata@samsung.com, selvarasu.g@samsung.com, kauschluss@disroot.org, 
- ivo.ivanov.ivanov1@gmail.com, dev.tailor@samsung.com, 
- devicetree@vger.kernel.org, kishon@kernel.org, peter.griffin@linaro.org, 
- muhammed.ali@samsung.com, linux-arm-kernel@lists.infradead.org, 
- alim.akhtar@samsung.com, m.szyprowski@samsung.com
-To: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-In-Reply-To: <20250613055613.866909-1-pritam.sutar@samsung.com>
-References: <CGME20250613055037epcas5p1ce00fda1b535dbeb9a98458d1f0a28ee@epcas5p1.samsung.com>
- <20250613055613.866909-1-pritam.sutar@samsung.com>
-Message-Id: <175011004935.2433563.8726528182523156685.robh@kernel.org>
-Subject: Re: [PATCH v3 0/9] initial usbdrd phy support for Exynosautov920
- soc
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, conor+dt@kernel.org, 
+ edumazet@google.com, peng.fan@nxp.com, krzk+dt@kernel.org, 
+ catalin.marinas@arm.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org, 
+ ping.bai@nxp.com, imx@lists.linux.dev, ye.li@nxp.com, 
+ richardcochran@gmail.com, linux-pm@vger.kernel.org, festevam@gmail.com, 
+ kuba@kernel.org, davem@davemloft.net, mcoquelin.stm32@gmail.com, 
+ linux-stm32@st-md-mailman.stormreply.com, s.hauer@pengutronix.de, 
+ linux-arm-kernel@lists.infradead.org, frank.li@nxp.com, pabeni@redhat.com, 
+ netdev@vger.kernel.org, andrew+netdev@lunn.ch, alexandre.torgue@foss.st.com, 
+ will@kernel.org, ulf.hansson@linaro.org, aisheng.dong@nxp.com, 
+ xiaoning.wang@nxp.com
+To: Joy Zou <joy.zou@nxp.com>
+In-Reply-To: <20250613100255.2131800-1-joy.zou@nxp.com>
+References: <20250613100255.2131800-1-joy.zou@nxp.com>
+Message-Id: <175011005057.2433615.9910599057752637741.robh@kernel.org>
+Subject: Re: [PATCH v5 0/9] Add i.MX91 platform support
 
 
-On Fri, 13 Jun 2025 11:26:04 +0530, Pritam Manohar Sutar wrote:
-> This SoC has a single USB 3.1 DRD combo phy and three USB2.0 only
-> DRD phy controllers
+On Fri, 13 Jun 2025 18:02:46 +0800, Joy Zou wrote:
+> The design of i.MX91 platform is very similar to i.MX93.
+> Extracts the common parts in order to reuse code.
 > 
->   - Combo phy supports USB3.1 SSP+(10Gbps) protocol and is backwards
->     compatible to the USB3.0 SS(5Gbps). 'Add-on USB2.0' phy is added
->     to support USB2.0 HS(480Mbps), FS(12Mbps) and LS(1.5Mbps) data
->     rates. These two phys are combined to form a combo phy as mentioned
->     below.
+> The mainly difference between i.MX91 and i.MX93 is as follows:
+> - i.MX91 removed some clocks and modified the names of some clocks.
+> - i.MX91 only has one A core.
+> - i.MX91 has different pinmux.
+> - i.MX91 has updated to new temperature sensor same with i.MX95.
 > 
->    USB30DRD_0 port
+> ---
+> Changes for v5:
+> - rename imx93.dtsi to imx91_93_common.dtsi.
+> - move imx93 specific part from imx91_93_common.dtsi to imx93.dtsi.
+> - modify the imx91.dtsi to use imx91_93_common.dtsi.
+> - add new the imx93-blk-ctrl binding and driver patch for imx91 support.
+> - add new net patch for imx91 support.
+> - change node name codec and lsm6dsm into common name audio-codec and
+>   inertial-meter, and add BT compatible string for imx91 board dts.
 > 
->      +-----------------------------------------------------+
->      |                                                     |
->      |           (combo) USB PHY controller                |
->      |     +-----------------------------------------+     |
->      |     |               USB HSPHY                 |     |
->      |     |  (samsung,exynosautov920-usbdrd-hsphy)  |     |
->      |     +-----------------------------------------+     |
->      |                                                     |
->      |   +---------------------------------------------+   |
->      |   |               USB SSPHY                     |   |
->      |   |   (samsung,exynosautov920-usb31drd-ssphy)   |   |
->      |   +---------------------------------------------+   |
->      |                                                     |
->      +-----------------------------------------------------+
->      |                                                     |
->      |                USBDRD30 Link                        |
->      |                  Controller                         |
->      |                                                     |
->      +-----------------------------------------------------+
+> Changes for v4:
+> - Add one imx93 patch that add labels in imx93.dtsi
+> - modify the references in imx91.dtsi
+> - modify the code alignment
+> - remove unused newline
+> - delete the status property
+> - align pad hex values
 > 
->   - USB2.0 phy supports only UTMI+ interface. USB2.0DRD phy
->     is very similar to the existing Exynos850 support in this driver.
+> Changes for v3:
+> - Add Conor's ack on patch #1
+> - format imx91-11x11-evk.dts with the dt-format tool
+> - add lpi2c1 node
 > 
->     USB20DRD_0/1/2 ports
+> Changes for v2:
+> - change ddr node pmu comaptible
+> - remove mu1 and mu2
+> - change iomux node compatible and enable 91 pinctrl
+> - refine commit message for patch #2
+> - change hex to lowercase in pinfunc.h
+> - ordering nodes with the dt-format tool
 > 
+> Joy Zou (8):
+>   dt-bindings: soc: imx-blk-ctrl: add i.MX91 blk-ctrl compatible
+>   arm64: dts: freescale: rename imx93.dtsi to imx91_93_common.dtsi
+>   arm64: dts: imx93: move i.MX93 specific part from imx91_93_common.dtsi
+>     to imx93.dtsi
+>   arm64: dts: imx91: add i.MX91 dtsi support
+>   arm64: dts: freescale: add i.MX91 11x11 EVK basic support
+>   arm64: defconfig: enable i.MX91 pinctrl
+>   pmdomain: imx93-blk-ctrl: mask DSI and PXP PD domain register on
+>     i.MX91
+>   net: stmmac: imx: add i.MX91 support
 > 
->       +---------------------------------------------------+
->       |                                                   |
->       |                USB PHY controller                 |
->       |    +-----------------------------------------+    |
->       |    |              USB HSPHY                  |    |
->       |    |  (samsung,exynosautov920-usbdrd-phy)    |    |
->       |    +-----------------------------------------+    |
->       |                                                   |
->       +---------------------------------------------------+
->       |                                                   |
->       |             USBDRD20_* Link                       |
->       |                Controller                         |
->       |                                                   |
->       +---------------------------------------------------+
+> Pengfei Li (1):
+>   dt-bindings: arm: fsl: add i.MX91 11x11 evk board
 > 
-> This patchset only supports device mode and same is verified with
-> as NCM device with below configfs commands
-> 
-> changelog
-> ----------
-> Changes in v2:
-> - Used standard GENMASK() and FIELD_GET() to get the major version
->   from controller version register.
->   link for v1: https://lore.kernel.org/linux-phy/20250514134813.380807-1-pritam.sutar@samsung.com/
-> 
-> Changes in v3:
-> - Updated dt-bindings for USB2.0 only.
-> - Added dt-bindings for combo phy.
-> - Added implementation for combo phy (SS and HS phy).
-> - Added added DTS nodes for all the phys.
->   link for v2: https://lore.kernel.org/linux-phy/20250516102650.2144487-1-pritam.sutar@samsung.com/
-> 
-> Pritam Manohar Sutar (9):
->   dt-bindings: phy: samsung,usb3-drd-phy: add ExynosAutov920 HS phy
->     compatible
->   phy: exyons5-usbdrd: support HS phy for ExynosAutov920
->   arm64: dts: exynos: ExynosAutov920: add USB and USB-phy nodes
->   dt-bindings: phy: samsung,usb3-drd-phy: add ExynosAutov920 combo HS
->     phy
->   phy: exyons5-usbdrd: support HS combo phy for ExynosAutov920
->   arm64: dts: exynos: ExynosAutov920: add USB and USB HS combo phy nodes
->   dt-bindings: phy: samsung,usb3-drd-phy: add ExynosAutov920 combo SS
->     phy
->   phy: exyons5-usbdrd: support SS combo phy for ExynosAutov920
->   arm64: dts: exynos: ExynosAutov920: add USB and USB SS combo phy nodes
-> 
->  .../bindings/phy/samsung,usb3-drd-phy.yaml    |   6 +
->  .../boot/dts/exynos/exynosautov920-sadk.dts   |  53 ++
->  .../arm64/boot/dts/exynos/exynosautov920.dtsi | 155 +++++
->  drivers/phy/samsung/phy-exynos5-usbdrd.c      | 529 ++++++++++++++++++
->  4 files changed, 743 insertions(+)
+>  .../devicetree/bindings/arm/fsl.yaml          |    6 +
+>  .../soc/imx/fsl,imx93-media-blk-ctrl.yaml     |   55 +-
+>  arch/arm64/boot/dts/freescale/Makefile        |    1 +
+>  .../boot/dts/freescale/imx91-11x11-evk.dts    |  878 ++++++++++
+>  arch/arm64/boot/dts/freescale/imx91-pinfunc.h |  770 +++++++++
+>  arch/arm64/boot/dts/freescale/imx91.dtsi      |  124 ++
+>  .../boot/dts/freescale/imx91_93_common.dtsi   | 1215 ++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx93.dtsi      | 1412 ++---------------
+>  arch/arm64/configs/defconfig                  |    1 +
+>  .../net/ethernet/stmicro/stmmac/dwmac-imx.c   |    2 +
+>  drivers/pmdomain/imx/imx93-blk-ctrl.c         |   15 +
+>  11 files changed, 3166 insertions(+), 1313 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx91-11x11-evk.dts
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx91-pinfunc.h
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx91.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx91_93_common.dtsi
 > 
 > --
-> 2.34.1
+> 2.37.1
 > 
 > 
 > 
@@ -167,21 +150,14 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/v6.16-rc1-6-g8a22d9e79cf0 (exact match)
+ Base: tags/v6.16-rc1-6-g8a22d9e79cf0 (best guess, 6/7 blobs matched)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250613055613.866909-1-pritam.sutar@samsung.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250613100255.2131800-1-joy.zou@nxp.com:
 
-arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16600000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
-arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16700000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
-arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16800000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
-arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16900000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
+arch/arm64/boot/dts/freescale/imx91-11x11-evk.dtb: /soc@0/bus@44000000/thermal-sensor@44482000: failed to match any schema with compatible: ['fsl,imx91-tmu']
 
 
 
