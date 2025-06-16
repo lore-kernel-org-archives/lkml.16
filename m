@@ -1,95 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27613126F0A;
-	Mon, 16 Jun 2025 14:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8911F8AD3
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084303; cv=none; b=Jx0cMM5XC7R9BaSTdtBjJrRmUfjlRBzKjUIm14Y3jJmjZ6JxFLe7vPEJ9+1vs/RlvHHOwaNrR/rVO4gLj68WjVCjF5azxhOiEAajn/Bh1vkBIwzboGQfKV7vRBFZ39kr6vTmsgm+k68rYZa9e+pNCJBW9FqalFIU4Vx7pJA+cm8=
+	t=1750084312; cv=none; b=WRFNvt4dAlpqUWAAj9wjqwJDhbqBLQC7BD4eseNkPplLyZoLmCmYMm5g2VSr0ZvF7cZAa/lQCNX+o/o1GqHGKBCsx/KFjOYZDrGGUIayGG3bjPMYlmB1e8ImiW/bpGejHfZKvkIFHpI7hc9Uk7gzD7MWaL5tzzG6JaqPI2xQSEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084303; c=relaxed/simple;
-	bh=WulBjw8ArzfQyf38C3shN1EE4DycRB8irg80xQNbZ2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZbVMVDMjVi6uaLVZzLmPNt92uXoMDl5fWazn9/pfBtjkveQQrf9+OEpxEVfjtradoXywaUxwCfwIz7qhIVv6WhWZDcx4hdBhAihNii0H7duUgoaTqhLGguc+HzUqW+XAN6NqRyBjcpqGnZKh9OUq/01VwCApGPG7octuqU6weIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNY68t13; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNY68t13"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D0B9C4CEEA;
-	Mon, 16 Jun 2025 14:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750084302;
-	bh=WulBjw8ArzfQyf38C3shN1EE4DycRB8irg80xQNbZ2c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mNY68t131j2sbE+wrh/9hFO/9Y6RIDXstIu70Eaxz5LP3nuynE6eJTlLPTJZw3Dz6
-	 uK1mmHGzPxr//YXp3ZzTbNsIrhSQwPvGBnCTEnUdlmUwnZj9Vw+Mum81Nk8tdn+w9N
-	 9Zfq6xRVMs4ngsURFm9Lh4lfkm1MELs6H+bJgrodMmhUry7LKrSI1yQk4E+VnPBExc
-	 OuQlCCHZsvlYcIkssLi0VvLUFTtD4+WO56nEiMN5yjmb7DiWo79KcHBXchDmJMemcM
-	 8lDIs8aDGxdc2rDGfZcPnnhlJXaGZhLjqkax7MUPIpNzbalzTB7skInSacujqByJU4
-	 YoqEjkina0ULw==
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Tyler Hicks <code@tyhicks.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <smfrench@gmail.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	netfs@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-unionfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] VFS: change old_dir and new_dir in struct renamedata to dentrys
-Date: Mon, 16 Jun 2025 16:31:26 +0200
-Message-ID: <20250616-kopfende-seilbahn-cdd8b52e8b2a@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <174977089072.608730.4244531834577097454@noble.neil.brown.name>
-References: <174977089072.608730.4244531834577097454@noble.neil.brown.name>
+	s=arc-20240116; t=1750084312; c=relaxed/simple;
+	bh=sP5m0kuPKiS/WCBtatxWYXmjGlGqfu0bIYTcLzutOvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bAWAk2CJ3JBkdHt4lCLBfx3E7ioPwwMa1Ixy9JJm524ojA067scxXMJh45kuqP/OZZ0XIf3vdir135YMiPaKbZ5CBJpfEUKhMJJMZ+KspgqQHgZiaHL0ruqqAkBepd8b0lQxzwQw5ASWd0vbRDa6SOt1007eMDEx1UBOLHowpEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uRAsE-0003e3-SA; Mon, 16 Jun 2025 16:31:46 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uRAsE-003p3H-1h;
+	Mon, 16 Jun 2025 16:31:46 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uRAsE-00H5ur-1H;
+	Mon, 16 Jun 2025 16:31:46 +0200
+Date: Mon, 16 Jun 2025 16:31:46 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: pca953x: fix wrong error probe return value
+Message-ID: <aFAq0il8HFQNFyWk@pengutronix.de>
+References: <20250616134503.1201138-1-s.hauer@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1303; i=brauner@kernel.org; h=from:subject:message-id; bh=WulBjw8ArzfQyf38C3shN1EE4DycRB8irg80xQNbZ2c=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQEaB3r/skkzG/dU7zq7OYZB2SP/H3J2bay5X+S9Hxnq x7DU+sEO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYyJYHhv59k+Svl0KXhUxjZ iu/PF1ued/OkguBbn67p/MqT1ZX8rzD8D9t6ISvTuPp1iuevd8rSq2KDco019lqp/93E9rzx0tE jzAA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616134503.1201138-1-s.hauer@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, 13 Jun 2025 09:28:10 +1000, NeilBrown wrote:
-> all users of 'struct renamedata' have the dentry for the old and new
-> directories, and often have no use for the inode except to store it in
-> the renamedata.
+On Mon, Jun 16, 2025 at 03:45:03PM +0200, Sascha Hauer wrote:
+> The second argument to dev_err_probe() is the error value. Pass the
+> return value of devm_request_threaded_irq() there instead of the irq
+> number.
+>
+
+Fixes: c47f7ff0fe61 ("gpio: pca953x: Utilise dev_err_probe() where it makes sense")
+
+Sascha
+
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This patch changes struct renamedata to hold the dentry, rather than
-> the inode, for the old and new directories, and changes callers to
-> match.  The names are also changed from a _dir suffix to _parent.  This
-> is consistent with other usage in namei.c and elsewhere.
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index b852e49976294..e80a96f397885 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -974,7 +974,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
+>  					IRQF_ONESHOT | IRQF_SHARED, dev_name(dev),
+>  					chip);
+>  	if (ret)
+> -		return dev_err_probe(dev, client->irq, "failed to request irq\n");
+> +		return dev_err_probe(dev, ret, "failed to request irq\n");
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.39.5
 > 
-> [...]
+> 
 
-Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.17.misc branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.17.misc
-
-[1/1] VFS: change old_dir and new_dir in struct renamedata to dentrys
-      https://git.kernel.org/vfs/vfs/c/bc9241367aac
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
