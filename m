@@ -1,28 +1,29 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74701156677
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DDF23AD
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750036132; cv=none; b=C/AHwf/s7819wvWaF6g/HnwMUVvqqMqAfBzIF1Eb7GGt1YlKDLOEcevALHlW0clAdPUA4dTFYOsZBJ4oM0GqqlHcgZkRFO4wCOEuSmxmT8c1xO1DPMp7HeulNebX8NCA1bwSwQt8Sft0kZsxWPCsLPRKfsqoqIQS4rPkYyUQJG8=
+	t=1750036133; cv=none; b=F/a/5pLn87uL8POB5IRv5FSDPgpohaejgTG1HLf07boOxwETX677nFERtKB1pBl9p5HFvWYDNE94uIGWBrrmo/2cSRd0xoreELVXRG2mq1kvQtF+1OVag39iagfpj0U/JZnJ6C+9tcwMM9fouzFiUU6++SKxJwYmNurAWIm0SDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750036132; c=relaxed/simple;
-	bh=mn8rlMH1QU6CVrwegnSLDndCUjago51N5YKqkGNYGQY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tBEgGr2eaPNXM7MALWtYth5u4I4uRPKY77J5Q9+GiFN3TLk87XDA3cDbidvzFUhZqrkg5SN0dFdyiJTZxMqQkgeiqCDdufoYu+aZq8YXQ5o9LIWa3FvT0qFEWalvY5Gn5gCOywRlJuxdbbQNSvK5OUhEsI/OBz+ysHNK2HvwO8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=c0mzj0wP; arc=none smtp.client-ip=115.124.30.130
+	s=arc-20240116; t=1750036133; c=relaxed/simple;
+	bh=abEiY5hBMI67CoNMXEMvgnnZK8G6qawPiVrmr/bLuG0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hOJlojOVMqh5Cznsb+wMY4ZZiTUnhlqVSLa9/hewIjYcMVBPE5G5hnY3rZkGr4UG0mRJ3Xfo4QQ4pW1QDNmonyLR3Od37ynRjVDh89421VrDzWZLuqWeR3o23v+ZgHeYy82gLAx7C2GywIQNXa3pyOcmDKKMWIgEpej8k/D2mG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yL/oXijF; arc=none smtp.client-ip=115.124.30.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="c0mzj0wP"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yL/oXijF"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1750036121; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=8zeKyqydqxDuVfkT53Zd9krS+5GqnZkwc9ENxNH7g7I=;
-	b=c0mzj0wPhmZt27jLKkXWfCaSA25YpbYO1rHCUznm0cuqVXL9QD5AaVpnfwohF6JwMPubZVe4mvkFgQNhkAH8aVZwdkIXVKg9eru/Zqz6UPHu6w1HNLLOFVpuKq6IpF8el14CkFSTdIxJlUXE0TLgxqYR5FdNUrdiVuJqfOfmT88=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0Wdr3n89_1750036120 cluster:ay36)
+	t=1750036124; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=PLJj49F9PjWWVpiZxBe0LA+dLBqogOq9Z6+7w2bNWXk=;
+	b=yL/oXijFpfOmhCbcDCAq8xYUSSrD81HZynudmaTSRMKtgSuK9kSuuaHNp8odsVvWwQUVBLJe9vDsooRH9PntuO9gTYZfvx2Wmoc0Ign236G1xFA3f765ANeh9oyusgk58dBFurGxDct1Ht/yrHnUbj/IS03TBHe4CRYb4hV47Ng=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WdqyMzW_1750036122 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 16 Jun 2025 09:08:41 +0800
+          Mon, 16 Jun 2025 09:08:42 +0800
 From: Feng Tang <feng.tang@linux.alibaba.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Petr Mladek <pmladek@suse.com>,
@@ -33,10 +34,12 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: paulmck@kernel.org,
 	john.ogness@linutronix.de,
 	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH V2 0/5] generalize panic_print's dump function to be used by other kernel parts 
-Date: Mon, 16 Jun 2025 09:08:35 +0800
-Message-Id: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
+Subject: [PATCH V2 3/5] sys_info: add help to translate sys_info string to bitmap
+Date: Mon, 16 Jun 2025 09:08:38 +0800
+Message-Id: <20250616010840.38258-4-feng.tang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
+References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,72 +48,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When working on kernel stability issues, panic, task-hung and 
-software/hardware lockup are frequently met. And to debug them, user
-may need lots of system information at that time, like task call stacks,
-lock info, memory info etc. 
+Bitmap definition is hard to remember and decode. Add sysctl interface
+to translate human readable string like "tasks,mem,timer,lock,ftrace,..."
+to bitmap.
 
-panic case already has panic_print_sys_info() for this purpose, and has
-a 'panic_print' bitmask to control what kinds of information is needed,
-which is also helpful to debug other task-hung and lockup cases.
+Suggested-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+---
+ include/linux/sys_info.h |  7 +++
+ lib/sys_info.c           | 97 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
 
-So this patchset extract the function out to a new file 'lib/sys_info.c',
-and make it usable for other cases which also need system info for
-debugging. 
-
-Also as suggested by Petr Mladek, add 'panic_sys_info=' interface to
-take human readable string like "tasks,mem,lock,timer,ftrace,....", 
-and eventually obsolete the current 'panic_print' bitmap interface.
-
-In RFC and V1 version, hung_task and SW/HW watchdog modules are enabled
-with the new sys_info dump interface. In v2, they are kept out for
-better review of current change, and will be posted later. 
-
-Locally these have been used in our bug chasing for stabilility issues
-and was helpful.
-
-Please help to review, thanks!
-
-- Feng
-
-Changelog:
-
-  Sinc V1:
-     * Separate the 'sys_show_info' related code to new file sys_info.[ch] 
-       (Petr Mladek)
-     * Clean up the code for panic console replay (Petr Mladek)
-     * Add 'panic_sys_info=' cmdline and sysctl interface for taking
-       human readable parameters (Petr Mladek)
-     * Add note about the obsoleting of 'panic_print' (Petr Mladek)
-     * Hold the changes to hungtask/watchdog 
-
-  Since RFC:
-     * Don't print all cpu backtrace if 'sysctl_hung_task_all_cpu_backtracemay'
-       is 'false' (Lance Yang)
-     * Change the name of 2 new kernel control knob to have 'mask' inside, and
-       add kernel document and code comments for them (Lance Yang)
-     * Make the sys_show_info() support printk msg replay and all CPU backtrace. 
-
-
-Feng Tang (5):
-  panic: clean up code for console replay
-  panic: generalize panic_print's function to show sys info
-  sys_info: add help to translate sys_info string to bitmap
-  panic: add 'panic_sys_info=' setup option for sysctl and kernel
-    cmdline
-  panic: add note that panic_print interface is deprecated
-
- .../admin-guide/kernel-parameters.txt         |  13 ++
- Documentation/admin-guide/sysctl/kernel.rst   |  18 +++
- include/linux/kernel.h                        |   1 +
- include/linux/sys_info.h                      |  27 ++++
- kernel/panic.c                                |  66 +++++----
- lib/Makefile                                  |   2 +-
- lib/sys_info.c                                | 127 ++++++++++++++++++
- 7 files changed, 217 insertions(+), 37 deletions(-)
- create mode 100644 include/linux/sys_info.h
- create mode 100644 lib/sys_info.c
-
+diff --git a/include/linux/sys_info.h b/include/linux/sys_info.h
+index 79bf4a942e5f..0b49863cd414 100644
+--- a/include/linux/sys_info.h
++++ b/include/linux/sys_info.h
+@@ -16,5 +16,12 @@
+ #define SYS_SHOW_BLOCKED_TASKS		0x00000080
+ 
+ extern void sys_show_info(unsigned long info_mask);
++extern unsigned long sys_info_parse_param(char *str);
+ 
++#ifdef CONFIG_SYSCTL
++struct ctl_table;
++extern int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
++					  void *buffer, size_t *lenp,
++					  loff_t *ppos);
++#endif
+ #endif	/* _LINUX_SYS_INFO_H */
+diff --git a/lib/sys_info.c b/lib/sys_info.c
+index 90a79b5164c9..9693542435ba 100644
+--- a/lib/sys_info.c
++++ b/lib/sys_info.c
+@@ -5,6 +5,103 @@
+ #include <linux/console.h>
+ #include <linux/nmi.h>
+ 
++struct sys_info_name {
++	unsigned long bit;
++	const char *name;
++};
++
++static const char sys_info_avail[] = "tasks,mem,timer,lock,ftrace,all_bt,blocked_tasks";
++
++static const struct sys_info_name  si_names[] = {
++	{ SYS_SHOW_TASK_INFO,	"tasks" },
++	{ SYS_SHOW_MEM_INFO,	"mem" },
++	{ SYS_SHOW_TIMER_INFO,	"timer" },
++	{ SYS_SHOW_LOCK_INFO,	"lock" },
++	{ SYS_SHOW_FTRACE_INFO, "ftrace" },
++	{ SYS_SHOW_ALL_CPU_BT,	"all_bt" },
++	{ SYS_SHOW_BLOCKED_TASKS, "blocked_tasks" },
++};
++
++/* Expecting string like "xxx_sys_info=tasks,mem,timer,lock,ftrace,..." */
++unsigned long sys_info_parse_param(char *str)
++{
++	unsigned long si_bits = 0;
++	char *s, *name;
++	int i;
++
++	s = str;
++	while ((name = strsep(&s, ",")) && *name) {
++		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
++			if (!strcmp(name, si_names[i].name)) {
++				si_bits |= si_names[i].bit;
++				break;
++			}
++		}
++	}
++
++	return si_bits;
++}
++
++#ifdef CONFIG_SYSCTL
++int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
++					  void *buffer, size_t *lenp,
++					  loff_t *ppos)
++{
++	char names[sizeof(sys_info_avail) + 1];
++	struct ctl_table table;
++	unsigned long *si_bits_global;
++	int i, ret, len;
++
++	si_bits_global = ro_table->data;
++
++	if (write) {
++		unsigned long si_bits;
++
++		table = *ro_table;
++		table.data = names;
++		table.maxlen = sizeof(names);
++		ret = proc_dostring(&table, write, buffer, lenp, ppos);
++		if (ret)
++			return ret;
++
++		si_bits = sys_info_parse_param(names);
++		/*
++		 * The access to the global value is not synchronized.
++		 */
++		WRITE_ONCE(*si_bits_global, si_bits);
++		return 0;
++	} else {
++		/* for 'read' operation */
++		bool first = true;
++		char *buf;
++
++		buf = names;
++		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
++			if (*si_bits_global & si_names[i].bit) {
++
++				if (first) {
++					first = false;
++				} else {
++					*buf = ',';
++					buf++;
++				}
++
++				len = strlen(si_names[i].name);
++				strncpy(buf, si_names[i].name, len);
++				buf += len;
++			}
++
++		}
++		*buf = '\0';
++
++		table = *ro_table;
++		table.data = names;
++		table.maxlen = sizeof(names);
++		return proc_dostring(&table, write, buffer, lenp, ppos);
++	}
++}
++#endif
++
+ void sys_show_info(unsigned long info_flag)
+ {
+ 	if (info_flag & SYS_SHOW_TASK_INFO)
 -- 
 2.39.5 (Apple Git-154)
 
