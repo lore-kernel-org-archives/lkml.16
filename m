@@ -1,152 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3513594C;
-	Mon, 16 Jun 2025 07:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750057335; cv=none; b=SMneTR12T2xaCJPMDA8bHLxlhw4VfMHdF+13J5nEdSfW9hPQdIofLQzLvUgLXtyr99o4rcPih66jXjyDXwVvjYQPTMD6bOSegFnVwESBq4XPJUeH10ZfPOK1A9Y5CvQzmubynNt1GZ8P6ZXMWADRk1G9tIDi6JKQtq1GhSzfUhw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2CC191F7E;
+	Mon, 16 Jun 2025 07:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750057335; cv=pass; b=dU1qTExKRhIMPgGVyjWwA+BaE3SWdz6PG6PXUHcjf03UYwcD4SP6UTszEfAwsGDzxzRe8gCDuc8gZt5/jWIiMGZeDOvCJ2/HeQFJ9YQiqk+z5/6kl+p1IyEYE8en9gIET4MQlpTFFxGKRdqiLSa/u42s6Do9r16NhSp4iE4iDQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750057335; c=relaxed/simple;
-	bh=wtbfEeOL/Iwytwv0chNjnkbRPieHgETH8QUmwLHMVng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mimPFBVbwIWBAXtjI7+lfHEUMHm+gWbChd8VWiFlujLUvdQA28cuXQD0+fLTzwd92xZYqK28IxUI8M9LymQ+JMvuTCTmofOkWizjrQKUhl2iV0XXPIdbHE0GhSC0Odn1/tsLE9Qkp3jzHGMGOlf82JLpenRKiFo5HuNWcYPTU/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2CsJPDp; arc=none smtp.client-ip=10.30.226.201
+	bh=oEb7wU/bu1oja52oKmgMha7mtv8iISClgAa0+JK8RlY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U+ydmlMxPBKBrZnNxWj64pM6OUhG4xTsJSO/IVqoPIouJsueqHNxiDaeEotUbmxTv1PwrGWvy+3zj9WV2X7ZLNQex2kVeXe+Lxa/dwn3fZAVqKOkiexY0O7pYjvhj67hg8U3oNRBXkR1OL0fwRI7mztbxsVQBJa8QSE0m7jAliQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=IxQi+7T1; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2CsJPDp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB574C4CEEA;
-	Mon, 16 Jun 2025 07:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750057334;
-	bh=wtbfEeOL/Iwytwv0chNjnkbRPieHgETH8QUmwLHMVng=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y2CsJPDp+gSv42YlP8LhIv04Xf98IL72UnwK3c6GW4L9TSITCGRyWqZNtywohxr1G
-	 I4v9lgiuj7/D5FQuHIy52u253l1XuHoCF9tJ5XfJT8Ob/h9yEsYjQqO6aRU1PCqtRe
-	 8TFK2TRg4yib7IIJ/nKloUfS8XE+FFxha1WnAkLaX2r8dcitIyuZkg+GhrhjwLXCsO
-	 vyxSR5bGQpls36JdoKXiETrvJ8wOncfcz0hYVIc28tETuRaooiIovKBxxcfup7JsZc
-	 quYKyDO2cQA9T5jtGb1tjAtGQjP78lNUeZaa2H8aMolblNrR/j3SR5N9JaOn3PxMyi
-	 gKNlKPRY70yGQ==
-Message-ID: <c2bd6a03-6f65-41ff-ad26-71287068f2f9@kernel.org>
-Date: Mon, 16 Jun 2025 09:02:08 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="IxQi+7T1"
+ARC-Seal: i=1; a=rsa-sha256; t=1750057314; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Jifj7LPMyfhtP30MtT1rMLT80HmtvAWL7dm8J4KTHjHv0ysl3gAQ2JJsye1U79ru0Ptyvm5+F9c0fE0g2ttioPbe+VSLnCipT5Ra++D1TvHI0PnaA1zMqYapDXAoxB78QCEFlwmI0/9Tq1MvOZYOsevhuv/KTBjOVNhT+H7Lv9A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750057314; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=w2oMih2lbo9iywrNmIQ7860yAhkMUGDVYCOSRkVl8HE=; 
+	b=Xl6Z8aNSFfTb8gDV7YCiDulQeCZ4LdwI96+oaLlG0NMP3Mi6u7FGhX1Z/DFfHyRDJb6imFWelRXCPRFzWLM9Bta63b4n8Ys7OIbaYRwjz8k26pIjZdkJOoEDaZrwRcs62hRHyT5RmG/t52K+Rto5nJcuYLtxnSkrM1KTT1p+aSI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750057314;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=w2oMih2lbo9iywrNmIQ7860yAhkMUGDVYCOSRkVl8HE=;
+	b=IxQi+7T1vu3ihlP6vgZgo5YeXRZ1xjBpC9Gb25NI5BOcn+wqUVXT+L2oBykRhQJA
+	BBkE1n6pOQHpPizZw7CG8aBOJVIee2SspJ+EEh4xOf/fcjCTlFKaUykFYEgpwEje0cy
+	l6MPeRz7CejjG12vjWB8M7zT3+cmrpQNwWCMamDU=
+Received: by mx.zohomail.com with SMTPS id 17500573121561008.1454058676544;
+	Mon, 16 Jun 2025 00:01:52 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] docs: document linked lists
+Date: Mon, 16 Jun 2025 09:01:48 +0200
+Message-ID: <4657048.LvFx2qVVIh@workhorse>
+In-Reply-To: <87v7p48vd6.fsf@trenco.lwn.net>
+References:
+ <20250520-linked-list-docs-v1-0-db74f7449785@collabora.com>
+ <20250520-linked-list-docs-v1-2-db74f7449785@collabora.com>
+ <87v7p48vd6.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] drm: bridge: add support for Triple 10-BIT
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Maxim Schwalm <maxim.schwalm@gmail.com>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250303120455.90156-1-clamor95@gmail.com>
- <CAPVz0n0XSzxzkPocRVx6QF7xwmA4otSeSEiRZgJQ3oStyUBrLA@mail.gmail.com>
- <CAPVz0n2MLmHfVNb25=o1_woE7v16hoamwFbbT3ecE+BP1Bn9aw@mail.gmail.com>
- <6df6ecc4-088a-4b27-bebf-abc4560b00ae@kernel.org>
- <CAPVz0n1S2rWW_08FoL+jsVJEOkQ0JJZBu+bB2U5K=fF-g87Y0A@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAPVz0n1S2rWW_08FoL+jsVJEOkQ0JJZBu+bB2U5K=fF-g87Y0A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On 16/06/2025 08:54, Svyatoslav Ryhel wrote:
-> пн, 16 черв. 2025 р. о 09:50 Krzysztof Kozlowski <krzk@kernel.org> пише:
->>
->> On 16/06/2025 08:42, Svyatoslav Ryhel wrote:
->>>>>
->>>>>  .../devicetree/bindings/display/bridge/lvds-codec.yaml       | 1 +
->>>>>  .../devicetree/bindings/display/bridge/simple-bridge.yaml    | 1 +
->>>>>  drivers/gpu/drm/bridge/simple-bridge.c                       | 5 +++++
->>>>>  3 files changed, 7 insertions(+)
->>>>>
->>>>> --
->>>>> 2.43.0
->>>>>
->>>>
->>>> These patches had no activity/feedback from maintainers for a while,
->>>> so, in case they got lost in the depths of email box, this is a
->>>> friendly reminder that they are still relevant and I would like them
->>>> to move on.
->>>>
->>>> Best regards,
->>>> Svyatoslav R.
->>>
->>> These patches had no activity/feedback from maintainers for a while,
->>
->> Really? No activity/feedback?
->>
->> What is this then:
->>
->> https://lore.kernel.org/all/567addb4-169b-4fd0-aabb-78ceded22702@kernel.org/#t
->>
->> https://lore.kernel.org/all/ptyvn34i377pdu7mqital6v2bqe36oy3yprxb5c3hztni7h52j@6eo64gzxvgg3/
->>
->> You already were sending such pings claiming there is no activity while
->> we provide you the reviews.
->>
->>
+On Monday, 9 June 2025 23:20:53 Central European Summer Time Jonathan Corbet wrote:
+> Nicolas Frattaroli <nicolas.frattaroli@collabora.com> writes:
 > 
-> Then why these patches were not picked for more then 2 month if
-> everyone acked and reviewed them? I am pinging every month to remind
-> that they are still relevant and were not picked!
-So acking and reviewing is an activity or not? Because if it is not an
-activity, there is no point for me to keep doing it.
+> > The kernel contains various generic data structures that should ideally
+> > not be reinvented. However, it often fails to document the usage of
+> > these in the in-tree kernel documentation beyond just a listing of
+> > header symbols in the very lengthy kernel-api docs page. This is fine
+> > for things that have simple invocations, but occasionally things devolve
+> > into several layers of concatenating macros, which are subpar for humans
+> > to parse.
+> >
+> > Begin making a small impact by adding some rudimentary example-driven
+> > documentation for the linked list type. It's far from exhaustive, as
+> > many list modification functions are currently not mentioned. However,
+> > it covers the basics and directs readers towards further documentation
+> > should they be interested in concurrency.
+> >
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  Documentation/core-api/index.rst |   1 +
+> >  Documentation/core-api/list.rst  | 390 +++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 391 insertions(+)
+> 
+> So I'm only now getting around to a belated look at this.  I like it
+> overall, but I do have a couple of comments:
+> 
+> - Is there any way to talk you into replacing all of the graphviz
+>   diagrams with ascii art in literal blocks?  All the dot stuff makes
+>   for pretty HTML, but is entirely unreadable for people looking at the
+>   plain-text docs.
 
-It's not a question to me why DRM maintainers do not pick up such
-patches, but your message did not question that.
+Yeah, the dot was more easily understood at one point but then I decided
+I wanted to wrestle the layout and add backedges and then not make the
+backedges look horrible. Now it's a mess. I think I can easily be
+convinced to replace it with ASCII art in literal blocks. On that note,
+I wonder if there is a tool to translate simple ASCII graphs into dot
+and then whatever output from that, which would be the ideal solution
+here to encode semantic meaning for both audiences.
 
-Best regards,
-Krzysztof
+I'll definitely drop the back edges from the diagrams though, they
+only make things more confusing.
+
+> 
+> - All of the kerneldoc stuff for list.h is currently pulled into
+>   kernel-api.rst.  Should we perhaps move it over here?
+
+I think that's a good idea once the new documentation exhaustively
+covers everything. Pulling it into both places generates warnings,
+which is why I didn't do it for the functions I already did document.
+And doing it only for some and not others needlessly spreads things
+out across two pages, though maybe this is best dealt with having a
+"dumping ground" in each section for other functions related to that
+section, so that we have an exhaustive function listing even if no
+usage examples are provided.
+
+I will work on a v2 today which addresses your concerns, and expands
+on the documentation to also include some list modification functions.
+
+> 
+> Thanks,
+> 
+> jon
+> 
+
+Kind regards,
+Nicolas Frattaroli
+
+
+
