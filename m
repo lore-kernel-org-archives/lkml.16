@@ -1,183 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02904214A94;
-	Mon, 16 Jun 2025 15:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BE42206AF;
+	Mon, 16 Jun 2025 15:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088148; cv=none; b=NvdqY4+7K3IyBqJ+NMtRo+vAiRXp3p11Pqm1GWTSCJstg16guFEfVsolH5/gW222709EtH8K+2/Dd+B+QBJ/AKymj9l5xUPOzZvWhh5KO8FtvF90CFBldGojFpxjc3kNa/d26cYI9S84bH5jXuYVybxFSa+Purkr6rAjkr4B7UE=
+	t=1750088171; cv=none; b=HT7/CekfthIU21+++5GOypDTJKBuacSX0qiHSLUAmeTH3c7mFKCrzXffq2+lyoLhp4QGlZZrkiu3IvF1oM/EPRiFzGxnAGALn5zuQlNxsswRoDpbSKpzRYRia//fFlJMAOF6dXtr2NICBMfmNYj2fKHvE7+CRj68wnO5YMLQvmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088148; c=relaxed/simple;
-	bh=wyqcm4yLFb4zJVbqbZ+q1/zy0wFmRhuu32ZyoGJEm1w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TojDn1/EltXeRMHpaQ2E/eNZtZV1HLaeKdw9pCRgdEF0eBTW8B1+4GPL3Ns5qdL/wSFBleABVH7hF9JJD4HyTuQQA3bL+cCFrfvnFS2GjHWbvR+RQwKH7wSTPb/wPUUB19mEAeiB19KK7Pqphkl0n5RVO4RIg5B796vt+CDt5+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3bZOHKZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750088171; c=relaxed/simple;
+	bh=eNIUtFAa2St0iqrOauq71j8o6PgQUDcBtyV35ApQvHE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fZKIp8s2CdhZOgwBNCpjtTsKtWPkE+1wfigBBHoEBXhjRY6PUlkCuFWh5USQbOQlVvLJNjRu53/Jh/28uaXJ1wApcwbIicnz+9TFyYYHMBLyE7HOLi75coc/LWyEB6cwj14/ECwFVWbiOyXvMuP6owGD7Orm+Q1Xe7G4O/rJNe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ho806Lts; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3bZOHKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F203C4CEF3;
-	Mon, 16 Jun 2025 15:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750088147;
-	bh=wyqcm4yLFb4zJVbqbZ+q1/zy0wFmRhuu32ZyoGJEm1w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=n3bZOHKZoHcqds6WdwLDyCh3eGecUSnALkzpuA6RI2FELJ0DG8RzDRcPyzsFnI4Ab
-	 ZN4TgdtH68jdmFSKH1v4IEWLcNeGY5IGxIWYLylzvIdcpzqWQsJHUjBDhxKnqffsuA
-	 9lQ2Ab3Sm2gIeJFCkShIkyDnsUFHgIUh5OSbS1VAGeL7udBfn4zwunNF9IiYoCyanx
-	 q+9Tp/HH1rZdCnr+paz7eIpDktBTVHAbDfaMrB1RYh5x77mLUDUjEiQ60AW4dtxn+e
-	 arDHNiEC8SwPHl7laJtMdGyaPFqIFI1lqOZs/U1Pg0W+m+OkFDB9RrtwCLe9b7+e6L
-	 H+lO6Oxh40Mow==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54e7967cf67so4774161e87.0;
-        Mon, 16 Jun 2025 08:35:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVkw1rpKVr8+9/zdzHaTr7UuDfpr5Kpz1ZDYGiBoTRPIBomoOk6uPYvwTAtIU6vp3d7yvmJsF1LPbo@vger.kernel.org, AJvYcCVLhkAUHLvSdeVoJ+f2vLzLqQcsVRhuOgA0O58+UVHz6GHqYXjql3gFKvcdy1d0V1rAigbdFe+m7Zw=@vger.kernel.org, AJvYcCWkqu6A5nFQ2d5DBuTMznURN2JvkzJKX/hI+o6aEtIH1Gs3KYYnnp6gikxvkP0SMjbXu49ZsoD//VPZa2Xv@vger.kernel.org, AJvYcCX603D6nx86jL7VRowUjoaoycjmDWZAHS5dciekGEPHP+/0fqYJCev0H3Is6o+jLTHT4FAHnoDkJ4udxMB2@vger.kernel.org, AJvYcCXcB3UO4cfZiwZB+EWcNdAMY+W2lnKBKguX5uj9fypr8gw6F+UNUcKgRdvcu0vj/rs02fv5YPfUJeU1qebKFg8/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZX4OPcDuTNQwQbzk56+qTP60FOqT9otKyLVIoBu5f6C3etL8Z
-	nRmODZ7jVhJq7CKNpfYT5KvPIrjsuP+L015PcKe+o/ZeOtWqinSt9G15qpbTtiGjSWpYYnjIwOi
-	NwciWkqpODyNEHoECMe8/3S8DA80Cqkc=
-X-Google-Smtp-Source: AGHT+IFbOeYossnraAyxlskXcqKyhhi56Nq19OyIZS4QGfWlkeawL/vDS4Zr+c6sgGu0d5OcjxKjLTWl/KyJOsqacys=
-X-Received: by 2002:a05:6512:3096:b0:553:2f8c:e631 with SMTP id
- 2adb3069b0e04-553b6e6898bmr2461277e87.9.1750088146062; Mon, 16 Jun 2025
- 08:35:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho806Lts"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a58e0b26c4so84819261cf.3;
+        Mon, 16 Jun 2025 08:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750088169; x=1750692969; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=whwXtwuGz4PF/512N5Kt7VCfkXWiQL7fNxAtNK+cJsE=;
+        b=ho806Lts7wlAOct/AUDqj8LlRqKc2YofduIWM2Ii7O4tSFSK5sEnG0CIHwYsGrRek0
+         cpogPz89hS9BuWGvOGPsdK7A/hxl2y8Lomhe3AkbWRkGbYHKkVNHjg0kaHWn+xXxKmx9
+         1CzA+oon9gZtKT3CvODBS80ZJnE0qGBKo+euVWtdrPiIsU58KT2dmbky8KmtcpWNYJId
+         ZbJVgEBK8KfVEpbxWT2x14O3wCbtTS76+Cvwv/IAvb3ko6as+q4tHneL3xeMkHWLUGtb
+         FCM91l0hR/wst3IDwIA/vebuML48I52qvqBUYdk8eaI+yQYHgWo7mZA5SwJUVCa8iDKI
+         5LIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750088169; x=1750692969;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=whwXtwuGz4PF/512N5Kt7VCfkXWiQL7fNxAtNK+cJsE=;
+        b=mz9ys6qfF4+OO/szCLws6mtGgzJgd8nMfsVv+a/1XopJbV1h+/76DZu2KpbuDMn1zR
+         qdGz53XxSTmaMNnzEWqYjh/qpnDsQbi/0IpERPExmgOej7IgTppQnxOkWjQCGmwhAp0e
+         2xxHLjwg1zo+dT0sEZ5hph8liwQ87yiAKooav1ooxv/xR/tuIKrqrM0xbD/KWBje3CGo
+         X4Bx6Yg9MSYUiRRWL9cLucT1FmaeQBEAi1s78EEUU3Fdxs13Eodb+X4dAJLfVTQuPJnO
+         GdXi3pVzmwVedOq+pK2Ytoa0DtWIaxlewP902bvx6Bw1u+VKXJJKXaxPwOplBPCzsFk2
+         O6Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnBSmt4z7EwW07dVVZr/dUUkFkgY8/xh/Go/OHgFNSjkyq3QGrihEqWHTZWsCXdT8M6iLkslnii7qFtJ+RDg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWSOXWzlCMAMxD67HAk8Xasy7d7ufQUos1xDkXX1pdU8w+iwoZ
+	RTGl/JlhVNpCC0uh9nDnd2PzXQ9MAYweXmj/6eqerK/ywFqWWlzVWhV1
+X-Gm-Gg: ASbGncsimr0lfpTjMKCX5DSY1QaS/yZxIZGXdXakTpjJR+yL/x8W48QAgAZZqADP10M
+	Q8U14jQPU1dWK+/7jyK0HWomn0lM9K7DIgJVbWhP/CMKftzYIYhsHMauVNAIM/LydRgWrK0EMRP
+	yNLdOSHh6v942Gqa7fpYXVuuFPHXgrpzfYW8hyF9FwaiI1WquFfs1AIkcKyX/+GZGp3dR0QvVOY
+	y6T3wSXwE2OOHTgKmmjh7SuN6hqubi7dxePJ+VQRSDl7HXp/z2NSxWSfhB9ksUgNOjczViUmfDi
+	ojOp1vysL08rkyCSExwXVR6odiJ7R+/eoebS2HDt3ZEfovWgp3U/JtT0kd34vHIWpa5raykEPrX
+	mXeZxwMnKbY9GO/NHxU1euV2CC31OjrfdFFfK/HJttiSjYnR9yyyB
+X-Google-Smtp-Source: AGHT+IGsGTFBnixwKO4V2fHWkZ4L98o/359ONOWMIVHIKQNk+Be+l+Q4VbfHut4icP9rjYen8X0Ayg==
+X-Received: by 2002:a05:622a:7:b0:4a7:2357:dc81 with SMTP id d75a77b69052e-4a73c57508bmr177177251cf.3.1750088168678;
+        Mon, 16 Jun 2025 08:36:08 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a315c58sm50491911cf.36.2025.06.16.08.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 08:36:08 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 54826120006A;
+	Mon, 16 Jun 2025 11:36:07 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Mon, 16 Jun 2025 11:36:07 -0400
+X-ME-Sender: <xms:5zlQaI9-eA02-UFjKZpk5FuBOUfy7ELzuH9T8qzLBIgsSihf3YjXag>
+    <xme:5zlQaAt5zPN4dbKo-9Qk_CwViZQtCe1FtafyqEhLZeYX7ZyMXExXzhC2uUaalMueP
+    Y6NBG9eqUQsS7146A>
+X-ME-Received: <xmr:5zlQaODDU5o9jzfoUPEaoDP9Y9m4aWThjt-HWmxy9minQWR8al2D8twbQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieelhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
+    fufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosgho
+    qhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeetleeffe
+    dvgfffjeeggffhveevieeljeffudfhfeeigfelffefjeefueevheekjeenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquh
+    hnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghp
+    thhtohepvdegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdqfhho
+    rhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquh
+    hnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpd
+    hrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhr
+    nhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhnohdrlh
+    hoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehs
+    rghmshhunhhgrdgtohhm
+X-ME-Proxy: <xmx:5zlQaIcSCQ-cp_8o-ptI6bfRvYOK89gCd7eaFBZyNt7_IexWfkRj0g>
+    <xmx:5zlQaNPxOfBhDnHLT9J0neqje_GMyilcZg5BasnucLyBVQchUotKOg>
+    <xmx:5zlQaCklWsGoAztlFFcGcAnJEeKyWJkuL-DN3DfbO_fKtXB8FzaqTw>
+    <xmx:5zlQaPs5LpOBAY7ZsithCHRBNq5cj5tKEVK3jNbS7JNtKj7j1FYNwQ>
+    <xmx:5zlQaLv-2lid7j-SwFe3L1324QSloiNvxg7kC41Gm5wtp8n18qyb75gr>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 16 Jun 2025 11:36:06 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	pmladek@suse.com,
+	fujita.tomonori@gmail.com,
+	mingo@kernel.org
+Subject: [PATCH v3 0/2] Add Rust version of might_sleep()
+Date: Mon, 16 Jun 2025 08:36:02 -0700
+Message-Id: <20250616153604.49418-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de> <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
-In-Reply-To: <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 17 Jun 2025 00:35:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
-X-Gm-Features: AX0GCFsBbQd8edKmRItTPTAmU_9r7N84LVB4bZhJmBSwwSeK_bPp6ZeS2KFUAXQ
-Message-ID: <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/16] kbuild: userprogs: add nolibc support
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	workflows@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 4:38=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Userprogs are built with the regular kernel compiler $CC.
-> A kernel compiler does not necessarily contain a libc which is required
-> for a normal userspace application.
-> However the kernel tree does contain a minimal libc implementation
-> "nolibc" which can be used to build userspace applications.
->
-> Introduce support to build userprogs against nolibc instead of the
-> default libc of the compiler, which may not exist.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
->
-> ---
-> This could probably be moved out of the generic kbuild makefiles.
-> I think the ergonimics would suffer and this functionality could be
-> used by other users of userprogs.
->
-> Also this does currently not support out-of-tree builds.
-> For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-> installed into the build directory.
-> ---
->  Documentation/kbuild/makefiles.rst | 13 +++++++++++++
->  scripts/Makefile.userprogs         | 13 ++++++++++---
->  2 files changed, 23 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/ma=
-kefiles.rst
-> index 8aef3650c1f32b6b197e0dc777e26775d371a081..4cc7a1b89f1803857a4723284=
-613111e9ad71d92 100644
-> --- a/Documentation/kbuild/makefiles.rst
-> +++ b/Documentation/kbuild/makefiles.rst
-> @@ -974,6 +974,19 @@ When linking bpfilter_umh, it will be passed the ext=
-ra option -static.
->
->  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` w=
-ill also be used.
->
-> +Building userprogs against nolibc
-> +---------------------------------
-> +
-> +Not all kernel toolchains provide a libc.
-> +Simple userprogs can be built against a very simple libc call "nolibc" p=
-rovided
-> +by the kernel source tree.
-> +This requires ``CONFIG_HEADERS_INSTALL=3Dy``.
-> +
-> +Example::
-> +
-> +  # lib/kunit/Makefile
-> +  uapi-preinit-nolibc :=3D $(CONFIG_ARCH_HAS_NOLIBC)
-> +
->  When userspace programs are actually built
->  ------------------------------------------
->
-> diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-> index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..b1633a9de6c86a023c70a717b=
-ac0b80b89d01431 100644
-> --- a/scripts/Makefile.userprogs
-> +++ b/scripts/Makefile.userprogs
-> @@ -16,10 +16,17 @@ user-csingle        :=3D $(addprefix $(obj)/, $(user-=
-csingle))
->  user-cmulti    :=3D $(addprefix $(obj)/, $(user-cmulti))
->  user-cobjs     :=3D $(addprefix $(obj)/, $(user-cobjs))
->
-> +user_nolibc_ccflags :=3D -nostdlib -nostdinc -static -fno-ident -fno-asy=
-nchronous-unwind-tables \
-> +                     -ffreestanding -fno-stack-protector \
-> +                     -isystem $(objtree)/usr/include -include $(srctree)=
-/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
+Hi,
 
-The tools/ directory is a different world, and Kbuild scripts do not know
-anything about it.
+This is a quick v3 of Tomo's previous version:
 
-And, you do not need to implement this in scripts/Makefile.userprogs
-because you can move this to lib/kunit/Makefile.kunit-uapi or somewhere.
+v2: https://lore.kernel.org/rust-for-linux/20250410225623.152616-1-fujita.tomonori@gmail.com/
 
+Given Ingo's feedback [1], and the ongoing work at Rust side [2] (thanks
+Alice!), I think it's better that we just start to use
+Location::file_with_nul() if available, otherwise use a "this is not
+supported" as file names for might_sleep() debug output, this should be
+sufficient since might_sleep() only uses the file names for debug
+output, and it will also trigger a stack trace when error, so some
+callsite information can be gather from there too.
 
+Having might_sleep() will unblock the support of read_poll_timeout()
+[3], and then wait_gfw_boot_completion() [4] in nova. So hopefully this
+will allow use moving forward.
 
+I will a PR to tip including this updated version if no one objects.
+Thanks.
 
+[1]: https://lore.kernel.org/rust-for-linux/aB2aAEELa3253nBh@gmail.com/
+[2]: https://github.com/rust-lang/rust/issues/141727
+[3]: https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonori@gmail.com/
+[4]: https://lore.kernel.org/rust-for-linux/20250612-nova-frts-v5-12-14ba7eaf166b@nvidia.com/
 
+Regards,
+Boqun
 
+Boqun Feng (1):
+  rust: Introduce file_from_location()
 
+FUJITA Tomonori (1):
+  rust: task: Add Rust version of might_sleep()
 
+ init/Kconfig        |  3 +++
+ rust/helpers/task.c |  6 ++++++
+ rust/kernel/lib.rs  | 21 +++++++++++++++++++++
+ rust/kernel/task.rs | 22 ++++++++++++++++++++++
+ 4 files changed, 52 insertions(+)
 
-> +user_nolibc_ldflags :=3D -nostdlib -nostdinc -static
-> +
->  user_ccflags   =3D -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflag=
-s) \
-> -                       $($(target-stem)-userccflags)
-> -user_ldflags   =3D $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)=
--userldflags)
-> -user_ldlibs    =3D $(userldlibs) $($(target-stem)-userldlibs)
-> +                       $($(target-stem)-userccflags) $(if $($(target-ste=
-m)-nolibc),$(user_nolibc_ccflags))
-> +user_ldflags   =3D $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)=
--userldflags) \
-> +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldfla=
-gs))
-> +user_ldlibs    =3D $(userldlibs) $($(target-stem)-userldlibs) \
-> +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldlib=
-s))
->
->  # Create an executable from a single .c file
->  quiet_cmd_user_cc_c =3D CC [U]  $@
->
-> --
-> 2.49.0
->
->
+-- 
+2.39.5 (Apple Git-154)
 
-
---
-Best Regards
-Masahiro Yamada
