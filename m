@@ -1,291 +1,234 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011003.outbound.protection.outlook.com [52.101.65.3])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD462737E1;
-	Mon, 16 Jun 2025 09:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065251; cv=fail; b=Ym++R9ZYfStZP9lX+Mr8JaABQYjt6D5mNxUXKxZ70pYvN8V/q4c/vgtqo4FyXhG5rKetHITHqTSWATEkQ+QfnTUGWs1IgE8kzWdFiHRs2icZCvQik2i3nRBvPaxGcZaA61v9PYCLeNU/sYr1Lf/nwZ3axaJ+/CAbokeOvsKZaJc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065251; c=relaxed/simple;
-	bh=5F9yvspxOZ5xlmvNYBDFe1xU60kVFEe/8HI1H2LV9b8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CJioUw/VyOvTLLRLCujGokr1HxXNn9XomwB8IzN3jTskLnH7vywLqq3kA2oYrbVdb+8gtW1RJ1uAcPGudy5frVLBY/tfTJ7ECIaT+ziH4225grIdWiaGrA8rwlYktqKHzzg0vjsXLC4nfw9qMh8L5YhIUk8xF5bdg73cbYslLXg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=E9xbOgen; arc=fail smtp.client-ip=52.101.65.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E0B273814
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750065256; cv=none; b=HdMxW5Tjvkjz0hCFoalSgwxc6fLK3IEkHuI9lR0ekA3jvsvac61ilYMO5wYniHhp2Hz0ep20kW308H15bE9vY7+FRQgy/LnZr21rIfC+CSDkhZaf94SVWca4yBCwAbSIGHl5p8Wrbqu+Kj3bRS3dq/72ZkT4FhE3wgLnf3YzyCs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750065256; c=relaxed/simple;
+	bh=aHvslj4u0YmVjl6caLmXcxjAEu5IMNlDH3uwp1kYvck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PXIiRWZgv7e7blZbuy8e25VC9Yxs9J5+vV55ijZDS8Z4sdwlJJo6L9+fFTr1g+ga1yOeFX0M43XFWRhNkj/57CR+aEDaCyYmBfRMcdPEtgZpkC15qOFCLTSPPH1X0OMGLUybeVgU7NI0vHLbSTXg1sbtYYmXDgNpm/sjNQ4TUfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K0s57Of2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="E9xbOgen"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kOMoiMmhDKV2Wa1FqY02LPmmE7GOV5eDEjWakYMwVwzVXTWbl+QOT/6D1JD3kUPzlOBgVfhxnGY+ai+UXEWURaV+NPgmdiDQq0JwVqPfLzkM5XD14kS7ncaGElf0NX1aZ+gZlH9AywaTht6Gu1qJhfNnWDXwdpwBt4ql7g96FBzJO5XnVp7mCIPbhhoZSAn4D64MlJdehBk/Tx0zdytF5aOjYT9enw2criBO8czl0IAvGUGyW16UKx08d4Qg9X2VOTbA6b+pkjXAVr6rtE173FyC9/7Dm9kSbuincXQMp51kfz/1dgB70FSv1t23JqsqVO3h1Rin7d/XsA6cqBWjyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T5AblgMIgfJT36bKWhO2j6nN3NVjCiBPyX7fbTiFv0Y=;
- b=tpPciTNLau1aJAGyENCX7kohVzX+g4F5daYF/w/6YA6s4gRgaUfNWb+yK4PK/ZnoygxjAC97Xpl5MCWgTOF95rDENsFGTVHDGSPcgpFkogi5gwAh7ibaUX8cKHgGsao0wqmPuubZHhb8gMPsbvbUrQE77FUEB5aRshcOC3wTjUX7PfDaSsrg24illlN1LQoic0UJG5ofTs27tNILkWpmvvXkizUfaPCGHATi6/7ns6pYB+QJZ2WiGyZYiymLSGHPb5aU07K9Ual4Z7Oum86fjhJwwK0M3TPn5TFVcggboFhzmzS3z/2CQ2qDV7t5FzHqegrf2M9eol58W5B2Y+sGxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5AblgMIgfJT36bKWhO2j6nN3NVjCiBPyX7fbTiFv0Y=;
- b=E9xbOgenYq0Hw4Nt+ojxrljRnsK/mB0WI28qqV7cXVxOoVmqh3S6DPREXWMDo37Cpg/yEtAwPZINy11hV4rlpXId/ZTfaO/mr2jbiuzvR2XNORL1iMCmqx7JVxfpL/ZtlO8BtpzVOWQvoWinCGL7c8/dbJyocasNA5zKN/brxYU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by GVXPR04MB9804.eurprd04.prod.outlook.com (2603:10a6:150:114::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.24; Mon, 16 Jun
- 2025 09:14:03 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%5]) with mapi id 15.20.8835.018; Mon, 16 Jun 2025
- 09:14:03 +0000
-Message-ID: <b0be71ba-e2e0-4a6d-94ba-72d54959c929@cherry.de>
-Date: Mon, 16 Jun 2025 11:14:01 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: rockchip: support Ethernet Switch adapter
- for RK3588 Jaguar
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>, foss+kernel@0leil.net,
- conor+dt@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de,
- jakob.unterwurzacher@cherry.de, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, robh@kernel.org,
- Kever Yang <kever.yang@rock-chips.com>
-References: <20250523-jaguar-mezz-eth-switch-v2-1-aced8bf6612d@cherry.de>
- <20250527131142.1100673-1-jakob.unterwurzacher@cherry.de>
- <35e0a925-4cba-41de-8fe4-4dd10e8816f1@lunn.ch>
- <380ba32b-bb9a-411e-8006-127461cac08a@cherry.de>
- <3303d8d4-ec5a-4cdc-8391-ab6e35d76b33@lunn.ch>
- <96d32ce8-394b-4454-8910-a66be2813588@cherry.de>
- <bb3486c6-93df-4453-acc6-deba3c8f7f0e@lunn.ch>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <bb3486c6-93df-4453-acc6-deba3c8f7f0e@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA3P292CA0005.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2c::18) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K0s57Of2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750065253;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Wuv2mA62fcjoUn35N/C8umkBOU3qJG3E1wudHQl3vVY=;
+	b=K0s57Of2TEEBxM2VMJ+kz4AadYSVfFRKe8ZQZG4mZTYWDFN4bkCRFnu1C6roorSp0MJD9M
+	SCB8c526SkvkxFLFrrqTOw+c8O+SmmUuV/9b18NB5bIL1pkaB2Y2MXDRvqaXzS1wrFGhNN
+	RY1aqALBkuP2kfuxt7ANGvI4gdbiTP4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-166-XL8Z716XOiGrz90OESncWA-1; Mon, 16 Jun 2025 05:14:12 -0400
+X-MC-Unique: XL8Z716XOiGrz90OESncWA-1
+X-Mimecast-MFC-AGG-ID: XL8Z716XOiGrz90OESncWA_1750065251
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a579728319so477904f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:14:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750065251; x=1750670051;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Wuv2mA62fcjoUn35N/C8umkBOU3qJG3E1wudHQl3vVY=;
+        b=Fahrh3PJ8fIcgqqRuB/iTxfpisANCEetX6uq340Wq4TUk08t/tGpxvtrYnD3cyYUzu
+         vtgsn9EN39cRsFeF8VhRo9wumd0/JNHNNrwiA51EOUDbxTSYzBJ2uBcU5i7/Hb0tS5OL
+         0PxRz43FpGhefQ16+7dluAqgHSCpEed0lQzzTUFrzeb2J5wYLR5Ourz/mESOLzp2Y3pj
+         bCGRbCtMqOgsb9Sxus/QhA+y+xeN5bBPvdMn5vhmdw17bcOc8QBJbOINKMLhqU7lhPjT
+         2Hq5mnCNwc4k5KdPMTonD4xgYkyehOW/augZ0vOj1xJD5bdP7X3vIVBeU6lyfJPSkuVT
+         hmFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVn/DgWUXzA7aitmDNYdVJydNB2X2aTJU2w9T6UlAfUyYN+SYYgBfSv+5omNat4neB8gboS3MIydSeurDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYNTCceGUfOefdKNYForJf7IlP4E72VIqpVmI0AoZ5aOV8TY/g
+	ZKjZZGwN+bW7DgIC0jAePVYEBR96zjuer3rmLH3ceJxl0XDioJvVq6gCWmFWylVI1f0mjltDasN
+	pFhyI0+RkAFHvl0/79NtGOqbAaAc2IQWfQh7XKS/V/y/c9B/PCqRWv2rDojc8nOYF6Q==
+X-Gm-Gg: ASbGnct6eSJoo3uTFtkY3YCauP8f5tguTlQgXIjZhdfONC9Y/jwXcpD34UgdfKVEyty
+	5OataTyw90SQW3aVU6e3aZQ3A9IR1HSPfoW11U5orp8E0tBH37G9R+kcsIztNY0a1cZu/NqzBkn
+	ojNQcM5V4d49Sb36ZguG6syAjbpRhqoD4PEfAVLgJRHzuf+RJXfnS6HEuoORwO/N8rLPiUWkGsr
+	5ro1r0O1Fk2KmgZAEgMDBE+xDSG2ianFNXPT8be+qVujISvexC7Js3qVHbXkH2tDj3K23jNYB2b
+	w2Frd+Bl3ucppk6gpWEinMEwgN1sF9h7ZRkX+2t9vbAes58KHR0OVprNzAUyzKqeuIhdhqw27pp
+	lqsp0SDSESsRThicNxNHS0KC//5WLSywdi5h8U1ZuYhWKQeQ=
+X-Received: by 2002:a05:6000:22c1:b0:3a5:276b:1ec0 with SMTP id ffacd0b85a97d-3a572e8c5dbmr6274575f8f.45.1750065250775;
+        Mon, 16 Jun 2025 02:14:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1eku5C1wKEWMA/zLh1Kb+dGj72gg4ERn3ZZ3O6rewQsnKxfuyXv1A1iI5gYDDemL/53xxLg==
+X-Received: by 2002:a05:6000:22c1:b0:3a5:276b:1ec0 with SMTP id ffacd0b85a97d-3a572e8c5dbmr6274538f8f.45.1750065250350;
+        Mon, 16 Jun 2025 02:14:10 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7f8f9sm10462943f8f.42.2025.06.16.02.14.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 02:14:09 -0700 (PDT)
+Message-ID: <a65ee315-23b7-4058-895a-69045829bd01@redhat.com>
+Date: Mon, 16 Jun 2025 11:14:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|GVXPR04MB9804:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2bc6e89c-a535-41c1-3adc-08ddacb62321
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aUtQSmVhQkZBTlRXU3d0VmN5SGEvc0Z0VjhqeEF4SVBpTVVnZVdrMnh4dm9P?=
- =?utf-8?B?dUFDcTJld1A3eWNRUWVpZFBTVU1sVytsRWNwekVHd3IxaXNNbmM3NDFxUHRY?=
- =?utf-8?B?bnJRWXZBRDhITnQ5TExyYUZUYWJIeVdaVytXSklKcHJaYVc5Sk1rSXlPUHlK?=
- =?utf-8?B?SU5ZMitrWFlWL1dUdUZHeldsRHV3VjNKSmxxS1FLNlZ1d3prWHhKbTVRelNp?=
- =?utf-8?B?NU9mV1JEcmNEZ1N1QWo2TEpWa0JYMDA0M3RCUWVYMEhVOFJaa1FheHNhdVBu?=
- =?utf-8?B?VHh2cEcvTlE1NFUzOXIvRWszVjBZOG41cHh5STRteTl2Y2dRbDNlc0tSdU5r?=
- =?utf-8?B?NmNoa3pTQTN5YWd3TmpCQ0h5aHM2QjBSdlMzUTMrMy9lcXFNZWpNR29BbGEz?=
- =?utf-8?B?TWlBSTlJU1gySmdvU2c1NkF2UnNZQkZ2MUJhbDR6dHZ3S1A5WXpHTHo2MEYw?=
- =?utf-8?B?TXM2ZkY1OHhoVGJ3SnpaUTF4aEVxS0g0eWhuelV5UTB1ZkgxdG95aGV1NFV4?=
- =?utf-8?B?MW1RWnc3Z0I1NDM5ak54NVNoVWpTOWdOYVREckdDcm50N0NmR2dubzV0MFpq?=
- =?utf-8?B?VEFBaTJwNklsY211UCtXUG45QVBIS2FyRHAxc3Rld0NybGs3T3VMNXlFSTRn?=
- =?utf-8?B?VTZOcm4vblpJU2lxVkowL2srRXZwckFTTC9ZdnRUOVlrZnJKSkNaa1hRSWtH?=
- =?utf-8?B?M1JnUURBbHREVzFNRUJnNGdwRnFQY011NkJkUUc5QkYzTzF1YlpON0hvWGpV?=
- =?utf-8?B?NXJjclQ4Q1VqY2VvUWtNK20xc3Z1NWpGR2lCeVVBLzd6V00zWEt4QWorUlBQ?=
- =?utf-8?B?RW1BbTRQMW92RHpTdEkrM1VkQjhXeFhsbjF2Rjc0L0w1bnZMZXhIc3FIcisy?=
- =?utf-8?B?VGxsS01qUVRPMnJaSlFKLzRZOEN1VG5LZy9OYTNJSWo1aWtlT0xwVWptMHhS?=
- =?utf-8?B?ZEo2TU1WMmkyT0MzK0NyeERtY0JiOE1sekZmSEFnQ0VWLzNRWWFWOVl2amFK?=
- =?utf-8?B?aXAyTHFGdngxaUJBcXViZk5Bek93aVUvUlBzOTNqam5CVEhZOXdnSWxJY2Uv?=
- =?utf-8?B?TXkrNlZ1UzhuMGxWOEZjRS9YVk9wUW55YmVmUXUvTUpmQlgwemNZOEdDRi9Y?=
- =?utf-8?B?UFV1SDlKcU9VcG9wU0ZWWGFjSHdQU1dQbldyZHJSQWxrNnhGWE1rU1krY3VO?=
- =?utf-8?B?R2dUdjVuQkN1TVVDa0c4UDJPZjZuVEJ3OFBRN3FmUzlhd0REeEhOMFBXYWVv?=
- =?utf-8?B?bmdmZjdzUHFTaG1xL1lUR0VBV1pVcW5KamdvQUpCckNCck5mb2YyMWI0MGQ2?=
- =?utf-8?B?aGJxLzNBNU8xY2JJWkZTbGwyYkRjeTJnRm15a3AyNkJBWGdYdEFsNkh3ZFhm?=
- =?utf-8?B?QS9kVXJlU0x2M2tpTjYrOHRVYWYrK2x3ZFhSNmc2QkpOM0FFamQzeWpFYWZ0?=
- =?utf-8?B?VTlqY2ZJK2JrRFcvN3B5MldFOE8wbkhydHA3NUFicnFKU0pwc0F1SjRGUXZp?=
- =?utf-8?B?U3pBU3pkNThaOC85NVR6NHRrcHJqS1d3SXFVVVExZ1VpaHg4SkRUTlRQVEEv?=
- =?utf-8?B?clZPK0VLNEdyYStOa0JFSFg3RWdXbmd1TkxVa3RkSUFkU0lvS1RKT0RjZXBk?=
- =?utf-8?B?aTY1NGsxT243UXB0aUtiQzIyY2lpdWpxUFNFakx2K3l3aHhMRWtXNjZrWlJ1?=
- =?utf-8?B?aWtOTFVHelpmbE5vZEgzK0UxemlWeFdzK2wvQ0JaK0o3WGR3T2VRQk16RFRy?=
- =?utf-8?B?bGRVOE1XbnJYNkZ2enhRNi9vcDFnaUlJUnFpVWdxNDVQTWFmdFFKK0s4b1lk?=
- =?utf-8?B?QlptdnVCZS92WHlMMTlmQlFoTlJKVXRnWno2dGhIWUtZcDhrRkIrL0lycDJ5?=
- =?utf-8?B?ZXIyK0gxV2ZxRlNBSTIwR0grb2xHWUl3eFN1cld6a1RLZzRUUmY5MW11YTYv?=
- =?utf-8?Q?lnD34pXE368=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L0hzVlIyWkEyVFduSCttejk0YlZReHBQdTFXVm8xRzdFUjI1TUNOdmRqQWQw?=
- =?utf-8?B?R1QvVzR2THpybFJNdHBtTlVYS3hBK3BOY1dDRXVaMTlpVkJlaGN5dVpjRGxL?=
- =?utf-8?B?RlBoRENRR1RIclkzeFdwMVh5Vm5kYis1QmhGTHhXTWpzMEVGck5XTnVaWEJB?=
- =?utf-8?B?R282L0RWNUtaL1JjSkZpK0FRS0RvNGEvUlBVYmVTQkcwVFJRUFZpRWdKTXpk?=
- =?utf-8?B?dURPY0x0czk2akp6TXFGd0hucUd1ZitEQVdhRHdyRjBiTWd3VytCQnh1Q2RB?=
- =?utf-8?B?QXFaV2Y5cGdvRlVHQmRZRHFISjVLdTM1K2Vra0RydGdxZDBvTVJOWUMvVVBa?=
- =?utf-8?B?MWdnNFpDc3RCREtxNHQrTDVrNkF3M3NycGtvQmVDeG9xUVhrcW5tZXViR0g4?=
- =?utf-8?B?NTZ5Y1lBK2JIaXFJSXdFMVRLVVkwWUtMdjc2d1JXdlN1dmlMVDNaenUzR1Bh?=
- =?utf-8?B?eklGWmhCNWYrTmp3U09qSGtZYklSM1NLbDlud05FNnZNd1J3QXJKVEx1NHl5?=
- =?utf-8?B?SERpRTNoWXE2bk1rSmk5V000M0l6bmNBMUZzOW1IUFd2cWo4aE55Nm1STndZ?=
- =?utf-8?B?L21rRTVKUlZWSkdlUmF4dTlKa1g5c0Z1dGJMalBUaC9NREtsR25CNXFGbnNI?=
- =?utf-8?B?ZEphUFZhNHpwNUJtWmpYVWRrUlVhZ1k2emFBWGQzWVZocFNSdHhBc0EzOUJn?=
- =?utf-8?B?LzFJZVVqTWN1ZEZBWDViS0hjdjVPNFpBMEhPWDBuT1hSS0gva0dieFdQN2tP?=
- =?utf-8?B?aVc2WHMzc0NBd0FPdy93d0RHQ0FUZm9MNC9rUDBDSkFGci9CWDhHRnF2ZDRk?=
- =?utf-8?B?ZlV6cWh3TmVFOGhvUVZKZksvNzgxbEY1ZkFSaHJKNDNzQnNtMU9STmxoUnZM?=
- =?utf-8?B?YzNJRjRreThRU2FwUnJKSU4wcXZHblZ0S1hXOThYR01lVVJvYTFVd3ZIbjU2?=
- =?utf-8?B?QVptN1pnVWpsUzBQVnhwL2ZvZGJLY3FFWWhncWNlRkMycTR1L3R1Tk4yYkhu?=
- =?utf-8?B?RWFlaUNXODFGZXFXMVdiV0Q5ajNJMUtZd2llNjBYOW9mVkRtMlAwK2FzdVc3?=
- =?utf-8?B?c2ZRUWFXTzBFMTlXYUFZQ1h4RHY0dUFISEtmS2htOHV3ZDFUWHRQL0Y5K1V3?=
- =?utf-8?B?UE9SZktrR2dITEtyQmVzeFhKVk5jVFFzbm1WYnJpeDcwR3FvSlBlcTc3d3Ux?=
- =?utf-8?B?ZVhiY3k3d2RKTkZSeE9QRDkvT1VPNjFHbmZOdENaUXRnOUpmNTV5MHhhd3Jv?=
- =?utf-8?B?L00xaFFVdWRnOWtkL0lGbmJyVmFQd2k1VGtVbVN6SzQwRkpZNkRDa083bzZO?=
- =?utf-8?B?aE4vUks1YmpudnhwUDdFa1FJNjBZdVFxRU90QmNSbEFjeWI4dTh4Z1BQS2lR?=
- =?utf-8?B?c2JaM05pY0oyUVRiVis3elRsb0tBY2crZVdQUEt3L09IWk1JN21yOE0vNm8y?=
- =?utf-8?B?WDdZK0MwK0xyenEzMG9Pc1h2cnRObEEwMzRIWkRMNDd1UGp2Y0MweWZEZ043?=
- =?utf-8?B?ZlZnZ3B0ZXI2bjBkOXFRWnJtZit1R3RObkUzc1kzeEx2NTdDbDh6WnFCWXM5?=
- =?utf-8?B?U0pXVERwU3BQV0NYV1hUSkhRTk16U25SUS9UV2lHYnNpcFRXM2Y3bm9hb2k1?=
- =?utf-8?B?bER3R0hBR2pTVldlc3BVNzJNWjJCMFNmWWNBcVMrZEUyMDhRS1pSTXhtcHVO?=
- =?utf-8?B?d2pEblMvdTJ0amM5dGg4MW5RUk9hdXhQcWdEV3BGU29VYUVScnpwN2JzUW9I?=
- =?utf-8?B?cVM5bG5helJnRTBOUDQzL2dWdmlia256U1N3SnVON1g3eVR3aUlXK1JJQlB3?=
- =?utf-8?B?ZXduM1VrR2d5clZtMjVRQzFyd0lJVjhIVXZUcVdpKzdLTGs5VXpDeFBEWi8x?=
- =?utf-8?B?bzI5amxoczY2dDFtdjZoUEtXeHIvVFJFeGF6OC9DSFdRd0w0dDJlQWtnWEU2?=
- =?utf-8?B?SFlnRHY3UmRKenBRWDdlWHRJVkUxUTJDend1RFBFTU9jQzc4WkpKa3RhWVVH?=
- =?utf-8?B?QWlELzlES1NDVEFUd2hZQm43TExSOEVWcEc4S3RNaEp0dExCUDdZTzNzSW9Z?=
- =?utf-8?B?Q2NYYS9oRHZtTDY0cGJOQUFtT2d0SUxTNGNDYUtFaGZFNkRIRXJJOHpYM1Vy?=
- =?utf-8?B?a2Z1ZXVrNG43UVBMOXY2TkpYNkJudTNpb2VQWDlIZGlYNmh2bDRESm5GNnlK?=
- =?utf-8?B?ZWc9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bc6e89c-a535-41c1-3adc-08ddacb62321
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 09:14:03.1810
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MEXFAlNBM4+vD3fr6kuiu/h8P/2c8SDd4lMkEyHFIw5BQCmAxam+VkyrE7wk4yuINv9fGvNdl9BOtVMsLrjO0BqXlldRLffHIFTP3WufV70=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9804
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] mm: add mm_get_static_huge_zero_folio() routine
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Dave Hansen <dave.hansen@intel.com>
+Cc: Pankaj Raghav <p.raghav@samsung.com>,
+ Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
+ Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
+ x86@kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
+ gost.dev@samsung.com, hch@lst.de
+References: <20250612105100.59144-1-p.raghav@samsung.com>
+ <20250612105100.59144-5-p.raghav@samsung.com>
+ <e3075e27-93d2-4a11-a174-f05a7497870e@intel.com>
+ <cglmujb275faqkpqmb75mz4tt5dtruvhntpe5t4qyzjr363qyr@vluzyx4hukap>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <cglmujb275faqkpqmb75mz4tt5dtruvhntpe5t4qyzjr363qyr@vluzyx4hukap>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andrew,
-
-On 6/15/25 4:53 PM, Andrew Lunn wrote:
-> On Fri, Jun 13, 2025 at 04:27:54PM +0200, Quentin Schulz wrote:
->> Hi Andrew,
+On 12.06.25 22:54, Pankaj Raghav (Samsung) wrote:
+> On Thu, Jun 12, 2025 at 07:09:34AM -0700, Dave Hansen wrote:
+>> On 6/12/25 03:50, Pankaj Raghav wrote:
+>>> +/*
+>>> + * mm_get_static_huge_zero_folio - Get a PMD sized zero folio
 >>
->> On 5/28/25 3:09 PM, Andrew Lunn wrote:
->>> On Wed, May 28, 2025 at 09:56:51AM +0200, Quentin Schulz wrote:
->>>> Hi Andrew,
->>>>
->>>> On 5/27/25 6:18 PM, Andrew Lunn wrote:
->>>>> On Tue, May 27, 2025 at 03:11:42PM +0200, Jakob Unterwurzacher wrote:
-[...]
->>>> I'll need to implement reading the delay from the stmmac driver to use this
->>>> property, do I need to restrict reading this property to the SoC we tested
->>>> (RK3588)?
->>>
->>> Yes, please only allow it to be used on RK3588, and any other SoC you
->>> can test and verify its behaviour.
+>> Isn't that a rather inaccurate function name and comment?
+> I agree. I also felt it was not a good name for the function.
+> 
 >>
->> Coming back to this topic, I'm unfortunately the bearer of some bad news.
+>> The third line of the function literally returns a non-PMD-sized zero folio.
 >>
->> I implemented the suggested logic (see at the end of this mail) and then
->> went to validate it with Jakob's help. Unfortunately, it seems that the
->> delay value really isn't stable or reliable.
+>>> + * This function will return a PMD sized zero folio if CONFIG_STATIC_PMD_ZERO_PAGE
+>>> + * is enabled. Otherwise, a ZERO_PAGE folio is returned.
+>>> + *
+>>> + * Deduce the size of the folio with folio_size instead of assuming the
+>>> + * folio size.
+>>> + */
+>>> +static inline struct folio *mm_get_static_huge_zero_folio(void)
+>>> +{
+>>> +	if(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
+>>> +		return READ_ONCE(huge_zero_folio);
+>>> +	return page_folio(ZERO_PAGE(0));
+>>> +}
 >>
->> We tested the same adapter with two different main boards (the same product,
->> just two different units). With a value of 0x40 for tx_delay (which should
->> be ~2000ps if we have a 31ps per tx_delay unit as empirically decided), we
->> have one board with 1778ps and one with 1391ps. Following a hunch, we
->> started to stress (or cool) the device (with stress-ng/a fan) and it did
->> slightly change the result too. Changing the CPU operating points (and by
->> extension at least CPU clocks) didn't impact the result though.
-> 
-> Thanks for taking such a scientific approach to this. Most developers
-> try values until it works, and call it done. It is nice to see
-> somebody doing some real study.
-> 
-> Russell quoted the standard, which says the delay needs to be between
-> 1ns and 2.6ns, which is quite a wide range. So for a tx_delay value of
-> 0x40, nominally 2000ps, your two values are within that range, and so
-> conform to the standard.
-> 
-
-If there's a source about the 2.6ns being the upper limit, I would 
-appreciate a link to it (or the maths leading to this claim) :) My 
-understanding is: at least 1.2ns.
-
-Considering that for 125MHz TXC (for 1GbE), the clock period is 8ns and 
-that two
-
->> While this could be observed with tx_delay property too, this property
->> doesn't claim to provide a value in picoseconds that tx-internal-delay-ps
->> would (but at the same time this didn't stop it to be implemented for the
->> DSA switch we have which claims "more than 1.5ns" and nothing more, so maybe
->> that would be acceptable?).
+>> This doesn't tell us very much about when I should use:
 >>
->> I feel uncomfortable contributing this considering the wildly different
->> results across our very small test sample pool of two units and slightly
->> different operating temperature.
+>> 	mm_get_static_huge_zero_folio()
+>> vs.
+>> 	mm_get_huge_zero_folio(mm)
+>> vs.
+>> 	page_folio(ZERO_PAGE(0))
+>>
+>> What's with the "mm_" in the name? Usually "mm" means "mm_struct" not
+>> Memory Management. It's really weird to prefix something that doesn't
+>> take an "mm_struct" with "mm_"
 > 
-> I can understand that. But there is another way to look at this. I am
-> making a big jump from just two boards, but it seems to me, tx_delay
-> and rx_delay are pointless, if they produce such a wide range of
-> values from what should be identical boards. They cannot be used for
-> fine tuning because the same value has a 387ps difference, which is
-> huge compared to the 31ps step.
+> Got it. Actually, I was not aware of this one.
 > 
-
-I'm making the same conclusion.
-
-I'm not sure though it's a good idea to force the user to implement the 
-delay in the PHY only. I can tell you that we have two variants of 
-RK3399 Puma, RK3588 Jaguar and RK3588 Tiger with either a KSZ9031 or a 
-KSZ9131 PHY. As far as I understood from reading the driver, the delay 
-is implemented differently for both PHYs. KSZ9131 adds a DLL-based clock 
-skew (4.9.3.1 in datasheet[1]) in the appropriate direction whenever 
-phy-mode requires a delay be added by MAC/PHY. KSZ9031 doesn't. Both 
-KSZ9031 and KSZ9131 have per-lane skews. If I wanted the delay to be 
-added by the PHY in the DT, I basically wouldn't be able to share the DT 
-between both variants of our boards as the KSZ9131 would add a 2ns 
-delay[2] based on phy-mode but not KSZ9031 where I assume I would need 
-to use pad skews instead to add up to 1.9ns (TXC; 1.4ns for RXC) but 
-then we would have ~4ns for KSZ9131 which is likely out of spec :/ Today 
-it works by "chance" because our phy-mode is rgmii but the delay is 
-added by the MAC (due to the long-standing mistake in the Rockchip GMAC 
-driver). I have not tested any of the above claims.
-
-[1] 
-https://ww1.microchip.com/downloads/aemDocuments/documents/UNG/ProductDocuments/DataSheets/00002841D.pdf
-[2] Link [1] at 4.9.3 RGMII TIMING
-
-> It seems to me, rx_delay and tx_delay should be deprecated, set to 0,
-> and let the PHY do they delays. If i remember correctly, that is what
-> you ended up with for you board?
+>>
+>> Isn't the "get_" also a bad idea since mm_get_huge_zero_folio() does its
+>> own refcounting but this interface does not?
+>>
 > 
+> Agree.
+> 
+>> Shouldn't this be something more along the lines of:
+>>
+>> /*
+>>   * pick_zero_folio() - Pick and return the largest available zero folio
+>>   *
+>>   * mm_get_huge_zero_folio() is preferred over this function. It is more
+>>   * flexible and can provide a larger zero page under wider
+>>   * circumstances.
+>>   *
+>>   * Only use this when there is no mm available.
+>>   *
+>>   * ... then other comments
+>>   */
+>> static inline struct folio *pick_zero_folio(void)
+>> {
+>> 	if (IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
+>> 		return READ_ONCE(huge_zero_folio);
+>> 	return page_folio(ZERO_PAGE(0));
+>> }
+>>
+>> Or, maybe even name it _just_: zero_folio()
+> 
+> I think zero_folio() sounds like a good and straightforward name. In
+> most cases it will return a ZERO_PAGE() folio. If
+> CONFIG_STATIC_PMD_ZERO_PAGE is enabled, then we return a PMD page.
 
-This is what we ended up doing for our adapter board indeed.
+"zero_folio" would be confusing I'm afraid.
 
-I'm trying to figure out if there's a way to not break stuff by forcing 
-the properties to 0 and deprecating the values.
+At least with current "is_zero_folio" etc.
 
-tx_delay is used (by the driver) whenever the delay is added by the PCB 
-on TXC (based on phy-mode, which is incorrect). Same for rx_delay but 
-for RXC. So if we set phy-mode correctly (as it's being pushed lately 
-for Rockchip boards), tx_delay/rx_delay will need to be set to 0 
-explicitly whenever the delay is expected to be NOT implemented by the 
-PCB (so in addition to the phy-mode saying "delay not added by the PCB").
+"largest_zero_folio" or sth. like that might make it clearer that the 
+size we are getting back might actually differ.
 
-If the properties are missing in the DT, they are assigned a default 
-value. So we cannot simply remove them or expect them gone (we also want 
-DT backward compatibility so cannot change the driver behavior :/).
-
-The only way forward that I see is forcing the properties to be 0 in 
-device tree and warn if they are non-zero or something. Will trigger a 
-bunch of warning/errors on existing Device Trees though. And this will 
-not allow us to use two slightly different PHYs for our products without 
-having two separate Device Trees.
-
+-- 
 Cheers,
-Quentin
+
+David / dhildenb
+
