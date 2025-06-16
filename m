@@ -1,64 +1,73 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9EC292B36
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F405230D0E
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079224; cv=none; b=APkhYivYjpBAYhrf8T/Gcu1Pu3gfe4uAL742N8riFk8ZQOcw9jaRQA3OVxEbR+cgSpFVCUJsvi6oTvHuz5A0+MsL73n8tlh409LIYg6vWm8EAj/LmxrEMjyd7WDijTDl7aEmwyjS6BYod4f4Pq8C/ORe1ITUc/1fMkglCGGy370=
+	t=1750079255; cv=none; b=c8XIdso+WPiJFw7VwAOy86T1jJJvNMEujq2JxBjQzVBSYkBpnHoysCoZ/D5SuhbMeV5I9sksao1FMnTC1RhFQt3TkClkybWbT0D2DR+MTk/yV6qK5Eb+knHZwlzT+OgJpFJvklZOVnnSmpuLS+KpbnvidFVEWvmhouikTCFrjfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079224; c=relaxed/simple;
-	bh=ee/RwBi8FKq9VtJWA9MlNDaZc7H3g32sL1jjfJsCjaU=;
+	s=arc-20240116; t=1750079255; c=relaxed/simple;
+	bh=K+2x3g3ibknHv1jEjab8MkunrvI8egf4XRjyzS3MveA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yb3n9mUo/Abn/wODy9SLk18MEnkBJU+r0HCokq7QGLDlGr7vzYyI2yOrX18easYLeRFYhu32wQCYib9BlcDgy9Gi925VXVMftNzfQ/jd4yu/45NFTzYD8Vrkof3Du2QLurg9YiHrLa5jmWyBoe8CWwb9lLB3P4sEoZy7wTVQayM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IGvaPTJb; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=JglIVqTUtzuHp/r/Jb0aGINUdWOyLKhIlOsJ75cVrRYBHpu+EQE+jXbTvFpOoSq6pxZO9RNvnTIG0H9R3NFeIpItcRAINjWkxzPhzndz6UHL5c5y9G2sIu3ZzMlMptp+jQIVTjg/p40CNi0C6oRlqFrQsG5KotuluHpJBwiz114=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ivpaAujU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGvaPTJb"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45300c82c1cso14239125e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750079220; x=1750684020; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VvG8EvOBERndyafhh0R3gUvPVZ3AkVSl0zI3A6MAIiE=;
-        b=IGvaPTJbwpudoSi+/srk0DY/kALkjaRG+1gfCnA9Z9NiHpoD+kY6qy2cU0fV5ASl5H
-         QlfSyQpWFlZZakYAGQ9bM4pWEsBGii7trWwJ/gKl8Z/JudYguLkG0j5Rr3wydEUOiY4i
-         YCWLZrbF5soTVvn5bkPKBlFWKWnTMDcm1SCksLhZVHXXN4G2YkhM+UjcwvXZOYlH+znJ
-         8Lu5HHmQ6Ws0AI04o27R6a4x1HGTr1yfczNGaDa05GfHtav3DV3f2rIrQxJ8Zuh/nBhr
-         nRzYuYN5hx/WyKHUh9r0S1jaiXeCH3TJZ3bqSm6lTNiYIbRq1jDe+5892bv43dYednCf
-         ncSw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ivpaAujU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750079252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NEh91vA9Wxz85gRtNA+9lUxQQ56dlvAv6y9wRHW8BUw=;
+	b=ivpaAujUntXBJxajdfwulr0RQJ/cirw/me+q/pK0p9smL9ZxdCyi0m+v29sY68zQJd1YIG
+	cV9sh3tABPWYo4Y3AkwUft2DL6ugUlJVnrczmKNOoor2nLbBbfJ5tYB+ZksUYlbsHoZ+x3
+	rqdLt64b8wX+2PuWWpKPmM5EZuYgVBc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-377-pP3QbsVoMoK46ItaFg8PCg-1; Mon, 16 Jun 2025 09:07:30 -0400
+X-MC-Unique: pP3QbsVoMoK46ItaFg8PCg-1
+X-Mimecast-MFC-AGG-ID: pP3QbsVoMoK46ItaFg8PCg_1750079250
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f3796779so3049058f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:07:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750079220; x=1750684020;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VvG8EvOBERndyafhh0R3gUvPVZ3AkVSl0zI3A6MAIiE=;
-        b=di/AVPcFnI183Xqhl7GnP0IL0AQ5GQYVGk7wjI9kFDCryV33rfTzEHgL0p1KlMhn+4
-         Iymg4i32z+87bjHNiLYaEIS93TUcfMY2jhNB4bKteKxHL6GbFwsV0lG1TmscpESBpU2G
-         4QQ13NEaZL0Gv2Nq25SLuS9Rpj7uoFGK4aD4KVWfRu3uL7DBf3gauzi7zs6JfNb0PFLx
-         pAmcJMKsv48331oajB5toDwxZ+BZCCdeb/pjyj8ZNS4Zvw2oJETWEPMk0g5kiTkNemyS
-         G3eu3ure/wKwt4xgZc7H4j1xRLC7fykGX2GQ8qoeQvbwL0jSwRl5JQ8By3DdiF8uWH5Z
-         8KpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcdcR4ZuPt0IFl13qYMx1qLIXFVLYIHk2jKSyZ93R3Rh5ExTqj+q7cWkX+FsYyeYv5CjrKNJh/+xz7oxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8i1dnCHchkflkfKprYb8bOUBPNYz4wagspLJG6WJXAXF2b4ZF
-	T/ORUkBdsSyQLqIuvQLgZ53WDj4y8VD9PMFQ6ssQQHMeCpy6PW3BGuvit4p5fYDBLvU=
-X-Gm-Gg: ASbGncudXCkkmGkYnL4M22iEZY6wTPkuFSsNea69h7/vKDSAnfdzKxQeouuDHjeDe0I
-	0FOkDj03x98mqIn8Y0QG+Wspvmk8WdklC/4AVIU+8A4C1DfeqeIrarhgwiOYp24z18cnqh58mIV
-	0yv3JQdK6BaBP6e9T8c1Plvd+GAZ8ffHuuEtDJOwnk1B5BMBAlMz8RhWmZFhdMSp8lS5ZP+YkNw
-	s3VwM4ATtipj2zfILoWEpngPPXOmng/8ZvAjomUskSIvkW3tMe8T3x4e8dqbpHCE0VyATmoe3/2
-	lB6O2dkT7p1SaJLoG/2/JaQ/iAdR3CBUnGoh+8EfoGmA49X7zZIdop92EIKNDGGjhio=
-X-Google-Smtp-Source: AGHT+IG90jrm0/YmUPPNZ3DkrXfamsqfYyknv5iOIGHsAtWVD7TaDVkBdpDcbQNvCeQ9SbB64y/LyQ==
-X-Received: by 2002:a05:600c:1ca1:b0:43c:ea1a:720a with SMTP id 5b1f17b1804b1-4533cacf2d1mr70512635e9.1.1750079219441;
-        Mon, 16 Jun 2025 06:06:59 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2384cesm142172555e9.16.2025.06.16.06.06.58
+        d=1e100.net; s=20230601; t=1750079249; x=1750684049;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NEh91vA9Wxz85gRtNA+9lUxQQ56dlvAv6y9wRHW8BUw=;
+        b=BaDLKXXk8VQCO3oN40PYC9XCv7ofJjOxssMYnOM8LVNr6Q1M73kYc5bIsHskXSPLmL
+         EA/xjsULAu+CtI2tQ3tilv6+v1i0+8jH2Un6xhU+ghceUQLorGrG6QTbekUOcSAuyWRz
+         rCtFK2FQGGFKpNUlHXvKI6KzJeOZ5kPZD2cA6c3+nqkmrbzrvHCPTou/VETpKoI79PQ2
+         Hq3rq2cyAPyTJHTtscJiMym1tuhzQinslFjPkGHA0555sbbQY4w3E9EoyAC8a6/EZY4e
+         5qUkD0rCM5B01SQxPA0DuEvFgCsfbjPSpPmi+yHGYz9eCrN6TTQiPhr0SFrMyiwnCsJk
+         +6ww==
+X-Forwarded-Encrypted: i=1; AJvYcCW/aRNAq1yb0GaJZ/HaLl9fQf0UzvpzfzjalZRNkFsOu4gMbAixF/1wfEvrcceWaI9UkDYYZd8j+0Q+VW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdW1JZQMVXqzZSNmjlSXi6HY6JHhXC+RAU/r+9WRiq4jOf/slM
+	KhBr6BpH0d30tVyrPPB2qOp6yWxe8U+qK97XCdV3OC4tDlm2L8mZNQH81wILqkPBxWAVpavoLvs
+	V4h+Rm7rCmyueBe4K36BTBscJGMda3vSoOxrzOxBskUKxvnsCqmaX12frNd3Y8Vge6aYQKM4SHA
+	==
+X-Gm-Gg: ASbGncvBjfu34FnsKjk7tshYwqPQ9kY5tAtHbg2uTgnEDlVpTaTzpL+woAZ4xzXwCMd
+	qQqNHlEtMtrwilO50eYXlF9h3O9Tu3TdQaCf/BPYtHbMc6tmIz8WsGrNyCQqMD6Ckfj6OUQZunN
+	Ei/a0N0w7RugGaHVF+knkMIzMYzkIQ0ljg1cm0XJNixZuGSVMg+FCkFUzHQEHk+xqjQxGzlhJtE
+	ywldflEE6+rOyxxeBb50fznLFeSdT2Ta352OHjg2vTIEgr9E5GvGAitCwcOSYmzf4L9y7AQ/x76
+	X8UmqiW10s+Cq0xGh/pue2QERnzBRiw4JuKBbr1wIg5Ie3OA8+TXppJQvZyKmg==
+X-Received: by 2002:a05:6000:144f:b0:3a5:2599:4163 with SMTP id ffacd0b85a97d-3a572e8e56cmr7284429f8f.47.1750079249509;
+        Mon, 16 Jun 2025 06:07:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFx1GOoDTc/8rrvBJlWHToytU+R3cfbzVAbYt+/o6NPhC2gNi5p8T4FxpCUlpaE2CWc1vf5UA==
+X-Received: by 2002:a05:6000:144f:b0:3a5:2599:4163 with SMTP id ffacd0b85a97d-3a572e8e56cmr7284381f8f.47.1750079249064;
+        Mon, 16 Jun 2025 06:07:29 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e10:ef90:343a:68f:2e91:95c? ([2a01:e0a:e10:ef90:343a:68f:2e91:95c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b09148sm11418791f8f.58.2025.06.16.06.07.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 06:06:59 -0700 (PDT)
-Message-ID: <a0291b82-5441-421b-9338-eef26d72544e@linaro.org>
-Date: Mon, 16 Jun 2025 14:06:58 +0100
+        Mon, 16 Jun 2025 06:07:28 -0700 (PDT)
+Message-ID: <ecfe7d40-257a-426c-b200-4fd62f18cde7@redhat.com>
+Date: Mon, 16 Jun 2025 15:07:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,183 +75,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Use non-coherent memory for DMA
-To: Robin Murphy <robin.murphy@arm.com>, Vladimir Oltean <olteanv@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
- Larisa Grigore <larisa.grigore@nxp.com>, Frank Li <Frank.li@nxp.com>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250613-james-nxp-spi-dma-v2-0-017eecf24aab@linaro.org>
- <20250613-james-nxp-spi-dma-v2-2-017eecf24aab@linaro.org>
- <adbbfc9c-5d21-4c8f-ba71-ae1103569037@arm.com>
+Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error
+ reporting
+To: "Michael S. Tsirkin" <mst@redhat.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org
+References: <20250521092236.661410-1-lvivier@redhat.com>
+ <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
+ <20250528031540-mutt-send-email-mst@kernel.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <adbbfc9c-5d21-4c8f-ba71-ae1103569037@arm.com>
+From: Laurent Vivier <lvivier@redhat.com>
+Autocrypt: addr=lvivier@redhat.com; keydata=
+ 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
+In-Reply-To: <20250528031540-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 16/06/2025 12:56 pm, Robin Murphy wrote:
-> On 2025-06-13 10:28 am, James Clark wrote:
->> Using coherent memory here isn't functionally necessary. Because the
->> change to use non-coherent memory isn't overly complex and only a few
->> synchronization points are required, we might as well do it while fixing
->> up some other DMA issues.
-> 
-> If it doesn't need coherent memory then does the driver really need to 
-> do its own bounce-buffering at all? Could you not simplify the whole lot 
-> even more by getting rid of {tx,rx}_dma_buf altogether and relying on 
-> the SPI core helpers to DMA-map the messages in-place?
-> 
-> Thanks,
-> Robin.
-> 
-
-In this case the device needs a control word to be written into the 
-buffer for every SPI word to be sent, so it didn't fit into what was in 
-the core layer. But we did look into doing it that way.
-
-James
-
->> Suggested-by: Arnd Bergmann <arnd@arndb.de>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   drivers/spi/spi-fsl-dspi.c | 55 ++++++++++++++++++++++++++++ 
->> +-----------------
->>   1 file changed, 35 insertions(+), 20 deletions(-)
+On 28/05/2025 09:20, Michael S. Tsirkin wrote:
+> On Wed, May 28, 2025 at 08:24:32AM +0200, Paolo Abeni wrote:
+>> On 5/21/25 11:22 AM, Laurent Vivier wrote:
+>>> This patch series contains two fixes and a cleanup for the virtio subsystem.
+>>>
+>>> The first patch fixes an error reporting bug in virtio_ring's
+>>> virtqueue_resize() function. Previously, errors from internal resize
+>>> helpers could be masked if the subsequent re-enabling of the virtqueue
+>>> succeeded. This patch restores the correct error propagation, ensuring that
+>>> callers of virtqueue_resize() are properly informed of underlying resize
+>>> failures.
+>>>
+>>> The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
+>>>
+>>> The third patch addresses a reliability issue in virtio_net where the TX
+>>> ring size could be configured too small, potentially leading to
+>>> persistently stopped queues and degraded performance. It enforces a
+>>> minimum TX ring size to ensure there's always enough space for at least one
+>>> maximally-fragmented packet plus an additional slot.
 >>
->> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->> index 744dfc561db2..f19404e10c92 100644
->> --- a/drivers/spi/spi-fsl-dspi.c
->> +++ b/drivers/spi/spi-fsl-dspi.c
->> @@ -379,6 +379,11 @@ static bool is_s32g_dspi(struct fsl_dspi *data)
->>              data->devtype_data == &devtype_data[S32G_TARGET];
->>   }
->> +static int dspi_dma_transfer_size(struct fsl_dspi *dspi)
->> +{
->> +    return dspi->words_in_flight * DMA_SLAVE_BUSWIDTH_4_BYTES;
->> +}
->> +
->>   static void dspi_native_host_to_dev(struct fsl_dspi *dspi, u32 *txdata)
->>   {
->>       switch (dspi->oper_word_size) {
->> @@ -493,7 +498,10 @@ static void dspi_tx_dma_callback(void *arg)
->>   {
->>       struct fsl_dspi *dspi = arg;
->>       struct fsl_dspi_dma *dma = dspi->dma;
->> +    struct device *dev = &dspi->pdev->dev;
->> +    dma_sync_single_for_cpu(dev, dma->tx_dma_phys,
->> +                dspi_dma_transfer_size(dspi), DMA_TO_DEVICE);
->>       complete(&dma->cmd_tx_complete);
->>   }
->> @@ -501,9 +509,13 @@ static void dspi_rx_dma_callback(void *arg)
->>   {
->>       struct fsl_dspi *dspi = arg;
->>       struct fsl_dspi_dma *dma = dspi->dma;
->> +    struct device *dev = &dspi->pdev->dev;
->>       int i;
->>       if (dspi->rx) {
->> +        dma_sync_single_for_cpu(dev, dma->rx_dma_phys,
->> +                    dspi_dma_transfer_size(dspi),
->> +                    DMA_FROM_DEVICE);
->>           for (i = 0; i < dspi->words_in_flight; i++)
->>               dspi_push_rx(dspi, dspi->dma->rx_dma_buf[i]);
->>       }
->> @@ -513,6 +525,7 @@ static void dspi_rx_dma_callback(void *arg)
->>   static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->>   {
->> +    size_t size = dspi_dma_transfer_size(dspi);
->>       struct device *dev = &dspi->pdev->dev;
->>       struct fsl_dspi_dma *dma = dspi->dma;
->>       int time_left;
->> @@ -521,10 +534,9 @@ static int dspi_next_xfer_dma_submit(struct 
->> fsl_dspi *dspi)
->>       for (i = 0; i < dspi->words_in_flight; i++)
->>           dspi->dma->tx_dma_buf[i] = dspi_pop_tx_pushr(dspi);
->> +    dma_sync_single_for_device(dev, dma->tx_dma_phys, size, 
->> DMA_TO_DEVICE);
->>       dma->tx_desc = dmaengine_prep_slave_single(dma->chan_tx,
->> -                    dma->tx_dma_phys,
->> -                    dspi->words_in_flight *
->> -                    DMA_SLAVE_BUSWIDTH_4_BYTES,
->> +                    dma->tx_dma_phys, size,
->>                       DMA_MEM_TO_DEV,
->>                       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->>       if (!dma->tx_desc) {
->> @@ -539,10 +551,10 @@ static int dspi_next_xfer_dma_submit(struct 
->> fsl_dspi *dspi)
->>           return -EINVAL;
->>       }
->> +    dma_sync_single_for_device(dev, dma->rx_dma_phys, size,
->> +                   DMA_FROM_DEVICE);
->>       dma->rx_desc = dmaengine_prep_slave_single(dma->chan_rx,
->> -                    dma->rx_dma_phys,
->> -                    dspi->words_in_flight *
->> -                    DMA_SLAVE_BUSWIDTH_4_BYTES,
->> +                    dma->rx_dma_phys, size,
->>                       DMA_DEV_TO_MEM,
->>                       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->>       if (!dma->rx_desc) {
->> @@ -644,17 +656,17 @@ static int dspi_request_dma(struct fsl_dspi 
->> *dspi, phys_addr_t phy_addr)
->>           goto err_tx_channel;
->>       }
->> -    dma->tx_dma_buf = dma_alloc_coherent(dma->chan_tx->device->dev,
->> -                         dma_bufsize, &dma->tx_dma_phys,
->> -                         GFP_KERNEL);
->> +    dma->tx_dma_buf = dma_alloc_noncoherent(dma->chan_tx->device->dev,
->> +                        dma_bufsize, &dma->tx_dma_phys,
->> +                        DMA_TO_DEVICE, GFP_KERNEL);
->>       if (!dma->tx_dma_buf) {
->>           ret = -ENOMEM;
->>           goto err_tx_dma_buf;
->>       }
->> -    dma->rx_dma_buf = dma_alloc_coherent(dma->chan_rx->device->dev,
->> -                         dma_bufsize, &dma->rx_dma_phys,
->> -                         GFP_KERNEL);
->> +    dma->rx_dma_buf = dma_alloc_noncoherent(dma->chan_rx->device->dev,
->> +                        dma_bufsize, &dma->rx_dma_phys,
->> +                        DMA_FROM_DEVICE, GFP_KERNEL);
->>       if (!dma->rx_dma_buf) {
->>           ret = -ENOMEM;
->>           goto err_rx_dma_buf;
->> @@ -689,11 +701,12 @@ static int dspi_request_dma(struct fsl_dspi 
->> *dspi, phys_addr_t phy_addr)
->>       return 0;
->>   err_slave_config:
->> -    dma_free_coherent(dma->chan_rx->device->dev,
->> -              dma_bufsize, dma->rx_dma_buf, dma->rx_dma_phys);
->> +    dma_free_noncoherent(dma->chan_rx->device->dev, dma_bufsize,
->> +                 dma->rx_dma_buf, dma->rx_dma_phys,
->> +                 DMA_FROM_DEVICE);
->>   err_rx_dma_buf:
->> -    dma_free_coherent(dma->chan_tx->device->dev,
->> -              dma_bufsize, dma->tx_dma_buf, dma->tx_dma_phys);
->> +    dma_free_noncoherent(dma->chan_tx->device->dev, dma_bufsize,
->> +                 dma->tx_dma_buf, dma->tx_dma_phys, DMA_TO_DEVICE);
->>   err_tx_dma_buf:
->>       dma_release_channel(dma->chan_tx);
->>   err_tx_channel:
->> @@ -714,14 +727,16 @@ static void dspi_release_dma(struct fsl_dspi *dspi)
->>           return;
->>       if (dma->chan_tx) {
->> -        dma_free_coherent(dma->chan_tx->device->dev, dma_bufsize,
->> -                  dma->tx_dma_buf, dma->tx_dma_phys);
->> +        dma_free_noncoherent(dma->chan_tx->device->dev, dma_bufsize,
->> +                     dma->tx_dma_buf, dma->tx_dma_phys,
->> +                     DMA_TO_DEVICE);
->>           dma_release_channel(dma->chan_tx);
->>       }
->>       if (dma->chan_rx) {
->> -        dma_free_coherent(dma->chan_rx->device->dev, dma_bufsize,
->> -                  dma->rx_dma_buf, dma->rx_dma_phys);
->> +        dma_free_noncoherent(dma->chan_rx->device->dev, dma_bufsize,
->> +                     dma->rx_dma_buf, dma->rx_dma_phys,
->> +                     DMA_FROM_DEVICE);
->>           dma_release_channel(dma->chan_rx);
->>       }
->>   }
+>> @Michael: it's not clear to me if you prefer take this series via your
+>> tree or if it should go via net. Please LMK, thanks!
 >>
+>> Paolo
 > 
+> Given 1/3 is in virtio I was going to take it. Just after rc1,
+> though.
+> 
+
+Hi Michael,
+
+rc2 is out. Do you always plan to merge these fixes?
+
+Thanks,
+Laurent
 
