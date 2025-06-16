@@ -1,228 +1,83 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E0928D8EE;
-	Mon, 16 Jun 2025 09:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059232D0283
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750067947; cv=none; b=nTUwVm31coJFom3tuiWi8kcTaucCZyz6A8vnpjgwtpjK3Ff1nUqLUiLwnKnkkXe87/LO6CZgXhtR6o07MSI1LHKKhPgsGkknHz5vW5U88qwcrXdVJFrG1Hh8vXRPZQsUcsVydTXKiJ+RxKt8jf5CJWla4o5QT62zhlghoTd8piY=
+	t=1750067963; cv=none; b=CvdotH8MBFNQE0oe/5gN8/wwjjgXmOscIRTgBIBuK6wIX7r0oTlKursTFV3o4hEjn8uvSWiNcsa58tIApKQoFNDpYEPFTcX1kE4o9mMNp9oBt1HWikbTOcZsHH1WO1DGPIB9g3PVFvOoM4lKaFqCehvxV5/VoTyLK99pLlh2aaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750067947; c=relaxed/simple;
-	bh=oEHCeCyYmhRvcoDsSzTQBlneOLnSQNdeNvfMRFj69TE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fa7D1tn1zxUU8J2eE9prJuUd3OlAywQRgSZnZyizzpnX3vCIyC1g7E+RGHxP++SYIa39HUwWIenuRKX5box+3tp7QE58XC6nz6z4FAejTjsag7ZCYnE/mE0t4deRDMGD+MsbLRudvCaRinRGxQUH/9tddKNcFomRZzj9UjEaRsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=j0Ysww2v; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="j0Ysww2v"
-Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout4.routing.net (Postfix) with ESMTP id 7292B100947;
-	Mon, 16 Jun 2025 09:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1750067923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zCArQQjnZOoBXdfm7YKc01KniAiMbD7wl2wyNkiAMyg=;
-	b=j0Ysww2vk4736GogUkpaDc0OLO5b9m7c91QkacYMAfba4I6tkiF1iuTWrLO+Me1Ew9ZF5p
-	WDeglTwBcvwB8dPyvGlLpwW3K/ESJz6Wlle5DErBl1TRPZWfRAlW2wxTqDdhfHxYXEj8yf
-	mP/zjDpj0WHwgeoZ0NMHSrZfXJPoCc4=
-Received: from frank-u24.. (fttx-pool-194.15.87.210.bambit.de [194.15.87.210])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 172B1122704;
-	Mon, 16 Jun 2025 09:58:43 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	Jia-Wei Chang <jia-wei.chang@mediatek.com>,
-	Johnson Wang <johnson.wang@mediatek.com>,
-	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Felix Fietkau <nbd@nbd.name>,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v4 09/13] arm64: dts: mediatek: mt7988a-bpi-r4: drop unused pins
-Date: Mon, 16 Jun 2025 11:58:19 +0200
-Message-ID: <20250616095828.160900-10-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250616095828.160900-1-linux@fw-web.de>
-References: <20250616095828.160900-1-linux@fw-web.de>
+	s=arc-20240116; t=1750067963; c=relaxed/simple;
+	bh=doCLeYzsrj45Z2HBYvq5g3My9gFsOrT5a5JAuEQIrso=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=AB9mmzu7JIKxcOInj5/kDf3N6cgUAKKFjD+QHBoiSr1+UpurNXoip0Hsg0nVHI3MTy0nbenM1JaNSHaK3C8fvD3QwE16w8kj2vOeSsIvZsp10tFXseRD0F4KVnCybgn1YG2GzKtbJSPpz3qxHDryay+TbKTL6zLAzamQSLgYcug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddb9c3b6edso54943445ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:59:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750067961; x=1750672761;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Uv1B4mAfQmuzPqdcif0Rr998oEN+e6p2IZSVJLfUKAY=;
+        b=YdGvCHl5tBJJHR05RrviZyclczu0O433wMYyHSaH5bfCgmSxCUw7SShzBWHw8YSq2x
+         Nn1zvBUyOo6UCwb2jv3z8wRnCu+94rDUf0zyZSTYFfJf0ak5IAOd/M7JGtnNINLPtJZW
+         ws80Ra1sz6q2q9kkD/DXw++TkdXd3pvQWaCnwng9iHLiYqTajaPFBPa9BI76YXaFjfPZ
+         X3SiBmVTqd4yQBYRrIZKIQDh+J/EPndmpvID5yMOxocNBH4XASaNUNfp/GBmrNe/nwS1
+         FD0PjxDMOi7FLC/tYlAnYxTm7yJiFVUsWVUz3gyLk6zpFSnJj6zIUidBgfJ2Q6KbwWJ2
+         vjEg==
+X-Gm-Message-State: AOJu0YwNK46OhA1uzuPUoMgRIMLFJNed6ajCQtxS2Qzq9XOKD9v9AP2T
+	oNRDurl7bhPcflwRejqTI/wqKlNd4i0npneU0Zoig1Jb5AN1xqzXLVEi7HJH7pNLjM0Kh4C6E4A
+	f3jSOXip9mJQmjcWya3vQcTm2x1kXiWGm+J12vCQ7m2d+HFMPdU8bymMa4m0=
+X-Google-Smtp-Source: AGHT+IGL3GRknel6W1gofzr2MZ/Z3dEyG16sNMTBLVsWsK9zMf4tfmz3K7ba/JBRVWpRHM++g7sMRmmM/qThPgdChW6+K6cUasAP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:168e:b0:3dc:8423:545c with SMTP id
+ e9e14a558f8ab-3de07bc8ab4mr92413975ab.0.1750067961202; Mon, 16 Jun 2025
+ 02:59:21 -0700 (PDT)
+Date: Mon, 16 Jun 2025 02:59:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684feaf9.050a0220.3aca5c.000c.GAE@google.com>
+Subject: [syzbot] Monthly sctp report (Jun 2025)
+From: syzbot <syzbot+list1d5558bc40e501f5b38a@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org, 
+	lucien.xin@gmail.com, marcelo.leitner@gmail.com, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Frank Wunderlich <frank-w@public-files.de>
+Hello sctp maintainers/developers,
 
-Pins were moved from SoC dtsi to Board level dtsi without cleaning up
-to needed ones. Drop the unused pins now.
+This is a 31-day syzbot report for the sctp subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/sctp
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 4 issues are still open and 70 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 3976    Yes   KMSAN: uninit-value in sctp_inq_pop (2)
+                  https://syzkaller.appspot.com/bug?extid=70a42f45e76bede082be
+<2> 124     No    KMSAN: uninit-value in sctp_assoc_bh_rcv
+                  https://syzkaller.appspot.com/bug?extid=773e51afe420baaf0e2b
+<3> 3       Yes   INFO: rcu detected stall in inet6_rtm_newaddr (3)
+                  https://syzkaller.appspot.com/bug?extid=3e17d9c9a137bb913b61
+
 ---
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 89 -------------------
- 1 file changed, 89 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-index afa9e3b2b16a..30affedf84d4 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-@@ -223,18 +223,6 @@ &pcie3 {
- };
- 
- &pio {
--	mdio0_pins: mdio0-pins {
--		mux {
--			function = "eth";
--			groups = "mdc_mdio0";
--		};
--
--		conf {
--			pins = "SMI_0_MDC", "SMI_0_MDIO";
--			drive-strength = <8>;
--		};
--	};
--
- 	i2c0_pins: i2c0-g0-pins {
- 		mux {
- 			function = "i2c";
-@@ -249,20 +237,6 @@ mux {
- 		};
- 	};
- 
--	i2c1_sfp_pins: i2c1-sfp-g0-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c1_sfp";
--		};
--	};
--
--	i2c2_0_pins: i2c2-g0-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c2_0";
--		};
--	};
--
- 	i2c2_1_pins: i2c2-g1-pins {
- 		mux {
- 			function = "i2c";
-@@ -298,34 +272,6 @@ mux {
- 		};
- 	};
- 
--	gbe0_led1_pins: gbe0-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe0_led1";
--		};
--	};
--
--	gbe1_led1_pins: gbe1-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe1_led1";
--		};
--	};
--
--	gbe2_led1_pins: gbe2-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe2_led1";
--		};
--	};
--
--	gbe3_led1_pins: gbe3-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe3_led1";
--		};
--	};
--
- 	i2p5gbe_led0_pins: 2p5gbe-led0-pins {
- 		mux {
- 			function = "led";
-@@ -333,13 +279,6 @@ mux {
- 		};
- 	};
- 
--	i2p5gbe_led1_pins: 2p5gbe-led1-pins {
--		mux {
--			function = "led";
--			groups = "2p5gbe_led1";
--		};
--	};
--
- 	mmc0_pins_emmc_45: mmc0-emmc-45-pins {
- 		mux {
- 			function = "flash";
-@@ -361,40 +300,12 @@ mux {
- 		};
- 	};
- 
--	snfi_pins: snfi-pins {
--		mux {
--			function = "flash";
--			groups = "snfi";
--		};
--	};
--
--	spi0_pins: spi0-pins {
--		mux {
--			function = "spi";
--			groups = "spi0";
--		};
--	};
--
- 	spi0_flash_pins: spi0-flash-pins {
- 		mux {
- 			function = "spi";
- 			groups = "spi0", "spi0_wp_hold";
- 		};
- 	};
--
--	spi2_pins: spi2-pins {
--		mux {
--			function = "spi";
--			groups = "spi2";
--		};
--	};
--
--	spi2_flash_pins: spi2-flash-pins {
--		mux {
--			function = "spi";
--			groups = "spi2", "spi2_wp_hold";
--		};
--	};
- };
- 
- &pwm {
--- 
-2.43.0
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
