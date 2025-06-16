@@ -1,107 +1,149 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019DC277C98;
-	Mon, 16 Jun 2025 10:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFD7295D8F;
+	Mon, 16 Jun 2025 10:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070494; cv=none; b=SBZeSpMU0/je7DljlyqV0+iQVsBkmGpy7kUWYMZO/N4N4vScj7dXCsiByOKOXnu0FWvHvMeb5NF9kpzMtoVT0y9bu5ft73yMwjhv/TuCtfSkAVXSCng0/b3qkTOafUQqOpRYPbAWNP/AhXk8Y8bimCcEjc8Jb8j7WN8FEEJ6VR0=
+	t=1750070496; cv=none; b=exe5ot2DWHUuiyIJyGiaZMgsBcmESvpTh3O9RuIIhGlcrqK03WIJKJSgJnDpFbl/oGqx4TtX7LA3pqw4XZkjn82TOT0SNvJthbd617guuVfz7bNfbIHRN2mBkXR92sxMWgLvKWmiDq9/qFduP36aE8SgBrcvPLPTepqVW+PWpR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070494; c=relaxed/simple;
-	bh=V2vEf1txavranr9WehRAx38ioCKVOHTKJXZmVUR0ohs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K+ooKQohl4mxKCk/nd2XKJ4CdQXBFte5DOXYV4DRbqOVqw55JLhadwx9ftJOoI0wM26/Z2sjKRHZUdpb/g87JHMT6l1ruJee3mIgd/5AYniJqQEtjXGp4tWSXJb7uYAw1n0UvWwerHF7UXYVdMuSLS0+orUQ3ssK8mg7t6Tu7mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVCSI9yR; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVCSI9yR"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7487d2b524eso2123835b3a.0;
-        Mon, 16 Jun 2025 03:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750070492; x=1750675292; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7htFOZxdAd0AZk3HoT2TGIMCVLzxW3F5ddbQjitwc+o=;
-        b=HVCSI9yRflGQD8nOFwiXHVUJ72x6QdMlCrpnjQfZaKvz7yJse0sFB8HsdknKVVlEmT
-         du8qt/s/NHQs7W9BwTCGzqhFxGxsoj8SQhWzjwEgtmUtbxESUlY7M+Ka/bVNCfF6IN4+
-         +YnKJZTS5jlL4yHkNVmqhooL43gGBp3MzKRGWJbdEvffd/xJwdA98O0eSHFKIHl5rCFU
-         qQoZxmLdUHLyh459nyPTHD3Dxhcx9LxcH+mAs7tiMqIRx6l0arLzvo2giOjEF5b4A9d6
-         oGfznHAeiqN6uRtu2II0FNo+bAUXgWsJUmSqxlazc6cnE9G2Vps2OpDQjeCPFionCkzu
-         xzdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750070492; x=1750675292;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7htFOZxdAd0AZk3HoT2TGIMCVLzxW3F5ddbQjitwc+o=;
-        b=wDWjs1oc/77lygGHgu5iyLWb3BFqkzv6fEbg+rKFrdYLeqZTxXqMlAV5y2d8yirGH9
-         1TdG22KGKDGbVgUIvtY1i1uXVFZ0EvSQJgnzw5d1h6ZFU5GiYFDimS4GCvgcSURL4yPH
-         lTmFoxNm+1bViZ4ACREwEZpM3M4FUIMFMVeZssOOXKOdZfYSNd1ipTEYIpgpalvxzOfj
-         rCWvD3ZL5MmhDCg7n4clnQDFva89pFFCfkYPeYiHMcxQLVByqsmoR/mxhqU5BNS1iS49
-         NrY9wJj0aMy7qWD0cVnRCuJRlWLSwG5i7CObWQXf9PtmfCVhhbxI3HJfETqlbSIU+KXX
-         8scA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbSc37kF/bfsv/gvPeIRLyKaUjXjOOLcGrVo4qytCw6YnD0P3lHGiKsLzjlX8AiPH7B+eSSckT7Q==@vger.kernel.org, AJvYcCX2ycHLKZdvfEuMN0fT12hpeQd2C6VUKd6WeVScwPul54lhfSKUknslZoK3HwmhZoDlyMCQegv1arBdc2Zh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPvlIG42+x1QGRcfosHDYDslGd1bB9MiPuiaw0Gzqoe+yOUof8
-	510kWdxugpcTJRRrEJ7sgN0iKf2R7jMaKJZEMLVhtbTNB/0csWMMpqBL
-X-Gm-Gg: ASbGncuRoZ6M5pJzFAMGN5kx2hQRI4WwuCegbU4RzPulcVzBxz2vKOMUptwor/JpkOk
-	ugVDsY1o/iGc4/afu6pVW0Kc9QAyQN8gvMvOuKUuK09ZhmOvrj3dCciZKKav7yIVED4wZow6zqU
-	Qi5H/1GwGq3XXHu4qFTkKqTSWzwDg1vXq6ytUzrvZ5DCIx8dn1mZbiP/MKBPGt2+dWhJBi8hydt
-	BDx/Ns5W6q8mEIteHd12OLKHC27UldNb8Lq+hCbeQKr8hlxNJZMwP2L7Hdq5zARCqDtMnz4bP/X
-	J5OwvAz1++uiuYL0qK7wLcwSN57H+EsflEPoBja6Ppe9C11jbm0UyaMEFRBouPRRMcDt7nALoQj
-	kSJ41mDc=
-X-Google-Smtp-Source: AGHT+IHJOJ6onIIMZqicZrrWs0JqkgSdx0gliCNfsg73RZ0DBjdADGctqIxGkjQ/9vTtLs74zMRE3w==
-X-Received: by 2002:a05:6a00:1994:b0:725:96f2:9e63 with SMTP id d2e1a72fcca58-7489d050f48mr14158247b3a.24.1750070492184;
-        Mon, 16 Jun 2025 03:41:32 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c68:884c:5800:7324:c411:408d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083ba7sm6669992b3a.102.2025.06.16.03.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 03:41:31 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: code@tyhicks.com
-Cc: brauner@kernel.org,
-	sandeen@redhat.com,
-	colin.i.king@gmail.com,
-	skhan@linuxfoundation.org,
-	ecryptfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH] fs/ecryptfs: use scnprintf() in version show
-Date: Mon, 16 Jun 2025 16:11:20 +0530
-Message-ID: <20250616104120.370832-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1750070496; c=relaxed/simple;
+	bh=Lw2dE+P+MII1mRCnkvkm+zkgPFhWavrLZBJGcO21axg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NTCojAZ29koW7fTNp9q0J4Y4QMjoH0jfH4J6QR6VOpNbfsY1I99XYyeDQkGuLCMOLq6vBUyPSibVuXpgDyimmQCxEwNm56WJHwz6g11XJ0AG9wXTsNTfqPyZQlcl8UsqghELzn+HWuI7o4qBpvygzO8YSDOW1i8MzMZQuzi4grE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27592150C;
+	Mon, 16 Jun 2025 03:41:12 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31E963F58B;
+	Mon, 16 Jun 2025 03:41:31 -0700 (PDT)
+Message-ID: <b39ce0e3-5d44-4334-b739-2af07a24a668@arm.com>
+Date: Mon, 16 Jun 2025 11:41:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/43] arm64: RME: RTT tear down
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>
+References: <20250611104844.245235-1-steven.price@arm.com>
+ <20250611104844.245235-11-steven.price@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250611104844.245235-11-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Replace all snprintf() instances with scnprintf(). snprintf() returns
-the number of bytes that would have been written had there been enough
-space. For sysfs attributes, snprintf() should not be used for the
-show() method. Instead use scnprintf() which returns the number of
-bytes actually written.
+Hi Steven
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- fs/ecryptfs/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 11/06/2025 11:48, Steven Price wrote:
+> The RMM owns the stage 2 page tables for a realm, and KVM must request
+> that the RMM creates/destroys entries as necessary. The physical pages
+> to store the page tables are delegated to the realm as required, and can
+> be undelegated when no longer used.
+> 
+> Creating new RTTs is the easy part, tearing down is a little more
+> tricky. The result of realm_rtt_destroy() can be used to effectively
+> walk the tree and destroy the entries (undelegating pages that were
+> given to the realm).
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-diff --git a/fs/ecryptfs/main.c b/fs/ecryptfs/main.c
-index 8dd1d7189c3b..2a97c2b1fc69 100644
---- a/fs/ecryptfs/main.c
-+++ b/fs/ecryptfs/main.c
-@@ -764,7 +764,7 @@ static struct kobject *ecryptfs_kobj;
- static ssize_t version_show(struct kobject *kobj,
- 			    struct kobj_attribute *attr, char *buff)
- {
--	return snprintf(buff, PAGE_SIZE, "%d\n", ECRYPTFS_VERSIONING_MASK);
-+	return scnprintf(buff, PAGE_SIZE, "%d\n", ECRYPTFS_VERSIONING_MASK);
- }
- 
- static struct kobj_attribute version_attr = __ATTR_RO(version);
--- 
-2.49.0
+A couple of minor nits below. Should have spotted earlier, apologies.
+...
+
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 73261b39f556..0f89295fa59c 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -17,6 +17,22 @@ static unsigned long rmm_feat_reg0;
+>   #define RMM_PAGE_SHIFT		12
+>   #define RMM_PAGE_SIZE		BIT(RMM_PAGE_SHIFT)
+>   
+> +#define RMM_RTT_BLOCK_LEVEL	2
+> +#define RMM_RTT_MAX_LEVEL	3
+> +
+> +/* See ARM64_HW_PGTABLE_LEVEL_SHIFT() */
+> +#define RMM_RTT_LEVEL_SHIFT(l)	\
+> +	((RMM_PAGE_SHIFT - 3) * (4 - (l)) + 3)
+> +#define RMM_L2_BLOCK_SIZE	BIT(RMM_RTT_LEVEL_SHIFT(2))
+> +
+> +static inline unsigned long rme_rtt_level_mapsize(int level)
+> +{
+> +	if (WARN_ON(level > RMM_RTT_MAX_LEVEL))
+> +		return RMM_PAGE_SIZE;
+> +
+> +	return (1UL << RMM_RTT_LEVEL_SHIFT(level));
+> +}
+> +
+>   static bool rme_has_feature(unsigned long feature)
+>   {
+>   	return !!u64_get_bits(rmm_feat_reg0, feature);
+> @@ -82,6 +98,126 @@ static int free_delegated_granule(phys_addr_t phys)
+>   	return 0;
+>   }
+>   
+> +static void free_rtt(phys_addr_t phys)
+> +{
+> +	if (free_delegated_granule(phys))
+> +		return;
+> +
+> +	kvm_account_pgtable_pages(phys_to_virt(phys), -1);
+> +}
+> +
+> +static int realm_rtt_destroy(struct realm *realm, unsigned long addr,
+> +			     int level, phys_addr_t *rtt_granule,
+> +			     unsigned long *next_addr)
+> +{
+> +	unsigned long out_rtt;
+> +	int ret;
+> +
+> +	ret = rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level,
+> +			      &out_rtt, next_addr);
+> +
+> +	*rtt_granule = out_rtt;
+> +
+> +	return ret;
+
+ultra minor nit: this could simply be :
+
+	return rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level, 
+rtt_granule, next_addr);
+
+
+...
+
+> +
+> +static int realm_tear_down_rtt_range(struct realm *realm,
+> +				     unsigned long start, unsigned long end)
+> +{
+
+minor nit: Is it worth adding a comment here, why we start from 
+start_level + 1 and downwards ? Something like:
+
+	/*
+	 * Root level RTTs can only be destroyed after the RD is
+	 * destroyed. So tear down everything below the root level.
+	 */
+
+Similarly, we may be able to clarify a comment in kvm_free_stage2_pgd()
+
+Suzuki
 
