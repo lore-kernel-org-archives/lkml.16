@@ -1,91 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387362E426E;
-	Mon, 16 Jun 2025 12:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A052E4250;
+	Mon, 16 Jun 2025 12:06:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075567; cv=none; b=fl6X4xrCgUO0DmM4MTQfAbvluXgxXgMMKy5Jjeo0nd+oubg6IZVCi0EMfo2xpOVZ+Hr3d0eZrnr+UBTCMLat/EAExZ4zE6HM2rYkwS4agg3vw/Qao9K+PHDGbXV4Dwlq9Qm+VhbVycSFDN8EDey55KWlfCQfE/Nbj9w1bfDhBQE=
+	t=1750075576; cv=none; b=isDPNaD1YlTmmmY4AXGGPawbBzRcKkyx7CUJFClrkDB5TqO3s+kVNdIeJawlSxQXi+bbcYlc1mTFiNaNsLaInlVAzuVr8AbdpBvjLTJTjXnAAhAq2bElfM92FPhM5VmyZan5DLmq31Bb+i+kCoxJQHD9MjSCc5OaMG7bQ2hyJ3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075567; c=relaxed/simple;
-	bh=81KHwSljmnJTPeKJj2v4TDvROMlMHB1LsZuqXD9yw+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nvui4VhHok32iLQsZT1xI0pO1poLB0LPH8bED//7gZ/qksCN3tyZJxw/Vu4755D43bz/mWTX9M5eLTD5xBteVX0r9XPeUsDUf1w9H9zYD26W8NLG6OEtvHFFZ1AkK/89pUDsyf9xvU7oVrsy4ERAmD3TzS+AvmMfLogyMmRh9OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+eWInOZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750075576; c=relaxed/simple;
+	bh=4uEpYiyn+cDmCnrHepPRVMLDX/06gaPZ5NPiOUGm4UI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IOA+2NEEr9Eawzwg7msL7XL3jzXskC0XzeW54dJ9lMoV157Ga5u2xv/Jn1/Kj0DeOwzVydzpZEm7aC315ZnGXk9sCTdHH5McKYGoERQJrnu9JdYjKWuyuyhL+V1dlofFV9OkqEVFkBxNhn+ZdRM+JkJw7wMLOFLR+uUsowDz7L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jN7PV+OK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+eWInOZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA7BC4CEEF;
-	Mon, 16 Jun 2025 12:06:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jN7PV+OK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E13C4CEF1;
+	Mon, 16 Jun 2025 12:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750075566;
-	bh=81KHwSljmnJTPeKJj2v4TDvROMlMHB1LsZuqXD9yw+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S+eWInOZdvCl4lZ2CWY38xdR5eYCTJcNKTAnyS3GFOAPfHu5KcLyPfAfFt9E1Z/iM
-	 zL4kNwxq5CGlYbQgJTngT7eFRMmCqjUbq98xK84hR4QhycXQy9+UMrB4xEtQ1fOGGI
-	 FTR70AG1J76Oa3yS6t4+6L8Kt2fZKTE4aiwUFewv8MyZD44moVINTOJWiUQSlm5e6e
-	 eSJhjEtTifLRpcoNETlrkJeC630FnG7oCX1lHVbzK7J3jwqmc+w94/AHBYyWdiXmYq
-	 uS34HK6gnBciniIiuXgSGXZwZEuuvmxj7kKrkiXnHZ/pIr7aOJ9Hl9xnM1q4Zhbfu1
-	 FcxKTAZY428Dg==
-Date: Mon, 16 Jun 2025 13:06:00 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: James Clark <james.clark@linaro.org>, olteanv@gmail.com,
-	oe-kbuild-all@lists.linux.dev, arnd@arndb.de,
-	larisa.grigore@nxp.com, Frank.li@nxp.com, linux-spi@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
-Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
-Message-ID: <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
-References: <202506160036.t9VDxF6p-lkp@intel.com>
- <20250616111749.316413-1-james.clark@linaro.org>
- <20250616112927.GA21689@lst.de>
+	s=k20201202; t=1750075575;
+	bh=4uEpYiyn+cDmCnrHepPRVMLDX/06gaPZ5NPiOUGm4UI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jN7PV+OKe4kK7t9sezCh4YDmcotyMEV/FWqyy/aCKXD/bOqeWDNrs47EPsxF5GuDQ
+	 csKk42KVD0tGGf90XBNrOhPMfW7/wXCyudLRkjG7uIbjUYgGCKAOxIqlyv9viPilW/
+	 VwM7G9nWHt+PP4bJbnvzUkU28YilMdnTJBhUpfC7wx9zxLh+zXrUlBWxJXnW9WSomp
+	 WeDlSpVjsrOD3B2friMRlenZU4uVcEj5bJ38HHVgsK/0TawB6PzQRx9BZy1oKRlTXl
+	 /zcUlk5lZHAoLie3m7KXqs4a6iLQJIdgXxz5r+GLShy7pR9tY9Q+PZHHsN1UmO6E3X
+	 d6qg5dobC4Naw==
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-610dfa45fa2so2591135eaf.2;
+        Mon, 16 Jun 2025 05:06:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVK4QGEhh7f0DJ19qy33VJv8HMPLGbBYXAdAouf16xFplHWcFULCtXGZhG1/IhUVC0AeTMMPGANLSQ=@vger.kernel.org, AJvYcCW6qqBQQlksWCQgPAVNeIL0zXT1h9ULlDFcfyUxgdQj7Z3BNrSzW34RNXxEHm/jSmdu97fwmpgjZcroSa0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyihupECx1c3Rm/doFd6vTSWSByybZkbZnEjT2QzOvK5o0k6rJt
+	DLQujCpVLQFpYTTvbzFS9zy0VyBXAtQ1LJ0AWrmli/GJgi/98hw3DGtYkEM2HOkop+2SRFr4Krq
+	we21zr2vkVgRIvdRf6D9UVDiF1NLCmAc=
+X-Google-Smtp-Source: AGHT+IFy1zym+4Q5imP+75KVhgYVa7eHhY8Xhr4U2gwmYKuGk22DNuQAO20NmOw30FKtPOKaK9ZjcznZH1gHNpaBOEE=
+X-Received: by 2002:a05:6820:2290:b0:611:6fa:fbb8 with SMTP id
+ 006d021491bc7-61110fdf602mr4938153eaf.6.1750075575051; Mon, 16 Jun 2025
+ 05:06:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yQrkc45Aa466PEFE"
-Content-Disposition: inline
-In-Reply-To: <20250616112927.GA21689@lst.de>
-X-Cookie: Keep out of the sunlight.
+References: <20250613214923.2910397-1-srinivas.pandruvada@linux.intel.com> <0dc5ad78ecd3e9a692c50ffb860bb1b0f93fef39.camel@intel.com>
+In-Reply-To: <0dc5ad78ecd3e9a692c50ffb860bb1b0f93fef39.camel@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 16 Jun 2025 14:05:59 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jY1HRqDtCBkDWD6FyWNGS+U1K2Y=9BqS7rgVZYS06dMg@mail.gmail.com>
+X-Gm-Features: AX0GCFsY5nZpGvBPcGJEONjmDPFJldt-XLNs0OESQtrgSBIELofuZNG7LUPK0gU
+Message-ID: <CAJZ5v0jY1HRqDtCBkDWD6FyWNGS+U1K2Y=9BqS7rgVZYS06dMg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] thermal: intel: int340x: Add throttling control
+ interface to PTC
+To: "Zhang, Rui" <rui.zhang@intel.com>, 
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>
+Cc: "lukasz.luba@arm.com" <lukasz.luba@arm.com>, 
+	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 16, 2025 at 2:47=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com> wr=
+ote:
+>
+> On Fri, 2025-06-13 at 14:49 -0700, Srinivas Pandruvada wrote:
+> > Firmware-based thermal temperature control loops may aggressively
+> > throttle performance to prevent temperature overshoots relative to the
+> > defined target temperature. This can negatively impact performance.
+> > User
+> > space may prefer to prioritize performance, even if it results in
+> > temperature overshoots with in acceptable range.
+> >
+> > For example, user space might tolerate temperature overshoots when the
+> > device is placed on a desk, as opposed to when it's on a lap. To
+> > accommodate such scenarios, an optional attribute is provided to
+> > specify
+> > a tolerance level for temperature overshoots while maintaining
+> > acceptable
+> > performance.
+> >
+> > Attribute:
+> > thermal_tolerance:
+>
+> yeah, this is much better to me.
+>
+> >  This attribute ranges from 0 to 7, where 0 represents
+> > the most aggressive control to avoid any temperature overshoots, and 7
+> > represents a more graceful approach, favoring performance even at the
+> > expense of temperature overshoots.
+> > Note: This level may not scale linearly. For example, a value of 3 does
+> > not
+> > necessarily imply a 50% improvement in performance compared to a value
+> > of
+> > 0.
+> >
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+>
+> Reviewed-by: Zhang Rui <rui.zhang@intel.com>
 
---yQrkc45Aa466PEFE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jun 16, 2025 at 01:29:27PM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 16, 2025 at 12:17:49PM +0100, James Clark wrote:
-
-> > The implementations are in mapping.c which requires HAS_DMA so stub them
-> > out if not present. This is required for some drivers to pass randconfig
-> > builds.
-
-> No.  Just add the proper IS_ENABLED checks in the callers.  While these
-> kinds of stubs used to be popular they are really nasty in that the
-> calls unexpectedly just fail without the right depends.
-
-The issue with HAS_DMA is that essentially all platforms have and rely
-on DMA.  This ends up just being painful noise from the buildbots when
-they do randconfigs rather than something useful.
-
---yQrkc45Aa466PEFE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhQCKcACgkQJNaLcl1U
-h9D0eQf/ePoOXoqCP5feLeTghxn9bOAHGZSj2dGtDODfvqyZChR5qZwlk59nXu4y
-HSyVPkGL7MobX4QBk7cBPljYfeJ6Lpk3hiuEKtnZY5WvFjy2FvZ21tA2fTwIxpNL
-kKW8oPUtgyOLBKcWdDz2B4NN9aXYjpddRfAOWAKZPtydxp/baZEg8y/N4IDsi+Q/
-P2L0LeP+zoaAW0IKPYSXWi4ORETJv3xB85enYrY/wqvF3LCLWdJcuWUMSwDqUfdW
-Mc2+X9wZ3XR2coA27TcOcM0ac37VQgwKR8rSt9a5o8UED8Dk5CUwSQoOhFRpgoLn
-66xG5r35MfMl2roIb0Uc8iasLxamDw==
-=OEz+
------END PGP SIGNATURE-----
-
---yQrkc45Aa466PEFE--
+Applied along with the [2/2] as 6.17 material, thanks!
