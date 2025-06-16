@@ -1,96 +1,167 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B35295D8F
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF51295D8F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070996; cv=none; b=mwh30ktQORnfenoZjtDBJeatqHQ70SWLDqv0umrrxidwpYCUuBDUf5gAzx5hbgG/1ofAJC0ZqBgyaY2I7fey2UDJI4XgtcXp+tsm6a3mp0GsUnoA3ipAHzzOBbSpUGVPNYan1Yxuk+ZLSG4U2FRwnMZ/Y8Qia7iuBJO5SpnXCVg=
+	t=1750071069; cv=none; b=OPJOIcMKMzb+J6VRqRWvD9djkwDAlGbomBM6bJBfQPK7nVlCzigazwzfe9b3QyQlSZXljKh3FKD3kqpJ3JTSWswZ4Mc8/Ma5yudUeLmUMPWqo8ZHRWm/KTjda/MBgJGi3e4IT9kUMmhMYuZ25a0szFhz1EyqieYUzRD0U9ZKakU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070996; c=relaxed/simple;
-	bh=fgAbH+bqMDdFSxa5Nsg900AieTB/XPyHcssZQxwzQvc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kt8DR9IFCU9giHu3Sg9dA1wwLti0T973Z28owBKBUWUt8PqOI9QAqeFWGoo7EvMI5ilLuJQ9+8UhkF4I0Lhrops/IHSIlydlrhrd5R63chZ5a2j0eMqPdBZXjn+vin2ajnuxghQ+/auIi0yJzw92Vlbnh8BN0f6k5g6eTveSCZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OBcnlKMa; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750071069; c=relaxed/simple;
+	bh=mW/gM49W+/lH6XeJ73Jgnv8wvFZuY8rej9CVO1OjhSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pfo53Y2/2lbR4Ma2lTjwT8s1okYVgw9kZtxARQO+hE40Qw5e8OVuAC0gRwipUmLCPDHbS6dKm/B8vleYFs5PIA8AuNQR308NSOXBDyO+sKo8xELt98AiJhczTBtdY4XDeXKNRhnvjdHX69RsgDzlqIhpNInvAeKxuA6wY99yoog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxCUK9Hj; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OBcnlKMa"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so779264f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:49:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxCUK9Hj"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b2f603b0f0dso4092942a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:51:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750070993; x=1750675793; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=noASFFqKv9QR1JcSSNjGq2HTnkr+7eqAct6g0x+3TVU=;
-        b=OBcnlKMaqNC2WOlTeGBmZbP1DYtdgWbUgbvF446lFQZV+9M1F/mYJPw4jjhK0i38hT
-         2sLxaBiWaGUUL+azGAhFL7zgpJvqn5g74oULrWoFX3gtf6CISW11jNPRkOtgJ+YL5dAV
-         wcgQ5dlzJw/fuWqug4MpRYDfVU5sujAiDB6TiwUhrIvrO1xrTmZyr4YPQ2NwiKQ5YRze
-         KvuBYvuveubzHWWKXUJ7PnnhsfMTrwNTDAfrznQCyInKOh0+ZV4HaaBwgJ3B/QLcHB8W
-         JuLA/mbHQAsZoeDgxrt8BoBZ/4AlYLfflvevd0kKUgd3Wvk9BMSTxul1yaTSB53Njf9V
-         BfPw==
+        d=gmail.com; s=20230601; t=1750071067; x=1750675867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XiZT8fyfWnDQ5DnwRzZVizGiA0t8KqH/r5W4lxBjzhw=;
+        b=hxCUK9HjNTGIe1iXFVu4ZTqqmnoP4CSYQ7Dc/89xCnoOU5E5ghwQTxlv5YFS/Rm5o1
+         P2sZdy70Co0j/OVoQXOANI0cb4vuzrCEtQzR9Y61teplsLVB4sBwE48kiSjq2dCWpn7Y
+         ADsq8qvnFJV5v5LJ3+n9UltQF/mT9aalVhEjmAyKcmcck5SQIN4KWHegMuzlhIscnr+C
+         Pd6S4friuJpOAxeVeuVgoCPr1sAnVjhZ4Z4RYNZP3C7M7WMqlZUCWIC5LPrbDamvI4yM
+         bps86IM0eqvWEQdwJUMesDUIXEu2ICN+Fvdohz+EWlFBNbdYt5pQ5e2yEdc7iCXYjJLl
+         Hb6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750070993; x=1750675793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=noASFFqKv9QR1JcSSNjGq2HTnkr+7eqAct6g0x+3TVU=;
-        b=niOG6Oq9dmx6yvhOr0yMd45Kku2vSUq5dwFMCCvecbhf5nApdXmp+97wfJq0zh+w7l
-         Ez8QS7XW8MQA+N0Y2+JA9oDaK1jo+wOSOvvUQkZJ/q4Hm1G8JAJArmf36QW/6myfD3HR
-         9/u2HoKUYEkDFi/p0eV1O7cqeGetewzSmKX5PuaFUs6XQ7rBMnJNsLo137Di81J+8emg
-         iPdzVxRkuny95wvqg8owYa5l5Aen2+kqotBaF+38sFsM/Vx//deu0+lnHXmc0Uy1VAqm
-         dY94isJhSNLKb860A0qH4wbTHCcI/jmNdxzJ7swthALv3Fj1vYg5dI1QnzgNqgsYMPTG
-         tKLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxBC1h53pAknGFxwwwG/VJNEypCjfR7mV9KSx+WZWBUfruKygy5Z5/1IOmUKLc8N6E781n0bRK0Q4oKEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySYhn68h/P2ePAiHQJx7JDRMQODRGGwOWtbDnzNTZ+ViM+VtpC
-	HvSm4fn8+CsjkO5N5xKAFZ40J6rhtw85FVkMitP8FD4Ytmmdrk9inTW9mGsmpCYyJwFTJ6FMmWS
-	xLnQVf0n3X/5S2+STfpxCRBX40Yv15K6FvTrOfvpz
-X-Gm-Gg: ASbGnctX0Kft5+arKWQyxDSDfEfJe34gIdTngQ8z/VlqxkbGQ39CuUIw7/pHzEjTW88
-	KnrBng0xFvZueI2Lhl2Og6RSlTooSH9gznIX/Jc2hxaa1QTiVHn5H7eZuTEetxwdR0YTNUHUdPj
-	SW1PC3NIhf8lljx4zJASqOU5fc8hikLqXSWzY3yLnUhaBjqsBH/c8nHFs=
-X-Google-Smtp-Source: AGHT+IF5tKVn0HH4+Er7S+XZNod2FyfrS9dHKNqy5QhSTc4SSiK6Xgx8ZEz8Nlngk9yhomQM63HB2J6yh0gSTliC484=
-X-Received: by 2002:a05:6000:188b:b0:3a4:ef0d:e614 with SMTP id
- ffacd0b85a97d-3a572e79d24mr7089351f8f.33.1750070992846; Mon, 16 Jun 2025
- 03:49:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750071067; x=1750675867;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XiZT8fyfWnDQ5DnwRzZVizGiA0t8KqH/r5W4lxBjzhw=;
+        b=Z+AZe4T+skKwQ90cjnBZGaSaDDeUoIBK11r/kpf6nKo5bHdwyW1P+Ii2d3driXUEaI
+         5SMEV/2yhSp5iWzFx4/WC38ZHpVOBznIAwSy7Fj/ayuBm/tUJWs9DwpC2oS6mFqyHwpE
+         noi60pCEqgdfvb2qk8QFjj0y7sqSsNEYNy1pF92Duqrb2Od/zEWx8Nk/rPfjDYbubdL6
+         2O9UWTrPGRq3sFIt6CLSQXJS5SKUuICAwo2a/dBGoe2rIll4nh8jkLA3YvLSUZnBDHad
+         /Sx3PUZKzmIC2FxAx168QXMCP2D6yTcN3Zz+7RM9bvpzTp/hf+bQ2GL7a9R52feziaoX
+         v2pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH9m8mON9B70Qso/n83KOx8JMHQ1n3UXVLFsFNUdZG1cdIkmbp5wuwbu+BamLBqy9EEAELC551Fc0ogvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDBRLs76+mRgeMgt7eoBwUMwKIKmI+Ft4d0OjvPLrSZW/GcqUI
+	irhu1qsjrXAnbcSVi1w3jstdkVk1fDrFjlNpyyYV+Dh50YVok7osdIy/
+X-Gm-Gg: ASbGncuBSfJwxGy+6FfZXcATbCdn583NiRUF131/Clka+9VaMYc0gTo1yg9g5zlygDo
+	Mb4NcO9ClCvgL5qT9uio/QjDBPbn3xIUMfyQgemUmsVcdvc+4HSOPdIg4VFVRdBO9/AQfcJpE2g
+	VdWlPDHxX0u2FZyDxbFlp4A+peZS7lCaY/0hqZG+bX1EzpR6soQQiChMqGG/c+26KiairXcsXFs
+	m2YLrNkTfhZvdysRmgUBJa/yVMU38ffq21r7ztS5DCdR9ak/v73brGkJQROZaZievA3UXFwnoif
+	ZRD6MzZ3EL4t9H4sXSrKv3I98f9RkgDkSDGMStXtdnADIc6f+Y58G0P2T5fRIh+xqMgbJci0AT9
+	uZMS2q87F3RpYkDTopA==
+X-Google-Smtp-Source: AGHT+IE4omYKJqyL/KYZqyQgCYrH8mhzUBKZKG0S+o6pOvpI7nPqf26GDX0iloH0LttyYw/5k0ECNQ==
+X-Received: by 2002:a05:6a21:150b:b0:215:ead1:b867 with SMTP id adf61e73a8af0-21fbd56945amr14844625637.14.1750071066946;
+        Mon, 16 Jun 2025 03:51:06 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c68:884c:5800:7324:c411:408d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe15bb83asm5508221a12.0.2025.06.16.03.51.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 03:51:06 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: mark@fasheh.com,
+	jlbec@evilplan.org,
+	joseph.qi@linux.alibaba.com
+Cc: skhan@linuxfoundation.org,
+	ocfs2-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH] fs/ocfs2: use scnprintf() in show functions
+Date: Mon, 16 Jun 2025 16:20:28 +0530
+Message-ID: <20250616105028.371633-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
-In-Reply-To: <20250611194840.877308-4-bqe@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 16 Jun 2025 12:49:40 +0200
-X-Gm-Features: AX0GCFuTb5n8MBWBEa5YiiJmxDs0pB6vkofAmmHr2Oh2WDSvt3-JtKcoydHZXtM
-Message-ID: <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com>
-Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 9:48=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
-> +impl core::ops::DerefMut for Bitmap {
-> +    fn deref_mut(&mut self) -> &mut CBitmap {
-> +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ {
-> +            // SAFETY: Bitmap is represented inline.
-> +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
-> +        } else {
-> +            // SAFETY: Bitmap is represented as array of `unsigned long`=
-.
-> +            unsafe { self.repr.ptr.as_mut() }
+Replace all snprintf() instances with scnprintf(). snprintf() returns
+the number of bytes that would have been written had there been enough
+space. For sysfs attributes, snprintf() should not be used for the
+show() method. Instead use scnprintf() which returns the number of bytes
+actually written.
 
-Nit: You want NonNull::as_mut_ptr() here.
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ fs/ocfs2/cluster/masklog.c |  2 +-
+ fs/ocfs2/cluster/sys.c     |  2 +-
+ fs/ocfs2/stackglue.c       | 14 +++++++-------
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-Alice
+diff --git a/fs/ocfs2/cluster/masklog.c b/fs/ocfs2/cluster/masklog.c
+index 563881ddbf00..0bc21dc71d29 100644
+--- a/fs/ocfs2/cluster/masklog.c
++++ b/fs/ocfs2/cluster/masklog.c
+@@ -28,7 +28,7 @@ static ssize_t mlog_mask_show(u64 mask, char *buf)
+ 	else
+ 		state = "off";
+ 
+-	return snprintf(buf, PAGE_SIZE, "%s\n", state);
++	return scnprintf(buf, PAGE_SIZE, "%s\n", state);
+ }
+ 
+ static ssize_t mlog_mask_store(u64 mask, const char *buf, size_t count)
+diff --git a/fs/ocfs2/cluster/sys.c b/fs/ocfs2/cluster/sys.c
+index 022f716c74ff..23febbe3dc5d 100644
+--- a/fs/ocfs2/cluster/sys.c
++++ b/fs/ocfs2/cluster/sys.c
+@@ -21,7 +21,7 @@
+ static ssize_t version_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 			    char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%u\n", O2NM_API_VERSION);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", O2NM_API_VERSION);
+ }
+ static struct kobj_attribute attr_version =
+ 	__ATTR(interface_revision, S_IRUGO, version_show, NULL);
+diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
+index a28c127b9934..9af03869a04b 100644
+--- a/fs/ocfs2/stackglue.c
++++ b/fs/ocfs2/stackglue.c
+@@ -477,9 +477,9 @@ static ssize_t ocfs2_max_locking_protocol_show(struct kobject *kobj,
+ 
+ 	spin_lock(&ocfs2_stack_lock);
+ 	if (locking_max_version.pv_major)
+-		ret = snprintf(buf, PAGE_SIZE, "%u.%u\n",
+-			       locking_max_version.pv_major,
+-			       locking_max_version.pv_minor);
++		ret = scnprintf(buf, PAGE_SIZE, "%u.%u\n",
++				locking_max_version.pv_major,
++				locking_max_version.pv_minor);
+ 	spin_unlock(&ocfs2_stack_lock);
+ 
+ 	return ret;
+@@ -525,8 +525,8 @@ static ssize_t ocfs2_active_cluster_plugin_show(struct kobject *kobj,
+ 
+ 	spin_lock(&ocfs2_stack_lock);
+ 	if (active_stack) {
+-		ret = snprintf(buf, PAGE_SIZE, "%s\n",
+-			       active_stack->sp_name);
++		ret = scnprintf(buf, PAGE_SIZE, "%s\n",
++				active_stack->sp_name);
+ 		if (ret >= PAGE_SIZE)
+ 			ret = -E2BIG;
+ 	}
+@@ -545,7 +545,7 @@ static ssize_t ocfs2_cluster_stack_show(struct kobject *kobj,
+ {
+ 	ssize_t ret;
+ 	spin_lock(&ocfs2_stack_lock);
+-	ret = snprintf(buf, PAGE_SIZE, "%s\n", cluster_stack_name);
++	ret = scnprintf(buf, PAGE_SIZE, "%s\n", cluster_stack_name);
+ 	spin_unlock(&ocfs2_stack_lock);
+ 
+ 	return ret;
+@@ -595,7 +595,7 @@ static ssize_t ocfs2_dlm_recover_show(struct kobject *kobj,
+ 					struct kobj_attribute *attr,
+ 					char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "1\n");
++	return scnprintf(buf, PAGE_SIZE, "1\n");
+ }
+ 
+ static struct kobj_attribute ocfs2_attr_dlm_recover_support =
+-- 
+2.49.0
+
