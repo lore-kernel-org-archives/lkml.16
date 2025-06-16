@@ -1,84 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8EF226CF6;
-	Mon, 16 Jun 2025 22:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E241A262D;
+	Mon, 16 Jun 2025 22:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750113027; cv=none; b=eenEVfO9k9+7MfLp/E7uwiQL4VpsMsiVSmOs7JhEl/NwsBucgyVPaAA9tXZYu8B5jmlRtYHi3SRFGYhLmRfCDAzIGbVypupfP5a/xkgVlkQRuyOYWVeZW68AldHcWRy6EGQ7KrMZksFLUUsIUCUVrhe7eZPycuj54fQUflsoBaQ=
+	t=1750113068; cv=none; b=ASUq+k2fselhjHPsdqTq/j9bVxwkn1ac0flZBpLrgBIeh46nkx7rmhI7+6hqc5C663K7Gj9+zRZ1IJJmlxbOp4qCQVckprAbaDXtN2qA/Pv5DeivkFPNGu6zQy9uY43dv4LNxgwD5gOiEIYjk5fpDOGDh61OLxvMXlfJZhd3f+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750113027; c=relaxed/simple;
-	bh=WDVZv9EE6mS6jDvaajlm3u4/ZSWgLXQxQ1N6upZKKn0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KzoS4lTlO52FZ3y8PgOBxpzkD3NhktDi6ndpDV0M7X0MpeIWea9P0U6XlLAUwbyOJzmKwBI3z3tXRKwUuZ7fknuY34XMgHJ13EXhEPpdyJKyvvKgrVVi9dTDUXTQEvv4w1UGiUAMXI13LP6q86KR/G2lPTKlx+TYlit4jLhQdzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oY5tAgJ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750113068; c=relaxed/simple;
+	bh=EkAFJcLPgPbjTKoUMNmizvrwNLp1j6JJOB4wBncDD1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=h4vlCxgtiHHxTYAlWWb53uJbKHGAWnsMNhOL4uUoT7/8iJKIzqEB888zD41N2nbxx154O/xdGPWMwUKiXhxZGcWrjfR/x9KYhIugxx51GY/UfpFrd44daaGjMPItxgge6lk4mMCOdyrEv1Uzm4IdpuDPKkUztVTql2iGDYOwuj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkGFeU9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oY5tAgJ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56C0C4CEEF;
-	Mon, 16 Jun 2025 22:30:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkGFeU9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F033C4CEEA;
+	Mon, 16 Jun 2025 22:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750113027;
-	bh=WDVZv9EE6mS6jDvaajlm3u4/ZSWgLXQxQ1N6upZKKn0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oY5tAgJ03t9L79RFF2nY/cl8ZB738UveLK+CGHvVPahajhd5CYC89lhzvjmHHrdcb
-	 nSraE+dF8VoIibrQia8RRZZxnvXgAA1eP73sxuf3asMPqksGdwRX1urDQ5+GKVDzh/
-	 F9P1aMg6oMOVWyLTuolVpKTJzq+N/oAMGOQydyubD/yUSyXRT3z5AhKxqTNL1O1Nfg
-	 Lr//oXonVACnP6KVzBqzcae29hjOnvXIB5UrbHpEQVxtWcvP0d/rjDRA0GzIMTbNJH
-	 jTjhMKE7RSABpVQ9ARIM038fImgSblT/IPxZxTmUObsNLvqmTEoNsJ28x/DUmkBdkT
-	 9t7vTTyWaHHSg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEE038111D8;
-	Mon, 16 Jun 2025 22:30:56 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750113068;
+	bh=EkAFJcLPgPbjTKoUMNmizvrwNLp1j6JJOB4wBncDD1I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TkGFeU9p/O3ay7cUOsigArUqUuE7ZDXE9F74E+EPJFM7VNOea1yKmiZAaAdVcG2hj
+	 /j3l7PNx/AGchLGgLyNSLuyNYUrP/FTwEz7M9W8xUr3CAOlj67mFFmM4vWETAPgfnf
+	 tr0gRArzeLvszG14SzhINBpderB36IgE/rllkk8Xfa6nYeCUrReAtJfXsI36DgnoYK
+	 jSzVIhdO+tznOxHQZ+QEDNUwdWoHEE6r2LefMGQ9L4TCXIECnNHOryg21LB1weTFW3
+	 D9XX2aqBR5ZSCRp99GAAfJKk0Lh+Wn/lM0g1/WowKHRb4Q4u5qTo58tGC5pS10r1i0
+	 517cI1i4cWAzA==
+Date: Mon, 16 Jun 2025 16:31:03 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3][next] NFSD: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aFCbJ7mKFOzJ8VZ6@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next,v8] net: mana: Add handler for hardware servicing
- events
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175011305549.2535792.9878725373600359262.git-patchwork-notify@kernel.org>
-Date: Mon, 16 Jun 2025 22:30:55 +0000
-References: <1749834034-18498-1-git-send-email-haiyangz@linux.microsoft.com>
-In-Reply-To: <1749834034-18498-1-git-send-email-haiyangz@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- haiyangz@microsoft.com, decui@microsoft.com, stephen@networkplumber.org,
- kys@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
- vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
- kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello:
+Replace flexible-array member with a fixed-size array.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+With this changes, fix many instances of the following type of
+warnings:
 
-On Fri, 13 Jun 2025 10:00:34 -0700 you wrote:
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> To collaborate with hardware servicing events, upon receiving the special
-> EQE notification from the HW channel, remove the devices on this bus.
-> Then, after a waiting period based on the device specs, rescan the parent
-> bus to recover the devices.
-> 
-> [...]
+fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/state.h:763:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/state.h:669:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/state.h:549:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Here is the summary with links:
-  - [net-next,v8] net: mana: Add handler for hardware servicing events
-    https://git.kernel.org/netdev/net-next/c/7768c5f41733
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Replace flexible-array member with a fixed-size array. (NeilBrown)
 
-You are awesome, thank you!
+Changes in v2:
+ - Use indices into `fh_raw`. (Christoph)
+ - Remove union and flexible-array member `fh_fsid`. (Christoph)
+ - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
+
+ fs/nfsd/nfsfh.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 5103c2f4d225..760e77f3630b 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -56,7 +56,7 @@ struct knfsd_fh {
+ 			u8		fh_auth_type;	/* deprecated */
+ 			u8		fh_fsid_type;
+ 			u8		fh_fileid_type;
+-			u32		fh_fsid[]; /* flexible-array member */
++			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
+ 		};
+ 	};
+ };
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
