@@ -1,71 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCA2224220;
-	Mon, 16 Jun 2025 23:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA07434545
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 23:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750115856; cv=none; b=pxV2jmtvI4+Gi+J15eEHQlQ98s7yYfQa2V4EGA5xwN1OTWhIXpnM9Ig+3yTUGA0d9bCxCEikCp/3+y7XhObju4SGXwodANZ5cOWaXcUogjUM0Hp87kS/7ni+HbXCEQDEMKdAOQcfEVv4kMWS08X80My7NhEK1pTTut45/ioprkU=
+	t=1750116041; cv=none; b=VniVT5P1Ku3bW4pjy9yK01bnBTZVC8o5jVaO8wy4DzIP2o+jDQJ0PoX4cszloye91EOQWBI9qNofYegu7qCcCpmrdlC28ahqdOyBVOuM26TLGg3TGV2TPUyLBeDjP/hOsEUiMXfv8g/SZD9J1TIhVny8AIZ6JsM+HiQqVe5DdY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750115856; c=relaxed/simple;
-	bh=pXipBkzqPpWFfLYGxvff5bCpfr/MseDQEAxz0VdKj20=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ddN3c16GHIG7OCCO4wtlD5BO7j39yXNpkHk5QgBSFu4eM4OT0K0EQLGrhQmBl8JQcqv6UAjtsGFOPh9OfVXZIE1TNtjxMLXcUsko7Jgf1HVrvwl8vLMO53Qi8wmrIPmbvv8T5PgDTdGjMmb7swC9ztvLDmCkKpO9rNs9hpW8MEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gWTaREBv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750116041; c=relaxed/simple;
+	bh=vNTnwF9GKK0IoF6o/nzhrJo2uLgI+FrXJuwxp8SqTQI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PyTt5cWaV/o/3X0kTQsTvOwLcQSUBa5+qGgjKF8UGkUjDZhd2x9IuRNL1DmpToQP437tDVBpUX6TUjJn8pzkME8+d19AU+dmQ9uEmA7KK5DReyLmVS7Mmtf2gLmY63q1xQ23xOYuXPGwanAFViquiFfjw7tJ66ExHDUgTyOtD6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MckM5IBx; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gWTaREBv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D22C4CEEA;
-	Mon, 16 Jun 2025 23:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750115856;
-	bh=pXipBkzqPpWFfLYGxvff5bCpfr/MseDQEAxz0VdKj20=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gWTaREBvDqaqK+694z40cmWUuro7uBYzjnFRdB8/5NPX8zTu2yMjmUB2fJgXd3MAT
-	 zi/WdVsU69wXqEMblZ8wEhGN1ujQqhDSwIVd6xaS5CuShCRv0kbgtBzj2i0daMCeag
-	 64c2FE2lxQ5YkB7jXrKwK8tgaVrdLEk+rcp4CzNg=
-Date: Mon, 16 Jun 2025 16:17:35 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, LKML <linux-kernel@vger.kernel.org>, Linux
- trace kernel <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org,
- x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to
- x86 code
-Message-Id: <20250616161735.26785bf45d765345b89ad0c8@linux-foundation.org>
-In-Reply-To: <32c85c56-063a-40ea-b6ea-e49304447ad6@redhat.com>
-References: <20250612100313.3b9a8b80@batman.local.home>
-	<65bb272d-b2d4-4d2a-9c7f-d3d5d2eba23d@lucifer.local>
-	<20250616150942.789c791a@batman.local.home>
-	<32c85c56-063a-40ea-b6ea-e49304447ad6@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MckM5IBx"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2357c61cda7so30315ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750116039; x=1750720839; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kyytRBIss30VLX92/RelICIPjiY1WTLTsOKNaQMthuE=;
+        b=MckM5IBxSpxEkpnREDbQCGssFi2zwwoMzRv/sKjHGFe3Y21GIsKmbZHS1tw74x01PO
+         wFcsw+HnJ2D2dorp+sNRQS95c3nzqyAKN4BLNKC9accNGTN1dDIYa2ZNri8TDNW/XTZs
+         YMiVrpw/d4zNEa2gLWH4bTNxh0y4roULFxryzC/yMq4YMv0m0Fe3DY+nxOtd9ee+VbQk
+         IE9wR/r2EnIJNz8Ze/EJ6j1MTNJn6HY+p49afoGBJ4qjM1E1YOSN2rifo95w0xFGNt/N
+         kyCqaCsz1eAQC0x+5pNejlZNluMbjQbzVVz0YVwWWMRwuyxISouxIQ/ul6jT7WgR/unu
+         gExQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750116039; x=1750720839;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kyytRBIss30VLX92/RelICIPjiY1WTLTsOKNaQMthuE=;
+        b=T46Cc1UmBikBN6C1rlGW+/DWa4Fvo/kzDtbY9cuKPDfgdEmIkQ46pnpZWanhJ65NWK
+         3Zy0vFWYBcZ4jD7xXrsTQmdr6c28GuMukMK4URhXr3Vw7pr66jTiWcA+Jg8KEStU7Fdv
+         tk3PLue5LhfwgdPyID/Bv0kPFLb9RCTzNcWzJqzvN0ibNdvFnNVT1Hm/dbUDIFkTN67O
+         cMrGekda6Ebv8UzJpEe3RTym+6S4bEIKVTUtFjagsOFOGiicqvZGrZ3nVHKYtsLxP9Bl
+         PXJyr/iR4m35DowwgRItSrOULG8ZmrU2QPwwblFHIbAXOCNNULJFavOyUWkLhUvDnKoS
+         fXCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXM8qGOgourslCQiNF4kvHfz3IA6ACh59kyzaBtbEpO1h2tFJ9MyknDTPcc0DdssTICJB/6PoVyiEI1q0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW5bG+189KbdHvPJ5Q/ekM8dh6QjS7gWa+i6w1DzAGKcCBNIax
+	LoiyFqusS867sjsnu6UaHGKJkC28SwFb2qZ7cfknPCSDkWRLYFJ41V2XDNSj8EK4Q2xs38EUScY
+	ozkwuBphXnUqiZJbEvET7/1f1mObcLmiXoeoVTIaK
+X-Gm-Gg: ASbGncsGypwnnJjjrl5C3fSRbPevUB8U3mswJ2tDcDXnil2686iBNAhVbhC6rL0Zt7G
+	Nfe1oNyWMIyjIQYjCAitZ3WohD1m5jz00bbc2/w7IR7Ovm6TODZp5iP2WN+F726JgyxueBF1MCJ
+	pjBGCN5qm9GrjTWd2NcZVcX4C+QPwKFWaPD6CKZGc16j/8
+X-Google-Smtp-Source: AGHT+IHXnwARWegGFo3Ls/RMFPkkol/qsUQos1PSrw1y658KGXmes/6RuO0wwXI83dq5TgtFosifbJghm7S3DE4kZ4Y=
+X-Received: by 2002:a17:903:2f07:b0:22e:1858:fc25 with SMTP id
+ d9443c01a7336-2366eef4f2bmr5835145ad.9.1750116038794; Mon, 16 Jun 2025
+ 16:20:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250616141441.1243044-1-mbloch@nvidia.com> <20250616141441.1243044-11-mbloch@nvidia.com>
+In-Reply-To: <20250616141441.1243044-11-mbloch@nvidia.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 16 Jun 2025 16:20:25 -0700
+X-Gm-Features: AX0GCFtZpxhZvU77AkL5_V9_bYi_u1lZxXIho5kV2sVVHPGhYrOea7qfCuTr1rU
+Message-ID: <CAHS8izN_Aj6jswP=FRDu6a4TG1Qcc2HHQYxRUuL4HO_UShHkRg@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 10/12] net/mlx5e: Implement queue mgmt ops and
+ single channel swap
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, saeedm@nvidia.com, 
+	gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com, 
+	Leon Romanovsky <leon@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Richard Cochran <richardcochran@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Dragos Tatulea <dtatulea@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Jun 2025 21:19:18 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Mon, Jun 16, 2025 at 7:22=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
+e:
+>
+> From: Saeed Mahameed <saeedm@nvidia.com>
+>
+> The bulk of the work is done in mlx5e_queue_mem_alloc, where we allocate
+> and create the new channel resources, similar to
+> mlx5e_safe_switch_params, but here we do it for a single channel using
+> existing params, sort of a clone channel.
+> To swap the old channel with the new one, we deactivate and close the
+> old channel then replace it with the new one, since the swap procedure
+> doesn't fail in mlx5, we do it all in one place (mlx5e_queue_start).
+>
+> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
 
-> >>> Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")
-> >>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> >>
-> >> LGTM so:
-> >>
-> >> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > 
-> > Thanks.
-> > 
-> > Should I take this or should this go through the mm tree?
-> 
-> I suspect this can go through your tree. (@Andrew)
-> 
+Acked-by: Mina Almasry <almasrymina@google.com>
 
-Sure.
+> ---
+>  .../net/ethernet/mellanox/mlx5/core/en_main.c | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/=
+net/ethernet/mellanox/mlx5/core/en_main.c
+> index a51e204bd364..873a42b4a82d 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> @@ -5494,6 +5494,103 @@ static const struct netdev_stat_ops mlx5e_stat_op=
+s =3D {
+>         .get_base_stats      =3D mlx5e_get_base_stats,
+>  };
+>
+> +struct mlx5_qmgmt_data {
+> +       struct mlx5e_channel *c;
+> +       struct mlx5e_channel_param cparam;
+> +};
+> +
+> +static int mlx5e_queue_mem_alloc(struct net_device *dev, void *newq,
+> +                                int queue_index)
+> +{
+> +       struct mlx5_qmgmt_data *new =3D (struct mlx5_qmgmt_data *)newq;
+> +       struct mlx5e_priv *priv =3D netdev_priv(dev);
+> +       struct mlx5e_channels *chs =3D &priv->channels;
+> +       struct mlx5e_params params =3D chs->params;
+> +       struct mlx5_core_dev *mdev;
+> +       int err;
+> +
+> +       mutex_lock(&priv->state_lock);
+> +       if (!test_bit(MLX5E_STATE_OPENED, &priv->state)) {
+> +               err =3D -ENODEV;
+> +               goto unlock;
+> +       }
+> +
+> +       if (queue_index >=3D chs->num) {
+> +               err =3D -ERANGE;
+> +               goto unlock;
+> +       }
+> +
+> +       if (MLX5E_GET_PFLAG(&chs->params, MLX5E_PFLAG_TX_PORT_TS) ||
+> +           chs->params.ptp_rx   ||
+> +           chs->params.xdp_prog ||
+> +           priv->htb) {
+> +               netdev_err(priv->netdev,
+> +                          "Cloning channels with Port/rx PTP, XDP or HTB=
+ is not supported\n");
+> +               err =3D -EOPNOTSUPP;
+
+I would have used a different error code here as EOFNOTSUPP usually
+means the driver doesn't support queue API at all.
+
+--=20
+Thanks,
+Mina
