@@ -1,93 +1,205 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0825285C98;
-	Mon, 16 Jun 2025 13:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08582BF013;
+	Mon, 16 Jun 2025 13:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081313; cv=none; b=SsVTl5EudXP7gVnhDG8Ruud9i3nLfioS/45AUV5NmuJCDFKOk4Jq4NbxsMT8B3FN1+Jy/POXQL6OoCt2SJNa3ATyyoOdUiCbAaOGD8ASH31Ir83acii8FDkhdH0+/8n8km+y5T2DJNUdgpg5RyJYNSqwZ4OGSOmn9ymZQK57U78=
+	t=1750081380; cv=none; b=Up5bUB94FoFRTnxxnOhaJFq48ugvIb/qx5guy9It37r5u55gInj0YPBw4Y2ppYZYTtALDqvhK+kVNW0/Usmu/CG4viBnwJEYd3jTYhLo0m2iVS7QOs3Bf4c4/fOa7EnPpdz9GmA22a1PMhkGvgzbEUextC1bvOt3JBtnMPtpKKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081313; c=relaxed/simple;
-	bh=UG52tGL5lemW+BQ7mx7lKFDNox+1XXbApeUAxe3ql90=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MaIMAlekvN1J79hZWubkcOOPPXMZgixFXiJCPJ6/idBoqdFXJP7FfYNL0tg6D5QiYU1do2tSYoWxAAQvOdGo8OPOCZq8tVD/2u8L74Z+/GO1fvPqqRihf31M7S3bKsIk4l1INaPwk03ZnTlSD/NYutxX3ZkeThxUQUuXTi0pwxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app2 (Coremail) with SMTP id HwEQrAD3J7DhHlBoJl2aAQ--.19222S2;
-	Mon, 16 Jun 2025 21:40:49 +0800 (CST)
-Received: from pride-PowerEdge-R740.. (unknown [222.20.126.129])
-	by gateway (Coremail) with SMTP id _____wDngNnfHlBoWuZCAA--.2378S2;
-	Mon, 16 Jun 2025 21:40:48 +0800 (CST)
-From: Dongliang Mu <dzm91@hust.edu.cn>
-To: Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Dongliang Mu <dzm91@hust.edu.cn>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs/zh_CN: update git command examples in how-to.rst
-Date: Mon, 16 Jun 2025 21:40:01 +0800
-Message-ID: <20250616134003.3981866-1-dzm91@hust.edu.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750081380; c=relaxed/simple;
+	bh=QzCwI34Y8oNDKacW8SnUKWGWjQW6wZXO0iwISYs+G7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vC40AYTh7DO2rXrNFDo+6FnvHd8tl2lGX5FSu3PajjJIvtc00czoNAe0vXaDpAxWiz6nEWEDlAnMfifqgcUA4oFMSNCALi2D6jpUunUmGHMg2f+deYfN8OCWb7O6/T0KJzuK3EeOFEhYNVmMt40vDgz+WToijNewMymZfoS7i+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y10UAQyH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y10UAQyH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D3C4CEEA;
+	Mon, 16 Jun 2025 13:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750081380;
+	bh=QzCwI34Y8oNDKacW8SnUKWGWjQW6wZXO0iwISYs+G7Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y10UAQyH6vsYaBlg32iACD1FtFjPGDiFVa+TtDVaBwfklvpOXWGNNwNcFrwM76pgB
+	 zL2zol9nBEwcwEctpQR3OUux8tYP/Q/1k8TYLLdY0l94GO3SGxm4cz1BRqwS43H70D
+	 wW1gYvyiF13kWMMZ2NHodu0e2j9agodXxFbNscHunCboYSx0jdqwITFncZNaQN4cQ1
+	 bRhVE/cgjcZFcB07/XkIMH97Xe8geUmzvvsovl2kkOlixuARCmADWuUouL5AZlOixi
+	 MIYwnORqJPiB8xrg08zYU9i5V6X6mM38mbLCPXtGkKHUUTYFNo5fBkxUh12Arvrff+
+	 4VOYG5CKTbBug==
+Message-ID: <bdf227fa-c171-4bc7-a4c0-518afaec94d4@kernel.org>
+Date: Mon, 16 Jun 2025 15:42:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/5] media: uvcvideo: Remove stream->is_streaming field
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans Verkuil <hans@jjverkuil.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250602-uvc-fop-v3-0-a99e18f65640@chromium.org>
+ <20250602-uvc-fop-v3-5-a99e18f65640@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250602-uvc-fop-v3-5-a99e18f65640@chromium.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HwEQrAD3J7DhHlBoJl2aAQ--.19222S2
-Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw4UGw15WrWxurykXw4UXFb_yoWDtFbE9F
-	93JF4fAwsrAr4xJFn5Z34jqF18uF409wn7Arn0y3yDJw17W3yDWrWDXrWkZF15XanI9Fyr
-	CFZ3uayrXF9IvjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbv8YjsxI4VWxJwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
-	s7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
-	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jr
-	v_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26r4UJVWxJr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxAIw2
-	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU0X_-JUUUUU==
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+Content-Transfer-Encoding: 7bit
 
-This patch leverages `checkout -b` to shorten branch & checkout
-and fix the missing checkout.
+Hi Ricardo,
 
-Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
----
- Documentation/translations/zh_CN/how-to.rst | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On 2-Jun-25 18:06, Ricardo Ribalda wrote:
+> The is_streaming field is used by modular PM to know if the device is
+> currently streaming or not.
+> 
+> With the transition to vb2 and fop helpers, we can use vb2 functions for
+> the same functionality. The great benefit is that vb2 already takes
+> track of the streaming state for us.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-diff --git a/Documentation/translations/zh_CN/how-to.rst b/Documentation/translations/zh_CN/how-to.rst
-index 569b0209385a..0896f13d8b8d 100644
---- a/Documentation/translations/zh_CN/how-to.rst
-+++ b/Documentation/translations/zh_CN/how-to.rst
-@@ -177,8 +177,7 @@ git和邮箱配置
- 请执行以下命令，新建开发分支::
- 
- 	git checkout docs-next
--	git branch my-trans
--	git checkout my-trans
-+	git checkout -b my-trans
- 
- 译文格式要求
- ------------
-@@ -286,7 +285,7 @@ warning 不需要解决::
- 然后执行以下命令为补丁追加更改::
- 
- 	git checkout docs-next
--	git branch test-trans
-+	git checkout -b test-trans-new
- 	git am 0001-xxxxx.patch
- 	./scripts/checkpatch.pl 0001-xxxxx.patch
- 	直接修改您的翻译
--- 
-2.43.0
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/media/usb/uvc/uvc_queue.c |  9 +++++++
+>  drivers/media/usb/uvc/uvc_v4l2.c  | 51 ++-------------------------------------
+>  drivers/media/usb/uvc/uvcvideo.h  |  1 -
+>  3 files changed, 11 insertions(+), 50 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
+> index 3f357c2d48cfd258c26f0342007d1d12f1e01007..6e845705b3286348a60650eb262e620dc6039d60 100644
+> --- a/drivers/media/usb/uvc/uvc_queue.c
+> +++ b/drivers/media/usb/uvc/uvc_queue.c
+> @@ -175,12 +175,18 @@ static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
+>  
+>  	lockdep_assert_irqs_enabled();
+>  
+> +	ret = uvc_pm_get(stream->dev);
+> +	if (ret)
+> +		return ret;
+> +
+>  	queue->buf_used = 0;
+>  
+>  	ret = uvc_video_start_streaming(stream);
+>  	if (ret == 0)
+>  		return 0;
+>  
+> +	uvc_pm_put(stream->dev);
+> +
+>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_QUEUED);
+>  
+>  	return ret;
+> @@ -189,11 +195,14 @@ static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
+>  static void uvc_stop_streaming_video(struct vb2_queue *vq)
+>  {
+>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+> +	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
+>  
+>  	lockdep_assert_irqs_enabled();
+>  
+>  	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+>  
+> +	uvc_pm_put(stream->dev);
+> +
+>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+>  }
+>  
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 7a5ecbefa32c0a6b74c85d7f77a25b433598471e..d4bee0d4334b764c0cf02363b573b55fb44eb228 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -617,9 +617,6 @@ static int uvc_v4l2_release(struct file *file)
+>  
+>  	uvc_ctrl_cleanup_fh(handle);
+>  
+> -	if (handle->is_streaming)
+> -		uvc_pm_put(stream->dev);
+> -
+>  	/* Release the file handle. */
+>  	vb2_fop_release(file);
+>  	file->private_data = NULL;
+> @@ -677,50 +674,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
+>  	return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
+>  }
+>  
+> -static int uvc_ioctl_streamon(struct file *file, void *fh,
+> -			      enum v4l2_buf_type type)
+> -{
+> -	struct uvc_fh *handle = fh;
+> -	struct uvc_streaming *stream = handle->stream;
+> -	int ret;
+> -
+> -	if (handle->is_streaming)
+> -		return 0;
+> -
+> -	ret = uvc_pm_get(stream->dev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = vb2_ioctl_streamon(file, fh, type);
+> -	if (ret) {
+> -		uvc_pm_put(stream->dev);
+> -		return ret;
+> -	}
+> -
+> -	handle->is_streaming = true;
+> -
+> -	return 0;
+> -}
+> -
+> -static int uvc_ioctl_streamoff(struct file *file, void *fh,
+> -			       enum v4l2_buf_type type)
+> -{
+> -	struct uvc_fh *handle = fh;
+> -	struct uvc_streaming *stream = handle->stream;
+> -	int ret;
+> -
+> -	ret = vb2_ioctl_streamoff(file, fh, type);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (handle->is_streaming) {
+> -		handle->is_streaming = false;
+> -		uvc_pm_put(stream->dev);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int uvc_ioctl_enum_input(struct file *file, void *fh,
+>  				struct v4l2_input *input)
+>  {
+> @@ -1323,8 +1276,8 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
+>  	.vidioc_expbuf = vb2_ioctl_expbuf,
+>  	.vidioc_dqbuf = vb2_ioctl_dqbuf,
+>  	.vidioc_create_bufs = vb2_ioctl_create_bufs,
+> -	.vidioc_streamon = uvc_ioctl_streamon,
+> -	.vidioc_streamoff = uvc_ioctl_streamoff,
+> +	.vidioc_streamon = vb2_ioctl_streamon,
+> +	.vidioc_streamoff = vb2_ioctl_streamoff,
+>  	.vidioc_enum_input = uvc_ioctl_enum_input,
+>  	.vidioc_g_input = uvc_ioctl_g_input,
+>  	.vidioc_s_input = uvc_ioctl_s_input,
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 3ddbf065a2cbae40ee48cb06f84ca8f0052990c4..f895f690f7cdc1af942d5f3a5f10e9dd1c956a35 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -626,7 +626,6 @@ struct uvc_fh {
+>  	struct uvc_video_chain *chain;
+>  	struct uvc_streaming *stream;
+>  	unsigned int pending_async_ctrls;
+> -	bool is_streaming;
+>  };
+>  
+>  /* ------------------------------------------------------------------------
+> 
 
