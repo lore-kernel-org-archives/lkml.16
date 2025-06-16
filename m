@@ -1,163 +1,124 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B0189F56
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C662C189F56
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750062924; cv=none; b=FoK3E+10ArhH5GJX+qsjtaKSLPiM3ID1NuMQfjfb3GTB4vJ8vNR6NCa7xp9mtx98t5vEO8Ipg5CMj/qQsao67pZnH2I72reakCgSJTIjC3LUoY5Qvzd0haMbqbOwxlVbehn15wg/x6RsmtQeYa+G0NuHWFjFrIZ5pbBfaSIeGpI=
+	t=1750062977; cv=none; b=ioLmEt0AehDKQ2Txj32uELqaT0+CCCfZVjmHJe4GdOmnaQyDSTAU2uXGHOmVkFjjQhhMBuwZp084I5bTYm+zPBWSm5dQDEhrFGflXOL7sTG2H0LY01T73ddFw1TbEKABFWIa0QMHJHd2nw5i3stk0cYOhaU2NUXOcBDfGsGN8Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750062924; c=relaxed/simple;
-	bh=jaVBmfhiO/gMUJCxr4WGTf3k2pGJTYD8tBDjkUnbMjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TX0Q8rKSUI48FzSZAYiGl9MlUJMIUL+tlIpZuJdTpgY/usv2JDvLg2mTCCPRGcaW2OOhTnHcy4ufI51ao5MTc6zG85gX7tWwlTE1RePnjmk3iDNCvX7F5lF1NDsmYoVSHrILH6GxYy60mn6ZTx1bCaB05wzHqnmHLDGY4nTmwi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n9s1izY1; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750062977; c=relaxed/simple;
+	bh=KvuBapPFIUFpeO1GcEW+NVpFFKs9aE2atVl+Hcoz4dE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gkR3eqwL7rbGdrMGL+/wK4f7f4Enpn8DM1yqWEYDY30mt1LJ/3LwBjF1EtOWq00qruAXormCWRp6DYWbI3ms3Qoj3XkEYn/nDlLHxGokMr8hOZuhLU2mKr8ujeOK+qeSMaXPqT3gyH2IN7fMa0NyGd8qMnRD3zdFfJRLu2gzTzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RocffQMI; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n9s1izY1"
-Message-ID: <d4a28883-2aff-42dd-afe4-c5a42447ed0e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750062907;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QKgw0q/b2wsEMiS8v+UPXQrLZWDcU2TmDlxSNErwZhE=;
-	b=n9s1izY1DgFXeYapdxjJWy2Y9bElYZA4F9H+Gw2gUs+VgMyWEytAWbwxpfwCN3BQUo06j5
-	kugONuIW0EAqmK1xABumKKsn2773yVZ0U5cj6Vd4vkybXCdsnYqlwR+Wy8fFYE4E8qs4l4
-	D0h+6ZUHdkmGxDVeN51DAqfhJYVJxzY=
-Date: Mon, 16 Jun 2025 16:34:59 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RocffQMI"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-452f9735424so13008345e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750062974; x=1750667774; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qDFMbaNBOZF6U3t9x/vAMuueUEpg2ql5GHLmS+YRkOg=;
+        b=RocffQMIEbqrJ39yIzYNKhUZbld037aim0EcwtAQ57bUx0ol8NBqmmqBnr23p7+DlJ
+         2GXNY8hVJ456qE74gwJR/kj+SYAEyRJtjyP8Yp5vjGtJDGicU+WOaYzjav1GUIrvimcR
+         TFy/voZchhQUA2q9lqOkkoxnOi7wfludBa8GXPYF7f/IzaIEH9BJ+m+L8gcdr8sR+6lL
+         /gkc+fVpQMNbdE++LiiOHPqi4bkDRQ/B5TqJjLOqRKJew7jR9wHhKJ+5WWXpPGmdJ9nE
+         tACCO3GWnqmSb825f1/U0OdyUCqm13Lo9MJlD2gKN6Jl73ngr2qhKLQgewpYGCm4EICD
+         I3BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750062974; x=1750667774;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qDFMbaNBOZF6U3t9x/vAMuueUEpg2ql5GHLmS+YRkOg=;
+        b=Qe7Xm68LmLhzKQO8IYW6MaKB/VHVkPnP8taiWY3y19m0EiUQKzajKB4nN9owe3biJC
+         sighiiEcDXdmXfGfXV7RYfG7hBdsFDPwsBLQv+vAF7d/p+U0wKWzPfthQ+UaD7MFkyOi
+         0MVOMjT+X9F341CIRnmaKEij4Rsn+eZLmeQhsViIFmNajHxMt80VuRgXgrkJNoPKURB8
+         aryfPxQD4dc1b0PK+RnlbfeyAlVQ4FAzk+qeLQie0l6Ov8BNUe+dwdE3llQ3ShWKPzUo
+         An/Ssx4R8uv711QFbgDavkH9m1NbGPqfxu2rx30D7wKHYMvSd3H/pEt41Uz+U7/mhu2R
+         P8Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIrfO88O2WZTtRHD0MxA1MODi+8SeAFkEdRux99AxAXQ+XdzfM77Ni4dFMbWW2BhtSCAaWgxSy2wdzmHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8AJwfki5Q6Cqrku5aSjsAw4p8/giT9LNsgEYV/86QWx6TYhIS
+	egEalSW7eYk9VU2Ea8JestTdLPBwzbMIUure80ddhoDS/uTH0/K62a/r
+X-Gm-Gg: ASbGncv49GuErhBx+lRMS4BH9zT9agLwCD9W6bqCr/A1BI95j4XVQy0BN/IKDwCDPfL
+	Fyx5mwaWVzNBSj2NljnAxXN5dyXPZ5TCBs3dqlzJkrEvZz+AEmdNVSn9py+ZoEYIziMEhnUBpe+
+	VCo8joT/r4NkLblRuCypyWFahIi9VGOOSBR/g9OfmOxMhP4AJweQ32AwPaZTIkpnrr/A1odQ0f1
+	La5FHS3fMEdGmNwgXFGJUz9FEDIiE75PfNFT9IvPos+03jan6FH0ySTH9ofd9fN8+MBqNtRwGW5
+	oZxVqr4VH5P4plRzHmCXE3XlRnkOpUG3G8zpf9wRP254QwJzqzrYbEIAf+pTdFZT
+X-Google-Smtp-Source: AGHT+IFpuj8zGMKC22v1x08gRfVznZE4IbwhMqise4wL5yEimrHgA4V9FRrzjmQRaKLJRisxYdE6Pg==
+X-Received: by 2002:a05:600c:3b98:b0:43c:fbba:41ba with SMTP id 5b1f17b1804b1-453418e0926mr45598435e9.28.1750062974069;
+        Mon, 16 Jun 2025 01:36:14 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08c7csm10601966f8f.50.2025.06.16.01.36.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 01:36:13 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/asm: Use RDPKRU and WRPKRU mnemonics in <asm/special_insns.h>
+Date: Mon, 16 Jun 2025 10:35:57 +0200
+Message-ID: <20250616083611.157740-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v2 2/2] bpf: Add show_fdinfo for kprobe_multi
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: song@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, sdf@fomichev.me, haoluo@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250615150514.418581-1-chen.dylane@linux.dev>
- <20250615150514.418581-2-chen.dylane@linux.dev> <aE_KaH3DAo4-Yq7m@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <aE_KaH3DAo4-Yq7m@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/6/16 15:40, Jiri Olsa 写道:
-> On Sun, Jun 15, 2025 at 11:05:14PM +0800, Tao Chen wrote:
->> Show kprobe_multi link info with fdinfo, the info as follows:
->>
->> link_type:	kprobe_multi
->> link_id:	3
->> prog_tag:	e8225cbcc9cdffef
->> prog_id:	29
->> type:	kprobe_multi
->> kprobe_cnt:	8
->> missed:	0
->> func:	bpf_fentry_test1+0x0/0x20
->> cookie:	1
->> func:	bpf_fentry_test2+0x0/0x20
->> cookie:	7
->> func:	bpf_fentry_test3+0x0/0x20
->> cookie:	2
->> func:	bpf_fentry_test4+0x0/0x20
->> cookie:	3
->> func:	bpf_fentry_test5+0x0/0x20
->> cookie:	4
->> func:	bpf_fentry_test6+0x0/0x20
->> cookie:	5
->> func:	bpf_fentry_test7+0x0/0x20
->> cookie:	6
->> func:	bpf_fentry_test8+0x0/0x10
->> cookie:	8
->>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   kernel/trace/bpf_trace.c | 33 +++++++++++++++++++++++++++++++++
->>   1 file changed, 33 insertions(+)
->>
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index 9a8ca8a8e2b..d060c61e4e4 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -2623,10 +2623,43 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
->>   	return err;
->>   }
->>   
->> +#ifdef CONFIG_PROC_FS
->> +static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
->> +					 struct seq_file *seq)
->> +{
->> +	struct bpf_kprobe_multi_link *kmulti_link;
->> +	char sym[KSYM_NAME_LEN];
->> +
->> +	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
->> +
->> +	seq_printf(seq,
->> +		   "type:\t%s\n"
->> +		   "kprobe_cnt:\t%u\n"
->> +		   "missed:\t%lu\n",
->> +		   kmulti_link->flags == BPF_F_KPROBE_MULTI_RETURN ? "kretprobe_multi" :
->> +					 "kprobe_multi",
->> +		   kmulti_link->cnt,
->> +		   kmulti_link->fp.nmissed);
->> +
->> +	for (int i = 0; i < kmulti_link->cnt; i++) {
->> +		sprint_symbol(sym, kmulti_link->addrs[i]);
-> 
-> I think you could use specifier to do the translation for you,
-> check Documentation/core-api/printk-formats.rst:
-> 
->          %pS     versatile_init+0x0/0x110 [module_name]
-> 
+Current minimum required version of binutils is 2.30,
+which supports RDPKRU and WRPKRU instruction mnemonics.
 
-I'll refer to that, thanks!
+Replace the byte-wise specification of RDPKRU and
+WRPKRU with these proper mnemonics.
 
-> 
-> 
->> +		seq_printf(seq,
->> +			  "func:\t%s\n"
->> +			  "cookie:\t%llu\n",
->> +			  sym,
->> +			  kmulti_link->cookies[i]
->> +			  );
-> 
-> bracket should be on the previous line
-> 
+No functional change intended.
 
-will fix it in v3, thanks.
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/special_insns.h | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-> jirka
-> 
-> 
->> +	}
->> +}
->> +#endif
->> +
->>   static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
->>   	.release = bpf_kprobe_multi_link_release,
->>   	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
->>   	.fill_link_info = bpf_kprobe_multi_link_fill_link_info,
->> +#ifdef CONFIG_PROC_FS
->> +	.show_fdinfo = bpf_kprobe_multi_show_fdinfo,
->> +#endif
->>   };
->>   
->>   static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
->> -- 
->> 2.48.1
->>
-
-
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index ecda17efa042..13e272e1a53f 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -75,9 +75,7 @@ static inline u32 rdpkru(void)
+ 	 * "rdpkru" instruction.  Places PKRU contents in to EAX,
+ 	 * clears EDX and requires that ecx=0.
+ 	 */
+-	asm volatile(".byte 0x0f,0x01,0xee\n\t"
+-		     : "=a" (pkru), "=d" (edx)
+-		     : "c" (ecx));
++	asm volatile("rdpkru" : "=a" (pkru), "=d" (edx) : "c" (ecx));
+ 	return pkru;
+ }
+ 
+@@ -89,8 +87,7 @@ static inline void wrpkru(u32 pkru)
+ 	 * "wrpkru" instruction.  Loads contents in EAX to PKRU,
+ 	 * requires that ecx = edx = 0.
+ 	 */
+-	asm volatile(".byte 0x0f,0x01,0xef\n\t"
+-		     : : "a" (pkru), "c"(ecx), "d"(edx));
++	asm volatile("wrpkru" : : "a" (pkru), "c"(ecx), "d"(edx));
+ }
+ 
+ #else
 -- 
-Best Regards
-Tao Chen
+2.49.0
+
