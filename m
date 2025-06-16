@@ -1,187 +1,325 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2066.outbound.protection.outlook.com [40.107.93.66])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9321E7C23;
-	Mon, 16 Jun 2025 06:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750056460; cv=fail; b=hNv6atgGzAJUz2pMnSTs1+88QzQgCDBZfg3hytqnhnC2gzJBctVdKhMDlCiO/K9crCbEt10g4RcBgx/RJ/koEFI3LR6kY45VfQNn8u1RNmSqxYtdPvS/E3+rrZODVVaIwYK2zrIUsHpfKtb0v/oQJocfHPjZW/oO6vAbYhz5iiU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750056460; c=relaxed/simple;
-	bh=JGMJQjCHJWYt7jNtOC6ILqZLmR5oC1nMR4q5h601VTU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJQeNZAyIH5489CCxXlvlhaRAHZqkf/8wdZ8CBK6sf0L9QsSnJR2d3JHt6ppBq//ta0zqEuGdosOXxFVnq6zTKtsCt4pHZQ9kEPsDiK/+K5VNOaXsygbrmAMnw9XEVin3mqEnwQXD53wGphHR5MgZi8eoraHNR2nKQjMaSaw+/k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZYTq7djh; arc=fail smtp.client-ip=40.107.93.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC94E1EEA4D
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750056464; cv=none; b=IXx+39uOqi9tGBhep/4eAzjEqtxea3mVgLI7YzthbkNEZyjuyQHzClS82TGt6w8D9sra1BxjAZgGXhrsisKA9HT3oDcscmwa7HBohgrP06enYOJeLXqZUa+P1ByeuIEB5byEgV1dVJYalO67rw2LD79ZTCCN+DWBgZuviPlJbi4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750056464; c=relaxed/simple;
+	bh=lhDBabnMGa6gVzwwG3E0BbqVgM0h91lBKMw72syQGWI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nox+ZtuTBrs/r+3aBPpyi72mzPazEQe43hR/Ne7Y7If07qYehpMIDAm5SLky8ekfWb3BAsKp9CdwXaXr4wOWr748hsYImxlNNuB1GnS7VKRUlNyOp+XOXWhuNgs3SN1vkeUgKQqtCRS8dQkYOZDVrbnd2KkCEvdWySSHBKX/GF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iTT2n4nP; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZYTq7djh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ggJatRjYfoZVtzQRQAS779M+hFt13EISj2ISyFUZeniYOsylfqC5+t2yP0oX10vuHKdV3BUiFCF1DWbZW8vs2NSeKUoa5r9XabhJPJupuxE/oq5T/PSpFrI+yYIf2+d02rJJ6VuwciSD+kXBAN9KUuD1CXG+U5qxJad5TwuMOHSPB75nNQ6g/5bWam779lS5CXWs51lC7PU18oxVXeTLHADondOj1xWeOHJpqklh/GHcr/ZkoICyby3FPIdJ5VRiNV3Nx14f5E6Q4+meQD+W5ROX11KxlU5S947X+hHjD5qeTozfkcfNmnosqxbqUXTO5NhRqAlivDBYABl1o0Z6Uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LDbZTTRrRalFNUJNx7F13nnXd0WwvyKGpjTIfJ+WlFM=;
- b=FQhfyBKWywyuvQvtbQjOnxhFi/kZK0dvR3q9HvNuuM1IofJAQkr02hH1L6lEHaA8zkaax3Jj9ZJcYKwlaEi2hKA3O04OwkNW3HLKvsqekDC9mWl01TwPI4ygW0G1PQKaVZsQvB+Ge/61c+xgYgjkNDTpK2a8LKOCVZFcnK6WL+mRAtn8NtoqIwFoXleAggZSpKxsM73pxF2Z3gtwGmi5QWLbulIcCe41n/pbIXa8HB2Bm3NbPpko4kelfatUQxT/WczRTVJsIde65bys1neml7xbFiz9ZaOuYfMuSGpqGkdYm3KbkeMJUlPk5sOL1RrB1u4V5R0E7M9kfD2BcEfERw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LDbZTTRrRalFNUJNx7F13nnXd0WwvyKGpjTIfJ+WlFM=;
- b=ZYTq7djhlL7GCG2Gwc0ZAc+RBjhNzNltpl7X18D9U460MApIv88oRAyVzvLl3MYJJDmztCNWnFD3tGYp40bckX8xWISGi6VtPU/FmZ+dVOXyX6eE+78RRhTHEgRAU+eS3x8k3xteafa/abVLtQOrj/nAKa0QDCupyiGzG+UygHRdqMALRH6RvHCJRKlNaVAHXzCzs2liNcy1EcnRmv6tEvqIh/ul+y/usC5sD7bGXjI/qUkfYnY/Jh2zSlymK4EsYxyaGgQ7LhCenBitAAgZa+aZaeMdE5T6QN+cY2ACnoywclq83eI0pVRctNvKi9jhe3XvyB0Wgi+HbmPojOZeQA==
-Received: from MW2PR16CA0051.namprd16.prod.outlook.com (2603:10b6:907:1::28)
- by MW5PR12MB5650.namprd12.prod.outlook.com (2603:10b6:303:19e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
- 2025 06:47:35 +0000
-Received: from SJ5PEPF000001EB.namprd05.prod.outlook.com
- (2603:10b6:907:1:cafe::c7) by MW2PR16CA0051.outlook.office365.com
- (2603:10b6:907:1::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Mon,
- 16 Jun 2025 06:47:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001EB.mail.protection.outlook.com (10.167.242.199) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 06:47:34 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 15 Jun
- 2025 23:47:21 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 15 Jun
- 2025 23:47:20 -0700
-Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Sun, 15 Jun 2025 23:47:14 -0700
-Date: Sun, 15 Jun 2025 23:47:11 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
-	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
-	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
-	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
-	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
-	<mshavit@google.com>, <praan@google.com>, <zhangzekun11@huawei.com>,
-	<iommu@lists.linux.dev>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-tegra@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<patches@lists.linux.dev>, <mochs@nvidia.com>, <alok.a.tiwari@oracle.com>,
-	<vasant.hegde@amd.com>, <dwmw2@infradead.org>
-Subject: Re: [PATCH v6 10/25] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
- ioctl
-Message-ID: <aE+976F9zPsjtfry@nvidia.com>
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <7dfb002613f224f57a069d27e7bf2b306b0a5ba0.1749884998.git.nicolinc@nvidia.com>
- <1ab8030b-8d2f-4ebe-a280-6d0e4e1d17c7@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iTT2n4nP"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55G6lEx32513225;
+	Mon, 16 Jun 2025 01:47:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750056434;
+	bh=S6BXEeXEeozfsESlUOgc0qg+v45RGU438oFQpmXKSRM=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=iTT2n4nP4qEtPX0ec4eDDmY3BA/YS2jQHeGcMGlB1k8o1cgL9CS6eds3XIzBVXhVd
+	 89g01phPxJEusVac+zYdECeunvVo97dhf+udfTbin2NUMxbOq/OWsCqU7QKV+b58zz
+	 nMt8Ua+m0kxIB9xJ9pdqMlSTYETh67xl3CbaMJIU=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55G6lEVU720022
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 16 Jun 2025 01:47:14 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 16
+ Jun 2025 01:47:14 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 16 Jun 2025 01:47:14 -0500
+Received: from uda0492258.dhcp.ti.com (dhcp-172-24-227-169.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55G6l6Cn3805820;
+	Mon, 16 Jun 2025 01:47:10 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <vkoul@kernel.org>, <kishon@kernel.org>, <sjakhade@cadence.com>,
+        <rogerq@kernel.org>, <christophe.jaillet@wanadoo.fr>,
+        <u.kleine-koenig@baylibre.com>, <eballetb@redhat.com>,
+        <make24@iscas.ac.cn>
+CC: <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v4 1/2] phy: cadence-torrent: Add PCIe multilink configuration for 100 MHz refclk
+Date: Mon, 16 Jun 2025 12:17:04 +0530
+Message-ID: <20250616064705.3225758-2-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250616064705.3225758-1-s-vadapalli@ti.com>
+References: <20250616064705.3225758-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1ab8030b-8d2f-4ebe-a280-6d0e4e1d17c7@linux.intel.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EB:EE_|MW5PR12MB5650:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55e81667-edcc-45ab-fa18-08ddaca1aca4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9Qqa4uLqSwy0sYhnbIcU7LRbr05x68IiFs41+/F6EURNZIx75DDD/5vvt0Qd?=
- =?us-ascii?Q?+CUsCpYeBpjvKk4Q1x0nzoSJzYgnzCridGFZujXixgprt5V6OqL2mQaYHusl?=
- =?us-ascii?Q?IfiRLEj2sFCdCVUtm9ACnOTXVYoFKje1+fkSAjHy4GQ0Gc2LjizhEL+vLK1V?=
- =?us-ascii?Q?nO1j/aFja75SzLBipjRaslOP7eJo/1MDBqvXtYr9Dv9R5lbA+5es07GCksD4?=
- =?us-ascii?Q?0fuzNKjiuL84HedophAmNdMmt47802AOR6rvwPhtRPVtoxSppdlO0+b3+q49?=
- =?us-ascii?Q?YpilzC/AURY4m6RqPyNGVys61ZXxdWHf9iF8UgMTogQ4VS1Jdv+tKoIBjckk?=
- =?us-ascii?Q?Sp7jPKLfdNmWWianlg3TJXGx26WxgODAmYOTuRviCmqVq+fe9jBxWmNARM4q?=
- =?us-ascii?Q?g9u0PYIGRy7YL+TRNh6g2VByqmsiQru+1j4E/kYkYtUMszxRjFf09jKmSxNw?=
- =?us-ascii?Q?OsQnUWoyCEE8PTHDQ6M5rNxR5LDXXoHSr7gHqv6i5lYL6JmmDxuzyiyzjnGY?=
- =?us-ascii?Q?FQgMI3OoHczea22oJmzyrfrDTVoA5xTV9mtEy47CupdTAimkhk/yANKu1Sdc?=
- =?us-ascii?Q?JnnPmOl3rpuu3VXbMfoVIaQadLkZ0DWNgTI14iEN7kVEhDDn8xuvFMYE5N4l?=
- =?us-ascii?Q?mWy5XnzKoNWofOvEG7zZPyrDOk+J3uLj80K9sC0ur5EHVts/t49SAXRX3WWi?=
- =?us-ascii?Q?VgpNMduxHO619ebdTTL3eVXKOAwrcSJuR7Zrex4G2y8f04cpW5J4vi/i/xm/?=
- =?us-ascii?Q?tH1UrjoV1HM8dRBjWwVvnN4swsKAvKuTuSFQaWF+IuA9PCZ+wrixFZknob1A?=
- =?us-ascii?Q?GadTWPfnvTij4btY6WkR1ZF1bAL1iAXZCExHkZNGt6qXdj1snTp959ydMe5e?=
- =?us-ascii?Q?zswmRgRwIVlZfg8LpzYOrp//GWsVS0BwZyZpUGcl2pspMtm2r078e0l+bm/a?=
- =?us-ascii?Q?IgJdLEzhZ5/yVQitxXw9xWaT6/yWbp3pMrXhgTa79MulLly6Oznq1Rwm1RiI?=
- =?us-ascii?Q?/bCyFB+i+MJEt1Fp90NRmw5cRFbLxtJuZ90BGaDdgLN99khNuTg9u6ipvDyT?=
- =?us-ascii?Q?9d5uXZ7f2Y886r2lEjHEPO3/CUSbyXymI9nCw1hs4Mml7jMu3MhMY1NYzCos?=
- =?us-ascii?Q?bM2QI8KE5Y49XrviHdgADdqhdSLn0BHEWcYDDgWFDFZy0mJRaEJ6/bwCohCP?=
- =?us-ascii?Q?/cHssG0HbRr1cmsR4CEoEz4sSCDlugANIR91ltAasGNcy2+1e9YaIg5e/PrD?=
- =?us-ascii?Q?hNk6/wcNdSMiBUUUg/sdOsZu1mgdk/IPtgBVecz80W2FmY+RfNoZ/wjKwAQi?=
- =?us-ascii?Q?T8BUiHQ4z0ZnTJctRbzl67IRZioFM/8J6M3RuJB4GlJkbsQLlpCNHfErVGGY?=
- =?us-ascii?Q?Ttq6eOrgLfkLnzqBmpDrteUp4FUqw8dxgy+WdE8eP6Zeh9JS7ApB3e1vlMo+?=
- =?us-ascii?Q?flldShUPr53zK8Cip7+vfotJm3qmslAXE0DZTZUJGTe7iiX0HeHxCSysui9z?=
- =?us-ascii?Q?5arEK4itL6DxTv/WGJSw618ZDEd/Dg23h0cC?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 06:47:34.2357
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55e81667-edcc-45ab-fa18-08ddaca1aca4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5650
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Jun 16, 2025 at 02:12:04PM +0800, Baolu Lu wrote:
-> On 6/14/25 15:14, Nicolin Chen wrote:
-> > +	if (!viommu->ops || !viommu->ops->get_hw_queue_size ||
-> > +	    !viommu->ops->hw_queue_init_phys) {
-> > +		rc = -EOPNOTSUPP;
-> > +		goto out_put_viommu;
-> > +	}
+From: Swapnil Jakhade <sjakhade@cadence.com>
 
-Hmm, here it does abort when !viommu->ops->hw_queue_init_phys ..
+Add register sequences to support PCIe multilink configuration for 100MHz
+reference clock. Maximum two PCIe links are supported.
 
-> > +	/*
-> > +	 * FIXME once ops->hw_queue_init is introduced, this should check "if
-> > +	 * ops->hw_queue_init_phys". And "access" should be initialized to NULL.
-> > +	 */
-> 
-> I just don't follow here. Up until now, only viommu->ops->
-> hw_queue_init_phys has been added, which means the current code only
-> supports hardware queues that access guest memory using physical
-> addresses. The access object is not needed for the other type of
-> hardware queue that uses guest IOVA.
-> 
-> So, why not just abort here if ops->hw_queue_init_phys is not supported
-> by the IOMMU driver?
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Reviewed-by: Roger Quadros <rogerq@kernel.org>
+---
 
-.. so, it already does.
+v3:
+https://lore.kernel.org/r/20250109121614.754466-2-s-vadapalli@ti.com/
+Changes since v3:
+- Rebased on next-20250616.
+- Collected Reviewed-by tag from:
+  Roger Quadros <rogerq@kernel.org>
 
-> Leave other logics to the patches that introduce
-> ops->hw_queue_init? I guess that would make this patch more readible.
+Regards,
+Siddharth.
 
-The patch is doing in the way to support the hw_queue_init_phys
-case only. It is just adding some extra FIXMEs as the guideline
-for the future patch adding hw_queue_init op.
+ drivers/phy/cadence/phy-cadence-torrent.c | 130 +++++++++++++++++++++-
+ 1 file changed, 129 insertions(+), 1 deletion(-)
 
-I personally don't feel these are confusing. Maybe you can help
-point out what specific wording feels odd here? Maybe "FIXME"s
-should be "TODO"s?
+diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
+index a281c0dfae97..1c5e96e2a188 100644
+--- a/drivers/phy/cadence/phy-cadence-torrent.c
++++ b/drivers/phy/cadence/phy-cadence-torrent.c
+@@ -197,6 +197,7 @@
+ #define RX_SDCAL1_INIT_TMR		0x004CU
+ #define RX_SDCAL1_ITER_TMR		0x004DU
+ #define RX_CDRLF_CNFG			0x0080U
++#define RX_CDRLF_CNFG2			0x0081U
+ #define RX_CDRLF_CNFG3			0x0082U
+ #define RX_SIGDET_HL_FILT_TMR		0x0090U
+ #define RX_REE_GCSM1_CTRL		0x0108U
+@@ -204,6 +205,7 @@
+ #define RX_REE_GCSM1_EQENM_PH2		0x010AU
+ #define RX_REE_GCSM2_CTRL		0x0110U
+ #define RX_REE_PERGCSM_CTRL		0x0118U
++#define RX_REE_PEAK_UTHR		0x0142U
+ #define RX_REE_ATTEN_THR		0x0149U
+ #define RX_REE_TAP1_CLIP		0x0171U
+ #define RX_REE_TAP2TON_CLIP		0x0172U
+@@ -212,6 +214,7 @@
+ #define RX_DIAG_DFE_CTRL		0x01E0U
+ #define RX_DIAG_DFE_AMP_TUNE_2		0x01E2U
+ #define RX_DIAG_DFE_AMP_TUNE_3		0x01E3U
++#define RX_DIAG_REE_DAC_CTRL		0x01E4U
+ #define RX_DIAG_NQST_CTRL		0x01E5U
+ #define RX_DIAG_SIGDET_TUNE		0x01E8U
+ #define RX_DIAG_PI_RATE			0x01F4U
+@@ -3131,6 +3134,101 @@ static void cdns_torrent_phy_remove(struct platform_device *pdev)
+ 	cdns_torrent_clk_cleanup(cdns_phy);
+ }
+ 
++/* Multi link PCIe configuration */
++static const struct cdns_reg_pairs ml_pcie_link_cmn_regs[] = {
++	{0x0002, PHY_PLL_CFG},
++	{0x0601, CMN_PDIAG_PLL0_CLK_SEL_M0}
++};
++
++static const struct cdns_reg_pairs ml_pcie_xcvr_diag_ln_regs[] = {
++	{0x0100, XCVR_DIAG_HSCLK_SEL},
++	{0x0001, XCVR_DIAG_HSCLK_DIV},
++	{0x0812, XCVR_DIAG_PLLDRC_CTRL}
++};
++
++static const struct cdns_torrent_vals ml_pcie_link_cmn_vals = {
++	.reg_pairs = ml_pcie_link_cmn_regs,
++	.num_regs = ARRAY_SIZE(ml_pcie_link_cmn_regs),
++};
++
++static const struct cdns_torrent_vals ml_pcie_xcvr_diag_ln_vals = {
++	.reg_pairs = ml_pcie_xcvr_diag_ln_regs,
++	.num_regs = ARRAY_SIZE(ml_pcie_xcvr_diag_ln_regs),
++};
++
++/* Multi link PCIe, 100 MHz Ref clk, no SSC */
++static const struct cdns_reg_pairs ml_pcie_100_no_ssc_cmn_regs[] = {
++	{0x0003, CMN_PLL0_VCOCAL_TCTRL},
++	{0x0003, CMN_PLL1_VCOCAL_TCTRL}
++};
++
++static const struct cdns_reg_pairs ml_pcie_100_no_ssc_rx_ln_regs[] = {
++	{0x0019, RX_REE_TAP1_CLIP},
++	{0x0019, RX_REE_TAP2TON_CLIP},
++	{0x0008, RX_REE_PEAK_UTHR},
++	{0x018E, RX_CDRLF_CNFG},
++	{0x2E33, RX_CDRLF_CNFG2},
++	{0x0001, RX_DIAG_ACYA},
++	{0x0C21, RX_DIAG_DFE_AMP_TUNE_2},
++	{0x0002, RX_DIAG_DFE_AMP_TUNE_3},
++	{0x0005, RX_DIAG_REE_DAC_CTRL}
++};
++
++static const struct cdns_torrent_vals ml_pcie_100_no_ssc_cmn_vals = {
++	.reg_pairs = ml_pcie_100_no_ssc_cmn_regs,
++	.num_regs = ARRAY_SIZE(ml_pcie_100_no_ssc_cmn_regs),
++};
++
++static const struct cdns_torrent_vals ml_pcie_100_no_ssc_rx_ln_vals = {
++	.reg_pairs = ml_pcie_100_no_ssc_rx_ln_regs,
++	.num_regs = ARRAY_SIZE(ml_pcie_100_no_ssc_rx_ln_regs),
++};
++
++/* Multi link PCIe, 100 MHz Ref clk, internal SSC */
++static const struct cdns_reg_pairs ml_pcie_100_int_ssc_cmn_regs[] = {
++	{0x0004, CMN_PLL0_DSM_DIAG_M0},
++	{0x0004, CMN_PLL1_DSM_DIAG_M0},
++	{0x0509, CMN_PDIAG_PLL0_CP_PADJ_M0},
++	{0x0509, CMN_PDIAG_PLL1_CP_PADJ_M0},
++	{0x0F00, CMN_PDIAG_PLL0_CP_IADJ_M0},
++	{0x0F00, CMN_PDIAG_PLL1_CP_IADJ_M0},
++	{0x0F08, CMN_PDIAG_PLL0_FILT_PADJ_M0},
++	{0x0F08, CMN_PDIAG_PLL1_FILT_PADJ_M0},
++	{0x0064, CMN_PLL0_INTDIV_M0},
++	{0x0050, CMN_PLL1_INTDIV_M0},
++	{0x0002, CMN_PLL0_FRACDIVH_M0},
++	{0x0002, CMN_PLL1_FRACDIVH_M0},
++	{0x0044, CMN_PLL0_HIGH_THR_M0},
++	{0x0036, CMN_PLL1_HIGH_THR_M0},
++	{0x0002, CMN_PDIAG_PLL0_CTRL_M0},
++	{0x0002, CMN_PDIAG_PLL1_CTRL_M0},
++	{0x0001, CMN_PLL0_SS_CTRL1_M0},
++	{0x0001, CMN_PLL1_SS_CTRL1_M0},
++	{0x011B, CMN_PLL0_SS_CTRL2_M0},
++	{0x011B, CMN_PLL1_SS_CTRL2_M0},
++	{0x006E, CMN_PLL0_SS_CTRL3_M0},
++	{0x0058, CMN_PLL1_SS_CTRL3_M0},
++	{0x000E, CMN_PLL0_SS_CTRL4_M0},
++	{0x0012, CMN_PLL1_SS_CTRL4_M0},
++	{0x0C5E, CMN_PLL0_VCOCAL_REFTIM_START},
++	{0x0C5E, CMN_PLL1_VCOCAL_REFTIM_START},
++	{0x0C56, CMN_PLL0_VCOCAL_PLLCNT_START},
++	{0x0C56, CMN_PLL1_VCOCAL_PLLCNT_START},
++	{0x0003, CMN_PLL0_VCOCAL_TCTRL},
++	{0x0003, CMN_PLL1_VCOCAL_TCTRL},
++	{0x00C7, CMN_PLL0_LOCK_REFCNT_START},
++	{0x00C7, CMN_PLL1_LOCK_REFCNT_START},
++	{0x00C7, CMN_PLL0_LOCK_PLLCNT_START},
++	{0x00C7, CMN_PLL1_LOCK_PLLCNT_START},
++	{0x0005, CMN_PLL0_LOCK_PLLCNT_THR},
++	{0x0005, CMN_PLL1_LOCK_PLLCNT_THR}
++};
++
++static const struct cdns_torrent_vals ml_pcie_100_int_ssc_cmn_vals = {
++	.reg_pairs = ml_pcie_100_int_ssc_cmn_regs,
++	.num_regs = ARRAY_SIZE(ml_pcie_100_int_ssc_cmn_regs),
++};
++
+ /* SGMII and QSGMII link configuration */
+ static const struct cdns_reg_pairs sgmii_qsgmii_link_cmn_regs[] = {
+ 	{0x0002, PHY_PLL_CFG}
+@@ -4531,7 +4629,7 @@ static const struct cdns_torrent_vals sl_sgmii_xcvr_diag_ln_vals = {
+ 	.num_regs = ARRAY_SIZE(sl_sgmii_xcvr_diag_ln_regs),
+ };
+ 
+-/* Multi link PCIe, 100 MHz Ref clk, internal SSC */
++/* For PCIe (with some other protocol), 100 MHz Ref clk, internal SSC */
+ static const struct cdns_reg_pairs pcie_100_int_ssc_cmn_regs[] = {
+ 	{0x0004, CMN_PLL0_DSM_DIAG_M0},
+ 	{0x0004, CMN_PLL0_DSM_DIAG_M1},
+@@ -4670,6 +4768,7 @@ static const struct cdns_torrent_vals_entry link_cmn_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_DP, TYPE_USB), &usb_dp_link_cmn_vals},
+ 
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_NONE), NULL},
++	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_PCIE), &ml_pcie_link_cmn_vals},
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_SGMII), &pcie_sgmii_link_cmn_vals},
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_QSGMII), &pcie_sgmii_link_cmn_vals},
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_USB), &pcie_usb_link_cmn_vals},
+@@ -4706,6 +4805,7 @@ static const struct cdns_torrent_vals_entry xcvr_diag_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_DP, TYPE_USB), &dp_usb_xcvr_diag_ln_vals},
+ 
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_NONE), NULL},
++	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_PCIE), &ml_pcie_xcvr_diag_ln_vals},
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_SGMII), &pcie_sgmii_xcvr_diag_ln_vals},
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_QSGMII), &pcie_sgmii_xcvr_diag_ln_vals},
+ 	{CDNS_TORRENT_KEY_ANYCLK(TYPE_PCIE, TYPE_USB), &pcie_usb_xcvr_diag_ln_vals},
+@@ -4756,6 +4856,10 @@ static const struct cdns_torrent_vals_entry cmn_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), &sl_pcie_100_int_ssc_cmn_vals},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), &ml_pcie_100_no_ssc_cmn_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), &ml_pcie_100_no_ssc_cmn_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), &ml_pcie_100_int_ssc_cmn_vals},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), &pcie_100_no_ssc_cmn_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), &pcie_100_no_ssc_cmn_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), &pcie_100_int_ssc_cmn_vals},
+@@ -4838,6 +4942,10 @@ static const struct cdns_torrent_vals_entry cdns_tx_ln_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), NULL},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), NULL},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), NULL},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), NULL},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), NULL},
+@@ -4920,6 +5028,10 @@ static const struct cdns_torrent_vals_entry cdns_rx_ln_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), &ml_pcie_100_no_ssc_rx_ln_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), &ml_pcie_100_no_ssc_rx_ln_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), &ml_pcie_100_no_ssc_rx_ln_vals},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+@@ -5038,6 +5150,10 @@ static const struct cdns_torrent_vals_entry ti_tx_ln_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), NULL},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), NULL},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), NULL},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), NULL},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), NULL},
+@@ -5154,6 +5270,10 @@ static const struct cdns_torrent_vals_entry ti_j7200_cmn_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), &sl_pcie_100_int_ssc_cmn_vals},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), &ml_pcie_100_no_ssc_cmn_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), &ml_pcie_100_no_ssc_cmn_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), &ml_pcie_100_int_ssc_cmn_vals},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), &pcie_100_no_ssc_cmn_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), &pcie_100_no_ssc_cmn_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), &pcie_100_int_ssc_cmn_vals},
+@@ -5236,6 +5356,10 @@ static const struct cdns_torrent_vals_entry ti_j7200_tx_ln_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), NULL},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), NULL},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), NULL},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), NULL},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), NULL},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), NULL},
+@@ -5318,6 +5442,10 @@ static const struct cdns_torrent_vals_entry ti_j7200_rx_ln_vals_entries[] = {
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, EXTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_NONE, INTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, NO_SSC), &pcie_100_no_ssc_rx_ln_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, EXTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
++	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_PCIE, INTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
++
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, NO_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, EXTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+ 	{CDNS_TORRENT_KEY(CLK_100_MHZ, CLK_100_MHZ, TYPE_PCIE, TYPE_SGMII, INTERNAL_SSC), &pcie_100_no_ssc_rx_ln_vals},
+-- 
+2.34.1
 
-I could also drop all of these guideline if they are considered
-very unnecessary.
-
-Thanks
-Nicolin
