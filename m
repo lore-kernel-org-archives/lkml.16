@@ -1,129 +1,86 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8911F0995;
-	Mon, 16 Jun 2025 15:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615AA21CC62;
+	Mon, 16 Jun 2025 15:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087538; cv=none; b=DJQhn06rDs393eEl3TjyzqzLzc6yeeai7AFGhtUgyvMwMeDgYFMueVTsq/g44wchGdbCsdB/nFeKhcE0laukmynq5Em5PqwKwoJriUoTc2EY/I7vwOc0yaGlj5W0Cu1wqnGv5J6Lsw9m9ABhruF11ZnvVEpHCXDvXYaoD7ElWto=
+	t=1750087564; cv=none; b=qD82+lmtWjkAKlpktsGtQ1p7m2PJtSpL2rkCq6jWc9csZ6TBAxv8RnRBGkyNcYMhCaCb8KzHs+WSjKiZSD8Q+1tcTnQXkIvtB+Y85Psc0EkNk16QYKdMiH9XpXKFKDV/0/uHhJm1RRqw3r9Bcvlun6cEvvpV1cakbuL2HiyG/3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087538; c=relaxed/simple;
-	bh=dqCC8ak/91Dzr4+3kecF6KVGO0oq/uGowumULvxPFCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YIlkVHXIlJ65FZc0eLHwhDj3KaWgBMhNO8oG1Lz9idXCfvCwRjyIkpQAHMhSIWKNUV2dczqRS39L9tJ2BML5QZyPMPHYXPONTCVjBX1RQBSLDp0l/uJK4IoiJxn/g5/8nM6gm3ATrxXM93WyHgdobwfwT1fQU6FOWMeGuP/n2k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=N2uGulhZ; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750087564; c=relaxed/simple;
+	bh=8492Hh9sftwBn41V1sCx1kh7fJYDsSQj3M1IUOmjNxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RyFg6r2FSX3G/CEffaaL5ojUtt7rv7yF6k/c27xU3VCLD4DA3a9PG+9KWzQlRoYqU3m/iZZZvgHQwKGBPBT+HNUxWAMr/sDCXr+OTS/wFtQbyXXdpM+1lcP4ZOW8Nob9imStVY95Kqgpg8ZpfODHhwqkIQCqKwSL3xzCdcPPECY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=ZB4DEg1i; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=ZB4DEg1i; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="N2uGulhZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=yh
-	CLHY+Yn5QZ5riQsIqS3LeSsfbH4BcVgHt29CWBC98=; b=N2uGulhZDW3wO2TBkk
-	O8pJE5fVzrKggDDY/cSjM2i4EQ7/wLW8nEPrillstJMX22Shyljl3MB+G3kfT8o1
-	2sOdTzImUgNoGw7xFSisfo+J0sfvJS8D13EWuvOMWMdQjzA87T86ZxKqfrJ1t1IR
-	sBBMhoEdh6JaX7gyqapnwFQ5g=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDnr6ZcN1Bo7z_bIw--.19402S2;
-	Mon, 16 Jun 2025 23:25:17 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	mani@kernel.org
-Cc: robh@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI: endpoint: Use common PCI host bridge APIs for finding the capabilities
-Date: Mon, 16 Jun 2025 23:25:15 +0800
-Message-Id: <20250616152515.966480-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="ZB4DEg1i";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="ZB4DEg1i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1750087561; bh=8492Hh9sftwBn41V1sCx1kh7fJYDsSQj3M1IUOmjNxw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZB4DEg1iyhX9hHcPY36NlJhyw7YR8EH+7MAMpzHLuVSr2OfkuimqdG96O2zlGiO1I
+	 ddMWdM22PFvOHxF63O9ocYlBpzk8QFX6JC3H1qJbHJa9smFSjJ4gZyATUzoJCqTIrd
+	 DmHVO8juXi5FKBQwVrpmmqxOrMbKYP5/wtFa2pwDLA+09AstzWNUrQyN9HvMKeWx0x
+	 6MIkNUHjDgQYXGbwm3yNi9nM1HpsjTyHu7jXT011RKaW1kvJmTZEwcyBwvCve/2Rjz
+	 9Gdjj2jiIBjC2gqD+iyATnMahCbd+nqvrpFRFgb6CU4/leFEC+BzcQG7ekvry4tt33
+	 qFRTTMJQI3l9A==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id 9CDB93C2957;
+	Mon, 16 Jun 2025 15:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1750087561; bh=8492Hh9sftwBn41V1sCx1kh7fJYDsSQj3M1IUOmjNxw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZB4DEg1iyhX9hHcPY36NlJhyw7YR8EH+7MAMpzHLuVSr2OfkuimqdG96O2zlGiO1I
+	 ddMWdM22PFvOHxF63O9ocYlBpzk8QFX6JC3H1qJbHJa9smFSjJ4gZyATUzoJCqTIrd
+	 DmHVO8juXi5FKBQwVrpmmqxOrMbKYP5/wtFa2pwDLA+09AstzWNUrQyN9HvMKeWx0x
+	 6MIkNUHjDgQYXGbwm3yNi9nM1HpsjTyHu7jXT011RKaW1kvJmTZEwcyBwvCve/2Rjz
+	 9Gdjj2jiIBjC2gqD+iyATnMahCbd+nqvrpFRFgb6CU4/leFEC+BzcQG7ekvry4tt33
+	 qFRTTMJQI3l9A==
+Message-ID: <335bf854-1a73-4370-93f4-77e9fd3febca@mleia.com>
+Date: Mon, 16 Jun 2025 18:26:00 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnr6ZcN1Bo7z_bIw--.19402S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KFy5Ww4Utw4DWFyfGw1DAwb_yoW5JFyDpa
-	yrZry5Cr4UKF1Yq3ZxAFZxZr98ZFn8AFWUZ39xG3WSvr17Zry3W34IkFW5Kry7KF4jgrWf
-	KrsFyFWrWr1fGa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pELvKUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwRuo2hQL1TsVQAAsw
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: Add NULL check in lpc32xx_dmamux_reserve()
+Content-Language: ru-RU
+To: Charles Han <hanchunchao@inspur.com>, vkoul@kernel.org,
+ piotr.wojtaszczyk@timesys.com
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250616104639.1935-1-hanchunchao@inspur.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <20250616104639.1935-1-hanchunchao@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20250616_152601_656558_A4BAA7A1 
+X-CRM114-Status: UNSURE (   8.94  )
+X-CRM114-Notice: Please train this message. 
 
-Use the PCI core is now exposing generic macros for the host bridges to
-search for the PCIe capabilities, make use of them in the DWC EP driver.
+Hi Charles,
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-- Submissions based on the following patches:
-https://patchwork.kernel.org/project/linux-pci/patch/20250607161405.808585-1-18255117159@163.com/
+On 6/16/25 13:46, Charles Han wrote:
+> The function of_find_device_by_node() may return NULL if the device
+> node cannot be found or if CONFIG_OF is not defined, dereferencing
 
-Recently, I checked the code and found that there are still some areas that can be further optimized.
-The above series of patches has been around for a long time, so I'm sending this one out for review
-as a separate patch.
----
- .../pci/controller/dwc/pcie-designware-ep.c   | 39 +++++++------------
- 1 file changed, 14 insertions(+), 25 deletions(-)
+please see my comments provided for lpc18xx-dmamux.c driver, all of
+them are applicable here as well.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 0ae54a94809b..9f1880cc1925 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -69,37 +69,26 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
- 
--static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
--				     u8 cap_ptr, u8 cap)
-+static int dw_pcie_ep_read_cfg(void *priv, u8 func_no, int where, int size, u32 *val)
- {
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_ep_readw_dbi(ep, func_no, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
--
--	if (cap_id == cap)
--		return cap_ptr;
-+	struct dw_pcie_ep *ep = priv;
-+
-+	if (size == 4)
-+		*val = dw_pcie_ep_readl_dbi(ep, func_no, where);
-+	else if (size == 2)
-+		*val = dw_pcie_ep_readw_dbi(ep, func_no, where);
-+	else if (size == 1)
-+		*val = dw_pcie_ep_readb_dbi(ep, func_no, where);
-+	else
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
- 
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
- {
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_ep_readw_dbi(ep, func_no, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
-+	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_ep_read_cfg, PCI_CAPABILITY_LIST,
-+				     cap, ep, func_no);
- }
- 
- /**
+There is no problem to be fixed, the change also shall be dropped
+in my opinion.
 
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.25.1
+> it without NULL check may lead to NULL dereference.
+> Add a check to verify whether the return value is NULL.
+> 
+> Fixes: 5d318b595982 ("dmaengine: Add dma router for pl08x in LPC32XX SoC")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 
+--
+Best wishes,
+Vladimir
