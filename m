@@ -1,133 +1,193 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEF222F76C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A72129B8D9
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071137; cv=none; b=arlhuEhXHZGxJiOFEfVqotan1Stbv2A2qVANTnFD63ZgCQHWz3QZkRrlGTKh/IwvDS6CdL0bbRJZ4WZ0lh7eFNET9VxljwtzfQm7Ec3Uw2QDRDausVWZRgYl9weaCs5698SQfCDdPTkOpEcX/btNC+QkNhsJ0isQXYcVZDIAkSM=
+	t=1750071139; cv=none; b=Mdp9HXQLU44EpNyuOBCw5FN1pthFWZnoern1SR4flkj3CPrqBlu68P4Du1kvzkuseNOVb73DT2rXECSydhG0teHodz9ibkE5vMRivHCNyIwHzZye9SmXUXJ3Gs9SsiMBxB1DPrUgz34dfGFD8QT9CzO+c3GCUD3Bp4m+3hpuxe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071137; c=relaxed/simple;
-	bh=Xd5HQxch8DJ8T7mxwkyj8OYWsC/SVmBYJYSpYWhAnqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JO2Ox4ZaqwiSOosa05O0Atdnsqfjr3mIgb5aBJ/AqBoTOzlHArNTq1K0BOLWkNKOgY6QfiOQ8we4+mXMPOIDD4eIykxHwy/oQ+FV7fb5HFEz1Wa6raXuZC0cWQMbaMZ9yeE5RCzqaBh7y2QT9f8z/EkyFUNSJHMrxIwa03XzkJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CqNOazR6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750071139; c=relaxed/simple;
+	bh=pRtjn2ajpJjDDgnbUTZy/EBQ+X/hcS8YWC9E3N75B2k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OoTaT/GHd+wsZQ3snelqiAJeeSfjRpwuQ+fx7ZYCQjpRJ/1JbyuRqCHw23kOtup6aExi0MpJiZbtmAAmjF8XPM6L/A/xl6hLbHEhilr0D3M1MEYoT2IWNzgcsu9CO3w4mHXp1Q38Lyenuu26ijmIj9P7m3UYo0Gn1qc70fmCjcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GzWTwdFC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CqNOazR6"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8T02Z014411
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:52:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=VUJEcgadRGVVdACDvLFJMjAg
-	G3Ukslnrtn2VKYsQ5ic=; b=CqNOazR6EFXiLhiQXTxle3BZjNvSVwwrYcBO7n6J
-	/V3alRKwFaJToxGdzCVZtH1dIhnevENrocahehzNH4Jp4P7y/EmCLjXxOFHAASbA
-	WpFKmYF/XTXDh33wq26LSrU+vO01HjaomSPg9ITbVKqaYE1yNbZ/YV+uK59oYQj1
-	oNdS0MBTV+f3Vh5VWB6eRYv+Fen/t6QkbD8CSpgEFkoK4VXnmEkQi066Q2bICyX8
-	RaFDubkVFwfKwMp/3H+kvavxXbXp34rC+9ycm1VsYEF1yDOpnXYn+9tYh/DwHWTl
-	tQvTsDbKLRv8YQG9V8zkVQAY+ZsJkgYswQtFBY74fo+CwA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791crm5c6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:52:14 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d38f565974so942593285a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:52:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GzWTwdFC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750071136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hk9Uc/UNTVqG7C07kBMIdRJ3hUm2mx5PXQsfSHyh+9o=;
+	b=GzWTwdFCP66PSgyR96JDb0P9PcfmwzB7nAhSuAtk8sR//hYlk+sGKMQMMRCK+OLnHebzQb
+	jueh0/Zo2yyBO1hhpk98s+XqXtYw0EtChI7IQ+HrlnVBSIkmKVkefIw6dKqivtz3gH2HBt
+	RJUfyJKbvVSayaKFGIT7DPbeGVtkCVA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-323-S8vyleKnPGe5MGo6b1yVow-1; Mon, 16 Jun 2025 06:52:15 -0400
+X-MC-Unique: S8vyleKnPGe5MGo6b1yVow-1
+X-Mimecast-MFC-AGG-ID: S8vyleKnPGe5MGo6b1yVow_1750071134
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad89c32a8a6so414716866b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:52:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750071134; x=1750675934;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VUJEcgadRGVVdACDvLFJMjAgG3Ukslnrtn2VKYsQ5ic=;
-        b=FA7h9NndlFAzYfC/UJjx96kypc6L2m1+4UA8s3J4a476BPsg7JR75j8Gu2IGgdeJKZ
-         aQaAQClgFSsGnhBklyxmWrlcTKn1fm9156DJJCDc4WTLC46ww/VFu2NhWYlune16PRxv
-         zxEfK6LYbsDOUaPQhX8FQFZqQYeBUiMj7Q9M1L2XREomVPZmjNVn3A/eDYiwEAN54Det
-         dTw8SghvAbNp82mxWlz75G34WoXdfEg1uiIyZ1lCbuBpp+Jm0P3m6zzxXWSI+WPw4yX7
-         LUhdlAYEsM4uKQKw9b7oZtg03DRmcVwX9miLSQhzXDAYH5Y3T3oraRD6UHF1+88ImJwO
-         tqjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXA1aHu4SB2pShcguEBnyH/JDOfYsqri0PhNdvSox0G3VWWI3QrmGAI0EuJowX/JrcEqjdsyv1sE6ydj8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH+VXp2hDpGnHbjqCQRuCwUz5hUb9sWC1Q2V1rtjW1a34m7vXE
-	135LnignY45rIK3+9z5ukO8CEo3rKb129V0Fvmx2LiKHmKIFcLUUpFp9cyjvtunj+ZetRoQs2jK
-	glXlNnk2NX3ggaxbZ+BomZJf1qGJk6ah5xK/CDap/iqztZvhlsHVF9j2UeU6h992zPVhRW0PROq
-	12hg==
-X-Gm-Gg: ASbGncvp89tZinzSucrVQu0gu30Ww9mK5yol7K56i6MW6yQw85SraVBuGPfNihAlyCq
-	PCQnmxCCGaG/6yYDijPv78w4wT0w3951yDwtrFUZLNn4TUkrV4jQIFxKxyC3j3L+/Sme7OCLnll
-	OKa5tuoDnq2KdX3DI6Gh20edBoJBABvV4nH+OBopDgQDodPAJCyLUBAAe5o4W9XnqcbcAAFwcLB
-	k67Pwx6wQvcY6DZH6KZu1ekqxWsVZYwq5RJMUA9wIdMbJnCa5rBKZPzieIgO/LyXJXI/wGXK0sg
-	4Y1ehoqnAJEf5yvU/+kt9Sbmqw93jlGJOjcvz8Fa2T7D8Xli1maIX7zS2rAPt2gq9ANfFOaqTc0
-	CKgUrrV4f+5rdCb7T8wTrpOHpod6KPWX5aWk=
-X-Received: by 2002:a05:620a:319c:b0:7d3:89c7:684d with SMTP id af79cd13be357-7d3c68548b7mr1118616685a.20.1750071133740;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hk9Uc/UNTVqG7C07kBMIdRJ3hUm2mx5PXQsfSHyh+9o=;
+        b=QjHCoxssFGXaxO5FfEySA+lux1Sb3K/2PYyzTyhqbvqnfi77avKjzyBX3CNWpOwPUU
+         jvmfpbIyIjigV6NMLLXMBXikVdKHhahIFp2RmxnC426/GsDunz+hq9NlQW7BbThZ34B5
+         RH/W6X4jYsLGwv1u9+lb/a+mSyNoRWk15Coc0TzRFtbOYXYuaAGpiFix0apg4CFUg41Z
+         VBFASzsu/ebEvDn2Y9jEX0OrPrTu+DFkjNChG+XvbnKDmyaT10cVQnvZOgxH7HjhtMNf
+         ccEaQUbklz1mspOJ9tNkX3IVCFmUGRvHn0VQQWkvChVRNnJqYvhdxDdf4UhJgZi+D/rG
+         A8gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFVXx6n37RJtUUi7uiHMnU1Cn3fTZtKrCdA90oT+okXnAcU7FOSyruslrADX15F8D6QppXIz7mmT6DvNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJhj2rh+YIdV/0yn9GTJzXYiiEKFEybXwnEwwWjQCnm3oVutAA
+	YX3M9CgxfhrcjSDd26N7sp0Ew3qpfxMhf/xS5a8isKP/InX/BjN/wQZBDANxPvdonwKqxCA106A
+	++Tk+rEgqBBsUO2+mP1yeDnBJ8WzpI0izzGxrKJYYvsUWGrkgVJElmfVj4lClE3mbAA==
+X-Gm-Gg: ASbGncvBNdAZD/uEE4vbjqTUbYQduce6i7wfkh+Gzds4hKSK1xQ8FGIlBqDzUW9civG
+	NfmbgoyGbchCYeIXwo3QM9OVujyR/yywwbjn9dN5dPG3P90dKlGrQG59zhqWJlYzKDkUdCttWd2
+	TUycALRzFI575kbueQaFq4TKi/mOoIY5wrLIhDcCFuyqu8zDft43rCk5ud7uOMdQV3BTEMUhNoL
+	cEty1zbmD1ZUkP+XThN5H9sYYJFDxfUcGQ9enb4oQ0M+NXoNQBBn7Ek9pRhUd+lcupWLurlYjMY
+	YXzLDAI535lPgVPBQtlJEXAs9g==
+X-Received: by 2002:a17:906:7954:b0:ad5:3743:3fa1 with SMTP id a640c23a62f3a-adfad59fe96mr807304066b.50.1750071134040;
+        Mon, 16 Jun 2025 03:52:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDfE8XtZp/JlVmaxbngNN01gtbKw114f41ls9b8Zl+6xI4HTLykb1zxM1beH9uYfGTjokCZg==
+X-Received: by 2002:a17:906:7954:b0:ad5:3743:3fa1 with SMTP id a640c23a62f3a-adfad59fe96mr807301666b.50.1750071133531;
         Mon, 16 Jun 2025 03:52:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEepDi1ZYDSTtYKF0mLtAVvx1xpIfGtgjgZd2J70oP7izfYqJxqwXkDfhP4ZfXaSTlD+UbJKw==
-X-Received: by 2002:a05:620a:319c:b0:7d3:89c7:684d with SMTP id af79cd13be357-7d3c68548b7mr1118613585a.20.1750071133304;
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec899c757sm634292566b.183.2025.06.16.03.52.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Mon, 16 Jun 2025 03:52:13 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1ab3e7sm1517482e87.111.2025.06.16.03.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 03:52:12 -0700 (PDT)
-Date: Mon, 16 Jun 2025 13:52:10 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Melody Olvera <melody.olvera@oss.qualcomm.com>,
-        Wesley Cheng <quic_wcheng@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom: qmp-combo: Add missing PLL (VCO)
- configuration on SM8750
-Message-ID: <azx5zo4rbhw434vyyunpjswtjfyr5notjd7glm2hvg3yertvzq@wcbrrmhstvlc>
-References: <20250616062541.7167-2-krzysztof.kozlowski@linaro.org>
+Message-ID: <98a85abb-5e77-4e66-a192-8db9245e7ef7@redhat.com>
+Date: Mon, 16 Jun 2025 12:52:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616062541.7167-2-krzysztof.kozlowski@linaro.org>
-X-Proofpoint-ORIG-GUID: pYsspvtYX0d5iV7t1Wa0XfbpoZzMSyMQ
-X-Authority-Analysis: v=2.4 cv=BoedwZX5 c=1 sm=1 tr=0 ts=684ff75e cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=v-rge3Vw8ZcHLs8CdegA:9
- a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: pYsspvtYX0d5iV7t1Wa0XfbpoZzMSyMQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2NyBTYWx0ZWRfXzcG/uhLxeeBz
- cG7xYwxEQFWWriQzj2MwGPgKYVXWWkWR48nKi6HLSWcQTF3B1Dr9OuSLO/mgDfGZw3PXVcDygPa
- UM3jgfNLVGLV72YUyfmTLuInrWjDbEyedpTPhMvLlgQ18Wmgjrj/znQmaaQi/f2xkOlIcIDmygS
- ddshLgmGbgrkvY9ZGIK375Lf/5ZozVhLyQcjNPOQbctXNCzfLSG5XUE4sncnBnDPZZPKOg5gg2j
- 6gGDNQEffazK7dWTInKRqF41nShrXqLRjrVZR97v9RKnzuCIhn7ZDe3jVFGx5R/OMSw4wXalq2r
- af7kljSoMk5m74SpKxQjRXitAp57h/I+5HLbU+fFjMQ+aYdgF1YmCRj//mSN+YhGhX7o696Lipj
- DehambKEz5Ie1umNpvj4euBd1Rr34XcNwa11nRwn3aPYtLd69biqdiE7nefdUP01M1pFe9vY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160067
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: rtl8723bs: remove some 5 GHz code
+To: Michael Straube <straube.linux@gmail.com>, gregkh@linuxfoundation.org
+Cc: Larry.Finger@lwfinger.net, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250615123859.41922-1-straube.linux@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250615123859.41922-1-straube.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 08:25:42AM +0200, Krzysztof Kozlowski wrote:
-> Add missing DP PHY status and VCO clock configuration registers to fix
-> configuring the VCO rate on SM8750.  Without proper VCO rate setting, it
-> works on after-reset half of rate which is not enough for DP over USB to
-> work as seen on logs:
+Hi,
+
+On 15-Jun-25 14:38, Michael Straube wrote:
+> Chips that use this driver are 2.4 GHz only. Remove some code that is
+> executed only for 5 GHz (channel > 14) . This addresses the following
+> TODO item:
 > 
->   [drm:msm_dp_ctrl_link_train_1_2] *ERROR* max v_level reached
->   [drm:msm_dp_ctrl_link_train_1_2] *ERROR* link training #1 on phy 0 failed. ret=-11
+> - find and remove any code for other chips that is left over
 > 
-> Fixes: c4364048baf4 ("phy: qcom: qmp-combo: Add new PHY sequences for SM8750")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Michael Straube <straube.linux@gmail.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+
+
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Compile tested only, due to lack of hardware.
 > 
+>  drivers/staging/rtl8723bs/core/rtw_ap.c        |  9 ++-------
+>  drivers/staging/rtl8723bs/core/rtw_mlme.c      | 18 ++++--------------
+>  drivers/staging/rtl8723bs/core/rtw_wlan_util.c |  9 ++-------
+>  3 files changed, 8 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> index 383a6f7c06f4..b2e7e7267aa4 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> @@ -741,13 +741,8 @@ void start_bss_network(struct adapter *padapter)
+>  	if (p && ie_len) {
+>  		pht_info = (struct HT_info_element *)(p + 2);
+>  
+> -		if (cur_channel > 14) {
+> -			if ((pregpriv->bw_mode & 0xf0) > 0)
+> -				cbw40_enable = 1;
+> -		} else {
+> -			if ((pregpriv->bw_mode & 0x0f) > 0)
+> -				cbw40_enable = 1;
+> -		}
+> +		if ((pregpriv->bw_mode & 0x0f) > 0)
+> +			cbw40_enable = 1;
+>  
+>  		if ((cbw40_enable) &&	 (pht_info->infos[0] & BIT(2))) {
+>  			/* switch to the 40M Hz mode */
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> index 1d23ea7d6f59..0b0ee023a239 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> @@ -2252,13 +2252,8 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
+>  	}
+>  
+>  	/* to disable 40M Hz support while gd_bw_40MHz_en = 0 */
+> -	if (channel > 14) {
+> -		if ((pregistrypriv->bw_mode & 0xf0) > 0)
+> -			cbw40_enable = 1;
+> -	} else {
+> -		if ((pregistrypriv->bw_mode & 0x0f) > 0)
+> -			cbw40_enable = 1;
+> -	}
+> +	if ((pregistrypriv->bw_mode & 0x0f) > 0)
+> +		cbw40_enable = 1;
+>  
+>  	if ((cbw40_enable == 1) && (operation_bw == CHANNEL_WIDTH_40)) {
+>  		ht_capie.cap_info |= cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH);
+> @@ -2366,13 +2361,8 @@ void rtw_update_ht_cap(struct adapter *padapter, u8 *pie, uint ie_len, u8 channe
+>  		/* todo: */
+>  	}
+>  
+> -	if (channel > 14) {
+> -		if ((pregistrypriv->bw_mode & 0xf0) > 0)
+> -			cbw40_enable = 1;
+> -	} else {
+> -		if ((pregistrypriv->bw_mode & 0x0f) > 0)
+> -			cbw40_enable = 1;
+> -	}
+> +	if ((pregistrypriv->bw_mode & 0x0f) > 0)
+> +		cbw40_enable = 1;
+>  
+>  	/* update cur_bwmode & cur_ch_offset */
+>  	if ((cbw40_enable) &&
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+> index 73c70b016f00..0c6072d08661 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+> @@ -854,13 +854,8 @@ static void bwmode_update_check(struct adapter *padapter, struct ndis_80211_var_
+>  
+>  	pHT_info = (struct HT_info_element *)pIE->data;
+>  
+> -	if (pmlmeext->cur_channel > 14) {
+> -		if ((pregistrypriv->bw_mode & 0xf0) > 0)
+> -			cbw40_enable = 1;
+> -	} else {
+> -		if ((pregistrypriv->bw_mode & 0x0f) > 0)
+> -			cbw40_enable = 1;
+> -	}
+> +	if ((pregistrypriv->bw_mode & 0x0f) > 0)
+> +		cbw40_enable = 1;
+>  
+>  	if ((pHT_info->infos[0] & BIT(2)) && cbw40_enable) {
+>  		new_bwmode = CHANNEL_WIDTH_40;
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-
--- 
-With best wishes
-Dmitry
