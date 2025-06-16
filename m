@@ -1,76 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16D9224228;
-	Mon, 16 Jun 2025 08:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DE31EB3E;
+	Mon, 16 Jun 2025 08:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750061499; cv=none; b=UGxE0FQMipn4JgFTU1WuZ7JO83qqp/S/MZeJFIJdvU9HJ/t48NUpsgfS41yHy84VcaL7FnX+N+7GeGP6553KP5duS8UodSddk4BZiN6CDwHKcbFgPaH47eMdTA88BbH5rA7Zc6DdY/2pzDY9UcByrJiEkWFsO+zwH5stcv3FZHo=
+	t=1750061559; cv=none; b=ujOLUT33+6tRIyzW0bYSyreWbazjYGM7oHuHgS4KtaRHH14XFQDjOJNNyXAyZImh7xqDmJ7pvAbAil6PqfNMwV5dHy7pjhD6euMOw06xDLiZQr7KNuis8Q4C3WC3bNUsqRkoeJIvDJM211L1vIhBw3lwKD+nicYuARYLY9FHlXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750061499; c=relaxed/simple;
-	bh=te8dm/diw0y2VhNPSG+i9Er+pf2FUpm9NdYwsE1lfRE=;
+	s=arc-20240116; t=1750061559; c=relaxed/simple;
+	bh=WNQjjeV2gpE3amaa7wziU/9tXorxQQ+MAUeb2tTJ1Qo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TymF79+mqv3ON8uf2WTorzoV1pwbz0q9l03HAjjPzrBZTCFe8gl8D4oEY1Pgx/mh0aN7/N2TIuzym9HgwDNF+H2jLnuUbbFKJ6fFfYyYLV6tjb95/VU58fLLXAWo9UEFjzhfN1EZoNKlluEwrvauOiHP9RMm9nijTMORn2gshg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liDb1+Cz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NaNXEwiIj66pvngv4+gvl2NYghCdd1nhiaITjQKlWlK9jpDR5bZp7/N+m+we+PJO6JtNmI1jVVI3Zv3QbseM2X2tGlMxSazga6hNYyTz9sPQkBAGPqEH5+gtwREDl6b78IdIyQvK2aqnM1ugQNFYEOF/rTcaPFwhbKbpV/aNBLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gra7XrJG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liDb1+Cz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB925C4CEEA;
-	Mon, 16 Jun 2025 08:11:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gra7XrJG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F231C4CEEA;
+	Mon, 16 Jun 2025 08:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750061497;
-	bh=te8dm/diw0y2VhNPSG+i9Er+pf2FUpm9NdYwsE1lfRE=;
+	s=k20201202; t=1750061559;
+	bh=WNQjjeV2gpE3amaa7wziU/9tXorxQQ+MAUeb2tTJ1Qo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=liDb1+CzxOC7TFLqFNvaVYpgqck1ifdIRFmFXxb1SZYO8Fmh5Bi7HoDmI05PuUN8I
-	 c5oLA1FZVcnfhm1M9M0SAzY/hN1ct3Vug7B7ZQzWMpi2M6chbabHzaRBw21mHU5PmK
-	 indb/gSUeExljMnpz8hX1qHV+nM5MHhsFTYFAWHL8JAbbm9v6ZgyqkNaB46pC0xIab
-	 0jkZ2yOyDWzsOfmmiluwW/W6Du78ecFaJbzkV+925pN5rb+vQuJzrHppdVOGiJ8l2r
-	 WNdsANwogjGPLUc9Y0SbCvWW4qx96GvZUIqltYeEo4l/MH5A0CnyRyK3jNgQsXD0Jv
-	 BkTvvkoFc/P8Q==
-Date: Mon, 16 Jun 2025 10:11:32 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] xfs: actually use the xfs_growfs_check_rtgeom tracepoint
-Message-ID: <f4ffv2wantwfworrki5qc6uvihdozwka4khsvahnwxthcul4ww@dzygdh3a334h>
-References: <z8SkjCilUqL9QYTBGvwhNH_vmCnFBUNOAxN2XMHSNODzcSh0cS3ZP_mqpytvGOmXGr1KHC3JD6jueHX0V6SSZw==@protonmail.internalid>
- <20250612175111.GP6156@frogsfrogsfrogs>
+	b=gra7XrJGV4ZiC9vwS2uNjs0AZSx2u8/PhN1+EJGI0ROURDSEW8XMDu7r3vG+1d0JZ
+	 UvefqBXj04DnNpChqeHfukMy8bj9FcFik6jeT552r0ILMIOQzXN+8wrhAe+aL8rJbg
+	 94wKlcnjz5imUN5HQrZxU/JxiSc6KaZk1M1lC0HgpvZOSjezQ0MYhkVc7x3IM696Sf
+	 k38l+6hMaHDTR4HmcfXfUlvvTLy5Kx8KzzDuqdX/lWW2APKBVl7HC92Ko7TIImRsgh
+	 pgo9E+Rr4L4Khf+d7Zk5nI7O3Jt+wbXZjtxM6dZ5j4+Fku/iMxhnNwGz9rqf5fxEeP
+	 uJY1v9tkI6CKQ==
+Date: Mon, 16 Jun 2025 10:12:35 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, 
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kauschluss@disroot.org, 
+	ivo.ivanov.ivanov1@gmail.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, 
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com, 
+	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com, 
+	selvarasu.g@samsung.com
+Subject: Re: [PATCH v3 2/9] phy: exyons5-usbdrd: support HS phy for
+ ExynosAutov920
+Message-ID: <20250616-boisterous-mouse-of-current-adfd67@kuoka>
+References: <20250613055613.866909-1-pritam.sutar@samsung.com>
+ <CGME20250613055043epcas5p2437abc65042529a2012a6ca80559ac80@epcas5p2.samsung.com>
+ <20250613055613.866909-3-pritam.sutar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250612175111.GP6156@frogsfrogsfrogs>
+In-Reply-To: <20250613055613.866909-3-pritam.sutar@samsung.com>
 
-On Thu, Jun 12, 2025 at 10:51:12AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Fri, Jun 13, 2025 at 11:26:06AM GMT, Pritam Manohar Sutar wrote:
+> This SoC has a single USB 3.1 DRD combo phy that supports both
+> UTMI+ (HS) and PIPE3 (SS) and three USB2.0 DRD HS phy controllers
+> those only support the UTMI+ (HS) interface.
 > 
-> We created a new tracepoint but forgot to put it in.  Fix that.
+> Support only UTMI+ port for this SoC which is very similar to what
+> the existing Exynos850 supports.
 > 
-
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-
-> Cc: rostedt@goodmis.org
-> Cc: <stable@vger.kernel.org> # v6.14
-> Fixes: 59a57acbce282d ("xfs: check that the rtrmapbt maxlevels doesn't increase when growing fs")
-> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+> The combo phy support is out of scope of this commit.
+> 
+> Add required change in phy driver to support HS phy for this SoC.
+> 
+> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
 > ---
->  fs/xfs/xfs_rtalloc.c |    2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/phy/samsung/phy-exynos5-usbdrd.c | 25 ++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-> index 6484c596eceaf2..736eb0924573d3 100644
-> --- a/fs/xfs/xfs_rtalloc.c
-> +++ b/fs/xfs/xfs_rtalloc.c
-> @@ -1259,6 +1259,8 @@ xfs_growfs_check_rtgeom(
-> 
->  	kfree(nmp);
-> 
-> +	trace_xfs_growfs_check_rtgeom(mp, min_logfsbs);
+> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> index 917a76d584f0..15965b4c6f78 100644
+> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> @@ -2025,6 +2025,28 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
+>  	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
+>  };
+>  
+> +static const struct phy_ops exynosautov920_usbdrd_phy_ops = {
+> +	.init		= exynos850_usbdrd_phy_init,
+> +	.exit		= exynos850_usbdrd_phy_exit,
+> +	.owner		= THIS_MODULE,
+> +};
 > +
->  	if (min_logfsbs > mp->m_sb.sb_logblocks)
->  		return -EINVAL;
-> 
+> +static const struct exynos5_usbdrd_phy_config phy_cfg_exynosautov920[] = {
+> +	{
+> +		.id		= EXYNOS5_DRDPHY_UTMI,
+> +		.phy_init	= exynos850_usbdrd_utmi_init,
+> +	},
+> +};
+> +
+> +static const struct exynos5_usbdrd_phy_drvdata exynosautov920_usbdrd_phy = {
+> +	.phy_cfg		= phy_cfg_exynosautov920,
+> +	.phy_ops		= &exynosautov920_usbdrd_phy_ops,
+> +	.clk_names		= exynos5_clk_names,
+> +	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
+> +	.core_clk_names		= exynos5_core_clk_names,
+> +	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
+
+Where are the supplies? Where is power on/off seqequence in the phy
+ops?
+
+No pmu control (missing offset)?
+
+You have entire commit msg to explain unusual things.
+
+Best regards,
+Krzysztof
+
