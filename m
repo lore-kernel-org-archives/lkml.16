@@ -1,290 +1,201 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD03289823
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998DF289838
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750100004; cv=none; b=Bi5CXyjdTrjfbPwPFBQENkNY/WdR/Bh7l45t6YUpC9yVwK5/cgEsk/PjCsas9HtAmAJ5vZiGORLJ0QHCHSutcsin5zqnGGuZZkwaAvAhOUnysvfqBihKLj7isyYV+uef3UNYX43MwsnrPdZfockHRknlO08a3cg1xtjNtQnbGrU=
+	t=1750100032; cv=none; b=uVleTvjYK9M1UomII0DjvEMlmRpc0XPlNFy50jI8QXFQmlhMNwK6UiyuxG/jiTFH5ewR3con0vwovEzVptLtPOpJwpxmSAXqfRngJa8yajYwFuw9NmCo3dk2KWrG17uWCGPEIQ0HqbSYNjqso7rI2ZsagT7O31RQ5ZYj5Bp039E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750100004; c=relaxed/simple;
-	bh=wPUzTydNxr8Bne1mftnFfwNbN2QFUqUlnk1+McjJqZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOPXvBgaQFgvAwZBoqtpF0rSvLyQmchVx8zPQ+O18Oaxk0OC0sJku4A8RhCDScIBnADVRIFD/csaavPEdDkm/boJQxJiY1chGUfSYE/VxKFqorqYwXSC8mGmkskejxfz2mTwRvVuWcksm2TPAbN5F//QfAhc4zlokLNEe8mM8zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QtyKoM+4; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750100032; c=relaxed/simple;
+	bh=zUxltSsWVNVt8bYevgiEv/NHVTrfuATi/zj9pH/LRUY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NRCZ1b5vHI4NI93ZOy/ys7O4XDCD/Pi3ZbyP3M8iRYVR0EelKWtAMzX9dozLZyq3DTBFCi7B4HDD+TSp2nwntWUe+QRtKVbuZhGIMHRMLqOq4WoFquQXY3X6Stdhzih4VBMW4+4TyOeP3onmgDF+7dS5sLEIFxA3rSqev5BXFQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--salomondush.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MHiwZUAi; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--salomondush.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QtyKoM+4"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so46630895e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:53:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MHiwZUAi"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so4806586a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750100000; x=1750704800; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PSAHs0D4DZvGhRjRk5eyEpbY9QCRDT/qtuz8dJZf7TA=;
-        b=QtyKoM+4RSR73zqxL6whQ3NIHi1t6v0ytaruQzzcMK+WhZautDAR+FEZ+ABEacl1mS
-         TVHBjyxKSNvgkISpWyvWL8leKOwEbgnhGz24p+f3GayJr0yxQXVwG6aJb+tzk24ZOxbe
-         j0eNcK+o1EJ/b26p6tHlGRxUDvDQ54he0Dxn8D+GovyHLb6qSRS6HdBLL5TeRRhqndAt
-         /o5Ieh8NofcR9rfNdxHzIibwrTi0N26nMzEx3byo+rsMMf90dsqAQDYdipnf6b6QfyHV
-         dbNZGB66WpwtUWc0uRNzSIp6gQ9TDxDHaZ33hFZXSoD8zMPmVC3ukNkD5FILRquA0sKp
-         /RQQ==
+        d=google.com; s=20230601; t=1750100030; x=1750704830; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OLAr2ewOlT6jsnw3XYqY4XngPcCJbvRfNpPnxqDqFR8=;
+        b=MHiwZUAirjFiY8zWd6t+4hQ4DOIYJUHk9U7OuzdK7Uu5ohbZZXfI2wBz/6H0YePXiG
+         UFiFq9RbxgCqKP3+qniuLKAT5mRuVoWxZEXoCh5kWbxFbSwRwkH+lOk7k0v9YeUxr05F
+         N07wK53lLtyyeNAWGdz7Er6ZBKE2nC5SoIPxGBSiIr564/LRWOeLJUbHX7nZx/aSfJTx
+         MomLyu73R8iGlvq6l3vfs/z9dr+RwNkCvV86CIwSGMx4DBYEdLbWWJQlpMtGM8dL8iJ0
+         HkE8dez5Y+C6J6GEl8Voscij3sqbwVDkj1plBc0pHiCnCCkSQ4i9dQytC9rW/eddPd42
+         Icyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750100000; x=1750704800;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PSAHs0D4DZvGhRjRk5eyEpbY9QCRDT/qtuz8dJZf7TA=;
-        b=TNo6JkpTvRbwJLZAR/Vg59u/pYsMCKc7B6w9fxydXmaXYqZOY7jUFqj7G3XTGM8d9Z
-         kMEJZJBe1NmBwlUo/b3+s3/XLN/1WvSKAdsA+ekBJghBuK+z+GiOX4iu3VjUpNgQfrWY
-         AR6touwXk9sQFeX4+TjwJiOXEoObQP61wDv7dRnMwsrtnQnEEMNtXxZ9p3/eDhRaUb2C
-         WKGbRBx91c89Jptu8slDvSjXpKlRg/2WlrTb8AQGTR0zsOFXPhRw4+716YKDmiIUQ2/p
-         61n2To2ohysEGC2F6PxNpkP2hty//pG84LofwFQCYGCs3m1xTNFmxf5Eg3uze/SthG2D
-         uVSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2+rW1kA2P7USR+28Zu9y+7CT4QnWggkwYtRdC5J3+j1Vc7XAd0c9qX8WQR0xORo2/8uGIqBIhyFq+IBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypNDLlxw3pBsF+yBbPhGxBZnNRApQN9Wg35vN7Pmpj9ZGnqhym
-	3UQtQvgK9IC0lN+ZMNKapPaq3GLUt1DRCklPJ7XKXMTpKWgA1p18nfaefpWuLDTNOks=
-X-Gm-Gg: ASbGncsqEdMlK8NjuIb6ewsu77ev/uk7PqEtmsGHJBlA8JM6Dsisz/DqQ7VzYymcN4w
-	xqMATtnjogVioJ0AUZaPqopyOqnzbN/fAEoi3o1dRODdJzwJ0uyuhGgOspbqnB94NC0A54EEaI2
-	Vafo0A2qMcJ3s/2dItArINCBKtJlOqxKtALAoyWfatksKpnAql/J1BrJ9DN5rhUfOHSkeSU5V7w
-	++9XzzC0D38UQyxkEa3YwyRvGyw72tZabZp4ssLFS7qFcK2CLyyxjXv1rJpgoFFWAOF3Ssi+0lr
-	/tfj+VHKvYVP9u3UPLD/+y0wmuhwNgaeoQ0BQCZC2rPK4bSetbh3QJixSkghDt5Uyd/ZR/6YwI0
-	CKty82Fd5kdl8mAqynOsupLX+d4U=
-X-Google-Smtp-Source: AGHT+IFn0SbC3L/Gh4Y2s0CsidlVrBqISko0TH0zpbHX6Ka08lsavjOIKbCtPTUiRNsMm0TcYXt/4A==
-X-Received: by 2002:a05:600c:674a:b0:453:dda:a52e with SMTP id 5b1f17b1804b1-4533cad28b6mr89612035e9.33.1750099999511;
-        Mon, 16 Jun 2025 11:53:19 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e254396sm156200275e9.28.2025.06.16.11.53.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 11:53:19 -0700 (PDT)
-Message-ID: <2eea0b19-1a82-428a-8c04-74ee465e7516@linaro.org>
-Date: Mon, 16 Jun 2025 19:53:17 +0100
+        d=1e100.net; s=20230601; t=1750100030; x=1750704830;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OLAr2ewOlT6jsnw3XYqY4XngPcCJbvRfNpPnxqDqFR8=;
+        b=YWRtET1y030XmSxWg5nZ3iRjNk03HOcvUSNA8P5nVDMA1JNXxi0S9RJHkAmqEjFrAL
+         9S8KXgoCVDorxBrdMrxO0GO5/ep2fB0U2uSfVrepZMZ13eDSCE0hgSeVw5ktlBAsAubu
+         UT99LG22pNnBaknK9rdCuV9dUUYwO8GpahZ37tmUaVCQkCnVRKxg6mfev/a0GnMk51Zz
+         8V/nAVzQu6tgX7oh0lK6JwywAUfylQPUAEAhp1hBNqKVOV8mACpIRDBD9VuLC7p5k7wB
+         esz6sEQa9ghFCRDGEpsJgSU2bHYenwZ6ig/nGN/exoTFEob0wq3Wd/9/XqxhDzjaX3hV
+         wgGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBfCUmrWBjHtrs73ZshMADpCGvfNPKkJOMRRBlEBWJC6Fn/gBFn0OonL5Y+Pzd3TodnbpOthXdmREeM1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6a/p3oXSXmYlJjua5JQrm/g/9Xypmvi0e2WI62oyHRTTggtrw
+	Rk00rAJfBPJoT0CTzpWTNpUqrFs0HmKQ4TiqUP5HgxvdEq8TczOtDf/9+5Asry/VnQUGoMYW0aB
+	OYSWsQYHJg/R5PR4VoqzRefs+0w==
+X-Google-Smtp-Source: AGHT+IET7z9u2/hgTm5vndqG54MifGSmury/J3t5MlQaWyCOVjZGzk0mnDTcEwEQvUvJ3VNrnbLs36h+M+HrUqO/rQ==
+X-Received: from pfbha10.prod.google.com ([2002:a05:6a00:850a:b0:746:1cdd:faa3])
+ (user=salomondush job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:4612:b0:1ee:e33d:f477 with SMTP id adf61e73a8af0-21fbd4cd6f3mr16856910637.15.1750100029982;
+ Mon, 16 Jun 2025 11:53:49 -0700 (PDT)
+Date: Mon, 16 Jun 2025 18:53:45 +0000
+In-Reply-To: <20250612212504.512786-1-salomondush@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] soc: qcom: geni-se: Enable QUPs on SA8255p
- Qualcomm platforms
-To: Praveen Talari <quic_ptalari@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com,
- quic_vtanuku@quicinc.com, quic_arandive@quicinc.com,
- quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
-References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
- <SlCtr38wFck_Zdxg3nfChaMwe2uSvlQdfRCutdXc-Z2BTqoUOPd9Z9QY0cdREgcdxl40k41wXpszBkVTBB2T7A==@protonmail.internalid>
- <20250606172114.6618-4-quic_ptalari@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250606172114.6618-4-quic_ptalari@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250612212504.512786-1-salomondush@google.com>
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250616185345.2133349-1-salomondush@google.com>
+Subject: [PATCH v2] scsi: pm80xx: add controller scsi host fatal error uevents
+From: Salomon Dushimirimana <salomondush@google.com>
+To: Jack Wang <jinpu.wang@cloud.ionos.com>, 
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Salomon Dushimirimana <salomondush@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 06/06/2025 18:21, Praveen Talari wrote:
-> On the sa8255p platform, resources such as clocks,interconnects
-> and TLMM (GPIO) configurations are managed by firmware.
-> 
-> Introduce a platform data function callback to distinguish whether
-> resource control is performed by firmware or directly by the driver
-> in linux.
-> 
-> The refactor ensures clear differentiation of resource
-> management mechanisms, improving maintainability and flexibility
-> in handling platform-specific configurations.
-> 
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> ---
-> v5 -> v6
-> - replaced dev_err with dev_err_probe
+Adds pm80xx_fatal_error_uevent_emit(), called when the pm80xx driver
+encouters a fatal error. The uevent has the following additional custom
+key/value pair sets:
 
-You've missed two opportunities for dev_err_probe() in this submission.
+- DRIVER: driver name, pm80xx in this case
+- HBA_NUM: the scsi host id of the device
+- EVENT_TYPE: to indicate a fatal error
+- REPORTED_BY: either driver or firmware
 
-> - added a check for desc->num_clks with MAX_CLKS, an error if
->    the specified num_clks in descriptor exceeds defined MAX_CLKS.
-> - removed min_t which is not necessary.
-> - renamed callback function names to resources_init.
-> - resolved kernel bot warning error by documenting function
->    pointer in geni_se_desc structure.
-> 
-> v3 -> v4
-> - declared an empty struct for sa8255p and added check as num clks.
-> - Added version log after ---
-> 
-> v1 -> v2
-> - changed datatype of i from int to unsigned int as per comment.
-> ---
->   drivers/soc/qcom/qcom-geni-se.c | 77 +++++++++++++++++++++------------
->   1 file changed, 49 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> index 4cb959106efa..5c727b9a17e9 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -101,10 +101,13 @@ struct geni_wrapper {
->    * struct geni_se_desc - Data structure to represent the QUP Wrapper resources
->    * @clks:		Name of the primary & optional secondary AHB clocks
->    * @num_clks:		Count of clock names
-> + * @resources_init:	Function pointer for initializing QUP Wrapper resources
->    */
->   struct geni_se_desc {
->   	unsigned int num_clks;
->   	const char * const *clks;
-> +	int (*resources_init)(struct geni_wrapper *wrapper,
-> +			      const struct geni_se_desc *desc);
->   };
-> 
->   static const char * const icc_path_names[] = {"qup-core", "qup-config",
-> @@ -891,10 +894,47 @@ int geni_icc_disable(struct geni_se *se)
->   }
->   EXPORT_SYMBOL_GPL(geni_icc_disable);
-> 
-> +static int geni_se_resource_init(struct geni_wrapper *wrapper,
-> +				 const struct geni_se_desc *desc)
-> +{
-> +	struct device *dev = wrapper->dev;
-> +	int ret;
-> +	unsigned int i;
-> +
-> +	if (desc->num_clks > MAX_CLKS)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "Too many clocks specified in descriptor:%u (max allowed: %u)\n",
-> +				     desc->num_clks, MAX_CLKS);
+The uevent is anchored to the kernel object that represents the scsi
+controller, which includes other useful core variables, such as, ACTION,
+DEVPATH, SUBSYSTEM, and more.
 
-I think this is an extraneous add, we should trust the array indexes 
-inside our own driver that we control.
+The fatal_error_uevent_emit() function is called when the controller
+fatal error state changes. Since this doesn't happen often for a
+specific scsi host, there is no worries of a uevent storm.
 
-Actually why do we have a MAX_CLKS ? We specify a list of clk names with 
-aggregate-initialisation and ARRAY_SIZE() of the aggregate.
-
-Like so:
-
-static const char * const qup_clks[] = {
-         "m-ahb",
-         "s-ahb",
-};
-
-static const struct geni_se_desc qup_desc = {
-         .clks = qup_clks,
-         .num_clks = ARRAY_SIZE(qup_clks),
-
-> +
-> +	wrapper->num_clks = desc->num_clks;
-> +
-> +	for (i = 0; i < wrapper->num_clks; ++i)
-> +		wrapper->clks[i].id = desc->clks[i];
-> +
-> +	ret = of_count_phandle_with_args(dev->of_node, "clocks", "#clock-cells");
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "invalid clocks property at %pOF\n", dev->of_node);
-> +
-> +	if (ret < wrapper->num_clks) {
-> +		dev_err(dev, "invalid clocks count at %pOF, expected %d entries\n",
-> +			dev->of_node, wrapper->num_clks);
-> +		return -EINVAL;
-> +	}
-
-This code OTOH makes way more sense as we are validating our internal 
-num_clks variable which we have enumerated ourselves against a DT input 
-which we are consuming.
-
-> +
-> +	ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
-> +	if (ret) {
-> +		dev_err(dev, "Err getting clks %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   static int geni_se_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct geni_wrapper *wrapper;
-> +	const struct geni_se_desc *desc;
->   	int ret;
-> 
->   	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
-> @@ -906,36 +946,12 @@ static int geni_se_probe(struct platform_device *pdev)
->   	if (IS_ERR(wrapper->base))
->   		return PTR_ERR(wrapper->base);
-> 
-> -	if (!has_acpi_companion(&pdev->dev)) {
-> -		const struct geni_se_desc *desc;
-> -		int i;
-> -
-> -		desc = device_get_match_data(&pdev->dev);
-> -		if (!desc)
-> -			return -EINVAL;
-> -
-> -		wrapper->num_clks = min_t(unsigned int, desc->num_clks, MAX_CLKS);
-> -
-> -		for (i = 0; i < wrapper->num_clks; ++i)
-> -			wrapper->clks[i].id = desc->clks[i];
-> -
-> -		ret = of_count_phandle_with_args(dev->of_node, "clocks", "#clock-cells");
-> -		if (ret < 0) {
-> -			dev_err(dev, "invalid clocks property at %pOF\n", dev->of_node);
-> -			return ret;
-> -		}
-> +	desc = device_get_match_data(&pdev->dev);
-> 
-> -		if (ret < wrapper->num_clks) {
-> -			dev_err(dev, "invalid clocks count at %pOF, expected %d entries\n",
-> -				dev->of_node, wrapper->num_clks);
-> +	if (!has_acpi_companion(&pdev->dev) && desc->num_clks) {
-> +		ret = desc->resources_init(wrapper, desc);
-> +		if (ret)
->   			return -EINVAL;
-> -		}
-> -
-> -		ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
-> -		if (ret) {
-> -			dev_err(dev, "Err getting clks %d\n", ret);
-> -			return ret;
-> -		}
->   	}
-> 
->   	dev_set_drvdata(dev, wrapper);
-> @@ -951,8 +967,11 @@ static const char * const qup_clks[] = {
->   static const struct geni_se_desc qup_desc = {
->   	.clks = qup_clks,
->   	.num_clks = ARRAY_SIZE(qup_clks),
-> +	.resources_init = geni_se_resource_init,
->   };
-> 
-> +static const struct geni_se_desc sa8255p_qup_desc;
-> +
->   static const char * const i2c_master_hub_clks[] = {
->   	"s-ahb",
->   };
-> @@ -960,11 +979,13 @@ static const char * const i2c_master_hub_clks[] = {
->   static const struct geni_se_desc i2c_master_hub_desc = {
->   	.clks = i2c_master_hub_clks,
->   	.num_clks = ARRAY_SIZE(i2c_master_hub_clks),
-> +	.resources_init = geni_se_resource_init,
->   };
-> 
->   static const struct of_device_id geni_se_dt_match[] = {
->   	{ .compatible = "qcom,geni-se-qup", .data = &qup_desc },
->   	{ .compatible = "qcom,geni-se-i2c-master-hub", .data = &i2c_master_hub_desc },
-> +	{ .compatible = "qcom,sa8255p-geni-se-qup", .data = &sa8255p_qup_desc },
->   	{}
->   };
->   MODULE_DEVICE_TABLE(of, geni_se_dt_match);
-> --
-> 2.17.1
-> 
-> 
-
+Signed-off-by: Salomon Dushimirimana <salomondush@google.com>
 ---
-bod
+Changelog since v2:
+- Fix kernel test robot build warnings.
+
+ drivers/scsi/pm8001/pm8001_sas.h | 10 +++++++
+ drivers/scsi/pm8001/pm80xx_hwi.c | 48 ++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
+
+diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
+index 315f6a7523f0..334485bb2c12 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.h
++++ b/drivers/scsi/pm8001/pm8001_sas.h
+@@ -170,6 +170,14 @@ struct forensic_data {
+ #define SPCV_MSGU_CFG_TABLE_TRANSFER_DEBUG_INFO  0x80
+ #define MAIN_MERRDCTO_MERRDCES		         0xA0/* DWORD 0x28) */
+ 
++/**
++ * enum fatal_error_reporter: Indicates the originator of the fatal error
++ */
++enum fatal_error_reporter {
++	REPORTER_DRIVER,
++	REPORTER_FIRMWARE,
++};
++
+ struct pm8001_dispatch {
+ 	char *name;
+ 	int (*chip_init)(struct pm8001_hba_info *pm8001_ha);
+@@ -715,6 +723,8 @@ ssize_t pm80xx_get_non_fatal_dump(struct device *cdev,
+ 		struct device_attribute *attr, char *buf);
+ ssize_t pm8001_get_gsm_dump(struct device *cdev, u32, char *buf);
+ int pm80xx_fatal_errors(struct pm8001_hba_info *pm8001_ha);
++void pm80xx_fatal_error_uevent_emit(struct pm8001_hba_info *pm8001_ha,
++	enum fatal_error_reporter error_reporter);
+ void pm8001_free_dev(struct pm8001_device *pm8001_dev);
+ /* ctl shared API */
+ extern const struct attribute_group *pm8001_host_groups[];
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 5b373c53c036..dfa9494fa659 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -1551,6 +1551,52 @@ static int mpi_uninit_check(struct pm8001_hba_info *pm8001_ha)
+ 	return 0;
+ }
+ 
++/**
++ * pm80xx_fatal_error_uevent_emit - emits a single fatal error uevent
++ * @pm8001_ha: our hba card information
++ * @error_type: fatal error type to emit
++ */
++void pm80xx_fatal_error_uevent_emit(struct pm8001_hba_info *pm8001_ha,
++	enum fatal_error_reporter error_reporter)
++{
++	struct kobj_uevent_env *env;
++
++	pm8001_dbg(pm8001_ha, FAIL, "emitting fatal error uevent");
++
++	env = kzalloc(sizeof(struct kobj_uevent_env), GFP_KERNEL);
++	if (!env)
++		return;
++
++	if (add_uevent_var(env, "DRIVER=%s", DRV_NAME))
++		goto exit;
++
++	if (add_uevent_var(env, "HBA_NUM=%u", pm8001_ha->id))
++		goto exit;
++
++	if (add_uevent_var(env, "EVENT_TYPE=FATAL_ERROR"))
++		goto exit;
++
++	switch (error_reporter) {
++	case REPORTER_DRIVER:
++		if (add_uevent_var(env, "REPORTED_BY=DRIVER"))
++			goto exit;
++		break;
++	case REPORTER_FIRMWARE:
++		if (add_uevent_var(env, "REPORTED_BY=FIRMWARE"))
++			goto exit;
++		break;
++	default:
++		if (add_uevent_var(env, "REPORTED_BY=OTHER"))
++			goto exit;
++		break;
++	}
++
++	kobject_uevent_env(&pm8001_ha->shost->shost_dev.kobj, KOBJ_CHANGE, env->envp);
++
++exit:
++	kfree(env);
++}
++
+ /**
+  * pm80xx_fatal_errors - returns non-zero *ONLY* when fatal errors
+  * @pm8001_ha: our hba card information
+@@ -1580,6 +1626,7 @@ pm80xx_fatal_errors(struct pm8001_hba_info *pm8001_ha)
+ 			"Fatal error SCRATCHPAD1 = 0x%x SCRATCHPAD2 = 0x%x SCRATCHPAD3 = 0x%x SCRATCHPAD_RSVD0 = 0x%x SCRATCHPAD_RSVD1 = 0x%x\n",
+ 				scratch_pad1, scratch_pad2, scratch_pad3,
+ 				scratch_pad_rsvd0, scratch_pad_rsvd1);
++		pm80xx_fatal_error_uevent_emit(pm8001_ha, REPORTER_DRIVER);
+ 		ret = 1;
+ 	}
+ 
+@@ -4039,6 +4086,7 @@ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
+ 			pm8001_dbg(pm8001_ha, FAIL,
+ 				   "Firmware Fatal error! Regval:0x%x\n",
+ 				   regval);
++			pm80xx_fatal_error_uevent_emit(pm8001_ha, REPORTER_FIRMWARE);
+ 			pm8001_handle_event(pm8001_ha, NULL, IO_FATAL_ERROR);
+ 			print_scratchpad_registers(pm8001_ha);
+ 			return ret;
+-- 
+2.50.0.rc2.701.gf1e915cc24-goog
+
