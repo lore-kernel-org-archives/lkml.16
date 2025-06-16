@@ -1,66 +1,62 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58CA2820AC
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 17:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B0BBA53
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 17:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750095690; cv=none; b=Aa9Mj4VuxJYAChxhvoeJKiNPan7ieYJejTbM75aeO7KK3IwgRDuhD0SqtHzeEr9GN4BIYSr2Jn4Y5XL7m+RVdhp68HaLw7pZnPy1PMCXtZ3bk1MCBTc/FDj1YsdFw/7wY7oFNY6AZwwGu0zC0m9/DVvnX1gAv6Fh9S8K/fjSY+Q=
+	t=1750095772; cv=none; b=P3qv3L++iZQlktHxd0zHvtL6tkUeiuqMJLa3j17P4TKFUqADhIGvxPLXznswtN7gBtJMhy9zes2T1KizSZegVK7APR2ag0yuEzknKtA9StDinln9BxCWTinRpjkvPRhzvLlv3D+ANKLZIbsDV25gkKSHrdKW4X6GIh+Tk9HkFZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750095690; c=relaxed/simple;
-	bh=/vgjYeNTVTX6rqRmqUDB+RtaLvgr6oHZObz3FWgpgTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BYux39e1UiEpz74ubO9IdvvnuVm9+SlmE6WbhppuQJRqvP5C7K7nYKcRBO6SMmI+GH1SttA9oVxtxIrElDB8hU6jdByhHKopUZz5dNHakkcPau22LYfxBWgNnx0qsQQOb+kPn9yIFcseWiYilpombfMvchWNbBSndOY0iIjijA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2927150C;
-	Mon, 16 Jun 2025 10:41:04 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AC5F3F58B;
-	Mon, 16 Jun 2025 10:41:23 -0700 (PDT)
-Date: Mon, 16 Jun 2025 18:41:20 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Yicong Yang <yangyicong@huawei.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
-	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jinqian Yang <yangjinqian1@huawei.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	Yicong Yang <yangyicong@hisilicon.com>
-Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
-Message-ID: <aFBXQGeYCO2nJYNG@J2N7QTR9R3>
-References: <aEyGg98z-MkcClXY@x1>
- <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
- <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
+	s=arc-20240116; t=1750095772; c=relaxed/simple;
+	bh=vxpaOH/Gox36dSnCROY4WD3ZR+EVmjITyBrlZ7VmBTA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=TlSrProJoAahMMEh/Dse6qataaQ6ZAy7tu68+ZVn5KjC/t4pPm+cMWH7IWZZ6Li/iPlhkkXAo9K0joxTIUN8vkuycJZP6erYduVuuKg451FsSQRN2xqvhyp5mmnmM0iVguXfn73U1aQxOgFJDiwnxBRlbFEsRBMDJoZOsmJ4qyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so49217955ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:42:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750095770; x=1750700570;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vxpaOH/Gox36dSnCROY4WD3ZR+EVmjITyBrlZ7VmBTA=;
+        b=o0n4ZaVVkYnMl4chTDXCPL0NI/SUFuTppEAACun5Vq4+/+EADmzJi6sO7BHrgWOaM3
+         lvipCpWY2+dXUzI5agudlRHn/bVJemWfNqvmZaU43FTlvBdueG2tJdrX1CL48Coz0yMv
+         sAgcwF+Qw3X9vtmEZ4uMAT4BhqbClG2tgPKM3COAR+IXiaPM0XBwHDGuMz2NXR2PAX+h
+         HXjUrt8Q40YMn9bQuLXE9wZ99Kx48SiyTJI5Aq/VP/ns2xy6vL+JcT60NxzwJ46kfgWj
+         FVWWmtbemytBgKJ4yjK1e6XMh2uN8BgGjyDav/lfaFiQRXG4/qRPF3ePnT7d9J62EOaG
+         4L6g==
+X-Gm-Message-State: AOJu0YwOR1/X/f5ifx9w7U0Y65Ktm8ztKHoyV+8/o0PrB0R4vhYgbkLv
+	zfPtKPzLT7sLeaDmsqUhnSQakAAG9grl4kBS6fyjU6bBRn2bNGJo/U2a6dQ/GcmM09djD6snK0b
+	fMshUM8KauErrGrjz43XR1KqfqxkdD5FW8vBTwoBdUOEjgogvRffTbwYhDrA=
+X-Google-Smtp-Source: AGHT+IEA2/jWHjUgXCeJcQuRTcZefeXc+khv9vSfJOPZg23X8Y5jz51aEbjN5DqBvquf5EIzbq8d+pFcYk7NvaFpfT12B4w2+rk7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
+X-Received: by 2002:a92:cdaa:0:b0:3dd:b808:be59 with SMTP id
+ e9e14a558f8ab-3de07cee48cmr128039315ab.21.1750095770148; Mon, 16 Jun 2025
+ 10:42:50 -0700 (PDT)
+Date: Mon, 16 Jun 2025 10:42:50 -0700
+In-Reply-To: <68432451.a00a0220.29ac89.0047.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6850579a.050a0220.2608ac.0005.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 44a5ab7a7958fbf190ae384b8ef252f23b840c1b
+From: syzbot <syzbot+0d8afba53e8fb2633217@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 16, 2025 at 10:29:48AM +0100, James Clark wrote:
-> I was also wondering if we could just diverge on the tools side, but in
-> reality it also has to stay compatible with the definitions of all the MIDRs
-> so might as well keep the whole thing identical.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-I think that'd be the best option overall.
+***
 
-The only thing we really care about updating periodically is the set of
-MIDRs, and we can factor that out to a cputype-defs.h header, and
-possibly generate that too (as with sysreg-defs.h).
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 44a5ab7a7958fbf190ae384b8ef252f23b840c1b
+Author: dmantipov@yandex.ru
 
-Mark.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 44a5ab7a7958fbf190ae384b8ef252f23b840c1b
