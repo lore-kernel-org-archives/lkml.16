@@ -1,104 +1,128 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA55289814
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66422289372;
+	Mon, 16 Jun 2025 18:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750098884; cv=none; b=W5duIztAG0xIEKZtjDNJPuhNQeW8bvPjfIQraZjrHQjgWMHmrWG37mUk6dv9n7NxWP1jtXv7cDpY2EDA7dvFdL/lCwHp1UC5CCWHy8Oovu/3kk4RE3dSr9pi3VdpLMPsOQLsUtLdQT3RCmw7XPolLCxqnw6mW1VmFUOC6mA6uzM=
+	t=1750098899; cv=none; b=EqA8B6AQb71Ri3NDSj9ZfDuWznDA1FWdEcRe6GwgzoFTIino25YPe6k3vFTvKQFV+RmDNvi4s7Kl5nWchPG+AiFfdRU3Ntu9q0WA4vPCcFPS2eRR6wOA0+E4m5s6GcBCa+Eh5br5WwEt6xwRMx8t/SLl2YYkZ532s+f8WeA5TpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750098884; c=relaxed/simple;
-	bh=+NLHBsPwERoPzBQUAwwqAk/157acmkgAwFB47XBdL78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sndYVESx3CcrSHv9/TENT9wNop+3nStojdEPLPaAhFRhvlkS4g2xBiFUAfFd4VgITCnlm6OiDb9mPRIV7cyT2pAC8r7qfYcdnPSwlSdyKNqw3jCWeHM43DZ4MwbSP+93KaDr1djuN9OuoEoapXShVUMnDs+RSbMmNvNZhLqte2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jsl81Urj; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750098899; c=relaxed/simple;
+	bh=k3U8hdUVf2mysDGF9j7sGFSXq/NHg1BAR9W4A1e7FBY=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=R0yHX9vWn8ZHzu5DVLC7auJIs5n6v+tYJqygR5XTJByStvvaDnO7FZ/y7YTCESq1bC8APlTg+SJwiKpxLXNfBdv3HEs6l8oJ3P7UG2YD+vPm2Kj9Cap8yLkSEmgryOr4kUMy+O7g3tsXeyQKHoi5m727iHxLkqKfmaJ0vsOuWO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CkAQbKwL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KEsNygaq; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jsl81Urj"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so1831a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750098881; x=1750703681; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HR1yCl2bxF4JqHppQGHIp2MoQ9YrzZ1LBmArarKp6bU=;
-        b=jsl81UrjB+hA3c6lnfe+ypboFjHCKHLXLDd0dOfHVS6uFnrkdpp1KGqwUXjeo87Roz
-         uQjh//JMJsPjo/ZZCedHlvczCZ2lcy/0+nLTro9v4sb6j7zJCZMzfXEHJQSL57KoJ3ST
-         ARjlTynW1XtgfD7wftHSwGnW8hJ9+IqpbXzTCuC/TG0ARhRXHprb8X4CWSBtGgHtCNwu
-         0QFyLvJ6f3etqrlfpjcFYgSS+LGd1wdLxTqMsvNVDRDliaAIueuSC1IcgZhASFq9zDYr
-         KxH+iiufE95WYEbOftUbmeL1Nxht2UueYfjPIALB68Ku9E5GKzn2kpxBU8dz14visRVz
-         JP0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750098881; x=1750703681;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HR1yCl2bxF4JqHppQGHIp2MoQ9YrzZ1LBmArarKp6bU=;
-        b=VChZjdeLxaK7WDs1Y4MmNaU34oLtOHn7u2/7JAe+Z0r1rg167O7FWBrpnrpPfh5VgG
-         6ooNJd5YQf7slnJNVurfW3QaXbtoQNfdsi6THgYgFXrp3JGwiBs7fOuR4bAIFbzU8KO4
-         HA770YP78RzOZ8uhBYYE6esKDlP3XgNNELTEA3GsL4DufMAeaJQAR8eWa5Gl3vHoexlb
-         HyS3LdIeWjwae2ob/R+E9sNUrGJ8Vf9sG94ddNp+FNKTlHo68OLstLbFkx7Mn0Ggn724
-         RkxnAz76P6xlu9UXPQ3NQ6gJYMmfIPldEPmzX55BdtiClaLGYbYT8/EnRnBBfodDW4Fk
-         k6Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDGp4NjszPl4MkHUalPo09kVmcOyXsVngzMye/0p3tCtebRLsCBZCq/ekCM6lf1NhGheaG4iXWecyaGO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR4b5pa151Mi/8SuaWdwUFnSCUjL0gObcpJx5iVOE40IXi0ez1
-	hfvTDkxtpalXdNy79PYxfWcVmRmSIJY4IQWyDSIn3cJyUegSqxt00zlNlAOXxcCWVVz9CgdvZ/z
-	2UcdEl/k8RJcVxgsB5sOyIafOjEhWTzvNpRc9UXat
-X-Gm-Gg: ASbGnctt6IIlgLzOkQzAiF6YWoVBsqGnr+ne21hNBLox1/LErrEfzHddjxkIdHrRZb3
-	GACj9yN49+UfTMS3twbXPTdh5nbgxQ8xLpkJm0Zt401tBFGOpqCsbS6ecFtx3Psu6/KBydQUHIn
-	1KYVYyGD9NZxOAtmsTYC8TxEacFaRXMEG5BAsK3xkq1bYpez6mfcbRSlIev5zxluQofvhBCg==
-X-Google-Smtp-Source: AGHT+IF+32JRHWdswwzAbDYijh1wc4I07bcj84BxTlQmfqE6qlGSHr9nKq8shBYBBqOFlQkxFnKJVbY2h0KM0F4f8N8=
-X-Received: by 2002:aa7:dd04:0:b0:607:2070:3a4 with SMTP id
- 4fb4d7f45d1cf-608d314d9b7mr154461a12.2.1750098880357; Mon, 16 Jun 2025
- 11:34:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CkAQbKwL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KEsNygaq"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 337F0254012F;
+	Mon, 16 Jun 2025 14:34:56 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 16 Jun 2025 14:34:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750098896;
+	 x=1750185296; bh=qRwibQTbtTFkc/qCHLHPXCkbTuwR1ipXTlm5cdeOUc4=; b=
+	CkAQbKwLRJX2qandCly0sWKOMtf77gN4MgYUuG+OsOzmG9buhoB1zAZUt2ybs+s+
+	WmpvOgS6fN47mDAumZkluDJWBK/0X5X0MWxxxXVGYGEddsSPLnDb4tDzwRPyqEEe
+	1TET4TyLtO+8vp8XiTLBs7hxKkuda37K+lr2eXSvmWrkF5ewuuTW1iQdxwTkdmTk
+	6eXvfnz5QtT1UDMOK+LVbs1kYSHQrteUiv0qfRYwmQD+FUq/jYyvzyxu4CKBn/G7
+	yQkaK3WsuaL9pK8PdvLge8pbRkN1dCtXTgWmBXfDFQp2PJPRo8PNd1aYg+s3DHeI
+	YFB789jS8Qab+ttLYZ/O0w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1750098896; x=1750185296; bh=q
+	RwibQTbtTFkc/qCHLHPXCkbTuwR1ipXTlm5cdeOUc4=; b=KEsNygaqVgj7WbCwZ
+	Lkvakt2piIfCMaBt1ZbJrSwo4TK7oIkyX4Uoa9XJkgfm1OQP+3u1brIo11UMHbL1
+	84tfEe8rsX9Q3gIlO4CAxB2hm2py3yaD8D5YdOUIVdpWbaLmFIopaUFhBbzTs/qe
+	kUTiISvnEf5hjsrwF8mFI49VrSwxA4CnQw01e/+H5PaxqtIQa3SQ3iUwbxKtmZeb
+	ZEnrDwtSNoPspZvBlo3k7hGL85lsrP4TdTtDQ+qF7Xb3o8DBwzPsKR0WobtUQwt2
+	foTLiVMGGX7ZCjuRShvV4eFXAxLJSicbiC+3IxzCRFEqsUSxJqv1SwcRh4l1Rs4u
+	q28pA==
+X-ME-Sender: <xms:zmNQaIO0hvU2mt4H2Xvk5AnX0iB1kD8BTIM0kmdEAL52qNH_X7Zt-A>
+    <xme:zmNQaO-pQtuwcQxZUMYxJEK6v4sPWP1MMPZ4mTg4DyfSTda8L3t54rfvrxWL8zo-n
+    VTn7Y50tNPm6fcmkVo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvjeefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfekledtffefhffghfetteehuefhgfetgefhtdeu
+    feduueeltefghedtjeeifffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudel
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
+    hssegrrhhmrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
+    thdprhgtphhtthhopehhvghrsggvrhhtsehgohhnughorhdrrghprghnrgdrohhrghdrrg
+    hupdhrtghpthhtoheprghnughirdhshhihthhisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvkhhouhhlse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgrug
+    gvrggurdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhmrggthhhonhesmhhitghrohgt
+    hhhiphdrtghomh
+X-ME-Proxy: <xmx:zmNQaPRswyGdepgzEcq8ZxPpnVu2Wrc6-oOZ7im99CjLcZTGH4eBjA>
+    <xmx:zmNQaAsI7EG80DBY_yZ4XKwGWgi6xUtMqBQBeetDFZIs5zE557ilxQ>
+    <xmx:zmNQaAcTIVEBWFXjvaHxr56Nf0Ub6-2ApA-P1suW0_0LL4_J5QTA6w>
+    <xmx:zmNQaE0AiF_i6R0owGd_wFWswJPr2jjUGwz6T9iv27LgZiCo4HITeQ>
+    <xmx:0GNQaAnKS3ebf6Eh4ZHo3SUihb-d9QthvKL2qiqOPzxP4wLM775-Y9gS>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 87E5E700062; Mon, 16 Jun 2025 14:34:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515132719.31868-1-mingo@kernel.org> <20250515132719.31868-10-mingo@kernel.org>
- <20250614103915.GM2278213@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250614103915.GM2278213@noisy.programming.kicks-ass.net>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 16 Jun 2025 20:34:04 +0200
-X-Gm-Features: AX0GCFsusYmQS5x4XLip7pJyg7zFX34bowR6ZljPpKMR_AcbEhXv0GNX8i0a_uw
-Message-ID: <CAG48ez1do372y_ow37tEdkyfUOHrwtLXBWH8PfnwwAN1ApT8Lg@mail.gmail.com>
-Subject: Re: [PATCH 09/13] x86/kconfig/64: Enable popular MM options in the defconfig
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	=?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw@amazon.co.uk>, 
-	Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, 
-	Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Tad13d72cbf59a799
+Date: Mon, 16 Jun 2025 20:34:34 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Robert Marko" <robert.marko@sartura.hr>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Olivia Mackall" <olivia@selenic.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>, "Vinod Koul" <vkoul@kernel.org>,
+ "Andi Shyti" <andi.shyti@kernel.org>, "Mark Brown" <broonie@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>, ore@pengutronix.de,
+ luka.perkov@sartura.hr, "Daniel Machon" <daniel.machon@microchip.com>
+Message-Id: <3ba837f8-70bb-4b9e-a9f9-0e71b9e073c4@app.fastmail.com>
+In-Reply-To: <20250613114148.1943267-1-robert.marko@sartura.hr>
+References: <20250613114148.1943267-1-robert.marko@sartura.hr>
+Subject: Re: [PATCH v7 0/6] arm64: lan969x: Add support for Microchip LAN969x SoC
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 14, 2025 at 12:39=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
-> On Thu, May 15, 2025 at 03:27:15PM +0200, Ingo Molnar wrote:
-> > Since the x86 defconfig aims to be a distro kernel work-alike with
-> > fewer drivers and a shorter build time, enable the following
-> > MM options that are typically enabled on major Linux distributions:
-> >
-> > - ACPI_HOTPLUG_MEMORY, ZSWAP, SLAB hardening, MEMORY_HOTPLUG,
-> >   MEMORY_HOTREMOVE, PAGE_REPORTING, KSM, higher DEFAULT_MMAP_MIN_ADDR,
-> >   MEMORY_FAILURE, HWPOISON_INJECT, TRANSPARENT_HUGEPAGE,
-> >   TRANSPARENT_HUGEPAGE_MADVISE, IDLE_PAGE_TRACKING, ZONE_DEVICE
-> >   DEVICE_PRIVATE, ANON_VMA_NAME, USERFAULTFD, multi-gen LRU.
-> >
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+On Fri, Jun 13, 2025, at 13:39, Robert Marko wrote:
+> This patch series adds basic support for Microchip LAN969x SoC.
 >
-> > +CONFIG_KSM=3Dy
+> It introduces the SoC ARCH symbol itself and allows basic peripheral
+> drivers that are currently marked only for AT91 to be also selected for
+> LAN969x.
 >
-> Isn't this thing like a giant security fail?
+> DTS and further driver will be added in follow-up series.
+>
+> Robert Marko (6):
+>   arm64: lan969x: Add support for Microchip LAN969x SoC
+>   spi: atmel: make it selectable for ARCH_LAN969X
+>   i2c: at91: make it selectable for ARCH_LAN969X
+>   dma: xdmac: make it selectable for ARCH_LAN969X
+>   char: hw_random: atmel: make it selectable for ARCH_LAN969X
+>   crypto: atmel-aes: make it selectable for ARCH_LAN969X
 
-Yeah. (Though to actually do anything interesting, it requires root to
-opt-in by enabling it through sysfs, and also requires the application
-to opt in.)
+If the drivers on ARCH_LAN969X are largely shared with those on
+ARCH_AT91, should they perhaps depend on a common symbol?
+
+That could be either the existing ARCH_AT91 as we do with LAN966,
+or perhaps ARCH_MICROCHIP, which is already used for riscv/polarfire.
+
+    Arnd
