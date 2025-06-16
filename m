@@ -1,62 +1,87 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6CF22083;
-	Mon, 16 Jun 2025 05:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD5F2629F;
+	Mon, 16 Jun 2025 05:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750051885; cv=none; b=VAqw6OFW9d4CdGO3EKf3sJsKnHI3nD5hm9fCXS9wJtumBJyIRzZY1S/FkXd0caLyri7hVNB/6AnRg141fKRDzIIz6C0ayFN8rHwYNoQhGHhWylpDHzGnojIjHeozedhxX99HfYZhv0rGLhxxbsTwSNQxdEQ6y+8izh0n6r4cli4=
+	t=1750051905; cv=none; b=Nn5O+wci9bWgEJmIHBek0oNfevOuBPjbgHH6sUVt3bwRukDcIh7ZtvvkLreoxcLfuCzMXhsE3KIeDi6VRQ/X6naIc1Zlc4EE/6SyrRSwD31e5dF9uXWt8L8Mr1GUmeCQgu5XOL6Ae2Aahp60qANPjq05mMSFWwuON+lZMqzh6zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750051885; c=relaxed/simple;
-	bh=zSaOHFrXIviraOq+DBoF/OzWdoBrZxNNGBbVMZCvNrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9hyP1Yl2Q5SADcIogr4931+KTi4r9+NQuONPqiIdg5l4qf2CHN3amRRX7J/dmIqEfzbZLBKD0qhEkkRC6fKBfzlpUH+2BYcKaA/SyXJRGgGPH7kFTrLJwP5JFpDIgo9j1NB2it/VSbsgcyqhoSNeHxo9ex0QlM02UsmiYwhvJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 2465468C7B; Mon, 16 Jun 2025 07:31:20 +0200 (CEST)
-Date: Mon, 16 Jun 2025 07:31:19 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 00/14] xfs: Remove unused trace events
-Message-ID: <20250616053119.GD1148@lst.de>
-References: <20250612212405.877692069@goodmis.org> <20250613150855.GQ6156@frogsfrogsfrogs> <20250613113119.24943f6d@batman.local.home>
+	s=arc-20240116; t=1750051905; c=relaxed/simple;
+	bh=qYoVlq8m6Y5sCgW5dD/wQw9vDbOD0UXJ8pdJjbGNU4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hhP7rvW+kkJDRoJ22ZxDZWyudjf5x2xXd/lzGjN8qrBs/CIdjhbeQiB6zvwKRjat2JgCLBOSX5eG8EBGhcC+0xsCkNIHadmXCeJubD63ZPOv2bkqjV0wj8d1+tp/X0vlAIXb5xM8e1QDmKRz8ynufmQGpK5cIgKY0HatIqcAUnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VMKmr182; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VMKmr182"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750051896;
+	bh=cLEeRM1CL5/Z5I60v9zuIYp8AFyWIY04ZQ97Zfe/p8Q=;
+	h=Date:From:To:Cc:Subject:From;
+	b=VMKmr182nFhSBXLAboBIGsXTSVCjZRIXbHbVpQbSy1OxzISvAPsNQZVsabp8g9e8u
+	 xc62yeyDPKL07E96wRlZtkV/KQnOkWyezdBIznCvxaaCEUR7FtJYfxFlyg4NrIeQG0
+	 JqMaIECG+wcKnEjDqLqpk2oLplUUl2pYMrjJ+f6WtHSzpK6vtfZajfrWaYAdtXN5YQ
+	 laYzaI2MkBGvL3sz3o3SCV8HdNwUNia6EIgG2f5lsio6TX8hKz/Pf+7M9EnhtiuN9+
+	 H6SUaXnYXi/MW5kB2SrFGFVNEbtAbj0u0TW/z+qJXe0NjpP/0nQ5k8R3erqWI9GufF
+	 SrVFNrPd8iE7w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bLJX806M1z4wbW;
+	Mon, 16 Jun 2025 15:31:34 +1000 (AEST)
+Date: Mon, 16 Jun 2025 15:31:34 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Herbert Xu <herbert@gondor.apana.org.au>, Linux Crypto List
+ <linux-crypto@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the crypto tree
+Message-ID: <20250616153134.1583c3bb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613113119.24943f6d@batman.local.home>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/signed; boundary="Sig_/r+UJ+0s=TH.2LYQ_FwuT=wD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Jun 13, 2025 at 11:31:19AM -0400, Steven Rostedt wrote:
-> On Fri, 13 Jun 2025 08:08:55 -0700
-> "Darrick J. Wong" <djwong@kernel.org> wrote:
-> 
-> > On Thu, Jun 12, 2025 at 05:24:05PM -0400, Steven Rostedt wrote:
-> > > 
-> > > Trace events take up to 5K in memory for text and meta data. I have code that  
-> > 
-> > Under what circumstances do they eat up that much memory?  And is that
-> > per-class?  Or per-tracepoint?
-> 
-> I just did an analysis of this:
-> 
->   https://lore.kernel.org/lkml/20250613104240.509ff13c@batman.local.home/T/#md81abade0df19ba9062fd51ced4458161f885ac3
-> 
-> A TRACE_EVENT() is about 5K, and each DEFINE_EVENT() is about 1K.
+--Sig_/r+UJ+0s=TH.2LYQ_FwuT=wD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That's really quite expensive.  And you only measured the tezt/data/bss
-overhead and not even the dynamic memory overhead, which is probably
-a lot more.
+Hi all,
 
+After merging the crypto tree, today's linux-next build (htmldocs)
+produced this warning:
+
+include/linux/padata.h:104: warning: Excess struct member 'reorder_work' de=
+scription in 'parallel_data'
+
+Introduced by commit
+
+  71203f68c774 ("padata: Fix pd UAF once and for all")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/r+UJ+0s=TH.2LYQ_FwuT=wD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhPrDYACgkQAVBC80lX
+0GwJaAgAg67JURkrM4ZstGQwrdaMek0eLmL6TTqrUMK9bYOhUWk4q2BVSu0AvMBg
+D4fApkU1rnuNdhKGH/MqUVxQT5gXX1WcD4ebbDYOHgfDELsbAFcj3tjnIkNilKZU
+8mhEcO2VUGhMAsi7hw5jl+n7InbZG+Vpi6KhjQRm2PQ0r/KGDQTj+IrrnNk21AEn
+HaHMttjSzEIzqlPhUkGMAtse8PFJu70qLQ+GC24buoi4A5skay5aRaESQ6s7cMcp
+hBZUgo0CSr+E9ns8MKwbj8QtCL9oGC1kCJXiXTBedwOY/emrbPbzwzuPlopQgJ8N
+Ju0Tx1S1r+3koLw4uGQ1I4ARXMwyKw==
+=Qy/x
+-----END PGP SIGNATURE-----
+
+--Sig_/r+UJ+0s=TH.2LYQ_FwuT=wD--
