@@ -1,101 +1,154 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59642BF012;
-	Mon, 16 Jun 2025 14:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085007; cv=pass; b=CSEdarrwJZOz6DcFUgbDb/vxIfra/qY0J5SUQhDXy8tWTkG8rnBz4HtCQxT2jmxIo9lhN502fegt4YwtIPPNH1ZHj078NXaojn9GoQiO2T7nR3reFrHxj2mQGGLmFWsv8csvlLT6TfCNqH5YhfuHKRuWefdOq0b6RKUisOXRTyM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085007; c=relaxed/simple;
-	bh=pP1xiFra15VE0xcoJZoV/ZTiyyuP/s1T6tuRzjmNIVk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=pRNlkkDrveg5ZLi7QMuIRvweMsb/C3j9v1rrlAp3Kllb6GvJHoxF4T9xsrbYxuOQ0TMo72te4TXjTOnKzHqfM7k1L5Llo00tCX9GB5giCNu2le9KtP7ZG0DkRz7QoIa1IsURqTTIS0wms9SYkiif8dXheT7Ae372XhtVj0R4QoU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=V0OXg2VW; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3026A14F98
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750085057; cv=none; b=gFDZTiR6mcnH0+kTjNde8Cm3eS98OllsoEV3hYC+0XsNMH8I4/GGh6PWi0xscrt9cXU9uxfzxHKlLGf+WiVqcVZGtowbOgkfPMxrYmhXSlnPzelNhUqXgAxxPD0eREHqqPTTLmcIOynPh28rhxyM/RIP2cbW715Njdsvi28YN2s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750085057; c=relaxed/simple;
+	bh=9BBoIubYusSj98PZ4Ec3nWS7gEGj9UW0LeP6DU7VFgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G/eSpRrg2w3P4Bdif1WjYb5lBuHRJcuONuZQ26NagdjjDzzihwIKYdvHQ+94pry28mSZNuEW+ytCWR9S/BBltjzeDsxKxYXPxvpmMGo2miw4k4a50y2rh97h3FllbK0sC/HjdnprYHjPLAxB8P9n2SVGD/Dkvw8xDbyEsM5Kd/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glh9Qrqs; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="V0OXg2VW"
-ARC-Seal: i=1; a=rsa-sha256; t=1750084979; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=O103MT88nytMHJ8xqzCbEgWuBW+ZKSCvaLVUCBhi9NIxK6kTL/wNAbIK1xtxocnqXfqJRFalIl3cl5mJEjdEm2OmyArYbuhQljpcrKT19ChpYNJsSYSCvTffIGOpGqcRhaoSC2qX3AAydJtJQhI2Onu3UojtDtzfB/uVE4c+7y0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750084979; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=pP1xiFra15VE0xcoJZoV/ZTiyyuP/s1T6tuRzjmNIVk=; 
-	b=LNOyLEPUDykDzgHOrwpBnliufaSLe9sTNCpO+CMAbbGAfSCgzX82a6x0CoQGqdWPfwxdLDS/1auP3rBTBC35rzMmybrSeQrCt7ERptPO6XTbfTGc6V/ZW2zPKVYGRB3aUij3vfAsrIGXNltWO7pXw5ye3/howfuCxrpcLVoYhwk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750084979;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=pP1xiFra15VE0xcoJZoV/ZTiyyuP/s1T6tuRzjmNIVk=;
-	b=V0OXg2VWwB37OxJmQRQtsr5i/HFRhFLNRtb7dPq2XaffkIhh4f+AF49vq9HbqCDF
-	K1YT/XqMWxquneJ06B/QgZOs55rgBTBYmcinQCihhJnVA+ps8J+q0w0JiW9eWOEiHI6
-	oj3wP+ua5Lo+PQNJ8gIT9YPyHazVRuKYnanH9O+k=
-Received: by mx.zohomail.com with SMTPS id 1750084978404609.7770321053222;
-	Mon, 16 Jun 2025 07:42:58 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glh9Qrqs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750085056; x=1781621056;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9BBoIubYusSj98PZ4Ec3nWS7gEGj9UW0LeP6DU7VFgg=;
+  b=glh9QrqsCXkdm4NrN02P0Lex5g872+DFGcDVVIpZFgXkkSvv+SnchhnB
+   X6B9jY6Z72DHdUo5aefJiROK5EeYqnJgVgq7L13l7zrNWTfh3QlLW3HH4
+   KcsLzir+NuIksC2b2GrpUEo+u38NfPyM8Za2SjEx2SxzmW9LhJZlNL0n3
+   BceAVEIm5cfi6hk4AmbgPtP/tigQCRDXROSTRLaB2xfGWbWHrw+ykc7Wg
+   46EQB/Ub/9K9YdMRuE0JbmgETMGEcp8iXSXqBNsHt+6x5eL1vpLsY1+kr
+   ha2QUbXjPHPiZmyFtRtEoS4n6AX46XGoYTjll7DB9Wpf0R1C0KDwi0LfW
+   w==;
+X-CSE-ConnectionGUID: KYT94gaaTnGHnhfUtw/Jzg==
+X-CSE-MsgGUID: 7Jl2AFLqSQywm2UtpjwJzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="74766836"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="74766836"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 07:44:15 -0700
+X-CSE-ConnectionGUID: /wtb+DfnTmmwvYcZuewykQ==
+X-CSE-MsgGUID: +MVbUbqmTWC4o66OEczJZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="149366114"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.25]) ([10.125.108.25])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 07:44:14 -0700
+Message-ID: <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
+Date: Mon, 16 Jun 2025 07:44:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v6] rust: kernel: add support for bits/genmask macros
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aFAqLYBMHkC_X-dr@Mac.home>
-Date: Mon, 16 Jun 2025 11:42:43 -0300
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D29BB87C-356E-4885-8308-456028AE3B6F@collabora.com>
-References: <20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com>
- <DAMAPVAI3V8X.N8SAQD6KOO1Q@nvidia.com>
- <9578ECFC-6C59-40E3-9340-A426E8D2328A@collabora.com>
- <aFAqLYBMHkC_X-dr@Mac.home>
-To: Boqun Feng <boqun.feng@gmail.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/13] x86/folio_zero_user: Add multi-page clearing
+To: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org
+Cc: akpm@linux-foundation.org, bp@alien8.de, dave.hansen@linux.intel.com,
+ hpa@zytor.com, mingo@redhat.com, mjguzik@gmail.com, luto@kernel.org,
+ peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+ tglx@linutronix.de, willy@infradead.org, jon.grimm@amd.com, bharata@amd.com,
+ raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+References: <20250616052223.723982-1-ankur.a.arora@oracle.com>
+ <20250616052223.723982-14-ankur.a.arora@oracle.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250616052223.723982-14-ankur.a.arora@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Boqun,
+On 6/15/25 22:22, Ankur Arora wrote:
+> Override the common code version of folio_zero_user() so we can use
+> clear_pages() to do multi-page clearing instead of the standard
+> page-at-a-time clearing.
 
->=20
-> We should tell/educate people to do the right thing, if a..b is not
-> inclusive in Rust, then we should treat them as non-inclusive in Rust
-> kernel code. Otherwise you create confusion for no reason. My =
-assumption
-> is that most people will ask "what's the right way to do this" first
-> instead of replicating the old way.
->=20
-> Regards,
-> Boqun
->=20
+I'm not a big fan of the naming in this series.
 
-This is just my opinion, of course:
+To me multi-page means "more than one 'struct page'". But this series is
+clearly using multi-page clearing to mean clearing >PAGE_SIZE in one
+clear. But oh well.
 
-I _hardly_ believe this will be the case. When people see genmask and =
-two
-numbers, they expect the range to be inclusive, full stop (at least =
-IMHO). That's how it has
-worked for decades, so it=E2=80=99s only natural to expect this behavior =
-to transfer over.
+The second problem with where this ends up is that none of the code is
+*actually* x86-specific. The only thing that x86 provides that's
+interesting is a clear_pages() implementation that hands >PAGE_SIZE
+units down to the CPUs.
 
-However, I do understand and agree with your point, and I will change =
-the
-implementation here to comply. Perhaps we can use some markdown to alert =
-users?
+The result is ~100 lines of code that will compile and run functionally
+on any architecture.
 
-=E2=80=94 Daniel=
+To me, that's deserving of an ARCH_HAS_FOO bit that we can set on the
+x86 side that then cajoles the core mm/ code to use the fancy new
+clear_pages_resched() implementation.
+
+Because what are the arm64 guys going to do when their CPUs start doing
+this? They're either going to copy-and-paste the x86 implementation or
+they're going to go move the refactor the x86 implementation into common
+code.
+
+My money is on the refactoring, because those arm64 guys do good work.
+Could we save them the trouble, please?
+
+Oh, and one other little thing:
+
+> +/*
+> + * Limit the optimized version of folio_zero_user() to !CONFIG_HIGHMEM.
+> + * We do that because clear_pages() works on contiguous kernel pages
+> + * which might not be true under HIGHMEM.
+> + */
+
+The tip trees are picky about imperative voice, so no "we's". But if you
+stick this in mm/, folks are less picky. ;)
