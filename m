@@ -1,197 +1,123 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30322CA6;
-	Mon, 16 Jun 2025 07:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0577F9;
+	Mon, 16 Jun 2025 07:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750058763; cv=none; b=Q4qr0eIcSc5lVRUv6p5Gd5iJE30Oi7epIEl5HxGz5RXYx5/vj7ujyXZKaPnKxCiP6Tl5xs/izoVOJzbPTtzIOqJLMbz7p/2yrD8FrOrRMpw48ArGgG07ccVe/dNJYxzxEICo92wLfNSAEN7EKQsKrCG4+g7x1qG39BeRv9ZTdCc=
+	t=1750058883; cv=none; b=fq9bcrAUnQUznP28wTSrURPSzMYbg1spOw01QEAtfTPNvRhYajd61CMB9j3HhyU3DWdKZ1Nrk6uOsK8L29mhsq1EvucRmv1hFGhMKYF7dnKkTKqw3R+KHfTbDGS/y7UMKcs63VMxRSwuTH3F9M7Xi1moWU6DF6L7QMbuQ4KiDkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750058763; c=relaxed/simple;
-	bh=XP9PvxbbFwpO9eJAx75niUIURXU9zqEWph+Lc77aPAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k8aKLKxaDoUqRDWCgWomC/vTyFXidT/XERGpLHppTx9s1QuPGhpWottqvss7E8Qv0PqG1BQh2MivrKYCNsoKycsUESJ4kGSid4wwGapQ0ApCMIYW2bZdHcJNM7Nok4CFJM4/qfkKtpu2nfu44o22Nj6u+vNzWPC+esmlbhsORck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KEeBvaFx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KEeBvaFx"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FNqAWg025415;
-	Mon, 16 Jun 2025 07:25:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XcAily78zL3qaqYDxn/xmpaLjAqqMN5K0g0hvjaD8L4=; b=KEeBvaFxHO77fjN/
-	FeHD3Q0WqQJpOUjk1oRLS1za33xmvfGQ6nvVU9lW3XF3NcsU2SerVFqyjCaTyDmB
-	nsRMZVIzaobiESI/Qp9z7EP6tU8S6cTxkhlGJ6hZfG6TBIqitlAokgxqyguslflK
-	0abLCOm+t0H9pc9r5wfBl9+6LmBnx3rGsIy04xfofhTMS4oGchCg+lIJCXYsLDW+
-	DbJ0oUkZRBEMyDdMMQgwnG/SS2E1/ABIGctG3H3eJjX5dpF/Gp/ZfbXdbVMoXx1Y
-	7zcvMG2c8VBiVNq0mSO8yL3m/Pbo47/Sf3MzJ75MHOWs8CpJZ47b8OWPb06CEgss
-	VfgGag==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 479qp5j2jd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 07:25:57 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55G7Puis009950
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 07:25:56 GMT
-Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 00:25:50 -0700
-Message-ID: <0d9846f8-da23-4f2a-a593-35350c026b44@quicinc.com>
-Date: Mon, 16 Jun 2025 12:55:47 +0530
+	s=arc-20240116; t=1750058883; c=relaxed/simple;
+	bh=QZnBd0tvGKes4F4h/RTCBDHZkG2oZ7PWbsHjXAeeGSo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sO0EXGs5D77J8tt6TQN7yXLAQjfZjSib3DVC/CrI8C5ur7E1HhrHw5Nw62MxDWHSu4lPJ+n7qIXDZa210UtxAHNcViF9+PKGI539TC7V/hv1+G4s75ad1aLQ5m9TZE/3yXvwzX/0m/5HtOFSNFuLsarri2woQKi6BWvfGFpKgeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bLM4k7228z2sD0F;
+	Mon, 16 Jun 2025 15:26:30 +0800 (CST)
+Received: from kwepemf100013.china.huawei.com (unknown [7.202.181.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 222C21400D4;
+	Mon, 16 Jun 2025 15:27:56 +0800 (CST)
+Received: from DESKTOP-F6Q6J7K.china.huawei.com (10.174.175.220) by
+ kwepemf100013.china.huawei.com (7.202.181.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 16 Jun 2025 15:27:54 +0800
+From: Fan Gong <gongfan1@huawei.com>
+To: Fan Gong <gongfan1@huawei.com>, Zhu Yikai <zhuyikai1@h-partners.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	<linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas
+	<helgaas@kernel.org>, luosifu <luosifu@huawei.com>, Xin Guo
+	<guoxin09@huawei.com>, Shen Chenyang <shenchenyang1@hisilicon.com>, Zhou
+ Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>, Shi Jing
+	<shijing34@huawei.com>, Meny Yossefi <meny.yossefi@huawei.com>, Gur Stavi
+	<gur.stavi@huawei.com>, Lee Trager <lee@trager.us>, Michael Ellerman
+	<mpe@ellerman.id.au>, Suman Ghosh <sumang@marvell.com>, Przemek Kitszel
+	<przemyslaw.kitszel@intel.com>, Joe Damato <jdamato@fastly.com>, Christophe
+ JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH net-next v03 0/1] net: hinic3: Add a driver for Huawei 3rd gen NIC - part 2
+Date: Mon, 16 Jun 2025 15:27:49 +0800
+Message-ID: <cover.1750054732.git.zhuyikai1@h-partners.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v5 00/18] clk: qcom: Add support to attach
- multiple power domains in cc probe
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
- <174970084192.547582.612305407582982706.b4-ty@kernel.org>
- <65828662-5352-449b-a892-7c09d488a1f4@quicinc.com>
- <91c11e62-b0d4-40e9-91a1-20da9973e415@linaro.org>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <91c11e62-b0d4-40e9-91a1-20da9973e415@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: uIkot9sHibWn9vjlb_aH7r3PxNan9Lg7
-X-Proofpoint-ORIG-GUID: uIkot9sHibWn9vjlb_aH7r3PxNan9Lg7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA0OCBTYWx0ZWRfX5Z/C+ZXYek0t
- Q3OLc16zslcmrB0Hz0nVi8H/55dGfx8M8lnH3TdJnsKnO/6beNzsKkYtD9GB4bvuVIq2XWyGkfN
- j2Vz4391McwGr3HnvNsfL7BUa9aCBxZmBSaLTs2fFM3IRKUbV29/+9GvS9MCNnq4HJR2hk9oNSQ
- 0GuIGAlGSOHQlWj3hpQcICtWH6vYvP0/0XSBNTKybKjcomBacOFoLVCal27pbtL9ClpliGpEgqw
- 6LtE/nPcoR0pA+J+4N+NiV/wbpE/8wD6Njp0hYcBBKi3z6k1EysVmxKL+u/KMRTS/O5HQf0BCau
- RipXrcBjpsAsbmjfXLW50QM68+x4wAQwVidw/bTgraQc0T+kYutnAOqHvhJvPj+9qRKOy6X5KDa
- EOp2zdwB+7gzd1yXcpZJHt/0d7K9wpcv6kNBQDS0DTbSAVl0S032RDWrkbrjC/1wN7wfOZYY
-X-Authority-Analysis: v=2.4 cv=fMc53Yae c=1 sm=1 tr=0 ts=684fc705 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=4vALZuFKeRXYYujc2Y0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160048
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemf100013.china.huawei.com (7.202.181.12)
+
+This is the 2/3 patch of the patch-set described below.
+
+The patch-set contains driver for Huawei's 3rd generation HiNIC
+Ethernet device that will be available in the future.
+
+This is an SRIOV device, designed for data centers.
+Initially, the driver only supports VFs.
+
+Following the discussion over RFC01, the code will be submitted in
+separate smaller patches where until the last patch the driver is
+non-functional. The RFC02 submission contains overall view of the entire
+driver but every patch will be posted as a standalone submission.
+
+Changes:
+
+PATCH 02 V01: https://lore.kernel.org/netdev/cover.1749561390.git.root@localhost.localdomain
+
+PATCH 02 V02: https://lore.kernel.org/netdev/cover.1749718348.git.zhuyikai1@h-partners.com
+* Fix build allmodconfig warning (patchwork)
+* Update cover-letter changes information.
+
+PATCH 02 V03:
+* Use refcount_*() instead of atomic_*() (Jakub Kicinski)
+* Consistency fixes : HIG->HIGH, BAR45->BAR4/5 , etc (ALOK TIWARI)
+* Code format fixes : use \n before return, remove extra spaces (ALOK TIWARI)
+* Remove hinic3_request_irq redundant error print (ALOK TIWARI)
+* Modify hinic3_wq_create error print (ALOK TIWARI)
+
+Fan Gong (1):
+  hinic3: management interfaces
+
+ drivers/net/ethernet/huawei/hinic3/Makefile   |   4 +-
+ .../net/ethernet/huawei/hinic3/hinic3_cmdq.c  | 912 ++++++++++++++++++
+ .../net/ethernet/huawei/hinic3/hinic3_cmdq.h  | 156 +++
+ .../ethernet/huawei/hinic3/hinic3_common.c    |  31 +
+ .../ethernet/huawei/hinic3/hinic3_common.h    |  27 +
+ .../net/ethernet/huawei/hinic3/hinic3_csr.h   |  79 ++
+ .../net/ethernet/huawei/hinic3/hinic3_eqs.c   | 803 +++++++++++++++
+ .../net/ethernet/huawei/hinic3/hinic3_eqs.h   | 130 +++
+ .../ethernet/huawei/hinic3/hinic3_hw_cfg.c    |  43 +
+ .../ethernet/huawei/hinic3/hinic3_hw_comm.c   |  31 +
+ .../ethernet/huawei/hinic3/hinic3_hw_comm.h   |  13 +
+ .../ethernet/huawei/hinic3/hinic3_hw_intf.h   |  36 +
+ .../net/ethernet/huawei/hinic3/hinic3_hwif.c  | 153 ++-
+ .../net/ethernet/huawei/hinic3/hinic3_hwif.h  |  16 +
+ .../net/ethernet/huawei/hinic3/hinic3_irq.c   | 137 ++-
+ .../net/ethernet/huawei/hinic3/hinic3_lld.c   |   5 +
+ .../net/ethernet/huawei/hinic3/hinic3_main.c  |  65 +-
+ .../net/ethernet/huawei/hinic3/hinic3_mbox.c  | 843 +++++++++++++++-
+ .../net/ethernet/huawei/hinic3/hinic3_mbox.h  | 127 +++
+ .../ethernet/huawei/hinic3/hinic3_nic_cfg.c   |   2 +
+ .../ethernet/huawei/hinic3/hinic3_nic_dev.h   |  14 +-
+ .../huawei/hinic3/hinic3_queue_common.h       |   1 +
+ .../net/ethernet/huawei/hinic3/hinic3_tx.c    |   2 +
+ .../net/ethernet/huawei/hinic3/hinic3_wq.c    | 109 +++
+ .../net/ethernet/huawei/hinic3/hinic3_wq.h    |  11 +
+ 25 files changed, 3735 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_cmdq.c
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_cmdq.h
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_csr.h
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_eqs.c
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_eqs.h
 
 
+base-commit: 8909f5f4ecd551c2299b28e05254b77424c8c7dc
+-- 
+2.43.0
 
-On 6/12/2025 4:22 PM, Krzysztof Kozlowski wrote:
-> On 12/06/2025 12:03, Jagadeesh Kona wrote:
->>
->>
->> On 6/12/2025 9:30 AM, Bjorn Andersson wrote:
->>>
->>> On Fri, 30 May 2025 18:50:45 +0530, Jagadeesh Kona wrote:
->>>> In recent QCOM chipsets, PLLs require more than one power domain to be
->>>> kept ON to configure the PLL. But the current code doesn't enable all
->>>> the required power domains while configuring the PLLs, this leads to
->>>> functional issues due to suboptimal settings of PLLs.
->>>>
->>>> To address this, add support for handling runtime power management,
->>>> configuring plls and enabling critical clocks from qcom_cc_really_probe.
->>>> The clock controller can specify PLLs, critical clocks, and runtime PM
->>>> requirements using the descriptor data. The code in qcom_cc_really_probe()
->>>> ensures all necessary power domains are enabled before configuring PLLs
->>>> or critical clocks.
->>>>
->>>> [...]
->>>
->>> Applied, thanks!
->>>
->>> [01/18] dt-bindings: clock: qcom,sm8450-videocc: Add MXC power domain
->>>         commit: 1a42f4d4bb92ea961c58599bac837fb8b377a296
->>> [02/18] dt-bindings: clock: qcom,sm8450-camcc: Allow to specify two power domains
->>>         commit: a02a8f8cb7f6f54b077a6f9eb74ccd840b472416
->>> [03/18] dt-bindings: clock: qcom,sm8450-camcc: Move sc8280xp camcc to sa8775p camcc
->>>         commit: 842fa748291553d2f56410034991d0eb36b70900
->>> [04/18] clk: qcom: clk-alpha-pll: Add support for common PLL configuration function
->>>         commit: 0f698c16358ef300ed28a608368b89a4f6a8623a
->>> [05/18] clk: qcom: common: Handle runtime power management in qcom_cc_really_probe
->>>         commit: c0b6627369bcfec151ccbd091f9ff1cadb1d40c1
->>> [06/18] clk: qcom: common: Add support to configure clk regs in qcom_cc_really_probe
->>>         commit: 452ae64997dd1db1fe9bec2e7bd65b33338e7a6b
->>> [07/18] clk: qcom: videocc-sm8450: Move PLL & clk configuration to really probe
->>>         commit: 512af5bf312efe09698de0870e99c0cec4d13e21
->>> [08/18] clk: qcom: videocc-sm8550: Move PLL & clk configuration to really probe
->>>         commit: a9dc2cc7279a1967f37192a2f954e7111bfa61b7
->>> [09/18] clk: qcom: camcc-sm8450: Move PLL & clk configuration to really probe
->>>         commit: eb65d754eb5eaeab7db87ce7e64dab27b7d156d8
->>> [10/18] clk: qcom: camcc-sm8550: Move PLL & clk configuration to really probe
->>>         commit: adb50c762f3a513a363d91722dbd8d1b4afc5f10
->>> [11/18] clk: qcom: camcc-sm8650: Move PLL & clk configuration to really probe
->>>         commit: 3f8dd231e60b706fc9395edbf0186b7a0756f45d
->>> [12/18] clk: qcom: camcc-x1e80100: Move PLL & clk configuration to really probe
->>>         commit: d7eddaf0ed07e79ffdfd20acb2f6f2ca53e7851b
->>>
->>> Best regards,
->>
->>
->> Hi Bjorn,
->>
->> Thanks for picking these patches. However, the dt-bindings patches are closely linked with
->> the DT patches in this series and needs to be picked together. The dt-bindings changes adds
-> 
-> DT bindings are the DT patches. What do you mean by DT? DTS? If so, then
-> you introduce regressions without explaining this at all in cover letter
-> or patches.
-> 
->> multiple power domains support for clock controllers, and without the corresponding DT
->> patches, dtbs_check will give warnings.
->>
->> Can you please help to pick DT patches as well?
-> 
-> Please read soc maintainer profile explaining how DTS is being organized.
-> 
-
-I apologize for not mentioning this details in cover letter. Here the dt-bindings documentation
-changes(patches 1-3) are only applied and the corresponding DTS changes(patches 13-18) are not
-yet applied via DTS tree, leading to dtbs_check warnings.
-
-Thanks,
-Jagadeesh
-
-> 
-> Best regards,
-> Krzysztof
