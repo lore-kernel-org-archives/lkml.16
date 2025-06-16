@@ -1,122 +1,326 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA92D2BEFED;
-	Mon, 16 Jun 2025 21:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65DE220F063
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750108807; cv=none; b=o7ReBNeKu2SrS2aY1nD7RrdvjDXXvkjQCUkctgRP74HWP6+dWZeHl3YId4jNVwZGxNFspmqS1L6d6GS17C8lKNIqDr4cN+0/rpd/smlDd/En0Ku4zCeE4ksqsaZoa+o7crMKZ7jDcf+mRUeSxl7WGLvWKPe0WbO6+L6l3QcfKOY=
+	t=1750108836; cv=none; b=jZvubGd0nqai0kkCuS/SM11dhLCZ323o+IDTqDbxgGhl8R8RlhK5LmCiwU7yk4Hl4Yjsvf56ySwe1r/cZZK2XV3tqAKPe5u0IN3SzMdC+Ey/Jq3qz8+aUHoIzeJl3SbKu9/+HRl3wv9jONDrW4d/l8dXh/Nj9TIeSwEuCkRFglY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750108807; c=relaxed/simple;
-	bh=4UIaouMsCRqr8dBEcgHI5BI5QkXJ765RuxIaZtUU9a4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WVpSWXAhZm48wFx5JBUsZRgNWIw4kwYzXYvjhXdwwRsu10F9CqJgfo4J4ruox6h0PCrWo2Ve2T5RvGgpj4WSHDZEBliCar8FHbc26BNCpyynjqkvBmkzphbPzCWJDlRENINuYYcDB6ilxb/vvhc9z+fYa+AC/GHHRp/9M52PglA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cvDC1qAx; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvDC1qAx"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234949fd425so5837005ad.2;
-        Mon, 16 Jun 2025 14:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750108805; x=1750713605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zr64jz9gDGuJ0hnnLVqhsR2DJK3BafHW6k53/hKx8GA=;
-        b=cvDC1qAxaM3g0Bb2r/VDw1MJyU+aPNwDZfCZGtpc8RzuWp21/r/Khe47vfxojwRBQI
-         jt0aqAZgGgNF28Pvdxl6r8MShuBQNAmhidVOrcOLib9+tcVB0/0p6Bt/8yRY4b0mGpJu
-         euPgn0w1GJLrhqi8vbGNVjiPDugj9PAfbE7XSRIrFiMUMN5g2h/stSApDtt3Viea9rf9
-         ktD/COrADtVbeg26zyC4u3pQsRZgCBohK7qtjoyQISFdtaofEXON9WckkrHXgjjT+CYk
-         NoYAs3Q7V5iRd6B187a//X59oadpIJVxbTrSa+x1VqenCU7F8THdD5v4CJ0y8MQAdENt
-         y8Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750108805; x=1750713605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zr64jz9gDGuJ0hnnLVqhsR2DJK3BafHW6k53/hKx8GA=;
-        b=t5ZOfP3r3s5W5pL/Z6KSs7pMnoo8xWBGvCTIV9Wj3qfeDRz/LlS7nQ8NPnD647u7CN
-         fgH5klHp1JMOpOAChNzZ8WWTKb/q8JFO3LdMn0btbhc/NAkeF1AqZrteZFr75I59ZliZ
-         pp7FueEvT0dfXx0nsEiZq7YLjoZdNLVFN+35gEEmTgkETXlgp2hRgLol/C3P8qBaNAcs
-         6EkBe/mhYM9uLpDZVsXbOYmye/oTx+la7WVqFGCk4R3YhgJVU8+8T+iYKxLEMeh7ixL3
-         gJKN5I13eYKBokNu+XqRRN35cH1uc6UoCK8W1L8BQNxrKGAFuD7Hg+tFYIJcgOJQr42N
-         n8wA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+yoryuWtklDOd5xYwzGMlLT8wZhsAgHS5tTUE8HWZOSUugT3f8NnuVJ+FM0BAGAQ6mzXuFZbmPP5c2HPoFA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIHwJFBTCqWnJ7F1BJE+QFmu6Z9oDiPMndaDR+t+vhR6Y3FOMI
-	uokuMYcgy+s5qx6etq7fAbjXgBYePlqGf1ASSHKZPKZ3KZ9MRD2M1VPxZVcDMlGVl32plTGGZVn
-	Q0C9wUTAeHUPLcyN+u21Mgo5aXxiR0J0=
-X-Gm-Gg: ASbGncvAp6z9DWhE7D3XxIwFWZf/l9Fdge5ttQYDPm8owVl3D2ePVG/+UKPgAwic7n+
-	tFE3CLfEZDa8G1veCLaDkrcDZaIeFrHzgs0mEUQH9cmF8HHhhuLlWiTninsVBAoiFWrlSJMzXNk
-	+8caq0iAWeBwtzfieIpeMqoG0Ja6o4tlT4I+D6buZpoZo=
-X-Google-Smtp-Source: AGHT+IGDZw7b7D7QUpBKsXb/3kKD9Jd4NzRUwttJlo1ZeWVSbIPTimu/WlzlYGu3nb9Vzh1RPGp5Isjwv8IQ0/e6aSU=
-X-Received: by 2002:a17:902:ea06:b0:234:ed31:fc9f with SMTP id
- d9443c01a7336-2366b13c9f7mr66317935ad.11.1750108805275; Mon, 16 Jun 2025
- 14:20:05 -0700 (PDT)
+	s=arc-20240116; t=1750108836; c=relaxed/simple;
+	bh=lBHXkifJyo3/sbvghGHHaDebBA+zH1aoT43GyVwvsvE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qCB9qWOCVce0KG/6Nwe+E5LPILKUh20JlhwCq8Ph1Z1jl8Een7J8UCkG1AgT//EjXn0r+oF9m4VXtbxAH0EYYu9xRVkXUleCFWzxvDKlVt3apxVZO8FOcx2fbpL230BEprmIkFVBRnc2D1THtogfkRlgBPei8xXMBL4HcVZuHfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05830150C;
+	Mon, 16 Jun 2025 14:20:11 -0700 (PDT)
+Received: from [10.57.84.117] (unknown [10.57.84.117])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A41DB3F58B;
+	Mon, 16 Jun 2025 14:20:30 -0700 (PDT)
+Message-ID: <ed2df0cc-e02c-4376-af7a-7deac6efa9b4@arm.com>
+Date: Mon, 16 Jun 2025 22:20:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616153604.49418-1-boqun.feng@gmail.com> <20250616153604.49418-2-boqun.feng@gmail.com>
-In-Reply-To: <20250616153604.49418-2-boqun.feng@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 16 Jun 2025 23:19:52 +0200
-X-Gm-Features: AX0GCFt6NXahJr2ZuSc0fByzY5H5l8XaJxcLGDzA3jWHnSy2oybsowxt6fNWv8Q
-Message-ID: <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com, 
-	fujita.tomonori@gmail.com, mingo@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: Enable vmalloc-huge with ptdump
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+ kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ david@redhat.com
+References: <20250616103310.17625-1-dev.jain@arm.com>
+ <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
+In-Reply-To: <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 5:36=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> introduce a file_from_location() function, which return a warning string
+On 16/06/2025 19:07, Ryan Roberts wrote:
+> On 16/06/2025 11:33, Dev Jain wrote:
+>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
+>> because an intermediate table may be removed, potentially causing the
+>> ptdump code to dereference an invalid address. We want to be able to
+>> analyze block vs page mappings for kernel mappings with ptdump, so to
+>> enable vmalloc-huge with ptdump, synchronize between page table removal in
+>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
+>> use mmap_read_lock and not write lock because we don't need to synchronize
+>> between two different vm_structs; two vmalloc objects running this same
+>> code path will point to different page tables, hence there is no race.
+>>
+>> For pud_free_pmd_page(), we isolate the PMD table to avoid taking the lock
+>> 512 times again via pmd_free_pte_page().
+>>
+>> We implement the locking mechanism using static keys, since the chance
+>> of a race is very small. Observe that the synchronization is needed
+>> to avoid the following race:
+>>
+>> CPU1							CPU2
+>> 						take reference of PMD table
+>> pud_clear()
+>> pte_free_kernel()
+>> 						walk freed PMD table
+>>
+>> and similar race between pmd_free_pte_page and ptdump_walk_pgd.
+>>
+>> Therefore, there are two cases: if ptdump sees the cleared PUD, then
+>> we are safe. If not, then the patched-in read and write locks help us
+>> avoid the race.
+>>
+>> To implement the mechanism, we need the static key access from mmu.c and
+>> ptdump.c. Note that in case !CONFIG_PTDUMP_DEBUGFS, ptdump.o won't be a
+>> target in the Makefile, therefore we cannot initialize the key there, as
+>> is being done, for example, in the static key implementation of
+>> hugetlb-vmemmap. Therefore, include asm/cpufeature.h, which includes
+>> the jump_label mechanism. Declare the key there and define the key to false
+>> in mmu.c.
+>>
+>> No issues were observed with mm-selftests. No issues were observed while
+>> parallelly running test_vmalloc.sh and dumping the kernel pagetable through
+>> sysfs in a loop.
+>>
+>> v2->v3:
+>>  - Use static key mechanism
+>>
+>> v1->v2:
+>>  - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
+>>  - In case of pud_free_pmd_page(), isolate the PMD table to avoid taking
+>>    the lock 512 times again via pmd_free_pte_page()
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>  arch/arm64/include/asm/cpufeature.h |  1 +
+>>  arch/arm64/mm/mmu.c                 | 51 ++++++++++++++++++++++++++---
+>>  arch/arm64/mm/ptdump.c              |  5 +++
+>>  3 files changed, 53 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+>> index c4326f1cb917..3e386563b587 100644
+>> --- a/arch/arm64/include/asm/cpufeature.h
+>> +++ b/arch/arm64/include/asm/cpufeature.h
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/kernel.h>
+>>  #include <linux/cpumask.h>
+>>  
+>> +DECLARE_STATIC_KEY_FALSE(ptdump_lock_key);
+>>  /*
+>>   * CPU feature register tracking
+>>   *
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 8fcf59ba39db..e242ba428820 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -41,11 +41,14 @@
+>>  #include <asm/tlbflush.h>
+>>  #include <asm/pgalloc.h>
+>>  #include <asm/kfence.h>
+>> +#include <asm/cpufeature.h>
+>>  
+>>  #define NO_BLOCK_MAPPINGS	BIT(0)
+>>  #define NO_CONT_MAPPINGS	BIT(1)
+>>  #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
+>>  
+>> +DEFINE_STATIC_KEY_FALSE(ptdump_lock_key);
+>> +
+>>  enum pgtable_type {
+>>  	TABLE_PTE,
+>>  	TABLE_PMD,
+>> @@ -1267,8 +1270,9 @@ int pmd_clear_huge(pmd_t *pmdp)
+>>  	return 1;
+>>  }
+>>  
+>> -int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>> +static int __pmd_free_pte_page(pmd_t *pmdp, unsigned long addr, bool lock)
+>>  {
+>> +	bool lock_taken = false;
+>>  	pte_t *table;
+>>  	pmd_t pmd;
+>>  
+>> @@ -1279,15 +1283,29 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>>  		return 1;
+>>  	}
+>>  
+>> +	/* See comment in pud_free_pmd_page for static key logic */
+>>  	table = pte_offset_kernel(pmdp, addr);
+>>  	pmd_clear(pmdp);
+>>  	__flush_tlb_kernel_pgtable(addr);
+>> +	if (static_branch_unlikely(&ptdump_lock_key) && lock) {
+>> +		mmap_read_lock(&init_mm);
+>> +		lock_taken = true;
+>> +	}
+>> +	if (unlikely(lock_taken))
+>> +		mmap_read_unlock(&init_mm);
+>> +
+>>  	pte_free_kernel(NULL, table);
+>>  	return 1;
+>>  }
+>>  
+>> +int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>> +{
+>> +	return __pmd_free_pte_page(pmdp, addr, true);
+>> +}
+>> +
+>>  int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>  {
+>> +	bool lock_taken = false;
+>>  	pmd_t *table;
+>>  	pmd_t *pmdp;
+>>  	pud_t pud;
+>> @@ -1301,15 +1319,40 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>  	}
+>>  
+>>  	table = pmd_offset(pudp, addr);
+>> +	/*
+>> +	 * Isolate the PMD table; in case of race with ptdump, this helps
+>> +	 * us to avoid taking the lock in __pmd_free_pte_page().
+>> +	 *
+>> +	 * Static key logic:
+>> +	 *
+>> +	 * Case 1: If ptdump does static_branch_enable(), and after that we
+>> +	 * execute the if block, then this patches in the read lock, ptdump has
+>> +	 * the write lock patched in, therefore ptdump will never read from
+>> +	 * a potentially freed PMD table.
+>> +	 *
+>> +	 * Case 2: If the if block starts executing before ptdump's
+>> +	 * static_branch_enable(), then no locking synchronization
+>> +	 * will be done. However, pud_clear() + the dsb() in
+>> +	 * __flush_tlb_kernel_pgtable will ensure that ptdump observes an
+>> +	 * empty PUD. Thus, it will never walk over a potentially freed
+>> +	 * PMD table.
+>> +	 */
+>> +	pud_clear(pudp);
+> 
+> How can this possibly be correct; you're clearing the pud without any
+> synchronisation. So you could have this situation:
+> 
+> CPU1 (vmalloc)			CPU2 (ptdump)
+> 
+> 				static_branch_enable()
+> 				  mmap_write_lock()
+> 				    pud = pudp_get()
+> pud_free_pmd_page()
+>   pud_clear()
+> 				    access the table pointed to by pud
+> 				    BANG!
+> 
+> Surely the logic needs to be:
+> 
+> 	if (static_branch_unlikely(&ptdump_lock_key)) {
+> 		mmap_read_lock(&init_mm);
+> 		lock_taken = true;
+> 	}
+> 	pud_clear(pudp);
+> 	if (unlikely(lock_taken))
+> 		mmap_read_unlock(&init_mm);
+> 
+> That fixes your first case, I think? But doesn't fix your second case. You could
+> still have:
+> 
+> CPU1 (vmalloc)			CPU2 (ptdump)
+> 
+> pud_free_pmd_page()
+>   <ptdump_lock_key=FALSE>
+> 				static_branch_enable()
+> 				  mmap_write_lock()
+> 				    pud = pudp_get()
+>   pud_clear()
+> 				    access the table pointed to by pud
+> 				    BANG!
+> 
+> I think what you need is some sort of RCU read-size critical section in the
+> vmalloc side that you can then synchonize on in the ptdump side. But you would
+> need to be in the read side critical section when you sample the static key, but
+> you can't sleep waiting for the mmap lock while in the critical section. This
+> feels solvable, and there is almost certainly a well-used pattern, but I'm not
+> quite sure what the answer is. Perhaps others can help...
 
-returns
+Just taking a step back here, I found the "percpu rw semaphore". From the
+documentation:
 
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized=
-))]
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_=
-dyn))]
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_LOCATION_FILE_WITH_NUL, feature(file_with_n=
-ul))]
+"""
+Percpu rw semaphores is a new read-write semaphore design that is
+optimized for locking for reading.
 
-I would change the config name to `CONFIG_RUSTC_HAS_FILE_WITH_NUL`
-since that is the actual name, i.e. without "location".
+The problem with traditional read-write semaphores is that when multiple
+cores take the lock for reading, the cache line containing the semaphore
+is bouncing between L1 caches of the cores, causing performance
+degradation.
 
-By the way, please add a comment on top, like the others, i.e. something li=
-ke:
+Locking for reading is very fast, it uses RCU and it avoids any atomic
+instruction in the lock and unlock path. On the other hand, locking for
+writing is very expensive, it calls synchronize_rcu() that can take
+hundreds of milliseconds.
+"""
 
-    //
-    // `feature(file_with_nul)` is expected to become stable. Before Rust
-    // 1.89.0, it did not exist, so enable it conditionally.
+Perhaps this provides the properties we are looking for? Could just define one
+of these and lock it in read mode around pXd_clear() on the vmalloc side. Then
+lock it in write mode around ptdump_walk_pgd() on the ptdump side. No need for
+static key or other hoops. Given its a dedicated lock, there is no risk of
+accidental contention because no other code is using it.
 
-Alice: the tracking issue uses the wrong name, i.e. with the
-`location_*` prefix.
 
-> +/// If `file_with_nul()` is not available, returns a string that warns a=
-bout it.
+> 
+> Thanks,
+> Ryan
+> 
+> 
+>> +	__flush_tlb_kernel_pgtable(addr);
+>> +	if (static_branch_unlikely(&ptdump_lock_key)) {
+>> +		mmap_read_lock(&init_mm);
+>> +		lock_taken = true;
+>> +	}
+>> +	if (unlikely(lock_taken))
+>> +		mmap_read_unlock(&init_mm);
+>> +
+>>  	pmdp = table;
+>>  	next = addr;
+>>  	end = addr + PUD_SIZE;
+>>  	do {
+>> -		pmd_free_pte_page(pmdp, next);
+>> +		__pmd_free_pte_page(pmdp, next, false);
+>>  	} while (pmdp++, next += PMD_SIZE, next != end);
+>>  
+>> -	pud_clear(pudp);
+>> -	__flush_tlb_kernel_pgtable(addr);
+>>  	pmd_free(NULL, table);
+>>  	return 1;
+>>  }
+>> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+>> index 421a5de806c6..f75e12a1d068 100644
+>> --- a/arch/arm64/mm/ptdump.c
+>> +++ b/arch/arm64/mm/ptdump.c
+>> @@ -25,6 +25,7 @@
+>>  #include <asm/pgtable-hwdef.h>
+>>  #include <asm/ptdump.h>
+>>  
+>> +#include <asm/cpufeature.h>
+>>  
+>>  #define pt_dump_seq_printf(m, fmt, args...)	\
+>>  ({						\
+>> @@ -311,7 +312,9 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
+>>  		}
+>>  	};
+>>  
+>> +	static_branch_enable(&ptdump_lock_key);
+>>  	ptdump_walk_pgd(&st.ptdump, info->mm, NULL);
+>> +	static_branch_disable(&ptdump_lock_key);
+>>  }
+>>  
+>>  static void __init ptdump_initialize(void)
+>> @@ -353,7 +356,9 @@ bool ptdump_check_wx(void)
+>>  		}
+>>  	};
+>>  
+>> +	static_branch_enable(&ptdump_lock_key);
+>>  	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
+>> +	static_branch_disable(&ptdump_lock_key);
+>>  
+>>  	if (st.wx_pages || st.uxn_pages) {
+>>  		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
+> 
 
-Could we give a couple examples, i.e. of each case? (No need to assert anyt=
-hing)
-
-> +        use crate::c_str;
-
-Do we need the `use`?
-
-Thanks!
-
-Cheers,
-Miguel
