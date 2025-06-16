@@ -1,143 +1,97 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E171DA53
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8949D1DA53;
+	Mon, 16 Jun 2025 07:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750059028; cv=none; b=sxkQDVQYfNvmcn81HGvZUkQ74XfKO9svrH1e7HVCTpS7UqJmFFWMuhfQIFZQlSf9vbIYQnfVVTcNFMi7uKxMTIfuodMDn98CmLuGfsH9MkI8Fok4okhyrLL8rRb/yEB2cFB3S2aTarRr/oVElC4QoVYnenW4wGFDCaAMPrqRvjg=
+	t=1750059073; cv=none; b=uqDjIECDDEBOd9hUCngabutt7KISXhRIeOeOLfJvMOYeCUFKFi9g+EnnAW6amg93JvxkjHxiGLSDDZ3VREzTGuhWBmZuUKf9YCrZRH1C7pI/qot8idsO+vAK+Ep069rjaQr4HdnQM3WzPEzGFB4HTufEgRFp80QqvMww+AkkHHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750059028; c=relaxed/simple;
-	bh=pORw2nHLabEfQe1PMaZrWgMUSxiudeH7gfLb/k2mU70=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=F/evFOonrItVHYLzow8ByqHEDXzbsHogbrFn8H6mSA6larfSWag2k4SQMbJO7VkKDjXUA+E3W4jE6o7lZZyGXzbPom93w+RqNX4/LJ9BikyiBw2Sj1tOUmKaHgtcZuteKb+DA3EXZI1P8rRAsEdfOuz/E8ViTJbCOdLW+q+tQRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rqBcBmIa; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750059073; c=relaxed/simple;
+	bh=cheEarIyKVJUARXwRvLdgflVQA3knWwTd0Aeo5HkwRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JZSXd3sFcIF0E+43rmbRInUN9Km+ZQxP2Im1dHbGx7rMnqaJSJXnhRiCNnIYCNLT/+vCqfdOn0eosQxZL0QVIFNplXrOSNd9ih780Mvcs0bHIm4Mb8cE3dz3pPQ3Eh3gpOcH5S7Gw1jkEefweoqipGiKw/ms53t6lHfsdR8xocM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKFulSnI; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqBcBmIa"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a361b8a664so4227705f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:30:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKFulSnI"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af51596da56so3509844a12.0;
+        Mon, 16 Jun 2025 00:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750059025; x=1750663825; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u4g4ohSAiRV+zTDawEcZfrTruxPOBshWISquGhuBGvo=;
-        b=rqBcBmIaqC+CN0rkEdH1xVMZY51w2K+NBuo4a6cfG09A5vg5j1z0OkOiZO44dX3Jqw
-         58bYbv1vST53GF2sKz+Ty10gHWYHAih1au21yjK8ff1888hHyfcfxfzHiNOMpW0oTUri
-         l80Nzf/c+kk6jmwcaxB45nNeckDqjw0dpRvONSgsqLHestXdMN5CG+KY/MsJ29wOvCuc
-         vR64JXiN0Pd91ZSOUyhCghQLlsmBkVeSW3l5gbqnF2HRKPy96UMYbCLPD4MDOUGV55tV
-         cvrfc6Ah725VX3g566rlE071q1bRvRoPtfz9GjUtI5WMzIIq7a731+j3mMZISZ9pFPze
-         RFug==
+        d=gmail.com; s=20230601; t=1750059072; x=1750663872; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cheEarIyKVJUARXwRvLdgflVQA3knWwTd0Aeo5HkwRs=;
+        b=MKFulSnIWH4GvPNkt1OHFWo+qB4zTZ0WcKLLAvIGzn0Lhff/rrYuOHx3N1qQ16HBzH
+         spEgY/sGDmfDZEqHiyolcP0CzEdM2cF5nMCw5nH/25r71yZJXb4VIEskkbfEhBjbiCoR
+         yeSamMoJ3dixoySedJxw5cxrq8iyun3CbKhO+sSLWxqjo91cwdBhTpcXwMRMQHrMcki5
+         pwc3nouzzYzKv+/XauOdbnq6VCHkTovo6TavAlvkaf4NBYRkzAU2NPkMrhBbBrJYZeuK
+         Xh4N2q9O1Ba6JKQafXYlvxFzYA6bHmj2uZ7Ub5OvL6saMEhiXRFUjgaYmzlNonxOr2gz
+         mORg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750059025; x=1750663825;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=u4g4ohSAiRV+zTDawEcZfrTruxPOBshWISquGhuBGvo=;
-        b=QJ9lurKDz6P+MNxE2IciXJMHZ/8EPyhmkL1EBLWicu45YPX5IUhjKLY3RweReaJqk8
-         Y6jmSV/Wlb9KJFEuCXmVkmB4eaHdNg+5Jcj79mE/kBAybstmWZ/B3E4e8terq7YcAAK6
-         X5ZhamhMWuKfwC3X39jVTTagwhjkBwUX5WW4AUUN2gIJEA6alObiDycWxT1Mh//dx4dq
-         F404KrKeSd1UWF4A/EJUSodkSszPiuPV2ars2ClSDDWxOhzc8hm4/42KTBFyLEKWxFmD
-         xRmuRXKtxi5ItfN6UQKLwBZsLXP3yUiJLOAsp+aOPUi7x8nxKCN8pKA53jtShdUcSl2C
-         9YBw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7BFDS5XlF4Ea+SuyBiGP4DkUBRPAeqHiDZx5dUc8LRBZ3htyPxw8uLesGX6xy9fGWCAgumItyavlzeIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLwqOCXmcJTmryJKB4lP4MPdyXzg0TsvXTaBvOdVLarIVo24H6
-	Y1FF9GzCt3bDDNdy0jxCWeqNgiwX2fLxCy3M9pcuu/qd5ZsGC5OCsANw8J9QHEDz+W8=
-X-Gm-Gg: ASbGncsv8sEsem5ee65FK9gwHGigdM/VOn2hUZAvX3szjXNMAkKL8rcaP7SiRF9X2ft
-	de9fkTYKAfas1lNBk2V2oNeaJZ+mP+NcIr+QdBDytUwpxlpZTFkh4zwLA9raY+UCv2uehNURHVz
-	5gJY+HDBWXfvjhNBjbgpstDYC4x761nH006lln+UwMhliq40lVZp67fnu81R/gPkV8O9XFfJESl
-	g2bPgylM3zofNsb3C2saVXw6GfOlNy7OY2F4Cwwezg/3GXUid1Bfj4HKe+OK8QWobXR3QVUo127
-	R1De1uv9PmVkYjXDgGSMf+so2zm6ocO9dBjW9cZbudkr+niV7TF3TuLfgMAmw3bKEjdK2o2SyP+
-	JeBGmp71x6M41vWhliJRD08tS/YpMFSe6dad2
-X-Google-Smtp-Source: AGHT+IEwjEpuiWh57LayRsqK5pKmU9wpWm982Uem9pS1nRTdbkNJ7pz2QlqFMoGeW71phckBOrBYIQ==
-X-Received: by 2002:a05:6000:430c:b0:3a4:f787:9b58 with SMTP id ffacd0b85a97d-3a572e9c412mr7428081f8f.58.1750059024717;
-        Mon, 16 Jun 2025 00:30:24 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:6c7:97de:65a8:488a? ([2a01:e0a:3d9:2080:6c7:97de:65a8:488a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b48564sm10089367f8f.82.2025.06.16.00.30.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 00:30:24 -0700 (PDT)
-Message-ID: <4f703259-c27f-403e-8ebf-2358a3b90b6d@linaro.org>
-Date: Mon, 16 Jun 2025 09:30:23 +0200
+        d=1e100.net; s=20230601; t=1750059072; x=1750663872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cheEarIyKVJUARXwRvLdgflVQA3knWwTd0Aeo5HkwRs=;
+        b=FfYz1b6h2QxD2/Rih+qDRqW8R3LpswNZTahLmOKDaNbhcjRqHnW268UX/fl7JQRMPG
+         RJd3MLDBNNfiSvInKjdSn+uHsipMQPYDArGTNB0IZajX48JvHcKOIkCq+GoomZzDtmEP
+         5xVH0zOEc8k6XWe6jLVjh8NDsw9l1LRrZ5MeUXaoB70A4v53FsmqSH9YfSnqfT7i0Rxb
+         MM7P6nus8L4Js/uEeR0su+gP+6F8mPRqq/S42GU4B6lEb5+hp5mmiJz/IfPdLnSsW0/b
+         bUgcru7krzmaUrwy4JMRH//eDWvyH3VwuUazpF3NQzvtcvLi2KhVNRMz0PaAn3UVP8Ke
+         uJ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUpij9ltFNsKjunJ++0VekxzXKjClcdWIuwSRHUWdg6LCeJeuKGbMEUwfeytj7+/WvhPyVX/+zmZSK4tfw=@vger.kernel.org, AJvYcCWwoVQsgvgpuipoboxX+pUZGVvDPzkIrSJ/2ERi2SUWGc6FDh9Kzw/Zofj6W38uZvE8Ryp7wU8ie5cc9II=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjwtjyCPIK1iWMNGQ0u1w9OSSPvEZxsDK6gJqYSdlAQWMJw3C6
+	KA8Q8I5wtiMB1cUQM8GAuk9lnbUVvHU54B0FhiyCsVG9lN+UGjsSrPG9m/jD4eSz+MMInThmBEg
+	nYrFGMkmrS+r4NITwm5aBqh8zBHdZz64=
+X-Gm-Gg: ASbGncuFl7CPMTuFJK40gzwVaq3LGS1oeWjTvn30ukrPOTspmyvU+H3tVSDTMPuNoYG
+	tXQ7BSDMkJfEeH5h4o0649UlmCJR18yk+ky7u0s1bNFEQBKP8yr+OJifYtQ2gjTodStPB0DZRQ2
+	Ou1ReBw990LJWdukIAsK8WMrLX35hwCS1dXLvSX90a
+X-Google-Smtp-Source: AGHT+IFAqYUd3QpiI+ATQMIggtddyd5pZ5byJDm+wKZp9c0vvh4+WvPZLenvvopWZ+I4insDVZLiVfMwAJbeqfnmCkc=
+X-Received: by 2002:a17:90a:c107:b0:311:fc8b:31b5 with SMTP id
+ 98e67ed59e1d1-313f1ca1398mr15200699a91.14.1750059071687; Mon, 16 Jun 2025
+ 00:31:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] phy: qcom: qmp-combo: Add missing PLL (VCO) configuration
- on SM8750
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Melody Olvera <melody.olvera@oss.qualcomm.com>,
- Wesley Cheng <quic_wcheng@quicinc.com>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250616062541.7167-2-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250616062541.7167-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250613194310.1128733-1-laurentiumihalcea111@gmail.com>
+In-Reply-To: <20250613194310.1128733-1-laurentiumihalcea111@gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Mon, 16 Jun 2025 10:33:13 +0300
+X-Gm-Features: AX0GCFtn0hwbvtz7t5if-ZTv1RrgsBJVVoHPdrySbGFc57a2cboCkTDRMjfm2ao
+Message-ID: <CAEnQRZBHF4dwTEcaz2VQE9UYCu9aVapV4fuRtTXhvBdDDkZDWg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: SOF: imx8: add core shutdown operation for imx8/imx8x
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+	Bard Liao <yung-chuan.liao@linux.intel.com>, 
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
+	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/06/2025 08:25, Krzysztof Kozlowski wrote:
-> Add missing DP PHY status and VCO clock configuration registers to fix
-> configuring the VCO rate on SM8750.  Without proper VCO rate setting, it
-> works on after-reset half of rate which is not enough for DP over USB to
-> work as seen on logs:
-> 
->    [drm:msm_dp_ctrl_link_train_1_2] *ERROR* max v_level reached
->    [drm:msm_dp_ctrl_link_train_1_2] *ERROR* link training #1 on phy 0 failed. ret=-11
-> 
-> Fixes: c4364048baf4 ("phy: qcom: qmp-combo: Add new PHY sequences for SM8750")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> index 8b9710a9654a..f07d097b129f 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> @@ -228,6 +228,9 @@ static const unsigned int qmp_v8_usb3phy_regs_layout[QPHY_LAYOUT_SIZE] = {
->   	[QPHY_COM_CMN_STATUS]		= QSERDES_V8_COM_CMN_STATUS,
->   	[QPHY_COM_BIAS_EN_CLKBUFLR_EN]	= QSERDES_V8_COM_BIAS_EN_CLKBUFLR_EN,
->   
-> +	[QPHY_DP_PHY_STATUS]		= QSERDES_V6_DP_PHY_STATUS,
-> +	[QPHY_DP_PHY_VCO_DIV]		= QSERDES_V6_DP_PHY_VCO_DIV,
-> +
->   	[QPHY_TX_TX_POL_INV]		= QSERDES_V8_TX_TX_POL_INV,
->   	[QPHY_TX_TX_DRV_LVL]		= QSERDES_V8_TX_TX_DRV_LVL,
->   	[QPHY_TX_TX_EMP_POST1_LVL]	= QSERDES_V8_TX_TX_EMP_POST1_LVL,
+On Fri, Jun 13, 2025 at 10:43=E2=80=AFPM Laurentiu Mihalcea
+<laurentiumihalcea111@gmail.com> wrote:
+>
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>
+> Currently, the DSP core from i.MX8QM/i.MX8QXP is able to operate while th=
+e
+> firmware image is being loaded. Because of this, the DSP may change the
+> content of the firmware data just after it was loaded, thus leading to th=
+e
+> data having unexpected values when the DSP is reset (via run()).
+>
+> Fix this by implementing the core_shutdown() operation that will put the
+> DSP in stall during suspend(). The stall will be removed during the run()
+> opertion, thus guaranteeing that the DSP core will not be able to run
+> while the firmware image is being loaded.
+>
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
