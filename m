@@ -1,174 +1,125 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB1926FA46
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120131E25EB
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750062625; cv=none; b=VnJ8JZEgEyvrHixF7kZpLp19b52+D3Tc2Q4Quxeg3U5bx9DlRdLENsZwrK+bmWuZAR8Kvm+lxHAWybgrVQ7nNY4QKHLbH/pvCdLvxquKHiAbj2Pu/UtGYuY1bw3LGhc2Yp7HMBCdR4EBK3ivcYsrZOOb584UjB6Ngb7XYLe4oog=
+	t=1750062662; cv=none; b=nYU3rm7qRsXV9e5cBJEFmqGnhMLQXyX4KLP7/97IUN/r7A/A68kqb7urKIgh5LSTJ9vQfJkEyNDSVdP+sA1BjXMfFUaHJ+/eP2JbOXYaJp6c9RggpGRit1KAd2Kc1ssBqoCCN82pTLkggu3pD/cWrIpHAxCgaJGPyPzlgK4Q6To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750062625; c=relaxed/simple;
-	bh=w4BHDqwkLIpyR6zL77M4S/jNqUQlHBIkk+AZOE397s0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DL8xh/WBUuOeuTIGYu20FdQNP+ZyebbcV+5DRPYETncmynCsOiEk6qpRlQXS8ZCb2xFu9CPWgAtpuEfKfEDa6ArWCC7A56jdxqYNFbHghwp96DiWX0uzX+LNSWrH3tDYdFV1eUQGgKHMi0bcupopNU8xdwviuQn4kqwYdPjF9H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1hz2n+Jx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tWOMfBkx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1hz2n+Jx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tWOMfBkx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750062662; c=relaxed/simple;
+	bh=2/Z4r18vsY0SX4W4/zyu97SlBTjtJ9U8SMkKx61jbSM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QfuIa+sBJOVYK8Wv6lnel/Ep3tj7iQIMMICUbFP/OKsSCwFUtZKcPR5q2xW4qOvg1Y7WWRO7NpwnNza+Jt/pkfc5OJSl+f+jL60vmBAD2NVOTOZACo1v+Z4oIX52MsrQEbC7raKs8Bo9jz+BIESmLPSWfUSvhjT4CbZsjtFYnL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddBkUSnc; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1hz2n+Jx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tWOMfBkx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1hz2n+Jx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tWOMfBkx"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 16140211F7;
-	Mon, 16 Jun 2025 08:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750062622; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3aX0NRoJxcW3u/fu9obhKehgI7vwsQ+JsjDf2wKCRV0=;
-	b=1hz2n+JxBvGkv8bj7q++Zv4/XgkyDe9nVZ1B++XURNscZRaePu/8vuTLQ2HnVyctKEkd+H
-	lT42M3U69v9A5BUHUGJrpMXpNUA8aSP48s1ORonhdmSzBgf29jrkv/7qE0wyn6rUuVlCyT
-	h0Zfxug4SJTYZo2M470H3K2KUNJiKq0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750062622;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3aX0NRoJxcW3u/fu9obhKehgI7vwsQ+JsjDf2wKCRV0=;
-	b=tWOMfBkxSbBlJ1SHucZE4sNz8IRn55vhIMXIkxXLjwgRjX+KddebWcsJUHUd0Qb9J/cum1
-	TbEasZXWE5ERYsBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750062622; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3aX0NRoJxcW3u/fu9obhKehgI7vwsQ+JsjDf2wKCRV0=;
-	b=1hz2n+JxBvGkv8bj7q++Zv4/XgkyDe9nVZ1B++XURNscZRaePu/8vuTLQ2HnVyctKEkd+H
-	lT42M3U69v9A5BUHUGJrpMXpNUA8aSP48s1ORonhdmSzBgf29jrkv/7qE0wyn6rUuVlCyT
-	h0Zfxug4SJTYZo2M470H3K2KUNJiKq0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750062622;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3aX0NRoJxcW3u/fu9obhKehgI7vwsQ+JsjDf2wKCRV0=;
-	b=tWOMfBkxSbBlJ1SHucZE4sNz8IRn55vhIMXIkxXLjwgRjX+KddebWcsJUHUd0Qb9J/cum1
-	TbEasZXWE5ERYsBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 817A8139E2;
-	Mon, 16 Jun 2025 08:30:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id K5otHR3WT2j8OQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 08:30:21 +0000
-Date: Mon, 16 Jun 2025 10:30:19 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddBkUSnc"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso35050015e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750062659; x=1750667459; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjVy9U5cCHfPCLkIztlHvZcD6jwKLBifr0CRV+MLuWg=;
+        b=ddBkUSnc8e5vMtxJvxBVk3aURwNsygEbWYhbLWMLy0v0M4H5lmJBXnjeZsl8QSrjxv
+         DYKe4f47zfTl6KRdGkkSkHUzVEDyOQ2WRF32C2+iaqgLi/Qt+REjzHnU/2dYavWuOI88
+         K9Gz1/vdOlu5XNU9+5TYH3jMin5OxwCCuf3EgqP+nYNV3+Xxk9QIu3BYvWF13hCz/mno
+         zzzHQyJX5/1K3lc0YKHfZsBATjTRsPgfttWYIpZkX/PDDIcIOwnxz/RJ3FHy/qYbb3Sm
+         NYk/ydQzjKUrgGfKKGVnlpwXJoUXX3OzvhY0IDQXJJ9kWu7Ih7wxM0A8qkiHv9QgjqvU
+         Nhig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750062659; x=1750667459;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CjVy9U5cCHfPCLkIztlHvZcD6jwKLBifr0CRV+MLuWg=;
+        b=m6pUhXNjlL/TEwxAEEPkS8plEPH6B4FV/nanJ45YTFX2kwb25tQM7BlqwA8Nm/6eXU
+         S68SjyiZmOELYytcW6ZYvf1OInhv1YS0H7kF6sJGVmIveBoCRyEYDnkUsqyyd7Fz4Xvk
+         5BebSz9o2Ab8MvvyYDQ6spL+5jX9nC/D9udBQ8EJg/T28Db7ZzFWD8qZYq45CzKVN+82
+         T95S0CwfwZkUsQEsMPhsGneSA3KqLXGw3bRXOT3EgnVHPwUHfxIR8eCLmXeeYOAa4EIJ
+         axMpiz/2SSpSshWRMWW1j5W9OOJ5zO5qhtdIEqNzhlwR9BNNUHxi7vcXXfIeBPLq+gnA
+         d46w==
+X-Forwarded-Encrypted: i=1; AJvYcCVsmRXkZiKNKJWPfOJZ804u1Z3pSAMNhZq1qEVjFJcWSq37kapUy7YDjgQreo1+5hgkeyS12gSQsKfnaMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhkp+fNeLggvl0HlYiJZxmoBbgb/dY45yEA3nfg78Y3e289G4S
+	hIlldWgXk478yQOBtuS5qOvS7LApHLrcqlGacMA4bC/0cCZ5yGhSKMks
+X-Gm-Gg: ASbGncu5beAEWKWVRGIG7+QHdEFsv/tOlDoWyehj0zUyF8YRFH/4QfYXUPfA9it0x02
+	4ENMtyyx2lNTV9FW7eAqAXesprEeBnxespss9QYBhwVlzSNbo8Wpz9OMIROwe3BJWJIg3CfX07T
+	Poly5hYbEl0FACT7aOlq0WXyMu9Dc09RpcSDNviW/f1XVxpQdRXsZ+TYxDVeIR/fRisCkfdQG26
+	86rdDd5dQsHyhoeu6SIiaJS1gT7649aksY290g9zxSpRpt1e7N3vOyCF3Uu7szLT7HJUa5nfu77
+	cC+gX3UZmLUEbeZQCZ/7NC1h2PrITwrcIxgIOmBySV0CJxXStX7PbQ==
+X-Google-Smtp-Source: AGHT+IFhoddjnbRB+Yj//UnTop550KeuR1B2yCI8OKQE7qzsxeHpqo1UpQ670wVoWROSY/sPoY36BA==
+X-Received: by 2002:a05:6000:4028:b0:3a4:f379:65b6 with SMTP id ffacd0b85a97d-3a5723af4e8mr7039560f8f.46.1750062659214;
+        Mon, 16 Jun 2025 01:30:59 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm10329580f8f.26.2025.06.16.01.30.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 01:30:58 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.ort,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 03/10] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <aE_WG6bnjtLBzCp8@localhost.localdomain>
-References: <20250609092149.312114-1-osalvador@suse.de>
- <20250609092149.312114-4-osalvador@suse.de>
- <2bec8b53-f788-493e-a76e-1f804ed3aa0c@redhat.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/idle: Use MONITORX and MWAITX mnemonics in <asm/mwait.h>
+Date: Mon, 16 Jun 2025 10:30:41 +0200
+Message-ID: <20250616083056.157460-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2bec8b53-f788-493e-a76e-1f804ed3aa0c@redhat.com>
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 10:10:21AM +0200, David Hildenbrand wrote:
-> On 09.06.25 11:21, Oscar Salvador wrote:
-> > +The first argument of the callback function (self) is a pointer to the block
-> > +of the notifier chain that points to the callback function itself.
-> > +The second argument (action) is one of the event types described above.
-> > +The third argument (arg) passes a pointer of struct node_notify::
-> > +
-> > +        struct node_notify {
-> > +                int nid;
-> > +        }
-> > +
-> > +- nid is the node we are adding or removing memory to.
-> > +
-> > +  If nid >= 0, callback should create/discard structures for the
-> > +  node if necessary.
-> 
-> Likely that should be removed?
+Current minimum required version of binutils is 2.30,
+which supports MONITORX and MWAITX instruction mnemonics.
 
-Yes, indeed.
+Replace the byte-wise specification of MONITORX and
+MWAITX with these proper mnemonics.
 
-> 
-> It' probably worth mentioning that one might get notified about
-> NODE_CANCEL_ADDING_FIRST_MEMORY even though never notified for
-> NODE_ADDING_FIRST_MEMORY. (same for removing)
-> 
-> I recall this can happen if one of the NODE_ADDING_FIRST_MEMORY notifiers
-> fails.
-> 
-> (same applies to MEM_CANCEL_*)
-> 
-> Consequently, we might simplify the cancel_mem_notifier_on_err etc stuff,
-> simply unconditionally calling the cancel counterparts.
+No functional change intended.
 
-So, I managed to do another respin with all feedback included, but I
-left this one for the end, and here I'm.
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/mwait.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-It's true, currently users can get notified about e.g: MEM_CANCE_ONLINE without
-going through MEM_GOING_ONLINE if another user fails for the latter, but I'm
-trying to workaround the fact why that's not a problem.
-
-Because assume you have a user of MEM_CANCEL_ONLINE, who thinks it got called
-for MEM_GOING_ONLINE, while in fact it didn't because some other user fail on
-it, and it tries to free some memory it thinks it initialized during MEM_GOING_ONLINE.
-
-Isn't this a bit shaky? I mean, yes, I guess we can put the burden on the users of
-the notifiers to not assume anything, but then yes, I think we should document this
-as it can lead to potential misbeliefs.
-
-
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index dd2b129b0418..d4bcbe59626d 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -36,9 +36,7 @@ static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
+ 
+ static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
+ {
+-	/* "monitorx %eax, %ecx, %edx" */
+-	asm volatile(".byte 0x0f, 0x01, 0xfa"
+-		     :: "a" (eax), "c" (ecx), "d"(edx));
++	asm volatile("monitorx" :: "a" (eax), "c" (ecx), "d"(edx));
+ }
+ 
+ static __always_inline void __mwait(u32 eax, u32 ecx)
+@@ -82,9 +80,7 @@ static __always_inline void __mwaitx(u32 eax, u32 ebx, u32 ecx)
+ {
+ 	/* No MDS buffer clear as this is AMD/HYGON only */
+ 
+-	/* "mwaitx %eax, %ebx, %ecx" */
+-	asm volatile(".byte 0x0f, 0x01, 0xfb"
+-		     :: "a" (eax), "b" (ebx), "c" (ecx));
++	asm volatile("mwaitx" :: "a" (eax), "b" (ebx), "c" (ecx));
+ }
+ 
+ /*
 -- 
-Oscar Salvador
-SUSE Labs
+2.49.0
+
