@@ -1,148 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81190283FE2;
-	Mon, 16 Jun 2025 16:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED3E283CBD;
+	Mon, 16 Jun 2025 16:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089882; cv=none; b=YvKq3sKW6CqUIAEO9fe/SRSgPcw095GGv227vQdCraYb7Sj2foWn3axi9RIiYOcqI4NwR1mfsQpnW39cgZR/vKhhHdfkqheTkg1204OTH93WNIxQx7BFm+EH6u4ppzrOqmfAx01+1foxOzo5545jFaZoGqOApvIkDwLDzV5msiw=
+	t=1750089883; cv=none; b=uBnMH4wKgEgKqSB9jePzheAvJHJwynf4PG0W426povkLxkcJmFCZ1UNtYb9VL1JSFJMLOlE5UOE3Dv5p1X/odjvsq1HHXZiR6DPk4Gc1uQscU+CwzPfEk+Q/XWOBYNpz/CTv8p6vCGHFA2KCTb6qW9a9JVG+tZuMCo0HURGv/4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089882; c=relaxed/simple;
-	bh=iqHAfcEE2L0JfOWWsbGPMexlJF+Oe7neMoL811q80vQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I7HccdFD/HTwLqrBvMHo7xJ2qgWVG7oWlEIGyguHTMXQNemtTULkhyHPKWOYFRfXzKadYMUtw0XEkVHpkGO0POSZzMS4PA3B1kl0IRIz0oAEaX+5cUtC5TBfL6TGgcgm5HieYUA8qZuWxb2ev5OhcQyCjGbXpw+FR7DWqt2Uwh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jTi0FrW/; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750089883; c=relaxed/simple;
+	bh=4i0m/14BXCehb1bURjYgdNwmL0nuOwpk+bAUh2HlVfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Plt8ZMW3t7sIyVMrp6e8HOTVQImmxtlGA37bWTIECST76en+s6PBS/AYMS0b9DEbLwvdecer4NG7XfUTJqz8b/Jm6dVj0CN4sEMIAvhBjjL0l4kDmlII2RgUYvVZQMqTDbK/6SU0dhy8LlnLfuJjdzQHlZUMRGGUVmOFvaPN2uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XeAJNb4b; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jTi0FrW/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750089880; x=1781625880;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=iqHAfcEE2L0JfOWWsbGPMexlJF+Oe7neMoL811q80vQ=;
-  b=jTi0FrW/tIvCw0c0NggKCvd7rxUiDfCYx1g3I2Pd9Ndll7PLZ7jl+Ph9
-   CI7VB7B1+qbdh/NK1HYkbpi3dOabXc1ZDvMXFt2/51js24eHwtRc4S0zL
-   L1gDMVTi5KtKWRT+fdqH4BXGtEFdqtDM0QOFEe3gchL2+Zztucjl8672o
-   F88t0vcbjU8MTVeZJLrXVt1w1PTFPxmDBIk4paibhLoKrakS+fDvF0Klr
-   XnHHI54gDD7HDF9BIY1ykUsGs3HYiv0uzHhjfqMTSLDuBfLonejS1MPwP
-   Wz4B3/p5y8ntckk8YHbByH/K9nX+FJug2Q9SIgZ/aiKByan5f8i+sISW7
-   g==;
-X-CSE-ConnectionGUID: aT9PN3aHQJS8H9l/5RZLjw==
-X-CSE-MsgGUID: CjspogxdS4STnRPS+kiXGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52158458"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="52158458"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 09:04:40 -0700
-X-CSE-ConnectionGUID: InfjtWltTwShIGwz3jDgow==
-X-CSE-MsgGUID: BfKjf7qGQiO8P1edaxT9Ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="148351165"
-Received: from spandruv-desk2.amr.corp.intel.com ([10.124.223.117])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 09:04:40 -0700
-Message-ID: <f50a036f94000bad3de9f10e8a26240a2306c638.camel@linux.intel.com>
-Subject: Re: [PATCH 04/15] platform/x86/intel/vsec: Add device links to
- enforce dependencies
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,  srinivas.pandruvada@linux.intel.com,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
- xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Date: Mon, 16 Jun 2025 09:04:38 -0700
-In-Reply-To: <31ed1609-5da1-722e-5182-5c199a3bcb1f@linux.intel.com>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com>
-	 <20250430212106.369208-5-david.e.box@linux.intel.com>
-	 <31ed1609-5da1-722e-5182-5c199a3bcb1f@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XeAJNb4b"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8dDql019473;
+	Mon, 16 Jun 2025 16:04:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PalnoA7Aqj4g1TN3NQrWj4j5JVW/HWc+WnQeOaO9HKg=; b=XeAJNb4b674MuJoj
+	hhX90aTbtPKz/4m62i/Lrykai6sWrTlea1L/Sae74ZycHI383yAnQQNOVdhLVie6
+	PEEpEioJ1SHOJY2DdQk4KV17Y8DlL39qmu3zAgkjMJOPGqJx59dQqa0PGi2xLcR5
+	SHbsDgHIKa5Oear+RTWMXQC3Fc2FRZOUYXM/hCDNmvEHYa+r5Su+rwcBmtmJYOpq
+	wBX5Asw/NgDeJdmmK8yZ1tNup8qBcZ15jiClcXu+bF9hXnpqWVHV73Qxq5WktMRs
+	dIJth3lC/5VJ3GjIYIrFz32g3Z/0CuCpNFr1kmoRha5KR0qtUPpM9vbI0uuq3Olo
+	fek/Ug==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h954qs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 16:04:36 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GG4ZmV020198
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 16:04:35 GMT
+Received: from [10.216.4.100] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 09:04:29 -0700
+Message-ID: <509c94bb-cf31-43bb-a92d-db006efd43aa@quicinc.com>
+Date: Mon, 16 Jun 2025 21:34:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 6/8] serial: qcom-geni: move clock-rate logic to
+ separate function
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
+ <20250606172114.6618-7-quic_ptalari@quicinc.com>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <20250606172114.6618-7-quic_ptalari@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dfjNEMNrv_M2QXivt2QwV8_rdesJ9iGN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNCBTYWx0ZWRfX5JjzziloWYIy
+ BWsPLWMJkYOBmzqxyaYugMrQYSCBQA12HJDtRyv36NQja2gX1QgihVK3niY1UycG48T5V2IR8Ke
+ jYoDMu45gDVzBnfOiUycU2FFIakMW8DCKwZvThCSt+4RFyzqG12VZrFKXBVppLIM7ayQCPrsrJg
+ 3GOEmiMbasjqQOskqz+/roQxpBtG4yCoWFwwoivKnVywiGFSKcoKDBtijAWaayZBDCJnhl/4WWo
+ RX7OZyZb2TS9OR3/EEwED0uzKZfWcoarMnCpOld5RxUPeu+zwexmpFvqIUy80zUIcVvRzJ2UoHO
+ MoVdfYCV5a4PkrKOR3s5DXipSKkpXsO+u2/2vcbCr9WNf3/l3ZhzvlCOBUC29ORyRMcs9BogKj+
+ UfP7YjcMUHyKK6J2abEEXYhMst7/yfP1CSOrT6z6SBa54RkowaGP7+TjoPJJqEhPFO6vAbFO
+X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=68504094 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=E4x2KR17IadLq3rmprIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: dfjNEMNrv_M2QXivt2QwV8_rdesJ9iGN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160104
 
-Hi Ilpo,
+Hi Bryan,
 
-On Tue, 2025-05-20 at 16:51 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 30 Apr 2025, David E. Box wrote:
->=20
-> > New Intel VSEC features will have dependencies on other features, requi=
-ring
-> > certain supplier drivers to be probed before their consumers. To enforc=
-e
-> > this dependency ordering, introduce device links using device_link_add(=
-),
-> > ensuring that suppliers are fully registered before consumers are probe=
-d.
-> >=20
-> > - Add device link tracking by storing supplier devices and tracking the=
-ir
-> > =C2=A0 state.
-> > - Implement intel_vsec_link_devices() to establish links between suppli=
-ers
-> > =C2=A0 and consumers based on feature dependencies.
-> > - Add get_consumer_dependencies() to retrieve supplier-consumer
-> > =C2=A0 relationships.
-> > - Modify feature registration logic:
-> > =C2=A0 * Consumers now check that all required suppliers are registered=
- before
-> > =C2=A0=C2=A0=C2=A0 being initialized.
-> > =C2=A0 * suppliers_ready() verifies that all required supplier devices =
-are
-> > =C2=A0=C2=A0=C2=A0 available.
-> > - Prevent potential null consumer name issue in sysfs:
-> > =C2=A0 - Use dev_set_name() when creating auxiliary devices to ensure a
-> > =C2=A0=C2=A0=C2=A0 unique, non-null consumer name.
-> > - Update intel_vsec_pci_probe() to loop up to the number of possible
-> > =C2=A0 features or when all devices are registered, whichever comes fir=
-st.
-> > - Introduce VSEC_CAP_UNUSED to prevent sub-features (registered via
-> > =C2=A0 exported APIs) from being mistakenly linked.
-> >=20
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
+Gentle reminder!!
 
-...
+Thanks,
+Praveen Talari
 
->=20
-> > +		return ret;
-> > +	}
-> > +
-> > =C2=A0	ret =3D auxiliary_device_add(auxdev);
-> > =C2=A0	if (ret < 0) {
-> > =C2=A0		auxiliary_device_uninit(auxdev);
->=20
-> Don't you need to tear down the device link on failure?
-
-Not necessary according to the doc:
-
-
- * If DL_FLAG_STATELESS is set in @flags, the caller of this function is
- * expected to release the link returned by it directly with the help of ei=
-ther
- * device_link_del() or device_link_remove().
- *
- * If that flag is not set, however, the caller of this function is handing=
- the
- * management of the link over to the driver core entirely and its return v=
-alue
- * can only be used to check whether or not the link is present.
-
-
-I've tested this with repeat modprobe [-r] and kmemleak detect.
-
-I addressed the rest of you comments across the series and will send V2 sho=
-rtly.
-
-Thanks.
-
-David
-
+On 6/6/2025 10:51 PM, Praveen Talari wrote:
+> Facilitates future modifications within the new function,
+> leading to better readability and maintainability of the code.
+> 
+> Move the code that handles the actual logic of clock-rate
+> calculations to a separate function geni_serial_set_rate()
+> which enhances code readability.
+> 
+> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+> ---
+> v5 -> v6
+> - used "unsigned int" instead of "unsigned long" in newly
+>    added API function params to avoid the format specifier
+>    warnings.
+> 
+> v3 -> v4
+> - added version log after ---
+> 
+> v1 -> v2
+> - resolved build warnings for datatype format specifiers
+> - removed double spaces in log
+> ---
+>   drivers/tty/serial/qcom_geni_serial.c | 56 +++++++++++++++++----------
+>   1 file changed, 36 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 715db35bab2f..b6fa7dc9b1fb 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -1283,27 +1283,14 @@ static unsigned long get_clk_div_rate(struct clk *clk, unsigned int baud,
+>   	return ser_clk;
+>   }
+>   
+> -static void qcom_geni_serial_set_termios(struct uart_port *uport,
+> -					 struct ktermios *termios,
+> -					 const struct ktermios *old)
+> +static int geni_serial_set_rate(struct uart_port *uport, unsigned int baud)
+>   {
+> -	unsigned int baud;
+> -	u32 bits_per_char;
+> -	u32 tx_trans_cfg;
+> -	u32 tx_parity_cfg;
+> -	u32 rx_trans_cfg;
+> -	u32 rx_parity_cfg;
+> -	u32 stop_bit_len;
+> -	unsigned int clk_div;
+> -	u32 ser_clk_cfg;
+>   	struct qcom_geni_serial_port *port = to_dev_port(uport);
+>   	unsigned long clk_rate;
+> -	u32 ver, sampling_rate;
+>   	unsigned int avg_bw_core;
+> -	unsigned long timeout;
+> -
+> -	/* baud rate */
+> -	baud = uart_get_baud_rate(uport, termios, old, 300, 4000000);
+> +	unsigned int clk_div;
+> +	u32 ver, sampling_rate;
+> +	u32 ser_clk_cfg;
+>   
+>   	sampling_rate = UART_OVERSAMPLING;
+>   	/* Sampling rate is halved for IP versions >= 2.5 */
+> @@ -1317,7 +1304,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>   		dev_err(port->se.dev,
+>   			"Couldn't find suitable clock rate for %u\n",
+>   			baud * sampling_rate);
+> -		return;
+> +		return -EINVAL;
+>   	}
+>   
+>   	dev_dbg(port->se.dev, "desired_rate = %u, clk_rate = %lu, clk_div = %u\n",
+> @@ -1339,6 +1326,37 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>   	port->se.icc_paths[CPU_TO_GENI].avg_bw = Bps_to_icc(baud);
+>   	geni_icc_set_bw(&port->se);
+>   
+> +	writel(ser_clk_cfg, uport->membase + GENI_SER_M_CLK_CFG);
+> +	writel(ser_clk_cfg, uport->membase + GENI_SER_S_CLK_CFG);
+> +	return 0;
+> +}
+> +
+> +static void qcom_geni_serial_set_termios(struct uart_port *uport,
+> +					 struct ktermios *termios,
+> +					 const struct ktermios *old)
+> +{
+> +	struct qcom_geni_serial_port *port = to_dev_port(uport);
+> +	unsigned int baud;
+> +	unsigned long timeout;
+> +	u32 bits_per_char;
+> +	u32 tx_trans_cfg;
+> +	u32 tx_parity_cfg;
+> +	u32 rx_trans_cfg;
+> +	u32 rx_parity_cfg;
+> +	u32 stop_bit_len;
+> +	int ret = 0;
+> +
+> +	/* baud rate */
+> +	baud = uart_get_baud_rate(uport, termios, old, 300, 4000000);
+> +
+> +	ret = geni_serial_set_rate(uport, baud);
+> +	if (ret) {
+> +		dev_err(port->se.dev,
+> +			"%s: Failed to set baud:%u ret:%d\n",
+> +			__func__, baud, ret);
+> +		return;
+> +	}
+> +
+>   	/* parity */
+>   	tx_trans_cfg = readl(uport->membase + SE_UART_TX_TRANS_CFG);
+>   	tx_parity_cfg = readl(uport->membase + SE_UART_TX_PARITY_CFG);
+> @@ -1406,8 +1424,6 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>   	writel(bits_per_char, uport->membase + SE_UART_TX_WORD_LEN);
+>   	writel(bits_per_char, uport->membase + SE_UART_RX_WORD_LEN);
+>   	writel(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
+> -	writel(ser_clk_cfg, uport->membase + GENI_SER_M_CLK_CFG);
+> -	writel(ser_clk_cfg, uport->membase + GENI_SER_S_CLK_CFG);
+>   }
+>   
+>   #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
