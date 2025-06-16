@@ -1,42 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8321F2BEFE3;
-	Mon, 16 Jun 2025 13:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F46C2C08B4
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750082234; cv=none; b=WhaPbZivmZHk2ByELu9JlLT9rNbqpSuXsDJHiEniTl5y5r7fD12oJU1KOnlBeqOmFE3J5+vQmCG9+w3Kh66tNDSG6XPL2q5ykK/NaYJUHjYa66QCSbc+FLEVdq/Ncli79zb2IcWM1y7t1m2ArqWqsGz75vuN18FFsDn1i8e2uxo=
+	t=1750082239; cv=none; b=fvDC18dWHwQFdiGyzjpe0xLmp5P+BKS2a8fJHftLlBV0PLPRo5D7wvYZ4irWwxIQzwA0f4nh/dtFNRok5TQ3duDcJhp8vRuwLeCBIOBtH2D06OQFiPaJ1x6B4zVLZXk6/8El4hlSQiieHUTW5RRy8qwpW0AvWW0OUX5pF4k5QzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750082234; c=relaxed/simple;
-	bh=Hk7Va6Iu364kbEVxUitn8McLv5eF7J6RIuH3M1AERsE=;
+	s=arc-20240116; t=1750082239; c=relaxed/simple;
+	bh=NH0FX9kt0WubJvwnc+nYK/maDfQ9wwkDesbyODdRkTY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t0VzSau54rP+Lv+NxMevu3YT4kg/ga5Nk6/W3TY5yrDfAXjLbLs5RpUOmbp9sreYG9Gup+HIcWtXosPfbQswxuv1EAJF8TdmB3+IRXrv/ONSuLMrSXj5t/2YVkl7cisCkFVMwr5d7FRtXCC5soumRnUTq8WPSVxBwfaqXds36jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UE9qhnox; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nKyVXkcjl/78JPf/xlKWdRbtebcyTruf2CzKUV6Jw2xuzto2netOP4LJAoC7lpbrHo9NJ/4AYYpBJUFebxbfc11WUC9Eqb6msSCL6rB9ofFVKTeGUHqsne2OvxeURQtXCOx0t3r3DqGl+tdu8IIfvYh0kx40xuMePQ1NQ/CvKhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=hGTxF0p6; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UE9qhnox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B69C4CEEA;
-	Mon, 16 Jun 2025 13:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750082234;
-	bh=Hk7Va6Iu364kbEVxUitn8McLv5eF7J6RIuH3M1AERsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UE9qhnoxXCy7fn7Vkg4R8LGvz1WsK4S0q+UOFp4Q28sm6seV5+oPaWpvdGvwff3KQ
-	 cAOgU6Koid7IA9a06+w/va8VYZLjc8+X/LMP2AeK15Ya8jQN6zfL7gUISBucY+QDQZ
-	 Ne/owr9ilELQreDyVs/XkDYNZRRlnFb81Yfvyeq2+Cjwc1DwWkWjJExhz4Yfxhn0wj
-	 E/Mr4bCiaNR1K3tYvq0CyKX/j4/Gt880kcXT0Ugf5/BZhg1jqBE03n090NgCEl+oT3
-	 sX5jk1NGT6kTmPcN1e5P6izNhkaZ30hI8/aMZ1DNiiJIjT1mTTd1Ua6jf35Ydy+lv8
-	 K+ubGkgi/FIFA==
-Date: Mon, 16 Jun 2025 14:57:10 +0100
-From: Simon Horman <horms@kernel.org>
-To: David Thompson <davthompson@nvidia.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, asmaa@nvidia.com,
-	u.kleine-koenig@baylibre.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v1] mlxbf_gige: emit messages during open and
- probe failures
-Message-ID: <20250616135710.GA6918@horms.kernel.org>
-References: <20250613174228.1542237-1-davthompson@nvidia.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="hGTxF0p6"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4f71831abso4161176f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750082235; x=1750687035; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E5U21iemE/c9Sz0YhEWkD1P9gtyQVcNDFZou5zB9HsA=;
+        b=hGTxF0p6tGO+hQUegUdTkJeP17/HhQs9wCy334tOFiX1HT+Y/DvpMaGKoSRHZ5597N
+         pY7u4a08y3J1KNnDG5DfyU42bZp4mOVeQdh0guB3Uv1B3Wrsa103Wwf69rGXKReMidUc
+         jHJJzYnseEc7JWxkZxukJbxcthl0yrx9kL4TTWPD0jJ1FVDSxij8b1UMYVJNgVy3T1BM
+         tfSu12FvP+T/IVMiJcsAWIpt2veVuMYy0TQhzKA3ryl0XKuchDwYnHjjTb6N9BeuwTkl
+         5C/g6H389IT/4cmQez+9PlnKqdCgH+qaDzmlnMy4eUxVkHrqfIDonY2NpzmkPE9+5fUR
+         icBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750082235; x=1750687035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E5U21iemE/c9Sz0YhEWkD1P9gtyQVcNDFZou5zB9HsA=;
+        b=McPs1Ot0YlX2n7nhwKivfA1P1Jdz8/L3zeLda1pWUPL6i/fqgaRgXJ+j0l2eok/a8F
+         fjUSblpNy5HKqNJL0UUsuXwX6uDWs9aLXpR6vEfgQPFstl62LA8L0em68HulfwIn4eoB
+         LePkcviOMnFANEX0laydrk9gMdGUPDRmqvNnJ7nzgW6NMOUksBVgVaVdGxIxkNWAB8MC
+         PIZ2YctVgdGdMULayNG5c9FENfqw5K8CMRelJVzDFvlgiSj+EZ4ufADxS8O/zkp+Rweb
+         QtvnMcHJqHjufuzMLma5Y3KbOFMrQz40vks6+f6P732SsiVp3i7iSDp/lhDcJa+5tFTv
+         6EGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkI6YSoQLlVD25xBHBfH2J2MR6SG19goBC/leIu+mnBqSTLXqxl+s3kMBBsVtdu/JrlScuhLidTY+kPHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY86BAc3mF1u4g7Ob/pG28G+1IrpwcxwDg+rJgZbkx9SkiL82c
+	cj/TkSy4Wz9HvdtChxzRLlbdCC3gLayShA0RLZSmwloW4XKTaFJYuZJIaWX2NxXojwM=
+X-Gm-Gg: ASbGncsbRb7GcqAu+5rtw5YfZ4RYp6gOxmldi7c2wZ3RoKU0Ul0DtWRXtOr/nu+/41W
+	tQzLghIEiHGHp27jbbhYee/UQY40VqJX0JvL4tx2WSR+5HtbRxMnLp/p0tnc9ok5AtW/LK+AEcq
+	vFDtIm+YBoT4OmsRo0Kmlde62tYJ384ZH1VSRPHQPIhqu9+Cu/vuztTGP50M3LvLpTI8Rq2JibH
+	HNDGssGC9eu/nmFse4/YBVKOuSFTAZG1eRcNUQbjJaAAjkUQs9+D+3QKZKryE3DJAgxb14GVGja
+	x9lQm90Ca0z/sMRyZ+daBKky5590EPK/vqZnzQo7TE1vGX+MTTyknfKH99K2G0Nt
+X-Google-Smtp-Source: AGHT+IG5cdNsogAjYlCwwv/Yr99wBxZ5kpKFYKtrzNVTxQPp1q35B4mAJcdg7PMSO6nM0Lz7izNcdg==
+X-Received: by 2002:a05:6000:1449:b0:3a4:ed62:c7e1 with SMTP id ffacd0b85a97d-3a572367734mr6709880f8f.12.1750082235292;
+        Mon, 16 Jun 2025 06:57:15 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea927asm61349195ad.155.2025.06.16.06.57.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 06:57:14 -0700 (PDT)
+Date: Mon, 16 Jun 2025 15:56:59 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
+Subject: Re: [PATCH 6/7] debug: kgd_io: Don't check for CON_ENABLED
+Message-ID: <aFAiq3IEic8DuATR@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+ <20250606-printk-cleanup-part2-v1-6-f427c743dda0@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,24 +84,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613174228.1542237-1-davthompson@nvidia.com>
+In-Reply-To: <20250606-printk-cleanup-part2-v1-6-f427c743dda0@suse.com>
 
-On Fri, Jun 13, 2025 at 05:42:28PM +0000, David Thompson wrote:
-> The open() and probe() functions of the mlxbf_gige driver
-> check for errors during initialization, but do not provide
-> details regarding the errors. The mlxbf_gige driver should
-> provide error details in the kernel log, noting what step
-> of initialization failed.
+On Fri 2025-06-06 23:53:48, Marcos Paulo de Souza wrote:
+> All consoles found on for_each_console_srcu are registered, meaning that all of
+> them are CON_ENABLED. The code tries to find an active console, so check if the
+> console is not suspended instead.
 > 
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 9b11b10b120cf07e451a7a4d92ce50f9a6c066b2..cdc1ee81d7332a9a00b967af719939f438f26cef 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -589,7 +589,7 @@ static void kdb_msg_write(const char *msg, int msg_len)
+>  	 */
+>  	cookie = console_srcu_read_lock();
+>  	for_each_console_srcu(c) {
+> -		if (!(console_srcu_read_flags(c) & CON_ENABLED))
+> +		if (console_srcu_read_flags(c) & CON_SUSPENDED)
+>  			continue;
 
-Hi David,
+I think that this is similar to the 5th patch. We should check
+here is_console_usable(con, console_srcu_read_flags(c), true)
+because it checks more conditions:
 
-I do have some reservations about the value of printing
-out raw err values. But I also see that the logging added
-by this patch is consistent with existing code in this driver.
-So in that context I agree this is appropriate.
+     + the global console_suspended flag. The consoles drivers should
+       not be used when it is set...
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+     + whether NBCON console driver has con->write_atomic
 
-...
+and we should also fix kdb_msg_write() to actually use
+con->write_atomic() when it is a NBCON console driver.
+There is hard-coded con->write() at the moment.
+
+But it might get more complicated. It would be nice to do it correctly
+and use con->write_atomit() only when nbcon_context_try_acquire()
+succeeds. We probably should use a context with NBCON_PRIO_EMERGENCY.
+
+And this should be fixed at the beginning of the patchset because
+it actually fixes the support of the new NBCON console drivers.
+
+Best Regards,
+Petr
+
+>  		if (c == dbg_io_ops->cons)
+>  			continue;
+> 
+> -- 
+> 2.49.0
