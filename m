@@ -1,198 +1,166 @@
-Received: from mx0b-007b0c01.pphosted.com (mx0b-007b0c01.pphosted.com [205.220.177.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88EA20FAA4;
-	Mon, 16 Jun 2025 16:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090903; cv=fail; b=EKI3c5rF458bHfs3QmRjoWbTIW+oB3xMCh/wb4+m76AzO1QHY/oJO9jUHuglc7+LU+CHRbt14fvSwp7TzJSTvyualQuFrOkSx8qM5Wxvxcb1/i/1iBDp9mWwXPmgeEC1IWLgQ4FEay9NcoT5eoEWOn2gxTSBPNOoUl/rwR4gN+M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090903; c=relaxed/simple;
-	bh=OGAaE8OaKbi+AyyBIrvuPej0uuYtas/eGeFEAgRNoo8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pDCnWSATioHWtR+jZSC+e0gbHESv4r+NqjADYVt/Nh6YOkZEVc4EJ0orK54IERVkkbdasaVG/FXGDs29Rr+YRHjD/hfleiGmBpPjdArMrxhretiKibU7pYs/m/BVveaq49niQJD6nKWNK/geymQBfgfZkpmUbxo6RauZiwl787o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=OJnxSFdU; arc=fail smtp.client-ip=205.220.177.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E63286D4C;
+	Mon, 16 Jun 2025 16:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750090917; cv=none; b=XB79kGYd/F0lOImTY2W4gY2eLbrGM/0fn8o/J892S41NYlZaNmpqH8//LbDvH6sUXh2I47FCv4CbS9natdJ6lNy22pwAXj+P3JRaRW2RmT2NQjtqNt8m/ta8VKyu21C7xz52CadR7TKqyn6IvSWwFzPpyZUIYYBdkrrB3iW8zW0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750090917; c=relaxed/simple;
+	bh=RfRvUUYoMKCxEmMrEwHViOmEyxcA6EnHNTWW62LCo3I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EvRYQn2Xl3JoRqK3+UO0rKutNSFSP9qao8/RsIxgTpM0vG8te0LZXSK0TSXftNK+w02Wi+I129WuYk3a7InHITt8CcUfmx5GnF+6XIG73JA/RLjzroVWTGd2ASumsPIl67OM7ushdPlaohzPLT2rzrkWLSpn9/aQ5qDb1yZCkm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQ5hE9Kn; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="OJnxSFdU"
-Received: from pps.filterd (m0316044.ppops.net [127.0.0.1])
-	by mx0b-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G9xHFU026144;
-	Mon, 16 Jun 2025 11:21:21 -0500
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2047.outbound.protection.outlook.com [40.107.220.47])
-	by mx0b-007b0c01.pphosted.com (PPS) with ESMTPS id 479r3mxnw1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:21:20 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mF7sVi+Atle7vnEi5FeRI1MYQtVikO2W4UTv/R4DDaZbz/3+CoU7D1QMI4zQFBZ8CHoSxczapQDlvaQH2hk61kQJcK2RgMcidLYBVriyVNqAdTKcUIGE+mnqslUeGOku3uYRkaQotFe6BXh18ePLIYhaXCkestni+vniRe0HjzeTIpwAv5UAWmGuLEQLPIJqXEbxzaZmtIcGjQWKsM9fweEKMfMn5c0RJD1/cyX1T0ZE1F0K8sGN8i4bUkFJw/SBgKVyVCvwTxMBmQdTjiUpN9pLCV+46OjM2kNijXqt097NjftDJdamrDst7DHDmpjmqMuyya04kkVLbuv+R6681A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XBPNDlqk/0RPWmHq/WeQOtDPphwEPFt4OFdsO4KZwNo=;
- b=i6najaP/l00EBLGHKjHd9jrBUsmNCNgOU//5VzbuCwqpADqYnfmy9So+uyF8d0z/jYQFcjohl7QzNMm6p2i5rvb7/APkrSynstYBySFBqDGBc23P8fpEUmzYYs28LTCFsgKBpRNEic+9FO/eggVaBuYuykFUjPJJ7f7Wx0kiCyP1BOc9wcAtYXyRlM1NecP+Lsn/GdvpTEZecS0E8UlblwQP9vQVBsay1X786MczUwKItzu4MTDxD+9W7vtR8xrMP96sz4ToD8vGxjveiMgFlyGoAJ+g5IHrODsF7EgLegLrAkVr2mcTzW/Xvt55nFnhcX959mClBjQDVLe0Du+x6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
- dkim=pass header.d=cs.wisc.edu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XBPNDlqk/0RPWmHq/WeQOtDPphwEPFt4OFdsO4KZwNo=;
- b=OJnxSFdUJ6BTCSGoBFZ2NVZ9PREsVlJD4jCN3T4Q3IjgMhoiSG69az3f6LEqbUf86ly4rN8jGUvt0xYLgONcknjU3EsNENbbN/U4Ygnm1ZxIBmOh7L4g0wYk1NUXbXJ+N7sWwoDGBjSHUQBirDZ/DV7Zujc3vnrHUb9DTt1+MLWr4deeBeDlsME8YVHX1HiYwAUrwPRhmjrOZuDVeYwcpFUkyC70YYxUfN9NM2VVrNQFhyAdxHxdz0YNUvyKICcDOmH1bnEvqMnT7tVH7eaEsJW09cMW+lChqv1AwAobi4KtNC+hr2A9ASHh2X9InFoRj5BOkvF5XcQgFfOATYp0/Q==
-Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
- by MWHPR06MB10248.namprd06.prod.outlook.com (2603:10b6:303:27f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 16:21:18 +0000
-Received: from DS7PR06MB6808.namprd06.prod.outlook.com
- ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
- ([fe80::76b2:e1c8:9a15:7a1c%7]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
- 16:21:18 +0000
-Message-ID: <f3eb815b-8c47-4001-b6e6-ec47ae10b288@cs.wisc.edu>
-Date: Mon, 16 Jun 2025 11:21:17 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] docs/vfs: update references to i_mutex to i_rwsem
-To: Jan Kara <jack@suse.cz>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Matthew Wilcox (Oracle)"
- <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>
-References: <666eabb6-6607-47f4-985a-0d25c764b172@cs.wisc.edu>
- <fd087bc3-879f-4444-b4ad-601a3632d138@cs.wisc.edu>
- <fduatokkcmrhtndxbmkcarycto5su7gb7jfkcb53gvzflj5o5a@itnis2jwtdt6>
-Content-Language: en-US
-From: Junxuan Liao <ljx@cs.wisc.edu>
-In-Reply-To: <fduatokkcmrhtndxbmkcarycto5su7gb7jfkcb53gvzflj5o5a@itnis2jwtdt6>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR17CA0012.namprd17.prod.outlook.com
- (2603:10b6:610:53::22) To DS7PR06MB6808.namprd06.prod.outlook.com
- (2603:10b6:5:2d2::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQ5hE9Kn"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a589b7dd5fso75867011cf.0;
+        Mon, 16 Jun 2025 09:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750090915; x=1750695715; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jFLMSnoLv/CTUlJyxBIiOWdEUWj3gdBoK2X2AHkWCds=;
+        b=NQ5hE9KnhtQIP1yT6s+mD2afxS3Bpc4mpjC6ctAB6qD/3XL0FeWcM3AMPlTARSOpFy
+         7qMawJRKZfnpXOjoak4pzMhtwm9q0Wbuuw6J1iHfbGRrhTznlIrQqiXEMc8Vt1cxlMbI
+         hf0c92Uvg0Ze31WBztuoeqDs3e9qWliozk2ek4E+i8giQvnp3LBFcxSnCUQAzVtuACtT
+         GhErPpg6NdzNF+Bgq0hn5MXe+dexu4WDOuMAEDQotJApFRDJXe62eaHPD5loQkL3vsGH
+         YHRpDnBWBrxIXP2P7E+XOqjgCwFkHxMeL1p3nmqymSF3q/VBV0HQH/Cp7iS6NkuicJsJ
+         XG9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750090915; x=1750695715;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jFLMSnoLv/CTUlJyxBIiOWdEUWj3gdBoK2X2AHkWCds=;
+        b=YyDwn/uj0+SvYx7Cl2GoZ9+gtP1PR37p3JevAPz/C70QTRBbsG7dRqY+oW3134QdNN
+         59TJWzC9bKo04gjAqbVb6ea9ABBQ9PUmX7qyiSek9maIXCFdorrsjb9WH7Kfof6CAWDz
+         IVmJY8Lgo0HeRVSNJ5vOMBkZ2ytHTPHtAtvpNTsRP75K4I8n4lGKav3JngAOc7Itr3gA
+         Ys3rX1G5XKZNlegjxTIOYCr+ciYKRB5cytiwvgna5GT44rbVPwgm0AjnPEL5x6onYReJ
+         msSDpxT4JzxaTlPvGM7nAW9i1e4QNWmViusArjF5kpptAwhIWsq38ogXbwssKyNB8l3N
+         JiiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxj8leGOE0hYORg7KbdYYpj2muJYRerOeFEif64UXhKPWuVhUS5eiIbbvLgz4hI4+G1fERFW+siGXd1pk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWDu1ahOurbjyaD6POAiQMCtQddNB5y8YjYM/yPBErpTtynO+C
+	lGpHJc+ovfDGDe79How80pLe1mAYDrq6wjnNQ2+3qQb3HyJgp+hDkGCd94Ruc18LCik=
+X-Gm-Gg: ASbGncu+5QRC0UCrovkcFI+W72fKbvKAnBBs0My9tL6jOeF6/KXrE7YxxwZ8XuMaoxX
+	HfqG3C8dmJOnThRwtQ6WzErTsafqd1BozRKB5RLkCvMj3YI2WBQYGiJey/Mo8D7QE3yRgiTvYIh
+	8cpXFf64ZuKN+PIvFhV65HEe0OKbmWuvHrcsLsAIytX98QT3mMkwLBrPOs4mr33pmKB1NmeGTgx
+	9hSBFlvOPnfjfZ8kkQAxrqoYcPddXp9iZdhpdPbXVtP02F1vJjJK7YxGRHtkELflOaW4tc+aiHa
+	tC4gpHpG6bD/HmKNX+pv3Ue950upS5tFktHaR+blREXIjYhvuOE30tz0m+UpZANEBL8iOACTB6e
+	Fo1VvPW4uw6xGG8w0fAap06Dctwy8SynM6CVVlxNK/A==
+X-Google-Smtp-Source: AGHT+IEOSfILcG9gkykewKvy4dyQpZ/6LjMM3OZLq4alndr+S6qX1BPsy940UsDGx+W57yjmAUHP5w==
+X-Received: by 2002:ac8:7d85:0:b0:477:64b0:6a21 with SMTP id d75a77b69052e-4a73c50a741mr165042891cf.23.1750090914508;
+        Mon, 16 Jun 2025 09:21:54 -0700 (PDT)
+Received: from localhost.localdomain (syn-184-074-055-142.biz.spectrum.com. [184.74.55.142])
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-4a72a5298f2sm50952041cf.80.2025.06.16.09.21.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:21:54 -0700 (PDT)
+From: Robert Cross <quantumcross@gmail.com>
+To: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org,
+	andrew@lunn.ch,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-kernel@vger.kernel.org,
+	Robert Cross <quantumcross@gmail.com>
+Subject: [PATCH v2] net: dsa: mv88e6xxx: fix external smi for mv88e6176
+Date: Mon, 16 Jun 2025 12:20:25 -0400
+Message-Id: <20250616162023.2795566-1-quantumcross@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|MWHPR06MB10248:EE_
-X-MS-Office365-Filtering-Correlation-Id: eede4652-bf3d-4d73-e1c2-08ddacf1d322
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|41320700013|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Mjl6T3dkUEptb3VpSCtzaTJaY0syQ1QvSFpYcDFwZHJKTWxVWEZBUFlYU1U4?=
- =?utf-8?B?OTdiOTVEMDRMMHgwUXlPUmRBSWdBU2Y1Z015cFdFeU1oZ2RBSC9Vdjc5b0RD?=
- =?utf-8?B?bDUwVkRTeDBCNTEzV3p3VnN0QmRYTWFaTndSeC91MlhuZlZJa2hSSE1jc2xz?=
- =?utf-8?B?V2NMTDRGMUo3WHNHMlRCQ2tRU0pyaFp2WXQrcjBRSUVhUVBjOUJGTC9SSDBn?=
- =?utf-8?B?Y3FISTBHMkdwRXVNd2M2WGQ5RDNGWFZBR2oreDBNNldZdzdJVDFyVmkwd2R3?=
- =?utf-8?B?RExmMVVCcjRVdTVLZ1NIaEc3RFdWN0hLNVhNNWo1L2xvTitJTkE0N3V5ZUda?=
- =?utf-8?B?ZE95cmdVRVVrZ0lCc2ZrVDB5ekhvVjBWSGZMTFVBQ1F3VEh2ZWhFV0pheUd5?=
- =?utf-8?B?RXJYR3lucE5TVlZGK2V3RnlLVVZGM2E1eGpmaFIwVU9UZWxIWm4wQ0IzNGFH?=
- =?utf-8?B?T1lITDF6UEZ3NnFKRmo0NUFBTE81QVlXaXN2dVJ0QUVWUUk3cUxEZWlyQndP?=
- =?utf-8?B?VFJieVhnSWJsdVl6cEJHSXgxZ0twRkVSZmpVS1k3T1gwamx3QzFMb21xTVRx?=
- =?utf-8?B?RHZVSFloeG83UU9ra21EbDV5dDFDcWdteFNMdUlBc1pWRnpUdm1mVy8yNWNS?=
- =?utf-8?B?V1lRNzNSenU0NGZZRVdQbFROcGRXNGNHcjBnVFhiODRKMFZMbnVBMzdQTzFS?=
- =?utf-8?B?bU9id3ZMZnlucmFIWU0zUjMyWWlKbzNLdVRhaHhvVE8yWXBwVXUxSGdqUlVV?=
- =?utf-8?B?YS93VmNBa2NFMC9zb2V6TU5rMkp6bnUrYk1tMEdON2RTSG9jTGFKWGVJZ285?=
- =?utf-8?B?S2M4bXV5L05vTHdsZm05N1lSN3cxM1JNbEFpSkNvdUtTc1ZSVHNjc3NJTEts?=
- =?utf-8?B?c291cXUxNlp4YURLUzJVcTBUVlZSTU1ocTJ3WFFDSjd0cEhVWjBWVzRmdEJk?=
- =?utf-8?B?c2hUUEluTUc0cTh2ck83Q3Q0Rnd3K1Q5dXNPb0NYSkRyZzhzL2w0MGpGOUZp?=
- =?utf-8?B?eVEwR0VkMmxzWWF1TVRSKzRKSURSNW53ZEQ5YUhEVXVrK1ROaE9XVVAxQnkz?=
- =?utf-8?B?aWtuQlM1ekJHd2M4ZGtNazZ4bWJQTlVYRUNVV054bUZzMHR4MU85bVNUeVJ4?=
- =?utf-8?B?cXdDYmtqTGpXTW00QjNIN2Q0ZzBTdytMRmVXOTlENThVelR2MWZDczhiTUJq?=
- =?utf-8?B?R1l4UTJFNFl0YVE4dVcxUE9sSmNJcmxIaVN2TkYvTzVUZnowRDFmRTRNNW4x?=
- =?utf-8?B?WmVFbmpERXRydElwbzNNK3JxdEpHRHlaWVZoMGdXNG5xeTRYYkc1NlRaTEJu?=
- =?utf-8?B?bDIwUFVFcy9wbndDNnplOUJEd0NGMiswbTZMQldDa3FSbDg4VmpDT2NqN3dX?=
- =?utf-8?B?NFYydUFrNGlBK3ByVVQ5VzVJOENLYmdKZEJPdGlrc1A3d2dvNitJSUpxelN0?=
- =?utf-8?B?S3A2Z2FhU0NWcWtOZ3F0RGg3MFJQL1hHSkhIV3I1R2dNdGFUQ2ZFRytUTXdn?=
- =?utf-8?B?M3kzRXhzbGdYRHBkNUlGMzV6ZzRzZ1RiRG5raWhmN1NHeDBQV00xTWU0N3Qw?=
- =?utf-8?B?R20xOWkrQmFadzZaZXhiNVFpZEN0TnBmQlVnRmI4aWNtcGZ4YXZ6SmNWM0VG?=
- =?utf-8?B?K3pPMzk1eVZldlVPSHQzbE9NRnFScHlpb1dSVFBKZlZpamlsMDFHeEc0Sm1D?=
- =?utf-8?B?d3dCWFgxL1A5ZDFoVlRYZTh1UXBHbUJBSXhzZlNCRFo5aWJ6VzN0NHlXU0Ri?=
- =?utf-8?B?andTejYrZzB4QmFET1FUZGFvb2RVYjdFQVJnUmwwVHk5dUFLb1d5RVQ1RzFI?=
- =?utf-8?B?VDg2cUFBWTl3ek82ODZHNWpCeGF0cGhaeFZEZnlXUUtVOTFCOWUyWmI0MXFi?=
- =?utf-8?B?dnJpV3R6c2kyZDdVR1lDN1hYZmtxTGlLZUxPaWdKdEtBN25oQkdqU205Uy82?=
- =?utf-8?Q?8864o1bfX6k=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(41320700013)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dWVoYldYcGZWYXFtNGI5OE44TGFnQUFoM2FDMzhpcUxDcHpzQ3BNem9hZ0Rk?=
- =?utf-8?B?ck94bDVZNE5UeDN2dFFhMHZnOVUzNmo1TFVTSUsvenoyR0FEOWFGSndoSVVZ?=
- =?utf-8?B?UnRGR3VlTEtzcy9vNGdueUZvbStEaForNWpiUW5ibDZYdnJhUm5sN0swVkdT?=
- =?utf-8?B?MjdrQy9NYU9SaFFrREc4VUlIRzgzWThyNFY4R2E2dUhBMzRWb0xGWXpRWWJv?=
- =?utf-8?B?clhySkRiWG9qemU1MnVMSGs0ek9LVnN2R2hxczR6MGVGRHpxemV3dmZzalpu?=
- =?utf-8?B?RnF3NkFtdkJJb0FqaERHZkFKdUk5SkNjZUFqQUNUYytYVlNTQkVzdGdFdFdO?=
- =?utf-8?B?RnZ1Qi9JR0ZYWTFqMkpPQnNyMUxJL3ZKOTlDakdWOFdsdHppNkhvM0xsSEFR?=
- =?utf-8?B?MGprMGllZlFNZFgzNVRLNG5yOE9MQWNqOGhYRjh4MWxvU1NpRnZCZ3ZiYWdB?=
- =?utf-8?B?cVdBTzUweWE3WmxVOW9tejE0NTNFZnhlU0Q2OXlCRnM1T0FTR3JXbUxxeVlk?=
- =?utf-8?B?eHI3T1NlZEVMdHh1MXY0cXlETklQeGVjckRrd295UWJvNkkyTHZxSzFsb29i?=
- =?utf-8?B?dmpFR244d2ZWRHg4dWoxRU1IUjA2T1JNTk9pU0RzQTVBYkNJTHVyWC9hWVpZ?=
- =?utf-8?B?UDh3MXRIUnFYdVE0N2hGcm13aGh2b3lnLysySUdRTHlNSTBBV3ZNdTM4MzNn?=
- =?utf-8?B?MFlTWFRiMVQxaEQyK3dvTmhHZEFYVXhDdFZ5VVlSdVBNNmpqVkJlb3lNSDI2?=
- =?utf-8?B?clJDZVlCemQ5bzdydm03VUd0SklPOW8ydlR1aGJYaStONlEwb0lmanJDNEpH?=
- =?utf-8?B?UDVjejkxdExwa1N6VlY3N1JkK2h2YWZkSmJTaXhqNFdiU0JyYldXaTI1REFJ?=
- =?utf-8?B?dWNSOW5BaUZkR1c1UFhkcCtBeGlMdHZiNmRWS3NkV2lOTWQ2eFY0UXRqMGV3?=
- =?utf-8?B?djVsVnl4TkZDeEFRaWxkTVl1RWlxQzN4NzVxTDdtV25uZ0pJZUF3RjNnbm1K?=
- =?utf-8?B?ZXMwMGZVQUo2RldGbUR1blp1YUJkeUZHc29RMlRoZUk5RTF3cENpU2xSSHVZ?=
- =?utf-8?B?amgwM1JvNmNFV2xmVitRWHgxYjFyUEtWT1NOYThLWldSQUdKZFA5S1RMeWdY?=
- =?utf-8?B?ai9MZ2pGUC90YzBsOEZRcmt0Y2M5R2pwb0NycWpOYXNYSTJ5L2xxdnhOSVdh?=
- =?utf-8?B?ZGJYbzZIa0lvWGUxMExINzZaSjRXTW9acFhjS0ZUTUxlb1Mxd1EwM3hCRFJN?=
- =?utf-8?B?LzBkUEcybGpBekhSL2ZpMEN4UnBsS0lpNlhpUkNHd2ovamZFMjhHQS8yMFEy?=
- =?utf-8?B?YzZjS2h4bTIrRVl4K1EvNWhSNEg0UWxQa2lUYndXTFJOREJCNEhObFFoM1d2?=
- =?utf-8?B?a2VOVXovK1NIaU1oM0lUUVZjSWo4NzhOMnJ5K2cvbzcrZ2x1WXh6eTVlcHBG?=
- =?utf-8?B?OElEVFJaMnNUR1hrb0ZnVU1sd1ZkMXd0UUllU1JVWnRvc2ZOQzhEbVVhaW42?=
- =?utf-8?B?NWlySXI0WEQvR0lUQXRXM3MwOWZxLzd2dkR5OGJZS2krK3UrZ0xKTWg2bzJJ?=
- =?utf-8?B?WmJ1RmtwZE5VejVYaHZHVTY1UUtXQ29ZaVhFMHRRb2QvT2ZCMkJreTQ0Q25W?=
- =?utf-8?B?RWxOcFZxcitSMjAxZGhndUNvUGJjSktkY3JBWkFxaTZIK2M4Nm5BVHQrRC9T?=
- =?utf-8?B?SWhZN1B0QnBlbkhLRktPbFo2S0toWDBjV3hTQlFLRFliWHpkNG9obzZnSFhu?=
- =?utf-8?B?QklSL0JSZ2hrV0dSVUE5cklkYUVHaFlQbmtFQ0ZuWEZaYzNySjYzQ1BZQTZw?=
- =?utf-8?B?N3JsU1JjaDhLRmVtYmF1TGk5eFloZVdNVURYQXoyVVcvcitzVmZNZit5WnVN?=
- =?utf-8?B?KzJhTzRpcXNXRnMyMGIvUm54Ly9oWnFRcHBWWTdXZDQ4WWplQzFCQXRrTmlk?=
- =?utf-8?B?aXBqSngyVGdibnhuWktINWFUbS93ZTB2UnFBN216RUJ5eUhBQkFKSk5ROG5w?=
- =?utf-8?B?cklLb3d1UjN4b0N3NGJOM2RlWU5KNCtvWWQwKzh4Q2p2NFFUNXc5ODZxaDRy?=
- =?utf-8?B?citFb0o5bFpGRU1kQkhUeEU0V3pKdUdSYTRXSGdldmx3M0JHK3hHckxYNXlp?=
- =?utf-8?B?bVpuR0x5SlluT3RwcEFhdXpadlVtNXhORlFVZW90K3VNd04ySmNGS0ZZUVJF?=
- =?utf-8?Q?q2yBAF3VOgrqfp8IkcYCzn2/Axq22faP0N/kzOHhxUJ2?=
-X-OriginatorOrg: cs.wisc.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: eede4652-bf3d-4d73-e1c2-08ddacf1d322
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 16:21:18.7354
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5F8Xxfo/1wpFcJOKuuuhgaiiIblAuRhlBq388ZJ+ThPO2/sEBjv0AFq4aP9814Ko+CmBtQDH70CCPvJmQxpKYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR06MB10248
-X-Authority-Analysis: v=2.4 cv=AvDu3P9P c=1 sm=1 tr=0 ts=68504480 cx=c_pps a=YTCy/NNc/GbGYbKR6UHGQw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=3-xYBkHg-QkA:10 a=1E0aQHB0DHgRhcW9lg4A:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
-X-Proofpoint-GUID: WMUGXZgA1nYSSCk59tpKNUq3GQC4PSy7
-X-Proofpoint-ORIG-GUID: WMUGXZgA1nYSSCk59tpKNUq3GQC4PSy7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNiBTYWx0ZWRfXxXlkkJRGEUn1 gyEUmWbhhc4HRm/q0wE65NbNiUe314ivyfiHhfr9YyCTTb+NZbWpb98qw5E7kXWJREakUFRgpmA bKtaLCnn+pmChqlSZpM8hPnPOBQ4A8rdu09vmvqDBUppFNUWFWC1rf8SJ+b4T3F332aK623MJ3q
- UJs4ESI3k1+IIRrfDHwAo1JezVXpCyatqrpOhf1Wv7m5BrWB4csmh5qBTfajqh/KOLzr+jgNmEg R5AfxizHDa8CJMSZ8HlBt3qK4e3gKcj0UP7YJzaHECxeyn19p9gYRjW7HiM+H/X3etMIhHI12cY Qiqpr7xoUifvrYQTBCShFvbzasDgwvXUxxzWttkwVvC2LGRaKlWWhdX2lwuawTKuWj4vmBJeT3i
- sEcY7HwsVDDXasNi27gwi4Gurjubds+FF+1QUl6K14yUkquocTKuIUdclxeKiqQZwYqoBUTI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=900
- lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0 mlxscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160106
+Content-Transfer-Encoding: 8bit
 
+(Sorry this is my second attempt, I fixed my email client)
 
+I was trying to enable external SMI on a mv88e6176.
+mv88e6390_g2_scratch_gpio_set_smi() would return -EBUSY when checking
+the scratch register Config DATA2 p0 mode to ensure that the external
+smi pins are free, but on my device, bit 4 of p0_mode was always 1,
+even if the port was completely disabled.
 
-On 6/16/25 5:10 AM, Jan Kara wrote:
-> Otherwise the changes look good to me.
+Unless someone with the datasheet can prove me wrong, I believe that
+at least for the 6176, the mode mask here is 3 bits wide, and the
+fourth bit is irrelevant or reserved.
 
-Thanks! Just for clarification, is the __d_move comment accurate? i.e.
-Does it assume the two i_rwsem's are locked in shared mode?
+To fix this, I add a field in mv88e6xxx_info to denote a
+p0_mode_mask_override to use. If this is set to the default
+value of 0, then the definition of
+MV88E6352_G2_SCRATCH_CONFIG_DATA2_P0_MODE_MASK will be used as normal.
 
+I can confirm that this allows me to use external smi on my mv88e6176!
+
+Fixes: 2510babcfaf0 ("net: dsa: mv88e6xxx: scratch registers and external MDIO pins")
+Signed-off-by: Robert Cross <quantumcross@gmail.com>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c            | 1 +
+ drivers/net/dsa/mv88e6xxx/chip.h            | 7 +++++++
+ drivers/net/dsa/mv88e6xxx/global2_scratch.c | 7 ++++++-
+ 3 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 2281d6ab8c9ab..0fe7b6fc7016c 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -6013,6 +6013,7 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
+ 		.multi_chip = true,
+ 		.edsa_support = MV88E6XXX_EDSA_SUPPORTED,
+ 		.ops = &mv88e6176_ops,
++		.p0_mode_mask_override = 0x7,
+ 	},
+ 
+ 	[MV88E6185] = {
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
+index 7d00482f53a3b..6307c225ce94c 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.h
++++ b/drivers/net/dsa/mv88e6xxx/chip.h
+@@ -178,6 +178,13 @@ struct mv88e6xxx_info {
+ 	 * port 0, 1 means internal PHYs range starts at port 1, etc
+ 	 */
+ 	unsigned int internal_phys_offset;
++
++	/* Some chips use 3 bits for the port mode in scratch
++         * register CONFIG Data2.
++         * If this is set to 0x0, it will use the default mask of
++         * MV88E6352_G2_SCRATCH_CONFIG_DATA2_P0_MODE_MASK
++         */
++	u8 p0_mode_mask_override;
+ };
+ 
+ struct mv88e6xxx_atu_entry {
+diff --git a/drivers/net/dsa/mv88e6xxx/global2_scratch.c b/drivers/net/dsa/mv88e6xxx/global2_scratch.c
+index 53a6d3ed63b32..7f1657eba7a4e 100644
+--- a/drivers/net/dsa/mv88e6xxx/global2_scratch.c
++++ b/drivers/net/dsa/mv88e6xxx/global2_scratch.c
+@@ -255,6 +255,7 @@ int mv88e6390_g2_scratch_gpio_set_smi(struct mv88e6xxx_chip *chip,
+ 	int config_data1 = MV88E6352_G2_SCRATCH_CONFIG_DATA1;
+ 	int config_data2 = MV88E6352_G2_SCRATCH_CONFIG_DATA2;
+ 	bool no_cpu;
++	u8 p0_mode_mask;
+ 	u8 p0_mode;
+ 	int err;
+ 	u8 val;
+@@ -263,7 +264,11 @@ int mv88e6390_g2_scratch_gpio_set_smi(struct mv88e6xxx_chip *chip,
+ 	if (err)
+ 		return err;
+ 
+-	p0_mode = val & MV88E6352_G2_SCRATCH_CONFIG_DATA2_P0_MODE_MASK;
++	p0_mode_mask = chip->info->p0_mode_mask_override;
++	if( p0_mode_mask == 0x0) {
++		p0_mode_mask = MV88E6352_G2_SCRATCH_CONFIG_DATA2_P0_MODE_MASK;
++	}
++	p0_mode = val & p0_mode_mask;
+ 
+ 	if (p0_mode == 0x01 || p0_mode == 0x02)
+ 		return -EBUSY;
 -- 
-Junxuan
+2.39.5
+
