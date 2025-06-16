@@ -1,128 +1,107 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2CC191F7E;
-	Mon, 16 Jun 2025 07:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750057335; cv=pass; b=dU1qTExKRhIMPgGVyjWwA+BaE3SWdz6PG6PXUHcjf03UYwcD4SP6UTszEfAwsGDzxzRe8gCDuc8gZt5/jWIiMGZeDOvCJ2/HeQFJ9YQiqk+z5/6kl+p1IyEYE8en9gIET4MQlpTFFxGKRdqiLSa/u42s6Do9r16NhSp4iE4iDQU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750057335; c=relaxed/simple;
-	bh=oEb7wU/bu1oja52oKmgMha7mtv8iISClgAa0+JK8RlY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U+ydmlMxPBKBrZnNxWj64pM6OUhG4xTsJSO/IVqoPIouJsueqHNxiDaeEotUbmxTv1PwrGWvy+3zj9WV2X7ZLNQex2kVeXe+Lxa/dwn3fZAVqKOkiexY0O7pYjvhj67hg8U3oNRBXkR1OL0fwRI7mztbxsVQBJa8QSE0m7jAliQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=IxQi+7T1; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="IxQi+7T1"
-ARC-Seal: i=1; a=rsa-sha256; t=1750057314; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Jifj7LPMyfhtP30MtT1rMLT80HmtvAWL7dm8J4KTHjHv0ysl3gAQ2JJsye1U79ru0Ptyvm5+F9c0fE0g2ttioPbe+VSLnCipT5Ra++D1TvHI0PnaA1zMqYapDXAoxB78QCEFlwmI0/9Tq1MvOZYOsevhuv/KTBjOVNhT+H7Lv9A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750057314; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=w2oMih2lbo9iywrNmIQ7860yAhkMUGDVYCOSRkVl8HE=; 
-	b=Xl6Z8aNSFfTb8gDV7YCiDulQeCZ4LdwI96+oaLlG0NMP3Mi6u7FGhX1Z/DFfHyRDJb6imFWelRXCPRFzWLM9Bta63b4n8Ys7OIbaYRwjz8k26pIjZdkJOoEDaZrwRcs62hRHyT5RmG/t52K+Rto5nJcuYLtxnSkrM1KTT1p+aSI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750057314;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=w2oMih2lbo9iywrNmIQ7860yAhkMUGDVYCOSRkVl8HE=;
-	b=IxQi+7T1vu3ihlP6vgZgo5YeXRZ1xjBpC9Gb25NI5BOcn+wqUVXT+L2oBykRhQJA
-	BBkE1n6pOQHpPizZw7CG8aBOJVIee2SspJ+EEh4xOf/fcjCTlFKaUykFYEgpwEje0cy
-	l6MPeRz7CejjG12vjWB8M7zT3+cmrpQNwWCMamDU=
-Received: by mx.zohomail.com with SMTPS id 17500573121561008.1454058676544;
-	Mon, 16 Jun 2025 00:01:52 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: kernel@collabora.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] docs: document linked lists
-Date: Mon, 16 Jun 2025 09:01:48 +0200
-Message-ID: <4657048.LvFx2qVVIh@workhorse>
-In-Reply-To: <87v7p48vd6.fsf@trenco.lwn.net>
-References:
- <20250520-linked-list-docs-v1-0-db74f7449785@collabora.com>
- <20250520-linked-list-docs-v1-2-db74f7449785@collabora.com>
- <87v7p48vd6.fsf@trenco.lwn.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6ACA17BCE;
+	Mon, 16 Jun 2025 07:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750057349; cv=none; b=L7wTVCnpod2nrtReaK4FVoOyMgxOW+ULXdGerhLU76LPx0p5QvKyNVqsxDZ6/h66yeNiZtZBDpVd4IVD/2RIxlp5se7UKDUSVgFaErINFUs77EBa6YWSVNjEyUD5VSHC6LCrnT16s2y+iclj29MvRdb/gvdK8cInbcT7F6FnG6U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750057349; c=relaxed/simple;
+	bh=y2zwx8wrxjsoYZOJCM8KBecAPPwDzhWK0TEKPCVeKAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bALDbhG49i1E9awaLCamJlho9nM4mmVKQHMVyK/btEhroW21ijT0nOqNf3p7V0umRyRIEUDNRsEQOKVi01QXkmUUvK3pceJvOwElMA6lFELrzSg+MD79TDKUrgGlN594PWpsJEkPlZtPKsBkw986Xl0pHg4M1Cda6UB27JPQAxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-53164bd0df3so141499e0c.0;
+        Mon, 16 Jun 2025 00:02:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750057346; x=1750662146;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a6qJGrts1k8wK/issuCyiIJGXwrSCMwYoyxafIhTBy8=;
+        b=srDx5Y7yf5E4Ljs8DZrJg3E59JJzPohTbVG7y7SXUNt0JupEq/U1irjN6K0VX0SaSE
+         96ClNxqhd9bE1yEWTMXDNyI41cepTx7EKOYHsd1ieqFKNgOmaL97uARh+omVHENqgGj9
+         j/zdhZ3pl3gO4l6wNvAk/IDOHf46XEBVhfc6S9prDMB7aJopCPsbmn8ZEZ9WVDL3HCvh
+         UPPjWw6qxGchdxyMIrMXfSgfNzWFV9kUuokxL84vU/x9w2LcbLQ4RJXEPg0RkEUB1Z8A
+         QjJZEB5VdOCelvoXdwy9w2mh9JK0eh8cSmLqEjBFFldyUu8msQTiAFKycqEAqVkApmqS
+         3MvA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6TGr4qGsa5QyLvV/36D8eA+OpxHxZeaRd2xJIwfIwNGZfMNFySsR7d+o8aBQIeN/u+NuSJ4osHbJ2sJI=@vger.kernel.org, AJvYcCWI6c2IEROkImEX9i21rHgGWEOUikJuICyvo+FJpBONSNbL36Hf98/gkWf7CSVpKP62nUFK19WsLo58LXzmboXoAmY=@vger.kernel.org, AJvYcCX0YPCJEwDlx0fxtiDmErcx/v4PVwktzHM0+q+iWjUV5mmwSEmK/qbpyILQkYyPtJz2rblUFtlF+MqnV90=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5sC6fXNBbJcBKtxvGCC5uzGTIDpu5a/fm59Y+4hJcbLRORsV/
+	eAL4+OwUQYPKqdwwyHVhziDv1goyEk4OqdYb96VJztjl5CVjJpSsrpZqk5HTEYnX
+X-Gm-Gg: ASbGnct0pv/jsRAzM2SgZFXjIexz3Jtx+f9RtLmpT6ncEasWJ3kU19NEfShTC2CfdqB
+	KcfblYpuSybfCpSBVl8QL8HwoPSXJX8iZNhZBB4OCpDlFTjtEVXiB9yCm7D8qETHSamb8yB8zOQ
+	X/EvmJU7ecM3koW7rdf70qmNUV8S6WOw0Rqk62rRIJSA6N6X/c71ywjAtptStfZHf80hL6Uefev
+	MNQFb7MCI151uP+Z8sZiTYSNdt1T6csCVjxAqAK5DLeBGnZVbuBoBibsatZIU/pJmfvoqSTeh3p
+	UqIuyld7u4awUqfFJQwwLBmK7Vs19Z06rT4Gu2rMpGljDOM2XkLB9UHs2rgAy0ed3DdzXd6nPBZ
+	6Ibl8Ymmv8nrppGCVF/I9eKSs
+X-Google-Smtp-Source: AGHT+IHiBvP1BdyXpqWiaYub++dXeXURwLkKZYB46PON2HjGYb5rLWyI/vhhIV9TTsfaAc2DbqRJrA==
+X-Received: by 2002:a05:6122:547:b0:531:4041:c4c5 with SMTP id 71dfb90a1353d-53149b60c74mr5067781e0c.7.1750057346382;
+        Mon, 16 Jun 2025 00:02:26 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5313ddd6327sm1145465e0c.11.2025.06.16.00.02.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 00:02:26 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87f2e02c62aso174676241.2;
+        Mon, 16 Jun 2025 00:02:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVQbE1OWrdEwgVU3QjaF6pc8nAsa7Q7TRHBenlMgb3hOSDfJBQWXyFbz11GP1K4xWObAEO+tQ33k9Ze6FI=@vger.kernel.org, AJvYcCX405bFofuAI4QLN4b/DC7geNzWfX0hKmtK6MfQGpBH1Kn1Z8TqM/XBTjTu/r7tdJgLlqL5kzSXMK6s6iMyw5jnhQU=@vger.kernel.org, AJvYcCXpQnZ7b8Ih0nLCuCy8vhDAVqfoDeJR4bEpT+3+hz9ECIrGGXHewHHRNIqrhLMSznH5F8SDA5cUXHENFOE=@vger.kernel.org
+X-Received: by 2002:a05:6102:2b99:b0:4e6:67f6:e9af with SMTP id
+ ada2fe7eead31-4e7f62d771bmr5205598137.9.1750057345822; Mon, 16 Jun 2025
+ 00:02:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+References: <20250614141545.2860860-1-niklas.soderlund+renesas@ragnatech.se> <20250614141545.2860860-2-niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <20250614141545.2860860-2-niklas.soderlund+renesas@ragnatech.se>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 16 Jun 2025 09:02:14 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXptFAonh99oJcXRzuWvnS7h-GM72MW5JY7YRVHD30MsQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvcNd1vNd3-ReYreHHNw75G5DxHJKAoiatW0sTkjHy-nwSo4LHt9r0VnkI
+Message-ID: <CAMuHMdXptFAonh99oJcXRzuWvnS7h-GM72MW5JY7YRVHD30MsQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] media: rcar-vin: Fold interrupt helpers into only callers
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Monday, 9 June 2025 23:20:53 Central European Summer Time Jonathan Corbet wrote:
-> Nicolas Frattaroli <nicolas.frattaroli@collabora.com> writes:
-> 
-> > The kernel contains various generic data structures that should ideally
-> > not be reinvented. However, it often fails to document the usage of
-> > these in the in-tree kernel documentation beyond just a listing of
-> > header symbols in the very lengthy kernel-api docs page. This is fine
-> > for things that have simple invocations, but occasionally things devolve
-> > into several layers of concatenating macros, which are subpar for humans
-> > to parse.
-> >
-> > Begin making a small impact by adding some rudimentary example-driven
-> > documentation for the linked list type. It's far from exhaustive, as
-> > many list modification functions are currently not mentioned. However,
-> > it covers the basics and directs readers towards further documentation
-> > should they be interested in concurrency.
-> >
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > ---
-> >  Documentation/core-api/index.rst |   1 +
-> >  Documentation/core-api/list.rst  | 390 +++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 391 insertions(+)
-> 
-> So I'm only now getting around to a belated look at this.  I like it
-> overall, but I do have a couple of comments:
-> 
-> - Is there any way to talk you into replacing all of the graphviz
->   diagrams with ascii art in literal blocks?  All the dot stuff makes
->   for pretty HTML, but is entirely unreadable for people looking at the
->   plain-text docs.
+Hi Niklas,
 
-Yeah, the dot was more easily understood at one point but then I decided
-I wanted to wrestle the layout and add backedges and then not make the
-backedges look horrible. Now it's a mess. I think I can easily be
-convinced to replace it with ASCII art in literal blocks. On that note,
-I wonder if there is a tool to translate simple ASCII graphs into dot
-and then whatever output from that, which would be the ideal solution
-here to encode semantic meaning for both audiences.
+Thanks for your patch!
 
-I'll definitely drop the back edges from the diagrams though, they
-only make things more confusing.
+On Sat, 14 Jun 2025 at 16:16, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> The call sites using the interrupt helper functions have all been
+> reworked to only one for each. Fold echo of them into the only call
 
-> 
-> - All of the kerneldoc stuff for list.h is currently pulled into
->   kernel-api.rst.  Should we perhaps move it over here?
+s/echo/each/?
 
-I think that's a good idea once the new documentation exhaustively
-covers everything. Pulling it into both places generates warnings,
-which is why I didn't do it for the functions I already did document.
-And doing it only for some and not others needlessly spreads things
-out across two pages, though maybe this is best dealt with having a
-"dumping ground" in each section for other functions related to that
-section, so that we have an exhaustive function listing even if no
-usage examples are provided.
+> sites left.
+>
+> While at it rename the variable holding the current interrupt status to
+> make the code easier to read.
+>
+> There is no functional change.
+>
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
 
-I will work on a v2 today which addresses your concerns, and expands
-on the documentation to also include some list modification functions.
+Gr{oetje,eeting}s,
 
-> 
-> Thanks,
-> 
-> jon
-> 
+                        Geert
 
-Kind regards,
-Nicolas Frattaroli
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
