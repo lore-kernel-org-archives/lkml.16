@@ -1,88 +1,507 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743F81991CD;
-	Mon, 16 Jun 2025 09:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A631991CD;
+	Mon, 16 Jun 2025 09:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750064659; cv=none; b=fgDYb+4ikKv96tocgqdNp22Q8Phe165LmOQtowcvqdJSu3O1iZRuoQM9nNwNN1YGqhX1dwiwcaYxaaxbhuQVYGL+TEBHvP9p17KVBu/A0cke/CKBR74D0XpsVrZs2Ooa0Cdf/mmglPi8TTH4LK8SNc7v3wHukg6TlNGJwH577uA=
+	t=1750064672; cv=none; b=GmA3c69A4HKLWcstppwgC46srXMqq4LRmVSoGw8q77BezkSdAwZFEh6bd2Zvwmy7OkwIxcR01TGVCg7eF36Ha8bk75Pu9pG9EKofjU2fk1OVBc+jaX39oWwxGu6uJHI/b50hO1180RBh/WTdNtY5MvgaOF/aDniZvMjqFyQZtFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750064659; c=relaxed/simple;
-	bh=0cC6uUPoW8D1ceNhr+gzB+r6cQqyjYO+BddOkail6Jg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=koNzkQachRBRoxZ0v6BDJXuuw1t16ETriLXrWOQWqht0P5kxM1nIiN4N7jhezsaBgSvEm/EeTBZxRNvRKeOJKEXf3fbVO4lpKf3+BHKBE7B2ERspsJpBFExJ4O4V8NUOXrM+z/KB4mRWX7K9fwuFF05a4pBrQHi3RAn1/zk2Zos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCCjnVs1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750064672; c=relaxed/simple;
+	bh=lS+tDPP9HtrmCc+gMnERVt58Izq/Exmd8oTX0TyOivI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P82PGh6TRhNIQEuLxTOJ5HzNy3snoWWSJqod1bs7bVVxRgRATH5/n0vVW6h+g7FuBrCK5leTbKpH6+h6RzJXN036W5oUJwl15i1o4qIeQAytDSPLVvWOGyHdoDic2XFJ8QSDvv/mVkudVXA+sYT00wX/maPT+Oiz/bUE0waxcl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N6WmfoiB; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCCjnVs1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7566C4CEEA;
-	Mon, 16 Jun 2025 09:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750064655;
-	bh=0cC6uUPoW8D1ceNhr+gzB+r6cQqyjYO+BddOkail6Jg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vCCjnVs15JhLr+gkD0415uzKKH65zw2YauahA6dRUAPnpTJy+lPsBQ6ucpj7PZf0N
-	 vvkhTkiUXBcywJwff0Ncy4b2zFm0yVpVGV7GiQuquOXqrE8cfvYNHeHu6FGWeHja/x
-	 rfJWVhb++gX0S2D9XIaUSle/unVj5pwTs1H3JrDm2IZdLO9fPHfwRLNxEvmC6xRKl0
-	 lR8bJSr2kBTAqCOF6bvWtcySDjgslavLj1rC0+8r3MbFhjezmcdlaPYgmL6J/AUDln
-	 bGUrLl7+vAMzJmABMvhYZUPclEUIhdfWrZ2jA9D3eDwjPsKI+PbGyr/WDrHMIoeExR
-	 bGrh9zQ+C8llA==
-Message-ID: <92df9bdd-734b-461c-bf98-070e4fc59d50@kernel.org>
-Date: Mon, 16 Jun 2025 11:04:08 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N6WmfoiB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750064671; x=1781600671;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lS+tDPP9HtrmCc+gMnERVt58Izq/Exmd8oTX0TyOivI=;
+  b=N6WmfoiBrn/ZNQ+xLuQUGsTE+vTh6D4Y3bee9jHckr1zyLZcgvkv9Kde
+   OTaGdJhNveifOTolUmsTIx2O9dk1rJtD0JdBqCcFx6Eo/0kAENUP7IJVZ
+   r/WTcqYR84QrQpZzX2MevSX+eydvSVLwcc7hZETIN+86GHxC2TLahThS6
+   Yp+cmXYyX2GSegYy/kmU0H2CZIAOxXZ77HaLquLuBsqvu2cLRbrYC4Iwz
+   gQLuE47rf9euzDQCMzWA8LqSxvzsufmZAFGeo7ep3ItQ5DqtviseEihO0
+   0fGCfxBPH5XCGl0PRn+SOGKg7dYhCrLkKMWMvzgKyahLMaQRhyr0GVelB
+   g==;
+X-CSE-ConnectionGUID: VvO98BSnTxGYoe1m89Mjog==
+X-CSE-MsgGUID: ondb1fioSrKO//d4JY6N8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="63616778"
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="63616778"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 02:04:30 -0700
+X-CSE-ConnectionGUID: 2olP2E60RSaa2eRVAtQrBA==
+X-CSE-MsgGUID: T+wW8xF6Q6mewIt59EZTKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="149295827"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 16 Jun 2025 02:04:27 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 60BA9197; Mon, 16 Jun 2025 12:04:25 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
+Subject: [PATCH v1 1/1] iio: imu: inv_icm42600: Convert to uXX and sXX integer types
+Date: Mon, 16 Jun 2025 12:03:21 +0300
+Message-ID: <20250616090423.575736-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/6] rust: add support for port io
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Andrew Ballance <andrewjballance@gmail.com>, a.hindborg@kernel.org,
- airlied@gmail.com, akpm@linux-foundation.org, alex.gaynor@gmail.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, benno.lossin@proton.me,
- bhelgaas@google.com, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
- daniel.almeida@collabora.com, fujita.tomonori@gmail.com, gary@garyguo.net,
- gregkh@linuxfoundation.org, kwilczynski@kernel.org, me@kloenk.dev,
- ojeda@kernel.org, raag.jadav@intel.com, rafael@kernel.org, simona@ffwll.ch,
- tmgross@umich.edu, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
-References: <20250514105734.3898411-1-andrewjballance@gmail.com>
- <CAH5fLgjgtLQMaAZxufttzoVCJpAfTifn6VWwKZ7Q6vAOOvG+ug@mail.gmail.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <CAH5fLgjgtLQMaAZxufttzoVCJpAfTifn6VWwKZ7Q6vAOOvG+ug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/16/25 10:03 AM, Alice Ryhl wrote:
-> On Wed, May 14, 2025 at 12:58 PM Andrew Ballance
-> <andrewjballance@gmail.com> wrote:
->>
->> currently the rust `Io` type maps to the c read{b, w, l, q}/write{b, w, l, q}
->> functions and have no support for port io. this can be a problem for pci::Bar
->> because the pointer returned by pci_iomap can be either PIO or MMIO [0].
->>
->> this patch series splits the `Io` type into `Io`, and `MMIo`. `Io` can be
->> used to access PIO or MMIO. `MMIo` can only access memory mapped IO but
->> might, depending on the arch, be faster than `Io`. and updates pci::Bar,
->> so that it is generic over Io and, a user can optionally give a compile
->> time hint about the type of io.
->>
->> Link: https://docs.kernel.org/6.11/driver-api/pci/pci.html#c.pci_iomap [0]
-> 
-> This series seems to try and solve parts of the same problems as
-> Daniel's patchset:
-> https://lore.kernel.org/rust-for-linux/20250603-topics-tyr-platform_iomem-v9-0-a27e04157e3e@collabora.com/#r
-> 
-> We should probably align these two patchsets so that they do not add
-> incompatible abstractions for the same thing.
+The driver code is full of intXX_t and uintXX_t types which is
+not the pattern we use in the IIO subsystem. Switch the driver
+to use kernel internal types for that. No functional changes.
 
-AFAICS, they solve different problems, i.e.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-   1) Add Port I/O support to the generic I/O abstractions.
-   2) Add an abstraction for generic ioremap() used to map a struct resource
-      obtained from a platform device.
+As noted before the pattern is used in less than 10% files in IIO,
+So it's safe to assume that IIO prefers uXX/sXX types over C99 ones.
 
-The patch series will conflict though, I think it would be best to rebase this
-one onto Daniel's patch series, since it is close to land.
+ drivers/iio/imu/inv_icm42600/inv_icm42600.h   |  8 ++---
+ .../iio/imu/inv_icm42600/inv_icm42600_accel.c | 30 ++++++++--------
+ .../imu/inv_icm42600/inv_icm42600_buffer.c    | 22 ++++++------
+ .../imu/inv_icm42600/inv_icm42600_buffer.h    | 10 +++---
+ .../iio/imu/inv_icm42600/inv_icm42600_core.c  |  6 ++--
+ .../iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 36 +++++++++----------
+ .../iio/imu/inv_icm42600/inv_icm42600_temp.c  |  6 ++--
+ 7 files changed, 59 insertions(+), 59 deletions(-)
+
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+index f893dbe69965..55ed1ddaa8cb 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+@@ -164,11 +164,11 @@ struct inv_icm42600_state {
+ 	struct inv_icm42600_suspended suspended;
+ 	struct iio_dev *indio_gyro;
+ 	struct iio_dev *indio_accel;
+-	uint8_t buffer[2] __aligned(IIO_DMA_MINALIGN);
++	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
+ 	struct inv_icm42600_fifo fifo;
+ 	struct {
+-		int64_t gyro;
+-		int64_t accel;
++		s64 gyro;
++		s64 accel;
+ 	} timestamp;
+ };
+ 
+@@ -410,7 +410,7 @@ const struct iio_mount_matrix *
+ inv_icm42600_get_mount_matrix(const struct iio_dev *indio_dev,
+ 			      const struct iio_chan_spec *chan);
+ 
+-uint32_t inv_icm42600_odr_to_period(enum inv_icm42600_odr odr);
++u32 inv_icm42600_odr_to_period(enum inv_icm42600_odr odr);
+ 
+ int inv_icm42600_set_accel_conf(struct inv_icm42600_state *st,
+ 				struct inv_icm42600_sensor_conf *conf,
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+index e6cd9dcb0687..550eaa5a2ea7 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+@@ -177,7 +177,7 @@ static const struct iio_chan_spec inv_icm42600_accel_channels[] = {
+  */
+ struct inv_icm42600_accel_buffer {
+ 	struct inv_icm42600_fifo_sensor_data accel;
+-	int16_t temp;
++	s16 temp;
+ 	aligned_s64 timestamp;
+ };
+ 
+@@ -241,7 +241,7 @@ static int inv_icm42600_accel_update_scan_mode(struct iio_dev *indio_dev,
+ 
+ static int inv_icm42600_accel_read_sensor(struct iio_dev *indio_dev,
+ 					  struct iio_chan_spec const *chan,
+-					  int16_t *val)
++					  s16 *val)
+ {
+ 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+ 	struct inv_icm42600_sensor_state *accel_st = iio_priv(indio_dev);
+@@ -284,7 +284,7 @@ static int inv_icm42600_accel_read_sensor(struct iio_dev *indio_dev,
+ 	if (ret)
+ 		goto exit;
+ 
+-	*val = (int16_t)be16_to_cpup(data);
++	*val = (s16)be16_to_cpup(data);
+ 	if (*val == INV_ICM42600_DATA_INVALID)
+ 		ret = -EINVAL;
+ exit:
+@@ -492,11 +492,11 @@ static int inv_icm42600_accel_read_offset(struct inv_icm42600_state *st,
+ 					  int *val, int *val2)
+ {
+ 	struct device *dev = regmap_get_device(st->map);
+-	int64_t val64;
+-	int32_t bias;
++	s64 val64;
++	s32 bias;
+ 	unsigned int reg;
+-	int16_t offset;
+-	uint8_t data[2];
++	s16 offset;
++	u8 data[2];
+ 	int ret;
+ 
+ 	if (chan->type != IIO_ACCEL)
+@@ -550,7 +550,7 @@ static int inv_icm42600_accel_read_offset(struct inv_icm42600_state *st,
+ 	 * result in micro (1000000)
+ 	 * (offset * 5 * 9.806650 * 1000000) / 10000
+ 	 */
+-	val64 = (int64_t)offset * 5LL * 9806650LL;
++	val64 = (s64)offset * 5LL * 9806650LL;
+ 	/* for rounding, add + or - divisor (10000) divided by 2 */
+ 	if (val64 >= 0)
+ 		val64 += 10000LL / 2LL;
+@@ -568,10 +568,10 @@ static int inv_icm42600_accel_write_offset(struct inv_icm42600_state *st,
+ 					   int val, int val2)
+ {
+ 	struct device *dev = regmap_get_device(st->map);
+-	int64_t val64;
+-	int32_t min, max;
++	s64 val64;
++	s32 min, max;
+ 	unsigned int reg, regval;
+-	int16_t offset;
++	s16 offset;
+ 	int ret;
+ 
+ 	if (chan->type != IIO_ACCEL)
+@@ -596,7 +596,7 @@ static int inv_icm42600_accel_write_offset(struct inv_icm42600_state *st,
+ 	      inv_icm42600_accel_calibbias[1];
+ 	max = inv_icm42600_accel_calibbias[4] * 1000000L +
+ 	      inv_icm42600_accel_calibbias[5];
+-	val64 = (int64_t)val * 1000000LL + (int64_t)val2;
++	val64 = (s64)val * 1000000LL + (s64)val2;
+ 	if (val64 < min || val64 > max)
+ 		return -EINVAL;
+ 
+@@ -671,7 +671,7 @@ static int inv_icm42600_accel_read_raw(struct iio_dev *indio_dev,
+ 				       int *val, int *val2, long mask)
+ {
+ 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+-	int16_t data;
++	s16 data;
+ 	int ret;
+ 
+ 	switch (chan->type) {
+@@ -899,9 +899,9 @@ int inv_icm42600_accel_parse_fifo(struct iio_dev *indio_dev)
+ 	ssize_t i, size;
+ 	unsigned int no;
+ 	const void *accel, *gyro, *timestamp;
+-	const int8_t *temp;
++	const s8 *temp;
+ 	unsigned int odr;
+-	int64_t ts_val;
++	s64 ts_val;
+ 	struct inv_icm42600_accel_buffer buffer;
+ 
+ 	/* parse all fifo packets */
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
+index aae7c56481a3..00b9db52ca78 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
+@@ -26,28 +26,28 @@
+ #define INV_ICM42600_FIFO_HEADER_ODR_GYRO	BIT(0)
+ 
+ struct inv_icm42600_fifo_1sensor_packet {
+-	uint8_t header;
++	u8 header;
+ 	struct inv_icm42600_fifo_sensor_data data;
+-	int8_t temp;
++	s8 temp;
+ } __packed;
+ #define INV_ICM42600_FIFO_1SENSOR_PACKET_SIZE		8
+ 
+ struct inv_icm42600_fifo_2sensors_packet {
+-	uint8_t header;
++	u8 header;
+ 	struct inv_icm42600_fifo_sensor_data accel;
+ 	struct inv_icm42600_fifo_sensor_data gyro;
+-	int8_t temp;
++	s8 temp;
+ 	__be16 timestamp;
+ } __packed;
+ #define INV_ICM42600_FIFO_2SENSORS_PACKET_SIZE		16
+ 
+ ssize_t inv_icm42600_fifo_decode_packet(const void *packet, const void **accel,
+-					const void **gyro, const int8_t **temp,
++					const void **gyro, const s8 **temp,
+ 					const void **timestamp, unsigned int *odr)
+ {
+ 	const struct inv_icm42600_fifo_1sensor_packet *pack1 = packet;
+ 	const struct inv_icm42600_fifo_2sensors_packet *pack2 = packet;
+-	uint8_t header = *((const uint8_t *)packet);
++	u8 header = *((const u8 *)packet);
+ 
+ 	/* FIFO empty */
+ 	if (header & INV_ICM42600_FIFO_HEADER_MSG) {
+@@ -100,7 +100,7 @@ ssize_t inv_icm42600_fifo_decode_packet(const void *packet, const void **accel,
+ 
+ void inv_icm42600_buffer_update_fifo_period(struct inv_icm42600_state *st)
+ {
+-	uint32_t period_gyro, period_accel, period;
++	u32 period_gyro, period_accel, period;
+ 
+ 	if (st->fifo.en & INV_ICM42600_SENSOR_GYRO)
+ 		period_gyro = inv_icm42600_odr_to_period(st->conf.gyro.odr);
+@@ -204,8 +204,8 @@ int inv_icm42600_buffer_update_watermark(struct inv_icm42600_state *st)
+ {
+ 	size_t packet_size, wm_size;
+ 	unsigned int wm_gyro, wm_accel, watermark;
+-	uint32_t period_gyro, period_accel, period;
+-	uint32_t latency_gyro, latency_accel, latency;
++	u32 period_gyro, period_accel, period;
++	u32 latency_gyro, latency_accel, latency;
+ 	bool restore;
+ 	__le16 raw_wm;
+ 	int ret;
+@@ -459,7 +459,7 @@ int inv_icm42600_buffer_fifo_read(struct inv_icm42600_state *st,
+ 	__be16 *raw_fifo_count;
+ 	ssize_t i, size;
+ 	const void *accel, *gyro, *timestamp;
+-	const int8_t *temp;
++	const s8 *temp;
+ 	unsigned int odr;
+ 	int ret;
+ 
+@@ -550,7 +550,7 @@ int inv_icm42600_buffer_hwfifo_flush(struct inv_icm42600_state *st,
+ 	struct inv_icm42600_sensor_state *gyro_st = iio_priv(st->indio_gyro);
+ 	struct inv_icm42600_sensor_state *accel_st = iio_priv(st->indio_accel);
+ 	struct inv_sensors_timestamp *ts;
+-	int64_t gyro_ts, accel_ts;
++	s64 gyro_ts, accel_ts;
+ 	int ret;
+ 
+ 	gyro_ts = iio_get_time_ns(st->indio_gyro);
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
+index f6c85daf42b0..ffca4da1e249 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
+@@ -28,7 +28,7 @@ struct inv_icm42600_state;
+ struct inv_icm42600_fifo {
+ 	unsigned int on;
+ 	unsigned int en;
+-	uint32_t period;
++	u32 period;
+ 	struct {
+ 		unsigned int gyro;
+ 		unsigned int accel;
+@@ -41,7 +41,7 @@ struct inv_icm42600_fifo {
+ 		size_t accel;
+ 		size_t total;
+ 	} nb;
+-	uint8_t data[2080] __aligned(IIO_DMA_MINALIGN);
++	u8 data[2080] __aligned(IIO_DMA_MINALIGN);
+ };
+ 
+ /* FIFO data packet */
+@@ -52,7 +52,7 @@ struct inv_icm42600_fifo_sensor_data {
+ } __packed;
+ #define INV_ICM42600_FIFO_DATA_INVALID		-32768
+ 
+-static inline int16_t inv_icm42600_fifo_get_sensor_data(__be16 d)
++static inline s16 inv_icm42600_fifo_get_sensor_data(__be16 d)
+ {
+ 	return be16_to_cpu(d);
+ }
+@@ -60,7 +60,7 @@ static inline int16_t inv_icm42600_fifo_get_sensor_data(__be16 d)
+ static inline bool
+ inv_icm42600_fifo_is_data_valid(const struct inv_icm42600_fifo_sensor_data *s)
+ {
+-	int16_t x, y, z;
++	s16 x, y, z;
+ 
+ 	x = inv_icm42600_fifo_get_sensor_data(s->x);
+ 	y = inv_icm42600_fifo_get_sensor_data(s->y);
+@@ -75,7 +75,7 @@ inv_icm42600_fifo_is_data_valid(const struct inv_icm42600_fifo_sensor_data *s)
+ }
+ 
+ ssize_t inv_icm42600_fifo_decode_packet(const void *packet, const void **accel,
+-					const void **gyro, const int8_t **temp,
++					const void **gyro, const s8 **temp,
+ 					const void **timestamp, unsigned int *odr);
+ 
+ extern const struct iio_buffer_setup_ops inv_icm42600_buffer_ops;
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+index 63d46619ebfa..0bf696ba35ed 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+@@ -103,7 +103,7 @@ const struct regmap_config inv_icm42600_spi_regmap_config = {
+ EXPORT_SYMBOL_NS_GPL(inv_icm42600_spi_regmap_config, "IIO_ICM42600");
+ 
+ struct inv_icm42600_hw {
+-	uint8_t whoami;
++	u8 whoami;
+ 	const char *name;
+ 	const struct inv_icm42600_conf *conf;
+ };
+@@ -188,9 +188,9 @@ inv_icm42600_get_mount_matrix(const struct iio_dev *indio_dev,
+ 	return &st->orientation;
+ }
+ 
+-uint32_t inv_icm42600_odr_to_period(enum inv_icm42600_odr odr)
++u32 inv_icm42600_odr_to_period(enum inv_icm42600_odr odr)
+ {
+-	static uint32_t odr_periods[INV_ICM42600_ODR_NB] = {
++	static u32 odr_periods[INV_ICM42600_ODR_NB] = {
+ 		/* reserved values */
+ 		0, 0, 0,
+ 		/* 8kHz */
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+index b4d7ce1432a4..6ad15866c201 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+@@ -77,7 +77,7 @@ static const struct iio_chan_spec inv_icm42600_gyro_channels[] = {
+  */
+ struct inv_icm42600_gyro_buffer {
+ 	struct inv_icm42600_fifo_sensor_data gyro;
+-	int16_t temp;
++	s16 temp;
+ 	aligned_s64 timestamp;
+ };
+ 
+@@ -139,7 +139,7 @@ static int inv_icm42600_gyro_update_scan_mode(struct iio_dev *indio_dev,
+ 
+ static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
+ 					 struct iio_chan_spec const *chan,
+-					 int16_t *val)
++					 s16 *val)
+ {
+ 	struct device *dev = regmap_get_device(st->map);
+ 	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+@@ -179,7 +179,7 @@ static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
+ 	if (ret)
+ 		goto exit;
+ 
+-	*val = (int16_t)be16_to_cpup(data);
++	*val = (s16)be16_to_cpup(data);
+ 	if (*val == INV_ICM42600_DATA_INVALID)
+ 		ret = -EINVAL;
+ exit:
+@@ -399,11 +399,11 @@ static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
+ 					 int *val, int *val2)
+ {
+ 	struct device *dev = regmap_get_device(st->map);
+-	int64_t val64;
+-	int32_t bias;
++	s64 val64;
++	s32 bias;
+ 	unsigned int reg;
+-	int16_t offset;
+-	uint8_t data[2];
++	s16 offset;
++	u8 data[2];
+ 	int ret;
+ 
+ 	if (chan->type != IIO_ANGL_VEL)
+@@ -457,7 +457,7 @@ static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
+ 	 * result in nano (1000000000)
+ 	 * (offset * 64 * Pi * 1000000000) / (2048 * 180)
+ 	 */
+-	val64 = (int64_t)offset * 64LL * 3141592653LL;
++	val64 = (s64)offset * 64LL * 3141592653LL;
+ 	/* for rounding, add + or - divisor (2048 * 180) divided by 2 */
+ 	if (val64 >= 0)
+ 		val64 += 2048 * 180 / 2;
+@@ -475,9 +475,9 @@ static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
+ 					  int val, int val2)
+ {
+ 	struct device *dev = regmap_get_device(st->map);
+-	int64_t val64, min, max;
++	s64 val64, min, max;
+ 	unsigned int reg, regval;
+-	int16_t offset;
++	s16 offset;
+ 	int ret;
+ 
+ 	if (chan->type != IIO_ANGL_VEL)
+@@ -498,11 +498,11 @@ static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
+ 	}
+ 
+ 	/* inv_icm42600_gyro_calibbias: min - step - max in nano */
+-	min = (int64_t)inv_icm42600_gyro_calibbias[0] * 1000000000LL +
+-	      (int64_t)inv_icm42600_gyro_calibbias[1];
+-	max = (int64_t)inv_icm42600_gyro_calibbias[4] * 1000000000LL +
+-	      (int64_t)inv_icm42600_gyro_calibbias[5];
+-	val64 = (int64_t)val * 1000000000LL + (int64_t)val2;
++	min = (s64)inv_icm42600_gyro_calibbias[0] * 1000000000LL +
++	      (s64)inv_icm42600_gyro_calibbias[1];
++	max = (s64)inv_icm42600_gyro_calibbias[4] * 1000000000LL +
++	      (s64)inv_icm42600_gyro_calibbias[5];
++	val64 = (s64)val * 1000000000LL + (s64)val2;
+ 	if (val64 < min || val64 > max)
+ 		return -EINVAL;
+ 
+@@ -577,7 +577,7 @@ static int inv_icm42600_gyro_read_raw(struct iio_dev *indio_dev,
+ 				      int *val, int *val2, long mask)
+ {
+ 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+-	int16_t data;
++	s16 data;
+ 	int ret;
+ 
+ 	switch (chan->type) {
+@@ -803,9 +803,9 @@ int inv_icm42600_gyro_parse_fifo(struct iio_dev *indio_dev)
+ 	ssize_t i, size;
+ 	unsigned int no;
+ 	const void *accel, *gyro, *timestamp;
+-	const int8_t *temp;
++	const s8 *temp;
+ 	unsigned int odr;
+-	int64_t ts_val;
++	s64 ts_val;
+ 	struct inv_icm42600_gyro_buffer buffer;
+ 
+ 	/* parse all fifo packets */
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
+index 988f227f6563..8b15afca498c 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
+@@ -13,7 +13,7 @@
+ #include "inv_icm42600.h"
+ #include "inv_icm42600_temp.h"
+ 
+-static int inv_icm42600_temp_read(struct inv_icm42600_state *st, int16_t *temp)
++static int inv_icm42600_temp_read(struct inv_icm42600_state *st, s16 *temp)
+ {
+ 	struct device *dev = regmap_get_device(st->map);
+ 	__be16 *raw;
+@@ -31,7 +31,7 @@ static int inv_icm42600_temp_read(struct inv_icm42600_state *st, int16_t *temp)
+ 	if (ret)
+ 		goto exit;
+ 
+-	*temp = (int16_t)be16_to_cpup(raw);
++	*temp = (s16)be16_to_cpup(raw);
+ 	if (*temp == INV_ICM42600_DATA_INVALID)
+ 		ret = -EINVAL;
+ 
+@@ -48,7 +48,7 @@ int inv_icm42600_temp_read_raw(struct iio_dev *indio_dev,
+ 			       int *val, int *val2, long mask)
+ {
+ 	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+-	int16_t temp;
++	s16 temp;
+ 	int ret;
+ 
+ 	if (chan->type != IIO_TEMP)
+-- 
+2.47.2
+
