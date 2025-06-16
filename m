@@ -1,75 +1,130 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DC428EA65;
-	Mon, 16 Jun 2025 02:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F28AD58;
+	Mon, 16 Jun 2025 02:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750042039; cv=none; b=s289j30/nJ07ZnDJLLuzeyxJtzFtUqrTR2OwNO+tBAee2ZaH7te/zWIEvmoCjwsadZjQhNA5CXmAiFKBRY9TJIDHhXAnoo/zyWe3gEXGp6MHD9KqC9JVCIBpBmHIeMQRsqcwh2nfGgaXOLXro3sET7nNkqLmlSepdo4KBapS/7o=
+	t=1750042199; cv=none; b=Kurp4+1XRusrQhmGwDeI02Fo3CMl5sPsgyecljy4eFNDkgnOPQ9s9shwn5N9zrDHBDNqebDdF7jA9jjfdR4IcmE+PwErrrcy7Ba322tAvvBzYenpyjvx3HeS4o/mpkXCXx5Yx58gZ6B+tcHRby5iPcK9hs0RsYQu2PRjvaxKU3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750042039; c=relaxed/simple;
-	bh=FlwQxJuGAOcmvn4PXXGQ+USfVSwSjgXAPWXer3igmeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z8sGBpVdfTq5TuyOH1wLPzCOpVh6I2e5OqgbtdhYLYpmcmx8K6FY5vttg8UYmHOriX6Do0E73/8a1ccO6YMi7DZJ2aQqmKZhwGktEMfOBKJg/AncmDnO4UxtpUA/7rjcPSYhPVFe4dtaspdKkVKQVeFdOO8k6o0yVrJ8tKmMSyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=gVuxHSAd; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="gVuxHSAd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=YEtckLm6ZfdKefMAFsRJm10nDoOLNy7qpOL8icEW1ns=; b=gVuxHSAdhpWrGQVNeZ3UWOg1L3
-	E6usWBR3XW9Atf19k3GlkHqJCsReefNrZJvvmYJiVOKjHP2kWGd7C58qkMX/6CDt9YRgz5diTev9K
-	Oor10CZwvwF69EvtcICFu87zfWMb8c13ajgN+8Tku2C8UTkYtga6vWwuS1GQuf/27gDw147Iqps22
-	KkZytWHXgyQTgM17vIrrEEKkRuU0qD+ytC9hoErN6ATooaEN6eC9VagI4+a/QU9lUUJNwD7gURXHM
-	4yoWJrGkqqL8iXtxrtROus//vU7gc4BzDMx/Uxcxq7iZQCAk57TVRFKype1jElwGM795BSAeuLkdm
-	aGFGE1xw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uQzd0-000IXB-2T;
-	Mon, 16 Jun 2025 10:46:59 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 16 Jun 2025 10:46:58 +0800
-Date: Mon, 16 Jun 2025 10:46:58 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: thomas.lendacky@amd.com, john.allen@amd.com, davem@davemloft.net,
-	dan.carpenter@linaro.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: ccp: Fix dereferencing uninitialized error
- pointer
-Message-ID: <aE-ForLUfyrXeOhg@gondor.apana.org.au>
-References: <20250528202018.78192-1-Ashish.Kalra@amd.com>
+	s=arc-20240116; t=1750042199; c=relaxed/simple;
+	bh=DYO+VmXbSPl0n+XcYwRnDBRDmHRWSTPQ63i0cRGdqws=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=WcVr4zKR9//CSfKD2lABl0QjtUhjlPikXm6uT1I458VIXVq/AfCxqJ/+fjeF0GnaoQIS3SvPujqdKuwjVkUAUJ0Xb9UG1IbEQ2RZCR3HNpMKu+iCBnXuD4EyFT8dygCXmXpgDCzZgrjupcrjlQqqZDyI5xPWjwQR3vTP0mvSVCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uQzuy-00FfCx-Fe;
+	Mon, 16 Jun 2025 02:49:52 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528202018.78192-1-Ashish.Kalra@amd.com>
+From: "NeilBrown" <neil@brown.name>
+To: "Al Viro" <viro@zeniv.linux.org.uk>
+Cc: "Kees Cook" <kees@kernel.org>, "Joel Granados" <joel.granados@kernel.org>,
+ linux-fsdevel@vger.kernel.org, "LKML" <linux-kernel@vger.kernel.org>
+Subject:
+ Re: [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing ->sysctl
+In-reply-to: <20250615235714.GG1880847@ZenIV>
+References: <175002843966.608730.14640390628578526912@noble.neil.brown.name>,
+ <20250615235714.GG1880847@ZenIV>
+Date: Mon, 16 Jun 2025 12:49:51 +1000
+Message-id: <175004219130.608730.907040844486871388@noble.neil.brown.name>
 
-On Wed, May 28, 2025 at 08:20:18PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
+On Mon, 16 Jun 2025, Al Viro wrote:
+> On Mon, Jun 16, 2025 at 09:00:39AM +1000, NeilBrown wrote:
+> > 
+> > The rcu_dereference() call in proc_sys_compare() is problematic as
+> > ->d_compare is not guaranteed to be called with rcu_read_lock() held and
+> > rcu_dereference() can cause a warning when used without that lock.
+> > 
+> > Specifically d_alloc_parallel() will call ->d_compare() without
+> > rcu_read_lock(), but with ->d_lock to ensure stability.  In this case
+> > ->d_inode is usually NULL so the rcu_dereference() will normally not be
+> > reached, but it is possible that ->d_inode was set while waiting for
+> > ->d_lock which could lead to the warning.
 > 
-> Fix below smatch warnings:
-> drivers/crypto/ccp/sev-dev.c:1312 __sev_platform_init_locked()
-> error: we previously assumed 'error' could be null
+> Huh?
 > 
-> Fixes: 9770b428b1a2 ("crypto: ccp - Move dev_info/err messages for SEV/SNP init and shutdown")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/r/202505071746.eWOx5QgC-lkp@intel.com/
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  drivers/crypto/ccp/sev-dev.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> There are two call sites of d_same_name() in d_alloc_parallel() - one
+> in the loop (under rcu_read_lock()) and another after the thing we
+> are comparing has ceased to be in-lookup.  The latter is under ->d_lock,
+> stabilizing everything (and it really can't run into NULL ->d_inode
+> for /proc/sys/ stuff).
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Ok, so ->d_inode will always be non-NULL here, so the rcu_dereference()
+will always cause a warning if that code is reached for a proc_sysctl dentry.
+
+> 
+> ->d_compare() instances are guaranteed dentry->d_lock or rcu_read_lock();
+> in the latter case we'll either recheck or validate on previously sampled
+> ->d_seq.  And the second call in d_alloc_parallel() is just that - recheck
+> under ->d_lock.
+> 
+> Just use rcu_dereference_check(...., spin_is_locked(&dentry->d_lock)) and
+> be done with that...
+
+We could - but that would be misleading.  And it would still cause a
+sparse warning because ->sysctl isn't marked __rcu.
+
+The reality is that ->sysctl does not need rcu protection.  There is no
+concurrent update except that it can be set to NULL which is pointless.
+
+For the entire public life of the inode - whenever ->d_compare could
+possibly run - there is precisely one "struct ctl_table_header"
+associated with the inode.
+
+Once we remove the unnecessary RCU_INIT_POINTER, the ->sysctl pointer is
+completely stable and not needing any protection at all.  So it would be
+misleading to leave the rcu_dereference{_check}() there.
+
+> 
+> The part where we have a somewhat wrong behaviour is not the second call
+> in d_alloc_parallel() - it's the first one.  Something like this
+> 
+> static int proc_sys_compare(const struct dentry *dentry,
+> 		unsigned int len, const char *str, const struct qstr *name)
+> {
+> 	struct ctl_table_header *head;
+> 	struct inode *inode;
+> 
+> 	if (name->len != len)
+> 		return 1;
+> 	if (memcmp(name->name, str, len))
+> 		return 1;
+> 
+> 	// false positive is fine here - we'll recheck anyway
+> 	if (d_in_lookup(dentry))
+> 		return 0;
+
+I wonder if it would be good to document that d_compare on a
+d_in_lookup() dentry will always be re-checked.  I agree this is a good
+way to avoid the possible duplicate dentries.
+
+But this is fixing a different problem than the one I'm trying to fix.
+I'm just trying to remove a possible warning and to do so in a way the
+makes the code consistent.
+
+Thanks,
+NeilBrown
+
+
+> 
+> 	inode = d_inode_rcu(dentry);
+> 	// we just might have run into dentry in the middle of __dentry_kill()
+> 	if (!inode)
+> 		return 1;
+> 	head = rcu_dereference_check(PROC_I(inode)->sysctl,
+> 				     spin_is_locked(&dentry->d_lock));
+> 	return !head || !sysctl_is_seen(head);
+> }
+> 
+
