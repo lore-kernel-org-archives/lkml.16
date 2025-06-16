@@ -1,167 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F312E2EF4;
-	Mon, 16 Jun 2025 11:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2F01A840A
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073704; cv=none; b=Qc75hQmBnnHJymrjM4L341Hg4oXIcoDS/UWCcuORKt61v+du4FzRVNzNTU1IUzsjG/GiL++pwhklphP67XJwLccd3R2CigLK80sQfn4JK0sHA8Cjetng8asTt6uk/pXX0c5c6jZKyTxhXPPpVsQB3PR53CfE2nVajxtwKYyak08=
+	t=1750073767; cv=none; b=OBtt6fWSK5mbcoJArmAWDa0J9J5MHrEtR4xwHoHkmRHJCPKeuZgDHHPRrYMLMIlHS/K7gNJigjPt3ETZCbjjUEHIALEDdsLhTWvkuPhxikla8y6qMchiN9GI9VowkvphfNwnPmHlitvInkt5+S2eyfDNZwYp3HEnFbcQgX3rLMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073704; c=relaxed/simple;
-	bh=G9IPn0guZ8e7luDU6lCo/MjI/7F105ibaLtlSYoaCLo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GlAgrpx9PZ4LEH93KgV8OxBMaeQ0f+nA9g/oEuk7FitqCe+Ye5U8FbmjQw5u5Kdfy+eGCTKawOY2rZBPmqFvljUn0Jj3MvvYZD00EDLsOQnzvsIf32WJSK5n/Fukfx9Evl8eB3Emtk9hv0j8D5ZRUwzBGbmV00IqRIkbw9YHLD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V1g+KUgl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750073767; c=relaxed/simple;
+	bh=cH1mdebi7kDJEeg0Wb5HT6Owhw8PFAmNDyCQqE/rqOc=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=jdm6pKrvxmX6wNtJKkffucniRsBFNevbsRQ936Dk8QD76Xc3RtMRFrs8pen5/+YwvV33g0NqhIN4T5locmLI/WE/hofr872ZuO5nn6rONk9XbL8UvkNahEJaicGWqNulApIQ/JFE96GRYigo0bS2lsZHwA6L2AJ/+9D7nXxxZWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Miqsqp/M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V1g+KUgl"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8llZk004109;
-	Mon, 16 Jun 2025 11:34:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mr+Lp2/Tw3slc2QsiFw5oFEx+8uq1qJflYKkjSNvbyQ=; b=V1g+KUgltpBweqga
-	hHfyKTyVE7c57ftCUqnehK21wDra3JnHOH+fHvRd3IL7k8A1vuC8qigmyQXmSgLB
-	A+hIBXoz6v84oQ4dakE2aDgF2o8RGpnpcAqNYorpjeohSs4S7ln29jJp4jLuOkY2
-	AjVUW00G8gG+MECBWBN3QKzuVsalwTOIo4SBmCFvqGRBRXRVHnjhGMQvcEhyxZ4G
-	62nIT2730k7ukpIdVhH66ZMsncuu/FYJpfuJfAXgmC0hcUM/a2ze6MT0wM0sD3+6
-	lKk3EUMrz2VFf05zSjj4PjzbB6PydCkYbc99J9bNTlo04XYmkTz8x3Xnpjn6FzhG
-	i8ALtw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791fsv9k4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:34:57 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GBYuOA010464
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:34:56 GMT
-Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 04:34:54 -0700
-Message-ID: <a20f7ad1-1b01-57d0-89ad-e1429690e770@quicinc.com>
-Date: Mon, 16 Jun 2025 17:04:51 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Miqsqp/M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750073764;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nf0+ogMmdaKGYBzbk4mOB841JGfIQ7imOaaevAHK9Zk=;
+	b=Miqsqp/MafBUICUKgaol0LafUrV5+1/mlCkp/rUbWST8LhZVCD4ohQuUhAW5IcnzuoVFrw
+	ekUglUmnrIe+tEYRyp8eqGDeh7RA3Ad4lpTrw8IqwfZCFHBo1/Me9holHjtWB47EiT61Fu
+	pSJN/7bU7ORdwpXo+vMYNCtlbEvLZdc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-CcDyKh_qNOe3bhhPj8MzuQ-1; Mon,
+ 16 Jun 2025 07:36:02 -0400
+X-MC-Unique: CcDyKh_qNOe3bhhPj8MzuQ-1
+X-Mimecast-MFC-AGG-ID: CcDyKh_qNOe3bhhPj8MzuQ_1750073761
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B02DF1800368;
+	Mon, 16 Jun 2025 11:36:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.18])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B9B91195608F;
+	Mon, 16 Jun 2025 11:35:58 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Steve French <sfrench@samba.org>
+cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.org>,
+    linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] netfs: Fix hang due to missing case in final DIO read result collection
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 0/6] media: Fix coccinelle warning/errors
-Content-Language: en-US
-To: Ricardo Ribalda <ribalda@chromium.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Kosta Stefanov <costa.stephanoff@gmail.com>
-References: <20250111-fix-cocci-v6-0-1aa7842006cc@chromium.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250111-fix-cocci-v6-0-1aa7842006cc@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MSBTYWx0ZWRfX0ZGFoaCRuJxE
- mOxG45ATH6ThVLoctmeRTgoYsoVY4UiC9dJtNsEKqtehWKw1pk0oSyWWCtThX28u0tQRnTzOgHr
- hRkLa5dZDdnU97QV+KnxGrGeiyjOLs6tWmP/hRfvNfeH/CcL+pSPa3hrWsCQASvEIh6Oov3O5Du
- Ki/onV82tNJ28aFuyKIYOqcGcKyRJfxe0r9ifqoB8XGOgyX3i82cnHh2TNokisIuK/4ycNt6Zfv
- iEgRgVotgr05Kqv4131nXxA8cd/MStyxp9u6WR5br0uxW3XwxJuHx0+ESkC3/rHZmZ9u4W4efco
- XMVLvRMi5IrUd2luJzStl7hTA39hkovxg89XL+LdgOzr88brCelY3f3DIYi28ZIjP8YN/wWoyUh
- fwfJm6TzUdRegeSUsIbKCTRJyUvZ+/dtbKGtVdgk8CeQM+mBapZG/i4yZVz0wEwQw8acrgb0
-X-Proofpoint-ORIG-GUID: adkOhAidUbc3L4XsB_qaLo5Jh1Mg_aLX
-X-Authority-Analysis: v=2.4 cv=OLIn3TaB c=1 sm=1 tr=0 ts=68500161 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=cm27Pg_UAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=xOd6jRPJAAAA:8 a=OPJHTv8p9pyGCHnS0U8A:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: adkOhAidUbc3L4XsB_qaLo5Jh1Mg_aLX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 clxscore=1011 lowpriorityscore=0 priorityscore=1501
- malwarescore=0 impostorscore=0 mlxscore=0 bulkscore=0 adultscore=0
- suspectscore=0 phishscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160071
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <583791.1750073757.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 16 Jun 2025 12:35:57 +0100
+Message-ID: <583792.1750073757@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hi Ricardo,
+When doing a DIO read, if the subrequests we issue fail and cause the
+request PAUSE flag to be set to put a pause on subrequest generation, we
+may complete collection of the subrequests (possibly discarding them) prio=
+r
+to the ALL_QUEUED flags being set.
 
-On 1/11/2025 3:25 PM, Ricardo Ribalda wrote:
-> These is the last set of patches to fix all the relevant patchwork
-> warnings (TM).
-> 
-> --
-> 
-> ---
-> Changes in v6:
-> - Improve comments for tda10048, thanks Kosta.
-> - Link to v5: https://lore.kernel.org/r/20250107-fix-cocci-v5-0-b26da641f730@chromium.org
-> 
-> Changes in v5:
-> - venus: Ignore fps > 240
-> - venus: Clamp invalid fps instead of -EINVAL
-> - Link to v4: https://lore.kernel.org/r/20250106-fix-cocci-v4-0-3c8eb97995ba@chromium.org
-> 
-> Changes in v4:
-> - Remove all merged patches
-> - Improve commit messages.
-> - media: Remove timeperframe from inst
-> - Ignore 0 fps (Thanks Hans)
-> - Link to v3: https://lore.kernel.org/r/20240429-fix-cocci-v3-0-3c4865f5a4b0@chromium.org
-> 
-> Changes in v3: Thanks Bryan, Dan, Markus, Sakary and Hans
-> - Improve commit messages.
-> - Use div64_u64 when possible
-> - Link to v2: https://lore.kernel.org/r/20240419-fix-cocci-v2-0-2119e692309c@chromium.org
-> 
-> Changes in v2:
-> - Remove all the min() retval, and send a patch for cocci:  https://lore.kernel.org/lkml/20240415-minimax-v1-1-5feb20d66a79@chromium.org/T/#u
-> - platform_get_irq() cannot return 0, fix that (Thanks Dan).
-> - Fix stb0800 patch. chip_id can be 0 (Thanks Dan).
-> - Use runtime (IS_ENABLED), code looks nicer. (Thanks Dan).
-> - Do not replace do_div for venus (Thanks Dan).
-> - Do not replace do_div for tda10048 (Thanks Dan).
-> - Link to v1: https://lore.kernel.org/r/20240415-fix-cocci-v1-0-477afb23728b@chromium.org
-> 
-> To: Mauro Carvalho Chehab <mchehab@kernel.org>
-> To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-> To: Vikash Garodia <quic_vgarodia@quicinc.com>
-> To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> To: Hans Verkuil <hverkuil@xs4all.nl>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> 
-> ---
-> Ricardo Ribalda (6):
->       media: dvb-frontends: tda10048: Make the range of z explicit.
->       media: venus: vdec: Clamp parm smaller than 1fps and bigger than 240.
->       media: venus: venc: Clamp parm smaller than 1fps and bigger than 240
->       media: venus: Remove timeperframe from inst
->       media: venus: venc: Make the range of us_per_frame explicit
->       media: venus: vdec: Make the range of us_per_frame explicit
-> 
->  drivers/media/dvb-frontends/tda10048.c   |  8 +++++++-
->  drivers/media/platform/qcom/venus/core.h |  4 ++--
->  drivers/media/platform/qcom/venus/vdec.c | 23 +++++++++++------------
->  drivers/media/platform/qcom/venus/venc.c | 24 +++++++++++-------------
->  4 files changed, 31 insertions(+), 28 deletions(-)
-> ---
+In such a case, netfs_read_collection() doesn't see ALL_QUEUED being set
+after netfs_collect_read_results() returns and will just return to the app
+(the collector can be seen unpausing the generator in the trace log).
 
-Apologies for delay in review for this series.
+The subrequest generator can then set ALL_QUEUED and the app thread reache=
+s
+netfs_wait_for_request().  This causes netfs_collect_in_app() to be called
+to see if we're done yet, but there's missing case here.
 
-Regards,
-Vikash
+netfs_collect_in_app() will see that a thread is active and set inactive t=
+o
+false, but won't see any subrequests in the read stream, and so won't set
+need_collect to true.  The function will then just return 0, indicating
+that the caller should just sleep until further activity (which won't be
+forthcoming) occurs.
+
+Fix this by making netfs_collect_in_app() check to see if an active thread
+is complete - i.e. that ALL_QUEUED is set and the subrequests list is empt=
+y
+- and to skip the sleep return path.  The collector will then be called
+which will clear the request IN_PROGRESS flag, allowing the app to
+progress.
+
+Fixes: 2b1424cd131c ("netfs: Fix wait/wake to be consistent about the wait=
+queue used")
+Reported-by: Steve French <sfrench@samba.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Paulo Alcantara <pc@manguebit.org>
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 43b67a28a8fa..1966dfba285e 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -381,7 +381,7 @@ void netfs_wait_for_in_progress_stream(struct netfs_io=
+_request *rreq,
+ static int netfs_collect_in_app(struct netfs_io_request *rreq,
+ 				bool (*collector)(struct netfs_io_request *rreq))
+ {
+-	bool need_collect =3D false, inactive =3D true;
++	bool need_collect =3D false, inactive =3D true, done =3D true;
+ =
+
+ 	for (int i =3D 0; i < NR_IO_STREAMS; i++) {
+ 		struct netfs_io_subrequest *subreq;
+@@ -400,9 +400,11 @@ static int netfs_collect_in_app(struct netfs_io_reque=
+st *rreq,
+ 			need_collect =3D true;
+ 			break;
+ 		}
++		if (subreq || test_bit(NETFS_RREQ_ALL_QUEUED, &rreq->flags))
++			done =3D false;
+ 	}
+ =
+
+-	if (!need_collect && !inactive)
++	if (!need_collect && !inactive && !done)
+ 		return 0; /* Sleep */
+ =
+
+ 	__set_current_state(TASK_RUNNING);
+
