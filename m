@@ -1,155 +1,166 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D083F1BF58
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE7B111AD
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063857; cv=none; b=Gd8PKdKSPPoAac0ZmNi1PIrlHsIxrTysJE+Bo8NwVaCz5PYKmczFG7bCcXSi4tbRIYMTR705H0N4i4aO2DlKqZn0aXjEW/vLZrB+L+4rmBm8R9iINzuts9IB7qh1kwF0YACZgKH/JFUbTXBmumwXEaIo3qnkyxI1d7RzgCnBI9w=
+	t=1750063959; cv=none; b=sNdFNREH/3NtiP8UkJUnL64ArqMrNGn2UNPZFEU7nzicUIP9nF7bIbZnF3aw34et1YWIqmwHvc2aoRkCknIpphwchOQZoHFfU/SwmVLX1vEbq72kcHImeEF4JKiS23PBRUPdTiQ/dY6Q68gJeLEIClj/IK42zHWl9ddT0rFoWCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063857; c=relaxed/simple;
-	bh=MApachlhqAzCVaIiSiIPpWwCa3tuQFOMspQIadnilIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MoKQtnOiPA1kao5zat9JxhLYewsSnHt0fmxjjS9XhG+I4m73otgbJ9i50v9Rsj0Jd+Blu9ecWwor6tJLctJUykvr7bkpFGN2mtw/XchfmOcp75K/pIF+nbKMnDvWKlAkJZDDn68u1XX2vpj126qEEYvtsa/ybapDQfl8M7uwr0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2CAAFci1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zk2TXigx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2CAAFci1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zk2TXigx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750063959; c=relaxed/simple;
+	bh=TyxpSP78nDCh3Vd7Wbl/3HT5AyOJ05SWkUzJt4gc7j4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s5tVUOpTtYBQE6cN9SBMJpvuC9uRTbONJqyh7vkYWsTR6JK1SfVsEoWsvO3KzzTIJLJnbLbGX+VTlaUh/scS6Miho0Pd0zLLbiCjlKQktDfFzXbleQFfUAAi8F0R5hycpftaFkhI1Gf0f3OJ2K9DN0VVkHtMo7ZFM/Bx4CL7ljg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SxjC98kR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2CAAFci1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zk2TXigx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2CAAFci1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zk2TXigx"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 162A121203;
-	Mon, 16 Jun 2025 08:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750063854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x/4amVyIfpjADX65ebEMO5hOWnVs7Lj7aXl/n8kGn2w=;
-	b=2CAAFci1yPN/wPPx+9rxZcbaSfKV4pT3VM/+GjchMTHhnWagQomeFGblEVXte0RDn4xQgz
-	l6u1VZZkcj8aOiIXaZjglO5Vjoo42zcTNscorxrEsXrU1OjT9OY5aI4f21CwtyYg8j5WcM
-	KxZhJt1wzoUTO30X++3Xc1RRCmQnZT4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750063854;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x/4amVyIfpjADX65ebEMO5hOWnVs7Lj7aXl/n8kGn2w=;
-	b=Zk2TXigxxjkMqaa0nhBK948HIqOrGvb7ArlIroeC011v+eSNuE+4PFQNjmkE1J9eqhYNzg
-	ycV2c8CEZBJHTCDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=2CAAFci1;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Zk2TXigx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750063854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x/4amVyIfpjADX65ebEMO5hOWnVs7Lj7aXl/n8kGn2w=;
-	b=2CAAFci1yPN/wPPx+9rxZcbaSfKV4pT3VM/+GjchMTHhnWagQomeFGblEVXte0RDn4xQgz
-	l6u1VZZkcj8aOiIXaZjglO5Vjoo42zcTNscorxrEsXrU1OjT9OY5aI4f21CwtyYg8j5WcM
-	KxZhJt1wzoUTO30X++3Xc1RRCmQnZT4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750063854;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x/4amVyIfpjADX65ebEMO5hOWnVs7Lj7aXl/n8kGn2w=;
-	b=Zk2TXigxxjkMqaa0nhBK948HIqOrGvb7ArlIroeC011v+eSNuE+4PFQNjmkE1J9eqhYNzg
-	ycV2c8CEZBJHTCDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 88BD2139E2;
-	Mon, 16 Jun 2025 08:50:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BBqwHu3aT2hXQQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 08:50:53 +0000
-Date: Mon, 16 Jun 2025 10:50:43 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 03/10] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <aE_a4_rGbMLJKBIs@localhost.localdomain>
-References: <20250609092149.312114-1-osalvador@suse.de>
- <20250609092149.312114-4-osalvador@suse.de>
- <2bec8b53-f788-493e-a76e-1f804ed3aa0c@redhat.com>
- <aE_WG6bnjtLBzCp8@localhost.localdomain>
- <10c87a0e-c9fe-48fe-9bbd-16afd244b4ec@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SxjC98kR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750063955;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fPHIMPvrBzoREu1VcC8X9lDpNoQrPz3OTuINv7K2wUc=;
+	b=SxjC98kRo06gWosbuEWvux03pKttpi+i1k3rlzX/acgCdkPeEHw6MM3HhMeLm8eimg8Win
+	aP0UEVW1j3KyjgoKWSwkDYOEvNNYNEtGht7WSP3bnBUgaWMLdwVdb7BBys/XR5hk/Y8OX6
+	B1loS3tf34KNGdLJ7zUNYv5F71yH0LI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-279-nh3pnL8DP36GXINtlWOrqw-1; Mon, 16 Jun 2025 04:52:34 -0400
+X-MC-Unique: nh3pnL8DP36GXINtlWOrqw-1
+X-Mimecast-MFC-AGG-ID: nh3pnL8DP36GXINtlWOrqw_1750063953
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451deff247cso26411265e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:52:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750063953; x=1750668753;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fPHIMPvrBzoREu1VcC8X9lDpNoQrPz3OTuINv7K2wUc=;
+        b=BGR9ZXIZbXwE5SxAfYz+zpqxm59AG1k8bv7/z5veysF9obvQuUqqopYhT5NhleYnQ6
+         P9J6rTP0opMpelEx8ud1nyNWdNpNHPgH82xRN53IDv3MU8jbLtMb/odW7Kj0e0e+J9yk
+         xCwpOoucoYNsa4C8xJwyQ36mU/1dhwMbLwxfNFymUALg/Q105oMXWCFc7FV+DTkgwRbB
+         4jE5CtKMERypYzXNK2r6sD5Uf62x4ndGbI+UOKa7XSXUh0GVuDMh1S/QAbnlZjUr224B
+         AWUH4G0nIkyhWt8CDdYDpGgFYzjyDX1uCuMye2EJZHF5NxEOduLGPRl7aVIQboiJT+Hr
+         bzaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXps3gT8Cjz66K7lja5ZUleaV3ZySQLNNL2U/hQlXiF8UG7xIQTAi1A0G9b/bbUxDaJVohMh4f4k/gncus=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz94QthVdlAi8DIqIhMconOE+RjG4vfZluNtFSVRG5kHmRiVKA0
+	td0Ct1FZFaCWvQ8Q2P0xdEqOGYcXygdMILCgkcumuEPrazDmnzInuoC97YZeOAYP5lkJla/6KJs
+	Nu+3qRlfiioxMPVOKfNrwqHQneLTr8Fm0DcuGx63SxsmUPFGU0gtblF4bvYkhYUn57Q==
+X-Gm-Gg: ASbGncsC5xFQP031TXyOLs/FnFlJHf3QSxFTDdT6NmGsuNE0bFR4O+utzvRZbKBwT6D
+	iMWmXfpwNh6YDkJCMwNFpnqYLs6hqM0+9q8wYYsRRRfsTRVNYKY5FNwA3e7kRoYol2h0hOxr8Zx
+	om6bXxCIWRYXyP8tqr4yyFgUhfCg/JwntZQxYhpEmUYCKjysrTf1Uli8KUvrGxmVWomihCHG/yQ
+	gC8TfBCztAvpHzZ6Whu9yYRWKNeAXvYGPEeFLIbOBXJSCfOdq9cAgn8rovV47zY6I2ZqAZZz8zM
+	Kd9lRGkG+Xq8SHGSFWyGTZxgvAymB3K2tG/FInyYAT9sqaSYy9joKasrCec8p89JEaN6+mc8U92
+	7MHjVj92JIyXBtMOmINpg2pLEHpwYUz6DUa5usXkyUbX2CjI=
+X-Received: by 2002:a05:600c:5908:b0:453:827:d0b1 with SMTP id 5b1f17b1804b1-4533b235e16mr57473095e9.2.1750063953023;
+        Mon, 16 Jun 2025 01:52:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9GnegdK/3E3PNxqRuxb0/vNwMKp7H5Yg1NntIPro7VDqQfx5r3w41L1vEP8lrERepH6JIBg==
+X-Received: by 2002:a05:600c:5908:b0:453:827:d0b1 with SMTP id 5b1f17b1804b1-4533b235e16mr57472965e9.2.1750063952648;
+        Mon, 16 Jun 2025 01:52:32 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532063ebf6sm109069235e9.3.2025.06.16.01.52.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 01:52:32 -0700 (PDT)
+Message-ID: <360f2f04-4542-4595-bf36-c45ed10335af@redhat.com>
+Date: Mon, 16 Jun 2025 10:52:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10c87a0e-c9fe-48fe-9bbd-16afd244b4ec@redhat.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 162A121203
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,localhost.localdomain:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.01
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 03/10] mm,memory_hotplug: Implement numa node notifier
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250609092149.312114-1-osalvador@suse.de>
+ <20250609092149.312114-4-osalvador@suse.de>
+ <2bec8b53-f788-493e-a76e-1f804ed3aa0c@redhat.com>
+ <aE_WG6bnjtLBzCp8@localhost.localdomain>
+ <10c87a0e-c9fe-48fe-9bbd-16afd244b4ec@redhat.com>
+ <aE_a4_rGbMLJKBIs@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aE_a4_rGbMLJKBIs@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 10:39:24AM +0200, David Hildenbrand wrote:
-> It's suboptimal yes, But to get it right, you'd have to remmeber for exactly
-> which notofiers you performed the calls ...
-
-Yeah, definitely not straightforward.
-
-> > I mean, yes, I guess we can put the burden on the users of
-> > the notifiers to not assume anything, but then yes, I think we should document this
-> > as it can lead to potential misbeliefs.
+On 16.06.25 10:50, Oscar Salvador wrote:
+> On Mon, Jun 16, 2025 at 10:39:24AM +0200, David Hildenbrand wrote:
+>> It's suboptimal yes, But to get it right, you'd have to remmeber for exactly
+>> which notofiers you performed the calls ...
 > 
-> The burden is already on the users I think.
+> Yeah, definitely not straightforward.
+> 
+>>> I mean, yes, I guess we can put the burden on the users of
+>>> the notifiers to not assume anything, but then yes, I think we should document this
+>>> as it can lead to potential misbeliefs.
+>>
+>> The burden is already on the users I think.
+> 
+> Yes, it's already on them, although I'm not sure if all of them are aware
+> though.
 
-Yes, it's already on them, although I'm not sure if all of them are aware
-though.
-But anyway, let's just document it to have the ruleset clear.
-
+Probably worth checking, to make sure we don't have accidental bugs in 
+there ...
 
 -- 
-Oscar Salvador
-SUSE Labs
+Cheers,
+
+David / dhildenb
+
