@@ -1,184 +1,193 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADCD2E3395
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081977; cv=none; b=BhUfOyQWvCQsOVZUCBhS8WvYIL+G5LWUWVKmr1nSF0iJ3Hxhh1Bba6kqCQ86XTUfHvnJ0J9Vg4tgNKU6xbK0ojBVCvcX8BLJw25vjv6LBjX8LR6k8E/zY+783ntZJqvwJWlpLPOJbwM5Y1eQM4Eo4pemNzGOPWO3Zqekxd4djzQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081977; c=relaxed/simple;
-	bh=HZ7VTMFCZg/RrEaRfaqlQE/QwJsYgd6PCOTFvkwF/iE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PA6YwIAQfkSBnedWkMgQ0NRB+GnzibWr1uNl9svFWQJdS/jAnJ0PfmhVCXOhDbQ57eAnqTQx0+2Jw9PxHy4/F+CHMqN3iUDnrXbhD3HSiy8TL026Jhrbbe6qG/7eA/RLcpQhlNbt3tojH3dxfNT0hbUtzXN7H0mZS+V56yP01B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dsRoRfxL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=265VEO8k; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KJONCF02; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kMzdF76e; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5422877DF;
+	Mon, 16 Jun 2025 13:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750082011; cv=pass; b=VzniAGeovsTde/aM93H9zmXvzpCM7sG4tDB3R+9VONAvASd2lFIUYJ9pXc2/k3axgsyqziOvpeOj3tnUJRu7S3e2lVmBLNsOplPFoVBfzGnUEkpDxBqNQ5HW8r4gCnrkYj6+ymCO3za+xMaYlbRG1Uzs0Js87IW9eHy4YnsP+Qk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750082011; c=relaxed/simple;
+	bh=VPBW3DUZWR8rEu+xKM8mLtm8j6S+GyFkek9AfvzzjtY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=dNyZLlk1kVK6S8tjFfunT7MnNHty77W0S0wQCkrAgPK1jd1pXhXsO1S3vtKGDF1uwsgvgjqEdCIJZQhi26tNYmQErHJ7z+cBdEKi9hDtctOnwXze1XFnX1poSe7dF8fIwB3HYW+w/1Ig3VzfbHZ0mO8cLFJXCJnyXZANmeA9cNY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=h7XMA1G1; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dsRoRfxL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="265VEO8k";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KJONCF02";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kMzdF76e"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D02F1211AD;
-	Mon, 16 Jun 2025 13:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750081946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRexV9IJxfAwxsTfqVeSOlBNGRbyQpxEVLWIJJKw5mQ=;
-	b=dsRoRfxLKtdv4ei0VlI9LKBX3lMlgbWiiN6gO5OfSvYO+LCsV4vuZ6DL0Md2XBxPssLITI
-	Zk5DdTikuSv6OCt9uWoSFPb75/qDy5qAidLOBVkGKCcZE4kBD3nncmkKbtwHzzS18+pY+u
-	AbRU0Fyu3r58PRW+AVKSsm+nKW60uZE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750081946;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRexV9IJxfAwxsTfqVeSOlBNGRbyQpxEVLWIJJKw5mQ=;
-	b=265VEO8kflQetmz3526mokfwA3LM9J1YPVjGovDCho9WDgYZCharHscG4O3k2m4HlyCnPU
-	tX8HYaZ9sDtFdEBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=KJONCF02;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=kMzdF76e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750081941; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRexV9IJxfAwxsTfqVeSOlBNGRbyQpxEVLWIJJKw5mQ=;
-	b=KJONCF02BfvXEWl272lnT3aB8nUCYTAl6lmg7EwerSuQxGOft7+1D8VfjnqSEpLEEeobYl
-	iv4xepdLakJHQe4dZb+A4/BnOgkTqg4fAiu2mbGdbKkiIQqELfe3WiFWmMC7pYKl2zqT3u
-	aPToVr0HaAAPR3q0Zx0ZZAE43XElhes=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750081941;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRexV9IJxfAwxsTfqVeSOlBNGRbyQpxEVLWIJJKw5mQ=;
-	b=kMzdF76es1pBSWQZTRpwT5U150VfurtN2gSD0NGMEanAKm2L56GDH+ZksvD878iLlSAYeq
-	UntEHt87DV/IH8AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C015413AE7;
-	Mon, 16 Jun 2025 13:52:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QBVHLI4hUGhHLwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 13:52:14 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v7 07/11] drivers,hmat: Use node-notifier instead of memory-notifier
-Date: Mon, 16 Jun 2025 15:51:50 +0200
-Message-ID: <20250616135158.450136-8-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616135158.450136-1-osalvador@suse.de>
-References: <20250616135158.450136-1-osalvador@suse.de>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="h7XMA1G1"
+ARC-Seal: i=1; a=rsa-sha256; t=1750081982; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PLKRiJVJmOyTAh2bXwlTII/rAuVlxuOBFvmRD8uxukWTwO/W5f3KfBu02FQihNT3EujN2JMsySR10GfMFNvge1tMTknr4TQ0ScsjEsgHoPZt+ps2m1yj7L6ZIyK3fg9Qm8tEL0NuPXPrvvdp6+eSqvxLTWTQzrm6Y4ja++Hcsqc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750081982; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=1KfyiRvfAxxfHaWLnswCRSWM0xyQXffOX6Zl0uvCN6o=; 
+	b=I4aRotmYjNrU2gOe3zrwlmnBIe3JQaYiFYtio7k18SlZb1D0bcuMj2f+mZ1J76rX65RLJrBQV7x3ew/r6fneoWQwjJR/FWwwDGrQ+P+BJaRVuZcaeai0aL+pXcS212gfgFhFUM1nZfdTacSQ8JWEhF7gdupKOiOl+t7sCZ5wpHI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750081982;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=1KfyiRvfAxxfHaWLnswCRSWM0xyQXffOX6Zl0uvCN6o=;
+	b=h7XMA1G1BS40763It7I+21kD5l55RVWd4SasXUxDkq4tQryH19E0esGJuzPEelG4
+	fbBPV8ErEkEiWTuIJjx0ORWvXvKV8GT1INfNfOeLr2pVmo9tOt7ZYGaA4ExO9YX3Y3n
+	NjQYfqnS+KY1mlIt1+JttTtEGycBMcbMVyUvAArI=
+Received: by mx.zohomail.com with SMTPS id 1750081979926577.9845647874406;
+	Mon, 16 Jun 2025 06:52:59 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RSPAMD_URIBL_FAIL(0.00)[oracle.com:query timed out,suse.cz:query timed out];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[redhat.com,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org,suse.de];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.de:dkim,suse.de:mid,suse.de:email,oracle.com:email];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: D02F1211AD
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -1.51
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+Date: Mon, 16 Jun 2025 10:52:44 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Benno Lossin <lossin@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <24F81191-5391-4208-9943-64440FCC19D8@collabora.com>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux>
+ <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-hmat driver is only concerned when a numa node changes its memory state,
-specifically when a numa node with memory comes into play for the first
-time, because it will register the memory_targets belonging to that numa
-node.
-So stop using the memory notifier and use the new numa node notifer
-instead.
+Hi,
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
----
- drivers/acpi/numa/hmat.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+>>=20
+>>> +
+>>> +impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for =
+Box<T, A> {
+>>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+>>> +        T::handle_irq(self)
+>>> +    }
+>>> +
+>>> +    fn thread_fn(&self) -> IrqReturn {
+>>> +        T::thread_fn(self)
+>>> +    }
+>>> +}
+>>> +
+>>> +/// A registration of a threaded IRQ handler for a given IRQ line.
+>>> +///
+>>> +/// Two callbacks are required: one to handle the IRQ, and one to =
+handle any
+>>> +/// other work in a separate thread.
+>>> +///
+>>> +/// The thread handler is only called if the IRQ handler returns =
+`WakeThread`.
+>>> +///
+>>> +/// # Examples
+>>> +///
+>>> +/// The following is an example of using `ThreadedRegistration`. It =
+uses a
+>>> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior =
+mutability.
+>>> +///
+>>> +/// ```
+>>> +/// use core::sync::atomic::AtomicU32;
+>>> +/// use core::sync::atomic::Ordering;
+>>> +///
+>>> +/// use kernel::prelude::*;
+>>> +/// use kernel::device::Bound;
+>>> +/// use kernel::irq::flags;
+>>> +/// use kernel::irq::ThreadedIrqReturn;
+>>> +/// use kernel::irq::ThreadedRegistration;
+>>> +/// use kernel::irq::IrqReturn;
+>>> +/// use kernel::platform;
+>>> +/// use kernel::sync::Arc;
+>>> +/// use kernel::sync::SpinLock;
+>>> +/// use kernel::alloc::flags::GFP_KERNEL;
+>>> +/// use kernel::c_str;
+>>> +///
+>>> +/// // Declare a struct that will be passed in when the interrupt =
+fires. The u32
+>>> +/// // merely serves as an example of some internal data.
+>>> +/// struct Data(AtomicU32);
+>>> +///
+>>> +/// // [`handle_irq`] takes &self. This example illustrates =
+interior
+>>> +/// // mutability can be used when share the data between process =
+context and IRQ
+>>> +/// // context.
+>>> +///
+>>> +/// type Handler =3D Data;
+>>> +///
+>>> +/// impl kernel::irq::request::ThreadedHandler for Handler {
+>>> +///     // This is executing in IRQ context in some CPU. Other CPUs =
+can still
+>>> +///     // try to access to data.
+>>> +///     fn handle_irq(&self) -> ThreadedIrqReturn {
+>>> +///         self.0.fetch_add(1, Ordering::Relaxed);
+>>> +///
+>>> +///         // By returning `WakeThread`, we indicate to the system =
+that the
+>>> +///         // thread function should be called. Otherwise, return
+>>> +///         // ThreadedIrqReturn::Handled.
+>>> +///         ThreadedIrqReturn::WakeThread
+>>> +///     }
+>>> +///
+>>> +///     // This will run (in a separate kthread) if and only if =
+`handle_irq`
+>>> +///     // returns `WakeThread`.
+>>> +///     fn thread_fn(&self) -> IrqReturn {
+>>> +///         self.0.fetch_add(1, Ordering::Relaxed);
+>>> +///
+>>> +///         IrqReturn::Handled
+>>> +///     }
+>>> +/// }
+>>> +///
+>>> +/// // This is running in process context.
+>>> +/// fn register_threaded_irq(handler: Handler, dev: =
+&platform::Device<Bound>) -> Result<Arc<ThreadedRegistration<Handler>>> =
+{
+>>> +///     let registration =3D dev.threaded_irq_by_index(0, =
+flags::SHARED, c_str!("my-device"), handler)?;
+>>=20
+>> This doesn't compile (yet). I think this should be a "raw" example, =
+i.e. the
+>> function should take an IRQ number.
+>>=20
+>> The example you sketch up here is for =
+platform::Device::threaded_irq_by_index().
+>=20
+> Yes, I originally had an example along the lines of what you =
+mentioned. Except
+> that with the changes in register() from pub to pub(crate) they =
+stopped
+> compiling.
+>=20
+> I am not sure how the doctest to kunit machinery works, but I was =
+expecting
+> tests to have access to everything within the module they're defined =
+in, but
+> this is apparently not the case.
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 9d9052258e92..4958301f5417 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -962,10 +962,10 @@ static int hmat_callback(struct notifier_block *self,
- 			 unsigned long action, void *arg)
- {
- 	struct memory_target *target;
--	struct memory_notify *mnb = arg;
--	int pxm, nid = mnb->status_change_nid;
-+	struct node_notify *nn = arg;
-+	int pxm, nid = nn->nid;
- 
--	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
-+	if (action != NODE_ADDED_FIRST_MEMORY)
- 		return NOTIFY_OK;
- 
- 	pxm = node_to_pxm(nid);
-@@ -1118,7 +1118,7 @@ static __init int hmat_init(void)
- 	hmat_register_targets();
- 
- 	/* Keep the table and structures if the notifier may use them */
--	if (hotplug_memory_notifier(hmat_callback, HMAT_CALLBACK_PRI))
-+	if (hotplug_node_notifier(hmat_callback, HMAT_CALLBACK_PRI))
- 		goto out_put;
- 
- 	if (!hmat_set_default_dram_perf())
--- 
-2.49.0
+Does anybody have any input on this? Again, I tried it already before =
+sending
+the current version but it does not compile due to pub(crate).
 
+=E2=80=94 Daniel=
