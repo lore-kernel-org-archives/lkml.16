@@ -1,138 +1,243 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F46C2C08B4
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D9D2877C3;
+	Mon, 16 Jun 2025 13:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750082239; cv=none; b=fvDC18dWHwQFdiGyzjpe0xLmp5P+BKS2a8fJHftLlBV0PLPRo5D7wvYZ4irWwxIQzwA0f4nh/dtFNRok5TQ3duDcJhp8vRuwLeCBIOBtH2D06OQFiPaJ1x6B4zVLZXk6/8El4hlSQiieHUTW5RRy8qwpW0AvWW0OUX5pF4k5QzI=
+	t=1750082260; cv=none; b=F1v1Cll742yvFFip+XH5C0iGMHCit0Ritlozu9y8MA8mBB/e3utJuFjsVXuDDL5Ph80PFb0vL81JIesVtApONqlgUru8L8Tmb0rIzb3xnLbxAXVcI3WfGbFBDqmykk5zJw8AVI0t/JyRx393IxMnTA2RCemeGZX3gvguPURhv70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750082239; c=relaxed/simple;
-	bh=NH0FX9kt0WubJvwnc+nYK/maDfQ9wwkDesbyODdRkTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nKyVXkcjl/78JPf/xlKWdRbtebcyTruf2CzKUV6Jw2xuzto2netOP4LJAoC7lpbrHo9NJ/4AYYpBJUFebxbfc11WUC9Eqb6msSCL6rB9ofFVKTeGUHqsne2OvxeURQtXCOx0t3r3DqGl+tdu8IIfvYh0kx40xuMePQ1NQ/CvKhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=hGTxF0p6; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750082260; c=relaxed/simple;
+	bh=NyizBTDfDWXK6sw8uHD082UVWglR8ES2/VkYsuwaR4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sm4rxNXAhttsOerwuPaZ8lu5cwfImgC5dxr6MpwHpMbHeI1EOaOeVqKeLCSlMoNcRv/sjLoo9YJcYxyVK+1qkn0Stp9xIUipPdS0y78P5ghlcgHAt17pkQXUMo+7JtEb75R9JhOvN+BoKGU8D6C5Tsqq37+7RTgRnZGZTnfF6vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8ULzQPh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="hGTxF0p6"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4f71831abso4161176f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750082235; x=1750687035; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E5U21iemE/c9Sz0YhEWkD1P9gtyQVcNDFZou5zB9HsA=;
-        b=hGTxF0p6tGO+hQUegUdTkJeP17/HhQs9wCy334tOFiX1HT+Y/DvpMaGKoSRHZ5597N
-         pY7u4a08y3J1KNnDG5DfyU42bZp4mOVeQdh0guB3Uv1B3Wrsa103Wwf69rGXKReMidUc
-         jHJJzYnseEc7JWxkZxukJbxcthl0yrx9kL4TTWPD0jJ1FVDSxij8b1UMYVJNgVy3T1BM
-         tfSu12FvP+T/IVMiJcsAWIpt2veVuMYy0TQhzKA3ryl0XKuchDwYnHjjTb6N9BeuwTkl
-         5C/g6H389IT/4cmQez+9PlnKqdCgH+qaDzmlnMy4eUxVkHrqfIDonY2NpzmkPE9+5fUR
-         icBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750082235; x=1750687035;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E5U21iemE/c9Sz0YhEWkD1P9gtyQVcNDFZou5zB9HsA=;
-        b=McPs1Ot0YlX2n7nhwKivfA1P1Jdz8/L3zeLda1pWUPL6i/fqgaRgXJ+j0l2eok/a8F
-         fjUSblpNy5HKqNJL0UUsuXwX6uDWs9aLXpR6vEfgQPFstl62LA8L0em68HulfwIn4eoB
-         LePkcviOMnFANEX0laydrk9gMdGUPDRmqvNnJ7nzgW6NMOUksBVgVaVdGxIxkNWAB8MC
-         PIZ2YctVgdGdMULayNG5c9FENfqw5K8CMRelJVzDFvlgiSj+EZ4ufADxS8O/zkp+Rweb
-         QtvnMcHJqHjufuzMLma5Y3KbOFMrQz40vks6+f6P732SsiVp3i7iSDp/lhDcJa+5tFTv
-         6EGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkI6YSoQLlVD25xBHBfH2J2MR6SG19goBC/leIu+mnBqSTLXqxl+s3kMBBsVtdu/JrlScuhLidTY+kPHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY86BAc3mF1u4g7Ob/pG28G+1IrpwcxwDg+rJgZbkx9SkiL82c
-	cj/TkSy4Wz9HvdtChxzRLlbdCC3gLayShA0RLZSmwloW4XKTaFJYuZJIaWX2NxXojwM=
-X-Gm-Gg: ASbGncsbRb7GcqAu+5rtw5YfZ4RYp6gOxmldi7c2wZ3RoKU0Ul0DtWRXtOr/nu+/41W
-	tQzLghIEiHGHp27jbbhYee/UQY40VqJX0JvL4tx2WSR+5HtbRxMnLp/p0tnc9ok5AtW/LK+AEcq
-	vFDtIm+YBoT4OmsRo0Kmlde62tYJ384ZH1VSRPHQPIhqu9+Cu/vuztTGP50M3LvLpTI8Rq2JibH
-	HNDGssGC9eu/nmFse4/YBVKOuSFTAZG1eRcNUQbjJaAAjkUQs9+D+3QKZKryE3DJAgxb14GVGja
-	x9lQm90Ca0z/sMRyZ+daBKky5590EPK/vqZnzQo7TE1vGX+MTTyknfKH99K2G0Nt
-X-Google-Smtp-Source: AGHT+IG5cdNsogAjYlCwwv/Yr99wBxZ5kpKFYKtrzNVTxQPp1q35B4mAJcdg7PMSO6nM0Lz7izNcdg==
-X-Received: by 2002:a05:6000:1449:b0:3a4:ed62:c7e1 with SMTP id ffacd0b85a97d-3a572367734mr6709880f8f.12.1750082235292;
-        Mon, 16 Jun 2025 06:57:15 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea927asm61349195ad.155.2025.06.16.06.57.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 06:57:14 -0700 (PDT)
-Date: Mon, 16 Jun 2025 15:56:59 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
-Subject: Re: [PATCH 6/7] debug: kgd_io: Don't check for CON_ENABLED
-Message-ID: <aFAiq3IEic8DuATR@pathway.suse.cz>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-6-f427c743dda0@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8ULzQPh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30632C4CEF5;
+	Mon, 16 Jun 2025 13:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750082260;
+	bh=NyizBTDfDWXK6sw8uHD082UVWglR8ES2/VkYsuwaR4w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=H8ULzQPh/xdtTiMfI3eihUsGI91soNyJ6AwSVhjKDO4IOJN3V4MbJf8Fy4Hjq/oPp
+	 2Nz2B/U4yIFMJwmnbkUKrRHPQlmnGxkQzpjpiCeObGnKgdgWNzsVdGM/wnAIfKzp77
+	 OsClgdjfqK9hC7ntKJziHbTNlOcBTkzZtkxBTl+MoNrw4Prth4u5dv8z+GPcY3x8+Z
+	 U2k1ZLAOc0Hf27lZEchtd7fnehD5vtVw0ubzu82UT3OAUYvJ2sHBVW6ZPHM2SMa5/b
+	 3BkA+Ysg02RQ/8M/W2p7dGMiij+LRkAAw0f9T5daEgcrGL2oTSRbJk3qI+xDTglt9P
+	 Rxa8e8y8zLkiw==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad89ee255easo836057666b.3;
+        Mon, 16 Jun 2025 06:57:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVSMzq7zjG0+pq767/j8rNRPoNC3p3dbsKCBBq5/iwKc36CQCJ4NftP82wnfaR5bzqXkHJA9VB5I4pr@vger.kernel.org, AJvYcCVuOgM4yom8JPJYbOg2SN3VRtAXK9gFJuZn7zUZr7nuPDf2DRJy9PoGNw6fHc92by+RUmWSYZeGi1QePTbn@vger.kernel.org, AJvYcCVwanjuhQLiqdYS85HR6yv3NYS26HDXK4/fieeR/FNdiF86OkhijwETWnHHizckFkgne70tT6udkF3EqA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkxk/QZJsXJZRYXUDt1a4D99+DaGSxK6kva1x80WqFvt/st52U
+	C8HlnQW2PJrUsnKqmJEiW+NSDabqMuZQwR5qPN3zdB5S0gEjCWgElbYkkIj3nCmqPKSqVfVyYi7
+	85EWE2tbmZjl3nSfIl8Ds4zc5p7oMSQ==
+X-Google-Smtp-Source: AGHT+IHpdF6x/V/pazyqhO2sJpaXwkib8ZBd2w1M4Ij3Nkk6Wn/WfgezoqePwqWHQsTrHmBU64Y1n8FFZazVHIrz33o=
+X-Received: by 2002:a17:907:7241:b0:ad2:3f9a:649f with SMTP id
+ a640c23a62f3a-adfad60d405mr821849566b.42.1750082258737; Mon, 16 Jun 2025
+ 06:57:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606-printk-cleanup-part2-v1-6-f427c743dda0@suse.com>
+References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
+ <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 16 Jun 2025 08:57:26 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJpb7wFw3DqX504LyS2PGbQxQfbBKh9VfCY8j7G9YKXiw@mail.gmail.com>
+X-Gm-Features: AX0GCFuQPys5Thxu-nqBA43dpX9szemYIEtdKd5xHzL7MleeMvIzogZHZdn5g7w
+Message-ID: <CAL_JsqJpb7wFw3DqX504LyS2PGbQxQfbBKh9VfCY8j7G9YKXiw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
+ SoC and eval board
+To: Harshit Shah <hshah@axiado.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, soc@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 2025-06-06 23:53:48, Marcos Paulo de Souza wrote:
-> All consoles found on for_each_console_srcu are registered, meaning that all of
-> them are CON_ENABLED. The code tries to find an active console, so check if the
-> console is not suspended instead.
-> 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+On Sun, Jun 15, 2025 at 11:32=E2=80=AFPM Harshit Shah <hshah@axiado.com> wr=
+ote:
+>
+> Add initial device tree support for the AX3000 SoC and its evaluation
+> platform. The AX3000 is a multi-core SoC featuring 4 Cortex-A53 cores,
+> Secure Vault, AI Engine and Firewall.
+>
+> This commit adds support for Cortex-A53 CPUs, timer, UARTs, and I3C
+> controllers on the AX3000 evaluation board.
+>
+> Signed-off-by: Harshit Shah <hshah@axiado.com>
 > ---
->  kernel/debug/kdb/kdb_io.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> index 9b11b10b120cf07e451a7a4d92ce50f9a6c066b2..cdc1ee81d7332a9a00b967af719939f438f26cef 100644
-> --- a/kernel/debug/kdb/kdb_io.c
-> +++ b/kernel/debug/kdb/kdb_io.c
-> @@ -589,7 +589,7 @@ static void kdb_msg_write(const char *msg, int msg_len)
->  	 */
->  	cookie = console_srcu_read_lock();
->  	for_each_console_srcu(c) {
-> -		if (!(console_srcu_read_flags(c) & CON_ENABLED))
-> +		if (console_srcu_read_flags(c) & CON_SUSPENDED)
->  			continue;
+>  arch/arm64/boot/dts/Makefile              |   1 +
+>  arch/arm64/boot/dts/axiado/Makefile       |   2 +
+>  arch/arm64/boot/dts/axiado/ax3000.dtsi    | 584 ++++++++++++++++++++++++=
+++++++
+>  arch/arm64/boot/dts/axiado/ax3000_evk.dts |  72 ++++
+>  4 files changed, 659 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index 79b73a21ddc22b17308554e502f8207392935b45..47dd8a1a7960d179ee28969a1=
+d6750bfa0d73da1 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -9,6 +9,7 @@ subdir-y +=3D amlogic
+>  subdir-y +=3D apm
+>  subdir-y +=3D apple
+>  subdir-y +=3D arm
+> +subdir-y +=3D axiado
+>  subdir-y +=3D bitmain
+>  subdir-y +=3D blaize
+>  subdir-y +=3D broadcom
+> diff --git a/arch/arm64/boot/dts/axiado/Makefile b/arch/arm64/boot/dts/ax=
+iado/Makefile
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..eb5e08ba0f39c32cdbfd586d9=
+82849a80da30160
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/axiado/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_AXIADO) +=3D ax3000_evk.dtb
+> diff --git a/arch/arm64/boot/dts/axiado/ax3000.dtsi b/arch/arm64/boot/dts=
+/axiado/ax3000.dtsi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..d5d84986d18efe9dfbb446cee=
+e42fc4e4dbf95d0
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/axiado/ax3000.dtsi
+> @@ -0,0 +1,584 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (c) 2021-25 Axiado Corporation (or its affiliates). All rig=
+hts reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/memreserve/ 0x3c0013a0 0x00000008;    /* cpu-release-addr */
+> +/ {
+> +       compatible =3D "axiado,ax3000";
 
-I think that this is similar to the 5th patch. We should check
-here is_console_usable(con, console_srcu_read_flags(c), true)
-because it checks more conditions:
+Drop. As this is not valid and overridden anyways.
 
-     + the global console_suspended flag. The consoles drivers should
-       not be used when it is set...
+> +       interrupt-parent =3D <&gic500>;
+> +
+> +       aliases {
+> +               i3c0 =3D &i3c0;
+> +               i3c1 =3D &i3c1;
+> +               i3c2 =3D &i3c2;
+> +               i3c3 =3D &i3c3;
+> +               i3c4 =3D &i3c4;
+> +               i3c5 =3D &i3c5;
+> +               i3c6 =3D &i3c6;
+> +               i3c7 =3D &i3c7;
+> +               i3c8 =3D &i3c8;
+> +               i3c9 =3D &i3c9;
+> +               i3c10 =3D &i3c10;
+> +               i3c11 =3D &i3c11;
+> +               i3c12 =3D &i3c12;
+> +               i3c13 =3D &i3c13;
+> +               i3c14 =3D &i3c14;
+> +               i3c15 =3D &i3c15;
+> +               i3c16 =3D &i3c16;
+> +               serial0 =3D &uart0;
+> +               serial1 =3D &uart1;
+> +               serial2 =3D &uart2;
+> +               serial3 =3D &uart3;
+> +       };
+> +
+> +       cpus {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <0>;
+> +
+> +               cpu0: cpu@0 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "arm,cortex-a53";
+> +                       reg =3D <0x0 0x0>;
+> +                       enable-method =3D "spin-table";
+> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
+> +                       d-cache-size =3D <0x8000>;
+> +                       d-cache-line-size =3D <64>;
+> +                       d-cache-sets =3D <128>;
+> +                       i-cache-size =3D <0x8000>;
+> +                       i-cache-line-size =3D <64>;
+> +                       i-cache-sets =3D <256>;
+> +                       next-level-cache =3D <&l2>;
+> +               };
+> +
+> +               cpu1: cpu@1 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "arm,cortex-a53";
+> +                       reg =3D <0x0 0x1>;
+> +                       enable-method =3D "spin-table";
+> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
+> +                       d-cache-size =3D <0x8000>;
+> +                       d-cache-line-size =3D <64>;
+> +                       d-cache-sets =3D <128>;
+> +                       i-cache-size =3D <0x8000>;
+> +                       i-cache-line-size =3D <64>;
+> +                       i-cache-sets =3D <256>;
+> +                       next-level-cache =3D <&l2>;
+> +               };
+> +
+> +               cpu2: cpu@2 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "arm,cortex-a53";
+> +                       reg =3D <0x0 0x2>;
+> +                       enable-method =3D "spin-table";
+> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
+> +                       d-cache-size =3D <0x8000>;
+> +                       d-cache-line-size =3D <64>;
+> +                       d-cache-sets =3D <128>;
+> +                       i-cache-size =3D <0x8000>;
+> +                       i-cache-line-size =3D <64>;
+> +                       i-cache-sets =3D <256>;
+> +                       next-level-cache =3D <&l2>;
+> +               };
+> +
+> +               cpu3: cpu@3 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "arm,cortex-a53";
+> +                       reg =3D <0x0 0x3>;
+> +                       enable-method =3D "spin-table";
+> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
+> +                       d-cache-size =3D <0x8000>;
+> +                       d-cache-line-size =3D <64>;
+> +                       d-cache-sets =3D <128>;
+> +                       i-cache-size =3D <0x8000>;
+> +                       i-cache-line-size =3D <64>;
+> +                       i-cache-sets =3D <256>;
+> +                       next-level-cache =3D <&l2>;
+> +               };
+> +
+> +               l2: l2-cache0 {
+> +                       compatible =3D "cache";
+> +                       cache-size =3D <0x100000>;
+> +                       cache-unified;
+> +                       cache-line-size =3D <64>;
+> +                       cache-sets =3D <1024>;
+> +                       cache-level =3D <2>;
+> +               };
+> +       };
+> +
+> +       timer:timer {
+> +               compatible =3D "arm,armv8-timer";
+> +               interrupt-parent =3D <&gic500>;
+> +               interrupts =3D <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> +                          <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> +                          <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> +                          <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +               arm,cpu-registers-not-fw-configured;
 
-     + whether NBCON console driver has con->write_atomic
+Drop. Not valid for arm64. And new platforms should fix the firmware anyway=
+s.
 
-and we should also fix kdb_msg_write() to actually use
-con->write_atomic() when it is a NBCON console driver.
-There is hard-coded con->write() at the moment.
-
-But it might get more complicated. It would be nice to do it correctly
-and use con->write_atomit() only when nbcon_context_try_acquire()
-succeeds. We probably should use a context with NBCON_PRIO_EMERGENCY.
-
-And this should be fixed at the beginning of the patchset because
-it actually fixes the support of the new NBCON console drivers.
-
-Best Regards,
-Petr
-
->  		if (c == dbg_io_ops->cons)
->  			continue;
-> 
-> -- 
-> 2.49.0
+Rob
