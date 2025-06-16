@@ -1,271 +1,498 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111002E425D
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AB3D52F99
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750077181; cv=none; b=tGa3/T4d8UMqhj2I47fic7d6m3oCtgLoW1yFLs+RD34Ck+4mfZ+z28TLKNljIBW3FAA/fnFxdQzrGvErp7RFS1E6+T/YwONmveo8mVw5cHl9ltBF+HQeYXeA4Nvt+bkg5ns0ORd/Q4udmXTo9Z7mK88MdTWqgzPWfnAyw9MNRBk=
+	t=1750077215; cv=none; b=OPcB+d4Ycf2KUJfHDHRZXYdHNwNBC3Cnm+bWc5MGZoOQMalBNYZzeaV0M2dS9TjOn+Sr4gzNdl/LPrLRRvj+fYtIlsIhkxHyCqYqIRONp1yvKDSZyVBJTIsoyXnkbVcGRLExZSOWOEuYfRbVIKNBZYDyE1S//XWxGv8D8MygQbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750077181; c=relaxed/simple;
-	bh=OwlUMduCrZ+msLujtEjTceKi7BOIeKBdbPjQ5VWAm0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWeowTTZAhMBYIWzXnTTLakJf0bG84jrtDvf/4DBLXCEjqydez60bn02+13lmXkXRzNBbYCwVCF5AJzVJAqtVGySI7/C0SUDcJdSirkIUpvCmmufJ7WY01olubTAxQYTetYgyYBQ6NW590oBLalJNWjNx/DK4KKbPHhz0h7Nd8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j9FfApOZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KmNOV6uW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GbZbGM8o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Rzw6rv9K; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j9FfApOZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KmNOV6uW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GbZbGM8o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Rzw6rv9K"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CFAAB211A3;
-	Mon, 16 Jun 2025 12:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750077177; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gVMuZ31mFi2uH+VZBaaisw/uEdjo/iMkeB0fQGy/mHo=;
-	b=j9FfApOZWtbgJFHk+Ik2mh10HTTqMtgyd8JYvPZk8gFIaKoBIhXqHTib1MyEBYooT5jP0a
-	uYtNm9ntqPUYruqsWT6cSPmjre6s86orQExkUkzNjOfJOZt6jLA1tcPGb57x3eaRPRPCQL
-	ygtI+n6L+Nr2F+65E4jevdwv3w9IfSI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750077177;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gVMuZ31mFi2uH+VZBaaisw/uEdjo/iMkeB0fQGy/mHo=;
-	b=KmNOV6uWXeK3ssLS2cKHoi3+4lFkwPpLio4BDZtPuu6WBtxdoe06Grrv5Y822nHO2X1DWb
-	36IuafMLmJZrOrDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=GbZbGM8o;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Rzw6rv9K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750077176; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gVMuZ31mFi2uH+VZBaaisw/uEdjo/iMkeB0fQGy/mHo=;
-	b=GbZbGM8o1DSBmIn8dbTFYcVEDItw6lg4nBypYHonYgsIJ+oCaJMzYNbieb5xsxuXLb2AJi
-	zQ1W6WfOBLo0vDbUfokCNzVAhnuCaXTrxhAyRYrndjPpNWZFX4tjBlLFnx1FScL4iujRBS
-	AnkQE++KaNlrNbeIKF43C5VeU+OYvgI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750077176;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gVMuZ31mFi2uH+VZBaaisw/uEdjo/iMkeB0fQGy/mHo=;
-	b=Rzw6rv9KlwEF0HvE29gHURgQ0YXv4QMzd8KiBeuau8mR//srGn+qiMUEjFcOBhpmU++lSx
-	1oI9WDG9U3NX2sDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 473FB139E2;
-	Mon, 16 Jun 2025 12:32:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 29HBDvgOUGhnCQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 12:32:56 +0000
-Date: Mon, 16 Jun 2025 14:32:54 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 03/10] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <aFAO9igZQ7yP1m7A@localhost.localdomain>
-References: <20250609092149.312114-1-osalvador@suse.de>
- <20250609092149.312114-4-osalvador@suse.de>
- <2bec8b53-f788-493e-a76e-1f804ed3aa0c@redhat.com>
- <aE_WG6bnjtLBzCp8@localhost.localdomain>
- <10c87a0e-c9fe-48fe-9bbd-16afd244b4ec@redhat.com>
- <aE_a4_rGbMLJKBIs@localhost.localdomain>
- <360f2f04-4542-4595-bf36-c45ed10335af@redhat.com>
- <aFADwYs9LcyK5tVn@localhost.localdomain>
- <23431108-b5b8-4c8a-8869-8f994371e7a5@redhat.com>
+	s=arc-20240116; t=1750077215; c=relaxed/simple;
+	bh=8h5GMsK815d9SvZu+c51s4POOMv4gzsF61NaYUdt50E=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=L7NkGfH0TfC3F9+/WEBmgUuZQBUtYOH2ZQQYKKCtX6mUlp14zaijjZs2VI17OsuNm41VnQOY1fOlPMOpW82JWH2OGRXisXlMwyqDS4BsshrijqGKpgc6ZkjTjblRjC6y/u52gvB8AdrRgpsVHI+Cx5i0Cxs4CRbDWPTK6wteBd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 091DC150C;
+	Mon, 16 Jun 2025 05:33:11 -0700 (PDT)
+Received: from [10.57.84.117] (unknown [10.57.84.117])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0879A3F58B;
+	Mon, 16 Jun 2025 05:33:30 -0700 (PDT)
+Message-ID: <aa932ea3-d408-40a1-a734-60ac8fc73a50@arm.com>
+Date: Mon, 16 Jun 2025 13:33:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23431108-b5b8-4c8a-8869-8f994371e7a5@redhat.com>
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,localhost.localdomain:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: CFAAB211A3
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] arm64: mm: support large block mapping when
+ rodata=full
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
+ <20250531024545.1101304-4-yang@os.amperecomputing.com>
+ <60a7e30e-73f4-4e0f-aee5-606808a18a61@arm.com>
+In-Reply-To: <60a7e30e-73f4-4e0f-aee5-606808a18a61@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 02:21:02PM +0200, David Hildenbrand wrote:
-> Exactly. I recall I checked some of them in the past as well, when I
-> stumbled over this behavior.
+On 16/06/2025 12:58, Ryan Roberts wrote:
+> On 31/05/2025 03:41, Yang Shi wrote:
+>> When rodata=full is specified, kernel linear mapping has to be mapped at
+>> PTE level since large page table can't be split due to break-before-make
+>> rule on ARM64.
+>>
+>> This resulted in a couple of problems:
+>>   - performance degradation
+>>   - more TLB pressure
+>>   - memory waste for kernel page table
+>>
+>> With FEAT_BBM level 2 support, splitting large block page table to
+>> smaller ones doesn't need to make the page table entry invalid anymore.
+>> This allows kernel split large block mapping on the fly.
+>>
+>> Add kernel page table split support and use large block mapping by
+>> default when FEAT_BBM level 2 is supported for rodata=full.  When
+>> changing permissions for kernel linear mapping, the page table will be
+>> split to smaller size.
+>>
+>> The machine without FEAT_BBM level 2 will fallback to have kernel linear
+>> mapping PTE-mapped when rodata=full.
+>>
+>> With this we saw significant performance boost with some benchmarks and
+>> much less memory consumption on my AmpereOne machine (192 cores, 1P) with
+>> 256GB memory.
+>>
+>> * Memory use after boot
+>> Before:
+>> MemTotal:       258988984 kB
+>> MemFree:        254821700 kB
+>>
+>> After:
+>> MemTotal:       259505132 kB
+>> MemFree:        255410264 kB
+>>
+>> Around 500MB more memory are free to use.  The larger the machine, the
+>> more memory saved.
+>>
+>> * Memcached
+>> We saw performance degradation when running Memcached benchmark with
+>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
+>> With this patchset we saw ops/sec is increased by around 3.5%, P99
+>> latency is reduced by around 9.6%.
+>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
+>> MPKI is reduced by 28.5%.
+>>
+>> The benchmark data is now on par with rodata=on too.
+>>
+>> * Disk encryption (dm-crypt) benchmark
+>> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
+>> encryption (by dm-crypt).
+>> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
+>>     --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
+>>     --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
+>>     --name=iops-test-job --eta-newline=1 --size 100G
+>>
+>> The IOPS is increased by 90% - 150% (the variance is high, but the worst
+>> number of good case is around 90% more than the best number of bad case).
+>> The bandwidth is increased and the avg clat is reduced proportionally.
+>>
+>> * Sequential file read
+>> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
+>> The bandwidth is increased by 150%.
+>>
+>> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+>> ---
+>>  arch/arm64/include/asm/cpufeature.h |  26 +++
+>>  arch/arm64/include/asm/mmu.h        |   1 +
+>>  arch/arm64/include/asm/pgtable.h    |  12 +-
+>>  arch/arm64/kernel/cpufeature.c      |   2 +-
+>>  arch/arm64/mm/mmu.c                 | 269 +++++++++++++++++++++++++---
+>>  arch/arm64/mm/pageattr.c            |  37 +++-
+>>  6 files changed, 319 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+>> index 8f36ffa16b73..a95806980298 100644
+>> --- a/arch/arm64/include/asm/cpufeature.h
+>> +++ b/arch/arm64/include/asm/cpufeature.h
+>> @@ -1053,6 +1053,32 @@ static inline bool cpu_has_lpa2(void)
+>>  #endif
+>>  }
+>>  
+>> +bool cpu_has_bbml2_noabort(unsigned int cpu_midr);
+>> +
+>> +static inline bool has_nobbml2_override(void)
+>> +{
+>> +	u64 mmfr2;
+>> +	unsigned int bbm;
+>> +
+>> +	mmfr2 = read_sysreg_s(SYS_ID_AA64MMFR2_EL1);
+>> +	mmfr2 &= ~id_aa64mmfr2_override.mask;
+>> +	mmfr2 |= id_aa64mmfr2_override.val;
+>> +	bbm = cpuid_feature_extract_unsigned_field(mmfr2,
+>> +						   ID_AA64MMFR2_EL1_BBM_SHIFT);
+>> +	return bbm == 0;
+>> +}
+>> +
+>> +/*
+>> + * Called at early boot stage on boot CPU before cpu info and cpu feature
+>> + * are ready.
+>> + */
+>> +static inline bool bbml2_noabort_available(void)
+>> +{
+>> +	return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT) &&
+>> +	       cpu_has_bbml2_noabort(read_cpuid_id()) &&
+>> +	       !has_nobbml2_override();
+> 
+> Based on Will's feedback, The Kconfig and the cmdline override will both
+> disappear in Miko's next version and we will only use the MIDR list to decide
+> BBML2_NOABORT status, so this will significantly simplify. Sorry about the churn
+> here.
+> 
+>> +}
+>> +
+>>  #endif /* __ASSEMBLY__ */
+>>  
+>>  #endif
+>> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+>> index 6e8aa8e72601..2693d63bf837 100644
+>> --- a/arch/arm64/include/asm/mmu.h
+>> +++ b/arch/arm64/include/asm/mmu.h
+>> @@ -71,6 +71,7 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+>>  			       pgprot_t prot, bool page_mappings_only);
+>>  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+>>  extern void mark_linear_text_alias_ro(void);
+>> +extern int split_linear_mapping(unsigned long start, unsigned long end);
+> 
+> nit: Perhaps split_leaf_mapping() or split_kernel_pgtable_mapping() or something
+> similar is more generic which will benefit us in future when using this for
+> vmalloc too?
+> 
+>>  
+>>  /*
+>>   * This check is triggered during the early boot before the cpufeature
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index d3b538be1500..bf3cef31d243 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -293,6 +293,11 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
+>>  	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
+>>  }
+>>  
+>> +static inline pmd_t pmd_mknoncont(pmd_t pmd)
+>> +{
+>> +	return __pmd(pmd_val(pmd) & ~PMD_SECT_CONT);
+>> +}
+>> +
+>>  static inline pte_t pte_mkdevmap(pte_t pte)
+>>  {
+>>  	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+>> @@ -769,7 +774,7 @@ static inline bool in_swapper_pgdir(void *addr)
+>>  	        ((unsigned long)swapper_pg_dir & PAGE_MASK);
+>>  }
+>>  
+>> -static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>> +static inline void __set_pmd_nosync(pmd_t *pmdp, pmd_t pmd)
+>>  {
+>>  #ifdef __PAGETABLE_PMD_FOLDED
+>>  	if (in_swapper_pgdir(pmdp)) {
+>> @@ -779,6 +784,11 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>>  #endif /* __PAGETABLE_PMD_FOLDED */
+>>  
+>>  	WRITE_ONCE(*pmdp, pmd);
+>> +}
+>> +
+>> +static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>> +{
+>> +	__set_pmd_nosync(pmdp, pmd);
+>>  
+>>  	if (pmd_valid(pmd)) {
+>>  		dsb(ishst);
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index e879bfcf853b..5fc2a4a804de 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -2209,7 +2209,7 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+>>  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+>>  }
+>>  
+>> -static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+>> +bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+>>  {
+>>  	/*
+>>  	 * We want to allow usage of bbml2 in as wide a range of kernel contexts
+> 
+> 
+> [...] I'll send a separate response for the mmu.c table walker changes.
+> 
+>>  
+>> +int split_linear_mapping(unsigned long start, unsigned long end)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (!system_supports_bbml2_noabort())
+>> +		return 0;
+> 
+> Hmm... I guess the thinking here is that for !BBML2_NOABORT you are expecting
+> this function should only be called in the first place if we know we are
+> pte-mapped. So I guess this is ok... it just means that if we are not
+> pte-mapped, warnings will be emitted while walking the pgtables (as is the case
+> today). So I think this approach is ok.
+> 
+>> +
+>> +	mmap_write_lock(&init_mm);
+> 
+> What is the lock protecting? I was orignally thinking no locking should be
+> needed because it's not needed for permission changes today; But I think you are
+> right here and we do need locking; multiple owners could share a large leaf
+> mapping, I guess? And in that case you could get concurrent attempts to split
+> from both owners.
+> 
+> I'm not really a fan of adding the extra locking though; It might introduce a
+> new bottleneck. I wonder if there is a way we could do this locklessly? i.e.
+> allocate the new table, then cmpxchg to insert and the loser has to free? That
+> doesn't work for contiguous mappings though...
+> 
+>> +	/* NO_EXEC_MAPPINGS is needed when splitting linear map */
+>> +	ret = __create_pgd_mapping_locked(init_mm.pgd, virt_to_phys((void *)start),
+>> +					  start, (end - start), __pgprot(0),
+>> +					  __pgd_pgtable_alloc,
+>> +					  NO_EXEC_MAPPINGS | SPLIT_MAPPINGS);
+>> +	mmap_write_unlock(&init_mm);
+>> +	flush_tlb_kernel_range(start, end);
+> 
+> I don't believe we should need to flush the TLB when only changing entry sizes
+> when BBML2 is supported. Miko's series has a massive comment explaining the
+> reasoning. That applies to user space though. We should consider if this all
+> works safely for kernel space too, and hopefully remove the flush.
+> 
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  /*
+>>   * This function can only be used to modify existing table entries,
+>>   * without allocating new levels of table. Note that this permits the
+>> @@ -676,6 +887,24 @@ static inline void arm64_kfence_map_pool(phys_addr_t kfence_pool, pgd_t *pgdp) {
+>>  
+>>  #endif /* CONFIG_KFENCE */
+>>  
+>> +static inline bool force_pte_mapping(void)
+>> +{
+>> +	/*
+>> +	 * Can't use cpufeature API to determine whether BBML2 supported
+>> +	 * or not since cpufeature have not been finalized yet.
+>> +	 *
+>> +	 * Checking the boot CPU only for now.  If the boot CPU has
+>> +	 * BBML2, paint linear mapping with block mapping.  If it turns
+>> +	 * out the secondary CPUs don't support BBML2 once cpufeature is
+>> +	 * fininalized, the linear mapping will be repainted with PTE
+>> +	 * mapping.
+>> +	 */
+>> +	return (rodata_full && !bbml2_noabort_available()) ||
+> 
+> So this is the case where we don't have BBML2 and need to modify protections at
+> page granularity - I agree we need to force pte mappings here.
+> 
+>> +		debug_pagealloc_enabled() ||
+> 
+> This is the case where every page is made invalid on free and valid on
+> allocation, so no point in having block mappings because it will soon degenerate
+> into page mappings because we will have to split on every allocation. Agree here
+> too.
+> 
+>> +		arm64_kfence_can_set_direct_map() ||
+> 
+> After looking into how kfence works, I don't agree with this one. It has a
+> dedicated pool where it allocates from. That pool may be allocated early by the
+> arch or may be allocated late by the core code. Either way, kfence will only
+> modify protections within that pool. You current approach is forcing pte
+> mappings if the pool allocation is late (i.e. not performed by the arch code
+> during boot). But I think "late" is the most common case; kfence is compiled
+> into the kernel but not active at boot. Certainly that's how my Ubuntu kernel is
+> configured. So I think we should just ignore kfence here. If it's "early" then
+> we map the pool with page granularity (as an optimization). If it's "late" your
+> splitter will degenerate the whole kfence pool to page mappings over time as
+> kfence_protect_page() -> set_memory_valid() is called. But the bulk of the
+> linear map will remain mapped with large blocks.
+> 
+>> +		is_realm_world();
+> 
+> I think the only reason this requires pte mappings is for
+> __set_memory_enc_dec(). But that can now deal with block mappings given the
+> ability to split the mappings as needed. So I think this condition can be
+> removed too.
 
-Now, about simplying the cancel_{mem,node}_notifier_on_err.
-It would look like this:
+To clarify; the latter 2 would still be needed for the !BBML2_NOABORT case. So I
+think the expression becomes:
 
- diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
- index d6df85452c72..ff887f10b114 100644
- --- a/mm/memory_hotplug.c
- +++ b/mm/memory_hotplug.c
- @@ -1150,11 +1150,16 @@ void mhp_deinit_memmap_on_memory(unsigned long pfn, unsigned long nr_pages)
-  int online_pages(unsigned long pfn, unsigned long nr_pages,
-  		       struct zone *zone, struct memory_group *group)
-  {
- -	bool cancel_mem_notifier_on_err = false, cancel_node_notifier_on_err = false;
-  	const int nid = zone_to_nid(zone);
-  	int need_zonelists_rebuild = 0;
- -	struct memory_notify mem_arg;
- -	struct node_notify node_arg;
- +	struct memory_notify mem_arg = {
- +		.start_pfn = pfn,
- +		.nr_pages = nr_pages,
- +		.status_change_nid = NUMA_NO_NODE,
- +	};
- +	struct node_notify node_arg = {
- +		.nid = NUMA_NO_NODE,
- +	};
-  	unsigned long flags;
-  	int ret;
- 
- @@ -1173,21 +1178,16 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
-  	/* associate pfn range with the zone */
-  	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_ISOLATE);
- 
- -	node_arg.nid = NUMA_NO_NODE;
-  	if (!node_state(nid, N_MEMORY)) {
-  		/* Adding memory to the node for the first time */
- -		cancel_node_notifier_on_err = true;
-  		node_arg.nid = nid;
- +		mem_arg.status_change_nid = nid;
-  		ret = node_notify(NODE_ADDING_FIRST_MEMORY, &node_arg);
-  		ret = notifier_to_errno(ret);
-  		if (ret)
-  			goto failed_addition;
-  	}
- 
- -	mem_arg.start_pfn = pfn;
- -	mem_arg.nr_pages = nr_pages;
- -	mem_arg.status_change_nid = node_arg.nid;
- -	cancel_mem_notifier_on_err = true;
-  	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
-  	ret = notifier_to_errno(ret);
-  	if (ret)
- @@ -1249,9 +1249,8 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
-  	pr_debug("online_pages [mem %#010llx-%#010llx] failed\n",
-  		 (unsigned long long) pfn << PAGE_SHIFT,
-  		 (((unsigned long long) pfn + nr_pages) << PAGE_SHIFT) - 1);
- -	if (cancel_mem_notifier_on_err)
- -		memory_notify(MEM_CANCEL_ONLINE, &mem_arg);
- -	if (cancel_node_notifier_on_err)
- +	memory_notify(MEM_CANCEL_ONLINE, &mem_arg);
- +	if (node_arg.nid != NUMA_NO_NODE)
-  		node_notify(NODE_CANCEL_ADDING_FIRST_MEMORY, &node_arg);
-  	remove_pfn_range_from_zone(zone, pfn, nr_pages);
-  	return ret;
- @@ -1899,13 +1898,18 @@ static int count_system_ram_pages_cb(unsigned long start_pfn,
-  int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-  			struct zone *zone, struct memory_group *group)
-  {
- -	bool cancel_mem_notifier_on_err = false, cancel_node_notifier_on_err = false;
-  	unsigned long pfn, managed_pages, system_ram_pages = 0;
-  	const unsigned long end_pfn = start_pfn + nr_pages;
-  	struct pglist_data *pgdat = zone->zone_pgdat;
-  	const int node = zone_to_nid(zone);
- -	struct memory_notify mem_arg;
- -	struct node_notify node_arg;
- +	struct memory_notify mem_arg = {
- +		.start_pfn = pfn,
- +		.nr_pages = nr_pages,
- +		.status_change_nid = NUMA_NO_NODE,
- +	};
- +	struct node_notify node_arg = {
- +		.nid = NUMA_NO_NODE,
- +	};
-  	unsigned long flags;
-  	char *reason;
-  	int ret;
- @@ -1970,20 +1974,15 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-  	 * 'nr_pages' more. If so, we know that the node will become empty, and
-  	 * so we will clear N_MEMORY for it.
-  	 */
- -	node_arg.nid = NUMA_NO_NODE;
-  	if (nr_pages >= pgdat->node_present_pages) {
-  		node_arg.nid = node;
- -		cancel_node_notifier_on_err = true;
- +		mem_arg.status_change_nid = node;
-  		ret = node_notify(NODE_REMOVING_LAST_MEMORY, &node_arg);
-  		ret = notifier_to_errno(ret);
-  		if (ret)
-  			goto failed_removal_isolated;
-  	}
- 
- -	mem_arg.start_pfn = start_pfn;
- -	mem_arg.nr_pages = nr_pages;
- -	mem_arg.status_change_nid = node_arg.nid;
- -	cancel_mem_notifier_on_err = true;
-  	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
-  	ret = notifier_to_errno(ret);
-  	if (ret) {
- @@ -2087,9 +2086,8 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-  failed_removal_isolated:
-  	/* pushback to free area */
-  	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
- -	if (cancel_mem_notifier_on_err)
- -		memory_notify(MEM_CANCEL_OFFLINE, &mem_arg);
- -	if (cancel_node_notifier_on_err)
- +	memory_notify(MEM_CANCEL_OFFLINE, &mem_arg);
- +	if (node_arg.nid != NUMA_NO_NODE)
-  		node_notify(NODE_CANCEL_REMOVING_LAST_MEMORY, &node_arg);
-  failed_removal_pcplists_disabled:
-  	lru_cache_enable();
+	return (!bbml2_noabort_available() && (rodata_full ||
+		arm64_kfence_can_set_direct_map() || is_realm_world())) ||
+		debug_pagealloc_enabled();
 
+Thanks,
+Ryan
 
-Not sure if I like keeping the cancel_* stuff.
-Strong opinion here? Feelings? :-)
+> 
+>> +}
+> 
+> Additionally, for can_set_direct_map(); at minimum it's comment should be tidied
+> up, but really I think it should return true if "BBML2_NOABORT ||
+> force_pte_mapping()". Because they are the conditions under which we can now
+> safely modify the linear map.
+> 
+>> +
+>>  static void __init map_mem(pgd_t *pgdp)
+>>  {
+>>  	static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
+>> @@ -701,7 +930,7 @@ static void __init map_mem(pgd_t *pgdp)
+>>  
+>>  	early_kfence_pool = arm64_kfence_alloc_pool();
+>>  
+>> -	if (can_set_direct_map())
+>> +	if (force_pte_mapping())
+>>  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>>  
+>>  	/*
+>> @@ -1402,7 +1631,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>  
+>>  	VM_BUG_ON(!mhp_range_allowed(start, size, true));
+>>  
+>> -	if (can_set_direct_map())
+>> +	if (force_pte_mapping())
+>>  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>>  
+>>  	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+>> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+>> index 39fd1f7ff02a..25c068712cb5 100644
+>> --- a/arch/arm64/mm/pageattr.c
+>> +++ b/arch/arm64/mm/pageattr.c
+>> @@ -10,6 +10,7 @@
+>>  #include <linux/vmalloc.h>
+>>  
+>>  #include <asm/cacheflush.h>
+>> +#include <asm/mmu.h>
+>>  #include <asm/pgtable-prot.h>
+>>  #include <asm/set_memory.h>
+>>  #include <asm/tlbflush.h>
+>> @@ -42,6 +43,8 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+>>  	struct page_change_data *cdata = data;
+>>  	pte_t pte = __ptep_get(ptep);
+>>  
+>> +	BUG_ON(pte_cont(pte));
+> 
+> I don't think this is required; We want to enable using contiguous mappings
+> where it makes sense. As long as we have BBML2, we can update contiguous pte
+> mappings in place, as long as we update all of the ptes in the contiguous block.
+> split_linear_map() should either have converted to non-cont mappings if the
+> contiguous block straddled the split point, or would have left as is (or
+> downgraded a PMD-block to a contpte block) if fully contained within the split
+> range.
+> 
+>> +
+>>  	pte = clear_pte_bit(pte, cdata->clear_mask);
+>>  	pte = set_pte_bit(pte, cdata->set_mask);
+>>  
+>> @@ -80,8 +83,9 @@ static int change_memory_common(unsigned long addr, int numpages,
+>>  	unsigned long start = addr;
+>>  	unsigned long size = PAGE_SIZE * numpages;
+>>  	unsigned long end = start + size;
+>> +	unsigned long l_start;
+>>  	struct vm_struct *area;
+>> -	int i;
+>> +	int i, ret;
+>>  
+>>  	if (!PAGE_ALIGNED(addr)) {
+>>  		start &= PAGE_MASK;
+>> @@ -118,7 +122,12 @@ static int change_memory_common(unsigned long addr, int numpages,
+>>  	if (rodata_full && (pgprot_val(set_mask) == PTE_RDONLY ||
+>>  			    pgprot_val(clear_mask) == PTE_RDONLY)) {
+>>  		for (i = 0; i < area->nr_pages; i++) {
+>> -			__change_memory_common((u64)page_address(area->pages[i]),
+>> +			l_start = (u64)page_address(area->pages[i]);
+>> +			ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
+>> +			if (WARN_ON_ONCE(ret))
+>> +				return ret;
+> 
+> I don't think this is the right place to integrate; I think the split should be
+> done inside __change_memory_common(). Then it caters to all possibilities (i.e.
+> set_memory_valid() and __set_memory_enc_dec()). This means it will run for
+> vmalloc too, but for now, that will be a nop because everything should already
+> be split as required on entry and in future we will get that for free.
+> 
+> Once you have integrated Dev's series, the hook becomes
+> ___change_memory_common() (3 underscores)...
+> 
+>> +
+>> +			__change_memory_common(l_start,
+>>  					       PAGE_SIZE, set_mask, clear_mask);
+>>  		}
+>>  	}
+>> @@ -174,6 +183,9 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
+>>  
+>>  int set_direct_map_invalid_noflush(struct page *page)
+>>  {
+>> +	unsigned long l_start;
+>> +	int ret;
+>> +
+>>  	struct page_change_data data = {
+>>  		.set_mask = __pgprot(0),
+>>  		.clear_mask = __pgprot(PTE_VALID),
+>> @@ -182,13 +194,21 @@ int set_direct_map_invalid_noflush(struct page *page)
+>>  	if (!can_set_direct_map())
+>>  		return 0;
+>>  
+>> +	l_start = (unsigned long)page_address(page);
+>> +	ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
+>> +	if (WARN_ON_ONCE(ret))
+>> +		return ret;
+>> +
+>>  	return apply_to_page_range(&init_mm,
+>> -				   (unsigned long)page_address(page),
+>> -				   PAGE_SIZE, change_page_range, &data);
+>> +				   l_start, PAGE_SIZE, change_page_range,
+>> +				   &data);
+> 
+> ...and once integrated with Dev's series you don't need any changes here...
+> 
+>>  }
+>>  
+>>  int set_direct_map_default_noflush(struct page *page)
+>>  {
+>> +	unsigned long l_start;
+>> +	int ret;
+>> +
+>>  	struct page_change_data data = {
+>>  		.set_mask = __pgprot(PTE_VALID | PTE_WRITE),
+>>  		.clear_mask = __pgprot(PTE_RDONLY),
+>> @@ -197,9 +217,14 @@ int set_direct_map_default_noflush(struct page *page)
+>>  	if (!can_set_direct_map())
+>>  		return 0;
+>>  
+>> +	l_start = (unsigned long)page_address(page);
+>> +	ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
+>> +	if (WARN_ON_ONCE(ret))
+>> +		return ret;
+>> +
+>>  	return apply_to_page_range(&init_mm,
+>> -				   (unsigned long)page_address(page),
+>> -				   PAGE_SIZE, change_page_range, &data);
+>> +				   l_start, PAGE_SIZE, change_page_range,
+>> +				   &data);
+> 
+> ...or here.
+> 
+> Thanks,
+> Ryan
+> 
+>>  }
+>>  
+>>  static int __set_memory_enc_dec(unsigned long addr,
+> 
 
- 
-
--- 
-Oscar Salvador
-SUSE Labs
