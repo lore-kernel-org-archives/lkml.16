@@ -1,173 +1,531 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2045.outbound.protection.outlook.com [40.107.102.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB92D1ABEC5
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078148; cv=fail; b=lBQu4HWFTj2BVPD3cv9k8bkdg9bocolVc2wYgZh9CBq8ui8F3nojstm1Bbq+hmWTQG60GGH9IE29soozYh3jr1aqKI0HDPD3eA07+oSEWuIb3dvwXbf1NgQxmMtagMobWhn82KeFubnz5bTSljSgJE9IMp1uPmUxcq3m0vqBDZs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078148; c=relaxed/simple;
-	bh=WpB2JJuk8U36CqF8hUgcDS7HTC3Z4ddMCfB30HMKw4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LOatrgEVVclAW68dz0uhypvwu5ogeIbUMTpXFOQVgl0CTGq6bYpUrz7qGkEf8OnW+xvtHuqMlD3xiv0V2M/CgDE5CoCaKxQw9htrUBZsSSD+2/ZOdqoly7wiTPjmjB6fyTEDnW8SS6K6aQHrKZkm039NweV8vh+X4D6y5swJzoQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CM13yjb5; arc=fail smtp.client-ip=40.107.102.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066CB1ABEC5;
+	Mon, 16 Jun 2025 12:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750078187; cv=none; b=hEDXeTs9QP9RZu9KHSmYcVtt/cbuCVHkP0YD37xyYx6m3d/dkOpnMVBbvTg64Fxtc0cM64Nd2B/2XF+kLSl/tDj0yFb3iEM/B3lH5gp5qhbh/zx1aYw51vHWCOJZi+mqaGUqQ9z9ZvgQNz6SaMCkVr8PxIn1B6GXu4jbNd4ISV4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750078187; c=relaxed/simple;
+	bh=qkqlhKjdJO8J5GB9CvX4foOoObaUYDwVcup5l10hhWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t21GIgl+5qtfASX5/NEEPszgBCvOb615DSMZzRul39ku2tDyrQytWa6Pz5sZGgE+FvY3v9jhreLaOXZx7Ew9x0B6Y39qUoxP/3IDS5Z5cyJTJylHKaknVtplKKEBAXlXIoT3/3WKSR0M1CfOege+E7eRYenBP+eGicX4Glw1MOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d5lK0oM0; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CM13yjb5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Uc10IhtdPPGaZprWzQ3RriUN9TVTdaetrKd/J7/z4rus/UOrToUIwGmB6R23VYwOEJbI01VoZrEzKdAbcS3B2+HsEhQSGW+eYnAIrTawrr/1qXTInlwXodxdAlG31L8TkFdOCMMcdl4HYK5LvnQjqhCipno8qwpXJ1EnScJEY8oKPZqtDqGeHDnbe68CdJuTTg0pDKNc8r5go+EUW8lhvENycUNCA8Vq9+zRkJ8WKiJBHLy59oRn3wkCytzBIc3Te01Vk/ueeILvbNqWmyv/FJAC7iXLoMZQDR+yZqpAh0tI/B0F1HBOmX2SLMxmb84kUPM2OuM6HxfoQJc1vw9P2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tHWvYN3e4Q8erFib/CqjM/U64fXw6Itk8ZIgHFvrgv0=;
- b=sk7No1WGY7/uEQteVxJk9lbHCDwgNuNVVjrQguj/Ckvimm93vrHlycJ0TMk/1kff3c9H7lNhMWYw1wbJzMCwsqQhF44/zgl8waQbNfjTq8UnWiB37Ou3y5EwLqKFrDznZIj4qAI0390VFNRPFKQFBYcvi5LQJY+AoZkPtMoqUtoUPxz3RO9VzJJgDSAuYFr+BjoH9XrPIYzQYxWXGibdUq5zjQ61Y06Vur5bfPlE/cf5VUkpiw4531LYFlTbGKVTEdsHDY7tmhKJWDUBZ6FAV3Dd/YCZrQog45uY6EtmnNQI8O9kDQFw1KunKLEik5xaBKs1zNv5pM1GyLvW+G+vsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tHWvYN3e4Q8erFib/CqjM/U64fXw6Itk8ZIgHFvrgv0=;
- b=CM13yjb5DdYAo9QLYNyjpM+TKQHMclPp5fj6IjFDDs3rsSmv8VEhb+PadiwjGhNWgtQzLc3u4/TAOKm5TvkM4MyCaAR4A9O6+loFuOKUel9ZT/cxqu9nNg38rdpJrdhqF//bdxGYiGIH+FtVQ9Bd6ZghkZ7/bnd0yl+sRjy0FYnJeP22Xnk75q+yuIKARgw7/bJffRACSfcAOm4sEkfJf5Rr5XBMZmGp2O8m8mXtPuTre56RbqEKP93CBXNJFy12ECU92pW7U3NxHK1wBj3XjpehIdskyuQxRW4mpyyC+y8l4bQ+bmZW1U+uRpoMslOHMDDeLdqh7agEhGHivm/PFg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by MN0PR12MB6295.namprd12.prod.outlook.com (2603:10b6:208:3c0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 12:49:04 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
- 12:49:04 +0000
-Date: Mon, 16 Jun 2025 09:49:01 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, will@kernel.org, robin.murphy@arm.com,
-	joro@8bytes.org, praan@google.com, yi.l.liu@intel.com,
-	peterz@infradead.org, jsnitsel@redhat.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 10/14] iommu/arm-smmu-v3: Replace arm_vsmmu_alloc with
- arm_vsmmu_init
-Message-ID: <20250616124901.GZ1174925@nvidia.com>
-References: <cover.1749882255.git.nicolinc@nvidia.com>
- <64e4b4c33acd26e1bd676e077be80e00fb63f17c.1749882255.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64e4b4c33acd26e1bd676e077be80e00fb63f17c.1749882255.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: MW4P221CA0018.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::23) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5lK0oM0"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54e98f73850so4283578e87.1;
+        Mon, 16 Jun 2025 05:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750078183; x=1750682983; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZ4WRavB5zFwjZHJzhP+H8upINz+844Em+7kb5ozr5E=;
+        b=d5lK0oM0KO5GlfYZYiLEwO3Zeu5cZxsUs7582rSUr4YviaCie+99yK2cCqhS3+CNnt
+         9wxXoen6846r9M0ScUa7qnbquR+J7g9Lyex5vdnKWSIHc6L7mRUpx7Nc0SBpJ+1yq5VV
+         ilaRmcabo069TyEmxsZrCVX5OoMsTw0hOJXo/a9SM3cTSves170onHmMxwPvq6xOij1g
+         fywVXOYkVL44RFmqV15Hu0osNUOkaXBCtAQladMktbq/HaKcd7+WEYeTeK7MkIEl61Za
+         FZ3cox+f8XWPU9HMCkux3HubBB8uc3bdxHNjb3+9rLwDrMEwHvDjb37DRSi2Jm8N2wLM
+         meEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750078183; x=1750682983;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CZ4WRavB5zFwjZHJzhP+H8upINz+844Em+7kb5ozr5E=;
+        b=P7ItA+/hakiePWcOeA7s/Q2OohQidrLE87YomcjnRo1tbHfRRXUr2Z1NbcEtC/RJF/
+         h+kBgXlR1pMZjAdg5JhxFMx2nb6JatwH6cDLQf6Wx3CcgUpaNGJE4Xjb0TvuN9LY2Byy
+         gEaelHqkpLfZJa4TctEpnz+kn+Q+aSsEo1NI+7XjuO7rw0PA6BQ1vzy+2ARHArqWrGr4
+         8nJS0/NQen3dLXlmGy7EIAMUpoXuYAgsr8tDsFBZf4uGucM1rVl6uWauP55nI1BEAF+i
+         VZ4rIH+9zbAJ6cuEWrDWs1rnW+Ll+TE8JTzKAn+dgaMuiBlqKDwx/k4XgWLM24MnQ+D7
+         ck7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWkm8ZBotG/moGj1cSPA9LxAV4Mkt4Pq0RkhoUHF1hVrc9qaKr5CNUXZdJZL8zYdSEvZ/gYYM1JhE4=@vger.kernel.org, AJvYcCXC1UBk3g3D6so+Up3oEiWWQSiFduWEwoSIj3cEy6v/pxCRl2VQOCVxUGaiByAHfL4DuDLCthjq5AQDyjnS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOpblDVbXtD1Kgk7mRrrNsykPsufxLLuDLKGPSeRZyAwJVXv72
+	6WQJMIIQbPcFvcu73xi2XNK4Uj27HbmzGROs+qhPw85tgjn0cTlQ4n2R
+X-Gm-Gg: ASbGnctLTX6Vq+qsxRf4AYRpc56gRDnlEpP1ojWzFajtKZAzAGCNwfDs9xjzTyPz7s+
+	1ySR/IH3rvm/M0kqmH2e6rm5Nk3cl++Gf2kttCE7xWC8fb7cDHT2YCZrlR0BTfCjdW62pjh6eci
+	Tsl0haqWk56+g91ZAds/TXoqvnaSt9LybvMEnN5nlzVtl8oVf0Et0AtDjoe+ocBq/Q73z75rKdG
+	oLOhpScQWKrPgFlISJ6ZuTvrgmO+zYoiRjGWK7q1yHQgx5196qJjoFlXVNGn/BTgvz2PHU7bdm5
+	llNgc1lEDp8HTwxRBBmOXRg22zYOcFqOGU9kif0IexW2vxht+sB5pGaeSctV2gSxpxG0JyLzVaU
+	4h4zNxA==
+X-Google-Smtp-Source: AGHT+IFW+0OWL85Apksy9XTkUqA17Ln55STCkHZhbPZPX+GSiUhqua72av+0g7J4+NDr55EqZogylw==
+X-Received: by 2002:a05:6512:2345:b0:553:ae17:556 with SMTP id 2adb3069b0e04-553b6f0fcf1mr2132681e87.27.1750078182638;
+        Mon, 16 Jun 2025 05:49:42 -0700 (PDT)
+Received: from ubuntu-2404-1.lintech.local ([80.87.144.137])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac116968sm1529733e87.32.2025.06.16.05.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 05:49:41 -0700 (PDT)
+From: Alexander Kochetkov <al.kochet@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nishad Saraf <nishads@amd.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	=?UTF-8?q?Am=C3=A9lie=20Delaunay?= <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Amit Vadhavana <av2082000@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Alexander Kochetkov <al.kochet@gmail.com>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Subject: [PATCH v2 0/2] dmaengine: virt-dma: convert tasklet to BH workqueue for callback invocation
+Date: Mon, 16 Jun 2025 12:48:02 +0000
+Message-ID: <20250616124934.141782-1-al.kochet@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB6295:EE_
-X-MS-Office365-Filtering-Correlation-Id: 203645b6-2ec0-438f-7089-08ddacd42c6e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Bn3c2HeTvSClo+OK4140Wtm4oEjS7tYgXp86rvq59qKn5EgzBM5cNZR6Ff62?=
- =?us-ascii?Q?p89QmzRbNllDS1ssDCTeOtYxpwRoiF622HyFyXOjWKSG3asQxB8fXL9cNNzp?=
- =?us-ascii?Q?IhF5qgWNxP1MNBuP7SfhTXHy8286x3QLE8vV7iBAXnfDaxEsAny/lY30hUED?=
- =?us-ascii?Q?WutB5soBFkLhd+TBlMHo2D0RBHIf51L980BmWCiI2oRBLkoGdbHXP4UDmvcp?=
- =?us-ascii?Q?RhA0YsYRvl5FV501uSa2pDdhVnyGj/veUnmMQgeZ6AV1VWkvqtFM4bHZeOOA?=
- =?us-ascii?Q?GwxC1BTYNJWCgpY4bxjQybH8J2tPbMRrW+HV+V/GFyoX5iKD/gOZS+/dQWEI?=
- =?us-ascii?Q?Z0QqD9W0scvJY1B3nENjJEn28lf1C++WHDx8QHYuB4AzrGaOc3Enfg+USwg6?=
- =?us-ascii?Q?3FqPvU4sPQD+lvkjlUEzHWmRtn+pLfxD9+321tIVW4WWmlsXmqQiHqP1d4EK?=
- =?us-ascii?Q?RKF3P3KDMG1SluzOWZV70iw3El9zunwgBzNVh/ZAvk8WUvXhJ+M5D0p1aikE?=
- =?us-ascii?Q?8wt5t7vy7fAgIPYC/D0MfDzxbiuxjEcPHik0S1ctfQbGWuKPiB2jmmWLrMN7?=
- =?us-ascii?Q?CWdgDg+bgyp5JHYwfUdFgtlegbZhLSI9UTfsDS9zbPFrKz6/kcQZ/qmSb5fn?=
- =?us-ascii?Q?kiUXNz/7zwx16ZOmuLVMjl83oZKD8hRQctltACmknQAaVBsouqPb7K0jNMWq?=
- =?us-ascii?Q?e2545XVetT/elBcCm5vSghEqDU7gTOxS4YF+IGjmcjmB95k3i80oEcoLD0jw?=
- =?us-ascii?Q?nijH8RFQFejuKj7nmmbaNBkkdjDrsWXDizQnNpBxMZjaMr8ZZgRYcltcUXrC?=
- =?us-ascii?Q?lMEXlvcf3VLWv8zKRlqX1FzLi/6PNxXf5AokF/XIwvRi3VZclUVNm8N0h5va?=
- =?us-ascii?Q?k+OU0sH2e+47SVLC/cF6ql7cPCYDMuRprcZ15ukeZ/Er8o3qRIgCD2DsoE8s?=
- =?us-ascii?Q?dJ/lYtLyFJAx7TzsvmKECqI0ckbqjED0Z4YRgLKTueh/cY7abIOrIgFc5uwY?=
- =?us-ascii?Q?QHkBhie83J5UjdkvZ0p/W+Ub7VqB+7VGtvAwvovCvH8A3jvYht9/U5XpuJZD?=
- =?us-ascii?Q?Ip4aeBbsJzcEvl3SPQ4L7dsmOSAcVt8YOJN0X6Z/+kAq+VANTXqOS+FxHwQp?=
- =?us-ascii?Q?cf+n/MdCht9NWylMBaninMo68Nn7eCEh1qB/Njb0zkw4AVaGHoe/aYc7sGVd?=
- =?us-ascii?Q?2ha4pkzcpIJ121ymzyVJh1C1cnVDdV7EPneBppya7H6ivnEuJy79npJO1aiD?=
- =?us-ascii?Q?8zyfPDPxWxfkwHBRolhSe4OZNewQPAtz2AEt2MEOLk0zbunrvyiTh6okJ4gn?=
- =?us-ascii?Q?7KSBvkAbrwEbVsoyUQ3zJwUpYb/DRU2GO+3DHkbAlW3aGgB1mybgwqNi0+w4?=
- =?us-ascii?Q?jXZaq2vB8SUDSMqV5qYmnWMRKBxo+8EAAr7/eEt+Tm2cAGMlxlA8q3Ec9hkh?=
- =?us-ascii?Q?jN8hBkTMIis=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fYAYI8Fd9YWXxl0CejBaciexNWT7y9onU75/0QrlF3kBPQBRuJ5bHndC1844?=
- =?us-ascii?Q?zQIfpOriFTIlAq350Ch6sbs+Ax5qKkbKtSyGI4VJT1vDn7Tuli81BDFSf+E0?=
- =?us-ascii?Q?b+DkbkD0Sg8WB/yzAYWyl4GMdlhStGL2gM8QZnFtB9mtcMzMLhvLmUr6qT99?=
- =?us-ascii?Q?EZyK+EfqETqULEuE4iVdOcYnHURS3XP04rhqoDmYqMMJrxQlOz/seE141LOC?=
- =?us-ascii?Q?IRICl81cEmZaZ5ctpm7n88x6IxJdHoaH0oXxTn2E1OjTQK/ViGfVOAYt7vNe?=
- =?us-ascii?Q?vQjhHVFHE+89RuoRQuV2Z3W+fV4kXdChlSXFIoWOuy8aElLfUvPBp605KAgk?=
- =?us-ascii?Q?fgyZelWwowrYMg5DQ6tVqbmnIE8Y9yvwcH2wYBgZBluHay/d6oEduhwitcEt?=
- =?us-ascii?Q?FXd8sb/49WBIb7i9igbjg+M7DkOQ+neI6eyutNoQpqCNw/yjgP2uDL25HwKa?=
- =?us-ascii?Q?4n/L2kv6jRGlPaQS7Gk7eJ3iVUD4RZfrxbvquaIEej/aNZQ258Q750sjYvCU?=
- =?us-ascii?Q?XgvBXM8BG7cW9OthimdAZx9c5fjKnP6omzalxTxdfZ0bxhV0P2VzWgEA89oW?=
- =?us-ascii?Q?bgxmmJ3qirhzjsf/dxO0YPn7YHpygsEp1STYb5p/fUfI6kJIs4tcS+KC6AlE?=
- =?us-ascii?Q?YDPfeqo/lSOPSmibG4OQdx+ZBHclt1yYvG1a1donh4IFUg0rneObfk64eFvP?=
- =?us-ascii?Q?z7Lm+ggoGHgf22DjyvEt1/p6f6uqho/Lrfy5ZZqrYewiNps0Tj/MQaL1RF6s?=
- =?us-ascii?Q?ETARh8fos33r0QuXAKw87zW4HxFYpmLGsQrsMVb3va4e1I1MziMZ91ewcoex?=
- =?us-ascii?Q?3ixHWdKjNJRzezehsGEReglIv1grOViVW4XbkI0Fg//lrzhDfPJSyU+teLls?=
- =?us-ascii?Q?DotrxDdDYk9njrdHdwGjZpTxtE/tU4EtFK6DrB1BqpIEOYs0ciJCpljVDeQm?=
- =?us-ascii?Q?6nPzbZEHxzAh9TV+mWMsoojAxA3tK3+qFF9ljnI/fk0BD5UaV1XP8t8xI+tK?=
- =?us-ascii?Q?FWo7oVNfRjUe8p9kXbK/FDUU5ofyNbIpd4cGWRksPnW9+9wmzDFvCOCE2l52?=
- =?us-ascii?Q?6DkhOhj9PFcNYei2vWIwnf4mr7UCBfz21ZyZ1YbGcKa2tEHik7OQrT5GFZvJ?=
- =?us-ascii?Q?/kPhLnvYNUIZNTyaFpxB7FtpzI9Ca38LrWYFOnMVDXXh7+jLIWpYr1+uiV6H?=
- =?us-ascii?Q?SlndgG5gJ7Tc4xVMgzxWdwv1YjzKHxs4SesBNYPvFzOqCPkbdHDniNuyJq+X?=
- =?us-ascii?Q?wCD236OBv+GSKdN5vw/X4k0s/bNUHC9B0aMWuA2JHA9jDxNoBi8C2Ci150/7?=
- =?us-ascii?Q?0mY1YMx89h73NEUM+wI0+X87M0OasGkZFWLCjA4NYgmhA/Ds+GBi9Letp86i?=
- =?us-ascii?Q?xlgRuHlJQsRm2BSvWlM+BzluG3I/65W6Ra6d4CavoA7teB1AHx4bCrMPyfkm?=
- =?us-ascii?Q?klNMMvUdx3j9X2k9ysQTf5YVZBFrNHwbrjSdEd2113S0fMtS55WHImKChhbB?=
- =?us-ascii?Q?J9OnyWw97AFT0y9MZr+qJvMR2MH3uGlWbLhkbda/721qJHDfzp7FI523Q9s1?=
- =?us-ascii?Q?ybjkP2mX+8bFwNvpw1FGgiADfNg12HEcnHU5fTZA?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 203645b6-2ec0-438f-7089-08ddacd42c6e
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 12:49:03.9816
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TnWGFCtJ2h0JDO4zsRKTnjcm+zRyAlZSVA0rF4obBtctoL12sU2VUkZ4bqoS6NVn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6295
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 11:35:22PM -0700, Nicolin Chen wrote:
-> To ease the for-driver iommufd APIs, get_viommu_size and viommu_init ops
-> are introduced.
-> 
-> Sanitize the inputs and report the size of struct arm_vsmmu on success, in
-> arm_smmu_get_viommu_size().
-> 
-> Place the type sanity at the last, becase there will be soon an impl level
-> get_viommu_size op, which will require the same sanity tests prior. It can
-> simply insert a piece of code in front of the IOMMU_VIOMMU_TYPE_ARM_SMMUV3
-> sanity.
-> 
-> The core will ensure the viommu_type is set to the core vIOMMU object, and
-> pass in the same dev pointer, so arm_vsmmu_init() won't need to repeat the
-> same sanity tests but to simply init the arm_vsmmu struct.
-> 
-> Remove the arm_vsmmu_alloc, completing the replacement.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   | 11 +++--
->  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 46 ++++++++++---------
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  3 +-
->  3 files changed, 32 insertions(+), 28 deletions(-)
+Hello!
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Here is v2.
 
-Jason
+I've updated patch accoding to recomendations from Andy Shevchenko:
+- where possible I placed #include <linux/interrupt.h> in correct position
+  to keep include list ordered.
+
+Also I provide patch file for Kconfig files. It allows to compile most of
+virt-dma users on unsupported architecture. I've used ARM64 configuration
+to compile kernel.
+
+One driver (qcom_adm.o) is impossible to compile on ARM64, and that intended
+behaviour. It has condition 'depends on (ARCH_QCOM || COMPILE_TEST) &&
+!PHYS_ADDR_T_64BIT' preventing from building it on 64-bit architectures.
+I've checked it doesn't touch virt-dma fields directly and contains
+#include <linux/interrupt.h> already. It looks that it doesn't need any
+changes. Anyway, I tried to compile it and only get the following errors:
+
+/kernel-source/drivers/dma/qcom/qcom_adm.c: In function 'adm_process_fc_descriptors':
+/kernel-source/drivers/dma/qcom/qcom_adm.c:245:21: error: assignment to 'u32 *' 
+{aka 'unsigned int *'} from incompatible pointer type 'phys_addr_t *' 
+{aka 'long long unsigned int *'} [-Werror=incompatible-pointer-types]
+  245 |                 src = &achan->slave.src_addr;
+      |                     ^
+/kernel-source/drivers/dma/qcom/qcom_adm.c:251:21: error: assignment to 'u32 *' 
+{aka 'unsigned int *'} from incompatible pointer type 'phys_addr_t *' 
+{aka 'long long unsigned int *'} [-Werror=incompatible-pointer-types]
+  251 |                 dst = &achan->slave.dst_addr;
+      |                     ^
+/kernel-source/drivers/dma/qcom/qcom_adm.c: In function 'adm_process_non_fc_descriptors':
+/kernel-source/drivers/dma/qcom/qcom_adm.c:309:21: error: assignment to 'u32 *' 
+{aka 'unsigned int *'} from incompatible pointer type 'phys_addr_t *' 
+{aka 'long long unsigned int *'} [-Werror=incompatible-pointer-types]
+  309 |                 src = &achan->slave.src_addr;
+      |                     ^
+/kernel-source/drivers/dma/qcom/qcom_adm.c:313:21: error: assignment to 'u32 *' 
+{aka 'unsigned int *'} from incompatible pointer type 'phys_addr_t *' 
+{aka 'long long unsigned int *'} [-Werror=incompatible-pointer-types]
+  313 |                 dst = &achan->slave.dst_addr;
+      |                     ^
+/kernel-source/drivers/dma/qcom/qcom_adm.c: In function 'adm_dma_probe':
+/kernel-source/drivers/dma/qcom/qcom_adm.c:77:41: warning: conversion from 
+'long unsigned int' to 'u32' {aka 'unsigned int'} changes value from 
+'18446744072371568648' to '2956984328' [-Woverflow]
+   77 | #define ADM_CI_RANGE_START(x)           ((x) << 16)
+/kernel-source/drivers/dma/qcom/qcom_adm.c:848:16: note: in expansion of 
+macro 'ADM_CI_RANGE_START'
+  848 |         writel(ADM_CI_RANGE_START(0x40) | ADM_CI_RANGE_END(0xb0) |
+
+
+In order to detect all users of virt-dma, I did following.
+
+I got all include files containing 'virt-dma.h' or 'struct virt_dma_chan'.
+
+$ git grep -l -e virt-dma.h -e 'struct virt_dma_chan' -- '*.h'
+drivers/dma/amd/ae4dma/ae4dma.h
+drivers/dma/amd/ptdma/ptdma.h
+drivers/dma/amd/qdma/qdma.h
+drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+drivers/dma/dw-edma/dw-edma-core.h
+drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
+drivers/dma/fsl-edma-common.h
+drivers/dma/hsu/hsu.h
+drivers/dma/idma64.h
+drivers/dma/sf-pdma/sf-pdma.h
+drivers/dma/st_fdma.h
+drivers/dma/virt-dma.h
+
+I got all include files containing all include files found in step 1:
+
+$ git grep -l -e ae4dma.h -e ptdma.h -e qdma.h -e dw-axi-dmac.h \
+              -e dw-edma-core.h -e dpaa2-qdma.h -e fsl-edma-common.h \
+              -e hsu.h -e idma64.h -e sf-pdma.h -e st_fdma.h -e virt-dma.h \
+              -e 'struct virt_dma_chan' -- '*.h'
+drivers/dma/amd/ae4dma/ae4dma.h
+drivers/dma/amd/ptdma/ptdma.h
+drivers/dma/amd/qdma/qdma.h
+drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+drivers/dma/dw-edma/dw-edma-core.h
+drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
+drivers/dma/fsl-edma-common.h
+drivers/dma/hsu/hsu.h
+drivers/dma/idma64.h
+drivers/dma/sf-pdma/sf-pdma.h
+drivers/dma/st_fdma.h
+drivers/dma/virt-dma.h
+drivers/net/ethernet/mediatek/mtk_eth_soc.h
+include/linux/dma/hsu.h
+
+After that I got all users of virt dma:
+$ git grep -l -e ae4dma.h -e ptdma.h -e qdma.h -e dw-axi-dmac.h \
+              -e dw-edma-core.h -e dpaa2-qdma.h -e fsl-edma-common.h \
+              -e hsu.h -e idma64.h -e sf-pdma.h -e st_fdma.h -e virt-dma.h \
+              -e mtk_eth_soc.h -e 'struct virt_dma_chan' -- '*.c'
+
+drivers/dma/amba-pl08x.c
+drivers/dma/amd/ae4dma/ae4dma-dev.c
+drivers/dma/amd/ae4dma/ae4dma-pci.c
+drivers/dma/amd/ptdma/ptdma-debugfs.c
+drivers/dma/amd/ptdma/ptdma-dev.c
+drivers/dma/amd/ptdma/ptdma-dmaengine.c
+drivers/dma/amd/ptdma/ptdma-pci.c
+drivers/dma/amd/qdma/qdma-comm-regs.c
+drivers/dma/amd/qdma/qdma.c
+drivers/dma/arm-dma350.c
+drivers/dma/at_hdmac.c
+drivers/dma/bcm2835-dma.c
+drivers/dma/dma-axi-dmac.c
+drivers/dma/dma-jz4780.c
+drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+drivers/dma/dw-edma/dw-edma-core.c
+drivers/dma/dw-edma/dw-edma-pcie.c
+drivers/dma/dw-edma/dw-edma-v0-core.c
+drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+drivers/dma/dw-edma/dw-hdma-v0-core.c
+drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+drivers/dma/fsl-edma-common.c
+drivers/dma/fsl-edma-main.c
+drivers/dma/fsl-edma-trace.c
+drivers/dma/fsl-qdma.c
+drivers/dma/hisi_dma.c
+drivers/dma/hsu/hsu.c
+drivers/dma/hsu/pci.c
+drivers/dma/idma64.c
+drivers/dma/img-mdc-dma.c
+drivers/dma/imx-sdma.c
+drivers/dma/k3dma.c
+drivers/dma/lgm/lgm-dma.c
+drivers/dma/loongson1-apb-dma.c
+drivers/dma/loongson2-apb-dma.c
+drivers/dma/mcf-edma-main.c
+drivers/dma/mediatek/mtk-cqdma.c
+drivers/dma/mediatek/mtk-hsdma.c
+drivers/dma/mediatek/mtk-uart-apdma.c
+drivers/dma/milbeaut-hdmac.c
+drivers/dma/milbeaut-xdmac.c
+drivers/dma/moxart-dma.c
+drivers/dma/owl-dma.c
+drivers/dma/pxa_dma.c
+drivers/dma/qcom/bam_dma.c
+drivers/dma/qcom/gpi.c
+drivers/dma/qcom/qcom_adm.c
+drivers/dma/sa11x0-dma.c
+drivers/dma/sf-pdma/sf-pdma.c
+drivers/dma/sh/rz-dmac.c
+drivers/dma/sh/usb-dmac.c
+drivers/dma/sprd-dma.c
+drivers/dma/st_fdma.c
+drivers/dma/stm32/stm32-dma.c
+drivers/dma/stm32/stm32-dma3.c
+drivers/dma/stm32/stm32-mdma.c
+drivers/dma/sun4i-dma.c
+drivers/dma/sun6i-dma.c
+drivers/dma/tegra186-gpc-dma.c
+drivers/dma/tegra210-adma.c
+drivers/dma/ti/edma.c
+drivers/dma/ti/k3-udma.c
+drivers/dma/ti/omap-dma.c
+drivers/dma/uniphier-mdmac.c
+drivers/dma/uniphier-xdmac.c
+drivers/dma/virt-dma.c
+drivers/dma/xilinx/xdma.c
+drivers/dma/xilinx/xilinx_dpdma.c
+drivers/mfd/intel-lpss.c
+drivers/net/ethernet/airoha/airoha_eth.c
+drivers/net/ethernet/mediatek/mtk_eth_path.c
+drivers/net/ethernet/mediatek/mtk_eth_soc.c
+drivers/net/ethernet/mediatek/mtk_ppe.c
+drivers/net/ethernet/mediatek/mtk_ppe_debugfs.c
+drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+drivers/net/ethernet/mediatek/mtk_wed.c
+drivers/pci/controller/pcie-xilinx-dma-pl.c
+drivers/tty/serial/8250/8250_mid.c
+
+After that I compiled kernel with following options:
+CONFIG_COMPILE_TEST=y
+CONFIG_FORCE_PCI=y
+CONFIG_PCI=y
+CONFIG_PCI_MSI=y
+CONFIG_AMD_QDMA=y
+CONFIG_AMD_PTDMA=y
+CONFIG_DW_AXI_DMAC=y
+CONFIG_DW_EDMA=y
+CONFIG_DW_EDMA_PCIE=y
+CONFIG_INTEL_LDMA=y
+CONFIG_SERIAL_8250=y
+CONFIG_SERIAL_8250_MT6577=y
+CONFIG_MTK_HSDMA=y
+CONFIG_MTK_CQDMA=y
+CONFIG_MTK_UART_APDMA=y
+# CONFIG_QCOM_ADM=y - error: assignment to 'u32 *' {aka 'unsigned int *'} from incompatible pointer type 'phys_addr_t *'
+CONFIG_QCOM_GPI_DMA=y
+CONFIG_QCOM_BAM_DMA=y
+CONFIG_SF_PDMA=y
+CONFIG_STM32_DMA=y
+CONFIG_STM32_MDMA=y
+CONFIG_STM32_DMA3=y
+CONFIG_DMA_OMAP=y
+CONFIG_TI_EDMA=y
+CONFIG_TI_MESSAGE_MANAGER=y
+CONFIG_TI_SCI_PROTOCOL=y
+CONFIG_TI_SCI_INTA_IRQCHIP=y
+CONFIG_TI_K3_UDMA=y
+CONFIG_XILINX_ZYNQMP_DPDMA=y
+CONFIG_XILINX_XDMA=y
+CONFIG_AMBA_PL08X=y
+CONFIG_ARM_DMA350=y
+CONFIG_FSL_EDMA=y
+CONFIG_FSL_QDMA=y
+CONFIG_MCF_EDMA=y
+CONFIG_INTEL_IDMA64=y
+CONFIG_DMA_SUN6I=y
+CONFIG_DMA_SUN4I=y
+CONFIG_AT_HDMAC=y
+CONFIG_REMOTEPROC=y
+CONFIG_ST_FDMA=y
+CONFIG_K3_DMA=y
+CONFIG_DMA_SA11X0=y
+CONFIG_AXI_DMAC=y
+CONFIG_IMG_MDC_DMA=y
+CONFIG_UNIPHIER_XDMAC=y
+CONFIG_UNIPHIER_MDMAC=y
+CONFIG_LOONGSON1_APB_DMA=y
+CONFIG_LOONGSON2_APB_DMA=y
+CONFIG_DMA_BCM2835=y
+CONFIG_TEGRA210_ADMA=y
+CONFIG_TEGRA186_GPC_DMA=y
+CONFIG_MOXART_DMA=y
+CONFIG_DMA_JZ4780=y
+CONFIG_IMX_SDMA=y
+CONFIG_OWL_DMA=y
+CONFIG_SPRD_DMA=y
+CONFIG_MILBEAUT_XDMAC=y
+CONFIG_MILBEAUT_HDMAC=y
+CONFIG_HISI_DMA=y
+CONFIG_FSL_MC_BUS=y
+CONFIG_FSL_MC_DPIO=y
+CONFIG_FSL_DPAA2_QDMA=y
+CONFIG_RZ_DMAC=y
+CONFIG_RENESAS_USB_DMAC=y
+CONFIG_PXA_DMA=y
+CONFIG_HSU_DMA=y
+CONFIG_HSU_DMA_PCI=y
+CONFIG_MFD_INTEL_LPSS=y
+CONFIG_NET_AIROHA=y
+CONFIG_NET_VENDOR_MEDIATEK=y
+CONFIG_NET_MEDIATEK_SOC=y
+CONFIG_NET_MEDIATEK_SOC_WED=y
+CONFIG_PCIE_XILINX_DMA_PL=y
+CONFIG_SERIAL_8250_MID=y
+CONFIG_AMD_AE4DMA=y
+
+After that I've used following script to check compilation (it used file
+list obtained in previous step):
+#!/bin/bash
+
+for f in `cat files`; do
+    f=`echo $f | sed 's/.c$/.o/'`
+    test -f $f && echo $f: ok || echo $f: No such file or directory
+done
+
+It produced following output:
+$ ./check
+drivers/dma/amba-pl08x.o: ok
+drivers/dma/amd/ae4dma/ae4dma-dev.o: ok
+drivers/dma/amd/ae4dma/ae4dma-pci.o: ok
+drivers/dma/amd/ptdma/ptdma-debugfs.o: ok
+drivers/dma/amd/ptdma/ptdma-dev.o: ok
+drivers/dma/amd/ptdma/ptdma-dmaengine.o: ok
+drivers/dma/amd/ptdma/ptdma-pci.o: ok
+drivers/dma/amd/qdma/qdma-comm-regs.o: ok
+drivers/dma/amd/qdma/qdma.o: ok
+drivers/dma/arm-dma350.o: ok
+drivers/dma/at_hdmac.o: ok
+drivers/dma/bcm2835-dma.o: ok
+drivers/dma/dma-axi-dmac.o: ok
+drivers/dma/dma-jz4780.o: ok
+drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.o: ok
+drivers/dma/dw-edma/dw-edma-core.o: ok
+drivers/dma/dw-edma/dw-edma-pcie.o: ok
+drivers/dma/dw-edma/dw-edma-v0-core.o: ok
+drivers/dma/dw-edma/dw-edma-v0-debugfs.o: ok
+drivers/dma/dw-edma/dw-hdma-v0-core.o: ok
+drivers/dma/dw-edma/dw-hdma-v0-debugfs.o: ok
+drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.o: ok
+drivers/dma/fsl-edma-common.o: ok
+drivers/dma/fsl-edma-main.o: ok
+drivers/dma/fsl-edma-trace.o: ok
+drivers/dma/fsl-qdma.o: ok
+drivers/dma/hisi_dma.o: ok
+drivers/dma/hsu/hsu.o: ok
+drivers/dma/hsu/pci.o: ok
+drivers/dma/idma64.o: ok
+drivers/dma/img-mdc-dma.o: ok
+drivers/dma/imx-sdma.o: ok
+drivers/dma/k3dma.o: ok
+drivers/dma/lgm/lgm-dma.o: ok
+drivers/dma/loongson1-apb-dma.o: ok
+drivers/dma/loongson2-apb-dma.o: ok
+drivers/dma/mcf-edma-main.o: ok
+drivers/dma/mediatek/mtk-cqdma.o: ok
+drivers/dma/mediatek/mtk-hsdma.o: ok
+drivers/dma/mediatek/mtk-uart-apdma.o: ok
+drivers/dma/milbeaut-hdmac.o: ok
+drivers/dma/milbeaut-xdmac.o: ok
+drivers/dma/moxart-dma.o: ok
+drivers/dma/owl-dma.o: ok
+drivers/dma/pxa_dma.o: ok
+drivers/dma/qcom/bam_dma.o: ok
+drivers/dma/qcom/gpi.o: ok
+drivers/dma/qcom/qcom_adm.o: No such file or directory
+drivers/dma/sa11x0-dma.o: ok
+drivers/dma/sf-pdma/sf-pdma.o: ok
+drivers/dma/sh/rz-dmac.o: ok
+drivers/dma/sh/usb-dmac.o: ok
+drivers/dma/sprd-dma.o: ok
+drivers/dma/st_fdma.o: ok
+drivers/dma/stm32/stm32-dma.o: ok
+drivers/dma/stm32/stm32-dma3.o: ok
+drivers/dma/stm32/stm32-mdma.o: ok
+drivers/dma/sun4i-dma.o: ok
+drivers/dma/sun6i-dma.o: ok
+drivers/dma/tegra186-gpc-dma.o: ok
+drivers/dma/tegra210-adma.o: ok
+drivers/dma/ti/edma.o: ok
+drivers/dma/ti/k3-udma.o: ok
+drivers/dma/ti/omap-dma.o: ok
+drivers/dma/uniphier-mdmac.o: ok
+drivers/dma/uniphier-xdmac.o: ok
+drivers/dma/virt-dma.o: ok
+drivers/dma/xilinx/xdma.o: ok
+drivers/dma/xilinx/xilinx_dpdma.o: ok
+drivers/mfd/intel-lpss.o: ok
+drivers/net/ethernet/airoha/airoha_eth.o: ok
+drivers/net/ethernet/mediatek/mtk_eth_path.o: ok
+drivers/net/ethernet/mediatek/mtk_eth_soc.o: ok
+drivers/net/ethernet/mediatek/mtk_ppe.o: ok
+drivers/net/ethernet/mediatek/mtk_ppe_debugfs.o: ok
+drivers/net/ethernet/mediatek/mtk_ppe_offload.o: ok
+drivers/net/ethernet/mediatek/mtk_wed.o: ok
+drivers/pci/controller/pcie-xilinx-dma-pl.o: ok
+drivers/tty/serial/8250/8250_mid.o: ok
+
+
+Alexander Kochetkov (2):
+  dmaengine: virt-dma: convert tasklet to BH workqueue for callback
+    invocation
+  Allow compile virt-dma users on ARM64 platform
+
+ drivers/dma/Kconfig                           | 22 +++++++++----------
+ drivers/dma/amd/Kconfig                       |  4 ++--
+ drivers/dma/amd/qdma/qdma.c                   |  1 +
+ drivers/dma/arm-dma350.c                      |  1 +
+ drivers/dma/bcm2835-dma.c                     |  2 +-
+ drivers/dma/dma-axi-dmac.c                    |  8 +++----
+ drivers/dma/dma-jz4780.c                      |  2 +-
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |  2 +-
+ drivers/dma/dw-edma/dw-edma-core.c            |  2 +-
+ drivers/dma/fsl-edma-common.c                 |  2 +-
+ drivers/dma/fsl-edma-common.h                 |  1 +
+ drivers/dma/fsl-qdma.c                        |  3 ++-
+ drivers/dma/hisi_dma.c                        |  2 +-
+ drivers/dma/hsu/Kconfig                       |  4 ++--
+ drivers/dma/hsu/hsu.c                         |  2 +-
+ drivers/dma/idma64.c                          |  3 ++-
+ drivers/dma/img-mdc-dma.c                     |  2 +-
+ drivers/dma/imx-sdma.c                        |  2 +-
+ drivers/dma/k3dma.c                           |  2 +-
+ drivers/dma/loongson1-apb-dma.c               |  2 +-
+ drivers/dma/mediatek/mtk-cqdma.c              |  2 +-
+ drivers/dma/mediatek/mtk-hsdma.c              |  3 ++-
+ drivers/dma/mediatek/mtk-uart-apdma.c         |  4 ++--
+ drivers/dma/owl-dma.c                         |  2 +-
+ drivers/dma/pxa_dma.c                         |  2 +-
+ drivers/dma/qcom/Kconfig                      |  6 ++---
+ drivers/dma/qcom/bam_dma.c                    |  4 ++--
+ drivers/dma/qcom/gpi.c                        |  1 +
+ drivers/dma/qcom/qcom_adm.c                   |  2 +-
+ drivers/dma/sa11x0-dma.c                      |  2 +-
+ drivers/dma/sf-pdma/sf-pdma.c                 |  3 ++-
+ drivers/dma/sprd-dma.c                        |  2 +-
+ drivers/dma/st_fdma.c                         |  2 +-
+ drivers/dma/stm32/stm32-dma.c                 |  1 +
+ drivers/dma/stm32/stm32-dma3.c                |  1 +
+ drivers/dma/stm32/stm32-mdma.c                |  1 +
+ drivers/dma/sun6i-dma.c                       |  2 +-
+ drivers/dma/tegra186-gpc-dma.c                |  2 +-
+ drivers/dma/tegra210-adma.c                   |  3 ++-
+ drivers/dma/ti/Kconfig                        |  2 +-
+ drivers/dma/ti/edma.c                         |  2 +-
+ drivers/dma/ti/k3-udma.c                      | 10 ++++-----
+ drivers/dma/ti/omap-dma.c                     |  2 +-
+ drivers/dma/uniphier-xdmac.c                  |  1 +
+ drivers/dma/virt-dma.c                        |  8 +++----
+ drivers/dma/virt-dma.h                        | 10 ++++-----
+ drivers/mfd/Kconfig                           |  2 +-
+ 47 files changed, 82 insertions(+), 69 deletions(-)
+
+-- 
+2.43.0
+
