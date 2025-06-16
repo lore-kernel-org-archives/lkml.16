@@ -1,202 +1,132 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7121B1E22FC
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5565C1A23A9
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750100431; cv=none; b=aMlPH4CGXp/kJj0+7slKa8S6AIpwouxyiUXRR15ez9TTSkuhH9Cg5KhW0WpreXVm9VElCUgE4QBzWCbCMLnYh35QGzs6f01qGHeCHLAg/23hVpQu7l2WqgRvKdKuEn0+tEvxg5JholssGFjXXve128pnLGV3LFp7n9LFOJ4MaYw=
+	t=1750100573; cv=none; b=D5J0NKWDL4Mb5Mg4rSVxIDXFUII2mInPFzTPJyL9vRX8CFpERfE0a1zH/ymaBvDKZ9uJmPcLbsVKvpVV7IOAmxHNJlU5/gWKgtgDLManvQ3PByDDDma14YgRY3VekvIV5Ok+xd/Lw0NJZHy285D3vkECII32CiUZmDWzdxImasI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750100431; c=relaxed/simple;
-	bh=9besGwIU/81/CaB70eqYGxX6VSKamtzwWGExgc/F3XE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cUHG5aEZ3i89z5aYhCl4NELwF8fVApczmUAsdAD6tNEiqXToEA7hxvn/pqn0KuAk7DVzejBeWCty0Y9Qzw89L4+Onj65o5jhc/RSmK5VjMdAvyRD5Y+RhmwKd8s+r3I9Uuv3JO7omwM6crDwoAeD4oFIA6MeMFUGC7sSmI7U4fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--salomondush.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vAI8SHBx; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--salomondush.bounces.google.com
+	s=arc-20240116; t=1750100573; c=relaxed/simple;
+	bh=6+hoqbF7qU3gB6hPBCrL3ucYUOOv3ajc9wz+ntu6F1g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ybj6b+qPN9NYO2mvyOHj3WgnMGaE/zhDyVSZHeJwPkh1y1HWQxmRkwVX1LMaOTj0IXMnpxu6uGLXVtUqxLVqlAfd2eQHP/FDHQ4ssyYBbJhhFgcn+5KXDDlmMPRL/A1rA9OpRNmVF+0PFW0BPDnRSYMkyyHpCAErZns6zjYrSV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=H+JE2fC3; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vAI8SHBx"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23689228a7fso11899235ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:00:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="H+JE2fC3"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a440a72584so48118921cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750100422; x=1750705222; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750100569; x=1750705369; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jFNCP/Zfjf0zOYYsP29CukZPsGtgXo87gr1Y7z6mt20=;
-        b=vAI8SHBxRlToldnVS8rSMkh4trf+nWk+GEtyW9HLfnFBZY2cZX+uOcyc/eUH8Bxgb5
-         yIM1LdSrq8t/j7vkJNaPkQ3AYERZx9FcLD4k2r2qwN7zmq/mqP3xCPwvD1fMNq+bY5H0
-         juPQ1nEDxfygJTuDzY7Yd77tqN6u0ovz4jq0zt9KbaPs3Zx3zCy9NVwzPOHYmD8FWx2e
-         1tmyge1QHZWljLoR2ArNOZ4EJFABP4VSVFz7zAbcMeqV1EjA/m8XNZhw1pRzQb+g5X/Q
-         k6MTYI5JdyHe/e4hfN6s51T/NkKRD9qVC+ig3mARZtulqMxxMHi26mJ0mVuMaZ7lE/hT
-         8hvw==
+        bh=TI9wxfdohUcaRkceGSkpPvsSG7L6Cg48O4vTLDe4N7A=;
+        b=H+JE2fC3AYonTkMe14kXBMIV7G6fdDiK7+w0gQPWIn9k5kcjbKjkGvowbc0DjRa3Ca
+         ILPaF/qpD1ZEx9cy+TsfFDozx38QhhOmcTWz9K9QE1qPXJaKVDcNRrqRMfW3SdzdG/DV
+         ndw6qSWEHPeAPrbex4aArBdvxiz7tWfdYbEGS6ENQxLDCI6lkJr8+aryzfo+Kdlhujlm
+         br5WbsI0Ewl6CGBBacrvTKWqtbrXf68XbfHFyd404UNNt6ugRY7T++BRZrhZ1KAftTdw
+         92eHcx5jrZJVxSG285wiSzG3STE9RHrSrADKsmGQh5drPG4rVls0gp6DdA8GcIqIN5Eo
+         vrpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750100422; x=1750705222;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+        d=1e100.net; s=20230601; t=1750100569; x=1750705369;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jFNCP/Zfjf0zOYYsP29CukZPsGtgXo87gr1Y7z6mt20=;
-        b=SBdmOhNCK6iHnhsYbspViOfzTavqLyngd+QckDdS+y6WFTDekv+KRtyELCDV6WY8Ow
-         zYuBlQXpCjPGgD5y8RTdu+SZlb6T72NBUYJTfzWA22ErGr6pWqJpqDTnDByXVm6N18Hk
-         kC9yg6Q3Ajz1uhEiYGlc6KqBecDJ3JeV1Qdq5NGPKja9ciWjbxKGhKezsokY5HVeQmZs
-         lnJAwOQVeOFMUvAXNrbUui3Bv1gc/uY8xJZfMqKhKNmTNEDH/mJ6pIgD2IETiyIjnA+P
-         zVL7Akk4rcqjO7iqFCkVUuxnHCaJsyLZSImbFMeyDhlgELVsAnlDVuuzqBXgOD6i/HRe
-         gd5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAyLVLz5QMz4WQxN0orujjQQkgpSq+AflA+WFrm+Y0Wha1KH1DMIJEguaXq64qjSob109SrYxUcmfU6aQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz18CIOClG0WIFMH5Cu1MXt1icGcbbozFlAUEMtUWYtX3Mrcl7G
-	ISCouP85DhBXAcdd1r5OX8EpgO6bknRv7+FER4iU8xqWpHY4zmyQ8SPwEOmvptvqiVpJ+tIi207
-	K+HCZ6g/mpEPu6dYJa4dWRbbIng==
-X-Google-Smtp-Source: AGHT+IGSEuQN3aX5jJ+hJ9qbwRUdVZknufgr0wwISVat/2IXLjOni3lc/rfWow0P9ZS5mdJZ7txhZ0mkCZ6P5oOqvA==
-X-Received: from plap10.prod.google.com ([2002:a17:902:f08a:b0:220:ca3c:96bc])
- (user=salomondush job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:ce89:b0:220:c164:6ee1 with SMTP id d9443c01a7336-2366b3dd319mr170509295ad.32.1750100421812;
- Mon, 16 Jun 2025 12:00:21 -0700 (PDT)
-Date: Mon, 16 Jun 2025 19:00:18 +0000
-In-Reply-To: <20250612212504.512786-1-salomondush@google.com>
+        bh=TI9wxfdohUcaRkceGSkpPvsSG7L6Cg48O4vTLDe4N7A=;
+        b=xHvgtoSYh9JdWsaKgfRksHTlaxKcY/NVz79XS+DdCWj+tGaOfKq44KGHoU+SBhS5sK
+         zrG5KnXIqA5nU55z5EoAeaMgzL1fawFqOuCUDw8BVhIQwGH+bLxvGlnonWGF2qjYlqFj
+         2Y0monbJY+J9SQAvuXG8X7uv5K1IzR8wEX6mdJQI29njpaes1z018xmqNDp4/+OmT7OE
+         dXAQ/W+zbtOn5yUQ0PFc0Z9RoJhrACi6v3b6r8MY2b8JP2o8UHwznLxDgbF8mB53eQJT
+         RkrxcvcYi5Ins6aVzuHpwny+OiMDu+kBgzR++2wipoPe7XvQ4CCJDVZOp+MuJpE85W9m
+         Ny1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVAh6SqCFESZp8G3Yq7n4Bt4ilA2gvnR3jMm7gemuilTu9SuatyQnYI7LNgMOnnHXhAANzCzlOC6B3Hgn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6CWb/1kDREgR7pY/eM1if7MOmgDPJRevbGBOu73ALUsMvQ4bJ
+	kmKHpVQH6KHZA9Y0r+u1DlvRpMk7u7N9m23ck84sxdF1SjkQjSN//bi5XXAxMppgBlg=
+X-Gm-Gg: ASbGncs5k1INuNWH/HqewcM/PyB7MugDvKOnRWklylzDzrAMH1hiGVz75Ic3+ynHe4G
+	2wrXuF9Gkv0FfndHeEfEp7H05yDl9sWhgE605lUuMYVmgtHgVN12r0LNP/PPWUzVsLQn8EBWolC
+	9KaaYtRqSKPMPoPs/yZps77wJkp+uR5rG8zWTFS+HFa2k30v19prowC1ygBxN7AjzJxFvNqLtAF
+	MSyarxDbs2L2XVtSVYbIx7ATlBN9SRTfpdLZHMQig5JGpesPXi2vczjAenMIXqK0+Adn79nL0ug
+	nAgYIYhr5pB90IAXVNxxtOuoeiCMKQTiklRLgRF3gZLoMyO+iXmbdVPuryQIjgkZM6vLBF2oFl4
+	Wq6+JGc1K3AjRbYtpdMawuu6E6w==
+X-Google-Smtp-Source: AGHT+IGH1k7/kfQPsaNlU5APqCbpKu79g9Wmdgx0D/D/dqeH2i3+cbiUArmrWmkRhN5wTAe0Ot8Vlg==
+X-Received: by 2002:a05:622a:2d5:b0:4a2:719b:122e with SMTP id d75a77b69052e-4a73c53b18dmr167480441cf.18.1750100569165;
+        Mon, 16 Jun 2025 12:02:49 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a31716bsm52491081cf.35.2025.06.16.12.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 12:02:48 -0700 (PDT)
+Date: Mon, 16 Jun 2025 15:02:47 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>
+cc: Andrew Morton <akpm@linux-foundation.org>, 
+    David Laight <david.laight.linux@gmail.com>, 
+    Oleg Nesterov <oleg@redhat.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mul_u64_u64_div_u64: fix the division-by-zero behavior
+In-Reply-To: <f256c2d1-6f35-447d-9f21-30d0c4a2419a@t-8ch.de>
+Message-ID: <8s7595q6-208q-r756-qsrs-4ononrp3n7o0@onlyvoer.pbz>
+References: <q2o7r916-5601-11pn-30pn-8n5ns6p079o7@onlyvoer.pbz> <f256c2d1-6f35-447d-9f21-30d0c4a2419a@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250612212504.512786-1-salomondush@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250616190018.2136260-1-salomondush@google.com>
-Subject: [PATCH v3] scsi: pm80xx: add controller scsi host fatal error uevents
-From: Salomon Dushimirimana <salomondush@google.com>
-To: Jack Wang <jinpu.wang@cloud.ionos.com>, 
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Salomon Dushimirimana <salomondush@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="-1463781375-202099526-1750100568=:1551"
 
-Adds pm80xx_fatal_error_uevent_emit(), called when the pm80xx driver
-encouters a fatal error. The uevent has the following additional custom
-key/value pair sets:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-- DRIVER: driver name, pm80xx in this case
-- HBA_NUM: the scsi host id of the device
-- EVENT_TYPE: to indicate a fatal error
-- REPORTED_BY: either driver or firmware
+---1463781375-202099526-1750100568=:1551
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-The uevent is anchored to the kernel object that represents the scsi
-controller, which includes other useful core variables, such as, ACTION,
-DEVPATH, SUBSYSTEM, and more.
+On Mon, 16 Jun 2025, Thomas Weißschuh wrote:
 
-The fatal_error_uevent_emit() function is called when the controller
-fatal error state changes. Since this doesn't happen often for a
-specific scsi host, there is no worries of a uevent storm.
+> On 2025-06-16 14:48:44-0400, Nicolas Pitre wrote:
+> > The current implementation forces a compile-time 1/0 division, which
+> > generates an undefined instruction (ud2 on x86) rather than a proper 
+> > runtime division-by-zero exception.
+> > 
+> > Change to trigger an actual div-by-0 exception at runtime, consistent
+> > with other division operations. Use a non-1 dividend to prevent the
+> > compiler from optimizing the division into a comparison.
+> > 
+> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> > 
+> > diff --git a/lib/math/div64.c b/lib/math/div64.c
+> > index 5faa29208bdb..eaa0c7e8b974 100644
+> > --- a/lib/math/div64.c
+> > +++ b/lib/math/div64.c
+> > @@ -212,12 +212,13 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
+> >  
+> >  #endif
+> >  
+> > -	/* make sure c is not zero, trigger exception otherwise */
+> > -#pragma GCC diagnostic push
+> > -#pragma GCC diagnostic ignored "-Wdiv-by-zero"
+> > -	if (unlikely(c == 0))
+> > -		return 1/0;
+> > -#pragma GCC diagnostic pop
+> > +	/* make sure c is not zero, trigger runtime exception otherwise */
+> > +	if (unlikely(c == 0)) {
+> > +		unsigned long zero = 0;
+> > +
+> > +		asm ("" : "+r" (zero)); /* hide actual value from the compiler */
+> 
+> This is OPTIMIZER_HIDE_VAR().
 
-Signed-off-by: Salomon Dushimirimana <salomondush@google.com>
----
-Changelog since v2:
-- Same intention as v2 but actually includes the changes to fix build
-  warnings
+Excellent! I thought I'd seen that somewhere but couldn't remember it.
 
- drivers/scsi/pm8001/pm8001_sas.h | 10 +++++++
- drivers/scsi/pm8001/pm80xx_hwi.c | 48 ++++++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
 
-diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
-index 315f6a7523f0..334485bb2c12 100644
---- a/drivers/scsi/pm8001/pm8001_sas.h
-+++ b/drivers/scsi/pm8001/pm8001_sas.h
-@@ -170,6 +170,14 @@ struct forensic_data {
- #define SPCV_MSGU_CFG_TABLE_TRANSFER_DEBUG_INFO  0x80
- #define MAIN_MERRDCTO_MERRDCES		         0xA0/* DWORD 0x28) */
- 
-+/**
-+ * enum fatal_error_reporter: Indicates the originator of the fatal error
-+ */
-+enum fatal_error_reporter {
-+	REPORTER_DRIVER,
-+	REPORTER_FIRMWARE,
-+};
-+
- struct pm8001_dispatch {
- 	char *name;
- 	int (*chip_init)(struct pm8001_hba_info *pm8001_ha);
-@@ -715,6 +723,8 @@ ssize_t pm80xx_get_non_fatal_dump(struct device *cdev,
- 		struct device_attribute *attr, char *buf);
- ssize_t pm8001_get_gsm_dump(struct device *cdev, u32, char *buf);
- int pm80xx_fatal_errors(struct pm8001_hba_info *pm8001_ha);
-+void pm80xx_fatal_error_uevent_emit(struct pm8001_hba_info *pm8001_ha,
-+	enum fatal_error_reporter error_reporter);
- void pm8001_free_dev(struct pm8001_device *pm8001_dev);
- /* ctl shared API */
- extern const struct attribute_group *pm8001_host_groups[];
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 5b373c53c036..d1741a2ea07c 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -1551,6 +1551,52 @@ static int mpi_uninit_check(struct pm8001_hba_info *pm8001_ha)
- 	return 0;
- }
- 
-+/**
-+ * pm80xx_fatal_error_uevent_emit - emits a single fatal error uevent
-+ * @pm8001_ha: our hba card information
-+ * @error_reporter: reporter of fatal error
-+ */
-+void pm80xx_fatal_error_uevent_emit(struct pm8001_hba_info *pm8001_ha,
-+	enum fatal_error_reporter error_reporter)
-+{
-+	struct kobj_uevent_env *env;
-+
-+	pm8001_dbg(pm8001_ha, FAIL, "emitting fatal error uevent");
-+
-+	env = kzalloc(sizeof(struct kobj_uevent_env), GFP_KERNEL);
-+	if (!env)
-+		return;
-+
-+	if (add_uevent_var(env, "DRIVER=%s", DRV_NAME))
-+		goto exit;
-+
-+	if (add_uevent_var(env, "HBA_NUM=%u", pm8001_ha->id))
-+		goto exit;
-+
-+	if (add_uevent_var(env, "EVENT_TYPE=FATAL_ERROR"))
-+		goto exit;
-+
-+	switch (error_reporter) {
-+	case REPORTER_DRIVER:
-+		if (add_uevent_var(env, "REPORTED_BY=DRIVER"))
-+			goto exit;
-+		break;
-+	case REPORTER_FIRMWARE:
-+		if (add_uevent_var(env, "REPORTED_BY=FIRMWARE"))
-+			goto exit;
-+		break;
-+	default:
-+		if (add_uevent_var(env, "REPORTED_BY=OTHER"))
-+			goto exit;
-+		break;
-+	}
-+
-+	kobject_uevent_env(&pm8001_ha->shost->shost_dev.kobj, KOBJ_CHANGE, env->envp);
-+
-+exit:
-+	kfree(env);
-+}
-+
- /**
-  * pm80xx_fatal_errors - returns non-zero *ONLY* when fatal errors
-  * @pm8001_ha: our hba card information
-@@ -1580,6 +1626,7 @@ pm80xx_fatal_errors(struct pm8001_hba_info *pm8001_ha)
- 			"Fatal error SCRATCHPAD1 = 0x%x SCRATCHPAD2 = 0x%x SCRATCHPAD3 = 0x%x SCRATCHPAD_RSVD0 = 0x%x SCRATCHPAD_RSVD1 = 0x%x\n",
- 				scratch_pad1, scratch_pad2, scratch_pad3,
- 				scratch_pad_rsvd0, scratch_pad_rsvd1);
-+		pm80xx_fatal_error_uevent_emit(pm8001_ha, REPORTER_DRIVER);
- 		ret = 1;
- 	}
- 
-@@ -4039,6 +4086,7 @@ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
- 			pm8001_dbg(pm8001_ha, FAIL,
- 				   "Firmware Fatal error! Regval:0x%x\n",
- 				   regval);
-+			pm80xx_fatal_error_uevent_emit(pm8001_ha, REPORTER_FIRMWARE);
- 			pm8001_handle_event(pm8001_ha, NULL, IO_FATAL_ERROR);
- 			print_scratchpad_registers(pm8001_ha);
- 			return ret;
--- 
-2.50.0.rc2.701.gf1e915cc24-goog
-
+> 
+> > +		return ~0UL/zero;
+> > +	}
+> >  
+> >  	int shift = __builtin_ctzll(c);
+> >  
+> 
+---1463781375-202099526-1750100568=:1551--
