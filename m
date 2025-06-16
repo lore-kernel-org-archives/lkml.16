@@ -1,240 +1,204 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644382737F4
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750074645; cv=none; b=EgYzAlYOT0X3XzpH57jMNOpctKMeNaA8WH+kwiDBoYhHPvwQVtBDjVxcTQcTrwlgTwYxT6dl6oLd17TpJigaiKQGKtYn6ogDgUzcBE9WaK7hGsMOcH5bZ9ZWj5slldezLnpJ5eHP9GjY/tYp3cqNEcuSX53EVOf/XVvidfnpNts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750074645; c=relaxed/simple;
-	bh=2TXIdS0DrtcJ/aN3kEEgXsku4ahxNSy7vjY6kQ9nPJg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=q+L3l9CbziseU6ILTn5a7EHMAz251Br+hhM/MK8QpzEUpdF9naYbjA+3JRpBDVypVdlmJ+5t3RLRYJ66pQa3znFR9wmuXzrFwJkNosk2ujL2IO33fuKeLSVUl3Kkb9PF7JcO1W87sLxx0XhKB0Yixh57wPsYDIaiCgWJvDaH0GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=oo/LIOIc; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CD11BD9C1
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750074745; cv=fail; b=M9l6Rt+Jcy5iagMdgy8O1Dp3s3YS3b0wvGsQ/U2jVMo4D2ynUC/k+vhRk32slxtoSvVuJ477Gix/PSSO4JsyEdYzAAclkYedBxHc4wZ+e42q3xTUZiPwp2coJ+dx6CQQWueA7Mp4LtEDTizLUSxf6l7TEE0I3x9VzF7iwOah+QU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750074745; c=relaxed/simple;
+	bh=LjAASHbC6Idbcf/fJCsZqwLX8cK/7BeXNJCg/Jfll4M=;
+	h=Content-Type:Date:Message-ID:CC:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=MQ5c4sOkIKwuin6tTzeVQkBuRGhHod5uky9O6If51XG4rEmkwDCHZfi2wpWLdy6aP6xjIIiX2f6vu+xCAr+BNq9039PO/wsUBRveHR6LdXIDd/jz7BmYZhnTdqNxE2c3LSNRGb8Bm5XjH9WBwTgCvlKsm0eZeRlCVtWprYgHflQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=demaK+D8; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="oo/LIOIc"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad574992fcaso684416566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:50:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750074641; x=1750679441; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xuSf6RLaP8+rHWDi/+Q9MWXI6iUycqZnVn3e8MQYPzQ=;
-        b=oo/LIOIc2AQwaEDw6APuTipI/APVrhhgtlAsZ3ROG3hWKiqdKtvrC7/4wnuu6ST/gl
-         4RUBfH7JWJ9IJDei/bjaou8yfr9IFsoIH/7C2BVWQOLFk8tfhay/OPF5NCpHn7HBN9i1
-         obNRXcs04fi/1yLNYVMBcFqPcS/Y4RvLI/Df/4pcaqpjlgru9XizUAr94iitKLxW5IDL
-         9oeXy/3A2yQq/oXUoPzPirRXVQb93Uq17BHJo0VHpvRWtxY8Txy3VToxSyQPp22tIKiQ
-         IuZiDfQk7W5nKh0WOkH+oq+f7bFjXjvxfO2EJwtjtb18xV9ccIR5/cNr1vdpYyHjnYdh
-         BmnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750074641; x=1750679441;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xuSf6RLaP8+rHWDi/+Q9MWXI6iUycqZnVn3e8MQYPzQ=;
-        b=InzHecW2rWioZZb8+/JJHVKQcy8NJjWnXtqXfLajvr9NTD+VJcaMxDI7zrTEu5uHv2
-         hr6ITjiKc6mijsQnl5yZWGNffvK9xdaKkAhhfj1pCGPYeGMJwGPumNES8saAjD/ZVVps
-         XMIrAlWzAQDtd4eOapFDfY93ESU6temntT58gCO5rcQlng0izgOOm4iDGfQhpbLRpXxP
-         xRSWgtuUgxeYki/KWGF5ykGAYEWh3HRHWuP4ZiXppWKLlYsP9uhA1K+zMeB4l3/ySR6t
-         /Cf5gGDTCHGgCrVba68EHRh2nYuT3pNd2JtZBDAd83rmbjnRSdnB2CZzEMvg9d+7YT86
-         rKSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVLDIVTIkFhEBKuNUWGChnd/ogBVvp3Gc2spGL8WVKngwqcMqQ3BIe4HOKqwhlXOb9jLdaAOawcdYdKIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXlPynP0Z89y5czJYIRAH/dlyr5+kMsx4cEyEaQVsNl0GxPueg
-	3HrA1SxDnqiqvUw5/9XKaeAkWNbztYf+ArC0anWkyuERdegmKLNImxL7Pr097/hM3JU=
-X-Gm-Gg: ASbGncs+trRD275BfKvTF8c77xo/oOwh3ycAm4ymOArc32VY0Fg/PTDhBTiZPfuiwzl
-	bQ/6+3Sgjdx4Fkk4k1dPTiocO5TYldVcj5lMKK1Hra0qPb2prtGgy6oRGRXWuDLe+xZmau2xcBI
-	ptbw6tR4EnVMpJ0Ig11ZtcxNW/0mQtiML0CNkr8Xrtu2bHQz0fzjiHeMhiMCtPObgHVZTNgkxTR
-	H+0jJBOWJ/plDcLJCyFwP4PrcHM82FmAMcmN3Difme8oA4bfN8SJN6My4MSWqtiCiGSGKOZVWDF
-	hMInz/r/o6DtTUdTDigCdRl9daCUgO5xYVEYnOIeI+IMFh5RtiJ7yKIOdo5tHWCnG6vMkLukDQE
-	g1eXn0AhacJfwhKUmQ/H4Piq3cmtGBRI=
-X-Google-Smtp-Source: AGHT+IEw/IbSDxrPrp5P71189l+YICG0EEl5mwsAYurOHLofD+R6bizDKSfCRwi4sa9axsT85oX+fQ==
-X-Received: by 2002:a17:907:6d0d:b0:adb:2bb2:ee2 with SMTP id a640c23a62f3a-adfad451438mr946727766b.41.1750074640652;
-        Mon, 16 Jun 2025 04:50:40 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88ff5d3sm657753466b.101.2025.06.16.04.50.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 04:50:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="demaK+D8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750074744; x=1781610744;
+  h=content-transfer-encoding:date:message-id:cc:subject:
+   from:to:references:in-reply-to:mime-version;
+  bh=LjAASHbC6Idbcf/fJCsZqwLX8cK/7BeXNJCg/Jfll4M=;
+  b=demaK+D8UNzWftlCfJCt3mfAriVRb6Ol4UvEzs788vP10UvenWUj3OGM
+   bEE8yH2pUXf83AgHccTFIzThob6dBPnlWh4WfoZqPi7i/54Na2BycUCcd
+   mjz+9GXbSocccUBxttb0rUge7DLaOkiZDaAeq6Uk/lzK8lqfamx07mg7f
+   Z6SNXu9AW/OM7nUeWT5DKkBkg1Alv7G+p/So18XCARDFIJ1wS45LR8Wix
+   MaQtAmqZGVvabEbk1PBVx4J0CVs+bHZ0rC3G1oLPgqosHzIhIPZFa/u6Y
+   tBKAPV8qw0XrJ6WIh6oBWttWibwLZRt4c8TnC6NrNy2+rc13Q+ZhTiuVl
+   g==;
+X-CSE-ConnectionGUID: A7SZAuq4SwSpO9MiRy9WWw==
+X-CSE-MsgGUID: k7rTXi7WQqeN20Ky2G2dkw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52304827"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="52304827"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:52:23 -0700
+X-CSE-ConnectionGUID: ac4fE945Sxy/HUUy7lwrlw==
+X-CSE-MsgGUID: XeTdOrU7TXGQYWVMKx0B7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="148441612"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:52:23 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 16 Jun 2025 04:52:22 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 16 Jun 2025 04:52:22 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.52)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 16 Jun 2025 04:52:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rzxer1F9+emYfrbhjgyL6jJCd7Ew4+vESX00RxsajAxtpHX7exaA0GLFl1glzUlq9HiqtvlJDj78AWrR8eZc6AqAcODkTluJn0XbwqGODjg99LWvdX62G/8FTD5TM1ANM217cFdVAh8yXEts6zhdToZPt4w/avSB0CPIg35LkFmAn4N/bnHAcAcYbNDQkGQFLMSPzBLm8vyvhv48qs13YcYtMamIiw4zWySn6KlrZ35AXOv0qTKuTp3EtcDah9vnVc1LUf/zHx0RYpcl5nnqBMic6EhtLhq1EG8URbXJ9zjgPNsSii5QK1UoYrnR/PYJY5L3AMgGDPzCpdFV0sj2uQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LjAASHbC6Idbcf/fJCsZqwLX8cK/7BeXNJCg/Jfll4M=;
+ b=Rf8jmH+qJlOnOThuSHO9XC3jVmi4PNs1wsSgnLJC9Qakv45/yje7cpoqhmaGcf/zdpC7jMKDuZLVgol+1oX/CZmvn1tzrHI9kF7iQMdu04QR4ILxgDGgkpBwfcoCKO8mIWruv9Q2PwUbTSybvY3pbTMf3gk8xE0jwD876yuLm/fAjzu7N673whYHf5vGGKm+yfgEEsdglJmXNBxZ+jlIZMRYVh7p4A/AIT5fHFbOl8rxYCikvfRkJjXR2CA/ESVnwyoVVLqYfmjBE+kUZtYLL3DSbLOcEcjrXZT16OWmjOCiG4aXp0v37bY6qyUIO2A3hv74Zv0PL7+gV8WEoLiihg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MW4PR11MB6909.namprd11.prod.outlook.com (2603:10b6:303:224::12)
+ by SA1PR11MB8280.namprd11.prod.outlook.com (2603:10b6:806:25d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 11:52:20 +0000
+Received: from MW4PR11MB6909.namprd11.prod.outlook.com
+ ([fe80::28da:9438:a3ef:19c0]) by MW4PR11MB6909.namprd11.prod.outlook.com
+ ([fe80::28da:9438:a3ef:19c0%4]) with mapi id 15.20.8835.018; Mon, 16 Jun 2025
+ 11:52:19 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 16 Jun 2025 11:52:15 +0000
+Message-ID: <DANXPUK6QX1D.3Q2EF3KG26LWR@intel.com>
+CC: <intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [BUG] i915 WARN: RPM wakelock not held in fwtable_read32 on
+ Lenovo T14
+From: Sebastian Brzezinka <sebastian.brzezinka@intel.com>
+To: Damian Tometzki <damian@riscv-rocks.de>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>
+X-Mailer: aerc 0.18.2-107-g4f7f5d40b602
+References: <0107019739d4e899-81e90dc7-0ff9-43aa-91dc-d57ef84c64b3-000000@eu-central-1.amazonses.com>
+In-Reply-To: <0107019739d4e899-81e90dc7-0ff9-43aa-91dc-d57ef84c64b3-000000@eu-central-1.amazonses.com>
+X-ClientProxiedBy: DB7PR05CA0045.eurprd05.prod.outlook.com
+ (2603:10a6:10:2e::22) To MW4PR11MB6909.namprd11.prod.outlook.com
+ (2603:10b6:303:224::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 16 Jun 2025 13:50:39 +0200
-Message-Id: <DANXOMLSCTUE.149W1NJZ0U8M0@fairphone.com>
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Kishon Vijay Abraham I"
- <kishon@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Abel Vesa"
- <abel.vesa@linaro.org>, "Konrad Dybcio" <konradybcio@kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: Don't
- zero-out registers
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250616-eusb2-repeater-tuning-v1-0-9457ff0fbf75@fairphone.com>
- <20250616-eusb2-repeater-tuning-v1-2-9457ff0fbf75@fairphone.com>
- <qmcoh5lysln46mg7tbmeelmnzc7s6o7bssir3a7r3n3x5lnboq@cizzodjel4ut>
-In-Reply-To: <qmcoh5lysln46mg7tbmeelmnzc7s6o7bssir3a7r3n3x5lnboq@cizzodjel4ut>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR11MB6909:EE_|SA1PR11MB8280:EE_
+X-MS-Office365-Filtering-Correlation-Id: 041e4ff3-a8a8-48c0-fbfd-08ddaccc3f9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WUFQU1VvelJDT2N0Q0EzZGNpdjkxUHErU3lFeGlBUUZMN21ERWYwM0ZBRHgy?=
+ =?utf-8?B?ejhVK0k3WEMzM2U2S2RTWWg2dmdPcUoxRlRXdHJsNFlJM0w0QzVyV1JaTWZy?=
+ =?utf-8?B?M1JCbFY5dGVySWtaZWtFNkNvYm1uMS9KejF5cWNVNDNmNW9iOWx3bHNWekM0?=
+ =?utf-8?B?SGdRQThrL0lzNi9IaXFJZzlETVkrcUVMUEt5UnA1amFja001R1BOSi8vQ3NF?=
+ =?utf-8?B?RVhhcktnRk5Sc0VzekN5TEJFS09uVXRaM3pWSkpRbXNCQUNhcFUwcVVXVkZE?=
+ =?utf-8?B?TGpzRTM3RTJaTEJydExSY3l2NXlNNDhOUXNNR2xjRi9SZ3h4QmFBSG1vRm1r?=
+ =?utf-8?B?aFgxS3ppbnZUYVZUc0lZOFR5WFIrWllOd3lXSGRFWTZRWTFsTC9ydFJidmRQ?=
+ =?utf-8?B?VzBrV0hvVUNUMGUyNWNVQ3prSW11TkhaQUFpRmtsdHJZTmt0ZjluVXlVYmFU?=
+ =?utf-8?B?SDlTWnV2eXpJUTRSZkRuTngzRjM4ako0ejgxRFpNbmhvMmhUOWQ0aExSZzB0?=
+ =?utf-8?B?RU1GLzR5OE1oT3lIQ29rMUl1dEZZOU4rclg2TDUvdmk5emxYcnhsQjhDbGZ0?=
+ =?utf-8?B?WHNna0FZaU8vYVZDWW9Fc0cvZjhDNWhUaGRJMndwZUFlRU1QQzc3VmtkcFdJ?=
+ =?utf-8?B?YldUT3oxdlUyL2tERlZwbVBNZXVuVVdDcDFWYmJua1hqWmZjam5STjN0ZjdZ?=
+ =?utf-8?B?VFNvYW4rV2g4T3Btd3pycktYK1l5N0k4elFGMjlGbDl1cHhUdEtrbHZOc1ZI?=
+ =?utf-8?B?VW1mbDZpU2h1d1kyNTIvWUZqa1JvcThoS3M0bG8zMWpJMWNhYUk3SXZmYzFN?=
+ =?utf-8?B?dTVwRU1UVDllQ3JDZHY3ZENDZEZ0UkthN3hYcW5vUC9La0hnYmVyWTBEbUJp?=
+ =?utf-8?B?Y1VCU05LTVVVdFB0dlN4anRtU1pWMEVoMDFHaCthekJaZHBEUVlvdmp4OEFj?=
+ =?utf-8?B?eHVhazRDakZjcVUyZUpOZ2UzbE9wRUNKeXNRVXJJL0FnK0c0Y3piVWYyOUJN?=
+ =?utf-8?B?SnVlVm9WUUNaTGt0dVU1TnNuNWhUU1cwYjNpOTZKM2Vzc20rRndiQ0dLeFA3?=
+ =?utf-8?B?OEc5eHpsUkZMUUhJTm5iVFZEL2hBcHFuek1veHoyTTZrME9OQm1JakNaSzVW?=
+ =?utf-8?B?c3JadmFHUlV6OE1pQzVFMWZma0xRVWxGcytNbVR0NkoxQ1d6dXhtMG9LOVBh?=
+ =?utf-8?B?akdrVENQOFpWUm5sR29xeWlTVnFSZFoxcUo3dWJrSEVOMFBadTgrWVBZbVM3?=
+ =?utf-8?B?Mm9NSldOaFBuNVZDc280ZHBNQk1pd1ErU0JFT1NuTERZZloyZStpMkhPT29W?=
+ =?utf-8?B?RFNJNXI5UkxvRlNxWkgyRjNVRzAyUWNvWVJoRnFQeGl6K0c1NEFlQUZna0tD?=
+ =?utf-8?B?UlRrTXpmRllYWlM4YlZyV0ZYQlBZYnE4U2k5QjV4eXNJUWlEMHJWczVTSW1K?=
+ =?utf-8?B?UDlWZ3BRZjU3ZnZGY3NzMTlnUWtuQUd3RENheWdTUnNlMVRtRmhzL0NVc21C?=
+ =?utf-8?B?S0ZQQVR6Qm5leTlQbHJLbnc0M1ZwMmNvb2FTeG5RQUYvZForNTdjOTdTb1hj?=
+ =?utf-8?B?d3V1cVJ0NktWdHBURzVZSmREeGZ2ZnJPY0FocnFMVzN3eGtCY2wwTzE2S1hl?=
+ =?utf-8?B?MVk0eUw3VjZNTEl3RXNiT0xtTlNFNTFLVjdsOVp4QXdTRmtJUDZpWk5ZOTFk?=
+ =?utf-8?B?YlpHaTUwU3FRSmlpampUenlwNHVGc2p6L0J4UENrcXRwbXU2dTNFT0pkbWZC?=
+ =?utf-8?B?R2ZoU3RabDNPbHRGN3l5N0YwMVNHSHJYci9pTGpvdk5ackNMaXNZa21JSE5T?=
+ =?utf-8?Q?B7wQCkf9WM61HYWV+RFgSdMWYxjiyrXzLwLi0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB6909.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M1luQW9WNU1GWWVtbW1hQ3BvT3pMbDZ6aDAzSVJEbHQ3NSsxaFZVZS9admFH?=
+ =?utf-8?B?NmZraVZIYTN6aGlYSEFUUjI5dVpCeU1VZGNSTDFMOGtWL1dOSVVlbHFtMllK?=
+ =?utf-8?B?V3NtZFFlclVXek1VcU1ySnpZUFFYVUdTNElkS2JvcjVoTldrNVVCSjhFemRM?=
+ =?utf-8?B?aGJZdTlDYkpKcE5JZGNGREhCRWVIbUNMNytEV29sU0hiWGxFRnpaNjB4VEcr?=
+ =?utf-8?B?L3EvTGV2SUQ1N05kOTdnU1k2bzlKeThXbUY5TjBYMExvNU9oWWFNSCtOVm1W?=
+ =?utf-8?B?SGlRTXFZSUI3QjN0SzNlM2pqTk5paElJSzJmL0hDdUVmMDRZMUJqc2VwSVMr?=
+ =?utf-8?B?ejFVWHBxV2RlNFVMZDIxZnFjTlM4cGNTVG9POWJVV0p0bmJhZXlsYUZUN0sx?=
+ =?utf-8?B?Tm5KTVF4c3l2SEIzWk9MSnhDMHREdUVZYzdGYXQ3OGYwdTBjTUtWeTJaeFBS?=
+ =?utf-8?B?UWViQUVzVDE2SEM0djNDS0E3NVRoS0Zrb21iYTN1YXhscUx4Mk5UcTludEVo?=
+ =?utf-8?B?SXRqbUwyV2NOSlhiVDA0UlpHYVM0anh2MDJlbUFFVTMvblhHNHBrdEJXS3VT?=
+ =?utf-8?B?eFhlZ1YwK3I2V015Q3BlSTUrWnJ2UzJ0SHB2dm1IMG0wZTJncVlsWnl1WGpV?=
+ =?utf-8?B?bmdENFpSRzFrOEpodjdEWUxJVHRweWd1NmxwNHhyL1BQbm5kTGIrdlpCNE95?=
+ =?utf-8?B?UThPZThNQmNzRGNhRWdtUEtqSHp3RmZaMFhyOGl3Q1k5OTlJak9wVUw2eGQ2?=
+ =?utf-8?B?MklhNUtuMCtSRFdRNmx3WlF3aWJRY3VTdzFYejYrL2EvbWR5WlNHRWdGZVdC?=
+ =?utf-8?B?OCt4S1J5R3NEd3FESlFrRXVRdVpaUUc3eFJGZUJzSWZCTmlqZTdRZElFem14?=
+ =?utf-8?B?dHUrQlBkNjdBMHhhWnk3K2srTzNCU1Z6VzUvK1ZvY3NIbC9ZODBaMHpTQ1hY?=
+ =?utf-8?B?M1JXNGpNaGpFUEsxTXFOc2c5SG9QZU5Ld04rY1BNcFhOQU9sK3I3Y1paR29J?=
+ =?utf-8?B?cWZnMEIraUNNZCsyQThvUGRScHFacjQyZmE3MFJscXgvb2xvSmltcktCZW5z?=
+ =?utf-8?B?eUFBL2U4UVgwL1hOTksrR0lsVlZTOUxtdXBiWmhsL0x6WXpvQ1NvL3NkdHVs?=
+ =?utf-8?B?VmNDWkpHcHVmaWVRUzJvWFo0anFJZlpFK0tsQ2hWZHhqZEpGN2JiUUNGZVBY?=
+ =?utf-8?B?VFcrTEJZVTZ2SFVrWk9GS0c5MUY4dUZ3UHBzQUliTVJnNTdxblBBNWs2WnpE?=
+ =?utf-8?B?R2s5R1BjNEFoWXI3SVM3Q0ZVd2EwcENyRGpSTGg1K09PcHdRVXZYYnUxMnl4?=
+ =?utf-8?B?ckRNNzhvNmZveXBudmFUREc4KzFwNFcxbzZoM1llc0pUZU51eGx5VHdveHE3?=
+ =?utf-8?B?ZFZlS3cxL0pKbmpkYndCbUpJSUNtOFNBakx6bW11TjZuSTFOSEFZWGZKakdi?=
+ =?utf-8?B?eDM5UlY3bXFjZkNGVUdoNmFwSVFOeXlUTmVKeTNGeE1XQ2pTd2N6ejNmZzdY?=
+ =?utf-8?B?NktEVmJWeEJmTThCRXZ6b0hTUWxiZnpzL1NLSDhZSjFieVN5NmVnc2Y4aHFS?=
+ =?utf-8?B?SEJ2Y0U2ODh1VUQ1dzlrbjlNKzNqek9WbEkzVkdHcGFoVkNnR1lld2tZZ3Ni?=
+ =?utf-8?B?NDhaUkJFcjJ0SmpOTnJNd0V1dVAxa0gwc2FBYXBiaXlQVEFMcEZFTnQzdmc4?=
+ =?utf-8?B?QmhNcS9IV1lIWkR1MmhDblM2RitQa01sT2trM0RCU1MvYTY3Qlp5TmZoaDlY?=
+ =?utf-8?B?dG9IVmdzdjFPSHVhZEZRZlFJcG5wZXVxajZNU2NvaWZMTXQyaVJNRzY5RUEv?=
+ =?utf-8?B?VEdqdFZZbkdEcHRlRmFtNVo5dWJLd09JVnN5dXNycWRWbHVMRUVRK1orUmVv?=
+ =?utf-8?B?QjdxRXVkV3B1OEdnMEE0by9EVHBmbjNXU0V6em0rdGdoRnR6UkJNVDQvZ0d2?=
+ =?utf-8?B?aC83dWp5TTU2dGFmb0d1KytBYTNyVWs2dm4ySEtZb3RlSnM5a2ZyNW1Kc0lO?=
+ =?utf-8?B?Z2dSQWptVFNGWmJKdHNhME13V0dSY0VSclBpcGsyalN4ejUzMnA0SHhET1Iz?=
+ =?utf-8?B?RWkvUmpUVW9zbTEwakx4MHR6Q1diRGRMMGtBNmdXTWdpR25sTTBLUFJZS0o1?=
+ =?utf-8?B?NTJ4bnJSNW4rWFZZVjBadDIrWUJ4RnJ4TitkNzVTTEJHUkpkenBOY3QreFJn?=
+ =?utf-8?B?eEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 041e4ff3-a8a8-48c0-fbfd-08ddaccc3f9d
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB6909.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 11:52:19.8676
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AeIxcCfy+12mZQUlfT8icauxHZHJpxrTbQ2LfHeCJRbFzBwifpj9nVHDomCIigT6gzm7f5+QEOszuJ8tn8hdfWp9f0skhlUNKttBYDpdZIY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8280
+X-OriginatorOrg: intel.com
 
-On Mon Jun 16, 2025 at 1:40 PM CEST, Dmitry Baryshkov wrote:
-> On Mon, Jun 16, 2025 at 11:45:12AM +0200, Luca Weiss wrote:
->> Zeroing out registers does not happen in the downstream kernel, and will
->> "tune" the repeater in surely unexpected ways since most registers don't
->> have a reset value of 0x0.
->>=20
->> Stop doing that and instead just set the registers that are in the init
->> sequence (though long term I don't think there's actually PMIC-specific
->> init sequences, there's board specific tuning, but that's a story for
->> another day).
->>=20
->> Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out u=
-ntouched tuning regs")
->> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->> ---
->>  drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 63 +++++++++++++------=
--------
->>  1 file changed, 32 insertions(+), 31 deletions(-)
->>=20
->> diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/ph=
-y/qualcomm/phy-qcom-eusb2-repeater.c
->> index 6bd1b3c75c779d2db2744703262e132cc439f76e..a246c897fedb2edfd376ac5f=
-dc0423607f8c562b 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
->> @@ -61,8 +61,13 @@ enum eusb2_reg_layout {
->>  	LAYOUT_SIZE,
->>  };
->> =20
->> +struct eusb2_repeater_init_tbl_reg {
->> +	u8 reg;
->> +	u8 value;
->> +};
->> +
->>  struct eusb2_repeater_cfg {
->> -	const u32 *init_tbl;
->> +	const struct eusb2_repeater_init_tbl_reg *init_tbl;
->>  	int init_tbl_num;
->>  	const char * const *vreg_list;
->>  	int num_vregs;
->> @@ -82,16 +87,16 @@ static const char * const pm8550b_vreg_l[] =3D {
->>  	"vdd18", "vdd3",
->>  };
->> =20
->> -static const u32 pm8550b_init_tbl[NUM_TUNE_FIELDS] =3D {
->> -	[TUNE_IUSB2] =3D 0x8,
->> -	[TUNE_SQUELCH_U] =3D 0x3,
->> -	[TUNE_USB2_PREEM] =3D 0x5,
->> +static const struct eusb2_repeater_init_tbl_reg pm8550b_init_tbl[] =3D =
-{
->> +	{ TUNE_IUSB2, 0x8 },
->> +	{ TUNE_SQUELCH_U, 0x3 },
->> +	{ TUNE_USB2_PREEM, 0x5 },
->>  };
->> =20
->> -static const u32 smb2360_init_tbl[NUM_TUNE_FIELDS] =3D {
->> -	[TUNE_IUSB2] =3D 0x5,
->> -	[TUNE_SQUELCH_U] =3D 0x3,
->> -	[TUNE_USB2_PREEM] =3D 0x2,
->> +static const struct eusb2_repeater_init_tbl_reg smb2360_init_tbl[] =3D =
-{
->> +	{ TUNE_IUSB2, 0x5 },
->> +	{ TUNE_SQUELCH_U, 0x3 },
->> +	{ TUNE_USB2_PREEM, 0x2 },
->>  };
->> =20
->>  static const struct eusb2_repeater_cfg pm8550b_eusb2_cfg =3D {
->> @@ -129,17 +134,10 @@ static int eusb2_repeater_init(struct phy *phy)
->>  	struct eusb2_repeater *rptr =3D phy_get_drvdata(phy);
->>  	struct device_node *np =3D rptr->dev->of_node;
->>  	struct regmap *regmap =3D rptr->regmap;
->> -	const u32 *init_tbl =3D rptr->cfg->init_tbl;
->> -	u8 tune_usb2_preem =3D init_tbl[TUNE_USB2_PREEM];
->> -	u8 tune_hsdisc =3D init_tbl[TUNE_HSDISC];
->> -	u8 tune_iusb2 =3D init_tbl[TUNE_IUSB2];
->>  	u32 base =3D rptr->base;
->> -	u32 val;
->> +	u32 poll_val;
->>  	int ret;
->> -
->> -	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
->> -	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
->> -	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
->> +	u8 val;
->> =20
->>  	ret =3D regulator_bulk_enable(rptr->cfg->num_vregs, rptr->vregs);
->>  	if (ret)
->> @@ -147,21 +145,24 @@ static int eusb2_repeater_init(struct phy *phy)
->> =20
->>  	regmap_write(regmap, base + EUSB2_EN_CTL1, EUSB2_RPTR_EN);
->> =20
->> -	regmap_write(regmap, base + EUSB2_TUNE_EUSB_HS_COMP_CUR, init_tbl[TUNE=
-_EUSB_HS_COMP_CUR]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_EUSB_EQU, init_tbl[TUNE_EUSB_EQ=
-U]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_EUSB_SLEW, init_tbl[TUNE_EUSB_S=
-LEW]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_USB2_HS_COMP_CUR, init_tbl[TUNE=
-_USB2_HS_COMP_CUR]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_USB2_EQU, init_tbl[TUNE_USB2_EQ=
-U]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_USB2_SLEW, init_tbl[TUNE_USB2_S=
-LEW]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_SQUELCH_U, init_tbl[TUNE_SQUELC=
-H_U]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_RES_FSDIF, init_tbl[TUNE_RES_FS=
-DIF]);
->> -	regmap_write(regmap, base + EUSB2_TUNE_USB2_CROSSOVER, init_tbl[TUNE_U=
-SB2_CROSSOVER]);
->> +	/* Write registers from init table */
->> +	for (int i =3D 0; i < rptr->cfg->init_tbl_num; i++)
->> +		regmap_write(regmap, base + rptr->cfg->init_tbl[i].reg,
->
-> Init tables have TUNE_foo values in the .reg field instead of
-> EUSB2_TUNE_foo, which means that writes go to a random location.
+Hi Damian,
 
-Right, stupid mistake. Thanks for spotting!
+Thanks for reporting this issue.
 
-I will fix the init tables to use EUSB2_TUNE_*, and probably drop this
-"enum eusb2_reg_layout" completely.
+To ensure the bug is properly tracked and addressed by the right team,
+could you please refile it using the official Intel i915 bug reporting
+guidelines? You can find the instructions here:
 
-Regards
-Luca
+https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.html
 
->
->> +			     rptr->cfg->init_tbl[i].value);
->> =20
->> -	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, tune_usb2_preem);
->> -	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, tune_hsdisc);
->> -	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, tune_iusb2);
->> +	/* Override registers from devicetree values */
->> +	if (!of_property_read_u8(np, "qcom,tune-usb2-amplitude", &val))
->> +		regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, val);
->> =20
->> -	ret =3D regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, val=
-, val & RPTR_OK, 10, 5);
->> +	if (!of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &val))
->> +		regmap_write(regmap, base + EUSB2_TUNE_HSDISC, val);
->> +
->> +	if (!of_property_read_u8(np, "qcom,tune-usb2-preem", &val))
->> +		regmap_write(regmap, base + EUSB2_TUNE_IUSB2, val);
->> +
->> +	/* Wait for status OK */
->> +	ret =3D regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, pol=
-l_val,
->> +				       poll_val & RPTR_OK, 10, 5);
->>  	if (ret)
->>  		dev_err(rptr->dev, "initialization timed-out\n");
->> =20
->>=20
->> --=20
->> 2.49.0
->>=20
+--=20
+Best regards,
+Sebastian
 
