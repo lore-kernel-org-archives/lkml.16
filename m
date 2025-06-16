@@ -1,94 +1,143 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BD11C860C;
-	Mon, 16 Jun 2025 20:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAFF1E89C;
+	Mon, 16 Jun 2025 20:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750106610; cv=none; b=Ne7lqFdvugeU0lF9kLgeWj3ENyEEOsfnYrjNqkBfOQLPPkSmq2QOfBgoDH4eECvhtZT3PbjPPY8IU/OdR3b1IQYGZENY6R9Cbbqwx7CM4LmVGP16La5oCV5fqnOa2GFLmzz6Y2B+a3YWYkAsz795YqDgiHoJuME67iYqO9WYjSg=
+	t=1750106794; cv=none; b=OQRJDs5nRb0jGoltB+IJdXpIDozzqMrnzr9+Pg6vob7S5LgXwLDf0nXYCshd03EjdZWZsKfVrrOr1luS1UyDY83/Ed8QEZQBe7zVjJ3XQXzBTZSEPCfmjHXDB7Nb4XkrN+oqgWPO8K270q158Ar7azLRrhgCM2RMXC+ECLPtv1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750106610; c=relaxed/simple;
-	bh=MPROsdRxArwhnjbtN9ZftmZMxHEmEvfOk5+/jeQ8KB8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eM00kzWJJCv1PpXoRLaLXemWLPiG9uXGMwmPitArglDTqR81GOKdVoBtNFvDKlTmvLYbV3MZPzydo8tZSWijkWNcxqbIaEJPyWw6asPZr7Yx4xpMK+Q8e/VjKTzhfth4SUmlyKAp+iMTyH5x89SkHw7c8PvCYCUt69jd1FqrxuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCLQKVei; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCLQKVei"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a3db0666f2so112345681cf.1;
-        Mon, 16 Jun 2025 13:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750106607; x=1750711407; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eRWSTZ0XbChoIlsy92a3twWjGeU8UCDzFEMehFMQRMw=;
-        b=DCLQKVeijs9a7MDHZh0ZO1APAeggCjdfisQWGeTla5otMaEnuvrbRGV2YeUfa4HDyx
-         4o+DaonMI3F8G+oWlqI6tNLyeGAZFdINf4ftqWEilw+Tvahbg2r9tlsw/ZFbBRZGxMwb
-         O2yROIqHqjY9lt/m0OnzUB+UkJU7AovHdYh5CQfmUMXfr/s3uNFPDWu1p/D1gtNusxFt
-         /Qss8znxrOP4fgOSielYVCmzhxgG97ddYdPcXMQ2ZGf9pKBghvUrncDFBEa/I8SMWJA+
-         lImqhWvt7FE45hz9KNEgslCj45JZ5sk1mgDIf/UKzzjS3TvD7BhcaGZ1PKr2qOqWCdiG
-         K5FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750106607; x=1750711407;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eRWSTZ0XbChoIlsy92a3twWjGeU8UCDzFEMehFMQRMw=;
-        b=UGfYZN275IcY6PP8fcp9CUsm4TkPEHeWkkdDRIalCfiXzlf84M/xTKnM/lE2OEPoHd
-         PVfonyM1FLZvQHzlk6gpqH6KVys0mSpLfs7kWF/x49MllcYIGQAhV/jAVhZUL91b5X7L
-         HhXk9Alkt8qpAgLan3P2NRcFKnEb22DnZKU/dwNpYRj6jbzwHUzaZfjy8y/V19tfxlWM
-         FtKGEtPV3z1neWf7bwAcCF+BkhNZZqcR/vUo0f+PAZNQMed4Yjp52gyco7zU7mAX2HuS
-         y8avM1hu0VX43wWlNJy+1Q4d/BlkV7XcTIx2P0fqdsE2bLxGWRZzP5J1a7XgJENqlNoh
-         hDQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqGjhKVGMBZklzOn+5mSZuz1Yj0lViFqNM+AOlzBtcP86HMPJgD4hClD0cizvYzhOzJOWLWb+g@vger.kernel.org, AJvYcCX/I9dHKxKObPslfEQ9dwnDrU3zjDWHUmm+LDOWQbrCUu6ojZy2yWyFmy0p5JPeF71zBeG9X9x0shFfpBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6V/EUdqwedkQDR4Y+BJDY8sluQTKVjqBagBqOdDF5aBPO7ZEy
-	rYbfKRuL8daZLQIBD/NU3l7ZZ7ISwWqigvUiWHOy5WlXBjQXnIRKLLHc
-X-Gm-Gg: ASbGncte25JCwsB8rnr4M8+crRUHQ/Iek56LI37zUCKiFjqa4OEY9aqThkeTnnMhxm3
-	nnW7Tu4Fbw1K66+Jk8DWb5/OmeNegXn4U6jZ2aWQaZxwoehDnK8fKXsenmuYdaXbKvgmarw+asD
-	idDbhOqhFFYlqa6jnQf65HAXLEeOB6TeDkF4EZO0dnoE1JgrZca+oAYlgNQftGwMJdRLs3qgK8C
-	4Hg3KAxySPNChi0nvvKwVL4cjbpvjMKS4FXWEw4BX8iQFF10XuV5OdAPKnNhhcmM7tz//Fj2DtJ
-	xDBSaPQIQLh6Gh2FZh+fDculf1XSRMeb/IdHgjaOYT3KS5BZ77VMIZ6X4FYU6acpN/YrzWLwJeu
-	QrMvbzAO3ScNxc8qz6Jg5bQe6sCccnvbapPWjRpUT0Q==
-X-Google-Smtp-Source: AGHT+IH7BnvrBt09eangwJrns+ePgz/UJrNeXwsBCjJZDAR2PEBxYpJLCZcb8nTbHvvK0S0/K2oXPw==
-X-Received: by 2002:ac8:7d0e:0:b0:4a6:c5ea:6fc with SMTP id d75a77b69052e-4a73c5b0a8bmr146135721cf.42.1750106607313;
-        Mon, 16 Jun 2025 13:43:27 -0700 (PDT)
-Received: from localhost.localdomain (syn-184-074-055-142.biz.spectrum.com. [184.74.55.142])
-        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-4a72a52a1ddsm53655481cf.81.2025.06.16.13.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 13:43:26 -0700 (PDT)
-From: Robert Cross <quantumcross@gmail.com>
-To: andrew@lunn.ch
-Cc: bpf@vger.kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	olteanv@gmail.com,
-	pabeni@redhat.com,
-	quantumcross@gmail.com
-Subject: Re: [PATCH v2] net: dsa: mv88e6xxx: fix external smi for mv88e6176
-Date: Mon, 16 Jun 2025 16:43:24 -0400
-Message-Id: <20250616204324.2542804-1-quantumcross@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <ad17b701-f260-473f-b96f-0668ce052e75@lunn.ch>
-References: <ad17b701-f260-473f-b96f-0668ce052e75@lunn.ch>
+	s=arc-20240116; t=1750106794; c=relaxed/simple;
+	bh=eAyF1yEkPz/7b1iwDBdEM7HpOPPG+s3E1OAnGVTGLq4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=FTux6G4zA3CPz6SHPcv/yi0CtivEH2AfSHWndO1kuA/aALp+hgs4CxDF7NNAZlt7pKXjBYn8o6DbdJkevIIPbsL3AFBw7VCPZExTG4H+JEXoBx2uz9XVUrOalI9dWh7K02kuBdIA+3mNPf6f9rxE4YH479xA1V5vBxn7Bv0V9qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.150.136) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 16 Jun
+ 2025 23:30:59 +0300
+Message-ID: <8809cfc6-6e49-4c9c-bc0e-8eb581478d11@omp.ru>
+Date: Mon, 16 Jun 2025 23:30:58 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH] usb: gadget: composite: fix possible kernel oops in
+ composite_setup()
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<linux-usb@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Fedor
+ Pchelkin <pchelkin@ispras.ru>
+References: <0e61b364-8f26-4f98-9f10-9b9800b1cd41@omp.ru>
+Content-Language: en-US
+Organization: Open Mobile Platform
+In-Reply-To: <0e61b364-8f26-4f98-9f10-9b9800b1cd41@omp.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 06/16/2025 20:19:32
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 194079 [Jun 16 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 62 0.3.62
+ e2af3448995f5f8a7fe71abf21bb23519d0f38c3
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.150.136 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.150.136 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.150.136
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 06/16/2025 20:20:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 6/16/2025 2:43:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Imagine that, it just works when I set it up like that...
+On 4/29/25 11:32 PM, Sergey Shtylyov wrote:
 
+   Hm, 1.5 months passed and no reaction whatsoever... :-/
 
-And now I don't get concerning watchdog event messages probably from
-putting the chip and driver in an undefined state!
+> list_first_entry() should never return NULL -- which makes Svace complain
+> about the next *if* statement's condition being always false. What's worse,
+> list_first_entry() won't work correctly when the list is empty -- in that
+> case, passing config->descriptors[0] to memcpy() further below will cause
+> dereferencing of a garbage pointer read from cdev->qw_sign[] and so (most
+> probably) a kernel oops. Use list_first_entry_or_null() that returns NULL
+> if the list is empty; fix the strange indentation below, while at it...
+> 
+> TTBOMK, this situation shouldn't happen with the current gadget drivers --
+> however there's no guarantee that usb_add_config[_only]() is called by any
+> gadget driver; and anyway, Svace's complaints would be silenced...
+> 
+> Found by Linux Verification Center (linuxtesting.org) with the Svace static
+> analysis tool.
+> 
+> Fixes: 53e6242db8d6 ("usb: gadget: composite: add USB_DT_OTG request handling")
+> Suggested-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> 
+> ---
+> This patch is against the usb-linus branch of Greg KH's usb.git repo.
+> 
+>  drivers/usb/gadget/composite.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Index: usb/drivers/usb/gadget/composite.c
+> ===================================================================
+> --- usb.orig/drivers/usb/gadget/composite.c
+> +++ usb/drivers/usb/gadget/composite.c
+> @@ -1887,8 +1887,8 @@ composite_setup(struct usb_gadget *gadge
+>  				if (cdev->config)
+>  					config = cdev->config;
+>  				else
+> -					config = list_first_entry(
+> -							&cdev->configs,
+> +					config = list_first_entry_or_null(
 
-[  145.839142] mv88e6085 gpio-0:04: Watchdog event: 0x003b
+   So we either need to do this...
 
-Thank you again!
+> +						&cdev->configs,
+>  						struct usb_configuration, list);
+>  				if (!config)
+
+   ... or this check needs to be removed.
+
+>  					goto done;
+
+   OK, I've tried (unsuccessfully!) reaching Greg on IRC, both privately and
+on the OFTC's IRC channel #kernelnewbies -- and now I can't even connect to
+irc.oftc.net:6697 for some reason. Thought I should try following up on the
+linux-usb ML, just in case...
+   So Greg, I'd still like to know: do you ignore all patches from .ru, all
+patches from omp.ru or just all patches from me? :-)
+
+MBR, Sergey
