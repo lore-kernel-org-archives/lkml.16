@@ -1,94 +1,189 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEBF360
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6B61C5D5E;
+	Mon, 16 Jun 2025 01:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750037533; cv=none; b=tFV0Bj88qyZmXFelsCiVHG7cjCcyUu1MM4oZYCimwLyyLbcE1opay/bPSfrZOJ1Xo7hlI2KluC6LIVeifQPX648FEcw1AVRHmKk0J1WyE0Ew843CXy8YRDRbLFlBH3Mzwd2JOYYHrfEh4IqGhqCH+FVxTE2/I1RMcQDkNUHc66k=
+	t=1750037536; cv=none; b=btJZSQqn77HX+JKh/18o+0jeif8nMmEdOopgtPBtCnAdFmoPXOoeWQoFyLUsTGwP7RLK8FIOeOKxCM+ddOSmJmIzh4xehJkF/5H7t2QPfAuFiiT6MxkOqhnlDVW09bLMJuPOLzbridZ+betLLRU+5npQ+yfBDLDW2pjTIElEpEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750037533; c=relaxed/simple;
-	bh=VSafLg20ijrLrjjSIN/9RD2FHjGJsFhkBCHmI+gvDPU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eRnNhewBpWF8kYzsuXyBzxYPVDOqlDuY6YwI22jeEZPBSTu9uVMoRGGGexM1G49iFhpFuHP22C2uUPz/XpobXCT+AMH9vRmZDcZJDEuAb9eMBqgGGh44gY41kfl+0mxlmq8x17waJwKruCyGgMsoAzu3YPZS3ojYF/eY5winW+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G1QftV017685;
-	Mon, 16 Jun 2025 01:31:45 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4790281ag1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 16 Jun 2025 01:31:44 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Sun, 15 Jun 2025 18:31:43 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.57 via Frontend Transport; Sun, 15 Jun 2025 18:31:41 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <syzbot+c2ea94ae47cd7e3881ec@syzkaller.appspotmail.com>
-CC: <jlbec@evilplan.org>, <joseph.qi@linux.alibaba.com>,
-        <linux-kernel@vger.kernel.org>, <mark@fasheh.com>,
-        <ocfs2-devel@lists.linux.dev>, <syzkaller-bugs@googlegroups.com>
-Subject: [PATCH] ocfs2: reset folio to NULL when get folio fails
-Date: Mon, 16 Jun 2025 09:31:40 +0800
-Message-ID: <20250616013140.3602219-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <684efdcd.050a0220.be214.02c1.GAE@google.com>
-References: <684efdcd.050a0220.be214.02c1.GAE@google.com>
+	s=arc-20240116; t=1750037536; c=relaxed/simple;
+	bh=IImZvUkpMAnwhvmBNPBZuUuP3+ZC7bdMT4Tj48zkB6M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kLDEnJVRxKEaALJpL9WgAgTzVGjktxB6XenJk+vWwwFzpC/p/qwrNcyFP6phxHJkGvvFkWKJSkKl1f7JX2OgoXTO+C7lhSlqtnEchWrs8v95r9LubCaeWW6Lj2/t6gU/X+tsJSXwwYPhPrynDpwykIu+XZqA/fvT4Uazixhj7uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gVdFYXw5; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVdFYXw5"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b271f3ae786so2837600a12.3;
+        Sun, 15 Jun 2025 18:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750037534; x=1750642334; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sR6qkQWtty2THn9HV/oPVYY8q0oy4myszmIk0XskAD4=;
+        b=gVdFYXw5RlBxVibkWVK3c7bNck88IAXKB5cv8rsxqAO1E2rGwfrnitDK/O7NKa2Udm
+         7WtZYp+GPDK45aKxnVcf26P9R3jSv8LAGBej3kQMR11I9+pWNglGgze549h3pNE2v9YJ
+         N91+ri/wXYsYZv9hCsgt+sACE8FURaLgvCDSJRZAhOm0cbWnMlwJsiDgh3CptPk301jD
+         NfVkhEJCwG+FUvWYa8NmaMdpLavIQngwTGXivrcPMNLGWJAW8Pr3OnVoiAOpe0DE7URO
+         1EFdBnpFngBpPp9HFNSFhqTP5QNWjogzgeWN5D+vqLSC/v3BPdhJFIbjRkSr41eGiDrD
+         0L/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750037534; x=1750642334;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sR6qkQWtty2THn9HV/oPVYY8q0oy4myszmIk0XskAD4=;
+        b=cGlx51rZt/YzyKQh5GEfSFFmGeFyjp1W8N25TDxmpau+cW63k7ZtyO2e4bMQRml8Um
+         GPQyAQo6zAAMHOgLcPfNUKuQmsUEqlSg9EpoX7hBOqRjYOcp+iMcXfAXy7Abvytv5ebY
+         rdVrowwGLvp3e3QiQNAD22y4I55oarIhKWmPfHcO5/oQdiKqgS+r3nIVeroIm2H2/+14
+         l06OLjqRDWvEH4chvd9o1riSGw8kk65VqKlYra6Ec1juKFjTALyLAa0Xm/dlLu2EgrH+
+         LLNsnomVUtigtGlM5BSCvMXgoOyxsQAwJ19z4NzOX8mAUCamAjnldBmRDSXGluwtHzwZ
+         JCRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV31b10zzSqPMUt+9YB7w8qxYFOjY+VYeytJqZblPCgHvOov+iZTNGZi57glp7/F8Nu6bCQkk8mkRoS@vger.kernel.org, AJvYcCVa5BHbdhrNCFpsh4TqudnRYWNhmfJHDVJePAcBzZCHCThvI/bwHNy/T7cBKtJQpAx/BH/1vqjWQ5SVvzwuUD1q5g==@vger.kernel.org, AJvYcCVh437mzHa05ig79NLpmKUlKtV7VV4jyxU/kfTfrUSXXuQReOYHi//hv8c2q6W7SRDZ7NETislX959iEGRh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwREsTgw21n3iVgykSUfZG2dgjBQjQDmCa02C4P6vmhVdUx+APJ
+	TMn3ZQhAhleCOlpXrIGD6UPCCosSuMXHbDW2OE9V1RNmZQe+B5uh/dq1HwgK7g==
+X-Gm-Gg: ASbGnct39JCMZmyWaP9Blkw+vMEumgfcK/KqVV3fZubdhDIxluV9L0jcV+uF3FhMmxP
+	jzcNu/rpWc9wERKJThadpwKvwh60N7P6ltzFSoQOK5WsO0vXRJfATMOhsHvu5SGf0gI2pYRdmgu
+	en2K5YkG1Xffnk6JnAJn6pxRtz0aJgN/Ke0Uueto4mQuVwg5M6l9Xp2080zIqmoYcyikXnuTDPp
+	MQEYWHYOEzKitRfhGBQfexk0Epn/6ZllrK+x2un6FRFuyVaObMteQkSonKc4q/FI9+dy+fkdkYN
+	BfZoIedQ6S69sC22JgEpagHnTZibZU9zV95VUdjAmobHc0ol8UuTUb27VOa43/9BeYeBGdEYg4W
+	4kNc=
+X-Google-Smtp-Source: AGHT+IEjqUySqGRQmucLa3hYe61oVihGWXZ54gO48AIrBbAmxb4PLDq2yHwjYLsiPdfkyoftEBxaKg==
+X-Received: by 2002:a17:90b:1c04:b0:30a:4874:5397 with SMTP id 98e67ed59e1d1-313f1ca7f9cmr12489670a91.9.1750037533701;
+        Sun, 15 Jun 2025 18:32:13 -0700 (PDT)
+Received: from [127.0.1.1] (wf121-134.ust.hk. [175.159.121.134])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2365deb2cedsm49932455ad.163.2025.06.15.18.32.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 18:32:13 -0700 (PDT)
+From: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple A7-A11,
+ T2 SoC support
+Date: Mon, 16 Jun 2025 09:31:49 +0800
+Message-Id: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDAwOSBTYWx0ZWRfX3DYRoYSkBAM8 nZAjbVYaiMkoTLbY8oRQkQoF6CbBbwa/yj/khCl83stPKD4II5F9zuXjjwZHS4PhtK0LmXEYdP9 BcnfJwF81/6F+uwyU2Kh+DPYo7+uJMzQWCcKYGRPA2YR+0C1KaupmNi1Xyv5tb7+LD4bZgyp2Fx
- i8qYTxhlhYmogh/TgT+hxYeeZea+9BpPBfmr+aFgEIFVf41rxfp+L2MHfC0uoWOx1kd16dkKarN 2gdd5IVtS6jHdTJVQoidNzEMHmXc4/fgsKnHKIC59tFxEcXiyyh5T9WxcPlV8tVdcyu97Rm7bxI hg49A2UPIs3As/0w097oeQlfYCEtwvQw8hTxZO9kXrMyGHLJwts3kIs9sNwzYJBfGikaUxw5asb
- ntTKxiktAp+6xgI+e01k3ii4iOo6raLkZBEGDOKpRLSER7orqZFCUBx20OhFEGxECTlaw9sj
-X-Proofpoint-GUID: DMiliXBUZePCpmRx072qLsN4UuLpnDAE
-X-Authority-Analysis: v=2.4 cv=ar2yCTZV c=1 sm=1 tr=0 ts=684f7400 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=6IFa9wvqVegA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=VIXK_nqSdHjJPRK1elYA:9 a=DcSpbTIhAlouE1Uv7lRv:22
- a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: DMiliXBUZePCpmRx072qLsN4UuLpnDAE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-15_10,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 impostorscore=0 clxscore=1011 bulkscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
- definitions=main-2506160009
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Sven Peter <sven@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4111; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=IImZvUkpMAnwhvmBNPBZuUuP3+ZC7bdMT4Tj48zkB6M=;
+ b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBoT3QWFDqwdlCT87E/lnHN0y3uxYwVNCrcfXdEv
+ r8W31VQ5I6JAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaE90FgAKCRABygi3psUI
+ JHOcD/9aqE6YzKXZcdiBW5LIR1CLL8vrnqMP86Z4ipOHcMcJQdQT15eeRJduzxpeFzUHsqqlVko
+ S9wtuUkyLZlSRNuwIzyh9bkSDMvgTIMCcmGqpNIgNbqZ9IN8AeYyxjfJUUqoZ6q9wn7e1j85aDS
+ BRAYn0al8oDlTlWq+LPbEvMJtGdc+oYqt5scMf9V68svvEdjqsSqL/DpUGtH7obA6hYmx77etoa
+ FFPkshJ8PGB+WAFWxQkSm02PU8YxFzv0TZtxJwH3t2J7i6arjJfAURZt26JL7rFNZXsTq1hCIlK
+ bN5fFrzAMwFtrLAox+nZ4wUDBJLTl8bWvSN9ur9Ny3MPvlBxifUEtnsEslTP2OsGXzhVF22Xesr
+ bFoA8m3ZdGrrFH+VNsLJxys1NNkiWHDzh3wj8c/JENOFtDdU08WLZr65UatfL10vzvCNyJHYSKJ
+ oU80Bszn2ITw2U3knG/X2MTklcmDHK7/xkWRmiTnPJrNBQu6SJOAJkhvKtJ3cTWaiwnBE/qIvfh
+ C+ECXbFaoNIwW+56dUdKRRGcFpFz0LWt1BhKa5QZ6Q8qxYSGZwr+oc/8TOpSNaCNWnYpIRpi8bY
+ F3EhnhR6lLnxPffH2+YqunJwEFDPWlVgZlj/E2AaX6SWiS33WoDsKo7uL/zQDDFybZqbvEU/iRZ
+ 9EkuYkCRyCg4khg==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-The reproducer uses FAULT_INJECTION to make memory allocation fail, which
-causes __filemap_get_folio() to fail, when initializing w_folios[i] in
-ocfs2_grab_folios_for_write(), it only returns an error code and the value
-of w_folios[i] is the error code, which causes ocfs2_unlock_and_free_folios()
-to recycle the invalid w_folios[i] when releasing folios.
+This series adds support for the CPU PMU in the older Apple A7-A11, T2
+SoCs. These PMUs may have a different event layout, less counters, or
+deliver their interrupts via IRQ instead of a FIQ. Since some of those
+older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
+be enabled by the driver where applicable.
 
-Reported-by: syzbot+c2ea94ae47cd7e3881ec@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=c2ea94ae47cd7e3881ec
-Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+Patch 1 adds the DT bindings.
+Patch 2-7 prepares the driver to allow adding support for those
+older SoCs.
+Patch 8-12 adds support for the older SoCs.
+Patch 13-21 are the DT changes.
+
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
 ---
- fs/ocfs2/aops.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v7:
+- Fix a W=1 compile warning in apple_pmu_get_event_idx() as appearently using GENMASK()
+in a function prototype causes a warning in GCC.
+- Link to v6: https://lore.kernel.org/r/20250407-apple-cpmu-v6-0-ae8c2f225c1f@gmail.com
 
-diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
-index 40b6bce12951..89aadc6cdd87 100644
---- a/fs/ocfs2/aops.c
-+++ b/fs/ocfs2/aops.c
-@@ -1071,6 +1071,7 @@ static int ocfs2_grab_folios_for_write(struct address_space *mapping,
- 			if (IS_ERR(wc->w_folios[i])) {
- 				ret = PTR_ERR(wc->w_folios[i]);
- 				mlog_errno(ret);
-+				wc->w_folios[i] = NULL;
- 				goto out;
- 			}
- 		}
+Changes in v6:
+- Rebased on top of v6.15-rc1 (Conflict with FEAT_PMUv3 support for KVM on Apple Hardware)
+- Add patch to skip initialization of PMUv3 remap in EL1 even though not strictly needed
+- Include DT patches
+- Link to v5: https://lore.kernel.org/r/20250228-apple-cpmu-v5-0-9e124cd28ed4@gmail.com
+
+Changes in v5:
+- Slightly change "drivers/perf: apple_m1: Add Apple A11 Support", to keep things in
+chronological order.
+- Link to v4: https://lore.kernel.org/r/20250214-apple-cpmu-v4-0-ffca0e45147e@gmail.com
+
+Changes in v4:
+- Support per-implementation event attr group
+- Fix Apple A7 event attr groups
+- Link to v3: https://lore.kernel.org/r/20250213-apple-cpmu-v3-0-be7f8aded81f@gmail.com
+
+Changes in v3:
+- Configure PMC8 and PMC9 for 32-bit EL0
+- Remove redundant _common suffix from shared functions
+- Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b361932e88@gmail.com
+
+Changes in v2:
+- Remove unused flags parameter from apple_pmu_init_common()
+- Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com
+
+---
+Nick Chan (21):
+      dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
+      drivers/perf: apple_m1: Only init PMUv3 remap when EL2 is available
+      drivers/perf: apple_m1: Support per-implementation event tables
+      drivers/perf: apple_m1: Support a per-implementation number of counters
+      drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
+      drivers/perf: apple_m1: Support per-implementation PMU startup
+      drivers/perf: apple_m1: Support per-implementation event attr group
+      drivers/perf: apple_m1: Add Apple A7 support
+      drivers/perf: apple_m1: Add Apple A8/A8X support
+      drivers/perf: apple_m1: Add A9/A9X support
+      drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
+      drivers/perf: apple_m1: Add Apple A11 Support
+      arm64: dts: apple: s5l8960x: Add CPU PMU nodes
+      arm64: dts: apple: t7000: Add CPU PMU nodes
+      arm64: dts: apple: t7001: Add CPU PMU nodes
+      arm64: dts: apple: s800-0-3: Add CPU PMU nodes
+      arm64: dts: apple: s8001: Add CPU PMU nodes
+      arm64: dts: apple: t8010: Add CPU PMU nodes
+      arm64: dts: apple: t8011: Add CPU PMU nodes
+      arm64: dts: apple: t8012: Add CPU PMU nodes
+      arm64: dts: apple: t8015: Add CPU PMU nodes
+
+ Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
+ arch/arm64/boot/dts/apple/s5l8960x.dtsi        |   8 +
+ arch/arm64/boot/dts/apple/s800-0-3.dtsi        |   8 +
+ arch/arm64/boot/dts/apple/s8001.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t7000.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t7001.dtsi           |   9 +
+ arch/arm64/boot/dts/apple/t8010.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t8011.dtsi           |   9 +
+ arch/arm64/boot/dts/apple/t8012.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t8015.dtsi           |  24 +
+ arch/arm64/include/asm/apple_m1_pmu.h          |   3 +
+ drivers/perf/apple_m1_cpu_pmu.c                | 807 +++++++++++++++++++++++--
+ 12 files changed, 871 insertions(+), 35 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250211-apple-cpmu-5a5a3da39483
+
+Best regards,
 -- 
-2.43.0
+Nick Chan <towinchenmi@gmail.com>
 
