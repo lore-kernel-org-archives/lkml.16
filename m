@@ -1,439 +1,120 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23342DFA2F
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA962264DC
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750068273; cv=none; b=F3zMD52Ssig/NmSh37Ilt0YE+NUfrHFHnedgvSb4fVpXFKwBcDDB9LfbXC0wvp9bNpV35RBWJtfZXQGt9/GoAz95OqcEk86nw2PbDE52gAaA0XfGeP7s44795fPOvDWCKeUogaIVHEbgYoj6h3FiGLmCy0DI1OXVf8kjoFnVJRg=
+	t=1750068283; cv=none; b=HLQQUHwUflyPjyRnJv6JK35VQQUf4c+NfAow3O/VOpS8+rrXXcP0bKwJup+7pdG9Y/jZpe8Ivutz5J13I3l3khjjF4u9y2vAIn3aE1OMeS0qJRYT7rLjwh3DUBTfoIySu9H4Ho+3EESJqbdVQMPmeSXjS+CShVFYMz/4aIYok64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750068273; c=relaxed/simple;
-	bh=s+D/YIbvNeYd2YSGMv4IZPPJMh+1+OBska8P62CM2e8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c05pRApg8a3FhhVVYuPkjH5gkbR1B096dPBOh0zAGvRz1IkvcLT4mZ1d6nuSfiZjFymOfU7hHlIXAKv6tCC3ADBzCty1Qf60Lci1H2OiEKIn/v+GZW6E8eea6IMLwrVxkhwQOvyinkDXGiMecEWcqk+R7PR7DaMsNgP+S3cdeBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CE8212FC;
-	Mon, 16 Jun 2025 03:04:08 -0700 (PDT)
-Received: from [10.57.84.117] (unknown [10.57.84.117])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 601873F58B;
-	Mon, 16 Jun 2025 03:04:28 -0700 (PDT)
-Message-ID: <38fb7875-88c0-4687-8421-f92ae3ffaa72@arm.com>
-Date: Mon, 16 Jun 2025 11:04:26 +0100
+	s=arc-20240116; t=1750068283; c=relaxed/simple;
+	bh=uHrG9AeiPfO2ujCvATyl7C613FFrJeskk1YaGMKCsyA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t4Qizrbuxb3F0xJRWb083sngKpC4tYgflO1CRPrxvpXLCdkbkrhRGqSwaJkagZXeaoA1trnwIPgNuSvCrOJEaFsHhgMJmorDTeOcUlu6D4/NuMzxgKiBYRYQ7/JvOP/O0HGmtUF+Re/6sz7YvC3uB62EywHupcp1sJBrRnG2Osc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OOV9yn8r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OOV9yn8r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750068280;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cdzwj7ImrbS9o0Bom5tv9zCMbeN8T26Ybl8KaA09pw8=;
+	b=OOV9yn8rMlmB4/sBKDYF/3MwacCUvowJy1dso4R3oEncuoN+EYKQU/2rlIhc2Woz/Zi97A
+	POZYXctP75IdhHC30A22gw034dggKjrWnxSIJw/treCl//PyRlXPYMqKR/RBywyA6M07CQ
+	fbAqPQIM4H8MurMbtL9lzr4CmI76JuU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-hbjdZhxhNYaEDpFPibhwig-1; Mon, 16 Jun 2025 06:04:39 -0400
+X-MC-Unique: hbjdZhxhNYaEDpFPibhwig-1
+X-Mimecast-MFC-AGG-ID: hbjdZhxhNYaEDpFPibhwig_1750068278
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb94dbd01fso407843766b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:04:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750068278; x=1750673078;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cdzwj7ImrbS9o0Bom5tv9zCMbeN8T26Ybl8KaA09pw8=;
+        b=vbCsAHZxQm50ouumJTIcBa5TYRcqQfUq5ns32v43c/KNjpqIfTCWBwRGmMohPbWTUD
+         t/ozB9HpJ/8gVWcgf2W8fqEpPgQrt109EVv9l78oaB5WBQn76+E2cE/41TllXyYM4xlW
+         zIIltzuyCwqZmjth26hPnDWF2PMsY1+XjUn5HABnO1vX5JN+KJbl5phHsyZLH9/5S73x
+         EqvaCGhNT4e9azQTevhkdExIEZ2wD2aYJGrFn8FA357JFutUOZnNAebaoz5/isxF47Cq
+         vMMXH1DG1EQ0HnCFD/muJ7jU7y1UFgQDHzi+M20/bVVczNGFvPcPtbUaUZCRV8Tb1JKu
+         qaBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJGwTaEjPYNYQVTEaccgF9p8bvK/hSkwX8fcOtjePK1SRQwUH05vlKjm8j8EZkc4rqryd0DhfzozE5miI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTNYu+Wa/6D+ZmMO0Vl8qMVoKp65zOT2pLO9vYbNPdR89GhjAz
+	zsJcQvhtk7qndGJiQYcTx9IK76QNWmQCsWolnVOgQB7KzyCjm0mE0LuUdnLsEF+x92Mw17LlYyO
+	7BtQj5Ha/6ZJjzCyvLO2P9dM32a6KGgvltQXnkskvjDQQF1WNecEXWR+IUmCEhXujcA==
+X-Gm-Gg: ASbGncvjwRJpa2idrGVEWIjcyWtgdCYlXqImDWmGAw9l4d1fJa5jmn3zTfH24Nxjlg4
+	2DX8iEWDpZHETAtWT/7mc2e4rhCv2zOskQ4eyi34CVf2R0rDJhAS/t0YucW2yNHqwYUAhOiunId
+	DZc08ZdM6tp0NR8ud9c0+Lv3txqbA/sCpEfX48tERnhnPNV2P/5IG/e4ti+56xeMiw66ARWREpd
+	bQ55fiTwd26UxHZGizTfh9ihCkDOBHYNhSNfqoCgmuMnRo54Vb7K27nATGHBtGVzMN8GsBhacwB
+	jbxk46X2jtkI2ujt1VRWzyCnSURzIWlxB7NHAyyY2qhP+Ayc/56WB4nOl5D4KLlcCia8
+X-Received: by 2002:a17:907:6e9f:b0:ade:35fc:1a73 with SMTP id a640c23a62f3a-adfad686483mr812056666b.55.1750068278296;
+        Mon, 16 Jun 2025 03:04:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmpyH9jeg0f77jDm3nySdq6N+wtnB02XFddQoRJxIvvAvLfKSuRlmjGjjHEdBqpoEQMLrfPA==
+X-Received: by 2002:a17:907:6e9f:b0:ade:35fc:1a73 with SMTP id a640c23a62f3a-adfad686483mr812054466b.55.1750068277873;
+        Mon, 16 Jun 2025 03:04:37 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec815992bsm633223566b.13.2025.06.16.03.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 03:04:37 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nikolay Borisov <nik.borisov@suse.com>
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] x86/its: fix an ifdef typo in its_alloc()
+Date: Mon, 16 Jun 2025 12:04:32 +0200
+Message-ID: <20250616100432.22941-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] arm64: mm: make __create_pgd_mapping() and helpers
- non-void
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
- <20250531024545.1101304-3-yang@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250531024545.1101304-3-yang@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 31/05/2025 03:41, Yang Shi wrote:
-> The later patch will enhance __create_pgd_mapping() and related helpers
-> to split kernel linear mapping, it requires have return value.  So make
-> __create_pgd_mapping() and helpers non-void functions.
-> 
-> And move the BUG_ON() out of page table alloc helper since failing
-> splitting kernel linear mapping is not fatal and can be handled by the
-> callers in the later patch.  Have BUG_ON() after
-> __create_pgd_mapping_locked() returns to keep the current callers behavior
-> intact.
-> 
-> Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
-> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-With the nits below taken care of:
+Commit a82b26451de1 ("x86/its: explicitly manage permissions for ITS
+pages") reworks its_alloc() and introduces a typo in an ifdef
+conditional, referring to CONFIG_MODULE instead of CONFIG_MODULES.
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Fix this typo in its_alloc().
 
-> ---
->  arch/arm64/kernel/cpufeature.c |  10 ++-
->  arch/arm64/mm/mmu.c            | 130 +++++++++++++++++++++++----------
->  2 files changed, 99 insertions(+), 41 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 25e1fbfab6a3..e879bfcf853b 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1933,9 +1933,9 @@ static bool has_pmuv3(const struct arm64_cpu_capabilities *entry, int scope)
->  #define KPTI_NG_TEMP_VA		(-(1UL << PMD_SHIFT))
->  
->  extern
-> -void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
-> -			     phys_addr_t size, pgprot_t prot,
-> -			     phys_addr_t (*pgtable_alloc)(int), int flags);
-> +int create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
-> +			    phys_addr_t size, pgprot_t prot,
-> +			    phys_addr_t (*pgtable_alloc)(int), int flags);
->  
->  static phys_addr_t __initdata kpti_ng_temp_alloc;
->  
-> @@ -1957,6 +1957,7 @@ static int __init __kpti_install_ng_mappings(void *__unused)
->  	u64 kpti_ng_temp_pgd_pa = 0;
->  	pgd_t *kpti_ng_temp_pgd;
->  	u64 alloc = 0;
-> +	int err;
->  
->  	if (levels == 5 && !pgtable_l5_enabled())
->  		levels = 4;
-> @@ -1986,9 +1987,10 @@ static int __init __kpti_install_ng_mappings(void *__unused)
->  		// covers the PTE[] page itself, the remaining entries are free
->  		// to be used as a ad-hoc fixmap.
->  		//
-> -		create_kpti_ng_temp_pgd(kpti_ng_temp_pgd, __pa(alloc),
-> +		err = create_kpti_ng_temp_pgd(kpti_ng_temp_pgd, __pa(alloc),
->  					KPTI_NG_TEMP_VA, PAGE_SIZE, PAGE_KERNEL,
->  					kpti_ng_pgd_alloc, 0);
-> +		BUG_ON(err);
->  	}
->  
->  	cpu_install_idmap();
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index ea6695d53fb9..775c0536b194 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -189,15 +189,16 @@ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
->  	} while (ptep++, addr += PAGE_SIZE, addr != end);
->  }
->  
-> -static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
-> -				unsigned long end, phys_addr_t phys,
-> -				pgprot_t prot,
-> -				phys_addr_t (*pgtable_alloc)(int),
-> -				int flags)
-> +static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
-> +			       unsigned long end, phys_addr_t phys,
-> +			       pgprot_t prot,
-> +			       phys_addr_t (*pgtable_alloc)(int),
-> +			       int flags)
->  {
->  	unsigned long next;
->  	pmd_t pmd = READ_ONCE(*pmdp);
->  	pte_t *ptep;
-> +	int ret = 0;
->  
->  	BUG_ON(pmd_sect(pmd));
->  	if (pmd_none(pmd)) {
-> @@ -208,6 +209,10 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
->  			pmdval |= PMD_TABLE_PXN;
->  		BUG_ON(!pgtable_alloc);
->  		pte_phys = pgtable_alloc(PAGE_SHIFT);
-> +		if (pte_phys == -1) {
+Fixes: a82b26451de1 ("x86/its: explicitly manage permissions for ITS pages")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ arch/x86/kernel/alternative.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It would be better to have a macro definition for the invalid PA case instead of
-using the magic -1 everywhere. I think it can be local to this file. Perhaps:
-
-#define INVAL_PHYS_ADDR -1
-
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
->  		ptep = pte_set_fixmap(pte_phys);
->  		init_clear_pgtable(ptep);
->  		ptep += pte_index(addr);
-> @@ -239,13 +244,17 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
->  	 * walker.
->  	 */
->  	pte_clear_fixmap();
-> +
-> +out:
-> +	return ret;
->  }
->  
-> -static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
-> -		     phys_addr_t phys, pgprot_t prot,
-> -		     phys_addr_t (*pgtable_alloc)(int), int flags)
-> +static int init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
-> +		    phys_addr_t phys, pgprot_t prot,
-> +		    phys_addr_t (*pgtable_alloc)(int), int flags)
->  {
->  	unsigned long next;
-> +	int ret = 0;
->  
->  	do {
->  		pmd_t old_pmd = READ_ONCE(*pmdp);
-> @@ -264,22 +273,27 @@ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
->  			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
->  						      READ_ONCE(pmd_val(*pmdp))));
->  		} else {
-> -			alloc_init_cont_pte(pmdp, addr, next, phys, prot,
-> +			ret = alloc_init_cont_pte(pmdp, addr, next, phys, prot,
->  					    pgtable_alloc, flags);
-> +			if (ret)
-> +				break;
->  
->  			BUG_ON(pmd_val(old_pmd) != 0 &&
->  			       pmd_val(old_pmd) != READ_ONCE(pmd_val(*pmdp)));
->  		}
->  		phys += next - addr;
->  	} while (pmdp++, addr = next, addr != end);
-> +
-> +	return ret;
->  }
->  
-> -static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
-> -				unsigned long end, phys_addr_t phys,
-> -				pgprot_t prot,
-> -				phys_addr_t (*pgtable_alloc)(int), int flags)
-> +static int alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
-> +			       unsigned long end, phys_addr_t phys,
-> +			       pgprot_t prot,
-> +			       phys_addr_t (*pgtable_alloc)(int), int flags)
->  {
->  	unsigned long next;
-> +	int ret = 0;
->  	pud_t pud = READ_ONCE(*pudp);
->  	pmd_t *pmdp;
->  
-> @@ -295,6 +309,10 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
->  			pudval |= PUD_TABLE_PXN;
->  		BUG_ON(!pgtable_alloc);
->  		pmd_phys = pgtable_alloc(PMD_SHIFT);
-> +		if (pmd_phys == -1) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
->  		pmdp = pmd_set_fixmap(pmd_phys);
->  		init_clear_pgtable(pmdp);
->  		pmdp += pmd_index(addr);
-> @@ -314,21 +332,27 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
->  		    (flags & NO_CONT_MAPPINGS) == 0)
->  			__prot = __pgprot(pgprot_val(prot) | PTE_CONT);
->  
-> -		init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
-> +		ret = init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
-> +		if (ret)
-> +			break;
->  
->  		pmdp += pmd_index(next) - pmd_index(addr);
->  		phys += next - addr;
->  	} while (addr = next, addr != end);
->  
->  	pmd_clear_fixmap();
-> +
-> +out:
-> +	return ret;
->  }
->  
-> -static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
-> -			   phys_addr_t phys, pgprot_t prot,
-> -			   phys_addr_t (*pgtable_alloc)(int),
-> -			   int flags)
-> +static int alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
-> +			  phys_addr_t phys, pgprot_t prot,
-> +			  phys_addr_t (*pgtable_alloc)(int),
-> +			  int flags)
->  {
->  	unsigned long next;
-> +	int ret = 0;
->  	p4d_t p4d = READ_ONCE(*p4dp);
->  	pud_t *pudp;
->  
-> @@ -340,6 +364,10 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
->  			p4dval |= P4D_TABLE_PXN;
->  		BUG_ON(!pgtable_alloc);
->  		pud_phys = pgtable_alloc(PUD_SHIFT);
-> +		if (pud_phys == -1) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
->  		pudp = pud_set_fixmap(pud_phys);
->  		init_clear_pgtable(pudp);
->  		pudp += pud_index(addr);
-> @@ -369,8 +397,10 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
->  			BUG_ON(!pgattr_change_is_safe(pud_val(old_pud),
->  						      READ_ONCE(pud_val(*pudp))));
->  		} else {
-> -			alloc_init_cont_pmd(pudp, addr, next, phys, prot,
-> +			ret = alloc_init_cont_pmd(pudp, addr, next, phys, prot,
->  					    pgtable_alloc, flags);
-> +			if (ret)
-> +				break;
->  
->  			BUG_ON(pud_val(old_pud) != 0 &&
->  			       pud_val(old_pud) != READ_ONCE(pud_val(*pudp)));
-> @@ -379,14 +409,18 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
->  	} while (pudp++, addr = next, addr != end);
->  
->  	pud_clear_fixmap();
-> +
-> +out:
-> +	return ret;
->  }
->  
-> -static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
-> -			   phys_addr_t phys, pgprot_t prot,
-> -			   phys_addr_t (*pgtable_alloc)(int),
-> -			   int flags)
-> +static int alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
-> +			  phys_addr_t phys, pgprot_t prot,
-> +			  phys_addr_t (*pgtable_alloc)(int),
-> +			  int flags)
->  {
->  	unsigned long next;
-> +	int ret = 0;
->  	pgd_t pgd = READ_ONCE(*pgdp);
->  	p4d_t *p4dp;
->  
-> @@ -398,6 +432,10 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
->  			pgdval |= PGD_TABLE_PXN;
->  		BUG_ON(!pgtable_alloc);
->  		p4d_phys = pgtable_alloc(P4D_SHIFT);
-> +		if (p4d_phys == -1) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
->  		p4dp = p4d_set_fixmap(p4d_phys);
->  		init_clear_pgtable(p4dp);
->  		p4dp += p4d_index(addr);
-> @@ -412,8 +450,10 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
->  
->  		next = p4d_addr_end(addr, end);
->  
-> -		alloc_init_pud(p4dp, addr, next, phys, prot,
-> +		ret = alloc_init_pud(p4dp, addr, next, phys, prot,
->  			       pgtable_alloc, flags);
-> +		if (ret)
-> +			break;
->  
->  		BUG_ON(p4d_val(old_p4d) != 0 &&
->  		       p4d_val(old_p4d) != READ_ONCE(p4d_val(*p4dp)));
-> @@ -422,23 +462,27 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
->  	} while (p4dp++, addr = next, addr != end);
->  
->  	p4d_clear_fixmap();
-> +
-> +out:
-> +	return ret;
->  }
->  
-> -static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
-> -					unsigned long virt, phys_addr_t size,
-> -					pgprot_t prot,
-> -					phys_addr_t (*pgtable_alloc)(int),
-> -					int flags)
-> +static int __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
-> +				       unsigned long virt, phys_addr_t size,
-> +				       pgprot_t prot,
-> +				       phys_addr_t (*pgtable_alloc)(int),
-> +				       int flags)
->  {
->  	unsigned long addr, end, next;
->  	pgd_t *pgdp = pgd_offset_pgd(pgdir, virt);
-> +	int ret = 0;
->  
->  	/*
->  	 * If the virtual and physical address don't have the same offset
->  	 * within a page, we cannot map the region as the caller expects.
->  	 */
->  	if (WARN_ON((phys ^ virt) & ~PAGE_MASK))
-> -		return;
-> +		return -EINVAL;
->  
->  	phys &= PAGE_MASK;
->  	addr = virt & PAGE_MASK;
-> @@ -446,10 +490,14 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
->  
->  	do {
->  		next = pgd_addr_end(addr, end);
-> -		alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
-> +		ret = alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
->  			       flags);
-> +		if (ret)
-> +			break;
->  		phys += next - addr;
->  	} while (pgdp++, addr = next, addr != end);
-> +
-> +	return ret;
->  }
->  
->  static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
-> @@ -458,17 +506,20 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
->  				 phys_addr_t (*pgtable_alloc)(int),
->  				 int flags)
->  {
-> +	int err;
-> +
->  	mutex_lock(&fixmap_lock);
-> -	__create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
-> -				    pgtable_alloc, flags);
-> +	err = __create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
-> +					  pgtable_alloc, flags);
-> +	BUG_ON(err);
->  	mutex_unlock(&fixmap_lock);
->  }
->  
->  #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->  extern __alias(__create_pgd_mapping_locked)
-> -void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
-> -			     phys_addr_t size, pgprot_t prot,
-> -			     phys_addr_t (*pgtable_alloc)(int), int flags);
-> +int create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
-> +			    phys_addr_t size, pgprot_t prot,
-> +			    phys_addr_t (*pgtable_alloc)(int), int flags);
->  #endif
-
-Personally I would have converted this from an alias to a wrapper:
-
-void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
-			     phys_addr_t size, pgprot_t prot,
-			     phys_addr_t (*pgtable_alloc)(int), int flags)
-{
-	int ret;
-
-	ret = __create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
-					  pgtable_alloc, flags);
-	BUG_ON(err);
-}
-
-Then there is no churn in cpufeature.c. But it's not a strong opinion. If you
-prefer it like this then I'm ok with it (We'll need to see what Catalin and Will
-prefer ultimately anyway).
-
-Thanks,
-Ryan
-
->  
->  static phys_addr_t __pgd_pgtable_alloc(int shift)
-> @@ -476,13 +527,17 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
->  	/* Page is zeroed by init_clear_pgtable() so don't duplicate effort. */
->  	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL & ~__GFP_ZERO);
->  
-> -	BUG_ON(!ptr);
-> +	if (!ptr)
-> +		return -1;
-> +
->  	return __pa(ptr);
->  }
->  
->  static phys_addr_t pgd_pgtable_alloc(int shift)
->  {
->  	phys_addr_t pa = __pgd_pgtable_alloc(shift);
-> +	if (pa == -1)
-> +		goto out;
->  	struct ptdesc *ptdesc = page_ptdesc(phys_to_page(pa));
->  
->  	/*
-> @@ -498,6 +553,7 @@ static phys_addr_t pgd_pgtable_alloc(int shift)
->  	else if (shift == PMD_SHIFT)
->  		BUG_ON(!pagetable_pmd_ctor(ptdesc));
->  
-> +out:
->  	return pa;
->  }
->  
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 6455f7f751b3..9ae80fa904a2 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -228,7 +228,7 @@ static void *its_alloc(void)
+ 	struct its_array *pages = &its_pages;
+ 	void *page;
+ 
+-#ifdef CONFIG_MODULE
++#ifdef CONFIG_MODULES
+ 	if (its_mod)
+ 		pages = &its_mod->arch.its_pages;
+ #endif
+-- 
+2.49.0
 
