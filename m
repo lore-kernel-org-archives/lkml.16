@@ -1,78 +1,78 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F02BF018
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CB22DBF71
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081951; cv=none; b=k78dgQ3/PzapE0aLGeeeqoZhyE7VJ3HeE8CWoBDTk62nQa9woZ048ZLJQpr+HEHNM8EmY9aTnpGBR0/jSjyoYe1sFWQy1tge8p0ZIH8vgft3mkMUP2Snz91CeMfvd7x6wwULPTBzRGO84sEctBOF/drHsWLPmgJDxQjHytAU7SI=
+	t=1750081956; cv=none; b=d7zYt7/cdBXa0CAeAnsKkzWTzvww+hJhj9CLtwqzGBQr9Dz1XbldA3qUnRjHuvJU9AN5UZUnZCaD7Tzk2p1B0gCzCg5D40AbbNzG9rRB3hKuFaTCmnV8XxV7q9vc7DP6l8LCOGAlSYHSAuNvcxRep9UMHjCIzR0QZeiNR00WKp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081951; c=relaxed/simple;
-	bh=NuvAG5Ic7stlgpTDpW1Ft+SUtgwCL1O/JOF3GB6Clf0=;
+	s=arc-20240116; t=1750081956; c=relaxed/simple;
+	bh=/8TsCVZKOPE1DhRIUaatqoY0vFG3mdYqkBZFpcFjoEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T84n8feMrIlFOuqKmX8IBwmn10g7cEV97NX8VVnUP5+q2BifEcQgz+8dL8wfy/Lu78lUXHhbNzf5XCpqHHnWvMpSxBZFCeIWOVWtInDn+i4/5+iPhNC8v8fcNKhNIupPVctcHwtruJS9fIcJnPR3lnHpE9DFmsbwjplUXJbVDjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RbZwnZZz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c7ga4orI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RbZwnZZz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c7ga4orI; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=f7ha1cYrADXfe6aAHxK2HWwBTHpjFDy0QgqyRvdtJOzQ7ltFQqZIweL2XUG3yG+93ScAnrjvsMgiZbMGdDDbM5vmkQUDZ2q1fQCQt/H68WTAotd0BzGupotHqEDYO6Ruew+l9T0cxmsmgDhdKqbWIz9+0NXy+MGrZaFDy6XGSUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bHV0K0Tc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uFbpwRGD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZsErYesK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M5ekM3xO; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RbZwnZZz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c7ga4orI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RbZwnZZz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c7ga4orI"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bHV0K0Tc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uFbpwRGD";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZsErYesK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M5ekM3xO"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 82C51211E8;
-	Mon, 16 Jun 2025 13:52:23 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 78A3B1F74D;
+	Mon, 16 Jun 2025 13:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750081943; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1750081938; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QwIgB06OxaspRxHAY+9bd+ehKx+2dZwQV4n7zKbdfq8=;
-	b=RbZwnZZzNxkdmyLx+iPMvU+wPqlL8I9WR+GrFYz3KH2F5G98PiQhcRzc1BBIq0p8fxNgQQ
-	9Un/o6oOx+znwKumCcAcuZg70yuR8fyD5U8HsYMvhUgUVncy4uNz2Ie77r6wLH0thQjwpw
-	NfEwVl+qwBqo+TgkkUQaBAW5Q+nhbCM=
+	bh=HTx+hI4xt6iSJJj4xnIqdQLTXs9ciYhDC9ckQWuC4pM=;
+	b=bHV0K0Tc2UHrdTB6pmoMJkle/JGx5tAu128OpT0+XaqtCPubWva+09OQjWl+GFTh+0GhtJ
+	EbEohU3JIaU55N5+ARi89pWcUPKBY4dVVTQMdgybYQueAkEfAYQzsv4S5d3f9EZ6oWbu0T
+	hNfFBNtoLIUR7cLd3zkrDYwPiaYDrbg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750081943;
+	s=susede2_ed25519; t=1750081938;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QwIgB06OxaspRxHAY+9bd+ehKx+2dZwQV4n7zKbdfq8=;
-	b=c7ga4orIVC00MD6dDsTpwW45tgdPIc7C2BBRF+sr7zCmBipwX/EhJPJbUcUdjyqXB+FuUf
-	xGudF2PXBL62RtBg==
-Authentication-Results: smtp-out1.suse.de;
+	bh=HTx+hI4xt6iSJJj4xnIqdQLTXs9ciYhDC9ckQWuC4pM=;
+	b=uFbpwRGDOh7yrfbDCVIIoTOqURviulPjnhV7eV76YsFj2DyXcHLqMhwnc+ABOnO08Ya+X8
+	jS+JSdZlM4BOH/Ag==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750081943; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1750081933; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QwIgB06OxaspRxHAY+9bd+ehKx+2dZwQV4n7zKbdfq8=;
-	b=RbZwnZZzNxkdmyLx+iPMvU+wPqlL8I9WR+GrFYz3KH2F5G98PiQhcRzc1BBIq0p8fxNgQQ
-	9Un/o6oOx+znwKumCcAcuZg70yuR8fyD5U8HsYMvhUgUVncy4uNz2Ie77r6wLH0thQjwpw
-	NfEwVl+qwBqo+TgkkUQaBAW5Q+nhbCM=
+	bh=HTx+hI4xt6iSJJj4xnIqdQLTXs9ciYhDC9ckQWuC4pM=;
+	b=ZsErYesKIFG+499bMGk0cTXMjkXliQ+4zpeFmnUnHID/6QJ3GoCuNC1FJ/6Zq311pDnEGP
+	QsIu0hEy5BH+E2OEce3KfznYkHC8SGjCNvw+3RcELcP5M7AvvvY1cVsynXTkQ3kc1dEkOJ
+	z/9u8YZXOEzXr55eiZfVIwhxP/Al1yE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750081943;
+	s=susede2_ed25519; t=1750081933;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QwIgB06OxaspRxHAY+9bd+ehKx+2dZwQV4n7zKbdfq8=;
-	b=c7ga4orIVC00MD6dDsTpwW45tgdPIc7C2BBRF+sr7zCmBipwX/EhJPJbUcUdjyqXB+FuUf
-	xGudF2PXBL62RtBg==
+	bh=HTx+hI4xt6iSJJj4xnIqdQLTXs9ciYhDC9ckQWuC4pM=;
+	b=M5ekM3xO0Kwk4MCEbfDEPURmwlYNpIWho+Y9Ggaw320rayuyJPH0d3YFSLx13olrgxxpGQ
+	TG0r3RtPfyqX4oBQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 47F1E13AF1;
-	Mon, 16 Jun 2025 13:52:17 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E142013ADC;
+	Mon, 16 Jun 2025 13:52:12 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ePvhDpEhUGhHLwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 13:52:17 +0000
+	id MM5LM4whUGhHLwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 13:52:12 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: David Hildenbrand <david@redhat.com>,
@@ -84,9 +84,9 @@ Cc: David Hildenbrand <david@redhat.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v7 11/11] mm,memory_hotplug: Drop status_change_nid parameter from memory_notify
-Date: Mon, 16 Jun 2025 15:51:54 +0200
-Message-ID: <20250616135158.450136-12-osalvador@suse.de>
+Subject: [PATCH v7 04/11] mm,slub: Use node-notifier instead of memory-notifier
+Date: Mon, 16 Jun 2025 15:51:47 +0200
+Message-ID: <20250616135158.450136-5-osalvador@suse.de>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250616135158.450136-1-osalvador@suse.de>
 References: <20250616135158.450136-1-osalvador@suse.de>
@@ -105,13 +105,13 @@ X-Spamd-Result: default: False [-1.30 / 50.00];
 	R_MISSING_CHARSET(0.50)[];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FREEMAIL_CC(0.00)[redhat.com,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org,suse.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	RSPAMD_URIBL_FAIL(0.00)[oracle.com:server fail,suse.cz:server fail,huawei.com:server fail];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,oracle.com:email,suse.de:email,suse.de:mid,suse.cz:email];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[10];
@@ -119,95 +119,95 @@ X-Spamd-Result: default: False [-1.30 / 50.00];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCVD_TLS_ALL(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	R_RATELIMIT(0.00)[to_ip_from(RLsc83pr41xu6y1i6mw9yajrf5)];
+	TO_DN_SOME(0.00)[];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com]
 X-Spam-Level: 
 X-Spam-Flag: NO
 X-Spam-Score: -1.30
 
-There no users left of status_change_nid, so drop it from memory_notify
-struct.
+slub is only concerned when a numa node changes its memory state,
+so stop using the memory notifier and use the new numa node notifer
+instead.
 
-Suggested-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 Acked-by: David Hildenbrand <david@redhat.com>
 ---
- Documentation/core-api/memory-hotplug.rst | 7 -------
- include/linux/memory.h                    | 1 -
- mm/memory_hotplug.c                       | 4 ----
- 3 files changed, 12 deletions(-)
+ mm/slub.c | 28 +++++++++-------------------
+ 1 file changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/core-api/memory-hotplug.rst b/Documentation/core-api/memory-hotplug.rst
-index fb84e78968b2..8fc97c2379de 100644
---- a/Documentation/core-api/memory-hotplug.rst
-+++ b/Documentation/core-api/memory-hotplug.rst
-@@ -59,17 +59,10 @@ The third argument (arg) passes a pointer of struct memory_notify::
- 	struct memory_notify {
- 		unsigned long start_pfn;
- 		unsigned long nr_pages;
--		int status_change_nid;
- 	}
+diff --git a/mm/slub.c b/mm/slub.c
+index f92b43d36adc..3ff0b94f3eeb 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -6146,7 +6146,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+ 	return __kmem_cache_do_shrink(s);
+ }
  
- - start_pfn is start_pfn of online/offline memory.
- - nr_pages is # of pages of online/offline memory.
--- status_change_nid is set node id when N_MEMORY of nodemask is (will be)
--  set/clear. It means a new(memoryless) node gets new memory by online and a
--  node loses all memory. If this is -1, then nodemask status is not changed.
+-static int slab_mem_going_offline_callback(void *arg)
++static int slab_mem_going_offline_callback(void)
+ {
+ 	struct kmem_cache *s;
+ 
+@@ -6160,21 +6160,12 @@ static int slab_mem_going_offline_callback(void *arg)
+ 	return 0;
+ }
+ 
+-static int slab_mem_going_online_callback(void *arg)
++static int slab_mem_going_online_callback(int nid)
+ {
+ 	struct kmem_cache_node *n;
+ 	struct kmem_cache *s;
+-	struct memory_notify *marg = arg;
+-	int nid = marg->status_change_nid;
+ 	int ret = 0;
+ 
+-	/*
+-	 * If the node's memory is already available, then kmem_cache_node is
+-	 * already created. Nothing to do.
+-	 */
+-	if (nid < 0)
+-		return 0;
 -
--  If status_changed_nid* >= 0, callback should create/discard structures for the
--  node if necessary.
+ 	/*
+ 	 * We are bringing a node online. No memory is available yet. We must
+ 	 * allocate a kmem_cache_node structure in order to bring the node
+@@ -6214,17 +6205,16 @@ static int slab_mem_going_online_callback(void *arg)
+ static int slab_memory_callback(struct notifier_block *self,
+ 				unsigned long action, void *arg)
+ {
++	struct node_notify *nn = arg;
++	int nid = nn->nid;
+ 	int ret = 0;
  
- It is possible to get notified for MEM_CANCEL_ONLINE without having been notified
- for MEM_GOING_ONLINE, and the same applies to MEM_CANCEL_OFFLINE and
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index a9ccd6579422..de8b898ada3f 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -109,7 +109,6 @@ struct memory_notify {
- 	unsigned long altmap_nr_pages;
- 	unsigned long start_pfn;
- 	unsigned long nr_pages;
--	int status_change_nid;
- };
+ 	switch (action) {
+-	case MEM_GOING_ONLINE:
+-		ret = slab_mem_going_online_callback(arg);
+-		break;
+-	case MEM_GOING_OFFLINE:
+-		ret = slab_mem_going_offline_callback(arg);
++	case NODE_ADDING_FIRST_MEMORY:
++		ret = slab_mem_going_online_callback(nid);
+ 		break;
+-	case MEM_ONLINE:
+-	case MEM_CANCEL_OFFLINE:
++	case NODE_REMOVING_LAST_MEMORY:
++		ret = slab_mem_going_offline_callback();
+ 		break;
+ 	}
+ 	if (ret)
+@@ -6300,7 +6290,7 @@ void __init kmem_cache_init(void)
+ 			sizeof(struct kmem_cache_node),
+ 			SLAB_HWCACHE_ALIGN | SLAB_NO_OBJ_EXT, 0, 0);
  
- struct notifier_block;
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e8ccfe4cada2..bfaa570c0685 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1153,7 +1153,6 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 	struct memory_notify mem_arg = {
- 		.start_pfn = pfn,
- 		.nr_pages = nr_pages,
--		.status_change_nid = NUMA_NO_NODE,
- 	};
- 	struct node_notify node_arg = {
- 		.nid = NUMA_NO_NODE,
-@@ -1181,7 +1180,6 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 	if (!node_state(nid, N_MEMORY)) {
- 		/* Adding memory to the node for the first time */
- 		node_arg.nid = nid;
--		mem_arg.status_change_nid = nid;
- 		ret = node_notify(NODE_ADDING_FIRST_MEMORY, &node_arg);
- 		ret = notifier_to_errno(ret);
- 		if (ret)
-@@ -1905,7 +1903,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 	struct memory_notify mem_arg = {
- 		.start_pfn = start_pfn,
- 		.nr_pages = nr_pages,
--		.status_change_nid = NUMA_NO_NODE,
- 	};
- 	struct node_notify node_arg = {
- 		.nid = NUMA_NO_NODE,
-@@ -1976,7 +1973,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 	 */
- 	if (nr_pages >= pgdat->node_present_pages) {
- 		node_arg.nid = node;
--		mem_arg.status_change_nid = node;
- 		ret = node_notify(NODE_REMOVING_LAST_MEMORY, &node_arg);
- 		ret = notifier_to_errno(ret);
- 		if (ret)
+-	hotplug_memory_notifier(slab_memory_callback, SLAB_CALLBACK_PRI);
++	hotplug_node_notifier(slab_memory_callback, SLAB_CALLBACK_PRI);
+ 
+ 	/* Able to allocate the per node structures */
+ 	slab_state = PARTIAL;
 -- 
 2.49.0
 
