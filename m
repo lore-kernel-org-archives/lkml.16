@@ -1,93 +1,110 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9718FDD2;
-	Mon, 16 Jun 2025 07:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D00242AB0;
+	Mon, 16 Jun 2025 07:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750060115; cv=none; b=JY50neUjM2nMmWWCeAL/BY0OquClWRrZuGvylpxfUtPWi7si1/JW3ivduA8c20cVVpXJX5vquXItD2h/Yd9D/hOl+orem8MsIbsQZWvhlu+CctJVUzozzIAaJUP6PLrn27Vw/KtLZ9yLRrwUxNpxjzrIuo0+7ypxikoW5BFYAos=
+	t=1750060292; cv=none; b=FNBf/X0iRKKGsoz6d5pVbzrberEnjwuqbCn8JXY+hObfjPkQDrCGzNQtFHGSpi+oE8r4eGpzaGmkRavsE11HeOWNISkrNWJogoiiwdxKuROt3R42MHo/tOOHRkGOx12juc+2XTE+6MFih4jUWaHHiJ4aRf4Cbg1+Rj4EVXbaRVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750060115; c=relaxed/simple;
-	bh=gcW7ZhojFDRnb7CjmSy4Y2Jh/XxIrpKyzi5TmlhgjS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WRxgfttZElAT3awYEPLW2eswqMY9ULMykoijM49rk6SX75lpk6ug/Wi3JKhahBG6JDoozRWsBYvXqUr0TxsHdvU7q9fm1HHv/fQZUoM149bh9mG0TXopewYAQlnexkPj8M2EofL6+7QIxQJSV71fhIHGmPiIu5W88E3IDo8++jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=RB9+UGxW; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="RB9+UGxW"
-Received: from canonical.com (118-163-61-247.hinet-ip.hinet.net [118.163.61.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 89D8A3FC24;
-	Mon, 16 Jun 2025 07:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1750060104;
-	bh=0sMODnku3hXVLi3524sm5kQNYzvUnfCHr4KSrFoxIN8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=RB9+UGxWZP5tQcDQWyqaMnAoo+/svHQTHqgA9n3jwfjIJ+HxD1XQeRZjhtWNfjbj4
-	 QjQgkDlCGLemhSrPjAYloybFCxy0VCpoIpQWG1wPh6tOwATsbnl7ligrBlNJ3n0Z0G
-	 hgPkUSRYmViwaDcGSnTbZOuOCiXocv8Q6Oheq+ucaJJUxs6CeTQHN0SAMgbeIs1XR4
-	 i1ZNXelA/BKAiaDvk/RgGoeJGiPPtW/gWq93+eAfTRLU0ub/OPFVS+b7A1Txl9Ma7f
-	 LjEEjpJmHCRaUPyNXbjlZad8ZhlIlE3wdKCtzjK7yq4lnRBQtHWi6Upr1/Ebygzu2O
-	 mLrlplHQ4K02Q==
-From: Ivan Hu <ivan.hu@canonical.com>
-To: hdegoede@redhat.com,
-	jesse.huang@portwell.com.tw,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ivan.hu@canonical.com
-Subject: [PATCH v2] platform/x86: portwell-ec: Move watchdog device under correct platform hierarchy
-Date: Mon, 16 Jun 2025 15:48:19 +0800
-Message-Id: <20250616074819.63547-1-ivan.hu@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750060292; c=relaxed/simple;
+	bh=YuyT1YyBuYG4wqa+Ht7aSBXnGvxZhhg7A9glic+jqSA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cT4flmaodmR6kiAdAODGp4cvtFVJOBc+eC6Zwj7OK2JaHxcq7fWokBA+CmxYzgWrQqgoukxdzANjgMSBuA8OpVnsIEu+OVPNekc80KTJpjZEvuWAVALB1iKSNUM8tdTCLSOxIk6I60zsbTrbKFv2ZkAbp8Ku9ZIZgnR3GDXX17M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: zesmtpsz8t1750060147t8ffa88a1
+X-QQ-Originating-IP: TMyvGnHlVWeQP6sEE0T+5jBz56pJK9ZPBzZTiCvA75E=
+Received: from [192.168.3.231] ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 16 Jun 2025 15:49:05 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 11962215163039328790
+Message-ID: <6E9B7F9B8D47F98B+d6fd7e8f-de81-4ec3-b3ae-f85bbb744e66@chenxiaosong.com>
+Date: Mon, 16 Jun 2025 15:49:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] nfsd: prevent callback tasks running concurrently
+From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>,
+ Li Lingfeng <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Neil Brown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
+ <20250220-nfsd-callback-v2-1-6a57f46e1c3a@kernel.org>
+ <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
+ <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
+ <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
+In-Reply-To: <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: Mnff/9wu0oJYO3GB4f1kHYl+nPZWrKexqFBNP0dLbyIHs4e2EHRAu3IJ
+	d8XumO6/xxcQNeDtb2VGsc1xGnNPOBsPmyDlRPag1sOcV7TVoHgPpC5GTLFKghSqZaiW/xu
+	iMgIxIjBYm2tFq4flEikrJ6FYo9GZQ3hu7pA0/jENXjwFrZXbPOEoeuCTiNADjpe2YorwNF
+	nT4n2ucfJ54MGTAGI6mUvV6MtHTp+gB6wsbJIrZJX0hWJnK8cSDN2YSnNXnWm6bRaU86iv3
+	EJhQEQ6PErpU5NhFwy1XGY5JFm4HcRTEHXMCUexpwi8whbELZXZmNyapyYO/3QN6enb3XNx
+	Fc3D/g1POk43anjEqNnQ5xVQjDiE/3ythgw+6eCnx/Pl1pPVoOcSQjZfNHl1EHtx3cJpbWw
+	EnPVAp5cKnIYObrHT5MlN5X+p6jToStMoHj9axaUcbi+dmObEu7D8F6X+INK3ZhZueqCQd4
+	NfOPXmaYQX5RE5lUARch0YYyWzpEVG2vDv+Ewm61Wypf+SYuBVb3C2J55S7L/tdjpmJWSdR
+	YF5lLHL1g7pywG0dSFebr07wZT//N9ZWpolxvIxunG4tYm4GcOTpVhMpUOja2u4y9qoRBZ4
+	YCsIp//C/RvWFHA7hGGfpcyDQZLsyMTqyVbYZREX9/d5F1z+TDVSmfc9vuaNOt7wyqrX2kJ
+	bYTKS+jb1LzyPZZPUI9KUbVrGcFRpK/fwJNzioqBx9LYNL3uT2X/IxyLMqkVCFVZi9/4B2V
+	U3EiC7gsvaJT9XJy1YV0xtQtEB9H9QpyoN2uo2x/mehZUPNhmsVoUd0Wi2et9OgKlkTSVCN
+	lPdJFVNUb+wAbmWEEPpLLBJlOTiKYEaND0H4SMYTtvH0Cj2N5rKfeUN+qSVpyNetYUM9i3U
+	rbWXr33aSnWHz3KVDWVZjXHY6shQe6mdbJasuyVeX3Ouu5WswU4biBa/IXcjND4QevCh0TY
+	iwA71jE9VSPqx7HzoCMjaucwobLpigbb1P5A0nHV8oiui5XEvt7vVPD9OXgK+qAud1cyp/5
+	m9bQg1Zw==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-Without explicitly setting a parent for the watchdog device, the device is
-registered with a NULL parent. This causes device_add() (called internally
-by devm_watchdog_register_device()) to register the device under
-/sys/devices/virtual, since no parent is provided. The result is:
+Hi Jeff:
 
-DEVPATH=/devices/virtual/watchdog/watchdog0
+Do you have any suggestions for this null-ptr-deref issue?
 
-To fix this, assign &pdev->dev as the parent of the watchdog device before
-calling devm_watchdog_register_device(). This ensures the device is
-associated with the Portwell EC platform device and placed correctly in
-sysfs as:
+Here is the link to the vmcore analysis:
 
-DEVPATH=/devices/platform/portwell-ec/watchdog/watchdog0
+https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
 
-This aligns the device hierarchy with expectations and avoids misplacement
-under the virtual class.
+Thanks,
+ChenXiaoSong.
 
-Fixes: 835796753310 ("platform/x86: portwell-ec: Add GPIO and WDT driver for Portwell EC")
-Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
+在 2025/6/11 15:12, ChenXiaoSong 写道:
+> 在 2025/6/10 19:09, Jeff Layton 写道:
+>>
+>> Synchronization was probably too strong a word. I remember looking over
+>> this code and convincing myself that the probe callback wasn't subject
+>> to the same races as the others, but I think that was mostly because
+>> the outcome of those races was not harmful. Note that the probe itself
+>> can actually be run at the start of a completely unrelated callback to
+>> the same client.
+>>
+>> So you hit a NULL pointer in __queue_work()? The work_struct is
+>> embedded in the nfs4_client so that would probably imply that that the
+>> nfs4_client struct was corrupt?
+>>
+>> You may want to get a vmcore and analyze it if you can reproduce this.
+> 
+> Thanks for your reply.
+> 
+> I have already got a vmcore. Here is the link to the vmcore analysis:
+> 
+> https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in- 
+> nfsd4_probe_callback.html
+> 
+> Please let me know if you need any more detailed information.
+> 
+> Thanks,
+> ChenXiaoSong.
 
----
-v2: add Fixes tag
----
- drivers/platform/x86/portwell-ec.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-index 8b788822237b..3e019c51913e 100644
---- a/drivers/platform/x86/portwell-ec.c
-+++ b/drivers/platform/x86/portwell-ec.c
-@@ -236,6 +236,7 @@ static int pwec_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ec_wdt_dev.parent = &pdev->dev;
- 	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register Portwell EC Watchdog\n");
--- 
-2.34.1
 
