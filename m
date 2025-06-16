@@ -1,120 +1,106 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D80F1F428C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE321F3B8A;
+	Mon, 16 Jun 2025 08:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750061127; cv=none; b=KQyh2bJJXbzo+Fld22sM0koMUfQcsp5yM8ZWII1mf+S73hyj9WzLwWAcCdJkhS1NdBd7kVcyxY/RQAQQ2Z9ovQVzIyouwxlnRGqeF7KXVIYus6Lb9vl0ErPxciqccawoqeu7kJ1d3VYBsH8kXRn8TpdYZjTeP7XAvNHLASwktv4=
+	t=1750061156; cv=none; b=UowKmIdLFxf0Dm9P1KlqeGfZhcpDxzpXRz6MIO5aUX5F92jxhtAQA5V3cO8gkfYmIwPl3MjO2ubHK6IPmXQkZTbN+uTR+hFqYbq8tUmi1DL6pG1ThWR6zsJF17581oB6HK3x6V2A47MXiZTpqn0yf2HumgzFBi9tswNocoOq4kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750061127; c=relaxed/simple;
-	bh=nyf2g989nH7J3pvCSN0gr3wDLJxFEUoowOZ4vMGp6J8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iVyaDPmhAjkzuHjx2+7HLt0oqQruemQd+bQOXSKQSt6kmExk+iANINXkOfvucpPAiqPgPZj8jSKiLKpt3psR07wuqF0bY7SYXgkGWVetoKo8QoIWUmG0yqdlH/0FkeSf9s9GumNgfRLMHPuY+z5lrjqJ3hiMVGX5WJ+Cc+/tWEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JJefz5RG; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750061156; c=relaxed/simple;
+	bh=/ap91qCTSfqwZt+drR99+M7HfL8Z013gvOOenkeMFwU=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=d1uFgIR+e6yfU1CkDUYdvviQx84fgE5rR1YGZJubYjJlnpLpR9//YwUKDpzO6P8xjc3uByF7TW4ICvYh5shbGv3zOpe5I30fj3isDsGvf3yFkXGri9+zXPeh69uBBc69h8u+rycOv5lKxZ6zL60eGU8LLYk70fkxXfUN+B49b2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=eFCbuYCR; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JJefz5RG"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54b10594812so4157929e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750061123; x=1750665923; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ywH8Dejsdq3x0VdIrtMd2wFdmECbqVFAg+zOSDofJ2s=;
-        b=JJefz5RGZlrQY03Wq03TJ94YFJyignEWyGXHKpL+FwbygEHUAj9a3rxUI9EhYnTHyQ
-         wAyDY7n45nN0vHunGupFGfpKW1RXIrMYZa0uQ6brESkicX6ngQFf+mW+tTX67My81c7V
-         0qYpUlrs2TPt3I8tQxTV0ko+1218f/64A9QvZ44h4hW4Fnmiy5yVv0nFDUA7TOj0gz5t
-         1a7twkvo3jWhrGqPbQ8DUrkziGQeMeySx95fpptSTlMJAwTW+BHDPxY4FSpQPCWzFMkC
-         cOPETOxTx2QcvGBu6FTWIvgda9ggHLXmZgxFYoUtkrzHYWWRHti3EStFHzYiRemKgrIP
-         ZHWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750061123; x=1750665923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ywH8Dejsdq3x0VdIrtMd2wFdmECbqVFAg+zOSDofJ2s=;
-        b=O/6bxBbndgMNdFsZtpKNn/Dk6RR7XwUF1KMMyddqi+hsFZeSb6lTa0Ujwn59IlUNou
-         sE//OS5ClHCCevLs6E2QHgd00LE194c2NYMwXOxXWFT6/hClApFoWxEubfFSs/JTvkIb
-         LJTZOMLZ5XUU4iQBF8+pE/w5015ac53F4Iltj00/Zm+Hw/6u12uaKbZKQn9MM2nmXQiI
-         481pqYo85Xfm1dXaboW9kJEj+ahHjgKI3Y/47peoJicgKZ8/qXT6foeR23qYUgejaR2T
-         rTKyo4gGIXvNswn8J36DXRAXYviKOsm0xezZ3JDYpmPswrFNfdsIBcCujgcJM20/Hx9b
-         TymQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWglATdbwf4pRWLDpHYMwwC+QLebZVJII2oo70OMEnujzdwobGkLBTA+KeipHXeA5ek2KCqjnFQ4PrSOkk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOSTkN0Fd71NyCTYRck2kpxseCgIubpk/8wsievDViFz/7a+ts
-	vVHubsQ7dAWwERe1cfFXkdToNPk668zqf23yI+UNfwIfIXA6b5rg64YZ31RKpDZQjCyeiu7JDpE
-	o5zPa9zPD8TWHgJwOvtg8B0WQCYZECZrPuAQukPBpMQ==
-X-Gm-Gg: ASbGncv+derBbMPI1Nx6dRsAD0RlXMWfTE9SgnBYnxU6hNmJ/CGvvZPXgQwz5rueEvP
-	4MutBkd6jTaW2DFH8eRxH4/+5QpvmM3OrDEfGzP1YvnHapkXfFCqgN1kY4R90JGCmqUcTjXcdLV
-	eWoCrEbDxyWPveLHxHTIrTChjRjozW8lqYHhKbYfyRuBrRPkzpDnIa5t5maCSQ0K5NiH0pXwc1+
-	44=
-X-Google-Smtp-Source: AGHT+IHui39rGOe78ZVv1GL/qozjTCuN+gIRPTaD2LzbbRuwGK+ExSJGXv1lf4f3l/OzpiTJL7GG+3gb2jdEJtZBUck=
-X-Received: by 2002:a05:6512:3e07:b0:553:2fa8:8405 with SMTP id
- 2adb3069b0e04-553b6f4f34bmr2175898e87.56.1750061123552; Mon, 16 Jun 2025
- 01:05:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="eFCbuYCR"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FNVcqN028273;
+	Mon, 16 Jun 2025 01:05:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	pfpt0220; bh=JnrOOoAgr5uNgKTUzkhibZVApJlrnyyUF1e4XdpSyao=; b=eFC
+	buYCRPfa2gde9tw2PhlHtrV6Qi1V6PDTXPj2x6QNH/ByPlUT6+qZHukqC/a64kbl
+	Zmhl+5idPdqLZWRdHa2lmfkb9GJeYKR/tT42zXQOwMQFfvbrNbvwgP/G5RQ8UljX
+	eAnuTFBRVQdwQCcE5toAhd6YZFj3djwxcWYt5YRUYRldcucu9nGsLxDFftqpm/fX
+	9J4dOx/GkPOL/dFMRK3deSP6SKNh2b+EJ/y8SdFYHjYlS9KtHg7Ws2gF9XE49/we
+	FdR6ujUKtQoetyNMSfF5MMFY0iMFOpFRMETMcFKUR7U+QEeRrJueBk3qD+gZDIOd
+	1ZVASmzcW25ZJ5yiA0A==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 47a7w70rrp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 01:05:35 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 16 Jun 2025 01:05:34 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 16 Jun 2025 01:05:34 -0700
+Received: from maili.marvell.com (unknown [10.28.36.165])
+	by maili.marvell.com (Postfix) with SMTP id 771285E6875;
+	Mon, 16 Jun 2025 01:05:31 -0700 (PDT)
+Date: Mon, 16 Jun 2025 13:35:30 +0530
+From: Ratheesh Kannoth <rkannoth@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <linyunsheng@huawei.com>
+Subject: [RFC]Page pool buffers stuck in App's socket queue
+Message-ID: <20250616080530.GA279797@maili.marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
-In-Reply-To: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Jun 2025 10:05:12 +0200
-X-Gm-Features: AX0GCFsKseF3x4tMXUWhM7GW0aQJySrNOOS0VJu19t9Ohnme0LPMU6-HMe9h4i0
-Message-ID: <CAMRc=MeTmwgbHv9R_=GFmjkAV4Nvc-SeSCOz1k6pnGUrF+R9Mg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Introduce HDP support for STM32MP platforms
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-Authority-Analysis: v=2.4 cv=BIyzrEQG c=1 sm=1 tr=0 ts=684fd04f cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=TaUrKhdEcyyTM7VkM04A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA1MiBTYWx0ZWRfXwcB+8evqSl3f l1wUn1/nMgc6KwVcPWJWV8zMRgN6N/3k7kUxF4fXTXhDnSYie99co95TWKwaNa0ty0YVfnYHvFG zcW3se4AkDBamy7KPMU8zLOKEraAUxUU7v36IDONA1QIq+0lbGLJkanSMCNwj/hibeFmQWXgnFO
+ wf4bi5GCRlweYSpnt38LbOpgZ58xyr8O5jwrDAwXtMaiGBHwQZ5AU+fRdx06bgpr40R46LrEZEo AL1xpgOuVwdufhSyTIKjFMU3oYgqW8S7g5iKWAIqIP41vIrQFTVY6KJNcFlFkOwnycovieSsrJA JfiYC8q1S0ExjKPIZPgXeKcPBlsM+l07ZKVPKxStrQgZukYUGUJN6xsVQwyRPNcbHaiB7Vr/Fc3
+ p1zly/ow/s+wRJM7IK7uDigXpBFCeMIcHhrE5x2bqmsCrrkEnr+OAFPkBeRhHVo5x1Wz5jor
+X-Proofpoint-ORIG-GUID: rBFx7aqOJrr7i_B4GdzvNCM9-blkZE8w
+X-Proofpoint-GUID: rBFx7aqOJrr7i_B4GdzvNCM9-blkZE8w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
 
-On Fri, Jun 13, 2025 at 12:16=E2=80=AFPM Cl=C3=A9ment Le Goffic
-<clement.legoffic@foss.st.com> wrote:
->
-> This patch series introduces the Hardware Debug Port (HDP) support for
-> STM32MP platforms.
->
-> It includes updates to the mmio gpio driver, the addition of device tree
-> bindings, the HDP driver, and updates to the device tree files for
-> STM32MP13, STM32MP15,
-> and STM32MP25 SoCs.
-> The series also updates the MAINTAINERS file to include myself as the
-> maintainer for the STM32 HDP driver and adds the necessary
-> pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
->
-> Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
-> ---
+Hi,
 
-[snip]
+Recently customer faced a page pool leak issue And keeps on gettting following message in
+console.
+"page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
 
-> ---
-> Cl=C3=A9ment Le Goffic (9):
->       gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
->       dt-bindings: pinctrl: stm32: Introduce HDP
->       pinctrl: stm32: Introduce HDP driver
->       MAINTAINERS: add Cl=C3=A9ment Le Goffic as STM32 HDP maintainer
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
->       ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinct=
-rl node
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 b=
-oard
->
+Customer runs "ping" process in background and then does a interface down/up thru "ip" command.
 
-Patches 1-4 and 5-9 can go upstream independently. I suggest taking
-patch 1/9 through the GPIO tree and providing an immutable tag to
-Linus to take patches 2-4 through the pinctrl tree. Linus: are you OK
-with that?
+Marvell octeotx2 driver does destroy all resources (including page pool allocated for each queue of
+net device) during interface down event. This page pool destruction will wait for all page pool buffers
+allocated by that instance to return to the pool, hence the above message (if some buffers
+are stuck).
 
-Bart
+In the customer scenario, ping App opens both RAW and RAW6 sockets. Even though Customer ping
+only ipv4 address, this RAW6 socket receives some IPV6 Router Advertisement messages which gets generated
+in their network.
+
+[   41.643448]  raw6_local_deliver+0xc0/0x1d8
+[   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
+[   41.652149]  ip6_input_finish+0x48/0x70
+[   41.655976]  ip6_input+0x44/0xcc
+[   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
+[   41.663546]  ip6_sublist_rcv+0x16c/0x22c
+[   41.667460]  ipv6_list_rcv+0xf4/0x12c
+
+Those packets will never gets processed. And if customer does a interface down/up, page pool
+warnings will be shown in the console.
+
+Customer was asking us for a mechanism to drain these sockets, as they dont want to kill their Apps.
+The proposal is to have debugfs which shows "pid  last_processed_skb_time  number_of_packets  socket_fd/inode_number"
+for each raw6/raw4 sockets created in the system. and
+any write to the debugfs (any specific command) will drain the socket.
+
+1. Could you please comment on the proposal ?
+2. Could you suggest a better way ?
+
+-Ratheesh
