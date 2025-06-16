@@ -1,161 +1,116 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5204285C84;
-	Mon, 16 Jun 2025 12:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D82E424A;
+	Mon, 16 Jun 2025 12:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075372; cv=none; b=luO96/XbZ2v7L9+gcbZVuVkT0v7APMxmFr7aQL2mEGY9VV9QBBTifywXN98GUIRaMI+6rgHMFeNDk3HEp635gq11w55i/3vOuT3/ZmqfzhoiRZRbc3u1GVaq/kimKy6rpvEw7VphjDrhs7aX1Tg2KxDu+/j6KNHSdKNQ/R+0tUg=
+	t=1750075564; cv=none; b=tzIe96KNyNUSzP7KYI1z4meYQ4OGwEtTZrhZFIHe1zoPDdJGOR2laQDzcEmChb5bGNX/CPrDNC7tnl2ydiJUXG4rrDF0Ve4OXwpiyZ8cve70aBArlO9ig33AWItLr/eLDNSjL+jZBd5akQLYlnLqm7LAQDRUpcFRfe0fGydqbp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075372; c=relaxed/simple;
-	bh=vXBu7uwkxPOsvKdqrgHswhlxEEE0Wgvz5jbfmhZinlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V5rHDoT0DKLlKiN9ZPLbBL30XsDHuYZDeiMQk1Hp85B322pgzRyU5yxkalvr238mx8CHKRjvGVE50iRCY2I62BMvF0D97qN0a63mK+qDGeHKDJhxoXthicXHwLI+FofsAEJoqNIfZsI3ZUj94D/Bwj9k9g2e7gC9GHgy6Gh+Wqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6face1d58dcso71264276d6.2;
-        Mon, 16 Jun 2025 05:02:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750075368; x=1750680168;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ploSucNH29V90v2689/j3svshD2BMkR3XA3gPmC2bbo=;
-        b=riUuZmO9ufJc4MSveocOo8GmGmLfU0uuiUQ1uwnSpfCZTKAXFPx/baansQRtTdb2rJ
-         A64CulxiJULe89sdLZwf3W0aN4DW4YrqhK2/MyNZQpDPLEmqWQ7KTZ3b5QJs1F7rir25
-         Aokr996IoDzNe0GkciujQyt7SnrbO7wkaDKYJKQcJVndKJcO3SlHDvF+qt2JKT/haR5h
-         uj/fIdHaXJdWPBHmjljLhrzPr0no1H2uzzjbpAVErpGNCU9K1HCWU16qRJyOTRLOP2ro
-         AdD/AeF/WYQiAmmmvXMP8xriIQ4O0vcGso0PoMdTq+M5TuEcSM1KG+he4ipRb0GrcYu7
-         DwiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyiAxzoGGz9lAwOPoTvNt5lTW4Gzq9XPREOYbGniAKPPhTn4KolffL9bz+tqeIVH3UzHHNtz1cg5Gvs2Mp@vger.kernel.org, AJvYcCVqU/ylK5WXAKWQ8gQOK42dJJCuXlXSTBtVvX2L/SoMrMcl6zSu7I8DJFGaU1n8nZUtj07+BoheEk/6hJVtkbHFKyc=@vger.kernel.org, AJvYcCXHIaKAuHbNkMqfrbwLkw2o5MPDrfGMG21Jj62dQd+nBBkS1MqmmThjXM0hXEJLvVl6BG8yXdsqbWaS@vger.kernel.org, AJvYcCXLfLmWT2F7VM06HJY78LFWb7HDOXu3lYuW7zBzQCZJjdShzkCkvlYdfVWmZS8Gb/pt4lgTuVQG/MVO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzgiud/7pIXtnzAb1TpltoFnGZtEOUWnv8pG4gD/b8zdjZAvKQh
-	kQxqEdZeBuJXI82R3zpNIfV3ihiR/lCac3bNBdRDbOee4JOTGpJ/jSFepsoWB2bK
-X-Gm-Gg: ASbGncsFmQSeMiGpa4j0dJ3ttoS6gRyQiSKSBBiqQFFc1Ay0iOfSkDTv9oliVbkBnAW
-	rNZ86kumxvKhbg51M3Zj92NrhRPCZG5ng92tccZH8i0eOLIEq8T2yETZMPTqRZxfpwod4bdRbnM
-	0c+IA/t9fimcJa+4YQyEOoygCDF5JXlzgo/KtXvFFw9Jcsm5Y+rZI2f8JR4U9hwAcZIqXKLRuHl
-	GkHQ42y+wLBM+Z92OXSvHpubDPEZNefoNoMyudw97BF6qhoKGuYamZ/iDcxdbjEbTyMkqwrfhZT
-	WvwxB4PzqYvaJxt/3oUz7tTncwbPZvw1bEYHdi/4zfPcxzVgQTZKDk8voRK3oHpOsB3OeORoqjV
-	T45GiHYykd8aTDguhhMIRGqrlMvGR
-X-Google-Smtp-Source: AGHT+IGaSL4wf+lxi6xehLxilhn3urHlQbpFxBdgSiB38NiFFpsSt7fAX/o6XZC56+FVfkSeFjm/UQ==
-X-Received: by 2002:a05:6214:2b9b:b0:6fa:fe27:a249 with SMTP id 6a1803df08f44-6fb478103b0mr102407926d6.43.1750075367839;
-        Mon, 16 Jun 2025 05:02:47 -0700 (PDT)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb569796e2sm8847296d6.80.2025.06.16.05.02.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 05:02:47 -0700 (PDT)
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d2107eb668so716716785a.1;
-        Mon, 16 Jun 2025 05:02:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVc4QZxFF/bIDhVOXu8rIrL8/cuZ0hwVmmA61TcFErKUP+CVoyfe020UMUk8wfhuu8lq8OjEVDsd8SLOGC+cOdcj/8=@vger.kernel.org, AJvYcCVygQWqJ6baCDpylKTIKNhz+gImxkXn6d6ykjSwNSKa7vK+KjMVYSsq2KL3Z2ZnOdKdcLyAUTgmOP2F@vger.kernel.org, AJvYcCW5HoseMoeOuraGAg0V2WN5WddH/Na1pCNUgzbjNOz52JmJnR58v8yA+fhugWgdOdamoUdldlKqJ/f6@vger.kernel.org, AJvYcCWvpzKz3fJwnwGGUQNZ2dKw++FhHh4QpCJNWi3cpq5EgJQUE9bzXhaRG1rTCbuURL0gYrjcBW+B+/cZC9If@vger.kernel.org
-X-Received: by 2002:a05:620a:2a03:b0:7d3:8df8:cc04 with SMTP id
- af79cd13be357-7d3c6cc98efmr1411274185a.35.1750075366742; Mon, 16 Jun 2025
- 05:02:46 -0700 (PDT)
+	s=arc-20240116; t=1750075564; c=relaxed/simple;
+	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Aupcn7drlTaujYfs4UdI/BGDOk49TB6mkAeYUYumxOu19FMEsts3G0V8A9NIvHjNFtgBbi2k1QOEsGV/wBa504Ht6cy5mgNXQMweA8ZaX8JDV9D7jcDctUuh+ZwGSbZb/jrTwf+cFXO6DbebO5Ypx0DzvWi6FIf8DvUfbee5OMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pq67Wpiy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pq67Wpiy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4F8C4CEEA;
+	Mon, 16 Jun 2025 12:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750075563;
+	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=pq67WpiybJlomxNo1Q0ynrhGsdBlLEZa3DapIvrN62fslXaJvFSseYU1F6UF6iK7m
+	 eRjNYnjG4H+HpTv+rDskCAVmxpco7/DZ+LSFuf6wTg0KlYhtOAWE/nAjK43uRVc+mZ
+	 jLR2DW/n7KG1ffCW0PtADsj9vMXl1cgYgm39oBRnpvW912H0vgijYY1cE6n2UfvoJo
+	 g3MFBCtiYS2xpwe4DQIkU5knmOVB1NsyYKYtmYFn55S1xvicbtUkR+RuAaSfi8PXXz
+	 U6Xd+aDPSj5ualUsK7k5hQqGA3nehA79pSkx32khEdCQ/bUQdJ+l6ni7LEO1Sq5oJo
+	 rkLvwouWXCydQ==
+Message-ID: <20415ab5-5003-4725-bf1b-560f197465c4@kernel.org>
+Date: Mon, 16 Jun 2025 14:05:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
- <20250613220104.GA986309@bhelgaas>
-In-Reply-To: <20250613220104.GA986309@bhelgaas>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 16 Jun 2025 14:02:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU=+Hxz09DJeVOhZ1N5yS=UJgMsr5R40KBeu=ftoq4zrw@mail.gmail.com>
-X-Gm-Features: AX0GCFvGpF0UKvY33FJrsFmSliyEKvidiVPDSH8oJwCDkQnKl_S7otDQDQqSNxs
-Message-ID: <CAMuHMdU=+Hxz09DJeVOhZ1N5yS=UJgMsr5R40KBeu=ftoq4zrw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Anand Moon <linux.amoon@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
+ xdp_redirect_map_err
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>
+References: <20250611155615.0c2cf61c@batman.local.home>
+ <87bjqtb6c1.fsf@toke.dk> <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
+Content-Language: en-US
+In-Reply-To: <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Bjorn,
 
-On Sat, 14 Jun 2025 at 00:01, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Thu, Jun 12, 2025 at 03:16:45PM +0200, Geert Uytterhoeven wrote:
-> > On Sat, 7 Jun 2025 at 21:46, Marek Vasut
-> > <marek.vasut+renesas@mailbox.org> wrote:
-> > > Add the ability to enable optional slot clock into the pwrctrl driver.
-> > > This is used to enable slot clock in split-clock topologies, where the
-> > > PCIe host/controller supply and PCIe slot supply are not provided by
-> > > the same clock. The PCIe host/controller clock should be described in
-> > > the controller node as the controller clock, while the slot clock should
-> > > be described in controller bridge/slot subnode.
-> > >
-> > > Example DT snippet:
-> > > &pcicontroller {
-> > >     clocks = <&clk_dif 0>;             /* PCIe controller clock */
-> > >
-> > >     pci@0,0 {
-> > >         #address-cells = <3>;
-> > >         #size-cells = <2>;
-> > >         reg = <0x0 0x0 0x0 0x0 0x0>;
-> > >         compatible = "pciclass,0604";
-> > >         device_type = "pci";
-> > >         clocks = <&clk_dif 1>;         /* PCIe slot clock */
-> > >         vpcie3v3-supply = <&reg_3p3v>;
-> > >         ranges;
-> > >     };
-> > > };
-> > >
-> > > Example clock topology:
-> > >  ____________                    ____________
-> > > |  PCIe host |                  | PCIe slot  |
-> > > |            |                  |            |
-> > > |    PCIe RX<|==================|>PCIe TX    |
-> > > |    PCIe TX<|==================|>PCIe RX    |
-> > > |            |                  |            |
-> > > |   PCIe CLK<|======..  ..======|>PCIe CLK   |
-> > > '------------'      ||  ||      '------------'
-> > >                     ||  ||
-> > >  ____________       ||  ||
-> > > |  9FGV0441  |      ||  ||
-> > > |            |      ||  ||
-> > > |   CLK DIF0<|======''  ||
-> > > |   CLK DIF1<|==========''
-> > > |   CLK DIF2<|
-> > > |   CLK DIF3<|
-> > > '------------'
-> > >
-> > > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Bartosz: Any chance you can apply this patch to an immutable branch,
-> > so I can merge that before taking the other two patches?
-> > The alternative is to postpone the DTS patches for one cycle.
->
-> I applied this patch only to pci/pwrctrl for v6.17 and made a note
-> that the commit should be immutable:
->
->   66db1d3cbdb0 ("PCI/pwrctrl: Add optional slot clock for PCI slots")
->
-> We will likely add other pwrctrl patches to this branch during this
-> cycle; I assume that will be OK as long as 66db1d3cbdb0 remains
-> untouched, right?
 
-Great, I will merge that branch, and will apply the DTS patches on top.
-Thanks!
+On 12/06/2025 12.54, Jesper Dangaard Brouer wrote:
+> 
+> 
+> On 12/06/2025 12.30, Toke Høiland-Jørgensen wrote:
+>> Steven Rostedt <rostedt@goodmis.org> writes:
+>>
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> Each TRACE_EVENT() defined can take up around 5K of text and meta data
+>>> regardless if they are used or not. New code is being developed that 
+>>> will
+>>> warn when a tracepoint is defined but not used.
+>>>
+>>> The trace events xdp_redirect_map and xdp_redirect_map_err are 
+>>> defined but
+>>> not used, but there's also a comment that states these are kept 
+>>> around for
+>>> backward compatibility. Which is interesting because since they are not
+>>> used, any old BPF program that expects them to exist will get incorrect
+>>> data (no data) when they use them. It's worse than not working, it's
+>>> silently failing.
+>>>
+>>> Remove them as they will soon cause warnings, or if they really need to
+>>> stick around, then code needs to be added to use them.
+>>>
+>>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>
+>> I guess that makes sense; I have no objections to getting rid of them.
+>>
+>> Reviewed-by: Toke Høiland-Jørgensen <toke@kernel.org>
+> 
+> Make sense.
+> 
+> 
+> Toke we have to check how XDP-tools handle when these tracepoints 
+> disappears.
 
-Gr{oetje,eeting}s,
+To Toke, notice that userspace tools expect this tracepoint to be
+available will fail as below (for kernel release v6.16):
 
-                        Geert
+  $ sudo ./xdp-bench redirect mlx5p1 veth41
+   libbpf: prog 'tp_xdp_redirect_map_err': failed to find kernel BTF 
+type ID of 'xdp_redirect_map_err': -3
+   libbpf: prog 'tp_xdp_redirect_map_err': failed to prepare load 
+attributes: -3
+   libbpf: prog 'tp_xdp_redirect_map_err': failed to load: -3
+   libbpf: failed to load object 'xdp_redirect_basic'
+  Failed to attach XDP program: No such process
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+IMHO this is a userspace problem, that needs to be more flexible and
+adapt to this change.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+This was changed in kernel v5.6 (Jan 2020) commit 1d233886dd90 ("xdp:
+Use bulking for non-map XDP_REDIRECT and consolidate code paths").
+So, I'm thinking that xdp-tools could just remove monitoring for these
+tracepoints?
+
+--Jesper
