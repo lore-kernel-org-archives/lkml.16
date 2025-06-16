@@ -1,166 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F8F249F9;
-	Mon, 16 Jun 2025 19:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04031E1E1D
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750103580; cv=none; b=lxKVLxPQ30VFTT2OoB+x25g6GSOAVzfX6uFCOnRkeS/VBThz8LynWZMdGDayk7unNkbpaIvfUQ+D4pVhs7cWDHZAbMnKoVpyKZ0z2WdrFpSZEggkYt2ukKP33Bi1sCFcQgS0Vqwe5skTiH5MKhfwsH/rWqoHVmrH4MLcBlG6rnM=
+	t=1750103663; cv=none; b=meeR8MOe7glvBE5/EZ0E7L/SG19ecpARGq/+P5hzbYgBUSfeHdPWXxUOWSiXkb5U5XUFwA7dW8f3ykhIITjU3Zb+PN5x9G7ABoZZEZsds+BKJ75zzUez5eClmAuAoG/XquBO3v0Ie+a8k3eLi6Hw/1m8c1lIOxW3eEJgLvistKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750103580; c=relaxed/simple;
-	bh=4TsZfMRJ0KYt9kFx3GdlaieAGxVQz4lRsWZyWYs6e1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nAjRkRtJMvz7dcV3jeP3NC6QCRgdV/DyLyHnKolUzwjVJpQnM7kbqWe4Scx6kMj7uhHWHVemkjBq+iT7KOYCA+lERF0I6I9BLpFKuluFG3vcNF42NSfVPfdWIachMHEJVZtCaxuRatJ0vakxpaPttYDNd3EedCP0HWQZxhx0aBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1c1xR/d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750103663; c=relaxed/simple;
+	bh=DzQkA5W6ZIhKPWw5S/j85sM++f2+cNXvXoRn/1gennM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HItRPthfk1b6HuppcltbYQGM9c7tGr9zKqV0v3Gc2m+HS371bkz7hXM7oVZoDHtg3EP6IARvHNBgXCS7YieZ8ozP4iB31/akxeYpPcrf1329ZX+NSSAwGPGa9v90n/gLNtF+Gw5Aro+H5D8G/cpV5robIG7HOP+dRCdGG5PJdmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=joWrUbcV; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1c1xR/d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 456C9C4CEEA;
-	Mon, 16 Jun 2025 19:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750103580;
-	bh=4TsZfMRJ0KYt9kFx3GdlaieAGxVQz4lRsWZyWYs6e1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B1c1xR/dp3Hn0TuK0dyVw2OBNiXhrB8BNXJCYqY4/tOHzj2GN6lsI6gzuzNQJi8sV
-	 6j3hwUaAnUl2lP3dCTtEv+6jAlDV18GeoIYpjzsn0UIOeK4nFxK6SQmdIRoqNjpZcS
-	 VPAxgFUwoiDFubetz5CfM7e7Ah+3D34jsGS2lWx/FMYW4d1VfPxBRsNtvEQz0gZOqn
-	 4b5NeDyNJTUlBG0657k86AVSdrnL2tGnzcjwkPbE5W56NGs4Xjr8C1kmCCp7fHPP2g
-	 wGgcNtjcB3Va0E8NQQaYiAbSXIf8TT3FAUM/edjECnkt+U+xPzAHZ3eUzKXUXBAOhD
-	 HDEyiHD51B3wQ==
-Date: Mon, 16 Jun 2025 21:52:53 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
-	viresh.kumar@linaro.org, alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: Re: [PATCH v6 6/6] samples: rust: add ACPI match table example to
- platform driver
-Message-ID: <aFB2FZEFcXUsW8lN@pollux>
-References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
- <20250613135407.1233005-1-igor.korotin.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="joWrUbcV"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553b51f5218so3212096e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:54:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750103660; x=1750708460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BXz3Yj+fndsiQvF8Y+I/xW2CmjWY6qouxuqd1z1WGzE=;
+        b=joWrUbcVy3eik7doCl+hmdq6sNlw4yWfPKU84yVJlxQHivOk+vxnyTp6M44sSblc35
+         8qXBHEqWrbuVbtM1VJWVPYTD4ZAv9ueh4w4w2s3qyo7zyu0BZ+fFBfdzBeSQZjqSh30q
+         qdsDHlaugCzCJaH+DKGpXfMSJQsRMjHmC46D0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750103660; x=1750708460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BXz3Yj+fndsiQvF8Y+I/xW2CmjWY6qouxuqd1z1WGzE=;
+        b=LZM7uWUrP1qrw5Brcrs1Vnt+GxrUWyvQLWN3jwdzJaSSRfyE1BwrkQ/C8WB1VpTHo4
+         PyRlbchRbYrALjjaizrDyndoGuaKY/aICysG0DGTN2zcLZh+ceMyl4EniPkjyLq2jp13
+         vf0viOQtx2nMFtf9v0w4JFCRCnnsDXsfc419btiN5EZPocUbYfwIq9XAAvYwnjdB4syh
+         fuED9MPUzsqdFjR6rRzlYiKlw1u6YXMekPZIFCTHFxyTy3BP9ULw8xb7r68zwIQ4C+N/
+         CRg4FfCZBsrtb16tqrDCTs3jitWO6HrI5Noa09Imd1/S1xphOz5RtU8PMIsQg6YEaMZe
+         YZxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvV77EGejSfeo7LWDJTM0qSRpemrJ5NDY2rwkYTh7xdt1/MU+yBX/KThjPrBst+9unN42EFnuoBVcSvyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZjHLxWYddnSgD0p4/TeS0uJM0PrZ76+pssfCOGTnk6BcdlzJB
+	N8IoYHQz0gkuYidFrsAQBRJ6ERpdIGL573cCUlOyDTc/MSnpC0ynh7lVw4CEXZLKH4Qf8410256
+	Mj5w=
+X-Gm-Gg: ASbGnctemAfK/hOFYKSILDYa1bpi1uzToTEusTENCSeuM8ok+UH3GvIb2aYNqIrOQqW
+	CZFBGOQ9FRxYoQ1OAYSJ9iUQLeJBFIHPz7xGor2fnptmrDSYBcleQUVbGjn1h/WHyqzFcrtcEus
+	e172gbMXqIEfAywZ2/xEqVv2EzRd2KWtUSmdcB+f9loqNeWaR1B5Iha+xXpRlIKP1mBG61KlmxT
+	i40miCLTqUT9JnLxhXYNcc/z7gBqGLbEXJnT0+ymJjf+P4GW4ijBAeSsh/D/SZ71BWBahOcg08E
+	ABpScjtTWEpss6Q9vFTq9LtnVTUbp51cBBCOkO54BlsP37+JP3zO4IxOdS4ATxb2QEXfpEKPKkh
+	Qxpj0fWJR/nOdl1Qrg+nOvbUl2tMt1IpK7Uw=
+X-Google-Smtp-Source: AGHT+IHHHrdXP1DvbTfcPhXUkRkJN8JHOHgEpQpw8n2AGAqCwfxWMFmbroOCZT1kC5QMp7acDdOL2w==
+X-Received: by 2002:a05:6512:1188:b0:553:af30:1e8b with SMTP id 2adb3069b0e04-553b6f19a2fmr2762863e87.38.1750103659693;
+        Mon, 16 Jun 2025 12:54:19 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1165a6sm1652014e87.7.2025.06.16.12.54.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 12:54:19 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-553b51f5218so3212047e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:54:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX1ciG2BW3YPTXc/eHEHd9Aq4/vunGXpCWya7ykJa8EVX2P42CkH9wO3r+jvxLMMrWp+QDgToL+j0vsUpg=@vger.kernel.org
+X-Received: by 2002:a05:6512:2351:b0:553:24b7:2f61 with SMTP id
+ 2adb3069b0e04-553b6f5a056mr2704851e87.57.1750103657726; Mon, 16 Jun 2025
+ 12:54:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613135407.1233005-1-igor.korotin.linux@gmail.com>
+References: <20250616-test-v7-0-b8c0f98494fa@chromium.org> <20250616-test-v7-3-b8c0f98494fa@chromium.org>
+ <3d08da09653034128c48e97c1f6fad59c2ff5f35.camel@ndufresne.ca>
+In-Reply-To: <3d08da09653034128c48e97c1f6fad59c2ff5f35.camel@ndufresne.ca>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 16 Jun 2025 21:54:05 +0200
+X-Gmail-Original-Message-ID: <CANiDSCtRE+kEt=1jr=L+EB_axbAeg_-bhD1FAPe2xufuC_nmeA@mail.gmail.com>
+X-Gm-Features: AX0GCFso7Umw_6wpxvuce0gLpPYr1ipCL6-nm2w3EzXeGlmtVoG3SHyPy3-SJDI
+Message-ID: <CANiDSCtRE+kEt=1jr=L+EB_axbAeg_-bhD1FAPe2xufuC_nmeA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/5] media: venus: Remove timeperframe from inst
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, 
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 02:54:07PM +0100, Igor Korotin wrote:
-> Extend the Rust sample platform driver to probe using device/driver name
-> matching, OF ID table matching, or ACPI ID table matching.
+Hi Nicolas
 
-Can you please rebase onto driver-core-next? You may also want to add the three
-patches I sent as a reply to this one to your series.
 
-> Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
-> ---
->  samples/rust/rust_driver_platform.rs | 71 +++++++++++++++++++++++++++-
->  1 file changed, 70 insertions(+), 1 deletion(-)
-> 
-> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-> index 8b42b3cfb363..35d5067aa023 100644
-> --- a/samples/rust/rust_driver_platform.rs
-> +++ b/samples/rust/rust_driver_platform.rs
-> @@ -2,7 +2,7 @@
->  
->  //! Rust Platform driver sample.
->  
-> -use kernel::{c_str, device::Core, of, platform, prelude::*, types::ARef};
-> +use kernel::{acpi, c_str, device::Core, of, platform, prelude::*, types::ARef};
->  
->  struct SampleDriver {
->      pdev: ARef<platform::Device>,
-> @@ -17,9 +17,78 @@ struct SampleDriver {
->      [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
->  );
->  
-> +// ACPI match table test
-> +//
-> +// This demonstrates how to test an ACPI-based Rust platform driver using QEMU
-> +// with a custom SSDT.
-> +//
-> +// Steps:
-> +//
-> +// 1. **Create an SSDT source file** (`ssdt.dsl`) with the following content:
-> +//
-> +//     ```asl
-> +//     DefinitionBlock ("", "SSDT", 2, "TEST", "VIRTACPI", 0x00000001)
-> +//     {
-> +//         Scope (\_SB)
-> +//         {
-> +//             Device (T432)
-> +//             {
-> +//                 Name (_HID, "TEST4321")  // ACPI hardware ID to match
-> +//                 Name (_UID, 1)
-> +//                 Name (_STA, 0x0F)        // Device present, enabled
-> +//                 Name (_CRS, ResourceTemplate ()
-> +//                 {
-> +//                     Memory32Fixed (ReadWrite, 0xFED00000, 0x1000)
-> +//                 })
-> +//             }
-> +//         }
-> +//     }
-> +//     ```
-> +//
-> +// 2. **Compile the table**:
-> +//
-> +//     ```sh
-> +//     iasl -tc ssdt.dsl
-> +//     ```
-> +//
-> +//     This generates `ssdt.aml`
-> +//
-> +// 3. **Run QEMU** with the compiled AML file:
-> +//
-> +//     ```sh
-> +//     qemu-system-x86_64 -m 512M \
-> +//         -enable-kvm \
-> +//         -kernel path/to/bzImage \
-> +//         -append "root=/dev/sda console=ttyS0" \
-> +//         -hda rootfs.img \
-> +//         -serial stdio \
-> +//         -acpitable file=ssdt.aml
-> +//     ```
-> +//
-> +//     Requirements:
-> +//     - The `rust_driver_platform` must be present either:
-> +//         - built directly into the kernel (`bzImage`), or
-> +//         - available as a `.ko` file and loadable from `rootfs.img`
-> +//
-> +// 4. **Verify it worked** by checking `dmesg`:
-> +//
-> +//     ```
-> +//     rust_driver_platform TEST4321:00: Probed with info: '0'.
-> +//     ```
-> +//
-> +// This demonstrates ACPI table matching using a custom ID in QEMU with a minimal SSDT
+On Mon, 16 Jun 2025 at 21:37, Nicolas Dufresne <nicolas@ndufresne.ca> wrote=
+:
+>
+> Hi Ricardo,
+>
+> Le lundi 16 juin 2025 =C3=A0 15:29 +0000, Ricardo Ribalda a =C3=A9crit :
+> > The driver only cares about whole fps. We can infer the timeperframe
+> > from the fps field. Remove the redundant field.
+>
+> I do have reserved about this change. Video standards commonly uses fract=
+ional
+> rates for videos. If my memory is correct, venus uses Q16 ... So with thi=
+s change,
+> we now round all frame rate passed to encoders to an integer, which will =
+introduce
+> error in the resulting bitrate.
+>
+> Perhaps it was already broken, but if so, it should be fixed instead ?
 
-Can you please move this up into the module-level documentation?
+It seems like today it only supports integer frame rates, or at least
+timeperframe is not used anywhere in the code, this is why I
+implemented the change.
 
-> +kernel::acpi_device_table!(
-> +    ACPI_TABLE,
-> +    MODULE_ACPI_TABLE,
-> +    <SampleDriver as platform::Driver>::IdInfo,
-> +    [(acpi::DeviceId::new(c_str!("TEST4321")), Info(0))]
+In other words, when the driver was returning a fractional it was lying (a =
+bit).
 
-Let's use something like "SAMPLE_DRV0" instead.
+I do not have the hardware to test this, the best thing I can offer is
+to remove this patch from the set and rebase the code.
 
-> +);
-> +
->  impl platform::Driver for SampleDriver {
->      type IdInfo = Info;
->      const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-> +    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
->  
->      fn probe(
->          pdev: &platform::Device<Core>,
-> -- 
-> 2.43.0
-> 
+My main concern is to fix the "division errors" from the static analyzer :)
+
+>
+> regards,
+> Nicolas
+>
+> >
+> > Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/platform/qcom/venus/core.h |  2 --
+> >  drivers/media/platform/qcom/venus/vdec.c | 15 ++++++++-------
+> >  drivers/media/platform/qcom/venus/venc.c | 16 ++++++++--------
+> >  3 files changed, 16 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/p=
+latform/qcom/venus/core.h
+> > index 5b1ba1c69adba14c3560a4bc6d09435529f295a6..9cfb860e01e752bf9856a35=
+50f59c8c7b43647d2 100644
+> > --- a/drivers/media/platform/qcom/venus/core.h
+> > +++ b/drivers/media/platform/qcom/venus/core.h
+> > @@ -413,7 +413,6 @@ enum venus_inst_modes {
+> >   * @tss:             timestamp metadata
+> >   * @payloads:                cache plane payload to use it for clock/B=
+W scaling
+> >   * @fps:             holds current FPS
+> > - * @timeperframe:    holds current time per frame structure
+> >   * @fmt_out: a reference to output format structure
+> >   * @fmt_cap: a reference to capture format structure
+> >   * @num_input_bufs:  holds number of input buffers
+> > @@ -484,7 +483,6 @@ struct venus_inst {
+> >       struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
+> >       unsigned long payloads[VIDEO_MAX_FRAME];
+> >       u64 fps;
+> > -     struct v4l2_fract timeperframe;
+> >       const struct venus_format *fmt_out;
+> >       const struct venus_format *fmt_cap;
+> >       unsigned int num_input_bufs;
+> > diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/p=
+latform/qcom/venus/vdec.c
+> > index fca27be61f4b869840904cc0577949635bc63cab..7d6612234d18a49573dc502=
+d48ee61a900b63194 100644
+> > --- a/drivers/media/platform/qcom/venus/vdec.c
+> > +++ b/drivers/media/platform/qcom/venus/vdec.c
+> > @@ -471,10 +471,12 @@ static int vdec_s_parm(struct file *file, void *f=
+h, struct v4l2_streamparm *a)
+> >               return -EINVAL;
+> >
+> >       memset(cap->reserved, 0, sizeof(cap->reserved));
+> > -     if (!timeperframe->denominator)
+> > -             timeperframe->denominator =3D inst->timeperframe.denomina=
+tor;
+> > -     if (!timeperframe->numerator)
+> > -             timeperframe->numerator =3D inst->timeperframe.numerator;
+> > +
+> > +     if (!timeperframe->numerator || !timeperframe->denominator) {
+> > +             timeperframe->numerator =3D 1;
+> > +             timeperframe->denominator =3D inst->fps;
+> > +     }
+> > +
+> >       cap->readbuffers =3D 0;
+> >       cap->extendedmode =3D 0;
+> >       cap->capability =3D V4L2_CAP_TIMEPERFRAME;
+> > @@ -487,7 +489,8 @@ static int vdec_s_parm(struct file *file, void *fh,=
+ struct v4l2_streamparm *a)
+> >       fps =3D min(VENUS_MAX_FPS, fps);
+> >
+> >       inst->fps =3D fps;
+> > -     inst->timeperframe =3D *timeperframe;
+> > +     timeperframe->numerator =3D 1;
+> > +     timeperframe->denominator =3D inst->fps;
+> >
+> >       return 0;
+> >  }
+> > @@ -1622,8 +1625,6 @@ static void vdec_inst_init(struct venus_inst *ins=
+t)
+> >       inst->out_width =3D frame_width_min(inst);
+> >       inst->out_height =3D frame_height_min(inst);
+> >       inst->fps =3D 30;
+> > -     inst->timeperframe.numerator =3D 1;
+> > -     inst->timeperframe.denominator =3D 30;
+> >       inst->opb_buftype =3D HFI_BUFFER_OUTPUT;
+> >  }
+> >
+> > diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/p=
+latform/qcom/venus/venc.c
+> > index b9ccee870c3d1238e04cef5e9344bd992d86d737..4979392aa20b6dc94895c70=
+89878531b92b57754 100644
+> > --- a/drivers/media/platform/qcom/venus/venc.c
+> > +++ b/drivers/media/platform/qcom/venus/venc.c
+> > @@ -401,10 +401,10 @@ static int venc_s_parm(struct file *file, void *f=
+h, struct v4l2_streamparm *a)
+> >
+> >       memset(out->reserved, 0, sizeof(out->reserved));
+> >
+> > -     if (!timeperframe->denominator)
+> > -             timeperframe->denominator =3D inst->timeperframe.denomina=
+tor;
+> > -     if (!timeperframe->numerator)
+> > -             timeperframe->numerator =3D inst->timeperframe.numerator;
+> > +     if (!timeperframe->numerator || !timeperframe->denominator) {
+> > +             timeperframe->numerator =3D 1;
+> > +             timeperframe->denominator =3D inst->fps;
+> > +     }
+> >
+> >       out->capability =3D V4L2_CAP_TIMEPERFRAME;
+> >
+> > @@ -416,8 +416,9 @@ static int venc_s_parm(struct file *file, void *fh,=
+ struct v4l2_streamparm *a)
+> >       do_div(fps, us_per_frame);
+> >       fps =3D min(VENUS_MAX_FPS, fps);
+> >
+> > -     inst->timeperframe =3D *timeperframe;
+> >       inst->fps =3D fps;
+> > +     timeperframe->numerator =3D 1;
+> > +     timeperframe->denominator =3D inst->fps;
+> >
+> >       return 0;
+> >  }
+> > @@ -431,7 +432,8 @@ static int venc_g_parm(struct file *file, void *fh,=
+ struct v4l2_streamparm *a)
+> >               return -EINVAL;
+> >
+> >       a->parm.output.capability |=3D V4L2_CAP_TIMEPERFRAME;
+> > -     a->parm.output.timeperframe =3D inst->timeperframe;
+> > +     a->parm.output.timeperframe.numerator =3D 1;
+> > +     a->parm.output.timeperframe.denominator =3D inst->fps;
+> >
+> >       return 0;
+> >  }
+> > @@ -1454,8 +1456,6 @@ static void venc_inst_init(struct venus_inst *ins=
+t)
+> >       inst->out_width =3D 1280;
+> >       inst->out_height =3D 720;
+> >       inst->fps =3D 15;
+> > -     inst->timeperframe.numerator =3D 1;
+> > -     inst->timeperframe.denominator =3D 15;
+> >       inst->hfi_codec =3D HFI_VIDEO_CODEC_H264;
+> >  }
+> >
+
+
+
+--=20
+Ricardo Ribalda
