@@ -1,205 +1,456 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8138F27FB29
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081200; cv=fail; b=htjMCKqJuFReBKCtVwO06BCfgWG9UKVB30+zz+79bxxD+XVrHBwQn+DVydBhxgAF63yMNAT9x96GG06mL2JEgcfXxMsCKmDke7PThVBMVWIJM+ObReDPmKRn5Ab6ILpKyt0LoSxOz9olivwS339DhB4a3CMRWAimC+8dKU/i7Mc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081200; c=relaxed/simple;
-	bh=vGl1xP7JBBLVP93OGxFVoSm7AfA1UEUY0kZcUpT/iJg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q3NoCHK/pr/LhS8CrHxh+nsQFmkI/Sq3Rl9LGVFW9rHS0Uz43Ok3a2ym6jLkWfkq5+2FMYqeSPjOqz8wgTVI5vTxuV84W11bvN/w13/I2I6icucjh8WSL6JuX5MgtwM1FsMF6YqIuNPE4eULcNeNuDT1+KFuo1PF4/KPVS8pk3k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xwp29Wyx; arc=fail smtp.client-ip=40.107.223.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8006227FB29
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750081219; cv=none; b=Q71i9XvWSWH6ZKA4PBOMmHNGReUEvBw20iNCz4QWB8YaBTUhiY72BZ0J2JGc8hSMmOzstxxDJTyplvQdn4jatINqDiSm6YMGTIG7i1TCuZwvYgClnLfyJwcm6LCEvkvETsqkGWewTIxFgS3bOgLdRjHU0Lnv5C2jyevUzv7lMW8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750081219; c=relaxed/simple;
+	bh=uGkzcwgTLa9uZZKVQ9eiHG2DD4vNankdU5erSvLSnqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XoIi3l5Ea/rXo0AdkRJ/dwXmnxchu7dIckvf1U78zRLhi3JSQ/CYhymFoxaaxfOIm4lsJn0zG6A+OmhYNbzISxsB4Dp4gkBpc7MUpsCCy7lhLj8XW9YnToBEyaUqgWrW4BSmM/tCyRp82Af9vU+yCW3SOBmOvwNjSO7rldxFb+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=If+GPbti; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xwp29Wyx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a8lYxWgDamtRESSKvtkbvqumsKgPAhFfB9Iyt1iY9Pb7eegDQr5MCIxijmxqNMCyX2+mBR7NNR0koJoZF+Gx2NFDWRSvXaYbrEoUzKkqBX1QBn9lGRNoTxuXEUmTyeChAkaBEjB52v/W5U83MwdSGlKmMVohn8pMLqK54OEXkqEEBMe6wZZIqFK9r1Y6ndh0UWZjG4CLQHGBEW3heu+KPCgyWJDWCYVFt4zccjRwEphb0qcuV3f99iABlVcoSDogAEd4dT3iN5QabIbEprH6hGzKEdivuWPc9ICvJq58LljD9WLFbJFlPqsDJSU9Kmd76hsSmyGYdh0IV/4Ae/29Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PjDy4IRTU7exOecC7/zSAJwKFSxStpSct4vxQBUO2vI=;
- b=u814Uy1kEKE31JYAjfa6ydSr+OUHZfSY8hIt0nrFKEf/tZEYwOMFN7gsuPP0pQaRKbwGltSAjcY5CFhEkiUCAEoEjmLXm/H/wnxO9k1wfPALoS9yGNhhjPdF6ThCNEDejoyrp5qieInJokofYi1SwcgUFJy099M9OWracoJXEKEiGmusUdY1uimEfS8QHFiWrCRuuUh+9THf585Loc2GcpE45q18dEtWlmICFf+/OwoRbxxWJCmWs96j9OqcfTOKUXXI1xfhK2qgwiPhaPerUNvn4sd/PGaxCLrTmsQ3+FHTuUf1yWPOSSUs95FY/hhsQlMoinWd0/kDB8wMao+5bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PjDy4IRTU7exOecC7/zSAJwKFSxStpSct4vxQBUO2vI=;
- b=xwp29WyxoDaYO0quwoKp4HefUw4ZEHi3JBHcpuDVuEvMEBEFGINrHEKQFhxVdMeWRLZRi/ZSVxI/lDJF1Lhb7mwyyNsbCI8FRwoh24Pyp4ekk2fiBoUE3a1/gYRs3ygWueXEtdnWhsuOkQNomCQM7CpReQeIgQRRyR1FXnsjG7I=
-Received: from DS7PR03CA0272.namprd03.prod.outlook.com (2603:10b6:5:3ad::7) by
- MN2PR12MB4423.namprd12.prod.outlook.com (2603:10b6:208:24f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Mon, 16 Jun
- 2025 13:39:52 +0000
-Received: from DS3PEPF000099D4.namprd04.prod.outlook.com
- (2603:10b6:5:3ad:cafe::56) by DS7PR03CA0272.outlook.office365.com
- (2603:10b6:5:3ad::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.21 via Frontend Transport; Mon,
- 16 Jun 2025 13:39:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D4.mail.protection.outlook.com (10.167.17.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 13:39:52 +0000
-Received: from BLR-L-BHARARAO.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
- 2025 08:39:46 -0500
-From: Bharata B Rao <bharata@amd.com>
-To: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC: <Jonathan.Cameron@huawei.com>, <dave.hansen@intel.com>,
-	<gourry@gourry.net>, <hannes@cmpxchg.org>, <mgorman@techsingularity.net>,
-	<mingo@redhat.com>, <peterz@infradead.org>, <raghavendra.kt@amd.com>,
-	<riel@surriel.com>, <rientjes@google.com>, <sj@kernel.org>,
-	<weixugc@google.com>, <willy@infradead.org>, <ying.huang@linux.alibaba.com>,
-	<ziy@nvidia.com>, <dave@stgolabs.net>, <nifan.cxl@gmail.com>,
-	<xuezhengchu@huawei.com>, <yiannis@zptcorp.com>, <akpm@linux-foundation.org>,
-	<david@redhat.com>, <bharata@amd.com>
-Subject: [RFC PATCH v1 0/4] Kernel thread based async batch migration
-Date: Mon, 16 Jun 2025 19:09:27 +0530
-Message-ID: <20250616133931.206626-1-bharata@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="If+GPbti"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad88d77314bso1003423066b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750081216; x=1750686016; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DXMgtgBREAhqXs7fPljpPs2zj+1GZVJ1mU2+Ly3eGIo=;
+        b=If+GPbtia3jYqs4IBiwMEmphMo8Ehomm7AkpSH503LgszYCzRmMfkWCQRQuNep6eZU
+         FwwHFZWcrjJ3qJ681mJZ8vkabRkqnJh55r4h10il/8/WqBcoYEGkbM9FKqtKxxnlik6n
+         JvUYESq2hN0aBwJmF2ck55s/37du1DeD7UXZLZr5gDF8nIy7CRlYR7gfMVpMoV6pJ3Mb
+         EE8jtEWB3ddmNj9/3GgWm0K7CTY8TzVPFbu281faoDAzMQ3P/7PTjn+JIIi/q34XG1pI
+         yO0Bf9H4hFxMOvMSXpi4UhUPj5bBZ8aM93CBfLs/jvwvcJ89zktea1GyxqDeVkYVChpK
+         U2JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750081216; x=1750686016;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DXMgtgBREAhqXs7fPljpPs2zj+1GZVJ1mU2+Ly3eGIo=;
+        b=QgGSuo5SeO7qNWlJ9Nr1+H9zPDCsfWgj67+EC7Bgj/+1Lq8f7+2RbUy8AdrQpil8Xs
+         CsMaV4KKvDcWDfc5uvUzLYDWThY3dvSKBBd9cgp9oxBGeBvt2OqsDaCOgWFL/+sAA09n
+         WplBBXGYZfH4RfzEXEYCP7t1eveavRifucUpleiRa2rFY+2l+QcFAFvidQ2zocw5tGFn
+         kGxcogCY+CrWqGjiEkgnN56DmcG6Oy2jZ4QBKD6mP9uTtUQbAuCfCKsDj+VUUIXlwR7B
+         1uY2/EFnhlDKWp5ckbRwCrK/Sunb+QAsx2hImSs0any3fskRgSNagTEow8nAxII8+3aa
+         6SOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSD/TA3gsi5vuC4ODqV9coYuzK99rqO2ZwjhYPEJPaqn1DrhlFqZE9yX2h1uKeNREC84/8H8E3SCmTR8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3X/RXv6RZkKgdklKpf+tnAnSuDTP27onS0CvF+FKRyX47q278
+	XrtauhdS+cVBGHj54u4A/rURy5vicbUHgYPsc8DBr8yOmt7BnLl+zQ+I6nQBlLmU1RspzmXL6MF
+	s+cEN/Uq5Uo4kwK4qNjcmpgwYcPD4dAR4ovE6E55M0w==
+X-Gm-Gg: ASbGncum77VLxtoog38zr+xtlW27VknnlgzwkrXnHc2QtjvDiSIqdEiAJVb6cwcgEzL
+	+hvotn+0yXoxYkGWDQb04fO00e6+ga5srSa+4/iH016veM0omh3U7hUKD0bQSrLXVhzzQI5uPfT
+	LP4XoZje+eYpBPC/fLY/Fgi2Ht9TdZIDtRXH/waqCBI06FpNcaopvS
+X-Google-Smtp-Source: AGHT+IFWcSeGsCAQdrj9adUAYNl9kSrg2eu/sNtevQzb0bfBo8T+7z6o2AHoej+CvXD3n4jGSQ9PhQvNTEOaBCCOiIc=
+X-Received: by 2002:a17:907:6d20:b0:ad8:9b5d:2c1c with SMTP id
+ a640c23a62f3a-adfad39e4bdmr977791466b.19.1750081215406; Mon, 16 Jun 2025
+ 06:40:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D4:EE_|MN2PR12MB4423:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b6b8266-d467-4406-6b7d-08ddacdb45cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hmKBcT16acdLeBbpeQKn+zpMeMuyriKdY3is6HejRKSftXiB2er/eDVBGM+q?=
- =?us-ascii?Q?yEp7KdMK6N2eHNV7+Tm+WwEJvKxQ8FaBJ0A4qULfxU/b3WjQiw1jOLYgWLxk?=
- =?us-ascii?Q?R3F6SJbK685lJy8XdG8SKsaSxjdWEgQwDcTlmHLorysfjOhnAWvwrYTnYSJ8?=
- =?us-ascii?Q?pDHx2hUYsFiQx3CD60QlXSMQBsP5srf3JZTIMJw7HvRaljt+87bfNzNmswsF?=
- =?us-ascii?Q?BmvlWmye9jxGwTC6VxjJOGoSlhc32GzKn09yDW0QfEwWvvRitYtBgSWmFO1Z?=
- =?us-ascii?Q?2ymcFAitvAPiIc6M9WAKk7AaVmtJXvGa09BF2wyu/i9asC60rVynEzoUbQly?=
- =?us-ascii?Q?Va2eEq5RuehwjK44l9rLGC5FO+AlyzinAqMLi6L/PWwkixbUFXVXoLdoISvf?=
- =?us-ascii?Q?2hTJvKdQlKHwqfB8dQEqG4BgP/oXr9VZBJMalODzAllRsC5pA6hpLGtrFBFQ?=
- =?us-ascii?Q?zE1YwFPHIdvOmBwxCrnlJY+z+Q0C0+uKoDZ5Ainfdv1t5q8SWVr1MunJxKow?=
- =?us-ascii?Q?Oy1jqKr6ZUm9S0A0OT2ZZ9LxGUtTCxQN+Il1qWrfK56GwxHA7PDN4R9+E/kW?=
- =?us-ascii?Q?FYNP+GIbt0g0FhQPFL/GbkZFamyuDKVsLXtK9ioe7IyTOuI+HvMGkRJaptE6?=
- =?us-ascii?Q?Xeq7SHwGvnTuKy87FHby/q4+r/QNkcUZ7ptQ6cgIJx5dfp9TuhxLj/CIkV2R?=
- =?us-ascii?Q?aADxGhmx/AXEAUSCIBAqCJNVQIR/DIZDUml/qtj6pldQ/9n+WONyl0alCrCm?=
- =?us-ascii?Q?fg8RWdhpjWQgsgfeYIF7b55jN+uwFlk5mv482fzk7Df8bxEg59iIHQ35VDHL?=
- =?us-ascii?Q?qhJPqKbJ1DOTSpytJ9OlFO6FyQ49gzjHmPwHDMwx82BPN11FntdigDg26632?=
- =?us-ascii?Q?kYptK4asHt9OkutjbSGYoosbtKLeyUCS3OuWdbElkWqLmoS8Sgp8RHzIZOud?=
- =?us-ascii?Q?c7itgkhg+jx4mI0/7NSr+tDyZUFZLcKFam8c/8dI5dQQsZPEp4Q8ryEtULyh?=
- =?us-ascii?Q?WXulaiS3SMRJrP4rFpEZMC5It+tSQxUS0mXdgHg7UrYMZEd+ZnNg2MlJ87vk?=
- =?us-ascii?Q?8ThxwihyRKNbwKPVOXwwYvkd6BBbrU0ExLPkZwteafzz4CRY922PFV6Mh0fB?=
- =?us-ascii?Q?66D5UsJCzpTcxw+Do/tL/Nxm8/BbjWTrLyS2xdlWyAgerO2j6hrievt3XJM7?=
- =?us-ascii?Q?WdbY0SJAytPG0HvXXWhs0mrwJqXRVaZ3OlOkScNx6Y4/vMmrh4FI4w9vIQq+?=
- =?us-ascii?Q?3jggPt4BJ83t6EQdz7GhAN9wIstDC7xyOcd0HVG4PqkR+0L65MjUIKnu8Fgy?=
- =?us-ascii?Q?mfjok0zo4wEutHrnQlIyfqTv55r7e6TFh9HMGLij1QwxefJXm5HKMIG5HqBj?=
- =?us-ascii?Q?beENR7ZMYyE6E/Bjbyl1Dt3HTlOJG/aYptCC24rRkuvhog/ldMoGFP0asHmF?=
- =?us-ascii?Q?s8D9LvzAG8SGM7qsZ3DfeRXeut5ZS3kI4lM8gxRaAzdlsRwT4fTkVq2wqPZj?=
- =?us-ascii?Q?+4pmIyFYY2qQ3iXgemuYUnp46gzRzHJiHqxOy0Mc1MEDeXm+Qz9YJGN8QQ?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 13:39:52.4515
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b6b8266-d467-4406-6b7d-08ddacdb45cc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D4.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4423
+References: <cover.1749731531.git.zhoubinbin@loongson.cn> <aEzFPdYEvbkaH_B5@mail.minyard.net>
+ <CAMpQs4L66sXLdj6+ebMXcwq4i+XVi+AmwBbQSx0-EuULNJ5XeQ@mail.gmail.com>
+ <aEzqbLHSB6phFNox@mail.minyard.net> <CAMpQs4L82x=OhLQJb96ZC4YfT_ZhHcU+zks2r0HMU0Y2fjwsbg@mail.gmail.com>
+ <aE2AR8rj9OEM8TcB@mail.minyard.net> <CAMpQs4+5hapiYv_M4px0XkcXiCd7cCpyb55APKt+uh1iBaor3Q@mail.gmail.com>
+ <aFAZOH7ymTVmTduw@mail.minyard.net>
+In-Reply-To: <aFAZOH7ymTVmTduw@mail.minyard.net>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 16 Jun 2025 21:40:02 +0800
+X-Gm-Features: AX0GCFvN86tQcGX_sGWSk_1_sCrY5QQ_l18kVipW3iUYoXYYIOd2f_cWFVyOMk4
+Message-ID: <CAMpQs4Ld67ot5xaRPjQT2Yq5Nt3N-9qvd3U75Z5fcPrQ16Ve-A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] LoongArch: Add Loongson-2K BMC support
+To: corey@minyard.net
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io, 
+	kexybiscuit@aosc.io, wangyao@lemote.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Jun 16, 2025 at 9:16=E2=80=AFPM Corey Minyard <corey@minyard.net> w=
+rote:
+>
+> On Mon, Jun 16, 2025 at 03:35:56PM +0800, Binbin Zhou wrote:
+> > Hi Corey:
+> >
+> > Thanks  for your detailed review.
+> >
+> > On Sat, Jun 14, 2025 at 9:59=E2=80=AFPM Corey Minyard <corey@minyard.ne=
+t> wrote:
+> > >
+> > > On Sat, Jun 14, 2025 at 01:25:17PM +0800, Binbin Zhou wrote:
+> > > > Hi Corey:
+> > > >
+> > > > Thanks for your detailed suggestions.
+> > > >
+> > > > On Sat, Jun 14, 2025 at 11:20=E2=80=AFAM Corey Minyard <corey@minya=
+rd.net> wrote:
+> > > > >
+> > > > > On Sat, Jun 14, 2025 at 10:50:37AM +0800, Binbin Zhou wrote:
+> > > > > > Hi Corey:
+> > > > > >
+> > > > > > On Sat, Jun 14, 2025 at 8:41=E2=80=AFAM Corey Minyard <corey@mi=
+nyard.net> wrote:
+> > > > > > >
+> > > > > > > On Fri, Jun 13, 2025 at 02:43:38PM +0800, Binbin Zhou wrote:
+> > > > > > > > Hi all:
+> > > > > > > >
+> > > > > > > > This patch set introduces the Loongson-2K BMC.
+> > > > > > > >
+> > > > > > > > It is a PCIe device present on servers similar to the Loong=
+son-3 CPUs.
+> > > > > > > > And it is a multifunctional device (MFD), such as display a=
+s a sub-function
+> > > > > > > > of it.
+> > > > > > >
+> > > > > > > I've asked this before, but I haven't gotten a answer, I don'=
+t think.
+> > > > > > >
+> > > > > > > Is this really a multi-function device?  Is there (or will th=
+ere be)
+> > > > > > > another driver that uses the MFD code?
+> > > > > >
+> > > > > > I am very sorry, I may have overlooked your previous question.
+> > > > > >
+> > > > > > And I also may not have a thorough understanding of multifuncti=
+on devices.
+> > > > > >
+> > > > > > The Loongson-2K BMC device provides two functions: display and =
+IPMI.
+> > > > > > For display, we pass the simplefb_platform_data parameter and r=
+egister
+> > > > > > the simpledrm device, as shown in patch-1.
+> > > > > >
+> > > > > > Therefore, I think this should be considered a multifunction de=
+vice.
+> > > > >
+> > > > > Ok, that's clear, thank you.
+> > > > >
+> > > > > However, that's not really very clear from the patches you have
+> > > > > provided.  Particularly, the "bmc" in the name from patch 1 makes=
+ one
+> > > > > think that it's only a bmc.
+> > > > >
+> > > > > The "bmc" name is also a little confusing; the devices with a "bm=
+c" in
+> > > > > the name are all the BMC side, but you are doing a host side devi=
+ce.
+> > > > >
+> > > > > If you look at most of the other MFDs, they have a "core" section=
+ then
+> > > > > various other parts that use the core.  And possibly parts in oth=
+er
+> > > > > directories for individual functions.  I think you need to do the=
+ same
+> > > > > design.  Have a "core" section that both the display and bmc use,=
+ then a
+> > > > > separate display and bmc driver.
+> > > >
+> > > > If it can be reconstructed in this way, it should be clearer.
+> > > >
+> > > > However, there is a key point in my mind: if the display and IPMI a=
+re
+> > > > separated into two parts, they should at least be able to be probed
+> > > > separately, but in fact they belong to the same PCI-E device, just
+> > > > allocated different resource intervals.
+> > > >
+> > > > static struct pci_device_id ls2k_bmc_devices[] =3D {
+> > > >        { PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
+> > > >        { }
+> > > > };
+> > > > MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
+> > > >
+> > > > I'm not sure if my understanding is correct?
+> > >
+> > > You are already doing this, it appears.  I spent a little time to lea=
+rn
+> > > how this works.  You are using the standard frame buffer driver, so n=
+o
+> > > special driver is required there (per earlier discussions).  And you =
+are
+> > > registering it all as an MFD device, so the display buffer and IPMI
+> > > interface will pick it up there.
+> > >
+> > > So from a design point of view this all looks good.
+> > >
+> > > The IPMI interface needs to be separately selectable from the main mf=
+d
+> > > device in the Kconfigs.  Add an IPMI_LS2K config in the IPMI section
+> > > that enables the IPMI interface and selects MFD_LS2K_BMC.  And both
+> > > configs need to be tristate, not bool, so they can be modules.
+> >
+> > I tried rewriting Kconfig as follows:
+> >
+> > IPMI Kconfig:
+> >
+> > config IPMI_LS2K
+> >        bool 'Loongson-2K IPMI interface'
+> >        depends on LOONGARCH
+> >        select MFD_LS2K_BMC_CORE
+> >        help
+> >          Provides a driver for Loongson-2K IPMI interfaces.
+> >
+> > MFD Kconfig:
+> >
+> > config MFD_LS2K_BMC_CORE
+> >         bool "Loongson-2K Board Management Controller Support"
+> >         select MFD_CORE
+> >
+> >
+> > However, `tristate` does not seem to work.
+> > On the IPMI side, in order to better reuse code, our driver is not
+> > actually a completely independent driver; it is part of `ipmi_si`.
+>
+> Ah, yes, that is true.  The trouble with the above is it will select
+> MFD_LS2K_BMC_CORE as "y" even if ipmi_si is a module.  And that will
+> force MFD_CORE to be "y" as well.  At least I think it works that way.
+> Anyway, that's not terrible, but it would be nice to have the core code
+> as a module if possible.
+>
+> Another issue is you don't have help text on MFD_LS2K_BMC_CORE code.
+> You probably want to mention there that it enables the display on
+> the BMC.
 
-This is a continuation of the earlier post[1] that attempted to
-convert migrations from NUMA Balancing to be async and batched.
-In this version, per-node kernel threads are created to handle
-migrations in an async manner.
+Of course, I will add some information about BMC in the help text.
 
-This adds a few fields to the extended page flags that can be
-used both by the sub-systems that request migrations and kmigrated
-which migrates the pages. Some of the fields are potentially defined
-to be used by kpromoted-like subsystem to manage hot page metrics,
-but are unused right now.
+Finally, I would like to thanks you again for taking the time to
+review my patch. I have benefited greatly from it.
+>
+> -corey
+>
+> >
+> > diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_=
+si_intf.c
+> > index 7fe891783a37..c13d5132fffc 100644
+> > --- a/drivers/char/ipmi/ipmi_si_intf.c
+> > +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> > @@ -2120,6 +2120,8 @@ static int __init init_ipmi_si(void)
+> >
+> >         ipmi_si_pci_init();
+> >
+> > +       ipmi_si_ls2k_init();
+> > +
+> >         ipmi_si_parisc_init();
+> >
+> >         mutex_lock(&smi_infos_lock);
+> > @@ -2334,6 +2335,8 @@ static void cleanup_ipmi_si(void)
+> >
+> >         ipmi_si_pci_shutdown();
+> >
+> > +       ipmi_si_ls2k_shutdown();
+> > +
+> >         ipmi_si_parisc_shutdown();
+> >
+> >         ipmi_si_platform_shutdown();
+> >
+> >
+> > Therefore, it seems that we can only use `bool` here, otherwise an
+> > error will occur during compilation, as seen in the V3 patchset[1]:
+> >
+> > [1]: https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
+> >
+> > >
+> > > I don't know if you want to make the display part so it can be enable=
+d
+> > > separately, I'm not sure how you would do that.  But that's not my
+> > > concern, really.
+> > >
+> > > Thanks,
+> > >
+> > > -corey
+> > >
+> > > >
+> > > > >
+> > > > > That way, you can use the display without the IPMI interface, or =
+the
+> > > > > IPMI interface without the display.
+> > > > >
+> > > > > I would like to see:
+> > > > >
+> > > > > * A core mfd device named ls2k-core.c that has the core functions=
+.
+> > > > >   It would have its own config item (MFD_LS2K) that would be
+> > > > >   selected if either the display or IPMI device is enabled.
+> > > > >
+> > > > > * A separate display device in its own file with its own config i=
+tem.
+> > > > >   This isn't my area, so I'm not sure where this should go.
+> > > > >
+> > > > > * The IPMI device in the ipmi directory named ipmi_ls2k.c, again
+> > > > >   with it's own config item (IPMI_LS2K).
+> > > > >
+> > > > > Does that make sense?  I don't want to make things too hard, but =
+that's
+> > > > > the way pretty much everything else is done on MFDs.
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > > -corey
+> > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > If nothing else is going to use this, then it's really not a
+> > > > > > > multi-function device and all the code can go into the IPMI d=
+irectory.
+> > > > > > > That simplifies maintenance.
+> > > > > > >
+> > > > > > > If it is a multi-function device, then I want two separate Kc=
+onfig
+> > > > > > > items, one for the MFD and one for the IPMI portion.  That wa=
+y it's
+> > > > > > > ready and you don't have to bother about the IPMI portion whe=
+n
+> > > > > > > adding the other device.
+> > > > > > >
+> > > > > > > All else looks good, I think.
+> > > > > > >
+> > > > > > > -corey
+> > > > > > >
+> > > > > > > >
+> > > > > > > > For IPMI, according to the existing design, we use software=
+ simulation to
+> > > > > > > > implement the KCS interface registers: Stauts/Command/Data_=
+Out/Data_In.
+> > > > > > > >
+> > > > > > > > Also since both host side and BMC side read and write kcs s=
+tatus, we use
+> > > > > > > > fifo pointer to ensure data consistency.
+> > > > > > > >
+> > > > > > > > For the display, based on simpledrm, the resolution is read=
+ from a fixed
+> > > > > > > > position in the BMC since the hardware does not support aut=
+o-detection
+> > > > > > > > of the resolution. Of course, we will try to support multip=
+le
+> > > > > > > > resolutions later, through a vbios-like approach.
+> > > > > > > >
+> > > > > > > > Especially, for the BMC reset function, since the display w=
+ill be
+> > > > > > > > disconnected when BMC reset, we made a special treatment of=
+ re-push.
+> > > > > > > >
+> > > > > > > > Based on this, I will present it in four patches:
+> > > > > > > > patch-1: BMC device PCI resource allocation.
+> > > > > > > > patch-2: BMC reset function support
+> > > > > > > > patch-3: IPMI implementation
+> > > > > > > >
+> > > > > > > > Thanks.
+> > > > > > > >
+> > > > > > > > -------
+> > > > > > > > V4:
+> > > > > > > > - Add Reviewed-by tag;
+> > > > > > > > - Change the order of the patches.
+> > > > > > > > Patch (1/3):
+> > > > > > > >   - Fix build warning by lkp: Kconfig tristate -> bool
+> > > > > > > >     - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp=
+@intel.com/
+> > > > > > > >  - Update commit message;
+> > > > > > > >  - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfi=
+g and
+> > > > > > > >    Makefile.
+> > > > > > > > Patch (2/3):
+> > > > > > > >   - Remove unnecessary newlines;
+> > > > > > > >   - Rename ls2k_bmc_check_pcie_connected() to
+> > > > > > > >     ls2k_bmc_pcie_is_connected();
+> > > > > > > >   - Update comment message.
+> > > > > > > > Patch (3/3):
+> > > > > > > >   - Remove unnecessary newlines.
+> > > > > > > >
+> > > > > > > > Link to V3:
+> > > > > > > > https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin=
+@loongson.cn/
+> > > > > > > >
+> > > > > > > > V3:
+> > > > > > > > Patch (1/3):
+> > > > > > > >  - Drop "MFD" in title and comment;
+> > > > > > > >  - Fromatting code;
+> > > > > > > >  - Add clearer comments.
+> > > > > > > > Patch (2/3):
+> > > > > > > >  - Rebase linux-ipmi/next tree;
+> > > > > > > >  - Use readx()/writex() to read and write IPMI data instead=
+ of structure
+> > > > > > > >    pointer references;
+> > > > > > > >  - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
+> > > > > > > >  - Drop unused output.
+> > > > > > > > Patch (3/3):
+> > > > > > > >  - Inline the ls2k_bmc_gpio_reset_handler() function to ls2=
+k_bmc_pdata_initial();
+> > > > > > > >  - Add clearer comments.
+> > > > > > > >  - Use proper multi-line commentary as per the Coding Style=
+ documentation;
+> > > > > > > >  - Define all magic numbers.
+> > > > > > > >
+> > > > > > > > Link to V2:
+> > > > > > > > https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin=
+@loongson.cn/
+> > > > > > > >
+> > > > > > > > V2:
+> > > > > > > > - Drop ls2kdrm, use simpledrm instead.
+> > > > > > > > Patch (1/3):
+> > > > > > > >  - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+> > > > > > > >  - Add resolution fetching due to replacing the original di=
+splay
+> > > > > > > >    solution with simpledrm;
+> > > > > > > >  - Add aperture_remove_conflicting_devices() to avoid efifb
+> > > > > > > >    conflict with simpledrm.
+> > > > > > > > Patch (3/3):
+> > > > > > > >  - This part of the function, moved from the original ls2kd=
+rm to mfd;
+> > > > > > > >  - Use set_console to implement the Re-push display functio=
+n.
+> > > > > > > >
+> > > > > > > > Link to V1:
+> > > > > > > > https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin=
+@loongson.cn/
+> > > > > > > >
+> > > > > > > > Binbin Zhou (3):
+> > > > > > > >   mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+> > > > > > > >   mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+> > > > > > > >   ipmi: Add Loongson-2K BMC support
+> > > > > > > >
+> > > > > > > >  drivers/char/ipmi/Makefile       |   1 +
+> > > > > > > >  drivers/char/ipmi/ipmi_si.h      |   7 +
+> > > > > > > >  drivers/char/ipmi/ipmi_si_intf.c |   3 +
+> > > > > > > >  drivers/char/ipmi/ipmi_si_ls2k.c | 189 ++++++++++++
+> > > > > > > >  drivers/mfd/Kconfig              |  12 +
+> > > > > > > >  drivers/mfd/Makefile             |   2 +
+> > > > > > > >  drivers/mfd/ls2kbmc-mfd.c        | 485 +++++++++++++++++++=
+++++++++++++
+> > > > > > > >  7 files changed, 699 insertions(+)
+> > > > > > > >  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+> > > > > > > >  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+> > > > > > > > --
+> > > > > > > > 2.47.1
+> > > > > > > >
+> > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Thanks.
+> > > > > > Binbin
+> > > >
+> > > > --
+> > > > Thanks.
+> > > > Binbin
+> >
+> > --
+> > Thanks.
+> > Binbin
 
-Currently only NUMA Balancing is changed to make use of the async
-batched migration. It does so by recording the target NID and the
-readiness of the page to be migrated in the extended page flags
-fields.
-
-Each kmigrated routinely scans its PFNs, identifies the pages
-marked for migration and batch-migrates them. Unlike the previous
-approach, the responsibility of isolating the pages is now with
-kmigrated.
-
-The major difference between this approach and the way kpromoted[2]
-tracked hot pages is the elimination of heavy synchronization points
-between producers(sub-systems that request migrations or report
-a hot page) and the consumer (kmigrated or kpromoted).
-Instead of tracking only the list of hot pages in an orthogonal
-manner, this approach ties the hot page or migration infomation
-to the struct page.
-
-TODOs:
-
-- Very lightly tested(only with NUMAB=1) and posted to get some
-  feedback on the overall approach.
-- Currently uses the flags field from page extension sub-system.
-  However need to check if it is preferrable to use/allocate a
-  separate 32bit field exclusively for this purpose within page
-  extension sub-system or outside of it.
-- Benefit of async batch migration still needs to be measured.
-- Need to really tune a few things like the number of pages to
-  batch, the aggressiveness of kthread, the kthread sleep interval etc.
-- The logic to skip scanning of zones that don't have any pages
-  marked for migration needs to be added.
-- No separate kernel config is defined currently and dependency
-  on PAGE_EXTENSION isn't cleanly laid out. Some added definitions
-  currently sit in page_ext.h which may not be an ideal location
-  for them.
-
-[1] v0 - https://lore.kernel.org/linux-mm/20250521080238.209678-3-bharata@amd.com/
-[2] kpromoted patchset - https://lore.kernel.org/linux-mm/20250306054532.221138-1-bharata@amd.com/
-
-Bharata B Rao (3):
-  mm: migrate: Allow misplaced migration without VMA too
-  mm: kmigrated - Async kernel migration thread
-  mm: sched: Batch-migrate misplaced pages
-
-Gregory Price (1):
-  migrate: implement migrate_misplaced_folios_batch
-
- include/linux/migrate.h  |   6 ++
- include/linux/mmzone.h   |   5 +
- include/linux/page_ext.h |  17 +++
- mm/Makefile              |   3 +-
- mm/kmigrated.c           | 223 +++++++++++++++++++++++++++++++++++++++
- mm/memory.c              |  30 +-----
- mm/migrate.c             |  36 ++++++-
- mm/mm_init.c             |   6 ++
- mm/page_ext.c            |  11 ++
- 9 files changed, 309 insertions(+), 28 deletions(-)
- create mode 100644 mm/kmigrated.c
-
--- 
-2.34.1
-
+--=20
+Thanks.
+Binbin
