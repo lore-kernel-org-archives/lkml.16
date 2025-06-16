@@ -1,96 +1,104 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5FC2853E5;
-	Mon, 16 Jun 2025 18:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C2D15278E
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750097964; cv=none; b=VLxU1vCtUCABzevzoadYphhDYzTopogmgzJIVmMZrhRUfxWPYSM4umAyFPrGSetfBteu227tLdUCc+yGMVazo3An2m/aT6CSM5AOg7tmik6brrMkQgndZU5s97fH3sIxq7wnLUTAZN3eqRRsQqfUp2ewFvH8zIDBdhzDrZ3t+ts=
+	t=1750098002; cv=none; b=OSVAe20WNHMG/l1YLx+ht5GMT0ZB5/1fa9+jDyTj59TULxtZ1C4hDPfel5tGK+WyNMLWYdRvVB5Vly38Uow2tYvwiTvEy/iFuuaqe7nv1NF1UMdlnhleb966h2OSfCZaOM3SE+jwdu6hCReWmc615nk1dKDjV/HZzzYUBlp3uk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750097964; c=relaxed/simple;
-	bh=D4eLze5Axvit8hLX0d5/vlrb0Iv++TCuRDiYVH+TJOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aknOozEXp4jGHbNR6eP8TRMmMfTw6/wXJtsKsy1pnx1JAhOqVGn9O6JGz4QrroZ+0IjS5sxPEBy26B2iuxk3Mzz2F9nWdj8bUwOPPxPhoi9ymNyNB9Xtptfm9wz7m4QOQXmVIq449NBVM/88WJAYhP2DmU9uaTsXhfV6uQvnjLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=SAeJUQgu; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1750098002; c=relaxed/simple;
+	bh=v6EDMRKtKnbgoH+BBJ64hNYmsi+j0bmARWZDSnGtRk4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ojkHdT7F1MkiDs2X4vkygoWWI0m3lEEBBcFUws4vCxei97KolEalYVmp8d8+f6jJSlttbJfq85N/MDwCZufg7Bv4ICatT6swSjLq5hQo1Cs6Fb/dsjNJOPWU4LBwh36dJj70WBiFgTxQRnM2ZElbHj8JPPdqyIJugBpKasm9RwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oyGXx5ci; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="SAeJUQgu"
-Received: from kreacher.localnet (unknown [5.63.189.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 8119366DC60;
-	Mon, 16 Jun 2025 20:19:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1750097960;
-	bh=D4eLze5Axvit8hLX0d5/vlrb0Iv++TCuRDiYVH+TJOM=;
-	h=From:Subject:Date;
-	b=SAeJUQgudqQJESLvdmzjn7dL5BgbpVN/e0qT9VLREuEFIUa6ynhibUJ/F9RVKB0NF
-	 2+k3Sfo1MhnHlER3AhT6uYWfTWWFeOc5gWzVumMwu5ipu5VEOWA49sx2+uBs1hgucl
-	 ds2IKisES3SKizu4mzruO6jKPFjUf5uluLwqy1ispkWKiM0CDLIz9CYyE7R1yOzbo2
-	 4gQrSUOeoP2N5yiWl5CrNwnX+F2uN9jbKTxo1MnoyslqKC1MEqz0e8jwReDSxHblfl
-	 4VpYyoW51EqbDrYM27FffizrgIqjias4LCKaNXmPLLQRVAEJwZHiMxmeB4MzlhOkjr
-	 L5fu5BYBTWKsA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Shashank Balaji <shashank.mahadasyam@sony.com>,
- Russell Haley <yumpusamongus@gmail.com>
-Subject:
- [PATCH v1] cpufreq: intel_pstate: Always use HWP_DESIRED_PERF in passive mode
-Date: Mon, 16 Jun 2025 20:19:19 +0200
-Message-ID: <6173276.lOV4Wx5bFT@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oyGXx5ci"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GHuS92015738;
+	Mon, 16 Jun 2025 18:19:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=ysAR0yE+Us1cnHYzApgdYXhn0CW6q
+	ObAXT8BVYnrL7I=; b=oyGXx5ciUZJn7zjbXEHUM3gMyxFdMnWKG0HRNdMEsC9nl
+	oMJlSYwnVILflVPuYChaigcshYdG/1wzY4okkvrdWZcIh5GoaBD87B3gtZfRiZ0j
+	jjGuLBF13nYgh/DH4pBaLbFq+x1Sg5xrjOrNKYtRDWsuZsk4gTYD9ciTcG7n9Zcs
+	o1GUAvxlI8PLhm9ezZpiBUV/t6l+0QycWX8Z/zw7/9D8Mo0VXPMJmn3jzWLafa0V
+	b5TjusobDuY/xwYc8O6f8AYyR9lGUPpYddG3m8lvcCU3dNgtK5D/1biugG6JGLW6
+	MRJ0tDHIpelL6GCqViig9bXV0duCRMQIKp67kQ7wQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yv53drb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 18:19:40 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55GIETOA032196;
+	Mon, 16 Jun 2025 18:19:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh890ev-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 18:19:39 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55GIJdEp016156;
+	Mon, 16 Jun 2025 18:19:39 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 478yh890e6-1;
+	Mon, 16 Jun 2025 18:19:38 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: kbusch@kernel.org, axboe@kernel.dk, hch@lst.d, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] nvme: Fix incorrect cdw15 value in passthru error logging
+Date: Mon, 16 Jun 2025 11:19:29 -0700
+Message-ID: <20250616181936.2094176-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 5.63.189.50
-X-CLIENT-HOSTNAME: 5.63.189.50
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: dmFkZTF/I4x6zZceSr9PpSvCQ9iNejtSEb4amLQZYAOrXMGCwU3OPukZULDXLJRB2Ru/igCon2RjW5s/5tXTxXUbO4u2LLgc7+RQyZFuID53nbnaLXshf7Pa7GSn7fhNSfsecRRfQR9H6mHErZLFTVqaoS6sdnnM8kaYymqvDuhRZnasowwmF/Rnd/HfXRMw8GQG4zUE946pZo1MLH0KQfwO9rAhzoVDoLNDvD5qlqXn+FdCjRcAcD9lZ1EYhHFXyhaXw2MYRV4OXUQwwmf4uDzEcvT1EWQxCzyuh/qXTaAk0v6gHJ0+W6gmwB5Mbo1ayn+BI43KxwcVPBhZWO9lE4ef5c1/crmURsPWB7OKlACH63XR0HvlnAQblV4EuAldnPzSM3SnIfkxOtda+rDBCIMRNjHAAl1OH+wDD2TNNDOMjWIC6JgFMDSFz6sVjlzPyxacQ31SZAlnnGI5KLh2XNd1t4yjc4JG8GngHmds0UOUc28Eneysb7waTukQ6PrNZgkztlpDV8ubwwcJtsBXYvODr8qToZfB0dRnBlHn+7hfJlpvKVpWdDI4vLmz/ztO8tvD3p9FJwgpqnry/iLXuqeRZW9iyysaClNhbB6kRExudVvbJh8ETKwxtjHNyZbBNkSIRmnHhusI5BfJhagZ7Bni7YvyNGYbM2XsgZsHjfhlKuuYsA
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_09,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506160123
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEyMiBTYWx0ZWRfXzQ65P/5oVfh2 ntoWhG3RTTMUfm74z8Ki+ivlEJoIzXKxWpyyDByOwEP+ouQfMj5HtxYhFYjEjiIZJgIf4sUKgXF GdhMUtjdgl8oZvBLH+nQzrPy5gJUlYMG3x7wZUAEqO4yCNlLiza0k6NniaHVX2cW2Hpixlw7/XA
+ OZ6IwZvKFuDfvY2UF62F3q+nZbmLKli5L/3kkmVe17FQx0vYl2llDvDsgPC1rMKhf3th0mktTM8 PaxqTYMLcAg8WsTIO6YoKDw1ruxncsf7Lq3mfoH8f2mvc3U3TCFqRhs8r6MMy/nEBc9T3dupTNv Tv22u0ydY2tALFmz2NKuFdKMsFA8EK9GTkY3Z4VOyzY/GwTomC5xMLdk2Y5Pa6uIZKOIejzP8mo
+ acYiiIXDaLP5cssNqDcwn25KGytUa56FiRdAdGgwTjtvXt4yUR5kZEYKzl8OzNioAxjhjijW
+X-Proofpoint-GUID: QNIwZEwuSV9pJXpnom1oWen04q35hoO0
+X-Proofpoint-ORIG-GUID: QNIwZEwuSV9pJXpnom1oWen04q35hoO0
+X-Authority-Analysis: v=2.4 cv=W9c4VQWk c=1 sm=1 tr=0 ts=6850603c b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=AeMM1KqErxL4ncdj0kYA:9
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fix an error in nvme_log_err_passthru() where cdw14 was incorrectly
+printed twice instead of cdw15. This fix ensures accurate logging of
+the full passthrough command payload.
 
-In the passive mode, intel_cpufreq_update_pstate() sets HWP_MIN_PERF in
-accordance with the target frequency to ensure delivering adequate
-performance, but it sets HWP_DESIRED_PERF to 0, so the processor has no
-indication that the desired performance level is actually equal to the
-floor one.  This may cause it to choose a performance point way above
-the desired level.
-
-Moreover, this is inconsistent with intel_cpufreq_adjust_perf() which
-actually sets HWP_DESIRED_PERF in accordance with the target performance
-value.
-
-Address this by adjusting intel_cpufreq_update_pstate() to pass
-target_pstate as both the minimum and the desired performance levels
-to intel_cpufreq_hwp_update().
-
-Fixes: a365ab6b9dfb ("cpufreq: intel_pstate: Implement the ->adjust_perf() callback")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 9f079dda1433 ("nvme: allow passthru cmd error logging")
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
- drivers/cpufreq/intel_pstate.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Is it ok to keep Fixes tag for this fix?
+---
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -3249,8 +3249,8 @@
- 		int max_pstate = policy->strict_target ?
- 					target_pstate : cpu->max_perf_ratio;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 92697f98c601..f3e07cb92385 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -386,7 +386,7 @@ static void nvme_log_err_passthru(struct request *req)
+ 		nr->cmd->common.cdw12,
+ 		nr->cmd->common.cdw13,
+ 		nr->cmd->common.cdw14,
+-		nr->cmd->common.cdw14);
++		nr->cmd->common.cdw15);
+ }
  
--		intel_cpufreq_hwp_update(cpu, target_pstate, max_pstate, 0,
--					 fast_switch);
-+		intel_cpufreq_hwp_update(cpu, target_pstate, max_pstate,
-+					 target_pstate, fast_switch);
- 	} else if (target_pstate != old_pstate) {
- 		intel_cpufreq_perf_ctl_update(cpu, target_pstate, fast_switch);
- 	}
-
-
+ enum nvme_disposition {
+-- 
+2.47.1
 
