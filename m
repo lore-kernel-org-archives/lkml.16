@@ -1,120 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA962264DC
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908F27F001
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750068283; cv=none; b=HLQQUHwUflyPjyRnJv6JK35VQQUf4c+NfAow3O/VOpS8+rrXXcP0bKwJup+7pdG9Y/jZpe8Ivutz5J13I3l3khjjF4u9y2vAIn3aE1OMeS0qJRYT7rLjwh3DUBTfoIySu9H4Ho+3EESJqbdVQMPmeSXjS+CShVFYMz/4aIYok64=
+	t=1750068342; cv=none; b=QtWrujQzfkbV8MG5GRJgNA9LMbUt28P8PQe3/rj6x3KOxQDjr+CUudrEoEyK5JQKd7JCYdCAvqYgMdtjMu9nHUcSuOlO3uNrGk31fmHNuaIwXmim5OwhCeOhXv6hsFMWSgUw1/glkE5INMNndLjb/R7F8lEdNjS441pQ/8VLwKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750068283; c=relaxed/simple;
-	bh=uHrG9AeiPfO2ujCvATyl7C613FFrJeskk1YaGMKCsyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t4Qizrbuxb3F0xJRWb083sngKpC4tYgflO1CRPrxvpXLCdkbkrhRGqSwaJkagZXeaoA1trnwIPgNuSvCrOJEaFsHhgMJmorDTeOcUlu6D4/NuMzxgKiBYRYQ7/JvOP/O0HGmtUF+Re/6sz7YvC3uB62EywHupcp1sJBrRnG2Osc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OOV9yn8r; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OOV9yn8r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750068280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cdzwj7ImrbS9o0Bom5tv9zCMbeN8T26Ybl8KaA09pw8=;
-	b=OOV9yn8rMlmB4/sBKDYF/3MwacCUvowJy1dso4R3oEncuoN+EYKQU/2rlIhc2Woz/Zi97A
-	POZYXctP75IdhHC30A22gw034dggKjrWnxSIJw/treCl//PyRlXPYMqKR/RBywyA6M07CQ
-	fbAqPQIM4H8MurMbtL9lzr4CmI76JuU=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-hbjdZhxhNYaEDpFPibhwig-1; Mon, 16 Jun 2025 06:04:39 -0400
-X-MC-Unique: hbjdZhxhNYaEDpFPibhwig-1
-X-Mimecast-MFC-AGG-ID: hbjdZhxhNYaEDpFPibhwig_1750068278
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb94dbd01fso407843766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:04:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750068278; x=1750673078;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cdzwj7ImrbS9o0Bom5tv9zCMbeN8T26Ybl8KaA09pw8=;
-        b=vbCsAHZxQm50ouumJTIcBa5TYRcqQfUq5ns32v43c/KNjpqIfTCWBwRGmMohPbWTUD
-         t/ozB9HpJ/8gVWcgf2W8fqEpPgQrt109EVv9l78oaB5WBQn76+E2cE/41TllXyYM4xlW
-         zIIltzuyCwqZmjth26hPnDWF2PMsY1+XjUn5HABnO1vX5JN+KJbl5phHsyZLH9/5S73x
-         EqvaCGhNT4e9azQTevhkdExIEZ2wD2aYJGrFn8FA357JFutUOZnNAebaoz5/isxF47Cq
-         vMMXH1DG1EQ0HnCFD/muJ7jU7y1UFgQDHzi+M20/bVVczNGFvPcPtbUaUZCRV8Tb1JKu
-         qaBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJGwTaEjPYNYQVTEaccgF9p8bvK/hSkwX8fcOtjePK1SRQwUH05vlKjm8j8EZkc4rqryd0DhfzozE5miI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTNYu+Wa/6D+ZmMO0Vl8qMVoKp65zOT2pLO9vYbNPdR89GhjAz
-	zsJcQvhtk7qndGJiQYcTx9IK76QNWmQCsWolnVOgQB7KzyCjm0mE0LuUdnLsEF+x92Mw17LlYyO
-	7BtQj5Ha/6ZJjzCyvLO2P9dM32a6KGgvltQXnkskvjDQQF1WNecEXWR+IUmCEhXujcA==
-X-Gm-Gg: ASbGncvjwRJpa2idrGVEWIjcyWtgdCYlXqImDWmGAw9l4d1fJa5jmn3zTfH24Nxjlg4
-	2DX8iEWDpZHETAtWT/7mc2e4rhCv2zOskQ4eyi34CVf2R0rDJhAS/t0YucW2yNHqwYUAhOiunId
-	DZc08ZdM6tp0NR8ud9c0+Lv3txqbA/sCpEfX48tERnhnPNV2P/5IG/e4ti+56xeMiw66ARWREpd
-	bQ55fiTwd26UxHZGizTfh9ihCkDOBHYNhSNfqoCgmuMnRo54Vb7K27nATGHBtGVzMN8GsBhacwB
-	jbxk46X2jtkI2ujt1VRWzyCnSURzIWlxB7NHAyyY2qhP+Ayc/56WB4nOl5D4KLlcCia8
-X-Received: by 2002:a17:907:6e9f:b0:ade:35fc:1a73 with SMTP id a640c23a62f3a-adfad686483mr812056666b.55.1750068278296;
-        Mon, 16 Jun 2025 03:04:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmpyH9jeg0f77jDm3nySdq6N+wtnB02XFddQoRJxIvvAvLfKSuRlmjGjjHEdBqpoEQMLrfPA==
-X-Received: by 2002:a17:907:6e9f:b0:ade:35fc:1a73 with SMTP id a640c23a62f3a-adfad686483mr812054466b.55.1750068277873;
-        Mon, 16 Jun 2025 03:04:37 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec815992bsm633223566b.13.2025.06.16.03.04.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 03:04:37 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nikolay Borisov <nik.borisov@suse.com>
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] x86/its: fix an ifdef typo in its_alloc()
-Date: Mon, 16 Jun 2025 12:04:32 +0200
-Message-ID: <20250616100432.22941-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1750068342; c=relaxed/simple;
+	bh=K5ZyQ77aDKtscOMkjMS4b1nCdU/hnoiOTCcV27+ejFI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KKxfZY1xH/JXaoai1aRJckh4EFx3jaDLbjzPHTEjzCj5xxdXsv+My3SO3d6IhO59i61EnYUkvFtZtX2hKg/VNzDebOEewNHPBeQObMfoTy97LhyjtVC0knucML2Bbzt/Pv1LFWCmzNo/4jXhpLupNMlEFcxbiA1xRDW4uPnocF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bLQW308QJz6L5fj;
+	Mon, 16 Jun 2025 18:01:03 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 68C94140157;
+	Mon, 16 Jun 2025 18:05:36 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 16 Jun
+ 2025 12:05:35 +0200
+Date: Mon, 16 Jun 2025 11:05:34 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Qinxin Xia <xiaqinxin@huawei.com>
+CC: <21cnbao@gmail.com>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
+	<yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
+	<prime.zeng@huawei.com>, <fanghao11@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: Re: [RESEND PATCH v4 2/4] dma-mapping: benchmark: modify the
+ framework to adapt to more map modes
+Message-ID: <20250616110534.000022b0@huawei.com>
+In-Reply-To: <20250614143454.2927363-3-xiaqinxin@huawei.com>
+References: <20250614143454.2927363-1-xiaqinxin@huawei.com>
+	<20250614143454.2927363-3-xiaqinxin@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On Sat, 14 Jun 2025 22:34:52 +0800
+Qinxin Xia <xiaqinxin@huawei.com> wrote:
 
-Commit a82b26451de1 ("x86/its: explicitly manage permissions for ITS
-pages") reworks its_alloc() and introduces a typo in an ifdef
-conditional, referring to CONFIG_MODULE instead of CONFIG_MODULES.
+> In some service scenarios, the performance of dma_map_sg needs to be
+> tested to support different map modes for benchmarks. This patch adjusts
+> the DMA map benchmark framework to make the DMA map benchmark framework
+> more flexible and adaptable to other mapping modes in the future.
+> By abstracting the framework into four interfaces:prepare, unprepare,
+> do_map, and do_unmap.The new map schema can be introduced more easily
+> without major modifications to the existing code structure.
+> 
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
 
-Fix this typo in its_alloc().
+There is what looks like an accidental change in behavior for loops
+after the first one.  I think the cache lines will end up clean so
+any flush will be just dropping them.  Prior to this patch they
+were probably dirty.
 
-Fixes: a82b26451de1 ("x86/its: explicitly manage permissions for ITS pages")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- arch/x86/kernel/alternative.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jonathan
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 6455f7f751b3..9ae80fa904a2 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -228,7 +228,7 @@ static void *its_alloc(void)
- 	struct its_array *pages = &its_pages;
- 	void *page;
- 
--#ifdef CONFIG_MODULE
-+#ifdef CONFIG_MODULES
- 	if (its_mod)
- 		pages = &its_mod->arch.its_pages;
- #endif
--- 
-2.49.0
+>  #endif /* _KERNEL_DMA_BENCHMARK_H */
+> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
+> index cc19a3efea89..05f85cf00c35 100644
+> --- a/kernel/dma/map_benchmark.c
+> +++ b/kernel/dma/map_benchmark.c
+> @@ -5,6 +5,7 @@
+
+> +static void *dma_single_map_benchmark_prepare(struct map_benchmark_data *map)
+> +{
+> +	struct dma_single_map_param *params __free(kfree) = kzalloc(sizeof(*params),
+> +								    GFP_KERNEL);
+Trivial: I'd split this slightly differently.
+
+	struct dma_single_map_param *params __free(kfree) =
+		kzalloc(sizeof(*params), GFP_KERNEL);
+
+
+> +}
+
+> +
+> +static int dma_single_map_benchmark_do_map(void *mparam)
+> +{
+> +	struct dma_single_map_param *params = mparam;
+> +	int ret = 0;
+> +
+> +	params->addr = dma_map_single(params->dev, params->xbuf,
+> +				      params->npages * PAGE_SIZE, params->dma_dir);
+> +	if (unlikely(dma_mapping_error(params->dev, params->addr))) {
+> +		pr_err("dma_map_single failed on %s\n", dev_name(params->dev));
+
+dev_err() seems more appropriate than passing in the dev to a pr_err.
+
+> +		ret = -ENOMEM;
+		return -ENOMEM;
+Or better still don't assume the error return of dma_mapping_error()
+(even though it is currently only -ENOMEM)
+
+> +	}
+> +
+	return 0;
+
+
+would be neater and avoid need for the local variable.
+If you add stuff here later in the series then fine to ignore this comment.
+
+
+> +	return ret;
+> +}
+
+>  static int map_benchmark_thread(void *data)
+>  {
+> -	void *buf;
+> -	dma_addr_t dma_addr;
+>  	struct map_benchmark_data *map = data;
+> -	int npages = map->bparam.granule;
+> -	u64 size = npages * PAGE_SIZE;
+> +	__u8 map_mode = map->bparam.map_mode;
+>  	int ret = 0;
+>  
+> -	buf = alloc_pages_exact(size, GFP_KERNEL);
+> -	if (!buf)
+> +	struct map_benchmark_ops *mb_ops = dma_map_benchmark_ops[map_mode];
+> +	void *mparam = mb_ops->prepare(map);
+> +
+> +	if (!mparam)
+>  		return -ENOMEM;
+>  
+>  	while (!kthread_should_stop())  {
+> @@ -49,23 +132,10 @@ static int map_benchmark_thread(void *data)
+>  		ktime_t map_stime, map_etime, unmap_stime, unmap_etime;
+>  		ktime_t map_delta, unmap_delta;
+>  
+> -		/*
+> -		 * for a non-coherent device, if we don't stain them in the
+> -		 * cache, this will give an underestimate of the real-world
+> -		 * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
+> -		 * 66 means evertything goes well! 66 is lucky.
+> -		 */
+> -		if (map->dir != DMA_FROM_DEVICE)
+> -			memset(buf, 0x66, size);
+
+This seems to change the behavior form memset every time to only once
+in the prepare call above.  If that has no affect on what is being benchmarked,
+then add a comment on it to the patch description.
+
+
+> -
+>  		map_stime = ktime_get();
+> -		dma_addr = dma_map_single(map->dev, buf, size, map->dir);
+> -		if (unlikely(dma_mapping_error(map->dev, dma_addr))) {
+> -			pr_err("dma_map_single failed on %s\n",
+> -				dev_name(map->dev));
+> -			ret = -ENOMEM;
+> +		ret = mb_ops->do_map(mparam);
+> +		if (ret)
+>  			goto out;
+> -		}
+>  		map_etime = ktime_get();
+>  		map_delta = ktime_sub(map_etime, map_stime);
+>  
+> @@ -73,7 +143,8 @@ static int map_benchmark_thread(void *data)
+>  		ndelay(map->bparam.dma_trans_ns);
+>  
+>  		unmap_stime = ktime_get();
+> -		dma_unmap_single(map->dev, dma_addr, size, map->dir);
+> +		mb_ops->do_unmap(mparam);
+> +
+>  		unmap_etime = ktime_get();
+>  		unmap_delta = ktime_sub(unmap_etime, unmap_stime);
+>  
+> @@ -108,7 +179,7 @@ static int map_benchmark_thread(void *data)
+>  	}
+>  
+>  out:
+> -	free_pages_exact(buf, size);
+> +	mb_ops->unprepare(mparam);
+>  	return ret;
+>  }
 
