@@ -1,156 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE023522F;
-	Mon, 16 Jun 2025 08:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049E6522F;
+	Mon, 16 Jun 2025 08:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063675; cv=none; b=aexve3sYoh9nCIHodEsQ7EKfWidcXc+qD+L+JhUod6jBFqA4E4G2PdM1VSOpqZteUDF6KpnkryeIifEtX7/e96yROLLBXDZK2ZHdmln1EaSdXRJ07eb2OlXmwu2CmZvNDeLnz3ksCeoj0nvup8fU8atQexSjYPX4RcI79Z9MBq0=
+	t=1750063682; cv=none; b=VWBE7yK98mD7yYcUdkc6+I8lF39BeYTrLu88VqL0M1ILkhJgedqC4DLfbRN1jUl57VH+Qp5q/8I0Eb5sxJ8iYGdudUW7LBNv9ag3XtmxszBQEe8fP2HLUctaPZ3DusqaqE0niwKwHBD+4Dk9dTJqWh6iU3aRLQ5x6j52Ry7CzLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063675; c=relaxed/simple;
-	bh=Jmw+LF/yWtvrkBOZ2hbKLwp4rJ8jMljTl1Iw26HP98I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VnJgH0aGbs7BAoLs3ahrgHzUxmrMSPmt8opNJYk6LlFy2Of7V6y8gmWi24kJgikT0iWygj400EqIyjGNAj+MwYRvZCB8ulib/rZQsPUlc079a1Ne4f+3HMCzRo1oka+8xP+XXivcD4H9CQWOxIn3ngUxhEZ8IpSVK7RCFprOxIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMTegmHZ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750063682; c=relaxed/simple;
+	bh=ABxPcG6RRfW20RkKqMQhOQXK5M86GqkUcBcJN3JJRhY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MA3mio1Jm6+qh2tGJyUrnaxlwPgFBSA7K9iTu4Yj3OEYwxkg9uAOvg4xjZly96JcDPNTj3miSC++/rwikqOIbLm8WDKGw2OSAODNCl5YabVaUks8JbowoRg3KkftEro/sGWw7pQuvzTMUmHthBq4O1pbURIAmqXywMeEKtx1Sdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwbJx5or; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMTegmHZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwbJx5or"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750063674; x=1781599674;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Jmw+LF/yWtvrkBOZ2hbKLwp4rJ8jMljTl1Iw26HP98I=;
-  b=QMTegmHZ01LY5UrRRB6DlH4DCkOJnpPQ4ijSD5pMNKvHSztotNmk9Ig3
-   0bL891QzCkqTT7wgikwJu+GDdE+6AAdz7qVlATaE5OCCdB4Bv285c82vd
-   0Zm4b8xdt5gSD36vdYFxNMKuhkQreBzLgta5DwUlKG4xw1p5Dewqetx+u
-   TCVYuQiQ9qrLgacxAcWZXw9gI+TjIdeYqd9Tl/sXdWdkpGCKj3R1DAJKE
-   NqkNv2IyaIsEtw+2Yp6X5ZGIIGo/w7LYSHu62k73u+61+b8nyrO2atikL
-   GPOqBsXyKhmWWn6tPjooQCJiWi5iI9RRu+5VmlZMPe+0APOMNii1w/Ir/
+  t=1750063682; x=1781599682;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ABxPcG6RRfW20RkKqMQhOQXK5M86GqkUcBcJN3JJRhY=;
+  b=SwbJx5ord8FmaZu705n+qbmHewTDGQrz3idfHMEyYxlW1LDu68sOYveh
+   yam2Vtzdp+mZOS8QAQxHnwWaLvCLxZry5fiZKAZvsZTjnM2o1fJoz8V8v
+   kcURwhHsVgM12QQfaL3aC3nOnzt1b7L3B3XrQ9y1fZCLcPNG8vquazzaI
+   6gIoZjDVoQ8chZrVmqmOYA4iJg355914qW9eA3EAgxNhsoVB9e53RZAie
+   Xk6IoTPe6UbrBveqICcMS7CbC6CZSKAQtnTl2N5zqxx8bPzblOTJfhrRt
+   DwppA3noBODwlEOXaddYZRfSe6xqG02akTIy2Th3+oXG9ZV7QTa54r+Ne
    g==;
-X-CSE-ConnectionGUID: kC0Gih4sSHW8PnJWDm/e8g==
-X-CSE-MsgGUID: knB34gDwTe6h6tgcurk7UA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62472285"
+X-CSE-ConnectionGUID: wULjngdqT86WdmmnmuMxaw==
+X-CSE-MsgGUID: xXkeUqzYR1K9m2z7y0nefg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="51912671"
 X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="62472285"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:47:50 -0700
-X-CSE-ConnectionGUID: k9Brh6RfRuyve3qjkPmnxg==
-X-CSE-MsgGUID: faX8jCxLQECduLo6MltvDA==
+   d="scan'208";a="51912671"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:48:01 -0700
+X-CSE-ConnectionGUID: GzQvTa4HT3allmjjapk0tA==
+X-CSE-MsgGUID: zXwFLMjjQbOFGQ58ddwGBg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="153709859"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:47:47 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uR5VH-000000071XI-2Sv3;
-	Mon, 16 Jun 2025 11:47:43 +0300
-Date: Mon, 16 Jun 2025 11:47:43 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Marek Vasut <marek.vasut@mailbox.org>
-Cc: Marek Vasut <marek.vasut+bmc150@mailbox.org>,
-	Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Julien Stephan <jstephan@baylibre.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
- IRQ connected
-Message-ID: <aE_aL5dGKZeKBu50@smile.fi.intel.com>
-References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
- <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
- <8605141c-b615-4e84-9574-81e24590df48@mailbox.org>
+   d="scan'208";a="149319583"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.107])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:47:57 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [RFC PATCH v1 0/2] kselftest/resctrl: CAT functional tests
+Date: Mon, 16 Jun 2025 11:24:51 +0300
+Message-Id: <20250616082453.3725-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8605141c-b615-4e84-9574-81e24590df48@mailbox.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 07:02:28PM +0200, Marek Vasut wrote:
-> On 6/13/25 5:09 PM, Andy Shevchenko wrote:
-> > On Fri, Jun 13, 2025 at 02:45:22PM +0200, Marek Vasut wrote:
+Hi all,
 
-> > > The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
-> > > which leads to bmc150_accel_core_probe() being called with irq=0, which
-> > > leads to bmc150_accel_interrupts_setup() never being called, which leads
-> > > to struct bmc150_accel_data *data ->interrupts[i].info being left unset
-> > > to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
-> > > which depends on struct bmc150_accel_data *data ->interrupts[i].info being
-> > > non-NULL, and which triggers NULL pointer dereference. This is triggered
-> > > e.g. from iio-sensor-proxy.
-> > > 
-> > > Fix this by skipping the IRQ register configuration in case there is no
-> > > IRQ connected in hardware, in a manner similar to what the driver did in
-> > > the very first commit which added the driver.
-> > > 
-> > > ACPI table dump:
-> > 
-> > >          Device (BMA2)
-> > >          {
-> > >              Name (_ADR, Zero)  // _ADR: Address
-> > >              Name (_HID, "BOSC0200")  // _HID: Hardware ID
-> > >              Name (_CID, "BOSC0200")  // _CID: Compatible ID
-> > >              Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
-> > >              Name (_UID, One)  // _UID: Unique ID
-> > >              Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-> > >              {
-> > >                  Name (RBUF, ResourceTemplate ()
-> > >                  {
-> > >                      I2cSerialBusV2 (0x0019, ControllerInitiated, 0x00061A80,
-> > >                          AddressingMode7Bit, "\\_SB.PCI0.I2C0",
-> > >                          0x00, ResourceConsumer, , Exclusive,
-> > >                          )
-> > >                  })
-> > >                  Return (RBUF) /* \_SB_.PCI0.I2C0.BMA2._CRS.RBUF */
-> > >              }
+In the last Fall Reinette mentioned functional tests of resctrl would
+be preferred over selftests that are based on performance measurement.
+This series tries to address that shortcoming by adding some functional
+tests for resctrl FS interface and another that checks MSRs match to
+what is written through resctrl FS. The MSR test is only available for
+Intel CPUs at the moment.
 
-> > >          }
+Why RFC?
 
-...
+The new functional selftest itself works, AFAIK. However, calling
+ksft_test_result_skip() in cat.c if MSR reading is found to be
+unavailable is problematic because of how kselftest harness is
+architected. The kselftest.h header itself defines some variables, so
+including it into different .c files results in duplicating the test
+framework related variables (duplication of ksft_count matters in this
+case).
 
-> > As for the solution, are you sure the line is not wired at all?
-> 
-> No . It is some cheap mini-laptop , I have no schematics or any other info
-> really .
+The duplication problem could be worked around by creating a resctrl
+selftest specific wrapper for ksft_test_result_skip() into
+resctrl_tests.c so the accounting would occur in the "correct" .c file,
+but perhaps that is considered hacky and the selftest framework/build
+systems should be reworked to avoid duplicating variables?
 
-> Note that I am not really familiar with x86 and ACPI, so there is that.
 
-Yes, I understand that.
+Ilpo Järvinen (2):
+  kselftest/resctrl: CAT L3 resctrl FS function tests
+  kselftest/resctrl: Add CAT L3 CBM functional test for Intel RDT
 
-You can try to monitor the /sys/kernel/debug/pinctrl/*/pins files for any
-changes that might happen on the sensor events. It might (help to) reveal
-the IRQ line.
+ tools/testing/selftests/resctrl/cat_test.c    | 210 ++++++++++++++++++
+ tools/testing/selftests/resctrl/msr.c         |  55 +++++
+ tools/testing/selftests/resctrl/resctrl.h     |   6 +
+ .../testing/selftests/resctrl/resctrl_tests.c |   2 +
+ tools/testing/selftests/resctrl/resctrlfs.c   |  48 ++++
+ 5 files changed, 321 insertions(+)
+ create mode 100644 tools/testing/selftests/resctrl/msr.c
 
-> > IIRC Hans had a broken tales where it was simply forgotten, meaning
-> > the Android / Windows driver simply hardcoded needed info.
-> > 
-> > If it's the case, it should be solved differently around PDx86 special quirk
-> > driver for the cases like this.
-> There are likely two issues.
-> 
-> First, this driver needs to handle i2c_client->irq == 0 correctly if it
-> should work without IRQ line, which the driver seems to indicate that it
-> does. The current crashing the kernel is not the correct way of handling
-> that. That's this patch, in some form.
-> 
-> Second, if this laptop has some IRQ line for this chip hidden somewhere,
-> then it might need a quirk of sorts, sure. Is there some way to find out,
-> without taking the thing apart and poking around with a scope ?
 
+base-commit: c1d7e19c70cbb8a19f63c190cf53e71b5f970514
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
