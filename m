@@ -1,52 +1,45 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8339928DEE0
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442C3278E71;
+	Mon, 16 Jun 2025 10:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750068186; cv=none; b=lfu0YXptJY/e29JrKzvy4Xq6TPFuPyrPeeyHMO0xSViHhNeCCBioTq16n6nWpRpVy3SH4DNFg38mk3IvcdZWE/kdXefs39v639hnXE+1DIRgjA+XCf8xgwUjyC+RtuJAJLPRM/adobIO0Mf2Y5ECi9ZjB7Ho3P5kZajZqDPazgM=
+	t=1750068190; cv=none; b=uU/PAoW//ODD/9QHh98gL9xgPbKsX0fJ1CAj1NZRGgCVtmw1vgUPAsD+OSU9FShPQ9Rqn03gjB/I7FR3WwdwFR8IAm3k6B4l2VE+KNwZpkUYfojc4JaN5jz0alRnLBHttdz9DComBHdLAmtlyDQHlygi/NoOarFgOGsiV40HVX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750068186; c=relaxed/simple;
-	bh=lLM6PNG7dKx15HVc5tCO8LXy6xfPDli0bR1Pop3fY/M=;
+	s=arc-20240116; t=1750068190; c=relaxed/simple;
+	bh=XQM8j714x8CB0+wIsMuEuOxZKpbd7ep9EJ8KDVn9O04=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EnBapLSVdpC+GkoquQThlk0wgQ4kh3X+Oa5xIrPLG4qn1y94TreBICrf3AyefmehyYtMyHbmMYVct72U2pKcn5U00OzjKbrW/azPChLJcp5/Ng1JdSqbWEwLuXz8ItBZ85gdtVGG8LN2fUsZniMrQb1FVaY2as4qZRSQf2E40CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uR6g5-0002xJ-5k; Mon, 16 Jun 2025 12:02:57 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uR6g4-003mkZ-1v;
-	Mon, 16 Jun 2025 12:02:56 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uR6g4-00H0zN-1X;
-	Mon, 16 Jun 2025 12:02:56 +0200
-Date: Mon, 16 Jun 2025 12:02:56 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	kernel@pengutronix.de,
-	Alvin =?iso-8859-15?Q?=A6ipraga?= <alsi@bang-olufsen.dk>
-Subject: Re: [PATCH v4 2/3] dt-bindings: clock: add TI CDCE6214 binding
-Message-ID: <aE_r0MB9rVdJeYkG@pengutronix.de>
-References: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de>
- <20250430-clk-cdce6214-v4-2-9f15e7126ac6@pengutronix.de>
- <3ba53493700561923c4ea9ab53a1a272@kernel.org>
- <aBsUObKHmJkBFN04@pengutronix.de>
- <1f072e2e02bb6a66d10c50177e5c69a6@kernel.org>
- <aBxbr8CyKmdZQobS@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MspZ6jFnuxd1VpgE+walzLfOWFJIh0Icc/Cn3Ja1VaJj8MZgwzZgFR98YCM+uV2SDJTjLMghluvWO0WBE7EHOz4OeascCPgMd/1mGkozhXpzVXyTRwqRJ2wSeKBV8/HBYVbj57ScZdLVxDaiyBuPMtstZqCCfZTohurMnlHf7lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bjo78z/u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bjo78z/u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1DDC4CEEA;
+	Mon, 16 Jun 2025 10:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750068189;
+	bh=XQM8j714x8CB0+wIsMuEuOxZKpbd7ep9EJ8KDVn9O04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bjo78z/unMglag+thKwfukBAUjd4ObIDnwtDCbACbFN5dFlqSZb7v2YHP8Ec096Xz
+	 3bBI17L+F4CO4kHNuVKN4tT+N3y5D96977CfynimipzSkpa684O1LZf8Tpd8b3uXfH
+	 VjyIiqTLkKw0ooqWiFAab1+KWJAr5v0cdg1farxLQL2LQG3yXIKkAPYh1W1dX9/ga7
+	 jaEmX0vtnKB6tc/p+4nOfiX5AMUCLhbfPMmMgV3qM2RDzSnlJsw0r+EPs9u4X0rXfd
+	 gRIEN/qyLYZiLxAYWFv8B/s11wE2NTm2iv3Fjv3cL2qiaYUZ8LYvqLelF9dj8magUt
+	 O/gxT9SFf8NjQ==
+Date: Mon, 16 Jun 2025 11:03:04 +0100
+From: Will Deacon <will@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, robin.murphy@arm.com,
+	joro@8bytes.org, praan@google.com, yi.l.liu@intel.com,
+	peterz@infradead.org, jsnitsel@redhat.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	baolu.lu@linux.intel.com
+Subject: Re: [PATCH v2 10/14] iommu/arm-smmu-v3: Replace arm_vsmmu_alloc with
+ arm_vsmmu_init
+Message-ID: <20250616100303.GA17132@willie-the-truck>
+References: <cover.1749882255.git.nicolinc@nvidia.com>
+ <64e4b4c33acd26e1bd676e077be80e00fb63f17c.1749882255.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,58 +48,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBxbr8CyKmdZQobS@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <64e4b4c33acd26e1bd676e077be80e00fb63f17c.1749882255.git.nicolinc@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, May 08, 2025 at 09:22:23AM +0200, Sascha Hauer wrote:
-> On Wed, May 07, 2025 at 01:11:31PM -0700, Stephen Boyd wrote:
-> > Quoting Sascha Hauer (2025-05-07 01:05:13)
-> > > On Mon, May 05, 2025 at 10:50:49AM -0700, Stephen Boyd wrote:
-> > > > Quoting Sascha Hauer (2025-04-30 02:01:35)
-> > > > > diff --git a/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
-> > > > > new file mode 100644
-> > > > > index 0000000000000..d4a3a3df9ceb9
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
-> > > > > @@ -0,0 +1,155 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > +
-> > > > > +patternProperties:
-> > > > > +  '^clk@[0-1]$':
-> > > > > +    type: object
-> > > > > +    description:
-> > > > > +      optional child node that can be used to specify input pin parameters. The reg
-> > > > > +      properties match the CDCE6214_CLK_* defines.
-> > > > 
-> > > > Presumably the EEPROM is typically used to configure all this stuff? Do
-> > > > you actually need to program this from the kernel, or are you
-> > > > implementing all this for development purposes?
-> > > 
-> > > The EEPROM could be used to configure this. I don't know if the final
-> > > product will have the EEPROM programmed, but even if it is, should we
-> > > make this mandatory?
-> > 
-> > No I'm not asking about making the property/node required. I'm wondering
-> > if you're actually using these bindings. If they're not used then I
-> > worry we're putting a bunch of configuration in here that we'll never
-> > use.
+On Fri, Jun 13, 2025 at 11:35:22PM -0700, Nicolin Chen wrote:
+> To ease the for-driver iommufd APIs, get_viommu_size and viommu_init ops
+> are introduced.
 > 
-> At the moment we are using the device tree binding. I asked our customer if
-> they plan to use it in production as well.
+> Sanitize the inputs and report the size of struct arm_vsmmu on success, in
+> arm_smmu_get_viommu_size().
+> 
+> Place the type sanity at the last, becase there will be soon an impl level
+> get_viommu_size op, which will require the same sanity tests prior. It can
+> simply insert a piece of code in front of the IOMMU_VIOMMU_TYPE_ARM_SMMUV3
+> sanity.
+> 
+> The core will ensure the viommu_type is set to the core vIOMMU object, and
+> pass in the same dev pointer, so arm_vsmmu_init() won't need to repeat the
+> same sanity tests but to simply init the arm_vsmmu struct.
+> 
+> Remove the arm_vsmmu_alloc, completing the replacement.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   | 11 +++--
+>  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 46 ++++++++++---------
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  3 +-
+>  3 files changed, 32 insertions(+), 28 deletions(-)
 
-Answer from customer: We have no plans using the EEPROM
+Acked-by: Will Deacon <will@kernel.org>
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Will
