@@ -1,120 +1,108 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFCD2737E1;
-	Mon, 16 Jun 2025 09:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF211DB92A;
+	Mon, 16 Jun 2025 09:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065304; cv=none; b=cQe6d941gz8+58Kk1CiKV2vHcTHwfjcoPziG0nPO3jTtVj9z/Xqjotf2MwQhESLW/viNxxTMZSOnRgNYgJgesqUF/OOvlulCMTDS+5Y7xOgmHX/8Bza3ZuMJvMtef7klzbC5a9AgNKyS0oRf39F7VW8oCtKBk8KcwYtJ5kOJPPE=
+	t=1750065560; cv=none; b=p6d/mFC1O/GLUQEC1Unf82mlmyMi2oT74apJMd3zYZzdHYDRx2Kt+S3Y8LShdm68l0o4VOTVuSfQ+5CbUTQXPIzppfIl2xXs+gbU7qZNbY9YD37b7p0RhXXSS/Zi5k2LujaVpUiqIZYJZNcs88hPXLf7dn2dM1t7s/FQB5MAJGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065304; c=relaxed/simple;
-	bh=2HRrz5CjnU8wZIMFr5D7DyrHO5tkX2e1sFACMrY04Vs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=c0a2YAb3smVnhcpwyVCrj+XAX52hSgn0DldpMjXRMMgA1kwNEXfoWzzTDvU16kspxQasxLPkPYGgmxfk7Qm5e5Fw6DFdmvcEhEzT47IU7atEJ70zlja6cW5bVlyuggJlRLFQ9kQwrDhjITNUCevtmlSzmmnwx1C0g31Xw7ZznUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bLPTp172WzYQvRL;
-	Mon, 16 Jun 2025 17:14:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1E19F1A1DE0;
-	Mon, 16 Jun 2025 17:14:53 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAni1+L4E9o9F+9Pg--.37809S3;
-	Mon, 16 Jun 2025 17:14:52 +0800 (CST)
-Subject: Re: [PATCH RFC v2 0/5] blk-mq-sched: support request batch
- dispatching for sq elevator
-To: Damien Le Moal <dlemoal@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>,
- ming.lei@redhat.com, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
- <9d3aee10-9eb3-4f2d-bb9a-1721c05ec3aa@kernel.org>
- <16fd5432-36b0-0a92-0caa-7374ce1464a5@huaweicloud.com>
- <27d2cd23-1c0e-4a21-975c-68be727220ec@kernel.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <54c6a041-8937-3d8c-24f4-7cd7f15cdaca@huaweicloud.com>
-Date: Mon, 16 Jun 2025 17:14:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1750065560; c=relaxed/simple;
+	bh=cIWgCue/aqvpSg/kLDSZwh6pFlaG1xIal/HdrKsv3tA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cOvmAWPn8YqSCLoJ9pOUIZmc8m9au6iSsuydMWmFmOGQfSlYN4GMOeU0nqjblaCfcOq5hgSw4c/ZzawrZoO0xwDkDyFjsuA6lcMdshnFfjQVIt9ei1msBewkrxwusPL+N0oUNDHIWyvPlPJYVcLyIps3+RaTqjss97K/TcA/5dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csja2bDf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csja2bDf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F7A5C4CEEE;
+	Mon, 16 Jun 2025 09:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750065560;
+	bh=cIWgCue/aqvpSg/kLDSZwh6pFlaG1xIal/HdrKsv3tA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=csja2bDfFVXwJHWt9Mv+cG/BZxIObuzgt1mBo5mgh8rbGQnTZx8gvAxRHHyOhFy0a
+	 G0scb5aTnlGOrkoLj/IIqrQGA0N8ZaYJX9swYbqcetVA1INH/BO9MUSky41vA2KPGK
+	 cKo+uLHW6PutUn58QN2K4C7n5nk69ibXq63hVOUr3jvP2KwxtVlfdKVtmiKG9IoKGL
+	 jLBItFuxKDmT2/lFbLFNKef/lPKlPn3lH2Rbe3HAXNZEyGdGy8EwIIk/PiBup1CzU5
+	 jwiHY3QOSItn6IStk4J0QihcCSTJm8VZI0T5Voic2AMx0PwPoBa6+CLR8vT8DddXsz
+	 PRLn3slXKLQgw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uR5zo-000000005ZR-2jKu;
+	Mon, 16 Jun 2025 11:19:17 +0200
+Date: Mon, 16 Jun 2025 11:19:16 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Depeng Shao <quic_depengs@quicinc.com>,
+	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+	Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH 2/2] media: qcom: camss: vfe: Fix registration sequencing
+ bug
+Message-ID: <aE_hlGHkRZqFFacR@hovoldconsulting.com>
+References: <20250612-linux-next-25-05-30-daily-reviews-v1-0-88ba033a9a03@linaro.org>
+ <20250612-linux-next-25-05-30-daily-reviews-v1-2-88ba033a9a03@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <27d2cd23-1c0e-4a21-975c-68be727220ec@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAni1+L4E9o9F+9Pg--.37809S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7trW3tw43KFWfZry8uF1kuFg_yoW8GFW7pF
-	WrtFWayws0gFn2y34v934rKr1Uu34kWFyfJrn8JrW2g3s8Jr1SkrsxKFZ8ZFW7Arn3GFsF
-	9FW0qFyFqrn2qFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-linux-next-25-05-30-daily-reviews-v1-2-88ba033a9a03@linaro.org>
 
-Hi,
-
-在 2025/06/16 15:37, Damien Le Moal 写道:
-> On 6/16/25 16:22, Yu Kuai wrote:
->> I agree that lock contention here will not affect HDD performance.
->> What I suspect the difference in my environment is that the order of rqs
->> might be changed from elevator dispatching them and the disk handling
->> them.
->>
->> For example, the order can be easily revised if more than one context
->> dispatch one request at a time:
->>
->> t1:
->>
->> lock
->> rq1 = dd_dispatch_request
->> unlock
->> 			t2:
->> 			lock
->> 			rq2 = dd_dispatch_request
->> 			unlock
->>
->> lock
->> rq3 = dd_dispatch_request
->> unlock
->>
->> 			lock
->> 			rq4 = dd_dispatch_request
->> 			unlock
->>
->> //rq1,rq3 issue to disk
->> 			// rq2, rq4 issue to disk
->>
->> In this case, the elevator dispatch order is rq 1-2-3-4, however,
->> such order in disk is rq 1-3-2-4.
->>
->> And with batch requests dispatch, will this less likely to happen?
+On Thu, Jun 12, 2025 at 09:07:16AM +0100, Bryan O'Donoghue wrote:
+> msm_vfe_register_entities loops through each Raw Data Interface input line.
+> For each loop we add video device with its associated pads.
 > 
-> If you are running a write test with the HDD write cache enabled, such
-> reordering will most liley not matter at all. Running the same workload with
-> "none" and I get the same IOPS for writes.
+> Once a single /dev/video0 node has been populated it is possible for
+> camss_find_sensor_pad to run. This routine scans through a list of media
+> entities taking a pointer pad = media_entity->pad[0] and assuming that
+> pointer is always valid.
 > 
-> Check your disk. If you do have the HDD write cache disabled, then sure, the
-> order will matter more depending on how your drive handles WCD writes (recent
-> drives have very similar performance with WCE and WCD).
+> It is possible for both the enumeration loop in msm_vfe_register_entities()
+> and a call from user-space to run concurrently.
 > 
-Thanks for the explanation, I'll test more workload on more disks, and
-of corese, explain details more in the formal version as you suggested.
+> Adding some deliberate sleep code into the loop in
+> msm_vfe_register_entities() and constructing a user-space program to open
+> every /dev/videoX node in a tight continuous loop, quickly shows the
+> following error.
+> 
+> [  691.074558] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
+> [  691.074933] Call trace:
+> [  691.074935]  camss_find_sensor_pad+0x74/0x114 [qcom_camss] (P)
+> [  691.074946]  camss_get_pixel_clock+0x18/0x64 [qcom_camss]
+> [  691.074956]  vfe_get+0xc0/0x54c [qcom_camss]
+> [  691.074968]  vfe_set_power+0x58/0xf4c [qcom_camss]
+> [  691.074978]  pipeline_pm_power_one+0x124/0x140 [videodev]
+> [  691.074986]  pipeline_pm_power+0x70/0x100 [videodev]
+> [  691.074992]  v4l2_pipeline_pm_use+0x54/0x90 [videodev]
+> [  691.074998]  v4l2_pipeline_pm_get+0x14/0x20 [videodev]
+> [  691.075005]  video_open+0x74/0xe0 [qcom_camss]
+> [  691.075014]  v4l2_open+0xa8/0x124 [videodev]
+> [  691.075021]  chrdev_open+0xb0/0x21c
+> [  691.075031]  do_dentry_open+0x138/0x4c4
+> [  691.075040]  vfs_open+0x2c/0xe8
 
-Kuai
+> Taking the vfe->power_lock is not possible since
+> v4l2_device_register_subdev takes the mdev->graph_lock. Later on fops->open
+> takes the mdev->graph_lock followed by vfe_get() -> taking vfe->power_lock.
+> 
+> Introduce a simple enumeration_complete bool which is false initially and
+> only set true once in our init routine after we complete enumeration.
+> 
+> If user-space tries to interact with the VFE before complete enumeration it
+> will receive -EAGAIN.
 
+As Vladimir also pointed out, this is at best just papering over the
+issue.
+
+You need to make sure the video device is not registered until it's
+ready to be used. That is the bug that needs fixing.
+
+Johan
