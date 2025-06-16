@@ -1,104 +1,136 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10E32BEFED;
-	Mon, 16 Jun 2025 21:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98653136349
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750109025; cv=none; b=HfjUOW34u1Xq/MCEyqES6ndG8Cdcnt4KnHNEUH9NzkIasvqKMbrGwmn8qtUte17pPP5PlgEsWTRz54kgU777vrkMjeI2E0LGzTFx3f7waFOSa8fxv/6pF22OI9K6BHYdnSJGbhekfgePmkzeNX2h5GQuKEudiNRnznkhDfvAo1g=
+	t=1750109194; cv=none; b=Em0HgPXX8AiWrrfEd00JDbkvTRsQheDkU34T4J4k37+puHy7vIN4fUbHsTXd+I/6GGoUPt5dNMiG0NUmn/x4OaFkMdOf7eVAkU5n0xxgfTMBT+pt0hs+8Tw4ADQRcKza1WIFi70gGpWd6gfWvRG1f2Kfy142mt5E0lb0M61lDog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750109025; c=relaxed/simple;
-	bh=d95uYNA+qHBnKVR/s9FPPkJ8oxqbnwmVAa9sGVJwP+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y42PYHrRMFIXrzn8AvWa0xRPygUkYD+MCkawrJ2/fZ2tjPRQ7LFRJJBnhHUrs1lUDmriLAsW7iv71UIPOZbXReH+8MPV1P7vQsfc50rlN88oOgqgZRp+cZXmsumB4lT6r+uPywPkvsr9sLFkRnx4qa5CsoPMyx4Iqp9cE6qTeC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PQo3fQwM; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1750109194; c=relaxed/simple;
+	bh=Qx3RgIciF8FScrA3fp7NDvcLUeQpT4dfJxakDbrgEX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V3vq4ypaowbtznW8vu32UwiAoNZlasJ31TBYyPFjBj9rWMY5huCvgFKA6KVJZGKW8Iq5GSRp8AMcasESRjZUIMU/aBaLnFOui+ROYjJ80tceiA/NaFa5j9ej/Pbni2WnxS3eEsTNWTY+8R9A9UBVwAoAdWXnIvAAO8Q2PXwLAI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UiBkq26w; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQo3fQwM"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234a45e69c8so3562435ad.2;
-        Mon, 16 Jun 2025 14:23:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiBkq26w"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453066fad06so37731955e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750109023; x=1750713823; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750109191; x=1750713991; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d95uYNA+qHBnKVR/s9FPPkJ8oxqbnwmVAa9sGVJwP+I=;
-        b=PQo3fQwM7OGdaEYLdz1BjDlKwLbJhBKMUV4qlTGwzm3xElq/uSBI0fejf42OM2tgax
-         XnuoBc1SULVgTQ+zStYUtoL+GOT4wToLJrZzxObWAXpOg/h09A+D81vFL03b41OO2+9R
-         W0x+qpNPjhdg7YYgHiU72FwzQwoC+bMxnVpMb2ywd5ogZG+Qlf+EgSBCLZ6AbDF7vxOr
-         doWG9uAcmekv3fYLPXJU8geOpmHa9ZWlm7wYdMyXG3NRYupwjN8bSAhPmIGZy7c4v2kr
-         M/5AaLFLKXmmxr9AOsreWoqVKGgPwp71gtrbPMetyIs/BNi3fF3yMNVneoeJIaFjsLsR
-         5/0g==
+        bh=7K/Whje5bbq5X82a9GV6t7IagAg7RVEk9VXUfZi6KFw=;
+        b=UiBkq26w/cOv5ZqQCAOm2+Q59gE0zVOte60MkmszrphRyqjcN7tFb7duPzsDJfiqfb
+         5q6vHyW4UZZCMFEOq0d9MpVuC8GGKy6Mti1zVkJwSAJ6gNxZnn2xsRT8cylg6wIQpP53
+         ew3WOKTm1cSSkyP2OlYuQ8L4x02NKnTQ/W+wzAGz5eKOtVU4vW2HQFTHpk0VLgZ9aVfr
+         Cjzp7roEVEhTFMmxURkK8DA+43q7IpBJJl8zB0AUeNBKyg5txg/RixehDLhdC14kuTOt
+         RBNSvQiKsFS4ivkFQ9dX6r6tRvEYl5eoBRBdzd9XF7bhICbbA0a5A2dOQZqKf5vReKWn
+         CDAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750109023; x=1750713823;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750109191; x=1750713991;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d95uYNA+qHBnKVR/s9FPPkJ8oxqbnwmVAa9sGVJwP+I=;
-        b=Eq4dN+HwsghXCWxu77orUX188uDo7QpqAbLvbBdzeHmdYcpYr+UOa88NXs9j5mkBqz
-         8ofCCllxuROFCAf2LVOeHS0tmP7mklmZRQFZMHxj1NB8aQXpdQMp1DaussfLCK+qx610
-         bDDcQv+P8lJ5flthufXwvo6XsC/4oe7+zLK1M8/jxlrF9PJjhLYW9mC2sUzyUAYZVvLt
-         crPWpGKE8jS6xoiEpHP207rU350YaKVOP1151+hY5JhZ8laBtOaJ/bkedS2hm2Ux+Sxc
-         3N5AlUpbHI+lQDVQ98FZX3Tb5B664rC2xl6eN14qiPWiGxnQlr7cis39IIoc1ytuvYXP
-         otJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZDpoSER3fL6HBrL4LR6BVkzVRgPFHi8IcX+WNxFBMZDkAZG5bfX0UOYd3t/tIYqGkw0xA9X256pP+gOo=@vger.kernel.org, AJvYcCUthTtGursGJP1zAxK6O8CCFMOcTiEJknrB2dqTzrZTAQy8jgqqZ0Y6ZBmdjsrZi+qgvUHofIGlFi4hAseq+s8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt44fSNtxBugraXObwlHdThBn76326ahaqOcRxuJy3R8FkcLdV
-	1U7OJXwJVDO3aeQOuJ5etYi3C0WveW7JY+zZejqTULAwjBzJFoS4H3PONo4PezD3J6Zg86NILxI
-	qgIc+pv8eFSsUqd7UkFLbMPW78XZIJ4A=
-X-Gm-Gg: ASbGncvxwXSUl1bJtRgcjVdtn5mkwMTfpjM6IV3ShOxssb4gVFLyxnn4ye6am+3vlEO
-	njShLvLUoc5ljXtq6PjiVaoHZ+9jLtjZZzXOyubo4IEjAS1WtBUiLzbKhxfZfdyvbMLpqZPCXx8
-	bEdLnfDUgm5XCOnU2gRy/l+Z3gOet2su0KLaaKNT8AVnU=
-X-Google-Smtp-Source: AGHT+IGTCVFlE+jAZCqa1TImuqxuuHFlZFaIUVaOzy6TS2kVGm3wib1sMfeHG9Uc6JYsZfAqIfMyIXuOxZnmzFI3nis=
-X-Received: by 2002:a17:902:d2cc:b0:235:ed02:2866 with SMTP id
- d9443c01a7336-2368eca476dmr6350155ad.4.1750109023104; Mon, 16 Jun 2025
- 14:23:43 -0700 (PDT)
+        bh=7K/Whje5bbq5X82a9GV6t7IagAg7RVEk9VXUfZi6KFw=;
+        b=W57WhEYwaEAKzXw3omzHubVBT98dIqPa0VlLr1y2q7BARi1VapX/L0KN/DqI/d5OJ1
+         pQbErzqYV20dNOja0CkQjHbnOfOlgAtBSfLqN9CxLUav+1CdPFnFJcO69s+2RcbUD0lb
+         8Ku1pq+H6pI2ICtIYHzEXblm6G82W6UiwDZdAlQ5UXLw4oIovbW1jEmu82xMe/XlvGR3
+         sT7lVd/KQGhtwvtqpJtfRMk++m8qz4SXN/eenStJe5dPxdLAnanfpa05blPycAUa5iAC
+         bmZS/+yobVQ7dNZ76lRvmjh3ghUPPDeSzzHN6hIEcvpkbbYtE1Jn0EP7QRuhm9WMnpOn
+         9A5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVKemRVSzsR5vjXGhPBTWIF349HPQtxhMv05nKUd8DG3bLWxUFk/gkxtICGt1Syy2ui/jEddrdQpxFE/eY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeZgvwsgd6bdWGaclizGgcuYvAM1UQwRRKdIPzFlhzlhuctp77
+	4PA52KiKl9ojvBjdsvUU5oq3dJdSH1DrBZT6NngftuAMUN49IlgWe20O
+X-Gm-Gg: ASbGncsrbl3rDiEC0IovaQVg3XlI5cHwjfSo9Gev1uy7QssCAgkgqaD0XBgaFHvSQhY
+	rpGwOkuY6At1ZYRham+S+FNR/247nL0BK0OlIc+I8weLgv+JB83DIux2LLcPj+MqCkGxvmzvGfF
+	GcKxO9CCWhm0m4wjqe8MrWLEAtB215bNj30aDBKuxLVMDC4iglex98e6lS8v4BUdYdwVpHTOAIc
+	CK/CeEWaMyieWrqJb7++t5PQJfvHa/m0xwUXHzfCLIv1M6ZpNNs/SLOCfI0iuTFS9E3JZ0J28to
+	2y1LmJA+KhwnMg4na79+1g99RppLpO5gJr2kyXzei1rMzZ5gFgFIZtm9yVXnbECwfD4sFWGQ3Sr
+	DAIZzVq80vNTsY0XX4vTUsEOe
+X-Google-Smtp-Source: AGHT+IHx9IRQDvRtg1mLpDGTbJyv9WzL268TwPwvqQ6KNZYc5t1shyGS3ZrVrPkSr44osRE1m8UK3Q==
+X-Received: by 2002:a05:600c:4ed1:b0:453:78f:fa9f with SMTP id 5b1f17b1804b1-4533ca510afmr97441065e9.11.1750109190660;
+        Mon, 16 Jun 2025 14:26:30 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a547ecsm12251433f8f.17.2025.06.16.14.26.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 14:26:30 -0700 (PDT)
+Date: Mon, 16 Jun 2025 22:26:29 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Nicolas Pitre <npitre@baylibre.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Thomas =?UTF-8?B?V2Vpw59z?=
+ =?UTF-8?B?Y2h1aA==?= <linux@weissschuh.net>, Oleg Nesterov
+ <oleg@redhat.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@baylibre.com>, Peter Zijlstra <peterz@infradead.org>, Biju
+ Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] mul_u64_u64_div_u64: fix the division-by-zero
+ behavior
+Message-ID: <20250616222629.620830f6@pumpkin>
+In-Reply-To: <q246p466-1453-qon9-29so-37105116009q@onlyvoer.pbz>
+References: <q246p466-1453-qon9-29so-37105116009q@onlyvoer.pbz>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615072042.133290-1-christiansantoslima21@gmail.com>
- <CANiq72mnxRquFmjoJemb=3LSq+ZdUfs9J+HXTwM6AavprsVNUg@mail.gmail.com>
- <CABm2a9fVSGm+WWjdkAmJHUH9eH=Qx5efORKxyJtt0HnQrs0QHQ@mail.gmail.com>
- <CANiq72=s6Ugqrf5Ot6fJOMyCug2XyvKpjFCzya_Mr5iBkpitLA@mail.gmail.com> <CABm2a9e+XJsess6XY5ukz8vav30ADcmBrufmek+Bd-TNJpR2aQ@mail.gmail.com>
-In-Reply-To: <CABm2a9e+XJsess6XY5ukz8vav30ADcmBrufmek+Bd-TNJpR2aQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 16 Jun 2025 23:23:30 +0200
-X-Gm-Features: AX0GCFtT-gKuoP083LhJniF8uXA9-2rFn2pMTJ_mxVkBeIFy0Ly57UElPki82Zw
-Message-ID: <CANiq72kY=sSnhzYPRo3Zuj-7RjULMpRfCBYfoDDCpCHttX-3-A@mail.gmail.com>
-Subject: Re: [PATCH v7] rust: transmute: Add methods for FromBytes trait
-To: Christian <christiansantoslima21@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ~lkcamp/patches@lists.sr.ht, 
-	richard120310@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 11:11=E2=80=AFPM Christian
-<christiansantoslima21@gmail.com> wrote:
->
-> I mean, using something like `use core::mem;` globally since we use a
-> lot of core stuff and so, it would make the code less verbose just
-> importing size_of, align_of and etc.
+On Mon, 16 Jun 2025 15:22:44 -0400 (EDT)
+Nicolas Pitre <npitre@baylibre.com> wrote:
 
-Do you mean adding some more `core` bits to the `kernel` prelude?
-Yeah, we are always considering which ones to add -- if you want to
-propose particular ones, then it can be discussed of course. Perhaps
-in Zulip?
+> The current implementation forces a compile-time 1/0 division, which
+> generates an undefined instruction (ud2 on x86) rather than a proper
+> runtime division-by-zero exception.
+> 
+> Change to trigger an actual div-by-0 exception at runtime, consistent
+> with other division operations. Use a non-1 dividend to prevent the
+> compiler from optimizing the division into a comparison.
 
-However, since these are macros, unless we get a proper custom prelude
-feature in the compiler (which we requested a long time ago), we
-probably want to still to refer to everything in full, even if it is
-in the `kernel` prelude.
+Given there is a definite 'plan' to avoid adding more BUG() to code
+I'm not at all sure generating UB here is right at all.
 
-Thanks!
+I don't know the best solution though.
+To my mind returning zero for divide by zero and ~0 for overflow is least
+likely to cause real grief later on in the called code.
 
-Cheers,
-Miguel
+	David
+
+> 
+> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> ---
+> 
+> Change from v1 (http://lore.kernel.org/all/q2o7r916-5601-11pn-30pn-8n5ns6p079o7@onlyvoer.pbz):
+> - use OPTIMIZER_HIDE_VAR() in place of the open coded incantation.
+> 
+> diff --git a/lib/math/div64.c b/lib/math/div64.c
+> index 5faa29208bdb..bf77b9843175 100644
+> --- a/lib/math/div64.c
+> +++ b/lib/math/div64.c
+> @@ -212,12 +212,13 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
+>  
+>  #endif
+>  
+> -	/* make sure c is not zero, trigger exception otherwise */
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdiv-by-zero"
+> -	if (unlikely(c == 0))
+> -		return 1/0;
+> -#pragma GCC diagnostic pop
+> +	/* make sure c is not zero, trigger runtime exception otherwise */
+> +	if (unlikely(c == 0)) {
+> +		unsigned long zero = 0;
+> +
+> +		OPTIMIZER_HIDE_VAR(zero);
+> +		return ~0UL/zero;
+> +	}
+>  
+>  	int shift = __builtin_ctzll(c);
+>  
+
