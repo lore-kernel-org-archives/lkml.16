@@ -1,104 +1,94 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C7A267721
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F305820DD54;
+	Mon, 16 Jun 2025 15:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089006; cv=none; b=OPZL0JFPSyCGGQhceLzJ5j3TT9lwMWMhqrUyIM7Thz9RYvsNh2/2PtoFbftwPXONTIuJnawRWQYZwHw3BR5EvgrHhythIQ+bWzYAZpQP7gqTo58g8pk4423ChmMeo9Oalhh8r2wEtm9UggNGQBMpXGB0HonzhH/e2jIS8XDfCd8=
+	t=1750089049; cv=none; b=MFue+oJgAVj3ZKX5j09cH6gggvUMtrwpN38SljNc4ZLd8R4iRCn+WHVC/1tvOzqP4A+HW7/mGa/tCsquRSSbucvnmd3FL4Y7Le2cV3g4RC7EGAyjfSIOjeoQptXBkQR11K1WusvgLTxl/UiJ+l8VKQ5ATEBc51XYTSbNLPTbSww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089006; c=relaxed/simple;
-	bh=qob5NJ8G5c6QzGmBfprP/lA7j97XJ9zNuEiloSsBDvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lvyKdEdMvvcEn3HzofvA77obah3i08jXcUSRi4YQfxe52OjyOPSQlb23ZuDJE7C7MovroPseC4lgpUcIKeRlkIn7HqqF63HWCTK6NWhfovbIZYZJcMpi3igFq+dpK9510QXBqI9WgmnxeVfEXX71KokopebHR+j1cTnnNio8ai8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=FkEL7YfA; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
+	s=arc-20240116; t=1750089049; c=relaxed/simple;
+	bh=ZvyxT+BLHx5DS2IcO1NmOuiRk2nhSfoLDrUKrw0sJe4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=i/ZmbFraZA63OA40Se9/W10KOcekRRdKv2+U5qLdfbNMPk1P0OWstht73m6qXfrdRxsG0bPuOjoVj9nmfKfr2P3FvE+qug3Klf9V8GaYyCfFYd/BBN90oTCXH0HOkQv3uK2NgZ5cbrDHfd4XQSxIQ9NFyNbbms3og/bY5Hvz5ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVqfnmM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="FkEL7YfA"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cfb79177so28755295e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1750089003; x=1750693803; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+HG07yhDdt92251lTiG8gm/91c+HEf0mdiuFjonzF6Y=;
-        b=FkEL7YfAb9m+0CijchWGHD1+f93zOBfmNtpruELi6g5lE5Qq8SORF/+GLUYR0tVhdB
-         tWjE4IawaQjOrCJmwxVJIRrF0Nf7vyZrUmpOTmX0kPto28y/kbOuRwt74AR7JKXqJgbV
-         H4mclPjAJDXReqqoktoVDlNaKKVZjkhr5+Wjyo/GhfS6XBYndMWkKz8JU/A3QiO6t1PM
-         /yl9wOEQTfCEwOTFnLPIpKGGIc6w8Jn8c6DEttCmiBTD+i2nxz0ETILGQJDFFMYHbX0b
-         +Yz17pjKFsCacEzttZNzIw460mekcWbXGej2kp4LeTkXW3fGufdfjevEYaBU8RGW06ke
-         FM9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750089003; x=1750693803;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+HG07yhDdt92251lTiG8gm/91c+HEf0mdiuFjonzF6Y=;
-        b=AMEoYMmnvv8kz0ukWFGhGXg2rNF57SjhGTayQ1QjSkgMnbFcmA/9g3LRM7t9/8OSvb
-         bnJpFL4hj1zts1N3eagWnbE/eKiJsbFayVLKocm+gFkbUYaJRpmCTgcqOaIfGsl/1VZV
-         Kvvc23p14enyDJeRkZE5mZaxbRIcJyIKYM44X5uuwuPZVBb/v+83Wh9cB1WLEzLXWv9n
-         nBG5vp3go7IRHb0dlkHuxP7E87spcMtvKky47mlbpWx4B7BqlcGRUI6jUB18g02c2JI8
-         9WY9Xuh2mkb72FBj8Zd778ZlZ8Gs1TNR9xnRMdcQ6WivdIt0YsiZ8GJCBMSx0NEhQNFv
-         G+xA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSmmSUXxFquMJLoCdske/6zJ8n+EGli0ta503J6/42ofVCVpPjN9nmIXeQ0Pc8VraMzjWYdLAO57RlLUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdJpY94z7duuULMhMFljdal6s8Ct2nUytEtu1jC1OjD5tmKWko
-	Cidk4VzTDObuzW4cQ+ad7ksD85gOMjN1tE/ta3QnI1/N4tAIubT/1dkYnxC8gwaa0sE=
-X-Gm-Gg: ASbGncsedRDEgGJwxtY1+XBal80GdpoRDPQpZUalkNo/Pl7SVsaC8PqvHWP7KF60B38
-	J/NanODc1ntNVLERXYsPwR0M8XMXUfsYXd8frI2w5lyQUswxwyjA7ErLeXb629DRyzcS9FdsVSi
-	o25tSGFLBkblHi5+p0d+2Sb7NTJ7zWJYLDifF+HctH8XY60Dwc6uHwdZ1b/RD3XDWani5MHJFZv
-	t+bywepEbsGtRqW4LqxJaHNGWUFnoH4FNjD8AlPE9/1MN4p8bd/Dd0/++qhIfek1AeR0tyYEOmf
-	1UuiitrQR7iiXjc54jreh6TAgonGtMw7hPJ5b3zMNCMElb3h7f+5K35QCxlGpkorXds=
-X-Google-Smtp-Source: AGHT+IH0ZJ7gpp+bLXTmZH0utmqDobsB3MfjlLY8LYiad1AFTLXWZpdDhWNjYJrUzP1yR5mvXiTn3w==
-X-Received: by 2002:a05:600c:1f94:b0:450:d019:263 with SMTP id 5b1f17b1804b1-4533cad3c9cmr103710705e9.18.1750089002809;
-        Mon, 16 Jun 2025 08:50:02 -0700 (PDT)
-Received: from MacBook-Air.local ([5.100.243.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b70d77sm11543216f8f.94.2025.06.16.08.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 08:50:02 -0700 (PDT)
-Date: Mon, 16 Jun 2025 18:49:59 +0300
-From: Joe Damato <joe@dama.to>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: pabeni@redhat.com, kuba@kernel.org, jeroendb@google.com,
-	hramamurthy@google.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, netdev@vger.kernel.org, almasrymina@google.com,
-	bcf@google.com, linux-kernel@vger.kernel.org, ziweixiao@google.com,
-	joshwash@google.com, willemb@google.com, pkaligineedi@google.com
-Subject: Re: [PATCH 1/2] gve: Fix various typos and improve code comments
-Message-ID: <aFA9J6-6Kj3LcQL8@MacBook-Air.local>
-Mail-Followup-To: Joe Damato <joe@dama.to>,
-	Alok Tiwari <alok.a.tiwari@oracle.com>, pabeni@redhat.com,
-	kuba@kernel.org, jeroendb@google.com, hramamurthy@google.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	netdev@vger.kernel.org, almasrymina@google.com, bcf@google.com,
-	linux-kernel@vger.kernel.org, ziweixiao@google.com,
-	joshwash@google.com, willemb@google.com, pkaligineedi@google.com
-References: <20250616054504.1644770-1-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVqfnmM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06D7C4CEED;
+	Mon, 16 Jun 2025 15:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750089048;
+	bh=ZvyxT+BLHx5DS2IcO1NmOuiRk2nhSfoLDrUKrw0sJe4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jVqfnmM4ALR/uTwNxSGtcmpMOVWFdjt5LUfVJpp7JZYIr0QuNZfLz73BQqbEy1t3S
+	 IrlhJI7Xhl3chkELWQyR/m8TizEKWCE2ytTm1Ji9FLDupIZz9hv3ONjur2qAi2yXrh
+	 ZgIzoHZAuLCWRoitic7YQaXFz50W/AFd/r3tnR61OLPj69/cv7kAtoutAMdn+Vx18U
+	 rqFlMi2Rm9yBPEWzfIlKY9ozQ5V3YrBErnoiM1KXQZ2HyBw7VfiPT28uh8DwLMyj4t
+	 +BU7G3N39Z83aF3WLRRgED1QHlNbvZrIhtW5+6wKuOBRgKdARHFfbIaKfS18GnUHLB
+	 71ceJxjs5NWsg==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: linux-sound@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250613194310.1128733-1-laurentiumihalcea111@gmail.com>
+References: <20250613194310.1128733-1-laurentiumihalcea111@gmail.com>
+Subject: Re: [PATCH] ASoC: SOF: imx8: add core shutdown operation for
+ imx8/imx8x
+Message-Id: <175008904672.262284.1831269930819653048.b4-ty@kernel.org>
+Date: Mon, 16 Jun 2025 16:50:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616054504.1644770-1-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-On Sun, Jun 15, 2025 at 10:45:00PM -0700, Alok Tiwari wrote:
-> - Correct spelling and improves the clarity of comments
->    "confiugration" -> "configuration"
->    "spilt" -> "split"
->    "It if is 0" -> "If it is 0"
->    "DQ" -> "DQO" (correct abbreviation)
-> - Clarify BIT(0) flag usage in gve_get_priv_flags()
-> - Replaced hardcoded array size with GVE_NUM_PTYPES
->   for clarity and maintainability.
+On Fri, 13 Jun 2025 15:43:10 -0400, Laurentiu Mihalcea wrote:
+> Currently, the DSP core from i.MX8QM/i.MX8QXP is able to operate while the
+> firmware image is being loaded. Because of this, the DSP may change the
+> content of the firmware data just after it was loaded, thus leading to the
+> data having unexpected values when the DSP is reset (via run()).
+> 
+> Fix this by implementing the core_shutdown() operation that will put the
+> DSP in stall during suspend(). The stall will be removed during the run()
+> opertion, thus guaranteeing that the DSP core will not be able to run
+> while the firmware image is being loaded.
+> 
+> [...]
 
-Subject line should target the tree ("net-next") and it's helpful to include
-the base-commit (git format-patch --base=auto). Since this series is two
-patches you should probably include a short cover letter.
+Applied to
 
-That said, the changes seem reasonable so when you resubmit you can add my:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Reviewed-by: Joe Damato <joe@dama.to>
+Thanks!
+
+[1/1] ASoC: SOF: imx8: add core shutdown operation for imx8/imx8x
+      commit: b081d8564e4a396843a78788476fdcbf70efed06
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
