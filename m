@@ -1,109 +1,104 @@
-Received: from mail.crpt.ru (mx03.crpt.ru [91.230.251.117])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABF51863E;
-	Mon, 16 Jun 2025 05:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.230.251.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0313E1863E;
+	Mon, 16 Jun 2025 05:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750050400; cv=none; b=N6rj87M5aGY9y5i6gSTIIqpWTsNc4Ppw3kzt9TT3pe0/PaVX08ZLrOAVsnH+9FUNf7YbBtkKlqrfwbPzAnngM6329cD6xy2HRDZLSGjp/JDZk44BheUmvNEAaP/20ju83LZ3HWg9wpGZzqKeHgCQ9mOQFVLPfF/ywfkZyk8FeCk=
+	t=1750050416; cv=none; b=QpAxdvqtr9bFDaIJfz/Xg9HFQuiGXPG8C4ElGWM9+/hBWSMe5UFgP7PIyS0tZUnA9+Ox4KLWjwkIl9cWsYsW7tSLD0Yqq0BVqa+MCADZqwUT9yTHTSFp+rbDpTQNDZhkhx5MF/hbR69XDB1c2Vdkugpsc460G1znyFeHSXOq1+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750050400; c=relaxed/simple;
-	bh=Bc+zA+sHr92wmJmoKBYrXr1MsDN1MT+rlsejLa9BpY4=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DvZda3r/SlGhs5fA+197y8Tly77vJ62q8yAgBSkxt4eKlbdtGBXryWcYSIrlPlPI1RlajcfnWKZaB9E3g+9/zxjqxd7xmg1IbedyJ77KgmctLd5so977hoHCtfdZfTXBXKv88YGIUJM8KiSQ8Zaq/axOON1pkg9pWGGcaaw/SAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=fail (0-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=XhHhVosD reason="key not found in DNS"; arc=none smtp.client-ip=91.230.251.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
+	s=arc-20240116; t=1750050416; c=relaxed/simple;
+	bh=cA3SwmYgYeSIyOV2poq56YF76ctfNib2sQffxNFTYNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n2WKfV3aWqCJ1GyrO1Xu28JYJK6LM/W+XLfAvEDUI2ABxOhhCMbVcLkJkOLekAWjFFJWZyVPSWYnrcAWTy3sf2pg8hIlOV8n8cMaRfPRgH5+OoZyR9A4K4z/Ggu0LhfMGGMZN4j4GPVg+ro0GFz7ZQ01GeTu7F8UNkr6yzFT+0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ghnfkWtR; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="XhHhVosD"
-Received: from mail.crpt.ru ([192.168.60.4])
-	by mail.crpt.ru  with ESMTPS id 55G4oj26030341-55G4oj28030341
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Mon, 16 Jun 2025 07:50:45 +0300
-Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 16 Jun
- 2025 07:50:44 +0300
-Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
- ([192.168.60.4]) with mapi id 15.01.2507.044; Mon, 16 Jun 2025 07:50:44 +0300
-From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
-To: Tariq Toukan <tariqt@nvidia.com>
-CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: [PATCH net-next] net/mlx4_en: Remove the redundant NULL check for the
- 'my_ets' object
-Thread-Topic: [PATCH net-next] net/mlx4_en: Remove the redundant NULL check
- for the 'my_ets' object
-Thread-Index: AQHb3no3cJA/FSbAVkSNIYVzsV0iVw==
-Date: Mon, 16 Jun 2025 04:50:44 +0000
-Message-ID: <20250616045034.26000-1-a.vatoropin@crpt.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: EX2.crpt.local, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 6/15/2025 9:22:00 PM
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ghnfkWtR"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750050410; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=R5GJYlkXT0vSw2Kc0ay2ukzCBmnnFXXk54xXv2Y6mic=;
+	b=ghnfkWtRBN2py6eYOj+JEYDUA5ZtoozP4y6ILy4Rc4yRuqyE93ZN6Zoj2y8FTsuGKJQz4jHs5m2hHrMyxW/Iwi7IgZcZKU92RzqYztzSSpRR5ckTAnLGfYvZnE3vUiBWF3xRxdGrUJB0NUCq1Hfv2u54vItfjl7Jaumcw0aZcmo=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WdrrnGW_1750050408 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 16 Jun 2025 13:06:49 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: brauner@kernel.org,
+	shuah@kernel.org,
+	will@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com,
+	xueshuai@linux.alibaba.com,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com
+Subject: [RESEND PATCH] selftests/pidfd: align stack to fix SP alignment exception
+Date: Mon, 16 Jun 2025 13:06:48 +0800
+Message-ID: <20250616050648.58716-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-BEC-Info: WlpIGw0aAQkEARIJHAEHBlJSCRoLAAEeDUhZUEhYSFhIWUhZXkguLVxYWC48UVpaWFhYWFtRSFlRSAlGHgkcBxoHGAEGKAsaGBxGGh1IWUhZX0gcCRoBGRwoBh4BDAEJRgsHBUhYSFpIWVpIWVFaRlleUEZeWEZcSFBIWEhYSFBIWEhYSFhIWllICQYMGg0fQwYNHAwNHigEHQYGRgsASFhIWVFIDAkeDQUoDAkeDQUEBw4cRgYNHEhYSFlRSA0MHQUJEg0cKA8HBw8EDUYLBwVIWEhZXUgDHQoJKAMNGgYNBEYHGg9IWEhaUEgEAQYdEEUDDRoGDQQoHg8NGkYDDRoGDQRGBxoPSFhIWlBIBB4LRRgaBwINCxwoBAEGHRAcDRscAQYPRgcaD0hYSFlfSBgJCg0GASgaDQwACRxGCwcFSFhIWV9IHAkaARkcKAYeAQwBCUYLBwVIWA==
-X-FEAS-Client-IP: 192.168.60.4
-X-FE-Policy-ID: 2:2:0:SYSTEM
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=ud.crpt.ru; c=relaxed/relaxed;
- h=from:to:cc:subject:date:message-id:content-type:mime-version;
- bh=cgljj/Kunki6TqOGaVTTv0LJ3MX0FK/HJaxIZV2Kyag=;
- b=XhHhVosDHFpa6LLLpWv1gcimFJpW3+aw2ct9p+ok3/U6ldQD9ZWeQtqziglmaQzN2CgO9MxizLQH
-	Uq5zMH5MUPHg/fAE496b1/ZjWZ2eLo4bzwo+p1/oOZ1vFFzyNVTqtQXu+mPAPL0wSD9AsJhEHg8j
-	Sk+fw9FGxX8swe8tw77YUhX6L0mDQxK66/K/8Av4BwxZbCJ/CAuxQbEctyueXonWaLn3LmSx/nu4
-	1WYOwQsrjgVhJlLwOy/lmiMSfCCHb09vBsNFLqeNeR7S4FM2W4aPawxfZxj5jdxI2ncU+a1jdPf6
-	pSKjO8KfIRZAjutwyl9YoH7TwDjfF+xWyEUVcg==
+Content-Transfer-Encoding: 8bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+The pidfd_test fails on the ARM64 platform with the following error:
 
-Static analysis shows that pointer "my_ets" cannot be NULL because it=20
-points to the object "struct ieee_ets".
+    Bail out! pidfd_poll check for premature notification on child thread exec test: Failed
 
-Remove the extra NULL check. It is meaningless and harms the readability
-of the code.
+When exception-trace is enabled, the kernel logs the details:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+    #echo 1 > /proc/sys/debug/exception-trace
+    #dmesg | tail -n 20
+    [48628.713023] pidfd_test[1082142]: unhandled exception: SP Alignment, ESR 0x000000009a000000, SP/PC alignment exception in pidfd_test[400000+4000]
+    [48628.713049] CPU: 21 PID: 1082142 Comm: pidfd_test Kdump: loaded Tainted: G        W   E      6.6.71-3_rc1.al8.aarch64 #1
+    [48628.713051] Hardware name: AlibabaCloud AliServer-Xuanwu2.0AM-1UC1P-5B/AS1111MG1, BIOS 1.2.M1.AL.P.157.00 07/29/2023
+    [48628.713053] pstate: 60001800 (nZCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=-c)
+    [48628.713055] pc : 0000000000402100
+    [48628.713056] lr : 0000ffff98288f9c
+    [48628.713056] sp : 0000ffffde49daa8
+    [48628.713057] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
+    [48628.713060] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+    [48628.713062] x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000400e80
+    [48628.713065] x20: 0000000000000000 x19: 0000000000402650 x18: 0000000000000000
+    [48628.713067] x17: 00000000004200d8 x16: 0000ffff98288f40 x15: 0000ffffde49b92c
+    [48628.713070] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+    [48628.713072] x11: 0000000000001011 x10: 0000000000402100 x9 : 0000000000000010
+    [48628.713074] x8 : 00000000000000dc x7 : 3861616239346564 x6 : 000000000000000a
+    [48628.713077] x5 : 0000ffffde49daa8 x4 : 000000000000000a x3 : 0000ffffde49daa8
+    [48628.713079] x2 : 0000ffffde49dadc x1 : 0000ffffde49daa8 x0 : 0000000000000000
 
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+According to ARM ARM D1.3.10.2 SP alignment checking:
+
+> When the SP is used as the base address of a calculation, regardless of
+> any offset applied by the instruction, if bits [3:0] of the SP are not
+> 0b0000, there is a misaligned SP.
+
+To fix it, align the stack with 16 bytes.
+
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
-Resend for net-next. Link to initial thread:
-https://lore.kernel.org/netdev/20250401061439.9978-1-a.vatoropin@crpt.ru/
- drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/testing/selftests/pidfd/pidfd_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c b/drivers/net/e=
-thernet/mellanox/mlx4/en_dcb_nl.c
-index 752a72499b4f..be80da03a594 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
-@@ -290,9 +290,6 @@ static int mlx4_en_dcbnl_ieee_getets(struct net_device =
-*dev,
- 	struct mlx4_en_priv *priv =3D netdev_priv(dev);
- 	struct ieee_ets *my_ets =3D &priv->ets;
-=20
--	if (!my_ets)
--		return -EINVAL;
--
- 	ets->ets_cap =3D IEEE_8021QAZ_MAX_TCS;
- 	ets->cbs =3D my_ets->cbs;
- 	memcpy(ets->tc_tx_bw, my_ets->tc_tx_bw, sizeof(ets->tc_tx_bw));
---=20
-2.43.0
+diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+index c081ae91313a..ec161a7c3ff9 100644
+--- a/tools/testing/selftests/pidfd/pidfd_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_test.c
+@@ -33,7 +33,7 @@ static bool have_pidfd_send_signal;
+ static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
+ {
+ 	size_t stack_size = 1024;
+-	char *stack[1024] = { 0 };
++	char *stack[1024] __attribute__((aligned(16))) = {0};
+ 
+ #ifdef __ia64__
+ 	return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
+-- 
+2.39.3
+
