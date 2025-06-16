@@ -1,384 +1,133 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CF9263C75
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD85A29C35C;
+	Mon, 16 Jun 2025 11:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073549; cv=none; b=lkmpO8mVDxEzoRbBxGhODSc4wWdQkzye9W2e9mVvEbLYrhy+OZwzVwHwXF07NUsUgyh6ihaG7eoMelQRhWPDMMpiZ428yyHZld+8f5aB2uZJdxeLNwStpQ/d+XreWacpuj+Vbeg/cJFQu1B5n92LYG/42ojuHLaQRAq6Cj1YZ5M=
+	t=1750073558; cv=none; b=oi0Q/0itA1IScvQZ3G8DqkwLNb47KclUaqRXBjLT+DjmFYsNw2eqDdGL6PiueAlUtbt1hGemb4pVz0s43y6S8AJOI+8Khp7bCsxwnxTGdUyHkt7yEuJtXoHPZRdU8O3kJ/MC5jT693MJsT0HkBE8saCP+7HEFhy6wG2ngIHkZBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073549; c=relaxed/simple;
-	bh=OM4ukmkvHF3bWa/6MQDtPcqF7cFW5tgL3BM4AR4AZOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IOAqZDKCqCXxoNSjL4y2vg8H9pVvysFDzm8yvfkkYFd7Ur5j4ZDpymbseBbdcPZiOHVXEgMViaQbKHyRnl6gkoV2qBprSwwwYg07hFTMQMovJEfOYQk7zN6qogZ6YxDRoV5oTTux+PpzqA3cZz/X7dze2oWKqC4h44lUTVoWIe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ltHrVmla; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750073558; c=relaxed/simple;
+	bh=K9KWXjUK6ETi9gIw9hOQRn1dglxLURauDPg1WLVBpa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZgU6F0lh3SCIn3VWNtp6g7cvq/NQKyQIJqoNJskDWtw9RgRs4VkWhhl8o/nfL7Gu1M+nZKTgWm2hk5BOCSHwGOw9XNqsty8SCgK4hlFq5Ug1Ayz7BqH+xvmyDI00GbBdJYBztWk0ujqxk0rpa5w861FGSsrxBH6bZVwp0Ojir84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhL/aw41; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ltHrVmla"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8kn18003269
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:32:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VhReFJIFGzRzknyzHaRK8EX3c4dPqPcybLOZHXiPHaI=; b=ltHrVmlaevrDM6Yw
-	vDwkUIrqFh5TtWieEbQC1jISg4cA4vqe9qAL8rEjWPgMd+7nKkvyTI2vGQZPHX3J
-	Ebht9/fAeja80kT38fIzNMbgJDtuIX1bZlc5fS8bpFIVrj7yjLFc7H9Dz1ONNZyo
-	IJVa8Z2UnsW88IoOwiLZzC75BZvj73zwO7CEDs3Hzvb4V5L8EYBJkAC9G4H5REE6
-	Ml3yJrduYbLAoLtHQad1xeiwOXzgDbkwTH6trNnrOgeNwdZB3dmMhXClZ4BK6Kem
-	CPxBhCKqp9xTdPOFo9LV5GEg6u5nCHYBIp8x9V0Vk/i2TfVoEBQBApoNjyEsDUHA
-	a2BqtQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ag230f60-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:32:25 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fabb9286f9so94560776d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:32:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750073541; x=1750678341;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VhReFJIFGzRzknyzHaRK8EX3c4dPqPcybLOZHXiPHaI=;
-        b=e6EZiX9ep/cqDNP8AJ4u8GNnRkB+zM114wXQqI6iIwoPkHaYho+XZ5Nmc6hLxQ4ai6
-         RmQ/IClrUk+MFh3WtS2XQTjwketWeZPwg+IajaBx6aAIXpM6+CPeYyV40EfL9AwJtdNs
-         q8IZv1oFOh33IhUL7faikAuwR/EXAL/SKWtsW4p9by1CHSRxQRjJ/CGor9LVRjTztVkF
-         zf0Jg0d+MBezsNHrxtVy4pdmw0lSY1y0ONNaMps5DP1EjL0eoHi5VIy350eaba6RABi2
-         6qAhniSlyKtAWxj/S4//ShTTsAuQIRCguroZWSJj9zxwzcdKI76Th8UM338jbyengmJh
-         SelQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqPwjNpyqVBo89lXtzDOXt1VqrsJVtyFRRw7mQjohKT8LlS9dyC/pHZVoYUHVVXiZfX90yjbxUhIDDyV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+glX2NvRcLzrPZn+C7Ucxe19RM1ospCiDwgFLei5rqoZ2amYP
-	Fo0jtrCySjUJWAeDfaVw+MdLRTMhJF5M8awQSSahRp0W3xnunhUyno1ItHlFk7OCMex72g+bLS+
-	z2aCRBJJQFQwiXjZ1UuqOvQez/OvULAUcyf0P1nAmK6DTE8+YeO3YHt6108r9qgOZswE=
-X-Gm-Gg: ASbGncuY7Xja5QnwmUK4alepDD7WTJt+23fZECu+n5qidCU+MuXvFLXUk4AkF2TdRls
-	t55R2jgfNKPL1Bh9ny6HSWBJvv5PsB4p0Gx1sVTzwf8MlRi8gkgeY4p34CE67zrwjp9fRhNznPX
-	7URzLu1CagUyTrJJ2io++6TpWeazDVZBpnFxQ3ir/Yl2S+XvzM3Gn/fqZt9VfaS+xb1iVtFU3MH
-	2ohyr4Ld8sdGx98b0m1YA109CJRqQb3Ta85MLxousehcvIRu687AjNTT8NYOijtU6Rf020Ros7S
-	GQNYW2FWyjnFLTinop6m0d37cgakXSk9I+F1QtJw6x6jp/IXZGNyBHIrqQd4Jok/xZIfwhBB8G7
-	SMNIbMb3wuG+kcfYLI9KYXNTsFSMCIfrI6bUf+Q1aq2uhCJXFLatd5tzyjHs53xCu97M1VLy8fC
-	w=
-X-Received: by 2002:a05:6214:3d9c:b0:6fb:3e3e:89da with SMTP id 6a1803df08f44-6fb4776e0e4mr143194856d6.25.1750073540803;
-        Mon, 16 Jun 2025 04:32:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGwjE7NgqGQJ5dlBHGyGS3GLtFKWMEQiXrYgTad8WhvvEtddvjIxuizLej1JtENs1oh6vFd5Q==
-X-Received: by 2002:a05:6214:3d9c:b0:6fb:3e3e:89da with SMTP id 6a1803df08f44-6fb4776e0e4mr143194396d6.25.1750073540332;
-        Mon, 16 Jun 2025 04:32:20 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:a4:c3fb:c59f:e024:c669:a69b? (2001-14bb-a4-c3fb-c59f-e024-c669-a69b.rev.dnainternet.fi. [2001:14bb:a4:c3fb:c59f:e024:c669:a69b])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1c1195sm1509064e87.141.2025.06.16.04.32.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 04:32:19 -0700 (PDT)
-Message-ID: <cdf0accd-82dd-49e5-a8e5-1b4865e97356@oss.qualcomm.com>
-Date: Mon, 16 Jun 2025 14:32:17 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhL/aw41"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750073557; x=1781609557;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=K9KWXjUK6ETi9gIw9hOQRn1dglxLURauDPg1WLVBpa8=;
+  b=HhL/aw413zoAJjXdVpxZ0DjIY3QCT+TJvVGCzpc2yo0kWsIh/Nt69OuK
+   30A0PbetITLld2Kixncl+WryQSKGmotiXMyvEb1GKs3HnmgHTjc60Mnng
+   o5+0CWZnzZ95ncUSW6OlDVckoYMUBRpFOuZdqqzgvTWog2Uw0srgxn1EI
+   ps5FIrLSPSWIGYPYhQqS+foVrQ+9OzDen+ad2LXq8Q1UEjgiVljhxKSDK
+   +27AGjxTTLy0LQKwH102GGEJxc+peYZ0PUvlZKjQND2fDG+WyQ3upSz6K
+   eVhNxmkxRsrokxm5i2Thd+ptUK1l2sEvMkg0cJWe+C64SH7q79N3OX9HX
+   g==;
+X-CSE-ConnectionGUID: ZSYUzmwbR9O17H0BOLMs2Q==
+X-CSE-MsgGUID: duvoV5RMSBGuHNCZO0pzew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="69657581"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="69657581"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:32:36 -0700
+X-CSE-ConnectionGUID: QDgnZjIbTNK2iCkDaWZJzA==
+X-CSE-MsgGUID: eGPeF19JQ0WYvqZkT3eomA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="152281049"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:32:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uR84a-000000073ib-42pq;
+	Mon, 16 Jun 2025 14:32:20 +0300
+Date: Mon, 16 Jun 2025 14:32:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 06/28] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Message-ID: <aFAAxKKmwagLcg9B@smile.fi.intel.com>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-7-herve.codina@bootlin.com>
+ <CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] misc: fastrpc: add support for gpdsp remoteproc
-To: Ling Xu <quic_lxu5@quicinc.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, amahesh@qti.qualcomm.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: quic_kuiw@quicinc.com, quic_ekangupt@quicinc.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20250320091446.3647918-1-quic_lxu5@quicinc.com>
- <20250320091446.3647918-3-quic_lxu5@quicinc.com>
- <30bba296-8e6f-41ee-880e-2d5ecc8fe5a4@linaro.org>
- <e2a8528b-fa18-471f-9cb8-da64bb488f2a@quicinc.com>
- <07bfc5f3-1bcb-4018-bd63-8317ec6dac48@linaro.org>
- <5f70a482-6e61-4817-afdb-d5db4747897a@quicinc.com>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <5f70a482-6e61-4817-afdb-d5db4747897a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: SU8H5T3ugWc1N1dPpV9AK_WPOEvjsbQL
-X-Authority-Analysis: v=2.4 cv=edY9f6EH c=1 sm=1 tr=0 ts=685000c9 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=KKAkSRfTAAAA:8 a=iV2O8m49h_L4xXlhIwoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MSBTYWx0ZWRfX+QqPnJOMEjAX
- WpzNrq7AVKarNgjqMMAQpF8DuSzdfxtNfFHjEGvpLyLq+KToKskAppG5pAV4xAnCoT6oc+V1NSE
- vJtJTraconKY85GNDFpG7rW3aL15b4mfJrm2LGjVbHcdcmwYTovv2MKQrKun5DbZvJxUC0dqM6A
- OFSIAsoQHci84enrG/N7aW8W74rDdyLB28xii5BIf7esMXP1kGwdHDsQZ0ks4WAvJn3ZTezOviR
- SE29sK8qvd3a/XTvb1C5F/dg19Tp80aBeQTqMPeZ2+ugqQRPkfqksf0116e8u76rybtdZa/VCcs
- pem7K3eMuAoGcYhocPabefqcdpRsIQve0luuynDD6B9M3STRh1ecWzVx7che89HjlUbXp22WHvS
- LYnjwZvzRUil6bAcCMFdFJD/o248iKwc5Kehv9764pWNL++Ad2B7HRZG3wnxNt/8SCokTg3k
-X-Proofpoint-GUID: SU8H5T3ugWc1N1dPpV9AK_WPOEvjsbQL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999 malwarescore=0
- phishscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160071
+In-Reply-To: <CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 16/06/2025 14:28, Ling Xu wrote:
-> 在 4/8/2025 4:14 PM, Srinivas Kandagatla 写道:
->>
->>
->> On 07/04/2025 10:13, Ling Xu wrote:
->>> 在 3/21/2025 1:11 AM, Srinivas Kandagatla 写道:
->>>>
->>>>
->>>> On 20/03/2025 09:14, Ling Xu wrote:
->>>>> The fastrpc driver has support for 5 types of remoteprocs. There are
->>>>> some products which support GPDSP remoteprocs. Add changes to support
->>>>> GPDSP remoteprocs.
->>>>>
->>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->>>>> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
->>>>> ---
->>>>>     drivers/misc/fastrpc.c | 10 ++++++++--
->>>>>     1 file changed, 8 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->>>>> index 7b7a22c91fe4..80aa554b3042 100644
->>>>> --- a/drivers/misc/fastrpc.c
->>>>> +++ b/drivers/misc/fastrpc.c
->>>>> @@ -28,7 +28,9 @@
->>>>>     #define SDSP_DOMAIN_ID (2)
->>>>>     #define CDSP_DOMAIN_ID (3)
->>>>>     #define CDSP1_DOMAIN_ID (4)
->>>>> -#define FASTRPC_DEV_MAX        5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
->>>>> +#define GDSP0_DOMAIN_ID (5)
->>>>> +#define GDSP1_DOMAIN_ID (6)
->>>>
->>>> We have already made the driver look silly here, Lets not add domain ids for each instance, which is not a scalable.
->>>>
->>>> Domain ids are strictly for a domain not each instance.
->>>>
->>>>
->>>>> +#define FASTRPC_DEV_MAX        7 /* adsp, mdsp, slpi, cdsp, cdsp1, gdsp0, gdsp1 */
->>>>>     #define FASTRPC_MAX_SESSIONS    14
->>>>>     #define FASTRPC_MAX_VMIDS    16
->>>>>     #define FASTRPC_ALIGN        128
->>>>> @@ -107,7 +109,9 @@
->>>>>     #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
->>>>>       static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
->>>>> -                        "sdsp", "cdsp", "cdsp1" };
->>>>> +                        "sdsp", "cdsp",
->>>>> +                        "cdsp1", "gdsp0",
->>>>> +                        "gdsp1" };
->>>>>     struct fastrpc_phy_page {
->>>>>         u64 addr;        /* physical address */
->>>>>         u64 size;        /* size of contiguous region */
->>>>> @@ -2338,6 +2342,8 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
->>>>>             break;
->>>>>         case CDSP_DOMAIN_ID:
->>>>>         case CDSP1_DOMAIN_ID:
->>>>> +    case GDSP0_DOMAIN_ID:
->>>>> +    case GDSP1_DOMAIN_ID:
->>>>>             data->unsigned_support = true;
->>>>>             /* Create both device nodes so that we can allow both Signed and Unsigned PD */
->>>>>             err = fastrpc_device_register(rdev, data, true, domains[domain_id]);
->>>>
->>>>
->>>> Can you try this patch: only compile tested.
->>>>
->>>> ---------------------------------->cut<---------------------------------------
->>>>   From 3f8607557162e16673b26fa253d11cafdc4444cf Mon Sep 17 00:00:00 2001
->>>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> Date: Thu, 20 Mar 2025 17:07:05 +0000
->>>> Subject: [PATCH] misc: fastrpc: cleanup the domain names
->>>>
->>>> Currently the domain ids are added for each instance of domain, this is
->>>> totally not scalable approch.
->>>>
->>>> Clean this mess and create domain ids for only domains not its
->>>> instances.
->>>> This patch also moves the domain ids to uapi header as this is required
->>>> for FASTRPC_IOCTL_GET_DSP_INFO ioctl.
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> ---
->>>>    drivers/misc/fastrpc.c      | 45 ++++++++++++++++++++-----------------
->>>>    include/uapi/misc/fastrpc.h |  7 ++++++
->>>>    2 files changed, 32 insertions(+), 20 deletions(-)
->>>>
->>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->>>> index 7b7a22c91fe4..b3932897a437 100644
->>>> --- a/drivers/misc/fastrpc.c
->>>> +++ b/drivers/misc/fastrpc.c
->>>> @@ -23,12 +23,6 @@
->>>>    #include <uapi/misc/fastrpc.h>
->>>>    #include <linux/of_reserved_mem.h>
->>>>
->>>> -#define ADSP_DOMAIN_ID (0)
->>>> -#define MDSP_DOMAIN_ID (1)
->>>> -#define SDSP_DOMAIN_ID (2)
->>>> -#define CDSP_DOMAIN_ID (3)
->>>> -#define CDSP1_DOMAIN_ID (4)
->>>> -#define FASTRPC_DEV_MAX        5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
->>>>    #define FASTRPC_MAX_SESSIONS    14
->>>>    #define FASTRPC_MAX_VMIDS    16
->>>>    #define FASTRPC_ALIGN        128
->>>> @@ -106,8 +100,6 @@
->>>>
->>>>    #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
->>>>
->>>> -static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
->>>> -                        "sdsp", "cdsp", "cdsp1" };
->>>>    struct fastrpc_phy_page {
->>>>        u64 addr;        /* physical address */
->>>>        u64 size;        /* size of contiguous region */
->>>> @@ -1769,7 +1761,7 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
->>>>            return  -EFAULT;
->>>>
->>>>        cap.capability = 0;
->>>> -    if (cap.domain >= FASTRPC_DEV_MAX) {
->>>> +    if (cap.domain >= FASTRPC_DOMAIN_MAX) {
->>>>            dev_err(&fl->cctx->rpdev->dev, "Error: Invalid domain id:%d, err:%d\n",
->>>>                cap.domain, err);
->>>>            return -ECHRNG;
->>>
->>> I tested this patch and saw one issue.
->>> Here FASTRPC_DOMAIN_MAX is set to 4, but in userspace, cdsp1 is 4, gdsp0 is 5 and gdsp1 is 6.
->>
->>
->> Why is the userspace using something that is not uAPI?
->>
->> Why does it matter if its gdsp0 or gdsp1 for the userspace?
->> It should only matter if its gdsp domain or not.
->>
-> 
-> Give an example here:
-> In test example, user can use below API to query the notification capability of the specific domain_id,
-> (actually this will not have any functional issue, but just return an error and lead wrong message):
-> request_status_notifications_enable(domain_id, (void*)STATUS_CONTEXT, pd_status_notifier_callback)
-> 
-> this will call ioctl_getdspinfo in fastrpc_ioctl.c:
-> https://github.com/quic-lxu5/fastrpc/blob/8feccfd2eb46272ad1fabed195bfddb7fd680cbd/src/fastrpc_ioctl.c#L201
-> 
-> code snip:
-> 	FARF(ALWAYS, "ioctl_getdspinfo in ioctl.c domain:%d", domain);
-> 	ioErr = ioctl(dev, FASTRPC_IOCTL_GET_DSP_INFO, &cap);
-> 	FARF(ALWAYS, "done ioctl_getdspinfo in ioctl.c ioErr:%x", ioErr);
-> 
-> and finally call fastrpc_get_dsp_info in fastrpc.c.
-> 
-> if I use the patch you shared, it will report below error:
-> 
-> UMD log:
-> 2025-01-08T18:45:03.168718+00:00 qcs9100-ride-sx calculator: fastrpc_ioctl.c:201: ioctl_getdspinfo in ioctl.c domain:5
-> 2025-01-08T18:45:03.169307+00:00 qcs9100-ride-sx calculator: log_config.c:396: file_watcher_thread starting for domain 5
-> 2025-01-08T18:45:03.180355+00:00 qcs9100-ride-sx calculator: fastrpc_ioctl.c:203: done ioctl_getdspinfo in ioctl.c ioErr:ffffffff
-> 
-> putty log:
-> [ 1332.308444] qcom,fastrpc 20c00000.remoteproc:glink-edge.fastrpcglink-apps-dsp.-1.-1: Error: Invalid domain id:5, err:0
-> 
-> Because on the user side, gdsp0 and gdsp1 will be distinguished to 5 and 6.
-> so do you mean you want me to modify UMD code to transfer both gdsp0 and gdsp1 to gdsp just in ioctl_getdspinfo?
+On Fri, Jun 13, 2025 at 02:13:49PM -0700, Saravana Kannan wrote:
+> On Fri, Jun 13, 2025 at 6:49 AM Herve Codina <herve.codina@bootlin.com> wrote:
 
-No, we need to modify the kernel code to ignore cap.domain here. The 
-user has already open the particular FastRPC device. All queries should 
-be target that device and that domain. As such, cap.domain doesn't make 
-sense and should be ignored by the kernel.
-
->>
->> --srini
->>
->>
->>> For example, if we run a demo on gdsp0, cap.domain copied from userspace will be 5 which could lead to wrong message.
->>>
->>> --Ling Xu
->>>
->>>> @@ -2255,6 +2247,24 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
->>>>        return err;
->>>>    }
->>>>
->>>> +static int fastrpc_get_domain_id(const char *domain)
->>>> +{
->>>> +    if (strncmp(domain, "adsp", 4) == 0) {
->>>> +        return ADSP_DOMAIN_ID;
->>>> +    } else    if (strncmp(domain, "cdsp", 4) == 0) {
->>>> +        return CDSP_DOMAIN_ID;
->>>> +    } else if (strncmp(domain, "mdsp", 4) ==0) {
->>>> +        return MDSP_DOMAIN_ID;
->>>> +    } else if (strncmp(domain, "sdsp", 4) ==0) {
->>>> +        return SDSP_DOMAIN_ID;
->>>> +    } else if (strncmp(domain, "gdsp", 4) ==0) {
->>>> +        return GDSP_DOMAIN_ID;
->>>> +    }
->>>> +
->>>> +    return -EINVAL;
->>>> +
->>>> +}
->>>> +
->>>>    static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
->>>>    {
->>>>        struct device *rdev = &rpdev->dev;
->>>> @@ -2272,15 +2282,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
->>>>            return err;
->>>>        }
->>>>
->>>> -    for (i = 0; i < FASTRPC_DEV_MAX; i++) {
->>>> -        if (!strcmp(domains[i], domain)) {
->>>> -            domain_id = i;
->>>> -            break;
->>>> -        }
->>>> -    }
->>>> +    domain_id = fastrpc_get_domain_id(domain);
->>>>
->>>>        if (domain_id < 0) {
->>>> -        dev_info(rdev, "FastRPC Invalid Domain ID %d\n", domain_id);
->>>> +        dev_info(rdev, "FastRPC Domain %s not supported\n", domain);
->>>>            return -EINVAL;
->>>>        }
->>>>
->>>> @@ -2332,19 +2337,19 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
->>>>        case SDSP_DOMAIN_ID:
->>>>            /* Unsigned PD offloading is only supported on CDSP and CDSP1 */
->>>>            data->unsigned_support = false;
->>>> -        err = fastrpc_device_register(rdev, data, secure_dsp, domains[domain_id]);
->>>> +        err = fastrpc_device_register(rdev, data, secure_dsp, domain);
->>>>            if (err)
->>>>                goto fdev_error;
->>>>            break;
->>>>        case CDSP_DOMAIN_ID:
->>>> -    case CDSP1_DOMAIN_ID:
->>>> +    case GDSP_DOMAIN_ID:
->>>>            data->unsigned_support = true;
->>>>            /* Create both device nodes so that we can allow both Signed and Unsigned PD */
->>>> -        err = fastrpc_device_register(rdev, data, true, domains[domain_id]);
->>>> +        err = fastrpc_device_register(rdev, data, true, domain);
->>>>            if (err)
->>>>                goto fdev_error;
->>>>
->>>> -        err = fastrpc_device_register(rdev, data, false, domains[domain_id]);
->>>> +        err = fastrpc_device_register(rdev, data, false, domain);
->>>>            if (err)
->>>>                goto populate_error;
->>>>            break;
->>>> diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
->>>> index f33d914d8f46..89516abd258f 100644
->>>> --- a/include/uapi/misc/fastrpc.h
->>>> +++ b/include/uapi/misc/fastrpc.h
->>>> @@ -133,6 +133,13 @@ struct fastrpc_mem_unmap {
->>>>        __s32 reserved[5];
->>>>    };
->>>>
->>>> +#define ADSP_DOMAIN_ID (0)
->>>> +#define MDSP_DOMAIN_ID (1)
->>>> +#define SDSP_DOMAIN_ID (2)
->>>> +#define CDSP_DOMAIN_ID (3)
->>>> +#define GDSP_DOMAIN_ID (4)
->>>> +
->>>> +#define FASTRPC_DOMAIN_MAX    4
->>>>    struct fastrpc_ioctl_capability {
->>>>        __u32 domain;
->>>>        __u32 attribute_id;
->>>
+> > Setting fwnode->dev is specific to fw_devlink.
+> >
+> > In order to avoid having a direct 'fwnode->dev = dev;' in several
+> > place in the kernel, introduce fw_devlink_set_device() helper to perform
+> > this operation.
 > 
+> This should not be set anywhere outside the driver core files. I'll
+> get to reviewing the series
 
+Strictly speaking I agree with you, but this is not a some driver case,
+it's very special and also we have some (ab)users of it.
+I can relax the requirement to not set outside of a core functionality,
+(like driver core, PCI core) which are tightly related to driver core
+one.
+
+Just my 2c.
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
