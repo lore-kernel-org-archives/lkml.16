@@ -1,40 +1,40 @@
 Received: from naesa03.arrow.com (naesa03.arrow.com [216.150.161.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E6929DB9B;
-	Mon, 16 Jun 2025 11:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792CD2BD5A8;
+	Mon, 16 Jun 2025 11:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.150.161.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073008; cv=none; b=a1Mgq/lSztCx/lSsBOzssGU4DPOVEEEzMlxIftA9wV2usEXSFH3aCxRRAofBYycUs24cY8SyiaRwkTjBZMsnFX04H/tVIPm5yKHoJv8nuyfZZ/qTFdkCw0mmY8bqgtCdE0OvMWKa0AxiSLkfusye6hBa6CuaXw5yEIYxWv/hWXk=
+	t=1750073010; cv=none; b=iRoi76zOFkph4sM7+BqiKgaZrDJdBQoWLauRb6wF6BGGbKL+/0Ez3rsMaUBKiDjUgfanimHHNulnO3NYgD3rkhMyMXTP71GBgNoqiulUHVJAsGy8CLmYcfkgliXMl+gC4S3S3feup8vjHyLu7VndzvktCE3HgyUPXPCJpDaSkcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073008; c=relaxed/simple;
-	bh=JrJ+umgrNMzWySXESlaKAGuivVKus8Rx3Q4aaoBen2A=;
+	s=arc-20240116; t=1750073010; c=relaxed/simple;
+	bh=cn13MD+YqkkW+ZeWZc6YLX1Q9LAquq/3iQjwn6K8z9Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OY1/AKmKv3EdrgdQJzMiKktQ8mLd1OGquIey3WGCayuSPZvdqOvNdP/BKFd19G9zGnpl9cc+/qEBPnUFQ53ktVDqEb4X7MO/RLV8O/8mJI4kUZZM4kquZekmORTnMWl5lFe3YhzkXU6iYjPpsBQKmhcPatA3TofOXc5WurG0R28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=YhzZQtK8; arc=none smtp.client-ip=216.150.161.23
+	 MIME-Version; b=JeH/6Hz7gLIojV8W5K/6LY0eotRcdNriERS23fZvsCRQ+9xKWnOnjz0YoxjS1bq6/95MlYSlm8QsKn+2x37ks70XpCM6+NWSCm57N4o7Jagw0aL4I0okWeBtKTQiX5tD+UyxpJe25NrGnFvkq3ubKEkQ0AyYfAm0d5xugXTrzRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=qmZw4031; arc=none smtp.client-ip=216.150.161.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="YhzZQtK8"
+	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="qmZw4031"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=einfochips.com; i=@einfochips.com; l=1119; q=dns/txt;
-  s=NAESA-Selector1; t=1750073006; x=1781609006;
+  d=einfochips.com; i=@einfochips.com; l=2356; q=dns/txt;
+  s=NAESA-Selector1; t=1750073008; x=1781609008;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JrJ+umgrNMzWySXESlaKAGuivVKus8Rx3Q4aaoBen2A=;
-  b=YhzZQtK82+1Fox9hKLu5J2BCJkMat2lofZtmiW/H12XQ+eBUFbawf6+s
-   ZsGRLqjnWQpJApqL6oVRjEh5nJuNIqwWPjiDrjgVv7POmzhbW3zO1tkB/
-   B9O+p/TnvnrngADDHm2ID96sp7YadOMZRLp3RTx5ppfC4QDdFp1ysYEbJ
-   NM+/IlDkBqSOaGN5Yy/7gY2YcFlwMnXfg+Yve5QI4Z9RewTrh7A6wwdJN
-   D91ro7nqasaJyDUqkUlotWb9PwsOHDk/+znxgXFOxUcMJbBLwhXomZdXc
-   L2xvkqXOSu3udrmjOXAvh93LOddF8TgBmyeR6NipSC55W4M1xazdrhpDE
-   g==;
-X-CSE-ConnectionGUID: oL9CiXDSQ8WZlVQisCBqwQ==
-X-CSE-MsgGUID: Xw5K/lG/Q7SUtrotL8LHyA==
+  bh=cn13MD+YqkkW+ZeWZc6YLX1Q9LAquq/3iQjwn6K8z9Q=;
+  b=qmZw4031VUOFEH04WJ4PHvba2H1pdJsZ0WSa8J3n5blicbIBFlP9ys9R
+   NN1kpli7c55MwDqsRlaxtf+/e7Y3qlQt0XLAsuSqub8F4ovIEJin8xqSv
+   eic7nv8/D5zeAo39SaZmSBTrqdhEYtjrQ3rPfVMfrzxf13DjbKnmzgRom
+   UZ+IUomxNH7z2UcsR7deP9i7SYSrEp+0BwWI9OcrTuRQWhmhQt3JC9w5c
+   tmYtTPuxro9aD9IxSCogaJ0tWy4DYa8wRzGUVLY1YZYJ2QM3D8U+n61Gb
+   maS5GCjAiGKHrgV9Xb9NGCuCz10Yj+2mPEYWS5cHAfKvQ6fYDHqf5W3Sh
+   A==;
+X-CSE-ConnectionGUID: k75QcjoyQx2pmRDPyu10NA==
+X-CSE-MsgGUID: 8LBG/hAzSkGKbaTkaesCCw==
 X-IronPort-AV: E=Sophos;i="6.16,241,1744092000"; 
-   d="scan'208";a="86117905"
+   d="scan'208";a="86117911"
 Received: from unknown (HELO eicahmirelay01.einfochips.com) ([10.100.49.50])
-  by naesa03out.arrow.com with ESMTP; 16 Jun 2025 05:23:24 -0600
+  by naesa03out.arrow.com with ESMTP; 16 Jun 2025 05:23:27 -0600
 Received: from AHMCPU1888.ap.corp.arrow.com ([172.25.5.100]) by eicahmirelay01.einfochips.com with Microsoft SMTPSVC(10.0.14393.4169);
 	 Mon, 16 Jun 2025 16:53:16 +0530
 From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
@@ -64,9 +64,9 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/7] dt-bindings: interrupt-controller: Add ESWIN EIC7700 PLIC
-Date: Mon, 16 Jun 2025 16:53:14 +0530
-Message-Id: <20250616112316.3833343-6-pinkesh.vaghela@einfochips.com>
+Subject: [PATCH v4 7/7] riscv: dts: eswin: add HiFive Premier P550 board device tree
+Date: Mon, 16 Jun 2025 16:53:16 +0530
+Message-Id: <20250616112316.3833343-8-pinkesh.vaghela@einfochips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250616112316.3833343-1-pinkesh.vaghela@einfochips.com>
 References: <20250616112316.3833343-1-pinkesh.vaghela@einfochips.com>
@@ -77,32 +77,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 16 Jun 2025 11:23:16.0724 (UTC) FILETIME=[0E406340:01DBDEB1]
+X-OriginalArrivalTime: 16 Jun 2025 11:23:16.0865 (UTC) FILETIME=[0E55E710:01DBDEB1]
 
-From: Darshan Prajapati <darshan.prajapati@einfochips.com>
+From: Min Lin <linmin@eswincomputing.com>
 
-Add compatible string for ESWIN EIC7700 PLIC.
+Add minimal device tree for HiFive Premier P550 Development board
 
-Signed-off-by: Darshan Prajapati <darshan.prajapati@einfochips.com>
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Currently the data populated in this DT file is for UART.
+
+Signed-off-by: Min Lin <linmin@eswincomputing.com>
+Co-developed-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
 Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Tested-by: Samuel Holland <samuel.holland@sifive.com>
+Tested-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 ---
- .../bindings/interrupt-controller/sifive,plic-1.0.0.yaml         | 1 +
- 1 file changed, 1 insertion(+)
+ arch/riscv/boot/dts/Makefile                  |  1 +
+ arch/riscv/boot/dts/eswin/Makefile            |  2 ++
+ .../dts/eswin/eic7700-hifive-premier-p550.dts | 29 +++++++++++++++++++
+ 3 files changed, 32 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/eswin/Makefile
+ create mode 100644 arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-index ffc4768bad06..9d7daaca125c 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-@@ -58,6 +58,7 @@ properties:
-       - items:
-           - enum:
-               - canaan,k210-plic
-+              - eswin,eic7700-plic
-               - sifive,fu540-c000-plic
-               - spacemit,k1-plic
-               - starfive,jh7100-plic
+diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+index 64a898da9aee..29a97a663ea2 100644
+--- a/arch/riscv/boot/dts/Makefile
++++ b/arch/riscv/boot/dts/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ subdir-y += allwinner
+ subdir-y += canaan
++subdir-y += eswin
+ subdir-y += microchip
+ subdir-y += renesas
+ subdir-y += sifive
+diff --git a/arch/riscv/boot/dts/eswin/Makefile b/arch/riscv/boot/dts/eswin/Makefile
+new file mode 100644
+index 000000000000..224101ae471e
+--- /dev/null
++++ b/arch/riscv/boot/dts/eswin/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_ARCH_ESWIN) += eic7700-hifive-premier-p550.dtb
+diff --git a/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts b/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
+new file mode 100644
+index 000000000000..131ed1fc6b2e
+--- /dev/null
++++ b/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (c) 2024, Beijing ESWIN Computing Technology Co., Ltd.
++ */
++
++/dts-v1/;
++
++#include "eic7700.dtsi"
++
++/ {
++	compatible = "sifive,hifive-premier-p550", "eswin,eic7700";
++	model = "SiFive HiFive Premier P550";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
 -- 
 2.25.1
 
