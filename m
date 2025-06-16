@@ -1,67 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F912820A7;
-	Mon, 16 Jun 2025 15:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F092E272E48;
+	Mon, 16 Jun 2025 15:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088732; cv=none; b=gt6d4cfT68A0PjoAraNbsPT4dyOUlKpN5LJZ3rnrUhDGqXOg8MLRlLIkTnpbEWsVpBKS1AquvIX7of0tICzgWnJcO3NjKiJOFdbyw9LO+eYRIrIozu99oUBSKwifTK/wzeY2JkSQYIgaS1v7T8bH9q9q8S+A6q1VYkxOrfivr4s=
+	t=1750088736; cv=none; b=sCfoO47G1qmZrH419heseR08FjPYl8x+G5BK6dOEOxn+hA3NkVfqLh+Ku557iR3kA1JdTR/YzyFH/1WhatTcI1LRatLANjVGDE58ANIEHpmcLoZNOhTP/bz09rXs8mXo2FvoEBDEHr7SdSUua6sSv0QCQfffJcJVYkwT7xMKN/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088732; c=relaxed/simple;
-	bh=eqJ2tUOlRedBHMVbikQn7vNqvx6tJ1bIb0c2oc4h4Tw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mrv5FmdUUKETHNhxI1CcAAuk8BdbXuUnpa27zOJ4zzGWD3vcRJz1GFsd9RHHBdgNvVw6GErjpqmp7Mke0HivkZL7BcogSKb7exQh+nNQARLRX0bJKY9QPIBpFW219tKT+56TLJLM3N/lumjGdoQH31DuqbyR3z+OqZ0pW7Vd1xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYq4N3To; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYq4N3To"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DC0C4CEEA;
-	Mon, 16 Jun 2025 15:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750088732;
-	bh=eqJ2tUOlRedBHMVbikQn7vNqvx6tJ1bIb0c2oc4h4Tw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pYq4N3Tos+t+xCWWobu7NtpNPLamy0Su2zM4QYU7nSLMawYdD4/RxeMFgfM4dfmtw
-	 Js/SutomzUuW6mxoC5/sejZoBS5CA3OjoTRfurHpIc2kA5tBR2d/KlOquAHEFnjbat
-	 shHNUdr+KWbge266SdkeYD5U43gMLm9/8ZpjJ3vjID1U/iBsDQAIUoqhzCUvfz4frM
-	 gKMN8GL05cE2VciLKCQQs/1FpOzEiNj90+Ou7T1gvnZqXnZL6IQBuE2x35HWpS1Qbm
-	 jFo0B/a8OQmONb0+MDcxtw2dFb6sSn42B/g5ViWHmrSI2/7rgAh+K2wwxsUtH2MotX
-	 5viPbpdJNGf9A==
-Date: Mon, 16 Jun 2025 16:45:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, shuah@kernel.org,
-	linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-Subject: Re: [PATCH v2] selftests: nettest: Fix typo in log and error
- messages for clarity
-Message-ID: <20250616154528.GF6918@horms.kernel.org>
-References: <20250615084822.1344759-1-alok.a.tiwari@oracle.com>
+	s=arc-20240116; t=1750088736; c=relaxed/simple;
+	bh=ra8p9X0kjOiFPIwyw3A4kgvR0ernRDG0F99sfFix9qg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dYXnFhqFFXWPCJL2/i9RsuqPNu3Qxut2rTovEUSJ4Az3Mmhsbk7/S01aPmmF1fmm+gHBNgPcJEwi0ZSDka/AlxOytdwdayxeM6mM1lMfFdQoxh/n6yKDCr6hUWcQHf21lNsTTLvwxvtAWS6i8A6fCXOBIBrm1U080pawIuS3oHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bLZ8W4LT5z9sWF;
+	Mon, 16 Jun 2025 17:45:31 +0200 (CEST)
+From: Remo Senekowitsch <remo@buenzli.dev>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Mark Brown <broonie@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v1 3/3] samples: rust: platform: Add property child and reference args examples
+Date: Mon, 16 Jun 2025 17:45:11 +0200
+Message-ID: <20250616154511.1862909-4-remo@buenzli.dev>
+In-Reply-To: <20250616154511.1862909-1-remo@buenzli.dev>
+References: <20250616154511.1862909-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250615084822.1344759-1-alok.a.tiwari@oracle.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 15, 2025 at 01:48:12AM -0700, Alok Tiwari wrote:
-> This patch corrects several logging and error message in nettest.c:
-> - Corrects function name in log messages "setsockopt" -> "getsockopt".
-> - Closes missing parentheses in "setsockopt(IPV6_FREEBIND)".
-> - Replaces misleading error text ("Invalid port") with the correct
->   description ("Invalid prefix length").
-> - remove Redundant wording like "status from status" and clarifies
->   context in IPC error messages.
-> 
-> These changes improve readability and aid in debugging test output.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> ---
-> v1 ->v2
-> remove extra space
+Add some example usage of the device property methods for reading
+DT/ACPI/swnode child nodes and reference args.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+---
+ drivers/of/unittest-data/tests-platform.dtsi |  7 +++++++
+ samples/rust/rust_driver_platform.rs         | 13 ++++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
+index 50a51f38afb6..509eb614ab2b 100644
+--- a/drivers/of/unittest-data/tests-platform.dtsi
++++ b/drivers/of/unittest-data/tests-platform.dtsi
+@@ -40,6 +40,13 @@ test-device@2 {
+ 
+ 				test,u32-prop = <0xdeadbeef>;
+ 				test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
++
++				ref_child_0: child@0 {
++					test,ref-arg = <&ref_child_1 0x20 0x32>;
++				};
++				ref_child_1: child@1 {
++					test,ref-arg = <&ref_child_0 0x10 0x64>;
++				};
+ 			};
+ 		};
+ 
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+index c0abf78d0683..4dcedb22a4bb 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -4,7 +4,11 @@
+ 
+ use kernel::{
+     c_str,
+-    device::{self, Core},
++    device::{
++        self,
++        property::{FwNodeReferenceArgs, NArgs},
++        Core,
++    },
+     of, platform,
+     prelude::*,
+     str::CString,
+@@ -91,6 +95,13 @@ fn properties_parse(dev: &device::Device) -> Result {
+         let prop: KVec<i16> = fwnode.property_read_array_vec(name, 4)?.required_by(dev)?;
+         dev_info!(dev, "'{name}'='{prop:?}' (KVec)\n");
+ 
++        for child in fwnode.children() {
++            let name = c_str!("test,ref-arg");
++            let nargs = NArgs::N(2);
++            let prop: FwNodeReferenceArgs = child.property_get_reference_args(name, nargs, 0)?;
++            dev_info!(dev, "'{name}'='{prop:?}'\n");
++        }
++
+         Ok(())
+     }
+ }
+-- 
+2.49.0
 
