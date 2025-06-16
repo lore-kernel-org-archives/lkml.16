@@ -1,86 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB6828A737;
-	Mon, 16 Jun 2025 17:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C361287512;
+	Mon, 16 Jun 2025 17:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096240; cv=none; b=fYWdi5/dh3afUUAisvUurr7gIRkyzLDdsxZAEh5sVeKmWwZjlJsu7WAxzaMFb/b3AOtrvTWSOdZnV+rN7m7wF4IncMc6NxCkGS34GQgk08jVf6Eea+JcYI+sIiekkgM0qDjQFiJAsSBFkhYGPTUMiWQbSl2eDSUX/ACC7Sc/3/8=
+	t=1750096348; cv=none; b=GG0YT2SPsy8aXvowU09sRhSSdqjZ3ZsUeNeIe11ZDCYyAznfKtLjuYLYWZEhWTUfjQ11gCo2IYFfonyxziN7W9z+7PLGpIxHTyNSOHrMEcwZpcr/Enu1zfzq19z5QFy1FGfckHZnB2uVaQcmK0a1SBTxh6lRQp7tgmY+F/ODFEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096240; c=relaxed/simple;
-	bh=kzKMod4I7trzDSgNu24uRFQQmwK7y0+QIxuaSSqQlpQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S9Ti30IWSF9Ki1g1CK+OzKVu3JhxGwFNDhsq0UVFRTphq/nXOM3Li4fBkgocBjWKWvGB9Up/zDMJIbpqpjC1gm8If5fAs30baHZsQ/CGMmzfAFMP4N2VjnrMe296joxd5a8dREBNzOoP2D9LsHLYz+4WwR2mkafhqgpfo9be/84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7ow5wJg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750096348; c=relaxed/simple;
+	bh=g+HwPP9ZIb15NvMhIr+CPbozu6dGSLfBz7OsV9vYGrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1+JmCWY8NyqxmBycR3EvFque0hUQ+x7fSVgGM9KNzG26/sDCpq7FTVff5oX3t/+qLH+zzwEMM8RulsKA99qgzM0ZZLDED9CfLTo7NdssTwoIXofbYRHm84GbmWOhWPQEkRyZvGwj6FE9cxMERQa2PkH7NcGARnxEkj+trmIW2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=gpYq4SO4; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7ow5wJg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A46AC4CEF0;
-	Mon, 16 Jun 2025 17:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750096240;
-	bh=kzKMod4I7trzDSgNu24uRFQQmwK7y0+QIxuaSSqQlpQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h7ow5wJgVkPm9yWdKVjD60KWlSRkSmm6cw/oTDox6/0rJnALyI2LzVVZmftnEbk1a
-	 cj19J5s9m/xSEt0Q1lGfyisLPD/xhUWj3eJ09ZV7Cq2eDPmHpFKxV9ttKVAXRYO9xL
-	 t3i75y+Zn+c41hwcIVmbXzN/gyJv/L/HXJ9RMmvRcJWAYVbn7Jsm+qspDe1DC5VhaI
-	 cwuktwZSEI59MRvzFnWWFepW6VoI0xSUtYpv3awwFbio469BFaBdVvfj8WcGXMvj9t
-	 TFKV9Aoh0KnDwKQtpZ/8VlqOm2A7m2x7gAcDDj2Nru3AaKfILw0lJ+N9Iz9jFs4TIV
-	 bTShavQtFBzpQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list),
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v4 5/5] usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
-Date: Mon, 16 Jun 2025 12:50:19 -0500
-Message-ID: <20250616175019.3471583-6-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250616175019.3471583-1-superm1@kernel.org>
-References: <20250616175019.3471583-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="gpYq4SO4"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bLcyq33LHz9tSG;
+	Mon, 16 Jun 2025 19:52:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1750096339;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U80w8z7BB4L7OCfBpTuzF9uuk8qIENMB0ofD4rcuGa0=;
+	b=gpYq4SO4iiyKNpezJWHa+j/YfswRSZbwFLtuhYuTL3DP9NhfuBwXl3rBauMFpBYWKoXaLy
+	6EWbnFUwLZABQotOqFCr5fJAX1YKX4/whhZNQJz8KixNPQtbKMLbIIsFAUrywRY/ig+8mn
+	7nPcH0k2Qm13BpQ9W/bpd9vcsMUXZQV2WRQXZvdd313tLCmSYFFXVUPdpyXLcPLx6TIZIy
+	ej64GXidw4LGDQ+nbLWPofbWRq3YKhiVO8DWBjJ5Zoz6Uuh8xCgY7+tlvYvn0FPGzNHnRE
+	mC0UF1J5ka9vOSfygWyvj1xUEO3xaw/EvtqY8mJihqr++3CsbSIXOX4GciKUyw==
+Date: Mon, 16 Jun 2025 23:22:15 +0530
+From: Brahmajit Das <listout@listout.xyz>
+To: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	lv.zheng@intel.com
+Subject: Re: [RFC PATCH] ACPI / sysfs: Replace deprecated strcpy() with
+ strscpy()
+Message-ID: <4euirck7yxqxlnzfwus7xfhpxre5q7ck5nhumvj7vdw2ha35mm@dtrhqeyl5tob>
+References: <20250616174748.2799-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250616174748.2799-1-listout@listout.xyz>
+X-Rspamd-Queue-Id: 4bLcyq33LHz9tSG
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On 16.06.2025 23:17, Brahmajit Das wrote:
+...
+> ---
+>  drivers/acpi/sysfs.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+> index a48ebbf768f9..4005c9faf14f 100644
+> --- a/drivers/acpi/sysfs.c
+> +++ b/drivers/acpi/sysfs.c
+> @@ -181,10 +181,9 @@ static int param_set_trace_method_name(const char *val,
+>  
+>  	/* This is a hack.  We can't kmalloc in early boot. */
+>  	if (is_abs_path)
+> -		strcpy(trace_method_name, val);
+> +		strscpy(trace_method_name, val);
+>  	else {
+> -		trace_method_name[0] = '\\';
+> -		strcpy(trace_method_name+1, val);
+> +		scnprintf(trace_method_name, sizeof(trace_method_name), "%c%s", '\\', val);
 
-When the ACPI core uses hibernation callbacks for shutdown drivers
-will receive PM_EVENT_POWEROFF and should handle it the same as
-PM_EVENT_HIBERNATE would have been used.
+Maybe something like would be better
+ -		trace_method_name[0] = '\\';
+ -		strcpy(trace_method_name+1, val);
+ +		scnprintf(trace_method_name, sizeof(trace_method_name+1), "%c%s", '\\', val);
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v3: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/T/#me6db0fb946e3d604a8f3d455128844ed802c82bb
----
- drivers/usb/host/sl811-hcd.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/usb/host/sl811-hcd.c b/drivers/usb/host/sl811-hcd.c
-index ea3cab99c5d40..5d6dba681e503 100644
---- a/drivers/usb/host/sl811-hcd.c
-+++ b/drivers/usb/host/sl811-hcd.c
-@@ -1748,6 +1748,7 @@ sl811h_suspend(struct platform_device *dev, pm_message_t state)
- 		break;
- 	case PM_EVENT_SUSPEND:
- 	case PM_EVENT_HIBERNATE:
-+	case PM_EVENT_POWEROFF:
- 	case PM_EVENT_PRETHAW:		/* explicitly discard hw state */
- 		port_power(sl811, 0);
- 		break;
 -- 
-2.43.0
-
+Regards,
+listout
