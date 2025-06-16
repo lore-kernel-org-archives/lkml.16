@@ -1,218 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C931289E2B
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0091E2602
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750102816; cv=none; b=Gwf8GxC2aOe7xuILVB88FdIWVfnvE9qo0ErbcEEsRzX9FsjJJpMMavE20bkuu8jnvCEstZp6ieKczwTKGdBiK9hUnWXu2geBh/vhBWjs/adUaR68gOZRXRjWfF+ddeXp3Zzbp7A1x0O8cWEOi3KuOUgJixvMqCBKzTWOAxq8BDk=
+	t=1750102987; cv=none; b=JyRES+/5n5+yqwXqJSNMqQWK5BQHJJX13dk7/hSDufL0zvNzPkRZjL1S7X+l9nn+fWSsFvOd8Jz4nj4zOTNle9EOoCfwVshKWX54S5LqI48C5ch6oKO39BsQttSolA7qRZR5J2J5H5lDeGNF/EB0GslmfPTmq/hk6Tbqeh8KK0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750102816; c=relaxed/simple;
-	bh=2HSj50ZkFeGvip9u2ovexwxRbE+rayK2QY+MngvUtSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KKYJUDWQxwkZ0grqGxqg7GvSkrvkt98NkNxVv3O+RGineXpDaQ/vcrdXYPZDgnR7fo8WDmjc3eufBOvghNg6tz/rNLpk+9iwQT1oUzdQnkb6WYFR3HX+D+0Y5jFNi69mAprADtWNcjv4nf0hldKddPg+lFFE21/3UYQ7KR9a1Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fF43hVTA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750102987; c=relaxed/simple;
+	bh=4GXtdJIt4heRHXVxGyZI7LVV8sINiu3XKNwn1Nmm8ac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BxBw1P+8wTa5iCZWdFXeUBsR6bqceQSkfyoiVhm1gEKN4FKuJePDQlWoYkoWBkfZ1FeLum8bWsdlHHPrQwR7joi2SjdOd13cOKFGFYUAgt+RTjLi7dfgz7yC4VZHqAxzB7TQGv7epPguoPpdWTFExt+FdqeK2A1FSdhyB4ZlVn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cx2HqPE5; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fF43hVTA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750102810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jv0l4BNCIbAbpcAAOOCGBfYtJjS97nEwM6epWvM50jQ=;
-	b=fF43hVTAfDRzgYUulmljd/nN74DrKMmM1MDUtTJWDTfdVkAD1972+O7+SpDR2NGOnQ/tvr
-	DDJypodfbmM+0N5ubJlhGQSAz05d87FnqpEqKH/xofp6PTEYcS11vq3JybyQtQb0YgE7Ok
-	iBngBKAzcGf/3HiMK6Il9atEF3hvkhk=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-lZGz1GBHOt2QmCSWWTGpig-1; Mon, 16 Jun 2025 15:40:09 -0400
-X-MC-Unique: lZGz1GBHOt2QmCSWWTGpig-1
-X-Mimecast-MFC-AGG-ID: lZGz1GBHOt2QmCSWWTGpig_1750102809
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cff09d29dso62444039f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:40:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cx2HqPE5"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-73972a54919so4270266b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750102985; x=1750707785; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wt5vEBoX/7CZPzuyH4aIpdA7WQr2k5uAvo+zHY/RWMw=;
+        b=cx2HqPE5ITLOKP+itfe2BXrgNdhPZb+jEZjU9WLTxUjfKorOhsZI/s3nZcfRBUGcCs
+         0M1rnl3tlnbtaN+cdbPnTTykvmIWwvFFnqoGE+yXkGeeeLmQz6WCqU2ywL4Hb1NcYBZZ
+         I+y9YWS4PuB47HnC5QhIQDgVZA5PAVnsseRow=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750102808; x=1750707608;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jv0l4BNCIbAbpcAAOOCGBfYtJjS97nEwM6epWvM50jQ=;
-        b=TfrGPin7cxKUnIej3H9sC5a8a60RUjhGsqAbfkO3XAsrY3ooTsoUOPyMNWESZ2P7wY
-         HNYJLg6J6jedCOdCm1KLz/0H596mBg0IG9+a3oFHxXkuOWJDjbRtRONq275X2NR1VaCu
-         DRzcJHnuReVfRoy8VWcAZlwEJcchN43wDCRNskMNADSJFsdpWTb/7PXKdHcBZn+BSyJu
-         4589+0aY+iScJ9EXo+p+IELIZ4bntlwmICD3HsYYiEvPmjss1AMvtHasP71hC9CEAD69
-         Phfm0/82Glzpy/OuF/+uQsBYc8k033ozVHW0mxyDc90xRwqs+iSzGGc0E/+KgcdaC0kp
-         RvpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+tXXb+1SJY8nWzqd2L5dbPAcrxsk03VsVbpRd1G6uJFxBX7ViLZtxA8tb0Qiq3IzxkQDpg7c9TwO+Sh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeUSrjNxNYdjTj7ESF7SUMvn9NV1nD87PCo63bcO7qhlyl9I+E
-	kkWaFCgWD6D6UKXv6vKQkpEIfyqq9ccYEQIp9w43vRSGoDnqKWyrMW999sInXGMUzpc8eAWv9FV
-	bqDblSsSw1YSYrMmng6RKGDS3y2U4jCKPdJudh5El9JEt/iGlLbY4oEtJihL2JIDFdQ+S19gINw
-	==
-X-Gm-Gg: ASbGnctDHfJmFkjxQy7nabYCkyNtjfBQkyH7LfRaXt72dzjkRxCuiedYUvxxq6smEwd
-	ltCdXBoOXvvTZxveZJ/wvZOHQZqBERxHQTXTpvrBuqjTyt16RHPKS4PVJX33Mxv6cznFvr6qd7h
-	FV9IG7m66K7Ldwma90V7YNvT90Nmpq6wLqqOQ1Tw/RdirxBspyyIAMkKV+D8K5DQtlrdArPeolf
-	rZS3tY4nREGSn/JnO7wPyhpic2KoeWhVwli0x8Kn7PZmuRhZdPYpIKD8DnUCJkl6bB1DrkKpTqO
-	0q/CHCxwMaK8ksvciWXYsIdv/w==
-X-Received: by 2002:a05:6602:1683:b0:873:13c6:f365 with SMTP id ca18e2360f4ac-875dedfd0efmr313067839f.5.1750102808219;
-        Mon, 16 Jun 2025 12:40:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnRPBkV684dJntapdXKPif4JLdEUHjwAgaMW17ime3UOUTf06bvLAvLx4npqtrBInZ4sL6Jg==
-X-Received: by 2002:a05:6602:1683:b0:873:13c6:f365 with SMTP id ca18e2360f4ac-875dedfd0efmr313066539f.5.1750102807793;
-        Mon, 16 Jun 2025 12:40:07 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149ca3519sm1818547173.144.2025.06.16.12.40.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 12:40:06 -0700 (PDT)
-Date: Mon, 16 Jun 2025 13:40:04 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jacob Pan <jacob.pan@linux.microsoft.com>, linux-kernel@vger.kernel.org,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "Liu, Yi L"
- <yi.l.liu@intel.com>, Zhang Yu <zhangyu1@microsoft.com>, Easwar Hariharan
- <eahariha@linux.microsoft.com>, Saurabh Sengar
- <ssengar@linux.microsoft.com>
-Subject: Re: [PATCH v2 2/2] vfio: Fix unbalanced vfio_df_close call in
- no-iommu mode
-Message-ID: <20250616134004.60105ad5.alex.williamson@redhat.com>
-In-Reply-To: <20250616153455.GK1174925@nvidia.com>
-References: <20250603152343.1104-1-jacob.pan@linux.microsoft.com>
-	<20250603152343.1104-2-jacob.pan@linux.microsoft.com>
-	<20250613163103.3bca27cd.alex.williamson@redhat.com>
-	<20250614001555.GR1174925@nvidia.com>
-	<20250616084708.5a94ead7.alex.williamson@redhat.com>
-	<20250616153455.GK1174925@nvidia.com>
-Organization: Red Hat
+        d=1e100.net; s=20230601; t=1750102985; x=1750707785;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wt5vEBoX/7CZPzuyH4aIpdA7WQr2k5uAvo+zHY/RWMw=;
+        b=ZzZ2DZkuLSIodcZwPdsCgqyMPiAa+Rv/1F8Zinh/81J3QFw+MwDZENwgOhMa2SwD3k
+         zpv6+x6kIrVQBHs8LZeFdybBiBmbm3m1TmaYGddMh3RwjvA3uEr0Q44vn1XajgZwiWDo
+         YixK3uXiO1PcevVZ3FY1M9qCJ1i74v8OVAsgw/EKkAa1eFr/F0IDJUyJaP3nxqRpXs74
+         9xkBX247iSmBgI7oyyhbam5PCMsInTgYj6Ylk/WGU3KUausC5G3XgOUjiwqZiwwADcHl
+         yg8T3RPNC4OUyquodroIK4ObZi37j6WdWYAPPlLjKbQT0dmbnzFcaDUfZLkhlQUfkWUo
+         /aiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVc4BoZK2/1jqWqEWKasEGVLAvQcXEy2he1oOnRA3gcSAOCuVPtRFG2NQJjIbbxUF1jNxe9ww2z3TdLzXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgO0DPqEpMMGyP7JGII5Ux2INZFkAugGCRf0Xn4EMieJGuINje
+	5hywGODADD0rsZzv2thNDqxrTVD1pfVIlaCBOvwu7gxRhVV5Gmi87SJ65gPY2wNqh4459KajWWH
+	DTCA1XqWxRE+nFozWfUxJ5cRmHGD4BquT5DsW0DKl
+X-Gm-Gg: ASbGnct5gky48t4sJMb7W0i+vfz2GZ+g2aNA7fngbAxBdi1cTG0vT7hcOn4gWYco8vN
+	aHHue5NbQamPbatY54D08NpfYqV/MN5NkKm2SDqrtjGKjFuW5epx98WH6OAjtxe4eRIoHGKpvil
+	KzrbUaQ+fXdJ4mxmB3oRD7WpRtDu01XX6yWfmkshHZzw==
+X-Google-Smtp-Source: AGHT+IHg3+dqJWa4H+fZqAabDzILCcABfw73ZiZnurFMysI5YMbqJFlOWJudAKNQbZsNaHnRlMJ68o95/n7AayxSldk=
+X-Received: by 2002:a05:6a00:3a04:b0:736:d297:164 with SMTP id
+ d2e1a72fcca58-7489cf6aad9mr14779236b3a.1.1750102984856; Mon, 16 Jun 2025
+ 12:43:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250616133147.1835939-1-akuchynski@chromium.org>
+ <20250616133147.1835939-7-akuchynski@chromium.org> <2025061623-ammonium-outskirts-e89e@gregkh>
+In-Reply-To: <2025061623-ammonium-outskirts-e89e@gregkh>
+From: Andrei Kuchynski <akuchynski@chromium.org>
+Date: Mon, 16 Jun 2025 21:42:53 +0200
+X-Gm-Features: AX0GCFtdGIjZUFsa_hlqAkw8MFj1EgMmaIch8V2HBLolVrJ7BiBJkQmysNKbhAw
+Message-ID: <CAMMMRMebxSLorxTRzre6MDEn0bdC3hrNVQzZyf0NH=TNUk+YGw@mail.gmail.com>
+Subject: Re: [PATCH 06/10] Revert "usb: typec: displayport: Receive DP Status
+ Update NAK request exit dp altmode"
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, Jameson Thies <jthies@google.com>, 
+	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Guenter Roeck <groeck@chromium.org>, Pooja Katiyar <pooja.katiyar@intel.com>, 
+	Badhri Jagan Sridharan <badhri@google.com>, RD Babiera <rdbabiera@google.com>, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Jun 2025 12:34:55 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Mon, Jun 16, 2025 at 4:15=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jun 16, 2025 at 01:31:43PM +0000, Andrei Kuchynski wrote:
+> > This reverts commit b4b38ffb38c91afd4dc387608db26f6fc34ed40b.
+> >
+> > The commit introduced a deadlock with the cros_ec_typec driver.
+> > The deadlock occurs due to a recursive lock acquisition of
+> > `cros_typec_altmode_work::mutex`.
+> > The call chain is as follows:
+> > 1. cros_typec_altmode_work() acquires the mutex
+> > 2. typec_altmode_vdm() -> dp_altmode_vdm() ->
+> > 3. typec_altmode_exit() -> cros_typec_altmode_exit()
+> > 4. cros_typec_altmode_exit() attempts to acquire the mutex again
+> >
+> > This revert is considered safe as no other known driver sends back
+> > DP_CMD_STATUS_UPDATE command with the NAK flag.
+> >
+> > Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
+> > ---
+> >  drivers/usb/typec/altmodes/displayport.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+>
+> Why isn't this being sent as a separate patch for 6.16-final?  And why
+> not put a fixes: line?
+>
 
-> On Mon, Jun 16, 2025 at 08:47:08AM -0600, Alex Williamson wrote:
-> > On Fri, 13 Jun 2025 21:15:55 -0300
-> > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >   
-> > > On Fri, Jun 13, 2025 at 04:31:03PM -0600, Alex Williamson wrote:  
-> > > > On Tue,  3 Jun 2025 08:23:43 -0700
-> > > > Jacob Pan <jacob.pan@linux.microsoft.com> wrote:
-> > > >     
-> > > > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > > > 
-> > > > > For devices with no-iommu enabled in IOMMUFD VFIO compat mode, the group
-> > > > > open path skips vfio_df_open(), leaving open_count at 0. This causes a
-> > > > > warning in vfio_assert_device_open(device) when vfio_df_close() is called
-> > > > > during group close.
-> > > > > 
-> > > > > The correct behavior is to skip only the IOMMUFD bind in the device open
-> > > > > path for no-iommu devices. Commit 6086efe73498 omitted vfio_df_open(),
-> > > > > which was too broad. This patch restores the previous behavior, ensuring
-> > > > > the vfio_df_open is called in the group open path.
-> > > > > 
-> > > > > Fixes: 6086efe73498 ("vfio-iommufd: Move noiommu compat validation out of vfio_iommufd_bind()")
-> > > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > > Tested-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> > > > > Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> > > > > ---
-> > > > > v2: Use a fix from Jason
-> > > > > ---
-> > > > >  drivers/vfio/group.c     | 10 +++++-----
-> > > > >  drivers/vfio/iommufd.c   |  3 ---
-> > > > >  drivers/vfio/vfio_main.c | 26 ++++++++++++++++----------
-> > > > >  3 files changed, 21 insertions(+), 18 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-> > > > > index c321d442f0da..8f5fe8a392de 100644
-> > > > > --- a/drivers/vfio/group.c
-> > > > > +++ b/drivers/vfio/group.c
-> > > > > @@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
-> > > > >  		 * implies they expected translation to exist
-> > > > >  		 */
-> > > > >  		if (!capable(CAP_SYS_RAWIO) ||
-> > > > > -		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
-> > > > > +		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
-> > > > >  			ret = -EPERM;
-> > > > > -		else
-> > > > > -			ret = 0;
-> > > > > -		goto out_put_kvm;
-> > > > > +			goto out_put_kvm;
-> > > > > +		}
-> > > > >  	}
-> > > > >  
-> > > > >  	ret = vfio_df_open(df);
-> > > > >  	if (ret)
-> > > > >  		goto out_put_kvm;
-> > > > >  
-> > > > > -	if (df->iommufd && device->open_count == 1) {
-> > > > > +	if (df->iommufd && device->open_count == 1 &&
-> > > > > +	    !vfio_device_is_noiommu(device)) {    
-> > > > 
-> > > > Why do we need this?    
-> > > 
-> > > What I was trying to do is put all the logic about noiommu into only
-> > > vfio_df..open/close functions instead of sprikling it into a bunch of
-> > > other functions. That seemed to be the right point to make this cut.  
-> > 
-> > Alternatively we could be consistent about breaking out of the
-> > vfio/iommufd.c functions that aren't relevant to noiommu.  The
-> > container side handles noiommu internally, why should iommufd push
-> > handling up to the device file layer?  We're really just missing the
-> > bind path.  
-> 
-> Broadly what I was going for was to just remove the iommufd stuff
-> entirely from the DF layer rather than to half pretend there is an
-> iommufd layer below it. This should ideally go as far as not having an
-> iommufd_ctx at all. So things start to look really weird calling
-> iommufd functions without an iommufd ctx.
-> 
-> > > With this patch we move toward the vfio_df..open/close functions being
-> > > symmetrical in their decision making.  
-> > 
-> > But is it?  We special case all the iommufd paths to filter out noiommu
-> > but it's inconsistent with the legacy paths.  Thanks,  
-> 
-> The container still exists in noiommu mode and internally does things,
-> eg it has a container->noiommu indicationm and the vfio-noiommu ops to
-> manage this.
-> 
-> The iommufd should not exist and should never be used. They are
-> different cases.
-> 
-> If Jacob eventually does what I suggested in another email then we
-> would have a noiommu special mode inside iommufd and it would look
-> more like the container.
+Hi Greg,
 
-A concise fix would be nice for stable backports though, so even if we
-want to move to testing noiommu in the device file layer or create a
-special mode in iommufd, the smallest, most consistent initial fix
-would be to continue the _group_open:
+The issue will emerge only after this series is applied, so 6.16
+remains secure as this code is not executable.
+I will submit it as a separate patch, with the relevant tags included.
 
---- a/drivers/vfio/group.c
-+++ b/drivers/vfio/group.c
-@@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
- 		 * implies they expected translation to exist
- 		 */
- 		if (!capable(CAP_SYS_RAWIO) ||
--		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
-+		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
- 			ret = -EPERM;
--		else
--			ret = 0;
--		goto out_put_kvm;
-+			goto out_put_kvm;
-+		}
- 	}
-
-
-And add a noiommu exit branch to _iommufd_bind, symmetric to unbind.
-Right?  Thanks,
-
-Alex
-
+Thanks,
+Andrei
