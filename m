@@ -1,94 +1,136 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9AC2BEFF9
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A771E501C;
+	Mon, 16 Jun 2025 15:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087126; cv=none; b=bs7eRaYVeBFforIT+Bb38AcbSZSdQMeyJr8QncMrnprIU3k6F6IakbKpjPGtX/247JSXhdwJ0/MebbTqAeiv7+B1ZqV5x4DuvURDP5NTLyEYXzdy+M+aynEuUz9SWN5aQLuvHch+k84pbbRuq565V/IUdQ6akSSP22AINvW9qIc=
+	t=1750087318; cv=none; b=gzTjynAKqYpUi9Y14cmIuGcvZXXu0B7B/I51BE+IOQ7HxqhJQSfdZ7vruZzHj0Gi2F3FSNAZHhzaHaI0QG7lfF/MAHskf+PmyYX1Eo70W70+MthlfHiY/UJCjEK0E0o6X/ilORexX23z0gY7xRBPZfzwcALGt1VwU5AOAuOSVOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087126; c=relaxed/simple;
-	bh=Tuzibk2DlH5Ipns7Ujv4PcGD1xdc1k2V17KPDpsOw4w=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kWrfgkOgg09OT9UwqhrGVxhVP9VHLvLZM47zSXv7ckleRHkyWgZyY5Mqx67QcTGqXbwuKuUbVa+NyWFKvNm1dUlfJrVM+Po/V0ADc3xsKL4F9bFokwIDJX3mo8CYi/T2b0HXhHwnulp2ppy1PKL+SDW2bk+KuDFlNrVh5wBNuI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86463467dddso501028539f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:18:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750087124; x=1750691924;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w8dxOTrTDAJD1OCCztvcoAkhn+hL2VYiAjXZhSDtU8s=;
-        b=ayzRxXnRGOVYhJDL6QrVsMsjA8i+eKHr/2vyfByf/5DGwspPOAlwpXDWFvu8tg0OAL
-         BR/Zv4fJvfFCTA6huzn5ZttdsXx2QBw9TLwvLCj/isDCUqRJQvRkkHAOVeSTXxHgKgWU
-         ssipsJBVmYgTQmGdP7MANgpKju1VnnkL9f48xGuEQb++phbop9tub6UTnjSZvOrv2RhG
-         V8Ez6eVZUhL6ixb0dOBX5IgsmpENHBhCrR++3saXMMqv784ErFowCZScjoV0yvIkofVy
-         emlB0+ksOEy3yWc8d9zy/KaIBRzEtYGRX2cv8NOFMS/0ag0zDMfotj2sryNcvb0ryuEg
-         Utog==
-X-Gm-Message-State: AOJu0YxG8ZXhKt/61Myx9wUIfrGq9UhyNGyqc0OrNfJVuz7jlvI3Q9Sd
-	6CV772LgSZ/k9CtF/IIoeVennAdDyG1fP/zHpzXfSxmDYunCAbCJt0oO5/+QMgdvNGqzsBjWtv9
-	APUC8r9sM37Pd/OLgicWiPEv2s7Lo1xRw15XqmXou5SS/f2KDDnUjYtUYi+w=
-X-Google-Smtp-Source: AGHT+IHHd5k1z7UbhCr6Qf3FrKyqZi8Kqs55igMDltLnsdwFDJb2BYMxf8Ze6f0qTgygD/EKeILDJYSfbWBXl8EbHDXJUM/ic6gI
+	s=arc-20240116; t=1750087318; c=relaxed/simple;
+	bh=F/QyudQDY/anQvkRN0MCoaO7t8IhTLucluA7Fcylo0Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GTfoQ7SF87pC0/sgNTxF0YXmK0cxhZOZc4jM5N6oNv2ay3Ls5X2gEooViqIJszF8T4axIIJCVYqMDUoumKD/RfPiYVn0ouLtFaFkf5WCUKyUDGX8aXyrzayQd6Ns63+YaiXxFIZJuIijhxxEWmPa9LKV15ZL9Wb6HPiAuasnV8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyaUN2wQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyaUN2wQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C703C4CEEA;
+	Mon, 16 Jun 2025 15:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750087318;
+	bh=F/QyudQDY/anQvkRN0MCoaO7t8IhTLucluA7Fcylo0Y=;
+	h=From:Date:Subject:To:Cc:From;
+	b=HyaUN2wQUnvOmZj06/ZeoyJY0N8JQOKU8TwCyxXPEu9e4mSBG+JOffhb7m1PWDD3r
+	 JdbTuYCAKkT9Q0jw5gaBI4yco6Xj4u5IuzpTrNrj6KhYTa61/2ZzgV5mUbKOpyTDpg
+	 z81uQHC3ElzB4UY8M1TDIS+9tI5fVfsrxLT3EdEhI+PWm0hkh/9l3t35WYhMfx4GnI
+	 7nnlQnqyGSx/pJrikNehMBNzbkd2Gh1OZyeFryN34Wyy9HTnqV6Tz3rc9Z5yME7Dmc
+	 jIaMvSXbCWVfQMnQZhIBPpai/P2wLfTd8Bp/+WIQCvRqtuQT1MuV479EdzbmuWKyFP
+	 hxOtBqthEu6Bw==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Mon, 16 Jun 2025 17:21:46 +0200
+Subject: [PATCH v2] Documentation: dma-buf: heaps: Add naming guidelines
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2308:b0:3dd:f4d5:1c1a with SMTP id
- e9e14a558f8ab-3de07cd1771mr98353845ab.17.1750087124155; Mon, 16 Jun 2025
- 08:18:44 -0700 (PDT)
-Date: Mon, 16 Jun 2025 08:18:44 -0700
-In-Reply-To: <673b71bc.050a0220.87769.004d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685035d4.050a0220.2608ac.0003.GAE@google.com>
-Subject: Re: [syzbot] [PATCH wireless v2] wifi: mac80211: drop invalid source
- address OCB frames
-From: syzbot <syzbot+8b512026a7ec10dcbdd9@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250616-dma-buf-heap-names-doc-v2-1-8ae43174cdbf@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAIk2UGgC/4WNTQ6CMBBGr0Jm7Zi2CP6svIdhMZQpbZSWtEo0p
+ He3cgGX7yXf+1ZIHB0nuFQrRF5ccsEXULsKtCU/MrqhMCihGtEogcNE2L8MWqYZPU2ccAgaa6l
+ aSSS04RbKeI5s3HsL37rC1qVniJ/tZ5E/+ze5SJRIfS3N8XASZ+brnaPnxz7EEbqc8xceLSYKv
+ QAAAA==
+X-Change-ID: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
+To: Sumit Semwal <sumit.semwal@linaro.org>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+ "T.J. Mercier" <tjmercier@google.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jared Kangas <jkangas@redhat.com>, 
+ Mattijs Korpershoek <mkorpershoek@kernel.org>, 
+ Bagas Sanjaya <bagasdotme@gmail.com>, Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3203; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=F/QyudQDY/anQvkRN0MCoaO7t8IhTLucluA7Fcylo0Y=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBkBZpMuGPxdwfn04PlNCc0vnt5KLJi0N0WrOZFHdNc1v
+ c+rHiws7pjKwiDMySArpsjyRCbs9PL2xVUO9it/wMxhZQIZwsDFKQATKTjD2LB7cvExg2L+mYve
+ 7jDX3zlhDdvGXDlmu1s3DbqOz36kv9M4xV9IVSSuzfnX3k+zyq7trmSslVL+tuqtbqvTNm7t5Xe
+ eOazxXBj46YvhTVnR1pzrixXs7wZfzv9aOrn/6JrOfx8nb/3tDAA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+We've discussed a number of times of how some heap names are bad, but
+not really what makes a good heap name.
 
-***
+Let's document what we expect the heap names to look like.
 
-Subject: [PATCH wireless v2] wifi: mac80211: drop invalid source address OCB frames
-Author: johannes@sipsolutions.net
-
-From: Johannes Berg <johannes.berg@intel.com>
-
-In OCB, don't accept frames from invalid source addresses
-(and in particular don't try to create stations for them),
-drop the frames instead.
-
-Reported-by: syzbot+8b512026a7ec10dcbdd9@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/r/6788d2d9.050a0220.20d369.0028.GAE@google.com/
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
-#syz test
+Changes in v2:
+- Added justifications for each requirement / suggestions
+- Added a mention and example of buffer attributes
+- Link to v1: https://lore.kernel.org/r/20250520-dma-buf-heap-names-doc-v1-1-ab31f74809ee@kernel.org
 ---
- net/mac80211/rx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/userspace-api/dma-buf-heaps.rst | 38 +++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 09beb65d6108..e73431549ce7 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -4432,6 +4432,10 @@ static bool ieee80211_accept_frame(struct ieee80211_rx_data *rx)
- 		if (!multicast &&
- 		    !ether_addr_equal(sdata->dev->dev_addr, hdr->addr1))
- 			return false;
-+		/* reject invalid/our STA address */
-+		if (!is_valid_ether_addr(hdr->addr2) ||
-+		    ether_addr_equal(sdata->dev->dev_addr, hdr->addr2))
-+			return false;
- 		if (!rx->sta) {
- 			int rate_idx;
- 			if (status->encoding != RX_ENC_LEGACY)
+diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentation/userspace-api/dma-buf-heaps.rst
+index 535f49047ce6450796bf4380c989e109355efc05..835ad1c3a65bc07b6f41d387d85c57162909e859 100644
+--- a/Documentation/userspace-api/dma-buf-heaps.rst
++++ b/Documentation/userspace-api/dma-buf-heaps.rst
+@@ -21,5 +21,43 @@ following heaps:
+    usually created either through the kernel commandline through the
+    `cma` parameter, a memory region Device-Tree node with the
+    `linux,cma-default` property set, or through the `CMA_SIZE_MBYTES` or
+    `CMA_SIZE_PERCENTAGE` Kconfig options. Depending on the platform, it
+    might be called ``reserved``, ``linux,cma``, or ``default-pool``.
++
++Naming Convention
++=================
++
++``dma-buf`` heaps name should meet a number of constraints:
++
++- That name must be stable, and must not change from one version to the
++  other. Userspace identifies heaps by their name, so if the names ever
++  changes, we would be likely to introduce regressions.
++
++- That name must describe the memory region the heap will allocate from,
++  and must uniquely identify it in a given platform. Since userspace
++  applications use the heap name as the discriminant, it must be able to
++  tell which heap it wants to use reliably if there's multiple heaps.
++
++- That name must not mention implementation details, such as the
++  allocator. The heap driver will change over time, and implementation
++  details when it was introduced might not be relevant in the future.
++
++- The name should describe properties of the buffers that would be
++  allocated. Doing so will make heap identification easier for
++  userspace. Such properties are:
++
++  - ``cacheable`` / ``uncacheable`` for buffers with CPU caches enabled
++    or disabled;
++
++  - ``contiguous`` for physically contiguous buffers;
++
++  - ``protected`` for encrypted buffers not accessible the OS;
++
++- The name may describe intended usage. Doing so will make heap
++  identification easier for userspace applications and users.
++
++For example, assuming a platform with a reserved memory region located
++at the RAM address 0x42000000, intended to allocate video framebuffers,
++physically contiguous, and backed by the CMA kernel allocator. Good
++names would be ``memory@42000000-cacheable-contiguous`` or
++``video@42000000``, but ``cma-video`` wouldn't.
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
+
+Best regards,
 -- 
-2.49.0
+Maxime Ripard <mripard@kernel.org>
 
