@@ -1,245 +1,120 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0461B1DDC0F
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5F21DDC0F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750066401; cv=none; b=ONeovELFjzBgLyRfLGsNzp8zh88+6C9QiT/SIBeDaidl6X+gLVr5hTR968sFiwLZvmjIWx1Ba0RkOsuY7qkuIzezOWzYn5t28/iPsNUrmv+N58N1y3GseJiChkQ7jTnwYnXwrlBoDaqxh2Un2QlmXYmV89ZQmsfJpHzV1nHnXhk=
+	t=1750066459; cv=none; b=fKJtPkMsPyjm/03b+VzbLA7HEwpEb6tzplBvzmK9rmYu8cWpdWjRklVS0hwln6dYowChGa/cmQ1UChnN2sEW4SkI9fCEW057JUZKoBXbkw1nW5Qw7mAEkQbcf6Hc2aqpQoZ528LTzKIweofSBlHGYj7tHctWQi6FmdMPKnNRC94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750066401; c=relaxed/simple;
-	bh=1xitmJe9osecVteRG+cTGUtrbKgPNDzlq4jf3ouZAnE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mQmwWXnB+YxCx6xGnh2V81kln0Es+fsss5mpV+mHuiQmWhAJZWAGENHiRVxDVvn7u778Kne3QyID/oFMmxNZV5nvibnMpxr71240WAO+gzkvlm7lA24Cffa0ov4HqTaskYeg0iS2RaFryW6GjAqrA9QD8nLANSUWJ/VNixUYYwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=F7U72Yyw; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750066459; c=relaxed/simple;
+	bh=yWuVND4T3UIjH81QGhsgSpvTzpQOmi6MbpEzktgkuI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lxHi/5Donv0EaQP+wUfqfRH0TrtGR3qkwL9Mdykrj5v/mkyALyIRb1BARIeHCtDcuevBan9pBRMH+2uDy1lZ04/14cTv03qj767bKObcx96i2eZDe8M40TCXMIAfnEhjheUWBS90eNlk8fTWrvlvHEsXsiUWHF5R/idbRpjrv6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MFidEgOK; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F7U72Yyw"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55G9Wgs22547230;
-	Mon, 16 Jun 2025 04:32:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750066362;
-	bh=FMKsK8MsLoeoZo/zKx62EbrjGAGZA4tE7r2K7Q4U/9U=;
-	h=From:To:CC:Subject:Date;
-	b=F7U72Yyw2uRHDLygZLsq7GK2wQiJrL6mouhcpgp7NBuz98/ga7gBmYOVUK2csB9P8
-	 IwZYTNj3GTLEn0SYC7+Y0t8cdMbtinByxfCGFbJoIhi/MOUldyW3I2PSAP7c8lLQ+i
-	 fQRA5JF8QwuISKXkme/ldhP3bNH4Cb9K70IGOhws=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55G9Wfnk2535591
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 16 Jun 2025 04:32:42 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 16
- Jun 2025 04:32:41 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 16 Jun 2025 04:32:41 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55G9Wede3821589;
-	Mon, 16 Jun 2025 04:32:41 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <max.krummenacher@toradex.com>,
-        <ernestvanhoecke@gmail.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <kieran.bingham+renesas@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <max.oss.09@gmail.com>,
-        <devarsht@ti.com>, <j-choudhary@ti.com>, <geert@linux-m68k.org>
-Subject: [PATCH v5] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort connector type
-Date: Mon, 16 Jun 2025 15:02:40 +0530
-Message-ID: <20250616093240.499094-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MFidEgOK"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a365a6804eso2998670f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750066456; x=1750671256; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t9CmXx7Jox2MTWDj8UZuRJKz6FA45h7DTh7MdX7eUyU=;
+        b=MFidEgOKkpw4Z9O7KVk0KUuUoWwhFn/l6i4WUoKLxlApenc/ehCs3ENMT8hJZW/5sp
+         s/6SrY22821PTS/QPYyc1teFOUQ71TodgN73+Ga+bCbHLMKY0DnJaEj2DgDVPLRvDUbY
+         4pFdELkO8z7K3jArSU5t6ZvHf8Ay6W23Skp/St87bxPTEoGQNoxvoMgAbbSGt073Dp8I
+         Ro6YqzOAN7+vLVc6EUqzxw4VNJBJSEJ3px9MnrhQH5ET9XMRBGwG2KbG7oQ2FUlktDUU
+         C35LdAqQEiiUhe0s2LI68DBMIWZEYLE7SWgWLsATa6BfwNslDhuxQpzYmdid+r5KUK2D
+         EI/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750066456; x=1750671256;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t9CmXx7Jox2MTWDj8UZuRJKz6FA45h7DTh7MdX7eUyU=;
+        b=ciapKuZxOuBEvdK2rutMB5bQ43gZ6KuvZ1p0k2nOFLMi3jfFs/V36hf+GI5OLxZgX5
+         y0Z9LObqQAE8UF+kbc0nVu6/T6pssqbfuXOuJXNvbE3gCqn1RoXVVDpjMMZ6z4xErBlb
+         4EjWp9GAJW0RnG8MsBDQoGwkkor1AQMWYz/TOEQySOrzL21bHbVlGn5frJB9yRJ3/+3P
+         I39AB1msFDcHFSDlACBjaXVi4dRins0/h4MDyy7whITax3hiUkq3LTtnsAVykM56MWe+
+         WQgA4Gsj+1lHl8EicOPWuAfDkgXHE4JdsCeaKkiH8wWs470y0fGiXmXHpUh0Q+naKkAI
+         9Gzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVetZ/Z6k3CCkLx5nEyAWiMKl45yPIZ8orqTRtwmKLs/Uh94RhhqgveIgGRp2Hlb8m//iYxPjsoHue79Cs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjgBO4ZwYukyFBG28mulylBkYl3yYaAGg1KnSeY6848CU8MgAz
+	+NVOBHzcxuLXmOsxLDmItqkmAybvNETnvbwhUlE3ATgQvqAD7e7HTju7/QFPkwkDGKE=
+X-Gm-Gg: ASbGncsRNoTzFFj56ZrZ8bzl4ZQ0GMb2aZaV/OCD5xY5NUMrfuwlp5vOPoguIawGBzJ
+	+QyakTAswix5z+WIz9AqnRpUe6NZ6l75+jscOkLpp8OzNFsfo38j47+Ahj+vluxtuj4lLcVfLT1
+	StHjcPXJLWbTzYh8gC6OeGDVHyVzTQSbjB+/85LqOyr7/KOXN8EEa5230BkoCBD+ifJDxRYpO0D
+	Uk9HkS+3rLlR2uy4rRV1sfvxgxUke5U4Z7HHkg8TVCKweO+GjwPbQFgToDvJjukwF2pudndODwv
+	rVoTo+/3QR1gYYL1vFzw+ZSARy7+2X7j91homol8GfOBqtOUXlfI4M7PKQdSK12i323vX1rDAMs
+	WYA==
+X-Google-Smtp-Source: AGHT+IH2eCAan9hr2z5r64aFmnkOfZ0VQQsGBIwNUvdyfgouIqWaqapfX02p+ntb3Jt3ejJMX+pmLw==
+X-Received: by 2002:a5d:5f8d:0:b0:3a5:5270:a52c with SMTP id ffacd0b85a97d-3a57189727dmr7228368f8f.0.1750066456498;
+        Mon, 16 Jun 2025 02:34:16 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b403b4sm10327273f8f.80.2025.06.16.02.34.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 02:34:16 -0700 (PDT)
+Message-ID: <9af5522e-02e3-4a82-a9df-20c71ebb3875@linaro.org>
+Date: Mon, 16 Jun 2025 10:34:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Revert unintended dependency change in
+ config SPI_FSL_DSPI
+To: Lukas Bulwahn <lbulwahn@redhat.com>, Mark Brown <broonie@kernel.org>,
+ Ciprian Marian Costea <ciprianmarian.costea@nxp.com>,
+ Larisa Grigore <Larisa.Grigore@nxp.com>,
+ Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>, linux-spi@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20250616091955.20547-1-lukas.bulwahn@redhat.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250616091955.20547-1-lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-By default, HPD was disabled on SN65DSI86 bridge. When the driver was
-added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
-call which was moved to other function calls subsequently.
-Later on, commit "c312b0df3b13" added detect utility for DP mode. But with
-HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
-state always return 1 (always connected state).
 
-Set HPD_DISABLE bit conditionally based on display sink's connector type.
-Since the HPD_STATE is reflected correctly only after waiting for debounce
-time (~100-400ms) and adding this delay in detect() is not feasible
-owing to the performace impact (glitches and frame drop), remove runtime
-calls in detect() and add hpd_enable()/disable() bridge hooks with runtime
-calls, to detect hpd properly without any delay.
 
-[0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
+On 16/06/2025 10:19 am, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit 9a30e332c36c ("spi: spi-fsl-dspi: Enable support for S32G
+> platforms") reworks the dependencies of config SPI_FSL_DSPI, but introduces
+> a typo changing the dependency to M5441x to a dependency on a non-existing
+> config M54541x.
+> 
+> Revert the unintended change to depend on the config M5441x.
+> 
+> Fixes: 9a30e332c36c ("spi: spi-fsl-dspi: Enable support for S32G platforms")
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> ---
+>   drivers/spi/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 60eb65c927b1..f2d2295a5501 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -647,7 +647,7 @@ config SPI_FSL_SPI
+>   config SPI_FSL_DSPI
+>   	tristate "Freescale DSPI controller"
+>   	select REGMAP_MMIO
+> -	depends on ARCH_MXC || ARCH_NXP || M54541x || COMPILE_TEST
+> +	depends on ARCH_MXC || ARCH_NXP || M5441x || COMPILE_TEST
+>   	help
+>   	  This enables support for the Freescale DSPI controller in master
+>   	  mode. S32, VF610, LS1021A and ColdFire platforms uses the controller.
 
-Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connector operations for DP")
-Cc: Max Krummenacher <max.krummenacher@toradex.com>
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
+How did that get there... Sorry for the breakage
 
-Changelog v4->v5:
-- Make suspend asynchronous in hpd_disable()
-- Update HPD_DISABLE in probe function to address the case for when
-  comms are already enabled. Comments taken verbatim from [2]
-- Update comments
-
-v4 patch:
-<https://lore.kernel.org/all/20250611052947.5776-1-j-choudhary@ti.com/>
-
-Changelog v3->v4:
-- Remove "no-hpd" support due to backward compatibility issues
-- Change the conditional from "no-hpd" back to connector type
-  but still address [1]
-
-v3 patch link:
-<https://lore.kernel.org/all/20250529110418.481756-1-j-choudhary@ti.com/>
-
-Changelog v2->v3:
-- Change conditional based on no-hpd property to address [1]
-- Remove runtime calls in detect() with appropriate comments
-- Add hpd_enable() and hpd_disable() in drm_bridge_funcs
-
-v2 patch link:
-<https://lore.kernel.org/all/20250508115433.449102-1-j-choudhary@ti.com/>
-
-Changelog v1->v2:
-- Drop additional property in bindings and use conditional.
-- Instead of register read for HPD state, use dpcd read which returns 0
-  for success and error codes for no connection
-- Add relevant history for the required change in commit message
-- Drop RFC subject-prefix in v2
-- Add "Cc:" tag
-
-v1 patch link:
-<https://lore.kernel.org/all/20250424105432.255309-1-j-choudhary@ti.com/>
-
-[1]: <https://lore.kernel.org/all/mwh35anw57d6nvre3sguetzq3miu4kd43rokegvul7fk266lys@5h2euthpk7vq/>
-[2]: <https://lore.kernel.org/all/CAD=FV=WvH73d78De3PrbiG7b6OaS_BysGtxQ=mJTj4z-h0LYWA@mail.gmail.com/>
-
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 70 +++++++++++++++++++++++----
- 1 file changed, 61 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 60224f476e1d..c6a826e8091e 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -348,12 +348,18 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
- 	 * 200 ms.  We'll assume that the panel driver will have the hardcoded
- 	 * delay in its prepare and always disable HPD.
- 	 *
--	 * If HPD somehow makes sense on some future panel we'll have to
--	 * change this to be conditional on someone specifying that HPD should
--	 * be used.
-+	 * For DisplayPort bridge type, we need HPD. So we use the bridge type
-+	 * to conditionally disable HPD.
-+	 * NOTE: The bridge type is set in ti_sn_bridge_probe() but enable_comms()
-+	 * can be called before. So for DisplayPort, HPD will be enabled once
-+	 * bridge type is set. We are using bridge type instead of "no-hpd"
-+	 * property because it is not used properly in devicetree description
-+	 * and hence is unreliable.
- 	 */
--	regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
--			   HPD_DISABLE);
-+
-+	if (pdata->bridge.type != DRM_MODE_CONNECTOR_DisplayPort)
-+		regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
-+				   HPD_DISABLE);
- 
- 	pdata->comms_enabled = true;
- 
-@@ -1195,9 +1201,14 @@ static enum drm_connector_status ti_sn_bridge_detect(struct drm_bridge *bridge)
- 	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
- 	int val = 0;
- 
--	pm_runtime_get_sync(pdata->dev);
-+	/*
-+	 * Runtime reference is grabbed in ti_sn_bridge_hpd_enable()
-+	 * as the chip won't report HPD just after being powered on.
-+	 * HPD_DEBOUNCED_STATE reflects correct state only after the
-+	 * debounce time (~100-400 ms).
-+	 */
-+
- 	regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
--	pm_runtime_put_autosuspend(pdata->dev);
- 
- 	return val & HPD_DEBOUNCED_STATE ? connector_status_connected
- 					 : connector_status_disconnected;
-@@ -1220,6 +1231,27 @@ static void ti_sn65dsi86_debugfs_init(struct drm_bridge *bridge, struct dentry *
- 	debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
- }
- 
-+static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
-+{
-+	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
-+
-+	/*
-+	 * Device needs to be powered on before reading the HPD state
-+	 * for reliable hpd detection in ti_sn_bridge_detect() due to
-+	 * the high debounce time.
-+	 */
-+
-+	pm_runtime_get_sync(pdata->dev);
-+}
-+
-+static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
-+{
-+	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
-+
-+	pm_runtime_mark_last_busy(pdata->dev);
-+	pm_runtime_put_autosuspend(pdata->dev);
-+}
-+
- static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
- 	.attach = ti_sn_bridge_attach,
- 	.detach = ti_sn_bridge_detach,
-@@ -1234,6 +1266,8 @@ static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
- 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
- 	.debugfs_init = ti_sn65dsi86_debugfs_init,
-+	.hpd_enable = ti_sn_bridge_hpd_enable,
-+	.hpd_disable = ti_sn_bridge_hpd_disable,
- };
- 
- static void ti_sn_bridge_parse_lanes(struct ti_sn65dsi86 *pdata,
-@@ -1321,8 +1355,26 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
- 	pdata->bridge.type = pdata->next_bridge->type == DRM_MODE_CONNECTOR_DisplayPort
- 			   ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CONNECTOR_eDP;
- 
--	if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort)
--		pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
-+	if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort) {
-+		pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT |
-+				    DRM_BRIDGE_OP_HPD;
-+		/*
-+		 * If comms were already enabled they would have been enabled
-+		 * with the wrong value of HPD_DISABLE. Update it now. Comms
-+		 * could be enabled if anyone is holding a pm_runtime reference
-+		 * (like if a GPIO is in use). Note that in most cases nobody
-+		 * is doing AUX channel xfers before the bridge is added so
-+		 * HPD doesn't _really_ matter then. The only exception is in
-+		 * the eDP case where the panel wants to read the EDID before
-+		 * the bridge is added. We always consistently have HPD disabled
-+		 * for eDP.
-+		 */
-+		mutex_lock(&pdata->comms_mutex);
-+		if (pdata->comms_enabled)
-+			regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG,
-+					   HPD_DISABLE, 0);
-+		mutex_unlock(&pdata->comms_mutex);
-+	};
- 
- 	drm_bridge_add(&pdata->bridge);
- 
--- 
-2.34.1
+Reviewed-by: James Clark <james.clark@linaro.org>
 
