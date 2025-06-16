@@ -1,130 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366D31D6188
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2310A41
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750082612; cv=none; b=BhsdB+LUKh2D3T4V2L9kAugU9tqIdaXBaDWUU6K4SHgJyakFhaJbyLgErs3l+EpYlbivhs4CjjAcnUR2nYQqfTy7fhefuVmvM5SAPBEp/CLLAX8ToILBv94ofVXcu7PXgAHG9qr7tkUlwq9kZ2F9NJnlADALI6yy2E2otWYsOSY=
+	t=1750082646; cv=none; b=gvNsElys73JNeJZ8axvXSAaDc++V9P2GIg0/uQdoDC+o2ADmR0dr4pMciY+qPK7I3MLaiFEWy51Gf7f6CIgTsmkkZ1Y8ZaA5qm0twc9wEvQ4M+4m6OI3YMsj58gGXrMjN/v0dxligpeE1g3NWvEIMoC9FwdyaMiSWFoBJN/vHtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750082612; c=relaxed/simple;
-	bh=JO2DVA5a3HV+i3BWwWTQYfMByP2lmbmi28yHxOFU1Hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YTFgcZUnmBXUlO3YJj5KEaYk/tTZ9aSX82YGISfeiVoOfFXMF6kVeUnTDjQycwply718QPcAUCSTwbdobgBCOsEbpJ0u1HUVaVDpvbnBCayM3F0wOSKjsptEMAa2x2mqw3jXhdcEnfJWO82vGPtWScAHmbUbUZY6sYcZsIL8Pto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NkOq7Mw9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750082646; c=relaxed/simple;
+	bh=cd/1vdRHQJYLjFS4gtG9R3aSxRwOTrVzGKk7oI2wz+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W0fuU+9cHROn5LjiIUOwF5uif03++5QD4LQe32Ur+WhMemEpmf9W18AkUF3dz+dLZp/DCkM0+5MHHwcNdpQUBD0VKyQyJO8pNLW80XE8nhpS+6q8vB+7JRrNwillvKwCKASnv5ttTjbF+B2/DvtiX29LZaUieyRokRiMTvl2hVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ITzJg/Fi; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NkOq7Mw9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750082610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3KT/2mLdsrhe4l5WXh2mMIJOHdvnt3ZcZb+h3AjjEok=;
-	b=NkOq7Mw9JZqSR3eNC3D9+6PHDoqWFih7EyTd+dyHmYW/31vdKLEBP7MOrpvLHDnE/TVSRf
-	98XUxXCR3Axiubzo8KaOvsAshrYiMVrNcf/MT27J0K59d2Ft3838pOsSmUM95jgsRIcxIB
-	MyzWx3LINQj8n4XwuN4Ape27pqS0VfA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-n-Qvwc_wPgKH2bUrdY5lLg-1; Mon, 16 Jun 2025 10:03:29 -0400
-X-MC-Unique: n-Qvwc_wPgKH2bUrdY5lLg-1
-X-Mimecast-MFC-AGG-ID: n-Qvwc_wPgKH2bUrdY5lLg_1750082608
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a54a8a0122so1797488f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:03:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750082608; x=1750687408;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ITzJg/Fi"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-708d90aa8f9so42888567b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1750082644; x=1750687444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3KT/2mLdsrhe4l5WXh2mMIJOHdvnt3ZcZb+h3AjjEok=;
-        b=WaPr06+J97rCmeSn8uuY0MBuFhM4KF9sRH6qNwBHunML4TQ/PmPiZeGqezVY/FsN96
-         T4Ct6qB2QpXGkpjB7l6Aq7gmsEPPD0gkIn5plcj9GZAQcWgsQUkmcAjMgo8sf0tgafIr
-         GCWI/x6BU/sCjSgBQRCG9moNvQOHbTmCYCnZD47LFFCfwfeY2bYpDFRN+itT7RsoN+ZL
-         X4SKN2WRhqOvek/IqceJQxIPkl1qtKbvQgG2l6ksHyuocoTVnBPUfbbxqpEmjcYddIxN
-         1Msfn4uquMKKQlKf1/M4k4iQElxN/FJR4gKIM+5n1URvGvvCMVdZ5PrI7pFELG1TxbpZ
-         MvNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXt8xTXEry3NwDmscPIjXiItFiD6ghDXNExP8WcuC3Yu6cqG/O8KAg1C+Nu4bR7TP0nnECVyiM7ctWq44U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw94vzV0iNOiCvqbB2a6TtxDOK6Zb34P6g2OjCG23YIEzACkm9
-	5KExIN3Pavbwg1rqhx3HCr5pqN2nZeG5YPVzE5mYEkZFBgDRS5C54k3OISFcMk+RThcrSi0dj/w
-	K8irqYeNei3a4qYAQEYZfwRMHgSiXJNm4VY9+ipQebaTQJcSWA31wTDeVuGPpHqFDwA==
-X-Gm-Gg: ASbGncvReLTLCWfmm0yV1oXSgIaMWRu7GfwW7LavgUMTC676JOaQcJoR5E1wRig2ssE
-	x2Ob4ak7gKBFsRstOpt7DaRsYEpUqNjbN7LdQxHEFo0AhYPa6OPpuT7qDzrFfd6oMnFTmEnNJCg
-	Z+tYJDts3+ZV1uGCJ7UT1mxlANhAXWdairfAmcwYBvKtCvijWFPS+cQD+QczL2/sMsjVwR4V1Wq
-	FQ9fqR2S881Lr1OwI9mMpwvA1KXMuQs8HDB8o2jyEjYVwyRZzwwoPbhKWca94T30iIShzWmV4NG
-	veyl/ZndLJ+ixamDH74Kg1nJf4esDPdAW6c7Hv89e2Uls0GRe7UClg==
-X-Received: by 2002:a5d:64c9:0:b0:3a4:dde7:ee12 with SMTP id ffacd0b85a97d-3a572e9e01cmr8627010f8f.53.1750082607434;
-        Mon, 16 Jun 2025 07:03:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhnN5lqHyekM9U5mFuJ4VnEOh6SefVAzY1bT/B5jogeMQLSgptuYNFVoJKZP5a2pKpaGM6cQ==
-X-Received: by 2002:a5d:64c9:0:b0:3a4:dde7:ee12 with SMTP id ffacd0b85a97d-3a572e9e01cmr8626772f8f.53.1750082605375;
-        Mon, 16 Jun 2025 07:03:25 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.151.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54d7fsm11345085f8f.18.2025.06.16.07.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 07:03:24 -0700 (PDT)
-Date: Mon, 16 Jun 2025 16:03:20 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Kuyo Chang <kuyo.chang@mediatek.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	jstultz <jstultz@google.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation
- formula
-Message-ID: <aFAkKGs5h6kfXYnO@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+        bh=7AlgErA+6FwDIPpCfYm0ZK7PwLNuiNga29BtB+gMnus=;
+        b=ITzJg/FilF+o9umsjW4Aj1MdD4Pk9mQNKosy9j9qXll8qvF0As1XcjzyNBh9qTGY9S
+         FUXQw5VFJVQ4yz8+XVmvz8iIqSEBU5LJnSN5hnfGUcDUVbEkbApiWrYiBl7+7TQ+Jej6
+         FF2JBpCnpeJAqS5/MPFgxEfC9/IixCywWdTX7NETI4cpIWIA159bKOw96ezfjTHIeL5D
+         NeohaA2C7IW422kYWTpYkkSMRKddoMWrEAtLycTaRPTFJ6m8fRQX1UTLET2QitUmHqHN
+         D+731VvgIa7xzINW53bNB9r3DX7hlc69InZxGh/xYrIPEN7F37m1ydjCmmE7KJRmiXh+
+         GxAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750082644; x=1750687444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7AlgErA+6FwDIPpCfYm0ZK7PwLNuiNga29BtB+gMnus=;
+        b=RS2hdkhoNGHtnA6X+qDhedblBqbZ8fClkUHN2PMz54h34YD7T7wyTk8HLsz/5tzR1R
+         fR0lFYL/Qi7SdGsZ1gsRK6TXIp4KPF5qNihJQO0XmOPShuq9YWIRF+5FL7316ZJ6nFgQ
+         NaxH+9UpOOM9mAanPxS9Z3zCAOuEfJEKAHfIdhjONhFKLZcdB8vDeWLeGkzm890PFbBI
+         tOqwsg2pE7BPcIhkMnglMP+x1ARjqNfqdTbATzSidtvBaZnDeG9J4ZUpbzPKmZGohy8L
+         3JHXZdXdhM3qTDL3kDUCdEgDkUL8hOjqzgfmQJ1Xjx3yk8tVKlQIcfaxjXUJu73LZePs
+         MKZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAYdJJXMLjZWBcZG98rBcsdZGzijVl20ugaCJnX12KjU6JbDtt5p48QqmCn75Zgvdg53S0vr5Fm/P88LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJbHHTFQDJWkmJYuAcM8itHNa9Iy/5qvHK8+oJ8HBeYtImb2dV
+	L810hKSdzRQ8X7gg3sUtpu5BXbEVWzu3IR46JngcJLIlERyQ5oqHloeapEMs532bm0Dtk3hUI4Q
+	kiCPWh5uhF0WvyT+bwHa7RTdpzK3euv9q8CRMv2fS
+X-Gm-Gg: ASbGnctfEJ4evg0MHLez44kSw+wzx3Go6z96UDcOzQXL1hOuxyvgkxlBF21UI16TEX2
+	Zev6UQTujLEIa4pmIMSj2qi6r1C8ug1bRTOCa/q/OVfrLiiRgDR0Q46hNTaaxomy5nrZkh+/ulY
+	hBc+eVJUrWSLnKUQwAh3A9YbW3K9h37UXorXKYb+LVlisgL9aw8W2D9w==
+X-Google-Smtp-Source: AGHT+IG6MEVOuSVXk6qFi4vb3Qu0hAnZomNNZ8O7DydwFFAo4eO3mag7yPTcNw5TSJolwTumNWcDm4fltR6zpijXBuA=
+X-Received: by 2002:a05:690c:d1f:b0:710:ea78:8ff with SMTP id
+ 00721157ae682-7117544c85fmr128441827b3.23.1750082643585; Mon, 16 Jun 2025
+ 07:04:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+References: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
+ <CAHC9VhQ-f-n+0g29MpBB3_om-e=vDqSC3h+Vn_XzpK2zpqamdQ@mail.gmail.com>
+ <CAHC9VhRUqpubkuFFVCfiMN4jDiEhXQvJ91vHjrM5d9e4bEopaw@mail.gmail.com>
+ <87plfhsa2r.fsf@gmail.com> <CAHC9VhRSAaENMnEYXrPTY4Z4sPO_s4fSXF=rEUFuEEUg6Lz21Q@mail.gmail.com>
+ <20250611-gepunktet-umkurven-5482b6f39958@brauner>
+In-Reply-To: <20250611-gepunktet-umkurven-5482b6f39958@brauner>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 16 Jun 2025 10:03:52 -0400
+X-Gm-Features: AX0GCFutf2IknDGBAYa5W13CzhJZ3TOjubm4voGGY8iOl_MS1QuvnClSmk8QN7Q
+Message-ID: <CAHC9VhTWEWq_rzZnjbYrS6MCb5_gSBDAjUoYQY4htQ5MaY2o_w@mail.gmail.com>
+Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list()
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Collin Funk <collin.funk1@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, eggert@cs.ucla.edu, 
+	bug-gnulib@gnu.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Jun 11, 2025 at 6:05=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> On Tue, Jun 10, 2025 at 07:50:10PM -0400, Paul Moore wrote:
+> > On Fri, Jun 6, 2025 at 1:39=E2=80=AFAM Collin Funk <collin.funk1@gmail.=
+com> wrote:
+> > > Paul Moore <paul@paul-moore.com> writes:
+> > > >> <stephen.smalley.work@gmail.com> wrote:
+> > > >> >
+> > > >> > commit 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to alway=
+s
+> > > >> > include security.* xattrs") failed to reset err after the call t=
+o
+> > > >> > security_inode_listsecurity(), which returns the length of the
+> > > >> > returned xattr name. This results in simple_xattr_list() incorre=
+ctly
+> > > >> > returning this length even if a POSIX acl is also set on the ino=
+de.
+> > > >> >
+> > > >> > Reported-by: Collin Funk <collin.funk1@gmail.com>
+> > > >> > Closes: https://lore.kernel.org/selinux/8734ceal7q.fsf@gmail.com=
+/
+> > > >> > Reported-by: Paul Eggert <eggert@cs.ucla.edu>
+> > > >> > Closes: https://bugzilla.redhat.com/show_bug.cgi?id=3D2369561
+> > > >> > Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to alway=
+s include security.* xattrs")
+> > > >> >
+> > > >> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > > >> > ---
+> > > >> >  fs/xattr.c | 1 +
+> > > >> >  1 file changed, 1 insertion(+)
+> > > >>
+> > > >> Reviewed-by: Paul Moore <paul@paul-moore.com>
+> > > >
+> > > > Resending this as it appears that Stephen's original posting had a
+> > > > typo in the VFS mailing list.  The original post can be found in th=
+e
+> > > > SELinux archives:
+> > > >
+> > > > https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.small=
+ey.work@gmail.com/
+> > >
+> > > Hi, responding to this message since it has the correct lists.
+> > >
+> > > I just booted into a kernel with this patch applied and confirm that =
+it
+> > > fixes the Gnulib tests that were failing.
+> > >
+> > > Reviewed-by: Collin Funk <collin.funk1@gmail.com>
+> > > Tested-by: Collin Funk <collin.funk1@gmail.com>
+> > >
+> > > Thanks for the fix.
+> >
+> > Al, Christian, are either of you going to pick up this fix to send to
+> > Linus?  If not, any objection if I send this up?
+>
+> It's been in vfs.fixes for some time already and it'll go out with the
+> first round of post -rc1 fixes this week.
 
-On 14/06/25 10:04, Kuyo Chang wrote:
-> From: kuyo chang <kuyo.chang@mediatek.com>
-> 
-> [Symptom]
-> The calculation formula for fair_server runtime is based on
-> Frequency/CPU scale-invariance.
-> This will cause excessive RT latency (expect absolute time).
-> 
-> [Analysis]
-> Consider the following case under a Big.LITTLE architecture:
-> 
-> Assume the runtime is : 50,000,000 ns, and FIE/CIE as below
-> FIE: 100
-> CIE:50
-> First by FIE, the runtime is scaled to 50,000,000 * 100 >> 10 = 4,882,812
-> Then by CIE, it is further scaled to 4,882,812 * 50 >> 10 = 238,418.
-> 
-> So it will scaled to 238,418 ns.
-> 
-> [Solution]
-> The runtime for fair_server should be absolute time
-> asis RT bandwidth control.
-> Fix the runtime calculation formula for the fair_server.
-> 
-> Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
-> ---
+Checking on the status of this patch as we are at -rc2 and I don't see
+it in Linus' tree?
 
-Right, I would agree we don't actually want to scale fair_server runtime
-by frequency/capacity. Your change looks good to me.
-
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-
-Thanks!
-Juri
-
+--=20
+paul-moore.com
