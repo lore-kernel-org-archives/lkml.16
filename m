@@ -1,167 +1,148 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C665620B80D
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A16720B80D
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071399; cv=none; b=UN6qRY2uYAC0tftvSNXTEImKYjcvqSN0yGP8jpge7Gg1+9v4dhfc5/b/ZF+5qrZtqJP9Y4osUSwykWxFa2QcSje4KMRRotwUksihNBazzyu0pslrLxlp3sVqnWjztq41izenMq4RuDjb0mKXQYvEgHbTsDnawSfZ2CuIWe7dOz0=
+	t=1750071487; cv=none; b=T9Z2Qnn688UXapRHkvcKSbE7pXSE0Vo80lXz5/X10hp8xB4zUDN2qkVZJuh8mjvZYnovDTgYCNerxE1keUwdWZQjlJmhpw7DUMA5ti0LznCS95t8Yzyt+/+YAJEx9BalbGEvvIqtyKoU3WdCeRLlHhV7tOLQS7f3gSGkQETqwC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071399; c=relaxed/simple;
-	bh=CkOxFf7EE54QiWk3H3djGE1kHgl8sxStzqzBqhoUAzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QSYcG5RhKuhYv7nZcntULPDrw0CtmwPeOYRTgWZ/VuEmdzHri0HNPzU9Bja4bxM09RMblfTPNm+uA7VIwaDSZxm03vJqgOOI8hrGYge/dPCcrCxbnwYoFwuK/uz3sTFctpvqTwCxi01Ii5LuXHZ+VlkM8tK3P34X/YqaskBpgyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wa/3r67e; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750071487; c=relaxed/simple;
+	bh=ubkxmZ4ITkeoj/8uncE/6quxdEUTqr28dQ8KzbOfLfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fDo2XDdKOWWVmvGY1FGx1MnB99vkY+udHVwiVoVqSAxT/yL+mvusbfDxKoHITqDj9Ot6qnHKq5QlGdVolSa+JP+oG8ZRf1D/allkmA95rLEpXuHyKYMuge4P2ICc94DXt3MMDmgDYrrF7SnliWoMwvCCULFNIDqwuo4cCF14Euc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kRG+UUUe; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wa/3r67e"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235ef62066eso64507735ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750071397; x=1750676197; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BdDBWycVFIVV412Xw0TdxhPfgA72SVqwCO00BmRsjEc=;
-        b=Wa/3r67eAb/TEy3tbu3GEtPAd9ywP/Nyv7tqvpQY37812UIoLbL1bCu4h6EN0O7d4l
-         3xDwBF8ZH1FnX+LK4BCeg/7sdX1EHtdG1X4V13UynGpKwIM7xgrCW/fH6U53XqEXQoJZ
-         V+4Sd93vp7VRnj3WvjHkE3TsXbe32gD0Ze7o7MS6LUF9XY9QyIsLFGlTCHcQF/IiZIOt
-         r1JJRNNGR3rGIEgteGip54/NbaRX5pIyR4ceRvOskk0WjDM2AvqcbViEksl8bAaIvkYk
-         GWLZTbHckks8l4DJPasepAOl4dqWYNMErcW67YwHCAVq3W6vNka3JlwjGOUZ10D1GDAG
-         W4SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750071397; x=1750676197;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BdDBWycVFIVV412Xw0TdxhPfgA72SVqwCO00BmRsjEc=;
-        b=JX+MfcWd3FeigPOXdByp88q+tyMY9NmmiB3AhssnAZr9/Ug6yR3n9pnhiFdQ8ISDKG
-         huAWneRD+E4xpcQ1p9wDH90Ox98CZcj2gQvbmgC9vFOZ2pollO9MBH+abpVU5a4Spf7K
-         hVTdmt0FH3SeSyGB2TuGiMWUFXkQrPTyhyRhYAqr5O40TM2pDqhnJDzd5k0KXOeA0Ven
-         mY7qTYKjQF/RpemzI/Gy1dHtJs/YMomrFtO4LoLoZJ2YIdvoh7WXQhDPOG53no3hklKP
-         CrvopLkTATE83chQMf1zY+n3WDiJmMbGpeh2FAsgv4dnH4V9l3JC2BlF7YbNX3iiC5fa
-         JHvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVONK8QKZgyYPJGbx24YgAlu1IxnvimgtM8Tan566fFpatlNLh4k46qU5nxScfWUXEDAzWph+vqBAsibwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmXZijbFNiHRmK/gYDwM3Q5EB/8eP/qWaCnjHrKciLz1jBM4Yt
-	rYPXY5bgvEd+t0VzKYtcaMHHqFIXyrgU9ZIFFOHenAzvsRbjUNqdWQ8j
-X-Gm-Gg: ASbGncvQRG6Wd3fe/UcNo5N828QrBJyE7C7n4qNfgBzP/awZUDIR3+tw2WJcSMZC7lf
-	tkOowA7RgR7BUVkDx8U2byjXgmYpIY9fhFzNkWqDDRK8aLUxqyfXveLEq2HbCG6R7PBU9tpqik+
-	vKz/Lu/a0ONo/nU723fD7CslyDB1iGxgjNAruj6gweaKun929dnPiQSHkwTHpp9tISCUK/C1TRt
-	5p0QwKgbp9JBDHqym7DLJF0hcgOaCl4lXiOTAyix1Jm56PLvxkffJ0SO7BmDBf9wKOC6hvZA39P
-	1Lxdyv+7wfQfdg/crnKhZG8adrKUtXCmBBileDnQbNPq/gEq3vdIgr+2Ml6aAG3Broc4DzUOfgw
-	A/5J7nbQXPPLO1VKYtA==
-X-Google-Smtp-Source: AGHT+IHbTcVdwxhdfcP798T6pP1VsYxzzYGaXdvIwkCmRvnp/SY1JJEv6fQ/wVRyxzqBhML+XIv4lg==
-X-Received: by 2002:a17:902:ce81:b0:234:f1ac:c036 with SMTP id d9443c01a7336-2366b40b7c2mr115347415ad.50.1750071396733;
-        Mon, 16 Jun 2025 03:56:36 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c68:884c:5800:7324:c411:408d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deaaa15sm58456615ad.173.2025.06.16.03.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 03:56:36 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: agruenba@redhat.com
-Cc: skhan@linuxfoundation.org,
-	gfs2@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH] fs/gfs2: use scnprintf() in show functions
-Date: Mon, 16 Jun 2025 16:26:26 +0530
-Message-ID: <20250616105626.372040-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kRG+UUUe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HIamhGj5Ow+LQrKkxI4Twb1fxMLUTEDZJDogvvERshc=; b=kRG+UUUep/2YeJA40ygPO/KdUe
+	Q59kDn2qNpwDKjghBq4oF/SptfPTv4xmntDW8K0rFJewlPv6+I+R6ksDYry8WZzoI3C1rhYeazFTE
+	lSTp6ZnrLSrhBT13gjnzcWUXDl0GyGGdi6YbUAfx4YXaZG9rfiLVHTi0WPiOhVVv5qAu9PbHLJsT+
+	jBzjbOuuHBVOD447x2BKjsHFaaKXe3PYwy+SkEXvbMcIns2sIfGKZb4YkXzaSEj1DL+1d1TX5b+6E
+	prh220AdrnzHPUpK/m42+uc/7Ok1MiJdbA3nj/5Kan2GNe7YcAyY2ND1uBFqV3tyvQdaMX0rwLHqn
+	u1F+elqQ==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uR7XA-0044qa-2x; Mon, 16 Jun 2025 12:57:48 +0200
+Message-ID: <e1b65491-781c-48f7-9368-58d7ede91b12@igalia.com>
+Date: Mon, 16 Jun 2025 11:57:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/sched/tests: Make timedout_job callback a better role
+ model
+To: Philipp Stanner <phasta@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250605134154.191764-2-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250605134154.191764-2-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Replace all snprintf() instances with scnprintf(). snprintf() returns
-the number of bytes that would have been written had there been enough
-space. For sysfs attributes, snprintf() should not be used with the
-show() method. Instead use scnprintf() which returns the number of bytes
-actually written.
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- fs/gfs2/sys.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+On 05/06/2025 14:41, Philipp Stanner wrote:
+> Since the drm_mock_scheduler does not have real users in userspace, nor
+> does it have real hardware or firmware rings, it's not necessary to
+> signal timedout fences nor free jobs - from a functional standpoint.
+> 
+> The unit tests, however, serve as a reference implementation and a first
+> example for new scheduler users. Therefore, they should approximate the
+> canonical usage as much as possible.
+> 
+> Make sure timed out hardware fences get signaled with the appropriate
+> error code.
 
-diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-index c3c8842920d2..25c1d71359ed 100644
---- a/fs/gfs2/sys.c
-+++ b/fs/gfs2/sys.c
-@@ -59,7 +59,7 @@ static struct kset *gfs2_kset;
- 
- static ssize_t id_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%u:%u\n",
-+	return scnprintf(buf, PAGE_SIZE, "%u:%u\n",
- 			MAJOR(sdp->sd_vfs->s_dev), MINOR(sdp->sd_vfs->s_dev));
- }
- 
-@@ -68,7 +68,7 @@ static ssize_t status_show(struct gfs2_sbd *sdp, char *buf)
- 	unsigned long f = sdp->sd_flags;
- 	ssize_t s;
- 
--	s = snprintf(buf, PAGE_SIZE,
-+	s = scnprintf(buf, PAGE_SIZE,
- 		     "Journal Checked:          %d\n"
- 		     "Journal Live:             %d\n"
- 		     "Journal ID:               %d\n"
-@@ -140,7 +140,7 @@ static ssize_t status_show(struct gfs2_sbd *sdp, char *buf)
- 
- static ssize_t fsname_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%s\n", sdp->sd_fsname);
-+	return scnprintf(buf, PAGE_SIZE, "%s\n", sdp->sd_fsname);
- }
- 
- static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
-@@ -150,7 +150,7 @@ static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
- 	buf[0] = '\0';
- 	if (uuid_is_null(&s->s_uuid))
- 		return 0;
--	return snprintf(buf, PAGE_SIZE, "%pUB\n", &s->s_uuid);
-+	return scnprintf(buf, PAGE_SIZE, "%pUB\n", &s->s_uuid);
- }
- 
- static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
-@@ -158,7 +158,7 @@ static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
- 	struct super_block *sb = sdp->sd_vfs;
- 	int frozen = (sb->s_writers.frozen == SB_UNFROZEN) ? 0 : 1;
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", frozen);
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", frozen);
- }
- 
- static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -194,7 +194,7 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
- static ssize_t withdraw_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	unsigned int b = gfs2_withdrawing_or_withdrawn(sdp);
--	return snprintf(buf, PAGE_SIZE, "%u\n", b);
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", b);
- }
- 
- static ssize_t withdraw_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -626,7 +626,7 @@ static struct attribute *lock_module_attrs[] = {
- 
- static ssize_t quota_scale_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%u %u\n",
-+	return scnprintf(buf, PAGE_SIZE, "%u %u\n",
- 			sdp->sd_tune.gt_quota_scale_num,
- 			sdp->sd_tune.gt_quota_scale_den);
- }
-@@ -679,7 +679,7 @@ static struct gfs2_attr tune_attr_##name = __ATTR(name, 0644, show, store)
- #define TUNE_ATTR_2(name, store)                                              \
- static ssize_t name##_show(struct gfs2_sbd *sdp, char *buf)                   \
- {                                                                             \
--	return snprintf(buf, PAGE_SIZE, "%u\n", sdp->sd_tune.gt_##name);      \
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", sdp->sd_tune.gt_##name);     \
- }                                                                             \
- TUNE_ATTR_3(name, name##_show, store)
- 
--- 
-2.49.0
+Code looks fine, but currently nothing is broken and I disagree with the 
+goal that the _mock_^1 components should be role models. The idea is to 
+implement as little in the mock components as it is required to exercise 
+the tested functionality.
+
+As the motivation for this patch, ie. things which start depending on 
+adding this functionality, only appear in one upcoming series, and as 
+mentioned in 
+https://lore.kernel.org/dri-devel/18cd6b1f-8872-4a16-9ceb-50fd1ecfea39@igalia.com/, 
+I think it makes most sense to stick with that philosophy and fold this 
+patch into the respective series.
+
+Also, there are various ways drivers use the scheduler API. Trying to 
+make the mock scheduler a reference driver implementation would only be 
+able to make it a reference for one possible use.
+
+Regards,
+
+Tvrtko
+
+1)
+mock
+adjective
+not authentic or real, but without the intention to deceive.
+"a mock-Georgian red brick house"
+
+> 
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>   .../gpu/drm/scheduler/tests/mock_scheduler.c  | 26 ++++++++++++++++++-
+>   1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> index 7f947ab9d322..49d067fecd67 100644
+> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> @@ -200,12 +200,36 @@ static struct dma_fence *mock_sched_run_job(struct drm_sched_job *sched_job)
+>   	return &job->hw_fence;
+>   }
+>   
+> +/*
+> + * Normally, drivers would take appropriate measures in this callback, such as
+> + * killing the entity the faulty job is associated with, resetting the hardware
+> + * and / or resubmitting non-faulty jobs.
+> + *
+> + * For the mock scheduler, there are no hardware rings to be resetted nor jobs
+> + * to be resubmitted. Thus, this function merely ensures that
+> + *   a) timedout fences get signaled properly and removed from the pending list
+> + *   b) the mock scheduler framework gets informed about the timeout via a flag
+> + *   c) The drm_sched_job, not longer needed, gets freed
+> + */
+>   static enum drm_gpu_sched_stat
+>   mock_sched_timedout_job(struct drm_sched_job *sched_job)
+>   {
+> +	struct drm_mock_scheduler *sched = drm_sched_to_mock_sched(sched_job->sched);
+>   	struct drm_mock_sched_job *job = drm_sched_job_to_mock_job(sched_job);
+> +	unsigned long flags;
+>   
+> -	job->flags |= DRM_MOCK_SCHED_JOB_TIMEDOUT;
+> +	spin_lock_irqsave(&sched->lock, flags);
+> +	if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
+> +		list_del(&job->link);
+> +		job->flags |= DRM_MOCK_SCHED_JOB_TIMEDOUT;
+> +		dma_fence_set_error(&job->hw_fence, -ETIMEDOUT);
+> +		dma_fence_signal_locked(&job->hw_fence);
+> +	}
+> +	spin_unlock_irqrestore(&sched->lock, flags);
+> +
+> +	dma_fence_put(&job->hw_fence);
+> +	drm_sched_job_cleanup(sched_job);
+> +	/* Mock job itself is freed by the kunit framework. */
+>   
+>   	return DRM_GPU_SCHED_STAT_NOMINAL;
+>   }
 
