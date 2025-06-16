@@ -1,117 +1,154 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523DA1DF99C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF4F1DE4CE
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750055349; cv=none; b=g7WEbeU5JF6qJRX+csCIWYVWKNepTpLWfMyyU4pibZCj64eV6Sn4nRJifC0S0JAHqJ28V3MRDBCsl+98mikm0rbx2Q06+dKqaltRX6UByaa0bdoPvnfZE8h0/PcAeRmbL2DzlgG7fNLikkjDhwTLg44hqyJbjSIsxunMSqCRtBI=
+	t=1750055381; cv=none; b=hQW7vCe2h+Z3HGfU5Zp5Uluf6wqrMmYM1n6u2nlJuSky2+dFaGUQ7hHCIrvjyAM5+ulCGyjk3ssOOkIFXONfXxMx71ljsYMkuSQVPOSlbBtKan2qpRp/16ztSk0fyueMB3sCaEgKYHN7++7tFcQM101m6Gh7+BYfLzIfAxWWj/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750055349; c=relaxed/simple;
-	bh=nOc/n1KV0S5P3fT9GMJf7e5kLYWdERJAb3PbQtwye74=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L1tkwUxih74rrP0bivZAMZj/p3pvNiO4akFwl6OU1xQolvw41g6A8nBuszaXHreuR3Vo4GrMCL25lHC1ObpNF4hp6qfArVOj/B4MZXQS2aAnL+VytF1Q4MzUjjKTJS6uvPmCGrwySmlCD8jjuaM3XscmPvOIZ+GkOj/n6F6J5Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eIXC8fgC; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750055381; c=relaxed/simple;
+	bh=ZuAJhunIdhiRVbwSx22dtZmYaWTEVUA+PNlYbDCTU/Q=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fYGw+7jV4Ai4LUDHvVtH7fosBSI/rPw/1eXXGFPutHzT0vuPBQQO9CXK0XjwsB8gZLej+T1HIYWrmf2j6P4dcVEebeULA421EZYlRc7NpGnqQj9aqB4egLz56yJfRLREitYMDkZmso1NsQ8GdL3lAbwrHLeCAs6BMvnzwoTh8Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JYWlJX79; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eIXC8fgC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=7k
-	mj3Dx6LNtxMuBXInzuZTk0/cSW/2IYoCKygr1quCg=; b=eIXC8fgCqhW51YyUuT
-	z5sKx2J7ii9G4nHFklkOBqLe+N3JVWuwFiY0gHjzRupVwpinOPJhtp+91bmkSPn0
-	uHGloeovr0lcPEDIJwAA15zIPFiTR9i5TdU9gjXh0APNkYD/IJDGc7dBG1XI/Ype
-	sASIJvB+5XS09TJVAmYMP1uls=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgD3Q8t2uU9oJf4vAg--.3816S2;
-	Mon, 16 Jun 2025 14:28:07 +0800 (CST)
-From: wangdicheng <wangdich9700@163.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-arm-kernel@lists.infradead.org,
-	wangdicheng <wangdicheng@kylinos.cn>
-Subject: [PATCH] KYLIN: sound/conexant: Renaming the codec with device ID 0x1f86 and 0x1f87
-Date: Mon, 16 Jun 2025 14:27:49 +0800
-Message-Id: <20250616062749.553030-1-wangdich9700@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYWlJX79"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750055378;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QB1vqa7l7yUSFc6Qyhs+6pk7Xex3aXBfsGdjk1Sd0qg=;
+	b=JYWlJX79QWKJ8LVwvtrtHMjwq4OBoDSrjXkXap5GfOnXN4Mkx81PFKe6mJcrnnoLAT06wP
+	IG+ioo8Y6UIn4b4FAuVN/EiArXSp5+wD6gadObcODg9orki32zQ4bj6BkmxwMdo4ork3XV
+	AgIws0NhL0NYCdUM4mJXdTPJ/SPQopI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-27-QK-_B-iKPD63cHIN6VFSjA-1; Mon,
+ 16 Jun 2025 02:29:34 -0400
+X-MC-Unique: QK-_B-iKPD63cHIN6VFSjA-1
+X-Mimecast-MFC-AGG-ID: QK-_B-iKPD63cHIN6VFSjA_1750055373
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B372D19560B0;
+	Mon, 16 Jun 2025 06:29:33 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.46])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6A56619560A3;
+	Mon, 16 Jun 2025 06:29:29 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	michael.christie@oracle.com,
+	sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v12 0/1] vhost: Add support of kthread API
+Date: Mon, 16 Jun 2025 14:28:18 +0800
+Message-ID: <20250616062922.682558-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgD3Q8t2uU9oJf4vAg--.3816S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7urWfZr1UuFyxXw4UGw4kJFb_yoW5JF48pr
-	18Way5JrW2qFn0vFWxJr4DGF43W3ZayF97JrWakryxtw15Xry7Wa4fWryIvF4fJFZ0gaya
-	qFsrKF10qayYvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jzhFxUUUUU=
-X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1tbiRxZuT2hPtndN6wAAsw
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: wangdicheng <wangdicheng@kylinos.cn>
+In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),   
+the vhost now uses vhost_task and operates as a child of the   
+owner thread. This aligns with containerization principles.   
+However, this change has caused confusion for some legacy   
+userspace applications. Therefore, we are reintroducing   
+support for the kthread API. 
 
-Due to changes in the manufacturer's plan, all 0x14f11f86 will be named CX11880, and 0x14f11f87 will be named SN6140
+In this series, a new UAPI is implemented to allow   
+userspace applications to configure their thread mode.
 
-Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
----
- sound/pci/hda/patch_conexant.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Changelog v2:
+ 1. Change the module_param's name to enforce_inherit_owner, and the default value is true.
+ 2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
 
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index 4985e72b9094..1366a33de8d3 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -42,7 +42,7 @@ struct conexant_spec {
- 	unsigned int gpio_led;
- 	unsigned int gpio_mute_led_mask;
- 	unsigned int gpio_mic_led_mask;
--	bool is_cx8070_sn6140;
-+	bool is_cx11880_sn6140;
- };
+Changelog v3:
+ 1. Change the module_param's name to inherit_owner_default, and the default value is true.
+ 2. Add a structure for task function; the worker will select a different mode based on the value inherit_owner.
+ 3. device will have their own inherit_owner in struct vhost_dev
+ 4. Address other comments
+
+Changelog v4:
+ 1. remove the module_param, only keep the UAPI
+ 2. remove the structure for task function; change to use the function pointer in vhost_worker
+ 3. fix the issue in vhost_worker_create and vhost_dev_ioctl
+ 4. Address other comments
+
+Changelog v5:
+ 1. Change wakeup and stop function pointers in struct vhost_worker to void.
+ 2. merging patches 4, 5, 6 in a single patch
+ 3. Fix spelling issues and address other comments.
+
+Changelog v6:
+ 1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
+ 2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM_OWNER
+ 3. reuse the function __vhost_worker_flush
+ 4. use a ops sturct to support worker relates function
+ 5. reset the value of inherit_owner in vhost_dev_reset_owner.
  
+Changelog v7: 
+ 1. add a KConfig knob to disable legacy app support
+ 2. Split the changes into two patches to separately introduce the ops and add kthread support.
+ 3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
+ 4. Rebased on the latest kernel
+ 5. Address other comments
  
-@@ -195,7 +195,7 @@ static int cx_auto_init(struct hda_codec *codec)
- 	cxt_init_gpio_led(codec);
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+Changelog v8: 
+ 1. Rebased on the latest kernel
+ 2. Address some other comments 
  
--	if (spec->is_cx8070_sn6140)
-+	if (spec->is_cx11880_sn6140)
- 		cx_fixup_headset_recog(codec);
+Changelog v9:
+ 1. Rebased on the latest kernel. 
+ 2. Squashed patches 6‑7. 
+ 3. Squashed patches 2‑4. 
+ 4. Minor fixes in commit log
  
- 	return 0;
-@@ -247,7 +247,7 @@ static void cx_update_headset_mic_vref(struct hda_codec *codec, struct hda_jack_
- {
- 	unsigned int mic_present;
- 
--	/* In cx8070 and sn6140, the node 16 can only be configured to headphone or disabled,
-+	/* In cx11880 and sn6140, the node 16 can only be configured to headphone or disabled,
- 	 * the node 19 can only be configured to microphone or disabled.
- 	 * Check hp&mic tag to process headset plugin & plugout.
- 	 */
-@@ -1191,11 +1191,11 @@ static int patch_conexant_auto(struct hda_codec *codec)
- 	codec->spec = spec;
- 	codec->patch_ops = cx_auto_patch_ops;
- 
--	/* init cx8070/sn6140 flag and reset headset_present_flag */
-+	/* init cx11880/sn6140 flag and reset headset_present_flag */
- 	switch (codec->core.vendor_id) {
- 	case 0x14f11f86:
- 	case 0x14f11f87:
--		spec->is_cx8070_sn6140 = true;
-+		spec->is_cx11880_sn6140 = true;
- 		snd_hda_jack_detect_enable_callback(codec, 0x19, cx_update_headset_mic_vref);
- 		break;
- 	}
-@@ -1283,7 +1283,7 @@ static int patch_conexant_auto(struct hda_codec *codec)
-  */
- 
- static const struct hda_device_id snd_hda_id_conexant[] = {
--	HDA_CODEC_ENTRY(0x14f11f86, "CX8070", patch_conexant_auto),
-+	HDA_CODEC_ENTRY(0x14f11f86, "CX11880", patch_conexant_auto),
- 	HDA_CODEC_ENTRY(0x14f11f87, "SN6140", patch_conexant_auto),
- 	HDA_CODEC_ENTRY(0x14f12008, "CX8200", patch_conexant_auto),
- 	HDA_CODEC_ENTRY(0x14f120d0, "CX11970", patch_conexant_auto),
+Changelog v10:
+ 1.Add support for the module_param.
+ 2.Squash patches 3 and 4.
+ 3.Make minor fixes in the commit log.
+ 4.Fix the mismatched tabs in Kconfig.
+ 5.Rebase on the latest kernel.
+
+Changelog v11:
+ 1.make the module_param under Kconfig
+ 2.Make minor fixes in the commit log.
+ 3.change the name inherit_owner to fork_owner
+ 4.add NEW ioctl VHOST_GET_FORK_FROM_OWNER
+ 5.Rebase on the latest kernel
+
+Changelog v12:
+1.Squash all patches to 1.
+2.Add define for task mode and kthread mode
+3.Address some other comments
+4.Rebase on the latest kernel
+     
+Tested with QEMU with kthread mode/task mode/kthread+task mode
+
+
+Cindy Lu (1):
+  vhost: Reintroduces support of kthread API and adds mode selection
+
+ drivers/vhost/Kconfig      |  17 +++
+ drivers/vhost/vhost.c      | 244 ++++++++++++++++++++++++++++++++++---
+ drivers/vhost/vhost.h      |  22 ++++
+ include/uapi/linux/vhost.h |  29 +++++
+ 4 files changed, 294 insertions(+), 18 deletions(-)
+
 -- 
-2.25.1
+2.45.0
 
