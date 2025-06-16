@@ -1,116 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D82E424A;
-	Mon, 16 Jun 2025 12:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387362E426E;
+	Mon, 16 Jun 2025 12:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075564; cv=none; b=tzIe96KNyNUSzP7KYI1z4meYQ4OGwEtTZrhZFIHe1zoPDdJGOR2laQDzcEmChb5bGNX/CPrDNC7tnl2ydiJUXG4rrDF0Ve4OXwpiyZ8cve70aBArlO9ig33AWItLr/eLDNSjL+jZBd5akQLYlnLqm7LAQDRUpcFRfe0fGydqbp8=
+	t=1750075567; cv=none; b=fl6X4xrCgUO0DmM4MTQfAbvluXgxXgMMKy5Jjeo0nd+oubg6IZVCi0EMfo2xpOVZ+Hr3d0eZrnr+UBTCMLat/EAExZ4zE6HM2rYkwS4agg3vw/Qao9K+PHDGbXV4Dwlq9Qm+VhbVycSFDN8EDey55KWlfCQfE/Nbj9w1bfDhBQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075564; c=relaxed/simple;
-	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Aupcn7drlTaujYfs4UdI/BGDOk49TB6mkAeYUYumxOu19FMEsts3G0V8A9NIvHjNFtgBbi2k1QOEsGV/wBa504Ht6cy5mgNXQMweA8ZaX8JDV9D7jcDctUuh+ZwGSbZb/jrTwf+cFXO6DbebO5Ypx0DzvWi6FIf8DvUfbee5OMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pq67Wpiy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750075567; c=relaxed/simple;
+	bh=81KHwSljmnJTPeKJj2v4TDvROMlMHB1LsZuqXD9yw+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nvui4VhHok32iLQsZT1xI0pO1poLB0LPH8bED//7gZ/qksCN3tyZJxw/Vu4755D43bz/mWTX9M5eLTD5xBteVX0r9XPeUsDUf1w9H9zYD26W8NLG6OEtvHFFZ1AkK/89pUDsyf9xvU7oVrsy4ERAmD3TzS+AvmMfLogyMmRh9OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+eWInOZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pq67Wpiy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4F8C4CEEA;
-	Mon, 16 Jun 2025 12:06:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+eWInOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA7BC4CEEF;
+	Mon, 16 Jun 2025 12:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750075563;
-	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=pq67WpiybJlomxNo1Q0ynrhGsdBlLEZa3DapIvrN62fslXaJvFSseYU1F6UF6iK7m
-	 eRjNYnjG4H+HpTv+rDskCAVmxpco7/DZ+LSFuf6wTg0KlYhtOAWE/nAjK43uRVc+mZ
-	 jLR2DW/n7KG1ffCW0PtADsj9vMXl1cgYgm39oBRnpvW912H0vgijYY1cE6n2UfvoJo
-	 g3MFBCtiYS2xpwe4DQIkU5knmOVB1NsyYKYtmYFn55S1xvicbtUkR+RuAaSfi8PXXz
-	 U6Xd+aDPSj5ualUsK7k5hQqGA3nehA79pSkx32khEdCQ/bUQdJ+l6ni7LEO1Sq5oJo
-	 rkLvwouWXCydQ==
-Message-ID: <20415ab5-5003-4725-bf1b-560f197465c4@kernel.org>
-Date: Mon, 16 Jun 2025 14:05:58 +0200
+	s=k20201202; t=1750075566;
+	bh=81KHwSljmnJTPeKJj2v4TDvROMlMHB1LsZuqXD9yw+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S+eWInOZdvCl4lZ2CWY38xdR5eYCTJcNKTAnyS3GFOAPfHu5KcLyPfAfFt9E1Z/iM
+	 zL4kNwxq5CGlYbQgJTngT7eFRMmCqjUbq98xK84hR4QhycXQy9+UMrB4xEtQ1fOGGI
+	 FTR70AG1J76Oa3yS6t4+6L8Kt2fZKTE4aiwUFewv8MyZD44moVINTOJWiUQSlm5e6e
+	 eSJhjEtTifLRpcoNETlrkJeC630FnG7oCX1lHVbzK7J3jwqmc+w94/AHBYyWdiXmYq
+	 uS34HK6gnBciniIiuXgSGXZwZEuuvmxj7kKrkiXnHZ/pIr7aOJ9Hl9xnM1q4Zhbfu1
+	 FcxKTAZY428Dg==
+Date: Mon, 16 Jun 2025 13:06:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: James Clark <james.clark@linaro.org>, olteanv@gmail.com,
+	oe-kbuild-all@lists.linux.dev, arnd@arndb.de,
+	larisa.grigore@nxp.com, Frank.li@nxp.com, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
+Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
+Message-ID: <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
+References: <202506160036.t9VDxF6p-lkp@intel.com>
+ <20250616111749.316413-1-james.clark@linaro.org>
+ <20250616112927.GA21689@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
- xdp_redirect_map_err
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>
-References: <20250611155615.0c2cf61c@batman.local.home>
- <87bjqtb6c1.fsf@toke.dk> <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
-Content-Language: en-US
-In-Reply-To: <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yQrkc45Aa466PEFE"
+Content-Disposition: inline
+In-Reply-To: <20250616112927.GA21689@lst.de>
+X-Cookie: Keep out of the sunlight.
 
 
+--yQrkc45Aa466PEFE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 12/06/2025 12.54, Jesper Dangaard Brouer wrote:
-> 
-> 
-> On 12/06/2025 12.30, Toke Høiland-Jørgensen wrote:
->> Steven Rostedt <rostedt@goodmis.org> writes:
->>
->>> From: Steven Rostedt <rostedt@goodmis.org>
->>>
->>> Each TRACE_EVENT() defined can take up around 5K of text and meta data
->>> regardless if they are used or not. New code is being developed that 
->>> will
->>> warn when a tracepoint is defined but not used.
->>>
->>> The trace events xdp_redirect_map and xdp_redirect_map_err are 
->>> defined but
->>> not used, but there's also a comment that states these are kept 
->>> around for
->>> backward compatibility. Which is interesting because since they are not
->>> used, any old BPF program that expects them to exist will get incorrect
->>> data (no data) when they use them. It's worse than not working, it's
->>> silently failing.
->>>
->>> Remove them as they will soon cause warnings, or if they really need to
->>> stick around, then code needs to be added to use them.
->>>
->>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->>
->> I guess that makes sense; I have no objections to getting rid of them.
->>
->> Reviewed-by: Toke Høiland-Jørgensen <toke@kernel.org>
-> 
-> Make sense.
-> 
-> 
-> Toke we have to check how XDP-tools handle when these tracepoints 
-> disappears.
+On Mon, Jun 16, 2025 at 01:29:27PM +0200, Christoph Hellwig wrote:
+> On Mon, Jun 16, 2025 at 12:17:49PM +0100, James Clark wrote:
 
-To Toke, notice that userspace tools expect this tracepoint to be
-available will fail as below (for kernel release v6.16):
+> > The implementations are in mapping.c which requires HAS_DMA so stub them
+> > out if not present. This is required for some drivers to pass randconfig
+> > builds.
 
-  $ sudo ./xdp-bench redirect mlx5p1 veth41
-   libbpf: prog 'tp_xdp_redirect_map_err': failed to find kernel BTF 
-type ID of 'xdp_redirect_map_err': -3
-   libbpf: prog 'tp_xdp_redirect_map_err': failed to prepare load 
-attributes: -3
-   libbpf: prog 'tp_xdp_redirect_map_err': failed to load: -3
-   libbpf: failed to load object 'xdp_redirect_basic'
-  Failed to attach XDP program: No such process
+> No.  Just add the proper IS_ENABLED checks in the callers.  While these
+> kinds of stubs used to be popular they are really nasty in that the
+> calls unexpectedly just fail without the right depends.
 
-IMHO this is a userspace problem, that needs to be more flexible and
-adapt to this change.
+The issue with HAS_DMA is that essentially all platforms have and rely
+on DMA.  This ends up just being painful noise from the buildbots when
+they do randconfigs rather than something useful.
 
-This was changed in kernel v5.6 (Jan 2020) commit 1d233886dd90 ("xdp:
-Use bulking for non-map XDP_REDIRECT and consolidate code paths").
-So, I'm thinking that xdp-tools could just remove monitoring for these
-tracepoints?
+--yQrkc45Aa466PEFE
+Content-Type: application/pgp-signature; name="signature.asc"
 
---Jesper
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhQCKcACgkQJNaLcl1U
+h9D0eQf/ePoOXoqCP5feLeTghxn9bOAHGZSj2dGtDODfvqyZChR5qZwlk59nXu4y
+HSyVPkGL7MobX4QBk7cBPljYfeJ6Lpk3hiuEKtnZY5WvFjy2FvZ21tA2fTwIxpNL
+kKW8oPUtgyOLBKcWdDz2B4NN9aXYjpddRfAOWAKZPtydxp/baZEg8y/N4IDsi+Q/
+P2L0LeP+zoaAW0IKPYSXWi4ORETJv3xB85enYrY/wqvF3LCLWdJcuWUMSwDqUfdW
+Mc2+X9wZ3XR2coA27TcOcM0ac37VQgwKR8rSt9a5o8UED8Dk5CUwSQoOhFRpgoLn
+66xG5r35MfMl2roIb0Uc8iasLxamDw==
+=OEz+
+-----END PGP SIGNATURE-----
+
+--yQrkc45Aa466PEFE--
