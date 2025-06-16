@@ -1,94 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5781A8F84;
-	Mon, 16 Jun 2025 17:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B719288C1E;
+	Mon, 16 Jun 2025 17:00:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750093255; cv=none; b=mAYX43ZGIyyID2AyET8/h6kiGiJRFq5ff+qzCUKqsxlV+XxCdTC7teiYCyKJmrRAYRvs+tZ09aNQMJ+b8+5TiENN7dOM3jv/hVFjI01XPMro1FYkafQGi9S8N7b2BoAzPHYLjCVuYa3yb9jF+9MFL42BxiiroAUMjGH487PtqDE=
+	t=1750093258; cv=none; b=gkp2EImUYzxuw22KTV6ta/MWC8GCNNWcb2Tvz3X0w8jEzm7Jouhmonm5HA2sOmfYP55IMjAQKNDK2aft6Uddw4YGn6pxe41vwxwDmSne2+h3hCOvqScFvg6c75v3rTR9K2reP3SnXR3MsDWO0pjX2LzW6fKz5+bQ83w0tT5zw/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750093255; c=relaxed/simple;
-	bh=w8kwfakgTDDq+gZlHITNqncq9RlH3vHKlobIKGrM2HU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sDbR8Q5YEJlIr1mzeAm4ZOYJjexvMToGS0/E5nvjo+oA253Xefd9Ge7BxfYeL9Lpz3JeC0nb/UO1iC0zYFVIaeRTqK5iHyGhw37Lce+KiGhlZts7lMYzikbpPuAdn/DYb959UAk9sHvcJYX13xIXpOOb7EY7TnE28WbQNsPyeHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+wz1jK1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750093258; c=relaxed/simple;
+	bh=LIHLqXxyRllxlm8oEjNBIkiTqf6Esvz9pt+PybPh+8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3K7krg65fVfZXCwQH0aJXUdo1nXc21tNyAqIFIjyaQSSYBjIXFYjs+nfC1X/pX689P3GjV4icQK37zAdVmuyGVBlJc819uFH8XrxUfcJDWOqa7N0rhWsC1boY88Y/q3XhUU389d8M/k+2e43/MMyNcr56w/EHysmt26xWwfuss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sqps2wqk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+wz1jK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30221C4CEEA;
-	Mon, 16 Jun 2025 17:00:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sqps2wqk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81C23C4CEED;
+	Mon, 16 Jun 2025 17:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750093255;
-	bh=w8kwfakgTDDq+gZlHITNqncq9RlH3vHKlobIKGrM2HU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j+wz1jK1RwBlSRkPRl6X9pdsDwe5fl7ilQFCi54NDyJ/JnFvvdsV2qj9MoAOJX5gA
-	 Hp5G10SkiKrJYlykC+fpR/zZANvcY1CbHYVAFyBLEf9yXHK774dBvMEayJ/jpCsMEp
-	 ozBtdY1Y76EXYSRTizbtlsm1ybSZbZbbHr00MVSKXIbFaRrzdax10ydqndUnp/r70A
-	 CB5dDvxpf5EMA8XOmRFQjg2mH2NYhObtL9Whyr+trTlCc1OxjJpHrVF7uly5a9G5ZV
-	 anXZVkI5dgTYxMkfofzrPDnI1Cce/7jYcODkVM2es86kqv+Z9Eimx4apFnsn3ToyR7
-	 4dpvZF43h9UBQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uRDCW-007JGE-O0;
-	Mon, 16 Jun 2025 18:00:52 +0100
-Date: Mon, 16 Jun 2025 18:00:52 +0100
-Message-ID: <86plf3d3jv.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-Cc: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Jintack Lim <jintack@cs.columbia.edu>,
-	Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH] KVM: arm64: nv: Fix s_cpu_if->vgic_lr[] indexing in vgic_v3_put_nested()
-In-Reply-To: <2p4urq6ij5zq77c7viydmqqaj2doeyja43khvcjgn5pkpe7saz@eyfvuykscn22>
-References: <20250614145721.2504524-1-r09922117@csie.ntu.edu.tw>
-	<86qzzkc5xa.wl-maz@kernel.org>
-	<2p4urq6ij5zq77c7viydmqqaj2doeyja43khvcjgn5pkpe7saz@eyfvuykscn22>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1750093258;
+	bh=LIHLqXxyRllxlm8oEjNBIkiTqf6Esvz9pt+PybPh+8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sqps2wqkYACDdWCldgDyoINfGS/q9F47Al4KIwSAMuvb6MUI785rHmI4DfBCiGUGb
+	 GWP+hm3eHJe6/TjGVsAK/r73eAA2/eDetRCVeKrKzHtRzZSH2SmTk5gx1c2WIobJ6r
+	 f2+NjZdE/hIaVR4zipV0NBucIJbaoN11C+Rk/uxryeVrl8nczuHXf1vi8/Lz1yk4ho
+	 B9OtOHBSRFJSVIyJsHoD1gQVbCaenD8FXEuo5kygidn8yWpKFgB8S0vTj0pNuCIebU
+	 PBnx8zNs4sQvg70enXwvDljxViSGhB+3iD9VFXu5/Qrx5K0RSTEvUY58vQdquHa6oO
+	 M7F7oWuEaBGiA==
+Date: Mon, 16 Jun 2025 22:30:54 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Melody Olvera <melody.olvera@oss.qualcomm.com>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom: qmp-combo: Add missing PLL (VCO)
+ configuration on SM8750
+Message-ID: <aFBNxvggJXYKQ4d1@vaman>
+References: <20250616062541.7167-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: r09922117@csie.ntu.edu.tw, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, jintack@cs.columbia.edu, christoffer.dall@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616062541.7167-2-krzysztof.kozlowski@linaro.org>
 
-On Mon, 16 Jun 2025 15:34:58 +0100,
-Wei-Lin Chang <r09922117@csie.ntu.edu.tw> wrote:
+On 16-06-25, 08:25, Krzysztof Kozlowski wrote:
+> Add missing DP PHY status and VCO clock configuration registers to fix
+> configuring the VCO rate on SM8750.  Without proper VCO rate setting, it
+> works on after-reset half of rate which is not enough for DP over USB to
+> work as seen on logs:
 > 
-> On Mon, Jun 16, 2025 at 11:54:57AM +0100, Marc Zyngier wrote:
->
-> > +static u64 translate_lr_hw_bit(struct kvm_vcpu *vcpu, u64 lr)
-> 
-> I believe translate_lr_pintid() better describes what this function is
-> doing.
+>   [drm:msm_dp_ctrl_link_train_1_2] *ERROR* max v_level reached
+>   [drm:msm_dp_ctrl_link_train_1_2] *ERROR* link training #1 on phy 0 failed. ret=-11
 
-Ah, you too noticed that I am terrible at naming things? ;-)
+Hey,
 
-Agreed, this is a better name, and I'll gladly apply your suggestion.
+This does not apply for on phy/fixes
 
-> 
-> For everything else, I don't spot any issues after review.
-> 
-> Reviewed-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-
-Thanks again!
-
-	M.
+Can you please rebase
 
 -- 
-Without deviation from the norm, progress is not possible.
+~Vinod
