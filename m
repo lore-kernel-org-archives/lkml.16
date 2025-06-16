@@ -1,148 +1,207 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A16720B80D
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A823C1465A5;
+	Mon, 16 Jun 2025 10:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071487; cv=none; b=T9Z2Qnn688UXapRHkvcKSbE7pXSE0Vo80lXz5/X10hp8xB4zUDN2qkVZJuh8mjvZYnovDTgYCNerxE1keUwdWZQjlJmhpw7DUMA5ti0LznCS95t8Yzyt+/+YAJEx9BalbGEvvIqtyKoU3WdCeRLlHhV7tOLQS7f3gSGkQETqwC8=
+	t=1750071554; cv=none; b=jjlxPvskZeErpzAD7OWOhtXpsbrwknV/HWk4W6hwrKErmQOLZNbso1BboZ1KP/f6FLAW+q64CAI5aCo915yULdJRrTRZeba2b8MXknvtv9OX+w59dAO+YSJfHGkq4dx717pESizcLbvyT7hgRcS3mV6xBJkQQt0pfmYGsYVeGzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071487; c=relaxed/simple;
-	bh=ubkxmZ4ITkeoj/8uncE/6quxdEUTqr28dQ8KzbOfLfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fDo2XDdKOWWVmvGY1FGx1MnB99vkY+udHVwiVoVqSAxT/yL+mvusbfDxKoHITqDj9Ot6qnHKq5QlGdVolSa+JP+oG8ZRf1D/allkmA95rLEpXuHyKYMuge4P2ICc94DXt3MMDmgDYrrF7SnliWoMwvCCULFNIDqwuo4cCF14Euc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kRG+UUUe; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1750071554; c=relaxed/simple;
+	bh=ivAyhqHkPrwFRYJzP0f+A9vzerfjqRCkdprjo4/m3aw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jSQyv8Ff5mMs07PNBex3Yn7LTZZYPRTJ0qxTDochMwaiBmdfr5OBazLN/FytlrYjIxTjzGQA6Y9Pxf4gpJFTrTWE7OLoE/1U4ZslbdFj0Oifr+XswBpm/XcyIKmeb86qIrz9BwvgZKZ2/0rGV8Y/aAKSAOwh+IDLceqLdJ7zgbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WO4eQEqU; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kRG+UUUe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HIamhGj5Ow+LQrKkxI4Twb1fxMLUTEDZJDogvvERshc=; b=kRG+UUUep/2YeJA40ygPO/KdUe
-	Q59kDn2qNpwDKjghBq4oF/SptfPTv4xmntDW8K0rFJewlPv6+I+R6ksDYry8WZzoI3C1rhYeazFTE
-	lSTp6ZnrLSrhBT13gjnzcWUXDl0GyGGdi6YbUAfx4YXaZG9rfiLVHTi0WPiOhVVv5qAu9PbHLJsT+
-	jBzjbOuuHBVOD447x2BKjsHFaaKXe3PYwy+SkEXvbMcIns2sIfGKZb4YkXzaSEj1DL+1d1TX5b+6E
-	prh220AdrnzHPUpK/m42+uc/7Ok1MiJdbA3nj/5Kan2GNe7YcAyY2ND1uBFqV3tyvQdaMX0rwLHqn
-	u1F+elqQ==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uR7XA-0044qa-2x; Mon, 16 Jun 2025 12:57:48 +0200
-Message-ID: <e1b65491-781c-48f7-9368-58d7ede91b12@igalia.com>
-Date: Mon, 16 Jun 2025 11:57:47 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WO4eQEqU"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade4679fba7so800681266b.2;
+        Mon, 16 Jun 2025 03:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750071551; x=1750676351; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HUerpZOJO73onNYo92QlKelLbykJvFa6HSMQaRUUq74=;
+        b=WO4eQEqUni3TWzTsEdBQRAv6Key5XqbHtvi35OYeBw5HwDZ2HvRSXurSEfjmSiEwiU
+         ITlra45M3QRsQHBx79l1Qe43Hr9EAezgGhX7mElaJ46CzyuP9YP7NRZRDAa7aXydC20Q
+         P/1kzOS33F5TgsuwKNcCcpt4UC2BvZBNJAEQeI2EkXIl6v+0Q+pOCl8nk2Q27IGCaRDb
+         6WKP8xvPZofRvR3DF6RvNSQjLjuaE3PjxAHpR3mRt3ss7Y6KpRbecRc2JnD0TEsWdVME
+         CE46rG3M+nPCpTJkILWADepuTxv2FA3xwPvVsiPxVAUHaEVO9EgIDl/r0IVshDpalkO9
+         /vPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750071551; x=1750676351;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HUerpZOJO73onNYo92QlKelLbykJvFa6HSMQaRUUq74=;
+        b=qsQTIF1OOLDIOQ1BHNJSkC50EMr1sG+RB4FEw6jd1kcQ/IthiqRjxp8GVQZaE4bRUY
+         aH11gRnBfyYNm4W/8a2hLKQUSMwmrPMdRSqehqAtLxfErSXq+Hnf4xYZTNubQc44tmfa
+         DDXFqUrEoXE6mGmFV+kOWaIMce04M3lR9fWlFp063J/XHIusyZIMtTSVb2d63R8awCLL
+         LoMGPPnH50B0snAKsGX4lQV0z9GjIN4cvBOsmk10eSMjvIQ0XKj6Tmc+u+gW8jDCN0SL
+         VaX5XZf6zkvca4KHifAlX31crJ8yg2wgKs9k6ODCyUVGcfQ8YU5Kl5GTGGQy2QE9rxjl
+         KovA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpfx1MvhQZL/cpzSfCNpJsjoNIXA3w9CwZwKzKaZelfx3Qr5Grrg7Jc0VZ0iqiznF/t4CD0pmU8Cc=@vger.kernel.org, AJvYcCWrOoSVh76FO65EyMMxIDiKkNfa2/8QZN3vVdeZRFeFThl1b4NQf9yBYEe5fsKSiCus/OJi9/dZ3hK5@vger.kernel.org, AJvYcCXKirJA/eU3CENo6/VQHejd4lq4RN8KKTSbC6u7/a/++6RwvjtYw3HKkFm3Zsh6Jus9rwe65a2Xt+KubExk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4hUtKHF9F6GgaMk0vt6+3xbGnD9u+tfGw4ZGX3DUYT14SIjdi
+	45fzacM1hsvl+EeeBvrn480bG+n6D+Ipu2AKADIjnfRsYvubP1jlJGl3cv2cZfSD7S3NZ29Xvj6
+	Hs21E6rutng5+HnU+wc8NccGKXqRIQxU=
+X-Gm-Gg: ASbGnct95bWdA/Cy/fEQ03ZCHV/VZQQphmHf4xlMhV3vcbn+HAdkp9VrOwRQBzLgRNP
+	e/Ciy58DsW29okCfhti862X9TbkM0muZ9JAihJEq4rOkXlYTO8CQY9KIzJzkoS8nyPyQNA4zq/k
+	3MIP117IrvyZ5G7zUjpUezKt3VbFg8dhaTZX4BoFachvJCz4vQEk6UNTmo
+X-Google-Smtp-Source: AGHT+IEj0l0JJd/YOnNnj6VYrjKKVCp+t0CG6lxcnBcfrsUbqPiZvWYlOO3jWuW8VuwwavUgBZGYerQdMSELsDjKuPA=
+X-Received: by 2002:a17:907:9285:b0:ad5:5198:b2ad with SMTP id
+ a640c23a62f3a-adfad59ac32mr846089466b.48.1750071550733; Mon, 16 Jun 2025
+ 03:59:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/sched/tests: Make timedout_job callback a better role
- model
-To: Philipp Stanner <phasta@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250605134154.191764-2-phasta@kernel.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <20250605134154.191764-2-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250615222258.117771-1-l.rubusch@gmail.com> <20250615222258.117771-6-l.rubusch@gmail.com>
+In-Reply-To: <20250615222258.117771-6-l.rubusch@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 16 Jun 2025 13:58:34 +0300
+X-Gm-Features: AX0GCFu4RcbVhsjuRncgzOdsGD5SqBMHKarvEM9c27WzKqfcMa8HYO2IM5SjMgs
+Message-ID: <CAHp75VdWtY6nxFFTucoCRiq+tM5caL5N1yp_15=FSAZ7Vyk_7Q@mail.gmail.com>
+Subject: Re: [PATCH v5 5/8] iio: accel: adxl313: add inactivity sensing
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 16, 2025 at 1:23=E2=80=AFAM Lothar Rubusch <l.rubusch@gmail.com=
+> wrote:
+>
+> Enhance the interrupt handler to process inactivity events. Introduce
+> functions to configure the threshold and period registers for
+> inactivity detection, as well as to enable or disable the inactivity
+> feature. Extend the fake IIO channel to handle inactivity events by
+> combining the x, y, and z axes using a logical AND operation.
+
+...
+
+> -       axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +       /* Check if axis for activity are enabled */
+> +       switch (type) {
+> +       case ADXL313_ACTIVITY:
+> +               axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +               break;
+> +       case ADXL313_INACTIVITY:
+> +               axis_en =3D FIELD_GET(ADXL313_INACT_XYZ_EN, axis_ctrl);
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+>
+>         if (!axis_en)
+>                 return false;
+
+So, this looks better without a variable?
+
+  case FOO:
+     if (!FIELD_GET(...))
+         return false;
+     break;
+
+On the first glance it seems that next changes don't affect this.
+
+...
+
+> -       /* Start modifying configuration registers */
+
+Stray change, the next patch restores this. So why change to  begin with?
+
+>         ret =3D adxl313_set_measure_en(data, false);
+>         if (ret)
+>                 return ret;
+
+...
+
+>         /* Enable axis according to the command */
+> -       axis_ctrl =3D ADXL313_ACT_XYZ_EN;
+> +       switch (type) {
+
+I was wondering if you can use switch-case earlier in the series.
+
+> +       case ADXL313_ACTIVITY:
+> +               axis_ctrl =3D ADXL313_ACT_XYZ_EN;
+> +               break;
+> +       case ADXL313_INACTIVITY:
+> +               axis_ctrl =3D ADXL313_INACT_XYZ_EN;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+
+...
+
+> -       if (info !=3D IIO_EV_INFO_VALUE)
+> -               return -EINVAL;
+> -
+> -       switch (dir) {
+> -       case IIO_EV_DIR_RISING:
+> +       switch (info) {
+> +       case IIO_EV_INFO_VALUE:
+> +               switch (dir) {
+> +               case IIO_EV_DIR_RISING:
+> +                       ret =3D regmap_read(data->regmap,
+> +                                         adxl313_act_thresh_reg[ADXL313_=
+ACTIVITY],
+> +                                         &act_threshold);
+> +                       if (ret)
+> +                               return ret;
+> +                       *val =3D act_threshold * 15625;
+> +                       *val2 =3D MICRO;
+> +                       return IIO_VAL_FRACTIONAL;
+> +               case IIO_EV_DIR_FALLING:
+> +                       ret =3D regmap_read(data->regmap,
+> +                                         adxl313_act_thresh_reg[ADXL313_=
+INACTIVITY],
+> +                                         &inact_threshold);
+> +                       if (ret)
+> +                               return ret;
+
+> +                       *val =3D inact_threshold * 15625;
+> +                       *val2 =3D MICRO;
+> +                       return IIO_VAL_FRACTIONAL;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +       case IIO_EV_INFO_PERIOD:
+>                 ret =3D regmap_read(data->regmap,
+> -                                 adxl313_act_thresh_reg[ADXL313_ACTIVITY=
+],
+> -                                 &act_threshold);
+> +                                 ADXL313_REG_TIME_INACT,
+> +                                 &inact_time_s);
+>                 if (ret)
+>                         return ret;
+> -               *val =3D act_threshold * 15625;
+> -               *val2 =3D MICRO;
+> -               return IIO_VAL_FRACTIONAL;
+> +               *val =3D inact_time_s;
+> +               return IIO_VAL_INT;
+>         default:
+>                 return -EINVAL;
+>         }
+
+I still don't get what's wrong with helpers for nested switches?
+Instead of doing ping-pong with so many lines (due to indentation
+changes), just create a helper from the beginning. In this case this
+will look more like
 
 
-On 05/06/2025 14:41, Philipp Stanner wrote:
-> Since the drm_mock_scheduler does not have real users in userspace, nor
-> does it have real hardware or firmware rings, it's not necessary to
-> signal timedout fences nor free jobs - from a functional standpoint.
-> 
-> The unit tests, however, serve as a reference implementation and a first
-> example for new scheduler users. Therefore, they should approximate the
-> canonical usage as much as possible.
-> 
-> Make sure timed out hardware fences get signaled with the appropriate
-> error code.
+  if (nfo =3D=3D IIO_EV_INFO_VALUE)
+    return my_cool_helper_for_THIS_case(...);
 
-Code looks fine, but currently nothing is broken and I disagree with the 
-goal that the _mock_^1 components should be role models. The idea is to 
-implement as little in the mock components as it is required to exercise 
-the tested functionality.
+Note, I admit that not all the cases may be done like this, but just
+look at this again and perhaps something can be optimised.
 
-As the motivation for this patch, ie. things which start depending on 
-adding this functionality, only appear in one upcoming series, and as 
-mentioned in 
-https://lore.kernel.org/dri-devel/18cd6b1f-8872-4a16-9ceb-50fd1ecfea39@igalia.com/, 
-I think it makes most sense to stick with that philosophy and fold this 
-patch into the respective series.
-
-Also, there are various ways drivers use the scheduler API. Trying to 
-make the mock scheduler a reference driver implementation would only be 
-able to make it a reference for one possible use.
-
-Regards,
-
-Tvrtko
-
-1)
-mock
-adjective
-not authentic or real, but without the intention to deceive.
-"a mock-Georgian red brick house"
-
-> 
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->   .../gpu/drm/scheduler/tests/mock_scheduler.c  | 26 ++++++++++++++++++-
->   1 file changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> index 7f947ab9d322..49d067fecd67 100644
-> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> @@ -200,12 +200,36 @@ static struct dma_fence *mock_sched_run_job(struct drm_sched_job *sched_job)
->   	return &job->hw_fence;
->   }
->   
-> +/*
-> + * Normally, drivers would take appropriate measures in this callback, such as
-> + * killing the entity the faulty job is associated with, resetting the hardware
-> + * and / or resubmitting non-faulty jobs.
-> + *
-> + * For the mock scheduler, there are no hardware rings to be resetted nor jobs
-> + * to be resubmitted. Thus, this function merely ensures that
-> + *   a) timedout fences get signaled properly and removed from the pending list
-> + *   b) the mock scheduler framework gets informed about the timeout via a flag
-> + *   c) The drm_sched_job, not longer needed, gets freed
-> + */
->   static enum drm_gpu_sched_stat
->   mock_sched_timedout_job(struct drm_sched_job *sched_job)
->   {
-> +	struct drm_mock_scheduler *sched = drm_sched_to_mock_sched(sched_job->sched);
->   	struct drm_mock_sched_job *job = drm_sched_job_to_mock_job(sched_job);
-> +	unsigned long flags;
->   
-> -	job->flags |= DRM_MOCK_SCHED_JOB_TIMEDOUT;
-> +	spin_lock_irqsave(&sched->lock, flags);
-> +	if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
-> +		list_del(&job->link);
-> +		job->flags |= DRM_MOCK_SCHED_JOB_TIMEDOUT;
-> +		dma_fence_set_error(&job->hw_fence, -ETIMEDOUT);
-> +		dma_fence_signal_locked(&job->hw_fence);
-> +	}
-> +	spin_unlock_irqrestore(&sched->lock, flags);
-> +
-> +	dma_fence_put(&job->hw_fence);
-> +	drm_sched_job_cleanup(sched_job);
-> +	/* Mock job itself is freed by the kunit framework. */
->   
->   	return DRM_GPU_SCHED_STAT_NOMINAL;
->   }
-
+--
+With Best Regards,
+Andy Shevchenko
