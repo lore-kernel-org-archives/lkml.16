@@ -1,121 +1,88 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5DD72607;
-	Mon, 16 Jun 2025 17:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A854C288518;
+	Mon, 16 Jun 2025 17:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750094608; cv=none; b=F6O0ZSjAgLcAQ2FUPzii/+QvwJvDS00dd4wFCAgEVxhVUnKtelmtTVFnBxYUhtaOtYkvFwTDimHkj+CBfS8fRMU6llv2br2b+rt7dThIdDanLacuJV4Jb6YG5VoLlfzqQF7M2pYcsLrL3sMSdlLATcIjVUx8tVq5rejxds1dPs4=
+	t=1750094630; cv=none; b=WbNazW09ONFgc2jYE9f7f65eaqq6KuQyNdmp1kSenrQ1hQjRFzCSvhGLGUBoEnI48Rq2C7ySUg2JDyi7ZUaZguWOMJFQslmxxxxFRyd6aRydFssz2ir6VZFQR/OnL4VLJUhyUKEaRMXF8Z8Jgv7fudU1dnU06dpMLgZkCuJlJrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750094608; c=relaxed/simple;
-	bh=+l4ppMaVCu63D4oHT/VFaC9XIkU5AWpD2V0YNiZREaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RNaeJ25hHa7WTqNq0ErarVLwmDOr/c7BF3xIT3V1ciFTi/e0ni2D8DfdWGpH6rB5+LCp47X0cp3nxDdyH41Lb6IlqPvzlEEjZPRHNt1+b9Qmb1kcEWREb5Y3ZJYJhil5VqFmr/o6Qz8dHBL0mCm9jkzwrrAcXzYRZsiFUVPNQow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YofZZmVz; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750094630; c=relaxed/simple;
+	bh=cFTYLzRVovBgv1/UqtXnIM5Df8l6NGl02hyuDQ2d9m8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q1aSa6bqisYKAYfOREgaCOea0ZOh8J2BM9/v4dzrhHCyO9GD9iZWMTBnj/m+3zkdqBM1K5bwzisqWJYIPiyCQtHJFie73CMSNeHOWb6sCZJJG7kmZ5wgZhh8AbG6V9ZWV/pR4QrIW4amrOSLSzorRsBnuN0d8AALC9shacXF+sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=anbKykwC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YofZZmVz"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso5584603a91.3;
-        Mon, 16 Jun 2025 10:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750094607; x=1750699407; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Bcecguv7Lx+rjWJW35AroK+WdqJscdUsmjDvoTT5PQk=;
-        b=YofZZmVzKoPyNZUJdXusZh7H+xumzUNu+p1K3RC8+LNdSkYkVcz2R5WqanXsd7c5CA
-         C7Pys5NGoVL8a8hZ4yEGHaS7pusXy3sM6IGOVKK60JHXq6YSaeDOJthrijU8LrFJ6OEz
-         buTMQ6f6J/je9TSlkhsWvAyDbFOA/WFWnaSkQPgawsj2q0Hu5re99Oxh02MyBgZiTWOC
-         rvicwg22nk9HITuuthwLCacQBoHpmIVm+i9vbaGEWq/SnTSVqIwVdvjompyU+2iTPk2L
-         WexvPUWfdlE4OG7DJWtFaxuUs+v25HSsMuIlVI57bUONj7lWoXkx6++t6I4LlkQM4Q6g
-         Yxiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750094607; x=1750699407;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bcecguv7Lx+rjWJW35AroK+WdqJscdUsmjDvoTT5PQk=;
-        b=n2eFlomyglPRjYOapt2dakhomxk2r00NgYxR4oaMDGnYHhRL4gyo6VHw3U/DRwV0fI
-         dIuWBj9m9GVF42jVL1f7wBSrAifw3dOl/wH3sPLydZEX2gDN1nfXspehaWbNNVRiyPqR
-         O8TsgPlyzdliycfTfZBCnYckOyhlK6AaoeAumphS6dG6QyQs4LBCi1PzwMnabyhSEz53
-         ewKqawbOT6oTikglWOvJptk2KchTaaue5AtNIkqgZ6EsrOg8GH1aqTEKsg3xWu67cIKD
-         b4NHEynC23OZk8wFB8AgJ2xE/gU3qgqVN4CeKQLX6FI1oTiHZlg5y3BLxIAkRr8Pkqkm
-         ikJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcyJ5ht6aweXeEWv8wiSIrSU0tCW6IY92CcHhga9QpPBXvj7j2nlj/bT6xGv62/kghU2f3QJaZp/R+aYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqquWRokEXigDdPFupAQHvFy26B0ZZ5XWMARjk8ATRMCnRnBVo
-	FkLlg3gtalLVnPLT+i9EkCQFB2RO4Lnfe5fycLi4/c8XEzQ+1bQq0Bo=
-X-Gm-Gg: ASbGncsem3J4EsoIjo8Z5YvsRRY3zLlIanfuuz7YMvT6Th7LcoSS9/IwolLeGMiB4J8
-	6igecElqvCNntukc5UGi40fsLnC4r2Vp/H8S3Tf5aqj2wgduXZApE4HhYEHjQNaAEbybJ/mgvA2
-	9NDMdiJ0YndT3wCe0nKf46qgOYaTpPj7hgherBcYMGEZy4C7y18zBv98AazFMs8DsYRKtncukOS
-	DhXYecfJTBvdT2E1Lx5C0l1apd+E8G1+SCoJQY/PYlaELNii86gR8BrQiJt1ByM62Rynqlh+BTr
-	74C4le5ktAvJCWfWRaU7PFHHxNJzMrk/sYpbsTmdB3HMK2cxfGYPSRH0I73jQS3xD5HOIokyK9L
-	Bc+r7IWuJEYYJGQDGbpU/nij6Lr5BCW9Xgg==
-X-Google-Smtp-Source: AGHT+IFfQB9Clm1X82qpx0OvfXc8H2gIYXEJfbAdy0qqZVrsr/8ozgKrWw0ODjmsciNUtolB2Tuv5w==
-X-Received: by 2002:a17:90b:2dcc:b0:311:9c1f:8516 with SMTP id 98e67ed59e1d1-313f1c3fb20mr17528197a91.15.1750094606695;
-        Mon, 16 Jun 2025 10:23:26 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365deb0fb6sm63390435ad.141.2025.06.16.10.23.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 10:23:26 -0700 (PDT)
-Date: Mon, 16 Jun 2025 10:23:25 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, willemb@google.com,
-	sdf@fomichev.me, asml.silence@gmail.com
-Subject: Re: [PATCH net v1] net: netmem: fix skb_ensure_writable with
- unreadable skbs
-Message-ID: <aFBTDZPj97PAe-EI@mini-arch>
-References: <20250615200733.520113-1-almasrymina@google.com>
- <aFAsRzbS1vTyB_uO@mini-arch>
- <CAHS8izMgmSQPPqu4xo1To=4vFvJi+cxP72KewhMJ+BqDbka0hQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="anbKykwC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A3BC4CEEA;
+	Mon, 16 Jun 2025 17:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750094630;
+	bh=cFTYLzRVovBgv1/UqtXnIM5Df8l6NGl02hyuDQ2d9m8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=anbKykwCl4RiKvRK5qZnOUvhj8yrO78vP7yUeRVhNFgjOVZN9IzxiwQuf8+WHZbbo
+	 cwJ57i6V2gakEQr1MEbSkgTxcrlH8CWdLUerko2/TGXLxxTt0ggDyniuh6Riz8leD0
+	 gfxYY7xn8LniYpUDGvpzSDRL7ZCl17yswLKBySlQZ5ces/0G0iFPzYi7oP2dWesUlO
+	 n2t5sfIptEW0wj3ZCwr7vrGp8xyRYsWl5QykABU5Pz1p/WGfQq6dm40wlLzerXxqGI
+	 J8jcXwXgsa4IAVZl5EMu9jbBqrItJl1NBlvrFTmO03Juxx82JgdLC0VbJR5u4RMOn7
+	 vRSNO0iziwONA==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Honggyu Kim <honggyu.kim@sk.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Michal Hocko <mhocko@kernel.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 0/3] mm/damon: use alloc_migrate_target() for DAMOS_MIGRATE_{HOT,COLD}
+Date: Mon, 16 Jun 2025 10:23:43 -0700
+Message-Id: <20250616172346.67659-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izMgmSQPPqu4xo1To=4vFvJi+cxP72KewhMJ+BqDbka0hQ@mail.gmail.com>
 
-On 06/16, Mina Almasry wrote:
-> On Mon, Jun 16, 2025 at 7:38 AM Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> >
-> > On 06/15, Mina Almasry wrote:
-> > > skb_ensure_writable should succeed when it's trying to write to the
-> > > header of the unreadable skbs, so it doesn't need an unconditional
-> > > skb_frags_readable check. The preceding pskb_may_pull() call will
-> > > succeed if write_len is within the head and fail if we're trying to
-> > > write to the unreadable payload, so we don't need an additional check.
-> > >
-> > > Removing this check restores DSCP functionality with unreadable skbs as
-> > > it's called from dscp_tg.
-> >
-> > Can you share more info on which use-case (or which call sites) you're
-> > trying to fix?
-> 
-> Hi Stan,
-> 
-> It's the use case of setting a DSCP header, and the call site is
-> dscp_tg() -> skb_ensure_writable.
-> 
-> Repro steps should roughly be:
-> 
-> # Set DSCP header
-> sudo iptables -tmangle -A POSTROUTING -p tcp -m comment --comment
-> "foo" -j DSCP --set-dscp 0x08
-> 
-> # then run some unreadable netmem workload.
-> 
-> Before this change you should see 0 throughput, after this change the
-> unreadable netmem workload should work as expected.
+DAMOS_MIGRATE_{HOT,COLD} implementation resembles that for demotion, and
+hence the behavior is also similar to that.  But, since those are not
+only for demotion but general migrations, it would be better to match
+with that for move_pages() system call.  Make the implementation and the
+behavior more similar to move_pages() by not setting migration fallback
+nodes, and using alloc_migration_target() instead of
+alloc_migrate_folio().
 
-Ah, so this is basically all netfilter, makes sense, thanks!
+alloc_migrate_folio() was renamed from alloc_demote_folio() and been
+non-static function, to let DAMOS_MIGRATE_{HOT,COLD} call it.  As
+alloc_migration_target() is called instead, the renaming and de-static
+changes are no more required but could only make future code readers be
+confused.  Revert the changes, too.
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+Changes from RFC
+(https://lore.kernel.org/20250609200048.50914-1-sj@kernel.org)
+- Rebase to latest mm-new
+- Slightly wordsmith cv and commit messages
+
+SeongJae Park (3):
+  mm/damon/paddr: use alloc_migartion_target() with no migration
+    fallback nodemask
+  Revert "mm: rename alloc_demote_folio to alloc_migrate_folio"
+  Revert "mm: make alloc_demote_folio externally invokable for
+    migration"
+
+ mm/damon/paddr.c | 4 +---
+ mm/internal.h    | 1 -
+ mm/vmscan.c      | 5 +++--
+ 3 files changed, 4 insertions(+), 6 deletions(-)
+
+
+base-commit: b29ac9653c1fae75d3444b6a03521c74adb6d4cc
+-- 
+2.39.5
