@@ -1,149 +1,152 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFD7295D8F;
-	Mon, 16 Jun 2025 10:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816A82882D1;
+	Mon, 16 Jun 2025 10:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070496; cv=none; b=exe5ot2DWHUuiyIJyGiaZMgsBcmESvpTh3O9RuIIhGlcrqK03WIJKJSgJnDpFbl/oGqx4TtX7LA3pqw4XZkjn82TOT0SNvJthbd617guuVfz7bNfbIHRN2mBkXR92sxMWgLvKWmiDq9/qFduP36aE8SgBrcvPLPTepqVW+PWpR8=
+	t=1750070513; cv=none; b=orK0/Tu9Du4Aoe640vK3or25xVo7vFY5ddowmZDPYV2rYaHV40ts90q0wPFa4GNqY30UkcSKKrNG+OKCb1MAvEPQU/nAesSw+nLiCKHS6HnAe6GPKkGG26CP5O87FmR/0sC2Ps3QGOUzN241C7kxsgZvEKk1PFLcO0I8JTvoBxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070496; c=relaxed/simple;
-	bh=Lw2dE+P+MII1mRCnkvkm+zkgPFhWavrLZBJGcO21axg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NTCojAZ29koW7fTNp9q0J4Y4QMjoH0jfH4J6QR6VOpNbfsY1I99XYyeDQkGuLCMOLq6vBUyPSibVuXpgDyimmQCxEwNm56WJHwz6g11XJ0AG9wXTsNTfqPyZQlcl8UsqghELzn+HWuI7o4qBpvygzO8YSDOW1i8MzMZQuzi4grE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27592150C;
-	Mon, 16 Jun 2025 03:41:12 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31E963F58B;
-	Mon, 16 Jun 2025 03:41:31 -0700 (PDT)
-Message-ID: <b39ce0e3-5d44-4334-b739-2af07a24a668@arm.com>
-Date: Mon, 16 Jun 2025 11:41:28 +0100
+	s=arc-20240116; t=1750070513; c=relaxed/simple;
+	bh=9jQvnHzyUbfSeBBYrBGACK8W4qVfv3z2D1HKLv2ml1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KAWufnPUobbgfmsWuZxnBWPHbEMz4myzyoKbq0hCOvrrVXzB6Wu0Lv8wVACN7gEXsXe+lgwwU1CKLf5T0/eCtjpSQlnermnflI8bWqdziHezAiXWhfJICtZNGPmu0Xbte/Omko/QlYhh0fuq5ffEmH48/kczW3sDmnjnT4HdBBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=PtBEAxVo; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="PtBEAxVo"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bLRPy4Xyfz9sNv;
+	Mon, 16 Jun 2025 12:41:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1750070502;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5oSk0eziRiPQxIm2xpJSi+rzCVxixCf2/SUD1VuuXvA=;
+	b=PtBEAxVon6X+5TauyCHml0gSVf0/dK0Bz09Z5ym8rKg8H0PYZ0URJ2w6F67+4+9YsFlBbj
+	2uqpgH2adVdkOzlaFbsakNOPFL//WXshXak1la9GF6kJZzioWFauDyUmTXiQq3gm9Bb7e4
+	OX3Lv8MiZ+P5Q1prPdc6ZBk0Bf/U++79fnNB8SFUNatFwc/owqStWtcOjYtcq5Of1BHCAG
+	jTVDO6nrqSYc+xd6t2OIpVGjyNy7POqsgHeexXChHIZp+jVRhcqyjGVph/fPLxYFA5ta/z
+	j5ZwBcoaSXf5cO5A55o6PN7HSajou51Pgas4/J5heggkVtC13NIjOxpoN9msow==
+Date: Mon, 16 Jun 2025 12:41:30 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, 
+	Pankaj Raghav <p.raghav@samsung.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
+	gost.dev@samsung.com, hch@lst.de
+Subject: Re: [PATCH 4/5] mm: add mm_get_static_huge_zero_folio() routine
+Message-ID: <xyp7neexwts566fndmfdwivcrg4qmdu2nfv2nppcjukvpog3ib@ieuhruutubos>
+References: <20250612105100.59144-1-p.raghav@samsung.com>
+ <20250612105100.59144-5-p.raghav@samsung.com>
+ <e3075e27-93d2-4a11-a174-f05a7497870e@intel.com>
+ <cglmujb275faqkpqmb75mz4tt5dtruvhntpe5t4qyzjr363qyr@vluzyx4hukap>
+ <a65ee315-23b7-4058-895a-69045829bd01@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 10/43] arm64: RME: RTT tear down
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-11-steven.price@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250611104844.245235-11-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a65ee315-23b7-4058-895a-69045829bd01@redhat.com>
 
-Hi Steven
-
-On 11/06/2025 11:48, Steven Price wrote:
-> The RMM owns the stage 2 page tables for a realm, and KVM must request
-> that the RMM creates/destroys entries as necessary. The physical pages
-> to store the page tables are delegated to the realm as required, and can
-> be undelegated when no longer used.
+On Mon, Jun 16, 2025 at 11:14:07AM +0200, David Hildenbrand wrote:
+> On 12.06.25 22:54, Pankaj Raghav (Samsung) wrote:
+> > On Thu, Jun 12, 2025 at 07:09:34AM -0700, Dave Hansen wrote:
+> > > On 6/12/25 03:50, Pankaj Raghav wrote:
+> > > > +/*
+> > > > + * mm_get_static_huge_zero_folio - Get a PMD sized zero folio
+> > > 
+> > > Isn't that a rather inaccurate function name and comment?
+> > I agree. I also felt it was not a good name for the function.
+> > 
+> > > 
+> > > The third line of the function literally returns a non-PMD-sized zero folio.
+> > > 
+> > > > + * This function will return a PMD sized zero folio if CONFIG_STATIC_PMD_ZERO_PAGE
+> > > > + * is enabled. Otherwise, a ZERO_PAGE folio is returned.
+> > > > + *
+> > > > + * Deduce the size of the folio with folio_size instead of assuming the
+> > > > + * folio size.
+> > > > + */
+> > > > +static inline struct folio *mm_get_static_huge_zero_folio(void)
+> > > > +{
+> > > > +	if(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
+> > > > +		return READ_ONCE(huge_zero_folio);
+> > > > +	return page_folio(ZERO_PAGE(0));
+> > > > +}
+> > > 
+> > > This doesn't tell us very much about when I should use:
+> > > 
+> > > 	mm_get_static_huge_zero_folio()
+> > > vs.
+> > > 	mm_get_huge_zero_folio(mm)
+> > > vs.
+> > > 	page_folio(ZERO_PAGE(0))
+> > > 
+> > > What's with the "mm_" in the name? Usually "mm" means "mm_struct" not
+> > > Memory Management. It's really weird to prefix something that doesn't
+> > > take an "mm_struct" with "mm_"
+> > 
+> > Got it. Actually, I was not aware of this one.
+> > 
+> > > 
+> > > Isn't the "get_" also a bad idea since mm_get_huge_zero_folio() does its
+> > > own refcounting but this interface does not?
+> > > 
+> > 
+> > Agree.
+> > 
+> > > Shouldn't this be something more along the lines of:
+> > > 
+> > > /*
+> > >   * pick_zero_folio() - Pick and return the largest available zero folio
+> > >   *
+> > >   * mm_get_huge_zero_folio() is preferred over this function. It is more
+> > >   * flexible and can provide a larger zero page under wider
+> > >   * circumstances.
+> > >   *
+> > >   * Only use this when there is no mm available.
+> > >   *
+> > >   * ... then other comments
+> > >   */
+> > > static inline struct folio *pick_zero_folio(void)
+> > > {
+> > > 	if (IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
+> > > 		return READ_ONCE(huge_zero_folio);
+> > > 	return page_folio(ZERO_PAGE(0));
+> > > }
+> > > 
+> > > Or, maybe even name it _just_: zero_folio()
+> > 
+> > I think zero_folio() sounds like a good and straightforward name. In
+> > most cases it will return a ZERO_PAGE() folio. If
+> > CONFIG_STATIC_PMD_ZERO_PAGE is enabled, then we return a PMD page.
 > 
-> Creating new RTTs is the easy part, tearing down is a little more
-> tricky. The result of realm_rtt_destroy() can be used to effectively
-> walk the tree and destroy the entries (undelegating pages that were
-> given to the realm).
+> "zero_folio" would be confusing I'm afraid.
 > 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> At least with current "is_zero_folio" etc.
+> 
+> "largest_zero_folio" or sth. like that might make it clearer that the size
+> we are getting back might actually differ.
+> 
 
-A couple of minor nits below. Should have spotted earlier, apologies.
-...
+That makes sense. I can change that in the next revision.
 
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 73261b39f556..0f89295fa59c 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -17,6 +17,22 @@ static unsigned long rmm_feat_reg0;
->   #define RMM_PAGE_SHIFT		12
->   #define RMM_PAGE_SIZE		BIT(RMM_PAGE_SHIFT)
->   
-> +#define RMM_RTT_BLOCK_LEVEL	2
-> +#define RMM_RTT_MAX_LEVEL	3
-> +
-> +/* See ARM64_HW_PGTABLE_LEVEL_SHIFT() */
-> +#define RMM_RTT_LEVEL_SHIFT(l)	\
-> +	((RMM_PAGE_SHIFT - 3) * (4 - (l)) + 3)
-> +#define RMM_L2_BLOCK_SIZE	BIT(RMM_RTT_LEVEL_SHIFT(2))
-> +
-> +static inline unsigned long rme_rtt_level_mapsize(int level)
-> +{
-> +	if (WARN_ON(level > RMM_RTT_MAX_LEVEL))
-> +		return RMM_PAGE_SIZE;
-> +
-> +	return (1UL << RMM_RTT_LEVEL_SHIFT(level));
-> +}
-> +
->   static bool rme_has_feature(unsigned long feature)
->   {
->   	return !!u64_get_bits(rmm_feat_reg0, feature);
-> @@ -82,6 +98,126 @@ static int free_delegated_granule(phys_addr_t phys)
->   	return 0;
->   }
->   
-> +static void free_rtt(phys_addr_t phys)
-> +{
-> +	if (free_delegated_granule(phys))
-> +		return;
-> +
-> +	kvm_account_pgtable_pages(phys_to_virt(phys), -1);
-> +}
-> +
-> +static int realm_rtt_destroy(struct realm *realm, unsigned long addr,
-> +			     int level, phys_addr_t *rtt_granule,
-> +			     unsigned long *next_addr)
-> +{
-> +	unsigned long out_rtt;
-> +	int ret;
-> +
-> +	ret = rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level,
-> +			      &out_rtt, next_addr);
-> +
-> +	*rtt_granule = out_rtt;
-> +
-> +	return ret;
-
-ultra minor nit: this could simply be :
-
-	return rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level, 
-rtt_granule, next_addr);
-
-
-...
-
-> +
-> +static int realm_tear_down_rtt_range(struct realm *realm,
-> +				     unsigned long start, unsigned long end)
-> +{
-
-minor nit: Is it worth adding a comment here, why we start from 
-start_level + 1 and downwards ? Something like:
-
-	/*
-	 * Root level RTTs can only be destroyed after the RD is
-	 * destroyed. So tear down everything below the root level.
-	 */
-
-Similarly, we may be able to clarify a comment in kvm_free_stage2_pgd()
-
-Suzuki
-
+--
+Pankaj
