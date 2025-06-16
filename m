@@ -1,221 +1,209 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012C61EF0B0
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750057474; cv=none; b=FIyyswJKGIM32xf2XKnI7wuiIcSdGsahx0ekE681+fzpzjzaiVuKWQEVeMvCDmXHe/iANOzlIO4IMYOHdq80Y+uKnAImSNm0Pn9vh1L3iIlzMeHVuEy60WKINHyXJzYIdbZF2pmW4TpBF4MsOe7xlF7lRd4D8NL1Axn027RasRk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750057474; c=relaxed/simple;
-	bh=Yku77j1H71JfQ/twHVlYKlXs/8EsIDDQPIPX+lny6TE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QxjiN6kYWUqkiU+S15DUNBIVmvZdopYst4BXksZJalE37/wq6xom1OGqqSXL5rTwNFyClfJ17aYWu7X065fsUvX2E08ZVJpvTDjV0NKggKxEIAaJM1HAuuPqHDXz1jHSoq5kC2R1r06SJQo7QudfPgjNUVEvdipv0doIuQZ4FVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n1UB5XK+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDCE1DFD8B;
+	Mon, 16 Jun 2025 07:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750057486; cv=fail; b=mY32vXhMhj6KgJ56oyqaTIHkscbX+azkm547G7M0q9KtZU6flWKAfSpomrGkUi7txRD+CL5ZgmX2eHB68BLG+C/oOwPAOumReejKtnpiqVbJRQDIY7Ut4M16+CuvOtxl6PLBfICf4ZbOWhUhGu7jxQe0NzNskAl5D5H24uxFLB0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750057486; c=relaxed/simple;
+	bh=eY1vo4mCyiKtm/s8E55g3wOjlM7ciuGHyeP2dzmsj1M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LMjlg2diYnWQZcq+svl835DW4+jAvLsIEjcu+iH/xiSCIoeXr/sM+BB7oTudyxxSesFKTreo1c1aISH7BgKlAYWl09rtTgSqxEo1VBb0daKrNkGj3Bp6JkzLGdkLj+x7bNGBcd/IhBzstwTndzzW2mHsDpCn7uOdxe6TvV06geI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EG3iQg49; arc=fail smtp.client-ip=40.107.223.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n1UB5XK+"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FNsK7I013131
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=REn5KerYQ+u
-	Iw8V+Q4CeAOn6cwn/KOHFnel4TKPwLg0=; b=n1UB5XK+pPGGziBWq00WJaLr8nr
-	3AK5zDJWCYD9pKiSfPPy3D/Ypf3wF01kOjTz/Ffc/kME+bk+NrSXKNNPoES5b0Mj
-	lQByHt1SM+493a9ifjl/GgZTuNeAR2U+LdGcJTnDRxPLrAxYdsuPzRJMK/i444xD
-	V+ailudOxiuZKT57v18Q0P5jnPqbIyrmEvL7Yzf+UrCRteXuyl1HVFJTR5WIQ4sv
-	/mYDr35ic5dhaJpO8AAzo48EMQkIqRATR6dzQ0p+d0QNNRbqmdtMFx9slhO2Y6ke
-	QBKrCuJYybyjl+W/NxWEiYofCAZUppJVY0G2nVwYNfLPXlzgE5qmm6rTswQ==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9uc6x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:32 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235dd77d11fso33716015ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:04:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750057471; x=1750662271;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=REn5KerYQ+uIw8V+Q4CeAOn6cwn/KOHFnel4TKPwLg0=;
-        b=qpD3U85xQhlcnyDYGGRvMnhTIpcLlSXVQvTQTEJzMAcfji7jMXPs1kYLR99T5kun0D
-         PBobOAoYWSQO0JMHDQtWlUsGk4WxH6Sx6tV2auqpwZZeg0gRdmFCvSg7Y8I1F3bcuELz
-         FtcTU9wf1oJUSRDt5nY93ckPUYueL0ZZdNfRB2dF66KyIrJljpnY9NQ51ZGIWqwnGLDj
-         vzq7V1E5yDAW9Nm03I8wx2s/Md+xY5ChkkuVOjE3p76IY+4w+Ov6oCo0qpxtFuFgeShj
-         75v2QGECiRLWwnx1aJrgFWUDkQlYl/LMNu3w8Ni+FIqRYmDAXwAQ1Ul7IfAM8jTX6ndT
-         DxTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuw0heshG1n7jpfj5XVU+on0Y8DIXiVP52zGuYePIJvn8MeI7SO7CR2r0qmXaxGMohbXW8R/KX5HQUDU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRaqQvH+WTuOigqjDRqas83uXlf42ughoL3NVAk4pp1FWLzzTJ
-	vA8+Q9DDAQQoM5MLIg/QBU83b8nVTpqKtIque0rxk+smEKzvulL+c4rM0/PW6wOu0/0sA753opd
-	BkkN1JKPAMgPK9f47vFPp1WZGwS5xuO8krACasvA0IgI30B7+Vz5kq/Dn8WUsh3wZ6D0=
-X-Gm-Gg: ASbGncv5LSH/wABZGVgfGfNuAhPdG7YOupAvTmUy3813kNID0p4TsPs5u0ilVfsZdBU
-	e8GU7scZEVrNwvHdZpZJrnomzpsrmEpaivFdrN2r+jk01M02j0fSu4zbwCS2BtM+5wph8pVX4Ic
-	63141Uj4sWm0I6WwsBFy87fGx/kO29UyF24VEeILLREIbZgI0cNYOrvVydG7f6rAdYLmj78iwl/
-	32GLCzji8UFLvTv2m2KuDjZoag0ysOuyspIGDwguNCkskFM8REj6zVxY8LzZAS/i0bY/sYEGw2N
-	m1ehoBImXjEMwfWq8CmSbsKqq5cUFOK23hreJ/ePWIkg+WV355zz4aWXpa8=
-X-Received: by 2002:a17:902:e745:b0:235:27b6:a897 with SMTP id d9443c01a7336-2366b3c5ad3mr121973545ad.34.1750057471208;
-        Mon, 16 Jun 2025 00:04:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIjOGzxocwotSO3DLN7Z1O8JiPGy3RDCh5cpXniIq3OezTeuvNAfTP1/bRoL/5jWy743us+A==
-X-Received: by 2002:a17:902:e745:b0:235:27b6:a897 with SMTP id d9443c01a7336-2366b3c5ad3mr121973315ad.34.1750057470817;
-        Mon, 16 Jun 2025 00:04:30 -0700 (PDT)
-Received: from hu-mohs-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a19e3sm54435825ad.82.2025.06.16.00.04.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 00:04:30 -0700 (PDT)
-From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
-        kernel@oss.qualcomm.com
-Subject: [PATCH v2 2/2] arm64: dts: qcom: qcs9075-evk: Add sound card
-Date: Mon, 16 Jun 2025 12:34:05 +0530
-Message-Id: <20250616070405.4113564-3-mohammad.rafi.shaik@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250616070405.4113564-1-mohammad.rafi.shaik@oss.qualcomm.com>
-References: <20250616070405.4113564-1-mohammad.rafi.shaik@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EG3iQg49"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZrM7SzdOs7HldoTADzZcirO+lfETlTykSrsv13HvaRTluunwhEZ5w0Cru2mkcpnQLWhTrFP2cZXFJDCk7YC5JLj5ixDiU7I2338Rcd1D1+chRYfaq78zitZSnWW/k91O7VyQh37OWBSJ/dxtec4stUPvbPUhEQol0tj0brNowU0Y1vbW6t4wjogH06fQgIb7jXxzdP7oZSQNbxqTlfXKOcA+/bMa5lUphsn5tNgq/IqeIgIRb/iF9p+pmYUfZluNJEV9BJQNbFfNmbbVb034sEbWlKiV3zc7l/NJIqZoHd1kBvAizn3R37xOVdhOAUArINkOSuauUlw60IcYVVtSuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HRidCw3ZxXKUOQ0x2x4jih+5EMyPE8YikgSMCV2Orok=;
+ b=m0bVcxutmoY2YimoJ3DmFM6th4ZmwU+hMWUaYdkyEiUFfkH/McUQxuYpZPN2PaRr2XBOOUYHQm3Z0rUAgmKbNJNGXPJsaY0r8O6YmA1Pyu5dswTMRokWGOQjO7IHhJ8M5sXLwnXp3v4tsc2g5FaIGMccJiK7ae5Vr5t9i64Do99TwjaHEHoZ5ScUXG0BNZzltkaiT3TvsTEjHfa39jcJh+tQIr9AHeuWiX1fJqP9jvQIKYMz/fmFGkt6WPEGpGMYzWZ+46Xmyl8k1EOdv7Fk9eyE5zrTCaMmnm3SZtQApP4fvpv1ycScL/Csou2K+kUYDSsvHOGF1MD18bwE8OZ75g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HRidCw3ZxXKUOQ0x2x4jih+5EMyPE8YikgSMCV2Orok=;
+ b=EG3iQg499+NMxbVtn3jYM1QJ8CL/NRl34k2GsGQgTIf1zgy0GwZqiduPRKYxs9OMENYeAcZuOkoUXC1gyHCkBuQkfVPl2WwcYX/QJLxUArR2koMN3SwDjbV4SmWk6FskbTQ2sUc7hFu11fcUyJCY+ZAjLmmCAp1jPihq9oUy/l1x2P+NjdYmWCSO7Tiu+HLGUrfAJGgpyS+pCSANEpJjTXmZwIqT4Cj5JKWke4b6AIiDxSZFBJizo4TWdQl1ZJjCpYDB6l8TsJzuEJtf8BGec4nKuyg2wNDdijFccAeEQJyHTsffChcLhiBLJi2yv23X4cV08FIhBH4IgWPEKkPn5g==
+Received: from MN2PR13CA0027.namprd13.prod.outlook.com (2603:10b6:208:160::40)
+ by LV2PR12MB5749.namprd12.prod.outlook.com (2603:10b6:408:17f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
+ 2025 07:04:38 +0000
+Received: from BN2PEPF000044A6.namprd04.prod.outlook.com
+ (2603:10b6:208:160:cafe::b8) by MN2PR13CA0027.outlook.office365.com
+ (2603:10b6:208:160::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Mon,
+ 16 Jun 2025 07:04:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN2PEPF000044A6.mail.protection.outlook.com (10.167.243.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 07:04:37 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 16 Jun
+ 2025 00:04:12 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 16 Jun
+ 2025 00:04:11 -0700
+Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 16 Jun 2025 00:04:05 -0700
+Date: Mon, 16 Jun 2025 00:04:03 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <praan@google.com>, <zhangzekun11@huawei.com>,
+	<iommu@lists.linux.dev>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<patches@lists.linux.dev>, <mochs@nvidia.com>, <alok.a.tiwari@oracle.com>,
+	<vasant.hegde@amd.com>, <dwmw2@infradead.org>
+Subject: Re: [PATCH v6 10/25] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Message-ID: <aE/B40NRb+GecpRi@nvidia.com>
+References: <cover.1749884998.git.nicolinc@nvidia.com>
+ <7dfb002613f224f57a069d27e7bf2b306b0a5ba0.1749884998.git.nicolinc@nvidia.com>
+ <1ab8030b-8d2f-4ebe-a280-6d0e4e1d17c7@linux.intel.com>
+ <aE+976F9zPsjtfry@nvidia.com>
+ <b9a7ae65-edc6-46e9-bea0-163a51459884@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: x_WV17XYW8vWMcYPpD13bs9xBQxeGvyv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA0NSBTYWx0ZWRfXz+2KKWBMF6pk
- HTrtg0XzNixer4CZBhsegI4g0FGL+YdVA+dHvi/rF0ZP4zpBcO1UuUl3ZrPMJ48UoLgCSjMODH7
- c/CoohdWgtFoBE1polQDHmThYLWx2rApvJxjWYwXrQI64bAfURwv6Okux6m47AnLH8iq2smGa0Z
- C95hBKRp+Ecro6b7eFA7W/YkEJBcMt6gXVeor3mKrBO4UVLLxTajKavrCkjdu+bPXOXxwyBRlvN
- kim3A9y8PEaXw1CkK6RuLG6nmOOVGwLVQi8vWUc39Sm1BV7I68J/aoKNjGkx5ixcR/LeJIpdT3k
- 5MsRXgN8QniEzid3wyEaWaJo01xF/o6JEFFbafjxD/8MjzHi02XDSG/2cV79zs8mj8iRLh7THJc
- wjLY4faMzpQZXD5n0LCEMWhxu5QgUozvHYvYCrN0yWe1PTJKjl9j2nNstQIgyZZ2qb9e105l
-X-Proofpoint-ORIG-GUID: x_WV17XYW8vWMcYPpD13bs9xBQxeGvyv
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=684fc200 cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=_dDu9j5-v2Tbu4HaPncA:9
- a=GvdueXVYPmCkWapjIL-Q:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160045
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <b9a7ae65-edc6-46e9-bea0-163a51459884@linux.intel.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A6:EE_|LV2PR12MB5749:EE_
+X-MS-Office365-Filtering-Correlation-Id: 594c09f5-bba3-4950-96d2-08ddaca40ec8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ww5G02/TLOvFPsYElWDyP0OJLE7fRG4snxivwP5DCjl8dc2vU+fLTJLu7sQz?=
+ =?us-ascii?Q?NBE8PN0u4Lo8g1ZdFTGBZtNeZRBPvcgXklSquE1NSznscxpK26thAOuxxuBd?=
+ =?us-ascii?Q?N0bxcavzkqVO0ZNdf2h+jokqeLftw+Sq8vX4yXhRb+CNVlN9sLuYf3ZNNCiT?=
+ =?us-ascii?Q?WsqnDf6LhBwV97FpZ874/IatxZ0VwZzbKJ+Y6v7iJ9mPp3qTVhbyyYsWL0cU?=
+ =?us-ascii?Q?g7+YFjCE40dDp6jDfIu/FGa3LnMvbW/FPuFpJZHcz836z4XxrE5233M4XOp6?=
+ =?us-ascii?Q?sJSPFBUjXS3oXAhI79GN2iYBxjyILAFLiM9EmjuJ3QmWCqmvqAeiDVYWd4zs?=
+ =?us-ascii?Q?FcmdPJ3SL2zFARQfwzd3ntzArRTdRQ2Ap2s2WKFDBP6NADEpB8j41joGGqrF?=
+ =?us-ascii?Q?dMsiChlEOnVDqJQ/dWadXSyw5pnwiZSWAN0AgSKKtPPpxIFToZBgABiiDoxy?=
+ =?us-ascii?Q?lri9dl9ZTm28YiXSlJXt8nRAkPAB89u80KxYm1njuHKTJswomNSRHIGPR1hW?=
+ =?us-ascii?Q?PmW9jye/wyuL2cC5qaXrJOEfdQmrb13SSz7WZP8Sv3Xl12XnWnJmfVrSbeCl?=
+ =?us-ascii?Q?9ghYSyMk1KZ3wReEL1id7jTlzRDah5biyuM6Q63THjD5B9OKkyNEqAV5VV4a?=
+ =?us-ascii?Q?6cd4Xo92ip0vVsLLk/+fSMvQoE9hKn05+kFwsnD2xhcS59Gi2BIQF93a8FyN?=
+ =?us-ascii?Q?YKq48z5LbJ37pYEiWQQEnIeoMo1F9VFZqEgpF8si6pQZRunMQ7b4gIV8Todn?=
+ =?us-ascii?Q?HBl4y3zBdChkiHnSOWdrFDeiGvDu9+OFP9MGvKcryel0xzGEwwcrMnNhoE7b?=
+ =?us-ascii?Q?C44/PyMUJQH2DRNTG5TMJqA9tggoV6LYibcz6yoL5G8DJRYL3LZxj4Uf79tj?=
+ =?us-ascii?Q?3zEUVzZc+k+fPRyhCNazHIYE65q/XNcG0eV9UY6S8QmjqopIomywdYo3cIHc?=
+ =?us-ascii?Q?Z5Z2BhACvgW8DKI3sMqOyF5OGLPGvvn5iHRAUA0aOI+B+rc5sMKLzp9+p+Pu?=
+ =?us-ascii?Q?xS09tmZRWsxogtNYfUGYWaT5J2YMeN+4+maha9vYVOff+zkvdmz01JRK7EMh?=
+ =?us-ascii?Q?+6zjdYVCxEkwYCQhBc5DW1exVhhiv3ksunGQCpA1tE+2BajuZ7R5Ds9wFjap?=
+ =?us-ascii?Q?qCKC43LnRB12g2PS8KxIcTFqQqeHhHxBGJD/qfdOdvYPM386FMv6RDYRjC5x?=
+ =?us-ascii?Q?EdYa4LO0MsO96A6QC2fKQGoSqe2VECM3XjXVq3Ad/7U1A/fHGAepZb7zFtw6?=
+ =?us-ascii?Q?ktGl4XMzihXjtLt10Z/qPS4Lf001uf1i6bMKrSK5qEGjFitwmCfVh4+VbLdI?=
+ =?us-ascii?Q?nqqWnc3fZsGU2nOiu1TjB27ySwTeyHvU5e5bWoVHIo8O59VgtjFKyvssHf69?=
+ =?us-ascii?Q?Ph4qHTPfofAV0gDsrz2i3ArbM/7l+2EbrFVNEHkgWpjletuxkF4aBRwNdXjE?=
+ =?us-ascii?Q?VPmBAKf2mGbhagK8I0i5b04/qjAr9zfFYUuDyQz6VtURJAfQULWA9n2vdJmk?=
+ =?us-ascii?Q?XuK6ZPdikxqL2gUuZeqS6VfKVi8bFElVGsBF?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 07:04:37.7054
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 594c09f5-bba3-4950-96d2-08ddaca40ec8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5749
 
-Add the sound card node with tested playback over max98357a
-I2S speakers amplifier and I2S mic.
+On Mon, Jun 16, 2025 at 02:54:10PM +0800, Baolu Lu wrote:
+> On 6/16/25 14:47, Nicolin Chen wrote:
+> > On Mon, Jun 16, 2025 at 02:12:04PM +0800, Baolu Lu wrote:
+> > > On 6/14/25 15:14, Nicolin Chen wrote:
+> > > > +	if (!viommu->ops || !viommu->ops->get_hw_queue_size ||
+> > > > +	    !viommu->ops->hw_queue_init_phys) {
+> > > > +		rc = -EOPNOTSUPP;
+> > > > +		goto out_put_viommu;
+> > > > +	}
+> > Hmm, here it does abort when !viommu->ops->hw_queue_init_phys ..
+> > 
+> > > > +	/*
+> > > > +	 * FIXME once ops->hw_queue_init is introduced, this should check "if
+> > > > +	 * ops->hw_queue_init_phys". And "access" should be initialized to NULL.
+> > > > +	 */
+> > > I just don't follow here. Up until now, only viommu->ops->
+> > > hw_queue_init_phys has been added, which means the current code only
+> > > supports hardware queues that access guest memory using physical
+> > > addresses. The access object is not needed for the other type of
+> > > hardware queue that uses guest IOVA.
+> > > 
+> > > So, why not just abort here if ops->hw_queue_init_phys is not supported
+> > > by the IOMMU driver?
+> > .. so, it already does.
+> > 
+> > > Leave other logics to the patches that introduce
+> > > ops->hw_queue_init? I guess that would make this patch more readible.
+> > The patch is doing in the way to support the hw_queue_init_phys
+> > case only. It is just adding some extra FIXMEs as the guideline
+> > for the future patch adding hw_queue_init op.
+> > 
+> > I personally don't feel these are confusing. Maybe you can help
+> > point out what specific wording feels odd here? Maybe "FIXME"s
+> > should be "TODO"s?
+> 
+> Oh, I probably misunderstood the logic here. For both hw_queue_init and
+> hw_queue_init_phys, using an access object to pin the pages for hardware
+> access is necessary, right? My understanding was that pinning pages is
+> only required for hw_queue_init_phys.
 
-Introduce HS (High-Speed) MI2S pin control support.
-The I2S max98357a speaker amplifier is connected via HS0 and I2S
-microphones utilize the HS2 interface.
+No. The access is only used by the ops->hw_queue_init_phys case.
 
-Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
----
- .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 52 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 14 +++++
- 2 files changed, 66 insertions(+)
+The ops->hw_queue_init case will use the cmd->nesting_parent_iova
+directly without calling iommufd_hw_queue_alloc_phys().
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-index ab161180d1d5..d073c6f95d4c 100644
---- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-@@ -5,6 +5,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/sound/qcom,q6afe.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- 
- #include "qcs9075.dtsi"
-@@ -21,6 +22,57 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	max98357a: audio-codec-0 {
-+		compatible = "maxim,max98357a";
-+		#sound-dai-cells = <0>;
-+	};
-+
-+	dmic: audio-codec-1 {
-+		compatible = "dmic-codec";
-+		#sound-dai-cells = <0>;
-+		num-channels = <1>;
-+	};
-+
-+	sound {
-+		compatible = "qcom,qcs9075-sndcard";
-+		model = "qcs9075-iq-evk-snd-card";
-+
-+		pinctrl-0 = <&hs0_mi2s_active>, <&hs2_mi2s_active>;
-+		pinctrl-names = "default";
-+
-+		hs0-mi2s-playback-dai-link {
-+			link-name = "HS0 mi2s playback";
-+
-+			codec {
-+				sound-dai = <&max98357a>;
-+			};
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai PRIMARY_MI2S_RX>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		hs2-mi2s-capture-dai-link {
-+			link-name = "HS2 mi2s capture";
-+
-+			codec {
-+				sound-dai = <&dmic>;
-+			};
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai TERTIARY_MI2S_TX>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+	};
- };
- 
- &apps_rsc {
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 07ca6dd4f759..968730da180d 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -4711,6 +4711,20 @@ tlmm: pinctrl@f000000 {
- 			gpio-ranges = <&tlmm 0 0 149>;
- 			wakeup-parent = <&pdc>;
- 
-+			hs0_mi2s_active: hs0-mi2s-active-state {
-+				pins = "gpio114", "gpio115", "gpio116", "gpio117";
-+				function = "hs0_mi2s";
-+				drive-strength = <8>;
-+				bias-disable;
-+			};
-+
-+			hs2_mi2s_active: hs2-mi2s-active-state {
-+				pins = "gpio122", "gpio123", "gpio124", "gpio125";
-+				function = "hs2_mi2s";
-+				drive-strength = <8>;
-+				bias-disable;
-+			};
-+
- 			qup_i2c0_default: qup-i2c0-state {
- 				pins = "gpio20", "gpio21";
- 				function = "qup0_se0";
--- 
-2.34.1
+This FIXME means that, when adding ops->hw_queue_init, add this:
 
+-	struct iommufd_access *access;
++	struct iommufd_access *access = NULL;
+...
+-	access = iommufd_hw_queue_alloc_phys(cmd, viommu, &base_pa);
++	if (ops->hw_queue_init_phys) {
++		access = iommufd_hw_queue_alloc_phys(cmd, viommu, &base_pa);
+
+Also, the other FIXME guideline states that these two ops should be
+mutually exclusive. So, add this too:
++	if (WARN_ON_ONCE(ops->hw_queue_init &&
++			 ops->hw_queue_init_phys)) {
++		rc = -EOPNOTSUPP;
+
+Thanks
+Nicolin
