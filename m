@@ -1,82 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88FF01F55FA
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C95C2C1A2;
+	Mon, 16 Jun 2025 08:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750061843; cv=none; b=BpoNy347W9Ewn9LMFI2DW02pv8lBLnqoWHxfUrJx/vi8YjOl4abO5pE8PlWuUuuclm5qBLhdB9JaVxjZx95zMlWD0174TjpsJWPdEGV/PJDNNf3hj2LXNDFywtftsBfTUF/D9A4GR8XAxIoUKv3TyyhOtNlWSn3jBgAz+9X8NXY=
+	t=1750062035; cv=none; b=ZsX9wY9d09xqw3VHb6DELGab0CgUEe5NcAxxo2QAeKrwMcbuwaeSKFj0zwt4vacZzt1tqD9ZANd1diZFsj7v0hdJixA0UxX8z6GEwCehQIPe4WxNfmrCx4rh2zKYlUuVzu7O9TO4bajRERwZukQgaaIH1jR6wPhOfVmofiwBhCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750061843; c=relaxed/simple;
-	bh=b/i6D772U4j88mAXG9LkCWQ2SgkzM9Y41IoqieHTauo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bWrCoATb3bBZTricGFgkoN+4HiHDR1xaxuXV+c+gHkJR0mXU6Jn0kJMlAhprcgax3GfYozyI5junL271M/l0SRlDSSCuMRVtMOimpipCl/A0yHrOxhcebPDjNjoLPXeCVsQ6cRyOA27TEHc/wf5202+2L5flcZ+8n83SXjEimSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DE7414BF;
-	Mon, 16 Jun 2025 01:16:53 -0700 (PDT)
-Received: from [192.168.178.71] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDA7A3F58B;
-	Mon, 16 Jun 2025 01:17:13 -0700 (PDT)
-Message-ID: <99643c17-80ba-4910-8238-3674d583c401@arm.com>
-Date: Mon, 16 Jun 2025 10:16:46 +0200
+	s=arc-20240116; t=1750062035; c=relaxed/simple;
+	bh=MYRmGlLoIXrin3wWq4OyK6li1uInLcEiJ2ttFcjN3so=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dl0Mg/oJfFek2hBXid9hoHjocFaQAJStrXd+QzSqaxxXWae04v69VQgTSDfNvUMtZRwTsgJeps54f1O2CUGelmkMYDgCzZnDEcHJ41CBJNMMLXN3Pvb2w1DaJsRGVfLvvNNh6PHTbLMB50eTnFZes3gFW8uqn/KOeu/tiCGoAdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/qbE3Iq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/qbE3Iq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BAC9C4CEEA;
+	Mon, 16 Jun 2025 08:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750062034;
+	bh=MYRmGlLoIXrin3wWq4OyK6li1uInLcEiJ2ttFcjN3so=;
+	h=From:To:Cc:Subject:Date:From;
+	b=d/qbE3IqQ6tOPl10gfb3wrpX00JJJhAkMDf1j/TzMUFrL2qqmfc7duSM81IO1DMd+
+	 P6WuSfhmxHuVmKBLi1qWo5I+K2svA5o0r/rQirlK95/lDzkm8qHNuHhV15GnYtqhqO
+	 ephWufSuw+UUK9+fFlZfF0MVA6YNvXpcJzGs7NZq2G9TZTz1g1HkKBzTHdWDsMLUXp
+	 iEVZmxEjrzk9vlPlUkTv5ZSvvSZWpbJjIoCSLhraVhu1kwa5umO4SDcSFMzU9o9Hrr
+	 extJmQSeop838Rzxu1q6sBXaJGCeN2FWH/dYJ8y84keQIP0X+sw67jQ/u+6Ehjcn8q
+	 24ueyodq/HsKA==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Mon, 16 Jun 2025 10:20:20 +0200
+Message-ID: <20250616-vfs-fixes-c7cd6114f3de@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.984171377@infradead.org>
- <64ae41a7-2c06-4082-a4d6-0db5b635ea01@arm.com>
- <20250613095119.GH2278213@noisy.programming.kicks-ass.net>
- <20250613104644.GB2273450@noisy.programming.kicks-ass.net>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20250613104644.GB2273450@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2996; i=brauner@kernel.org; h=from:subject:message-id; bh=MYRmGlLoIXrin3wWq4OyK6li1uInLcEiJ2ttFcjN3so=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWT4Xz5p+zLxGafQnu//17gp/jJ9nSiU9YRF+9ByFYbED etKDRb+7ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhILSMjwyX52ZtmH2IpsDFN 1bg5f/vnG2cUn1osXum1s/X+qycr25kZGXo4nj6837N38d7v/CtFXnCfstu3XVc2j5vjxOXV0xc LBHEDAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 13/06/2025 12:46, Peter Zijlstra wrote:
-> On Fri, Jun 13, 2025 at 11:51:19AM +0200, Peter Zijlstra wrote:
->> On Fri, Jun 13, 2025 at 09:34:22AM +0200, Dietmar Eggemann wrote:
->>> On 20/05/2025 11:45, Peter Zijlstra wrote:
+Hey Linus,
 
-[...]
+/* Summary */
 
->>> I always get this fairly early with TTWU_QUEUE_DELAYED enabled, related
->>> to p->pi_lock not held in wakeup from interrupt.
->>>
->>> [   36.175285] WARNING: CPU: 0 PID: 162 at kernel/sched/core.c:679 __task_rq_lock+0xf8/0x128
->>
->> Thanks, let me go have a look.
-> 
-> I'm thinking this should cure things.
-> 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -677,7 +677,12 @@ struct rq *__task_rq_lock(struct task_st
->  {
->  	struct rq *rq;
->  
-> -	lockdep_assert_held(&p->pi_lock);
-> +	/*
-> +	 * TASK_WAKING is used to serialize the remote end of wakeup, rather
-> +	 * than p->pi_lock.
-> +	 */
-> +	lockdep_assert(p->__state == TASK_WAKING ||
-> +		       lockdep_is_held(&p->pi_lock) != LOCK_STATE_NOT_HELD);
->  
->  	for (;;) {
->  		rq = task_rq(p);
+This contains another round of fixes for this cycle:
 
-Yes, it does. I assume we can only end up in sched_ttwu_pending()'s 'if
-(unlikely(p_rq != rq))' when ttwu_queue_wakelist() is called from
-ttwu_runnable(), i.e. for sched_delayed tasks.
+- Fix a regression in overlayfs caused by reworking the lookup_one*()
+  set of helpers.
 
+- Make sure that the name of the dentry is printed in
+  overlayfs' mkdir() helper.
+
+- Add missing iocb values to TRACE_IOCB_STRINGS define.
+
+- Unlock the superblock during iterate_supers_type().
+  This was an accidental internal api change.
+
+- Drop a misleading assert in file_seek_cur_needs_f_lock() helper.
+
+- Never refuse to return PIDFD_GET_INGO when parent pid is zero.
+  That can trivially happen in container scenarios where the parent
+  process might be located in an ancestor pid namespace.
+
+- Don't revalidate in try_lookup_noperm() as that causes regression for
+  filesystems such as cifs.
+
+- Fix simple_xattr_list() and reset the err variable after
+  security_inode_listsecurity() got called so as not to confuse
+  userspace about the length of the xattr.
+
+/* Testing */
+
+gcc (Debian 14.2.0-19) 14.2.0
+Debian clang version 19.1.7 (3)
+
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+No known conflicts.
+
+Merge conflicts with other trees
+================================
+
+No known conflicts.
+
+The following changes since commit 5abc7438f1e9d62e91ad775cc83c9594c48d2282:
+
+  Merge tag 'nfs-for-6.16-1' of git://git.linux-nfs.org/projects/anna/linux-nfs (2025-06-03 16:13:32 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc3.fixes
+
+for you to fetch changes up to dd2d6b7f6f519d078a866a36a625b0297d81c5bc:
+
+  fs: drop assert in file_seek_cur_needs_f_lock (2025-06-16 09:59:24 +0200)
+
+Please consider pulling these changes from the signed vfs-6.16-rc3.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.16-rc3.fixes
+
+----------------------------------------------------------------
+Amir Goldstein (2):
+      ovl: fix regression caused by lookup helpers API changes
+      ovl: fix debug print in case of mkdir error
+
+Christoph Hellwig (1):
+      fs: add missing values to TRACE_IOCB_STRINGS
+
+Darrick J. Wong (1):
+      fs: unlock the superblock during iterate_supers_type
+
+Luis Henriques (1):
+      fs: drop assert in file_seek_cur_needs_f_lock
+
+Mike Yuan (1):
+      pidfs: never refuse ppid == 0 in PIDFD_GET_INFO
+
+NeilBrown (1):
+      VFS: change try_lookup_noperm() to skip revalidation
+
+Stephen Smalley (1):
+      fs/xattr.c: fix simple_xattr_list()
+
+ fs/file.c                |  8 ++++++--
+ fs/namei.c               | 17 +++++++++++++----
+ fs/overlayfs/namei.c     | 10 ++++++++--
+ fs/overlayfs/overlayfs.h |  8 +++++---
+ fs/pidfs.c               |  2 +-
+ fs/super.c               |  4 +++-
+ fs/xattr.c               |  1 +
+ include/linux/fs.h       |  4 +++-
+ 8 files changed, 40 insertions(+), 14 deletions(-)
