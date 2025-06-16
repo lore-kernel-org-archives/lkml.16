@@ -1,63 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140BE285CBF;
-	Mon, 16 Jun 2025 16:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B687214A94;
+	Mon, 16 Jun 2025 16:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090303; cv=none; b=VYqU5g/uRAB5VbQB5ODstel6y37SXbP7yxzgvZYu8MM3dI9LPiLxugANxNxyCHbzt2YBmjPy5GCp7OaJS1BcwHz1IazYfKDjPEgKUxDlO9W/Ou5V7+97Ay9knoiVjC0UNEAGhLzMcd0AbeahYna36Yju+hdo/Q6azYgVf5vkjzQ=
+	t=1750090329; cv=none; b=Q0TuEw8zX1hJQ2PYD3nRQYxVJ21UkySyuCWkzGOUQpmf8V6Tgcs6EvjLOGCiqL7VBwwgpwiY7nL6mDKDyRmV0LhQc9SqHtN63AD0Ltzy+S0drWy4JcYoxnEp8wSUHsJedjxVbAHKUDt5O6HLib/UFWGxgGOjjwBlp3pVLSpOsbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090303; c=relaxed/simple;
-	bh=VV/RJXjrr6EQgimHja20h5wop7ng5cwkbPCivBxE4BE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fI3Z4d7Hq4ZtY1CnM7PdH18n6YLnnv+twNSeKeX5w16v+JBD39uPyg9fUGVQJQAHLlwoO6MKSHpJoQr5RPgEew4VbyF+Efz9Ifi4+OG4ZYhQXdTaFNILpgF8SZ4R1aC+ym/cQRqIUjNVyfVzYWqr54ah8slVpbduM5cnWTEw+CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kojHqGTf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750090329; c=relaxed/simple;
+	bh=ZHkEjR1EUaWEl4hOQe4bNI42ap2UwML8zt3XEQ/z8gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4Jiop4oZtNyc6SDocBcGAXBQ9X7GSAbqDGf66AQTLU5gemkiXg0PdIzXQCaSQx1wk47NPBMRxSPFhDWxxeBFEookK/Y0crPGzf9Xn57IqFq7uYK1a7UlpDepnSzyMJhAmgwGTUjkOh/4BnwaAr197ohcr/DMNYRTXXX/dYKXu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtXLLVUT; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kojHqGTf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0884C4CEEA;
-	Mon, 16 Jun 2025 16:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750090302;
-	bh=VV/RJXjrr6EQgimHja20h5wop7ng5cwkbPCivBxE4BE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=kojHqGTfw6xd8/f68/sjJfwVeVPb7SACGoRcU6lz0my2rfNf+h5cUxpsJvWsCJtQ2
-	 oGRcx0bcKUvpXiRXyFlFAfUeI7fzuPCwXAO6s9oJISpW3CvqsQbjDbAyS1WDuY7uPJ
-	 yoDKNIAjw9aLSCieRXfXCzRXJumbd1lm8hsGdGMmvCoPMoyoG1FmeK6q/Cl6Yj55Gy
-	 LQOqd+ZfEwE7TSdy3OcCuG9RQaS5xM09+VtuqGJWthebiMOoEVmUzqX904sA3O58ah
-	 zxnLcq7nVlwGGlc0FXci4hYuJF3fOgOfQzsC11PdRbTkdx0phaOL8GPIJRPv43caaq
-	 /w2RN2N9rGFLg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD3C38111D8;
-	Mon, 16 Jun 2025 16:12:12 +0000 (UTC)
-Subject: Re: [GIT PULL] vfs fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250616-vfs-fixes-c7cd6114f3de@brauner>
-References: <20250616-vfs-fixes-c7cd6114f3de@brauner>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250616-vfs-fixes-c7cd6114f3de@brauner>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc3.fixes
-X-PR-Tracked-Commit-Id: dd2d6b7f6f519d078a866a36a625b0297d81c5bc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fe78e02600f83d81e55f6fc352d82c4f264a2901
-Message-Id: <175009033156.2413506.5248155856851419.pr-tracker-bot@kernel.org>
-Date: Mon, 16 Jun 2025 16:12:11 +0000
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtXLLVUT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750090328; x=1781626328;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZHkEjR1EUaWEl4hOQe4bNI42ap2UwML8zt3XEQ/z8gU=;
+  b=NtXLLVUTai6u5e6fm+OVcISC554b6r+0t7T/ZYqIrID08jYMcGkSjkI4
+   3QZTufwbPiC/Rlhazr6zZssdnQYjWlJIqxV2CSHGQvmXOjSMg9BCiRPx1
+   6lbfaoKIu+eHD8DXBxhLgGzjqJpnX8p77pjz8vDSR/hLq7VbBfdiskJ5U
+   0e1/nZh2pXIRjks6LFNPuye3qzyMlxz8CQlA+cGoZttFYqaUVoN1cFM0A
+   V6e4AnWsCpulmzjdj0/SicQ92w3yVO87aSYtmzqrGTM/QybUFvC5tdNr1
+   dWpe+fsFVh7gXjA2hii6FKLskbgOzVPlZGACCscmZptebQmjn3QdaGAAL
+   g==;
+X-CSE-ConnectionGUID: ydfzqjDqRE+ixgG9B+4hDQ==
+X-CSE-MsgGUID: 1u23oXItQWyAJb0IXyHwjw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="51467090"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="51467090"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 09:12:07 -0700
+X-CSE-ConnectionGUID: uwMKB0QzQdKaOkDKRqVdSg==
+X-CSE-MsgGUID: STzIZZlFRKWtY4AirqBzyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="185773744"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 09:12:07 -0700
+Date: Mon, 16 Jun 2025 09:12:05 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: George Gaidarov <gdgaidarov+lkml@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>, Jason Baron <jbaron@akamai.com>,
+	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	James Morse <james.morse@arm.com>, Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH 2/2] EDAC/ie31200: Document which CPUs correspond to each
+ Raptor Lake-S device ID
+Message-ID: <aFBCVSH-85fvV3Ln@agluck-desk3>
+References: <20250529162933.1228735-1-gdgaidarov+lkml@gmail.com>
+ <20250529162933.1228735-2-gdgaidarov+lkml@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529162933.1228735-2-gdgaidarov+lkml@gmail.com>
 
-The pull request you sent on Mon, 16 Jun 2025 10:20:20 +0200:
+On Thu, May 29, 2025 at 04:29:33PM +0000, George Gaidarov wrote:
+> Based on table 103 ("Host Device ID (DID0)") in [1], document which CPUs
+> correspond to each Raptor Lake-S device ID for better readability.
+> 
+> [1] https://www.intel.com/content/www/us/en/content-details/743844/13th-generation-intel-core-intel-core-14th-generation-intel-core-processor-series-1-and-series-2-and-intel-xeon-e-2400-processor-datasheet-volume-1-of-2.html
+> 
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc3.fixes
+George,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fe78e02600f83d81e55f6fc352d82c4f264a2901
+Ditto. Merged as for part 1.
 
-Thank you!
+Thanks
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+-Tony
