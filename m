@@ -1,159 +1,178 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A821E216E26;
-	Mon, 16 Jun 2025 16:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C680A286428
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090073; cv=none; b=ftSMAS46fmoUS/MMf/iU/sxS+iM0gAycWtPb1yFkaKOpg86dhS27Yu/Ml/Z7/ntERAbHQKn1LYlU78Afx71l+ulik5qnKLWDYkhrzvtOm5TuQLt0R0i4OhBRK0WQR5eD3pd4eIi1+KH3amS50ZDMxzamMmP6ZugUW3XbNSwgS90=
+	t=1750090074; cv=none; b=K8457MG4qFTbYHUiQkpENlt12qMb2KX+v+fNPyGRc27hqfs9EwNBx0IDRh6VOqr74jLUYc5rFBtbHwWSE8ZmmrSJIc8ygUnsNSaoaN3hZGKQiwpgCQchaAiadTJStIDd+8rIp2Gl6m7xho13x0sb6oZVrZGFDAQrHsnvtLKSG+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090073; c=relaxed/simple;
-	bh=em+SN0x1mC+IqmsH8A16eJyQWpa6/HJZkosxlgqRp/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j8bWpC5Tq5VYAUNhFKn7EbYEEjGH+QaZv57x9xvK7GMFla3G0jtxix6U1Y8ZD131mOWC5cvoyqJQzGfMxV6anZx0z701eAPhaYvUU0MvC3c+1iA/ReZ2rR/X5q0yhK9fArNBKTOqcVQMZL4EG+7MfTocVJDgT6ocaeWFit8zsMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=do2b2KRj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750090074; c=relaxed/simple;
+	bh=ZA6S9shc1QEX3PEyqUllB6Vi85lndLEG0kzkNo7/Ypk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cIZ2f202gf6lsiy7zi67+fhOg2x7BHYZdegv01v1tx9glE6shVLHGdFGopjKn06l0c3Po++SicNBugab1eIllf2N+P3gYlZ5AaxkJdwKmW3/GJSEouGBgO6xhWC+VpRcq7X/4WM7iF1pTt9yDPt0WBDHgz6mzectv4KgejN0Bp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a3s6TluD; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="do2b2KRj"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GE1un6015418;
-	Mon, 16 Jun 2025 16:07:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=972LgufYEMp1H43lu
-	pR25PdynFvVC6p4emQMxZaEsyg=; b=do2b2KRjGv/Slm6ARz4Xb5dNsrHQFZ6sn
-	dAtKcFneef+GVVO4PZVzGhq1UWr6e5N8beuBygUqAfODLDWB0lppOfiiORYksEhu
-	lBgwnfb0RXARnhAqFvd9EhJgNFGm2POZq27atDHCU8nbkHVKQulsn+NuPQegCzgK
-	VvMlmq9z5G614yjJLInVxtc5kBPhl2uBk1SJ6N6UU/Wdq3RHwQCzCVQ1yUVDqdjg
-	L9YuPNcpA6wbyDaKYissrbNAPwEWsTvJiDe5HLPbY/k7wpwbH0mG0Sui5SU97/fV
-	MfS8ZOvHeOkkag+HbdkqtsWkySbmSvUIPgrQZHH6+NtEHAWIFcKTA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790ktb17n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:07:24 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55GG7Lis009511;
-	Mon, 16 Jun 2025 16:07:24 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790ktb17e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:07:24 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55GCjXvx000752;
-	Mon, 16 Jun 2025 16:07:22 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479mdnxw7w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:07:22 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55GG7IY627198186
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 16 Jun 2025 16:07:18 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7BE1B20043;
-	Mon, 16 Jun 2025 16:07:18 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9CED520040;
-	Mon, 16 Jun 2025 16:07:12 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com.com (unknown [9.43.33.110])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 16 Jun 2025 16:07:12 +0000 (GMT)
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
-        lorenzo.stoakes@oracle.com, shuah@kernel.org, pfalcato@suse.de,
-        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
-        npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
-        baohua@kernel.org
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, donettom@linux.ibm.com,
-        ritesh.list@gmail.com, aboorvad@linux.ibm.com
-Subject: [PATCH 6/6] selftests/mm: Mark thuge-gen as skipped if shmmax is too small or no 1G pages
-Date: Mon, 16 Jun 2025 21:36:32 +0530
-Message-ID: <20250616160632.35250-7-aboorvad@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616160632.35250-1-aboorvad@linux.ibm.com>
-References: <20250616160632.35250-1-aboorvad@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a3s6TluD"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so39892535e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750090071; x=1750694871; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=66enaQYzVszRsP2d3FubStZt1y7rSXnP5cI/cUMaHAc=;
+        b=a3s6TluDxHNO9L6Ppp/c5qLuQ4qi+zVkatDACSrjNQzGMPwNIgOmn/VZz8jg1qfjXc
+         BXFJ/8N3NKzS9QTT4nmSoT6jHT8VAyO/w0KHLiCMrtl39msoo62nrIVEmchKwR3QEjWZ
+         1IuZmKD370XRIdCKBo/ZDWMmy0perrx80w4XGqsxz9zHhe8YHzKUP/7SiX8pvaGaf/FO
+         x1n0z6eE1gbJO1eGX7b8hPD0TA5eGqHlIIq678MhQg2B8ooQP4iyRqY/wiBl0ykvTbNl
+         R+AMxoNHEjQmhKEUpIRBvx9k6hSvApOkL4mNSwA68tU6g2guvBbQUBHK4zlXYGsLQ3gD
+         xJ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750090071; x=1750694871;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=66enaQYzVszRsP2d3FubStZt1y7rSXnP5cI/cUMaHAc=;
+        b=TFgTRuApFgqINcGrC9hQiuWngPoWX/vDZtyZDE4TgXuInMPZcpykcn+BrOYkydqbMr
+         tboADYefZkfroAO04xGIktoOV4eReOoBU08EUbtH0/UHUCGDOYDeiX+PbyB+ULHURfMq
+         Kaujd+YA/3eiIuWjEd0GWvqoQ2TCHsPTYb04YZKr8ZadjaRVjYI1tSracTHxEhryM7PG
+         qUa/j1tHHWi7csLsIQZzUEV/SqJOK+hepXJitabgKq6hDKxSQXcfdpzUAkAn3G54IW3k
+         5ABLXgPGLfSQ4pMMKsstC4WwKUScmR4G/R4y8g+uPK6S7WzOw94qs6cBQYcj890ry+Pr
+         dF8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJyd65CxBn+D00INMNPmXW7r8lFMTaIO9j4FLveXq7Mmv6TO73L2kCfccGDXqtZZcadZrwP3d7DWynM8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaKbsEBJ7zSUyh2ph9KMNIiRo6YYPvuTAt2O4jdMUQONedz7FB
+	uuhh+jWr9X6bkZHk7eaYuBbHWorLgC1hUZegCfytliswb1lKTVI2WAOjn8sxp2PMEnw=
+X-Gm-Gg: ASbGncsJWbuuTODlM30JbzTPzxmVR0TwtHnJESFBzFWlYgUZFUPnltfBJvhw4CcBRJG
+	FRnQUFBWk9Ogm86IhhPewGBpzI1fho3VvdCUBABOtduxhQithpaY6cpLE3utq0YHExuAXSrrNdn
+	IZSoyJV79dMonb0kGVpN7wCvI64ZQXVPa563+MRkiTYIQ64gN9TeW9xvI4pQWF4viuwYUCuvLLN
+	yjwI6R8dclEgpZ+LUqK7UzZOsB1fXhkvzmN32jhXomM+o3+Dhq+mdUyKqK5fLY868OG4hpg+bRB
+	XYMxes9mnOw2kI7kbm04pmEMQRQSscI0YruqadQ2Vh6KCU6ncwuE2GbnesDgpDKkhLyn0k/p6wa
+	ohs3aNEh1Hcqv7Q==
+X-Google-Smtp-Source: AGHT+IFm2XOGvEu+c2Vt4oKDTOhDYuX0Zc67/qbAzwRfpRIo4JlzBUdpBKcXvIOmlDkGO4s2VlIKAQ==
+X-Received: by 2002:a05:600c:3ba2:b0:442:dc6f:7a21 with SMTP id 5b1f17b1804b1-4533ca79d19mr100567515e9.3.1750090071100;
+        Mon, 16 Jun 2025 09:07:51 -0700 (PDT)
+Received: from myrica (92.40.185.180.threembb.co.uk. [92.40.185.180])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b19b32sm11602270f8f.67.2025.06.16.09.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:07:50 -0700 (PDT)
+Date: Mon, 16 Jun 2025 17:07:52 +0100
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+To: Alyssa Ross <hi@alyssa.is>
+Cc: Demi Marie Obenour <demiobenour@gmail.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	devel@spectrum-os.org, Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	eric.auger@redhat.com
+Subject: Re: Virtio interrupt remapping
+Message-ID: <20250616160735.GA5171@myrica>
+References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
+ <20250613181345.GA1350149@myrica>
+ <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
+ <877c1ed9o7.fsf@alyssa.is>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: iSOFNF05E8fwKEhb6Rcw-TdIR6yvrmMU
-X-Proofpoint-ORIG-GUID: nTHQStWhUi2UJJGFRutxY286VuQT9UkH
-X-Authority-Analysis: v=2.4 cv=KaDSsRYD c=1 sm=1 tr=0 ts=6850413c cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=zAPJwtp4Tg_ksFu_fawA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwMiBTYWx0ZWRfX9KS4gU9f3qax fUOP5ygceKQs+cFoLkGjIGhNYPQ1AB60e+jKYcc8ZGzGtrBsFHactIsk4k1+rMOCd9RF3gGRNAg GUsy/SRxSf7ys/5cqFJPJtISxQupD6YdCWlXvqymCeamdEtm9FMmn8rdWtpThOIqGVEiUBIUn1i
- ahG98JwFm702+NND+NA7SX4Atu/nsT9rNGy9pTu+m7UVYoGmG9xwIsv25h7REfBiGmff3nR554K npoBuJLM99k/1WYE9okrY1/0PaByuSdzwKHd7Tpy+vlZEes+xkBz9s9YmDQLgaroAx9EOf3clY1 Uez8R3wwn63hILLXWCzzmr3VgtW2zKA2G0Egnr52Prpcbq4r6YS7WSnY6Osa8VlZ55A0zSeJjfT
- LhvxJVDLA5Joxe2jmBxWpGeTIFV1tmu4hsG/7je2nzfKFYcMxhkV9L2QYprP9B+dvmovYjmr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 adultscore=0 phishscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160102
+In-Reply-To: <877c1ed9o7.fsf@alyssa.is>
 
-Make thuge-gen skip instead of fail when it can't run due to system
-settings. If shmmax is too small or no 1G huge pages are available,
-the test now prints a warning and is marked as skipped.
+[+Eric]
 
-Before Patch:
--------------------
-~ running ./thuge-gen
--------------------
-~ TAP version 13
-~ Bail out! Please do echo 262144 > /proc/sys/kernel/shmmax
-~ Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
-~ [FAIL]
-not ok 28 thuge-gen ~ exit=1
+On Sat, Jun 14, 2025 at 10:11:52AM +0200, Alyssa Ross wrote:
+> Demi Marie Obenour <demiobenour@gmail.com> writes:
+> 
+> > On 6/13/25 14:13, Jean-Philippe Brucker wrote:
+> >> Hi,
+> >> 
+> >> On Fri, Jun 13, 2025 at 01:08:07PM -0400, Demi Marie Obenour wrote:
+> >>> I’m working on virtio-IOMMU interrupt remapping for Spectrum OS [1],
+> >>> and am running into a problem.  All of the current interrupt remapping
+> >>> drivers use __init code during initialization, and I’m not sure how to
+> >>> plumb the struct virtio_device * into the IOMMU initialization code.
+> >>>
+> >>> What is the proper way to do this, where “proper” means that it doesn’t
+> >>> do something disgusting like “stuff the virtio device in a global
+> >>> variable”?
+> >> 
+> >> I'm not familiar at all with interrupt remapping, but I suspect a major
+> >> hurdle will be device probing order: the PCI subsystem probes the
+> >> virtio-pci transport device relatively late during boot, and the virtio
+> >> driver probes the virtio-iommu device afterwards, at which point we can
+> >> call viommu_probe() and inspect the device features and config.  This can
+> >> be quite late in userspace if virtio and virtio-iommu get loaded as
+> >> modules (which distros tend to do).> 
+> >> The way we know to hold off initializing dependent devices before the
+> >> IOMMU is ready is by reading the firmware tables. In devicetree the
+> >> "msi-parent" and "msi-map" properties point to the interrupt remapping
+> >> device, so by reading those Linux knows to wait for the probe of the
+> >> remapping device before setting up those endpoints. The ACPI VIOT
+> >> describes this topology as well, although at the moment it does not have
+> >> separate graphs for MMU and interrupts, like devicetree does (could
+> >> probably be added to the spec if needed, but I'm guessing the topologies
+> >> may be the same for a VM).  If the interrupt infrastructure supports
+> >> probe deferral, then that's probably the way to go.
+> >
+> > I don't see any examples of probe deferral in the codebase.
 
-After Patch:
--------------------
-~ running ./thuge-gen
--------------------
-~ TAP version 13
-~ ~ WARNING: shmmax is too small to run this test.
-~ ~ Please run the following command to increase shmmax:
-~ ~ echo 262144 > /proc/sys/kernel/shmmax
-~ 1..0 ~ SKIP Test skipped due to insufficient shmmax value.
-~ [SKIP]
-ok 29 thuge-gen ~ SKIP
+I think the flow with VIOT is roughly:
 
-Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
----
- tools/testing/selftests/mm/thuge-gen.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ // Scan an endpoint
+ pci_bus_add_device()
+  device_attach()
+   driver_probe_device()
+    really_probe()
+     dev->bus->dma_configure()
+      pci_dma_configure()
+       acpi_dma_configure()
+        acpi_iommu_configure_id()
+         viot_iommu_configure()
+	  viot_dev_iommu_init()
+	   acpi_iommu_fwspec_init()
+	    iommu_fwspec_init()
+	     driver_deferred_probe_check_state()
+	     iommu ready ? 0 : -EPROBE_DEFER
 
-diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
-index 95b6f043a3cb..cc302a29d485 100644
---- a/tools/testing/selftests/mm/thuge-gen.c
-+++ b/tools/testing/selftests/mm/thuge-gen.c
-@@ -195,13 +195,16 @@ void find_pagesizes(void)
- 	}
- 	globfree(&g);
- 
--	if (thuge_read_sysfs(0, "/proc/sys/kernel/shmmax") < NUM_PAGES * largest)
--		ksft_exit_fail_msg("Please do echo %lu > /proc/sys/kernel/shmmax",
--				   largest * NUM_PAGES);
-+	if (thuge_read_sysfs(0, "/proc/sys/kernel/shmmax") < NUM_PAGES * largest) {
-+		ksft_print_msg("WARNING: shmmax is too small to run this test.\n");
-+		ksft_print_msg("Please run the following command to increase shmmax:\n");
-+		ksft_print_msg("echo %lu > /proc/sys/kernel/shmmax\n", largest * NUM_PAGES);
-+		ksft_exit_skip("Test skipped due to insufficient shmmax value.\n");
-+	}
- 
- #if defined(__x86_64__)
- 	if (largest != 1U<<30) {
--		ksft_exit_fail_msg("No GB pages available on x86-64\n"
-+		ksft_exit_skip("No GB pages available on x86-64\n"
- 				   "Please boot with hugepagesz=1G hugepages=%d\n", NUM_PAGES);
- 	}
- #endif
--- 
-2.43.5
+So if the IOMMU isn't available at this point, base/dd.c adds the device
+to the deferred probe list, to be retried later. Later:
 
+ // Scan the IOMMU
+ ...
+  virtio_dev_probe()
+   viommu_probe()
+    iommu_device_register()
+     add to iommu_device_list
+     iommu->ready = true
+
+I believe after this probe completes, base/dd.c checks if dependent
+devices can now be probed:
+
+ driver_bound()
+  driver_deferred_probe_trigger()
+
+That should all be working and you don't need to add anything. The
+question is whether the interrupt core supports starting the setup of
+interrupt remapping in viommu_probe(), or if it needs to know of the
+IOMMU's config and features earlier during boot. Even if the viommu driver
+is builtin, those info may not be available early enough since they
+require PCI and virtio probe.
+
+> > Would it instead be possible to require virtio-iommu (and thus virtio)
+> > to be built-in rather than modules?
+> 
+> It's certainly possible to have an optional feature in the kernel that
+> depends on a module being built in where it otherwise wouldn't have to be.
+
+Agree, no problem requiring this as a first step, but the IOMMU probe
+might still not be early enough. 
+
+Thanks,
+Jean
