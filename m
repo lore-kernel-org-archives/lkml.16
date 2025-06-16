@@ -1,182 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB0A2E0B7E
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD17257458;
+	Mon, 16 Jun 2025 11:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750074959; cv=none; b=ln0fuk8QQ7ngkLSGDUHsjZKX06vzj1huHhIR7AXHh0AKJA0qKqa+2/DYZLV9LzRYPGCFproNGfCYbKmukk+gVoid3HtILt92Wg/U0xDeWRdITSDvFPODkkFTIDoWKE5pLhXgCyr1RtQQ9uYDziUGnNNv1CTL5lB5MDXfik+TaPw=
+	t=1750074995; cv=none; b=jFkZiLds70M446brSYZhpxUauBqhtKyvvLiFermAPl1v14eOZ9e3BHfyKdkCAt68Rlsqrwj2e7XPEbU3Lpc7mjnzUq5OdEt8Fv+7na7L+JAjtqBZBQs7IGg7LNUvRFJBkbh6HfZ/RUKQhbwmxDDL9zl0plFWU8s8kPOVLQuFfLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750074959; c=relaxed/simple;
-	bh=BIFd+6oh6dlqpYkuI/bWibgQdDxXaDLAnSklZ6vF2yA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uJQlGd+bB1Xmz3C/X13KTJGXethlErg9oXXkrsAg+xUU7VGEI0eVbHvf/QeaCdSMbuZ60m1me5aWMX3rrtyumtJrCxifniMMD1FW6bpvIkaBp9rQUcHipa7WRJ3/SYzHAkcf2nf651QW3EbjHJvvzvQbB8yGs+PzsjdsLsnic7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VtVAO2ZP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750074995; c=relaxed/simple;
+	bh=1BYl8vGZcp8qkQIS/k7/EDF7txlfV4e2fvxJT8xn5Oo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pTqff4FAutoDPbVEYRIGyotq3AXhA00ULQkTpV8nu6dGrA3ieeWD/tHCDBB6DC2l3jEC6cxb6Ik77+6jTgLxqKnRVPcjlEk01P3qaZP1wvyfI4c2GrfWNbJ6Kwv1KNPz1XvpBLBrmRSYuBtkFClsJsgANZ8VfnFHPVOmmIYEUZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BIcPgRsF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VtVAO2ZP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750074956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q/bdXjwJJqnT59AvXGlfQuOEaPnWXD3kQ9bjbSA1eBM=;
-	b=VtVAO2ZPcXVcY5M2eTZMCZJ7qBiDQI7pXSlVzfv8RmkXQCPakP8QkylDBeMdGP9Ax5VrBW
-	goC8Ygn7ddWFCmNovFl0N1+XDGjp/j5tjFQCxdDzQsmjBskT44g6DRJn9uU9TlhXIAY4wt
-	js3rXeJ/VbCrihElR9zH6b2xIlMWYDw=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-542-VpX-ai10MZOqIAQ_9SeMPQ-1; Mon, 16 Jun 2025 07:55:55 -0400
-X-MC-Unique: VpX-ai10MZOqIAQ_9SeMPQ-1
-X-Mimecast-MFC-AGG-ID: VpX-ai10MZOqIAQ_9SeMPQ_1750074954
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3138e671316so3512139a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:55:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750074954; x=1750679754;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q/bdXjwJJqnT59AvXGlfQuOEaPnWXD3kQ9bjbSA1eBM=;
-        b=HubijaS3JFXppDgbr07Na1FTltgWekdVMqZIuA/VlWkjb/PpeH6uuiVRI7yIrKtzmb
-         6Rc5cBuLBrMZiE8uOYLLNo2D5u9FunpypsP3AATejCLJoyI3SYBbEL0qPhkG86u4mwJM
-         vw1jzvs7tQXHmenwkBoY5mcubk1Kwy1og/6fGAJr90tUSuZ8q7sWRpMo/0aywxm0SXhK
-         u9q0+SErgNhOeRSvji74ElZa71HqjSZH3597WaU01EZoHwiqaS0E1vzJNz7+FMaQyI91
-         FR3s4FRxNzPeNP/eYpqk3fZO0ClZjBKo0CuPa18KctYz6s0ZDrKpuH7VV3XpEbgnbd9k
-         jzDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW35J4jThCAEjSf3O1CfTsP5Ci6j0JDE/QeHy1yBL/NOotyhT/MzIINqAMZtQuCOKv72XNwSnGoH4m2dtU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvtnNeI+xxSaFxIpwfTYMIGNUHaTqd/Bgjcm/hK7J+MeLFWhWy
-	pqeRkh+ElI8UoezJF3akVqCLAMem044nQnpQHWBQTiJIwBj3yCimyphDIDQtI2pxHxBSFX0WHiM
-	zrgojE3JvgOFoqNO1Ikn+ZJJ/aIQN2nQdVnrvG8e9TCGrSqaS+A52dnoV1bMrclKkpw==
-X-Gm-Gg: ASbGncso7NC5P32NjVgzfTlmFlBZn7jL4xRUCrm1QLnXeifog7sZW53o7JuDB1gMgfn
-	zuYMcmMxc2cGBNXKbjDh7zgcjTheJk1gnBC2qQOKCXToKPlDXBMcIyWL1tWg1/zwJ+q806W9+U7
-	/9eZ7A71Gc42zS41naksOY8IXtsCOc0MKYLv1pd9ILB+fYtR+Zmtaa0ishDOUz9UEQTZmkLX3hD
-	hYVzFo1V4aO7Xo+oKfBCX0n0hxhVHDb40Dn7PY4KI7KlLswAMwPGNMsMZ+xn6UxHrJ2UrOT++Ts
-	eKgw53NrOxEA1J0JKTCepiY0CSL2Lkk6Go0U3KF0rzC7esoYgdyKw567ZSkPEQ==
-X-Received: by 2002:a17:90b:3c02:b0:311:ab20:1591 with SMTP id 98e67ed59e1d1-313f1cd69f3mr13757033a91.15.1750074954264;
-        Mon, 16 Jun 2025 04:55:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuchxuxj8O5MpDvVakFeHHtf7J6zJLUbqb0Q+xynaID1xSy0YUrglk2QzDK6/NsQI8aZeFug==
-X-Received: by 2002:a17:90b:3c02:b0:311:ab20:1591 with SMTP id 98e67ed59e1d1-313f1cd69f3mr13757005a91.15.1750074953812;
-        Mon, 16 Jun 2025 04:55:53 -0700 (PDT)
-Received: from [192.168.68.51] (n175-34-62-5.mrk21.qld.optusnet.com.au. [175.34.62.5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c6c978sm8460898a91.49.2025.06.16.04.55.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 04:55:52 -0700 (PDT)
-Message-ID: <e75dfc47-5b74-4898-91c0-fed9880f9727@redhat.com>
-Date: Mon, 16 Jun 2025 21:55:42 +1000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BIcPgRsF"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8QtHa031850;
+	Mon, 16 Jun 2025 11:56:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZtSOvAt0q/d0enJM4qc+OSsnJ7dqqVOnt42/ihjbwqQ=; b=BIcPgRsFgG3NZJXR
+	71xfl07VSThDwEzHBM0Ku5ofB6k+nhor22vYd6fKn4fd3eV5t4FIebBydqGNDRqP
+	9CSqi8a+kE4deEqOhMVDjldBnweFG47tsTsfz8TYEb6ylqtj/WsccbBPclgiZDMe
+	jbJxsBrbqgChsd1fsg2Ft/iSwe8j2gDDBTEPllFBmyOQ6IxRyDCd/F0RO8kcR3Ad
+	LSFLRjv78xMt0zqxo+VBia5ZWkcOVBO8UKTPc0qjgsxDZmAQar7fn49DX1Lc7JAT
+	HZeX+vGCn0JJHXrfPrcRk0Lc+HaYL+5cJ5Uf4GmU3zfg0hc9oxC7L4Qx0YQbxhcz
+	6pTHdw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9varu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:56:30 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GBuTwX031350
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:56:30 GMT
+Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 04:56:27 -0700
+Message-ID: <54157ce5-8a6b-75ae-0a21-a8df59242c40@quicinc.com>
+Date: Mon, 16 Jun 2025 17:26:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 20/43] arm64: RME: Runtime faulting of memory
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
- Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-21-steven.price@arm.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] media: venus: hfi: explicitly release IRQ during teardown
 Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250611104844.245235-21-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>,
+        <quic_dikshita@quicinc.com>, <bryan.odonoghue@linaro.org>,
+        <loic.poulain@oss.qualcomm.com>, <mchehab@kernel.org>,
+        <hans.verkuil@cisco.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250612082943.2753676-1-jorge.ramirez@oss.qualcomm.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250612082943.2753676-1-jorge.ramirez@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QfcPl0fUP-qRbJVCiZHgP8HGGykswjz2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3NCBTYWx0ZWRfX5OkmvYYblrzY
+ TIz039kHECRG2xs1tarlG56pFUiYSIS9Y+3yNqYayfQr3gUPWRGEU5ad6RJJqEtkNLrS+DpWO/b
+ ML2J4cvrqBofjJD4dgifpmqNn2oXi+O/iMbwM/mrB/lXDa3WH9/6J02J2/7PzYpJWENe3MVwz0v
+ jVBkcYkb+VkpeetPVcQXuWI98tq/LnE6FhQQjHSJAq5NcxVFM2EkA0UbJMYmFajXkhwlFWqB/Tn
+ kY1ezHhTnVw8UPtCwcJEYE1mtC3e006btbglyrWGgO4qXNTX1cyrqmuXAgaLg1PmDVffRGY7Q5X
+ uBTTZUTDLIxVgTJN0WZiSO+JxmFRadATKpLocgcboZoeyOkL9xG7+26UUNwe1mvofi2SHZhDZHA
+ UU/B/w4dTBEyQAIF6MHWnPKjefc1PHXlTi+n9EKJSTBndkYTZGI0tDUFGjUfftOzC6QtS+Yy
+X-Proofpoint-ORIG-GUID: QfcPl0fUP-qRbJVCiZHgP8HGGykswjz2
+X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=6850066e cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8
+ a=EUspDBNiAAAA:8 a=U5IicJL0JrA6Xyt5t0MA:9 a=QEXdDO2ut3YA:10
+ a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=767
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160074
 
-Hi Steven,
 
-On 6/11/25 8:48 PM, Steven Price wrote:
-> At runtime if the realm guest accesses memory which hasn't yet been
-> mapped then KVM needs to either populate the region or fault the guest.
+On 6/12/2025 1:59 PM, Jorge Ramirez-Ortiz wrote:
+> Ensure the IRQ is released before dismantling the ISR handler and
+> clearing related pointers.
 > 
-> For memory in the lower (protected) region of IPA a fresh page is
-> provided to the RMM which will zero the contents. For memory in the
-> upper (shared) region of IPA, the memory from the memslot is mapped
-> into the realm VM non secure.
+> This prevents any possibility of the interrupt triggering after the
+> handler context has been invalidated.
 > 
-> Signed-off-by: Steven Price <steven.price@arm.com>
+> Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
 > ---
->   arch/arm64/include/asm/kvm_emulate.h |  10 ++
->   arch/arm64/include/asm/kvm_rme.h     |  10 ++
->   arch/arm64/kvm/mmu.c                 | 133 ++++++++++++++++++++-
->   arch/arm64/kvm/rme.c                 | 165 +++++++++++++++++++++++++++
->   4 files changed, 312 insertions(+), 6 deletions(-)
+>  drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index b5f2ea879950..d9d62d965bcf 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -1678,6 +1678,7 @@ void venus_hfi_destroy(struct venus_core *core)
+>  	venus_interface_queues_release(hdev);
+>  	mutex_destroy(&hdev->lock);
+>  	kfree(hdev);
+> +	devm_free_irq(core->dev, core->irq, core);
+Could you please check and add the handling here [1] as well ?
 
-[...]
+[1]
+https://elixir.bootlin.com/linux/v6.16-rc1/source/drivers/media/platform/qcom/venus/core.c#L427
 
-> @@ -1078,6 +1091,9 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
->   	if (kvm_is_realm(kvm) &&
->   	    (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
->   	     kvm_realm_state(kvm) != REALM_STATE_NONE)) {
-> +		struct realm *realm = &kvm->arch.realm;
-> +
-> +		kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), false);
->   		write_unlock(&kvm->mmu_lock);
->   		kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
->   
-
-I'm giving it a try before taking time to review, @may_block needs to be true.
-I don't see there is anything why not to do so :)
-
-   kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), true);
-
-Otherwise, there is RCU stall when the VM is destroyed.
-
-[12730.399825] rcu: INFO: rcu_preempt self-detected stall on CPU
-[12730.401922] rcu:     5-....: (5165 ticks this GP) idle=3544/1/0x4000000000000000 softirq=41673/46605 fqs=2625
-[12730.404598] rcu:     (t=5251 jiffies g=61757 q=36 ncpus=8)
-[12730.406771] CPU: 5 UID: 0 PID: 170 Comm: qemu-system-aar Not tainted 6.16.0-rc1-gavin-gfbc56042a9cf #36 PREEMPT
-[12730.407918] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
-[12730.408796] pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[12730.409515] pc : realm_unmap_private_range+0x1b4/0x310
-[12730.410825] lr : realm_unmap_private_range+0x98/0x310
-[12730.411377] sp : ffff8000808f3920
-[12730.411777] x29: ffff8000808f3920 x28: 0000000104d29000 x27: 000000004229b000
-[12730.413410] x26: 0000000000000000 x25: ffffb8c82d23f000 x24: 00007fffffffffff
-[12730.414292] x23: 000000004229c000 x22: 0001000000000000 x21: ffff80008019deb8
-[12730.415229] x20: 0000000101b3f000 x19: 000000004229b000 x18: ffff8000808f3bd0
-[12730.416119] x17: 0000000000000001 x16: ffffffffffffffff x15: 0000ffff91cc5000
-[12730.417004] x14: ffffb8c82cfccb48 x13: 0000ffff4b1fffff x12: 0000000000000000
-[12730.417876] x11: 0000000038e38e39 x10: 0000000000000004 x9 : ffffb8c82c39a030
-[12730.418863] x8 : ffff80008019deb8 x7 : 0000010000000000 x6 : 0000000000000000
-[12730.419738] x5 : 0000000038e38e39 x4 : ffff0000c0d80000 x3 : 0000000000000000
-[12730.420609] x2 : 000000004229c000 x1 : 0000000104d2a000 x0 : 0000000000000000
-[12730.421602] Call trace:
-[12730.422209]  realm_unmap_private_range+0x1b4/0x310 (P)
-[12730.423096]  kvm_realm_unmap_range+0xbc/0xe0
-[12730.423657]  __unmap_stage2_range+0x74/0xa8
-[12730.424198]  kvm_free_stage2_pgd+0xc8/0x120
-[12730.424746]  kvm_uninit_stage2_mmu+0x24/0x48
-[12730.425284]  kvm_arch_flush_shadow_all+0x74/0x98
-[12730.425849]  kvm_mmu_notifier_release+0x38/0xa0
-[12730.426409]  __mmu_notifier_release+0x80/0x1f0
-[12730.427031]  exit_mmap+0x3d8/0x438
-[12730.427526]  __mmput+0x38/0x160
-[12730.428000]  mmput+0x58/0x78
-[12730.428463]  do_exit+0x210/0x9d8
-[12730.428945]  do_group_exit+0x3c/0xa0
-[12730.429458]  get_signal+0x8d4/0x9c0
-[12730.429954]  do_signal+0x98/0x400
-[12730.430455]  do_notify_resume+0xec/0x1a0
-[12730.431030]  el0_svc+0xe8/0x130
-[12730.431536]  el0t_64_sync_handler+0x10c/0x138
-[12730.432085]  el0t_64_sync+0x1ac/0x1b0
-
-Thanks,
-Gavin
-
+Regards,
+Vikash
+>  	core->ops = NULL;
+>  }
+>  
