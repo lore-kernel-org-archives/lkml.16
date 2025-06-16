@@ -1,159 +1,239 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F8F273D91
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E75E2D0283;
+	Mon, 16 Jun 2025 11:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750072876; cv=none; b=XXoM0ONTScDuQHHvL8jt0ajsMWSgN7ENS6cH7p2i4Eanc8f3aET5Z7/lOP6pJ8gsOazRLQYDewTpgHe3Tr0H6ODP1v9PhmU2smnWmJBBfGfGoFqxxmfeA5WGmlNknS06MjRR3gJ1efec0Lc5bdeWwzovhGyNzUvLq3681tpq46A=
+	t=1750072883; cv=none; b=s3Py/bkJLQZBw3z20+wQuZeGglzfxNwppkcxICWD8IcV1cEmKOX3rnp9cPEeOwA1FforPE/JC5+uBn1ZpSlEpOHWosfp4v/YFk3HMLT3HHsm5bJJiKoOf9rncFD4S4Qktwu5GysHx3iNVgtSbxQ6Hihii8o6rRv7FiDTt75j8aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750072876; c=relaxed/simple;
-	bh=qgYShiCICLGlyXPXkMFaa9MBddkYx+zhgvPZouJhpug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DhffgOehiPPbBwYok1YvAi4A2l9p7s+TwzQNtBJIgvTT/JXzAPCD4IArPRtmPu0YTi9K96sVT+hIqXABNmAmf2UZMXFWgRV0H6mY9nhxJKBaInM0YdEM+JEUKM8NqKW1EOi+KwqYHC8yfej2vz7NbEAlF/up3aj2+bqydFB87Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hExHp9/8; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750072883; c=relaxed/simple;
+	bh=1dSXR/UyoNR9Nrxz61oGFFAxMFZZaFzRmt7p4pCLMG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nx93p3RjZ1rE3sQVEsUYXHaxD15UlXCXggk1Qhob5t7CFG4fmHdXuBglRj+0OeZbc7weNDFiUK9SZxLxYlHBucEYxb59LaSp3XThQMDcehuefJ9Ej2gyROimlgjwQ275TV4cyPI4Geiw59Mz3mycOXYtbhfIdPWbEzBSKEqPlX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/t603yT; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hExHp9/8"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4531e146a24so26928395e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:21:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/t603yT"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so25145985e9.1;
+        Mon, 16 Jun 2025 04:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750072873; x=1750677673; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M4euJ7IL/UtIuqUuTsf6umM3mNJN/f7JKsQPFpax4oo=;
-        b=hExHp9/875LeWT6ykEHjyAWx7hjRXx4I/jz3F3zzbyLI4pJjJtjB1N9IS1Os4Bko7t
-         ta6y8ucgNyiEv56NAVFlcZWCRO5z4/9NjamcaBdHxqQmnoqUzO9Ag+kAEkog+h+iDgfc
-         liMGVLt5zvXH6/GsfvY/T9xcBzNS3yqiRrqMyMGUGEQolnADI216pPY+dVx0WOjWbl/5
-         beUc809JabUOTS/Pyaqk44pY14CK0FEjzOEYB0XKI1g0mGaWfftRW6yRLaft0FVx4mvQ
-         WfVd8VrldHMB88S5Wdfq+at4z7osBsvH39CANk8uWrbnwrkL9RDEFdzZHvo2RxeW5VJn
-         BnCA==
+        d=gmail.com; s=20230601; t=1750072880; x=1750677680; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HH/XG6DTsco8TheFYVMqA8WWvPjyKgOz5uHAKCaL2jQ=;
+        b=T/t603yTQrxVwdlZimtwaoUvC1kBKqNNvqaX7fTwA00Rtxnxj2OcjDWJJ/3Ob2/g5V
+         ehawDlg9rZB7WYPnQsDvCim1AvPEj8EJSy6v8RQCmJsXlglpfZFhsFcoYCQWyfIKeZml
+         +kVV7LKux+MT3ZXHiQZwwh3AEYJRjviTuLVyQqiE5hAsEBGPrxBpK5V4WMR0/9LcmmBP
+         6L9h05Vf+wrCg/59TSre+6SJVAl5/2sYQcsX/Ks+YxDJIFXk6sVRsvwl3Tc+gvTKFgC2
+         xMsk8MW3kL4NOaNetXtfxi8SluwBk+8BIox1qpzOIfGRzJT3dQ8qXttAYYmKEZ0B/SeS
+         NebQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750072873; x=1750677673;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M4euJ7IL/UtIuqUuTsf6umM3mNJN/f7JKsQPFpax4oo=;
-        b=ID7wLdnjPyoyRCrXlEPw7RieArd59OW9ZIMgSy27nBOfKzBjoGOP+APvXEsEAafuLK
-         ifgtDO/IfD2zP9y8d5dwrs2V8YJmcq5Q4PHTNHss4QV63VzQTSlDonmfEm/uv5xIwURq
-         tAdvmgE6kOpWUApK6RpBzrR86BT00rwXXajpYjGJL58ViGE7v2RnIjCDTUYQDHyEswQG
-         BPwjiczjurArO6Yk+E/KHN9LvW4Ac5o3zNmThJkFt4hFVlkTyIz7h89hEHcVVyU6Q8ee
-         lweSjkG7BHVBVO8FQfi6PkGEsjkrSkW+ddPOwa/jo7UagqGY/SGrT6byyxmA417tlvAA
-         dewA==
-X-Forwarded-Encrypted: i=1; AJvYcCVd7iV3eYXufUq5sMOLuW0x4mHCcqJ2BNl4TVaq1rAFFXdK0eplcZ7CIi7ZeXWPutc+7c6b8dvJXbnFo/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH2zGonqY6LVQ996s8QDhssjke5ElH4+q9RjuLEzg5kBzwd+a6
-	lTK3eHolBPPAMH7sDYB+00le7AVwPscxOmmIlS7JX1QeYfyRb8qhi4ib71Z0fYRAKBk=
-X-Gm-Gg: ASbGncvqrf6qU5N0gDahJML5cwycZ9kX9/WzQXccll90jdUk4sMgrhf08cti9h9Shue
-	wApleda4C3sGZhfuvBfb2SpX9mCkogsdK6YkOomb/59x//QE0dl9dQzWiSI3jR2aK7tPdAZUtOJ
-	NL9G2Z5Gg/BbayLlDIyPQMeQCakisN59f/2Bf6ibl4HhSALNuVugOiKgkCW4r+WizIfdWzJ3Khi
-	CwQ+O9VxvbMeBfSmD5U1Hi3uuu3gniqhJx4QVOdUt8RcmoMlXso/J3uJHLGBa5YW0RDjRm7SYhi
-	btg8oTvY5j+n2vtvSDuzZykZszY8FK/hzLXTctDz3hoTMjGCuqHwtoJAN+BsLTGMs40=
-X-Google-Smtp-Source: AGHT+IFm7lURtK3nakQke2Eo0A04R9F5ogbYQ5oAvV51pSxGomor7dB0raebWDwLvF03RocQuXgBNA==
-X-Received: by 2002:a05:600c:a218:b0:451:edc8:7806 with SMTP id 5b1f17b1804b1-4533e57d98dmr39178155e9.32.1750072872918;
-        Mon, 16 Jun 2025 04:21:12 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e254396sm145401575e9.28.2025.06.16.04.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 04:21:12 -0700 (PDT)
-Message-ID: <7cf90a89-b381-48ae-98bc-1316022e03b6@linaro.org>
-Date: Mon, 16 Jun 2025 12:21:11 +0100
+        d=1e100.net; s=20230601; t=1750072880; x=1750677680;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HH/XG6DTsco8TheFYVMqA8WWvPjyKgOz5uHAKCaL2jQ=;
+        b=riUlVqDstjLSuycfbl7geMS8EnilpfDO3+aYc10BAU5Tg+4fTCjsFikLy/04+dKeYy
+         jeg1qsm3tOLabYd9uobOaPNyp4c6f1ZneBlZeUU/f7S8ftNfnODlkhPGGzClBbafYAPx
+         gUX7B/Cygdwip3//aII4usgYk7f3tThrtrMbvWI20SSShTulyrsHbORV41rk6er+gr4b
+         Y3y286J+N19N7pWoDDH3c30Vs9QnQJ0lxCuHdWYeFUl9l5Ts7ToBQY5r96yNXL8j/TFI
+         N82YByoS5hxKBh2Bx5+JK++DOaSG8L5EmtbcerZ7gFQicyFmsGb4QhI+StPQydMxSHKN
+         qtXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9lcUjNB3jo+LQLoww7i5+ttnlMcJQZ6703AMsvyId1zr3AFx7qPpWsICl2FDDW6LZKfIExi+T7/AhFX9GFvlJwCw=@vger.kernel.org, AJvYcCULw6B1bJzzU7HyZcNNu6JMQgP59g4VGc97XOC8mXIrtQqmrXU7UyqHYGyh7s0iIQPMF2HXo1lWs9T6WjPM@vger.kernel.org, AJvYcCURBfisnMomi9ApvmF3JXq+Bhgs9+EKvQi+JrLwtRmt0OaFeBQuAjuxQro7NzlpWn74ey15hlTdC+4I@vger.kernel.org, AJvYcCXsZcPuTS/IyanZNaO5yKGiWjxkYUQ6++U0dT8VN8Odg8yfRKA/v47OkiMn/NL1CFELXAEGGKgADeiT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHK0fkdgpQk7Pe2e1esP1ejWf1pfMKAVGFaL3/+x9jlievvZrj
+	g7XPMqgXIFFDqyZbtYgo7iJEfsYe9D4lNbiWA2SkERK7RMmg+osbv5JRHnN1sZlHVkqsb+x4UCv
+	PptmzL4xWICULxJXkYJ4VtMkltsfJOSo=
+X-Gm-Gg: ASbGncu2+FWoBoIOlt6iz7RkOGL0wwGTyvV4WHZ+9UUBeU5OjgQgzppX5Hn26dmEPcZ
+	MOx3+YUcbkeMeTdFAZkGJLQuiPJCfeH6Ndem2DfE1EkHxZKx2kwKw1dHSeulBPZXsfZ3CUHFSqF
+	gembjk2ZQfe9xWIsXR6kEOSsr06lk/cP6OBDQxsfunzA==
+X-Google-Smtp-Source: AGHT+IFQFbpkJW8fhrHvXulTMgusuzcINLRFAAfYmf5HJpOcM0iLUansHMeU1JtnA7xzSFm6QhKrX41V1m0Oq6cxIQk=
+X-Received: by 2002:a05:600c:1c0a:b0:451:e394:8920 with SMTP id
+ 5b1f17b1804b1-4533cab8564mr76816335e9.27.1750072879570; Mon, 16 Jun 2025
+ 04:21:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
-To: hch@lst.de
-Cc: olteanv@gmail.com, broonie@kernel.org, oe-kbuild-all@lists.linux.dev,
- arnd@arndb.de, larisa.grigore@nxp.com, Frank.li@nxp.com,
- linux-spi@vger.kernel.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
-References: <202506160036.t9VDxF6p-lkp@intel.com>
- <20250616111749.316413-1-james.clark@linaro.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250616111749.316413-1-james.clark@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250530171841.423274-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530171841.423274-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TY3PR01MB11346A62FDF84C5F2C1240BBF8677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CA+V-a8sZfTgOENXfR2NnykgjGHd+2-vS9Jk-dNLWTVQyAGbQTw@mail.gmail.com> <TYCPR01MB11332F40696148C7216866D3B8670A@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB11332F40696148C7216866D3B8670A@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 16 Jun 2025 12:20:53 +0100
+X-Gm-Features: AX0GCFtgrcxJq-tg2C4PkYvICy9lU_woFiUNZXsfPzvEdHMwe4O6KkHnXumJ2Xc
+Message-ID: <CA+V-a8tKm4yjEG_ZbajXcgTdOB=GxqA=kt63svJ4ZF609tXHDA@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support for
+ RZ/V2H(P) SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	"laurent.pinchart" <laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Biju,
 
+On Mon, Jun 16, 2025 at 11:54=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.c=
+om> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: Monday, June 16, 2025 11:48 AM
+> > To: Biju Das <biju.das.jz@bp.renesas.com>
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>; Andrzej Hajda
+> > <andrzej.hajda@intel.com>; Neil Armstrong <neil.armstrong@linaro.org>;
+> > Robert Foss <rfoss@kernel.org>; laurent.pinchart
+> > <laurent.pinchart@ideasonboard.com>; Jonas Karlman <jonas@kwiboo.se>;
+> > Jernej Skrabec <jernej.skrabec@gmail.com>; Maarten Lankhorst
+> > <maarten.lankhorst@linux.intel.com>; Maxime Ripard <mripard@kernel.org>=
+;
+> > Thomas Zimmermann <tzimmermann@suse.de>; David Airlie <airlied@gmail.co=
+m>;
+> > Simona Vetter <simona@ffwll.ch>; Rob Herring <robh@kernel.org>; Krzyszt=
+of
+> > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+> > Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
+> > <sboyd@kernel.org>; Magnus Damm <magnus.damm@gmail.com>; dri-
+> > devel@lists.freedesktop.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
+> > clk@vger.kernel.org; Fabrizio Castro <fabrizio.castro.jz@renesas.com>;
+> > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support =
+for
+> > RZ/V2H(P) SoC
+> >
+> > Hi Biju,
+> >
+> > Thank you for the review.
+> >
+> > On Fri, Jun 13, 2025 at 7:17=E2=80=AFAM Biju Das <biju.das.jz@bp.renesa=
+s.com>
+> > wrote:
+> > >
+> > > Hi Prabhakar,
+> > >
+> > > > -----Original Message-----
+> > > > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > > > Sent: 30 May 2025 18:19
+> > > > Subject: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support
+> > > > for RZ/V2H(P) SoC
+> > > >
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Add DSI support for Renesas RZ/V2H(P) SoC.
+> > > >
+> > > > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Signed-off-by: Lad Prabhakar
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > ---
+> > > > v5->v6:
+> > > > - Made use of GENMASK() macro for PLLCLKSET0R_PLL_*,
+> > > >   PHYTCLKSETR_* and PHYTHSSETR_* macros.
+> > > > - Replaced 10000000UL with 10 * MEGA
+> > > > - Renamed mode_freq_hz to mode_freq_khz in rzv2h_dsi_mode_calc
+> > > > - Replaced `i -=3D 1;` with `i--;`
+> > > > - Renamed RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA to
+> > > >   RZV2H_MIPI_DPHY_FOUT_MIN_IN_MHZ and
+> > > >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA to
+> > > >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MHZ.
+> > > >
+> > > > v4->v5:
+> > > > - No changes
+> > > >
+> > > > v3->v4
+> > > > - In rzv2h_dphy_find_ulpsexit() made the array static const.
+> > > >
+> > > > v2->v3:
+> > > > - Simplifed V2H DSI timings array to save space
+> > > > - Switched to use fsleep() instead of udelay()
+> > > >
+> > > > v1->v2:
+> > > > - Dropped unused macros
+> > > > - Added missing LPCLK flag to rzv2h info
+> > > > ---
+> > > >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 345
+> > ++++++++++++++++++
+> > > >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  34 ++
+> > > >  2 files changed, 379 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > > > b/drivers/gpu/drm/renesas/rz- du/rzg2l_mipi_dsi.c index
+> > > > a31f9b6aa920..ea554ced6713 100644
+> > > > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > > > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > > > @@ -5,6 +5,7 @@
+> > > >   * Copyright (C) 2022 Renesas Electronics Corporation
+> > > >   */
+> > > >  #include <linux/clk.h>
+> > > > +#include <linux/clk/renesas-rzv2h-dsi.h>
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/io.h>
+> > > >  #include <linux/iopoll.h>
+> > <snip>
+> > > > +
+> > > > +static int rzv2h_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsign=
+ed
+> > long mode_freq,
+> > > > +                             u64 *hsfreq_millihz) {
+> > > > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi-
+> > >dsi_parameters;
+> > > > +     unsigned long status;
+> > > > +
+> > > > +     if (dsi->mode_calc.mode_freq_khz !=3D mode_freq) {
+> > > > +             status =3D rzv2h_dphy_mode_clk_check(dsi, mode_freq);
+> > > > +             if (status !=3D MODE_OK) {
+> > > > +                     dev_err(dsi->dev, "No PLL parameters found fo=
+r
+> > mode clk %lu\n",
+> > > > +                             mode_freq);
+> > > > +                     return -EINVAL;
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     clk_set_rate(dsi->vclk, dsi->mode_calc.mode_freq_hz);
+> > >
+> > > Not sure, Can we use the DSI divider required based on the data rate
+> > > (vclk, bpp and numlanes) here
+> > >
+> > > and then the set parent clk of PLLDSI as well here (dsi->vclk * the
+> > divider value) ??
+> > >
+> > > 24MHZ->PLL DSI->DSI DIVIDER->VCLOCK
+> > >
+> > > Maybe then the clock framework has all the information for setting
+> > PLL_DSI and DSI_DIVIDER clks??
+> > >
+> > Can you please elaborate here with a detailed example.
+>
+> There will be determine_clk followed by set_clock for setting new rate fo=
+r PLL DSI(dsi->vclk * the divider value)
+> For eg:  vclk_max =3D 187.5 MHz, DSI Divider required =3D 16
+> Then set PLL_DSI =3D 187.5 * 16 MHz using clk_set.
+>
+You mean to use `clk_set_rate(dsi->vclk, (clk_get_rate(dsi->vclk) *
+dsi_divider));` ?
 
-On 16/06/2025 12:17 pm, James Clark wrote:
-> The implementations are in mapping.c which requires HAS_DMA so stub them
-> out if not present. This is required for some drivers to pass randconfig
-> builds.
-> 
-
-So the commit message makes it seem like this fixes an existing issue 
-and it would need a fixes: tag. But I didn't add one because it seems 
-like it would only hit new users like in the linked patchset. It might 
-be better to add a tag but it was changed 5 years ago and nobody hit it 
-until now so I'm not sure.
-
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506160036.t9VDxF6p-lkp@intel.com/
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->   include/linux/dma-mapping.h | 28 +++++++++++++++++++++-------
->   1 file changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index 55c03e5fe8cb..766f28a0e11f 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -161,6 +161,12 @@ void *dma_vmap_noncontiguous(struct device *dev, size_t size,
->   void dma_vunmap_noncontiguous(struct device *dev, void *vaddr);
->   int dma_mmap_noncontiguous(struct device *dev, struct vm_area_struct *vma,
->   		size_t size, struct sg_table *sgt);
-> +struct page *dma_alloc_pages(struct device *dev, size_t size,
-> +		dma_addr_t *dma_handle, enum dma_data_direction dir, gfp_t gfp);
-> +void dma_free_pages(struct device *dev, size_t size, struct page *page,
-> +		dma_addr_t dma_handle, enum dma_data_direction dir);
-> +int dma_mmap_pages(struct device *dev, struct vm_area_struct *vma,
-> +		size_t size, struct page *page);
->   #else /* CONFIG_HAS_DMA */
->   static inline dma_addr_t dma_map_page_attrs(struct device *dev,
->   		struct page *page, size_t offset, size_t size,
-> @@ -291,6 +297,21 @@ static inline int dma_mmap_noncontiguous(struct device *dev,
->   {
->   	return -EINVAL;
->   }
-> +static inline struct page *dma_alloc_pages(struct device *dev, size_t size,
-> +		dma_addr_t *dma_handle, enum dma_data_direction dir, gfp_t gfp)
-> +{
-> +	return NULL;
-> +}
-> +static inline void dma_free_pages(struct device *dev, size_t size,
-> +		struct page *page, dma_addr_t dma_handle,
-> +		enum dma_data_direction dir)
-> +{
-> +}
-> +static inline int dma_mmap_pages(struct device *dev, struct vm_area_struct *vma,
-> +				 size_t size, struct page *page)
-> +{
-> +	return -EINVAL;
-> +}
->   #endif /* CONFIG_HAS_DMA */
->   
->   #ifdef CONFIG_IOMMU_DMA
-> @@ -438,13 +459,6 @@ static inline bool dma_need_unmap(struct device *dev)
->   }
->   #endif /* !CONFIG_HAS_DMA || !CONFIG_DMA_NEED_SYNC */
->   
-> -struct page *dma_alloc_pages(struct device *dev, size_t size,
-> -		dma_addr_t *dma_handle, enum dma_data_direction dir, gfp_t gfp);
-> -void dma_free_pages(struct device *dev, size_t size, struct page *page,
-> -		dma_addr_t dma_handle, enum dma_data_direction dir);
-> -int dma_mmap_pages(struct device *dev, struct vm_area_struct *vma,
-> -		size_t size, struct page *page);
-> -
->   static inline void *dma_alloc_noncoherent(struct device *dev, size_t size,
->   		dma_addr_t *dma_handle, enum dma_data_direction dir, gfp_t gfp)
->   {
-
+Cheers,
+Prabhakar
