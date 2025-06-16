@@ -1,124 +1,96 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-13.smtpout.orange.fr [193.252.22.13])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C662C189F56
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87D81FFC6D;
+	Mon, 16 Jun 2025 08:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750062977; cv=none; b=ioLmEt0AehDKQ2Txj32uELqaT0+CCCfZVjmHJe4GdOmnaQyDSTAU2uXGHOmVkFjjQhhMBuwZp084I5bTYm+zPBWSm5dQDEhrFGflXOL7sTG2H0LY01T73ddFw1TbEKABFWIa0QMHJHd2nw5i3stk0cYOhaU2NUXOcBDfGsGN8Mc=
+	t=1750062981; cv=none; b=Wd75/xLmPsMcR38yNX59C0sQUkzjSgJWYFiwbsakYQ/+w1K8zrU+TxCCZXEa/hXtSNie5UFHdXhc1OylS8Q5ch4DgoOAJ2k2XT8aGGOjbvFO1T7lW2Usytn9b10q1+672+gLh7BpABcbyBCBudIc7ky0m190ZPqXXOHHCMNgGfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750062977; c=relaxed/simple;
-	bh=KvuBapPFIUFpeO1GcEW+NVpFFKs9aE2atVl+Hcoz4dE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gkR3eqwL7rbGdrMGL+/wK4f7f4Enpn8DM1yqWEYDY30mt1LJ/3LwBjF1EtOWq00qruAXormCWRp6DYWbI3ms3Qoj3XkEYn/nDlLHxGokMr8hOZuhLU2mKr8ujeOK+qeSMaXPqT3gyH2IN7fMa0NyGd8qMnRD3zdFfJRLu2gzTzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RocffQMI; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750062981; c=relaxed/simple;
+	bh=utrvK5z++4pWgL/XQzh0Lgu2WUPVRlcJZdqAcKgzPW8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TO0hVnBhuFaTJTCNscqenPL7vOugKiDqarc0eU0vEpcOJtVaPVDWgtttXVqP70ZFxgbuzWAmqi5MiJvwxMuaDuKh6RPw4fkEnv4QScrbaKsztJ/RnaRyDzknIO6IZuuiQxEN7tUCsbHpTjTnPfcoXUJLbS5mFTjZoTBIoMaIk80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=fsYltiCq; arc=none smtp.client-ip=193.252.22.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RocffQMI"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-452f9735424so13008345e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750062974; x=1750667774; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDFMbaNBOZF6U3t9x/vAMuueUEpg2ql5GHLmS+YRkOg=;
-        b=RocffQMIEbqrJ39yIzYNKhUZbld037aim0EcwtAQ57bUx0ol8NBqmmqBnr23p7+DlJ
-         2GXNY8hVJ456qE74gwJR/kj+SYAEyRJtjyP8Yp5vjGtJDGicU+WOaYzjav1GUIrvimcR
-         TFy/voZchhQUA2q9lqOkkoxnOi7wfludBa8GXPYF7f/IzaIEH9BJ+m+L8gcdr8sR+6lL
-         /gkc+fVpQMNbdE++LiiOHPqi4bkDRQ/B5TqJjLOqRKJew7jR9wHhKJ+5WWXpPGmdJ9nE
-         tACCO3GWnqmSb825f1/U0OdyUCqm13Lo9MJlD2gKN6Jl73ngr2qhKLQgewpYGCm4EICD
-         I3BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750062974; x=1750667774;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qDFMbaNBOZF6U3t9x/vAMuueUEpg2ql5GHLmS+YRkOg=;
-        b=Qe7Xm68LmLhzKQO8IYW6MaKB/VHVkPnP8taiWY3y19m0EiUQKzajKB4nN9owe3biJC
-         sighiiEcDXdmXfGfXV7RYfG7hBdsFDPwsBLQv+vAF7d/p+U0wKWzPfthQ+UaD7MFkyOi
-         0MVOMjT+X9F341CIRnmaKEij4Rsn+eZLmeQhsViIFmNajHxMt80VuRgXgrkJNoPKURB8
-         aryfPxQD4dc1b0PK+RnlbfeyAlVQ4FAzk+qeLQie0l6Ov8BNUe+dwdE3llQ3ShWKPzUo
-         An/Ssx4R8uv711QFbgDavkH9m1NbGPqfxu2rx30D7wKHYMvSd3H/pEt41Uz+U7/mhu2R
-         P8Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIrfO88O2WZTtRHD0MxA1MODi+8SeAFkEdRux99AxAXQ+XdzfM77Ni4dFMbWW2BhtSCAaWgxSy2wdzmHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8AJwfki5Q6Cqrku5aSjsAw4p8/giT9LNsgEYV/86QWx6TYhIS
-	egEalSW7eYk9VU2Ea8JestTdLPBwzbMIUure80ddhoDS/uTH0/K62a/r
-X-Gm-Gg: ASbGncv49GuErhBx+lRMS4BH9zT9agLwCD9W6bqCr/A1BI95j4XVQy0BN/IKDwCDPfL
-	Fyx5mwaWVzNBSj2NljnAxXN5dyXPZ5TCBs3dqlzJkrEvZz+AEmdNVSn9py+ZoEYIziMEhnUBpe+
-	VCo8joT/r4NkLblRuCypyWFahIi9VGOOSBR/g9OfmOxMhP4AJweQ32AwPaZTIkpnrr/A1odQ0f1
-	La5FHS3fMEdGmNwgXFGJUz9FEDIiE75PfNFT9IvPos+03jan6FH0ySTH9ofd9fN8+MBqNtRwGW5
-	oZxVqr4VH5P4plRzHmCXE3XlRnkOpUG3G8zpf9wRP254QwJzqzrYbEIAf+pTdFZT
-X-Google-Smtp-Source: AGHT+IFpuj8zGMKC22v1x08gRfVznZE4IbwhMqise4wL5yEimrHgA4V9FRrzjmQRaKLJRisxYdE6Pg==
-X-Received: by 2002:a05:600c:3b98:b0:43c:fbba:41ba with SMTP id 5b1f17b1804b1-453418e0926mr45598435e9.28.1750062974069;
-        Mon, 16 Jun 2025 01:36:14 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08c7csm10601966f8f.50.2025.06.16.01.36.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 01:36:13 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/asm: Use RDPKRU and WRPKRU mnemonics in <asm/special_insns.h>
-Date: Mon, 16 Jun 2025 10:35:57 +0200
-Message-ID: <20250616083611.157740-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="fsYltiCq"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id R5IeuW612OV6eR5Imu85m7; Mon, 16 Jun 2025 10:34:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1750062900;
+	bh=yljn2wE0jxa3Ta1cbirF7DuNbCTWHRKQYs9jILtQOYU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=fsYltiCqE50Oa0GcKzBw679uxCrG9XJtgv0kp7F4MUXqm0R8UF0EXWim5Uuo5kiX6
+	 UEh/FQSbHha17lgba4Cv4KclKCZGH2qFoo4SPm9yUvbpLOgNvncJU4R0s+pXIMD6d6
+	 OMEqNFAIcjYwZ+AqHO9wx6hJgT4zd2iLhIlYwz0vkq6KnXk8XKDtpL1ETYHOxuhSAq
+	 Ep1FK8MqIsTTUVgVtMfXXr5gc9/mSV1ppjYn3PWQIP5CnUPVRUE25Zs400PyTjDJbo
+	 HpqFPuRnsGxRHaXIoUGQ9TUtgZmem8cEgWGB8vBI5ej+BXdQ2Jd7XBBAjyepJjLITi
+	 iBH60L1r8VjNw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 16 Jun 2025 10:35:00 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <0b74cdf8-516a-4f13-928c-4d88307bf1ed@wanadoo.fr>
+Date: Mon, 16 Jun 2025 17:34:38 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] net: can: mcp251x: propagate the return value of
+ mcp251x_spi_write()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "Chester A. Unal" <chester.a.unal@arinc9.com>,
+ Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
+References: <20250616-gpiochip-set-rv-net-v2-0-cae0b182a552@linaro.org>
+ <20250616-gpiochip-set-rv-net-v2-3-cae0b182a552@linaro.org>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <20250616-gpiochip-set-rv-net-v2-3-cae0b182a552@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Current minimum required version of binutils is 2.30,
-which supports RDPKRU and WRPKRU instruction mnemonics.
+On 16/06/2025 at 16:24, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Add an integer return value to mcp251x_write_bits() and use it to
+> propagate the one returned by mcp251x_spi_write(). Return that value on
+> error in the request() GPIO callback.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Replace the byte-wise specification of RDPKRU and
-WRPKRU with these proper mnemonics.
+Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
-No functional change intended.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/special_insns.h | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index ecda17efa042..13e272e1a53f 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -75,9 +75,7 @@ static inline u32 rdpkru(void)
- 	 * "rdpkru" instruction.  Places PKRU contents in to EAX,
- 	 * clears EDX and requires that ecx=0.
- 	 */
--	asm volatile(".byte 0x0f,0x01,0xee\n\t"
--		     : "=a" (pkru), "=d" (edx)
--		     : "c" (ecx));
-+	asm volatile("rdpkru" : "=a" (pkru), "=d" (edx) : "c" (ecx));
- 	return pkru;
- }
- 
-@@ -89,8 +87,7 @@ static inline void wrpkru(u32 pkru)
- 	 * "wrpkru" instruction.  Loads contents in EAX to PKRU,
- 	 * requires that ecx = edx = 0.
- 	 */
--	asm volatile(".byte 0x0f,0x01,0xef\n\t"
--		     : : "a" (pkru), "c"(ecx), "d"(edx));
-+	asm volatile("wrpkru" : : "a" (pkru), "c"(ecx), "d"(edx));
- }
- 
- #else
--- 
-2.49.0
+Yours sincerely,
+Vincent Mailhol
 
