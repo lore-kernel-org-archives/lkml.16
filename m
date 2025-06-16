@@ -1,50 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2D42EB5A9;
-	Mon, 16 Jun 2025 11:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB0A2E0B7E
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750074879; cv=none; b=ll/cZXV+ymQPrQPeEkfqYABGGy9QkF/BoUpqOmTJlsK0LjUf7MEGIo3+RyI51UpSJycXjRlWPjyghJzIUQ+6zekjPwJOxQrHoEKh2w4COEOzmYejfPk19G4f6BEfgALnDEUrDllbPijtFAW9RfFdlvfmy+2oXjQJmsn8y88Z7G0=
+	t=1750074959; cv=none; b=ln0fuk8QQ7ngkLSGDUHsjZKX06vzj1huHhIR7AXHh0AKJA0qKqa+2/DYZLV9LzRYPGCFproNGfCYbKmukk+gVoid3HtILt92Wg/U0xDeWRdITSDvFPODkkFTIDoWKE5pLhXgCyr1RtQQ9uYDziUGnNNv1CTL5lB5MDXfik+TaPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750074879; c=relaxed/simple;
-	bh=a4308r24XGn+BMFT+GUDp6JTrDSZTiUE/F3YsroUvUM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ou5xmJMU3kOmoLaNeBePW361mONUW4+hD4B7eRb3bDr1lMfHgwjntOxRWSNg2iQr2FuWjPW8BWCRvjgOjoKihLqtADPxKoH52Gdoyht+E7+hAnSGbEuAeiDKmx7AVtv7JKaT2JklFuFlfrBRefaDU8Y5W43O9S881YuJogI4t/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MCndAI6n; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750074959; c=relaxed/simple;
+	bh=BIFd+6oh6dlqpYkuI/bWibgQdDxXaDLAnSklZ6vF2yA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uJQlGd+bB1Xmz3C/X13KTJGXethlErg9oXXkrsAg+xUU7VGEI0eVbHvf/QeaCdSMbuZ60m1me5aWMX3rrtyumtJrCxifniMMD1FW6bpvIkaBp9rQUcHipa7WRJ3/SYzHAkcf2nf651QW3EbjHJvvzvQbB8yGs+PzsjdsLsnic7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VtVAO2ZP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MCndAI6n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750074878; x=1781610878;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=a4308r24XGn+BMFT+GUDp6JTrDSZTiUE/F3YsroUvUM=;
-  b=MCndAI6nQbgl+aW7ifyAHQxlGUoRgSluXnyeIfbW4oqWxG8C6uXOXF66
-   HT+x+k8do595YAw27leKCFR16/Dk5wCV6xijYPv1xkfvCdJr4bB/XW7vQ
-   wMW4j/yH/kFV/SMYy/uvjJmx79BOjGTfi4DWaBANQ0sL/bOt+qe1imeNz
-   LTWDmNfW74jSKykI1YSskelSVy19ofnezf6vbZfaaX0eiAt531A+GK5rr
-   H7zgSUy1kHlQ2A+86slDVzh4KO8wFKlgmn36vM0ntLW9RQSwKvWTKIrlZ
-   5La080asbJbRuGC+1mPwBwgWMvkaE4GF9jL6IA9zJHbUNUHM8DPNjaw7j
-   Q==;
-X-CSE-ConnectionGUID: X52ILO8SQVCmwwS3K6pFvw==
-X-CSE-MsgGUID: 21Prh0tTQ360tgb8mwYStw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="51323398"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="51323398"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:54:35 -0700
-X-CSE-ConnectionGUID: IYbJH8q2SSmGyMvltH3CVA==
-X-CSE-MsgGUID: VG9tbGEyRFWbq9Pf22lypw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="148824406"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.252]) ([10.124.243.252])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:54:29 -0700
-Message-ID: <78d05dff-f396-4214-a7fc-f0c674144aef@linux.intel.com>
-Date: Mon, 16 Jun 2025 19:54:26 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VtVAO2ZP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750074956;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q/bdXjwJJqnT59AvXGlfQuOEaPnWXD3kQ9bjbSA1eBM=;
+	b=VtVAO2ZPcXVcY5M2eTZMCZJ7qBiDQI7pXSlVzfv8RmkXQCPakP8QkylDBeMdGP9Ax5VrBW
+	goC8Ygn7ddWFCmNovFl0N1+XDGjp/j5tjFQCxdDzQsmjBskT44g6DRJn9uU9TlhXIAY4wt
+	js3rXeJ/VbCrihElR9zH6b2xIlMWYDw=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-VpX-ai10MZOqIAQ_9SeMPQ-1; Mon, 16 Jun 2025 07:55:55 -0400
+X-MC-Unique: VpX-ai10MZOqIAQ_9SeMPQ-1
+X-Mimecast-MFC-AGG-ID: VpX-ai10MZOqIAQ_9SeMPQ_1750074954
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3138e671316so3512139a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:55:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750074954; x=1750679754;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q/bdXjwJJqnT59AvXGlfQuOEaPnWXD3kQ9bjbSA1eBM=;
+        b=HubijaS3JFXppDgbr07Na1FTltgWekdVMqZIuA/VlWkjb/PpeH6uuiVRI7yIrKtzmb
+         6Rc5cBuLBrMZiE8uOYLLNo2D5u9FunpypsP3AATejCLJoyI3SYBbEL0qPhkG86u4mwJM
+         vw1jzvs7tQXHmenwkBoY5mcubk1Kwy1og/6fGAJr90tUSuZ8q7sWRpMo/0aywxm0SXhK
+         u9q0+SErgNhOeRSvji74ElZa71HqjSZH3597WaU01EZoHwiqaS0E1vzJNz7+FMaQyI91
+         FR3s4FRxNzPeNP/eYpqk3fZO0ClZjBKo0CuPa18KctYz6s0ZDrKpuH7VV3XpEbgnbd9k
+         jzDg==
+X-Forwarded-Encrypted: i=1; AJvYcCW35J4jThCAEjSf3O1CfTsP5Ci6j0JDE/QeHy1yBL/NOotyhT/MzIINqAMZtQuCOKv72XNwSnGoH4m2dtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvtnNeI+xxSaFxIpwfTYMIGNUHaTqd/Bgjcm/hK7J+MeLFWhWy
+	pqeRkh+ElI8UoezJF3akVqCLAMem044nQnpQHWBQTiJIwBj3yCimyphDIDQtI2pxHxBSFX0WHiM
+	zrgojE3JvgOFoqNO1Ikn+ZJJ/aIQN2nQdVnrvG8e9TCGrSqaS+A52dnoV1bMrclKkpw==
+X-Gm-Gg: ASbGncso7NC5P32NjVgzfTlmFlBZn7jL4xRUCrm1QLnXeifog7sZW53o7JuDB1gMgfn
+	zuYMcmMxc2cGBNXKbjDh7zgcjTheJk1gnBC2qQOKCXToKPlDXBMcIyWL1tWg1/zwJ+q806W9+U7
+	/9eZ7A71Gc42zS41naksOY8IXtsCOc0MKYLv1pd9ILB+fYtR+Zmtaa0ishDOUz9UEQTZmkLX3hD
+	hYVzFo1V4aO7Xo+oKfBCX0n0hxhVHDb40Dn7PY4KI7KlLswAMwPGNMsMZ+xn6UxHrJ2UrOT++Ts
+	eKgw53NrOxEA1J0JKTCepiY0CSL2Lkk6Go0U3KF0rzC7esoYgdyKw567ZSkPEQ==
+X-Received: by 2002:a17:90b:3c02:b0:311:ab20:1591 with SMTP id 98e67ed59e1d1-313f1cd69f3mr13757033a91.15.1750074954264;
+        Mon, 16 Jun 2025 04:55:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGuchxuxj8O5MpDvVakFeHHtf7J6zJLUbqb0Q+xynaID1xSy0YUrglk2QzDK6/NsQI8aZeFug==
+X-Received: by 2002:a17:90b:3c02:b0:311:ab20:1591 with SMTP id 98e67ed59e1d1-313f1cd69f3mr13757005a91.15.1750074953812;
+        Mon, 16 Jun 2025 04:55:53 -0700 (PDT)
+Received: from [192.168.68.51] (n175-34-62-5.mrk21.qld.optusnet.com.au. [175.34.62.5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c6c978sm8460898a91.49.2025.06.16.04.55.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 04:55:52 -0700 (PDT)
+Message-ID: <e75dfc47-5b74-4898-91c0-fed9880f9727@redhat.com>
+Date: Mon, 16 Jun 2025 21:55:42 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,45 +73,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, bagasdotme@gmail.com, robin.murphy@arm.com,
- joro@8bytes.org, thierry.reding@gmail.com, vdumpa@nvidia.com,
- jonathanh@nvidia.com, shuah@kernel.org, jsnitsel@redhat.com,
- nathan@kernel.org, peterz@infradead.org, yi.l.liu@intel.com,
- mshavit@google.com, praan@google.com, zhangzekun11@huawei.com,
- iommu@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-tegra@vger.kernel.org, linux-kselftest@vger.kernel.org,
- patches@lists.linux.dev, mochs@nvidia.com, alok.a.tiwari@oracle.com,
- vasant.hegde@amd.com, dwmw2@infradead.org
-Subject: Re: [PATCH v6 17/25] iommufd: Allow an input data_type via
- iommu_hw_info
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
- corbet@lwn.net, will@kernel.org
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <8e1d8432fb7e11f0ed514bc96690ece1f5e47fdd.1749884998.git.nicolinc@nvidia.com>
+Subject: Re: [PATCH v9 20/43] arm64: RME: Runtime faulting of memory
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+ Emi Kisanuki <fj0570is@fujitsu.com>
+References: <20250611104844.245235-1-steven.price@arm.com>
+ <20250611104844.245235-21-steven.price@arm.com>
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <8e1d8432fb7e11f0ed514bc96690ece1f5e47fdd.1749884998.git.nicolinc@nvidia.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250611104844.245235-21-steven.price@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/14/2025 3:14 PM, Nicolin Chen wrote:
-> The iommu_hw_info can output via the out_data_type field the vendor data
-> type from a driver, but this only allows driver to report one data type.
-> 
-> Now, with SMMUv3 having a Tegra241 CMDQV implementation, it has two sets
-> of types and data structs to report.
-> 
-> One way to support that is to use the same type field bidirectionally.
-> 
-> Reuse the same field by adding an "in_data_type", allowing user space to
-> request for a specific type and to get the corresponding data.
-> 
-> For backward compatibility, since the ioctl handler has never checked an
-> input value, add an IOMMU_HW_INFO_FLAG_INPUT_TYPE to switch between the
-> old output-only field and the new bidirectional field.
-> 
-> Reviewed-by: Kevin Tian<kevin.tian@intel.com>
-> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
+Hi Steven,
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+On 6/11/25 8:48 PM, Steven Price wrote:
+> At runtime if the realm guest accesses memory which hasn't yet been
+> mapped then KVM needs to either populate the region or fault the guest.
+> 
+> For memory in the lower (protected) region of IPA a fresh page is
+> provided to the RMM which will zero the contents. For memory in the
+> upper (shared) region of IPA, the memory from the memslot is mapped
+> into the realm VM non secure.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/kvm_emulate.h |  10 ++
+>   arch/arm64/include/asm/kvm_rme.h     |  10 ++
+>   arch/arm64/kvm/mmu.c                 | 133 ++++++++++++++++++++-
+>   arch/arm64/kvm/rme.c                 | 165 +++++++++++++++++++++++++++
+>   4 files changed, 312 insertions(+), 6 deletions(-)
+> 
+
+[...]
+
+> @@ -1078,6 +1091,9 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
+>   	if (kvm_is_realm(kvm) &&
+>   	    (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
+>   	     kvm_realm_state(kvm) != REALM_STATE_NONE)) {
+> +		struct realm *realm = &kvm->arch.realm;
+> +
+> +		kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), false);
+>   		write_unlock(&kvm->mmu_lock);
+>   		kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
+>   
+
+I'm giving it a try before taking time to review, @may_block needs to be true.
+I don't see there is anything why not to do so :)
+
+   kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), true);
+
+Otherwise, there is RCU stall when the VM is destroyed.
+
+[12730.399825] rcu: INFO: rcu_preempt self-detected stall on CPU
+[12730.401922] rcu:     5-....: (5165 ticks this GP) idle=3544/1/0x4000000000000000 softirq=41673/46605 fqs=2625
+[12730.404598] rcu:     (t=5251 jiffies g=61757 q=36 ncpus=8)
+[12730.406771] CPU: 5 UID: 0 PID: 170 Comm: qemu-system-aar Not tainted 6.16.0-rc1-gavin-gfbc56042a9cf #36 PREEMPT
+[12730.407918] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
+[12730.408796] pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[12730.409515] pc : realm_unmap_private_range+0x1b4/0x310
+[12730.410825] lr : realm_unmap_private_range+0x98/0x310
+[12730.411377] sp : ffff8000808f3920
+[12730.411777] x29: ffff8000808f3920 x28: 0000000104d29000 x27: 000000004229b000
+[12730.413410] x26: 0000000000000000 x25: ffffb8c82d23f000 x24: 00007fffffffffff
+[12730.414292] x23: 000000004229c000 x22: 0001000000000000 x21: ffff80008019deb8
+[12730.415229] x20: 0000000101b3f000 x19: 000000004229b000 x18: ffff8000808f3bd0
+[12730.416119] x17: 0000000000000001 x16: ffffffffffffffff x15: 0000ffff91cc5000
+[12730.417004] x14: ffffb8c82cfccb48 x13: 0000ffff4b1fffff x12: 0000000000000000
+[12730.417876] x11: 0000000038e38e39 x10: 0000000000000004 x9 : ffffb8c82c39a030
+[12730.418863] x8 : ffff80008019deb8 x7 : 0000010000000000 x6 : 0000000000000000
+[12730.419738] x5 : 0000000038e38e39 x4 : ffff0000c0d80000 x3 : 0000000000000000
+[12730.420609] x2 : 000000004229c000 x1 : 0000000104d2a000 x0 : 0000000000000000
+[12730.421602] Call trace:
+[12730.422209]  realm_unmap_private_range+0x1b4/0x310 (P)
+[12730.423096]  kvm_realm_unmap_range+0xbc/0xe0
+[12730.423657]  __unmap_stage2_range+0x74/0xa8
+[12730.424198]  kvm_free_stage2_pgd+0xc8/0x120
+[12730.424746]  kvm_uninit_stage2_mmu+0x24/0x48
+[12730.425284]  kvm_arch_flush_shadow_all+0x74/0x98
+[12730.425849]  kvm_mmu_notifier_release+0x38/0xa0
+[12730.426409]  __mmu_notifier_release+0x80/0x1f0
+[12730.427031]  exit_mmap+0x3d8/0x438
+[12730.427526]  __mmput+0x38/0x160
+[12730.428000]  mmput+0x58/0x78
+[12730.428463]  do_exit+0x210/0x9d8
+[12730.428945]  do_group_exit+0x3c/0xa0
+[12730.429458]  get_signal+0x8d4/0x9c0
+[12730.429954]  do_signal+0x98/0x400
+[12730.430455]  do_notify_resume+0xec/0x1a0
+[12730.431030]  el0_svc+0xe8/0x130
+[12730.431536]  el0t_64_sync_handler+0x10c/0x138
+[12730.432085]  el0t_64_sync+0x1ac/0x1b0
+
+Thanks,
+Gavin
+
