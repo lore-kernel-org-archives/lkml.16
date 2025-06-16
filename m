@@ -1,91 +1,114 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m15595.qiye.163.com (mail-m15595.qiye.163.com [101.71.155.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AD8208994;
-	Mon, 16 Jun 2025 14:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313D3216E24;
+	Mon, 16 Jun 2025 14:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084790; cv=none; b=MuKmE14jqzVCKDI1Xlqg0Cbx0J3EtesdqYSv9BV9yB452cFXXVV30LxwxYMiW4ScvVEmPj5g+d3Yu8oXgPXCKLNYtW20/qScgQCc9eijt94i1qt6X7AQblRsReSkOm4/RV/ZFdBIWKUBE+mHY84BmhdoePrfhJgsorAM4gn9mgc=
+	t=1750084795; cv=none; b=ZFCYsYBj2dptyKEQ6goOKc72R9t8p/kRy1tIPfb595zVJD57+kud0HYusEbuuOoiy091OC4aUri+DdGJdU/AdC2+CJbXMhGjqPqWYYPcgGciiL9lUd66Y8OFhxwKYffl1xnqpRHhddH7G+dT0IRW6aIw2X3FxnHR/fYHhwZgf0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084790; c=relaxed/simple;
-	bh=KOPENwIVb19LoAtVyZS+Al0TEn5BM5TRgXuv9tmcfaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bsgabPzIibCCpspdoG+COg90nVYbCXdezRDRJyrHgs4DAPkhkWvXHdCC96Kfk/eG+HeRPQQYlHjmBTC2J4p8dT4+MuUJeK/9sX+Kn3CL69B7TgyEkdSb2pr9/k+yn7c1DH8L9Eadq3Nv5vR+2yZwn2+1L/0MbWqxE2lnNDyd5oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GT44MBDU; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750084795; c=relaxed/simple;
+	bh=Hq8BGB78MSB1bwABjFq8eVa/UYbHdlW3XX5nempYpkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SIaphicLERoEyK1ygQ+XwnGjkRWvay2cL989EDsFyCj8YOhUv2aMcaSMCBXdoMsVTnzCh/h5phD1LSGL9eWr4bkP+c+vSUNmS86Uir7C9fKy6tT67O/j6/1AQOMehucyV+zwMwWPG9DU8HH6MdkVKWqLV4rlsz0EB4JzmcFFbWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com; spf=pass smtp.mailfrom=hillstonenet.com; dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b=Cswv30FH; arc=none smtp.client-ip=101.71.155.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hillstonenet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GT44MBDU"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso5426410a12.2;
-        Mon, 16 Jun 2025 07:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750084789; x=1750689589; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sPbroSu8CG5R70vyLYRD7e9AmIXXtiRxa68yYHMHnnY=;
-        b=GT44MBDU68gDVp2NORrXwP79GbgrQzE4diGFEAhWktAdSkVGenS++wtgBXXcMsS16A
-         qRhDDU40ykc+yC3d9/RQpFtq3rrjXEqi7NrbUUBYIr+KcEg4hEbY1cX61eYospCfKQZW
-         IrY8zfH03pP8wTyhGH4Mpra2Y/QCTd+szmIZWGH5zsWaKldC981MT5ewd2qCmFKCHVVI
-         4ged9iL+LeLrTmXAFWpSA1zLyLriuna5iHBOx/UbvourZpxIVB9U4A5jCn4VAZlBEh7Z
-         NsNcY4Kjuqly64NhglymeYmUJrgjbVgr21M9o0n9vSuTtsS2OLLJm0vycfFA/4ztFZB3
-         520Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750084789; x=1750689589;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sPbroSu8CG5R70vyLYRD7e9AmIXXtiRxa68yYHMHnnY=;
-        b=s2HktxEZUZA/pkp/mZUnnBiPjlwhg0+8UmwesaE2qpUrjHQBpcRi0Bo8dnbbrZPhtG
-         rHLPHbIuT+Slw5clozVr0xeaOgrjSIPTGnWLyys2b/lJHaCQtH1f7vEcDi2aopMANhoY
-         LinfNCfuyLL25EMaqXupOipXFLc+siejvwiACAlNpyLg/cPEC+zhddbqOBJ6uI7QJuv4
-         2GnFS+L3SOMwHK3NGPYnPHtPaAuWszMIlRmHs1nZ/R0zJxbH8StQOosK9Kb0swZHcC7V
-         f3KbDEyF+BKYZqQ7WOPOAynl0rGbdHS5R17uA37XfT5MVXuTCXYzEQg3z76uMIg5jasA
-         0ROA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/hV+8H9z1qiyXTgS9VeWeyO12GLjM+dVK1socg0c1eZFXtLA4QKxubiyhsx/E+TcsS7jJLNGkO+JmUoI=@vger.kernel.org, AJvYcCWEWCW64Q8q/KNhAOXbBUCxQWIcISRDi7aaWSBADMQWGt8BanvC4bubxOk5AbjtxyDgFnj7XG0n/EvjOlBalg7h@vger.kernel.org
-X-Gm-Message-State: AOJu0YyruCJuXKTpiRsEN3PFz6Gzc0npE04gVivC9oKVx1U53+SeMIgY
-	Te3qRJ16KbSLePPwH6T8a+yWzEvl/oQgClpzXDYyxbkK0yWFTAuFhuI=
-X-Gm-Gg: ASbGnculH4MBx0pMFbEs/+p9CN1Q+3FhdPuJkbQGWSlHv2jgC7Hdhqgmx7+OC4P9jyC
-	cAAunOSCbAV1jgC7SssRCTRBPIz/MFyZ+jlN8hQn8XHhLcor2iHMccC/Dz9x7C6a+dGxKUEbtFu
-	EAKRfTfMDy+GDnXKS0oS4lGbgyBAFr+mvsS3h9d1SCL7tial72RAETujE7NSTUr5Q7OJjznHoLT
-	3gT5w+zhLu2yHJafoGhnNh2Z7hBdNXkarF4xX3TfPZ1G67JX7LO0J7EDVruUEs1Yybcn5Gckk3/
-	LD0+99sBBHXvIHL5CBydGQ38WR5mdpfdPbJw+olpC3gaI8vGDqREHJPrcmtcInBK/ts4GxuWhSr
-	/Rznd/XR+euOju5tvUrlqzNGw7u+mA31oVg==
-X-Google-Smtp-Source: AGHT+IHh5T9eh3/X1yuF67gc+S2u45L50Mi5AWrm3N5u7RWhqvRjC/ODmjTOs11AsWmQFqzbiOWd5Q==
-X-Received: by 2002:a05:6a21:4d8c:b0:1f5:72eb:8b62 with SMTP id adf61e73a8af0-21fbd55112fmr13978289637.20.1750084788606;
-        Mon, 16 Jun 2025 07:39:48 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2fe168045fsm5921442a12.35.2025.06.16.07.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 07:39:48 -0700 (PDT)
-Date: Mon, 16 Jun 2025 07:39:47 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b="Cswv30FH"
+Received: from ubuntu.. (unknown [120.244.177.73])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 18c377ba7;
+	Mon, 16 Jun 2025 12:29:46 +0800 (GMT+08:00)
+From: Haixia Qu <hxqu@hillstonenet.com>
+To: Jon Maloy <jmaloy@redhat.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Joe Damato <jdamato@fastly.com>
-Subject: Re: [PATCH net-next v2 2/3] selftests: devmem: remove unused variable
-Message-ID: <aFAssytEf5mbgdmg@mini-arch>
-References: <20250615203511.591438-1-almasrymina@google.com>
- <20250615203511.591438-2-almasrymina@google.com>
+	Richard Alpe <richard.alpe@ericsson.com>
+Cc: Haixia Qu <hxqu@hillstonenet.com>,
+	Jon Maloy <jon.maloy@ericsson.com>,
+	netdev@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] tipc: fix panic in tipc_udp_nl_dump_remoteip() using bearer as udp without check
+Date: Mon, 16 Jun 2025 04:28:33 +0000
+Message-ID: <20250616042901.12978-1-hxqu@hillstonenet.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250615203511.591438-2-almasrymina@google.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSRpIVhpOSEhKSE5KSUofSFYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUtVSU9PVUpMTFVMSFlXWRYaDxIVHRRZQVlPS0hVSktJT09PSFVKS0
+	tVSkJLS1kG
+X-HM-Tid: 0a97770021d909dakunm7ad0add73107996
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6My46Azo6NjE*F00RPSExOTEQ
+	CDoKCilVSlVKTE5LS09DSkNDSUpKVTMWGhIXVRMDCg47ExIXFwgPFBUeFR4PVRgUFkVZV1kSC1lB
+	WUpJS1VJT09VSkxMVUxIWVdZCAFZQUlOTUI3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=Cswv30FHbvHO1h5XHE3uTrne6tgUKGJr10ksqd6V7nFoqU+3UP4Y2Hn6Oo0/ugC9CdZ1OJG767ps0OqXwErFWPkIQU18qY1tV4rTUv+kPjnaUVQij2623HLPBfZa6w2wt626RjA5JpYo7O7BIzlnQaN5u6FTdPhuz3hM8t1Hj34=; s=default; c=relaxed/relaxed; d=hillstonenet.com; v=1;
+	bh=YeiCMRU+GGDznU/jqFopoJClZm/E/OHhHUNSiUfiIjQ=;
+	h=date:mime-version:subject:message-id:from;
 
-On 06/15, Mina Almasry wrote:
-> Trivial fix to unused variable.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
+When TIPC_NL_UDP_GET_REMOTEIP cmd calls tipc_udp_nl_dump_remoteip()
+with media name set to a l2 name, kernel panics [1].
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+The reproduction steps:
+1. create a tun interface
+2. enable l2 bearer
+3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
+
+the ub was in fact a struct dev.
+
+when bid != 0 && skip_cnt != 0, bearer_list[bid] may be NULL or
+other media when other thread changes it.
+
+fix this by checking media_id.
+
+[1]
+tipc: Started in network mode
+tipc: Node identity 8af312d38a21, cluster identity 4711
+tipc: Enabled bearer <eth:syz_tun>, priority 1
+Oops: general protection fault
+KASAN: null-ptr-deref in range
+CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
+Hardware name: QEMU Ubuntu 24.04 PC
+RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
+
+Fixes: 832629ca5c313 ("tipc: add UDP remoteip dump to netlink API")
+Signed-off-by: Haixia Qu <hxqu@hillstonenet.com>
+---
+ net/tipc/udp_media.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
+index 108a4cc2e001..258d6aa4f21a 100644
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -489,7 +489,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
+ 
+ 		rtnl_lock();
+ 		b = tipc_bearer_find(net, bname);
+-		if (!b) {
++		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
+ 			rtnl_unlock();
+ 			return -EINVAL;
+ 		}
+@@ -500,7 +500,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
+ 
+ 		rtnl_lock();
+ 		b = rtnl_dereference(tn->bearer_list[bid]);
+-		if (!b) {
++		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
+ 			rtnl_unlock();
+ 			return -EINVAL;
+ 		}
+-- 
+2.43.0
+
