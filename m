@@ -1,160 +1,236 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2058.outbound.protection.outlook.com [40.107.95.58])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB68A31;
-	Mon, 16 Jun 2025 13:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081651; cv=fail; b=dpAqNIanmBVmbA9P12iYiLqskKT91CYjETmNA7Hs/eDQz1HNKJ1UW+DUsJTH2+YT+NYcHAYzFh01M86B8gNbJShpwhTrzRE/HwxFZDgvcvLmnDyABVLAtlBcihiYKhJgPmfuaPILLsqG3viXIrK/B3jNqDs5REVgdRz9L2R+FtQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081651; c=relaxed/simple;
-	bh=Bs7n09o0XCQO6pyFxw2go6DpD47i0CPQWUiyqeSj5iE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ohf7OvOIJwFR+SBoAeJlhtSXLgmClHPdEZczcd3St1eAToD5rMc4IIETFiurbULYb7tviqvkYiF4EoqoLPavCZxqvaGtvc+yKGKMJsM/xOoR9Xc1D5Ye2n4M8lqTfqTfCNrh9qBdJcn6q0HNL5SGIPUi4HpvUWl1TITjCdkhj2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=crkPv32w; arc=fail smtp.client-ip=40.107.95.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566D01B423C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750081696; cv=none; b=iEldMicDAd6NDa7C7zuep40Ui5aGfG3+DIQoITQW8UTt6RylSFtT8hwg7kAA2RyD89t37jl/TcjOpsAjU7dRmQNl7bgQYlbJohGTJCo7a2T1rECTPYOWdv7jVlNf60Fi/bHenKa4gtI5yN4h85mSu/j53oTZM4fI/YqhgMpQHpk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750081696; c=relaxed/simple;
+	bh=GzgbkQhkxGKkIQaYd3TxcpGQW2BoX1t9v+87GbmUuoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=slQx8Q0SiAaZIobnh4xZrgbPIWRIx0oynPXpgx829FQM/HB2OGtBjhfJ0J9BV5KtTi78zY2OZa9cgV+PrUXBDgoIK6FfhDJq4/otngR5WBD8VyHLvo6P8oA5I0M6YGZiZwsY/2iTZjE6aiTPr1zlfXbTKGJuWncKtfxvFT+ygOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fKxODzvU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="crkPv32w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vW76ZG88c1zgsyRvro5FPLqV3ykcMwFeOZ6qaJ18/3LtZ1md52R5yjc/im2oa0R30wR/5HrLwQRYJfg495TSYzDK2wqCb5ii/kjfjL3L7qfpHCMmiwgMnK9dr0BOfbjh9VQvckigMyisjNZfxIRO8InaYKwNDHeIBogWVhLRHgGXQEOsLPrAIpth9IRSCEjU++Ar4rdex+x1rtFk2KYuXS9CUomXqx4EGso4m2BhSz+DKDU4FO6ec2k6iCrPpsrsVSL0N/M0nlo70zU17ew2YahXdBwSQJrLUkp6P482Wttq061VyLyjquDd1Vgyjo9OjgWS9pnys3gR3qU5hSCDuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Np6wCo0jW8PQoDpiUxXB6QVgB+qxzNID39Eq5/M7EUY=;
- b=ZvyP8COMFT9gGt7o7YfK2qsOxpG7z/MdB64B6R2RUCY+sSNXeOwtnj3YIiT2olQ6jShUkcvZL4IQC/Y/NAQutFboRaTyifvXz5OkdyKBXCMay8/EmZUsGqcesqrRFasae8HKtrwpCTQLI0s69F0NG2heFY8mCed/ofHDG/HaX+6DnDWTic6Ac4t/NpZw3/R62hyQhI+rimBXZmXH6uS0RtiOGF9xSQp2OkDC3cEbXlCmzNpW8K4H43OTGE3zdCv4+p4LnKTJ3VVTbLAUeWrL+VPGAPS1IQQmzWJFM/pzzWb/9IK8UCvh+QfiUXLL4jcKemBqfBDNFGeXJNQhuOJb3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Np6wCo0jW8PQoDpiUxXB6QVgB+qxzNID39Eq5/M7EUY=;
- b=crkPv32wx7umQRqngnCiYBwEhiQFPTk3xq5gDBecIWP07jMi5YD9fE5e1S3sUv0NKAVVYzyXQDO/NdplEBy6i/eIHtOjnXSHMkS8zkYIZQhW0mXikpzTkNwDoOa3yG7HdgFA49eXfqPk3sfk8CzL1sXvzYI2Mc6D1j3i45lcdzoBp+u+xUlmPAJlDOm2voXBZRM6PRI1JR4luX4HdGXLRGgqp9WY4KfGBS7wWSAJUjMu22Or8yQBZSa8w/MqIauzlggHtIZbSgfM9gW4ShGqt7p1bhNKUx7TZPRlj9LREBiD2wnVJnUwSOeW79ghRIC5h/XQJOOM0dZiXdViCDLKfg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM4PR12MB7527.namprd12.prod.outlook.com (2603:10b6:8:111::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Mon, 16 Jun
- 2025 13:47:25 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
- 13:47:25 +0000
-Date: Mon, 16 Jun 2025 10:47:23 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v6 09/25] iommufd/viommu: Introduce IOMMUFD_OBJ_HW_QUEUE
- and its related struct
-Message-ID: <20250616134723.GD1174925@nvidia.com>
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <c9ce52fdbcc7a049b6e27e93875fba4cbc516220.1749884998.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9ce52fdbcc7a049b6e27e93875fba4cbc516220.1749884998.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: MN0P220CA0004.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:52e::15) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fKxODzvU"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TO8K028193
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:48:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=BIIY/fRKWsQgNmG2HbZPcw1m
+	+aSAr4IzJ2LTNf0iuZ4=; b=fKxODzvUyXzYkNWXxcEuVXnKnKWE8tgplu93rLqn
+	/jt8j6bVg/62lB45+YRYEslrCh0UJFCfNy/0iPTqqYVpTZt8RkbqF5hbR3hwWV4c
+	15r7sqSM6oPhcJgHnFdJCP9W1B0KtISa+9xjsSEudS/7DlI9pReP/8mvyKs5D+Qd
+	cd0WJ82x27xZ7v2OizMGkXUyf6zPuzksfCw5qDcJMLPTQwilKyYGK04rxswHGu+c
+	Ki8UNWfgVjWinIWkO93K+hf5UDFDATIFUriAqAKfoFqs3youqo6wo8CbZXk4Kxpr
+	sgxjo31Ow/tBqp3j0/hM/vMKUSX3APZRu4FZOeGN0M3wWA==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h94pjy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:48:12 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fb01bb5d9aso58495226d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:48:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750081691; x=1750686491;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BIIY/fRKWsQgNmG2HbZPcw1m+aSAr4IzJ2LTNf0iuZ4=;
+        b=uyGpU4IZ3tiZ+VRYsbgsf51Xhr4FEOWrYPQ5A1ql+RvwyEtb3gX077qW4mngNNCKb0
+         v67Ut19aMi7W1QWWZ9pa4PU/iCBiEASdGcippkft8oqx9dn0+ls+hFuv6kR8LnURTLJF
+         agkXq7bXjTlNqWQD9YCvQaWuKN5Qtm4g7RNo+pgQ09BsjSitGNl3Isp2j6CAfs0/nQDT
+         pDogxlBcZ1twgMvDussBLw3GCMkuVSMSHEoLyr9VW5+hvwxu9DXnBtjMSHM0W1tQTWdd
+         RqUl61gAnrR9iUm0YRYE/tgHlmhV3dThiV7mgw8hT0HRgUcAKaZjyS1RSvShHaV7Meiu
+         HU7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXgSQNqrQN0KgRCmKFuVF87pvCQAeJmJYW+iInQpgBnV7F4P/QzFVAN9fFtDI/5iuOHF1LOzoHLfv9h9LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqPVdZTkjgt7UDhXOHsBpuyIonHbKpz2CRFQ0jQJBmbTSSr3b9
+	SjqG+xeEvXKo3dSSQkqTmig9QdVy+wpV8OkVCxpU+w8UQCp2/YA/wlbqZ0CQrk/GM8Z/wwef1Yx
+	hNouDWhWh+GqZplFOIHD402JggPbETd06SqlBDSKtigoA1L3YS/lIU8jdbXaHK351WAc=
+X-Gm-Gg: ASbGncs/WLHuDRgzCn6NLJIT7mST9UEDoaJblliAlYHSL75tszKyBSkJIiKPr+iuJcI
+	/n/M1J4n2jIKFuUehPSeWXY/lTUI2Jv1p1t6id4OvjVIykSXQJfeOb9da2Fxl8X5dWUT+s2HI9n
+	iS81sRjUj8xMrhwjYqi5cL4C+V/YHdURESvgPE05XhsXlNgrWOrPwmM1+/IqM6e3v57Litd1E5p
+	EZK4i0GEyM3IwOzptfZ45/Jr1o/RNwAjkAPTqkrK2UMWjRIXh0woT5qNIcFApQPgrB1cgVxkITh
+	tHB97Ub0vQu5iPzo0Nj2WoJcZn0uifRIHecMMTeETtb731jKTYCgFm+7l2p56h7+udM64+MMxX7
+	b70o6pAZTIzcpl8wlhfLBymPPA1A6ZmFxtp0=
+X-Received: by 2002:a05:6214:252d:b0:6fa:ff79:2cfe with SMTP id 6a1803df08f44-6fb47729df2mr137837796d6.12.1750081691120;
+        Mon, 16 Jun 2025 06:48:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF4hLKRzzWBZMauvEObY3mOqYUuEjkBCcDNkBKkaRNoOK6orlQCG9s5Zi1kcaeGYrzQFeU1Ug==
+X-Received: by 2002:a05:6214:252d:b0:6fa:ff79:2cfe with SMTP id 6a1803df08f44-6fb47729df2mr137837276d6.12.1750081690559;
+        Mon, 16 Jun 2025 06:48:10 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1c25d5sm1537270e87.166.2025.06.16.06.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 06:48:09 -0700 (PDT)
+Date: Mon, 16 Jun 2025 16:48:06 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Yongxing Mou <quic_yongmou@quicinc.com>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: [PATCH v2 29/38] drm/msm/dp: add connector abstraction for DP MST
+Message-ID: <7r7vdbeols4suew7rlvogft4b5lmg22osipydxzkubxsychewi@lpyj6vmoapzb>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-29-a54d8902a23d@quicinc.com>
+ <fcmbo5qhiifo3erfnejgtu6es2nmeo3c5r4plbutj23gdtydng@xy3mqkhbsjia>
+ <1c09642b-7a0c-4073-97d3-f6f6cddbde83@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB7527:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99991c63-0829-4e08-5d09-08ddacdc5335
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?z0LEamv9luGEQV34viA+avzZ1QiQDljS4viF9nOo1GLsQrykFofbsfA/kCrs?=
- =?us-ascii?Q?Z1b+8t2Ibw2Gft4Kchk8qn72Ou5CttB0OE8j84yYoIlzKto3D1EAVUTN1vVN?=
- =?us-ascii?Q?/Rc3ZtB1evCg4gXgTMsP9Mavm1wq9AzueF7V6kztGtVoXfX8R6xz/1QWquTs?=
- =?us-ascii?Q?wWrGAvb1FZeF5AXTJkVpEAL9WTMrSqOu98SgMriqpwMuBPSZBa+wKlA12d3j?=
- =?us-ascii?Q?Rn7V4v3XYFRcTWp2Ds6yRl/CywjpBa7YXd2FpFhJU5mzsNQTba8EcbZoQx0+?=
- =?us-ascii?Q?RZY7L6AsIwGjeR6AY6jAUEBRzhvjELHbLZLEq8TzJT1QS6crIsmY0EMN8thl?=
- =?us-ascii?Q?NxiWpC0M61Ivxgt9TCYL9i4P60AclMtzdKCFQ8/U7cEoa8/XZXrE9RarXISZ?=
- =?us-ascii?Q?cSq6Rlu59hRUg0JN4xBOyqVDgg5BAid2CHxtcxSMCQd+/+9jKHDLD8ipCtI6?=
- =?us-ascii?Q?KIWodGgl3P0dgKFeGYqSY6h2919Pt29MhnYYUToXIHDw/O9xhD6myTwHUbui?=
- =?us-ascii?Q?Fo5WzfGLmitaFp68bHuPkd6n1dT3vO1jKAYDv5/M+TvEvd/MTcGFsO/V4Vor?=
- =?us-ascii?Q?a4S58xIDXq9Np1ha/HAC/AjnTVMddm6EP+YuNj8GMIHrlPOkC3eajbMku5EP?=
- =?us-ascii?Q?oLbiP/tDEnT0nMFp+feZfIKss6dRha3kYgpOZ6x9UCgayK/Zu6UQpTLOnUQg?=
- =?us-ascii?Q?OJYgMlmAYkEN45s58gfJJxdSlDBod7Jj+UideghsRhKCVkgU6lUxmdhEvMTN?=
- =?us-ascii?Q?GgY+z/Mi53JzNHrjrA2jj4NFcjW6fLvnzgc6Q/2m6c6eSTvPhbC0JVozbGdt?=
- =?us-ascii?Q?sJutR+VXbMBBB22d5VIgwqWa/w6a4nS3xXNQWfXIPnsidPZW7l9cRoFlXcj1?=
- =?us-ascii?Q?fRnFNFdQeNa4c+BfsAq73duxvq59PPueYjnxxvYSkQfsMq79HouDVxxAPOn2?=
- =?us-ascii?Q?Resx065IhF97Iw0c9ZCtxlKPuMPNTBYbvJl0e0g3KfY81t1sSMYhr7LEBuHh?=
- =?us-ascii?Q?N4doyNsWQ3UF7+peMyJxdAvUC/WK/KBhFF4S7+MPqUpXMvOgHKvmtH64eGbJ?=
- =?us-ascii?Q?MXjD4euhxqBJ4D1+Eq9l8cUAWA/iskTldGsZ0omeXafL32/mrLzO1gZJ4TIg?=
- =?us-ascii?Q?ndMhlX+CtK+csXFSFtTO2zIyafRy98wEPFrIYE3s9W/drCNJtIOvfeC6BN9E?=
- =?us-ascii?Q?FbMWDC7c6Q9uz/OHtpKz6f9FF1UDYrBxMvHIZOHrqGfA+1dzsa7lzTPHpg9r?=
- =?us-ascii?Q?qxrpXkJw108ukX5kUJNZwyQ9LvtDMgOtcqAbgQJHHeca/TJuYQvdfsnhgR71?=
- =?us-ascii?Q?HU1FtUnSriB6AGzkhuyJqsHyFWG/yoaLcnVuG5ptrT+gk8X/S+TgKVcVHXWH?=
- =?us-ascii?Q?5EJDXVWkkFKWaA0CL/CcfYgB7zJiMWvCFoOGKglMcYUqFSv2ujY+jRP7BMFf?=
- =?us-ascii?Q?e6AGdVjYK+c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xJV63Vlb2WVTqzgHg14DWAY7iMvdFQCRiet5DYpeRaowADK4ryVAiwXnVYVe?=
- =?us-ascii?Q?elN6FEXY9AygtTiKR4zPHqELCVVbbDXUnIFtL0zFrV6u5KuQxKsMCparQe5P?=
- =?us-ascii?Q?f4CRAkCMevKIjWIa+G8QCiWZ3OiukSpdM6HyjxcEGARUSd3cJ1gh2k4CbMV3?=
- =?us-ascii?Q?Cjl3r4Kj/00ACpbqqtXy2M5cYPYpsJ9zWw5l116t7ggXfTV2Ociuc95q194P?=
- =?us-ascii?Q?qxE9PaookAysIuTisietqXg7Bihuo9oOva2rp/sxpphHKE5ZppWwiaq/Hg2G?=
- =?us-ascii?Q?YrDDBuYQR3KfMFxqkRZDkuionOdl3PLbCGUGgy6f5g0j46C0/+UdV1fsbY13?=
- =?us-ascii?Q?NjQz48lGFpvOYnXtqLdXAmAYgf2h66cyCLDI6K8VZeY7o+hikcRq/OxpTa1r?=
- =?us-ascii?Q?vl1NVhU9fvt8+HYZZWCT9kWLxI3vmTEdIacG23oO7DwRjZu9ukhxYhBEwAMZ?=
- =?us-ascii?Q?EpbKwLoqkrjobRWq/DeA5uQhJ31kGoHpKTmDd9v8ntPvJhQS1EfBVhQzCLSr?=
- =?us-ascii?Q?42FiOOCww7Y+XHfyddl7RTLvOgC4B0bNXSOtb2UyKskI+MrjH9Bzaernm8eP?=
- =?us-ascii?Q?fJrZ/hucPR2PWQMdpwzzCro8/LducCY13bzlfrHegDBMUfVGtuNPA98j0cpX?=
- =?us-ascii?Q?gG6B69cmaTZsg3rodjVEJidZAxi7wSmJu6PJ0+vXAPXnE6FNNfT+Yfz+9NXS?=
- =?us-ascii?Q?+AEIjL3O5Mn0FEyVGlaoSD39vQEUPZBKSjUYxfGCYfD6+cRRiptyCRi4Z/rI?=
- =?us-ascii?Q?FVCwiUoaOXK9Zx57ED17R9281Gvee/HeTPj5uTjRWGwdwamvbMKOnnohzGer?=
- =?us-ascii?Q?gMw6N/DU8fHpTn+nOT4fEfMbYkSID+ucf4dfgB99AVVokjBLQziLrsjld6wF?=
- =?us-ascii?Q?eBQ2Qd5n7EY6lROe7Herz5j908HXPbJO2mteCuGzZi3uMy1y74j9GrmNCCFO?=
- =?us-ascii?Q?JrXEd69L3IqJoSxcElxaKmV4CnGmZDb2PExWjG0oLrlqPgbfS8eg5be9QmqS?=
- =?us-ascii?Q?mpTOeXuL6Dqt+nP4sgsRr0r9hjX2euFKMl9s0qybaEMe/EY93hyayLloLysF?=
- =?us-ascii?Q?5ykg19SneJqURdl5KtcKeCPGRl/8wFH0pzEvNUAVUljfOz6azHZwjceTpcn6?=
- =?us-ascii?Q?mMEyT4QOTPoKFYbcZfF0khylocxQKC6VQTpCgxyxRntJCDkGJMV3oHnX89Pi?=
- =?us-ascii?Q?T8tYs5KNYsbHo4Oz7J10PHXvph3Jh2DaLMA3Gm3Qn8/VZQZfrBjP11yD7yxu?=
- =?us-ascii?Q?2LiyMN5RDJziYqs9WbmPzUxMawwSYuraiLvbtuIaE8yaEIEtZm8n3lWCQ+wR?=
- =?us-ascii?Q?sdyaYUK7l+CQC5xlaG+nDEJ828AVhBPWbuzb29FSn2fFPlrvQVltFWWAS55v?=
- =?us-ascii?Q?v5KgD/JlTbkG6GnSiWSRAk4TEAuyGhPVAbhHOjwR9Uf4jGOTW7H93IZpwsZc?=
- =?us-ascii?Q?Ci3sxOO39LEP5SUx4j8kf2qpYZjabXhxsxNbZk10Ok/b2Ye2vUCqR3OCZ5o+?=
- =?us-ascii?Q?J/8tXDtaD73mf+EACndmstbTv3zBbIZ+UaiVli3F+aw1rZXwsLYSmc3fodey?=
- =?us-ascii?Q?fSmCDpAJLyqvoikC1kB3JwNCnClpCFKKbQ/9AcK7?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99991c63-0829-4e08-5d09-08ddacdc5335
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 13:47:24.9034
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ocp9yz+0mcR5p+uCso+MX74XTI9zRQDtHdyfRrfM475y5WD4HSCkDcN2nAYIBFDn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7527
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c09642b-7a0c-4073-97d3-f6f6cddbde83@quicinc.com>
+X-Proofpoint-ORIG-GUID: iQbWdyV5Zjg578qAcxSP2VVauGSRCeOe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA4NyBTYWx0ZWRfX7sgM3sQueNBO
+ uVLUTaySgAKZ5u3/SAFeheKC/sbWLU+kAQ0ZOJfh4VDl1BZNr8qrcPPMXgTw1ON9WnKrgi+/e+2
+ 1TUTljrdNwP03uiHEigeSMpfSuB96FhULgSwhDt6sIYwUwf2Re+arJ6tdDmaKnyPrg9rbjeDbmu
+ GQ8RGllpvDHNz4unv34RRt3/P3afJ+slB7ZOGF7zkNjTNM/bbZBWDOx1aqiU2eoAdOWjUP4xhRW
+ LzWOq99XrKpHQ4xpzEnQtmmfyy+0puA1yfVBuIEna92YXM7ef+rBExkcKsAbwR/ud/3GXfpZNEM
+ V2NFsPJvOOPlTrKhYdam8SykEL3XAeN0SbpREGTiXYWgu1oDYuPbgNuBTBj34eQZNBX3fo3BuWu
+ QHXXTEz7SgcwuxTNfPHjkrOG3x6PkMJpaeXf1N6q9LJ0F2frVtiw3zR3suWEvq7+n/YPViuC
+X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=6850209c cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=xh06mepXuQVyf8XfyCsA:9 a=CjuIK1q_8ugA:10
+ a=OIgjcC2v60KrkQgK7BGD:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: iQbWdyV5Zjg578qAcxSP2VVauGSRCeOe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_06,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160087
 
-On Sat, Jun 14, 2025 at 12:14:34AM -0700, Nicolin Chen wrote:
-> +struct iommufd_hw_queue {
-> +	struct iommufd_object obj;
-> +	struct iommufd_ctx *ictx;
+On Mon, Jun 16, 2025 at 08:43:40PM +0800, Yongxing Mou wrote:
+> 
+> 
+> On 2025/6/9 23:51, Dmitry Baryshkov wrote:
+> > On Mon, Jun 09, 2025 at 08:21:48PM +0800, Yongxing Mou wrote:
+> > > From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> > > 
+> > > Add connector abstraction for the DP MST. Each MST encoder
+> > > is connected through a DRM bridge to a MST connector and each
+> > > MST connector has a DP panel abstraction attached to it.
+> > > 
+> > > Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> > > Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+> > > ---
+> > >   drivers/gpu/drm/msm/dp/dp_mst_drm.c | 515 ++++++++++++++++++++++++++++++++++++
+> > >   drivers/gpu/drm/msm/dp/dp_mst_drm.h |   3 +
+> > >   2 files changed, 518 insertions(+)
+> > 
+> > > +
+> > > +static enum drm_mode_status msm_dp_mst_connector_mode_valid(struct drm_connector *connector,
+> > > +							    const struct drm_display_mode *mode)
+> > > +{
+> > > +	struct msm_dp_mst_connector *mst_conn;
+> > > +	struct msm_dp *dp_display;
+> > > +	struct drm_dp_mst_port *mst_port;
+> > > +	struct msm_dp_panel *dp_panel;
+> > > +	struct msm_dp_mst *mst;
+> > > +	u16 full_pbn, required_pbn;
+> > > +	int available_slots, required_slots;
+> > > +	struct msm_dp_mst_bridge_state *dp_bridge_state;
+> > > +	int i, slots_in_use = 0, active_enc_cnt = 0;
+> > > +	const u32 tot_slots = 63;
+> > > +
+> > > +	if (drm_connector_is_unregistered(connector))
+> > > +		return 0;
+> > > +
+> > > +	mst_conn = to_msm_dp_mst_connector(connector);
+> > > +	dp_display = mst_conn->msm_dp;
+> > > +	mst = dp_display->msm_dp_mst;
+> > > +	mst_port = mst_conn->mst_port;
+> > > +	dp_panel = mst_conn->dp_panel;
+> > > +
+> > > +	if (!dp_panel || !mst_port)
+> > > +		return MODE_ERROR;
+> > > +
+> > > +	for (i = 0; i < mst->max_streams; i++) {
+> > > +		dp_bridge_state = to_msm_dp_mst_bridge_state(&mst->mst_bridge[i]);
+> > > +		if (dp_bridge_state->connector &&
+> > > +		    dp_bridge_state->connector != connector) {
+> > > +			active_enc_cnt++;
+> > > +			slots_in_use += dp_bridge_state->num_slots;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (active_enc_cnt < DP_STREAM_MAX) {
+> > > +		full_pbn = mst_port->full_pbn;
+> > > +		available_slots = tot_slots - slots_in_use;
+> > > +	} else {
+> > > +		DRM_ERROR("all mst streams are active\n");
+> > > +		return MODE_BAD;
+> > > +	}
+> > > +
+> > > +	required_pbn = drm_dp_calc_pbn_mode(mode->clock, (connector->display_info.bpc * 3) << 4);
+> > > +
+> > > +	required_slots = msm_dp_mst_find_vcpi_slots(&mst->mst_mgr, required_pbn);
+> > > +
+> > > +	if (required_pbn > full_pbn || required_slots > available_slots) {
+> > > +		drm_dbg_dp(dp_display->drm_dev,
+> > > +			   "mode:%s not supported. pbn %d vs %d slots %d vs %d\n",
+> > > +			   mode->name, required_pbn, full_pbn,
+> > > +			   required_slots, available_slots);
+> > > +		return MODE_BAD;
+> > > +	}
+> > 
+> > I almost missed this. Could you please point me, do other drivers
+> > perform mode_valid() check based on the current slots available or not?
+> > Could you please point me to the relevant code in other drivers? Because
+> > it doesn't look correct to me. The mode on the screen remains valid no
+> > matter if I plug or unplug other devices. The atomic_check() should fail
+> > if we don't have enough resources (which includes slots).
+> > 
+> Currently, I haven't found other drivers checking available slots during
+> mode_valid(). Intel will check the PBN in here.
 
-Try to avoid this if we don't need it
+pointer? Also, what do AMD and nouveau do?
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> This condition can help us
+> in the following case:
+> 
+> Assume two downstream devices both support 4K 60Hz 10-bit. In MST mode, when
+> the first device occupies the 4Kx60Hzx10bit mode, the remaining bandwidth is
+> insufficient to support the same mode for the second device.
+> 
+> If we check the slots in mode_valid(), the second device will reject the
+> 4Kx60Hzx10bit mode but accept 4Kx30Hzx10bit. However, if the check is done
+> in atomic_check(), the second device will display a black screen (because
+> 4Kx60Hzx10bit is considered valid in mode_valid() but failed in
+> atomic_check()).
 
-Jason
+If we filter modes in mode_valid(), then consider the following
+scenario: we plug monitor A, plug monitor B, then unplug monitor A. At
+this point we only have monitor B, but it has all modes filtered when A
+has been plugged. So, it is impossible to select 4k@60x10, even though
+it is a perfectly valid mode now.
+
+Also, with the check happening in the atomic_check() the user will not
+get the black screen: the commit will get rejected, letting userspace to
+lower the mode for the second monitor.
+
+> > > +
+> > > +	return msm_dp_display_mode_valid(dp_display, &dp_display->connector->display_info, mode);
+> > > +}
+> > > +
+> > 
+> 
+
+-- 
+With best wishes
+Dmitry
