@@ -1,243 +1,122 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A638E288526;
-	Mon, 16 Jun 2025 16:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657D320FAA4;
+	Mon, 16 Jun 2025 16:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091959; cv=none; b=OJ1iC0FIigQJTlv1oLireyLsa9DQdgCtIrtfCi5q0KN1QWVQSz+xaeZeQ1ATOTBSMVnsLDO56rq7Mg+KAnfQtok6lQoKhauq4rBs8kz4ecA2P2bbcY6SdaAt4Pqs0nzdGtNDu8zO1mrKKvHWmIz7biTHPVQsitNUknmu6S2hXK0=
+	t=1750092007; cv=none; b=MQzeAbD526FvBJK3UmFcst91FJBOLa5fTgbg5sml1TJJYU1BHq1XYJ5ViDnCAL6ELvTE/yLpwzKQzSiv2uplcS9YD4ZkIaTFAEo3ybBqkdAKwDBLrvGM5gGWhlEKesARRQQdkVMKcR1jWgvLMLN3hi54IiC5bMZvA4S9iHIcROo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091959; c=relaxed/simple;
-	bh=5Jf/daIPASnAH44EY0GFABrkhKx0d/E/507Dge2MJxk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=thpdza2EUWc5LiKDZyS+5PSZpmupUd4K8oatGLvclcebP1nGH4QWeR/O3cfiJQZQ3BiH1vZof9T83z93AVKJXYvcbJpAC0wvLLa36ti4iJdVNk8xvT6qGGOCL2NKPJNIfoDIhZoZtoxbiVSBVWi5BM5F4D+6K2B0NHu5bfco+EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWE69wHQ; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750092007; c=relaxed/simple;
+	bh=XfFyFp4FrIaLnJZ5bwtNOzQyxcUbSQvT+2H+xGDEpn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=st982/UuPBvuFzj11zee5yh7sYBaFxmRalHDnqVL1/VlWSFZg3Ju0EvPRPOd4PdNeLEzTqoiM1yqLCbnmh5sKnfhL2JfBJyjyIgWRhLqdo2bjjiuydMPD2cCU7j3OpWL5K+BDSqCa3NGO4J/At6wBa5oVJNSD3ydbdlvOPOk1KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sbHo1M+o; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWE69wHQ"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2fc93728b2so3835447a12.0;
-        Mon, 16 Jun 2025 09:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750091957; x=1750696757; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NgaiOiiIv8UyT/OK2no2aphPsCtckyR44JUNKUXKM+Y=;
-        b=VWE69wHQIJ73nOkNOwgXMHo03EIxCJvnVYQFB4iHKKV7ApHkQagUvs7SAG4mDdqtHP
-         f/dFRWuDqunTweSb4Ve9rQxYJocC56/5uP0M3DTjECjeuMF6WTaY2YgbT6677D42/PW0
-         TY98xTIKI4Gf8F3h7KUP0dsWrhWFxqsIbNI/KndWfUgjYPXO/fPuaXUkyRxbMlXwR7s7
-         VSfVsyheeTcpzuez8tuJ3laowrYWEuZpe0+tW4Va6nLmGbk90KL8LgOiJe+s04JAGIs0
-         H5kFKSqErUFxCmkNFmJgMB3/Sxl7d5ESoUH64fQDGe5z2YcH8rzgw78Welwr+OrpXSHK
-         JKQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750091957; x=1750696757;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NgaiOiiIv8UyT/OK2no2aphPsCtckyR44JUNKUXKM+Y=;
-        b=ROuSVmIY6pvKmB+u0Tt9DNmGVofAR1E9ywr2uu1pXInYpuDQxYvh2s++SCQie+HeEV
-         2LJuxA+zUPEuE2lBAkb9eLGma05ujkmRX9RoWQoFidAfAwg8bIkO+3LX7qWnI9zZsstw
-         Tumlq52LT693H9obiKvNRxgyOnnGphL+9N/9TboLbY/ZZRf3ct9B/3uwH1ty8J1pMKQK
-         CgGWBqvW5EMX32mNmbQ0d7jBu34bjdhiTXOTJ52CBEVHnQQdRM/dZp7Lwt2Bvvzdb6p8
-         5eBn3xGPM5jEE6SxZvbxpQLk62ENksNu76s5GKv6FOgI7+eKRcOmNpxJd/iTzZLTLhiu
-         /onA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQltPo/TzDFHRQYg0R9G3uU6384UiDullP8tDcsaTwpKagxoNoowPdQJn26Q6bCjnBaif7ERE1zzrYhY4=@vger.kernel.org, AJvYcCVWITIWCW3rge1TMsOZJ1yahZri8TK5G+Ha51uI7PXX0EshzUhLcHiBSlYHYY3erbuUpSXDiSHhBL8=@vger.kernel.org, AJvYcCVZSBZGAIKLp9ybk6bByjekFd3hGTUkuUPitcHSf+YS0I5UsErhzvGyGwYd9iOS9M7cBHyYsOYlv4nvnZ8UrILi6fI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDyR3koljek8pHSY9dnEV5sre8fMle6NXhrGiG7ZJaM8b2P/gQ
-	aPPhwT1T9h6nthwahGeqDXcuPqalk5eHZ36v0+OilGyLh5P1yHQYPL1FVIwrMA==
-X-Gm-Gg: ASbGncvHxX1FYts5viXxbhl4gl7P5/c7580H9NV3NFlwfzj3lgPAUFengfwX8FfCDve
-	suMSzhNBPOnueFaDCaFix15kWcCq9R0VzwpR6TJnDW14XXajZ4/1c3YJNPa98xZ+/XZnbwN81AW
-	oGZ8tBg3eEfCwkz7oMkx5VNO46X9hQOEoLe4/Qd6YBFHNBZb1/hZJj8wD3qZOQrEGByN9F0bfX0
-	n8Llc4MyIauNguHpID5PvYGEqVxtiCxF+z/LmCS/549+J2CT/TLuoIdy7aX5VCpThS3a8DpldST
-	GHq1GlqlNpm6KmV+RblmtN0TnmIM1eiB7IhWAE27Toj8T7o1zqk2ABduTSfO4pWLZorujvLGEYt
-	VacL0Ou3kAw==
-X-Google-Smtp-Source: AGHT+IHsD566uR2iJmA1x5dTinmhbSc92nzu4ptM9O+HZPszU2hE5Hk8Ch3KBvp7WkOFDhYtt71tSA==
-X-Received: by 2002:a05:6a21:4a41:b0:218:75de:d924 with SMTP id adf61e73a8af0-21fbd631648mr13177925637.19.1750091956904;
-        Mon, 16 Jun 2025 09:39:16 -0700 (PDT)
-Received: from localhost.localdomain ([45.112.0.181])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680c6asm6067882a12.42.2025.06.16.09.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 09:39:16 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-pm@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
-	linux-samsung-soc@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [RRC v1 3/3] thermal/drivers/exynos: Refactor IRQ clear logic using SoC-specific config
-Date: Mon, 16 Jun 2025 22:08:24 +0530
-Message-ID: <20250616163831.8138-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616163831.8138-1-linux.amoon@gmail.com>
-References: <20250616163831.8138-1-linux.amoon@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sbHo1M+o"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2BE6E752;
+	Mon, 16 Jun 2025 18:39:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750091993;
+	bh=XfFyFp4FrIaLnJZ5bwtNOzQyxcUbSQvT+2H+xGDEpn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sbHo1M+oN7X6tv/QDVfkjS4ZW63z/ymSOa3MDIpraEBrzcDTlWtqFGmMBjB82Z5iY
+	 79DEwxGbko5+TCefxG+AKRzqQi1SG8+jWIQGMDaRWy7tgpR/xeEphN+ZSE8xNTSFBU
+	 IaMOtpz3NI2kHoJ4z1jCuwG1EWAmLpThjZC/6UAI=
+Date: Mon, 16 Jun 2025 19:39:49 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] media: vsp1: vsp1_dl: Count display lists
+Message-ID: <20250616163949.GL10542@pendragon.ideasonboard.com>
+References: <20250616-vsp1_dl_list_count-v2-0-7d3f43fb1306@ideasonboard.com>
+ <20250616-vsp1_dl_list_count-v2-2-7d3f43fb1306@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250616-vsp1_dl_list_count-v2-2-7d3f43fb1306@ideasonboard.com>
 
-Refactors the IRQ clear logic in the Exynos TMU driver to eliminate
-redundant code and enhance maintainability. Previously, the driver
-relied on multiple SoC-specific functions or conditional branching
-based on data->soc to handle differences in IRQ register behavior.
+On Mon, Jun 16, 2025 at 06:30:38PM +0200, Jacopo Mondi wrote:
+> To detect leaks of display lists, store in the display list manager the
+> number of allocated display lists when the manager is created and verify
+> that when the display manager is reset the same number of lists is
+> allocated.
 
-Change introduces a unified exynos_tmu_clear_irqs() function
-that adapts its behavior using SoC-specific configuration fields
-(tmu_intstat, tmu_intclear, and irq_clear_direct) defined in the
-exynos_tmu_data structure. These fields are initialized per SoC
-during device setup.
+"is available in the free list".
 
-This refactor reduces code duplication, simplifies the addition of
-new SoC support, and improves overall code clarity.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/thermal/samsung/exynos_tmu.c | 52 +++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+I'll update the above when applying.
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index b7522b7b1230..cd21b36674c3 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -172,6 +172,9 @@ enum soc_type {
-  *	0 < reference_voltage <= 31
-  * @tzd: pointer to thermal_zone_device structure
-  * @enabled: current status of TMU device
-+ * @tmu_intstat: interrupt status register
-+ * @tmu_intclear: interrupt clear register
-+ * @irq_clear_support: SoC supports clear IRQ
-  * @tmu_set_low_temp: SoC specific method to set trip (falling threshold)
-  * @tmu_set_high_temp: SoC specific method to set trip (rising threshold)
-  * @tmu_set_crit_temp: SoC specific method to set critical temperature
-@@ -198,6 +201,9 @@ struct exynos_tmu_data {
- 	u8 reference_voltage;
- 	struct thermal_zone_device *tzd;
- 	bool enabled;
-+	u32 tmu_intstat;
-+	u32 tmu_intclear;
-+	bool irq_clear_support;
- 
- 	void (*tmu_set_low_temp)(struct exynos_tmu_data *data, u8 temp);
- 	void (*tmu_set_high_temp)(struct exynos_tmu_data *data, u8 temp);
-@@ -785,28 +791,15 @@ static irqreturn_t exynos_tmu_threaded_irq(int irq, void *id)
- 	return IRQ_HANDLED;
- }
- 
--static void exynos4210_tmu_clear_irqs(struct exynos_tmu_data *data)
-+static void exynos_tmu_clear_irqs(struct exynos_tmu_data *data)
- {
- 	unsigned int val_irq, clearirq = 0;
--	u32 tmu_intstat, tmu_intclear;
--
--	if (data->soc == SOC_ARCH_EXYNOS5260) {
--		tmu_intstat = EXYNOS5260_TMU_REG_INTSTAT;
--		tmu_intclear = EXYNOS5260_TMU_REG_INTCLEAR;
--	} else if (data->soc == SOC_ARCH_EXYNOS7) {
--		tmu_intstat = EXYNOS7_TMU_REG_INTPEND;
--		tmu_intclear = EXYNOS7_TMU_REG_INTPEND;
--	} else if (data->soc == SOC_ARCH_EXYNOS5433) {
--		tmu_intstat = EXYNOS5433_TMU_REG_INTPEND;
--		tmu_intclear = EXYNOS5433_TMU_REG_INTPEND;
--	} else {
--		tmu_intstat = EXYNOS_TMU_REG_INTSTAT;
--		tmu_intclear = EXYNOS_TMU_REG_INTCLEAR;
--	}
-+	u32 tmu_intstat = data->tmu_intstat;
-+	u32 tmu_intclear = data->tmu_intclear;
- 
- 	val_irq = readl(data->base + tmu_intstat);
- 
--	if (data->soc == SOC_ARCH_EXYNOS4210) {
-+	if (!data->irq_clear_support) {
- 		writel(val_irq, data->base + tmu_intclear);
- 		return;
- 	}
-@@ -900,12 +893,15 @@ static int exynos_map_dt_data(struct platform_device *pdev)
- 		data->tmu_initialize = exynos4210_tmu_initialize;
- 		data->tmu_control = exynos4210_tmu_control;
- 		data->tmu_read = exynos4210_tmu_read;
--		data->tmu_clear_irqs = exynos4210_tmu_clear_irqs;
-+		data->tmu_clear_irqs = exynos_tmu_clear_irqs;
- 		data->gain = 15;
- 		data->reference_voltage = 7;
- 		data->efuse_value = 55;
- 		data->min_efuse_value = 40;
- 		data->max_efuse_value = 100;
-+		data->tmu_intstat = EXYNOS_TMU_REG_INTSTAT;
-+		data->tmu_intclear = EXYNOS_TMU_REG_INTCLEAR;
-+		data->irq_clear_support = false;
- 		break;
- 	case SOC_ARCH_EXYNOS3250:
- 	case SOC_ARCH_EXYNOS4412:
-@@ -922,7 +918,7 @@ static int exynos_map_dt_data(struct platform_device *pdev)
- 		data->tmu_control = exynos4210_tmu_control;
- 		data->tmu_read = exynos4412_tmu_read;
- 		data->tmu_set_emulation = exynos4412_tmu_set_emulation;
--		data->tmu_clear_irqs = exynos4210_tmu_clear_irqs;
-+		data->tmu_clear_irqs = exynos_tmu_clear_irqs;
- 		data->gain = 8;
- 		data->reference_voltage = 16;
- 		data->efuse_value = 55;
-@@ -932,6 +928,14 @@ static int exynos_map_dt_data(struct platform_device *pdev)
- 		else
- 			data->min_efuse_value = 0;
- 		data->max_efuse_value = 100;
-+		data->irq_clear_support = true;
-+		if (data->soc == SOC_ARCH_EXYNOS5260) {
-+			data->tmu_intstat = EXYNOS5260_TMU_REG_INTSTAT;
-+			data->tmu_intclear = EXYNOS5260_TMU_REG_INTCLEAR;
-+		} else {
-+			data->tmu_intstat = EXYNOS_TMU_REG_INTSTAT;
-+			data->tmu_intclear = EXYNOS_TMU_REG_INTCLEAR;
-+		}
- 		break;
- 	case SOC_ARCH_EXYNOS5433:
- 		data->tmu_set_low_temp = exynos5433_tmu_set_low_temp;
-@@ -943,7 +947,7 @@ static int exynos_map_dt_data(struct platform_device *pdev)
- 		data->tmu_control = exynos5433_tmu_control;
- 		data->tmu_read = exynos4412_tmu_read;
- 		data->tmu_set_emulation = exynos4412_tmu_set_emulation;
--		data->tmu_clear_irqs = exynos4210_tmu_clear_irqs;
-+		data->tmu_clear_irqs = exynos_tmu_clear_irqs;
- 		data->gain = 8;
- 		if (res.start == EXYNOS5433_G3D_BASE)
- 			data->reference_voltage = 23;
-@@ -952,6 +956,9 @@ static int exynos_map_dt_data(struct platform_device *pdev)
- 		data->efuse_value = 75;
- 		data->min_efuse_value = 40;
- 		data->max_efuse_value = 150;
-+		data->tmu_intstat = EXYNOS5433_TMU_REG_INTPEND;
-+		data->tmu_intclear = EXYNOS5433_TMU_REG_INTPEND;
-+		data->irq_clear_support = true;
- 		break;
- 	case SOC_ARCH_EXYNOS7:
- 		data->tmu_set_low_temp = exynos7_tmu_set_low_temp;
-@@ -963,12 +970,15 @@ static int exynos_map_dt_data(struct platform_device *pdev)
- 		data->tmu_control = exynos7_tmu_control;
- 		data->tmu_read = exynos7_tmu_read;
- 		data->tmu_set_emulation = exynos4412_tmu_set_emulation;
--		data->tmu_clear_irqs = exynos4210_tmu_clear_irqs;
-+		data->tmu_clear_irqs = exynos_tmu_clear_irqs;
- 		data->gain = 9;
- 		data->reference_voltage = 17;
- 		data->efuse_value = 75;
- 		data->min_efuse_value = 15;
- 		data->max_efuse_value = 100;
-+		data->tmu_intstat = EXYNOS7_TMU_REG_INTPEND;
-+		data->tmu_intclear = EXYNOS7_TMU_REG_INTPEND;
-+		data->irq_clear_support = true;
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Platform not supported\n");
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+> ---
+>  drivers/media/platform/renesas/vsp1/vsp1_dl.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_dl.c b/drivers/media/platform/renesas/vsp1/vsp1_dl.c
+> index 18617cbb168703b851a9b437fa62f18425934c68..3713730c6ad8739935851e4da464fc8f23da6180 100644
+> --- a/drivers/media/platform/renesas/vsp1/vsp1_dl.c
+> +++ b/drivers/media/platform/renesas/vsp1/vsp1_dl.c
+> @@ -215,6 +215,7 @@ struct vsp1_dl_list {
+>   * @pending: list waiting to be queued to the hardware
+>   * @pool: body pool for the display list bodies
+>   * @cmdpool: commands pool for extended display list
+> + * @list_count: number of allocated display lists
+>   */
+>  struct vsp1_dl_manager {
+>  	unsigned int index;
+> @@ -229,6 +230,8 @@ struct vsp1_dl_manager {
+>  
+>  	struct vsp1_dl_body_pool *pool;
+>  	struct vsp1_dl_cmd_pool *cmdpool;
+> +
+> +	size_t list_count;
+>  };
+>  
+>  /* -----------------------------------------------------------------------------
+> @@ -1078,6 +1081,7 @@ void vsp1_dlm_setup(struct vsp1_device *vsp1)
+>  void vsp1_dlm_reset(struct vsp1_dl_manager *dlm)
+>  {
+>  	unsigned long flags;
+> +	size_t list_count;
+>  
+>  	spin_lock_irqsave(&dlm->lock, flags);
+>  
+> @@ -1085,8 +1089,11 @@ void vsp1_dlm_reset(struct vsp1_dl_manager *dlm)
+>  	__vsp1_dl_list_put(dlm->queued);
+>  	__vsp1_dl_list_put(dlm->pending);
+>  
+> +	list_count = list_count_nodes(&dlm->free);
+>  	spin_unlock_irqrestore(&dlm->lock, flags);
+>  
+> +	WARN_ON_ONCE(list_count != dlm->list_count);
+> +
+>  	dlm->active = NULL;
+>  	dlm->queued = NULL;
+>  	dlm->pending = NULL;
+> @@ -1155,6 +1162,7 @@ struct vsp1_dl_manager *vsp1_dlm_create(struct vsp1_device *vsp1,
+>  
+>  		list_add_tail(&dl->list, &dlm->free);
+>  	}
+> +	dlm->list_count = prealloc;
+>  
+>  	if (vsp1_feature(vsp1, VSP1_HAS_EXT_DL)) {
+>  		dlm->cmdpool = vsp1_dl_cmd_pool_create(vsp1,
+
 -- 
-2.49.0
+Regards,
 
+Laurent Pinchart
