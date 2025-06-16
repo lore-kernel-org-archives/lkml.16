@@ -1,108 +1,337 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A080B2139B5
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA3C2BEFED
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750107609; cv=none; b=J8zceKShsvhX0kYmlMw6Ya6B+1ymQB4de79/zsZunjc7OCmksgjLKy8ShDPWtMPr6pXW7IwgEquwHvGl61owfhtWSKp0Jx4WNLuCfsnR83XrRjmApsRy8qHqInUrDlx2NmsQWdPXFbHiMLRWNNiVQT/pIqnYFY2URxFR0o4p8ic=
+	t=1750107772; cv=none; b=CFJQk6f/WVqdWst8Z7w8ogh34K8nTSyq8z45AX2Ere1cHcg1GFfFKeU1l3dQOyRybhPRxmSQaeRRwmBIdV8SpglTy4/6mMPsGy0WUmV2eMGg+CIYTwFbfs2HDNEIFftpKAS85G3n79wbj8bUdmDsZAWxfNE7Uo9UVJrHyJl4/Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750107609; c=relaxed/simple;
-	bh=85V7IA2aISIwTDOJA3zCDbzaPGLMrAlD2eCpQ+pTtCY=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Wg7d6q3DMViOzomZ81I6/Fp4Y2z9QxNU/XEKmGphpt2usFCW6fbFUeHCbdy8gGfEVgkBF8MAwPL2rXCjDnaoHfnkCklPlqAUY7IvdxpC54pzPz1/OlKNtUQqj9ZOgzlQ1/6HRJqjz7BDLahXovrmfODVl+8cHhuJN5Laz47M4vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=LX89Feo+; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1750107772; c=relaxed/simple;
+	bh=VUGbQSlpv2U8R1jdbUJn51uIyoYhGn8dY810LqSWYtc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GlKFzswXsRh24e+Uvmq4bGf5yp/e/yJgdjSWOlXtl4rOw96syyqjf0zcgvBUjJ+hedlnzXqKAbhSFuc/nIjwUW59Se3vG1mQwZ261a1oz8cYjxw+p/hZi8DQk3uaYfd04dXOA5zdlGqUvNEDBZF3B1yUClvL8S/+f1HnnGc06vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SPe7GrV/; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="LX89Feo+"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7caeeef95d4so551116985a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:00:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SPe7GrV/"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55351af2fc6so5506942e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1750107606; x=1750712406; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=65voBFu++KUxAGnb17CUWd/eEc8FRKpL+JgvnIz6Rz8=;
-        b=LX89Feo+52pF37QwuNRSqtLtCdIxpG3ehzgXg1AzH5HAeAA4IbflBPFfo/+UT03ae6
-         uQBGvJ94MsLCOBAvPhFNnBHdEPWIGaFh5mPjBVn6BlP0te/8+oUtcHnHXKaOiIYQNepX
-         ZyBsjRzk/zolnlNdYwUlEAzyDMQsLUc8lHphTo9J3PPrqzp9VP8wdW55Q/iacsJdijGW
-         GS4v4BucndWqyts+r6KyeCCT37wYwN/2sDG2aZz71zUGyUjJZsOAX1lmDcVLZdnFWwCF
-         hhitpJFA3e1lGqdf1lMTTUq/uP+loqHNpkuKBiTfF+WywJA7ZAauMfMGPlaxywLVxfXQ
-         d/bQ==
+        d=chromium.org; s=google; t=1750107768; x=1750712568; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9tJfw+k7xufHIN5ReiQx5xacfGPuiC+xpWuZiEqJRlI=;
+        b=SPe7GrV/tbBeg1sksZDCeFarUVzFdL2o1245C3m/YwLiUR+lRMEXgzVZaP1hz4RU3G
+         l8j6NzvO0rndYkMv7TP2iATos6X2nwUTYjHHBzg1VRQWDJmq4Vr1I/23NjqD1EsZU2hC
+         cS0jqf9xDk62XjKA9DA0K4RVf6uuKTck3vvXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750107606; x=1750712406;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=65voBFu++KUxAGnb17CUWd/eEc8FRKpL+JgvnIz6Rz8=;
-        b=wIYdHpBxARmuVqyloivS9zZDHKMaELTE3WwenFgr0vSJN+BqQLo6GG2NaCT7n6tH+m
-         /7SfxwT5k81X0simQQrEpYtktd2Yj6Ia73xlI9p2HuvCXM6l6GbrnvOLsJjVqlJ26Wym
-         2m13CjUflp7PcbawfcZ/s42HGnYMIJwuDG3+hqujfk72mDhRDOdc0OsM1+IgwUhhAWtQ
-         MRVDlIKW8yqJp5VCnj7ibcgOiCg7cOSnKo8jPV8p++QgmUuiYit7Y+ugB+V8VQ0of9T7
-         O+Ty/O1I8ggy29GJwMyqweY8OI7BUUfyh0aQ/BsTYptKpHr7YfZZugIkE/U9Rp2rs9RC
-         Z7Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCXO1H+3IhEXsWWxYymnfVzKp+PlAZqtVLmDL6qpNWTd8AC/EwPfEZCpKFCF5H35Vc7XSeX3cAwfCKYlZ30=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Ht7TU8XZB9pzzLV48V/tmv0Eizq4/eJcVEInyXw57qWOaFKL
-	mxDd/YqSdhrkVWwOE07A2Is9lzcePzsrw6pxmGzIfGwXp8ZU9PDOWrX7bTgdnFggfQ==
-X-Gm-Gg: ASbGncs7MpQ48YTCAAwIWkuLGOvQlzFtx70oJxstxedN1QscUYU2BjUfShsZeXrVcbA
-	B2T4fjtNcQg1gTZRsBsRLPzlt8FTNqPUDGpQDkyjgIDVsLFlxlDLOgNBczFMRxsC/FAOa78LWvA
-	u/dfbgpa0bMC20vsZaJhnoS+L0w7HaCBaOupD2lzjJ9/QrrvgNFdJiXHnLIIDr/Xl6LtTuVBg7C
-	23e+QueYtQqR3QJqLJUuqGZ8YqQRwhMi983LXxHn+Hl25OaTAbSgjHpU2/e/MF10ECMXGMrdLTY
-	ATHN8ked6OSWomkrlYtUROalTNoZy/W9lq8AvLhrgrFhQcP36/lh7BW7lATt8mlyFkA1KvS9/Pt
-	DzNKJBIQk1FLtm/oLEp1MXaI5QMdc/50=
-X-Google-Smtp-Source: AGHT+IHaG7XFRU2VIYe0CJKJvqwGmo+KTaXV3iT3aOl1lxbWuUv/pC/6cFlxEol951+BgG6B48ONvg==
-X-Received: by 2002:a05:620a:f13:b0:7c0:c469:d651 with SMTP id af79cd13be357-7d3c6cff2a0mr1547477985a.57.1750107606484;
-        Mon, 16 Jun 2025 14:00:06 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d3b8e0535csm569975685a.41.2025.06.16.14.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 14:00:06 -0700 (PDT)
-Date: Mon, 16 Jun 2025 17:00:05 -0400
-Message-ID: <baa9721a34d995cbcc9f7db5c9eba531@paul-moore.com>
+        d=1e100.net; s=20230601; t=1750107768; x=1750712568;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9tJfw+k7xufHIN5ReiQx5xacfGPuiC+xpWuZiEqJRlI=;
+        b=jG9IryZg/1zonD44c/TdcoLcC6GZwj59ocT+ebvh5vUt70L1IGQM0juYFM3NRwFQwt
+         qP0K2QkIYtat/KHk3dHItZCdOXa9Un+3bhBkqGwrN3D7fKTNyZUDcn09fRllOLjW6+Bl
+         NCCrYn3mmXnIJFUzwAhWbmKsQAmVyif/cWZIf/BMGKW6ceoJfvU80DVurfDjsZV8hckd
+         BUTpiqGa/sXVns0MXFUY11w4juSRP8sOxvD43qAKomfMiN+d/S3BeY63m1YW1Giu5P/P
+         BgXGdcNPcIoup8wBXx2Cu6rob3xPkdfVQe6uGazVraXM8LwpKKT/JwByF6fN9LgJYMKa
+         3X9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV+vLJlStaP9BAfyaArryo9niz8xbx61wrko4Hr1bA6b0OyTG0d6AG8B7QfMqRZxQbGWsTRcdZ7gcrXur4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJpCliiOWG3vmgu2sjDGCmcUwox9lOV4x9H0adzfZVpnSwpNSu
+	KNNclobRgosHVIDK+2Wo2093s0LpK6QvY+o4sSPi3sgzo0rpY+0S893oEHW4OOwqN46MyrRKE66
+	fe4o=
+X-Gm-Gg: ASbGncvT7DpjRev3u8hZlbm6j3KgWKIGyclIfFMkf11nAuoeL6XZOtNgesiR8sKaLMS
+	Zbhk2eSG7F/XAx+q91CmwnCHv+VWcn2NGSeM4JwvXLD+qxKUC9wv/zC8vOX+pNweiUDrBIxaJal
+	ylypxWI1URxneqw/nkzDgLUYMa5WqKNsSiUq+vynJWF1BaEvFhQTI73bTHkWq1Lu9i20xu3hH8l
+	o8ixqNnfUClCHl38tWD46eduaEIOlx9I9+YC3sUEU+uFQROuDNVlSijNvdN9jRvAGuZVkHYUIAh
+	0T//yGX/WmnCLfpeH+Q70v6q9z0WRoQncboFsm2DrFwLIJpTCP8fMv1/dzUBYwCDVhQ7rTQ/59A
+	WPKLkUiulaPJDkb0UWeEclaH+
+X-Google-Smtp-Source: AGHT+IEsWcbIhCu0fAL/3uDmwbqFLSFQHN3A/Ok7pvB9ml+WKySKAtCr6Drva+8ZOQ6fbVXEH80+1g==
+X-Received: by 2002:a05:6512:b97:b0:553:a3ed:f2ee with SMTP id 2adb3069b0e04-553b6e89475mr2393817e87.13.1750107768260;
+        Mon, 16 Jun 2025 14:02:48 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1ab448sm1671355e87.133.2025.06.16.14.02.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 14:02:48 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55351af2fc6so5506924e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:02:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUuNEp/DN6su9vS7fQRR1v9Mt36nG7v3r3GxHUrNVwwuj3sBBZpKVqVk+Y0qm9OeSlNqs/NktzFXxqiSGg=@vger.kernel.org
+X-Received: by 2002:a05:6512:138c:b0:553:66b3:c385 with SMTP id
+ 2adb3069b0e04-553b6ee3e9cmr2720265e87.24.1750107765537; Mon, 16 Jun 2025
+ 14:02:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250616_1212/pstg-lib:20250616_1001/pstg-pwork:20250616_1212
-From: Paul Moore <paul@paul-moore.com>
-To: Richard Guy Briggs <rgb@redhat.com>, Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>, LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org, Linux Kernel Audit Mailing List <audit@vger.kernel.org>
-Cc: Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>, Richard Guy Briggs <rgb@redhat.com>
-Subject: Re: [PATCH v3] audit,module: restore audit logging in load failure  case
-References: <9b7b21e5f37f5718fe9176a36ebf670bbdfdd54a.1748462545.git.rgb@redhat.com>
-In-Reply-To: <9b7b21e5f37f5718fe9176a36ebf670bbdfdd54a.1748462545.git.rgb@redhat.com>
+MIME-Version: 1.0
+References: <20250604-uvc-meta-v6-0-7141d48c322c@chromium.org>
+ <20250604-uvc-meta-v6-4-7141d48c322c@chromium.org> <d1e5942b-f8e5-42c6-98ae-d346927df3cb@kernel.org>
+ <CANiDSCtXmXYkv3b_62iegTFOxBVrGUv9+mbioxvQvPsadwBpqg@mail.gmail.com> <ec722aa6-17d4-4264-b99f-bdae1d908713@kernel.org>
+In-Reply-To: <ec722aa6-17d4-4264-b99f-bdae1d908713@kernel.org>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 16 Jun 2025 23:02:33 +0200
+X-Gmail-Original-Message-ID: <CANiDSCu1b2n9c7WH2ZHysOY2xV1RbV9Z6AHBuXXfF8fV8OwYgg@mail.gmail.com>
+X-Gm-Features: AX0GCFsNdtkP8JB6ltTsdc-cqZ6Op2oMgeY2ihm_dh0JlNkr6ExVMQMQ5z0q73M
+Message-ID: <CANiDSCu1b2n9c7WH2ZHysOY2xV1RbV9Z6AHBuXXfF8fV8OwYgg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
+To: Hans de Goede <hansg@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Jun 13, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
-> 
-> The move of the module sanity check to earlier skipped the audit logging
-> call in the case of failure and to a place where the previously used
-> context is unavailable.
-> 
-> Add an audit logging call for the module loading failure case and get
-> the module name when possible.
-> 
-> Link: https://issues.redhat.com/browse/RHEL-52839
-> Fixes: 02da2cbab452 ("module: move check_modinfo() early to early_mod_check()")
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-> ---
-> Changelog:
-> v2
-> - use info->name for both audit_log_kern_module() calls and add const
-> v3
-> - use "?" rather than "(unavailable)" for consistency with other records
-> ---
->  include/linux/audit.h | 9 ++++-----
->  kernel/audit.h        | 2 +-
->  kernel/auditsc.c      | 2 +-
->  kernel/module/main.c  | 6 ++++--
->  4 files changed, 10 insertions(+), 9 deletions(-)
+Hi Hans
 
-Merged into audit/dev, thanks!
+On Mon, 16 Jun 2025 at 22:47, Hans de Goede <hansg@kernel.org> wrote:
+>
+> Hi Ricardo,
+>
+> On 16-Jun-25 5:04 PM, Ricardo Ribalda wrote:
+> > Hi Hans
+> >
+> > On Mon, 16 Jun 2025 at 16:38, Hans de Goede <hansg@kernel.org> wrote:
+> >>
+> >> Hi Ricardo,
+> >>
+> >> On 4-Jun-25 14:16, Ricardo Ribalda wrote:
+> >>> If the camera supports the MSXU_CONTROL_METADATA control, auto set the
+> >>> MSXU_META quirk.
+> >>>
+> >>> Reviewed-by: Hans de Goede <hansg@kernel.org>
+> >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> >>> ---
+> >>>  drivers/media/usb/uvc/uvc_metadata.c | 72 ++++++++++++++++++++++++++++++++++++
+> >>>  include/linux/usb/uvc.h              |  3 ++
+> >>>  2 files changed, 75 insertions(+)
+> >>>
+> >>> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
+> >>> index df3f259271c675feb590c4534dad95b3b786f082..cd58427578ff413591b60abe0a210b90802dddc7 100644
+> >>> --- a/drivers/media/usb/uvc/uvc_metadata.c
+> >>> +++ b/drivers/media/usb/uvc/uvc_metadata.c
+> >>> @@ -10,6 +10,7 @@
+> >>>  #include <linux/list.h>
+> >>>  #include <linux/module.h>
+> >>>  #include <linux/usb.h>
+> >>> +#include <linux/usb/uvc.h>
+> >>>  #include <linux/videodev2.h>
+> >>>
+> >>>  #include <media/v4l2-ioctl.h>
+> >>> @@ -188,11 +189,82 @@ static const struct v4l2_file_operations uvc_meta_fops = {
+> >>>       .mmap = vb2_fop_mmap,
+> >>>  };
+> >>>
+> >>> +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
+> >>> +
+> >>> +static struct uvc_entity *uvc_meta_find_msxu(struct uvc_device *dev)
+> >>> +{
+> >>> +     struct uvc_entity *entity;
+> >>> +
+> >>> +     list_for_each_entry(entity, &dev->entities, list) {
+> >>> +             if (!memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
+> >>> +                     return entity;
+> >>> +     }
+> >>> +
+> >>> +     return NULL;
+> >>> +}
+> >>> +
+> >>> +#define MSXU_CONTROL_METADATA 0x9
+> >>> +static int uvc_meta_detect_msxu(struct uvc_device *dev)
+> >>> +{
+> >>> +     u32 *data __free(kfree) = NULL;
+> >>> +     struct uvc_entity *entity;
+> >>> +     int ret;
+> >>> +
+> >>> +     entity = uvc_meta_find_msxu(dev);
+> >>> +     if (!entity)
+> >>> +             return 0;
+> >>> +
+> >>> +     /*
+> >>> +      * USB requires buffers aligned in a special way, simplest way is to
+> >>> +      * make sure that query_ctrl will work is to kmalloc() them.
+> >>> +      */
+> >>> +     data = kmalloc(sizeof(*data), GFP_KERNEL);
+> >>> +     if (!data)
+> >>> +             return -ENOMEM;
+> >>> +
+> >>> +     /* Check if the metadata is already enabled. */
+> >>> +     ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id, dev->intfnum,
+> >>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
+> >>> +     if (ret)
+> >>> +             return 0;
+> >>> +
+> >>> +     if (*data) {
+> >>> +             dev->quirks |= UVC_QUIRK_MSXU_META;
+> >>> +             return 0;
+> >>> +     }
+> >>> +
+> >>> +     /*
+> >>> +      * We have seen devices that require 1 to enable the metadata, others
+> >>> +      * requiring a value != 1 and others requiring a value >1. Luckily for
+> >>> +      * us, the value from GET_MAX seems to work all the time.
+> >>> +      */
+> >>> +     ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id, dev->intfnum,
+> >>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
+> >>> +     if (ret || !*data)
+> >>> +             return 0;
+> >>> +
+> >>> +     /*
+> >>> +      * If we can set MSXU_CONTROL_METADATA, the device will report
+> >>> +      * metadata.
+> >>> +      */
+> >>> +     ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
+> >>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
+> >>> +     if (!ret)
+> >>> +             dev->quirks |= UVC_QUIRK_MSXU_META;
+> >>
+> >> Since we set the ctrl to enable MSXU fmt metadata here, this means that
+> >> cameras which also support V4L2_META_FMT_D4XX will be switched to MSXU
+> >> metadata mode at probe() time.
+> >
+> > Not sure that I completely follow you. D4XX cameras will not be
+> > switched to MSXU, they will support MSXU and D4XX with the current
+> > patchset.
+>
+> Is MSXU an extension on top of D4XX ? If not then we need to tell
+> the camera which metadata we want in uvc_meta_v4l2_set_format()
+
+I think I know where the miss-comunication happened :)
+
+MSXU is indeed a superset of D4xx. D4xx metadata is formatted in MSXU.
+
+If an app fetches D4XX and MSXU from an Intel D4xx device, they are identical.
+
+Or in other words, if D4XX devices have MSXU_CONTROL_METADATA, they
+are probably today initialized with a value != 0.
+
+
+Thanks!
+>
+> Currently your patch 4/4 does:
+>
+> +       ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
+> +                            MSXU_CONTROL_METADATA, data, sizeof(*data));
+>
+> in uvc_meta_detect_msxu() which runs at probe time.
+>
+> So patch 4/4 breaks V4L2_META_FMT_D4XX support as it switched the
+> camera to MSXU metadata mode (I'm assuming the 2 metadata formats
+> are different and that MSXU metadata is not just a superset of D4xx).
+>
+> This is why I suggest supporting only one metadata format. If we
+> want to support both on cameras which support both and can switch
+> formats with the msxu control, then this patch needs to modify
+> uvc_meta_v4l2_set_format() to do something like this:
+>
+> +       ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
+> +                            MSXU_CONTROL_METADATA, data, sizeof(*data));
+>
+> When switching formats, that or only support 1 metadata fmt.
+>
+> I hope this explains my thinking here, if not keep asking questions ...
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+> >
+> >>
+> >> So even if cameras exist which support both metadata formats, since we
+> >> switch to MSXU at probe() time, disabling V4L2_META_FMT_D4XX support,
+> >> the uvcvideo driver will only support 1 metadata fmt per camera.
+> >> Which is fine supporting more then 1 metadata fmt is not worth
+> >> the trouble IMHO.
+> >
+> > If we only support one metadata, we have two options for D4XX cameras:
+> >
+> > A) Switch to MSXU: apps that expect D4XX will not work. I think this
+> > will mean breaking uAPI.
+> > B) Keep D4XX and ignore MSXU: apps that work with MSXU will not work
+> > with D4XX cameras. I do not love this but it will not affect my
+> > usecase.
+> >
+> >
+> > If you are ok with B) I can start the implementation. But I still
+> > believe that the current option is more generic and the extra
+> > complexity is not too excessive.
+> >
+> >
+> >>
+> >> This means that Laurent's remark on [PATCH v5 4/4]:
+> >>
+> >> "I would prefer if you could instead add a metadata format field in the
+> >> uvc_device structure (I'd put it right after the info field, and while
+> >> at it you could move the quirks field to that section too). The metadata
+> >> format would be initialized from dev->info (when available) or set to
+> >> the UVC format, and overridden when the MSXU is detected."
+> >>
+> >> is still relevant, which will also make patch 3/4 cleaner.
+> >>
+> >> The idea is to (in patch 3/4):
+> >>
+> >> 1. Introduce a dev->meta_format which gets initialized from dev->info->meta_format
+> >> 2. Keep the quirk and if the quirk is set override dev->meta_format to
+> >>    V4L2_META_FMT_UVC_MSXU_1_5 thus still allowing testing for MSXU metadata on
+> >>    cameras which lack the MSXU_CONTROL_METADATA control.
+> >>
+> >> Doing things this way avoids the need for the complexity added to
+> >> uvc_meta_v4l2_try_format() / uvc_meta_v4l2_set_format() /
+> >> uvc_meta_v4l2_enum_format(). Instead the only changes necessary there now will
+> >> be replacing dev->info->meta_format with dev->meta_format.
+> >>
+> >> Regards,
+> >>
+> >> Hans
+> >>
+> >>
+> >>
+> >>
+> >>
+> >>> +
+> >>> +     return 0;
+> >>> +}
+> >>> +
+> >>>  int uvc_meta_register(struct uvc_streaming *stream)
+> >>>  {
+> >>>       struct uvc_device *dev = stream->dev;
+> >>>       struct video_device *vdev = &stream->meta.vdev;
+> >>>       struct uvc_video_queue *queue = &stream->meta.queue;
+> >>> +     int ret;
+> >>> +
+> >>> +     ret = uvc_meta_detect_msxu(dev);
+> >>> +     if (ret)
+> >>> +             return ret;
+> >>>
+> >>>       stream->meta.format = V4L2_META_FMT_UVC;
+> >>>
+> >>> diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
+> >>> index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
+> >>> --- a/include/linux/usb/uvc.h
+> >>> +++ b/include/linux/usb/uvc.h
+> >>> @@ -29,6 +29,9 @@
+> >>>  #define UVC_GUID_EXT_GPIO_CONTROLLER \
+> >>>       {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+> >>>        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
+> >>> +#define UVC_GUID_MSXU_1_5 \
+> >>> +     {0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
+> >>> +      0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
+> >>>
+> >>>  #define UVC_GUID_FORMAT_MJPEG \
+> >>>       { 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
+> >>>
+> >>
+> >
+> >
+>
+
 
 --
-paul-moore.com
+Ricardo Ribalda
