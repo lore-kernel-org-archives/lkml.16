@@ -1,171 +1,128 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C12D9EF3;
-	Mon, 16 Jun 2025 11:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75552BEC22
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073565; cv=none; b=uJ9Vi6zXLvEIRggfuL+AJWDeViPV3xRdpxefHo/ZVAjwuv4nsjvDZHCmlJkFUpMIXx75Uo4XjOmwYhwD2mqM03OJST4WKVhAXbi93m8XvhBpYbWh1lVjiN3RMCOKE/v1uU0o8ObeqySeD1e6MvXWMVESgwF7Ad8l9SWmp741trc=
+	t=1750073607; cv=none; b=Jo2kL0hohzdHjOSalVdjbmeVxr9ItgdTvJ8LKJOmULvVDVQg3lj3e3EO169kmrrwwfC3EIiQtynIBFU67Rbw949AU06j0tTu4M/Htx8rHp/K8fS1DXn4kDK/DuHINt20VSFUB/WCeZMXG5D4VPaS2DZKrBtZaoiQ9m3h+UJEzqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073565; c=relaxed/simple;
-	bh=qFzH7nDxVxhBuZ6wfSoR0S5kYoV5v/qxy6rZqdqeRgM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=BXgch+Zsww1gH+tnbUCkihnxUO6XdrE0hN/SHf1aWVWl/tYDMxNzmFeMGZnKLrSFBsN2WPUHOv69fHPJacekWnZWzXgLcCFKO7zrW+y5bHcMB7uXHAYyE7fmK8KC5qfzsC6YtYv23MjftOJhtiOPJeq/EkdyBHAoM4cePvvzkfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bLSXm5d2nzYQvpc;
-	Mon, 16 Jun 2025 19:32:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BCF381A2208;
-	Mon, 16 Jun 2025 19:32:39 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBXul7WAFBoyYfHPg--.11393S3;
-	Mon, 16 Jun 2025 19:32:39 +0800 (CST)
-Subject: Re: [PATCH v2] md/raid1: Fix stack memory use after return in
- raid1_reshape
-To: Wang Jinchao <wangjinchao600@gmail.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- Song Liu <song@kernel.org>, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250611090203.271488-1-wangjinchao600@gmail.com>
- <5143c5c3-3a77-919f-0d38-8adb0e8923e9@huaweicloud.com>
- <06935480-a959-4e3f-8e41-286d7f54754a@gmail.com>
- <9c7d5e66-4f5f-b984-c291-f19c3d568b85@huaweicloud.com>
- <938b0969-cace-4998-8e4a-88d445c220b1@gmail.com>
- <8a876d8f-b8d1-46c0-d969-cbabb544eb03@huaweicloud.com>
- <726fe46d-afd5-4247-86a0-14d7f0eeb3b3@gmail.com>
- <c328bc72-0143-d11c-2345-72d307920428@huaweicloud.com>
- <9275145b-3066-41e5-a971-eba219ef0d3c@gmail.com>
- <a4f9b5a2-bf83-482e-e1fe-589f9ff004a1@huaweicloud.com>
- <0ccb9479-92ac-4c8e-afdc-a1e3f14fe401@gmail.com>
- <351b7dc4-7a2c-4032-bf2c-2edaa9da9300@gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d7022eb3-4dee-8d15-1018-051b882467b2@huaweicloud.com>
-Date: Mon, 16 Jun 2025 19:32:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1750073607; c=relaxed/simple;
+	bh=sUJtxVCgOPUC9izlgo4CNw2jnzc7+5K3qEajbBawjgg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FrBWW7Hz5hl3QAL3nTwiqLxdtFlgGM8bZn+wOSs/eaezMLYplKPK595sYOjKb3wxdG2vB3I51a4ak6VQEy2qGqnPE2u36ddr/ar/m0kMhmlmYFyBxCLRd86nL3C+L/b88HTE6Gyt9q0xSAco5D+lz+gMJipbNhYKPMqyKXk3u+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DgZmK78e; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DgZmK78e"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so36671645e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750073603; x=1750678403; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sUJtxVCgOPUC9izlgo4CNw2jnzc7+5K3qEajbBawjgg=;
+        b=DgZmK78eRIvsGmJEJg3/5LzJP6Jt1UIMX+KReOFN2e6WY7772YzjvQKG8Ob4NQke1v
+         7JbWE6tg3XFdbI+PdFQE4NdFat6syGXC1yBSpd2AKEkCAEB/TOkNC5LWbBVrtIN2fFwW
+         dfVUJMWM51xdFBjkXK0tsbaesFESXrfM2cPsMQnN7c/zCHt5F3ihxluYnxjXwNvPHr4X
+         WH4XD/YzpzMoh7+sYVRwPfl08wD5okkeGBSqKth6UWxZUQ9ywxHZHl+OR1Hxso+uU7W0
+         h7Mv3B+G3vIw6t7wgM4HEP8U1j3boV+J8pi7MEW8549I8qGh4c3BNqwRKe+ZFrKy07Q5
+         C7Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750073603; x=1750678403;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sUJtxVCgOPUC9izlgo4CNw2jnzc7+5K3qEajbBawjgg=;
+        b=LnkkU2qeNNJXlS4eH4Ck5uup4jNDBbR8t+Hvg3XW186SZgu8xWglIyfLXGZrI0lWIv
+         rQxArCvXtyQpiKKZj7UBLfab0PeFzkEG1KD6GIM8NjQBRDUW/8prb7UuVwtHFKQGrn5C
+         uCbvqwHkVRl2ehkjiPPPy2dDJlUCG9DA1xv7/Wm4wCcjl58PlrQ3dBUnbdPx5RZlynYI
+         6N/Mi681xzxvXxGMK36oNuS8adlLoTDBnD4m9zb2ag53Z98Oh0Za+ZRwjRs/ISFuUd3H
+         I/ejSH+RlWiYlOzM8MX9TtQ5yeEnJjKYrh3DiCXv9WqI8Y7nowwwzU7h2nv3KazMyfId
+         JywQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoCEN24/Qms2W462ij6b/7F/pcymJxVdHPdd30Zx2pGFufptu4OmNnnFflCyvcMHZg1JRs8e/rC1scXXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFB6QhvT4z7pIKoc3BQ7HVPqnT9hlZRUMVrsi7DW9NA5iFljfS
+	2DZg+vFnkLqJWJTVYQXOE+mKO9H/v6oh64t2lrUVafokw2zW0NtBVAXRmPBS5wk61DA=
+X-Gm-Gg: ASbGncvOsnLyfHC5Td2FWoOjy+9OFUAZJK901EuX4UyV7GjbTwiNB9IrrNZEBU5aakb
+	WTH3fz+2qMuCJtHWoQZjEEkvWoVZ/xKI/lcJtEeAVaocMAqLXn01uAeVs8MGmYp8rir/jq5Sh+E
+	HueXnpD4RXY4fcmz2JWgxtdooHolP3pUqviz70H22M28t5URwTuh4ogFTQtS9Nd6hQasJGDZbXD
+	6ymbsR8TtYQ0zg+Udnt81gJELtdOr8B/8rio/zMHUp4Yj/k82lzFHu5iZw6pDiEQrbGL7Adss+P
+	XH8nRRXA3BHc8OOZzNvPiLwt/XxT0Wqe+X432TngXd9uMxOSOEY1qs4BAAEXR9YaK2RUNLvU4VF
+	4+A==
+X-Google-Smtp-Source: AGHT+IHENEkwxduA7K0Vjfe2dGuq+xptRSYw34g+0tog7rCYhbhJGOxjnsq/iY/dAhPOFFaN1g90tg==
+X-Received: by 2002:a05:6000:2501:b0:3a4:d700:f773 with SMTP id ffacd0b85a97d-3a5723977camr6533466f8f.11.1750073603145;
+        Mon, 16 Jun 2025 04:33:23 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532063ebf6sm111747185e9.3.2025.06.16.04.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 04:33:22 -0700 (PDT)
+Message-ID: <b193e94f042cf6134d2bed92152c23ee5bba6a26.camel@linaro.org>
+Subject: Re: [PATCH v4 00/32] Samsung S2MPG10 PMIC MFD-based drivers
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Chanwoo Choi	 <cw00.choi@samsung.com>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Russell King	
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon	 <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, Tudor
+ Ambarus	 <tudor.ambarus@linaro.org>, Will McVicker
+ <willmcvicker@google.com>, 	kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, 	linux-rtc@vger.kernel.org, Lee Jones
+ <lee@kernel.org>
+Date: Mon, 16 Jun 2025 12:33:21 +0100
+In-Reply-To: <905e6cab9932c814a578826329f5e3f944418ef9.camel@linaro.org>
+References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
+			 <20250415160212.GA372032@google.com> <2025041715425693974c6d@mail.local>
+		 <24314441936d97a1892474eacdbbd690612de265.camel@linaro.org>
+	 <905e6cab9932c814a578826329f5e3f944418ef9.camel@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <351b7dc4-7a2c-4032-bf2c-2edaa9da9300@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXul7WAFBoyYfHPg--.11393S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFy7Jw4xuFyDJw1kXry3XFb_yoW5CF4Dpa
-	18KasIkr4vvrnIyrsrAa1xuFy5tw4IgFWxGrs3G3y7Zr9I9a4fWr4UKry3CF4UXr4rXw40
-	va15JFykZFyj9aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUBVbkUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
-
-在 2025/06/16 18:11, Wang Jinchao 写道:
-> On 6/13/25 19:53, Wang Jinchao wrote:
->> On 2025/6/13 17:15, Yu Kuai wrote:
->>> Hi,
->>>
->>> 在 2025/06/12 20:21, Wang Jinchao 写道:
->>>> BTW, I feel raid1_reshape can be better coding with following：
->>>
->>> And another hint:
->>>
->>> The poolinfo can be removed directly, the only other place to use it
->>> is r1buf_pool, and can covert to pass in conf or &conf->raid_disks.
->> Thanks, I'll review these relationships carefully before refactoring.
->>>
->>> Thanks,
->>> Kuai
->>>
->>
-> Hi Kuai,
-> 
-> After reading the related code, I’d like to discuss the possibility of 
-> rewriting raid1_reshape.
-> 
-> I am considering converting r1bio_pool to use 
-> mempool_create_kmalloc_pool. However, mempool_create_kmalloc_pool 
-> requires the element size as a parameter, but the size is calculated 
-> dynamically in r1bio_pool_alloc(). Because of this, I feel that 
-> mempool_create() may be more suitable here.
-
-You only need raid_disks to calculate the size, the value will not
-change.
-> 
-> I noticed that mempool_create() was used historically and was later 
-> replaced by mempool_init() in commit afeee514ce7f. Using 
-> mempool_create() would essentially be a partial revert of that commit, 
-> so I’m not sure whether this is appropriate.
-
-This is fine, the commit introduce the porblem.
-> 
-> Regarding raid1_info and pool_info, I feel the original design might be 
-> more suitable for the reshape process.
-> 
-> The goals of raid1_reshape() are:
-> 
-> - Keep the array usable for as long as possible.
-This is not needed, reshape is a slow path, just don't introduce
-problems.
-
-> - Be able to restore the previous state if reshape fails.
-Yes.
-
-> So I think we need to follow some constraints:
-> 
-> - conf should not be modified before freeze_array().
-> - We should try to prepare everything possible before freeze_array().
-> - If an error occurs after freeze_array(), it must be possible to roll 
-> back.
-> 
-> Now, regarding the idea of rewriting raid1_info or pool_info:
-> 
-> Convert raid1_info using krealloc:
-
-1) If raid_disks decreases, you don't need to realloc it;
-2) If raid_disks increases, call krealloc after freezing the array, you
-can't call it before in order to prevent concurrent access.
-> 
-> According to rule 1, krealloc() must be called after freeze_array(). 
-> According to rule 2, it should be called before freeze_array(). → So 
-> this approach seems to violate one of the rules.
-> 
-> Use conf instead of pool_info:
-
-I'm suggesting to remove pool_info, you should change conf->raid_disks
-as it is now, while the array is freezed.
-
-Thanks,
-Kuai
-
-> 
-> According to rule 1, conf->raid_disks must be modified after 
-> freeze_array(). According to rule 2, conf->raid_disks needs to be 
-> updated before calling mempool_create(), i.e., before freeze_array().
-> These also seem to conflict.
-> 
-> For now, I’m not considering rule 3, as that would make the logic even 
-> more complex.
-> 
-> I’d really appreciate your thoughts on whether this direction makes 
-> sense or if there’s a better approach.
-> 
-> Thank you for your time and guidance.
-> .
-> 
+SGkgQWxleGFuZHJlLAoKT24gTW9uLCAyMDI1LTA1LTE5IGF0IDE1OjQxICswMTAwLCBBbmRyw6kg
+RHJhc3ppayB3cm90ZToKPiBIaSBBbGV4YW5kcmUsCj4gCj4gT24gTW9uLCAyMDI1LTA0LTI4IGF0
+IDE5OjE3ICswMTAwLCBBbmRyw6kgRHJhc3ppayB3cm90ZToKPiA+IEhpIEFsZXhhbmRyZSwKPiA+
+IAo+ID4gT24gVGh1LCAyMDI1LTA0LTE3IGF0IDE3OjQyICswMjAwLCBBbGV4YW5kcmUgQmVsbG9u
+aSB3cm90ZToKPiA+ID4gT24gMTUvMDQvMjAyNSAxNzowMjoxMiswMTAwLCBMZWUgSm9uZXMgd3Jv
+dGU6Cj4gPiA+ID4gPiDCoGRyaXZlcnMvbWZkL0tjb25maWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMzUgKy0KPiA+ID4g
+PiA+IMKgZHJpdmVycy9tZmQvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNSArLQo+ID4gPiA+ID4gwqBkcml2
+ZXJzL21mZC9zZWMtYWNwbS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfCA0NDIgKysrKysrKysrKysrKysrKysrKwo+ID4gPiA+ID4gwqBk
+cml2ZXJzL21mZC9zZWMtY29tbW9uLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHwgMzAxICsrKysrKysrKysrKysKPiA+ID4gPiA+IMKgZHJpdmVy
+cy9tZmQvc2VjLWNvcmUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHwgNDgxIC0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gPiA+ID4gwqBk
+cml2ZXJzL21mZC9zZWMtY29yZS5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDIzICsKPiA+ID4gPiA+IMKgZHJpdmVycy9tZmQvc2Vj
+LWkyYy5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB8IDIzOSArKysrKysrKysrCj4gPiA+ID4gPiDCoGRyaXZlcnMvbWZkL3NlYy1pcnEu
+Y8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgfCA0NjAgKysrKysrKy0tLS0tLS0tLS0tLS0KPiA+ID4gPiAKPiA+ID4gPiA+IMKgZHJpdmVy
+cy9ydGMvcnRjLXM1bS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB8IDE5NyArKysrKystLS0KPiA+ID4gPiAKPiA+ID4gPiBNRkQgcGFy
+dHMgbG9vayBva2F5IHRvIG1lIG5vdy4KPiA+ID4gPiAKPiA+ID4gPiBXaXRoIEFja3MgZnJvbSB0
+aGUgQ2xrIGFuZCBSVEMgbWFpbnRhaW5lcnMsIEkgY2FuIG1lcmdlIGFsbCBvZiB0aGUKPiA+ID4g
+PiBkcml2ZXIgc3R1ZmYgdG9nZXRoZXIgYW5kIHN1Ym1pdCBhIFBSIGZvciBvdGhlcnMgdG8gcHVs
+bCBmcm9tLgo+ID4gPiA+IAo+ID4gPiAKPiA+ID4gSSBkb24ndCB0aGluayB0aGUgUlRDIHBhcnQg
+ZGVwZW5kcyBvbiB0aGUgTUZEIG9uZSBzbyBJIHdhcyBnb2luZyB0bwo+ID4gPiBhcHBseSB0aGUg
+cGF0Y2hlcyBpbiBteSB0cmVlIGlmIHRoaXMgaXMgZmluZSBmb3IgZXZlcnlvbmUuCj4gPiAKPiA+
+IFJUQyBwYXRjaCAyNyBkb2VzIGRlcGVuZCBvbiB0aGUgczJtcGcxMCBtZmQgY29yZSBkcml2ZXIg
+KGR1ZSB0bwo+ID4gdXNpbmcgZW51bXMgYW5kIG1hY3JvcyBpbnRyb2R1Y2VkIHRoZXJlKS4KPiAK
+PiBMZWUgaGFzIGtpbmRseSBtZXJnZWQgYWxsIHRoZSBjb3JlIGRyaXZlciBwYXRjaGVzLgo+IAo+
+IEFueSBjaGFuY2UgdGhlIHJ0YyBjaGFuZ2VzIHdpbGwgbWFrZSBpdCBpbnRvIHRoZSBzYW1lIGtl
+cm5lbCByZWxlYXNlPwoKRnJpZW5kbHkgcGluZy4KCgpDaGVlcnMsCkFuZHJlJwo=
 
