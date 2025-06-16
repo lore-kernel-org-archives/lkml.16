@@ -1,259 +1,117 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4AB2E06ED
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796EC285C8A;
+	Mon, 16 Jun 2025 13:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079653; cv=none; b=DfW5OgI1zqUy5E70epjsRvTjSJ0KoTl4tim/ZQJFFHgF4GJiimkMMC98vZHvXv2RkxWWCc6ckGrhJJMHb0DyiWpJC/FKHRowbFHr89qIRd7MVZMP9WXuQcYCzjmQFZOboMDW6tmA0R3s3t0XW6zaj5xwiQvSWXr+hE5o+WtKGPs=
+	t=1750079685; cv=none; b=rJNQ+jo1Dt5GLw8EN8x3rnBuNQmk4yC4J0/rw6Ds7uqIl/P45uV7uOEpgoCajHUN/vr7hPiekfr33eC1J6+VQ0gjHV3LH2ePTEoyYDaZUJ3vJq0sLMS6Yf0b/2BsgqLD19xRYOq3gR+4dZT3k9b5X+SvUMLM+ICFdcPHTDSAN+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079653; c=relaxed/simple;
-	bh=NTaaj0bQBTFyCLNa/36CV97eeQ50/YQ67VFHukPjTeM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T5zFwzJIWXYiOTCXHOhkowfirTsMX+fMMSmqISq7yIUPOiyZ08d/7RBWM01nDHN7VLWYLsCTQZJ7h+mkFQLGBd4djQMNgkG5cAJALW6CqT1kkiVv35148hMibo5myXaakz3YWQLBxEfgGAolvQAw/zlRkE+4ooQw+des2hpKOJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Kor3MH/X; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750079685; c=relaxed/simple;
+	bh=kb1b6C4yM57+Gn9/9WAtBxL1EdUT2+sgNeDSaVoGKM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r3ONv2Id+Hy0iXVY2YRdPbpMP8TLJPc0znpYXRDoolhV8JbKmzfl1KLXGyaqA8a7EQR2CrMcBSpTAX/dLFKVMkcoLGcwtx4Ax9KZPfcp9MjQ1mvRn66xBpgw1wvxAXgSdRvN4X5MBqGdY/bwyvdVkrVwnUe8ig9aGadW49hFJaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i+w6G83w; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Kor3MH/X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750079645;
-	bh=6h0ix1ZdixoOBaPO3IlzuOaav+hjON9yVdm3QZ+ABs4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Kor3MH/XjP0L5Qf7xtsszE318PqOoYFUW4LmZufq+PV1IG00ZaBxZrGo4TV66c7wT
-	 g/nO3IrU50YVymtMloXXIbGQO+f8DLdIeKGiiVz3Q39yBcMJhutjCY1P6IjDZcisrS
-	 Mp4NB+eBYCz2rS1A5RsP1/CnZwOuLKNxHufGdxTqrrcnnrzFDrQuj1rrGpaHw1AygZ
-	 W7rF21jQzGf2p4NFQsopVAid4EohIDoKXZrPsbz1GXOG9DYcwhz3RlB0Ry6fJjxZMR
-	 znMkjUBhJV1S6JgpRCyd+bOGYamCJcDsSsZOIR3i4zyI6uJd3FJ5nWWndufy7SaULP
-	 IP1uL0ys+1VIg==
-Received: from [127.0.1.1] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 0A88368865;
-	Mon, 16 Jun 2025 21:14:04 +0800 (AWST)
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-Date: Mon, 16 Jun 2025 22:43:47 +0930
-Subject: [PATCH v2 10/10] soc: aspeed: lpc-snoop: Lift channel config to
- const structs
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i+w6G83w"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C74F644305;
+	Mon, 16 Jun 2025 13:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750079680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6tGU+j/DGX7Z6zWCQu/tHD8h7NUEb8TaXsJyR3P26k=;
+	b=i+w6G83wep4FVd7GHRgZDcLQ4cJPLMYnKlP0oENTWL2kzvp51yNaUPYuTyTTrD6EF+P0KH
+	GVNQfz8TAiDhLMVV3skdZqb5DVOK2c1hyjenlZwi0HfmqfRD+gt8aShXYJjjZ2qOpAGvC7
+	lB0V/EG34ckQ+sr3I6azKcwJsRDzorxSeQ4ALO5gRR7ZiwnNTFAoVJcrIBLxdbxQmfcE8c
+	B8fGmbPfXPiaUUZkGP1C1QTP24FznknLwVBPJTbMAvPvhYdV3XYOih5iECKup+T19XgZdj
+	FrbbraKu705iKPnDFeNnW58E42qN8PKgXBgR59SBra/ov6mYm3I1XUDK8tQ4Rg==
+Date: Mon, 16 Jun 2025 15:14:37 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v13 07/13] net: pse-pd: Add support for budget
+ evaluation strategies
+Message-ID: <20250616151437.221a4aef@kmaincent-XPS-13-7390>
+In-Reply-To: <20250614123311.49c6bcbf@kernel.org>
+References: <20250610-feature_poe_port_prio-v13-0-c5edc16b9ee2@bootlin.com>
+	<20250610-feature_poe_port_prio-v13-7-c5edc16b9ee2@bootlin.com>
+	<20250614123311.49c6bcbf@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-aspeed-lpc-snoop-fixes-v2-10-3cdd59c934d3@codeconstruct.com.au>
-References: <20250616-aspeed-lpc-snoop-fixes-v2-0-3cdd59c934d3@codeconstruct.com.au>
-In-Reply-To: <20250616-aspeed-lpc-snoop-fixes-v2-0-3cdd59c934d3@codeconstruct.com.au>
-To: linux-aspeed@lists.ozlabs.org
-Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>, 
- Jean Delvare <jdelvare@suse.de>, 
- Patrick Rudolph <patrick.rudolph@9elements.com>, 
- Andrew Geissler <geissonator@yahoo.com>, 
- Ninad Palsule <ninad@linux.ibm.com>, Patrick Venture <venture@google.com>, 
- Robert Lippert <roblip@gmail.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@codeconstruct.com.au>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieeijecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiiv
+ ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-The shifts and masks for each channel are defined by hardware and
-are not something that changes at runtime. Accordingly, describe the
-information in an array of const structs and associate elements with
-each channel instance, removing the need for the switch and handling of
-its default case.
+Le Sat, 14 Jun 2025 12:33:11 -0700,
+Jakub Kicinski <kuba@kernel.org> a =C3=A9crit :
 
-Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
----
- drivers/soc/aspeed/aspeed-lpc-snoop.c | 100 +++++++++++++++-------------------
- 1 file changed, 45 insertions(+), 55 deletions(-)
+> On Tue, 10 Jun 2025 10:11:41 +0200 Kory Maincent wrote:
+> > +static bool
+> > +pse_pi_is_admin_enable_not_applied(struct pse_controller_dev *pcdev,
+> > +				   int id) =20
+>=20
+> the only caller of this function seems to negate the return value:
+>=20
+> drivers/net/pse-pd/pse_core.c:369:              if
+> (!pse_pi_is_admin_enable_not_applied(pcdev, i))
+>=20
+> let's avoid the double negation ?
 
-diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-index 9f88c5471b1b6d85f6d9e1970240f3d1904d166c..2d97b8d5fb429e215c321c9c2ee3fa35d39f8618 100644
---- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-+++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-@@ -63,7 +63,16 @@ enum aspeed_lpc_snoop_index {
- 	ASPEED_LPC_SNOOP_INDEX_MAX = ASPEED_LPC_SNOOP_INDEX_1,
- };
- 
-+struct aspeed_lpc_snoop_channel_cfg {
-+	enum aspeed_lpc_snoop_index index;
-+	u32 hicr5_en;
-+	u32 snpwadr_mask;
-+	u32 snpwadr_shift;
-+	u32 hicrb_en;
-+};
-+
- struct aspeed_lpc_snoop_channel {
-+	const struct aspeed_lpc_snoop_channel_cfg *cfg;
- 	bool enabled;
- 	struct kfifo		fifo;
- 	wait_queue_head_t	wq;
-@@ -77,6 +86,23 @@ struct aspeed_lpc_snoop {
- 	struct aspeed_lpc_snoop_channel chan[ASPEED_LPC_SNOOP_INDEX_MAX + 1];
- };
- 
-+static const struct aspeed_lpc_snoop_channel_cfg channel_cfgs[ASPEED_LPC_SNOOP_INDEX_MAX + 1] = {
-+	{
-+		.index = ASPEED_LPC_SNOOP_INDEX_0,
-+		.hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
-+		.snpwadr_mask = SNPWADR_CH0_MASK,
-+		.snpwadr_shift = SNPWADR_CH0_SHIFT,
-+		.hicrb_en = HICRB_ENSNP0D,
-+	},
-+	{
-+		.index = ASPEED_LPC_SNOOP_INDEX_1,
-+		.hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
-+		.snpwadr_mask = SNPWADR_CH1_MASK,
-+		.snpwadr_shift = SNPWADR_CH1_SHIFT,
-+		.hicrb_en = HICRB_ENSNP1D,
-+	},
-+};
-+
- static struct aspeed_lpc_snoop_channel *snoop_file_to_chan(struct file *file)
- {
- 	return container_of(file->private_data,
-@@ -189,28 +215,27 @@ static int aspeed_lpc_snoop_config_irq(struct aspeed_lpc_snoop *lpc_snoop,
- }
- 
- __attribute__((nonnull))
--static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
--				   struct device *dev,
--				   enum aspeed_lpc_snoop_index index, u16 lpc_port)
-+static int aspeed_lpc_enable_snoop(struct device *dev,
-+				    struct aspeed_lpc_snoop *lpc_snoop,
-+				    struct aspeed_lpc_snoop_channel *channel,
-+				    const struct aspeed_lpc_snoop_channel_cfg *cfg,
-+				    u16 lpc_port)
- {
- 	const struct aspeed_lpc_snoop_model_data *model_data;
--	u32 hicr5_en, snpwadr_mask, snpwadr_shift, hicrb_en;
--	struct aspeed_lpc_snoop_channel *channel;
- 	int rc = 0;
- 
--	channel = &lpc_snoop->chan[index];
--
- 	if (WARN_ON(channel->enabled))
- 		return -EBUSY;
- 
- 	init_waitqueue_head(&channel->wq);
- 
-+	channel->cfg = cfg;
- 	channel->miscdev.minor = MISC_DYNAMIC_MINOR;
- 	channel->miscdev.fops = &snoop_fops;
- 	channel->miscdev.parent = dev;
- 
- 	channel->miscdev.name =
--		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, index);
-+		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, cfg->index);
- 	if (!channel->miscdev.name)
- 		return -ENOMEM;
- 
-@@ -223,39 +248,18 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
- 		goto err_free_fifo;
- 
- 	/* Enable LPC snoop channel at requested port */
--	switch (index) {
--	case 0:
--		hicr5_en = HICR5_EN_SNP0W | HICR5_ENINT_SNP0W;
--		snpwadr_mask = SNPWADR_CH0_MASK;
--		snpwadr_shift = SNPWADR_CH0_SHIFT;
--		hicrb_en = HICRB_ENSNP0D;
--		break;
--	case 1:
--		hicr5_en = HICR5_EN_SNP1W | HICR5_ENINT_SNP1W;
--		snpwadr_mask = SNPWADR_CH1_MASK;
--		snpwadr_shift = SNPWADR_CH1_SHIFT;
--		hicrb_en = HICRB_ENSNP1D;
--		break;
--	default:
--		rc = -EINVAL;
--		goto err_misc_deregister;
--	}
--
--	/* Enable LPC snoop channel at requested port */
--	regmap_update_bits(lpc_snoop->regmap, HICR5, hicr5_en, hicr5_en);
--	regmap_update_bits(lpc_snoop->regmap, SNPWADR, snpwadr_mask,
--			   lpc_port << snpwadr_shift);
-+	regmap_set_bits(lpc_snoop->regmap, HICR5, cfg->hicr5_en);
-+	regmap_update_bits(lpc_snoop->regmap, SNPWADR, cfg->snpwadr_mask,
-+		lpc_port << cfg->snpwadr_shift);
- 
- 	model_data = of_device_get_match_data(dev);
- 	if (model_data && model_data->has_hicrb_ensnp)
--		regmap_update_bits(lpc_snoop->regmap, HICRB, hicrb_en, hicrb_en);
-+		regmap_set_bits(lpc_snoop->regmap, HICRB, cfg->hicrb_en);
- 
- 	channel->enabled = true;
- 
- 	return 0;
- 
--err_misc_deregister:
--	misc_deregister(&channel->miscdev);
- err_free_fifo:
- 	kfifo_free(&channel->fifo);
- 	return rc;
-@@ -263,30 +267,13 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
- 
- __attribute__((nonnull))
- static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
--				     enum aspeed_lpc_snoop_index index)
-+				     struct aspeed_lpc_snoop_channel *channel)
- {
--	struct aspeed_lpc_snoop_channel *channel;
--
--	channel = &lpc_snoop->chan[index];
--
- 	if (!channel->enabled)
- 		return;
- 
- 	/* Disable interrupts along with the device */
--	switch (index) {
--	case 0:
--		regmap_update_bits(lpc_snoop->regmap, HICR5,
--				   HICR5_EN_SNP0W | HICR5_ENINT_SNP0W,
--				   0);
--		break;
--	case 1:
--		regmap_update_bits(lpc_snoop->regmap, HICR5,
--				   HICR5_EN_SNP1W | HICR5_ENINT_SNP1W,
--				   0);
--		break;
--	default:
--		return;
--	}
-+	regmap_clear_bits(lpc_snoop->regmap, HICR5, channel->cfg->hicr5_en);
- 
- 	channel->enabled = false;
- 	/* Consider improving safety wrt concurrent reader(s) */
-@@ -299,8 +286,8 @@ static void aspeed_lpc_snoop_remove(struct platform_device *pdev)
- 	struct aspeed_lpc_snoop *lpc_snoop = dev_get_drvdata(&pdev->dev);
- 
- 	/* Disable both snoop channels */
--	aspeed_lpc_disable_snoop(lpc_snoop, ASPEED_LPC_SNOOP_INDEX_0);
--	aspeed_lpc_disable_snoop(lpc_snoop, ASPEED_LPC_SNOOP_INDEX_1);
-+	aspeed_lpc_disable_snoop(lpc_snoop, &lpc_snoop->chan[0]);
-+	aspeed_lpc_disable_snoop(lpc_snoop, &lpc_snoop->chan[1]);
- }
- 
- static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
-@@ -339,6 +326,8 @@ static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	static_assert(ARRAY_SIZE(channel_cfgs) == ARRAY_SIZE(lpc_snoop->chan),
-+		"Broken implementation assumption regarding cfg count");
- 	for (idx = ASPEED_LPC_SNOOP_INDEX_0; idx <= ASPEED_LPC_SNOOP_INDEX_MAX; idx++) {
- 		u32 port;
- 
-@@ -346,7 +335,8 @@ static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
- 		if (rc)
- 			break;
- 
--		rc = aspeed_lpc_enable_snoop(lpc_snoop, dev, idx, port);
-+		rc = aspeed_lpc_enable_snoop(dev, lpc_snoop, &lpc_snoop->chan[idx],
-+					     &channel_cfgs[idx], port);
- 		if (rc)
- 			goto cleanup_channels;
- 	}
+I thought it was better for comprehension.
+If we inverse the behavior we would have a function name like that:
+pse_pi_is_admin_disable_not_detected_or_applied()
 
--- 
-2.39.5
+Do you have a better proposition?
 
+> > +static int pse_disable_pi_pol(struct pse_controller_dev *pcdev, int id)
+> > +{
+> > +	unsigned long notifs =3D ETHTOOL_PSE_EVENT_OVER_BUDGET;
+> > +	struct pse_ntf ntf =3D {};
+> > +	int ret;
+> > +
+> > +	dev_dbg(pcdev->dev, "Disabling PI %d to free power budget\n", id);
+> > +
+> > +	NL_SET_ERR_MSG_FMT(&ntf.extack,
+> > +			   "Disabling PI %d to free power budget", id); =20
+>=20
+> You so dutifully fill in this extack but it doesn't go anywhere.
+> Extacks can only be attached to NLMSG_ERROR and NLMSG_DONE
+> control messages. You can use the extack infra for the formatting,
+> but you need to add a string attribute to the notification message
+> to actually expose it to the user.
+
+Indeed it seems there are useless extacks.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
