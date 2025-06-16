@@ -1,152 +1,194 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5330721146C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0A7EAFA;
+	Mon, 16 Jun 2025 07:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750058351; cv=none; b=gG9p93s/DEGiwCqQPktGns6AbfgFaoVFJIDuVGr58cygKqSDe5J0ZhgrCTekJ/LwY61zkBzbTsqtPCFM92UhKYCN5CXPEXCWOJ1G3X2xvAWr91GmkbxQ/KGHzIapFFBsji04tvoAYQWxpri2hdajmTs3pc1TcOmsk3jaWgLwMWs=
+	t=1750058538; cv=none; b=jNX2AAodi27KlX4LIsXKXsKSWNkj20qROfK9XxROmS5p41zEp9MlsYKsIThj+EITqPKCgqdHXB3R6kwJ+HqGB1cP/X5RU15jbfb/Bq1caCfU8ha67bYtcbgOOTOuY7MpCaHqFkizZHT31ub1+NzB5MhkOi3PaW7wTFCL4PjjaNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750058351; c=relaxed/simple;
-	bh=j8Ee5zNRTgD6Im7szjj0YX+ao0qiLzGNAn/JhbhBZbo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R4rA4APqvlfhp4PZsqEidgL+QZzibk2ncTX3Qsnq8naM56iEvmRgw4sztQVhz/wNh42fN6MeoTt1EQZNpqtKLk+rcvdXWOWB03TnDEqPPC7ALbcArJW3/X+ygJYBPzTiw8VqLuj2eZ5isqOzhhL6S6wNro4LRNofAErPC7a48B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qDCrGNw6; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qDCrGNw6"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a36748920cso4888904f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750058348; x=1750663148; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UnEiJ0DPVJeTNWgLtlb3XDcjvamvu9NbT3oHT6+NmYs=;
-        b=qDCrGNw6vOVtCYsWW6pZuP63jtcaTzjRYotoYEfzsBcsOw77W8+OTE6sqlWN2IplRj
-         /Lw4SofKdSF5agcg/Ab3aQvGFlMSFeACELVDKms3zaZU0xZXOttedeNdzTwI9chwpeQM
-         bLJLEOpGSAjSaU37wZiuN0BwFEsRAkGMhvJ5rfDixq87wbIW4eNjy8kG1/o+18mPbrhs
-         w72yENPZ92jOI1BVtK7pToaDHZSwASfVUrdML4MH2Kq7RUWFB6Ep6YoVlYtONRa1X1RH
-         aXZ/3cKlPu4tvP0Zy6Nn2u+UXIEZr+lNCv2zyZKx1b0Jbg/DaIQUONF8U8K9iVv5V5Gs
-         P6qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750058348; x=1750663148;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UnEiJ0DPVJeTNWgLtlb3XDcjvamvu9NbT3oHT6+NmYs=;
-        b=MyyYujRXyoSDePetFnW+ZATPKzASb/K1hEGvxVRDUZh+pCSPWDFYMGwsrkrDA5ZI/O
-         dxcKX44lsUo+IueFTq7+W5uqWHgmi6W4nWpNou6npZfcM4lmg+fbKQQ99IEU4y6JwZlv
-         a69JuI7iYbrzrYSfxzr7Jnx1439Rnum19cpxXyUgoEbuaXlqhW74QOsw6uQPa3HBwSg6
-         B+SKeQvpHdrvXLEX1SzX6CZn9FI8wAe9FrlrgtANC+7ARRtxUn3MLAwiJ4+ZL2ZtY6wh
-         gbJRGVYkolE8st2b03cJ47nX8KJ1H78rzA9FcTyHEIJmX7qCZ4NHfipMcMkuO1Pmb/UZ
-         5yLw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5wzibrITymQxX8fAKjq0VPbXQQBDemKFk4WOOgSxG97iYq7wwZHB/+8sjZo7yZ/I6ZpoxDmgrD10d3HY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzz4cMV1gX1XlYo1HgMD+5PNdTYmfdL3VlUY0jwM8KTX2EV0rV
-	KKb5Et9UlGyAtBCx0nf4iiXn2MUlm1bAKsLyDmqbskN9Pfi7uOrnzbe9kqAM1x2QNmc=
-X-Gm-Gg: ASbGncspz+lHCowjzGOjyGxlkEjlU+VaJv2objJLBzwZ3sh/Z0QMx/hF0TwzH4GufU2
-	HE2jz082GUVZGs6X7u2YRq2gheMfP+OmY3uzA1MN/cib9r0cgzxntlEMBAFB9G0JV6kDQQw5inN
-	JBQ/EdVlyybAW0yhPUYgquBVeAe5w50yoEM6/XPIKR/Gdl6ZGgHgTSq6WP+pjNaOzbzzHArimQU
-	rb9WsjZN/mYdIPRD0UqM2PdZ0qHyprBM3g+TBwdIVYKVu7r/oWgR66qLg0tGJLc37mojm8v4jy4
-	fSwQYbnm60OqfsUEJk423KMDMrmexfKtp4ZfgEQ/+6O3OtFtfdPbP/5b
-X-Google-Smtp-Source: AGHT+IF+qO7rWbAY/SNylys3RMK9GUs1aiqLgKMYCwlF9r3dPIWRev8VFgPCt2yqZehByEZR5PrtlA==
-X-Received: by 2002:a05:6000:430e:b0:3a5:1c3c:8d8d with SMTP id ffacd0b85a97d-3a572e56dc1mr6643153f8f.55.1750058346514;
-        Mon, 16 Jun 2025 00:19:06 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4238:f8a4:c034:8590])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a800d9sm10104675f8f.45.2025.06.16.00.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 00:19:06 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Jun 2025 09:18:56 +0200
-Subject: [PATCH v2 7/7] media: i2c: max9286: use new GPIO line value setter
- callbacks
+	s=arc-20240116; t=1750058538; c=relaxed/simple;
+	bh=WYJBgBE5OoKfdnIg3dSfEmExU5NkhwbCPGfNjh4VGbI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QKVExhspAOd/Jb57gTPDS2HV940eFIYfsYOqKd6Ct70dELLFMLgjbFARQ0H59+jLrmssHd+U+/JUFkQfVytyulesI2jCONZ4w7focXVKeJC8BowecC+pDpx1LJclfXy4x/P7HZO8W8eUF8KLXpS1mnp+JCzJPFwmqyHyWnLBd4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bLLzn5NYbzKHMp3;
+	Mon, 16 Jun 2025 15:22:13 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 1C5AA1A0AD6;
+	Mon, 16 Jun 2025 15:22:12 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP3 (Coremail) with SMTP id _Ch0CgAXacMixk9ohQO+PQ--.53163S3;
+	Mon, 16 Jun 2025 15:22:11 +0800 (CST)
+Subject: Re: [PATCH RFC v2 0/5] blk-mq-sched: support request batch
+ dispatching for sq elevator
+To: Damien Le Moal <dlemoal@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>,
+ ming.lei@redhat.com, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
+ <9d3aee10-9eb3-4f2d-bb9a-1721c05ec3aa@kernel.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <16fd5432-36b0-0a92-0caa-7374ce1464a5@huaweicloud.com>
+Date: Mon, 16 Jun 2025 15:22:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-gpiochip-set-rv-media-v2-7-6825114f18b0@linaro.org>
-References: <20250616-gpiochip-set-rv-media-v2-0-6825114f18b0@linaro.org>
-In-Reply-To: <20250616-gpiochip-set-rv-media-v2-0-6825114f18b0@linaro.org>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Bluecherry Maintainers <maintainers@bluecherrydvr.com>, 
- Andrey Utkin <andrey_utkin@fastmail.com>, 
- Ismael Luceno <ismael@iodev.co.uk>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Julien Massot <julien.massot@collabora.com>, 
- Jacopo Mondi <jacopo+renesas@jmondi.org>, 
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1468;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=HgIaQmZBN+2BMb6XtS/4r6T+Stu0X4lPC1c0+Nqlo58=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoT8VhkafOCJzunwHbvzisJ4lCYekKB0yX6Z1BU
- lA0/7SwGLeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaE/FYQAKCRARpy6gFHHX
- ct50D/0R/5NlZeCsQ88EZ/XCDrW343VojK/G9nbfS4hJar5K6EYRhVcDHsK+tMtcwIOj+0f1ozw
- OjUPWbhs742QvGSlKtHOqOmq0AUJwSteNm3ejtzQa9EYOfB2dfGfxmuV40c36KwLbWsDvqQAiBe
- yy+ikCLRngH3/7nCo59Lo5rKfr+O8tb4jhbIY2p3R8UPlZEGn5mmyC6Nre6P4qcYRymZ1InB+YS
- 8pTjnbsKf4znlbuzFq3DCWdw3kkLja6z/U+BK8h5N1wtkoYA26csJVzcxeFCSGTvGX1JbbOa1/E
- IbzmubKPKPUAiwp5T8yUhuCweat4prnW3G6L53LZ6An5q9WhvnYR/EFOb5IEyxlMLT+mCT6Go+S
- 99sue8AZtPQ6RZc0UUKhuYM8EvHy0Sr9FylULPazl+k1DxGjqp6udkaAQcJ3fhdtHO5b4bmA1jB
- X/NVEzdIFrJh8ql+dxLTcROLtdTLpFBf+ErT2WrLXXRttzaGq7fx9ycItE1Ub8uh/kkEaOECwNA
- SvDORHEtVtlOjehTqC+sd29sNRNVxhLYEA15W0tcZYH5p+cOJt6NVH96vtEMgtZzbnDuLZ4w+oT
- N8HktFnOdHwD56w/WQ4v+yNbF/AYhECgLsA95l2vZ68K2cNVR8yaGTfzSUZ8b4GL4h+HysK/HlX
- QKE2oo1JlgG9XGA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+In-Reply-To: <9d3aee10-9eb3-4f2d-bb9a-1721c05ec3aa@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgAXacMixk9ohQO+PQ--.53163S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFWrZr4UJFy5KrW7tF1xAFb_yoWrGF15pr
+	Wft3ZIyF1DJ3ZFqFn2v34DXr1Utw4kJw4fJFyrtr4ktwn8Zr13Ar4kXFy0va9rt3s5WFWD
+	ZwsrXF95XFyUC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
+在 2025/06/16 12:03, Damien Le Moal 写道:
+> On 6/14/25 18:25, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Before this patch, each dispatch context will hold a global lock to
+>> dispatch one request at a time, which introduce intense lock competition:
+>>
+>> lock
+>> ops.dispatch_request
+>> unlock
+>>
+>> Hence support dispatch a batch of requests while holding the lock to
+>> reduce lock contention.
+>>
+>> nullblk setup:
+>> modprobe null_blk nr_devices=0 &&
+>>      udevadm settle &&
+>>      cd /sys/kernel/config/nullb &&
+>>      mkdir nullb0 &&
+>>      cd nullb0 &&
+>>      echo 0 > completion_nsec &&
+>>      echo 512 > blocksize &&
+>>      echo 0 > home_node &&
+>>      echo 0 > irqmode &&
+>>      echo 128 > submit_queues &&
+>>      echo 1024 > hw_queue_depth &&
+>>      echo 1024 > size &&
+>>      echo 0 > memory_backed &&
+>>      echo 2 > queue_mode &&
+>>      echo 1 > power ||
+>>      exit $?
+>>
+>> Test script:
+>> fio -filename=/dev/$disk -name=test -rw=randwrite -bs=4k -iodepth=32 \
+>>    -numjobs=16 --iodepth_batch_submit=8 --iodepth_batch_complete=8 \
+>>    -direct=1 -ioengine=io_uring -group_reporting -time_based -runtime=30
+>>
+>> Test result(elevator is deadline): iops
+>> |                 | null_blk | scsi hdd |
+>> | --------------- | -------- | -------- |
+>> | before this set | 263k     | 24       |
+>> | after this set  | 475k     | 272      |
+> 
+> For the HDD, these numbers are very low, and I do not understand how you can get
+> any improvement from reducing lock contention, since contention should not be an
+> issue with this kind of performance. What HW did you use for testing ? Was this
+> a VM ?
+> 
+
+Thanks for reviewing this RFC set! I'm curious why there are improvement
+as well, I didn't have the answer when I sent this set.
+
+I'm testing on 256-core Kunpeng-920 server, with MG04ACA600E, 5TB HDD,
+attched to hisi_sas_v3, and the disk have beed used for testing for more
+than 5 years, perhaps this is why randwrite numbers are so low.
+
+> I tested this null_blk setup and your fio command on a bare-metal 16-cores Xeon
+> machine. For the scsi disk, I used a 26TB SATA HDD connected to an AHCI port).
+> With this setup, results are like this:
+> 
+> |                 | null_blk | hdd (write) | hdd (read) |
+> | --------------- | -------- | ----------- | ---------- |
+> | before this set | 613k     | 1088        | 211        |
+> | after this set  | 940k     | 1093        | 212        |
+> 
+> So not surprisingly, there is no improvement for the SATA HDD because of the low
+> max IOPS these devices can achieve: lock contention is not really an issue when
+> you are dealing with a slow device. And a SAS HDD will be the same. Gains may
+> likely be more significant with a fast SAS/FC RAID array but I do not have
+> access to that.
+> 
+> But the improvement for a fast device like null_blk is indeed excellent (+53%).
+> 
+> With LOCKDEP & KASAN disabled, the results are like this:
+> 
+> |                 | null_blk | hdd (write) | hdd (read) |
+> | --------------- | -------- | ----------- | ---------- |
+> | before this set | 625k     | 1092        | 213        |
+> | after this set  | 984k     | 1095        | 215        |
+> 
+> No real changes for the HDD, as expected, and the improvement for null_blk is
+> still good.
+
+I agree that lock contention here will not affect HDD performance.
+What I suspect the difference in my environment is that the order of rqs
+might be changed from elevator dispatching them and the disk handling
 them.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/media/i2c/max9286.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+For example, the order can be easily revised if more than one context
+dispatch one request at a time:
 
-diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
-index 9fc4e130a273f8547d7e7ec194cade5b5e9c8df2..1d0b5f56f989874e46f87db4a49d935049e6e7ce 100644
---- a/drivers/media/i2c/max9286.c
-+++ b/drivers/media/i2c/max9286.c
-@@ -1193,12 +1193,12 @@ static int max9286_gpio_set(struct max9286_priv *priv, unsigned int offset,
- 			     MAX9286_0X0F_RESERVED | priv->gpio_state);
- }
- 
--static void max9286_gpiochip_set(struct gpio_chip *chip,
--				 unsigned int offset, int value)
-+static int max9286_gpiochip_set(struct gpio_chip *chip,
-+				unsigned int offset, int value)
- {
- 	struct max9286_priv *priv = gpiochip_get_data(chip);
- 
--	max9286_gpio_set(priv, offset, value);
-+	return max9286_gpio_set(priv, offset, value);
- }
- 
- static int max9286_gpiochip_get(struct gpio_chip *chip, unsigned int offset)
-@@ -1220,7 +1220,7 @@ static int max9286_register_gpio(struct max9286_priv *priv)
- 	gpio->owner = THIS_MODULE;
- 	gpio->ngpio = 2;
- 	gpio->base = -1;
--	gpio->set = max9286_gpiochip_set;
-+	gpio->set_rv = max9286_gpiochip_set;
- 	gpio->get = max9286_gpiochip_get;
- 	gpio->can_sleep = true;
- 
+t1:
 
--- 
-2.48.1
+lock
+rq1 = dd_dispatch_request
+unlock
+			t2:
+			lock
+			rq2 = dd_dispatch_request
+			unlock
+
+lock
+rq3 = dd_dispatch_request
+unlock
+
+			lock
+			rq4 = dd_dispatch_request
+			unlock
+
+//rq1,rq3 issue to disk
+			// rq2, rq4 issue to disk
+
+In this case, the elevator dispatch order is rq 1-2-3-4, however,
+such order in disk is rq 1-3-2-4.
+
+And with batch requests dispatch, will this less likely to happen?
+> 
+> So maybe drop the RFC tag on these patches and repost after cleaning things up ?
+
+Sure, thanks again for reviewing this RFC set.
+Kuai
+
+> 
+> 
 
