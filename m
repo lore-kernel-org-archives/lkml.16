@@ -1,157 +1,154 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DDE22097;
-	Mon, 16 Jun 2025 13:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081754; cv=none; b=gFY89z+fjpDNDMH2pg3UFCKT1cNVQ5WaqNyxvPhjOvNMJ/zyvAw4DlnwmzET9xCqwxg0lOpYy4hT17rq1Gl96mYIVKeJnhxiqhuVb04PC16y/ar8q3PvD4KGdDhwFcXjuSvVlPbtF3YMiJyejqtiE2+RKdVqZ6s/mxXiBi60c0o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081754; c=relaxed/simple;
-	bh=lIoE9gcdwJ3ykhVZ65gPKl4QqyXImX16Y6imO4XoKpo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Yoc5cCUJwq6t05M7abjWfF9HD2/o6jk2JfM+SpF/Zn9mvhnXpwNXD6BbxpiACspV9T3FOzE9LHOIth/L4DSQexIncUYAtAsSvqszopc5AbkU2TsNdYDmwNWlbQLoyfMmUXiL1BBCbE6eNFUmAbNXRYRSYYVICZ/dauN5y0TG2b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Z4uIJC/a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SWV475mM; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1211D63F8;
+	Mon, 16 Jun 2025 13:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750081758; cv=pass; b=D/sZy8wjj9iWUjw1+b/n7GtYzWvcxf0NCz/T1siqXQiwCjCKLmzUjAxN+xpkTNF8dB/S4vkjgCPvdKrDfMNmpAa/36stpHtOeXUegSmOIqPOJwv728yd39mZEF+tTogIazwGU0NMdPfQWw4RvuT5hWeCAhSk+VJQMU2qtTrJmJg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750081758; c=relaxed/simple;
+	bh=suG/XmN64poiwvdjtYlhbYfxNOYfNnN19diIXR+URYY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=YNGktZj4eAPYLZP5V01Z/QC2PcwFWaziIZtczQo7QGIcNpQE7K06Hn1nzT0HjU8DKSey9XrOEQUoYKMPSH1a9SoT9b7yHsah5jpFx1rUXpGX4WUVX3Bk5eCEYYOxwH++PV3hsvusIdUrXIiNYhiFdiHBKKJoEdrRVrfGF6b5kW8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=A8V7qrDQ; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Z4uIJC/a";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SWV475mM"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A7B9211402B7;
-	Mon, 16 Jun 2025 09:49:11 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 16 Jun 2025 09:49:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750081751;
-	 x=1750168151; bh=8qsrTRHcvOAd2c9i2pGiJI5TDC5V+Z/Uoi8ty2RR4eU=; b=
-	Z4uIJC/aCJl5TCM7IJcxdppiQeF9UinlgJ2FAyHxVkhcbrEisiiFz6bUlWGEeZXd
-	/d5wIDHzl+uT+3Zn1PimRM7erbMWjE0B6lgEglmMpgNW8BJ/CrLM1wrixtFzEVmN
-	kcUbY5GkddT9ORS9T5vTVBNefyf1Hm8cgrk5ClP8fXWtCkwghqO95Cc5kW+iCGzD
-	taBqRXfX2aCqKTT4gmrm6ZaJOugD/3+yABMtAjV9GHv9PDH3nAbdhnDVnwOvCk1M
-	1it0uzJGhC1lKG9AO5hF0CXdRZUbA6pw7zcdtsEqaKApoS0U+JAILj41qfCidCMe
-	PKvPm2ujwVvhL71oKEM3Kw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750081751; x=
-	1750168151; bh=8qsrTRHcvOAd2c9i2pGiJI5TDC5V+Z/Uoi8ty2RR4eU=; b=S
-	WV475mMLO7x4A5sZtbebmxvM8OcaNLnVCtokq8g6gTNSCzQBy4s025IKdGXzlnfc
-	T7N0xGe8eeZpfQCa3gK1yt3CpZgatrJ+Y/VqbkpCn4BF/ZHybXzF0SiP3tm9j3zC
-	9TYsF5kvNUfT4YDBhPxJsGkJ2qDt91JmaJ1FzBEH6yY6hN6a/YilWxajwkf7ONEC
-	cKXnkQj2sqK5bjPm9qyRx7tTdrawXLK5kgcz5J9zsytUuN6C8eaNAKkzFtvbge+3
-	7+YpUYa0T+fwb1mYR2yyK/0q2BBunr595MFRJPDqzGYJX4PiPzjkOTtY8hvfYOg6
-	YdWcjeLIrBV/zATgtPzpg==
-X-ME-Sender: <xms:1iBQaJovrZfMAJmFVtahyuzCOC3jdKDplIkMzJtu7T1-Vridmdy1CA>
-    <xme:1iBQaLq8b-MxDM4GeGqxtFEGrppMWOXAax4vZH-AGalSjHJp3JJFDCtDSBYVGAhyP
-    seZ43u0GUSxV_1ttno>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieejgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    gedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihse
-    grrhhmrdgtohhmpdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgt
-    phhtthhopehlkhhpsehinhhtvghlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhho
-    rdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtph
-    htthhopehiohhmmhhusehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepohgv
-    qdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhope
-    hhtghhsehlshhtrdguvg
-X-ME-Proxy: <xmx:1iBQaGPP-njiVQWYcMzKqfN8lWKt9KF-S1wtG_wm6kPw_gxZUfGVFg>
-    <xmx:1iBQaE6rRCeVI14O_0cd-8ltlcUvcT-2wBWXWvZmHREULi8sUN979w>
-    <xmx:1iBQaI7IUDY9acNm7MIkvYwTI1PPa3BRqYfGOWPARWICCfoy8ytxkw>
-    <xmx:1iBQaMiUYzyNEksn2mo2FifTqnPgZNYfQAh_z6slzGqt4lIDho2R7A>
-    <xmx:1yBQaCJ-8dPrB2ejqDv-iCGGYbucZDq8lQpAyVmE_WAP8eNfUxFTF9Ap>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CFC38700062; Mon, 16 Jun 2025 09:49:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="A8V7qrDQ"
+ARC-Seal: i=1; a=rsa-sha256; t=1750081736; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QOkFke+WYRdhFdoWYsFwbcjyaLKzKNw5qOZVzhtwMnkC8aHMsPHoCw/QiCXEp/9Ypa1VT7dBHA12lhloN7qHviAL3wTRkjorBOPpcflZK2Fl4f22aTVf3R+x2LOoxpbob/rTd0J5odSv6Cvwa1oerNYVx1ToYkntyST4iItDleM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750081736; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=F/rH2WrCUQ484FUFlRj5siQ69daSzn6eYUq3Oh+TEoA=; 
+	b=DcMPcGCrew6QaLYGsiLfH3eXLW7MKhjOEbGXzk9JdIz6BBTP64jDYKkt63VC4NkX5qSZD9ftmb9otDVDKQR9uQAWImdPnUMCJjfrKUoGAfe8qOwy56ODAJRUKWJTzhThQ9qjqFu6rkazbgso0qVaNYMvmzJrdVBhDN5nvZx0LsE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750081736;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=F/rH2WrCUQ484FUFlRj5siQ69daSzn6eYUq3Oh+TEoA=;
+	b=A8V7qrDQFujNu15YNu5iHvvHPfx9ilP21fKxk0qxc48bCSQezHjtuRu3sAE8HmQs
+	ifHB+BeziJgMEUeUNra2Ay39jCpSs+Vy3V59m4LjPzpheE9dG9W51P8+susyRO89MiL
+	OMC6NF0j3DrBPOVEbxtSK3mvkdm0J3r7YXrI3vwQ=
+Received: by mx.zohomail.com with SMTPS id 1750081733380228.17260193114203;
+	Mon, 16 Jun 2025 06:48:53 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: T4808b90e09d8ad4f
-Date: Mon, 16 Jun 2025 15:48:50 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "James Clark" <james.clark@linaro.org>, "Christoph Hellwig" <hch@lst.de>
-Cc: "Mark Brown" <broonie@kernel.org>, "Vladimir Oltean" <olteanv@gmail.com>,
- oe-kbuild-all@lists.linux.dev, "Larisa Grigore" <larisa.grigore@nxp.com>,
- "Frank Li" <Frank.li@nxp.com>, linux-spi@vger.kernel.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org,
- "kernel test robot" <lkp@intel.com>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Robin Murphy" <robin.murphy@arm.com>, iommu@lists.linux.dev
-Message-Id: <9788991a-ac37-4fde-81db-c55035d00f27@app.fastmail.com>
-In-Reply-To: <f723d490-c228-42d5-9f9f-158df54a092d@linaro.org>
-References: <20250616111749.316413-1-james.clark@linaro.org>
- <20250616112927.GA21689@lst.de>
- <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
- <20250616120832.GA24959@lst.de>
- <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk>
- <20250616121444.GA25443@lst.de>
- <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org>
- <20250616131346.GB29838@lst.de>
- <83855c1a-c128-4762-9d6b-e17f2c4c8820@linaro.org>
- <d16bdc40-20d6-49db-bf41-18bb9b8e01fd@linaro.org>
- <20250616131944.GA30260@lst.de>
- <f723d490-c228-42d5-9f9f-158df54a092d@linaro.org>
-Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+Date: Mon, 16 Jun 2025 10:48:37 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Benno Lossin <lossin@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux>
+ <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-On Mon, Jun 16, 2025, at 15:23, James Clark wrote:
-> On 16/06/2025 2:19 pm, Christoph Hellwig wrote:
->> On Mon, Jun 16, 2025 at 02:15:56PM +0100, James Clark wrote:
->>>> Yes it does, it has a few modes that don't require it. Presumably we can't
->>>> just add a depends into the kconfig for all devices because they might not
->>>> be using DMA.
->>>
->>> *for all the different variants of spi-fsl-dpsi devices I mean
->> 
->> This is drivers/spi/spi-fsl-dspi.c?
->> 
->> Yes, looks like it is one of those rare devices supporting a DMA and
->> non-DMA mode.  But everything seems nicely guarded off using
->> "dspi->devtype_data->trans_mode == DSPI_DMA_MODE" checks there.  So
->> wrap them into a little helper using IS_ENABLED(CONFIG_HAS_DMA) and
->> everything should be sorted out.
->
-> Sure, I don't mind doing it.
->
-> But separately to that, I still think making the stubs consistent would 
-> save people a lot of time diagnosing build failures if they switch 
-> existing code to any of those 3 functions. Principle of Least 
-> Astonishment and all that.
+Hi Danilo,
 
-As far as I can tell, the difference here is that the
-dma_alloc_coherent()/dma_free_coherent() calls all get stubbed
-out, so the 827 drivers using those can all build cleanly on
-mk68knommu, shnommu and UML, while dma_alloc_noncoherent()/
-dma_free_noncoherent() are only used on 15 files that are all
-guarded by some other Kconfig dependency at the moment and won't
-build on the those platforms.
+> On 9 Jun 2025, at 13:24, Daniel Almeida <daniel.almeida@collabora.com> =
+wrote:
+>=20
+> Hi Danilo,
+>=20
+>> On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
+>>=20
+>> On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
+>>> +/// Callbacks for a threaded IRQ handler.
+>>> +pub trait ThreadedHandler: Sync {
+>>> +    /// The actual handler function. As usual, sleeps are not =
+allowed in IRQ
+>>> +    /// context.
+>>> +    fn handle_irq(&self) -> ThreadedIrqReturn;
+>>> +
+>>> +    /// The threaded handler function. This function is called from =
+the irq
+>>> +    /// handler thread, which is automatically created by the =
+system.
+>>> +    fn thread_fn(&self) -> IrqReturn;
+>>> +}
+>>> +
+>>> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> =
+{
+>>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+>>> +        T::handle_irq(self)
+>>> +    }
+>>> +
+>>> +    fn thread_fn(&self) -> IrqReturn {
+>>> +        T::thread_fn(self)
+>>> +    }
+>>> +}
+>>=20
+>> In case you intend to be consistent with the function pointer names =
+in
+>> request_threaded_irq(), it'd need to be handler() and thread_fn(). =
+But I don't
+>> think there's a need for that, both aren't really nice for names of =
+trait
+>> methods.
+>>=20
+>> What about irq::Handler::handle() and irq::Handler::handle_threaded() =
+for
+>> instance?
+>>=20
+>> Alternatively, why not just
+>>=20
+>> trait Handler {
+>>  fn handle(&self);
+>> }
+>>=20
+>> trait ThreadedHandler {
+>>  fn handle(&self);
+>> }
+>>=20
+>> and then we ask for `T: Handler + ThreadedHandler`.
+>=20
+> Sure, I am totally OK with renaming things, but IIRC I've tried  =
+Handler +
+> ThreadedHandler in the past and found it to be problematic. I don't =
+recall why,
+> though, so maybe it's worth another attempt.
 
-I agree that it would be best to treat the coherent/noncoherent
-cases the same, and I also think the existing stubs are a bit
-silly, but just removing them would likely require fixing
-hundreds of drivers with added Kconfig or IS_ENABLED() checks.
+Handler::handle() returns IrqReturn and ThreadedHandler::handle() =
+returns
+ThreadedIrqReturn, which includes WakeThread, so these had to be =
+separate
+traits.
 
-Maybe we can actually remove CONFIG_NO_DMA/CONFIG_HAS_DMA
-entirely and remove all the checks for CONFIG_HAS_DMA? 
-My guess is that this would only lead to a small code size
-increase on the affected targets, but since they are not
-actually trying to do DMA, and they all have a very limited
-set of drivers they actually use, it won't break existing
-code.
+I'd say lets keep it this way. This really looks like the discussion on
+de-duplicating code, and as I said (IMHO) it just complicates the
+implementation for no gain.
 
-    Arnd
+=E2=80=94 Daniel=
