@@ -1,79 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7AA1F0E2F;
-	Mon, 16 Jun 2025 07:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5391433AC;
+	Mon, 16 Jun 2025 08:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750060791; cv=none; b=iGD6RQyuN02hvoGXX6SufjX3BbcZDGAWUeMExCPDWM5IzJdO8OdaqSLPupsO5K+wyXU1zMOKPj0FI6BkXHF9UpJpyChTnqjAWQunMXx55zWsiujfjZah4Ol9dOpDzIFvsjn46/uRvaG9iu9/VksSoneG8/GsIIptygCKVEwJWLw=
+	t=1750060899; cv=none; b=XxofqKggDnwrUg6ewa1qhogJCLimg5/OgCyaZPRm0dV8rGFT7ZVRz/DHYx2LfM77m7afQYuqm9Lze6K4LI2j6uZet0Q4G6i7ZEdOeZJ8U3jtmRLbnsuh69FTgRX1f3/P2Ot/OFT6RPH7E7EG0a6H7j4/8LHKxkzF9HvtcaIoFLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750060791; c=relaxed/simple;
-	bh=M3kirMB7I0PslYpcYITprtiGrb3XS15fDjXTKOawV4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hlMkKOkQPDw54d+Kc0VYmFkWlCa9VB6fgzV5GXa/LdlfIRv3iLiMneUEfdrwh1AScmwTdogPFcYaNDiK/v7cpy+m8Mw35s4fdWkpz85LuVEivrMoRIMyhGwP0g1OwvqlCV7w4NUraOQDaamtMY/AEa0kTFEhgoChrzqQvpBKmH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOVcITC3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750060899; c=relaxed/simple;
+	bh=qbiuABhOHw9jCScXy7wSJQIDHq9uSZO6sxDl4pZ+a4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o3s2Bh11GByQmq+KaYPDw40Dl9XCb1s9woxFdaoAHaEKvYjeL3CNZO7s82tILxF7njHbSqVAjO8UeqR558pS4wYaCLURW6qJL8Frhtjof1ZlzSDvbKZKEpzpV9esr+iBY68S2oDqX2QJcRcdPlwEfRgaGlaJmlGT/oT81RijAmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQ6DkCCA; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOVcITC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9FBCC4CEEA;
-	Mon, 16 Jun 2025 07:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750060790;
-	bh=M3kirMB7I0PslYpcYITprtiGrb3XS15fDjXTKOawV4M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QOVcITC3IPfmG2wgtHqZpSiFBYi6jqGqSOzNeoH9vfkSmo5kvKx4FoP3Bt3TVo4f3
-	 pBjVjs51cBw3wFGszj9ozgzBgx5oItB89616pE1op+KOHFWEDy2OlSZCfoBLkO6oQV
-	 TCQjxj1GqPswCC5RkYxuy2cPFOgHh9VDhN7IrZVrF3HpCmPhwm4gmAgVkxbrgp7p6G
-	 qWLZEqHvWmFGk4+Ik0bDFYK1ifXEMh/6sE2ebTl6uen5NcERNT3kda4vZgniVCoTde
-	 k4L+NK07M9i/Br2ELNClsTfrtNIsHoU8uAtBGH7oc7TBjU8HXmdTGM335V60Uzxq4E
-	 iv2tdKZvumacg==
-From: Christian Brauner <brauner@kernel.org>
-To: Luis Henriques <luis@igalia.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] fs: drop assert in file_seek_cur_needs_f_lock
-Date: Mon, 16 Jun 2025 09:59:37 +0200
-Message-ID: <20250616-entflammen-braten-00f78640ddce@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250613101111.17716-1-luis@igalia.com>
-References: <CAGudoHGfa28YwprFpTOd6JnuQ7KAP=j36et=u5VrEhTek0HFtQ@mail.gmail.com> <20250613101111.17716-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQ6DkCCA"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45348bff79fso10992435e9.2;
+        Mon, 16 Jun 2025 01:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750060896; x=1750665696; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8rjhe62crpddPisDTbWMw9CI5pB8pf5ptQA0xBtkwno=;
+        b=iQ6DkCCAnRvMVRPI/cFYj68wmsbSonMgYuXVbbxRaYtWr84XrGlGEdMzDB3IdM0nbD
+         3Pdt4zDOnMXiWcwjOn1lhWMwttw4cA0rjyVzCAsc6hhdHZ0IrrYHyfrAaY7DK26clmTn
+         LSBvHfAWuGHvOasHSDvIHed+a+cGxdLxPN6eURHXUyCC4w0uYfvzRvVzHCv0MV+WqlvY
+         cIjQqhSssgsoUzz09hwF91uVmuEpIVaTeFy26piU0mCTfNTfBtp5xOs4sAouB+1pE5Cm
+         9kSJafOScQlxD9A+/wNRBAoO6zIE1ohEoQ8MxcMb1hQYvS0HSsEnA8heNAFXh6KhekI/
+         3dbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750060896; x=1750665696;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8rjhe62crpddPisDTbWMw9CI5pB8pf5ptQA0xBtkwno=;
+        b=bPzBy27yGibfy3R7itDe1qQGab2uXwlIFuyVSC/vL6BqzjdZmbYlFtRRPn9WFXLTsu
+         ILV884omU8xT3VC8V9asrb/nuGhGJrQvYyqNSC5omjfQ2D5lS6L6fDuIrie4upYsObwe
+         t1lOgI9hEjMx8A28DWfP90kcKNn0yiKfWmeEF2ekC6cMJ/IWrm2jJWZ4wHdj2+ET0DhK
+         tmLYa3FoGxXN3KmUTTS5qqB4AxgtdK6JYjuGnGcOvfpEr6lfTmRS1Vq4+PGc8A71OTRq
+         4ePAzY3FLTk8kKh3HDAr2/2lAevPWNDRwW7GlZsRw7Ox/61wkzXO3Hb/Y3PAXnmf+z3t
+         Sg/g==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Zgh87fI8F5nXUHhkqcrkj7OsHTWD6sY4xN6osVrbQy7mcFF2b0oRKShX3fJpvlzrE8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEC6qvmnt7Fj98wHsiiVk3AqLci1ayMFmPpPyLIorNN5S3dOvI
+	wfxvuUri8UrQZ5l0Z+VsAftE/WDFThOxFAPv9xxks8NqNWLS5TBQLYNsrj2K+Q==
+X-Gm-Gg: ASbGnctFxbHjt7e2cYQdXLLelI6zJ/4rWLzmbq4fGOB/MguzWi5TkC6WmveB3gGbDpA
+	Ex652YeLHgIDdFfOC6jsKgPLPyH51au1klTUurjSkXcyWCFgzBIkQjot8RkEtaCUQ86q6o1IWGV
+	0d1etlOfMVoDP9lT1GJzCAYmWXK+mx8m5H5pvAuA0J9kX9jS4GhFmqK2wx1YS7o4KE5AAK4xh3X
+	2oK1YfyKo+XzoYB2F1aWw5a83xPJI5UiSs3esqR5/ZMEe2d2uZ5i3L4RxlFtNtaTr1dIEucuy5e
+	96wFUqWZSsFVrqSmPoaTAyEb06QDMoulIMJTKDALlpr6euJf2VFLoMXDYh22Rd5Rol2BPA0fsCG
+	tPNNHdj8iVShj7IwrVyf7oisc
+X-Google-Smtp-Source: AGHT+IFxUzw9tvO6IMyaRp5Ig3addvgyu6ghA4/maMlkhudC6AOZXyedgOso00+fPoolrpIVZvIyoQ==
+X-Received: by 2002:a05:600c:8509:b0:441:b19c:96fe with SMTP id 5b1f17b1804b1-4533caa3d54mr98453155e9.10.1750060895713;
+        Mon, 16 Jun 2025 01:01:35 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b62ba7sm10525383f8f.91.2025.06.16.01.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 01:01:35 -0700 (PDT)
+Date: Mon, 16 Jun 2025 09:01:34 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Alex Williamson
+ <alex.williamson@redhat.com>, Zi Yan <ziy@nvidia.com>, Jason Gunthorpe
+ <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>, David Hildenbrand
+ <david@redhat.com>, Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
+Message-ID: <20250616090134.476427c0@pumpkin>
+In-Reply-To: <20250613134111.469884-2-peterx@redhat.com>
+References: <20250613134111.469884-1-peterx@redhat.com>
+	<20250613134111.469884-2-peterx@redhat.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1100; i=brauner@kernel.org; h=from:subject:message-id; bh=M3kirMB7I0PslYpcYITprtiGrb3XS15fDjXTKOawV4M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWT4n/t4cvXZUreskAUSR3c9z7cxDPjidU2z+qPJ3J+P1 E7vUPlxs6OUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAiD7cw/Hf0dbJfwle6psXq 1s7eU/X9B3P8ns2zDZ1982vpjt+/21cz/I+ZPJGTve5ycczGaRIX30fvsPjiO6PElMl7s295bmH oRAYA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 13 Jun 2025 11:11:11 +0100, Luis Henriques wrote:
-> The assert in function file_seek_cur_needs_f_lock() can be triggered very
-> easily because there are many users of vfs_llseek() (such as overlayfs)
-> that do their custom locking around llseek instead of relying on
-> fdget_pos(). Just drop the overzealous assertion.
+On Fri, 13 Jun 2025 09:41:07 -0400
+Peter Xu <peterx@redhat.com> wrote:
+
+> Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
+> the helper instead to dedup the lines.
+
+Would it make more sense to make it an inline wrapper?
+Moving the EXPORT_SYMBOL to mm_get_unmapped_area_vmflags.
+
+	David
+
 > 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  mm/mmap.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 09c563c95112..422f5b9d9660 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -871,9 +871,8 @@ mm_get_unmapped_area(struct mm_struct *mm, struct file *file,
+>  		     unsigned long addr, unsigned long len,
+>  		     unsigned long pgoff, unsigned long flags)
+>  {
+> -	if (test_bit(MMF_TOPDOWN, &mm->flags))
+> -		return arch_get_unmapped_area_topdown(file, addr, len, pgoff, flags, 0);
+> -	return arch_get_unmapped_area(file, addr, len, pgoff, flags, 0);
+> +	return mm_get_unmapped_area_vmflags(mm, file, addr, len,
+> +					    pgoff, flags, 0);
+>  }
+>  EXPORT_SYMBOL(mm_get_unmapped_area);
+>  
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] fs: drop assert in file_seek_cur_needs_f_lock
-      https://git.kernel.org/vfs/vfs/c/dd2d6b7f6f51
