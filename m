@@ -1,135 +1,217 @@
-Received: from rcdn-iport-8.cisco.com (rcdn-iport-8.cisco.com [173.37.86.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34072868B3;
-	Mon, 16 Jun 2025 16:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F1D287511
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091279; cv=none; b=rY6ZIorURvX5oOnhXGCYLHkQQYJAFERbjABlXULO8KrG4mJpaT6aqz9Te08CxxSMcqLYzcbl4Awu+EWdHAH99pDRJyj523hFTupKAIeGP8dsBSgOC0Rd2Iy2tRLOQU90rrHYD9OAn24yVRaySFcDJJ+deBubhmcemrIe+VkIOy8=
+	t=1750091342; cv=none; b=Qicinu9ikj1SXMWpq+L1qdj8OMipFfS+YXGXWhDgfEzkJqv0s2d22JxzFC2030OxaCsL3IyW6UyOW4yr/M6MiNJKVEFIDygeHZvm6X8O9aK9bFVn9+l68Cb3jp6TVf32MzCYqsgRZIXTQkomivyZwol6muLV/ldxU44vKzjls5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091279; c=relaxed/simple;
-	bh=HURmsdBbKNOSAqNOenBr9m14Z0sOMDL8smrbOnA/p1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WkS5kR0RwO6egxwj6sqOMsaaikiMWpDWHLQTfHRU8MK3TTkCFQNYsU15F6sZ1IMNlS+IBJkoSbAFOF6idYVwcftFqcvRIJoNm9R0Gl04TvK7wW7vXoIzbbO4jizpyb39PL74Q2QoT/JrKkiC4QpsmXQ8jdx5kR9+iJcvuv8HCo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=N+LPfg/O; arc=none smtp.client-ip=173.37.86.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1750091342; c=relaxed/simple;
+	bh=oc308cWJY7K5jtB4M8lGQgi0gwj+laPxSvUnNM1ACGw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gx4RyELFZgUw9fC5HovsNolKYgqfT3j31OoOIBzEB/wDvzUQ3fCLTzb3u8C513YJb0Req7c4zVJcmf77qMSMvTQaqGMpqTMZwqitkEUtxaYXCcDfuS5CkElhajFqsDVhsopU/IV1ZN6BFEPdNFQVoBD8eVqBko/9Zr+Xtczsejk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jkjYoPFJ; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="N+LPfg/O"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jkjYoPFJ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so2684056f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=1077; q=dns/txt;
-  s=iport01; t=1750091278; x=1751300878;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IFBqO6pbNAK7jq9L1bG5wLn+UjI0z0smSksS5Y9zv6A=;
-  b=N+LPfg/Oz2RRoLbTZTO/o5g9yvRqBWb1/fWXcgpIt8OL4ndBLHNtoz8O
-   pDkR4ChJIOf78ke2Xqb1Vr2+vA6o81fjZjgUenZxJnRDW0GNOpSMwg7aE
-   IFEyt4jRAhjFagUzgWYFpNBx9QCsbvo4xNkwwPSzSbKoAJIOrRkbTrZHr
-   9wE6lfXt9Ry6Bs1Bg8D1b7xZq5ditiUhg6HNcy9BC2So5DyigsyH54Mhj
-   zaRoaPWDXQNicNnPIfaHRFwh4cEG3nFRFQuQX/Ejym73icL3Fk99z/GDs
-   h1IWUDrjX7CQJbHJeFLHIG3mgZus+Oe9UPU4jZuTsyhMeUFOa0+ZeuiYc
-   w==;
-X-CSE-ConnectionGUID: kIg4VixtRbSEoQ7TvlZwnw==
-X-CSE-MsgGUID: b9xPorp1RVeXRrUqJcmfaQ==
-X-IPAS-Result: =?us-ascii?q?A0ANAACbRFBo/5QQJK1aGwEBAQEBAQEBBQEBARIBAQEDA?=
- =?us-ascii?q?wEBAYF/BgEBAQsBgkqBUkMZMIxwhzSgOoElA1cPAQEBD1EEAQGFBwKLZgImN?=
- =?us-ascii?q?AkOAQIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBDhOGCIZbAgEDJ?=
- =?us-ascii?q?wsBRhBRVhmDAoJvA694gXkzgQHeN4FugUkBjU1whHcnFQaBSUSCUIE+b4FSg?=
- =?us-ascii?q?jiBBoV3BIMmFJUzi3BIgR4DWSwBVRMNCgsHBYFjAzUMCy4VbjIdgg2FGYISh?=
- =?us-ascii?q?CmGX4RJK0+FIYUFJHEPBk9AAwsYDUgRLDcUGwY+bgeYC4NygQ6BAoE9AaYAo?=
- =?us-ascii?q?QuEJaFTGjOqYZkEqTiBaDyBWTMaCBsVgyJSGQ+OLRa7UyYyPAIHCwEBAwmPf?=
- =?us-ascii?q?4F9AQE?=
-IronPort-Data: A9a23:BIWiv6Cl+O9POBVW//niw5YqxClBgxIJ4kV8jS/XYbTApDlxgWAHm
- 2QYCGDXPa6DZWTzft0kbN7koE4D6JOHx98xOVdlrnsFo1CmBibm6XV1Cm+qYkt+++WaFBoPA
- /02M4eGdIZuCCaF/H9BC5C5xVFkz6aEW7HgP+DNPyF1VGdMRTwo4f5Zs7ZRbrVA357gXWthh
- fuo+5eCYAH8hWYuWo4pw/vrRC1H7ayaVAww5jTSVdgT1HfCmn8cCo4oJK3ZBxPQXolOE+emc
- P3Ixbe/83mx109F5gSNy+uTnuUiG9Y+DCDW4pZkc/HKbitq+kTe5p0G2M80Mi+7vdkmc+dZk
- 72hvbToIesg0zaldO41C3G0GAkmVUFKFSOuzXWX6aSuI0P6n3TEwNRhUH83LZEi8N1aBlgRy
- eIcGi8LcUXW7w626OrTpuhEj8AnKozveYgYoHwllGifBvc9SpeFSKLPjTNa9G5v3YYVQ7CHO
- YxANWoHgBfoO3WjPn8UAYgineOhhVH0ciZTrxSeoq9fD237l1wtjOi2bIOPEjCMbc8Ejn6fv
- HqfxVr0MisACcW9wj+L+0v504cjmgu+Aur+DoaQ+vdsxlaa3HQeDgEbT3O/oP+wkEn4XMhQQ
- 2QW9ygkhawz8lG7CNj3Wluzp3vslhsVQcZRFasi5R2A0LHZ5S6eHGEPSjMHY9sj3Oc0QDEs2
- 1CJnvvzCDBvuaHTQnWYnp+OoC2/IzM9N2IOZSYYCwAC5rHLpIA1kwKKTdt5FqOxpsP6FCu2w
- D2QqiU6wbIJgqYj06S94ECCmDm3p7DXQQMvoAbaRGSo6kV+foHNWmCzwVHf6fAFKMOSSUOM+
- SFd3cOf9+sJS5qKkURhXdkwIV1g3N7dWBW0vLKlN8dJG+iFk5J7Qb1t3Q==
-IronPort-HdrOrdr: A9a23:xozmcqtMJXdssWrU/7ysx1cP7skDWdV00zEX/kB9WHVpmwKj+/
- xG+85rsSMc5wx+ZJhNo7q90ey7MBDhHP1OkOws1NWZPTUO0VHAROpfBMnZsl/d8kbFmdK1u5
- 0MT4FOTPXtEFl3itv76gGkH9tl/MOK68mT9IDjJg9WLT2Dr8pbnn5E4sHxKDwReDV7
-X-Talos-CUID: 9a23:ItKyc2M+tYQZYu5DWwhoqHAVCtwfeEbwy06PH1G8O3lvV+jA
-X-Talos-MUID: 9a23:Mh7zGgROYDMtF6J/RXTm1SFaM91wup6QBXA3i6gfmcKBOyVJbmI=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.16,241,1744070400"; 
-   d="scan'208";a="384483412"
-Received: from alln-l-core-11.cisco.com ([173.36.16.148])
-  by rcdn-iport-8.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 16 Jun 2025 16:27:51 +0000
-Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kartilak@cisco.com)
-	by alln-l-core-11.cisco.com (Postfix) with ESMTPSA id 85E82180001E7;
-	Mon, 16 Jun 2025 16:27:49 +0000 (GMT)
-From: Karan Tilak Kumar <kartilak@cisco.com>
-To: sebaddel@cisco.com
-Cc: arulponn@cisco.com,
-	djhawar@cisco.com,
-	gcboffa@cisco.com,
-	mkai2@cisco.com,
-	satishkh@cisco.com,
-	aeasi@cisco.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	revers@redhat.com,
-	dan.carpenter@linaro.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: [PATCH v5 4/4] scsi: fnic: Set appropriate logging level for log message
-Date: Mon, 16 Jun 2025 09:26:32 -0700
-Message-ID: <20250616162632.4835-4-kartilak@cisco.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250616162632.4835-1-kartilak@cisco.com>
-References: <20250616162632.4835-1-kartilak@cisco.com>
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750091339; x=1750696139; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GLMk8sUAbFDL9awvd1JVfmla5ZuGflgSXmH7EtFQNMY=;
+        b=jkjYoPFJOKMBzVp4gaYUmYrdwEo44U3Kvrkp8aDRzsY+PznXMsZSXsLph1CCWcjWbP
+         fbnSPRsj7mCsxB4q7LNiyZOHBpHA942a0WZsct3ixAxlLPm6RpqgOWEGCj7/XsYE2Qe+
+         4PxPT9rmsmY1f/lPwWxDZrBYeh3R9sqD30RQkTn0DH/aASfAtfIbL8yXPk+uwxK58UwX
+         j+049SWln+hHrPnzANpUSGQInhu6DVAxNEz5FrZhVsc5SneDM7VivovKK5zwhD3WQ5PO
+         8nEcWU2Vs3DqcnQcoUoMD8R5/pUGaVkvuYQwhOo8t/0KWpAJjOSEMfu7KEe+XSDzxrJm
+         wwUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750091339; x=1750696139;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GLMk8sUAbFDL9awvd1JVfmla5ZuGflgSXmH7EtFQNMY=;
+        b=aIsyk2eFx+dhE9PPm4DTeRqgwtVy5wA17JWTNl3HxhXSs2ZLOtBFxEl+jIB9nQ/adK
+         nbz+vkp5+iVdjacPS8grrga3r1ESG+z5B9F+5sZlSG0BqK7S1nCIGrAh2v5x3tXSHkd9
+         nsy9GePt8vO1NZmSwRAJ9ZRpYoz9zc7L9OKS0FAvM8eAc3TX/X6fDibmlAdnSxzZYInR
+         6oDmICSz4vRVX0xmou0OGoGx4Tn8qtOGSs/pcwoKlIhOOi0IEBKH5yu0q/8p6atH5rIV
+         sst+073mwQVC6C6D6MoZX81KQqcNflF1qbUDZUwkIlt98Qhvc2+euxU6JUlQsugIKAj4
+         qFqA==
+X-Forwarded-Encrypted: i=1; AJvYcCV53dCf0hNjz4lPf0EZUfq7T6oQTbmhNPylEZjrVSPyNY6Cwm7PP2Kpj4EFqaZnNlJHkvtNMEiAoIzfQ8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXAo9QCaXwRnplY2FT2U1e8kpw56/2bx1Ot6wKq41B05PRXTOf
+	jyeiF4JCb98MPpp39YSkHQog7dCL4CH/HjeYwoy+ynLeedFRU4RAe1/0qkRWMmC7RiI=
+X-Gm-Gg: ASbGncvvib+hUjAW3EbKdh5FrmMbhVU5s1DMUlJQ2q/PsHz1UBa4KWC8FyES9J7lGsU
+	5o2la4bbgzXm3T6OhWslRqAl6hysrNNOjZK/wfLhMwRRhD2HaXGJFzr94nKz+u/u+gtvD08HuO0
+	XsDB4h8oipmpuUGyziYcMFYK+52s6730ZvfMjJKaZzTor+EjR9mKW38aVmNlGBYJh80W9jJ09Rm
+	iwIGxuZRGt5dJHSLJ/B51ae1ZoAT3xMBYajJZkTJ4H3x6apUq54yVx/EC58qdVWq5A6arYDA+1q
+	cOjQYX0irRGlDajKdg3q/KZVDiffq0fgBDSPSI7IzSD2lzTsOTYU0v/XQGivpg==
+X-Google-Smtp-Source: AGHT+IG+uKVD+2uQ30rqIvYD8novgngIzsToeM/OcxULMAkMYw8cbJlVs0Ezi+EAX8FyDekCYLEjHA==
+X-Received: by 2002:a05:6000:1447:b0:3a4:d9fa:f1ed with SMTP id ffacd0b85a97d-3a572371aa7mr7369046f8f.13.1750091338599;
+        Mon, 16 Jun 2025 09:28:58 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1866:9357:88b6:f1b2])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568a5407csm11646209f8f.12.2025.06.16.09.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:28:58 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jian Hu <jian.hu@amlogic.com>
+Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>,  Chuan Liu
+ <chuan.liu@amlogic.com>,  Neil Armstrong <neil.armstrong@linaro.org>,
+  Kevin Hilman <khilman@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,
+  Michael Turquette <mturquette@baylibre.com>,  Dmitry Rokosov
+ <ddrokosov@sberdevices.ru>,  robh+dt <robh+dt@kernel.org>,  Rob Herring
+ <robh@kernel.org>,  devicetree <devicetree@vger.kernel.org>,  linux-clk
+ <linux-clk@vger.kernel.org>,  linux-amlogic
+ <linux-amlogic@lists.infradead.org>,  linux-kernel
+ <linux-kernel@vger.kernel.org>,  linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 5/6] clk: meson: add MESON_PCLK_V2 for sys gate clock
+In-Reply-To: <ea83e375-7088-4047-92f1-31d0e7c2c331@amlogic.com> (Jian Hu's
+	message of "Fri, 13 Jun 2025 13:35:22 +0800")
+References: <20250509074825.1933254-1-jian.hu@amlogic.com>
+	<20250509074825.1933254-6-jian.hu@amlogic.com>
+	<1jzfffy738.fsf@starbuckisacylon.baylibre.com>
+	<ea83e375-7088-4047-92f1-31d0e7c2c331@amlogic.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 16 Jun 2025 18:28:57 +0200
+Message-ID: <1j8qlrd512.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-User: kartilak@cisco.com
-X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
-X-Outbound-Node: alln-l-core-11.cisco.com
+Content-Type: text/plain
 
-Replace KERN_INFO with KERN_DEBUG for a log message.
+On Fri 13 Jun 2025 at 13:35, Jian Hu <jian.hu@amlogic.com> wrote:
 
-Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-Reviewed-by: Arun Easi <aeasi@cisco.com>
-Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
----
-Changes between v4 and v5:
-    - Incorporate review comments from John:
-	- Refactor patches
----
- drivers/scsi/fnic/fnic_scsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On 2025/5/14 15:39, Jerome Brunet wrote:
+>
+>  [ EXTERNAL EMAIL ]
 
-diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-index 7133b254cbe4..75b29a018d1f 100644
---- a/drivers/scsi/fnic/fnic_scsi.c
-+++ b/drivers/scsi/fnic/fnic_scsi.c
-@@ -1046,7 +1046,7 @@ static void fnic_fcpio_icmnd_cmpl_handler(struct fnic *fnic, unsigned int cq_ind
- 		if (icmnd_cmpl->scsi_status == SAM_STAT_TASK_SET_FULL)
- 			atomic64_inc(&fnic_stats->misc_stats.queue_fulls);
- 
--		FNIC_SCSI_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+		FNIC_SCSI_DBG(KERN_DEBUG, fnic->host, fnic->fnic_num,
- 				"xfer_len: %llu", xfer_len);
- 		break;
- 
+Please fix your mailer, can't read that reply
+
+>
+> On Fri 09 May 2025 at 07:48, Jian Hu <jian.hu@amlogic.com> wrote:
+>
+>  A new MESON_PCLK_V2 macro is introduced for the sys gate clock. Its parent
+> is an SCMI clock. It belongs to another clock controller, and the parent
+> configuration is different from  that of MESON_PCLK. This avoids new macro
+> definition in the peripheral clock driver.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  drivers/clk/meson/clk-regmap.h | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/drivers/clk/meson/clk-regmap.h b/drivers/clk/meson/clk-regmap.h
+> index e365312da54e..61b8fc2d875f 100644
+> --- a/drivers/clk/meson/clk-regmap.h
+> +++ b/drivers/clk/meson/clk-regmap.h
+>
+>
+> This file is not meant for amlogic specific stuff. I know some found
+> their way in regardless but that's being fixed
+>
+> I found macro MESON_PCLK is used in G12A/MESON8B/GXBB/S4.
+>
+> you mean the macro will be fixed? and use something else instead.
+>
+>  
+>  @@ -134,4 +134,28 @@ struct clk_regmap _name = {                                              \
+>
+>  #define MESON_PCLK_RO(_name, _reg, _bit, _pname)     \
+>       __MESON_PCLK(_name, _reg, _bit, &clk_regmap_gate_ro_ops, _pname)
+> +
+> +#define __MESON_PCLK_V2(_name, _reg, _bit, _ops, _pname)             \
+> +struct clk_regmap _name = {                                          \
+> +     .data = &(struct clk_regmap_gate_data){                         \
+> +             .offset = (_reg),                                       \
+> +             .bit_idx = (_bit),                                      \
+> +     },                                                              \
+> +     .hw.init = &(struct clk_init_data) {                            \
+> +             .name = #_name,                                         \
+> +             .ops = _ops,                                            \
+> +             .parent_data = &(const struct clk_parent_data) {        \
+> +                     .fw_name = #_pname,                             \
+> +             },                                                      \
+> +             .num_parents = 1,                                       \
+> +             .flags = (CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED),     \
+> +     },                                                              \
+> +}
+>
+>
+> The proliferation of those macros has been going on for far too long,
+> add using CLK_IGNORE_UNUSED inside is certainly a mistake I won't
+> repeat.
+>
+> This will be part of more general clean-up that currently depends on a
+> this [1] patch to go further. You'll have to be patient.
+>
+> [1]: https://lore.kernel.org/r/20250417-clk-hw-get-helpers-v1-0-7743e509612a@baylibre.com
+>
+> OK, CLK_IGNORE_UNUSED is added for all gate clocks. it is better to remove it. and wait for your patch merged.
+>
+> And  quote your comments in v2.  the T7_CLK_GATE is newly added in T7 Peripheral driver in v2.
+>
+> If I understand you correctly.  A common macro should be added for it and remove T7_CLK_GATE.
+>
+> So I add a common macro in clk-regmap.h, and it can be used for different SoCs.
+>
+> MESON_PCLK and MESON_PCLK_V2 difference is a clocks's parent defination.
+>
+> the sys gate clock parent is in another clock controller. So parent_data member is need for it.
+>
+> and parent_hw member is for previous SoCs which clock and parent clock are in one clock controller.
+>
+> How should we deal with it. 
+>
+> 1.Add the macro in T7 Perpheral driver.
+>
+> 2.Or add a common macro for parent_data,   and where the macro should be placed?
+>
+> ---
+>
+>> +#define T7_CLK_GATE(_name, _reg, _bit, _fw_name, _flags)		\
+>
+> See, redefining the peripheral once again ... something all the SoCs
+> uses with minor variation.
+>
+>> +struct clk_regmap _name = {						\
+>> +	.data = &(struct clk_regmap_gate_data){				\
+>> +		.offset = (_reg),					\
+>> +		.bit_idx = (_bit),					\
+>> +	},								\
+>> +	.hw.init = &(struct clk_init_data) {				\
+>> +		.name = #_name,						\
+>
+> There is an exception in the naming convention for peripheral clocks.
+>
+> The name is soc id prefixed in most SoC. It is these pointless minor
+> diff that makes factorisation difficult.
+>
+>> +		.ops = &clk_regmap_gate_ops,				\
+>> +		.parent_data = &(const struct clk_parent_data) {	\
+>> +			.fw_name = #_fw_name,				\
+>> +		},							\
+>> +		.num_parents = 1,					\
+>> +		.flags = (_flags),					\
+>> +	},								\
+>
+> ---
+>
+>  
+>  +
+> +#define MESON_PCLK_V2(_name, _reg, _bit, _pname)     \
+> +     __MESON_PCLK_V2(_name, _reg, _bit, &clk_regmap_gate_ops, _pname)
+> +
+> +#define MESON_PCLK_RO_V2(_name, _reg, _bit, _pname)  \
+> +     __MESON_PCLK_V2(_name, _reg, _bit, &clk_regmap_gate_ro_ops, _pname)
+> +
+>  #endif /* __CLK_REGMAP_H */
+
 -- 
-2.47.1
-
+Jerome
