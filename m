@@ -1,37 +1,36 @@
 Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B23E1B4231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2EA1C1F2F
 	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750097736; cv=none; b=n29KF9shSvQABYwlm9psa+DwjY4MBtCrK5RnwrVjE9ejL5brE/GlPkxuqHx9OwrgaWqAx6dKsNDs2eDOBYlTsljM6oxL2+BOaEeMtwP2R9qn+3ZTetQYLETAvGC0ptNy7kbl6qOqvnY5JGA37gXE8unDQSiVArwixcLdmLMUMhI=
+	t=1750097736; cv=none; b=UuHIn50Bh1Sax1w6Qegl/eG/yF9PB6bfay3RZrwXE1SabaZIavtCK8HFxuf4M+IzwiklXVZabwtojrBSGIBUJmvlvvbKZBPc5Golxms9k4Z18VMgj6tdGoJzVW24JVRd8dCFFa7sushE2QPfjxd51Iiy8f2qe+D8aTYwkfpXM+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750097736; c=relaxed/simple;
-	bh=E1ZIO9BFrLWcgct8qP07+TcvpjAKRQ1ZjdkzQYhno/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NMStr65t4DOd5wmBmuUSMfOX50egx/S3r2F1JixgM3uTBO1FbuG+2pzD2FU2148cTgnKOY2C/gtKbIbAlut/dkEC+eowp+F35acFY3KGzLKBaQcf4YklSH//kfrdtn+TTsDjHql8hJBpOwXZFvNjmYHzp+TCjb6m7ccM5uTlsyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=OpaF8pqh; arc=none smtp.client-ip=213.97.179.56
+	bh=hKb4PPg13gwvag6FLpH+wtvSZrdIXiXjlgs74PqawHM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=am8eWvfhSl+7pE421L/4nzpjUnWSuuYY8GKl7P5LO++kNTVYsxXl2pSycp+DvmGvM57EZonG9OWpk4n68HHi9EuYZfJuUb8rg3/I4vjQu8jzUKt9E9fR4XuQn2d3yc8uWcvZRlulqaLUPJ2YMSI3JmwXhj/h7YUWMn3DX6uCR1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=PpKrbbTW; arc=none smtp.client-ip=213.97.179.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="OpaF8pqh"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="PpKrbbTW"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=psYij8s9Ia2uYH+3eeL2z0De96IT8g97QGXw+98uT8g=; b=OpaF8pqhsEEyn/YUt8Ls0rCWPP
-	Fex+nlV8DsU7HvGjjEPobjGnW2KFYWfiw0vUnYH9hxr+JYmdsL7YWI/70HX39eTl1+ZfUY2ZOLmYV
-	T0+Hvx6FkVrmAZd114MFj78urHM5fGMqSF/2tB1g+/jWhLvwHezAfsrtUIU+UCv1mPGjbyTOsdi9x
-	S+cpiHUKFnFxwKsVbpWqVrn6uRqVzK3kAOkNCKesMWc5tJMXEzLGEWRLyXsFOW9FN3bR/N9UuSphF
-	IynfJs/xVwMTF8oy6zrenXhytgRCSolV/Rhxhw+LOVeG+75Hm6bUALPZUzOI4QK6fTmcFqb+13o9f
-	vLq32qpg==;
+	bh=vDKcW68nzROUj9CbHR0FyUYWXknhrv44YLJ1qPZX0+0=; b=PpKrbbTWxEZovYBMAIrzJBDH+T
+	vp7VyvpfLx6c59EjZciDSaNTp3n3mnwVTXfKefVGnm/rRD/r/wdSJl82HwxqY5E2e/oJmqQXo09MM
+	ME3kjsugkBIhWb3E4hvHM3+b9TkCFyiOhbVhnRjRQHoGQA1/fSaYMQB/xRLYEU6Xfsc+1wOYUjZRP
+	gstaU4CflbOXWQAA6iWXlAxMxRlAXEg1KcyTiEYPZ0K56W3oGqxovS/7gTBLxbREqBpYRKXkqIpZ+
+	3WFugXmi3AV61B7ImMOC7k4A7BDvllYH2065J/Qnw8qF9S5TMkesWWTXDbXzzLfYEx0No3oIyryj9
+	myFKVQ8g==;
 Received: from [191.204.192.64] (helo=localhost.localdomain)
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uREMa-004Eh6-4E; Mon, 16 Jun 2025 20:15:20 +0200
+	id 1uREMW-004Eh6-2G; Mon, 16 Jun 2025 20:15:16 +0200
 From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
 To: "Alex Deucher" <alexander.deucher@amd.com>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -50,12 +49,10 @@ Cc: dri-devel@lists.freedesktop.org,
 	intel-xe@lists.freedesktop.org,
 	intel-gfx@lists.freedesktop.org,
 	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v8 1/6] drm: amdgpu: Allow NULL pointers at amdgpu_vm_put_task_info()
-Date: Mon, 16 Jun 2025 15:14:33 -0300
-Message-ID: <20250616181438.2124656-2-andrealmeid@igalia.com>
+Subject: [PATCH v8 0/6] drm: Create a task info option for wedge events
+Date: Mon, 16 Jun 2025 15:14:32 -0300
+Message-ID: <20250616181438.2124656-1-andrealmeid@igalia.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616181438.2124656-1-andrealmeid@igalia.com>
-References: <20250616181438.2124656-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,31 +62,94 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Allow NULL pointers at amdgpu_vm_put_task_info() as it common practice
-for "put" or "free" functions. This avoid an extra check for NULL for
-callers.
+This patchset implements a request made by Xaver Hugl about wedge events:
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
-v8: New patch
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 3 +++
- 1 file changed, 3 insertions(+)
+"I'd really like to have the PID of the client that triggered the GPU
+reset, so that we can kill it if multiple resets are triggered in a
+row (or switch to software rendering if it's KWin itself) and show a
+user-friendly notification about why their app(s) crashed, but that
+can be added later."
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 3911c78f8282..dadf5633476c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -2447,6 +2447,9 @@ amdgpu_vm_get_vm_from_pasid(struct amdgpu_device *adev, u32 pasid)
-  */
- void amdgpu_vm_put_task_info(struct amdgpu_task_info *task_info)
- {
-+	if (unlikely(ZERO_OR_NULL_PTR(task_info)))
-+		return;
-+
- 	kref_put(&task_info->refcount, amdgpu_vm_destroy_task_info);
- }
- 
+From https://lore.kernel.org/dri-devel/CAFZQkGwJ4qgHV8WTp2=svJ_VXhb-+Y8_VNtKB=jLsk6DqMYp9w@mail.gmail.com/
+
+For testing, I've used amdgpu's debug_mask options debug_disable_soft_recovery
+and debug_disable_gpu_ring_reset to test both wedge event paths in the driver.
+To trigger a ring timeout, I've used this app:
+https://gitlab.freedesktop.org/andrealmeid/gpu-timeout
+
+Thanks!
+
+Changelog:
+
+v8:
+ - New patch "Allow NULL pointers at amdgpu_vm_put_task_info()"
+ - Dropped inline for amdgpu_vm_print_task_info()
+ - Code style changes for "Create a task info option for wedge events"
+ - Drop check before calling amdgpu_vm_put_task_info()
+
+v7:
+ - Change `char *comm` to `char comm[TASK_COMM_LEN]`
+ - New patches to encapsulate struct drm_wedge_task_info inside of struct
+   amdgpu_task_info
+ - Remove struct cast for struct amdgpu_task_info, now we can use `info =
+   &ti->task`
+ - Fix struct lifetime, move amdgpu_vm_put_task_info() after
+   drm_dev_wedged_event() call
+
+v6:
+ - Check if PID >= 0 for displaying the task info
+ - s/app/task in a comment
+
+v5:
+ - Change from app to task also in structs, commit message and docs
+ - Add a check for NULL or empty task name string
+
+v4:
+ - Change from APP to TASK
+ - Add defines for event_string and pid_string length
+
+v3:
+ - Make comm_string and pid_string empty when there's no app info
+ - Change "app that caused ..." to "app involved ..."
+ - Clarify that devcoredump have more information about what happened
+
+v2:
+  - Rebased on top of drm/drm-next
+  - Added new patch for documentation
+
+André Almeida (6):
+  drm: amdgpu: Allow NULL pointers at amdgpu_vm_put_task_info()
+  drm: amdgpu: Create amdgpu_vm_print_task_info()
+  drm: Create a task info option for wedge events
+  drm/doc: Add a section about "Task information" for the wedge API
+  drm: amdgpu: Use struct drm_wedge_task_info inside of struct
+    amdgpu_task_info
+  drm/amdgpu: Make use of drm_wedge_task_info
+
+ Documentation/gpu/drm-uapi.rst                | 17 ++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c   |  2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c  |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c    | 13 +++++++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c       |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.c       | 11 +++++-----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        | 22 ++++++++++++++-----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h        |  6 +++--
+ drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c        |  5 +----
+ drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c        |  5 +----
+ drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c        |  5 +----
+ drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c         |  4 +---
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c         |  5 +----
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c        |  2 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c      |  2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.c       |  2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c   |  8 +++----
+ drivers/gpu/drm/drm_drv.c                     | 21 ++++++++++++++----
+ drivers/gpu/drm/i915/gt/intel_reset.c         |  3 ++-
+ drivers/gpu/drm/xe/xe_device.c                |  3 ++-
+ include/drm/drm_device.h                      |  9 ++++++++
+ include/drm/drm_drv.h                         |  3 ++-
+ 22 files changed, 103 insertions(+), 51 deletions(-)
+
 -- 
 2.49.0
 
