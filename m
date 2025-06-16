@@ -1,295 +1,199 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2045.outbound.protection.outlook.com [40.107.237.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9571F37A1;
-	Mon, 16 Jun 2025 14:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D5D1F37A1;
+	Mon, 16 Jun 2025 14:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750083348; cv=pass; b=q3Wxci7RzE/N2kL5HujIXLW4TOcPe7glmkSEYl/DSTzol+87bgUmxmLxN8YskpJ2pnjZQr4zLj2kdOJTaO1BpwBrycoEgfJmcNgV3jfAcnnpue6ErGWtC4RAEmdnnFVKMsXhoAtKd7wFdeYbCtcAeyNb3WHEwxS1tGgozFLwz9E=
+	t=1750083357; cv=fail; b=QwsrziTnF7hECoyPhrIVjgQSCrJ8WBRblpzOYcdhtVjTmcLSeonQdTvrwV2TtaQR0GhmUBhq43qM2lEIQuQi/ALzNW2ro7XC1YnwthfRSFZSVBuc3/6vSkyv4H4ge95Mj1K78IBYwAECcMgEy1IMs5Lub+L0nVGRJtjsHRUUgMY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750083348; c=relaxed/simple;
-	bh=ABPZUeBgb7gYr2fe3auOdhMs+JGavtczNnMWfjbtJWI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=WNz1cjqFW+QRI2PdUMClSMwFzURznNrJZcDE83/rXy8xJ/AV9wkEdVg/tik5HYIPMMw1t8QvwNozHWpGjzxNyaHnB2JeT7PX2F6QaDluRG3W0dKnq4swCdarxoYATae43/Mi7nN9yox5XtLvYqoe7tGN2IMnKzP7PYCh9b02ycI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=J9cFAg6D; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750083357; c=relaxed/simple;
+	bh=Y2ui4bpyi2StrG03Rxz/C3o+qK4XzXlFkCTpwgp/vNM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FukQEoVnAp905iupsAu/O4YZLf+Ir38osIgfRi20/DOz+wthaRNO9jus8yNKVFiryhxtAwdYS2Gs+di3+MudLpWVSAjbdDFxSIT9T1sDw6Dp9xcKn51q5Br+6A16ipjgXQhVYJD3Covr/cDabECX8ANjADoNWGH7DL2+xs1di8E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Q6tvQ+yc; arc=fail smtp.client-ip=40.107.237.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="J9cFAg6D"
-ARC-Seal: i=1; a=rsa-sha256; t=1750083316; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fPee8SXSjKA1LNjljho5r/p0YNMkj3/TDh23r1j28i9mR4NlnEmq7NqV2Ym51j1yJ1bwGE+gp+aLv5FQkDoEP7MwLDEHretVUP/8s7xU/Lhwz6X0MrYwIKuloxygjUAmF5sFxs7JDKKsCU1z+OKF0gy6CRVw1pTewVGkl7jkdVg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750083316; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=LYr79EjyQeYZ1aetrepeTKqMV+Zqb7Wk4jbRJSW83SM=; 
-	b=PKJyG0PUda2uhFMaej5wEuG4rWmug/XZ8gtgGsnRxx2m8LbBrFbFmV5JIxJAORdRQwlkjqlE6MgvkRZOZB146yGnX+loiftGLCNJqAPtk3CmqFNAUzSow5f3IkiQeAQWcRE3HEMlcH+9W5jV5sH43Z8WaEQOQ6XT3UwSKezk/2s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750083316;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=LYr79EjyQeYZ1aetrepeTKqMV+Zqb7Wk4jbRJSW83SM=;
-	b=J9cFAg6DNc1ah6V5QP2qOVVGiQHZEF/uLrm5r1wUNadtzRkB73uMQ8wcvqAPUs/u
-	koNeMIexagsfTZLMlQyZX/mVI/yug0zbBjLW6EfepeaOZaYviKtlwB+5Xc2yC7BuZ1a
-	ef07spcD8wqjhrvzFjlgnLwM1FXat8FCopACmcFo=
-Received: by mx.zohomail.com with SMTPS id 1750083313701245.23015770749498;
-	Mon, 16 Jun 2025 07:15:13 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Q6tvQ+yc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GccXyFlbiEh2y8LWsel72Lqn0knJD3km3WqVnjcLKnjsL+siYYdNSEVoiIIHW3OaR1rRA1MAXBdtuPyUq5Toq2rRA9Jp223zWJf+q9vlutMDULjhaimg/IxD4FF3nJNZmoSAkuLoORhiqwejIuX29Ub6idNVpTl48uU/flM7x2zAnCgKczSpH5/+/YlOW1Ndo+qEefBFXRP0OljrGn2utOEuWAnXEYV5+IzgHEUE9LD+ZeXUOitTsm7MexmoG1EXYAiaXXbUgdO6f1OM1YCFY/rNDobFiPNHLg9bFoqEXhtLqNlXKGOn3BoXo9YcPxLNZCcAfD0m3lE7XF60jr7jOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ffOldQx4EhzLumaUO4DQI/K6c9IeBAfc4wzdVLLPS+U=;
+ b=vHRtXwzWChOQUCCQXfZm4QVwOOzVfuYHxdJS0ZGo2nfzINWsYwg+lMAfmGbXONWJRrLsE2H9+jwsEfSvjXjmBhBk+WjphpWFU/wX4hbF8CGtlT4aNMoS3P0Q/vOhpXticzsO+26jwi49LSH67IZCXmTW+f6BCC5U7h+QR4sq2rd8689+SM2yUqXOBNjFw6gvVVPtNpUQii/FHdtPDFaFk/RxQYSypI5LH61T7gaaMLiG2JtwtqGpZwhdV7SiEwtlPzIrYjLoe/UKdQf8oqfGrjfEQxBB7eKLcf+iPBMjLLV4ie8hKL4HWoYPivzNiKT52Ce79hkd0yVeo9WSgkvhpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ffOldQx4EhzLumaUO4DQI/K6c9IeBAfc4wzdVLLPS+U=;
+ b=Q6tvQ+yctrSQgAovNFIc5VM8gz22ySUdHqIlM/NxemdvEF/I9l12c4v/QTqc1R7O78pdLkKMbQLIOGlK7AOcfNci+YvUS3Bi/nGmvRWipb8JOkD/eAzsLQ2zE8IVchB7/S+vffSIdXaH1Tov5Qdtp9T2gdnOnIsHnhYs9FEs5JmxFFJe4FcydTdRR0OvlOlh+H2z0R3t+Ofhf6+IzUH+hZf4Sk3G9MCvRQdF8TxCLiXTDgS+QkRA+xeJyxSQrafSlhcXQRzlOQG6/U9IsTXoASrRZeQZIc72JlNjY+ygR2fW/zaAsriTPIJlNQ0Q0AMzD+mAl9cdTMbJBYv02t/f9A==
+Received: from CH5PR02CA0013.namprd02.prod.outlook.com (2603:10b6:610:1ed::27)
+ by CY3PR12MB9578.namprd12.prod.outlook.com (2603:10b6:930:109::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 14:15:48 +0000
+Received: from DS3PEPF0000C37A.namprd04.prod.outlook.com
+ (2603:10b6:610:1ed:cafe::21) by CH5PR02CA0013.outlook.office365.com
+ (2603:10b6:610:1ed::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Mon,
+ 16 Jun 2025 14:15:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ DS3PEPF0000C37A.mail.protection.outlook.com (10.167.23.4) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 14:15:48 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 16 Jun
+ 2025 07:15:37 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 16 Jun 2025 07:15:37 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 16 Jun 2025 07:15:31 -0700
+From: Mark Bloch <mbloch@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>
+CC: <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
+	<tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>, "Jesper Dangaard
+ Brouer" <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Richard Cochran <richardcochran@gmail.com>, Alexei Starovoitov
+	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	<john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>,
+	<netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, Dragos Tatulea
+	<dtatulea@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>, Mark Bloch
+	<mbloch@nvidia.com>
+Subject: [PATCH net-next v6 06/12] net/mlx5e: SHAMPO: Improve hw gro capability checking
+Date: Mon, 16 Jun 2025 17:14:35 +0300
+Message-ID: <20250616141441.1243044-7-mbloch@nvidia.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250616141441.1243044-1-mbloch@nvidia.com>
+References: <20250616141441.1243044-1-mbloch@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v6] rust: kernel: add support for bits/genmask macros
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <DAMAPVAI3V8X.N8SAQD6KOO1Q@nvidia.com>
-Date: Mon, 16 Jun 2025 11:14:58 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9578ECFC-6C59-40E3-9340-A426E8D2328A@collabora.com>
-References: <20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com>
- <DAMAPVAI3V8X.N8SAQD6KOO1Q@nvidia.com>
-To: Alexandre Courbot <acourbot@nvidia.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF0000C37A:EE_|CY3PR12MB9578:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa056869-a64d-4b58-68f3-08ddace04afa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gSbnOELVplb5LQFEPewJl/9xclRh0lGY9WTUxT3YC3iR4pbNy1ifl2kelW+6?=
+ =?us-ascii?Q?BbCSHDXyNxQon/N5ubmJZwwfT8EggkW9ShyUrsm3u2ob1VODbWxVrWjK60ig?=
+ =?us-ascii?Q?CxFyCOSJ3cczJlsp3Kq/CmJVSFFsoQPwYjRxC+TSpqHq7KUJmWtwzHramOrn?=
+ =?us-ascii?Q?xn/SS7CZP8o27nz6s23kqAQgTRPbbLylkkEeai26Tvi8jn6BcCoskCP9Kkn5?=
+ =?us-ascii?Q?2fwCXddyLS5Scr9Kk1z03Ofe6Krd4Aba78dGocghubkWHh+rIOWuouc8Hy3L?=
+ =?us-ascii?Q?xQUTxVcK729J3LCo/WrqtGHgr/IfG2VWmeH4fd6gZhOIeY9h0+rNpxiqhT+K?=
+ =?us-ascii?Q?cdYJ/niGFSJ5ohSMTveUj4B629sTvLqfNSty3nZd7o4xkD/ckggo8WWc6YHE?=
+ =?us-ascii?Q?PJ5MHd9iwS6EUaTOye+HMiCOvMflz0G6vN7q4xrX5imiP0kO0UCkIsd9mbMw?=
+ =?us-ascii?Q?T+2Zcxgh19SUcfEngSdthO5U3aADb4HW460Mg6qqSkly7JJ+B0S1TpPBg1/O?=
+ =?us-ascii?Q?L1XcRjXgvXvlf42tGzM51tRBw+mUaFDHOexYLAx/EByci0hnyK93WioR5JE4?=
+ =?us-ascii?Q?OK85wV9g7ZQSSvimbyo46BbJEevv6gHVvCs8FWBWaJ9BGmEjychAU7grLel2?=
+ =?us-ascii?Q?XzMH++dyiLcDjY28MV4y6+HOatmKk+u41MlnkXD3qzuz6qLkX9wcdDNgRfxq?=
+ =?us-ascii?Q?VUY/x3g+v8xT5l5cDOb0YlxQKMMfeP2wBLrn9I6ufu1qYI+Qi682l0N4tqk5?=
+ =?us-ascii?Q?USvPIxJxzM4mXN7p4jZA77dHxOer8mQFiORUtCHp1IToqCeWYTnNT9FM2Tcg?=
+ =?us-ascii?Q?hFtCPWT0jota+o8STc69CYoIq6a2bOHsbH3f3CQJCqyylI0gu/+ZATdJc5QO?=
+ =?us-ascii?Q?qBYifMSwcbSFXgS5ADdgCBxy8tTTeBn8LN0R4Yp8fPfd9KCaFQjesz5fektP?=
+ =?us-ascii?Q?rh0NzPFI6uPC0POZhIipVJWPnsCDI0E+HilGFFO57LllMNJac5mQobZqKcsW?=
+ =?us-ascii?Q?iaZUlP9RmgNyvln3rgTWYB4Rg4NUKykV7xZOcPNg2+ytrS1RNkndAwnxYxbt?=
+ =?us-ascii?Q?G+qzFTrDUfgtx5Zly6ciOizPjGYrEoR3CrKXkpqBcP1OMx6+8QvlO91PxXsx?=
+ =?us-ascii?Q?Pfi2LNHbdTg5AlDOmg9QAsk/7w3/++loSFDERiiLVBEChAqtFhQFKP74XmQi?=
+ =?us-ascii?Q?hPJkHFtgxm3V8pG+c4+BZswqafs8a1Rm6DYYdQkI7N6mxNmKfKN170tRsh1O?=
+ =?us-ascii?Q?tOWgCM0b6d/YGLL3N8H0Occt2fzlnlQLONZ7NSmMjTrCqrfl1dYEc0zzHy5v?=
+ =?us-ascii?Q?/qFzOeV4e/KWVRvZLqIInDdcF/PNApwZTghZlH94IL6KO2atqhu7sXHPD6XQ?=
+ =?us-ascii?Q?ovEkrIqIYQoGG41UgvArftofVFQJf0k4Jm+1M9BpWazQDABTtxSHi/+qBWl3?=
+ =?us-ascii?Q?rheKKKdQ7kz8MhSmiUdRrmp9MIGfHSl+EUM0ncJyXi8Ct0YLonxkzeY5BYNa?=
+ =?us-ascii?Q?NPRmWp6rbJa8jId7YUhu1d0+2VDG9n77QXD5?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 14:15:48.5641
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa056869-a64d-4b58-68f3-08ddace04afa
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF0000C37A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9578
 
-Hi,
+From: Saeed Mahameed <saeedm@nvidia.com>
 
-> On 14 Jun 2025, at 10:38, Alexandre Courbot <acourbot@nvidia.com> =
-wrote:
->=20
-> Hi Daniel,
->=20
-> On Tue Jun 10, 2025 at 11:14 PM JST, Daniel Almeida wrote:
->> In light of bindgen being unable to generate bindings for macros, and
->> owing to the widespread use of these macros in drivers, manually =
-define
->> the bit and genmask C macros in Rust.
->>=20
->> The *_checked version of the functions provide runtime checking while
->> the const version performs compile-time assertions on the arguments =
-via
->> the build_assert!() macro.
->=20
-> I think this is the right approach, I wish we could make the functions
-> generic but that doesn't appear to be currently possible (and it
-> wouldn't make their invocation shorter anyway).
->=20
-> I agree with Miguel's suggestion to use paste to shorten the macro
-> syntax, it would make it much easier to understand them (and most of =
-the
-> naming could be harmonized in the macro itself instead of relying on =
-the
-> invocations to use the same names).
->=20
+Add missing HW capabilities, declare the feature in
+netdev->vlan_features, similar to other features in mlx5e_build_nic_netdev.
+No functional change here as all by default disabled features are
+explicitly disabled at the bottom of the function.
 
-OK.
+Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-[=E2=80=A6]
-
->>=20
->> diff --git a/rust/kernel/bits.rs b/rust/kernel/bits.rs
->> new file mode 100644
->> index =
-0000000000000000000000000000000000000000..98065c8f7c94cfc3b076e041de190e94=
-2e1b4a9f
->> --- /dev/null
->> +++ b/rust/kernel/bits.rs
->> @@ -0,0 +1,168 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +//! Bit manipulation macros.
->> +//!
->> +//! C header: [`include/linux/bits.h`](srctree/include/linux/bits.h)
->> +
->> +use crate::build_assert;
->> +use core::ops::Range;
->> +
->> +macro_rules! impl_bit_fn {
->> +    (
->> +        $checked_name:ident, $unbounded_name:ident, =
-$const_name:ident, $ty:ty
->> +    ) =3D> {
->> +        /// Computes `1 << n` if `n` is in bounds, i.e.: if `n` is =
-smaller than
->> +        /// the maximum number of bits supported by the type.
->> +        ///
->> +        /// Returns [`None`] otherwise.
->> +        #[inline]
->> +        pub fn $checked_name(n: u32) -> Option<$ty> {
->> +            (1 as $ty) .checked_shl(n)
->> +        }
->> +
->> +        /// Computes `1 << n` if `n` is in bounds, i.e.: if `n` is =
-smaller than
->> +        /// the maximum number of bits supported by the type.
->> +        ///
->> +        /// Returns `0` otherwise.
->> +        ///
->> +        /// This is a convenience, as [`Option::unwrap_or`] cannot =
-be used in
->> +        /// const-context.
->> +        #[inline]
->> +        pub fn $unbounded_name(n: u32) -> $ty {
->> +            match $checked_name(n) {
->> +                Some(v) =3D> v,
->> +                None =3D> 0,
->> +            }
->=20
-> This could more succintly be `$checked_name(n).unwrap_or(0)` (same
-> remark for `$genmask_unbounded` below).
->=20
-
-Wait, I just realized that $unbounded_name is not =E2=80=98const fn=E2=80=99=
-, so we don=E2=80=99t need this function at all?
-
-Users can simply do `unwrap_or` on their own.
-
->> +        }
->> +
->> +        /// Computes `1 << n` by performing a compile-time assertion =
-that `n` is
->> +        /// in bounds.
->> +        ///
->> +        /// This version is the default and should be used if `n` is =
-known at
->> +        /// compile time.
->> +        #[inline]
->> +        pub const fn $const_name(n: u32) -> $ty {
->> +            build_assert!(n < <$ty>::BITS);
->> +            1 as $ty << n
->> +        }
->> +    };
->> +}
->> +
->> +impl_bit_fn!(checked_bit_u64, unbounded_bit_u64, bit_u64, u64);
->> +impl_bit_fn!(checked_bit_u32, unbounded_bit_u32, bit_u32, u32);
->> +impl_bit_fn!(checked_bit_u16, unbounded_bit_u16, bit_u16, u16);
->> +impl_bit_fn!(checked_bit_u8, unbounded_bit_u8, bit_u8, u8);
->> +
->> +macro_rules! impl_genmask_fn {
->> +    (
->> +        $ty:ty, $checked_bit:ident, $bit:ident, $genmask:ident, =
-$genmask_checked:ident, $genmask_unbounded:ident,
->> +        $(#[$genmask_ex:meta])*
->> +    ) =3D> {
->> +        /// Creates a compile-time contiguous bitmask for the given =
-range by
->> +        /// validating the range at runtime.
->> +        ///
->> +        /// Returns [`None`] if the range is invalid, i.e.: if the =
-start is
->> +        /// greater than or equal to the end.
->> +        #[inline]
->> +        pub fn $genmask_checked(range: Range<u32>) -> Option<$ty> {
->> +            if range.start >=3D range.end || range.end > <$ty>::BITS =
-{
->> +                return None;
->> +            }
->=20
-> =46rom this check I assumed that you interpret `range` as =
-non-inclusive,
-> since `range.end =3D=3D 32` is valid on u32...
->=20
->> +            let high =3D $checked_bit(range.end)?;
->=20
-> ... however IIUC `checked_bit` will return `None` here in such a case.
-> Should the argument be `range.end - 1`?
->=20
-> Your examples do seem to interpret the range as inclusive though, so
-> probably the check should be `|| range.end >=3D <$ty>::BITS`. But that
-> triggers the question, is it ok to use `Range` that way, when its
-> documentation specifically states that it is bounded exclusively =
-above?
-> We could use `RangeInclusive` to match the semantics, which would
-> require us to write the ranges as `0..=3D7`. At least it is clear that =
-the
-> upper bound is inclusive.
-
-Sorry, the idea was to indeed interpret a..b as inclusive. I =
-specifically
-thought we'd suprise a lot of people if we deviated from the way genmask =
-works
-in C. In other words, I assumed a lot of people would write a..b, when =
-what
-they meant is a..=3Db.
-
->=20
-> ... or we make the methods generic against `RangeBounds` and allow =
-both
-> `Range` and `RangeInclusive` to be used. But I'm concerned that =
-callers
-> might use `0..1` thinking it is inclusive while it is not.
->=20
-> Thoughts?
-
-I don't think we can do what you suggested here. I assume that we'd have =
-to
-rely on [0] and friends, and these are not const fn, so they can=E2=80=99t=
- be used in
-the const version of genmask.
-
->=20
->> +            let low =3D $checked_bit(range.start)?;
->> +            Some((high | (high - 1)) & !(low - 1))
->> +        }
->> +
->> +        /// Creates a compile-time contiguous bitmask for the given =
-range by
->> +        /// validating the range at runtime.
->> +        ///
->> +        /// Returns `0` if the range is invalid, i.e.: if the start =
-is greater
->> +        /// than or equal to the end.
->> +        #[inline]
->> +        pub fn $genmask_unbounded(range: Range<u32>) -> $ty {
->> +            match $genmask_checked(range) {
->> +                Some(v) =3D> v,
->> +                None =3D> 0,
->> +            }
->=20
-> This could more succintly be `$genmask_checked(range).unwrap_or(0)`.
-
-See my comment above. Maybe this function is not needed at all?
-
->=20
->> +        }
->> +
->> +        /// Creates a compile-time contiguous bitmask for the given =
-range by
->> +        /// performing a compile-time assertion that the range is =
-valid.
->> +        ///
->> +        /// This version is the default and should be used if the =
-range is known
->> +        /// at compile time.
->> +        $(#[$genmask_ex])*
->> +        #[inline]
->> +        pub const fn $genmask(range: Range<u32>) -> $ty {
->> +            build_assert!(range.start < range.end);
->> +            build_assert!(range.end <=3D <$ty>::BITS);
->=20
-> I guess this check also needs to be fixed.
-
-Ok.
-
-=E2=80=94 Daniel
-
-[0]: https://doc.rust-lang.org/src/core/ops/range.rs.html#781
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index e1e44533b744..a81d354af7c8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -78,7 +78,8 @@
+ 
+ static bool mlx5e_hw_gro_supported(struct mlx5_core_dev *mdev)
+ {
+-	if (!MLX5_CAP_GEN(mdev, shampo))
++	if (!MLX5_CAP_GEN(mdev, shampo) ||
++	    !MLX5_CAP_SHAMPO(mdev, shampo_header_split_data_merge))
+ 		return false;
+ 
+ 	/* Our HW-GRO implementation relies on "KSM Mkey" for
+@@ -5499,17 +5500,17 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
+ 						   MLX5E_MPWRQ_UMR_MODE_ALIGNED))
+ 		netdev->vlan_features    |= NETIF_F_LRO;
+ 
++	if (mlx5e_hw_gro_supported(mdev) &&
++	    mlx5e_check_fragmented_striding_rq_cap(mdev, PAGE_SHIFT,
++						   MLX5E_MPWRQ_UMR_MODE_ALIGNED))
++		netdev->vlan_features |= NETIF_F_GRO_HW;
++
+ 	netdev->hw_features       = netdev->vlan_features;
+ 	netdev->hw_features      |= NETIF_F_HW_VLAN_CTAG_TX;
+ 	netdev->hw_features      |= NETIF_F_HW_VLAN_CTAG_RX;
+ 	netdev->hw_features      |= NETIF_F_HW_VLAN_CTAG_FILTER;
+ 	netdev->hw_features      |= NETIF_F_HW_VLAN_STAG_TX;
+ 
+-	if (mlx5e_hw_gro_supported(mdev) &&
+-	    mlx5e_check_fragmented_striding_rq_cap(mdev, PAGE_SHIFT,
+-						   MLX5E_MPWRQ_UMR_MODE_ALIGNED))
+-		netdev->hw_features    |= NETIF_F_GRO_HW;
+-
+ 	if (mlx5e_tunnel_any_tx_proto_supported(mdev)) {
+ 		netdev->hw_enc_features |= NETIF_F_HW_CSUM;
+ 		netdev->hw_enc_features |= NETIF_F_TSO;
+-- 
+2.34.1
 
