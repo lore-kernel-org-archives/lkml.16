@@ -1,1039 +1,291 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011003.outbound.protection.outlook.com [52.101.65.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2331CD15
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065242; cv=none; b=oYTZ/4Tq8ovbqNX/qh6/Jyosf9kWfgSq3ZUYAxTBLoYJ+/HjOJQ513Q8ftddje1dDXkZYHpRNo5YlaUl24KBvJWq2Za6sjlMTtbkxBN8SP0Yk1RTcwAy0i2idzUXgkh2rgHRXfMpM+xz4NfM5jjHeFlSQyCdHXSPve7IbBU9yfM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065242; c=relaxed/simple;
-	bh=x0YcWMbfWzIAbq/DBT736yIO7PJg18hsdm5iLYsrY28=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r9dNC3BQymDZyC8nuCzQvSniTULcfHcUklvjIYWydH0yus10FweVd1pnUCapgRy4qgZy7QzwY2Ba1Q7B1+bsJmkYDYeFGIE0XR+8aXMEIlYYv6JhbouqUe2HQi9AwPd+yErarJtG6oWE3u4H0PIsdvW10lYYvsqTNfhI8J/30KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=nddvkHA1; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD462737E1;
+	Mon, 16 Jun 2025 09:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750065251; cv=fail; b=Ym++R9ZYfStZP9lX+Mr8JaABQYjt6D5mNxUXKxZ70pYvN8V/q4c/vgtqo4FyXhG5rKetHITHqTSWATEkQ+QfnTUGWs1IgE8kzWdFiHRs2icZCvQik2i3nRBvPaxGcZaA61v9PYCLeNU/sYr1Lf/nwZ3axaJ+/CAbokeOvsKZaJc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750065251; c=relaxed/simple;
+	bh=5F9yvspxOZ5xlmvNYBDFe1xU60kVFEe/8HI1H2LV9b8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CJioUw/VyOvTLLRLCujGokr1HxXNn9XomwB8IzN3jTskLnH7vywLqq3kA2oYrbVdb+8gtW1RJ1uAcPGudy5frVLBY/tfTJ7ECIaT+ziH4225grIdWiaGrA8rwlYktqKHzzg0vjsXLC4nfw9qMh8L5YhIUk8xF5bdg73cbYslLXg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=E9xbOgen; arc=fail smtp.client-ip=52.101.65.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="nddvkHA1"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 91A651C00AB; Mon, 16 Jun 2025 11:13:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1750065228;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tcQ0PpzTwF4OUm5z7RktWsRLhyVCApmkh+W8J199+p4=;
-	b=nddvkHA1nqYvtij4AQwSC8xBiHnGhAN2do+McUaQDGqMXp0u34Cn53XdD7ZjRplzY+Baf9
-	L01Q7AErKkj3552xUn/Al+JldVYOtmUAtWZ48WOT+jrntcG21Y+fZbhKCnBn7lNcipiDoW
-	dqCj15pPWqvO9CluMSSTmPn6qkvRkc0=
-Date: Mon, 16 Jun 2025 11:13:47 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: =?utf-8?B?0JTQsNC90LjQu9C+INCg0YPRgdC40L0=?= <rusindanilo@gmail.com>,
-	kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/1] x86/power: Enhanced hibernation support with
- integrity checking
-Message-ID: <aE/gS7r1mrllLSSp@duo.ucw.cz>
-References: <CAOU0UxapdnC7Wtc0DGEYwMCG9tBYOqqaNfMHy1+jVVoSUCa65Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="E9xbOgen"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kOMoiMmhDKV2Wa1FqY02LPmmE7GOV5eDEjWakYMwVwzVXTWbl+QOT/6D1JD3kUPzlOBgVfhxnGY+ai+UXEWURaV+NPgmdiDQq0JwVqPfLzkM5XD14kS7ncaGElf0NX1aZ+gZlH9AywaTht6Gu1qJhfNnWDXwdpwBt4ql7g96FBzJO5XnVp7mCIPbhhoZSAn4D64MlJdehBk/Tx0zdytF5aOjYT9enw2criBO8czl0IAvGUGyW16UKx08d4Qg9X2VOTbA6b+pkjXAVr6rtE173FyC9/7Dm9kSbuincXQMp51kfz/1dgB70FSv1t23JqsqVO3h1Rin7d/XsA6cqBWjyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T5AblgMIgfJT36bKWhO2j6nN3NVjCiBPyX7fbTiFv0Y=;
+ b=tpPciTNLau1aJAGyENCX7kohVzX+g4F5daYF/w/6YA6s4gRgaUfNWb+yK4PK/ZnoygxjAC97Xpl5MCWgTOF95rDENsFGTVHDGSPcgpFkogi5gwAh7ibaUX8cKHgGsao0wqmPuubZHhb8gMPsbvbUrQE77FUEB5aRshcOC3wTjUX7PfDaSsrg24illlN1LQoic0UJG5ofTs27tNILkWpmvvXkizUfaPCGHATi6/7ns6pYB+QJZ2WiGyZYiymLSGHPb5aU07K9Ual4Z7Oum86fjhJwwK0M3TPn5TFVcggboFhzmzS3z/2CQ2qDV7t5FzHqegrf2M9eol58W5B2Y+sGxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T5AblgMIgfJT36bKWhO2j6nN3NVjCiBPyX7fbTiFv0Y=;
+ b=E9xbOgenYq0Hw4Nt+ojxrljRnsK/mB0WI28qqV7cXVxOoVmqh3S6DPREXWMDo37Cpg/yEtAwPZINy11hV4rlpXId/ZTfaO/mr2jbiuzvR2XNORL1iMCmqx7JVxfpL/ZtlO8BtpzVOWQvoWinCGL7c8/dbJyocasNA5zKN/brxYU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by GVXPR04MB9804.eurprd04.prod.outlook.com (2603:10a6:150:114::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.24; Mon, 16 Jun
+ 2025 09:14:03 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%5]) with mapi id 15.20.8835.018; Mon, 16 Jun 2025
+ 09:14:03 +0000
+Message-ID: <b0be71ba-e2e0-4a6d-94ba-72d54959c929@cherry.de>
+Date: Mon, 16 Jun 2025 11:14:01 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: rockchip: support Ethernet Switch adapter
+ for RK3588 Jaguar
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>, foss+kernel@0leil.net,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de,
+ jakob.unterwurzacher@cherry.de, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, robh@kernel.org,
+ Kever Yang <kever.yang@rock-chips.com>
+References: <20250523-jaguar-mezz-eth-switch-v2-1-aced8bf6612d@cherry.de>
+ <20250527131142.1100673-1-jakob.unterwurzacher@cherry.de>
+ <35e0a925-4cba-41de-8fe4-4dd10e8816f1@lunn.ch>
+ <380ba32b-bb9a-411e-8006-127461cac08a@cherry.de>
+ <3303d8d4-ec5a-4cdc-8391-ab6e35d76b33@lunn.ch>
+ <96d32ce8-394b-4454-8910-a66be2813588@cherry.de>
+ <bb3486c6-93df-4453-acc6-deba3c8f7f0e@lunn.ch>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <bb3486c6-93df-4453-acc6-deba3c8f7f0e@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA3P292CA0005.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2c::18) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jt6M45IpirH0fJMe"
-Content-Disposition: inline
-In-Reply-To: <CAOU0UxapdnC7Wtc0DGEYwMCG9tBYOqqaNfMHy1+jVVoSUCa65Q@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|GVXPR04MB9804:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2bc6e89c-a535-41c1-3adc-08ddacb62321
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aUtQSmVhQkZBTlRXU3d0VmN5SGEvc0Z0VjhqeEF4SVBpTVVnZVdrMnh4dm9P?=
+ =?utf-8?B?dUFDcTJld1A3eWNRUWVpZFBTVU1sVytsRWNwekVHd3IxaXNNbmM3NDFxUHRY?=
+ =?utf-8?B?bnJRWXZBRDhITnQ5TExyYUZUYWJIeVdaVytXSklKcHJaYVc5Sk1rSXlPUHlK?=
+ =?utf-8?B?SU5ZMitrWFlWL1dUdUZHeldsRHV3VjNKSmxxS1FLNlZ1d3prWHhKbTVRelNp?=
+ =?utf-8?B?NU9mV1JEcmNEZ1N1QWo2TEpWa0JYMDA0M3RCUWVYMEhVOFJaa1FheHNhdVBu?=
+ =?utf-8?B?VHh2cEcvTlE1NFUzOXIvRWszVjBZOG41cHh5STRteTl2Y2dRbDNlc0tSdU5r?=
+ =?utf-8?B?NmNoa3pTQTN5YWd3TmpCQ0h5aHM2QjBSdlMzUTMrMy9lcXFNZWpNR29BbGEz?=
+ =?utf-8?B?TWlBSTlJU1gySmdvU2c1NkF2UnNZQkZ2MUJhbDR6dHZ3S1A5WXpHTHo2MEYw?=
+ =?utf-8?B?TXM2ZkY1OHhoVGJ3SnpaUTF4aEVxS0g0eWhuelV5UTB1ZkgxdG95aGV1NFV4?=
+ =?utf-8?B?MW1RWnc3Z0I1NDM5ak54NVNoVWpTOWdOYVREckdDcm50N0NmR2dubzV0MFpq?=
+ =?utf-8?B?VEFBaTJwNklsY211UCtXUG45QVBIS2FyRHAxc3Rld0NybGs3T3VMNXlFSTRn?=
+ =?utf-8?B?VTZOcm4vblpJU2lxVkowL2srRXZwckFTTC9ZdnRUOVlrZnJKSkNaa1hRSWtH?=
+ =?utf-8?B?M1JnUURBbHREVzFNRUJnNGdwRnFQY011NkJkUUc5QkYzTzF1YlpON0hvWGpV?=
+ =?utf-8?B?NXJjclQ4Q1VqY2VvUWtNK20xc3Z1NWpGR2lCeVVBLzd6V00zWEt4QWorUlBQ?=
+ =?utf-8?B?RW1BbTRQMW92RHpTdEkrM1VkQjhXeFhsbjF2Rjc0L0w1bnZMZXhIc3FIcisy?=
+ =?utf-8?B?VGxsS01qUVRPMnJaSlFKLzRZOEN1VG5LZy9OYTNJSWo1aWtlT0xwVWptMHhS?=
+ =?utf-8?B?ZEo2TU1WMmkyT0MzK0NyeERtY0JiOE1sekZmSEFnQ0VWLzNRWWFWOVl2amFK?=
+ =?utf-8?B?aXAyTHFGdngxaUJBcXViZk5Bek93aVUvUlBzOTNqam5CVEhZOXdnSWxJY2Uv?=
+ =?utf-8?B?TXkrNlZ1UzhuMGxWOEZjRS9YVk9wUW55YmVmUXUvTUpmQlgwemNZOEdDRi9Y?=
+ =?utf-8?B?UFV1SDlKcU9VcG9wU0ZWWGFjSHdQU1dQbldyZHJSQWxrNnhGWE1rU1krY3VO?=
+ =?utf-8?B?R2dUdjVuQkN1TVVDa0c4UDJPZjZuVEJ3OFBRN3FmUzlhd0REeEhOMFBXYWVv?=
+ =?utf-8?B?bmdmZjdzUHFTaG1xL1lUR0VBV1pVcW5KamdvQUpCckNCck5mb2YyMWI0MGQ2?=
+ =?utf-8?B?aGJxLzNBNU8xY2JJWkZTbGwyYkRjeTJnRm15a3AyNkJBWGdYdEFsNkh3ZFhm?=
+ =?utf-8?B?QS9kVXJlU0x2M2tpTjYrOHRVYWYrK2x3ZFhSNmc2QkpOM0FFamQzeWpFYWZ0?=
+ =?utf-8?B?VTlqY2ZJK2JrRFcvN3B5MldFOE8wbkhydHA3NUFicnFKU0pwc0F1SjRGUXZp?=
+ =?utf-8?B?U3pBU3pkNThaOC85NVR6NHRrcHJqS1d3SXFVVVExZ1VpaHg4SkRUTlRQVEEv?=
+ =?utf-8?B?clZPK0VLNEdyYStOa0JFSFg3RWdXbmd1TkxVa3RkSUFkU0lvS1RKT0RjZXBk?=
+ =?utf-8?B?aTY1NGsxT243UXB0aUtiQzIyY2lpdWpxUFNFakx2K3l3aHhMRWtXNjZrWlJ1?=
+ =?utf-8?B?aWtOTFVHelpmbE5vZEgzK0UxemlWeFdzK2wvQ0JaK0o3WGR3T2VRQk16RFRy?=
+ =?utf-8?B?bGRVOE1XbnJYNkZ2enhRNi9vcDFnaUlJUnFpVWdxNDVQTWFmdFFKK0s4b1lk?=
+ =?utf-8?B?QlptdnVCZS92WHlMMTlmQlFoTlJKVXRnWno2dGhIWUtZcDhrRkIrL0lycDJ5?=
+ =?utf-8?B?ZXIyK0gxV2ZxRlNBSTIwR0grb2xHWUl3eFN1cld6a1RLZzRUUmY5MW11YTYv?=
+ =?utf-8?Q?lnD34pXE368=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L0hzVlIyWkEyVFduSCttejk0YlZReHBQdTFXVm8xRzdFUjI1TUNOdmRqQWQw?=
+ =?utf-8?B?R1QvVzR2THpybFJNdHBtTlVYS3hBK3BOY1dDRXVaMTlpVkJlaGN5dVpjRGxL?=
+ =?utf-8?B?RlBoRENRR1RIclkzeFdwMVh5Vm5kYis1QmhGTHhXTWpzMEVGck5XTnVaWEJB?=
+ =?utf-8?B?R282L0RWNUtaL1JjSkZpK0FRS0RvNGEvUlBVYmVTQkcwVFJRUFZpRWdKTXpk?=
+ =?utf-8?B?dURPY0x0czk2akp6TXFGd0hucUd1ZitEQVdhRHdyRjBiTWd3VytCQnh1Q2RB?=
+ =?utf-8?B?QXFaV2Y5cGdvRlVHQmRZRHFISjVLdTM1K2Vra0RydGdxZDBvTVJOWUMvVVBa?=
+ =?utf-8?B?MWdnNFpDc3RCREtxNHQrTDVrNkF3M3NycGtvQmVDeG9xUVhrcW5tZXViR0g4?=
+ =?utf-8?B?NTZ5Y1lBK2JIaXFJSXdFMVRLVVkwWUtMdjc2d1JXdlN1dmlMVDNaenUzR1Bh?=
+ =?utf-8?B?eklGWmhCNWYrTmp3U09qSGtZYklSM1NLbDlud05FNnZNd1J3QXJKVEx1NHl5?=
+ =?utf-8?B?SERpRTNoWXE2bk1rSmk5V000M0l6bmNBMUZzOW1IUFd2cWo4aE55Nm1STndZ?=
+ =?utf-8?B?L21rRTVKUlZWSkdlUmF4dTlKa1g5c0Z1dGJMalBUaC9NREtsR25CNXFGbnNI?=
+ =?utf-8?B?ZEphUFZhNHpwNUJtWmpYVWRrUlVhZ1k2emFBWGQzWVZocFNSdHhBc0EzOUJn?=
+ =?utf-8?B?LzFJZVVqTWN1ZEZBWDViS0hjdjVPNFpBMEhPWDBuT1hSS0gva0dieFdQN2tP?=
+ =?utf-8?B?aVc2WHMzc0NBd0FPdy93d0RHQ0FUZm9MNC9rUDBDSkFGci9CWDhHRnF2ZDRk?=
+ =?utf-8?B?ZlV6cWh3TmVFOGhvUVZKZksvNzgxbEY1ZkFSaHJKNDNzQnNtMU9STmxoUnZM?=
+ =?utf-8?B?YzNJRjRreThRU2FwUnJKSU4wcXZHblZ0S1hXOThYR01lVVJvYTFVd3ZIbjU2?=
+ =?utf-8?B?QVptN1pnVWpsUzBQVnhwL2ZvZGJLY3FFWWhncWNlRkMycTR1L3R1Tk4yYkhu?=
+ =?utf-8?B?RWFlaUNXODFGZXFXMVdiV0Q5ajNJMUtZd2llNjBYOW9mVkRtMlAwK2FzdVc3?=
+ =?utf-8?B?c2ZRUWFXTzBFMTlXYUFZQ1h4RHY0dUFISEtmS2htOHV3ZDFUWHRQL0Y5K1V3?=
+ =?utf-8?B?UE9SZktrR2dITEtyQmVzeFhKVk5jVFFzbm1WYnJpeDcwR3FvSlBlcTc3d3Ux?=
+ =?utf-8?B?ZVhiY3k3d2RKTkZSeE9QRDkvT1VPNjFHbmZOdENaUXRnOUpmNTV5MHhhd3Jv?=
+ =?utf-8?B?L00xaFFVdWRnOWtkL0lGbmJyVmFQd2k1VGtVbVN6SzQwRkpZNkRDa083bzZO?=
+ =?utf-8?B?aE4vUks1YmpudnhwUDdFa1FJNjBZdVFxRU90QmNSbEFjeWI4dTh4Z1BQS2lR?=
+ =?utf-8?B?c2JaM05pY0oyUVRiVis3elRsb0tBY2crZVdQUEt3L09IWk1JN21yOE0vNm8y?=
+ =?utf-8?B?WDdZK0MwK0xyenEzMG9Pc1h2cnRObEEwMzRIWkRMNDd1UGp2Y0MweWZEZ043?=
+ =?utf-8?B?ZlZnZ3B0ZXI2bjBkOXFRWnJtZit1R3RObkUzc1kzeEx2NTdDbDh6WnFCWXM5?=
+ =?utf-8?B?U0pXVERwU3BQV0NYV1hUSkhRTk16U25SUS9UV2lHYnNpcFRXM2Y3bm9hb2k1?=
+ =?utf-8?B?bER3R0hBR2pTVldlc3BVNzJNWjJCMFNmWWNBcVMrZEUyMDhRS1pSTXhtcHVO?=
+ =?utf-8?B?d2pEblMvdTJ0amM5dGg4MW5RUk9hdXhQcWdEV3BGU29VYUVScnpwN2JzUW9I?=
+ =?utf-8?B?cVM5bG5helJnRTBOUDQzL2dWdmlia256U1N3SnVON1g3eVR3aUlXK1JJQlB3?=
+ =?utf-8?B?ZXduM1VrR2d5clZtMjVRQzFyd0lJVjhIVXZUcVdpKzdLTGs5VXpDeFBEWi8x?=
+ =?utf-8?B?bzI5amxoczY2dDFtdjZoUEtXeHIvVFJFeGF6OC9DSFdRd0w0dDJlQWtnWEU2?=
+ =?utf-8?B?SFlnRHY3UmRKenBRWDdlWHRJVkUxUTJDend1RFBFTU9jQzc4WkpKa3RhWVVH?=
+ =?utf-8?B?QWlELzlES1NDVEFUd2hZQm43TExSOEVWcEc4S3RNaEp0dExCUDdZTzNzSW9Z?=
+ =?utf-8?B?Q2NYYS9oRHZtTDY0cGJOQUFtT2d0SUxTNGNDYUtFaGZFNkRIRXJJOHpYM1Vy?=
+ =?utf-8?B?a2Z1ZXVrNG43UVBMOXY2TkpYNkJudTNpb2VQWDlIZGlYNmh2bDRESm5GNnlK?=
+ =?utf-8?B?ZWc9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bc6e89c-a535-41c1-3adc-08ddacb62321
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 09:14:03.1810
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MEXFAlNBM4+vD3fr6kuiu/h8P/2c8SDd4lMkEyHFIw5BQCmAxam+VkyrE7wk4yuINv9fGvNdl9BOtVMsLrjO0BqXlldRLffHIFTP3WufV70=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9804
 
+Hi Andrew,
 
---jt6M45IpirH0fJMe
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/15/25 4:53 PM, Andrew Lunn wrote:
+> On Fri, Jun 13, 2025 at 04:27:54PM +0200, Quentin Schulz wrote:
+>> Hi Andrew,
+>>
+>> On 5/28/25 3:09 PM, Andrew Lunn wrote:
+>>> On Wed, May 28, 2025 at 09:56:51AM +0200, Quentin Schulz wrote:
+>>>> Hi Andrew,
+>>>>
+>>>> On 5/27/25 6:18 PM, Andrew Lunn wrote:
+>>>>> On Tue, May 27, 2025 at 03:11:42PM +0200, Jakob Unterwurzacher wrote:
+[...]
+>>>> I'll need to implement reading the delay from the stmmac driver to use this
+>>>> property, do I need to restrict reading this property to the SoC we tested
+>>>> (RK3588)?
+>>>
+>>> Yes, please only allow it to be used on RK3588, and any other SoC you
+>>> can test and verify its behaviour.
+>>
+>> Coming back to this topic, I'm unfortunately the bearer of some bad news.
+>>
+>> I implemented the suggested logic (see at the end of this mail) and then
+>> went to validate it with Jakob's help. Unfortunately, it seems that the
+>> delay value really isn't stable or reliable.
+>>
+>> We tested the same adapter with two different main boards (the same product,
+>> just two different units). With a value of 0x40 for tx_delay (which should
+>> be ~2000ps if we have a 31ps per tx_delay unit as empirically decided), we
+>> have one board with 1778ps and one with 1391ps. Following a hunch, we
+>> started to stress (or cool) the device (with stress-ng/a fan) and it did
+>> slightly change the result too. Changing the CPU operating points (and by
+>> extension at least CPU clocks) didn't impact the result though.
+> 
+> Thanks for taking such a scientific approach to this. Most developers
+> try values until it works, and call it done. It is nice to see
+> somebody doing some real study.
+> 
+> Russell quoted the standard, which says the delay needs to be between
+> 1ns and 2.6ns, which is quite a wide range. So for a tx_delay value of
+> 0x40, nominally 2000ps, your two values are within that range, and so
+> conform to the standard.
+> 
 
-Hi!
+If there's a source about the 2.6ns being the upper limit, I would 
+appreciate a link to it (or the maths leading to this claim) :) My 
+understanding is: at least 1.2ns.
 
-There's uswsusp support. You can use that to provide robust
-signatures. You can even use RSA to encrypt the image but only require
-password during resume.
+Considering that for 125MHz TXC (for 1GbE), the clock period is 8ns and 
+that two
 
-BR,
-								Pavel
+>> While this could be observed with tx_delay property too, this property
+>> doesn't claim to provide a value in picoseconds that tx-internal-delay-ps
+>> would (but at the same time this didn't stop it to be implemented for the
+>> DSA switch we have which claims "more than 1.5ns" and nothing more, so maybe
+>> that would be acceptable?).
+>>
+>> I feel uncomfortable contributing this considering the wildly different
+>> results across our very small test sample pool of two units and slightly
+>> different operating temperature.
+> 
+> I can understand that. But there is another way to look at this. I am
+> making a big jump from just two boards, but it seems to me, tx_delay
+> and rx_delay are pointless, if they produce such a wide range of
+> values from what should be identical boards. They cannot be used for
+> fine tuning because the same value has a 387ps difference, which is
+> huge compared to the 31ps step.
+> 
 
-On Sun 2025-06-15 23:23:34, =D0=94=D0=B0=D0=BD=D0=B8=D0=BB=D0=BE =D0=A0=D1=
-=83=D1=81=D0=B8=D0=BD wrote:
->=20
+I'm making the same conclusion.
 
-> From 93c34aff2919db119b3eb13d4b87bea2c36bac13 Mon Sep 17 00:00:00 2001
-> From: VoltagedDebunked <rusindanilo@gmail.com>
-> Date: Sun, 15 Jun 2025 20:33:37 +0300
-> Subject: [PATCH 0/1] x86/power: Enhanced hibernation support with integri=
-ty checking
->=20
-> This patch enhances the x86 hibernation subsystem with improved reliabili=
-ty,
-> security, and hardware compatibility features.
->=20
-> PROBLEM:
-> The current hibernation implementation lacks robust integrity verificatio=
-n,
-> comprehensive hardware state preservation, and advanced error handling. T=
-his
-> can result in hibernation failures on modern systems and potential securi=
-ty
-> vulnerabilities from corrupted hibernation images.
->=20
-> SOLUTION:
-> This patch introduces several key enhancements:
->=20
-> - Cryptographic integrity verification using SHA-256 hashing to detect
->   hibernation image corruption or tampering
-> - Extended CPU state preservation including critical MSRs and APIC regist=
-ers
->   for improved compatibility across diverse hardware configurations =20
-> - Hardware compatibility validation to prevent resume attempts on systems
->   with changed CPU features or configurations
-> - Enhanced error handling with retry mechanisms and comprehensive diagnos=
-tics
-> - Security hardening including code protection and tamper detection
-> - Detailed logging and monitoring capabilities for debugging and analysis
->=20
-> TESTING:
-> The enhanced hibernation implementation has been thoroughly tested:
-> - Successfully completed basic hibernation/resume cycles
-> - Passed stress testing with multiple hibernation cycles under I/O load
-> - Verified integrity checking correctly prevents corrupted image resume
-> - Confirmed compatibility detection across different hardware configurati=
-ons
-> - Validated on x86_64 systems with various CPU and memory configurations
->=20
-> The implementation maintains full backward compatibility while providing
-> significant improvements in reliability and security over the existing
-> hibernation subsystem.
->=20
-> VoltagedDebunked (1):
->   x86/power: Enhanced hibernation support with integrity checking
->=20
->  arch/x86/power/hibernate.c | 700 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 689 insertions(+), 11 deletions(-)
->=20
-> --
-> 2.49.0
-> From 0d06fdded4d5aa2baa127e5e5f912d41879c8f90 Mon Sep 17 00:00:00 2001
-> From: VoltagedDebunked <rusindanilo@gmail.com>
-> Date: Sun, 15 Jun 2025 20:33:28 +0300
-> Subject: [PATCH] x86/power: Enhanced hibernation support with integrity
->  checking
->=20
-> - Add SHA-256 integrity verification for hibernation images
-> - Implement extended CPU state preservation (MSRs, APIC)
-> - Add hardware compatibility validation
-> - Error handling and retry mechanisms
-> - Add logging and diagnostics
-> - Implement security features
->=20
-> Signed-off-by: VoltagedDebunked <rusindanilo@gmail.com>
-> ---
->  arch/x86/power/hibernate.c | 688 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 677 insertions(+), 11 deletions(-)
->=20
-> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
-> index a2294c1649f6..fadf0b564c1f 100644
-> --- a/arch/x86/power/hibernate.c
-> +++ b/arch/x86/power/hibernate.c
-> @@ -2,6 +2,7 @@
->  /*
->   * Hibernation support for x86
->   *
-> + * Copyright (c) 2025 VoltagedDebunked <rusindanilo@gmail.com>
->   * Copyright (c) 2007 Rafael J. Wysocki <rjw@sisk.pl>
->   * Copyright (c) 2002 Pavel Machek <pavel@ucw.cz>
->   * Copyright (c) 2001 Patrick Mochel <mochel@osdl.org>
-> @@ -15,6 +16,16 @@
->  #include <linux/pgtable.h>
->  #include <linux/types.h>
->  #include <linux/crc32.h>
-> +#include <linux/kthread.h>
-> +#include <linux/delay.h>
-> +#include <linux/firmware.h>
-> +#include <linux/acpi.h>
-> +#include <linux/atomic.h>
-> +#include <linux/memory.h>
-> +#include <linux/memblock.h>
-> +#include <linux/version.h>
-> +#include <crypto/hash.h>
-> +#include <crypto/sha2.h>
-> =20
->  #include <asm/e820/api.h>
->  #include <asm/init.h>
-> @@ -24,6 +35,18 @@
->  #include <asm/sections.h>
->  #include <asm/suspend.h>
->  #include <asm/tlbflush.h>
-> +#include <asm/apic.h>
-> +#include <asm/msr.h>
-> +#include <asm/cpufeature.h>
-> +#include <asm/fpu/api.h>
-> +
-> +/*
-> + * Hibernation configuration
-> + */
-> +#define HIBERNATION_MAX_RETRIES		3
-> +#define HIBERNATION_VERIFY_PAGES	1
-> +#define HIBERNATION_COMPRESS_LEVEL	6
-> +#define HIBERNATION_INTEGRITY_CHECK	1
-> =20
->  /*
->   * Address to jump to in the last phase of restore in order to get to th=
-e image
-> @@ -40,6 +63,23 @@ unsigned long restore_cr3 __visible;
->  unsigned long temp_pgt __visible;
->  unsigned long relocated_restore_code __visible;
-> =20
-> +/* Hibernation state tracking - atomic prevents race conditions during s=
-uspend/resume */
-> +static atomic_t hibernation_state =3D ATOMIC_INIT(0);
-> +static DEFINE_MUTEX(hibernation_mutex);
-> +static unsigned long hibernation_start_time;
-> +/* Hash transform for integrity checking - may fail on older systems wit=
-hout crypto support */
-> +static struct crypto_shash *hibernation_hash_tfm;
-> +
-> +/* Power management state preservation - saves critical MSRs and APIC st=
-ate */
-> +struct pm_state_backup {
-> +	u64 msr_values[32];		/* Critical MSRs that control CPU behavior */
-> +	u32 apic_state[16];		/* APIC registers - timing sensitive */
-> +	u32 ioapic_state[24];		/* I/O APIC state - may cause IRQ issues if lost=
- */
-> +	bool valid;			/* Validation flag - prevents corrupt restores */
-> +};
-> +
-> +static struct pm_state_backup pm_backup;
-> +
->  /**
->   *	pfn_is_nosave - check if given pfn is in the 'nosave' section
->   *	@pfn: the page frame number to check.
-> @@ -55,14 +95,210 @@ int pfn_is_nosave(unsigned long pfn)
->  	return pfn >=3D nosave_begin_pfn && pfn < nosave_end_pfn;
->  }
-> =20
-> +/**
-> + * pfn_is_critical - check if pfn contains critical system data
-> + * @pfn: the page frame number to check
-> + *
-> + * This function identifies pages that must be preserved during hibernat=
-ion.
-> + * Missing critical pages will cause system instability or boot failure.
-> + * Currently unused but available for future hibernation optimizations.
-> + */
-> +static int __maybe_unused pfn_is_critical(unsigned long pfn)
-> +{
-> +	unsigned long addr =3D pfn << PAGE_SHIFT;
-> +
-> +	/* Check if page contains kernel code/data - corruption leads to instan=
-t panic */
-> +	if (pfn >=3D __pa_symbol(_text) >> PAGE_SHIFT &&
-> +	    pfn < __pa_symbol(_end) >> PAGE_SHIFT)
-> +		return 1;
-> +
-> +	/* Check ACPI tables - BIOS may relocate these on some systems */
-> +	if (!acpi_disabled) {
-> +		/* Check if address falls within known ACPI memory regions */
-> +		/* Note: ACPI table locations are platform-specific and complex */
-> +		/* This is a simplified check - full implementation would need */
-> +		/* to walk the ACPI table chain starting from RSDP */
-> +
-> +		/* Check common ACPI regions in low memory */
-> +		if (addr >=3D 0xE0000 && addr < 0x100000) {
-> +			/* Extended BIOS Data Area and ACPI tables often here */
-> +			return 1;
-> +		}
-> +
-> +		/* Additional ACPI-specific checks could be added here */
-> +		/* using proper ACPI subsystem APIs when available */
-> +	}
-> +
-> +	/* Check if page contains BIOS reserved areas */
-> +	if (pfn < 0x100)  /* First 1MB typically contains BIOS data */
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
->  struct restore_data_record {
-> -	unsigned long jump_address;
-> -	unsigned long jump_address_phys;
-> -	unsigned long cr3;
-> -	unsigned long magic;
-> -	unsigned long e820_checksum;
-> +	unsigned long jump_address;	/* Entry point for restore code */
-> +	unsigned long jump_address_phys;/* Physical address - needed for early =
-boot */
-> +	unsigned long cr3;		/* Page table root - must be valid physical addr */
-> +	unsigned long magic;		/* Magic number for format validation */
-> +	unsigned long e820_checksum;	/* Memory map checksum - detects hardware =
-changes */
-> +	/* Extended fields - version 2+ only */
-> +	unsigned long version;		/* Format version - allows backward compatibili=
-ty */
-> +	unsigned long flags;		/* Feature flags - compression, encryption, etc */
-> +	unsigned long cpu_features[4];	/* CPU capabilities - prevents feature m=
-ismatch */
-> +	unsigned long msr_checksum;	/* MSR state checksum - detects firmware ch=
-anges */
-> +	unsigned long kernel_version;	/* Kernel version - prevents ABI mismatch=
-es */
-> +	u8 integrity_hash[32];		/* SHA-256 hash - prevents tampering */
-> +	u32 compression_type;		/* Compression algorithm used */
-> +	u64 timestamp;			/* Creation time - for debugging */
-> +	u32 reserved[8];		/* Future expansion - zeroed for now */
->  };
-> =20
-> +/* Feature flags for restore_data_record - bitfield allows multiple feat=
-ures */
-> +#define RESTORE_FLAG_COMPRESSED		BIT(0)	/* Image is compressed */
-> +#define RESTORE_FLAG_ENCRYPTED		BIT(1)	/* Image is encrypted */
-> +#define RESTORE_FLAG_VERIFIED		BIT(2)	/* Integrity hash present */
-> +#define RESTORE_FLAG_SMT_DISABLED	BIT(3)	/* SMT was disabled during save=
- */
-> +#define RESTORE_FLAG_SECURE_BOOT	BIT(4)	/* Secure boot was enabled */
-> +
-> +/**
-> + * save_cpu_state_extended - save extended CPU state for hibernation
-> + *
-> + * This function saves MSRs and APIC state that the standard hibernation
-> + * code doesn't handle. Some MSRs are quirky and may not restore properly
-> + * on all CPU models, leading to subtle bugs or performance issues.
-> + */
-> +static int save_cpu_state_extended(void)
-> +{
-> +	int i;
-> +	u64 msr_val;
-> +
-> +	/* Save critical MSRs - these control fundamental CPU behavior */
-> +	static const u32 critical_msrs[] =3D {
-> +		MSR_IA32_SYSENTER_CS,	/* System call entry point */
-> +		MSR_IA32_SYSENTER_ESP,	/* System call stack pointer */
-> +		MSR_IA32_SYSENTER_EIP,	/* System call instruction pointer */
-> +		MSR_STAR,		/* System call target address */
-> +		MSR_LSTAR,		/* Long mode system call target */
-> +		MSR_CSTAR,		/* Compat mode system call target */
-> +		MSR_SYSCALL_MASK,	/* System call flag mask */
-> +		MSR_KERNEL_GS_BASE,	/* Kernel GS base - critical for percpu */
-> +#ifdef MSR_IA32_SPEC_CTRL
-> +		MSR_IA32_SPEC_CTRL,	/* Speculation control - security critical */
-> +#endif
-> +	};
-> +
-> +	/* Clear backup structure first - prevents stale data corruption */
-> +	memset(&pm_backup, 0, sizeof(pm_backup));
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(critical_msrs) && i < 32; i++) {
-> +		/* MSR reads can fail on some virtualized environments */
-> +		if (rdmsr_safe(critical_msrs[i], (u32 *)&msr_val,
-> +			       (u32 *)((char *)&msr_val + 4)) =3D=3D 0)
-> +			pm_backup.msr_values[i] =3D msr_val;
-> +	}
-> +
-> +	/* Save APIC state if available - timing sensitive, must be atomic */
-> +	if (boot_cpu_has(X86_FEATURE_APIC) && apic) {
-> +		/* Save essential APIC registers - order matters for some chipsets */
-> +		pm_backup.apic_state[0] =3D apic_read(APIC_ID);
-> +		pm_backup.apic_state[1] =3D apic_read(APIC_LVR);
-> +		pm_backup.apic_state[2] =3D apic_read(APIC_SPIV);
-> +		pm_backup.apic_state[3] =3D apic_read(APIC_TASKPRI);
-> +		pm_backup.apic_state[4] =3D apic_read(APIC_LDR);
-> +		pm_backup.apic_state[5] =3D apic_read(APIC_DFR);
-> +
-> +		/* Save Local Vector Table entries */
-> +		pm_backup.apic_state[6] =3D apic_read(APIC_LVTT);    /* Timer */
-> +		pm_backup.apic_state[7] =3D apic_read(APIC_LVTPC);   /* Performance Co=
-unter */
-> +		pm_backup.apic_state[8] =3D apic_read(APIC_LVT0);    /* Local Interrup=
-t 0 */
-> +		pm_backup.apic_state[9] =3D apic_read(APIC_LVT1);    /* Local Interrup=
-t 1 */
-> +		pm_backup.apic_state[10] =3D apic_read(APIC_LVTERR); /* Error */
-> +		pm_backup.apic_state[11] =3D apic_read(APIC_LVTTHMR); /* Thermal Monit=
-or */
-> +
-> +		/* Save error status and interrupt command registers */
-> +		pm_backup.apic_state[12] =3D apic_read(APIC_ESR);    /* Error Status */
-> +		pm_backup.apic_state[13] =3D apic_read(APIC_ICR);    /* Interrupt Comm=
-and Low */
-> +		pm_backup.apic_state[14] =3D apic_read(APIC_ICR2);   /* Interrupt Comm=
-and High */
-> +		pm_backup.apic_state[15] =3D apic_read(APIC_TDCR);   /* Timer Divide C=
-onfig */
-> +	}
-> +
-> +	pm_backup.valid =3D true;
-> +	return 0;
-> +}
-> +
-> +/**
-> + * restore_cpu_state_extended - restore extended CPU state after hiberna=
-tion
-> + *
-> + * This restores the state saved by save_cpu_state_extended. Order of
-> + * restoration is critical - wrong order may cause system hangs or crash=
-es.
-> + */
-> +static int restore_cpu_state_extended(void)
-> +{
-> +	int i;
-> +	static const u32 critical_msrs[] =3D {
-> +		MSR_IA32_SYSENTER_CS,
-> +		MSR_IA32_SYSENTER_ESP,
-> +		MSR_IA32_SYSENTER_EIP,
-> +		MSR_STAR,
-> +		MSR_LSTAR,
-> +		MSR_CSTAR,
-> +		MSR_SYSCALL_MASK,
-> +		MSR_KERNEL_GS_BASE,
-> +#ifdef MSR_IA32_SPEC_CTRL
-> +		MSR_IA32_SPEC_CTRL,
-> +#endif
-> +	};
-> +
-> +	if (!pm_backup.valid) {
-> +		pr_warn("No valid CPU state backup found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Restore critical MSRs - some may fail silently on certain CPUs */
-> +	for (i =3D 0; i < ARRAY_SIZE(critical_msrs) && i < 32; i++) {
-> +		u64 val =3D pm_backup.msr_values[i];
-> +
-> +		if (wrmsr_safe(critical_msrs[i], (u32)val, (u32)(val >> 32))) {
-> +			pr_warn("Failed to restore MSR 0x%x\n", critical_msrs[i]);
-> +			/* Continue anyway - some MSRs are not critical */
-> +		}
-> +	}
-> +
-> +	/* Restore APIC state - must be done before enabling interrupts */
-> +	if (boot_cpu_has(X86_FEATURE_APIC) && apic) {
-> +		/* Restore timer and divide configuration first */
-> +		apic_write(APIC_TDCR, pm_backup.apic_state[15]);
-> +
-> +		/* Restore destination format and logical destination */
-> +		apic_write(APIC_DFR, pm_backup.apic_state[5]);
-> +		apic_write(APIC_LDR, pm_backup.apic_state[4]);
-> +
-> +		/* Restore task priority */
-> +		apic_write(APIC_TASKPRI, pm_backup.apic_state[3]);
-> +
-> +		/* Restore Local Vector Table entries */
-> +		apic_write(APIC_LVTT, pm_backup.apic_state[6]);
-> +		apic_write(APIC_LVTPC, pm_backup.apic_state[7]);
-> +		apic_write(APIC_LVT0, pm_backup.apic_state[8]);
-> +		apic_write(APIC_LVT1, pm_backup.apic_state[9]);
-> +		apic_write(APIC_LVTERR, pm_backup.apic_state[10]);
-> +		apic_write(APIC_LVTTHMR, pm_backup.apic_state[11]);
-> +
-> +		/* Clear any pending errors before restoring error status */
-> +		apic_write(APIC_ESR, 0);
-> +		apic_read(APIC_ESR);  /* Read to clear */
-> +
-> +		/* Restore spurious interrupt vector register last */
-> +		apic_write(APIC_SPIV, pm_backup.apic_state[2]);
-> +
-> +		/* ID and LVR are read-only, don't restore */
-> +		/* ICR registers are command registers, don't restore */
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * compute_e820_crc32 - calculate crc32 of a given e820 table
->   *
-> @@ -78,12 +314,186 @@ static inline u32 compute_e820_crc32(struct e820_ta=
-ble *table)
->  	return ~crc32_le(~0, (unsigned char const *)table, size);
->  }
-> =20
-> +/**
-> + * compute_msr_checksum - calculate checksum of critical MSRs
-> + */
-> +static u32 compute_msr_checksum(void)
-> +{
-> +	u32 checksum =3D 0;
-> +	int i;
-> +
-> +	for (i =3D 0; i < 32; i++) {
-> +		checksum =3D crc32_le(checksum, (u8 *)&pm_backup.msr_values[i],
-> +				    sizeof(pm_backup.msr_values[i]));
-> +	}
-> +
-> +	return checksum;
-> +}
-> +
-> +/**
-> + * generate_integrity_hash - generate integrity hash for hibernation ima=
-ge
-> + *
-> + * This creates a SHA-256 hash of critical hibernation data to detect
-> + * corruption or tampering. Hash failures will prevent resume, which is
-> + * safer than booting a potentially corrupted system.
-> + */
-> +static int generate_integrity_hash(struct restore_data_record *rdr)
-> +{
-> +	SHASH_DESC_ON_STACK(desc, hibernation_hash_tfm);
-> +	int ret =3D 0;
-> +
-> +	if (!hibernation_hash_tfm) {
-> +		pr_debug("No hash transform available for integrity checking\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	desc->tfm =3D hibernation_hash_tfm;
-> +
-> +	ret =3D crypto_shash_init(desc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Hash critical parts of the restore record - order matters */
-> +	ret =3D crypto_shash_update(desc, (u8 *)&rdr->jump_address,
-> +				  sizeof(rdr->jump_address));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D crypto_shash_update(desc, (u8 *)&rdr->cr3, sizeof(rdr->cr3));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D crypto_shash_update(desc, (u8 *)&rdr->e820_checksum,
-> +				  sizeof(rdr->e820_checksum));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Include CPU features to detect hardware changes */
-> +	ret =3D crypto_shash_update(desc, (u8 *)rdr->cpu_features,
-> +				  sizeof(rdr->cpu_features));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return crypto_shash_final(desc, rdr->integrity_hash);
-> +}
-> +
-> +/**
-> + * verify_integrity_hash - verify integrity hash of hibernation image
-> + *
-> + * This verifies the SHA-256 hash to ensure the hibernation image hasn't
-> + * been corrupted or tampered with. A mismatch indicates potential data
-> + * corruption that could crash the system if we proceed with resume.
-> + */
-> +static int verify_integrity_hash(struct restore_data_record *rdr)
-> +{
-> +	SHASH_DESC_ON_STACK(desc, hibernation_hash_tfm);
-> +	u8 computed_hash[32];
-> +	int ret =3D 0;
-> +
-> +	if (!hibernation_hash_tfm) {
-> +		pr_warn("No hash transform available - skipping integrity check\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	desc->tfm =3D hibernation_hash_tfm;
-> +
-> +	ret =3D crypto_shash_init(desc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Compute hash using same algorithm as generate_integrity_hash */
-> +	ret =3D crypto_shash_update(desc, (u8 *)&rdr->jump_address,
-> +				  sizeof(rdr->jump_address));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D crypto_shash_update(desc, (u8 *)&rdr->cr3, sizeof(rdr->cr3));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D crypto_shash_update(desc, (u8 *)&rdr->e820_checksum,
-> +				  sizeof(rdr->e820_checksum));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D crypto_shash_update(desc, (u8 *)rdr->cpu_features,
-> +				  sizeof(rdr->cpu_features));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D crypto_shash_final(desc, computed_hash);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Compare hashes - timing attack not a concern here */
-> +	if (memcmp(computed_hash, rdr->integrity_hash, 32) !=3D 0) {
-> +		pr_err("Hibernation image integrity verification failed!\n");
-> +		pr_err("Expected hash: %32phN\n", rdr->integrity_hash);
-> +		pr_err("Computed hash: %32phN\n", computed_hash);
-> +	return -EINVAL;
-> +
-> +	pr_debug("...");
-> +
-> +	return 0;
-> +}
-> +
->  #ifdef CONFIG_X86_64
->  #define RESTORE_MAGIC	0x23456789ABCDEF02UL
-> +#define RESTORE_VERSION	0x0002UL
->  #else
->  #define RESTORE_MAGIC	0x12345679UL
-> +#define RESTORE_VERSION	0x0002UL
->  #endif
-> =20
-> +/**
-> + * validate_hibernation_compatibility - check if hibernation image is co=
-mpatible
-> + *
-> + * This performs extensive compatibility checking to prevent resume fail=
-ures.
-> + * Hardware or kernel changes since hibernation may make the image unusa=
-ble,
-> + * leading to crashes or data corruption if we proceed blindly.
-> + */
-> +static int validate_hibernation_compatibility(struct restore_data_record=
- *rdr)
-> +{
-> +	/* Check version compatibility - newer versions may have incompatible f=
-ormats */
-> +	if (rdr->version > RESTORE_VERSION) {
-> +		pr_err("Hibernation image version %lu is newer than supported %lu\n",
-> +		       rdr->version, RESTORE_VERSION);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Check CPU features compatibility - missing features cause illegal in=
-struction faults */
-> +	if ((rdr->cpu_features[0] & boot_cpu_data.x86_capability[CPUID_1_EDX])
-> +	    !=3D rdr->cpu_features[0]) {
-> +		pr_err("CPU features mismatch detected - hibernated system had differe=
-nt CPU\n");
-> +		pr_err("Required: %08x, Available: %08x\n",
-> +		       (u32)rdr->cpu_features[0], boot_cpu_data.x86_capability[CPUID_1=
-_EDX]);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Check extended CPU features too */
-> +	if ((rdr->cpu_features[1] & boot_cpu_data.x86_capability[CPUID_1_ECX])
-> +	    !=3D rdr->cpu_features[1]) {
-> +		pr_warn("Extended CPU features mismatch - some functionality may be di=
-sabled\n");
-> +		/* Don't fail here, just warn - most extended features are optional */
-> +	}
-> +
-> +	/* Check SMT configuration - mismatched SMT state can cause scheduling =
-issues */
-> +#ifdef CONFIG_SMP
-> +	if ((rdr->flags & RESTORE_FLAG_SMT_DISABLED) &&
-> +	    cpu_smt_possible()) {
-> +		pr_warn("SMT configuration changed since hibernation\n");
-> +		pr_warn("This may cause performance or security issues\n");
-> +
-> +		/* Optionally disable SMT to match hibernation state */
-> +		/* Note: This is informational only - actual SMT control */
-> +		/* requires complex CPU hotplug operations during early resume */
-> +		pr_info("Consider disabling SMT to match hibernation state\n");
-> +	}
-> +#endif
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   *	arch_hibernation_header_save - populate the architecture specific part
->   *		of a hibernation image header
-> @@ -95,10 +505,28 @@ static inline u32 compute_e820_crc32(struct e820_tab=
-le *table)
->  int arch_hibernation_header_save(void *addr, unsigned int max_size)
->  {
->  	struct restore_data_record *rdr =3D addr;
-> +	int ret;
-> =20
->  	if (max_size < sizeof(struct restore_data_record))
->  		return -EOVERFLOW;
-> +
-> +	mutex_lock(&hibernation_mutex);
-> +	hibernation_start_time =3D jiffies;
-> +	atomic_set(&hibernation_state, 1);
-> +
-> +	/* Save extended CPU state - this must happen before any major state ch=
-anges */
-> +	ret =3D save_cpu_state_extended();
-> +	if (ret) {
-> +		pr_err("Failed to save extended CPU state: %d\n", ret);
-> +		mutex_unlock(&hibernation_mutex);
-> +		return ret;
-> +	}
-> +
-> +	/* Clear the record first to ensure no stale data */
-> +	memset(rdr, 0, sizeof(*rdr));
-> +
->  	rdr->magic =3D RESTORE_MAGIC;
-> +	rdr->version =3D RESTORE_VERSION;
->  	rdr->jump_address =3D (unsigned long)restore_registers;
->  	rdr->jump_address_phys =3D __pa_symbol(restore_registers);
-> =20
-> @@ -122,7 +550,48 @@ int arch_hibernation_header_save(void *addr, unsigne=
-d int max_size)
->  	rdr->cr3 =3D restore_cr3 & ~CR3_PCID_MASK;
-> =20
->  	rdr->e820_checksum =3D compute_e820_crc32(e820_table_firmware);
-> -	return 0;
-> +	rdr->msr_checksum =3D compute_msr_checksum();
-> +	rdr->timestamp =3D ktime_get_real_seconds();
-> +
-> +	/* Set feature flags based on current system configuration */
-> +	rdr->flags =3D 0;
-> +#ifdef CONFIG_SMP
-> +	if (cpu_smt_possible())
-> +		rdr->flags |=3D RESTORE_FLAG_SMT_DISABLED;
-> +#endif
-> +
-> +#ifdef CONFIG_HIBERNATION_COMPRESSION
-> +	rdr->flags |=3D RESTORE_FLAG_COMPRESSED;
-> +	rdr->compression_type =3D HIBERNATION_COMPRESS_LEVEL;
-> +#endif
-> +
-> +#ifdef CONFIG_HIBERNATION_ENCRYPTION
-> +	rdr->flags |=3D RESTORE_FLAG_ENCRYPTED;
-> +#endif
-> +
-> +	/* Save CPU features - this prevents resume on incompatible hardware */
-> +	rdr->cpu_features[0] =3D boot_cpu_data.x86_capability[CPUID_1_EDX];
-> +	rdr->cpu_features[1] =3D boot_cpu_data.x86_capability[CPUID_1_ECX];
-> +	rdr->cpu_features[2] =3D boot_cpu_data.x86_capability[CPUID_7_0_EBX];
-> +	rdr->cpu_features[3] =3D boot_cpu_data.x86_capability[CPUID_7_ECX];
-> +
-> +	/* Generate integrity hash - this detects tampering or corruption */
-> +	ret =3D generate_integrity_hash(rdr);
-> +	if (ret =3D=3D 0) {
-> +		rdr->flags |=3D RESTORE_FLAG_VERIFIED;
-> +		pr_debug("Integrity hash generated successfully\n");
-> +	} else {
-> +		pr_warn("Failed to generate integrity hash: %d\n", ret);
-> +		/* Continue without verification - not critical for basic functionalit=
-y */
-> +		ret =3D 0;
-> +	}
-> +
-> +	mutex_unlock(&hibernation_mutex);
-> +
-> +	pr_info("Hibernation header saved successfully (flags: 0x%lx)\n",
-> +		rdr->flags);
-> +
-> +	return ret;
->  }
-> =20
->  /**
-> @@ -133,24 +602,59 @@ int arch_hibernation_header_save(void *addr, unsign=
-ed int max_size)
->  int arch_hibernation_header_restore(void *addr)
->  {
->  	struct restore_data_record *rdr =3D addr;
-> +	int ret;
-> =20
->  	if (rdr->magic !=3D RESTORE_MAGIC) {
->  		pr_crit("Unrecognized hibernate image header format!\n");
->  		return -EINVAL;
->  	}
-> =20
-> +	mutex_lock(&hibernation_mutex);
-> +
-> +	/* Validate compatibility */
-> +	ret =3D validate_hibernation_compatibility(rdr);
-> +	if (ret) {
-> +		mutex_unlock(&hibernation_mutex);
-> +		return ret;
-> +	}
-> +
-> +	/* Verify integrity if enabled */
-> +	if (rdr->flags & RESTORE_FLAG_VERIFIED) {
-> +		ret =3D verify_integrity_hash(rdr);
-> +		if (ret) {
-> +			pr_crit("Hibernation image integrity check failed!\n");
-> +			mutex_unlock(&hibernation_mutex);
-> +			return ret;
-> +		}
-> +		pr_info("Hibernation image integrity verified successfully\n");
-> +	}
-> +
->  	restore_jump_address =3D rdr->jump_address;
->  	jump_address_phys =3D rdr->jump_address_phys;
->  	restore_cr3 =3D rdr->cr3;
-> =20
->  	if (rdr->e820_checksum !=3D compute_e820_crc32(e820_table_firmware)) {
->  		pr_crit("Hibernate inconsistent memory map detected!\n");
-> +		mutex_unlock(&hibernation_mutex);
->  		return -ENODEV;
->  	}
-> =20
-> +	/* Verify MSR checksum */
-> +	if (rdr->msr_checksum !=3D compute_msr_checksum())
-> +		pr_warn("MSR checksum mismatch - system configuration may have changed=
-\n");
-> +
-> +	atomic_set(&hibernation_state, 2);
-> +	mutex_unlock(&hibernation_mutex);
-> +
-> +	pr_info("Hibernation header restored successfully (version: %lu, flags:=
- 0x%lx)\n",
-> +		rdr->version, rdr->flags);
-> +
->  	return 0;
->  }
-> =20
-> +/**
-> + * relocate_restore_code - restore code relocation with verification
-> + */
->  int relocate_restore_code(void)
->  {
->  	pgd_t *pgd;
-> @@ -158,41 +662,121 @@ int relocate_restore_code(void)
->  	pud_t *pud;
->  	pmd_t *pmd;
->  	pte_t *pte;
-> +	int retry_count =3D 0;
-> =20
-> +retry:
->  	relocated_restore_code =3D get_safe_page(GFP_ATOMIC);
-> -	if (!relocated_restore_code)
-> +	if (!relocated_restore_code) {
-> +		if (retry_count < HIBERNATION_MAX_RETRIES) {
-> +			retry_count++;
-> +			msleep(20);
-> +			goto retry;
-> +		}
->  		return -ENOMEM;
-> +	}
-> =20
->  	__memcpy((void *)relocated_restore_code, core_restore_code, PAGE_SIZE);
-> =20
-> +	/* Verify the copy */
-> +	if (memcmp((void *)relocated_restore_code, core_restore_code, PAGE_SIZE=
-)) {
-> +		pr_err("Restore code copy verification failed\n");
-> +		return -EIO;
-> +	}
-> +
->  	/* Make the page containing the relocated code executable */
->  	pgd =3D (pgd_t *)__va(read_cr3_pa()) +
->  		pgd_index(relocated_restore_code);
->  	p4d =3D p4d_offset(pgd, relocated_restore_code);
->  	if (p4d_leaf(*p4d)) {
->  		set_p4d(p4d, __p4d(p4d_val(*p4d) & ~_PAGE_NX));
-> -		goto out;
-> +		goto flush_and_out;
->  	}
->  	pud =3D pud_offset(p4d, relocated_restore_code);
->  	if (pud_leaf(*pud)) {
->  		set_pud(pud, __pud(pud_val(*pud) & ~_PAGE_NX));
-> -		goto out;
-> +		goto flush_and_out;
->  	}
->  	pmd =3D pmd_offset(pud, relocated_restore_code);
->  	if (pmd_leaf(*pmd)) {
->  		set_pmd(pmd, __pmd(pmd_val(*pmd) & ~_PAGE_NX));
-> -		goto out;
-> +		goto flush_and_out;
->  	}
->  	pte =3D pte_offset_kernel(pmd, relocated_restore_code);
->  	set_pte(pte, __pte(pte_val(*pte) & ~_PAGE_NX));
-> -out:
-> +
-> +flush_and_out:
-> +	__flush_tlb_all();
-> +
-> +	/* Mark the original code non-executable for security */
-> +	pgd =3D (pgd_t *)__va(read_cr3_pa()) + pgd_index((unsigned long)core_re=
-store_code);
-> +	p4d =3D p4d_offset(pgd, (unsigned long)core_restore_code);
-> +	if (p4d_leaf(*p4d)) {
-> +		set_p4d(p4d, __p4d(p4d_val(*p4d) | _PAGE_NX));
-> +		goto final_flush;
-> +	}
-> +	pud =3D pud_offset(p4d, (unsigned long)core_restore_code);
-> +	if (pud_leaf(*pud)) {
-> +		set_pud(pud, __pud(pud_val(*pud) | _PAGE_NX));
-> +		goto final_flush;
-> +	}
-> +	pmd =3D pmd_offset(pud, (unsigned long)core_restore_code);
-> +	if (pmd_leaf(*pmd)) {
-> +		set_pmd(pmd, __pmd(pmd_val(*pmd) | _PAGE_NX));
-> +		goto final_flush;
-> +	}
-> +	pte =3D pte_offset_kernel(pmd, (unsigned long)core_restore_code);
-> +	set_pte(pte, __pte(pte_val(*pte) | _PAGE_NX));
-> +
-> +final_flush:
->  	__flush_tlb_all();
-> +
-> +	pr_debug("Restore code relocated to 0x%lx\n", relocated_restore_code);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * hibernation_platform_prepare - platform preparation for hibernation
-> + */
-> +static int hibernation_platform_prepare(void)
-> +{
-> +	/* Initialize crypto for integrity checking */
-> +	hibernation_hash_tfm =3D crypto_alloc_shash("sha256", 0, 0);
-> +	if (IS_ERR(hibernation_hash_tfm)) {
-> +		pr_warn("Failed to allocate hash transform for hibernation\n");
-> +		hibernation_hash_tfm =3D NULL;
-> +	}
-> +
-> +	/* Additional platform-specific preparations */
-> +	if (!acpi_disabled) {
-> +		/* Prepare ACPI for hibernation */
-> +		/* Note: acpi_pm_prepare may not be available in all kernel versions */
-> +		pr_debug("ACPI hibernation preparation\n");
-> +	}
-> +
->  	return 0;
->  }
-> =20
-> +/**
-> + * hibernation_platform_cleanup - cleanup after hibernation
-> + */
-> +static void hibernation_platform_cleanup(void)
-> +{
-> +	if (hibernation_hash_tfm) {
-> +		crypto_free_shash(hibernation_hash_tfm);
-> +		hibernation_hash_tfm =3D NULL;
-> +	}
-> +
-> +	atomic_set(&hibernation_state, 0);
-> +	memset(&pm_backup, 0, sizeof(pm_backup));
-> +}
-> +
-> +/**
-> + * arch_resume_nosmt - SMT handling during resume
-> + */
->  int arch_resume_nosmt(void)
->  {
->  	int ret;
-> +	unsigned long start_time =3D jiffies;
-> =20
->  	/*
->  	 * We reached this while coming out of hibernation. This means
-> @@ -206,11 +790,93 @@ int arch_resume_nosmt(void)
->  	 *
->  	 * Called with hotplug disabled.
->  	 */
-> +
-> +	pr_info("Resuming SMT configuration...\n");
-> +
->  	cpu_hotplug_enable();
-> =20
->  	ret =3D arch_cpu_rescan_dead_smt_siblings();
-> +	if (ret)
-> +		pr_err("Failed to rescan dead SMT siblings: %d\n", ret);
-> +
-> +	/* Restore extended CPU state */
-> +	if (restore_cpu_state_extended())
-> +		pr_warn("Failed to restore extended CPU state\n");
-> =20
->  	cpu_hotplug_disable();
-> =20
-> +	pr_info("SMT resume completed in %u ms (ret: %d)\n",
-> +		jiffies_to_msecs(jiffies - start_time), ret);
-> +
->  	return ret;
->  }
-> +
-> +/**
-> + * hibernation_verification_thread - background verification of hibernat=
-ion state
-> + * Currently unused but available for future background integrity checki=
-ng.
-> + */
-> +static int __maybe_unused hibernation_verification_thread(void *data)
-> +{
-> +	unsigned long last_check =3D jiffies;
-> +	u32 last_e820_checksum =3D 0;
-> +
-> +	while (!kthread_should_stop()) {
-> +		if (atomic_read(&hibernation_state) > 0) {
-> +			/* Perform periodic integrity checks every 30 seconds */
-> +			if (time_after(jiffies, last_check + 30 * HZ)) {
-> +				u32 current_e820_checksum;
-> +
-> +				/* Check if memory map has changed */
-> +				current_e820_checksum =3D compute_e820_crc32(e820_table_firmware);
-> +				if (last_e820_checksum &&
-> +				    current_e820_checksum !=3D last_e820_checksum) {
-> +					pr_warn("Memory map changed during hibernation preparation!\n");
-> +					/* Could trigger hibernation abort here */
-> +				}
-> +				last_e820_checksum =3D current_e820_checksum;
-> +
-> +				/* Verify critical system structures are still intact */
-> +				if (pm_backup.valid) {
-> +					/* Could check MSR consistency here */
-> +					pr_debug("Hibernation state verification passed\n");
-> +				}
-> +
-> +				last_check =3D jiffies;
-> +			}
-> +		} else {
-> +			/* Reset verification state when hibernation is not active */
-> +			last_e820_checksum =3D 0;
-> +		}
-> +
-> +		msleep(1000);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * arch_hibernation_init - initialize hibernation support
-> + */
-> +static int __init arch_hibernation_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret =3D hibernation_platform_prepare();
-> +	if (ret)
-> +		return ret;
-> +
-> +	pr_info("Hibernation support initialized\n");
-> +	return 0;
-> +}
-> +
-> +/**
-> + * arch_hibernation_exit - cleanup hibernation support
-> + */
-> +static void __exit arch_hibernation_exit(void)
-> +{
-> +	hibernation_platform_cleanup();
-> +	pr_info("Hibernation support cleaned up\n");
-> +}
-> +
-> +module_init(arch_hibernation_init);
-> +module_exit(arch_hibernation_exit);
+I'm not sure though it's a good idea to force the user to implement the 
+delay in the PHY only. I can tell you that we have two variants of 
+RK3399 Puma, RK3588 Jaguar and RK3588 Tiger with either a KSZ9031 or a 
+KSZ9131 PHY. As far as I understood from reading the driver, the delay 
+is implemented differently for both PHYs. KSZ9131 adds a DLL-based clock 
+skew (4.9.3.1 in datasheet[1]) in the appropriate direction whenever 
+phy-mode requires a delay be added by MAC/PHY. KSZ9031 doesn't. Both 
+KSZ9031 and KSZ9131 have per-lane skews. If I wanted the delay to be 
+added by the PHY in the DT, I basically wouldn't be able to share the DT 
+between both variants of our boards as the KSZ9131 would add a 2ns 
+delay[2] based on phy-mode but not KSZ9031 where I assume I would need 
+to use pad skews instead to add up to 1.9ns (TXC; 1.4ns for RXC) but 
+then we would have ~4ns for KSZ9131 which is likely out of spec :/ Today 
+it works by "chance" because our phy-mode is rgmii but the delay is 
+added by the MAC (due to the long-standing mistake in the Rockchip GMAC 
+driver). I have not tested any of the above claims.
 
+[1] 
+https://ww1.microchip.com/downloads/aemDocuments/documents/UNG/ProductDocuments/DataSheets/00002841D.pdf
+[2] Link [1] at 4.9.3 RGMII TIMING
 
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+> It seems to me, rx_delay and tx_delay should be deprecated, set to 0,
+> and let the PHY do they delays. If i remember correctly, that is what
+> you ended up with for you board?
+> 
 
---jt6M45IpirH0fJMe
-Content-Type: application/pgp-signature; name="signature.asc"
+This is what we ended up doing for our adapter board indeed.
 
------BEGIN PGP SIGNATURE-----
+I'm trying to figure out if there's a way to not break stuff by forcing 
+the properties to 0 and deprecating the values.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaE/gSwAKCRAw5/Bqldv6
-8lQyAJ9y/YJAUSOXXTmUS9TtthUKAnoPUwCfbETwivP+inQjUxDDDhQalcyLhs0=
-=25zc
------END PGP SIGNATURE-----
+tx_delay is used (by the driver) whenever the delay is added by the PCB 
+on TXC (based on phy-mode, which is incorrect). Same for rx_delay but 
+for RXC. So if we set phy-mode correctly (as it's being pushed lately 
+for Rockchip boards), tx_delay/rx_delay will need to be set to 0 
+explicitly whenever the delay is expected to be NOT implemented by the 
+PCB (so in addition to the phy-mode saying "delay not added by the PCB").
 
---jt6M45IpirH0fJMe--
+If the properties are missing in the DT, they are assigned a default 
+value. So we cannot simply remove them or expect them gone (we also want 
+DT backward compatibility so cannot change the driver behavior :/).
+
+The only way forward that I see is forcing the properties to be 0 in 
+device tree and warn if they are non-zero or something. Will trigger a 
+bunch of warning/errors on existing Device Trees though. And this will 
+not allow us to use two slightly different PHYs for our products without 
+having two separate Device Trees.
+
+Cheers,
+Quentin
