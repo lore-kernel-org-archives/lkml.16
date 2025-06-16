@@ -1,81 +1,69 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E3820B807;
-	Mon, 16 Jun 2025 14:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EBF1F0E25
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085423; cv=none; b=iWIPE1OpdChfKv4TXI3b6so9FbBV4B0jYHEQKCC3lR+q007NF2OCjWBJdBlynv0wpnqpSG/46kUZxaKy8Bd9Zk2ZtNyNtHIr5wP6jWCOhgu4AOtRjMp4Cu2SQEw1cqD8JqLaG9LIxSMOXZ9W0TDWC/9jT82MOx3QQN33URQNgo0=
+	t=1750085427; cv=none; b=sQZdhTyr5NPOHEYQHQv/YtCIZxbDCK8UAHQ+W/J4QXlpIAr5W8chyaAvFLpXKma6nxzNnZuNNjiJpslALMNyYFrw9qTFC2938/kSTLF7MFLuRaK4JTjLqQ9zp9/i8Y1VgIcl7nD4bQ/ph/Tt/xFsAd/KhcX1bH10PXCVUHUcDII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085423; c=relaxed/simple;
-	bh=eA7YMpGghvvwTSt9K1EZbouO635j9XtsXcoyrP1WGjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EaqXcOGBWYs8n5Y+UbPcRc6LTroF1iLhzvK1dzpOFEBxs2i7ae4zjmCizFDz5FrWQrzzfQSAc2aA+3JBDE79pe2ph9WIKEFF+ezVryK+kltIBi+L0u6XoWoVFYEVJuirjPcE2Aio7eOoxupHLy56zXWH0xOh8fygRgWPlokssL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 1589BBA10C;
-	Mon, 16 Jun 2025 14:50:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 267F120011;
-	Mon, 16 Jun 2025 14:50:12 +0000 (UTC)
-Date: Mon, 16 Jun 2025 10:50:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org, Carlos Maiolino
- <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: Re: Unused event xfs_growfs_check_rtgeom
-Message-ID: <20250616105010.11efd49f@batman.local.home>
-In-Reply-To: <aEu-U-va9q0QRuX0@infradead.org>
-References: <20250612131021.114e6ec8@batman.local.home>
-	<20250612131651.546936be@batman.local.home>
-	<20250612174737.GM6179@frogsfrogsfrogs>
-	<20250612144608.525860bc@batman.local.home>
-	<aEu-U-va9q0QRuX0@infradead.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750085427; c=relaxed/simple;
+	bh=NLHb6i+qfakh3m/2nUmEanwAnL7MqTRL1fFLISGJsfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HFC6bYUD5ks4+clTqRC97ulw0vuY2Red2YZnW4zNuk24fa/awp0+oGT0/xpyozO0XNsCv0UtjbHFDPLgaYF7yWnmo0dErCD3GcdniJVUb+noEpZw1BplsHVQbbaVXE4cAlfG7i/q27OFs2vDVCr5oVwXXE5oFcWGNqpQ28XtN+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IJ6JZT0d; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IJ6JZT0d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=NLHb6i+qfakh3m/2nUmEanwAnL7MqTRL1fFLISGJsfE=; b=IJ6JZT0dcI9doVtkpQ1MU4ZIRg
+	HXgnl/4XnBwbXVkR+gur94H1RK5EM/DErrK8zGCZkO/Vsjk6xqEQ3RN+Grv4GITduD+mGVA6ocBfg
+	EWylcsKgU4aTBT19cT1mSo9Lvhagpt3GkUlm/wkhp3cwKIMvnOeroe+Flz3Hi+NZaHzoS6RC1wRzH
+	233FNkwRk+POciJSuvtLmRzwHLIOXtaif6PvbisOoHRoDF1/+4ycsvnaEi1wctOQNf+37L6nATdYN
+	GnfV6d9EDonlWPgTSWH3c7GQSm9IDYCSfGu5V29rVYDKu8oURAoBwXNdSnvdUdzrLfHczqOrNPGRh
+	BfVe3H0Q==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRBA2-00000003cLU-0Als;
+	Mon, 16 Jun 2025 14:50:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4255930D552; Mon, 16 Jun 2025 16:50:07 +0200 (CEST)
+Date: Mon, 16 Jun 2025 16:50:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org, akpm@linux-foundation.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	mingo@redhat.com, mjguzik@gmail.com, luto@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+	willy@infradead.org, jon.grimm@amd.com, bharata@amd.com,
+	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com
+Subject: Re: [PATCH v4 13/13] x86/folio_zero_user: Add multi-page clearing
+Message-ID: <20250616145007.GF1613376@noisy.programming.kicks-ass.net>
+References: <20250616052223.723982-1-ankur.a.arora@oracle.com>
+ <20250616052223.723982-14-ankur.a.arora@oracle.com>
+ <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 267F120011
-X-Stat-Signature: ijnqwr669i87ibkrhpcbcwt6q88hjb1s
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Kh8mRHqt8+6D0roufbHVC8u+e7jwxvSY=
-X-HE-Tag: 1750085412-706185
-X-HE-Meta: U2FsdGVkX1+of2ah6iD7vqtj+jIarF4Dt0DZpS7dhJfdro+EWaPpnww4gIMEc4ufvhwojCLo5T/yUAyAZecoOcmnYnHhasbTE4aIgkCDl4KDyCWyrTTX2PYfZhI5MhxhlfHLJU95wXyejl6AQ6hH45CHhgbbRMD/oE/wvkdjNHiMlyTK8KE7bgoChDLWOT8jm4OcfDeR6HaLgdrNCkXV4/1gyCwv8PXdOOgz/kgJkDFpN0nribnJap06X0GSL9ymxDgB40iqSdt4NU1f5ydNClUXQqhM9DqutMiizg4LqxdK3A9Be3NhXGL82NcXZKGnZUosZGwKihvJfKbsJv+QO2L3pLju5IlUYq55sP0Jny8YraBrvVuPEzJxM2V/v/H8ql1rxlXazUSjyUyboU8tLg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
 
-On Thu, 12 Jun 2025 22:59:47 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
+On Mon, Jun 16, 2025 at 07:44:13AM -0700, Dave Hansen wrote:
 
-> On Thu, Jun 12, 2025 at 02:46:08PM -0400, Steven Rostedt wrote:
-> > On Thu, 12 Jun 2025 10:47:37 -0700
-> > "Darrick J. Wong" <djwong@kernel.org> wrote:
-> >   
-> > > On Thu, Jun 12, 2025 at 01:16:51PM -0400, Steven Rostedt wrote:  
-> > > > I also found events: xfs_metadir_link and xfs_metadir_start_link are
-> > > > defined in fs/xfs/libxfs/xfs_metadir.c in a #ifndef __KERNEL__ section.
-> > > > 
-> > > > Are these events ever used? Why are they called in !__KERNEL__ code?    
-> > > 
-> > > libxfs is shared with userspace, and xfs_repair uses them to relink old
-> > > quota files.
-> > >  
-> > 
-> > Does this userspace use these trace events? If so, I think the events
-> > need to have an:  
-> 
-> They have stubs for them.
+> To me, that's deserving of an ARCH_HAS_FOO bit that we can set on the
+> x86 side that then cajoles the core mm/ code to use the fancy new
+> clear_pages_resched() implementation.
 
-If user space only has stubs for them, then why do they exist? The call
-to this tracepoints are within #ifndef __KERNEL__ so the kernel will
-never call them. Or can the user space stubs be replaced by actual content?
-
-Either case, the events in the header file should be hidden from the kernel.
-
--- Steve
+Note that we should only set this bit with either full or lazy
+preemption selected. Haven't checked the patch-set to see if that
+constraint is already taken care of.
