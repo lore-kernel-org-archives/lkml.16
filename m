@@ -1,193 +1,145 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2552153D3
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BF8218EB1
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750108289; cv=none; b=CanqS9cDpjVFHHYsVTavx9se7oOmca8uly0dw0GdBW/hBlKZB/27MSpBPFTNJ3F2Xn+de40maOT2DKVA/oX8ivpWkq2QkmVwBhC9Kdy833/0Tg12IAJeDv5mppo/yWwx66HUtUCDTKjiVGQWslqn6WrUSyoeCWXSqVgsjkDk144=
+	t=1750108293; cv=none; b=NKf8tPjdKOCv6LYTInFttT0Rp48Rx/eDmaBqUp0r6yNfYybI9PJdKku6bfK6MAVrvhJnmh6P2BdN/HkQpga39epzfXIjtzupUneYWlnJGOddZc0Hpr+JiUubBJIPcp0ivuo4r578sTnI97lL6Jd8B6ukeTWRUW8heBHpm8KBBM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750108289; c=relaxed/simple;
-	bh=IgYPB6NSRiySo3tOXBpLXxIs1rnBT7hMzDeQePuqOK4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q7sAYCrtQSX75irCELJGno7gVOrH+iV8+0xOSpnvxZ5KoN1hKL/xNeLHPJ1CIAMe989OuzlM6trhUYUwVekUQpwoUNQmVrqwSNBtS7ERZ/ty23dy1wxAyBRr8bvFDaavk4yk1mOBhHWlpDWysDRVwjW/Q5Fmtj6IFh0FT+EjTFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lNuHYmfv; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750108293; c=relaxed/simple;
+	bh=QDEJC9lNPPxMJgzIsPCXcaBWEEtBKY1BQcD54BSSUUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jKF63rxkprbLZru1Zm1Cofz8lfch0DRyVIt/MfSuXcfOqgLDzV6vOP57r08IGwk7xpUJZ7i5fbB89/IOL0Tn8ey0w3sk0JFOEbR7amMy5lmtxSoGjH9QSRWaFGjj1yFQ3uBgFHiDaszYsRAPksIyoHN7hxcD8P38NTphoMGsLho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vW48Ws+G; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lNuHYmfv"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2348ac8e0b4so20385ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:11:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vW48Ws+G"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-739f2508ffaso3760123a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:11:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750108287; x=1750713087; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LzvFmHWfZ+bWAuTVcKtdw0qV+ufI/jqJ17BT4JBpweI=;
-        b=lNuHYmfvfIo3qxvT1Pe4owENzg0v2AcCvpTwV8yaVXqa554R7utFF9eqTpTGovVv1e
-         YTBRGQw5QTnHHQqlWj8u6XbCwGKvl214C0h+VBmdJiy03puWqm3RiXoin/yu5otQhmea
-         bzonDmWiPsuER+su2wUUZa5wKAspwphLHxNiQcN7yprNM/RKQ7/8FHw5obtpR5IZAJ18
-         Bs7OsRRkecXnLvfsFT4e9BNd69J+A/KBsAZ5PYM9vmHNmC/eU2LmVvk97+NbBmY9gqEb
-         ixdisYCBzeudD/AG20l5BDXWe7TVxxk/7JeevdYN1xgoD5UIdwfMHMCXgBSUc+alJb2/
-         qXSQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750108290; x=1750713090; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qYkNHZ7Min5h27AdAztgUbznbIMSIi9ilTeWa8MhK+E=;
+        b=vW48Ws+GXJxUskFWMuXzMMaakcBhTzo6DQIB4Hnm/eaH2/XJrnM8kfpk+QSoMN6Hml
+         UmyofMcVvMYyz/Y8FD6h//WFwJshRvWvRsviQ6zQhemWgrshK8HvKPj3iXnQehT+LdYZ
+         uhYwEQ2iJPB4Klvzd0boMZclTzEQPaYu160d+jJYQ0I5eDVt8GeetyAkz+aro3mTZbQw
+         udSUS0Ul61J0cYppKjdW8kVV9l8ANeWeDekwx+LC7EUC+rvHrfIgbNDw0qXwh66llwuK
+         r+zK59BasfH+NGffR8AVavN6DWhhNjs1DZgzPQj47WR0Kgjkd0rawP5wKk29DpKuWP/M
+         ft6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750108287; x=1750713087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LzvFmHWfZ+bWAuTVcKtdw0qV+ufI/jqJ17BT4JBpweI=;
-        b=fOQ0h4RcnQ3rQcdHGtlrNBtV3HsVrWerOu0Pl6zU3+5hK2cCTc5l9CMhup2zjNLsxl
-         qgu9iJU0AMspE78GtlLT4TRO1TZukgHiyTSoLYzICr676+N3buUxpZJAiuqgsmpYTCxI
-         cIyeb+KWtz6+7QIYM/SrkPVxPlGGUJbhFfp5B3PCsHUTf7u7TX/EksBwZF6IYe3Aqcwq
-         hq1m8CPCc16T3TFcP63PTG9VAWFLL0q5InRttIh8dGJp1CKOvcKzIqayxiEgtmIaPmOe
-         7CkxsHZy+YxjQvfWGWNwrImrprhppT1mmf7AdcuawGMQIlnkgTfXKnzoCDTwm6dq7DAX
-         kKfA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2bbetsw7lvJgEfBq48RD6K+L1gJfRZW4dTmXKzlHkMw+kbaG7N9o2m6il8MXR+2wT298BzwQSCrETzYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt7tn8M9JIchTogVb5oVswvGyWOEhKI6TLaMKbE41N//Uk7Xzr
-	JakyMF4SYwNjIlRIjded1XUPjVEZlsA8dNHmQmHKy1S+6j2flS+XnUuKNiuWkp/TT/V+TZPSx+x
-	jn60CRCz+MhwArMePQFTJVaEKHkpQi3IwSaHVAhs+
-X-Gm-Gg: ASbGncvW6u64BINVnPl1RIkD7noJkI0LqM48iItorMDBt5iSdlecDp52cPkUpsWL+aP
-	ecyAbGiYJRebj02rZq/gWtGxrk88TA599ETVOgrhBhAC21P8ZSTpc4LxTj5QyaqunzMBazpJs8h
-	bFqsSFftJri9gZNFEkr3bprJtvYDZEZAyMDC1XXG31Ux9h
-X-Google-Smtp-Source: AGHT+IEYD9mjZhB+8kdOtsUeVNHAgHFECRq5REI45W+eZ0qjy9K8ihOl699135DPyu8F/uAp0DbHfoASyudXxJwDbRk=
-X-Received: by 2002:a17:903:3b8f:b0:234:8eeb:d81a with SMTP id
- d9443c01a7336-2366c5cd450mr6187045ad.16.1750108286081; Mon, 16 Jun 2025
- 14:11:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750108290; x=1750713090;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qYkNHZ7Min5h27AdAztgUbznbIMSIi9ilTeWa8MhK+E=;
+        b=PJ/biq5mMutBEJb246bMnupQhZxlPp8KvtaKSFIiKAutR0kiXtQyKRXzlHCUUt+ZOK
+         TUVQdWj9hf4YogHHI0oNTRkmT5X71U+9SXFt3kWU7UePSmy/zoNXgb/b6ngv8NaaHq89
+         MyVAaB2bXdWLE5WjC0/7B6QZMaCHjT1zXB+9sUB8JEhFFF3ifCbB8K7DQnSQ/ElzHuBx
+         kCCD/ROpydc1A6uYENy37f1wPQdjpDNiNe9YlBMFtwNlaTkMMajVAPZhs8dChLCYYnmD
+         ukT+DY+Q2ZY027Wq3OPYJ7l6CS9+dy4d35zvYBg0jTHZxhkXrhxP3WudBkMsybmnsKb7
+         7vAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWH4tWcpPdMJZlT3J/zS5CQ56P+6wbujiScPUzmLSC9IKUBsHALQiGCn3j8Og0+fL2kNtuun32kmtwVlZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZkd8XctXSYPCsMg1mtp3Ct3gCKdnaFntHGi7Y0SL3oOfFpKwF
+	Sgx1HhgBWcRlNHS1pvoPRzm7RD2RqjmtY0VZVwfYkL9kBkoHQjD/ZRplg+05ZXmCL6k=
+X-Gm-Gg: ASbGncsO6YmK7PRaTRJO/7ZdRDXaK/0HiP3MXPz5sYwIhY82qesiansknlhkG1P/I9+
+	4GdRfJdLTRIU86wtqlmbCu/GHgZ62rrAMdBcBqpg4MCMnrZRKWG3pL//3LNBuWE+VlYg/ACL9/h
+	nTd777lfpkBm3sCCZ+JykT2OYA/CiFMukZRc4xqZwufu4wKvGTv8aS0YxWNxZG+gDbPD/Gmn4Bx
+	RG1M3N5Ar3zEYn+OHQ6biwpvXj71IIekx8LPkH/tZ8Nnt+M1HxFjar2YiW//LE3gBDh4yvMCL3J
+	NEs2HcW7Ifa3a9CmBmbhJTPMn4EmVVFwaDM/UC6VUhonyj7DB9zCzK/kBEZ/jBsfsp537xKJPiN
+	zNUhZcDdjB9vAD7DPKHl2Wkfys2Otpz54VLiE5hM=
+X-Google-Smtp-Source: AGHT+IEVfg00pTGaPRzK4Tu/NTTi24yJzRagmZrO6SxeTxUYhm24UeyDhh597dYIx3cwF5Ovt4WWcw==
+X-Received: by 2002:a05:6830:7203:b0:735:afba:ba99 with SMTP id 46e09a7af769-73a363069e3mr6270036a34.4.1750108290314;
+        Mon, 16 Jun 2025 14:11:30 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a283dbf9asm1344501a34.12.2025.06.16.14.11.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 14:11:29 -0700 (PDT)
+Message-ID: <656c43dd-c39d-4e35-a9d8-70383c0836a0@baylibre.com>
+Date: Mon, 16 Jun 2025 16:11:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615205914.835368-1-almasrymina@google.com> <c126182c-8f26-41e2-a20d-ceefc2ced886@kernel.org>
-In-Reply-To: <c126182c-8f26-41e2-a20d-ceefc2ced886@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 16 Jun 2025 14:11:13 -0700
-X-Gm-Features: AX0GCFtZMmk9CxeJgCCVOcm5DzBrlgdeP3SE9Biv6QMSHTkAiL4Vqg5o1bTfpyM
-Message-ID: <CAHS8izPyzJvchqFNrRjY95D=41nya8Tmvx1eS9n0ijtHcUUETA@mail.gmail.com>
-Subject: Re: [PATCH net-next v4] page_pool: import Jesper's page_pool benchmark
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@toke.dk>, 
-	Ignat Korchagin <ignat@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/11] iio: adc: ad4170: Add clock provider support
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+ nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+ marcelo.schmitt1@gmail.com
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <5ac4b2d54f426d997cbb067530ab8e9af9bdcf16.1749582679.git.marcelo.schmitt@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <5ac4b2d54f426d997cbb067530ab8e9af9bdcf16.1749582679.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 2:29=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel=
-.org> wrote:
-> On 15/06/2025 22.59, Mina Almasry wrote:
-> > From: Jesper Dangaard Brouer <hawk@kernel.org>
-> >
-> > We frequently consult with Jesper's out-of-tree page_pool benchmark to
-> > evaluate page_pool changes.
-> >
-> > Import the benchmark into the upstream linux kernel tree so that (a)
-> > we're all running the same version, (b) pave the way for shared
-> > improvements, and (c) maybe one day integrate it with nipa, if possible=
-.
-> >
-> > Import bench_page_pool_simple from commit 35b1716d0c30 ("Add
-> > page_bench06_walk_all"), from this repository:
-> > https://github.com/netoptimizer/prototype-kernel.git
-> >
-> > Changes done during upstreaming:
-> > - Fix checkpatch issues.
-> > - Remove the tasklet logic not needed.
-> > - Move under tools/testing
-> > - Create ksft for the benchmark.
-> > - Changed slightly how the benchmark gets build. Out of tree, time_benc=
-h
-> >    is built as an independent .ko. Here it is included in
-> >    bench_page_pool.ko
-> >
-> > Steps to run:
-> >
-> > ```
-> > mkdir -p /tmp/run-pp-bench
-> > make -C ./tools/testing/selftests/net/bench
-> > make -C ./tools/testing/selftests/net/bench install INSTALL_PATH=3D/tmp=
-/run-pp-bench
-> > rsync --delete -avz --progress /tmp/run-pp-bench mina@$SERVER:~/
-> > ssh mina@$SERVER << EOF
-> >    cd ~/run-pp-bench && sudo ./test_bench_page_pool.sh
-> > EOF
-> > ```
-> >
-> > Output:
-> >
-> > ```
-> > (benchmrk dmesg logs)
-> >
->
-> Something is off with benchmark numbers compared to the OOT version.
->
+On 6/10/25 3:33 PM, Marcelo Schmitt wrote:
+> The AD4170 chip can use an externally supplied clock at the XTAL2 pin, or
+> an external crystal connected to the XTAL1 and XTAL2 pins. Alternatively,
+> the AD4170 can provide its 16 MHz internal clock at the XTAL2 pin. In
+> addition, the chip has a programmable clock divider that allows dividing
+> the external or internal clock frequency, however, control for that is not
+> provided in this patch. Extend the AD4170 driver so it effectively uses the
+> provided external clock, if any, or supplies its own clock as a clock
+> provider.
+> 
 
-I assume you're comparing my results (my kernel config + my hardware +
-upstream benchmark) with your results (your kernel config + your
-hardware + OOT version). The problem may be in OOT vs upstream but it
-may be just different code/config/hardware.
-
-> Adding my numbers below, they were run on my testlab with:
->   - CPU E5-1650 v4 @ 3.60GHz
->   - kernel: net.git v6.15-12438-gd9816ec74e6d
->
-> > Fast path results:
-> > no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.368 ns
-> >
->
-> Fast-path on your CPU is faster (22 cycles(tsc) 6.128 ns) than my CPU.
-> What CPU is this?
-
-My test setup is a Gcloud A3 VM (so virtualized). The CPU is:
-
-cat /proc/cpuinfo
 ...
-model name      : Intel(R) Xeon(R) Platinum 8481C CPU @ 2.70GHz
 
->
-> Type:no-softirq-page_pool01 Per elem: 22 cycles(tsc) 6.128 ns (step:0)
->   - (measurement period time:0.061282924 sec time_interval:61282924)
->   - (invoke count:10000000 tsc_interval:220619745)
->
-> > ptr_ring results:
-> > no-softirq-page_pool02 Per elem: 527 cycles(tsc) 195.187 ns
->
-> I'm surprised that ptr_ring benchmark is very slow, compared to my
-> result (below) 60 cycles(tsc) 16.853 ns.
->
-> Type:no-softirq-page_pool02 Per elem: 60 cycles(tsc) 16.853 ns (step:0)
->   - (measurement period time:0.168535760 sec time_interval:168535760)
->   - (invoke count:10000000 tsc_interval:606734160)
->
-> Maybe your kernel is compiled with some CONFIG debug thing that makes it
-> slower?
->
+> +static int ad4170_clock_select(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4170_state *st = iio_priv(indio_dev);
+> +	struct device *dev = &st->spi->dev;
+> +	struct clk *ext_clk;
+> +	int ret;
+> +
+> +	ext_clk = devm_clk_get_optional_enabled(dev, NULL);
+> +	if (IS_ERR(ext_clk))
+> +		return dev_err_probe(dev, PTR_ERR(ext_clk),
+> +				     "Failed to get external clock\n");
+> +
+> +	if (!ext_clk) {
+> +		/* Use internal clock reference */
+> +		st->mclk_hz = AD4170_INT_CLOCK_16MHZ;
+> +		st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
+> +					     AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT);
+> +
+> +		if (!device_property_read_bool(&st->spi->dev, "#clock-cells"))
 
-Yeah, I actually just checked and I have CONFIG_DEBUG_NET on in my
-build, and a lot of other debug configs are turned on.
+This isn't a flag, so device_property_present() is probably more correct.
 
-Let me investigate here. Maybe trimming the debug configs and double
-checking my tree for debug logs I added would point to the difference.
+> +			return 0;
+> +
+> +		return ad4170_register_clk_provider(indio_dev);
+> +	}
+> +
+> +	/* Read optional clock-names prop to specify the external clock type */
+> +	ret = device_property_match_property_string(dev, "clock-names",
+> +						    ad4170_clk_sel,
+> +						    ARRAY_SIZE(ad4170_clk_sel));
+> +
+> +	ret = ret < 0 ? 0 : ret; /* Default to external clock if no clock-names */
+> +	st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
+> +				     AD4170_CLOCK_CTRL_CLOCKSEL_EXT + ret);
+> +
+> +	st->mclk_hz = clk_get_rate(ext_clk);
+> +	if (st->mclk_hz < AD4170_EXT_CLOCK_MHZ_MIN ||
+> +	    st->mclk_hz > AD4170_EXT_CLOCK_MHZ_MAX) {
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Invalid external clock frequency %u\n",
+> +				     st->mclk_hz);
+> +	}
+> +
+> +	return 0;
+> +}
 
-I could also try to put both the OOT version and upstream version in
-my tree and do a proper A/B comparison that way.
-
-If you do get chance to run this upstream version from your exact tree
-and config, that would be a good A/B comparison as well.
-
-> You can troubleshoot like this:
->   - select the `no-softirq-page_pool02` test via run_flags=3D$((2#100)).
->
->   # perf record -g modprobe bench_page_pool_simple run_flags=3D$((2#100))
-> loops=3D$((100*10**6))
->   # perf report --no-children
->
-
-Thanks, will do.
-
---=20
-Thanks,
-Mina
