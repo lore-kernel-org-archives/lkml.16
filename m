@@ -1,132 +1,157 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2053.outbound.protection.outlook.com [40.107.237.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D82527713
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750076842; cv=none; b=Fb1r0+3efv7G1WCM1al11d7gImmMIymsfvIa10ZvQmAniLEjSjiy1XR9qaIKFL/NJwZ+F61PmtKtCBcnxiSXyOYNC0LwoZsobTVRRYPupOqvPz04keXHXy0JMspjYVSP6mJpRtGwRyXq5h5M4/J1MoLdJUHA/gVoGHQxw/7MKl4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750076842; c=relaxed/simple;
-	bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EpG3uqpCV1pcvLLGkF65LiFr8SLl9slIXTKelg3NeAdDEx1zKIaYlxswvgkFhGGUDxuvzbwmV3lm2+qRXFMnfraX8fd/rZQnw9TOqHVmezwC3fC0t4ZC4MRwYXzo8rWHoVkSBMSgEzaRrCRV9OcdwW3QM2AJoUZ/iNGY/bZa9CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w/0ai9F/; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6392E425B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750076891; cv=fail; b=gH9IbGabGOOzE0fYDeF/Uu3qtn/dIQz3GiDgm4TZ5XUpIq8PvqTwAi6INBnYg0UdBF3To3EoKD0p+iJImNBwtVrpeDkVugmtO2/B9IaLQRy1R4EXKggA47Jwzip3w7yhr8QwuGkI2xsbEpiDLdDV6ul6P5M1vy946eXSJIiOfIk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750076891; c=relaxed/simple;
+	bh=sqX1ymzikeA8GTam48yIgKNpCw8GQuXqDDH8rnqgxnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QzGTZ4dnxKEONeg7l3CTPtaDw1YAZKl9xVd9V+yl8P8Np+LtBgjAU4oIRbWWK/Q8E4wKyojtvnGvk7WdAWM2wwIox5zViZSzQKUeSsrRYto7d5LY3BeHgGcimAYSeiY/d1D6ose41fb7c9J3gd9enZxifNMQFYgI7C9R2zPY0Lg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Z2iBNSvP; arc=fail smtp.client-ip=40.107.237.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w/0ai9F/"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553bcf41440so1461390e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:27:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750076837; x=1750681637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
-        b=w/0ai9F/1ouue8aP8TbGJVQbjyB2UDqm2QeFWXvQRbul16AkNaYo+7MQQk0QJ48nOD
-         jp4FCyxgzY1wWV50R6bhFJERRtTvIaeHZGB+Cy/CTO6CvgPT4FwXvCO/7+FrNPkD63vD
-         RT1I9KtQkDK8ZEDwjU/VooLFcH8FHHZEoekdkdBR1r/eeYW4f/hCZR6SS4wlKec6Y1cr
-         x2BktdqszWovKUhXeUOjt+UyyR0iy/oCO/5pIsN1Ud/F+T3h3kd/F0UFRyXk/p4o8x9/
-         NoaxA6mEVnnINHi1YBj4HaUTIFMPs7r/SLRFYv3nplxYQ9fmtY62hcOR7cOhsyD4aaQo
-         5QdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750076837; x=1750681637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
-        b=lY48shamvkj+AUutfhKTUHKr/7i6A8yAAFtgkvnw0IH3OI57MmhrIgGT8HDySa9tGL
-         ukyQ6Sj6vSbbEbECdqCFXbFS9oyAijWM2eJRmzBCZAw5795IYO+jxBJQWZumcjIw2epb
-         Ui/sU3kI/3Tc3Bg+Cdkb7J2qB2FqUZk/E2EZ86hhzspuTmLVFvEd35KhiorJpePBmjMv
-         2zSDNP4iq23hhIaNv+DnF9bw2CWPKmeR0i97oAciwjFOlU4XXzaAj4EJ+qXbs4upToy1
-         OI17NUYNGTkeO8eFwaEdKh3cCH2TtS/rnKPRrD8f+qqgbHNzDls8Yi+sA30Kws94sOsk
-         h7zA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVEqgW4Z//aMCpfTfhgCmDAv/luCeTvwynJQUoh3Un59/DNKQIi7Qvt9EG4q9KCJ5el9awknud77TBzkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY5+ib2+y1Ok+hcb2miclBIrjstbAKlLbLIrhkytlOqNNLZt8v
-	onfAwpVD9TKWmNV8QOBQjmAZs6HnpK5Y49/nOpNRyGZUgBXbwwHm48atbY1KtRqRfkmhwaQse+N
-	W1ensVzuDk9VfgV5oBEPyd8zWoePHOnAiJxyllS1bRQ==
-X-Gm-Gg: ASbGncu9q/2KOwB3crgVcMsgIGednr6OQcr1v7QHvoJv0UgZiPMD00qeGRp1eIMSx+g
-	5/riI8xAc/QYBQxlP3B5wfOxKKZRKqnYl3IT9jRbgVschwzSVflZc80MXZeSMO9RxZ7/i6CRHLA
-	GFnWjL4Lbqcua3h6LIg0ylR7ahE+/9GeQpqGKD3yQlQOPNbcgN2QZ0eN+inpO6A2UMeoTrZixxJ
-	1Y=
-X-Google-Smtp-Source: AGHT+IESdzbSr0hyb5ZTrddk2EekSKVqWpeLC69vtkyeTgrO9IfOok5XJzSK6MtFLNImcFxcWud6sO3MLnOLklka9Vc=
-X-Received: by 2002:a05:6512:1192:b0:553:addb:ef51 with SMTP id
- 2adb3069b0e04-553b6e8c2f5mr2040920e87.18.1750076837237; Mon, 16 Jun 2025
- 05:27:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Z2iBNSvP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gVlInCzVGpioDQzGQpohp9u7JJAmfITGyzFzjgQjZHkX9t0kao/EHbbfPL5p4fRMo9YKq7aijvyDnNJFhncgAN03q3h5JnUgto85Dje3zg5OHQkUY3SJtvO/r7lYL3RkZHeB8Sixw+A15V64Y1rHJBLQL9m6Z9nLhFgo6lLvZRWRrVakZh5+1nOqItzL0RRD92FFVhxd6L8I8dmZYJeTPunlpML3MQbKLm/dK7ZBGch2VXHsnvIes+X3I+FnLweD2ch3wp2NxwCytlRl2WBc56feFG1Odo3poygv3pceucrhe6kxlT7AzejinwS8a/usxI0FZwm/GrD/AQEezPz+Cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5GbdLCa9hOXxMNEHftkixHwrEtFTqvFdI0M7EY6BxmI=;
+ b=G/ZWauHdiA0yDtqyiLRzi3X2R3Kn0HTcTfcD8q44i7jQGBlNf0+ou2ANQrPOVtHCGOKjUdU3U2/IxIIffN2+0RlLW5P/FrCRZCDdpNS2wYDLlW+9uUHktdwtc2+GLxVns2a4HyNok/rNCWGouCfPz1XvtW2FzJlVNgbuXuoRrwsaB/Np+E2ykavHRLDqx1uNoYW7xdQg/r1NJgvPUixZ8CL9S5K+JbRiFATm153ZrkzKxJv/THaIcPzBN12URci/2E0zCledeZuVB7dlq+iQgQRuZSWHAMfqAIhj3p6Yij9OvegkVTcIEP+AUygA6PzViQtyct8tqNL4hB/PJVAFAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5GbdLCa9hOXxMNEHftkixHwrEtFTqvFdI0M7EY6BxmI=;
+ b=Z2iBNSvPIJ+RRSdwLASMlOZ1HRE0RfXMP00BbUcEbx68x9VIEwD9P/Bp3o0hKpil/Cn/9BdSnBfOVe/qlnfqjlwcdQBHNkKe4MqSv8NlDKK1QAd5xRvaaj8xO7Nnabs0ao+cG7yMD6n518MOGXtYEup08EALmK2C2Cf9bMWaFgPT97fjIqRXCLBEjmESL05ZiQj8DVyhvs9h2N3WEAUXPTS4zfF8MTpoYvOBdfEk/XhCLjBfSNqIgiTv9obkhPPWGN+kUsH2TLEUTthnoAN3643lmslZe8K7WFub1dWGjiQBJmeOgxG7e/AQs/qJ4+nfWBOqq6m+i/vrETjIoYpUzA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CY5PR12MB6060.namprd12.prod.outlook.com (2603:10b6:930:2f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
+ 2025 12:28:06 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
+ 12:28:06 +0000
+Date: Mon, 16 Jun 2025 09:28:01 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: kevin.tian@intel.com, will@kernel.org, robin.murphy@arm.com,
+	joro@8bytes.org, praan@google.com, yi.l.liu@intel.com,
+	peterz@infradead.org, jsnitsel@redhat.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	baolu.lu@linux.intel.com
+Subject: Re: [PATCH v2 05/14] iommufd: Return EOPNOTSUPP for failures due to
+ driver bugs
+Message-ID: <20250616122801.GU1174925@nvidia.com>
+References: <cover.1749882255.git.nicolinc@nvidia.com>
+ <623bb6f0e8fdd7b9c5745a2f99f280163f9f1f5a.1749882255.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <623bb6f0e8fdd7b9c5745a2f99f280163f9f1f5a.1749882255.git.nicolinc@nvidia.com>
+X-ClientProxiedBy: ROAP284CA0335.BRAP284.PROD.OUTLOOK.COM (2603:10d6:10:f7::8)
+ To CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org> <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Jun 2025 14:27:06 +0200
-X-Gm-Features: AX0GCFvBiJSrqsy2NmICkTOhhNTaArcZZ0rZD9G4yrtV8RBEldgTv4LBOcVAA00
-Message-ID: <CAMRc=MdbYesiRDfvwSchZZ5jOnSRffS3JzUzQh++J1JZLwm1Wg@mail.gmail.com>
-Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY5PR12MB6060:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5853781-93d9-4ffb-7017-08ddacd13e9e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QfUf5WpV5kFwfOflm9Q16arr7JGJjMEjdjPe36vlGs9psaYavky3IX+oM/Et?=
+ =?us-ascii?Q?lSfDOdZ08zXLz6lV1ih8E4VPwawWZCAmSHa/KD0MWnGZSc74WxILBbF1LcRi?=
+ =?us-ascii?Q?66NjrB/eJ2LO28EPiO6CzOQh9Hs7v5qkEiKM7sOC9/dDtOiavPRmQMvxcZTj?=
+ =?us-ascii?Q?9rGpWgHK64UmUevXCgV5mbrOKeStIH7vkLRF3lhhyHbwaEHh0jkhz5HvCRnL?=
+ =?us-ascii?Q?BtsZ3d+FD+UxTg3OzNjIfZHD69mVxa9MbnAMA8cZsvvCJwrvpRxLCj+Ih0dk?=
+ =?us-ascii?Q?ghQetFR4qtMD0pkw7kiCgySzGYanEXKQ7B+0HsuaLlAwC07svh512xQl4PSL?=
+ =?us-ascii?Q?MR5g3tcor9A4bblPCfVnPOP4MyAwG1y1imVjP0q+ABZMXNOsn/bc1S2pXyLD?=
+ =?us-ascii?Q?+lJTBcRSEP6XSTbCTyiLXrWZnfRSEaGSFVWBJyM1uhGOH8Rp4r+5O7Wxr/FI?=
+ =?us-ascii?Q?5V3jnn2M4B3mQyvgeBcAlc962/m3lpgSMp2+nGIXFT4Z9hYu8SVj47b0a60+?=
+ =?us-ascii?Q?STPggFHX1DQPnF8PIXt79SofkTWhUqhlLk33mjRUif5O0au15qE0+hVbEX6d?=
+ =?us-ascii?Q?c4g5Ln4YAq9B0qI3xf4d0H1kwqf4lyzNM+L/YjIjdHNV9dIQIQTP4tplMA9j?=
+ =?us-ascii?Q?v+SaElcPNpztAC4US7zth6xZCV1T+YZPibQ5TmqN07ZrGggTZsvg+rXxBrfh?=
+ =?us-ascii?Q?0CsrbdDQan4TW7dFm0rLAuQdyCocShM9/Bf1vrrzOUSTCCAEwv8yRWsKuOob?=
+ =?us-ascii?Q?wdGGaqC/iRmiVHb0BemhrDGkUUGl14xHgJsB1PMFdBzrvqCRqsStK47t6nMk?=
+ =?us-ascii?Q?iOxB1jsaYnzhf3G53Z2zB8oYPZvmlrp9GNhub7ZuBN4wgKrg1P2NxgguSMJu?=
+ =?us-ascii?Q?AegHFFsEfIXIaQdeOqZx/3VzqGwgDHMPnv3JOVFRuR2gLWU7nRIE95s88pHG?=
+ =?us-ascii?Q?Mpv/uArOUdAIcToTxKzbC45KQhixTwoqrqnH9oCcG+YBoh+82JCPwj09epur?=
+ =?us-ascii?Q?jYVzOFrH1iAv0hADPTYrQGGuyh/Rz/dEtT0d5CZhdSk1vVKLr+w0mSxGN6l8?=
+ =?us-ascii?Q?zL3jMzGRu57ihx13+OW1fTpNepQFIe6VmjUzJdPdGlSzzJwESUcfALE458xo?=
+ =?us-ascii?Q?lANkq9xSdWjcdzoWRiE4bVlTHL0AZ0D8h+NQiIZTBafQ6XePyVeCgFbDrLGl?=
+ =?us-ascii?Q?tN1WcW5JGnKDcKUKTaSuyV3085GOwxP6nrAvNhzAGdwxKfPH2tI6Us43obhw?=
+ =?us-ascii?Q?YK1MRy71krcisI7mA1uBUvxB5Y6ZnBVnHvJZy98LF78Iop+I+qBZ4bkrLdDy?=
+ =?us-ascii?Q?TNBhiD4jMn9gnD/z31dy14XbsE5obHO+qopVXamgCKojmhthmBi3kmd+FE5a?=
+ =?us-ascii?Q?UGwjTkosrw2oybvM1nLgL6zcXToSzS1nx1+P8uYQ9sJ6y4z3UOQuZ1CNio36?=
+ =?us-ascii?Q?FlpxLE1bYrk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?OhNlJuRdnC/OMX4C8iWwWWa4fp5kZ5o+qtRsxKENMPKNbyK5yKsENaaAHpgj?=
+ =?us-ascii?Q?xC/A1HQUWLM6t0ydFriQGI42YNY4mvZNF1gInG88BoFygrtcmxd6eJbCDkyX?=
+ =?us-ascii?Q?23+Bj3yGa1qsJiaOpZov3fj3jY6JPhrqkSMQQwGHNZUMydEsN/0nSjD/uflt?=
+ =?us-ascii?Q?TKO1SwnbPbH5LjmIzH+V60GTAhUHKIz4I2pjnpklpMbBdyNkWiR0zPY/rGLZ?=
+ =?us-ascii?Q?eyQP3eK0aenF7QF0iKaCLjZzgNEtHN6GjHE6FzB9hdtYbW1plDYWGAYBtNh3?=
+ =?us-ascii?Q?dh2y3FzEaxgs0w/f8mB1iHyZAoPzmXRLGf2S/jdUSg2oNddr4EVabwGHq0AG?=
+ =?us-ascii?Q?a63+bG/dDbzgTEyyLLtG0z76KVSXbLcbOXKXiq4Iod+S4DWBLshyEtEdehfc?=
+ =?us-ascii?Q?GZfQ9+0qqwNszngvCFm6/vmEZINWGMYvKBjqKrXLnnl3j81dTH0p02eyyLGE?=
+ =?us-ascii?Q?DY74net0EKZdKKyB/rvWfwaqMdiN+JfOoE/q9Tdu386/wKzNuDWvlbzBFxF+?=
+ =?us-ascii?Q?VRpGOHvJnlUrHIJXAjTsq4IT6gNMtSEpEVR4oXIE8+N1KPQQE5rDEZ2iSIt4?=
+ =?us-ascii?Q?0R4HbShqL77yLU1yPQmUPtTtWOuC/sWykspGWqCIPYkLk6wgDX/GKkPIzYFH?=
+ =?us-ascii?Q?6CtJZ91ITFYCr60g/4FouKSsMtkLxsvqRoS7sRtvdgiLw3MtpTshwIP+++X8?=
+ =?us-ascii?Q?EtZOjVfP27sJM+HJ/b+7Z5b39iKK0qZpkqPBh1EpzslULGU5EECTIT06P6V1?=
+ =?us-ascii?Q?O4Q1q+Py5zjMLL6IeUDor55LOwo4L6icA8vrx/E8sb8Bh0KESYP+/ZOzLYkR?=
+ =?us-ascii?Q?YWqw+UMq3oniY7ryVafSbiwAX8UudPm0GglqKLn4JpRwNjwEgHXc3tZoD52E?=
+ =?us-ascii?Q?xR5JhStCS6ywVCJul6NcO2faWZVW0eNyfw2L1tXERtlDfk7ayrG6gjDM39bU?=
+ =?us-ascii?Q?0DOMfhhHM1shURtMs0P/PWgBNJCCCObZGbdfhmgLVuqmEiaVS8F8+3M4mlya?=
+ =?us-ascii?Q?PI5zvl2UPT/t6tTeDkWQObBMJqB44NNF0mX8ozXuikP97pGm/or9TRyt135V?=
+ =?us-ascii?Q?q46Mf3gLYXS6xMQhJJMokBPfDh9ZCRUY8WKbKwaJbfK6voOCbNAusUqzsNfw?=
+ =?us-ascii?Q?MXo4na4hiksaKGbipx3hTrsevcuDUDKeHLxACdj7sM7WxcWP/B1RrwDDxf8r?=
+ =?us-ascii?Q?2Xuz8a+enPSjkUty3VxxKeLCz9bdOi9NtURFw2o56V3NKN+gzFRVFeboejUk?=
+ =?us-ascii?Q?WE4lh2+L8HrqYrMa5ZCFT7Un+u20V2w23iswKUS3q3RVRtlgdHJfHpB5konE?=
+ =?us-ascii?Q?FqhtVhp6QhtMMPZ4mcsXWY94ILCGkyDYPa6qaSyUaYEwL936Ld1nZ9ZpvJpv?=
+ =?us-ascii?Q?6LA/ifb6NW1LMYBBSzBAvsOhYawrJWzAUJAg+wXt03zXUgRz4sjpvA4bf3tA?=
+ =?us-ascii?Q?6oklgXfp8tL49+Dj7eloTw5weJ9u97J5XXqMrGBDBSOqP+tjAWBg9jEDRE2N?=
+ =?us-ascii?Q?i7Kz/nphxIhY7vsf+5pHs3FmMreWqWBGTZRU1RzAzPf4ZtsjzmeNDfYpoxBX?=
+ =?us-ascii?Q?PhIR7zj8tDEe8z7W04Aka0ZW4mS5Ms4z2fMwtcOS?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5853781-93d9-4ffb-7017-08ddacd13e9e
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 12:28:06.5970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9FStaesV38OimKDe5KtKKXk37PBwbdblLgAjfqqE4FE193vSZh7oxtTj+7DkIOSa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6060
 
-On Fri, Jun 13, 2025 at 10:02=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Bartosz,
->
-> On Tue, 10 Jun 2025 at 16:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > Following our discussion[1], here's a proposal for extending the sysfs
-> > interface with attributes not referring to GPIO lines by their global
-> > numbers in a backward compatible way.
-> >
-> > Long story short: there is now a new class device for each GPIO chip.
-> > It's called chipX where X is the ID of the device as per the driver
-> > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > base. Each new chip class device has a pair of export/unexport
-> > attributes which work similarly to the global ones under /sys/class/gpi=
-o
-> > but take hardware offsets within the chip as input, instead of the
-> > global numbers. Finally, each exported line appears at the same time as
-> > the global /sys/class/gpio/gpioABC as well as per-chip
-> > /sys/class/gpio/chipX/gpioY sysfs group.
-> >
-> > First, there are some documentation updates, followed by a set of
-> > updates to the sysfs code that's useful even without the new
-> > functionality. Then the actual implementation of a parallel GPIO chip
-> > entry not containing the base GPIO number in the name and the
-> > corresponding sysfs attribute group for each exported line that lives
-> > under the new chip class device. Finally: also allow to compile out the
-> > legacy parts leaving only the new elements of the sysfs ABI.
-> >
-> > This series passes the compatibility tests I wrote while working on the
-> > user-space compatibility layer for sysfs[2].
-> >
-> > [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu=
-4iKQ5npwXk6GXA@mail.gmail.com/
-> > [2] https://github.com/brgl/gpio-sysfs-compat-tests
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Thanks for your series!
->
-> I gave it a quick try, and it seems to work as expected, great!
->
-> Given the /sys/class/gpio/chip* numbering is volatile, I expect
-> script writers should use topological path names instead, .e.g.
-> /sys/devices/platform/soc/e6052000.gpio/gpio/chip*/export and
-> sys/devices/platform/soc/e6052000.gpio/gpio/chip*/gpio19
-> (note the wildcards).
->
+On Fri, Jun 13, 2025 at 11:35:17PM -0700, Nicolin Chen wrote:
+> It's more accurate to report EOPNOTSUPP when an ioctl failed due to driver
+> bug, since there is nothing wrong with the user space side.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/iommufd/device.c       | 2 +-
+>  drivers/iommu/iommufd/hw_pagetable.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-Or they can use the chip label like what they would do with the
-character device. The relevant attribute is still there.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Bartosz
+Jason
