@@ -1,210 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D0B2BEFE1;
-	Mon, 16 Jun 2025 17:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D5028853C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 17:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750094052; cv=none; b=GRrYIye+WHa9dzVGJByIIatD2uvzNQFDK/gjiFKlxISJeX41or3SwyIUin2czbhAipaL25EGfyNcqq5BtvpXGgCQ/ucnbicK6BNUK8pzSqb0POKTbhO+oc9FsN51lZXzqb+7v3q9jOve3mGcwn7tPEXYjH+nTzXMH8Fvt8qVFeE=
+	t=1750094070; cv=none; b=OC56G7fqq78+fY6wUY0MljfhPzAGp/s+ZKfDDmePrpm+SENuYd4JUOoNeGmH9vJvfjrgHbJ0PETTwC8xhY6U+03Z2rEZCvsuVFZWlblzt8R3rGJ9kXA7oRK0e/Y2CVje5PFzjwrZYo/gkdq3TsoRetAX8CH4IYukXLGQfN/eQH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750094052; c=relaxed/simple;
-	bh=UwjggO9gJnjfl6+Ixw0I0bYEyFGok+qYdoeeLeS+z8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BAQwlskrTwQuJPWZUi69WSkFH53mqvv4/CCP/2anw0ldL6jy5AWnr4BBbJrFLc7TogZhPZMT3oQ/IvU8OX1NQydFTpXYb2NmsxrkkNV68CpwT2kAYXJRsJz1fEqwuc0V+2b0YEoAsjFOCsgwKizMYtyRqRDR6lgFdqMxDENPY6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVB2KOSi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750094070; c=relaxed/simple;
+	bh=OFEsIZoZ2x5Mmf2UvRZPkqsa3+SQpPvOfqzf8VR/J4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqKZIVSjn0kn6xbYn4aBjfbNBkG33jvH/m0rBRsMzXhwQtgUAkejcSlolx8MibXnYpMm7vGTFr03ln3xIEonrg2r5zdhOrGmuiFhEsGhqswP7Hb9aTr5isqVh4Tqi5G18GGEQ676jA1WDUPyEzkxYUvaRypOSZTZ19OPqP2nYV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=ExitEuht; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVB2KOSi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A775FC4CEED;
-	Mon, 16 Jun 2025 17:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750094051;
-	bh=UwjggO9gJnjfl6+Ixw0I0bYEyFGok+qYdoeeLeS+z8M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UVB2KOSimzOXfYnK2DRr3Ybka3oheq7ROCKbXhmFgrLmwNKXVLA614nnhOtP6gCB+
-	 mFAtxrXm0otuAZ2m4j9NFVmQFDjAijl1VkmIK48MMw2jl2APkRgaONYEvlvIKwxtTE
-	 TXEJZzYvos9YuW/VF2u4xVRSYuO9GWrKAmb+DgTdVXdDWGFv4bPm5QGpMjqnAM8BpG
-	 uuVua5/nv57MzBWuwBeEktAOxxvWwj/JohPYLG8n7/bgOshDzstyCP8jVHVpa5RctG
-	 3RowQkKQIFEh/d6G0eU2eajlcbN8CwnMw+EoY5K1mcjqi7Uw5wJX/zvxoEzyzhHdZk
-	 /ITGJv5lNK6Wg==
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-408d7e2ad03so3135668b6e.1;
-        Mon, 16 Jun 2025 10:14:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3t/fG+cvN/TcZvOqng4+Wv6QXrK6ks9sdEtaFOpasMF+lj5InryyZhIFHP8sFsR6b2mDgn9GOY+73FGJw1071Irg=@vger.kernel.org, AJvYcCVYbSG55lRNxkBmaAOo+ve0U7g0ETDEzS3g6l/MDQEXo/BvYjT/8TT16qmn7wJ+HmezbcbILdI4/d8=@vger.kernel.org, AJvYcCW18bkU9bhL9xGZeS01HS9DLRPmZE5lcpnhbc8yISPDkFztgLdCym+XYE1JtY9jfHEuJglskp73dRw=@vger.kernel.org, AJvYcCXgwzW1yRDpknj6hy1dgcMk1c+RGvb+mnGTO9jg+9wgPJ8fTlVLf1DY/LShXbySBr9nnSGwr8i3eavi+XhC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9Rje4MyR6dt1JttrnEDVAnwaeTGXMTmAZbQ6UKI1sI6pdEeUW
-	ErF/0sbkPT2K4aBoDi3DqlHeWMVjTvn02+Fd8Cbm2wL31zKAioZziHh7GoSjcqJv3UNtI7JCV79
-	v1hP64PeQ78IZ3SYEnSmZsMhiis/D+pY=
-X-Google-Smtp-Source: AGHT+IENdHN3S0+/AJ48hd1G5VfOrsAlSi1xyptiND94+qyMdvtUbI3fcqFn659eFO6cyHDU4A3F9NLax2NQGrFUZdg=
-X-Received: by 2002:a05:6808:690b:b0:401:cae9:4dc3 with SMTP id
- 5614622812f47-40a7c13a8b6mr6692272b6e.8.1750094050962; Mon, 16 Jun 2025
- 10:14:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="ExitEuht"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7426c44e014so3919296b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wbinvd.org; s=wbinvd; t=1750094067; x=1750698867; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oT2Gg960F6nCct08h4buU1Fg42pa/POQgz2KBQCjymY=;
+        b=ExitEuhtAiVn+OhCN4DU/ZQ1QhhH8DDDt93Y/rStnrbvJqqz3G3Zcg8UOG44qdLByC
+         77NFG6cVc7R77Steba2CysGrbat/IjfXqbiturDiJhwCXN6wi9fa3j+SFChurKMgtwjx
+         v5aAb5IzbdZQCYN45d8ML8PG3bR/EGw7TReZ5OP2AiT5Sh2SdEOObiDgpfnf/HeHWwFx
+         7FTTwECPFBwxTAQhlykC1N+2m8b23K66/cCWSW8t5BqGSdfifY5a2l/wjEXfXi1dW4gY
+         Z8RRXBwgqeSKRYjh53rMiymi0qCUCy+1UAvBlW+1RkQhyLcg7Ftd7AaVt5Gg/CM3DG2d
+         OvkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750094067; x=1750698867;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oT2Gg960F6nCct08h4buU1Fg42pa/POQgz2KBQCjymY=;
+        b=n3OW3dGTmLeSlPQj1NWdsovElkrat/1qnA8bK440y+Xq4tbvGoQY1wYWT6B3XMphGx
+         Ajm2KFLwLKin3OIqlnX1/RZ/OxCVr8xX0ksPFvOII5HsqKa0l2Pzhe0C0QJZdzftXOmy
+         84Nqilr9Bnx71aC8d2ri8jm/xO4PzuXLqES67ilqlCLclCD0rLz7dCV6tuG4ghtIxqii
+         LggLnfbdmo2fXUwFm/yFnwdr8emXzERkcJYyqRcSXIiNdqKF2rZRnBcoynAAX/eQc9VR
+         sGF79obtlBIg1oalYrrnJVSwR2kHWqHqVZtvZtJsvXz6vpgcAVpHgiQ7ksizEtruce1p
+         2JMw==
+X-Gm-Message-State: AOJu0YwcFK6zyM9cZez6pQsfZr4GcZ+i39P2ORNvWZCuBRoQryGro+aC
+	wlDioNbKNoXAh754k0jucMlvglSieic7Kt5lhW+iUAwXaM+5Yhh+sqap7F8QO9otsjRXpEto81k
+	8Gi/p
+X-Gm-Gg: ASbGnctylt/8LiRJwgd1QsyUn9CfOqBmUMsQHfx1JOCztHz2rnmKoRLFmKj4vixTUtV
+	VgJHuPtSiazERkru9kSwLzEXPgIMOGjASen/EB22KLuoObRiO0yAoEP/zXwOFhKQVep5hbyxhh6
+	XEDVUKdWzP/LFefBzKdnl9r/YHMdIzZ7ym/aKVH6WZgwMrtQYPfajN5utPZfHryo3BMA90QtquF
+	4EAKyg+Cn0Cno7v9dF76Qr5NLZwIGK3/I1fsCFp8EH7CLzO2uD4fq6hEuXNKtIzWMhvKiRy/oI6
+	vvak0/sjQa84+uZ5zjUObjr3hD8Y8C3YYuaruWeIzj+PWRUKyxgaVNHpdHmomXWv73lvBbxRNb/
+	z8I2Fk8xb7R50tayKryvPr7xDgUHJpgpkFjQTNHx2mg==
+X-Google-Smtp-Source: AGHT+IGo+Yn3fRGZB/M+5UglmLAVSl93G2OwT5ejJTLApDYY8rJB0Wo0PBt5zcOZuMFVZbnYsfyRiA==
+X-Received: by 2002:a05:6a00:4602:b0:748:3849:e790 with SMTP id d2e1a72fcca58-7489ccc77c6mr13764312b3a.0.1750094067266;
+        Mon, 16 Jun 2025 10:14:27 -0700 (PDT)
+Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890005329sm7088267b3a.40.2025.06.16.10.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 10:14:26 -0700 (PDT)
+Date: Mon, 16 Jun 2025 10:14:24 -0700
+From: Calvin Owens <calvin@wbinvd.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-tip-commits@vger.kernel.org, "Lai, Yi" <yi1.lai@linux.intel.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
+ hash
+Message-ID: <aFBQ8CBKmRzEqIfS@mozart.vkv.me>
+References: <20250602110027.wfqbHgzb@linutronix.de>
+ <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616135357.3929441-1-claudiu.beznea.uj@bp.renesas.com> <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 16 Jun 2025 19:14:00 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
-X-Gm-Features: AX0GCFs4MChoTlgVHYwMUsgHoWrzBXwH3xptS7eJ6TN2twbvPobpEJ4Vzj_inP8
-Message-ID: <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] PM: domains: Detach on device_unbind_cleanup()
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
-	len.brown@intel.com, pavel@kernel.org, ulf.hansson@linaro.org, 
-	jic23@kernel.org, daniel.lezcano@linaro.org, dmitry.torokhov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com, 
-	geert@linux-m68k.org, linux-iio@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
 
-On Mon, Jun 16, 2025 at 3:54=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
->
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> The dev_pm_domain_attach() function is typically used in bus code alongsi=
-de
-> dev_pm_domain_detach(), often following patterns like:
->
-> static int bus_probe(struct device *_dev)
-> {
->     struct bus_driver *drv =3D to_bus_driver(dev->driver);
->     struct bus_device *dev =3D to_bus_device(_dev);
->     int ret;
->
->     // ...
->
->     ret =3D dev_pm_domain_attach(_dev, true);
->     if (ret)
->         return ret;
->
->     if (drv->probe)
->         ret =3D drv->probe(dev);
->
->     // ...
-> }
->
-> static void bus_remove(struct device *_dev)
-> {
->     struct bus_driver *drv =3D to_bus_driver(dev->driver);
->     struct bus_device *dev =3D to_bus_device(_dev);
->
->     if (drv->remove)
->         drv->remove(dev);
->     dev_pm_domain_detach(_dev);
-> }
->
-> When the driver's probe function uses devres-managed resources that depen=
-d
-> on the power domain state, those resources are released later during
-> device_unbind_cleanup().
->
-> Releasing devres-managed resources that depend on the power domain state
-> after detaching the device from its PM domain can cause failures.
->
-> For example, if the driver uses devm_pm_runtime_enable() in its probe
-> function, and the device's clocks are managed by the PM domain, then
-> during removal the runtime PM is disabled in device_unbind_cleanup() afte=
-r
-> the clocks have been removed from the PM domain. It may happen that the
-> devm_pm_runtime_enable() action causes the device to be runtime-resumed.
-> If the driver specific runtime PM APIs access registers directly, this
-> will lead to accessing device registers without clocks being enabled.
-> Similar issues may occur with other devres actions that access device
-> registers.
->
-> Add detach_power_off member to struct dev_pm_info, to be used later in
-> device_unbind_cleanup() as the power_off argument for
-> dev_pm_domain_detach(). This is a preparatory step toward removing
-> dev_pm_domain_detach() calls from bus remove functions. Since the current
-> PM domain detach functions (genpd_dev_pm_detach() and acpi_dev_pm_detach(=
-))
-> already set dev->pm_domain =3D NULL, there should be no issues with bus
-> drivers that still call dev_pm_domain_detach() in their remove functions.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v4:
-> - save dev->power.detach_power_off in dev_pm_domain_attach() and use
->   it in device_unbind_cleanup() when detaching
-> - adjusted patch description
->
-> Changes in v3:
-> - dropped devm_pm_domain_detach_off(), devm_pm_domain_detach_on()
->   and use a single function devm_pm_domain_detach()
->
-> Changes in v2:
-> - none; this patch is new
->
->  drivers/base/dd.c           | 2 ++
->  drivers/base/power/common.c | 3 +++
->  include/linux/pm.h          | 1 +
->  3 files changed, 6 insertions(+)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index b526e0e0f52d..13ab98e033ea 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -25,6 +25,7 @@
->  #include <linux/kthread.h>
->  #include <linux/wait.h>
->  #include <linux/async.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pinctrl/devinfo.h>
->  #include <linux/slab.h>
-> @@ -552,6 +553,7 @@ static void device_unbind_cleanup(struct device *dev)
->         dev->dma_range_map =3D NULL;
->         device_set_driver(dev, NULL);
->         dev_set_drvdata(dev, NULL);
-> +       dev_pm_domain_detach(dev, dev->power.detach_power_off);
->         if (dev->pm_domain && dev->pm_domain->dismiss)
->                 dev->pm_domain->dismiss(dev);
->         pm_runtime_reinit(dev);
-> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-> index 781968a128ff..a8f302ed27a5 100644
-> --- a/drivers/base/power/common.c
-> +++ b/drivers/base/power/common.c
-> @@ -111,6 +111,9 @@ int dev_pm_domain_attach(struct device *dev, bool pow=
-er_on)
->         if (!ret)
->                 ret =3D genpd_dev_pm_attach(dev);
->
-> +       if (dev->pm_domain)
-> +               dev->power.detach_power_off =3D power_on;
+On Wednesday 06/11 at 14:39 -0000, tip-bot2 for Sebastian Andrzej Siewior wrote:
+> <snip> 
+> It is possible that two threads simultaneously request the global hash
+> and both pass the initial check and block later on the
+> mm::futex_hash_lock. In this case the first thread performs the switch
+> to the global hash. The second thread will also attempt to switch to the
+> global hash and while doing so, accessing the nonexisting slot 1 of the
+> struct futex_private_hash.
 
-I'm assuming that you have checked all of the users of
-dev_pm_domain_attach() and verified that the "power off" value is the
-same as the "power on" one for all of them.
+In case it's interesting to anyone, I'm hitting this one in real life,
+one of my build machines got stuck overnight:
 
-> +
->         return ret < 0 ? ret : 0;
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index f0bd8fbae4f2..dcbe2c1ef59b 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -720,6 +720,7 @@ struct dev_pm_info {
->         struct pm_subsys_data   *subsys_data;  /* Owned by the subsystem.=
- */
->         void (*set_latency_tolerance)(struct device *, s32);
->         struct dev_pm_qos       *qos;
-> +       bool                    detach_power_off:1;
+Jun 16 02:51:34 beethoven kernel: rcu: INFO: rcu_preempt self-detected stall on CPU
+Jun 16 02:51:34 beethoven kernel: rcu:         16-....: (59997 ticks this GP) idle=eaf4/1/0x4000000000000000 softirq=14417247/14470115 fqs=21169
+Jun 16 02:51:34 beethoven kernel: rcu:         (t=60000 jiffies g=21453525 q=663214 ncpus=24)
+Jun 16 02:51:34 beethoven kernel: CPU: 16 UID: 1000 PID: 2028199 Comm: cargo Not tainted 6.16.0-rc1-lto-00236-g8c6bc74c7f89 #1 PREEMPT 
+Jun 16 02:51:34 beethoven kernel: Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
+Jun 16 02:51:34 beethoven kernel: RIP: 0010:queued_spin_lock_slowpath+0x162/0x1d0
+Jun 16 02:51:34 beethoven kernel: Code: 0f 1f 84 00 00 00 00 00 f3 90 83 7a 08 00 74 f8 48 8b 32 48 85 f6 74 09 0f 0d 0e eb 0d 31 f6 eb 09 31 f6 eb 05 0f 1f 00 f3 90 <8b> 07 66 85 c0 75 f7 39 c8 75 13 41 b8 01 00 00 00 89 c8 f0 44 0f
+Jun 16 02:51:34 beethoven kernel: RSP: 0018:ffffc9002fb1fc38 EFLAGS: 00000206
+Jun 16 02:51:34 beethoven kernel: RAX: 0000000000447f3a RBX: ffffc9003029fdf0 RCX: 0000000000440000
+Jun 16 02:51:34 beethoven kernel: RDX: ffff88901fea5100 RSI: 0000000000000000 RDI: ffff888127e7d844
+Jun 16 02:51:34 beethoven kernel: RBP: ffff8883a3c07248 R08: 0000000000000000 R09: 00000000b69b409a
+Jun 16 02:51:34 beethoven kernel: R10: 000000001bd29fd9 R11: 0000000069b409ab R12: ffff888127e7d844
+Jun 16 02:51:34 beethoven kernel: R13: ffff888127e7d840 R14: ffffc9003029fde0 R15: ffff8883a3c07248
+Jun 16 02:51:34 beethoven kernel: FS:  00007f61c23d85c0(0000) GS:ffff88909b9f6000(0000) knlGS:0000000000000000
+Jun 16 02:51:34 beethoven kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Jun 16 02:51:34 beethoven kernel: CR2: 000056407760f3e0 CR3: 0000000905f29000 CR4: 0000000000750ef0
+Jun 16 02:51:34 beethoven kernel: PKRU: 55555554
+Jun 16 02:51:34 beethoven kernel: Call Trace:
+Jun 16 02:51:34 beethoven kernel:  <TASK>
+Jun 16 02:51:34 beethoven kernel:  __futex_pivot_hash+0x1f8/0x2e0
+Jun 16 02:51:34 beethoven kernel:  futex_hash+0x95/0xe0
+Jun 16 02:51:34 beethoven kernel:  futex_wait_setup+0x7e/0x230
+Jun 16 02:51:34 beethoven kernel:  __futex_wait+0x66/0x130
+Jun 16 02:51:34 beethoven kernel:  ? __futex_wake_mark+0xc0/0xc0
+Jun 16 02:51:34 beethoven kernel:  futex_wait+0xee/0x180
+Jun 16 02:51:34 beethoven kernel:  ? hrtimer_setup_sleeper_on_stack+0xe0/0xe0
+Jun 16 02:51:34 beethoven kernel:  do_futex+0x86/0x120
+Jun 16 02:51:34 beethoven kernel:  __se_sys_futex+0x16d/0x1e0
+Jun 16 02:51:34 beethoven kernel:  do_syscall_64+0x47/0x170
+Jun 16 02:51:34 beethoven kernel:  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+Jun 16 02:51:34 beethoven kernel: RIP: 0033:0x7f61c1d18779
+Jun 16 02:51:34 beethoven kernel: Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4f 86 0d 00 f7 d8 64 89 01 48
+Jun 16 02:51:34 beethoven kernel: RSP: 002b:00007ffcd3f6e3f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+Jun 16 02:51:34 beethoven kernel: RAX: ffffffffffffffda RBX: 00007f61c1d18760 RCX: 00007f61c1d18779
+Jun 16 02:51:34 beethoven kernel: RDX: 00000000000000a9 RSI: 0000000000000089 RDI: 0000564077580bb0
+Jun 16 02:51:34 beethoven kernel: RBP: 00007ffcd3f6e450 R08: 0000000000000000 R09: 00007ffcffffffff
+Jun 16 02:51:34 beethoven kernel: R10: 00007ffcd3f6e410 R11: 0000000000000246 R12: 000000001dcd6401
+Jun 16 02:51:34 beethoven kernel: R13: 00007f61c1c33fd0 R14: 0000564077580bb0 R15: 00000000000000a9
+Jun 16 02:51:34 beethoven kernel:  </TASK>
+<repeats forever until I wake up and kill the machine>
 
-Please put the new flag under #ifdef CONFIG_PM after memalloc_noio and
-comment it as "Owned by the driver core".
+It seems like this is well understood already, but let me know if
+there's any debug info I can send that might be useful.
 
-Otherwise LGTM.
-
->  };
->
->  extern int dev_pm_get_subsys_data(struct device *dev);
-> --
-> 2.43.0
->
+Thanks,
+Calvin
