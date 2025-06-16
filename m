@@ -1,115 +1,183 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D1258CFA
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087766; cv=none; b=czmTrWH0y4VGK26563IXJ6uXuIlI80W5nasuwlge3idiWbsgQhPyhfQBp2mmN11hHxEEbGPv0oHNGizR9tgpsA77awxUy8TmngT/BZ5+NrfzgMed3PGkqF1BhOQsmApTd2BMZzFe3G/BzZiWbX7Pis5czts6oVvKe70tHg8APoE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087766; c=relaxed/simple;
-	bh=nJe/rCU0mM1LK6ZhEfAvqmM6ue4Q9Vd6jDTW9fx9UlI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AwNOu+WaDpAv8UxW9tUsqoD4fqRu7N5BsfSn1ZX2DC1UnjTE54vyW+KDJlKTlZJarnLaZLFCifaiv7JYmU0eKC4yGddgeupZ2YQAtF+JsrwpbjKyTyaj9QYtwBQ5ub1oaLUwf25SQgbohmPPhX/xEd5MtnFeYJvsENSpVbhxFfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Fntgc+a8; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A0D38FB0;
+	Mon, 16 Jun 2025 15:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750087883; cv=pass; b=uSqh0G2ADeKUWDFrhr8B+20dI97uPNhZZdgcWP0/9Ezb9K6yXZD486wDWYAb4XZi1wDKL8MaIFTeXIfnbq7hAaPXUIGD7C/YwoYdZb2JPTlpCaCrhDIh4nQHb5w/oeN47xbdnk0uiidRRheYiod3JlN44UccDrIqN7cCvLusn9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750087883; c=relaxed/simple;
+	bh=IyNyE4rK4hkY3z7uAZZgkVqTnSDkDqzal28PUmVRGsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q6Faip4G97I632KhZ8NwHK/aOtgujaCI4+aYoW3ZgbvcsJ6CX3HTckPap9ltugckGZQ+t5AZSQfHGK24mgTYw/MXgERX3smwmqLPHLlf45sGWB3/vNPtHTGYfVvFlgIhZ4cMt/wua4xjjzZJF+nhM7l7xE51HM7jfu2zWKHLl+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=SWU8ZoOV; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fntgc+a8"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5534edc6493so5041840e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:29:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750087760; x=1750692560; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tU/MOIKq84YnAfhWoL4YWtwA5Rdh3uTG/Wp8rz5grc0=;
-        b=Fntgc+a8z5geufgs8sQoEQbGb/K+59HnfptcsL0592AYayiLkVrWQw75I19JSwYuN5
-         kY3NRTR5wCMKwcXdDiQPmUp/Q8uDOsc+kp63l8Axa6LLPTR/eItMX3RHFcN9PkaiEDJ1
-         erZdXwV8uzT0z+h8MZ1otW4QkQnIb3UvjI/2Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750087760; x=1750692560;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tU/MOIKq84YnAfhWoL4YWtwA5Rdh3uTG/Wp8rz5grc0=;
-        b=PIMlgG2PwjAEnQkB5/02IiloQIU0oUiy5wp/XKY/fgbOXiHto9I6JWhhGX/IDqTitP
-         MtWNXd6FxE28GpVmSXngSSDjYkTGXncRQWTU+sxhyC3KsFZK0OJTZAbQ09ZS4xZtAcSb
-         zDoJtrzKjSzcS+SJidH+TATRWZbzwPrgX1jQcmN9DCq8Ns80Ru8hgAaSbzfG8o1M8GIF
-         bmxuCD5Mg/v4ridr20QCWw03V3kfwKKdGvVrTGbxnOoZBmXCOtjefZFhGstff5Sj/HTn
-         7BU1Ry9Su9pAT2EMG0f+hDSekpPLiGv+u1JZwm3YDkG8EZBEBN0b6D/kMpxyxbhoGd0j
-         jUwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVM0JvfZL+DPNpPJMif+QF07Y07qRC5d2b9yQgZdCCHe9tMiYJLGW7v32nblUGLu4GmFbPvdRKW11zTKK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYR+gdfXLIgLIBYU2jIhFrOvQh1V/PWHF4+mHAKu4o3+do1FYk
-	V6zSmf8+vn5ujWPvKSL8YTDyed1pGAJ9uwpPAzwRAodb5leEi33lwHw0VxKvdEZVpQ==
-X-Gm-Gg: ASbGncufkPsKn1gzMT9pbu+vRFkDWLPBwEB4qjb1MuC3/RRX8AR3StFVpY3W3wxUcg8
-	ViDxPz4evuDwAxwZtKhP9OZhIayzHWjW41Zo6PY/SIaJMQVN20du83A1aNJ9ful1UwvDIXWquTi
-	Flno0ODnJjj9NzHrRqwTD8kuOAh9q9+tXLbSfQFXF1nh8uinMs6T5Imh9vsAgtlm9lw1Zn+z9BJ
-	US8JG1936N1Dv7ftg9M7z/hbPHPMGByJKCXIzrs0232Xfes/TIb/tjvTClq7gxc4hIEZ2X2FQou
-	MrtUrS/VPQxSjiMMPJkG2M+Ex22pOKUVLtK7LVmVX/kVPWK+plfLzGtBqcfXZZhBLD2mxt02j/P
-	LwO2fBwdPFUWdKKjJK5xzepMV48l7Dxjie8SLzZmGHRxNIm28PYbE
-X-Google-Smtp-Source: AGHT+IF9Hd3Wtj66G1qTf/FKk0SD1/kjIqCqNtZy8C7aM1FLVNBfFTvcQ0578pGYNs8i7deIw2reqQ==
-X-Received: by 2002:a05:6512:b0a:b0:54f:bce6:63bd with SMTP id 2adb3069b0e04-553b6f62293mr2330891e87.54.1750087760319;
-        Mon, 16 Jun 2025 08:29:20 -0700 (PDT)
-Received: from ribalda.c.googlers.com (166.141.88.34.bc.googleusercontent.com. [34.88.141.166])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac11ff5dsm1568020e87.31.2025.06.16.08.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 08:29:20 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 16 Jun 2025 15:29:17 +0000
-Subject: [PATCH v7 4/5] media: venus: venc: Make the range of us_per_frame
- explicit
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="SWU8ZoOV"
+ARC-Seal: i=1; a=rsa-sha256; t=1750087851; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Cgga3I8jF2zVzJLMOxq+Vn/77I5PkLmkTEtFZ7zNvJouifQS8tbvClE2MYxzRvqgv5KVzPwkMsKX2c8dbRw5aHEE/3p6BawvJT7ELQd2A/dXTwS/Q232zAh7k72IfEqxMWj/wct0nfysdOtrsy6wmTBOQ1YWREv9UelFbSUtMMk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750087851; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0BL+aG/UNNGLP1x4xgnCt14zsxQCcrfboSBpn0n95Mc=; 
+	b=dNmPhDbLjmWo3vNDqZAV9EaDNH0C+Nd6EWaKjh/gurcELJAgpGBk3PZFA3qlTTe9rbCGWjQHk9g5ZmMoK1gP/8stAwxj+jZv7f9YjMebrb1NxZXxPxGUcya6gQHqL98FvYUFoIJOBgFVMeycR6esHS9i3XNPYNIsO5Bha0wQpgI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
+	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750087851;
+	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=0BL+aG/UNNGLP1x4xgnCt14zsxQCcrfboSBpn0n95Mc=;
+	b=SWU8ZoOVqPfce4bWTOatjItj8sFTpIKwVX2258AwFPU8OkUv2qfeu9ySMT7l9ZJU
+	hOApFkMODZXMLbz4r7F2gtSRAFjq/z0WgTx1z/VEEVumTMuhTO23GeTEzAmQRhghH5a
+	DDVTRNOSby77h75bM5LvF0eCcqcswZ36jcaAHcnw=
+Received: by mx.zohomail.com with SMTPS id 1750087849499697.6715293869444;
+	Mon, 16 Jun 2025 08:30:49 -0700 (PDT)
+Message-ID: <5c971c09-c398-40a3-9ed5-ec38b6645e1d@collabora.com>
+Date: Mon, 16 Jun 2025 17:30:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-test-v7-4-b8c0f98494fa@chromium.org>
-References: <20250616-test-v7-0-b8c0f98494fa@chromium.org>
-In-Reply-To: <20250616-test-v7-0-b8c0f98494fa@chromium.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
- Dikshita Agarwal <quic_dikshita@quicinc.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Stanimir Varbanov <stanimir.varbanov@linaro.org>, 
- Hans Verkuil <hans.verkuil@cisco.com>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: iommu: verisilicon: Add binding for VSI
+ IOMMU
+To: Conor Dooley <conor@kernel.org>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ nicolas.dufresne@collabora.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+ iommu@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+ kernel@collabora.com
+References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
+ <20250616145607.116639-3-benjamin.gaignard@collabora.com>
+ <20250616-winter-strict-db98f85db22d@spud>
+Content-Language: en-US
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <20250616-winter-strict-db98f85db22d@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Fps bigger than 0.000232829 fps, this fits in a 32 bit us_per_frame.
-There is no need to do a 64 bit division here.
 
-Also, the driver only works with whole fps.
+Le 16/06/2025 à 17:14, Conor Dooley a écrit :
+> On Mon, Jun 16, 2025 at 04:55:50PM +0200, Benjamin Gaignard wrote:
+>> Add a device tree binding for the Verisilicon (VSI) IOMMU. This IOMMU sits
+>> in front of hardware encoder and decoder blocks on SoCs using Verisilicon IP,
+>> such as the Rockchip RK3588.
+>>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>> ---
+>>   .../bindings/iommu/verisilicon,iommu.yaml     | 71 +++++++++++++++++++
+>>   1 file changed, 71 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
+>> new file mode 100644
+>> index 000000000000..acef855fc61d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
+>> @@ -0,0 +1,71 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iommu/verisilicon,iommu.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Verisilicon IOMMU
+>> +
+>> +maintainers:
+>> +  - Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>> +
+>> +description: |+
+>> +  A Versilicon iommu translates io virtual addresses to physical addresses for
+>> +  its associated video decoder.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - items:
+>> +          - const: verisilicon,iommu
+> You're missing a soc-specific compatible at the very least here, but is
+> there really no versioning on the IP at all? I'd be surprised if
+> verisilicon only produced exactly one version of an iommu IP.
 
-Found with cocci:
-drivers/media/platform/qcom/venus/venc.c:418:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead.
+I only aware this version of the iommu for the moment.
+Does adding verisilicon,rk3588-iommu sound good for you ?
 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/platform/qcom/venus/venc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+>
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: Core clock
+>> +      - description: Interface clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: aclk
+>> +      - const: iface
+> Why "aclk" rather than core, to match the description?
 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 4979392aa20b6dc94895c7089878531b92b57754..13395aaf06bbb1f381d809c18be61c5d6da85723 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -412,8 +412,7 @@ static int venc_s_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
- 	do_div(us_per_frame, timeperframe->denominator);
- 
- 	us_per_frame = clamp(us_per_frame, 1, USEC_PER_SEC);
--	fps = (u64)USEC_PER_SEC;
--	do_div(fps, us_per_frame);
-+	fps = USEC_PER_SEC / (u32)us_per_frame;
- 	fps = min(VENUS_MAX_FPS, fps);
- 
- 	inst->fps = fps;
+I will change that, the driver doesn't care of the clock name anyway
 
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+>
+>> +
+>> +  "#iommu-cells":
+>> +    const: 0
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - clock-names
+>> +  - "#iommu-cells"
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +    bus {
+>> +      #address-cells = <2>;
+>> +      #size-cells = <2>;
+>> +
+>> +      vsi_mmu: iommu@fdca0000 {
+> The "vsi_mmu" label can be dropped here, it has no users.
 
+ok.
+
+Thanks,
+Benjamin
+
+>
+> Cheers,
+> Conor.
+>
+>> +        compatible = "verisilicon,iommu";
+>> +        reg = <0x0 0xfdca0000 0x0 0x600>;
+>> +        interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +        clocks = <&cru ACLK_AV1>, <&cru PCLK_AV1>;
+>> +        clock-names = "aclk", "iface";
+>> +        #iommu-cells = <0>;
+>> +      };
+>> +    };
+>> -- 
+>> 2.43.0
+>>
