@@ -1,146 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D8027454;
-	Mon, 16 Jun 2025 07:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE613208;
+	Mon, 16 Jun 2025 07:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750058052; cv=none; b=b8s7tpfRXDCtSrTBrEEycb3Mq6rUG70yUEyYgTK9s3Ejq4Y1n+2KEqRNY+UuAUNvTb3tR3lG8FefVZfIwub/LAKQVwhPKo4kXHPATXOz1kvFQY8L51CQUmgrCw8bzhbJld2mpbypfyN/xMJEwrUR0asvPr+sKoH5MyUO7j7qLyE=
+	t=1750058208; cv=none; b=CKXYvY0oB8K/i5+3fRELydwvXsM2L01G6uHTOjq2OtPzi7Ealqa1n5kID+wAdhS2UrJ+7cfkLRhBMpb18Qnjk2P+znLbA2OB6q7So39hS8QBKw7UjPXA8PISK5Lj7gOzKZqjnNRN5O1WjNlky5PCxiD9WqO3SgXkqVo4zsqiz34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750058052; c=relaxed/simple;
-	bh=8mjw1p7jH5U3R+sYOCQOnSj98L74qXNWmdd6u//UBqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QVcKrnTqt7Uaq4Fb1iZL5Ua8loDau7Gzs+w4Qt3AmC3l8IoHBjJeCwi/AVJN0gIww9aP7OncbuxyU8nDuzaUsgku2ibonr6jBiZg9cQb5zp8wPRaG/2B5n3GVb2HeoYoMDhfOzz2ls0f4YYekojMTSzfPC1t1FBCgDG9uhos9QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FDJGkOsc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750058208; c=relaxed/simple;
+	bh=8oS9W40Kxi3jCDLjbplhmNHApFzpmxWBjEyHqggrd0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKrUH8VKJzYbc7rHTSK8qkSKCxa8bXD1BIKeZoHy1DNKK3RNagnca7zDpG3SshBwWEEk74HEUdPPbp3BtUY5fd0sUZ8enBcNTMFlxHW3u+5ycZFirDpDt975wp56TTlttNpOvQkzs/aPlbgSQtQIHKEcaIJyWxInHW96nAhVqFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qAY4VVpi; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FDJGkOsc"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FMjLD4021701;
-	Mon, 16 Jun 2025 07:14:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YfE33/hzYMpvHI+EVdkFbVpEI44vnDFenLTTlPLs3Sc=; b=FDJGkOsccrC5PNe3
-	1M6VVACtfXJTwNcC5RBpbdN0WWkmRZfEUeOGzThS1CsZVaHmV5wk38NXs5gtkdFA
-	KWSdm49mokPGagmkliA+J0v9iufSVO5kUv109VlINMz3FrbfrUos5vhUv0CG6lWw
-	0Lu+9pkfs3tfpE7UVg/DW1UQNeNhOOZuONbnU4+0VLARcffA/tXyAEmm65NVsRrq
-	MEo+DTjsZVAErMW4jtkcBAkJAeeKYN5qakt0DNCkW2+fT7Bu7GO7U8eNy1NxY0+1
-	2BrV0Z3zkca+cQCVCWeHA2yctr9VL1oQln5JpRh6gvqym0c/2OGi7IYE4F+MD9qs
-	ttL4JQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9ude8-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qAY4VVpi"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FLRHHr025161;
+	Mon, 16 Jun 2025 07:15:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=8oS9W40Kxi3jCDLjbplhmNHApFzpmx
+	WBjEyHqggrd0A=; b=qAY4VVpinI2Rbjtg6/cTxb0ByK9Dpzpf/aO3yY9XM5UF4d
+	fU78j65QpJ3TapkNS/xL3vWbPV5/pklD1FE7kjijxU/XLyukt6XZ3WfcR4gFH81+
+	UFdauXXxcaqtHqvoucUPRYWnY4bL4ogy5OumG75AWe2BeYdsMVMYJOpOVg665ANi
+	VWvgBCKH/JyZisb5vUa4CL8qgECUwjCm3TRR4ZUf58M9gln0exc5pR4IRrjSC6+f
+	ZkrajO9adrWRsa38pwUBB5r4ztMCHddjRWJusLpI5uP3qlP55wkLVB/N8+UcqUCc
+	LCE/mDDOWLEmLtUGpgpcmyaSwGoUdK3hRWsyQEfA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790r1qypc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 07:14:06 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55G7E5Ir018364
+	Mon, 16 Jun 2025 07:15:36 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55G6uksv023490;
+	Mon, 16 Jun 2025 07:15:36 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790r1qyp8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 07:14:06 GMT
-Received: from [10.217.216.168] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 00:14:00 -0700
-Message-ID: <b35d6797-c574-4b85-878d-502fb4b22152@quicinc.com>
-Date: Mon, 16 Jun 2025 12:44:00 +0530
+	Mon, 16 Jun 2025 07:15:36 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55G3BxpK011236;
+	Mon, 16 Jun 2025 07:15:35 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 479kdt56ah-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 07:15:35 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55G7FVZd43385168
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 07:15:31 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB3CA2004D;
+	Mon, 16 Jun 2025 07:15:30 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6B03A2004E;
+	Mon, 16 Jun 2025 07:15:26 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.204.206.66])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 16 Jun 2025 07:15:26 +0000 (GMT)
+Date: Mon, 16 Jun 2025 12:45:22 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Anup Patel <anup@brainfault.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anish Ghulati <aghulati@google.com>,
+        Colton Lewis <coltonlewis@google.com>, Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH 6/8] KVM: PPC: Stop adding virt/kvm to the arch include
+ path
+Message-ID: <etqfg3dvpr4tabk3lysnvelpb5k3pyuuhhkfxsd4oyxlmgwnit@rducsforanaj>
+References: <20250611001042.170501-1-seanjc@google.com>
+ <20250611001042.170501-7-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/3] Add level shifter support for qualcomm SOC's
-Content-Language: en-US
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>
-References: <20250523105745.6210-1-quic_sartgarg@quicinc.com>
- <d0d3c2c0-d5ab-484d-835b-3a76055cad55@oss.qualcomm.com>
- <CAPDyKFoKh6KLtn6-Rvttt9zKh2fk7T28t_jC7KC8peYE+RkL5Q@mail.gmail.com>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <CAPDyKFoKh6KLtn6-Rvttt9zKh2fk7T28t_jC7KC8peYE+RkL5Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Z3sYcZ34SVXSTAF2ZUKEExoXLFmsFZgL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA0NiBTYWx0ZWRfX7YPUs/OdImC6
- 0XRGG3+pcdBlpaEMtlRrZHjus4lJzuaSVOn0c/gfCX/UgDly4fRdxf02UTJFSqE6EnW0Fwr3rdF
- NXuKxpVVZLHy3GzK59y/21qyCmUxsy1MLQ0spSwtrUuFfzcBl4nBK9H3PWQvkyykXIWPvf/61jJ
- gYAA9oSdtmJvsIQLtUQthX+u6YY3PGPwqvb/y3PwjeSRuZO0DR+vDi4BR/uAkWkYlA0urfXfmw5
- AVtjepMDUHClpHlEQoUQrOLn1FhqhtNBO8psvdrGMr1eLDRF4zaOKB24ffdKi1yGTZwFKC8EqoZ
- xMajAerulR4OLSNRLQJOt7AYk/5vpm/7Ey4lGcBjZuBygVDKoGGgN/Q4eRPJVc4/3nYFb3xcqvS
- HZ/MXBBjXXHZPghqJiImND+9DAgtYQbYy1MKabDgrlAKcWIJIAvaVho/YxvqJuhuYmHuWgj4
-X-Proofpoint-ORIG-GUID: Z3sYcZ34SVXSTAF2ZUKEExoXLFmsFZgL
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=684fc43e cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=R8EqlNOSqXiF4fyEEKEA:9 a=QEXdDO2ut3YA:10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611001042.170501-7-seanjc@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pA27UQdSoFi7fENYAbcClrvtInowwnUB
+X-Proofpoint-ORIG-GUID: TmHFGtZ04KPLB6esid1G6CYOB7tVt6Vr
+X-Authority-Analysis: v=2.4 cv=AqTu3P9P c=1 sm=1 tr=0 ts=684fc498 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=90UzZmcSQ78tuVnzBuAA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA0NCBTYWx0ZWRfX7cOmaIrOSqpw SXLMPZuCWSZBCBLE3FL1xYcVW8X8KK0s74UvFuWZnCI71S5bsha1iy0u8LbyZa/+82oTUgv81jB 8/dlb4z7C/9S1qOfR7ocu1ICPZlI2cR3jyDHY3OeqfHz4UFQa3Rmzgnyh3GV1P+TxeqAcXYuNcf
+ QEN1U+QFmMf+lloYVcQjizKufdVGBS01u2hgxtp3bvDWMeYFm65yaoSob0KnI8NZ2r/UggduiwU ZI3aZ9HSz+pCtgy2G1LIxS18dF8Y3fx6iFj5NS4G1C1cP4XiHgt73JfFH9LrR8JcXlRfTcEju3e eeU8dw7b1BrKJERMYaXJKC8cF2yDollkevHHuOIz2ofPC4iO7YXWdRjLohoPeN5pLWHoOr65LX/
+ hSQl2MRrPAQ08Y2Uc3A15BdBi0qU/CKs2ILqAsxRoOrQErs71PyFk7tko/eh6IYJbN/lDZCI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=980
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160046
+ definitions=2025-06-16_02,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=478 mlxscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160044
 
-
-
-On 5/27/2025 8:05 PM, Ulf Hansson wrote:
-> On Fri, 23 May 2025 at 20:25, Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 5/23/25 12:57 PM, Sarthak Garg wrote:
->>> Add level shifter support for qualcomm SOC's.
->>>
->>> - Changed from v1
->>>      - As suggested by Krzysztof Kozlowski redesigned logic to use
->>>      compatible property for adding this level shifter support.
->>>      - Addressed Adrian Hunter comments on V1 with resepect to
->>>        checkpatch.
->>>      - Cleared the bits first and then set bits in
->>>        sdhci_msm_execute_tuning as suggested by Adrian Hunter.
->>>      - Upated the if condition logic in msm_set_clock_rate_for_bus_mode
->>>        as suggested by Adrian Hunter.
->>
->> During internal review I suggested we could introduce a generic quirk,
->> perhaps called "max-hs-frequency" which would update this
->> currently-constant value:
->>
->> ---------------- drivers/mmc/core/sd.c ----------------
->> if (status[13] & SD_MODE_HIGH_SPEED)
->>          card->sw_caps.hs_max_dtr = HIGH_SPEED_MAX_DTR;
->> -------------------------------------------------------
->>
->> (50 MHz)
->>
->> which I believe is where it comes from
-> 
-> I agree that a DT property for the mmc controller would make sense.
-> 
-> Although, this seems limited to SD UHS-I speed modes, so perhaps
-> "max-sd-uhs-frequency" would be a better name for it?
-> 
-> Kind regards
-> Uffe
-
-Sure will update this logic in V3.
+Reviewed-by: Gautam Menghani <gautam@linux.ibm.com>
