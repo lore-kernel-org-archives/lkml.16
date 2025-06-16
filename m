@@ -1,129 +1,72 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC9E289355;
-	Mon, 16 Jun 2025 18:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F040A217F56
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750097769; cv=none; b=IsUDxGcUnRAOccY2Gv07isV9DT+Xk46JFpYyUhKzZFXvo8j22+dLTtBBDQ+pJ0n+2pnm+C4gDLtUlA9S4eashv27ikUevGwVRGQDRdr9/lQL7RG5q57LUd4VK9PU7uJXenbM0fl28GkV6h729dH8IzZdZVGfYRhn+klTuYntk4U=
+	t=1750097782; cv=none; b=kxFgHyjMWVvRJwYi8jApWuoWI/MkiLBTs0v7UXYtUKQGoVRjKnsbqIZNWOQIDeVRjS9D73mMSHYEey6EX20WwixH3gPTG45pfFF3xX0lX0ibA3S/vUKqgGZl5WMBF45ERz7wj9feNiy1ZOnzDbk/hU9sVMjdtPW6k7DZ2zvveb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750097769; c=relaxed/simple;
-	bh=/pZm9yfXNPLct3xNQ9rK2CmHW5wGaXEtYHqQSb38IW0=;
+	s=arc-20240116; t=1750097782; c=relaxed/simple;
+	bh=hishAlYarzpYkWDiZzcN1tYkTRPdwHa+/Z/vANbUma0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gjta7YaPC6/nzIIsj4CQEcdmUcYBbA+71yoSnSCJQynwLYOdaIdQXz7mK3AueJuWW4QBTn4gLVCldt2jQWlr6J6UybvfiolgNyhe7jAejr9nv2s2iH3y/37NEF9svyKzndjtFkfzQ/y6SlVX6P74tdbiNCJmxPmsftPROl+gORo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AjlRW9dC; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pKQkoIRrieph5oN2TSFOmYni8rLkTRaEylEp7vUmKU2TGu/ZDpiyTjL/NwdHPPzB1G1JFjDIKpbaQsUmoeqH/i+gYk+gSXLJtcyciBfrRH6EzdsNwTAvxeaup/FR5Xq3atLtQI29uv1p9cnbJJFUa8eZZacPMEpPa6z9toEzXss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OlVBQpkO; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjlRW9dC"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6face367320so47159686d6.3;
-        Mon, 16 Jun 2025 11:16:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OlVBQpkO"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b271f3ae786so3550821a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750097766; x=1750702566; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1750097780; x=1750702580; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sT3ko79tVyEi08Of4cxMVWn5wZT+D9NrIn/UbzDrO5o=;
-        b=AjlRW9dCqI4b4Gj1Fe8G/sFRZb5Tmc/jnbXGG58qea10M1AyHrJR58RFCisjM72lnA
-         g1p7wqI9FgKgYMAwg7gAsKExT/M3R7eiMNwPcDpJaP2YBJDaJnZoXRDt3b1lrAEKSJw0
-         pgrU0a9d3t/WaMrDi5PtZpemdfrDUMLmS/9MukF+d+KjsKS9bd29hdhWxu2mnZ9ZKWb5
-         XtMKBUwx+kGirqzVi8lBaZaplfZlTuEFv5/rcZlRGXab0BK1TWTsYttuV6LQ7mAzZvJt
-         swhmOOg0UkOE9lameIC5vxw5hna0g2f4PyjiSjyIFYCg2RmgdddyNNR8DBKNPUsA9VRv
-         sv8Q==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wl8PkghuCWqFkQT5amFIMJEShqvcx+zM//1mjsk79zk=;
+        b=OlVBQpkOU7kEuKrcVjDsjV9OxWlUFNgxF39B6Lx7SEw/vGbYoX3Zmx+HIh947qlkNo
+         WWbYiADO2xnyE+GPdY/x+fyi83tuLyUGKVyKNKN6i1915wb7HIHV36gbgx91Vf6uNqx2
+         13qYCz52FQvyi86Pwx740BhLHYqYXRMiaeo7s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750097766; x=1750702566;
+        d=1e100.net; s=20230601; t=1750097780; x=1750702580;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sT3ko79tVyEi08Of4cxMVWn5wZT+D9NrIn/UbzDrO5o=;
-        b=f5VLaGHZo/NakgkIQK2b1zOi1rmUBtX7/n/m/xU93K3AKOZ+Xa1d/4eI5XpTWweJuu
-         JoKWp8cl9Nirc4iYqZmbPbdMDk8EIStMcS984pCI8e2OFu5fboIgCMSWP/MTDTkL+7Ke
-         IAzmVPiWtfDP6D4CdHezmBIp0qpA/8pk4ugApP8CJ7zbjrLZNA7dY6PdkxycMgCZtbuk
-         UgOupziW2pYjwqp2uRKIZEeIk0Pcr3aSH7B8ttUpHip+eJPLAZDIdBRu4hGYBUvqc2TI
-         tXlEdMB/72Ycd7lwYVJ7G4hiXE8P7+Xgo9LkNoqWlK0oSyGKQzfQvPdXVZELCQr2kZ3F
-         XSxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLdS8VIOViI/4TUaI/B6Thmw7/5I1Pi37ofbSgehNect/n2/oZR23CRgG5QzeZXe6SkMPdleBue6FLIV1jjRs=@vger.kernel.org, AJvYcCWqO/ykN+zIiBGlqE4ixiO7iNkbca7U0DBIPnqUBpfFc5QiyqBnvgdZS+qGwvIq3L9Qqh6R4pHCiwv+Aek=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzj+Uzt9+l0ZZSv1wk4D6uqi8UZJwV/uMItrJpHTAZbDzDl+Yg
-	kgT6z8MbC4dbCisScTDzY6rQIKnikWfi6aQWPBHIndUUEnnY41UQzs3T
-X-Gm-Gg: ASbGnctfpJoSQSkl3BuLVa+z3b0SumBctfRBWiFUDd68041fP2YcicfyUwtAtWQAavO
-	H3UkoBL7dRTHnYXqaSPyQKPCiEkF835VKbXemJE1Ujff9N2H/D/OuGkdh6V2A5SaEhLIMP2bIr2
-	kgj0ba4UCeSiNTo6eIWSrObnVbSrTORWylf0ZY3vChM9hsEW3YwO4GrzHCPQldsccJ3QzyKB3+5
-	5GT6nxrf2NjOp0r0VA9soXKuQiG2I5u7IvpYxevjtwq0ImaD328K1Jua+U2yNaRtH6SI3SSu1Wr
-	E3Rw3CS9tt57OXUTtuqJ5DIJqFGQuvGdvYtDAVOlI65K2PII8btZdzf+OdefYZ8skHPKMPMSu8G
-	KkFm1I7dEzYAzpSRG+pWNS3FPgHu4HgggHzgyLAwdppYthXpSL90m
-X-Google-Smtp-Source: AGHT+IHIlF9oCh/F8BcpSQ0sJwsx29M4Ym7xtFrEUkK8zwOvDnlfJmU8NN4VBR8GfYYpAHSQNQDPOg==
-X-Received: by 2002:a05:6214:2343:b0:6fb:23:4812 with SMTP id 6a1803df08f44-6fb47778242mr133563396d6.26.1750097766478;
-        Mon, 16 Jun 2025 11:16:06 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb366eb588sm52326626d6.58.2025.06.16.11.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 11:16:06 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 29BA11200043;
-	Mon, 16 Jun 2025 14:16:05 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 16 Jun 2025 14:16:05 -0400
-X-ME-Sender: <xms:ZV9QaDl6IpuBIH45PyzKUY5Jcm3xJg80TkjyndApBVSs9SMPVOo0IQ>
-    <xme:ZV9QaG1c_2kz1ir_xWKeb9BVPz5UGA6jMM8TrQQ5vJFAZ_86wd5ak2baQw1oGCruM
-    B5ZJdOQ5gpWd-PlSQ>
-X-ME-Received: <xmr:ZV9QaJqgoEDqoeTpFvuUzPp0vpMTDw8SLMbiS04nnH6RnGjZabgkxYG3Hw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvjedvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeefgedpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhovghlrghgnhgvlhhfsehnvhhiughirg
-    drtghomhdprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprhgtphhtthho
-    pehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehlihhnuhig
-    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnih
-    gvlhdrrghlmhgvihgurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehmihhn
-    ghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvg
-    grugdrohhrghdprhgtphhtthhopehjuhhrihdrlhgvlhhlihesrhgvughhrghtrdgtohhm
-X-ME-Proxy: <xmx:ZV9QaLkpirMaSOrQGVHKKxianjRQNLZR7HUniNx5JPqIIe2ssghm_A>
-    <xmx:ZV9QaB2-H7SPat92pIUpmlbNgUStmx9ThWhcJOG9HIuIBU5_MaPgkw>
-    <xmx:ZV9QaKuc9B-rvU-kUj2byXFqtxEhJYjMtCfXb_To8LWepW_k9IW-5Q>
-    <xmx:ZV9QaFXoKYry37R2jIad48JLWMv34SCG2VPlQ4AHgUVFJiOMcv999g>
-    <xmx:ZV9QaA0XoWcVGY28-ZkKPq21tPO4v6-skSc9ZOy_XIz2aPwUlVcjg-g_>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Jun 2025 14:16:04 -0400 (EDT)
-Date: Mon, 16 Jun 2025 11:16:03 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Ingo Molnar <mingo@redhat.com>,	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,	Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>,	Valentin Schneider <vschneid@redhat.com>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,	David Woodhouse <dwmw@amazon.co.uk>,
- Jens Axboe <axboe@kernel.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	NeilBrown <neilb@suse.de>,	Caleb Sander Mateos <csander@purestorage.com>,
-	Ryo Takakura <ryotkkr98@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [RFC RESEND v10 03/14] irq & spin_lock: Add counted interrupt
- disabling/enabling
-Message-ID: <aFBfY1oyme5PkmqS@Mac.home>
-References: <20250527222254.565881-1-lyude@redhat.com>
- <20250527222254.565881-4-lyude@redhat.com>
- <20250616181001.GA905960@joelnvbox>
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wl8PkghuCWqFkQT5amFIMJEShqvcx+zM//1mjsk79zk=;
+        b=hFk/M4XIoaMCyhN781NSRar6KjbRI7d9OORgKxhj3c/5pCliB0K6ihjJyBL92no9ko
+         r3SoPjQpycanimcTm+VyQCcRZjySzt8nJ/mHg20Y9uEChYq2m8GU9dbbKWkIpy6+z7PH
+         H3ifa3gbdlzTgYVgG/YvPsi7G3DlV8IMJGLOhSrMyt1S0kbaYtSJGiOq8WeZJ+pCEttx
+         GCRwbiTo0Mo88ZEuFZ+Of9p0/+oPlaev7LMpBybHDjjEWWHGAyZmnu3fHB8uPLxRqBk+
+         du79YC99pX3gkO40b1IfeqJfUSH/fvOLlbWrH8N3iNQBojkof3i/1eL1ZXVBdReZnSPU
+         4PdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVeNbBd++NDMtxFmwI5cyb9d8zkLRKijLoqSp6JS3lp3lBLebkLJRlVqEguMv5leT6ViIaXiPf5Gksx84=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV1SBEMcBuBmp6J7xDx/j0vVLS5v/Bg3UA7nR12rhWp+leNmlQ
+	2ZDOyDhFo7hK2G+Z0bXBq0CVuY2u8D2YYWXl1jGmkLATJFSI4sq02QjURkTBOfp1IQ==
+X-Gm-Gg: ASbGncsay6PJjb8EYT9xdFylI8a8wsKdJSKXvqIDnmmDSU4G1Hbum9nVIcKQjqBPD83
+	fTY/vQFTWknL/vKdeSQhIQ7tJtNuhTpIgwoUvbseQlwRagxaxkszmqIwGmYBtFP2grK5U9O3piU
+	l+svJTqMSnj8RZwdv457MXdsN1VZOfh8YOZYypf4HONuzc9f4mFNccZ+AQerkc+jHxfqX0YXKnU
+	Riy2gRs9Lnia/nNug9oe7GqWvoFb+JG2hwPCPJISgOJ3l9LIXz+sWb2a9hm+W3j81OTfBB6uc3E
+	STm470EKNJNwTQfMVXTLiuk/GWso+jNMSwU4Ks9ECoQUiVlof+wdv3GFC9oM7bJOSgG3Usf59W8
+	WQLYNYu/WhKUvUhTDalHrdrQ=
+X-Google-Smtp-Source: AGHT+IF21Fesko939SBPpCgWRIkPS1DA0RmshZONlWsh46qwm4hB/VYq64E4e1CY0dJS7UBmNcE4vQ==
+X-Received: by 2002:a05:6300:614a:b0:21f:51ea:5c57 with SMTP id adf61e73a8af0-21fbd4cd474mr15723881637.16.1750097780283;
+        Mon, 16 Jun 2025 11:16:20 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:89ef:e9ef:a9e:d5b3])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2fe1642ecfsm7234288a12.19.2025.06.16.11.16.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 11:16:19 -0700 (PDT)
+Date: Mon, 16 Jun 2025 11:16:18 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Michal Gorlas <michal.gorlas@9elements.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
+	Julius Werner <jwerner@chromium.org>, marcello.bauer@9elements.com,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] firmware: coreboot: support for parsing SMM
+ related informations from coreboot tables
+Message-ID: <aFBfcg7E38ywGD5W@google.com>
+References: <cover.1749734094.git.michal.gorlas@9elements.com>
+ <815080fae73a4e879bae4851367ac7c0ad2cd551.1749734094.git.michal.gorlas@9elements.com>
+ <aEtWtBKfNhDT1bF9@google.com>
+ <aE1wvuamXqVTzpny@cyber-t14sg4>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -132,44 +75,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250616181001.GA905960@joelnvbox>
+In-Reply-To: <aE1wvuamXqVTzpny@cyber-t14sg4>
 
-On Mon, Jun 16, 2025 at 02:10:01PM -0400, Joel Fernandes wrote:
-> On Tue, May 27, 2025 at 06:21:44PM -0400, Lyude Paul wrote:
-> > From: Boqun Feng <boqun.feng@gmail.com>
+On Sat, Jun 14, 2025 at 02:53:18PM +0200, Michal Gorlas wrote:
+> On Thu, Jun 12, 2025 at 03:37:40PM -0700, Brian Norris wrote:
+> > > @@ -112,8 +122,8 @@ void coreboot_driver_unregister(struct coreboot_driver *driver);
+> > >   * boilerplate.  Each module may only use this macro once, and
+> > >   * calling it replaces module_init() and module_exit()
+> > >   */
+> > > -#define module_coreboot_driver(__coreboot_driver) \
+> > > +#define module_coreboot_driver(__coreboot_driver)                  \
+> > >  	module_driver(__coreboot_driver, coreboot_driver_register, \
+> > > -			coreboot_driver_unregister)
+> > > +		      coreboot_driver_unregister)
 > > 
-> > Currently the nested interrupt disabling and enabling is present by
-> > _irqsave() and _irqrestore() APIs, which are relatively unsafe, for
-> > example:
-> [...]
-> > diff --git a/include/linux/irqflags_types.h b/include/linux/irqflags_types.h
-> > index c13f0d915097a..277433f7f53eb 100644
-> > --- a/include/linux/irqflags_types.h
-> > +++ b/include/linux/irqflags_types.h
-> > @@ -19,4 +19,10 @@ struct irqtrace_events {
-> >  
-> >  #endif
-> >  
-> > +/* Per-cpu interrupt disabling state for local_interrupt_{disable,enable}() */
-> > +struct interrupt_disable_state {
-> > +	unsigned long flags;
-> > +	long count;
+> > You're making arbitrary whitespace changes in this hunk. Try to avoid
+> > that, please.
+> > 
 > 
-> Is count unused? I found it in earlier series but not this one. Now count
+> Sure, will do. It came from a style warning when running
+> scripts/checkpatch.pl. I thought it could be useful to fix it on the
+> same go.
 
-You're right, the original proposal is to use a separate count, but it
-turned out we can use preempt count.
+That's odd, I don't see any such warning. Anyway, typically I'd expect
+such things not to be lumped together under the "separate your changes"
+guidance of Documentation/process/submitting-patches.rst (if they're
+worth changing at all), although that may not be a hard and fast rule.
 
-> should be in the preempt counter, not in this new per-cpu var?
-> 
-> Sorry if I missed it from some other patch in this series.  thanks,
-> 
-
-Nope, it's merely some code we forgot to clean up from the previous
-version.
-
-Regards,
-Boqun
-
->  - Joel
-[...]
+Brian
