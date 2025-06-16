@@ -1,90 +1,137 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6E26D4C7
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE69C1F4617
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063693; cv=none; b=Y+4W4N8c0mtwl+gMBCZD/2+sjbvIp+b87aDK2Jb4ccUQPnxweSp7BmYDVADQGhg3tU3dm6Dr6E8W9yIuSyB1vTkHfsRW3n/t2mF0TqoviceolBoyOH2bwX7uNEfCEaTpi8D9HvQXGqfCl+kHFQG5cDuwCfG4s8Xyg4MUSVfn4N8=
+	t=1750063739; cv=none; b=OgTaOTnB3ik0qevQGqR3eVdTO/cK/UnmJC+RnlLdmnTWlHRsZFnZ/zTPe3YmyEgX3Km6qZVG5wkK5/bWmVwMI6TUybfMOemkK8o9ITYrBER/AzoVj5AGxh4vSlmQu2X6raluKe8vXvucZUsn2X/uCIJxGsSj20cC4+8SVZtruCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063693; c=relaxed/simple;
-	bh=DrGv/t0gdja4YyUbnvE/2AmaBViJfnwtbz0D2rU2N0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VpMsEqOBqOfl8MhYy+X20uOp4lhHTfoKphiLJEtQjxBC3s8MoasZUrySG4gfWiJdcCw89gg7bbbNou3bdqYqs56OBoJN7ZMnKEmYsaGFe7kcbAXFZLvNuldAsluTrNOHeO2rc1fJxYRsdqTpauf6REonyCYouEssHImlojo6lL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y30ocp6R; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750063739; c=relaxed/simple;
+	bh=CMHmRMvlIybPgTfplY3MjJdRgM5JMp6XgJ/jU980qkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ByRS64XhGWw2WIA54+Hwv45FBy68aq7fuJl+hYPcn5i7H1jkXY7lI03g1IN+kvpWyYtVQ78rd+44kN7u/oUYzAZ5b6RwfpzWISLmjWd5jOAjGaXDI6jV9FpQaw2G3pjkThiSnhT3p/7W/kRfKVcF5EWFdC+8iLjx0XRf7sO7Z/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OVM6DWUw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P6DY0zDJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OVM6DWUw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P6DY0zDJ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y30ocp6R"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3105ef2a071so42493291fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750063690; x=1750668490; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DrGv/t0gdja4YyUbnvE/2AmaBViJfnwtbz0D2rU2N0A=;
-        b=Y30ocp6RPBBY96BsWmfqPvcktpuFOJnWTLiBf6Dm9K0Z9k0uERyCO4kTBNr8a+C+rP
-         SwqF0eIHLcg5ruU08PWNNc1BZN2P7F4PIzrduYMKC9UpuPLzJdRF43cVN5GlXirVVap/
-         0VXv8Ne5Vef5z2CbuIUvkNxuQucg9NM1OMYdTk+kssRTPjiS/rsQbIaWcFqGCUVvg9df
-         R9DH4ImgDtkQgSsZdUfw0fpkLT8opj0JC0lnwLYQVVXxuZ3PvL25+HNWr+nqaRL27JGQ
-         WwFT8nEMG0KkHX4PsQNjNbopHRJXmE4MR1llpdr/6HhB4hpy4kIn+aVzIjeG/h0OQRUQ
-         T6wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750063690; x=1750668490;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DrGv/t0gdja4YyUbnvE/2AmaBViJfnwtbz0D2rU2N0A=;
-        b=WVg17nf3kZk59G+U6AaEj04p9W61TjicY+GOvRbtcJAgIDED74zkqYGlGhGppKN1JB
-         k7/zDlFLiACMiCbGhhNxGsvdh/+pboE97LuojBowf5K8iZsmNNwznh1bXovOlm/L/fKe
-         nzVu/J2GyTQ0E68BHYdEXzwSBCQ8GkZNovYHEnTd9OqDgHIdZEHQO5e2dxgz4V17vCix
-         HXdXYMjcyq8KzuBOmWkbIAGdcQkvYlUGpv9+UHZxq7/68/UINNigw7cqp5i0ojBvOxrx
-         l9Pb4DGNMwCJToyrvxNhF7Ldk86WJO7a2AFcVCjW9c4TnZe0T+brqjBwCRYFlqOx83gW
-         wdXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgrA7UbKOG6UDmuJ2x5YHtIeaGqyslNvhoArgwW1gbKk3gnMTCbp3pzaNwUhP5Kk8dVtrrDcoPdiWCE34=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjcR112pt5wFB4P0ftLlQ+8slkYmTiTGVIVROAvJTNxpGrQcQg
-	egSukzZQWnaOnJu1A+7TsFxVRLuBCCmkqiIwAKVblppZFDhfLwwe0+MlfH3R95eyJjDyFlvTG/0
-	JagFxu/5IK4JVvxz7yLg+b2mxmI43m74=
-X-Gm-Gg: ASbGncugwZNI46WBnDfJxOfbYaY5Aq39IZwW3fid7amOBCtVfUQ6OZleRjp5XeqCt1B
-	RRMjko1WyU7hGaVkZlFztHE/mMV62iWLYai9DHFaNjZVG1CXYGn5Ua3jrzT4hmBrwOOn27eUwTT
-	D6w5LfSpR7B0SEt4+YvKsvBJ4j+OTDhw4KkWqHJwfL7PQ=
-X-Google-Smtp-Source: AGHT+IHScaDdY5IcJHSg0gKTcs9SxJxqatQurhkW3HvTnt+zdpYbSH8IvPkY9DjO5WcfgeVpJtOKSgYuzZWgbXm8O60=
-X-Received: by 2002:a05:651c:4018:b0:32a:6af3:aead with SMTP id
- 38308e7fff4ca-32b4a4080aemr11366111fa.16.1750063689934; Mon, 16 Jun 2025
- 01:48:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OVM6DWUw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P6DY0zDJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OVM6DWUw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P6DY0zDJ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4788D1F387;
+	Mon, 16 Jun 2025 08:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750063736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nHbZRanB9XFp1ak2RIkdbOzwIS6/gWxvY61QFs2vR94=;
+	b=OVM6DWUwW6hjaPYrsfsbVeaoBAcM8kOiyboNeIEMEpFor/yriBwKHvBDcWcC96mA+CXzRA
+	ui7h7Or/vlJr87zml2b4WCE+MnQhNU8bHjLEah52M0qooa0vmvUBE9rjnGij7do/LzsTPA
+	uWmqJlX/ORUZ+M4NE4Gf8pnb0wt7zVQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750063736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nHbZRanB9XFp1ak2RIkdbOzwIS6/gWxvY61QFs2vR94=;
+	b=P6DY0zDJXEd33jVSpsuUyM1abMmOQgHYHYg56AB9JZDzEotyd7AgXuAbFdWZwJHeIIBzeX
+	W1UqgxsfxrQIR0CQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750063736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nHbZRanB9XFp1ak2RIkdbOzwIS6/gWxvY61QFs2vR94=;
+	b=OVM6DWUwW6hjaPYrsfsbVeaoBAcM8kOiyboNeIEMEpFor/yriBwKHvBDcWcC96mA+CXzRA
+	ui7h7Or/vlJr87zml2b4WCE+MnQhNU8bHjLEah52M0qooa0vmvUBE9rjnGij7do/LzsTPA
+	uWmqJlX/ORUZ+M4NE4Gf8pnb0wt7zVQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750063736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nHbZRanB9XFp1ak2RIkdbOzwIS6/gWxvY61QFs2vR94=;
+	b=P6DY0zDJXEd33jVSpsuUyM1abMmOQgHYHYg56AB9JZDzEotyd7AgXuAbFdWZwJHeIIBzeX
+	W1UqgxsfxrQIR0CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05485139E2;
+	Mon, 16 Jun 2025 08:48:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mI3FOnfaT2i5QAAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Mon, 16 Jun 2025 08:48:55 +0000
+Date: Mon, 16 Jun 2025 10:48:55 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Alex Guo <alexguo1023@gmail.com>
+Cc: andi.shyti@kernel.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: i801: Fix out-of-bounds bug in
+ i801_block_transaction _byte_by_byte
+Message-ID: <20250616104855.06859f8e@endymion>
+In-Reply-To: <20250615233306.498536-1-alexguo1023@gmail.com>
+References: <20250615233306.498536-1-alexguo1023@gmail.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616083611.157740-1-ubizjak@gmail.com> <20250616083944.GC1613376@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250616083944.GC1613376@noisy.programming.kicks-ass.net>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Mon, 16 Jun 2025 10:47:58 +0200
-X-Gm-Features: AX0GCFsnOq1eoIcVM99UqD3JLPDnssfWN1GAl4OGdkVDJo_Ovb2sQMh2ewtNTHY
-Message-ID: <CAFULd4YQe=xb2-GH8EHLyiNQL=uCBZ7QAqmasyroT9ZhPoRRwg@mail.gmail.com>
-Subject: Re: [PATCH] x86/asm: Use RDPKRU and WRPKRU mnemonics in <asm/special_insns.h>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Mon, Jun 16, 2025 at 10:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Mon, Jun 16, 2025 at 10:35:57AM +0200, Uros Bizjak wrote:
-> > Current minimum required version of binutils is 2.30,
-> > which supports RDPKRU and WRPKRU instruction mnemonics.
-> >
-> > Replace the byte-wise specification of RDPKRU and
-> > WRPKRU with these proper mnemonics.
->
-> What about the minimal clang version and their integrated assembler?
+Hi Alex,
 
-Yes, it works with the minimum required clang version 13.0.1.
+On Sun, 15 Jun 2025 19:33:06 -0400, Alex Guo wrote:
+> The data->block[0] variable comes from user. Without proper check,
+> the variable may be very large to cause an out-of-bounds bug.
+> 
+> Fix this bug by checking the value of data->block[0] first.
 
-Uros.
+The same check is already present in i801_smbus_block_transaction() and
+i801_i2c_block_transaction(), which are the only 2 functions calling
+i801_block_transaction_byte_by_byte(). So the out-of-bounds bug you
+describe does not exist.
+
+-- 
+Jean Delvare
+SUSE L3 Support
