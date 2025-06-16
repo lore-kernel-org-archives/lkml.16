@@ -1,129 +1,167 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843D92868BE
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88413259C9F;
+	Mon, 16 Jun 2025 16:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090856; cv=none; b=awmiLuQmNKwE8Mw9W/3czOwjtolTfY92ayTD8Jj40B1iPsKx/r15+C6Kd9qtVg/2Z8x6zbI80rh/CtkCBzpB0SIz8oVBHOTkiFH+UELvtIWQJ2TSjPxQmRpAjNOY5UfAravLlBFezp/dp82rptA+o49CuESZxyRdgQqGWxPEuN0=
+	t=1750090881; cv=none; b=WduYWnOFXP6QwsITeo/woMPKGi3wC3AF5AJB6nr/QcWQThCqXuPjYCCh7NFkRk3jpeXwTgV/NafVKdtoV4cmcdq7a+Bc0iW1cnbfp33ozoUOT0ZZigqcq3oP87DtYHXJ0dSIdK+nAtpcN2E6tiZyvLslMKD1m8skVTm3OT+ZT0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090856; c=relaxed/simple;
-	bh=NDEkmxPGrGCG8ArtMUMwszjzAXpcPJOg3oxz2zuKJt8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NBy2H9zHm2ZXtA878ilbWk5O84G4wSMn90b6BgXRJkXg+npzdSkobCXtFvncOI1IfN0kir+fnNYubdLnY/WWO0aTaLveddXqXX6nuX0LAFhzHFY7Y3lteHiQBiNiuebC2hRgt5MbLpZsZh6PWFn9SY7NcH7DF4exk9KYa4o1YVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=K8F29TXY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750090881; c=relaxed/simple;
+	bh=k7/WisMXKbWlUR77eX7NtSJyTLCBVVNGedGYzI96uRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jx/k5CIhtspKAWKIMcVVUPa4z/VLOcOFfoXa2M9e9fnY9ZbaaB5oKfUpue+DbqNm3XM93lFLsjhtPYb0YLJCQ0IrmjC7Tch1IIrNdVe+APm5/3VKa0GRERgjzXYuBOEMf47MN6xZzPSqHhWdl7gvCt3IjQzDM9JCHAP7AisBxGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HxE4ZsKv; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="K8F29TXY"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TctE021517
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Mu+psP+X+UUrmMw1teQblkErLFop9Y7rtZWa3PcMk9o=; b=K8F29TXYiy/ZZ9zu
-	3y1vn87x7SCZcDXLwM/nsiTixg/PcGr2OEd5nTv0yjevUZi7DVAF1dy5jCE9ouLs
-	EsMCWMFWPByBLg2sWIqB+rf75HvfJUSoOA4abKrSHn8udoNU8keMAWTEsIJOKsop
-	plcW4jHkdyftDZurJb/gbRlr8xD7dihLS1SdFu9YfAkZ80AQfVjgp04jRk8OW815
-	OLfrHShVyuhXoFSU4vCi7EZx17TYk8H9jVwH2wokhHpCBUpMkQD8MuNE7YMLeS/2
-	t3CLt17W6WTOYmo9ue8SBFl4JstcizeWy1ycwyzIB87Pg7X9wCiUUxvi246Hw6BO
-	35pX7Q==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791end6ph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:52 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a5aeebad31so10517041cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:20:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxE4ZsKv"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so4908178a12.0;
+        Mon, 16 Jun 2025 09:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750090878; x=1750695678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VpBWNqe15V8+KavYjcJ0yYawZufKK5c9dNkPp38Ln4Y=;
+        b=HxE4ZsKvEhIWz2axYUgC5vfebpG70DD9Lsgbvqpm9DHmE8LXEVvoh64mrysnu1n5T5
+         6ew7G35UqwQ47rPXhmoU48H7RjN7gmHeLpYnaJjdZeMHtYrCcQQ2cq4xgumG7BoX/LQs
+         LyH04YhDJSAos34ojCupIhLrfIjzOnlZbA5IKxUc3n3wPCXL06gydGF1TQjx68u0QN0j
+         /cYX1uYiO6W3X1jshm81WBsUf9yGzQ/Wcx5NQU7jgKjzkOl6rc6nqiSPiwRdmrBQ4grf
+         XIvduLiWQLNrJAYBrPPYyOJT58GsHOK9XIMdm9GaA0dRKL7baDwZGMa2z90Lq61rVNKm
+         Stdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090851; x=1750695651;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mu+psP+X+UUrmMw1teQblkErLFop9Y7rtZWa3PcMk9o=;
-        b=VjMcScM2/icMVCReBRsKO6HaiTYeMIBfvSFkympTaCL7qL9ZeYTXrDgRMuEgE586fD
-         G9H50KGZ9y75BRAoU+HkDljMcRgbmmeyYFQmU0nyEo5aTFfX0uDa2ZMRErAhpa4liiJt
-         /v1g7gNXsX6IJJA8RGezEJdunS5g9DUfJngqklZHouP9eU0zI75DJNJSfsRICLkKlWVw
-         pNtqgQ4Mdlrea5xsyZ/py3ljCdtplGRJBA+MJYkZhcSQiOcoam6kw2dCa3DGuC7F+l0H
-         nmUYDk7BGb6RBNf5R+hlSE/NEnizM9HnysZkZlZA71qEObl/6XcN0/C8vrTnq3isJ3no
-         AjGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFpUpenr84oz9wysKC49gnnG2Aqi7aPM8UvC1VoCyd1xyKQNFTKzcUXbOS50YJ/hmTSdpP99gChiE87Ic=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf2J1v5BhYtLxHTFafIELPO4dqLhmsuyk7jmxrBlQoD67oTlX2
-	A49UG+3keXs4LPQ+dSD+GaZIfJYd8cDxZb9vggCHAcrcGSn+fVclb7rXKIW/O4v+J9od/BA98Rh
-	qKTq2knDhAW3yCVqBGxPILa0QHI0cKS/+ggEykCGyrvpD1TB/oeW8HNwvtd7qenNo6IQ=
-X-Gm-Gg: ASbGncuT9TbhdXNrtSeOvrEewoheg6GFLdxJPq2MxxQeFDM44TFmtI4EKOpD/W3O0T7
-	i6ud4Z40yx8UPYJhEuE9gf6/+Gie3r+vlXxorGwUqrJQGMu+6RAManXPVdt3UnKDlckK/c7WLWI
-	mRoq9FKTJviv9RNjtJmLuF7DWKk8GjrNKpomnBYmeRgo2wR2MN6jN7+g3Ry+b5fRiQUZz3jXlfQ
-	bJLaQUQdrPwc2CsI200EjvISJSOJ8LAF4TN25RpY3e5Whon5buv2QO1GxnTJ5FhXMQF6ex5QQ1x
-	ceZDosar2BvjRtTUFsM17trm8IbuGs5y8hui8/Eumvh0ZqikizrE6w+u0QKmnJ8InfspO1rIKXM
-	qUUQ=
-X-Received: by 2002:a05:622a:451:b0:4a5:a4ad:c55b with SMTP id d75a77b69052e-4a758bbb5camr1770041cf.12.1750090851517;
-        Mon, 16 Jun 2025 09:20:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGN9jae6FOVYKQqSYeEw38hAiQvkYtCqfi+CbDM3+x5+zp/5SRgo/YqSvoVNOrVijkqA/tVJQ==
-X-Received: by 2002:a05:622a:451:b0:4a5:a4ad:c55b with SMTP id d75a77b69052e-4a758bbb5camr1769861cf.12.1750090851050;
-        Mon, 16 Jun 2025 09:20:51 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48f27e1sm6496194a12.29.2025.06.16.09.20.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 09:20:50 -0700 (PDT)
-Message-ID: <713cd518-935f-4501-9753-d33c9ea6aef7@oss.qualcomm.com>
-Date: Mon, 16 Jun 2025 18:20:48 +0200
+        d=1e100.net; s=20230601; t=1750090878; x=1750695678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VpBWNqe15V8+KavYjcJ0yYawZufKK5c9dNkPp38Ln4Y=;
+        b=bAiIHfS4ErirhuzsWuTTQQJRy9xnOMB9758yAl09cokrTC0kOq8tVOgCqJHwRgur3w
+         e8950zQy+dsiM8pIwJzJvS0IqeHnhvrgFoX9MrdnC2YtHvaSmkB04WuNP/RLRiR8WhV6
+         gx1SZMjIJQivFEHVYt9YEH65eJ0nwMf/dLhtsVmAcxSpqTMqvSd2LCwkjkWq7ppa/bsW
+         4/6ImzaQoEeqlNr2R86vzzfrJZycuZxOg3kf2/HnqWXCrJ53vr+rEpF3MTpWbPwogiup
+         ghgOc5nD1e+1GYTBJWArxLXNdCTwQLysZBEDPTtCeME2742Ln8KJkhW8sZVK4g+Qw8mi
+         fjUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQAPLauNpzjOl0LWob1c7368RtGy7YZgks+dOhffdcbD2L+EHmbFWJvpNw2xH2/cF8IKi3vBaS2AbLIwo=@vger.kernel.org, AJvYcCVuK/YeExAPWGzSZCFi3uh5LyXa9ow/xJlrA8CBTa1jYnCxw+QR++fGBzG9PvA1s4ghPP0HkhmTlNzRksvG6bxE@vger.kernel.org, AJvYcCVwHrImk4qotmg7PIXkQaUMx4qyh1ULJnEPJ7Mixgs2UfVUATeZXkQDXk8YLYYfrnBqNXU8y+lpdR/4sw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1fAV3FwSB0uLhmYbVKuiikuykfZd9orNIKaTZ3pwXVUdfoiGa
+	URNrNSDDC+0TNfPGG53oCSjxo599CwFEnj5U5fKt6y/H4ApD2US516r3MJLO
+X-Gm-Gg: ASbGncsNgS0P1U8pwxFpNBuM5jazigdFeR2P7Rueo7nZaw2YwaDYjGH5Sbwz7KEjaRy
+	xSU6EA2eNkmVgPpslKhL1BQwEsWxwD9e+aeT7o2/Q2xcQ6xZ3GoP0UJ+bRHd+A59TcAjRj2Dq9K
+	FqARDUZZduN1WxCHngZ0ZmjTQnm7uG76Sz7Mg9Ha4ehZsWuSyWi5ZXK+8zTJs5ZnX7wrrshDYeq
+	PxVKtXI2P53QuG3dM1WefzVoCSrJ/TN47lbFUZMijYAA1BV3Z0a0MOJNTsYO+wJFIfU/XncBcD6
+	wTwanBeELANQojnNIvQwdNiF2OFPWCEEVTD21AFGIyATcEF+A713sDbxnuYpy2qFyKugWJvfogL
+	d/Cp73Aa5KOywMoGp/Oi4Yq0=
+X-Google-Smtp-Source: AGHT+IH5DqWr8tn3eyoLjnJaVFTvxrJy9DsLY+LkxxLU5h/ESvqg52ldyexR7aG8aD+QL/ZCJHTmfw==
+X-Received: by 2002:a05:6a00:1989:b0:746:24c9:c92e with SMTP id d2e1a72fcca58-7489cfdaf27mr15181815b3a.8.1750090878424;
+        Mon, 16 Jun 2025 09:21:18 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7488ffee55bsm6989549b3a.1.2025.06.16.09.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:21:17 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	skalluru@marvell.com,
+	manishc@marvell.com,
+	andrew+netdev@lunn.ch,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	ajit.khaparde@broadcom.com,
+	sriharsha.basavapatna@broadcom.com,
+	somnath.kotur@broadcom.com,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	tariqt@nvidia.com,
+	saeedm@nvidia.com,
+	louis.peens@corigine.com,
+	shshaikh@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	ecree.xilinx@gmail.com,
+	horms@kernel.org,
+	dsahern@kernel.org,
+	shuah@kernel.org,
+	tglx@linutronix.de,
+	mingo@kernel.org,
+	ruanjinjie@huawei.com,
+	idosch@nvidia.com,
+	razor@blackwall.org,
+	petrm@nvidia.com,
+	kuniyu@google.com,
+	sdf@fomichev.me,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	oss-drivers@corigine.com,
+	linux-net-drivers@amd.com,
+	linux-kselftest@vger.kernel.org,
+	leon@kernel.org
+Subject: [PATCH net-next v5 0/6] udp_tunnel: remove rtnl_lock dependency
+Date: Mon, 16 Jun 2025 09:21:11 -0700
+Message-ID: <20250616162117.287806-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: add debug UART pins to reserved GPIO
- ranges on RB2
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250616143341.51944-1-brgl@bgdev.pl>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250616143341.51944-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: TGJy94OnmZTVZfIe0HW1MfyCOYV5xeEP
-X-Authority-Analysis: v=2.4 cv=D6RHKuRj c=1 sm=1 tr=0 ts=68504464 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=Uobm0kU4YoDV-O0PfCkA:9
- a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: TGJy94OnmZTVZfIe0HW1MfyCOYV5xeEP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNyBTYWx0ZWRfX5U/KEwOZBegd
- T9E4e6+AmjTRawpidCSANCG0ZUPEWbiySteXI8tXGJa/mXnQTdRCmz+L4bvfJ3vS13+zJ6pYd4I
- +ONpYFt8gkURB+hRPfCZON8g9aICOXKaQ2jLPz3Aa0ltAjvyApJHJ03T4wRF6bChbsiOJ5yd5FR
- cwDdPvnPsjoAAX8TZiYFTg7a8g9AYARxNYjR1PDuB1MNWXkfvyhwjWfmx+7f30nF2jD1KPSuolX
- 61dFXbJfYLmDC2ZZlYeDv9EXcCrUY5rgdERfdHrFQyGmpanU+ImpL9fO0iPN+3ve8wkDkPqMVnA
- Ut/VjD/nySkuH+I2N2BBcDfnncupz9FgNJWhOpYxHrw1/9VZ5Wdxr5URN1xrBBJSSf0OeVDTFsi
- c7qgdZkdReVpQy7NHg5ZD9bqyGhrEr41fD0sdTNMj1pZPD2tam9yQEB4PvAvqPx7+IiXsLGm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxlogscore=835 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160107
+Content-Transfer-Encoding: 8bit
 
-On 6/16/25 4:33 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> GPIO12 and GPIO13 are used for the debug UART and must not be available
-> to drivers or user-space. Add them to the gpio-reserved-ranges.
-> 
-> Fixes: 8d58a8c0d930c ("arm64: dts: qcom: Add base qrb4210-rb2 board dts")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+Recently bnxt had to grow back a bunch of rtnl dependencies because
+of udp_tunnel's infra. Add separate (global) mutext to protect
+udp_tunnel state.
 
-That also makes them unavailable to the kernel though, no?
+v5:
+- remove unused variable (lkp@intel.com)
 
-Konrad
+v4:
+- grab lock in more places, specifically netlink and notifiers (Jakub)
+- convert geneve and vxlan notifiers to (sleepable) rtnl lock
+
+v3:
+- fix 2 test failures (Jakub NIPA)
+
+v2:
+- move the lock into udp_tunnel_nic (Jakub)
+- reorder the lock ordering (Jakub)
+- move udp_ports_sleep removal into separate patch and update the test
+(Jakub)
+
+Cc: Michael Chan <michael.chan@broadcom.com>
+
+Stanislav Fomichev (6):
+  geneve: rely on rtnl lock in geneve_offload_rx_ports
+  vxlan: drop sock_lock
+  udp_tunnel: remove rtnl_lock dependency
+  net: remove redundant ASSERT_RTNL() in queue setup functions
+  netdevsim: remove udp_ports_sleep
+  Revert "bnxt_en: bring back rtnl_lock() in the bnxt_open() path"
+
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     | 42 ++-------
+ drivers/net/ethernet/emulex/benet/be_main.c   |  3 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |  1 -
+ drivers/net/ethernet/intel/ice/ice_main.c     |  1 -
+ .../net/ethernet/mellanox/mlx4/en_netdev.c    |  3 +-
+ .../net/ethernet/mellanox/mlx5/core/en_main.c |  3 +-
+ .../ethernet/netronome/nfp/nfp_net_common.c   |  3 +-
+ .../net/ethernet/qlogic/qede/qede_filter.c    |  3 -
+ .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  |  1 -
+ drivers/net/ethernet/sfc/ef10.c               |  1 -
+ drivers/net/geneve.c                          |  7 +-
+ drivers/net/netdevsim/netdevsim.h             |  2 -
+ drivers/net/netdevsim/udp_tunnels.c           | 12 ---
+ drivers/net/vxlan/vxlan_core.c                | 35 +++-----
+ drivers/net/vxlan/vxlan_private.h             |  2 +-
+ drivers/net/vxlan/vxlan_vnifilter.c           | 18 ++--
+ include/net/udp_tunnel.h                      | 87 ++++++++++++++-----
+ net/core/dev.c                                |  4 +-
+ net/ipv4/udp_tunnel_core.c                    | 16 ++--
+ net/ipv4/udp_tunnel_nic.c                     | 78 +++++++++++++----
+ .../drivers/net/netdevsim/udp_tunnel_nic.sh   | 23 +----
+ 22 files changed, 176 insertions(+), 172 deletions(-)
+
+-- 
+2.49.0
+
