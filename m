@@ -1,65 +1,56 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF401DB377
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBA88488;
+	Mon, 16 Jun 2025 14:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085698; cv=none; b=CwkgZKWGpU7fRjE/l7pfTn73m7fwUXWEp9Ik7zdlPqr5TuXA2VOXYQpDVBoSuGb9TAKsrvm/MdePguYa60nitK6LOdQrmhXE3Z+vzAWeXXkvuxIkZ3JHl4wM/qdSGB+nsfplF73Hji+f242wvk/nQeOigLf5yxu1UocU2dtavgU=
+	t=1750085734; cv=none; b=PhVajKKmV9MeT1RZGc0B7LLiNuRvZRRg6GJopXeNG2HP5ZowarkRp6s0Du6YJT7pp1PeJIy9H2+lhd4GZzktvFry6MQ2DJY1usO3zvUTIDfLL7YKyo4PQOdnyVvDM2sloRRROW8CF1XZ47JtPQ4fEHWdXZj7gegrVlfuu41LoVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085698; c=relaxed/simple;
-	bh=5Nm9CImpLsi7qFyQR0yZH/U+R7I2IFhkj7QErWfdJPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lz1E83LbIeYa04KE6/pZUxOhlBCkWPp4aZBU4pM8cVch/szAtBSeI+e5ozm+tkMqrj0MqP7S3c7zy4xaxU6gwCB5CRt3MSWUemRH2mqHLWgrmfQ+0MMRp9wPd42KmpOKuoMsImDLqH3IvHMsv86NNuLiwfi/SWNnt5gVYU8+u1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Jln1o/IM; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750085734; c=relaxed/simple;
+	bh=hHnys39r5rQ888A/YzcobRKqIr3EZK/DFAoRVXWQ1tE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dbgm8lsql+O8Zw2dQs3toYtmRP/YBXwFQcMeQcZsy9Qu0TQQ83GvZkiWmsSnypedZYhrKLzqgKvDUivSf2faZQ95w/yXAbLhMCGmn8VL3kB4dPKo88HcKScUm/WHjgi7fP41FVaF30kW3Abg6EXyIw5OvmwPgYkgcM6wO7e4uSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X1ZcJGm7; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Jln1o/IM"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60634f82d1aso990973eaf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750085696; x=1750690496; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IbjUWaweNAfTcsTb0I52VudEVmpioqIEWXQ0+qpwB9M=;
-        b=Jln1o/IM8EYQe6Q/oeLM+Yd1u2bSCN7beyDqfSc0HuMJX549XViJLi06lrYzFzzxNM
-         s5IbJ5FPnlpB+p70CGAoAs+Xz+uRBCmc+44XoZCgtaf4Ib4ZS/uSdAgAoRetWVIyaukM
-         Ngu7HbkCEGlA6lS9EqggoujD2Rmlt0oAUlWSPnP4CVnKKmA3T5B+uV/FkF4l34QgBeVQ
-         KC8EqMFC3beZda1atraoGlvVcp9bn7G+WE25aMdEGSp3kDsG0cXdtlMX+4XGGiBzIgk7
-         1ETrtjvsoFLmKpo5pAM9hyNoO59zrbVMHCNKyP+CgnRkbkU6WQCngO1KKogjFdB3Pr+r
-         UxaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750085696; x=1750690496;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbjUWaweNAfTcsTb0I52VudEVmpioqIEWXQ0+qpwB9M=;
-        b=fPrb81HEe15mTQ7MYq3GPwrYbaosJn/CCpNau9UizF3KXqtRE7ILwg8zXlUoniS7cu
-         dnA98Gn4WWbCE9rpG9hola/fFK95Lur/QxyEHmRaYhWpSIYhC3s6UclmDRBGNtt8qJpZ
-         L6L8x9VrEKwuhuGEaeddZdoVPyo5kye/QkIXrX8rrHAoVtu5vp0uAariAQ2bJg+7q7sK
-         plJV2FEhDXWy3JUgYZVHR6W34VpIFj5SYnaHSDlxciMwGQ79+PCLSu/yd7/DsQF9Zlkd
-         gei3ylkLZQCwNmwkNGFS087rySR27njzHqS0criI8NzWEDjcSsV/Wa0j3ny9pIoM+uYe
-         nPnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjr95jHdugWbeD3Um3UTfVMKW98XpdgYgD67r3U0PmXs3uLGu5oDhRV34VAvGVcHxABsiYcdAt11PU4rM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2pRrJ3ZKSMeFr5rbnNbpZjPj1IiZf0YtPMpO0AYxkzrC1tKQI
-	zjqJ+ALSWllsBsMADDGsgEMe7rCuMsGFgf20UvBPhD/DyOOLCinWvSPAG/NH9OiJjVg=
-X-Gm-Gg: ASbGncve5HgCJhAEDCHUpMOT1MfOAf6mFVz1q8zihVLehYIq8FP59Gm2VFV67lx/G4Y
-	HrbguSx0Ut0gEMCfhmbNuNqdDy3CnAlYnwUkxrhwjHcQ3oIk/R6kH71IDaD4TPTXbxWP1UZFxwQ
-	DiAPSVaCh8OyfT4r3AobV3YBt1ZjyWG4yQCjvs2KRwx7lN5KlJqkiicRMFonGgLTMJ1joyfEJB0
-	v7ctirDnnPBKGAHOUGHQp9+etSUuo0ZygfeYT019JeOSiMabJjkY9SLj782APF9E1pRsXLUmPXY
-	X/jdn2tIVlJ5l2buJR9JerqoLS+BrFdZyIMYV8nU/6b68GJmvALW7Ic60r9WBeQsqT2t80q0L/Y
-	Tgnz5Zcc7dmhmL7tZPFQF381c1xKB2Zax1fKLuVM=
-X-Google-Smtp-Source: AGHT+IG/zyPyHx6md2qlWK0JseESq5/UwM8f1EqlrlgEOHuHiIJkuH+hr0ysstl4fbKuuVmWS7NVVw==
-X-Received: by 2002:a05:6820:627:b0:610:fa7d:9a14 with SMTP id 006d021491bc7-61110e6582emr5134060eaf.2.1750085695706;
-        Mon, 16 Jun 2025 07:54:55 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-61108ebd14fsm905901eaf.22.2025.06.16.07.54.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 07:54:54 -0700 (PDT)
-Message-ID: <c89f4b2f-0892-4f63-b9b4-5ae55b477c01@baylibre.com>
-Date: Mon, 16 Jun 2025 09:54:52 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X1ZcJGm7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750085732; x=1781621732;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=hHnys39r5rQ888A/YzcobRKqIr3EZK/DFAoRVXWQ1tE=;
+  b=X1ZcJGm7rxM8qAAdhwbmTOvYbU+2BWLv+7+JSAqGG7alXBGEeb3mBFPo
+   RcwgNT3wsX9JQpbWyhS9+R4PFC7J6oCEW9jU27dBc9n9N7bswI270ol7Q
+   X3UAxCt1e2ScTVrCAopQrQBjNMWK8pXG5FpefgToUfHtwgY24hbWvKGZI
+   j4J+uAkwiiUlXzA7HopixwiqhZo+dFey/glY4yBEE2t2DqPg7FB0HeKYr
+   UOBql3+x0qdKRKxfzkpLlNj6dj8QdoNxS3r38aBTzDi7c1RNq2iMYw0At
+   z5VtPQWS706rOZtCJSYcQqHjc1NPdV59CRm/XSeAFowk8RXJ+txC1BbjE
+   A==;
+X-CSE-ConnectionGUID: s71zIdqoR66tfylSctoDiQ==
+X-CSE-MsgGUID: ux7e6hvyTAWgmAQUA7NuGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52151673"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="52151673"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 07:55:30 -0700
+X-CSE-ConnectionGUID: HTgPmMJlS0+QZPhQRTQpgw==
+X-CSE-MsgGUID: Sbv6MwnhTv6Aq3EI+qkb8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="148963973"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 07:55:30 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 87D1A20B5736;
+	Mon, 16 Jun 2025 07:55:27 -0700 (PDT)
+Message-ID: <83ee6240-b270-4057-bc8d-4dcc9ddc1b9b@linux.intel.com>
+Date: Mon, 16 Jun 2025 10:55:26 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,156 +58,487 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
-To: Jonathan Cameron <jic23@kernel.org>,
- Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
- <20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
- <20250614110812.39af2c41@jic23-huawei>
+Subject: Re: [PATCH v1] perf test: Expand user space event reading (rdpmc)
+ tests
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Howard Chu <howardchu95@gmail.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250614004528.1652860-1-irogers@google.com>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250614110812.39af2c41@jic23-huawei>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250614004528.1652860-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/14/25 5:08 AM, Jonathan Cameron wrote:
-> On Tue, 10 Jun 2025 09:34:37 +0200
-> Jorge Marques <jorge.marques@analog.com> wrote:
+
+
+On 2025-06-13 8:45 p.m., Ian Rogers wrote:
+> Test that disabling rdpmc support via /sys/bus/event_source/cpu*/rdpmc
+> disables reading in the mmap (libperf read support will fallback to
+> using a system call).
+> Test all hybrid PMUs support rdpmc.
+> Ensure hybrid PMUs use the correct CPU to rdpmc the correct
+> event. Previously the test would open cycles or instructions with no
+> extended type then rdpmc it on whatever CPU. This could fail/skip due
+> to which CPU the test was scheduled upon.
 > 
->> The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit, successive
->> approximation register (SAR) analog-to-digital converter (ADC) that
->> enables low-power, high-density data acquisition solutions without
->> sacrificing precision. This ADC offers a unique balance of performance
->> and power efficiency, plus innovative features for seamlessly switching
->> between high-resolution and low-power modes tailored to the immediate
->> needs of the system. The AD4052/AD4058/AD4050/AD4056 are ideal for
->> battery-powered, compact data acquisition and edge sensing applications.
->>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-...
+Thanks for the fix.
 
->> +static int ad4052_update_xfer_raw(struct iio_dev *indio_dev,
->> +				   struct iio_chan_spec const *chan)
->> +{
->> +	struct ad4052_state *st = iio_priv(indio_dev);
->> +	const struct iio_scan_type *scan_type;
->> +	struct spi_transfer *xfer = &st->xfer;
->> +
->> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
->> +	if (IS_ERR(scan_type))
->> +		return PTR_ERR(scan_type);
->> +
->> +	xfer->rx_buf = st->raw;
->> +	xfer->bits_per_word = scan_type->realbits;
->> +	xfer->len = scan_type->realbits == 24 ? 4 : 2;
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan> ---
+>  tools/perf/tests/mmap-basic.c | 289 +++++++++++++++++++++++++---------
+>  tools/perf/tests/tests.h      |   9 ++
+>  tools/perf/util/affinity.c    |  18 +++
+>  tools/perf/util/affinity.h    |   2 +
+>  4 files changed, 240 insertions(+), 78 deletions(-)
 > 
-> This is a little odd. I'm not sure what happens with len not dividing
-> into a whole number of bits per word chunks.
-> Maybe a comment?
+> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+> index 04b547c6bdbe..3c89d3001887 100644
+> --- a/tools/perf/tests/mmap-basic.c
+> +++ b/tools/perf/tests/mmap-basic.c
+> @@ -1,15 +1,18 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <errno.h>
+> +#include <fcntl.h>
+>  #include <inttypes.h>
+>  #include <stdlib.h>
+>  #include <perf/cpumap.h>
+>  
+> +#include "cpumap.h"
+>  #include "debug.h"
+>  #include "event.h"
+>  #include "evlist.h"
+>  #include "evsel.h"
+>  #include "thread_map.h"
+>  #include "tests.h"
+> +#include "util/affinity.h"
+>  #include "util/mmap.h"
+>  #include "util/sample.h"
+>  #include <linux/err.h>
+> @@ -172,99 +175,199 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
+>  	return err;
+>  }
+>  
+> -static int test_stat_user_read(int event)
+> -{
+> -	struct perf_counts_values counts = { .val = 0 };
+> -	struct perf_thread_map *threads;
+> -	struct perf_evsel *evsel;
+> -	struct perf_event_mmap_page *pc;
+> -	struct perf_event_attr attr = {
+> -		.type	= PERF_TYPE_HARDWARE,
+> -		.config	= event,
+> -#ifdef __aarch64__
+> -		.config1 = 0x2,		/* Request user access */
+> -#endif
+> -	};
+> -	int err, i, ret = TEST_FAIL;
+> -	bool opened = false, mapped = false;
+> +enum user_read_state {
+> +	USER_READ_ENABLED,
+> +	USER_READ_DISABLED,
+> +	USER_READ_UNKNOWN,
+> +};
+>  
+> -	threads = perf_thread_map__new_dummy();
+> -	TEST_ASSERT_VAL("failed to create threads", threads);
+> +static enum user_read_state set_user_read(struct perf_pmu *pmu, enum user_read_state enabled)
+> +{
+> +	char buf[2] = {0, '\n'};
+> +	ssize_t len;
+> +	int events_fd, rdpmc_fd;
+> +	enum user_read_state old_user_read = USER_READ_UNKNOWN;
+> +
+> +	if (enabled == USER_READ_UNKNOWN)
+> +		return USER_READ_UNKNOWN;
+> +
+> +	events_fd = perf_pmu__event_source_devices_fd();
+> +	if (events_fd < 0)
+> +		return USER_READ_UNKNOWN;
+> +
+> +	rdpmc_fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
+> +	if (rdpmc_fd < 0) {
+> +		close(events_fd);
+> +		return USER_READ_UNKNOWN;
+> +	}
+>  
+> -	perf_thread_map__set_pid(threads, 0, 0);
+> +	len = read(rdpmc_fd, buf, sizeof(buf));
+> +	if (len != sizeof(buf))
+> +		pr_debug("%s read failed\n", __func__);
+>  
+> -	evsel = perf_evsel__new(&attr);
+> -	TEST_ASSERT_VAL("failed to create evsel", evsel);
+> +	// Note, on Intel hybrid disabling on 1 PMU will implicitly disable on
+> +	// all the core PMUs.
+> +	old_user_read = (buf[0] == '1') ? USER_READ_ENABLED : USER_READ_DISABLED;
+>  
+> -	err = perf_evsel__open(evsel, NULL, threads);
+> -	if (err) {
+> -		pr_err("failed to open evsel: %s\n", strerror(-err));
+> -		ret = TEST_SKIP;
+> -		goto out;
+> +	if (enabled != old_user_read) {
+> +		buf[0] = (enabled == USER_READ_ENABLED) ? '1' : '0';
+> +		len = write(rdpmc_fd, buf, sizeof(buf));
+> +		if (len != sizeof(buf))
+> +			pr_debug("%s write failed\n", __func__);
+>  	}
+> -	opened = true;
+> +	close(rdpmc_fd);
+> +	close(events_fd);
+> +	return old_user_read;
+> +}
+>  
+> -	err = perf_evsel__mmap(evsel, 0);
+> -	if (err) {
+> -		pr_err("failed to mmap evsel: %s\n", strerror(-err));
+> -		goto out;
+> +static int test_stat_user_read(u64 event, enum user_read_state enabled)
+> +{
+> +	struct perf_pmu *pmu = NULL;
+> +	struct perf_thread_map *threads = perf_thread_map__new_dummy();
+> +	int ret = TEST_OK;
+> +
+> +	pr_err("User space counter reading %" PRIu64 "\n", event);
+> +	if (!threads) {
+> +		pr_err("User space counter reading [Failed to create threads]\n");
+> +		return TEST_FAIL;
+>  	}
+> -	mapped = true;
+> +	perf_thread_map__set_pid(threads, 0, 0);
+>  
+> -	pc = perf_evsel__mmap_base(evsel, 0, 0);
+> -	if (!pc) {
+> -		pr_err("failed to get mmapped address\n");
+> -		goto out;
+> -	}
+> +	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+> +		enum user_read_state saved_user_read_state = set_user_read(pmu, enabled);
+> +		struct perf_event_attr attr = {
+> +			.type	= PERF_TYPE_HARDWARE,
+> +			.config	= perf_pmus__supports_extended_type()
+> +			? event | ((u64)pmu->type << PERF_PMU_TYPE_SHIFT)
+> +				: event,
+> +#ifdef __aarch64__
+> +			.config1 = 0x2,		/* Request user access */
+> +#endif
+> +		};
+> +		struct perf_evsel *evsel = NULL;
+> +		int err;
+> +		struct perf_event_mmap_page *pc;
+> +		bool mapped = false, opened = false, rdpmc_supported;
+> +		struct perf_counts_values counts = { .val = 0 };
+> +
+> +
+> +		pr_debug("User space counter reading for PMU %s\n", pmu->name);
+> +		/*
+> +		 * Restrict scheduling to only use the rdpmc on the CPUs the
+> +		 * event can be on. If the test doesn't run on the CPU of the
+> +		 * event then the event will be disabled and the pc->index test
+> +		 * will fail.
+> +		 */
+> +		if (pmu->cpus != NULL)
+> +			cpu_map__set_affinity(pmu->cpus);
+> +
+> +		/* Make the evsel. */
+> +		evsel = perf_evsel__new(&attr);
+> +		if (!evsel) {
+> +			pr_err("User space counter reading for PMU %s [Failed to allocate evsel]\n",
+> +				pmu->name);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+>  
+> -	if (!pc->cap_user_rdpmc || !pc->index) {
+> -		pr_err("userspace counter access not %s\n",
+> -			!pc->cap_user_rdpmc ? "supported" : "enabled");
+> -		ret = TEST_SKIP;
+> -		goto out;
+> -	}
+> -	if (pc->pmc_width < 32) {
+> -		pr_err("userspace counter width not set (%d)\n", pc->pmc_width);
+> -		goto out;
+> -	}
+> +		err = perf_evsel__open(evsel, NULL, threads);
+> +		if (err) {
+> +			pr_err("User space counter reading for PMU %s [Failed to open evsel]\n",
+> +				pmu->name);
+> +			ret = TEST_SKIP;
+> +			goto cleanup;
+> +		}
+> +		opened = true;
+> +		err = perf_evsel__mmap(evsel, 0);
+> +		if (err) {
+> +			pr_err("User space counter reading for PMU %s [Failed to mmap evsel]\n",
+> +				pmu->name);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+> +		mapped = true;
+> +
+> +		pc = perf_evsel__mmap_base(evsel, 0, 0);
+> +		if (!pc) {
+> +			pr_err("User space counter reading for PMU %s [Failed to get mmaped address]\n",
+> +				pmu->name);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+>  
+> -	perf_evsel__read(evsel, 0, 0, &counts);
+> -	if (counts.val == 0) {
+> -		pr_err("failed to read value for evsel\n");
+> -		goto out;
+> -	}
+> +		if (saved_user_read_state == USER_READ_UNKNOWN)
+> +			rdpmc_supported = pc->cap_user_rdpmc && pc->index;
+> +		else
+> +			rdpmc_supported = (enabled == USER_READ_ENABLED);
+>  
+> -	for (i = 0; i < 5; i++) {
+> -		volatile int count = 0x10000 << i;
+> -		__u64 start, end, last = 0;
+> +		if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index)) {
+> +			pr_err("User space counter reading for PMU %s [Failed unexpected supported counter access %d %d]\n",
+> +				pmu->name, pc->cap_user_rdpmc, pc->index);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+>  
+> -		pr_debug("\tloop = %u, ", count);
+> +		if (!rdpmc_supported && pc->cap_user_rdpmc) {
+> +			pr_err("User space counter reading for PMU %s [Failed unexpected unsupported counter access %d]\n",
+> +				pmu->name, pc->cap_user_rdpmc);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+> +
+> +		if (rdpmc_supported && pc->pmc_width < 32) {
+> +			pr_err("User space counter reading for PMU %s [Failed width not set %d]\n",
+> +				pmu->name, pc->pmc_width);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+>  
+>  		perf_evsel__read(evsel, 0, 0, &counts);
+> -		start = counts.val;
+> +		if (counts.val == 0) {
+> +			pr_err("User space counter reading for PMU %s [Failed read]\n", pmu->name);
+> +			ret = TEST_FAIL;
+> +			goto cleanup;
+> +		}
+>  
+> -		while (count--) ;
+> +		for (int i = 0; i < 5; i++) {
+> +			volatile int count = 0x10000 << i;
+> +			__u64 start, end, last = 0;
+>  
+> -		perf_evsel__read(evsel, 0, 0, &counts);
+> -		end = counts.val;
+> +			pr_debug("\tloop = %u, ", count);
+>  
+> -		if ((end - start) < last) {
+> -			pr_err("invalid counter data: end=%llu start=%llu last= %llu\n",
+> -				end, start, last);
+> -			goto out;
+> -		}
+> -		last = end - start;
+> -		pr_debug("count = %llu\n", end - start);
+> -	}
+> -	ret = TEST_OK;
+> +			perf_evsel__read(evsel, 0, 0, &counts);
+> +			start = counts.val;
+> +
+> +			while (count--) ;
+>  
+> -out:
+> -	if (mapped)
+> -		perf_evsel__munmap(evsel);
+> -	if (opened)
+> -		perf_evsel__close(evsel);
+> -	perf_evsel__delete(evsel);
+> +			perf_evsel__read(evsel, 0, 0, &counts);
+> +			end = counts.val;
+>  
+> +			if ((end - start) < last) {
+> +				pr_err("User space counter reading for PMU %s [Failed invalid counter data: end=%llu start=%llu last= %llu]\n",
+> +					pmu->name, end, start, last);
+> +				ret = TEST_FAIL;
+> +				goto cleanup;
+> +			}
+> +			last = end - start;
+> +			pr_debug("count = %llu\n", last);
+> +		}
+> +		pr_debug("User space counter reading for PMU %s [Success]\n", pmu->name);
+> +cleanup:
+> +		if (mapped)
+> +			perf_evsel__munmap(evsel);
+> +		if (opened)
+> +			perf_evsel__close(evsel);
+> +		perf_evsel__delete(evsel);
+> +
+> +		/* If the affinity was changed, then put it back to all CPUs. */
+> +		if (pmu->cpus != NULL) {
+> +			struct perf_cpu_map *cpus = cpu_map__online();
+> +
+> +			cpu_map__set_affinity(cpus);
+> +			perf_cpu_map__put(cpus);
+> +		}
+> +		set_user_read(pmu, saved_user_read_state);
+> +	}
+>  	perf_thread_map__put(threads);
+>  	return ret;
+>  }
+> @@ -272,20 +375,32 @@ static int test_stat_user_read(int event)
+>  static int test__mmap_user_read_instr(struct test_suite *test __maybe_unused,
+>  				      int subtest __maybe_unused)
+>  {
+> -	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS);
+> +	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS, USER_READ_ENABLED);
+>  }
+>  
+>  static int test__mmap_user_read_cycles(struct test_suite *test __maybe_unused,
+>  				       int subtest __maybe_unused)
+>  {
+> -	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES);
+> +	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES, USER_READ_ENABLED);
+> +}
+> +
+> +static int test__mmap_user_read_instr_disabled(struct test_suite *test __maybe_unused,
+> +					       int subtest __maybe_unused)
+> +{
+> +	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS, USER_READ_DISABLED);
+> +}
+> +
+> +static int test__mmap_user_read_cycles_disabled(struct test_suite *test __maybe_unused,
+> +						int subtest __maybe_unused)
+> +{
+> +	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES, USER_READ_DISABLED);
+>  }
+>  
+>  static struct test_case tests__basic_mmap[] = {
+>  	TEST_CASE_REASON("Read samples using the mmap interface",
+>  			 basic_mmap,
+>  			 "permissions"),
+> -	TEST_CASE_REASON("User space counter reading of instructions",
+> +	TEST_CASE_REASON_EXCLUSIVE("User space counter reading of instructions",
+>  			 mmap_user_read_instr,
+>  #if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || \
+>  			 (defined(__riscv) && __riscv_xlen == 64)
+> @@ -294,13 +409,31 @@ static struct test_case tests__basic_mmap[] = {
+>  			 "unsupported"
+>  #endif
+>  		),
+> -	TEST_CASE_REASON("User space counter reading of cycles",
+> +	TEST_CASE_REASON_EXCLUSIVE("User space counter reading of cycles",
+>  			 mmap_user_read_cycles,
+>  #if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || \
+>  			 (defined(__riscv) && __riscv_xlen == 64)
+>  			 "permissions"
+>  #else
+>  			 "unsupported"
+> +#endif
+> +		),
+> +	TEST_CASE_REASON_EXCLUSIVE("User space counter disabling instructions",
+> +			 mmap_user_read_instr_disabled,
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || \
+> +			 (defined(__riscv) && __riscv_xlen == 64)
+> +			 "permissions"
+> +#else
+> +			 "unsupported"
+> +#endif
+> +		),
+> +	TEST_CASE_REASON_EXCLUSIVE("User space counter disabling cycles",
+> +			 mmap_user_read_cycles_disabled,
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || \
+> +			 (defined(__riscv) && __riscv_xlen == 64)
+> +			 "permissions"
+> +#else
+> +			 "unsupported"
+>  #endif
+>  		),
+>  	{	.name = NULL, }
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index bb7951c61971..4c128a959441 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -71,6 +71,15 @@ struct test_suite {
+>  		.exclusive = true,			\
+>  	}
+>  
+> +#define TEST_CASE_REASON_EXCLUSIVE(description, _name, _reason)	\
+> +	{						\
+> +		.name = #_name,				\
+> +		.desc = description,			\
+> +		.run_case = test__##_name,		\
+> +		.skip_reason = _reason,			\
+> +		.exclusive = true,			\
+> +	}
+> +
+>  #define DEFINE_SUITE(description, _name)		\
+>  	struct test_case tests__##_name[] = {           \
+>  		TEST_CASE(description, _name),		\
+> diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+> index 38dc4524b7e8..4fe851334296 100644
+> --- a/tools/perf/util/affinity.c
+> +++ b/tools/perf/util/affinity.c
+> @@ -5,6 +5,7 @@
+>  #include <stdlib.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/zalloc.h>
+> +#include <perf/cpumap.h>
+>  #include "perf.h"
+>  #include "cpumap.h"
+>  #include "affinity.h"
+> @@ -83,3 +84,20 @@ void affinity__cleanup(struct affinity *a)
+>  	if (a != NULL)
+>  		__affinity__cleanup(a);
+>  }
+> +
+> +void cpu_map__set_affinity(const struct perf_cpu_map *cpumap)
+> +{
+> +	int cpu_set_size = get_cpu_set_size();
+> +	unsigned long *cpuset = bitmap_zalloc(cpu_set_size * 8);
+> +	struct perf_cpu cpu;
+> +	int idx;
+> +
+> +	if (!cpuset)
+> +		return;
+> +
+> +	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, cpumap)
+> +		__set_bit(cpu.cpu, cpuset);
+> +
+> +	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)cpuset);
+> +	zfree(&cpuset);
+> +}
+> diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+> index 0ad6a18ef20c..7341194b2298 100644
+> --- a/tools/perf/util/affinity.h
+> +++ b/tools/perf/util/affinity.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <stdbool.h>
+>  
+> +struct perf_cpu_map;
+>  struct affinity {
+>  	unsigned long *orig_cpus;
+>  	unsigned long *sched_cpus;
+> @@ -13,5 +14,6 @@ struct affinity {
+>  void affinity__cleanup(struct affinity *a);
+>  void affinity__set(struct affinity *a, int cpu);
+>  int affinity__setup(struct affinity *a);
+> +void cpu_map__set_affinity(const struct perf_cpu_map *cpumap);
+>  
+>  #endif // PERF_AFFINITY_H
 
-Even better, there is now spi_bpw_to_bytes() for this.
-
-> 
->> +	xfer->speed_hz = AD4052_SPI_MAX_ADC_XFER_SPEED(st->vio_uv);
->> +
->> +	return 0;
->> +}
-> 
-> 
-
-...
-
-> 
->> +static int __ad4052_read_chan_raw(struct ad4052_state *st, int *val)
->> +{
->> +	struct spi_device *spi = st->spi;
->> +	struct spi_transfer t_cnv = {};
->> +	int ret;
->> +
->> +	reinit_completion(&st->completion);
->> +
->> +	if (st->cnv_gp) {
->> +		gpiod_set_value_cansleep(st->cnv_gp, 1);
->> +		gpiod_set_value_cansleep(st->cnv_gp, 0);
->> +	} else {
->> +		ret = spi_sync_transfer(spi, &t_cnv, 1);
-> 
-> Add a comment for this.   I can't immediately spot documentation on what
-> a content free transfer actually does.  I assume pulses the chip select?
-> is that true for all SPI controllers?
-
-Should be. Setting .delay in the xfer would also make it more
-clear that this is doing.
-
-> 
->> +		if (ret)
->> +			return ret;
->> +	}
->> +	/*
->> +	 * Single sample read should be used only for oversampling and
->> +	 * sampling frequency pairs that take less than 1 sec.
->> +	 */
->> +	if (st->gp1_irq) {
->> +		ret = wait_for_completion_timeout(&st->completion,
->> +						  msecs_to_jiffies(1000));
->> +		if (!ret)
->> +			return -ETIMEDOUT;
->> +	}
->> +
->> +	ret = spi_sync_transfer(spi, &st->xfer, 1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (st->xfer.len == 2)
->> +		*val = sign_extend32(*(u16 *)(st->raw), 15);
->> +	else
->> +		*val = sign_extend32(*(u32 *)(st->raw), 23);
->> +
->> +	return ret;
->> +}
-> 
-
-...
-
->> +
->> +static int ad4052_debugfs_reg_access(struct iio_dev *indio_dev, unsigned int reg,
->> +				     unsigned int writeval, unsigned int *readval)
->> +{
->> +	struct ad4052_state *st = iio_priv(indio_dev);
->> +	int ret;
->> +
->> +	if (!iio_device_claim_direct(indio_dev))
-> 
-> For these guards in the debugfs callback, please add a comment on why they
-> are needed.   We've had a lot of questions about these recently and I'd
-> like it to be clear to people when they should cut and paste these and when
-> not.
-
-The reason I started doing this is that running the iio_info command attemps
-to read register 0x00 via the debug attribute of every single iio device. So
-if you run iio_info during a buffered read, and 0x00 is a valid register, it
-would break things without this check.
-
-Ideally, general purpose commands wouldn't be poking debug registers, but
-that isn't the case. But I suppose we could "fix" iio_info instead.
-
-> 
->> +		return -EBUSY;
->> +
->> +	if (readval)
->> +		ret = regmap_read(st->regmap, reg, readval);
->> +	else
->> +		ret = regmap_write(st->regmap, reg, writeval);
->> +	iio_device_release_direct(indio_dev);
->> +	return ret;
->> +}
-> 
