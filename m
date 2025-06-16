@@ -1,159 +1,152 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F741E7C23;
-	Mon, 16 Jun 2025 11:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A8C298998
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071857; cv=none; b=Wztl1l5xY4PdHhI0Wq5aaGprwkfwSo/0gSAfwNcnUPOgbofewYf4PNVcqs+MYS5QHwsNtJFQN6bgDAYQznJBgABuvwXGmIiYGuO+YpSv01CpaA2FeE2Sf2hBFd8fcjqmLv94sdAsZAiQPS3kBcnK4OIjQaxO7HSgXrqRqiZY0Rc=
+	t=1750071860; cv=none; b=mi9ALMdTDkCGNQ2R3TFBgg9IPDY58/VLL5hPvhQ9kuZFRS8zMc68jerJoNt9OPMWySHCfMlPsINGi4HX7ElyP1FZRaKK3jlaOdCrC8/Uq9bDBDwN83gu1ZTtt709y4UOGlMmrIVP9j6GCqiv3THPWhuhY+ou68vIcVzaPehW5xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071857; c=relaxed/simple;
-	bh=Jwp8Cj/zPQ4RWEW/ykeFLMMMsvvniNLODU2XcDsQxmQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=u8t/Cg2/ZaBilJ/VMXQJSRlMqNfmptWqkpOsmiigHGIeDJpXHOtCBAo1fHcsHM5F6KLTCzm/YAAKqPPNmHZFbMuUJW0igvEfLhXA6wBt5fPAZehCfE65YdOunWMRn2Qlzg5KCkYTCDlmYvKG/SnViaC3u8sEAPm1A+cWlUvhb9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gtJvFWmQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750071860; c=relaxed/simple;
+	bh=cZ96XbquQqST07cmpZCxaySWnUVgiBMaxoseaYKqZAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eSTZIHnj9SxC4BuLdjpABYQl5IyD27SnWpKju3NOE3JZxcKA1wSoQHnnEeORsFTuFQWVJ1z83U98mKtLl+ZCD48vXyQ2h/734qtq6AJRdZFztKKnrn5dYGC6gMY0KyXjn7u05h9IJsWvVQimSTDKiqcDZijCLlG6wiXPk9hzOkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NwxSOp57; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gtJvFWmQ"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TcKe021517;
-	Mon, 16 Jun 2025 11:04:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fpXXsxPhxQL6vsPElauKlyhm+eyLlFrQVxNOqFVvGJ8=; b=gtJvFWmQvzttj1mJ
-	l/jyETWfE0CDUZJYDmimFLGjrfYjMV6cwlL4eSZ0mvk62L9gREEbIOvIBWuKaMaG
-	UZwImKzJNiG+Q5/o7F/8UP2aDsa7YpAMA7H+iOL0DMyeMxMhGHwR1zy8fX0jlbCp
-	aJZDYEWAO+i13j4wACTm+uePd3T2uK8Jz9W5vdB6E8zwtWuGLjxARRFACxjpR3HV
-	G29ttICB81jo0u3tI0l2deibdWya/2s9kQL/7EaxZqHTuRsW1fGxXRkpr1aY/Rb4
-	dGAt8vgIggNyK8Xswv+oA9Y2pveeraIWDPAi+FaON3q5Tonxr/0SZxfBTOdpAVoH
-	XcBghg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791enc7k8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:04:10 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GB499x014454
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:04:09 GMT
-Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 04:04:07 -0700
-Message-ID: <41cba134-4c8c-bb6d-c68b-a7de8da0689c@quicinc.com>
-Date: Mon, 16 Jun 2025 16:34:04 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NwxSOp57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750071856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RznKbWG0gfknAu3iwovxCiP4HQBREMLRrwNJpblRENQ=;
+	b=NwxSOp57qULHJKmsb9tQ5QadW/rkAT/pYjYu6jr+UUaA6NW+md8zqEmpP+RWdgVWyRgcgj
+	c2tt4YYwUU4FIZ/1qLJ4BBAh3UVykkuEzlIPPlGQjyt+K21dH6JJWUqD8/CKiQX8dorMfF
+	sbKHkxWZlO66K/58CBPxeZ0LIp5F1ok=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-3TpVPDTSMqaDXMKXkrGKcQ-1; Mon,
+ 16 Jun 2025 07:04:12 -0400
+X-MC-Unique: 3TpVPDTSMqaDXMKXkrGKcQ-1
+X-Mimecast-MFC-AGG-ID: 3TpVPDTSMqaDXMKXkrGKcQ_1750071850
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E9D9119560B5;
+	Mon, 16 Jun 2025 11:04:08 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.154])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9AD881956096;
+	Mon, 16 Jun 2025 11:03:59 +0000 (UTC)
+Date: Mon, 16 Jun 2025 08:03:57 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, David Vernet <dvernet@meta.com>, 
+	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>, DietmarEggemann@uudg.org, 
+	dietmar.eggemann@arm.com, Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RESEND PATCH v4] sched: do not call __put_task_struct() on rt
+ if pi_blocked_on is set
+Message-ID: <sebgq5zykuzb5qx22ejjlz5b4pnnrnpgcq7mk6cr7vkl455sjy@z3xx7l3s6ks6>
+References: <aEw-KjUjjP2gYH6z@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 2/6] media: venus: vdec: Clamp parm smaller than 1fps
- and bigger than 240.
-Content-Language: en-US
-To: Ricardo Ribalda <ribalda@chromium.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20250111-fix-cocci-v6-0-1aa7842006cc@chromium.org>
- <20250111-fix-cocci-v6-2-1aa7842006cc@chromium.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250111-fix-cocci-v6-2-1aa7842006cc@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XNbSgwv2S_ebCPqChMA7VZBbBSidIG3Y
-X-Authority-Analysis: v=2.4 cv=D6RHKuRj c=1 sm=1 tr=0 ts=684ffa2a cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=xOd6jRPJAAAA:8 a=cm27Pg_UAAAA:8 a=O9dv3vlXt8vYLVQyHzoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: XNbSgwv2S_ebCPqChMA7VZBbBSidIG3Y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2OCBTYWx0ZWRfX3Ab9NvgPlSw3
- zZSfdUNTk/Ixb+Nuf2bxG8r/qrRjNsJ0DCDXNepfgDebNsbs3mCHK+VYhpbg1q3uyX92jO2DD6f
- AtVKjds6K5Wbgd//QRdEe4Gt6hiUnoVgqGQNISzfiR7qW7UWopFQH77knVl8etXtANIrYInTTbr
- cqxgQ3b+c40HBtFkBz38JTkgXKeSyKFhbQs5cew6rhnI75anqnRQP607xLow+utZ3ZqZqomsgXw
- RDSwUl7Wr7L6HTbJD/QQ3C9zspBh/VpQh0hWU8E5Pcd/x4sFpkB79eCpcizeTdRNSv9azWqvEwe
- jwcPKeFnEZSZfu3gDXWC9+V7HGM9Hu65ecRHZTas/egQS6roIEyryfxN9qgl3m8aPkDZYlbuLaE
- bEC6VoZEKg0QXX2JalPPnRc4+pdRiOWskGZQtFBi7Bop8Q/HC8zPs+gGQY3k/YV4SeRl6tcO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 clxscore=1011 mlxscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160068
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEw-KjUjjP2gYH6z@uudg.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-
-On 1/11/2025 3:25 PM, Ricardo Ribalda wrote:
-> The driver uses "whole" fps in all its calculations (e.g. in
-> load_per_instance()). Those calculation expect an fps bigger than 1, and
-> not big enough to overflow.
+On Fri, Jun 13, 2025 at 12:05:14PM -0300, Luis Claudio R. Goncalves wrote:
+> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+> with a mutex enqueued. That could lead to this sequence:
 > 
-> Clamp the value if the user provides a parm that will result in an invalid
-> fps.
+>         rt_mutex_adjust_prio_chain()
+>           put_task_struct()
+>             __put_task_struct()
+>               sched_ext_free()
+>                 spin_lock_irqsave()
+>                   rtlock_lock() --->  TRIGGERS
+>                                       lockdep_assert(!current->pi_blocked_on);
 > 
-> Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-> Closes: https://lore.kernel.org/linux-media/f11653a7-bc49-48cd-9cdb-1659147453e4@xs4all.nl/T/#m91cd962ac942834654f94c92206e2f85ff7d97f0
-> Fixes: 7472c1c69138 ("[media] media: venus: vdec: add video decoder files")
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> Fix that by unconditionally resorting to the deferred call to
+> __put_task_struct() if PREEMPT_RT is enabled.
+> 
+> Suggested-by: Crystal Wood <crwood@redhat.com>
+> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
 > ---
->  drivers/media/platform/qcom/venus/core.h | 2 ++
->  drivers/media/platform/qcom/venus/vdec.c | 5 ++---
->  2 files changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 44f1c3bc4186..afae2b9fdaf7 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -28,6 +28,8 @@
->  #define VIDC_RESETS_NUM_MAX		2
->  #define VIDC_MAX_HIER_CODING_LAYER 6
+> Resent as a gentle reminder, because this issue results in scary backtraces,
+> not obvious to debug and pinpoint root cause.
+> 
+> v2: (Rostedt) remove the #ifdef from put_task_struct() and create
+>     tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
+> v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
+> v4: Fix the implementation of what was requested on v3.
+> 
+>  include/linux/sched/task.h |   17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 0f2aeb37bbb04..51678a541477a 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
+>  	if (!refcount_dec_and_test(&t->usage))
+>  		return;
 >  
-> +#define VENUS_MAX_FPS			240
-> +
->  extern int venus_fw_debug;
+> -	/*
+> -	 * In !RT, it is always safe to call __put_task_struct().
+> -	 * Under RT, we can only call it in preemptible context.
+> -	 */
+> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> +	/* In !RT, it is always safe to call __put_task_struct(). */
+> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
+>  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
 >  
->  struct freq_tbl {
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index 98c22b9f9372..c1d5f94e16b4 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -481,11 +481,10 @@ static int vdec_s_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
->  	us_per_frame = timeperframe->numerator * (u64)USEC_PER_SEC;
->  	do_div(us_per_frame, timeperframe->denominator);
+>  		lock_map_acquire_try(&put_task_map);
+> @@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
+>  	}
 >  
-> -	if (!us_per_frame)
-> -		return -EINVAL;
-> -
-> +	us_per_frame = max(USEC_PER_SEC, us_per_frame);
-This logic changes the actual fps from client. Consider a regular encode usecase
-from client setting an fps as 30. The "max(USEC_PER_SEC, us_per_frame)" would
-override it to USEC_PER_SEC and then the subsequent logic would eventually make
-fps to 1.
-Please make it conditional to handle the 0 fps case, i guess that the objective
-in above code, something like below
-if (!us_per_frame)
-  us_per_frame = USEC_PER_SEC;
+>  	/*
+> -	 * under PREEMPT_RT, we can't call put_task_struct
+> +	 * Under PREEMPT_RT, we can't call __put_task_struct
+>  	 * in atomic context because it will indirectly
+> -	 * acquire sleeping locks.
+> +	 * acquire sleeping locks. The same is true if the
+> +	 * current process has a mutex enqueued (blocked on
+> +	 * a PI chain).
+>  	 *
+> -	 * call_rcu() will schedule delayed_put_task_struct_rcu()
+> +	 * call_rcu() will schedule __put_task_struct_rcu_cb()
+>  	 * to be called in process context.
+>  	 *
+>  	 * __put_task_struct() is called when
+> @@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
+>  	 *
+>  	 * delayed_free_task() also uses ->rcu, but it is only called
+>  	 * when it fails to fork a process. Therefore, there is no
+> -	 * way it can conflict with put_task_struct().
+> +	 * way it can conflict with __put_task_struct().
+>  	 */
+>  	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
+>  }
+> 
 
-Regards,
-Vikash
->  	fps = (u64)USEC_PER_SEC;
->  	do_div(fps, us_per_frame);
-> +	fps = min(VENUS_MAX_FPS, fps);
->  
->  	inst->fps = fps;
->  	inst->timeperframe = *timeperframe;
+Reviewed-by: Wander Laurson Costa <wander@redhat.com>
+
+> ----- End forwarded message -----
 > 
+
