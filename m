@@ -1,125 +1,118 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C10285C9E
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F9D285C80
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079355; cv=none; b=nuMk1DbrkMSyZfxdUa6oLUewjRewn/fYiYkOvJqVo7PNnbwD2L4/2rMQDu03oqOAyy5rUotGuXfMJ+pmEI3frQPLPh+NXYDYhnEReIoQhH93IzOypP0sfBJlw2jBsGcxJgEtljNaksDQw3zIA2HtD2JB4awa1toiF8gzrV02UrQ=
+	t=1750079445; cv=none; b=iZbizuOfSjdirj872KQFfQVSkoL7g68WIT2Xowow6/sF/2xOtf/TDadXmKfYc7J+8+F86ckHqkYB1KEYQLvYq0ThR9nJFiS2SUoyZQOm24rle7JIBXfUhkTBUN7fOkf/SBu1HQW+eNtfiCeuexvZix19bKiWfRFtlqnTK+GOTJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079355; c=relaxed/simple;
-	bh=mbyl5OXkWqYUPxXU7YEwGwzWceS42PNsUXDiLKdjHeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONAYLINeL2E7Rzx5ryUiR321Me4tV6r5lWP4y/gelSKXsVXkLdIasttxvBQmwmxutefdC6/thSPuHbO/ld2MXYS3Mcm5J8BUVWcHhex+MmLp8Ih1T+MRwai6ptH4nBtz2GOsULaxL86e8U8ZOc9pyDNSqXEi9wYFxNeS8ijC6tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=adHw9e5z; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1750079445; c=relaxed/simple;
+	bh=pFqG/js0pAlqzBZAvPKECVmOa3/ZW9gFrsfeSebvWj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g1i6msGSo/LEFtYmYgMZXxE4jl6ELr/yUEPaPaI2FKKqojtGqPUNVs6lCkjoInA/6/wlObukuQoohCsg3Pmim5GGzk9WUYO53NMsmWcjut+DvINJTg/rzJbwdmpUrO2rDiwgzKM+kvgZO+5OkbJbPagsjPby/haD2/+FnW74zro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T9RQ2btZ; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="adHw9e5z"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6ecf99dd567so48045126d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:09:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T9RQ2btZ"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so3901157f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1750079353; x=1750684153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OlPt6HGrhBZHmQKdGeykmC3k0brj4QqdFhzAJiZkO8k=;
-        b=adHw9e5zGGe0tObvkCm206nPr7XYfppmXqyx6ru2fg7iN0VEhmk8x1dMlwd5kOGevR
-         LrPiZmJRSrXDzXU7fPCV5zoc+udPjLvhFut19IlNDRssW5toyyhHzJEGCgAv0nMgVbP/
-         8LUxCTF1XOJh+Uol1xrJAc1p1MPN7BAu0pxfF7bRhiO7inckBk2wSGbPgCyVchrK7PFX
-         FxMunE1GYXc1qaLfudxwAYSMtiNiTvqY5tC0WBFHkAQX/JaKXUXw8WYWfU1ZJFNc+tLp
-         uqCtTtXQVnwVOF+PSVN8/uKYXJDIBPAld5TsYcjT/W6MUbYpGyewReBbySD4pGO/V5i3
-         zl9A==
+        d=linaro.org; s=google; t=1750079442; x=1750684242; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x1cp+4QPv/1PUyqDV9F6cY2KZxx/RBlLdAVmrPE1MfI=;
+        b=T9RQ2btZgx+EAZpkOtkYQEPfrBSmU5Fu9FRQLS0vcfsZzDvM29PG0/KCu3UFR0cWO1
+         89CEPTRzHf2ulCOc8wfAeNMFXCOC8zHpsmzilFulmp4kYQ0rDtBrBWjFtQN5My6aiyoQ
+         B+aGx/rjh7VA7zyjFzvFaSvUD7BQJklEJC8NtGENk27FFKccQrl5xY8aoza7pi+s4Zdy
+         1ddjI0cFXOb7ycUjigQzfB8WrlzKR+Aa9oGmiE2WgpXi0O6OE1a5osvPXuhncSCnaJd8
+         4ZHM82kGbgeu01O87AUaX2CZOFEl81ACul3KsAmTsuf3dXaVuKHT5TFoJFB6et2+ql1I
+         7yTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750079353; x=1750684153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OlPt6HGrhBZHmQKdGeykmC3k0brj4QqdFhzAJiZkO8k=;
-        b=rRI0j/3OwoSehOq9DfKpCTomMYYSERIcopNMpl/Z6lEMweV3pVw715BTXqWn2IuyvJ
-         TELyWdVdgiVzNc0AIRVDlb5g9eMkcsVfbedD7UIQmTnrigGZyQWbpxxZ2md/qZZf+5KV
-         bEITk5SnDU/22BBJ8L1Fnli1occLlb1VopGqg4rOuGqjUyUN8q0yqk2pKbL0XwPLwX4N
-         19Lhial2kUr+8LMajX7j2WEGHtvx9VVdVU9PakyLjdd4YsMGjXuSR9NACag09oZddvYN
-         ZV2K2X0YupFm4q5ff1WoLblkWYmwoXX3HdN4ms6ezCH6vco2AVv4WsGxps5Sz2gWQmpM
-         ko8A==
-X-Forwarded-Encrypted: i=1; AJvYcCU4uCM+9JpWgIkkxFesRGkJBYm4G441eGjZaP4S9ENDHCeaUbreXzz3IVYYkKzsz3A2Wsu2vvkWuVt8cUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+ob06RrlYBYtWVKaeu2Zv2Flo5kaTGJQkVfD2i6bn8TwW7rPJ
-	AsdU0T2j/FtTzHxZQ+98kY/QyTR/CRJJ36Fgwp4oAem157MeoAmIO8/wdGK5VQQaGg0=
-X-Gm-Gg: ASbGncsd640L7mtDEWeDb/nKlowrt5xLtGsuSJbWBj/luIcResuktW6tStMvXJOw/eI
-	O+2Icp7N1kCvzMNvpS24NpZx6AnEbHUOhlT08jzN90UlG6g240ruVG4Yw/XUFxLcnmiMKv0ngLn
-	n3Tv/57CL6VGj3ByoqLNl2AzHQBQqwF0lQAvdzSDxu2rVtL4OHzLAfM/WfXL1tN4f9Ci0isiWn6
-	lFtEPbSAesL83CGT5aDySiCKOo8ZbREkIa+CgG5pgETYHUl5ILbaB/hPuQREnk81YMg5QZ1ExHp
-	C4MJ3JdSMR0a7E3yk27dX7Ul6hm6JEUioFaiF4otGZI0ai2uixv9a07U0odR76cXJ34J0q8T46R
-	AINpsNGjc45JbaVAauoJ8jIlGYXnYCMeOFdVc+A==
-X-Google-Smtp-Source: AGHT+IFYwnfrlyEOgdj8TrGnzF9X6IlaZQJ38GRIzTE1wgTjrgnCanKObhnDaStP1HkHOZyR/IYWjw==
-X-Received: by 2002:ad4:5d6f:0:b0:6fa:d8bb:294c with SMTP id 6a1803df08f44-6fb47726e99mr137566516d6.14.1750079352531;
-        Mon, 16 Jun 2025 06:09:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35b20f67sm50759076d6.16.2025.06.16.06.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 06:09:11 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uR9aJ-00000005gPp-17Iv;
-	Mon, 16 Jun 2025 10:09:11 -0300
-Date: Mon, 16 Jun 2025 10:09:11 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Nicolin Chen <nicolinc@nvidia.com>,
-	joro@8bytes.org, will@kernel.org, bhelgaas@google.com,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, patches@lists.linux.dev,
-	pjaroszynski@nvidia.com, vsethi@nvidia.com
-Subject: Re: [PATCH RFC v1 0/2] iommu&pci: Disable ATS during FLR resets
-Message-ID: <20250616130911.GA1354058@ziepe.ca>
-References: <20250610163045.GI543171@nvidia.com>
- <20250613192709.GA971579@bhelgaas>
+        d=1e100.net; s=20230601; t=1750079442; x=1750684242;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x1cp+4QPv/1PUyqDV9F6cY2KZxx/RBlLdAVmrPE1MfI=;
+        b=CBKTyam7H827IazGVGc5El4gUSQJ6hTjorM0L9YNbyw3mLE5E8waui6OCF6hRUiXwr
+         ukX1jZPa3RKQIFyvfX5ruAsBTd3aCTgpKZwOICNowVfk3g3KJF+hCodJv041exlCNqnK
+         IceTYZEqPcsMkDskCFEVv+eKTnMS0ykL1IL/38CsN2SMf7aokB4ablq2RNu9L4odF5DY
+         xS1cE3u9+57KE+c1U6ARgzGwATb9/fnh9Az4LjQaTBTSV1244+0SQuCr97VTWGfub8rT
+         toBai88pLKhGvJh6PjtV9wl2J447Jgqabl/bdv6nNF430RT/NPSYaUlqBAUQuvwVon/i
+         KnGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1o1wrWGdfRsOiP6iJzjkm3cKYCzyBaR4A/b2khYSTN4Wbkm2AlPelhfnXWnowiPR5zVcYHU4fSZVlIa8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWMKN/LTCBnxkL1izNF4ErXqjBuTsxkfPvPIDSxrgQqbcMDq5m
+	T6MupkzsVrD/INzefKaveMprBjtnSPCeZZzUgEvjGkR/FO/KZhpppLuon8oubI9kvB1agZasd6Z
+	yNiU9
+X-Gm-Gg: ASbGncvaceInf0vzHrxf1WxlUJsKuQ+ez5Bc5mkYQLPBV2guvPzKwUqEELW/46QSvQm
+	WpZag++ZzlEJAPb5cDzBMEmfvfS03tgFuykT/+RwNRGP2+3W6/zM7vj2U5jKP0jH+BXF0lP8W5Q
+	OZ74MCHJ5xMerlu8Y6hruprStQ14VPolRVj3xnHddH9Q4Mq5+CINcTNaksx3MnSGZnEQJgGhApp
+	UyKcBK41IJzYgJI6u0AnjDTLf3sfKJg7MwUNciMSalHyf/NMivcrsu71NCEFS5F8/C8IR0/H2sf
+	Y9/+8jy02OCulOiF8eIRROCs3Q+hckJJFHDv34Vc92ezjfGdWbEOMMCzJK4VhLJUMJkH01ESS38
+	0dQ==
+X-Google-Smtp-Source: AGHT+IFNHg0hyF1PNKI8qLbgZNCoz4YroOmMfvQ93hu1uR9eCFCC/xZl5Wbo20JN2FbWxFzP2HZ79A==
+X-Received: by 2002:a05:6000:4284:b0:3a4:e6e6:a026 with SMTP id ffacd0b85a97d-3a572e6bb83mr7546401f8f.28.1750079441882;
+        Mon, 16 Jun 2025 06:10:41 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54aeasm11271121f8f.14.2025.06.16.06.10.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 06:10:41 -0700 (PDT)
+Message-ID: <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org>
+Date: Mon, 16 Jun 2025 14:10:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613192709.GA971579@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
+To: Christoph Hellwig <hch@lst.de>, Mark Brown <broonie@kernel.org>
+Cc: olteanv@gmail.com, oe-kbuild-all@lists.linux.dev, arnd@arndb.de,
+ larisa.grigore@nxp.com, Frank.li@nxp.com, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kernel test robot <lkp@intel.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
+References: <202506160036.t9VDxF6p-lkp@intel.com>
+ <20250616111749.316413-1-james.clark@linaro.org>
+ <20250616112927.GA21689@lst.de>
+ <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
+ <20250616120832.GA24959@lst.de>
+ <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk>
+ <20250616121444.GA25443@lst.de>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250616121444.GA25443@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 02:27:09PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jun 10, 2025 at 01:30:45PM -0300, Jason Gunthorpe wrote:
-> > On Tue, Jun 10, 2025 at 04:37:58PM +0100, Robin Murphy wrote:
-> > > On 2025-06-09 7:45 pm, Nicolin Chen wrote:
-> > > > Hi all,
-> > > > 
-> > > > Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software should disable ATS
-> > > > before initiating a Function Level Reset, and then ensure no invalidation
-> > > > requests being issued to a device when its ATS capability is disabled.
-> > > 
-> > > Not really - what it says is that software should not expect to receive
-> > > invalidate completions from a function which is in the process of being
-> > > reset or powered off, and if software doesn't want to be confused by that
-> > > then it should take care to wait for completion or timeout of all
-> > > outstanding requests, and avoid issuing new requests, before initiating such
-> > > a reset or power transition.
-> > 
-> > The commit message can be more precise, but I agree with the
-> > conclusion that the right direction for Linux is to disable and block
-> > ATS, instead of trying to ignore completion time out events, or trying
-> > to block page table mutations. Ie do what the implementation note
-> > says..
-> > 
-> > Maybe:
-> > 
-> > PCIe permits a device to ignore ATS invalidation TLPs while it is
-> > processing FLR. This creates a problem visible to the OS where ATS
-> > invalidation commands will time out. For instance a SVA domain will
-> > have no coordination with a FLR event and can racily issue ATC
-> > invalidations into a resetting device.
+
+
+On 16/06/2025 1:14 pm, Christoph Hellwig wrote:
+> On Mon, Jun 16, 2025 at 01:11:49PM +0100, Mark Brown wrote:
+>> already tied to a platform that needs DMA needing to add the dependency
+>> which nobody is going to notice without doing build testing for
+>> randconfigs or similar non-useful configs - it's not a productive use of
+>> time.
 > 
-> The sec 10.3.1 implementation note mentions FLR specifically, but it
-> seems like *any* kind of reset would be vulnerable, e.g., SBR,
-> external PERST# assert, etc?
+> Stop your unproductive whining and just fix your dependencies.
 
-Yes, there are a bunch of states where a PCI devices is permitted to
-ignore ATC invalidation TLPs.. Aside from all the resets power
-management is also a problem.
+The change introduces consistency with the existing declarations in 
+dma-mapping.h. Surely there is value in consistency and it doesn't do 
+any harm to define new ones with stubs the same as the other ones. That 
+way when you change an existing device that has DMA stuff to use a new 
+part of the API you don't have to predict that it will behave 
+differently to another part of the API.
 
-Jason
+I suppose it is possible to #ifdef out the DMA stuff in this driver, but 
+IMO it would be quite messy, and I don't think randomly not stubbing out 
+some functions is the right way to move towards fixing all the 
+dependencies in all drivers. We should continue with the stubs for now 
+and fix whole drivers one by one as a proper effort.
+
+Thanks
+James
+
