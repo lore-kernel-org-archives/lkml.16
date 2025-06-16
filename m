@@ -1,101 +1,105 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8391448D5;
-	Mon, 16 Jun 2025 21:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84966522F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750111187; cv=none; b=WhesXjmOzcD2bz22XtxD04PYFFMHDs0WF6ZfgaldugbkWddDG5Vrk/jdq91fRv3J+XXT5NFr+Nx6nMZSyZhm5INujBpEnPIRPzAS74YAbE+Y01PoZB8yC/pPIWSuM7LFSIO8IdUVmxzzWHpXlnyx7urvaq8Q92uzkIOm6Bir+mk=
+	t=1750111275; cv=none; b=ZxpK58PQhSPnWVI8f3DUt4xQ0C0xyAjDA2SC+APnZp8FWVu/e5bfhNbSLxezPW804xEEcdfaTYXf3TublAb3nkqFQVuMsAJeBomRwtcnKIdSbaVFE0lTh4Rn1CyrIUXZwfrrv1qmreOW/71aH3VsblUHpVPc6ZtyoIFkj24u3EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750111187; c=relaxed/simple;
-	bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rg5fzTYFdjNwDkgBcjC9Gd2khbri7yi/D0a7/dFUeWrdL5UjTaGtuRKYxCrs0ltV3w8iXtB0vS5YaW2dVrC7rq3rqEiHEpDj3zSpI7KnLKvYDRNKJDoQlyj+xWAJ5lX4O2jKbtevXNGKZzkja4q6V8LbOgAiUEVOihKyAtiO/rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mx+QJq/Z; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750111275; c=relaxed/simple;
+	bh=q7tD4d0yNr2pbj8cYfhujZP3byO/0ot0K8Igx0jNNuE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gD+uMGJlolD6kZpGREfqs5u6b1IipFGjOwah1LT/FNqqmFzoujsI8TnMQq15MYwXT9TAnP7fMXi+G7TOEXCRgTTIH3WrJvjYhExLZ0DDm9akJciXNJ1FJh49o30nOcj+D8aEvOrXBJ8o0KuN06NnxsGzXCG6BgnZ1+w3wDGuBQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iL+3CM+D; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mx+QJq/Z"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-31329098ae8so4362421a91.1;
-        Mon, 16 Jun 2025 14:59:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750111186; x=1750715986; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
-        b=mx+QJq/Zm7DH+1NBZIyhQ1smtWKecQgkvnlVbl8wY1mazmEbFRzWaQbs14E7H31pxZ
-         50cB0dYBp4VsU+YYoOk6ICTUM8nmE7imWT85znAnUL0+erM5CWad3TDUgMo2Hdn1b1tj
-         X800t1zGk1QP+q4LF4KGizzI90sy+ygiXSgN7gyfvO9Se5LmZLIcW8Uu9v90pba0Xk/Q
-         osUcXNlNI6/j10lZAWkmeo3M0Qnc49+WoIAQipTp0KtBWQ57c+Pa0kJBdR1so5XQA3Dz
-         tCrpRhzUlvs0tmXvRVzeHyTQujEsAq2ENp/c+yxFpdmojGxapIfSFLgGAyag5Dd3Pilq
-         s7yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750111186; x=1750715986;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
-        b=i4pkGC2mW3zFb9pQOYXfb8yns/x9PBRwJwKznMHhcvG7T8Ry7C78MRb5Ec+eWQPLZI
-         ACcrfj8wbQy4t9VtmQchCA5VfiOP49IPb0B7gdwyxYu7W8IlDGrAtoKfo5iHRSR8yhBD
-         4oIvjbCIoYl2Da7LiR5NNWd5eD6I6ADTxhzjbUGpjqvy+otQJU+qU6uRgDdLWOwqie1f
-         k6jKBT+RYE+gOr9lo5LAw1yr0J8eVjt4DC2erX6J8qhOvqCpJtsR4J6HrXyCZNEpjuo8
-         dUSELKf5iQH34akhHtizqybSl2AWoDS3sxDcWvu9JG4Y8387zFJ02DxrqIzNlUDWHtPz
-         rDtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQl5DZa3Zv+y+7lb9Bvv7Ehd73wzMzdo3wz8RH2jlLjCxzJGgkmRonhb5NQOvXnNB36CTtoAy3FEY=@vger.kernel.org, AJvYcCWzvYnZEc97Sv+iShfgv3bdEPCwLGMsdzNxO3Qxfh2joA/DOaiOA87n+ReEzrl8hUURs2PkOAkkOh39biWg@vger.kernel.org, AJvYcCXP7LdwsH342IAgh+Jx9qbvbfRjs1cKz3a5WJ1eEuNE7jVjJqFYV8oYmClqY142hTJgAgS9qKcIRSr4/MF4eQ==@vger.kernel.org, AJvYcCXzZ6iUFc48x0TIsHJ32iR2raQ7AZn6YS6cKjA+W6/Dql91pPp7W0d1OnMC2Gl3Jzf/P/TEeRo8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw19h5N5qmDZ9rCk2+/oBNfXl0hiJRaxdHWShgk02P02CEMQTLH
-	y+0Abk+UdR5Boogjs2mfc0PcTfZesnqzEYKIuTe86D3YioNtqjgrlqBo
-X-Gm-Gg: ASbGncvTgs95kvy3UqtrkqEtxE63bYzJYwhyzLDQUC/VZPZ/y36M14olTfIoFJ8h634
-	1+4FbrDbINcVtbiDXOo74ghbgQiPJq15gDwxLjpKMV8mCzf2wR5j8piyazyfsGdGxGWxNbSaaU1
-	u5GSydqQMVwJXHJJxW5c29JV4xFVXL9It9nCqFmzqs6GE6wEQ9pj7CTvcuhnhH4Hw2JD7gxO8XZ
-	OGRXlTAYbtXb1FRnLWyxPYHkeIIn8uyQXT9icDejyVmX+QTa6TjjqQ6kgwIF1tF7+tFojNoVWyw
-	9saVBiHmkD501y20ngNszDVHaE1DpyYmmV9LTiXuQgD5SpJavFJuOGPw4NOk0N1CVQ==
-X-Google-Smtp-Source: AGHT+IH4wh9y8+17NNr6OsXro0iWKu8R34LNjAfr7G0A8dLv1PD8LHOCsQSVBTatYUghTPAmFqKHbw==
-X-Received: by 2002:a17:90b:5603:b0:310:c8ec:4192 with SMTP id 98e67ed59e1d1-31427e9d73fmr267216a91.10.1750111185654;
-        Mon, 16 Jun 2025 14:59:45 -0700 (PDT)
-Received: from [10.0.2.172] ([70.37.26.34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5e2ebsm9155674a91.33.2025.06.16.14.59.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 14:59:45 -0700 (PDT)
-Sender: Sinan Kaya <franksinankaya@gmail.com>
-From: Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Message-ID: <9fb982e6-7184-410e-94d0-90836c2a9129@kernel.org>
-Date: Mon, 16 Jun 2025 17:59:44 -0400
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iL+3CM+D"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750111270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4s03yPEhF45+lWh5hyBpMppSw2oqj+GdWmyYq1pWC3U=;
+	b=iL+3CM+DtVo4+gmEcNyja3IwWUGWPIvvvUP9mUdkZpBaCIC8Z8NAxdgHcEBFZgeO8YSfJa
+	oNioV1esuk2dUqqUWhTtNaQH8m1XvDXAl6NtTGNZf1TOwE849tKso4U0wbTTOG6SBRnFox
+	+qb/om8Jl/33MlLXRAD+sz9iVuLAUT0=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Mark Brown <broonie@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-spi@vger.kernel.org
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 0/9] spi: zynqmp-gqspi: Support multiple buses and add GPIO support
+Date: Mon, 16 Jun 2025 18:00:45 -0400
+Message-Id: <20250616220054.3968946-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dmaengine: qcom_hidma: fix handoff FIFO memory leak
- on driver removal
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: Eugen Hristev <eugen.hristev@linaro.org>, Vinod Koul <vkoul@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250601224231.24317-1-qasdev00@gmail.com>
- <20250601224231.24317-3-qasdev00@gmail.com>
- <3c6513fe-83b3-4117-8df6-6f8c7eb07303@linaro.org>
- <7649f016-87f1-475d-8ff7-7608b14c5654@kernel.org>
- <aE8bu2woUe96DVo-@gmail.com>
-Content-Language: en-US
-In-Reply-To: <aE8bu2woUe96DVo-@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 6/15/2025 3:15 PM, Qasim Ijaz wrote:
-> Thanks for reviewing the patch and for pointing out the correct
-> shutdown ordering.
->
-> If you’re both happy with it, I’ll send a v2 that calls
-> tasklet_disable() before tasklet_kill(), then frees the handoff_fifo.
->
-> Just let me know and I’ll resend.
+This device really has two SPI buses but they are currently determined
+by the slave's CS. Decouple bus selection from CS, and add support for
+GPIO chipselects. This allows adding arbitrary devices on either bus.
 
-Sure, please test it on a test kernel module before posting with a tasklet.
+This version does the bus selction using a spi-buses property in
+slaves's node, as opposed to having separate nodes for the upper and
+lower buses. This should be backwards compatible with existing bindings,
+and could allow supporting "parallel" memories in the future (identical
+flashes on both buses controlled in lockstep).
 
-This should be straightforward to verify.
+Changes in v2:
+- Add spi-buses property
+- Update spi-zynqmp-qspi.yaml with new binding style
+- Support multi-bus controllers
+- Add flag to determine default bus
+- Support multiple buses with spi-buses instead of explicit
+  upper/lower/merged buses
+
+David Lechner (2):
+  dt-bindings: spi: Add spi-buses property
+  spi: Support multi-bus controllers
+
+Sean Anderson (7):
+  dt-bindings: spi: zynqmp-qspi: Add example dual upper/lower bus
+  spi: Add flag to determine default bus
+  spi: zynqmp-gqspi: Support multiple buses
+  spi: zynqmp-gqspi: Pass speed directly to config_op
+  spi: zynqmp-gqspi: Configure SPI mode dynamically
+  spi: zynqmp-gqspi: Support GPIO chip selects
+  ARM64: xilinx: zynqmp: Add spi-buses property
+
+ .../bindings/spi/spi-peripheral-props.yaml    |  10 ++
+ .../bindings/spi/spi-zynqmp-qspi.yaml         |  22 ++-
+ .../boot/dts/xilinx/zynqmp-sm-k26-revA.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zc1254-revA.dts    |   1 +
+ .../dts/xilinx/zynqmp-zc1751-xm015-dc1.dts    |   1 +
+ .../dts/xilinx/zynqmp-zc1751-xm018-dc4.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zcu104-revA.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zcu104-revC.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zcu106-revA.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zcu111-revA.dts    |   1 +
+ .../boot/dts/xilinx/zynqmp-zcu1275-revA.dts   |   1 +
+ drivers/spi/spi-zynqmp-gqspi.c                | 155 ++++++++++++++----
+ drivers/spi/spi.c                             |  31 +++-
+ include/linux/spi/spi.h                       |  15 ++
+ 15 files changed, 208 insertions(+), 35 deletions(-)
+
+-- 
+2.35.1.1320.gc452695387.dirty
 
