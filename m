@@ -1,100 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9594E1DE2BD;
-	Mon, 16 Jun 2025 06:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523DA1DF99C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750055345; cv=none; b=LqgU6hFqzV+CMWds9p4ZQrV56V1kE8xgv4tNcZytbC0NmTaA1J5aVeYXrXvp6a1rBmiJlykPR11z235KILhoSsd68SO+QBFP20rJojVxstQKZmPYCgU3QLDq5nDkcgqt5jUWRpbPvVDYNvHiiO/VxhMkvFkbPFEyCebY2kL6Y/w=
+	t=1750055349; cv=none; b=g7WEbeU5JF6qJRX+csCIWYVWKNepTpLWfMyyU4pibZCj64eV6Sn4nRJifC0S0JAHqJ28V3MRDBCsl+98mikm0rbx2Q06+dKqaltRX6UByaa0bdoPvnfZE8h0/PcAeRmbL2DzlgG7fNLikkjDhwTLg44hqyJbjSIsxunMSqCRtBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750055345; c=relaxed/simple;
-	bh=9JJEZwJcy718D1DrMK8Hs+ZKn8NzsTjuogMc/xnMV6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VuarvnaHEObucf1xLZ+CMJglbn3Xhq20U0c0NV+R4BZyFewGZm43tW0d2hErq0J9BtM+WjZCbS/3HC5n9sEKIoLlYLJtMosHFiZkFyz/sRDpqL+8IjVa0rKnKnRprJtJDRNRrAEPNJAFgKM/lyAPmT816urr32QvEvP0UXCr6KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QXm5+uxr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0cTukvmU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750055349; c=relaxed/simple;
+	bh=nOc/n1KV0S5P3fT9GMJf7e5kLYWdERJAb3PbQtwye74=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L1tkwUxih74rrP0bivZAMZj/p3pvNiO4akFwl6OU1xQolvw41g6A8nBuszaXHreuR3Vo4GrMCL25lHC1ObpNF4hp6qfArVOj/B4MZXQS2aAnL+VytF1Q4MzUjjKTJS6uvPmCGrwySmlCD8jjuaM3XscmPvOIZ+GkOj/n6F6J5Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eIXC8fgC; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QXm5+uxr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0cTukvmU"
-Date: Mon, 16 Jun 2025 08:28:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750055335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+LICzzU5v3SFqwCiAXYPpdpUgYqySOSePsKj/xJRbx4=;
-	b=QXm5+uxrJxDXN6WaP4aDXprPGZDiQmKTUXTpwed9hi+VP7xu8ZzQs1J7nmeTwua3lso/J1
-	kPN9kBLJREooVryRBDPOgiSssvgNcENdcdySSAb3oI+jKzpo1tMtUbBYYzXDwD4j3ro2+d
-	/XT3mrWzRh2oSGRcvGnxN8wqJZAPXVYIXOP6LjRlrAwminD+to6chtUP0q7QUHBFqhzIih
-	yWpeRQQnl1k5sJvJIgClncO/plKBTXVOrxLJLRoQPXYVxrQ3OTGmfTMlZAR16RJvrC063y
-	5sYzD8yTDxhcm+ueiBdzR4SphqHUj7n/u7GLAVFGbdrasVpIS3amxua7J4t/ZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750055335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+LICzzU5v3SFqwCiAXYPpdpUgYqySOSePsKj/xJRbx4=;
-	b=0cTukvmUiSNPCOcrLgwcOuURn2EirANnSFbj9MA2OrOylAaL0PRh2ro8v1A0szyqq8xSST
-	X+gLHtnggF3lBrBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-	bpf@vger.kernel.org, linux-rt-users@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: BUG: scheduling while atomic with PREEMPT_RT=y and bpf selftests
-Message-ID: <20250616062853.G6JxYeK1@linutronix.de>
-References: <20250605091904.5853-1-spasswolf@web.de>
- <20250605084816.3e5d1af1@gandalf.local.home>
- <20250605125133.RSTingmi@linutronix.de>
- <0b1f48ba715a16c4d4874ae65bc01914de4d5a90.camel@web.de>
- <727212f9d3c324787ddd9ede9e2d800a02b629b2.camel@web.de>
- <0c0b2385452292d6b1df3066b7223b420066f0a1.camel@web.de>
- <aa28ef09763eeefd54d4c26fb01599fd5197b265.camel@web.de>
- <7937d287a3ff24ce7c7e3eb2cd18788521975511.camel@web.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eIXC8fgC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=7k
+	mj3Dx6LNtxMuBXInzuZTk0/cSW/2IYoCKygr1quCg=; b=eIXC8fgCqhW51YyUuT
+	z5sKx2J7ii9G4nHFklkOBqLe+N3JVWuwFiY0gHjzRupVwpinOPJhtp+91bmkSPn0
+	uHGloeovr0lcPEDIJwAA15zIPFiTR9i5TdU9gjXh0APNkYD/IJDGc7dBG1XI/Ype
+	sASIJvB+5XS09TJVAmYMP1uls=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgD3Q8t2uU9oJf4vAg--.3816S2;
+	Mon, 16 Jun 2025 14:28:07 +0800 (CST)
+From: wangdicheng <wangdich9700@163.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-arm-kernel@lists.infradead.org,
+	wangdicheng <wangdicheng@kylinos.cn>
+Subject: [PATCH] KYLIN: sound/conexant: Renaming the codec with device ID 0x1f86 and 0x1f87
+Date: Mon, 16 Jun 2025 14:27:49 +0800
+Message-Id: <20250616062749.553030-1-wangdich9700@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <7937d287a3ff24ce7c7e3eb2cd18788521975511.camel@web.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgD3Q8t2uU9oJf4vAg--.3816S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7urWfZr1UuFyxXw4UGw4kJFb_yoW5JF48pr
+	18Way5JrW2qFn0vFWxJr4DGF43W3ZayF97JrWakryxtw15Xry7Wa4fWryIvF4fJFZ0gaya
+	qFsrKF10qayYvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jzhFxUUUUU=
+X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1tbiRxZuT2hPtndN6wAAsw
 
-On 2025-06-16 00:12:49 [+0200], Bert Karwatzki wrote:
-> These three patches fixes all the dmesg warning (with CONFIG_LOCKDEP) iss=
-ues when running the
-> bpf test_progs and does not cause deadlocks without CONFIG_LOCKDEP.
->=20
-=E2=80=A6
-> is fixed by this:
->=20
-> diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-> index 183fa2aa2935..49257cb90209 100644
-> --- a/include/trace/bpf_probe.h
-> +++ b/include/trace/bpf_probe.h
-> @@ -58,9 +58,9 @@ static notrace void \
->  __bpf_trace_##call(void *__data, proto) \
->  { \
->  might_fault(); \
-> - preempt_disable_notrace(); \
-> + migrate_disable(); \
->  CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args));=
- \
-> - preempt_enable_notrace(); \
-> + migrate_enable(); \
->  }
+From: wangdicheng <wangdicheng@kylinos.cn>
 
-I doubt this can be fixed that way. I sent a series out
-	https://lore.kernel.org/all/20250613152218.1924093-1-bigeasy@linutronix.de/
+Due to changes in the manufacturer's plan, all 0x14f11f86 will be named CX11880, and 0x14f11f87 will be named SN6140
 
-which is the first the step towards fixing this properly.
+Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
+---
+ sound/pci/hda/patch_conexant.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Sebastian
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 4985e72b9094..1366a33de8d3 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -42,7 +42,7 @@ struct conexant_spec {
+ 	unsigned int gpio_led;
+ 	unsigned int gpio_mute_led_mask;
+ 	unsigned int gpio_mic_led_mask;
+-	bool is_cx8070_sn6140;
++	bool is_cx11880_sn6140;
+ };
+ 
+ 
+@@ -195,7 +195,7 @@ static int cx_auto_init(struct hda_codec *codec)
+ 	cxt_init_gpio_led(codec);
+ 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+ 
+-	if (spec->is_cx8070_sn6140)
++	if (spec->is_cx11880_sn6140)
+ 		cx_fixup_headset_recog(codec);
+ 
+ 	return 0;
+@@ -247,7 +247,7 @@ static void cx_update_headset_mic_vref(struct hda_codec *codec, struct hda_jack_
+ {
+ 	unsigned int mic_present;
+ 
+-	/* In cx8070 and sn6140, the node 16 can only be configured to headphone or disabled,
++	/* In cx11880 and sn6140, the node 16 can only be configured to headphone or disabled,
+ 	 * the node 19 can only be configured to microphone or disabled.
+ 	 * Check hp&mic tag to process headset plugin & plugout.
+ 	 */
+@@ -1191,11 +1191,11 @@ static int patch_conexant_auto(struct hda_codec *codec)
+ 	codec->spec = spec;
+ 	codec->patch_ops = cx_auto_patch_ops;
+ 
+-	/* init cx8070/sn6140 flag and reset headset_present_flag */
++	/* init cx11880/sn6140 flag and reset headset_present_flag */
+ 	switch (codec->core.vendor_id) {
+ 	case 0x14f11f86:
+ 	case 0x14f11f87:
+-		spec->is_cx8070_sn6140 = true;
++		spec->is_cx11880_sn6140 = true;
+ 		snd_hda_jack_detect_enable_callback(codec, 0x19, cx_update_headset_mic_vref);
+ 		break;
+ 	}
+@@ -1283,7 +1283,7 @@ static int patch_conexant_auto(struct hda_codec *codec)
+  */
+ 
+ static const struct hda_device_id snd_hda_id_conexant[] = {
+-	HDA_CODEC_ENTRY(0x14f11f86, "CX8070", patch_conexant_auto),
++	HDA_CODEC_ENTRY(0x14f11f86, "CX11880", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f11f87, "SN6140", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f12008, "CX8200", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f120d0, "CX11970", patch_conexant_auto),
+-- 
+2.25.1
+
