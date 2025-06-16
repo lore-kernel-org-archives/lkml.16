@@ -1,142 +1,152 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47983292B54
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456E3285C9F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080173; cv=none; b=pDUhrAL/AetmVRwQxTpNiP4Ygo9bK4bDx9VoO0LdBUGhrypy1atiOZGzOG3GlUI4erDx9M1doerieXAnOXeDm/Vj5tCpKH7dIKp17ACT9W3NqwGUmI5i/uZCrIEk2xYWyIE6U44X419LfC9gPAnRLbGEIhDGggk9KDe2kdUnOy8=
+	t=1750080188; cv=none; b=TM6paEheK6kTxI4Py1HCXIRESXu45H0R2htVCxL4AykvCPUtFQyP9+Dp68hx8JhB2jQyVxW0rWLcOYkY2goHH2oXmyn4ydXeLC7KBTcx2SIIGE21ykMRenFY4trLef6MNKOOjgbV++cfAHSBvDiCHGdWIugtTmrvGOWcDDh5JnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080173; c=relaxed/simple;
-	bh=SfDNrgkiyxr1e5rAONZhMJ5nG8Q58jojguyKXEUxd+I=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ALVM3qrTebVdq0zOXHLKeiLqcpDDz3hTsoG33guyiXWy2pemgBYB7E0FXOhDLeigq0uva+auRYgV3wj588pV5wwyZ1v2AkeQqoPe+Ke9z4aFKkEQvZ1KoLt9tCDjO75SIxA0+HbXFfVdSUg4aEHzIlxddQzglcLeZejPxKpNdRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uR9n5-0003xV-Cd; Mon, 16 Jun 2025 15:22:23 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uR9n4-003oWd-0b;
-	Mon, 16 Jun 2025 15:22:22 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uR9n4-000VBo-0L;
-	Mon, 16 Jun 2025 15:22:22 +0200
-Message-ID: <6aeab5e5b616b1e690c2622d6599c5228a391e69.camel@pengutronix.de>
-Subject: Re: [PATCH 1/8] mmc: sdhci-of-aspeed: Fix sdhci software reset
- can't be cleared issue.
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Cool Lee <cool_lee@aspeedtech.com>, andrew@codeconstruct.com.au, 
-	adrian.hunter@intel.com, ulf.hansson@linaro.org, joel@jms.id.au, 
-	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 16 Jun 2025 15:22:21 +0200
-In-Reply-To: <20250615035803.3752235-2-cool_lee@aspeedtech.com>
-References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
-	 <20250615035803.3752235-2-cool_lee@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1750080188; c=relaxed/simple;
+	bh=KCD5428E2V4OWj4bxH6DMumzOTk0rgOlJJTO5eLsA3E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bh2C/6T1QWyUXXm7JF4tdRJUJhYCCb8NhxiIpVWCgOx0kthK7NEzjjLzVbA783Kh7kGKo2HhAojTpdIAC4GtfKrTqgXpWZnjh2G5Fff/Stc5hgOvip9DjolvUrSIovG9pz8IVlRONg9dPRHxkY1wGRg3OGmS3Up+XpvGy5w39Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Q/6P2ggl; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q/6P2ggl"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32b2f5d91c8so36333991fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750080184; x=1750684984; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QPiIwXPnB/QPRp9lTZSU0TIMgfDz8msjPC5y3Zu6Zog=;
+        b=Q/6P2gglNhFX5JSn/TNYE4WC/y4jwf+pWVN1Lu4HiwbgF5ULtY009pZEG/m1pgfsr5
+         j7XuoFzua6NKkNS+QmxHGrFBKXCI5QPYt5xzT5retPkHNd03RUtN+vCzD2y/zee5xkyc
+         /jxu0YcIh6GustVWC5FflYDCJCqyeLquzdyJk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750080184; x=1750684984;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QPiIwXPnB/QPRp9lTZSU0TIMgfDz8msjPC5y3Zu6Zog=;
+        b=jKO2+C6jzWv04ZoEDFuo6Zlc9JfCOGlrxYnuUk/19BRzr8j54eYZiPSKLoB8b0e4m9
+         XJIjCnJdbqPXTyYMjs5YZkZiso3FmnJ8s+XZGsuS3rsBugAwhetvQdb//XVyw9/yY666
+         9hhVjWjnpYbhVyFZHTeUfv7ptY/HprSPjCb0L8J+pF1dFkaEtKDe2VwlX8489SOofou6
+         eg3ROwf8CGTJOGHPbLSR9YkSrkWaxPcLwppSw5Tyb+l4jWD9udT2nxY1ThDcAKZRRgln
+         DO5YUcx+sX6D7+a5sgAfnoKLz6fU+HW+i98phdqLKu34hhbv1+F9dg04klXZFQCIUUNi
+         Wk8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUzhct3hgYuei90Hae+/RDjUsRZTdh0Iyk6jO8swymy75rNX22UsyD2epYSe51Cmn1EmqMoOvTJCqdJegY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIRw/+cJKejfFKZjHHOX7kV4VCB/Xr+LTQiGQw/FOtPeEtM1MY
+	vJ93nX65GmgX2Jd3szON64oWBAr7BQftVygZ0Mkie1k97QO0gvouKH4jFIzqYIPssovPTRyaMj4
+	e8fE=
+X-Gm-Gg: ASbGncvR1uZ2q4fRA3R5K8zE6uAl2TfRXe5gtr0kmyidjcTMThxE332Uy/ObVetL7KD
+	m4kgQhPaRH3bN5lVa/BwnwvKaWdWV6SZm4h2KFjjDKCOJrdQ1G5gNPziLhveEi3KRiVaMf309Z/
+	uBMJESQ33YCxznXF0x7djGKuO0w3rX/5DMZhB8Ch0PAgyDuE5/MaBQt97LkYr3yEgPPSbPi19vS
+	8ZTjq7q6NN7CKXp+M1o+ffV6KdRWufIivM3ZAz9uxaeBNbI5vX30Mwx1nARFwQ7ZZh0kNraxh4i
+	FmOesUtAnkB1V8b0UXOZu0gtJtxQ6Pzjwj8CZktFD9wr4idqrnudVtxNymlSyoGMduFvWif3cqq
+	EYaG9av993BpThMDpesK/LbK2N4JDfQL4L+4=
+X-Google-Smtp-Source: AGHT+IHI25Lmv6QNsScKcnkP/rp8EsU0TtGI6aL9qL16iPxNpB9wmIHh/n47hh6ryqzgLejzDstuYg==
+X-Received: by 2002:a05:651c:a0b:b0:32a:6eea:5c35 with SMTP id 38308e7fff4ca-32b4a2ff940mr19804101fa.15.1750080184022;
+        Mon, 16 Jun 2025 06:23:04 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b331ca96asm15922441fa.101.2025.06.16.06.23.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 06:23:03 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b82f3767so2069931e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:23:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUq4LFYU1zlQJZk4WCW7bUAtGBtbmFdgU0J6zYEMifQckDyzhS7dATaQu1bqpqidcfaDTL/3sevHPQqWQ0=@vger.kernel.org
+X-Received: by 2002:a05:6512:1150:b0:553:2a0f:d3d4 with SMTP id
+ 2adb3069b0e04-553b6f4268dmr1908878e87.49.1750080183070; Mon, 16 Jun 2025
+ 06:23:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org> <f9275079-842a-406e-8bb7-b22a22b7c7e6@kernel.org>
+In-Reply-To: <f9275079-842a-406e-8bb7-b22a22b7c7e6@kernel.org>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 16 Jun 2025 15:22:49 +0200
+X-Gmail-Original-Message-ID: <CANiDSCt18PUWo2Z-9T2nBMMJfpRcdAGhO5S0jE85-1ZPO1qD7g@mail.gmail.com>
+X-Gm-Features: AX0GCFuqWLgUehzKJAibYIjgFF6eDhR6nU8vRFEBGE8EDAHBKBOg2zBL7WW-dyc
+Message-ID: <CANiDSCt18PUWo2Z-9T2nBMMJfpRcdAGhO5S0jE85-1ZPO1qD7g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] media: uvcvideo: Enable keep-sorted
+To: Hans de Goede <hansg@kernel.org>, Hans Verkuil <hans@jjverkuil.nl>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On So, 2025-06-15 at 11:57 +0800, Cool Lee wrote:
-> Replace sdhci software reset by scu reset from top.
->=20
-> Signed-off-by: Cool Lee <cool_lee@aspeedtech.com>
-> ---
->  drivers/mmc/host/sdhci-of-aspeed.c | 55 +++++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-=
-of-aspeed.c
-> index d6de010551b9..01bc574272eb 100644
-> --- a/drivers/mmc/host/sdhci-of-aspeed.c
-> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> @@ -13,6 +13,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->  #include <linux/spinlock.h>
-> =20
->  #include "sdhci-pltfm.h"
-> @@ -39,6 +40,7 @@
->  struct aspeed_sdc {
->  	struct clk *clk;
->  	struct resource *res;
-> +	struct reset_control *rst;
-> =20
->  	spinlock_t lock;
->  	void __iomem *regs;
-> @@ -328,13 +330,58 @@ static u32 aspeed_sdhci_readl(struct sdhci_host *ho=
-st, int reg)
->  	return val;
->  }
-> =20
-> +static void aspeed_sdhci_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_priv;
-> +	struct aspeed_sdhci *aspeed_sdhci;
-> +	struct aspeed_sdc *aspeed_sdc;
-> +	u32 save_array[7];
-> +	u32 reg_array[] =3D {SDHCI_DMA_ADDRESS,
-> +			SDHCI_BLOCK_SIZE,
-> +			SDHCI_ARGUMENT,
-> +			SDHCI_HOST_CONTROL,
-> +			SDHCI_CLOCK_CONTROL,
-> +			SDHCI_INT_ENABLE,
-> +			SDHCI_SIGNAL_ENABLE};
-> +	int i;
-> +	u16 tran_mode;
-> +	u32 mmc8_mode;
-> +
-> +	pltfm_priv =3D sdhci_priv(host);
-> +	aspeed_sdhci =3D sdhci_pltfm_priv(pltfm_priv);
-> +	aspeed_sdc =3D aspeed_sdhci->parent;
-> +
-> +	if (!IS_ERR(aspeed_sdc->rst)) {
-> +		for (i =3D 0; i < ARRAY_SIZE(reg_array); i++)
-> +			save_array[i] =3D sdhci_readl(host, reg_array[i]);
-> +
-> +		tran_mode =3D sdhci_readw(host, SDHCI_TRANSFER_MODE);
-> +		mmc8_mode =3D readl(aspeed_sdc->regs);
-> +
-> +		reset_control_assert(aspeed_sdc->rst);
-> +		mdelay(1);
-> +		reset_control_deassert(aspeed_sdc->rst);
-> +		mdelay(1);
+Hi Hans
 
-Why are there delays here ...
+On Mon, 16 Jun 2025 at 15:05, Hans de Goede <hansg@kernel.org> wrote:
+>
+> Hi Ricardo,
+>
+> On 29-Apr-25 15:47, Ricardo Ribalda wrote:
+> > When committers contribute quirks to the uvc driver, they usually add
+> > them out of order.
+> >
+> > We can automatically validate that their follow our guidelines with the
+> > use of keep-sorted.
+> >
+> > This patchset adds support for keep-sorted in the uvc driver. The two
+> > patches can be squashed if needed.
+> >
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>
+> I've no objections against these 2 patches, but these need to be
+> rebased on top of the latest uvc/for-next. Can you send out a new
+> version please ?
 
-[...]
-> @@ -535,6 +582,12 @@ static int aspeed_sdc_probe(struct platform_device *=
-pdev)
-> =20
->  	spin_lock_init(&sdc->lock);
-> =20
-> +	sdc->rst =3D devm_reset_control_get(&pdev->dev, NULL);
-> +	if (!IS_ERR(sdc->rst)) {
-> +		reset_control_assert(sdc->rst);
-> +		reset_control_deassert(sdc->rst);
+I was waiting for HansV to say that keep-sorted was useful and then
+add it to the CI.
 
-... but not here?
+Right now it is probably just useful for the Makefiles and uvc.
 
-regards
-Philipp
+>
+> Also for patch 2/2 can we not just add the 2 keep-sorted headers
+> and then actually run keep-sorted to auto-fix things ?
+
+Do you mean removing the annotation after running keep-sorted?
+
+We can do that, but we will be unsorted again in the future after N
+patches unless we add it to CI.
+
+If we do not handle this automatically I do not think that there is
+much point on this series.
+
+
+Thanks for looking into it anyway :)
+
+>
+> Or can it not auto-fix ?
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > ---
+> > Ricardo Ribalda (2):
+> >       media: uvcvideo: Rewrite uvc_ids for keep-sorted.
+> >       media: uvcvideo: Add keep-sorted statement and sort uvc_ids
+> >
+> >  drivers/media/usb/uvc/uvc_driver.c | 660 +++++++++++++++++++++++--------------
+> >  1 file changed, 409 insertions(+), 251 deletions(-)
+> > ---
+> > base-commit: 398a1b33f1479af35ca915c5efc9b00d6204f8fa
+> > change-id: 20250429-keep-sorted-2ac6f4796726
+> >
+> > Best regards,
+>
+
+
+-- 
+Ricardo Ribalda
