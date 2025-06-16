@@ -1,94 +1,81 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB781E89C;
-	Mon, 16 Jun 2025 21:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1831F429C;
+	Mon, 16 Jun 2025 21:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750107908; cv=none; b=ssDqSHTiJkFPeeVrFJUGu2oiRTUj/KRNv8gMq5o98cCBs4/PJ06vRYtMHCIZ/CEU3PhoF3un0BLUNJYCdyxik1zhKJqWKmbn2EH6OqqEp/IxVpIPxa9/2sqoMeLzg9X9zzpvM5wt2Ky8hbxbzwc5ZQb4gMRB+/AJyf9zgRRDl/M=
+	t=1750107933; cv=none; b=leHiinfxTGWHuXW2bbwaEK8jq87lRtcO3rC1vHtVJA8YzNCnVFQQphWzOt3k9OJrhtWCud/NSxy86NIjspROcOGDnyyneqSG/B3iJNfJNhDEwzGBxBbz8Tu94vlY9gG+zBqOETyBHHGonA149rFaKgqnKl3eLAn/a563tul5Is4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750107908; c=relaxed/simple;
-	bh=+qn2H6nfevlQ7wKmJdpRn7FFdR32WZSW7opnHstQ6Qg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CBkBMBWw6H1TftSZVes65QnyjurfdtKPG/K4rC3xHpsVUcL7Of/rvWSFOZ53q//F8Te3sE9Ha2tVwTjsdzeErwiAANYeJ/4bRsrwsvisunhNF3vJiJjw5XcxNcpQoQHrhDJU+POc0OhB529PzVtJ1K99QWETPWIBst7kCWUWP9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kgx13JBE; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750107933; c=relaxed/simple;
+	bh=0W3oaKucpq4l/BVEw8nroG4LqtFe0etV3ZPi0IaCQ2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XGxc4lAY4WcqmF13o3O0iUcYRKze477lKRW3H00JdwWRR8JIjWRXECga+UQgkFqn0rCIVDwNHCQKf9OyAxM0jd6ka9+U+spDo6YOEXwJIE8BlZfVCW7WEU+vkq3S0SUpDgD9J4sVgWxFISt3qDDagX7TIpPz5TSwfoyN9exgqzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UL/gkN/S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kgx13JBE"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23496600df1so6190785ad.2;
-        Mon, 16 Jun 2025 14:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750107906; x=1750712706; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+qn2H6nfevlQ7wKmJdpRn7FFdR32WZSW7opnHstQ6Qg=;
-        b=Kgx13JBEL5xgGP2iPEzljdK+iJPrR+8Hm/w+N/GTsee7iX+gojSB+ZS/W82jqq0rnM
-         tnFeLoOQX3e8DlJ14R9Ids0oO8elMn20r3xFfJNkMjWAXB3g/uPYERHQZgHXFJHFoxKT
-         x5/XqbLQlAqe0nXrCGlTgeqccZPvAo0fWjlBJj/4vWjYifZJVTLXekdXGL84uM4YVoFw
-         Cj4nnFsfcldgO+am+MsZ1dMWL/DR20OGoqAOy+esittXRHNdlmce5LwKk7e1mxvn6jfo
-         zR45UcLfesaySOqzfylE9vsqYnWOgHwmC1k/xELPCpBvgAgLE9mKERgIi+wZBzwnhj51
-         HuWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750107906; x=1750712706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+qn2H6nfevlQ7wKmJdpRn7FFdR32WZSW7opnHstQ6Qg=;
-        b=JXeV7DYZolOa5FTNhYz3AgnE1FV0gaRb5XcRpMKDwBDmZSGaCgSSdaMeg7yIH6Rv32
-         69I6F8Higptt1DzD2UUsEKZ35a4doO+0dzA14eYv35CHQvJNvnkO8WFp9qRnkW7QasOF
-         wzzFkoS8GEWE0VDt13v7yBIbPzwCIJ8hzD2hoKdPTLYODZmQbtP9x92LO8xN1zmBmUXD
-         ONnpoNYMjxFLiLLxPcGFbdWrY4nuh2vQO9Ex3E1sC/ybKjbE4Aey5tmwBr0GpxLk3tjB
-         bNZOctbK6RxQVW30Ein1JrKlr4d+Mu8663VdDZbBHSwIZBxxNruKCqKo4Task8MzlkmT
-         Vt8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUWzssFx7+rngT5r7bup56xZnFChkFkBDWQLf/kv5nUgmFxzFYJ/ukK8YJRYxoYk5mnB1FLKwblfaUfvDM=@vger.kernel.org, AJvYcCV3Ymx10zOFxOrsiEih+Dq2KIt42Put4bSBM0c/cXRJ3ElzheG+BBmQlbMbW9/WMGVU7iv4OQx4wpjcIwaa6Zo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEoNXurXNIYpEWguAa1hAjC0bkXIqcS0AnNBcmsi1sqfEtLaL2
-	nwI/7GDU2Wj16iO4IKsdF+Vuty8MivWazvupNo5qKc0HBG/IYORcA3XrPCSII8wE+0xsOSCbl36
-	8VJaD6Sjh+zO2VUIS341CQDqg6TKPjoQ=
-X-Gm-Gg: ASbGncv8KuBkO5xM+9wkoszioLPhIXlYtUobamEXAQ3x1gMtkFFqHaEZM3ONxaxAIfg
-	RfW5nK4wQLtOOJfUzgdi7pRelUDXMsZNjcXKAR/TDor9exkalrTFp5Hllbm5PSTu8mNfI1VBIhH
-	XeuOdBrKPFjs5Q+iZ2vqlUZlHrCXKFLutRStAjjZrwF0c=
-X-Google-Smtp-Source: AGHT+IF1S2axf3PVB3z4DKxY9YfUqh2ejZWFt0fQTJLprfKx3NOg48dOG4XgpLdVmaqM9PC31GirVgLnCzf+nO1mg/0=
-X-Received: by 2002:a17:902:d2c5:b0:234:ef42:5d52 with SMTP id
- d9443c01a7336-2366b202b0fmr58019545ad.6.1750107906018; Mon, 16 Jun 2025
- 14:05:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UL/gkN/S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A9B0C4CEEA;
+	Mon, 16 Jun 2025 21:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750107931;
+	bh=0W3oaKucpq4l/BVEw8nroG4LqtFe0etV3ZPi0IaCQ2U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UL/gkN/SKre6OQ5X/2Uls97pnva5BO/5/U4mQ4utL3gqDmKY/PhDB5FWFIJEFGI/3
+	 pWncB5M6cmngqDJw2gTW+ZZKepwp8OnByujelWvg/LikasnF4zwAvLn/li0WJIJ2Gt
+	 u4I0aRoXRJJxqqDYYjSqYvDs/S1a5qrvGoxvIwQMxYKQyDdaHnUKHrkrwhzjPytoGF
+	 ekraTpUnYjyBalWCoPZ/9509yfkIj7UDA+3K+R/mDsuaQJLvUEgQMP1z+ovzWlVjcy
+	 In5HGUVE/B1650hoHh6EHbgtzIKUluNUMwrMA+VIM+4IaTwBuD/VJXpw3HyfxclNEb
+	 ubSMnzCQH4ZaQ==
+Date: Mon, 16 Jun 2025 16:05:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Graham Whyte <grwhyte@linux.microsoft.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
+	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org,
+	bhelgaas@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+Message-ID: <20250616210530.GA1106466@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-userptr-newtype-v3-1-5ff7b2d18d9e@google.com>
-In-Reply-To: <20250616-userptr-newtype-v3-1-5ff7b2d18d9e@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 16 Jun 2025 23:04:53 +0200
-X-Gm-Features: AX0GCFsYLflQK_lRNgAyhjylwzyLukxWj1tfGGW3HXaI5xOsGTLYwG_iZQuKH78
-Message-ID: <CANiq72nGU4A5ZgzrNnpC8LRpnFEZis0U1G7-m41MCPihRZcxXw@mail.gmail.com>
-Subject: Re: [PATCH v3] uaccess: rust: use newtype for user pointers
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Christian Schrefl <chrisi.schrefl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56b926e8-4b5c-45a8-882e-7c6be0e2fd26@linux.microsoft.com>
 
-On Mon, Jun 16, 2025 at 3:46=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> This is based on top of the strncpy_from_user for Rust patch.
-> https://lore.kernel.org/r/20250616-strncpy-from-user-v5-0-2d3fb0e1f5af@go=
-ogle.com
->
-> I don't see a clear owner of uaccess in MAINTAINERS, so I suggest that
-> it lands through Miguel's tree.
+On Mon, Jun 16, 2025 at 12:02:41PM -0700, Graham Whyte wrote:
+> On 6/13/2025 8:33 AM, Bjorn Helgaas wrote:
+> > On Thu, Jun 12, 2025 at 09:41:45AM -0700, Graham Whyte wrote:
+> >> On 6/11/2025 11:31 PM, Christoph Hellwig wrote:
+> >>> On Wed, Jun 11, 2025 at 01:08:21PM -0700, Graham Whyte wrote:
+> >>>> We can ask our HW engineers to implement function readiness but we need
+> >>>> to be able to support exiting products, hence why posting it as a quirk.
+> >>>
+> >>> Your report sounds like it works perfectly fine, it's just that you
+> >>> want to reduce the delay.  For that you'll need to stick to the standard
+> >>> methods instead of adding quirks, which are for buggy hardware that does
+> >>> not otherwise work.
+> >>
+> >> Bjorn, what would you recommend as next steps here?
+> > 
+> > This is a tough call and I don't pretend to have an obvious answer.  I
+> > understand the desire to improve performance.  On the other hand, PCI
+> > has been successful over the long term because devices adhere to
+> > standardized ways of doing things, which makes generic software
+> > possible.  Quirks degrade that story, of course, especially when there
+> > is an existing standardized solution that isn't being used.  I'm not
+> > at all happy about vendors that decide against the standard solution
+> > and then ask OS folks to do extra work to compensate.
+> 
+> Should someone want to implement readiness time reporting down the road,
+> they'll need to do the same work as patch 1 in this series (making the
+> flr delay a configurable parameter).
 
-Sounds good to me, also for the dependency, unless someone really
-needs it earlier.
+Sure.  That's a trivial change.  The problem is the quirk itself.
 
-Cheers,
-Miguel
+The Readiness Time Reporting Extended Capability is read-only with no
+control bits in it so it requires no actual logic in the device.
+Maybe you can just implement that capability with a firmware change on
+the device and add the corresponding Linux support for it.
