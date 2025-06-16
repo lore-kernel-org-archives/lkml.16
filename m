@@ -1,91 +1,164 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEFE189F56;
-	Mon, 16 Jun 2025 08:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF071FFC6D;
+	Mon, 16 Jun 2025 08:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063138; cv=none; b=BAzEFRGhodJl+xYOgRmny7E4m8wmZi7BdREpwSMXcwIKaAxOwTcJ26trYt3ddLjHj6OHvK7wwgMGEUDxJX+mYm8WgvmggPxIw29md51HuGIEj5g+tL1CFcuaT3QIh4Pgh6rJMN0WiYcIvAYqoQ47NUbRxe9YQXMIFX9PzdnXfek=
+	t=1750063165; cv=none; b=cY0hFuWF9AEsPQxr+/zM+v3ij0ap5KgLGfdZXaUWLQAWI08ni4cRIkG9yALrUHzA/Y8xaVFHdBGxDh9iDdnLjkzNlhox3pk3Jsgcr0VvRcUjWZgmFN+qgww5GQ4l/C3NXXfU3QPIjPDsk3i5687V6CpgMpj5TIoRcbE+hO9CSxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063138; c=relaxed/simple;
-	bh=cs8ODmouFFhPJh9ppcqIIdAqVeG7KRkviTSrm0mHKd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uc9SWAo2DVoy9QZYZ4EaM1DVFVJ9KojYHjDccdPIwfcnP9Qz8A2MEU64sfr7VAhRLl0EJh1vEgB7n8AxboaYO+sDFiceBlxWFoLZv5HyTmVCOkW5G/2G69EfJDH4pXcpoqfuSNlSrXlqgURYM0AnjvrKZgkZl3f/ZwGYLn2oi5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=oIZhSQc1; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1750063165; c=relaxed/simple;
+	bh=FFhM6VokJ06/I0t25GEFn7UsvK/jGGFQzI0Ory0yLm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L38r5ikJ2aaXY15/N07UD8PeLMKn/DfOLFALlIfNy8uKoLZVMr8ymtkT7gGSykyVO0YnoFd3+W1tHN6/JNFrJGB02gJZZAXJAzjxMRAqwXdJcaVjBKWyuUfcy7SQ8ZhnXtSTVBQXKav+PTWbs1nAbCTCiMhT1+6Gr7RUhYPo9bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=T/g6uJv0; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="oIZhSQc1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=4LqocdEhXQ0As2fdnIbbMcmHN/Z5fyN5voDLLrNKoLI=; b=oIZhSQc1uwRsFCprF8kPjONbZY
-	Di/4WoFmADFFM5gvcMEGT8g32fLITLjeUm7mRYaGQgJXAsrAAFolafDZV5hQeB7Rwfy4KA7PW/L8t
-	0kmpeSjDgMrEMtmfYF/7/6cCzUQsH9LtpX9xXPyyPTYnqmixgAy1PwaYwEA+y+p0QDK0YwDf9lELi
-	U6Et4a16pEfFyKoL7AoN37JlBoHI9MuUZ1VwDsM09EClvYY1eVVbQTFDeYva42XTBKT4cPTESjyCZ
-	QTy5bFSYklnZyi4vcx+JcbZ7tBm81hDv654BOD8tNk0h7J33HKcgz2fX8hgTENg64grWaAM328yNF
-	3d5kgPLA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uR57V-000M79-0u;
-	Mon, 16 Jun 2025 16:38:50 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 16 Jun 2025 16:38:49 +0800
-Date: Mon, 16 Jun 2025 16:38:49 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Crypto List <linux-crypto@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: [PATCH] padata: Remove comment for reorder_work
-Message-ID: <aE_YGbugmAlKk2tC@gondor.apana.org.au>
-References: <20250616153134.1583c3bb@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="T/g6uJv0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 015B841D11;
+	Mon, 16 Jun 2025 08:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750063161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rxpc53pcs9/ImiGc8WRsxEwJ2C+yK+Q3uRnvwi8vl9Q=;
+	b=T/g6uJv0DktbNAIvT3CUgs9nfD/z4ZaAY3tuOQTayPiC0nbFM+l2YdnEbaj/nFUkpWxPhs
+	4m4Vy/sV+HEfIXAPoQeAGKuUQD/oQrz9paXLq7+JtdFkhW+RvILvIY9gwSn4mc/N6Fagfe
+	vJBxZjnRlTianYyyw503L4LUKI9wnWd4vZr/FeXpnMZ9MaikThEW04EhwklB35zWnFrKyI
+	hdPe29pa4tcimfUjhBBQLYvCfLoqgFcvBSQhBSCV2APqaqNCq2tdpQ+8DktqrhzOggczTJ
+	9lcsAQ2IsSAF11BQGJdOwjD4RhlSWcZvo9ri1x3oX0yttKz6tTH711SiZOSUvA==
+Date: Mon, 16 Jun 2025 10:39:19 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jason Kridner <jkridner@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas
+ Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, Roger
+ Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Paul
+ Barker <paul.barker@sancloud.com>, Marc Murphy <marc.murphy@sancloud.com>,
+ Andrew Davis <afd@ti.com>, Bajjuri Praneeth <praneeth@ti.com>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/7] ARM: dts: omap: Remove incorrect compatible
+ strings from device trees
+Message-ID: <20250616103919.2d678c1a@kmaincent-XPS-13-7390>
+In-Reply-To: <CA+T6QPnaCFZyRsv9q3bcOrTc22nA0AOXy0tR_SpAkGVVPQqfLg@mail.gmail.com>
+References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
+	<20250613-bbg-v3-2-514cdc768448@bootlin.com>
+	<CA+T6QPnaCFZyRsv9q3bcOrTc22nA0AOXy0tR_SpAkGVVPQqfLg@mail.gmail.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616153134.1583c3bb@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehjkhhrihgunhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhnhiesrghtohhmihguvgdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopegrrghrohdrkhhoshhkihhnvghnsehikhhirdhfihdprhgtphhtthhopegrnhgurhgvrghssehkvghmnhgruggvrdhinhhfohdprhgtphhtthhopehkhhhilhhmrghnsegsrgihlhhisghrvgdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, Jun 16, 2025 at 03:31:34PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the crypto tree, today's linux-next build (htmldocs)
-> produced this warning:
-> 
-> include/linux/padata.h:104: warning: Excess struct member 'reorder_work' description in 'parallel_data'
-> 
-> Introduced by commit
-> 
->   71203f68c774 ("padata: Fix pd UAF once and for all")
+Le Fri, 13 Jun 2025 13:52:23 -0500,
+Jason Kridner <jkridner@gmail.com> a =C3=A9crit :
 
-Thanks for the report Stephen!
+> On Fri, Jun 13, 2025 at 10:49=E2=80=AFAM Kory Maincent <kory.maincent@boo=
+tlin.com>
+> wrote:
+>=20
+> > Several device trees incorrectly included extraneous compatible strings
+> > in their compatible property lists. The policy is to only describe the
+> > specific board name and SoC name to avoid confusion.
+> >
+> > Remove these incorrect compatible strings to fix the inconsistency.
+> >
+> > Also fix board vendor prefixes for BeagleBoard variants that were
+> > incorrectly using "ti" instead of "beagle" or "seeed".
+> >
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> > ---
+> >
+> > Changes in v3:
+> > - Remove extraneous compatible strings.
+> > - Replace BeagleBone board name vendor.
+> >
+> > Changes in v2:
+> > - New patch
+> > ---
+> >  arch/arm/boot/dts/ti/omap/am335x-base0033.dts                   | 2 +-
+> >  arch/arm/boot/dts/ti/omap/am335x-bone.dts                       | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts         | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-boneblack.dts                  | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-boneblue.dts                   | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts         | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts                  | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts                 | 3 +--
+> >  arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts               | 2 +-
+> >  arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts             | 2 +-
+> >  arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts               | 4 ++=
+--
+> >  arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts | 5 +-=
+---
+> >  arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts          | 5 +-=
+---
+> >  arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts               | 2 +-
+> >  arch/arm/boot/dts/ti/omap/am335x-shc.dts                        | 2 +-
+> >  15 files changed, 22 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> > b/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> > index 46078af4b7a3..176de29de2a6 100644
+> > --- a/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> > +++ b/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> > @@ -9,7 +9,7 @@
+> >
+> >  / {
+> >         model =3D "IGEP COM AM335x on AQUILA Expansion";
+> > -       compatible =3D "isee,am335x-base0033", "isee,am335x-igep0033",
+> > "ti,am33xx";
+> > +       compatible =3D "isee,am335x-base0033", "ti,am33xx";
+> >
+> >         hdmi {
+> >                 compatible =3D "ti,tilcdc,slave";
+> > diff --git a/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> > b/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> > index b5d85ef51a02..2790c0c5a473 100644
+> > --- a/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> > +++ b/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> > @@ -8,8 +8,8 @@
+> >  #include "am335x-bone-common.dtsi"
+> >
+> >  / {
+> > -       model =3D "TI AM335x BeagleBone";
+> > -       compatible =3D "ti,am335x-bone", "ti,am33xx";
+> > +       model =3D "AM335x BeagleBone"; =20
+>=20
+>=20
+> We have software that looks at these in running systems, so I=E2=80=99d b=
+e ok not
+> to change. If changing, why not =E2=80=9CBeagleBoard.org BeagleBone=E2=80=
+=9D? Not sure of
+> the convention to mention the SoC, but AM335x is not part of the product
+> name.
 
----8<---
-Remove comment for reorder_work which no longer exists.
+Is it ok to change it or not then? Ok to move on to BeagleBoard.org.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 71203f68c774 ("padata: Fix pd UAF once and for all")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index b486c7359de2..765f2778e264 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -90,7 +90,6 @@ struct padata_cpumask {
-  * @processed: Number of already processed objects.
-  * @cpu: Next CPU to be processed.
-  * @cpumask: The cpumasks in use for parallel and serial workers.
-- * @reorder_work: work struct for reordering.
-  */
- struct parallel_data {
- 	struct padata_shell		*ps;
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
