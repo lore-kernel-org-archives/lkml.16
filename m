@@ -1,149 +1,200 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083D872608;
-	Mon, 16 Jun 2025 06:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750055653; cv=none; b=VUDJWdiB8OznvDINYY62oVlYdtIIAOHmWhZVjPBWptsm+J2qnsRoD5L4EfF5qXt2lPN8DYQ9ss/l/JcpzIYScP/OkZTDJh8mcrg3nxMUx1if/dMVolIOj70hwjrvzNq3KN5dsiy0k5J5QVQdbU+lleh54W//+G9VqTnrJmyIanE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750055653; c=relaxed/simple;
-	bh=NcfOR+xbcUtfA85Y9HH6vmCb9ZL4oKoRn9ZbKKZJ2Vw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qB22mwo+XOvsLDGR5FJm7PnL9mp/YW2I1O8DN/tEhuttMw0Z2d3exUNcFyto4Sf4+r4mEUGKqYj2Jtmuvm0MpUnfuDNSHDBwKNVESc7wPJKyuLvanE8clzaIlghTS02RwwzGT9n9NzCru7MHCUWTUC/Vv49QkGCSU/XEqXAD/+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=M4suDSk5; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744A372608;
+	Mon, 16 Jun 2025 06:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750055809; cv=fail; b=uSD8DUj9T/dHYRXwaBhpZgCFQjQEgHwamuVxdERQFtk5+mg8Xkv5dwIDnzUizrH09+C1xPcjngJ8uKTevPnxZYBShIOVulgw0yJow8sdIypN8k0g9j/dSd+YZPfiOE9uMMdopuSoYeSPgwRFpYeX4pq/0/M3lDQWSO8DNFjz4QA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750055809; c=relaxed/simple;
+	bh=yh9mIFs+E2t3Ff36yQmA5a0S+RY6d3BBxUT/J0Uu+hw=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
+	 In-Reply-To:MIME-Version; b=oj7Qfxxm8Y08I0y0gfJ48RzlsIgE2KyWFrtrfsAgv+isnfy2yKnBKB8oZvJb7Ivt2rEqyTVpVw6AKywt6Io8ddDHMvyC2hkGXZVtspMMjLpzTJ8fL/X4+N5emW9Uh9cqHmgn6eDayJKEc1jUklSnGZGs49YE+zNE2lNCqHx3qFk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KcbCcVXa; arc=fail smtp.client-ip=40.107.223.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M4suDSk5"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55G6XOH23658728;
-	Mon, 16 Jun 2025 01:33:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750055604;
-	bh=9BkVFrTKgC9rH1nlpqm8W5gPeCeKSxMCFUVpVGS1JwA=;
-	h=From:To:CC:Subject:Date;
-	b=M4suDSk5URjh3EEu2LT1eSO/deE9Cj1GublOs7d9aZyvMXJy85MJBLG0wY35rt/hQ
-	 /ZoBbvPQdMaJKtiHLySTzuAWHz7JqO4WsBEd+C6QBtpADloL8He/08jceiwymicDXa
-	 GtwX4YqGD3lmFzdOIIcD0p91qguu4JRY99N2xPl0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55G6XOhw2410372
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 16 Jun 2025 01:33:24 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 16
- Jun 2025 01:33:23 -0500
-Received: from fllvem-mr08.itg.ti.com (10.64.41.88) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 16 Jun 2025 01:33:23 -0500
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by fllvem-mr08.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55G6XNHh3813524;
-	Mon, 16 Jun 2025 01:33:23 -0500
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 55G6XMuC003283;
-	Mon, 16 Jun 2025 01:33:23 -0500
-From: Meghana Malladi <m-malladi@ti.com>
-To: <namcao@linutronix.de>, <m-malladi@ti.com>, <john.fastabend@gmail.com>,
-        <hawk@kernel.org>, <daniel@iogearbox.net>, <ast@kernel.org>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net v2] net: ti: icssg-prueth: Fix packet handling for XDP_TX
-Date: Mon, 16 Jun 2025 12:03:19 +0530
-Message-ID: <20250616063319.3347541-1-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KcbCcVXa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u+w/3lRfCOYXprmQzP4Ib7Ereejq+khAtDeok1DHYKAzjITyeO8mEW/4HOyQZSh321y0Y4JC4vNnRp+G/6LStBrMwiIBvbhNn3ZYiN7GYcMrnboFid6X9pJx7KL0386iGkgQfjn3eQA41PUxnE0xcLO8LDT8UkKD/4kjRxC986QBfeK4Qm3pbDsFrg54m34g46EUjDaA0KtAcRiQb3U2SNJlF4EK8yaiiVYD2o8++opHU/MTpGFfG/T6O2aRgBaem4/iZdILQNn1A2j7Q57DsyUnzT9PLxhoO/yd+8oEYy691Cq6W9NQLOCFVYOGKKZIrIqmJU4tsqPPeaGse1fAkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GrQP2J5plnBLK13OYrG2M+UZbEc+D6zEBOh1z8gKMi8=;
+ b=N709rjss6KMcyGvHWX1ylwrNIpgF9SwuHIaUZ2PRDUD+83U3oT7ymAXdsDrHjbtyMPmi20Hjn2nKxNgKRY7I6lgSxI7sXp6Bgys9lqz5OcnAHxf8b4IeAGLFuT+gf9GWBAhs3mbcfDmssEZ1dx8ZwOGNf2WWeOF4KPk0JKsBkOlZ64a7X4iavYaq1EGQxVM1fuIANYsxGzyhm5vM4iob0le1VriSLssl4Cz7KrLr3SsX/3mnWKU9uZ18dgcMJSVnDzF/EwDsQUvRrATZvDZaQEYy+fRuEMNby5RTqcCmRPnyAfANypPe5O3h4F1iHh7pW+iF/XsRjuzajw2e/0Vcow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GrQP2J5plnBLK13OYrG2M+UZbEc+D6zEBOh1z8gKMi8=;
+ b=KcbCcVXa85sB+QO7i8Y/Os6EXea3pUylOsbt+6b78AcEEEYdm8aL5s7zLL4Lt/bb9bOauyd014kw45aWWI6ydy0oaeFcmWy1mgHx3yyfrtOPy4U1GLPAUx2XuidZVCNKR0l0Oi+YaXTBl5dA9gqY4h2tPpwM/wAAwZVh36FRWhatAiPy0+A2vD8F3SrG3akRA2AeWQ5Igez2XkH/aUKI0WQkke4TFV8WIvB+uAA2cMvG13UXcoQKhtTwXgAwxc12A4JxbWxibs8OEm3NPqxYeFPBaeyMUsqZE9AxY7p9wSPjBUujFATu/E8IIdpdqc9LfVDWS8c6nqQNS7LGEYXXvg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SN7PR12MB8027.namprd12.prod.outlook.com (2603:10b6:806:32a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
+ 2025 06:36:45 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 06:36:45 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 16 Jun 2025 15:36:42 +0900
+Message-Id: <DANR08O454U7.2VTTLNPOTD6U@nvidia.com>
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Benno Lossin"
+ <lossin@kernel.org>, "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs"
+ <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v5 05/23] rust: num: add the `fls` operation
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
+ <CANiq72=3nDR=J2OXu9nWwZW_kcWfZ4KhZ3aS12_dcB=1EP2icQ@mail.gmail.com>
+ <DAN1SGG5DPVE.UUW0B523LQHO@nvidia.com>
+ <DAN1XS7Z0AFO.3S7PRNH5FWWV4@nvidia.com>
+ <CANiq72mpFX2pSuy7JU+Xb_6fCkEA96er6Rsg0bVv+wBBO5OqUw@mail.gmail.com>
+In-Reply-To: <CANiq72mpFX2pSuy7JU+Xb_6fCkEA96er6Rsg0bVv+wBBO5OqUw@mail.gmail.com>
+X-ClientProxiedBy: TYCPR01CA0182.jpnprd01.prod.outlook.com
+ (2603:1096:400:2b0::6) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SN7PR12MB8027:EE_
+X-MS-Office365-Filtering-Correlation-Id: f41ed769-0b93-4ccf-4cc2-08ddaca029ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|10070799003|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RVdxTlRFbmo5eDFoQi91b09RSkwxbnczd3YyYTIxY2ZyYzRKZzk3WVcxOFZH?=
+ =?utf-8?B?bDFsdjJ2VnRhVytmTkVMYndSamp0OFJrU0dGclExdERGeTlPUjM2Vm1QUldq?=
+ =?utf-8?B?SUwzaGFBVE84Rzk5VDdUNlUyM212UHphMzJDZkpJSTAzZElKVHVpWlNtTWV0?=
+ =?utf-8?B?VXZzbnpVWTJyWFdwT292bEFlVkFFcGVWZTEyb2k0c2loYlpCV2xmUWhYRXJT?=
+ =?utf-8?B?bTJtbEtNWnRZdFhVTWdWbDArSVRoU1grQnNVUERYK2dGaVZOOWtERkxCaE94?=
+ =?utf-8?B?cWZUQzZCTmowT2Rub001MENQbHBIcGU4WVo2R3ZpR3V4NU85d0J0ZEtxL0dw?=
+ =?utf-8?B?M08xNVYzdVlXekRRZ0ZKMVp4OUZGc0M5Z1FkRzRVa2h4dElsbWx3Z0pyNDFX?=
+ =?utf-8?B?QnlzL29tS204YTRoY3cvZCtRbXkzQnlXVVBvSUlXM0NQU0NYR0FHV2JYb2JJ?=
+ =?utf-8?B?c0ZMOW5LTmxQMUlEV1NSVEVhRnZIMmhoQTQvY2lOVEJFZ0VlWXRpQU5wb1lK?=
+ =?utf-8?B?Y2FlUkxJMHR5cSs5aEszYURMVGRCZ2pjc203bmdIVHAwQVhaWnZCZis3cjky?=
+ =?utf-8?B?Snhkc3RsZmRLeXQ2K295cThESG5lL0JjNWhwTkw2YVBRQk04cVQ5K2hDUGlo?=
+ =?utf-8?B?dUNVUUlFeWtxMmNGWCtDSVZ6UEJUcmxUamEwQlpoeE1OS0RsRGZEWjNxajNM?=
+ =?utf-8?B?MnFzbDJjYUQxTHBydFBDZ3VYa3MyNjE5U0tmblVKWE5tQy9BNWlScHdDaVZz?=
+ =?utf-8?B?ZGhJYUsybmRLUmtRWkFCRENOWFNvT28wWGc3YkpkMDZXdyt2RS9SSkNaOTYx?=
+ =?utf-8?B?SUZwMFhic0kvc09UTXRraXdGYlE4WUxPenIrcnBXN2UvL21CY1ErSkxjV2pt?=
+ =?utf-8?B?UjRZYy9OOFlOTkdIWDBaK0ZQY2xCZDZtaWc0ZnV1MWhBeTBLTHJxcUllYUF0?=
+ =?utf-8?B?djdabnhVeGZydTdqb0E0UHh5NEVvUDRaZ2Z2N0pValV6OXZsTkRqeWNQVEFl?=
+ =?utf-8?B?Z29CWUtLZUV3UzhTbys1YlU1ZGptRDVTQyszbnRxL21zRlV0cUdNYU5sRisr?=
+ =?utf-8?B?dmMyalR0U2NLVmV2MWFYaUhpQlU0eTRyQVA0OHBTRlViQ1J4M3VvNjlIc3hn?=
+ =?utf-8?B?ZWVpTHAzRUdSMnV5dE9uajMyOW9CdDd1TWRza2F1QmRjRFA2MnJXVmJpYmxl?=
+ =?utf-8?B?UDFDL2ZIM3E5cHJtY043b1VudXF6UkZGMFJiL1lxaWNJUWMzYmhaNWxHd2FX?=
+ =?utf-8?B?alE3YlRWSGY2ZEF0WmlzVUlqOGtTcXppRzRnRE01U0FRZ2pCNHA5dExMZEVL?=
+ =?utf-8?B?ZkhvYUw5UE9xREdYV3prL3RnUTlVSm5uUkRVU29SWTZqMXN0aUdZL0ZLYjJn?=
+ =?utf-8?B?c2praWY1eDdmSnZjUkFLY2VpbDI1V2dzcHRpdWUwQWhjRFhBckhtVW54azl4?=
+ =?utf-8?B?L1lRSGRURmhpbWdiOGpLSDlOTjY4MERyQzcxOFcvc21qV2p4QmFSVXRqbHp1?=
+ =?utf-8?B?TEtqOVpaeWh5UzRSSVpvdlhGUnZjTGI2anBVdUp2WHVmVnRJb2ZSV0wwNmNZ?=
+ =?utf-8?B?R3l6YWd1bVNTUFhUeFM1dDlwejViSGpOcll5Q21XVnliblc3bjI2d2VIOTFU?=
+ =?utf-8?B?WHJqN3lRa2V0ZHpBLzJYc0RtaDAxdlEyUkREYlVhd2p4VE80cit5b3hydXhZ?=
+ =?utf-8?B?SkxVa2F1QUg3VXhoMkdSemdvNDRyN0VaN1E0UGsvaURndkswZGlESXRKNUYv?=
+ =?utf-8?B?Y2kwSE5VMnkxb0l0Z3paK1dMTDI2WGhKeUVlWC9QM0pIM2ZmU2pZUXAweEVE?=
+ =?utf-8?B?S0Zhc1I1TStqU1Zac2hsTEduZVlJOFA0UVdHTFgyQmM2ODh2OFo2NEZSTVBG?=
+ =?utf-8?B?UWNwMWlXc2RHODJBTUU0cTJvNG1iYk1vWk5Tc3JyOHZOTmJlL0xmOVlqYmhC?=
+ =?utf-8?Q?vfR/LZ2oLDo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?anNQRGV3SDBUUmZQRjdjNHpoZGJnTStpb3lKM1hOWllGK2gwdkhsZTcyYTVL?=
+ =?utf-8?B?UjNLUmUrVVkySXRkNXVwQ2lKYXNaNWlVSHhQRThLMkJkUlREMlF0V0xwRGFk?=
+ =?utf-8?B?R2pVeTBSUGRTMGVMeWY5SEszcmtGTng5bXFTVXRHSnZXWmlKc1dFa3orOWFm?=
+ =?utf-8?B?eDZORzZTdlVvK244SnV0NEI1em4rTGVvazBwdStuU2xNbUoyaEY4QzNUWnJ1?=
+ =?utf-8?B?Z1Z1WHhKVmZ1aWtDTk41ZXZ4QWtHaHF4NUd4cHNwRHR6eTR1UFpjY3dobDhG?=
+ =?utf-8?B?OE8xWThzRUExWDFzMEhadndqRXlUY1dqYk8raVF3Q3c5WkhrWE1TSU5TMEtK?=
+ =?utf-8?B?c01RbVZwRzg1cnJmdk1NbFlkcVRRSGphMzREN01GMSt4cnVULzdEL0QySjVU?=
+ =?utf-8?B?WEQrbFl6WDVHcUVTSXN0SVpweVFaVnpNMzZEVWRERGJBOUdueUZNNzBFL2Zx?=
+ =?utf-8?B?OG54SFRoc2JQNkdVdWR4RWEza3dDOXpnWlZqYWoySFpRRTVoMmVnZU9zamFE?=
+ =?utf-8?B?ZGF5NitYampjMUMzejFJVmcrc2R1dUREb0liRE1DbExNRG81VlBSYU53Qk1Q?=
+ =?utf-8?B?S1ZpYStBU1kzaUdXZzhJZEFlV01wUW1SY0pNbU9yZFcrMWEyK0lINTNRYkVv?=
+ =?utf-8?B?WGdJekxoTS9JOEFQalFQWXRIYVdncDRMY2c3KzlsY2FYVnlVZGFyeVBwRUlq?=
+ =?utf-8?B?bStnMzlXVTRTUS9RUEpRSS9mTGFwRUVMcU5wSWdkOE5LUFhQeStHMW4xZ1FM?=
+ =?utf-8?B?T3VEOG4rbVBhT0JFTkp4Y1MwWmNQVkZuRnRSK3d1bCtJdkYrSSt3VzhGQ1pD?=
+ =?utf-8?B?VHh3TkVHOUh4YUYwTDAvQ1hXMFp6cjBuMkRnbklDUFJIMHBJWjdvVnJFWjBr?=
+ =?utf-8?B?TDJRNVBPMC9pd2V5UC8vZWFhKzZ6QUREZGw5REp2YU14Q1RzZUdjeTZZMEdx?=
+ =?utf-8?B?TW9qa2JmRE01SVJNVlE1M051VHJlYVg5N29uWWcxd3grektpUGtiSG9sTDAz?=
+ =?utf-8?B?eVpDTlNRY1VYODJEeWRLNDQvNXdtQzJKVGhDVFloNU96OGFVdVZ2VGZmTVJi?=
+ =?utf-8?B?aW1kaThnNGpXbE1DcHFPTUNLYWhtemJDNGQ3eUZ2Q1FOLzg2U3BCb0xZR0VG?=
+ =?utf-8?B?c0RKT3FRNUowUnFqSU5nakV1ZzV0U3JBZzBpeUFHSjRZWDdqSkhscExHNW1Y?=
+ =?utf-8?B?dTR6YmZzS1crQUc3aVBqYTlHQ1IxV2taY2YyZG52cGNDTExyRXVtTDFCWXNQ?=
+ =?utf-8?B?TENDcU9DaXlXRXVlaEx3UHFQOWhKcEduOWdpemp1ZlZKa2VtR0xML1FzTm9o?=
+ =?utf-8?B?NTRjV1NVSEhkb0Z6LzBBTGZEeTBJV2ZsWTF3cW5JaDJRenRtQzZ1MmJ2S0Fr?=
+ =?utf-8?B?eGFsMUN4NTdHdFJESWlEb293M3U3ZVcvaytkQWpKVndRaEFXTEF3bUdrWG9x?=
+ =?utf-8?B?RVFkc3RPVXlXK0d0K2p4MTdmYzV4YjFsWURQNE1vUEhRWjRhZk5NdkZBY2Fu?=
+ =?utf-8?B?aFpTbVRWUXYvVTdaU0dzZ0hsN1ZMME5PTnlXTi9CbmNMSTVtOVcxMWJjZnBN?=
+ =?utf-8?B?Q3htYVkxUzh2WE05RjRScWRaUXE0VFFJM2hjWDV0VjJoc2g4WW8xN2RoQVlF?=
+ =?utf-8?B?cHlkS3U3a3R5b2RpY2dUMzgxcHZuNFlMZFIvQXBjTEdvYURBZzErQlN3U1VO?=
+ =?utf-8?B?a2lRT3lTRUlZNlMwbzJHN29IWFFIUUY1c0c5WG15U1NSMm5iMGtSZzM4MEZU?=
+ =?utf-8?B?QWlLdGhUaStxU3o5MEpxaGF2eWJaRUZZem5WeFpGYTVwd2JXdHd3RXNQOGkw?=
+ =?utf-8?B?djhMZFZnKzJFQjdzVXhKZUk3cHdvR1FraVNIbTkxamRiNzNzVmUyNmF2bzZo?=
+ =?utf-8?B?QTFhcERMdXZBNkQ3Q0d4anQraVAxcVhWRlZ5THVVY2xzRmVQRmNtYTBLaE96?=
+ =?utf-8?B?bys0dFBpb1VLL05JL3J1SHNKZ1V6Wkt4VkJOU3R4d3pjVklpRDlvSjRqRzV3?=
+ =?utf-8?B?dm9nUU9wRHNLK3NHcVZaSGJldm9aUzRwVXAvdUcrZTNXNlFyVEZmUHFMc3V6?=
+ =?utf-8?B?OWpnbWc2WXJnZVpJVitBVkp2cGV2bk1vb3JvRU40dm9ZUU5LMm5va2VEejJl?=
+ =?utf-8?B?YS9RakNoc2R3bnhuTlAzWDM1MDNaV1hrbUltdWQyc041QU5qZ01jYkpHZmUw?=
+ =?utf-8?Q?ibKbAhIS+gDX5Gzu/wTuKnqttZRLH80MaYWkmmcK6ymf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f41ed769-0b93-4ccf-4cc2-08ddaca029ae
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 06:36:45.2163
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FP38QwCl7nq5e/Sa2PNsSjF7AzMETrLEDdGb0SKZREc8Vr6YBgDQF/SK+xwIEgxdQZDhOUEyTlWjlPfJUE77jQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8027
 
-While transmitting XDP frames for XDP_TX, page_pool is
-used to get the DMA buffers (already mapped to the pages)
-and need to be freed/reycled once the transmission is complete.
-This need not be explicitly done by the driver as this is handled
-more gracefully by the xdp driver while returning the xdp frame.
-__xdp_return() frees the XDP memory based on its memory type,
-under which page_pool memory is also handled. This change fixes
-the transmit queue timeout while running XDP_TX.
+On Sun Jun 15, 2025 at 10:25 PM JST, Miguel Ojeda wrote:
+> On Sun, Jun 15, 2025 at 12:58=E2=80=AFPM Alexandre Courbot <acourbot@nvid=
+ia.com> wrote:
+>>
+>> Also, although this will work nicely for `impl_fls!` which is a single
+>> function, I'm afraid this won't scale well for `power_of_two_impl!`,
+>> which defines 6 functions per type... Any suggestions for this case?
+>
+> We can always generate the same "cases", i.e. sharing as much as
+> possible the lines, and just passing the values (numbers) that
+> actually differ, which you then plug into the example line
+> concatenating.
+>
+> The standard library does that for their integer macros, e.g.
+>
+>     https://doc.rust-lang.org/src/core/num/int_macros.rs.html#3639-3644
+>
+> If that happened to be too onerous for some reason, then we could
+> ignore it for the time being (i.e. we don't need to delay things just
+> for that), or we could put them as `#[test]`s to at least have them as
+> tests.
 
-logs:
-[  309.069682] icssg-prueth icssg1-eth eth2: NETDEV WATCHDOG: CPU: 0: transmit queue 0 timed out 45860 ms
-[  313.933780] icssg-prueth icssg1-eth eth2: NETDEV WATCHDOG: CPU: 0: transmit queue 0 timed out 50724 ms
-[  319.053656] icssg-prueth icssg1-eth eth2: NETDEV WATCHDOG: CPU: 0: transmit queue 0 timed out 55844 ms
-...
-
-Fixes: 62aa3246f462 ("net: ti: icssg-prueth: Add XDP support")
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
----
-v2-v1:
-- Added the missing Fixes tag
-
-v1: https://lore.kernel.org/all/20250612094523.1615719-1-m-malladi@ti.com/
-
- drivers/net/ethernet/ti/icssg/icssg_common.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index 5b8fdb882172..12f25cec6255 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -98,20 +98,11 @@ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
- {
- 	struct cppi5_host_desc_t *first_desc, *next_desc;
- 	dma_addr_t buf_dma, next_desc_dma;
--	struct prueth_swdata *swdata;
--	struct page *page;
- 	u32 buf_dma_len;
- 
- 	first_desc = desc;
- 	next_desc = first_desc;
- 
--	swdata = cppi5_hdesc_get_swdata(desc);
--	if (swdata->type == PRUETH_SWDATA_PAGE) {
--		page = swdata->data.page;
--		page_pool_recycle_direct(page->pp, swdata->data.page);
--		goto free_desc;
--	}
--
- 	cppi5_hdesc_get_obuf(first_desc, &buf_dma, &buf_dma_len);
- 	k3_udma_glue_tx_cppi5_to_dma_addr(tx_chn->tx_chn, &buf_dma);
- 
-@@ -135,7 +126,6 @@ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
- 		k3_cppi_desc_pool_free(tx_chn->desc_pool, next_desc);
- 	}
- 
--free_desc:
- 	k3_cppi_desc_pool_free(tx_chn->desc_pool, first_desc);
- }
- EXPORT_SYMBOL_GPL(prueth_xmit_free);
-@@ -612,13 +602,8 @@ u32 emac_xmit_xdp_frame(struct prueth_emac *emac,
- 	k3_udma_glue_tx_dma_to_cppi5_addr(tx_chn->tx_chn, &buf_dma);
- 	cppi5_hdesc_attach_buf(first_desc, buf_dma, xdpf->len, buf_dma, xdpf->len);
- 	swdata = cppi5_hdesc_get_swdata(first_desc);
--	if (page) {
--		swdata->type = PRUETH_SWDATA_PAGE;
--		swdata->data.page = page;
--	} else {
--		swdata->type = PRUETH_SWDATA_XDPF;
--		swdata->data.xdpf = xdpf;
--	}
-+	swdata->type = PRUETH_SWDATA_XDPF;
-+	swdata->data.xdpf = xdpf;
- 
- 	/* Report BQL before sending the packet */
- 	netif_txq = netdev_get_tx_queue(ndev, tx_chn->id);
-
-base-commit: 5d6d67c4cb10a4b4d3ae35758d5eeed6239afdc8
--- 
-2.43.0
-
+Thanks, this appears to work quite nicely (if a bit verbose), and I can
+adjust the tests to avoid the need to take extra arguments.
