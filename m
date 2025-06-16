@@ -1,73 +1,45 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1814019D087
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C12BE49;
+	Mon, 16 Jun 2025 04:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750049084; cv=none; b=J4PxXdrpvT6xRk5E26LB+/1WSHaq3XbTc6H4WaeuhAHVsLJve6IYuyIfCQh8N/2Ku21FhmJYFq1evGAsp2zCx2k9R60Qf5l5XsHOuDDWmj8HGfWxAexAK9s3K0okZlHBciNiX9WjCL+rNJsd0bnx+BFc7hyhIqA+QRSqJKzZ/Jc=
+	t=1750049182; cv=none; b=RMQ1d30taYr36xAsZFtBvwxKSby7UXSzlHHdqI3rOYCDZNztwVm0qwBwsWAX8K9/PnlRkf9wG1QWx3NGFmTYmD3TNzXcWtCeS29WWgZtB1RthkFrWDbFmxS/CU7w2jBUsCG7nJ5fcfUcAvEB07eMTVCGjPfkzyhmrAgw2XILK0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750049084; c=relaxed/simple;
-	bh=Ql1n+4jUxnOtoX7FKD8Mc3RaJicHFobkF1KXH7F9hn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cnka1zFyim7s5jPQeM2WDzK2cQ2vYDOj84TV7TpiBe2CM+izMDPdt8bRxYVQ9BqeeTRR8Ukji5YwChhCDU8DsVoPNC2YP3aESM2QsQwWFfRxP9q7zXLCKDCKLtrLDwos15rS3oSNlhKV5ek1ZpzRdQMdVHpfNUgBA4xU+wVVo4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=PX43daP8; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	s=arc-20240116; t=1750049182; c=relaxed/simple;
+	bh=VxeE5b495HPYIW1v9NA5NUalr5gn/cyjD63eiAtKrLg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cR48yKV0yzUI/AV4abdc24eLxxZo15ms22gw3huK811xT1B5d5H+P0+xfQLihbRxq/sdrmfS1w1P2U6A5oOwBkxbeX1bdoJNVO9NmBNVQWGnBSv7gU7wZf+OV9mpU/LMrA5qoaxs88nEtJN8MWU29nu1WeVspW/w4HgBnhmM3ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBLX+0XY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="PX43daP8"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c73f82dfso3079527b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 21:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1750049081; x=1750653881; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gx/8eoHL8Kyw56Icq4f/cXQzirpUgPz3h2cjfH8G+5s=;
-        b=PX43daP8SWtEVJJGIC3RkLS/wlhX98x6hr+Ub7PG53G8YOrqk6/Be5pOzpxDxU8jSJ
-         YrpDhUpPBqxUbCUBaqw6B/le86vUxEBRHIC4a15XqrV+L/TGtVUQQof+AKQgpw55ait+
-         91NI495+dzS9+M/e7TRMY+YSb8UZJUEFKWbbqMBNHSvJbvA63xeHZkxiEm3KgkzLGqF/
-         RZmkrnyhmXO469dBHgQoxvkacSfcSc664WH5x0VkZzyGiD2kzdwzxYF5xkeKckcH2wVL
-         PBcUfZ1DpCr5laNy1cSfwDGBh8to0ZmAitpPIwnst7EVNuvJS7OM/69mUlxuJYnK+yT/
-         fE2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750049081; x=1750653881;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gx/8eoHL8Kyw56Icq4f/cXQzirpUgPz3h2cjfH8G+5s=;
-        b=Xpn+/osR/dA1V8rGIwGtissNVKshl65Rm0CkAK4erY3LMJbeJPVtqIAD33cY1PXdzt
-         yJ7iH9e4eFe2zPbE1gLZgI7/MBX1sfJtzHnsOUGoj+rcsjTa9uvp6xObG8vkAk5QSV1x
-         58r3iZ2Hf45tCjWTScYnjAs6FXJnPaojugeQ18TFPabav5BAm/aFE9f2BGp3y4bQFsal
-         wvHKroRNZaQSd1r5NTUye5dD0VAWh2mrg58KA0JnaGA0OkmvbpbxKel3WlxbyPIsB3JZ
-         QXhnLZsxpa6Phgx2MA6fyP72dgCkofmTKb7nK3pcmpg0K1kv7xsUyBTM5USrr+kbqFtU
-         Q2pw==
-X-Gm-Message-State: AOJu0YyN1SKIXo3atDaTJBnvv5lRHs84mD0rDKUf/ieBJsGFvOxQvwy3
-	+Uzy3HQd13Z6duyqH20trMN03GdeZ2GHBO2FSKTL7OJe7G3iE/pcHZRRnze28yyEJKg=
-X-Gm-Gg: ASbGncsS2LEjgyPGX0hFJ6ecpNlzj//aKovzNbc/9F3aptcSCobFAPpOLKubW0QPVIE
-	aWL5Y+zdL4q+sTukv5Xz5jTnSu88awUf5/VM2QTIhwQfG3pNjQaNyGVfHX0sahz0lNck4W3Q+sx
-	Adc0VEdICDt+Sop4RdxFsMKXVXMrBRK58JOKEz/VNqOfr0McAtXryh8rZulGqG9oQGJP9X55PNV
-	K+aQPCVf/86UwdGWhhDjaS3I5sRsPtha/GdKl1w8RQH571HnO6+IcnMO79bsNgGa/5nvApnRlE1
-	ab6Cz8vZKvAiFJC1hmsglyQFCIPxB4aHx2Ktam5C9iUagO3pOKlcIgXqCsacEae11M0zZsxldBA
-	D6qIPm4QWn04JJUkf9Dgen0ZSb8d0xJc=
-X-Google-Smtp-Source: AGHT+IEPckFcFtldN4ccAXqEziO/DNLijHVnM7HrhF08iZR3CHfDjHXQRjSASarfx6qpCIhG77IwIQ==
-X-Received: by 2002:a05:6a00:3d10:b0:740:aa31:fe66 with SMTP id d2e1a72fcca58-7489ce0d39fmr10409001b3a.4.1750049081300;
-        Sun, 15 Jun 2025 21:44:41 -0700 (PDT)
-Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d24c6sm5758990b3a.168.2025.06.15.21.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 21:44:40 -0700 (PDT)
-Date: Sun, 15 Jun 2025 21:44:38 -0700
-From: Calvin Owens <calvin@wbinvd.org>
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>
-Subject: Re: [PATCH] tools/power turbostat: Fix MSRs with CONFIG_MULTIUSER=n
-Message-ID: <aE-hNs1bWTbqE6ih@mozart.vkv.me>
-References: <81f4c402d1fda7c2419aac1148061a0789112e76.1749849645.git.calvin@wbinvd.org>
- <99f09d35e30fa335508823e9848a3365936ac9b3.camel@intel.com>
- <aE-f35kOO0TywX5K@mozart.vkv.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBLX+0XY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9AAEC4CEEA;
+	Mon, 16 Jun 2025 04:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750049180;
+	bh=VxeE5b495HPYIW1v9NA5NUalr5gn/cyjD63eiAtKrLg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mBLX+0XYXbGsWRonxQ1wzcwK7aEYnbbNpAdlOnQ23z12S4GGwuU/OhGXpnh+Vdw4A
+	 TvxX3KhAwPWWJGvRz5TAF+SB6eKGIvNu4BRg0FoR3QoLr/zqUGReMWKnQ0Uv+9l66Y
+	 dvjutIbxSCMcpNgNivCC5l0oC4/xr/KgVKkTa37PuWCJD9HhdiVPMOHJkjeZwoyLrx
+	 DZbdbLxUwtzDCvcDkYDKG26njwGWny2leF/TfNb4cdr37YYXQfWbUAbDsHnzAeJJx/
+	 2LLocnYeGQJ6lgLMh8qcot8V7HaMDWQV1BjxpWxdlkw0MHLnXu5T2nTkQi2mUpdGh6
+	 hVhZxx2+ZAVRg==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: "Tian, Kevin" <kevin.tian@intel.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: RE: [RFC PATCH] iommufd: Destroy vdevice on device unbind
+In-Reply-To: <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
+ <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Date: Mon, 16 Jun 2025 10:16:14 +0530
+Message-ID: <yq5a8qlstht5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,76 +47,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aE-f35kOO0TywX5K@mozart.vkv.me>
+Content-Transfer-Encoding: quoted-printable
 
-On Sunday 06/15 at 21:38 -0700, Calvin Owens wrote:
-> On Monday 06/16 at 01:30 +0000, Zhang, Rui wrote:
-> > On Fri, 2025-06-13 at 19:20 -0700, Calvin Owens wrote:
-> > > Handle ENOSYS from cap_get_proc() in check_for_cap_sys_rawio(), so
-> > > turbostat can display temperatures when running on kernels compiled
-> > > without multiuser support.
-> > > 
-> > > Signed-off-by: Calvin Owens <calvin@wbinvd.org>
-> > > ---
-> > >  tools/power/x86/turbostat/turbostat.c | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/power/x86/turbostat/turbostat.c
-> > > b/tools/power/x86/turbostat/turbostat.c
-> > > index 925556b90770..f7d665913a52 100644
-> > > --- a/tools/power/x86/turbostat/turbostat.c
-> > > +++ b/tools/power/x86/turbostat/turbostat.c
-> > > @@ -6496,8 +6496,13 @@ int check_for_cap_sys_rawio(void)
-> > >  	int ret = 0;
-> > >  
-> > >  	caps = cap_get_proc();
-> > > -	if (caps == NULL)
-> > > +	if (caps == NULL) {
-> > > +		/* Support CONFIG_MULTIUSER=n */
-> > > +		if (errno == ENOSYS)
-> > 
-> > Can you point me where this knowledge comes from?
-> > 
-> > I downloaded the libcap source and didn't see how ENOSYS is set.
-> 
-> Hi Rui,
-> 
-> When the kernel is built without multiuser support, the capget() et al.
-> syscalls are #ifdef'd out:
-> 
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/capability.c#n32
-> 
-> ...so userspace will get -ENOSYS when it tries to call them, and that
-> ends up being propagated to errno in userspace.
+"Tian, Kevin" <kevin.tian@intel.com> writes:
 
-Sorry, what I meant was: the kernel syscall returns -ENOSYS to
-userspace, and the syscall() wrapper (in userspace) assigns the positive
-error value to errno, where it remains after cap_get_proc() returns.
+>> From: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+>> Sent: Tuesday, June 10, 2025 2:52 PM
+>>=20
+>> The iommufd subsystem uses the VFIO character device descriptor to bind
+>
+> it's the 'user' or 'vmm' initiating that operation, not the subsystem its=
+elf.
+>
+>> a device file to an iommufd context via the VFIO_DEVICE_BIND_IOMMUFD
+>> ioctl. This binding returns a bind_id, which is then used in subsequent
+>
+> there is no 'bind_id' in any uAPI. let's stick to 'devid'.
+>
+>> iommufd ioctls such as IOMMU_HWPT_ALLOC, IOMMU_VIOMMU_ALLOC,
+>> and
+>> IOMMU_VDEVICE_ALLOC.
+>>=20
+>> Among these, IOMMU_VDEVICE_ALLOC is special=E2=80=94the lifetime of a vi=
+rtual
+>> device (vdevice) should be tied to the bound state of its physical
+>> device.
+>>=20
+>> In the current kernel, there is no enforced dependency between
+>> iommufd_device and iommufd_vdevice. This patch introduces such a
+>> dependency: when the device is unbound, the associated vdevice is now
+>> automatically destroyed.
+>
+> This went backward.
+>
+> The initial v5 patch [1] from Nicolin was similar to what this
+> patch does. Jason explained [2] why it's unsafe to destroy "userspace
+> created" objects behind the scene. And a general rule in iommufd is
+> to not take long term references on kernel owned objects.
+>
+> [1] https://lore.kernel.org/all/53025c827c44d68edb6469bfd940a8e8bc6147a5.=
+1729897278.git.nicolinc@nvidia.com/
+> [2] https://lore.kernel.org/all/20241029184801.GW6956@nvidia.com/
+>
+>>=20
+>> Although there is already an implicit dependency=E2=80=94vdevices can on=
+ly be
+>> destroyed after the iommufd_device is unbound due to the VFIO cdev file
+>> descriptor holding a reference to the iommu file descriptor=E2=80=94this=
+ patch
+>
+> I didn't get this part. The user owns the life cycle of its created objec=
+ts.
+> We don't have such restriction that a vdevice object can be destroyed
+> only after device is unbound...
+>
 
-> Admittedly it is sort of implicit. Maybe a better way to "fix" this
-> would be to warn the user if the capability check fails, but still
-> attempt to access the MSR devices? I can do that if you prefer.
-> 
-> That is my only problem here: when check_for_cap_sys_rawio() fails, the
-> current code doesn't attempt to access the MSR devices at all, even
-> though in my case it would actually work.
-> 
-> I realize this is very weird: it came up when I was recently including
-> turbostat as part of an extremely tiny bootable utility image.
-> 
-> Thanks,
-> Calvin
-> 
-> > thanks,
-> > rui
-> > > +			return 0;
-> > > +
-> > >  		return 1;
-> > > +	}
-> > >  
-> > >  	if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE,
-> > > &cap_flag_value)) {
-> > >  		ret = 1;
-> > 
+What I described above explains how the kernel manages destruction of
+these objects.
+
+The vfio subsystem retains a reference to the iommufd file descriptor
+through:
+
+    vfio_df_ioctl_bind_iommufd() =E2=86=92 iommufd_ctx_from_fd()
+
+This reference prevents the associated vdevice from being destroyed when
+the iommufd file descriptor is closed, as long as the idevice remains
+bound. While vdevice objects can still be explicitly destroyed using
+iommufd_destroy(), with this patch, if the idevice is still bound,
+attempting to destroy the vdevice will return EBUSY.
+
+In effect, the change ensures that once a vdevice is created, its
+lifecycle is tied to that of the idevice.
+
+From other emails in this thread, I understand that beyond the the
+changes in this patch, we want to prevent the reuse of the vdevice
+object ID. We also need to ensure that any userspace-initiated operation
+on this vdevice object ID results in an error after the idevice is
+unbound?
+
+-aneesh
