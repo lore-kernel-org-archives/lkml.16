@@ -1,93 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4342529B229;
-	Mon, 16 Jun 2025 13:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71982E427E
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079134; cv=none; b=CVn4idOz2VV9cOVHOHMNTtzeGjpJpJTtQC47oR2HUp74bmDbqVuy8Y9adpWgbBKHMaRit9gtJPSG7NWC+V2oFe1ukqa5U1lHUlmJHTBvgg6WlMXs6hvdX+K0n504mfxxT5MHiOsGrb4izAUjW40j2OnR0ZMrN0ZNV9fhNQAkM7E=
+	t=1750079186; cv=none; b=kkUG1W8esvzZV1+ctTDIgrgRZ+OzU7ZgfxDP+s+hPj/Uj6WSoZ6nuFj3jlUexetiE3nSe/KvGkqUsi78Fm6z2BZXBXKn4JAZ2sfIOmZjAR8LFKCE5OgOV0Hox+tWvjxgLCXPaOqfJoGo+lpBGyBFeT35NvPhmxiU3nNi8tzm+H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079134; c=relaxed/simple;
-	bh=t0JMBfBiTDh2FNYLfPkkjnYHrm08fBNCDYTeqxlKy/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cjf21RUKrvolJNjiI2cKnfTu+M+eoMWepbAJCE9fnoYaSaKIFAq0KW5qIpEin/WMzP6pJ3DC8RFqw6dTrLOAh2WbzVQS2KoogWuLZh/fFwnmhyrmQI1iDOEkQIQhAjzgx8jZ6Wx8eZm7ZY5VhPcG+Zs8fM6uxpYudiPeQ5pPAvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF8r54ma; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750079186; c=relaxed/simple;
+	bh=BtjsCricPsiRwMVD5AfCwbuZCCElOO1xuxYeG3PfGb0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QOF3yCrCMf+7yJY2Jbryq8QRD0RUU58Rg2yZm7cCBO1DnmalEELs6WZkb4ynnd8WvxWhVOkX3qQD0CiiK1PBTJO0UtF4bPhC3bgwB5/nRMRwimriX/gmQZd9ZI3Wt6ZLMnwoBlZpzfYRhPHYYJH+J31ZPrOx2P4w7md8SjNa8Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=q6Y9idkP; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF8r54ma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0429C4CEEA;
-	Mon, 16 Jun 2025 13:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750079133;
-	bh=t0JMBfBiTDh2FNYLfPkkjnYHrm08fBNCDYTeqxlKy/g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eF8r54maNn2NcTHuaf6QNkp/cGyzHK293NNEqp/kth1LcOSVIlmbp9oh8Fm4JTSIg
-	 w789MZqheUYObGmuGXE39vcSetpYQY73zuTsqSbRpnOtf8xTDjRBoTmRZMYyhnBghM
-	 PaS4RGWmJPRNqpXtvgfJBDUL5q3vdQ4YoEAR5y+j/Y4Y7iPeYBBEgkNjhJTw5c+OUB
-	 eJS+LT0qgHwl2mv3lczzcTkwH0I7dGBmo358A2umzLN9lOqZF23Zng02nXZJ/Tzy6N
-	 HMW0d0X1m7drpooTbZNkD0FrSX7ZWPCu62XbXBlabhAa1TwfgDv9fxyu8vGG35Qdm4
-	 fg4eGPFJWj+Gw==
-Message-ID: <f9275079-842a-406e-8bb7-b22a22b7c7e6@kernel.org>
-Date: Mon, 16 Jun 2025 15:05:30 +0200
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="q6Y9idkP"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bLVPG38zCz9sdG;
+	Mon, 16 Jun 2025 14:56:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750078578; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z0McVc7X6YbwKGJstVkFtBBrm4Pgr9VGcIDoTIXEPD8=;
+	b=q6Y9idkPzqdf1g5JQSD+kZLBywbaWRW1Ekcgjg6In5N0eCQXWBFWvzPFBUr6yeG9zbuZyg
+	YxXeJkJht7K8b2n1Jtjx/NcnrRDTY6p448zlr64aEZKnYcn2Exlzvt1WVchdV+8ZFYE6ly
+	QOgCxWBLjkFiz2RHqUe07D4Ed+FXDXSC+mGje31ma4obT1JQja1iBdcv52SNe89sEMnjhF
+	R5/PeLFG86XduCOfDoxaCqjT+aFvHgYHmLAZ+cTO66bNjLaDGWmAyjdwbEmrUpVUlO2wvK
+	I15mbJhw5J/CU5QY2di+cQT2mwTo/8+AgO7ptIlhHy/a168b4eQhPb6DPHPPpA==
+Message-ID: <e7c3a8a33d00409935f4d43b40aa19c2c146e996.camel@mailbox.org>
+Subject: Re: [PATCH] drm/sched/tests: Make timedout_job callback a better
+ role model
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: =?ISO-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>, Danilo Krummrich
+	 <dakr@kernel.org>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Cc: Philipp Stanner <phasta@kernel.org>, Matthew Brost
+ <matthew.brost@intel.com>,  Christian =?ISO-8859-1?Q?K=F6nig?=
+ <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,  Pierre-Eric Pelloux-Prayer
+ <pierre-eric.pelloux-prayer@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Date: Mon, 16 Jun 2025 14:56:13 +0200
+In-Reply-To: <723c98e2-cf75-4565-b78b-711b3022d44d@igalia.com>
+References: <20250605134154.191764-2-phasta@kernel.org>
+	 <e1b65491-781c-48f7-9368-58d7ede91b12@igalia.com> <aE_8lDuMFFhJBeUY@pollux>
+	 <723c98e2-cf75-4565-b78b-711b3022d44d@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] media: uvcvideo: Enable keep-sorted
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hans@jjverkuil.nl>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: 4q3k3hist7scuj7ju4oeyyef6cyo9etf
+X-MBO-RS-ID: 05c311bc11569575a33
 
-Hi Ricardo,
+On Mon, 2025-06-16 at 09:49 -0300, Ma=C3=ADra Canal wrote:
+> Hi Danilo,
+>=20
+> On 16/06/25 08:14, Danilo Krummrich wrote:
+> > On Mon, Jun 16, 2025 at 11:57:47AM +0100, Tvrtko Ursulin wrote:
+> > > Code looks fine, but currently nothing is broken and I disagree
+> > > with the
+> > > goal that the _mock_^1 components should be role models. The idea
+> > > is to
+> > > implement as little in the mock components as it is required to
+> > > exercise the
+> > > tested functionality.
+> >=20
+> > No, please consider the following.
+> >=20
+> > =C2=A0=C2=A0 1) When we write tests for common infrastructure we should=
+ be
+> > testing things
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 as close as possible to how we intend re=
+al code to use this
+> > infrastructure.
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Relying on internals in creative ways is=
+ likely to underrun
+> > this testing.
+>=20
+> Regarding unit testing (and KUnit is a unit testing framework), the
+> core
+> principle is that individual components of the code should be tested
+> in
+> isolation to validate that they perform as expected.
+>=20
+> The "units" should be tested independently and we use those mocks to
+> simulate dependencies, ensuring that the test focuses solely on the
+> unit
+> under scrutiny.
+>=20
+> If we introduce more things into the mock, we end up losing the
+> isolation.
 
-On 29-Apr-25 15:47, Ricardo Ribalda wrote:
-> When committers contribute quirks to the uvc driver, they usually add
-> them out of order.
-> 
-> We can automatically validate that their follow our guidelines with the
-> use of keep-sorted.
-> 
-> This patchset adds support for keep-sorted in the uvc driver. The two
-> patches can be squashed if needed.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+That depends on what those "things" are.
 
-I've no objections against these 2 patches, but these need to be
-rebased on top of the latest uvc/for-next. Can you send out a new
-version please ?
+In the presented case, the unit tests are just as isolated as before.
+The particular test case itself is not even modified and it will still
+do exactly one thing: See if the job actually timed out as expected.
 
-Also for patch 2/2 can we not just add the 2 keep-sorted headers
-and then actually run keep-sorted to auto-fix things ?
+The added overhead in the mock component is merely the guarantee that
+the fence gets signaled and that the job is removed from the mock
+component's list at the appropriate place.
 
-Or can it not auto-fix ?
+0 downside, documentation upside.
 
-Regards,
-
-Hans
+Each unit test still tests exactly 1 functionality.
 
 
+> The mock scheduler, from what I understand, is not suppose to
+> be a reference design or even something close to a driver.=C2=A0
 
-> ---
-> Ricardo Ribalda (2):
->       media: uvcvideo: Rewrite uvc_ids for keep-sorted.
->       media: uvcvideo: Add keep-sorted statement and sort uvc_ids
-> 
->  drivers/media/usb/uvc/uvc_driver.c | 660 +++++++++++++++++++++++--------------
->  1 file changed, 409 insertions(+), 251 deletions(-)
-> ---
-> base-commit: 398a1b33f1479af35ca915c5efc9b00d6204f8fa
-> change-id: 20250429-keep-sorted-2ac6f4796726
-> 
-> Best regards,
+We here in DRM define what it is supposed to be.
+
+And since the scheduler has been infinitely abused and misused, at
+least having one official, simple example "this is how you're supposed
+to do it" is desirable, wouldn't you say so?
+
+
+P.
+
+>  It should
+> remain just a mock, a minimal interface to test the scheduler's
+> internals.
+>=20
+> Best Regards,
+> - Ma=C3=ADra
+>=20
+> >=20
+> > =C2=A0=C2=A0 2) Being close to a reference design is a good thing, why
+> > wouldn't we want
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 that? The reality is that people *will* =
+look at this code for
+> > reference.
+> >=20
+> > > Also, there are various ways drivers use the scheduler API.
+> > > Trying to make
+> > > the mock scheduler a reference driver implementation would only
+> > > be able to
+> > > make it a reference for one possible use.
+> >=20
+> > Why? Nothing prevents us from covering all of them eventually.
+> >=20
+> > If for now, we just implement one of them, that's better than none,
+> > so why not?
+>=20
 
