@@ -1,31 +1,31 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4219E288C2D;
-	Mon, 16 Jun 2025 17:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD44E28A1DB;
+	Mon, 16 Jun 2025 17:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096380; cv=none; b=RCU7tCw0fgzlG/YJcRltPrUj6HZpyAGoICeq7gJ+P9eAGja97R5xT4wcbCWc4NvcF0SIcKNawLueuH/Vw6mv5EPiimt8LnJh/aMI7j5obFbsSbihhCI1sFkIGhCzRApCmrbvC+INUHxw6N8UP2K5iyCvT/ApjsVk1TN2A8Wg6zE=
+	t=1750096383; cv=none; b=uMo9ZtGnx+gDdtZigR9UyoN6fSMfFQmy3WTS1bqE8sEbPUYywQCgIxXf7tPsD+zGvaGuNdAEPrijXAXPoodVNf7qCQFmnmbnLtgKk0htuQgHQ/eJZTw/jKO5XonglFYTnOeEtSyO5jPtpEG5jCTOT8kl7XzTneCeD5Dz0tbf9TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096380; c=relaxed/simple;
-	bh=GkX6+5ssbSsWC2eRweu5p5dS6b/weFQGhxl3Vz1yWm4=;
+	s=arc-20240116; t=1750096383; c=relaxed/simple;
+	bh=mLvPZZP61oay+IscZv9tkm2Gs3ZjQaoIJgaLGEYX/hU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=scRzjFWl2njWgnCzZ04rY67l5OFJNlDrHObsiZsM0GoTGZmYnP/oir+EaSFiefQxExxaLe1wyc3MUJp3l+7YQ2fgvfuVryGrVu5Lq1Ojfkn9oizaG+e50YL+WVtWte633ILTUqhKPBArGDDp4XkBN84q4A3WOLLZ6yGO02GGmKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 Content-Type; b=ZRtht9+UK8uDs6l8yrXdp1FiLI3h6uE8dHmSQmjOsC61pgKRGeyvSboWMFFkLSgbuPLw51kTvfXP5DeOJti1NBwYMnU0Xk8X1sFW7LN1UfAak3fJjemBKIAJlmibxscbspLEL6NTFQosBIhhsZO9pOtK2PDF3SA9uljJF7lenwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 98518C0AF9;
-	Mon, 16 Jun 2025 17:52:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id CFDA12002C;
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id A88F7120AE1;
 	Mon, 16 Jun 2025 17:52:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id EAA8E60010;
+	Mon, 16 Jun 2025 17:52:52 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uRE0w-00000001KZ6-3XJ8;
-	Mon, 16 Jun 2025 13:52:58 -0400
-Message-ID: <20250616175258.691664401@goodmis.org>
+	id 1uRE0u-00000001KTj-49Xa;
+	Mon, 16 Jun 2025 13:52:56 -0400
+Message-ID: <20250616175256.839740146@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 16 Jun 2025 13:51:59 -0400
+Date: Mon, 16 Jun 2025 13:51:48 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -37,8 +37,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH v2 13/13] xfs: change xfs_xattr_class from a TRACE_EVENT() to
- DECLARE_EVENT_CLASS()
+Subject: [PATCH v2 02/13] xfs: remove unused event xlog_iclog_want_sync
 References: <20250616175146.813055227@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,57 +46,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: CFDA12002C
-X-Stat-Signature: 6151eycwd9aj61x8fugb3hnroagoiz49
+X-Rspamd-Queue-Id: EAA8E60010
+X-Stat-Signature: ec3rbhqom87ts3188j6pqbpd9jg8h1ja
 X-Rspamd-Server: rspamout05
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19GNZDWZ6rXSZs0MgWJEFXBUVhlRJNZ5b4=
-X-HE-Tag: 1750096374-804361
-X-HE-Meta: U2FsdGVkX1+g5hTChwKkEzGc6weI1MJjDnZc/XzwPe7Mykeii7LOaV5B+syfA7Zl0zJ6NUf6pv49P1IZ89eBtI94uTBoT/jLlWB26uu+EeNbBhvXSr2gngHPGIV+yAtoRtO+dwLs4z0L7GnlBKbp8cf7Xm0pGaoIIpSrJs45tQ/gjUacW8fxzL8b9jhWLHm/iUGRSwFQhBZcp7UBd9lQqtz8Mlt3JOkvZoS9iSzhbQqlbb8aCyZs/tMHyot7vmZqeVoU6nP1eAZcZFL2qc9DNpgBcbEf/mO4jEgBb97lizzVEFRKwCzvEt9ZGJxs9baTbxngz1//Kh48zSyuXEStKdTMtyHCGMMt2gn8aj7CgGcndRXmB1SiZK+Nwq2eIkE4tQ0FfbIredHRI+PhKSeAfw==
+X-Session-ID: U2FsdGVkX19VVEMzjf2QpB/ZfvWAE/b4HOi2l7+cTcw=
+X-HE-Tag: 1750096372-822555
+X-HE-Meta: U2FsdGVkX18UQPxgTBPAbOf8BTJ7oAdNJWvqdYSu74rPotqdc7B1MkJOZNV4iY1/VCl8bd7phyVLPf1otbYIMZK8BxEtssdxm3UZ7A+0hh7MfA2ri4DGWrGy60hyT7r+A2knqryHhOGTM4sP8xnDhde7NMWLNM0D/07TrszbLLpv205qJiPTHEuwHUNqpQBUiNLxcPz3agdJLQjNv4MaeBGePOp0wmFrWiM6F+aPAngDDmLdoJU1BRa8nvMxYjO3LpTWGlWl77M8sya5mnWwkMqdRrmAs3wlrU1rK8vj0R6kL9Ifk8d5Hdg1Qqm0TdxGpKX2ysDdu1Xm2i1aPZ9wqGgMKiH+QDIdvpIqrJLmsdq0kJIh7yUYU4ye8NfRVIbqXPmxpBV6zjoRS81jkZO6JA==
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-xfs_xattr_class was accidentally created as a TRACE_EVENT() instead of a
-class with DECLARE_EVENT_CLASS().
+The trace event xlog_iclog_want_sync was added but never used. As trace
+events can take up around 5K of memory in text and meta data regardless if
+they are used or not, remove this unused event.
 
-Note, TRACE_EVENT() is just defined as:
-
- #define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
-	DECLARE_EVENT_CLASS(name,			       \
-			     PARAMS(proto),		       \
-			     PARAMS(args),		       \
-			     PARAMS(tstruct),		       \
-			     PARAMS(assign),		       \
-			     PARAMS(print));		       \
-	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
-
-The difference between TRACE_EVENT() and DECLARE_EVENT_CLASS() is that
-TRACE_EVENT() also creates an event with the class name.
-
-Switch xfs_xattr_class over to being a class and not an event as it is not
-called directly, and that event with the class name takes up unnecessary
-memory.
-
-Fixes: e47dcf113ae3 ("xfs: repair extended attributes")
+Fixes: 956f6daa84bf ("xfs: add iclog state trace events")
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/xfs/scrub/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_trace.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-index d7c4ced47c15..1e6e9c10cea2 100644
---- a/fs/xfs/scrub/trace.h
-+++ b/fs/xfs/scrub/trace.h
-@@ -2996,7 +2996,7 @@ DEFINE_EVENT(xrep_pptr_salvage_class, name, \
- DEFINE_XREP_PPTR_SALVAGE_EVENT(xrep_xattr_salvage_pptr);
- DEFINE_XREP_PPTR_SALVAGE_EVENT(xrep_xattr_insert_pptr);
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index a8867f62ba18..b78676f44750 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -5028,7 +5028,6 @@ DEFINE_ICLOG_EVENT(xlog_iclog_switch);
+ DEFINE_ICLOG_EVENT(xlog_iclog_sync);
+ DEFINE_ICLOG_EVENT(xlog_iclog_syncing);
+ DEFINE_ICLOG_EVENT(xlog_iclog_sync_done);
+-DEFINE_ICLOG_EVENT(xlog_iclog_want_sync);
+ DEFINE_ICLOG_EVENT(xlog_iclog_wait_on);
+ DEFINE_ICLOG_EVENT(xlog_iclog_write);
  
--TRACE_EVENT(xrep_xattr_class,
-+DECLARE_EVENT_CLASS(xrep_xattr_class,
- 	TP_PROTO(struct xfs_inode *ip, struct xfs_inode *arg_ip),
- 	TP_ARGS(ip, arg_ip),
- 	TP_STRUCT__entry(
 -- 
 2.47.2
 
