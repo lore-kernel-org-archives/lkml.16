@@ -1,130 +1,161 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9210D27F016
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5204285C84;
+	Mon, 16 Jun 2025 12:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075299; cv=none; b=eSBzNMC8PpSXOCWx48MLPInolgJ02MZsxoonNQwIwH2Y2Os95Z8eMVMwT86CWeBuyxMPOp8iyFeQqfub7iI+eC4oeiZGRMZgTJcN7A1gVpMjq9VslzZDa8d/0pOaSXy/ZgH0IBgEIbkoWvtCPQDjF34IIb6Iq99IF1kL5HgO/B4=
+	t=1750075372; cv=none; b=luO96/XbZ2v7L9+gcbZVuVkT0v7APMxmFr7aQL2mEGY9VV9QBBTifywXN98GUIRaMI+6rgHMFeNDk3HEp635gq11w55i/3vOuT3/ZmqfzhoiRZRbc3u1GVaq/kimKy6rpvEw7VphjDrhs7aX1Tg2KxDu+/j6KNHSdKNQ/R+0tUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075299; c=relaxed/simple;
-	bh=TmsFqMOHOiv+UJaO/10NqHKo/dK2Hx/1lVWoKx6mX1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rq1DW8MgbJDWuvjh3rNYkO4VieR5tjJCScC6qsYCiaUIT2f/7M1cK4drdSkHrMDsdbc5SeOGb/kgzOIhdHyZxJ7dlTIYqd9RsCCY0zqLU7gOrKiHVy51J/vGei1mSmLv8ZKRyKJSQMQU1VjkHipZ74ycCH8QZoxkPbVh5QCYZQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Dy/dYPEI; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dy/dYPEI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=jg2wefG8UuebG8p1mWNX8nDttqSmgyHNmlNNJsm7n4Q=; b=Dy/dYPEIMmTTrMQOeb18WKqPgO
-	yBq8dSDTrpmz7XuBUGTljpkz3c1+FHWcpVpYC/aI2SW+Fz1hhWk8xE4Qu1IF+KZ+ZnACTVnNnuWd2
-	7Txfr5+5pjz41dTw0dhC5Q7a/NohD+QKWk0hVbYt2AFJrITQgHB4ajFUWnX74gDV5uymSLuxOb/gg
-	dxWQPul3wc/gLf7dcJ16sWYQ41RtboJnvXmCwKrP9yt6P/lqksygjCTxCuVdXnREExXa5p+/Bgs/B
-	1FKIv23km4cBNoILJy9hYIBPLwqnnhvvEZVlUIkhzmoXD2p8zEK3zWrV6YlEQuYSUR/j/m1sAli3i
-	7gIn9tgQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uR8Wl-00000003ZMW-1Exd;
-	Mon, 16 Jun 2025 12:01:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2EDBA307FCB; Mon, 16 Jun 2025 14:01:25 +0200 (CEST)
-Date: Mon, 16 Jun 2025 14:01:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-Message-ID: <20250616120125.GB1613200@noisy.programming.kicks-ass.net>
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.984171377@infradead.org>
- <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
+	s=arc-20240116; t=1750075372; c=relaxed/simple;
+	bh=vXBu7uwkxPOsvKdqrgHswhlxEEE0Wgvz5jbfmhZinlE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V5rHDoT0DKLlKiN9ZPLbBL30XsDHuYZDeiMQk1Hp85B322pgzRyU5yxkalvr238mx8CHKRjvGVE50iRCY2I62BMvF0D97qN0a63mK+qDGeHKDJhxoXthicXHwLI+FofsAEJoqNIfZsI3ZUj94D/Bwj9k9g2e7gC9GHgy6Gh+Wqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6face1d58dcso71264276d6.2;
+        Mon, 16 Jun 2025 05:02:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750075368; x=1750680168;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ploSucNH29V90v2689/j3svshD2BMkR3XA3gPmC2bbo=;
+        b=riUuZmO9ufJc4MSveocOo8GmGmLfU0uuiUQ1uwnSpfCZTKAXFPx/baansQRtTdb2rJ
+         A64CulxiJULe89sdLZwf3W0aN4DW4YrqhK2/MyNZQpDPLEmqWQ7KTZ3b5QJs1F7rir25
+         Aokr996IoDzNe0GkciujQyt7SnrbO7wkaDKYJKQcJVndKJcO3SlHDvF+qt2JKT/haR5h
+         uj/fIdHaXJdWPBHmjljLhrzPr0no1H2uzzjbpAVErpGNCU9K1HCWU16qRJyOTRLOP2ro
+         AdD/AeF/WYQiAmmmvXMP8xriIQ4O0vcGso0PoMdTq+M5TuEcSM1KG+he4ipRb0GrcYu7
+         DwiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyiAxzoGGz9lAwOPoTvNt5lTW4Gzq9XPREOYbGniAKPPhTn4KolffL9bz+tqeIVH3UzHHNtz1cg5Gvs2Mp@vger.kernel.org, AJvYcCVqU/ylK5WXAKWQ8gQOK42dJJCuXlXSTBtVvX2L/SoMrMcl6zSu7I8DJFGaU1n8nZUtj07+BoheEk/6hJVtkbHFKyc=@vger.kernel.org, AJvYcCXHIaKAuHbNkMqfrbwLkw2o5MPDrfGMG21Jj62dQd+nBBkS1MqmmThjXM0hXEJLvVl6BG8yXdsqbWaS@vger.kernel.org, AJvYcCXLfLmWT2F7VM06HJY78LFWb7HDOXu3lYuW7zBzQCZJjdShzkCkvlYdfVWmZS8Gb/pt4lgTuVQG/MVO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgiud/7pIXtnzAb1TpltoFnGZtEOUWnv8pG4gD/b8zdjZAvKQh
+	kQxqEdZeBuJXI82R3zpNIfV3ihiR/lCac3bNBdRDbOee4JOTGpJ/jSFepsoWB2bK
+X-Gm-Gg: ASbGncsFmQSeMiGpa4j0dJ3ttoS6gRyQiSKSBBiqQFFc1Ay0iOfSkDTv9oliVbkBnAW
+	rNZ86kumxvKhbg51M3Zj92NrhRPCZG5ng92tccZH8i0eOLIEq8T2yETZMPTqRZxfpwod4bdRbnM
+	0c+IA/t9fimcJa+4YQyEOoygCDF5JXlzgo/KtXvFFw9Jcsm5Y+rZI2f8JR4U9hwAcZIqXKLRuHl
+	GkHQ42y+wLBM+Z92OXSvHpubDPEZNefoNoMyudw97BF6qhoKGuYamZ/iDcxdbjEbTyMkqwrfhZT
+	WvwxB4PzqYvaJxt/3oUz7tTncwbPZvw1bEYHdi/4zfPcxzVgQTZKDk8voRK3oHpOsB3OeORoqjV
+	T45GiHYykd8aTDguhhMIRGqrlMvGR
+X-Google-Smtp-Source: AGHT+IGaSL4wf+lxi6xehLxilhn3urHlQbpFxBdgSiB38NiFFpsSt7fAX/o6XZC56+FVfkSeFjm/UQ==
+X-Received: by 2002:a05:6214:2b9b:b0:6fa:fe27:a249 with SMTP id 6a1803df08f44-6fb478103b0mr102407926d6.43.1750075367839;
+        Mon, 16 Jun 2025 05:02:47 -0700 (PDT)
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb569796e2sm8847296d6.80.2025.06.16.05.02.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 05:02:47 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d2107eb668so716716785a.1;
+        Mon, 16 Jun 2025 05:02:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVc4QZxFF/bIDhVOXu8rIrL8/cuZ0hwVmmA61TcFErKUP+CVoyfe020UMUk8wfhuu8lq8OjEVDsd8SLOGC+cOdcj/8=@vger.kernel.org, AJvYcCVygQWqJ6baCDpylKTIKNhz+gImxkXn6d6ykjSwNSKa7vK+KjMVYSsq2KL3Z2ZnOdKdcLyAUTgmOP2F@vger.kernel.org, AJvYcCW5HoseMoeOuraGAg0V2WN5WddH/Na1pCNUgzbjNOz52JmJnR58v8yA+fhugWgdOdamoUdldlKqJ/f6@vger.kernel.org, AJvYcCWvpzKz3fJwnwGGUQNZ2dKw++FhHh4QpCJNWi3cpq5EgJQUE9bzXhaRG1rTCbuURL0gYrjcBW+B+/cZC9If@vger.kernel.org
+X-Received: by 2002:a05:620a:2a03:b0:7d3:8df8:cc04 with SMTP id
+ af79cd13be357-7d3c6cc98efmr1411274185a.35.1750075366742; Mon, 16 Jun 2025
+ 05:02:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
+References: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
+ <20250613220104.GA986309@bhelgaas>
+In-Reply-To: <20250613220104.GA986309@bhelgaas>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 16 Jun 2025 14:02:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU=+Hxz09DJeVOhZ1N5yS=UJgMsr5R40KBeu=ftoq4zrw@mail.gmail.com>
+X-Gm-Features: AX0GCFvGpF0UKvY33FJrsFmSliyEKvidiVPDSH8oJwCDkQnKl_S7otDQDQqSNxs
+Message-ID: <CAMuHMdU=+Hxz09DJeVOhZ1N5yS=UJgMsr5R40KBeu=ftoq4zrw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
+ driver for PCI slots
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Anand Moon <linux.amoon@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 06, 2025 at 05:03:36PM +0200, Vincent Guittot wrote:
-> On Tue, 20 May 2025 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Bjorn,
+
+On Sat, 14 Jun 2025 at 00:01, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Thu, Jun 12, 2025 at 03:16:45PM +0200, Geert Uytterhoeven wrote:
+> > On Sat, 7 Jun 2025 at 21:46, Marek Vasut
+> > <marek.vasut+renesas@mailbox.org> wrote:
+> > > Add the ability to enable optional slot clock into the pwrctrl driver.
+> > > This is used to enable slot clock in split-clock topologies, where the
+> > > PCIe host/controller supply and PCIe slot supply are not provided by
+> > > the same clock. The PCIe host/controller clock should be described in
+> > > the controller node as the controller clock, while the slot clock should
+> > > be described in controller bridge/slot subnode.
+> > >
+> > > Example DT snippet:
+> > > &pcicontroller {
+> > >     clocks = <&clk_dif 0>;             /* PCIe controller clock */
+> > >
+> > >     pci@0,0 {
+> > >         #address-cells = <3>;
+> > >         #size-cells = <2>;
+> > >         reg = <0x0 0x0 0x0 0x0 0x0>;
+> > >         compatible = "pciclass,0604";
+> > >         device_type = "pci";
+> > >         clocks = <&clk_dif 1>;         /* PCIe slot clock */
+> > >         vpcie3v3-supply = <&reg_3p3v>;
+> > >         ranges;
+> > >     };
+> > > };
+> > >
+> > > Example clock topology:
+> > >  ____________                    ____________
+> > > |  PCIe host |                  | PCIe slot  |
+> > > |            |                  |            |
+> > > |    PCIe RX<|==================|>PCIe TX    |
+> > > |    PCIe TX<|==================|>PCIe RX    |
+> > > |            |                  |            |
+> > > |   PCIe CLK<|======..  ..======|>PCIe CLK   |
+> > > '------------'      ||  ||      '------------'
+> > >                     ||  ||
+> > >  ____________       ||  ||
+> > > |  9FGV0441  |      ||  ||
+> > > |            |      ||  ||
+> > > |   CLK DIF0<|======''  ||
+> > > |   CLK DIF1<|==========''
+> > > |   CLK DIF2<|
+> > > |   CLK DIF3<|
+> > > '------------'
+> > >
+> > > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 > >
-> > One of the things lost with introduction of DELAY_DEQUEUE is the
-> > ability of TTWU to move those tasks around on wakeup, since they're
-> > on_rq, and as such, need to be woken in-place.
-> 
-> I was thinking that you would call select_task_rq() somewhere in the
-> wake up path of delayed entity to get a chance to migrate it which was
-> one reason for the perf regression (and which would have also been
-> useful for EAS case) but IIUC, 
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Bartosz: Any chance you can apply this patch to an immutable branch,
+> > so I can merge that before taking the other two patches?
+> > The alternative is to postpone the DTS patches for one cycle.
+>
+> I applied this patch only to pci/pwrctrl for v6.17 and made a note
+> that the commit should be immutable:
+>
+>   66db1d3cbdb0 ("PCI/pwrctrl: Add optional slot clock for PCI slots")
+>
+> We will likely add other pwrctrl patches to this branch during this
+> cycle; I assume that will be OK as long as 66db1d3cbdb0 remains
+> untouched, right?
 
-FWIW, the trivial form of all this is something like the below. The
-problem is that performance sucks :/ For me it is worse than not doing
-it. But perhaps it is the right thing for the more complicated cases ?
+Great, I will merge that branch, and will apply the DTS patches on top.
+Thanks!
 
-On my SPR:
+Gr{oetje,eeting}s,
 
-schbench-6.9.0-1.txt:average rps: 2975450.75
-schbench-6.9.0-2.txt:average rps: 2975464.38
-schbench-6.9.0-3.txt:average rps: 2974881.02
+                        Geert
 
-(these patches)
-schbench-6.15.0-dirty-1.txt:average rps: 3029984.58
-schbench-6.15.0-dirty-2.txt:average rps: 3034723.10
-schbench-6.15.0-dirty-3.txt:average rps: 3033893.33
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-TTWU_QUEUE_DELAYED
-schbench-6.15.0-dirty-delayed-1.txt:average rps: 3048778.58
-schbench-6.15.0-dirty-delayed-2.txt:average rps: 3049587.90
-schbench-6.15.0-dirty-delayed-3.txt:average rps: 3045826.95
-
-NO_DELAY_DEQUEUE
-schbench-6.15.0-dirty-no_delay-1.txt:average rps: 3043629.03
-schbench-6.15.0-dirty-no_delay-2.txt:average rps: 3046054.47
-schbench-6.15.0-dirty-no_delay-3.txt:average rps: 3044736.37
-
-TTWU_DEQUEUE
-schbench-6.15.0-dirty-dequeue-1.txt:average rps: 3008790.80
-schbench-6.15.0-dirty-dequeue-2.txt:average rps: 3017497.33
-schbench-6.15.0-dirty-dequeue-3.txt:average rps: 3005858.57
-
-
-
-Index: linux-2.6/kernel/sched/core.c
-===================================================================
---- linux-2.6.orig/kernel/sched/core.c
-+++ linux-2.6/kernel/sched/core.c
-@@ -3770,8 +3770,13 @@ static int __ttwu_runnable(struct rq *rq
- 		return 0;
- 
- 	update_rq_clock(rq);
--	if (p->se.sched_delayed)
-+	if (p->se.sched_delayed) {
-+		if (sched_feat(TTWU_DEQUEUE)) {
-+			dequeue_task(rq, p, DEQUEUE_NOCLOCK | DEQUEUE_DELAYED | DEQUEUE_SLEEP);
-+			return 0;
-+		}
- 		enqueue_task(rq, p, ENQUEUE_NOCLOCK | ENQUEUE_DELAYED);
-+	}
- 	if (!task_on_cpu(rq, p)) {
- 		/*
- 		 * When on_rq && !on_cpu the task is preempted, see if
-Index: linux-2.6/kernel/sched/features.h
-===================================================================
---- linux-2.6.orig/kernel/sched/features.h
-+++ linux-2.6/kernel/sched/features.h
-@@ -84,6 +84,7 @@ SCHED_FEAT(TTWU_QUEUE, true)
- SCHED_FEAT(TTWU_QUEUE_ON_CPU, true)
- SCHED_FEAT(TTWU_QUEUE_DELAYED, false)
- SCHED_FEAT(TTWU_QUEUE_DEFAULT, false)
-+SCHED_FEAT(TTWU_DEQUEUE, false)
- 
- /*
-  * When doing wakeups, attempt to limit superfluous scans of the LLC domain.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
