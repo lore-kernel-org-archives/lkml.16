@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2671E32C6
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFE21E32C3
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750050940; cv=none; b=IghQkDh2JfGGvM1k/eUT5uZPYEjLzPrD2qIckBA3O4hz9LREOg55vpLlj+9yWGUt7K+x2WEX75anuBWgT8KXOTcHn9Bqo+SaYIDBQ6RHgaPADG/AAtX/POnrsL2dJYDT+hERWjoS2F3UuHuLgWeEqSGNSIBp4xuAyOHZEcoovy8=
+	t=1750050940; cv=none; b=nR0+6FT0MMozGWZXKd5A+VwDgobbpFhYdeHunXAIpQ8znd+FBAMOfLF/uZJFiSuT5+iZ3sROLOditBmXxHb2+Tl0i2bYYsJxWSZymzXxNsFqEY8+jQEbyAbs04shvBky0T4LsEQxp+INjKMAde7tg0gCanXE4MgPWKIKSOvaUsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750050940; c=relaxed/simple;
-	bh=yKpHM+BCHbeFrpnY+3JEnhGTh0ytgZYNLTTi4rBzWCk=;
+	bh=FDHXLU4J2D78n30kero/Zz2zkovLAiNRWMXuqyzrGCw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=uq6wvhC82ykIyT/JrVlM6KanGmcUi2SfQB43G/SfUXcq+reekF94WfmNnMZElJKqLRkklBEQatm0Jz1XbH9U2pGAor7n0X/hPgiEEl8VfvBqZ4i81L8y3zWCYnI3/xfLp0UKA7G4badVphbBsB9NKBWGZfx7I9XVLBhTMFdU+J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y9OgqlqL; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=nWDSZ4pghCqyUqMJRPDryOYvBsasMEms39GvqMp/E3R6ALBSHW5+HZWLrvFjt7HM5tjXEdiqTv/gHsaVXB+VUGhd2VJt9TK1c74blPNsRFuJbhlWs4PYx6UAL7ejWmjgJs+ZsmVnD99eOzfzA+22xKcoyN571AqazgUTOgnRsOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mkcTB7jE; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y9OgqlqL"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b115fb801bcso4542383a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 22:15:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mkcTB7jE"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235e1d66fa6so39341785ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 22:15:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750050936; x=1750655736; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750050938; x=1750655738; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aJlPf9F5g9Wk9gssd6aqu3WR8vZd4WrO7zxv/Qci614=;
-        b=y9OgqlqLJx15qy2BQk7a/RMjyK3cL6qeZN1RUdITvCEGEpFViARjLXh37RdZOetHpH
-         yvoDp1joMvo1WGi1muYCmUzZXmkO//rYmUbDrg1ygPr/sQlUBhymegl0tZPkn7qnxKjS
-         Q1sqEJFbXFtukOpY1PvRQltEoiGGBtzDbvcm4tkHRhIw5zOjxWtlFwU6/n1HTGp84akF
-         VZFOnaQfC3n2qg33js6/zEKhWH1ojKtyyC7qAys8JU+oVxGDGCoh2O87VP0M7tXTbd6A
-         Ixzt+4Cs+i4DJqLtaYvM66JPExsQPEF3ttpWt5LF9MZqTqQ6tCMtxqLOiCZfWd1LF6bt
-         qKVQ==
+        bh=sTKqdcYyHF9clcVtgl1QXOADzr9s/Gb9doCvReUrwZ4=;
+        b=mkcTB7jE+SJuvZ0mTKmqpnoE1Iy64bu4kEq35lEUxKb2c4jaJjWf2y++isIR62H3bI
+         +s14KXUyc/8/Ek3n0Cn2MxoqAnxz8DbkSTQRWerEjLxvBfFcKlaKNg4MJTFrZuUhafgB
+         Cu9I+dhNk29hBuvWMLYpg4rr6YJQzpT2VGz14+j2C/NSDsW1opWkLAvYUEhEynpplJdw
+         a349DyIadYdV1jYiz90lY+14udy6vVkbbigoMJmkx6wl4ms4DFh3A+akexdcYayQ5yfs
+         jk5n4ZckHjYknY44gXMRYKBhfTKI6ieV+FrMyF0cRk1cuvKLyM3a+vYPapGZp+m8/4/1
+         BMIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750050936; x=1750655736;
+        d=1e100.net; s=20230601; t=1750050938; x=1750655738;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aJlPf9F5g9Wk9gssd6aqu3WR8vZd4WrO7zxv/Qci614=;
-        b=vDIUbOkqIffSm2yRUnXlsRUJhLCTd4flcrPTTNPKP1UvnmYuBP8eyfngGciUKkDu+q
-         Cn9GoxNXU0hXLq1X3NJPHJXebaQzqZIa4AGiU+F+12RD+xUH8tgufZHMdZgmrFbSwDNH
-         CGWlRPaO2+lDUnQj4HUWmMJ+VSaGsmU7K0Dtmy1aoCDUZSLCsMnO7lRrXWafLzBcSeT8
-         LuxM2bCCAg9/t3p66lUYHUHm7Px9pYZPwyDIADGTQi48hGUTJVnOpfrVM4NGjOEkNu3I
-         qqXDJl7q52il1a3v1CyMI1RsxnyxNrBQenkMvg9Y1ZNY56BGe1pdALID9Yac2AEwkmdQ
-         Lmeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTp+xKJ6qr+rI93POfodrrRBQo18hGuEVKJ1QAXUxR/pizk7hKpALUh+P+rZcISz+lbl5uwXRuiKvBkEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCTg32bynW/TrG3Jj6SqBI/4vdCDIF2CX5K1NU4mM8RJhyia4b
-	f8+J5nvRr3moFrc8PKbEmPYW6pObVkJ3/XUD5Xk6mB68HfftiIkU2l6N/IskGrnuEeJhXskhwhE
-	AD5a+1abLBw==
-X-Google-Smtp-Source: AGHT+IG8/lpjRrXKSMUNfgQtOdF3/fPjhcRdKaaH7jugd3IevsUPJkeZLGKMaZeT5E8zo0HJDv/ht6QFjnmf
-X-Received: from pgbdi9.prod.google.com ([2002:a05:6a02:c09:b0:b2c:3afe:6ece])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:1443:b0:21d:939:18c
- with SMTP id adf61e73a8af0-21fbd4741e0mr11715398637.4.1750050936503; Sun, 15
- Jun 2025 22:15:36 -0700 (PDT)
-Date: Sun, 15 Jun 2025 22:14:50 -0700
+        bh=sTKqdcYyHF9clcVtgl1QXOADzr9s/Gb9doCvReUrwZ4=;
+        b=bwdKJi58ltnG4l1JRF+AR3/2j+7n9vLlD7szFZ5FOowInjK/aEa35go7d6Wsg1Lu0s
+         hP9HDwReaYQpGP+0DgIh2Uy9ZRwCAhyrTYk4UaRy1K7aW8P6nrP1GLCZq8nyTLxmfr0t
+         bWellgLO+3+sjhV7bjtNnv8M1hT1KJ/SDeOSrr9j8KQ0PMjtaFyusp8IwaFbOkzXSQZ0
+         ZCJLCapbinjshNFxkEkQ9VbHY99GADvbGJH+7jFtRJGKlloDPYUfbEN3RAqJ1yUAdqx3
+         eIXGC4hiJd//VIx8FWR2AUQWRoVX2vdeXrv1o0CP7qtsuaKWFIqkOf7Cpq1wleEtO4yE
+         Scrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ8Ah6M0pIicj0oV/JVYBh2HnZHZVuVovQc7RsB4ilP5M1tmpylPVHtpZxjRoznivXs6+55U4BjVIh+3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcUuDj0i5Tzr6Qd/JilHztmRcAeAH8NHY7G+6rhcscazO0Rm0e
+	fDFCJX5ZT8U31ltW/GKVN7NPuWHW+WqUC6INhpYt9cMFCdersZUQTN+xy7ZQBubC3lG+XVzEjg9
+	t9W+7EWMYGA==
+X-Google-Smtp-Source: AGHT+IHAPYNAv465eOEq5YoSg/nkLLSoi5rsqXTEcUYGxPxVFq2qs/MG23h5xOFSmuKncDzY5lZ2sYPF0mxQ
+X-Received: from pgar5.prod.google.com ([2002:a05:6a02:2e85:b0:b2c:4702:db0e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:f90:b0:225:abd2:5e4b
+ with SMTP id d9443c01a7336-2366afe7c13mr124614375ad.16.1750050938284; Sun, 15
+ Jun 2025 22:15:38 -0700 (PDT)
+Date: Sun, 15 Jun 2025 22:14:51 -0700
 In-Reply-To: <20250616051500.1047173-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250616051500.1047173-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250616051500.1047173-6-irogers@google.com>
-Subject: [PATCH v3 05/15] perf python: Correct pyrf_evsel__read for tool PMUs
+Message-ID: <20250616051500.1047173-7-irogers@google.com>
+Subject: [PATCH v3 06/15] perf python: Add basic PMU abstraction and pmus sequence
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,79 +76,197 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Tool PMUs assume that stat's process_counter_values is being used to
-read the counters. Specifically they hold onto old values in
-evsel->prev_raw_counts and give the cumulative count based off of this
-value. Update pyrf_evsel__read to allocate counts and prev_raw_counts,
-use evsel__read_counter rather than perf_evsel__read so tool PMUs are
-read from not just perf_event_open events, make the returned
-pyrf_counts_values contain the delta value rather than the cumulative
-value.
+Add an ability to iterate over PMUs and a basic PMU type then can just
+show the PMU's name.
 
-Fixes: 739621f65702 ("perf python: Add evsel read method")
+An example usage:
+```
+$ python
+Python 3.12.9 (main, Feb  5 2025, 01:31:18) [GCC 14.2.0] on linux
+>>> import perf
+>>> list(perf.pmus())
+[pmu(cpu), pmu(breakpoint), pmu(cstate_core), pmu(cstate_pkg),
+pmu(hwmon_acpitz), pmu(hwmon_ac), pmu(hwmon_bat0),
+pmu(hwmon_coretemp), pmu(hwmon_iwlwifi_1), pmu(hwmon_nvme),
+pmu(hwmon_thinkpad), pmu(hwmon_ucsi_source_psy_usbc000_0),
+pmu(hwmon_ucsi_source_psy_usbc000_0), pmu(i915), pmu(intel_bts),
+pmu(intel_pt), pmu(kprobe), pmu(msr), pmu(power), pmu(software),
+pmu(tool), pmu(tracepoint), pmu(uncore_arb), pmu(uncore_cbox_0),
+pmu(uncore_cbox_1), pmu(uncore_cbox_2), pmu(uncore_cbox_3),
+pmu(uncore_cbox_4), pmu(uncore_cbox_5), pmu(uncore_cbox_6),
+pmu(uncore_cbox_7), pmu(uncore_clock), pmu(uncore_imc_free_running_0),
+pmu(uncore_imc_free_running_1), pmu(uprobe)]
+```
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+ tools/perf/util/python.c | 140 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 140 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index b724478fe34a..201fe04fb6dd 100644
+index 201fe04fb6dd..33b23d56dfb1 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -10,6 +10,7 @@
- #endif
- #include <perf/mmap.h>
- #include "callchain.h"
-+#include "counts.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "event.h"
-@@ -893,7 +894,7 @@ static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
- {
- 	struct evsel *evsel = &pevsel->evsel;
- 	int cpu = 0, cpu_idx, thread = 0, thread_idx;
--	struct perf_counts_values counts;
-+	struct perf_counts_values *old_count, *new_count;
- 	struct pyrf_counts_values *count_values = PyObject_New(struct pyrf_counts_values,
- 							       &pyrf_counts_values__type);
- 
-@@ -914,8 +915,35 @@ static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
- 			     thread);
- 		return NULL;
- 	}
--	perf_evsel__read(&(evsel->core), cpu_idx, thread_idx, &counts);
--	count_values->values = counts;
-+
-+	/*
-+	 * Ensure evsel's counts and prev_raw_counts are allocated, the latter
-+	 * used by tool PMUs to compute the cumulative count as expected by
-+	 * stat's process_counter_values.
-+	 */
-+	if (evsel->counts == NULL) {
-+		int nthreads = perf_thread_map__nr(evsel->core.threads);
-+		int ncpus = perf_cpu_map__nr(evsel->core.cpus);
-+
-+		evsel->counts = perf_counts__new(ncpus, nthreads);
-+		if (evsel->counts == NULL)
-+			return NULL;
-+		evsel->prev_raw_counts = perf_counts__new(ncpus, nthreads);
-+		if (evsel->prev_raw_counts == NULL)
-+			return NULL;
-+	}
-+	/* Set up pointers to the old and newly read counter values. */
-+	old_count = perf_counts(evsel->prev_raw_counts, cpu_idx, thread_idx);
-+	new_count = perf_counts(evsel->counts, cpu_idx, thread_idx);
-+	/* Update the value in evsel->counts. */
-+	evsel__read_counter(evsel, cpu_idx, thread_idx);
-+	/* Copy the value and turn it into the delta from old_count. */
-+	count_values->values = *new_count;
-+	count_values->values.val -= old_count->val;
-+	count_values->values.ena -= old_count->ena;
-+	count_values->values.run -= old_count->run;
-+	/* Save the new count over the old_count for the next read. */
-+	*old_count = *new_count;
- 	return (PyObject *)count_values;
+@@ -627,6 +627,138 @@ static int pyrf_thread_map__setup_types(void)
+ 	return PyType_Ready(&pyrf_thread_map__type);
  }
+ 
++/**
++ * A python wrapper for perf_pmus that are globally owned by the pmus.c code.
++ */
++struct pyrf_pmu {
++	PyObject_HEAD
++
++	struct perf_pmu *pmu;
++};
++
++static void pyrf_pmu__delete(struct pyrf_pmu *ppmu)
++{
++	Py_TYPE(ppmu)->tp_free((PyObject *)ppmu);
++}
++
++static PyObject *pyrf_pmu__name(PyObject *self)
++{
++	struct pyrf_pmu *ppmu = (void *)self;
++
++	return PyUnicode_FromString(ppmu->pmu->name);
++}
++
++static PyObject *pyrf_pmu__repr(PyObject *self)
++{
++	struct pyrf_pmu *ppmu = (void *)self;
++
++	return PyUnicode_FromFormat("pmu(%s)", ppmu->pmu->name);
++}
++
++static const char pyrf_pmu__doc[] = PyDoc_STR("perf Performance Monitoring Unit (PMU) object.");
++
++static PyMethodDef pyrf_pmu__methods[] = {
++	{
++		.ml_name  = "name",
++		.ml_meth  = (PyCFunction)pyrf_pmu__name,
++		.ml_flags = METH_NOARGS,
++		.ml_doc	  = PyDoc_STR("Name of the PMU including suffixes.")
++	},
++	{ .ml_name = NULL, }
++};
++
++/** The python type for a perf.pmu. */
++static PyTypeObject pyrf_pmu__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name	= "perf.pmu",
++	.tp_basicsize	= sizeof(struct pyrf_pmu),
++	.tp_dealloc	= (destructor)pyrf_pmu__delete,
++	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
++	.tp_doc		= pyrf_pmu__doc,
++	.tp_methods	= pyrf_pmu__methods,
++	.tp_str         = pyrf_pmu__name,
++	.tp_repr        = pyrf_pmu__repr,
++};
++
++static int pyrf_pmu__setup_types(void)
++{
++	pyrf_pmu__type.tp_new = PyType_GenericNew;
++	return PyType_Ready(&pyrf_pmu__type);
++}
++
++
++/** A python iterator for pmus that has no equivalent in the C code. */
++struct pyrf_pmu_iterator {
++	PyObject_HEAD
++	struct perf_pmu *pmu;
++};
++
++static void pyrf_pmu_iterator__dealloc(struct pyrf_pmu_iterator *self)
++{
++	Py_TYPE(self)->tp_free((PyObject *) self);
++}
++
++static PyObject *pyrf_pmu_iterator__new(PyTypeObject *type, PyObject *args __maybe_unused,
++					PyObject *kwds __maybe_unused)
++{
++	struct pyrf_pmu_iterator *itr = (void *)type->tp_alloc(type, 0);
++
++	if (itr != NULL)
++		itr->pmu = perf_pmus__scan(/*pmu=*/NULL);
++
++	return (PyObject *) itr;
++}
++
++static PyObject *pyrf_pmu_iterator__iter(PyObject *self)
++{
++	Py_INCREF(self);
++	return self;
++}
++
++static PyObject *pyrf_pmu_iterator__iternext(PyObject *self)
++{
++	struct pyrf_pmu_iterator *itr = (void *)self;
++	struct pyrf_pmu *ppmu;
++
++	if (itr->pmu == NULL) {
++		PyErr_SetNone(PyExc_StopIteration);
++		return NULL;
++	}
++	// Create object to return.
++	ppmu = PyObject_New(struct pyrf_pmu, &pyrf_pmu__type);
++	if (ppmu) {
++		ppmu->pmu = itr->pmu;
++		// Advance iterator.
++		itr->pmu = perf_pmus__scan(itr->pmu);
++	}
++	return (PyObject *)ppmu;
++}
++
++/** The python type for the PMU iterator. */
++static PyTypeObject pyrf_pmu_iterator__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name = "pmus.iterator",
++	.tp_doc = "Iterator for the pmus string sequence.",
++	.tp_basicsize = sizeof(struct pyrf_pmu_iterator),
++	.tp_itemsize = 0,
++	.tp_flags = Py_TPFLAGS_DEFAULT,
++	.tp_new = pyrf_pmu_iterator__new,
++	.tp_dealloc = (destructor) pyrf_pmu_iterator__dealloc,
++	.tp_iter = pyrf_pmu_iterator__iter,
++	.tp_iternext = pyrf_pmu_iterator__iternext,
++};
++
++static int pyrf_pmu_iterator__setup_types(void)
++{
++	return PyType_Ready(&pyrf_pmu_iterator__type);
++}
++
++static PyObject *pyrf__pmus(PyObject *self, PyObject *args)
++{
++	// Calling the class creates an instance of the iterator.
++	return PyObject_CallObject((PyObject *) &pyrf_pmu_iterator__type, /*args=*/NULL);
++}
++
+ struct pyrf_counts_values {
+ 	PyObject_HEAD
+ 
+@@ -1613,6 +1745,12 @@ static PyMethodDef perf__methods[] = {
+ 		.ml_flags = METH_VARARGS,
+ 		.ml_doc	  = PyDoc_STR("Parse a string of events and return an evlist.")
+ 	},
++	{
++		.ml_name  = "pmus",
++		.ml_meth  = (PyCFunction) pyrf__pmus,
++		.ml_flags = METH_NOARGS,
++		.ml_doc	  = PyDoc_STR("Returns a sequence of pmus.")
++	},
+ 	{ .ml_name = NULL, }
+ };
+ 
+@@ -1640,6 +1778,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	    pyrf_evsel__setup_types() < 0 ||
+ 	    pyrf_thread_map__setup_types() < 0 ||
+ 	    pyrf_cpu_map__setup_types() < 0 ||
++	    pyrf_pmu_iterator__setup_types() < 0 ||
++	    pyrf_pmu__setup_types() < 0 ||
+ 	    pyrf_counts_values__setup_types() < 0)
+ 		return module;
  
 -- 
 2.50.0.rc2.696.g1fc2a0284f-goog
