@@ -1,128 +1,147 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5265E223DD5;
-	Mon, 16 Jun 2025 23:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE5F223DD5
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 23:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750115416; cv=none; b=q9X5Jt6mZjsTBFBvmzcNyq7VGHyU+t5bBSdRlDB2pN0L/IwIzVc/HzUqNjdgFFO0rO83e+gg0Z+T1aKVLR3hdT54GUYcMa0ghb6tpbYQZLH7sL2LjYHjPOQLI7dYNKPgL9W12gP53ngLjZ8GIw6W4gxwkpfLRheUcbitse0leVA=
+	t=1750115441; cv=none; b=FdRnHbvRYGBMzPZ15pEQSM/0/V1AAaJlY6BXjoHykewX+83rcvtnY+VFzSvC5jdVce617+V3jZHPPCnBlOqfHd3mk+1H9C35FXviyZsQQz/LWjPzMQ5vogpxEgyAJCnUdpFn8VYeh4Q4vg9tpkzq9XKxG+chnkcwAFvmm7nuFBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750115416; c=relaxed/simple;
-	bh=l/dsEKZik8069kBgbRAsR0tcPdM8xcTYaQmnuK2tb18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uoc3gh/IxUWhOCpTpzxd72d7kaubKJLjkWmmIyAvP4jeVn0dJr36xj/q/P1z/dS5Bu+BYsbL2qJczHuOhy4axBcHZrxB871AWOTpyY0pq3lnJpO9iPKYC4XsXXKXtEWwecoB/Rx8blF2goDzFWWf/lNGUic/z7Zi/RHfrA537Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=ba1Vh+Nr; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1750115441; c=relaxed/simple;
+	bh=Sg/Zeim155lPoBlFzQfHz+7xJEIx+3K9aJFJCsa+t9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oH1ryCtlUAq3gnNOE5Sih+bfxY7MAsX1Y9TGKPHpdrgtXGhjqdNhlgz5CHkWThdwwccKKPA5k3n0gsYqvTRJRJIlrsjjDwKi7T1/wzPl3z0Pi+SkpYenXOhQyM/PN2IZwACestBEg2KbqNOcTj0i5MvFvYHay7GoWelK2doPGic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jINVkrGZ; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="ba1Vh+Nr"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 45E3014C2D3;
-	Tue, 17 Jun 2025 01:00:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1750114827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LSj4gXCyHisTwhB2BQnYcgpL/7V+l81OjPQ3XMozPiY=;
-	b=ba1Vh+NrSIjd7dsdd0+OHQAo7kEOIiMCbiZJITasBMpb06v5GCKFJzfa1Q00oZ7ppDVJYG
-	V+JsgYIurMccniqSrkVZn6QnSlVESpbxMFZPC8sfVKmKZ+D3eo+daYi/ML7Vs8MJu4t/cR
-	1BtXctHoYjA4lz1+e8LJvfTLuJIMFlCmmGvQXCcVMABgSNMwml7IPYNukXzENuyJR/XK7w
-	LIkPx8oP95IJ7trvfZ/myMEkKZumsIBRyJr+knK01jJeJ8WRyBrEAcGxgk9x92o3cIZwfM
-	mlxTijTq0BCrtF6ANKmdm/PJN/2PMo81dXOiCXGii/KvVky1ARmGdwrB/hSKmw==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id ffc07ee8;
-	Mon, 16 Jun 2025 23:00:23 +0000 (UTC)
-Date: Tue, 17 Jun 2025 08:00:08 +0900
-From: asmadeus@codewreck.org
-To: Yuhao Jiang <danisjiang@gmail.com>
-Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
-	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
-	security@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] net/9p: Fix buffer overflow in USB transport layer
-Message-ID: <aFCh-JXnifNXTgSt@codewreck.org>
-References: <20250616132539.63434-1-danisjiang@gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jINVkrGZ"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7382a999970so3333779a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750115438; x=1750720238; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZhqwSDdN0As9EP8iCCAnsHFrVsuS6BmzZLRtm9F+Ab4=;
+        b=jINVkrGZBWazZCfJTImqGL6jTnWdvwBZ+0zBKRsaphS95mW8HkhAXJGBuVf3nqR5VJ
+         B+09AiZPh+XRbbkKVNbCzrvnvFSpU+Qj6yy7SQVUapFXBupuIoQBtTFd740OwN2uofSA
+         33zLhZf/YGbx3iH6wyxxoSF1NqngJ83IXCS5aqin5SEy4OqG8C/dVlwUuaSgcSOXbuIs
+         iSL+CcL5OQ+2tdMUXTevIJxB7hI1ziXD2Au1rUUqU+ttKkp5r2+mncYvp5tU/zyzYtJl
+         eRtZ7qzQhx0VqYcQtzSrlTlwlyXdxS2GNROl1qK/BdI5Vx3zlztjVkJEOwekR4+xGdiX
+         HelA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750115438; x=1750720238;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZhqwSDdN0As9EP8iCCAnsHFrVsuS6BmzZLRtm9F+Ab4=;
+        b=VAaSxuGcmT8G4LqAVn4FaK0j/I9PBKb6C4cksCalqpmijOLraPisEYbIPiZMF8i1RG
+         5uURA2J4d+iUT3jUbPsK1rCc3Pu1JjhSofAonljj5+SjFReSDW3XmXxC5nfi0LIAFpfm
+         WY3CJBvQuiqC65NsKap/0Y/6+RL+QTC6yWXL3X5QL+ia8HsQ+/GIcJh4HFwJ8L7DAz5L
+         oWPpyrvr+wSt3JMAd0tYn7fJpaWXXbEuOBsQmhVTcGnhNTdgixNtPkLMl0ApU5XU9ng0
+         cR5POXfteZf7lOD4Ubo6j0KJG+F1snBmkmsN29TzoUuOaAqxs4ddfsp71T4pi4gwrTkZ
+         EI6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVMLceiQQ+tpkITTc7zDq++LYH7hwBiuxG2MsSQ7UrRwjJ1bpL17hGxz5ahWXBni+vlQP3IJtG/EMXgfo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo1R2QYBnKt6kCuBHc4QwMbqZvhtYgYcrZSBFNSQYuRJ6SQIgS
+	7qxnc7qtjQ31VUpJ4I2JYAWo9goppnZSAWfPj869kwHesvARnS/lN2fgSymX0fHIwuk=
+X-Gm-Gg: ASbGncuSvJ9/ZV6SBDCoBztr1kgMeQt2LTjoK551NSH2XgM0uJ6kPTqn+lN9/FVyMjt
+	pMN+hXwj3snnsZ20lnTkahDdBT6toWLSsKBfYnwHNVZrHA4Z18BmuC2dQRam5jJ+EQnbq2Hpim9
+	IQPbdlU9lOsa/Lrng0u9nqZYgJ/P3/9Ve0rMVIU1mZLE+qNipPYAE3clM+36eZkQ2NUbano1aWS
+	4YbyQBid72tsZ0C5rEjUTg+Mrpmed97sM9+5Vu976N8twimVGGdKadCkTSA723h9F5gUvrFVy9G
+	IzVrpx5frWVC7F0SfXvRjBJQC1choXtHB40aJ8CDNQFOIPknTVvfFQLoscq7DHFpMr0mMtQ9V7d
+	RNZWbn4glCVg8NESYzAm44Q2RMzkXAr8iAp08p20=
+X-Google-Smtp-Source: AGHT+IEWczTOKpxrX7Kq4OJFYfDdAA9v5c0yaK836ViXrpfcsn3PHuwhhvfHdkmxcH18lsKBAQA0YA==
+X-Received: by 2002:a05:6830:2908:b0:739:fe04:7aec with SMTP id 46e09a7af769-73a363ed869mr7767099a34.26.1750115438134;
+        Mon, 16 Jun 2025 16:10:38 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a28554581sm1377254a34.61.2025.06.16.16.10.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 16:10:37 -0700 (PDT)
+Message-ID: <e4d80845-ddf4-487a-8ad4-c9429eccea4c@baylibre.com>
+Date: Mon, 16 Jun 2025 18:10:36 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250616132539.63434-1-danisjiang@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/9] spi: zynqmp-gqspi: Support multiple buses
+To: Sean Anderson <sean.anderson@linux.dev>, Mark Brown <broonie@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+References: <20250616220054.3968946-1-sean.anderson@linux.dev>
+ <20250616220054.3968946-6-sean.anderson@linux.dev>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250616220054.3968946-6-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Yuhao Jiang wrote on Mon, Jun 16, 2025 at 09:25:39PM +0800:
-> A buffer overflow vulnerability exists in the USB 9pfs transport layer
-> where inconsistent size validation between packet header parsing and
-> actual data copying allows a malicious USB host to overflow heap buffers.
+On 6/16/25 5:00 PM, Sean Anderson wrote:
+> Currently, selection of the upper/lower buses is determined by the
+> chipselect. Decouple this by allowing explicit bus selection through the
+> spi-buses property.
 > 
-> The issue occurs because:
-> - usb9pfs_rx_header() validates only the declared size in packet header
-> - usb9pfs_rx_complete() uses req->actual (actual received bytes) for memcpy
-> 
-> This allows an attacker to craft packets with small declared size (bypassing
-> validation) but large actual payload (triggering overflow in memcpy).
-> 
-> Add validation in usb9pfs_rx_complete() to ensure req->actual does not
-> exceed the buffer capacity before copying data.
-
-Thanks for this check!
-
-Did you reproduce this or was this static analysis found?
-(to knowi if you tested wrt question below)
-
-> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-> Fixes: a3be076dc174 ("net/9p/usbg: Add new usb gadget function transport")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yuhao Jiang <danisjiang@gmail.com>
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 > ---
->  net/9p/trans_usbg.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
 > 
-> diff --git a/net/9p/trans_usbg.c b/net/9p/trans_usbg.c
-> index 6b694f117aef..047a2862fc84 100644
-> --- a/net/9p/trans_usbg.c
-> +++ b/net/9p/trans_usbg.c
-> @@ -242,6 +242,15 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
->  	if (!p9_rx_req)
->  		return;
+> Changes in v2:
+> - New
+> 
+>  drivers/spi/spi-zynqmp-gqspi.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+> index 595b6dc10845..add5eea12153 100644
+> --- a/drivers/spi/spi-zynqmp-gqspi.c
+> +++ b/drivers/spi/spi-zynqmp-gqspi.c
+> @@ -465,13 +465,13 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
+>  	genfifoentry |= GQSPI_GENFIFO_MODE_SPI;
 >  
-> +	/* Validate actual received size against buffer capacity */
-> +	if (req->actual > p9_rx_req->rc.capacity) {
-> +		dev_err(&cdev->gadget->dev,
-> +			"received data size %u exceeds buffer capacity %zu\n",
-> +			req->actual, p9_rx_req->rc.capacity);
-> +		p9_req_put(usb9pfs->client, p9_rx_req);
+>  	if (!is_high) {
+> -		if (!spi_get_chipselect(qspi, 0)) {
+> -			xqspi->genfifobus = GQSPI_GENFIFO_BUS_LOWER;
+> +		xqspi->genfifobus =
+> +			FIELD_PREP(GQSPI_GENFIFO_BUS_MASK, qspi->buses);
+> +		if (!spi_get_chipselect(qspi, 0))
+>  			xqspi->genfifocs = GQSPI_GENFIFO_CS_LOWER;
+> -		} else {
+> -			xqspi->genfifobus = GQSPI_GENFIFO_BUS_UPPER;
+> +		else
+>  			xqspi->genfifocs = GQSPI_GENFIFO_CS_UPPER;
+> -		}
+> +
 
-I still haven't gotten around to setting up something to test this, and
-even less the error case, but I'm not sure a single put is enough --
-p9_client_cb does another put.
-Conceptually I think it's better to mark the error and move on
-e.g. (not even compile tested)
-```
-	int status = REQ_STATUS_RCVD;
+We could possibly drop adding the SPI_CONTROLLER_DEFAULT_BUS_IS_CS flag
+and handle the fallback here instead. Like this:
 
-	[...]
+	/*
+	 * If spi-buses was not provided in devicetree, assume bus is
+	 * the same as chipselect (needed for backwards compatibility).
+	 */
+	if (qspi->buses)
+		xqspi->genfifobus =
+			FIELD_PREP(GQSPI_GENFIFO_BUS_MASK, qspi->buses);
+	else if (spi_get_chipselect(qspi, 0) == 0)
+		xqspi->genfifocs = GQSPI_GENFIFO_BUS_LOWER;
+	else
+		xqspi->genfifocs = GQSPI_GENFIFO_BUS_UPPER;
 
-	if (req->actual > p9_rx_req->rc.capacity) {
-		dev_err(...)
-		req->actual = 0;
-		status = REQ_STATUS_ERROR;
-	}
-	
-	memcpy(..)
+>  		genfifoentry |= xqspi->genfifobus;
+>  		genfifoentry |= xqspi->genfifocs;
+>  		genfifoentry |= GQSPI_GENFIFO_CS_SETUP;
+> @@ -1316,6 +1316,8 @@ static int zynqmp_qspi_probe(struct platform_device *pdev)
+>  		ctlr->num_chipselect = num_cs;
+>  	}
+>  
+> +	ctlr->num_buses = 2;
+> +	ctlr->flags = SPI_CONTROLLER_DEFAULT_BUS_IS_CS;
+>  	ctlr->bits_per_word_mask = SPI_BPW_MASK(8);
+>  	ctlr->mem_ops = &zynqmp_qspi_mem_ops;
+>  	ctlr->mem_caps = &zynqmp_qspi_mem_caps;
 
-        p9_rx_req->rc.size = req->actual;
-
-        p9_client_cb(usb9pfs->client, p9_rx_req, status);
-        p9_req_put(usb9pfs->client, p9_rx_req);
-
-	complete(&usb9pfs->received);
-```
-(I'm not sure overriding req->actual is allowed, might be safer to use
-an intermediate variable like status instead)
-
-What do you think?
-
-Thanks,
--- 
-Dominique Martinet | Asmadeus
