@@ -1,206 +1,150 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82E92E11C1;
-	Mon, 16 Jun 2025 01:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B621E4AB;
+	Mon, 16 Jun 2025 01:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750038884; cv=none; b=OPDt+pKIropB/vBKCYdTFVVS6T+KgAgFbsBVJCq1MdgZ3r82ezL3i8NhuhZRFtrm1c7HEZMjkPn5E3nCdP7dIw0DKn9UfhXSslvEBqh6ONqXe+8cF6nEhnWbubyO91MCPgqzzKkWZoTMaHEMty6Ct+X6qyAnmBMubbSMHWQqw0E=
+	t=1750039185; cv=none; b=emUGyE7zxvq/v6+yutaWSQKj7DTLzurydjm9c30WsIXzoq33n5NA81gHRPiSW5TUwrSayedGxYAwq2fa7qAth0u1vGOOm3OiHR+NolA6rtyNjdV7pNRKhdDYzz+JBFi2MSk1aGTd9KNhaQ1rE8PTvJXfLQU1sUbryPmfb/mQ87c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750038884; c=relaxed/simple;
-	bh=9xGDvmxo0AP6GBlgQhbw3vx4+flIT+BN+eC0id6BcXA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WP9uF1bwFTmJvURityIWCzq8WlbQtRYM5A6b0Kyneoa+gcuRvTVoYJX5STvjP2KUKk0dogpelEqZT/zf3h+or0nFji8HvcodtQ6Fvjf8RxOW3whuYCJJ9LuZTwDhuMn/rSBD9n2Vi9d6RFevTbu6+goS22KIyCgq0dHEfbNFbpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Wj4mi925; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750039185; c=relaxed/simple;
+	bh=SsxSOqUPy+o3mzZJbGfqcDYBLF1eMDREI+pTPYjyBEs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bEPQ0ta8Q9JybBRKoIISDXSIQ072w2FspSbsbqbJ1vZHQmSweb3ibRMmcUEMo/K9R+gQAIgfmDwGCXW7e3vueujK1V1vmqPm8YAUyrirurjdi4/P5ocSkSjuJne5BNYRXv7TerIP1fa/w3J+dNUM+x2xC5iZ+oniAUULIIMOPPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HR5g8eS5; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Wj4mi925"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750038878; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zHPvx6QoNDHkEaNKrICKyd3s4RbALR021dqg3TaZACY=;
-	b=Wj4mi9259YYENJb1iJkBP/d8IDv/aFNlz29ss0rHF01jPtaYUw3HdMgLn53E5FiHGucd9LYMpQhnR2HGU/KvnNtr/RzCs/d3pXeE8y94DosDgUc0/yAuqkUxOrBsokB9rAo3SHrLdoIhXzFuC6PS2b8OFAzOlA04tqjDmXIILj0=
-Received: from 30.221.97.59(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wdr40hQ_1750038876 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 16 Jun 2025 09:54:37 +0800
-Message-ID: <83916c62-6069-4ed1-9856-b6c21363b137@linux.alibaba.com>
-Date: Mon, 16 Jun 2025 09:54:36 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HR5g8eS5"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81f8679957so3465763276.2;
+        Sun, 15 Jun 2025 18:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750039182; x=1750643982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=11s8nKjLduRW6FuWO4dUrGE7FYRxfoT1SWC9TRxpG+g=;
+        b=HR5g8eS5alhrppPoaojShbvnQayquZ+M5DbdlkDP4WBSnunXF/DftONQax15rA+Hjr
+         l5iSOyk3miXhmLaFgOS7kkLreYxta40iIMFyw0XcVtyqmdB2cmMOyR7DxzjJmsW2MdOL
+         R2m7SlHpuLQZJZ/gucooY8UztRQ8KaW4zO2SAOqb6JVuzTF/kVhAtKeaprnouSrRR5Iu
+         Ns9Uhn5ArogkqCHXlrdwtK5hPeow4VgygEI0cMA6rkTx/qBeYi3m7VjSSjMNwT2meMwo
+         rOCVTk7YkDwA1ZqivzawpC8Eihm/1iy23OFjfcQjsv3lxIic0TGlbHiRk5Z6zculU5Kq
+         ZYbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750039182; x=1750643982;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=11s8nKjLduRW6FuWO4dUrGE7FYRxfoT1SWC9TRxpG+g=;
+        b=YUEPEstXrX9Jq7raWKS3wX/e+aLZ1hNaC5ZOJrY0Z6csTggaIBJjbYmwzC1X9MkIKE
+         d6mvKlwF72EH796UD7vIBm3pedvXSrMyUSp6rqcOy9WOtIiToe63oXl8TJ6rkOTMPRYN
+         2BMfLiD6X4tqKnglZCi/TIWCpR5+pi6z1oVDzQXPIZ9iXspKcxzBI3cxieBnbS2hFdCV
+         JpaSEJ4+7GT1QM4hIVsPJ4UakF2yPhblhGGJMXTbCLQotlfHP1w9xFGQXpAZ9nSCOxfa
+         hGLk6Yn3k3cgnZO3vbVi1uyxRmT6c3dntx846eLjO5IENXGFHNPR074qiU1cirXFd388
+         OfbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaMuEpHW1JjkV+tWw9qN8IdlgpIvjHXzucuL1u7YUdOnG8SzjUVN+SKDqu1ToRo2ZK9jxxu78RY4qxzqQ=@vger.kernel.org, AJvYcCUlf/ROVwmJzffiJQzcIRZRB7MJP3Y16O/lFplEU50C1LWd1rCTNRdRMw+gv13m0vWnXhcIl22NuxTtXGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnC8U5xZ3TSe1ZwaqprkAQlxIVx7jP1ofl2vwCoVILigj/8pcF
+	B8qS+J5Jd8z0wM0j0/ZOGedyl9OYkr/d/EPFExjuX1/hPQnYgadJDIxR
+X-Gm-Gg: ASbGncvQFHc47b/BJlQwbZcUGXVO8By4QuoW7r5rRkR6qFBYJoTzkXXl0yuaEAxXvc/
+	rwqL+OxBFxHQCgf1XGDDyjwAuBAp+izlxa51F/bWx7KWD9fL0LOJ69jllbjhG1Ug/Jsa+FnCKLv
+	E8zo5/kSSsTs34hYRQbq14M8X8neaClwnMP5lcF12ZYK8SDKVwszK3nj3w4iSKPagH/UDGMGmL2
+	eFRktRwrX5TSVFn7SXFnqXiqhDhvBMSYVkUVeg+zuwb06e3bA2lt4+8m9HPjSvdPEoaqM3+yQg/
+	6g/IfpSiMF5cPRAiD7uOGQxSd8qDaNI2pC3PNYM4TTLDSCMsNqTVwODy6q+TG9YLTbLOCcuVndL
+	T
+X-Google-Smtp-Source: AGHT+IGo13HHvpDgHzjDouJcIIKG8qVtXxKblKahx3eKvKKptwr2rsKXI14LgqmfdAPat0I0ca5u1Q==
+X-Received: by 2002:a05:6902:208a:b0:e81:caf5:451c with SMTP id 3f1490d57ef6-e822acf3e6amr10699755276.41.1750039182547;
+        Sun, 15 Jun 2025 18:59:42 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e820e04016fsm2664871276.11.2025.06.15.18.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jun 2025 18:59:42 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: alexguo1023@gmail.com,
+	jpoimboe@kernel.org,
+	algonell@gmail.com,
+	mingo@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb-frontends: w8096p: fix null-ptr-deref
+Date: Sun, 15 Jun 2025 21:59:40 -0400
+Message-Id: <20250616015940.779326-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Dave Jiang <dave.jiang@intel.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
- vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
- <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
- <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
- <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
- <343f6719-598a-453b-9903-21632bc6b623@intel.com>
- <97e52eb0-d531-4464-bbb7-1dffa5d8d74e@linux.alibaba.com>
- <d4d61f9a-e73d-4689-bef2-7b9c583e1b32@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <d4d61f9a-e73d-4689-bef2-7b9c583e1b32@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+msg is controlled by user. If accessing msg.buf without sanity
+check, null pointer deref would happen. We add check on
+msg.len to prevent crash.
 
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer()")
 
-在 2025/6/6 22:32, Dave Jiang 写道:
-> 
-> 
-> On 6/5/25 12:40 AM, Shuai Xue wrote:
->>
->>
->> 在 2025/6/4 22:19, Dave Jiang 写道:
->>>
->>>
->>> On 6/4/25 1:55 AM, Shuai Xue wrote:
->>>>
->>>>
->>>> 在 2025/6/3 22:32, Dave Jiang 写道:
->>>>>
->>>>>
->>>>> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
->>>>>> Shuai Xue <xueshuai@linux.alibaba.com> writes:
->>>>>>
->>>>>>> 在 2025/5/23 22:54, Dave Jiang 写道:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>>>>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>>>>>>>>> is being enabled, it can cause a mismatch between the software and hardware
->>>>>>>>>>> states.
->>>>>>>>>>>
->>>>>>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>>>>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>>>>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>>>>>>>>> ensure consistency between the software and hardware states.
->>>>>>>>>>>
->>>>>>>>>>> However, a race condition exists between the WQ enable path and the
->>>>>>>>>>> reset/recovery path. For example:
->>>>>>>>>>>
->>>>>>>>>>> A: WQ enable path                   B: Reset and recovery path
->>>>>>>>>>> ------------------                 ------------------------
->>>>>>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>>>>>>>>                                         b1. issue IDXD_CMD_RESET_DEVICE
->>>>>>>>>>>                                         b2. clear wq->state
->>>>>>>>>>>                                         b3. check wq_enable_map bit, not set
->>>>>>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>>>>>>>>> a3. set wq_enable_map
->>>>>>>>>>>
->>>>>>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>>>>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>>>>>>>>> leading to an inconsistency between wq->state (software) and the actual
->>>>>>>>>>> hardware state (IDXD_WQ_DISABLED).
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>>>>>>>>
->>>>>>>>>> DJ
->>>>>>>>>
->>>>>>>>> Yep, how about add a spin lock to enable wq and reset device path.
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->>>>>>>>> index 38633ec5b60e..c0dc904b2a94 100644
->>>>>>>>> --- a/drivers/dma/idxd/device.c
->>>>>>>>> +++ b/drivers/dma/idxd/device.c
->>>>>>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>>>>>>>>      }
->>>>>>>>>      EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>>>>>>>>      +/*
->>>>>>>>> + * This function enables a WQ in hareware and updates the driver maintained
->>>>>>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->>>>>>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->>>>>>>>> + * otherwise disable the WQ without the driver's state being properly
->>>>>>>>> + * updated.
->>>>>>>>> + *
->>>>>>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->>>>>>>>> + * called after the WQ has been explicitly disabled, so no concurrency
->>>>>>>>> + * issues arise.
->>>>>>>>> + */
->>>>>>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->>>>>>>>> +{
->>>>>>>>> +       struct idxd_device *idxd = wq->idxd;
->>>>>>>>> +       int ret;
->>>>>>>>> +
->>>>>>>>> +       spin_lock(&idxd->dev_lock);
->>>>>>>>
->>>>>>>> Let's start using the new cleanup macro going forward:
->>>>>>>> guard(spinlock)(&idxd->dev_lock);
->>>>>>>>
->>>>>>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
->>>>>>>> guard(device)(idxd_confdev(idxd));
->>>>>>>
->>>>>>> Then we need to replace the lock from spinlock to mutex lock?
->>>>>>
->>>>>> We still need a (spin) lock that we could hold in interrupt contexts.
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
->>>>>>>> guard(device)(wq_confdev(wq));
->>>>>>>>
->>>>>>>> If you are up for it that is.
->>>>>>>
->>>>>>> We creates a hierarchy: pdev -> idxd device -> wq device.
->>>>>>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
->>>>>>>
->>>>>>>         (wq_confdev(wq))->parent = idxd_confdev(idxd);
->>>>>>>
->>>>>>> Is it safe to grap lock of idxd_confdev(idxd) under hold
->>>>>>> lock of wq_confdev(wq)?
->>>>>>>
->>>>>>> We have mounts of code use spinlock of idxd->dev_lock under
->>>>>>> hold of wq->wq_lock.
->>>>>>>
->>>>>>
->>>>>> I agree with Dave that the locking could be simplified, but I don't
->>>>>> think that we should hold this series because of that. That
->>>>>> simplification can be done later.
->>>>>
->>>>> I agree. Just passing musing on the current code.
->>>>
->>>> Got it, do I need to send a separate patch for Patch 2?
->>>
->>> Not sure what you mean. Do you mean if you need to send patch 2 again?
->>
->> Yep, the locking issue is more complicate and can be done later.
->> (I could split patch 2 from this patch set if you prefer a new patch.)
-> 
-> Yes split it out and send it ahead if it can go independently.
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/dvb-frontends/dib8000.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Hi, Dave,
-
-I split patch 2 out.
-
-As for this race issue between WQ enable and reset paths, do you have any plan
-or idea?
-
-
-> 
->>
->>>>
->>>> Thanks.
->>>> Shuai
->>
->>
+diff --git a/drivers/media/dvb-frontends/dib8000.c b/drivers/media/dvb-frontends/dib8000.c
+index d90f1b0b2051..26988d2aa065 100644
+--- a/drivers/media/dvb-frontends/dib8000.c
++++ b/drivers/media/dvb-frontends/dib8000.c
+@@ -1677,6 +1677,8 @@ static int dib8096p_tuner_write_serpar(struct i2c_adapter *i2c_adap,
+ 	struct dib8000_state *state = i2c_get_adapdata(i2c_adap);
+ 	u8 n_overflow = 1;
+ 	u16 i = 1000;
++	if (msg[0].len < 3)
++		return -EINVAL;
+ 	u16 serpar_num = msg[0].buf[0];
+ 
+ 	while (n_overflow == 1 && i) {
+@@ -1697,6 +1699,8 @@ static int dib8096p_tuner_read_serpar(struct i2c_adapter *i2c_adap,
+ 	struct dib8000_state *state = i2c_get_adapdata(i2c_adap);
+ 	u8 n_overflow = 1, n_empty = 1;
+ 	u16 i = 1000;
++	if (msg[0].len < 1 || msg[1].len < 2)
++		return -EINVAL;
+ 	u16 serpar_num = msg[0].buf[0];
+ 	u16 read_word;
+ 
+@@ -1740,7 +1744,8 @@ static int dib8096p_rw_on_apb(struct i2c_adapter *i2c_adap,
+ {
+ 	struct dib8000_state *state = i2c_get_adapdata(i2c_adap);
+ 	u16 word;
+-
++	if (msg[0].len < 3 || msg[1].len < 2)
++		return -EINVAL;
+ 	if (num == 1) {		/* write */
+ 		dib8000_write_word(state, apb_address,
+ 				((msg[0].buf[1] << 8) | (msg[0].buf[2])));
+@@ -1758,7 +1763,8 @@ static int dib8096p_tuner_xfer(struct i2c_adapter *i2c_adap,
+ 	struct dib8000_state *state = i2c_get_adapdata(i2c_adap);
+ 	u16 apb_address = 0, word;
+ 	int i = 0;
+-
++	if (msg[0].len < 1)
++		return -EINVAL;
+ 	switch (msg[0].buf[0]) {
+ 	case 0x12:
+ 			apb_address = 1920;
+@@ -1848,11 +1854,15 @@ static int dib8096p_tuner_xfer(struct i2c_adapter *i2c_adap,
+ 			/* get sad sel request */
+ 			i = ((dib8000_read_word(state, 921) >> 12)&0x3);
+ 			word = dib8000_read_word(state, 924+i);
++			if (msg[1].len < 2)
++				return -EINVAL;
+ 			msg[1].buf[0] = (word >> 8) & 0xff;
+ 			msg[1].buf[1] = (word) & 0xff;
+ 			return num;
+ 	case 0x1f:
+ 			if (num == 1) {	/* write */
++				if (msg[0].len < 3)
++					return -EINVAL;
+ 				word = (u16) ((msg[0].buf[1] << 8) |
+ 						msg[0].buf[2]);
+ 				/* in the VGAMODE Sel are located on bit 0/1 */
+-- 
+2.34.1
 
