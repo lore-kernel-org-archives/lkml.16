@@ -1,119 +1,107 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28AB2877F1;
-	Mon, 16 Jun 2025 13:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB212777E9
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080628; cv=none; b=tV0sAw9MFKoCyiBWhHI3nG10pJKcJIz7MapgCAt+tXM9z16NouP2ZohwKoQ5inZsh0QozCE141NlTt36rYxanCeqWdA7JeNS3Slu1EnIQX9ksVkQrIWVkB178xVVW/kvXhiXkQTGFpsajGfiNDkS/HmAPLETk4SkaCrXhIDu6G4=
+	t=1750080643; cv=none; b=sH96MgaICS/VW2fmn+vlySSdkZ9qEYmD0I+sb2zq0vWd10ukjBCi1Mz+5QyEgFd6IQ43hcORZi1PbWeWp4Js2ualKPZkHReQ5i45k92W1t/y5C+9F8T0cDlQ3xOZKtk/uSJVgU/dfI9q9tSy/bouVrwi0WnT2W3PV1YOHLXd0M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080628; c=relaxed/simple;
-	bh=eSGM/kHiThLG0+4KJzd+4iN5W6WU/gNP8I5Ybs3fFmU=;
+	s=arc-20240116; t=1750080643; c=relaxed/simple;
+	bh=Set7ARbDGtVl+rypiAdzKX+Nu1RI6OmX9rgnwmZ6y4Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gWSKBFxoPvT01+cKXUNZ2Zt7Fm8fAaPqcAlycJcRISJUsPDLQJy86gxdoTBM0UR2Fvl24an8BFEJlOJ5y3PP/o93OYBCsRHjuNMDrkp9fbFyJJ/5HYMuTCKuAXi2+44BD88FTwJaBYz0rUg0vV6oqoh3XS6HW94EJeoy2JI+WU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nd38/hnG; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=G6ooBsBESd/gisRzIae7l/Lm5MSeFLj9x1xR4fgmgvKO/k3hxuhFlrWxnxOeZy1kNR4tocMKUpkZ1phwBfDja8fFJEig9n1e5rYouOLdyIEw+ek28HjcExI+DEuLHdSrcXXEqv+LBXMVJYzU6GjM7E83mG4NSEGd5H8OYw9foMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cYlV4oAy; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nd38/hnG"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2351227b098so36000105ad.2;
-        Mon, 16 Jun 2025 06:30:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cYlV4oAy"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3105ef2a071so45529491fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750080626; x=1750685426; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750080640; x=1750685440; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c0hEZwGp1ZWclkFU1+i1qSi3AaZ5vIDWkPqR7hw0AQY=;
-        b=nd38/hnGbIgXuAnBMzEMtgM3u11yP9WGa1QlDSlfz4Cw0cuewS+eliFIag06GjKWsT
-         dWHMxr3LtmnVWSUAD0nzWLeWNLIsYp2aLxeaUJVaLeXbjXMCTnsJAeMQ9Tah8zZgeQAU
-         6GFXl9Y4uLhch/+4aVyVoLz1lmNDmmKDqL5UPJJNW4L170V+xWeIsBVt9F5lemAa8Hf7
-         eQZDLylC6DRQcVXLbG7Xk7G8QGxR6CHzgcCfZqynh6CQJZjo/ffLCx8W1cbIfKldT6JH
-         hddbLdMsN1yO1DClZoXo7INTiHDOpwZuvoa579vlanYvxgXL8BnFwcpQVug6nAQMptqk
-         xQAw==
+        bh=PpFwILv4epGn2GHEmYFKtiL50L1fsQYq7PF3nsB89Ng=;
+        b=cYlV4oAyvGjKbkG0YWUekZpabHfvLEROpLCZRFgVyTafp7OnA2lBk9fxS9hrHKqv9D
+         Ga3sA+N5rxNJP1w3rbx+Fwh2i9A6U6zin07vwT4odocivw++VaeEy+8W1KZigo+WSsT5
+         wj6MdzFKsNIkvNJGCQAI6C+YVDELbkVRVlTr3RXtuFyZK9pqx9wR7+b4aiDCJiYbMg5J
+         ewracz6DrS1drCUPQmUzHl0ol5v0Jmv7EUo4fdSGfsZVn6wH6sWoyrqLZDEHV7l3kv8G
+         XREcNjpaZb07VueULpzOdKWGCMsSXYe+abbKBsy19piFeKMp2qlyVrH8GbUgkN+qqaex
+         ymkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750080626; x=1750685426;
+        d=1e100.net; s=20230601; t=1750080640; x=1750685440;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c0hEZwGp1ZWclkFU1+i1qSi3AaZ5vIDWkPqR7hw0AQY=;
-        b=WvVHgSeqXzlI5vTO+vUVC7TANnazP8k/oF1Z2zpp99w6uVD0hN2M7lR9KZnwyjxque
-         OIcxsJJ2F79lLm7qkxoN8OHjdl9u1v6m6t77jguezvHpvy9zkcyPOdNhuT6RFtUoUG70
-         GBOJ3KZFJNkhAnDoxNSBw4UMmeojBS3pDFSGDDkI0PBKu8Ia9QY8GXuLKGc+6wszxIZE
-         3+GUyrzDvmtEiWS64vmKtvDjurEImCbxTSY0RXo1EiG1Mj5bw8TTh8tHKFWjbG9Cp/Ho
-         2j8GLfb6u5HSsihYWgdmFU/jS2R4H0yZAxgL4RavNTMN6TNcLl10GKoWbPmre+gLhFap
-         syDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhCesORbqLDcGrJIP2pzUyvXuDtz9ySD4I0SZyyoS8fQQsumel7udaQBDZPUPzRJWRYMiJztSEw52R@vger.kernel.org, AJvYcCVq9z/LPEUvGrOL/NPCNQtxNoaOE5+KMAYBbPOjs31SaLYRE16e+xTKqHxKy3rHSGF3Q1W8CTLHc9EkAOVh@vger.kernel.org, AJvYcCXSiTXBEKr89ymkBI5y7kUuY6jPmmTl9uvAdc9fUbp0CwD0m6eRwIID9F+T47jpBK5vAr+no4wvVOY9YWBxZvaNvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs+Ks53YpL3QdBXZXLLKU3QN1vHChVQtIGWrhDv5LlmDxR5Fh7
-	vQSvBdsmC+oreNsM5SMinxKpcJIRZUYmHBbk7qqQJ2lR5HIgDjZSrMU6pKwTVBI3s2Im/vxT8CY
-	78G98i+JF7lSLt6LuMH+U+ZriXrN993Y=
-X-Gm-Gg: ASbGncvXjtPksqEqtDo4aSq1aJRbQnQJ9ayserr9Dr+I5TwYbET5UojCJ7grFI0DSeY
-	cQuJrhF3R63/P5P89jKjWRPYglCmlQHooMXJTKD64lsUW7eQn0kBeIT0KtZ5027/UPPRIgihpzL
-	KyowTGI06hAUxsSICiitQs1nMX/V/IHB1tqZkOH53E
-X-Google-Smtp-Source: AGHT+IHrnOe9BgEaf7IB6cKO8/zukFqN2HZ5IAYeo7rZcnUwyz06zgXtx6or4FKsocwZQxMzpq7RhmfRl7nR3WTEeSU=
-X-Received: by 2002:a17:903:228a:b0:235:1962:1bf4 with SMTP id
- d9443c01a7336-2366b32ce3amr144470995ad.14.1750080625607; Mon, 16 Jun 2025
- 06:30:25 -0700 (PDT)
+        bh=PpFwILv4epGn2GHEmYFKtiL50L1fsQYq7PF3nsB89Ng=;
+        b=pis5GJHouvXuozQzIJsuSR9c4XORhk5bcEIip8mjz/5BpV/yzoFiJOXPf010Dh/jsW
+         F86sdwRL47WTb1pSNjr4aaQeDQq5a5NOzsyXb6fAmeBdJJg8++YJT1M0f+qnPttLXD/o
+         V9fW48P4Ka79seLv5DLG3orKcWxQY58Io+7X7ZYrm2/CDW6T/EGtlUHg4ZxE7Z30SI00
+         CEL8xphKC3F8+uFFUw5EV0KT3mS2mQeI+EKDhafRAyAEIVzcOTlnKXrtvn/HqJPhOZTW
+         bw7N5Lp7evijd4Gg9lwnYw1zSXq9y+4F9sN65Mhy17KEw6QXGVo6KSZF8BSr/RftvzJT
+         EkOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWenLGdMDkDxEhZw6phgx98rQ+vFHoeu9Ob/iODsQts51vtrVJVJP8u70QxeJSEkiKKdWI4fYIkVJALKj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXNSmQwqVnfs14Y2rwcyUhV6Agn+dvUlRAC2kz/AsZDp91o/G1
+	ApEVBTGEF0+ArHYfE2gATX93bQDIEQbdhPQvSUhZpPSIs6B4JPPNsmrwO7ZMrcta3QLnoeqDdPb
+	nNGGfNAwlS00XKQFt+g2ciy4h63Lqxi4M55UCWfMIhw==
+X-Gm-Gg: ASbGncvpF2WrjrJSrGhNok5rpIWhOZ5lxxCTsk1BA6g9Sdmr9GjvipqlLsDPG0blcfa
+	yRQny79iAEgkHXZErfDe7+oo8Rh7m6X1jKWO5v+lgj8hJwk/PKebdSjXV1S4DJJa5ry7N/69pEs
+	wNK57Z1ot3gdQ42TP7lm5CMcdskhUoiOUL0HUtLx5poHbom1bVgD1iLTqpVOCZEUgZMhfI+GEiu
+	qY7HxUQCyhesg==
+X-Google-Smtp-Source: AGHT+IGDpPwrY/qezNWazK+rw//fC7hH97md4nyqXriaZInw5tKf/dsV1dwP+FB3JvLuRVtC7OZOgXl1b9/GYt16THo=
+X-Received: by 2002:a05:651c:1505:b0:31e:261a:f3e2 with SMTP id
+ 38308e7fff4ca-32b4a2e35f0mr24206531fa.1.1750080639525; Mon, 16 Jun 2025
+ 06:30:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-imx95-rproc-1-v2-0-a2bd64438be9@nxp.com> <20250606-imx95-rproc-1-v2-2-a2bd64438be9@nxp.com>
-In-Reply-To: <20250606-imx95-rproc-1-v2-2-a2bd64438be9@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Mon, 16 Jun 2025 16:32:27 +0300
-X-Gm-Features: AX0GCFsogmtArdg5rIwFR58rkkFYwbGckSH0KHSur5wUDe92Y-KCqAhSavVUQsU
-Message-ID: <CAEnQRZCq45wzoDLd=_vPn8cNkiVrbYrg5LJwbZUSdRndRn_U_g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] remoteproc: imx_rproc: Add support for System
- Manager API
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Iuliana Prodan <iuliana.prodan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+References: <20250616053209.13045-1-mani@kernel.org> <202506162013.go7YyNYL-lkp@intel.com>
+ <ji3pexgvdkfho6mnby5jumkeaxdbzom574kbiyfy4dcqumtgz2@h4nmwjvox7nl> <aFAZL1GgEH9l-zj9@wunner.de>
+In-Reply-To: <aFAZL1GgEH9l-zj9@wunner.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 16 Jun 2025 15:30:27 +0200
+X-Gm-Features: AX0GCFsuPlvNCKVZ42nqFo1y-oTylnUFxw211QqxqFtmolpwWlFQJ8VvyOnirMY
+Message-ID: <CAMRc=Mf=Z+d3UKdwEXkw1Xm9G=qVwh6=fXsfgS6JiOM6Z7H50w@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, kernel test robot <lkp@intel.com>, bhelgaas@google.com, 
+	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 6, 2025 at 4:57=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
+On Mon, Jun 16, 2025 at 3:16=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
+e:
 >
-> From: Peng Fan <peng.fan@nxp.com>
+> On Mon, Jun 16, 2025 at 06:07:48PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jun 16, 2025 at 08:21:20PM +0800, kernel test robot wrote:
+> > >    ld: drivers/pci/probe.o: in function `pci_scan_single_device':
+> > > >> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create=
+_device'
+> >
+> > Hmm, so we cannot have a built-in driver depend on a module...
+> >
+> > Bartosz, should we make CONFIG_PCI_PWRCTRL bool then? We can still allo=
+w the
+> > individual pwrctrl drivers be tristate.
 >
-> i.MX95 features a Cortex-M33 core, six Cortex-A55 cores, and
-> one Cortex-M7 core. The System Control Management Interface(SCMI)
-> firmware runs on the M33 core. The i.MX95 SCMI firmware named System
-> Manager(SM) includes vendor extension protocols, Logical Machine
-> Management(LMM) protocol and CPU protocol and etc.
+> I guess the alternative is to just leave it in probe.c.  The function is
+> optimized away in the CONFIG_OF=3Dn case because of_pci_find_child_device=
+()
+> returns NULL.  It's unpleasant that it lives outside of pwrctrl/core.c,
+> but it doesn't occupy any space in the compiled kernel at least on non-OF
+> (e.g. ACPI) platforms.
 >
-> There are three cases for M7:
->  (1) M7 in a separate Logical Machine(LM) that Linux can't control it.
->  (2) M7 in a separate Logical Machine that Linux can control it using
->      LMM protocol
->  (3) M7 runs in same Logical Machine as A55, so Linux can control it
->      using CPU protocol
->
-> So extend the driver to using LMM and CPU protocol to manage the M7 core.
->  - Add IMX_RPROC_SM to indicate the remote core runs on a SoC that
->    has System Manager.
->  - Compare linux LM ID(got using scmi_imx_lmm_info) and M7 LM ID(got
->    from DTB), if same, use CPU protocol to start/stop. Otherwise, use
->    LMM protocol to start/stop.
->    Whether using CPU or LMM protocol to start/stop, the M7 status
->    detection could use CPU protocol to detect started or not. So
->    in imx_rproc_detect_mode, use scmi_imx_cpu_started to check the
->    status of M7.
->  - For above case 1 and 2, Use SCMI_IMX_LMM_POWER_ON to detect whether
->    the M7 LM is under control of A55 LM.
->
-> Current setup relies on pre-Linux software(U-Boot) to do
-> M7 TCM ECC initialization. In future, we could add the support in Linux
-> to decouple U-Boot and Linux.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+And there's a third option of having this function live in a separate
+.c file under drivers/pci/pwrctl/ that would be always built-in even
+if PWRCTL itself is a module. The best/worst of two worlds? :)
+
+Bart
