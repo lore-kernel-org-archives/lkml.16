@@ -1,112 +1,182 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B749215773;
-	Mon, 16 Jun 2025 15:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092168488;
+	Mon, 16 Jun 2025 15:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750086134; cv=none; b=AxMvOMy7cI2fTaYRnw7eCdrOo83hi/dIPWJrK6zyQo3XOLXfmfPVTXcSPZHIspHi+KMr+uXuQuJEY6XR/ss+oEHgLgUFsamF0h0umNCGLpeNzho9tPT7nyeDsoJ0ZS0Tm3xgj2PqKoqizH3KhdYwiUeRB/DgM+5vTfKAa+LhH88=
+	t=1750086140; cv=none; b=Zhw0o08jNDcS3h0/awfcL2ExH9fbDbDyleM4K62LAbVNey7zRApAQ+2XgTfJuSU/0M4/ZjruFq/ybRIWpxNFB1e/Zkmvwck8fnMRIvgA8Nq5RYY8ltVbnOnL115Psw8P5KsIbHIOHLJt4Jn32r+hSJkkdG5/xota8jM1Lirgemw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750086134; c=relaxed/simple;
-	bh=5FGZTXPSRB9UdOMKVVzsofQp4QdGIsgXthBaH70tIlw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UheCqau8eUaJtbVzJm+dln2hM6Iz6hbn3npbRnqAC6jtHC7Anvq+TvHU2a15W+0WaTT84FgP22dJKveh0pzR19nKoO+pMFY8CggamBWKVPIb/AhIpxKNVP9cKO3CFXxEko9bY0rD2Dv+bfSQMPimQreg3+nAbX//91DeRbBPkFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dvUWYfKe; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1750086140; c=relaxed/simple;
+	bh=JCQknAprNlRaRH3VNCOPHvAgVWxdW540EkUC2RxQbug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HGbFMWHQ/U+ZP04JvbaPaS3VKur21GgxuP9PFCAxY/lzG6ErK/hi9tyMxvw1qhDlr0fNsiXKBipReGxlgHOu3akYhuAuuZuUY58SFfIwpiuyXYFBr1+103+iTmMhApFX/XQPLBJkeDc7cK9GlfxtPHQFVurFvx1gmMcwLQuo4Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0OfcAiA; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvUWYfKe"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ade33027bcfso741649766b.1;
-        Mon, 16 Jun 2025 08:02:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0OfcAiA"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a44b0ed780so67878621cf.3;
+        Mon, 16 Jun 2025 08:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750086131; x=1750690931; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xxpfP09wMONaS9jpAWxQ7WCauQRBx9+f7EU0xvtD+hk=;
-        b=dvUWYfKek2zCVmPOzspikptLipSo9TNJ5Od6eyaM/yk/dsZaD+BL6x677rarsMraRu
-         bo2GjgoYFED9zxduzelnqw7ZbWcJDRxRChq/SUQ2D7ieHskcQyskG0B8QKdmqBj/zIZb
-         ZDiX5a5tEcZqoYOZq/upcasFAZZhSbNHHhsXpZsDfVXTgx2FAZEOGEgtxvM1yaRoYx7N
-         nEGzX7GF0LhkoDVmi6NBrcp8clhuDdRQrWPlL/hO5J2r/FLOYHUw9F1tzH9X1gzCcwxT
-         xK6ENT5vXMj9O9eFUVNuMUYYzlpcZo0oxDesyG4HeyCdchY5b43QbmkJCCGfKcs64MOA
-         lfiQ==
+        d=gmail.com; s=20230601; t=1750086138; x=1750690938; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rwgpX5X/SCSKuQA+X6Wr14gURs3q9R5/sK1cAoP4C5g=;
+        b=k0OfcAiAikyNBYKeaP23as4rl5Uzk6fwLcuyxTapPupcjuj5rrjjF1D0EeGGXe7mE9
+         C9WztOjTcRHna0oMhEDZ3R2GIDKQdyWqswhnlqpjW0yQhc4sZ0l0S6UGqJFFEA5Wqo/U
+         T3j1/vGS20+letvCevUf2XEi+as2GucHRqIyZg/3FD15BVJgtOavEyyzJ8Zxi4H3rDxT
+         GhVh85oPtPd+eoZd4obrpkKsiK0e5FBFtTJHl435wA9LyYuHFeIZ3xyRcAfi3i9F66CG
+         a7A4YCKwE9JyL0LBMmOAwwUbRjpSlR79x9AS3qLi+GiOvx/sEbJLqmbnlxyFm9bwGKXR
+         eCAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750086131; x=1750690931;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xxpfP09wMONaS9jpAWxQ7WCauQRBx9+f7EU0xvtD+hk=;
-        b=sqbLJJc8wciID2BJu5nASCQqrUiOnGRB89ycD8Xf7yaeUxuUtpSslUQevGJl3qzw4c
-         66uoEv3Mrtfma82jBsaHPWalAVS5j+bmoFqVmHnyjHrB7OtZih3tzwExCkpob11qTRqf
-         goxKXMnMUlai0WHim06e9MJexrikP2jy5teA7zCsx7jUACBJRZEFIq5Yu2V2kEJ70Pri
-         XEQfjSWy7OGWEDcoHMTkVbdNwj9DsddjoQ3pKzkYWy4GLYUT6NBXzbMPGHZaGrtM35SS
-         YtK3jZILpU7LEQhY4vRmOqAD2d2dvHPRr1JlKdQJNYf0vV1pBUIjV9jh4fQjZpHXhmri
-         L/qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOZiOzWDMtaSpI6mNdHCKE65kisDOF4c06jcDGzm1sxrrF5BsBLluGwjmJrhrBKnsIPvRpRxX1gVo=@vger.kernel.org, AJvYcCWRNBf8Mtngpp27RNhPIM+4JeeLU6mGr0IbowjoKC4AAMpQKyR+d+QRySzmFEAf8fFeAwun3BDxqJLgGBLZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJkNghN2ewdMhIpd+ij+DizKJ6GnYhm31ouqMp+mvKhmlwdGfi
-	1VlvfyJwSotOZsREK0KFXM8ZjpBh6lmlnS0X9lg/S8V50fRvPYSg9FwemVjY3NZwSkWjBUsIjPp
-	xYZnwAhy9Ml6cmgefKNPGph5hRe+PGSE=
-X-Gm-Gg: ASbGncvoBW2oTXsIy69Id4Z4phlBcGJ+1a8WruUBDm80BI0XX5tmSGVTyKj+npj7q63
-	BgNzI9x51SePmh2GLEvnxDV2OnKJXONjiiV6Jx3w3SvLTUdJ/icxsBDZCsClG4UKE10VnV2gHr2
-	rcSrIntfhrMvBXB06slB4rhTXVjP1EnS6OiTdwvfT0VfsV405WhRL+JX7Qn871t+zaacdJ1V2tg
-	pi4
-X-Google-Smtp-Source: AGHT+IGJ/zFE4w+JKMjUWfvDesBnew2u7pOoc4H3+qqMTkNhD/5NjNC8e3RLUAEQRY/PUbER+yrMW04GTUY04EM7Ez0=
-X-Received: by 2002:a17:907:6d28:b0:ade:2e4b:50db with SMTP id
- a640c23a62f3a-adfad2a0920mr927784766b.10.1750086130484; Mon, 16 Jun 2025
- 08:02:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750086138; x=1750690938;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rwgpX5X/SCSKuQA+X6Wr14gURs3q9R5/sK1cAoP4C5g=;
+        b=ZAZIXHfafEM71RX0rl9auK5NhB0lmEh8ZyPPoYMqyD6/mNTuNgo/968tsJMbNXKaK4
+         8B39me+SY0MtH7WNZSJGIoW91jgT1XoGm+feofbsg63nit/09yCSiQaDAuAZy1cAyTYr
+         PKvqXDNB1/PZYJ12Qj1GxZkzh7TuBl2XThzQALSTTqpekijMAdLrRGidB43FdjoTg7HB
+         Wb66LEKJ4zfn9yaIkZDloUiBQ1xNrsbLpGGIcDLbujRaLRuJGBfxOI4IgW8Fsmik1z6X
+         Vbpth6zpsDQFZ1rIzIg7lcT1XT+ImnAV3Vi2QZOE7RgfjQAGt+ucvQoNXmuzWziX0Iu2
+         RivQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQuZOYLn5NUKf6ZzQ4/1lhsWU+YFXQXzF68b114nbi3HlzPA4LxjsHRhuOlkPuiwXN0rNxRcPKqV42AyxWiKE=@vger.kernel.org, AJvYcCVNF9tEMj+8p4B8PGPlj3uyPkftw1NG6q10IZoQhUpGAEDVaGudCI8vF+FIAzkcKWTjOegw6RdMR5kVI2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3ZPQ4GOtE6xlg+VvnxuWQngLnjiKUz81egEefOpJGGPkeyFTx
+	ZVbJv5KWRBejtTDrrxuaB9nbGKFaVv1ZIPmWojNQKs/lQVv8JJJi8ul7
+X-Gm-Gg: ASbGncuMTuIkRejAR+eJh4VM4EapQgjnXtpDPpBKBzqVKfZ11HE1Nwwta55I5irbeZS
+	0+Z1qlyUSTEzbNFTAK2ikILkBOF2MNtN1e9/cQdkHQxWuCCs0RQmcejUar8tiXgfimfSfvhpse9
+	fe/np7M/pPlQvbvI7jJ4HTArUn1ahF959u4d8p6SSCIhwiAev95TvNWISiDVxE9BceoFj9Jt4jO
+	uNNKdthxheAY0MJJuTEZes5KI9Sm3QD8Cwo9plF5Fb80msAKdX6uN0Hn9KaTWzS3P30q8U8Nw64
+	fBmDNfSRaImVPOIAW/NXirAGU/aMXCL7bDNt0Ckg8dDiSMQwH1kxjrNlqHMBbv9MUoLEWNTdfQP
+	lHKncwvndRlnbRD1ZCmewxrGOyDmpzlifjWRZRmzghMKTKrmBAiVx
+X-Google-Smtp-Source: AGHT+IHu7j4JO1Xh2sKe5r+VwP4idYsvwoWSUvoHNcSBKiiyOGa2xqmyYRuhHztCpmvWIAUC3TRLfQ==
+X-Received: by 2002:a05:622a:453:b0:4a5:8387:8b9f with SMTP id d75a77b69052e-4a73c533a10mr127583261cf.15.1750086137767;
+        Mon, 16 Jun 2025 08:02:17 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4e7edasm50151221cf.67.2025.06.16.08.02.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 08:02:17 -0700 (PDT)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D0C921200043;
+	Mon, 16 Jun 2025 11:02:16 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 16 Jun 2025 11:02:16 -0400
+X-ME-Sender: <xms:-DFQaMIMUV5BlWzax-bGLEnY5aQD5n9anZZJrmDo8vD_hVhhdD5b9g>
+    <xme:-DFQaMLWxkBzXAmjKHmMVmqQMWZP7OAJiaAu2ZBBTJj-bq3YS7KOz1ui9bexDqhvd
+    UFiuRWFp9yK7E-Tqw>
+X-ME-Received: <xmr:-DFQaMsU1GdEImg1QIGALTtYGSVtY-Jfy662MBvd36CE_yGbkwKnD81vHA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieeklecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    udenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpedtgeehleevffdujeffgedvlefghffhleek
+    ieeifeegveetjedvgeevueffieehhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudegpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegurghnihgvlhdrrghlmhgvihgurgestg
+    holhhlrggsohhrrgdrtghomhdprhgtphhtthhopegrtghouhhrsghothesnhhvihguihgr
+    rdgtohhmpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhies
+    ghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonh
+    hmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhn
+    rdhmvgdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:-DFQaJaoAjpZ7EIKlPsHb-8B7ioeolksyBEfLcAlQOG4QCTKwt8Jvg>
+    <xmx:-DFQaDZQJNErWToPm-V46sMX-6H01FZpWeNR70c8wEklulnKo-RE3Q>
+    <xmx:-DFQaFBHNfMEc6_EFIwMlNy4z5XKEaG2juYkq0n-1rdGr32hY1N2qA>
+    <xmx:-DFQaJbOHvyoWSTmccJWI-Tm5F6rXS47f_Lwscgljbus9CFq4KFzJQ>
+    <xmx:-DFQaLqGsZUNZ4aS-MdQNKpIfKdmB4e9AMF0Ly1VVQWwswKCR5s12EJ5>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 16 Jun 2025 11:02:16 -0400 (EDT)
+Date: Mon, 16 Jun 2025 08:02:15 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v6] rust: kernel: add support for bits/genmask macros
+Message-ID: <aFAx997imisc3HGk@Mac.home>
+References: <20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com>
+ <DAMAPVAI3V8X.N8SAQD6KOO1Q@nvidia.com>
+ <9578ECFC-6C59-40E3-9340-A426E8D2328A@collabora.com>
+ <aFAqLYBMHkC_X-dr@Mac.home>
+ <D29BB87C-356E-4885-8308-456028AE3B6F@collabora.com>
+ <D12DC02A-E1EE-47F1-86AF-C25C492FA3D4@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612181330.31236-1-bijan311@gmail.com> <20250612234942.3612-1-sj@kernel.org>
- <CAMvvPS4WsGkfukNscnLWW40Agg6_wmkm_QF96m+HZrEZrstR4A@mail.gmail.com> <20250616074233.GA74466@system.software.com>
-In-Reply-To: <20250616074233.GA74466@system.software.com>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Mon, 16 Jun 2025 10:01:57 -0500
-X-Gm-Features: AX0GCFv72kKkxX-qe1l08YvlwPCsH3UbKfNEIk9xWqIa4M8jORlTYRaH3Xzfz5g
-Message-ID: <CAMvvPS4OAHAdUJtuinCgo+oTQ8akSk8138LikLx_38pr8rtqeA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data
- across nodes
-To: Byungchul Park <byungchul@sk.com>
-Cc: SeongJae Park <sj@kernel.org>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org, corbet@lwn.net, 
-	david@redhat.com, ziy@nvidia.com, matthew.brost@intel.com, 
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, gourry@gourry.net, 
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, bijantabatab@micron.com, 
-	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com, 
-	vtavarespetr@micron.com, damon@lists.linux.dev, kernel_team@skhynix.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D12DC02A-E1EE-47F1-86AF-C25C492FA3D4@collabora.com>
 
-On Mon, Jun 16, 2025 at 2:42=E2=80=AFAM Byungchul Park <byungchul@sk.com> w=
-rote:
-[...]
+On Mon, Jun 16, 2025 at 11:45:21AM -0300, Daniel Almeida wrote:
+> 
+> 
+> > On 16 Jun 2025, at 11:42, Daniel Almeida <daniel.almeida@collabora.com> wrote:
+> > 
+> > Hi Boqun,
+> > 
+> >> 
+> >> We should tell/educate people to do the right thing, if a..b is not
+> >> inclusive in Rust, then we should treat them as non-inclusive in Rust
+> >> kernel code. Otherwise you create confusion for no reason. My assumption
+> >> is that most people will ask "what's the right way to do this" first
+> >> instead of replicating the old way.
+> >> 
+> >> Regards,
+> >> Boqun
+> >> 
+> > 
+> > This is just my opinion, of course:
+> > 
+> > I _hardly_ believe this will be the case. When people see genmask and two
+> > numbers, they expect the range to be inclusive, full stop (at least IMHO). That's how it has
+> > worked for decades, so it´s only natural to expect this behavior to transfer over.
+> > 
 
-Hi Byungchul,
+Well, there are always users who don't read the manual, but we shouldn't
+encourage that ;-) Technically kernel internal API is unstable, so use
+before fully understanding the semantics is a user risk.
 
-> Your approach sounds interesting.
->
-> IIUC, the approach can be intergrated with the existing numa hinting
-> mechanism as well, so as to perform weighted interleaving migration for
-> promotion, which may result in suppressing the migration anyway tho, in
-> MPOL_WEIGHTED_INTERLEAVE set.
->
-> Do you have plan for the that too?
+And if we provided non-inclusive range as inclusive, there would be
+complains (probably from the same people) that:
 
-I do not currently have plans to support that, but this approach could
-be used there as well.
+    for_each_bit(genmask(a..b), |i| { do_sth(i); });
 
-> Plus, it'd be the best if you share the improvement result rather than
-> the placement data.
+doesn't behave the same as:
 
-Sure, I could add some performance data in the cover letter of the
-next revision.
+    for i in a..b { do_sth(i); }
 
->         Byungchul
->
-[...]
+And we cannot always make them happy ;-)
 
-Thanks,
-Bijan
+> > However, I do understand and agree with your point, and I will change the
+> > implementation here to comply. Perhaps we can use some markdown to alert users?
+> > 
+> > - Daniel
+> 
+> Or better yet, perhaps we should only support a..=b.
+> 
+
+Yes, given the const function factor for now, and I think eventually
+most people will get themselves more familiar with Rust syntax.
+
+Regards,
+Boqun
+
+> - Daniel 
