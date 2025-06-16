@@ -1,186 +1,157 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F1E285CB2
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DDE22097;
+	Mon, 16 Jun 2025 13:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081727; cv=none; b=KPik4sJSJpG2R4uweCXeD51lb1R20VxueZ/CjUKI4arVHy1LHP/qCQEaUVaIhYHgpoSv3o6c5XJOXeZ46TOBFVi6GeReO+Gx07Z3MrgKpiI7qZgXjA142bQgnIcD7i7iGiIMuRQYMcvO73fpZoGVYb5Fl2JWOzNBrLzoSEyy+jo=
+	t=1750081754; cv=none; b=gFY89z+fjpDNDMH2pg3UFCKT1cNVQ5WaqNyxvPhjOvNMJ/zyvAw4DlnwmzET9xCqwxg0lOpYy4hT17rq1Gl96mYIVKeJnhxiqhuVb04PC16y/ar8q3PvD4KGdDhwFcXjuSvVlPbtF3YMiJyejqtiE2+RKdVqZ6s/mxXiBi60c0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081727; c=relaxed/simple;
-	bh=hORHC5srxkLYSdtcercNBIJfYGZMJfr+bVXBwlntJR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JVWRdnjjY0Wiw1289Pa9YmCasL2EjC7OcolwbM6Mfnnwelw6B3wIjpkK2DzUKT8+JXyNR896AZm3Sh5tiYSh1T7q+k9kE7km0VzyicHV7KEGLY8sXX/KyMgSCPgPgStAxWozktfvnq5eri0nVyCKDsu33CCrDsc+Uvqz6OpgdfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HC9caf5t; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750081754; c=relaxed/simple;
+	bh=lIoE9gcdwJ3ykhVZ65gPKl4QqyXImX16Y6imO4XoKpo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Yoc5cCUJwq6t05M7abjWfF9HD2/o6jk2JfM+SpF/Zn9mvhnXpwNXD6BbxpiACspV9T3FOzE9LHOIth/L4DSQexIncUYAtAsSvqszopc5AbkU2TsNdYDmwNWlbQLoyfMmUXiL1BBCbE6eNFUmAbNXRYRSYYVICZ/dauN5y0TG2b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Z4uIJC/a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SWV475mM; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HC9caf5t"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e733e25bfc7so3826394276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750081725; x=1750686525; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uDEsIjpQxmad8FZLMr2zVoXrSneTIt+2z4fP3XcIK5Y=;
-        b=HC9caf5t7Z3YV34hMVfY2iOyc8ceDK41ddWnZGKqTuEfRCkaUY3raiG3FlkrCFIjfD
-         tPyRf2CTFWTmNqn1/fqrqeiU9uJtuN0/o6S2lRpPIvGheNVfGEWlXe0gKBMgT93uCWaV
-         howKJOdXYFL5VBUyk2ABJnWG4of5g8jT5EQF3lfnh7+BPQPGs47ip1FBWZ/yH45SY+nE
-         ITmfq9OEFvRdyraYRy2/XeNzHkPruJLRo4LNcIanLnMF1+j2wUFJAl4/IBSZ8nBmL7y3
-         hnmmFLXuSOCnEaOhKiBMjLbpfE4uyCGHw7eLjaR81qvd/V7H6hVfgYy2IZI1q74yo9eT
-         +LMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750081725; x=1750686525;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uDEsIjpQxmad8FZLMr2zVoXrSneTIt+2z4fP3XcIK5Y=;
-        b=XW813BwnyEvu3qxyuTH1WTRy4v51kUvcXClRxvU2Xa954TNdm/HuJlghbnRas3YcRz
-         5/wqIrK/jJgi8pTX/6YVst27CB4st2rzEDK8lUsWMo0v1dODNlhwgbYjBRG4CtcUshDL
-         SKV/+geDC506/SKMihygFJUC7tkbWiNmscC1XUJmTj4t6Gwq5EbyVLgN4ev3wpLxC96o
-         /gfDK8aQXb5YqAGa7HNp0K+MgmMAuRFssNUALvTvSOEZiawaKOYPywqw9FGGupVq3WnG
-         2pPdQmroKGBN1xaB2528mPxtW2asVLK6ignZnIwVxV+UGVnryKFDoZNZZ2MQRZfP4YGI
-         y5iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTQZVRXiXTPqKJs64X+OmK5DCN4wg0JhPWRowLIW7HDyGH3YIWNpSEuRNpzJrb+3ooKzV96tJIbliIEtY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypfmZVYtM9MCXuWsM48VL8ZoBfiN9KuvyiPUBtOwN5L6DGu65I
-	tOPvyWgIZ9hybEsWeGQW+Y2ZOJA02iF7Xq2yqjbdPNUTq83iiUYv0rsAi0bPhPJa4vGLyIyG/3p
-	YjodZPDqjcgdguc/fXDDUstwY2yv1OHO+3oSvwTHx4Q==
-X-Gm-Gg: ASbGncvAbsHDGFo2hmBeTBxzAP0UPoZXNJOr8RoReUzt805EZfaVdPQ99jsgI4KCIkF
-	LCDeSbTnXPv9pp7JwE2BqHYt3pRlEVB32ksyFX/AQvpCxO036n5417m95EP/64H92YSuPxnfuTe
-	m3x7Ak9iB6YdZMhN2lWAtHVJEVGUzknxxlJzZMViuxkuK6
-X-Google-Smtp-Source: AGHT+IHNxadKla4VrvH6YQyXKvJ7gWCdWq9mPlNx20rADiF787HEQItMLkqVHGwgE74xslQFsHpPtk0p6m7ForJ9ORA=
-X-Received: by 2002:a05:6902:220e:b0:e81:9581:4caa with SMTP id
- 3f1490d57ef6-e822ad8bc0fmr12562057276.34.1750081724654; Mon, 16 Jun 2025
- 06:48:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Z4uIJC/a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SWV475mM"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A7B9211402B7;
+	Mon, 16 Jun 2025 09:49:11 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 16 Jun 2025 09:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750081751;
+	 x=1750168151; bh=8qsrTRHcvOAd2c9i2pGiJI5TDC5V+Z/Uoi8ty2RR4eU=; b=
+	Z4uIJC/aCJl5TCM7IJcxdppiQeF9UinlgJ2FAyHxVkhcbrEisiiFz6bUlWGEeZXd
+	/d5wIDHzl+uT+3Zn1PimRM7erbMWjE0B6lgEglmMpgNW8BJ/CrLM1wrixtFzEVmN
+	kcUbY5GkddT9ORS9T5vTVBNefyf1Hm8cgrk5ClP8fXWtCkwghqO95Cc5kW+iCGzD
+	taBqRXfX2aCqKTT4gmrm6ZaJOugD/3+yABMtAjV9GHv9PDH3nAbdhnDVnwOvCk1M
+	1it0uzJGhC1lKG9AO5hF0CXdRZUbA6pw7zcdtsEqaKApoS0U+JAILj41qfCidCMe
+	PKvPm2ujwVvhL71oKEM3Kw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750081751; x=
+	1750168151; bh=8qsrTRHcvOAd2c9i2pGiJI5TDC5V+Z/Uoi8ty2RR4eU=; b=S
+	WV475mMLO7x4A5sZtbebmxvM8OcaNLnVCtokq8g6gTNSCzQBy4s025IKdGXzlnfc
+	T7N0xGe8eeZpfQCa3gK1yt3CpZgatrJ+Y/VqbkpCn4BF/ZHybXzF0SiP3tm9j3zC
+	9TYsF5kvNUfT4YDBhPxJsGkJ2qDt91JmaJ1FzBEH6yY6hN6a/YilWxajwkf7ONEC
+	cKXnkQj2sqK5bjPm9qyRx7tTdrawXLK5kgcz5J9zsytUuN6C8eaNAKkzFtvbge+3
+	7+YpUYa0T+fwb1mYR2yyK/0q2BBunr595MFRJPDqzGYJX4PiPzjkOTtY8hvfYOg6
+	YdWcjeLIrBV/zATgtPzpg==
+X-ME-Sender: <xms:1iBQaJovrZfMAJmFVtahyuzCOC3jdKDplIkMzJtu7T1-Vridmdy1CA>
+    <xme:1iBQaLq8b-MxDM4GeGqxtFEGrppMWOXAax4vZH-AGalSjHJp3JJFDCtDSBYVGAhyP
+    seZ43u0GUSxV_1ttno>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieejgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    gedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihse
+    grrhhmrdgtohhmpdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgt
+    phhtthhopehlkhhpsehinhhtvghlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhho
+    rdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtph
+    htthhopehiohhmmhhusehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepohgv
+    qdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhope
+    hhtghhsehlshhtrdguvg
+X-ME-Proxy: <xmx:1iBQaGPP-njiVQWYcMzKqfN8lWKt9KF-S1wtG_wm6kPw_gxZUfGVFg>
+    <xmx:1iBQaE6rRCeVI14O_0cd-8ltlcUvcT-2wBWXWvZmHREULi8sUN979w>
+    <xmx:1iBQaI7IUDY9acNm7MIkvYwTI1PPa3BRqYfGOWPARWICCfoy8ytxkw>
+    <xmx:1iBQaMiUYzyNEksn2mo2FifTqnPgZNYfQAh_z6slzGqt4lIDho2R7A>
+    <xmx:1yBQaCJ-8dPrB2ejqDv-iCGGYbucZDq8lQpAyVmE_WAP8eNfUxFTF9Ap>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CFC38700062; Mon, 16 Jun 2025 09:49:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613-pmdomain-hierarchy-onecell-v3-0-5c770676fce7@baylibre.com>
- <20250613-pmdomain-hierarchy-onecell-v3-2-5c770676fce7@baylibre.com>
-In-Reply-To: <20250613-pmdomain-hierarchy-onecell-v3-2-5c770676fce7@baylibre.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 16 Jun 2025 15:48:08 +0200
-X-Gm-Features: AX0GCFvKDYfrBoGxWHbzdQisHdQSvIWu47gSqcVmiJT8KMDILVyrcsYNa9sTBzs
-Message-ID: <CAPDyKFrO9rb0eDb2qO+EGaVjOFG=7emgca8511XACDhWY=dt5g@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 2/2] pmdomain: core: add support for subdomains
- using power-domain-map
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-pm@vger.kernel.org, arm-scmi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T4808b90e09d8ad4f
+Date: Mon, 16 Jun 2025 15:48:50 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Clark" <james.clark@linaro.org>, "Christoph Hellwig" <hch@lst.de>
+Cc: "Mark Brown" <broonie@kernel.org>, "Vladimir Oltean" <olteanv@gmail.com>,
+ oe-kbuild-all@lists.linux.dev, "Larisa Grigore" <larisa.grigore@nxp.com>,
+ "Frank Li" <Frank.li@nxp.com>, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+ "kernel test robot" <lkp@intel.com>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>,
+ "Robin Murphy" <robin.murphy@arm.com>, iommu@lists.linux.dev
+Message-Id: <9788991a-ac37-4fde-81db-c55035d00f27@app.fastmail.com>
+In-Reply-To: <f723d490-c228-42d5-9f9f-158df54a092d@linaro.org>
+References: <20250616111749.316413-1-james.clark@linaro.org>
+ <20250616112927.GA21689@lst.de>
+ <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk>
+ <20250616120832.GA24959@lst.de>
+ <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk>
+ <20250616121444.GA25443@lst.de>
+ <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org>
+ <20250616131346.GB29838@lst.de>
+ <83855c1a-c128-4762-9d6b-e17f2c4c8820@linaro.org>
+ <d16bdc40-20d6-49db-bf41-18bb9b8e01fd@linaro.org>
+ <20250616131944.GA30260@lst.de>
+ <f723d490-c228-42d5-9f9f-158df54a092d@linaro.org>
+Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Sat, 14 Jun 2025 at 00:39, Kevin Hilman <khilman@baylibre.com> wrote:
+On Mon, Jun 16, 2025, at 15:23, James Clark wrote:
+> On 16/06/2025 2:19 pm, Christoph Hellwig wrote:
+>> On Mon, Jun 16, 2025 at 02:15:56PM +0100, James Clark wrote:
+>>>> Yes it does, it has a few modes that don't require it. Presumably we can't
+>>>> just add a depends into the kconfig for all devices because they might not
+>>>> be using DMA.
+>>>
+>>> *for all the different variants of spi-fsl-dpsi devices I mean
+>> 
+>> This is drivers/spi/spi-fsl-dspi.c?
+>> 
+>> Yes, looks like it is one of those rare devices supporting a DMA and
+>> non-DMA mode.  But everything seems nicely guarded off using
+>> "dspi->devtype_data->trans_mode == DSPI_DMA_MODE" checks there.  So
+>> wrap them into a little helper using IS_ENABLED(CONFIG_HAS_DMA) and
+>> everything should be sorted out.
 >
-> Currently, PM domains can only support hierarchy for simple
-> providers (e.g. ones with #power-domain-cells = 0).
+> Sure, I don't mind doing it.
 >
-> Add more generic support for hierarchy by using nexus node
-> maps (c.f. section 2.5.1 of the DT spec.)
->
-> For example, we could describe SCMI PM domains with multiple parents
-> domains (MAIN_PD and WKUP_PD) like this:
->
->     scmi_pds: protocol@11 {
->         reg = <0x11>;
->         #power-domain-cells = <1>;
->
->         power-domain-map = <15 &MAIN_PD>,
->                            <19 &WKUP_PD>;
->     };
->
-> which should mean that <&scmi_pds 15> is a subdomain of MAIN_PD and
-> <&scmi_pds 19> is a subdomain of WKUP_PD.
->
-> IOW, given an SCMI device which uses SCMI PM domains:
->
->    main_timer0: timer@2400000 {
->       power-domains = <&scmi_pds 15>;
->    };
->
-> it already implies that main_timer0 is PM domain <&scmi_pds 15>
->
-> With the new map, this *also* now implies <&scmi_pds 15> is a
-> subdomain of MAIN_PD.
->
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-> ---
->  drivers/pmdomain/core.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index d6c1ddb807b2..adf022b45d95 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -2998,8 +2998,8 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
->                                  unsigned int index, unsigned int num_domains,
->                                  bool power_on)
->  {
-> -       struct of_phandle_args pd_args;
-> -       struct generic_pm_domain *pd;
-> +       struct of_phandle_args pd_args, parent_args;
-> +       struct generic_pm_domain *pd, *parent_pd = NULL;
->         int ret;
->
->         ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
-> @@ -3039,6 +3039,22 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
->                         goto err;
->         }
->
-> +       /*
-> +        * Check for power-domain-map, which implies the primary
-> +        * power-doamin is a subdomain of the parent found in the map.
-> +        */
-> +       ret = of_parse_phandle_with_args_map(dev->of_node, "power-domains",
-> +                                            "power-domain", index, &parent_args);
-> +       if (!ret && (pd_args.np != parent_args.np)) {
-> +               parent_pd = genpd_get_from_provider(&parent_args);
-> +               of_node_put(parent_args.np);
-> +
-> +               ret = pm_genpd_add_subdomain(parent_pd, pd);
-> +               if (!ret)
-> +                       dev_dbg(dev, "adding PM domain %s as subdomain of %s\n",
-> +                               pd->name, parent_pd->name);
-> +       }
+> But separately to that, I still think making the stubs consistent would 
+> save people a lot of time diagnosing build failures if they switch 
+> existing code to any of those 3 functions. Principle of Least 
+> Astonishment and all that.
 
-Please move the above new code to a separate shared genpd helper
-function, that genpd providers can call build the topology. This, to
-be consistent with the current way for how we usually add
-parent/child-domains in genpd (see of_genpd_add_subdomain).
+As far as I can tell, the difference here is that the
+dma_alloc_coherent()/dma_free_coherent() calls all get stubbed
+out, so the 827 drivers using those can all build cleanly on
+mk68knommu, shnommu and UML, while dma_alloc_noncoherent()/
+dma_free_noncoherent() are only used on 15 files that are all
+guarded by some other Kconfig dependency at the moment and won't
+build on the those platforms.
 
-Moreover, we also need a corresponding "cleanup" helper function to
-remove the child-domain (subdomain) correctly, similar to
-of_genpd_remove_subdomain().
+I agree that it would be best to treat the coherent/noncoherent
+cases the same, and I also think the existing stubs are a bit
+silly, but just removing them would likely require fixing
+hundreds of drivers with added Kconfig or IS_ENABLED() checks.
 
-> +
->         ret = genpd_set_required_opp(dev, index);
->         if (ret)
->                 goto err;
-> @@ -3056,6 +3072,8 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
->                         dev_gpd_data(dev)->default_pstate = 0;
->                 }
->
-> +               if (parent_pd)
-> +                       pm_genpd_remove_subdomain(parent_pd, pd);
->                 genpd_remove_device(pd, dev);
->                 return -EPROBE_DEFER;
->         }
-> @@ -3063,6 +3081,8 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
->         return 1;
->
->  err:
-> +       if (parent_pd)
-> +               pm_genpd_remove_subdomain(parent_pd, pd);
->         genpd_remove_device(pd, dev);
->         return ret;
->  }
->
-> --
-> 2.49.0
->
+Maybe we can actually remove CONFIG_NO_DMA/CONFIG_HAS_DMA
+entirely and remove all the checks for CONFIG_HAS_DMA? 
+My guess is that this would only lead to a small code size
+increase on the affected targets, but since they are not
+actually trying to do DMA, and they all have a very limited
+set of drivers they actually use, it won't break existing
+code.
 
-Kind regards
-Uffe
+    Arnd
