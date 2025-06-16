@@ -1,48 +1,73 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45200269CF0
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843D92868BE
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090849; cv=none; b=YjewtI9rmOs2zQ9tyHYpXuZHFwujUyr2Wkcba7SMgJLN1IljdKTLpBjNT8Ud7S1ftTCWoBDr4PyOOlGKH788AeqEOxj22RwnVle7bzJqTk91B8Zm1z7F8tEhJCKD1ltYs/4rZxuNkd9sqkJqnNhf6dUyUM5+RwiufqloOwUYT+c=
+	t=1750090856; cv=none; b=awmiLuQmNKwE8Mw9W/3czOwjtolTfY92ayTD8Jj40B1iPsKx/r15+C6Kd9qtVg/2Z8x6zbI80rh/CtkCBzpB0SIz8oVBHOTkiFH+UELvtIWQJ2TSjPxQmRpAjNOY5UfAravLlBFezp/dp82rptA+o49CuESZxyRdgQqGWxPEuN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090849; c=relaxed/simple;
-	bh=7/6Zk5ECIk3ufJzj3zBNdmjp956e/2BkawTbTwbQ77I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ucrTEnHmNoG3xB9Eyz/q5GWbyakfCK7WnfXIDfUxt4K5X9wRTi1mygRR4hYm7XKfbMyPbwhaXGYq1MuJoV5QpMhpai4H+eiLQbFTjMTaafb5O1vZZf7c9+x7e1VSVDhwBwmPaUD0LiHRv2wrLX0JUSmd806Vb91DHMf96Q11xlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oz+rVnva; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750090856; c=relaxed/simple;
+	bh=NDEkmxPGrGCG8ArtMUMwszjzAXpcPJOg3oxz2zuKJt8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NBy2H9zHm2ZXtA878ilbWk5O84G4wSMn90b6BgXRJkXg+npzdSkobCXtFvncOI1IfN0kir+fnNYubdLnY/WWO0aTaLveddXqXX6nuX0LAFhzHFY7Y3lteHiQBiNiuebC2hRgt5MbLpZsZh6PWFn9SY7NcH7DF4exk9KYa4o1YVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=K8F29TXY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oz+rVnva"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8knX0003269;
-	Mon, 16 Jun 2025 16:19:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="K8F29TXY"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TctE021517
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	T9tIP/nA/ojXJcuyJ7abvo5FqmtLH8FMyCSjTHFOwIo=; b=oz+rVnvay4RqXGaS
-	su8jq0wu9WXgxbf9OoseSyuYta6ZWUAJSPlLeM58oqxumqdhqscJ0Pv8gVNkoOKe
-	Q2FbHkEUSELviRgZd8coHNHpuClo6vXzerTWu2drelH23T+C5eZNlHYjELedcVd6
-	wLVBSMSYaBFBtmOPn4D25VoQ0gf3wYNHKMpg2LjrMw6wqlrzh04FWZfNA0w/vIuA
-	1v6J1VpHHDrMPYsdS5H33Ac4eVhRxi+5czLsoIb14u2lbXp704FdKraw3XNcV8gC
-	hvlrrYlMFQio/KiaLUbC9FUiw4L+rlmVJsTKIkYAWOxOg8KXf5oW2fiXUgCSZUEo
-	oh+Mkg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ag231bbb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:19:19 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GGJI4h019496
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:19:18 GMT
-Received: from [10.253.36.28] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 09:19:13 -0700
-Message-ID: <79355a26-c901-40a4-8a90-096da1380d9f@quicinc.com>
-Date: Tue, 17 Jun 2025 00:19:11 +0800
+	Mu+psP+X+UUrmMw1teQblkErLFop9Y7rtZWa3PcMk9o=; b=K8F29TXYiy/ZZ9zu
+	3y1vn87x7SCZcDXLwM/nsiTixg/PcGr2OEd5nTv0yjevUZi7DVAF1dy5jCE9ouLs
+	EsMCWMFWPByBLg2sWIqB+rf75HvfJUSoOA4abKrSHn8udoNU8keMAWTEsIJOKsop
+	plcW4jHkdyftDZurJb/gbRlr8xD7dihLS1SdFu9YfAkZ80AQfVjgp04jRk8OW815
+	OLfrHShVyuhXoFSU4vCi7EZx17TYk8H9jVwH2wokhHpCBUpMkQD8MuNE7YMLeS/2
+	t3CLt17W6WTOYmo9ue8SBFl4JstcizeWy1ycwyzIB87Pg7X9wCiUUxvi246Hw6BO
+	35pX7Q==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791end6ph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:52 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a5aeebad31so10517041cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:20:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750090851; x=1750695651;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mu+psP+X+UUrmMw1teQblkErLFop9Y7rtZWa3PcMk9o=;
+        b=VjMcScM2/icMVCReBRsKO6HaiTYeMIBfvSFkympTaCL7qL9ZeYTXrDgRMuEgE586fD
+         G9H50KGZ9y75BRAoU+HkDljMcRgbmmeyYFQmU0nyEo5aTFfX0uDa2ZMRErAhpa4liiJt
+         /v1g7gNXsX6IJJA8RGezEJdunS5g9DUfJngqklZHouP9eU0zI75DJNJSfsRICLkKlWVw
+         pNtqgQ4Mdlrea5xsyZ/py3ljCdtplGRJBA+MJYkZhcSQiOcoam6kw2dCa3DGuC7F+l0H
+         nmUYDk7BGb6RBNf5R+hlSE/NEnizM9HnysZkZlZA71qEObl/6XcN0/C8vrTnq3isJ3no
+         AjGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFpUpenr84oz9wysKC49gnnG2Aqi7aPM8UvC1VoCyd1xyKQNFTKzcUXbOS50YJ/hmTSdpP99gChiE87Ic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf2J1v5BhYtLxHTFafIELPO4dqLhmsuyk7jmxrBlQoD67oTlX2
+	A49UG+3keXs4LPQ+dSD+GaZIfJYd8cDxZb9vggCHAcrcGSn+fVclb7rXKIW/O4v+J9od/BA98Rh
+	qKTq2knDhAW3yCVqBGxPILa0QHI0cKS/+ggEykCGyrvpD1TB/oeW8HNwvtd7qenNo6IQ=
+X-Gm-Gg: ASbGncuT9TbhdXNrtSeOvrEewoheg6GFLdxJPq2MxxQeFDM44TFmtI4EKOpD/W3O0T7
+	i6ud4Z40yx8UPYJhEuE9gf6/+Gie3r+vlXxorGwUqrJQGMu+6RAManXPVdt3UnKDlckK/c7WLWI
+	mRoq9FKTJviv9RNjtJmLuF7DWKk8GjrNKpomnBYmeRgo2wR2MN6jN7+g3Ry+b5fRiQUZz3jXlfQ
+	bJLaQUQdrPwc2CsI200EjvISJSOJ8LAF4TN25RpY3e5Whon5buv2QO1GxnTJ5FhXMQF6ex5QQ1x
+	ceZDosar2BvjRtTUFsM17trm8IbuGs5y8hui8/Eumvh0ZqikizrE6w+u0QKmnJ8InfspO1rIKXM
+	qUUQ=
+X-Received: by 2002:a05:622a:451:b0:4a5:a4ad:c55b with SMTP id d75a77b69052e-4a758bbb5camr1770041cf.12.1750090851517;
+        Mon, 16 Jun 2025 09:20:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGN9jae6FOVYKQqSYeEw38hAiQvkYtCqfi+CbDM3+x5+zp/5SRgo/YqSvoVNOrVijkqA/tVJQ==
+X-Received: by 2002:a05:622a:451:b0:4a5:a4ad:c55b with SMTP id d75a77b69052e-4a758bbb5camr1769861cf.12.1750090851050;
+        Mon, 16 Jun 2025 09:20:51 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48f27e1sm6496194a12.29.2025.06.16.09.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 09:20:50 -0700 (PDT)
+Message-ID: <713cd518-935f-4501-9753-d33c9ea6aef7@oss.qualcomm.com>
+Date: Mon, 16 Jun 2025 18:20:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,136 +75,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [PATCH v4 2/5] arm64: tlb: Convert the opencoded field
- modify
-To: Will Deacon <will@kernel.org>
-CC: Markus Elfring <Markus.Elfring@web.de>, <cocci@inria.fr>,
-        LKML
-	<linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Joey Gouly <joey.gouly@arm.com>, Julia Lawall
-	<Julia.Lawall@inria.fr>,
-        Kiran Kumar C.S.K <quic_kkumarcs@quicinc.com>,
-        "Lei
- Wei" <quic_leiwei@quicinc.com>, Marc Zyngier <maz@kernel.org>,
-        Nicolas Palix
-	<nicolas.palix@imag.fr>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Pavithra R
-	<quic_pavir@quicinc.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Suruchi Agarwal <quic_suruchia@quicinc.com>,
-        Suzuki Poulose
-	<suzuki.poulose@arm.com>,
-        Yury Norov <yury.norov@gmail.com>, Zenghui Yu
-	<yuzenghui@huawei.com>,
-        <quic_linchen@quicinc.com>
-References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
- <20250612-field_modify-v4-2-ae4f74da45a6@quicinc.com>
- <3537a4ce-b5e8-44d5-a884-70a81562068d@web.de>
- <94b40ff2-9e9e-4eea-8a66-87d8976aeb70@quicinc.com>
- <20250616104109.GA17500@willie-the-truck>
+Subject: Re: [PATCH] arm64: dts: qcom: add debug UART pins to reserved GPIO
+ ranges on RB2
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250616143341.51944-1-brgl@bgdev.pl>
 Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <20250616104109.GA17500@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250616143341.51944-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: WwhEiw-vE7EU9ByCs0vSwvvuPqtNiw5R
-X-Authority-Analysis: v=2.4 cv=edY9f6EH c=1 sm=1 tr=0 ts=68504407 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=YgwN3AOMAAAA:8
- a=GpepFeYYm93ioQPZbdsA:9 a=QEXdDO2ut3YA:10 a=ztR1XV6QG-NWxUt1dNgd:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNiBTYWx0ZWRfX2SsQ7Egy1Lgq
- 3PaG3WWwqmwPWB7U2f/+vnv3tUT+SKiRLHYsRcjVhI4b8LiBO6MvmBJcjUH8ZJxHEb+gBAvI+s6
- iY4lCjthHgCoKlh2shbP4SevA2I8VNDkzN4s6TCFRYT6Zf04af2/ZM/RYTYT+fmFdEZBeJjrbGE
- qPRY7tX8guFGIL01aSHti2m0PxdfXLkVVYbqttNmJtQnqLPfP3i3YLdhP+AfCpc6vFSB6Q6dxws
- acstCiAVOYJ9Rcrx71lJeMui+AzbWvo7frgc0ARX5S8m0n2RIsLgzpAzBhWVLXdxf36WV9QpvCE
- Xjg8+4BoWsbJREsDLPgDjgqIDv4Lu0ObzneNCJ9zE6GSW8iYQw7U5kAnYpbbSXVKalp6bb36L9o
- ZpF3FCgP2wA2hpyqxf3/Nou54p4aGFtvzl26R/UmPXs7u0dApb+bmPdUQU/iFvK58rJGdGZr
-X-Proofpoint-GUID: WwhEiw-vE7EU9ByCs0vSwvvuPqtNiw5R
+X-Proofpoint-ORIG-GUID: TGJy94OnmZTVZfIe0HW1MfyCOYV5xeEP
+X-Authority-Analysis: v=2.4 cv=D6RHKuRj c=1 sm=1 tr=0 ts=68504464 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=Uobm0kU4YoDV-O0PfCkA:9
+ a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: TGJy94OnmZTVZfIe0HW1MfyCOYV5xeEP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNyBTYWx0ZWRfX5U/KEwOZBegd
+ T9E4e6+AmjTRawpidCSANCG0ZUPEWbiySteXI8tXGJa/mXnQTdRCmz+L4bvfJ3vS13+zJ6pYd4I
+ +ONpYFt8gkURB+hRPfCZON8g9aICOXKaQ2jLPz3Aa0ltAjvyApJHJ03T4wRF6bChbsiOJ5yd5FR
+ cwDdPvnPsjoAAX8TZiYFTg7a8g9AYARxNYjR1PDuB1MNWXkfvyhwjWfmx+7f30nF2jD1KPSuolX
+ 61dFXbJfYLmDC2ZZlYeDv9EXcCrUY5rgdERfdHrFQyGmpanU+ImpL9fO0iPN+3ve8wkDkPqMVnA
+ Ut/VjD/nySkuH+I2N2BBcDfnncupz9FgNJWhOpYxHrw1/9VZ5Wdxr5URN1xrBBJSSf0OeVDTFsi
+ c7qgdZkdReVpQy7NHg5ZD9bqyGhrEr41fD0sdTNMj1pZPD2tam9yQEB4PvAvqPx7+IiXsLGm
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 clxscore=1015 mlxlogscore=859 malwarescore=0
- phishscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=835 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160106
+ definitions=main-2506160107
 
-
-
-On 6/16/2025 6:41 PM, Will Deacon wrote:
-> On Mon, Jun 16, 2025 at 06:37:41PM +0800, Luo Jie wrote:
->>
->>
->> On 6/13/2025 4:15 AM, Markus Elfring wrote:
->>> I see further refinement possibilities for such a change description.
->>>
->>>
->>>> Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
->>>> - reg &= ~MASK;
->>>> - reg |= FIELD_PREP(MASK, val);
->>>
->>> * How do you think about to omit leading minus characters?
->>>
->>> * Subsequent blank line?
->>>
->>>
->>>> More information about semantic patching is available at
->>>> http://coccinelle.lip6.fr/
->>>
->>> I suggest to omit this information here (and in similar patches).
->>>
->>> Regards,
->>> Markus
->>
->> Thank you for your suggestions. The current commit message was generated
->> by the following patch mode command:
->> ```
->> make coccicheck MODE=patch COCCI=scripts/coccinelle/misc/field_modify.cocci
->> V=1
->> ```
->> However, as I understand, the discussion on the ARM patches (between
->> Russel/Marc/Yury) has concluded that the ARM arch changes may not be
->> adding value over the current code, so I will drop the ARM patches
->> in the next version.
+On 6/16/25 4:33 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Well, hang on a second. From what I can tell, the objections haven't
-> been specific to arch/arm{,64}/. You haven't really explained why this
-> new helper is needed and what value it brings over the existing set of
-> functionality.
+> GPIO12 and GPIO13 are used for the debug UART and must not be available
+> to drivers or user-space. Add them to the gpio-reserved-ranges.
 > 
-> So maybe start there, rather than dropping the parts that attracted the
-> comments to start with?
-> 
-> Will
+> Fixes: 8d58a8c0d930c ("arm64: dts: qcom: Add base qrb4210-rb2 board dts")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-FIELD_MODIFY is similar to uxx_replace_bits() for in-memory bit field
-modification, but with the added advantage of strict parameter type
-checking at compile time.
+That also makes them unavailable to the kernel though, no?
 
-Previous discussions (in patch series v3) among Russell, Marc, and Yury
-focused on whether there is any added advantage of using FIELD_MODIFY()
-(possibility of size overflow checking) for the specific cases being
-modified by the patch series inside arm64. For the one case where enum
-was being used, it was originally thought that there may be a
-possibility of size overflow due to 32bit size used by the compiler for
-the enum. However it was identified that the kernel's compiler already
-uses 64bit types for enum if the number of bits used with the enum is
-more than 32 (the code in this case used more than 32 bits).So, it seems
-that there is no additional benefit of using FIELD_MODIFY() in the
-specific cases in arm64/.
-
-Please note that the current ARM64 code using FIELD_PREP() also supports
-strict parameter checking at compile time. Both FIELD_PREP and
-FIELD_MODIFY utilize `__BF_FIELD_CHECK()` to support this compile-time
-parameter validation.
-
+Konrad
