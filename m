@@ -1,326 +1,287 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65DE220F063
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750108836; cv=none; b=jZvubGd0nqai0kkCuS/SM11dhLCZ323o+IDTqDbxgGhl8R8RlhK5LmCiwU7yk4Hl4Yjsvf56ySwe1r/cZZK2XV3tqAKPe5u0IN3SzMdC+Ey/Jq3qz8+aUHoIzeJl3SbKu9/+HRl3wv9jONDrW4d/l8dXh/Nj9TIeSwEuCkRFglY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750108836; c=relaxed/simple;
-	bh=lBHXkifJyo3/sbvghGHHaDebBA+zH1aoT43GyVwvsvE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qCB9qWOCVce0KG/6Nwe+E5LPILKUh20JlhwCq8Ph1Z1jl8Een7J8UCkG1AgT//EjXn0r+oF9m4VXtbxAH0EYYu9xRVkXUleCFWzxvDKlVt3apxVZO8FOcx2fbpL230BEprmIkFVBRnc2D1THtogfkRlgBPei8xXMBL4HcVZuHfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05830150C;
-	Mon, 16 Jun 2025 14:20:11 -0700 (PDT)
-Received: from [10.57.84.117] (unknown [10.57.84.117])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A41DB3F58B;
-	Mon, 16 Jun 2025 14:20:30 -0700 (PDT)
-Message-ID: <ed2df0cc-e02c-4376-af7a-7deac6efa9b4@arm.com>
-Date: Mon, 16 Jun 2025 22:20:29 +0100
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2088.outbound.protection.outlook.com [40.107.220.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7BA2BEFED;
+	Mon, 16 Jun 2025 21:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750108937; cv=fail; b=UuqSJQezHszI81e1A0KRxHNooxYSA78dyGU6aN6xmXV3R27WMHZJ+iFN8bDlOCU18Yn2+Gcel8zS5lNgUIXE7bdoaruIE5NYjAoG0QM455iPWDCTEkkock3P0ZArJyY+q4DNH4avmiEdGBMWRoVEEDKDe+7QfnfLlcuZ6if5UMo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750108937; c=relaxed/simple;
+	bh=ZVN3MLUDCf08zQQPKOIk3mAPLLiJgmyoP7uRLBTURv8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mDNfsYLa6alq92V+/Iz7+9fVg8797wreInLcb+CAY3pWr0yPStM9D/Au124iPO4bghlMphF39uZLKNZAtI4yylRC/Fi0+G0aKr756JruUaGl96mwbOZEGSulhpC1B8yc9/rwuB4buevv7dNG/Huw65XMj693H2QMj7xUupctSAg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GassCnck; arc=fail smtp.client-ip=40.107.220.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GassCnck"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uJYcTXRWFHHy0emeaFT4P5i0Vsv8I7WedUg6GaZ6Mb6fzGtbcco+hC3FwdipXYcV80Utk6A8637oVxQhuWwhyIvOlWTkqLAGRSrNm639scdQ74pR8K2qFUTZMNL1Nx2MLLVJRX4pa/3ap40GPy63SaCWoFftIgNsaja0FXC6QY9+Eot0bDIWJgqevO2O6OVdnYHxJ8Ys9tObBNT3BMDnKI3QCDsWgPkBsKUMITiUM8A9Xpwy+I2BcbULFhbPgzs27mx/nWCCWRRHhd2/bn73gTW5OoA5kXFd5ZVhoFikyltVYn+HVF+DK6WRJsSwDzLjn5xKQ0lPiawGmquL3EugRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n0+I7jf3QkRusXt0zFFxpWZmxoB6JXaVjVsCQDbbU+U=;
+ b=PhDVISIdrMzl4ihAeKYgCfW64LcRDY6V/zyYkD+TWVy3xiwLfK737vjGMowV1Mqd+EufP9aT0lEUSCBF3WQVvFwCcSFfTyg84DrmV53iIIiyukFV5pcBjT3cnQSyGAnOO1oxRT/1iSkWVlGp7WXYDY2qF1DlE9xf/wCbx/PBHV+x+DiCvnT+wY8XxCmaGBlW89D+WxKd8FhSJZCZ0UFZy0p1Hz9443gPdoeVkvczvbYbM1yJ9v3GWBYr0Q1OqrslnXnNtq8fen09+Mh/nOYm07/0u2qmQe+X8yx6mPS4np4S9F4Ek5ZBvtKSKld0IirjY6QpXbwzCFx28IoItAW4oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n0+I7jf3QkRusXt0zFFxpWZmxoB6JXaVjVsCQDbbU+U=;
+ b=GassCnckSIoDm4lXTIkoHtXyyfiGOggsrx4vBtm8Z2pWz53xBtEksiG1Xn1pZwZIrtSq9eJrruKxOZzpDi9wbNIyIXBF9cMw4PwkyhlYLWeajL1swbe+9SBtVkMhC1owNGdsSPmc6ivBjoqif0GqO7Aw/KARF9f4DTRu8KG3/ls=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
+ by SN7PR12MB6840.namprd12.prod.outlook.com (2603:10b6:806:264::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 21:22:12 +0000
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1%5]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 21:22:12 +0000
+Message-ID: <ba89d859-f132-4e7d-ba29-47331e02152a@amd.com>
+Date: Mon, 16 Jun 2025 15:22:06 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] drm/amd/display: Fix exception handling in
+ dm_validate_stream_and_context()
+To: Markus Elfring <Markus.Elfring@web.de>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
+ Aurabindo Pillai <aurabindo.pillai@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+ Dominik Kaszewski <dominik.kaszewski@amd.com>,
+ Fangzhi Zuo <Jerry.Zuo@amd.com>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Mario Limonciello <mario.limonciello@amd.com>,
+ Roman Li <roman.li@amd.com>, Simona Vetter <simona@ffwll.ch>,
+ Tom Chung <chiahsuan.chung@amd.com>, Wayne Lin <Wayne.Lin@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ lkp@intel.com, oe-kbuild-all@lists.linux.dev, llvm@lists.linux.dev,
+ cocci@inria.fr, Melissa Wen <mwen@igalia.com>,
+ Fangzhi Zuo <jerry.zuo@amd.com>
+References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
+ <e6656c83-ee7a-a253-2028-109138779c94@web.de>
+ <ea0ff67b-3665-db82-9792-67a633ba07f5@web.de>
+ <32674bac-92c2-8fc7-0977-6d2d81b3257f@amd.com>
+ <da489521-7786-4716-8fb8-d79b3c08d93c@web.de>
+ <8684e2ba-b644-44c8-adf7-9f1423a1251d@web.de>
+Content-Language: en-US
+From: Alex Hung <alex.hung@amd.com>
+In-Reply-To: <8684e2ba-b644-44c8-adf7-9f1423a1251d@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQBPR0101CA0123.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:5::26) To DM4PR12MB8476.namprd12.prod.outlook.com
+ (2603:10b6:8:17e::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: Enable vmalloc-huge with ptdump
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
- kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- david@redhat.com
-References: <20250616103310.17625-1-dev.jain@arm.com>
- <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
-In-Reply-To: <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 16/06/2025 19:07, Ryan Roberts wrote:
-> On 16/06/2025 11:33, Dev Jain wrote:
->> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
->> because an intermediate table may be removed, potentially causing the
->> ptdump code to dereference an invalid address. We want to be able to
->> analyze block vs page mappings for kernel mappings with ptdump, so to
->> enable vmalloc-huge with ptdump, synchronize between page table removal in
->> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
->> use mmap_read_lock and not write lock because we don't need to synchronize
->> between two different vm_structs; two vmalloc objects running this same
->> code path will point to different page tables, hence there is no race.
->>
->> For pud_free_pmd_page(), we isolate the PMD table to avoid taking the lock
->> 512 times again via pmd_free_pte_page().
->>
->> We implement the locking mechanism using static keys, since the chance
->> of a race is very small. Observe that the synchronization is needed
->> to avoid the following race:
->>
->> CPU1							CPU2
->> 						take reference of PMD table
->> pud_clear()
->> pte_free_kernel()
->> 						walk freed PMD table
->>
->> and similar race between pmd_free_pte_page and ptdump_walk_pgd.
->>
->> Therefore, there are two cases: if ptdump sees the cleared PUD, then
->> we are safe. If not, then the patched-in read and write locks help us
->> avoid the race.
->>
->> To implement the mechanism, we need the static key access from mmu.c and
->> ptdump.c. Note that in case !CONFIG_PTDUMP_DEBUGFS, ptdump.o won't be a
->> target in the Makefile, therefore we cannot initialize the key there, as
->> is being done, for example, in the static key implementation of
->> hugetlb-vmemmap. Therefore, include asm/cpufeature.h, which includes
->> the jump_label mechanism. Declare the key there and define the key to false
->> in mmu.c.
->>
->> No issues were observed with mm-selftests. No issues were observed while
->> parallelly running test_vmalloc.sh and dumping the kernel pagetable through
->> sysfs in a loop.
->>
->> v2->v3:
->>  - Use static key mechanism
->>
->> v1->v2:
->>  - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
->>  - In case of pud_free_pmd_page(), isolate the PMD table to avoid taking
->>    the lock 512 times again via pmd_free_pte_page()
->>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>  arch/arm64/include/asm/cpufeature.h |  1 +
->>  arch/arm64/mm/mmu.c                 | 51 ++++++++++++++++++++++++++---
->>  arch/arm64/mm/ptdump.c              |  5 +++
->>  3 files changed, 53 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
->> index c4326f1cb917..3e386563b587 100644
->> --- a/arch/arm64/include/asm/cpufeature.h
->> +++ b/arch/arm64/include/asm/cpufeature.h
->> @@ -26,6 +26,7 @@
->>  #include <linux/kernel.h>
->>  #include <linux/cpumask.h>
->>  
->> +DECLARE_STATIC_KEY_FALSE(ptdump_lock_key);
->>  /*
->>   * CPU feature register tracking
->>   *
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index 8fcf59ba39db..e242ba428820 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -41,11 +41,14 @@
->>  #include <asm/tlbflush.h>
->>  #include <asm/pgalloc.h>
->>  #include <asm/kfence.h>
->> +#include <asm/cpufeature.h>
->>  
->>  #define NO_BLOCK_MAPPINGS	BIT(0)
->>  #define NO_CONT_MAPPINGS	BIT(1)
->>  #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
->>  
->> +DEFINE_STATIC_KEY_FALSE(ptdump_lock_key);
->> +
->>  enum pgtable_type {
->>  	TABLE_PTE,
->>  	TABLE_PMD,
->> @@ -1267,8 +1270,9 @@ int pmd_clear_huge(pmd_t *pmdp)
->>  	return 1;
->>  }
->>  
->> -int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
->> +static int __pmd_free_pte_page(pmd_t *pmdp, unsigned long addr, bool lock)
->>  {
->> +	bool lock_taken = false;
->>  	pte_t *table;
->>  	pmd_t pmd;
->>  
->> @@ -1279,15 +1283,29 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
->>  		return 1;
->>  	}
->>  
->> +	/* See comment in pud_free_pmd_page for static key logic */
->>  	table = pte_offset_kernel(pmdp, addr);
->>  	pmd_clear(pmdp);
->>  	__flush_tlb_kernel_pgtable(addr);
->> +	if (static_branch_unlikely(&ptdump_lock_key) && lock) {
->> +		mmap_read_lock(&init_mm);
->> +		lock_taken = true;
->> +	}
->> +	if (unlikely(lock_taken))
->> +		mmap_read_unlock(&init_mm);
->> +
->>  	pte_free_kernel(NULL, table);
->>  	return 1;
->>  }
->>  
->> +int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
->> +{
->> +	return __pmd_free_pte_page(pmdp, addr, true);
->> +}
->> +
->>  int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->>  {
->> +	bool lock_taken = false;
->>  	pmd_t *table;
->>  	pmd_t *pmdp;
->>  	pud_t pud;
->> @@ -1301,15 +1319,40 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->>  	}
->>  
->>  	table = pmd_offset(pudp, addr);
->> +	/*
->> +	 * Isolate the PMD table; in case of race with ptdump, this helps
->> +	 * us to avoid taking the lock in __pmd_free_pte_page().
->> +	 *
->> +	 * Static key logic:
->> +	 *
->> +	 * Case 1: If ptdump does static_branch_enable(), and after that we
->> +	 * execute the if block, then this patches in the read lock, ptdump has
->> +	 * the write lock patched in, therefore ptdump will never read from
->> +	 * a potentially freed PMD table.
->> +	 *
->> +	 * Case 2: If the if block starts executing before ptdump's
->> +	 * static_branch_enable(), then no locking synchronization
->> +	 * will be done. However, pud_clear() + the dsb() in
->> +	 * __flush_tlb_kernel_pgtable will ensure that ptdump observes an
->> +	 * empty PUD. Thus, it will never walk over a potentially freed
->> +	 * PMD table.
->> +	 */
->> +	pud_clear(pudp);
-> 
-> How can this possibly be correct; you're clearing the pud without any
-> synchronisation. So you could have this situation:
-> 
-> CPU1 (vmalloc)			CPU2 (ptdump)
-> 
-> 				static_branch_enable()
-> 				  mmap_write_lock()
-> 				    pud = pudp_get()
-> pud_free_pmd_page()
->   pud_clear()
-> 				    access the table pointed to by pud
-> 				    BANG!
-> 
-> Surely the logic needs to be:
-> 
-> 	if (static_branch_unlikely(&ptdump_lock_key)) {
-> 		mmap_read_lock(&init_mm);
-> 		lock_taken = true;
-> 	}
-> 	pud_clear(pudp);
-> 	if (unlikely(lock_taken))
-> 		mmap_read_unlock(&init_mm);
-> 
-> That fixes your first case, I think? But doesn't fix your second case. You could
-> still have:
-> 
-> CPU1 (vmalloc)			CPU2 (ptdump)
-> 
-> pud_free_pmd_page()
->   <ptdump_lock_key=FALSE>
-> 				static_branch_enable()
-> 				  mmap_write_lock()
-> 				    pud = pudp_get()
->   pud_clear()
-> 				    access the table pointed to by pud
-> 				    BANG!
-> 
-> I think what you need is some sort of RCU read-size critical section in the
-> vmalloc side that you can then synchonize on in the ptdump side. But you would
-> need to be in the read side critical section when you sample the static key, but
-> you can't sleep waiting for the mmap lock while in the critical section. This
-> feels solvable, and there is almost certainly a well-used pattern, but I'm not
-> quite sure what the answer is. Perhaps others can help...
-
-Just taking a step back here, I found the "percpu rw semaphore". From the
-documentation:
-
-"""
-Percpu rw semaphores is a new read-write semaphore design that is
-optimized for locking for reading.
-
-The problem with traditional read-write semaphores is that when multiple
-cores take the lock for reading, the cache line containing the semaphore
-is bouncing between L1 caches of the cores, causing performance
-degradation.
-
-Locking for reading is very fast, it uses RCU and it avoids any atomic
-instruction in the lock and unlock path. On the other hand, locking for
-writing is very expensive, it calls synchronize_rcu() that can take
-hundreds of milliseconds.
-"""
-
-Perhaps this provides the properties we are looking for? Could just define one
-of these and lock it in read mode around pXd_clear() on the vmalloc side. Then
-lock it in write mode around ptdump_walk_pgd() on the ptdump side. No need for
-static key or other hoops. Given its a dedicated lock, there is no risk of
-accidental contention because no other code is using it.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|SN7PR12MB6840:EE_
+X-MS-Office365-Filtering-Correlation-Id: f91f6eb8-3e97-4f22-08ac-08ddad1bdbba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YXBjYVBWczIxRTF3bTJsRklpUlZjUmlXRjRDTXhDK3NacTRqNjEwWG5nd0xI?=
+ =?utf-8?B?blkrWHNWNmNsOThSVUZ2ZDU4R3R3VjA4UUZDajNxRkFLb3ZaRWFXMlN1SUVG?=
+ =?utf-8?B?Q3JoNTN4a25iZHUrQ214cUJpVzljNGk5eXJKZ3VNS0t2ZWdLT0o1SUFmT3I3?=
+ =?utf-8?B?TWhpU3BWbG9pR3A5d1NoNnhZZThCdXc1VHdQMWUrUXNxU3U3b2NwZDJVZ1Rj?=
+ =?utf-8?B?Nmd6cEo4bWpUMGtjbVdFcVQ5c1RyMEh5QXZ4VkdxamhIdkNvRERET2pQWVQw?=
+ =?utf-8?B?Umh1N25TY3plSitRRVRNcU16OGFQRU1HRUlMRWlsWTNzbGJnUCtmVFRDOVA0?=
+ =?utf-8?B?Y3J5elJ6MFowOFZoSlFpQnhmOFF0Q3ZpTlRDUnIwRW1WM3BTR28zODJ0L3dH?=
+ =?utf-8?B?TVhRc0gvZFVWWEFMeVMxazB2cjJHcDhMcGhFVGhKbWt4Z0N0RTVPSzhXZFp0?=
+ =?utf-8?B?RkV2RzdWM2J5SHRicU9kaWlwTFE3K3pMQi83TDVOcDJoZWpmcmNURnlQbEU4?=
+ =?utf-8?B?cFBPK2RjS3lmZGltaWkxSEpDOGdGR1psSzRwcDYvak1KMHBFT2p5Z2xHR1lT?=
+ =?utf-8?B?dmZBc1pBT0dLWGU0ZVpyOHpNNlpnOXNjSHhGMUM0VFhBUUR3NVpYLy9xU0VD?=
+ =?utf-8?B?amhJcG84OFlueEdTejlOS05VczV0MDBTSjlBcWhMZ2FabGtjZGJoYWNpUDBi?=
+ =?utf-8?B?NGRqWHlHaFRmWFBMdy90WEJvZ2Yyd1lYKzFDVzVYVTZIRkFTRUVkRmk5NzJr?=
+ =?utf-8?B?RExLeUdobFkvNnI2cmlJZXJCM2dCVXM2RjNsQ0QvVkVwWXpiQnRGbFhMYmV1?=
+ =?utf-8?B?NXkrMGQxMERMY3BQaTdKMElNOG0vbnhBb0FFK001U09xNVBxdytHbWZUMCtx?=
+ =?utf-8?B?Rmh2TUQ3ZllWa3JoZE1hVVFNRUd1Z3kzd2ZlcUZMOVRmNDdGTjlxL3l0WDdH?=
+ =?utf-8?B?UkZnVXdWNTE4S3VHdExDOEZ6VE8ydlYxUnl3NERPdFBwQ2poaXRGWGFucHIz?=
+ =?utf-8?B?QlJJdXBWTVhBSVZnR3dzUUYzKzg1U21sSEFOTGUvcktaUHVnMlRxaU1ad29K?=
+ =?utf-8?B?SHNQSG82NWVJTXp3bWZOS0YvM1RnUU93SHN2VEJzWTk1MlJHSlMzTEROZmNR?=
+ =?utf-8?B?TkZLU1dOdyttdEdXUUp2bkkyN3JUMnJQNWJxSjl4Nm95RTVGWkxTYmFiOVpO?=
+ =?utf-8?B?NjVQdnVwODk1WjNWdmdNaTZkZ2dLNFV4MXgrRkgxUHhGaTV4aVFQQjZVTFM4?=
+ =?utf-8?B?SjVrZ08yckI1dWp1ajFmUzAyVi9mWlhmdGxRQ3RCSXoybmZrbFhlWXR3b1dv?=
+ =?utf-8?B?QTN5bTQrbU5pc2NlVHk3b3g0N1RyMkgrWHFnYlhHWlJwamtoRW16azIyYk00?=
+ =?utf-8?B?bUFOdldUWCtkTWdNNlV0MExoWWMyK2ovaENpR0FjYVBJYzM3Nlc5QjhhMm5N?=
+ =?utf-8?B?YkZQN0puSjF6WTUvdnViVjA3Y0lJeGxhb2RJNXRkQWY0WnIwQ0FoOXgvL2Vw?=
+ =?utf-8?B?b0lHNzdrTnRTcFBrclYzeVdBVVlMU2VINFJmZVZVY0RodGZOb28vVStsMkl2?=
+ =?utf-8?B?aU1QSCtKdkpnUnRIVDFENElqenZwU0tqeFRNV0VLL0ZJaFFDYnhHMm9CcGs2?=
+ =?utf-8?B?dEFRdktybFliMUVwRTB3bk1iSU1wUzNJNGx1bGFKWlpJMDlkS2J4OHlybXNW?=
+ =?utf-8?B?NmRpQ21WcnJZa2pEMjA5MHlzaSt0WlFYL2RsVzFvUXF6NXQ4c2lySlc4N2RJ?=
+ =?utf-8?B?Nnl2QmRvRURTT25Na3ptaEVFNDdqVDFWNDE0ZSt2Lzg2MEVKc3FNSDFoMjFB?=
+ =?utf-8?B?TVZDaWtCU3liV3cyRGJVTmpKamYra1NxbG1jOThuK1Z6RXFuTVpnazhtd1hv?=
+ =?utf-8?B?dDRmL2tDdkRQczZIUTdEejM0YnM1RTdHOTNhQWNCRFR5bUZWaVh0VU9KbWtt?=
+ =?utf-8?B?N2dsQTQ0STZNQTU2U3JZKzdGeElRTkVteFNoRGQ1OFV3Q1M3UFlDbGNoRy8x?=
+ =?utf-8?B?c2h3TmxVOFNRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dVRXTnJ6VEVRSG14cXJyMXhZd1M3WTZjazVaTzFaZElvcU1abmNzdzFiMGha?=
+ =?utf-8?B?L2pOUXE3dUhSblM0WWowcXNnZFdwRUxia2tRMW92MHpwUG5hU28wZi9UdHNO?=
+ =?utf-8?B?eUNzSHoxZXlVOFJNallLNHp0VzN3TmQrOVdFZDl0QzhxRXBJTlY4cDkxc2Vz?=
+ =?utf-8?B?R0drdjZvODVHbjUvSkhRcFdxc2Rsb2twQThORUl2c05kZllVOGhrV3FXRElL?=
+ =?utf-8?B?UHpzdXM1d01SVTVMc1BSZ0NHNTNYMU1qNC9yTHJFMVV5OGhLNTlQT2xSa0ZH?=
+ =?utf-8?B?YjJVY0lOY1ZuZVYvOVd3VmpMek1sbENUUlhCT0VNTnR2dFBKb1VxYlk2Zjgz?=
+ =?utf-8?B?eE1GNWU3Z3BMRmNTVG5JTTUxcTNzUGtQL3JERlZvUkRVTUVNVjhDWEFnZ2lO?=
+ =?utf-8?B?MHBEK3FoV2hzdVQ3aFlON0FVY2dZRW9KYityYlJoMzFBVVVEVC9UdjAzMjdi?=
+ =?utf-8?B?dXA0eUZPaldqWUczSzRQaVJMUmcwMzRtNS9mZ2V2Ri9ralpzeTl1M283NnVZ?=
+ =?utf-8?B?d0MrbWZTTVBHR3BlVEFzdG9Oa0x5ZGxZMU83RWhMUWpvMjVqV2h3ZGVmcnQ3?=
+ =?utf-8?B?Y1lINWJlVzd4YUFnTHZqV0pTZmk3UXhPckFtck5ydW05VExUSG9ITVd2dG8v?=
+ =?utf-8?B?eG9pYi9MNTZLaE5aWHprUEcwakxCQkgvK1NvRjVlbENPSlp0akRWQjVZaktz?=
+ =?utf-8?B?WjJyUWVDdzVqci8vUkRYdGxKRGRjaVhJWmhucFBSTXQ0WXovOUR2b0pOSWFH?=
+ =?utf-8?B?VE1nK2V0R3NUK2ZEcUUxYmwybitBbDdqQVpKa3Fsb3lIN2lVbSsxdUlEd0hI?=
+ =?utf-8?B?SEFETkhHWFE1RnRJdGhFT25vYlZpUFZJUXJKeng0WmVkM0R4cWx2NjlkUmM3?=
+ =?utf-8?B?a3VxTVdkSndFRFpEdVNtMm83b1ljSjdFRjlaM3VrdTZ5VHlvbkp3YVA2cGps?=
+ =?utf-8?B?NlVwRDFLZFFPcEpncklCbzNjLzBjN0VFY2wrTElUTXlUVnc5Ui85MEZtRWpz?=
+ =?utf-8?B?d0hNQ04zN1NwRkc2aEJ1ZURrWERjQlNUcGtLN3NoWWVaMVlZSXBialJOdlVy?=
+ =?utf-8?B?bTNIMVE1QnE4dUx3NW0rUDRLU01pNkE0UWIrdm1OUHJOV1BjL3Qxdm5ySnZH?=
+ =?utf-8?B?VEFvSUtXNTJCTHFVV2xsRGhNSTZEQ3h0WUFJYlhsWWZ5NGRRZ2h5eXlwa0g2?=
+ =?utf-8?B?UCtlTnhVY3V4M1laTElaaGloL3FWR1ZxNUZlNVBudStncENhdTMrVGxCdlE0?=
+ =?utf-8?B?dXRMT0hUdkFMVUhDMS9XakFEVmhuclFkaUlUc2Qya0ZSLzdZRzdpNFNraWsr?=
+ =?utf-8?B?RUdrakliMjBheDd1cTQrVGJEdnlqS1M0ZURBVzFwdElHVXJWZ21GdlBSZnho?=
+ =?utf-8?B?NjlYcThnNlcrUnpOUzlqUXZHa1A0N0YyTld2azJIRFVpNElVeWhtUG5LWGoy?=
+ =?utf-8?B?dnd6dmJ1SGIxOEtQZGRCZlJ5Skp4Z0pJbXlvNlN3dTNqN2pQZFJhdDlPZWpM?=
+ =?utf-8?B?eGM4TGh1ekJ2bmNEUmFlYWg3OThMWFBBT3ErU0RBRHNpeHlhU1B1Z3ViMEgx?=
+ =?utf-8?B?aExnUW1BUDRRQU1pS1ZaL3lZaDdaSUFLU1BpN1VFQ0ttaW1zaGMyYS9tSGl3?=
+ =?utf-8?B?dE40NDdQU0NoSHA1WVRUcSs5MWZsQkRrMVVwRWlaeklRSHpGTVltRDFzdHps?=
+ =?utf-8?B?QzNaM29uRkhES0tGN25nQWsxbjhTQTNVZVN0K1JZZTltcUNGcDhUazhYc3Rn?=
+ =?utf-8?B?NEhSd1VuSnNwR1BNdmduWUMzMm0vamlEYlA5N1JnT0dCa0ZxOWtCbVRqVzVa?=
+ =?utf-8?B?TlRJSVMwejFaY0xFb3RqNmxqVzlHcUtZb1dZdGpmcEczV2ZGbmEyWVR6T3pE?=
+ =?utf-8?B?TmVsanZqbEhHRFlvS0thRThJdFZLc0tKajZWYzc1eDI3MzU4ZHNJWDE3MmhO?=
+ =?utf-8?B?YUZ3cmVLL082cHVybmF2Q0dXZU1SWlkyeC9lTmZ3aVhuNXhUTVR2aFJZclRi?=
+ =?utf-8?B?Wk5CTGxzbU1Cek5ldk9nOVd2ZHgxbktQcnM3R2pZazRLaXREQ1J1QVhCV2ZY?=
+ =?utf-8?B?WkVnT0p6MHA4TlE1Qlh6ZHIvZkRKU2JyNlVDYzdWbFdlQUhGWEhDT1A2UDFN?=
+ =?utf-8?Q?od+ykZKz9Qex0ORcWuyQNQFJ1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f91f6eb8-3e97-4f22-08ac-08ddad1bdbba
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 21:22:12.0761
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p3J63Nl9YFLxiaLTiWt3ROc7QennhjzmBYIbVfAQFkSdrpcvht92nZbtQM8zPm8qQzc29gQYQ00APIKTEGFmUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6840
 
 
+
+On 6/10/25 00:10, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 10 Jun 2025 07:42:40 +0200
 > 
-> Thanks,
-> Ryan
+> The label “cleanup” was used to jump to another pointer check despite of
+> the detail in the implementation of the function “dm_validate_stream_and_context”
+> that it was determined already that corresponding variables contained
+> still null pointers.
+> 
+> 1. Thus return directly if
+>     * a null pointer was passed for the function parameter “stream”
+>       or
+>     * a call of the function “dc_create_plane_state” failed.
+> 
+> 2. Use a more appropriate label instead.
+> 
+> 3. Delete two questionable checks.
+> 
+> 4. Omit extra initialisations (for the variables “dc_state” and “dc_plane_state”)
+>     which became unnecessary with this refactoring.
 > 
 > 
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	if (static_branch_unlikely(&ptdump_lock_key)) {
->> +		mmap_read_lock(&init_mm);
->> +		lock_taken = true;
->> +	}
->> +	if (unlikely(lock_taken))
->> +		mmap_read_unlock(&init_mm);
->> +
->>  	pmdp = table;
->>  	next = addr;
->>  	end = addr + PUD_SIZE;
->>  	do {
->> -		pmd_free_pte_page(pmdp, next);
->> +		__pmd_free_pte_page(pmdp, next, false);
->>  	} while (pmdp++, next += PMD_SIZE, next != end);
->>  
->> -	pud_clear(pudp);
->> -	__flush_tlb_kernel_pgtable(addr);
->>  	pmd_free(NULL, table);
->>  	return 1;
->>  }
->> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
->> index 421a5de806c6..f75e12a1d068 100644
->> --- a/arch/arm64/mm/ptdump.c
->> +++ b/arch/arm64/mm/ptdump.c
->> @@ -25,6 +25,7 @@
->>  #include <asm/pgtable-hwdef.h>
->>  #include <asm/ptdump.h>
->>  
->> +#include <asm/cpufeature.h>
->>  
->>  #define pt_dump_seq_printf(m, fmt, args...)	\
->>  ({						\
->> @@ -311,7 +312,9 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
->>  		}
->>  	};
->>  
->> +	static_branch_enable(&ptdump_lock_key);
->>  	ptdump_walk_pgd(&st.ptdump, info->mm, NULL);
->> +	static_branch_disable(&ptdump_lock_key);
->>  }
->>  
->>  static void __init ptdump_initialize(void)
->> @@ -353,7 +356,9 @@ bool ptdump_check_wx(void)
->>  		}
->>  	};
->>  
->> +	static_branch_enable(&ptdump_lock_key);
->>  	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
->> +	static_branch_disable(&ptdump_lock_key);
->>  
->>  	if (st.wx_pages || st.uxn_pages) {
->>  		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
+> This issue was detected by using the Coccinelle software.
 > 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506100312.Ms4XgAzW-lkp@intel.com/
+> Fixes: 5468c36d6285 ("drm/amd/display: Filter Invalid 420 Modes for HDMI TMDS")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+> 
+> V3:
+> * Another function call was renamed.
+> 
+> * Recipient lists were adjusted once more.
+> 
+> V2:
+> * The change suggestion was rebased on source files of
+>    the software “Linux next-20250606”.
+> 
+> * Recipient lists were adjusted accordingly.
+> 
+> 
+>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 20 ++++++++-----------
+>   1 file changed, 8 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index 78816712afbb..7dc80b2fbd30 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -7473,19 +7473,19 @@ static enum dc_status dm_validate_stream_and_context(struct dc *dc,
+>   						struct dc_stream_state *stream)
+>   {
+>   	enum dc_status dc_result = DC_ERROR_UNEXPECTED;
+> -	struct dc_plane_state *dc_plane_state = NULL;
+> -	struct dc_state *dc_state = NULL;
+> +	struct dc_plane_state *dc_plane_state;
+> +	struct dc_state *dc_state;
+>   
+>   	if (!stream)
+> -		goto cleanup;
+> +		return dc_result;
+>   
+>   	dc_plane_state = dc_create_plane_state(dc);
+>   	if (!dc_plane_state)
+> -		goto cleanup;
+> +		return dc_result;
+
+I think the two early returns look fine, but the rest of the changes 
+reduces the readability and reusability.
+
+>   
+>   	dc_state = dc_state_create(dc, NULL);
+>   	if (!dc_state)
+> -		goto cleanup;
+> +		goto release_plane_state;
+>   
+>   	/* populate stream to plane */
+>   	dc_plane_state->src_rect.height  = stream->src.height;
+> @@ -7522,13 +7522,9 @@ static enum dc_status dm_validate_stream_and_context(struct dc *dc,
+>   	if (dc_result == DC_OK)
+>   		dc_result = dc_validate_global_state(dc, dc_state, DC_VALIDATE_MODE_ONLY);
+>   
+> -cleanup:
+> -	if (dc_state)
+> -		dc_state_release(dc_state);
+> -
+> -	if (dc_plane_state)
+> -		dc_plane_state_release(dc_plane_state);
+> -
+> +	dc_state_release(dc_state);
+> +release_plane_state:
+> +	dc_plane_state_release(dc_plane_state);
+
+This clean was intended to be reused for now and for future changes, and 
+the changes here remove the reusability. Also "cleanup" is commonly used 
+already.
+
+>   	return dc_result;
+>   }
+>   
+
+I guess the intention was to reduce goto statements. If that's the case, 
+it would be better to eliminate all goto and then to remove cleanup + 
+two checks.
+
+On the other hand, I don't see anything wrong with goto/cleanup approach 
+either. Multiple exits in a function do not hurt if managed correctly.
+
 
