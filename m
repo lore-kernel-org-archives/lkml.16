@@ -1,105 +1,120 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905B21DE3B5;
-	Mon, 16 Jun 2025 06:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1952F1AC88A;
+	Mon, 16 Jun 2025 06:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750056756; cv=none; b=QOoC0bvGEMnr1pZFBijS/AYLi3gi+uOKk3S9WX5xkKN673skGdqveTpz1lfbHtEwpGQZDucCW5SCx70s2pXtRR9SedIDGRlz3aUzbfiu6RBIQViDeWPdHldRlc2jgTQ4MDi17q6jXBTBxgyOrUaQhl0F+t8qag0bPJ3dpgeJNK8=
+	t=1750056791; cv=none; b=QpZS9dn4h6oAgPnFjvAJcaEkNzT9t0DaZPfKB7UDl10Fne63VX6fZHewcr2WCWRDLhHlrX6acMlBih8Lwn1ghiIxGC8ziW9i2x7wMLFoOemGI7s1KzBzfrG9kO5MgObJFyqfhZs/TzSBNWrwQrDUGchDxIE5DBV7DCaQCmgWHGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750056756; c=relaxed/simple;
-	bh=c3Abq9r0WKT5CRHfIudmhf9++9t9ilHe9MWq4ef4008=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DdQi915Oqvb37HZGEJdInRwyi7OlPi1KTQr+2E5rDaP3BaaT96t3Q2Cv1ivGkW2sMeJdXuXO5tVpgXrdpDpEtmQPpulP9M+G4Y9umrVWyGq2emyij8BEPiKaxz9ACHcq8Zu039gs672BUB+P7k9bBAKCSDptJRpqQ1uvno7V7vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=Ezob7mt/; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1750056791; c=relaxed/simple;
+	bh=Qfmr62EJG482Y98uXnZ0DUADLOxBA9j0CZv+N0ryPJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ezszMWeQG0N1tkv8F96Wf0pkRKcMDIoXBuHildQiaG+cK2qCiwfbIm9kRXUb7KJV0ivKPF0Z0yCfNt/64yjQot5AIo0F3bpxhThhqXw5ovYfiUqu0N/ZUJpqIXcTFdgfyQx6UV+amKDrZJIlNoO3W55WOS2srcCH09r3ba8SAUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUxWq/Kn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="Ezob7mt/"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55G6qOSX1028700, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1750056745; bh=uQJRs8JPrDgseyBh1Kdw8v61KB5kB5LLlsaWCnTBDjY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=Ezob7mt/vaBIPrwIeexPyCbYK36eBN+hxBNraVuWobVEIJVL9I1cLM05QNC/PWBQs
-	 t03JBTBlCtG2ZNWZTeLMmCjua/1yNlP3iFGg4e3tVVPHHl8c5oZDpwZ5CsRzBzuQ//
-	 hugy5b/e7hnnzBDIxw+ZqbqyBOxJudOY0D3dlFjS+wVGq1tAzmqddoh0E+rGBW5fyf
-	 4jy6WJGprBzG2OMH2iFADI+9wUxmW4LivgrTAQnHFhAuwq96998fMibUdLm6/pVCcK
-	 BC7Yj8JsmJ1CU+ReaFW89tldkrsqvxKmSvDCA3pUlnA4pMkrmX1x3CDXTnIX9GP84O
-	 l0hO1hiq9BlhQ==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55G6qOSX1028700
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 16 Jun 2025 14:52:24 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 16 Jun 2025 14:50:04 +0800
-Received: from RTEXH36506.realtek.com.tw (172.21.6.27) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 16 Jun 2025 14:50:03 +0800
-Received: from localhost (172.22.144.1) by RTEXH36506.realtek.com.tw
- (172.21.6.27) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 16 Jun 2025 14:50:03 +0800
-From: Ricky Wu <ricky_wu@realtek.com>
-To: <linux-kernel@vger.kernel.org>, <ulf.hansson@linaro.org>,
-        <linux-mmc@vger.kernel.org>, <viro@zeniv.linux.org.uk>,
-        <ricky_wu@realtek.com>
-Subject: [PATCH v4] mmc: rtsx: usb add 74 clocks in poweron flow
-Date: Mon, 16 Jun 2025 14:49:56 +0800
-Message-ID: <20250616064956.1846258-1-ricky_wu@realtek.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUxWq/Kn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516E3C4CEEA;
+	Mon, 16 Jun 2025 06:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750056790;
+	bh=Qfmr62EJG482Y98uXnZ0DUADLOxBA9j0CZv+N0ryPJc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oUxWq/KnldbiR/TxJ0fzYjMtotL6MHBUiLQSObTGmjtJLlQhqm53uC0mdw9phQxoM
+	 0gy4gtpKPPZcko4q2k8bozIQjCoIsK4/ejzd2/ZUEiaWZxxqp8eo0Hu47AnQ9TpXvj
+	 qZpZu/5rNNxg4eEQX6gFZLtACX1xxepWTMvxTW1q7mdshN+4lUcgf2IsMZ5znaogsE
+	 D27kpe/2dLeTcIm/Y/xem4Yrv3oGqWByf2Y5nZLyGPY4XHFCKvQMH1NvlcTLKlwUO1
+	 cAw3x9gULotD0fnvW2soIHheICiasZAq0ZtKenDlx/GB+nLy6gwrki+ZhwefNmHRT9
+	 3IMzivRNHBCWA==
+Message-ID: <2ecee1b5-4d95-47ea-935f-3ba93d35d2ff@kernel.org>
+Date: Mon, 16 Jun 2025 08:53:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/7] dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM
+ controller
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
+ <CGME20250610125336eucas1p2ea5eaa740364b6db5007e0849465402d@eucas1p2.samsung.com>
+ <20250610-rust-next-pwm-working-fan-for-sending-v2-4-753e2955f110@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250610-rust-next-pwm-working-fan-for-sending-v2-4-753e2955f110@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SD spec definition:
-"Host provides at least 74 Clocks before issuing first command"
+On 10/06/2025 14:52, Michal Wilczynski wrote:
+> Add the Device Tree binding documentation for the T-HEAD
+> TH1520 SoC PWM controller.
+> 
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
 
-add issue the clocks when power_mode is POWER_UP
-and stop the signal when power_mode is POWER_ON
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
----
-v2: remove delay 100ms in power_on
-v3: Use switch-case instead of if statements
-v4: re-base on the patches
-https://lore.kernel.org/all/20250610111633.504366-1-ulf.hansson@linaro.org/
----
- drivers/mmc/host/rtsx_usb_sdmmc.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c b/drivers/mmc/host/rtsx_usb_sdmmc.c
-index c1fdcc334c8f..239eb9acf7a7 100644
---- a/drivers/mmc/host/rtsx_usb_sdmmc.c
-+++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
-@@ -1014,6 +1014,7 @@ static void sd_set_power_mode(struct rtsx_usb_sdmmc *host,
- 		unsigned char power_mode)
- {
- 	int err;
-+	struct rtsx_ucr *ucr = host->ucr;
- 
- 	if (power_mode == host->power_mode)
- 		return;
-@@ -1031,9 +1032,13 @@ static void sd_set_power_mode(struct rtsx_usb_sdmmc *host,
- 		err = sd_power_on(host);
- 		if (err)
- 			dev_dbg(sdmmc_dev(host), "power-on (err = %d)\n", err);
-+		/* issue the clock signals to card at least 74 clocks */
-+		rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, SD_CLK_TOGGLE_EN);
- 		break;
- 
- 	case MMC_POWER_ON:
-+		/* stop to send the clock signals */
-+		rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, 0x00);
- 	case MMC_POWER_UNDEFINED:
- 		break;
- 
--- 
-2.25.1
-
+Best regards,
+Krzysztof
