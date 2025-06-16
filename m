@@ -1,121 +1,114 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8C02641C3;
-	Mon, 16 Jun 2025 11:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D000F29DB9B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071632; cv=none; b=DtLb8IOkNkcmU9IHOsjkvIRR3tpujZd08b2W/u9MZRCyzJUZ6TzNHlgR4G9/5mdQ70OU3N45/E9Rcbd3LnORCz2KBfvwwD4+3LQQj6dDck+pibcds9i3PVMqhI+9hB2Y/yfw/pA7IFh878afl47EyatpIzaq7soT1xeT983Ecwg=
+	t=1750071719; cv=none; b=SQcQJEjqwEEpqTiKn+kHswby1TZQAGYyWtaQ//HGGTv142b2f7ksmuV2xJZEnWBvfmP4as4zcwHyyxmCpfU3JvQeA40dc7aWXiWb64IEKWZY2yM+X+zGdpy6V1jVdMI0frK94hpTB7QwdSafpWNNTH0/CUMiCm6aF23Ib4uEoIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071632; c=relaxed/simple;
-	bh=6z9NzNvBj8ioUHa19DGKBiny64vYpDpgrxx9Br4X40Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1D3ezryo3Z+TKzLl9F94CNRqcXcC1ZVK0RakvsQxxilkP167X6teO6m2jgb7SPx5uWXUEtnUZxNZC0t2PYWTECM5DXbgtaIhfAypwa5b9r2rItSWKbP+U3iInYjxuunSY2Bi9TMd+Fli75+yQYIIyQW9ghJ4I3h+vYIFjEQTtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhflbkV1; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhflbkV1"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453442d3a15so1293385e9.0;
-        Mon, 16 Jun 2025 04:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750071629; x=1750676429; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9bqiSrhoIiWXRKRJpyDH6Ku/AH8RgOghRxqamwLvyLU=;
-        b=mhflbkV1n88kH3b68ibPeEBd4okzurc+4MKAc1s5yR/2xBSJd3T78mgoeAyp0qmrZT
-         kMQfK15rrfIHT2W6MzQzf/5r5M/Y9KHLIsvOyfQaVNM9UatrWMmVNTFegti7rmpF3+xq
-         ei+0/EyEhanj1P8rogYoR2busborb08fXJXOh90CptqIcy2a/JYFBKYpeUDrBWAvl0s2
-         oLCkoX34fvlmRx5ToPqaegESRKGcFeEISaUo8yl3nFQIoXOcKwmmGGUUz5n7dp62wmpN
-         tgqOa2twM1YdcJD21enBga7MOIjVkG0D01Y9R5Ar5KnCe+JabnUeEu66QHBEzRJ85iJE
-         sfBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750071629; x=1750676429;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9bqiSrhoIiWXRKRJpyDH6Ku/AH8RgOghRxqamwLvyLU=;
-        b=QkJ/q3+p3QfsmpwJEY/wHdfYxzkPezll/2kMhRku7xgc2wVj3fANGgHr2G9tHrQTr5
-         kpYP6/EPgvmwKcp6M9PiiGtIypdaLkcu6vaC83IerhpHouSrN616jWqHj7twBDEE37cQ
-         f3ElINEn8JeiUUOenU32Qrs4MQ0cDLWHt2Grqui5fErOmyjVYaeYEwICdiDCcW0eBt24
-         9CJHmqHdpoDSFoA99AwiziipgufipVp0/QpZ6uvH18uWt/KWln0qL+OM7E+c/0vN/TwA
-         8Odopn2C6oDk5HQolrkwUR0fvaOveNBHlygDncpVy6eMJYw0hsQ7CV0bHlcH+W2V7cun
-         ppSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtN6PXHfWr23YDr1THV/WUrKZ2zBUYPVCOOp8zOE0GXhSbVpuBX9GDFfpj8XNK7KPCZOO7eE8YWsovHow=@vger.kernel.org, AJvYcCWF8XR5ps2kIKe+5IBqaJ1XJDDIpbg4/E9rcwgBGPGJYQ3JyKYiB3RCEoHRyo5fP/+mQv72eb2cobWjuF/fSSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdbKyyEPqRzSEXVXQKwtwnj4vK+fBJuK8okHlvblwNTBkbMz+C
-	LtB/3GCiSpgN31VydpukoNha+Tbti3GPivekOCO4pK+fqr4PKRFGBDQU//weScPC
-X-Gm-Gg: ASbGncsbEGOhgQQBdgpIAhQ7fgVX1TiTWo/hpBcmw3+eFYf5hthHIyTWk+gFwF58srF
-	l904K7ji3WMI7BFZoZ8+w4hfcF4NLfZJPCeXxwoIL2OgSnLJ5QzyRsGZ337FLOGT8Dt1JDLb27s
-	FRsYp81+qMtxa7UtQ+FMYrUoNat65FFWaDZ2mHYA1C0sovr5CRb/sgHuqCO/IEHkPXCSPHrJ2Bg
-	pxTYejUf0kALYFeyuQD9wwf0porM8dvJgiIAN9GfW0Y5IqkEh1Oz5FWgHuTnmmwM07Xl2fwpXOA
-	bNuaW8BX5PRDDPDg/VrMuYT6b9GFvCKQ2zx7WJpKqI/u/kMrQPLDfm/K4CvIDyV9pJ6REDMTGp6
-	FCNDk6FRQxRkG5hmLJo34E90v2JiPNtUDWx2toJeyz/N0E80BOrybo05dcz+dgrZc0N1+zqdmbu
-	M=
-X-Google-Smtp-Source: AGHT+IFP6IfBMjPk0Sy/UFfTQ8tgtMlunh5jZblveLko5YxX6LY6VgpRrVA339mdGWac2iuKaZopLg==
-X-Received: by 2002:a05:600c:35cc:b0:451:df07:f41e with SMTP id 5b1f17b1804b1-4533ca4d6bfmr28881245e9.1.1750071628498;
-        Mon, 16 Jun 2025 04:00:28 -0700 (PDT)
-Received: from thomas-precision3591.home (2a01cb00014ec30071b84413be10a7ee.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:71b8:4413:be10:a7ee])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453421fe188sm67869595e9.5.2025.06.16.04.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 04:00:28 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in `_rtl_pci_rx_interrupt()`.
-Date: Mon, 16 Jun 2025 12:56:30 +0200
-Message-ID: <20250616105631.444309-4-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750071719; c=relaxed/simple;
+	bh=Blj7OdweNvMj6IcZFUrLUJTJlraPWT18QouClWkAzsU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W673LEpxFGIb1ZQ2G6aKMQHeI6FbVNT3vGqxRh5/B2oKkvAZVFxWhYeKom8z6hlragcpqkxVK2spAz5iWDswout8sCCKHCJKX3B+g/3G6C8DnMgLMBtE43YrD4E9ci8cG9yLvwWz/DMfgWCSeg3gr/RgAzvfxuiqB984O3vQPcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uR7ap-0007WP-Qv; Mon, 16 Jun 2025 13:01:35 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uR7ao-003nBX-1X;
+	Mon, 16 Jun 2025 13:01:34 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uR7ao-000LXs-1C;
+	Mon, 16 Jun 2025 13:01:34 +0200
+Message-ID: <0444ceee9743a349bb7155dac6ca7ea25f5adb18.camel@pengutronix.de>
+Subject: Re: [PATCH v3 3/5] net: phy: qcom: at803x: Add Qualcomm IPQ5018
+ Internal PHY support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: george.moussalem@outlook.com, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli
+ <f.fainelli@gmail.com>, Bjorn Andersson <andersson@kernel.org>, Konrad
+ Dybcio <konradybcio@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Date: Mon, 16 Jun 2025 13:01:34 +0200
+In-Reply-To: <20250602-ipq5018-ge-phy-v3-3-421337a031b2@outlook.com>
+References: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
+	 <20250602-ipq5018-ge-phy-v3-3-421337a031b2@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The function `_rtl_pci_init_one_rxdesc()` can fail even when the new
-`skb` is passed because of a DMA mapping error.  If it fails, the `skb`
-is not saved in the rx ringbuffer and thus lost.
+On Mo, 2025-06-02 at 13:53 +0400, George Moussalem via B4 Relay wrote:
+> From: George Moussalem <george.moussalem@outlook.com>
+>=20
+> The IPQ5018 SoC contains a single internal Gigabit Ethernet PHY which
+> provides an MDI interface directly to an RJ45 connector or an external
+> switch over a PHY to PHY link.
+>=20
+> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+> 802.3az EEE.
+>=20
+> Let's add support for this PHY in the at803x driver as it falls within
+> the Qualcomm Atheros OUI.
+>=20
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+>  drivers/net/phy/qcom/Kconfig  |   2 +-
+>  drivers/net/phy/qcom/at803x.c | 185 ++++++++++++++++++++++++++++++++++++=
+++++--
+>  2 files changed, 178 insertions(+), 9 deletions(-)
+>=20
+[...]
+> diff --git a/drivers/net/phy/qcom/at803x.c b/drivers/net/phy/qcom/at803x.=
+c
+> index 26350b962890b0321153d74758b13d817407d094..c148e245b5391c5da374ace86=
+09dcdfd8284732d 100644
+> --- a/drivers/net/phy/qcom/at803x.c
+> +++ b/drivers/net/phy/qcom/at803x.c
+> @@ -7,19 +7,24 @@
+[...]
+> +static int ipq5018_probe(struct phy_device *phydev)
+> +{
+> +	struct device *dev =3D &phydev->mdio.dev;
+> +	struct ipq5018_priv *priv;
+> +	int ret;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->set_short_cable_dac =3D of_property_read_bool(dev->of_node,
+> +							  "qcom,dac-preset-short-cable");
+> +
+> +	priv->rst =3D devm_reset_control_array_get_exclusive(dev);
 
-Compile tested only
+Both dt-bindings and dts patch only show a single reset. Is there a
+reason this is a reset_control_array?
 
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/net/wireless/realtek/rtlwifi/pci.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
-index 472072630f8d..d080469264cf 100644
---- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-@@ -805,13 +805,19 @@ static void _rtl_pci_rx_interrupt(struct ieee80211_hw *hw)
- 		skb = new_skb;
- no_new:
- 		if (rtlpriv->use_new_trx_flow) {
--			_rtl_pci_init_one_rxdesc(hw, skb, (u8 *)buffer_desc,
--						 rxring_idx,
--						 rtlpci->rx_ring[rxring_idx].idx);
-+			if (!_rtl_pci_init_one_rxdesc(hw, skb, (u8 *)buffer_desc,
-+						      rxring_idx,
-+						      rtlpci->rx_ring[rxring_idx].idx)) {
-+				if (new_skb)
-+					dev_kfree_skb_any(skb);
-+			}
- 		} else {
--			_rtl_pci_init_one_rxdesc(hw, skb, (u8 *)pdesc,
--						 rxring_idx,
--						 rtlpci->rx_ring[rxring_idx].idx);
-+			if (!_rtl_pci_init_one_rxdesc(hw, skb, (u8 *)pdesc,
-+						      rxring_idx,
-+						      rtlpci->rx_ring[rxring_idx].idx)) {
-+				if (new_skb)
-+					dev_kfree_skb_any(skb);
-+			}
- 			if (rtlpci->rx_ring[rxring_idx].idx ==
- 			    rtlpci->rxringcount - 1)
- 				rtlpriv->cfg->ops->set_desc(hw, (u8 *)pdesc,
--- 
-2.43.0
-
+regards
+Philipp
