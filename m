@@ -1,142 +1,166 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796341B4247
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9B42BEFE6
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750082998; cv=none; b=RsRFRrGV/Ax/ZeC8RYbd1M1PKYvpncx5/i9fLynbCBWKxwgnv01jwuPTPQG8LukExfgCPivmhsbCH2Lc5+KnRVRSAqL+YJUZJDvGRarUnqLYoZ3I99bxrFfeLoiLd3iKpq0CvMxFdEjE0kVm21cycFtcWjtFPbkwK69EBWqrw50=
+	t=1750083016; cv=none; b=PHf24oj//yCXFUGSOK+1UCHsSc6eoHeNF4JT7Aq3busbQOgK8WMIenp3/5hRJx1bMps5hNyDCF7IKbR9/+noUoDU3fk3yy3BT7URrL/8Ey9/YyXnnFEuknOxh2/P+uFX7xsp8sSUFfgF3FJzKXGW/NsKB+vjIz2m6atBzib4C30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750082998; c=relaxed/simple;
-	bh=bk/xyjGw0KBtVhvEHPMiHe27jiw8lhL8yD97jfdJW6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jt0QaK02f1c0bX8ycNf3YuJ2moPs8uopVevQPE3zHVxa8i1/IEj3/bFdMMT93pU1Vvto3xfy9pnpBlIxLlmdOqcea+jOyHJ/wOfwGjPXSucwt3aSgZBULSNWAiOhLKjYsafUc0wjQvwg/KrSwapt3FvrDWmlZnub/6UfhIfs7q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eQ4/1G0Q; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750083016; c=relaxed/simple;
+	bh=WAuAopaFE62od8GV/8XzeePYFJyET2mSBfEs8wOz79A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbJRlLEWn2KjfiHj9C4EcdgcVbzccAtgmheeYmnO5FyfrTVUWUNNDUWsVvEmLyNI3jEL/7nVB0zb0tS6sIZ7eZM0SH7i6fQOmtaI9GfN8m+sW+1+jieBYG0vXxGJE7NL2wysVxHmJ3Y+BxLFQPuu+/j4Hm3kLtCVI9O0lNVLTzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FfE3qqOd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GaimmJA3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FfE3qqOd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GaimmJA3; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQ4/1G0Q"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4533bf4d817so11892055e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750082994; x=1750687794; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eG1tRllaLzLQ7yTmOFiDAfPfVrd6z8cvaWD0QjpeVfQ=;
-        b=eQ4/1G0QGeD33EfKaqzK1zPqIUOc83BL6y/DXiVZJAM4/CjFvs+MEMhfHtWeSWOCmy
-         O5P12EqQ6ZvtZMXK7LLM7wiUD0QgCz+aBp3YT5j6FCBGV6AvvMOwHReng2lLKDqPbBe7
-         P/GZU5r8lh4tvXl+ATJsfF9u0mTELVp1ttGIe9sG1zHJr6hyVgIWjL6bu6geql3p0f6o
-         gAAM9BLyhL99OPKPEL+3ChFOwMgFRC5cyzuGRZLJ+R/EsUzczrzXGVUUTL6HEpTisroF
-         ejNGUnNEAF4lRRxiDTL1BY+TzMWxS2fWg0j6oYWsWX0176Ht0XNycxPQO0NOLru7spKI
-         7AMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750082994; x=1750687794;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eG1tRllaLzLQ7yTmOFiDAfPfVrd6z8cvaWD0QjpeVfQ=;
-        b=afzZzzRsUvj/aZpsOPOg7iCdIemalfFXk62sn2f8F4JKUmF161HQUIWZFIeTEQGLci
-         DNvY6s0UzwS2UNSrMYjIUd9UG172SEX/uQVG4aBy7E/WXJW9PnvqiGPWkNp7BIAyX1My
-         CNnEiQBELrRcXnYGYiqFbxEMnhLXYAfGAS69S4xxop9x7NydzFXSTX21mW7hMAuneZ2T
-         tRo6/qhQ/nle2Rw2CDQbekWlV43hUF92uCRy3OqY7rgk7Pz/3J7jSH7EITmEVsBE+b/5
-         Pt8qQpIGE8FAC3RIAHqzrEamkDrq7FgozqXsKDk1WAouNgvFC6azr+0y1yR+9b9DND/f
-         dBVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzICIg/Vh9H5L6168W0G81idbhm8N4GNlSjI2Fqz+rWuEJN6AILl37HujwpPyDHzBrMBaLK5F/Ug+UNEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNBHoh3bl9R/0kw6dSUw0QfCoz1zrbF1uGS+E3OR6UA4S27et+
-	eebiumHapnWC4w10hU3t+Fq7R+WUyX4h1IhFyCgwQdQBMrxFRG7ODZIP+BAQRyXEdbg=
-X-Gm-Gg: ASbGnctysbLTPNr7LeKxsqfdvBWYri//grdjeuiGA/KQ4mtwQCBy3tNK1N4FhzUplKD
-	Qs08NMQXnDi3+imo7xA0ndblzQxsnHDu0B2v+rn2dbTxc4ZNjyPviK19Lqmd+9OQlz7cNLh5+Mp
-	ggT/wUkvKZ2tpP0cE7R5/A6gU5BscgVWyfRt7szn/3lU6juay7driP1wJMEnyfq4C3fgGGRUj+u
-	QgpgSDaX/VDLwLDXivLykwG52JqycPZgq4rbwuZSvCHnqJHGU0BqLdopPRTCpN+vz+wkImm7xcr
-	86XzORWtVCOO/VYNTyjQ/KOb09ncwlwXetgRCkbKjL2dblOr7wdSCrHhdbcwB5IeNB4RvTVQrUi
-	RuYljK591I8KHVGuobWB6zPI17FQ=
-X-Google-Smtp-Source: AGHT+IGDznAxXwPZeCKDNC5f9lF2U35yVP5doTOeyIgRBtLp4L+itiFGFFEjMkvl5sT9mvcZduwjhw==
-X-Received: by 2002:a05:600c:1e02:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-4533cac919bmr79593775e9.32.1750082993741;
-        Mon, 16 Jun 2025 07:09:53 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4b67bsm11033125f8f.83.2025.06.16.07.09.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 07:09:53 -0700 (PDT)
-Message-ID: <21bc46d0-7e11-48d3-a09d-5e55e96ca122@linaro.org>
-Date: Mon, 16 Jun 2025 15:09:52 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FfE3qqOd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GaimmJA3";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FfE3qqOd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GaimmJA3"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E1D641F74A;
+	Mon, 16 Jun 2025 14:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750083012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjbZJaffVvP6vuBZvxM6g9mqSeMEhj0RjSxyuqax+yM=;
+	b=FfE3qqOdPMtM0nEACqjOdSJ/1V4ckmGIOhu1d5aYdsNFn6fKKVdl+ETe/QJYsWZvy+yecS
+	1oQ81cb/l4FZLTktYRnKbbNc45L6Q13UAhp6i/pHdxZuEOsGEUnfFSJGfmJy8lj7rXyk/W
+	8TH9YE1y2rhdI6eEqvPaLgVylJV5YLA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750083012;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjbZJaffVvP6vuBZvxM6g9mqSeMEhj0RjSxyuqax+yM=;
+	b=GaimmJA3hGx3BbuHMjADldom51FNmjZZ7B48/hqQNjxvz3DaCiejmLIujrOxQO9RxiqY0q
+	rchSEgGVgze38lDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750083012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjbZJaffVvP6vuBZvxM6g9mqSeMEhj0RjSxyuqax+yM=;
+	b=FfE3qqOdPMtM0nEACqjOdSJ/1V4ckmGIOhu1d5aYdsNFn6fKKVdl+ETe/QJYsWZvy+yecS
+	1oQ81cb/l4FZLTktYRnKbbNc45L6Q13UAhp6i/pHdxZuEOsGEUnfFSJGfmJy8lj7rXyk/W
+	8TH9YE1y2rhdI6eEqvPaLgVylJV5YLA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750083012;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjbZJaffVvP6vuBZvxM6g9mqSeMEhj0RjSxyuqax+yM=;
+	b=GaimmJA3hGx3BbuHMjADldom51FNmjZZ7B48/hqQNjxvz3DaCiejmLIujrOxQO9RxiqY0q
+	rchSEgGVgze38lDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6FFE013A6D;
+	Mon, 16 Jun 2025 14:10:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id J++TF8QlUGi9TAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 14:10:12 +0000
+Date: Mon, 16 Jun 2025 16:10:02 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	James Houghton <jthoughton@google.com>,
+	Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] mm,hugetlb: Document the reason to lock the folio in
+ the faulting path
+Message-ID: <aFAlupvoJ_w7jCIU@localhost.localdomain>
+References: <20250612134701.377855-1-osalvador@suse.de>
+ <20250612134701.377855-3-osalvador@suse.de>
+ <44f0f1cc-307a-46e3-9e73-8b2061e4e938@redhat.com>
+ <aEw0dxfc5n8v1-Mp@localhost.localdomain>
+ <ffeeb3d2-0e45-43d1-b2e1-a55f09b160f5@redhat.com>
+ <aEychl8ZkJDG1-5K@localhost.localdomain>
+ <aE075ld-fOyMipcJ@localhost.localdomain>
+ <a5e098d1-ee5a-447f-9e05-0187b22500e1@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] media: qcom: camss: vfe: Fix registration sequencing
- bug
-To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Depeng Shao <quic_depengs@quicinc.com>,
- Hans Verkuil <hans.verkuil@cisco.com>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Johan Hovold <johan+linaro@kernel.org>
-References: <20250612-linux-next-25-05-30-daily-reviews-v1-0-88ba033a9a03@linaro.org>
- <20250612-linux-next-25-05-30-daily-reviews-v1-2-88ba033a9a03@linaro.org>
- <c90a5fd3-f52e-4103-a979-7f155733bb59@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <c90a5fd3-f52e-4103-a979-7f155733bb59@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5e098d1-ee5a-447f-9e05-0187b22500e1@redhat.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On 13/06/2025 10:13, Vladimir Zapolskiy wrote:
+On Mon, Jun 16, 2025 at 11:22:43AM +0200, David Hildenbrand wrote:
+ 
+> hugetlb_fault->hugetlb_no_page->hugetlb_wp
 > 
-> Per se this concurrent execution shall not lead to the encountered bug,
+> already *mapped* the pagecache page into the page table.
+> 
+> See
+> 	if (anon_rmap)
+> 		hugetlb_add_new_anon_rmap(folio, vma, vmf->address);
+> 	else
+> 		hugetlb_add_file_rmap(folio);
+> 
+> So at that point it would be "stable" unless I am missing something?
+> 
+> So once we are in hugetlb_wp(), that path much rather corresponds to
+> do_wp_page()->wp_page_copy.
 
-What does that mean ? Please re-read the commit log, the analysis is all 
-there.
+Yes, that's right.
+That's something I've been thinking over the weekend.
 
-> both an initialization of media entity pads by media_entity_pads_init()
-> and a registration of a v4l2 devnode inside msm_video_register() are
-> done under in a proper sequence, aren't they?
+E.g: do_cow_fault, first copies the page from the pagecache to a new one
+and __then__ maps the that page into the page tables.
+While in hugetlb_no_page->hugetlb_wp, the workflow is a bit different.
 
-No, I clearly haven't explained this clearly enough in the commit log.
+We first map it and then we copy it if we need to.
 
-vfe0_rdi0 == /dev/video0 is complete. vfe0_rdi1 is not complete there is 
-no /dev/video1 in user-space.
+What do you mean by stable?
+In the generic faulting path, we're not worried about the page going away
+because we hold a reference, so I guess the lock must be to keep content stable?
 
-vfe_get() is called for an RDI in a VFE, camss_find_sensor_pad() assumes 
-all RDIs are populated.
+I mean, yes, after we have mapped the page privately into the pagetables,
+we don't have business about content-integrity anymore, so given this rule, yes,
+I guess hugetlb_wp() wouldn't need the lock (for !anonymous) because we already
+have mapped it privately at that point.
 
-We can't use any VFE mutex to synchronise this because
-
-lock(vfe->mutex);
-lock(media->mutex);
-
-and
-lock(media->mutex);
-lock(vfe->mutex);
-
-happen.
-
-So we can educate vfe_get() about the RDI it is operating on or we can 
-flag that a VFE - all of it's subordinate RDIs are available.
-
-I didn't much like teaching vfe_get() about which RDI index because the 
-code looked ugly for 8916 you have to assume on one of the code paths 
-that it always operates on RDI0, which is an invalid assumption.
-
-The other way to fix this is:
-
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -2988,7 +2988,7 @@ struct media_pad *camss_find_sensor_pad(struct 
-media_entity *entity)
-
-         while (1) {
-                 pad = &entity->pads[0];
--               if (!(pad->flags & MEDIA_PAD_FL_SINK))
-+               if (!pad || !(pad->flags & MEDIA_PAD_FL_SINK))
+But there's something I don't fully understand and makes me feel uneasy.
+If the lock in the generic faultin path is to keep content stable till we
+have mapped it privately, wouldn't be more correct to also hold it
+during the copy in hugetlb_wp, to kinda emulate that?
 
 
-But then you see that every other driver treats pad = &entity->pads[0] 
-as always non-NULL.
-
----
-bod
+-- 
+Oscar Salvador
+SUSE Labs
