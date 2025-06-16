@@ -1,117 +1,122 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F092E272E48;
-	Mon, 16 Jun 2025 15:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581B71E22E9;
+	Mon, 16 Jun 2025 15:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088736; cv=none; b=sCfoO47G1qmZrH419heseR08FjPYl8x+G5BK6dOEOxn+hA3NkVfqLh+Ku557iR3kA1JdTR/YzyFH/1WhatTcI1LRatLANjVGDE58ANIEHpmcLoZNOhTP/bz09rXs8mXo2FvoEBDEHr7SdSUua6sSv0QCQfffJcJVYkwT7xMKN/E=
+	t=1750088739; cv=none; b=Ph8Om0TZAdtnJ3VD2Cb2JW18J1Ils69XdPGigrLo0hUCbxAfkTQEHoN48rDtjxHbifXR16XbgS4qUkhVsoUvAXmAT/VleTZ35HEBxMQk9MqVRW9sjeoXGZ0T6KBJyNPreKZ33ll2lm1PuVw2zbYW6G/TII5q2sH1OORkbtswhGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088736; c=relaxed/simple;
-	bh=ra8p9X0kjOiFPIwyw3A4kgvR0ernRDG0F99sfFix9qg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dYXnFhqFFXWPCJL2/i9RsuqPNu3Qxut2rTovEUSJ4Az3Mmhsbk7/S01aPmmF1fmm+gHBNgPcJEwi0ZSDka/AlxOytdwdayxeM6mM1lMfFdQoxh/n6yKDCr6hUWcQHf21lNsTTLvwxvtAWS6i8A6fCXOBIBrm1U080pawIuS3oHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bLZ8W4LT5z9sWF;
-	Mon, 16 Jun 2025 17:45:31 +0200 (CEST)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
+	s=arc-20240116; t=1750088739; c=relaxed/simple;
+	bh=Phz8r6X/1/Hfio3qW3aeXo0QdX243igoFLB5Ql8EyIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKQRdCGlAmfV44XUUNT+ix4My3xFWrxtvmokhOmPlzkx7/UNm+rjgI5QYdeKe/Bef33TslqA2azznUAOhcuaIK91NDPD98OYf7VwwgecBq9jLp9e1z8YgIlEKGSs+BQ+ellByj8eSJ7BJdgtv6ldgBwUWfZGny9lH1FZn+stgGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsE/rIpQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsE/rIpQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0BE0C4CEEA;
+	Mon, 16 Jun 2025 15:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750088739;
+	bh=Phz8r6X/1/Hfio3qW3aeXo0QdX243igoFLB5Ql8EyIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RsE/rIpQgQubD9FD467llyTDjelw55TPUcdwrb3S1TXpCpXXNI43yrGPqDiR5nlqa
+	 5TaebA2IEx6SuLpxCLrzK+vChFuXE6GGqpTKbGmHVpDela40oSWhU99OzwUu1A8U2p
+	 ptnhDotPAzF1Irh4PN/v4rJURVqJYGkmrRRKP13lds41ykDKZgf4r7gi5Do6PdPXbD
+	 rfZacp+1dtK5Uq27l+OehTp3KZCDFi28e/6Zpha8lBtamt2+AJrZaCD4bHD0MrHjNc
+	 TNeuHUOHVTlHxeZz+OPK3UblpI1OCqbhTFAGFfeO+J7ndKOXZ1MeId9BrdXbWcoK4j
+	 DiE9RKF5pKoEg==
+Date: Mon, 16 Jun 2025 17:45:32 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Mark Brown <broonie@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Remo Senekowitsch <remo@buenzli.dev>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v1 3/3] samples: rust: platform: Add property child and reference args examples
-Date: Mon, 16 Jun 2025 17:45:11 +0200
-Message-ID: <20250616154511.1862909-4-remo@buenzli.dev>
-In-Reply-To: <20250616154511.1862909-1-remo@buenzli.dev>
-References: <20250616154511.1862909-1-remo@buenzli.dev>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+Message-ID: <aFA8HLREfMtZSh_u@pollux>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux>
+ <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+ <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
 
-Add some example usage of the device property methods for reading
-DT/ACPI/swnode child nodes and reference args.
+On Mon, Jun 16, 2025 at 10:48:37AM -0300, Daniel Almeida wrote:
+> Hi Danilo,
+> 
+> > On 9 Jun 2025, at 13:24, Daniel Almeida <daniel.almeida@collabora.com> wrote:
+> > 
+> > Hi Danilo,
+> > 
+> >> On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
+> >> 
+> >> On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
+> >>> +/// Callbacks for a threaded IRQ handler.
+> >>> +pub trait ThreadedHandler: Sync {
+> >>> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
+> >>> +    /// context.
+> >>> +    fn handle_irq(&self) -> ThreadedIrqReturn;
+> >>> +
+> >>> +    /// The threaded handler function. This function is called from the irq
+> >>> +    /// handler thread, which is automatically created by the system.
+> >>> +    fn thread_fn(&self) -> IrqReturn;
+> >>> +}
+> >>> +
+> >>> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
+> >>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+> >>> +        T::handle_irq(self)
+> >>> +    }
+> >>> +
+> >>> +    fn thread_fn(&self) -> IrqReturn {
+> >>> +        T::thread_fn(self)
+> >>> +    }
+> >>> +}
+> >> 
+> >> In case you intend to be consistent with the function pointer names in
+> >> request_threaded_irq(), it'd need to be handler() and thread_fn(). But I don't
+> >> think there's a need for that, both aren't really nice for names of trait
+> >> methods.
+> >> 
+> >> What about irq::Handler::handle() and irq::Handler::handle_threaded() for
+> >> instance?
+> >> 
+> >> Alternatively, why not just
+> >> 
+> >> trait Handler {
+> >>  fn handle(&self);
+> >> }
+> >> 
+> >> trait ThreadedHandler {
+> >>  fn handle(&self);
+> >> }
+> >> 
+> >> and then we ask for `T: Handler + ThreadedHandler`.
+> > 
+> > Sure, I am totally OK with renaming things, but IIRC I've tried  Handler +
+> > ThreadedHandler in the past and found it to be problematic. I don't recall why,
+> > though, so maybe it's worth another attempt.
+> 
+> Handler::handle() returns IrqReturn and ThreadedHandler::handle() returns
+> ThreadedIrqReturn, which includes WakeThread, so these had to be separate
+> traits.
 
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
----
- drivers/of/unittest-data/tests-platform.dtsi |  7 +++++++
- samples/rust/rust_driver_platform.rs         | 13 ++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
-index 50a51f38afb6..509eb614ab2b 100644
---- a/drivers/of/unittest-data/tests-platform.dtsi
-+++ b/drivers/of/unittest-data/tests-platform.dtsi
-@@ -40,6 +40,13 @@ test-device@2 {
- 
- 				test,u32-prop = <0xdeadbeef>;
- 				test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
-+
-+				ref_child_0: child@0 {
-+					test,ref-arg = <&ref_child_1 0x20 0x32>;
-+				};
-+				ref_child_1: child@1 {
-+					test,ref-arg = <&ref_child_0 0x10 0x64>;
-+				};
- 			};
- 		};
- 
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-index c0abf78d0683..4dcedb22a4bb 100644
---- a/samples/rust/rust_driver_platform.rs
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -4,7 +4,11 @@
- 
- use kernel::{
-     c_str,
--    device::{self, Core},
-+    device::{
-+        self,
-+        property::{FwNodeReferenceArgs, NArgs},
-+        Core,
-+    },
-     of, platform,
-     prelude::*,
-     str::CString,
-@@ -91,6 +95,13 @@ fn properties_parse(dev: &device::Device) -> Result {
-         let prop: KVec<i16> = fwnode.property_read_array_vec(name, 4)?.required_by(dev)?;
-         dev_info!(dev, "'{name}'='{prop:?}' (KVec)\n");
- 
-+        for child in fwnode.children() {
-+            let name = c_str!("test,ref-arg");
-+            let nargs = NArgs::N(2);
-+            let prop: FwNodeReferenceArgs = child.property_get_reference_args(name, nargs, 0)?;
-+            dev_info!(dev, "'{name}'='{prop:?}'\n");
-+        }
-+
-         Ok(())
-     }
- }
--- 
-2.49.0
-
+Ok, that fine then. But I'd still prefer the better naming as mentioned above.
