@@ -1,94 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D519F40A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EB17262B;
 	Mon, 16 Jun 2025 04:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750047307; cv=none; b=laHrFW4DvVvmSYeH5rK0axddbOuqRvgpcs2SVReVbRUV1Ju3YvqFEkOnewr5593pz6auIzvannLqQv65Is+jwkQ0SE5QksmCe91cKLAuExS/bKPOqv/lGUF+8NKkKqb3Kte6u8D7bd/YuaUHPD2pCW6wCF//+fZ8qN5MxGCSLMA=
+	t=1750047310; cv=none; b=sHwIm9AvI24NhBo8REydowH57T44cZw7l2ImP42sl3lK1k+jf6kpUw6v5TCbunUXS7Yw8Px1q+i6HtqM8dp+lkl2NOcu2tHm/h24Z0PErp/7A9D1ZT2e+M4Au0RWUk6gPro/gwEfw15cLkKpNVfaBokydWhI9P6J4jg25by/UY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750047307; c=relaxed/simple;
-	bh=rM9bL9wU00reQIIaJPIlupar5fdGN2JTE/STQh4Kwy8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hEtSeNTpCjjZbsLEEW+MRUuuyGqlixsRsfa1wEArI/LJCHsFBw3ZsF7Uqe7A96CBPY5nQl4miqJUOhab87/QAFB9zRefo2g2qjl6zBnayHt7sDFfoq44ejaF+ztGMWHxMHnBTF3KGzh5U9GDYonsK4+ZLBf4JPb1ta10Y+Net4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pho//p2s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750047310; c=relaxed/simple;
+	bh=WzDEvnQGvdgtdYz/0ru2tNuMxEP5YJDnyny/hKocKAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cYzk9ywH6MYoAqu2XD3rGtHsJVAZCPIXN8OFJtIG8pHtS3qciDWNF+zJ4/5XU8D0Wk2LafH9XDYrFfxhM4o0zG4qjRlDY9ml2onpsFwHpZdiiVWGbtrCLO9D+snl7rQfc9UFxBZgQKb451cE91ZgVr4KPBKcYPi7L8vOZ8A84Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D4IQXzua; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pho//p2s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6061C4CEEA;
-	Mon, 16 Jun 2025 04:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750047307;
-	bh=rM9bL9wU00reQIIaJPIlupar5fdGN2JTE/STQh4Kwy8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pho//p2sCMtqAHmfvjHeegXm1CNgbt731roXNYYkYIUi5nT1Ulu3PkBwnT73QZAfI
-	 /7MtdLlan1GgNIL+clL6kRIyutQEB+PB2SnFW6F4ZBRg03/QVye8DxrMFAXHxSZS/T
-	 ApayrsqxuEcw/TuSTbEfb/OPgX9VIwqdPZMz90zeK71BjQlIBeqHexb92pQjgCzKuu
-	 6xiRsEs+8vL6IyKGpuEBjyioW0JkpiNme2R+Z/SphrqtDr+7wlVTcAG3dK28Q9G/B5
-	 u4DU3rzspodA/cVWTn9KanSc/p4uJS6EoZmpIj4p3KzsCyyAKEemOxypMyA//xmtcZ
-	 +6UIYIN81NXRQ==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [RFC PATCH] iommufd: Destroy vdevice on device unbind
-In-Reply-To: <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
- <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250612172645.GA1011960@ziepe.ca>
- <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date: Mon, 16 Jun 2025 09:45:00 +0530
-Message-ID: <yq5aecvktj97.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D4IQXzua"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750047308; x=1781583308;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WzDEvnQGvdgtdYz/0ru2tNuMxEP5YJDnyny/hKocKAE=;
+  b=D4IQXzuaj3TGX7Mm3uY8yTbML/0jgm0MtufWfM2x/uudV2zGjx2wFZ6W
+   tu83u1X9GPLnWHAvh+4uzQ+TCWqenqCIwq9zWb71ueHUKxeIYVx2CGqG7
+   r01sihVouzraV1jUt0bv3XbZVtV1r7Dd3HoDi2Bii2KkUrJQhIO/dfM+a
+   nMCYn+AXKpEH9BcXUjjLhtSIies5LNlb0SmYd3xpxQHnmNG1sAMM5SY+C
+   isJWvEFRgKIN/ljDwTb4VM9Yk5SS4K1uJOlj2kNogLgWYEIS2QGMukTTp
+   S/5C4FfutAhtr4CY44REUlm2WDbfQ+WLh6BRsG4dKlyCIyh95rQceSrWY
+   g==;
+X-CSE-ConnectionGUID: l1wT6HaoQJe9+QNkjlCg6Q==
+X-CSE-MsgGUID: IcVo+z1kQKSSRk8uU77OJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="63213811"
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="63213811"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 21:15:07 -0700
+X-CSE-ConnectionGUID: S8Nxdwc0RoGeD5CmbsCYHA==
+X-CSE-MsgGUID: Wb1PpUIdT0O6iG26yvCcJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="171569944"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa002.fm.intel.com with ESMTP; 15 Jun 2025 21:15:04 -0700
+Date: Mon, 16 Jun 2025 12:07:54 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Michal Simek <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
+	git@xilinx.com, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>, Rob Herring <robh@kernel.org>,
+	Tom Rix <trix@redhat.com>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:FPGA MANAGER FRAMEWORK" <linux-fpga@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: fpga: Also describe clock for gpio
+Message-ID: <aE+YmvQGvpB3kx48@yilunxu-OptiPlex-7050>
+References: <8407ef56b11632c1a7abfce8a4534ed8a8ed56cc.1749809570.git.michal.simek@amd.com>
+ <aEwA/pFuvbP+acSY@yilunxu-OptiPlex-7050>
+ <712b690d-2fcf-486e-87a1-17e2354d371f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <712b690d-2fcf-486e-87a1-17e2354d371f@amd.com>
 
-"Tian, Kevin" <kevin.tian@intel.com> writes:
+On Fri, Jun 13, 2025 at 12:52:46PM +0200, Michal Simek wrote:
+> 
+> 
+> On 6/13/25 12:44, Xu Yilun wrote:
+> > On Fri, Jun 13, 2025 at 12:12:52PM +0200, Michal Simek wrote:
+> > > Axi gpio is going to have clocks as required property that's why it should
+> > > be also described in bindings which are using axi gpio node.
+> > > 
+> > > Signed-off-by: Michal Simek <michal.simek@amd.com>
+> > > ---
+> > > 
+> > > Changes in v2:
+> > > - New patch to fix reported as issue by the second patch
+> > > - https://lore.kernel.org/r/174954437576.4177094.15371626866789542129.robh@kernel.org
+> > > 
+> > >   Documentation/devicetree/bindings/fpga/fpga-region.yaml | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.yaml b/Documentation/devicetree/bindings/fpga/fpga-region.yaml
+> > > index 77554885a6c4..7d2d3b7aa4b7 100644
+> > > --- a/Documentation/devicetree/bindings/fpga/fpga-region.yaml
+> > > +++ b/Documentation/devicetree/bindings/fpga/fpga-region.yaml
+> > > @@ -316,6 +316,7 @@ examples:
+> > >           reg = <0x40000000 0x10000>;
+> > >           gpio-controller;
+> > >           #gpio-cells = <2>;
+> > > +        clocks = <&clk>;
+> > 
+> > This file is mainly for fpga-region bindings. So I don't think we have
+> > to strictly align with the example IP block binding every time it has
+> > an update.
+> 
+> But Rob's script are reporting issue if they are not. Please take a look at
+> link above.
 
->> From: Jason Gunthorpe <jgg@ziepe.ca>
->> Sent: Friday, June 13, 2025 1:27 AM
->> 
->> On Thu, Jun 12, 2025 at 08:05:37AM +0000, Tian, Kevin wrote:
->> > The initial v5 patch [1] from Nicolin was similar to what this
->> > patch does. Jason explained [2] why it's unsafe to destroy "userspace
->> > created" objects behind the scene. And a general rule in iommufd is
->> > to not take long term references on kernel owned objects.
->> >
->> > [1]
->> https://lore.kernel.org/all/53025c827c44d68edb6469bfd940a8e8bc6147a5.1
->> 729897278.git.nicolinc@nvidia.com/
->> > [2] https://lore.kernel.org/all/20241029184801.GW6956@nvidia.com/
->> 
->> Yes, we have a problem here where we both can't let VFIO go away while
->> the vdevice is present nor can we let the vdevice be fully deleted.
->> 
->> At that point it wasn't such a big deal, but the new stuff seems to
->> make vdevice more complicated that it cannot out live the idevice.
->> 
->> Probably the answer is to tombstone the vdevice in the xarray so the
->> ID is still there and userspace can still destroy it while destroying
->> everything linked to it?
->> 
->
-> yeah that seems to be the option if the said life-cycle dependency
-> cannot be removed...
->
-> conceptually it's still a bit unclean as the user needs to know that
-> the vdevice object is special after idevice is unbound i.e. it can only
-> be destroyed instead of supporting any other kind of operations.
->
-> hmm if the user needs to build certain knowledge anyway can we 
-> go one step further to state that the vdevice will be destroyed
-> automatically once its idevice is unbound so the user shouldn't
-> attempt to explicitly destroy it again after unbind?
+I see, then from FPGA side
 
-That is what this patch is does. ie, it automatically destroy the
-vdevice while unbinding the idevice.
-
--aneesh
+Reviewed-by: Xu Yilun <yilun.xu@intel.com>
+> 
+> M
