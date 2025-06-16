@@ -1,105 +1,106 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE5A748D;
-	Mon, 16 Jun 2025 04:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0256748D;
+	Mon, 16 Jun 2025 04:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750046965; cv=none; b=lGrPN1l4+3G5Q/OHI5sxgUInm3UXfB9W2OnqzydekI/dFp2nQB5ADCQG1rsFqlawVr45BDCzsjFUZgTahfLS9fTe0otobNdZXP/BsyWjukNaP48LOhPOiMM/FFfHWpij+gNTOzOLwWrH1kTk1oJy+CNZMFNt1z0h57RXK5zArZA=
+	t=1750047120; cv=none; b=KtxucJqmtgHLmaWbjYo1T6eQ/9j5u9AruShCgbrCQk6jusvpPApAoO834ShtjoSX8OMdnQQTOEXbaFIi4lLyEUTtgj5GzdLGmsBPyGanuSUvueyon2MH6/2LKXywDHB6A2mZoAsV0GJOatq3PskDAOrcneoyawZzn/kbsKsm00s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750046965; c=relaxed/simple;
-	bh=djI8g1JpgsRAjUj8Dc2+uUnKHr91231GLP6XPF8dB3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOJnvsuNjiD1QroWhQmK1O+iGYcMXo64n/hd81Ec9SjrRnEJlnhEVRj95eD3AvaEoX7YCnfQBV5Z8Ll93HEcXEiLtYkdxucXM8UPUXIjP8CUyokk2YzNHa3TKd1L7Aq6BXhxZRo57jkGriSW0c8zVx1iZZFCFsOc/0Ae6nLVQzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Dkr31hJx; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1750047120; c=relaxed/simple;
+	bh=BdyC90Qn1wdecaLVG79GIGZDrfU2hK8l5KTPBf/l2t0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L2ZDNxLIjKRfPlruxFbkbYko7RmtfNvWIXL5ndL/kAgn3XK9czPiVMmJTY3UTN5EBfiu5arVyPUxi995+zKjXJ4XBSJstp01/o759xFD1EJwdFNM4wRg/t/C5LX8lbL+g1U3Sg3SHigbbTOTRwcEcdcYoARBSWYgq/s97OnMpN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LNEIIpBD; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Dkr31hJx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=I38ai5ionxBMkBimwgLTi73TMk2JcKNFvw44Vez0IHg=; b=Dkr31hJxvLQnMX0CfUojD5ZoE7
-	MusiFgiCS4vFeeOt6FIPojpyxxSZVMUfETa4aO4WEzxp0Mjc4uOXbiK6zlntrb0LOL3eEZ//QO29I
-	1QPx96pD1ghlO3yPOzExTtEJ5KpKXOeEsJUbu9oED8EkTc2ABJC59nNNWQkr7t49qgLqu0Lo/4O/P
-	N0MTEVx+OkOxgm2Y6507kpc/JUHsMWiIi16uANk6vdK8E/qCV5C7q+Vr8nWeOmcYUJU5QmOg1pypW
-	TRIDx0faC1zS86z9Bm8sHbovNm2tMcfNbZQLNicr/kkjQ66KlAP2x2YVqG2HcJI6DnWoKnUoeXe+8
-	BToQgXOw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uR0uf-000JCI-2h;
-	Mon, 16 Jun 2025 12:09:18 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 16 Jun 2025 12:09:17 +0800
-Date: Mon, 16 Jun 2025 12:09:17 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: [PATCH] crypto: ahash - Fix infinite recursion in ahash_def_finup
-Message-ID: <aE-Y7VzdJTDJHsy_@gondor.apana.org.au>
-References: <20250611020923.1482701-8-ebiggers@kernel.org>
- <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
- <20250611033957.GA1484147@sol>
- <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
- <20250611035842.GB1484147@sol>
- <20250613053624.GA163131@sol>
- <aEu5cyDOMcKteW_b@gondor.apana.org.au>
- <20250613055439.GB163131@sol>
- <aEvmmr0huGGd2Psv@gondor.apana.org.au>
- <20250615031807.GA81869@sol>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LNEIIpBD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750047112;
+	bh=jfUtfepG9hGzFcULcP6CDM0WszwuNUz6BqXP9BIm0NI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=LNEIIpBDkAqJh3XAFaetWHFxjZtEle1YpteMFnVWQEVDL0XQyA54Y9zi4BlOZV1Hr
+	 c1FBI+j/UzxxCzJgs8qBKiL4Mi0cS86viVkwuFlIByK0PDYX7yKdEKYu+b95p6S/x5
+	 t30OAiVcfqFGVHHrLj/rkgwRPiujqo3KKcPcEM0OgwQnY1M9KOoXK8ESnzobJhNbct
+	 Zd4p8OisM5raCFEOvQ20vX26fIi7lDJYREXU+C7LqaIbn/+EGqxh0aUSHm1JRxkX87
+	 PGtaFpQbdnZh2mPWvQG9/9iU/kNA5HgcHn3vty5TchhN71qu7VEZaBWrmL3HJl7M+/
+	 oo1xN1Na/g1Mg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bLGm80p3nz4wb0;
+	Mon, 16 Jun 2025 14:11:52 +1000 (AEST)
+Date: Mon, 16 Jun 2025 14:11:51 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Wu Hao
+ <hao.wu@intel.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Xu Yilun
+ <yilun.xu@linux.intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the fpga tree
+Message-ID: <20250616141151.64eb59e0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250615031807.GA81869@sol>
+Content-Type: multipart/signed; boundary="Sig_/R+e/CqPHcGl6RkRsKZ+h6xs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Sat, Jun 14, 2025 at 08:18:07PM -0700, Eric Biggers wrote:
->
-> Even with your patch applied, it overflows the stack when running the crypto
-> self-tests, apparently due to crypto/ahash.c calling into itself recursively:
+--Sig_/R+e/CqPHcGl6RkRsKZ+h6xs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the report.  This driver doesn't provide a finup function
-which triggered a bug in the default finup implementation:
+Hi all,
 
----8<---
-Invoke the final function directly in the default finup implementation
-since crypto_ahash_final is now just a wrapper around finup.
+After merging the fpga tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 9d7a0ab1c753 ("crypto: ahash - Handle partial blocks in API")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+drivers/fpga/zynq-fpga.c: In function 'zynq_fpga_ops_write':
+drivers/fpga/zynq-fpga.c:409:13: error: too few arguments to function 'dma_=
+map_sgtable'
+  409 |             dma_map_sgtable(mgr->dev.parent, sgt, DMA_TO_DEVICE);
+      |             ^~~~~~~~~~~~~~~
+In file included from drivers/fpga/zynq-fpga.c:13:
+include/linux/dma-mapping.h:126:5: note: declared here
+  126 | int dma_map_sgtable(struct device *dev, struct sg_table *sgt,
+      |     ^~~~~~~~~~~~~~~
+drivers/fpga/zynq-fpga.c:481:9: error: too few arguments to function 'dma_u=
+nmap_sgtable'
+  481 |         dma_unmap_sgtable(mgr->dev.parent, sgt, DMA_TO_DEVICE);
+      |         ^~~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:504:20: note: declared here
+  504 | static inline void dma_unmap_sgtable(struct device *dev, struct sg_=
+table *sgt,
+      |                    ^~~~~~~~~~~~~~~~~
 
-diff --git a/crypto/ahash.c b/crypto/ahash.c
-index bd9e49950201..3878b4da3cfd 100644
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -603,12 +603,14 @@ static void ahash_def_finup_done2(void *data, int err)
- 
- static int ahash_def_finup_finish1(struct ahash_request *req, int err)
- {
-+	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
-+
- 	if (err)
- 		goto out;
- 
- 	req->base.complete = ahash_def_finup_done2;
- 
--	err = crypto_ahash_final(req);
-+	err = crypto_ahash_alg(tfm)->final(req);
- 	if (err == -EINPROGRESS || err == -EBUSY)
- 		return err;
- 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Caused by commit
+
+  f9b5ee4364ed ("fpga: zynq-fpga: use sgtable-based scatterlist wrappers")
+
+I have used the fpga tree from next-20250613 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/R+e/CqPHcGl6RkRsKZ+h6xs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhPmYcACgkQAVBC80lX
+0GyZtwf415FIfPYDn85dQujwHy+88OhCy/fOJn1HF1hqjEsMPVf2o8Wb1UD/Fu2G
+UFdRuDxXfufIzUjiko2HU+I4CKMBxfeUwH8Fnv/2MRkLOs4BNcGZJsfK+ENNaqGN
+gavyh3Q8sJujyoIOi8AInFN26VOP+AfHvLxSpcCb2upbM4g+1gyvnJPm7ihbDY8b
+8O5EOcwc9ziATf3jLzpoEylVtI31+VNDctXFkGGrjtMm7oHCUhmE3hv3VAuAcyGW
+tmsCVH+cWP2Yic8SwmjIVgoBx43TP/XoNxsBULj4RAeOu/h4ZHLtYoRfuD+OxMgE
+i8qx82NQ6PlAdHJFOmW4IqbsnGru
+=xnqg
+-----END PGP SIGNATURE-----
+
+--Sig_/R+e/CqPHcGl6RkRsKZ+h6xs--
