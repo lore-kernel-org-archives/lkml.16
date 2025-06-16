@@ -1,92 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BE81DE8BB;
-	Mon, 16 Jun 2025 03:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6041322612
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750044914; cv=none; b=HPujLO9QnySghNZva3Xm5wBkqiYLVB7IJZLq3oabkQrLb0bzP24s0wtD6lxqc6xIDGbYPwTcCf1SazsM8lnEeJB+Xrpc98h8ZsojUI1S4yBh4W6hbJ7ESdke2w5wp98iQPElnFSF+DzJBacdLeNAbivRH7nZx1a9pIVBgdAYk8U=
+	t=1750045233; cv=none; b=TEK+KStuScuLVuVNdD90/Szl7S5nLrk4+l41wX0PtbNJRBnKFFeL401zs/4a0f6OVmsUvwCImAyY4KNf/OkjmZACEzznVNqUKMz7v0S5smI6ykuAUesoPG9ixHpIhLMiOffX+pm1CI2U5bPTQ573rRry9wHIkr9t9Q/UaTcVLXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750044914; c=relaxed/simple;
-	bh=xUiaQrK9jzGMfYv6/h+DNBKT/uNE7jcWo2wKABJN138=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cExqpE89LS+uI8TMw5NDLyxSpmFDjoyzjunIoHdG4x21m9+ZWmYhCdvJ2XwILLov7SX0kZV1v0aLLMOrunIWJtLfBEDcXhk9HzOdwHOea4BLSYK/cuK1lxL94BV75p6CabPpZHPFfEWtKOc8bFr+vn9ZU4NOum0kHjiZSRCpLyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nt71+uJx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750045233; c=relaxed/simple;
+	bh=+wpO5vOrEQ4BK/d9nRdCszBbHM36E175f1TQdxC1fjQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bNVTNeoj6UQeZranwPnyeswOADFVrBE9afzVnvJzg8CDYsQmAVi4rxJcJHseJKRUkQ8JTehrBMttR+2RzYBVTqafKdyeQJvn4JRugm1GkEL01QubhoWTAW/3sL2r1mBu38nwXPu/WHjs398RIH1W8ZAMmeoM8cR/0ZK4daa5whI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F3OCiW3X; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nt71+uJx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13430C4CEF1;
-	Mon, 16 Jun 2025 03:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750044913;
-	bh=xUiaQrK9jzGMfYv6/h+DNBKT/uNE7jcWo2wKABJN138=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nt71+uJx7QXTGOtKf0VR+sAJ35Rj1uC0kefyQak5IaZLMFuMM8BdwdU4dCDqBFRfu
-	 m1NNJSZwh/prl/Rqc7M/fRBReIEpgfLVOjVBiZSaxHsjkr6tyV6lA1TOiVbHWTQYY8
-	 CkaQxn6HN/HrWKB9yHJrwduvcMftkG5TvjI+Fulw=
-Date: Sun, 15 Jun 2025 23:35:10 -0400
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Marc Herbert <marc.herbert@linux.intel.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Benjamin.Cheatham@amd.com,
-	Jonathan.Cameron@huawei.com, dakr@kernel.org,
-	dan.j.williams@intel.com, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rafael.j.wysocki@intel.com, rafael@kernel.org, sudeep.holla@arm.com,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
- faux_device_destroy()
-Message-ID: <2025061546-exile-baggage-c231@gregkh>
-References: <2025061313-theater-surrender-944c@gregkh>
- <20250614105037.1441029-1-ojeda@kernel.org>
- <2025061446-wriggle-modulator-f7f3@gregkh>
- <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F3OCiW3X"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2348ac8e0b4so191935ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750045231; x=1750650031; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LzgBhndjMqPOT6CtXswDurGqVhDAcemrLGOhUx4RtUs=;
+        b=F3OCiW3XY9lfUsfLw8vqTn3DK7Gon8WZZgvjVAA53iL8mDGc+GwT0zSCpAtUjythho
+         6KkEc6hVvXCB4mAADcZWVQBPdDDIA0rGQHvyoaGoorSvVf+i4EBc6rDXA6j7+CDJ98NK
+         UdhzR4EWi1Sam5sELQmCoEo3jWJHYO/8r3VOfsU2P4Mfqlr+OQdQFY7n793JZ2ui5byt
+         iF6EmHqV6kKsqh3YPqtZyNsBLzJkSy3V2oAuWp1QnMcJYCPGftRklxzpaQ/qF4Oop5Dm
+         W8iK3z4fmbj8YzqJRSW1M5xzBugVdMiTHIV4xCXPQAszZTBEPPD/l/qzF9insT4lEUON
+         DdGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750045231; x=1750650031;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LzgBhndjMqPOT6CtXswDurGqVhDAcemrLGOhUx4RtUs=;
+        b=gOL2uidJJhkc/iWdKdwGOOv/Hg8Xv9ldx8nzB0fYLRvlENTUBkiuf2xtJ7LjR5N5Xl
+         6ttxMo97WRP/lO6C53XClw/lqmwp9eyMPp0vcO+CtZy67Z9iGFG7+EyTzA7jYudDY7q4
+         KOcydACp9OQX5yNMgfRw88OXBgTXoNvcZjL4Pgyr+Fot+FwDBgxyuYv+fWZ036+au9Hl
+         oyCYiNBRr9JPuAQly7AEFegKHOpzIjuAMZBiRUcLxion7rwXAA+SOy1mG8Ab6g6QjLyy
+         3arK31KLY6QdJM69VRQEhyPt4vyRb/PrPKwKFNChQXCLR9OkOYHTcfXL/fFprZCxeHbt
+         rqlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBhZ1t3Eq6lINvWWluCvcMS3FvLFdAuubnjfOcI2JRVx3W6M11O6NRnGGJXUZrgeJYFIjNTGcSJENZoIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2IcOhO5sUCxUtVHV+4n9Y0kszInE3NRY/k5eXQlS1H6lProQy
+	b/NSi7fNtHgcMQwnyuq8gMGDNN62xAJJidVG+mNg7qrD29vqoETrbetzOc6of1JrVQ9QpXRFHA+
+	w3Xmncy07S+mcZDIzWCR7fXX2ehifGsr/ena3mnAD
+X-Gm-Gg: ASbGncspCD9+3P9z6chrEH6Qmj+c/J3MeFkaQ4sW2U3YiobUsBy7f9jR3yCTuNgCJ+r
+	ex7JEnPM3P/JYOnEg9WI1UuSvpep/vchBQdH1N2SmS6gtJXQz2VGyGavJpze3nQeFP6eGgFAZlA
+	e/z6V3g8drNDu0B9tIl9EwNFi+pdYpZ0ovZml0su7Okuh+TS2/de8trVtAdmHBcLL8FPdyS6iC1
+	1ON
+X-Google-Smtp-Source: AGHT+IHXcT2vX9Krkn2g4Zl2kbpzltNtMIZEW8N279/zEVRf9kgxBV4pT/SfkMOq2XO/c2V1t/6FSoNdo+0LBNkxRhA=
+X-Received: by 2002:a17:902:d4cb:b0:235:f10a:ad0 with SMTP id
+ d9443c01a7336-2366c81e9bamr2824415ad.28.1750045231218; Sun, 15 Jun 2025
+ 20:40:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
+References: <20250611095158.19398-1-adrian.hunter@intel.com> <20250611095158.19398-2-adrian.hunter@intel.com>
+In-Reply-To: <20250611095158.19398-2-adrian.hunter@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Sun, 15 Jun 2025 20:40:18 -0700
+X-Gm-Features: AX0GCFsFdktkIyRS-z1RXzCrSyF5K7txD3ZwNzQC82fURfZET0jzqjahyxLWu7o
+Message-ID: <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 14, 2025 at 07:53:34AM -0700, Marc Herbert wrote:
-> > the kernel relies on this not being "optimized away" by the compiler
-> > in many places.
-> 
-> I think "undefined behavior" is the more general topic, more important
-> than null pointer checks specifically?
+On Wed, Jun 11, 2025 at 2:52=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> From: Sean Christopherson <seanjc@google.com>
+>
+> Add sub-ioctl KVM_TDX_TERMINATE_VM to release the HKID prior to shutdown,
+> which enables more efficient reclaim of private memory.
+>
+> Private memory is removed from MMU/TDP when guest_memfds are closed. If
+> the HKID has not been released, the TDX VM is still in RUNNABLE state,
+> so pages must be removed using "Dynamic Page Removal" procedure (refer
+> TDX Module Base spec) which involves a number of steps:
+>         Block further address translation
+>         Exit each VCPU
+>         Clear Secure EPT entry
+>         Flush/write-back/invalidate relevant caches
+>
+> However, when the HKID is released, the TDX VM moves to TD_TEARDOWN state
+> where all TDX VM pages are effectively unmapped, so pages can be reclaime=
+d
+> directly.
+>
+> Reclaiming TD Pages in TD_TEARDOWN State was seen to decrease the total
+> reclaim time.  For example:
+>
+>         VCPUs   Size (GB)       Before (secs)   After (secs)
+>          4       18               72             24
+>         32      107              517            134
+>         64      400             5539            467
+>
+> Link: https://lore.kernel.org/r/Z-V0qyTn2bXdrPF7@google.com
+> Link: https://lore.kernel.org/r/aAL4dT1pWG5dDDeo@google.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>
+>
+> Changes in V4:
+>
+>         Drop TDX_FLUSHVP_NOT_DONE change.  It will be done separately.
+>         Use KVM_BUG_ON() instead of WARN_ON().
+>         Correct kvm_trylock_all_vcpus() return value.
+>
+> Changes in V3:
+>
+>         Remove KVM_BUG_ON() from tdx_mmu_release_hkid() because it would
+>         trigger on the error path from __tdx_td_init()
+>
+>         Put cpus_read_lock() handling back into tdx_mmu_release_hkid()
+>
+>         Handle KVM_TDX_TERMINATE_VM in the switch statement, i.e. let
+>         tdx_vm_ioctl() deal with kvm->lock
+> ....
+>
+> +static int tdx_terminate_vm(struct kvm *kvm)
+> +{
+> +       if (kvm_trylock_all_vcpus(kvm))
+> +               return -EBUSY;
+> +
+> +       kvm_vm_dead(kvm);
 
-Is this really "undefined behaviour"?  There are a lot of things that
-the kernel requires for a compiler to be able to build it, and this is
-one of those things, it can't do this type of "optimization" and expect
-the output to actually work properly.
+With this no more VM ioctls can be issued on this instance. How would
+userspace VMM clean up the memslots? Is the expectation that
+guest_memfd and VM fds are closed to actually reclaim the memory?
 
-> > the kernel relies on the compiler to be sane :)
-> 
-> Undefined behavior is... insane by essence? I'm afraid a few custom
-> compiler options can never fully address that.  While we might get away
-> with -fno-delete-null-pointer-checks right here right now, who knows
-> what else could happen in some future compiler version or future
-> combination of flags. No one: that's why it's called "undefined"
-> behavior!
+Ability to clean up memslots from userspace without closing
+VM/guest_memfd handles is useful to keep reusing the same guest_memfds
+for the next boot iteration of the VM in case of reboot.
 
-Again, that's not the issue here.  The issue is that we rely on this
-type of optimization to not happen in order to work properly.  So no
-need to "fix" anything here except perhaps the compiler for not
-attempting to do foolish things like this :)
-
-> > If "tooling" trips over stuff like this, then we should fix the tooling
-> 
-> Because of its old age, many quirks and limitations, C needs and has a
-> pretty large number of external "tools": static and run-time analyzers,
-> coding rules (CERT, MISRA,...) and what not. It's not realistic to "fix"
-> them all so they all "support" undefined behaviors like this one.
-
-If they wish to analize Linux, then yes, they do need to be fixed to
-recognize that this is not an issue for us.  There is no requirement
-that we have that _all_ tools must be able to parse our source code.
-
-thanks,
-
-greg k-h
+> +
+> +       kvm_unlock_all_vcpus(kvm);
+> +
+> +       tdx_mmu_release_hkid(kvm);
+> +
+> +       return 0;
+> +}
+> +
