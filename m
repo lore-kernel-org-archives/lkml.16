@@ -1,123 +1,137 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D142AB0;
-	Mon, 16 Jun 2025 07:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3819342AB0
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750057463; cv=none; b=Ik1/5DxckGVQ9duKjld+PXtY3Qj+ogDJCU1F5bEl1xHFi6cy4duB/yVxp0KzJ6TPqYQ/wCTu32iV99k0WZ+OHh3vdR/Psqv6sk+ReBePKzSZ2E4tpwrRgopDgfs8wUbkichozrjSHJLA9OYNnKVUop0Mzgq/k2U2lTiObB2xBMQ=
+	t=1750057469; cv=none; b=gL64dUnXGWselFvif1xb1i/sMz4SeLc0zvMFBZ87lVIDXx1iUuc21nO5wSN8vUSRw4mnagmg2P4f/0sgYNd7FztMOL/pOCsE5KmG5XP0ieuBMSv2tk2ofGNpclQda84BdPXbWOjSLdyywrW/lZhNkqj5OpsRAYM34H6szwKuBYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750057463; c=relaxed/simple;
-	bh=nLhGjURpTCk0v2y/8BYqjSMh+AN7in3C1Fv8fLv+X48=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mjdmd8aUTNAGstWoNDkGNtXhqTPzbajBIH5Ew0bTryfKKT5vw0yEnC7eyopiPaIVaLTS2GWQZRV7RE9IXOU8lLmfqVCOiPvLE8urBEqhy7M1m16br5jthROYBR0sPEzBgSoTwmsoPY8fbQDtxe6Qoe9u5VGPHsILa0TONnX0PkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RvuZAWtw; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750057469; c=relaxed/simple;
+	bh=DkGDjczW+RAHUbptz63iFFEXvw00+iORY5XJP5CER6Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qmoKqH7SwjXcfMDf9EAmJrhu8+XzXuk9XgedHyh/tp3AZNGB8KUVrrPeFyKmkh6lHu93qDzabKMBdAGnJm2DJD62RGKAoGBN8Iqs5vDvtW+TNe+OWU4iJhIngc95/6nSplLHptQ1hoxOfbKurgX2UoIqvkSBQWHn8s/MQx8yAho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Qx3HVd+P; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RvuZAWtw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C090944358;
-	Mon, 16 Jun 2025 07:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750057451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rQpUEyE2hSL3/anSM+mUj3B/dfO987OTyH9st7Zw9rI=;
-	b=RvuZAWtwncTDYBTmDQAlBIYQ37ITn2LNv8AE9RnE6ibp9xhLMXoG/P+FYoXnQn4WXwPoAU
-	/kMIcIHg7mBPD6KS4fM4TATpCovYXdlJ/S/5tPFqDNgWBxRwyYcORmltrjG6O9PZf37lQB
-	IQmasJyHwwVGFYltHgdTmBdQFOSbPNwi/8qxzvBfE4MxT7JDW0imBcadoL9/jsDUuPzXpw
-	fBtVIp8AFo8XzSXPdRTZcI0QUmtJbiBZNxj1lORjNz3V1ub/LaYlPzQYKTAon4QLlOoMwk
-	PeM3kR9n0FPn0e2zs4hpdyyi9dxvIyrQ9p8iEFKfpxusw0Kmk7p6j5aYgBKFCQ==
-Date: Mon, 16 Jun 2025 09:04:06 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown
- <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 06/28] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <20250616090406.32f62ca4@bootlin.com>
-In-Reply-To: <CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250613134817.681832-7-herve.codina@bootlin.com>
-	<CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Qx3HVd+P"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FMkUKt014411
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=8CSXs8YLFA90qJz0nFGCAuGj0c2/SeDodgr
+	F61jLHXY=; b=Qx3HVd+PIi1iUXhXWS1X0pQXVs4oktpQBwFEUbjfwhZI1nXN1k1
+	ygxf+9vQ6BfplAZP9qm4SA1LWblwhQUsgFFq0P4oJyV6rpqga8Y4rsa+OZx0pmtH
+	3fB/3mw4zsY2YdH9X1sKvKfq/Xr1XO5EkKb4kAhUYlqLmj3MmD8i9hzRX3TuZoIs
+	5gdtCekr63Xh7ScJUhinRA6LgxrrXLkb5yFtOwMRhEvBPn/sfOxZexSU4MmHpTOH
+	iblaMvMJbh688c4msQCZBJu3VgIlYHCODnY0RgqESphk+MJJ3s9RsCuIW/kgCn98
+	EsEv/3k/Dhc1JRVdWhfT9/uWPUT0xFK78yw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791crkbsn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:04:25 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2349fe994a9so29574725ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:04:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750057464; x=1750662264;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8CSXs8YLFA90qJz0nFGCAuGj0c2/SeDodgrF61jLHXY=;
+        b=oVtzK/aGXI0hNQYb6/5lVtR2ltWtNEL3do9rOSFrC2lOB9YCI17oipBxc+BNEzF0zT
+         btNvJCbBreQs1d6M2PR+FWZoVanGX7tkK0fZVggGkiCV5j4TXMRpWOLkzUu81T9VQtDW
+         ftgLGIjtw0vSCqIYAf4Mrg4TdsJNkBCBzrpMjs6qw7F1+YJj+SJZDRlnOGzgwMon+NSn
+         TUE1ahgYVJ/Fh6K2kbbX/+re/az0unSHlmHAEnhNRrm20qyeqDcPX65Vu2yXRIKoARAi
+         f7AemZmlhr8kwSh8TiEZfOFvwnsOxa8ESXRQuIWV9f75fJZVjoQC65r6KFDeF/6ep0uR
+         VhNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWd5QGqk0MgujBj5X2B9WyCWrVA4G2HZSAMwjjnLTeuzPtjyDnYV0Q0RsQRjnD+rz5cDXfxJ2v8hxTjaCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyikgYUUQLonuG7EwGxIRRxlP8EL+HJMTKMAbVx48CAmoPpttMm
+	UqgTCndbGU6fi1XKBPmq5Ddgb1XH0xFzBu0ZIObwSzb09nI9O6qm3aH1vShxnf/8rdH0hkCFt/5
+	LeG2PBqirgLYIj7zLrTi87b4frX+bg/boBCsIlfLAVSUe/FxC3pJmHfcmJ0t5I+WTTro=
+X-Gm-Gg: ASbGncvMXudbbm+bI5y6hI6lMX7qz74oPTyta70wAOi/FK6++kFYulAE0y05H/LoX0q
+	iUqIxV7QLCo94exUdWYhelIMWouMavCxEGHxzzrdqjjrb/nvBDZS/NHiZRhHF6WGt635gAc4C7v
+	nYj62HUNyuJzW5tvwEjQefYP5SegZPY3k7Webb0i7jOHFMsKEOiQOmKiRD5/GErDxc40nsU+N74
+	Cf95Krpk30kIkT/hQoPW8ILhkj6k+rpnm1cBjzn9I6A1JWbRceQzgDgtH1Xrs70vs0CNIXmnWGu
+	yfnwtvq9AnWB2xI+MqYBut2OjOICo6+yn7SD0kGEYu54y8Q4JuOwekZxxNo=
+X-Received: by 2002:a17:903:fb0:b0:235:e71e:a37b with SMTP id d9443c01a7336-2366b13c905mr111686125ad.34.1750057464465;
+        Mon, 16 Jun 2025 00:04:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGK+vfW0KxFP2RI/6Wr6CaYhcpxAIyDnSQ9Z/QOwugNmsDFlDJ7ZFbg+QCbcqSaAEuW+soZw==
+X-Received: by 2002:a17:903:fb0:b0:235:e71e:a37b with SMTP id d9443c01a7336-2366b13c905mr111685755ad.34.1750057464012;
+        Mon, 16 Jun 2025 00:04:24 -0700 (PDT)
+Received: from hu-mohs-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a19e3sm54435825ad.82.2025.06.16.00.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 00:04:23 -0700 (PDT)
+From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
+        kernel@oss.qualcomm.com
+Subject: [PATCH v2 0/2] Enable audio on qcs9075-evk board.
+Date: Mon, 16 Jun 2025 12:34:03 +0530
+Message-Id: <20250616070405.4113564-1-mohammad.rafi.shaik@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvheelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgeekpdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrn
- hgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
+X-Proofpoint-ORIG-GUID: pYPaoVbDubmQ7JKcLtvVHeW6UKzsbY0s
+X-Authority-Analysis: v=2.4 cv=BoedwZX5 c=1 sm=1 tr=0 ts=684fc1f9 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
+ a=YkB-U3mbqUf8DnNMcaUA:9 a=324X-CrmTo6CU4MGRt3R:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: pYPaoVbDubmQ7JKcLtvVHeW6UKzsbY0s
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA0NSBTYWx0ZWRfX6NuzMf00RDqW
+ MdJuvOCv1u/KXv0yXaEjdjMEUGJzjb9CgRo5pkBGwLKPGrc+pO5rLKUVbXzXJ74U1ekcPE8er9h
+ 6/totibXEyvf5vOA9xQAbbIipqskXPAfERmQsNu5fasGS2lIRrgXS5uXebrozM7+isJFESIoluG
+ rdJi1cvSPwySG1pjdr5JXGRfsdSG+zzIPwadE9SmvgzCsusDaRUayodD6pF3SlOKY1gJph0JWtO
+ 6m/CsJIjoH5bTif3/ArprpCLVhn0/dg26jzfF7dFAtIyzLGJFnT12AhN3mChmna1UdgAfeuh2r0
+ HrdWRx8uJu/WFWR8U+Q1V/IbrxI2hCUJS7nkHqDFHiWfzaroPE1xvtCihX+ABdzSK3aT4sTknSR
+ 7js8QGM/83ZC0bLgREUCfV59tjjavZfd0RNtfN+8++2nF14KknWgiVmX7KssP9QPg4I4l191
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160045
 
-Hi Saravana,
+Enable audio support on qcs9075-evk board.
 
-On Fri, 13 Jun 2025 14:13:49 -0700
-Saravana Kannan <saravanak@google.com> wrote:
+Introduce HS (High-Speed) MI2S pin control support.
+The I2S max98357a speaker amplifier is connected via HS0 and I2S
+microphones utilize the HS2 interface.
 
-> On Fri, Jun 13, 2025 at 6:49 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Setting fwnode->dev is specific to fw_devlink.
-> >
-> > In order to avoid having a direct 'fwnode->dev = dev;' in several
-> > place in the kernel, introduce fw_devlink_set_device() helper to perform
-> > this operation.
-> >  
-> 
-> This should not be set anywhere outside the driver core files. I'll
-> get to reviewing the series, but until then, NACK to this.
-> 
-> Is there a specific patch that explain why we need to set this outside
-> driver core?
+DT-Binding link for sound compatible:
+https://lore.kernel.org/linux-sound/20250519083244.4070689-3-mohammad.rafi.shaik@oss.qualcomm.com/
 
-We need to set it in case of creating device-tree node for PCI.
+---
+This patch series depends on patch series:
+https://lore.kernel.org/all/20250521140807.3837019-1-quic_wasimn@quicinc.com/
+---
 
-Usually, fwnode are created (based on DT or ACPI) and then, dev are
-created.
+Mohammad Rafi Shaik (2):
+  arm64: dts: qcom: sa8775p: Add gpr node
+  arm64: dts: qcom: qcs9075-evk: Add sound card
 
-In the PCI DT node creation case, device are already created and then, based
-on information already computed by the kernel, DT node are created.
+ .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 52 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 54 +++++++++++++++++++
+ 2 files changed, 106 insertions(+)
 
-You can see that on patch 11 (dev setting was already upstream and it is
-replace by a call to the helper for PCI host bridge) and on patch 13 (PCI
-device).
 
-Other patches (8, 9 and 10) replace the existing direct setting of the dev
-member by a call to the helper.
+base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+prerequisite-patch-id: 853eaf437b81f6fa9bd6d36e6ed5350acaf73017
+prerequisite-patch-id: cf52fc82e606ab87458339f71596ca31253e91ee
+prerequisite-patch-id: 3617ce3b1790bc5b8e50dca6c3ae482759dcc684
+-- 
+2.34.1
 
-Best regards,
-Hervé
