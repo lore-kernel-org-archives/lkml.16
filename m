@@ -1,493 +1,202 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4CA2063F3
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F9E1C6FE5
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750050960; cv=none; b=dCuMc2atsV89OQ2zkjKpVjT7EHDhhXj1SSPBdv9ApCyzL2nMIzbflTH8c+DGrAjuA6M+VOnhh1UaTi2rCkKug3aejjrcS+NRScSE6oL+Mb5pMmbCFknmSGp+wNKvCe0ScfZkfKB5ig/+pCMbk7Oi6kMq2msrdFx0PlE3gNoN21U=
+	t=1750051105; cv=none; b=RW/4IlAm9rF+TWmvXM9FIZk1a78T8+3k+tMbvnOtNEH/BpoC4GtHkShiYgflJ/giHeXMZwc787mCXCh+xVVRfT3EoKnI3krO/h2RQikrU7Hjy3gbLLvBb2CvPwVDuQ+TWIuloi2MMVlgT4omPCUWMD0IeA6M9jgTczvWPTpBwcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750050960; c=relaxed/simple;
-	bh=vMpp3wE4YxxlsaW079icYYQfKWfxXZSmzDTouEee0nc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=o0aE0oEhh1XtKj/o/tsJ52jSLJ31+jm9hAkgqytLg1v2KqOM+ezo6vE3JzdOCaUgIwY45wmp16tm+UHp/WKAX64FSBLOpJka+PKK79FQEb/wPTqn2ThPfcmkK0LLkD2DnnymTYpvYcoaRu/OZEyTBVkdU5a7K/nO0zrZGWNHnMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oZhmwjsY; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1750051105; c=relaxed/simple;
+	bh=dSTO6ceL4cBcJlGtrwFEVwSB8h1XEE3UyPcaVRgLcoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ETFx6PNFxme48t7/w1C4A2nbuIPFcY4RyCRh955XtijUrhLPHnaSGZW+9Zq2b/J1DDUem6WSEUtUzw4GnFOVtnm7Taos46Zy0VvPgaN33ifPnI6h5K0jfYLy0N4NyzAHy6EBcuVj2um3+9Y+eDE3Dnqc6kpx7ae7jsGOlTH1yFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LL2R0Cy5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZhmwjsY"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2356ce55d33so53222505ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 22:15:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750050957; x=1750655757; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jEbchuSB875SLepbJuHjmJtYDConDg5qTi58URUH7g4=;
-        b=oZhmwjsY/Ro68dNtUlXLE/X8+TxFQNEkf/hCVNQvRup0z3IX7yndHSszVjZNRI5ssS
-         N+sh0d+kEgZV9kbc3yYlT2IliWDASANtM2xlr5RDSJf8WTwlDQjQ7xhh67H4Lel9Yb5j
-         Iinec5VuPtxew8dzCNl96751/kMy867xT5TO9xLOtmm0yXk6YeG4+NhzHkheeMvRqJf8
-         mUigVTodqC70J+n+FZkcIJDeFebU3O9rX/gHkQpkBjUP5aUHLjKKdPQUCUxujSUmrWwu
-         naQcXswpxYuZMHSm10ddiMiGYIxna9rlY3ihFg57moR+Z68+FvA1bfLYxY7AsweC89Zg
-         F2Zw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LL2R0Cy5"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FMwodn021521
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:18:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eah5o1kUJVZGAXwBZNw8iMgtalpjcoQR+VZU+ZsxQwU=; b=LL2R0Cy5w0o97slA
+	hXfKgWsa/Mq+CtRLCE7pdpmGRx11xMV5gQaahmOGEWtHOfykvb57s4pDlLov80vd
+	rpPDi/1YZkvBpGA2tAz2iSYVWqxNbs7e0uw0hp52LnmX8bOqajNbhG6FyPyxmS+y
+	nr382m3JvFj61XXQe5xPw+Sz0TNcw3PtM33cjgMkVkSr2ogU9tgcygH+7x8AOuWl
+	KdQam2heRJVMiIwVI26oGRgTE2FjGElDHB9HpIrfbdTVgS6Bbz7WPKZDwgj9RgsF
+	hVsBLyiECHifKPbwkM65VjZ4WUocRWCBKw92SaNV7QqTMDLlSigPNShLdeuwBNEw
+	EEmISw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791f734tb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:18:21 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-231d13ac4d4so59043625ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 22:18:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750050957; x=1750655757;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+        d=1e100.net; s=20230601; t=1750051100; x=1750655900;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jEbchuSB875SLepbJuHjmJtYDConDg5qTi58URUH7g4=;
-        b=VEHe0JPZKlyLRGnjlUIa1eF7E4gLrGI8X12icJjBubQNMK8wUFgBIGFNKlRXgNv7xw
-         0VEXYxOIczfmqPbwbf97izhNeie0Dofe5yERGHRMjLwnqp3XIrKJteStF2JK8jnMIJPO
-         0ltjYU3+i9FnMTEwlgLwk3eUKLK9+n1WzTvmXrwOd7oAQ46nAYXcpmpL1/U0VK58V9+H
-         URo96x6dIJQiUhamgniK+TGlIpI45dJwoh7yh66C6ANHLu2hg451EqO4TOzhaqsfcUs7
-         TXw0jptFoWn+2vN3rc6b8yC613mTIFpP2y0+qWTCVlaFbffEsxpgIVQD6VFPzfqaa24V
-         Scrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVh9+TCcoSVSlS0WQLu0cXWQplH5LXJGvuvw0UMUH+jUVKzA80txMWz5YhFnLUk43X5Y4xouPZ7Ia3bkZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR7jkRYG2OFUnNuNdfyuNYNge3ehTZJ44sfsMDUwO8xj59oaPg
-	godoVKMyLfnJazKKjao6cHLvI9g9FPx8IgeqUMM2T35c1nxUrudJmFb1SvN4E6f7XAGJab3djfF
-	uIca/Y/rklg==
-X-Google-Smtp-Source: AGHT+IHKCKhRh5mvyE2Tcm3j094T49EqOlAYmNKvSEKLlJL9zq3tw4Dyo5ImZMUXVRQbYUKPZvJU7C88do6K
-X-Received: from pllk22.prod.google.com ([2002:a17:902:7616:b0:220:eaab:51c4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:da8c:b0:234:ed31:fcae
- with SMTP id d9443c01a7336-2366b3504b7mr123875505ad.22.1750050957000; Sun, 15
- Jun 2025 22:15:57 -0700 (PDT)
-Date: Sun, 15 Jun 2025 22:15:00 -0700
-In-Reply-To: <20250616051500.1047173-1-irogers@google.com>
+        bh=eah5o1kUJVZGAXwBZNw8iMgtalpjcoQR+VZU+ZsxQwU=;
+        b=wrD27bSCG1xD215FEe0IYONs0GKovTulRRzgkUqVi0WSl2gxfh8ZNDIt6WDYwooTq1
+         yIKrnfZIxbdqJiltdHIwTpBYgtNz292A4B3Z0cs6/0Gbwzoz1SWOSvgDb2eDS9hdKvQG
+         T3/GXNSWtMzKryq2ePfSy2UXWAfuL48QPRljgwFtZnkfjuhMHw+1zlIhhaOyq/e2LSUu
+         usc1tHsocWgJElxAo4nDvc9E0uq13Sk5XaVkxXWS+T/Fv908D0Q0/r3WT2TjMV4PLDAb
+         6xEFiHjZ+izslyQBQSGHBLU6x7enRpLILRyFs3Pbg3WS3ot/rpkjEM4WeV0XRtDiEWCI
+         QQ7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXrpH91Ek7J9oRGHlMeZGrbnqqo/j8SDbIwqzqZcQryatIePgZ6t7IEoHCmyVn0ZNFs+RB9XlV/dWJ/k88=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3IyO8o89nEBbQBT9TrDAN3WpU6ovF1p5HGDu7UfatTa1QPi4x
+	0rd4jRES+n4bV6KXpg3eLvHArpyezONQZv17GZ+w88ib16ebRE5h8U7D5o/n5DAXP7FN+voYSGk
+	hr+hK57w3osjSBRX4N0qnJy+7oBMsi2jYWR66VDQ0afY26m8eQYnODjQYgi6Pq6IAqPc=
+X-Gm-Gg: ASbGncvWVHc4DUv9k5HII7TU3apxhC4GyNrLJeNhb9II/LF6tMRvtlGeOmNEhvCY8Z7
+	t9fiUHWbrIuqdjNpFRBTCLiKFlQxaRhMFPZbJ8eKHdv5w05xUtBRNiI/Hf86trrQa0PJcVrNaPq
+	QxUejS3X87R6rnhN5MmGTjVYKTFwYZ8eQXb6qfq5adg8gBCclR+vHJUjJ4wfN1L+1dgl6GQx10c
+	uLKfsTrJy4LxTDEF3pNrYNy975cTNASZdYXOsl/02t95RVj1BVgWj8R7+peLenORYY4sKvmbiN3
+	mNLK8r2JzyG/UO4FXP4pv1xDrOGiEJl5FCd6x3bCnJsODSawS4ML01km3rVZSJ8=
+X-Received: by 2002:a17:902:d510:b0:235:1966:93a9 with SMTP id d9443c01a7336-2366b3135e7mr102105025ad.3.1750051100107;
+        Sun, 15 Jun 2025 22:18:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKX5qugZa1AxrKnkhp2zsOgIOkWCwkCCSqcySZ7F3F6nUv30kFT3Ho/o5/GcaX/FF9+6nTvw==
+X-Received: by 2002:a17:902:d510:b0:235:1966:93a9 with SMTP id d9443c01a7336-2366b3135e7mr102104765ad.3.1750051099523;
+        Sun, 15 Jun 2025 22:18:19 -0700 (PDT)
+Received: from [10.151.37.217] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78204sm52672895ad.101.2025.06.15.22.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Jun 2025 22:18:18 -0700 (PDT)
+Message-ID: <a8b33510-c010-452f-9177-ce743b732d21@oss.qualcomm.com>
+Date: Mon, 16 Jun 2025 10:48:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250616051500.1047173-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250616051500.1047173-16-irogers@google.com>
-Subject: [PATCH v3 15/15] perf ilist: Add new python ilist command
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] dt-bindings: watchdog: qcom-wdt: Document sram
+ property
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+ <linux@roeck-us.net>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250610-wdt_reset_reason-v5-0-2d2835160ab5@oss.qualcomm.com>
+ <20250610-wdt_reset_reason-v5-3-2d2835160ab5@oss.qualcomm.com>
+ <20250610180345.GA2382213-robh@kernel.org>
+Content-Language: en-US
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <20250610180345.GA2382213-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDAzMyBTYWx0ZWRfXznlD7B6Nliry
+ FjeD0T1ObrORoIHtE9E8xFI4g5xboulw0Cz8h2Xwl7s5S0iKrC55KIdQLXJ9HA0cBUYylrRSKWn
+ 8hman/Hyj+Ld3bw550GQUyhdd+csuiCSzHd1KyuU0BKQ4fa9zPy5FL6vDQoHMeVQTSksG1VqWcl
+ LkLKBAlzLVzq0jGEG6OCwjvcZXcEldN7H7GRAOFe6b+Cr/0MEHLNUPEpo57X0TR4Z7vZVvFRilW
+ 55NahOtvZ0OT94tqDzPyRANC19zhA25J6MlN0WJ1spfQ25TZ+yz43P3IZtaX1i9GrHSCzY5tpQd
+ FAEXvn0sVShRcUR/LnZETyhCeJkqkGR0S0L8w0QoHkat28X8LkJhhWiy3Ih32kSJXtDKesxT/ky
+ k8NluJzaweT71K9HG9KLGfDm4vSH5bVNNGLbXNIFvZnpD4xsR7fJwEYRNaU+7pNb5+SgbIMG
+X-Proofpoint-GUID: P7sA5UNXSQwchMWEz2x2Y9l46KuLaxek
+X-Proofpoint-ORIG-GUID: P7sA5UNXSQwchMWEz2x2Y9l46KuLaxek
+X-Authority-Analysis: v=2.4 cv=FrIF/3rq c=1 sm=1 tr=0 ts=684fa91d cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=Xrx7LQK3kUNipwB-6k4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_02,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160033
 
-The perf ilist command is a textual app [1] similar to perf list. In
-the top-left pane a tree of PMUs is displayed. Selecting a PMU expands
-the events within it. Selecting an event displays the `perf list`
-style event information in the top-right pane.
+Thanks Rob for the review comments!
 
-When an event is selected it is opened and the counters on each CPU
-the event is for are periodically read. The bottom of the screen
-contains a scrollable set of sparklines showing the events in total
-and on each CPU. Scrolling below the sparklines shows the same data as
-raw counts. The sparklines are small graphs where the height of the
-bar is in relation to maximum of the other counts in the graph.
+On 6/10/2025 11:33 PM, Rob Herring wrote:
+> On Tue, Jun 10, 2025 at 07:15:19PM +0530, Kathiravan Thirumoorthy wrote:
+>> Document the "sram" property for the watchdog device on Qualcomm
+>> IPQ platforms. Use this property to extract the restart reason from
+>> IMEM, which is updated by XBL. Populate the watchdog's bootstatus sysFS
+>> entry with this information, when the system reboots due to a watchdog
+>> timeout.
+>>
+>> Describe this property for the IPQ5424 watchdog device and extend support
+>> to other targets subsequently.
+>>
+>> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+>> ---
+>> Changes in v5:
+>> 	- Rename the property 'qcom,imem' to 'sram'
+>> Changes in v4:
+>> 	- New patch
+>> ---
+>>   .../devicetree/bindings/watchdog/qcom-wdt.yaml       | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+>> index 49e2b807db0bc9d3edfc93ec41ad0df0b74ed032..74a09c391fd8e2befeac07f254ea16d0ca362248 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+>> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+>> @@ -81,6 +81,16 @@ properties:
+>>       minItems: 1
+>>       maxItems: 5
+>>   
+>> +  sram:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description:
+>> +      phandle to the IMEM syscon node that exposes the system restart reason
+>> +    items:
+>> +      - items:
+>> +          - description: phandle of IMEM syscon
+>> +          - description: offset of restart reason region
+>> +          - description: value indicate that the watchdog timeout has occurred
+> A 'sram' property points to an SRAM region (see mmio-sram binding), not
+> a syscon and offset.
+>
+> The 'value' should be a separate property or implied by the compatible.
 
-By default the counts are read with an interval of 0.1 seconds (10
-times per second). A -I/--interval command line option allows the
-interval to be changed. The oldest read counts are dropped when the
-counts fill the line causing the sparkline to move from right to left.
+Sorry for the delay. It was a long weekend here!
 
-A search box can be pulled up with the 's' key. 'n' and 'p' iterate
-through the search results. As some PMUs have hundreds of events a 'c'
-key will collapse the events in the current PMU to make navigating the
-PMUs easier.
+Let me start with the requirement (Please feel free to skip it). When 
+the system goes for reboot, Xtensible Boot loader (XBL) find the cause 
+and update the particular offset (in this case it is 0x7b0) in the IMEM 
+region with the known values. On the next boot, if the system is 
+rebooted due to  watchdog timeout, watchdog's bootstatus is updated 
+accordingly, which this series tries to address it.
 
-[1] https://textual.textualize.io/
+Based on the previous review comments / discussions [1], it is decided 
+to go with the above approach, i.e., name the property to 'sram' and let 
+it points to the syscon region (IMEM) along with the offset to read and 
+what value to expect. So that we don't have to touch the driver if 
+either of the offset or the value changes across the platforms.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/python/ilist.py | 376 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 376 insertions(+)
- create mode 100755 tools/perf/python/ilist.py
+Currently, IMEM region (which is a on-chip SRAM) in the most of the QCOM 
+platforms are modeled as 'syscon' [2]. So I have followed the same 
+approach here as well. Should I describe the IMEM region as "sram" 
+(mmio-sram)  instead of the "syscon" (existing approach) and retrieve 
+the offset and desired value from the compatible? or stick with existing 
+approach and name the property to something else? Could you guide me 
+here to proceed further?
 
-diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
-new file mode 100755
-index 000000000000..b986447f8831
---- /dev/null
-+++ b/tools/perf/python/ilist.py
-@@ -0,0 +1,376 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+"""Interactive perf list."""
-+
-+import argparse
-+from typing import Any, Dict, Tuple
-+import perf
-+from textual import on
-+from textual.app import App, ComposeResult
-+from textual.binding import Binding
-+from textual.containers import Horizontal, HorizontalGroup, Vertical, VerticalScroll
-+from textual.command import SearchIcon
-+from textual.screen import ModalScreen
-+from textual.widgets import Button, Footer, Header, Input, Label, Sparkline, Static, Tree
-+from textual.widgets.tree import TreeNode
-+
-+class ErrorScreen(ModalScreen[bool]):
-+    """Pop up dialog for errors."""
-+
-+    CSS="""
-+    ErrorScreen {
-+        align: center middle;
-+    }
-+    """
-+    def __init__(self, error: str):
-+        self.error = error
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        yield Button(f"Error: {self.error}", variant="primary", id="error")
-+
-+    def on_button_pressed(self, event: Button.Pressed) -> None:
-+        self.dismiss(True)
-+
-+
-+class SearchScreen(ModalScreen[str]):
-+    """Pop up dialog for search."""
-+
-+    CSS="""
-+    SearchScreen Horizontal {
-+        align: center middle;
-+        margin-top: 1;
-+    }
-+    SearchScreen Input {
-+        width: 1fr;
-+    }
-+    """
-+    def compose(self) -> ComposeResult:
-+        yield Horizontal(SearchIcon(), Input(placeholder="Event name"))
-+
-+    def on_input_submitted(self, event: Input.Submitted) -> None:
-+        """Handle the user pressing Enter in the input field."""
-+        self.dismiss(event.value)
-+
-+
-+class Counter(HorizontalGroup):
-+    """Two labels for a CPU and its counter value."""
-+
-+    CSS="""
-+    Label {
-+        gutter: 1;
-+    }
-+    """
-+
-+    def __init__(self, cpu: int) -> None:
-+        self.cpu = cpu
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-+        yield Label(label + " ")
-+        yield Label("0", id=f"counter_{label}")
-+
-+
-+class CounterSparkline(HorizontalGroup):
-+    """A Sparkline for a performance counter."""
-+
-+    def __init__(self, cpu: int) -> None:
-+        self.cpu = cpu
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-+        yield Label(label)
-+        yield Sparkline([], summary_function=max, id=f"sparkline_{label}")
-+
-+
-+class IListApp(App):
-+    TITLE = "Interactive Perf List"
-+
-+    BINDINGS = [
-+        Binding(key="s", action="search", description="Search",
-+                tooltip="Search events and PMUs"),
-+        Binding(key="n", action="next", description="Next",
-+                tooltip="Next search result or item"),
-+        Binding(key="p", action="prev", description="Previous",
-+                tooltip="Previous search result or item"),
-+        Binding(key="q", action="quit", description="Quit the app"),
-+        Binding(key="c", action="collapse", description="Collapse",
-+                tooltip="Collapse the current PMU"),
-+    ]
-+
-+    # Make the 'total' sparkline a different color.
-+    CSS = """
-+        #sparkline_total > .sparkline--min-color {
-+            color: $accent;
-+        }
-+        #sparkline_total > .sparkline--max-color {
-+            color: $accent 30%;
-+        }
-+    """
-+
-+
-+    def __init__(self, interval: float) -> None:
-+        self.interval = interval
-+        self.evlist = None
-+        self.search_results: list[TreeNode[str]] = []
-+        self.cur_search_result: TreeNode[str] | None = None
-+        super().__init__()
-+
-+
-+
-+    def expand_and_select(self, node: TreeNode[Any]) -> None:
-+        """Expand select a node in the tree."""
-+        if node.parent:
-+            node.parent.expand()
-+            if node.parent.parent:
-+                node.parent.parent.expand()
-+        node.expand()
-+        node.tree.select_node(node)
-+        node.tree.scroll_to_node(node)
-+
-+
-+    def set_searched_tree_node(self, previous: bool) -> None:
-+        """Set the cur_search_result node to either the next or previous."""
-+        l = len(self.search_results)
-+
-+        if l < 1:
-+            tree: Tree[str] = self.query_one("#pmus", Tree)
-+            if previous:
-+                tree.action_cursor_up()
-+            else:
-+                tree.action_cursor_down()
-+            return
-+
-+        if self.cur_search_result:
-+            idx = self.search_results.index(self.cur_search_result)
-+            if previous:
-+                idx = idx - 1 if idx > 0 else l - 1
-+            else:
-+                idx = idx + 1 if idx < l - 1 else 0
-+        else:
-+            idx = l - 1 if previous else 0
-+
-+        node = self.search_results[idx]
-+        if node == self.cur_search_result:
-+            return
-+
-+        self.cur_search_result = node
-+        self.expand_and_select(node)
-+
-+    def action_search(self) -> None:
-+        """Search was chosen."""
-+        def set_initial_focus(event: str | None) -> None:
-+            """Sets the focus after the SearchScreen is dismissed."""
-+            if not event:
-+                return
-+
-+            event = event.lower()
-+            self.query_one("#active_search", Label) \
-+                .update(f'Searching for events matching "{event}"')
-+            tree: Tree[str] = self.query_one("#pmus", Tree)
-+            def find_search_results(event: str, node: TreeNode[str], \
-+                                    cursor_seen: bool = False, \
-+                                    match_after_cursor: TreeNode[str] | None = None) \
-+                    -> Tuple[bool, TreeNode[str] | None]:
-+                """Find nodes that match the search remembering the one after the cursor."""
-+                if not cursor_seen and node == tree.cursor_node:
-+                    cursor_seen = True
-+                if node.data and event in node.data:
-+                    if cursor_seen and not match_after_cursor:
-+                        match_after_cursor = node
-+                    self.search_results.append(node)
-+
-+                if node.children:
-+                    for child in node.children:
-+                        (cursor_seen, match_after_cursor) = \
-+                            find_search_results(event, child, cursor_seen, match_after_cursor)
-+                return (cursor_seen, match_after_cursor)
-+
-+            self.search_results.clear()
-+            (_ , self.cur_search_result) = find_search_results(event, tree.root)
-+            if len(self.search_results) < 1:
-+                self.push_screen(ErrorScreen(f"Failed to find pmu/event {event}"))
-+            elif self.cur_search_result:
-+                self.expand_and_select(self.cur_search_result)
-+            else:
-+                self.set_searched_tree_node(previous=False)
-+
-+        self.push_screen(SearchScreen(), set_initial_focus)
-+
-+
-+    def action_next(self) -> None:
-+        """Next was chosen."""
-+        self.set_searched_tree_node(previous=False)
-+
-+
-+    def action_prev(self) -> None:
-+        """Previous was chosen."""
-+        self.set_searched_tree_node(previous=True)
-+
-+
-+    def action_collapse(self) -> None:
-+        """Collapse the potentially large number of events under a PMU."""
-+        tree: Tree[str] = self.query_one("#pmus", Tree)
-+        node = tree.cursor_node
-+        if node and node.parent and node.parent.parent:
-+            node.parent.collapse_all()
-+            node.tree.scroll_to_node(node.parent)
-+
-+
-+    def update_counts(self) -> None:
-+        """Called every interval to update counts."""
-+        if not self.evlist:
-+            return
-+
-+        def update_count(cpu: int, count: int):
-+            # Update the raw count display.
-+            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
-+            if not counter:
-+                return
-+            counter = counter.first(Label)
-+            counter.update(str(count))
-+
-+            # Update the sparkline.
-+            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
-+            if not line:
-+                return
-+            line = line.first(Sparkline)
-+            # If there are more events than the width, remove the front event.
-+            if len(line.data) > line.size.width:
-+                line.data.pop(0)
-+            line.data.append(count)
-+            line.mutate_reactive(Sparkline.data)
-+
-+        # Update the total and each CPU counts, assume there's just 1 evsel.
-+        total = 0
-+        self.evlist.disable()
-+        for evsel in self.evlist:
-+            for cpu in evsel.cpus():
-+                aggr = 0
-+                for thread in evsel.threads():
-+                    counts = evsel.read(cpu, thread)
-+                    aggr += counts.val
-+                update_count(cpu, aggr)
-+                total += aggr
-+        update_count(-1, total)
-+        self.evlist.enable()
-+
-+
-+    def on_mount(self) -> None:
-+        """When App starts set up periodic event updating."""
-+        self.update_counts()
-+        self.set_interval(self.interval, self.update_counts)
-+
-+
-+    def set_pmu_and_event(self, pmu: str, event: str) -> None:
-+        """Updates the event/description and starts the counters."""
-+        # Remove previous event information.
-+        if self.evlist:
-+            self.evlist.disable()
-+            self.evlist.close()
-+            lines = self.query(CounterSparkline)
-+            for line in lines:
-+                line.remove()
-+            lines = self.query(Counter)
-+            for line in lines:
-+                line.remove()
-+
-+        def pmu_event_description(pmu: str, event: str) -> str:
-+            """Find and format event description for {pmu}/{event}/."""
-+            def get_info(info: Dict[str, str], key: str):
-+                return (info[key] + "\n") if key in info else ""
-+
-+            for p in perf.pmus():
-+                if p.name() != pmu:
-+                    continue
-+                for info in p.events():
-+                    if "name" not in info or info["name"] != event:
-+                        continue
-+
-+                    desc = get_info(info, "topic")
-+                    desc += get_info(info, "event_type_desc")
-+                    desc += get_info(info, "desc")
-+                    desc += get_info(info, "long_desc")
-+                    desc += get_info(info, "encoding_desc")
-+                    return desc
-+            return "description"
-+
-+        # Parse event, update event text and description.
-+        full_name = event if event.startswith(pmu) or ':' in event else f"{pmu}/{event}/"
-+        self.query_one("#event_name", Label).update(full_name)
-+        self.query_one("#event_description", Static).update(pmu_event_description(pmu, event))
-+
-+        # Open the event.
-+        try:
-+            self.evlist = perf.parse_events(full_name)
-+            if self.evlist:
-+                self.evlist.open()
-+                self.evlist.enable()
-+        except:
-+            self.evlist = None
-+
-+        if not self.evlist:
-+            self.push_screen(ErrorScreen(f"Failed to open {full_name}"))
-+            return
-+
-+        # Add spark lines for all the CPUs. Note, must be done after
-+        # open so that the evlist CPUs have been computed by propagate
-+        # maps.
-+        lines = self.query_one("#lines")
-+        line = CounterSparkline(cpu=-1)
-+        lines.mount(line)
-+        for cpu in self.evlist.all_cpus():
-+            line = CounterSparkline(cpu)
-+            lines.mount(line)
-+        line = Counter(cpu=-1)
-+        lines.mount(line)
-+        for cpu in self.evlist.all_cpus():
-+            line = Counter(cpu)
-+            lines.mount(line)
-+
-+
-+    def compose(self) -> ComposeResult:
-+        """Draws the app."""
-+        def pmu_event_tree() -> Tree:
-+            """Create tree of PMUs with events under."""
-+            tree: Tree[str] = Tree("PMUs", id="pmus")
-+            tree.root.expand()
-+            for pmu in perf.pmus():
-+                pmu_name = pmu.name().lower()
-+                pmu_node = tree.root.add(pmu_name, data=pmu_name)
-+                for event in sorted(pmu.events(), key=lambda x: x["name"]):
-+                    if "name" in event:
-+                        e = event["name"].lower()
-+                        if "alias" in event:
-+                            pmu_node.add_leaf(f'{e} ({event["alias"]})', data=e)
-+                        else:
-+                            pmu_node.add_leaf(e, data=e)
-+            return tree
-+
-+        yield Header(id="header")
-+        yield Horizontal(Vertical(pmu_event_tree(), id="events"),
-+                         Vertical(Label("event name", id="event_name"),
-+                                  Static("description", markup=False, id="event_description"),
-+                                  Label(id="active_search")
-+                                  ))
-+        yield VerticalScroll(id="lines")
-+        yield Footer(id="footer")
-+
-+
-+    @on(Tree.NodeSelected)
-+    def on_tree_node_selected(self, event: Tree.NodeSelected[str]) -> None:
-+        """Called when a tree node is selected, selecting the event."""
-+        if event.node.parent and event.node.parent.parent:
-+            assert event.node.parent.data is not None
-+            assert event.node.data is not None
-+            self.set_pmu_and_event(event.node.parent.data, event.node.data)
-+
-+
-+if __name__ == "__main__":
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument('-I', '--interval', help="Counter update interval in seconds", default=0.1)
-+    args = ap.parse_args()
-+    app = IListApp(float(args.interval))
-+    app.run()
--- 
-2.50.0.rc2.696.g1fc2a0284f-goog
+[1] 
+https://lore.kernel.org/linux-arm-msm/20250519-wdt_reset_reason-v4-3-d59d21275c75@oss.qualcomm.com/#t
 
+[2] 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/sram/qcom,imem.yaml
+
+
+Thanks,
+
+Kathiravan T.
+
+>
+> Rob
