@@ -1,118 +1,161 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40FF2868BF
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE142BEFF0
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750104821; cv=none; b=FWcbBUSbel0Te44gJCiFunyPw3/OyLDvkiYb8vvMmnGodnFZjPo+6YVmMMtbncxR6HdQL8+sMJ3AILVnREXgoO0EGVzVxh+Cwo09cTvgW9Rw21GUXXTJoSy1qwP8RGW0Oicz7vuKE4uGHQ4Bu73GLNCIM7natnOhkjiAUK1m9Zk=
+	t=1750104864; cv=none; b=E8pJW0+C/sECKXknhjkdlxR171YIpVvz0P8Ihb7YtIlCFxKmPDhbRrslX/IKY9NMZr+wqx4n/DvEl00oKWbSBMQh6LcTOsh/IFXnXcadd9vZ8UPYKa9tscUtOgWu1pFhTkByebar9H5m7re/609WfXOOw1K/UAmIL+Xrcmh8beU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750104821; c=relaxed/simple;
-	bh=ls4VGECiCBtg2JlEG7yNXWSKEOGCxJcawxWh97L01Y0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BjVLNcadKXHir6L9g2yDEdgRH+CM/tbllMw6zMVaxy10oJDk7GrodtoqW50XadfhBVLalfU5jMChFZoeitki5/mx4lAJKAHqwrmjV5Q3I5qC/yzTblEJBXAF6e3NZ/1Q9n8CbqKFkDp1casIzex44tt1V/Pnx3I0Gm48U484Oi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZQ3dcc5k; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750104864; c=relaxed/simple;
+	bh=TwP2O71xNX5KZBAcekuLe3rjLWvw+dJPP0fdo82f4Wo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dJQDYDP3da5eFzkkq53SReYtwDVrjFKuQIg/LZtLHOhqHCKwJRvG+VUzzyhwCUeJ6RFROTWvPdYoC09Fj8RF7WHDI2YTV6B6I2cMQBhHJNCtljWjmH1H0+cnRV7wSxImcRx9AogUV7j/Rzrxkk3CAQkhyCsf2SDjL631MmFj068=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RgjXGrxw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZQ3dcc5k"
-Date: Mon, 16 Jun 2025 13:13:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750104806;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RgjXGrxw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750104860;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7sWRkpC4J/fwZ8hiPeG9n9Tg+PgJKdAZANW52vn8x6Y=;
-	b=ZQ3dcc5kh6ona5ww/0k7/JsyT8NLs1JyZaMkcZsHB8MCT7NnZx9bcpaIRCYtFp4nCcIwk0
-	+ra73movQM5WaTKViT6cCTci195lS0YRX0dS53qVXMs5qfy0UNo4dx2kMkqRylshivfGhu
-	KDTh3eVjr0zGjK3bY08lspkLe6PKVXg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: JP Kobryn <inwardvessel@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Vlastimil Babka <vbabka@suse.cz>, Alexei Starovoitov <ast@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2 0/4] cgroup: nmi safe css_rstat_updated
-Message-ID: <nv7p4v6jpc7fc4dw6by4dqciqcfkzqtt74enyymx7s764f2dce@o5xlm5njrvwo>
-References: <20250611221532.2513772-1-shakeel.butt@linux.dev>
- <218e8b26-6b83-46a4-a57c-2346130a1597@gmail.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Aad9Gkf4CPYgn7WvQvhOXyC5N0TDYkAraLsrfuZwf9I=;
+	b=RgjXGrxwuxpox3mC+RTFvEPEj434Mo1FDa8B56vJP7b8QFCqJDX2Ql7zmkEl3NDMTWxvM2
+	ylBNHCo6Al6iQwhYF4JsaxN0JySZfryAUcq7k/+Z1zOkRqXbdsAjoN4Ddc4c/id0WWt7Jd
+	KqIPIBWYbwMs/E7TsSaf8wDU7/Emb70=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-FGeS-c9YOQuieXqBPEq_vA-1; Mon,
+ 16 Jun 2025 16:14:17 -0400
+X-MC-Unique: FGeS-c9YOQuieXqBPEq_vA-1
+X-Mimecast-MFC-AGG-ID: FGeS-c9YOQuieXqBPEq_vA_1750104854
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05F3D19560B2;
+	Mon, 16 Jun 2025 20:14:14 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.45.224.53])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BEB1330001B1;
+	Mon, 16 Jun 2025 20:14:05 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v11 00/14] Add Microchip ZL3073x support (part 1)
+Date: Mon, 16 Jun 2025 22:13:50 +0200
+Message-ID: <20250616201404.1412341-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <218e8b26-6b83-46a4-a57c-2346130a1597@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, Jun 16, 2025 at 01:08:49PM -0700, JP Kobryn wrote:
-> On 6/11/25 3:15 PM, Shakeel Butt wrote:
-> > BPF programs can run in nmi context and may trigger memcg charged memory
-> > allocation in such context. Recently linux added support to nmi safe
-> > page allocation along with memcg charging of such allocations. However
-> > the kmalloc/slab support and corresponding memcg charging is still
-> > lacking,
-> > 
-> > To provide nmi safe support for memcg charging for kmalloc/slab
-> > allocations, we need nmi safe memcg stats because for kernel memory
-> > charging and stats happen together. At the moment, memcg charging and
-> > memcg stats are nmi safe and the only thing which is not nmi safe is
-> > adding the cgroup to the per-cpu rstat update tree. i.e.
-> > css_rstat_updated() which this series is doing.
-> > 
-> > This series made css_rstat_updated by using per-cpu lockless lists whose
-> > node in embedded in individual struct cgroup_subsys_state and the
-> > per-cpu head is placed in struct cgroup_subsys. For rstat users without
-> > cgroup_subsys, a global per-cpu lockless list head is created. The main
-> > challenge to use lockless in this scenario was the potential multiple
-> > inserters from the stacked context i.e. process, softirq, hardirq & nmi,
-> > potentially using the same per-cpu lockless node of a given
-> > cgroup_subsys_state. The normal lockless list does not protect against
-> > such scenario.
-> > 
-> > The multiple stacked inserters using potentially same lockless node was
-> > resolved by making one of them succeed on reset the lockless node and the
-> > winner gets to insert the lockless node in the corresponding lockless
-> > list. The losers can assume the lockless list insertion will eventually
-> > succeed and continue their operation.
-> > 
-> > Changelog since v2:
-> > - Add more clear explanation in cover letter and in the comment as
-> >    suggested by Andrew, Michal & Tejun.
-> > - Use this_cpu_cmpxchg() instead of try_cmpxchg() as suggested by Tejun.
-> > - Remove the per-cpu ss locks as they are not needed anymore.
-> > 
-> > Changelog since v1:
-> > - Based on Yosry's suggestion always use llist on the update side and
-> >    create the update tree on flush side
-> > 
-> > [v1] https://lore.kernel.org/cgroups/20250429061211.1295443-1-shakeel.butt@linux.dev/
-> > 
-> > 
-> > Shakeel Butt (4):
-> >    cgroup: support to enable nmi-safe css_rstat_updated
-> >    cgroup: make css_rstat_updated nmi safe
-> >    cgroup: remove per-cpu per-subsystem locks
-> >    memcg: cgroup: call css_rstat_updated irrespective of in_nmi()
-> > 
-> >   include/linux/cgroup-defs.h   |  11 +--
-> >   include/trace/events/cgroup.h |  47 ----------
-> >   kernel/cgroup/rstat.c         | 169 +++++++++++++---------------------
-> >   mm/memcontrol.c               |  10 +-
-> >   4 files changed, 74 insertions(+), 163 deletions(-)
-> > 
-> 
-> I tested this series by doing some updates/flushes on a cgroup hierarchy
-> with four levels. This tag can be added to the patches in this series.
-> 
-> Tested-by: JP Kobryn <inwardvessel@gmail.com>
-> 
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the core functionality and basic DPLL support.
 
-Thanks a lot.
+The next part of the series will bring additional DPLL functionality
+like eSync support, phase offset and frequency offset reporting and
+phase adjustments.
+
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
+
+---
+Changelog:
+v11:
+Fixed uninitialized 'rc' in error-path in patch 9
+v10:
+Usage of str_enabled_disabled() where possible.
+v9:
+After discussion with Jakub Kicinski we agreed that it would be better
+to implement whole functionality in a single driver without touching
+MFD sub-system. Besides touching multiple sub-systems by single device
+there are also some technical issues that are easier resolvable
+in a single driver. Additionally the firmware flashing functionality
+would bring more than 1000 lines of code with previous approach to
+the MFD driver - it is not something the MFD maintainers would like
+to see.
+
+Ivan Vecera (14):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  dpll: Add basic Microchip ZL3073x support
+  dpll: zl3073x: Add support for devlink device info
+  dpll: zl3073x: Protect operations requiring multiple register accesses
+  dpll: zl3073x: Fetch invariants during probe
+  dpll: zl3073x: Add clock_id field
+  dpll: zl3073x: Read DPLL types and pin properties from system firmware
+  dpll: zl3073x: Register DPLL devices and pins
+  dpll: zl3073x: Implement input pin selection in manual mode
+  dpll: zl3073x: Add support to get/set priority on input pins
+  dpll: zl3073x: Implement input pin state setting in automatic mode
+  dpll: zl3073x: Add support to get/set frequency on input pins
+  dpll: zl3073x: Add support to get/set frequency on output pins
+
+ .../devicetree/bindings/dpll/dpll-device.yaml |   76 +
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |   45 +
+ .../bindings/dpll/microchip,zl30731.yaml      |  115 ++
+ Documentation/networking/devlink/index.rst    |    1 +
+ Documentation/networking/devlink/zl3073x.rst  |   37 +
+ MAINTAINERS                                   |   10 +
+ drivers/Kconfig                               |    4 +-
+ drivers/dpll/Kconfig                          |    6 +
+ drivers/dpll/Makefile                         |    2 +
+ drivers/dpll/zl3073x/Kconfig                  |   36 +
+ drivers/dpll/zl3073x/Makefile                 |   10 +
+ drivers/dpll/zl3073x/core.c                   |  968 +++++++++++
+ drivers/dpll/zl3073x/core.h                   |  371 ++++
+ drivers/dpll/zl3073x/dpll.c                   | 1494 +++++++++++++++++
+ drivers/dpll/zl3073x/dpll.h                   |   42 +
+ drivers/dpll/zl3073x/i2c.c                    |   95 ++
+ drivers/dpll/zl3073x/prop.c                   |  358 ++++
+ drivers/dpll/zl3073x/prop.h                   |   34 +
+ drivers/dpll/zl3073x/regs.h                   |  206 +++
+ drivers/dpll/zl3073x/spi.c                    |   95 ++
+ 20 files changed, 4003 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 Documentation/networking/devlink/zl3073x.rst
+ create mode 100644 drivers/dpll/zl3073x/Kconfig
+ create mode 100644 drivers/dpll/zl3073x/Makefile
+ create mode 100644 drivers/dpll/zl3073x/core.c
+ create mode 100644 drivers/dpll/zl3073x/core.h
+ create mode 100644 drivers/dpll/zl3073x/dpll.c
+ create mode 100644 drivers/dpll/zl3073x/dpll.h
+ create mode 100644 drivers/dpll/zl3073x/i2c.c
+ create mode 100644 drivers/dpll/zl3073x/prop.c
+ create mode 100644 drivers/dpll/zl3073x/prop.h
+ create mode 100644 drivers/dpll/zl3073x/regs.h
+ create mode 100644 drivers/dpll/zl3073x/spi.c
+
+-- 
+2.49.0
+
