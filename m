@@ -1,248 +1,569 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9692BE7C8
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5F1270EAB;
+	Mon, 16 Jun 2025 11:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750072442; cv=none; b=BaNmGoZN9yfP2l3iX9yc5P8gsQQ0AGc7E9j94sPV5k58K29+sy1TeHjgYlnJH48RtG1zPDS4JweHXw71wq01paNrXA3GyOB4glP0sfAKZknI+IUu3FIx5cZTazxWdN2hV3HTOeo6sl+IHNkelTNwOBpUsZZUX02pLDEjL3cpVBA=
+	t=1750072457; cv=none; b=hNnBiCgvIH1odw26yXTh5Npp27I8dd7VVnPf+XxEiH481DunvKbg88e4X2qNuZczI+ZIQah9XnsVoHs9cgN8kARRaflBneLm1Zd0RjeX+EBf3Ir1X417FRU4YNzph+krcQo4ui6ERshMvpd0aSh814f1dXhItKLWY7PE3dCMgiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750072442; c=relaxed/simple;
-	bh=bs5ACm5q/B0aNeifc4VzhWlruR9JAZlgVSd9tROUm0o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=saC/SCZ71TWss/6Suv8RZzq84iUE8E8Kng8kZEM/qviRSed+xA2qdu87DSm+iXn2Sc5supXIj+WAqn2tfFv2dKZjIj1qx2Ao3ehM/7cz0c5Dx+eSUBotuXv0iDYCO+tKvy54m/Avzd9EXeexJd6A6cuASbrJAVbv5TN2JMvUNJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TOqDspmi; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1750072457; c=relaxed/simple;
+	bh=if2NmAZEOedgGz5Ewx2SLYq6OAJLlbiOyud3CuDlCow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QoXPktw4pnumr9tLh5vzHNzU/XFmTOWpxGY0fsF4lEegV57/PeOqNtuiSqcaR/iiK7ndUwRhqDIKf8+ldXzHGjnEc/COrjnV01RVL+ziwLqLk0l96bCbi/VTuGn5AWKQtEx6xj+VAEpjVEInAtq+cAHHe1uqujCjQSbBuyJoJ0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=aLhzHVtJ; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TOqDspmi"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2c4e46a89fso3305438a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750072439; x=1750677239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=al9UD0RtKUpLDkN/iIvII9ZxHlnlE3IOjRU+2H6u4eo=;
-        b=TOqDspmi8bBSINqwzdaBJ5PirvqRIo810X4SMgmYkxtE8mN+QVfHSf6l2/XhiCwyGF
-         KTalOGPZ+vVWvoE7OzwP5IMIlMS/gO3kLBCRo73uKdSDZ7BfJjGJq6TaHF6PcVKUfFo/
-         DcplrGUYodZwknRCMOCgckuRKpYL6clF/53C282qo/SW2Xq751n0aBOW0p9bZn2q/VDg
-         5oSBvZVFR6jPhrPQ/ZxMvm9jvcnH+SRMdNssxOZqf+WPHZQ1SRLw7RET1QEjVuTGQCKB
-         chDsQTs4Ss2dINKlSxY6tphGnWfDOLhB1RpsMla80pSAmFnBFPxQquKmjTclXuPFIaEd
-         Jldg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750072439; x=1750677239;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=al9UD0RtKUpLDkN/iIvII9ZxHlnlE3IOjRU+2H6u4eo=;
-        b=LEN1lsTU/C7NTx2hqeAt9EuVIYbhSblucV/3BKXEE/1+EY+R/QUM91y7T8klTOZ3xB
-         RTGU5Mkmv0EZFVWz0L0yJeoCm53CIFa50Zy31kM3abYaEJAyXE+iD6+8MWAknh1Txk3N
-         wJ7iFR1f13Ef6BYmi32E3g3K80WoZMW1Czne+UOtPgFE5u1i//qprotqujT/C0tKs/7u
-         5EXS11JH5G4dbIUj7YTTAWKzc+OXqkDm3+FG4LqCBgzhPLfbNWJrJ+cX5WqwxkVyLf51
-         gYzVOdunPqG2PjwCJpnTmTr7lKnke7QeLiLw4yM3G4UtuQzx9p7DPBhBsOwB37i6Xpag
-         lMcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWL3Hz13XPK5+32Bje571YZUU3VDTW0BJFS5q3qsM4uy2rBsnVqkrmwgh+vq2RySFcJz+G6mjw/ZX8x4rM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxEch8JMPvqjxu3V5iQpeAA3xEbbcQ7yAC0AYczRsnTskDtfjQ
-	6XJ0cxG/ly8H8C3k0QYBzAEXY2DgRlSso5WUU++bir/kojKH3N3Qjd7OmzQatGuprte2geux20+
-	Ydpgg
-X-Gm-Gg: ASbGncvAJGV+m0YWS0QQbbcEm0UPbSsJ5XXOFFDskpPpQPo2SJycFMcA6zU+n0/ySLT
-	JecrRPvnxEaIqudT97BVXJ2Oia7NY7rvjvUm4cH5qhjLHA0tZfJnbwD/vqersSK3vADtgSyPPvZ
-	gKVs3WqNi7NoM4eWf/LYcBv0CBWivXLdnUaCIu7sIf/HzM5AvUCJo9iD/hybo6+7xQ66FJvKeAM
-	TNUQSRpYNbiRYWcF1i7mE/AMZRU+hCKFYtIpBONqj1IIPxZGx7DBKGppB+3GPINJgwYN6StB7gh
-	Ox3RuQzC6z6/xfcnDyOCN7dL+KixcddQEvVhb2GT8zORPnDUZgPBkj/DWONQMNRx1eYYx7+gFU6
-	t3NfrnaAOol+K
-X-Google-Smtp-Source: AGHT+IG/XkggEyeF9l/LZIp93+z0ZH94K4b8rZBDM2GqXk2C58rjCGjQSo51RjWqg5FESS9+H8eAYA==
-X-Received: by 2002:a05:6a21:6d92:b0:21f:86f1:e2dd with SMTP id adf61e73a8af0-21fbd4dd9cdmr11906649637.11.1750072439228;
-        Mon, 16 Jun 2025 04:13:59 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7489000604dsm6464687b3a.46.2025.06.16.04.13.56
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 16 Jun 2025 04:13:58 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: david@redhat.com
-Cc: alex.williamson@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	peterx@redhat.com
-Subject: Re: [PATCH v3 2/2] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
-Date: Mon, 16 Jun 2025 19:13:53 +0800
-Message-ID: <20250616111353.7964-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <753caff4-58d6-4d23-ae69-4b909a99aa16@redhat.com>
-References: <753caff4-58d6-4d23-ae69-4b909a99aa16@redhat.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="aLhzHVtJ"
+Received: from [192.168.42.116] (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id B35772FC0089;
+	Mon, 16 Jun 2025 13:14:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1750072443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6N5Ru2ma9ZvgG7hQ03K8lSkQi5TzLJZLJVF8eDsuPFk=;
+	b=aLhzHVtJ72+ts0GNdIspDTfMGp30NeLnPnwF5rfXjKbqcVc+uQHVEhMo6XhUTzS11g+C4Q
+	LQjsuipXHmjWY5QE0vRvemDPVY1X5wEurqCt0Afry9ZUnLc0uciMAtyT1LyvzlcTIZ+J64
+	xxcSmCj8eY/NBpKNf0oPJm3Itb6vJtQ=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <b22834bd-2a03-41c2-9c37-d57c0c4d2143@tuxedocomputers.com>
+Date: Mon, 16 Jun 2025 13:14:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-2-W_Armin@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <20250615175957.9781-2-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Jun 2025 10:14:23 +0200, david@redhat.com wrote:
+Hi Armin,
 
-> >   drivers/vfio/vfio_iommu_type1.c | 55 +++++++++++++++++++++++++++------
-> >   1 file changed, 46 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index e952bf8bdfab..09ecc546ece8 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -469,17 +469,28 @@ static bool is_invalid_reserved_pfn(unsigned long pfn)
-> >   	return true;
-> >   }
-> >   
-> > -static int put_pfn(unsigned long pfn, int prot)
-> > +static inline void _put_pfns(struct page *page, int npages, int prot)
-> >   {
-> > -	if (!is_invalid_reserved_pfn(pfn)) {
-> > -		struct page *page = pfn_to_page(pfn);
-> > +	unpin_user_page_range_dirty_lock(page, npages, prot & IOMMU_WRITE);
-> > +}
-> >   
-> > -		unpin_user_pages_dirty_lock(&page, 1, prot & IOMMU_WRITE);
-> > -		return 1;
-> > +/*
-> > + * The caller must ensure that these npages PFNs belong to the same folio.
-> > + */
-> > +static inline int put_pfns(unsigned long pfn, int npages, int prot)
-> > +{
-> > +	if (!is_invalid_reserved_pfn(pfn)) {
-> > +		_put_pfns(pfn_to_page(pfn), npages, prot);
-> > +		return npages;
-> >   	}
-> >   	return 0;
-> >   }
-> >   
-> > +static inline int put_pfn(unsigned long pfn, int prot)
-> > +{
-> > +	return put_pfns(pfn, 1, prot);
-> > +}
-> > +
-> >   #define VFIO_BATCH_MAX_CAPACITY (PAGE_SIZE / sizeof(struct page *))
-> >   
-> >   static void __vfio_batch_init(struct vfio_batch *batch, bool single)
-> > @@ -806,11 +817,37 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
-> >   				    bool do_accounting)
-> >   {
-> >   	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
-> > -	long i;
-> >   
-> > -	for (i = 0; i < npage; i++)
-> > -		if (put_pfn(pfn++, dma->prot))
-> > -			unlocked++;
-> > +	while (npage) {
-> > +		long nr_pages = 1;
-> > +
-> > +		if (!is_invalid_reserved_pfn(pfn)) {
-> > +			struct page *page = pfn_to_page(pfn);
-> > +			struct folio *folio = page_folio(page);
-> > +			long folio_pages_num = folio_nr_pages(folio);
-> > +
-> > +			/*
-> > +			 * For a folio, it represents a physically
-> > +			 * contiguous set of bytes, and all of its pages
-> > +			 * share the same invalid/reserved state.
-> > +			 *
-> > +			 * Here, our PFNs are contiguous. Therefore, if we
-> > +			 * detect that the current PFN belongs to a large
-> > +			 * folio, we can batch the operations for the next
-> > +			 * nr_pages PFNs.
-> > +			 */
-> > +			if (folio_pages_num > 1)
-> > +				nr_pages = min_t(long, npage,
-> > +					folio_pages_num -
-> > +					folio_page_idx(folio, page));
-> > +
-> > +			_put_pfns(page, nr_pages, dma->prot);
-> 
-> 
-> This is sneaky. You interpret the page pointer a an actual page array, 
-> assuming that it would give you the right values when advancing nr_pages 
-> in that array.
-> 
-> This is mostly true, but with !CONFIG_SPARSEMEM_VMEMMAP it is not 
-> universally true for very large folios (e.g., in a 1 GiB hugetlb folio 
-> when we cross the 128 MiB mark on x86).
-> 
-> Not sure if that could already trigger here, but it is subtle.
+thanks for pushing this forward.
 
-As previously mentioned in the email, the code here functions
-correctly.
+Small comment below.
 
-> > +			unlocked += nr_pages;
-> 
-> We could do slightly better here, as we already have the folio. We would 
-> add a unpin_user_folio_dirty_locked() similar to unpin_user_folio().
-> 
-> Instead of _put_pfns, we would be calling
-> 
-> unpin_user_folio_dirty_locked(folio, nr_pages, dma->prot & IOMMU_WRITE);
+Am 15.06.25 um 19:59 schrieb Armin Wolf:
+> Add a new driver for handling WMI events on Uniwill laptops.
+> The driver sadly cannot use the WMI GUID for autoloading since Uniwill
+> just copied it from the Windows driver example.
+>
+> The driver is reverse-engineered based on the following information:
+> - https://github.com/pobrn/qc71_laptop
+> - https://github.com/tuxedocomputers/tuxedo-drivers
+> - various OEM software
+>
+> Reported-by: cyear <chumuzero@gmail.com>
+> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
+> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>   Documentation/wmi/devices/uniwill-wmi.rst  |  52 ++++++
+>   MAINTAINERS                                |   8 +
+>   drivers/platform/x86/Kconfig               |   2 +
+>   drivers/platform/x86/Makefile              |   3 +
+>   drivers/platform/x86/uniwill/Kconfig       |  32 ++++
+>   drivers/platform/x86/uniwill/Makefile      |   7 +
+>   drivers/platform/x86/uniwill/uniwill-wmi.c | 177 +++++++++++++++++++++
+>   drivers/platform/x86/uniwill/uniwill-wmi.h | 122 ++++++++++++++
+>   8 files changed, 403 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/uniwill-wmi.rst
+>   create mode 100644 drivers/platform/x86/uniwill/Kconfig
+>   create mode 100644 drivers/platform/x86/uniwill/Makefile
+>   create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.c
+>   create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.h
+>
+> diff --git a/Documentation/wmi/devices/uniwill-wmi.rst b/Documentation/wmi/devices/uniwill-wmi.rst
+> new file mode 100644
+> index 000000000000..232fa8349611
+> --- /dev/null
+> +++ b/Documentation/wmi/devices/uniwill-wmi.rst
+> @@ -0,0 +1,52 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +======================================
+> +Uniwill WMI event driver (uniwill-wmi)
+> +======================================
+> +
+> +Introduction
+> +============
+> +
+> +Many notebooks manufactured by Uniwill (either directly or as ODM) provide an WMI-based
+> +event interface for various platform events like hotkeys. This interface is used by the
+> +``uniwill-wmi`` driver to react to hotkey presses.
+> +
+> +WMI interface description
+> +=========================
+> +
+> +The WMI interface description can be decoded from the embedded binary MOF (bmof)
+> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+> +
+> +::
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),
+> +   Description("Class containing event generated ULong data"),
+> +   guid("{ABBC0F72-8EA1-11d1-00A0-C90629100000}")]
+> +  class AcpiTest_EventULong : WmiEvent {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, write, Description("ULong Data")] uint32 ULong;
+> +  };
+> +
+> +Most of the WMI-related code was copied from the Windows driver samples, which unfortunately means
+> +that the WMI-GUID is not unique. This makes the WMI-GUID unusable for autoloading.
+> +
+> +WMI event data
+> +--------------
+> +
+> +The WMI event data contains a single 32-bit value which is used to indicate various platform events.
+> +Many non-hotkey events are not directly consumed by the driver itself, but are instead handled by
+> +the ``uniwill-laptop`` driver.
+> +
+> +Reverse-Engineering the Uniwill WMI event interface
+> +===================================================
+> +
+> +The driver logs debug messages when receiving a WMI event. Thus enabling debug messages will be
+> +useful for finding unknown event codes.
+> +
+> +Special thanks go to github user `pobrn` which developed the
+> +`qc71_laptop <https://github.com/pobrn/qc71_laptop>`_ driver on which this driver is partly based.
+> +The same is true for Tuxedo Computers, which developed the
+> +`tuxedo-drivers <https://github.com/tuxedocomputers/tuxedo-drivers>`_ package which also served as
+> +a foundation for this driver.
 
-Thank you so much for your suggestion. Does this implementation of
-unpin_user_folio_dirty_locked() look viable to you?
+The main repo is actually the one on gitlab: 
+https://gitlab.com/tuxedocomputers/development/packages/tuxedo-drivers
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index fdda6b16263b..567c9dae9088 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1689,6 +1689,8 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
- 				      bool make_dirty);
- void unpin_user_pages(struct page **pages, unsigned long npages);
- void unpin_user_folio(struct folio *folio, unsigned long npages);
-+void unpin_user_folio_dirty_locked(struct folio *folio,
-+		unsigned long npages, bool make_dirty);
- void unpin_folios(struct folio **folios, unsigned long nfolios);
- 
- static inline bool is_cow_mapping(vm_flags_t flags)
-diff --git a/mm/gup.c b/mm/gup.c
-index 84461d384ae2..2f1e14a79463 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -360,11 +360,8 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
- 
- 	for (i = 0; i < npages; i += nr) {
- 		folio = gup_folio_range_next(page, npages, i, &nr);
--		if (make_dirty && !folio_test_dirty(folio)) {
--			folio_lock(folio);
--			folio_mark_dirty(folio);
--			folio_unlock(folio);
--		}
-+		if (make_dirty && !folio_test_dirty(folio))
-+			folio_mark_dirty_lock(folio);
- 		gup_put_folio(folio, nr, FOLL_PIN);
- 	}
- }
-@@ -435,6 +432,26 @@ void unpin_user_folio(struct folio *folio, unsigned long npages)
- }
- EXPORT_SYMBOL(unpin_user_folio);
- 
-+/**
-+ * unpin_user_folio_dirty_locked() - release pages of a folio and
-+ * optionally dirty
-+ *
-+ * @folio:  pointer to folio to be released
-+ * @npages: number of pages of same folio
-+ * @make_dirty: whether to mark the folio dirty
-+ *
-+ * Mark the folio as being modified if @make_dirty is true. Then
-+ * release npages of the folio.
-+ */
-+void unpin_user_folio_dirty_locked(struct folio *folio,
-+		unsigned long npages, bool make_dirty)
-+{
-+	if (make_dirty && !folio_test_dirty(folio))
-+		folio_mark_dirty_lock(folio);
-+	gup_put_folio(folio, npages, FOLL_PIN);
-+}
-+EXPORT_SYMBOL(unpin_user_folio_dirty_locked);
-+
- /**
-  * unpin_folios() - release an array of gup-pinned folios.
-  * @folios:  array of folios to be marked dirty and released.
+The Github one is just a mirror
 
---
+Best regards,
 
-Thanks,
-Zhe
+Werner
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c14614613377..53876ec2d111 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -25496,6 +25496,14 @@ L:	linux-scsi@vger.kernel.org
+>   S:	Maintained
+>   F:	drivers/ufs/host/ufs-renesas.c
+>   
+> +UNIWILL WMI DRIVER
+> +M:	Armin Wolf <W_Armin@gmx.de>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/wmi/devices/uniwill-wmi.rst
+> +F:	drivers/platform/x86/uniwill/uniwill-wmi.c
+> +F:	drivers/platform/x86/uniwill/uniwill-wmi.h
+> +
+>   UNSORTED BLOCK IMAGES (UBI)
+>   M:	Richard Weinberger <richard@nod.at>
+>   R:	Zhihao Cheng <chengzhihao1@huawei.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 43055df44827..ba9d65f01332 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -65,6 +65,8 @@ config HUAWEI_WMI
+>   	  To compile this driver as a module, choose M here: the module
+>   	  will be called huawei-wmi.
+>   
+> +source "drivers/platform/x86/uniwill/Kconfig"
+> +
+>   config UV_SYSFS
+>   	tristate "Sysfs structure for UV systems"
+>   	depends on X86_UV
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 0530a224bebd..1549c56ced91 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -107,6 +107,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
+>   # before toshiba_acpi initializes
+>   obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
+>   
+> +# Uniwill
+> +obj-y				+= uniwill/
+> +
+>   # Inspur
+>   obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
+>   
+> diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/uniwill/Kconfig
+> new file mode 100644
+> index 000000000000..5f1ea3e9e72f
+> --- /dev/null
+> +++ b/drivers/platform/x86/uniwill/Kconfig
+> @@ -0,0 +1,32 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +#
+> +# Uniwill X86 Platform Specific Drivers
+> +#
+> +
+> +menuconfig X86_PLATFORM_DRIVERS_UNIWILL
+> +	bool "Uniwill X86 Platform Specific Device Drivers"
+> +	depends on X86_PLATFORM_DEVICES
+> +	help
+> +	  Say Y here to get to see options for device drivers for various
+> +	  Uniwill X86 platforms, including many OEM laptops originally
+> +	  manufactured by Uniwill.
+> +	  This option alone does not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped and disabled.
+> +
+> +if X86_PLATFORM_DRIVERS_UNIWILL
+> +
+> +config UNIWILL_WMI
+> +	tristate "Uniwill WMI Event Driver"
+> +	default m
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	select INPUT_SPARSEKMAP
+> +	help
+> +	  This driver adds support for various hotkey events on Uniwill laptops,
+> +	  like rfkill and other special buttons. It also supports many OEM laptops
+> +	  originally manufactured by Uniwill.
+> +
+> +	  If you have such a laptop, say Y or M here.
+> +
+> +endif
+> diff --git a/drivers/platform/x86/uniwill/Makefile b/drivers/platform/x86/uniwill/Makefile
+> new file mode 100644
+> index 000000000000..a5a300be63f3
+> --- /dev/null
+> +++ b/drivers/platform/x86/uniwill/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +#
+> +# Makefile for linux/drivers/platform/x86/uniwill
+> +# Uniwill X86 Platform Specific Drivers
+> +#
+> +
+> +obj-$(CONFIG_UNIWILL_WMI)	+= uniwill-wmi.o
+> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.c b/drivers/platform/x86/uniwill/uniwill-wmi.c
+> new file mode 100644
+> index 000000000000..b95a0d68ce6a
+> --- /dev/null
+> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.c
+> @@ -0,0 +1,177 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Linux hotkey driver for Uniwill notebooks.
+> + *
+> + * Copyright (C) 2025 Armin Wolf <W_Armin@gmx.de>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+> +#include <linux/input.h>
+> +#include <linux/input/sparse-keymap.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/notifier.h>
+> +#include <linux/printk.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +#include <linux/wmi.h>
+> +
+> +#include "uniwill-wmi.h"
+> +
+> +#define DRIVER_NAME		"uniwill-wmi"
+> +#define UNIWILL_EVENT_GUID	"ABBC0F72-8EA1-11D1-00A0-C90629100000"
+> +
+> +struct uniwill_wmi_data {
+> +	struct mutex input_lock;	/* Protects input sequence during notify */
+> +	struct input_dev *input_device;
+> +};
+> +
+> +static BLOCKING_NOTIFIER_HEAD(uniwill_wmi_chain_head);
+> +
+> +static const struct key_entry uniwill_wmi_keymap[] = {
+> +	/* Reported via keyboard controller */
+> +	{ KE_IGNORE,	UNIWILL_OSD_CAPSLOCK,			{ KEY_CAPSLOCK }},
+> +	{ KE_IGNORE,	UNIWILL_OSD_NUMLOCK,			{ KEY_NUMLOCK }},
+> +
+> +	/* Reported when the user locks/unlocks the super key */
+> +	{ KE_IGNORE,	UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE,	{ KEY_UNKNOWN }},
+> +	{ KE_IGNORE,	UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE,	{ KEY_UNKNOWN }},
+> +
+> +	/* Reported in manual mode when toggling the airplane mode status */
+> +	{ KE_KEY,	UNIWILL_OSD_RFKILL,			{ KEY_RFKILL }},
+> +
+> +	/* Reported when user wants to cycle the platform profile */
+> +	{ KE_IGNORE,	UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,	{ KEY_UNKNOWN }},
+> +
+> +	/* Reported when the user wants to toggle the microphone mute status */
+> +	{ KE_KEY,	UNIWILL_OSD_MIC_MUTE,			{ KEY_MICMUTE }},
+> +
+> +	/* Reported when the user locks/unlocks the Fn key */
+> +	{ KE_IGNORE,	UNIWILL_OSD_FN_LOCK,			{ KEY_FN_ESC }},
+> +
+> +	/* Reported when the user wants to toggle the brightness of the keyboard */
+> +	{ KE_KEY,	UNIWILL_OSD_KBDILLUMTOGGLE,		{ KEY_KBDILLUMTOGGLE }},
+> +
+> +	/* FIXME: find out the exact meaning of those events */
+> +	{ KE_IGNORE,	UNIWILL_OSD_BAT_CHARGE_FULL_24_H,	{ KEY_UNKNOWN }},
+> +	{ KE_IGNORE,	UNIWILL_OSD_BAT_ERM_UPDATE,		{ KEY_UNKNOWN }},
+> +
+> +	/* Reported when the user wants to toggle the benchmark mode status */
+> +	{ KE_IGNORE,	UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,	{ KEY_UNKNOWN }},
+> +
+> +	{ KE_END }
+> +};
+> +
+> +int uniwill_wmi_register_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&uniwill_wmi_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(uniwill_wmi_register_notifier, "UNIWILL");
+> +
+> +int uniwill_wmi_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&uniwill_wmi_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(uniwill_wmi_unregister_notifier, "UNIWILL");
+> +
+> +static void devm_uniwill_wmi_unregister_notifier(void *data)
+> +{
+> +	struct notifier_block *nb = data;
+> +
+> +	uniwill_wmi_unregister_notifier(nb);
+> +}
+> +
+> +int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifier_block *nb)
+> +{
+> +	int ret;
+> +
+> +	ret = uniwill_wmi_register_notifier(nb);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(dev, devm_uniwill_wmi_unregister_notifier, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_uniwill_wmi_register_notifier, "UNIWILL");
+> +
+> +static void uniwill_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> +{
+> +	struct uniwill_wmi_data *data = dev_get_drvdata(&wdev->dev);
+> +	u32 value;
+> +	int ret;
+> +
+> +	if (obj->type != ACPI_TYPE_INTEGER)
+> +		return;
+> +
+> +	value = obj->integer.value;
+> +
+> +	dev_dbg(&wdev->dev, "Received WMI event %u\n", value);
+> +
+> +	ret = blocking_notifier_call_chain(&uniwill_wmi_chain_head, value, NULL);
+> +	if (ret == NOTIFY_BAD)
+> +		return;
+> +
+> +	mutex_lock(&data->input_lock);
+> +	sparse_keymap_report_event(data->input_device, value, 1, true);
+> +	mutex_unlock(&data->input_lock);
+> +}
+> +
+> +static int uniwill_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct uniwill_wmi_data *data;
+> +	int ret;
+> +
+> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_mutex_init(&wdev->dev, &data->input_lock);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dev_set_drvdata(&wdev->dev, data);
+> +
+> +	data->input_device = devm_input_allocate_device(&wdev->dev);
+> +	if (!data->input_device)
+> +		return -ENOMEM;
+> +
+> +	ret = sparse_keymap_setup(data->input_device, uniwill_wmi_keymap, NULL);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	data->input_device->name = "Uniwill WMI hotkeys";
+> +	data->input_device->phys = "wmi/input0";
+> +	data->input_device->id.bustype = BUS_HOST;
+> +
+> +	return input_register_device(data->input_device);
+> +}
+> +
+> +/*
+> + * We cannot fully trust this GUID since Uniwill just copied the WMI GUID
+> + * from the Windows driver example, and others probably did the same.
+> + *
+> + * Because of this we cannot use this WMI GUID for autoloading.
+> + */
+> +static const struct wmi_device_id uniwill_wmi_id_table[] = {
+> +	{ UNIWILL_EVENT_GUID, NULL },
+> +	{ }
+> +};
+> +
+> +static struct wmi_driver uniwill_wmi_driver = {
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table = uniwill_wmi_id_table,
+> +	.probe = uniwill_wmi_probe,
+> +	.notify = uniwill_wmi_notify,
+> +	.no_singleton = true,
+> +};
+> +module_wmi_driver(uniwill_wmi_driver);
+> +
+> +MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
+> +MODULE_DESCRIPTION("Uniwill notebook hotkey driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platform/x86/uniwill/uniwill-wmi.h
+> new file mode 100644
+> index 000000000000..41662ece0675
+> --- /dev/null
+> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+> @@ -0,0 +1,122 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Linux hotkey driver for Uniwill notebooks.
+> + *
+> + * Copyright (C) 2025 Armin Wolf <W_Armin@gmx.de>
+> + */
+> +
+> +#ifndef UNIWILL_WMI_H
+> +#define UNIWILL_WMI_H
+> +
+> +#define UNIWILL_OSD_CAPSLOCK			0x01
+> +#define UNIWILL_OSD_NUMLOCK			0x02
+> +#define UNIWILL_OSD_SCROLLLOCK			0x03
+> +
+> +#define UNIWILL_OSD_TOUCHPAD_ON			0x04
+> +#define UNIWILL_OSD_TOUCHPAD_OFF		0x05
+> +
+> +#define UNIWILL_OSD_SILENT_MODE_ON		0x06
+> +#define UNIWILL_OSD_SILENT_MODE_OFF		0x07
+> +
+> +#define UNIWILL_OSD_WLAN_ON			0x08
+> +#define UNIWILL_OSD_WLAN_OFF			0x09
+> +
+> +#define UNIWILL_OSD_WIMAX_ON			0x0A
+> +#define UNIWILL_OSD_WIMAX_OFF			0x0B
+> +
+> +#define UNIWILL_OSD_BLUETOOTH_ON		0x0C
+> +#define UNIWILL_KEY_BLUETOOTH_OFF		0x0D
+> +
+> +#define UNIWILL_OSD_RF_ON			0x0E
+> +#define UNIWILL_OSD_RF_OFF			0x0F
+> +
+> +#define UNIWILL_OSD_3G_ON			0x10
+> +#define UNIWILL_OSD_3G_OFF			0x11
+> +
+> +#define UNIWILL_OSD_WEBCAM_ON			0x12
+> +#define UNIWILL_OSD_WEBCAM_OFF			0x13
+> +
+> +#define UNIWILL_OSD_BRIGHTNESSUP		0x14
+> +#define UNIWILL_OSD_BRIGHTNESSDOWN		0x15
+> +
+> +#define UNIWILL_OSD_RADIOON			0x1A
+> +#define UNIWILL_OSD_RADIOOFF			0x1B
+> +
+> +#define UNIWILL_OSD_POWERSAVE_ON		0x31
+> +#define UNIWILL_OSD_POWERSAVE_OFF		0x32
+> +
+> +#define UNIWILL_OSD_MENU			0x34
+> +
+> +#define UNIWILL_OSD_MUTE			0x35
+> +#define UNIWILL_OSD_VOLUMEDOWN			0x36
+> +#define UNIWILL_OSD_VOLUMEUP			0x37
+> +
+> +#define UNIWILL_OSD_MENU_2			0x38
+> +
+> +#define UNIWILL_OSD_LIGHTBAR_ON			0x39
+> +#define UNIWILL_OSD_LIGHTBAR_OFF		0x3A
+> +
+> +#define UNIWILL_OSD_KB_LED_LEVEL0		0x3B
+> +#define UNIWILL_OSD_KB_LED_LEVEL1		0x3C
+> +#define UNIWILL_OSD_KB_LED_LEVEL2		0x3D
+> +#define UNIWILL_OSD_KB_LED_LEVEL3		0x3E
+> +#define UNIWILL_OSD_KB_LED_LEVEL4		0x3F
+> +
+> +#define UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE	0x40
+> +#define UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE	0x41
+> +
+> +#define UNIWILL_OSD_MENU_JP			0x42
+> +
+> +#define UNIWILL_OSD_CAMERA_ON			0x90
+> +#define UNIWILL_OSD_CAMERA_OFF			0x91
+> +
+> +#define UNIWILL_OSD_RFKILL			0xA4
+> +
+> +#define UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED	0xA5
+> +
+> +#define UNIWILL_OSD_LIGHTBAR_STATE_CHANGED	0xA6
+> +
+> +#define UNIWILL_OSD_FAN_BOOST_STATE_CHANGED	0xA7
+> +
+> +#define UNIWILL_OSD_LCD_SW			0xA9
+> +
+> +#define UNIWILL_OSD_FAN_OVERTEMP		0xAA
+> +
+> +#define UNIWILL_OSD_DC_ADAPTER_CHANGED		0xAB
+> +
+> +#define UNIWILL_OSD_BAT_HP_OFF			0xAC
+> +
+> +#define UNIWILL_OSD_FAN_DOWN_TEMP		0xAD
+> +
+> +#define UNIWILL_OSD_BATTERY_ALERT		0xAE
+> +
+> +#define UNIWILL_OSD_TIMAP_HAIERLB_SW		0xAF
+> +
+> +#define UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE	0xB0
+> +
+> +#define UNIWILL_OSD_KBDILLUMDOWN		0xB1
+> +#define UNIWILL_OSD_KBDILLUMUP			0xB2
+> +
+> +#define UNIWILL_OSD_BACKLIGHT_LEVEL_CHANGE	0xB3
+> +#define UNIWILL_OSD_BACKLIGHT_POWER_CHANGE	0xB4
+> +
+> +#define UNIWILL_OSD_MIC_MUTE			0xB7
+> +
+> +#define UNIWILL_OSD_FN_LOCK			0xB8
+> +#define UNIWILL_OSD_KBDILLUMTOGGLE		0xB9
+> +
+> +#define UNIWILL_OSD_BAT_CHARGE_FULL_24_H	0xBE
+> +
+> +#define UNIWILL_OSD_BAT_ERM_UPDATE		0xBF
+> +
+> +#define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE	0xC0
+> +
+> +#define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
+> +
+> +struct notifier_block;
+> +
+> +int uniwill_wmi_register_notifier(struct notifier_block *nb);
+> +int uniwill_wmi_unregister_notifier(struct notifier_block *nb);
+> +int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifier_block *nb);
+> +
+> +#endif /* UNIWILL_WMI_H */
