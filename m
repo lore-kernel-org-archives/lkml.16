@@ -1,156 +1,131 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C149216E26
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB6720AF67;
+	Mon, 16 Jun 2025 16:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090171; cv=none; b=ZietBvHknwU5jhBscfLBjb22B7JM1YkG9JqkPt3pkVgWfBPx6IdzGaCCqnalkkwtexRyA8y/YzwwVMZCOlLcCYu19S8q3nyQTeWQ1ANgRxRLPY+usdNXAZKNWUdmjoRxReWUfhCK3HdqugkbkVC3TosEC+0zdXn/TciiWfGXpCc=
+	t=1750090190; cv=none; b=SKiQ/FLt+8wHE52yLqUccZ89pwyfQCOTopSdNYtPjkFvhwiGISOVqY9U8i4bEy/cVHBLK//KuylabeP8dQdcZ0raEX53NC5bfZkR7t29FrFP2KeE0hsDgdQdPjfcu28f+YMhKdvK+fcI0j2xpNuA2vPV6KFChULEGHp0odj1Z9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090171; c=relaxed/simple;
-	bh=n7CGWUPKO6knlkUZxBxZQSBznQO4bkyQfuItUEb1xPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FbD2pu51DU5Vp2PRyEB7fJjrk8+nmKQ2iZ3c+jdcBczcyNmX41858y2AGUTexL+LjieJbsUwVe96iKsJcYdMIQNLdRTibdfRh1Xmf0EdUw2xpnKURO8UNhgieCLMV/OP5yiBLNjJ+gXO+Ez7lv1Iqwg86ZLcG8V0Fbgqa1PKuJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=saAwb6ic; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YWzwOCuD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ue3TZ7yi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Gq51MwMk; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="saAwb6ic";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YWzwOCuD";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ue3TZ7yi";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Gq51MwMk"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 62C8221215;
-	Mon, 16 Jun 2025 16:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750090162; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Bx6i2NZ8BbZBrNkIElY6uzwl2GaqIZIIjwPFKMYv8is=;
-	b=saAwb6icJLSPyayJZyeWCYcfF6sLhVl2GprjCYXgMLgkyF76PdevYHAbY6b2wsVkHh7RXX
-	giSBC0eCWznrXSpSsga8e93B4x2sLXsZ/5HgLvtwO7AKORufCD8cAh4+cVjkUDBoNXl3hV
-	U/9D/dNn7RDXLkvzU5DDb27/YFGW9TE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750090162;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Bx6i2NZ8BbZBrNkIElY6uzwl2GaqIZIIjwPFKMYv8is=;
-	b=YWzwOCuDrVxMk/dZk/+rwM2wTjzFlIUDz2rysRQcXwNQ75zYE6ntpMRIsG7eYDSHIyKag7
-	lvj25i3r92pDAODw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ue3TZ7yi;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Gq51MwMk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750090157; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Bx6i2NZ8BbZBrNkIElY6uzwl2GaqIZIIjwPFKMYv8is=;
-	b=ue3TZ7yiQq865YUUlgGbbdCLmNL/TkQTkRUu+r25AlbdBgLa4YQzpe0tfrzpvOup9sbtlR
-	BYfzL9tmbJidhZ4TheHub78Avob4IzdeZNgRb8EmAFAFSOf0XHCJSdw+oKV+9wG256GQx3
-	6OQf6f0aFzipYl5300ZFqotgRT/d+E4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750090157;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Bx6i2NZ8BbZBrNkIElY6uzwl2GaqIZIIjwPFKMYv8is=;
-	b=Gq51MwMkyjQs/bLBV9jOh+Av8HGn3aFzXBqBjuNojMHe5NAQaR5Loh0RlR2b/T5FRFX9Yc
-	gfVm9DFmFPs+frCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 28E0E13A6B;
-	Mon, 16 Jun 2025 16:09:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qAOqCKhBUGi5cQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 16 Jun 2025 16:09:12 +0000
-From: Takashi Iwai <tiwai@suse.de>
-To: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH RESEND] drm/amd/display: Add sanity checks for drm_edid_raw()
-Date: Mon, 16 Jun 2025 18:08:41 +0200
-Message-ID: <20250616160908.26333-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1750090190; c=relaxed/simple;
+	bh=hupPpB5C7hsOujbd0CaSC1f/KBFOevySlxxsM3jXnA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DyWF7bVxGjkWUKCWxaU6wp3JvkhSy2k8sYq8QmMvzuKviJjF3naOg8Sp72HcxThAi4fkpNbJqgLd8Hfvzcv4YJPVTk0O0+XpV4VYB2bACAA5yFllgLqMzVh36sX7OolPPEqcy2bZrdVLCSY0+BRPMh7QDY2AFfKwdEe8sCYo0G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B05A6150C;
+	Mon, 16 Jun 2025 09:09:26 -0700 (PDT)
+Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C883B3F673;
+	Mon, 16 Jun 2025 09:09:47 -0700 (PDT)
+Message-ID: <14f2329f-e110-4f3f-976b-acb38d255798@arm.com>
+Date: Mon, 16 Jun 2025 11:07:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scripts: add zboot support to extract-vmlinux
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, nathan@kernel.org,
+ nicolas.schier@linux.dev, linux-kernel@vger.kernel.org,
+ Ard Biesheuvel <ardb@kernel.org>
+References: <20250522172941.1669424-1-jeremy.linton@arm.com>
+ <CAK7LNAQzkh+DO7ZBVEgLu63k0H5qB-etV_jpo67k+itLWGAosA@mail.gmail.com>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <CAK7LNAQzkh+DO7ZBVEgLu63k0H5qB-etV_jpo67k+itLWGAosA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	ASN_FAIL(0.00)[7.9.0.0.4.6.0.0.0.5.1.0.0.1.0.0.4.0.1.0.1.8.2.b.0.4.e.d.7.0.a.2.asn6.rspamd.com:server fail];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email,suse.com:url];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 62C8221215
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
 
-When EDID is retrieved via drm_edid_raw(), it doesn't guarantee to
-return proper EDID bytes the caller wants: it may be either NULL (that
-leads to an Oops) or with too long bytes over the fixed size raw_edid
-array (that may lead to memory corruption).  The latter was reported
-actually when connected with a bad adapter.
+Hi,
 
-Add sanity checks for drm_edid_raw() to address the above corner
-cases, and return EDID_BAD_INPUT accordingly.
+Thanks for looking at this.
 
-Fixes: 48edb2a4256e ("drm/amd/display: switch amdgpu_dm_connector to use struct drm_edid")
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1236415
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
+On 6/7/25 11:04 AM, Masahiro Yamada wrote:
+> On Fri, May 23, 2025 at 2:29 AM Jeremy Linton <jeremy.linton@arm.com> wrote:
+>>
+>> Zboot compressed kernel images are used for arm kernels on various
+>> distros.
+> 
+> Are you talking about arm 32 bit here?
+> (arch/arm/boot/zImage)
 
-Just resent, as the previous submission seems overlooked
+No, it should be arm64.
 
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> 
+>> extract-vmlinux fails with those kernels because the wrapped image is
+>> another PE. While this could be a bit confusing, the tools primary
+>> purpose of unwrapping and decompressing the contained vmlinux image
+>> makes it the obvious place for this functionality.
+>>
+>> Add a 'file' check in check_vmlinux() that detects a contained PE
+>> image before trying readelf. Recent file implementations output
+>> something like:
+>>
+>> "Linux kernel ARM64 boot executable Image, little-endian, 4K pages"
+> 
+> Are you talking about arm64 here?
+> 
+> I am confused, as arm64 adopts a simple-compressed image.
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-index d4395b92fb85..9e3e51a2dc49 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-@@ -1029,6 +1029,10 @@ enum dc_edid_status dm_helpers_read_local_edid(
- 			return EDID_NO_RESPONSE;
- 
- 		edid = drm_edid_raw(drm_edid); // FIXME: Get rid of drm_edid_raw()
-+		if (!edid ||
-+		    edid->extensions >= sizeof(sink->dc_edid.raw_edid) / EDID_LENGTH)
-+			return EDID_BAD_INPUT;
-+
- 		sink->dc_edid.length = EDID_LENGTH * (edid->extensions + 1);
- 		memmove(sink->dc_edid.raw_edid, (uint8_t *)edid, sink->dc_edid.length);
- 
--- 
-2.49.0
+No, there is a CONFIG_EFI_ZBOOT, which is a EFI/PE image which self 
+decompresses a contained kernel similar to x86, but is for !x86 EFI 
+architectures. This patch extends this utility to work for those images 
+as well.
+
+
+> 
+> 
+> Apparently, this patch did not work for me.
+> 
+> $ ./scripts/extract-vmlinux  arch/arm/boot/zImage
+> extract-vmlinux: Cannot find vmlinux.
+> 
+> The 'file' command says, it is "data".
+> Is my 'file' command too old?
+> 
+> $ file arch/arm/boot/Image
+> arch/arm/boot/Image: data
+> 
+> 
+>> Which is also a stronger statement than readelf provides so drop that
+>> part of the comment. At the same time this means that kernel images
+>> which don't appear to contain a compressed image will be returned
+>> rather than reporting an error. Which matches the behavior for
+>> existing ELF files.
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>>   scripts/extract-vmlinux | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/scripts/extract-vmlinux b/scripts/extract-vmlinux
+>> index 8995cd304e6e..edda1abe226c 100755
+>> --- a/scripts/extract-vmlinux
+>> +++ b/scripts/extract-vmlinux
+>> @@ -12,10 +12,11 @@
+>>
+>>   check_vmlinux()
+>>   {
+>> -       # Use readelf to check if it's a valid ELF
+>> -       # TODO: find a better to way to check that it's really vmlinux
+>> -       #       and not just an elf
+>> -       readelf -h $1 > /dev/null 2>&1 || return 1
+>> +       file $1 |grep 'Linux kernel.*boot executable Image' > /dev/null
+>> +       if [ "$?" -ne "0" ]; then
+>> +               # Use readelf to check if it's a valid ELF, if 'file' fails
+>> +               readelf -h $1 > /dev/null 2>&1 || return 1
+>> +       fi
+>>
+>>          cat $1
+>>          exit 0
+>> --
+>> 2.49.0
+>>
+> 
+> 
 
