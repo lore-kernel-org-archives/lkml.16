@@ -1,254 +1,193 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2088.outbound.protection.outlook.com [40.107.237.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CF51C1741;
-	Mon, 16 Jun 2025 05:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750050877; cv=fail; b=uFoSrzSa0gxYQZICq2ruW6p0XHy9j9pGbRPj7ceIOmqNhucNosmBEACZ9E03y+hYNJn5nR1KxTrAgsPWnjQztr1No5/Sb6kq0RmkhnBr/ItsSpXTVn4nFtX9JHlyk73pkhYnXl4nCV4nPO420Qxpcw7odaAGJ+onDBhdSc3njWo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750050877; c=relaxed/simple;
-	bh=p1PgUeodjmLut1DmS5vD/rVBGVbA8fuh5CGG9LsY60s=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=ctFSBrL7NwWHeDXY9WdQ/r0sIbByyPttwuTTYNy+SU/lDCHpyhMKMsTXBkhx1nIXA0dYlMHEDG5ed38qcsDS+GEze0SgF5s5nCvkmaRusXAtP8YNc42Nozpgnqb28FojoXTHMUGJKHQ+W0rGQkMM/iiB/b4aCBorByHS09kQpPk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Jtywh+7Y; arc=fail smtp.client-ip=40.107.237.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74D68F5E
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750050928; cv=none; b=TBto1hAjmwmyPLj+FlZstgr5NfCEgJrVclh4+clO9Gf59ftCNiBNZIxH5k2/OtG9jvWquqZVfg1QY6YjiE+SVJzsQ4N6u6Y3cw8QcLfSfz9VudGJqUSlpUFhoSmZKi7MSK/uZo7rVXjHrLfYtmOGdJsO+nxRmOdC9r9NIE1HLe8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750050928; c=relaxed/simple;
+	bh=sM00XjHMFbq/ecTSs00LP5tVfdCmiGEqc4YU3xkdTtk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=AvNgDXx0MaRiwEDVIuFsBdemuzVMiil3MLCq4q2rvAE7FRJ2Xei2quPEvGzlzLBGS2lo0yskgWwm+mSj7oGPfRvg5iOKR2g1aopdVu7AKrA/BtN1/Wa331SwBflRAm7M6nXTSkZDAD3Xhw75kTRfx80eB7Ka/cLK7WocJQcpi7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uq76THyu; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Jtywh+7Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=APECZID0NzaM04i3PJxp1B8mtHUHaFocBzqy9k8WUkKOQdiUv774mgKWNxSNR11wENNW8QORGnTj+8LQc8/CNa/d7IGjxGm0TU2+LkCUVqMDK87YcF6L3Ht0M//BCjj5RZHkx+GH0kX8Y81lEpzgM1xzGolbmTsbz93nPvQktDKYhQR7vFEPwSxAPAGb+Z1OfXPMcFd+h7ibMHl+wU/pke8lXDuuVoFaiAyVQtpsODKAvMzfGtwGU6BjHjcugxNrHXc52zuIGa0TmKSjEwhc7wWVqAbBdxZiNgB/7GJFhQlYor0Y8VMgV3t7mzexOSZfs1++KOokEOarB+scu10OSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DtonbrjietZNW5swa/6ksVzAo0YY3zUBI/9NwFIFX/k=;
- b=BmqrhxnFPd9tt1BEdno3bqr+udLKhpRkXVPeZyvoarGUUCYQejQye4iNQe1XMEKQCtUh+azReA3vBvgULkj1JcBcdnOghEtSiYcp7jAEth4fKRZ758ftgYa03RWqfqjYL59A7kvTPDUcLekyict3dydKfsJlbRd/grLWVA7pMU0e4dy3RUn49rn5fYtpxs5ZAxDxMDg4edFlvQJNuYHOe+Jld/56jmiVZrjdj7/qslsf065Gzpq6sW2pHOLjqKC+dNfvKM3W4vWFLriQWjmvkCDumkPVegWv9XQD08Bu+OmI/2Y7GqZ5HMS59qeDfdE2bLqw5XigZgifbbXwHnWfgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DtonbrjietZNW5swa/6ksVzAo0YY3zUBI/9NwFIFX/k=;
- b=Jtywh+7Y8z//fxd/VneUf8MXHTiO0VPTQB9w2Lghc5wLxmcMf3IWm65VtcHp9QNOtij5yFLZ8wHb0BII5s3I7tfYzuAUUetARaC/22kPZJBBqZ5PeKbDlk6Cuvz9DzWLoOnaERSkp4AXyyzhvWYM01nIMPvvUyLnwJ3MRgthLSKmAajm9iUdzPLXJLKKa3YF6/40pKhqh37h3c3Z8KP3U5WcGxXgNXGEUGNajcB5SETWsjYdg99kw3Tg5LfEa5e0POb5bkC9LVRVJK04ujsCtWGxjRBfwGH/Yuked4rV4S2h5uz92wax4Uh7dm0Jkw8FAH6v7rfQ0prOWpZPME9+Ig==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by CY8PR12MB7610.namprd12.prod.outlook.com (2603:10b6:930:9a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 05:14:33 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
- 05:14:33 +0000
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 16 Jun 2025 14:14:29 +0900
-Message-Id: <DANP9ATT1T5W.1KP4992E26FTP@nvidia.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Benno
- Lossin" <lossin@kernel.org>, "John Hubbard" <jhubbard@nvidia.com>, "Ben
- Skeggs" <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
- type
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
- <aErtL6yxLu3Azbsm@tardis.local> <DALGWEM3TD3O.95L77CD6R62S@nvidia.com>
- <aE2sjA4DxFndTZYk@Mac.home>
-In-Reply-To: <aE2sjA4DxFndTZYk@Mac.home>
-X-ClientProxiedBy: TYAPR01CA0023.jpnprd01.prod.outlook.com (2603:1096:404::35)
- To CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uq76THyu"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31202bbaafaso3758948a91.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 22:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750050926; x=1750655726; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ivPTZpmxX2ElfI/cSlheshsBgnhAB/W8LTyvJx8IZQE=;
+        b=Uq76THyuTT4hSgndQ00rNLbEN6iHcS0XBVGn+vHRh6hs75L4UiPLu26E5AKLBFphaZ
+         wAE6OMDfMW91RJ3hBnHCoI613yo7DM5TXrIidCnUuisFg8XyzO2/YZWD90CcGxYiY4Nq
+         Lk0JBHJkZ4mqYhaF5yrm822jdEVWgi7SeUTnYxKV4+X2IyT6e6fwa/b2kDsNmLiTX5+N
+         IJtiBpflJbMSZw28Y0nKcAIy0PJDTESu4f6bfA5NQ1DVgapBhnDH9igR/Ny/iMJLHcvx
+         gE79u6OQWPB6in+WPzvftOfAZjffyzYbVfs/0uoyR0378yzsmigyH+3eiqYTlqzUPunO
+         ZvFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750050926; x=1750655726;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ivPTZpmxX2ElfI/cSlheshsBgnhAB/W8LTyvJx8IZQE=;
+        b=iDJplGyoor8eakwzNwPwLmym7f+BNrqp3GsRs6O97q+rQLouMOP8QEo50pu2CM3UIO
+         QQbiUMiT0KNfWll2dB2S8e/wQ7mRBsiGcZdaU05bfGMZbjlTw1G/wtb5NPpmj07sj6N+
+         +8QkrcW+ogOcjQLI0kzqO8C3CjEyCUfc2xHm96il7EhxSvWlfrqVsTw2pE6HO2moIBxq
+         cQUI0252+suJoVsJ+fAM0vvAgCV03AwrT/gUXn5V640VifyL+sFw+PsGYEFSynYhzvW5
+         SchXO9rJbY/CgJ0DIeYoIlVdGRQxdtA+W0FrOJwIsfYmUJNpU2tKyWL3sucqbN1yJ+wc
+         CcCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOnH1YQXwkQyaNIalkjvIp1R4naKW9kc+UB3kypQnTZjMzgVOYd5emODD3xX9zkVBAMxpbUdpVSQY0VVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYYkVb7mBCy5+DGycPhpSUKBiUPF/gU60BZEMdX+O5XAMMFXsp
+	OgaHYe2twHkZhq/FJ3dCDqm2hHaMQWIg7Vu5LK0T5Nm+fkybinI4xClCcze460xWR5BC3dY48ko
+	BvPUye1+m1Q==
+X-Google-Smtp-Source: AGHT+IG7viZ1D+PslmII9o7bbht4gRgXyMwb7kHK+9d2oEyWX4s7C+PRLWmaIiV8o8tlZiPYvogcwXDbsZSF
+X-Received: from pjbsp12.prod.google.com ([2002:a17:90b:52cc:b0:311:7bc3:2a8d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:f944:b0:311:e305:4e97
+ with SMTP id 98e67ed59e1d1-313f1cb1ae5mr10850455a91.19.1750050926194; Sun, 15
+ Jun 2025 22:15:26 -0700 (PDT)
+Date: Sun, 15 Jun 2025 22:14:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CY8PR12MB7610:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8302e75e-b9f7-4eba-54b7-08ddac94adeb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TzQ5RmRmN3dvTkhKQWRYa0JpcmJkclR0VDdXRkJ5cU52YWZkcjhjNG5xekhw?=
- =?utf-8?B?ZzB0Q1lYcW1OTlpmWEdnTlJjV3FxM2hWem5vd2RXcEE0TDArWmVFTUFSRUdS?=
- =?utf-8?B?WkpMS3E0SXdLRXhmSWZReE9xOGVWMWd2dW9nenRwSlBqd2lCQjVLTHBoZDJr?=
- =?utf-8?B?c2NJRk5pdlJjN3VjU0RKL1lzM3d6dUZTSkwrcXdnNjFRQjJza1p6eXZJNU95?=
- =?utf-8?B?VVo5c2ZoaEZwN3JTSW95Mk93UThSL3pHaWl0TmNCZXJPL2pLVGV6MDhscG5h?=
- =?utf-8?B?TktzYVNrN3ljb28yeEoyZUdvYy9yUmR5NkloeVQ1aTFsZzdXa0lkQk9yRUl2?=
- =?utf-8?B?VkF2MnhlYWdLUTFKWG9pS01uMUY4QTgzQWkvZGFHUHgwZEtjdENGQW4vUjhJ?=
- =?utf-8?B?MnV0cGpmSFlPb2hIZitMU2M5T0I0cjBycUFMVS81ZGhheHZEQ3VuMnZjMytZ?=
- =?utf-8?B?UUNyS3lMa0ZkYXNSTllFdXRVNXpHcXd2cXNZTXk1dGFWK1RWaDFud1JhUGZu?=
- =?utf-8?B?aXo1Z0I4Zk42SFNmYkZCWHRKNXVISDFqVmt5bTdNbGUrRFZLZUd5VWRsMWRv?=
- =?utf-8?B?MjlWWUNKWW9IT2ptV25nb0tqOVJNUXlBbGgwb2g5aUFtUkVsT0NWZ1k4VFdO?=
- =?utf-8?B?OVJHN1N2S0lwWmtGVnVBa2N3VHdKbks4d01ETmh0cEkzT0thdGQxbnhDdmRY?=
- =?utf-8?B?RmxkMk9aZng5RXRHRllzM2ZmcmcxMEV4NXBIams0L2x6MHVmdlFnNHlFM1dk?=
- =?utf-8?B?bkxrc25TaDlxcGZzblBDdzdySEQyQ0ZxUnpIK2xZak9laGJUQlpyd3YxL0RI?=
- =?utf-8?B?SG9TZkcwVXBjYUxHcWZxMUlFWTlld1E3YjRZQlMvOElQSnhEMmJvQU1keXMx?=
- =?utf-8?B?NDB3U0h3WFkwLzIreTQ1K3FIcmpmYnJnODhFQW1rTTJjSDAvR2kzcW05R1lV?=
- =?utf-8?B?Q3RwY1lsOWQybnFQc3ZoLzZnVXdvVFA1K0xhcVZFbVRNSDhEK2puY09xN0Nv?=
- =?utf-8?B?SXNXVkVabHovNFZsUE1rdTQrYlNNcEtOYzk4L3dhU3pWa3d6cFJUU1U0Ykcw?=
- =?utf-8?B?dStiVER0UXZ3ek95NUVLZkFvR0daSHdSTklYRk13NDlNN3l5VEwwMGtVK2lS?=
- =?utf-8?B?bWpMeGl4eWVzRHUxU1d3OUFmNkNTTVd1bHl0VEVpZzFZRDNKM1RieSt2MFd4?=
- =?utf-8?B?NWFXYTN0Ym9oV2JvRDEyanFTNDREN3NETFNLZE1HbmFtZUpyd0U5VkV0QTJ3?=
- =?utf-8?B?S0JvdmpBY2FVdmRQOUpROElMd0ovdmM4TmlvUGgveC9od2h6UmNWVlJCaDNC?=
- =?utf-8?B?WDljNmtMbXJsV2g0bXlDd0pObWNFTU5iUkF1MVNNcXdZTHdBcWdMWHhxcElj?=
- =?utf-8?B?eTEwTVlXcXFWUGZFZlM3VG5PNitYTVlhNWx4bjNnUjRJYjA2cTNab1Y0U3hw?=
- =?utf-8?B?dCtKb0ZJMEljWDFvWHg3SnYzVmljU1FTV0dCYkNnaFQ1OHVqQ2dWUzlpZ3lt?=
- =?utf-8?B?S0x1MkFTQ3loUFZ4Ujcyek5VR2RhUnNZdE9lVjkyRmJTV2xRL056d1l3WUhl?=
- =?utf-8?B?SnZYZmwycXFxWDZFUDNESmJOS003Ym1BVmtON0pDVkxYU1BvbGNCcFpERmhL?=
- =?utf-8?B?U2hLWlBlbEFzUGxnVUNaSXg5ck12L2xkbURmc1dCQ0hjeUVpVzF5d0xLSjJq?=
- =?utf-8?B?ZXduRytDVkdxRmJNYlRvVCt6VjBwSGUrb2hvTXRmNzdWdzVWVmdCTnhVSldD?=
- =?utf-8?B?L2NiMDBaU0M1TCt6R2w3NFZvREgwaXZCdlVZYmZScUZPNTNhaGxkR3Y3eG85?=
- =?utf-8?B?RjhLYlpZbFBOeER6YjFRY2xPVjQrVndwbktzNWtwMTZucmU4VWxLWmFvdER2?=
- =?utf-8?B?aXprcXVUSHRzSEJsNFZqWDFUd2xHZnBGbk9YVW5wVFZ5QVE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VS9WMUpNaTdhc0pyT0RPRHpyUnN4QkVsd0cyZ3k4d1AxVk5kTDlEbVNHd05y?=
- =?utf-8?B?WnVWUDhqS1pNMnJqTC9YTU43N0VEaVVMOE9pTnJ0djdXUmRFazNVTlI5VENB?=
- =?utf-8?B?VVNLQ0c1bzdhSSs1d29tRm5QcW5NVTJPMFlkc2didHExemM1VGtKbVUwTmlP?=
- =?utf-8?B?L2NVTHJWZUdyaXhQQTVRcTB3V1FaUVV6WU4xQ05CNWdGWnVtTjYydXZ2Z1BM?=
- =?utf-8?B?VU80SFdTYXJkRjZsZDRUdXpYeEp6Z21ES1Y3Rk02S2hxU3I1ZXI1MFJaOUM3?=
- =?utf-8?B?TmJ4SHJWZUt3eGlEcGJtdFU1bTdqdWZ3M0hPNk9Gd2VxTG10VjlDa3JZZDVW?=
- =?utf-8?B?aHB0a2NjKzVndXNYcnpSYTUwL1dnUmVzS2hSem95bm9PN21aZ3RMZ1ZJMlFh?=
- =?utf-8?B?WjR6eFA2S2F6SzRIOHlqRys5am81S3IwM21uSUZmcm1MTjRVYU5BcXlZZnh2?=
- =?utf-8?B?eUlnZ2g4bkJUNnZjUjVZQ05HcHplR0RrNzE2eHRJVzd5UmZNRkhLU0M4Ni9F?=
- =?utf-8?B?T2ZNNjIwamRQVVBxcmhRckRYRjNORXRCMDU5eHR5VktDVnJSUFJzRFdnaGJy?=
- =?utf-8?B?NEt1QTM2RVF3anhid0UzM1RTU2ozQ281Mk5NZHBHcVo4Syt4ZjdnSkZySVYz?=
- =?utf-8?B?RWoybHRPUHdTdkFtMVpsNENNOERJRk5kWkwzOElrQUFOSjBaaWhNYldzK1Uv?=
- =?utf-8?B?Zkt4YXdNcEUwYUhyV0E3TnhHQXdDQll6RUFEVFppTU5qRTVhdUpTV2NERDlh?=
- =?utf-8?B?V0NaSmdBV0JSL2gxUnRVR1lCL1ZOSklPRlVYZFJqeGVScGV5K1B0QUFDd0kr?=
- =?utf-8?B?aHBXU2Q3ZmtqeVhmbTVNM0hGelVHaGRreFRWSmx0SjdkejFqOS9paGhoVlBq?=
- =?utf-8?B?M1JDU1FsejNqbkYzN2s1NStHSi9oaWdFb1J4Y2Z1L0tuVDBxc25jcy9xZTlj?=
- =?utf-8?B?S0hLdnovWGNmczJWZ0lyRHFxZjQrNUFMUFdjT2c1a1UzNG8vaTBsdDhERzNG?=
- =?utf-8?B?ZGlCeDVaR3prYzBwNWVhWFRHU291N1UyTXJjUHIrTm5CaDMzVFJvT2laM081?=
- =?utf-8?B?aWNKQnVlOWlVaDRFK0lNM3Y2aGQyU2JjYTN1bkQwc0tIM0ZGbW90a3NGaWFw?=
- =?utf-8?B?SFNINkFBR21IUDRHaXJ5R2l5V29xeFpJZHRYYzMrcldjNlZoVDBnMkpTUkt6?=
- =?utf-8?B?VGl2Q2toM0k0R1RqOTNoOXNwWEZCYVo1OGFZOGhEVDBvbkRFOEhNOUlmYjFT?=
- =?utf-8?B?THNNM2hUdVNzYm9MVG5Fa291QmxiUi9vODgvOUdPUGZHVmRuck1hVlNhSmx3?=
- =?utf-8?B?MkJmOHpxNm9yWFdzS2pzTnVZMlV0dUEzV05DMmNRS0xKRU1MSlBmUWtDN09w?=
- =?utf-8?B?azhlY3ZSd0ZwajNtWkx3WVhEbzJOZTl6OXp4TmFBWWlIY1hMQmY1ZkNtc2Nt?=
- =?utf-8?B?UEJ3dXBXeUlaNnUzU3JWd3JVbk11eUt6UVVMTVNnVGN0WG8vQ0xtUDlKKzZU?=
- =?utf-8?B?QmpqUlFEUWRPelpObzdadWpCZ1JaVTBLV2RLTVFuTlpNaG5PUUNpenlpaGlj?=
- =?utf-8?B?ZFAyMkpzK3pFVkxmeWdPcmUvbEFULzRsd3Fma1BqRjlxdEhxS0RZaHFON1kz?=
- =?utf-8?B?RFo1T05vRTVFbU5nVmt0bThFTEN0WXNZdlJqNlVoZStuNVBGVFZscWpIc1Uz?=
- =?utf-8?B?ekQ1N0pTb29iTVJhSlRnN0ZwK1BXdzgrMnIzSTdQN1JZbmhSU0Y2cWJGay9J?=
- =?utf-8?B?WWdsRmsreVJodkpnb2NUK28yaU13YTFBMmdSdU1mVzZadHZVQ1o2QjJwVzJp?=
- =?utf-8?B?ZEZISnFzZnQzVWhuaCtrd0Jsdi90WXBDdFBRWXVlNDhZdy93TjBOM29yNHFX?=
- =?utf-8?B?aUlOKzNFd3NRTFMxYktzWjA0WVVvWnJQK29ma0VoWExkWUlXN3dMN0ZEVTJV?=
- =?utf-8?B?UXM3YXY2dTE0SmdWMFFqSzNDa0ZmWmpDb29SQTZDbkQvcWJyU0RTdzFUV004?=
- =?utf-8?B?MTUxZzFRVFlLaU5iMW41TnE3U2trdkdHYjNLTG9vdjhIMFZ3amxzd0lsZ3hy?=
- =?utf-8?B?OEZHU2pZbml4MDl3M0NGVU12Qklhc0ZxRVpremg2YS9KY1UxNHhZM3lJcUQ2?=
- =?utf-8?B?WXlwOEJ0K3BiS2FMczA3VlBCYnJCSElQK0pjYTcwOUhDMCtGdkJTMll5LzdW?=
- =?utf-8?Q?QoF+JpdiHPmPKKRoaGYjIxYCb31b8D9b0Y57YTAeegHm?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8302e75e-b9f7-4eba-54b7-08ddac94adeb
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 05:14:33.0676
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cNPtsvpQ52cT1X8R0PrtWAJareSmz/aRSwISDbX68ROu+TTYsBZnS3KqZSdxMev2r6c5tb+VC7cYzRnOh/zAag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7610
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
+Message-ID: <20250616051500.1047173-1-irogers@google.com>
+Subject: [PATCH v3 00/15] New perf ilist app
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun Jun 15, 2025 at 2:08 AM JST, Boqun Feng wrote:
-> On Fri, Jun 13, 2025 at 11:16:10PM +0900, Alexandre Courbot wrote:
-> [...]
->> >> +                /// Aligns `self` down to `alignment`.
->> >> +                ///
->> >> +                /// # Examples
->> >> +                ///
->> >> +                /// ```
->> >> +                /// use kernel::num::PowerOfTwo;
->> >> +                ///
->> >> +                /// assert_eq!(PowerOfTwo::<u32>::new(0x1000).align_=
-down(0x4fff), 0x4000);
->> >> +                /// ```
->> >> +                #[inline(always)]
->> >> +                pub const fn align_down(self, value: $t) -> $t {
->> >
->> > I'm late to party, but could we instead implement:
->> >
->> >     pub const fn round_down<i32>(value: i32, shift: i32) -> i32 {
->> >         value & !((1 << shift) - 1)
->> >     }
->> >
->> >     pub const fn round_up<i32>(value: i32, shift: i32) -> i32 {
->> >         let mask =3D (1 << shift) - 1;
->> >         value.wrapping_add(mask) & !mask
->> >     }
->> >
->> > ? It's much harder to pass an invalid alignment with this.
->>=20
->> It also forces you to think in terms of shifts instead of values - i.e.
->> you cannot round to `0x1000` as it commonly done in the kernel, now you
->
-> Well, for const values, you can always define:
->
->    const ROUND_SHIFT_0X1000: i32 =3D 12;
->
-> because `0x1000` is just a name ;-)
->
-> or we define an Alignment in term of the shift:
->
->     pub struct Alignment {
->         shift: i8,
->     }
->
->     ipml Alignment {
->         pub const new(shift: i8) -> Self {
->             Self { shift }
->         }
->     }
->
-> then
->
->     const ALIGN_0x1000: Alignment =3D Alignment::new(12);
+This patch series builds up to the addition of a new ilist app written
+in python using textual [1] for the UI. The app presents perf PMUs and
+events, displays the event information as in `perf list` while at the
+bottom of the console showing recent activity of the event in total
+and across all CPUs.
 
-Now you take the risk that due to a typo the name of the constant does
-not match the alignment - something you cannot have if you use values
-directly (and if one wants to reason in terms of alignment, they can do
-`PowerOfTwo::<u32>::new(1 << 12)`, or we can even add an alternative
-constructor for that).
+The first part of the patches are a few perf and perf python C API
+fixes, most importantly the counter reading in python supports tool
+PMUs.
 
->
-> and
->
->     pub const fn round_down_i32(value: i32, align: Alignment) -> i32 {
->         ...
->     }
->
-> My point was that instead of the value itself, we can always use the
-> shift to represent a power of two, and that would avoid troubles when we
-> need to check the internal representation.
+The second part of the patches adds event json for the software PMU
+and makes the tracepoint PMU support iteration of events and the
+like. Without these improvements the tracepoint and software PMUs will
+appear to have no events in the ilist app. As the software PMU moves
+parsing to json, the legacy hard coded parsing is removed. This has
+proven controversial for hardware events and so that cleanup isn't
+done here.
 
-Storing the shift instead of the value means that we need to recreate
-the latter every time we need to access it (e.g. to apply a mask).
+The final patch adds the ilist command. To run it you need the updated
+perf.cpython.so in your PYTHONPATH and then execute the
+script. Expanding PMUs and then selecting events will cause event
+informatin to be displayed in the top-right and the counters values to
+be displayed as sparklines and counts in the bottom half of the
+screen.
 
->
-> That said, after some experiments by myself, I haven't found any
-> significant difference between shift representations vs value
-> representations. So no strong reason of using a shift representation.
+Some thoughts on the series:
 
-I'm open to any representation but AFAICT there is no obvious benefit
-(and a slight drawback when requesting the value) in representing these
-as a shift.
+ - The PMU changes will conflict with the addition of the DRM PMU:
+   https://lore.kernel.org/lkml/20250403202439.57791-1-irogers@google.com/
+   when these two are merged together ilist will show yet more
+   counters. It'd be nice if the DRM stuff could land and then I can
+   rebase these patches.
+
+ - The parse-events clean up of the software and tracepoint PMU. The
+   software PMU hard coding to be legacy first has similar issues and
+   will conflict with the clean up in:
+   https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
+   Moving the software work to json means we don't need special parse
+   events terms for software events, etc. We can just treat things
+   like regular PMUs with json, etc. I'd much rather we had less
+   special case logic so that series is best rebased on top of this
+   work and it should drop the changes for software terms, etc. which
+   this series removes. Maybe one day the whole event parsing can be
+   much more regular in how PMUs are treated but there's always
+   "cycles".
+
+ - Should python libraries have feature tests? How does this get
+   packaged outside the kernel tree? I think these are open
+   questions. Clearly textual is kind of a big dependency and we've
+   largely been moving in the direction of fewer dependencies
+   recently. Hopefully the app makes it clear why I think this one is
+   worth carrying. We carry libslang as a dependency and I think
+   textual clearly far surpasses it.
+
+ - How to launch? Currently I run tools/perf/python/ilist.py but it
+   would be much nicer if we could do `perf ilist` much as we do for
+   perf-archive.sh. There are probably other scripts that should be
+   perf commands like flamegraph and gecko. It'd be nice to follow up
+   the series with something to make using these commands easy.
+
+ - Additional thoughts were captured on the mailing list:
+   https://lore.kernel.org/lkml/CAP-5=fWC+doaVd5rEMWJXSQi_db_Wu2tyAe5Lm6jnQjcwXkF+w@mail.gmail.com/
+ 
+[1] https://textual.textualize.io/
+
+v3: Add a search dialog to the ilist app with 'n'ext and 'p'revious
+    keys. No changes in the ground work first 14 patches.
+
+v2: In the jevents event description duplication, some minor changes
+    accidentally missed from v1 meaning that in v1 the descriptions
+    were still duplicated. Expand the cover letter with some thoughts
+    on the series.
+
+Ian Rogers (15):
+  perf hwmon_pmu: Avoid shortening hwmon PMU name
+  perf parse-events: Minor tidy up of event_type helper
+  perf python: In str(evsel) use the evsel__pmu_name helper
+  perf python: Fix thread check in pyrf_evsel__read
+  perf python: Correct pyrf_evsel__read for tool PMUs
+  perf python: Add basic PMU abstraction and pmus sequence
+  perf python: Add function returning dictionary of all events on a PMU
+  perf jevents: If the long_desc and desc are identical then drop the
+    long_desc
+  perf jevents: Add common software event json
+  perf pmu: Tolerate failure to read the type for wellknown PMUs
+  perf parse-events: Remove non-json software events
+  perf tp_pmu: Factor existing tracepoint logic to new file
+  perf tp_pmu: Add event APIs
+  perf list: Remove tracepoint printing code
+  perf ilist: Add new python ilist command
+
+ tools/perf/builtin-list.c                     |  47 ++-
+ .../arch/common/common/software.json          |  92 +++++
+ tools/perf/pmu-events/empty-pmu-events.c      | 266 ++++++++-----
+ tools/perf/pmu-events/jevents.py              |  18 +-
+ tools/perf/python/ilist.py                    | 376 ++++++++++++++++++
+ tools/perf/util/Build                         |   1 +
+ tools/perf/util/evsel.c                       |  21 +-
+ tools/perf/util/hwmon_pmu.c                   |   2 +-
+ tools/perf/util/parse-events.c                | 225 ++++-------
+ tools/perf/util/parse-events.h                |   3 +-
+ tools/perf/util/parse-events.l                |  38 +-
+ tools/perf/util/parse-events.y                |  29 +-
+ tools/perf/util/pmu.c                         |  44 +-
+ tools/perf/util/print-events.c                |  95 -----
+ tools/perf/util/print-events.h                |   1 -
+ tools/perf/util/python.c                      | 248 +++++++++++-
+ tools/perf/util/tp_pmu.c                      | 209 ++++++++++
+ tools/perf/util/tp_pmu.h                      |  19 +
+ 18 files changed, 1282 insertions(+), 452 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/common/common/software.json
+ create mode 100755 tools/perf/python/ilist.py
+ create mode 100644 tools/perf/util/tp_pmu.c
+ create mode 100644 tools/perf/util/tp_pmu.h
+
+-- 
+2.50.0.rc2.696.g1fc2a0284f-goog
+
