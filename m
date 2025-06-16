@@ -1,152 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A8C298998
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC711E7C23;
+	Mon, 16 Jun 2025 11:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071860; cv=none; b=mi9ALMdTDkCGNQ2R3TFBgg9IPDY58/VLL5hPvhQ9kuZFRS8zMc68jerJoNt9OPMWySHCfMlPsINGi4HX7ElyP1FZRaKK3jlaOdCrC8/Uq9bDBDwN83gu1ZTtt709y4UOGlMmrIVP9j6GCqiv3THPWhuhY+ou68vIcVzaPehW5xU=
+	t=1750071908; cv=none; b=g43DvM2FevatXShvrOSZ47zMTAxPo/czITn4EzVuS1LBCVMvYAGCFCMX5Za7HmdJVuqXGcUaUX5lOKASSZ1hVIk1snTHtVWZTX9WWnfJhg9gC6UH79iRtqqPJAuYYlrS8n+AENKvxsCoP6kkb7A278W8vUNPOxqKEic85oqFEjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071860; c=relaxed/simple;
-	bh=cZ96XbquQqST07cmpZCxaySWnUVgiBMaxoseaYKqZAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSTZIHnj9SxC4BuLdjpABYQl5IyD27SnWpKju3NOE3JZxcKA1wSoQHnnEeORsFTuFQWVJ1z83U98mKtLl+ZCD48vXyQ2h/734qtq6AJRdZFztKKnrn5dYGC6gMY0KyXjn7u05h9IJsWvVQimSTDKiqcDZijCLlG6wiXPk9hzOkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NwxSOp57; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750071908; c=relaxed/simple;
+	bh=YF9drZt1Vk2tqLIRz2qYVmlEicLlB4tRXccdLxx+vwc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tujNuLsgXIVIDaHradt4hm4NGueQDl08FS0oBpzdN7pQYFa+N9C60DUjf9lkvidc7UGA4ada4Sj3e1NUi0KHTUA7OphCO0NFGtAszBVAqRXgeVbZHyY+PIVhYf3Jfczy6l1pwJAE3BF4nJKpPGhOo1HIWM7lpw+ZZ2kVP8HG9iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HeMTakPt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NwxSOp57"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750071856;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RznKbWG0gfknAu3iwovxCiP4HQBREMLRrwNJpblRENQ=;
-	b=NwxSOp57qULHJKmsb9tQ5QadW/rkAT/pYjYu6jr+UUaA6NW+md8zqEmpP+RWdgVWyRgcgj
-	c2tt4YYwUU4FIZ/1qLJ4BBAh3UVykkuEzlIPPlGQjyt+K21dH6JJWUqD8/CKiQX8dorMfF
-	sbKHkxWZlO66K/58CBPxeZ0LIp5F1ok=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-3TpVPDTSMqaDXMKXkrGKcQ-1; Mon,
- 16 Jun 2025 07:04:12 -0400
-X-MC-Unique: 3TpVPDTSMqaDXMKXkrGKcQ-1
-X-Mimecast-MFC-AGG-ID: 3TpVPDTSMqaDXMKXkrGKcQ_1750071850
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E9D9119560B5;
-	Mon, 16 Jun 2025 11:04:08 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.154])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9AD881956096;
-	Mon, 16 Jun 2025 11:03:59 +0000 (UTC)
-Date: Mon, 16 Jun 2025 08:03:57 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, David Vernet <dvernet@meta.com>, 
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>, DietmarEggemann@uudg.org, 
-	dietmar.eggemann@arm.com, Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RESEND PATCH v4] sched: do not call __put_task_struct() on rt
- if pi_blocked_on is set
-Message-ID: <sebgq5zykuzb5qx22ejjlz5b4pnnrnpgcq7mk6cr7vkl455sjy@z3xx7l3s6ks6>
-References: <aEw-KjUjjP2gYH6z@uudg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HeMTakPt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EE119C4CEEA;
+	Mon, 16 Jun 2025 11:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750071908;
+	bh=YF9drZt1Vk2tqLIRz2qYVmlEicLlB4tRXccdLxx+vwc=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=HeMTakPtuQv6b5KMOeuBi/+mhwM0DlMjbUG+POaxZQPQgGGTXOOi1kfGhmi6tmu5k
+	 Hc0W9nZ1+QGkgrgl6jLLPsNGVMgS6+evr6MY00Dif9yn6DRw16iIHDARNl2DovFJ4G
+	 akMbBuQ2Al+U+nz7P1I9eV5fIFraq60KMDVI/GkpwzFUW0pogOwL2Vdfd6ICgzUQ2B
+	 +lrjGYwqK6dXyn0U8zL3IMuGhrxEC0MF//rd/F4sK7nivmWMnkT+WUWef7GDbWxpeE
+	 vTx7zkTWBIDXYeSALVJQ+mUfGV7QUM2jcouoLrlco/3Njq8HIqXvF+QtO4fwVcM/0z
+	 RIiUS6UJSz2Qg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA185C71155;
+	Mon, 16 Jun 2025 11:05:07 +0000 (UTC)
+From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
+Date: Mon, 16 Jun 2025 19:05:05 +0800
+Subject: [PATCH] Bluetooth: Prevent unintended pause by checking if
+ advertising is active
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEw-KjUjjP2gYH6z@uudg.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250616-bluetooth_adv-v1-1-6876bf4e85b4@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAGD6T2gC/x2MQQqAIBAAvxJ7TtBIob4SEWZbLoSGlgTi35OOw
+ zCTIWIgjDA2GQImiuRdBdE2YKx2BzLaKkPHO8mVUGw9H7y9v+2it8RUPygURlcjoTZXwJ3e/zf
+ NpXwt9z1AXwAAAA==
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Johan Hedberg <johan.hedberg@gmail.com>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yang Li <yang.li@amlogic.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750071906; l=2052;
+ i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
+ bh=r05iRzMErPFbpn/k1ZeU0pqT4UoisdNs9mKwnHRGPV4=;
+ b=hop0CniKgaW+59T/eFsqEPThdBfFKX0zijHrAcYlvjOPkk6C76S9LnMHUOxGdglNyBUB2DdDR
+ NFRpFKOoGuaACPqG4oBtmBtsn7hNQX/Epkv6lKhyFG56/UJHdvTARrI
+X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
+ pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
+X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
+ auth_id=180
+X-Original-From: Yang Li <yang.li@amlogic.com>
+Reply-To: yang.li@amlogic.com
 
-On Fri, Jun 13, 2025 at 12:05:14PM -0300, Luis Claudio R. Goncalves wrote:
-> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
-> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
-> with a mutex enqueued. That could lead to this sequence:
-> 
->         rt_mutex_adjust_prio_chain()
->           put_task_struct()
->             __put_task_struct()
->               sched_ext_free()
->                 spin_lock_irqsave()
->                   rtlock_lock() --->  TRIGGERS
->                                       lockdep_assert(!current->pi_blocked_on);
-> 
-> Fix that by unconditionally resorting to the deferred call to
-> __put_task_struct() if PREEMPT_RT is enabled.
-> 
-> Suggested-by: Crystal Wood <crwood@redhat.com>
-> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> ---
-> 
-> Resent as a gentle reminder, because this issue results in scary backtraces,
-> not obvious to debug and pinpoint root cause.
-> 
-> v2: (Rostedt) remove the #ifdef from put_task_struct() and create
->     tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
-> v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
-> v4: Fix the implementation of what was requested on v3.
-> 
->  include/linux/sched/task.h |   17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 0f2aeb37bbb04..51678a541477a 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
->  	if (!refcount_dec_and_test(&t->usage))
->  		return;
->  
-> -	/*
-> -	 * In !RT, it is always safe to call __put_task_struct().
-> -	 * Under RT, we can only call it in preemptible context.
-> -	 */
-> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
-> +	/* In !RT, it is always safe to call __put_task_struct(). */
-> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
->  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
->  
->  		lock_map_acquire_try(&put_task_map);
-> @@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
->  	}
->  
->  	/*
-> -	 * under PREEMPT_RT, we can't call put_task_struct
-> +	 * Under PREEMPT_RT, we can't call __put_task_struct
->  	 * in atomic context because it will indirectly
-> -	 * acquire sleeping locks.
-> +	 * acquire sleeping locks. The same is true if the
-> +	 * current process has a mutex enqueued (blocked on
-> +	 * a PI chain).
->  	 *
-> -	 * call_rcu() will schedule delayed_put_task_struct_rcu()
-> +	 * call_rcu() will schedule __put_task_struct_rcu_cb()
->  	 * to be called in process context.
->  	 *
->  	 * __put_task_struct() is called when
-> @@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
->  	 *
->  	 * delayed_free_task() also uses ->rcu, but it is only called
->  	 * when it fails to fork a process. Therefore, there is no
-> -	 * way it can conflict with put_task_struct().
-> +	 * way it can conflict with __put_task_struct().
->  	 */
->  	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
->  }
-> 
+From: Yang Li <yang.li@amlogic.com>
 
-Reviewed-by: Wander Laurson Costa <wander@redhat.com>
+When PA Create Sync is enabled, advertising resumes unexpectedly.
+Therefore, it's necessary to check whether advertising is currently
+active before attempting to pause it.
 
-> ----- End forwarded message -----
-> 
+  < HCI Command: LE Add Device To... (0x08|0x0011) plen 7  #1345 [hci0] 48.306205
+  		Address type: Random (0x01)
+  		Address: 4F:84:84:5F:88:17 (Resolvable)
+  		Identity type: Random (0x01)
+  		Identity: FC:5B:8C:F7:5D:FB (Static)
+  < HCI Command: LE Set Address Re.. (0x08|0x002d) plen 1  #1347 [hci0] 48.308023
+  		Address resolution: Enabled (0x01)
+  ...
+  < HCI Command: LE Set Extended A.. (0x08|0x0039) plen 6  #1349 [hci0] 48.309650
+  		Extended advertising: Enabled (0x01)
+  		Number of sets: 1 (0x01)
+  		Entry 0
+  		Handle: 0x01
+  		Duration: 0 ms (0x00)
+  		Max ext adv events: 0
+  ...
+  < HCI Command: LE Periodic Adve.. (0x08|0x0044) plen 14  #1355 [hci0] 48.314575
+  		Options: 0x0000
+  		Use advertising SID, Advertiser Address Type and address
+  		Reporting initially enabled
+  		SID: 0x02
+  		Adv address type: Random (0x01)
+  		Adv address: 4F:84:84:5F:88:17 (Resolvable)
+  		Identity type: Random (0x01)
+  		Identity: FC:5B:8C:F7:5D:FB (Static)
+  		Skip: 0x0000
+  		Sync timeout: 20000 msec (0x07d0)
+  		Sync CTE type: 0x0000
+
+Signed-off-by: Yang Li <yang.li@amlogic.com>
+---
+ net/bluetooth/hci_sync.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+index 6687f2a4d1eb..4ea5a87f017d 100644
+--- a/net/bluetooth/hci_sync.c
++++ b/net/bluetooth/hci_sync.c
+@@ -2481,6 +2481,10 @@ static int hci_pause_advertising_sync(struct hci_dev *hdev)
+ 	int err;
+ 	int old_state;
+ 
++	/* If controller is not advertising we are done. */
++	if (!hci_dev_test_flag(hdev, HCI_ADVERTISING))
++		return 0;
++
+ 	/* If already been paused there is nothing to do. */
+ 	if (hdev->advertising_paused)
+ 		return 0;
+
+---
+base-commit: 6c31dab4ff1e1f4e0f3412efb1cfc88033358d1f
+change-id: 20250616-bluetooth_adv-6496e1ca6165
+
+Best regards,
+-- 
+Yang Li <yang.li@amlogic.com>
+
 
