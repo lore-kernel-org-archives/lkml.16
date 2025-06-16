@@ -1,39 +1,27 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3F1C2E11CF;
-	Mon, 16 Jun 2025 05:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from psionic.psi5.com (psionic.psi5.com [185.187.169.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D63015DBC1;
+	Mon, 16 Jun 2025 05:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.187.169.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750053039; cv=none; b=rF2iVw52asvrrEhtBoalrJH9aqpXNIomHT2qGlIiaIB0r0svShaNytZVHkgGYFBv2TTFa364UlLY7WPPsPnxGO3/w2dMwpXrkiWMOhnjTX7SvPdbkuklbucMNpy4bK+HByi8DnF0bkQ+cA3V11X8Lf99ZNKM14JuSpZ4OcoWKUc=
+	t=1750053243; cv=none; b=hUYZQGNCtVdv/pDateILA4BPE81CH7v3tmB2EhUxOtwW1smx5BUPARB91EKNuHkcgZFF7OACBKHB6YdUJTcTeoC10JM+Ls5bMYXD7qumlscZ2dd8i6JzGndsXauL0zAmAa6k34NI39redBo/gLFRAiORVpBceaCC94mZ3tA687A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750053039; c=relaxed/simple;
-	bh=CJAd+aKM9Pfu6e0guSrEaR+0MN/mkaAyikHCoyUr4Rw=;
+	s=arc-20240116; t=1750053243; c=relaxed/simple;
+	bh=74ZjaoWNfK7FR3D5Pn6XXTTwWWlLDwZFHG6UGrARaF0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=duIRcJ+FKvMH5HJoBfhMZwSl+tcQfPIIb3qegpE84y2HNc/XszOt4WZOlNY/2d2sZwOtVWrPbMjX0gxmsMFwI1cxoi5hy42nvvo6pUek0GuAgVDzgTwigyorSHSVJkgXqYHtvxTM4ScCGR9/f+q5sMKQK9wNmRN/rB1LECho5UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bLJVC6tLxz9st4;
-	Mon, 16 Jun 2025 07:29:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FIWO7-Oem8zY; Mon, 16 Jun 2025 07:29:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bLJVC638Dz9sSD;
-	Mon, 16 Jun 2025 07:29:55 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CDA7C8B764;
-	Mon, 16 Jun 2025 07:29:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id UYBXJMCF-rVY; Mon, 16 Jun 2025 07:29:55 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 899E08B763;
-	Mon, 16 Jun 2025 07:29:55 +0200 (CEST)
-Message-ID: <20f5757c-78b3-4a68-a499-96951108d27c@csgroup.eu>
-Date: Mon, 16 Jun 2025 07:29:55 +0200
+	 In-Reply-To:Content-Type; b=eZmvQ4tcXYe8/mSamiHQYFe2xBd3BonFy/Z14PF/9rg/ML0rZ67W2fcRG9HDo9zv91aXPvzmRhCastviwxvYmKpUJYdkAFKhczt8IUwUqK7iuG/QNWgkgxMPXqO9jmT93Nr5I8JPit5I7DtdX3h4yHuWj0PN6ZvXEoVnzbsFUNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hogyros.de; spf=pass smtp.mailfrom=hogyros.de; arc=none smtp.client-ip=185.187.169.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hogyros.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hogyros.de
+Received: from [192.168.43.209] (om126157192128.27.openmobile.ne.jp [126.157.192.128])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by psionic.psi5.com (Postfix) with ESMTPSA id 8A21C3F02F;
+	Mon, 16 Jun 2025 07:53:40 +0200 (CEST)
+Message-ID: <4cfbde5a-5bbe-462c-a52c-fe1c65aa3815@hogyros.de>
+Date: Mon, 16 Jun 2025 14:53:35 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,54 +29,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the sound tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Takashi Iwai <tiwai@suse.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250616130126.08729b84@canb.auug.org.au>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250616130126.08729b84@canb.auug.org.au>
+Subject: Re: [PATCH v2 0/5] drm/xe: enable driver usage on non-4KiB kernels
+To: jeffbai@aosc.io, Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Francois Dugast
+ <francois.dugast@intel.com>,
+ =?UTF-8?Q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>,
+ =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+ Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Zhanjun Dong <zhanjun.dong@intel.com>, Matt Roper
+ <matthew.d.roper@intel.com>, Alan Previn
+ <alan.previn.teres.alexis@intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Mateusz Naklicki <mateusz.naklicki@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Kexy Biscuit <kexybiscuit@aosc.io>, Shang Yatsen <429839446@qq.com>,
+ Wenbin Fang <fangwenbin@vip.qq.com>, Haien Liang <27873200@qq.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>, Shirong Liu <lsr1024@qq.com>,
+ Haofeng Wu <s2600cw2@126.com>
+References: <20250613-upstream-xe-non-4k-v2-v2-0-934f82249f8a@aosc.io>
+Content-Language: en-US
+From: Simon Richter <Simon.Richter@hogyros.de>
+In-Reply-To: <20250613-upstream-xe-non-4k-v2-v2-0-934f82249f8a@aosc.io>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
+On 6/13/25 10:11, Mingcong Bai via B4 Relay wrote:
 
-Le 16/06/2025 à 05:01, Stephen Rothwell a écrit :
-> Hi all,
-> 
-> After merging the sound tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> In file included from include/linux/uaccess.h:12,
->                   from include/linux/sched/task.h:13,
->                   from include/linux/sched/signal.h:9,
->                   from include/linux/rcuwait.h:6,
->                   from include/linux/percpu-rwsem.h:7,
->                   from include/linux/fs.h:34,
->                   from include/linux/compat.h:17,
->                   from sound/core/pcm_native.c:7:
-> sound/core/pcm_compat.c: In function 'snd_pcm_ioctl_sync_ptr_x32':
-> sound/core/pcm_native.c:3081:60: error: 'struct snd_pcm_mmap_status_x32' has no member named 'tstamp'
->   3081 |         unsafe_put_user(__s.tstamp.tv_sec, &__src->s.status.tstamp.tv_sec, failed);             \
->        |                                                            ^
+> This patch series attempts to enable the use of xe DRM driver on non-4KiB
+> kernel page platforms. This involves fixing the ttm/bo interface, as well
+> as parts of the userspace API to make use of kernel `PAGE_SIZE' for
+> alignment instead of the assumed `SZ_4K', it also fixes incorrect usage of
+> `PAGE_SIZE' in the GuC and ring buffer interface code to make sure all
+> instructions/commands were aligned to 4KiB barriers (per the Programmer's
+> Manual for the GPUs covered by this DRM driver).
 
-...
+Tested on POWER9 (TalosII) with B580, comparing commit b8f759deb9 with 
+4k pages with the same plus these patches with 64k pages. I did not test 
+4k pages with these patches, I suspect that is already well covered by CI.
 
-> 
-> Caused by (sone of) commits
-> 
->    2acd83beb4d3 ("ALSA: pcm: refactor copy from/to user in SNDRV_PCM_IOCTL_SYNC_PTR")
->    de32a6120b80 ("ALSA: pcm: Convert snd_pcm_sync_ptr() to user_access_begin/user_access_end()")
->    a0f3992ee86e ("ALSA: pcm: Replace [audio_]tstamp_[n]sec by struct __snd_timespec in struct snd_pcm_mmap_status32")
->    a9b49bf8ad59 ("ALSA: pcm: Convert SNDRV_PCM_IOCTL_SYNC_PTR to user_access_begin/user_access_end()")
-> 
-> I have used the sound tree from next-20250613 for today.
-> 
+The Piglit test suite reports the exact same number of pass/fail/crash 
+for both configurations.
 
-This is caused by a0f3992ee86e.
+https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/1310#note_2959331
 
-Fix here : 
-https://lore.kernel.org/linux-sound/e46139ed61bc52fab51babadb8b656fa1aa15506.1750050658.git.christophe.leroy@csgroup.eu/T/#u
+Are there other tests that make sense? Piglit does not include video 
+playback, for example. Since I have a dGPU, I can't run SR-IOV tests, 
+though.
 
-Christophe
+    Simon
