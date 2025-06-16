@@ -1,117 +1,189 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E51B203706
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2FF215787;
+	Mon, 16 Jun 2025 21:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750110317; cv=none; b=lkOjDFU91BeW+B+pPRnlKxdqD/71hlJSKgQiI3xijpnxr4gtBde5SZFMue6r2igaijbtqZU6nfqYhnmwElzOk0ZE7jV7acMgAf9MbOsmNaaYoJWcmCkZ7+yrkjVpWL9k+bpIsVOIeO2iIQ//XqQ0g2Jj2VzLocmmiYtaoW4e0D0=
+	t=1750110413; cv=none; b=aVcSDf9Jk1XpqJzSLfjc3taGQ2Qqa/jjSAD6Le4Zc53iLjCzOJZdk/d/wN5gEcv27ttF+RTCJhAsbkV5vUfwBAJlZkuDRVZKtX2G3n1tYsSew/sWxlk6nH+K/CVk4Z3KEKeKhO34BH+LhpnYv/6zUlNE4GFsO2pO5cvGH0oNG48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750110317; c=relaxed/simple;
-	bh=ue0zZGnlayFFocKO6DHpjurxQEhp5y8cZT9f9F34YpY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tWTEhZHLv30+/i8kkcNn0JIoF1waLN8dZWRSoA79xLE6ZreyjlNcq26UqVTvFfyhvMW6zvSfJNiN+xDOJ90VOUE2FAHxJAFwdqlDV7C6n64aM7Lwv/a5sEi2G0bDhoQK5DT9OM1EdQPMaVdtUtjdJroGsl55kkWQ/zn3Ux6/Dig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZlXObMO6; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750110413; c=relaxed/simple;
+	bh=P+l1gSKaL1N/vyV+DOT1UrSQ4fffm5IIUx8ooXOed1E=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=DB8zfgLzek1N7+HyPPb/VpjsC8/uTc/wouqm0Gq6Wvp9cGW2zTFvPpDEM2EfDfW1BkDAC12fcY0YKSPCKu3TdRmHBsaNRmBFlw2w8BgTISYN6xf7tH9Ro2H/oTbI49pAVWOZB3t7VcYJyTE9YK3D404kY2QdLMIV6edwxhoj9n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Szj//WWW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZlXObMO6"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235ca5eba8cso57995ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750110316; x=1750715116; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PkxtSh5lJN8oDluqdUpIdBWts0li7o6KCp4HMQP+7eU=;
-        b=ZlXObMO6vZfQMyoE5FKd2xNZC0TUU4XYU6M5sc+UhP4rRwM/3DI2LA9XjtYFRNGkxZ
-         bNoiBSKMhrkAU/8RLf41fW/6wy7nIwaxUlh7oSf0FrqS5t4mPPRCl2oyweKZjsPMlFAu
-         ZWaEM3hgFfjMtLShUN8GPzZukM+ArTJ+oEIUwVzFD3TuphzyYOFReAEXNDyUo/94bfgv
-         3r/nJJu9qZiCnSXOBMDEdDoXZdy4azkiDYbmambVtsyvGjd2Uv6BB2h/5SU0nFSzubwH
-         RmYsc59zcUU8ix3aDvGYskpd8YZqdlGFfkuOMK6MD9Ex/J6EMhl4icHQJKMzKopnR8Wh
-         aGrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750110316; x=1750715116;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PkxtSh5lJN8oDluqdUpIdBWts0li7o6KCp4HMQP+7eU=;
-        b=oZr8V4eOqzOWgPkkHw2sEntZZ3yhikcLIy5Cyc+gvOUl12Hx8BOlJS+ldpKWqro5Fg
-         lWcqZ9hJzbN61ODttOqN76D3xbWM/MUjuMDEQb8OxiIvMkg+0Wbzo+HLmXmA4ZuYPeXs
-         swlKijtFoGQYSCIIKj7IoVEB2xYWWNT2PKAle16zBxQl1AoSQlKzz/w1lX8haH6IEenM
-         qpk4azhwYVWZVeK+/UfCbM1P29r6OcpzFh+rpPgfrD+8kQNp1QQ4txAD+U6Hw9/sYxSR
-         MWmoOsBOFVbY3rq9fHyUqZQ7ibj4+xB+zTrEsP9gEQS/QpReiQaDOtYGwQxNoadiLUf4
-         Sebw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqowG2xAJKuEZG/PfjfGSjoBSGHRDcE5hbfe6ACvLvdZTGHEkiEqKhyNzw+Ae080Sd5XjPizuha3vFwb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvXiBCh8ci/R4mQKAa9Y0awW7AMhWN2tr4HK1O0a8qwzmIOBuT
-	tTpjQpduZrLWwGk3LS4v174aAp2B9+cQ3rKumpcpsDWwr5wpzDVMEjORPwfewMSXnA==
-X-Gm-Gg: ASbGnct96x17iw5OeraLJtQMjKJreGS9f5u/CFnRgO0WzB1N+a7e586CCCXUi9u8thX
-	yB4k/7GBZ5jkCWUs/teYvhmb6SebqZbOyo0IijYuN9rBxiejW7NTvBEIRFHcvxzgfJpGj1hlKzO
-	s+8WXoBxwTO2Ym/CBTrMy/ZBgG8NsoVc0DUydj7hUp5KpgHlKTk93NaMrX/tOvqY31sgNa8EL4w
-	lUJynDWD+EsjJ2o2UKV3WS8b4bjA3u4DLyolzc2rrlaTqUZY6fGb7oQJPLC1HWUYCUZwMPCS4lD
-	bSpck/KDQQPP3PK5ZupCP5n8lZsrK9DP3ACEWOM512h5oVhZNmD3GJG7g/A/74pfVkM6+ENQ8h1
-	w2MQI/dTZwTKuymcFEdqM
-X-Google-Smtp-Source: AGHT+IHrQDyvVnwCf9csPzPlw1hS7k+ZaNmE2pdHcui8ltcFiMTENAodaPPmibhzeNqADUXMrthyDA==
-X-Received: by 2002:a17:903:1a27:b0:234:bf4:98ba with SMTP id d9443c01a7336-2366c5bf768mr6063095ad.6.1750110315130;
-        Mon, 16 Jun 2025 14:45:15 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d1ceesm7328258b3a.161.2025.06.16.14.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 14:45:14 -0700 (PDT)
-Date: Mon, 16 Jun 2025 21:45:06 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, will@kernel.org,
-	robin.murphy@arm.com, joro@8bytes.org, yi.l.liu@intel.com,
-	peterz@infradead.org, jsnitsel@redhat.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 03/14] iommufd: Use enum iommu_viommu_type for type in
- struct iommufd_viommu
-Message-ID: <aFCQYqHostKg0YVt@google.com>
-References: <cover.1749882255.git.nicolinc@nvidia.com>
- <6c6ba5c0cd381594f17ae74355872d78d7a022c0.1749882255.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Szj//WWW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0563C4CEEA;
+	Mon, 16 Jun 2025 21:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750110412;
+	bh=P+l1gSKaL1N/vyV+DOT1UrSQ4fffm5IIUx8ooXOed1E=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Szj//WWWSX7Egy9IV2n6oWiSAnYoeR2NqgHnX6qjBNb51Cg9RQjsjbFnJ3zztDe8I
+	 mSliIgqysC/frhCJncjVf5IjJfwL3+RFTyNYEoeTZc9iZytlm25WR5L3oiIcwRLE+L
+	 14FRqZkbLm985wPGnXuwRIHuqcqLEwognK039s6OIv+JrYUbBhHvCSNXBgy4fxshrG
+	 v2VW/RkUuYvSAMdeiUXbcGOsntoaKQb+er/qIT3+19KN0J1w518JKZ1TbLzHQR/svV
+	 PjoC8pLV80/inUonAbTvUn4eebPmKkQqh0MMu6Bz8+PE0wAREEtES8s7Y5EeJF8Jvf
+	 7ov4q6jsw2+jw==
+Date: Mon, 16 Jun 2025 16:46:51 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c6ba5c0cd381594f17ae74355872d78d7a022c0.1749882255.git.nicolinc@nvidia.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: rosa.pila@samsung.com, s.nawrocki@samsung.com, 
+ linux-samsung-soc@vger.kernel.org, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
+ linux-phy@lists.infradead.org, vkoul@kernel.org, krzk+dt@kernel.org, 
+ faraz.ata@samsung.com, selvarasu.g@samsung.com, kauschluss@disroot.org, 
+ ivo.ivanov.ivanov1@gmail.com, dev.tailor@samsung.com, 
+ devicetree@vger.kernel.org, kishon@kernel.org, peter.griffin@linaro.org, 
+ muhammed.ali@samsung.com, linux-arm-kernel@lists.infradead.org, 
+ alim.akhtar@samsung.com, m.szyprowski@samsung.com
+To: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+In-Reply-To: <20250613055613.866909-1-pritam.sutar@samsung.com>
+References: <CGME20250613055037epcas5p1ce00fda1b535dbeb9a98458d1f0a28ee@epcas5p1.samsung.com>
+ <20250613055613.866909-1-pritam.sutar@samsung.com>
+Message-Id: <175011004935.2433563.8726528182523156685.robh@kernel.org>
+Subject: Re: [PATCH v3 0/9] initial usbdrd phy support for Exynosautov920
+ soc
 
-On Fri, Jun 13, 2025 at 11:35:15PM -0700, Nicolin Chen wrote:
-> Replace unsigned init, to make it clear. No functional changes.
 
-Super nit: Typo: s/init/int
-
+On Fri, 13 Jun 2025 11:26:04 +0530, Pritam Manohar Sutar wrote:
+> This SoC has a single USB 3.1 DRD combo phy and three USB2.0 only
+> DRD phy controllers
 > 
-> The viommu_alloc iommu op will be deprecated, so don't change that.
+>   - Combo phy supports USB3.1 SSP+(10Gbps) protocol and is backwards
+>     compatible to the USB3.0 SS(5Gbps). 'Add-on USB2.0' phy is added
+>     to support USB2.0 HS(480Mbps), FS(12Mbps) and LS(1.5Mbps) data
+>     rates. These two phys are combined to form a combo phy as mentioned
+>     below.
 > 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommufd.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>    USB30DRD_0 port
 > 
-> diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
-> index 498c9a768506..ac98e49e44fe 100644
-> --- a/include/linux/iommufd.h
-> +++ b/include/linux/iommufd.h
-> @@ -101,7 +101,7 @@ struct iommufd_viommu {
->  	struct list_head veventqs;
->  	struct rw_semaphore veventqs_rwsem;
->  
-> -	unsigned int type;
-> +	enum iommu_viommu_type type;
->  };
+>      +-----------------------------------------------------+
+>      |                                                     |
+>      |           (combo) USB PHY controller                |
+>      |     +-----------------------------------------+     |
+>      |     |               USB HSPHY                 |     |
+>      |     |  (samsung,exynosautov920-usbdrd-hsphy)  |     |
+>      |     +-----------------------------------------+     |
+>      |                                                     |
+>      |   +---------------------------------------------+   |
+>      |   |               USB SSPHY                     |   |
+>      |   |   (samsung,exynosautov920-usb31drd-ssphy)   |   |
+>      |   +---------------------------------------------+   |
+>      |                                                     |
+>      +-----------------------------------------------------+
+>      |                                                     |
+>      |                USBDRD30 Link                        |
+>      |                  Controller                         |
+>      |                                                     |
+>      +-----------------------------------------------------+
+> 
+>   - USB2.0 phy supports only UTMI+ interface. USB2.0DRD phy
+>     is very similar to the existing Exynos850 support in this driver.
+> 
+>     USB20DRD_0/1/2 ports
+> 
+> 
+>       +---------------------------------------------------+
+>       |                                                   |
+>       |                USB PHY controller                 |
+>       |    +-----------------------------------------+    |
+>       |    |              USB HSPHY                  |    |
+>       |    |  (samsung,exynosautov920-usbdrd-phy)    |    |
+>       |    +-----------------------------------------+    |
+>       |                                                   |
+>       +---------------------------------------------------+
+>       |                                                   |
+>       |             USBDRD20_* Link                       |
+>       |                Controller                         |
+>       |                                                   |
+>       +---------------------------------------------------+
+> 
+> This patchset only supports device mode and same is verified with
+> as NCM device with below configfs commands
+> 
+> changelog
+> ----------
+> Changes in v2:
+> - Used standard GENMASK() and FIELD_GET() to get the major version
+>   from controller version register.
+>   link for v1: https://lore.kernel.org/linux-phy/20250514134813.380807-1-pritam.sutar@samsung.com/
+> 
+> Changes in v3:
+> - Updated dt-bindings for USB2.0 only.
+> - Added dt-bindings for combo phy.
+> - Added implementation for combo phy (SS and HS phy).
+> - Added added DTS nodes for all the phys.
+>   link for v2: https://lore.kernel.org/linux-phy/20250516102650.2144487-1-pritam.sutar@samsung.com/
+> 
+> Pritam Manohar Sutar (9):
+>   dt-bindings: phy: samsung,usb3-drd-phy: add ExynosAutov920 HS phy
+>     compatible
+>   phy: exyons5-usbdrd: support HS phy for ExynosAutov920
+>   arm64: dts: exynos: ExynosAutov920: add USB and USB-phy nodes
+>   dt-bindings: phy: samsung,usb3-drd-phy: add ExynosAutov920 combo HS
+>     phy
+>   phy: exyons5-usbdrd: support HS combo phy for ExynosAutov920
+>   arm64: dts: exynos: ExynosAutov920: add USB and USB HS combo phy nodes
+>   dt-bindings: phy: samsung,usb3-drd-phy: add ExynosAutov920 combo SS
+>     phy
+>   phy: exyons5-usbdrd: support SS combo phy for ExynosAutov920
+>   arm64: dts: exynos: ExynosAutov920: add USB and USB SS combo phy nodes
+> 
+>  .../bindings/phy/samsung,usb3-drd-phy.yaml    |   6 +
+>  .../boot/dts/exynos/exynosautov920-sadk.dts   |  53 ++
+>  .../arm64/boot/dts/exynos/exynosautov920.dtsi | 155 +++++
+>  drivers/phy/samsung/phy-exynos5-usbdrd.c      | 529 ++++++++++++++++++
+>  4 files changed, 743 insertions(+)
+> 
+> --
+> 2.34.1
+> 
+> 
+> 
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
->  
->  /**
-> -- 
-> 2.43.0
-> 
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/v6.16-rc1-6-g8a22d9e79cf0 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250613055613.866909-1-pritam.sutar@samsung.com:
+
+arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16600000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
+arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16700000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
+arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16800000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
+arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: usb@16900000 (samsung,exynosautov920-dwusb3): 'vdd33-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/usb/samsung,exynos-dwc3.yaml#
+
+
+
+
+
