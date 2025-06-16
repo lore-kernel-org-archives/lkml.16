@@ -1,132 +1,90 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA0720C030
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843A920C030;
+	Mon, 16 Jun 2025 16:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090814; cv=none; b=Zbw+gws/r3uQYiZspLsOM4QT1obpp0x/kTa3SWhrQ10DEY7zCQNESpk6BGYHAg1HfsgAXDyn48uU18e+7QSwVBrhTGo7Fkz6P7IyFaxhlaeRFIswsyZimwl0bUrVPr3RdYzA5HrUfB1vkZy/93veicM3J5cWZDE8t/ehFML07VI=
+	t=1750090825; cv=none; b=tWQqNDGhs/hOWS/0c5m3BCNoCIhivWH9focbwGStJMSMM4CiySR2w5ODp/F6bE8tWmxAFzTcV25IelSCPy5RLr6E6qy/rNzZsm8JJRdQgDI7G5VdJnZ64cQ9CBHNFcQODhOG8jKBOchJLiab2Mf14ztKYh8y0xzEsY2RrfmUxKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090814; c=relaxed/simple;
-	bh=pL7gIsjjGRmojb3Wc6wnXyaNTBq0F3bA/e375gMYSyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cLrBwzQ5wO9Nt75mQWSfvkJipmtA4jugPN69mLXjhLs6ELgoZQnwrxc49UYCC94+F6v/1KT2yKLq1BeZcjO6b3guhc4BkdzYj8bXV0uzDEGy9BZFET98VNxe6l4HxDGzbylS7aWqN2VFvNVTTpsyefem/ZQm7T4+f8FDmsspOh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mXF0Hh81; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750090825; c=relaxed/simple;
+	bh=kLhHtvrDdsH/A1VjWV9b+OF8x5gSjBd5qG3IvXEFejY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DcJj3gV9dRau6FYosqLqhcFi4KzaoUFQ2NR+ZMDfBMheoy1umypDK4O3j1FVtDS0dRAvcxwtjTCAVBgH9XrXNmcB/T+RzZSdKxgLpBQa05bElloOYXAdhWyMBR22tbA6zyUi0SNg+PqNxF9TslQvgAVZDFlZKIty3wMfTVn6we4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSkAjDcT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mXF0Hh81"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8mNW8028015;
-	Mon, 16 Jun 2025 16:19:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gzEMBKQfbOth254trg1UjOoAu2N6WgvTU8AuHLIkTJ8=; b=mXF0Hh812A7YU6gq
-	Zww6rQY1+2RmQrsnPJkBU13qDygBkyNn2apizimiSdpFeyJd02xNVZ/2wMon2oNg
-	tARhW6EOmrGnlrMDZHHs6HFss3OVqrSNWh4mbft63HFJeLvp07m9fQKIJC7uOZDE
-	okHGHcMh/iN3TMINrIYKbI/1fUhWbWHqJSXnulJ8pilcDAW0mnKJJObF38NhQmtV
-	8c9Ivu9zv69GK2lGkLYB8xnoYiQvNgT5gSXh8fyOmbiP3zWCnlKcMcrfBgK26e/N
-	BeU1xvGABpr/aPvvn2I96MLkiO6UxDL5ZqwB8FOgNY8vFJ1+TT68zX17KgaqFXcl
-	KKDYEw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791f756pf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:19:27 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GGJQw2007814
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 16:19:26 GMT
-Received: from [10.253.36.28] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 09:19:21 -0700
-Message-ID: <b47977f1-e5fc-4f67-a84a-3a4f881d5bac@quicinc.com>
-Date: Tue, 17 Jun 2025 00:19:21 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSkAjDcT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 677BAC4CEEA;
+	Mon, 16 Jun 2025 16:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750090825;
+	bh=kLhHtvrDdsH/A1VjWV9b+OF8x5gSjBd5qG3IvXEFejY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=sSkAjDcTkNf0l0XibHmp4iF13gTnIhTQBqYrjkriQcUVdr/fQWmUKlgqcABulsO2t
+	 sBwCo+uQA+hIr1VAYBvjBxK8EVGclR89K9ZVowJRXgei+Cfr/Rfln+AYAYMXc/EkC2
+	 dDoa0Acnm4cgmNrkPbNFt7Q4M/LgnHAZuFZ/Tdazaj7MnUpC9CbVpsqw5DK2b+LlpB
+	 EFold/wOBHepbW6OyCpORFex3IQ7mx36oj3gY/xFVWrxHasJHpmtsPjh+0X5afPsSH
+	 Edp8ZWe4iVeWabIwnCjqPT7VHdbWlqPhVibZUKYOhniBRw+ajL/WjCVS2DLJFUf/Sx
+	 YgmqNP0DtHchQ==
+From: Mark Brown <broonie@kernel.org>
+To: James Clark <james.clark@linaro.org>, 
+ Ciprian Marian Costea <ciprianmarian.costea@nxp.com>, 
+ Larisa Grigore <Larisa.Grigore@nxp.com>, 
+ Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>, linux-spi@vger.kernel.org, 
+ Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+In-Reply-To: <20250616091955.20547-1-lukas.bulwahn@redhat.com>
+References: <20250616091955.20547-1-lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Revert unintended dependency change
+ in config SPI_FSL_DSPI
+Message-Id: <175009082316.296200.2676929998940689118.b4-ty@kernel.org>
+Date: Mon, 16 Jun 2025 17:20:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [v4 2/5] arm64: tlb: Convert the opencoded field modify
-To: Markus Elfring <Markus.Elfring@web.de>, <cocci@inria.fr>
-CC: LKML <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        Andrew Lunn
-	<andrew@lunn.ch>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Joey Gouly
-	<joey.gouly@arm.com>, Julia Lawall <Julia.Lawall@inria.fr>,
-        Kiran Kumar C.S.K
-	<quic_kkumarcs@quicinc.com>,
-        Lei Wei <quic_leiwei@quicinc.com>, Marc Zyngier
-	<maz@kernel.org>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Oliver Upton
-	<oliver.upton@linux.dev>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Rasmus
- Villemoes" <linux@rasmusvillemoes.dk>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        "Will
- Deacon" <will@kernel.org>, Yury Norov <yury.norov@gmail.com>,
-        Zenghui Yu
-	<yuzenghui@huawei.com>, <quic_linchen@quicinc.com>
-References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
- <20250612-field_modify-v4-2-ae4f74da45a6@quicinc.com>
- <3537a4ce-b5e8-44d5-a884-70a81562068d@web.de>
- <94b40ff2-9e9e-4eea-8a66-87d8976aeb70@quicinc.com>
- <9b7e7e8a-c070-46e4-8e77-25117ec57de4@web.de>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <9b7e7e8a-c070-46e4-8e77-25117ec57de4@web.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwNiBTYWx0ZWRfX/mIpZ9we1fKz
- wIPctTopq6ewPjc2scxgB8DtMZsfeMb6A/xR8uZnDJgrlfpu+3UyK3CBYNQUh/pi5JD08nFJSKr
- OncxWboOb/csSEVE0tKJIC9bVb5y4rQxkv/CvncpavgGmrNPd1eBhEuaqjYRYGf+8hFDqldy5q0
- Vok4Pbu4r73Ya895Pd/zdllTBGwOYHu6Gyjcs3H5JqBAYvUhTQngSgFmewSsbovlC9eFj1Cr5W1
- DdFSYNBwEu2Odl9MDJMGhn5X+mvf1+N59DlptLImBj+LAN9G7wUnlV8GIjdGWDpIkmkH123DaTG
- SDYhWJSUb3rqF8I+AsqnmKuMVrIX/ctNkQIYXyM63OFPnoavc3yPCgZbivjzgf0QNoois/bkJ8n
- 3cHakbOMOUPxiHtDrotGm7CYqgiKCDssOO9WL3WBG0/OUMF1xRQPHlkTQ4SCdX3ebjX+3i+m
-X-Proofpoint-GUID: 1sk1ogn38xpxhVGh1T8DbEdcesUyjhTt
-X-Proofpoint-ORIG-GUID: 1sk1ogn38xpxhVGh1T8DbEdcesUyjhTt
-X-Authority-Analysis: v=2.4 cv=FrIF/3rq c=1 sm=1 tr=0 ts=6850440f cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=RbIoU5Ni8US5FD6EvC8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- malwarescore=0 phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160106
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-
-
-On 6/16/2025 9:52 PM, Markus Elfring wrote:
->>>> Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
->>>> - reg &= ~MASK;
->>>> - reg |= FIELD_PREP(MASK, val);
-> …
->> I will review the generated message to improve the formatting as you
->> suggested, the next time I use it.
-> Would indentation be more helpful for the mentioned code excerpt
-> (instead of trying to describe lines with bullet points)?
+On Mon, 16 Jun 2025 11:19:55 +0200, Lukas Bulwahn wrote:
+> Commit 9a30e332c36c ("spi: spi-fsl-dspi: Enable support for S32G
+> platforms") reworks the dependencies of config SPI_FSL_DSPI, but introduces
+> a typo changing the dependency to M5441x to a dependency on a non-existing
+> config M54541x.
 > 
-> Regards,
-> Markus
+> Revert the unintended change to depend on the config M5441x.
+> 
+> [...]
 
-I agree that using indentation would make the code excerpt clearer.
-Thanks.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[1/1] spi: spi-fsl-dspi: Revert unintended dependency change in config SPI_FSL_DSPI
+      commit: dce4bc30f42d313b4dc5832316196411b7f07ad0
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
