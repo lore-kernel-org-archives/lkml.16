@@ -1,97 +1,136 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C06931A60;
-	Mon, 16 Jun 2025 22:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB10D28F4;
+	Mon, 16 Jun 2025 22:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750112171; cv=none; b=T7mVU2diSpMkDBNSI1uzHH55jB9kIT1TT4SzUm1DMxZ+CaEiHeImPRGxI+tujfmnnNWVVBU4ui3Dl+XVrdrlq+zCxLu/02Fj5QDQBsQzTuWfMzK80QIPNfqvThi6huBqEof58MS7k8UcRgcjJAOiIxWbaO8k/QMSPhA7TNqCV/c=
+	t=1750112191; cv=none; b=DxWiHFS/dkN+IPBcf4bniS4zK5mSq/X4JFTKsZwbjZbN5Lq6a9yhA0Z2hF4gxS4aCCUdI3RLWiwXa62njF1o+YAf7p5trwjs16lElWjwyzBPSOUX6q29RTFC+zGu2qxu43JvgR2AYUfFMARd1VEdRO2qtBOmVURSaZDzkyrKChw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750112171; c=relaxed/simple;
-	bh=ijhXuY/+FH+ilubfbP+vAqRx7K+apmTeIDWZZ1AOA+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=an/TOh+DR0ITYx0K9Lprl/t91HqWL7p7yYc/rpmYKWVgCJ8OVpd8XGYjzYmeorTwbg5LW+u1Sh9Wa04vM0FknKGOpl+gnH/wCbDFYplagzVAAzvXCu/e2TXIatxMu1y1UvsYizzUS30twbk9zPi5GqxoFubai+31znRLJGVo50Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FrzxTMq0; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1750112191; c=relaxed/simple;
+	bh=ziUc4Cazu8rPOj/A9CHLv5pVaJlPgsivV34HGY6F5Z8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WK0fbT723XGw9mubr6UmbuM3C4HUCJ2u7Wzi//+5PrGbDAzKsqLySmpNlmvY97Op+xQoxJxgUwTmLItni+HgA6W3LRT0B8vVT7koMTyZrbY63U+tzuyfkBcxfwHFpJGm7+m5QloouPI89x7FMpDmXtKmJjKXYKCr33lzutFAZ+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8uQjmGf; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrzxTMq0"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23602481460so46882855ad.0;
-        Mon, 16 Jun 2025 15:16:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8uQjmGf"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad883afdf0cso992410866b.0;
+        Mon, 16 Jun 2025 15:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750112169; x=1750716969; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hqzxOBMLH7wnd4MoqI+z4U0qu3t3OgvxHrZ5MX4ejcA=;
-        b=FrzxTMq0OLUizzxWOga5VaWD6pCulQNpBi/Rw67YkGZrJazZJGLLbXv6DGfv7HFhPi
-         W2/hK2S+YJzlj43TXbOsl6pY/rARswdpFJ+RZInmkHcxcpHqrgOmP6UNmyPbeBos2Wwr
-         6sIOes0dVI6B9+23TokBHRn1d7MTxMHfHjUIzvxTcavRx11NxMr3/T00Za81hpmorlze
-         0PZGNDlI4Fpe9geNAtf3W2CbcjAgPnQG8wzb/+LwqoMhqGszFZqeSEKyCWF8qgqsMGop
-         r++N0x8DxyEmGm34WReYWY5KHn4TNRhZdg3mogRoYxLpFX2Ujhrt6GP32n/bzvqdBCES
-         r8/w==
+        d=gmail.com; s=20230601; t=1750112188; x=1750716988; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L4x/p8NEu399tKFp+L82OEsMeF0ul8epvOoGorBxox8=;
+        b=L8uQjmGfW36/CAffJiKTertn5/RNjQuhETt6N1AwMxAI135qXifWUXZAnau+eKD59/
+         2OZ0JeBbVVqLYoKMJjI2Pi6fcGnoqI7L3GXq3pdnURckfrpZzWBXJ5C2Y4wU5O5EBs8V
+         5xsHbVbthz4uVPVs5+R5+aQn8J8xTkFY0V0oy5WYOCGzkcaP55LxZFFlBF8EtHtYZsX5
+         Jpf23nDYFUsQYfIXrzWZsWsr5FArsEJuVhySlZQkB1mF51P1kUHe//sdpsja3wvKSf7M
+         sb8MXIpOhyQNaLb3ChkCHnjcgU+IBQ4jcbViJJmxa9Eo0i6MOqCvmv3TC+iyQX7DVyML
+         BZ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750112169; x=1750716969;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750112188; x=1750716988;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hqzxOBMLH7wnd4MoqI+z4U0qu3t3OgvxHrZ5MX4ejcA=;
-        b=Idl0mamEtxdoJmTylBnOkRQahAgQUgS5ewEtPpIXJcNEozseleZiDVu49WDgx7JGd5
-         Tdr751gZoAkaB7CzqYdIDTHXY4jHNZxHhfzlFk8h5NhY9PtCgEiEQEqiAdqsO0iveUaC
-         +K9OrYAevwdsmdQSO+p9hNZnBn33M5WdezvBV6SjRnuvBiRf7IPdIRfTzr2dSzEqzRdp
-         Z4YWqklsWaRGHgqt6R/X5/uFLysEozdZVEqznxOf8/hpscupECSEks6//IZBeyux7HY/
-         +PnOvLM8XWsj1W00D6cDLBONlKhIa35uD46LQp0d/oziKsXIt8ffQ9rCOimy0MPu6KOY
-         U79Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUVAPYKXrNl5mmxRhITf3OsrJX26bQZlLa9vDjNh7CybrspQjb7vcfP7nKGUeJs12e/BxncvfXkryClDhjd@vger.kernel.org, AJvYcCUyZ2yoxzUiOcmbFIF/y1w9fTyUqSHITh1s8O1JZ+HHXHAW6ISX4/5mnYS31PRl9+3Vbcj9fYLCo6VLzg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywusps50BgNicjdazvWlgDt73OqZPcZ5GvBO7azh2wnfKdfj6ss
-	5eogkf7vp+DiXS1Wqw5gOxXUi6y7vW2VHO1C4AdztKKG1WSVmwo34l6LFqyD6g==
-X-Gm-Gg: ASbGnctCXRp/zyMXHFkSnHsOGyrYn5jX7FGYU6jNfpGSuKllVbxoHkeftzi9S7nH+ZX
-	4mUTT3t3Dy6IScThKHlZFj/SVA/GaGbJdlnVdnlGtkaO7AQohTueny7n1lHKAyoGt60ivjc+H9b
-	MeVFsojnGhn1XBYlxnoSAIOV/8vpohz3VqPACxURmpFE9nwLBwDGTJeRd4T39nY5YncJlNNj83f
-	PGPiXZL1tpVwqNarSGsoScSe/4agnultnWCB2EU3E0MFeh3Ldi+gjPbea/NP3FjXqShePupwzY6
-	luGm1ZWRM1Cx/bcNuuf4A9Har4YJ5l0llwvngAR3USuiEzhez2IMnHElV7xCFWhQdrIIRKT1Lwd
-	08GnIKW/8gg==
-X-Google-Smtp-Source: AGHT+IE7D45OxaXOpEnSNmrkvBGVxdNdlxgSulu93jAwXQec/wc9R/9wjbBwJ4aaqqfW5jX8XSaVRg==
-X-Received: by 2002:a17:903:320b:b0:236:15b7:62e4 with SMTP id d9443c01a7336-2366b1443c8mr181687065ad.38.1750112168797;
-        Mon, 16 Jun 2025 15:16:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1639dffsm6286948a12.3.2025.06.16.15.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 15:16:08 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 16 Jun 2025 15:16:07 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: florin.leotescu@oss.nxp.com
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Florin Leotescu <florin.leotescu@nxp.com>,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	viorel.suman@nxp.com, carlos.song@nxp.com, daniel.baluta@nxp.com,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	festevam@gmail.com
-Subject: Re: [PATCH 1/4] hwmon: emc2305: Add support for PWM frequency,
- polarity and output
-Message-ID: <d6a0d179-1fce-4b3e-9f3c-3dacf05cc22c@roeck-us.net>
-References: <20250603113125.3175103-1-florin.leotescu@oss.nxp.com>
- <20250603113125.3175103-2-florin.leotescu@oss.nxp.com>
+        bh=L4x/p8NEu399tKFp+L82OEsMeF0ul8epvOoGorBxox8=;
+        b=FZgVyELYVIb10JM5a/8DIKN+dllcvOj5sjdYhI8dMvAJnPrxwXaXbC0sVAiRR+9iud
+         6rdroVJhqss0XjnE56VAR6XGoRq+WPtXWZfATXzVNSyZsd6ty2ihnKRu5bUB38Xq47rf
+         Ty/faxVH2neXaeN0D4fbCcV1NBkHIjJYBRHKnoNAK3L/u89EtmtPqKVJcp6MRR9/6uLG
+         hmE4te59l3AEe/sVfInsF5zVrysBLfS+2ZfRi8P7kBFEERdA7F8mJSa9Rn/6fVI6oDEX
+         kXrwvzI6IzJFm9ny6bECC+ne78ai231rcvJx58/Yl6bUbxnl7evijWtWru7ZymJ/R7Eq
+         IURQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlZemCyeAqfFmmc9V5g+OaPN0xuV0RXYJynbhCp8NPCzXshs0uQ6FiISa1MvXsbXQ8FksIRwFAEp7fmUie@vger.kernel.org, AJvYcCVKxgAWCVzqK1U+zCZyUveSpvdE8T6vXXG2w6MFdK8F0dMvONl1TZWgWOctW9gp/dlm43GrtZ06nJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOg2xw2WBqwKhuveGQKijO8kTT0uW7mQH98/bTquGqH0aSQlnH
+	3/T8xYLF/oTGVoIFestc9wc+Aj98Wxlrz7kGrc3stju/lVb3/SxOkxaPvegAIWFPsnj2FJRCGzc
+	sTRnX0ztGoH+9CfNBQD5U0dDO4MsxVsI=
+X-Gm-Gg: ASbGncsejH0zjht+PXdaxuifmp5oOVfIG+1DE3f14ixEhbeXupyowb+FItZsX/OcSBM
+	zaVuHy7Ix3f7yeCEoeB1WgK3hHXf3lJZItK9uL3L5phsTEwpjoh0AZnY1Qg//7QYs6qDLf9MLlo
+	AXHjq+4smFDszwJYFJlLac7KkXE4ab251NIPXPqOR6gEj4csLhWwGo7pPE18DgZN4MHr+BYowkk
+	IA2qQ==
+X-Google-Smtp-Source: AGHT+IHWhKGzFlw/YafR+gXhZspwtYe6gkGuL7wwEgT/ACXbIUqtoGIZWUoj26D8y8Znb1z69yrl5bOG+d7vxjTvsJ4=
+X-Received: by 2002:a17:907:608b:b0:ade:3bec:ea29 with SMTP id
+ a640c23a62f3a-adfad397276mr976447066b.25.1750112187830; Mon, 16 Jun 2025
+ 15:16:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603113125.3175103-2-florin.leotescu@oss.nxp.com>
+References: <20250612181330.31236-1-bijan311@gmail.com> <20250612181330.31236-2-bijan311@gmail.com>
+ <5a50eeba-b26d-4913-8016-45278608a1ee@redhat.com> <CAMvvPS5U8exSvy0fknfhv8ym_dKgMVa7cfMOqn0fGyd+NSjSuQ@mail.gmail.com>
+ <e40aa590-f0a2-4666-84b0-c33c8f4fef87@redhat.com> <CAMvvPS5bTUfAXy4g79tAq+1DWKX79b33Jt=UNBg-xR9BDa7FdA@mail.gmail.com>
+ <aFBXuTtwhAV7BHeY@gourry-fedora-PF4VCD3F>
+In-Reply-To: <aFBXuTtwhAV7BHeY@gourry-fedora-PF4VCD3F>
+From: Bijan Tabatabai <bijan311@gmail.com>
+Date: Mon, 16 Jun 2025 17:16:16 -0500
+X-Gm-Features: AX0GCFtwj_QtqJXZ5jL7Wr8rfNEzrgEzB0jYXSU_0HLJ7kNaT0LSOgSWCHGca98
+Message-ID: <CAMvvPS4aiyA7nXTN=QkMz4ikvf77ZaZ05ys-4N09AFLrgeS_Pw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/4] mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
+To: Gregory Price <gourry@gourry.net>
+Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sj@kernel.org, akpm@linux-foundation.org, 
+	corbet@lwn.net, ziy@nvidia.com, matthew.brost@intel.com, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, bijantabatab@micron.com, 
+	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com, 
+	vtavarespetr@micron.com, damon@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 02:31:22PM +0300, florin.leotescu@oss.nxp.com wrote:
-> From: Florin Leotescu <florin.leotescu@nxp.com>
-> 
-> Add three new attributes to the driver data structures to support
-> configuration of PWM frequency, PWM polarity and PWM output config.
-> 
-> Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
+Hi Gregory,
 
-Applied.
+On Mon, Jun 16, 2025 at 12:43=E2=80=AFPM Gregory Price <gourry@gourry.net> =
+wrote:
+>
+> On Mon, Jun 16, 2025 at 09:16:55AM -0500, Bijan Tabatabai wrote:
+> > >
+> > > Which, you also have during the rmap walk.
+> >
+> > There is another subtle dependency in get_vma_policy.
+> > It first checks if a VMA policy exists, and if it doesn't, it uses the
+> > task policy of the current task, which doesn't make sense when called
+> > by a kdamond thread.
+> >
+> > However, I don't think this will change what seems to be our consensus
+> > of adding a new helper function.
+> >
+>
+> Hate to interject here, but this gets worse the further you dig in.  The
+> mempolicy interface as a whole has many, many, many hidden references to
+> current->mempolicy and current->mems_allowed.  External interface
+> references to a task or vma mempolicy is a problem i explored somewhat
+> extensively when I prototyped `set_mempolicy2()`. It did not go well.
+>
+> Generally, mempolicy is not well structured to allow external actors on
+> a task's mempolicy.  Accessing a task's mempolicy requires operating in
+> a task's context or at least taking a reference on that task's mempolicy
+> (which requires taking the task_struct lock).
+
+Good point, I didn't take the lock in the second patch. Also, this
+made me realize I need to make sure there isn't a race condition where
+a task exits after getting a pointer to its task_struct from
+mm->owner.
+
+> I will just say that mempolicy is *extremely* current-task centric - and
+> very much allocation-time centric (i.e. the internal workings don't
+> really want to consider migration all that much).  You'll probably find
+> that this project requires rethinking mempolicy's external interfaces in
+> general (which is sorely needed anyway).
+>
+> I think this path to modifying mempolicy to support DAMON is a bit
+> ambitious for where mempolicy is at the moment. You may be better off
+> duplicating the interleave-weight logic and making some helper functions
+> to get the weight data, and then coming back around to generalize it
+> later.
+
+This may be true, but I think I will be able to avoid a lot of this
+nastiness with what I need. I am going to try with the mempolicy
+approach for the next revision, but if I get too much resistance, I
+will probably switch to this approach.
 
 Thanks,
-Guenter
+Bijan
