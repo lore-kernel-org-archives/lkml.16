@@ -1,99 +1,284 @@
-Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3970F27EFF6;
-	Mon, 16 Jun 2025 10:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929262777E5;
+	Mon, 16 Jun 2025 10:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750068473; cv=none; b=hZrOPt7DdbvuTDUsXLYR5eroEnJrVBlHsXJ04MQXcT8YlN03K/1xSEauNu4ureJRD327fjQErHWLC7w5svCryP5+Ln0l0nXcuezuObmHGCYt09jbu+VKEVZe96MPt1qQ6YARoZ7LIaqKuQAQAgDdDZ/aiHuuUHb/89o4KpajyXI=
+	t=1750068540; cv=none; b=gqwU9s2dXvkXLWPyYmX1EVTPKF4BeYrzdDrgffscnx4qm1c31j0iOqrfeuQz+rl6PahB6n5ZKywRza+B+zRZyiLc5Wv7mumaXu/Zl9plbDegPQTE8RRqijcuZZfeuHx06dHzZ+uhQyVKIx5HyPoaqKfO+k7NzUBVa1oUTD3RwsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750068473; c=relaxed/simple;
-	bh=3+NUWscYQFNZqNiDoVLK4YsZWnWr4faF6U442YOervk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=TcBYkuhpLirAARI7+B8AcQ2CHyoPB02rLc7KDFQgRAPm0z+3fock3NIEVWUg3DB65fr7Xw5Nbbw7W/i9Z2fH3CiNMr0VqWhLtwx3JlY8YE7jgc2RDlmzRZKfZYuQ6/VnYuA7DG4D5TnFEFmybJbIutYcqCMnNCLablfNBeIcTzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=S50GKCaC; arc=none smtp.client-ip=178.154.239.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1750068540; c=relaxed/simple;
+	bh=zC8uwDAoMmaSBSLwSRHW41TakWNQQJg2FZeLHWrPNec=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dQSiQfnVfPrjf+TmvCKz6VfzWoP9jmiJuIyuGKDwQBInbkoKBH80AzS9SmYJa27L6HK3HX0LFQYsTbQfgwQnPXFvEYxnahonbZJMpW5bh8OTQFAk5j9bOqaPp/B4Dj7a3bRMAFNU+XsWaxkRr7UKZbVsv0ooi8sz3q1lyS8vad4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=turY0Mg0; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="S50GKCaC"
-Received: from mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:1984:0:640:94c0:0])
-	by forward500a.mail.yandex.net (Yandex) with ESMTPS id 7DEBF611DA;
-	Mon, 16 Jun 2025 13:01:33 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id W1IY5V13IGk0-thMQg0Br;
-	Mon, 16 Jun 2025 13:01:33 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1750068093; bh=3+NUWscYQFNZqNiDoVLK4YsZWnWr4faF6U442YOervk=;
-	h=In-Reply-To:Subject:To:From:Cc:Date:References:Message-ID;
-	b=S50GKCaCtgSQLOoCOW0vJifev1JEjnz3plRXmKeGvpVTTJLFJalKqO9no6fMjVTdT
-	 5lqvCBcPqDDm1GhesQ6btyXziElV9gKhH0hXZJTAEgM1LMKZ9Tyw/QJTnxz1I1Ddw+
-	 FKsqwvQkFfjZp8VBL4M+FNZYAn3jvc3PXvv9hX14=
-Authentication-Results: mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <70de6013-a5db-45c6-8288-e7b211a55a1e@yandex.ru>
-Date: Mon, 16 Jun 2025 13:01:32 +0300
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="turY0Mg0"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bLQgz507Bz9sqj;
+	Mon, 16 Jun 2025 12:08:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750068527; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o3szePmqcHJryvA1er9S8PcvbfWuy6iFHHcrJVIXtWM=;
+	b=turY0Mg0O+tfBX/no06qt5IutDn3NPSQsTsTMZLHDtwvFlKz/4uzFzCZFRqpfJxH9n633Q
+	XIsvXO9v4YQCXe396xopdx0KS90FHEEc+blHCSQjyeOWFjOhyx0NkFCQPThCrSG3kExsUu
+	Qrguz8OgAbVZg8LZJImDkC1jI4+99RqUbMC7hsxu6JDuGzPhpIHjdVuw5o+vmxZm6d1uCn
+	1UGZ2i1P04hU9S/uHS0rnZe9Q/A73/5BlueoyH2/yBf9yilf4X/rkn8Ormy/8T1VgsHewi
+	eCamfwEtewpBO6OKYaAWlIvTKAMfFYkE3yLyoEXQ3tIWZevQPXDHHdcLt5BRyQ==
+Message-ID: <d1ecec0124edcf70f682e91e52f3f349c7a1b33c.camel@mailbox.org>
+Subject: Re: [RFC PATCH 1/6] drm/sched: Avoid memory leaks with cancel_job()
+ callback
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, phasta@kernel.org, Lyude
+ Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
+ <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Pierre-Eric Pelloux-Prayer
+ <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Date: Mon, 16 Jun 2025 12:08:40 +0200
+In-Reply-To: <18cd6b1f-8872-4a16-9ceb-50fd1ecfea39@igalia.com>
+References: <20250603093130.100159-2-phasta@kernel.org>
+	 <20250603093130.100159-3-phasta@kernel.org>
+	 <62ff8ddb-b2f1-4e52-a026-290561ab5337@igalia.com>
+	 <f4f326a0ecb98a9996919c3f827b3247b8207feb.camel@mailbox.org>
+	 <18cd6b1f-8872-4a16-9ceb-50fd1ecfea39@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-MW
-To: Fedor Pchelkin <pchelkin@ispras.ru>,
- Christian Lamparter <chunkeey@gmail.com>
-Cc: linux-wireless@vger.kernel.org,
- Christian Lamparter <chunkeey@googlemail.com>, linux-kernel@vger.kernel.org
-References: <3qom4fkg7kp4l3bcgrbivmm2yi2wqrmso7rb5qe3xffjj3k7hz@nc7gx4atzfyq>
-From: Dmitry Antipov <dmantipov@yandex.ru>
-Autocrypt: addr=dmantipov@yandex.ru; keydata=
- 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
- A/UwwXBRuvydGV0=
-Subject: Re: [PATCH] wifi: carl9170: do not ping device which has failed to
- load firmware
-In-Reply-To: <3qom4fkg7kp4l3bcgrbivmm2yi2wqrmso7rb5qe3xffjj3k7hz@nc7gx4atzfyq>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: xugczu8yqt6ag77z8f3qkcye1jaikzbn
+X-MBO-RS-ID: 549f6941f9059223189
 
-On 6/15/25 10:54 PM, Fedor Pchelkin wrote:
+On Mon, 2025-06-16 at 10:27 +0100, Tvrtko Ursulin wrote:
+>=20
+> On 12/06/2025 15:20, Philipp Stanner wrote:
+> > On Thu, 2025-06-12 at 15:17 +0100, Tvrtko Ursulin wrote:
+> > >=20
+> > > On 03/06/2025 10:31, Philipp Stanner wrote:
+> > > > Since its inception, the GPU scheduler can leak memory if the
+> > > > driver
+> > > > calls drm_sched_fini() while there are still jobs in flight.
+> > > >=20
+> > > > The simplest way to solve this in a backwards compatible manner
+> > > > is
+> > > > by
+> > > > adding a new callback, drm_sched_backend_ops.cancel_job(),
+> > > > which
+> > > > instructs the driver to signal the hardware fence associated
+> > > > with
+> > > > the
+> > > > job. Afterwards, the scheduler can savely use the established
+> > > > free_job()
+> > > > callback for freeing the job.
+> > > >=20
+> > > > Implement the new backend_ops callback cancel_job().
+> > > >=20
+> > > > Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+> > >=20
+> > > Please just add the link to the patch here (it is only in the
+> > > cover
+> > > letter):
+> > >=20
+> > > Link:
+> > > https://lore.kernel.org/dri-devel/20250418113211.69956-1-tvrtko.ursul=
+in@igalia.com/
+> >=20
+> > That I can do, sure
+>=20
+> Cool, with that, for this patch:
+>=20
+> Acked-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+>=20
+> > > And you probably want to take the unit test modifications from
+> > > the
+> > > same
+> > > patch too. You could put them in the same patch or separate.
+> >=20
+> > Necessary adjustments for the unit tests are already implemented
+> > and
+> > are waiting for review separately, since this can be done
+> > independently
+> > from this entire series:
+> >=20
+> > https://lore.kernel.org/dri-devel/20250605134154.191764-2-phasta@kernel=
+.org/
+>=20
+> For me it would make most sense to fold that into 2/6 from this
+> series.=20
+> I don't see it making sense as standalone. So if you could repost the
+> series with it integrated I will give it a spin and can review that=20
+> patch at least.
 
-> So it looks like ar->registered being false here is a "correct" failure
-> condition, i.e. it can be expected when the certain phase of the driver
-> initialization fails and should be handled without any WARNs.
+It does make sense as an independent patch, because it is: independent.
+It improves the unit tests in a way that they become a better role
+model for the driver callbacks. All fences always must get signaled,
+which is not the case there currently. Unit tests serve as a reference
+implementation for new users, which is why I am stressing that point.
 
-Looking through Documentation/process/coding-style.rst, it may be
-better to use pr_warn_once() instead; anyway I would prefer leave
-the final decision to the maintainer.
+If you disagree with that patch's content, please answer on it
 
-Dmitry
+P.
+
+>=20
+> Regards,
+>=20
+> Tvrtko
+>=20
+> >=20
+> > Thx
+> > P.
+> >=20
+> > >=20
+> > > Regards,
+> > >=20
+> > > Tvrtko
+> > >=20
+> > > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > > > ---
+> > > > =C2=A0=C2=A0 drivers/gpu/drm/scheduler/sched_main.c | 34
+> > > > ++++++++++++++++-----
+> > > > -----
+> > > > =C2=A0=C2=A0 include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++++++
+> > > > =C2=A0=C2=A0 2 files changed, 30 insertions(+), 13 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+> > > > b/drivers/gpu/drm/scheduler/sched_main.c
+> > > > index d20726d7adf0..3f14f1e151fa 100644
+> > > > --- a/drivers/gpu/drm/scheduler/sched_main.c
+> > > > +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> > > > @@ -1352,6 +1352,18 @@ int drm_sched_init(struct
+> > > > drm_gpu_scheduler
+> > > > *sched, const struct drm_sched_init_
+> > > > =C2=A0=C2=A0 }
+> > > > =C2=A0=C2=A0 EXPORT_SYMBOL(drm_sched_init);
+> > > > =C2=A0=C2=A0=20
+> > > > +static void drm_sched_kill_remaining_jobs(struct
+> > > > drm_gpu_scheduler
+> > > > *sched)
+> > > > +{
+> > > > +	struct drm_sched_job *job, *tmp;
+> > > > +
+> > > > +	/* All other accessors are stopped. No locking
+> > > > necessary.
+> > > > */
+> > > > +	list_for_each_entry_safe_reverse(job, tmp, &sched-
+> > > > > pending_list, list) {
+> > > > +		sched->ops->cancel_job(job);
+> > > > +		list_del(&job->list);
+> > > > +		sched->ops->free_job(job);
+> > > > +	}
+> > > > +}
+> > > > +
+> > > > =C2=A0=C2=A0 /**
+> > > > =C2=A0=C2=A0=C2=A0 * drm_sched_fini - Destroy a gpu scheduler
+> > > > =C2=A0=C2=A0=C2=A0 *
+> > > > @@ -1359,19 +1371,11 @@ EXPORT_SYMBOL(drm_sched_init);
+> > > > =C2=A0=C2=A0=C2=A0 *
+> > > > =C2=A0=C2=A0=C2=A0 * Tears down and cleans up the scheduler.
+> > > > =C2=A0=C2=A0=C2=A0 *
+> > > > - * This stops submission of new jobs to the hardware through
+> > > > - * drm_sched_backend_ops.run_job(). Consequently,
+> > > > drm_sched_backend_ops.free_job()
+> > > > - * will not be called for all jobs still in
+> > > > drm_gpu_scheduler.pending_list.
+> > > > - * There is no solution for this currently. Thus, it is up to
+> > > > the
+> > > > driver to make
+> > > > - * sure that:
+> > > > - *
+> > > > - *=C2=A0 a) drm_sched_fini() is only called after for all submitte=
+d
+> > > > jobs
+> > > > - *=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_backend_ops.free_job() has be=
+en called or
+> > > > that
+> > > > - *=C2=A0 b) the jobs for which drm_sched_backend_ops.free_job() ha=
+s
+> > > > not
+> > > > been called
+> > > > - *=C2=A0=C2=A0=C2=A0=C2=A0 after drm_sched_fini() ran are freed ma=
+nually.
+> > > > - *
+> > > > - * FIXME: Take care of the above problem and prevent this
+> > > > function
+> > > > from leaking
+> > > > - * the jobs in drm_gpu_scheduler.pending_list under any
+> > > > circumstances.
+> > > > + * This stops submission of new jobs to the hardware through
+> > > > &struct
+> > > > + * drm_sched_backend_ops.run_job. If &struct
+> > > > drm_sched_backend_ops.cancel_job
+> > > > + * is implemented, all jobs will be canceled through it and
+> > > > afterwards cleaned
+> > > > + * up through &struct drm_sched_backend_ops.free_job. If
+> > > > cancel_job is not
+> > > > + * implemented, memory could leak.
+> > > > =C2=A0=C2=A0=C2=A0 */
+> > > > =C2=A0=C2=A0 void drm_sched_fini(struct drm_gpu_scheduler *sched)
+> > > > =C2=A0=C2=A0 {
+> > > > @@ -1401,6 +1405,10 @@ void drm_sched_fini(struct
+> > > > drm_gpu_scheduler
+> > > > *sched)
+> > > > =C2=A0=C2=A0=C2=A0	/* Confirm no work left behind accessing device
+> > > > structures
+> > > > */
+> > > > =C2=A0=C2=A0=C2=A0	cancel_delayed_work_sync(&sched->work_tdr);
+> > > > =C2=A0=C2=A0=20
+> > > > +	/* Avoid memory leaks if supported by the driver. */
+> > > > +	if (sched->ops->cancel_job)
+> > > > +		drm_sched_kill_remaining_jobs(sched);
+> > > > +
+> > > > =C2=A0=C2=A0=C2=A0	if (sched->own_submit_wq)
+> > > > =C2=A0=C2=A0=C2=A0		destroy_workqueue(sched->submit_wq);
+> > > > =C2=A0=C2=A0=C2=A0	sched->ready =3D false;
+> > > > diff --git a/include/drm/gpu_scheduler.h
+> > > > b/include/drm/gpu_scheduler.h
+> > > > index e62a7214e052..81dcbfc8c223 100644
+> > > > --- a/include/drm/gpu_scheduler.h
+> > > > +++ b/include/drm/gpu_scheduler.h
+> > > > @@ -512,6 +512,15 @@ struct drm_sched_backend_ops {
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+* and it's time to clean it up.
+> > > > =C2=A0=C2=A0=C2=A0	 */
+> > > > =C2=A0=C2=A0=C2=A0	void (*free_job)(struct drm_sched_job *sched_job=
+);
+> > > > +
+> > > > +	/**
+> > > > +	 * @cancel_job: Used by the scheduler to guarantee
+> > > > remaining jobs' fences
+> > > > +	 * get signaled in drm_sched_fini().
+> > > > +	 *
+> > > > +	 * Drivers need to signal the passed job's hardware
+> > > > fence
+> > > > with
+> > > > +	 * -ECANCELED in this callback. They must not free the
+> > > > job.
+> > > > +	 */
+> > > > +	void (*cancel_job)(struct drm_sched_job *sched_job);
+> > > > =C2=A0=C2=A0 };
+> > > > =C2=A0=C2=A0=20
+> > > > =C2=A0=C2=A0 /**
+> > >=20
+> >=20
+>=20
 
