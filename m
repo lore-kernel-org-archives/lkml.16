@@ -1,132 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF1346B5;
-	Mon, 16 Jun 2025 04:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE5A748D;
+	Mon, 16 Jun 2025 04:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750046642; cv=none; b=P3I4NvrUjzmbophP5ehhHA2hXaJhIjWc3sA3Xx4rcHXg6N7iesa6zjgeBiER8wfOl3dJ93Ps6/s1lMtQ1oAR0qfRhBnkgYhLh2UFAoaQZWZCd4jkqCTnksLvsGFpy/Cph6RDgHFqJNIIWMhOMbPJSzKMZH/X2sIYhaonQ5zQ7fM=
+	t=1750046965; cv=none; b=lGrPN1l4+3G5Q/OHI5sxgUInm3UXfB9W2OnqzydekI/dFp2nQB5ADCQG1rsFqlawVr45BDCzsjFUZgTahfLS9fTe0otobNdZXP/BsyWjukNaP48LOhPOiMM/FFfHWpij+gNTOzOLwWrH1kTk1oJy+CNZMFNt1z0h57RXK5zArZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750046642; c=relaxed/simple;
-	bh=yDzp1HXMtne8DF19p6akhYxebQV8My0v2pNpbGDe7DQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uu6IPVvYnIRIaFhdNWolHd1QY1OpGG1TIXZCvGx+IrdLKSrxHc5QClfgij8sjQKzbWC8jhyPPaYahG6n28sGPbQFkuDVly13FhgCotn5Zs7fksPBtk8HAQRkT7fgYrgQ3yrlRNE40xsay0cFpim6+5z7Fy+wajDyspkfEJFuXEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSeIzJgu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750046965; c=relaxed/simple;
+	bh=djI8g1JpgsRAjUj8Dc2+uUnKHr91231GLP6XPF8dB3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOJnvsuNjiD1QroWhQmK1O+iGYcMXo64n/hd81Ec9SjrRnEJlnhEVRj95eD3AvaEoX7YCnfQBV5Z8Ll93HEcXEiLtYkdxucXM8UPUXIjP8CUyokk2YzNHa3TKd1L7Aq6BXhxZRo57jkGriSW0c8zVx1iZZFCFsOc/0Ae6nLVQzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Dkr31hJx; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSeIzJgu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21278C4CEEA;
-	Mon, 16 Jun 2025 04:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750046641;
-	bh=yDzp1HXMtne8DF19p6akhYxebQV8My0v2pNpbGDe7DQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bSeIzJgu6jzY4Cv6vyOqZ3mwBMw5YbDtb2K73cSvFLj1NS45YrgepgVZ9xYxSkhxb
-	 PBhhca9dYT3DucO+oiMAz/1YLLM1IYrZ+nWF9iiBiXBNY/k9hedenuUuoE8PYa3fSc
-	 LbboorWoyS+MgkCebsDY28x/QVCYWtI3baDZrumT3A7zwwl9/SQhXbjSuEGafP7wYa
-	 fvb9YIWtsfFxzihajNe2Qmv7HlKlwcmlSBcZS7IcP7MlmLYtxHDK+viY7sQiiY23+I
-	 jwXRnll7VpL5uHrEr08YqM7TnyBeS+Pkn8kV9kgCN2RDqvamqamVicYcuGRQMwvAu2
-	 ytrtm4g/CIGPQ==
-Message-ID: <9d3aee10-9eb3-4f2d-bb9a-1721c05ec3aa@kernel.org>
-Date: Mon, 16 Jun 2025 13:03:59 +0900
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Dkr31hJx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=I38ai5ionxBMkBimwgLTi73TMk2JcKNFvw44Vez0IHg=; b=Dkr31hJxvLQnMX0CfUojD5ZoE7
+	MusiFgiCS4vFeeOt6FIPojpyxxSZVMUfETa4aO4WEzxp0Mjc4uOXbiK6zlntrb0LOL3eEZ//QO29I
+	1QPx96pD1ghlO3yPOzExTtEJ5KpKXOeEsJUbu9oED8EkTc2ABJC59nNNWQkr7t49qgLqu0Lo/4O/P
+	N0MTEVx+OkOxgm2Y6507kpc/JUHsMWiIi16uANk6vdK8E/qCV5C7q+Vr8nWeOmcYUJU5QmOg1pypW
+	TRIDx0faC1zS86z9Bm8sHbovNm2tMcfNbZQLNicr/kkjQ66KlAP2x2YVqG2HcJI6DnWoKnUoeXe+8
+	BToQgXOw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uR0uf-000JCI-2h;
+	Mon, 16 Jun 2025 12:09:18 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 16 Jun 2025 12:09:17 +0800
+Date: Mon, 16 Jun 2025 12:09:17 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
+	Jason@zx2c4.com, torvalds@linux-foundation.org
+Subject: [PATCH] crypto: ahash - Fix infinite recursion in ahash_def_finup
+Message-ID: <aE-Y7VzdJTDJHsy_@gondor.apana.org.au>
+References: <20250611020923.1482701-8-ebiggers@kernel.org>
+ <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
+ <20250611033957.GA1484147@sol>
+ <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
+ <20250611035842.GB1484147@sol>
+ <20250613053624.GA163131@sol>
+ <aEu5cyDOMcKteW_b@gondor.apana.org.au>
+ <20250613055439.GB163131@sol>
+ <aEvmmr0huGGd2Psv@gondor.apana.org.au>
+ <20250615031807.GA81869@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 0/5] blk-mq-sched: support request batch
- dispatching for sq elevator
-To: Yu Kuai <yukuai1@huaweicloud.com>, ming.lei@redhat.com,
- yukuai3@huawei.com, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com
-References: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250615031807.GA81869@sol>
 
-On 6/14/25 18:25, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Before this patch, each dispatch context will hold a global lock to
-> dispatch one request at a time, which introduce intense lock competition:
-> 
-> lock
-> ops.dispatch_request
-> unlock
-> 
-> Hence support dispatch a batch of requests while holding the lock to
-> reduce lock contention.
-> 
-> nullblk setup:
-> modprobe null_blk nr_devices=0 &&
->     udevadm settle &&
->     cd /sys/kernel/config/nullb &&
->     mkdir nullb0 &&
->     cd nullb0 &&
->     echo 0 > completion_nsec &&
->     echo 512 > blocksize &&
->     echo 0 > home_node &&
->     echo 0 > irqmode &&
->     echo 128 > submit_queues &&
->     echo 1024 > hw_queue_depth &&
->     echo 1024 > size &&
->     echo 0 > memory_backed &&
->     echo 2 > queue_mode &&
->     echo 1 > power ||
->     exit $?
-> 
-> Test script:
-> fio -filename=/dev/$disk -name=test -rw=randwrite -bs=4k -iodepth=32 \
->   -numjobs=16 --iodepth_batch_submit=8 --iodepth_batch_complete=8 \
->   -direct=1 -ioengine=io_uring -group_reporting -time_based -runtime=30
-> 
-> Test result(elevator is deadline): iops
-> |                 | null_blk | scsi hdd |
-> | --------------- | -------- | -------- |
-> | before this set | 263k     | 24       |
-> | after this set  | 475k     | 272      |
+On Sat, Jun 14, 2025 at 08:18:07PM -0700, Eric Biggers wrote:
+>
+> Even with your patch applied, it overflows the stack when running the crypto
+> self-tests, apparently due to crypto/ahash.c calling into itself recursively:
 
-For the HDD, these numbers are very low, and I do not understand how you can get
-any improvement from reducing lock contention, since contention should not be an
-issue with this kind of performance. What HW did you use for testing ? Was this
-a VM ?
+Thanks for the report.  This driver doesn't provide a finup function
+which triggered a bug in the default finup implementation:
 
-I tested this null_blk setup and your fio command on a bare-metal 16-cores Xeon
-machine. For the scsi disk, I used a 26TB SATA HDD connected to an AHCI port).
-With this setup, results are like this:
+---8<---
+Invoke the final function directly in the default finup implementation
+since crypto_ahash_final is now just a wrapper around finup.
 
-|                 | null_blk | hdd (write) | hdd (read) |
-| --------------- | -------- | ----------- | ---------- |
-| before this set | 613k     | 1088        | 211        |
-| after this set  | 940k     | 1093        | 212        |
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 9d7a0ab1c753 ("crypto: ahash - Handle partial blocks in API")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-So not surprisingly, there is no improvement for the SATA HDD because of the low
-max IOPS these devices can achieve: lock contention is not really an issue when
-you are dealing with a slow device. And a SAS HDD will be the same. Gains may
-likely be more significant with a fast SAS/FC RAID array but I do not have
-access to that.
-
-But the improvement for a fast device like null_blk is indeed excellent (+53%).
-
-With LOCKDEP & KASAN disabled, the results are like this:
-
-|                 | null_blk | hdd (write) | hdd (read) |
-| --------------- | -------- | ----------- | ---------- |
-| before this set | 625k     | 1092        | 213        |
-| after this set  | 984k     | 1095        | 215        |
-
-No real changes for the HDD, as expected, and the improvement for null_blk is
-still good.
-
-So maybe drop the RFC tag on these patches and repost after cleaning things up ?
-
-
+diff --git a/crypto/ahash.c b/crypto/ahash.c
+index bd9e49950201..3878b4da3cfd 100644
+--- a/crypto/ahash.c
++++ b/crypto/ahash.c
+@@ -603,12 +603,14 @@ static void ahash_def_finup_done2(void *data, int err)
+ 
+ static int ahash_def_finup_finish1(struct ahash_request *req, int err)
+ {
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++
+ 	if (err)
+ 		goto out;
+ 
+ 	req->base.complete = ahash_def_finup_done2;
+ 
+-	err = crypto_ahash_final(req);
++	err = crypto_ahash_alg(tfm)->final(req);
+ 	if (err == -EINPROGRESS || err == -EBUSY)
+ 		return err;
+ 
 -- 
-Damien Le Moal
-Western Digital Research
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
