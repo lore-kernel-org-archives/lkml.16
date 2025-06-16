@@ -1,135 +1,178 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0B5224AE0
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5142236FC
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750111829; cv=none; b=ef9RmQ+NrS6ZYypyZNZZW0ePi7sWDYa+uZQCOix0maTT8c7gRnRD4t6RbystSjJFyntmAVsb5OtPhr2ExzmNP2WdHgQexrAsFly0H3YG+8O529YG4Yxl1tJLjEZT7fwbAYjy0B7UCzVfUn8UhJo94tUCEPTnJZSIP3mcNt4dx4Y=
+	t=1750111921; cv=none; b=h9EocR3crEucbX0WSI5JCTkINcPDlkXDlaJnkUYv3PerBDWj0VqysDTCI6sxnfbm3RaCL1ITaP3YGo4K8ZMwRFhQeHKLnE6Hc7ubBkLFtPqKrdh654mUFAZ/XkquUQvhjr+hysNuot1AkNLeNm+Z8/R8UN1eu+wQ/No1TnApf9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750111829; c=relaxed/simple;
-	bh=8MpOJnSEQjfDa1EhgGnvBups2yrDGZ61bYb4+vQnEzI=;
+	s=arc-20240116; t=1750111921; c=relaxed/simple;
+	bh=z27b+y8IAQVhC5dT+anpQ1qNUaOyNff9dkszwQOUIik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BreJ49w2y+Z4ibgV9o9gPqMS0KsDbqpoC24cHjK1Uy9yPPWyguYMn4twxTD7rbPbmG+2cSl5NNq7yLdFV3kqx6/Fzh4eHtKAYu8auLuFxl3/VBnnbDeAf7NAhrd9U87592R/OXxYm8GFKA9+Y/uxgZ3uV4U+Fw44ni3UFPuztTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qDQqkVCB; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyVoTJcvEWbmamxOMtS7O1W/80MytLKXx9XIN/ywcBkr3bXtimrH5La6SW6/LlxenV+PdoxQJRV91myesE77JIMvRrHgsW8BR67xphveP8RFcKAYB0ivoGgG5sSXC1Mkr/eFfm27Gb6hgXb0WnMM/J4uPDQZDSEp2bzwmHVv1J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TDKuN8hZ; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDQqkVCB"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235ca5eba8cso61015ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:10:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750111827; x=1750716627; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0kNU98GqvoY/2N+rHSgzZWQGmQpqcL99KyddV2L+Mps=;
-        b=qDQqkVCB4TEAJjn7jRQzbWHFXwKmi0MPhYXzN4qMUENL2X3Yp7KDQri+ScCyC9pR5u
-         l0MlJSA8YYePwFFfvTizIfZzXz6nsRUUd8kdoA194mf3UkHNpybT9az3DPZKjZ1dmki1
-         zvgkmcS2lUkSsc2IUPV4Z2lwqGQR7jfsDtnSztBEVJxi6wKkG6e1I6URXiP781SfB6Qd
-         kgQeVl4RFgX/UlsevLcsl1iPXIMYsbThA64Mx8q7P37Xo6TMJTArdEMUuLnoKXcxsGon
-         50cblzIkFTB0pzFYm70nf9E2xLONo+CgXPkf80UuGMC5XmBmqUq9qx4DTEZjXKr8q383
-         iZcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750111827; x=1750716627;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0kNU98GqvoY/2N+rHSgzZWQGmQpqcL99KyddV2L+Mps=;
-        b=MBXZH3r6LSClMEr0NzG3EV3uh0vbKnlxWguaIE8clnUxAiKOVhn4hvCBH1jdjwxAYo
-         ukNjRVwVBkA12pnYj6zVIrXrdvZkouuWpolYlcQx8i0nlCBEwVCarGYz8+SaeLeIc9KV
-         HT/rxkRUCxbOls0ZVxx2Xnl/nMAGNEvTe1wqcrDpz9I/E8SOyMbCwJe3RWjrQrXrYVMd
-         3OCQ5mzRmAn7NPf2f7Igi1PcDigBj1/ze0f6Tc+aA8Z4/NkEAx6xJE+4Z8/+Sg37Fggq
-         0/I/YdWGLWOH73wB6urd5Wla3EPtBnPKpxJusCUyfo4s53r8LbXzwyqdyKtlynpSDyuo
-         BnLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZtxq3Bx8qTKoOuZ7vefhneV3qXHmw7G4w1M+MMskn4m5iXkW5YZRzaTXjphwun9DViXX5xJ+SS2V3SM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVBEhYhWPt5axa8j/E0bRjMyIv3rGVUylgpcTzK5f95XYmi3mE
-	RIfwAjxoBehr6KsDuobwJR4L2Pwu6O3rHoG8iudXuq+KS+5sXOq1Qzqx4Rx4JyAXayvyECdCQ0e
-	GvvQ70ViD
-X-Gm-Gg: ASbGncsIxujWtSlT+tCrwvGuZUT6DhBmymJZs/+AgisWkLfczoTK7XOMxcXSaUN50Xo
-	WDW2Nhn9bgB3Nje6WQNmF7OCrJwCySW7wBUIFIfzyc2tWhiRk856Q3gYMzhUBOfPaEc2NlKHW+p
-	/91qwFpynKOICbSGznOX3++8gdtYGRnMX2za6OjdqwE0Vjo5bdj53nhOyZJJ4J/FNYXvCBR7iQu
-	N8LJaWtcLpAZYobQe4xw/6Oul7Vbikb2jmxAo/9qWC0buGbtpwJcE8+XW5mlJ286mgwN7RDWJKY
-	DQcXEaaydAkzJH+8hu8xqHXsF7qPUNvyF4XwfGqjzrprgg3iH1aGSH4HzG/m6UZ4c5OaVYLBMxQ
-	uaKu/Trqpvso5c0Pwy2PG
-X-Google-Smtp-Source: AGHT+IHafQhQzPRhJ3j9d6qdD5hPqdbdu9Gdsdh0mrYjgCf+ykHfOaUnI39p3vGID7jjfHRJysZXkA==
-X-Received: by 2002:a17:902:d48f:b0:223:2630:6b86 with SMTP id d9443c01a7336-2366eef035dmr5556855ad.7.1750111826636;
-        Mon, 16 Jun 2025 15:10:26 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78e8asm66412495ad.132.2025.06.16.15.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 15:10:26 -0700 (PDT)
-Date: Mon, 16 Jun 2025 22:10:17 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, will@kernel.org,
-	robin.murphy@arm.com, joro@8bytes.org, yi.l.liu@intel.com,
-	peterz@infradead.org, jsnitsel@redhat.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 06/14] iommu: Introduce get_viommu_size and
- viommu_init ops
-Message-ID: <aFCWSZpFuhAweGdb@google.com>
-References: <cover.1749882255.git.nicolinc@nvidia.com>
- <3ab52c5b622dad476c43b1b1f1636c8b902f1692.1749882255.git.nicolinc@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TDKuN8hZ"
+Date: Tue, 17 Jun 2025 00:11:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750111917;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4pbm1b9LBgDfXKudtas1By4N/SakHI/JM8t8mVTU1hE=;
+	b=TDKuN8hZ097Ub/FhBuz7VWmhzzl8zAWBw/2k5gomhb8wUCpfEaJg/xWigwZ/IhBMQIw6uV
+	U8/3MH+9BxKcx9qcUPG9/wvUQyqrD+kRJOtPMQjAWkdNTCQu8p/2c8dMikTMaWii4ekyUV
+	L+5FR3Ibm9e1uMvQTUhHBnHFaQtakFw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 08/10] media: i2c: ov9282: add strobe_duration v4l2
+ control
+Message-ID: <iszi4xwmlefn2bz5k4kmlxqhcwrm7trzkr56z73rkwgbsj2e7u@rhxbkwaztrq6>
+References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+ <20250507-ov9282-flash-strobe-v4-8-72b299c1b7c9@linux.dev>
+ <aDTOsR_ctSsySEsr@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <3ab52c5b622dad476c43b1b1f1636c8b902f1692.1749882255.git.nicolinc@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDTOsR_ctSsySEsr@kekkonen.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 13, 2025 at 11:35:18PM -0700, Nicolin Chen wrote:
-> So far, a vIOMMU object has been allocated by IOMMU driver and initialized
-> with the driver-level structure, before it returns to the iommufd core for
-> core-level structure initialization. It has been requiring iommufd core to
-> expose some core structure/helpers in its driver.c file, which result in a
-> size increase of this driver module.
-> 
-> Meanwhile, IOMMU drivers are now requiring more vIOMMU-base structures for
-> some advanced feature, such as the existing vDEVICE and a future HW_QUEUE.
-> Initializing a core-structure later than driver-structure gives for-driver
-> helpers some trouble, when they are used by IOMMU driver assuming that the
-> new structure (including core) are fully initialized, for example:
-> 
-> core:	viommu = ops->viommu_alloc();
-> driver:	// my_viommu is successfully allocated
-> driver:	my_viommu = iommufd_viommu_alloc(...);
-> driver:	// This may crash if it reads viommu->ictx
-> driver:	new = iommufd_new_viommu_helper(my_viommu->core ...);
-> core:	viommu->ictx = ucmd->ictx;
-> core:	...
-> 
-> To ease such a condition, allow the IOMMU driver to report the size of its
-> vIOMMU structure, let the core allocate a vIOMMU object and initialize the
-> core-level structure first, and then hand it over the driver to initialize
-> its driver-level structure.
-> 
-> Thus, this requires two new iommu ops, get_viommu_size and viommu_init, so
-> iommufd core can communicate with drivers to replace the viommu_alloc op:
-> 
-> core:	viommu = ops->get_viommu_size();
-> driver:	return VIOMMU_STRUCT_SIZE();
-> core:	viommu->ictx = ucmd->ictx; // and others
-> core:	rc = ops->viommu_init();
-> driver:	// This is safe now as viommu->ictx is inited
-> driver:	new = iommufd_new_viommu_helper(my_viommu->core ...);
-> core:	...
-> 
-> This also adds a VIOMMU_STRUCT_SIZE macro, for drivers to use, which would
-> statically sanitize the driver structure.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommu.h   | 15 +++++++++++++++
->  include/linux/iommufd.h |  6 ++++++
->  2 files changed, 21 insertions(+)
-> 
+Hi Sakari,
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+thanks also for reviewing this patch :-)
 
+On Mon, May 26, 2025 at 08:27:29PM +0000, Sakari Ailus wrote:
+> Hi Richard,
+> 
+> On Wed, May 07, 2025 at 09:51:37AM +0200, Richard Leitner wrote:
+> > Add V4L2_CID_FLASH_DURATION support using the "strobe_frame_span"
+> > feature of the sensor. This is implemented by transforming the given µs
+> > value by an interpolated formula to a "span step width" value and
+> > writing it to register PWM_CTRL_25, PWM_CTRL_26, PWM_CTRL_27,
+> > PWM_CTRL_28 (0x3925, 0x3926, 0x3927, 0x3928).
+> > 
+> > The maximum control value is set to the period of the current default
+> > framerate.
+> > 
+> > All register values are based on the OV9281 datasheet v1.53 (jan 2019)
+> > and tested using an ov9281 VisionComponents module.
+> > 
+> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > ---
+> >  drivers/media/i2c/ov9282.c | 31 ++++++++++++++++++++++++++++++-
+> >  1 file changed, 30 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> > index b6de96997426f7225a061bfdc841aa062e8d0891..0bbdf08d7cda8f72e05fdc292aa69a4c821e4e03 100644
+> > --- a/drivers/media/i2c/ov9282.c
+> > +++ b/drivers/media/i2c/ov9282.c
+> > @@ -97,6 +97,10 @@
+> >  #define OV9282_REG_MIPI_CTRL00	0x4800
+> >  #define OV9282_GATED_CLOCK	BIT(5)
+> >  
+> > +/* Flash/Strobe control registers */
+> > +#define OV9282_REG_FLASH_DURATION	0x3925
+> > +#define OV9282_FLASH_DURATION_DEFAULT	0x0000001A
+> 
+> Lower case hexadecimals are preferred.
 
+Sure. Will fix that in v5.
+
+> 
+> > +
+> >  /* Input clock rate */
+> >  #define OV9282_INCLK_RATE	24000000
+> >  
+> > @@ -687,6 +691,25 @@ static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
+> >  				current_val);
+> >  }
+> >  
+> > +static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
+> 
+> I'd use u32 for the value here.
+
+Sounds legit. Will adapt that in v5.
+
+> 
+> > +{
+> > +	/*
+> > +	 * Calculate "strobe_frame_span" increments from a given value (µs).
+> > +	 * This is quite tricky as "The step width of shift and span is
+> > +	 * programmable under system clock domain.", but it's not documented
+> > +	 * how to program this step width (at least in the datasheet available
+> > +	 * to the author at time of writing).
+> > +	 * The formula below is interpolated from different modes/framerates
+> > +	 * and should work quite well for most settings.
+> > +	 */
+> > +	u32 val = value * 192 / (ov9282->cur_mode->width + ov9282->hblank_ctrl->val);
+> > +
+> > +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> 24) & 0xff);
+> > +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val >> 16) & 0xff);
+> > +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 2, 1, (val >> 8) & 0xff);
+> > +	return ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 3, 1, val & 0xff);
+> > +}
+> > +
+> >  /**
+> >   * ov9282_set_ctrl() - Set subdevice control
+> >   * @ctrl: pointer to v4l2_ctrl structure
+> > @@ -756,6 +779,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  	case V4L2_CID_FLASH_LED_MODE:
+> >  		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
+> >  		break;
+> > +	case V4L2_CID_FLASH_DURATION:
+> > +		ret = ov9282_set_ctrl_flash_duration(ov9282, ctrl->val);
+> > +		break;
+> >  	default:
+> >  		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
+> >  		ret = -EINVAL;
+> > @@ -1346,7 +1372,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+> >  	u32 lpfr;
+> >  	int ret;
+> >  
+> > -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
+> > +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 12);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -1418,6 +1444,9 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+> >  			       (1 << V4L2_FLASH_LED_MODE_TORCH),
+> >  			       V4L2_FLASH_LED_MODE_NONE);
+> >  
+> > +	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
+> > +			  0, 13900, 1, 8);
+> 
+> It'd be nice to calculate the limits based on the relevant parameters
+> rather than use a hard-coded value here.
+
+Ok :-)
+I will send an updated v5 where the maximum flash duration is set to the
+current exposure time in µs tomorrow.
+
+> 
+> > +
+> >  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+> >  	if (!ret) {
+> >  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> > 
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
+
+thanks & regards;rl
