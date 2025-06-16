@@ -1,42 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E491898E8
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40FF2868BF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750104807; cv=none; b=kt1kE07YbTRQeFiYp/Voy7FRX73jRlHF3V+MxEvtByM0KUa2GdAaF/XjTAhffdW+r1jfCCY7UjfM9K/Zcqec6N9bAzigFlboFzgOdXiaVzByA+x/SMYvZJnT7kC1b/BJOnkmKrTWC0OtP5xoSF9edlnilSJBfsnryLgp3veNIsY=
+	t=1750104821; cv=none; b=FWcbBUSbel0Te44gJCiFunyPw3/OyLDvkiYb8vvMmnGodnFZjPo+6YVmMMtbncxR6HdQL8+sMJ3AILVnREXgoO0EGVzVxh+Cwo09cTvgW9Rw21GUXXTJoSy1qwP8RGW0Oicz7vuKE4uGHQ4Bu73GLNCIM7natnOhkjiAUK1m9Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750104807; c=relaxed/simple;
-	bh=rm2cm6leHzxDp92hNDKcjjotXJWyVbcCrZHVpdjT+Og=;
+	s=arc-20240116; t=1750104821; c=relaxed/simple;
+	bh=ls4VGECiCBtg2JlEG7yNXWSKEOGCxJcawxWh97L01Y0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6aEGSNuiaaOHkDwWLlR8pMWrVdDNynKXh+9W5+IxjVJGbpsq3o6wdmUgZWiOQSB13H8ZpPFGEV8ZVsZjFiqAYKimXR6qB0zgO4HSTBxw7RRiFW/ILMxnbZgcCG9qfO9pf1QTTIv/vy9b4/EWaWPn0yIDNVpI2s+boRlqmVpHbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ma10h3nb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BjVLNcadKXHir6L9g2yDEdgRH+CM/tbllMw6zMVaxy10oJDk7GrodtoqW50XadfhBVLalfU5jMChFZoeitki5/mx4lAJKAHqwrmjV5Q3I5qC/yzTblEJBXAF6e3NZ/1Q9n8CbqKFkDp1casIzex44tt1V/Pnx3I0Gm48U484Oi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZQ3dcc5k; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ma10h3nb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA0CC4CEEA;
-	Mon, 16 Jun 2025 20:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750104806;
-	bh=rm2cm6leHzxDp92hNDKcjjotXJWyVbcCrZHVpdjT+Og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ma10h3nbgcMypzEjwGvkb/8ehPfXSj1zZzZgZjxydI5QqZYV7X6pEQSd8ocnBDQlc
-	 H7eXIwC/MFY16MDO4Zfmkpy5pwlLbhDYIbgm8BE/qthcjRu1KqZky30RTclqDcI4+m
-	 TBfwMOm1rzbX8OFoTuVw+kedRfR7W2WQrui4QSrZonw1rujNRsQ1HWrmY6qWjBeNpB
-	 wGfw4YbMZB5VUe3OZji1pOx8ZKRiK2/0/QGjGzWbIbD4V4ibx8tl4wzjK/hfqwB0Rq
-	 WZJ87Y4RjMNggy86AGcghPRoYqVcKhBXHz3SHjBvyD/UdJO9pcn5bVJJ9twXFORCJE
-	 9dLJh0g/u/L4g==
-Date: Mon, 16 Jun 2025 10:13:25 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 2/2 sched_ext/for-6.16-fixes] sched_ext, sched/core: Don't
- call scx_group_set_weight() prematurely from sched_create_group()
-Message-ID: <aFB65Zfis1iBvKoc@slm.duckdns.org>
-References: <aEyy27BecPPHDWHc@slm.duckdns.org>
- <aEyzhBAl5zkP6Ku-@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZQ3dcc5k"
+Date: Mon, 16 Jun 2025 13:13:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750104806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7sWRkpC4J/fwZ8hiPeG9n9Tg+PgJKdAZANW52vn8x6Y=;
+	b=ZQ3dcc5kh6ona5ww/0k7/JsyT8NLs1JyZaMkcZsHB8MCT7NnZx9bcpaIRCYtFp4nCcIwk0
+	+ra73movQM5WaTKViT6cCTci195lS0YRX0dS53qVXMs5qfy0UNo4dx2kMkqRylshivfGhu
+	KDTh3eVjr0zGjK3bY08lspkLe6PKVXg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: JP Kobryn <inwardvessel@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Alexei Starovoitov <ast@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH v2 0/4] cgroup: nmi safe css_rstat_updated
+Message-ID: <nv7p4v6jpc7fc4dw6by4dqciqcfkzqtt74enyymx7s764f2dce@o5xlm5njrvwo>
+References: <20250611221532.2513772-1-shakeel.butt@linux.dev>
+ <218e8b26-6b83-46a4-a57c-2346130a1597@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,79 +49,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEyzhBAl5zkP6Ku-@slm.duckdns.org>
+In-Reply-To: <218e8b26-6b83-46a4-a57c-2346130a1597@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-During task_group creation, sched_create_group() calls
-scx_group_set_weight() with CGROUP_WEIGHT_DFL to initialize the sched_ext
-portion. This is premature and ends up calling ops.cgroup_set_weight() with
-an incorrect @cgrp before ops.cgroup_init() is called.
+On Mon, Jun 16, 2025 at 01:08:49PM -0700, JP Kobryn wrote:
+> On 6/11/25 3:15 PM, Shakeel Butt wrote:
+> > BPF programs can run in nmi context and may trigger memcg charged memory
+> > allocation in such context. Recently linux added support to nmi safe
+> > page allocation along with memcg charging of such allocations. However
+> > the kmalloc/slab support and corresponding memcg charging is still
+> > lacking,
+> > 
+> > To provide nmi safe support for memcg charging for kmalloc/slab
+> > allocations, we need nmi safe memcg stats because for kernel memory
+> > charging and stats happen together. At the moment, memcg charging and
+> > memcg stats are nmi safe and the only thing which is not nmi safe is
+> > adding the cgroup to the per-cpu rstat update tree. i.e.
+> > css_rstat_updated() which this series is doing.
+> > 
+> > This series made css_rstat_updated by using per-cpu lockless lists whose
+> > node in embedded in individual struct cgroup_subsys_state and the
+> > per-cpu head is placed in struct cgroup_subsys. For rstat users without
+> > cgroup_subsys, a global per-cpu lockless list head is created. The main
+> > challenge to use lockless in this scenario was the potential multiple
+> > inserters from the stacked context i.e. process, softirq, hardirq & nmi,
+> > potentially using the same per-cpu lockless node of a given
+> > cgroup_subsys_state. The normal lockless list does not protect against
+> > such scenario.
+> > 
+> > The multiple stacked inserters using potentially same lockless node was
+> > resolved by making one of them succeed on reset the lockless node and the
+> > winner gets to insert the lockless node in the corresponding lockless
+> > list. The losers can assume the lockless list insertion will eventually
+> > succeed and continue their operation.
+> > 
+> > Changelog since v2:
+> > - Add more clear explanation in cover letter and in the comment as
+> >    suggested by Andrew, Michal & Tejun.
+> > - Use this_cpu_cmpxchg() instead of try_cmpxchg() as suggested by Tejun.
+> > - Remove the per-cpu ss locks as they are not needed anymore.
+> > 
+> > Changelog since v1:
+> > - Based on Yosry's suggestion always use llist on the update side and
+> >    create the update tree on flush side
+> > 
+> > [v1] https://lore.kernel.org/cgroups/20250429061211.1295443-1-shakeel.butt@linux.dev/
+> > 
+> > 
+> > Shakeel Butt (4):
+> >    cgroup: support to enable nmi-safe css_rstat_updated
+> >    cgroup: make css_rstat_updated nmi safe
+> >    cgroup: remove per-cpu per-subsystem locks
+> >    memcg: cgroup: call css_rstat_updated irrespective of in_nmi()
+> > 
+> >   include/linux/cgroup-defs.h   |  11 +--
+> >   include/trace/events/cgroup.h |  47 ----------
+> >   kernel/cgroup/rstat.c         | 169 +++++++++++++---------------------
+> >   mm/memcontrol.c               |  10 +-
+> >   4 files changed, 74 insertions(+), 163 deletions(-)
+> > 
+> 
+> I tested this series by doing some updates/flushes on a cgroup hierarchy
+> with four levels. This tag can be added to the patches in this series.
+> 
+> Tested-by: JP Kobryn <inwardvessel@gmail.com>
+> 
 
-sched_create_group() should just initialize SCX related fields in the new
-task_group. Fix it by factoring out scx_tg_init() from sched_init() and
-making sched_create_group() call that function instead of
-scx_group_set_weight().
-
-v2: Retain CONFIG_EXT_GROUP_SCHED ifdef in sched_init() as removing it leads
-    to build failures on !CONFIG_GROUP_SCHED configs.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 819513666966 ("sched_ext: Add cgroup support")
-Cc: stable@vger.kernel.org # v6.12+
----
- kernel/sched/core.c |    4 ++--
- kernel/sched/ext.c  |    5 +++++
- kernel/sched/ext.h  |    2 ++
- 3 files changed, 9 insertions(+), 2 deletions(-)
-
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8437,7 +8437,7 @@ void __init sched_init(void)
- 		init_cfs_bandwidth(&root_task_group.cfs_bandwidth, NULL);
- #endif /* CONFIG_FAIR_GROUP_SCHED */
- #ifdef CONFIG_EXT_GROUP_SCHED
--		root_task_group.scx_weight = CGROUP_WEIGHT_DFL;
-+		scx_tg_init(&root_task_group);
- #endif /* CONFIG_EXT_GROUP_SCHED */
- #ifdef CONFIG_RT_GROUP_SCHED
- 		root_task_group.rt_se = (struct sched_rt_entity **)ptr;
-@@ -8872,7 +8872,7 @@ struct task_group *sched_create_group(st
- 	if (!alloc_rt_sched_group(tg, parent))
- 		goto err;
- 
--	scx_group_set_weight(tg, CGROUP_WEIGHT_DFL);
-+	scx_tg_init(tg);
- 	alloc_uclamp_sched_group(tg, parent);
- 
- 	return tg;
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -4056,6 +4056,11 @@ bool scx_can_stop_tick(struct rq *rq)
- DEFINE_STATIC_PERCPU_RWSEM(scx_cgroup_rwsem);
- static bool scx_cgroup_enabled;
- 
-+void scx_tg_init(struct task_group *tg)
-+{
-+	tg->scx_weight = CGROUP_WEIGHT_DFL;
-+}
-+
- int scx_tg_online(struct task_group *tg)
- {
- 	struct scx_sched *sch = scx_root;
---- a/kernel/sched/ext.h
-+++ b/kernel/sched/ext.h
-@@ -95,6 +95,7 @@ static inline void scx_update_idle(struc
- 
- #ifdef CONFIG_CGROUP_SCHED
- #ifdef CONFIG_EXT_GROUP_SCHED
-+void scx_tg_init(struct task_group *tg);
- int scx_tg_online(struct task_group *tg);
- void scx_tg_offline(struct task_group *tg);
- int scx_cgroup_can_attach(struct cgroup_taskset *tset);
-@@ -104,6 +105,7 @@ void scx_cgroup_cancel_attach(struct cgr
- void scx_group_set_weight(struct task_group *tg, unsigned long cgrp_weight);
- void scx_group_set_idle(struct task_group *tg, bool idle);
- #else	/* CONFIG_EXT_GROUP_SCHED */
-+static inline void scx_tg_init(struct task_group *tg) {}
- static inline int scx_tg_online(struct task_group *tg) { return 0; }
- static inline void scx_tg_offline(struct task_group *tg) {}
- static inline int scx_cgroup_can_attach(struct cgroup_taskset *tset) { return 0; }
+Thanks a lot.
