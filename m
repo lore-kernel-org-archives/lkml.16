@@ -1,94 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E749C2CA6;
-	Mon, 16 Jun 2025 08:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD4626D4E7;
+	Mon, 16 Jun 2025 08:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750064254; cv=none; b=Vgi6lyZZrtIji5hy8lLvtT1elqwYqTy1LBNg/q7DS7s3KlHaEI7B0W7eF8hMXjrxUNegOdqcJjfmui6kqJc0FggiS4lhfsccznO5Wi2xOsKvO17y1JhAs2r0nPU+qFyO8U7OF8eKjh6KnLUaY/dEcNGhBRySzGs+SEW0oEBZS+0=
+	t=1750064276; cv=none; b=b5afen2SB0OpIBuq1AzVsclWu9nNykbgNbNQCiD+op5HH3d1gVF8PsTLTaQJNnexRcGUUKOPCPx0D2mLkqkjkmJyUHqpktyylMyAz4x7QgDMRb9jL7F1i8ZfkYEDO4HA3qHM4C7cD+/f/kKUd0grCtfucDfVz1IHAqUNUIq+9MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750064254; c=relaxed/simple;
-	bh=qnNf3fYIw3hmwU/97pa+2Ki60fD4diuhaBHLweuaEm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/j+tlo9OTtMqq9zZaN8jnNt8hRgbT7rrExNlbNYi7BstwngK41Xh496yGVZ5dIJqroH07gVxOQMaK++dHigDd3BLV+GGo19gbj882FP7vNkNhUzkSPS7uR7EULFTfw3inFd3v7chngk4m3SfIqWhBx3FPBbxNWzS/Wpd12mAds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QM/xGn7C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750064276; c=relaxed/simple;
+	bh=5s8sDohCKEkle5cF00Pjoe6FoxImIgxI9Ykte4n/HfQ=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=pAzQM90dhP+KFY1u5V7RAuZ9ou61pjL/ICj9kTVVMiRaIsmK5+D4Xv8Gwwqbx3CnI5tCM0IzjVWLil0SMveXkZq2sWyUaAap7qw8pVAsMIiG+QWJz/wlL9UgGoxPnlYoCJk68NFbS9/rqvdwZzzcIbX/HnEpqL+PK0Rn7nWQ5UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RMUr56cG; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QM/xGn7C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81034C4CEEE;
-	Mon, 16 Jun 2025 08:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750064253;
-	bh=qnNf3fYIw3hmwU/97pa+2Ki60fD4diuhaBHLweuaEm0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QM/xGn7CC+sFWc+9n8sXAve4bTiQGDieRIojRLHT9xm/RL2sytvsVxDLLe0GOuFDu
-	 r6zHcpf7BkgUi3ZaAWJE9hfpegYMirSFqWLld0SB5iQqpqezGfSn3EibKrPjevgIjx
-	 E7ZD/Pj0upkB89FnlJD7EdZ8mwUXMzl6OHt8X1ZZ8HyYNV8XzjlZt0i8S4rAzhUYRI
-	 mRFuGxDDtRhqePajtX7PR6TXc2Cc5M0yYb3Gs05PtL5VGqTnyKoErAj212oz3wHViO
-	 Gh9d+N/2TIwW8jKOSuW3TjCKliDqWKHAkqxoXhhoo0C3lKLD5AO8P7e9XWSuzW+UAn
-	 bDEOYzj2QKXgg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uR5ek-0000000058L-1DBy;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RMUr56cG"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8nbMS018924;
 	Mon, 16 Jun 2025 10:57:30 +0200
-Date: Mon, 16 Jun 2025 10:57:30 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH v2] dt: arm64: qcom: sc8280xp-x13s: amend usb0-sbu-mux
- enable gpio
-Message-ID: <aE_cejDMmmU48jMp@hovoldconsulting.com>
-References: <20250610-x13s-usb0-mux-v2-1-598454e6ad64@oldschoolsolutions.biz>
- <aEffYQND8eUgJbua@hovoldconsulting.com>
- <64d963bd-b38c-4f14-bb1d-f7e89dad999a@oldschoolsolutions.biz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=hZLfO/aZyhMByPrSvo6tyt
+	gTdrnVnO5xyKlmjUCAvKw=; b=RMUr56cGnt2/RKuJ4spaAqR0emvF93V4UccXgy
+	LMZbSVE+1tjfHj1tM/nNO0xtDGv8ZNjsp5EWl/h7LRsAaEU+dQU7iGVWopOKSTTx
+	SmMxOcsDq5+kooCeQHsQGojp3Ea2kzjQKhVnA+5rvfQ+j9qocvU2AcXgW5uJLqQJ
+	ftcScyP45zUgIiwv3ZyFa+YreFS93Rbd8Af6sguAbUFc0A4765p1UKOM/z6KwyKq
+	WUkjBpIvNRIpAjIrGZRlzYY4ilz+qNGXPX6OFYBBlKD3RNn+s3rM5g2GKUn1srO6
+	C7DbbaN/1GPmPG33jvn4XYGy6AyXTbqXovPbFKJ4tgWp3G/Q==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4790e1yqwy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:57:30 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 01A4740074;
+	Mon, 16 Jun 2025 10:56:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 29F025D40BC;
+	Mon, 16 Jun 2025 10:54:42 +0200 (CEST)
+Received: from localhost (10.252.14.42) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
+ 2025 10:54:41 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Subject: [PATCH 0/3] Fix STM32 I2C dma operations
+Date: Mon, 16 Jun 2025 10:53:53 +0200
+Message-ID: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <64d963bd-b38c-4f14-bb1d-f7e89dad999a@oldschoolsolutions.biz>
+X-B4-Tracking: v=1; b=H4sIAKLbT2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyNz3UyjZN3SguKSotTEXN1U0yQzS1MDQ2NTy0QloJaCotS0zAqwcdG
+ xtbUABnEo6l4AAAA=
+X-Change-ID: 20250527-i2c-upstream-e5b69501359a
+To: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "M'boumba Cedric
+ Madianga" <cedric.madianga@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>
+CC: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
+	<clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
 
-On Wed, Jun 11, 2025 at 09:25:20PM +0200, Jens Glathe wrote:
-> 
-> On 6/10/25 09:31, Johan Hovold wrote:
-> > On Tue, Jun 10, 2025 at 07:04:46AM +0200, Jens Glathe via B4 Relay wrote:
-> > DP alt mode works on both ports of the X13s and "resulted in
-> > gpio165" makes little sense so this commit message would need to be
-> > extended.
-> 
-> Well, that was the problem. It didn't on USB0. without and with the 4 
-> lanes patch.
-> 
-> Observed on Windows Dev Kit 2023 and X13s, what prompted me to look deeper.
-> 
-> > GPIO 101 *is* the OE_N pin, while GPIO 165 is not even connected
-> > according to the schematics. The mux may still work after this change,
-> > but you'd be relying on it having been enabled by the boot firmware.
-> >
-> Schematics trump any other data, of course. After a lot of tests and 
-> some wild
-> results I could narrow it down to the display I used for testing, iiyama 
-> XUB2792QSN.
-> It works with HDMI adapters on ~all other displays I have - with and 
-> without any
-> 4-lanes, lttpr patches. And the original GPIO. The issue with the 
-> display appears to
-> be something linked to how negotiation is done by it on that specific port.
-> 
-> Do I need to do anything since its already NAK?
+This patch series aims to fix some issues inside the driver's DMA
+handling.
+It also uses newer I2C DMA API.
 
-No, this patch should not be picked up now.
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+---
+Clément Le Goffic (3):
+      i2c: stm32: fix the device used for the DMA map
+      i2c: stm32f7: unmap DMA mapped buffer
+      i2c: stm32f7: support i2c_*_dma_safe_msg_buf APIs
 
-But you may want to revisit the other related patches for other boards
-that you sent in case they too are based on some misunderstanding.
+ drivers/i2c/busses/i2c-stm32.c   |  2 +-
+ drivers/i2c/busses/i2c-stm32f7.c | 40 +++++++++++++++++++++++++++++-----------
+ 2 files changed, 30 insertions(+), 12 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250527-i2c-upstream-e5b69501359a
 
-Johan
+Best regards,
+-- 
+Clément Le Goffic <clement.legoffic@foss.st.com>
+
