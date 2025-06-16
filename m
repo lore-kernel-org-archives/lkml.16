@@ -1,61 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA65627EFEB;
-	Mon, 16 Jun 2025 10:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603FA1E8337;
+	Mon, 16 Jun 2025 10:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750069046; cv=none; b=biI2YCZBOMTqVriAwIgOD14/1HYmd3lef1/RazUXPRrv7gu7JD5y4sxHZ/SnqQVjhbMlwP48TXYGI9H+SPqh4ZheRVfHQWrdnr97fIfHj8PFAJEg4/QagZhtRR92dkLWLwnjqm0iH/zS0o5JK1wlaxqNnYoGBg6h7VwGLnY+KqM=
+	t=1750069280; cv=none; b=cbqx4jqZPt1FMyIYlxHzSONmDjbnSWN9KhuRj/f4JPRur2TO1Tkkg8PSM4RFWLgnxK+WvaGYq4iEkGfbPz8v21Ebux3en8DjK/DT9uYy5XwpRj2D/IJvRBru4UPkzVQQsB996v9lB53eWZ/NmDWEcrkjrjnGtQBF87xDikOcK3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750069046; c=relaxed/simple;
-	bh=+1iHAvn5lkU0MLPZUomUSjEv+7jWX2Hk26+E4H64IPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKaSkWRFWcVEMAA3O7bae5ByQhq8BTMmXf3xIu7/BGx2/oK9B8kILjSBHXIHu+wwlBvX2DjgvlK11Wdlggh63Vv8DEcv4amWh7NNw6dVQpWaIWbSPsL3qKXSXXcn8c+b3clcio3X52yhpHzWiR4YZLUx/SDYfsTHERRdP7nwjtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quR9BKnH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750069280; c=relaxed/simple;
+	bh=NbJoM5LfG3qBcRohRdPVhQO3z/elUf1FtTUs4Rnoxr0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HNODtTGtzjkixWqbukAUHSAs9BX8GKpvh5VoKY+zdFcBW0lVvDPEspfV0RguK2tK5gmlM1vw/nBh/zXHConza2MW+QiN5yww9NUChFHd+pLqEz6vSrT5r/dPyYDym4wwKtqkqTDHNGGjuc4KUQPXzhpQCoMDGj7lhqQBl578i/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=h19Cefhf; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quR9BKnH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71D72C4CEEA;
-	Mon, 16 Jun 2025 10:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750069046;
-	bh=+1iHAvn5lkU0MLPZUomUSjEv+7jWX2Hk26+E4H64IPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=quR9BKnH46+jEpELJpY79TwT/YfI2clyTbONqqJ++noN03kqqk3Qk5mkOTfPvY/Vu
-	 564KpNo9bv3YRdMo7cd+NXF2T4cjlF8Jp6Dbb9UuWt2cKEI0wiD9ZY5fFzUVM+mSYH
-	 pgwjOEez074TdiEeU1Su6VKNtzCBxbAEyajrzPqrR6emhDypeRzfL8Fnw5LbCIjMSn
-	 Sp/U44LKcB2NDtQtkmjLHGNyuwWvN/+XYXU9zhT08ynYtINnGx0U6DFpjV1ZzWDqvG
-	 EulIBik/IBpsAB6rlSssq77ZMinti7wvL5l1T8bSukHBg+CWdMFvcBkVVskpBOcMUz
-	 Wj0J8SVsIhhjQ==
-Date: Mon, 16 Jun 2025 11:17:22 +0100
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Richard Cochran <richardcochran@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH net-next] ptp: Use ratelimite for freerun error message
-Message-ID: <20250616101722.GA23708@horms.kernel.org>
-References: <20250613-ptp-v1-1-ee44260ce9e2@debian.org>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="h19Cefhf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750069278; x=1781605278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NbJoM5LfG3qBcRohRdPVhQO3z/elUf1FtTUs4Rnoxr0=;
+  b=h19CefhfdfWVr2b052T4xa0BogZfmikdaZYYRFJfuiNy+CtTIJqsrDBD
+   eRzFqO5H9rt7DMpS3bJ5daE8SUb0CteTl8nYRNa8UTCRdyPweZMMV2Woz
+   /zwfJi5hTY0ApxbfXeBKuF3pludY16Q9ROTSkoPK9c/kSw6zcj3wkTOo0
+   fo/KLHcWNj/cwdsaODJROeR12ukVZuWgeqcMYZ0aCWh/cJKu3eInremIC
+   7hBPjcEnOi72U/fQn0dSFdHd3ZkP16op7T627PkFSUxFGosF69ya3kMHI
+   e7/+MlMpayQJJpJEd9Ac4FeO157UmPKSCqD0RNzmY7CDp+u2AB52mQPEP
+   w==;
+X-CSE-ConnectionGUID: NkMxLeT9QaGXvpWNNipztw==
+X-CSE-MsgGUID: 7tHYdufdSRiWVAqsQ/5L5Q==
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="42842138"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jun 2025 03:21:17 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 16 Jun 2025 03:21:07 -0700
+Received: from DEN-DL-M70577 (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Mon, 16 Jun 2025 03:21:04 -0700
+Date: Mon, 16 Jun 2025 10:21:03 +0000
+From: Daniel Machon <daniel.machon@microchip.com>
+To: Robert Marko <robert.marko@sartura.hr>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <olivia@selenic.com>,
+	<herbert@gondor.apana.org.au>, <davem@davemloft.net>, <vkoul@kernel.org>,
+	<andi.shyti@kernel.org>, <broonie@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-i2c@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+	<kernel@pengutronix.de>, <ore@pengutronix.de>, <luka.perkov@sartura.hr>,
+	<arnd@arndb.de>
+Subject: Re: [PATCH v7 1/6] arm64: lan969x: Add support for Microchip LAN969x
+ SoC
+Message-ID: <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
+References: <20250613114148.1943267-1-robert.marko@sartura.hr>
+ <20250613114148.1943267-2-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250613-ptp-v1-1-ee44260ce9e2@debian.org>
+In-Reply-To: <20250613114148.1943267-2-robert.marko@sartura.hr>
 
-On Fri, Jun 13, 2025 at 10:15:46AM -0700, Breno Leitao wrote:
-> Replace pr_err() with pr_err_ratelimited() in ptp_clock_settime() to
-> prevent log flooding when the physical clock is free running, which
-> happens on some of my hosts. This ensures error messages are
-> rate-limited and improves kernel log readability.
+> This adds support for the Microchip LAN969x ARMv8-based SoC switch family.
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Acked-by: Daniel Machon <daniel.machon@microchip.com>
+> ---
+>  arch/arm64/Kconfig.platforms | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index a541bb029aa4..834910f11864 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -133,6 +133,20 @@ config ARCH_SPARX5
+>           security through TCAM-based frame processing using versatile
+>           content aware processor (VCAP).
+> 
+> +config ARCH_LAN969X
+> +       bool "Microchip LAN969X SoC family"
+> +       select PINCTRL
+> +       select DW_APB_TIMER_OF
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+The lan969x SoC uses the clk-lan966x driver. Would it not make sense to select
+it here?
 
+  +       select COMMON_CLK_LAN966X
+
+> +       help
+> +         This enables support for the Microchip LAN969X ARMv8-based
+> +         SoC family of TSN-capable gigabit switches.
+> +
+> +         The LAN969X Ethernet switch family provides a rich set of
+> +         switching features such as advanced TCAM-based VLAN and QoS
+> +         processing enabling delivery of differentiated services, and
+> +         security through TCAM-based frame processing using versatile
+> +         content aware processor (VCAP).
+> +
+>  config ARCH_K3
+>         bool "Texas Instruments Inc. K3 multicore SoC architecture"
+>         select PM_GENERIC_DOMAINS if PM
+> --
+> 2.49.0
+> 
+
+/Daniel
