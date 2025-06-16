@@ -1,112 +1,132 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13FA2BF3C3;
-	Mon, 16 Jun 2025 11:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497F81A5BAE;
+	Mon, 16 Jun 2025 11:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073388; cv=none; b=MLvNtY8QNr7TRsSgQ/EdKqoxriSHeenYtHgGCulQeK748td5vdSF2Ew45rJnw+Jam2G3rYEeWHF99n26lkLpMGM+4pNLzNgP44ELDgz1c5sjPzYSbY9P5oIijFqkdoB+MbfxKvaX9V1zLQbZQXoWiDNA2mWfJK6GunjN4q4qhwA=
+	t=1750073530; cv=none; b=Hvm3J+9WGQvK+wDisEiY8CB+t4rLBcUDPQ1VXw+8KGyHGKY8mpDrV3eP5YU83uCtBQ0Q6C3jXJT8PPr4Fwj3X24YQK97TE9YVCsRj1wbfW7SXBaCL5Jz+GfAugU+MUZm7Ktg7szrgtt17AMdr5XtgzjrUVwp4t67GsFAUFrjdJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073388; c=relaxed/simple;
-	bh=h5SoZrXl5S4reO0OVVLyDdksy93ZlfckgM0USHvz0lY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=t1xGU9FpZepT+wG4Sq8NUISOLyr8XQm0bWyLZG60dIPMThMa3xP1F6H4sVJXLZQ24HV87T1mD1biFC7v0Y66CW3CpnrebWxF9uVQu/OrsV8+gnqZNg1rP3n9jYNYmjhC+mkXEQNp9NxUqRdO9WXh10SnhafQJr8XDJkyqUdQ/EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M0Du7zho; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750073530; c=relaxed/simple;
+	bh=b9cykgd9b9HvdismnjQ8vGoqV9YKeI/iJSIOsoqHBR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XOVeqeGKpvoSaT3AHZ5bVGk+qrAuXuAyqx9SCO2vNwA10Jc4T57ZuQnhZHu96u3WAr8zVa/jShegPiotb18ghGVD3OVQTmdvev5JUenR08N+6aQORurz/z/gHieFEj8EtInn1vcVTR4ZbK2GTA/+RJEdWbieQzQrJR36vqLJE+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S8ON28kH; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M0Du7zho"
-Message-ID: <1c1e7c9c-5143-43e9-a40b-42dfc3866a56@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750073383;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GsJbK3+gK/ymCJy2HxIdPeNdYIGOi33WqyAoP9tLfS0=;
-	b=M0Du7zhoFAzLrAnDS7PPcT3mu1knvhPth+C1+CwFm+JbPGwItueLXnwNRF98Psql6am8HI
-	NFsZCQX0jbEaamy1hU5mvKcrXF1aY7mecFs3yuz3mPIvJ5jtvqtgUlzgR3lovRTuxsUO5y
-	gxaSmAaoX8ZysPCIaSkzS402ohJWixI=
-Date: Mon, 16 Jun 2025 12:29:40 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S8ON28kH"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TJvd031861;
+	Mon, 16 Jun 2025 11:32:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vWCTgBL5yZFmM1TMcCbRfbJYa8267rXkRYmC52fTATE=; b=S8ON28kHPyB2FWFW
+	xWaBv5fGqmZBzUIwpUDG652KBdUpVVPR0Y4CujwQgaVQXfawgoK9PJk+VIrpXvcD
+	8pNKFV7eKahrS9n+3k6aAECiIvGZtz35HfkS4pBY4j40GEhucTOJ+aKLyJoQGJ3w
+	GYCnrnwUveQ2dkX+uyPYwrVYaFx5S9givGAtpTnCOgGvfAS/yBzrKV9di654Ab33
+	L4Ec6HG/pM+g7DDzM/gC/2ozhqySzXRMmISYOkufNFQ3Xp0AM56vi1GUfVmBGOc6
+	g7197STDlQ/MT6FH8dLj/RVBDGIy89P3erukuQY9JcB3Nb4BnlmQeRpO8NTl42Qq
+	T4FnLQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791enc9u3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:32:03 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GBW2qC017082
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:32:02 GMT
+Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 04:31:59 -0700
+Message-ID: <5d38e4ab-394c-8bcb-f34d-9c493f22ed75@quicinc.com>
+Date: Mon, 16 Jun 2025 17:01:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next] amd-xgbe: Configure and retrieve 'tx-usecs' for
- Tx coalescing
-To: Vishal Badole <Vishal.Badole@amd.com>, Shyam-sundar.S-k@amd.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250616104232.973813-1-Vishal.Badole@amd.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 5/6] media: venus: venc: Make the range of us_per_frame
+ explicit
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250616104232.973813-1-Vishal.Badole@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Ricardo Ribalda <ribalda@chromium.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20250111-fix-cocci-v6-0-1aa7842006cc@chromium.org>
+ <20250111-fix-cocci-v6-5-1aa7842006cc@chromium.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250111-fix-cocci-v6-5-1aa7842006cc@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: MbfoPWEGqw9KBOQjDg0shUyH5Z0NrWCx
+X-Authority-Analysis: v=2.4 cv=D6RHKuRj c=1 sm=1 tr=0 ts=685000b3 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8
+ a=cm27Pg_UAAAA:8 a=COk6AnOGAAAA:8 a=X-1hbc8ZBFZzn6B0vJMA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: MbfoPWEGqw9KBOQjDg0shUyH5Z0NrWCx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MSBTYWx0ZWRfXzPh5S2lm9kM0
+ ORFWc7W2iw6QVgssN1p3n3HwDCZ5bWmp6zlosYtGBXXyWVw5ueRlUuqyVo8GHZ013htDr+hq53f
+ NuBh8vZGLf3S7vk2ZCxGpaWNVTGAm/arU/x+UWpAjmMn15vSzZeHPK7c0p09Cl+AeyTw5Fw9ac8
+ Zbit4KtjxiQ19/C8hT79TGpmLQGYiDPJlC72YB1eCTGt9kv+1Jyr0/IdgqSotv4U4kBd803xg37
+ ZCFa8u9OieXchUeOmzH8rXGqbSVEOlj05rMBWD6FhKza4x4z7JZe5iNeta1Fc6H2MWvr1QHtnGP
+ PHM0CSY8JaPhuPnner+vpAMAMtA8rpDkQQSsJvYuMgmLK0ppVe9Ah22hb3GpX0bh8fkfsyKi8JS
+ Tk5M+AOyKytyfHqoxY3d9kPlW0HoNq+JTT+WSkXdulGGzEY/PEarnPgIrFssr1msb1+tFKdL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=997 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160071
 
-On 16/06/2025 11:42, Vishal Badole wrote:
-> Ethtool has advanced with additional configurable options, but the
-> current driver does not support tx-usecs configuration.
+
+
+On 1/11/2025 3:25 PM, Ricardo Ribalda wrote:
+> Fps bigger than 0.000232829 fps, this fits in a 32 bit us_per_frame.
+> There is no need to do a 64 bit division here.
 > 
-> Add support to configure and retrieve 'tx-usecs' using ethtool, which
-> specifies the wait time before servicing an interrupt for Tx coalescing.
+> Also, the driver only works with whole fps.
 > 
-> Signed-off-by: Vishal Badole <Vishal.Badole@amd.com>
-> Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Found with cocci:
+> drivers/media/platform/qcom/venus/venc.c:418:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead.
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > ---
->   drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c | 19 +++++++++++++++++--
->   drivers/net/ethernet/amd/xgbe/xgbe.h         |  1 +
->   2 files changed, 18 insertions(+), 2 deletions(-)
+>  drivers/media/platform/qcom/venus/venc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> index 12395428ffe1..362f8623433a 100644
-> --- a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> +++ b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> @@ -450,6 +450,7 @@ static int xgbe_get_coalesce(struct net_device *netdev,
->   	ec->rx_coalesce_usecs = pdata->rx_usecs;
->   	ec->rx_max_coalesced_frames = pdata->rx_frames;
->   
-> +	ec->tx_coalesce_usecs = pdata->tx_usecs;
->   	ec->tx_max_coalesced_frames = pdata->tx_frames;
->   
->   	return 0;
-> @@ -463,7 +464,7 @@ static int xgbe_set_coalesce(struct net_device *netdev,
->   	struct xgbe_prv_data *pdata = netdev_priv(netdev);
->   	struct xgbe_hw_if *hw_if = &pdata->hw_if;
->   	unsigned int rx_frames, rx_riwt, rx_usecs;
-> -	unsigned int tx_frames;
-> +	unsigned int tx_frames, tx_usecs;
->   
->   	rx_riwt = hw_if->usec_to_riwt(pdata, ec->rx_coalesce_usecs);
->   	rx_usecs = ec->rx_coalesce_usecs;
-> @@ -485,9 +486,22 @@ static int xgbe_set_coalesce(struct net_device *netdev,
->   		return -EINVAL;
->   	}
->   
-> +	tx_usecs = ec->tx_coalesce_usecs;
->   	tx_frames = ec->tx_max_coalesced_frames;
->   
-> +	/* Check if both tx_usecs and tx_frames are set to 0 simultaneously */
-> +	if (!tx_usecs && !tx_frames) {
-> +		netdev_err(netdev,
-> +			   "tx_usecs and tx_frames must not be 0 together\n");
-> +		return -EINVAL;
-> +	}
-> +
->   	/* Check the bounds of values for Tx */
-> +	if (tx_usecs > XGMAC_MAX_COAL_TX_TICK) {
-> +		netdev_err(netdev, "tx-usecs is limited to %d usec\n",
-> +			   XGMAC_MAX_COAL_TX_TICK);
-> +		return -EINVAL;
-> +	}
-
-ethtool uses netlink interface now and coalesce callbacks have extack
-parameters to return error information back to user-space. It would be
-great to switch to use it instead of adding more netdev_err messages.
-
-[...]
+> diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+> index 17bec44c9825..2c1836712362 100644
+> --- a/drivers/media/platform/qcom/venus/venc.c
+> +++ b/drivers/media/platform/qcom/venus/venc.c
+> @@ -412,8 +412,7 @@ static int venc_s_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
+>  	do_div(us_per_frame, timeperframe->denominator);
+>  
+>  	us_per_frame = max(USEC_PER_SEC, us_per_frame);
+> -	fps = (u64)USEC_PER_SEC;
+> -	do_div(fps, us_per_frame);
+> +	fps = USEC_PER_SEC / (u32)us_per_frame;
+>  	fps = min(VENUS_MAX_FPS, fps);
+>  
+>  	inst->fps = fps;
+> 
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
