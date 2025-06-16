@@ -1,243 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D9D2877C3;
-	Mon, 16 Jun 2025 13:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7AE2BF011
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750082260; cv=none; b=F1v1Cll742yvFFip+XH5C0iGMHCit0Ritlozu9y8MA8mBB/e3utJuFjsVXuDDL5Ph80PFb0vL81JIesVtApONqlgUru8L8Tmb0rIzb3xnLbxAXVcI3WfGbFBDqmykk5zJw8AVI0t/JyRx393IxMnTA2RCemeGZX3gvguPURhv70=
+	t=1750082293; cv=none; b=Aa296i0oWDzMrMmx6sBY5xtI1xMrwHSDdNjvk81kTgn6ep3xzfZOxH3nEJdVX4ORM/Z42WXR5JB5q4+o0yv9p0I/dgDH23N/Q87ogM2tnzs9yVCEhOMz+4fAWBWazpNZ82PwWA7zJxegKxvZuk2rSIbmde0msmpVeVlU9FYS0LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750082260; c=relaxed/simple;
-	bh=NyizBTDfDWXK6sw8uHD082UVWglR8ES2/VkYsuwaR4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sm4rxNXAhttsOerwuPaZ8lu5cwfImgC5dxr6MpwHpMbHeI1EOaOeVqKeLCSlMoNcRv/sjLoo9YJcYxyVK+1qkn0Stp9xIUipPdS0y78P5ghlcgHAt17pkQXUMo+7JtEb75R9JhOvN+BoKGU8D6C5Tsqq37+7RTgRnZGZTnfF6vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8ULzQPh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750082293; c=relaxed/simple;
+	bh=eNe1aGesW57V06u9+X7qSzUwlvkFL+QPjXfzqELIBUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=El25sya4Wt3m8po66HBYVGsqD9HzZgDiT848wN1HHhnfp8xYKbsHX4Hjyp6ZhcKg/ibOVAnaWfdyv0lLlp56RexETFJ1DZMGYyUxldK3idwzvZIJ1h+hFKYbKkxABH2ULEQdpG1xQt/00gZOapxsiLCctFVAh7pKA2LvySLqeHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Lxhe8rCt; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8ULzQPh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30632C4CEF5;
-	Mon, 16 Jun 2025 13:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750082260;
-	bh=NyizBTDfDWXK6sw8uHD082UVWglR8ES2/VkYsuwaR4w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=H8ULzQPh/xdtTiMfI3eihUsGI91soNyJ6AwSVhjKDO4IOJN3V4MbJf8Fy4Hjq/oPp
-	 2Nz2B/U4yIFMJwmnbkUKrRHPQlmnGxkQzpjpiCeObGnKgdgWNzsVdGM/wnAIfKzp77
-	 OsClgdjfqK9hC7ntKJziHbTNlOcBTkzZtkxBTl+MoNrw4Prth4u5dv8z+GPcY3x8+Z
-	 U2k1ZLAOc0Hf27lZEchtd7fnehD5vtVw0ubzu82UT3OAUYvJ2sHBVW6ZPHM2SMa5/b
-	 3BkA+Ysg02RQ/8M/W2p7dGMiij+LRkAAw0f9T5daEgcrGL2oTSRbJk3qI+xDTglt9P
-	 Rxa8e8y8zLkiw==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad89ee255easo836057666b.3;
-        Mon, 16 Jun 2025 06:57:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVSMzq7zjG0+pq767/j8rNRPoNC3p3dbsKCBBq5/iwKc36CQCJ4NftP82wnfaR5bzqXkHJA9VB5I4pr@vger.kernel.org, AJvYcCVuOgM4yom8JPJYbOg2SN3VRtAXK9gFJuZn7zUZr7nuPDf2DRJy9PoGNw6fHc92by+RUmWSYZeGi1QePTbn@vger.kernel.org, AJvYcCVwanjuhQLiqdYS85HR6yv3NYS26HDXK4/fieeR/FNdiF86OkhijwETWnHHizckFkgne70tT6udkF3EqA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkxk/QZJsXJZRYXUDt1a4D99+DaGSxK6kva1x80WqFvt/st52U
-	C8HlnQW2PJrUsnKqmJEiW+NSDabqMuZQwR5qPN3zdB5S0gEjCWgElbYkkIj3nCmqPKSqVfVyYi7
-	85EWE2tbmZjl3nSfIl8Ds4zc5p7oMSQ==
-X-Google-Smtp-Source: AGHT+IHpdF6x/V/pazyqhO2sJpaXwkib8ZBd2w1M4Ij3Nkk6Wn/WfgezoqePwqWHQsTrHmBU64Y1n8FFZazVHIrz33o=
-X-Received: by 2002:a17:907:7241:b0:ad2:3f9a:649f with SMTP id
- a640c23a62f3a-adfad60d405mr821849566b.42.1750082258737; Mon, 16 Jun 2025
- 06:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Lxhe8rCt"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d3f72391so53888545e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750082290; x=1750687090; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bVgzfdytw7GLqgjKncwxWa9YLoT5JIIwN29MSREtEbI=;
+        b=Lxhe8rCt9rVIQ7W+kwcUFZgvMT7VK47pwX6ygdkCLhFPYVijHBeNowf1PdMYU4jy7s
+         dkAMmeal1EtepNeKPR8zP8rU516G3sEhVNZjUbQUSqDlvA68BdcUEZHI7VAsRQfII2CA
+         8UoqIUfSGaeVblbC4DX6LLrQXkngMWd6tnlufQwrkqp7Z882/l/ysQ6ik+FJKxyRTDbO
+         1bkiB5ENtjy38AWSOujHuScXahq4xwzEOS0HS/PO+UDKNYJL+OyE4fO4aqCjN4evZEX5
+         JwgSYiykp2xcFbsop9GC5isOOa/RLYq9oiHUQ4cgisiw2SA6QodAfiVYkqK+bwX+HtOI
+         Zq+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750082290; x=1750687090;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bVgzfdytw7GLqgjKncwxWa9YLoT5JIIwN29MSREtEbI=;
+        b=grSaBYz1FlqrD8IHX6g7KdFsYGbtx0qINXpsU9na9XeOuU+tIMrkcE2RLY5bZGKxVw
+         GI1UPGKys3OW6Zyh5zTNrI/L+hw1i4uF1JPHAM17W5AiGgNT+gveiqPXT/RehdFmpUZz
+         1/jQMj72PpyBprOXVLyZ84NydMuwYqY4S3M9L88g2N0S4S3cVqppeYDNkSxmIEGFGyd/
+         pwLp70e6StTfkplLO72J+Zrzpl2vA2b/IFJWsU/Dng0gs/hVVSgwqnZnEvtsl3qUvr8W
+         D8PVhuEog0N5xKGqO8jt9zTs3nCDQeXeTX+DbiLaIc0+NGXx+OWMGdtaL0Ku6mTszrWl
+         zwhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjH+n0DMrmVZCemTE/syq2zd1abIiG0UiVbd52qrjlkhuMXFQgWR/WmX64tgZCX7Na8trE39fbwuK1Lqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKYLzEBXaMR//w6iDlM+A74ekfuM62DF07Egrf4McxO5ZAMShh
+	vOv0GpBWrO8NxBJ4ayGRZdHmHHuDiI3OcgPOvdiT8bUDffP071EhxhhpGvS28ycevv8=
+X-Gm-Gg: ASbGncuOU2CxNoV/qr9sA9VQlL3/RcKHquH53/jhF+LVPCqSmeEcVOyFtOMwQO7p0FI
+	/99rv+dSGDY+4ukiXdrlraauF29TMSBjSZxazO05TcnWIk5R3EPsKhoM0FfOyDQqkG+CoEyGWDB
+	GakykD82D/vE2w2XrWRxyQgMV7th3Dp35nQ1eA1Huf/Vv1NfO6FWUB/GlSj1uNvdpGKBqbpN4AF
+	iQETX16fq+339ieWu3EbjCAh9NIDxvXNehSY3+hNmDKpni7IL8kGjPSG46/u/aHCvebKsucT6t0
+	vMFOhe7SDLQls1SfZRLnoCMF9BZOBaJoMN9xvvlO4fEYcfyTP/gxK7I0irjuXEZNpA==
+X-Google-Smtp-Source: AGHT+IHTrudFH8bOP+1JEl3Xxm/O1MDRV2TH0s4tp7P/yBD7QShr6ZwCmRNFJoYZdJnnkRQ7CUzYWA==
+X-Received: by 2002:a05:600c:46cb:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-4533ca5f35emr90530715e9.4.1750082289684;
+        Mon, 16 Jun 2025 06:58:09 -0700 (PDT)
+Received: from [10.100.51.209] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e261ebdsm151289895e9.39.2025.06.16.06.58.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 06:58:09 -0700 (PDT)
+Message-ID: <97f26140-bf53-4c4d-bf63-2dd353a3ec85@suse.com>
+Date: Mon, 16 Jun 2025 15:58:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
-In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 16 Jun 2025 08:57:26 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJpb7wFw3DqX504LyS2PGbQxQfbBKh9VfCY8j7G9YKXiw@mail.gmail.com>
-X-Gm-Features: AX0GCFuQPys5Thxu-nqBA43dpX9szemYIEtdKd5xHzL7MleeMvIzogZHZdn5g7w
-Message-ID: <CAL_JsqJpb7wFw3DqX504LyS2PGbQxQfbBKh9VfCY8j7G9YKXiw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
-To: Harshit Shah <hshah@axiado.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, soc@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
+ move_module()
+To: Daniel Gomez <da.gomez@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250607161823.409691-1-petr.pavlu@suse.com>
+ <20250607161823.409691-2-petr.pavlu@suse.com>
+ <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
+ <c7dbb33d-98b6-45da-be77-e86b9e6787ee@suse.com>
+ <7cf40cd1-fe0d-4493-ac15-e70c418e54a5@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <7cf40cd1-fe0d-4493-ac15-e70c418e54a5@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 15, 2025 at 11:32=E2=80=AFPM Harshit Shah <hshah@axiado.com> wr=
-ote:
->
-> Add initial device tree support for the AX3000 SoC and its evaluation
-> platform. The AX3000 is a multi-core SoC featuring 4 Cortex-A53 cores,
-> Secure Vault, AI Engine and Firewall.
->
-> This commit adds support for Cortex-A53 CPUs, timer, UARTs, and I3C
-> controllers on the AX3000 evaluation board.
->
-> Signed-off-by: Harshit Shah <hshah@axiado.com>
-> ---
->  arch/arm64/boot/dts/Makefile              |   1 +
->  arch/arm64/boot/dts/axiado/Makefile       |   2 +
->  arch/arm64/boot/dts/axiado/ax3000.dtsi    | 584 ++++++++++++++++++++++++=
-++++++
->  arch/arm64/boot/dts/axiado/ax3000_evk.dts |  72 ++++
->  4 files changed, 659 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index 79b73a21ddc22b17308554e502f8207392935b45..47dd8a1a7960d179ee28969a1=
-d6750bfa0d73da1 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -9,6 +9,7 @@ subdir-y +=3D amlogic
->  subdir-y +=3D apm
->  subdir-y +=3D apple
->  subdir-y +=3D arm
-> +subdir-y +=3D axiado
->  subdir-y +=3D bitmain
->  subdir-y +=3D blaize
->  subdir-y +=3D broadcom
-> diff --git a/arch/arm64/boot/dts/axiado/Makefile b/arch/arm64/boot/dts/ax=
-iado/Makefile
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..eb5e08ba0f39c32cdbfd586d9=
-82849a80da30160
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/axiado/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_AXIADO) +=3D ax3000_evk.dtb
-> diff --git a/arch/arm64/boot/dts/axiado/ax3000.dtsi b/arch/arm64/boot/dts=
-/axiado/ax3000.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d5d84986d18efe9dfbb446cee=
-e42fc4e4dbf95d0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/axiado/ax3000.dtsi
-> @@ -0,0 +1,584 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2021-25 Axiado Corporation (or its affiliates). All rig=
-hts reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/memreserve/ 0x3c0013a0 0x00000008;    /* cpu-release-addr */
-> +/ {
-> +       compatible =3D "axiado,ax3000";
+On 6/14/25 11:28 PM, Daniel Gomez wrote:
+>> This seems to be off by one. For instance, if the loop reaches the last
+>> valid type in mod_mem_type, MOD_INIT_RODATA, and successfully allocates
+>> its memory, the variable t gets set to MOD_INIT_RODATA. Subsequently, if
+>> an error occurs later in move_module() and control is transferred to
+>> out_err, the deallocation starts from t-1, and therefore MOD_INIT_RODATA
+>> doesn't get freed.
+>>
+>> If we want to always start from the last type found, the code would need
+>> to be:
+>>
+>> 		[...]
+>> 		ret = module_memory_alloc(mod, type);
+>> 		if (ret)
+>> 			goto out_err;
+>> 		t = type + 1;
+>> 	}
+>>
+>> I can adjust it in this way if it is preferred.
+>>
+> 
+> My earlier suggestion was incorrect. We can simply initialize the memory
+> type t to MOD_MEM_NUM_TYPES since it's only used in the error path of
+> module_memory_alloc().
 
-Drop. As this is not valid and overridden anyways.
+Do you mean the following, or something else:
 
-> +       interrupt-parent =3D <&gic500>;
-> +
-> +       aliases {
-> +               i3c0 =3D &i3c0;
-> +               i3c1 =3D &i3c1;
-> +               i3c2 =3D &i3c2;
-> +               i3c3 =3D &i3c3;
-> +               i3c4 =3D &i3c4;
-> +               i3c5 =3D &i3c5;
-> +               i3c6 =3D &i3c6;
-> +               i3c7 =3D &i3c7;
-> +               i3c8 =3D &i3c8;
-> +               i3c9 =3D &i3c9;
-> +               i3c10 =3D &i3c10;
-> +               i3c11 =3D &i3c11;
-> +               i3c12 =3D &i3c12;
-> +               i3c13 =3D &i3c13;
-> +               i3c14 =3D &i3c14;
-> +               i3c15 =3D &i3c15;
-> +               i3c16 =3D &i3c16;
-> +               serial0 =3D &uart0;
-> +               serial1 =3D &uart1;
-> +               serial2 =3D &uart2;
-> +               serial3 =3D &uart3;
-> +       };
-> +
-> +       cpus {
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <0>;
-> +
-> +               cpu0: cpu@0 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "arm,cortex-a53";
-> +                       reg =3D <0x0 0x0>;
-> +                       enable-method =3D "spin-table";
-> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
-> +                       d-cache-size =3D <0x8000>;
-> +                       d-cache-line-size =3D <64>;
-> +                       d-cache-sets =3D <128>;
-> +                       i-cache-size =3D <0x8000>;
-> +                       i-cache-line-size =3D <64>;
-> +                       i-cache-sets =3D <256>;
-> +                       next-level-cache =3D <&l2>;
-> +               };
-> +
-> +               cpu1: cpu@1 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "arm,cortex-a53";
-> +                       reg =3D <0x0 0x1>;
-> +                       enable-method =3D "spin-table";
-> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
-> +                       d-cache-size =3D <0x8000>;
-> +                       d-cache-line-size =3D <64>;
-> +                       d-cache-sets =3D <128>;
-> +                       i-cache-size =3D <0x8000>;
-> +                       i-cache-line-size =3D <64>;
-> +                       i-cache-sets =3D <256>;
-> +                       next-level-cache =3D <&l2>;
-> +               };
-> +
-> +               cpu2: cpu@2 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "arm,cortex-a53";
-> +                       reg =3D <0x0 0x2>;
-> +                       enable-method =3D "spin-table";
-> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
-> +                       d-cache-size =3D <0x8000>;
-> +                       d-cache-line-size =3D <64>;
-> +                       d-cache-sets =3D <128>;
-> +                       i-cache-size =3D <0x8000>;
-> +                       i-cache-line-size =3D <64>;
-> +                       i-cache-sets =3D <256>;
-> +                       next-level-cache =3D <&l2>;
-> +               };
-> +
-> +               cpu3: cpu@3 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "arm,cortex-a53";
-> +                       reg =3D <0x0 0x3>;
-> +                       enable-method =3D "spin-table";
-> +                       cpu-release-addr =3D <0x0 0x3c0013a0>;
-> +                       d-cache-size =3D <0x8000>;
-> +                       d-cache-line-size =3D <64>;
-> +                       d-cache-sets =3D <128>;
-> +                       i-cache-size =3D <0x8000>;
-> +                       i-cache-line-size =3D <64>;
-> +                       i-cache-sets =3D <256>;
-> +                       next-level-cache =3D <&l2>;
-> +               };
-> +
-> +               l2: l2-cache0 {
-> +                       compatible =3D "cache";
-> +                       cache-size =3D <0x100000>;
-> +                       cache-unified;
-> +                       cache-line-size =3D <64>;
-> +                       cache-sets =3D <1024>;
-> +                       cache-level =3D <2>;
-> +               };
-> +       };
-> +
-> +       timer:timer {
-> +               compatible =3D "arm,armv8-timer";
-> +               interrupt-parent =3D <&gic500>;
-> +               interrupts =3D <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +                          <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +                          <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +                          <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +               arm,cpu-registers-not-fw-configured;
+static int move_module(struct module *mod, struct load_info *info)
+{
+	int i;
+	enum mod_mem_type t = MOD_MEM_NUM_TYPES;
+	int ret;
+	bool codetag_section_found = false;
 
-Drop. Not valid for arm64. And new platforms should fix the firmware anyway=
-s.
+	for_each_mod_mem_type(type) {
+		if (!mod->mem[type].size) {
+			mod->mem[type].base = NULL;
+			continue;
+		}
 
-Rob
+		ret = module_memory_alloc(mod, type);
+		if (ret) {
+			t = type;
+			goto out_err;
+		}
+	}
+
+	[...]
+}
+
+-- 
+Thanks,
+Petr
