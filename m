@@ -1,70 +1,92 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C662A23AD;
-	Mon, 16 Jun 2025 02:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0BC23AD;
+	Mon, 16 Jun 2025 02:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750042299; cv=none; b=EFZSLqBd4JwWRFuu8l9nZf6j3OOYGyT/QICB4bt3Qyb8CqhP6Yh5Dds142QLS7ua/5dDfmeMg3ZNSzk6NtNAegM9Li8aLxRm47NJSZksmT0XIeay6G4z7Rd5xlg97XumAof+BJ84mBp9OvKHuQXtayYKnVgPLWHPEy32rmTC8+8=
+	t=1750042499; cv=none; b=p5P2Sh9W5Upj9P7dAI4w6y6z+amSWhgfBsXf9pBtUCglEZzMduQMNDw5EEENzYFHXnrYjtEXMI+hx0IVkSWb0qBN6cStSUZjU59vBrNAMs8qOgVQ+ps1LFKPZ2NDs3+KPleM458aEKwaKLsU52SnAgNZYk3BeWK2fwFA5cFfegk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750042299; c=relaxed/simple;
-	bh=t0PstE8Y3LGllZTQ5OPBIV0oLS9BFz+KoRlQLDjH+gQ=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=SqVSeB63ZFx9hN+cJ+Japw+aq/S97c2W3cJsXGQ1TxNtjvfLlBSI/YtqUIQT/ngcCv7Se9ZjE5BFMMweAzNT3i8sjVLBD/edDKC6/uOIRlMPUov2cWBA4FiUXKSuReMrz0B08ELb7ixtg3af7Xrcl9T38te2aE5bM1Kmk1ftvmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bLDww2wBvz1d1h9;
-	Mon, 16 Jun 2025 10:49:20 +0800 (CST)
-Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
-	by mail.maildlp.com (Postfix) with ESMTPS id DC557180450;
-	Mon, 16 Jun 2025 10:51:28 +0800 (CST)
-Received: from [10.174.178.219] (10.174.178.219) by
- kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 16 Jun 2025 10:51:27 +0800
-Subject: Re: [PATCH] virtio-crypto: Remove unused virtcrypto functions
-To: <linux@treblig.org>
-CC: <arei.gonglei@huawei.com>, <mst@redhat.com>, <jasowang@redhat.com>,
-	<xuanzhuo@linux.alibaba.com>, <eperezma@redhat.com>,
-	<herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<virtualization@lists.linux.dev>, <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250614000505.596563-1-linux@treblig.org>
-From: Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <16a17372-891b-28f6-b3bd-aa92b0557b90@huawei.com>
-Date: Mon, 16 Jun 2025 10:51:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+	s=arc-20240116; t=1750042499; c=relaxed/simple;
+	bh=kb26pdyC2mhf/HxHHzF4lqYjFaP1Jqg1DRS4zwyBnq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GMaGuUf5IenEQEve19y+JtZaM+bCpu4w16Q2KUP3YZ2NgjX3PcZv72n3sRGwGkTuH/A/qIagYb/9hKrj5CWxZbnWh1EvYgE1wqefzkwZ7WImEPrsW1ffeNHf+/0LvdkH1mu26GMGy2Qk2ERPT38Xk/Ocs5qiC5T9L5gq8Jm8qaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0SYV94N; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0SYV94N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CFCC4CEE3;
+	Mon, 16 Jun 2025 02:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750042498;
+	bh=kb26pdyC2mhf/HxHHzF4lqYjFaP1Jqg1DRS4zwyBnq4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A0SYV94NKk1wZYHzwqZ8hnKPVE/PFf0Ksk5KcBT4inlMH0eIhMPmXllCBwZIqceD/
+	 4FvArmKHDop9fA9zCDu/PUSciDyBbiIUoeGy39C+WsSzyJtVmg/7EzdKaoZ1M102fO
+	 hH2gq69D+BkkNDDqM4Pjp3+bgpH+1KS8EQc477H/1M1GzxLypvti3lgGjRKQEjMWE1
+	 hhgRtG6QhFpp1TG0bfTauAckJry5VlnSJ4EZJ0V6TI8xs6u5AG5ikvw4HQNnO/oP/G
+	 r7BOROjxELcMESXP3A5KxuAFQb0oKFApRClMtLtgrqqeGgjh/Z66VP1K6ot9xanIpl
+	 AsIpeOAs4myPw==
+Message-ID: <62d47057-1ab4-4558-961c-8c8f7e170e4b@kernel.org>
+Date: Mon, 16 Jun 2025 11:54:56 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250614000505.596563-1-linux@treblig.org>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 4/5] blk-mq-sched: refactor
+ __blk_mq_do_dispatch_sched()
+To: Yu Kuai <yukuai1@huaweicloud.com>, ming.lei@redhat.com,
+ yukuai3@huawei.com, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com
+References: <20250614092528.2352680-1-yukuai1@huaweicloud.com>
+ <20250614092528.2352680-5-yukuai1@huaweicloud.com>
 Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20250614092528.2352680-5-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemk200017.china.huawei.com (7.202.194.83)
 
-On 2025/6/14 8:05, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 6/14/25 18:25, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
 > 
-> virtcrypto_devmgr_get_first() and virtcrypto_dev_in_use() were added in
-> 2016 by
-> commit dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-> 
-> but have remained unused.
-> 
-> Remove them.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  drivers/crypto/virtio/virtio_crypto_common.h |  2 --
->  drivers/crypto/virtio/virtio_crypto_mgr.c    | 36 --------------------
->  2 files changed, 38 deletions(-)
+> Introduce struct sched_dispatch_ctx, and split the helper into
+> elevator_dispatch_one_request() and elevator_finish_dispatch(). Make
+> code cleaner and prepare to support request batch dispatching.
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+It is not clear how this patch prepares for supporting batch dispatching. Since
+this is only a refactor without any semantic change, I would either drop this
+comment or explain more clearly what you mean. This patch can also probably come
+earlier in the series.
+
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+
+
+> +static int elevator_finish_dispatch(struct sched_dispatch_ctx *ctx)
+
+Please add a comment here to document the return values.
+
+> +/*
+> + * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+> + * its queue by itself in its completion handler, so we don't need to
+> + * restart queue if .get_budget() fails to get the budget.
+> + *
+> + * Returns -EAGAIN if hctx->dispatch was found non-empty and run_work has to
+> + * be run again.  This is necessary to avoid starving flushes.
+
+And what is returned for the non error case ? (e.e. document the meaning of 0
+and 1 return values).
+
+> + */
+> +static int __blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+
+
+
+-- 
+Damien Le Moal
+Western Digital Research
