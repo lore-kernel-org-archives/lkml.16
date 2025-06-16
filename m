@@ -1,193 +1,118 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880B51465A5;
-	Mon, 16 Jun 2025 10:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EDB27FB10;
+	Mon, 16 Jun 2025 10:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070913; cv=none; b=XUDy4jjZxfmz4Btf2tm6dADqRHdrJpryHcy+nNL46z5IfHuvd5OKW3urVAR91qNWrh2ve3gS3epDq+/y0WXUIlkSbChYwaAHiv5WjcAJk4S58qN4iJPwo9FsjD3uIMD8sIUJaw5xdjSdShBXiMw0Q0OroQpuRIZRKpfQHYZ8DNw=
+	t=1750070986; cv=none; b=YLAZlh96tdPQS0iNzbVVm+8M4V1NqGWFP2uFgtI9foeMaZmM6N1wNEW9+9pn10eNvhio5X0flFnGE9j5DXXCh/vuoUU30r6Mqmou5FnRi+AZz3iIQGRwNLo900wG/GU8pngKFoP8z5cQRW5r0lTLw7f9oOPxjwYoCU0YPL07pNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070913; c=relaxed/simple;
-	bh=TN0IXkVrp4lVOuNQ/RGdMfIJZCU7XDadGYk3N5Xjq2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qmpQwAHQf/bqPZ2mNAUSXWDGRIdE0N+SZdtoKsWskhu5DXl0397zS7FiSogo2NdEylVjtGswUT3A4FEBEurjemBkgEpx7EgPKVvghnR/9RI3+K43uA7DgwAIppg7uDEz2z3YoXr5ZJ6+Fz5IB8BYtePXng7a37YfZSLW5vm/VUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MhF7j1XG; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750070986; c=relaxed/simple;
+	bh=dTq/ijg9wAiLDDvYi5+KhFq6NE1kLb9RMnNwHLT6zAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KOKHVGbSTLTAQhCLd9u1kzBNhCdL1sT2yzIjON8IPlFFZhAMXjt/eBZrG4h3XXdI57eJDHxskX0HSBnwQVIzOVV5okQYXeoSMaa6+NsPO5My08HhRv6gIoihCzETxskxEUx9cAVtnq0LKk03w+YE0FralqkPprcZvuStQTznQXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=JbX1CR8R; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhF7j1XG"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d54214adso33681875e9.3;
-        Mon, 16 Jun 2025 03:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750070910; x=1750675710; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w1RZoaBd7s53Gl4EEOyB88bEuvLGxVXm4s1GPYIyQz4=;
-        b=MhF7j1XGqKzWLNsA1Q51VylKE3vjp69nfdP+HAqrY2Wy+BrH0CORd2h+Eyjvm2Dj8g
-         r84rQOnms6k5D1NTnpimUlX8GOll+WC4JJyBj3CAEAa26gnv200p39XFi8C2j0X6/wGx
-         W7lieoukos89OpIsy87feAw4eeP4S2GE2/INPYpUh64PXuEk8riyofX6vC2Ghp8SFWdc
-         Bi4Ml2xCrDUCJ6KjHmc7ZZxdPTTib+RtMRghNrlkmaBy4GJ814whaWQYXcTLuvSFSK/4
-         ObEO+vuHOQtI2jSRdUVRegFyD3oxFLcwCZ6asXGnCIhQH7QGc7hArTLCJvcWk5dWWcbK
-         rxBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750070910; x=1750675710;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w1RZoaBd7s53Gl4EEOyB88bEuvLGxVXm4s1GPYIyQz4=;
-        b=CObW3ihylbH0Ys7NbS5woh8nRbXsmrY7tcdkaXvpSFsz3sn+1oSYNIiZ7OAhqpTDvw
-         R/iOAoacpmP83kshCiIZcLxEHfTrKj/tM+Yi1q52NHfPA2XZUWGjjCKwHz8K7SgUjJ0D
-         wwFo2h/M26oHAbbmyKdjOihLZy4POz3IxR4/GGuk5BmQJhNYqLV9aofCbVweaq9BtMZQ
-         xzZad1jiOKr/o3agDVtuAFWVdY7P6HG1oFmbKbxFQXUN5Zqz4+AE6Ihv505votGfyOIX
-         p7X01i1D91Y0Ztg73r0baDfdhlts3QaQfe18qT1caJtYzdE6IPjj9zvreDhKH2L0v00J
-         HTVA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+x5/HVUBEBU6sGttZO+kSTMkcJHLuMxFv/xgInb2KKvK9vcKNEe/Pim4fUZWy5FJTLl5QlgUhuIgN@vger.kernel.org, AJvYcCUVNIyVpaKrC+KZT6oLwmk+Nn8Dwaun/mKOTxPEZWHgiza6XVgDG4OsB1WM4oLaTQSxgT6/dqxz5bGQesOd@vger.kernel.org, AJvYcCWDwPASOw7R8SEfWLouSUwP0e+Ti8devM4TsSfl9x1oM1Z+3e7sKOfkCXuBlSJ+/UOYjDSM726PAZNreFdezGpwpqs=@vger.kernel.org, AJvYcCXiI9mmvQtFtvamTxiJ4ZuAbOmqst4r8U29m55AxzOk/25zqHW8sIreZsCjcq+O1Lp735QloKSTrrax@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF0ow/OjQRHjwEKCdXeJKh+QZauTQiDtCmzi240gS9VEe5KUg7
-	WF+q7Q8y6ej4Q36Jt60KvoGRrArlP/ADGX42SOGxUjr/MpIljgPxiN71yaQxuFcfZguPblkC1g5
-	uN+sqbBoF5Dl1pPb/ySDU/iivqMM2UgI=
-X-Gm-Gg: ASbGncuA80GM/U/xa/5vnnN0ufP+7aITjYiP2VJtoBckfHZc2nkcudYmkk8C+ZGQ9yX
-	c6MVybSL5XZbT7hFGLw4gzw222XttAgT6ZD0MvUfvRy38EtBChGZ5rZEyw9s6GadvxrLK7Bzkvb
-	paTyc6xxooaM0s25n45B1g3ddF3/Pw8uvo+FSyqsizXIZW4FaDgxBT
-X-Google-Smtp-Source: AGHT+IHcaplUPGix4GRlSL0W5Y/N0Lt6acvjpm0+HqL8j14FYOo7Lfk9Q2H+n0iMYgc/RHSXREVhO7cCwWXNoFyP7QY=
-X-Received: by 2002:a05:600c:4e02:b0:453:c39:d0c2 with SMTP id
- 5b1f17b1804b1-4533cab541amr75662465e9.24.1750070909375; Mon, 16 Jun 2025
- 03:48:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="JbX1CR8R"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bLRb2549Vz9sQV;
+	Mon, 16 Jun 2025 12:49:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1750070974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XY8QmFX6C/sGkVxyzcatdwuMOackSJD85Ys2cJrlHdU=;
+	b=JbX1CR8RBtgCBQt8jaWY9VXnIednZIJjOtAvoib1pnvZYtCrjr7WedGKILsmrbjHc5Ejk1
+	U+EYALUUEEX7ioXOI0+f8htJlHxdiyPInM69QH9+x/zQ9MGxC/PYi1zKomi2BzPQ+ryMgM
+	LWBw4qAe5jDrzf2wJNd56YTxKrpD5t+Nr9QYUhJnBmX3C3Qd8H3J9THwBFFDwS5ccAnMAY
+	b6qdhL6RV5rmJCmXJv+c3mSrO2OVMeCWO6CN+ZTHSWd9Ne1KohY8T48fiOHT6/Jy5pikcV
+	D12PQCDwZVtg6fZKx7tvUb43RvI0lMB8MnmpErrcoKnSAoVyj+TX4ORp6a1K/g==
+Date: Mon, 16 Jun 2025 12:49:27 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, 
+	Pankaj Raghav <p.raghav@samsung.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
+	gost.dev@samsung.com, hch@lst.de
+Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
+Message-ID: <vmc7bu6muygheuepfltjvbbio6gvjemxostq4rjum66s4ok2f7@x7l3y7ot7mf4>
+References: <20250612105100.59144-1-p.raghav@samsung.com>
+ <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
+ <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
+ <76a48d80-7eb0-4196-972d-ecdcbd4ae709@intel.com>
+ <jpuz2xprvhklazsziqofy6y66pjxy5eypj3pcypmkp6c2xkmpt@bblq4q5w7l7h>
+ <b128d1de-9ad5-4de7-8cd7-1490ae31d20f@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530171841.423274-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530171841.423274-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB11346A62FDF84C5F2C1240BBF8677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY3PR01MB11346A62FDF84C5F2C1240BBF8677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 16 Jun 2025 11:48:03 +0100
-X-Gm-Features: AX0GCFubtUqu3fATVHFAzwxeT_PzWF71UNeBGrXqzwID3Wlx7D2bVaFvFl7UOIk
-Message-ID: <CA+V-a8sZfTgOENXfR2NnykgjGHd+2-vS9Jk-dNLWTVQyAGbQTw@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support for
- RZ/V2H(P) SoC
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	"laurent.pinchart" <laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b128d1de-9ad5-4de7-8cd7-1490ae31d20f@redhat.com>
 
-Hi Biju,
+> > > 
+> > > The mm is a nice convenient place to stick an mm but there are other
+> > > ways to keep an efficient refcount around. For instance, you could just
+> > > bump a per-cpu refcount and then have the shrinker sum up all the
+> > > refcounts to see if there are any outstanding on the system as a whole.
+> > > 
+> > > I understand that the current refcounts are tied to an mm, but you could
+> > > either replace the mm-specific ones or add something in parallel for
+> > > when there's no mm.
+> > 
+> > But the whole idea of allocating a static PMD page for sane
+> > architectures like x86 started with the intent of avoiding the refcounts and
+> > shrinker.
+> > 
+> > This was the initial feedback I got[2]:
+> > 
+> > I mean, the whole thing about dynamically allocating/freeing it was for
+> > memory-constrained systems. For large systems, we just don't care.
+> 
+> For non-mm usage we can just use the folio refcount. The per-mm refcounts
+> are all combined into a single folio refcount. The way the global variable
+> is managed based on per-mm refcounts is the weird thing.
+> 
+> In some corner cases we might end up having multiple instances of huge zero
+> folios right now. Just imagine:
+> 
+> 1) Allocate huge zero folio during read fault
+> 2) vmsplice() it
+> 3) Unmap the huge zero folio
+> 4) Shrinker runs and frees it
+> 5) Repeat with 1)
+> 
+> As long as the folio is vmspliced(), it will not get actually freed ...
+> 
+> I would hope that we could remove the shrinker completely, and simply never
+> free the huge zero folio once allocated. Or at least, only free it once it
+> is actually no longer used.
+> 
 
-Thank you for the review.
+Thanks for the explanation, David.
 
-On Fri, Jun 13, 2025 at 7:17=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
->
-> Hi Prabhakar,
->
-> > -----Original Message-----
-> > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: 30 May 2025 18:19
-> > Subject: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support for =
-RZ/V2H(P) SoC
-> >
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add DSI support for Renesas RZ/V2H(P) SoC.
-> >
-> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v5->v6:
-> > - Made use of GENMASK() macro for PLLCLKSET0R_PLL_*,
-> >   PHYTCLKSETR_* and PHYTHSSETR_* macros.
-> > - Replaced 10000000UL with 10 * MEGA
-> > - Renamed mode_freq_hz to mode_freq_khz in rzv2h_dsi_mode_calc
-> > - Replaced `i -=3D 1;` with `i--;`
-> > - Renamed RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA to
-> >   RZV2H_MIPI_DPHY_FOUT_MIN_IN_MHZ and
-> >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA to
-> >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MHZ.
-> >
-> > v4->v5:
-> > - No changes
-> >
-> > v3->v4
-> > - In rzv2h_dphy_find_ulpsexit() made the array static const.
-> >
-> > v2->v3:
-> > - Simplifed V2H DSI timings array to save space
-> > - Switched to use fsleep() instead of udelay()
-> >
-> > v1->v2:
-> > - Dropped unused macros
-> > - Added missing LPCLK flag to rzv2h info
-> > ---
-> >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 345 ++++++++++++++++++
-> >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  34 ++
-> >  2 files changed, 379 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
-pu/drm/renesas/rz-
-> > du/rzg2l_mipi_dsi.c
-> > index a31f9b6aa920..ea554ced6713 100644
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > @@ -5,6 +5,7 @@
-> >   * Copyright (C) 2022 Renesas Electronics Corporation
-> >   */
-> >  #include <linux/clk.h>
-> > +#include <linux/clk/renesas-rzv2h-dsi.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/io.h>
-> >  #include <linux/iopoll.h>
-<snip>
-> > +
-> > +static int rzv2h_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsigned l=
-ong mode_freq,
-> > +                             u64 *hsfreq_millihz)
-> > +{
-> > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi->dsi_para=
-meters;
-> > +     unsigned long status;
-> > +
-> > +     if (dsi->mode_calc.mode_freq_khz !=3D mode_freq) {
-> > +             status =3D rzv2h_dphy_mode_clk_check(dsi, mode_freq);
-> > +             if (status !=3D MODE_OK) {
-> > +                     dev_err(dsi->dev, "No PLL parameters found for mo=
-de clk %lu\n",
-> > +                             mode_freq);
-> > +                     return -EINVAL;
-> > +             }
-> > +     }
-> > +
-> > +     clk_set_rate(dsi->vclk, dsi->mode_calc.mode_freq_hz);
->
-> Not sure, Can we use the DSI divider required based on the data rate (vcl=
-k, bpp and numlanes) here
->
-> and then the set parent clk of PLLDSI as well here (dsi->vclk * the divid=
-er value) ??
->
-> 24MHZ->PLL DSI->DSI DIVIDER->VCLOCK
->
-> Maybe then the clock framework has all the information for setting PLL_DS=
-I and DSI_DIVIDER clks??
->
-Can you please elaborate here with a detailed example.
+But I am still a bit confused on how to proceed with these patches.
 
-Cheers,
-Prabhakar
+So IIUC, our eventual goal is to get rid of the shrinker.
+
+But do we still want to add a static PMD page in the .bss or do we take
+an alternate approach here?
+
+--
+Pankaj
