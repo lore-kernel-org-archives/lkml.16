@@ -1,183 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC82E7262B
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F481C54AF;
+	Mon, 16 Jun 2025 21:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750109944; cv=none; b=ltQHRIlJuUUi3UF+NkUR652dIQIE4cWLLVOhD1rVvzt/m663UObJzXfLmsDBT1X4LxzTNs4JhWX3RTOaq2okQXywegLEjUINxILEfEH8q2qhlQdLw+ANKlDYwpUIzdrXODKU1YcwPhRZn6JnW2e2gPPG/Zhcq1LrEce4A/7S6oM=
+	t=1750109972; cv=none; b=cgqQtfh8xcncqtzPXALFBHgTEiZf1mLm3vlre9/hMKXIwpGY//sgqnxcU8NTv7Vnb2q32jKiYa0Dr218vgZ0Fw7DPTHvWN6Kavd+3cJfBg52jY8+d7ufMQQEOF5HYtDZ/o7UlyIwf1QmTT6Bn5MyYZ+xNVBwNTJG+tFkK8906K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750109944; c=relaxed/simple;
-	bh=QN2i0eqFGWNXPooFbASnWQglHggpPgBSU7wRAUtSHX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qJRWdi8GsvWRmMi5vq6VgSnAiZkGaR0LdobU+h9OrIGqQeIEkrMb24NQV2JfNSNPPnVZznsIdwCw7XuuP6DO6xoqmR/lTt7V08ju38A9IWMvSt5rejZq/d+IYnthmSSTJ74SENRTQFF7BI37nb98s4Y9Y7re2santh7riAkAuPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N9s0yTSi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750109972; c=relaxed/simple;
+	bh=dMANp4RYRR1PlbR+3xAKlhI1wXnGkrP0d+toLijllaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KlqlziIkWa0VoYCOGzvjEjXOFMCnO69/jj3dVBCRm6oP8AKuvDJPybWUjALjZnIcTvBH9izOTF8dxB/pbximUZzhhLXvEUFwpv7uCy31rhParm/UCamYo+eKX14MH7DUAOcedzkjR7psQ0Vjuy4RoW4stsRkq4jI3bk7ut2xMeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ia+BdPOW; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N9s0yTSi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750109941;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7emt/zNGr/CBhfVNgDPKicHgy2P2Bp4GbdXMzFzaVxk=;
-	b=N9s0yTSi2DUgcDMwl2XLDF+1jzncb9KWx1Xk9/E9u6Owqe69wQeJNQozswUu7atK7qQpzt
-	ykdGCClt9H5rHwROBU7eKBkbMSI0I2dB8xDaL0/CQUxnKDc74OwIdDkcg4jTMQF9/I3cbQ
-	rAE6R/MY2JxfGixoRhgwPtUZz0qJEG0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-594-Sxp6PRFDMBOFuge5X2UL-A-1; Mon, 16 Jun 2025 17:39:00 -0400
-X-MC-Unique: Sxp6PRFDMBOFuge5X2UL-A-1
-X-Mimecast-MFC-AGG-ID: Sxp6PRFDMBOFuge5X2UL-A_1750109939
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso3139835f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:39:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ia+BdPOW"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4f379662cso4369577f8f.0;
+        Mon, 16 Jun 2025 14:39:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750109969; x=1750714769; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ftn+00a1LmneeOh5VpLw5LtCfyTkHHrQ+fYbzdf4uyE=;
+        b=ia+BdPOWebOG2E2ovKWZef1vxL+/c3UVgSnveQNO29dX4BfH9hRAyqCVX82dvnUuDW
+         Qr3ERHh1OB0a9i6bCjP9uzH5xUh8z+rAewTfQRHmqLmuKjVof3iCsRhkh626KjTNfzMO
+         lHAekBYVgDEFk+KJF0BTKIElx/+wExjs7EQOFXlul/EH5x0x/aZ/yfkpFn4Q5fwOX69C
+         seSvduk4kgsS7qf1X0J3Ckch3YxI7gmvJFMYbVlK4uWDgE50xeu+LJqJbBf77YQ5pF6n
+         PIrYdb4LystxENESclGmlCgk40qehgakpTI2hebFryOPVDhjsQYufLCYQPp+UwckP7/r
+         Zv0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750109938; x=1750714738;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7emt/zNGr/CBhfVNgDPKicHgy2P2Bp4GbdXMzFzaVxk=;
-        b=EIUmB5pLKMr2kEQnpG275NZfmZVhL/OVROXaQTRiwGZFdzeozqGN6MmHqTc3U7y1gZ
-         ZJSNXHO09YLbZGq9dAB4RDDeq+fNSi2Qe9Whk9liEAkYxQu3btlD8N7OBywpd81GeQxP
-         sPecULo4Tj3NujvWmiTT7gycvFKcVZbfWnTFqtJTBSaxxkt343T3SW2d4tYr59Zg/Xhu
-         rsBOU4bfaYeZmEY4dT+Yw8atqkI+O2Xrmua3AwCPBedENuegNMHKTRBx4KWY/LtrbVZd
-         DhvBvTaqtawp6zc3uxHvMURrFYikOhKPvdfHvhDZuQsae9ZaEnYrA7q6XAi4I4nhSynl
-         IBiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6GSSg3Up8v3evNO8Ul2DI1ah7Zc5UMC552NYcw5RoqtL4xJD3LlwV29chSbL7sFHUnWK88sjl3TMhLmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWBzAkobrmdepG/ZCD45TstrKSZJwb0PFnLkg7uzb5VdvmRpzB
-	b850lmyCi0Nbg7rh/RBAusdqbaOnochOFxXPbFiX/NescCjVGKu6r+qvDfC4ZDn5s2KT0IITPv7
-	5WDElTnSM2AZGxtnGTVzemoptRU0myuhoFhSyGC9dDA6w72vGvkVYzM7Lh9Hn6lYxwSZ+1u62Cf
-	9B
-X-Gm-Gg: ASbGncuN98nZ15mmLGFpyEyKzULLFZFECYuruYFh9sVnuIvUjzOpxtBol00/RGon5L2
-	Ld5HL5+Vbz2T9bHL5XMxDM9l5cyPAoBQs/q+3yQpMsAoH7KOFrMqBgduGUtq2iksm2x7wBwIOb6
-	7VEzmMN9NNg7D+eajxVVeVYEdW2D33VVFJAwDDc+HhwYTqdENHieu09L0zWebVGnZcS1/EJCLvH
-	XkrN+5rED81umW+oZhKtqcPxY5H2Isv5zPf/HrHaHATO7NvvoxZUJijXHz8p+naqUFIKFf/sD2h
-	o2VjvrneSlQ=
-X-Received: by 2002:a05:6000:400a:b0:3a5:2cb5:63fd with SMTP id ffacd0b85a97d-3a57238b522mr9595360f8f.10.1750109938539;
-        Mon, 16 Jun 2025 14:38:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzpDB07Ow6Aq7oaibwATYH2bwGc1v46BbhwhcmxYHu7okQGHS3ELJ0eFf8b83N36p9EgRDvg==
-X-Received: by 2002:a05:6000:400a:b0:3a5:2cb5:63fd with SMTP id ffacd0b85a97d-3a57238b522mr9595351f8f.10.1750109938128;
-        Mon, 16 Jun 2025 14:38:58 -0700 (PDT)
-Received: from pollux ([2a00:79c0:662:b300:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089a7sm11887641f8f.49.2025.06.16.14.38.56
+        d=1e100.net; s=20230601; t=1750109969; x=1750714769;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ftn+00a1LmneeOh5VpLw5LtCfyTkHHrQ+fYbzdf4uyE=;
+        b=UILsyxGDUxE6pIrhf7grOUGF0Lou0+2m1SVqTz0HXh4wSbLnHpd71wvv4APycJv9eN
+         7gtezpFELir8Tmc6N/J9pFuL9ELuqoosaA9pB9rjbSghVTEMSFv2aNFGveKqx3JANLcQ
+         XI26kFC9IMbNTLpaAUwr+u725h9Hz46yJnZu37mFrweo5EPgcs/FofYXytOXNOiuglPB
+         CV9lGZLEEoXxE6roEI2UNjRYiRuJHub4OjKYIYoHCVzlO6EETM8teWa0rAHoiegARKeW
+         IKbq7rgtvBAdPxpJi6KQUYof1geTcn+T1sHE0tevMGQfiiguO+IR1KtrKPPCqn3GSzEh
+         wC5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUTbQ1Q4tLEtLDC1vdVpEDKrh6RJyYiJR6BGoNq/HiZYt/fZMBt30+0Tevqg/ZPri6FsK1OzoBbnlwVv7ym1WmhcqU=@vger.kernel.org, AJvYcCVQKabGaevty1SkX/CRmTVcdBnaqwx1Nh5tHamrTi2t73+/g2UlOsryWn3+4ubsDrtkYW0ZRmS5CGev@vger.kernel.org, AJvYcCX3gBJviY7QL/D5nrcxJYQ03/iteHh926VGVXD1XcnswrKIp+McCqAhdn79ikgv2VQBKK7rkTyVkcVlbP+j@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2JgcaeM6JJ2yIvzreC1nNoxJDbsPduIWZmXV9gqBA6jDXU53L
+	76XCwZuY+YmOA1FqAKrakAwMPWUSQkzLnboKNV3cRPA2n36eKrwdR/FZ
+X-Gm-Gg: ASbGncvrGjAa/54GiAXOcxXQws/QbEIePRzNFVj7NDIWswWyaOEgjLm/2FQ0x/9t3T1
+	n5M2jdr8KeyyIfQa65kTqzWzkHMscLIBh4QmWl9IXPMKtTnBHu2T1i8olnGklrFZHgKCO7feg3M
+	vvALrDTVY5HA30ohMCuEcv8UVslGeDaEJeOU0UWwEvVlJgOrzgSwKBOvGzBsGJJcSpWW0tCFzHC
+	sEzEBvsKS4gnKk+H8Bc3Cg6hBV4EsoswddvxNLPSwezTfOxjE9sgts/TRs0r/ZRfr4xVaSlEpMe
+	7JGWnZSiyRTjrdlsxQKI1yk1hlo05RTolqfoQhbxr8vMuIQjWTO6wtPwRoZ+d8zMb9i0ya9dgk9
+	X0ElnrTEliXYTNTJM1B+C
+X-Google-Smtp-Source: AGHT+IH5e9MpTUXvR5lT+TeQX6hIfCC59J8c61jtIZiURU0W6UQc2eem6wclGiDoXDL65CZgVM69oQ==
+X-Received: by 2002:a05:6000:3106:b0:3a5:39e9:7997 with SMTP id ffacd0b85a97d-3a5723a3b38mr9192619f8f.34.1750109968912;
+        Mon, 16 Jun 2025 14:39:28 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:4135:3769:337c:8a0c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2354fbsm153211625e9.15.2025.06.16.14.39.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 14:38:57 -0700 (PDT)
-Date: Mon, 16 Jun 2025 23:38:55 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Rob Clark <rob.clark@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
-Message-ID: <aFCO7_RHuAaGyq1Q@pollux>
-References: <20250613235705.28006-1-robin.clark@oss.qualcomm.com>
- <20250613235705.28006-3-robin.clark@oss.qualcomm.com>
- <aE1RPZ_-oFyM4COy@pollux>
- <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
+        Mon, 16 Jun 2025 14:39:28 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v11 0/5] Add support for RSCI driver
+Date: Mon, 16 Jun 2025 22:39:22 +0100
+Message-ID: <20250616213927.475921-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
 
-On Sat, Jun 14, 2025 at 08:03:20AM -0700, Rob Clark wrote:
-> On Sat, Jun 14, 2025 at 3:39 AM Danilo Krummrich <dakr@redhat.com> wrote:
-> >
-> > On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wrote:
-> > > For UNMAP/REMAP steps we could be needing to lock objects that are not
-> > > explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
-> > > VAs.  These helpers handle locking/preparing the needed objects.
-> >
-> > Yes, that's a common use-case. I think drivers typically iterate through their
-> > drm_gpuva_ops to lock those objects.
-> >
-> > I had a look at you link [1] and it seems that you keep a list of ops as well by
-> > calling vm_op_enqueue() with a new struct msm_vm_op from the callbacks.
-> >
-> > Please note that for exactly this case there is the op_alloc callback in
-> > struct drm_gpuvm_ops, such that you can allocate a custom op type (i.e. struct
-> > msm_vm_op) that embedds a struct drm_gpuva_op.
-> 
-> I did use drm_gpuvm_sm_xyz_ops_create() in an earlier iteration of my
-> VM_BIND series, but it wasn't quite what I was after.  I wanted to
-> apply the VM updates immediately to avoid issues with a later
-> map/unmap overlapping an earlier map, which
-> drm_gpuvm_sm_xyz_ops_create() doesn't really handle.  I'm not even
-> sure why this isn't a problem for other drivers unless userspace is
-> providing some guarantees.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The drm_gpuva_ops are usually used in a pattern like this.
+Hi All,
 
-	vm_bind {
-		for_each_vm_bind_operation {
-			drm_gpuva_for_each_op {
-				// modify drm_gpuvm's interval tree
-				// pre-allocate memory
-				// lock and prepare objects
-			}
-		}
-		
-		drm_sched_entity_push_job();
-	}
+This patch series adds support for Renesas RSCI driver for RZ/N2H and
+RZ/T2H SoCs.
 
-	run_job {
-		for_each_vm_bind_operation {
-			drm_gpuva_for_each_op {
-				// modify page tables
-			}
-		}
-	}
+Note this patch series is split up from the series [1] to make it
+easier to review and test.
+[1] https://lore.kernel.org/all/20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com/
 
-	run_job {
-		for_each_vm_bind_operation {
-			drm_gpuva_for_each_op {
-				// free page table structures, if any
-				// free unused pre-allocated memory
-			}
-		}
-	}
+v10->v11:
+- Rebased on latest linux-next.
+- Added a new patch to update the dt-bindings maintainer entry.
+- Added a new patch to use port ops callbacks.
+- Implemented shutdown_complete callback
+- Added reviewed-by tags.
 
-What did you do instead to get map/unmap overlapping? Even more interesting,
-what are you doing now?
+Cheers,
+Prabhakar
 
-> Once I realized I only wanted to defer the
-> application of the pgtable changes, but keep all the
-> locking/allocation/etc in the synchronous part of the ioctl,
-> vm_op_enqueue() was the natural solution.
+Lad Prabhakar (2):
+  dt-bindings: serial: rsci: Update maintainer entry
+  tty: serial: sh-sci: Use port ops callbacks
 
-But vm_op_enqueue() creates exactly this list of operations you would get from
-drm_gpuvm_sm_{map,unmap}_ops_create(), just manually, no?
+Thierry Bultel (3):
+  dt-bindings: serial: Added secondary clock for RZ/T2H RSCI
+  serial: sh-sci: Use private port ID
+  serial: sh-sci: Add support for RZ/T2H SCI
 
-<snip>
+ .../bindings/serial/renesas,rsci.yaml         |  19 +-
+ drivers/tty/serial/Kconfig                    |   7 +
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/rsci.c                     | 483 ++++++++++++++++++
+ drivers/tty/serial/rsci.h                     |  10 +
+ drivers/tty/serial/sh-sci-common.h            |   8 +
+ drivers/tty/serial/sh-sci.c                   | 219 +++++---
+ 7 files changed, 655 insertions(+), 92 deletions(-)
+ create mode 100644 drivers/tty/serial/rsci.c
+ create mode 100644 drivers/tty/serial/rsci.h
 
-> > > Note that these functions do not strictly require the VM changes to be
-> > > applied before the next drm_gpuvm_sm_map_lock()/_unmap_lock() call.  In
-> > > the case that VM changes from an earlier drm_gpuvm_sm_map()/_unmap()
-> > > call result in a differing sequence of steps when the VM changes are
-> > > actually applied, it will be the same set of GEM objects involved, so
-> > > the locking is still correct.
-> >
-> > I'm not sure about this part, how can we be sure that's the case?
-> 
-> I could be not imaginative enough here, so it is certainly worth a
-> second opinion.  And why I explicitly called it out in the commit msg.
-> But my reasoning is that any new op in the second pass that actually
-> applies the VM updates which results from overlapping with a previous
-> update in the current VM_BIND will only involve GEM objects from that
-> earlier update, which are already locked.
-
-Yeah, it's probably fine, since, as you say, the only additional object can be
-the req_obj from the previous iteration.
+-- 
+2.49.0
 
