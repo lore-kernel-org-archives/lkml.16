@@ -1,146 +1,142 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A922877C3;
-	Mon, 16 Jun 2025 13:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998F1433A6
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080713; cv=none; b=Jux8vc5iQNXv3JhEdrfh9tsnF7LVoYQj7Bo90a+0GDxY5iKUnXqp29TIPnDMFekYr7B6tq8E6E03Au8Jt7qBHE66kjuHwXN9yh06mRwkHRAsaBKrjvLqioTbzDouvmuw9GzoxCsLll8n+p+kX4nR7vLGLu9jUoQK4kX+GGRyTe0=
+	t=1750080792; cv=none; b=QpM5ZcZ7B6SgaXwptoT5NQgheDg5M5k+IwzWxhgyld6jUuhlLvCMYsADpojg6QjDZhJOb8r7D+KzbiXx2CPQhjHBflRJTTax+7f8tqPulWreiaLGLX6wzZVDRp2tetFihJ4iREoGBdbPQ9LvMbhzwdnIhFaQrP1Tbgv7mIa33GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080713; c=relaxed/simple;
-	bh=YpM6x3pVZDq98sI2oYH3/tGiaLSYiy/AHMV6/X76vdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qk9lxM9v3FyNArtxTUppIq8qwlItIzbzUvBuQLVxgGUQew5q5MDOyLIJyIaDpVkeOjI41DkRMBCkp8JDb3f0tRXLSaLFboUk+IDc+0WOr4PhuCcdQ60NBRnP6ZsEOhLYYt25MRTuN8/DsGcy7YBy6VdO23q/ukH+fpno+MZyxck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=edFZTSDf; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750080792; c=relaxed/simple;
+	bh=YhWSDmrnOKoze3ApO91AUyBZ85d4Lcz4lg8oIS6fHeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nh+uWzpbH3yl/N8Q40o3FvHEnvTj9imSjiG2BfB4W3h24m72ZYEDDY2d7PIRvabSwbVK6vW8OCSw0Nxb2Q+KdrRh8SvD3MRPslVcBcUvK41RlWszl7KshW3llYncr+iX/KjfEvGzOsFOBoONQ39mvPZIqANxlHHL/+Teuyi2o1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mFWB0+2n; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="edFZTSDf"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3C30722A;
-	Mon, 16 Jun 2025 15:31:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750080698;
-	bh=YpM6x3pVZDq98sI2oYH3/tGiaLSYiy/AHMV6/X76vdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=edFZTSDfDpb+n/GAtPn9b8ktvswaT0Bq85r7H0riKjD4vvWn/kAB9kUSJ4/8yDc2x
-	 DA2ohGehZFrv+ZXHbkpU5E2gAkdglkCspPw2Q6c+67VDGr9ZMYH6Kd061M+1qGlCcF
-	 Ll9/dp4bue/9FhWsV3aGPibOT6dDZTnF8FKqRAyI=
-Date: Mon, 16 Jun 2025 16:31:34 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] media: vsp1: vsp1_dl: Count display lists
-Message-ID: <20250616133134.GC10542@pendragon.ideasonboard.com>
-References: <20250529-vsp1_dl_list_count-v1-0-40c6d0e20592@ideasonboard.com>
- <20250529-vsp1_dl_list_count-v1-2-40c6d0e20592@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mFWB0+2n"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so7681290a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750080789; x=1750685589; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R5YN2QkU5k06/pOxdUgeF6W/BLj5Q3PBTEndQTl0KDk=;
+        b=mFWB0+2nhYsa+12n3JVGtlWSVEHQ2NLyEHmiSbbgJUsIFvXfwNGjekDUnVLfQjiPFY
+         XOxD9cFUYMqadHpd12oU9G9OB+2ZH/WvNAyjn3xUwWDKJrXjHsOlVzxibrXotd9GgQBv
+         4SReJ+VxU+Hw3uLSkwWmhZn9ib2Jic+Lb52ig=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750080789; x=1750685589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R5YN2QkU5k06/pOxdUgeF6W/BLj5Q3PBTEndQTl0KDk=;
+        b=llhBlXsA4If34sUOx4TtMdLlcsm83PVODiyKMV6yAY8hxBLbmLv1VGBAHv+GdPTTVZ
+         QJZqi8TuAN6aSseewYqGnNxHYjhM3mZ/SuDFw0+6cLk0ng3C0ryNrsJL8EAzecSepThC
+         4ApwL6yjuoOiMOyWeBAvNMV48GezAmt11SSCK6rW1L6YL+vBYJguSodzvYAm6iO/6Gwk
+         QGXUnukl58+FhLA15lhzlKkgUAHb9AIKwDDb8s9JzHd3lMWOgm0olWHPNr1nCEdwXAfw
+         1f31cVCeTiXuA37Qx+HUrYECZgFrDnqIFqQAak6YuPKQ9dnDQE+AcJXF661361D6wquI
+         RsFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjt+a55jWufw4ywAQo6eBNffINF5CDeThflXzCVjxSDAcKRNKqpLpgkCHUMIDlouhcK+kB4evobyGi7tg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQsVJJNjL1oZpIwC5P37ty4pquetNJmL5FjMsaY4RlmOaPPGGD
+	t5yPzZS4Hxiqjshl4b43oIibD9KWvisIxGZD7MGhWVHrZ/hxvx+ToE2zYmqduUkaTA==
+X-Gm-Gg: ASbGncsoytH6x9CwpNJWdyU3zurvGtIltVRxXVrEBOhAV+AVcXWXuvj0+zpa5+1P/dt
+	dY1K9ez0VDnMQt+mqIJ6KOvrms2S/Imi9mho5iUM6Ox/cb2sH4UE8k+qAGZtvECQGNL+hS7MxB0
+	8e5yUCYHEF4o4TCVJcZldbH16SCPCBjoawHb/mSrq22BTtEdXArfOHKFTfULXG5b7EApSXjILim
+	KMAUYVQdu+fXpvGOIeEgrwVZ51+5VUsSP9QfM2cnok8ZQM/5MODeHA5bcJTcxtZKkTy1Fappi9I
+	lTRdaYgzX/Y1Ff4gRTRcjnR4M9m6P8rUu0my71AGIBiI3BJvwYSRvqw4hJ+wo/sdrcyByP6Xpv2
+	Q46x3h4vuwQoTCBsNqv7FGCwsvtWNxLfQ+sIfuZcCp6umlkuxY159IyzlHQ==
+X-Google-Smtp-Source: AGHT+IExI1WmkrxVe9zE/JbZig55DtGz8Y0L71WuTd6No5iWi9+KVXEZJTRNCO03hIbCfTQ5SWPVVQ==
+X-Received: by 2002:a05:6402:440b:b0:601:6c34:5ed2 with SMTP id 4fb4d7f45d1cf-608d08346e4mr7846954a12.4.1750080788784;
+        Mon, 16 Jun 2025 06:33:08 -0700 (PDT)
+Received: from akuchynski.c.googlers.com.com (244.175.141.34.bc.googleusercontent.com. [34.141.175.244])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a94ce7sm6036664a12.58.2025.06.16.06.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 06:33:08 -0700 (PDT)
+From: Andrei Kuchynski <akuchynski@chromium.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Pooja Katiyar <pooja.katiyar@intel.com>,
+	Badhri Jagan Sridharan <badhri@google.com>,
+	RD Babiera <rdbabiera@google.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Andrei Kuchynski <akuchynski@chromium.org>
+Subject: [PATCH 00/10] USB Type-C mode selection
+Date: Mon, 16 Jun 2025 13:31:37 +0000
+Message-ID: <20250616133147.1835939-1-akuchynski@chromium.org>
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250529-vsp1_dl_list_count-v1-2-40c6d0e20592@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Jacopo,
+This patch series introduces a flexible mechanism for USB Type-C mode
+selection, enabling into USB4 mode, Thunderbolt alternate mode, or
+DisplayPort alternate mode.
+Two new sysfs attributes are exposed to provide user control over mode
+selection:
+`altmode_priorities`: Allows users to define their preferred order for
+attempting mode entry.
+`mode_selection`: Initiates an automatic mode entry process based on the
+configured priorities and reports the outcome.
+The mode selection logic attempts to enter prioritized modes sequentially.
+A mode is considered successfully negotiated only when its alternate mode
+driver explicitly reports a positive status. Alternate mode drivers are
+required to report their mode entry status (either successful or failed).
+If an alt-mode driver does not report its status within a defined timeout
+period, the system automatically proceeds to attempt entry into the next
+preferred mode.
 
-Thank you for the patch.
+This series was tested on a ChromeOS Brya device running kernel 6.6, and on
+an Android OS device with kernel 6.12.
 
-On Thu, May 29, 2025 at 06:36:31PM +0200, Jacopo Mondi wrote:
-> To detect invalid usage patterns of the display list helpers, store
+Andrei Kuchynski (10):
+  usb: typec: Add alt_mode_override field to port property
+  platform/chrome: cros_ec_typec: Set alt_mode_override flag
+  usb: typec: ucsi: Set alt_mode_override flag
+  usb: typec: Expose alternate mode priorities via sysfs
+  usb: typec: Implement automated alternate mode selection
+  Revert "usb: typec: displayport: Receive DP Status Update NAK request
+    exit dp altmode"
+  usb: typec: Report altmode entry status via callback
+  usb: typec: ucsi: displayport: Propagate DP altmode entry result
+  platform/chrome: cros_ec_typec: Propagate altmode entry result
+  platform/chrome: cros_ec_typec: Report USB4 mode entry status via
+    callback
 
-We can be more precise:
-
-"To detect leaks of display lists, ..."
-
-> in the display list manager the number of available display lists
-
-s/available/allocated/
-
-> when the manager is created and verify that when the display manager
-> is reset the same number of lists is available.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/vsp1/vsp1_dl.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_dl.c b/drivers/media/platform/renesas/vsp1/vsp1_dl.c
-> index 8a3c0274a163..5c4eeb65216f 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_dl.c
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_dl.c
-> @@ -214,6 +214,7 @@ struct vsp1_dl_list {
->   * @pending: list waiting to be queued to the hardware
->   * @pool: body pool for the display list bodies
->   * @cmdpool: commands pool for extended display list
-> + * @list_count: display list counter
-
-"number of allocated display lists"
-
->   */
->  struct vsp1_dl_manager {
->  	unsigned int index;
-> @@ -228,6 +229,8 @@ struct vsp1_dl_manager {
->  
->  	struct vsp1_dl_body_pool *pool;
->  	struct vsp1_dl_cmd_pool *cmdpool;
-> +
-> +	size_t list_count;
->  };
->  
->  /* -----------------------------------------------------------------------------
-> @@ -1073,7 +1076,9 @@ void vsp1_dlm_setup(struct vsp1_device *vsp1)
->  
->  void vsp1_dlm_reset(struct vsp1_dl_manager *dlm)
->  {
-> +	size_t dlm_list_count;
->  	unsigned long flags;
-> +	size_t list_count;
->  
->  	spin_lock_irqsave(&dlm->lock, flags);
->  
-> @@ -1081,8 +1086,13 @@ void vsp1_dlm_reset(struct vsp1_dl_manager *dlm)
->  	__vsp1_dl_list_put(dlm->queued);
->  	__vsp1_dl_list_put(dlm->pending);
->  
-> +	list_count = list_count_nodes(&dlm->free);
-> +	dlm_list_count = dlm->list_count;
-
-dlm->list_count is not documented as protected by the lock. I don't
-think that's an oversight, as it can only be set when the dlm is
-created. You can drop the dlm_list_count variable and use
-dlm->list_count below.
-
-> +
->  	spin_unlock_irqrestore(&dlm->lock, flags);
->  
-> +	WARN_ON_ONCE(list_count != dlm_list_count);
-> +
->  	dlm->active = NULL;
->  	dlm->queued = NULL;
->  	dlm->pending = NULL;
-> @@ -1150,6 +1160,7 @@ struct vsp1_dl_manager *vsp1_dlm_create(struct vsp1_device *vsp1,
->  				      + sizeof(*dl->header);
->  
->  		list_add_tail(&dl->list, &dlm->free);
-> +		dlm->list_count = list_count_nodes(&dlm->free);
-
-Does this need to be done inside the loop, can't you just write
-
-	dlm->list_count = prealloc;
-
-after the loop ?
-
->  	}
->  
->  	if (vsp1_feature(vsp1, VSP1_HAS_EXT_DL)) {
+ Documentation/ABI/testing/sysfs-class-typec  |  34 ++
+ drivers/platform/chrome/cros_ec_typec.c      |  11 +
+ drivers/platform/chrome/cros_typec_altmode.c |  32 +-
+ drivers/platform/chrome/cros_typec_altmode.h |   6 +
+ drivers/usb/typec/Makefile                   |   2 +-
+ drivers/usb/typec/altmodes/displayport.c     |  17 +-
+ drivers/usb/typec/altmodes/thunderbolt.c     |   6 +
+ drivers/usb/typec/class.c                    |  95 +++-
+ drivers/usb/typec/class.h                    |  16 +
+ drivers/usb/typec/mode_selection.c           | 505 +++++++++++++++++++
+ drivers/usb/typec/mode_selection.h           |  42 ++
+ drivers/usb/typec/ucsi/displayport.c         |   4 +-
+ drivers/usb/typec/ucsi/ucsi.c                |   2 +
+ include/linux/usb/pd_vdo.h                   |   2 +
+ include/linux/usb/typec.h                    |   1 +
+ include/linux/usb/typec_altmode.h            |  12 +
+ include/linux/usb/typec_dp.h                 |   2 +
+ include/linux/usb/typec_tbt.h                |   3 +
+ 18 files changed, 775 insertions(+), 17 deletions(-)
+ create mode 100644 drivers/usb/typec/mode_selection.c
+ create mode 100644 drivers/usb/typec/mode_selection.h
 
 -- 
-Regards,
+2.50.0.rc1.591.g9c95f17f64-goog
 
-Laurent Pinchart
