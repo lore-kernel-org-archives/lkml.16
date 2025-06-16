@@ -1,130 +1,171 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F19E29C35C;
-	Mon, 16 Jun 2025 11:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C12D9EF3;
+	Mon, 16 Jun 2025 11:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073563; cv=none; b=C/cHcPc6jid3XNqfbc2p4d4OLPu41PRHCGk1h4pfjtOH+/1BZ9v3UafddX1GCI8T3vpDsNa1/pVlwqJLuYNLjpQHUp14szmDmBGAyuBEEzYpCNr3B2an5at4V85jPSOEcirgoglqRdihXscDnA1u7dAuX9OHrP1LWBIAN0MVMk8=
+	t=1750073565; cv=none; b=uJ9Vi6zXLvEIRggfuL+AJWDeViPV3xRdpxefHo/ZVAjwuv4nsjvDZHCmlJkFUpMIXx75Uo4XjOmwYhwD2mqM03OJST4WKVhAXbi93m8XvhBpYbWh1lVjiN3RMCOKE/v1uU0o8ObeqySeD1e6MvXWMVESgwF7Ad8l9SWmp741trc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073563; c=relaxed/simple;
-	bh=lek3KmihgUTuFXfPYEuMmeDsFSmrkafqPfUG/bPtZrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hf2MHajd2CFncBzPq49Q4YMRUQ8B9fGHnTcgeOm58EyF8BoLBBlVynechPnyDpQzc4FXAaYKRI5BqBRcv5rdlHtKdeAjkKNeBQKOoUHwL8ZIndvuomDjTmyetpLOXvTfT9sV3ob7jlcIS/g1ZPW0sIxj27JP09BDB7PTJuMNmFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KAkyhy+S; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KAkyhy+S"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8Qt8g019929;
-	Mon, 16 Jun 2025 11:32:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UkdYK6XKVqdDkxSVM2WvIQGODHgRqOJlLrCfmDL4dzw=; b=KAkyhy+SHeRd7en6
-	Wre8xIIXJr4lXZ7zrpUOS/MwwqtdksRA89vPbcLQmOnVZKtLsHVCo7gMKGVzvRPL
-	O+VgVMHYz23+iMtBfMrKWNLdOlKcvZJAM9koDROuqQqzAZ8BvLXmXBOv4FQjaPUK
-	vbizF8LR5NqVkVwObVeeY5cFEMOSuc4VvoXCkWnr6hN1BjNw1PP93nfwoBn5jU6d
-	+rbixTLTxEIEfsf1ED/Nu/fKfy1Mi8BEGoF4urdH+JdLUyDuPlIYGTLATXuMswOV
-	WXJYFg09KqQjNTP2Y/EV3SRL/P4DKtPg1QkeRhYKA52OBO9vmtFlT0P1iceWa2T/
-	2FBGCQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfcbkm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:32:35 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GBWYCs017963
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:32:34 GMT
-Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 04:32:32 -0700
-Message-ID: <88a7865d-4c42-04fe-ccd8-90647c5e8a2b@quicinc.com>
-Date: Mon, 16 Jun 2025 17:02:29 +0530
+	s=arc-20240116; t=1750073565; c=relaxed/simple;
+	bh=qFzH7nDxVxhBuZ6wfSoR0S5kYoV5v/qxy6rZqdqeRgM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=BXgch+Zsww1gH+tnbUCkihnxUO6XdrE0hN/SHf1aWVWl/tYDMxNzmFeMGZnKLrSFBsN2WPUHOv69fHPJacekWnZWzXgLcCFKO7zrW+y5bHcMB7uXHAYyE7fmK8KC5qfzsC6YtYv23MjftOJhtiOPJeq/EkdyBHAoM4cePvvzkfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bLSXm5d2nzYQvpc;
+	Mon, 16 Jun 2025 19:32:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id BCF381A2208;
+	Mon, 16 Jun 2025 19:32:39 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBXul7WAFBoyYfHPg--.11393S3;
+	Mon, 16 Jun 2025 19:32:39 +0800 (CST)
+Subject: Re: [PATCH v2] md/raid1: Fix stack memory use after return in
+ raid1_reshape
+To: Wang Jinchao <wangjinchao600@gmail.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Song Liu <song@kernel.org>, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250611090203.271488-1-wangjinchao600@gmail.com>
+ <5143c5c3-3a77-919f-0d38-8adb0e8923e9@huaweicloud.com>
+ <06935480-a959-4e3f-8e41-286d7f54754a@gmail.com>
+ <9c7d5e66-4f5f-b984-c291-f19c3d568b85@huaweicloud.com>
+ <938b0969-cace-4998-8e4a-88d445c220b1@gmail.com>
+ <8a876d8f-b8d1-46c0-d969-cbabb544eb03@huaweicloud.com>
+ <726fe46d-afd5-4247-86a0-14d7f0eeb3b3@gmail.com>
+ <c328bc72-0143-d11c-2345-72d307920428@huaweicloud.com>
+ <9275145b-3066-41e5-a971-eba219ef0d3c@gmail.com>
+ <a4f9b5a2-bf83-482e-e1fe-589f9ff004a1@huaweicloud.com>
+ <0ccb9479-92ac-4c8e-afdc-a1e3f14fe401@gmail.com>
+ <351b7dc4-7a2c-4032-bf2c-2edaa9da9300@gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d7022eb3-4dee-8d15-1018-051b882467b2@huaweicloud.com>
+Date: Mon, 16 Jun 2025 19:32:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 6/6] media: venus: vdec: Make the range of us_per_frame
- explicit
-Content-Language: en-US
-To: Ricardo Ribalda <ribalda@chromium.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20250111-fix-cocci-v6-0-1aa7842006cc@chromium.org>
- <20250111-fix-cocci-v6-6-1aa7842006cc@chromium.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250111-fix-cocci-v6-6-1aa7842006cc@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MSBTYWx0ZWRfX+egGT+YwmacP
- 3jPQLZ7aNbvmgbQe0Z4QN52EA+AlD6fpeqGlDY1c0t374ozAZ0GCYMCmEmpFO3RcZMk6SyeuSmJ
- DCJlRLkpirdH/MndvsqDRsTxI2KSnaipj8RUDlsTnBzJ5DVzfal4MkGNUds256JamLy1/4OONNm
- IoBgf3+vkcAKXEg0zB98B3rjM4bkpHH2/aG4r8ODAh5NpnNZ5UtaDid68zRcfNjRlT276cbdG8I
- AvihZ3/8J3S4FUwX2XUkc7Ruxm/LFKN03nAv6H+InuNIEoYZrtvM6gR8b9VFoj4AUMusaEfe0ZD
- ZM8aTScCr7eUB8Uz8PXS8DSRzhK4C1oXRGBz9LbbfiMxYn7ntNaCsaO23N6ZJvheh+rNpLW5Rkw
- xdMn95Or66cdQDM5xhownBBinWo47iJXLf8N0hncN09lT6O2Ni1akHqcz3zSoID647BNd+ca
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=685000d3 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8
- a=cm27Pg_UAAAA:8 a=COk6AnOGAAAA:8 a=Jj35otvxV6_FfqkHW9UA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 2LRMPAE_GVlKsydbvAylR7e1z8Sn-STh
-X-Proofpoint-ORIG-GUID: 2LRMPAE_GVlKsydbvAylR7e1z8Sn-STh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=997
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160071
+In-Reply-To: <351b7dc4-7a2c-4032-bf2c-2edaa9da9300@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXul7WAFBoyYfHPg--.11393S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFy7Jw4xuFyDJw1kXry3XFb_yoW5CF4Dpa
+	18KasIkr4vvrnIyrsrAa1xuFy5tw4IgFWxGrs3G3y7Zr9I9a4fWr4UKry3CF4UXr4rXw40
+	va15JFykZFyj9aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUBVbkUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-On 1/11/2025 3:25 PM, Ricardo Ribalda wrote:
-> Fps bigger than 0.000232829 fps, this fits in a 32 bit us_per_frame.
-> There is no need to do a 64 bit division here.
-> Also, the driver only works with whole fps.
+在 2025/06/16 18:11, Wang Jinchao 写道:
+> On 6/13/25 19:53, Wang Jinchao wrote:
+>> On 2025/6/13 17:15, Yu Kuai wrote:
+>>> Hi,
+>>>
+>>> 在 2025/06/12 20:21, Wang Jinchao 写道:
+>>>> BTW, I feel raid1_reshape can be better coding with following：
+>>>
+>>> And another hint:
+>>>
+>>> The poolinfo can be removed directly, the only other place to use it
+>>> is r1buf_pool, and can covert to pass in conf or &conf->raid_disks.
+>> Thanks, I'll review these relationships carefully before refactoring.
+>>>
+>>> Thanks,
+>>> Kuai
+>>>
+>>
+> Hi Kuai,
 > 
-> Found by cocci:
-> drivers/media/platform/qcom/venus/vdec.c:488:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead.
+> After reading the related code, I’d like to discuss the possibility of 
+> rewriting raid1_reshape.
 > 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/platform/qcom/venus/vdec.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> I am considering converting r1bio_pool to use 
+> mempool_create_kmalloc_pool. However, mempool_create_kmalloc_pool 
+> requires the element size as a parameter, but the size is calculated 
+> dynamically in r1bio_pool_alloc(). Because of this, I feel that 
+> mempool_create() may be more suitable here.
+
+You only need raid_disks to calculate the size, the value will not
+change.
 > 
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index e160a5508154..aa9ba38186b8 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -484,8 +484,7 @@ static int vdec_s_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
->  	do_div(us_per_frame, timeperframe->denominator);
->  
->  	us_per_frame = max(USEC_PER_SEC, us_per_frame);
-> -	fps = (u64)USEC_PER_SEC;
-> -	do_div(fps, us_per_frame);
-> +	fps = USEC_PER_SEC / (u32)us_per_frame;
->  	fps = min(VENUS_MAX_FPS, fps);
->  
->  	inst->fps = fps;
+> I noticed that mempool_create() was used historically and was later 
+> replaced by mempool_init() in commit afeee514ce7f. Using 
+> mempool_create() would essentially be a partial revert of that commit, 
+> so I’m not sure whether this is appropriate.
+
+This is fine, the commit introduce the porblem.
 > 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Regarding raid1_info and pool_info, I feel the original design might be 
+> more suitable for the reshape process.
+> 
+> The goals of raid1_reshape() are:
+> 
+> - Keep the array usable for as long as possible.
+This is not needed, reshape is a slow path, just don't introduce
+problems.
+
+> - Be able to restore the previous state if reshape fails.
+Yes.
+
+> So I think we need to follow some constraints:
+> 
+> - conf should not be modified before freeze_array().
+> - We should try to prepare everything possible before freeze_array().
+> - If an error occurs after freeze_array(), it must be possible to roll 
+> back.
+> 
+> Now, regarding the idea of rewriting raid1_info or pool_info:
+> 
+> Convert raid1_info using krealloc:
+
+1) If raid_disks decreases, you don't need to realloc it;
+2) If raid_disks increases, call krealloc after freezing the array, you
+can't call it before in order to prevent concurrent access.
+> 
+> According to rule 1, krealloc() must be called after freeze_array(). 
+> According to rule 2, it should be called before freeze_array(). → So 
+> this approach seems to violate one of the rules.
+> 
+> Use conf instead of pool_info:
+
+I'm suggesting to remove pool_info, you should change conf->raid_disks
+as it is now, while the array is freezed.
+
+Thanks,
+Kuai
+
+> 
+> According to rule 1, conf->raid_disks must be modified after 
+> freeze_array(). According to rule 2, conf->raid_disks needs to be 
+> updated before calling mempool_create(), i.e., before freeze_array().
+> These also seem to conflict.
+> 
+> For now, I’m not considering rule 3, as that would make the logic even 
+> more complex.
+> 
+> I’d really appreciate your thoughts on whether this direction makes 
+> sense or if there’s a better approach.
+> 
+> Thank you for your time and guidance.
+> .
+> 
+
