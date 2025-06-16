@@ -1,119 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB3E27E059;
-	Mon, 16 Jun 2025 11:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A68F29616E
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750074357; cv=none; b=BCo0iHr/ECy/e7WKiRKntY759vdqtMzYOqlGyvCV2pnUQKbDGC9rcWhY8c8kOP0H1+VznEEPXPdo9JITf0xAboWroyuLrCHyfJF+OTh4y1Nrws1qvckb309mY2NIZ8Q8xrgpc8xAO9muEbQec19i9osFygT0oFCuPKe1B5fqz98=
+	t=1750074423; cv=none; b=cBVZad8f/ynDxePk3WmXeOBWjrm21Iblej2YyPpdksPYzpfBpalbftVHkkEkkuQu4N8WJAw+1Eih66zbUBV507oMLrCHqKsG8tnDRmK/J71Fwk/En0X1+pXOd1cMK+iOxEfC4OdlXGUSlExEzKr+zcOHzlkuBHMRLOXWu6FSd0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750074357; c=relaxed/simple;
-	bh=O7zqOTuFLCOrB6zke/k+DoaYmhGkvGgv200R9Xh9Rv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=stTCNcicH4HPa1Juu+9MW01jXse/1kMqCcw5vJMk8vwsn9nZRnRDwK9DHmIcN5ruh38A/Se3KCIQY6Y13MlTM4RZLOJnzsufpZZ6ZyQtH1IKduqZ/oaaMO8OtVLThWU9bKV0l1t3bZa2iytW6wIJgT2x1KUkwNhXkYv+NEI9dyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kbf3Mba5; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750074423; c=relaxed/simple;
+	bh=xvLchH7ZetSbOXKQWka/fIa87mgHsBeuanRIcEntZKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L0znAzICSFND0uiZnGy/6S5R3S65++kWzEMHOH2gpH6PNr0tbk2irgWYC22cZva415clGnQ0tEhTwYjGpFf11X8ni1DqFOFo+LomlpUXKH4AB4+ckG2jPMZXuAImvt7C99IgXi/zlSH8uiz7v95jEWn8xq6/jtJeM6CtJoZ854Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZSls4azE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kbf3Mba5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750074355; x=1781610355;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O7zqOTuFLCOrB6zke/k+DoaYmhGkvGgv200R9Xh9Rv0=;
-  b=Kbf3Mba5ujKZypBR2wIFKFyXP2jDydWZiWqnkCWSjV//2oHf4L7KLUZ3
-   mPIGNyf+4BzQIebMf7pl0Wu8IHJMsjAGgHQKHiV/jZxc+sD3ctOpTA0RU
-   dYO2a5NKyt2iikZchHcvHXhjdlecC2zncKbekLVeZOK4NlI5T+BHkFM8+
-   GUyHDDx0tREYPRdz9FXd4bNHyImr2TlctrXJFwOEFd8I1KEq1EV19nKvV
-   4OduPrG3PjfJdmR64+1t5s2xzVMRp2efzhdI8rIlCco3zNbIGX3VD1S1V
-   F/zzrfnBNKo3ybIRp3NpUcDRtaSi3oluzFaVEgB4zBGR7zh2pYmMMCAH4
-   Q==;
-X-CSE-ConnectionGUID: gOMbagrtSzKEhzy9DzzA/A==
-X-CSE-MsgGUID: 8MHOkuv5SOKrX9eqeReAMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="63629545"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="63629545"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:45:54 -0700
-X-CSE-ConnectionGUID: YPoKs+xPTJS23+lwLuQK+g==
-X-CSE-MsgGUID: 2/EHphBLS6e1qatprLVKeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="148991459"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:45:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uR8HR-000000073td-2aiv;
-	Mon, 16 Jun 2025 14:45:37 +0300
-Date: Mon, 16 Jun 2025 14:45:37 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 11/28] PCI: of: Use fw_devlink_set_device()
-Message-ID: <aFAD4czF-qPxoc-X@smile.fi.intel.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-12-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZSls4azE"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GAPUtr020800
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:47:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4+9SjfwuMXgcQnirx7FViLQ3PT3LT50G+ecUzPrY6u8=; b=ZSls4azEotiCruzt
+	wxygWg6g3folqNwrjAcwi/leCje0HrwhXKagZzp4fizpOhrBfaCmqyBoqtD+Fz4o
+	vxpI42qsVBBa+70L+xBfe/upeSjK7zetvcAKHW7Q8mvWU36js+Tw9ZH6ktYADoDf
+	wxqELXZAztffF9nv2qcW9mnOn527aMtUesuj2G/rw/Q4h4lgiKoO3D8P/4hRjib8
+	Bf+klAJSix3CkKqssxj6cIT/W9BBYxk8MNZ+q4XasztAsm2ioJtSZI1XffJUsLWb
+	F6M6AHiVBGHcDQDvvSn1mxBLn/pI/kdlU7/mJ/6SelJND67IgwAtk5M0DfcPgzoT
+	qW2bow==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9v9x5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:47:01 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09a3b806aso97295985a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:47:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750074420; x=1750679220;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4+9SjfwuMXgcQnirx7FViLQ3PT3LT50G+ecUzPrY6u8=;
+        b=ZEN6iNyJXwackuM4ByyRD31ICKLSjEIuuaukmqr+mgE4ua2iEov6fh94965tjNVK7i
+         cuYYTab/04BE4lk4kiQJpQ3uc+GAVNSnDeDjEQgnmNOwurY6aXTrls5NNOSA2kDLo8EV
+         mNOR3JV4P78B9DcoVcF6HZ2YiesAPjhHfJnlLBUj6rLwjHEMCWnO4wdyKE3u7a4c3/rt
+         W/L+LpYSWxLMu8uq1qyMMeqbuONZWfdLaTQtpG/ieYjRmMx+ZIWiX7QBhYRlQs7xDI9g
+         +ofxw24EKFA7Yr4/1zkMdOHhbgpgFxFP4ptcmyB1YYkenvsEfS2LMI0yhs8bTxqH7vmN
+         NRGw==
+X-Forwarded-Encrypted: i=1; AJvYcCURMYKQcdO5gMRo+59ggOkchfk1/fGxjtJiqNL3EpGp8q9w2CHS5nPfCtup+p1o4BeArIcfP2J/+WJQPac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXo4pWOYNnDM3tACDKXfENSvRr79z8uCjrGUZGL2rZzkSb3wAn
+	AZikRolhdRGuKw4DPNlK52ou0YZsIeDGz9dT9txtfrsbVQMUfCrCFyUo7Wc6TxnXUlmhTMSTfgT
+	B3v+0AuYW4++GMLZLdVvVCrLnNtlRWoloGhBCvDjbytcbdX6zmvQBUVIFtTWki001KaY=
+X-Gm-Gg: ASbGnctvHe3+ugk5sU8HRQvuBXCNRvvzHzq7qFcL96Q6z6ylFZDN3YClIQ7DG17nugc
+	w3RgVp1yEzusOLHg9EvhR+77P3UotEU/jRJlGw0p5SSsx+AiAU/ER+74JwSZtqwmh4I0Pb+Zhcl
+	tcExrPQN0JnzkJ1KmX8b4QiNEy5/6N2GsEwOGXmbgAkFlkP9BKfbhUnAfQirGUqY+kV5Yh5Z32F
+	kSxaIPi+qFE24T5jIiOhLqH8X/s5ljlUUGQ3/K1+K1pRCsAwxUg3u4UWmlRvgckNV2ZTycaTvbB
+	ZPw2rP8+IUrC/ENNeHkIYsKbtNjgeMiLPlGnkUyDYgjvVEz95c4ZH20wAXn5JUiAVnMqB1zqR1s
+	pGto=
+X-Received: by 2002:a05:620a:6015:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d3c6c1aad2mr512720685a.6.1750074420337;
+        Mon, 16 Jun 2025 04:47:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhRDv3gJWoivgwjrGSlbD6D+Z6A4Ncme2M1YfZQGjp7xs3qbRnm8+STTXh6nGwR0vLHAZjiw==
+X-Received: by 2002:a05:620a:6015:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d3c6c1aad2mr512718485a.6.1750074419855;
+        Mon, 16 Jun 2025 04:46:59 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adf9ad8a155sm503073566b.84.2025.06.16.04.46.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 04:46:59 -0700 (PDT)
+Message-ID: <90be390b-d69f-4862-8f24-b692f41f9bf5@oss.qualcomm.com>
+Date: Mon, 16 Jun 2025 13:46:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-12-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] arm64: dts: qcom: msm8976-longcheer-l9360: Add
+ initial device tree
+To: git@apitzsch.eu, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250615-bqx5plus-v2-0-72b45c84237d@apitzsch.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250615-bqx5plus-v2-0-72b45c84237d@apitzsch.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: GzpO-EpBy721dJzfsFS51Udq8VnBVJ5X
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MiBTYWx0ZWRfXyKeulFHo9cVD
+ 80uIaL1IcwoUsXmyvrZ8IPX/i5mdLECq7r/A+QjMOByjFNc7k8fy0u07KiTOHO6hqaKzO+NcIXi
+ tUzjJ0LfZaVxYiSyM9uJ72o7ukWOHTHSOCaRKWGCPCPoYozo4PibTfmSByK0mo8uiMCatW2mXGJ
+ CTpHVosjUUv/sLa4Vej/kYsHXpc1xNVdgKKxjuXoFJoP/S5zY1UegH+Nr8nDbJuDWzF8Vo41qU3
+ IoLL/URQn9hvHGAuLKsFYN6L0zhp7JDFutwejpbiNnmS04u8tzEPT5FgzbFaiCw1F3Q+LWOXI9k
+ KSsMp6NKSYwGForV0de7YxSJ0zb6ZgYfNzsBfoIWwgv8itmXuCU1nEYiZTWEWK7dWt2XWqfgJj9
+ ujYRUIqipFaawN09dQ9jE5+u1XEDMlwMgMxsZ+BVWvF5wL55IG51E/6KDQcVJhLiR6fWXkIx
+X-Proofpoint-ORIG-GUID: GzpO-EpBy721dJzfsFS51Udq8VnBVJ5X
+X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=68500435 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=HDjIzE35AAAA:8 a=3LVZaTluhho0w2aZh4UA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+ a=y3C0EFpLlIT0voqNzzLR:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160072
 
-On Fri, Jun 13, 2025 at 03:47:51PM +0200, Herve Codina wrote:
-> The code set directly fwnode.dev field.
+On 6/15/25 10:35 PM, André Apitzsch via B4 Relay wrote:
+> This dts adds support for BQ Aquaris X5 Plus (Longcheer L9360) released
+> in 2016.
 > 
-> Use the dedicated fw_devlink_set_device() helper to perform this
-> operation.
+> Add a device tree with initial support for:
+> 
+> - GPIO keys
+> - NFC
+> - SDHCI
+> - Status LED
+> - Touchscreen
+> 
+> Signed-off-by: André Apitzsch <git@apitzsch.eu>
+> ---
+> Changes in v2:
+> - Add Fixes and R-b tag
+> - Move sdc2 GPIO definitions into msm8976.dtsi (new patch)
+> - Remove comments from rmi4 nodes
+> - Don't touch tz-app memory region. Currently, the bigger size seems
+>   not necessary.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+You may want to run the kernel memtest, which accesses all non-reserved
+regions. If the device doesn't kaboom, we're likely gtg
 
--- 
-With Best Regards,
-Andy Shevchenko
+To do so, enable CONFIG_MEMTEST and boot with "memtest=1" in cmdline,
+boot may take noticeably longer than usual.
 
-
+Konrad
