@@ -1,97 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8A9261570;
-	Mon, 16 Jun 2025 11:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAE329CB48
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073996; cv=none; b=ibChp1Wi552RK6SW+gRANTPChdYhZukJP+0if5GiIhxvdRAnd2/aC5wK5P2fipHEOtKlC7HDEpnnkVZXyY3tpclHbPqxHze9tCMR0tfIVSvcNiUx9WzCc84UwUsFwmFIZj4LClpz1IrKvlyZFDOLeoCVTyl45wZ2zq5FvVZo+kg=
+	t=1750074005; cv=none; b=S98qssLNrGwzHBaSjUrWAzG9CvFdemH7IScMX7PypivrbyOfzaAtcNCwE44WORu9OtqT/0WrUpA+J7lq9fYqbW22z79X0KYrq9dElFh1y2qn37FbBLB0jN8qdqvwk9Lcx7RBIJmT1f/MDOdEckXQHRiIwU6/0mTVD1jGBgtLsJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073996; c=relaxed/simple;
-	bh=Ma9+AWd3cIZf5Lwt4Vp92HukPMmMYh/Kb6RRViodh+0=;
+	s=arc-20240116; t=1750074005; c=relaxed/simple;
+	bh=UGARc4J6l7iTL9kWQcHxUPxULYLkQMKq1AkhDvpK+EU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0jFfKyL1/FVIxCM72vv+Mw1iSf+QND0voDVN/EscOD/gfIb7slNCjDM6wJ+OrfOPEpX8bKlAmyqLDQJYKrEQBvWWauoRybXsF3XkZZGbmKdzE5g/TkLHzTadMdYBEJQrQcJ6XL4zoeyrd34SN3v3SIBvmEj6fezms0SFRnbqsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQl8sq20; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KOj6oZJMornhTAg8ahvDhHXJUn7V27t6mrgNDoFzWag6oZF0TkGhfZwC/vkDSexbn7evSGcChkSBGWrywCppFI1QNkI/ZvIbdlF0n8pjgmwekroVT9B8qsTP1VH2KPcrxxyYRuVLzSmDrLQD1oOh+nyX5m9GDFdMqjL+i4/LxvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhbvjXex; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQl8sq20"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhbvjXex"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750073994; x=1781609994;
+  t=1750074003; x=1781610003;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Ma9+AWd3cIZf5Lwt4Vp92HukPMmMYh/Kb6RRViodh+0=;
-  b=RQl8sq20vMv3fxNKRmqNp0Sc2ODwBAjvN3nctJYJHKywa+mCheKwKWzj
-   yjXZm+nALaiXK/vxd1O1mdFC5kkGwKE14y+t4KPPVxpGBpsKSZY1clikA
-   UiMfruklXMBkVmGsCV+c9sgOIFKxNabHPypyCMFI5sy4pXdnS/SPNKC6T
-   QAr2iHiZX4HbRa8PGIv4wn8tjqVC/ZyaSrZGhHcC4Z19WqtYjtnpTJLK8
-   KPenbezXJosXM9G+6ZqvtMl8bZgVURMiWiQ73BdidB8LXJYXi11IS6g+d
-   TDGUrVvjI+kF/p8qYh55h+3AWP67xLWku1g5aJl4wfjL5e/GdmunDXpyj
+  bh=UGARc4J6l7iTL9kWQcHxUPxULYLkQMKq1AkhDvpK+EU=;
+  b=nhbvjXexUBPx9wKp+L6ePZRcD//SfJBXegF/l3lfXqvmyIx7gycU2R4s
+   KF7sD7t3duk9Tte+CvRJsJXN5xQofoHiGYJzhuKE3Y4Iu7a+nVPZduvVH
+   ZGO6fs1ybHKQ3iMu2kMhMmneaonZYttpAJjy3GdE9L6cfNsw8QMUn4PZh
+   zPz9dxRYw7581RLNRwFj8g/Un2ekwMKbnkfrNvi/gSc8wCBSAy6maH0gV
+   uu1UI9ChVFHGL/iGxg6trMuPuWo5E9Gs3ouu2KuyW0p/hhBfqFP+OvgQM
+   RIMJUlxiPb3zEh25R4rxWsE80+itU7E5vZBmP3EGidLzIZjdyrx2LSaVA
    g==;
-X-CSE-ConnectionGUID: /GKS4iugSCOChmoCdX71wQ==
-X-CSE-MsgGUID: N7j1M+nKSuC+rIxMIoUjXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52303585"
+X-CSE-ConnectionGUID: NIgbKcpjRSer6t6/jIaRaQ==
+X-CSE-MsgGUID: /8leozDdSOyAJcIMYG74Kw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="69658294"
 X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="52303585"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:39:54 -0700
-X-CSE-ConnectionGUID: 4QcUPl3STGqo4EMxHH73Ew==
-X-CSE-MsgGUID: hF5ltUg9SAaHsRMrX3NVog==
+   d="scan'208";a="69658294"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:40:03 -0700
+X-CSE-ConnectionGUID: ox07V1DyRueyaq7QBFpl7g==
+X-CSE-MsgGUID: y9HyWZnqRjyX6L26ZmkiUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="148282666"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:39:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uR8Be-000000073pQ-0wKC;
-	Mon, 16 Jun 2025 14:39:38 +0300
-Date: Mon, 16 Jun 2025 14:39:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 07/28] drivers: core: Use fw_devlink_set_device()
-Message-ID: <aFACeiO9ysybUwtv@smile.fi.intel.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-8-herve.codina@bootlin.com>
+   d="scan'208";a="152284195"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 16 Jun 2025 04:39:58 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uR8Bv-000EzU-2M;
+	Mon, 16 Jun 2025 11:39:55 +0000
+Date: Mon, 16 Jun 2025 19:39:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	akpm@linux-foundation.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+	mjguzik@gmail.com, luto@kernel.org, acme@kernel.org,
+	namhyung@kernel.org, tglx@linutronix.de, willy@infradead.org,
+	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+	ankur.a.arora@oracle.com
+Subject: Re: [PATCH v4 13/13] x86/folio_zero_user: Add multi-page clearing
+Message-ID: <202506161939.YrEAfTPY-lkp@intel.com>
+References: <20250616052223.723982-14-ankur.a.arora@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -100,20 +70,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-8-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250616052223.723982-14-ankur.a.arora@oracle.com>
 
-On Fri, Jun 13, 2025 at 03:47:47PM +0200, Herve Codina wrote:
-> The code set directly fwnode->dev field.
-> 
-> Use the dedicated fw_devlink_set_device() helper to perform this
-> operation.
+Hi Ankur,
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on perf-tools-next/perf-tools-next]
+[also build test WARNING on tip/perf/core perf-tools/perf-tools linus/master v6.16-rc2 next-20250616]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ankur-Arora/perf-bench-mem-Remove-repetition-around-time-measurement/20250616-132651
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/20250616052223.723982-14-ankur.a.arora%40oracle.com
+patch subject: [PATCH v4 13/13] x86/folio_zero_user: Add multi-page clearing
+config: x86_64-buildonly-randconfig-003-20250616 (https://download.01.org/0day-ci/archive/20250616/202506161939.YrEAfTPY-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250616/202506161939.YrEAfTPY-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506161939.YrEAfTPY-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> arch/x86/mm/memory.c:61:6: warning: no previous prototype for function 'folio_zero_user' [-Wmissing-prototypes]
+      61 | void folio_zero_user(struct folio *folio, unsigned long addr_hint)
+         |      ^
+   arch/x86/mm/memory.c:61:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+      61 | void folio_zero_user(struct folio *folio, unsigned long addr_hint)
+         | ^
+         | static 
+   1 warning generated.
+
+
+vim +/folio_zero_user +61 arch/x86/mm/memory.c
+
+    39	
+    40	/*
+    41	 * folio_zero_user() - multi-page clearing.
+    42	 *
+    43	 * @folio: hugepage folio
+    44	 * @addr_hint: faulting address (if any)
+    45	 *
+    46	 * Overrides common code folio_zero_user(). This version takes advantage of
+    47	 * the fact that string instructions in clear_pages() are more performant
+    48	 * on larger extents compared to the usual page-at-a-time clearing.
+    49	 *
+    50	 * Clearing of 2MB pages is split in three parts: pages in the immediate
+    51	 * locality of the faulting page, and its left, right regions; with the local
+    52	 * neighbourhood cleared last in order to keep cache lines of the target
+    53	 * region hot.
+    54	 *
+    55	 * For GB pages, there is no expectation of cache locality so just do a
+    56	 * straight zero.
+    57	 *
+    58	 * Note that the folio is fully allocated already so we don't do any exception
+    59	 * handling.
+    60	 */
+  > 61	void folio_zero_user(struct folio *folio, unsigned long addr_hint)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
