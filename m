@@ -1,114 +1,98 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526BC3594C;
-	Mon, 16 Jun 2025 00:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983AE13BC0C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750035539; cv=none; b=Sw18fC2pq4ziScT4wvFwN5JfPom8Dfv4IWux2IW35RzxcmyuTEDZL9oQir5a19cH6J5tdlh+3rpYaI9tM+xnp/tL7/mk1aLQ/vq+N9sHGbzZBxL+ww9XIO0nFhFeJQsW1wDMzKvF2QaaSumvkR0+cMBg5Kz9FvYGDtlmmD//2Ts=
+	t=1750035606; cv=none; b=Aag2MUqCXHwkRBGbUI32qsqyAt5/sFWunVxO1kUrNRhjcecjuEcnOkNjaabox12C9OMo7kxK6J1Un6FSQGLLbYKs2HpyKJHvZT2SseIsLsHUz+Xj8/Czb85Av3fGPFPVmvH34YSmWpZKM6ZfWGduexgi5vpo5V4z9TeAUeeMtVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750035539; c=relaxed/simple;
-	bh=f+5FHwXjcgYzYzIr6jYjN7qg/BvvqdDTBT3QaseGHbo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PoTCDi3PqEE1lxaMskzxsDqc5/+BVBkE03Zl1ZNp6Jsg+JEfTncl/EXz7xaZniK54pWf0/wsAWI6nNrrhHmvakQqTyQj89Bns0UXTdHBMmRXWBpcJvtBCHk096+bovQxho/NqCphRmzgIuF21vSXV+za1MzlC/R7T4ku1ECOVoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=b9Pm9JWn; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750035606; c=relaxed/simple;
+	bh=ihETkKqKIG8M9skc5uZtPuobJCFD4/xhLiN5mqVre8o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MW3s7AlxRoTwmxOuJNptDcEiJB0xeJNnK+fNTxPUWfJpXYVY4x/VMo+V+6u6rUwKRhv5APrdcPJtuErdxFChVBQ4wrCokdvGk5gcrBwt4VdUxo3R3bb+5AKoeRjEfrH43c/KMHiCGvqOsKfSVSTx4MKutKSS02LXYOMk/KYGU4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=z5AiXWx6; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b9Pm9JWn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750035528;
-	bh=VhttZDbhEWQy1S6BcWWgxQBLezIKUgoVvz0G55l+Pz0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=b9Pm9JWnVy9RdfBi9/hDcGi+OJNnIUYUEncTHQtjsyMePPfAvBZxC6FgPJ3z3r3Km
-	 0/RNx4MW91fOclEevJJmd93+gz9uzs/nDUjurJaNxmBTKJfEfLIHUn0lXpEp4hBKZq
-	 C3pMOebbTGtlqfp5S0Ppo58U2XK9pDfznTt3pDE1/iWuHTqvZF5twOk4C9zERhqOTR
-	 vKwUSwZLjmelaFnucW2DGGleTfRS0ssti+JyMg9iqpNvl2MJ3t9YGLhnYDF0iNy02Y
-	 /yMKN07MXy8/01OAwaIpPXBgrTE0ZeUUOlHX6YElxzyflEr5MiwQdViw42iq5hDCV/
-	 7qyIDcM15LI3w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="z5AiXWx6"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bLBTM600Cz4wcm;
-	Mon, 16 Jun 2025 10:58:47 +1000 (AEST)
-Date: Mon, 16 Jun 2025 10:58:46 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, wangzijie <wangzijie1@honor.com>
-Subject: linux-next: manual merge of the vfs tree with the mm-unstable tree
-Message-ID: <20250616105846.45af3a7b@canb.auug.org.au>
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 229272C05BD;
+	Mon, 16 Jun 2025 12:59:54 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1750035594;
+	bh=ihETkKqKIG8M9skc5uZtPuobJCFD4/xhLiN5mqVre8o=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=z5AiXWx66NE1ki4I1FHUabRUtrUlIw+chgqGDquaEvdd+OgueW1BUVBVBvqzf3TYS
+	 laLHz0xDyv37vSoL58woTX8WgTvgF4DM4f/YKiTD4TLtvxLWeShircadbi8bvYwyFI
+	 GmQDhmP08zJnx/gK1+WWJqFyu7dPxED1hsTX25gSnX8jB6JDR1PsPGkYLg5BzOdJ8F
+	 rkpOuXNgt9h4Qn5YNEzddf2/QVh0dOiFq+KD3LiKPUjoORyfMjij85/S9Obq5PrQO6
+	 ZYZIC6tojaZKO5VDdeI5hS/jxcPQsD8857/czwKs0CdStsQuyMnBfBmbsUro989F3v
+	 p8J8w+oXEXWFg==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B684f6c7f0001>; Mon, 16 Jun 2025 12:59:43 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 16 Jun 2025 12:59:43 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Mon, 16 Jun 2025 12:59:43 +1200
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Alex Guo <alexguo1023@gmail.com>
+CC: "andi.shyti@kernel.org" <andi.shyti@kernel.org>,
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: rtl9300: Fix out-of-bounds bug in
+ rtl9300_i2c_smbus_xfer
+Thread-Topic: [PATCH] i2c: rtl9300: Fix out-of-bounds bug in
+ rtl9300_i2c_smbus_xfer
+Thread-Index: AQHb3lCd+yXRspKshU2u62+trp+jQrQELhcA
+Date: Mon, 16 Jun 2025 00:59:42 +0000
+Message-ID: <e2c361b4-52bc-4ead-bbfc-fc6636b57064@alliedtelesis.co.nz>
+References: <20250615235248.529019-1-alexguo1023@gmail.com>
+In-Reply-To: <20250615235248.529019-1-alexguo1023@gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F360CFA3D31204FA966B0118EC6C233@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UJ+J2a.W.2EEatjTgEvbccf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=F7/0dbhN c=1 sm=1 tr=0 ts=684f6c7f a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=jnnnbLZWfpgPSXHVTWUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=QH9-EOpvJABdOtv2Ar0o:22
+X-SEG-SpamProfiler-Score: 0
 
---Sig_/UJ+J2a.W.2EEatjTgEvbccf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the fs-next tree got a conflict in:
-
-  include/linux/proc_fs.h
-
-between commit:
-
-  e4cbb84d3ce3 ("proc: use the same treatment to check proc_lseek as ones f=
-or proc_read_iter et.al")
-
-from the mm-unstable tree and commit:
-
-  5943c611c47c ("procfs: kill ->proc_dops")
-
-from the fs-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/proc_fs.h
-index 703d0c76cc9a,de1d24f19f76..000000000000
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@@ -27,7 -27,8 +27,9 @@@ enum=20
- =20
-  	PROC_ENTRY_proc_read_iter	=3D 1U << 1,
-  	PROC_ENTRY_proc_compat_ioctl	=3D 1U << 2,
- +	PROC_ENTRY_proc_lseek		=3D 1U << 3,
-+=20
-+ 	PROC_ENTRY_FORCE_LOOKUP		=3D 1U << 7,
-  };
- =20
-  struct proc_ops {
-
---Sig_/UJ+J2a.W.2EEatjTgEvbccf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhPbEYACgkQAVBC80lX
-0Gy99Af/cTh1zGyVmdzMOFw27HBZ2H80TfYt6Uxve7EKZvYWzdftHyktKbblN3wd
-bwgpbpMl79C7NLh3EAI5L8e9Z0ALc6AiZfyuO8VSNsQma68g1sojBRZ6u8Y+c3UV
-IHeT+wPhdQy6Kf/lXkVffdixm3AZZJBwRFHUrPmzrNQ4KKhBJWg25WcFVXkr1rlp
-boIQdN6rU6J6hRSiGr7LSZ+V7BQJ99kyWuMawGhPuxo+FpdNouzyFXm/70+Sae7Z
-XaVtkR4BzkD8Sy0ozdCTWhzFjW/pWnwzucUHKgvGp6BiOxPieQu1d6iAiylz2og2
-PmoADJndGn9XxBG7WlRbnKkJy5M9pw==
-=lY8s
------END PGP SIGNATURE-----
-
---Sig_/UJ+J2a.W.2EEatjTgEvbccf--
+SGkgQWxleCwNCg0KT24gMTYvMDYvMjAyNSAxMTo1MiwgQWxleCBHdW8gd3JvdGU6DQo+IFRoZSBk
+YXRhLT5ibG9ja1swXSB2YXJpYWJsZSBjb21lcyBmcm9tIHVzZXIuIFdpdGhvdXQgcHJvcGVyIGNo
+ZWNrLA0KPiB0aGUgdmFyaWFibGUgbWF5IGJlIHZlcnkgbGFyZ2UgdG8gY2F1c2UgYW4gb3V0LW9m
+LWJvdW5kcyBidWcuDQo+DQo+IEZpeCB0aGlzIGJ1ZyBieSBjaGVja2luZyB0aGUgdmFsdWUgb2Yg
+ZGF0YS0+YmxvY2tbMF0gZmlyc3QuDQo+DQo+IFNpbWlsYXIgY29tbWl0Og0KPiAxLiBjb21taXQg
+MzkyNDRjYzc1NDggKCJpMmM6IGlzbXQ6IEZpeCBhbiBvdXQtb2YtYm91bmRzIGJ1ZyBpbg0KPiBp
+c210X2FjY2VzcygpIikNCj4gMi4gY29tbWl0IDkyZmJiNmQxMjk2ICgiaTJjOiB4Z2VuZS1zbGlt
+cHJvOiBGaXggb3V0LW9mLWJvdW5kcw0KPiBidWcgaW4geGdlbmVfc2xpbXByb19pMmNfeGZlcigp
+IikNCj4NCj4gU2lnbmVkLW9mZi1ieTogQWxleCBHdW8gPGFsZXhndW8xMDIzQGdtYWlsLmNvbT4N
+Cg0KUmV2aWV3ZWQtYnk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNp
+cy5jby5uej4NClRlc3RlZC1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0
+ZWxlc2lzLmNvLm56Pg0KDQpUaGFua3MNCg0KPiAtLS0NCj4gICBkcml2ZXJzL2kyYy9idXNzZXMv
+aTJjLXJ0bDkzMDAuYyB8IDQgKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcnRsOTMwMC5jIGIv
+ZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1ydGw5MzAwLmMNCj4gaW5kZXggZTA2NGU4YTRhMWYwLi41
+Njg0OTU3MjA4MTAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcnRsOTMw
+MC5jDQo+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcnRsOTMwMC5jDQo+IEBAIC0yODEs
+NiArMjgxLDEwIEBAIHN0YXRpYyBpbnQgcnRsOTMwMF9pMmNfc21idXNfeGZlcihzdHJ1Y3QgaTJj
+X2FkYXB0ZXIgKmFkYXAsIHUxNiBhZGRyLCB1bnNpZ25lZCBzDQo+ICAgCQlyZXQgPSBydGw5MzAw
+X2kyY19yZWdfYWRkcl9zZXQoaTJjLCBjb21tYW5kLCAxKTsNCj4gICAJCWlmIChyZXQpDQo+ICAg
+CQkJZ290byBvdXRfdW5sb2NrOw0KPiArCQlpZiAoZGF0YS0+YmxvY2tbMF0gPCAxIHx8IGRhdGEt
+PmJsb2NrWzBdID4gSTJDX1NNQlVTX0JMT0NLX01BWCkgew0KPiArCQkJcmV0ID0gLUVJTlZBTDsN
+Cj4gKwkJCWdvdG8gb3V0X3VubG9jazsNCj4gKwkJfQ0KPiAgIAkJcmV0ID0gcnRsOTMwMF9pMmNf
+Y29uZmlnX3hmZXIoaTJjLCBjaGFuLCBhZGRyLCBkYXRhLT5ibG9ja1swXSk7DQo+ICAgCQlpZiAo
+cmV0KQ0KPiAgIAkJCWdvdG8gb3V0X3VubG9jazs=
