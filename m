@@ -1,168 +1,109 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8EA433AC;
-	Mon, 16 Jun 2025 08:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5CE1F418F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750060984; cv=none; b=HHiDC4TJ7OTj/dZeVmntLyXfgwZgWxuG3z21ys6/W34orlNfiSb2CxzTlSHq4dt9PyUCXvtiQovj8LCFPCfvuxor7X5OAXq+BEaAYBolPdsbfjDNvWaiH8kbFRTwsIcMUaluru9hKfCWhoPRMaGt3vvUdEsSbNuCR67JwzkX5LY=
+	t=1750061049; cv=none; b=HxWzq44ZEQ/Zp3/L2fD92tCDiLTYR7x03RN9N01vizSq9r3wKE8dLrFy1YfEadoqKyeq3CXB3ZopZg8+NWRcDEIy/Tk6ckAEI4CSYwKiZ2OkvuJk8UoK5wmt6VRt1/rXNh4V9I/4qjp1Zm6WBblxWRBMV2wXIScxQwjBEtwpF2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750060984; c=relaxed/simple;
-	bh=raEJHvLadixjvdJ7qc63R3g5V7Eedz7WU/voDKc8rO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RNKV+ycfAzKCZN/WNQmIbHdeykYPZNl+38J2bIV842gHr431XatgIgY9GGYW3PBWUcdPJPdytijNOVwDR867R36Iq9IWfuV4pcw1FOWij3XR7CCUyN7QBRN9ngDkcxbyeMG5aNm/Z6pu4UAFSHCUMtxuKlz9VvrL2vj5jCvfL2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=XjLGELEQ; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	s=arc-20240116; t=1750061049; c=relaxed/simple;
+	bh=f1PYGjMBDRYf08ilo6nO6r65U87ulrrDAGAp9xwJARk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WDc+x6mCWLSScDkdNEHewBvviP/4HMuzYvb+1qG8wbl4X6VcLIMdThS9rgEA1TBVtIxB0yWXAcXihXn0R3MHuD2FyDD0skoetbOfhVKMXwp5GU37Pbs86c2jENpB8HBV2Znn9RgEUAEcwQNhKUXDPyMWp9rYxMEimHVEXsTABvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z56rYfB/; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="XjLGELEQ"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4bLMtq22k4z1C5B;
-	Mon, 16 Jun 2025 08:02:59 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bLMtn6tbmz2xTl;
-	Mon, 16 Jun 2025 08:02:57 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=XjLGELEQ;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1750060978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xLn9WwMy2fbwLf23/cGZVfGu07MJ871ievcr/llgWdE=;
-	b=XjLGELEQ3ZeJLbQDIw7C2WCAxrCL49P5WAxLM7iPlB1LImWW61AnHtZqxOcfuqsA2EFwjk
-	SUE8mhzbZtTtd8lvQndklBgWOhWsVxsWxDpgDSlFWopotDUqOcXij4hacE03yEoOGFDVFo
-	PYFVu4ZHBNR8rXuR34ICzO3JxmDBmAZd+n0umsGRi9cKL4PqLt44rjwqmxjYb8uz5egFXm
-	G+SnxlcbWQetJ+ErVYlDeaEHYJym04FKTQaPcZbXSoNx+si2qgRpuZHh/TA2n/QY0/N/Sb
-	iSo+tZNtSvDozHL1GqXITI977MbWDoJmiNs/LXu8HZJ35WJpY/dN7TKw1TG+EA==
-X-CM-Analysis: v=2.4 cv=d/oPyQjE c=1 sm=1 tr=0 ts=684fcfb2 a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=P1BnusSwAAAA:8 a=ALfknb9URJNsmHePyuIA:9 a=QEXdDO2ut3YA:10 a=D0XLA9XvdZm18NrgonBM:22
-Message-ID: <2f0028ac-e94f-4f35-afda-8b53ce231b3f@jjverkuil.nl>
-Date: Mon, 16 Jun 2025 10:02:57 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z56rYfB/"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso2780352f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750061046; x=1750665846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1PYGjMBDRYf08ilo6nO6r65U87ulrrDAGAp9xwJARk=;
+        b=Z56rYfB/6DT74qaitagzv+993Q7uW7YWuqJ3iBr36WuY0NU+vutvNNc8Z6Mptbt5Th
+         6Q7n9WEuxpJ7vs+DvI66CwGFvYiUFLNhdhDxI1fY0H7jzjB66KHO6h/1mx25/XrYULrm
+         7NgvLqjxQx3hPxg4dlMS85JgljMIIPXZeHC8hDUHh9G9jazgHPAkioikTVh1FBnfSiV9
+         4BkPWMHF8wPlWKhRRP/C0Bkp/6RytYTB4I59QI0MD9msz37BtNQOuP+kwo5yjTHAHBBq
+         17tSItj17hu/Agc3XSrAUdc+8Q3mWv3y1RU6g1F2Le9fCkyOpEJ93rSZx4oD6W6gaGnD
+         L5+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750061046; x=1750665846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f1PYGjMBDRYf08ilo6nO6r65U87ulrrDAGAp9xwJARk=;
+        b=uCIGgqVgwxUaXRXQCJwn3Za00DHgO7z1kibrD0q/C3TqVb4IuXFf9ULFsF+ukOzzQJ
+         2vqyvMeQT1Qs06QjN30fOolZuKYkw+Oe3YpOvKaQyEkGtziFGPgLrJq9YPH6OSs6IEOZ
+         Vf2qC87LoKyBR2AsxJN8DelePnRf0ChJVJZ3bxWKw3XgtAfWJbDDkZc3DlpPW2ynwMJK
+         sGIi9qLjt+IUciMk5ZyPP6u0XHU4xSSZoyAn7/i/bYyXOg7zDnksQVhsKAET5pq7005I
+         C0zFpuQhi5bjzp7HWdcIRcAfjofE2JrPguMOBDgm6KuEYrT+mwPoKTWuCOkR8NN1XKiW
+         q0CA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsE8re1+Fg+JY1kUOyGiwqIsYs8bk1OnWOgwulLNFmHyut58WdqMAuen1ZxVEwFGd8wk59vpYcA/Ra5LE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7uySv99nC1eStt5OorhGfF8PRD6P75RpL3BuZMYpHcrrWowzn
+	vCIXAwKWw5xnkpcBKf2Mm1KA8opkRIR8NBxSdJjnN+5pLYFw5qOmH5r54/s5ZIFvz7jrQMiwiCs
+	Wo7zwchfKJLe5cTVYqSFOeO1Yg7XwRjYluFWylu+U
+X-Gm-Gg: ASbGncuxYkO1nH6I7nuM58urRl1HBmheX9QvYXlbmVnpqjIY/T6T/6+Oryf+QBpZIrO
+	k1CM7ROUzr2iep/tymON2EPyrCTkaMjf/PPGu4Z3fqyHpPn45rIrnhOmGLSbY8be1qpjXG9VMrn
+	GfwFCPJPhe17rOLw+QstVNPRdR+pyxYwsqljpQEm941zfLpoKaxEovpYw=
+X-Google-Smtp-Source: AGHT+IFJNYnGY++zKK9ezz4GBc7LrhfZRQuFSNzgJFJ9/LkEAc06KUhMt33Oo5LPfwTK3+h2aideyFG6HmImWi9Q2XQ=
+X-Received: by 2002:a5d:5846:0:b0:3a4:eef5:dece with SMTP id
+ ffacd0b85a97d-3a5723a3729mr6989355f8f.35.1750061045848; Mon, 16 Jun 2025
+ 01:04:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/4] media: Fix CSI2 RGB vs BGR pixel order
-To: Maxime Ripard <mripard@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Mats Randgaard <matrandg@cisco.com>,
- Alain Volmat <alain.volmat@foss.st.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-References: <20250612-csi-bgr-rgb-v1-0-dc8a309118f8@kernel.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hans@jjverkuil.nl>
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250612-csi-bgr-rgb-v1-0-dc8a309118f8@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+References: <20250514105734.3898411-1-andrewjballance@gmail.com>
+In-Reply-To: <20250514105734.3898411-1-andrewjballance@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 16 Jun 2025 10:03:53 +0200
+X-Gm-Features: AX0GCFuzgZ7WEl16NbBTVWyiSxMdvM6mQ36bWXoU4zjT-XrCROgztLnIerofDY4
+Message-ID: <CAH5fLgjgtLQMaAZxufttzoVCJpAfTifn6VWwKZ7Q6vAOOvG+ug@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] rust: add support for port io
+To: Andrew Ballance <andrewjballance@gmail.com>
+Cc: dakr@kernel.org, a.hindborg@kernel.org, airlied@gmail.com, 
+	akpm@linux-foundation.org, alex.gaynor@gmail.com, 
+	andriy.shevchenko@linux.intel.com, arnd@arndb.de, benno.lossin@proton.me, 
+	bhelgaas@google.com, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
+	daniel.almeida@collabora.com, fujita.tomonori@gmail.com, gary@garyguo.net, 
+	gregkh@linuxfoundation.org, kwilczynski@kernel.org, me@kloenk.dev, 
+	ojeda@kernel.org, raag.jadav@intel.com, rafael@kernel.org, simona@ffwll.ch, 
+	tmgross@umich.edu, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/06/2025 14:53, Maxime Ripard wrote:
-> Hi,
-> 
-> Here's an(other [1]) attempt at fixing the current mess due to the
-> opposite meaning of what v4l2 and the MIPI-CSI2 spec call "RGB". By v4l2
-> nomenclature, the format CSI calls RGB is actually BGR.
-> 
-> Unfortunately, a handful of CSI transceivers report through RGB media
-> bus pixel code, which is then understood as V4L2_PIX_FMT_RGB24 by CSI
-> receivers.
-> 
-> This is made somewhat worse the fact that media bus codes have been made
-> mostly with parallel busses in mind, and thus the order of pixels wasn't
-> clearly defined anywhere.
-> 
-> So the v4l2 vs CSI mismatch was confusing (but there's nothing we can do
-> about it), but the doc didn't really make an attempt at clearing it up
-> either.
-> 
-> We did have a convention so far though, that about half the affected
-> drivers were following. 
-> 
-> This series improves the doc, adds the missing media bus codes, and
-> converts the transceiver drivers to the rightful media bus format.
-> 
-> We'll also need that series [2] from Laurent to fix all the affected
-> transceivers. 
-> 
-> Let me know what you think,
-> Maxime
-> 
-> 1: https://lore.kernel.org/r/20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b963f3eb@kernel.org
-> 2: https://lore.kernel.org/r/20250611181528.19542-1-laurent.pinchart@ideasonboard.com
+On Wed, May 14, 2025 at 12:58=E2=80=AFPM Andrew Ballance
+<andrewjballance@gmail.com> wrote:
+>
+> currently the rust `Io` type maps to the c read{b, w, l, q}/write{b, w, l=
+, q}
+> functions and have no support for port io. this can be a problem for pci:=
+:Bar
+> because the pointer returned by pci_iomap can be either PIO or MMIO [0].
+>
+> this patch series splits the `Io` type into `Io`, and `MMIo`. `Io` can be
+> used to access PIO or MMIO. `MMIo` can only access memory mapped IO but
+> might, depending on the arch, be faster than `Io`. and updates pci::Bar,
+> so that it is generic over Io and, a user can optionally give a compile
+> time hint about the type of io.
+>
+> Link: https://docs.kernel.org/6.11/driver-api/pci/pci.html#c.pci_iomap [0=
+]
 
-This link seems to be wrong. Can you give the correct URL?
+This series seems to try and solve parts of the same problems as
+Daniel's patchset:
+https://lore.kernel.org/rust-for-linux/20250603-topics-tyr-platform_iomem-v=
+9-0-a27e04157e3e@collabora.com/#r
 
-Regards,
+We should probably align these two patchsets so that they do not add
+incompatible abstractions for the same thing.
 
-	Hans
-
-> 
-> ---
-> Maxime Ripard (4):
->       media: uapi: Clarify MBUS color component order for serial buses
->       media: uapi: Introduce MEDIA_BUS_FMT_BGR565_1X16
->       media: tc358743: Fix the RGB MBUS format
->       media: gc2145: Fix the RGB MBUS format
-> 
->  .../userspace-api/media/v4l/subdev-formats.rst     | 51 +++++++++++++++++++---
->  drivers/media/i2c/gc2145.c                         |  4 +-
->  drivers/media/i2c/tc358743.c                       | 10 ++---
->  include/uapi/linux/media-bus-format.h              |  3 +-
->  4 files changed, 54 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 6e417fb287553495e43135125d099daf80b63fe1
-> change-id: 20250612-csi-bgr-rgb-b837980c00b3
-> 
-> Best regards,
-
+Alice
