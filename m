@@ -1,111 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049E6522F;
-	Mon, 16 Jun 2025 08:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6E26D4C7
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063682; cv=none; b=VWBE7yK98mD7yYcUdkc6+I8lF39BeYTrLu88VqL0M1ILkhJgedqC4DLfbRN1jUl57VH+Qp5q/8I0Eb5sxJ8iYGdudUW7LBNv9ag3XtmxszBQEe8fP2HLUctaPZ3DusqaqE0niwKwHBD+4Dk9dTJqWh6iU3aRLQ5x6j52Ry7CzLk=
+	t=1750063693; cv=none; b=Y+4W4N8c0mtwl+gMBCZD/2+sjbvIp+b87aDK2Jb4ccUQPnxweSp7BmYDVADQGhg3tU3dm6Dr6E8W9yIuSyB1vTkHfsRW3n/t2mF0TqoviceolBoyOH2bwX7uNEfCEaTpi8D9HvQXGqfCl+kHFQG5cDuwCfG4s8Xyg4MUSVfn4N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063682; c=relaxed/simple;
-	bh=ABxPcG6RRfW20RkKqMQhOQXK5M86GqkUcBcJN3JJRhY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MA3mio1Jm6+qh2tGJyUrnaxlwPgFBSA7K9iTu4Yj3OEYwxkg9uAOvg4xjZly96JcDPNTj3miSC++/rwikqOIbLm8WDKGw2OSAODNCl5YabVaUks8JbowoRg3KkftEro/sGWw7pQuvzTMUmHthBq4O1pbURIAmqXywMeEKtx1Sdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwbJx5or; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750063693; c=relaxed/simple;
+	bh=DrGv/t0gdja4YyUbnvE/2AmaBViJfnwtbz0D2rU2N0A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VpMsEqOBqOfl8MhYy+X20uOp4lhHTfoKphiLJEtQjxBC3s8MoasZUrySG4gfWiJdcCw89gg7bbbNou3bdqYqs56OBoJN7ZMnKEmYsaGFe7kcbAXFZLvNuldAsluTrNOHeO2rc1fJxYRsdqTpauf6REonyCYouEssHImlojo6lL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y30ocp6R; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwbJx5or"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750063682; x=1781599682;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ABxPcG6RRfW20RkKqMQhOQXK5M86GqkUcBcJN3JJRhY=;
-  b=SwbJx5ord8FmaZu705n+qbmHewTDGQrz3idfHMEyYxlW1LDu68sOYveh
-   yam2Vtzdp+mZOS8QAQxHnwWaLvCLxZry5fiZKAZvsZTjnM2o1fJoz8V8v
-   kcURwhHsVgM12QQfaL3aC3nOnzt1b7L3B3XrQ9y1fZCLcPNG8vquazzaI
-   6gIoZjDVoQ8chZrVmqmOYA4iJg355914qW9eA3EAgxNhsoVB9e53RZAie
-   Xk6IoTPe6UbrBveqICcMS7CbC6CZSKAQtnTl2N5zqxx8bPzblOTJfhrRt
-   DwppA3noBODwlEOXaddYZRfSe6xqG02akTIy2Th3+oXG9ZV7QTa54r+Ne
-   g==;
-X-CSE-ConnectionGUID: wULjngdqT86WdmmnmuMxaw==
-X-CSE-MsgGUID: xXkeUqzYR1K9m2z7y0nefg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="51912671"
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="51912671"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:48:01 -0700
-X-CSE-ConnectionGUID: GzQvTa4HT3allmjjapk0tA==
-X-CSE-MsgGUID: zXwFLMjjQbOFGQ58ddwGBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="149319583"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.107])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:47:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [RFC PATCH v1 0/2] kselftest/resctrl: CAT functional tests
-Date: Mon, 16 Jun 2025 11:24:51 +0300
-Message-Id: <20250616082453.3725-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y30ocp6R"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3105ef2a071so42493291fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750063690; x=1750668490; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DrGv/t0gdja4YyUbnvE/2AmaBViJfnwtbz0D2rU2N0A=;
+        b=Y30ocp6RPBBY96BsWmfqPvcktpuFOJnWTLiBf6Dm9K0Z9k0uERyCO4kTBNr8a+C+rP
+         SwqF0eIHLcg5ruU08PWNNc1BZN2P7F4PIzrduYMKC9UpuPLzJdRF43cVN5GlXirVVap/
+         0VXv8Ne5Vef5z2CbuIUvkNxuQucg9NM1OMYdTk+kssRTPjiS/rsQbIaWcFqGCUVvg9df
+         R9DH4ImgDtkQgSsZdUfw0fpkLT8opj0JC0lnwLYQVVXxuZ3PvL25+HNWr+nqaRL27JGQ
+         WwFT8nEMG0KkHX4PsQNjNbopHRJXmE4MR1llpdr/6HhB4hpy4kIn+aVzIjeG/h0OQRUQ
+         T6wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750063690; x=1750668490;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DrGv/t0gdja4YyUbnvE/2AmaBViJfnwtbz0D2rU2N0A=;
+        b=WVg17nf3kZk59G+U6AaEj04p9W61TjicY+GOvRbtcJAgIDED74zkqYGlGhGppKN1JB
+         k7/zDlFLiACMiCbGhhNxGsvdh/+pboE97LuojBowf5K8iZsmNNwznh1bXovOlm/L/fKe
+         nzVu/J2GyTQ0E68BHYdEXzwSBCQ8GkZNovYHEnTd9OqDgHIdZEHQO5e2dxgz4V17vCix
+         HXdXYMjcyq8KzuBOmWkbIAGdcQkvYlUGpv9+UHZxq7/68/UINNigw7cqp5i0ojBvOxrx
+         l9Pb4DGNMwCJToyrvxNhF7Ldk86WJO7a2AFcVCjW9c4TnZe0T+brqjBwCRYFlqOx83gW
+         wdXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgrA7UbKOG6UDmuJ2x5YHtIeaGqyslNvhoArgwW1gbKk3gnMTCbp3pzaNwUhP5Kk8dVtrrDcoPdiWCE34=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjcR112pt5wFB4P0ftLlQ+8slkYmTiTGVIVROAvJTNxpGrQcQg
+	egSukzZQWnaOnJu1A+7TsFxVRLuBCCmkqiIwAKVblppZFDhfLwwe0+MlfH3R95eyJjDyFlvTG/0
+	JagFxu/5IK4JVvxz7yLg+b2mxmI43m74=
+X-Gm-Gg: ASbGncugwZNI46WBnDfJxOfbYaY5Aq39IZwW3fid7amOBCtVfUQ6OZleRjp5XeqCt1B
+	RRMjko1WyU7hGaVkZlFztHE/mMV62iWLYai9DHFaNjZVG1CXYGn5Ua3jrzT4hmBrwOOn27eUwTT
+	D6w5LfSpR7B0SEt4+YvKsvBJ4j+OTDhw4KkWqHJwfL7PQ=
+X-Google-Smtp-Source: AGHT+IHScaDdY5IcJHSg0gKTcs9SxJxqatQurhkW3HvTnt+zdpYbSH8IvPkY9DjO5WcfgeVpJtOKSgYuzZWgbXm8O60=
+X-Received: by 2002:a05:651c:4018:b0:32a:6af3:aead with SMTP id
+ 38308e7fff4ca-32b4a4080aemr11366111fa.16.1750063689934; Mon, 16 Jun 2025
+ 01:48:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250616083611.157740-1-ubizjak@gmail.com> <20250616083944.GC1613376@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250616083944.GC1613376@noisy.programming.kicks-ass.net>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Mon, 16 Jun 2025 10:47:58 +0200
+X-Gm-Features: AX0GCFsnOq1eoIcVM99UqD3JLPDnssfWN1GAl4OGdkVDJo_Ovb2sQMh2ewtNTHY
+Message-ID: <CAFULd4YQe=xb2-GH8EHLyiNQL=uCBZ7QAqmasyroT9ZhPoRRwg@mail.gmail.com>
+Subject: Re: [PATCH] x86/asm: Use RDPKRU and WRPKRU mnemonics in <asm/special_insns.h>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Mon, Jun 16, 2025 at 10:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
+> On Mon, Jun 16, 2025 at 10:35:57AM +0200, Uros Bizjak wrote:
+> > Current minimum required version of binutils is 2.30,
+> > which supports RDPKRU and WRPKRU instruction mnemonics.
+> >
+> > Replace the byte-wise specification of RDPKRU and
+> > WRPKRU with these proper mnemonics.
+>
+> What about the minimal clang version and their integrated assembler?
 
-In the last Fall Reinette mentioned functional tests of resctrl would
-be preferred over selftests that are based on performance measurement.
-This series tries to address that shortcoming by adding some functional
-tests for resctrl FS interface and another that checks MSRs match to
-what is written through resctrl FS. The MSR test is only available for
-Intel CPUs at the moment.
+Yes, it works with the minimum required clang version 13.0.1.
 
-Why RFC?
-
-The new functional selftest itself works, AFAIK. However, calling
-ksft_test_result_skip() in cat.c if MSR reading is found to be
-unavailable is problematic because of how kselftest harness is
-architected. The kselftest.h header itself defines some variables, so
-including it into different .c files results in duplicating the test
-framework related variables (duplication of ksft_count matters in this
-case).
-
-The duplication problem could be worked around by creating a resctrl
-selftest specific wrapper for ksft_test_result_skip() into
-resctrl_tests.c so the accounting would occur in the "correct" .c file,
-but perhaps that is considered hacky and the selftest framework/build
-systems should be reworked to avoid duplicating variables?
-
-
-Ilpo Järvinen (2):
-  kselftest/resctrl: CAT L3 resctrl FS function tests
-  kselftest/resctrl: Add CAT L3 CBM functional test for Intel RDT
-
- tools/testing/selftests/resctrl/cat_test.c    | 210 ++++++++++++++++++
- tools/testing/selftests/resctrl/msr.c         |  55 +++++
- tools/testing/selftests/resctrl/resctrl.h     |   6 +
- .../testing/selftests/resctrl/resctrl_tests.c |   2 +
- tools/testing/selftests/resctrl/resctrlfs.c   |  48 ++++
- 5 files changed, 321 insertions(+)
- create mode 100644 tools/testing/selftests/resctrl/msr.c
-
-
-base-commit: c1d7e19c70cbb8a19f63c190cf53e71b5f970514
--- 
-2.39.5
-
+Uros.
