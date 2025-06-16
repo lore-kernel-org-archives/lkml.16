@@ -1,31 +1,29 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtprelay04.ispgateway.de (smtprelay04.ispgateway.de [80.67.18.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6978884A35;
-	Tue, 17 Jun 2025 02:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C9620487E;
+	Tue, 17 Jun 2025 02:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.67.18.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750126493; cv=none; b=AhF3smDo/PGZNNZA+FRgT9lkf0AmQKR/UHJa8H1WI5lALEpEY4r/naQokFw2x4H/tT2EdkmSXfEUP+O4SdL7CvdBtoD5YgzO5ExFv6WPROr5IYDaRFnjILFLkUSSU1pxDewBj5auLzSc5/vm4E2AeHGbI+qk66F/Q8i/Ac0/RQ8=
+	t=1750126497; cv=none; b=WlOAkDrujywtitrrUxsi+L0rvQcxsim5/YH2w2QLorijU58C2U5KHfBe/N3/3RFZqqXxfMCRD+idpScPi59DarRs/KsEPH+IAdaf5teQw7wXb2G0kMuVkmm0acNrV92IPLgGqeG0zdwILXksM3ourM4weGeWqVx3jLNY54QI1jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750126493; c=relaxed/simple;
-	bh=mSTJGcHMk23jn9UCX9Cjixb88Ca0uGp9MTScxMCw8nc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gHOp2gsbJ3+5cqgs65kL0rWxLrCcKIyJvsBO8CK5m75kpaSxnvUSpHaVDBphl7NcyzBwNe+fqoUlyoGnCZ+mMycbAE6wDPkfJpBWzoRsqpxxwaXk5VH8odxwuSZ8Ud6GC2xmFvFDSh67IVuij68sKCqKMr3M71d2nQyNRDmoGrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bLr253hfQz2CffJ;
-	Tue, 17 Jun 2025 10:10:53 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 507F61A0188;
-	Tue, 17 Jun 2025 10:14:47 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Jun
- 2025 10:14:46 +0800
-Message-ID: <4b551b8c-6572-4fd1-9bd8-6669aaf69271@huawei.com>
-Date: Tue, 17 Jun 2025 10:14:46 +0800
+	s=arc-20240116; t=1750126497; c=relaxed/simple;
+	bh=Q1A8J6tIZQqQmeNjPYf+1EQTardLiNg1Qdfg4G9Msg0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OoEMlEZcdH5aNnRcMcUiWweiWFHC4qEObL9OEBVE1OTzGmt5c8FFRwkHPsSBP9DHfsFoeC1i8K1fVFAFkNIIu4EEDAnh+w6PZt0RcMrO7nI3lUqZNhfaLOke4NCb0q9FBrAZ7h7RO9iRKhOo0p9zy53CK8HM5wMOemouhGbKjlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eltropuls.de; spf=pass smtp.mailfrom=eltropuls.de; arc=none smtp.client-ip=80.67.18.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eltropuls.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eltropuls.de
+Received: from [87.79.10.98] (helo=mail.eltropuls.de)
+	by smtprelay04.ispgateway.de with esmtpa (Exim 4.98)
+	(envelope-from <marc.straemke@eltropuls.de>)
+	id 1uRBTp-000000005bF-2pH6;
+	Mon, 16 Jun 2025 17:10:37 +0200
+Received: from [172.16.0.75] (unknown [172.16.0.75])
+	by mail.eltropuls.de (Postfix) with ESMTPSA id 2D42110043C;
+	Mon, 16 Jun 2025 17:10:34 +0200 (CEST)
+Message-ID: <d72bc0b1-7898-4513-9b50-60b56112c8e1@eltropuls.de>
+Date: Mon, 16 Jun 2025 17:10:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,60 +31,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
-To: Robin Murphy <robin.murphy@arm.com>, Christian Loehle
-	<christian.loehle@arm.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, linux-pm <linux-pm@vger.kernel.org>, Viresh
- Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
- <34651625-08eb-46df-8075-4c5a08d15c18@arm.com>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <34651625-08eb-46df-8075-4c5a08d15c18@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel?
+ IGB
+From: =?UTF-8?Q?Marc_Str=C3=A4mke?= <marc.straemke@eltropuls.de>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+References: <20250613145434.T2x2ML8_@linutronix.de>
+ <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
+ <20250613195838.0-gZ6bqS@linutronix.de>
+ <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+X-Df-Sender: Y2F0Y2hhbGxfbWFpbEBlbHRyb3B1bHMuZXU=
 
-On 2025/6/17 3:10, Robin Murphy wrote:
-> On 2025-06-16 6:25 pm, Christian Loehle wrote:
->> The boost_enabled early return in policy_set_boost() caused
->> the boost disabled at initialization to not actually set the
->> initial policy->max, therefore effectively enabling boost while
->> it should have been enabled.
->>
->> Fixes: 27241c8b63bd ("cpufreq: Introduce policy_set_boost()")
-> 
-> I think it's a bit older than that - I noticed this with 6.15 stable, prior to that refactoring, and from a poke through the history the underlying logic appears to date back to dd016f379ebc ("cpufreq: Introduce a more generic way to set default per-policy boost flag"). Hopefully someone can figure out the appropriate stable backport.
-> 
-> I can at least confirm that equivalently hacking out the "&& policy->boost_enabled != cpufreq_boost_enabled()" condition previously here does have the desired effect for me of initialising scaling_max_freq correctly at boot, but I'm not sure that's entirely correct on its own...
-> 
-> Thanks,
-> Robin.
-> 
->> Reported-by: Robin Murphy <robin.murphy@arm.com>
->> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
->> ---
->>   drivers/cpufreq/cpufreq.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
->> index d7426e1d8bdd..e85139bd0436 100644
->> --- a/drivers/cpufreq/cpufreq.c
->> +++ b/drivers/cpufreq/cpufreq.c
->> @@ -1630,7 +1630,7 @@ static int cpufreq_online(unsigned int cpu)
->>        */
->>       if (cpufreq_driver->set_boost && policy->boost_supported &&
->>           (new_policy || !cpufreq_boost_enabled())) {
->> -        ret = policy_set_boost(policy, cpufreq_boost_enabled());
->> +        ret = cpufreq_driver->set_boost(policy, cpufreq_boost_enabled());
->>           if (ret) {
->>               /* If the set_boost fails, the online operation is not affected */
->>               pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
-> 
-> 
+Hi Sebastian,
 
-I don't quite understand what problem you've met. It semms like you guys
-propose that set_boost() should be called no matter what
-policy->boost_enabled is. Having more details would help to clarify things,
-such as which driver you use and what you expect but not be achieved.
+On 14.06.25 10:52, Marc Strämke wrote:
+>
+> I do not really understand where the IRQ/Preemption disabling is 
+> happening. What would the next thing be to do? Function (graph?) 
+> tracing on all the functions visible in the backtrace?
+>
+>
+> I tried to look at the event race output starting with the call to 
+> igb_set_rx_mode. I have attached the trace with all events and a 
+> function filter on igb on only the cpu executing ip.  I cannot 
+> understand what is happening between timestasmp 700.149995 and the IRQ 
+> disable event on 700.150795....
+>
+>
+> Thanks for your help,
+>
+> Marc
+>
+>
+I am still trying to figure that puzzle out: Please see the following 
+function trace snippet:
+
+ip-690530  [000] ..... 178636.460435: rtnl_is_locked <-__dev_change_flags
+ip-690530  [000] ..... 178636.460435: __local_bh_disable_ip 
+<-__dev_change_flags
+ip-690530  [000] ..... 178636.460435: migrate_disable 
+<-__local_bh_disable_ip
+ip-690530  [000] ...1. 178636.460435: preempt_disable: 
+caller=__local_bh_disable_ip+0x76/0xe0 
+parent=__local_bh_disable_ip+0x76/0xe0
+ip-690530  [000] ...11 178636.460435: preempt_enable: 
+caller=__local_bh_disable_ip+0x76/0xe0 
+parent=__local_bh_disable_ip+0x76/0xe0
+ip-690530  [000] ....1 178636.460435: rt_spin_lock <-__local_bh_disable_ip
+ip-690530  [000] ....1 178636.460436: __rcu_read_lock <-rt_spin_lock
+ip-690530  [000] ....1 178636.460436: migrate_disable 
+<-__local_bh_disable_ip
+ip-690530  [000] ....2 178636.460436: __rcu_read_lock 
+<-__local_bh_disable_ip
+ip-690530  [000] b...2 178636.460436: rt_spin_lock <-__dev_change_flags
+ip-690530  [000] b...2 178636.460436: __rcu_read_lock <-rt_spin_lock
+ip-690530  [000] b...2 178636.460436: migrate_disable <-__dev_change_flags
+ip-690530  [000] b...3 178636.460436: __dev_set_rx_mode <-__dev_change_flags
+ip-690530  [000] b...3 178636.460437: igb_set_rx_mode <-__dev_change_flags
+
+It is my understanding that __local_bh_disable_ip called from 
+netif_addr_lock_bh seems to be the origin of my latency.
+
+What i do not understand is, even if the bottom halves are disabled. 
+Shouldn't I see the interrupt arriving in the trace?
+
+If i understood it correctly, your talk "Unblocking the softirq lock for 
+PREEMPT_RT" during the plumbers conference 2023 is exactly about that 
+case, right?
+
+Probably fixing this issue is out of my abilities for now ;-) The wast 
+variety of locking concepts inside the kernel is quite intimidating for 
+a newcomer in kernel land...
+
+
+Regards,
+
+
+Marc
 
