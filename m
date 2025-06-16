@@ -1,110 +1,304 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011007.outbound.protection.outlook.com [40.107.130.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243C8204C1A;
-	Mon, 16 Jun 2025 18:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750098202; cv=none; b=WBeZVt9mlqcL5sCx3tpgodfcdQGuPEQAMo5xGimb47tIiNsgqVACJ17D3EMhgs7YDsTufNfnPjaLveLoI1Zlvq873JRGD6twmv5LTUbbRqHmhYpKoYT5fNrCqfQ8fIawMGLmh4T0EVsrjDYzy9ymLD9Mcstn380hZFMJt7SQVdU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750098202; c=relaxed/simple;
-	bh=SkxBo5Uo9BmDFR9ctIppZLeQSbbHyl6wpewl0lp/nng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZstjW0fnuOpbPAPSzNvzru03WPtkeNOtPA5bKnXZjJdZPYGOa2oiYaKJp1XTsZYsuged299sfyyHhRD/+dXTby0QGAkyHzOl1k/PpcxRHGbSDfNBI89DYDYcM9J3SlieaSsjjO/oDuxeb5kOBcVxRhL8b6Hw1hPErJCnCuCaOo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOVjTnIT; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDDB1DF24F;
+	Mon, 16 Jun 2025 18:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750098300; cv=fail; b=cIxoF/KVw7j3hR/tVi7mSsjM+rcFlaVKQytz3dcRVfqlw75tNZ3qLsnHZggQjuwLf4wser6NPeWloRqOanab7XJ0TCnOTl198kV0JM9wBYGfRTsdA54o3w+jwQeEMJiKwZUiOfVosFJO6ZtBMhUjCODrzhHzIyzLcZ9CXmnpvh0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750098300; c=relaxed/simple;
+	bh=I1BiZn+PtLugDBor4qTXOOh9sbpX7nnt0GZzQIZVF/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Fvlb7Q9Ym9w8MqJNMOJzy439qynWPXriZ3LRnHWdmJLJ70WXbmMnVv+CXof2wGOr9bKA6Z0f/OaRurlmZPqoUW27svoxHqcIAe2o/fH/k04tbxntU/pw4BzRPDjTROgcBImjqez6EuxmzoNz1a8Cepd16t5/DPYvgSUBVH/LsBI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=E3ZQr/qm; arc=fail smtp.client-ip=40.107.130.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOVjTnIT"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so8272914a12.3;
-        Mon, 16 Jun 2025 11:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750098199; x=1750702999; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5432uNKHLCfvBYMfRf2s2o1tNhT7+RCbmj1pz5oxdBA=;
-        b=LOVjTnITYuE0XxoTfl06ktA0dIipsAMvdsxEAov9HSrYIqE69EyVTQXOT7sEsWxHS2
-         rQm7hYKrTSHbpC4NtpeLO5khY2dH3zVbpOQuDbrM8SV8EejUtPkadjtVGInQaLWcFbFc
-         5IYWGnvpiPoAnNamP4/CdoMitrKlL62EG0O5DPPe88z4RcFnP1M+4cDGfPRec78Zw2HD
-         6NNpFU6Dxxj+jO/S/3A+JQXVvaBy9u8uBDFA/L2XidYr0iR2DOlnqQdQ+bTUCmM2dsgU
-         jde8XagKiPRKDOGad0OLfRXuwSgt6JBDCFf9pMcpLMtOgnLkDcfe7Y9a6a2c+jJLUugz
-         HqdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750098199; x=1750702999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5432uNKHLCfvBYMfRf2s2o1tNhT7+RCbmj1pz5oxdBA=;
-        b=w2bgD6DajPAtxSYAlEvUy8SQcdfqrtEFOWROuHUMH+eu+0yY/gPdzZdxnSTIAUm5Ag
-         /pzVhMnZ1DozUtlc4ky4ke1KWM5Eg9tzp3rVkScLkbkbPn0vRQfukYDqdeVxqtTcztzS
-         vdDTNumk+998t48pnZagZDzyWXWxv6q6+jbC6c43zo5l0FTIjpqjpELQShtQM6Nfazqk
-         otCFI9pDBu7SmVtRswTpcwzkr6mpNqnKakPLkzIjxauuDzEr8545CuUhgAc4CBOiYdUP
-         CLIMajRXF+1uT//uStJCmUSb8WVQFVYOSOi2kfHQdX5871Bebobp5t4lkYybi/zAfW9S
-         bITA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYgztZky7AxV5BVeymNWwB+LBqe4Gu2o39k/fHUcyg5a0TU873e0Tr8OF9lyJOtDM9sxIubQxmhbjx1QYN@vger.kernel.org, AJvYcCXZckMeY3h06CfoeBD0dXw8f21GhPYstI5/gf2j5XQhj9Tm/xTXCRHDPa6hRJd8xbgwj8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFSjzCbxT1o1lDJ6E4aW2R/69crrlxc+yHFnvGmf8lG5hlmDHK
-	bZdZCx+KXnBlP37igTbXujoPx/Wwp8HiYKhWILMqsK6z0logXPbcpx3bwRKZUKm5EMWQAYyEvsa
-	1l1hD/A/FksL4jXsf0qulYJz72WlvgWoH8Igt5Y8=
-X-Gm-Gg: ASbGncvyojxviRTx6crPhGWhdiS3udxDT/b6uUI5RxkuYzZF5j7v4wEH3T4Rble8IZV
-	7cseoXX8eeZ55XH5Mjc/8b981a0lDExzLEk2KvE61U9umvuJ3KD1o4EGQG9rFIgHkrlUN+C2fpJ
-	ymw0eippaG1+t0nS7DgznmeTBDC/Vwpxj1MYGzSlPhcHc=
-X-Google-Smtp-Source: AGHT+IGIjtvphpLoc9kCUbfA2WQ2xN+tzFeedjXYONEHZnsxW37Mi+C338tOkfvnR6sg/j3YidOecbpCL2ca4InMQ+4=
-X-Received: by 2002:a05:6402:2749:b0:5f7:f55a:e5e1 with SMTP id
- 4fb4d7f45d1cf-608d0976322mr8572060a12.24.1750098199241; Mon, 16 Jun 2025
- 11:23:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="E3ZQr/qm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q+Cxd1z2BYXpQOveR1OcsqP2/WJ4gVTkSRrW3KOqoTFRqdF3Qczy5nQDgEl8WJ7lmMAGeaGfVERahvDtE1j9j+60D9e62HcAEFmZapbwmptrrNSCIU84DH3Rq7nBauWHJZcQaII43FzDZ+y1QQj1jz/Xlm2ukSG3t32JLk7GF2hG8dCFDClz2JYkkLLstq8FwNTxoJd+N+1nqij8ZsMmUVNfTIfUfMVN0819Y6e1zar8y5h2139EjIGCxvJjdQGWkHzSq7QAujQ1pDqf/8f6nOBcvN0v4KRT21b0khff9WCxovWXvOl1ZqZTNXb0y2nfIvN9wDMC8XgHJzkp4t/KJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xyc8i2Mvrqx/KHYx7a1c850CX7/+NHzCBLlg3o11FuM=;
+ b=bX75KOISlJr5vMl4Jxrtspf/+iXFEtEdASpd5r6fPEWEwXH23jrWTrrR6HFyMtGbhRpvfgnxGtoQdPK/Cdo+JZDampOVylx2BPlWk/oD/uzh920gN5MqlBrw03uftkpW+Fcp8TMMskEjfaNF+/gAPa27zQcho7EXTdyNrzdA5GIqnZs/PbbAxTbPNDs2zwYnA2klprr9yhC+v8Rwiw1Itd0L4vVPkSydBtOcCfpqMqn/jwmp4rT6NXeAvfWIiqdaiUrouTE/OKfZ2hkYwTDM4+fHRSDi/IrDo9MhF3CClkj/qzVNqERKaqJ6R+sqaxPLRt1k1yu3g4eVRUTxUoqg0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xyc8i2Mvrqx/KHYx7a1c850CX7/+NHzCBLlg3o11FuM=;
+ b=E3ZQr/qmiTU+vFzJLMSwfe0pIdt8BEOU8pAIwe25o0G2rSvwx4J++FOTt3NaDVOT82O/kiWJpQrDO4ZTNb3TEf4O41KjuSdf7VSPGHKSHKmklmGXEH2XiUKVThbtsDSWz0gK58ZIYFgq7WbfBriY3o7F2oFhFKD92ZBtqBS+TA+QLxAZLQ17M68j19sMT8GDwgB90sunHflpdxjYVUmcP/LOiUfQkFiVIxEw27yjPrwlcAnftWlEeUCkspfezicasciuLtw8gjAlssbrNg+pqVDQ+UbiDyfaVgnMiKQcdsZa7gN8+VdeUOBowmd1Bw4rjDiV+COiAakqwT0hywPAzg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBAPR04MB7271.eurprd04.prod.outlook.com (2603:10a6:10:1a6::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
+ 2025 18:24:55 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.026; Mon, 16 Jun 2025
+ 18:24:55 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stefan Agner <stefan@agner.ch>,
+	Alison Wang <alison.wang@nxp.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [RESEND v2 1/1] dt-bindings: display: imx: convert fsl,dcu.txt to yaml format
+Date: Mon, 16 Jun 2025 14:24:38 -0400
+Message-Id: <20250616182439.1989840-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH8P220CA0034.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:348::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616162023.2795566-1-quantumcross@gmail.com> <3c5a8746-4d57-49d5-8a3d-5af7514c46b3@lunn.ch>
-In-Reply-To: <3c5a8746-4d57-49d5-8a3d-5af7514c46b3@lunn.ch>
-From: Robert Cross <quantumcross@gmail.com>
-Date: Mon, 16 Jun 2025 14:22:43 -0400
-X-Gm-Features: AX0GCFvsPOWK_JHyxFl74Qmgj14390Bc6R9oJnYGvhUVTdMTnqGht1oce_wDT2M
-Message-ID: <CAATNC474tcoDeDaGg1GKbSAkb8QBT9rcHrHrszycWpQwzU+6XA@mail.gmail.com>
-Subject: Re: [PATCH v2] net: dsa: mv88e6xxx: fix external smi for mv88e6176
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, olteanv@gmail.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3bd53c41-c50f-4f6d-5810-08ddad03178f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4mh6WqSDEwFd9r62nLTiUI/IvvIVbxmrYBNrq543VhaPo9Au2sYIxNjncKLY?=
+ =?us-ascii?Q?GmLuDFlwktAncOHYfL1H+5ugdHu5rCKZTP+GzroIONt310cCP/ujN3hSO+JH?=
+ =?us-ascii?Q?amXAh+k3pE+qZnv0+ppU/pEaZGfBjUBaGmmsXbGhteJpis7qllgzHQqgoa5b?=
+ =?us-ascii?Q?K+sqbzRzFxroXsRIzBQ5MgOiT9GdLJlu9UkcIsc47FvgTHSDv/+SDDHWu3AE?=
+ =?us-ascii?Q?SaCdWYLiDKxodIKgScC6ixOPJnv15nzSvQGaOaY9neC85thS0r8coNhbFFAz?=
+ =?us-ascii?Q?EtNP1c6PrXlFKgXcgU71KjPsxyN85TeOcRnW6ekjEYnQqeXaL2A0n27xAPxK?=
+ =?us-ascii?Q?Ea4bptH/CvO/ApMlWy9jIb9mevVPiGulzefdVwJWzCQJbcgnGo4OBMWkmSK4?=
+ =?us-ascii?Q?pHvwtcIVm7W2vthlB1IoxGptwaInaky4YEgmd/WDwW+HoWGWzNAHrzMVj5oP?=
+ =?us-ascii?Q?QwnkBlt8s19f6yrlcfjfoCNpLB778MGtorr2Vqn/wiwSUZLXbJ9wq9OPq+20?=
+ =?us-ascii?Q?fZ5peJKWQrPJF+WPbyNkyrKjH3MD5p023icZp2GlpsjfECwHLz5k5GYuNUhc?=
+ =?us-ascii?Q?Bpa2iJkReKSRG/qt0A1YPuj4MdaPZENc5RcgR02NjLxMuPXSJVAeWD2Q70MS?=
+ =?us-ascii?Q?Uh7+SeQzgX06MdDv/iPyMYjBtiyPpbL/FAMOXLRWpR2mjPXdh918LcBmMuTE?=
+ =?us-ascii?Q?Mzz7JxEre79l3r+Yx3oW8d6vgXDip6OkCMZ7fq7+llYka7embMyPjuH/FN8u?=
+ =?us-ascii?Q?gZYk3Nvo8ae8IGABGzWBRtWTE/HZMYOHEwb6TJGDSA80jHjZ5mam5H6FbTsL?=
+ =?us-ascii?Q?5/tbgLfikRQnBNyXFDVxk/ifDrYctlVRAAh9aKb7O1WXMHIYYGjkSPlZQTe5?=
+ =?us-ascii?Q?Et8fkUOpqB84YdnlgIfEDcrI66HLYR0dbg3z7mekq77jolTFwnE5Hy5MCpc6?=
+ =?us-ascii?Q?VxepfCmIqR+KDO3e936D9Oe9/89c5f4P+sfFZX9umuoR7X/87oNXNeY1YJag?=
+ =?us-ascii?Q?HdjLbqu7QkX0bf2qPm19yCLMYBHJuoRCVoI3pDoHih90NwkwnO8uD+SEQGr8?=
+ =?us-ascii?Q?ymH1Ogtsj/p/mVjwxZ4dwz5DVZZTGscDtO90NL02HJKQh1oDZDQyt198K+KK?=
+ =?us-ascii?Q?zVDzDBRwh5nTQhjigH3gQAwmiUK8cbtUQN74I685dk/LABOFSxeq16Zx2mtH?=
+ =?us-ascii?Q?nd8BM60eeL9+LC7PHuyqwXMcO6yuBt2l2JTDqQKXOBHA2EfE3ubDGUYsGQkN?=
+ =?us-ascii?Q?VkvZWK4q5BD3mZ3kTS2RnZOnW+TFjVJ7pOzw5u6AszZvFouKt5OtuKvXElBL?=
+ =?us-ascii?Q?osuhpxzEuTdPUhqUvTGE9eCOedU3q8860uZ9QMBGz73CkpjaCKuHQEqTURhg?=
+ =?us-ascii?Q?pb7H6gG7g/gj5DgjsAAJ/kdlkMTxe6zZIkpLn7pRBdLIFzb0PNoXkRuxyIwO?=
+ =?us-ascii?Q?GdffLVN+XTGpImpzDL1F6X6Kv4/6rQ/E?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DzPoeqcPj9VEZkwYajZXod2y/ILwU6DAhq4j3PjyPPCs6N5S65RpbQgL61Gd?=
+ =?us-ascii?Q?ThqI8/LFG2WT5RP3COGMwmPqiTZzEjcO+fAuY53NaHrub1KJO1Tbsu4ENRAR?=
+ =?us-ascii?Q?RVkgkC8lXpO2xeyITdzatXf/HKClDGQwzTPZ2PIzfjpK6lUwLAXj+xw7x2uX?=
+ =?us-ascii?Q?MsQbvwKQYdTLHtWlpD/Vwzyo5C5aSvndxUH24Q1Qucoznpy1j+idopbfjmKg?=
+ =?us-ascii?Q?ywM4hApo/YaM6gCE1z8ewtTTfHTj/XxKSkhYqNBPK/Xumi24RVv10XC2v7c6?=
+ =?us-ascii?Q?Kamg54qwxIgw3ZqEMdeJ8w/6NAptuFDZpyJ6lN47W7Dd2bNyEItrjj8i8EC1?=
+ =?us-ascii?Q?O+m5vKXDrfQfTDqxvvQfluiem6go+GZf1WSRP4ZXrmH9KBlYL1jULIvtu99Q?=
+ =?us-ascii?Q?c2jP1jCxdxv2KyHoQZUZRhpbLh+LIVXDjg9nMH7OG9+xt58X5QBqLlJifSWU?=
+ =?us-ascii?Q?REHvPhHMHUb24a3WLXddcFRlA6WoQqTMEuFHvWPQ3vx806iG8kAKZCoA78dj?=
+ =?us-ascii?Q?CEx3bB4xGWUE5oiU0+0khOUiTX3rdr77D/5Yiuv0eKjQ3wHOaChK48aDFWPw?=
+ =?us-ascii?Q?3PKUKKOwQ2jNCT8MeJ82x0COKGDA3X8q6nDQ4+Z1Y7XRLizAQatpVSAKtwsC?=
+ =?us-ascii?Q?l9QwO7HcX4xb20iVsa4bGqaZSn4LTGH+RYJ7ZRPkXKWddTlUI7rTDeyV6I8j?=
+ =?us-ascii?Q?Z5E2SbQOzcbV0tGiBYl32RCxs4kFDaaGPL9nIjemnpLZATUUwCxPalPgYHyI?=
+ =?us-ascii?Q?dt3yAGcDcEK8IVqphFojhIXTsft9iHRRA7xfLzgSY1L3VhtPrbRfAhwcdWeA?=
+ =?us-ascii?Q?oSPqWM8KHgY2//+UsAb/zS7o5FU8cHDUUUDURnZcPnGMzHVtSd+jT6N6mhcJ?=
+ =?us-ascii?Q?GEhUm0WFjDoBsL9kM65NOGnhkLwtJX+U9UCHiPVPi2nc2Tk8NekyGvwtWfkH?=
+ =?us-ascii?Q?CAIGWYLNmgf31eU3+MP9hCQnocNKUb/XZW6RqGL5hHJWZoC0HIg0L7xaUczZ?=
+ =?us-ascii?Q?XIVPZrRFt7w6/Fk1MMwzctCo1vGOsQP9fHQjhCGrRODW5dGNKQDVBHRauPp3?=
+ =?us-ascii?Q?M+SQVyXgKNMBwmHfkVjcfMTHmS/gASKY1bRpo+ET0kCn8N8JPkjw3jG8VA7J?=
+ =?us-ascii?Q?bNj9k5rm6wVgeWozTVRTSh7OKJ4z/1whgBXN39apgga8Nw8tBC2Fbq9bvS7l?=
+ =?us-ascii?Q?UP34apxr6uLYxYy6GrQki6Ff/eBPqHsIEl7D9iupOV1LhDH5XF5Jg0oNPXlA?=
+ =?us-ascii?Q?i2+Wz5PtoNTQJhXLpx8rn6kjav/Zg5WcIocLTj5EjFBwFtypqVeJQRlfRt+n?=
+ =?us-ascii?Q?Gp/m8DhecxajwI+GGoG989bitU6TVCAc2NUBLTGiqv7laUeT1gD5A24lVXqC?=
+ =?us-ascii?Q?RyEF3ibLZJWkOdi1pmelhVDOvVOCu7fs52nuUOnYW01hgVhwbGZXm6p+Glxj?=
+ =?us-ascii?Q?SwXy2JOe2K8gGw2N3mpQQdTr30A28Wp/uWyfYR5bUaU5Nm7g5yZDtrci/IDI?=
+ =?us-ascii?Q?le/84X9f7AmACTSHE4tA0ZsCUnV2BqkoBee3fLArQg1LrKKfN4dmP9sbsf/d?=
+ =?us-ascii?Q?GrHKv+w2IY60+PYwIZbfJHFwTaF/9U8cBTCAWE0b?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bd53c41-c50f-4f6d-5810-08ddad03178f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 18:24:55.0490
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HlKXiJIAq1+x/oCNJu7fP5hI20Q6vq1q3ipfQota2PoD0M6iWhdf8/hZNzU+ZQEu39AQHdcHJadKRZINvvbS2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7271
 
-According to the documents I'm looking at, the 88E6172 and
-88E6176 both have external MDIO buses. I have brought up
-a board with two connected 88E6176 chips, each with a PHY
-that can only be managed with the MDC/MDIO_PHY pins of
-the 88E6176s.
+Convert fsl,dcu.txt to yaml format.
 
-After applying this patch I was able to successfully manage
-and control these external PHYs without issue. I'm not sure
-if you have access to the 88E6176 datasheet specifically,
-but this chip absolutely does have an external MDIO.
+Additional changes:
+- remove label in example.
+- change node to display-controller in example.
+- use 32bit address in example.
+- add interrupts property.
 
-(also, I fixed the problems with the checkpatch.pl, I will submit
-the fixed version again tomorrow)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+---
+Change from v1 to v2
+- add Reviewed-by: Stefan Agner <stefan@agner.ch> review tag
+- add interrupt
+---
+ .../devicetree/bindings/display/fsl,dcu.txt   | 34 ---------
+ .../bindings/display/fsl,ls1021a-dcu.yaml     | 71 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 72 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/fsl,dcu.txt
+ create mode 100644 Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
 
-- Robert Cross
+diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Documentation/devicetree/bindings/display/fsl,dcu.txt
+deleted file mode 100644
+index 63ec2a624aa94..0000000000000
+--- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-Device Tree bindings for Freescale DCU DRM Driver
+-
+-Required properties:
+-- compatible:		Should be one of
+-	* "fsl,ls1021a-dcu".
+-	* "fsl,vf610-dcu".
+-
+-- reg:			Address and length of the register set for dcu.
+-- clocks:		Handle to "dcu" and "pix" clock (in the order below)
+-			This can be the same clock (e.g. LS1021a)
+-			See ../clocks/clock-bindings.txt for details.
+-- clock-names:		Should be "dcu" and "pix"
+-			See ../clocks/clock-bindings.txt for details.
+-- big-endian		Boolean property, LS1021A DCU registers are big-endian.
+-- port			Video port for the panel output
+-
+-Optional properties:
+-- fsl,tcon:		The phandle to the timing controller node.
+-
+-Examples:
+-dcu: dcu@2ce0000 {
+-	compatible = "fsl,ls1021a-dcu";
+-	reg = <0x0 0x2ce0000 0x0 0x10000>;
+-	clocks = <&platform_clk 0>, <&platform_clk 0>;
+-	clock-names = "dcu", "pix";
+-	big-endian;
+-	fsl,tcon = <&tcon>;
+-
+-	port {
+-		dcu_out: endpoint {
+-			remote-endpoint = <&panel_out>;
+-	     };
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml b/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
+new file mode 100644
+index 0000000000000..72d14babe993a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/fsl,ls1021a-dcu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale DCU DRM Driver
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++properties:
++  compatible:
++    enum:
++      - fsl,ls1021a-dcu
++      - fsl,vf610-dcu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: dcu
++      - const: pix
++
++  big-endian: true
++
++  port:
++    $ref: /schemas/graph.yaml#/$defs/port-base
++    unevaluatedProperties: false
++    description: Video port for the panel output
++
++    properties:
++      endpoint:
++        $ref: /schemas/media/video-interfaces.yaml#
++        unevaluatedProperties: false
++
++  fsl,tcon:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: The phandle to the timing controller node.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    display-controller@2ce0000 {
++        compatible = "fsl,ls1021a-dcu";
++        reg = <0x2ce0000 0x10000>;
++        clocks = <&platform_clk 0>, <&platform_clk 0>;
++        clock-names = "dcu", "pix";
++        big-endian;
++        fsl,tcon = <&tcon>;
++
++        port {
++            endpoint {
++                remote-endpoint = <&panel_out>;
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c2b570ed5f2f2..dcea56016c656 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8048,7 +8048,7 @@ M:	Alison Wang <alison.wang@nxp.com>
+ L:	dri-devel@lists.freedesktop.org
+ S:	Supported
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+-F:	Documentation/devicetree/bindings/display/fsl,dcu.txt
++F:	Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
+ F:	Documentation/devicetree/bindings/display/fsl,vf610-tcon.yaml
+ F:	drivers/gpu/drm/fsl-dcu/
+ 
+-- 
+2.34.1
 
-On Mon, Jun 16, 2025 at 1:55=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Mon, Jun 16, 2025 at 12:20:25PM -0400, Robert Cross wrote:
-> > (Sorry this is my second attempt, I fixed my email client)
-> >
-> > I was trying to enable external SMI on a mv88e6176.
->
->         MV88E6XXX_FAMILY_6352,  /* 6172 6176 6240 6352 */
->
-> So it is part of the 6352 family. That family does not have an
-> internal and external MDIO bus. It has a single bus which is both
-> internal and external.
->
-> It is only the 6390 family and above which has two MDIO busses.
->
->     Andrew
->
-> ---
-> pw-bot: cr
