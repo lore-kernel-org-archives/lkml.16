@@ -1,132 +1,80 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FEF1FE444;
-	Mon, 16 Jun 2025 03:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAEC86329
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750044215; cv=none; b=TytH3/EdUkNxAjkMgpWKxsmTUQ/O1OwE2gcnQj1JFmjq4qIMPEKuLPcqG5CUHkQ4TDLEjjviUIE59wUh2CwhuvPlTRebAp6j+gV+Xa1cF7/IxJEeH66h4FvYf0LTcpDNm0G7pntszDF96iW26QZWNcCy5LhLFYlXxMr8C0kNp/s=
+	t=1750044285; cv=none; b=R6pY71L7Z1xBxq5v0nIxYLGiBcSZ6AmpTBD8Tob5dBOMmqkcnW6huWG1uVMO2eriydNN2LLKp+ARg3oRGtOhBZcIVg569YUj3oQpc7HBwqSL/zOM/2LbUR81cZlS2eVmyTziJnurVTiCHFvWcWeyTxucYY20gemNOE5Rz0BviOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750044215; c=relaxed/simple;
-	bh=zuRubDgdhyaVBelPbTWu7FxxjsOP/AlwqUEazFgTPOk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gKpHuds5kT3FH9lXW5lg4153M6DVSu/T7MBkNXg7M7Drz2aZmBCT9Svv/vmy0mxC/Oe/At67d649MBhwNEde4Uxw7ddJdaQC7Ti4MtVwmW/cgZfcorIAofT6R5SlL6B0FGtHsCb85WcW13CIPVCcYql2PAph4RPy/XAeem5ua1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=Vd3NfXTE; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1750044285; c=relaxed/simple;
+	bh=nQlTpBtnZoIiH+wLV1PriCQvFOj3vAZit6p9w/vLTNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hxeKavcPk3peVwZLSmquvPZPt5zZj2vH3bZf4FNumO9cz3ZGCWIuUQcvDNymm9zgqnbKZl1H2myEUnkcf0mF1ncPQagdx8W41iQ+uXez0vgoMePaGOf2qnMoBFo5qhGTu7O0ZidbQKeCAxBoj1oGguhqYw2hfhMp9p6xxcPUVJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cC2GupS9; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="Vd3NfXTE"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55G3NA1e83976478, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1750044190; bh=WFooEOKAUiQJqcx+ihqU0ZIMimYXeAicAjCdvwMxz5I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=Vd3NfXTEi+X8xQl6RjE7+U/2RzGAgymVzksB/9LD42ZggOYH2zs1pDlWkD79Lrozk
-	 MSLV2VIWV2xHuSGNk0TJ1sSzgwBEQLpycs65ZONvsqcOFadJwkPTA1JYtx4mMf6uca
-	 vXSk/J1x+i6qvf7OoKBtdzXo+ZCLEeHb5I/vr+5jVQu7837w/gSBIMa7OPf9iqo823
-	 gPp6ClpoAi9AQN/PFIHU71/VP6BpLkZ4/RKl7rs9MuJw3pT6NULkZFD+5YMh5b/Lf5
-	 sKMImWq6t/kqVuJux0yTlCbJ3AwTK53vvrTkiwe4qJ5RWh85S5PBYpSSZR+HdutdLz
-	 5vWDML8A/tXTQ==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55G3NA1e83976478
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 16 Jun 2025 11:23:10 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 16 Jun 2025 11:23:02 +0800
-Received: from RTDOMAIN (172.21.210.109) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 16 Jun
- 2025 11:23:01 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <jdamato@fastly.com>,
-        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v2 1/2] rtase: Link IRQs to NAPI instances
-Date: Mon, 16 Jun 2025 11:22:25 +0800
-Message-ID: <20250616032226.7318-2-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250616032226.7318-1-justinlai0215@realtek.com>
-References: <20250616032226.7318-1-justinlai0215@realtek.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cC2GupS9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750044283; x=1781580283;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nQlTpBtnZoIiH+wLV1PriCQvFOj3vAZit6p9w/vLTNA=;
+  b=cC2GupS9IgU/dp1/ZgSpdSFWhOmUazNERDKUskxF+WINUJCd1vECLMdA
+   8Cd2oTAta0nOdZE61+qxXrp1qEjfIhJ7CRL1iXwkzuHKQKp7J0Xo0D+Lq
+   ZRKgvdlyD0y3Pi0pEFi+VqQyfwVI53lbfGoVFwbpgA//NLbnrAQv8XpmU
+   LRrg85ryXbvSnr4I4WHFL7xJ+pp54GYj+n3mZzDxylnkpx3KLMPELLW8I
+   cSG4go3RJ+bGO5ccPl6tjrrlyJGzEyxtuuNm5J0gtXs85TVsRflBYTaNl
+   UIbDOZRcIYv9K9pWKjmJZxWHZt7EKA4hw3AuDIpXj785n+clxVe7Q2mjM
+   w==;
+X-CSE-ConnectionGUID: 7NljwFeARES7NI39073qFg==
+X-CSE-MsgGUID: 1mdETnlZQvGDrpODh+psow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62449373"
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="62449373"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 20:24:43 -0700
+X-CSE-ConnectionGUID: 4+NUI3u4SVK7JFAdYkwgtg==
+X-CSE-MsgGUID: VvrxDRXxSZGE38Fhwmm2VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="148205460"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 20:24:40 -0700
+Message-ID: <1cd66b51-5d73-4d28-8b63-8df5a5bf7ee8@linux.intel.com>
+Date: Mon, 16 Jun 2025 11:23:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/14] iommufd: Apply obvious cosmetic fixes
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com
+Cc: will@kernel.org, robin.murphy@arm.com, joro@8bytes.org, praan@google.com,
+ yi.l.liu@intel.com, peterz@infradead.org, jsnitsel@redhat.com,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <cover.1749882255.git.nicolinc@nvidia.com>
+ <9132e1ab45690ab1959c66bbb51ac5536a635388.1749882255.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <9132e1ab45690ab1959c66bbb51ac5536a635388.1749882255.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Link IRQs to NAPI instances with netif_napi_set_irq. This
-information can be queried with the netdev-genl API.
+On 6/14/25 14:35, Nicolin Chen wrote:
+> Run clang-format but exclude those not so obvious ones, which leaves us:
+>   - Align indentations
+>   - Add missing spaces
+>   - Remove unnecessary spaces
+>   - Remove unnecessary line wrappings
+> 
+> Reviewed-by: Kevin Tian<kevin.tian@intel.com>
+> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
 
-Also add support for persistent NAPI configuration using
-netif_napi_add_config().
-
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 20 +++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 4d37217e9a14..d13877f051e7 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1871,6 +1871,18 @@ static void rtase_init_netdev_ops(struct net_device *dev)
- 	dev->ethtool_ops = &rtase_ethtool_ops;
- }
- 
-+static void rtase_init_napi(struct rtase_private *tp)
-+{
-+	u16 i;
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		netif_napi_add_config(tp->dev, &tp->int_vector[i].napi,
-+				      tp->int_vector[i].poll, i);
-+		netif_napi_set_irq(&tp->int_vector[i].napi,
-+				   tp->int_vector[i].irq);
-+	}
-+}
-+
- static void rtase_reset_interrupt(struct pci_dev *pdev,
- 				  const struct rtase_private *tp)
- {
-@@ -1956,9 +1968,6 @@ static void rtase_init_int_vector(struct rtase_private *tp)
- 	memset(tp->int_vector[0].name, 0x0, sizeof(tp->int_vector[0].name));
- 	INIT_LIST_HEAD(&tp->int_vector[0].ring_list);
- 
--	netif_napi_add(tp->dev, &tp->int_vector[0].napi,
--		       tp->int_vector[0].poll);
--
- 	/* interrupt vector 1 ~ 3 */
- 	for (i = 1; i < tp->int_nums; i++) {
- 		tp->int_vector[i].tp = tp;
-@@ -1972,9 +1981,6 @@ static void rtase_init_int_vector(struct rtase_private *tp)
- 		memset(tp->int_vector[i].name, 0x0,
- 		       sizeof(tp->int_vector[0].name));
- 		INIT_LIST_HEAD(&tp->int_vector[i].ring_list);
--
--		netif_napi_add(tp->dev, &tp->int_vector[i].napi,
--			       tp->int_vector[i].poll);
- 	}
- }
- 
-@@ -2206,6 +2212,8 @@ static int rtase_init_one(struct pci_dev *pdev,
- 		goto err_out_del_napi;
- 	}
- 
-+	rtase_init_napi(tp);
-+
- 	rtase_init_netdev_ops(dev);
- 
- 	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
--- 
-2.34.1
-
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
