@@ -1,120 +1,137 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0021FF5E;
-	Mon, 16 Jun 2025 23:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB41221FF5E;
+	Mon, 16 Jun 2025 23:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750116076; cv=none; b=JSOMzM3DMmHgjHyJPInEkJL8RbPLabRrB+/3YTarjF6oB1HidwJQ6Jc49Gb6JXv9EaUxnVou54bE5OJacerTG68zYDBzfhqEDX2Y5kjRgNQR2EgR/uZl72i5sqkows5cXIlSzMVLY+A/4NXwJnvZWJQFrBCnggVfnycF3lBSoS0=
+	t=1750116237; cv=none; b=IhZHpuURgf5c6FBgPMqQEjZk2zj4dxlXfM+pT8bpmTmp+2+AwX0BxwrLKopWyXF00Ku46J2QTswc1sGXlzcb4+Zjbvv+l6QNHYwE34w6dL2UrHkOvtYjdNBHPPHC4oZk1pkNGbOoa2PdDL9A5SmhUF5zJgkYOcp2DIxzJIOg7lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750116076; c=relaxed/simple;
-	bh=1U/vk/hToZB9yNutoVROj8CF01FsOu5fy9gSVKG5Hyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKhxLlBJ53GZA8g/bNkNLn/GEchpn4fJUS8W0jeVvP4eJ4nPH+Wfi0i1c1feKGUyNWBqFXPaJRuC7PYpSx1WtNXIuV0NY4tFBaMd3nzw0qaqABKvCxpxoVhCT3wy6hqGkLipytfE6tiEaomwVaFLXzVAFQeVSY+DOt+lwyTkUsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I74uuWpT; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750116237; c=relaxed/simple;
+	bh=9oGmaMe+uzcsSsY7ftL58AxNBVK5Bb/mQeUx0vxOhdA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RlG9IV+ig4Vx8JZ1NLZxyAFI9JDuvehdsjuQXZCn8EMgGfbMiwzBS3O0m+iS0B3McGJXs3dkRCyL8qi7sGDK5ZH+DUKnIULdeYLKnBc71Tm5LQxCWFBd30tusNTJFMFpWA+LConeiQ1KOL6Qx94eTTq6akaasuAuoSqxecyUFdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqoxVGeh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I74uuWpT"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747e41d5469so5471791b3a.3;
-        Mon, 16 Jun 2025 16:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750116074; x=1750720874; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6IqNHmz6GBQs1riK/mAoEi1wkyO1+RbMYiTYYA+9LAc=;
-        b=I74uuWpTfYi/SJGGhQRa4RrJyqkh1IjGbEJDYT75NAflxlJUCLpHVH2WAPHMbIIQgx
-         1772Dwp+hxaVwOKSrNCfll+B/ppjyvMhO867QkHveDuRKOuoEEns36X4P7nvtTrNM+iZ
-         hl98rGuFcrn93k4UUdn95hzDMlni2v8JI9ZN4mA01q87i+4oalXfv7JaJ8RW9GI0Nk/r
-         pwn/HVtcZxTPg59vSfBt0qbCp22JEGhwsFvs6jZsbsBWDaFC3WLR8QjmRiQeYji83AYn
-         SdY7IKv3/IY8b02RFgHCzS0PAIOX6sLtQ3fPHF0XejfPBDl02bn9OX7UGjhvQH8B736o
-         sTKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750116074; x=1750720874;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6IqNHmz6GBQs1riK/mAoEi1wkyO1+RbMYiTYYA+9LAc=;
-        b=Ly+0C4VdTJ6i+n7FNE8M43yT5dPUSMJbhzRQtdnBH5zKyNuR6Z2EHkaR0vO4g5ukGl
-         tY5XdlMSM2NT11vuAJR6NYe1G1mtNwRf8cy6BtXGNgIa8x7fQDeHKDeAHVhBsEcFUm1l
-         c3WSuuwKuOhj6pXO/3pqDOnBTvWnbIJbPDEHB2TUgWFK12vZYHlaMAwFwujGEUzoYNYC
-         syjdLDctk4nabtusapOkDFitNoI6+CGURxhxuv41/BD6/sth2LhlFMEfpTEME5A6yCB+
-         lqcGO9k83Qiumf6yhr/HYxxyJifsUevXZGaQUeO9iTD418ujkEk0QYsxtjfBKsMnp1Zu
-         UIgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIVbyQ+Co0paAv8E7TSll/tYS63F26PG+0s7gc726JsttBGoSB9JiH4wd3dgog3CWhuS7SRe3wTQJbk/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjdO7oU4TBYAUkf5+XO4cdpADz5wB01vtRgw5ACznYFTKWzF8r
-	pyA0hkM1F5zh2wRDjOub8IEbM4zsHfO2g3p5237hBR4g4gPXEpMNs4o=
-X-Gm-Gg: ASbGncssxQi0XpFDXOQ8eCRDZCD3ros/CT8jDVvETbNYF08smsqKGYz4EWFGbWCjIG1
-	gnco76sg9jykTISWxIripiAE3WG3Or49p17CnO6C+S2mOemuBu8674fXsROO5wz25rGQrPUtl0M
-	khaOd1/fDkrFX+fFmxnZXVnFRafRQ1da8tBqJAQipS+SNxTwFUmlZ7Z/m7nmHH93CmMcM/s9b1g
-	CVsNE2I4J95nBj9uB9bbKkaeKPYdX03e9pjx2voBLwXUpRAT5wsZOMZGaRg8z1vGSSR4i7WfNqN
-	85gbNUuTtNHH2QfzQXWzlXtleA42unMFID9J2/Sq8qBlKrlajf7mlCJ9nXhuOICxJfdY3Iys4im
-	I5SaeWglpx4uBDHkx4rPmu8E=
-X-Google-Smtp-Source: AGHT+IGM8cCk/sYANsFsOLgKO/7O5wrU1+7vPfxQLYsZdlHZ3CBtISb4TBCWVP0aNDz/CZJ58Ooyiw==
-X-Received: by 2002:a05:6a00:b8b:b0:73f:f816:dd78 with SMTP id d2e1a72fcca58-7489cfcb325mr13794495b3a.15.1750116074469;
-        Mon, 16 Jun 2025 16:21:14 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748900ac001sm7624361b3a.108.2025.06.16.16.21.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 16:21:14 -0700 (PDT)
-Date: Mon, 16 Jun 2025 16:21:13 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Jay Vosburgh <jv@jvosburgh.net>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, andrew+netdev@lunn.ch,
-	sdf@fomichev.me, liuhangbin@gmail.com, linux-kernel@vger.kernel.org,
-	syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com
-Subject: Re: [PATCH net] bonding: switch bond_miimon_inspect to rtnl lock
-Message-ID: <aFCm6TuOAr5cokFw@mini-arch>
-References: <20250616172213.475764-1-stfomichev@gmail.com>
- <1912679.1750099002@famine>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqoxVGeh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CAB2C4CEEA;
+	Mon, 16 Jun 2025 23:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750116237;
+	bh=9oGmaMe+uzcsSsY7ftL58AxNBVK5Bb/mQeUx0vxOhdA=;
+	h=From:Date:Subject:To:Cc:From;
+	b=EqoxVGehertI4Mz/aBzh9Pw1jln4/63OAHAGuu+LzEgL7ayLvKz+ByVWTTB+/u3FC
+	 K41t60eO7XcpV3JWpFRBP+LWbbxvzEV8LhPg8dSQUo/Mr06lshUJCuL1m219MhdiDJ
+	 JN9lWuw+bGksVy29iJY15llxpYiVKrtJfFHEOqBdU6GWlwPLFshXJcxo7h7xyi0hLq
+	 TWN+2VzjqUE1uBY86z+uNK7kES/tDSj+eJ5BRFAZoCAGNco3jR7x3CFixA3p8SE2M7
+	 o8tyfc9aiNYwFJBehzwlrhs2twndvZ3NMUFt86pMei8bM0wY+krlnc4WRYgtRoC4m2
+	 +rdNxjw30RR6g==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 16 Jun 2025 16:23:40 -0700
+Subject: [PATCH] loongarch: Use '.ascii' instead of '.string' in
+ __BUGVERBOSE_LOCATION
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1912679.1750099002@famine>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHunUGgC/x2N0QqDMAwAf0XybKCWWpi/MnzoYtRATUcKbiD++
+ 8oeD467CyqbcIWpu8D4lCpFGwx9B7Qn3RhlaQze+dHFIWIuRbdktOMqX/wkU6SiC+Z8Hiip4us
+ xhtV5CiEStMzbuJn/xXO+7x+1NQ5ucgAAAA==
+X-Change-ID: 20250616-loongarch-fix-warn-cond-llvm-ias-b954f02c446c
+To: Ingo Molnar <mingo@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3504; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=9oGmaMe+uzcsSsY7ftL58AxNBVK5Bb/mQeUx0vxOhdA=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBkBy7st7RXPHs2tLfvzLKnmSWFhTNQKBZ5flzt4C2+qr
+ F99Qiuro5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEzk6yVGhnWyO+t3R559y7bl
+ TcqPjvitDq+eb1ymvqmPR8PqZ2lG7jtGhhefl+lHdiyaKCpnL7m+W2Lpgk1LBM2dV51UthTuesE
+ axQQA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On 06/16, Jay Vosburgh wrote:
-> Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> 
-> >Syzkaller reports the following issue:
-> >
-> > RTNL: assertion failed at ./include/net/netdev_lock.h (72)
-> > WARNING: CPU: 0 PID: 1141 at ./include/net/netdev_lock.h:72 netdev_ops_assert_locked include/net/netdev_lock.h:72 [inline]
-> > WARNING: CPU: 0 PID: 1141 at ./include/net/netdev_lock.h:72 __linkwatch_sync_dev+0x1ed/0x230 net/core/link_watch.c:279
-> >
-> > ethtool_op_get_link+0x1d/0x70 net/ethtool/ioctl.c:63
-> > bond_check_dev_link+0x3f9/0x710 drivers/net/bonding/bond_main.c:863
-> > bond_miimon_inspect drivers/net/bonding/bond_main.c:2745 [inline]
-> > bond_mii_monitor+0x3c0/0x2dc0 drivers/net/bonding/bond_main.c:2967
-> > process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
-> > process_scheduled_works kernel/workqueue.c:3321 [inline]
-> > worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
-> > kthread+0x3c5/0x780 kernel/kthread.c:464
-> > ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
-> > ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> >
-> >As discussed in [0], the report is a bit bogus, but it exposes
-> >the fact that bond_miimon_inspect might sleep while its being
-> >called under RCU read lock. Convert bond_miimon_inspect callers
-> >(bond_mii_monitor) to rtnl lock.
-> 
-> 	Sorry, I missed the discussion on this last week.  This is on
-> me, last year this came up and the correct fix is to remove all of the
-> obsolete use_carrier logic in bonding.  A round trip on RTNL for every
-> miimon pass is not realistic.
-> 
-> 	I've got the following patch building as we speak, if it doesn't
-> blow up I'll post it for real.
-> 
-> 	Actually, reading the patch now as I write, I need to tweak the
-> option setting logic, it should permit setting use_carrier to "on" or 1,
-> but nothing else.  I had originally planned to permit setting it to
-> anything and ignore the value, but decided later that turning it off
-> should fail, as the behavior change implied by "off" won't happen.
+After commit 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with
+'__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output"), building
+loongarch with clang's integrated assembler fails with:
 
-That's even better, thanks, will take a look!
+  block/blk-throttle.c:205:2: error: unexpected token
+    205 |         WARN_ON_ONCE(!bio);
+        |         ^
+  include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONCE'
+    119 |                 __WARN_FLAGS("["#condition"] ",                 \
+        |                 ^
+  arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '__WARN_FLAGS'
+     47 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+        |         ^
+  arch/loongarch/include/asm/bug.h:42:23: note: expanded from macro '__BUG_FLAGS'
+     42 |         asm_inline volatile (__stringify(ASM_BUG_FLAGS(cond_str, flags)) extra);
+        |                              ^
+  ...
+  <inline asm>:1:134: note: instantiated into assembly here
+      1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "[""!bio""] " "block/blk-throttle.c"; .popsection; .long 10002b - .; .short 205; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: break 1;.pushsection .discard.annotate_insn,"M",@progbits,8
+        |                                                                                                                                             ^
+
+clang's integrated assembler only supports concatenating strings with
+'.ascii'. There was discussion of allowing '.string' / '.asciz' but it
+was decided against [1] because it was undesirable to match the behavior
+of released binutils at the time, where
+
+  .asciz "foo" "bar"
+
+was treated like
+
+  "foo\0bar\0"
+
+instead of the more intuitive to C programmers
+
+  "foobar\0"
+
+and diverging from that behavior was seen as risky and unnecessary. GNU
+binutils updated its handling of '.asciz' and '.string' to the more
+intuitive option in 2.36 [2] after this was brought up to them in
+passing.
+
+Convert LoongArch's __BUGVERBOSE_LOCATION from '.string' to '.ascii'
+with a manually added NUL, similar to commit 707f853d7fa3 ("module:
+Provide EXPORT_SYMBOL_GPL_FOR_MODULES() helper") for the same reason,
+which clears up the build error and results in no changes in output for
+builds with GNU binutils.
+
+Fixes: 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with '__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output")
+Link: https://reviews.llvm.org/D91460#2398228 [1]
+Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=3d955acb36f483c05724181da5ffba46b1303c43 [2]
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ arch/loongarch/include/asm/bug.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
+index cad807b100ad..d090a5bec5eb 100644
+--- a/arch/loongarch/include/asm/bug.h
++++ b/arch/loongarch/include/asm/bug.h
+@@ -11,7 +11,7 @@
+ #else
+ #define __BUGVERBOSE_LOCATION(file, line)			\
+ 		.pushsection .rodata.str, "aMS", @progbits, 1;	\
+-	10002:	.string file;					\
++	10002:	.ascii file "\0";				\
+ 		.popsection;					\
+ 								\
+ 		.long 10002b - .;				\
+
+---
+base-commit: d298bb98d65f964288bb87feef014da1baafedda
+change-id: 20250616-loongarch-fix-warn-cond-llvm-ias-b954f02c446c
+
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
+
