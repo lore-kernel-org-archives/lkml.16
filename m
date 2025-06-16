@@ -1,178 +1,101 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C680A286428
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8BCF8615A
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090074; cv=none; b=K8457MG4qFTbYHUiQkpENlt12qMb2KX+v+fNPyGRc27hqfs9EwNBx0IDRh6VOqr74jLUYc5rFBtbHwWSE8ZmmrSJIc8ygUnsNSaoaN3hZGKQiwpgCQchaAiadTJStIDd+8rIp2Gl6m7xho13x0sb6oZVrZGFDAQrHsnvtLKSG+I=
+	t=1750090096; cv=none; b=sDadcN6QgZ+XPA+hjdi17/QGKOupZjUxWVqThlMbz/9d/dyySKrrbUmOul9lZwqr3e1f54XLtBpgZRrXJjajOpGSOCI+kPQ+PSj4h0Tj6fVo2nJQuoWyyCDnHQ0UaFNLJDSv86hf7GsriroYSt7mY28CIdK193sCRdqSGy1R9XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090074; c=relaxed/simple;
-	bh=ZA6S9shc1QEX3PEyqUllB6Vi85lndLEG0kzkNo7/Ypk=;
+	s=arc-20240116; t=1750090096; c=relaxed/simple;
+	bh=nVULoYO6Vqsb9LSRiR3T/PI42YG97CzMGnwBwIWNtt8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIZ2f202gf6lsiy7zi67+fhOg2x7BHYZdegv01v1tx9glE6shVLHGdFGopjKn06l0c3Po++SicNBugab1eIllf2N+P3gYlZ5AaxkJdwKmW3/GJSEouGBgO6xhWC+VpRcq7X/4WM7iF1pTt9yDPt0WBDHgz6mzectv4KgejN0Bp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a3s6TluD; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a3s6TluD"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so39892535e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750090071; x=1750694871; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=66enaQYzVszRsP2d3FubStZt1y7rSXnP5cI/cUMaHAc=;
-        b=a3s6TluDxHNO9L6Ppp/c5qLuQ4qi+zVkatDACSrjNQzGMPwNIgOmn/VZz8jg1qfjXc
-         BXFJ/8N3NKzS9QTT4nmSoT6jHT8VAyO/w0KHLiCMrtl39msoo62nrIVEmchKwR3QEjWZ
-         1IuZmKD370XRIdCKBo/ZDWMmy0perrx80w4XGqsxz9zHhe8YHzKUP/7SiX8pvaGaf/FO
-         x1n0z6eE1gbJO1eGX7b8hPD0TA5eGqHlIIq678MhQg2B8ooQP4iyRqY/wiBl0ykvTbNl
-         R+AMxoNHEjQmhKEUpIRBvx9k6hSvApOkL4mNSwA68tU6g2guvBbQUBHK4zlXYGsLQ3gD
-         xJ4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090071; x=1750694871;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=66enaQYzVszRsP2d3FubStZt1y7rSXnP5cI/cUMaHAc=;
-        b=TFgTRuApFgqINcGrC9hQiuWngPoWX/vDZtyZDE4TgXuInMPZcpykcn+BrOYkydqbMr
-         tboADYefZkfroAO04xGIktoOV4eReOoBU08EUbtH0/UHUCGDOYDeiX+PbyB+ULHURfMq
-         Kaujd+YA/3eiIuWjEd0GWvqoQ2TCHsPTYb04YZKr8ZadjaRVjYI1tSracTHxEhryM7PG
-         qUa/j1tHHWi7csLsIQZzUEV/SqJOK+hepXJitabgKq6hDKxSQXcfdpzUAkAn3G54IW3k
-         5ABLXgPGLfSQ4pMMKsstC4WwKUScmR4G/R4y8g+uPK6S7WzOw94qs6cBQYcj890ry+Pr
-         dF8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWJyd65CxBn+D00INMNPmXW7r8lFMTaIO9j4FLveXq7Mmv6TO73L2kCfccGDXqtZZcadZrwP3d7DWynM8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaKbsEBJ7zSUyh2ph9KMNIiRo6YYPvuTAt2O4jdMUQONedz7FB
-	uuhh+jWr9X6bkZHk7eaYuBbHWorLgC1hUZegCfytliswb1lKTVI2WAOjn8sxp2PMEnw=
-X-Gm-Gg: ASbGncsJWbuuTODlM30JbzTPzxmVR0TwtHnJESFBzFWlYgUZFUPnltfBJvhw4CcBRJG
-	FRnQUFBWk9Ogm86IhhPewGBpzI1fho3VvdCUBABOtduxhQithpaY6cpLE3utq0YHExuAXSrrNdn
-	IZSoyJV79dMonb0kGVpN7wCvI64ZQXVPa563+MRkiTYIQ64gN9TeW9xvI4pQWF4viuwYUCuvLLN
-	yjwI6R8dclEgpZ+LUqK7UzZOsB1fXhkvzmN32jhXomM+o3+Dhq+mdUyKqK5fLY868OG4hpg+bRB
-	XYMxes9mnOw2kI7kbm04pmEMQRQSscI0YruqadQ2Vh6KCU6ncwuE2GbnesDgpDKkhLyn0k/p6wa
-	ohs3aNEh1Hcqv7Q==
-X-Google-Smtp-Source: AGHT+IFm2XOGvEu+c2Vt4oKDTOhDYuX0Zc67/qbAzwRfpRIo4JlzBUdpBKcXvIOmlDkGO4s2VlIKAQ==
-X-Received: by 2002:a05:600c:3ba2:b0:442:dc6f:7a21 with SMTP id 5b1f17b1804b1-4533ca79d19mr100567515e9.3.1750090071100;
-        Mon, 16 Jun 2025 09:07:51 -0700 (PDT)
-Received: from myrica (92.40.185.180.threembb.co.uk. [92.40.185.180])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b19b32sm11602270f8f.67.2025.06.16.09.07.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 09:07:50 -0700 (PDT)
-Date: Mon, 16 Jun 2025 17:07:52 +0100
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-To: Alyssa Ross <hi@alyssa.is>
-Cc: Demi Marie Obenour <demiobenour@gmail.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devel@spectrum-os.org, Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	eric.auger@redhat.com
-Subject: Re: Virtio interrupt remapping
-Message-ID: <20250616160735.GA5171@myrica>
-References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
- <20250613181345.GA1350149@myrica>
- <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
- <877c1ed9o7.fsf@alyssa.is>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQZNOqiEhDg4epMKz57HSs90moXU3l6BEeRYRQOqcnrHgZZhYf29MDKAiMczgH6unucF1q14IXhYDdzkKQ6pELlrenYFLl6Jp1eziGmFi57MssKzY3H/TuePhvwwsK41Y24uClGewHzXU0lMn6uQHKF0zkYsjQIPAhq73zxGSGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 606641515;
+	Mon, 16 Jun 2025 09:07:52 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 593B23F673;
+	Mon, 16 Jun 2025 09:08:13 -0700 (PDT)
+Date: Mon, 16 Jun 2025 17:08:11 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	yangyicong@hisilicon.com, James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	yangjinqian <yangjinqian1@huawei.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
+Message-ID: <20250616160811.GA794930@e132581.arm.com>
+References: <aEyGg98z-MkcClXY@x1>
+ <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
+ <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
+ <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
+ <20250616130736.GA788469@e132581.arm.com>
+ <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <877c1ed9o7.fsf@alyssa.is>
+In-Reply-To: <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
 
-[+Eric]
+On Mon, Jun 16, 2025 at 11:04:08PM +0800, Yicong Yang wrote:
 
-On Sat, Jun 14, 2025 at 10:11:52AM +0200, Alyssa Ross wrote:
-> Demi Marie Obenour <demiobenour@gmail.com> writes:
+[...]
+
+> >> +static bool is_perf_midr_in_range_list(u32 midr, struct midr_range
+> >> const *ranges)
+> >> +{
+> >> +       while (ranges->model) {
+> >> +               if (midr_is_cpu_model_range(midr, ranges->model,
+> >> +                                           ranges->rv_min, ranges->rv_max)) {
+> >> +                       return true;
+> >> +               }
+> >> +               ranges++;
+> >> +       }
+> >> +       return false;
+> >> +}
+> > 
+> > Maybe we can make it more general. For example, move this function into
+> > a common header such as tools/perf/arch/arm64/include/cputype.h. Then,
+> > util/arm-spe.c can include this header.
+> > 
 > 
-> > On 6/13/25 14:13, Jean-Philippe Brucker wrote:
-> >> Hi,
-> >> 
-> >> On Fri, Jun 13, 2025 at 01:08:07PM -0400, Demi Marie Obenour wrote:
-> >>> I’m working on virtio-IOMMU interrupt remapping for Spectrum OS [1],
-> >>> and am running into a problem.  All of the current interrupt remapping
-> >>> drivers use __init code during initialization, and I’m not sure how to
-> >>> plumb the struct virtio_device * into the IOMMU initialization code.
-> >>>
-> >>> What is the proper way to do this, where “proper” means that it doesn’t
-> >>> do something disgusting like “stuff the virtio device in a global
-> >>> variable”?
-> >> 
-> >> I'm not familiar at all with interrupt remapping, but I suspect a major
-> >> hurdle will be device probing order: the PCI subsystem probes the
-> >> virtio-pci transport device relatively late during boot, and the virtio
-> >> driver probes the virtio-iommu device afterwards, at which point we can
-> >> call viommu_probe() and inspect the device features and config.  This can
-> >> be quite late in userspace if virtio and virtio-iommu get loaded as
-> >> modules (which distros tend to do).> 
-> >> The way we know to hold off initializing dependent devices before the
-> >> IOMMU is ready is by reading the firmware tables. In devicetree the
-> >> "msi-parent" and "msi-map" properties point to the interrupt remapping
-> >> device, so by reading those Linux knows to wait for the probe of the
-> >> remapping device before setting up those endpoints. The ACPI VIOT
-> >> describes this topology as well, although at the moment it does not have
-> >> separate graphs for MMU and interrupts, like devicetree does (could
-> >> probably be added to the spec if needed, but I'm guessing the topologies
-> >> may be the same for a VM).  If the interrupt infrastructure supports
-> >> probe deferral, then that's probably the way to go.
-> >
-> > I don't see any examples of probe deferral in the codebase.
-
-I think the flow with VIOT is roughly:
-
- // Scan an endpoint
- pci_bus_add_device()
-  device_attach()
-   driver_probe_device()
-    really_probe()
-     dev->bus->dma_configure()
-      pci_dma_configure()
-       acpi_dma_configure()
-        acpi_iommu_configure_id()
-         viot_iommu_configure()
-	  viot_dev_iommu_init()
-	   acpi_iommu_fwspec_init()
-	    iommu_fwspec_init()
-	     driver_deferred_probe_check_state()
-	     iommu ready ? 0 : -EPROBE_DEFER
-
-So if the IOMMU isn't available at this point, base/dd.c adds the device
-to the deferred probe list, to be retried later. Later:
-
- // Scan the IOMMU
- ...
-  virtio_dev_probe()
-   viommu_probe()
-    iommu_device_register()
-     add to iommu_device_list
-     iommu->ready = true
-
-I believe after this probe completes, base/dd.c checks if dependent
-devices can now be probed:
-
- driver_bound()
-  driver_deferred_probe_trigger()
-
-That should all be working and you don't need to add anything. The
-question is whether the interrupt core supports starting the setup of
-interrupt remapping in viommu_probe(), or if it needs to know of the
-IOMMU's config and features earlier during boot. Even if the viommu driver
-is builtin, those info may not be available early enough since they
-require PCI and virtio probe.
-
-> > Would it instead be possible to require virtio-iommu (and thus virtio)
-> > to be built-in rather than modules?
+> ok this sounds just like as before except rename the midr check function and modify the
+> users in perf. will do in below steps:
+> - move cpu_errata_set_target_impl()/is_midr_in_range_list() out of cputype.h
+>   since they're only used in the kernel with errata information
+> - introduce is_target_midr_in_range_list() in cputype.h to test certain MIDR
+>   is within the ranges. (is_perf_midr_in_range_list() only make sense in
+>   userspace and is a bit strange to me in a kernel header). maybe reimplement
+>   is_midr_in_range_list() with is_target_midr_in_range_list() otherwise there's
+>   no users in kernel
+> - copy cputype.h to userspace and make users use new is_target_midr_in_range_list()
 > 
-> It's certainly possible to have an optional feature in the kernel that
-> depends on a module being built in where it otherwise wouldn't have to be.
+> this will avoid touching the kernel too much and userspace don't need to implement
+> a separate function.
 
-Agree, no problem requiring this as a first step, but the IOMMU probe
-might still not be early enough. 
+My understanding is we don't need to touch anything in kernel side, we
+simply add a wrapper in perf tool to call midr_is_cpu_model_range().
+
+When introduce is_target_midr_in_range_list() in kernel's cputype.h,
+if no consumers in kernel use it and only useful for perf tool, then
+it is unlikely to be accepted.
 
 Thanks,
-Jean
+Leo
