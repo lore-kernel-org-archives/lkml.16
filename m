@@ -1,88 +1,49 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D02A288C92
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 17:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911DD17BEBF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 17:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750095189; cv=none; b=tsC0dcy4YwBNr015q3SH8tUUdV3NdO7ciQI77pEQY5G94znagPch/APXbjSYI0KbMjyZcJ71C9YmKFmegamPd4DDI4+2ukTAAFGxQ5ypMovLYnE43Bd4N4V3IHaou5VyxgJs/bJFVqSIZL7d0jlxH2PtYBG8YWVWlCilQdH1BKo=
+	t=1750095363; cv=none; b=KYZE0epVjWnwjNXbKmblQR1TAAYP41OgAXRQmCMObnpxQmFGY6w1XQdRsKcSDU5B1jbk1Anm3rFiL93qlmds8sHx0Z0NMHfQh8yZDgCEiW/q1n9SkYjftyakoCvfPqCVnKpKOvruBx3ZAJb0Evp4X8PUNKB9rGOaHmplt+seyPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750095189; c=relaxed/simple;
-	bh=xFsrEhbFGU3z9UoiI2uJaXv//xa6Xz4juyBcTH3R7C4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4Lyum2HnASpdc+gNHkYKJbGz/YXa7K9Cg/HMPyaA5NHa8iC1EW0T7nJsOzMFDIV9j2/Vs0tYFsX8++AtkmtzlKpmXaBNin6SSj2XGVzi3OoZ6Piobm0GPeYt6CtGPz6yVxTL61vZoUgUqFgU4xPhJ1bcuLay6xG/K/R4UsdCQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oQPUQJ4/; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1750095363; c=relaxed/simple;
+	bh=q7ise6KOJzyBAl4GEgPgsl/5TL/Uz2OIZcoOm0xA+64=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=uz5F/M7Ff2zTRuT+SPe96QFtCC/cZ4DQz9LVsn62fw8dF6ZGFNlO2HdZxphr7MCLYFmy+X5w2UK6HEksgFnA8bL1DM9K1KsXHUZaei6h6H+pFvJ5FEE+uPfgpPX21QlU/BhOizVut8a4RFt9Fe04eJOsTB9N1IP0Hpx+9wnLDDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUnj60kR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oQPUQJ4/"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d38d1eae03so463275685a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1750095186; x=1750699986; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8X31SysrSCqMRM+zb4wzBK8eDdmvTJaf6Uq+iS7ehOE=;
-        b=oQPUQJ4/1oySx4jwKLAAkd0IMLjz6WrFi26YbD4TOJkOl5YM0y6Nn0nVHYTJ9gZAfW
-         peAaW9oCu5RrJqytt7Nte7StlkQ83wkXEpY5lQhUIZin79/sp0xIVtNjHyPRmgraA4EX
-         q3iw8ovrds9hb0mDf1u9TJMrc0FZ4rrYi0EAQnv95600Q8ncqvpWm2aLv7rEjCbBa7LC
-         wbuEOejizRVHrPcVJDA5qJYXUEKGq0rPIMWBHRHqgWiSrGbGkfywl5KMc6JIP0kqNaSJ
-         HsM1NjwUQr+7p6GSdn1pcEPrUzMD3w/CMdT2mbKpp5oHaQbvfvwbzkZarMW1ww0WwAj/
-         jfaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750095186; x=1750699986;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8X31SysrSCqMRM+zb4wzBK8eDdmvTJaf6Uq+iS7ehOE=;
-        b=LcioOU06qFRXvHMhMHbkmH1ydQkWpZiK5TMipPS39Z9BCO0Bm01/RHgpTTGwAedl6i
-         HimGxAoaqc3zuA/F4sUDeSP+NTyvWCfdgL3yLsbtImCxyN8TzXI6jIs2+to35ZLofTVG
-         Wc1FHT+D6bMj6QkA7z9sTT7T2EPn6K18lLKCHSkPGRO02DYRJ8790g3sCpG3WdNJWAqX
-         Y8r4OsFhicaumaSp60u+pEqWp7zWSRUU850ZxtAVJ1Oqybph+xTI8Yf3M6xCbjFgas79
-         acTFPRJgWy0ZdUOO+vMTBm6JiVejM9mqalopOepmObdKNpgZbaQYA5PVuEMJ6HxgCrJD
-         Nncw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/UknXzzwXBSbCvcVDtvptJgBbBtysbzvzaFICWYh+IoP6s+1qadVZ7qM0Zahjhe50Tb7vH+fLCiMuZFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8BSSdPRW2GGfL4GHmhBEdmdkQE2ecBxnH5pT2dylQzyiwa5e7
-	9dwQO1naF2pW0QLYVK33ehiY2c3P2+B0ydDs9SkiSdN1H70zjAWHM76njQ/X7NLjWW4=
-X-Gm-Gg: ASbGncs3Q1a1KIEuM1Rk27j3CwzrLR+WsVjpyaPZ6et1gX65dn+ZLvQ3P9AR16b8V1E
-	EN6Rk1fBmw7v/wE5eIdEx5zdCWTvaMgEUUWDKtzg0EURUFerqC/A7bj6D1uqpnDXBvoq0r7tGKY
-	vLFiSySTO/5mXCFUA+dbdcSPknRETSTwOnDP3PlNOiLL7pQQSBrYBYmX8btLkZx90UrftbzGa83
-	sZ8/lctsyvn88/sSdAX8Ag/7H76AkXWvThH95SYUd4NEy5VG2r9JNHYhVhhZuS7a2Xh69GvMQfp
-	RHIzmjy87ubLnzXoorEoa6P/1L2GxNHtsoVt1CagXYcRhx5PWfz+yddG2qV+TGSQz855t25OLZV
-	tbAqfd1Ndi2TTe8gFzaTAjbQklW5Q4kxvoxI0mA==
-X-Google-Smtp-Source: AGHT+IF4chGBuDLOAfxdrZKfkSU9t0Ai/SG6GB1rXrSJpRvbZP1WNygH1xEW0dli48w32M0hptcl5w==
-X-Received: by 2002:a05:620a:c4f:b0:7ca:dac1:a2d9 with SMTP id af79cd13be357-7d3c6cdf0c2mr1264284085a.28.1750095186387;
-        Mon, 16 Jun 2025 10:33:06 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dc9b58sm553436685a.13.2025.06.16.10.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 10:33:05 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uRDhh-00000005m43-1aC1;
-	Mon, 16 Jun 2025 14:33:05 -0300
-Date: Mon, 16 Jun 2025 14:33:05 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Demi Marie Obenour <demiobenour@gmail.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUnj60kR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E6C8C4CEEA;
+	Mon, 16 Jun 2025 17:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750095363;
+	bh=q7ise6KOJzyBAl4GEgPgsl/5TL/Uz2OIZcoOm0xA+64=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tUnj60kRcGP61jyVAlSYTv9rWI3kD+UEIcroFfwmRWCfmaMuQQ0Mufc57L/rQOvY4
+	 kNQJ51LmLVbEpIfSzpCYALaZmsQVoijXjSfLlrihj4LL0Dg/50aK7XDbmPtBT3qJjI
+	 Jxfma7D90EezufASMl6V+utzB/GzdfCfHwS2GZ+ruD+FLPkV/Cpmo0cbbxzCX5PB7N
+	 Bqwles82HCtIGGMdS86yNLMXiaZKK6VJsKI0YxVuQoq8gNZ9saJPIa8xLX+XHkg1s4
+	 GxcggTAPSjS8ZkxG8+qY92K4dxLK4L+a2f+4sF6huym0IvUeH01XIfd0YJdxDfPKxH
+	 TCdSjoQGp9TrQ==
+Date: Mon, 16 Jun 2025 14:36:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Babu Moger <babu.moger@amd.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alyssa Ross <hi@alyssa.is>, virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev, x86@kernel.org,
-	Spectrum OS Development <devel@spectrum-os.org>
-Subject: Re: Virtio-IOMMU interrupt remapping design
-Message-ID: <20250616173305.GA1376249@ziepe.ca>
-References: <>
- <a65d955c-192b-4e79-ab11-8e2af78b62af@gmail.com>
- <20250616132031.GB1354058@ziepe.ca>
- <8c3b08d5-24aa-4db2-84e1-dfd1d2c52065@gmail.com>
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Kishon Vijay Abraham I <kvijayab@amd.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH 1/1 fyi] tools headers x86 cpufeatures: Sync with the kernel
+ sources
+Message-ID: <aFBWAI3kHYX5aL9G@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,25 +52,119 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8c3b08d5-24aa-4db2-84e1-dfd1d2c52065@gmail.com>
 
-On Mon, Jun 16, 2025 at 12:53:40PM -0400, Demi Marie Obenour wrote:
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-> > AFAIK hyperv shows how to build something like this.
-> Would this need KVM patches?  I'm concerned that implementing this
-> in userspace would interact badly with the irqfd fast path.
+Full explanation:
 
-I don't know. I think you get the same issues even if you did
-virtio-iommu irq handling, it shouldn't be any different.
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
 
-I'm not sure there even is a fast path here, remapping happens during
-initial vector setup/affinity change only. That isn't fast path. So
-long as the MSI is delivered to the correct CPU vector entirely in KVM
-it seems OK.
+See further details at:
 
-And the hyperv approach of asking the hypervisor for the addr/data
-pair to achieve certain parameters will work alot better with existing
-Linux than trying to build a iommu emulation where the guest is
-building its own private addr/data pairs :\
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
 
-Jason
+To pick the changes from:
+
+  faad6645e1128ec2 ("x86/cpufeatures: Add CPUID feature bit for the Bus Lock Threshold")
+  159013a7ca18c271 ("x86/its: Enumerate Indirect Target Selection (ITS) bug")
+  f9f27c4a377a8b45 ("x86/cpufeatures: Add "Allowed SEV Features" Feature")
+  b02dc185ee86836c ("x86/cpufeatures: Add X86_FEATURE_APX")
+  d88bb2ded2efdc38 ("KVM: x86: Advertise support for AMD's PREFETCHI")
+
+This causes these perf files to be rebuilt and brings some X86_FEATURE
+that may be used by:
+
+      CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
+      CC       /tmp/build/perf/bench/mem-memset-x86-64-asm.o
+
+And addresses this perf build warning:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+
+Please see tools/include/uapi/README for further details.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Babu Moger <babu.moger@amd.com>
+Cc: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kvijayab@amd.com>
+Cc: Manali Shukla <manali.shukla@amd.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Link: https://lore.kernel.org/r/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/arch/x86/include/asm/cpufeatures.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index e02be2962a0181ec..ee176236c2be9908 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -336,7 +336,7 @@
+ #define X86_FEATURE_AMD_IBRS		(13*32+14) /* Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_AMD_STIBP		(13*32+15) /* Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* Single Thread Indirect Branch Predictors always-on preferred */
+-#define X86_FEATURE_AMD_IBRS_SAME_MODE (13*32+19) /* Indirect Branch Restricted Speculation same mode protection*/
++#define X86_FEATURE_AMD_IBRS_SAME_MODE	(13*32+19) /* Indirect Branch Restricted Speculation same mode protection*/
+ #define X86_FEATURE_AMD_PPIN		(13*32+23) /* "amd_ppin" Protected Processor Inventory Number */
+ #define X86_FEATURE_AMD_SSBD		(13*32+24) /* Speculative Store Bypass Disable */
+ #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* "virt_ssbd" Virtualized Speculative Store Bypass Disable */
+@@ -379,6 +379,7 @@
+ #define X86_FEATURE_V_SPEC_CTRL		(15*32+20) /* "v_spec_ctrl" Virtual SPEC_CTRL */
+ #define X86_FEATURE_VNMI		(15*32+25) /* "vnmi" Virtual NMI */
+ #define X86_FEATURE_SVME_ADDR_CHK	(15*32+28) /* SVME addr check */
++#define X86_FEATURE_BUS_LOCK_THRESHOLD	(15*32+29) /* Bus lock threshold */
+ #define X86_FEATURE_IDLE_HLT		(15*32+30) /* IDLE HLT intercept */
+ 
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (ECX), word 16 */
+@@ -447,6 +448,7 @@
+ #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* "debug_swap" SEV-ES full debug state swap support */
+ #define X86_FEATURE_RMPREAD		(19*32+21) /* RMPREAD instruction */
+ #define X86_FEATURE_SEGMENTED_RMP	(19*32+23) /* Segmented RMP support */
++#define X86_FEATURE_ALLOWED_SEV_FEATURES (19*32+27) /* Allowed SEV Features */
+ #define X86_FEATURE_SVSM		(19*32+28) /* "svsm" SVSM present */
+ #define X86_FEATURE_HV_INUSE_WR_ALLOWED	(19*32+30) /* Allow Write to in-use hypervisor-owned pages */
+ 
+@@ -458,6 +460,7 @@
+ #define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* Automatic IBRS */
+ #define X86_FEATURE_NO_SMM_CTL_MSR	(20*32+ 9) /* SMM_CTL MSR is not present */
+ 
++#define X86_FEATURE_PREFETCHI		(20*32+20) /* Prefetch Data/Instruction to Cache Level */
+ #define X86_FEATURE_SBPB		(20*32+27) /* Selective Branch Prediction Barrier */
+ #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* MSR_PRED_CMD[IBPB] flushes all branch type predictions */
+ #define X86_FEATURE_SRSO_NO		(20*32+29) /* CPU is not affected by SRSO */
+@@ -482,7 +485,8 @@
+ #define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
+ #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
+-#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+ 9) /* Use thunk for indirect branches in lower half of cacheline */
++#define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
++#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
+ 
+ /*
+  * BUG word(s)
+@@ -535,6 +539,8 @@
+ #define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by Branch History Injection */
+ #define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB omits return target predictions */
+ #define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_user" CPU is affected by Spectre variant 2 attack between user processes */
+-#define X86_BUG_ITS			X86_BUG( 1*32+ 6) /* "its" CPU is affected by Indirect Target Selection */
+-#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 7) /* "its_native_only" CPU is affected by ITS, VMX is not affected */
++#define X86_BUG_OLD_MICROCODE		X86_BUG( 1*32+ 6) /* "old_microcode" CPU has old microcode, it is surely vulnerable to something */
++#define X86_BUG_ITS			X86_BUG( 1*32+ 7) /* "its" CPU is affected by Indirect Target Selection */
++#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 8) /* "its_native_only" CPU is affected by ITS, VMX is not affected */
++
+ #endif /* _ASM_X86_CPUFEATURES_H */
+-- 
+2.49.0
+
