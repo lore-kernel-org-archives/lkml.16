@@ -1,133 +1,87 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CBD28E594;
-	Mon, 16 Jun 2025 03:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B034A1B87EB;
+	Mon, 16 Jun 2025 03:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750043510; cv=none; b=lf0O30RFxqsRqyZXp/V3kJx+LuP2G+1FzHgMMQeO7MOxfMCgcyc838UT9W0KANI/9Y4ZPv9z8hFuoXHnBjDAkG5UEagPBSYkFhHV+mkFEKt9JeU1zcHivwkjukAJURTlVExf3EhwnjlXrzVHeTNU+P+VNIopw+rX4HMzGSbvB5M=
+	t=1750043652; cv=none; b=Tu6ceqrcPlPl8CHzWsko1W6McovaDde3i/GjJSGvLFPmiz8ypSICF9bXsUFA3Laa5rUMEC2+RwcycD4xjlFQphpOwf6Q+ZV0E5gHrsZ37zgWhnEN85VqWTSp7eV/JNB5FbmP0U2i/DxngH6OQbyH7BXxAlAntRWBplNRQDVUCwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750043510; c=relaxed/simple;
-	bh=qf1MbNteaNFmIuHCeFXwy4QvVoxmZC5pLPaW/3wYq1g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OsZpZF9pRCdQxh99tFqLQapebRB2j7opNKpK3N/uPdL0ZrbumDfoD4Rcc3Xep2iOKgVbO2Jn2IG9sc1+0LZBfWFk0vfkfIPdUzqwjd1iURgxA8ZXy47KiapIm5k4ULmNPPy4auQllH6D27CjnZ3XztRqmBKoi/fLS9rXj4h6Sjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lF+ViI/Q; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1750043652; c=relaxed/simple;
+	bh=c0gwZpvRrZjf8E2MnG1KTyVnYNJEeLeorWvXPnso7jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FlZBXbEhDhm1EPYMaEesZINI/Frug3WcKnMmYpYuhLLtudJSyA0PhLeKgse9RCCHrf7htiRBisPkFMlnzE5LHH7yQi9k2B7Q6dgyyf5OgO9aU9nk88lUjP92z4odiXE2e2HZMKO3sZEJj9PmCxCz0B1aadQKO9GWgJxUHlTLIDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BsNKNSEx; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lF+ViI/Q"
-X-UUID: 848c90924a5d11f0b33aeb1e7f16c2b6-20250616
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=VBckLV6jNByzkSdMQw8AHIGDrw+A/A7qK4UW3zfX+Kk=;
-	b=lF+ViI/Q55Q68ANrrcMRpas9q+fzGc4+qK7bItFPOojM6rJTXxnLHkMgLRojTMmCUrhN9mpNykZ8z+GmelHdJ1p7tpkqAkNL2ahA5yeFeGVQyx574RJp0xgRVPt+e0ZCSP28KeG30ZdK3mjmzv1fVo0jA7ZBzmgRkgwbs8w189I=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.3,REQID:b1412469-3fad-484e-aacd-083c9afda5d9,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:09905cf,CLOUDID:ce810277-7521-4364-b0ef-cd7d9c0ecbde,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 848c90924a5d11f0b33aeb1e7f16c2b6-20250616
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-	(envelope-from <xueqi.zhang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 985199707; Mon, 16 Jun 2025 10:56:36 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 16 Jun 2025 10:56:34 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 16 Jun 2025 10:56:33 +0800
-From: Xueqi Zhang <xueqi.zhang@mediatek.com>
-To: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>, Robin
- Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>, Ning li
-	<ning.li@mediatek.com>, <linux-mediatek@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <iommu@lists.linux.dev>, Xueqi Zhang
-	<xueqi.zhang@mediatek.com>
-Subject: [RFC PATCH 1/8] dt-bindings: iommu: mediatek: Add mt8196 support
-Date: Mon, 16 Jun 2025 10:56:07 +0800
-Message-ID: <20250616025628.25454-2-xueqi.zhang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
-References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BsNKNSEx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=saNW8zdmippLZ+j7mPmKokLCsY7iQ+AF9tZzNqrD19s=; b=BsNKNSExvA9ezQrc46m9qXkSN7
+	4cQGezjhvnz2LgDhnu8UNRpY71q7WcxFVbxKkvwFooieoP1RAqi2gMen9NdtjmJKJr1tk7Yg3jryv
+	U4NeEqkudnRmDnynRoYxCleb7l1+TdsVDXNF7EKSNZ3WXMK5iT0ifuHtAt9hbX2Fmh9cu5R4xwmZB
+	i0+2vHFe0uzJv6c7dEuDfdTPc80CHfdFFi4B/I3Ku3PnISB7mTNlYswQ4QzkPM1ioF8ritKYHhRmu
+	U6CNQZQViGDPU1oaUA+CLOkr88XQfqLNszq7vrJZ5uoI19RtJMc4jMdT+DSCAijzCsZ5obtSa8gQP
+	IugRgPbQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uR0IF-0000000FUtX-15Dq;
+	Mon, 16 Jun 2025 03:13:55 +0000
+Date: Mon, 16 Jun 2025 04:13:55 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Hao Ge <hao.ge@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-s390@vger.kernel.org, Hao Ge <gehao@kylinos.cn>
+Subject: Re: [PATCH v3 1/2] mm: Optimize the ARCH_NEEDS_WEAK_PER_CPU logic
+ for s390/alpha architectures
+Message-ID: <aE-L81GzxzWBTfPb@casper.infradead.org>
+References: <cover.1750040317.git.gehao@kylinos.cn>
+ <57e110be6d8387e403b4ef1f3b10714c36afbb51.1750040317.git.gehao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57e110be6d8387e403b4ef1f3b10714c36afbb51.1750040317.git.gehao@kylinos.cn>
 
-1. Mediatek has its own implementation for wrapper interrupts and
-power management. Add the SoC specific compatible for MT8196
-implementing arm,smmu-v3.
-2. APU SMMU need wait until its power is ready, thus add a phandle
-smmu-mediatek-parents to its power node.
+On Mon, Jun 16, 2025 at 10:29:17AM +0800, Hao Ge wrote:
+> +++ b/mm/Kconfig
+> @@ -929,6 +929,10 @@ config ARCH_SUPPORTS_PUD_PFNMAP
+>  	def_bool y
+>  	depends on ARCH_SUPPORTS_HUGE_PFNMAP && HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+>  
+> +# s390 and alpha should be enabled,see comments for DECLARE_PER_CPU_SECTION
 
-Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
----
- .../bindings/iommu/arm,smmu-v3.yaml           | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+This comment is inappropriate and should be removed.
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-index 75fcf4cb52d9..c9a99e54de69 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-@@ -20,7 +20,12 @@ properties:
-   $nodename:
-     pattern: "^iommu@[0-9a-f]*"
-   compatible:
--    const: arm,smmu-v3
-+    - description: MediaTek SoCs implementing "arm,smmu-v3"
-+      items:
-+        - enum:
-+            - mediatek,mt8196-apu-smmu
-+            - mediatek,mt8196-mm-smmu
-+        - const: arm,smmu-v3
- 
-   reg:
-     maxItems: 1
-@@ -69,11 +74,28 @@ properties:
-       register access with page 0 offsets. Set for Cavium ThunderX2 silicon that
-       doesn't support SMMU page1 register space.
- 
-+  mediatek,smmu-parents:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      A phandle to the SMMU's power node. The SMMU should wait until its power
-+      is ready
-+
- required:
-   - compatible
-   - reg
-   - '#iommu-cells'
- 
-+allOf:
-+  - if:  # for SMMU need to wait its power node
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mediatek,mt8196-apu-smmu
-+    then:
-+      required:
-+        - mediatek,smmu-parents
-+
- additionalProperties: false
- 
- examples:
--- 
-2.46.0
-
+> +config ARCH_NEEDS_WEAK_PER_CPU
+> +       bool
+> +
+>  #
+>  # UP and nommu archs use km based percpu allocator
+>  #
+> -- 
+> 2.25.1
+> 
+> 
