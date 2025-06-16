@@ -1,137 +1,101 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF83347A2
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFC072607;
+	Mon, 16 Jun 2025 03:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750045655; cv=none; b=Yktrk/gw93axKPJlYIoNbHikld6PPqmaWtqWgGaEk41p+UyuL3AHWaa0gKh0K2guRhBxdnqhxQRPwsFfn20qYw9p2/QH3WlSGsRh3J+PDBD4aGozRHN8xHbFwYrPV9qaffMT92gB5uTBcYER1lwGxwvdXFoKFDgZCTh+5Jx7ttc=
+	t=1750045883; cv=none; b=AB0Oy3QsXN7Sc1A9a/CMWhYWRFzc9kKb3crHDaY6sXdp2vq21rfTw6UFksm+0IgyAOR+q0fuKtUwD5/cGr3VKj0IZVrrJU+ck9HQhqUpz/FZZ5/vsG11C3Pqf4NdbNsNVnH2cp12pz770zZZKM8apoXXI3/Tuu6PvRgSBGhBsU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750045655; c=relaxed/simple;
-	bh=oAPyorFVGnQcUaYRbcaf+X+aO7UokUBQs9yAd751ZT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OZl1kwL43EW0u+8cCP3hPNlmElB+C4HImbLOaRIqf0jtmYfdn5SEtI+66fGhpQHYdt/9LJZQrfBt7TKEjw+3oagFbtiqPmmINKkoaLE/93h+nkuh9PjKung0XXosXGIW0uSRHrIreCPn3t3e0Frmkm2MGVANb6EDGFTQxPOXFrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=F8OPrjJ1; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	s=arc-20240116; t=1750045883; c=relaxed/simple;
+	bh=hOxU99TpSpKXGu48+grXG6EUZeXaVP3xOwmaLj163g8=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date; b=ahLWGwNZJMGZt7h2i2nhdCBsXZtNOvn1Vt08hnVcI7REx04YsbLYFWd5UMSa6bzeqPdzCxD/gZa8bq+uEdOjDfUmte+mlAaUJgLFjqFO//KBufm7kMXfhHazwcOvLljMfS6i9HiXFch15YX3Fh6UX4fT4taSGxjDH+bh22hDI5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=YxyBd+Mm; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="F8OPrjJ1"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2350b1b9129so27188525ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1750045652; x=1750650452; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yvQ7KncdCkryYhQ6UYHiV8AcfEt99sLfw37M+fTpmcE=;
-        b=F8OPrjJ1S1whsTxc8AIpcvsQAkiuo/RBI80JpibZygVyJ4QQPV8gG2YzJI8wUce3CA
-         zQTCIoB2fE281IB6oFh8NQ5uTsLfowtGWGy3motGTDqkLWp/KEKhrP5D1KpxFf+BFVnE
-         pJpKdLF6ibivU33NTckd+61XeSsvyni7lFKtDJIa6JHd+3TjgjnnfLStaykPy9Spr9oO
-         OvW6DI56v5aCAkG1m10IbE/V/b58XbclToHnW5xFffarJrftLrSbKmlJOWu/WcMZh9Ca
-         kQmCJbkx0yVzSynOp0dMV5xVONGJcmRgAdp9Hp83++CqnWppRcpSclh8ew/PPOVE/Tvr
-         I0Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750045652; x=1750650452;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yvQ7KncdCkryYhQ6UYHiV8AcfEt99sLfw37M+fTpmcE=;
-        b=QqiUcENKOFWjuBzTKb/OrCuTbIigs+eAZnusDaf1q7lkvTIofcFkBiDvaNqmJ6R9WK
-         KRIOnXBY7xDHmUIdMCH0WWoBz0PrpBCj0XIK7UzYWHTXrHFAIrdiyCoGsSK7O5+r0l5Z
-         l6GDeHHwO0TCRdgpbrNOiva/BOaQu44suw6mljlY6b3L8j4kK0OVkYceJxstG8hCWV0D
-         wzzzT+AwL3lp+6QtiQI0USgLCzc/SB57vgYn6we2ixgCnWstwxdRl7skuWnRo4kvGcGZ
-         csDbZfIdI2bdiQKfAZ8zuVLot2tHzE2Wu3yMA1FfSPmzvqkZ5tNLJuhm2nNF5cTJkaqQ
-         f9Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDOVA1sV6inWpb3jZn/ltZx/kMZpA6d6/tyu/2C1S6LjQrz0udOcnDF3VY7b/PpmUgNWFpR4yZHDtT54I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrqYMC0En/eHxBrfbRrD8sBgVh7Lt5zbrOQkNDeUGp9kswa2K8
-	hcAjUqrci2VpuWEP3XX3u04CCT1SP0YJSj8o/SR9xHKmOLEtnz6bG8LXLISUI7AGZi0=
-X-Gm-Gg: ASbGnctL2XUsFvXWv+RP814WRTfkW4POOMfdk4t8JvHqvwiM3TAFgAtAM6wyAOArjWn
-	qohBT0yqlgdkYzNEWfU5Jho7WCUEzliefJDYXTUQ2sL7IoWfANaI1FNOpj9h9g9XanhQ+XypRGJ
-	E53BqUTzR29RMb/EGQHD/T6eEhSkN7oIA3j3YmdanCA8UgvD25xqfjRXYjLjoKfQdNey+O+FAj4
-	iRnal42iGFoOaD0YmlJMHCB05r3jRDYhzhJryR0yBNKZgnLQOYH9eRuFBgeS5B4GMgf26tm4y3M
-	V71BjaySotaw5zuJc+FJSFF04M1nx3AcgoDY1BsqS5EChgNmfMybjnMfbaaCWFOVFBEVsTqc5P0
-	YF3ZayJUk2Dtsu6mfXZVWQwJnCori/9Q=
-X-Google-Smtp-Source: AGHT+IHYu/FwcX7YLaKOx5VReMxqHPp8iD/ta3wBGnoP/HCC6DuKvKSDmh33M+/gwPrD4abjPDdP9Q==
-X-Received: by 2002:a17:902:e747:b0:234:d292:be8f with SMTP id d9443c01a7336-2366b32e55bmr121483435ad.1.1750045652463;
-        Sun, 15 Jun 2025 20:47:32 -0700 (PDT)
-Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea8ff7sm51388655ad.171.2025.06.15.20.47.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 20:47:31 -0700 (PDT)
-Date: Sun, 15 Jun 2025 20:47:29 -0700
-From: Calvin Owens <calvin@wbinvd.org>
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: "dedekind1@gmail.com" <dedekind1@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>
-Subject: Re: [PATCH] tools/power turbostat: Fix build with musl
-Message-ID: <aE-T0cZsdoCZOD_Y@mozart.vkv.me>
-References: <7edd4c688111a697cfe913c73d074738b3d1dffb.1749833196.git.calvin@wbinvd.org>
- <17f85f0bfa5446b86188616349b17d02fe207c22.camel@gmail.com>
- <7325c49d7d2c407f7391ed30e3a7e0c8898bf5cb.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="YxyBd+Mm"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55G3ofHsB4014230, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1750045841; bh=Xx6iKyuFlURJA1nKkrAmHDoDTEntui4zYETf3CUpBbo=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date;
+	b=YxyBd+Mm6TcO/CcwXpo01gfKUnHg66SAv5tpGKpRrCFyg7fTBP4PHfrK9MzIxUJCP
+	 G9D9JzDLvoI6AXrVnKei9jq9UBNgYEPcTjbnKREx9X1Bsv5w69igriS2XEqsREV9Yh
+	 Wi0RebTJjt4C8cTw0zEsxtDTE4pLVets1dJQhJs3eFTK6m7Ul1L5epRNUwwiwbFq/H
+	 HOuJelgfuMN3E4rA61Tx2JnKKxGS6RNV8AqUCZo576vsgnBtd4oOQfBSM3jWLDfXVA
+	 cLN8/wZuNztJT/ogA/GUCo6xFdeyIqiyE4EA178lnl9fHat08PYwotC9VsJ2Pr2BeE
+	 SuKVtZytS4QxA==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55G3ofHsB4014230
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 11:50:41 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 16 Jun 2025 11:50:23 +0800
+Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 16 Jun
+ 2025 11:50:20 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Arnd Bergmann <arnd@kernel.org>, Ping-Ke Shih <pkshih@realtek.com>,
+        "Nathan Chancellor" <nathan@kernel.org>
+CC: Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers
+	<nick.desaulniers+lkml@gmail.com>,
+        Bill Wendling <morbo@google.com>,
+        "Justin
+ Stitt" <justinstitt@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ingo
+ Molnar" <mingo@kernel.org>,
+        Colin Ian King <colin.i.king@gmail.com>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <llvm@lists.linux.dev>
+Subject: Re: [PATCH] wifi: rtlwifi: avoid stack size warning for _read_eeprom_info
+In-Reply-To: <20250610092240.2639751-1-arnd@kernel.org>
+References: <20250610092240.2639751-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7325c49d7d2c407f7391ed30e3a7e0c8898bf5cb.camel@intel.com>
+Content-Type: text/plain
+Message-ID: <61e3292b-c98d-4ac9-9ddc-165835b4583d@RTEXMBS04.realtek.com.tw>
+Date: Mon, 16 Jun 2025 11:50:20 +0800
+X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On Monday 06/16 at 01:31 +0000, Zhang, Rui wrote:
-> On Fri, 2025-06-13 at 20:45 +0300, Artem Bityutskiy wrote:
-> > On Fri, 2025-06-13 at 09:54 -0700, Calvin Owens wrote:
-> > >     turbostat.c: In function 'parse_int_file':
-> > >     turbostat.c:5567:19: error: 'PATH_MAX' undeclared (first use in
-> > > this function)
-> > >      5567 |         char path[PATH_MAX];
-> > >           |                   ^~~~~~~~
-> > > 
-> > >     turbostat.c: In function 'probe_graphics':
-> > >     turbostat.c:6787:19: error: 'PATH_MAX' undeclared (first use in
-> > > this function)
-> > >      6787 |         char path[PATH_MAX];
-> > >           |                   ^~~~~~~~
-> > > 
-> > > Signed-off-by: Calvin Owens <calvin@wbinvd.org>
-> > Reviewed-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> > 
-> May I know how to reproduce this?
+Arnd Bergmann <arnd@kernel.org> wrote:
 
-Hi Rui,
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> txpower_info_{2g,5g} are too big to fit on the stack, but in most of the
+> rtlwifi variants this stays below the warning limit for stack frames.
+> In rtl8192ee and a few others, I see a case where clang decides to fully
+> inline this into rtl92ee_read_eeprom_info, triggering this warning:
+> 
+> drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c:2178:6: error: stack frame size (1312) exceeds limit (1280) in 'rtl92ee_read_eeprom_info' [-Werror,-Wframe-larger-than]
+> 
+> Mark _rtl92ee_read_txpower_info_from_hwpg() as noinline_for_stack to
+> and mark _rtl92ee_get_chnl_group() as __always_inline to make clang
+> behave the same way as gcc. Inlining _rtl92ee_get_chnl_group helps
+> let the compiler see that the index is always in range. The same
+> change appears to be necessary in all rtlwifi variants.
+> 
+> A more thorough approach would be to avoid the use of the two structures
+> on the stack entirely and combine them with the struct rtl_efuse
+> data that is dynamically allocated and holds the same information.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Just build turbostat with musl as libc, here's a quick chroot repro that
-works on my Debian laptop:
+1 patch(es) applied to rtw-next branch of rtw.git, thanks.
 
-    wget https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-musl/stage3-amd64-musl-20250601T163943Z.tar.xz
-    mkdir tmp
-    sudo tar xf stage3-amd64-musl-20250601T163943Z.tar.xz -C ./tmp
-    wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.2.tar.xz
-    sudo mv linux-6.15.2.tar.xz tmp
-    sudo chroot tmp /bin/bash
-    gentoo / # tar xf linux-6.15.2.tar.xz
-    gentoo / # cd linux-6.15.2/tools/power/x86/turbostat/
-    gentoo /linux-6.15.2/tools/power/x86/turbostat # make
-    gcc -O2 -Wall -Wextra -I../../../include -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"' -DINTEL_FAMILY_HEADER='"../../../../arch/x86/include/asm/intel-family.h"' -DBUILD_BUG_HEADER='"../../../../include/linux/build_bug.h"' -D_FILE_OFFSET_BITS=64 -D_FORTIFY_SOURCE=2 turbostat.c -o /root/linux-6.15.2/tools/power/x86/turbostat/turbostat  -lcap -lrt
-    turbostat.c: In function 'parse_int_file':
-    turbostat.c:5567:19: error: 'PATH_MAX' undeclared (first use in this function)
-     5567 |         char path[PATH_MAX];
-          |                   ^~~~~~~~
-    turbostat.c:5567:19: note: each undeclared identifier is reported only once for each function it appears in
-    turbostat.c:5567:14: warning: unused variable 'path' [-Wunused-variable]
-     5567 |         char path[PATH_MAX];
-          |              ^~~~
-    turbostat.c: In function 'probe_graphics':
-    turbostat.c:6787:19: error: 'PATH_MAX' undeclared (first use in this function)
-     6787 |         char path[PATH_MAX];
-          |                   ^~~~~~~~
-    turbostat.c:6787:14: warning: unused variable 'path' [-Wunused-variable]
-     6787 |         char path[PATH_MAX];
-          |              ^~~~
-    make: *** [Makefile:23: turbostat] Error 1
+2baacfe83346 wifi: rtlwifi: avoid stack size warning for _read_eeprom_info
 
-Thanks,
-Calvin
+---
+https://github.com/pkshih/rtw.git
+
