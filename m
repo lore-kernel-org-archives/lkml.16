@@ -1,57 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72DB1E231E;
-	Mon, 16 Jun 2025 21:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8391448D5;
+	Mon, 16 Jun 2025 21:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750111050; cv=none; b=CJydTQmFyC2Hl1oc7RgLadRx2n2nsCmOKOQtpX1JpiqcmTHVNUoOQ46w4I6HqkJvG3vcb/gvXOheN6V51/EA07sFJzaPLaPtD3l7mJHFudMoVzm3Dwh3Q5rxbjEny+I74G61lii8yhJRPZ4f7jX9z7zsOesB5hRVMl/pHyLj/UM=
+	t=1750111187; cv=none; b=WhesXjmOzcD2bz22XtxD04PYFFMHDs0WF6ZfgaldugbkWddDG5Vrk/jdq91fRv3J+XXT5NFr+Nx6nMZSyZhm5INujBpEnPIRPzAS74YAbE+Y01PoZB8yC/pPIWSuM7LFSIO8IdUVmxzzWHpXlnyx7urvaq8Q92uzkIOm6Bir+mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750111050; c=relaxed/simple;
-	bh=eyc/gswzHPtBA6IU4zbzxIAE72gnf9Pb80P53cBpKZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Aex1dE8QU+u2f6YnwHtVe1OPFEKG5o631D2Vp+iZ7J54EnInob/8dHQQmMTbzxXkMiRmYc3ksruk02663EwEotZBB793vfRHxgsZEQeWmqh5v1hRRik791nrgvs23VuBFtoU0Ef5EsPy4+BT3jIA4U+tiKMzBJPxjwmYH40Gb24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5ZFIR8I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750111187; c=relaxed/simple;
+	bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rg5fzTYFdjNwDkgBcjC9Gd2khbri7yi/D0a7/dFUeWrdL5UjTaGtuRKYxCrs0ltV3w8iXtB0vS5YaW2dVrC7rq3rqEiHEpDj3zSpI7KnLKvYDRNKJDoQlyj+xWAJ5lX4O2jKbtevXNGKZzkja4q6V8LbOgAiUEVOihKyAtiO/rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mx+QJq/Z; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5ZFIR8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D213C4CEEE;
-	Mon, 16 Jun 2025 21:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750111050;
-	bh=eyc/gswzHPtBA6IU4zbzxIAE72gnf9Pb80P53cBpKZo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=D5ZFIR8IhcbWH9fc4y5RPfd+OmRo0zDNYPDVBezcZjWENLoOdvTtzknfH3jdBS9+i
-	 /255zhjcbWhwVsvUyspw97hyRF46AGRst1pcnerNVdHo0wD7c8y9bOBlP+aF6ej2//
-	 5KDYfmDLT/UJ4F8wLYot9ru/ufoDD8VDkJ8Os88yTkgINpye0sQoR7uCq+/WNcQjf4
-	 lz132eii7I9rRYYBjTuO6j5Fp7lfI2AOj32W0q5yx2nXolTlRMKyn/aepwchgpijuy
-	 jobsTsGgra3MJVrTHInWnsFNKcCaNn6dr+XU+WGiM06/Yn4nhtYQgxcWT2oRcNrPA4
-	 gkV7EcMhOVIuQ==
-Date: Mon, 16 Jun 2025 14:57:29 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 0/3] vsock/test: Improve transport_uaf test
-Message-ID: <20250616145729.1a16afdc@kernel.org>
-In-Reply-To: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
-References: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mx+QJq/Z"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-31329098ae8so4362421a91.1;
+        Mon, 16 Jun 2025 14:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750111186; x=1750715986; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
+        b=mx+QJq/Zm7DH+1NBZIyhQ1smtWKecQgkvnlVbl8wY1mazmEbFRzWaQbs14E7H31pxZ
+         50cB0dYBp4VsU+YYoOk6ICTUM8nmE7imWT85znAnUL0+erM5CWad3TDUgMo2Hdn1b1tj
+         X800t1zGk1QP+q4LF4KGizzI90sy+ygiXSgN7gyfvO9Se5LmZLIcW8Uu9v90pba0Xk/Q
+         osUcXNlNI6/j10lZAWkmeo3M0Qnc49+WoIAQipTp0KtBWQ57c+Pa0kJBdR1so5XQA3Dz
+         tCrpRhzUlvs0tmXvRVzeHyTQujEsAq2ENp/c+yxFpdmojGxapIfSFLgGAyag5Dd3Pilq
+         s7yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750111186; x=1750715986;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
+        b=i4pkGC2mW3zFb9pQOYXfb8yns/x9PBRwJwKznMHhcvG7T8Ry7C78MRb5Ec+eWQPLZI
+         ACcrfj8wbQy4t9VtmQchCA5VfiOP49IPb0B7gdwyxYu7W8IlDGrAtoKfo5iHRSR8yhBD
+         4oIvjbCIoYl2Da7LiR5NNWd5eD6I6ADTxhzjbUGpjqvy+otQJU+qU6uRgDdLWOwqie1f
+         k6jKBT+RYE+gOr9lo5LAw1yr0J8eVjt4DC2erX6J8qhOvqCpJtsR4J6HrXyCZNEpjuo8
+         dUSELKf5iQH34akhHtizqybSl2AWoDS3sxDcWvu9JG4Y8387zFJ02DxrqIzNlUDWHtPz
+         rDtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQl5DZa3Zv+y+7lb9Bvv7Ehd73wzMzdo3wz8RH2jlLjCxzJGgkmRonhb5NQOvXnNB36CTtoAy3FEY=@vger.kernel.org, AJvYcCWzvYnZEc97Sv+iShfgv3bdEPCwLGMsdzNxO3Qxfh2joA/DOaiOA87n+ReEzrl8hUURs2PkOAkkOh39biWg@vger.kernel.org, AJvYcCXP7LdwsH342IAgh+Jx9qbvbfRjs1cKz3a5WJ1eEuNE7jVjJqFYV8oYmClqY142hTJgAgS9qKcIRSr4/MF4eQ==@vger.kernel.org, AJvYcCXzZ6iUFc48x0TIsHJ32iR2raQ7AZn6YS6cKjA+W6/Dql91pPp7W0d1OnMC2Gl3Jzf/P/TEeRo8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw19h5N5qmDZ9rCk2+/oBNfXl0hiJRaxdHWShgk02P02CEMQTLH
+	y+0Abk+UdR5Boogjs2mfc0PcTfZesnqzEYKIuTe86D3YioNtqjgrlqBo
+X-Gm-Gg: ASbGncvTgs95kvy3UqtrkqEtxE63bYzJYwhyzLDQUC/VZPZ/y36M14olTfIoFJ8h634
+	1+4FbrDbINcVtbiDXOo74ghbgQiPJq15gDwxLjpKMV8mCzf2wR5j8piyazyfsGdGxGWxNbSaaU1
+	u5GSydqQMVwJXHJJxW5c29JV4xFVXL9It9nCqFmzqs6GE6wEQ9pj7CTvcuhnhH4Hw2JD7gxO8XZ
+	OGRXlTAYbtXb1FRnLWyxPYHkeIIn8uyQXT9icDejyVmX+QTa6TjjqQ6kgwIF1tF7+tFojNoVWyw
+	9saVBiHmkD501y20ngNszDVHaE1DpyYmmV9LTiXuQgD5SpJavFJuOGPw4NOk0N1CVQ==
+X-Google-Smtp-Source: AGHT+IH4wh9y8+17NNr6OsXro0iWKu8R34LNjAfr7G0A8dLv1PD8LHOCsQSVBTatYUghTPAmFqKHbw==
+X-Received: by 2002:a17:90b:5603:b0:310:c8ec:4192 with SMTP id 98e67ed59e1d1-31427e9d73fmr267216a91.10.1750111185654;
+        Mon, 16 Jun 2025 14:59:45 -0700 (PDT)
+Received: from [10.0.2.172] ([70.37.26.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5e2ebsm9155674a91.33.2025.06.16.14.59.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 14:59:45 -0700 (PDT)
+Sender: Sinan Kaya <franksinankaya@gmail.com>
+From: Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Message-ID: <9fb982e6-7184-410e-94d0-90836c2a9129@kernel.org>
+Date: Mon, 16 Jun 2025 17:59:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dmaengine: qcom_hidma: fix handoff FIFO memory leak
+ on driver removal
+To: Qasim Ijaz <qasdev00@gmail.com>
+Cc: Eugen Hristev <eugen.hristev@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250601224231.24317-1-qasdev00@gmail.com>
+ <20250601224231.24317-3-qasdev00@gmail.com>
+ <3c6513fe-83b3-4117-8df6-6f8c7eb07303@linaro.org>
+ <7649f016-87f1-475d-8ff7-7608b14c5654@kernel.org>
+ <aE8bu2woUe96DVo-@gmail.com>
+Content-Language: en-US
+In-Reply-To: <aE8bu2woUe96DVo-@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 11 Jun 2025 21:56:49 +0200 Michal Luczaj wrote:
-> Increase the coverage of a test implemented in commit 301a62dfb0d0
-> ("vsock/test: Add test for UAF due to socket unbinding"). Take this
-> opportunity to factor out some utility code, drop a redundant sync between
-> client and server, and introduce a /proc/kallsyms harvesting logic for
-> auto-detecting registered vsock transports.
+On 6/15/2025 3:15 PM, Qasim Ijaz wrote:
+> Thanks for reviewing the patch and for pointing out the correct
+> shutdown ordering.
+>
+> If you’re both happy with it, I’ll send a v2 that calls
+> tasklet_disable() before tasklet_kill(), then frees the handoff_fifo.
+>
+> Just let me know and I’ll resend.
 
-Hi Stefano! Sorry to ping, are these on your radar?
-I'm wondering if the delay is because of devconf.cz or you consider 
-the Suggested-by tags a strong enough indication of support :)
+Sure, please test it on a test kernel module before posting with a tasklet.
+
+This should be straightforward to verify.
+
