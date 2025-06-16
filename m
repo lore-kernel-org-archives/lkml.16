@@ -1,337 +1,175 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA3C2BEFED
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339881E89C
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750107772; cv=none; b=CFJQk6f/WVqdWst8Z7w8ogh34K8nTSyq8z45AX2Ere1cHcg1GFfFKeU1l3dQOyRybhPRxmSQaeRRwmBIdV8SpglTy4/6mMPsGy0WUmV2eMGg+CIYTwFbfs2HDNEIFftpKAS85G3n79wbj8bUdmDsZAWxfNE7Uo9UVJrHyJl4/Ic=
+	t=1750107900; cv=none; b=AlXEqvR0gWx7r2HpzPp9r1zIvS9ZWZ4WTxmBb5QhHRUc12LL4c9XrU2oQEjH04Ra/jbudK2wdKaOeApsNxMowgKhQqVe3Y5SJSgaR6dnHBSJxdKs01SDjgsI+S9ZN3q7Mp0soQF9zgpOH1Ez6L5c0jQsQ2E1zM00n0VnZ4rnmVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750107772; c=relaxed/simple;
-	bh=VUGbQSlpv2U8R1jdbUJn51uIyoYhGn8dY810LqSWYtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GlKFzswXsRh24e+Uvmq4bGf5yp/e/yJgdjSWOlXtl4rOw96syyqjf0zcgvBUjJ+hedlnzXqKAbhSFuc/nIjwUW59Se3vG1mQwZ261a1oz8cYjxw+p/hZi8DQk3uaYfd04dXOA5zdlGqUvNEDBZF3B1yUClvL8S/+f1HnnGc06vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SPe7GrV/; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750107900; c=relaxed/simple;
+	bh=nYaEYN227K6YpIf8VDVu8+1doLEoUJgywiwdWDHeB9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=reVla2kaLdCv4r8xBTbuPhldeqZ2+8Zxc4zBgCntkg9GzpYLdZkCC9ISFZ8xuJa7xrICnxWl0GEdOWAE9FvWqve91qLqexdzOrF9bEZ2xn8fN9DPkREGT+3bIO9J9qoFf5x/KqlicHJDiXdhAJnfunRoVFMcKddyy0GgSemgMwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p8DGSqsc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1N7koLaV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p8DGSqsc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1N7koLaV; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SPe7GrV/"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55351af2fc6so5506942e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750107768; x=1750712568; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9tJfw+k7xufHIN5ReiQx5xacfGPuiC+xpWuZiEqJRlI=;
-        b=SPe7GrV/tbBeg1sksZDCeFarUVzFdL2o1245C3m/YwLiUR+lRMEXgzVZaP1hz4RU3G
-         l8j6NzvO0rndYkMv7TP2iATos6X2nwUTYjHHBzg1VRQWDJmq4Vr1I/23NjqD1EsZU2hC
-         cS0jqf9xDk62XjKA9DA0K4RVf6uuKTck3vvXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750107768; x=1750712568;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9tJfw+k7xufHIN5ReiQx5xacfGPuiC+xpWuZiEqJRlI=;
-        b=jG9IryZg/1zonD44c/TdcoLcC6GZwj59ocT+ebvh5vUt70L1IGQM0juYFM3NRwFQwt
-         qP0K2QkIYtat/KHk3dHItZCdOXa9Un+3bhBkqGwrN3D7fKTNyZUDcn09fRllOLjW6+Bl
-         NCCrYn3mmXnIJFUzwAhWbmKsQAmVyif/cWZIf/BMGKW6ceoJfvU80DVurfDjsZV8hckd
-         BUTpiqGa/sXVns0MXFUY11w4juSRP8sOxvD43qAKomfMiN+d/S3BeY63m1YW1Giu5P/P
-         BgXGdcNPcIoup8wBXx2Cu6rob3xPkdfVQe6uGazVraXM8LwpKKT/JwByF6fN9LgJYMKa
-         3X9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV+vLJlStaP9BAfyaArryo9niz8xbx61wrko4Hr1bA6b0OyTG0d6AG8B7QfMqRZxQbGWsTRcdZ7gcrXur4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJpCliiOWG3vmgu2sjDGCmcUwox9lOV4x9H0adzfZVpnSwpNSu
-	KNNclobRgosHVIDK+2Wo2093s0LpK6QvY+o4sSPi3sgzo0rpY+0S893oEHW4OOwqN46MyrRKE66
-	fe4o=
-X-Gm-Gg: ASbGncvT7DpjRev3u8hZlbm6j3KgWKIGyclIfFMkf11nAuoeL6XZOtNgesiR8sKaLMS
-	Zbhk2eSG7F/XAx+q91CmwnCHv+VWcn2NGSeM4JwvXLD+qxKUC9wv/zC8vOX+pNweiUDrBIxaJal
-	ylypxWI1URxneqw/nkzDgLUYMa5WqKNsSiUq+vynJWF1BaEvFhQTI73bTHkWq1Lu9i20xu3hH8l
-	o8ixqNnfUClCHl38tWD46eduaEIOlx9I9+YC3sUEU+uFQROuDNVlSijNvdN9jRvAGuZVkHYUIAh
-	0T//yGX/WmnCLfpeH+Q70v6q9z0WRoQncboFsm2DrFwLIJpTCP8fMv1/dzUBYwCDVhQ7rTQ/59A
-	WPKLkUiulaPJDkb0UWeEclaH+
-X-Google-Smtp-Source: AGHT+IEsWcbIhCu0fAL/3uDmwbqFLSFQHN3A/Ok7pvB9ml+WKySKAtCr6Drva+8ZOQ6fbVXEH80+1g==
-X-Received: by 2002:a05:6512:b97:b0:553:a3ed:f2ee with SMTP id 2adb3069b0e04-553b6e89475mr2393817e87.13.1750107768260;
-        Mon, 16 Jun 2025 14:02:48 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1ab448sm1671355e87.133.2025.06.16.14.02.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 14:02:48 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55351af2fc6so5506924e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:02:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUuNEp/DN6su9vS7fQRR1v9Mt36nG7v3r3GxHUrNVwwuj3sBBZpKVqVk+Y0qm9OeSlNqs/NktzFXxqiSGg=@vger.kernel.org
-X-Received: by 2002:a05:6512:138c:b0:553:66b3:c385 with SMTP id
- 2adb3069b0e04-553b6ee3e9cmr2720265e87.24.1750107765537; Mon, 16 Jun 2025
- 14:02:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p8DGSqsc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1N7koLaV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p8DGSqsc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1N7koLaV"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 49E1D211F3;
+	Mon, 16 Jun 2025 21:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750107896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
+	b=p8DGSqsc2CftckQ2nvzSWoOQLibQLlL3wwFOr8nKvXRZ3VNV0tfEOhuuiopXojaUrFJ7G3
+	hftFc/Vlt+SbWMDdc4pzi1BO2ZP0Q36Q/EG31t1cMByO5n/GuKBPbrJk4huVhzH8jILUP9
+	czAtB91OCqXpcyKHc7BcDyXuJgv+XKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750107896;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
+	b=1N7koLaVg2jRSmZIrGjqYIcqCa3lpxVPQg7HxhBIMZYWM1niJDis3q8d4qcKHFhggCFGAw
+	YV4kHDP0rs2OgGBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750107896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
+	b=p8DGSqsc2CftckQ2nvzSWoOQLibQLlL3wwFOr8nKvXRZ3VNV0tfEOhuuiopXojaUrFJ7G3
+	hftFc/Vlt+SbWMDdc4pzi1BO2ZP0Q36Q/EG31t1cMByO5n/GuKBPbrJk4huVhzH8jILUP9
+	czAtB91OCqXpcyKHc7BcDyXuJgv+XKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750107896;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
+	b=1N7koLaVg2jRSmZIrGjqYIcqCa3lpxVPQg7HxhBIMZYWM1niJDis3q8d4qcKHFhggCFGAw
+	YV4kHDP0rs2OgGBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9D5AF139E2;
+	Mon, 16 Jun 2025 21:04:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ci3LIveGUGhSQQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Mon, 16 Jun 2025 21:04:55 +0000
+Date: Mon, 16 Jun 2025 22:04:54 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>, 
+	David Hildenbrand <david@redhat.com>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH] MAINTAINERS: add additional mmap-related files to mmap
+ section
+Message-ID: <sskcpsimubcpf6uq5dtoiklp23ese3psxgl75r75saxwqpvxgw@m5cf2kfxgqav>
+References: <20250616203503.565448-1-lorenzo.stoakes@oracle.com>
+ <cxwmebrnmrhnlzk4n4w5r5zlv5jwzsqfejgmsqup5fljg6jeee@vo377ihsh76r>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604-uvc-meta-v6-0-7141d48c322c@chromium.org>
- <20250604-uvc-meta-v6-4-7141d48c322c@chromium.org> <d1e5942b-f8e5-42c6-98ae-d346927df3cb@kernel.org>
- <CANiDSCtXmXYkv3b_62iegTFOxBVrGUv9+mbioxvQvPsadwBpqg@mail.gmail.com> <ec722aa6-17d4-4264-b99f-bdae1d908713@kernel.org>
-In-Reply-To: <ec722aa6-17d4-4264-b99f-bdae1d908713@kernel.org>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 16 Jun 2025 23:02:33 +0200
-X-Gmail-Original-Message-ID: <CANiDSCu1b2n9c7WH2ZHysOY2xV1RbV9Z6AHBuXXfF8fV8OwYgg@mail.gmail.com>
-X-Gm-Features: AX0GCFsNdtkP8JB6ltTsdc-cqZ6Op2oMgeY2ihm_dh0JlNkr6ExVMQMQ5z0q73M
-Message-ID: <CANiDSCu1b2n9c7WH2ZHysOY2xV1RbV9Z6AHBuXXfF8fV8OwYgg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
-To: Hans de Goede <hansg@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cxwmebrnmrhnlzk4n4w5r5zlv5jwzsqfejgmsqup5fljg6jeee@vo377ihsh76r>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-mm.org:url,kvack.org:email,oracle.com:email]
+X-Spam-Level: 
 
-Hi Hans
+(adding a few people on CC)
 
-On Mon, 16 Jun 2025 at 22:47, Hans de Goede <hansg@kernel.org> wrote:
->
-> Hi Ricardo,
->
-> On 16-Jun-25 5:04 PM, Ricardo Ribalda wrote:
-> > Hi Hans
-> >
-> > On Mon, 16 Jun 2025 at 16:38, Hans de Goede <hansg@kernel.org> wrote:
-> >>
-> >> Hi Ricardo,
-> >>
-> >> On 4-Jun-25 14:16, Ricardo Ribalda wrote:
-> >>> If the camera supports the MSXU_CONTROL_METADATA control, auto set the
-> >>> MSXU_META quirk.
-> >>>
-> >>> Reviewed-by: Hans de Goede <hansg@kernel.org>
-> >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >>> ---
-> >>>  drivers/media/usb/uvc/uvc_metadata.c | 72 ++++++++++++++++++++++++++++++++++++
-> >>>  include/linux/usb/uvc.h              |  3 ++
-> >>>  2 files changed, 75 insertions(+)
-> >>>
-> >>> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-> >>> index df3f259271c675feb590c4534dad95b3b786f082..cd58427578ff413591b60abe0a210b90802dddc7 100644
-> >>> --- a/drivers/media/usb/uvc/uvc_metadata.c
-> >>> +++ b/drivers/media/usb/uvc/uvc_metadata.c
-> >>> @@ -10,6 +10,7 @@
-> >>>  #include <linux/list.h>
-> >>>  #include <linux/module.h>
-> >>>  #include <linux/usb.h>
-> >>> +#include <linux/usb/uvc.h>
-> >>>  #include <linux/videodev2.h>
-> >>>
-> >>>  #include <media/v4l2-ioctl.h>
-> >>> @@ -188,11 +189,82 @@ static const struct v4l2_file_operations uvc_meta_fops = {
-> >>>       .mmap = vb2_fop_mmap,
-> >>>  };
-> >>>
-> >>> +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
-> >>> +
-> >>> +static struct uvc_entity *uvc_meta_find_msxu(struct uvc_device *dev)
-> >>> +{
-> >>> +     struct uvc_entity *entity;
-> >>> +
-> >>> +     list_for_each_entry(entity, &dev->entities, list) {
-> >>> +             if (!memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
-> >>> +                     return entity;
-> >>> +     }
-> >>> +
-> >>> +     return NULL;
-> >>> +}
-> >>> +
-> >>> +#define MSXU_CONTROL_METADATA 0x9
-> >>> +static int uvc_meta_detect_msxu(struct uvc_device *dev)
-> >>> +{
-> >>> +     u32 *data __free(kfree) = NULL;
-> >>> +     struct uvc_entity *entity;
-> >>> +     int ret;
-> >>> +
-> >>> +     entity = uvc_meta_find_msxu(dev);
-> >>> +     if (!entity)
-> >>> +             return 0;
-> >>> +
-> >>> +     /*
-> >>> +      * USB requires buffers aligned in a special way, simplest way is to
-> >>> +      * make sure that query_ctrl will work is to kmalloc() them.
-> >>> +      */
-> >>> +     data = kmalloc(sizeof(*data), GFP_KERNEL);
-> >>> +     if (!data)
-> >>> +             return -ENOMEM;
-> >>> +
-> >>> +     /* Check if the metadata is already enabled. */
-> >>> +     ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id, dev->intfnum,
-> >>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
-> >>> +     if (ret)
-> >>> +             return 0;
-> >>> +
-> >>> +     if (*data) {
-> >>> +             dev->quirks |= UVC_QUIRK_MSXU_META;
-> >>> +             return 0;
-> >>> +     }
-> >>> +
-> >>> +     /*
-> >>> +      * We have seen devices that require 1 to enable the metadata, others
-> >>> +      * requiring a value != 1 and others requiring a value >1. Luckily for
-> >>> +      * us, the value from GET_MAX seems to work all the time.
-> >>> +      */
-> >>> +     ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id, dev->intfnum,
-> >>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
-> >>> +     if (ret || !*data)
-> >>> +             return 0;
-> >>> +
-> >>> +     /*
-> >>> +      * If we can set MSXU_CONTROL_METADATA, the device will report
-> >>> +      * metadata.
-> >>> +      */
-> >>> +     ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
-> >>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
-> >>> +     if (!ret)
-> >>> +             dev->quirks |= UVC_QUIRK_MSXU_META;
-> >>
-> >> Since we set the ctrl to enable MSXU fmt metadata here, this means that
-> >> cameras which also support V4L2_META_FMT_D4XX will be switched to MSXU
-> >> metadata mode at probe() time.
-> >
-> > Not sure that I completely follow you. D4XX cameras will not be
-> > switched to MSXU, they will support MSXU and D4XX with the current
-> > patchset.
->
-> Is MSXU an extension on top of D4XX ? If not then we need to tell
-> the camera which metadata we want in uvc_meta_v4l2_set_format()
+On Mon, Jun 16, 2025 at 09:49:52PM +0100, Pedro Falcato wrote:
+> On Mon, Jun 16, 2025 at 09:35:03PM +0100, Lorenzo Stoakes wrote:
+> > msync and nommu are directly related to memory mapping, memfd and mincore
+> > are less so but are roughly speaking operating on virtual memory mappings
+> > from the point of view of the user so this seems the most appropriate place
+> > for them.
+> > 
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > ---
+> >  MAINTAINERS | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 4523a6409186..a5d1ff923a62 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -15735,7 +15735,6 @@ F:	Documentation/admin-guide/mm/
+> >  F:	Documentation/mm/
+> >  F:	include/linux/gfp.h
+> >  F:	include/linux/gfp_types.h
+> > -F:	include/linux/memfd.h
+> >  F:	include/linux/memory_hotplug.h
+> >  F:	include/linux/memory-tiers.h
+> >  F:	include/linux/mempolicy.h
+> > @@ -15974,12 +15973,17 @@ L:	linux-mm@kvack.org
+> >  S:	Maintained
+> >  W:	http://www.linux-mm.org
+> >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> > +F:	include/linux/memfd.h
+> >  F:	include/trace/events/mmap.h
+> > +F:	mm/memfd.c
+> 
+> memfd is a big stretch, no? I think it would feel more at home with shmem, or even VFS people. 
+> 
+> > +F:	mm/mincore.c
+> >  F:	mm/mlock.c
+> >  F:	mm/mmap.c
+> >  F:	mm/mprotect.c
+> >  F:	mm/mremap.c
+> >  F:	mm/mseal.c
+> > +F:	mm/msync.c
+> > +F:	mm/nommu.c
+> >  F:	mm/vma.c
+> >  F:	mm/vma.h
+> >  F:	mm/vma_exec.c
+> 
+> the rest obviously LGTM.
+> 
 
-I think I know where the miss-comunication happened :)
+This reminds me: now that we're at it, could we cross-own madvise.c? Now that
+we know it can be done. It's the only mmap-related syscall (i think?) we're
+missing.
 
-MSXU is indeed a superset of D4xx. D4xx metadata is formatted in MSXU.
+Also possibly mmap_lock.c.
 
-If an app fetches D4XX and MSXU from an Intel D4xx device, they are identical.
-
-Or in other words, if D4XX devices have MSXU_CONTROL_METADATA, they
-are probably today initialized with a value != 0.
-
-
-Thanks!
->
-> Currently your patch 4/4 does:
->
-> +       ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
-> +                            MSXU_CONTROL_METADATA, data, sizeof(*data));
->
-> in uvc_meta_detect_msxu() which runs at probe time.
->
-> So patch 4/4 breaks V4L2_META_FMT_D4XX support as it switched the
-> camera to MSXU metadata mode (I'm assuming the 2 metadata formats
-> are different and that MSXU metadata is not just a superset of D4xx).
->
-> This is why I suggest supporting only one metadata format. If we
-> want to support both on cameras which support both and can switch
-> formats with the msxu control, then this patch needs to modify
-> uvc_meta_v4l2_set_format() to do something like this:
->
-> +       ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
-> +                            MSXU_CONTROL_METADATA, data, sizeof(*data));
->
-> When switching formats, that or only support 1 metadata fmt.
->
-> I hope this explains my thinking here, if not keep asking questions ...
->
-> Regards,
->
-> Hans
->
->
->
->
-> >
-> >>
-> >> So even if cameras exist which support both metadata formats, since we
-> >> switch to MSXU at probe() time, disabling V4L2_META_FMT_D4XX support,
-> >> the uvcvideo driver will only support 1 metadata fmt per camera.
-> >> Which is fine supporting more then 1 metadata fmt is not worth
-> >> the trouble IMHO.
-> >
-> > If we only support one metadata, we have two options for D4XX cameras:
-> >
-> > A) Switch to MSXU: apps that expect D4XX will not work. I think this
-> > will mean breaking uAPI.
-> > B) Keep D4XX and ignore MSXU: apps that work with MSXU will not work
-> > with D4XX cameras. I do not love this but it will not affect my
-> > usecase.
-> >
-> >
-> > If you are ok with B) I can start the implementation. But I still
-> > believe that the current option is more generic and the extra
-> > complexity is not too excessive.
-> >
-> >
-> >>
-> >> This means that Laurent's remark on [PATCH v5 4/4]:
-> >>
-> >> "I would prefer if you could instead add a metadata format field in the
-> >> uvc_device structure (I'd put it right after the info field, and while
-> >> at it you could move the quirks field to that section too). The metadata
-> >> format would be initialized from dev->info (when available) or set to
-> >> the UVC format, and overridden when the MSXU is detected."
-> >>
-> >> is still relevant, which will also make patch 3/4 cleaner.
-> >>
-> >> The idea is to (in patch 3/4):
-> >>
-> >> 1. Introduce a dev->meta_format which gets initialized from dev->info->meta_format
-> >> 2. Keep the quirk and if the quirk is set override dev->meta_format to
-> >>    V4L2_META_FMT_UVC_MSXU_1_5 thus still allowing testing for MSXU metadata on
-> >>    cameras which lack the MSXU_CONTROL_METADATA control.
-> >>
-> >> Doing things this way avoids the need for the complexity added to
-> >> uvc_meta_v4l2_try_format() / uvc_meta_v4l2_set_format() /
-> >> uvc_meta_v4l2_enum_format(). Instead the only changes necessary there now will
-> >> be replacing dev->info->meta_format with dev->meta_format.
-> >>
-> >> Regards,
-> >>
-> >> Hans
-> >>
-> >>
-> >>
-> >>
-> >>
-> >>> +
-> >>> +     return 0;
-> >>> +}
-> >>> +
-> >>>  int uvc_meta_register(struct uvc_streaming *stream)
-> >>>  {
-> >>>       struct uvc_device *dev = stream->dev;
-> >>>       struct video_device *vdev = &stream->meta.vdev;
-> >>>       struct uvc_video_queue *queue = &stream->meta.queue;
-> >>> +     int ret;
-> >>> +
-> >>> +     ret = uvc_meta_detect_msxu(dev);
-> >>> +     if (ret)
-> >>> +             return ret;
-> >>>
-> >>>       stream->meta.format = V4L2_META_FMT_UVC;
-> >>>
-> >>> diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
-> >>> index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
-> >>> --- a/include/linux/usb/uvc.h
-> >>> +++ b/include/linux/usb/uvc.h
-> >>> @@ -29,6 +29,9 @@
-> >>>  #define UVC_GUID_EXT_GPIO_CONTROLLER \
-> >>>       {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
-> >>>        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
-> >>> +#define UVC_GUID_MSXU_1_5 \
-> >>> +     {0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
-> >>> +      0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
-> >>>
-> >>>  #define UVC_GUID_FORMAT_MJPEG \
-> >>>       { 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
-> >>>
-> >>
-> >
-> >
->
-
-
---
-Ricardo Ribalda
+-- 
+Pedro
