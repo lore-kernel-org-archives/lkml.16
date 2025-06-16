@@ -1,132 +1,296 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF8586340;
-	Mon, 16 Jun 2025 16:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089998; cv=pass; b=Uhxot0FKfp8X5AHs33kCP5Jo4x5Uu2kCaeea3Xa/19vQq270NwG/bgfVhwvHzKMdLfsD79kzOnPHmaILoCy3duaznro1+OGtdWJWiHA1ESYNdoi48SmwJh+PkkQRRghqesSI0tn8mHJGyqj3h2YljsXiW3HUy7PB/3359YLKbmA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089998; c=relaxed/simple;
-	bh=ASFFuuxt+NkRcr85V9Pfr5TSV45ijN++k4YYQyXOBPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FyslqY2BM0rkBV7Ns71zdTaLdiYX2TFu/S9pa8SBVYPQBU9ej6y4iQ6N8rSBxAHLxh1sQEv8Gi4gExlbj5pBHd46uO1WkpefhHivnTh4Qqn0bsHf47a8wcv3JxRC9ykPnVThc16pH1Claw7jlQrUT0LVcZC6r64YnScThDebtSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=Cxej/lQU; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="Cxej/lQU"
-ARC-Seal: i=1; a=rsa-sha256; t=1750089974; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=e3GNWk/WbTMBevIRzVxs0X0CrdY0pRAyPGz6jfHOmRORUsjwLA1tl83Tcg69Gdmjm6LtbNDMWkmzWPXstgPN13BL4cUCzalmADCecyqghzLvTPu7xIp5Zte6CJ7oUCnJXZEHBgK41h40PJKyFeuACrxbSi+mpnczIfdnz4rfot8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750089974; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=R2NIJYlZXUCPFvz62oOBC7RgnkUtxPH/uiLdx+Eefzw=; 
-	b=LPTH8d3DUcfCDo7jV04mDGb73PcRIZcqmB6HWL3b3Fwmaro5ZWuxr+RCxr3Gh3EofXC1PFLsCGqgykkco3tglMzjHesUsHPyai1hut15i1TFpPYezmbnoImx6TieTKuB6c2a9oBwESWEKNux8OyIhLTWlIF7v0/BhzqbDVUirqs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
-	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750089973;
-	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=R2NIJYlZXUCPFvz62oOBC7RgnkUtxPH/uiLdx+Eefzw=;
-	b=Cxej/lQUz2GTaTy62PcnOSfRvxKBanXxW0lGKW0AFWDQ7U+qDpLJSKzl0sFtrdA7
-	IlPkQnAXxZZRvNLvs2aFKNCn7ht/En6XoDdo+4KiSUwcNsn0YeE3BwU1TiJVG+uovHv
-	FdY7IkjAhFOlAV0AndUjZn8f5RMcY2IxVzacAGQM=
-Received: by mx.zohomail.com with SMTPS id 1750089971949421.80620542117106;
-	Mon, 16 Jun 2025 09:06:11 -0700 (PDT)
-Message-ID: <163a05ac-b0de-4345-8489-dbf858326908@collabora.com>
-Date: Mon, 16 Jun 2025 18:06:08 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0F12857FA
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750090025; cv=none; b=f4BfNfbJL81ny8A7xID+R99gqgF4wUb6UzVjQCij5JjysiYmtgtZ6q1hwnon4c59T+D9+FCG+YIlIsF1ibxXyckpYv8PkrRKJekjM+9gKFaq702xJRFWUZLh6ICCY1wJgK5hp1YZv/lmNdxfibI/dTLPrrXPig/etbnX9GJdxx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750090025; c=relaxed/simple;
+	bh=ods/arTWG7zZ2uno2X+VmD8n9DuNm4lm7lNPDCPVQEM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sX70ny/bf19ZWs6t+0OmcHsybEPpReyUF6xmvNlVoxMyDFwWPe2B6M/QwQPCJ2doyQEZgoCW7vggrrZBZjLm3SF7UWW4/mTjemPdElxfTSIvx1NRUNrGRGCAuHLNSDYu1Np2IrqAHta+xxoIfltBP317sBEQeoTyEddLglVe7VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddcb80387dso42344455ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:07:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750090022; x=1750694822;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oyrMjgYCMoTHaFVZEjrnp+WPauvIoz+a+6ANv4xt5JQ=;
+        b=e9T9TD54Xhogqrg2GMpW0mAiZH3T3nCuEnqlu+V4l/2n+E+j56c1tnGlCyPAw3jJgh
+         D94yJSLM0Pcnt5V+LmZ/S+eXzyNGY0bZyHFea+llAj0M34OxnoPzs7M3AqkKrYg5NGN0
+         K58BWSulJx5/dEGfDFHuNXiosh6P5mR4D7jIePOTl8SKK+vNfv5bFwx4liSL6pi9pyWV
+         6/UEJBP+6YKFqFqWAhH7xyTbEI4WcIDQ3VPUkKGbvOKeyUrYecPIdfHLAIdxUYyMycDz
+         Fk/UNdHwmbg7XLl44bh3Gle1AllDfznI/jWRfoRzW5JhAO7wmZ+OrtATAhodaZilNwLe
+         vFyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOsZjWtqRidtYPsXnIx5XduiOtgZGNVgAbbIdaYAFAOkdKB660fnBQqd00+sNXUcCpCu2dQwDc9TiKVB4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRKO9/ok5u4ymcKlxxHkMRdns1pkrRnj5N4iLltVYaLI7JKjJQ
+	jaAkTncsvi+Yx2YZh4oOienH+diQs2fNUDQcz2xxXslqg/ZzyMEq1f8rf97QKvRbnb8vLW4HDl3
+	2gFC740aMzMAqeOlcDw4VqDVnwlbh/vs3lIChvy7ZDwI3AkY3ODbCo7DFBcI=
+X-Google-Smtp-Source: AGHT+IGmzmhbQ10jKNMeBAYJc+boB0tO/bcvbxwh5R9+sXakm1D6YTGCMbDL0izvDKBz7Z1D9WlTUL0k4yqTud7rdk241oGDatiK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: iommu: verisilicon: Add binding for VSI
- IOMMU
-To: Conor Dooley <conor@kernel.org>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
- nicolas.dufresne@collabora.com, p.zabel@pengutronix.de, mchehab@kernel.org,
- iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
- kernel@collabora.com
-References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
- <20250616145607.116639-3-benjamin.gaignard@collabora.com>
- <20250616-winter-strict-db98f85db22d@spud>
- <5c971c09-c398-40a3-9ed5-ec38b6645e1d@collabora.com>
- <20250616-contempt-remix-5af2b7281cbd@spud>
- <2d251d7c-7906-4a66-9791-7f71e7a4b54d@collabora.com>
- <20250616-capped-rehab-6e7fd24d23ae@spud>
-Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20250616-capped-rehab-6e7fd24d23ae@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2787:b0:3dc:7b3d:6a45 with SMTP id
+ e9e14a558f8ab-3de07a9c6a0mr103005305ab.0.1750090022305; Mon, 16 Jun 2025
+ 09:07:02 -0700 (PDT)
+Date: Mon, 16 Jun 2025 09:07:02 -0700
+In-Reply-To: <aFA-NpGpVF77Fyer@mini-arch>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68504126.a70a0220.395abc.01e4.GAE@google.com>
+Subject: Re: [syzbot] [net?] WARNING in __linkwatch_sync_dev (2)
+From: syzbot <syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, stfomichev@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING: suspicious RCU usage in bond_mii_monitor
+
+=============================
+WARNING: suspicious RCU usage
+6.16.0-rc2-syzkaller-ge04c78d86a96-dirty #0 Not tainted
+-----------------------------
+drivers/net/bonding/bond_main.c:2736 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
 
 
-Le 16/06/2025 à 17:58, Conor Dooley a écrit :
-> On Mon, Jun 16, 2025 at 05:50:50PM +0200, Benjamin Gaignard wrote:
->> Le 16/06/2025 à 17:42, Conor Dooley a écrit :
->>> On Mon, Jun 16, 2025 at 05:30:44PM +0200, Benjamin Gaignard wrote:
->>>> Le 16/06/2025 à 17:14, Conor Dooley a écrit :
->>>>> On Mon, Jun 16, 2025 at 04:55:50PM +0200, Benjamin Gaignard wrote:
->>>>>> Add a device tree binding for the Verisilicon (VSI) IOMMU. This IOMMU sits
->>>>>> in front of hardware encoder and decoder blocks on SoCs using Verisilicon IP,
->>>>>> such as the Rockchip RK3588.
->>>>>>
->>>>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
->>>>>> ---
->>>>>>     .../bindings/iommu/verisilicon,iommu.yaml     | 71 +++++++++++++++++++
->>>>>>     1 file changed, 71 insertions(+)
->>>>>>     create mode 100644 Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
->>>>>> new file mode 100644
->>>>>> index 000000000000..acef855fc61d
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
->>>>>> @@ -0,0 +1,71 @@
->>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>>> +%YAML 1.2
->>>>>> +---
->>>>>> +$id: http://devicetree.org/schemas/iommu/verisilicon,iommu.yaml#
->>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>>> +
->>>>>> +title: Verisilicon IOMMU
->>>>>> +
->>>>>> +maintainers:
->>>>>> +  - Benjamin Gaignard <benjamin.gaignard@collabora.com>
->>>>>> +
->>>>>> +description: |+
->>>>>> +  A Versilicon iommu translates io virtual addresses to physical addresses for
->>>>>> +  its associated video decoder.
->>>>>> +
->>>>>> +properties:
->>>>>> +  compatible:
->>>>>> +    oneOf:
->>>>>> +      - items:
->>>>>> +          - const: verisilicon,iommu
->>>>> You're missing a soc-specific compatible at the very least here, but is
->>>>> there really no versioning on the IP at all? I'd be surprised if
->>>>> verisilicon only produced exactly one version of an iommu IP.
->>>> I only aware this version of the iommu for the moment.
->>> "for the moment", yeah. Is there any information that could be used to
->>> version this available?
->> The hardware block isn't documented in the TRM so I don't know if there is a version
->> field or something like that.
->>
->>>> Does adding verisilicon,rk3588-iommu sound good for you ?
->>> It'd be "rockchip,rk3588-iommu", but sure.
->> "rockchip,rk3588-iommu" is already use for other MMUs in rk3588.
-> "rockchip,rk3588-video-iommu" then? Instances of an IP in an SoC get a
-> specific compatible with the SoC vendor's prefix, so having verisilicon
-> there isn't suitable unless they made the SoC.
+rcu_scheduler_active = 2, debug_locks = 1
+3 locks held by kworker/u32:0/12:
+ #0: ffff888044cc7948 ((wq_completion)bond0#2){+.+.}-{0:0}, at: process_one_work+0x12a2/0x1b70 kernel/workqueue.c:3213
+ #1: ffffc900000f7d10 ((work_completion)(&(&bond->mii_work)->work)){+.+.}-{0:0}, at: process_one_work+0x929/0x1b70 kernel/workqueue.c:3214
+ #2: ffffffff9034d128 (rtnl_mutex){+.+.}-{4:4}, at: bond_mii_monitor+0x122/0x2a20 drivers/net/bonding/bond_main.c:2966
 
-Other hardware video codecs have a different IOMMU so I will suggest
-"rockchip,rk3588-av1-iommu" which is specific to this video hardware block.
+stack backtrace:
+CPU: 2 UID: 0 PID: 12 Comm: kworker/u32:0 Not tainted 6.16.0-rc2-syzkaller-ge04c78d86a96-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: bond0 bond_mii_monitor
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ lockdep_rcu_suspicious+0x166/0x260 kernel/locking/lockdep.c:6871
+ bond_miimon_inspect drivers/net/bonding/bond_main.c:2736 [inline]
+ bond_mii_monitor+0xab6/0x2a20 drivers/net/bonding/bond_main.c:2973
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3321 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5d7/0x6f0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: now running without any active interface!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): link status definitely up, 10000 Mbps full duplex
+bond0: (slave bond_slave_1): link status definitely up, 10000 Mbps full duplex
+bond0: active interface up!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): link status definitely up, 10000 Mbps full duplex
+bond0: (slave bond_slave_1): link status definitely up, 10000 Mbps full duplex
+bond0: active interface up!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): link status definitely up, 10000 Mbps full duplex
+bond0: (slave bond_slave_1): link status definitely up, 10000 Mbps full duplex
+bond0: active interface up!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: now running without any active interface!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: now running without any active interface!
+bond0: (slave bond_slave_0): link status definitely up, 10000 Mbps full duplex
+bond0: (slave bond_slave_1): link status definitely up, 10000 Mbps full duplex
+bond0: active interface up!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: now running without any active interface!
+bond0: (slave bond_slave_0): link status definitely up, 10000 Mbps full duplex
+bond0: (slave bond_slave_1): link status definitely up, 10000 Mbps full duplex
+bond0: active interface up!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: now running without any active interface!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+bond0: (slave bond_slave_0): link status definitely up, 10000 Mbps full duplex
+bond0: (slave bond_slave_1): link status definitely up, 10000 Mbps full duplex
+bond0: active interface up!
+bond0: (slave bond_slave_0): interface is now down
+bond0: (slave bond_slave_1): interface is now down
+
+
+Tested on:
+
+commit:         e04c78d8 Linux 6.16-rc2
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1321e90c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4130f4d8a06c3e71
+dashboard link: https://syzkaller.appspot.com/bug?extid=b8c48ea38ca27d150063
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1423490c580000
 
