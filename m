@@ -1,176 +1,201 @@
-Received: from rcdn-iport-2.cisco.com (rcdn-iport-2.cisco.com [173.37.86.73])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2066.outbound.protection.outlook.com [40.107.237.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B702874ED;
-	Mon, 16 Jun 2025 16:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091232; cv=none; b=ivAlw5XsiUAYEYmoXxkZP49sGBtJZr+mhm5SDUDUPStDcDT9QRY7xitp+81iN5OaNEBot8og3JcWSxsXF85P43WyUq89TvJ4dhTeufwdRlh2egxIEXtIym72d5lCP/yUy6rCtKlujl3rf6sS14p+LXme64wydwoLhd0jZXMnB/Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091232; c=relaxed/simple;
-	bh=DW0+h0UWS/Irhb2EAVUKA+dO+EBEWw8yU6Ds0ZFz+nM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iKH6g/VlBpwUGldMchkPTe8Jaj0iVyt6Ow2Ei/VfSGAvV7t1sZaVIwthGK7mkwMu9ngQkFwXH4/2VczCE4WNktNsEaDm6pUpqGltQDbPSNbUckAt/r8x51uAtLs21QX1tT+zs9QT8DPXnBnZgiQhq7n4JBZEbJbMVztLAOwWDbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=f0iy+wUh; arc=none smtp.client-ip=173.37.86.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8C11B4231;
+	Mon, 16 Jun 2025 16:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750091231; cv=fail; b=a1YoegpHV9SkqUGONhr9cl+o4/I2nmRuUPTX6drKl1avm0EfWcRAIq5Y9HKp5gRHbutYrW1eEWYez9/hAZqGvBVOuuai9WMaRDrab2KQEWxs/0HHyir1H6wiFxhskYec2hnpOyfMYH0y2nQ7L8HY7Db+z8XHvoWMIVvS9EC/WOs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750091231; c=relaxed/simple;
+	bh=FC3gj12hGkOwWmysKtVB+mBZHzqMdJ3epz9nvuUP7DI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=R37wK5faUhEoRztLVYS17ab1cWN2xUyKu4ukSRh9I5mfNaGxIr2dF3IrrTGFbNkQ49Dlbd5HzN6lQVNAsqU6NFOghSkDqnzQ1mi+r8gfZ1YiZCUyFKOHDh/poLyS/mZRDZWZjV7i0k9SXiALRRCGAyugq6qxcy1M0bW3rOkSCCk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jaVZo4YW; arc=fail smtp.client-ip=40.107.237.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="f0iy+wUh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=2244; q=dns/txt;
-  s=iport01; t=1750091230; x=1751300830;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YqODL3LXmwxnxActdJgMhQ4PbbcDeFUHmaJJHfZ370E=;
-  b=f0iy+wUh/aI9iyhEisC3cDyWSCskqkC/FPrTKH3oo3DdUCwYugPf7rgD
-   X9GUrii7xUKMYvaj+26OjWnOiRSO9GgOkYwh5n0Cin66fo3poZogEgEpb
-   hwiReEKRby0Fa10NSiEXiz3+uRszLARWY2mevy+2nzuej0VgkMd2uhDep
-   blAmM11kEyqDMgPATOrqcIanMHGF1QVFqp90AKFvON6CyFWJlkrAJeKPU
-   cVqqFXPrTFSDwGYYWYDZfvD4q0DbOlPJSycogp47n5iX/krnC/XhwaQdm
-   W94Ypo1PTBGI75b6h3Q9yP7GQ9FNT5uqzRFtgveJtDzaWgGtGemZnwqBQ
-   g==;
-X-CSE-ConnectionGUID: duDHG0QXRMeepINyvnsMCw==
-X-CSE-MsgGUID: R3gFHtHWTmqHOcJMkrJwHA==
-X-IPAS-Result: =?us-ascii?q?A0ANAAAYRVBo/5QQJK1aGwEBAQEBAQEBBQEBARIBAQEDA?=
- =?us-ascii?q?wEBAYF/BgEBAQsBgkqBUkMZMIxwhzSCIZ4ZgSUDVw8BAQEPUQQBAYUHAotmA?=
- =?us-ascii?q?iY0CQ4BAgQBAQEBAwIDAQEBAQEBAQEBAQELAQEFAQEBAgEHBYEOE4YIhlsCA?=
- =?us-ascii?q?QMnCwFGEFFWGYMCgm8Dr3WBeTOBAd43gW6BSQGNTXCEdycVBoFJRIEVgnlvg?=
- =?us-ascii?q?VKDPoV3BIMmFJUzi3BIgR4DWSwBVRMNCgsHBYFjAzUMCy4VbjIdgg2FGYISi?=
- =?us-ascii?q?wiESStPhSGFBSRxDwZPQAMLGA1IESw3FBsGPm4HmAuDcoEPezV4FgEppVehC?=
- =?us-ascii?q?4QloVMaM6phmQSpOIFoPIFZMxoIGxWDIlIZD44tFrtTJjI8AgcLAQEDCZF8A?=
- =?us-ascii?q?QE?=
-IronPort-Data: A9a23:g2ACvaCjrx5JfxVW/8Hiw5YqxClBgxIJ4kV8jS/XYbTApD4m0WAPm
- 2YWUTvQbKmNNGf1fo0nPdzn8U8H7JfRmNBqOVdlrnsFo1CmBibm6XV1Cm+qYkt+++WaFBoPA
- /02M4eGdIZuCCaF/H9BC5C5xVFkz6aEW7HgP+DNPyF1VGdMRTwo4f5Zs7ZRbrVA357gXWthh
- fuo+5eCYAH8hWYuWo4pw/vrRC1H7ayaVAww5jTSVdgT1HfCmn8cCo4oJK3ZBxPQXolOE+emc
- P3Ixbe/83mx109F5gSNy+uTnuUiG9Y+DCDW4pZkc/HKbitq+kTe5p0G2M80Mi+7vdkmc+dZk
- 72hvbToIesg0zaldO41C3G0GAkmVUFKFSOuzXWX6aSuI0P6n3TEz+hCLG5uBL0i3+t6GUBo5
- OIeMxUmcUXW7w626OrTpuhEj8AnKozveYgYoHwllGifBvc9SpeFSKLPjTNa9G5v3YYVQ7CHO
- YxANWoHgBfoO3WjPn8UAYgineOhhVH0ciZTrxSeoq9fD237l1Mgiee3bISOEjCMbf8OkWi4u
- kL5w2HgIjYRFvmc0xia0lv504cjmgu+Aur+DoaQ+vdsxlaa3HQeDgEbT3O/oP+wkEn4XMhQQ
- 2QW9ygkhawz8lG7CNj3Wluzp3vslhsVQcZRFasi5R2A0LHZ5S6eHGEPSjMHY9sj3Oc0QDEs2
- 1CJnvvzCDBvuaHTQnWYnp+OoC2/IzM9N2IOZSYYCwAC5rHLpIA1kwKKTdt5FqOxpsP6FCu2w
- D2QqiU6wbIJgqYj06S94ECCmDm3p7DXQQMvoAbaRGSo6kV+foHNT5e04FLf4N5eI4uDCFqMp
- n4Jn46Z9u9mMH2WvCWJRONIGPSi4OyIdWSFx1VuBJImsT+q/hZPYLxt3d23H28xWu5sRNMjS
- Ba7Vd95jHOLAEaXUA==
-IronPort-HdrOrdr: A9a23:Xs8XMa4kwtcixeqh6APXwOfXdLJyesId70hD6qm+c3Bom6uj5q
- STdZsguyMc5Ax6ZJhko6HiBEDiewK4yXcW2+gs1N6ZNWGMhILrFvAB0WKI+VLd8kPFm9J15O
- NJb7V+BNrsDVJzkMr2pDWjH81I+qjhzEnRv4fjJ7MHd3ASV0mmhD0JbDqmLg==
-X-Talos-CUID: 9a23:PudVXGCJuqOs7Gj6EyV62G47QvkVSFjQwW/xBV6mD31MY6LAHA==
-X-Talos-MUID: 9a23:xN3E4QbhOMHti+BTjWTjqhF+FPhU5r2OL0svtJYcmdakHHkl
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.16,241,1744070400"; 
-   d="scan'208";a="379172463"
-Received: from alln-l-core-11.cisco.com ([173.36.16.148])
-  by rcdn-iport-2.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 16 Jun 2025 16:27:03 +0000
-Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kartilak@cisco.com)
-	by alln-l-core-11.cisco.com (Postfix) with ESMTPSA id DFF9E180001E7;
-	Mon, 16 Jun 2025 16:27:01 +0000 (GMT)
-From: Karan Tilak Kumar <kartilak@cisco.com>
-To: sebaddel@cisco.com
-Cc: arulponn@cisco.com,
-	djhawar@cisco.com,
-	gcboffa@cisco.com,
-	mkai2@cisco.com,
-	satishkh@cisco.com,
-	aeasi@cisco.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	revers@redhat.com,
-	dan.carpenter@linaro.org,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v5 2/4] scsi: fnic: Turn off FDMI ACTIVE flags on link down
-Date: Mon, 16 Jun 2025 09:26:30 -0700
-Message-ID: <20250616162632.4835-2-kartilak@cisco.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250616162632.4835-1-kartilak@cisco.com>
-References: <20250616162632.4835-1-kartilak@cisco.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jaVZo4YW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nV7yfKcy5YnAiBgOekrre0s5cdXG2eK5XPU+639ABbPDNAnL9WyiMWRWZlg+l2NnovXRTvHpARGbzZxscaAKgdA2YndCYUER04AyBZ9F/a4FxzZxTy137O//26fIz1sx73l6aSGIfIQmUGAmL+sQJbawbfZuq8O145FILVl3zhXnwDKYlW+sGKxZkXj4YReVjzdCYvkgaToMGAJvbJYz8k5z5z7IJuVKtMSv6L7L9KN8KbJiA7S55Ng5hJHkfmlbtt1wSs18evHLiiEQ+MbKuJEbmc3JFfZTcE9h5VKZyHlozJFTubGigtJFirjRo3G/Y2+LFQLif8eKGNBlAJ4a1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U42iEVmyE/4ruPsSPIJ6g2XEVg/oLS0yUSZDQdvl23g=;
+ b=TMPvSEMQRCx/O8K4D3HHvkleWU8I92UIzC55Lf/o7DepxUIJW0zNzGbKmPI10Hra9h/MTj+NBiiyziD/0ksDb6PQFbtLRh4naqQaW/BAsqlzGk0C9kf2Hx/Cfv15tOWPQHxXWbL8IjDdrBczOUnc7u7QZ4FT5GHaG0scedkELssJufqF7qJJYhvkZaiv6pAAaIDPzptgTFqLHlI57BdMwC+s81riVKF7ckHXOnz6JkQ/1onk9GdnnbjCIhZiUXP7obwLCTzKEYLPU6rRpOq+XYJEE2hEVH2JWabQnA3F6HwXSclhBB4DOaqcc+MnqjAgacJf8OfX6GPUvdfZn31BPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U42iEVmyE/4ruPsSPIJ6g2XEVg/oLS0yUSZDQdvl23g=;
+ b=jaVZo4YWDiPn1DQWspKYqdcJQsbtLrAri0wB+bntILw6EyJ1/F1aOcFwwYo+SBZFu+5dWBFxCznyKwPxB4mKa0QPmCo+eZpKYb9YfPgViiE1uB7kUcM09n8fjw+n85Ck+R9VXqfY0zD7joozasdHeiUSWphuX5weNxCmvjhP1H7EOz4VOOEdNM2mFAW+e36ZBfv0qbJn/Wwvt9XKEm617VDDlOAhFHCrmsc/sD/S7s2Aohxnd6Bg8+Zf7/jWgSA+celVBz8sAWJ/uVhw22kGfEZapcSKH7mmavxbjBjvlMhjomqGbMrzbGwd1jYUchWpwm79NAVoEWVyYWWB2MsmiA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by IA1PR12MB6650.namprd12.prod.outlook.com (2603:10b6:208:3a1::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 16:27:06 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Mon, 16 Jun 2025
+ 16:27:04 +0000
+Date: Mon, 16 Jun 2025 13:27:02 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: kevin.tian@intel.com, shuah@kernel.org, joao.m.martins@oracle.com,
+	steven.sistare@oracle.com, iommu@lists.linux.dev,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.weissschuh@linutronix.de
+Subject: Re: [PATCH rc 4/4] iommufd/selftest: Fix build warnings due to
+ uninitialized mfd
+Message-ID: <20250616162702.GQ1174925@nvidia.com>
+References: <cover.1750049883.git.nicolinc@nvidia.com>
+ <be226e78fd581585c22c6c7f33c14bfe4a0c3ef4.1750049883.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be226e78fd581585c22c6c7f33c14bfe4a0c3ef4.1750049883.git.nicolinc@nvidia.com>
+X-ClientProxiedBy: YT4P288CA0003.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d4::11) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-User: kartilak@cisco.com
-X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
-X-Outbound-Node: alln-l-core-11.cisco.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB6650:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c9d354a-8a71-45f8-fc58-08ddacf2a0d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U1QzdmZ0WTFUUGlnM1dsQzBPT2k4a2tuSnNSZ3djYzc2SThxSXVvNDR0SFlq?=
+ =?utf-8?B?cHlSWFNRL01RSDZWc2hIck9YTENJUk13NzFFNjMvSlovZURxeGNPZXJ3WkI5?=
+ =?utf-8?B?VmRMVnVtV0dGLzFyR20ySjByWW5DaDdzVjJTZjdQOEhtSStLN0RONHJja0Z5?=
+ =?utf-8?B?L2pJSGxzeVpzR1Fyc1NiVURVbEd2NkY1TUJoWnlKRW55cXNpRHNnemUvYVpJ?=
+ =?utf-8?B?WjhTbUVsRFBKWk9mZkMxNTcwVUZvQjU2QjlUbkh5OVJMQUlWZFhHeERGMW9O?=
+ =?utf-8?B?Mk9KbFR6Z0ZSSUpjKy8xOGRFWmMvV28zNjdua2JkQnp2Qzd0S005QmVnRHc4?=
+ =?utf-8?B?dURSaGVpNlhDVXF0b0JzUHJCeGZmZHAvNWR6K1RxMWVqVERKQzFaYy9PeHpV?=
+ =?utf-8?B?SnRLVlJIM29NZW0vMTRXOTBQMldtUm9HQW5wNkdEU0dIeU96cmxkQkZDTkVX?=
+ =?utf-8?B?MlJiYW5IaGoraGxpMU4xL0RlSFA5YXdiWGJXS09sWVlNcGJGNlZGcUUzK2xs?=
+ =?utf-8?B?UmRBTUxQS0hjSzJDY1pUUG1NVXhpbVJvS0s5LzViYXpQTGxBMDJjYjIzQm4z?=
+ =?utf-8?B?UFVyamFQUU5EcS9XV3ppNkFMS0hoTFlPZWVBR0hYN0NvWGRRc0dFcm9DQ050?=
+ =?utf-8?B?UG9RcTduVzhBalFKL00ydUV1dVFwNnc4Q1B5NmhGcS85UFlIYnJhQ2QrS0tm?=
+ =?utf-8?B?SFNGbi9BYnhaNlpBNW5oWFBjQ0x2QlYyT0NyYUdxZHNEK1JFWUhhQ0cxNUQ4?=
+ =?utf-8?B?Z3RVY1NTQ3M0VnZxTnZ6NldOQUc4Q3o2Q2dvcEQrRkIrZGczc05kRG5EbEdI?=
+ =?utf-8?B?TFVyakRtMUJJNmtVZHZlOWZzVXcya2pQVFJ2c0ZNZHNDMlN3UThMbXI1OXcz?=
+ =?utf-8?B?N0FiZytST2kzY0F5NlVHK0NqU1UwdVo1aGJrTSs4aStlMWpTU20zY21hYlRU?=
+ =?utf-8?B?SWM1cHBRbHdLZGJkYnFOMVhrb1lXVWtlL01QczZsYjcrbFR3UG9KZ0piWWR5?=
+ =?utf-8?B?MWo5eXZSdllqRERtK0pHcmhtem9WNWF6ZXVPMHU3S29FUUJXTVVEQlpISXFa?=
+ =?utf-8?B?dHlwNFErZDFIZmd5bi8xNlowQ0dITm54Q1NPMU1DY2xmM3J6QnhtbFMydW43?=
+ =?utf-8?B?aVNZZ3VhWHNiTFRpbktLanZQL3RjaUo0T0xIRHhMbzBYWVBIcDhUME5xU0JP?=
+ =?utf-8?B?TitYZ2NzbFRKa0dQU1JWTzlzZURPMWo5Ymh5c0F0d2RMREx4TGFGK1ZZU0d4?=
+ =?utf-8?B?V0V2OEszakZ1YlZselg2ZVFMRldIaHRwdCsvTElWc1h4bEowdjhEWElBOUJk?=
+ =?utf-8?B?MTI1T3BsSU5RaGUwRFc3SXUzNWFWVDNaMjNKcm1ycWhWZ3BLV3J2ZGEvOE9X?=
+ =?utf-8?B?a21iRm5HazZiNnVSTVBtZDdXK3pJSncvblM0a0NpQXZCNWszRUNVS2lmNW5R?=
+ =?utf-8?B?bHRxNGFPdnNRTHNmTkE4Vm9zZmg0cjh4aDdjVUdTb29wbWU1SlhFamlYSUZN?=
+ =?utf-8?B?dXNBZ1lKOWNjSjUwUGNoa0pVamtRU0ZUcldyQjIyK3dEYzJFaDhabDBWRjJz?=
+ =?utf-8?B?R3JDNXBLNkQ0RGdaeENzTzBRWndva2dYcmE5MUNCNC9qWGw1dkhJbjZ4bEhI?=
+ =?utf-8?B?K1VpUnRhcldBN0NZUjJwSk5RdWs2cy9JQ1htMzBtdHRibnFycE9hQVZzWTla?=
+ =?utf-8?B?MmFTdXc2SnVTL0lRbGZERkZQOVkzQzhFSDBSRmlQbmZTSE14SUpQMk5TL1E3?=
+ =?utf-8?B?Y2pUaXhLRDFpdUtEMndEZE5rdDZtWlREWWZBaW1CU0t4cW45Mis4dW9wUWc1?=
+ =?utf-8?B?NjNEdUpFT09CZkVLMVhIQWN0R09tWFhPb3FFcU9DSFc3UFlXRHJmUlBXbHNH?=
+ =?utf-8?B?WVp5ZTJ1NWxYQXZwYWRCTmgxWWQzSGplaUU0SFBwRlhKRGY0aVUwT3lpd28z?=
+ =?utf-8?Q?Ak1Ig/iZaAw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bUVYaGJqenl1SU96NE1IdExLa05xN3FNS2J4SlVBUDB1SlNyMW5iUlhCUTNq?=
+ =?utf-8?B?VFZlMHZ5dHg4YmxpdWMrTVM4RFBBL0FMMG1kUm1RRTl4NExoTFQxSUlRM0s1?=
+ =?utf-8?B?aStwWWo2eFJldmt1Q1E1Q0t2ZnNQdE5xaWpLTmVWeVVDV3g0bjArbXlScnBX?=
+ =?utf-8?B?Wkhwb3JiNjgraUE3bkg3WndrMlVsQWMrdU9YaGxHbWlPcXJZYzd3QUl3RnV5?=
+ =?utf-8?B?aFdoOHJEellleDB3aU9kbkdNY0NoNjFCSE9vQmJlWkV1SC8waGUxdVRqVE52?=
+ =?utf-8?B?RHVnVlBKaEFMcU5xck5rYlJmVlZzZHMzRU5KSFZuNlNqV29SZnpwbFNTblRZ?=
+ =?utf-8?B?cC9tNGxXRnNpRHdjSjZpWW9FL3FKNUlDdDJPQ0lpOHhDRjNDNUlhd2dBNHhW?=
+ =?utf-8?B?dW50bEpCTXdaRjZma0NsOVlzV2N0cU5XRFZyTTNTam9rNUZ1cFVaU2gwN0pS?=
+ =?utf-8?B?WFQ0UUxGNkVNOVlPTGQ0VUxpd0hjZGtBaG9rVDN1RjdqODJWTVRLNWxjTTFz?=
+ =?utf-8?B?WmhPbXRtNTkyN2FPcHpkYzBiSDhNOWtXRS8xQ0dQd3BkQ25KYXdRazEwMXQw?=
+ =?utf-8?B?dmRBVFRSY2RHUjl6RWhScXdRSTZCZkV2czV2N09FWDg4bmhzY2JuUTMzUS82?=
+ =?utf-8?B?Q2llUFBLbzQrMmJhRlJ3c01uaEdDVVJPOE9xR2RPcUhSQ0twS0tOOWlZYm5O?=
+ =?utf-8?B?ZnpncFpzSnYzTXR5a2x4WGhpRFVqY3RNRHJ5dTlhZncvSG5PbTZ3VHN4VVBX?=
+ =?utf-8?B?ZWExMWw4a2VUM0ZYMEUzMHNUY0xlMHVCbFM1TVlIVWlZd0VSd3dFN2YwNEJG?=
+ =?utf-8?B?dVdSU3lETTcvNThOVXNPTHQzSXBrU1pMcENyT1BCay9pdHlxc0VvK0h2WXNJ?=
+ =?utf-8?B?ZENpbUhOQ1R3S3dWUmRKOHhjcFAvcFYvNm1rU1ZISWwzWjQwOGdzUjduemg2?=
+ =?utf-8?B?cHI3dURJVHdlYllKdGFQazBWMnpFRkQ4OEVFa1RrbkRxU3laamRQaEZDOGUx?=
+ =?utf-8?B?UFozVDc3TFpzK3k1ZDZLT1hkbUpYWTlCMmlPTkhETkpZeHFiM3RXc1ZjWGhL?=
+ =?utf-8?B?N1FSbWNkZ1ZJbjR2d28rcFhKTTMvUzg1enRSZ1hDc3UzQzBTS1R0aG5iOGRw?=
+ =?utf-8?B?T1dBaVpDYXJ0ZS9TbEUzbDhoc2dSWkRlNWs5dUdZWWRWV0lYbU9hMzlnL21P?=
+ =?utf-8?B?MGpRdzhnbElaeUdTVFM1NUJ1WFdtZVVMaC8wWGZIM2k2d0pEMXRwTmZVTjJ2?=
+ =?utf-8?B?V2JRN3UrcEZNNUNGd1BVUFRrU21qVllBV29PbDU1VmhFV0xDeGR4R0J2VFVE?=
+ =?utf-8?B?c3grSTA1QWhwamdybUJqZTdEYW9BNGllMWpwWEVXWWVhV05FU1JWeWt1Y25I?=
+ =?utf-8?B?NUtVaUw5elNYYWd3NmhzRExzSWlsV0FVTmFaMEMxOGJpV1lNaHJNbVRSY0E4?=
+ =?utf-8?B?MnJCZXVFOHluZTVJZEdhOXl1Tm9QRCtyUlQrMHJzLytHRU1iODlXVWkxQzRy?=
+ =?utf-8?B?c015WXNXT0NzL2gwbm5BVG5DK2tKUmVPOUNzRWhTUWE3aFFhWUgwN0t0NElL?=
+ =?utf-8?B?RW5WREtTTUE5dTFKWXBtOU9HbkpqWWRQczNTYXNVMkZlT1QxTnRTUWNZaWpP?=
+ =?utf-8?B?c3BrU2tCNVVySmx1QnQ0SUZuUGwxaStBNzhJckMxWEc0U0svWkJ0Ky9LaSsx?=
+ =?utf-8?B?REZXak41Y0YwQlRMSkVRUFl1ZnNlenY0YVhVUW43bVM5WVdUL3VNMXg0OWlo?=
+ =?utf-8?B?OWdCNUhIK0JpNXhEZCsrTC9mVzFVZ0U5d1ltNXkvVnZlZE5vdkxNZ1czVFY1?=
+ =?utf-8?B?blBmVis3dDQ5VzVqMHdhNHh6SVdLKzJmWjVkK0pEQnlvTDFCWGVoV0JMYjlj?=
+ =?utf-8?B?R0Mvai9XNnFTVEZBR1VvWVJaZUlvQW1tQXlYYkZzeHJrVEg2dW9JWE91dnBz?=
+ =?utf-8?B?VnhNWFFhYzhraXl6eDNuYm85UTNJbHNBbU9WT0tjR1Y2N3RBdkQ1Y0dVL3ZH?=
+ =?utf-8?B?MVozQ0FmR2ZoOVBraWVMeW42YUkxMGVwazFwNWtvYVA1UlJhTzZYdXhFV2pP?=
+ =?utf-8?B?a284MGJDNkxCNjJVYk9IZUpWUHhVRG9BcHdaNForQjlVWU0zS0Foenpid09G?=
+ =?utf-8?Q?ZaqXc3IftMdO4NPK8ra/sO7kl?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c9d354a-8a71-45f8-fc58-08ddacf2a0d7
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 16:27:04.0570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u2LaOSNTdRMcWeW904hraFGoNnG2lCpVtta8/DrOwmMsaU74CU88FmsmfFnnG0Rl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6650
 
-When the link goes down and comes up, FDMI requests are not sent out
-anymore.
-Fix bug by turning off FNIC_FDMI_ACTIVE when the link goes down.
+On Sun, Jun 15, 2025 at 10:02:06PM -0700, Nicolin Chen wrote:
+> Commit 869c788909b9 ("selftests: harness: Stop using setjmp()/longjmp()")
+> changed the harness structure. For some unknown reason, two build warnings
+> occur to the iommufd selftest:
+> 
+> iommufd.c: In function ‘wrapper_iommufd_mock_domain_all_aligns’:
+> iommufd.c:1807:17: warning: ‘mfd’ may be used uninitialized in this function
+>  1807 |                 close(mfd);
+>       |                 ^~~~~~~~~~
+> iommufd.c:1767:13: note: ‘mfd’ was declared here
+>  1767 |         int mfd;
+>       |             ^~~
+> iommufd.c: In function ‘wrapper_iommufd_mock_domain_all_aligns_copy’:
+> iommufd.c:1870:17: warning: ‘mfd’ may be used uninitialized in this function
+>  1870 |                 close(mfd);
+>       |                 ^~~~~~~~~~
+> iommufd.c:1819:13: note: ‘mfd’ was declared here
+>  1819 |         int mfd;
+>       |             ^~~
+> 
+> All the mfd have been used in the variant->file path only, so it's likely
+> a false alarm.
+> 
+> FWIW, the commit mentioned above does not cause this, yet it might affect
+> gcc in a certain way that resulted in the warnings. It is also found that
+> ading a dummy setjmp (which doesn't make sense) could mute the warnings:
+> https://lore.kernel.org/all/aEi8DV+ReF3v3Rlf@nvidia.com/
+> 
+> The job of this selftest is to catch kernel bug, while such warnings will
+> unlikely disrupt its role. Mute the warning by force initializing the mfd
+> and add an ASSERT_GT().
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  tools/testing/selftests/iommu/iommufd.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 
-Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
-Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-Reviewed-by: Arun Easi <aeasi@cisco.com>
-Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
----
-Changes between v4 and v5:
-    - Incorporate review comments from John:
-	- Refactor patches
-	- Increment driver version number
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Changes between v3 and v4:
-    - Incorporate review comments from Dan:
-	- Remove comments from Cc tag
-
-Changes between v2 and v3:
-    - Incorporate review comments from Dan:
-	- Add Cc to stable
-
-Changes between v1 and v2:
-    - Incorporate review comments from Dan:
-	- Add Fixes tag
----
- drivers/scsi/fnic/fdls_disc.c | 9 ++++++---
- drivers/scsi/fnic/fnic.h      | 2 +-
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
-index 0ee1b74967b9..146744ca97c2 100644
---- a/drivers/scsi/fnic/fdls_disc.c
-+++ b/drivers/scsi/fnic/fdls_disc.c
-@@ -5027,9 +5027,12 @@ void fnic_fdls_link_down(struct fnic_iport_s *iport)
- 		fdls_delete_tport(iport, tport);
- 	}
- 
--	if ((fnic_fdmi_support == 1) && (iport->fabric.fdmi_pending > 0)) {
--		timer_delete_sync(&iport->fabric.fdmi_timer);
--		iport->fabric.fdmi_pending = 0;
-+	if (fnic_fdmi_support == 1) {
-+		if (iport->fabric.fdmi_pending > 0) {
-+			timer_delete_sync(&iport->fabric.fdmi_timer);
-+			iport->fabric.fdmi_pending = 0;
-+		}
-+		iport->flags &= ~FNIC_FDMI_ACTIVE;
- 	}
- 
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
-index 86e293ce530d..c2fdc6553e62 100644
---- a/drivers/scsi/fnic/fnic.h
-+++ b/drivers/scsi/fnic/fnic.h
-@@ -30,7 +30,7 @@
- 
- #define DRV_NAME		"fnic"
- #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
--#define DRV_VERSION		"1.8.0.1"
-+#define DRV_VERSION		"1.8.0.2"
- #define PFX			DRV_NAME ": "
- #define DFX                     DRV_NAME "%d: "
- 
--- 
-2.47.1
-
+Jason
