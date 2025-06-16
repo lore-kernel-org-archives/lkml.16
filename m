@@ -1,113 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A8620E00B;
-	Mon, 16 Jun 2025 07:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FA220E023
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750059926; cv=none; b=XzzLxUxYl/vGM3K1MFcjfro+WqUQJdEOa30xz/5NB8Ih1QnqhHCbSa262Zshdm05XlCIe3TAL8GChH2FSaw+NXbtvb1jroDc5UgSj2LxygjvbeK9dMMN2fLcEHRa/G17C14k3vOZPPdFAGt87x6wwiPr9ajYKXcpdoVB1JyvoZw=
+	t=1750059941; cv=none; b=qfSLDhadQScqwn/FuDwq8kQV+Yzk46zgCncaN9vDuLPSBwT/p8yYxb+HRKVk41/BnWbEBh8Q4piZmBP5SyTv7js/ixI2qHQUJBEAIzmmpGid0bQZh+FmsEexNKgJ7MFvhFE2IwNYmraNhA684j+0bRiCcXF/UWYl7A4LkPgqz3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750059926; c=relaxed/simple;
-	bh=vHO6QCfc9duf+IwovLForDeOanm+zkghY5l8I2+xikM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k4qCtk36sP+raoZsy2v3aTSJrJ02VvW44imP3KM6T5S2wcbTcEtuuBlCqF2kz+tOng+2PS7WgoGiIDNFxGjepqX9HcxgWaEsBK7wXzWtDFFfcoNkP5Bd1g22ZkaNbq2JybmT9uDbSUmL53Lcznc3iLychNsD61R1tiN9Q+s73f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZB2rMIak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750059941; c=relaxed/simple;
+	bh=emuYZRRsAsbfW8dtLwfIHR1XhI9Ti0TeclpaLXuKj8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nh5KMmk6LOCJzPH6R0jrjdxgLxGaRDuK7iuNotlfncYrNUS+JZF0jjqRSzy/FTxC3aWLm+oRk2mZAEMO1N/CnXgeGLVdpOafa/D9D5peUsV8f7WCbxE3EPHtewHcgD58ViqqrgyfhHwyHoNbVMcDJMuxPwBc1qzQrSOKdsSQins=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Rwr5uj6i; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZB2rMIak"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAA0C4CEEA;
-	Mon, 16 Jun 2025 07:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750059925;
-	bh=vHO6QCfc9duf+IwovLForDeOanm+zkghY5l8I2+xikM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZB2rMIakqJgfKo62/tAMf5DkeFCIxlGjrc80HffKBy2eCBOf5Bxwr0xOBX4y7qQcK
-	 ij67s4Q8l1+4LABueLyoPaflLEtqi6kx+t8EuEgSdGXRcrq9fBHZ+85zLGRCKiCQRQ
-	 UeR4Ot73joKTCuresfP5hqsYw5RErjkWSKeck0O7GhRyv5lU2Aj03DW3DPG22VcaG/
-	 ScjieMek8whWcLEevdAfHWVV6SQCKSF7a9xLzMAj+dayftBm2NkAsjTBGCwsTMuz6P
-	 g/QbBzKyvoPDVn9UsfryoY1tK8YDYrB7xVMqtsSOyaFpUpwi3fHnXEfFBAwIP3vVEe
-	 LTIOR9zH1ha4A==
-Message-ID: <d90d71bd-229e-404a-8aeb-7ca7efaafad0@kernel.org>
-Date: Mon, 16 Jun 2025 09:45:15 +0200
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Rwr5uj6i"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso2402273f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750059938; x=1750664738; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QkcvPSidlO7p10vWDcll4mLBY5FWBOj4Z5ozH1tkERw=;
+        b=Rwr5uj6iG7+A25+ymEVrEZn9F3u5jsC6JRLVR7SNXGU5QCK+i3GObrIW0VCEfcj5vs
+         hT8e862H5y9uxoIUYSTsRKAeotcSV0HJIemrpN28NFzPvI8J3mbwGTmaGeqQ8sMVsN/Z
+         KUyGmd0XNuNaDHaWVqizcrtRm7YMDS3CDWqggq9jnlH/DgiMhkyUax5lm7xivfz7+Jk7
+         HR/+RPYLcGbGC/V7sGkgwQRvkXWGHcIPyg5POIE1rvXXeZIZe8bdj/gzCpfGe6B3Qs4h
+         i4+uP/3nxDtjSqKfu//B7TBUedStmSttiOeeBQFDmHfSWy7WMgbSs0DQxqc5iaAlkQF+
+         uAnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750059938; x=1750664738;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QkcvPSidlO7p10vWDcll4mLBY5FWBOj4Z5ozH1tkERw=;
+        b=Au3O37+jZRRtyNvFef10QnCS6BudWTbnsQ3Dk+urkDhyEewJLmM3QPwBQOulGEc2i/
+         /XPQKLrDoVbWM8N/kau7VYZqfyR8U9IFmnvpf47SZWlhMXkOOnkXP0rR/9W+8qVI3Cs5
+         GZ2khVzkl+pfH+gO1SS+3tC6nC3VbniEPHv/XwGh29TnDFwBXbQI+tovJQsPAqDlkLbj
+         kF6vV+xSzl5c7JcOtUEAxd9VyjGiRaLVRIQzMCVciqXYQjG+CCqGOCAn6X8ha2KsUNV3
+         Qq+2H5es8pBq4cJbJnWwcXrECJsLa8ajVnyXtLJd/a8rfuyjngn5tKpubPL1+PEWCb/m
+         hBMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKJjSUnvUTCSgQlKScIjIdn6K1Gi7AWqiTFDLDzPJLDsoWvk0qcTF6ZVyUP8aev/1yzLFr0cu7Pag60Sg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5EFyCb/x1AlCxclrF2aGOrgTwSMLuxjSkVfN717RWhdOZ/dSF
+	2FEWjfv4694s6lZumVI1uu4cKz63H+RCZrcK8XIwSCMi0ScZ5DZF2W+VGMvzIut+WS0=
+X-Gm-Gg: ASbGnct1h0aMbwRtHtkNiZKNfmdWpyRRp3VwNQNATMcqvuzEjzH/dFbojlSO6HJs/Qh
+	26zu56o6kLbcgpyW3SbEP3uBtxve9O5SGmhef4JGIAgSXPs1QBZsosMWoUQjtf5kYp1yyU7QzyI
+	3VOU1U3wBufIAqxbAO2J/TSdCEP6x6J2BNpqso9W9EuyUCNladH6A8QP1OSEdS0oNI/ubMH3aqB
+	c4v1nwVZFawd953R9JRhPQHUypJIdx5gQQUTvXEE528OeQ47KCphBxiyfYoo7B1HJtPjXjt8jSA
+	c8WWqr6RR/p3mX4B9tjiTHJSKXHXrQTbGJfPH14HbbTotWhDimHrMOjoDqiDenE=
+X-Google-Smtp-Source: AGHT+IHa3z0ZuONg+scxBHZPdfzZc35NbDeT4H9xI2j2Jv9Zpz8bLhlsMxdnKEUqdd/SI/I3ccpjFA==
+X-Received: by 2002:a05:6000:2289:b0:3a5:39bb:3d61 with SMTP id ffacd0b85a97d-3a5723a3af6mr6913868f8f.27.1750059937840;
+        Mon, 16 Jun 2025 00:45:37 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4238:f8a4:c034:8590])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b2b113sm10297163f8f.75.2025.06.16.00.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 00:45:37 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: sloppy-logic-analyzer: Fully open-code compatible for grepping
+Date: Mon, 16 Jun 2025 09:45:33 +0200
+Message-ID: <175005992380.16166.15596259788808709225.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
+References: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/9] Split netmem from struct page
-To: Mina Almasry <almasrymina@google.com>,
- Pavel Begunkov <asml.silence@gmail.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, akpm@linux-foundation.org, davem@davemloft.net,
- john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
- tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250609043225.77229-1-byungchul@sk.com>
- <8c7c1039-5b9c-4060-8292-87047dfd9845@gmail.com>
- <CAHS8izNiFA71bbLd1fq3sFh1CuC5Zh19f53XMPYk2Dj8iOfkOA@mail.gmail.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <CAHS8izNiFA71bbLd1fq3sFh1CuC5Zh19f53XMPYk2Dj8iOfkOA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On 11/06/2025 22.48, Mina Almasry wrote:
-> On Wed, Jun 11, 2025 at 7:24 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 6/9/25 05:32, Byungchul Park wrote:
->>> Hi all,
->>>
->>> In this version, I'm posting non-controversial patches first.  I will
->>> post the rest more carefully later.  In this version, no update has been
->>> applied except excluding some patches from the previous version.  See
->>> the changes below.
->>
->> fwiw, I tried it with net_iov (zcrx), it didn't blow up during a
->> short test.
->>
+On Fri, 13 Jun 2025 09:16:28 +0200, Krzysztof Kozlowski wrote:
+> It is very useful to find driver implementing compatibles with `git grep
+> compatible`, so driver should not use defines for that string, even if
+> this means string will be effectively duplicated.
 > 
-> FWIW, I ran my devmem TCP tests, and pp benchmark regression tests.
-> Both look good to me. For the pp benchmark:
+> 
 
-Thanks for verifying micro-benchmarks wasn't affected by this change.
+Applied, thanks!
 
-> Before:
-> 
-> Fast path results:
-> no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.337 ns
-> 
-> ptr_ring results:
-> no-softirq-page_pool02 Per elem: 529 cycles(tsc) 196.073 ns
+[1/1] gpio: sloppy-logic-analyzer: Fully open-code compatible for grepping
+      https://git.kernel.org/brgl/linux/c/bddfad9f7ef3fc73f0a6fb05996719adcb5082fc
 
-I'm surprised that ptr_ring return is this expensive on your system Mina.
-I'll reply on the [v4] benchmark import patch, as this needs some more 
-investigations.
-
-[v4] 
-https://lore.kernel.org/all/20250615205914.835368-1-almasrymina@google.com/
-
-> slow path results:
-> no-softirq-page_pool03 Per elem: 554 cycles(tsc) 205.195 ns
-> 
-> After:
-> 
-> Fast path results:
-> no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.401 ns
-> 
-> ptr_ring results:
-> no-softirq-page_pool02 Per elem: 530 cycles(tsc) 196.443 ns
-> 
-> slow path results:
-> no-softirq-page_pool03 Per elem: 551 cycles(tsc) 204.287 ns
-> 
-> 
-> 
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
