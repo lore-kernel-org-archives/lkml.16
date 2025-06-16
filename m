@@ -1,82 +1,67 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134C2216E26;
-	Mon, 16 Jun 2025 14:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A230721CC62
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085912; cv=none; b=Jj064MVyT+kCRzUf51jQv4V2OdEZ17vrTCVH+z9N9fbpLnpdJHXhnMDeRmYjtACzLJ2xsJHjX7u3IiNPIV6Z/M08KKUvynPreYJAAuvieKQ+8+2qwGRCLt2x2PhN0/XlmRFUdQ34PJmevWU7nBke9d3RJVw9INTW64PO5dNvmYg=
+	t=1750085911; cv=none; b=amPSpIOg+zAlbTMqSty9znaxzy/R42v3bnlGW8PgYyIuhNNZ7k7+TIp2xHj9oP3TCJYgKzDmzsJYH9G/9XHSSZlhd2BfWW5h4hJ0Qune/rESslcDNwXFdX5ZiCd0C13ttVtzphVyyJiaQ+gQQOEFf3zH68J1siTZ2proBbzzjdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085912; c=relaxed/simple;
-	bh=wIdiZPYyli2N4szu69CA2U7XhLnv02tXx97AcQ5lBKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O1cmxOMJoYvIRPmjwRC7fe4EcvD2MBVYdMKJqfrSz31RRHhBy6VS+9ETOb3dhBrgOp3bh/nloolO/we2UO8GCyVOs3jG5SZY8vGt+viOYORBctlXEUGw8/Vaa2O8og1Ie2g3lfZDWMGBe9t8Cmk+klKvnaEChpL5wlsesfCMBps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 425EB59CCB;
-	Mon, 16 Jun 2025 14:58:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 237CC20034;
-	Mon, 16 Jun 2025 14:58:20 +0000 (UTC)
-Date: Mon, 16 Jun 2025 10:58:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Carlos Maiolino <cem@kernel.org>
-Subject: Re: [PATCH 00/14] xfs: Remove unused trace events
-Message-ID: <20250616105819.4d37b83a@batman.local.home>
-In-Reply-To: <20250616053119.GD1148@lst.de>
-References: <20250612212405.877692069@goodmis.org>
-	<20250613150855.GQ6156@frogsfrogsfrogs>
-	<20250613113119.24943f6d@batman.local.home>
-	<20250616053119.GD1148@lst.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750085911; c=relaxed/simple;
+	bh=mwKKLHRDWleY5Bx+V9PkDR0ezRaFRqXe2spQND4s/r8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpXzqXWci4ALvRh9wHkBICY6/u1ddg1TKbbDLmuadI9EUguWbWM9GQMgON0yRZuOa+91kh+eWxkf/VUX/7B7mH4v9WSjj/fY6pbDDox8qgsuwSWC4Q8GRdN6x1X3vRfnqRM5H3PvPA5/Zjze7MD4cMd+Ld59rbjKlhzEjMOf/74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hLmnDTsM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hLmnDTsM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dyBQUAInGU3lGevMO5dRke5gOvctTg4sbZdLaGpdqLI=; b=hLmnDTsM7ylDVncjqFVj63Zv/G
+	vv7T3Wn3v4VhSf/MtxkiYEnBGINjpkmOuyjKX5AnSfJTUpw+ea99J1HD8vE+9yCEgOPqbpW8RlCZi
+	C5aLJ65+OwhJNB7QGsPdYauFWdhPEwJyRgreCAQXPh3CUJrhHixuD2qZfMCItfkI+AAKWtFbQahWt
+	X03chMj/j3ciI7+oQKAZued0wsGqcLF3o3kdFyHWeOzz5UHtx0/jUdEQ17owIxcV//MYOwVFCfwwv
+	4Aw8OVELkID4sva7HTd3+robjn6w2tV/rV4o7dqbKSpPWA5M+GUMN9QYbF/KH6lHCT4hUPpKGfMqW
+	wcOXjg/Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRBI1-0000000G4hW-2yuW;
+	Mon, 16 Jun 2025 14:58:25 +0000
+Date: Mon, 16 Jun 2025 15:58:25 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org, akpm@linux-foundation.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	mingo@redhat.com, mjguzik@gmail.com, luto@kernel.org,
+	peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+	tglx@linutronix.de, jon.grimm@amd.com, bharata@amd.com,
+	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com
+Subject: Re: [PATCH v4 13/13] x86/folio_zero_user: Add multi-page clearing
+Message-ID: <aFAxEdZCW_uQpfqN@casper.infradead.org>
+References: <20250616052223.723982-1-ankur.a.arora@oracle.com>
+ <20250616052223.723982-14-ankur.a.arora@oracle.com>
+ <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 237CC20034
-X-Stat-Signature: xrtt3cne15mpszeso61c3wd1iqzm4pfr
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19hESC1G4pzjZZdZ9uHr9kQMXh3gtnL9xU=
-X-HE-Tag: 1750085900-926499
-X-HE-Meta: U2FsdGVkX193XZgjGdRK5j8nHlonQUe7QYiUVCQinh20elGdhOpp7c9hBPTtm5JJvTcbS6ldHLC9sbPCyryypjBGvpBDVZTRyqY6aSqmsqGX8RgyTMQRew3KOtRbz44Ssm6cDa1nhpy1kvsyLnwEXnPHc/Wl2q2iiV0gg+OdXBl9tTiyo79whbeqEcAMxUhRlKhyjxG1ZiINHlBzkHblOiFX6YI41WsbBFKzRnurU8Vt4O3bcR5X21qvWkiDwuqVsk1cdotXm2Vt0bvpVK8HGfdsZXy7TltjDrMcdDqu/qKaALWntfOpgYVkSbn1TCR81H27Gmk8wgv7TLGDJAdRDZbXi0my8FFs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c0d3994-1397-4bc6-bb55-9c26acdcb477@intel.com>
 
-On Mon, 16 Jun 2025 07:31:19 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+On Mon, Jun 16, 2025 at 07:44:13AM -0700, Dave Hansen wrote:
+> To me multi-page means "more than one 'struct page'". But this series is
+> clearly using multi-page clearing to mean clearing >PAGE_SIZE in one
+> clear. But oh well.
 
-> > I just did an analysis of this:
-> > 
-> >   https://lore.kernel.org/lkml/20250613104240.509ff13c@batman.local.home/T/#md81abade0df19ba9062fd51ced4458161f885ac3
-> > 
-> > A TRACE_EVENT() is about 5K, and each DEFINE_EVENT() is about 1K.  
-> 
-> That's really quite expensive.  And you only measured the tezt/data/bss
+I'm not sure I see the distinction you're trying to draw.  struct page
+refers to a PAGE_SIZE aligned, PAGE_SIZE sized chunk of memory.  So
+if you do something to more than PAGE_SIZE bytes, you're doing something
+to multiple struct pages.
 
-Yes. This is something I've spent a bit of time over the years trying
-to address. With moving a bunch of code into trace_event.c with the
-added expense that trace events do function calls.
-
-It looks like it's still growing as the last time I checked it was just
-under 5K (something around 4800 bytes) and now it's over 5K, and the
-tracepoint code grew 4x. I'll start looking into "why" later when I
-have more time to deal with this. My time budget for removing unused
-events has pretty much dried up.
-
-> overhead and not even the dynamic memory overhead, which is probably
-> a lot more.
-
-Yes, and this is another area I look to make better. It was the
-motivation for eventfs which saved over 20 megs of memory by having
-trace event files dynamically created instead of being permanent.
-
--- Steve
