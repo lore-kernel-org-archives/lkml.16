@@ -1,75 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECB31922D3;
-	Mon, 16 Jun 2025 18:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B23E1B4231
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750097719; cv=none; b=X/LB5oRGODkdeBMI3NX2tpwfMCQPz6MTwufsbCqkU534cwFI9ba+lK8Fjc5fujmTHRXdSTMsfLPYVoClqtk5D5X4ld+eypoWk6BoDQL0032YZokhalDF6c99v3O0aftq5Yg9PIou9YI2A9hzmsiwOrFbpc1qyOKHFfLl/QXTT10=
+	t=1750097736; cv=none; b=n29KF9shSvQABYwlm9psa+DwjY4MBtCrK5RnwrVjE9ejL5brE/GlPkxuqHx9OwrgaWqAx6dKsNDs2eDOBYlTsljM6oxL2+BOaEeMtwP2R9qn+3ZTetQYLETAvGC0ptNy7kbl6qOqvnY5JGA37gXE8unDQSiVArwixcLdmLMUMhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750097719; c=relaxed/simple;
-	bh=yA7nQY6EB3++WTiYEV3GhWn+708ii7DZS9WFb6/7CHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G83sY7LcVscC5thGD52wVi4Y8H1d5TE3Mp7ndcWDscNGKh28nOq8tMMv9dknXYCAYTxeB44uN7DwqMtIwGQZ4hTf9R6wd3fv2kI7bUZHOr34QYp/6hTLXWMcHkmDY8fPyIbpwMd1H3TzWZQKngYUe70B8Tdntwl+YUjUsVQOEoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OP2hkkbH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750097736; c=relaxed/simple;
+	bh=E1ZIO9BFrLWcgct8qP07+TcvpjAKRQ1ZjdkzQYhno/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NMStr65t4DOd5wmBmuUSMfOX50egx/S3r2F1JixgM3uTBO1FbuG+2pzD2FU2148cTgnKOY2C/gtKbIbAlut/dkEC+eowp+F35acFY3KGzLKBaQcf4YklSH//kfrdtn+TTsDjHql8hJBpOwXZFvNjmYHzp+TCjb6m7ccM5uTlsyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=OpaF8pqh; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OP2hkkbH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5CAC4CEF1;
-	Mon, 16 Jun 2025 18:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750097718;
-	bh=yA7nQY6EB3++WTiYEV3GhWn+708ii7DZS9WFb6/7CHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OP2hkkbH8ofhfta0N/V3Cd6gPLQX7bBJtzWLbXa6/z12V/OKP+hrdGdyL0OVh0Bbl
-	 0iDhqKqww7fOB6i6ybbv+R5ZKx9TJJP6OB8xVO5ip9SWlDfpSCZ6v05dTYyUqFVC4y
-	 DoQJPoCn2xAGql4W/aDC/vktQtbm1DGDz0d0ne6yb2t8aHNiafPQYhDUeNL9txbsGV
-	 /SsUF9NiZAxMU1PuUiURQe6QrO02J1GurlZf43Aez1IZIfF0gtIWiuhWjHnb1+9Qj4
-	 0OJwVkYDi6MLVY6YM2w68jS9SEtKuOLI45uaml0aH/bovsFIU2bzu69YuAphARxJFR
-	 NpwhVu6tJBUpw==
-Date: Mon, 16 Jun 2025 08:15:17 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	JP Kobryn <inwardvessel@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="OpaF8pqh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=psYij8s9Ia2uYH+3eeL2z0De96IT8g97QGXw+98uT8g=; b=OpaF8pqhsEEyn/YUt8Ls0rCWPP
+	Fex+nlV8DsU7HvGjjEPobjGnW2KFYWfiw0vUnYH9hxr+JYmdsL7YWI/70HX39eTl1+ZfUY2ZOLmYV
+	T0+Hvx6FkVrmAZd114MFj78urHM5fGMqSF/2tB1g+/jWhLvwHezAfsrtUIU+UCv1mPGjbyTOsdi9x
+	S+cpiHUKFnFxwKsVbpWqVrn6uRqVzK3kAOkNCKesMWc5tJMXEzLGEWRLyXsFOW9FN3bR/N9UuSphF
+	IynfJs/xVwMTF8oy6zrenXhytgRCSolV/Rhxhw+LOVeG+75Hm6bUALPZUzOI4QK6fTmcFqb+13o9f
+	vLq32qpg==;
+Received: from [191.204.192.64] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uREMa-004Eh6-4E; Mon, 16 Jun 2025 20:15:20 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: "Alex Deucher" <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	siqueira@igalia.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	"Raag Jadav" <raag.jadav@intel.com>,
+	rodrigo.vivi@intel.com,
+	jani.nikula@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Krzysztof Karas <krzysztof.karas@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2 0/4] cgroup: nmi safe css_rstat_updated
-Message-ID: <aFBfNRVAyE1FU9aQ@slm.duckdns.org>
-References: <20250611221532.2513772-1-shakeel.butt@linux.dev>
+	kernel-dev@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v8 1/6] drm: amdgpu: Allow NULL pointers at amdgpu_vm_put_task_info()
+Date: Mon, 16 Jun 2025 15:14:33 -0300
+Message-ID: <20250616181438.2124656-2-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250616181438.2124656-1-andrealmeid@igalia.com>
+References: <20250616181438.2124656-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611221532.2513772-1-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Allow NULL pointers at amdgpu_vm_put_task_info() as it common practice
+for "put" or "free" functions. This avoid an extra check for NULL for
+callers.
 
-On Wed, Jun 11, 2025 at 03:15:28PM -0700, Shakeel Butt wrote:
-> Shakeel Butt (4):
->   cgroup: support to enable nmi-safe css_rstat_updated
->   cgroup: make css_rstat_updated nmi safe
->   cgroup: remove per-cpu per-subsystem locks
->   memcg: cgroup: call css_rstat_updated irrespective of in_nmi()
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
+v8: New patch
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The patches look good to me. How should it be routed? Should I take all
-four, just the first three or would it better to route all through -mm?
-
-Thanks.
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index 3911c78f8282..dadf5633476c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -2447,6 +2447,9 @@ amdgpu_vm_get_vm_from_pasid(struct amdgpu_device *adev, u32 pasid)
+  */
+ void amdgpu_vm_put_task_info(struct amdgpu_task_info *task_info)
+ {
++	if (unlikely(ZERO_OR_NULL_PTR(task_info)))
++		return;
++
+ 	kref_put(&task_info->refcount, amdgpu_vm_destroy_task_info);
+ }
+ 
 -- 
-tejun
+2.49.0
+
