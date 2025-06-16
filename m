@@ -1,212 +1,325 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010047.outbound.protection.outlook.com [52.101.84.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B413595A;
-	Mon, 16 Jun 2025 07:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750059765; cv=fail; b=Epak5KL58GljyjQsq4YMTlqkdv995+nE8jOPA6BVRb4/hCnsmhPAB6fd4Mns4kotEkP+70bU9jYWq9E52QKL4zAwDp/usifWpw1KXTTAStkrzYx757v/vigY7cJEWqsCPpv9awkQPF+VYUnOh3EABpHmTxughYCVkW9HXAqCiks=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750059765; c=relaxed/simple;
-	bh=KHJcntmFS6JM5EKc+xmrkmHIqxPdk5Fw00njv6T9ejA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CQ164s2Zi9ATaYy4DTpZlgG3CDl/sSjzbHsNWVg2iHgQCpOTz1CYfJkKLl0ZRuG0mN+njPOh387f5CeQEz6LeWJCTH/FH8wAzNvCC8ddf/upbkKcfOy7AE6TdVqa0MVRwqpxl+VWB+ZXH0Qnn/1eGeo4uRs8VOS9iCMPR1nGTnQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=iDOh/Zpd; arc=fail smtp.client-ip=52.101.84.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="iDOh/Zpd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OJFxfo1Rba7L0jrjKXHpDDdrgjzxDdlcUQ99Ay1+SAUSlJ8JfPOl0Z0srF0Hj8RqEKe1dUwtr8OryZ4gkstU/rQEq/yLE+USUYf3LpC1LAgk0WQYovQmbEjbW/iU8FdLLy4ZHML8vvL37ioKc7GI/vb/9njl9x+L4O8t2JZmXMwuPkvjeRTY9vCswQppKRE+xXJNfP+ProPoFJYe6e56pI6T/zOCex6NYotdVwnOZxgTqaR6+ffZ0Xy06x/KiLYj7XHrwOErsZdfJA5sqYYZcxfL6YglA4Pj6TyNMSzT3LrO+Uc4WCap+3VGc/REW+iciSLW6G5UQQa+oQRA9F0A6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KHJcntmFS6JM5EKc+xmrkmHIqxPdk5Fw00njv6T9ejA=;
- b=EkVhOR0QncZenFQU9dW55QkqsQBNfrGT9uOpCv8TNqSSgUaQ5t4a2IoD53FMr5Mmcz/arvx+/UFAaFYtHVDQYvP9PmkGw21qFPgE/pGrW8q5qb2AybEU3Gz0y2Bg3fCHKc+8M59isy6h15tM+UTW2DOx8+SkbPIplfzk/R1h25vbbGYOx1V0La4F7FTqPL2mkMfgbyy72/vyPvH3sGierFSgGGXhGd99DkHMoJy5tCrbxwF17fodgBbeCOCLIZWpv/cxz0gvrPeScSnWucCpHbuWxPtS5HUBPJRrNO7XPY31muu6zRwXYEO4g1K0r0sh95AwJY2itTsCBP9z0z0N3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KHJcntmFS6JM5EKc+xmrkmHIqxPdk5Fw00njv6T9ejA=;
- b=iDOh/ZpdXaVhRAIk+bxIYxWWyP7+gwkdMxzZMiY+TP4cE6gaHGSem5dNfLlCsapF9snSqx5mt6nLXDwQJ8LmZbHcmVz1nla+CuEZVTWStIujnEBMJ/YMuH99Mn3Wuf3bdhEpSvbs9m4lZJyGsK2ybD7KCr/59qAu8c2aSNGH+oa8dcpGcOo8jIbVfeUrgm5W42K0PR7wF5QR10gnUojyCnY52SzGVissprwIUV19NlDtjpgM1hksp+sYUVFSScqaMkCAyhEPYxs4nYM/6pr8bjAV01wZGniUiPMDngiVteI58UgTEUK/9w1Sc+bpjui+IIaB2qRJ3BxN1LoqTazKiA==
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
- by GV1PR04MB10349.eurprd04.prod.outlook.com (2603:10a6:150:1c6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 07:42:40 +0000
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::261e:eaf4:f429:5e1c]) by AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::261e:eaf4:f429:5e1c%7]) with mapi id 15.20.8835.026; Mon, 16 Jun 2025
- 07:42:39 +0000
-From: Joy Zou <joy.zou@nxp.com>
-To: Simon Horman <horms@kernel.org>
-CC: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
-	<s.hauer@pengutronix.de>, "catalin.marinas@arm.com"
-	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-	"alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>,
-	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "richardcochran@gmail.com"
-	<richardcochran@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, Frank Li <frank.li@nxp.com>, Ye Li
-	<ye.li@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-	Aisheng Dong <aisheng.dong@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>
-Subject: RE:  Re: [PATCH v5 1/9] dt-bindings: arm: fsl: add i.MX91 11x11 evk
- board
-Thread-Topic: Re: [PATCH v5 1/9] dt-bindings: arm: fsl: add i.MX91 11x11 evk
- board
-Thread-Index: AQHb3pI8Co8kOzjYZEu2GgHRQn77Cg==
-Date: Mon, 16 Jun 2025 07:42:39 +0000
-Message-ID:
- <AS4PR04MB93869345F739436917920F59E170A@AS4PR04MB9386.eurprd04.prod.outlook.com>
-References: <20250613100255.2131800-1-joy.zou@nxp.com>
- <20250613100255.2131800-2-joy.zou@nxp.com>
- <20250614171642.GU414686@horms.kernel.org>
-In-Reply-To: <20250614171642.GU414686@horms.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS4PR04MB9386:EE_|GV1PR04MB10349:EE_
-x-ms-office365-filtering-correlation-id: 7bd5b324-25be-4d82-257d-08ddaca95ebe
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?gb2312?B?cTVEV3JUWnQwYnVjRGcwai8vaks5Mmh6Zy9NdSs0c0VhdzU1TmoxQ21ZTExR?=
- =?gb2312?B?b2JQczFGdkVTMUt1SmZUSHVkTW1IOEd2c2p0NWZnQnN5cUI4ZUdPWlUrWXJ4?=
- =?gb2312?B?MmlLcjFiU3M5TS9QeDFEUFNuMGtCclpLZ2hSRytwbmxEQW1mODVBb0IrRjlM?=
- =?gb2312?B?TlZoTCtESk10ZDVuRnBCUEhpWllZRE11anliNlFQTE4zVVpycFN6ekdmb2I4?=
- =?gb2312?B?Zmh4L0wvSWdNbnNkQVFScjkrd3JmRlR0Ti9lN2ljcnRBeUNWc0l6c1pEb0Ro?=
- =?gb2312?B?b2kwMVlWbkJxMEZwS1oxLy81bEc5REtKVXpkREFDRzhMUURYck9aSktHajRo?=
- =?gb2312?B?bjZIT01pYmlVempZbisrMGFVbEhsOU4rdEVLUjJwTFNWc1FZbnFBK25YQXlH?=
- =?gb2312?B?enY2Ky9lMkV0SE4wcFZQbzFoeHl5QXVZNzFnTFpuTTRmV0xTMmVRRnM2Q1ky?=
- =?gb2312?B?aGNaWjZBZ2NteWswWHBNNHdqb0V6RTdGUzdwNTNzdS9MZzA4MEtSWmZEQlRs?=
- =?gb2312?B?aVVkRDZLRnlBV3NYUWpWRm5pczNNS2tqbjhwOHZ4YVlVL2w4OGx5SzR0L0w5?=
- =?gb2312?B?aHJyMm9ubWhraVY1WEZBUWRDUmkraWdFSGZWR1FjeFQyRGJTS01ZOHdxaUVj?=
- =?gb2312?B?OGMzejRvUExVYldBQ01jclVmcjgwelVMblhPc0pOOGhaTmRzcEtJWWhvdGdK?=
- =?gb2312?B?U0lVOGdpN3J2bFQveVg3K0phdDVHSzUwcndmK0JTdkg2SURoemRmL3dyRjFy?=
- =?gb2312?B?blJtd3pzdlFvZUZVaWN0RXJYUjhmODBkT0J0VkoyTzhLNURuVXNSc0pJK3E1?=
- =?gb2312?B?bDBCbjJLM2pPNGdiUnc2YUpwUlJZeXJncmRXaG1vbzFPbFpEaFBiaXZjSGh4?=
- =?gb2312?B?Z1MwY0VQZHU2TkpSVTNvd0c2czJIV2hIZGlKaXNLclhJM1BZc0hPaVVWMnhy?=
- =?gb2312?B?cmhlK1R4MGorUldJQXcyRURkVVYrZXBjM2NiNWJqTGk2Y2lFM1N1Q1RaeTJq?=
- =?gb2312?B?cERIV3VSNzRhRzh4OVdDZmk4Q2RlVlVPNW5QZ2MyK3hhSmJoR1pzOVltSWFL?=
- =?gb2312?B?VHp5Y2tQRFh1cFo0bVlXZGVSa1pOK09pUVRUM21vTlNCNHJNNXc0Q0NEUlVT?=
- =?gb2312?B?aGx2c1kvNFJmeWlkcWp5NzJnVU1tQStzdGFFcjQ2RmNNVDhhZC9jeHVyTUJu?=
- =?gb2312?B?dDVIelpVOWFGNHZJMDB3VEltOTBFNjlEeVBOTlhiSm9PNlpkRTJIODNtS2Nh?=
- =?gb2312?B?Nm9nUUhvNWdadVpWZmowRnQvNy9CcjAvRCtGTUlmSVk4RXQ1OFp4UHlOOGMy?=
- =?gb2312?B?K0x5OXJWdHh2WWRqVC9oZlZ2UU9GZWZkVlJLWkNGeGhiVmJuQ2g1STluOHRk?=
- =?gb2312?B?OGhnZTBHRW1BcVlpS1ZkUlBkNW4xUnZiZ1dxRVppbStQb0xEY3pqajBzU0Rh?=
- =?gb2312?B?dHdUY2Ric2hKMzh1bTI2ajl2OGdyV1FEbmMxbWJWWjNRSC85UW44enVHTjlF?=
- =?gb2312?B?VGc5SlozcU45QnFmOGZ1TGx3ZUM5RTl1VDYzT2JXZ3FBNWJqWG5kQW96dzB3?=
- =?gb2312?B?bXpYWmhUTEhSSkdDa0FoS3dxckdtTS9HcGFSRXFvOXZ4WWZBam9MSXNLckx1?=
- =?gb2312?B?ektwVHpqMzdlNUJ2a3I0Y0lsb2FRYUllc2ZWQ1V2aHdub2FIaGYyQ0NBbmJT?=
- =?gb2312?B?cmdjUUNmSUhmdzB2QzlOQ2M2bFBOeVlJdlJObFA0VjBLUUN2emlBRHllSzRE?=
- =?gb2312?B?clJjTzUxZDN3NXFWdEs5M1EwQmgzZXRJQ1YxbndKK2lxSzlxTk5xayt6U29o?=
- =?gb2312?B?YjVmbGFHOXRZMXQwZ3dUZnA2RVAzTU8za3VZcmtzRCtGbmJ0U2NEZnVDOTRL?=
- =?gb2312?B?Z3lrcm4rNFV1dE1TRmVYZWRNQ05FN2c2UnlUNlZqSnFQcEhTOUhURkErVVJk?=
- =?gb2312?B?SnRreDFZSTlmVkxzSkVqMUZxWWRmUkJvSGVDckQ3dWVMdUV5UEMzUDIrVHFH?=
- =?gb2312?B?OUNOc3hXbzRnPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?bTQwM3BVY0lQUllob2hjc3psT3pKVVlBdjRHR0ZweFhlMG9sakFDcmNwbURS?=
- =?gb2312?B?amFLTHF1NittYnpnbXh3WU1uZmN5NkRYN2tpL3hURnNSZDIwMVYvN2g0SUti?=
- =?gb2312?B?NzVGbmg5VU9NN0s3WVFuR3ZtTW1LUUJROHVFa3ZLcGNLWTlISHAyWG5MWlBl?=
- =?gb2312?B?ci80WU94cC95RE9BbFFnZmUxa2JORkpWRVVXaXRMVG82ZmVUTERTemRDUW9k?=
- =?gb2312?B?RmNxSVlmN0Y1SWVtbXJvbkN5OHQ5bFlEZG13TWZzYTBZaitoZlpxamU2VENm?=
- =?gb2312?B?aTA0cnEwZ0ttTFhoRHVOeEtZRXhRSTUvV010UTBVUnJDQmxKc3FQenI4cTJZ?=
- =?gb2312?B?alZ6S0prdEwvaUpwVzFwMDZQbFRrUUZPMXg5cHZhOGNaNkZrSlRndFVzSS96?=
- =?gb2312?B?MjdGbWVqSllmUHJQNldzcHpIalRnejVRL1ZpVXlmTGxHYnhDRXloNGFhWStW?=
- =?gb2312?B?dUMrMGkyaklMNUg2MmRBeFRCM09jdHlLTzdEcU9Xc0xMblhhWGxoSEtwR1Ba?=
- =?gb2312?B?VlRza2pvVTZXMVFtaW5lSnVPa0NVb2ltMXBlUnJucHZKYnVkQXh3YXJBMm1l?=
- =?gb2312?B?MWlOeVNHU1RjZHN6cDB3U2lmakVQU254ZmV0K2dBZEt0SHhkZk9IZjJ5RjRz?=
- =?gb2312?B?YXNHL1NHa3FCUHp4a01KTkdhdW14eU96Q2pjc3g4a1pnWnQ3cFFHMnJHdTlw?=
- =?gb2312?B?U1crU3hiYnVwZzV6ZnZyamJWSDJ0c3hxRWFLVVZ5TnQzYzhTNzV5NTNUYkc0?=
- =?gb2312?B?ZzZmTUR3emtsNWM3TitHTHhSU0k4QzM5QkdkTmc0QW0xUVRwNTBURjJMK2dt?=
- =?gb2312?B?UnBNVkdBa0xJMmgrZUdMb0YwdTQzWXVaaEJ2VDd5bTNtU3lUTHI4ZWxOdHFp?=
- =?gb2312?B?Wkg1Q2RwN29ZdEhIdXE3TFJBUXhrb1ZyU2ROckNrdExrNjZ6ejZPcTVTNU11?=
- =?gb2312?B?aW9YYW1vTWRPMDNuNUZvNDIxYXZZQkk2dm5IT1ZqL2MxWnhCb2paZFB3d1M0?=
- =?gb2312?B?TDhXeFRleXhZRE10QWhFY2liUzZmOC9UVVZQZ0c5WTR3MUNXRXNBUW9pNFhH?=
- =?gb2312?B?bEYxTG41WlVHZEdsdDNKR05yQnUxVGxWc0JPMmpJaE56amMrOWQ0RmEzSEZY?=
- =?gb2312?B?dHVNa1FsQ0ppMSt5eXBRUjcvQ0xyUlhRUGJxbmJRejNyN1ZhbjFBQTFsdWNk?=
- =?gb2312?B?YTZ0eERMd0RpQXFtSE5Dam0yYUxicnZkeE0yVFNreXFEbkJsbC9aU0hxT0oz?=
- =?gb2312?B?bXpxdkY3M3V1UXIvQmp3by9WQnJHa2xKNC9tV2hLRGtqZlIrM0wyU0lwd3Jx?=
- =?gb2312?B?N3JFa3Q0Mlhtb3BxMUtaVWliWklsVnNwZzY4T1Y5MVJENXZyQUgwa2NnSHBp?=
- =?gb2312?B?Tlo2MVhseFNhWk5DNVJyNGFoSG1tRXRabmJKTk9LZ0VNZ1BPT3JpQWF1YVJ3?=
- =?gb2312?B?cmhnLy9kS2Y4YlFtbnRZVGNhc2ZWS09DejN2REdBV1lERWgxalg1eVphU0JM?=
- =?gb2312?B?QThWb1liVHorSXNJaFMyNmdndmxLUit4dUtJQmZUK3lmampNZFo1bWVTb29y?=
- =?gb2312?B?NmFHaDU5Y1kwcXcveGtiYVprY0pJdGczNnBaOCtCekpZSWQrUU9QekRJZThx?=
- =?gb2312?B?My9HWHUrZGY3NnBTcCtydVRqZ2twcXFCMDFCL0k1RlNmWHRUQWU3bGRLV1Ux?=
- =?gb2312?B?ZlMycFF6OTc2SlhnbnFtdGtGU2hTZy9sZzE3Mzk1S2pkNDUycm93SCs2Yktj?=
- =?gb2312?B?a0tOUlJuQlVKREhsOGlMd2UzT3dBRXlscWN0ZVB1dndQa1k3d0R4L3hDTzdG?=
- =?gb2312?B?UDlCaWE5eW1lMWhnVHlvVmkyeWtsZDZHZ2FXalhYVFdQY0hjRjgrYXQrSVVL?=
- =?gb2312?B?RmhweU4yQS90SllJUmdlcVlFSmFNK1ZXWjNBTDVOVUhNSmlpK1NmbUlnYmd5?=
- =?gb2312?B?dklZU1JPdUxtLzNhVmZaSWlxZytlNEJJek41clJmd2pwWGNucmh3eVI1ZmdP?=
- =?gb2312?B?VC9FYXk1VFM3MWJZWEVUS2xnUm9TaFFzcEZCV0h2NXRiZVlESWRLcTNqWEhz?=
- =?gb2312?B?SDBZTGk5R2dFUTBoLzc1NGRycVZXZmlFSjdxYjZRcUR3OU80anc5dTZ3ZFp3?=
- =?gb2312?Q?mh1E=3D?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14293202C38;
+	Mon, 16 Jun 2025 07:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750059771; cv=none; b=FKPxt5RkhHjl7sIIvu3vDM5rBlyGOJ6Tt8wWARu+iYq2oZ3mjm4Sx0nAPZEMCjHglxRWTzYJWMX66SQGiBByDjWhzWtWl/WJpjYQX9PpPr8K2mck4e2vidw5sm5iBRbTPbybcrlt+tnBJA37JxmEMuTx/ZvWV6WfXATZND4Wbf8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750059771; c=relaxed/simple;
+	bh=uhpJklVbBbRMO7R0wFYgpRhw8DZy55F6QA/PMvAN/z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFB0XbP7Mejjcb7cxTP1cca9dy5YeTphdu/ivcxd0SGtkdLsrWt9dfkE7cEuMr1gkF/6F4yhzgkHR5JodxpDFavDn+SB3vt/oGnQm81P4F+axcqNB9Yqxgx3Dft4CAs6H8u0A19PoE07q60Viyqm+3LPFicPYLl9i5en4ll72MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-e0-684fcaeedd57
+Date: Mon, 16 Jun 2025 16:42:33 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, corbet@lwn.net, david@redhat.com,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, bijantabatab@micron.com,
+	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com,
+	vtavarespetr@micron.com, damon@lists.linux.dev,
+	kernel_team@skhynix.com
+Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data
+ across nodes
+Message-ID: <20250616074233.GA74466@system.software.com>
+References: <20250612181330.31236-1-bijan311@gmail.com>
+ <20250612234942.3612-1-sj@kernel.org>
+ <CAMvvPS4WsGkfukNscnLWW40Agg6_wmkm_QF96m+HZrEZrstR4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bd5b324-25be-4d82-257d-08ddaca95ebe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2025 07:42:39.5229
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: URHLwgMLdVraA0ju2KOY8oLyRgh+Q14yHmdf0tmKCbPeCOd2XqVVbMrawua1mj6F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10349
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMvvPS4WsGkfukNscnLWW40Agg6_wmkm_QF96m+HZrEZrstR4A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsXC9ZZnke67U/4ZBu2PTS1W7G1lt5izfg2b
+	xa4bIRYNPz6zWSy4d57R4smBdiDx/zerxdf1v5gtZny4xG7x8+5xdovjW+exWyxsW8JicXnX
+	HDaLe2v+s1p865O2OPz1DZPFzuY7TBbH701it1i9JsNi9tF77A4iHjtn3WX36G67zO6xeM9L
+	Jo9NqzrZPDZ9msTucWLGbxaPnQ8tPV5snsnosbhvMqvH9/UdbB69ze/YPN7vu8rm8XmTXABv
+	FJdNSmpOZllqkb5dAlfGu4/vmAomx1U0Pp3M3sC42ruLkZNDQsBEYuvrH8ww9rK7rewgNouA
+	qsTS62tZQGw2AXWJGzd+gtWICGhI7Ph+B6iGi4NZ4DezxLTDDWAJYYFIiX0Hr4DZvAIWEkcv
+	LgMrEhJYxijROuk9VEJQ4uTMJ2BTmYGm/pl3CSjOAWRLSyz/xwERlpdo3jobrJxTIFDi5JRl
+	bCC2qICyxIFtx5lAZkoI3GKX2DCthRXiakmJgytusExgFJyFZMUsJCtmIayYhWTFAkaWVYxC
+	mXlluYmZOSZ6GZV5mRV6yfm5mxiBkb2s9k/0DsZPF4IPMQpwMCrx8B7Y6pchxJpYVlyZe4hR
+	goNZSYR38QmgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalFMFkmDk6p
+	BsagV9k1Oi9N5K/pX2ErO/R3EWf+cpFn0ZE+l4/7ti6dkDBr02YWh9SY4tLNN4S3hf258jYi
+	9qSG1LctLk6T7QtZZ155azzddaf+XrsUfaeHrZd5Z2s+6/M/rXupyFYxsGtWzf5Kp3UMZtbb
+	8leke800u/JsfoNFgeGcr5qb7B9oyG65End5vZoSS3FGoqEWc1FxIgDzJjDy6AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsXC5WfdrPvulH+GwYxLihYr9rayW8xZv4bN
+	YteNEIuGH5/ZLBbcO89o8eRAO5D4/5vV4uv6X8wWMz5cYrf4efc4u8XxrfPYLQ7PPclqsbBt
+	CYvF5V1z2CzurfnPavGtT9ri0LXnrBaHv75hstjZfIfJ4vi9SewWq9dkWMw+eo/dQcxj56y7
+	7B7dbZfZPRbvecnksWlVJ5vHpk+T2D1OzPjN4rHzoaXHi80zGT0W901m9fi+voPNo7f5HZvH
+	+31X2Ty+3fbwWPziA5PH501yAfxRXDYpqTmZZalF+nYJXBnvPr5jKpgcV9H4dDJ7A+Nq7y5G
+	Tg4JAROJZXdb2UFsFgFViaXX17KA2GwC6hI3bvxkBrFFBDQkdny/A1TDxcEs8JtZYtrhBrCE
+	sECkxL6DV8BsXgELiaMXl4EVCQksY5RonfQeKiEocXLmE7CpzEBT/8y7BBTnALKlJZb/44AI
+	y0s0b50NVs4pEChxcsoyNhBbVEBZ4sC240wTGPlmIZk0C8mkWQiTZiGZtICRZRWjSGZeWW5i
+	Zo6pXnF2RmVeZoVecn7uJkZg5C6r/TNxB+OXy+6HGAU4GJV4eB9s8s8QYk0sK67MPcQowcGs
+	JMK7+IRfhhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFer/DUBCGB9MSS1OzU1ILUIpgsEwenVAPj
+	3Jc3f/92TmY79Lyk+svvxpbbWZtfZC2YKboz//Tqe8d2r9504F7x/5SV4nfVy22eLNOPW6hz
+	6PD0PRa1Idv/NPuJt8xrK1hz2Dqj5N+vS7Lt0WJvbq4oyfl7q9ZYO5Yt5HHIg2+VLisLPTY4
+	haxe+ktQJOgQt+TUW2luekEvs6+Zri0xyVR+pMRSnJFoqMVcVJwIAKOKiFDYAgAA
+X-CFilter-Loop: Reflected
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNpbW9uIEhvcm1hbiA8aG9y
-bXNAa2VybmVsLm9yZz4NCj4gU2VudDogMjAyNcTqNtTCMTXI1SAxOjE3DQo+IFRvOiBKb3kgWm91
-IDxqb3kuem91QG54cC5jb20+DQo+IENjOiByb2JoQGtlcm5lbC5vcmc7IGtyemsrZHRAa2VybmVs
-Lm9yZzsgY29ub3IrZHRAa2VybmVsLm9yZzsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVl
-ckBwZW5ndXRyb25peC5kZTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207DQo+IHdpbGxAa2VybmVs
-Lm9yZzsgYW5kcmV3K25ldGRldkBsdW5uLmNoOyBkYXZlbUBkYXZlbWxvZnQubmV0Ow0KPiBlZHVt
-YXpldEBnb29nbGUuY29tOyBrdWJhQGtlcm5lbC5vcmc7IHBhYmVuaUByZWRoYXQuY29tOw0KPiBt
-Y29xdWVsaW4uc3RtMzJAZ21haWwuY29tOyBhbGV4YW5kcmUudG9yZ3VlQGZvc3Muc3QuY29tOw0K
-PiB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyByaWNoYXJkY29jaHJhbkBnbWFpbC5jb207IGtlcm5l
-bEBwZW5ndXRyb25peC5kZTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgaW14QGxpc3RzLmxp
-bnV4LmRldjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBuZXRkZXZA
-dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1zdG0zMkBzdC1tZC1tYWlsbWFuLnN0b3JtcmVwbHku
-Y29tOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7DQo+IEZyYW5rIExpIDxmcmFuay5saUBueHAu
-Y29tPjsgWWUgTGkgPHllLmxpQG54cC5jb20+OyBKYWNreSBCYWkNCj4gPHBpbmcuYmFpQG54cC5j
-b20+OyBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IEFpc2hlbmcgRG9uZw0KPiA8YWlzaGVu
-Zy5kb25nQG54cC5jb20+OyBDbGFyayBXYW5nIDx4aWFvbmluZy53YW5nQG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMS85XSBkdC1iaW5kaW5nczogYXJtOiBmc2w6IGFkZCBpLk1Y
-OTEgMTF4MTEgZXZrDQo+IGJvYXJkDQo+IA0KPiBPbiBGcmksIEp1biAxMywgMjAyNSBhdCAwNjow
-Mjo0N1BNICswODAwLCBKb3kgWm91IHdyb3RlOg0KPiA+IEZyb206IFBlbmdmZWkgTGkgPHBlbmdm
-ZWkubGlfMUBueHAuY29tPg0KPiA+DQo+ID4gQWRkIHRoZSBib2FyZCBpbXg5MS0xMXgxMS1ldmsg
-aW4gdGhlIGJpbmRpbmcgZG9jdWVtbnQuDQo+IA0KPiBuaXQ6IGRvY3VtZW50DQpUaGFua3MgZm9y
-IHlvdXIgY29tbWVudHMhDQpXaWxsIGNvcnJlY3QgaXQhDQpXaWxsIHVzZSBjb2Rlc3BlbGwgY2hl
-Y2sgdGhlIHBhdGNoc2V0Lg0KQlINCkpveSBab3UNCj4gDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBQZW5nZmVpIExpIDxwZW5nZmVpLmxpXzFAbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBK
-b3kgWm91IDxqb3kuem91QG54cC5jb20+DQo+ID4gQWNrZWQtYnk6IENvbm9yIERvb2xleSA8Y29u
-b3IuZG9vbGV5QG1pY3JvY2hpcC5jb20+DQo+IA0KPiAuLi4NCg==
+On Fri, Jun 13, 2025 at 10:44:17AM -0500, Bijan Tabatabai wrote:
+> Hi SeongJae,
+> 
+> Thank you for your comments.
+> 
+> On Thu, Jun 12, 2025 at 6:49 PM SeongJae Park <sj@kernel.org> wrote:
+> >
+> > Hi Bijan,
+> >
+> > On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+> >
+> > > From: Bijan Tabatabai <bijantabatab@micron.com>
+> > >
+> > > A recent patch set automatically set the interleave weight for each node
+> > > according to the node's maximum bandwidth [1]. In another thread, the patch
+> > > set's author, Joshua Hahn, wondered if/how these weights should be changed
+> > > if the bandwidth utilization of the system changes [2].
+> >
+> > Thank you for sharing the background.  I do agree it is an important question.
+> >
+> > >
+> > > This patch set adds the mechanism for dynamically changing how application
+> > > data is interleaved across nodes while leaving the policy of what the
+> > > interleave weights should be to userspace. It does this by adding a new
+> > > DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
+> > > paddr and vaddr operations sets. Using the paddr version is useful for
+> > > managing page placement globally. Using the vaddr version limits tracking
+> > > to one process per kdamond instance, but the va based tracking better
+> > > captures spacial locality.
+> > >
+> > > DAMOS_INTERLEAVE interleaves pages within a region across nodes using the
+> > > interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node<N>
+> > > and the page placement algorithm in weighted_interleave_nid via
+> > > policy_nodemask.
+> >
+> > So, what DAMOS_INTERLEAVE will do is, migrating pages of a given DAMON region
+> > into multiple nodes, following interleaving weights, right?
+> 
+> That's correct.
+
+Your approach sounds interesting.
+
+IIUC, the approach can be intergrated with the existing numa hinting
+mechanism as well, so as to perform weighted interleaving migration for
+promotion, which may result in suppressing the migration anyway tho, in
+MPOL_WEIGHTED_INTERLEAVE set.
+
+Do you have plan for the that too?
+
+Plus, it'd be the best if you share the improvement result rather than
+the placement data.
+
+	Byungchul
+
+> > We already have
+> > DAMOS actions for migrating pages of a given DAMON region, namely
+> > DAMOS_MIGRATE_{HOT,COLD}.  The actions support only single migration target
+> > node, though.  To my perspective, hence, DAMOS_INTERLEAVE looks like an
+> > extended version of DAMOS_MIGRATE_{HOT,COLD} for flexible target node
+> > selections.  In a way, DAMOS_INTERLEAVE is rather a restricted version of
+> > DAMOS_MIGRATE_{HOT,COLD}, since it prioritizes only hotter regions, if I read
+> > the second patch correctly.
+> >
+> > What about extending DAMOS_MIGRATE_{HOT,COLD} to support your use case?  For
+> > example, letting users enter special keyword, say, 'weighted_interleave' to
+> > 'target_nid' DAMON sysfs file.  In the case, DAMOS_MIGRATE_{HOT,COLD} would
+> > work in the way you are implementing DAMOS_INTERLEAVE.
+> 
+> I like this idea. I will do this in the next version of the patch. I
+> have a couple of questions
+> about how to go about this if you don't mind.
+> 
+> First, should I drop the vaddr implementation or implement
+> DAMOS_MIGRATE_{HOT,COLD}
+> in vaddr as well? I am leaning towards the former because I believe
+> the paddr version is
+> more important, though the vaddr version is useful if the user only
+> cares about one
+> application.
+> 
+> Second, do you have a preference for how we indicate that we are using
+> the mempolicy
+> rather than target_nid in struct damos? I was thinking of either
+> setting target_nid to
+> NUMA_NO_NODE or adding a boolean to struct damos for this.
+> 
+> Maybe it would also be a good idea to generalize it some more. I
+> implemented this using
+> just weighted interleave because I was targeting the use case where
+> the best interleave
+> weights for a workload changes as the bandwidth utilization of the
+> system changes, which
+> I will go describe in more detail further down. However, we could
+> apply the same logic for
+> any mempolicy instead of just filtering for MPOL_WEIGHTED_INTERLEAVE. This might
+> clean up the code a little bit because the logic dependent on
+> CONFIG_NUMA would be
+> contained in the mempolicy code.
+> 
+> > > We chose to reuse the mempolicy weighted interleave
+> > > infrastructure to avoid reimplementing code. However, this has the awkward
+> > > side effect that only pages that are mapped to processes using
+> > > MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
+> > > weights. This might be fine because workloads that want their data to be
+> > > dynamically interleaved will want their newly allocated data to be
+> > > interleaved at the same ratio.
+> >
+> > Makes sense to me.  I'm not very familiar with interleaving and memory policy,
+> > though.
+> >
+> > >
+> > > If exposing policy_nodemask is undesirable,
+> >
+> > I see you are exposing it on include/linux/mempolicy.h on the first patch of
+> > this series, and I agree it is not desirable to unnecessarily expose functions.
+> > But you could reduce the exposure by exporting it on mm/internal.h instead.
+> > mempolicy maitnainers and reviewers who you kindly Cc-ed to this mail could
+> > give us good opinions.
+> >
+> > > we have two alternative methods
+> > > for having DAMON access the interleave weights it should use. We would
+> > > appreciate feedback on which method is preferred.
+> > > 1. Use mpol_misplaced instead
+> > >   pros: mpol_misplaced is already exposed publically
+> > >   cons: Would require refactoring mpol_misplaced to take a struct vm_area
+> > >   instead of a struct vm_fault, and require refactoring mpol_misplaced and
+> > >   get_vma_policy to take in a struct task_struct rather than just using
+> > >   current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
+> >
+> > I feel cons is larger than pros.  mpolicy people's opinion would matter more,
+> > though.
+> >
+> > > 2. Add a new field to struct damos, similar to target_nid for the
+> > > MIGRATE_HOT/COLD schemes.
+> > >   pros: Keeps changes contained inside DAMON. Would not require processes
+> > >   to use MPOL_WEIGHTED_INTERLEAVE.
+> > >   cons: Duplicates page placement code. Requires discussion on the sysfs
+> > >   interface to use for users to pass in the interleave weights.
+> >
+> > I agree this is also somewhat doable.  In future, we might want to implement
+> > this anyway, for non-global and flexible memory interleaving.  But if memory
+> > policy people are ok with reusing policy_nodemask(), I don't think we need to
+> > do this now.
+> >
+> > >
+> > > This patchset was tested on an AMD machine with a NUMA node with CPUs
+> > > attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
+> > > However, this patch set should generalize to other architectures and number
+> > > of NUMA nodes.
+> >
+> > I show the test results on the commit messages of the second and the fourth
+> > patches.  In the next version, letting readers know that here would be nice.
+> > Also adding a short description of what you confirmed with the tests here
+> > (e.g., with the test we confirmed this patch functions as expected [and
+> > achieves X % Y metric wins]) would be nice.
+> >
+> 
+> Noted. I'll include this in the cover letter of the next patch set.
+> 
+> > >
+> > > Patches Sequence
+> > > ________________
+> > > The first patch exposes policy_nodemask() in include/linux/mempolicy.h to
+> > > let DAMON determine where a page should be placed for interleaving.
+> > > The second patch implements DAMOS_INTERLEAVE as a paddr action.
+> > > The third patch moves the DAMON page migration code to ops-common, allowing
+> > > vaddr actions to use it.
+> > > Finally, the fourth patch implements a vaddr version of DAMOS_INTERLEAVE.
+> >
+> > I'll try to take look on code and add comments if something stands out, but
+> > let's focus on the high level discussion first, especially whether to implement
+> > this as a new DAMOS action, or extend DAMOS_MIGRATE_{HOT,COLD} actions.
+> 
+> Makes sense. Based on your reply, I will probably change the code significantly.
+> 
+> > I think it would also be nice if you could add more explanation about why you
+> > picked DAMON as a way to implement this feature.  I assume that's because you
+> > found opportunities to utilize this feature in some access-aware way or
+> > utilizing DAMOS features.  I was actually able to imagine some such usages.
+> > For example, we could do the re-interleaving for hot or cold pages of specific
+> > NUMA nodes or specific virtual address ranges first to make interleaving
+> > effective faster.
+> 
+> Yeah, I'll give more detail on the use case I was targeting, which I
+> will also include
+> in the cover letter of the next patch set.
+> 
+> Basically, we have seen that the best interleave weights for a workload can
+> change depending on the bandwidth utilization of the system. This was touched
+> upon in the discussion in [1]. As a toy example, imagine some
+> application that uses
+> 75% of the local bandwidth. Assuming sufficient capacity, when running alone, we
+> probably want to keep all of that application's data in local memory.
+> However, if a
+> second instance of that application begins, using the same amount of bandwidth,
+> it would be best to interleave the data of both processes to alleviate
+> the bandwidth
+> pressure from the local node. Likewise, when one of the processes ends, the data
+> should be moved back to local memory.
+> 
+> We imagine there would be a userspace application that would monitor system
+> performance characteristics, such as bandwidth utilization or memory
+> access latency,
+> and uses that information to tune the interleave weights. Others seemed to have
+> come to a similar conclusion in previous discussions [2]. We are
+> currently working
+> on a userspace program that does this, but it's not quite ready to be
+> published yet.
+> 
+> After the userspace application adjusts the interleave weights, we need some
+> mechanism to migrate the application pages that have already been allocated.
+> We think DAMON is the correct venue for this mechanism because we noticed
+> that we don't have to migrate all of the application's pages to
+> improve performance,
+> we just need to migrate the frequently accessed pages. DAMON's existing hotness
+> tracking is very useful for this. Additionally, as Ying pointed out
+> [3], a complete
+> solution must also handle when a memory node is at capacity. The existing
+> DAMOS_MIGRATE_COLD action can be used in conjunction with the functionality
+> in this patch set to provide that complete solution.
+> 
+> [1] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
+> [2] https://lore.kernel.org/linux-mm/20250314151137.892379-1-joshua.hahnjy@gmail.com/
+> [3] https://lore.kernel.org/linux-mm/87frjfx6u4.fsf@DESKTOP-5N7EMDA/
+> 
+> > Also we could apply a sort of speed limit for the interleaving-migration to
+> > ensure it doesn't consume memory bandwidth too much.  The limit could be
+> > arbitrarily user-defined or auto-tuned for specific system metrics value (e.g.,
+> > memory bandwidth balance?).
+> 
+> I agree this is a concern, but I figured DAMOS's existing quota mechanism would
+> handle it. If you could elaborate on why quotas aren't enough here,
+> that would help
+> me come up with a solution.
+> 
+> 
+> > If you have such use case in your mind or your test setups, sharing those here
+> > or on the next versions of this would be very helpful for reviewers.
+> 
+> Answered above. I will include them in the next version.
+> 
+> Thanks,
+> Bijan
+> 
+> > >
+> > > [1] https://lore.kernel.org/linux-mm/20250520141236.2987309-1-joshua.hahnjy@gmail.com/
+> > > [2] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
+> >
+> >
+> > Thanks,
+> > SJ
+> >
+> > [...]
