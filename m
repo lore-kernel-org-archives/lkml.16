@@ -1,122 +1,196 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987E71F5847;
-	Mon, 16 Jun 2025 20:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287AE1F099A
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750104385; cv=none; b=UFUc5H/LfImWO2h/7t59yiIjLWqCiM1Vz67hu9sFa1pB3HraBwBuS3h1esXivFwYC+Xahw8SJPm8rKt3/zHR8StguRaC4lQtvsT/3mj2/ZZfnfDhlAEm39C1QL965pbI7GmibPv5tH299Zz+y52kHxpAe7ikmd1z3vUXzLqS8Gs=
+	t=1750104451; cv=none; b=JlbQODNIVZ8BcH2/3Gt/SbyXGiceQ0wxFkTWWdOicvJNR+X8NH1V632D3oI6gj7a/Ch5hWBgey20miSMLCJEp8F2Fo+R6lbJky+5n85lvGPBfCSSUZA6+TveewzIWqcYGJySEDmEjCzPX3d/VKOLgZk20L2gjYXVc1RqfxVY0MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750104385; c=relaxed/simple;
-	bh=DxKYfW2Y3BQiZFIE+AMWe+NyrlGjHl/jlQm63dGeKuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RMB7E08JIyZZXakdDLGdci7ItBoRFNfTEY2Y6E/dU9bYWL6WOi8Nk16NqPMicWW7ONcJ0v55nNpzLQsMotM+Sj6QmqR9z+uYncRp5Fydch31ZFfmRRXYoDGmZ4A3aXTyXW5gSacroSaHt79H7MxF+7OzqjANr3tMajKZHwEBl1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MwygWuha; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MwygWuha"
-Received: from [100.65.1.24] (unknown [20.236.11.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A030C21176C6;
-	Mon, 16 Jun 2025 13:06:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A030C21176C6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750104381;
-	bh=RWf4U2IMgfXaKMSLGJUCrHvubnG0tLPF0JXW2PD8mi0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MwygWuhajk7TGYV1hsriMnPH/Z615YS+VR6NW/7XY+ka4XNr/WLH2QUZibl6KRgys
-	 duta2oQez2pfYwZQIs/JdGdS7BHRSYlkI3IaA2ECLv+a5lZnTkfKCJiuOuMTv1PfU1
-	 VHKF/NIqb+R7AbxYyEWJNa2pTcbblAVqovZtzrig=
-Message-ID: <38127f1a-3761-48c7-8e95-1f677d6bd7b3@linux.microsoft.com>
-Date: Mon, 16 Jun 2025 13:06:20 -0700
+	s=arc-20240116; t=1750104451; c=relaxed/simple;
+	bh=w4FT1H1otWuU41iKAyXE3aenXED+yXXKzBlMm2dXHmc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=fL6OyTS7PVwFbIf2PUnH2jVGineTQQ7MOpdc2nbYfNRso8FdREuUT6Uuo9xvxSyPjX0i4B38u7QsFLuKDlE481d6qcpMtK2faTp5Dc7LVSI95/YwRqMJuy5Rset7f5m17p8ZsLxsothoDq9ELalDTMpiH0l1rbRuXBvmTN9t4q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86cf89ff625so516638039f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:07:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750104449; x=1750709249;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YNrbzhDii0vU3vAETOQo/q36S4p52Ssz6LYa7lqmDek=;
+        b=mT0x/OR22ANaSYTCR1mFNkSaXfKY9KM7HZTVTrcQpcXbi0j2oy84gWVGHKXQDBIUDf
+         qw/+sGg+OZ7wJeshGsFTBw3pL6GEIK1gnRFRpZgsw2PLqD6TZcyQks9GUoYKPo9HvRAk
+         KC3PU8JRApmbmc/c7qi5N75mB3wyqS3g0JlMScaM7Mxgcapy8M60pU19+qchQoVRHd6E
+         t70U1yfAtD2tVG4BM9M9gydQy4ahRAfdWTxESQo8ieo9OIBjp7sm4Y7ibCSdBquvYb1L
+         Pt6FxNwhr2PYGCrnjgzqTBn7Gvx7nbq43X/up0j/MlRFxBP56yZ4BHHD2ZfSrc2Ex22y
+         GalQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDCaol7s7ENMMW9BQGoY85vUufQnhWmFAKBViBw1UXhxWCQUZT95MkU3b0lqF2Obvt8lpv77bvy1HRFok=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkx2qd9nOhLfy7X51lykc+e86PH1FHZp5Ri8D/7i+nwybEQZN4
+	Rx6wXJ2QAY6ECjhLEpSHXsAKPGG1ecGs+ZhReh4x3TR2eu2UCuo+Ic3ovFmzllz3g3MRue5K6ps
+	MZDw+jkA7UCg4TPhxPntGTN1qpEFK3TfkpZAAq0bkAnd9w9tU4YFaMLdnMAg=
+X-Google-Smtp-Source: AGHT+IF5ouNXG7IFJ8+gsVFgWhpwLyG5QVowKlfwZxWd8n7iGsa9J4BAoGGhM2HVK+UyWGzoJ62qf/3osFgrQtjulmLHv66DM0Tx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "x86@kernel.org" <x86@kernel.org>
-References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1fe7:b0:3dd:88da:e804 with SMTP id
+ e9e14a558f8ab-3de07d1bb31mr130508655ab.18.1750104449255; Mon, 16 Jun 2025
+ 13:07:29 -0700 (PDT)
+Date: Mon, 16 Jun 2025 13:07:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68507981.a70a0220.395abc.01ef.GAE@google.com>
+Subject: [syzbot] [net?] WARNING: suspicious RCU usage in mpls_getroute
+From: syzbot <syzbot+8a583bdd1a5cc0b0e068@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/11/2025 4:06 PM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
->>
->> From: Mukesh Rathor <mrathor@linux.microsoft.com>
-> 
-> The patch Subject line is confusing to me. Perhaps this better captures
-> the intent:
-> 
->  "PCI: hv: Don't load the driver for the root partition on a bare-metal hypervisor"
-> 
+Hello,
 
-Thanks, that does make more sense.
+syzbot found the following issue on:
 
->>
->> init_hv_pci_drv() is not relevant for root partition on baremetal as there
->> is no vmbus. On nested (with a Windows L1 root), vmbus is present.
-> 
-> This needs more precision. init_hv_pci_drv() isn't what is
-> "not relevant". It's the entire driver that doesn't need to be loaded
-> because the root partition on a bare-metal hypervisor doesn't use
-> VMBus. It's only when the root partition is running on a nested
-> hypervisor that it uses VMBus, and hence may need the Hyper-V
-> PCI driver to be loaded.
-> 
+HEAD commit:    5cdb2c77c4c3 Merge tag 'net-6.15-rc8' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1066f9f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87b7b87abbf1a67f
+dashboard link: https://syzkaller.appspot.com/bug?extid=8a583bdd1a5cc0b0e068
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-I'll update it so it is clearer, thanks.
+Unfortunately, I don't have any reproducer for this issue yet.
 
->>
->> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->>  drivers/pci/controller/pci-hyperv.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
->> index b4f29ee75848..4d25754dfe2f 100644
->> --- a/drivers/pci/controller/pci-hyperv.c
->> +++ b/drivers/pci/controller/pci-hyperv.c
->> @@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
->>  	if (!hv_is_hyperv_initialized())
->>  		return -ENODEV;
->>
->> +	if (hv_root_partition() && !hv_nested)
->> +		return -ENODEV;
->> +
->>  	ret = hv_pci_irqchip_init();
->>  	if (ret)
->>  		return ret;
->> --
->> 2.34.1
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ebc28a81a453/disk-5cdb2c77.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/331d1e5750f7/vmlinux-5cdb2c77.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/896acae01c9c/bzImage-5cdb2c77.xz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8a583bdd1a5cc0b0e068@syzkaller.appspotmail.com
+
+netlink: 334 bytes leftover after parsing attributes in process `syz.2.4451'.
+=============================
+WARNING: suspicious RCU usage
+6.15.0-rc7-syzkaller-00082-g5cdb2c77c4c3 #0 Not tainted
+-----------------------------
+net/mpls/af_mpls.c:84 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz.2.4451/17730:
+ #0: ffffffff9012a3e8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff9012a3e8 (rtnl_mutex){+.+.}-{4:4}, at: rtnetlink_rcv_msg+0x371/0xe90 net/core/rtnetlink.c:6961
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 17730 Comm: syz.2.4451 Not tainted 6.15.0-rc7-syzkaller-00082-g5cdb2c77c4c3 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ lockdep_rcu_suspicious+0x166/0x260 kernel/locking/lockdep.c:6865
+ mpls_route_input_rcu+0x1d4/0x200 net/mpls/af_mpls.c:84
+ mpls_getroute+0x621/0x1ea0 net/mpls/af_mpls.c:2381
+ rtnetlink_rcv_msg+0x3c9/0xe90 net/core/rtnetlink.c:6964
+ netlink_rcv_skb+0x16d/0x440 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg net/socket.c:727 [inline]
+ ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+ ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+ __sys_sendmmsg+0x200/0x420 net/socket.c:2709
+ __do_sys_sendmmsg net/socket.c:2736 [inline]
+ __se_sys_sendmmsg net/socket.c:2733 [inline]
+ __x64_sys_sendmmsg+0x9c/0x100 net/socket.c:2733
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0a2818e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0a28f52038 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00007f0a283b5fa0 RCX: 00007f0a2818e969
+RDX: 0000000000000003 RSI: 0000200000000080 RDI: 0000000000000003
+RBP: 00007f0a28210ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f0a283b5fa0 R15: 00007ffce5e9f268
+ </TASK>
+
+=============================
+WARNING: suspicious RCU usage
+6.15.0-rc7-syzkaller-00082-g5cdb2c77c4c3 #0 Not tainted
+-----------------------------
+net/mpls/af_mpls.c:85 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz.2.4451/17730:
+ #0: ffffffff9012a3e8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff9012a3e8 (rtnl_mutex){+.+.}-{4:4}, at: rtnetlink_rcv_msg+0x371/0xe90 net/core/rtnetlink.c:6961
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 17730 Comm: syz.2.4451 Not tainted 6.15.0-rc7-syzkaller-00082-g5cdb2c77c4c3 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ lockdep_rcu_suspicious+0x166/0x260 kernel/locking/lockdep.c:6865
+ mpls_route_input_rcu+0x153/0x200 net/mpls/af_mpls.c:85
+ mpls_getroute+0x621/0x1ea0 net/mpls/af_mpls.c:2381
+ rtnetlink_rcv_msg+0x3c9/0xe90 net/core/rtnetlink.c:6964
+ netlink_rcv_skb+0x16d/0x440 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg net/socket.c:727 [inline]
+ ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+ ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+ __sys_sendmmsg+0x200/0x420 net/socket.c:2709
+ __do_sys_sendmmsg net/socket.c:2736 [inline]
+ __se_sys_sendmmsg net/socket.c:2733 [inline]
+ __x64_sys_sendmmsg+0x9c/0x100 net/socket.c:2733
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0a2818e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0a28f52038 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00007f0a283b5fa0 RCX: 00007f0a2818e969
+RDX: 0000000000000003 RSI: 0000200000000080 RDI: 0000000000000003
+RBP: 00007f0a28210ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f0a283b5fa0 R15: 00007ffce5e9f268
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
