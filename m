@@ -1,188 +1,277 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013041.outbound.protection.outlook.com [40.107.159.41])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CDE26C3B6;
-	Mon, 16 Jun 2025 08:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063222; cv=fail; b=BsTCPD2k1F/NPeXFzca6sTxAIDOyK29MHp+fC/RtD0cBxlKei93z1yVzw+Hugyy+RLlXUCgtJlf9ydYNEMhgmS/LmpcZwhRZKbgGcj/KANiEgByJ47+WhLbmo4NN8wgj5NOBjdPkjpRyLehW6u4uzRRB4W5pLrsohnc3K95O6PM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063222; c=relaxed/simple;
-	bh=KvEmz/Bb1G0kzQ4tpW50CkFNOrnHY88sSX/oqggWU+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bSXKdHdTdA535XMGJDOxXSDlifwqwWgbgkvl6LGzKxQffnAlu8GaWGJgj2enyR1dyk9qXS8tE2TC5vrLra9d4D+ga5Wx62qZ7v2clhF9uXsDmu4OMqYqNACRbQlIAqFnoGCxHvsHGXSaPVXHkQ2y3rZg7ByWrAMmu5GRdruOFpU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=di/aNJYu; arc=fail smtp.client-ip=40.107.159.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979A126A0D0;
+	Mon, 16 Jun 2025 08:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750063273; cv=none; b=i+4CmqEhK1ocJPlnrNEOEEv2JH5mr09EGCJzvkN0OlozMJYH1Q9qlhGMh4folvbPEqAmu6PJIsBD9OD5J0redp6P9icd0xvsbngXM7wGKf6IaA6Mj9931kJnyhL781qnksH6dlcrwn02N1/TKNhRriOENvRTL37g5/BOMfpIe+w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750063273; c=relaxed/simple;
+	bh=lUTBn9nVP14ZgUwJZjdfYcXIiimg5PSNeqjhn/Mf/Mk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=n2jrctwEqWYuoDsIADGyjd2C864mSbJoW0bBG05tEhzYbkUl5FoA3cxPLFK8SLMFQE1/arEXX85b3wC9DGoucZgj1mfj1q4g/fJasKyPjTTrYzn7MAKj6dMtTucI3i3JgYUJfSonKMyP1TMeCJ2WA+gpgk7VyXyrbK2zxM9UF3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oEpep69V; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="di/aNJYu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U6oY/8+c6GKNWzrh5px7r9SepeMUOrxh+bAjnInAyyBQuxgO0Q8vlA8BpJZpgIhWACZTYgmT9l8D9k4YeiHpdSjTy4hD0vW20+Culhu7AVTXBq7ZGQkkGraLpcFQ0jo3qW+xbszg9N5/GrCEh7g+jLcbS64BH7UJCrijYCRQjE4cnlHX4jxST857ULGgwAI+2NVyEzQPCNCsQUY4yaFbpWQ/ZCr1GbEhxoQt72fJ0M/3cyWjQui8hkNcmXVSq8UiaAvraJkkMzKUcAO0Z4tg05QfEOWo3AoXTgBEecQPUD4Tv6klmi4ty29jXviqbvDLvZcRVhfZyZtp0VsLLBWJZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NqMblPvKfx4IE9vQ6YPAVX2Mp1AnULS+jubaXHyacis=;
- b=DJr1c+hEmoiIAF/KIwA4Rc0Xx98rzuPEhiQWdtSR8e4kHwDT4uH5V51aUBPNH7PF0HLDK3OaW8bc7gaH3CnH/hHCMpbt5j/QlEau/aCuyE9DrQtQxzrCD9YKsP8BK0l8sEVioXHbDQPL7J+bdRbwpKJqLTu9kz6aBuHLV0jXIPNN+rMs0YC2iY/ULCU/wO2ripXWTiLcZid9Dc91MFBY1632Hmw8U4HLAZTf3ckRfs36qcJmEHbbjuoEhTV/Jdnc6gHQWjEuwtStNVGEMs4eTVQv69o+rX1TisC1ukZVcZVHaMopHfdu9PxqyQsl0ps8c5ffh0ZPLMuajf+cognNhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NqMblPvKfx4IE9vQ6YPAVX2Mp1AnULS+jubaXHyacis=;
- b=di/aNJYuyUHuGpybnrNyRZLrCuvy+JfnJ5CN1Nwr9BGKut8kvS6TI1V7teHLBHQIFudu9YSb0P4vSOpuu4oylHOrN096spDrX9VYD6vDGUvhqnf9qfei3B9BbktD4oW+ZIhpKHE/M+KJsd7tQU8a6YMZN/TzuZoPXn/mXtYHIpQEha93hS1PRcnfQHU83p377KtbW3tIQnsubqRbZVtOetwZX00rrxfkPdlIjdtP1jnxzSmCfuJpfLREZvFAftgyxdGvaPGuUh+feky/kMxoQ30bXEz1Xa8t/gX1m3x728CeFPkC9OgZEBLDXkR9HG6R8HdVQ5vYUyCZSpvDdCLE7Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by GVXPR04MB10184.eurprd04.prod.outlook.com (2603:10a6:150:1bf::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 08:40:14 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
- 08:40:14 +0000
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v1] PCI: imx6: Correct the epc feature of i.MX8M chips
-Date: Mon, 16 Jun 2025 16:37:44 +0800
-Message-Id: <20250616083744.2672632-1-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0130.apcprd03.prod.outlook.com
- (2603:1096:4:91::34) To AS8PR04MB8676.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::10)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oEpep69V"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8SCWE010944;
+	Mon, 16 Jun 2025 08:41:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GcaXA6aB85PzCjRP4tvAHFHa54YRrnAuJaIwm6JHCRc=; b=oEpep69VUw6phu/7
+	Evh1Dp1hq1pAqYGE4ejRaBhmiMUrFkNXZdLUcymyWNM0LAqCWoMhOvnIod8DA+vl
+	+xZ6QKMCzHInuD16Tn6gKrUVenBLLieAPWLB1U00sda8qfeoeufkbWem2yxc+lw5
+	NivSAxhtYUBSZcV2PupTArnH4Hp91YIhx72U6FV+70KfmBNXx/z6Cml3KRbACCE9
+	6NXHRKDc7BriBPGhIKfWFkNXfvMumihZ+tNiLFRh2t35FTGHmMGZWYkRo1PNQGGo
+	BHEupfuTKpCkiQ/ddmNY6CXUc6vPGwsrnZbMIqep5AMgym5Ne/SsjrW3EDjmYr/W
+	Y7XqAQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 479qp5jcyc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 08:41:05 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55G8f5Gq015236
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 08:41:05 GMT
+Received: from [10.218.32.171] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 01:40:24 -0700
+Message-ID: <d4ce9309-4021-44e2-bc26-1bd9e7b7e8df@quicinc.com>
+Date: Mon, 16 Jun 2025 14:10:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|GVXPR04MB10184:EE_
-X-MS-Office365-Filtering-Correlation-Id: d479c43f-bf5e-496d-df43-08ddacb169a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9YIx11S4iW7v+9HaFbIiuBKDuQwkuEmqQ2ZnaYyd2bQ4irAEF/w4Uz2Znt/S?=
- =?us-ascii?Q?uSJCllAajbJafdf7cZ3uzFEGrlk+/RgRFyaLiA1I+GppjdIVlEDNA3PAl+qp?=
- =?us-ascii?Q?Wt068W1rs1JZ3HXR3WP0li3p2b+P7T8yCDnNAm0kjK2lfES3gAuZGarLWL+2?=
- =?us-ascii?Q?R5lrkNz2e2+R2j9a1cUNtM7dmn/lJ+0BNU5H6LUcuhjU1c3ikkCfX+NvuSy1?=
- =?us-ascii?Q?jZSyfRMwAEE/8XxOaImVJw1PZwn2c1SRky4sf7d2VMxHJX66IlvTa0aAmO93?=
- =?us-ascii?Q?wPVPVqJi1bX1NS7QqmGT99JtvHi9maJSvWA5N8SUAUlKBMaSCoBwuNuPnCKC?=
- =?us-ascii?Q?8kcMVDz0ceBfCFqZuwK0FPCP/kEAwe2qX6AT1d56u9ftGhZxnR75PAUlRkDH?=
- =?us-ascii?Q?zKJ/fiD+MCyv6zjqYFZQyJNjxbDkNgnxabSVM+RrR13H0jrXjMA4KBQlb0f7?=
- =?us-ascii?Q?YfW0FB5x2yy1kaACYeEK4v+gcxxWD6OhzgFwjcvubAnqJ+r1RaYECuflBfz3?=
- =?us-ascii?Q?DpIHyCV9awJ+F3KKmgOdmtgk2RjP0f/BmLj/hY+D0zfvS8m3+AkoMWsC6FR0?=
- =?us-ascii?Q?p5RpWnNO31BusC5+OCXza6U66NhP84BFhdvoL+CCc4AFLdBu+cGx9AowFMZp?=
- =?us-ascii?Q?mE8wME3+MUE20/5t1XId7XT8qFacAlynRKbwSK4ChhtlVz0nzUupgkH9CtrX?=
- =?us-ascii?Q?QR9mIgORrlocx8GM6CUu1w0tBoZGgQGM/dI9SyDOaxdh1vOShJYPv7oo1IxY?=
- =?us-ascii?Q?Tlz0j1iqxlOD8t4HSR8heWl486VOdR4uG1n5+PAar8r7FvF9cCYOJo2HUdOW?=
- =?us-ascii?Q?6nCcLrawEmv5sa8zjxlZj/rR5x6BtkwIYx1iVQ6UgYZ2m67kLMNJ1w4WCl72?=
- =?us-ascii?Q?sibLzXEnuw8psuB8nphNsh2F7AYmQ0NF7HpjAdLp135LniroUr51Y+MFqExi?=
- =?us-ascii?Q?IsKftddHyt+SLhe0gD5eZrrHc10dBG9JCbCrju+pcoZ3VdwuAQU06jHi2syZ?=
- =?us-ascii?Q?co4mOT174rSJ0WBhIgbT/H8w3bjFE5hnC1cgL3nuAgg5YCbruXFRSPbSoLjp?=
- =?us-ascii?Q?uJ2C9HX99ANxS3taXvE1dki7ojpn7rjJ4Q038MwW1+e8vznOnh6Is25f3/TJ?=
- =?us-ascii?Q?yveB8hvuii0pPfzySWgNE4cq4lzrUONciFp0iETVBLgLE/IidtjKBA1zzjv0?=
- =?us-ascii?Q?t7vHYYnOxFB3oZ3cjds1mef48E02E1y7EUwnZEX77jV/UF2T5uaW4bvjAIss?=
- =?us-ascii?Q?Ysx/yq817Wrp+teeThT2ktZZZ0/hzrSRpsPtq9zRwXuFzx2B2rohiFNF3zM9?=
- =?us-ascii?Q?CgM7W8DiGHkuw1KA4IuB2WVcLVKjtJtABztpM5AQyYwg7NQvwKjdcsjlraW5?=
- =?us-ascii?Q?eXwAXezzpKz9WORLRuV1s/jie4kyFw2ObjKV7vILHO2D+BqYrRfmO7HuNRRu?=
- =?us-ascii?Q?S/8WHwXhxT2nuiJ+kDXSepIFu7lw7OBbVgb14xDd4dqcuI5JufY71L50IDST?=
- =?us-ascii?Q?5/6TK0/KyQudKBs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CbIUO+J7lx6YA3VonNGaUw9kIAAux68fZD4I7Ok6u1V+4B2zfyHZGl2GkH/p?=
- =?us-ascii?Q?lySuuR9VlZgRYYldfPkpaZzd2LNCbRYcWUnzSjwOtPTdHdAbsqFcOCisNuST?=
- =?us-ascii?Q?ZdhHxUc4rRA1yz26Txdd2vDA0OxIwFhjDlLPazC9QhhCqpgJLmJQk4k+mdSD?=
- =?us-ascii?Q?kWsgTPT3S4VqxQ3lYR1IyLgJW+CC7S0pH6vez/eovoXYN6+PW1dCaTz2flcQ?=
- =?us-ascii?Q?ETW+lsnX7JBauZzi5mKoA+TuCIvE/rpxxYijC0PkYlR74y3Tc611q6mmszOp?=
- =?us-ascii?Q?SM1TSrKds0+opsam/y1mlQFuReDOWr73Ua0HoGP147NZz1Q7IqYlB4L0nAgK?=
- =?us-ascii?Q?6NdCyUHbt1UinXREO2OVq39tyCn/nGNHJpkr9/wxk6M8QgsD7IHQb4kmSWuh?=
- =?us-ascii?Q?1SFOGDdOCfLkbUweR6v2BTLyPoyil0doC1u/5clTAbGxJliYt0LdCir14iio?=
- =?us-ascii?Q?/DuhGxQP0Qm43CJAL7GhkDzs/nYbzmej032PPjXzOQxaxVRnfbwP1X1Z21YY?=
- =?us-ascii?Q?VP+yoEAtDalVI07lmO4Gi4NiSs02uPf76b6Z5V8OrVLhEa50l9mFZgWjQdYd?=
- =?us-ascii?Q?ccopcU1KeAplZhzV37+0QQsq6T3yjQfiJrSafGMRXCtfjrbDHCW+YQDzj7nu?=
- =?us-ascii?Q?1LbyfQCcJ+kGri0gC/qkgv5QiU+0gkomT0OYKkOERj9F8G7KjWRYLs1/pz2B?=
- =?us-ascii?Q?LZYHAY5N9Ol0WorNWM2QkS4va+laDRBTAuiA82N4/AVAgvK+AXibZc+7qbbS?=
- =?us-ascii?Q?oNy/gX2ACcU1/diu7vq/sclSkWZ9YDQbqDk0XJ7QYSkFZfz2s8zuttevK11p?=
- =?us-ascii?Q?9j8bzDDcf7MVyVBeDTnBjXWMIu0ljnUhcCeZHfiqADRHVXsuQbDdjXS5Cp91?=
- =?us-ascii?Q?QLoYrNese5njSdtyxwLjmBxdtH9o0bE7A0LDJja1lH+/CniJZywjsOlRUpYx?=
- =?us-ascii?Q?22ddRk3X/YIgP3T/3imsFaViziZjabTJBRGNp7eC+oyzKF7ukgCS/QtHo9z+?=
- =?us-ascii?Q?KaFi/QiKQ6Do+wF/V6zkQL3iNyb4sCMwoByKyBLMbzmC60aLQmj31rpZtZCT?=
- =?us-ascii?Q?O8FmX9DhltTqoJz3SzjJQLeuslQejbiHvP/Yt/a+1E3u3U673esa449DVvdT?=
- =?us-ascii?Q?6p6O5ncZ1wrI9SIPbkiXydorfxkrXw9IiT0I/kXbeQTG40BXeszC0N7Kl9Pf?=
- =?us-ascii?Q?3J78i/G2ZDhhVPugYGlyH9JdEMfLJ3jOCn8eVLkxEOKYaXC29onCAqjJBE5G?=
- =?us-ascii?Q?l7ZhD02gjkjs1duY7SVpEMiPVmuTPlwu1nR6rEaVXViyYDw7mDjMdNQx7E2u?=
- =?us-ascii?Q?AMtrZZc5DpzYp8HsFnIFNcrhILYhY+dOEKtOtYGnX0QiQcyn4sRRU/SDUDUo?=
- =?us-ascii?Q?Z0clHFDlw82JEJXq/vp0PK+zAYBqdrb6rkxEC0NnnQLB3ryOWYc62NCsCgLR?=
- =?us-ascii?Q?cX/ocvtW6DYShHnvJpHF1fcy1LU/eguMFhwEsM4UBuU7WncE2cTLytSKyAwR?=
- =?us-ascii?Q?5TTGb7WdcJ47RLJDCbWmpvgqFkXGv/1XcOO4HQVp6i2uEP+cW22G1kcbGxfh?=
- =?us-ascii?Q?Cox/5hjrtWw39poX27mOAKTBvc+w4oENB+l3h7Bo?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d479c43f-bf5e-496d-df43-08ddacb169a1
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 08:40:14.0051
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m6nDcLKDTBKD9QBY9RL29kApBEyOM6HWtUZiOR5jAORRbgo9lMTBR/xYUapDX1QBL9rkogubPlk/x3X3blgX0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10184
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] soc: qcom: geni-se: Enable QUPs on SA8255p
+ Qualcomm platforms
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
+ <20250606172114.6618-4-quic_ptalari@quicinc.com>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <20250606172114.6618-4-quic_ptalari@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: DFnzH0vnnRKyPiwfYK5whr4pyn5qPuMJ
+X-Proofpoint-ORIG-GUID: DFnzH0vnnRKyPiwfYK5whr4pyn5qPuMJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA1NiBTYWx0ZWRfXyu4JYWNJkCWh
+ +PYjHkkloWskcOaKFlkvMtgS5YgY24s+RLLPsrEd3DLc0rD/I9dTcuoaqQvoS1y/9m9e3610Xr4
+ sveF7eISNXUi+1mdIz77ryhWydkGpAT1quk53oN33oWxE3WoQPz1FA2MfyZlbpN4GteopNjO21O
+ Rf545lLPYsFhRrvdYcxNZ6XhXhOGtsmLLSq3MUdeClritwtW2QbhwAiGix+jIMEC9OhwsDtHfSB
+ dm5WeA0LBdXbRupKyQekiUrMWPFxsNYYTvWHhd3QItPaGY+Mu9kJli0SfUFtprKvwqZBVlSlW9v
+ JOcIORHHkG/yyIu7HQesRbVcSzX1v3YMX24zcif19Se8ScnTmSukwkV3OEUJ8fAyECcmBK7fVPL
+ QRCCYWLmeRBn+pOEfHWIaEpwDyfQU+Q+p8D6+qvj7GFx65AR4eYyfnHq0fQ4nYqLkKgBAG9m
+X-Authority-Analysis: v=2.4 cv=fMc53Yae c=1 sm=1 tr=0 ts=684fd8a1 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=_oO_JE4s1IoPHfOlYPIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_03,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160056
 
-i.MX8MQ PCIes have three 64-bit BAR0/2/4 capable and programmable BARs.
-But i.MX8MM and i.MX8MP PCIes only have BAR0/BAR2 64bit programmable
-BARs, and one 256 bytes size fixed BAR4.
+Hi Bryan,
 
-Correct the epc featue for i.MX8MM and i.MX8MP PCIes here.
+Gentle reminder!!
 
-Fixes: 75c2f26da03f ("PCI: imx6: Add i.MX PCIe EP mode support")
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks,
+Praveen talari
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 5a38cfaf989b..9754cc6e09b9 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1385,6 +1385,8 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
- 	.msix_capable = false,
- 	.bar[BAR_1] = { .type = BAR_RESERVED, },
- 	.bar[BAR_3] = { .type = BAR_RESERVED, },
-+	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_256, },
-+	.bar[BAR_5] = { .type = BAR_RESERVED, },
- 	.align = SZ_64K,
- };
- 
-@@ -1912,7 +1914,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
- 		.mode_off[1] = IOMUXC_GPR12,
- 		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
--		.epc_features = &imx8m_pcie_epc_features,
-+		.epc_features = &imx8q_pcie_epc_features,
- 		.init_phy = imx8mq_pcie_init_phy,
- 		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
- 	},
--- 
-2.37.1
-
+On 6/6/2025 10:51 PM, Praveen Talari wrote:
+> On the sa8255p platform, resources such as clocks,interconnects
+> and TLMM (GPIO) configurations are managed by firmware.
+> 
+> Introduce a platform data function callback to distinguish whether
+> resource control is performed by firmware or directly by the driver
+> in linux.
+> 
+> The refactor ensures clear differentiation of resource
+> management mechanisms, improving maintainability and flexibility
+> in handling platform-specific configurations.
+> 
+> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+> ---
+> v5 -> v6
+> - replaced dev_err with dev_err_probe
+> - added a check for desc->num_clks with MAX_CLKS, an error if
+>    the specified num_clks in descriptor exceeds defined MAX_CLKS.
+> - removed min_t which is not necessary.
+> - renamed callback function names to resources_init.
+> - resolved kernel bot warning error by documenting function
+>    pointer in geni_se_desc structure.
+> 
+> v3 -> v4
+> - declared an empty struct for sa8255p and added check as num clks.
+> - Added version log after ---
+> 
+> v1 -> v2
+> - changed datatype of i from int to unsigned int as per comment.
+> ---
+>   drivers/soc/qcom/qcom-geni-se.c | 77 +++++++++++++++++++++------------
+>   1 file changed, 49 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 4cb959106efa..5c727b9a17e9 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -101,10 +101,13 @@ struct geni_wrapper {
+>    * struct geni_se_desc - Data structure to represent the QUP Wrapper resources
+>    * @clks:		Name of the primary & optional secondary AHB clocks
+>    * @num_clks:		Count of clock names
+> + * @resources_init:	Function pointer for initializing QUP Wrapper resources
+>    */
+>   struct geni_se_desc {
+>   	unsigned int num_clks;
+>   	const char * const *clks;
+> +	int (*resources_init)(struct geni_wrapper *wrapper,
+> +			      const struct geni_se_desc *desc);
+>   };
+>   
+>   static const char * const icc_path_names[] = {"qup-core", "qup-config",
+> @@ -891,10 +894,47 @@ int geni_icc_disable(struct geni_se *se)
+>   }
+>   EXPORT_SYMBOL_GPL(geni_icc_disable);
+>   
+> +static int geni_se_resource_init(struct geni_wrapper *wrapper,
+> +				 const struct geni_se_desc *desc)
+> +{
+> +	struct device *dev = wrapper->dev;
+> +	int ret;
+> +	unsigned int i;
+> +
+> +	if (desc->num_clks > MAX_CLKS)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Too many clocks specified in descriptor:%u (max allowed: %u)\n",
+> +				     desc->num_clks, MAX_CLKS);
+> +
+> +	wrapper->num_clks = desc->num_clks;
+> +
+> +	for (i = 0; i < wrapper->num_clks; ++i)
+> +		wrapper->clks[i].id = desc->clks[i];
+> +
+> +	ret = of_count_phandle_with_args(dev->of_node, "clocks", "#clock-cells");
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "invalid clocks property at %pOF\n", dev->of_node);
+> +
+> +	if (ret < wrapper->num_clks) {
+> +		dev_err(dev, "invalid clocks count at %pOF, expected %d entries\n",
+> +			dev->of_node, wrapper->num_clks);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
+> +	if (ret) {
+> +		dev_err(dev, "Err getting clks %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>   static int geni_se_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+>   	struct geni_wrapper *wrapper;
+> +	const struct geni_se_desc *desc;
+>   	int ret;
+>   
+>   	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+> @@ -906,36 +946,12 @@ static int geni_se_probe(struct platform_device *pdev)
+>   	if (IS_ERR(wrapper->base))
+>   		return PTR_ERR(wrapper->base);
+>   
+> -	if (!has_acpi_companion(&pdev->dev)) {
+> -		const struct geni_se_desc *desc;
+> -		int i;
+> -
+> -		desc = device_get_match_data(&pdev->dev);
+> -		if (!desc)
+> -			return -EINVAL;
+> -
+> -		wrapper->num_clks = min_t(unsigned int, desc->num_clks, MAX_CLKS);
+> -
+> -		for (i = 0; i < wrapper->num_clks; ++i)
+> -			wrapper->clks[i].id = desc->clks[i];
+> -
+> -		ret = of_count_phandle_with_args(dev->of_node, "clocks", "#clock-cells");
+> -		if (ret < 0) {
+> -			dev_err(dev, "invalid clocks property at %pOF\n", dev->of_node);
+> -			return ret;
+> -		}
+> +	desc = device_get_match_data(&pdev->dev);
+>   
+> -		if (ret < wrapper->num_clks) {
+> -			dev_err(dev, "invalid clocks count at %pOF, expected %d entries\n",
+> -				dev->of_node, wrapper->num_clks);
+> +	if (!has_acpi_companion(&pdev->dev) && desc->num_clks) {
+> +		ret = desc->resources_init(wrapper, desc);
+> +		if (ret)
+>   			return -EINVAL;
+> -		}
+> -
+> -		ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
+> -		if (ret) {
+> -			dev_err(dev, "Err getting clks %d\n", ret);
+> -			return ret;
+> -		}
+>   	}
+>   
+>   	dev_set_drvdata(dev, wrapper);
+> @@ -951,8 +967,11 @@ static const char * const qup_clks[] = {
+>   static const struct geni_se_desc qup_desc = {
+>   	.clks = qup_clks,
+>   	.num_clks = ARRAY_SIZE(qup_clks),
+> +	.resources_init = geni_se_resource_init,
+>   };
+>   
+> +static const struct geni_se_desc sa8255p_qup_desc;
+> +
+>   static const char * const i2c_master_hub_clks[] = {
+>   	"s-ahb",
+>   };
+> @@ -960,11 +979,13 @@ static const char * const i2c_master_hub_clks[] = {
+>   static const struct geni_se_desc i2c_master_hub_desc = {
+>   	.clks = i2c_master_hub_clks,
+>   	.num_clks = ARRAY_SIZE(i2c_master_hub_clks),
+> +	.resources_init = geni_se_resource_init,
+>   };
+>   
+>   static const struct of_device_id geni_se_dt_match[] = {
+>   	{ .compatible = "qcom,geni-se-qup", .data = &qup_desc },
+>   	{ .compatible = "qcom,geni-se-i2c-master-hub", .data = &i2c_master_hub_desc },
+> +	{ .compatible = "qcom,sa8255p-geni-se-qup", .data = &sa8255p_qup_desc },
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(of, geni_se_dt_match);
