@@ -1,99 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC54928936B;
-	Mon, 16 Jun 2025 17:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B92972607;
+	Mon, 16 Jun 2025 17:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750094634; cv=none; b=ozV/cGJ5nfI2LjPTKRiw8tx/7XoeUwuFw5nkUimW3+c7PDSNVpO/5IqOBRSBubXxLdFDdFq2vgMuK6YwAkMI3L9/J47mg2UHX34RoqPi31IQ59kI8+FgxnWiDBGlOXDD4LxfklF7ulUHb9IdsjpbVSn2g8q5oMB1DpC9XlLlsdo=
+	t=1750094749; cv=none; b=XbhBml2+j4lip5SlX99w/3Umx06lH8aZ6StNcnL1HHwVoMZCi3EDrX2KlYXQVyF1KLgQKkZJ1r5gxmOcRIecvpfGd3TZY2Py0jdrMuoJHzINpSfyw4JtjhQLA1Gmh4haV1e0ZamtjNLaT0FXN17jWDbCXp/55Wc7lhzXSCF/q04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750094634; c=relaxed/simple;
-	bh=/jZrQ9S1/qKDrhEa24isAWnQHzj9GQjAjLTNE9pKE2E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BFvmisgn7s9TNpCm7X8l5Ecxv+PCw0MjgG83wlreB38vl0PNy60YL6SkR0ullYIIvRy6EiwMgV0IQeHmgYkxCpV37fVn0UUFlmKmblkWP3tvtLq61reWwBeWM5gme8rv2UHH25zTvSwZS/f0tqQ0wXQDFFTRphy6jvZh3eKKIbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWTjQjS9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWTjQjS9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FBC8C4CEF4;
-	Mon, 16 Jun 2025 17:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750094633;
-	bh=/jZrQ9S1/qKDrhEa24isAWnQHzj9GQjAjLTNE9pKE2E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jWTjQjS9OREK8EWUzjoQa7VWHP+QHa8ZXxQ/EMPS1ieWcV0CxI0SlDnsuojqQqgGN
-	 zY6dSApgSD08wg5HPYrDIV4TNwSyI929S7qSj+filcsX+r8s5PlKtErBM4nRmSH2gL
-	 ZQwzCiDwzLJSdAErNStpbvvejPBySymv9zO72+e/vUcCzgyFrEqgZJlRZGjeBH69dU
-	 /gZFvr8xNPwzO6+Yxup0D3x41hFxITQer7aT0rPZ7bIuruVJJSklKoi9WV71Z3wBq6
-	 +fBbE7g5EHtTjh4scICSo0jew4Of8R7ItRWW6o2GJPiwlkL1/6jF7wnbp21HKESpCl
-	 XRmNxXpYC16DA==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Honggyu Kim <honggyu.kim@sk.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Michal Hocko <mhocko@kernel.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 3/3] Revert "mm: make alloc_demote_folio externally invokable for migration"
-Date: Mon, 16 Jun 2025 10:23:46 -0700
-Message-Id: <20250616172346.67659-4-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250616172346.67659-1-sj@kernel.org>
-References: <20250616172346.67659-1-sj@kernel.org>
+	s=arc-20240116; t=1750094749; c=relaxed/simple;
+	bh=QHUx6cKB2rtQdOemSisCWLkC+xiLsWheLFlOwBG+g3Q=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=GeAdDvXzsvGSRNTFzOA7YSSezyjlPQQ2/GjX+9qEsbsWGLl5OPEP+W7wEv0MKUyJgKwDoTd+BQQqXspoAgXlDOARLXxxfAynJpjB8LHayooEXzWj62dDgbvbUjP3gCZMGkbTZIe5yy00JCCiXq2OALS4NlsojM8qcdSsFmiieFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B686114BF;
+	Mon, 16 Jun 2025 10:25:24 -0700 (PDT)
+Received: from [10.1.30.73] (e127648.arm.com [10.1.30.73])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 502E33F58B;
+	Mon, 16 Jun 2025 10:25:45 -0700 (PDT)
+Message-ID: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
+Date: Mon, 16 Jun 2025 18:25:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-pm <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, zhenglifeng1@huawei.com
+From: Christian Loehle <christian.loehle@arm.com>
+Subject: [PATCH] cpufreq: Fix initialization with disabled boost
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This reverts commit a00ce85af2a1be494d3b0c9457e8e81cdcce2a89.
+The boost_enabled early return in policy_set_boost() caused
+the boost disabled at initialization to not actually set the
+initial policy->max, therefore effectively enabling boost while
+it should have been enabled.
 
-Commit a00ce85af2a1 ("mm: make alloc_demote_folio externally invokable
-for migration") was made to let DAMOS_MIGRATE_{HOT,COLD} call the
-function.  But a previous commit made DAMOS_MIGRATE_{HOT,COLD} call
-alloc_migration_target() instead.  Hence there are no more callers of
-the function outside of vmscan.c.  Revert the commit to make the
-function static again.
-
-Signed-off-by: SeongJae Park <sj@kernel.org>
+Fixes: 27241c8b63bd ("cpufreq: Introduce policy_set_boost()")
+Reported-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Christian Loehle <christian.loehle@arm.com>
 ---
- mm/internal.h | 1 -
- mm/vmscan.c   | 3 ++-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/internal.h b/mm/internal.h
-index aedcf95737ed..746fa4187e9e 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1227,7 +1227,6 @@ extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
-         unsigned long, unsigned long);
- 
- extern void set_pageblock_order(void);
--struct folio *alloc_demote_folio(struct folio *src, unsigned long private);
- unsigned long reclaim_pages(struct list_head *folio_list);
- unsigned int reclaim_clean_pages_from_list(struct zone *zone,
- 					    struct list_head *folio_list);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 6bebc91cbf2f..620dce753b64 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1006,7 +1006,8 @@ static void folio_check_dirty_writeback(struct folio *folio,
- 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
- }
- 
--struct folio *alloc_demote_folio(struct folio *src, unsigned long private)
-+static struct folio *alloc_demote_folio(struct folio *src,
-+		unsigned long private)
- {
- 	struct folio *dst;
- 	nodemask_t *allowed_mask;
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index d7426e1d8bdd..e85139bd0436 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1630,7 +1630,7 @@ static int cpufreq_online(unsigned int cpu)
+ 	 */
+ 	if (cpufreq_driver->set_boost && policy->boost_supported &&
+ 	    (new_policy || !cpufreq_boost_enabled())) {
+-		ret = policy_set_boost(policy, cpufreq_boost_enabled());
++		ret = cpufreq_driver->set_boost(policy, cpufreq_boost_enabled());
+ 		if (ret) {
+ 			/* If the set_boost fails, the online operation is not affected */
+ 			pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
 -- 
-2.39.5
+2.34.1
