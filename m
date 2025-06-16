@@ -1,187 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110222E4241;
-	Mon, 16 Jun 2025 12:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDF02E4241;
+	Mon, 16 Jun 2025 12:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075770; cv=none; b=AkJEhxHAIEuKQGgDCsFp+bznV8mjaZ4ojUGe8DZcb2U4F6fdMZPp6HVJlFkTZLzgj9qQ6JCsAvHtKIQES/i5TyNa+spMv1A2cMNhsdlYLZK+7KWT1DC2OTa1z2LZZtLXsX6vyBhGgD93lYid5kOV1nsmBIL/b6P45lY/fmDWswc=
+	t=1750075821; cv=none; b=ROis3f7MOIlJhmAtkFNAayEsqZKs+eXD0gNBjWjrqNzt3nRltssFo9SIjX6iSTtQ1AkfrRIl+CSsXyNajW2grot9EFf2NKzcCbJwxyON6OTkbYQg3z92t8GzkTZWSC0SQPZp4Y9NOX9kP7K/yBOr4GfT8fUWOaI/GCY7lTXd1iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075770; c=relaxed/simple;
-	bh=Wo2XxdbZ7pdAohMk152uhjRRyVn8l8Io4GmZZilbNg8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZX6ewZ/VlMoE4VsXBmgNof8g+OYxrxjpFUUbYX7OtGHvT9bQzLR28emU+akI5sm+3jnpL9n/rxvo0hTgxpCI2QRaV6fCDRonRiN4MVnpxdoT+vPWS+pKj4EAhmJVm4LxZF/ptIVVM0+tdN6Uc847SzxG3J5GCs2tanqh7t1dgns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwIgOHM4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750075821; c=relaxed/simple;
+	bh=ojwhMmVeMqnjZosqlXZruxACtgqBN03bmbQ1B9/E6UI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q8C9cYtqz5m9yAOQCPvXID20ipzJPAQfzxxLLK5b1kuY+IHswAwlRE9o82d2tqkyduimfDEANlwQtIEHoYKYws9EauiDjqj3L/r1Hs49+L5C5w0YEg5QhONnQtScjaGBMRxQhbdlhXsZSWxCoushX1W8DO3D5cVq3cetzcH+e8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EEyg/Hp6; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwIgOHM4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40A9C4CEEA;
-	Mon, 16 Jun 2025 12:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750075769;
-	bh=Wo2XxdbZ7pdAohMk152uhjRRyVn8l8Io4GmZZilbNg8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YwIgOHM4Kt/F0zhoo6+5uwnZACjGD4TRomb6eOMF907AG/xRYvSi+oqRdBg4F5B23
-	 +oD+7BWzSdJNj+vaYrlzLQB53XocGOIS+FkR5IYp7Ll/wPhKkJXZkDRhDzYXnnxtdB
-	 bSpXknJA8bzcWrAOXGRu7RoufTFhoUSoxuKX1AtWNS1iT22EFGSFAHbYho+Fuhm9mC
-	 yWA2SxHKn12h4cx/iul35IAHN/oh7+AjeGnCDQIsvdHQX/FF4YUtlQ8GqjRIXEE2f0
-	 aiDdkN+0mIhiOjWJl2ofR4M2n0+bOR6k+sH4Iy8zni7Nz1rJg2Eg6ODQc4FeG6rBIo
-	 wT4Cf93DTzmsg==
-Message-ID: <219985d542d0eb765d917c0ab620b6af5c62f1af.camel@kernel.org>
-Subject: Re: [PATCH v2 1/5] nfsd: prevent callback tasks running concurrently
-From: Jeff Layton <jlayton@kernel.org>
-To: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Li Lingfeng	
- <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>, Neil Brown
- <neilb@suse.de>,  Chuck Lever <chuck.lever@oracle.com>, Tom Talpey
- <tom@talpey.com>, linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Mon, 16 Jun 2025 08:09:27 -0400
-In-Reply-To: <6E9B7F9B8D47F98B+d6fd7e8f-de81-4ec3-b3ae-f85bbb744e66@chenxiaosong.com>
-References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
-	 <20250220-nfsd-callback-v2-1-6a57f46e1c3a@kernel.org>
-	 <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
-	 <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
-	 <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
-	 <6E9B7F9B8D47F98B+d6fd7e8f-de81-4ec3-b3ae-f85bbb744e66@chenxiaosong.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EEyg/Hp6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0D9D0205B1;
+	Mon, 16 Jun 2025 12:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750075816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QAo/rJoPJaVKk6/wqH24mlqd1olNxReIFJb4vfD2uts=;
+	b=EEyg/Hp645fFSuxaOy1mGDBN/y7qfmX8LqB/i8dgo50hV3oMUizGP9yaXCwt8Uje6kL6mF
+	gaqkgdO7z48gIBDUevCzrzPtYR8MDj1kx7EswQ3jQ2H5ktr1DQc7sgpQeewIdsM7hUlgfp
+	7ID3oNq3HthGCYZouA303VyDmFOulN4ytAbGKe81xPFZUl8fj1Ra5xsWoLvZcQTbQxz8c+
+	SHJzrT/vPkt/jhCpfo9i8UJg10Gen0Xm3T/fJs0DVnjQXKlyhWNjwsNQYKZw7/UJIkfzDz
+	H3e6tKQv5vN3ibI7n13bmW79ZKg/AuleT1HH36zfa7J8HOsWdIdgug9RLxL8Cw==
+Date: Mon, 16 Jun 2025 14:10:12 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v13 02/13] net: pse-pd: Add support for
+ reporting events
+Message-ID: <20250616141012.31305f81@kmaincent-XPS-13-7390>
+In-Reply-To: <20250616135722.2645177e@kmaincent-XPS-13-7390>
+References: <20250610-feature_poe_port_prio-v13-0-c5edc16b9ee2@bootlin.com>
+	<20250610-feature_poe_port_prio-v13-2-c5edc16b9ee2@bootlin.com>
+	<20250614121843.427cfc42@kernel.org>
+	<20250616135722.2645177e@kmaincent-XPS-13-7390>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieehgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiiv
+ ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, 2025-06-16 at 15:49 +0800, ChenXiaoSong wrote:
-> Hi Jeff:
->=20
-> Do you have any suggestions for this null-ptr-deref issue?
->=20
-> Here is the link to the vmcore analysis:
->=20
-> https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback=
-.html
->=20
-> Thanks,
-> ChenXiaoSong.
->=20
+Le Mon, 16 Jun 2025 13:57:22 +0200,
+Kory Maincent <kory.maincent@bootlin.com> a =C3=A9crit :
 
-Not right offhand. My first guess would be some sort of UAF. Maybe a
-nfs4_client refcounting issue? If this is reproducible then you may
-want to turn up KASAN which might give you more info.
-
-That said, 4.19.90 is more than 6 years old at this point. You may want
-to consider moving to something more recent.
-
-
-> =E5=9C=A8 2025/6/11 15:12, ChenXiaoSong =E5=86=99=E9=81=93:
-> > =E5=9C=A8 2025/6/10 19:09, Jeff Layton =E5=86=99=E9=81=93:
-> > >=20
-> > > Synchronization was probably too strong a word. I remember looking ov=
-er
-> > > this code and convincing myself that the probe callback wasn't subjec=
-t
-> > > to the same races as the others, but I think that was mostly because
-> > > the outcome of those races was not harmful. Note that the probe itsel=
-f
-> > > can actually be run at the start of a completely unrelated callback t=
-o
-> > > the same client.
-> > >=20
-> > > So you hit a NULL pointer in __queue_work()? The work_struct is
-> > > embedded in the nfs4_client so that would probably imply that that th=
-e
-> > > nfs4_client struct was corrupt?
-> > >=20
-> > > You may want to get a vmcore and analyze it if you can reproduce this=
-.
-> >=20
-> > Thanks for your reply.
-> >=20
-> > I have already got a vmcore. Here is the link to the vmcore analysis:
-> >=20
-> > https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-=20
-> > nfsd4_probe_callback.html
-> >=20
-> > Please let me know if you need any more detailed information.
-> >=20
-> > Thanks,
-> > ChenXiaoSong.
+> Le Sat, 14 Jun 2025 12:18:43 -0700,
+> Jakub Kicinski <kuba@kernel.org> a =C3=A9crit :
 >=20
+> > On Tue, 10 Jun 2025 10:11:36 +0200 Kory Maincent wrote: =20
+> > > +static struct net_device *
+> > > +pse_control_find_net_by_id(struct pse_controller_dev *pcdev, int id,
+> > > +			   netdevice_tracker *tracker)
+> > > +{
+> > > +	struct pse_control *psec, *next;
+> > > +
+> > > +	mutex_lock(&pse_list_mutex);
+> > > +	list_for_each_entry_safe(psec, next, &pcdev->pse_control_head,
+> > > list) {   =20
+> >=20
+> > nit: _safe is not necessary here, the body of the if always exits after
+> > dropping the lock =20
+>=20
+> Indeed, I will drop it.
+>=20
+> > Do you plan to add more callers for this function?
+> > Maybe it's better if it returns the psec pointer with the refcount
+> > elevated. Because it would be pretty neat if we could move the=20
+> > ethnl_pse_send_ntf(netdev, notifs, &extack); that  pse_isr() does
+> > right after calling this function under the rtnl_lock.
+> > I don't think calling ethnl_pse_send_ntf() may crash the kernel as is,
+> > but it feels like a little bit of a trap to have ethtool code called
+> > outside of any networking lock. =20
+>=20
+> Ok. My aim was to put the less amount of code inside the rtnl lock but if=
+ you
+> prefer I will call ethnl_pse_send_ntf() with the lock acquired.
+
+psec pointer is private to pse so we will have something like the following.
+Is it ok for you ?
+
+psec =3D pse_control_find_by_id(pcdev, i, &tracker);
+rtnl_lock();
+if (psec && psec->attached_phydev &&
+    psec->attached_phydev->attached_dev)
+	ethnl_pse_send_ntf(psec->attached_phydev->attached_dev, notifs,
+			   &extack);
+rtnl_unlock();
+pse_control_put(psec);
+
 
 --=20
-Jeff Layton <jlayton@kernel.org>
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
