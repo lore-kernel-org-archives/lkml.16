@@ -1,186 +1,84 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE750273804;
-	Mon, 16 Jun 2025 09:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6E5522F
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065841; cv=none; b=PIYMbIq3VNxobrufE96yUOuebYrlK3ItIMjpzFBWU4O6Js5phYRZGiy8B1MJrWswjsN1/uch8fr6RwWBjQlD8GBUKT35A6Uirks0+Pnf74el4AaWT+fJ4xzvv7uoxX6kHh2e6vvp1GY7POncwCpkm3fKQ3S0jT1K6zNjhTS3CR8=
+	t=1750066056; cv=none; b=ihnTkdnwtEitsPi2ta3jalQECOxJjCbgaYxO1dLtv16EenenyXT2Vz5l7tvRMHl7Is/xV9/Tx0eLJLIwweZ9eQWkciOWS7eApCYDqQAXDujDoLAC8Jct1bMbKDM2G97pcUyGxuFTlBwMw3YfIwruFoVOMUJbfe892UcNK7MzpjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065841; c=relaxed/simple;
-	bh=A3jYVFOj1AeRkdskbnQ+KgmsePxGvMw1Qau4pL/Dbds=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=KPN1qGJsWm09SKp6lUKFI3LCueBQTQ8Zy6CCcZIPPSpPkmvgZKK1rDGxO8ejqiIEUVidcvjuB+AVdZw1kBwsDniSdS0/5ueGZDn/eOeoF0+mJcbgAXUTAd33ZvbF+ZWv2wGDnugOHOvae3tJfF6b0fs/1pD+1ISMIG1+UTiwC8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bSznlfWz; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bSznlfWz"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8tIwf030344;
-	Mon, 16 Jun 2025 11:23:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	GwJR4L4C5BNi8BSL4VDf9yl7ztEEHcvn8VOyGlQkwDc=; b=bSznlfWzf8JS1yut
-	xodDKNY6JZ0mK216iHwfRMnfrTXP+RL6V9Qsn6T2dY1wQEIrptU2ngmaUFoEpzkW
-	xs12kvgu3T9d64fmqoOWbzluYzFb3IM7p44C3ZniALjxhLOHThYlVo1JBBa1w4RJ
-	L+8XQbTIiwEghZ6GyRfe6G2dRTWwXmz9V9HW0uRtMkxPjUOOGJS6IghQj/BARp7x
-	zVTTwN1xjZa608Jtmhyq5Wsxmg+CGwdEQCheSXt87mwl4mgbN//g0bPF+6sXGMwn
-	cdaDRMx5PXgmSMS+Sm1aMcmHo0y64JFVFzF9thJtFcv/Vw3/uNMRfwvSugZZMd2I
-	ffX3uA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4790e1ywha-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:23:42 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0DB8440047;
-	Mon, 16 Jun 2025 11:22:24 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 83E60A7D80E;
-	Mon, 16 Jun 2025 11:21:07 +0200 (CEST)
-Received: from localhost (10.252.14.42) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
- 2025 11:21:07 +0200
-From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Mon, 16 Jun 2025 11:21:02 +0200
-Subject: [PATCH 1/6] spi: stm32: Add SPI_READY mode to spi controller
+	s=arc-20240116; t=1750066056; c=relaxed/simple;
+	bh=T2WFjnmOZ07v3v7UHQjXnCVxJbkNC7tdJ7mcbWqQNgw=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RPr9wpyvgX+PuKUonIttW6z7SJZBCdXCrGzIm0d1uqW8VhbTShajZJqxmfIJV5UQOuXttwGWN/5GIzmlhgyqy7pa+DCd2/3PZqINoqugApyKdwulXBaB6GGHwvfz3+yXgzvD/c8H3aUZh3pI9Mpft8KiWsU5Y3/fIg1AVjw7SSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bLPjb4dq6z1V43x;
+	Mon, 16 Jun 2025 17:25:07 +0800 (CST)
+Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
+	by mail.maildlp.com (Postfix) with ESMTPS id 76F2F1400D2;
+	Mon, 16 Jun 2025 17:27:31 +0800 (CST)
+Received: from [10.174.178.219] (10.174.178.219) by
+ kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 16 Jun 2025 17:27:30 +0800
+Subject: Re: [PATCH drm-dp 03/10] drm/hisilicon/hibmc: fix irq_request()'s irq
+ name variable is local
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Yongbang Shi
+	<shiyongbang@huawei.com>
+CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
+	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250530095432.1206966-1-shiyongbang@huawei.com>
+ <20250530095432.1206966-4-shiyongbang@huawei.com>
+ <oof3yrny3x5vglnjvcsz6brpn2a4l2nkmpepnykojqquytfj56@vz5sk7coojhw>
+ <c59b893c-dca4-4c7f-a57e-99e60401ebc0@huawei.com>
+ <a88f479b-e022-4ed7-8286-5d546423bfcf@oss.qualcomm.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <ef82045a-2efd-8a04-4c0a-6d90fd7bd08b@huawei.com>
+Date: Mon, 16 Jun 2025 17:27:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <a88f479b-e022-4ed7-8286-5d546423bfcf@oss.qualcomm.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250616-spi-upstream-v1-1-7e8593f3f75d@foss.st.com>
-References: <20250616-spi-upstream-v1-0-7e8593f3f75d@foss.st.com>
-In-Reply-To: <20250616-spi-upstream-v1-0-7e8593f3f75d@foss.st.com>
-To: Alain Volmat <alain.volmat@foss.st.com>, Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Valentin Caron <valentin.caron@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Erwan Leray <erwan.leray@foss.st.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        =?utf-8?q?Christian_K=C3=B6nig?=
-	<christian.koenig@amd.com>
-CC: <linux-spi@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk200017.china.huawei.com (7.202.194.83)
 
-The spi ready functionality is supported by our peripheral in host and
-target modes on STM32MP2x SoCs.
-Update our spi controller driver to allow devices to use this
-functionality.
+On 2025/6/9 22:53, Dmitry Baryshkov wrote:
+> On 09/06/2025 17:50, Yongbang Shi wrote:
+> >
+> > > On Fri, May 30, 2025 at 05:54:25PM +0800, Yongbang Shi wrote:
+> > > > From: Baihan Li <libaihan@huawei.com>
+> > > >
+> > > > The local variable of irq name is passed to
+> > > > devm_request_threaded_irq(),
+> > > > which will make request_irq failed. Using the global irq name instead
+> > > > of it to fix.
+> > > This doesn't explain, why does it fail and which IRQ name is actually
+> > > expected.
+> >
+> > The local variable is passed in request_irq (), and there will be use
+> > after free problem.
+> 
+> This needs to be explained (in details) in the commit message.
 
-Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
----
- drivers/spi/spi-stm32.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
++1. And I hope this can be fixed as soon as possible. I've run into
+several OOPS with that.
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index da3517d7102d..2bcd4a43676d 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -154,6 +154,9 @@
- /* STM32H7_SPI_I2SCFGR bit fields */
- #define STM32H7_SPI_I2SCFGR_I2SMOD	BIT(0)
- 
-+/* STM32MP25_SPICFG2 bit fields */
-+#define STM32MP25_SPI_CFG2_RDIOM	BIT(13)
-+
- /* STM32MP25 SPI registers bit fields */
- #define STM32MP25_SPI_HWCFGR1			0x3F0
- 
-@@ -222,6 +225,7 @@ struct stm32_spi_reg {
-  * @rx: SPI RX data register
-  * @tx: SPI TX data register
-  * @fullcfg: SPI full or limited feature set register
-+ * @rdy_en: SPI ready feature register
-  */
- struct stm32_spi_regspec {
- 	const struct stm32_spi_reg en;
-@@ -235,6 +239,7 @@ struct stm32_spi_regspec {
- 	const struct stm32_spi_reg rx;
- 	const struct stm32_spi_reg tx;
- 	const struct stm32_spi_reg fullcfg;
-+	const struct stm32_spi_reg rdy_en;
- };
- 
- struct stm32_spi;
-@@ -415,6 +420,8 @@ static const struct stm32_spi_regspec stm32mp25_spi_regspec = {
- 	.tx = { STM32H7_SPI_TXDR },
- 
- 	.fullcfg = { STM32MP25_SPI_HWCFGR1, STM32MP25_SPI_HWCFGR1_FULLCFG },
-+
-+	.rdy_en = { STM32H7_SPI_CFG2, STM32MP25_SPI_CFG2_RDIOM },
- };
- 
- static inline void stm32_spi_set_bits(struct stm32_spi *spi,
-@@ -1172,15 +1179,21 @@ static int stm32_spi_prepare_msg(struct spi_controller *ctrl,
- 	else
- 		clrb |= spi->cfg->regs->cs_high.mask;
- 
--	dev_dbg(spi->dev, "cpol=%d cpha=%d lsb_first=%d cs_high=%d\n",
-+	if (spi_dev->mode & SPI_READY)
-+		setb |= spi->cfg->regs->rdy_en.mask;
-+	else
-+		clrb |= spi->cfg->regs->rdy_en.mask;
-+
-+	dev_dbg(spi->dev, "cpol=%d cpha=%d lsb_first=%d cs_high=%d rdy=%d\n",
- 		!!(spi_dev->mode & SPI_CPOL),
- 		!!(spi_dev->mode & SPI_CPHA),
- 		!!(spi_dev->mode & SPI_LSB_FIRST),
--		!!(spi_dev->mode & SPI_CS_HIGH));
-+		!!(spi_dev->mode & SPI_CS_HIGH),
-+		!!(spi_dev->mode & SPI_READY));
- 
- 	spin_lock_irqsave(&spi->lock, flags);
- 
--	/* CPOL, CPHA and LSB FIRST bits have common register */
-+	/* CPOL, CPHA, LSB FIRST, CS_HIGH and RDY_EN bits have common register */
- 	if (clrb || setb)
- 		writel_relaxed(
- 			(readl_relaxed(spi->base + spi->cfg->regs->cpol.reg) &
-@@ -1768,6 +1781,13 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 	spi->cur_bpw = transfer->bits_per_word;
- 	spi->cfg->set_bpw(spi);
- 
-+	if (spi_dev->mode & SPI_READY && spi->cur_bpw < 8) {
-+		writel_relaxed(readl_relaxed(spi->base + spi->cfg->regs->rdy_en.reg) &
-+				~spi->cfg->regs->rdy_en.mask,
-+					spi->base + spi->cfg->regs->rdy_en.reg);
-+		dev_dbg(spi->dev, "RDY logic disabled as bits per word < 8\n");
-+	}
-+
- 	/* Update spi->cur_speed with real clock speed */
- 	if (STM32_SPI_HOST_MODE(spi)) {
- 		mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
-@@ -2179,7 +2199,7 @@ static int stm32_spi_probe(struct platform_device *pdev)
- 	ctrl->auto_runtime_pm = true;
- 	ctrl->bus_num = pdev->id;
- 	ctrl->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LSB_FIRST |
--			  SPI_3WIRE;
-+			  SPI_3WIRE | SPI_READY;
- 	ctrl->bits_per_word_mask = spi->cfg->get_bpw_mask(spi);
- 	ctrl->max_speed_hz = spi->clk_rate / spi->cfg->baud_rate_div_min;
- 	ctrl->min_speed_hz = spi->clk_rate / spi->cfg->baud_rate_div_max;
-
--- 
-2.43.0
-
+Thanks,
+Zenghui
