@@ -1,106 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDDC220F54;
-	Mon, 16 Jun 2025 15:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9AC2BEFF9
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750086907; cv=none; b=dyN0wtc3WOVLTlH60wSHz90v3QIZy/8+sLm27OmAsmT/PBCfUrPDCs+TttPf1iH4TQ0WnGOvhW/mbr7bAPAhwRNVf8w857MnisrKt7JVZtG8twt4FlnYtuklSgwa8ilEJQKknFhn4xRAg2sIf1uO1T5A+wsg1r97n5QzZ2u50kE=
+	t=1750087126; cv=none; b=bs7eRaYVeBFforIT+Bb38AcbSZSdQMeyJr8QncMrnprIU3k6F6IakbKpjPGtX/247JSXhdwJ0/MebbTqAeiv7+B1ZqV5x4DuvURDP5NTLyEYXzdy+M+aynEuUz9SWN5aQLuvHch+k84pbbRuq565V/IUdQ6akSSP22AINvW9qIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750086907; c=relaxed/simple;
-	bh=S01e6i/248142ZN8T1QwXvUAAnTI2Pm0YebVCw7eric=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u7WudD/DPZ7SDXv8ZysOpgycpHiJgznTACNlTi7I7Z6r36MrDjX/B6NVQ++eDIY/WfdNCRb1l9giNj9ii24IwRV+2bb+CM437pOM0medcLqfKIc/2ittd38rAXtH2m+pJS17xiBlk+5aTqcgBeT6IZhwovtLm4A9Bvqe5EJlfU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qt6DkzSv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qt6DkzSv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CD0C4CEEA;
-	Mon, 16 Jun 2025 15:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750086907;
-	bh=S01e6i/248142ZN8T1QwXvUAAnTI2Pm0YebVCw7eric=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qt6DkzSvMTZ2pDGD6PCVS11LpUE02bgSxx6mN5V/nvlZgNsarKHguqkC4KcmcE2q2
-	 dXMo1u9wvwAGu4LZt0pJq20fIykloL6HNR1DK0fB2xERYlirsiknDHLcCQ1J3+vfUm
-	 NQBZpdOjWkZjT36MsYxXlvCTvETWKTlvpTL8caXCtAN9GS1oNxM9trTaEexaHjWjTC
-	 V0uu9MNA+hJhTMnOtlaoXyHOZK/aTrmB+92CjX/VNw1W9iiYEU8y3rQQCCG8IImhg0
-	 XFg3D8f7LE3Jn32Ek3OG/y9wcJtKOld5QF7frs2hYx6MbJp8QZFDq7HQNFI74c4cmQ
-	 n5L7gejiKda7w==
-Date: Mon, 16 Jun 2025 16:15:01 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, p.zabel@pengutronix.de,
-	mchehab@kernel.org, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: [PATCH 1/5] dt-bindings: vendor-prefixes: Add Verisilicon
-Message-ID: <20250616-cold-dingy-7a3112a52273@spud>
-References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
- <20250616145607.116639-2-benjamin.gaignard@collabora.com>
+	s=arc-20240116; t=1750087126; c=relaxed/simple;
+	bh=Tuzibk2DlH5Ipns7Ujv4PcGD1xdc1k2V17KPDpsOw4w=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kWrfgkOgg09OT9UwqhrGVxhVP9VHLvLZM47zSXv7ckleRHkyWgZyY5Mqx67QcTGqXbwuKuUbVa+NyWFKvNm1dUlfJrVM+Po/V0ADc3xsKL4F9bFokwIDJX3mo8CYi/T2b0HXhHwnulp2ppy1PKL+SDW2bk+KuDFlNrVh5wBNuI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86463467dddso501028539f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:18:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750087124; x=1750691924;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w8dxOTrTDAJD1OCCztvcoAkhn+hL2VYiAjXZhSDtU8s=;
+        b=ayzRxXnRGOVYhJDL6QrVsMsjA8i+eKHr/2vyfByf/5DGwspPOAlwpXDWFvu8tg0OAL
+         BR/Zv4fJvfFCTA6huzn5ZttdsXx2QBw9TLwvLCj/isDCUqRJQvRkkHAOVeSTXxHgKgWU
+         ssipsJBVmYgTQmGdP7MANgpKju1VnnkL9f48xGuEQb++phbop9tub6UTnjSZvOrv2RhG
+         V8Ez6eVZUhL6ixb0dOBX5IgsmpENHBhCrR++3saXMMqv784ErFowCZScjoV0yvIkofVy
+         emlB0+ksOEy3yWc8d9zy/KaIBRzEtYGRX2cv8NOFMS/0ag0zDMfotj2sryNcvb0ryuEg
+         Utog==
+X-Gm-Message-State: AOJu0YxG8ZXhKt/61Myx9wUIfrGq9UhyNGyqc0OrNfJVuz7jlvI3Q9Sd
+	6CV772LgSZ/k9CtF/IIoeVennAdDyG1fP/zHpzXfSxmDYunCAbCJt0oO5/+QMgdvNGqzsBjWtv9
+	APUC8r9sM37Pd/OLgicWiPEv2s7Lo1xRw15XqmXou5SS/f2KDDnUjYtUYi+w=
+X-Google-Smtp-Source: AGHT+IHHd5k1z7UbhCr6Qf3FrKyqZi8Kqs55igMDltLnsdwFDJb2BYMxf8Ze6f0qTgygD/EKeILDJYSfbWBXl8EbHDXJUM/ic6gI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8nOZplPpgsff+FjY"
-Content-Disposition: inline
-In-Reply-To: <20250616145607.116639-2-benjamin.gaignard@collabora.com>
+X-Received: by 2002:a05:6e02:2308:b0:3dd:f4d5:1c1a with SMTP id
+ e9e14a558f8ab-3de07cd1771mr98353845ab.17.1750087124155; Mon, 16 Jun 2025
+ 08:18:44 -0700 (PDT)
+Date: Mon, 16 Jun 2025 08:18:44 -0700
+In-Reply-To: <673b71bc.050a0220.87769.004d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685035d4.050a0220.2608ac.0003.GAE@google.com>
+Subject: Re: [syzbot] [PATCH wireless v2] wifi: mac80211: drop invalid source
+ address OCB frames
+From: syzbot <syzbot+8b512026a7ec10dcbdd9@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
---8nOZplPpgsff+FjY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+***
 
-On Mon, Jun 16, 2025 at 04:55:49PM +0200, Benjamin Gaignard wrote:
-> Verisilicon Microelectronics is a company based in Shanghai, China,
-> developping hardware blocks for SoC.
->=20
-> https://verisilicon.com/
->=20
-> Add their name to the list of vendors.
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Subject: [PATCH wireless v2] wifi: mac80211: drop invalid source address OCB frames
+Author: johannes@sipsolutions.net
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
-umentation/devicetree/bindings/vendor-prefixes.yaml
-> index 5d2a7a8d3ac6..1baf8304c9ac 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -1635,6 +1635,8 @@ patternProperties:
->      description: Variscite Ltd.
->    "^vdl,.*":
->      description: Van der Laan b.v.
-> +  "^verisilicon,.*":
-> +    description: VeriSilicon Microelectronics
->    "^vertexcom,.*":
->      description: Vertexcom Technologies, Inc.
->    "^via,.*":
-> --=20
-> 2.43.0
->=20
+In OCB, don't accept frames from invalid source addresses
+(and in particular don't try to create stations for them),
+drop the frames instead.
 
---8nOZplPpgsff+FjY
-Content-Type: application/pgp-signature; name="signature.asc"
+Reported-by: syzbot+8b512026a7ec10dcbdd9@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/r/6788d2d9.050a0220.20d369.0028.GAE@google.com/
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+---
+#syz test
+---
+ net/mac80211/rx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 09beb65d6108..e73431549ce7 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -4432,6 +4432,10 @@ static bool ieee80211_accept_frame(struct ieee80211_rx_data *rx)
+ 		if (!multicast &&
+ 		    !ether_addr_equal(sdata->dev->dev_addr, hdr->addr1))
+ 			return false;
++		/* reject invalid/our STA address */
++		if (!is_valid_ether_addr(hdr->addr2) ||
++		    ether_addr_equal(sdata->dev->dev_addr, hdr->addr2))
++			return false;
+ 		if (!rx->sta) {
+ 			int rate_idx;
+ 			if (status->encoding != RX_ENC_LEGACY)
+-- 
+2.49.0
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFA09QAKCRB4tDGHoIJi
-0ghsAP0R8V9T4k3Bxyhe/X3aEh32l4IHKw5Cn9bsimUNs+RG8AEAg2TMoYlnM6jW
-L6gXbFxHvE9paMA6qFOLCYdHw86GVAo=
-=Lgt1
------END PGP SIGNATURE-----
-
---8nOZplPpgsff+FjY--
