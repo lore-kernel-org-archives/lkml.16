@@ -1,484 +1,366 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAF327932E
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075088; cv=none; b=cOUvUH56QuQL+WuxyULV07511TQlKyYTKKxAYdZq8kItrf4aq/4AgB+0ta/B+CAbXcYXy2HO4GIrGa9qiLlICbnOt5bPyZcrOD4strJ9CjWP6vTU95BgpEJF/8oh8T+qsG61KWXatJjXDsHgIiBF4WRlqHqgZkqhG9HqqPwOHrs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075088; c=relaxed/simple;
-	bh=Cx2/DWKuz93g/0pw0FTLUdC//4qDuU0wdH8/FBAEUjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RF9B1IKGNtV5ZtLX+bXm7YMmJTEUMrFvfuaDH8cXte2KfNEzcUgkpJp9WPrpoDZ2ElVe/IpqoZUCG0PIj5fXDJd1SQ2LOg1b99+rP5M3JRrkHqkb1Tawk/5ZclPbDFtDi0bXANhsU9RpRIznXx0+sg2E6zT9GYLj+gCtFe389bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBE3A150C;
-	Mon, 16 Jun 2025 04:57:43 -0700 (PDT)
-Received: from [10.57.84.117] (unknown [10.57.84.117])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEDA03F58B;
-	Mon, 16 Jun 2025 04:58:03 -0700 (PDT)
-Message-ID: <60a7e30e-73f4-4e0f-aee5-606808a18a61@arm.com>
-Date: Mon, 16 Jun 2025 12:58:02 +0100
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E532E889E;
+	Mon, 16 Jun 2025 11:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750075122; cv=fail; b=mMbcuI0Sn13CXA0UpBfTI1jQyfl3ciUqMBCMqb1rS2/llvXusfkGFAxDPSsUb1/4EcTVzL6b6DJ2aTrZlPaJLjJ393qThEJ81iDUEmyewkrGLduTKudplSF2qw99CBtYCnxWwsVoGkBsma/c7HYLIC0vqH0FloERkxdt158DyRo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750075122; c=relaxed/simple;
+	bh=OLaBRtPsH/ifUTlybZkQcb45j00990nWKqt56YUoDbo=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Iof/vlM2qAXLl2W/4nveN3U4PbfKRGMF/NOGwhK0HM7UQmiMrWsmRQeCRpY8gFjYLSL4rzPSdZ4SO//mrd4h0GaxdD19u1cxKUr4vZT9GHthqpWLDmLcAyS4aParauQH02N4b0IO+EDPaYxvOKTX0FFuI03XD9yK7T3f+gt1WUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AgycRbdk; arc=fail smtp.client-ip=40.107.92.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AgycRbdk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a7SXn7IJpfnrVzSgMjLVWv9QOTOhTXdqCx6Q81zcdTLuSPSio9dBEez32QS6NjT7erqDu9yCxZlbRwnT8ZFvDlab9inojFI5Wqr3ZVh8GAeyySIyf8FMnu5l7bt3dgEwgHYdnWigGR7sn6QwqIq6XxvWPtV2BAdVQavkf6G2wDc0+z4CEblwdWd7F9wPjJjtqoajd+6c4j16o3b99bkIkSBZYfrl81YKkoUTHA/pPrVZol/AA87k5E+WAfutfbRk/sJvIR+ygjpbU5hraYpVJA6eFmTAZv/ZQ47ZfJ6XYj+E48TrqFZwJt8I/TRCr2tKZPzRm51plFlEt7bYnpUHtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eqbnzGSPBqnBdBqRFmWvpsOX003YggjUXUdTI0QVQb8=;
+ b=dOZutVGS7NjJco1I9ke4zIOV+C2pKGdx7zGNGKMgfboo88IWC+M3G/zE12cWfMDPlQ6BEcsZHJ/yDwdlJmCMycIr5KzyKBk+ldVb6/Mb+4hEtaVb1jGQ1Y7CNRgIcukuP2BMZtBbnYUgIK28IaeQqP0PtU8UexwEAVCQYmyGQLUVKolB1OP2tc/JoPTuODzsNYP49HUVD1rZl2NBLUBhkt/hCq4xjsVmZaAJAQYBSDswMHG+wbrbb7KrUlaXTUvFft94bDq8CllPA6ayPW47nrWuerT+HQbIMJ9BV376EhXxbk24+6hg0IiTm7YxCFlCTSrOPtacpbQcOyDdCr5k0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eqbnzGSPBqnBdBqRFmWvpsOX003YggjUXUdTI0QVQb8=;
+ b=AgycRbdkLhrZ59/vzHjIBwNlXquiC2ufgTvFIwmyHFgf7FddcHtEfyJUAm5Xz0c4J+/JC/myDnl2mT0eX6E7TktJsLy59b+BFtYQRB7xDuBo4YPDk4Xd3L8goi7kGaGoAEvY2k9cJ4o6f1FaU3tdzuiqrasBrVHF9rUQAN49o//Nf9eeNZ9TUJQ+co9wZhzIVBXiUE9zlzwcePRjCb2R284HwmIywbPAptoPsCeRobabiUan/XicVBecaVoLeU8PZ34GTa1sxucHYQhEqygfrTBKFbmvp3o08ZqOffVVWlfWm729mesH3U52AbxLim8A4s3k97SqChTqVhg4cgldmg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com (2603:10b6:930:84::9)
+ by CH2PR12MB9517.namprd12.prod.outlook.com (2603:10b6:610:27f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 11:58:35 +0000
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4b06:5351:3db4:95f6]) by CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4b06:5351:3db4:95f6%5]) with mapi id 15.20.8835.026; Mon, 16 Jun 2025
+ 11:58:35 +0000
+From: Alistair Popple <apopple@nvidia.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	Alistair Popple <apopple@nvidia.com>,
+	gerald.schaefer@linux.ibm.com,
+	dan.j.williams@intel.com,
+	jgg@ziepe.ca,
+	willy@infradead.org,
+	david@redhat.com,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	jhubbard@nvidia.com,
+	hch@lst.de,
+	zhang.lyra@gmail.com,
+	debug@rivosinc.com,
+	bjorn@kernel.org,
+	balbirs@nvidia.com,
+	lorenzo.stoakes@oracle.com,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-cxl@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	John@Groves.net,
+	m.szyprowski@samsung.com
+Subject: [PATCH v2 00/14] mm: Remove pXX_devmap page table bit and pfn_t type
+Date: Mon, 16 Jun 2025 21:58:02 +1000
+Message-ID: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+X-Mailer: git-send-email 2.47.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SY6PR01CA0114.ausprd01.prod.outlook.com
+ (2603:10c6:10:1b8::14) To CY8PR12MB7705.namprd12.prod.outlook.com
+ (2603:10b6:930:84::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: mm: support large block mapping when
- rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
- <20250531024545.1101304-4-yang@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250531024545.1101304-4-yang@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY8PR12MB7705:EE_|CH2PR12MB9517:EE_
+X-MS-Office365-Filtering-Correlation-Id: 138796da-d67b-40be-07b1-08ddaccd1ee6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hbszUMfVh2zUjdkNO1f5OEuHP5XbO9zM7wMxGW6tGoKbWdsznDxGXpx89L1J?=
+ =?us-ascii?Q?5vYBU9w1NX88EDjg6PEl8jNpEqiKrkYnRgOZWvuKkV6AC+q0VE3i+2rYWfiC?=
+ =?us-ascii?Q?b7Dfdqala5dFmBJYE9acEPtHtG/hgdSwUegNqPNEYDKfGqbmeKWsQ+DAODdy?=
+ =?us-ascii?Q?3D3KRsH1De0RNKasY91BNjPLFTbscmEDi36pIeaXTn2aBzp9sPUf3632oE2D?=
+ =?us-ascii?Q?L5YB/WSTzRuLu3RymfIx3l7vRJ1hasJGKg1a0Xqwr+lz9qV504z6CrqeqnGj?=
+ =?us-ascii?Q?8lq/M2EiME8Q2W8ihwcUAJo4NSllEGYYvNWJLK3ZrufbHloIeW69TrTWqYpL?=
+ =?us-ascii?Q?pFYnhhbr9zooLJSrP0xqdcjeLsd48OGnEAqF7o4/Ibl6jsKjF1hWlgU9qEwF?=
+ =?us-ascii?Q?mGYT3rdLlfDWG9lrB7s4ogtCDB/ECJV2c4oVr4xsBVccpP6LXGqTu/ZmGPg8?=
+ =?us-ascii?Q?2pUpsmUj7dC+M2+H7G0e0RKOyQjnRmkf1vZCcFmVo1SIs2E3qmq3LdoVmbz+?=
+ =?us-ascii?Q?uGPkehL2z64CnNSm2vxLZ47s4lOjrPa63cPKOiubEs/w+8C8xqSTgrHsyLuP?=
+ =?us-ascii?Q?ij4dyfjr0ZJYpcbfrC0rk2X8iY2XoHDy3D1fOdeAG8dRSCTfNf3MzDzcruVD?=
+ =?us-ascii?Q?/Jek2/FMlHJhQN5sNDsizmoJRP1BeGNbkwmqtfttZJ001iGaHLTUs2am0k8+?=
+ =?us-ascii?Q?CyzZg4MSXfFUNlfiM+7cCYsUfDfaGqcYkl5sXht/zp5WHyshbzB1E9cEb5tG?=
+ =?us-ascii?Q?dHDTOqmokPtKq6Ym/NTV6m6RhAaEpau1UnUww0U6LzKGTEIzWASuBI3t9y0d?=
+ =?us-ascii?Q?aAcL1GCFGlIuAriJZv1wQd0MGpxnQK/CejJkZ+SXeRYHkX0j68A4A/logag5?=
+ =?us-ascii?Q?hKfbRbEbPLKhNUTZyREK2lS5/2mZOt7jM1+z2DcPO+Jq6mtssBDs0h6UD1AN?=
+ =?us-ascii?Q?QCXBs/M2IzBVVlDtuDH2RPwbe7i7ji8Zu7L6q5OXo+ovxzCLENmQwnPJkaaO?=
+ =?us-ascii?Q?2nRiNbYWK8kVlX+qk8u2Cw/Dr5vGeFGA3rdKCpnIMArdx/je+tlcTRzTHTVd?=
+ =?us-ascii?Q?DNf8oZkZiriO1p7XN3Us/Nb2VfCOrTTAu7EWvpKKaxk1EYKEIEvfnC3krppU?=
+ =?us-ascii?Q?UBIiD4vYiTpwWfvb4gNt96OLate6YbRPXEeHe9cyjcoHQvUQOyFwK+nKaEDa?=
+ =?us-ascii?Q?PmhodyUS5lfF1WmUHQG7Vf/DvFaBPVB/dvIDzgas9NrL2qkMYZfUXidlLCuS?=
+ =?us-ascii?Q?dmZC7QEbmSHMlAFSRUvoUW0f70CnzB5wcVZPMq37Flj1WReyw8H00Y7osIWk?=
+ =?us-ascii?Q?4iuJbFvaiZh174ErHDAyOgIHmpEqO1K1a0p4TTRgvpfudFiVytCtUqj2spqh?=
+ =?us-ascii?Q?FLZYmgqaXO5LfaWflEuAetxut5g4Ov1auo1/ZbjhptgyT/czjHd89mmUmeJX?=
+ =?us-ascii?Q?cJQWasMqOqA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7705.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NR5rcX8HTdelTKAlBEZdRQwameb0h4EJIdDMNWPl4iMzhF2127ycDMDHv2jt?=
+ =?us-ascii?Q?usiUPev8BaMRXBhb7Xx13lhNy8U7j6W/rNf3VmdVZHVsnDn/hHoTIXmyWX0O?=
+ =?us-ascii?Q?xn6HAugpj5uo6M6iYYtUPuriy7YPlRdnHlOJ5kS8eJHwtb6E0LupLPo5DTLW?=
+ =?us-ascii?Q?HkJHm7q9L2lUHqLryUlT3ru59xujBu3YbNrZFtsWNGdGq39Y/ROrle387cTH?=
+ =?us-ascii?Q?Gq8aEMerjYnLcjHNlPEdXzqZ7YjT/59o2ZcZ0p8qGcY1ohidJWni4Q/tOr5k?=
+ =?us-ascii?Q?6dU8heiVw5BB2IA4ais8eRP63bbxpyTOdxO0lce6WDGIZXn0IHvVEmOrL5FK?=
+ =?us-ascii?Q?rJWljOWg3Gc5c2xHk1fnY32otmJtXLISDYX7eDpdhijQPSxQvSj4v+Dh6+Dp?=
+ =?us-ascii?Q?9EeGQTktdPMiwAXlUNMc2OtQe6T/D22W46/W8gp7+Fh8M8s/gs3AnweALgt3?=
+ =?us-ascii?Q?g9ytayAN5LIS53f6MPkQVmBCeIa64JHqasSMioFdwTKh2TeidLkx+O1UFwJs?=
+ =?us-ascii?Q?RxyMls20QH6y6CrUQ63QwjKek8woYqqw2fnRQC6Q6B4o+xbHKBjTyiAs+F/N?=
+ =?us-ascii?Q?RbKJA13KLSjOh6+5O6GVCP3rpLdMgSc+xh33uqVMYDcTo/oQFXfQiz+Nr0RU?=
+ =?us-ascii?Q?6YXpYYCTnFWDmn2iQqtJmTmwXTmqdeCEoFcs3nCDbIlrGhqAOYHDfQnVZIWH?=
+ =?us-ascii?Q?n3TXD+mGPKbdbsj4UK+27XbrqY+krnP2E1jKqMobqLc4/dc9yPSkPi0q6YDl?=
+ =?us-ascii?Q?qLF+1Y2hcD9vbZJiPH14K0gj+Is1KXD+TFBy22cIplrSV7mlXbJCDr1Qiya4?=
+ =?us-ascii?Q?gVnn1YxaFnUs6rigz3i6dCDR70zCtaZm27boR1KEXtdpUJd00dNjEcr9JJk7?=
+ =?us-ascii?Q?03LgwVZzBwVK+otfDPNVrARJwek7Z3sDTwwRIpFTuSmy2Wy+wE822ff3upfX?=
+ =?us-ascii?Q?xn7cI4s9+WCm4xkKZVYo+iAAlnR90slkYTNmRftDjW1P6dzW3rN0qXjVuhvp?=
+ =?us-ascii?Q?GDlRLpoGcRUKWcgWcOkyLmTwjeTQr9cKQw9PMSoFPkSC6viwE7Nhkx/1U4FY?=
+ =?us-ascii?Q?ZTVZckRSU4xf4/Y0k3JzakEVD580M9NnG3hyUjRK31FBAdLOYa4t7KthzI/n?=
+ =?us-ascii?Q?HrEevULRjgRMPFizSiVnFolinULvUUcqlfxtZs1mWYgBLhZIN/oTbsW4rEn4?=
+ =?us-ascii?Q?UTFRAOwn8fucYAoEWZll3vHxFnPBs/BBveeSD39bdepSue3tDhEH+YIBrB8j?=
+ =?us-ascii?Q?3LQW2ZCPqy966Qi5E/uYa6XxsM0T3BwDxNSTsO6OKLOAsNYnt1MKSAc/zJHb?=
+ =?us-ascii?Q?nPPY5a4N52wBmkiA1elZ7Wv38SNLaX1waz5hzyPSOs8hprvI2b1JpLjlEcwe?=
+ =?us-ascii?Q?7fjfS8hHYKVboSj/M6mSXHXUBlZWdSdruCIlvuI8J5xfQp+ljkdGo1nHW6HD?=
+ =?us-ascii?Q?srF1lXXzf13tjHDdB6oyC2Ne/jRedY1VZENN4kU4VqsOPos+6BucZGvK0msM?=
+ =?us-ascii?Q?wRZohxdZldkHCkyZc3IT9163c/ooxNWQMytTxZ1wm7UDX3g7NN5V7EPTOpSQ?=
+ =?us-ascii?Q?smYpWrEq+Q9dQoAAi6lzZoEnNrYZrvpQU4SQ78ol?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 138796da-d67b-40be-07b1-08ddaccd1ee6
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7705.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 11:58:34.9020
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VXhyk12b7/j4saQibhIZZW8nDnzB3e5Q7fnG8UcjjK4Iu1pvvuq5oNwy2HGinJOPgnXJzjSdi4aQknoU2wtxiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9517
 
-On 31/05/2025 03:41, Yang Shi wrote:
-> When rodata=full is specified, kernel linear mapping has to be mapped at
-> PTE level since large page table can't be split due to break-before-make
-> rule on ARM64.
-> 
-> This resulted in a couple of problems:
->   - performance degradation
->   - more TLB pressure
->   - memory waste for kernel page table
-> 
-> With FEAT_BBM level 2 support, splitting large block page table to
-> smaller ones doesn't need to make the page table entry invalid anymore.
-> This allows kernel split large block mapping on the fly.
-> 
-> Add kernel page table split support and use large block mapping by
-> default when FEAT_BBM level 2 is supported for rodata=full.  When
-> changing permissions for kernel linear mapping, the page table will be
-> split to smaller size.
-> 
-> The machine without FEAT_BBM level 2 will fallback to have kernel linear
-> mapping PTE-mapped when rodata=full.
-> 
-> With this we saw significant performance boost with some benchmarks and
-> much less memory consumption on my AmpereOne machine (192 cores, 1P) with
-> 256GB memory.
-> 
-> * Memory use after boot
-> Before:
-> MemTotal:       258988984 kB
-> MemFree:        254821700 kB
-> 
-> After:
-> MemTotal:       259505132 kB
-> MemFree:        255410264 kB
-> 
-> Around 500MB more memory are free to use.  The larger the machine, the
-> more memory saved.
-> 
-> * Memcached
-> We saw performance degradation when running Memcached benchmark with
-> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
-> With this patchset we saw ops/sec is increased by around 3.5%, P99
-> latency is reduced by around 9.6%.
-> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
-> MPKI is reduced by 28.5%.
-> 
-> The benchmark data is now on par with rodata=on too.
-> 
-> * Disk encryption (dm-crypt) benchmark
-> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
-> encryption (by dm-crypt).
-> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
->     --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
->     --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
->     --name=iops-test-job --eta-newline=1 --size 100G
-> 
-> The IOPS is increased by 90% - 150% (the variance is high, but the worst
-> number of good case is around 90% more than the best number of bad case).
-> The bandwidth is increased and the avg clat is reduced proportionally.
-> 
-> * Sequential file read
-> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
-> The bandwidth is increased by 150%.
-> 
-> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
-> ---
->  arch/arm64/include/asm/cpufeature.h |  26 +++
->  arch/arm64/include/asm/mmu.h        |   1 +
->  arch/arm64/include/asm/pgtable.h    |  12 +-
->  arch/arm64/kernel/cpufeature.c      |   2 +-
->  arch/arm64/mm/mmu.c                 | 269 +++++++++++++++++++++++++---
->  arch/arm64/mm/pageattr.c            |  37 +++-
->  6 files changed, 319 insertions(+), 28 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index 8f36ffa16b73..a95806980298 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -1053,6 +1053,32 @@ static inline bool cpu_has_lpa2(void)
->  #endif
->  }
->  
-> +bool cpu_has_bbml2_noabort(unsigned int cpu_midr);
-> +
-> +static inline bool has_nobbml2_override(void)
-> +{
-> +	u64 mmfr2;
-> +	unsigned int bbm;
-> +
-> +	mmfr2 = read_sysreg_s(SYS_ID_AA64MMFR2_EL1);
-> +	mmfr2 &= ~id_aa64mmfr2_override.mask;
-> +	mmfr2 |= id_aa64mmfr2_override.val;
-> +	bbm = cpuid_feature_extract_unsigned_field(mmfr2,
-> +						   ID_AA64MMFR2_EL1_BBM_SHIFT);
-> +	return bbm == 0;
-> +}
-> +
-> +/*
-> + * Called at early boot stage on boot CPU before cpu info and cpu feature
-> + * are ready.
-> + */
-> +static inline bool bbml2_noabort_available(void)
-> +{
-> +	return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT) &&
-> +	       cpu_has_bbml2_noabort(read_cpuid_id()) &&
-> +	       !has_nobbml2_override();
+Changes from v1:
 
-Based on Will's feedback, The Kconfig and the cmdline override will both
-disappear in Miko's next version and we will only use the MIDR list to decide
-BBML2_NOABORT status, so this will significantly simplify. Sorry about the churn
-here.
+ - Moved "mm: Remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and PFN_SG_LAST" later
+   in the series to avoid creating a temporary boot issue on RISC-V as reported
+   by Marek[1].
 
-> +}
-> +
->  #endif /* __ASSEMBLY__ */
->  
->  #endif
-> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-> index 6e8aa8e72601..2693d63bf837 100644
-> --- a/arch/arm64/include/asm/mmu.h
-> +++ b/arch/arm64/include/asm/mmu.h
-> @@ -71,6 +71,7 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
->  			       pgprot_t prot, bool page_mappings_only);
->  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
->  extern void mark_linear_text_alias_ro(void);
-> +extern int split_linear_mapping(unsigned long start, unsigned long end);
+ - Rebased on mm-unstable which includes David's insert_pXd() fixes
 
-nit: Perhaps split_leaf_mapping() or split_kernel_pgtable_mapping() or something
-similar is more generic which will benefit us in future when using this for
-vmalloc too?
+ - Stop skipping DAX folios in folio_walk_start(). Instead callers not expecting
+   ZONE_DEVICE pages should filter these out, as most already do.
 
->  
->  /*
->   * This check is triggered during the early boot before the cpufeature
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index d3b538be1500..bf3cef31d243 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -293,6 +293,11 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
->  	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
->  }
->  
-> +static inline pmd_t pmd_mknoncont(pmd_t pmd)
-> +{
-> +	return __pmd(pmd_val(pmd) & ~PMD_SECT_CONT);
-> +}
-> +
->  static inline pte_t pte_mkdevmap(pte_t pte)
->  {
->  	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
-> @@ -769,7 +774,7 @@ static inline bool in_swapper_pgdir(void *addr)
->  	        ((unsigned long)swapper_pg_dir & PAGE_MASK);
->  }
->  
-> -static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
-> +static inline void __set_pmd_nosync(pmd_t *pmdp, pmd_t pmd)
->  {
->  #ifdef __PAGETABLE_PMD_FOLDED
->  	if (in_swapper_pgdir(pmdp)) {
-> @@ -779,6 +784,11 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->  #endif /* __PAGETABLE_PMD_FOLDED */
->  
->  	WRITE_ONCE(*pmdp, pmd);
-> +}
-> +
-> +static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
-> +{
-> +	__set_pmd_nosync(pmdp, pmd);
->  
->  	if (pmd_valid(pmd)) {
->  		dsb(ishst);
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index e879bfcf853b..5fc2a4a804de 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -2209,7 +2209,7 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
->  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
->  }
->  
-> -static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
-> +bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
->  {
->  	/*
->  	 * We want to allow usage of bbml2 in as wide a range of kernel contexts
+Changes from v2 of the RFC[2]:
 
+ - My ZONE_DEVICE refcount series has been merged as commit 7851bf649d42 (Patch series
+   "fs/dax: Fix ZONE_DEVICE page reference counts", v9.) which is included in
+   v6.15 so have rebased on top of that.
 
-[...] I'll send a separate response for the mmu.c table walker changes.
+ - No major changes required for the rebase other than fixing up a new user of
+   the pfn_t type (intel_th).
 
->  
-> +int split_linear_mapping(unsigned long start, unsigned long end)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!system_supports_bbml2_noabort())
-> +		return 0;
+ - As a reminder the main benefit of this series is it frees up a PTE bit
+   (pte_devmap).
 
-Hmm... I guess the thinking here is that for !BBML2_NOABORT you are expecting
-this function should only be called in the first place if we know we are
-pte-mapped. So I guess this is ok... it just means that if we are not
-pte-mapped, warnings will be emitted while walking the pgtables (as is the case
-today). So I think this approach is ok.
+ - This may be a bit late to consider for inclusion in v6.16 unless it can get
+   some more reviews before the merge window closes. I don't think missing v6.16
+   is a huge issue though.
 
-> +
-> +	mmap_write_lock(&init_mm);
+ - This passed xfstests for a XFS filesystem with DAX enabled on my system and
+   as many of the ndctl tests that pass on my system without it.
 
-What is the lock protecting? I was orignally thinking no locking should be
-needed because it's not needed for permission changes today; But I think you are
-right here and we do need locking; multiple owners could share a large leaf
-mapping, I guess? And in that case you could get concurrent attempts to split
-from both owners.
+Changes for v2:
 
-I'm not really a fan of adding the extra locking though; It might introduce a
-new bottleneck. I wonder if there is a way we could do this locklessly? i.e.
-allocate the new table, then cmpxchg to insert and the loser has to free? That
-doesn't work for contiguous mappings though...
+ - This is an update to my previous RFC[3] removing just pfn_t rebased
+   on today's mm-unstable which includes my ZONE_DEVICE refcounting
+   clean-up.
 
-> +	/* NO_EXEC_MAPPINGS is needed when splitting linear map */
-> +	ret = __create_pgd_mapping_locked(init_mm.pgd, virt_to_phys((void *)start),
-> +					  start, (end - start), __pgprot(0),
-> +					  __pgd_pgtable_alloc,
-> +					  NO_EXEC_MAPPINGS | SPLIT_MAPPINGS);
-> +	mmap_write_unlock(&init_mm);
-> +	flush_tlb_kernel_range(start, end);
+ - The removal of the devmap PTE bit and associated infrastructure was
+   dropped from that series so I have rolled it into this series.
 
-I don't believe we should need to flush the TLB when only changing entry sizes
-when BBML2 is supported. Miko's series has a massive comment explaining the
-reasoning. That applies to user space though. We should consider if this all
-works safely for kernel space too, and hopefully remove the flush.
+ - Logically this series makes sense to me, but the dropping of devmap
+   is wide ranging and touches some areas I'm less familiar with so
+   would definitely appreciate any review comments there.
 
-> +
-> +	return ret;
-> +}
-> +
->  /*
->   * This function can only be used to modify existing table entries,
->   * without allocating new levels of table. Note that this permits the
-> @@ -676,6 +887,24 @@ static inline void arm64_kfence_map_pool(phys_addr_t kfence_pool, pgd_t *pgdp) {
->  
->  #endif /* CONFIG_KFENCE */
->  
-> +static inline bool force_pte_mapping(void)
-> +{
-> +	/*
-> +	 * Can't use cpufeature API to determine whether BBML2 supported
-> +	 * or not since cpufeature have not been finalized yet.
-> +	 *
-> +	 * Checking the boot CPU only for now.  If the boot CPU has
-> +	 * BBML2, paint linear mapping with block mapping.  If it turns
-> +	 * out the secondary CPUs don't support BBML2 once cpufeature is
-> +	 * fininalized, the linear mapping will be repainted with PTE
-> +	 * mapping.
-> +	 */
-> +	return (rodata_full && !bbml2_noabort_available()) ||
+[1] - https://lore.kernel.org/linux-mm/957c0d9d-2c37-4d5f-a8b8-8bf90cd0aedb@samsung.com/
+[2] - https://lore.kernel.org/linux-mm/cover.95ff0627bc727f2bae44bea4c00ad7a83fbbcfac.1739941374.git-series.apopple@nvidia.com/
+[3] - https://lore.kernel.org/linux-mm/cover.a7cdeffaaa366a10c65e2e7544285059cc5d55a4.1736299058.git-series.apopple@nvidia.com/
 
-So this is the case where we don't have BBML2 and need to modify protections at
-page granularity - I agree we need to force pte mappings here.
+All users of dax now require a ZONE_DEVICE page which is properly
+refcounted. This means there is no longer any need for the PFN_DEV, PFN_MAP
+and PFN_SPECIAL flags. Furthermore the PFN_SG_CHAIN and PFN_SG_LAST flags
+never appear to have been used. It is therefore possible to remove the
+pfn_t type and replace any usage with raw pfns.
 
-> +		debug_pagealloc_enabled() ||
+The remaining users of PFN_DEV have simply passed this to
+vmf_insert_mixed() to create pte_devmap() mappings. It is unclear why this
+was the case but presumably to ensure vm_normal_page() does not return
+these pages. These users can be trivially converted to raw pfns and
+creating a pXX_special() mapping to ensure vm_normal_page() still doesn't
+return these pages.
 
-This is the case where every page is made invalid on free and valid on
-allocation, so no point in having block mappings because it will soon degenerate
-into page mappings because we will have to split on every allocation. Agree here
-too.
+Now that there are no users of PFN_DEV we can remove the devmap page table
+bit and all associated functions and macros, freeing up a software page
+table bit.
 
-> +		arm64_kfence_can_set_direct_map() ||
+---
 
-After looking into how kfence works, I don't agree with this one. It has a
-dedicated pool where it allocates from. That pool may be allocated early by the
-arch or may be allocated late by the core code. Either way, kfence will only
-modify protections within that pool. You current approach is forcing pte
-mappings if the pool allocation is late (i.e. not performed by the arch code
-during boot). But I think "late" is the most common case; kfence is compiled
-into the kernel but not active at boot. Certainly that's how my Ubuntu kernel is
-configured. So I think we should just ignore kfence here. If it's "early" then
-we map the pool with page granularity (as an optimization). If it's "late" your
-splitter will degenerate the whole kfence pool to page mappings over time as
-kfence_protect_page() -> set_memory_valid() is called. But the bulk of the
-linear map will remain mapped with large blocks.
+Cc: gerald.schaefer@linux.ibm.com
+Cc: dan.j.williams@intel.com
+Cc: jgg@ziepe.ca
+Cc: willy@infradead.org
+Cc: david@redhat.com
+Cc: linux-kernel@vger.kernel.org
+Cc: nvdimm@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: jhubbard@nvidia.com
+Cc: hch@lst.de
+Cc: zhang.lyra@gmail.com
+Cc: debug@rivosinc.com
+Cc: bjorn@kernel.org
+Cc: balbirs@nvidia.com
+Cc: lorenzo.stoakes@oracle.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: loongarch@lists.linux.dev
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: John@Groves.net
+Cc: m.szyprowski@samsung.com
 
-> +		is_realm_world();
+Alistair Popple (14):
+  mm: Convert pXd_devmap checks to vma_is_dax
+  mm: Filter zone device pages returned from folio_walk_start()
+  mm: Convert vmf_insert_mixed() from using pte_devmap to pte_special
+  mm: Remove remaining uses of PFN_DEV
+  mm/gup: Remove pXX_devmap usage from get_user_pages()
+  mm/huge_memory: Remove pXd_devmap usage from insert_pXd_pfn()
+  mm: Remove redundant pXd_devmap calls
+  mm/khugepaged: Remove redundant pmd_devmap() check
+  powerpc: Remove checks for devmap pages and PMDs/PUDs
+  fs/dax: Remove FS_DAX_LIMITED config option
+  mm: Remove devmap related functions and page table bits
+  mm: Remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and PFN_SG_LAST
+  mm: Remove callers of pfn_t functionality
+  mm/memremap: Remove unused devmap_managed_key
 
-I think the only reason this requires pte mappings is for
-__set_memory_enc_dec(). But that can now deal with block mappings given the
-ability to split the mappings as needed. So I think this condition can be
-removed too.
+ Documentation/mm/arch_pgtable_helpers.rst     |   6 +-
+ arch/arm64/Kconfig                            |   1 +-
+ arch/arm64/include/asm/pgtable-prot.h         |   1 +-
+ arch/arm64/include/asm/pgtable.h              |  24 +---
+ arch/loongarch/Kconfig                        |   1 +-
+ arch/loongarch/include/asm/pgtable-bits.h     |   6 +-
+ arch/loongarch/include/asm/pgtable.h          |  19 +--
+ arch/powerpc/Kconfig                          |   1 +-
+ arch/powerpc/include/asm/book3s/64/hash-4k.h  |   6 +-
+ arch/powerpc/include/asm/book3s/64/hash-64k.h |   7 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  53 +------
+ arch/powerpc/include/asm/book3s/64/radix.h    |  14 +--
+ arch/powerpc/mm/book3s64/hash_hugepage.c      |   2 +-
+ arch/powerpc/mm/book3s64/hash_pgtable.c       |   3 +-
+ arch/powerpc/mm/book3s64/hugetlbpage.c        |   2 +-
+ arch/powerpc/mm/book3s64/pgtable.c            |  10 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |   5 +-
+ arch/powerpc/mm/pgtable.c                     |   2 +-
+ arch/riscv/Kconfig                            |   1 +-
+ arch/riscv/include/asm/pgtable-64.h           |  16 +--
+ arch/riscv/include/asm/pgtable-bits.h         |   1 +-
+ arch/riscv/include/asm/pgtable.h              |  17 +--
+ arch/s390/kernel/uv.c                         |   2 +-
+ arch/s390/mm/fault.c                          |   2 +-
+ arch/x86/Kconfig                              |   1 +-
+ arch/x86/include/asm/pgtable.h                |  51 +------
+ arch/x86/include/asm/pgtable_types.h          |   5 +-
+ arch/x86/mm/pat/memtype.c                     |   1 +-
+ drivers/dax/device.c                          |  23 +--
+ drivers/dax/hmem/hmem.c                       |   1 +-
+ drivers/dax/kmem.c                            |   1 +-
+ drivers/dax/pmem.c                            |   1 +-
+ drivers/dax/super.c                           |   3 +-
+ drivers/gpu/drm/exynos/exynos_drm_gem.c       |   1 +-
+ drivers/gpu/drm/gma500/fbdev.c                |   3 +-
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c      |   1 +-
+ drivers/gpu/drm/msm/msm_gem.c                 |   1 +-
+ drivers/gpu/drm/omapdrm/omap_gem.c            |   7 +-
+ drivers/gpu/drm/v3d/v3d_bo.c                  |   1 +-
+ drivers/hwtracing/intel_th/msu.c              |   3 +-
+ drivers/md/dm-linear.c                        |   2 +-
+ drivers/md/dm-log-writes.c                    |   2 +-
+ drivers/md/dm-stripe.c                        |   2 +-
+ drivers/md/dm-target.c                        |   2 +-
+ drivers/md/dm-writecache.c                    |  11 +-
+ drivers/md/dm.c                               |   2 +-
+ drivers/nvdimm/pmem.c                         |   8 +-
+ drivers/nvdimm/pmem.h                         |   4 +-
+ drivers/s390/block/dcssblk.c                  |  10 +-
+ drivers/vfio/pci/vfio_pci_core.c              |   7 +-
+ fs/Kconfig                                    |   9 +-
+ fs/cramfs/inode.c                             |   5 +-
+ fs/dax.c                                      |  67 +++-----
+ fs/ext4/file.c                                |   2 +-
+ fs/fuse/dax.c                                 |   3 +-
+ fs/fuse/virtio_fs.c                           |   5 +-
+ fs/userfaultfd.c                              |   2 +-
+ fs/xfs/xfs_file.c                             |   2 +-
+ include/linux/dax.h                           |   9 +-
+ include/linux/device-mapper.h                 |   2 +-
+ include/linux/huge_mm.h                       |  19 +--
+ include/linux/mm.h                            |  11 +-
+ include/linux/pfn.h                           |   9 +-
+ include/linux/pfn_t.h                         | 131 +----------------
+ include/linux/pgtable.h                       |  21 +--
+ kernel/events/uprobes.c                       |   2 +-
+ mm/Kconfig                                    |   4 +-
+ mm/debug_vm_pgtable.c                         |  60 +-------
+ mm/gup.c                                      | 160 +-------------------
+ mm/hmm.c                                      |  12 +-
+ mm/huge_memory.c                              |  96 ++---------
+ mm/khugepaged.c                               |   2 +-
+ mm/madvise.c                                  |   8 +-
+ mm/mapping_dirty_helpers.c                    |   4 +-
+ mm/memory.c                                   |  64 ++------
+ mm/memremap.c                                 |  32 +----
+ mm/migrate.c                                  |   1 +-
+ mm/migrate_device.c                           |   2 +-
+ mm/mprotect.c                                 |   2 +-
+ mm/mremap.c                                   |   9 +-
+ mm/page_vma_mapped.c                          |   5 +-
+ mm/pagewalk.c                                 |   8 +-
+ mm/pgtable-generic.c                          |   7 +-
+ mm/userfaultfd.c                              |  10 +-
+ mm/vmscan.c                                   |   5 +-
+ tools/testing/nvdimm/pmem-dax.c               |   6 +-
+ tools/testing/nvdimm/test/iomap.c             |  11 +-
+ tools/testing/nvdimm/test/nfit_test.h         |   1 +-
+ 88 files changed, 191 insertions(+), 973 deletions(-)
+ delete mode 100644 include/linux/pfn_t.h
 
-> +}
-
-Additionally, for can_set_direct_map(); at minimum it's comment should be tidied
-up, but really I think it should return true if "BBML2_NOABORT ||
-force_pte_mapping()". Because they are the conditions under which we can now
-safely modify the linear map.
-
-> +
->  static void __init map_mem(pgd_t *pgdp)
->  {
->  	static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
-> @@ -701,7 +930,7 @@ static void __init map_mem(pgd_t *pgdp)
->  
->  	early_kfence_pool = arm64_kfence_alloc_pool();
->  
-> -	if (can_set_direct_map())
-> +	if (force_pte_mapping())
->  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
->  
->  	/*
-> @@ -1402,7 +1631,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  
->  	VM_BUG_ON(!mhp_range_allowed(start, size, true));
->  
-> -	if (can_set_direct_map())
-> +	if (force_pte_mapping())
->  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
->  
->  	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 39fd1f7ff02a..25c068712cb5 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -10,6 +10,7 @@
->  #include <linux/vmalloc.h>
->  
->  #include <asm/cacheflush.h>
-> +#include <asm/mmu.h>
->  #include <asm/pgtable-prot.h>
->  #include <asm/set_memory.h>
->  #include <asm/tlbflush.h>
-> @@ -42,6 +43,8 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
->  	struct page_change_data *cdata = data;
->  	pte_t pte = __ptep_get(ptep);
->  
-> +	BUG_ON(pte_cont(pte));
-
-I don't think this is required; We want to enable using contiguous mappings
-where it makes sense. As long as we have BBML2, we can update contiguous pte
-mappings in place, as long as we update all of the ptes in the contiguous block.
-split_linear_map() should either have converted to non-cont mappings if the
-contiguous block straddled the split point, or would have left as is (or
-downgraded a PMD-block to a contpte block) if fully contained within the split
-range.
-
-> +
->  	pte = clear_pte_bit(pte, cdata->clear_mask);
->  	pte = set_pte_bit(pte, cdata->set_mask);
->  
-> @@ -80,8 +83,9 @@ static int change_memory_common(unsigned long addr, int numpages,
->  	unsigned long start = addr;
->  	unsigned long size = PAGE_SIZE * numpages;
->  	unsigned long end = start + size;
-> +	unsigned long l_start;
->  	struct vm_struct *area;
-> -	int i;
-> +	int i, ret;
->  
->  	if (!PAGE_ALIGNED(addr)) {
->  		start &= PAGE_MASK;
-> @@ -118,7 +122,12 @@ static int change_memory_common(unsigned long addr, int numpages,
->  	if (rodata_full && (pgprot_val(set_mask) == PTE_RDONLY ||
->  			    pgprot_val(clear_mask) == PTE_RDONLY)) {
->  		for (i = 0; i < area->nr_pages; i++) {
-> -			__change_memory_common((u64)page_address(area->pages[i]),
-> +			l_start = (u64)page_address(area->pages[i]);
-> +			ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
-> +			if (WARN_ON_ONCE(ret))
-> +				return ret;
-
-I don't think this is the right place to integrate; I think the split should be
-done inside __change_memory_common(). Then it caters to all possibilities (i.e.
-set_memory_valid() and __set_memory_enc_dec()). This means it will run for
-vmalloc too, but for now, that will be a nop because everything should already
-be split as required on entry and in future we will get that for free.
-
-Once you have integrated Dev's series, the hook becomes
-___change_memory_common() (3 underscores)...
-
-> +
-> +			__change_memory_common(l_start,
->  					       PAGE_SIZE, set_mask, clear_mask);
->  		}
->  	}
-> @@ -174,6 +183,9 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
->  
->  int set_direct_map_invalid_noflush(struct page *page)
->  {
-> +	unsigned long l_start;
-> +	int ret;
-> +
->  	struct page_change_data data = {
->  		.set_mask = __pgprot(0),
->  		.clear_mask = __pgprot(PTE_VALID),
-> @@ -182,13 +194,21 @@ int set_direct_map_invalid_noflush(struct page *page)
->  	if (!can_set_direct_map())
->  		return 0;
->  
-> +	l_start = (unsigned long)page_address(page);
-> +	ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
-> +	if (WARN_ON_ONCE(ret))
-> +		return ret;
-> +
->  	return apply_to_page_range(&init_mm,
-> -				   (unsigned long)page_address(page),
-> -				   PAGE_SIZE, change_page_range, &data);
-> +				   l_start, PAGE_SIZE, change_page_range,
-> +				   &data);
-
-...and once integrated with Dev's series you don't need any changes here...
-
->  }
->  
->  int set_direct_map_default_noflush(struct page *page)
->  {
-> +	unsigned long l_start;
-> +	int ret;
-> +
->  	struct page_change_data data = {
->  		.set_mask = __pgprot(PTE_VALID | PTE_WRITE),
->  		.clear_mask = __pgprot(PTE_RDONLY),
-> @@ -197,9 +217,14 @@ int set_direct_map_default_noflush(struct page *page)
->  	if (!can_set_direct_map())
->  		return 0;
->  
-> +	l_start = (unsigned long)page_address(page);
-> +	ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
-> +	if (WARN_ON_ONCE(ret))
-> +		return ret;
-> +
->  	return apply_to_page_range(&init_mm,
-> -				   (unsigned long)page_address(page),
-> -				   PAGE_SIZE, change_page_range, &data);
-> +				   l_start, PAGE_SIZE, change_page_range,
-> +				   &data);
-
-...or here.
-
-Thanks,
-Ryan
-
->  }
->  
->  static int __set_memory_enc_dec(unsigned long addr,
-
+base-commit: f97971f859dd7d22e63982a493aec85d9e75a69e
+-- 
+git-series 0.9.1
