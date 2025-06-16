@@ -1,344 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ABA28643A
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090393; cv=none; b=ZrM2gm5pnUghlFVfzmWWrynM44vFfXzYwoJGP9osfLnDFmxUv88cCurcvJm0OuMt4kXDxsIVOrBJEiRFW0hAogscTEgDbzMgSOykZfTHi48IBM85moOtqdHXFEqrHmTYHFXLKTtWezxAxlu7brdMtmsEmqIlTF+y9SDp0+ZNGyI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090393; c=relaxed/simple;
-	bh=icgihF6nqtEDWpqBFjMsCBE+D1QltRYJ0wvWtBMnRgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tlwy8fqO+Gz9TA+2EqznW50SaC3hf7SVWw779xTo3Xj2cnmFMT/qUSyjdkd2AYtp0TbcKjYAJ3zIen8ztZsbjgN1atRBTVoWkskymAqXnj5/zJcavnsDdPQeqRh3H9wYlXudoGb1yiDzjAvINJlMVug6nK5m75FvRjrodCy0taI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HJO4lriB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B142857FA;
+	Mon, 16 Jun 2025 16:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750090412; cv=fail; b=GQ+BWZHmrGNZUj7JLXc3QA9lH6t066xEs6+o0IQQjURvSJ6n5eyUEgx00r2cZG24fM8IuzLEmH1m4cXuVIR1/PV+v10WJ3BBu+HY5u8ouGooH4YuNp9qhKqHQ5MWSxsKhCCInjD01bQme0dl8HJkKCZnqCZRJRFyQcufiYeOwZo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750090412; c=relaxed/simple;
+	bh=P2SoBvfFYuf2SlmNjNlsXbqVIWWj1nqleJHvSdfY5Ds=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=o4WmPl9MCl/ccdmEE7l0VtwObslcLdF7w1kk2Coa0y2PgoL2RpHo2LSyTYc7W45pB/Ic2S4Kq1Wwngu/qrkBps70MINHTF6RLacGzOTjxAsMB8pTo+eaNVHMBYT6Ak4qeC6WN78zwyaTtJHb9dNEwwChCRDWytFEoO7eYkDpKc8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OE2XjwNy; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJO4lriB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750090390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=C/ZrxZaPZVNPwZIrMln0mxQuZIriBwZ6wz5MhRzlmy4=;
-	b=HJO4lriBXGM24jNwyKRThqUidrv2VGyI3ECkHHzcvEyWaVdsT61xD3GOz5stOaHTDKBz5o
-	90+LUIzFJsLRK6tdB7mE4slTTGwGo9HMrFr0NOTDpt31FyeQ5PM98AyIp7cWd8j9trV1zN
-	/Q2nCaqCXYHmjmAHg4YPhia39uIXygg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-580-ELnGsHaSMCe8faFwGsxuUw-1; Mon, 16 Jun 2025 12:13:08 -0400
-X-MC-Unique: ELnGsHaSMCe8faFwGsxuUw-1
-X-Mimecast-MFC-AGG-ID: ELnGsHaSMCe8faFwGsxuUw_1750090388
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a578958000so651408f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:13:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090387; x=1750695187;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=C/ZrxZaPZVNPwZIrMln0mxQuZIriBwZ6wz5MhRzlmy4=;
-        b=aSGi40nmkzXm8aR9EfBttczAuiGRoQ7bsccEtve7GWmU8uRe427LuavytIYboaLbIn
-         jUBLn2Q0mOndn0LPoKpDEyhV5cDACEjLkLa2dNGRB5RYOacM9Mfgfu7gBxxhxTS1Ivj0
-         x0H60w+XdGmaK4JTeNE3Yed/3yRYnDqbvjaGv/TaW+mlafXkB2JBJRkwqYG0XX0L7773
-         lFOeuieVGnrN4KWpl0RKuapmPOaEv0ATrYXFdylXpbo9KtqbuYxcY+ce39P8HwDY4WzA
-         ZMyDRP34T3QGmbSRxwy6cqYCWg2BuZcg79nHSXTXEP5GyTWkGnXL+lVbUy9klf9/0FkX
-         x8AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVh2kaePfzinZSyC6FcLLo3EoIzFMc6SZLjIKvNmUeb5TFd/fBvc0WF5cM2o3aTlq0GCdTyvjJ1ZScm5T8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy02dnExgsL2sJcqE3yIKU/hifQIVTe3Jo4bVpOUZS9Gv1agd1n
-	aiAfu3Y1sFQ+uwTMCwP0qrKjmZNFRhIiBayHF91a60O7S78P/JC21SYatJ0WFh/c/cWyLRZV9vB
-	fTmf41MfwdvZYbGZDTFOS1JRSzquD9d2UiFssRFaad6pwZxt7VfCGq5SkLFxfFTDTdA==
-X-Gm-Gg: ASbGncviEbwEfTYQohvb0HCLvZYG6GgIfoZTKDFUL7432ckAuaRP64xVKODrhsfrzkJ
-	RqizGZicir5JyAe0EtDiH6ECK5pb5FSh7skQKD2P1zqNmICZkwRwvNKbvndkpKV+dIlY/+5RSRC
-	r6zLXaG+SNlsnOAYA5OaUO3vH3nhtKzEeEZwz234SDlr9wBqhUvPoaTWUr6UQTpbSoPt8STa2iS
-	dBGrjLg5CvXXQm6nFJenalVGoPXy1BTInYsRmgdY45z2ZdE4zRo2EYg9/v7DVh4/tlefZOW/4TI
-	Cv3QjS8kQH+fXtDN9tmHpPOWanfSiPV+4In0KslgslC3WAi8Rsqgb10CHPnKlj4uT47DIq/ER/W
-	nYf6omW3rcL6k9gkxvqwNa6CsLY9U6qWpwQf/otOGXs86bNU=
-X-Received: by 2002:a5d:64ca:0:b0:3a3:6a9a:5ebf with SMTP id ffacd0b85a97d-3a5723a352dmr9392038f8f.20.1750090387584;
-        Mon, 16 Jun 2025 09:13:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLTGh3YT8u9DxTJL0pbpY5buLKzRYbIG3/oyV4xEIsnWDco5W5TIdegHqyAXMbHJ4AR4gvMw==
-X-Received: by 2002:a5d:64ca:0:b0:3a3:6a9a:5ebf with SMTP id ffacd0b85a97d-3a5723a352dmr9392006f8f.20.1750090387113;
-        Mon, 16 Jun 2025 09:13:07 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e244392sm148792785e9.22.2025.06.16.09.13.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 09:13:06 -0700 (PDT)
-Message-ID: <d7c54bbf-ed99-43c7-99a7-a9be70071b4a@redhat.com>
-Date: Mon, 16 Jun 2025 18:13:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OE2XjwNy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750090410; x=1781626410;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=P2SoBvfFYuf2SlmNjNlsXbqVIWWj1nqleJHvSdfY5Ds=;
+  b=OE2XjwNy0zfRf7DW7VyVw/g9AiX8BgsxktqSqsfoXpqWQJ54tr62JOWq
+   Vs32CnMZ3yRJ5tkfrAGnYs0/qYhZaYmWhv0Ky6R4wQZ3xhYvjtK7+Ox2E
+   /SpygHDnyrbjrPzkp0Iu3la/ewIttNaqRuAFgBCktk6zcYk5QofBDT0Qx
+   MjRPZoqB/FwJfSxUUO0lySkXb3Gpd/w5dayYoFxbilc/YEpQh1c71LgS4
+   FZAmRJjHO9hVMKp2V7Zwufp3CsAOTcExcp/ZS3D8HCb10RnU+/Paajb0j
+   o++vOKSIuCyrIfBKKt3kQro6X2ylnAVWYE+HfCWE3nq68uwNmkBGFmWwE
+   w==;
+X-CSE-ConnectionGUID: 5JsxlMLdQIikEz0GXB9x9Q==
+X-CSE-MsgGUID: he/shv5uQ++Cx8ZtH1Nqrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="69683319"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="69683319"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 09:13:28 -0700
+X-CSE-ConnectionGUID: cHVS3Or6RZqapwbNExtA4A==
+X-CSE-MsgGUID: GxntcGTAS7SNKQBkcghDrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="153392508"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 09:13:27 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 16 Jun 2025 09:13:26 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 16 Jun 2025 09:13:26 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.83)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 16 Jun 2025 09:13:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=opgXECIgcUd0kG7Q11vr505Ugd2Lg1/SJT+K9+ORHI+F+gTMvXJdUop25mqgx27h+tw0sbO/fBywNGGqlOeCtom9ogRAi7zRBaVRxAuT+1ioUV8Tyy1Bl0nsRQ1JbaOEO5ngAc8v25jVSsuYq6WEFMkxmeFM/0xzh6QeJoBngO5uxff/ECpAtATqUtI48Gxx4DlPcKcruwQuMAiIqLsjUAozLIR/Sk02jVfAxz1PvGut3HtVIWjPrcsbLwpmBzbdOxDSZhvKBnp3oG3ugvoGVd1CVTILev91siN4aYQs5ESgr8RyEEvxeqbrMQdz5Nb2Cq+5Xd2rA3ih4igfdxp61Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P2SoBvfFYuf2SlmNjNlsXbqVIWWj1nqleJHvSdfY5Ds=;
+ b=CMkX7NcOCl9STIQqyvftsdkgIDpuMlTDVm3CV1LjSRMVNWr1Y97FCnp8MTAWZ1A6lN2T4SHCij7AMxV3Tiepuxu9+nF3nUkXW2GH7QdPD4OIOVOWI0X1Z9hmuGgOZuGvheuzK+2cUch2kI478hqx2szv88qAu1vcSdkxwf6y2mjmIufR1bXsmXxOHWfUM9Q+hHGSIK6rFGUAWZ92VP2kOHVAIYa3hbdI1rD83+tgfB52va5yDEKNUhJEpc18uWm59EfC1AqyhtNVwod0PXesZjeEQBaGxxVoTvCRNWJ/1ATWcIekUT1PPqRqOD/WjWEXoFR5C/uDvmi9iftq3zyx2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by CO1PR11MB5059.namprd11.prod.outlook.com (2603:10b6:303:9a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Mon, 16 Jun
+ 2025 16:13:23 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::acfd:b7e:b73b:9361]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::acfd:b7e:b73b:9361%5]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 16:13:23 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Jason Baron <jbaron@akamai.com>
+CC: James Morse <james.morse@arm.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Robert Richter <rric@kernel.org>, "Lai, Yi1"
+	<yi1.lai@intel.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] ie31200/EDAC: Add Intel Bartlett Lake-S SoCs support
+Thread-Topic: [PATCH 1/1] ie31200/EDAC: Add Intel Bartlett Lake-S SoCs support
+Thread-Index: AQHbuwMUh98xNLjD00ag7W3QhqrIdLQGPNfA
+Date: Mon, 16 Jun 2025 16:13:23 +0000
+Message-ID: <SJ1PR11MB6083BFB95E228F6CF3BFE666FC70A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20250502013900.343430-1-qiuxu.zhuo@intel.com>
+In-Reply-To: <20250502013900.343430-1-qiuxu.zhuo@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|CO1PR11MB5059:EE_
+x-ms-office365-filtering-correlation-id: 3f1179fc-280c-4054-2f5e-08ddacf0b82a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?smqV7GlKIl4cqMiRgi6hiiPikHN8+ZzGWRuHNEpOAzjPUI1ApvUZ5oE1P/Mu?=
+ =?us-ascii?Q?p0ldLXrWTWWq9PLtnG8zNB39H9N8SVRYmR2gGINrvDi6ZlPC9rOn7A8Odf4u?=
+ =?us-ascii?Q?7B8ZJlFyE5yKuBRHDDjztRHWcNzbS18YOmI5xIXd96UWbwccJnK9W1V7aDCg?=
+ =?us-ascii?Q?tZL+sP0kfBkzkIGq1lvZGvnFzBW5znrIQ4c/sRAUyjioAFSGGoBX9PGGZBb0?=
+ =?us-ascii?Q?iHr+jrXmvi1uL2tThHiR0HWo+ThWgzLphomv+arIX7gVDgFuUqbqbGhnKZxr?=
+ =?us-ascii?Q?uDq7uCEbiWh00a/xEvD0TfDJXYQ70rHCIn/2rJTwYvQDE4qNr+fIF5ecSjYy?=
+ =?us-ascii?Q?0QQTm0z8mPw5dL3FPTA5fMaqbLI5iPu7Szas8ruY72bu24v2tXz/FvebKvn8?=
+ =?us-ascii?Q?dCcYD99jfsPY1pXBJx6WigtvMwHe2TqBcIbCNi4UULa2NIefULP+l8CheLAX?=
+ =?us-ascii?Q?BJzCukFKS77kpxTPq3SxQN4NRXM4jPESBo5Xt0EpDIg90hrgyqovCpoCHqKR?=
+ =?us-ascii?Q?iw92EyyjYkFbFrK9LejLVnpATVrl1qvP0eLGNpwQXGz0ryKrw46j2glGXsFL?=
+ =?us-ascii?Q?tPVhCKeHu9o+7EXEFKya8MbEp2ZyAdDIPDRQi0rRGNrgC0bq202eKYN9IWy9?=
+ =?us-ascii?Q?wbJTDCiGLaR1cemab1mpQJ0jMjmyVycAMa/Sd0lf3cbC7OLFQ+sK3DG9if0q?=
+ =?us-ascii?Q?7iArkkOoXC2f5Im8l5Oh4tNP/BqQB3vF8mJYRawhtaKDhBJ9wH9F8uAi/+ER?=
+ =?us-ascii?Q?03K2FJnNl/iOdbjCBtJbwW5KgEAaHKGRtbDhRrJZcspqo5dhCo2yh+2GN3hK?=
+ =?us-ascii?Q?HTBasKMbMojIeHMtRFaQwzsOjeWxNlHJEX3Jq5dN5EDWI5Hwp2G2JBTh8x8O?=
+ =?us-ascii?Q?Riedz3QVnzwI9dCX/eR3SbV9Q9bZOFSGz5OgYGWKnaZfdgDoN5hf3gJXLyt+?=
+ =?us-ascii?Q?p27DsEqeLj8h1BaV2ht6f47yy1T9ZdO8Z92zjeAN7fdAz1MCxFu5zmYEOPMo?=
+ =?us-ascii?Q?1pcjFKGFXW5G1YbhfvwwIoMbauImJT0gF0kjhtoXC1EEE3yerAPPHRqiXe2N?=
+ =?us-ascii?Q?qHS+OBNAZOg+T64yqfUEbx/YPzANDZrV9SpgDqUaFKgf7JeNDRa2sj2t1uNc?=
+ =?us-ascii?Q?I/rdrMOo9yLUM2GsyWP/+0enefYcSPt5WYU8I+z8H3SJShHiAWscmMsm55Er?=
+ =?us-ascii?Q?W3ybIH1hMd3A8uyyERRI7YhS26v6y3q/kZ2f9hPf/nSuTVwaEU1gp3hHzT2q?=
+ =?us-ascii?Q?W8Tx8G16AU90yyr5GfNAwpSWE8Zw/sTH7S+28KQ+RMwShdbrgSEXuDeCcwR1?=
+ =?us-ascii?Q?muv+7JHu55Iga8lo4hxZfDG+j9TqJe9pqqBqVplE5Koay23OOzUbIKnc7SSo?=
+ =?us-ascii?Q?IUGdwh60kguFxwXF8kow8hbPRwys80dnpNgBDvw7/Zsp+9mOw7ach+bZEwk+?=
+ =?us-ascii?Q?hWwY7huHrJOXrMRz+W45Mo7aC55wN0OVUXGwysszEQ+fCdwqP1B1Gw=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?p8NvAePolnNNBy/sSyMxP1f5rJM4rOX/4dz9q2fLUEPOFRXsYmTHaM+kJOQP?=
+ =?us-ascii?Q?qAJr5fqgweKVCMH2N/kl4ChvHg3Ypw8cccMPFmsehkEb3q3Ys6zhLPtx3rMd?=
+ =?us-ascii?Q?JVEet4V+fnQIi989h9zxl0uqhc91Jmue4gF4LBeaSXhjfVY8c2oaz0PmRCak?=
+ =?us-ascii?Q?OCQuEshvnAgPYDxdPSG3K2CNJItBYqpPI1oRnwSZa3Z0JMvyP8KJfyl0o/DD?=
+ =?us-ascii?Q?KIiJpcNag4j6RlM2SMrTdNjIIPVFJLT6SQIof1NMTtxxpddPM6wXKoJTBVn9?=
+ =?us-ascii?Q?oinnAv/r+VsX6xeu7AOo92KO4uZeJdHs3AsBRqRFIDruMmekETQzagM1x+vW?=
+ =?us-ascii?Q?8Ruu2nwT/PMA8e4FSl1GhabkSQHdp7Gk76aOygzPopSJjulVKF0CF4ravbGd?=
+ =?us-ascii?Q?QAAjV39A6eKxZZBa3fAvpS0yvmGXGgyOWq8vaVYZM8o4OXcJqgntO1PjvKmE?=
+ =?us-ascii?Q?DfHLiHPH2v/6uFipEUjcRJ4IJY8dBUREpeW/CosRAf7y+/UfllF2l0+payiQ?=
+ =?us-ascii?Q?dFU2jWm3F2xJiAATC1Xwq05NMicURDY2CziR1GlH/YPt8Y9XeEXpYeYUZhT/?=
+ =?us-ascii?Q?XccS+8+gYxmz8HOPAq3qDXo00F2Pws9tn4805ujjWW70szYro/IdD7xyC+5z?=
+ =?us-ascii?Q?si/bM3JIyvQODCwBlU67TQoif1dDStiDuU4HuXnMGetg5Ai1SigTXudr24nk?=
+ =?us-ascii?Q?AyH1CC8/a+Dt9eoh0iE/8GrfpJ1fmbNRicEOedleCodQIkzGKhZv2sJuxKZk?=
+ =?us-ascii?Q?G42z6I8xkV/xOU6jZ3iCDcx1dZ3oECnp92tKD82HXoUPbVXo307vvz8G09oV?=
+ =?us-ascii?Q?uK71yi7nxJNYjbgoUlGQ17O87Tcs9DHi6DW26Y0mi7xTb+3lP6e/OG9yAqti?=
+ =?us-ascii?Q?jX5NWk0NfSW/kv7glfeNL1A7yGn3zQJgGWuuEKHllkPXVbUl5+z822rHuqPM?=
+ =?us-ascii?Q?sRYi4m/f8JXICjpuphYc8grh0tz35QGS+dMYgkPm3POtuIPYv/ammAsxKpfu?=
+ =?us-ascii?Q?GjTMsBg5Z8g7PTEJO97NGaCtwtufs9nivAJFIJi9l5i10JBfvrkBeJ5OJ18r?=
+ =?us-ascii?Q?OF1zZu/01KzDq8tZYlGFMfZoNlfQbCK5CAfi89bfRBQYvbvq38wilwGMFUEB?=
+ =?us-ascii?Q?vdfr4HPnSJVIP/O6DU24niHoTDKcisB0F9Br7TkQEZsf8e84WhPSlJI+jq/n?=
+ =?us-ascii?Q?3S5pAmQyS+MKbl6T8vvBR5PclwL35P4j4TD/Zxc8Sxac6+oj5a/tuKsn+aWY?=
+ =?us-ascii?Q?A/Whd+vR8vMO0u4wnmua6xRvNiE8tSRfucSDTgC4PS9tBVs4hsYJNKEj1xnl?=
+ =?us-ascii?Q?9w2jGH2h2i7wkjT0zvsyokG6vu2gqyXiRfi66M/JCS1NJDZ5D/7ASjPtdaxA?=
+ =?us-ascii?Q?gB80RwB6gHEKzR4yd77fU2Z1gMr0wxPwSmyB7n+JGALF3pauCM6hpexqmqQu?=
+ =?us-ascii?Q?oI5SafUXbPQJENxgWUrJ11z4xHWfk5cNQfccqT83NzEPLVf6hngc1dbv+dtV?=
+ =?us-ascii?Q?ijmHtRCxx7CulQ5XocH+UjTPQSevlpNbjqTaLExCA79ywx9jD1irqGJuaI06?=
+ =?us-ascii?Q?8Uh8xRJ1lZDzMIUXuD5AVlTA7zSPs/xFu/PzpevN?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com, pfalcato@suse.de,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
- yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
- hughd@google.com
-References: <20250610035043.75448-1-dev.jain@arm.com>
- <20250610035043.75448-3-dev.jain@arm.com>
- <43d9cb6e-1b8f-47b9-8c19-58fc7c74a71e@redhat.com>
- <bc25dd02-6ace-45e6-9d3b-50f9c06aef98@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <bc25dd02-6ace-45e6-9d3b-50f9c06aef98@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f1179fc-280c-4054-2f5e-08ddacf0b82a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2025 16:13:23.8311
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ohtgxDQhW7jAgv0ag1k41KyS/tHr+Gy3RNCenxfMHzD1D3GcevAORMTO79NiJ8IFKx84qvBsx8Iz0WjgfyM5Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5059
+X-OriginatorOrg: intel.com
 
-[...]
+> Bartlett Lake-S is a derivative of Raptor Lake-S and is optimized for
+> IoT/Edge applications. It shares the same memory controller registers
+> as Raptor Lake-S. Add compute die IDs of Bartlett Lake-S and reuse the
+> configuration data of Raptor Lake-S for Bartlett Lake-S EDAC support.
 
->>>    			}
->>> -			set_pte_at(mm, new_addr, new_ptep, pte);
->>> +			set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
->>
->>
->> What I dislike is that some paths work on a single PTE, and we implicitly have to know
->> that they don't apply for !pte_present.
-> 
-> I hate any kind of implicit knowledge like this.
-> 
->>
->> Like
->> 	if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
-> 
-> I also despise [with words I cannot use on-list] how uffd is implemented.
-> 
-> It's _nothing but_ ad-hoc stuff like this spawned all around the place.
-> 
-> It's hateful.
-> 
->>
->> Will not get batched yet. And that is hidden inside the pte_marker_uffd_wp check ...
->>
->> Should we properly separate both paths (present vs. !present), and while at it, do
->> some more cleanups? I'm thinking of the following on top (only compile-tested)
-> 
-> I'd like to see that, but I think maybe better as a follow up series?
+Qiuxu,
 
-I'd do the split as a cleanup patch upfront.
+Merged to eadac-drivers branch of RAS tree.
 
-Then add the batching for the pte_present() case.
+Thanks
 
-> 
-> On the other hand, this does improve this quite a bit. Could also be another
-> patch in the series.
-> 
->>
->>
->> diff --git a/mm/mremap.c b/mm/mremap.c
->> index 18b215521adae..b88abf02b34e0 100644
->> --- a/mm/mremap.c
->> +++ b/mm/mremap.c
->> @@ -155,21 +155,6 @@ static void drop_rmap_locks(struct vm_area_struct *vma)
->>                  i_mmap_unlock_write(vma->vm_file->f_mapping);
->>   }
->> -static pte_t move_soft_dirty_pte(pte_t pte)
->> -{
->> -       /*
->> -        * Set soft dirty bit so we can notice
->> -        * in userspace the ptes were moved.
->> -        */
->> -#ifdef CONFIG_MEM_SOFT_DIRTY
->> -       if (pte_present(pte))
->> -               pte = pte_mksoft_dirty(pte);
->> -       else if (is_swap_pte(pte))
->> -               pte = pte_swp_mksoft_dirty(pte);
->> -#endif
->> -       return pte;
->> -}
->> -
->>   static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
->>                  pte_t *ptep, pte_t pte, int max_nr)
->>   {
->> @@ -260,7 +245,6 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>                  VM_WARN_ON_ONCE(!pte_none(*new_ptep));
->>                  nr_ptes = 1;
->> -               max_nr_ptes = (old_end - old_addr) >> PAGE_SHIFT;
->>                  old_pte = ptep_get(old_ptep);
->>                  if (pte_none(old_pte))
->>                          continue;
->> @@ -277,24 +261,34 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>                   * flushed.
->>                   */
->>                  if (pte_present(old_pte)) {
->> +                       max_nr_ptes = (old_end - old_addr) >> PAGE_SHIFT;
->>                          nr_ptes = mremap_folio_pte_batch(vma, old_addr, old_ptep,
->>                                                           old_pte, max_nr_ptes);
->>                          force_flush = true;
->> -               }
->> -               pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr_ptes, 0);
->> -               pte = move_pte(pte, old_addr, new_addr);
->> -               pte = move_soft_dirty_pte(pte);
->> -
->> -               if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
->> -                       pte_clear(mm, new_addr, new_ptep);
->> -               else {
->> -                       if (need_clear_uffd_wp) {
->> -                               if (pte_present(pte))
->> -                                       pte = pte_clear_uffd_wp(pte);
->> -                               else if (is_swap_pte(pte))
->> +
->> +                       pte = get_and_clear_full_ptes(mm, old_addr, old_ptep,
->> +                                                     nr_ptes, 0);
->> +                       /*
->> +                        * Moving present PTEs requires special care on some
->> +                        * archs.
->> +                        */
->> +                       pte = move_pte(pte, old_addr, new_addr);
-> 
-> I guess we're good with only doing this in pte_present() case because the only
-> arch that implements this, sparc, does a present check anyway.
-
-Yes, we could then remove the call from pte_present(), see below.
-
-> 
->> +                       /* make userspace aware that this pte moved. */
->> +                       pte = pte_mksoft_dirty(pte);
->> +                       if (need_clear_uffd_wp)
->> +                               pte = pte_clear_uffd_wp(pte);
->> +                       set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
->> +               } else if (need_clear_uffd_wp && pte_marker_uffd_wp(pte)) {
->> +                       pte_clear(mm, old_addr, old_ptep);
-> 
-> Same comment as below re: pte_clear().
-> 
-> I see you've dropped pte_clear(mm, new_addr, new_ptep) which I guess is
-> purposefully?
-> 
-> I do think that it is pointless yes.
-
-Yeah, that's what I raised below.
-
-> 
->> +               } else {
->> +                       pte_clear(mm, old_addr, old_ptep);
-> 
-> I guess this is intended to replace ptep_get_and_clear_full_ptes() above in the
-> single PTE case... no?  Is this sufficient?
-> 
-> In the original code we'd always do ptep_get_and_clear().
-> 
-> I think the key difference is page_table_check_pte_clear().
-> 
-> I notice, hilariously, that there is a ptep_clear() that _does_ call this. What
-> a mess.
-
-ptep_get_and_clear() is only relevant when something is present and 
-could change concurrently (especially A/D bits managed by HW).
-
-We already obtained the pte, it's not present, and now just want to 
-clear it.
-
-> 
-> 
->> +                       if (is_swap_pte(pte)) {
->> +                               if (need_clear_uffd_wp)
->>                                          pte = pte_swp_clear_uffd_wp(pte);
->> +                               /* make userspace aware that this pte moved. */
->> +                               pte = pte_swp_mksoft_dirty(pte);
->>                          }
->> -                       set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
->> +                       set_pte_at(mm, new_addr, new_ptep, pte);
->>                  }
->>          }
->>
->>
->> Note that I don't know why we had the existing
->>
->> -               if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
->> -                       pte_clear(mm, new_addr, new_ptep);
->>
->>
->> I thought we would always expect that the destination pte is already pte_none() ?
-> 
-> I think this is because we already did the move_pte() call in the original code
-> before checking this:
-
-Oh, maybe that's why.
-
-> 
-> 		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr_ptes, 0);
-> 		pte = move_pte(pte, old_addr, new_addr);
-> 		pte = move_soft_dirty_pte(pte);
-> 
-> 		if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
-> 			pte_clear(mm, new_addr, new_ptep);
-> 
-> But maybe it's because there was a presumption move_pte() would like you know,
-> move a PTE entry? Which it doesn't, it - only on SPARC - does a hook to flush
-> the dcache.
-
-I wish we could remove move_pte() completely. Or just notify about the 
-move of a present pte ... because it doesn't ever modify the pte val.
-
-So renaming it to "arch_notify_move_pte()" or sth. like that that is a 
-void function might even be better.
-
-... I think we could go one step further if we already have the folio: 
-we could call it arch_notify_move_folio_pte(), and simplify the sparc 
-implementation ...
-
-Anyhow, the move_pte() cleanup can be done separately. Splitting the 
-present from !present case here should probably be done as a cleanup 
-upfront.
-
--- 
-Cheers,
-
-David / dhildenb
-
+-Tony
