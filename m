@@ -1,109 +1,151 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F284214C5B0
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695842264B2;
+	Mon, 16 Jun 2025 22:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750114336; cv=none; b=Bt3rhK8G9UBSUTTEGpp+/5bY1xhF4MY4ppEH+iOOOlkRyoG2eyZzxpp91kwJHmpLgcXUzDy9eetpucD2hqbpIH5Ldc6+UibcsikoCKe0bipV5nvY7BagdCshpeAbrHapC2g0R4m7lrzQ7n+YQ0YHno9EaMBnOGJ5GRqg3p1+1e0=
+	t=1750114450; cv=none; b=uShQ17Lm273lxbpC5DNmWcsi3TI599mE7bvNqCiT0kWngLYGD1EyAc/1jfmd5J2DlxrfxWNldF3wEEznsFj17UTziR2mCgGsv55djTUkcQ79oDc4rbWqQ3bKYX5uvB4OhgIf0gwOVQdC3PUNSeDG1MyTZQLHlTASQuLBRsX3ksI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750114336; c=relaxed/simple;
-	bh=PmDF/LX+MEY7yNxnBISXFQV1FTEkhwSQHKJS5tTjenI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByRZq0sUR8TmhK2eBv0WEfRPEFfUyLtv1wfDUBiGgC3ppvvB7stE9YBoqtzfIYOdmvICqXPhHkL4v7PbSJ0hDFaVhjMHd/Az9Jo4UxEudrlZhb9gqzJbGIRWPlIjWMRKPQ7z2QegPXdG07XlfDsAnMuls9gPMNtKQK1mVOi5WlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aPcgWDqN; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750114450; c=relaxed/simple;
+	bh=2rQ4MWMNuiiZXr3ruKby+3pF9PtUetUIutSjWGs52xQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BEFL7P7/Pt3Bw7drXhTdN861rZn1o4JPEunz+07SMZNkdqN+F8Lig/lYbfOrHWPAW7dso9Bhi1ha53GxcYvHZYSVzGdRnWky5/FhhejL2pQQF8z3VhNd2tU2Z5z/AuRVVjdCoOQP45fiPZ+1SZ4TtfDgH8cBanmOyey3FC6pQms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9LuBOmF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aPcgWDqN"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235ca5eba8cso65505ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750114333; x=1750719133; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jj6+mcpbE9V02qadLzbuN9y/flOOPMALPxxrYxqko6o=;
-        b=aPcgWDqNlyYS7EHeUOdGbiYb5ZaeCTaKT9VhYRuQ6Dw+l0SB/CQYZT6rd1SSHTU7M5
-         gSU9ScXizjrNSTQArjSAp3SENWuyhJfIekj6zqZvTiYyYUDefwe2HvNO/QRqKxbumCkV
-         SNjKLVC6ov45QbLrLvM7k8HuEbsul7mmPlL+QryvY9gFxTXwz9J1as7eHe4+nZwUdyVR
-         ieHIMIUgqXNvgMF/t0jQHDpOEEDX+rH2xrV8jbxRnj3yI/X7K9q5rkJH8yGiOm/9ZKR1
-         xAq1Q/bScY33e9xi6O3EDJ/bx82JW5OonFYa5QqQIajW9hgbnbRFGkKU+1FrjCac1Oog
-         LQhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750114333; x=1750719133;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jj6+mcpbE9V02qadLzbuN9y/flOOPMALPxxrYxqko6o=;
-        b=bnI4e4VwaE7CLC/Ly4QrMf0AN2DlNl+2CkYK+SGgp3GF+nUxmx+meCvG3y5RxgL6MW
-         ZH0JQP9bwtPF6qKekBrcMF5vU0xk+/5x53ACYs5RBYT7+HfiPRL8SUqUyW1wf8Wwjzpo
-         WKt1IqvyqC8Mp3XCc4E7HohdW4Xls9NGFPjNJiIirOJx9ng4FgyCUqJw5nAgoDjVHsWP
-         sh/NUCFVZxbs8XiFE/uiM6ByiWmGA5n9Ywvuj/4JJNBueLgieZg5RY8b4tSso3h0fIOh
-         16lZo6vvxIiBVJ4Mp1kdFb+hSVMJMtQNiOaDUgFX9W6seTlN27QLXBL3Iz4d7zjySGEk
-         rJDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVviIG1gnDEr1BucydkKsEAR3H1AFA+g+S8fgQKTGb9iGQTIH2YtpCjslbwAAhlXUjAVjVRf9TQR0CjecA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEpyGmHUuAEt9fsZm9LyZR87v3TxqfO1m7ovqHrHWz8NfHL9Hq
-	g9jwI3YcqKsb7hQmxlB+UJIw1YRDJjStC9SnyUXF2c3Ceu+ZcFjEzx+RpGvpeJ1BKQ==
-X-Gm-Gg: ASbGncvFaRpHP/jG/E71EqpKCSDmJCgFmettcyVa2hrThoVcA6vE1MZWEBlRySmTmZC
-	DLyL08uEL0s9sb+0t7C4tZ4PDe+t1I29V/cezH9SB0BILuhPyuokVEWKoRh2vdLvkcxqCCOM5qH
-	pv88LRdQDY35yqcUtEtAAsuJIB6UBOvzoObA3hfPujGoCTVeFCrfYaJKJpTKKe0RV0jsFq1m1gP
-	59emMU2v1G8JbjLQBchE1IQzrOgvEhGWFN0onUmNHeORFVLr2fIPMH+X3qlizBohw8/Z6L7NvDH
-	UF2KKkvTgiFPllZx+YSCxkED/Ksui0CUSdziTBuznf8ZPNtPi+oAUA0hR8ZhL5TnDstTkqyDbrX
-	9hy1agAfu9QAocU8h41Aq
-X-Google-Smtp-Source: AGHT+IGlPE9uP1SbbWnzOuYOIe1eDG4YyhjqWGy1/roBJfbAZkNgrizH5BthvNw3ZPe4qwD5HsBoXA==
-X-Received: by 2002:a17:903:b45:b0:234:b2bf:e67f with SMTP id d9443c01a7336-2366eef0269mr5964675ad.9.1750114333086;
-        Mon, 16 Jun 2025 15:52:13 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b319dc80726sm3333506a12.68.2025.06.16.15.52.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 15:52:12 -0700 (PDT)
-Date: Mon, 16 Jun 2025 22:52:04 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, will@kernel.org,
-	robin.murphy@arm.com, joro@8bytes.org, yi.l.liu@intel.com,
-	peterz@infradead.org, jsnitsel@redhat.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 13/14] iommufd: Introduce iommufd_object_alloc_ucmd
- helpery
-Message-ID: <aFCgFPlz5dYlN8N2@google.com>
-References: <cover.1749882255.git.nicolinc@nvidia.com>
- <e7206d4227844887cc8dbf0cc7b0242580fafd9d.1749882255.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9LuBOmF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F658C4CEEA;
+	Mon, 16 Jun 2025 22:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750114450;
+	bh=2rQ4MWMNuiiZXr3ruKby+3pF9PtUetUIutSjWGs52xQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p9LuBOmFGkwzRdPq0c3k3DFo+Gg7PbA5ztEVsDN9YZvn/BtbR0RubCEEUAupc/0QN
+	 UyKsXWg+3Xgr8jYaXCDMYIX9AMo3NmXmNJWlhYEhfQb2Sm0ZC+2euqRHnrYZxtOuoI
+	 /XOGCT4NNqf3QLkRtC5atg5JemfK28tCQYDxQ+vvt7VJIHaxKtebm4/Pva1Y9ypu3C
+	 0i5AHJz8+318CUMsMSF8zAEbryPRnLo/KnKQMO3Ip+RltAyo1TepCJSxqJg7VUGaup
+	 0RxiaVHPlYYqHNPaSdRNrmN5q1z0dDh0yP0RcMExF7vaS/owYzg4U/4qGi5HRJ5JK3
+	 4Jr+e8uabprHQ==
+Message-ID: <60615f31-7a58-4336-adaa-129408c90000@kernel.org>
+Date: Tue, 17 Jun 2025 07:51:56 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e7206d4227844887cc8dbf0cc7b0242580fafd9d.1749882255.git.nicolinc@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/10] fs: replace mmap hook with .mmap_prepare for simple
+ mappings
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe
+ <axboe@kernel.dk>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>,
+ Marc Dionne <marc.dionne@auristor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Amir Goldstein <amir73il@gmail.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ "Tigran A . Aivazian" <aivazian.tigran@gmail.com>,
+ Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
+ coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, Gao Xiang
+ <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+ <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
+ Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
+ Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+ Viacheslav Dubeyko <slava@dubeyko.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+ David Woodhouse <dwmw2@infradead.org>, Dave Kleikamp <shaggy@kernel.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>,
+ Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg
+ <martin@omnibond.com>, Steve French <sfrench@samba.org>,
+ Paulo Alcantara <pc@manguebit.org>,
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Bharath SM <bharathsm@microsoft.com>, Zhihao Cheng
+ <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>,
+ Carlos Maiolino <cem@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>,
+ Johannes Thumshirn <jth@kernel.org>, Dan Williams
+ <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-aio@kvack.org, linux-unionfs@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-mm@kvack.org,
+ linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org,
+ linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+ linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
+References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+ <f528ac4f35b9378931bd800920fee53fc0c5c74d.1750099179.git.lorenzo.stoakes@oracle.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <f528ac4f35b9378931bd800920fee53fc0c5c74d.1750099179.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 11:35:25PM -0700, Nicolin Chen wrote:
-> An object allocator needs to call either iommufd_object_finalize() upon a
-> success or iommufd_object_abort_and_destroy() upon an error code.
+On 6/17/25 4:33 AM, Lorenzo Stoakes wrote:
+> Since commit c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file
+> callback"), the f_op->mmap() hook has been deprecated in favour of
+> f_op->mmap_prepare().
 > 
-> To reduce duplication, store a new_obj in the struct iommufd_ucmd and call
-> iommufd_object_finalize/iommufd_object_abort_and_destroy() accordingly in
-> the main function.
+> This callback is invoked in the mmap() logic far earlier, so error handling
+> can be performed more safely without complicated and bug-prone state
+> unwinding required should an error arise.
 > 
-> Similar to iommufd_object_alloc() and __iommufd_object_alloc(), add a pair
-> of helpers: __iommufd_object_alloc_ucmd() and iommufd_object_alloc_ucmd().
+> This hook also avoids passing a pointer to a not-yet-correctly-established
+> VMA avoiding any issues with referencing this data structure.
 > 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/iommufd/iommufd_private.h | 26 +++++++++++++++++++++++++
->  drivers/iommu/iommufd/main.c            | 25 ++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
+> It rather provides a pointer to the new struct vm_area_desc descriptor type
+> which contains all required state and allows easy setting of required
+> parameters without any consideration needing to be paid to locking or
+> reference counts.
 > 
-> -- 
+> Note that nested filesystems like overlayfs are compatible with an
+> .mmap_prepare() callback since commit bb666b7c2707 ("mm: add mmap_prepare()
+> compatibility layer for nested file systems").
+> 
+> In this patch we apply this change to file systems with relatively simple
+> mmap() hook logic - exfat, ceph, f2fs, bcachefs, zonefs, btrfs, ocfs2,
+> orangefs, nilfs2, romfs, ramfs and aio.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Acked-by: Pranjal Shrivastava <praan@google.com>
+For zonefs,
 
-> 2.43.0
-> 
+Acked-by: Damien Le Moal <dlemoal@kernel.org>
+
+-- 
+Damien Le Moal
+Western Digital Research
