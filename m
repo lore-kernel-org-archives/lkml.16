@@ -1,103 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00503800;
-	Mon, 16 Jun 2025 12:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95081EF36B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750076527; cv=none; b=KZm5IoQ4i9kM6bBt+ezJq26C9qRlgSY8D3NstQaFn0mi8kYSMJFBgyJNg1dHI3Mcu+SKNXiU297YrJMnxGWWO1jgO7UKkYxTiEl8EpUDhFxpNyU51ElaXgQZwB09xiBkGP6qZ2ZSms1D6NMhTXTise6PpCrLUsekLyn+PozElL8=
+	t=1750076796; cv=none; b=n0txR9MmPdrBMRQ6BhbHq2wlL4n0dkbgNkCvgiZxnSgkdiEitKrE74NpsLxaUkLT7h/z4/tDHWaJLRC7bHvO3mq7/4B8PmPPEubNSx2sOiGznQ7kFWRvblyop6EEOZg/Ehzc4k6v0EfnlQDfN6d8bALsPUAlPXGtVKimiZp29Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750076527; c=relaxed/simple;
-	bh=mlk51EUaFTM60JuowPd7x+Uze/JnxYqKzWvV92wf+a8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sUqHVfcbEJRT3knOZkqufzlee41d0QkISJxDy8eO/cwVpaF5nV96rHXADZVYUAar5gtytq5mg2EZaiQqQdm8vFUbcwIRiqiqi6XopWbHGgaiZXNASySll2YTCk43Vs5GlIMTFSzl4N2sR0qwsueJ9aTzQ7cNvXGbknxfcV4KUnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YrDVamlS; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750076796; c=relaxed/simple;
+	bh=LHjIh7SrrJj1vGEg4Leu2HdoHohXcjN1SjtuAPRoHH4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=C5t/MHpYLSGUNkEtDlEb4OmjY7POGWnm0nfS99xhmSyx1BYq+U+fU8v4oVXv4vMfGsqW7hCXhgsg7KHNHlIbbRRd2j9XZLtOTfOhRWfkLeJdhtr7TTxyCJbL6CousW2X52QEq6UyoOvjQRuUU9DXPRyL/YzEqd6zQtZwXoj/0gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGu2SV3m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YrDVamlS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750076524; x=1781612524;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mlk51EUaFTM60JuowPd7x+Uze/JnxYqKzWvV92wf+a8=;
-  b=YrDVamlStZhruQUfrA8oXBxThFqGz3s9wPA6QEHVkW5HsYsa5i85VuM9
-   8l7mVRpUx09ebBkrF5VIc+oWsnk/zNWdNEm9N/Q6DWAFs0DKACgUS/+oV
-   8F9LyUi13KfoZhLV/YuO5vDeS/PzPko7doVVFd0yZytm9JPRr0Lf3EPK3
-   cM+9kfvp61pk3sTcV7Fd6mGqUSzp3ECvHTC35RSwmsdpYYC7XGbi43GaF
-   EEJi4Ice8yTtvPnN9VvIRRx0sCm2UALZlfOGPjckQarWzXYSOHd6m2gbl
-   EVlzWQlIOfCVcOKgiMoH+vnA0eSk7hrnzC3oGZDvQA3IF/m09j0BKuqs5
-   g==;
-X-CSE-ConnectionGUID: ZfcNp8fGTkOmqlAXtNwv1g==
-X-CSE-MsgGUID: Qd/6Z16PTKmRryDb/vm53g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="63566996"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="63566996"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 05:22:03 -0700
-X-CSE-ConnectionGUID: yg6Y5f6KQHy9iP2vfGCZXA==
-X-CSE-MsgGUID: KxVsMkQqQ0KgpYB+zIg9GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="153224360"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 16 Jun 2025 05:22:01 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uR8qd-000F0e-06;
-	Mon, 16 Jun 2025 12:21:59 +0000
-Date: Mon, 16 Jun 2025 20:21:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>, bhelgaas@google.com,
-	brgl@bgdev.pl
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lukas@wunner.de,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-Message-ID: <202506162013.go7YyNYL-lkp@intel.com>
-References: <20250616053209.13045-1-mani@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGu2SV3m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E36C4CEEA;
+	Mon, 16 Jun 2025 12:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750076796;
+	bh=LHjIh7SrrJj1vGEg4Leu2HdoHohXcjN1SjtuAPRoHH4=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=SGu2SV3mZqHA1ACNeN/A6uREmZaBGZT2KQtf7GU2Rk7lT9M7cM63XclRjIW8f50oN
+	 ne+P2IVhVoPLFFX9hFdolAuXmCWzrLAbQTTjZBoCQIeobMtJTuyA2kwE/a5fqKXlIy
+	 iMqhBXPr0sW/k42Bkg83vHkgK5DTxC/K0if45Ua4t4e/IL55Dbhljx5oTJIvkYweNB
+	 ZFLLdvqqo6XQgB0vopDZNeSYSI6BJ1gLRcAV6+FeA1Uu85pp8jnly9vhzn/eLKBNKA
+	 i9tGuyBLGis/z2ozbnqsXSNWXiNZhkbGXaseubjewDFEX93x/U7NJJNsd57zKxcSXA
+	 SJPvyC+6RvD5g==
+Message-ID: <22d8f579-ed67-4c4f-9e62-5e32b8bd0a7d@kernel.org>
+Date: Mon, 16 Jun 2025 20:26:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616053209.13045-1-mani@kernel.org>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com, bintian.wang@honor.com,
+ feng.han@honor.com
+Subject: Re: [f2fs-dev] [PATCH] f2fs: avoid non-section-aligned size pinned
+ file generation
+To: wangzijie <wangzijie1@honor.com>, jaegeuk@kernel.org
+References: <20250613103829.1895191-1-wangzijie1@honor.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250613103829.1895191-1-wangzijie1@honor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Manivannan,
+On 6/13/25 18:38, wangzijie wrote:
+> To prevent non-section-aligned size pinned file generated from truncation,
+> add check condition in setattr. Meanwhile, clean up F2FS_I_SB.
+> 
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+>  fs/f2fs/file.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f..31ecf615b 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1026,9 +1026,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  {
+>  	struct inode *inode = d_inode(dentry);
+>  	struct f2fs_inode_info *fi = F2FS_I(inode);
+> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> +	block_t sec_blks = CAP_BLKS_PER_SEC(sbi);
+>  	int err;
+>  
+> -	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+> +	if (unlikely(f2fs_cp_error(sbi)))
+>  		return -EIO;
+>  
+>  	if (unlikely(IS_IMMUTABLE(inode)))
+> @@ -1047,6 +1049,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  			!IS_ALIGNED(attr->ia_size,
+>  			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+>  			return -EINVAL;
+> +		if (f2fs_is_pinned_file(inode) &&
+> +			attr->ia_size < i_size_read(inode) &&
+> +			!IS_ALIGNED(attr->ia_size,
+> +			F2FS_BLK_TO_BYTES(sec_blks)))
 
-kernel test robot noticed the following build errors:
+F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))?
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.16-rc2 next-20250616]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+as this is the only case we use sec_blks in f2fs_setattr().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/PCI-pwrctrl-Move-pci_pwrctrl_create_device-definition-to-drivers-pci-pwrctrl/20250616-133314
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250616053209.13045-1-mani%40kernel.org
-patch subject: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition to drivers/pci/pwrctrl/
-config: i386-buildonly-randconfig-001-20250616 (https://download.01.org/0day-ci/archive/20250616/202506162013.go7YyNYL-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250616/202506162013.go7YyNYL-lkp@intel.com/reproduce)
+And can you please do cleanup on sbi in separated patch?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506162013.go7YyNYL-lkp@intel.com/
+Thanks,
 
-All errors (new ones prefixed by >>):
+> +			return -EINVAL;
+>  	}
+>  
+>  	err = setattr_prepare(idmap, dentry, attr);
+> @@ -1068,12 +1075,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	}
+>  	if (i_uid_needs_update(idmap, attr, inode) ||
+>  	    i_gid_needs_update(idmap, attr, inode)) {
+> -		f2fs_lock_op(F2FS_I_SB(inode));
+> +		f2fs_lock_op(sbi);
+>  		err = dquot_transfer(idmap, inode, attr);
+>  		if (err) {
+> -			set_sbi_flag(F2FS_I_SB(inode),
+> -					SBI_QUOTA_NEED_REPAIR);
+> -			f2fs_unlock_op(F2FS_I_SB(inode));
+> +			set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
+> +			f2fs_unlock_op(sbi);
+>  			return err;
+>  		}
+>  		/*
+> @@ -1083,7 +1089,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		i_uid_update(idmap, attr, inode);
+>  		i_gid_update(idmap, attr, inode);
+>  		f2fs_mark_inode_dirty_sync(inode, true);
+> -		f2fs_unlock_op(F2FS_I_SB(inode));
+> +		f2fs_unlock_op(sbi);
+>  	}
+>  
+>  	if (attr->ia_valid & ATTR_SIZE) {
+> @@ -1144,7 +1150,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	f2fs_mark_inode_dirty_sync(inode, true);
+>  
+>  	/* inode change will produce dirty node pages flushed by checkpoint */
+> -	f2fs_balance_fs(F2FS_I_SB(inode), true);
+> +	f2fs_balance_fs(sbi, true);
+>  
+>  	return err;
+>  }
 
-   ld: drivers/pci/probe.o: in function `pci_scan_single_device':
->> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create_device'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
