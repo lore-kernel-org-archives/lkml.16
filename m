@@ -1,135 +1,156 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF8626D4DF
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE023522F;
+	Mon, 16 Jun 2025 08:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063609; cv=none; b=kCbGo9+b6JGDk++S51A/MLYLvGFjv0YhT9PItbDPlRgOdeyZOnkkmCslGNmYS8KfWB6IZraJJVzfNVpe+uuZGlYKNeVgceUtHoRPdIQPf3AEfYF92/Uo2a8YyOuzdLTUBSeSug7YwceeUY/yVCIKEmIYeyaVUYE95FlMw7MDDgs=
+	t=1750063675; cv=none; b=aexve3sYoh9nCIHodEsQ7EKfWidcXc+qD+L+JhUod6jBFqA4E4G2PdM1VSOpqZteUDF6KpnkryeIifEtX7/e96yROLLBXDZK2ZHdmln1EaSdXRJ07eb2OlXmwu2CmZvNDeLnz3ksCeoj0nvup8fU8atQexSjYPX4RcI79Z9MBq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063609; c=relaxed/simple;
-	bh=ZQ9gcLTBm+aDRkU2fuZuUMzNjXUtXyuUZRtD/+qBp6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EEvkASYDBvccAihy8+glP2fzySsGo0GGlkh6SM5SlDzPVw1QPA8X8KfbXEjVi/16ix7y+WtkgZNgoMxfCsrFOg23sYlMoVhq8KRlHyJU/pQaHqokSEoIcj6hzNgi92CkCjBjqJcGhf4A0cIelZ+p7ieaJ0JA6ob5hGWX4paEw3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GrnSeCNu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R0MaR5Qk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GrnSeCNu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R0MaR5Qk; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750063675; c=relaxed/simple;
+	bh=Jmw+LF/yWtvrkBOZ2hbKLwp4rJ8jMljTl1Iw26HP98I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VnJgH0aGbs7BAoLs3ahrgHzUxmrMSPmt8opNJYk6LlFy2Of7V6y8gmWi24kJgikT0iWygj400EqIyjGNAj+MwYRvZCB8ulib/rZQsPUlc079a1Ne4f+3HMCzRo1oka+8xP+XXivcD4H9CQWOxIn3ngUxhEZ8IpSVK7RCFprOxIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMTegmHZ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GrnSeCNu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R0MaR5Qk";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GrnSeCNu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R0MaR5Qk"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E5E971F38F;
-	Mon, 16 Jun 2025 08:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750063605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V8DdQsnMLs1nvo7yl78JYktCidIs/cIpLkMKiz6CCJs=;
-	b=GrnSeCNuNoAOgeW4hN9aEvIspT8dBk2Y9O+x4kf9scc5hjNTEOGJfTif6JXQJLhG1Posrw
-	hNamLaxQAhTQ5XTisZYs2CLx8PSKLppX6kgE5rUaLMfWDZmB+BsnIRvADZpMsuQz5Mmm5c
-	dNbS5TpR3S4fM7pTfe2dAY1pJxRkp1E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750063605;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V8DdQsnMLs1nvo7yl78JYktCidIs/cIpLkMKiz6CCJs=;
-	b=R0MaR5Qk0I0Fvbst3HqR9Fjk3jiBfC8B12c6cW7HztO50qU3t3ku70EMYMUTBYjYLqWNBw
-	+Lw7pnUV57MxxsCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750063605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V8DdQsnMLs1nvo7yl78JYktCidIs/cIpLkMKiz6CCJs=;
-	b=GrnSeCNuNoAOgeW4hN9aEvIspT8dBk2Y9O+x4kf9scc5hjNTEOGJfTif6JXQJLhG1Posrw
-	hNamLaxQAhTQ5XTisZYs2CLx8PSKLppX6kgE5rUaLMfWDZmB+BsnIRvADZpMsuQz5Mmm5c
-	dNbS5TpR3S4fM7pTfe2dAY1pJxRkp1E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750063605;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V8DdQsnMLs1nvo7yl78JYktCidIs/cIpLkMKiz6CCJs=;
-	b=R0MaR5Qk0I0Fvbst3HqR9Fjk3jiBfC8B12c6cW7HztO50qU3t3ku70EMYMUTBYjYLqWNBw
-	+Lw7pnUV57MxxsCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A5F84139E2;
-	Mon, 16 Jun 2025 08:46:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HmGGJvXZT2gJQAAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Mon, 16 Jun 2025 08:46:45 +0000
-Date: Mon, 16 Jun 2025 10:46:44 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Alex Guo <alexguo1023@gmail.com>
-Cc: andi.shyti@kernel.org, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: i801: Fix out-of-bounds bug
-Message-ID: <20250616104644.2066693e@endymion>
-In-Reply-To: <20250615232857.491602-1-alexguo1023@gmail.com>
-References: <20250615232857.491602-1-alexguo1023@gmail.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMTegmHZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750063674; x=1781599674;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jmw+LF/yWtvrkBOZ2hbKLwp4rJ8jMljTl1Iw26HP98I=;
+  b=QMTegmHZ01LY5UrRRB6DlH4DCkOJnpPQ4ijSD5pMNKvHSztotNmk9Ig3
+   0bL891QzCkqTT7wgikwJu+GDdE+6AAdz7qVlATaE5OCCdB4Bv285c82vd
+   0Zm4b8xdt5gSD36vdYFxNMKuhkQreBzLgta5DwUlKG4xw1p5Dewqetx+u
+   TCVYuQiQ9qrLgacxAcWZXw9gI+TjIdeYqd9Tl/sXdWdkpGCKj3R1DAJKE
+   NqkNv2IyaIsEtw+2Yp6X5ZGIIGo/w7LYSHu62k73u+61+b8nyrO2atikL
+   GPOqBsXyKhmWWn6tPjooQCJiWi5iI9RRu+5VmlZMPe+0APOMNii1w/Ir/
+   g==;
+X-CSE-ConnectionGUID: kC0Gih4sSHW8PnJWDm/e8g==
+X-CSE-MsgGUID: knB34gDwTe6h6tgcurk7UA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62472285"
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="62472285"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:47:50 -0700
+X-CSE-ConnectionGUID: k9Brh6RfRuyve3qjkPmnxg==
+X-CSE-MsgGUID: faX8jCxLQECduLo6MltvDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
+   d="scan'208";a="153709859"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 01:47:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uR5VH-000000071XI-2Sv3;
+	Mon, 16 Jun 2025 11:47:43 +0300
+Date: Mon, 16 Jun 2025 11:47:43 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Marek Vasut <marek.vasut@mailbox.org>
+Cc: Marek Vasut <marek.vasut+bmc150@mailbox.org>,
+	Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Julien Stephan <jstephan@baylibre.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
+ IRQ connected
+Message-ID: <aE_aL5dGKZeKBu50@smile.fi.intel.com>
+References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
+ <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
+ <8605141c-b615-4e84-9574-81e24590df48@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8605141c-b615-4e84-9574-81e24590df48@mailbox.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Alex,
+On Fri, Jun 13, 2025 at 07:02:28PM +0200, Marek Vasut wrote:
+> On 6/13/25 5:09 PM, Andy Shevchenko wrote:
+> > On Fri, Jun 13, 2025 at 02:45:22PM +0200, Marek Vasut wrote:
 
-On Sun, 15 Jun 2025 19:28:57 -0400, Alex Guo wrote:
-> The data->block[0] variable comes from user. Without proper check,
-> the variable may be very large to cause an out-of-bounds bug.
+> > > The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
+> > > which leads to bmc150_accel_core_probe() being called with irq=0, which
+> > > leads to bmc150_accel_interrupts_setup() never being called, which leads
+> > > to struct bmc150_accel_data *data ->interrupts[i].info being left unset
+> > > to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
+> > > which depends on struct bmc150_accel_data *data ->interrupts[i].info being
+> > > non-NULL, and which triggers NULL pointer dereference. This is triggered
+> > > e.g. from iio-sensor-proxy.
+> > > 
+> > > Fix this by skipping the IRQ register configuration in case there is no
+> > > IRQ connected in hardware, in a manner similar to what the driver did in
+> > > the very first commit which added the driver.
+> > > 
+> > > ACPI table dump:
+> > 
+> > >          Device (BMA2)
+> > >          {
+> > >              Name (_ADR, Zero)  // _ADR: Address
+> > >              Name (_HID, "BOSC0200")  // _HID: Hardware ID
+> > >              Name (_CID, "BOSC0200")  // _CID: Compatible ID
+> > >              Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
+> > >              Name (_UID, One)  // _UID: Unique ID
+> > >              Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+> > >              {
+> > >                  Name (RBUF, ResourceTemplate ()
+> > >                  {
+> > >                      I2cSerialBusV2 (0x0019, ControllerInitiated, 0x00061A80,
+> > >                          AddressingMode7Bit, "\\_SB.PCI0.I2C0",
+> > >                          0x00, ResourceConsumer, , Exclusive,
+> > >                          )
+> > >                  })
+> > >                  Return (RBUF) /* \_SB_.PCI0.I2C0.BMA2._CRS.RBUF */
+> > >              }
+
+> > >          }
+
+...
+
+> > As for the solution, are you sure the line is not wired at all?
 > 
-> Fix this bug by checking the value of data->block[0] first.
+> No . It is some cheap mini-laptop , I have no schematics or any other info
+> really .
 
-This check is already present in i801_smbus_block_transaction(), which
-is the only place where i801_block_transaction_by_block() is being
-called. So the out-of-bounds bug you describe does not exist.
+> Note that I am not really familiar with x86 and ACPI, so there is that.
+
+Yes, I understand that.
+
+You can try to monitor the /sys/kernel/debug/pinctrl/*/pins files for any
+changes that might happen on the sensor events. It might (help to) reveal
+the IRQ line.
+
+> > IIRC Hans had a broken tales where it was simply forgotten, meaning
+> > the Android / Windows driver simply hardcoded needed info.
+> > 
+> > If it's the case, it should be solved differently around PDx86 special quirk
+> > driver for the cases like this.
+> There are likely two issues.
+> 
+> First, this driver needs to handle i2c_client->irq == 0 correctly if it
+> should work without IRQ line, which the driver seems to indicate that it
+> does. The current crashing the kernel is not the correct way of handling
+> that. That's this patch, in some form.
+> 
+> Second, if this laptop has some IRQ line for this chip hidden somewhere,
+> then it might need a quirk of sorts, sure. Is there some way to find out,
+> without taking the thing apart and poking around with a scope ?
 
 -- 
-Jean Delvare
-SUSE L3 Support
+With Best Regards,
+Andy Shevchenko
+
+
