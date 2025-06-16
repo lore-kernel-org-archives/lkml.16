@@ -1,152 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045A91DE892;
-	Mon, 16 Jun 2025 06:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F0B1E47B3;
+	Mon, 16 Jun 2025 06:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750056189; cv=none; b=HQCmm/YtXZiqX1vQIwto9+w2PI5cWw5jD9/acJAMmGv1dSTPKLNZS/F8HcQT01KOS88kn+fKBwN4exWpqTRjR7Hgnu4KZdsk1ojWk0jYFtfo1JGHieuYQIBegy/J/+Ot4q0ouwTEaYNuaC1DBKXi9laJov9APT9kjLyi/AgNx9s=
+	t=1750056192; cv=none; b=faEgNIE5NP2GLG8I+TNzNf5OLgwvVgHYEI+kjXnunkNgNn7BZd7bduEorImjpf6An4j8hd87ZrVkAyFsww8xjeSIYUbtzdashontKBV9SwSKcjf9i3sGRQPC04RVMNS8regd+nJB86RSt39sLaWZ5Vks+ZQ8WvgpE4ivIVC0okA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750056189; c=relaxed/simple;
-	bh=eOTADBZEYbv1U12BLhmN1jg0otaqgPU/5Sqwlul3Itg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OecES4jqXK7vALMXZTYEhTIEI6bUllbE6zT6XDYtLE3SdNFTF7UnOrN4Vr4pYFUfbaQ7Yk/4IMX4PlNZ4/RDapb9gj2yl7+Bq7kUF1g1yT58dOQmXy3K/1ewKVRVbWKvU9SIBPlu+me9kZuk04TKYV0iHR4fDQ0cTVymJ3wcP94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZGRFajB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750056192; c=relaxed/simple;
+	bh=OlsHUGq2O2ieQsD/aOKfW7ocz12uFu7mwwXmelDHk5g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iSforKU8tuV3hKxc4cFg21AwrscEhS2djcJEtEy4WBwjL72OLKX0C5nxmQNqyxi8KpaxOGMPqNdwJ3ZBipmwAQFb2MBjeRLtT79Yfd3QnryvJRVRlWqdswjJx6aQN9hDO6MYlNwlIwnmbJAhfjHuvQjXeAYl7owdf9OlffcG8xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adnQ52HF; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZGRFajB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8437BC4CEEA;
-	Mon, 16 Jun 2025 06:43:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750056188;
-	bh=eOTADBZEYbv1U12BLhmN1jg0otaqgPU/5Sqwlul3Itg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=uZGRFajBwjsdVkTQ1PpVHJfHX6odyK67jq+qcOmD8yMLynpyveLa41henstd/vpCl
-	 yLvEeN/YY3cK/2MXDQ5jEjyDxrRRUP3G+6Y5QMZc/MjLDjaFCNEfgLwfu4ItM01Pxa
-	 piBv2RJPwzdmR3v3/RwKEJ+c2XSJl5dn5VPSQBaMUl2iW6ntY9t446z836KYxBaMll
-	 UdnAw+yUvYLLS/1zTkXVO5NV8djZoG7c001DzQ+WuNlk0LqfEWuJhg2aDbqogqt7lw
-	 a8C9Id7WRQW/x3jSoS4fhlgKBigphF7KIMjmaFKN5AkqS8MC77APhGQRGY5PCqyEMQ
-	 ARCXWZklKgBag==
-Message-ID: <a2ca2f58-f648-43f9-8d23-4111e4eb1f1d@kernel.org>
-Date: Mon, 16 Jun 2025 08:43:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adnQ52HF"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so26409855e9.2;
+        Sun, 15 Jun 2025 23:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750056189; x=1750660989; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UxVFKfNvM2BqAgB6j79WL0EsmcX/ySBTZGTfRt9FrXo=;
+        b=adnQ52HFqgOQ5gxbeVd5bQAisujwNAjdNLj87f2ghuGCagYAvx5RPhT62mFl1cKMGT
+         XpNqzhfi6sm9q6TAUtl9Z9ycFTnnwMM5I79TzMMuIAkqOeQlmOvw07woQucbfQ4HKLPH
+         RkzZ7gqOlXuZEO3EjGROHvSLeBTpgWwQcfKax4BborjivtcDwYukxq/wmpH2DQul5OAy
+         bkludpJa9Uf2+1wyoZ5f+CS6qMdjzH5andjAZjB5gbDC+aYXktWiKQZ72jei9rZGFRJi
+         pM46jqb4PbRg/q6tT1IQdkw+G/iZvtIB5l94Tz7YwEUR3kao1rHixYtuAkuKZMc++L2C
+         2LRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750056189; x=1750660989;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UxVFKfNvM2BqAgB6j79WL0EsmcX/ySBTZGTfRt9FrXo=;
+        b=uCqUsK8XiIXbqtgTzSoxotApkw7j8/piOlXxmHsDg5CJ64JZ5oVozbFX9Ey4B5vCYv
+         6sd/LzptCd+Lrw/1G6qZtoOe8Oum8MqtiT7OVqTM+Cn9hVIK69lfJREqeVWKaOL/BESq
+         zlHoL9g1fr2yBZvnuCeKSlTPKdCLw4XSJ7hRLwyw/GwZ4gcQ//ytZjqNbfNukayjeu01
+         7r6X0TjpJnAzHNFinHWB4mOv3OKQak+zT6mUa+Birl2ypYmetipRw6mYaz9Q0KSFBNm+
+         dhNEtuBM4St9rX69zRMjGtfTlCRHCU2hi0BqUWXvRK0TakhOlMY8LuIE0RkqMb4Hyyqv
+         cciA==
+X-Forwarded-Encrypted: i=1; AJvYcCXE++CEOQUesLvtnXPj5+Jk0p9AXLJSglda/3KnezcgUnsZuhG731psF8Tm7ngYPtUMpEDFeJas82p0@vger.kernel.org, AJvYcCXZI96D6ylrByAo3ESlfosjqUewHUjN65kdP2pPXG4OnTyBoBDXxm1BeFh0UhqtZkX2ILOCrIJ5fdK612Cd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEwuu3bLnsK9hxGt+Tse1nN+yne0Q1L6LugSTN6tTYwrEMValp
+	Sve2jVajfNIkhyEc1fqU6Knl/yCmuHQ0OLNqjBOJWVbiHFBf8kj1BT9Jt4T2btUFGGAmzEe1p5n
+	KP2u3s1FgEaJ8i+DMQ2/nRpYZgWJGkC3IKgWh
+X-Gm-Gg: ASbGncsuLeNGPvMc5iL+GyEs4QlE2zwWbAjBTMMDOI+4XIHQxA9qH95k5HmS6mo9mCx
+	q4Hj+CNwLVUnpGQOBrWXl/3CT7CSOlhphs5nE8Xmr5FZM8hdVne4lxFpGZ0G+T3goHL47oj/Uay
+	gVf0v/Yv47J4zTJGZjVpoXHV6HlR8DL5YNGNz0F24ZQ4zp
+X-Google-Smtp-Source: AGHT+IEwlB4QUQeFMOPwl01laMzufAmY822smlnWFy3hy01YA2cBmDYgFTBipsnFP9vE8aGnDCq2ZR+CAREFF5BJtDM=
+X-Received: by 2002:a05:6000:2010:b0:3a4:f70d:8673 with SMTP id
+ ffacd0b85a97d-3a57237dc6cmr6965969f8f.25.1750056188970; Sun, 15 Jun 2025
+ 23:43:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 3/5] arm64: dts: aspeed: Add initial AST2700 SoC device
- tree
-To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Nishanth Menon <nm@ti.com>,
- "nfraprado@collabora.com" <nfraprado@collabora.com>,
- Taniya Das <quic_tdas@quicinc.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Eric Biggers <ebiggers@google.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "soc@lists.linux.dev" <soc@lists.linux.dev>, Mo Elbadry
- <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>,
- William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>,
- "wthai@nvidia.com" <wthai@nvidia.com>, "leohu@nvidia.com"
- <leohu@nvidia.com>, "dkodihalli@nvidia.com" <dkodihalli@nvidia.com>,
- "spuranik@nvidia.com" <spuranik@nvidia.com>
-References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
- <20250612100933.3007673-4-ryan_chen@aspeedtech.com>
- <485749d4-b3c4-4965-9714-ad534d37e8c9@kernel.org>
- <OS8PR06MB7541A100B918AAA84D1ABDCAF277A@OS8PR06MB7541.apcprd06.prod.outlook.com>
- <749c581e-cc00-428f-8eb9-222f9d574486@kernel.org>
- <OS8PR06MB7541FFCA9E28E5767791D869F270A@OS8PR06MB7541.apcprd06.prod.outlook.com>
- <e39b5259-db92-4269-84c9-d51e8e4f327e@kernel.org>
- <OS8PR06MB7541645F6A0638FC250B1272F270A@OS8PR06MB7541.apcprd06.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <OS8PR06MB7541645F6A0638FC250B1272F270A@OS8PR06MB7541.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250303120455.90156-1-clamor95@gmail.com> <CAPVz0n0XSzxzkPocRVx6QF7xwmA4otSeSEiRZgJQ3oStyUBrLA@mail.gmail.com>
+In-Reply-To: <CAPVz0n0XSzxzkPocRVx6QF7xwmA4otSeSEiRZgJQ3oStyUBrLA@mail.gmail.com>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Mon, 16 Jun 2025 09:42:56 +0300
+X-Gm-Features: AX0GCFuN9A6nBmialOiDeiAg-dzMMc_1kxFppc1ouGvrqvHbGHQHd0TyVB9y9Jk
+Message-ID: <CAPVz0n2MLmHfVNb25=o1_woE7v16hoamwFbbT3ecE+BP1Bn9aw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] drm: bridge: add support for Triple 10-BIT
+To: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Svyatoslav Ryhel <clamor95@gmail.com>, Maxim Schwalm <maxim.schwalm@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/06/2025 08:32, Ryan Chen wrote:
->>>
->>> But I don't know your previous "NAK, never tested" mean.
->>> I did make CHECK_DTBS=y arch/arm64/boot/dts/aspeed/ don't see the fail
->>> with
->>> intc0: interrupt-controller@12100000 {
->>> 	compatible = "simple-mfd";
->>>
->>> So, could you point me more test instruction for this?
->> See syscon.yaml. And writing bindings or talks on conferences:
->> simple-mfd cannot be alone.
->>
-> 
->         intc0: interrupt-controller@12100000 {
-> Sorry, do you mean add by following? 
-> 				 compatible = "aspeed,intc-controller", "simple-mfd";
->  					.....
->                  intc0_11: interrupt-controller@1b00 {
-> 					compatible = "aspeed,ast2700-intc-ic";
->  					......
->                  };
->          };
+=D1=81=D0=B1, 3 =D1=82=D1=80=D0=B0=D0=B2. 2025=E2=80=AF=D1=80. =D0=BE 12:50=
+ Svyatoslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> =D0=BF=D0=BD, 3 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 14:05 Svy=
+atoslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
+> >
+> > Triple 10-BIT LVDS Transmitter is used in Microsoft Surface RT and
+> > MStar TSUMU88ADT3-LF-1 HDMI bridge is used in ASUS Transformer AiO
+> > P1801-T.
+> >
+> > ---
+> > Changes on switching from v2 to v3:
+> > - place mstar,tsumu88adt3-lf-1 alphabetically
+> > - fix typos
+> >
+> > Changes on switching from v1 to v2:
+> > - sort compatible alphabetically in schema
+> > ---
+> >
+> > David Heidelberg (1):
+> >   dt-bindings: display: extend the LVDS codec with Triple 10-BIT LVDS
+> >     Transmitter
+> >
+> > Maxim Schwalm (1):
+> >   drm/bridge: simple-bridge: Add support for MStar TSUMU88ADT3-LF-1
+> >
+> > Svyatoslav Ryhel (1):
+> >   dt-bindings: display: extend the simple bridge with MStar
+> >     TSUMU88ADT3-LF-1
+> >
+> >  .../devicetree/bindings/display/bridge/lvds-codec.yaml       | 1 +
+> >  .../devicetree/bindings/display/bridge/simple-bridge.yaml    | 1 +
+> >  drivers/gpu/drm/bridge/simple-bridge.c                       | 5 +++++
+> >  3 files changed, 7 insertions(+)
+> >
+> > --
+> > 2.43.0
+> >
+>
+> These patches had no activity/feedback from maintainers for a while,
+> so, in case they got lost in the depths of email box, this is a
+> friendly reminder that they are still relevant and I would like them
+> to move on.
+>
+> Best regards,
+> Svyatoslav R.
 
-Maybe, but you said this is base address, so how can it be some separate
-device?
-
-I mean really, don't add fake nodes just to satisfy some device
-instantiation. Describe what this really is. That is the job of DTS. Not
-some fake nodes.
+These patches had no activity/feedback from maintainers for a while,
+so, in case they got lost in the depths of email box, this is a
+friendly reminder that they are still relevant and I would like them
+to move on.
 
 Best regards,
-Krzysztof
+Svyatoslav R.
