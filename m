@@ -1,101 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F158215DBC1;
-	Mon, 16 Jun 2025 06:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9594E1DE2BD;
+	Mon, 16 Jun 2025 06:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750055234; cv=none; b=T2AAAUChRSTY9ykXYhUZxXWHj0aE6cpP5B7C7WbF/R7a23Mfqi/Tk0mlZgT7Byfxto5VR2isiQuiPC90q8Inqj0cZxxQy4L5Dh/O7ZDHKVAq+5LOm44CRjvmIiG3Gb6JSP77XEqcFSv3yUofgYkolnRDq/asO03lgk9lk3StwUc=
+	t=1750055345; cv=none; b=LqgU6hFqzV+CMWds9p4ZQrV56V1kE8xgv4tNcZytbC0NmTaA1J5aVeYXrXvp6a1rBmiJlykPR11z235KILhoSsd68SO+QBFP20rJojVxstQKZmPYCgU3QLDq5nDkcgqt5jUWRpbPvVDYNvHiiO/VxhMkvFkbPFEyCebY2kL6Y/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750055234; c=relaxed/simple;
-	bh=guthJV8X5Sn3QS48dFxzVUYchT/ptlQNDvr7/P3ystE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jiMPzmfZOgoOzpGNWwC4eJjJk7zXgL8lO5yc5gqoko4WF74APMyg7LsnBKqdCU5tEKtR7tteqXiA+LgoUia/jWAWNlBTexgD8EMMo8LbDoi0+/ZyJqLG9/6ZllEe1zjZ98h2HHB5PklEox9FMfeMOb5TP0OES+8NAIzoWY0omOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gviuadVo; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750055345; c=relaxed/simple;
+	bh=9JJEZwJcy718D1DrMK8Hs+ZKn8NzsTjuogMc/xnMV6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VuarvnaHEObucf1xLZ+CMJglbn3Xhq20U0c0NV+R4BZyFewGZm43tW0d2hErq0J9BtM+WjZCbS/3HC5n9sEKIoLlYLJtMosHFiZkFyz/sRDpqL+8IjVa0rKnKnRprJtJDRNRrAEPNJAFgKM/lyAPmT816urr32QvEvP0UXCr6KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QXm5+uxr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0cTukvmU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gviuadVo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750055232; x=1781591232;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=guthJV8X5Sn3QS48dFxzVUYchT/ptlQNDvr7/P3ystE=;
-  b=gviuadVoelIR0Q5XQYw08IgTEBxcvL+X4u64q/hj+DF0WiLlBNxdUlB9
-   RLMzH11vLoMU1UXvNVINkFIOL5Bqxxjyq48RlwAO6qzw763ZblQ8/HPoo
-   bAbAjPes+8sW1CnYhe1RvLAhjqnh5mMrc9OlTn/rrzI8d6v3t1ZBHPQSr
-   nj8fOXwop3QoH61P6uFbLnDvJ19ecxnrRvwGLuDQXC4+GRhP+XiJ6m70R
-   EKDZuMIfjB7NAfkTDfQFtDXc59H5xFUjp/FJmwGDJATpMMU7dNa5jd4wx
-   ku65Kh33GnEuiE94DIZMaKGLQ3XOaXDDByK1Ilpgub9XM3iEe0Zr5wayF
-   w==;
-X-CSE-ConnectionGUID: zKXXLzjwSGSLGsLLvfWm+w==
-X-CSE-MsgGUID: uCwgUqAKQxy6slILmKd47g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="69632509"
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="69632509"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 23:27:10 -0700
-X-CSE-ConnectionGUID: ZURGS4SzT3Cu91PvtlrvWg==
-X-CSE-MsgGUID: ZI6oSjeARV23YgzKHmA7PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="148841810"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 23:27:03 -0700
-Message-ID: <ee1b9096-4687-49ad-815d-efe3dda5d31a@linux.intel.com>
-Date: Mon, 16 Jun 2025 14:26:04 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QXm5+uxr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0cTukvmU"
+Date: Mon, 16 Jun 2025 08:28:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750055335;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+LICzzU5v3SFqwCiAXYPpdpUgYqySOSePsKj/xJRbx4=;
+	b=QXm5+uxrJxDXN6WaP4aDXprPGZDiQmKTUXTpwed9hi+VP7xu8ZzQs1J7nmeTwua3lso/J1
+	kPN9kBLJREooVryRBDPOgiSssvgNcENdcdySSAb3oI+jKzpo1tMtUbBYYzXDwD4j3ro2+d
+	/XT3mrWzRh2oSGRcvGnxN8wqJZAPXVYIXOP6LjRlrAwminD+to6chtUP0q7QUHBFqhzIih
+	yWpeRQQnl1k5sJvJIgClncO/plKBTXVOrxLJLRoQPXYVxrQ3OTGmfTMlZAR16RJvrC063y
+	5sYzD8yTDxhcm+ueiBdzR4SphqHUj7n/u7GLAVFGbdrasVpIS3amxua7J4t/ZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750055335;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+LICzzU5v3SFqwCiAXYPpdpUgYqySOSePsKj/xJRbx4=;
+	b=0cTukvmUiSNPCOcrLgwcOuURn2EirANnSFbj9MA2OrOylAaL0PRh2ro8v1A0szyqq8xSST
+	X+gLHtnggF3lBrBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	bpf@vger.kernel.org, linux-rt-users@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: BUG: scheduling while atomic with PREEMPT_RT=y and bpf selftests
+Message-ID: <20250616062853.G6JxYeK1@linutronix.de>
+References: <20250605091904.5853-1-spasswolf@web.de>
+ <20250605084816.3e5d1af1@gandalf.local.home>
+ <20250605125133.RSTingmi@linutronix.de>
+ <0b1f48ba715a16c4d4874ae65bc01914de4d5a90.camel@web.de>
+ <727212f9d3c324787ddd9ede9e2d800a02b629b2.camel@web.de>
+ <0c0b2385452292d6b1df3066b7223b420066f0a1.camel@web.de>
+ <aa28ef09763eeefd54d4c26fb01599fd5197b265.camel@web.de>
+ <7937d287a3ff24ce7c7e3eb2cd18788521975511.camel@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 08/25] iommufd/viommu: Add driver-defined vDEVICE
- support
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
- corbet@lwn.net, will@kernel.org
-Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
- thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
- shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
- peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
- praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
- linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
- alok.a.tiwari@oracle.com, vasant.hegde@amd.com, dwmw2@infradead.org
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <937d515032be07af36c06a4adb662ee2f7693c75.1749884998.git.nicolinc@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <937d515032be07af36c06a4adb662ee2f7693c75.1749884998.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7937d287a3ff24ce7c7e3eb2cd18788521975511.camel@web.de>
 
-On 6/14/25 15:14, Nicolin Chen wrote:
-> NVIDIA VCMDQ driver will have a driver-defined vDEVICE structure and do
-> some HW configurations with that.
-> 
-> To allow IOMMU drivers to define their own vDEVICE structures, move the
-> struct iommufd_vdevice to the public header and provide a pair of viommu
-> ops, similar to get_viommu_size and viommu_init.
-> 
-> Doing this, however, creates a new window between the vDEVICE allocation
-> and its driver-level initialization, during which an abort could happen
-> but it can't invoke a driver destroy function from the struct viommu_ops
-> since the driver structure isn't initialized yet. vIOMMU object doesn't
-> have this problem, since its destroy op is set via the viommu_ops by the
-> driver viommu_init function. Thus, vDEVICE should do something similar:
-> add a destroy function pointer inside the struct iommufd_vdevice instead
-> of the struct iommufd_viommu_ops.
-> 
-> Note that there is unlikely a use case for a type dependent vDEVICE, so
-> a static vdevice_size is probably enough for the near term instead of a
-> get_vdevice_size function op.
-> 
-> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
-> Reviewed-by: Kevin Tian<kevin.tian@intel.com>
-> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
+On 2025-06-16 00:12:49 [+0200], Bert Karwatzki wrote:
+> These three patches fixes all the dmesg warning (with CONFIG_LOCKDEP) iss=
+ues when running the
+> bpf test_progs and does not cause deadlocks without CONFIG_LOCKDEP.
+>=20
+=E2=80=A6
+> is fixed by this:
+>=20
+> diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+> index 183fa2aa2935..49257cb90209 100644
+> --- a/include/trace/bpf_probe.h
+> +++ b/include/trace/bpf_probe.h
+> @@ -58,9 +58,9 @@ static notrace void \
+>  __bpf_trace_##call(void *__data, proto) \
+>  { \
+>  might_fault(); \
+> - preempt_disable_notrace(); \
+> + migrate_disable(); \
+>  CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args));=
+ \
+> - preempt_enable_notrace(); \
+> + migrate_enable(); \
+>  }
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+I doubt this can be fixed that way. I sent a series out
+	https://lore.kernel.org/all/20250613152218.1924093-1-bigeasy@linutronix.de/
+
+which is the first the step towards fixing this properly.
+
+Sebastian
