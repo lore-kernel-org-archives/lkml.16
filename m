@@ -1,105 +1,131 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745D202C50;
-	Mon, 16 Jun 2025 09:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444D622F764
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065022; cv=none; b=gF5RtiDU1IiXYB7XsU8Y9dIqvB6Rl4BNcXASvE7R5PJ1Mln/f+fWQtzvbFu+HYYt4YZMex64XvZ+fqWCX+uTTyeGbJCd9LxrM7oqt+i92hpoO68L6xDFnWJXwEWz0VE+9Kim/51qTnOkKffNhKD4+oUMBQ0t+YBYrUjV4WmJtlA=
+	t=1750065046; cv=none; b=Ww7c1dHKelNHzOkaX9lpnk8jMiCCu6zUEHnnSpUrNK7GkCw184zNrBW9JLYOV4hgCs+zUg8KALABHBxyHvoqAVWA675FLlS6T0pR8d47vS53jHhQRs91ch4ek6T6XNzPeXJPr6KTvCkwYpoQtaa7XO1nz0LiSowklXMPObBPt5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065022; c=relaxed/simple;
-	bh=Ab/azGHZAN5imCLvzke6FrRFhZsJl1QU6kgQsGu6z18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WNL0qhPFiuXmE3vd40uLorv+xVNHuehkHSPxJ+7CElHawwpQo8iRhsbCuBQHezW27rtr+xrHAL4egADBj6vPqfs4rQYN48vTOzqLMV8Dd/9OIzV9K8yD4PqS6z/M+pvuJ7e0Rr0ZE/Wvqrn7VW696OrgBC9IN/SoukbQAWcqeqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=xSBkN1Af; arc=none smtp.client-ip=212.227.126.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	s=arc-20240116; t=1750065046; c=relaxed/simple;
+	bh=SwWEvDaGj1H3eOVuukiaSaEPHd7lZiuo8sRHZvD7nY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o5pKm45BG1PdPS03MZOoCYmOyQEfDFetBpBNGaALnCajsQw6XFUNe+6DA9j0azHaY7s3d5EB+bdHsW7M2Lxfw5nOVxOvIiEQbeehRrouy8dvNMZ6e+ZEf0l8QaChgp3zRIv7ItnYEFXx5hOxF9pyipO+PvmjMS2j+kFtw7JTWLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QeTLjma9; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="xSBkN1Af"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QeTLjma9"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5532a30ac45so4061453e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1750065018; x=1750669818;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=Ab/azGHZAN5imCLvzke6FrRFhZsJl1QU6kgQsGu6z18=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=xSBkN1AfEEtMEcgvvZ/bUfDrElxWGO4lHiVJfduxQyBf4lRe2XkT/+j90unZ1PTG
-	 V4FKNFIrNgG6RaFveuHeinzSDX5G1CtoRoky0dKhY5NLPRrC70dU82vZJ//mbDOqY
-	 JvK9WnkG0RTOr+F56qZtflomu1frtMf677lOD8GN/Mbgc6mrFufgj34qLGD6zxZyL
-	 SIYPRflsbyBJvdSG5SdR4b5gojDrfnNnmIJ3nbNA1VOBW72zD2v1+gjG6qdE9C117
-	 Lke+F58Q64Wwe6MaDDI2ln+2kS9zds0G4StGKAnwNwJCojcD6WzCTgtvmqAvS3kiA
-	 9oe/9gle4d1LYNZ7Ag==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.107] ([62.226.41.128]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N336L-1unjU43iov-00wUjJ; Mon, 16 Jun 2025 11:04:57 +0200
-Message-ID: <3d449803-1880-46df-aacb-b42e757f90ab@oldschoolsolutions.biz>
-Date: Mon, 16 Jun 2025 11:04:57 +0200
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750065043; x=1750669843; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dmDMMMFI5G4DNwFWGn674MZ5D9eFoURbFcL3QvAF4Ig=;
+        b=QeTLjma9gn5dGBch89jyBaqcj8KgX5NiNqQwcHs8G5cvaw06cb9bZkpJ8STzi5kSdG
+         JVW2+7wpHPSn9w3hB2AJyf6wuSExYzSMtGO6o/1p7yfcJi6KsbnvPa40Xcu2H7UtlUE/
+         29K7pR9ROGGDBVW74OXhCtAGTtk7EQ0PX8/NDFD9QUWP0vZiZtCXC2d75gNELPwxmXbh
+         YQxJeSXNTnEEkYDS+wNgOYfV2rteAbB0sAo3rHdv2pCU0jIX57QIjCDT6rFyxnzVrh4I
+         VaebVZgyoM4Q7ngwBnV0le0DQ7NbZvVeTyFnEWCMxhQ8I7xbMVl0rlYfNH8/jVwTqQcY
+         jhcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750065043; x=1750669843;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dmDMMMFI5G4DNwFWGn674MZ5D9eFoURbFcL3QvAF4Ig=;
+        b=dwk0Afb1c2W3fSUuqf9q0iV0/PaAtSJeQbs5mQxt8prFJJbFXlAjcTfcjWwWXlwrhS
+         Kt360nEvF1WwdNn04ZPKZMH5VMGNk43JDk51DHIYIwOflTSTIUn8gFVx+Kr+XUAcjcgg
+         ZAN987KQyHS7StNE/qyT6eZgqtBhxSwOKIUK6g5lx0ja6waf+QsIUItKN/XROaGrTk27
+         IUETt0wvAcZpyjUjkFlZeSCl2uiqXpr043eT/glRoyCFC5rZb785//uzhj1n+C56F+/Z
+         Gmx0gs8Hthcwh/J7INPtrUbLFOoE8qDqBN2B567z8iGbRahOZuxfWFrLBuYsiMRZe/Dm
+         /2OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmlAliY9n5j+D7I4JUNDrtGQrMI+llWnltfJCaN+4RxNgCTchcKXxtBHDhJetmAncHayHvdR4fif/SZRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAEWK0rgNEkG0UMKPCVzeyS9QzJdoD1BpsjHmt0LxSNgre2i2/
+	kUcJkKYllhIxxTEVErpKAoGlPqfIGtAnf+51VFcRJEHwsBcTWv4ngChjxbVcxiTHIhTGKmWefWF
+	wg05OaNhA2EYTnV7+OoroC/QMsg5fqL5bF3FvO7VCBg==
+X-Gm-Gg: ASbGncueSr793qHh16PYOZG3WRXaWIGWGcUQxKKlBHl6/EbpXGpTYNgFwsTf6LyQWw9
+	4Q1x/J6BKRyeU+suk3mL49JzQuOCvRP+0RNeuhfTXuK1c+McXBNHoa4nIFSSdBI5I3T5aXxRQbv
+	Fyg1LHohs1l/fn4tiLABILJhRmuXUwcRb7HIibXXWMleKZVz5ezjToAPzpy/viLnlBz83ykILRT
+	9w=
+X-Google-Smtp-Source: AGHT+IHuGL7ppu54TT/M3Hxiz/E57PX/ijwwJDHxeHuWrcclls/KmfWg30WiaNhrMMlcrNDHFrl4pCAUL311IM7bJx0=
+X-Received: by 2002:a05:6512:1053:b0:553:29cc:c49c with SMTP id
+ 2adb3069b0e04-553b6810d6bmr2008050e87.7.1750065043405; Mon, 16 Jun 2025
+ 02:10:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt: arm64: qcom: sc8280xp-x13s: amend usb0-sbu-mux
- enable gpio
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Johan Hovold <johan+linaro@kernel.org>
-References: <20250610-x13s-usb0-mux-v2-1-598454e6ad64@oldschoolsolutions.biz>
- <aEffYQND8eUgJbua@hovoldconsulting.com>
- <64d963bd-b38c-4f14-bb1d-f7e89dad999a@oldschoolsolutions.biz>
- <aE_cejDMmmU48jMp@hovoldconsulting.com>
-Content-Language: en-US
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <aE_cejDMmmU48jMp@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9n3JJbsirUUTnyIWevxVAiWuOHNYigcxz+SL06SugMshZXOjIiV
- 453xsIWJL6OFGFydTArw3j7+8lS7o5zlQej4L/HIrYlhSI4UGbBDK613IcVCOh0oYQFSsTm
- gOCv4dgAUGnpfeYTPaAtqxFPWN1Lk+NmZ/qCUpqqvmgTN8rU7tU55tsqwce6TeRCp/Hj22n
- zzIyv5Jt2o0fSq62YCI/Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cuZjWuahtNg=;xzMFAAhf5qPzgZEqeXX/sUeuZFB
- UwIH1oC4TX3N0ucQW1rpI4M0tGbh6L1u7pvPz5iz4ui5iY7peuwMGkR4Moy9Kg/BXJUxkkWCA
- IBZnwjCqgmLE3ApwcBE5q8oDZUERhR6eJNAhxoS6el9tpn220DuO73Z+RAOcHeqMwJspQPhyu
- Unz2raRiRVW4OQvsE3hs6vHTTp9Uf377eMbsM6IJV1gDEn+t555tv2irHkJMRfz+saTXxgKqZ
- s9Y8CTeawhvFqCjVajIojbh0qirJHDXELjt4d1FxexwoooCgY0Cs6udLdbjdwou2zNv81ZQjm
- Td2V8nlyXTMsDpLyz8khFWMHpBcbFOOETAHossNfCB+keYS8+XthSFScy9iauNQyo4G/LJwYe
- UJDrJ3C0OiHNcjsXwTnxTg/Q7Hok5fVPMZzkHwp7E8vWS7txR7YeFXJ46ObKiCVcZIuajmrnm
- wExo89uVkTNgDRndnuYsjLUL+pTS+DM6rs8en7Eua5gwLn3QCtAsPNIqXfNNBm5h2clPVszyb
- HHLNfmTpI5L6YkZ0iItSdLUkPK15B2IRMvdXvWbalmon5j0LSTZuYUnx5QnrRb118rX5mQYJv
- w/TD+tiw/NZLOmOWwNN2sQ+XA2vCxlqZCvUmDN3Hx3h4nY+017ttCmq7t41voPcpmC/RJResE
- 916LAkg+nyXl2VF0tY/hksfb7H5UFWeei97xFfqt18b16EILeo7XryCamIlX1ymZgJTolYFdL
- biD21MBx7UkYmmKSD14EfHXZZ7umC0AM18nhun/P5KDGYAY7QRkLQM/HA0hund5ecRn9K6YZs
- kbXMtPMuT+1t5HETB6TR0pwObUlF8yzSuEUEy4cmtDhq1AQzi/o+Ps9WHnvfEg2OqEFvg+Cql
- DUt3mj0UrD+dHjonkwMRYqct9DAq15MbiFPi4jOjRIzyh7kYs6tTQQic+HcPHKzJf99aKynFX
- 0oZ8Mx0vEihhrw+pxbWoQlBsE3jlKG06+zkMSaTTsGI45/YAMasqsHOCzuqBZCwj8kQ7vgQFJ
- 1Vbls3MvqIF7GtmPMXcQOupqjK7jd3k33+Hj04dfXjJz8e5CtttgIGm/I/Eyc1tmZE8CccTJC
- +wPijOc2RxL7xtvSV70+KPPtLFpU6/0YJINnJtDjyGIgHy/yHrsiGITzFudDxeh0zLUVJAVXS
- VT24TjZmaDTxGvc9O0nOz/2jo0boVYtG2InALThxDVlJAq0sdFb5AVqdTlTI6UINHCOB1K623
- R3H3QEcuOvyDzAIQWhxq+hdqkY6Zxmawj4QpwR+RKpe3UNmKtH+qjVOCz7IDp3wbWXtAAYscN
- zOLLORCPCijwmd9KIG4gK0g+0W/Ep3u/MIqXlvE1lGGiGH/VuNKztZFufpUZBUQ/z/CLEIqVr
- r//BldTiemqSuDJWrsrLzBJV0LcMfATyOHqCtiAOcRAbpAaZIFlnD/SniP
+References: <CGME20250614180909eucas1p2a34e3242fb42f7fd25e4038c291276ff@eucas1p2.samsung.com>
+ <20250614-apr_14_for_sending-v4-0-8e3945c819cd@samsung.com> <20250614-apr_14_for_sending-v4-3-8e3945c819cd@samsung.com>
+In-Reply-To: <20250614-apr_14_for_sending-v4-3-8e3945c819cd@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 16 Jun 2025 11:10:31 +0200
+X-Gm-Features: AX0GCFundfu1_DbYfr4amG4ZmgyhqyYCcYsn5RbDrpDylY7Och28dfv5wtCxrQQ
+Message-ID: <CAMRc=MdrvZ0_3aWcmhYZP4CxOVbuYjL66iLPHKkDt=vCP7VN-Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] pmdomain: thead: Instantiate GPU power sequencer
+ via auxiliary bus
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16.06.25 10:57, Johan Hovold wrote:
-> No, this patch should not be picked up now.
+On Sat, Jun 14, 2025 at 8:09=E2=80=AFPM Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
 >
-> But you may want to revisit the other related patches for other boards
-> that you sent in case they too are based on some misunderstanding.
+> In order to support the complex power sequencing required by the TH1520
+> GPU, the AON power domain driver must be responsible for initiating the
+> corresponding sequencer driver. This functionality is specific to
+> platforms where the GPU power sequencing hardware is controlled by the
+> AON block.
 >
-> Johan
+> Extend the AON power domain driver to check for the presence of the
+> "gpu-clkgen" reset in its own device tree node.
+>
+> If the property is found, create and register a new auxiliary device.
+> This device acts as a proxy that allows the dedicated `pwrseq-thead-gpu`
+> auxiliary driver to bind and take control of the sequencing logic.
+>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
 
-That, I did. No changes except for this one.
+[snip]
 
-with best regards
+> +
+> +static int th1520_pd_pwrseq_gpu_init(struct device *dev)
+> +{
+> +       struct auxiliary_device *adev;
+> +       int ret;
+> +
+> +       /*
+> +        * Correctly check only for the property's existence in the DT no=
+de.
+> +        * We don't need to get/claim the reset here; that is the job of
+> +        * the auxiliary driver that we are about to spawn.
+> +        */
+> +       if (of_property_match_string(dev->of_node, "reset-names",
+> +                                    "gpu-clkgen") < 0)
 
-Jens
+If you use device_property_match_string() here, you don't need to pull
+in of.h. It's typically preferred to use the top-level abstraction
+unless not possible.
 
+[snip]
+
+Thanks,
+Bartosz
