@@ -1,34 +1,86 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FCC27E05A;
-	Mon, 16 Jun 2025 13:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC7D38FB0
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750079992; cv=none; b=JLsfcySr8jbGbyJ0BBV2XGx7Wz5308CX3pDkNx9wEF7sJh+lWvQJMFKcExsSiPYHyZxibijuVjSLH9wIcJqW/JWAiAiRmPdMIkOOMC25+RGWXBGJ4MnDMZmF9eupGMLPdH7XVuf4a38sShQo7zALqx7sswTVEtFbLuJqm3lpU0k=
+	t=1750080035; cv=none; b=km5A+gmZSCn3MAbcAjAm+R0KE1EwHkoJyjteFimTq4B/Dg9puZxCxar46MEoc8mRK1lAmxIa79XGQBuurORl35Gm9//PWCJ6VSIgtRFZXdNvayM/51KZ8sEkCO4cnJlav17F2Pc4CSDoGH0F9WfRk7xbQ4s22SlagEwYK+sPcjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750079992; c=relaxed/simple;
-	bh=j83uEkut/IUacfVpKQoQfNEnac5UYtvjf4AmXzaWfRg=;
+	s=arc-20240116; t=1750080035; c=relaxed/simple;
+	bh=KsZELZeWpT03UnkqhlfBW9r1APWyBQkH9RXynD91+cs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sv0Rvl3l3NJGIDkfSHXQscNWlqbyU6H42V2aMGk1QJerk9auwKRW75z0hC5mKS4BxnD7BS5v/s2GowbffYMLvD7CeUBV24E7GRC0cl5qVMZP6yAJwtV2vKIXtNRo9HvIoeIA1oYx5U7ont5/Mhf/l6u9v0kEel+0fH18uQ5rSP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id B8C2467373; Mon, 16 Jun 2025 15:19:44 +0200 (CEST)
-Date: Mon, 16 Jun 2025 15:19:44 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: James Clark <james.clark@linaro.org>
-Cc: Christoph Hellwig <hch@lst.de>, Mark Brown <broonie@kernel.org>,
-	olteanv@gmail.com, oe-kbuild-all@lists.linux.dev, arnd@arndb.de,
-	larisa.grigore@nxp.com, Frank.li@nxp.com, linux-spi@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
-Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
-Message-ID: <20250616131944.GA30260@lst.de>
-References: <20250616111749.316413-1-james.clark@linaro.org> <20250616112927.GA21689@lst.de> <5f1ca0ac-b66c-4b92-8f69-027c2468b117@sirena.org.uk> <20250616120832.GA24959@lst.de> <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk> <20250616121444.GA25443@lst.de> <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org> <20250616131346.GB29838@lst.de> <83855c1a-c128-4762-9d6b-e17f2c4c8820@linaro.org> <d16bdc40-20d6-49db-bf41-18bb9b8e01fd@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OnACLZ1UR8/+0vQf7R1NJE1cfFXd2TqJaX2HEB0T4oWZDjINqVz08eZPBCY3f1EhEmBmR1US8FiJs33ujVNtj3A8JQ2M7sGUbAvQo2zQsRtivjfklv54Ba+COhoIGlCScqfCpdKluFKoXR7/54xTCveo1elwCf93Dg2C4J293XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=InQhBDFO; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="InQhBDFO"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fae04a3795so47947716d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750080033; x=1750684833; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KsZELZeWpT03UnkqhlfBW9r1APWyBQkH9RXynD91+cs=;
+        b=InQhBDFOUPFGiSZrpdHxGtQG4VaKBdkr+fPJaqwR90/CiqoYaCxVmSn7QxrXNoLn1F
+         WBPef0OK0r+/TpY5qmsEnBqsb+iNAweOH++O1rQaBUo7lZqGOIWYyQ9FNr75CpyP7VGl
+         mVG8fRbp/yBoCPW5lcTUhWmD1iehkQ7MjS5bL7nO0uOEiTeH3DPKOGSlRqxug8yqSYn5
+         Ve6ZNIF8ZqjZvhJSc+ESyBZRqzMP+yLVb0oef1VZwF6NxRm9kHLZnzxQHarmc+twT2KM
+         J8QKvEsVOW0VkISB6x1WfonpZ6zurE8ezUKd7oWNnx8FXuMefw61z+pPmLyI3TbmbY5d
+         eF7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750080033; x=1750684833;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KsZELZeWpT03UnkqhlfBW9r1APWyBQkH9RXynD91+cs=;
+        b=aAjrZBkemTW12wNh5t8FpYF+sakgn7sb0zOlJzNXg7vtYakx1fj/Pp/ZXNI0aR80il
+         WuojIr4gBrPzF2032BJjTheYPZ3z/2pvB59PJergus4e1S8kHBqXimuSF0mdOWFUvgit
+         E8wjHrRa5dJwKoqxwWPUmzp9EJ3gHmJ1Ps23oxgFIlD88MftgD6st8k9pFcUw9VZrDwc
+         T9wt+WrW+v/Gz6TizHGJWyVBRB70Aj8wmVgT3030FtrNhnxQ1dBthj9iH82m+jel7ukI
+         6bQMvU+nBzqZODOc3WaqTTTFvPDFb/Eswkce9hASvQ3SYMA0OWYm0RGYt0b4Nik4sjMs
+         wF2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWLmJWPh0Pp+uWdAKwyqXyFAh8DYHNwWS7sLbn7Z+zCh+/ih76aelfirbyo9tDABVB3GPIWraRL6w/+B2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrs54jOGMZqY62cWcLs0mi/tMWSyfQs/fv9B4w7CFZSbNTMFo3
+	5tlaoWMGWiOfKHT2fPyOaLBowRlXkNdkmNs8JkxfBbhc8qs0a4SkQ486YnN3fc+mw2A=
+X-Gm-Gg: ASbGncu+woR6szKug7AU+1mr+ej8ijaaEiND0chWPNGGDMIb1yrDkRc26GbGcYixTI/
+	Dk4yYgJdYoZ1fwTTLKAMSXss1sGeJK0O5DJo61d+uielbdnZ1E1w+KKBZK6hicPsPwVBDbfsAdz
+	2CNpyoqzRmAsXF+iBvivNJGjtTInB6QZitvwrE3HJhVazb6N4OnSz7gVvrYJ5UY6rfZWDMD3ZIT
+	rbxSQsOeAAHB4LoT+4gLHNKBcEaoIb/YmoNX8++kEB23yCTwBp2vzaF20hutDpSOLz6aMyOCbmL
+	k4ne+UqQjUrbxLLPXgDcKcn3wtG7aZV+aKsW9qGynLhsCckpMxAfvlIblVHznC4nJ1OVW5HV192
+	XXysTzImSIl2ZULcqj5S2EvCfhnmSPQmNWSIeSA==
+X-Google-Smtp-Source: AGHT+IE1qGI9XHVDxJuyvFi/df2zVObBdJYoDm6YGOjnmbu+H4OWYnM+uHkjohkUfAcq9uWzh1e/Fw==
+X-Received: by 2002:ad4:5c6b:0:b0:6fa:c99a:b5e1 with SMTP id 6a1803df08f44-6fb47725fb8mr166833186d6.17.1750080032894;
+        Mon, 16 Jun 2025 06:20:32 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c84148sm50822446d6.109.2025.06.16.06.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 06:20:32 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uR9lH-00000005gVt-3sIA;
+	Mon, 16 Jun 2025 10:20:31 -0300
+Date: Mon, 16 Jun 2025 10:20:31 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Demi Marie Obenour <demiobenour@gmail.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alyssa Ross <hi@alyssa.is>, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	iommu@lists.linux.dev, x86@kernel.org,
+	Spectrum OS Development <devel@spectrum-os.org>
+Subject: Re: Virtio-IOMMU interrupt remapping design
+Message-ID: <20250616132031.GB1354058@ziepe.ca>
+References: <>
+ <a65d955c-192b-4e79-ab11-8e2af78b62af@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,20 +89,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d16bdc40-20d6-49db-bf41-18bb9b8e01fd@linaro.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <a65d955c-192b-4e79-ab11-8e2af78b62af@gmail.com>
 
-On Mon, Jun 16, 2025 at 02:15:56PM +0100, James Clark wrote:
->> Yes it does, it has a few modes that don't require it. Presumably we can't 
->> just add a depends into the kconfig for all devices because they might not 
->> be using DMA.
->
-> *for all the different variants of spi-fsl-dpsi devices I mean
+On Sun, Jun 15, 2025 at 02:47:15PM -0400, Demi Marie Obenour wrote:
 
-This is drivers/spi/spi-fsl-dspi.c?
+> Is a paravirtualized IOMMU with interrupt remapping something that makes
+> sense?
 
-Yes, looks like it is one of those rare devices supporting a DMA and
-non-DMA mode.  But everything seems nicely guarded off using
-"dspi->devtype_data->trans_mode == DSPI_DMA_MODE" checks there.  So
-wrap them into a little helper using IS_ENABLED(CONFIG_HAS_DMA) and
-everything should be sorted out.
+IMHO linking interrupt remapping to the iommu is a poor design,
+interrupt routing belongs in the irq subsystem, not in the iommu.
+
+The fact AMD and Intel both coupled their interrupt routing to their
+iommu hardware is just a weird design decision. ARM didn't do this,
+for instance.
+
+So I would not try to do this at all, you should have a
+para-virtualized IRQ interface, not an extension to virtio-iommu
+adding interrupt handling. :\
+
+AFAIK hyperv shows how to build something like this.
+
+Jason
