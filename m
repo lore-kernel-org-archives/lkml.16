@@ -1,144 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0F112DDA1;
-	Mon, 16 Jun 2025 10:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFB71DDC23;
+	Mon, 16 Jun 2025 10:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070600; cv=none; b=VHMB2LCRb+mpfSQDkWzAJtg5SFPyLCr35df9J7vkqyaHitsDTH9wqtgF69Z7XnxoYPDIfTOEMLT5DZASJ+l/NEU1hBgUZMUUOH7HrWQngX5ljovLiAGh17o/2ZHpNU42V3wMSztEEDdWDZA8ijMusCzFDNOLSB7PLSWkM8XdXh0=
+	t=1750070672; cv=none; b=o3kPOsJVtUc2GdhGQPsWozhaLliXyL2e0X9+H47hvXN02pbXCkp8rAZPbvCNCV4DWwxm+iadKOKENSFmnjbWWkiw/N+5R/of39moC4wxwDZtJ6bDAOsf4kd41uUjqmZlXzO8FsC3hfydCGqrcDPtq72zXxDiHal3dtx9IfkeNH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070600; c=relaxed/simple;
-	bh=Lbtuz5Vwa/cgdysdVyVn1eSaL5ZpHU9q9W99m/VIS2U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DuPYhkPEZn0a7sv54hKJTH+BKdbJClLlM29M6aJ86+pZs5iSfGjrZ2npaFSQrUE+d0wsuqpPG+3Aao+PtPxOgofyIUZiib9TwqqILrLCStHm8peFje1vB5i3nZai3+20ZQbAYJ7gWMfGKrxDK/lQ6UxIKqZJSpbhTRi+jBUf4qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEeoQYUk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEeoQYUk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B85C4CEEA;
-	Mon, 16 Jun 2025 10:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750070599;
-	bh=Lbtuz5Vwa/cgdysdVyVn1eSaL5ZpHU9q9W99m/VIS2U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=fEeoQYUkvSV+UKCyhe2VnUgE4OoTE8gOMla6mUimejqiNyx9AGGO0bpEkR6+e8GjA
-	 TwrbkH7EfhInNPZ1hsmuhpbjfc8Bgrcw1dz6RMErFRVFYDRQL92QKG0PgQDS/gPZ9G
-	 DaGlBy5tsfQjBsXx6fchbHwqDBgW4DrtIm0wE5+Tjzq8U9KNeyyed0OvoB59wHBIsN
-	 zmKi+jQaF8xJKQT4XWYOw3j+vuFct4jlzQzkL91nkvWVl2gnR7Q3ko/7fEp3mVwVFn
-	 4t/oO+E9uMq0BYUx5Kufwfm+WvRCwxPI1eKOo1kAutdDdwTqpsoz7TrTrP550frvPi
-	 p4shshgLj89tg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  jasonmiu@google.com,
-  graf@amazon.com,  changyuanl@google.com,  rppt@kernel.org,
-  dmatlack@google.com,  rientjes@google.com,  corbet@lwn.net,
-  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
-  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
-  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
-  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
-  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
-  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 09/16] luo: luo_files: implement file systems callbacks
-In-Reply-To: <CA+CK2bA6zsdARkRMQwadD__qXOzjABcRnwdZjfdnvLf26hsz9w@mail.gmail.com>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
-	<20250515182322.117840-10-pasha.tatashin@soleen.com>
-	<mafs0y0u6rx8y.fsf@kernel.org>
-	<CA+CK2bCigGJJqtSt1-4GP0JPVCZrTa6WS4LiMTT0J=04G64e5w@mail.gmail.com>
-	<mafs0h60jmzzc.fsf@kernel.org>
-	<CA+CK2bA6zsdARkRMQwadD__qXOzjABcRnwdZjfdnvLf26hsz9w@mail.gmail.com>
-Date: Mon, 16 Jun 2025 12:43:10 +0200
-Message-ID: <mafs0a568vuf5.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1750070672; c=relaxed/simple;
+	bh=LgglmT9a5i4f+e3Hdc2uHkjad54ebIatzamizH+LMFE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ob19OYCEYimNqA2cakBBJFPFTSqYxsPakCDp75ZE6yFHxAwWryo2OJE+4KccqZOSSAZHPj35JCnx1qXm/z+ur5XecmQ3Maqz4MXZ10qFcPVEf0A9j9nJiZIF6uAWYtU8hi0tXl0tymCFgZAHakTWzybQ7+/rGj7RDU9d1jwklIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201609.home.langchao.com
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202506161844237586;
+        Mon, 16 Jun 2025 18:44:23 +0800
+Received: from locahost.localdomain.com (10.94.7.47) by
+ jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server id
+ 15.1.2507.57; Mon, 16 Jun 2025 18:44:22 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <eugen.hristev@linaro.org>, <vkoul@kernel.org>, <vz@mleia.com>,
+	<manabian@gmail.com>
+CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH V2] dmaengine: Add NULL check in lpc18xx_dmamux_reserve()
+Date: Mon, 16 Jun 2025 18:44:19 +0800
+Message-ID: <20250616104420.1720-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025616184423c1b5f9bdf3a34ef1958d2b3d4c38fecf
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On Fri, Jun 13 2025, Pasha Tatashin wrote:
+The function of_find_device_by_node() may return NULL if the device
+node is not found or CONFIG_OF not defined.
+Add  check whether the return value is NULL and set the error code
+to be returned as -ENODEV.
 
-> On Fri, Jun 13, 2025 at 11:18=E2=80=AFAM Pratyush Yadav <pratyush@kernel.=
-org> wrote:
->>
->> On Sun, Jun 08 2025, Pasha Tatashin wrote:
->>
->> > On Thu, Jun 5, 2025 at 12:04=E2=80=AFPM Pratyush Yadav <pratyush@kerne=
-l.org> wrote:
->> >>
->> >> On Thu, May 15 2025, Pasha Tatashin wrote:
->> >>
->> >> > Implements the core logic within luo_files.c to invoke the prepare,
->> >> > reboot, finish, and cancel callbacks for preserved file instances,
->> >> > replacing the previous stub implementations. It also handles
->> >> > the persistence and retrieval of the u64 data payload associated wi=
-th
->> >> > each file via the LUO FDT.
->> >> >
->> >> > This completes the core mechanism enabling registered filesystem
->> >> > handlers to actively manage file state across the live update
->> >> > transition using the LUO framework.
->> >> >
->> >> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->> >> > ---
->> >> >  drivers/misc/liveupdate/luo_files.c | 105 ++++++++++++++++++++++++=
-+++-
->> >> >  1 file changed, 103 insertions(+), 2 deletions(-)
->> >> >
->> >> [...]
->> >> > @@ -305,7 +369,29 @@ int luo_do_files_prepare_calls(void)
->> >> >   */
->> >> >  int luo_do_files_freeze_calls(void)
->> >> >  {
->> >> > -     return 0;
->> >> > +     unsigned long token;
->> >> > +     struct luo_file *h;
->> >> > +     int ret;
->> >> > +
->> >> > +     xa_for_each(&luo_files_xa_out, token, h) {
->> >>
->> >> Should we also ensure at this point that there are no open handles to
->> >> this file? How else would a file system ensure the file is in quiesce=
-nt
->> >> state to do its final serialization?
->> >
->> > Do you mean check refcnt here? If so, this is a good idea, but first
->> > we need to implement the lifecycle of liveupdate agent correctectly,
->> > where owner of FD must survive through entering into reboot() with
->> > /dev/liveupdate still open.
->>
->> Yes, by this point we should ensure refcnt =3D=3D 1. IIUC you plan to
->> implement the lifecycle change in the next revision, so this can be
->> added there as well I suppose.
->
-> Yes, I am working on that. Current, WIP patch looks like this:
-> https://github.com/soleen/linux/commit/fecf912d8b70acd23d24185a8c0504764e=
-43a279
->
-> However, I am not sure about refcnt =3D=3D 1 at freeze() time. We can have
-> programs, that never terminated while we were still in userspace (i.e.
-> kexec -e -> reboot() -> freeze()), in that case refcnt can be anything
-> at the time of freeze, no?
+Fixes: e5f4ae84be74 ("dmaengine: add driver for lpc18xx dmamux")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ drivers/dma/lpc18xx-dmamux.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Do you mean the agent that controls the liveupdate session? Then in that
-case the agent can keep running with the /dev/liveupdate FD open, but it
-must close all of the FDs preserved via LUO before doing kexec -e.
+diff --git a/drivers/dma/lpc18xx-dmamux.c b/drivers/dma/lpc18xx-dmamux.c
+index 2b6436f4b193..f61183a1d0ba 100644
+--- a/drivers/dma/lpc18xx-dmamux.c
++++ b/drivers/dma/lpc18xx-dmamux.c
+@@ -53,11 +53,17 @@ static void lpc18xx_dmamux_free(struct device *dev, void *route_data)
+ static void *lpc18xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+ 				    struct of_dma *ofdma)
+ {
+-	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+-	struct lpc18xx_dmamux_data *dmamux = platform_get_drvdata(pdev);
++	struct platform_device *pdev;
++	struct lpc18xx_dmamux_data *dmamux;
+ 	unsigned long flags;
+ 	unsigned mux;
+ 
++	pdev = of_find_device_by_node(ofdma->of_node);
++	if (!pdev)
++		return ERR_PTR(-ENODEV);
++
++	dmamux = platform_get_drvdata(pdev);
++
+ 	if (dma_spec->args_count != 3) {
+ 		dev_err(&pdev->dev, "invalid number of dma mux args\n");
+ 		return ERR_PTR(-EINVAL);
+-- 
+2.43.0
 
---=20
-Regards,
-Pratyush Yadav
