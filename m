@@ -1,107 +1,142 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63AC27468;
-	Mon, 16 Jun 2025 02:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAB423A6;
+	Mon, 16 Jun 2025 02:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750040269; cv=none; b=Rla9aKwAoCo8IjXSIfuGuV2R9dkHkqonPsCc++WGs+ExhSTr70WOhUh6Y+XKcbZxK5SzDOcIvKrVZIYCHT56weCG4I6k2tXeZ7PmKmLQxp7pozuNG/N2xkNUDPn7zBhvSFbI2X4Hcl4mBtYluUfNTxKa7KF6bR6bIJiRcLGetws=
+	t=1750040406; cv=none; b=lN1HKyn7qwVdIuYkEAoEe6qqHMma/XrPoejzOaAg0QPbH5v2GwcJGZZuMTlvTORfvkrYxbaNUPMSPAHPjMu/apbyWkKMXY4fNAcbxQT3YNKo4TNDPGCHtOxJE8HG/SD/YxqLikOp5JgHwHBng0slz6YzKu3tQRjMbptAiddftiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750040269; c=relaxed/simple;
-	bh=SWPLtRw++Kkvx35Sx1XLcecpx0VtVmVooRZvcC3nzy8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sd5Aqou7/JTWz0MBBAarmCecZx+cPak3BeHgVfObKnIxM6wF6wXgMjsGpPvZbHjQhtCkUlKEv5NbS14BWkWwU9Ts+kG+PWBcshgEIWZMIlBAAg+f6cJZFEyFS3cLgpHB+0EgvGTU4KoCs4i5Q7l09iJRBfqtfjp8VsfV6ae4wWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNytxkVe; arc=none smtp.client-ip=209.85.215.173
+	s=arc-20240116; t=1750040406; c=relaxed/simple;
+	bh=b3hgF/Lbow1csUq8IcUa1wBJ57Qo7zOfK3OYewWbzCI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E098Jy6h/AIKcl5ZN/fchNlX/MZx0HRYLYoK9AOApJ8HN2247yzt1lp4kc8xAPxyjHN9jAbzDN6igjphMYn+lZjFwsaR9164MLgQSB3FOLrEOYmuPYbxjM3OAIH1wON68Hyn7BXDYy4MVdygTdPeb8vJZc0GOAoY22L8CP6pvK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXC1SfUS; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNytxkVe"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b2fa3957661so3283451a12.2;
-        Sun, 15 Jun 2025 19:17:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXC1SfUS"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b5226e6beso11809761fa.2;
+        Sun, 15 Jun 2025 19:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750040267; x=1750645067; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KZMQS+IaNs/xpTUGHSm25tygrtlj4jikbdPrhHwUj8Q=;
-        b=aNytxkVe0v93TLsaV9kBpWWv61XVUNo9IK/bmTif2WQgCTZrzfhoPaL6oz+rY3Gv6C
-         ulqkIqB1/sVmi+asre4ldwCZNvcc7XXEoJ2r51waw/hFXjWjI5x+zV808+9cV5LQlq+N
-         349pN0GqeWOzBRR+AE6ymOHyzVyjNCtzskkAjvMPYzyNR7pm2nxQdg8wx9fL6UPX9wA1
-         MIEeDprDz8sUqERHfvW2/Qt8RxcQaUO3KSUNPQJSNoV6Fna84SGce+KBLxRFduJ36Q5q
-         RDlVd0ptE6PM49bbIWhSBeGYqa8H7ooz5AvE2ywA4MM2eL+pCGQz4xA07xpe2XCuYC1E
-         DMmg==
+        d=gmail.com; s=20230601; t=1750040402; x=1750645202; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Adm7XuDI8badZxJVxnby3K6Zq8faQmVMQ1TgWod2DjI=;
+        b=lXC1SfUSYTpORj8XNq37rI40nFZ7yHuFmvllqSeUsMM5JBzq0CprJy/93yI0tbqFHU
+         73h3nM93sfSjpyv4PNB/+OA4Vj2xy3LsjYhODPLQ/JbEN6lT6gtB9CYSuI0HtcHjtVEQ
+         GddWHhLeS6vDROVAP5SX3Wr7ewIrfzAaX/Zpbk6b2VfRAdoSHDc/aXSvxSGoCPiKjFkt
+         wEcuwgx9/QNeJTyIbSvFNAKv1xiUxckRsYDKqHHpbL385ROab/23+LZYIVan/kE654aK
+         VnX+XiTrNHvdB5hnW+H5SiXQDhN0MK6YiXUJdeXznK4uyHKSC/6xGPxIX3AYtj3w7kfZ
+         GAqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750040267; x=1750645067;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KZMQS+IaNs/xpTUGHSm25tygrtlj4jikbdPrhHwUj8Q=;
-        b=mZeqj2P9a/7Lw836h+FSyS3rGyLNjQyCs1qWhitjTMwGIvHio9Yag1EKKvtGCNl6Cy
-         yfAtyhCiv0DWP0vPu158pRthj0oOBOMnnqfMFIUT/TGHmq9ICHV86gzZrNQHSqePM/lm
-         y8SVj0xDPsov2dKf/am/363+dKlOn7Zla/CN7Smf6UZz2s6Buu+iYnwpg7xZxan+uPtH
-         QPEvKVplwdKGVBwEzjFeqzw4XOPhYikjwm0GfDxFWAEt2q3ALbAgQVHFPv5SpCKEjWhw
-         mBUXnCytkNeYIAJoOCtKk3ITI0NjNRYsfGrsdk8kPEszxinymcHA7GOt95znAuKeF+k8
-         uaQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMAupEzO8MbCU6b89knKE0dZ/fuAmJizF6SV54uV15m9K/0aolbQbitvxiM7Uy/JDR/xhp7vUZwF5K4cVZ@vger.kernel.org, AJvYcCXVOVNq1E3JDsOOLnKw1vtd+RWrEv6a7tI1rpbQTBvNgDRw//VTBT4Fit3iO6z44R3lYLwwTxMYOGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxujbIGMsiumdXGONLvXLCKGIBrpkczqP9EOIIkYKuMaDxue97X
-	BXYYZSqJqEe65FfyxVk48jjQrprrK73GONjeg/3urkhaiRHQtC27LAMe
-X-Gm-Gg: ASbGnct6c1rjAN+XmON1xynNqkoReMv69QzWumPur9r9N3DkEsYFTVo3QrXiCZg5g9o
-	x+dsP8wOFYSzum/MQACQI2/gDCIb6rkRHUQwN61QaSKXtupGeGtjK2U6v8wA9F/y3Iy2JjTO+i8
-	VXyNOBOS+iLu8Udl0PwIrXMFa6BxuvqCF4NKXdeWzfUmawcjFLiTtQ+g2MGCW5vQyGOACsMAi5M
-	p56CvclnNvItHkopbBBd6CLCPBZPOKBzYiA4FIjNKnOurLwdNy2E3r2SiyHelu9s+kGPZIxvlvT
-	BuTvaboqbMnaBaZWKZhozOYbsbhnyN2xpQaNzxRm/UAmNj8d472dEhOuZI9QXkp0IqgYJDSYc4W
-	vy+Qkv/Ln2FL5S4MvUgz027mWTIhvrhaQH2Vmi7vDUzDGpG1unnZSsiks8oklGkA=
-X-Google-Smtp-Source: AGHT+IHDsJZGj+lDxZG5TgbN438rJtv/FU3URTV5UDwqjTi3dIwneqJsEiiTD8dmycjHVTZ+/dQLfw==
-X-Received: by 2002:a05:6a21:648b:b0:21f:53e4:1925 with SMTP id adf61e73a8af0-21fbd523a1dmr9778681637.10.1750040266910;
-        Sun, 15 Jun 2025 19:17:46 -0700 (PDT)
-Received: from hyeon-Virtual-Machine.mshome.net (syn-172-089-148-138.res.spectrum.com. [172.89.148.138])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1689814sm4718037a12.51.2025.06.15.19.17.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jun 2025 19:17:46 -0700 (PDT)
-From: HyeonSu Jeon <dev.hyeonsu.jeon@gmail.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	corbet@lwn.net
-Cc: HyeonSu Jeon <dev.hyeonsu.jeon@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: nouveau: remove invalid kernel-doc reference to r535.c
-Date: Sun, 15 Jun 2025 19:17:42 -0700
-Message-Id: <20250616021742.8304-1-dev.hyeonsu.jeon@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1750040402; x=1750645202;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Adm7XuDI8badZxJVxnby3K6Zq8faQmVMQ1TgWod2DjI=;
+        b=pO4uvB4XGbXEburZbLm3MbyutZh1A623ZFHYaGBZUhAnF8vggZQ56zw4s6vTP/nf1/
+         QNICfgfyZG+KAGNfyKo6ln7qbd+G9RT+8mCV+Onh/hloXvj0ud75bgCH7OIta37c5Tat
+         nmgPQ7TBPDHnWE07wjfrU1igAdS0PXYfJbz/WppbqHkqDnFXFh8atHQ34f//v5qoIF6F
+         NuuPwSrPStaP8HydQbFTKB5D5LVkFy2DIZMCeZhKZDJxgGtA5RDIkh/xDUdJs1445N7P
+         DMZiMHGKJx5avDuvNz2FmF91WhJ6Dh+dUSyRrR/m4hkdXMD+fTi79lno/j27r2XJ8cHY
+         Lw6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW5X1btABRyLX1UTURjJ/F2iONj30tKPXpbktoa1orHbIGz4WiPY2yj/qiFm6Aq/ePAe9k0ciQy3neuAg==@vger.kernel.org, AJvYcCWIQ+0sHqBLrR0KkepRVkqh9mU2LG+oPjxW65ROGkmUvztScx4j72wYJew0ty7GPoc4a8aMZ/t/8j1YfvE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNA2+fZZ1C4Uxgd9zM7ybrcOWH8KvdfaBZuXj9clj4mzRo51D1
+	DRZ5zxvNxumVlsGkq4MnzNC/xcrTIFBcUHTYeEkqe+fR7K4CrVdjg3rlgBJyZw0pwRSlmB+FSSg
+	7SOOWSgXvvqjP0yA3D1ijR6Z0tQqIZ8M=
+X-Gm-Gg: ASbGncvxKtlLwjayok4Sose5Z6vBm2yavOoYl+DVPmY7nIzKU1PPmj/D5i1OUbZMtSu
+	Spam1ki7gzTLqcrnEBOPFiK0t4Z/8RrX33dvwDwiv4s/4mWEiWPf2FlbimeRl6i55HB+A1hPr3q
+	2aDkFbZwax/1ypsQZjHYeLzBZOadSB/knA6ynoCjAUIfs=
+X-Google-Smtp-Source: AGHT+IGKWYxnv30DZihQ0w2N6RU8FRcQfAw0BZMV5/EUEN/j0MUi5fBTXIJXQzqTJt4lAiWsilE6m23Pt0ICDLLWis4=
+X-Received: by 2002:a05:651c:79e:b0:32a:739d:fad with SMTP id
+ 38308e7fff4ca-32b4a6108e4mr14588161fa.36.1750040401733; Sun, 15 Jun 2025
+ 19:20:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250610081759.185e7982@canb.auug.org.au> <874iwo8shn.fsf@trenco.lwn.net>
+In-Reply-To: <874iwo8shn.fsf@trenco.lwn.net>
+From: liu shouye <shouyeliu@gmail.com>
+Date: Mon, 16 Jun 2025 10:19:50 +0800
+X-Gm-Features: AX0GCFsco9XEuTsjS8HV0wL9rQCYkshAkMIjpMWIrmmY7cbYbv1m2ur_M22qIis
+Message-ID: <CAAscG3X1Rg3YE3+FvNuyK_0eRtz6Q7FgAJBW0saNYNQkigPZzw@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the jc_docs tree
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Shouye Liu <shouyeliu@tencent.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The file drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c does not exist
-in the tree, but is referenced in gsp.rst via a kernel-doc directive.
-This causes an error during the documentation build
+From: Shouye Liu <shouyeliu@tencent.com>
 
-Removing this refernce resolves the error
+In the AMD P-States Performance Scale diagram, the labels for "Max Perf"
+and "Lowest Perf" were incorrectly used to define the range for
+"Desired Perf".The "Desired performance target" should be bounded by the
+"Maximum requested performance" and the "Minimum requested performance",
+which corresponds to "Max Perf" and "Min Perf", respectively.
 
-Signed-off-by: HyeonSu Jeon <dev.hyeonsu.jeon@gmail.com>
+Signed-off-by: Shouye Liu <shouyeliu@tencent.com>
 ---
- Documentation/gpu/nouveau.rst | 3 ---
- 1 file changed, 3 deletions(-)
+ Documentation/admin-guide/pm/amd-pstate.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/gpu/nouveau.rst b/Documentation/gpu/nouveau.rst
-index b8c801e0068c..cab4a8eda850 100644
---- a/Documentation/gpu/nouveau.rst
-+++ b/Documentation/gpu/nouveau.rst
-@@ -25,8 +25,5 @@ providing a consistent API to upper layers of the driver stack.
- GSP Support
- ------------------------
- 
--.. kernel-doc:: drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
--   :doc: GSP message queue element
--
- .. kernel-doc:: drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h
-    :doc: GSP message handling policy
--- 
-2.34.1
+diff --git a/Documentation/admin-guide/pm/amd-pstate.rst
+b/Documentation/admin-guide/pm/amd-pstate.rst
+index 412423c54f25..e1771f2225d5 100644
+--- a/Documentation/admin-guide/pm/amd-pstate.rst
++++ b/Documentation/admin-guide/pm/amd-pstate.rst
+@@ -72,7 +72,7 @@ to manage each performance update behavior. ::
+   Lowest non-        |                       |
+ |                       |
+   linear perf ------>+-----------------------+
+ +-----------------------+
+                      |                       |
+ |                       |
+-                     |                       |       Lowest perf
+---->|                       |
++                     |                       |          Min perf
+---->|                       |
+                      |                       |
+ |                       |
+   Lowest perf ------>+-----------------------+
+ +-----------------------+
+                      |                       |
+ |                       |
+--
+2.19.1
 
+Jonathan Corbet <corbet@lwn.net> =E4=BA=8E2025=E5=B9=B46=E6=9C=8810=E6=97=
+=A5=E5=91=A8=E4=BA=8C 06:23=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+>
+> > Hi all,
+> >
+> > Commit
+> >
+> >   47cbe79dedbe ("Documentation: amd-pstate:fix minimum performance stat=
+e label error")
+> >
+> > is missing a Signed-off-by from its author.
+> >
+> > Actually it looks like 2 different email addresses have been used.
+>
+> Gee, I must have pushed that tree at least five minutes ago, you
+> couldn't find this sooner? :)
+>
+> Shouye, can you send me a version with a matching signoff, please?
+>
+> Thanks,
+>
+> jon
+
+I'm very sorry to see this email so late. This patch adds my "From"
+
+Thanks,
+Shouye
