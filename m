@@ -1,93 +1,104 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC1427605A
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 13:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2521D2BF01A;
+	Mon, 16 Jun 2025 13:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081251; cv=none; b=kOjTEDdPG9Ia+RxxPsapJSlpi5VA6GKFaExz7T2O2U3KGC29YX9cpaCY03KuJ4hEcay7D7REIpuprfBQW6cDo4b6JJtqt+ENs8L2xJVOqi8svDLwJg8AYsnsVy32JrXEp+UywhBqzdMvq/x6tCg58qcGdrO4wPXBPWPwTMeEm9M=
+	t=1750081254; cv=none; b=P2YG912tQqPjRFNfbSf7eoH8UZpeqSaYHke/r+fT7wqUUQv3Njxi8afzZM0twciLDpnleuwmxJqnpk5sqPX2+achEj18582OMD6Oda1NoF0FVTIEvo8/8S52qQMBUHInGt0YRdLQ4Rz9Pa5gKqLOIRKdlJwI0V4IWTJ0aAqznvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081251; c=relaxed/simple;
-	bh=E6deyVxdIiTOKtPqEDHCmsQcDcYWc6rwq51aWS3r0z4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=t193sNrqhGLpZXrJySBh44loBwm7S0sRdEN0TbJZ8wsBwd+jKpH4wjmycEbZ9iQmtKiiAbpRQ8wsG1C6fobLyPzOYBxPd3w1kxT5PhCHQpbjkevvmbE6qE64ff5+3987rv6DFKd8aIFqc+sHJKgmCWlWHJR4N0Yiek7cI7B/dTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so49808665ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 06:40:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750081249; x=1750686049;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eKVOVUfoPBnNfSHhGhHX8beS0CsyPJaHwLe0VYJW/Sg=;
-        b=JeA+UVbztg3BUn9q73FHMlBwdEJg2j4hN3C20dErraMHli08RW6peJI9L+f2FASaGv
-         tFGMVfaVLzQ988XjiLIIpwQJbU2fm4urnMM0MGEijuzdW+IYoqYO80yZXOErjxZDgmxf
-         xoh6AJ4CcnOeiQLCqcBbl49epzq97HA+QyxhfuO9fOtjAkD3eqKamOH9ZK+0imTqX5LG
-         kfNw3u89eaemk4fPOHFytLxZ9CXg7F+boPvVb8TsLPj8jCQmONufX4RoYm14IgnSE/AF
-         m4pPQdr7PgJnY8lTJt5DYq/dlfgNQIRIW/gxjdviufEea6yB0jsiNyhk8hypd7qezccQ
-         QkGw==
-X-Gm-Message-State: AOJu0YyvHC/35KX6fBZWXogLmQR3D7NfimNGXQ5wlaOUwI66soeLIFYM
-	wkMeSmcCp3U/70TjN8oOnaQUt7hUo8+JvtVEtAbPiWx9ZYupN8G4elnYqCABay5H0fPh73ODEcx
-	4KjAMEyAmjyuLOiMupDQ8x+xu+vYhZVag6xAcBdQ4nKWK+f285E0WEP6aaKo=
-X-Google-Smtp-Source: AGHT+IGedaX6Gauos9Kt6dFZozz1VCwm7F3kS961tZWkKKKaC8WloGjPXNcY/Iq+IYLSrLAicyjCVDzDAgmkL7cJQMGhgTYEFGho
+	s=arc-20240116; t=1750081254; c=relaxed/simple;
+	bh=rdv9kLnOvyNV5TOzVtFB/uj865WbpER5B4I4p9ckmR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHwJ5yfrAF+lp+EqCcFxvfcJrz5tsz/gEfVOKFqFFSlZycYXTCcnmwRXv2s2SFnt+vjYx+Y5iRjIxqgg05oUsaDPcz1CGkI+tg3DDbVmE5NU+eFYF4BQJtGnCxP5Bp7AFIlfE8wONznogHyGIdezoaUPALBX3leWginIYOtQ8tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IplYXVmP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IplYXVmP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25630C4CEED;
+	Mon, 16 Jun 2025 13:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750081253;
+	bh=rdv9kLnOvyNV5TOzVtFB/uj865WbpER5B4I4p9ckmR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IplYXVmP7vw4qSpQym/7rxQLwKuwNI2e8pBTRu/r17RN5mvo97RENr4I4q50uDB9z
+	 t3IXRMwwFu4tpBq8wDxHCNQm7EZ8D6+rfHfsnlpRzc3J6ADCRb00Jaff2WjFtcKnov
+	 Ocd658g+eaqFfCzrHNDXIpYgGX8gnfr6atwHt7Lp1hBUnuGUF2wMz+0oiU9Q5sqpfP
+	 +0rOAC7mhbC1gemvOOXRfCcnGmH3ybxlgV5UBHOSVjEVmeUEY7KNwEb4apo63ukbHQ
+	 Was0gsB6EAsSNE4ZrvIhqwcNjf9GVHDesnO3JMC9xwp36co9VscAofw7gb60Sc2QvV
+	 6lpTJgl42aimw==
+Date: Mon, 16 Jun 2025 15:40:50 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: pwm: convert lpc1850-sct-pwm.txt to
+ yaml format
+Message-ID: <hzcpjqvc7jygzt2xj25y7467b55gjv5w6bhgqq7plvzsom44wr@hzfzf6gth2we>
+References: <20250602140722.941002-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12e8:b0:3dd:d995:30ec with SMTP id
- e9e14a558f8ab-3de07cc8591mr113013155ab.12.1750081249020; Mon, 16 Jun 2025
- 06:40:49 -0700 (PDT)
-Date: Mon, 16 Jun 2025 06:40:49 -0700
-In-Reply-To: <673b71bc.050a0220.87769.004d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68501ee1.a70a0220.395abc.01e2.GAE@google.com>
-Subject: Re: [syzbot] [PATCH] wifi: mac80211: drop invalid source address OCB frames
-From: syzbot <syzbot+8b512026a7ec10dcbdd9@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ren6ciqm735ki2cb"
+Content-Disposition: inline
+In-Reply-To: <20250602140722.941002-1-Frank.Li@nxp.com>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-***
+--ren6ciqm735ki2cb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 1/1] dt-bindings: pwm: convert lpc1850-sct-pwm.txt to
+ yaml format
+MIME-Version: 1.0
 
-Subject: [PATCH] wifi: mac80211: drop invalid source address OCB frames
-Author: johannes@sipsolutions.net
+Hello Frank,
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Mon, Jun 02, 2025 at 10:07:21AM -0400, Frank Li wrote:
+> +properties:
+> +  compatible:
+> +    const: nxp,lpc1850-sct-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pwm
+> +
+> +  resets:
+> +    maxItems: 1
 
-In OCB, don't accept frames from invalid source addresses
-(and in particular don't try to create stations for them),
-drop the frames instead.
+Please add:
 
-Reported-by: syzbot+8b512026a7ec10dcbdd9@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/r/6788d2d9.050a0220.20d369.0028.GAE@google.com/
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
-#syz test
----
- net/mac80211/rx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+  '#pwm-cells':
+    const: 3
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 09beb65d6108..fe53c664e7c2 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -4432,6 +4432,10 @@ static bool ieee80211_accept_frame(struct ieee80211_rx_data *rx)
- 		if (!multicast &&
- 		    !ether_addr_equal(sdata->dev->dev_addr, hdr->addr1))
- 			return false;
-+		/* reject invalid/our STA address */
-+		if (!ether_addr_valid(hdr->addr2) ||
-+		    ether_addr_equal(sdata->dev->dev_addr, hdr->addr2))
-+			return false;
- 		if (!rx->sta) {
- 			int rate_idx;
- 			if (status->encoding != RX_ENC_LEGACY)
--- 
-2.49.0
+Otherwise looks fine.
 
+Best regards
+Uwe
+
+--ren6ciqm735ki2cb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhQHt4ACgkQj4D7WH0S
+/k6RoAf/U5Cx+rqRYS2ZdCPFHIdMoeLmobyj02rswAVnjmxl0ABjsH4OfMakH6tj
+76A4BaXMJG0cV8rtj546BuslYkMXGo9ekZ8XwGBSx4mv2i7/12jhXJLqYraJNZ5D
+Z1Kq7/KfOi4VN9A5iYOQwbIbYTnbX8DqvaoYg3jODYKRjSBrvox+JJ9+WHGhSmpm
+rXTp1Q3O7dCP9JVxFS5BBfSKDmkuUH/P7mX7abfnw2E93W7foFlKOJtBvrhxWPN3
+LPqrY6tkXKtjJ9QC9J28WFM7+f5HvEDA/V3QZm99fRQbkw2T6A863sgbTG4iA/qU
+V/V5ST9owWyF5szHnkzCikG7CROvhQ==
+=tzl7
+-----END PGP SIGNATURE-----
+
+--ren6ciqm735ki2cb--
