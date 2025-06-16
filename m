@@ -1,116 +1,206 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6C9136347
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 01:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82E92E11C1;
+	Mon, 16 Jun 2025 01:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750038503; cv=none; b=d6mCMY5RY8hBdKBITlxJTKhr23RyVMMFC5mN6hVr1KUh0vKbAlo6tubDW4Wzb+eFTXKt2mnFvTHU7oDLm0fN4OmciZmBYZ2C4HIXdA9Gd0YKYkCvP8m36cEm+iRnulIhsJUCDS88nDx8VYlRwwLDHE/R0x8J6Sk4vsaH8gvSVfI=
+	t=1750038884; cv=none; b=OPDt+pKIropB/vBKCYdTFVVS6T+KgAgFbsBVJCq1MdgZ3r82ezL3i8NhuhZRFtrm1c7HEZMjkPn5E3nCdP7dIw0DKn9UfhXSslvEBqh6ONqXe+8cF6nEhnWbubyO91MCPgqzzKkWZoTMaHEMty6Ct+X6qyAnmBMubbSMHWQqw0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750038503; c=relaxed/simple;
-	bh=EOzSlHGrohqg16jZUYXWufW0vuZiNjJeJ11ROGdnH0s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tL1lFReiK10Yq6ZY0kyYa5XJlx553d1wh9eEi7KD+EnbogZ/+hT2Uv0P85jNP8wiBIPP3mb8m1YZWk/+7GYFuFAgakNCH/L37gb2vv5W5eSqjFspnmqktoNMfsb/yiOauqUXd3lujYsKRehYkQGyTJFAXqYvHOEx6VjNFB6u2TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=PHMLFk1S; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1750038884; c=relaxed/simple;
+	bh=9xGDvmxo0AP6GBlgQhbw3vx4+flIT+BN+eC0id6BcXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WP9uF1bwFTmJvURityIWCzq8WlbQtRYM5A6b0Kyneoa+gcuRvTVoYJX5STvjP2KUKk0dogpelEqZT/zf3h+or0nFji8HvcodtQ6Fvjf8RxOW3whuYCJJ9LuZTwDhuMn/rSBD9n2Vi9d6RFevTbu6+goS22KIyCgq0dHEfbNFbpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Wj4mi925; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PHMLFk1S"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e7d8eb10c06so2841306276.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 18:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1750038501; x=1750643301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EOzSlHGrohqg16jZUYXWufW0vuZiNjJeJ11ROGdnH0s=;
-        b=PHMLFk1SFrlSDc+FW7PJvqlR1uqPj/vXiOwU6cmdrNVntcHkBakTg1kTbN3JI31xJW
-         p8wdASgjeL6IkJwyRYh9/1PMDano2pbkQWbgZD783fbNCQQv9P9Bs2xWTH8zi98Og9FZ
-         vy/lalsJLZ5XjgG8LvFiuKUEHzCAUDJH6nBtiYyZiPiHlMq1zw1bMeLUDtbfvApUmiU3
-         CoMGo5o1YhYj/J34rIdDgHfuYZEN8gATZ2QNphvbDGpo2fEm+AwK2vndXNjCN0jhClqB
-         4++p7McpYhL7LGLt+U5B2KZfMy2qP2EzepawP4ElyqD1aWIhw5mttF/ldM4DsUgceXHc
-         uHmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750038501; x=1750643301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EOzSlHGrohqg16jZUYXWufW0vuZiNjJeJ11ROGdnH0s=;
-        b=ijO+n1gHjDYf0XKUJnw8fgCKOuDofjvH54peGiPM3WkeWTBWbUtIsb1mqimji4rOCg
-         gs7Z4If62ed7tDJZbGDBeoJ734uQc4q236s/JHbKyH8sVW9WtNGC5KTPP3MGqDy8VH+R
-         64aAdtKRwlFI/dR+Gxcl0lZy0kZ/yyYXwWzmsp/ec0P1wZG76Fd9pn/3cJrG124Rnc7l
-         bkh/mHye1yOIdCwSovc7XItWrxdXcdkYHCDBXTbUbQtwfwyAcIXSjHzCbYBaFzXB3s1B
-         Wh684nLZiCy93LOWv9xnPobPiMcqiyLL03gyOPHk7SMslxQOvKH0yV8F5ojf/tTjddLo
-         Z4VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyRonKBiRIdQj9YBe+j8l76rPVnbp0BnRc6+rppgcOkZMEbWCEOxk+inj1H220cdaQk9uw0sKfpYgZSXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFVxW7cJ796sSIP0DOjOGHbyx31w8YYuiQNwMNjLevthXUXha4
-	w+KFlOkttiFtP4lFv/xSqQq8RJNYqPpwIqvj1bMOhfhAOY7ljlZgFm72N8lq/0ncHE0C7DjqaRy
-	S9yAleQaJiMeKaNXD05keZjeybEwRNk8h/2rvs9KOLZ7unPXBaR7IVyw=
-X-Gm-Gg: ASbGncvwCncJXZp8U63rk6iCNsoXRKQcrm2jrMuZE00XgVBgv3xDhuRi5TNtO09U4Le
-	6v1AUV1brO++bG2lMk9Rjcp04m9ruimS4Z4X+Qy41rCgUzUiLayvpeZ69OKafoSKmOvyAT0spHV
-	t4PT9zOgTAXVpP5GEDX7QR3dkFi4SgGxEPqo0oxctXFh+5bw==
-X-Google-Smtp-Source: AGHT+IFalCf8ZLoxrhpSKn9vCQOzYoFcnEfNXOj4LlRmMvOTsepmvXs4hWpCrqsUwKhOi0aW6UpNob7XRbuxVWD8Dgs=
-X-Received: by 2002:a05:6902:98e:b0:e7d:b107:d829 with SMTP id
- 3f1490d57ef6-e822acac597mr10474564276.34.1750038501428; Sun, 15 Jun 2025
- 18:48:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Wj4mi925"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750038878; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zHPvx6QoNDHkEaNKrICKyd3s4RbALR021dqg3TaZACY=;
+	b=Wj4mi9259YYENJb1iJkBP/d8IDv/aFNlz29ss0rHF01jPtaYUw3HdMgLn53E5FiHGucd9LYMpQhnR2HGU/KvnNtr/RzCs/d3pXeE8y94DosDgUc0/yAuqkUxOrBsokB9rAo3SHrLdoIhXzFuC6PS2b8OFAzOlA04tqjDmXIILj0=
+Received: from 30.221.97.59(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wdr40hQ_1750038876 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 16 Jun 2025 09:54:37 +0800
+Message-ID: <83916c62-6069-4ed1-9856-b6c21363b137@linux.alibaba.com>
+Date: Mon, 16 Jun 2025 09:54:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611031023.28769-1-nick.hu@sifive.com> <20250611031023.28769-2-nick.hu@sifive.com>
- <9c429671-8409-4911-8559-73a069d66964@kernel.org> <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
- <19dd3d16-aadd-469c-a090-238baba14d4e@kernel.org>
-In-Reply-To: <19dd3d16-aadd-469c-a090-238baba14d4e@kernel.org>
-From: Nick Hu <nick.hu@sifive.com>
-Date: Mon, 16 Jun 2025 09:48:10 +0800
-X-Gm-Features: AX0GCFuk6UQINAiWg9qRWYn3jgDichbt9fCZYVL_UNVZi-NYRKmQpcuss8-kLqU
-Message-ID: <CAKddAkB=yeLCh3oVFeot45nTr3d0tZjfiV+YmWR-DWFb8w+=jg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add SiFive Domain Management controllers
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: conor+dt@kernel.org, krzk+dt@kernel.org, Cyan Yang <cyan.yang@sifive.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
+ enable and reset paths
+To: Dave Jiang <dave.jiang@intel.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
+ vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+ <20250522063329.51156-2-xueshuai@linux.alibaba.com>
+ <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+ <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
+ <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
+ <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
+ <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
+ <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
+ <343f6719-598a-453b-9903-21632bc6b623@intel.com>
+ <97e52eb0-d531-4464-bbb7-1dffa5d8d74e@linux.alibaba.com>
+ <d4d61f9a-e73d-4689-bef2-7b9c583e1b32@intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <d4d61f9a-e73d-4689-bef2-7b9c583e1b32@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 3:20=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 11/06/2025 09:15, Nick Hu wrote:
-> > On Wed, Jun 11, 2025 at 2:57=E2=80=AFPM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> >>
-> >> On 11/06/2025 05:10, Nick Hu wrote:
-> >>> SiFive Domain Management controller includes the following components
-> >>> - SiFive Tile Management Controller
-> >>> - SiFive Cluster Management Controller
-> >>> - SiFive Core Complex Management Controller
-> >>>
-> >>> These controllers control the clock and power domain of the
-> >>> corresponding domain.
-> >>>
-> >>> However, Since we don't have a SoC specific compatible string yet, so
-> >>> add '- {}' for the first entry [1][2].
-> >>
-> >>
-> >> But you must have Soc specific compatible strings. See previous discus=
-sion.
-> >>
-> > Maybe I'm missing something, but since we don't have a SoC-specific com=
-patible
-> > string yet, I thought we agreed to include a `- {}` as the first
-> > entry, along with an
-> > explanation in both the commit message and comments [1].
-> But your commit msg does not explain. You need to explain why you do not
-> have SoC specific compatibles. Saying "I do not have a SoC specific
-> compatible" is not an argument explaining why you do not have SoC
-> specific compatible.
->
-You're right. How about updating the commit msg to "When the SoCs are
-ready, we will add the SoC compatible string at that time" ?
 
-Best regards,
-Nick
+
+在 2025/6/6 22:32, Dave Jiang 写道:
+> 
+> 
+> On 6/5/25 12:40 AM, Shuai Xue wrote:
+>>
+>>
+>> 在 2025/6/4 22:19, Dave Jiang 写道:
+>>>
+>>>
+>>> On 6/4/25 1:55 AM, Shuai Xue wrote:
+>>>>
+>>>>
+>>>> 在 2025/6/3 22:32, Dave Jiang 写道:
+>>>>>
+>>>>>
+>>>>> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
+>>>>>> Shuai Xue <xueshuai@linux.alibaba.com> writes:
+>>>>>>
+>>>>>>> 在 2025/5/23 22:54, Dave Jiang 写道:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
+>>>>>>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
+>>>>>>>>>>> is being enabled, it can cause a mismatch between the software and hardware
+>>>>>>>>>>> states.
+>>>>>>>>>>>
+>>>>>>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
+>>>>>>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
+>>>>>>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
+>>>>>>>>>>> ensure consistency between the software and hardware states.
+>>>>>>>>>>>
+>>>>>>>>>>> However, a race condition exists between the WQ enable path and the
+>>>>>>>>>>> reset/recovery path. For example:
+>>>>>>>>>>>
+>>>>>>>>>>> A: WQ enable path                   B: Reset and recovery path
+>>>>>>>>>>> ------------------                 ------------------------
+>>>>>>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
+>>>>>>>>>>>                                         b1. issue IDXD_CMD_RESET_DEVICE
+>>>>>>>>>>>                                         b2. clear wq->state
+>>>>>>>>>>>                                         b3. check wq_enable_map bit, not set
+>>>>>>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
+>>>>>>>>>>> a3. set wq_enable_map
+>>>>>>>>>>>
+>>>>>>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
+>>>>>>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
+>>>>>>>>>>> leading to an inconsistency between wq->state (software) and the actual
+>>>>>>>>>>> hardware state (IDXD_WQ_DISABLED).
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
+>>>>>>>>>>
+>>>>>>>>>> DJ
+>>>>>>>>>
+>>>>>>>>> Yep, how about add a spin lock to enable wq and reset device path.
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+>>>>>>>>> index 38633ec5b60e..c0dc904b2a94 100644
+>>>>>>>>> --- a/drivers/dma/idxd/device.c
+>>>>>>>>> +++ b/drivers/dma/idxd/device.c
+>>>>>>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
+>>>>>>>>>      }
+>>>>>>>>>      EXPORT_SYMBOL_GPL(idxd_wq_enable);
+>>>>>>>>>      +/*
+>>>>>>>>> + * This function enables a WQ in hareware and updates the driver maintained
+>>>>>>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
+>>>>>>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
+>>>>>>>>> + * otherwise disable the WQ without the driver's state being properly
+>>>>>>>>> + * updated.
+>>>>>>>>> + *
+>>>>>>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
+>>>>>>>>> + * called after the WQ has been explicitly disabled, so no concurrency
+>>>>>>>>> + * issues arise.
+>>>>>>>>> + */
+>>>>>>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
+>>>>>>>>> +{
+>>>>>>>>> +       struct idxd_device *idxd = wq->idxd;
+>>>>>>>>> +       int ret;
+>>>>>>>>> +
+>>>>>>>>> +       spin_lock(&idxd->dev_lock);
+>>>>>>>>
+>>>>>>>> Let's start using the new cleanup macro going forward:
+>>>>>>>> guard(spinlock)(&idxd->dev_lock);
+>>>>>>>>
+>>>>>>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
+>>>>>>>> guard(device)(idxd_confdev(idxd));
+>>>>>>>
+>>>>>>> Then we need to replace the lock from spinlock to mutex lock?
+>>>>>>
+>>>>>> We still need a (spin) lock that we could hold in interrupt contexts.
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
+>>>>>>>> guard(device)(wq_confdev(wq));
+>>>>>>>>
+>>>>>>>> If you are up for it that is.
+>>>>>>>
+>>>>>>> We creates a hierarchy: pdev -> idxd device -> wq device.
+>>>>>>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
+>>>>>>>
+>>>>>>>         (wq_confdev(wq))->parent = idxd_confdev(idxd);
+>>>>>>>
+>>>>>>> Is it safe to grap lock of idxd_confdev(idxd) under hold
+>>>>>>> lock of wq_confdev(wq)?
+>>>>>>>
+>>>>>>> We have mounts of code use spinlock of idxd->dev_lock under
+>>>>>>> hold of wq->wq_lock.
+>>>>>>>
+>>>>>>
+>>>>>> I agree with Dave that the locking could be simplified, but I don't
+>>>>>> think that we should hold this series because of that. That
+>>>>>> simplification can be done later.
+>>>>>
+>>>>> I agree. Just passing musing on the current code.
+>>>>
+>>>> Got it, do I need to send a separate patch for Patch 2?
+>>>
+>>> Not sure what you mean. Do you mean if you need to send patch 2 again?
+>>
+>> Yep, the locking issue is more complicate and can be done later.
+>> (I could split patch 2 from this patch set if you prefer a new patch.)
+> 
+> Yes split it out and send it ahead if it can go independently.
+
+Hi, Dave,
+
+I split patch 2 out.
+
+As for this race issue between WQ enable and reset paths, do you have any plan
+or idea?
+
+
+> 
+>>
+>>>>
+>>>> Thanks.
+>>>> Shuai
+>>
+>>
+
