@@ -1,99 +1,98 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B9F26156B;
-	Mon, 16 Jun 2025 15:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68C42652BF;
+	Mon, 16 Jun 2025 15:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088173; cv=none; b=cVUOv3P8FwhiB8IGQbKpceeZ6GUZaxX5mMTT5s3hI+x61pZNJWkBfH3nTPN1Eh2J6YnTtBt7rkDZI4DFmmHEheDUSZ8yePb5Xfzozk2BXKh9FE+iE6eAP2A4cLd9PXm4tmIpK+Tg6+jDsMg3h9/zYhjQZJ8hiL3mWqptOuaSdHg=
+	t=1750088174; cv=none; b=KLYgz/Guw8mg9/3I4Mk3oVdpGYFHDJbzsIUcViuXifFOF7LAqfOLXuClfYEhP+xXvZctpC8OAKrqPgRWYayDO+NiiEvsc6epXtfquTtzcTrQNWhrlt3klm30LBZQkGMRtWxZWcWC0xT1wjGFqvN9vEU2i0HbsZLJQrRwbHzddB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088173; c=relaxed/simple;
-	bh=zzsMyrPbS/8HNFX7XOV8PrrfxI/4mqA45NcoUDg4xLU=;
+	s=arc-20240116; t=1750088174; c=relaxed/simple;
+	bh=E5LglV6rAiHuequJO+Q4Ddirros+24bPUuo2UeWy3vE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ljp+YJgQ1GfOeTok64ok+YTrL9m8ZMXSUXzB3M2cMt5dm0cp+5cGMMf5vxZZR0Savl3wuSvZ0bZwfa0beKOZ4rhMN5eqaKSjWxCavK5nCBYfWZLEOzYepaDK8y4QX1EA66Ih/uEP7vY6qNxL/Qnvd+DHZ+6e0H1r6ZyJlFPVRe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VD8j/a/9; arc=none smtp.client-ip=209.85.160.180
+	 MIME-Version; b=XnGHXY5QCxje8Vl78afzr4ZS6vPZJx2uLm4iO999AGhneYOpD0kS46lkBH55X5WfCTAoXdlVGVu0Xdo6VRSpSSYb5ipQCxzI+Qknj9zsI6yE4udUPe+r7DPg8KxoMxL6SU5yGbQZCKeXEU1rz0fLsa23Hu3cYEhasvR2QIG6KLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fCBQL+ri; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VD8j/a/9"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a44b9b2af8so27450421cf.3;
-        Mon, 16 Jun 2025 08:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCBQL+ri"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a4312b4849so55275841cf.1;
+        Mon, 16 Jun 2025 08:36:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750088170; x=1750692970; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750088172; x=1750692972; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=ELoc9/eHFkq/xFaasXWNgk7mUrK1hUGLY4FCwkl4kmQ=;
-        b=VD8j/a/9wApXa9+1r8U98bmwQK/ykiGRi2468SDW9SfDdu8jTAYFSqK4dNIfB5rqbW
-         d8zJpkSZ6CeRZDPWQBSUnH4y7CtwjrhfZXco2gBjJTHRox3QYx+AzWuPqlWeZu0ZAPp6
-         2sIEBy4V1lpN5gpqrJlcTM3TQb3hdweeQirM7+BfkPrVmVQxNNWnxC9LR1YgPuutggHk
-         plPXya1TSi5LA4h89gtc8e94NTwz8dj8ClObiIZOFK6EPWlw3YJxhWrbL9BSbDNxkNJY
-         fm2teUdAHX2pR2u6VafdD3RV2RqJ1yq/+MIWc4SudwqwsTakkIe/cAx13IW0PmTaDQwI
-         SHww==
+        bh=RJaM7R24Tq+E1cluRMBVNRPC48DIpUAHPZ8QzeRruqs=;
+        b=fCBQL+riRHvy7dHA3qsQGK8Vln12UI5drGs26OyY84Oe4wdnr+qYLx5ErJjvQfuWUB
+         Q0D2/jiJGdTrcsG4dr3FP41zeVxRis1e0wrAxM3D2R2dt1pM/NuxEtqEqawxq29UbUhP
+         Ry+TIOlyvxCIaBLQb0yB2JTNe4Lu2x0nEqKcivz9k+F34pIUxRa69PmlVV2g4TWkaGFE
+         XXl9cFdgSgD1bJDwZhvw5CkJ4Un/IqKpl72AAibxHTAmDD3TciXhVVpkJp8KGqJSZL/V
+         Acv/ZZp7dqPfBkwhnB0oYvT0f94hqyTjJVHW1hfhboYsOD+C5viGAdPVAKdh2hfEY491
+         gJ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750088170; x=1750692970;
+        d=1e100.net; s=20230601; t=1750088172; x=1750692972;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ELoc9/eHFkq/xFaasXWNgk7mUrK1hUGLY4FCwkl4kmQ=;
-        b=ewc0jtrEO8bMkcrrjaSR9xXfFmD9sdyCYiimGC5bImcaYS3Ft+QoyQg2a5RmG2dfLP
-         UicyhC/saWxNlJUTvUUnI2WSEsnTAaiB4iMwNPa3MUln5ejqnDN6owvBUHQOF4N+lDpM
-         fKGYhgmhj3GP6aJkNfUXoCrClqadVu8ycYff39Gw95jq+0pf8CuAOdwDgpR35Yu9vh89
-         nP7B189ev24UBZkYrJxbLMpAKSCvLCthgCVZqnymx4SJd9wa1htsVffxdsyErlRbmIe6
-         Tlz7yGjNKLpkYdANF/6ODJq5HVTGj9W1JqPKnTuSoqEKwW/PH/9vtmFQs8+sADJaC4VQ
-         xE0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8ePjja4UXWP2j3pbjSe4TEDMSe1bZP5BtD0bwYi23I+v0NvhwvxqhMQzb1zrdvFW95kPDzWpPSekPPLWijg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI6wzdNUO0Gk3HNC7I13sCa4/ufa89qrPKv+dMGLXcWw56xrZ4
-	jBaW4hdn2csF7LeLSQEORLUzhOAq2EYGFYQjUYWE7BTfj6rsiA54mrx9
-X-Gm-Gg: ASbGncvAHrh4CTYbsGODiwHqL+2pwFAI6wWmgBslNKQH4KABohjWlA7G11rOcAMFDiL
-	MeBEvubW9FbydC6FmQm2yO+zVfjUTa1qYKSeNqx/Dpf4nfmt6dEOsOPN8oD3gcvYiYRTU+b1ee1
-	rn40vGKBKVaNqCAz6woWYm20f/7CcMNRyBtUvWFUz7FgS3CYDe6+MVzdLPw1qoU8/9zgwalNMX0
-	v1XhUpg26Em1s1PU8asRJhfrJOvtc8UMybKd+nr2/Qxn7d9YbSwdvxJBmljx3THG7oOHnVMfdMf
-	gdyr6dtCWzV0uoB6SXzPsvNCxTYHqcsPiCEqoaBjAFtF/f9MMxTRsq9r3dd3AyEpEGSNVt2TFlA
-	vYL1lRPQdQQoiWRLZxeiwnLgEW3F9C9B6l+yIfiWYeQ7zpW/w3rQR
-X-Google-Smtp-Source: AGHT+IGMuk1yHIEtD/xjcGuTwcjGkN1PW4yMn/cyKgSejtdie1UQXUAbVmVFoiSCIL9ne/sT3prEuQ==
-X-Received: by 2002:ac8:5749:0:b0:4a7:14fc:205e with SMTP id d75a77b69052e-4a73c5ce782mr192603511cf.50.1750088170281;
-        Mon, 16 Jun 2025 08:36:10 -0700 (PDT)
+        bh=RJaM7R24Tq+E1cluRMBVNRPC48DIpUAHPZ8QzeRruqs=;
+        b=f2LyZ16cZ1gBzNLJrulCvQcAQ9lNzNtZMqDMJYOVGrMXq3optq6LBj7sTygUHscoCM
+         JpBqF4vW4tQTyvIZv0O3+2Cwsei3ohB5h2xVwYyBrGRQi+dTzABEV4aosFo+qQfkQbap
+         K4yKRtzSd5l1AtK049jBIaor0QGy58A7SMb1vc8vB4xJuNIWFEQEuKcRPGG6fNoa5qU7
+         /SMXeauu5Xtwc6wW6dtbiWsDA+B6eJXPMefVWbIBQjZbRJ1gl381o8x0NO2Syt4XLJ4U
+         5ez9cR5SibGxk7AsXBBR5ENmF2xuUB2MRg+Pa82sYG3U1FSY0y2SaeAigsnB+FQKSfXx
+         pBEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbw4M+o/5zkIBPUW5SpPc60QOOUwSbsL2dc+K5NkiR7QzrBGchr2r4RYYkW9hJQ36d3oQb4g8CxPeYJEzB1g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzNqk3gnYBtmo/fqn3V0RJJQisJXcBzyWNfQDxS6LSazDO7HbL
+	GmXV1oZr8rnsK348W8aGkUZ9wMPmUKmEF4oXtBfb6ddBjyIoIUJlH/wV
+X-Gm-Gg: ASbGncvgE1EQHUxTMiXiiekPgpTwMuAbZPX9x+xG816YShmAkkwOEj2qV0XrQnpssBw
+	QlZKWuIh/QYMm/OsqO2MxR6v6wZG+AZGS9ezvziX1UGpGJkPegpOTCKPjzeP8TTU567Nvr5SffH
+	GTUNA6qjbQNEkHDetFENAed/ufqs72vxBEoQ0Y3slmNkOS7mdAtDBx8qI01LMRu686lZR+l9PLL
+	Q74u0PEblMob9o5Ncp+9hOIrt7OIAl4LUF3OKClQ3IQHsB1/rWIuoSL7G7fWd2TZDsHoYu4jWUQ
+	e700vn0ljUDRIUFpWDKUlSbIzwhglQZEngTa2SmTnoL8HcfIG4/mhqmxChs+w2soWYugpwaZHE2
+	vEHtgrRrL3PbbvL+nQTu0GROGDzjgJrgzuP1YZGg5SfDBwqTTT/kp
+X-Google-Smtp-Source: AGHT+IHICHDr24Pjo41nr1xoI1/YFJxOlsC3+QgYJ5w/dJkVtAr+PqejrcmoffrH9Dx0BUKJp/aw8Q==
+X-Received: by 2002:a05:622a:1a04:b0:4a1:3b18:598a with SMTP id d75a77b69052e-4a73c47e1bamr172454971cf.5.1750088171707;
+        Mon, 16 Jun 2025 08:36:11 -0700 (PDT)
 Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a315c58sm50492311cf.36.2025.06.16.08.36.09
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a0fcd34sm50312731cf.0.2025.06.16.08.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 08:36:09 -0700 (PDT)
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 3626A120006A;
-	Mon, 16 Jun 2025 11:36:09 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Mon, 16 Jun 2025 11:36:09 -0400
-X-ME-Sender: <xms:6TlQaOHYAYmD5YveSyBGd8TRSf5PWAcxHEEFcCMdtJVUvGVImTQfaQ>
-    <xme:6TlQaPWZBVR4cwTNkJS9y8zow114X4ea_T7EaTsVMsaJEA3UuxTP1m9tPA0kDASfQ
-    cWU37yFLg3T3jysVA>
-X-ME-Received: <xmr:6TlQaIID8SldxTAK4zMpRZEjFxNxstXn-2isWr4fnSCckuIBh5RJv4ZnDA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieeliecutefuodetggdotefrod
+        Mon, 16 Jun 2025 08:36:11 -0700 (PDT)
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id AD4E5120006A;
+	Mon, 16 Jun 2025 11:36:10 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Mon, 16 Jun 2025 11:36:10 -0400
+X-ME-Sender: <xms:6jlQaDuEPGv2fxAe8BoWzbvfV4iYrPAC9I5IJLFFy7hnJpZae1SR8A>
+    <xme:6jlQaEdr618-TUGJ1X8tROIWKcu9vrO5QZ_He9va85kYm9n1QqY6HNEkYQdL1XRBG
+    yaCBd5hpgUYnrmqRQ>
+X-ME-Received: <xmr:6jlQaGzPcsj4ncjtUKn9-Jw8KVAvfB7DJhCRoFm2o2kSJ0sD5HYwoo5pzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieelhecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
     fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceo
-    sghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpefgfe
-    ektdeftdevvdeiueelveefffeitdfgvdekueekgfeltedvkeeuffetuedttdenucffohhm
-    rghinhepghhithhhuhgsrdgtohhmpdhfihhlvggpfihithhhpghnuhhlrdhtohenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
-    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
-    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
-    vgdpnhgspghrtghpthhtohepvdegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
-    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
-    htthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehojhgv
-    uggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmh
-    grihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghp
-    thhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhi
-    nhgusghorhhgsehsrghmshhunhhgrdgtohhm
-X-ME-Proxy: <xmx:6TlQaIG2gKFmFX6B7qjKzXRO_0QuSjSxBw_3aDqaFc9pz7ONZKVmrQ>
-    <xmx:6TlQaEVf9cCVO6tcbU3jnKrcrIyV6xdeXAk5qvR5ROF9ERMzAWAXHA>
-    <xmx:6TlQaLMqlMaOqs9ySkUMkx2HCdVdAzefMeTvSe59zaIRM-Ux0Cyifg>
-    <xmx:6TlQaL2RFLWncuH7cT_1oBvB2IoZEOykC_Q2wMBcERsUKvcOG1ySyQ>
-    <xmx:6TlQaFWont2l1G05tuBIWOzW7qhZ4mPpOpiShfW6_Edf4FSOU5HrycHv>
+    sghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeegle
+    ejiedthedvheeggfejveefjeejkefgveffieeujefhueeigfegueehgeeggfenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
+    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
+    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+    dpnhgspghrtghpthhtohepvdegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehl
+    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehojhgvug
+    grsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgr
+    ihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpth
+    htohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohep
+    sggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinh
+    gusghorhhgsehsrghmshhunhhgrdgtohhm
+X-ME-Proxy: <xmx:6jlQaCPFsKMczuI8YiGa8yh21eQXV3h7FlCTIylyMSAI2LsvNoFsSg>
+    <xmx:6jlQaD8m6dXuyBqdbB80g1NwS-RJQfV9YT1mjtcgIw95GpuTz23WOA>
+    <xmx:6jlQaCV_nPHMeeBAa1FWMokJ-mKq4yhDU1rQvT_ye5_GxJqsHqXbvg>
+    <xmx:6jlQaEfyljgSy0sHiT0XSpGYX1R7W9VILQPoFsu6HTFqoFUxuDfPzA>
+    <xmx:6jlQaBe_FaqzOSeLCP9e0piecUnTDBtz-V3B_qROrrWezxISgtxY4ObR>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Jun 2025 11:36:08 -0400 (EDT)
+ 16 Jun 2025 11:36:10 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
@@ -119,9 +118,9 @@ Cc: boqun.feng@gmail.com,
 	pmladek@suse.com,
 	fujita.tomonori@gmail.com,
 	mingo@kernel.org
-Subject: [PATCH v3 1/2] rust: Introduce file_from_location()
-Date: Mon, 16 Jun 2025 08:36:03 -0700
-Message-Id: <20250616153604.49418-2-boqun.feng@gmail.com>
+Subject: [PATCH v3 2/2] rust: task: Add Rust version of might_sleep()
+Date: Mon, 16 Jun 2025 08:36:04 -0700
+Message-Id: <20250616153604.49418-3-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250616153604.49418-1-boqun.feng@gmail.com>
 References: <20250616153604.49418-1-boqun.feng@gmail.com>
@@ -133,82 +132,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Most of kernel debugging facilities take a nul-terminated string for
-file names for a callsite (generated from __FILE__), however the Rust
-courterpart, Location, would return a Rust string (not nul-terminated)
-from method .file(). And such a string cannot be passed to C debugging
-function directly.
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-There is ongoing work to support a Location::file_with_nul(), which
-returns a nul-terminated string from a Location. Since it's still
-working in progress, and it will take some time before the feature
-finally gets stabilized and the kernel's minimal rustc version might
-also take a while to bump to a version that at least has that feature,
-introduce a file_from_location() function, which return a warning string
-if Location::file_with_nul() is not available.
+Add a helper function equivalent to the C's might_sleep(), which
+serves as a debugging aid and a potential scheduling point.
 
-This should work in most cases because as for now the known usage of
-Location::file_with_nul() is only in debugging code (e.g. might_sleep())
-and there might be other information reported by the debugging code that
-could help locate the problematic function, so missing the file name is
-fine at the moment.
+Note that this function can only be used in a nonatomic context.
 
-Link: https://github.com/rust-lang/rust/issues/141727 [1]
+This will be used by Rust version of read_poll_timeout().
+
+[boqun: Use file_from_location() to get a C string instead of changing
+__might_sleep()]
+
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- init/Kconfig       |  3 +++
- rust/kernel/lib.rs | 21 +++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ rust/helpers/task.c |  6 ++++++
+ rust/kernel/task.rs | 22 ++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index af4c2f085455..16e84f80bcd1 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -142,6 +142,9 @@ config RUSTC_HAS_SPAN_FILE
- config RUSTC_HAS_UNNECESSARY_TRANSMUTES
- 	def_bool RUSTC_VERSION >= 108800
+diff --git a/rust/helpers/task.c b/rust/helpers/task.c
+index 31c33ea2dce6..2c85bbc2727e 100644
+--- a/rust/helpers/task.c
++++ b/rust/helpers/task.c
+@@ -1,7 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-+config RUSTC_HAS_LOCATION_FILE_WITH_NUL
-+	def_bool RUSTC_VERSION >= 108900
++#include <linux/kernel.h>
+ #include <linux/sched/task.h>
+ 
++void rust_helper_might_resched(void)
++{
++	might_resched();
++}
 +
- config PAHOLE_VERSION
- 	int
- 	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 6b4774b2b1c3..3ea2391c7f91 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -40,6 +40,7 @@
- #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized))]
- #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_dyn))]
- #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
-+#![cfg_attr(CONFIG_RUSTC_HAS_LOCATION_FILE_WITH_NUL, feature(file_with_nul))]
- 
- // Ensure conditional compilation based on the kernel configuration works;
- // otherwise we may silently break things like initcall handling.
-@@ -274,3 +275,23 @@ macro_rules! asm {
-         ::core::arch::asm!( $($asm)*, $($rest)* )
-     };
+ struct task_struct *rust_helper_get_current(void)
+ {
+ 	return current;
+diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+index 834368313088..518c42beaad1 100644
+--- a/rust/kernel/task.rs
++++ b/rust/kernel/task.rs
+@@ -400,3 +400,25 @@ fn eq(&self, other: &Kuid) -> bool {
  }
+ 
+ impl Eq for Kuid {}
 +
-+/// Gets the C string file name of a [`Location`].
++/// Annotation for functions that can sleep.
 +///
-+/// If `file_with_nul()` is not available, returns a string that warns about it.
++/// Equivalent to the C side [`might_sleep()`], this function serves as
++/// a debugging aid and a potential scheduling point.
 +///
-+/// [`Location`]: core::panic::Location
-+pub fn file_from_location<'a>(_loc: &'a core::panic::Location<'a>) -> &'a crate::str::CStr {
-+    // SAFETY: `Location::file_with_nul()` guarantees to return a string with a NUL terminated.
-+    #[cfg(CONFIG_RUSTC_HAS_LOCATION_FILE_WITH_NUL)]
-+    unsafe {
-+        crate::str::CStr::from_bytes_with_nul_unchecked(_loc.file_with_nul().to_bytes())
-+    }
-+
-+    #[cfg(not(CONFIG_RUSTC_HAS_LOCATION_FILE_WITH_NUL))]
++/// This function can only be used in a nonatomic context.
++#[track_caller]
++#[inline]
++pub fn might_sleep() {
++    #[cfg(CONFIG_DEBUG_ATOMIC_SLEEP)]
 +    {
-+        use crate::c_str;
++        let loc = core::panic::Location::caller();
++        let file = kernel::file_from_location(loc);
 +
-+        c_str!("<Location::file_with_nul() not supported>")
++        // SAFETY: `file.as_ptr()` is valid for reading and guaranteed to be nul-terminated.
++        unsafe { crate::bindings::__might_sleep(file.as_ptr().cast(), loc.line() as i32) }
 +    }
++
++    // SAFETY: Always safe to call.
++    unsafe { crate::bindings::might_resched() }
 +}
 -- 
 2.39.5 (Apple Git-154)
