@@ -1,67 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8385C204C1A;
-	Mon, 16 Jun 2025 18:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01757204C1A;
+	Mon, 16 Jun 2025 18:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750100260; cv=none; b=tKOUQJk8kLIIg8I6uu77y9xUdwPCr99ZEh1R0UXXAcu0kxGmI48AT1gWx10b7v2vx+jmlWffAgMf8skybaGrUH9sEVF9yPrZcEYw7klb4T80sO+V5sOL98IOCO7sUjEu7yUcPMn3BgeCFdWPllCxoUawltG/XoIpVTMuyzDZBRk=
+	t=1750100314; cv=none; b=uJFi6g5W3yJaGAc8jDYz8D0yP8BH79A5DChC8GVIYBsVW684EHYXFM5Bf7J/USd0Zpi5AFkm/Xnd8WwkY6rifQ2O/NFBTOgbFQnqX/iLdp3yXBuvT0RO3TNKaygY6Gar0pNuq7Bxw5chLfnyCbBd/2jpkxOImeWE301/bLG9HW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750100260; c=relaxed/simple;
-	bh=O3cwjLR1nWA9GzL+14mlgq2jH/1IszF/eakSRYB/Kgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hTNAPjvm66va9zv0E9Eas3j0E/d4QKH08HvUidVLpmw/slHH4IKe0U/x6+Ocz9d8ksGXRSGbR0WxescFPZxKJYDEHygyNrf2gE6xkmBQfLUxPRSIfLbKDB4jKW4ZpFkpVRWDKxNj/0nDLZtmvi4dr/Th0DdK2P7Ccu5lbTwVriY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHkvQ2uh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750100314; c=relaxed/simple;
+	bh=oeJRLLSwtRkQcKAdtfO5hAWD0B/mo5uE8GkCFYaDDjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q6z5Oh9P8K6Xtyhde94gUgO06aoeNXWOg4fhFh76CGNvu5OuygTyE7+5lxAbuoLr7FGaeswonyzE25fLfSIJMH+YyvY4kyF3ysb+6DA4R9UWaEv2Mvdtwt4NBCWj3HRJ2HWlqB1fAvJxQ6hQhHWCXDYHRJfAKdVNpQZ2Pn7SnWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=BvCp8Gi3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nsXoN/5d; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHkvQ2uh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A42F2C4CEEA;
-	Mon, 16 Jun 2025 18:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750100260;
-	bh=O3cwjLR1nWA9GzL+14mlgq2jH/1IszF/eakSRYB/Kgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BHkvQ2uhb8xOzRj67T0Ov8ofLgTpkGDaoUNNrMhfYFye/9O7CmbrCPLfpN+CG8q9U
-	 VfMDagsOvJJFE/EfZOxStyLqGFCUmgjdZ0B2Hf1Ylp6Z7YyZUOp2M+GvAFXE/or+tU
-	 ZoqFCe6WW9Ly7ZglrCHd/fS93xB5dRE1wxsTHRqNYAm47n2Kr6WrqWkc4QMtj3oIC0
-	 GZbROuonYGM0HjsgU3pII6STo2vI3HlbuTVfYDOBz4nfmXJZ7YKN0nuS7mw04uK7B5
-	 Mj9T2gSVyCEi3Cme1b4saNTSylUhGIzYa2STGvZS9jtBMYpnpjzehljcSE1LhvkI3N
-	 vxa77LjNKkuvA==
-Date: Mon, 16 Jun 2025 18:57:37 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Fix build warnings about export.h
-Message-ID: <20250616185737.GA23807@google.com>
-References: <20250608141509.157300-1-chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="BvCp8Gi3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nsXoN/5d"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0962F1140191;
+	Mon, 16 Jun 2025 14:58:31 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Mon, 16 Jun 2025 14:58:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1750100311; x=1750186711; bh=v/
+	TXx1dkm7xsWBo9OfUL4i6toTBkkYNGAFxAjhVZ8q4=; b=BvCp8Gi3DQzw/0p+rI
+	LciRyqRjRZG17SF5Y3Ya0gzowogs0R2IkFVAwAYTfgDvVqznIQ2N3dWZZMA78wXm
+	k0lFaydebtW4Aw1+RDyzecpQyGpNo4SA/tyKZFWXrSbwnhLOnOfK6IBiXgA3NOgO
+	b3QLOjv9o9EGqRtj4R5kpNWOXZWqgxmmgguDj4fxu48+shNJGQyuOziNnKFbyKB5
+	OXOVmwyuYELu0rvqeKsgMFbQbkJ9p8166xgNAY6m4G6VZ7U7wi85vDP7rNtS3mrs
+	aymQKq7E3wjxPA1XezoTvBdwexuwvK97WD4e4Y/bkVlTWfY9CqUsBxcmM4vjh8Ss
+	UGQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1750100311; x=1750186711; bh=v/TXx1dkm7xsWBo9OfUL4i6toTBk
+	kYNGAFxAjhVZ8q4=; b=nsXoN/5dP18oVPf5gPSposM0WpIMOlyrmDmH2X0MLODa
+	iI/oyV9DA6fe05E4P+RFxuZNPjtIqIno3UuShJOtk358fvPfCNQMugzJZ+6i8glj
+	yupwNf/v6T38BnUK6+TaH7KBYxcOGhDDYI2qbafOcbK1qk3uJFUCH/GPIqr7yidB
+	+fc2l4ZVAljZ3V+ukgSzOZ4DCeuc3KgDREMjjVeQP9yO+XqsMFKlnz3ZI4pztBd0
+	KEEo89NZzs5lu9GmI3nSc9etJJmf7Crr/8rtek1oLQTeXNxgaqJlFnby5tIxbAbb
+	B3GB6n2E8wDhJz9926v14MM8wdkvDCdZbMjPk+9VYQ==
+X-ME-Sender: <xms:VWlQaJfCH4_QCKeK9gXe3iyiSZGwNCvJ9O2vhRVrkVx9tpSqahHUOg>
+    <xme:VWlQaHOggxZXS-XIV7Lexi_5Pm-i7zPB-9s1De311xe83_8u1aqFfJpPSKWyIItUQ
+    mPn_ZU13AVmhksWHF0>
+X-ME-Received: <xmr:VWlQaCj7lnPFO-oGP33UvPwhL-iMOS_SIKnFqZUVWu7YubWla8kqOX16ZA0HZLwZDWMe9CTgpnZRppXPhHBG4ltdHg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvjeefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeen
+    ucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvg
+    hrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthht
+    vghrnhepheduleetteekgffffedufeeuvdejiedvkefhveeifeegffehledtvdevhfefte
+    egnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhi
+    khhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpth
+    htohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsgeskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvg
+    hrrdgsvgdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugidrihhnthgv
+    lhdrtghomhdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrghrthesihguvggrsh
+    honhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsoh
+    gtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhikhhlrghsrdhsoh
+    guvghrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvg
+X-ME-Proxy: <xmx:VmlQaC9MslqgyBXPQ54NZeVgTbSB830i67fMv1wwpeot6UVunB5crg>
+    <xmx:VmlQaFtu9AeRxnEU0jkp7C0kQLWBIMHFek9SoXvGSRSuM8pY5yrrmA>
+    <xmx:VmlQaBFbAyU0aZcM6MUEHyJsZOfrvOMtKxf-8rdmxXA02ei4xPSnjQ>
+    <xmx:VmlQaMOdiOqIBLegpFhxgMhZdQai47rFLCaCP2BYORBMI33IYf4LDg>
+    <xmx:V2lQaN5417xnN8bvIWiH_hU811K_SQ7Vw4CxErfg22r4ZgCje-yw5AqN>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 16 Jun 2025 14:58:29 -0400 (EDT)
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v2 0/3] media: rcar-vin: Generate FRAME_SYNC events
+Date: Mon, 16 Jun 2025 20:57:19 +0200
+Message-ID: <20250616185722.980722-1-niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608141509.157300-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 08, 2025 at 10:15:09PM +0800, Huacai Chen wrote:
-> diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/crc32-loongarch.c
-> index b37cd8537b45..db22c2ec55e2 100644
-> --- a/arch/loongarch/lib/crc32-loongarch.c
-> +++ b/arch/loongarch/lib/crc32-loongarch.c
-> @@ -11,6 +11,7 @@
->  
->  #include <asm/cpu-features.h>
->  #include <linux/crc32.h>
-> +#include <linux/export.h>
->  #include <linux/module.h>
->  #include <linux/unaligned.h>
+Hi,
 
-You can drop the change to crc32-loongarch.c, as it would conflict with
-https://lore.kernel.org/r/20250601224441.778374-8-ebiggers@kernel.org/ and
-https://lore.kernel.org/r/20250612183852.114878-1-ebiggers@kernel.org/ which are
-in crc-next for 6.17 and already handle this issue.
+This series extend the VIN interrupt handling to be able to generate
+FRAME_SYNC events. Having these events in user-space is a great help to
+know when a sensor starts to expose a new frame.
 
-- Eric
+Patch 1/3 and 2/3 prepays the existing interrupt infrastructure to
+support more then "frame captured" interrupts. While patch 3/3 enables
+and checks for VSYNC detection and generates the new event.
+
+The feature is tested on Gen2, Gen3 and Gen4 and all devices correctly
+generate FRAME_SYNC events.
+
+See individual patches for changelog.
+
+Niklas Söderlund (3):
+  media: rcar-vin: Fold interrupt helpers into only callers
+  media: rcar-vin: Check for correct capture interrupt event
+  media: rcar-vin: Generate FRAME_SYNC events
+
+ .../platform/renesas/rcar-vin/rcar-dma.c      | 54 ++++++++++---------
+ .../platform/renesas/rcar-vin/rcar-v4l2.c     |  2 +
+ 2 files changed, 32 insertions(+), 24 deletions(-)
+
+-- 
+2.49.0
+
