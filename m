@@ -1,198 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD9321C174
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CE2288514
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750092064; cv=none; b=NNt4OdRPt+llH2htsrsld7dXycPbrLB2eYJXxDtkPK1n5ECSVYVPIXPf4Q/7Utg60MLbNCRSmtegd51m8LVf0QqDAhF//JEmrHaeV7yuDE3LgPM4Tc1p/Fxe81HEA4aNAXqSYhp71FiVgACuK70+c/CQGd3KRNTcpFSpf+UwUss=
+	t=1750092066; cv=none; b=MKTEke5rH9VHrjLD/vdg7Sdpk+QoBKGwIyq3u3g8vib4nDxO0bVfJ8R5K1BMAUD7jDkxsV13E2FXWJaXjysS0XKMBNzC9o2ng8jhn+0/vF8Rgtd5xfkBsg/bjTRBtipB3xobGb7D/NCHH8lSXPaz3LmAAbtM6V5aDzvK1HLDOiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750092064; c=relaxed/simple;
-	bh=LwE/WuesUXIxV0abPIcpPADTky2PxZjAG+IcG/6YKSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g81FupDej4mdct284re7qcyvlcW6BYwK+tuXet6WSeKn27ZlJFAM3cDJg570hTemEF7rvCNfglSOhPLwg0ypumkkXDD4R5z4LYVx2DRCmpiGty+rn2t1XXxNyPmVRJv9O8jMfXJu414n/Sy78VklU+9WfpE3OfTYhuu5KonFURQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IiDccW4t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IiDccW4t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750092062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E8lQD9OdGrrnpQH1qsSN5fp1bQN4PsZfD/B5xZ27lys=;
-	b=IiDccW4tOh4m6wAs6LL3boZwDkpsbcKOj3pG6kShnrtzl3lE5tHgVLBgS5UVA1s2Ww79w8
-	kD7vW//z07RIrGdrRU8u07gMwqAwrCGwLWOVSsmR7p5Q8EQN/BQVGCpU4Lb+C4TFDja4dn
-	U9Oul3E0NPhsF52lC1ewsN2jHZXg7ms=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-136-d1Zho7N8MJij7u1dH3uWBg-1; Mon,
- 16 Jun 2025 12:40:56 -0400
-X-MC-Unique: d1Zho7N8MJij7u1dH3uWBg-1
-X-Mimecast-MFC-AGG-ID: d1Zho7N8MJij7u1dH3uWBg_1750092054
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F160719560B0;
-	Mon, 16 Jun 2025 16:40:52 +0000 (UTC)
-Received: from [10.45.224.53] (unknown [10.45.224.53])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CE7F8195608F;
-	Mon, 16 Jun 2025 16:40:45 +0000 (UTC)
-Message-ID: <9a0443f1-e3c0-443d-9120-636be25e6794@redhat.com>
-Date: Mon, 16 Jun 2025 18:40:44 +0200
+	s=arc-20240116; t=1750092066; c=relaxed/simple;
+	bh=YQlfqHXFMjkXG+QwxQehGbP3b+0lafdP0XvMgYigkPI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MqGp3cRnsT1dw60Ze077Q7p6QsU4ADiuQUBTTnODD+PTZL8WBaV+Irrf651oy5di/AWhFXzMdv30Muku9gHDNYA8GWQ5oJ1Cv/lRFakfBDP8y0rSe6wJZ+GgS9KSn/k0sR8y65Ub0OIy5KzInoc+VBZ06gdLTUkkuymtXWvuBkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so111580465ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:41:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750092064; x=1750696864;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V3YVJ7730tGgRpjEitFjjqGZ41i1VnAPsCDq4gx19VY=;
+        b=prmdKhFnG7oG3/pt78V83pxFe/xRhksGzCwz3uUg8/umD9DOu7zGa4T4IcVK3KAY89
+         WVyH9E0J4rLrGV5MLJ0U740GVKXVFlMVhbW+spEcpDEhxvGd8kojHU+0hoT+kfK869w+
+         z76/d9aaYFv062+8c9z1ucnEt5ITuPGfN6kp+b5VbohP/dDTHia5gvi7ikTTqJReuAaF
+         3xq6CHS6hc01P5QHIC5Kn4/Rd3nEQnuO4N8fuW4JyKyD8rP2ZoQSQwwZmQnaZP31DWPG
+         ZQTCiJiWKLzeMPmdMvEQn7aH0IRceWLbg+kJuwfRJDLbX7/DuJR4Fk3PXFw31/C4s0sV
+         itCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVs7tgH/AyapR9x1piF85nfGx8TcAl2V8xA6o9v7kXW3Cbb+bdqkP5zYMldl6tk7XJrUTBh/O34GSfCpCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPyrZNKERApsLeWeediJQQNNScTfl+/IpicJ+sedCxpNPd80l3
+	4iSWV3PWVtMMpB4xExUz6WBtujkUT35Hj/e97V22cqWK5r+MAqSrf/1+3Vt6o+mE9Sm3jpwdi8u
+	AE0kkcsrp3hwim6eiANzfZLN512K8dcpX4AXCvPPX0hFdASFhwc+NMxrKitg=
+X-Google-Smtp-Source: AGHT+IEgSLsjEk6wBL7H4inZGzjwbTa5xUkbOFhLObTZ+jgw5ICoBlR9VtYWvlUFTxMVqub0O6VG2z19ig4cP5/9tWbkMnCjdNyj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v10 09/14] dpll: zl3073x: Register DPLL devices
- and pins
-To: Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
-References: <20250615201223.1209235-1-ivecera@redhat.com>
- <20250615201223.1209235-10-ivecera@redhat.com>
- <20250616160047.GG6918@horms.kernel.org>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250616160047.GG6918@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Received: by 2002:a05:6e02:194d:b0:3dd:c78c:ec3e with SMTP id
+ e9e14a558f8ab-3de07d01d7emr122082285ab.22.1750092063406; Mon, 16 Jun 2025
+ 09:41:03 -0700 (PDT)
+Date: Mon, 16 Jun 2025 09:41:03 -0700
+In-Reply-To: <a454ce9b-807c-4f22-98fa-80a7da98e2a9@yandex.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6850491f.050a0220.4562c.000a.GAE@google.com>
+Subject: Re: [syzbot] [usb?] KASAN: slab-use-after-free Read in hdm_disconnect
+From: syzbot <syzbot+916742d5d24f6c254761@syzkaller.appspotmail.com>
+To: dmantipov@yandex.ru, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On 16. 06. 25 6:00 odp., Simon Horman wrote:
-> On Sun, Jun 15, 2025 at 10:12:18PM +0200, Ivan Vecera wrote:
->> Enumerate all available DPLL channels and registers a DPLL device for
->> each of them. Check all input references and outputs and register
->> DPLL pins for them.
->>
->> Number of registered DPLL pins depends on configuration of references
->> and outputs. If the reference or output is configured as differential
->> one then only one DPLL pin is registered. Both references and outputs
->> can be also disabled from firmware configuration and in this case
->> no DPLL pins are registered.
->>
->> All registrable references are registered to all available DPLL devices
->> with exception of DPLLs that are configured in NCO (numerically
->> controlled oscillator) mode. In this mode DPLL channel acts as PHC and
->> cannot be locked to any reference.
->>
->> Device outputs are connected to one of synthesizers and each synthesizer
->> is driven by some DPLL channel. So output pins belonging to given output
->> are registered to DPLL device that drives associated synthesizer.
->>
->> Finally add kworker task to monitor async changes on all DPLL channels
->> and input pins and to notify about them DPLL core. Output pins are not
->> monitored as their parameters are not changed asynchronously by the
->> device.
->>
->> Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
->> Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> 
-> ...
-> 
->> diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
-> 
-> ...
-> 
->> +static int
->> +zl3073x_devm_dpll_init(struct zl3073x_dev *zldev, u8 num_dplls)
->> +{
->> +	struct kthread_worker *kworker;
->> +	struct zl3073x_dpll *zldpll;
->> +	unsigned int i;
->> +	int rc;
->> +
->> +	INIT_LIST_HEAD(&zldev->dplls);
->> +
->> +	/* Initialize all DPLLs */
->> +	for (i = 0; i < num_dplls; i++) {
->> +		zldpll = zl3073x_dpll_alloc(zldev, i);
->> +		if (IS_ERR(zldpll)) {
->> +			dev_err_probe(zldev->dev, PTR_ERR(zldpll),
->> +				      "Failed to alloc DPLL%u\n", i);
-> 
-> Hi Ivan,
-> 
-> Jumping to the error label will return rc.
-> But rc may not be initialised here.
-> 
-> Flagged by Smatch.
+Reported-by: syzbot+916742d5d24f6c254761@syzkaller.appspotmail.com
+Tested-by: syzbot+916742d5d24f6c254761@syzkaller.appspotmail.com
 
-Hi Simon,
-good catch... thanks.
-Will fix this in v11 later today (after 24h).
+Tested on:
 
-Ivan
+commit:         e04c78d8 Linux 6.16-rc2
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12c915d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f72e140c622500d
+dashboard link: https://syzkaller.appspot.com/bug?extid=916742d5d24f6c254761
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12d70370580000
 
-> 
->> +			goto error;
->> +		}
->> +
->> +		rc = zl3073x_dpll_register(zldpll);
->> +		if (rc) {
->> +			dev_err_probe(zldev->dev, rc,
->> +				      "Failed to register DPLL%u\n", i);
->> +			zl3073x_dpll_free(zldpll);
->> +			goto error;
->> +		}
->> +
->> +		list_add(&zldpll->list, &zldev->dplls);
->> +	}
->> +
->> +	/* Perform initial firmware fine phase correction */
->> +	rc = zl3073x_dpll_init_fine_phase_adjust(zldev);
->> +	if (rc) {
->> +		dev_err_probe(zldev->dev, rc,
->> +			      "Failed to init fine phase correction\n");
->> +		goto error;
->> +	}
->> +
->> +	/* Initialize monitoring thread */
->> +	kthread_init_delayed_work(&zldev->work, zl3073x_dev_periodic_work);
->> +	kworker = kthread_run_worker(0, "zl3073x-%s", dev_name(zldev->dev));
->> +	if (IS_ERR(kworker)) {
->> +		rc = PTR_ERR(kworker);
->> +		goto error;
->> +	}
->> +
->> +	zldev->kworker = kworker;
->> +	kthread_queue_delayed_work(zldev->kworker, &zldev->work, 0);
->> +
->> +	/* Add devres action to release DPLL related resources */
->> +	rc = devm_add_action_or_reset(zldev->dev, zl3073x_dev_dpll_fini, zldev);
->> +	if (rc)
->> +		goto error;
->> +
->> +	return 0;
->> +
->> +error:
->> +	zl3073x_dev_dpll_fini(zldev);
->> +
->> +	return rc;
->> +}
->> +
-> 
-> ...
-> 
-
+Note: testing is done by a robot and is best-effort only.
