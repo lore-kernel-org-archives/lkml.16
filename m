@@ -1,96 +1,50 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9D626D4D5
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069B3285CBC
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078546; cv=none; b=I4GaDjYB+hc9jLjXCtLfBDORgI4y1UvE9kEAl64hsP0HCj1yHf/wVARat872FxXYwOSppRiTtqdl6UtM33YuCiFCM5X/7wv/qAmAJU8G1Pr4nUt7jMT/mZGdzsZ257sUfOsV9MaeH0R4X5DA9DEtLKvZCFwS1cW6PAeMo7XnpwU=
+	t=1750078566; cv=none; b=DZhKvVvT2gg0CxE+2prUef/ER8vgXJzSGQVtD+8mwl4c3kfOexJ2Q1ok82dzA5IjOF1Egz7mheSt56K+8P26A1I9PV6up0LmrS1vfePn7M82ncufw/G2szDp9+/2b8r/5A9vm2DJ0R2rPUdp+2alRgBRpOltHGyZQse+eYgAxqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078546; c=relaxed/simple;
-	bh=WmKoM4XcL/w/hrbpNUMW1bYwHRsA/hhEzOy4Wz0xO6o=;
+	s=arc-20240116; t=1750078566; c=relaxed/simple;
+	bh=spYR/2xvF+MKkfbF3T4H8ZiASBq5PM0aP8gj+hYX5xk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAx7NwWGCgrPyUq2G5J9E6Yjp4xwkeoRuW8QvY5v4U3GEkW8HtHyYL1gNAyER4cb2JAmx54j2Ghz6oGSEcKZF1EXgNui2YXRL7qM40KCDSDEgynxfSrYP/xmj0uTbFCDJG0Sj1oGyT2AAXUl6y4maqqwgVbS99e9cvg7cIyVRNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ch62BoVB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kx+epzwR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ch62BoVB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kx+epzwR; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=tRXrx3NfmUeIyndE1o/Cit1e9casUIwd4+Pgkmlid5IzOrZAyLd6OR7l15r9YHPOM0HZpV1DLw/dnmrCmpUJo74whdsDxuzR323Smm+T9KQWOtM35bZtExkrEoqPENeSkiTGYtaqxUqKtNRNPGJ1x1gyqiLzWQWU3JrrNT6a2Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKM+PDe6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ch62BoVB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kx+epzwR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ch62BoVB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kx+epzwR"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3B8531F394;
-	Mon, 16 Jun 2025 12:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750078542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kTZijOP/eg1k630Bl0eRX0hA5QB8mAiiv3COWgNQAQ=;
-	b=Ch62BoVBsb6apvaLdPvXDZINkZ2FObsqokC31d8t7nGfe6wEM36Fv+vWxDurz5rHsVODRk
-	subjHPMAjfR6jeQ74eqs1Y9M9HOjM4ZQZddy17QqntzlZiOKOxi+5pSNHbkpVh7m33fu8U
-	5YqmPDRTJfKW47XBNfG9KLk//dPv12Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750078542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kTZijOP/eg1k630Bl0eRX0hA5QB8mAiiv3COWgNQAQ=;
-	b=kx+epzwRGFOGwAgUSlFBSwgRK4lcc67Q7TZyBnbnI03PYR6bFwXY59fPr+Lbs/2FUu+ZJY
-	H+80N0i2TODurjBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750078542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kTZijOP/eg1k630Bl0eRX0hA5QB8mAiiv3COWgNQAQ=;
-	b=Ch62BoVBsb6apvaLdPvXDZINkZ2FObsqokC31d8t7nGfe6wEM36Fv+vWxDurz5rHsVODRk
-	subjHPMAjfR6jeQ74eqs1Y9M9HOjM4ZQZddy17QqntzlZiOKOxi+5pSNHbkpVh7m33fu8U
-	5YqmPDRTJfKW47XBNfG9KLk//dPv12Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750078542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kTZijOP/eg1k630Bl0eRX0hA5QB8mAiiv3COWgNQAQ=;
-	b=kx+epzwRGFOGwAgUSlFBSwgRK4lcc67Q7TZyBnbnI03PYR6bFwXY59fPr+Lbs/2FUu+ZJY
-	H+80N0i2TODurjBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A95BC139E2;
-	Mon, 16 Jun 2025 12:55:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bba6Jk0UUGiyEAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 16 Jun 2025 12:55:41 +0000
-Date: Mon, 16 Jun 2025 14:55:40 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 03/10] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <aFAUTPUOsi8dxAkY@localhost.localdomain>
-References: <20250609092149.312114-4-osalvador@suse.de>
- <2bec8b53-f788-493e-a76e-1f804ed3aa0c@redhat.com>
- <aE_WG6bnjtLBzCp8@localhost.localdomain>
- <10c87a0e-c9fe-48fe-9bbd-16afd244b4ec@redhat.com>
- <aE_a4_rGbMLJKBIs@localhost.localdomain>
- <360f2f04-4542-4595-bf36-c45ed10335af@redhat.com>
- <aFADwYs9LcyK5tVn@localhost.localdomain>
- <23431108-b5b8-4c8a-8869-8f994371e7a5@redhat.com>
- <aFAO9igZQ7yP1m7A@localhost.localdomain>
- <400b4d5a-8973-4301-a86b-41e1b412a3da@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKM+PDe6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF48FC4CEEA;
+	Mon, 16 Jun 2025 12:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750078565;
+	bh=spYR/2xvF+MKkfbF3T4H8ZiASBq5PM0aP8gj+hYX5xk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PKM+PDe6B26U3+HuDJMqmAsTAWa2DzNlpTuY3RYu4R2Be2sofu+JWv5tIjNjbSJ7P
+	 LadpZRYVGXa9SOoqtEdGBiVsiZKla7Dvba9rZSGlDawXQY0ygmf+nFEcLSmlK+hfyY
+	 fMkBoCOlwztQgfNsPccigLGVhEcCltszLMZhhf/LmCWCdp/XM1hqKOw6Feb/G/MRf9
+	 4h5v1v8AFknIXp5F38hIud1SdIg2rZIczqgxzT6gf1Fgoc9/OEHBLPmXUypCw+TzqW
+	 PN2I/GYvRbCrXGr7fP+JUh9O+z1AXn7niqiZPrjIS93p4+l/cPB479aEZJlW6GQJxb
+	 gxxOlfXKR7U2g==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uR9Nb-0000000020W-16pB;
+	Mon, 16 Jun 2025 14:56:03 +0200
+Date: Mon, 16 Jun 2025 14:56:03 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH] arm64: defconfig: fix renamed Qualcomm EUSB2 PHY symbol
+Message-ID: <aFAUYwB8IqZKFMT6@hovoldconsulting.com>
+References: <20250616103252.32642-1-johan+linaro@kernel.org>
+ <fdcbaaed-c088-4ccb-8897-bd69080a3346@linaro.org>
+ <6232e835-921d-4855-8b10-8f873a4e3c30@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -99,39 +53,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <400b4d5a-8973-4301-a86b-41e1b412a3da@redhat.com>
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+In-Reply-To: <6232e835-921d-4855-8b10-8f873a4e3c30@linaro.org>
 
-On Mon, Jun 16, 2025 at 02:35:54PM +0200, David Hildenbrand wrote:
-> Looks cleaner to me at least :)
+On Mon, Jun 16, 2025 at 01:23:08PM +0200, Krzysztof Kozlowski wrote:
+> On 16/06/2025 13:20, Krzysztof Kozlowski wrote:
+> > On 16/06/2025 12:32, Johan Hovold wrote:
+> >> The Qualcomm Synopsis EUSB2 PHY driver was recently renamed along with
+> >> its Kconfig symbol but the defconfig was never updated (which breaks USB
+> >> on a number of Qualcomm platforms).
+> >>
+> >> Fixes: 8d3b5f637546 ("phy: move phy-qcom-snps-eusb2 out of its vendor sub-directory")
+> >> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> >> Cc: Vinod Koul <vkoul@kernel.org>
+> >> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > 
+> > Thanks. This was sent on the lists some time ago and since a week is
+> > already in pending-fixes. Should be in coming RC as well.
+> 
+> Uh, now I noticed that due some other work I put it on different fixes
+> branch and that fixes branch was not feeding pending-fixes. That's my
+> bad, I need to fix my workflow.
+> 
+> It was in linux-next, though.
 
-Alright then, let's that route :-)
- 
+Ah, good. I did search the list but apparently only lkml so I missed
+that one.
 
--- 
-Oscar Salvador
-SUSE Labs
+Johan
