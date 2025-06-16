@@ -1,316 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC6D20B80D;
-	Mon, 16 Jun 2025 10:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678D426FA5E;
+	Mon, 16 Jun 2025 10:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750071301; cv=none; b=jH5elLZ+Wp4M96Y86V42OPe9gKLF4MMpVip4g3gy/qkAp/kMyGGs2i8FlKyLw4Z7kaDnam7LVa2Rk05+nvSo6O6nEnh3ZDTPyfjFi5J17O3M2fFBPNdiXR55+Aq+tVDfDVbhjX1VdlyxdOLe+Xa22nrKzuit8tGkvjRMXjAUOfg=
+	t=1750071342; cv=none; b=NyLrJQUuGhMY5z+XhUS5cv3qFVEvHJiMiG84IQYnCzHsJhh8RMIt6wgoFZqlWTJh6JMknd02mTb/8ReyVnQL4sg2KU41XVVsaKZ8spQptZiMF3Ba2tHqjHaYDvKOXDnxx9KsPU7si5BL8KLDTbZKRh42FMrLUVqzWWAbdZb8Oyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750071301; c=relaxed/simple;
-	bh=9qI7UdCi7n9CK2wqk4VuCHt+Q/KIMMELhBVBtp0x7hE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K8MNPFYlXskbxezyVCpW72P7V/w6PZx9R7uePoGMjXlQK9l5kBFONsyTgOxYwmyjCU3etIT9kl9PuRH7CovFy4j2L8sahTQNDIM4rNEh44YU5EWngxyr6Zp1TrhFIQ2G2rfaxsIR/YmDT686klx1Q00IIy3sS7kEWe7vcyJrZJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9NnLWv+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750071342; c=relaxed/simple;
+	bh=aDoIFUDPbKlkZs2LaI4PiAZe0ItSZiaPAXg5nePkjDQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gTHyJ3+y5dBXUaWQFR7CwJnyd6KaB8Xj9Krt4eKojTHUVkSM1x1W6IsD4d16hRrH9svFvXqgmRaRj+6cV5+MmFiE1eASKIeHwEDzT4OdJiKut17Gi+8BY6R+WpTORYLpDsaOJQ8WWzpihov5I1+SYm4nuOeUjdD+oWiHlKRPiX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=BaOhuSjW; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9NnLWv+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C20C4CEEE;
-	Mon, 16 Jun 2025 10:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750071300;
-	bh=9qI7UdCi7n9CK2wqk4VuCHt+Q/KIMMELhBVBtp0x7hE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Z9NnLWv+TPhnP0+1PZVTClIhlA4UtFV8WyWkxOCqTYIWWaGRjn60Nyh9+dhMhJiSq
-	 qeqfbWTzprGaircC07qj4yqZaW2qGubKcgWxaFMT/HRSdUrkVEHdg058gFmmaTnIVU
-	 3K7XATDo3LaHlaaZnlvXVGZdx2xyaecW+aYnQNdXpJnANhTnU9/CtQ7hBQSFeqPdUE
-	 SyR5CHgXja9aLZo6ZUDU3r0d7jScpLLdqcfOe+Ex8g01dx8Tjf6QLR3iLNwf34k2Sn
-	 LEnUUmOrB0BM5DyVxDnYHzUNdovx9ukVEH38Z7pe3d+FGOJkOWl5EErAfCXu+QpTII
-	 Pn7TFkaU3kc/Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uR7UP-007CpO-Sx;
-	Mon, 16 Jun 2025 11:54:58 +0100
-Date: Mon, 16 Jun 2025 11:54:57 +0100
-Message-ID: <86qzzkc5xa.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-Cc: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Jintack Lim <jintack@cs.columbia.edu>,
-	Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH] KVM: arm64: nv: Fix s_cpu_if->vgic_lr[] indexing in vgic_v3_put_nested()
-In-Reply-To: <20250614145721.2504524-1-r09922117@csie.ntu.edu.tw>
-References: <20250614145721.2504524-1-r09922117@csie.ntu.edu.tw>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="BaOhuSjW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750071336; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=i8EdbzyYXZcEWHaoQ9QBBBH1FZsnTBo/AD39uza65v0=;
+	b=BaOhuSjWV2CRDTzhpmjBaK/4xbXSSvO9tMNMleL/tVkUBnw8CMQeBDW8X6ChHLz8dFt8EvhI+hfN3COW2tBNagx8BBfQnl8PycM3h8nEwV1s9i64r+UW9Lgfxuf5MyW/r1MjFvYJbFAsO0yvVLj8BA3E1YDsuMrCpTYxqaSfPR4=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WdwwWRd_1750071334 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 16 Jun 2025 18:55:34 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>,  linux-mm@kvack.org,
+  linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,  sj@kernel.org,
+  akpm@linux-foundation.org,  corbet@lwn.net,  ziy@nvidia.com,
+  matthew.brost@intel.com,  joshua.hahnjy@gmail.com,  rakie.kim@sk.com,
+  byungchul@sk.com,  gourry@gourry.net,  apopple@nvidia.com,
+  bijantabatab@micron.com,  venkataravis@micron.com,  emirakhur@micron.com,
+  ajayjoshi@micron.com,  vtavarespetr@micron.com,  damon@lists.linux.dev
+Subject: Re: [RFC PATCH 1/4] mm/mempolicy: Expose policy_nodemask() in
+ include/linux/mempolicy.h
+In-Reply-To: <CAMvvPS5U8exSvy0fknfhv8ym_dKgMVa7cfMOqn0fGyd+NSjSuQ@mail.gmail.com>
+	(Bijan Tabatabai's message of "Fri, 13 Jun 2025 11:33:18 -0500")
+References: <20250612181330.31236-1-bijan311@gmail.com>
+	<20250612181330.31236-2-bijan311@gmail.com>
+	<5a50eeba-b26d-4913-8016-45278608a1ee@redhat.com>
+	<CAMvvPS5U8exSvy0fknfhv8ym_dKgMVa7cfMOqn0fGyd+NSjSuQ@mail.gmail.com>
+Date: Mon, 16 Jun 2025 18:55:32 +0800
+Message-ID: <87zfe83qhn.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: r09922117@csie.ntu.edu.tw, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, jintack@cs.columbia.edu, christoffer.dall@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, 14 Jun 2025 15:57:21 +0100,
-Wei-Lin Chang <r09922117@csie.ntu.edu.tw> wrote:
->=20
-> s_cpu_if->vgic_lr[] is filled continuously from index 0 to
-> s_cpu_if->used_lrs - 1, but vgic_v3_put_nested() is indexing it using
-> the positions of the set bits in shadow_if->lr_map. So correct it.
->=20
-> Signed-off-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-> ---
->  arch/arm64/kvm/vgic/vgic-v3-nested.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/v=
-gic-v3-nested.c
-> index 4f6954c30674..29741e3f077b 100644
-> --- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
-> +++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
-> @@ -343,7 +343,7 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
->  	struct shadow_if *shadow_if =3D get_shadow_if();
->  	struct vgic_v3_cpu_if *s_cpu_if =3D &shadow_if->cpuif;
->  	u64 val;
-> -	int i;
-> +	int i, index =3D 0;
-> =20
->  	__vgic_v3_save_vmcr_aprs(s_cpu_if);
->  	__vgic_v3_deactivate_traps(s_cpu_if);
-> @@ -368,10 +368,11 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
->  		val =3D __vcpu_sys_reg(vcpu, ICH_LRN(i));
-> =20
->  		val &=3D ~ICH_LR_STATE;
-> -		val |=3D s_cpu_if->vgic_lr[i] & ICH_LR_STATE;
-> +		val |=3D s_cpu_if->vgic_lr[index] & ICH_LR_STATE;
-> =20
->  		__vcpu_sys_reg(vcpu, ICH_LRN(i)) =3D val;
-> -		s_cpu_if->vgic_lr[i] =3D 0;
-> +		s_cpu_if->vgic_lr[index] =3D 0;
-> +		index++;
->  	}
-> =20
->  	shadow_if->lr_map =3D 0;
+Bijan Tabatabai <bijan311@gmail.com> writes:
 
-Nice catch, thanks a lot for tracking it down.
+> On Fri, Jun 13, 2025 at 8:45=E2=80=AFAM David Hildenbrand <david@redhat.c=
+om> wrote:
+>>
+>> On 12.06.25 20:13, Bijan Tabatabai wrote:
+>> > From: Bijan Tabatabai <bijantabatab@micron.com>
+>> >
+>> > This patch is to allow DAMON to call policy_nodemask() so it can
+>> > determine where to place a page for interleaving.
+>> >
+>> > Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
+>> > ---
+>> >   include/linux/mempolicy.h | 9 +++++++++
+>> >   mm/mempolicy.c            | 4 +---
+>> >   2 files changed, 10 insertions(+), 3 deletions(-)
+>> >
+>> > diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
+>> > index 0fe96f3ab3ef..e96bf493ff7a 100644
+>> > --- a/include/linux/mempolicy.h
+>> > +++ b/include/linux/mempolicy.h
+>> > @@ -133,6 +133,8 @@ struct mempolicy *__get_vma_policy(struct vm_area_=
+struct *vma,
+>> >   struct mempolicy *get_vma_policy(struct vm_area_struct *vma,
+>> >               unsigned long addr, int order, pgoff_t *ilx);
+>> >   bool vma_policy_mof(struct vm_area_struct *vma);
+>> > +nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
+>> > +             pgoff_t ilx, int *nid);
+>> >
+>> >   extern void numa_default_policy(void);
+>> >   extern void numa_policy_init(void);
+>> > @@ -232,6 +234,13 @@ static inline struct mempolicy *get_vma_policy(st=
+ruct vm_area_struct *vma,
+>> >       return NULL;
+>> >   }
+>> >
+>> > +static inline nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy=
+ *pol,
+>> > +                             pgoff_t ilx, int *nid)
+>> > +{
+>> > +     *nid =3D NUMA_NO_NODE;
+>> > +     return NULL;
+>> > +}
+>> > +
+>> >   static inline int
+>> >   vma_dup_policy(struct vm_area_struct *src, struct vm_area_struct *ds=
+t)
+>> >   {
+>> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> > index 3b1dfd08338b..54f539497e20 100644
+>> > --- a/mm/mempolicy.c
+>> > +++ b/mm/mempolicy.c
+>> > @@ -596,8 +596,6 @@ static const struct mempolicy_operations mpol_ops[=
+MPOL_MAX] =3D {
+>> >
+>> >   static bool migrate_folio_add(struct folio *folio, struct list_head =
+*foliolist,
+>> >                               unsigned long flags);
+>> > -static nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
+>> > -                             pgoff_t ilx, int *nid);
+>> >
+>> >   static bool strictly_unmovable(unsigned long flags)
+>> >   {
+>> > @@ -2195,7 +2193,7 @@ static unsigned int interleave_nid(struct mempol=
+icy *pol, pgoff_t ilx)
+>> >    * Return a nodemask representing a mempolicy for filtering nodes for
+>> >    * page allocation, together with preferred node id (or the input no=
+de id).
+>> >    */
+>> > -static nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
+>> > +nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *pol,
+>> >                                  pgoff_t ilx, int *nid)
+>> >   {
+>> >       nodemask_t *nodemask =3D NULL;
+>>
+>> You actually only care about the nid for your use case.
+>>
+>> Maybe we should add
+>>
+>> get_vma_policy_node() that internally does a get_vma_policy() to then
+>> give you only the node back.
+>>
+>> If get_vma_policy() is not the right thing (see my reply to patch #2),
+>> of course a get_task_policy_node() could be added.
+>>
+>> --
+>> Cheers,
+>>
+>> David / dhildenb
+>
+> Hi David,
+>
+> I did not use get_vma_policy or mpol_misplaced, which I believe is the
+> closest function that exists for what I want in this patch, because
+> those functions
+> seem to assume they are called inside of the task that the folio/vma
+> is mapped to.
+> More specifically, mpol_misplaced assumes it is being called within a
+> page fault.
+> This doesn't work for us, because we call it inside of a kdamond process.
+>
+> I would be open to adding a new function that takes in a folio, vma,
+> address, and
+> task_struct and returns the nid the folio should be placed on. It could p=
+ossibly
+> be implemented as a function internal to mpol_misplaced because the two w=
+ould
+> be very similar.
+>
+> How would you propose we handle MPOL_BIND and MPOL_PREFFERED_MANY
+> in this function? mpol_misplaced chooses a nid based on the node and
+> cpu the fault
+> occurred on, which we wouldn't have in a kdamond context. The two options=
+ I see
+> are either:
+> 1. return the nid of the first node in the policy's nodemask
+> 2. return NUMA_NO_NODE
+> I think I would lean towards the first.
 
-However, I think we should get rid of this double-indexing altogether,
-or at least make it less error-prone. This thing is extremely fragile,
-and it isn't the first time we are getting bitten with it.
+You can try numa_node_id() first, then fall back to the first nid in
+the nodemask.
 
-Looking at the code, it becomes pretty obvious that the shadow index
-is always the number of bits set in lr_map, and that we could
-completely drop the 'index' thing if we simply counted these bits
-(which isn't that expensive).
-
-I came up with the (admittedly much bigger) following fix.
-
-Thoughts?
-
-	M.
-
-=46rom 2484950b8fc3b36cca32bf5e86ffe7975a43e0e7 Mon Sep 17 00:00:00 2001
-From: Marc Zyngier <maz@kernel.org>
-Date: Sun, 15 Jun 2025 16:11:38 +0100
-Subject: [PATCH] KVM: arm64: nv: Fix tracking of shadow list registers
-
-Wei-Lin reports that the tracking of shadow list registers is
-majorly broken when resync'ing the L2 state after a run, as
-we confuse the guest's LR index with the host's, potentially
-losing the interrupt state.
-
-While this could be fixed by adding yet another side index to
-track it (Wei-Lin's fix), it may be better to refactor this
-code to avoid having a side index altogether, limiting the
-risk to introduce this class of bugs.
-
-A key observation is that the shadow index is always the number
-of bits in the lr_map bitmap. With that, the parallel indexing
-scheme can be completely dropped.
-
-While doing this, introduce a couple of helpers that abstract
-the index conversion and some of the LR repainting, making the
-whole exercise much simpler.
-
-Reported-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20250614145721.2504524-1-r09922117@csie.ntu=
-.edu.tw
 ---
- arch/arm64/kvm/vgic/vgic-v3-nested.c | 81 ++++++++++++++--------------
- 1 file changed, 42 insertions(+), 39 deletions(-)
-
-diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/vgi=
-c-v3-nested.c
-index d22a8ad7bcc51..bd22e42ce9112 100644
---- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
-+++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
-@@ -36,6 +36,11 @@ struct shadow_if {
-=20
- static DEFINE_PER_CPU(struct shadow_if, shadow_if);
-=20
-+static int lr_map_idx_to_shadow_idx(struct shadow_if *shadow_if, int idx)
-+{
-+	return hweight64(shadow_if->lr_map & (BIT(idx) - 1));
-+}
-+
- /*
-  * Nesting GICv3 support
-  *
-@@ -209,6 +214,29 @@ u64 vgic_v3_get_misr(struct kvm_vcpu *vcpu)
- 	return reg;
- }
-=20
-+static u64 translate_lr_hw_bit(struct kvm_vcpu *vcpu, u64 lr)
-+{
-+	struct vgic_irq *irq;
-+
-+	if (!(lr & ICH_LR_HW))
-+		return lr;
-+
-+	/* We have the HW bit set, check for validity of pINTID */
-+	irq =3D vgic_get_vcpu_irq(vcpu, FIELD_GET(ICH_LR_PHYS_ID_MASK, lr));
-+	/* If there was no real mapping, nuke the HW bit */
-+	if (!irq || !irq->hw || irq->intid > VGIC_MAX_SPI)
-+		lr &=3D ~ICH_LR_HW;
-+
-+	/* Translate the virtual mapping to the real one, even if invalid */
-+	if (irq) {
-+		lr &=3D ~ICH_LR_PHYS_ID_MASK;
-+		lr |=3D FIELD_PREP(ICH_LR_PHYS_ID_MASK, (u64)irq->hwintid);
-+		vgic_put_irq(vcpu->kvm, irq);
-+	}
-+
-+	return lr;
-+}
-+
- /*
-  * For LRs which have HW bit set such as timer interrupts, we modify them =
-to
-  * have the host hardware interrupt number instead of the virtual one prog=
-rammed
-@@ -217,58 +245,37 @@ u64 vgic_v3_get_misr(struct kvm_vcpu *vcpu)
- static void vgic_v3_create_shadow_lr(struct kvm_vcpu *vcpu,
- 				     struct vgic_v3_cpu_if *s_cpu_if)
- {
--	unsigned long lr_map =3D 0;
--	int index =3D 0;
-+	struct shadow_if *shadow_if;
-+
-+	shadow_if =3D container_of(s_cpu_if, struct shadow_if, cpuif);
-+	shadow_if->lr_map =3D 0;
-=20
- 	for (int i =3D 0; i < kvm_vgic_global_state.nr_lr; i++) {
- 		u64 lr =3D __vcpu_sys_reg(vcpu, ICH_LRN(i));
--		struct vgic_irq *irq;
-=20
- 		if (!(lr & ICH_LR_STATE))
--			lr =3D 0;
--
--		if (!(lr & ICH_LR_HW))
--			goto next;
--
--		/* We have the HW bit set, check for validity of pINTID */
--		irq =3D vgic_get_vcpu_irq(vcpu, FIELD_GET(ICH_LR_PHYS_ID_MASK, lr));
--		if (!irq || !irq->hw || irq->intid > VGIC_MAX_SPI ) {
--			/* There was no real mapping, so nuke the HW bit */
--			lr &=3D ~ICH_LR_HW;
--			if (irq)
--				vgic_put_irq(vcpu->kvm, irq);
--			goto next;
--		}
--
--		/* Translate the virtual mapping to the real one */
--		lr &=3D ~ICH_LR_PHYS_ID_MASK;
--		lr |=3D FIELD_PREP(ICH_LR_PHYS_ID_MASK, (u64)irq->hwintid);
-+			continue;
-=20
--		vgic_put_irq(vcpu->kvm, irq);
-+		lr =3D translate_lr_hw_bit(vcpu, lr);
-=20
--next:
--		s_cpu_if->vgic_lr[index] =3D lr;
--		if (lr) {
--			lr_map |=3D BIT(i);
--			index++;
--		}
-+		s_cpu_if->vgic_lr[hweight64(shadow_if->lr_map)] =3D lr;
-+		shadow_if->lr_map |=3D BIT(i);
- 	}
-=20
--	container_of(s_cpu_if, struct shadow_if, cpuif)->lr_map =3D lr_map;
--	s_cpu_if->used_lrs =3D index;
-+	s_cpu_if->used_lrs =3D hweight64(shadow_if->lr_map);
- }
-=20
- void vgic_v3_sync_nested(struct kvm_vcpu *vcpu)
- {
- 	struct shadow_if *shadow_if =3D get_shadow_if();
--	int i, index =3D 0;
-+	int i;
-=20
- 	for_each_set_bit(i, &shadow_if->lr_map, kvm_vgic_global_state.nr_lr) {
- 		u64 lr =3D __vcpu_sys_reg(vcpu, ICH_LRN(i));
- 		struct vgic_irq *irq;
-=20
- 		if (!(lr & ICH_LR_HW) || !(lr & ICH_LR_STATE))
--			goto next;
-+			continue;
-=20
- 		/*
- 		 * If we had a HW lr programmed by the guest hypervisor, we
-@@ -277,15 +284,13 @@ void vgic_v3_sync_nested(struct kvm_vcpu *vcpu)
- 		 */
- 		irq =3D vgic_get_vcpu_irq(vcpu, FIELD_GET(ICH_LR_PHYS_ID_MASK, lr));
- 		if (WARN_ON(!irq)) /* Shouldn't happen as we check on load */
--			goto next;
-+			continue;
-=20
--		lr =3D __gic_v3_get_lr(index);
-+		lr =3D __gic_v3_get_lr(lr_map_idx_to_shadow_idx(shadow_if, i));
- 		if (!(lr & ICH_LR_STATE))
- 			irq->active =3D false;
-=20
- 		vgic_put_irq(vcpu->kvm, irq);
--	next:
--		index++;
- 	}
- }
-=20
-@@ -368,13 +373,11 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
- 		val =3D __vcpu_sys_reg(vcpu, ICH_LRN(i));
-=20
- 		val &=3D ~ICH_LR_STATE;
--		val |=3D s_cpu_if->vgic_lr[i] & ICH_LR_STATE;
-+		val |=3D s_cpu_if->vgic_lr[lr_map_idx_to_shadow_idx(shadow_if, i)] & ICH=
-_LR_STATE;
-=20
- 		__vcpu_assign_sys_reg(vcpu, ICH_LRN(i), val);
--		s_cpu_if->vgic_lr[i] =3D 0;
- 	}
-=20
--	shadow_if->lr_map =3D 0;
- 	vcpu->arch.vgic_cpu.vgic_v3.used_lrs =3D 0;
- }
-=20
---=20
-2.39.2
-
-
---=20
-Without deviation from the norm, progress is not possible.
+Best Regards,
+Huang, Ying
