@@ -1,96 +1,149 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B8620F063;
-	Mon, 16 Jun 2025 20:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF4C1C860C;
+	Mon, 16 Jun 2025 20:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750106534; cv=none; b=hiTzbqnLpP8KrMIFYN0uvVxHhpFRjk9veNeIcWuORte9K+9Y4PXxUFFo2xQQYj9aet6dpRMsuWO4KLuqRDPC9cDaQ4jkZLE5axVvvN3YuIraVlpavUU1w75AIWK4Oa0opZnwiM2bPbVpRYL3jJ6rlENkxhp1hwDPbu8//0LnVCM=
+	t=1750106569; cv=none; b=oXYCFDnsVDmWDczeiy4m67QmrsvpmG5BCxwLOdm9MJCr1ogfs97Z7WfQEQUmUOGk68OX78pnOTPu5NgP9Q08FjeCXRoyU32x3AZ2mBMSPkQUF10rIO40OQDTynqhae0F6x7CHTaTykYzwv31r5KTy8phzgxGeGfkY4nhHaHPyrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750106534; c=relaxed/simple;
-	bh=2MVarrKr3EH+WpTMw6UOQrd0Q+i2vTps24RzpVNiFso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=noARMcJIdK2LrbuQV6/dd46lrH3mpzlyRcO6Fq8cUkmqOdJlR0gLw3V1Qa9Zo2WSNNDtVBCBS/Qz2KWMU5k3js27YofyzaxOZyd4c0YsPtt37NSo7U+vi0g75sRyZau8YJdfI8sxOklJpcO4p+aypURSAyqy6C71kjhWdJgjIjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxTyj02k; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750106569; c=relaxed/simple;
+	bh=RZvhT3osRsrhjeNVgiL0tfWaqyG2kuFrsDfJx3KFgYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2dKNgU2xTaaB67AMBR0YnUTUStR6OA7vE4dh8DFej4WawhzqwW+w1/RPooGjrN81fZ2aRCnhEFFPMLWD1J55mlwf7asXnhDC7E5h8Q3kp9kBtalzWbBVFWjXKgdFlIqFusT+Jxntd52wbVL+bbFdaOJLRrvKUP1lXatzJY+KrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=A7p+Acvn; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxTyj02k"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-31384c8ba66so949683a91.1;
-        Mon, 16 Jun 2025 13:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750106533; x=1750711333; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2MVarrKr3EH+WpTMw6UOQrd0Q+i2vTps24RzpVNiFso=;
-        b=dxTyj02kNJH3XPk63pac3TX9gaOEd0JqoZPRTNXFCnXKMBK2wj9V2l9N66mQE8BWp8
-         4t0cu3pff+2/yeayZ0RMHpK8+dBtc24lDe0JN06oS0j74JFS8b5EITTmaD+Dgq5sVFBm
-         D5sFUJ9bjP2DhDDv7FkyiURiU6sRSMIxHQ7h5gSAJcHPAVSH82hnfFW6gsOLZ51qdBnc
-         Bpaq/bmzRbm+Q96Fhm2JDR6ErUiZrK1w0lk8mLQYQoMnryRMWL4dgpRsP5UUq/DyVzXT
-         U6XOFW7zC4YBK1BsemKofIxDo+u4fHjdhzeqe6AtYSAbpGyqw/nHIDH2dbruYVMuUgJf
-         QgaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750106533; x=1750711333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2MVarrKr3EH+WpTMw6UOQrd0Q+i2vTps24RzpVNiFso=;
-        b=Gu+34qoVE33hlvoaUiw2oqa8uzL84993p1Z1f6zvbA4W5n8enCRbunvEpFgLy920om
-         P7K5s88XD7wJGI+OU3e6H623Jl1fJRYAnPEGQ/DLHySBNXVxrX3pWM4g/cO76mWaf619
-         QQUaPaeUU0GksaZMh3pBIVNsOUK3uOe8376FNCvHGRKuhaDYmvkLKCqPbkE/TIkQejhT
-         AEWSFT81R1EEKaXFiU9ZKQZdWmTABQFd+eT7UVrHPZXJayntpuvo0dcyLZkpMhTKY+pK
-         gLACPxgYG+RMYH35fkHE4gp/7pWjAfvGe478Xb5ldeviHUUDiOLPSon6BJW/N3X0vphA
-         CUkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJB5VCcC3jg47Ei1dRkfP7qHX4PsZW54GvHzhhVeCCWHEt6VZoSjfXwXz6yl3pxVT/CE/KQTXaLVLdY3s=@vger.kernel.org, AJvYcCXdLLvPRGnbundEtVoZgG9cERcTz0Pa+9w2pf5qN1X4/QyFAj5SHNVZL6M9haF4VVRHDSokjIjxVPP2Ni2hW2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy21DPYV2bVloA84d72yDnjPib5SkVLnWxkuZo26cY1kcxNagKx
-	tlt8iHbYa9RzSGgeAy0ZSj8fPaYYM+hzV6JJa4FaYAM2xe2SOcp2tTrSV9oTNeF0B9iKC0OIiMr
-	HxqF8j1cmIBFTKNxtD4L+9w56X/D5G7M=
-X-Gm-Gg: ASbGncsxJj7aFQYiM1xZ73N+bzaoRB2fje0BbPlVmNl3wbfEaXwFOoiT8n6CFwUMp58
-	mTJba9jUBKjL2eVsEIoGLszBRDVcfqtRbljXhnCL7he++PrAgUZPeeVmHg9hwA+xRMr3M6P027w
-	YzMSfMQcnaptdczFVvzvtdwsqGiIC68wVTgnOGv8yNIng=
-X-Google-Smtp-Source: AGHT+IHT8KPEV+iHcXim5KqyrVjf4AwLU8n3C89nP9x1BEVWMWsnUJWaRFLYWGWmGwAFRN3v+/B4S3Ge4P5xHC9Lal0=
-X-Received: by 2002:a17:90b:268a:b0:310:cf92:7899 with SMTP id
- 98e67ed59e1d1-31425ae4ce3mr472462a91.3.1750106532749; Mon, 16 Jun 2025
- 13:42:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="A7p+Acvn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=alq/Pjol9hRHmsoK4W/c2CtmXHL3bnmjTRKmw+CMrtk=; b=A7p+Acvn5uycXyz3kLo38iW9Ad
+	D+bYigpKSwXx9Qqj1iM2cauc4vJVM5S4cn4cbXzLSyPr5aCY6CT2OVFHXSo8Ysd1LMe4PIHVof75s
+	4ixGU0gXpw9fxNXo/FZ31klq9ihs5qru2SnNaJuY3SsfiDVgdbRXOX9BVI2VDLVAd+vUo1oJFU8Te
+	frcwrPbBPewoCrxwD5QpKNqhm3CGjwSVicr7Dykb5NZb2DUD7NyCDlrCYxIHPR3p2qtE9G2el/ykq
+	A/AlxzwslpPcDC/i4wy3o5P2e7I9G86mm6pGM50kd8VFzxMarLvEuy3Rg4LaGo1AqBnz7BuHEsWZB
+	PDLsSc+w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRGeL-00000002Qr4-0IjJ;
+	Mon, 16 Jun 2025 20:41:49 +0000
+Date: Mon, 16 Jun 2025 21:41:49 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Benjamin LaHaise <bcrl@kvack.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Tigran A . Aivazian" <aivazian.tigran@gmail.com>,
+	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
+	coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Bob Copeland <me@bobcopeland.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+	linux-aio@kvack.org, linux-unionfs@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, linux-mm@kvack.org,
+	linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev,
+	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH 00/10] convert the majority of file systems to
+ mmap_prepare
+Message-ID: <20250616204149.GK1880847@ZenIV>
+References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615072042.133290-1-christiansantoslima21@gmail.com>
- <CANiq72mnxRquFmjoJemb=3LSq+ZdUfs9J+HXTwM6AavprsVNUg@mail.gmail.com> <CABm2a9fVSGm+WWjdkAmJHUH9eH=Qx5efORKxyJtt0HnQrs0QHQ@mail.gmail.com>
-In-Reply-To: <CABm2a9fVSGm+WWjdkAmJHUH9eH=Qx5efORKxyJtt0HnQrs0QHQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 16 Jun 2025 22:42:00 +0200
-X-Gm-Features: AX0GCFtGeeEyfe06ypkz5KLQqKug3P3IchXOC3KBr6Wiay8_aCbTMa2-_9ua4iY
-Message-ID: <CANiq72=s6Ugqrf5Ot6fJOMyCug2XyvKpjFCzya_Mr5iBkpitLA@mail.gmail.com>
-Subject: Re: [PATCH v7] rust: transmute: Add methods for FromBytes trait
-To: Christian <christiansantoslima21@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ~lkcamp/patches@lists.sr.ht, 
-	richard120310@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Mon, Jun 16, 2025 at 10:08=E2=80=AFPM Christian
-<christiansantoslima21@gmail.com> wrote:
->
-> I see, sorry.
+On Mon, Jun 16, 2025 at 08:33:19PM +0100, Lorenzo Stoakes wrote:
+> REVIEWER'S NOTES
+> ================
+> 
+> I am basing this on the mm-new branch in Andrew's tree, so let me know if I
+> should rebase anything here. Given the mm bits touched I did think perhaps
+> we should take it through the mm tree, however it may be more sensible to
+> take it through an fs tree - let me know!
+> 
+> Apologies for the noise/churn, but there are some prerequisite steps here
+> that inform an ordering - "fs: consistently use file_has_valid_mmap_hooks()
+> helper" being especially critical, and so I put the bulk of the work in the
+> same series.
+> 
+> Let me know if there's anything I can do to make life easier here.
 
-No need to apologize! It is all fine :)
-
-> I noticed that core is used in other places, is it worth using as
-> default dependency since other people use it and reduce verbosity of
-> the code?
-
-Hmm... I am not sure I understand.
-
-Cheers,
-Miguel
+Documentation/filesystems/porting.rst?
