@@ -1,113 +1,199 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139A1F09BF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D070D1F2C45;
 	Mon, 16 Jun 2025 07:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750059622; cv=none; b=TbyBgV3Xymz2qpDlTy9BCGKYtX7noK/s8RA1D3ETAIa3u632MYqNGC+y1ZVP5oUpxGknHIZscUDfS+vaaJuGRNsJV9/qFJOZ88V5QWcYFpw4aDUuxGNjJXfmOxa8H4FhGTl1fAjqL5AR3tJUIg9nk0RY1eDd+chaQINNdwPlxOY=
+	t=1750059622; cv=none; b=j5dlBklxkhHDF5cZbCVVMNC6zGMjmfYrvbvJaK6Qi0EikoOOCFttqTFMIPxoyckxln7HArCBbbjUdLd8lT1YMsearHCb33b5Xb7HHe/76tDu4Iuppn4KL7Gd0WUPxC7XJ6L1Ad7F4FYOwnF0xipaTv+sJSTCILgjvXpCmtZ5Okk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750059622; c=relaxed/simple;
-	bh=uf1c7b6wV5zhastLCAqi3KoHMy/GmEnf2vSM+CMzF44=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OrT7Vg1/+X751c8B5sx/P9DhU+H36RK0VrZnGS8qYJWByqiQ7p3lbDtfVSyWwkYSmDIIPSvY38bYBJTcGYvje1vQhibwJ2vRukNQcire/r34XKf5UqYwl98b+e4Mn7fNoht24vF2LcV/awwerayNYbpuVqHH1/KWjQ1dQy3Ogz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PpHn3baD; arc=none smtp.client-ip=209.85.167.45
+	bh=9R521yEvSoTRMuAWEVwLtelRmMlrAZtGKB1H7DGvnvc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jKl6BNjVraJySZdAichQQjpbmkBCUHutb6jRVBQHOHlAddPfvAoJVQfcISdrzskiEkL4OfMihAb/l29qUpXwt6kZ9YM5ZKEW4IHowfAA5Z/sAIfD8fSCUSkfNNgM6By5V27xNtWIwx2yR+1ZysXgXkOoFG/SPPfCwrJIiwSoF64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRm7G+2O; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PpHn3baD"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55351af2fc6so4574560e87.0;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRm7G+2O"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad88d77314bso925030266b.1;
         Mon, 16 Jun 2025 00:40:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1750059619; x=1750664419; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QowhzLlyhpt/wBdayccfLQq+OvDIY0BBZc2dTRmHXis=;
-        b=PpHn3baDe5II+XjTZsbkKvB4WT9Lr3Akigse0ARfm2AwZ7ysTQdZTBqNPRZtJ3RhLe
-         hF+rNmtfkrINqLEaRdvHZQjSnV0z8jIfrRhR7vM3EC0qSv+hMq8HHdkW4tjPbTABt2W8
-         2RawAwFeQwyafG/vJfFQuzI9zVtmGON5HKgk/PVpuTXobHgG26Jg3FrxZNWdWaZ6vuVT
-         UPu/xJPuT7IlFwBkFikAoU21JJHA/nqFnJImgSNI4Vs2/iNrG52sz8HVOZuOFH0Xjz4p
-         m7ylCflznyglRSq+JI8f9g6uJKhPDjRARQEnL6ShGqe0QBxKZ5QmWg1pMlxeKhYAZyxP
-         7E6w==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h/VFqzJdBv7JH//nNz8fWrMW7ma2acRIz+sTqvArf+s=;
+        b=CRm7G+2Op+0XpT6VJ42d3QVh+vTH+SA0Tf8I2fJxeRehzgRquoB85MCuq6EvVUK1Ab
+         QdEAxpF2vd7Al5LFj8jxwWxyo+Naz2RB+2YBi+55b78MPSvGvmHKr+vp6D6v0jo5oJ6r
+         6YKMuXmixbUabKKuEnrpmVNe7i4/b4aEd8MoJ8LJ8HCGKD6U9LPALLFi632ylaZaJdVp
+         XBgWMfWuMy5gauC/gR6dw6DELgkhbQjlZdJUVtTLzxsFxp5XBNoquabANZ17pvz822Gw
+         L51LrG+5IuPjHa0lVntmmkxttMllZIzpQWhniKROB0AzBObDQJmCn4wsztPYDYZTghTq
+         Zwyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750059619; x=1750664419;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QowhzLlyhpt/wBdayccfLQq+OvDIY0BBZc2dTRmHXis=;
-        b=Ea04RaR6SBysF2igPWzVh1aE4ounPyRD5gKK6eOo5UR+/QK00Ei1RBGSAU9n7MNFaj
-         uWk759Sml/LHyMz/Y9Rzbo0dcu4BRcA0F3piXNSNtKMJOiEPQuyBX2KTjDKHZgpjK5Uq
-         wC0qMOLFpMra2LmAWwX65r+bLZJt19hT1g1GdLnJAYXUNSA/Y6p7/Eg/BEDqJNfbzP6/
-         Q0LjYP7nUSTZMPU4DpKEO720sniOaguFf7HForcAVNTx8nbrBMClfWcEAdLOpG4PJIQW
-         H2oMnfPNcrTAgJGRqc5wiNjPjy6rXtBKmoE+8Ocb4Gf6Inlf4IxQgrBXQYlHKqUx/M/v
-         rfng==
-X-Forwarded-Encrypted: i=1; AJvYcCVToJdQzzICLJk0XtYF06EpLBhjsQxtvWenR8cjP6zOv/GVdEsbRqZ0qAUaTZL6ZrJc3USAnUYQ/qJh0QE=@vger.kernel.org, AJvYcCXV8KAULh2+iKFyoKq1LH5V2dqNKDS6FYKwNjLataTS1zH0XWCsODGowR6+vX/sL0O0liPsQVnMZ5q1ugw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4Z64XUROiOJaJJJ/R7nvioKYqohq481KZRXhTsjt4ZlV33pyG
-	BCy1Iwqnbgc9HvsHIeYhX/yzk7g+T7zDXUS4Nq0Fo+kjOWeEfLwIVIaG
-X-Gm-Gg: ASbGncuGZOeWsySW+RCYTeuWROsgZ02vofO+nrMKzRAZJqMXxKfPPp6UkVSTkGteWRV
-	87eHPOzEjqIoiAsPy8S+V1HSE/dYufPcbNkD3qDvu6nXzOo9DVUg4NjGXkZUpt6h6QgGSl8WzxJ
-	lfcn2kNRE0VVH377tCHh4fOJtASCto0bTKls0yH3AP7xhhL9oe+0gz2L7mWD4rHyF+JFk+/v95z
-	z2kNR/cTNnTooNodCmLeTmBi27oMR4drkV9CP27FJxQLh7eWT3sWevFkbJoM4r6eSp3ugpoagpq
-	A9pDasDDID5sM9MzIdKSv0RQD3eSY1X6b7ldU1kIBsC0VgYG1i+xww==
-X-Google-Smtp-Source: AGHT+IHVthDXPnu0iZJ3imogPzE1kJl9SON1BNQjHX4qfStH6kv9COkXX+LE08mGtEGVHc/uvkP0hg==
-X-Received: by 2002:a05:6512:3501:b0:553:659c:53fa with SMTP id 2adb3069b0e04-553b6e7330emr2044334e87.5.1750059618485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h/VFqzJdBv7JH//nNz8fWrMW7ma2acRIz+sTqvArf+s=;
+        b=MoXORlkFKRBWFRTbg42EcbChu0KlmubcRu5IuUgL8B4/1hEKE6R0wOZYzFcw4qrQeR
+         D+NOlqMWxRQLNzgsWk+aOAqtXWTgAqbwTweEnMxquqeIccYZHjl1sx5sAWpHtune+FDP
+         v5WZmkF17tZXcuKimf/yv3DdAsxAP2XgvP/ew+SO8nkirdN84cVXYL3dNa+NFT6WBN0M
+         wVkVk1o9ACYN/ET2obs0U8V3xUAvuOutvkitngCcMBvtbmQzKAD5LUyi6RW7vkqBarD1
+         2mRZgf5AKIEEwopKgcTx0R8kgVoQ6pdzPGqH841+OivBnkM7yyOQM8aY/vnYY0oGVKdw
+         cGSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlugjQWHZWZcTIVx6vWsWQks1bpzhyhV1VU73uAzq/BiIRS+DLL9953xhupsT/Qbd4kHY=@vger.kernel.org, AJvYcCX/Hg5VxZIoaZvV1lrg7RcLUg6wg896Sg8QcRP9a7cv036NTziY95rAWFx7OMUbSrztU9cWOqwBLpw8pqh4lfx+Tztr@vger.kernel.org, AJvYcCXPocRbNV+pots1Hzmm/q4/uVxFdKnlxijPHSrgq7NB0nbay9Sd+NAAi8ypNbywAKfAwdze7jw0Z0wUXOap@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFzpQ6uhSbdbxdVqKW5fXfGW0+6+mxjlkz9/4P/jv9tE/VbVKw
+	npiqe3e0xxytTn4Q8HKvdTFgZLsHfVcixlVvk3Iwu0qpQTiHlldsz6Td
+X-Gm-Gg: ASbGncu04HtrVmrZCTUiGbLXAtB94QQu3q1+nnK63yhrqZrQxa5NPeFaZhM2QvvuEDG
+	jdS3so5BPiC6cReOxxoLtAT4G/uQr4cKxgOvdIX+CL/YF3Hh5YLnoVoXMV58YAk3X4v1lo17djT
+	kLe3a0Eb7Bb8/0EBps61eVm3R9EaLLj7L/5ULrOg8iOPUBLQwsWxyivGnT/dfRIM7b7/AnM1xZp
+	EFAD69vGr1e4QrWmel8Ocbwpwl2FDX3BAwZsdvIqzttVcOiiV/TRu/r2/wKaCUXQwZBHa4nSLPL
+	8grF1Zh0otqa67+K0Ifhl6aJnx+1n45O2rOJIYWGdgcCU+av
+X-Google-Smtp-Source: AGHT+IFBkUt1SLA2khCw9igvFJ2dxCo2xoj5v6KfMoQSZ+ORAKFruwVNHMfnbbIVVfe8zWgJnvjP+g==
+X-Received: by 2002:a17:907:d23:b0:ad8:9257:5742 with SMTP id a640c23a62f3a-adfad39cdd7mr795503566b.15.1750059618809;
         Mon, 16 Jun 2025 00:40:18 -0700 (PDT)
-Received: from xeon.. ([188.163.112.61])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1ab08fsm1452721e87.89.2025.06.16.00.40.17
+Received: from krava ([173.38.220.59])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892e756sm612120666b.144.2025.06.16.00.40.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 16 Jun 2025 00:40:18 -0700 (PDT)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Maxim Schwalm <maxim.schwalm@gmail.com>,
-	David Heidelberg <david@ixit.cz>,
-	Ion Agorria <ion@agorria.com>
-Cc: devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] dt-bindings: arm: tegra: Add Asus Portable AiO P1801-T
-Date: Mon, 16 Jun 2025 10:39:46 +0300
-Message-ID: <20250616073947.13675-2-clamor95@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250616073947.13675-1-clamor95@gmail.com>
-References: <20250616073947.13675-1-clamor95@gmail.com>
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 16 Jun 2025 09:40:15 +0200
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: song@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com,
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, sdf@fomichev.me, haoluo@google.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 1/2] bpf: Add show_fdinfo for uprobe_multi
+Message-ID: <aE_KX66K-8yrSPtS@krava>
+References: <20250615150514.418581-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250615150514.418581-1-chen.dylane@linux.dev>
 
-From: Maxim Schwalm <maxim.schwalm@gmail.com>
+On Sun, Jun 15, 2025 at 11:05:13PM +0800, Tao Chen wrote:
+> Show uprobe_multi link info with fdinfo, the info as follows:
+> 
+> link_type:	uprobe_multi
+> link_id:	9
+> prog_tag:	e729f789e34a8eca
+> prog_id:	58
+> type:	uprobe_multi
+> uprobe_cnt:	3
+> pid:	0
+> path:	/home/dylane/bpf/tools/testing/selftests/bpf/test_progs
+> offset:	0xa69ed7
+> ref_ctr_offset:	0x0
+> cookie:	3
+> offset:	0xa69ee2
+> ref_ctr_offset:	0x0
+> cookie:	1
+> offset:	0xa69eed
+> ref_ctr_offset:	0x0
+> cookie:	2
 
-Add a compatible for the Asus Portable AiO P1801-T.
+hi,
+does this need to be 'tag: value' format ? bpftool uses:
 
-Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
----
- Documentation/devicetree/bindings/arm/tegra.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+        offset             ref_ctr_offset     cookies
+        0xe558             0x0                0x0
+        0x2574e            0x0                0x0
+        0x6c393            0x0                0x0
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-index 9cae3268a827..79b027740694 100644
---- a/Documentation/devicetree/bindings/arm/tegra.yaml
-+++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-@@ -52,6 +52,10 @@ properties:
-               - nvidia,cardhu-a04
-           - const: nvidia,cardhu
-           - const: nvidia,tegra30
-+      - description: ASUS Portable AiO P1801-T
-+        items:
-+          - const: asus,p1801-t
-+          - const: nvidia,tegra30
-       - description: ASUS Transformers Device family
-         items:
-           - enum:
--- 
-2.48.1
+which might be more readable, or at least extra line after each uprobe?
+also using spaces instead of tabs  to align the values might help
 
+same for kprobe_multi, otherwise looks lgtm
+
+thanks,
+jirka
+
+
+> 
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>  kernel/trace/bpf_trace.c | 48 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> Change list:
+>   v1 -> v2:
+>     - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+>     - print func name is more readable and security for kprobe_multi.(Alexei)
+>   v1:
+>   https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
+> 
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 24b94870b50..9a8ca8a8e2b 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3157,10 +3157,58 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  	return err;
+>  }
+>  
+> +#ifdef CONFIG_PROC_FS
+> +static void bpf_uprobe_multi_show_fdinfo(const struct bpf_link *link,
+> +					 struct seq_file *seq)
+> +{
+> +	struct bpf_uprobe_multi_link *umulti_link;
+> +	char *p, *buf;
+> +
+> +	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
+> +
+> +	buf = kmalloc(PATH_MAX, GFP_KERNEL);
+> +	if (!buf)
+> +		return;
+> +
+> +	p = d_path(&umulti_link->path, buf, PATH_MAX);
+> +	if (IS_ERR(p)) {
+> +		kfree(buf);
+> +		return;
+> +	}
+> +
+> +	seq_printf(seq,
+> +		   "type:\t%s\n"
+> +		   "uprobe_cnt:\t%u\n"
+> +		   "pid:\t%u\n"
+> +		   "path:\t%s\n",
+> +		   umulti_link->flags == BPF_F_UPROBE_MULTI_RETURN ?
+> +					 "uretprobe_multi" : "uprobe_multi",
+> +		   umulti_link->cnt,
+> +		   umulti_link->task ? task_pid_nr_ns(umulti_link->task,
+> +			   task_active_pid_ns(current)) : 0,
+> +		   p);
+> +
+> +	for (int i = 0; i < umulti_link->cnt; i++) {
+> +		seq_printf(seq,
+> +			   "offset:\t%#llx\n"
+> +			   "ref_ctr_offset:\t%#lx\n"
+> +			   "cookie:\t%llu\n",
+> +			   umulti_link->uprobes[i].offset,
+> +			   umulti_link->uprobes[i].ref_ctr_offset,
+> +			   umulti_link->uprobes[i].cookie);
+> +	}
+> +
+> +	kfree(buf);
+> +}
+> +#endif
+> +
+>  static const struct bpf_link_ops bpf_uprobe_multi_link_lops = {
+>  	.release = bpf_uprobe_multi_link_release,
+>  	.dealloc_deferred = bpf_uprobe_multi_link_dealloc,
+>  	.fill_link_info = bpf_uprobe_multi_link_fill_link_info,
+> +#ifdef CONFIG_PROC_FS
+> +	.show_fdinfo = bpf_uprobe_multi_show_fdinfo,
+> +#endif
+>  };
+>  
+>  static int uprobe_prog_run(struct bpf_uprobe *uprobe,
+> -- 
+> 2.48.1
+> 
