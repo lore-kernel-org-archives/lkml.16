@@ -1,188 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4BC3B1AB
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A73136358
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750108636; cv=none; b=CtEARSC0mo/hz+74vhbC1e5rXE0LXuO6shbS/wsFjt7HOHIqkMKot+bZpIB8rRhm3J01hLKmGYziemsqSbU79hckZYAvGKUfixuDF1HfhP4Bs9ZZVWSOqyq0Y1CMaVfQkEUtPeuFqQ8Y+yuInvXKncs1Eq3ifLa0bIIwzDiZiFA=
+	t=1750108672; cv=none; b=mQ67p2D2g2pyj3fp6fNnx5w+r5ZObIfWnGuxy3DsTprwBt3USea1czvNYzifYt+jRhsO4tbzzhPZlDjVeeeftELDdDQok+iVBb/7cK1ZyMumOplg1XUY05TZS+H3wZ5FOZs+HXuYkdNj7fVhYMclImoNDR622AhJXKi0sXkKB8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750108636; c=relaxed/simple;
-	bh=6DkDAnTryZsdP9B2tJNBaVKvwzCmYC49oVMtV96EWUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pvoja24nZDFXdujyR4Sctn5AKXso00oHiNbHXuYzqnBSzyjg208d6JZDAnp8ufbU2/8R67JBsD9f+VGIAkh0SAJeaRSInoVMkLscLmNlmluKqspWGzFKKMz+pcJVu0/IjzBpffW0A2YG41xNePVRuRD6CiS85dtBWKX1VcIJm2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SBm+aslA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750108672; c=relaxed/simple;
+	bh=SQ4FnpsNh6VpTd7gKdL4dppDBM28FgxPAn0I0bxAUa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rcRS4sqohUFg5IOkk/SodBBrTPM9nynJ2EKjKywwMbrnL8I71/beT6JoPiVPOGlT9J+D4JS7OERZcQVz5h5mb1B17hb8Qtf/XH2HFuYfnwWYmH4HJPOsGEGdkTvAKhKE0ARaLql1DBwKiNo++EYKO4yxwc9xrBy9UoV6BWnSYEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fKa93aoH; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBm+aslA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750108633;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HnJYG3PvtFjFil/WV8ssVZhvqh2kulArcwW1sYXByhk=;
-	b=SBm+aslAhqAPTOHfEQ5sVgRXDQeogQCZije2ccVHRAWvPYs9a+PXEQ81tfbMaNnmM1mFi3
-	CyGE+OIivQX/CZCYksPcDRfskomsrm191WbfYgAknIbZmeLmRXUEVslNnvn4D1lG+yqorC
-	aHbRxQXWCpJAH4Jpwu+gPzxhBpdCFm8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-ebve0tayN1GJ2GDsaFfEDw-1; Mon, 16 Jun 2025 17:17:12 -0400
-X-MC-Unique: ebve0tayN1GJ2GDsaFfEDw-1
-X-Mimecast-MFC-AGG-ID: ebve0tayN1GJ2GDsaFfEDw_1750108631
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d64026baso34232945e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:17:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKa93aoH"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2348ac8e0b4so21255ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750108670; x=1750713470; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Dte9S5IWAzLh8eHyVjwryVoXkQBlEWABWLNFJpRbeA=;
+        b=fKa93aoHdFT/NxcjjI5QQWQ4ldfK/d0no5Ble6LxWcDxRdknMriDPx5A+SejPJI4Gd
+         mnM3CpIjnGtjvEi4YtKss6THyRE1zkeVCEnV0MQsXy6c1ouP7BkiVplbjg13BEbNxKB6
+         a+Ie1jCjsAz6DcUOk/DUb2ZzClgKsILLuFVW0jWMQZWm8y05IYM0XmKcaoCnkY+/E1uR
+         aXz14LsrhJRm0EzlvLKGjVRinEzb8/X3kj/CjZi27WtxrCxkRSKp53FmCBbGJCkKh0F/
+         58wM+s4b41k++8U3i1hltnDKfn9seSeCliHtQaaWRdjroVnGBfKVxQpjXqoGLngoDOB1
+         3E5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750108631; x=1750713431;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HnJYG3PvtFjFil/WV8ssVZhvqh2kulArcwW1sYXByhk=;
-        b=V4U6r0Bk0wg58VZujmoxwBCm7Tkt80RJHOgaEFm5tQ9z6IARj2z6JoIsN2v5Szjbhg
-         jeqCeIXdk3zshupsQJX2J3GqjKcir5pFvx07yEpxByVZbIP/XjSRc13qkdFvqEPXeSx4
-         pAPPykV2bbBf9WAOTGGYUmywiB86SlgCHoMAAboz3aByY2lNqrYocJpfOtBi8rwvsZ7g
-         5Vh2j5646w3SawHirgGw7bKyrATwJyi2Cyzs7YpDCy20QA/tMp82AW0blmtqbGMGENFu
-         B41Fw6DzgeRSmEF2d9FT30ZGIZ2e9iT3Oiw5s+KYLDBNGJIQF/t+W8OPlF0uTSNOU4y8
-         GLTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXt6WbglaHv8kD8T/MlS2h+kKnmJQBCX294fe4XEp15Zoclt0uiJTc54JJABScEYyMXroGjwzZKNrshhWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKHEYoH+/xcfuQjceUYcLSGXodJNAxqD91K8MWntXJaKruRFda
-	u1ODY/tnkGmhGUWcgObkTaD80E2Fwu0RNXarrDhoBIMHcoEgB+aW7/dTp7sO8gtctG86/bLaFUM
-	qMrY13jdpGbKufpbxgz+VtuhOfqEMvVeo8cXd4Q4H34ux0xbkvq2MbyGrRyntHzONkA==
-X-Gm-Gg: ASbGncvAhSp4SucqqYU9eiwDIv7xhedj4w972Ecpy27EapsZ5EneijihfDqCk9Q5OaO
-	KYVy4I5KA506/T4TWEpvPFWH0kr+Kx87OX6ev9LMk16bpOvygNFe8nziA/0DMmw0F8flgl78sF2
-	GwKSWt4P7U5H45ca98rQCiABlTTEcvncsujdJBVk2YR3XTKLhU9+g8+XKqv4LNJiiOYcDFZwJSJ
-	dOXQugReyKdg9z6bS2cDwgfDxYwUXOh+yGw+idDAP74dmAlu/ZFlw1vs2fTUmo8ruitJzUfHl7H
-	BZ/khIv4NrnkzSdYrfSxzylMbOJqGb1l5tZniCWWorLWz0DsCewklfu9ukguJpn+eau5Ge8JuiN
-	nJB/CwkqNxLYKBgDpRIMZolYuFc5pscOfOqGQqg3fHw9zbrnqqQ==
-X-Received: by 2002:a05:600c:a218:b0:451:edc8:7806 with SMTP id 5b1f17b1804b1-4533e57d98dmr50266315e9.32.1750108631234;
-        Mon, 16 Jun 2025 14:17:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8oBMkGvd7PRRPPcXzKQHTudMe5Uvbsmvsnm7KpeQdEh7RW/YNEFe0X2UUVYc+5/4PEY1nRg==
-X-Received: by 2002:a05:600c:a218:b0:451:edc8:7806 with SMTP id 5b1f17b1804b1-4533e57d98dmr50266175e9.32.1750108630742;
-        Mon, 16 Jun 2025 14:17:10 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f3a:e300:c660:4ff5:5bfb:f5c5? (p200300d82f3ae300c6604ff55bfbf5c5.dip0.t-ipconnect.de. [2003:d8:2f3a:e300:c660:4ff5:5bfb:f5c5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7f8f9sm11982771f8f.42.2025.06.16.14.17.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 14:17:10 -0700 (PDT)
-Message-ID: <f76e4f7b-1cac-4ce3-bd68-80d6c2ab5146@redhat.com>
-Date: Mon, 16 Jun 2025 23:17:09 +0200
+        d=1e100.net; s=20230601; t=1750108670; x=1750713470;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Dte9S5IWAzLh8eHyVjwryVoXkQBlEWABWLNFJpRbeA=;
+        b=jXd28XxmnyeycKFFwxwY+XFLd1M7/93QO/K24wp2oXmA3BdhnGmMQvD6rsCFgo5XSc
+         er3CvZ/UAZow2V08Qw/oBFeES77AKRTQtjJwVZvbWHyu2CsHtvs60S4u7c3b58zGVEsM
+         9Kt95RhsDqvbINvF/xz2xlvEChA4KQBOAz/YlkYrOIGhhtXljNFUFCdBR7Z0hqTpWzWl
+         NDAiNJL8xO589R24byMt3hwxGtmODNAIcqM6tyANBf8P7/3Ntg7fgRkUW/FHLMIUBuNb
+         flhDgEzvFHVKnaexvyNMcAhKl159s74PWgQm6tzJMOCVLRKixG0tce2ueU/7QTFRHum/
+         Yt9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWn89cys9yCVLBrZBt7VFDx/04K+0+jc93hq7/+9h6ukeVU4kFRG8I8HPXwYhIBDHFu89+Hf+UUgtUtJb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpdvX4JK59lGy4MyGztp7kcb147ZtfGQXE5Vr5tUzalBtKJevY
+	RaQDk9PyzMZbVfmzsInfPTuuIZk+/RwAP4PdVGR8P/fABU+M8ajHkppg7tQ8MRRNBQ==
+X-Gm-Gg: ASbGncuTOP/XKvE6dJiD2YvN6tycK51uO9vTkoL6K6TGg1W/3RH/vYhk1WJtw47Hrzc
+	N4iWFFM/jFgwkV91E6JF/9WWG9SiSimTu8n2R9eaPp+qMKciS4iPzXoJ0SKxijzHp2DboakqjpW
+	blq05TfnFRJArA7RmDard3B4jn0kjaurGSCoiqxuhgMnBCjzd2lRae/za2dhfG8SOLJX9EAk4nB
+	m+wK2i7lirfgf81VU5x+XdvdDVX4ZfXmHAzEaJgAzYGjT33o/KIjV7LTPA60hrKiVHZVOIvlAAt
+	JmTU18S5tBIT1AOS6o+qUSMOuDea3W8wUQkmN8OIgKBAT9VVCc9aq1eP8G2IxIzwzkoW0CqcQNY
+	ltk+vGRuGrTw2mLR/1iab
+X-Google-Smtp-Source: AGHT+IGAzwl1QJPvA++EDqwFMKyBsCjjEWjJhBE98c+aEAA11TrriZ5qleZr0s+YLMW9x0aRwxpKcQ==
+X-Received: by 2002:a17:902:f54c:b0:234:48b2:fd63 with SMTP id d9443c01a7336-2366f0099e0mr5348025ad.21.1750108670083;
+        Mon, 16 Jun 2025 14:17:50 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900cc047sm7614113b3a.147.2025.06.16.14.17.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 14:17:49 -0700 (PDT)
+Date: Mon, 16 Jun 2025 21:17:40 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Xueqi Zhang <xueqi.zhang@mediatek.com>
+Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	Ning li <ning.li@mediatek.com>, linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 2/8] iommu/arm-smmu-v3: Add SMMU implementation
+Message-ID: <aFCJ9IuzC1Rx2atk@google.com>
+References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
+ <20250616025628.25454-3-xueqi.zhang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: add additional mmap-related files to mmap
- section
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250616203503.565448-1-lorenzo.stoakes@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250616203503.565448-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616025628.25454-3-xueqi.zhang@mediatek.com>
 
-On 16.06.25 22:35, Lorenzo Stoakes wrote:
-> msync and nommu are directly related to memory mapping, memfd and mincore
-> are less so but are roughly speaking operating on virtual memory mappings
-> from the point of view of the user so this seems the most appropriate place
-> for them.
+On Mon, Jun 16, 2025 at 10:56:08AM +0800, Xueqi Zhang wrote:
+> Mediatek has its own implementation for wrapper interrupts and
+> power management.So add SMMU implementation when smmu device probe.
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
 > ---
->   MAINTAINERS | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
+>  drivers/iommu/arm/Kconfig                        |  7 +++++++
+>  drivers/iommu/arm/arm-smmu-v3/Makefile           |  3 ++-
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-impl.c | 16 ++++++++++++++++
+>  .../iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c | 13 +++++++++++++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c      |  3 +++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h      |  4 ++++
+>  6 files changed, 45 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-impl.c
+>  create mode 100644 drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4523a6409186..a5d1ff923a62 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15735,7 +15735,6 @@ F:	Documentation/admin-guide/mm/
->   F:	Documentation/mm/
->   F:	include/linux/gfp.h
->   F:	include/linux/gfp_types.h
-> -F:	include/linux/memfd.h
->   F:	include/linux/memory_hotplug.h
->   F:	include/linux/memory-tiers.h
->   F:	include/linux/mempolicy.h
-> @@ -15974,12 +15973,17 @@ L:	linux-mm@kvack.org
->   S:	Maintained
->   W:	http://www.linux-mm.org
->   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> +F:	include/linux/memfd.h
->   F:	include/trace/events/mmap.h
-> +F:	mm/memfd.c
+> diff --git a/drivers/iommu/arm/Kconfig b/drivers/iommu/arm/Kconfig
+> index ef42bbe07dbe..a7f98fd0f2bf 100644
+> --- a/drivers/iommu/arm/Kconfig
+> +++ b/drivers/iommu/arm/Kconfig
+> @@ -88,6 +88,13 @@ config ARM_SMMU_V3
+>  	  the ARM SMMUv3 architecture.
+>  
+>  if ARM_SMMU_V3
+> +config ARM_SMMU_V3_MEDIATEK
+> +	bool "ARM Ltd. System MMU Version 3 (SMMUv3) MediaTek Support"
+> +	depends on ARM_SMMU_V3 && ARCH_MEDIATEK
+> +	help
+> +	  When running on a MediaTek platform that has the custom variant
+> +	  of the ARM SMMUv3, this needs to be built into the SMMU driver.
+> +
+>  config ARM_SMMU_V3_SVA
+>  	bool "Shared Virtual Addressing support for the ARM SMMUv3"
+>  	select IOMMU_SVA
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/Makefile b/drivers/iommu/arm/arm-smmu-v3/Makefile
+> index 493a659cc66b..0670065d6e9a 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/Makefile
+> +++ b/drivers/iommu/arm/arm-smmu-v3/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_ARM_SMMU_V3) += arm_smmu_v3.o
+> -arm_smmu_v3-y := arm-smmu-v3.o
+> +arm_smmu_v3-y := arm-smmu-v3.o arm-smmu-v3-impl.o
+>  arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_IOMMUFD) += arm-smmu-v3-iommufd.o
+> +arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_MEDIATEK) += arm-smmu-v3-mediatek.o
+>  arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_SVA) += arm-smmu-v3-sva.o
+>  arm_smmu_v3-$(CONFIG_TEGRA241_CMDQV) += tegra241-cmdqv.o
+>  
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-impl.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-impl.c
+> new file mode 100644
+> index 000000000000..d39587b965ef
+> --- /dev/null
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-impl.c
+> @@ -0,0 +1,16 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 MediaTek Inc.
+> + * Author: Ning li <ning.li@mediatek.com>
+> + * Author: Xueqi Zhang <xueqi.zhang@mediatek.com>
+> + */
+> +
+> +#include "arm-smmu-v3.h"
+> +
+> +struct arm_smmu_device *arm_smmu_v3_impl_init(struct arm_smmu_device *smmu)
+> +{
+> +#if IS_ENABLED(CONFIG_ARM_SMMU_V3_MEDIATEK)
+> +	smmu = arm_smmu_v3_impl_mtk_init(smmu);
+> +#endif
+> +	return smmu;
+> +}
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c
+> new file mode 100644
+> index 000000000000..381268968185
+> --- /dev/null
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c
+> @@ -0,0 +1,13 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 MediaTek Inc.
+> + * Author: Ning li <ning.li@mediatek.com>
+> + * Author: Xueqi Zhang <xueqi.zhang@mediatek.com>
+> + */
+> +
+> +#include "arm-smmu-v3.h"
+> +
+> +struct arm_smmu_device *arm_smmu_v3_impl_mtk_init(struct arm_smmu_device *smmu)
+> +{
+> +	return NULL;
+> +}
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index 10cc6dc26b7b..d36124a6bb54 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -4754,6 +4754,9 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>  	}
+>  	ioaddr = res->start;
+>  
+> +	smmu = arm_smmu_v3_impl_init(smmu);
+> +	if (IS_ERR(smmu))
+> +		return PTR_ERR(smmu);
 
-This is much more shmem related than it is mapping related (I mean, 
-there is almost nothing mapping related in there)?
+I'd suggest adding ops to struct arm_smmu_impl_ops and use them. Please
+see how Nvidia's implementation makes use of `arm_smmu_impl_probe`,
+maybe we could improve that function to handle mtk smmu as well.
 
-> +F:	mm/mincore.c
->   F:	mm/mlock.c
->   F:	mm/mmap.c
->   F:	mm/mprotect.c
->   F:	mm/mremap.c
->   F:	mm/mseal.c
-> +F:	mm/msync.c
-> +F:	mm/nommu.c
+>  	/*
+>  	 * Don't map the IMPLEMENTATION DEFINED regions, since they may contain
+>  	 * the PMCG registers which are reserved by the PMU driver.
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index ea41d790463e..99eeb6143c49 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -998,6 +998,10 @@ int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+>  				struct arm_smmu_cmdq *cmdq, u64 *cmds, int n,
+>  				bool sync);
+>  
+> +struct arm_smmu_device *arm_smmu_v3_impl_init(struct arm_smmu_device *smmu);
+> +#if IS_ENABLED(CONFIG_ARM_SMMU_V3_MEDIATEK)
+> +struct arm_smmu_device *arm_smmu_v3_impl_mtk_init(struct arm_smmu_device *smmu);
+> +#endif
 
-There is a lot of mmap logic in there, correct. + a bunch of other weird 
-things ... :(
+We'd prefer to avoid implementation-specific #if CONFIG_* across the
+driver as much as possible.
 
--- 
-Cheers,
+>  #ifdef CONFIG_ARM_SMMU_V3_SVA
+>  bool arm_smmu_sva_supported(struct arm_smmu_device *smmu);
+>  void arm_smmu_sva_notifier_synchronize(void);
+> -- 
+> 2.46.0
 
-David / dhildenb
-
+Thanks,
+Praan
