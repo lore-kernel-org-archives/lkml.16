@@ -1,148 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE12238C25;
-	Mon, 16 Jun 2025 15:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BA72CA9;
+	Mon, 16 Jun 2025 16:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089497; cv=none; b=rDgQ8+eBZtQ+vO34b4C9JDdAQ8FhU7dZwDfWqBvKqKKV7g7ajq+Dtmbvvy1MA6tBOeodzePR3wNfPK+BpSYsk4cELK60XwZrZCFN7tKLIJ/o10c2cfdXJ7I4ugGl7mhjATdNfyaOGSm+JqCg+PpQuiCgyKmXJNvQzsL5c8Yz7Mk=
+	t=1750089654; cv=none; b=EDNKsvszoxuvRynDnK/itBVZ/7bfmCNzrY0fcWZp9fnILI2o+o5/Zh40YqcbFq8lvZ7jz8MvlT2omq6XraI9ixEnZDG2CDxw+B5KBtT6VFKXoR+t033/9/6BaE867rUw3yfmy6NcubHrXAUU/PCk9yuMI0ani6En3onnMiDhB1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089497; c=relaxed/simple;
-	bh=LuhQSb+DK+8zQUn35OeyQUEtiFm17Yx6iJkF9jT6jAg=;
+	s=arc-20240116; t=1750089654; c=relaxed/simple;
+	bh=AGgS9xG+XXtQyt/GqvZ5d2Bo7FUBHRlUWYBdw/v1s6w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pUIQHBYDjicJdYftgnCziKEuw5cU++uxXawiwHhifTWXeVUXF/XRMy9BU2I82/9cAPbt7XqjINzqM5YT+CryIYQmo8esDFPXJcC4UhwULF1gmcbaJrQXipXo4LiVybRD4afX0BOUrBpErLNz6QohoaSR3D8OfuxQi36yTjCj9IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXuopUs8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Klw8C0ee3gQ9/BhSTlsqlcx23G/FH8Qsb0lGFhMQOHc9GVp2TDrHLmwcc3AJJ7UrlaC5aV6vuHJX9gmSavr8okLYQYPEbPPV+1YpFoNuV5gwBEDi8tvyHh2M+XXUvpIdDHLExl+qKMCu1CSLG2TVoh/aH1ftoWNJw5AMFEADCEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGoyOaNs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXuopUs8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E588C4CEEA;
-	Mon, 16 Jun 2025 15:58:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGoyOaNs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9775C4CEEA;
+	Mon, 16 Jun 2025 16:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750089497;
-	bh=LuhQSb+DK+8zQUn35OeyQUEtiFm17Yx6iJkF9jT6jAg=;
+	s=k20201202; t=1750089653;
+	bh=AGgS9xG+XXtQyt/GqvZ5d2Bo7FUBHRlUWYBdw/v1s6w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qXuopUs8dZg+nW4ulZ3NCybN4E/fYmTKA3fG5vdNipDSwoMSw9v0GNdk9sHuMTgk8
-	 7zEkBsHS609cRj2ocvQqoaRYiQYrkQqFHmnc4IyoA5nUX0U5GEfLt4DpQV7lGSALSx
-	 IEbxO+EC/PWMviGLSOjSkMPCccA6CPwTwZNp5FJra76eEtwT0itnitLfln/5tAKCEx
-	 O0B8v020LKb+AAm1AuMcyyi1pqEJevNe+RnC+VSDE/IjdV6Og84wboQlUun8Ipw+79
-	 NE7txRrswhZNSLPD1I0SeYZPZOWoimaKVXGCMWKY/0QTIb1RAAW2TP/0XCT1JeD8Pd
-	 oNTZIZ69riAiQ==
-Date: Mon, 16 Jun 2025 16:58:11 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, p.zabel@pengutronix.de,
-	mchehab@kernel.org, iommu@lists.linux.dev,
+	b=SGoyOaNsHXLG/dyPjvdpKthHE6Yn0f0W7B7fIe0+RDg3s6I6zHdMC2LxzoBMgfKRx
+	 5lHzF18eHFJMwRvJ/9adL3kYDTTQ2fu7fskIIJmHkj1vMjmaNVdu4/sj+tyy/e/o4k
+	 3tucyYGxsTdjIkuJS+vMf7GZiNA05lu3Oq7t3qM6WVlyVd7LFYYItTrJCIaYMDxl5o
+	 M5dWWU1Trgr1XOJtQdoh6c5TGV1cP4VxIMMSDbM3nJojg5+yHIdtQyLRCxonerPwjr
+	 lWFeVkiSV4nW4nAGYpmQPNDqX2btNAtFGLjDKstFATjaeVtiLzJm7FTlu19U4iucnI
+	 EydrqqKmbkVew==
+Date: Mon, 16 Jun 2025 17:00:47 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: [PATCH 2/5] dt-bindings: iommu: verisilicon: Add binding for VSI
- IOMMU
-Message-ID: <20250616-capped-rehab-6e7fd24d23ae@spud>
-References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
- <20250616145607.116639-3-benjamin.gaignard@collabora.com>
- <20250616-winter-strict-db98f85db22d@spud>
- <5c971c09-c398-40a3-9ed5-ec38b6645e1d@collabora.com>
- <20250616-contempt-remix-5af2b7281cbd@spud>
- <2d251d7c-7906-4a66-9791-7f71e7a4b54d@collabora.com>
+	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: Re: [PATCH net-next v10 09/14] dpll: zl3073x: Register DPLL devices
+ and pins
+Message-ID: <20250616160047.GG6918@horms.kernel.org>
+References: <20250615201223.1209235-1-ivecera@redhat.com>
+ <20250615201223.1209235-10-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="seyiFdYL5UYYiB4P"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2d251d7c-7906-4a66-9791-7f71e7a4b54d@collabora.com>
+In-Reply-To: <20250615201223.1209235-10-ivecera@redhat.com>
 
+On Sun, Jun 15, 2025 at 10:12:18PM +0200, Ivan Vecera wrote:
+> Enumerate all available DPLL channels and registers a DPLL device for
+> each of them. Check all input references and outputs and register
+> DPLL pins for them.
+> 
+> Number of registered DPLL pins depends on configuration of references
+> and outputs. If the reference or output is configured as differential
+> one then only one DPLL pin is registered. Both references and outputs
+> can be also disabled from firmware configuration and in this case
+> no DPLL pins are registered.
+> 
+> All registrable references are registered to all available DPLL devices
+> with exception of DPLLs that are configured in NCO (numerically
+> controlled oscillator) mode. In this mode DPLL channel acts as PHC and
+> cannot be locked to any reference.
+> 
+> Device outputs are connected to one of synthesizers and each synthesizer
+> is driven by some DPLL channel. So output pins belonging to given output
+> are registered to DPLL device that drives associated synthesizer.
+> 
+> Finally add kworker task to monitor async changes on all DPLL channels
+> and input pins and to notify about them DPLL core. Output pins are not
+> monitored as their parameters are not changed asynchronously by the
+> device.
+> 
+> Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+> Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 
---seyiFdYL5UYYiB4P
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Mon, Jun 16, 2025 at 05:50:50PM +0200, Benjamin Gaignard wrote:
->=20
-> Le 16/06/2025 =E0 17:42, Conor Dooley a =E9crit=A0:
-> > On Mon, Jun 16, 2025 at 05:30:44PM +0200, Benjamin Gaignard wrote:
-> > > Le 16/06/2025 =E0 17:14, Conor Dooley a =E9crit=A0:
-> > > > On Mon, Jun 16, 2025 at 04:55:50PM +0200, Benjamin Gaignard wrote:
-> > > > > Add a device tree binding for the Verisilicon (VSI) IOMMU. This I=
-OMMU sits
-> > > > > in front of hardware encoder and decoder blocks on SoCs using Ver=
-isilicon IP,
-> > > > > such as the Rockchip RK3588.
-> > > > >=20
-> > > > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> > > > > ---
-> > > > >    .../bindings/iommu/verisilicon,iommu.yaml     | 71 +++++++++++=
-++++++++
-> > > > >    1 file changed, 71 insertions(+)
-> > > > >    create mode 100644 Documentation/devicetree/bindings/iommu/ver=
-isilicon,iommu.yaml
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/iommu/verisilicon,=
-iommu.yaml b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..acef855fc61d
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.y=
-aml
-> > > > > @@ -0,0 +1,71 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/iommu/verisilicon,iommu.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: Verisilicon IOMMU
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> > > > > +
-> > > > > +description: |+
-> > > > > +  A Versilicon iommu translates io virtual addresses to physical=
- addresses for
-> > > > > +  its associated video decoder.
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    oneOf:
-> > > > > +      - items:
-> > > > > +          - const: verisilicon,iommu
-> > > > You're missing a soc-specific compatible at the very least here, bu=
-t is
-> > > > there really no versioning on the IP at all? I'd be surprised if
-> > > > verisilicon only produced exactly one version of an iommu IP.
-> > > I only aware this version of the iommu for the moment.
-> > "for the moment", yeah. Is there any information that could be used to
-> > version this available?
->=20
-> The hardware block isn't documented in the TRM so I don't know if there i=
-s a version
-> field or something like that.
->=20
-> >=20
-> > > Does adding verisilicon,rk3588-iommu sound good for you ?
-> > It'd be "rockchip,rk3588-iommu", but sure.
->=20
-> "rockchip,rk3588-iommu" is already use for other MMUs in rk3588.
+> diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
 
-"rockchip,rk3588-video-iommu" then? Instances of an IP in an SoC get a
-specific compatible with the SoC vendor's prefix, so having verisilicon
-there isn't suitable unless they made the SoC.
+...
 
---seyiFdYL5UYYiB4P
-Content-Type: application/pgp-signature; name="signature.asc"
+> +static int
+> +zl3073x_devm_dpll_init(struct zl3073x_dev *zldev, u8 num_dplls)
+> +{
+> +	struct kthread_worker *kworker;
+> +	struct zl3073x_dpll *zldpll;
+> +	unsigned int i;
+> +	int rc;
+> +
+> +	INIT_LIST_HEAD(&zldev->dplls);
+> +
+> +	/* Initialize all DPLLs */
+> +	for (i = 0; i < num_dplls; i++) {
+> +		zldpll = zl3073x_dpll_alloc(zldev, i);
+> +		if (IS_ERR(zldpll)) {
+> +			dev_err_probe(zldev->dev, PTR_ERR(zldpll),
+> +				      "Failed to alloc DPLL%u\n", i);
 
------BEGIN PGP SIGNATURE-----
+Hi Ivan,
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFA/EwAKCRB4tDGHoIJi
-0kI2AP9KzlLbf7P4rTL1jmXCfJUvvM/YIgPfj9+baZXHSXGhrAEAjEfA2e8F23cf
-LiiZ9+IgE8h/RFOqP0RqrYnEJHimugI=
-=bE0w
------END PGP SIGNATURE-----
+Jumping to the error label will return rc.
+But rc may not be initialised here.
 
---seyiFdYL5UYYiB4P--
+Flagged by Smatch.
+
+> +			goto error;
+> +		}
+> +
+> +		rc = zl3073x_dpll_register(zldpll);
+> +		if (rc) {
+> +			dev_err_probe(zldev->dev, rc,
+> +				      "Failed to register DPLL%u\n", i);
+> +			zl3073x_dpll_free(zldpll);
+> +			goto error;
+> +		}
+> +
+> +		list_add(&zldpll->list, &zldev->dplls);
+> +	}
+> +
+> +	/* Perform initial firmware fine phase correction */
+> +	rc = zl3073x_dpll_init_fine_phase_adjust(zldev);
+> +	if (rc) {
+> +		dev_err_probe(zldev->dev, rc,
+> +			      "Failed to init fine phase correction\n");
+> +		goto error;
+> +	}
+> +
+> +	/* Initialize monitoring thread */
+> +	kthread_init_delayed_work(&zldev->work, zl3073x_dev_periodic_work);
+> +	kworker = kthread_run_worker(0, "zl3073x-%s", dev_name(zldev->dev));
+> +	if (IS_ERR(kworker)) {
+> +		rc = PTR_ERR(kworker);
+> +		goto error;
+> +	}
+> +
+> +	zldev->kworker = kworker;
+> +	kthread_queue_delayed_work(zldev->kworker, &zldev->work, 0);
+> +
+> +	/* Add devres action to release DPLL related resources */
+> +	rc = devm_add_action_or_reset(zldev->dev, zl3073x_dev_dpll_fini, zldev);
+> +	if (rc)
+> +		goto error;
+> +
+> +	return 0;
+> +
+> +error:
+> +	zl3073x_dev_dpll_fini(zldev);
+> +
+> +	return rc;
+> +}
+> +
+
+...
+
+-- 
+pw-bot: cr
