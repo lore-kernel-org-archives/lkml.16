@@ -1,289 +1,137 @@
-Received: from rcdn-iport-3.cisco.com (rcdn-iport-3.cisco.com [173.37.86.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDB72874E1;
-	Mon, 16 Jun 2025 16:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DA12868B2
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091247; cv=none; b=J8ZD2Uhbeil8WGie0H2cLHDhpEPPqAOmRAAPrskV1aEem+VI9+YwKvRO5GhvgG5Sjhv19/hCtfzcTdOjdBhjJDWPQmM+nAhEAayN+76NufC1hTZQapfxtR5+ZPBLWewr7nTIrxHgVrpNzbCoxvSPlUX2iPd3ovJoPIm2cjTuHmk=
+	t=1750091278; cv=none; b=lRjo/n5VTwrtKMooxiJO2rppjFc2gX0ip9+jLoCyXe/HhlsBg91//EqGE8UnOeL+C15YqzRpNzNEe25edAu2TeNtvz6RlBwAIAEUNzbVg0L/2y+DysFyxEBxVxAxJt8qAFgpSw9DIy6Vc0e6d+3T7xrdDeh0r8xDb8Tc7IdWPdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091247; c=relaxed/simple;
-	bh=L8wIpTB92/GO7zypSaXWXZ0oMLQI18H2zmJruLR+hlA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q/2L5a+G8UnCg6qwzL5v9UFIbvOj9iTU0N5YSGVozWWOJQhlZlB2EmBfhey8P2COXFDiBbw0z/0/k/I14XePmtB8lqksq73ZkKc4ecMAtvJ5Xn4Z+jMW8GI2IhaNjykTfchKqC6pRPlECwBIVkd1PP0cJVEmfBLiU0NNsuP+xO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=JlVAlUC/; arc=none smtp.client-ip=173.37.86.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1750091278; c=relaxed/simple;
+	bh=y+IVtu+WNfcfhdvqMMjx7mRf57PCrubK/DS0Yxo11+M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CjQPt990PwcVX5FyVZBbsL6Vd0wEKNWTe5GhuVi7fyCYqHIWgOVc6JwMuswNs3GLnsHIyqIItNoH42WjysfyywgMzjh0sT5uj4T0ipAu5NVZLxtEMnjLOxmMfmn4hf9lcWVmajcjPTiEVmk6LrmGoNHok0ERVQk6Vf12zJlVbDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=N8tKoTQx; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="JlVAlUC/"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="N8tKoTQx"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a5096158dcso4099675f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=7792; q=dns/txt;
-  s=iport01; t=1750091245; x=1751300845;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xv2pY2dcZZStRYn70I+jXe/82sKmKsqwAsAOsWBhsGQ=;
-  b=JlVAlUC/TkH8XYRYpVlXB/PkGCI8vQ7HdEgVuXo4IMLeJn5OtcdI0Bhc
-   7dZpI4Kk2QWb+A4cI0wNks83pERJ9Eq8/nAkJ83Jf5SDZ5yhSlzrpy0Nq
-   M8Abww6yMYUar/J+W06HY6HMSicgjsIDSpstR21+o9kJeunyteLjw/fi5
-   oAmyfjQj9JCCMOzuU6q8XCg2P2LuW+adePnEd1c4KMutLilkkXBj1hagz
-   WllGiT60xv7woIKrm0+ZUvxm13FEtYXbU/rOWBkTdYtFCk6LJFQrBIMQ+
-   eSuD/IlIBgFm40uy6aygUT+2inpiX+HLIuqvzGfQCQ6/w+3ctPU1Olw1z
-   w==;
-X-CSE-ConnectionGUID: t1BiUVzURFaafk0l0RWgnw==
-X-CSE-MsgGUID: JZxj47rgTAO0mKipMVBsug==
-X-IPAS-Result: =?us-ascii?q?A0ANAACbRFBo/5QQJK1aGwEBAQEBAQEBBQEBARIBAQEDA?=
- =?us-ascii?q?wEBAYF/BgEBAQsBgkqBUkMZMIxwhzSCIZ4ZgSUDVw8BAQEPUQQBAYUHAotmA?=
- =?us-ascii?q?iY0CQ4BAgQBAQEBAwIDAQEBAQEBAQEBAQELAQEFAQEBAgEHBYEOE4YIhlsCA?=
- =?us-ascii?q?QMnCwFGEFFWGYMCgm8Dr3iBeTOBAd43gW6BSQGNTXCEdycVBoFJRIEVgnlvg?=
- =?us-ascii?q?VKJNQSDOo9oYIFqgjGMQEiBHgNZLAFVEw0KCwcFgWMDNQwLLhUyPDIdgg2FG?=
- =?us-ascii?q?YISiwiESStPhSGFBSRxDwZPQAMLGA1IESw3FBsGPm4HmAuDaweBDhSBZEgek?=
- =?us-ascii?q?yQLkjOBNZ9WhCWhUxozqmGZBKN/hTmBaDyBWTMaCBsVgyJSGQ+OLRa7UyYyP?=
- =?us-ascii?q?AIHCwEBAwmPfweBFmABAQ?=
-IronPort-Data: A9a23:nnYDB6oKvbQu9NnCCUX+2OVJ9O5eBmLIZBIvgKrLsJaIsI4StFCzt
- garIBmGa/3cYDbwKYggao3kpBhTvJGEz9A2HlNp/HtnFC1Dp+PIVI+TRqvS04x+DSFioGZPt
- Zh2hgzodZhsJpPkjk7zdOCn9z8ljPvgqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
- T/Ji5OZYQHNNwJcaDpOtvrd8U035pwehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
- 86r5K255G7Q4yA2AdqjlLvhGmVSKlIFFVHT4pb+c/HKbilq/kTe4I5iXBYvQRs/ZwGyojxE4
- I4lWapc5useFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpfh660GMa04AWEX0vouK2Bzy
- +4lEh4EZx6A3+bu+o20TPY506zPLOGzVG8eknhkyTecCbMtRorOBvyTo9RZxzw3wMtJGJ4yZ
- eJANmEpN0qGOkMJYwtHYH49tL/Aan3XcDRCtFORrKkf6GnIxws327/oWDbQUofbHpoNwxbB/
- woq+UzbMAEYaIOFxgas1Sqppe7XuB3RQ58dQejQGvlCxQf7KnYoIBEfUx2wqOOhh0iiVsh3L
- 00S8zAp668o+ySDTNT/VTW8oXiZrlgdUd8WGOo/gCmIw7DI4gDfHmUYQyRaZdoOs9U/Tjgnk
- FSOmrvBBzlitrCaSXO17LqYrTqufyMSKAcqfyIaQBEey8PurIE6klTESdMLOKq0iMDlXDL92
- TaHqAAgiLgJy80GzaO2+RbAmT3EjpzISBMlox7cRWON8Ax0fsimapau5Fyd6uxPRLt1VXGIu
- HwC3szb5+cUANTUzWqGQf4GG/ei4PPt3CDgvGOD1qIJr1yFk0NPt6gJiN2iDC+F6vo5RAI=
-IronPort-HdrOrdr: A9a23:MHODWaCsF62YoT3lHemD55DYdb4zR+YMi2TDGXocdfUzSL39qy
- nAppomPHPP4gr5HUtQ+uxoW5PwJE80l6QV3WB5B97LNzUO+lHYTr2KhrGM/9SPIUDD398Y/b
- t8cqR4Fd37BUV3gILH+gWieuxQp+VviJrJuQ8bpE0dND2DrMpbnmFENjo=
-X-Talos-CUID: 9a23:62ulh265/U71XbPgJNss6Bc+G/0bYEDn4n7ZLUzgDT5Td7KTVgrF
-X-Talos-MUID: 9a23:zYB6TgVICYBuX+Pq/B3elDM+a91n342JUEUukI0jheOfKCMlbg==
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.16,241,1744070400"; 
-   d="scan'208";a="393705811"
-Received: from alln-l-core-11.cisco.com ([173.36.16.148])
-  by rcdn-iport-3.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 16 Jun 2025 16:27:24 +0000
-Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kartilak@cisco.com)
-	by alln-l-core-11.cisco.com (Postfix) with ESMTPSA id AC408180001E7;
-	Mon, 16 Jun 2025 16:27:22 +0000 (GMT)
-From: Karan Tilak Kumar <kartilak@cisco.com>
-To: sebaddel@cisco.com
-Cc: arulponn@cisco.com,
-	djhawar@cisco.com,
-	gcboffa@cisco.com,
-	mkai2@cisco.com,
-	satishkh@cisco.com,
-	aeasi@cisco.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	revers@redhat.com,
-	dan.carpenter@linaro.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: [PATCH v5 3/4] scsi: fnic: Add and improve logs in FDMI and FDMI ABTS paths
-Date: Mon, 16 Jun 2025 09:26:31 -0700
-Message-ID: <20250616162632.4835-3-kartilak@cisco.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250616162632.4835-1-kartilak@cisco.com>
-References: <20250616162632.4835-1-kartilak@cisco.com>
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750091274; x=1750696074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g//RjhSoXItXHLLuz1FPQ8PBTL6LhGzURl5mDmu1U+s=;
+        b=N8tKoTQxZRk0Op4GSzgx90r1v5+M8Wi9xiI3gB9HZg/36jS7MM3WI4WEib/BWH8B7J
+         ffiQUlvHgOcZ9t0OH3UTG+F1oU/RC/7wLcKeQl4MmUWzKJx6crv6UvzzeXg18m9d2pDg
+         QY73UTx5v/vRxicCGRGmXVtVBBWAm7YvdZ5gZ2bhSY1e3Vp6sD5jUU1clHbBuCctTzNC
+         yiw19Wo4ljjH4PzyZXDZsVxRBmip+UD/3cVVhGeSL1a+9GMfqRv5jiburkJDA6Fr03Qm
+         N2hiEBWayaW9wunAIjD7rXLN4JTDa9qAz4pfSLeHzh/cvTpotgDFchoVq88kdELdlNQ8
+         SOJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750091274; x=1750696074;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=g//RjhSoXItXHLLuz1FPQ8PBTL6LhGzURl5mDmu1U+s=;
+        b=b9gYpjXkwWwlp8QKfFOjW/zC/lypzjhyhc4WnIPujtwf/RoPpfbit0F+VMnSLhTMr4
+         puBr58mnDebkMLUU/ZauzLULWEd5XjbvKt0Ypadtbqeii/Z3XM2shPu1IFnclLFjRUR3
+         CczZEBtFG0cTh5H3wsO4QtNHjYBiPQutViCCjr4aBTJX91hLiiC4wwRx1/KKX81H+1r2
+         vjYHajfc282YB1MePCyIseGsGqlcZhJCb+Di4CiX6vwsObDBX+noK3LOo2V9hucpM3m3
+         eofy+mc7UJv6Fn9FezUCYusew9Boh7nRHcWNwy4kw/pRwLu8qdI7cmtUopk3srxRyN00
+         Wj0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVkTTEx6tcQ2F0kAILIEp5XoW2f+EZYIa1wzK8AvgqFhRNT5/fP0l3WC47Z4TlYPXbNSViJRUeAVl3HCW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykGWt83YengpJsMlHiGhbomsv+IeyE+v673nAzXpkqR1flM2XU
+	N2QdepWmIWsm5+AtdRc9ewGBs4zFF407k8tUI4JYamHvpXD6AUbIx+PyO46P/1duZAE=
+X-Gm-Gg: ASbGncvSBb1UJ6xyRO/cW1PlKuuauK3gE+etQQ8uvHBtFXsmZ2v7rwYD3Ksofz2lB07
+	SibIeCZ7bTCviHcw2v0bpXT0VioZ98V55+HQK1TOcUJoL8jMdCiSXdgVQsm73tgG/oWaMboLAMF
+	t7Ze2gdvZB8haCW4s0Qi3ECaFWjV8DJYCuKa/9VdJnmwO9UQ0PPQ5YP3WTSHil1UFxyJbRMs7Ue
+	G6h9b+RNClfd/eMze1cpfoXsaCQmMRIqLT9UYjW4qIk9H5bvBHjm1isXuXRDza+VGMP+EZPePSY
+	eSjHiIho/19KjVfWrfZFuJ6fqK7qKKJPGnvJ3Dq3wfXTqFgJHr7NFZfL+UTKxw==
+X-Google-Smtp-Source: AGHT+IErBlsaj2oMz4KGG0U/n1iHZhnbyvR7L71f4kcmN+NZni2stWVZL4S2bu1UJwMFwQlCqMCesg==
+X-Received: by 2002:a05:6000:240e:b0:3a4:eec8:c9b3 with SMTP id ffacd0b85a97d-3a57237dc17mr8397766f8f.23.1750091274515;
+        Mon, 16 Jun 2025 09:27:54 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1866:9357:88b6:f1b2])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568b089b5sm11356238f8f.48.2025.06.16.09.27.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:27:53 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jian Hu <jian.hu@amlogic.com>
+Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>,  Chuan Liu
+ <chuan.liu@amlogic.com>,  Neil Armstrong <neil.armstrong@linaro.org>,
+  Kevin Hilman <khilman@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,
+  Michael Turquette <mturquette@baylibre.com>,  Dmitry Rokosov
+ <ddrokosov@sberdevices.ru>,  robh+dt <robh+dt@kernel.org>,  Rob Herring
+ <robh@kernel.org>,  devicetree <devicetree@vger.kernel.org>,  linux-clk
+ <linux-clk@vger.kernel.org>,  linux-amlogic
+ <linux-amlogic@lists.infradead.org>,  linux-kernel
+ <linux-kernel@vger.kernel.org>,  linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 4/6] clk: meson: t7: add support for the T7 SoC PLL
+ clock
+In-Reply-To: <4dd25114-212d-44d6-938a-63871750c292@amlogic.com> (Jian Hu's
+	message of "Thu, 12 Jun 2025 21:02:00 +0800")
+References: <20250509074825.1933254-1-jian.hu@amlogic.com>
+	<20250509074825.1933254-5-jian.hu@amlogic.com>
+	<1jtt5ny6gq.fsf@starbuckisacylon.baylibre.com>
+	<4dd25114-212d-44d6-938a-63871750c292@amlogic.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 16 Jun 2025 18:27:53 +0200
+Message-ID: <1jh60fd52u.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-User: kartilak@cisco.com
-X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
-X-Outbound-Node: alln-l-core-11.cisco.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add logs in FDMI and FDMI ABTS paths.
-Modify log text in these paths.
+On Thu 12 Jun 2025 at 21:02, Jian Hu <jian.hu@amlogic.com> wrote:
 
-Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-Reviewed-by: Arun Easi <aeasi@cisco.com>
-Reviewed-by: John Meneghini <jmeneghi@redhat.com>
-Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
----
- drivers/scsi/fnic/fdls_disc.c | 65 +++++++++++++++++++++++++++++++----
- 1 file changed, 58 insertions(+), 7 deletions(-)
+>>> +
+>>> +static struct clk_regmap t7_pcie_pll_od =3D {
+>>> +     .data =3D &(struct clk_regmap_div_data){
+>>> +             .offset =3D ANACTRL_PCIEPLL_CTRL0,
+>>> +             .shift =3D 16,
+>>> +             .width =3D 5,
+>>> +             .flags =3D CLK_DIVIDER_ONE_BASED |
+>>> +                      CLK_DIVIDER_ALLOW_ZERO,
+>> What's the behaviour of the divider on zero then ?
+>
+>
+> If there is no CLK_DIVDER_ALLOW_ZERO, there is a warning when registering
+> t7_pcie_pll_od.
+>
+> like this:
+>
+> =C2=A0 ------------[ cut here ]------------
+> =C2=A0 WARNING: CPU: 1 PID: 1 at drivers/clk/clk-divider.c:140
+> divider_recalc_rate+0xfc/0x100
+> =C2=A0 pcie_pll_od: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
+> =C2=A0 Modules linked in:
+> =C2=A0CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+> 5.4.283-09976-ga803e94eed88-dirty #91
+> =C2=A0 Hardware name: tm2_t962e2_ab311 (DT)
+> =C2=A0Call trace:
+> =C2=A0 [ffffffc020003750+=C2=A0 64][<ffffffc0100e3e3c>] dump_backtrace+0x=
+0/0x1e4
+> =C2=A0 [ffffffc020003790+=C2=A0 32][<ffffffc0100e4044>] show_stack+0x24/0=
+x34
+> =C2=A0 [ffffffc0200037b0+=C2=A0 96][<ffffffc01130a2e8>] dump_stack+0xbc/0=
+x108
+> =C2=A0[ffffffc020003810+ 144][<ffffffc01010c484>] __warn+0xf4/0x1b8
+> =C2=A0 [ffffffc0200038a0+=C2=A0 64][<ffffffc01010c5f4>] warn_slowpath_fmt=
++0xac/0xc8
+> =C2=A0[ffffffc0200038e0+=C2=A0 64][<ffffffc01061d364>] divider_recalc_rat=
+e+0xfc/0x100
+> =C2=A0[ffffffc020003920+=C2=A0 80][<ffffffc010624e84>]
+> clk_regmap_div_recalc_rate+0x74/0x88
+> =C2=A0 [ffffffc020003970+=C2=A0 96][<ffffffc010616a54>] __clk_register+0x=
+62c/0xb78
+>
+> so add it to avoid the warning.
 
-diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
-index 146744ca97c2..14691db4d5f9 100644
---- a/drivers/scsi/fnic/fdls_disc.c
-+++ b/drivers/scsi/fnic/fdls_disc.c
-@@ -791,6 +791,7 @@ static uint8_t *fdls_alloc_init_fdmi_abts_frame(struct fnic_iport_s *iport,
- static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- {
- 	uint8_t *frame;
-+	struct fnic *fnic = iport->fnic;
- 	unsigned long fdmi_tov;
- 	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
- 			sizeof(struct fc_frame_header);
-@@ -801,6 +802,9 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 		if (frame == NULL)
- 			return;
- 
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: FDLS send FDMI PLOGI abts. iport->fabric.state: %d oxid: 0x%x",
-+			 iport->fcid, iport->fabric.state, iport->active_oxid_fdmi_plogi);
- 		fnic_send_fcoe_frame(iport, frame, frame_size);
- 	} else {
- 		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
-@@ -809,6 +813,9 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 			if (frame == NULL)
- 				return;
- 
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+				 "0x%x: FDLS send FDMI RHBA abts. iport->fabric.state: %d oxid: 0x%x",
-+				 iport->fcid, iport->fabric.state, iport->active_oxid_fdmi_rhba);
- 			fnic_send_fcoe_frame(iport, frame, frame_size);
- 		}
- 		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
-@@ -821,6 +828,9 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 					return;
- 			}
- 
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+				 "0x%x: FDLS send FDMI RPA abts. iport->fabric.state: %d oxid: 0x%x",
-+				 iport->fcid, iport->fabric.state, iport->active_oxid_fdmi_rpa);
- 			fnic_send_fcoe_frame(iport, frame, frame_size);
- 		}
- 	}
-@@ -829,6 +839,10 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 	fdmi_tov = jiffies + msecs_to_jiffies(2 * iport->e_d_tov);
- 	mod_timer(&iport->fabric.fdmi_timer, round_jiffies(fdmi_tov));
- 	iport->fabric.fdmi_pending |= FDLS_FDMI_ABORT_PENDING;
-+
-+	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+		 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+		 iport->fcid, iport->fabric.fdmi_pending);
- }
- 
- static void fdls_send_fabric_flogi(struct fnic_iport_s *iport)
-@@ -2292,7 +2306,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
- 	spin_lock_irqsave(&fnic->fnic_lock, flags);
- 
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	if (!iport->fabric.fdmi_pending) {
- 		/* timer expired after fdmi responses received. */
-@@ -2300,7 +2314,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
- 		return;
- 	}
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	/* if not abort pending, send an abort */
- 	if (!(iport->fabric.fdmi_pending & FDLS_FDMI_ABORT_PENDING)) {
-@@ -2309,26 +2323,37 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
- 		return;
- 	}
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	/* ABTS pending for an active fdmi request that is pending.
- 	 * That means FDMI ABTS timed out
- 	 * Schedule to free the OXID after 2*r_a_tov and proceed
- 	 */
- 	if (iport->fabric.fdmi_pending & FDLS_FDMI_PLOGI_PENDING) {
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"FDMI PLOGI ABTS timed out. Schedule oxid free: 0x%x\n",
-+			iport->active_oxid_fdmi_plogi);
- 		fdls_schedule_oxid_free(iport, &iport->active_oxid_fdmi_plogi);
- 	} else {
--		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING)
-+		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+						"FDMI RHBA ABTS timed out. Schedule oxid free: 0x%x\n",
-+						iport->active_oxid_fdmi_rhba);
- 			fdls_schedule_oxid_free(iport, &iport->active_oxid_fdmi_rhba);
--		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING)
-+		}
-+		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+						"FDMI RPA ABTS timed out. Schedule oxid free: 0x%x\n",
-+						iport->active_oxid_fdmi_rpa);
- 			fdls_schedule_oxid_free(iport, &iport->active_oxid_fdmi_rpa);
-+		}
- 	}
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	fdls_fdmi_retry_plogi(iport);
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
- }
- 
-@@ -3743,12 +3768,26 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
- 
- 	switch (FNIC_FRAME_TYPE(oxid)) {
- 	case FNIC_FRAME_TYPE_FDMI_PLOGI:
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"Received FDMI PLOGI ABTS rsp with oxid: 0x%x", oxid);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_plogi);
- 
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_PLOGI_PENDING;
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		break;
- 	case FNIC_FRAME_TYPE_FDMI_RHBA:
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"Received FDMI RHBA ABTS rsp with oxid: 0x%x", oxid);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
-+
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_REG_HBA_PENDING;
- 
- 		/* If RPA is still pending, don't turn off ABORT PENDING.
-@@ -3759,8 +3798,17 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
- 			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
- 
- 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rhba);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		break;
- 	case FNIC_FRAME_TYPE_FDMI_RPA:
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"Received FDMI RPA ABTS rsp with oxid: 0x%x", oxid);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
-+
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_RPA_PENDING;
- 
- 		/* If RHBA is still pending, don't turn off ABORT PENDING.
-@@ -3771,6 +3819,9 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
- 			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
- 
- 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rpa);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		break;
- 	default:
- 		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--- 
-2.47.1
-
+That does not really answer my question
