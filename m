@@ -1,126 +1,164 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFB02CA6
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D62C1C54AF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750109524; cv=none; b=TQX1Kv2IyOCALhvlxY9NkoI07VR3FzgRfSay/B5P/KZabzTU7v62xSEUdQBdTp8p1qIVjZiFDuTjcRpANYjNBMqf7EStuKJQ/aWyWai3bHAuuLFRCqmk9aasTlTgon0F0c3q7AkuxK7Riilj6DHQdma4aHdYQuenK0nyCIXdjms=
+	t=1750109571; cv=none; b=l3kWUZmX8knlUBEo1DI2sonyWxWstUz7Ng9noY1C45vp7A/Q60QrB4yzaczfr0ugdUhioU1fwyItfmrlEwrHLH+/UaJvUDPcp2cFcmH+sCO1S4WV+O0fK6qy2O/eoa2zOdAjgt6n5FFGnppReZICkmquAPwplhi6OcM8f9FHVUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750109524; c=relaxed/simple;
-	bh=iRkFuMxTZ0h0x2pZI1jYUc7gSmQrpxuVxvVwRlks80U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AXZTpqvUKQ1jb/deNlA4BZ96srTRu/+Y5RB1Fv2eqpa/pFadUrpfBoLa16nx26gJ4/+hZS9ySI+wfdoxxxcbZj1rjTA+aQc7q2gMjiAsVYFzCFI2VoVpU3R+HEjqefg9Z0U1WvHbuTiVoJeTyWBN0ANxF0dxdjFDIPxxMtR8FLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8mCjxmZ; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750109571; c=relaxed/simple;
+	bh=1daXkcpedeVMkdfibmjOiKjSGHv5H5jAWkH3U7rNLWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H4p3OexLOFvy23ZoG/JhIKpYk91JK62h7jpcT/KxMpjDxCA5FIFlLiNrTqLKaTALU3S/UVyWdthygEmhakUOVySzpb+FGE2RGVfkk+iUxFjGXLtwE0ibjs01qWnmPMrp7XqkrfHd5Yex4Iz2paiYg6XD9JvG42D4FWB5JcCvwjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h30leDPJ; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8mCjxmZ"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7dc89108bfso4026780276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:32:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h30leDPJ"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235e389599fso67605ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750109521; x=1750714321; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nFlrTdSbiYtSZxGPXOVLI+cEBoyC+FpjHzAjZc+xdGM=;
-        b=I8mCjxmZPniE/LWvCJ7QgWYDiCUwV/X1ac6La1yqFxDZEYSOPVO7vl5JGZnwEQjssi
-         FEotytQqfe5GNnXc59+/BQdmWwifrIqpcYHzxyPYiTb1NpXCHSCJFXiJiA3/WddyEnbH
-         Hf9r9oGHgK4C1BESUgYiMojlfYxz5wSk9mssDfRoHHqcO7wwmZ04yrbrP7DUFBSNwCUt
-         vHjGb0GVh7hhq2PPOtDZWWg91h83kqvL+9WbcaAdCtjs9d9Rs/Msy1GFnXtg0Jc2Y8sv
-         gVIw+G10V7jpXuz0ajp0Yw1zqo3L9G6a9Fc2qyWNLa4LP0N9bYpiLqnjDjx0zB3C4lec
-         Lpzw==
+        d=google.com; s=20230601; t=1750109569; x=1750714369; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=diaMMomGVSeMyl9b0SDQ+0jS5CqmoXFRYMyDr82RfPg=;
+        b=h30leDPJKwfat85XPkRXpJLknslyBZB1MxEVPBFu5/677ECoPMwlaFA4qkv6FXoHje
+         nAVhrPCuhlvL4Md56oo3xGPjbf4RA7mQC3khlai7WBQB6jYOQIF7rrsWV8qDnH0AYe1l
+         TCd/qQfUKUYlcGEePQ+T+YwjkBExpcLR4sERQsRm+FQn5Xnh8d/dNpdk/hsZfUdotQeL
+         9V9uVmecMSqFC6jnVflqsVDxC6Zfri4WSNDMQeEBhGo3sktbV+uOXWqrzNjT8Z3bMVjL
+         vf+O0O3wf1eyCtQYHrf7gd2C11wbXhWknuhaO3eUsmtyYu7Ml+v4bM9W/oq6cqqSQ7G/
+         1RVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750109521; x=1750714321;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nFlrTdSbiYtSZxGPXOVLI+cEBoyC+FpjHzAjZc+xdGM=;
-        b=M0hkZeHS2UET984vU/JKwzgIEuNVvXN/r877mOcl+/yCoemJqovwolvBzQ1I41cAQO
-         +yK2IvF6a+03sQQWJ8xrbQcfkB8qOBCLKLCS32vmUQ0xhMuvNYJnTKaI3ontIrbgDGg8
-         brdzAoBmoG5Cx8Xh3IkHtkyd+czkaWETjpMnBPAR7AyIdapFZ47gfYpmdKMBWEfB2IFx
-         bvhSwxigGHQ/fXKz8CzUxLJmbDNn0wzykWpRcbvE/exz0bYso07P69dXe23bw/JiBD2H
-         SQqPkYjN4K0YoONgP526gs5MCF7gzadNHPyR205wVGR7uz5KKFW/IEfBPXldzGMSQAP7
-         m7aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvRSi7TdCE34hfR7CA61rNZAkDtS2v+uQ9zUvAN73b5jpSeB7ZcnvZuBasaJbgeLoYjlG+6AgOWFdGixs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjKvCT3NYIFBCz5Rn7jLTA06SPnxH5CI6RWvEpzNWxfubE6y4M
-	ThNLLTDJGmi4y9aLZ+d2VdFMdONI5MQLVUifAT2CemqfnuVBkDGSsT76EiUefQ==
-X-Gm-Gg: ASbGncvv1ChmSPzNW8KkcHZjP0NUrBvcEIxdINBRTFffLZQHbhhcEQIB09TQxlyYJtw
-	hKyzdyGBzL9natd18kNFVYaB7WdkHkbBh8pk+OL5JcIzN0SBwUfcuKxPXjyHGHz2NgZ8RlLRYfr
-	Mi/oOQ2jQ9NERyyn2Sk6xemp1g9QraVOUgqEvEto3MfkYsYgaQke4XeeIo5PpGgBXQnxTm9R6Z+
-	I/kkZpr7rAa5fxLVhpxCgwKhUWwugBOme4bH84O1BPg5V3aZ3iyXePcAxd5nd0eVPgR1lUGSbaz
-	ujJU+JLKYq9GlwgcKxuSgexqfTZNTM/ep/yuFlVBJz5ktMtwUDyRm3vLwMA7zQ==
-X-Google-Smtp-Source: AGHT+IFTVBWlw9cflhlERZQFd/71VwgIhWWdB/OgezLH02B6Q4VgQCV4eFMJ0bcb9Z0GUl/V8MHJJw==
-X-Received: by 2002:a05:6902:2410:b0:e7b:607b:54b7 with SMTP id 3f1490d57ef6-e822acd0934mr14652384276.24.1750109521470;
-        Mon, 16 Jun 2025 14:32:01 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:13::])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e820e09fa44sm3183192276.24.2025.06.16.14.32.00
+        d=1e100.net; s=20230601; t=1750109569; x=1750714369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=diaMMomGVSeMyl9b0SDQ+0jS5CqmoXFRYMyDr82RfPg=;
+        b=i4wh1WOI/luqZlLyU4qIDiBrMdb97+z8NGUjYqGyysGn9VOoueETtAkNCvSwaKMmBq
+         yOCAXseBUE33JD7rnX3GER492rgPBMS4tfn7iw4TjPmUFiB4Vzjq/GYdsXZqgZWevrPm
+         O+ZoPkcfXPb+ZECmVnPg5ixI2jSnhpFJb4lyJMaY7DXFepuVsv90CLy5GWHzyneJph4u
+         +++vdlAFnWv1H2F3OI/t00sgwbg0H7+OmDiphoyfii+HQ3cxWmPwvO4+OFg1coV9tFv1
+         AXtY/sp79vSvFlKyukOVeTWwZLW9M52E81+0jVfKEQ1MyhjNZAkidBMMZx9iyD0LiS14
+         uvFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdh1uViZO1E13XZoTQXY6DP9ERzHlZGHwTSzAQu9VwifV0asTdZYLMrNUp0hLKW2EywOnNH/4iXMRNNTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdXAviQRASQ9gRLkaZHCihYks2ApQFzeFCutU5gDlhyd6gUPzg
+	S+9Us4lSGFnIyde/KanHaEAGqwqNxSW6G2YX/0nCCG1d7Qe0WI9lB8JlOf7dJ32AfA==
+X-Gm-Gg: ASbGncss32sL8S/Gdhj4vDJyRawEvWaSpRjzG0z0/bq2R5qNXgU7RT90nmairxWqoKk
+	qfjZA+ahiHXzDns0i+Ls22G1KDuBAiDTut+RL0n7GV6GTcmNEWaEducdBjXBvS8cWkliccX4I7j
+	DhZm33PmNissKPaXQl9HmQKQ8Mxl9EZ/uCDFUCPxHxgKkqqpafDdptuO9yMVgLBp/pFiKUNPK0O
+	30koOI2S6+NBbK3EClinqUR+DJR7RNe5vfcqGhp+mNb3X/2ZmlBoEcD/yAct7i76ODJgzhiYgv7
+	PWslL1+1epRb4Nwq/mddrt/fieb0Uot4CPB49AvVhuxaq2XT1EgSW0g8nXUhyjB1nMpxGkwIfjC
+	7X4rYwTAWEp+vr6ZjRdKD
+X-Google-Smtp-Source: AGHT+IFWcQvoP+9fcVVp+c/nzrucrkTOoV642VxsR9D43oNtEPpmRjh6B8M7BM1aG3k8myNk+wmbkw==
+X-Received: by 2002:a17:902:e74f:b0:21f:631c:7fc9 with SMTP id d9443c01a7336-2366c4f491bmr6716645ad.0.1750109569076;
+        Mon, 16 Jun 2025 14:32:49 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31886377a6sm5271665a12.71.2025.06.16.14.32.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 14:32:01 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Honggyu Kim <honggyu.kim@sk.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Michal Hocko <mhocko@kernel.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 0/3] mm/damon: use alloc_migrate_target() for DAMOS_MIGRATE_{HOT,COLD}
-Date: Mon, 16 Jun 2025 14:31:58 -0700
-Message-ID: <20250616213159.2839382-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250616172346.67659-1-sj@kernel.org>
-References: 
+        Mon, 16 Jun 2025 14:32:48 -0700 (PDT)
+Date: Mon, 16 Jun 2025 21:32:40 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Xueqi Zhang <xueqi.zhang@mediatek.com>
+Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	Ning li <ning.li@mediatek.com>, linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 5/8] iommu/arm-smmu-v3: Add IRQ handle for smmu impl
+Message-ID: <aFCNeOP7oRv7NRjQ@google.com>
+References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
+ <20250616025628.25454-6-xueqi.zhang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616025628.25454-6-xueqi.zhang@mediatek.com>
 
-On Mon, 16 Jun 2025 10:23:43 -0700 SeongJae Park <sj@kernel.org> wrote:
-
-> DAMOS_MIGRATE_{HOT,COLD} implementation resembles that for demotion, and
-> hence the behavior is also similar to that.  But, since those are not
-> only for demotion but general migrations, it would be better to match
-> with that for move_pages() system call.  Make the implementation and the
-> behavior more similar to move_pages() by not setting migration fallback
-> nodes, and using alloc_migration_target() instead of
-> alloc_migrate_folio().
+On Mon, Jun 16, 2025 at 10:56:11AM +0800, Xueqi Zhang wrote:
+> Add IRQ handle for smmu impl
 > 
-> alloc_migrate_folio() was renamed from alloc_demote_folio() and been
-> non-static function, to let DAMOS_MIGRATE_{HOT,COLD} call it.  As
-> alloc_migration_target() is called instead, the renaming and de-static
-> changes are no more required but could only make future code readers be
-> confused.  Revert the changes, too.
+> Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 9 ++++++++-
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h | 8 ++++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index d36124a6bb54..154417b380fa 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -1954,7 +1954,8 @@ static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
+>  			arm_smmu_decode_event(smmu, evt, &event);
+>  			if (arm_smmu_handle_event(smmu, evt, &event))
+>  				arm_smmu_dump_event(smmu, evt, &event, &rs);
+> -
+> +			if (smmu->impl && smmu->impl->smmu_evt_handler)
+> +				smmu->impl->smmu_evt_handler(irq, smmu, evt, &rs);
+>  			put_device(event.dev);
+>  			cond_resched();
+>  		}
+> @@ -2091,7 +2092,13 @@ static irqreturn_t arm_smmu_combined_irq_thread(int irq, void *dev)
+>  
+>  static irqreturn_t arm_smmu_combined_irq_handler(int irq, void *dev)
+>  {
+> +	struct arm_smmu_device *smmu = dev;
+> +
+>  	arm_smmu_gerror_handler(irq, dev);
+> +
+> +	if (smmu->impl && smmu->impl->combined_irq_handle)
+> +		smmu->impl->combined_irq_handle(irq, smmu);
+> +
+>  	return IRQ_WAKE_THREAD;
+>  }
+>  
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index 99eeb6143c49..f45c4bf84bc1 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -792,6 +792,7 @@ struct arm_smmu_device {
+>  
+>  	struct rb_root			streams;
+>  	struct mutex			streams_mutex;
+> +	const struct arm_smmu_v3_impl	*impl;
+>  };
+>  
+>  struct arm_smmu_stream {
+> @@ -998,6 +999,13 @@ int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+>  				struct arm_smmu_cmdq *cmdq, u64 *cmds, int n,
+>  				bool sync);
+>  
+> +/* Implementation details */
+> +struct arm_smmu_v3_impl {
+> +	int (*combined_irq_handle)(int irq, struct arm_smmu_device *smmu_dev);
+> +	int (*smmu_evt_handler)(int irq, struct arm_smmu_device *smmu_dev,
+> +				u64 *evt, struct ratelimit_state *rs);
+> +};
 
-Hi SJ,
-I hope you are doing well!
+Let's add these to the exisiting struct arm_smmu_impl_ops and invoke
+them like:
 
-These changes all look good to me. And I agree that changing the behavior
-to mimic migration as opposed to demotion might be helpful in making
-opportunities for others to use DAMOS as a means to perform other related
-works (like [1]), without having to use a "demotion" mechanism for simply
-moving pages around.
+	if (smmu->impl && smmu->impl_ops->combined_irq_handle)
+		smmu->impl_ops->combined_irq_handle(irq, smmu);
 
-I do have one question: I'm curious what kinds of changes callers can expect.
-Would I be correct in understanding that this is mostly a semantic change
-(aside from no longer having a fallback nodemask)? Just want to make sure I
-have a correct understanding of your intent was.
+Or maybe we could merge the existing impl_dev and impl_ops into a single
+structure.
 
-In the meantime, feel free to add the following to the series:
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-
-Have a great day!
-Joshua
-
-[1] https://lore.kernel.org/all/20250612181330.31236-1-bijan311@gmail.com/
-
-Sent using hkml (https://github.com/sjp38/hackermail)
+> +
+>  struct arm_smmu_device *arm_smmu_v3_impl_init(struct arm_smmu_device *smmu);
+>  #if IS_ENABLED(CONFIG_ARM_SMMU_V3_MEDIATEK)
+>  struct arm_smmu_device *arm_smmu_v3_impl_mtk_init(struct arm_smmu_device *smmu);
+> -- 
+> 2.46.0
+> 
+> 
