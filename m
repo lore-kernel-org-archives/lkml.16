@@ -1,304 +1,320 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012068.outbound.protection.outlook.com [52.101.66.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D701DF759;
-	Mon, 16 Jun 2025 07:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750060493; cv=fail; b=eLo0ZCDEHtIb/ZIxtNTnkmqDM0K9EUXjgRQlian/aEuJfd/M9yulwtrsie6ndodgflj/4fyETUvAmPbdzfSrBlJuiSiSS+Fbr/Zx1bV26ulbhTU7POBB008Uq7hn9qhzUcFMntO6fYwc5LwAliPsCblFfuQR07weLiEcACY+22s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750060493; c=relaxed/simple;
-	bh=+/8DVDviqHU1XxwzkSvyQ7s4QkRaF8PurL+YbwCg8rE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RZGDtfHwfQM7xnvjcl1gZGKt7rk6nmHCGPeLBLIrS5++YWoCxKXDw1uc0OlD4XpAe30OYc2uZ09KF05h3l9TINf1PNJxctr4T2OYlMLt7imvSZFTbGKFzXChOene8Jspas6ZRaCHA46uEdq4pummShU36X/JSt+iUyr9u2H0/CM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=dSClPA9k; arc=fail smtp.client-ip=52.101.66.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11621101FF
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750060537; cv=none; b=T6TIKMnB0t2JzqFbBCH2or+Jp8+x+bc8EVFHKsmmPwptLzBs5NlQYHnu1zHMgKZupIzVCmR8jhp3EKaHqcoKglGlZpy17E5WOL+h+xjVqe7QtRgf7LJwWqT1qGCk+frCYuditwZ/nNFw+kV05gD3y7IN1REflo5TNy37iZq/DN4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750060537; c=relaxed/simple;
+	bh=lWcVgpq1d0Ll5/wPccLN5cqT48b1mcZq9BCoeahdvnw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bng3VIBPikneaWzR7tbsDVck5lGG5tPq07AQVs7sA8BwA2ACF/4QS3uyOBiryOr4qGn7hnvS07c0xZKKD57bOS76LG+mNrn7KbpfRH20mbKOAKjpafLyRH/7ifTq6Ve2UMteVdUpXC15jj4vlCAEcntgRGwOPQHKHRAJj9xjkO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nGW2j2s6; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="dSClPA9k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fwefb3guRuhJlPSKRIFySijGm5TCCF4ulI0uZ5aGOpLBAiYWXkKai5bj1KylqGINflo1jPAJ+p69IqqqV2FtaTypCfDYwC8hykwF+J2beo+wJHjgrXF3pkF7ddhURyltr/SagPLo6HXSmadcSUhH4zySKeEic6QJ0Vh64GOUjXZM25il1MFCDCIWp9C45w60qZeGKkaCynO82ETc8zmNoAesO+dZhzl9HV+UnW84YcWP0pn2RLcO4+RIaTp2QGZqIfzmiMzOkLQ44PMV7+UXTz1wDPj/xyPa9v4HVspTCD8loSs0DlAk5AXLlfzk6P48FxQ79lRBZwwHYSJGrYCoBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+/8DVDviqHU1XxwzkSvyQ7s4QkRaF8PurL+YbwCg8rE=;
- b=PLXBVW0ABui6FFk7WQP56c2EAnMwn0cME6n5ke0W50VNB6GD6aQJpftIYw5pjkMhwmIb2DQ/ziij8D3/7XQkcG6UGPjy5YukdA3CJ0H2k+sHMnv7SLjhrvrKwfYi6EmYzxyaOqW5Ju13QqQFYwbv1XQnsaYedDAtIG0tgPQ2ZQAfnNuvQexpY0xhCuqCJbrRi6T5mTQ19MuYfC43/X9sLi9Fa1Itndo0nBf/50ZJQAZJn31ahim7+sacqMuEomPMSONFlbbdq4hebxb+SePTF9QQSASmJ+ieYo2bR9cp24dVmZzZUBtrnzQJteMjH2K6PXjAU327naHQAUtLzeEXSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+/8DVDviqHU1XxwzkSvyQ7s4QkRaF8PurL+YbwCg8rE=;
- b=dSClPA9kH+NujgAlcYfk4n+ozKr+W+5IpCC5YfIEHrHdznLd+00SVKFcdUfYI5tg5RX3WrvyORX4etbb5pIuPheNd5Si9ebSa1pLmi5D+Qp09hxmdES5RIvB0w/i9gu0pgQDXfnNn6R6LF8g4XQQiRntyDLa9XVipbq9GB6Ul+jIeaTwadgVKXgNV39F6xDm03VLCHk9aCtvrlngcBhmriztPNBzG28lMAkSwpJUX7pN8XYxJtFKgnZbmev/RsiGpY002vYy1dhM77362dyrg5qmFHCxtRrrw/OkywDPqZFNs7DZYD9odcQATJAuiHB/c5xTS76HEv1lVgG5A2AuvQ==
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by PA1PR04MB10555.eurprd04.prod.outlook.com (2603:10a6:102:48d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
- 2025 07:54:48 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
- 07:54:47 +0000
-From: Hongxing Zhu <hongxing.zhu@nxp.com>
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-CC: Bjorn Helgaas <helgaas@kernel.org>, Krishna Chaitanya Chundru
-	<quic_krichai@quicinc.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	Frank Li <frank.li@nxp.com>, "l.stach@pengutronix.de"
-	<l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org"
-	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
-	<festevam@gmail.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev"
-	<imx@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 1/4] PCI: dwc: Add quirk to fix hang issue in L2 poll
- of suspend
-Thread-Topic: [PATCH v1 1/4] PCI: dwc: Add quirk to fix hang issue in L2 poll
- of suspend
-Thread-Index: AQHbqFMD+NNlos4dREitFgMxw9LKubOZ3McAgAC11LCAUsTTgIAYeFJQ
-Date: Mon, 16 Jun 2025 07:54:47 +0000
-Message-ID:
- <AS8PR04MB86764EDD427DD58911FC08CA8C70A@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <20250408065221.1941928-2-hongxing.zhu@nxp.com>
- <20250408145840.GA231894@bhelgaas>
- <AS8PR04MB86766063C3A9E969234779EB8CB42@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <tv67nul5owjqywhqmekb2cf5q2acyb3jpcfvz6k62jd6sxd5gv@izy7uomaakei>
-In-Reply-To: <tv67nul5owjqywhqmekb2cf5q2acyb3jpcfvz6k62jd6sxd5gv@izy7uomaakei>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR04MB8676:EE_|PA1PR04MB10555:EE_
-x-ms-office365-filtering-correlation-id: 55a857eb-d83a-452f-026c-08ddacab10d9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?utf-8?B?YkxaM0hhV1RMUlJBRTR0WjVOMUV0YnROQ2Fqa0ZCY2tFcDJ3VnVNK0Zhbk5h?=
- =?utf-8?B?WDlvUEJiK0ZmaHRIQTY2ZldmQVNXWnJQY2dWckNVYkVocDFpclcrTXlkTWtC?=
- =?utf-8?B?MHFyQzBudy9sRVNJc29wWmZENVVMMjhqVnRSMVBjQTBEWklmbEVpWVhJZlJQ?=
- =?utf-8?B?VTRHUjFvRVNVcWMxd2Q0UGxyNHBJZUZGNnhxRmFJcDV3b2FHcURVTjRLRkZa?=
- =?utf-8?B?dHNPN2swQjVFQXJPV3g2QVRlRG9OelcxYlptMTlZclJNWDRhN1J6MlRWZkdy?=
- =?utf-8?B?dHlpNjhOK1dRbWNTNk9Ed2RkOTNqNDZEZ0MrRXE4b0ZsbzZ4TWUzOXNlQVNI?=
- =?utf-8?B?SkhqQW9KVUp2S3RqeWZpOUNXdURjSUtyWUwzV1JkWlJ0ZmZYYVNjQ0NuSlo3?=
- =?utf-8?B?K08vVXg1elpTOWdBSDJyTisvOG1oL2FNMnd5dElnOWI3V1pEc3Q1YlNoYTB4?=
- =?utf-8?B?NktVUEpHK1p5OU1mREJYai8rWmlkUmNTT0VzbE51UkFSOCtPQmV1NlNkd0xz?=
- =?utf-8?B?L21Bem5HY1VqWDlOOFZsNkkwSGFUMUp2U3Z3Z1RSQ3RCY1ZXU095NmZ4TGd2?=
- =?utf-8?B?N2VlMmhBai9QdTNQZ0xkVFJCMElmR0xnSG5UZ0VRaHc5eDQySWhpSmlRMG91?=
- =?utf-8?B?NExJRTZIdTVLZ2swTm9zcFl4bTl6U2RBUldQeDkreHNqajByWnlJelRkRWVM?=
- =?utf-8?B?SEI3SnRlb1NXZjd3cnRYRytDMnVUZUpFcCtjTDlNTGlJVUZ1MHNWUlRvZndl?=
- =?utf-8?B?WWxEY3l4c3U2b2FjRm1rNDI1bkNNQWNQL0FzaHdydUJERUVUb09ubGhNZjFS?=
- =?utf-8?B?UzU5V01YdEFaWHAvWC9HSU14STBKREJORUljb21tZ1d3S0Z5UlVCdmwxa001?=
- =?utf-8?B?a0o2Yi9rczIrcmorSFp1dUFvcDM2NlNtVVY1eEpFRFZCS0ZYakVOdlk5L01G?=
- =?utf-8?B?T0M3RWdmdkJrMitPdjZUU1ZVbTVleUZhdmtGUVBUdjlvNmdYOWVzc3pzZ0VZ?=
- =?utf-8?B?VkdSckhINlViVnZ3MHZ2QnUrOTdLQS9PZ3J4bXorc2JMci9iSDJkak9uaTJM?=
- =?utf-8?B?dktmRi9HYjJDN3o1Sy9TaTRmRTZlcVorNUVkeTBiaTVNY2liUjRFL3J3UEkx?=
- =?utf-8?B?N1htaXNnbWZ0WEtFUGZUQUVQUDRRbm5hdTJ6OGVSdkRwVGlzaTBkMjVQQXNz?=
- =?utf-8?B?cHgxZGlmTTNMOWQwcGs4Z0FMOTBuK1JhRVEyTHVrb2hmYUhucUVFZlNFaU1T?=
- =?utf-8?B?bmZkcWFEc1NLYUhKRVBlV0UrSit6SjlXOFpDd1lHaDlXV3dkUXo2OUhHQ29D?=
- =?utf-8?B?S0YyMStVN1gzVVNxZkNQVzNydnZlc2JiR3ByS1VHQlZqS2wwTjZkTzNDUy94?=
- =?utf-8?B?OWdRMm5XUzNhMHAxd09vaUVLNWZYY3htRVFGdmc4bkhLSnpMeTBHaWRsRXdq?=
- =?utf-8?B?L011N1B3SlJrTGhQWDlvd0FhRGxTempmWTVzdlBSeTJnUlJSYVU2Q1ZaRlhl?=
- =?utf-8?B?TnlZdldpTDY4Ym1YUTZnSWNueUd2OHFvdXhKdXNrblpRZ2h5c1JSM0JoSHV5?=
- =?utf-8?B?dzduVDQxc1llL2tzK3VKdytScllkdTl5ZHZMUjc5MDU2cU54dFdIa1FVMm83?=
- =?utf-8?B?KzJCN0JKRWNJakdGRW5nWVg0cTVVdERnRHM2UmVHc2RLdFZWUFB6ZHBwTzhq?=
- =?utf-8?B?SUk1ZHRKem54aHd4ZmxZTjZhd3U3RHlaeDNsbWcxL3pxejhVTmhuVWVVRE1T?=
- =?utf-8?B?dFB2NXp0NWx3cDI5WjdnbTlOQTVTQk1jUTVWbzhKaEtqbHIrLzNVM01CSUF5?=
- =?utf-8?B?VWEvWnI0cUgzS3orb0hZVHE2S2VKb2Iza1dvTE5TdTIrYjRKQ2dWaUpkemFB?=
- =?utf-8?B?Q294MUZJSWxIbThma2J4SC95NTZFTC9pMmJEbFVMd2xoT0ZJb0pwU0tNTTQw?=
- =?utf-8?B?K05kbEdWZi9tMmtEdVBoUEVFUzN4aXdmcE1YUjhxdmpNS3BYZEl5M3ZjRDc4?=
- =?utf-8?B?SENwSDhJNGZBPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?bjkxTFJOdjdnODE1KzVxcEJBVmRldHRWZGNNU2o4R2RXL21icTFEUXNYSTB4?=
- =?utf-8?B?SVo5bEVtVHhHWTdDUmlZV3llNkI2RnpCV2d0dnQ2YkNyMDVLSUxVV3Vwa0dG?=
- =?utf-8?B?Y3lNRGVaSFBnUWp6YWRWMTBWSUV6K2RKNDlmbE9MeWh3T2NWcEdmTG1DYTRO?=
- =?utf-8?B?cUFOc0VrazlxVlNWcFpYNzVKTEs3R0g1QUFBbFJyQUJkQzI5bUVJRHVyclg3?=
- =?utf-8?B?WjBGbEhaOFBSOFBCMStoYXhaRDdBYlBQTlNZY0swcHVSRVNudXNXTVdoN2hq?=
- =?utf-8?B?SGRodC9GUVBVUXBlMlJQOGVIVGJGM3p4b0Y3VHF3SUZlUk1ONm12eUdDUHZa?=
- =?utf-8?B?WHUxSVZ1OUtqZWEzMzVwMkRFSkxDQVhSRjNKTTNQN3VLVDd6bVUxZkJEY0w0?=
- =?utf-8?B?aGo0Tm9YU3d2NzhleGF0WFd6QU44MjNQeHMrUmhhTFZ0a2ZMM2J0MzFvaHBz?=
- =?utf-8?B?ckFNb2N0bzNzNlZOejA3Rzk0T1E4VDNiRVcxa0hwbUw2Q1ljalQ5cDh4Zy9Z?=
- =?utf-8?B?c3JiWE9CUnhseCs3YTZ3LzBySUNUdHBaUHI3RHVVRlZsTnQvR2pUUE9WUFlw?=
- =?utf-8?B?REVBQjdYVFhFOExuMUFnM25QNm5vUkFTYTF3Zm1TcEhON0dub2tUcldyYTRC?=
- =?utf-8?B?c0YrWFFxK0o2YWlYbTY5YzZqaWw0TTc3d1EvaC9iak11WDB5MlBOWU43OVR5?=
- =?utf-8?B?OUtRQU5hck9zbkNFSzdPa1MzVy9UWFZ5aERtY1UzOENRbloyWWlBZkNCUWhm?=
- =?utf-8?B?MmR4bklwM1pBbHR5Tk5XdWd4V3NNbU96WlU5U1NTYXpxTGU4TjZxbVRJdjkw?=
- =?utf-8?B?WllKeVhTc2I5bUtYNDRIWEdYMDB3Syt6eis3NTJQRWNxeStlVGpEZWNJT28r?=
- =?utf-8?B?bmwvbWFtTmpqVFJNQnhUUTFOd1ZVZG44aVd3bzROVkhhTG52cXJDbEhSS2tl?=
- =?utf-8?B?eURQdEpFWDIwTk5sZXc0ZGtaUHdFK2xMbzFLSmRBZXJ2WDd6TVp2KzJycGph?=
- =?utf-8?B?aVhjWDBtbU1mSjVFMWtVSkM0UUIyRTI0VnBHRzFxeGNxYWF0Zmsvci9ucWk5?=
- =?utf-8?B?N0F0M0xkcVRHREl1aUtqRGJuTWgycVVrY1ZmdndqSjYvUmpsNFU2MDlwVHRB?=
- =?utf-8?B?empXOWRYM1A4T1JTM3ovOU1oMEJXemJORkdja2hmNTAxUU5HR0FGc3BrWFpT?=
- =?utf-8?B?RFV3aDFIaVRVdUpkVUdLU1grOGtjazFteWdPK050V2VMZ01Ld0t5MHRRejNP?=
- =?utf-8?B?em1hTVNmMlZVc3FhQSt6YzBiS0JKMklmMzlzQ0czR2V6MmU5bnFRTkIxZXVD?=
- =?utf-8?B?dHZXN3VmWTFlaWgwdVhMUlIyWms0a2J4SEl1eUgzQmt4cTV3U0dCRXRZQkY1?=
- =?utf-8?B?eEFUMzhVN2RVQXhrM0ZNOHhtd2U0VzdJeG5UcmlHZ0k5NHlXc2dPQU9YWlZh?=
- =?utf-8?B?aG9nL0NDMy8weU0vQXA1aXlDdlVsY3BCZHlkYzNGUDg4TjVwUzZUZFVZeGJJ?=
- =?utf-8?B?a0VPYldkRnFFSzREb2VyZzA2bDMrcTcyeHpkMWtQYktoWkVQOG1aRURoRGM4?=
- =?utf-8?B?VTBzYVJpMVlLUThrTHd2OFpwc2kybFhBNmFNOFRIVDR0Ym9mVnNwbVFVZGI3?=
- =?utf-8?B?bW9VUWgzdXExMzlTQTVHd1VDMllCTVo1ZjZIbUV1RkNqbkpDbHNQMlY4VVh3?=
- =?utf-8?B?MVZvaEx4NGNGcU9DRXlHbncwYmN6S3kvVWY5NzJsZHVOcW5ITHo3NzNlSzBn?=
- =?utf-8?B?VmNjQ1RTcFJCYlo3WitRRmd0K3RYNVFiMjZkbHdSRk5VMTNQWkFNOUU4WVZj?=
- =?utf-8?B?T0h0dXJIcjI0KzF0NGpvM3VMWGRGY28yeHRjdVdreGt0eVh2anZwTTRodkhm?=
- =?utf-8?B?REpZNmpadjhzQTV0cVdMdDhWUTBHWGxiU1BISFhKY0p6M1VRc2YrbGc2UWk4?=
- =?utf-8?B?ZG96bHdaWnVrUzdIKyt1Nlc0bDA0N2E4Z01kcTBtazdUajhISjZxcERhTTYv?=
- =?utf-8?B?b000bGU1RzBPN3ZZNDZoc2JBVUNsOUxZaURYQmQ4aGtsRW1PdG9WRm9qSlZZ?=
- =?utf-8?B?TmhyQ1RUNjNHZFR2ZEpKUGlidDFCQm0yNHd3LzYzWDFucHZLYjBsQlA3djBC?=
- =?utf-8?Q?dhwxsZ+3ryNCLrtueWFjoAx0C?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nGW2j2s6"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so3204707f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 00:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750060533; x=1750665333; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tMwajpkh+cocbCYaaz8/qUrjRzZXU+QpHIECzhBSBHk=;
+        b=nGW2j2s6RIrvAAjJsMxyAyZhlMDuexgsCAPDrNs+mQeuc7nJrbZFDep5BQt6u9TS5n
+         OVI5lS3uBwqQyaZPFMdRs2D2aczq1B513prS8fuRAVfGWeBHHMb0jPbp9LD035ReFaCc
+         kR9z41RFgHyTnjacD4MvIl5WrlvbpRhjME3nhfpFn5Sdbsqh+XqmzJw81XfCvt1ff034
+         yScdzicEL8YydE2kHASR1gnhnBkDIozXh3oslSyTGQD9aB3pO9iz9QbaVyjHt/ZSjNCf
+         XcAy+HdPcTWVy4K8FFiLlX5UjSI7Rp/n5dngFHA7XzyIKTRxN7IYT7tg1c5r/KjBO4mJ
+         jX/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750060533; x=1750665333;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tMwajpkh+cocbCYaaz8/qUrjRzZXU+QpHIECzhBSBHk=;
+        b=N+TSHgjJwZDSqhHhbwEHj+n4xFOihIwWdHDwYOZCPbojxGQjFmT+9xwUQbS+RlCEys
+         WpbcKUs61SViM55qNnjiMD4j/rPInEouRA4Prapfo5AJtsqpT+UNJKT/0gb+DMYWEXmZ
+         LyGGxeLOMKRuEAe4zkxdPiXNxOs19Jt6J7cp6ID8vM5wDkyeF67vteaiFyhfHAYMque2
+         p9MTl5IV5eY+n+xfVBkmR2dnnrcJIuvhdTJM/YdkDzj1iOGWEc1YyKfatYtU7Qi4icGp
+         NfW2uDY/Xaz8uvAn+EsduLHTfg7dRoASJzv/WRDX0WMjbQGmjdPXY/WllArWc1GBwjR3
+         5Ltw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6byNomp+Ndxqo5DBGoAnBPTauwWIVunNulMoFtd8TZ0nOTrf8ejuf59L5wXTMn8XdQCUckeQvaMb6CHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yytx7pS8VFncHqx02dyiVy05y7aIrpowu2VOH1l1Pzq+xm0Uo35
+	k9RMPzCQCYn1u3J+kca0Zz1KahTNpTtQkp2EZyIqGozKcis28QNnBQQr6udxQN/vCLE=
+X-Gm-Gg: ASbGncvv/jBXuNZ+qyTlia+P5YYMBqrWANCJOLZLJM4yNU8PJuwnAhAvf7I1F5Z+3Kk
+	cPZBvDi6uOI9sgiDg5VptDt+Vgo4Kh82rK6q1TFu56FqSHP4+FmfhFh9H6kt8ip0Zk2Z7DmNcP3
+	Rl00XZ8EXXnjdVCCMpZ4ZsfxEALnJTWli03lBtxDEgjlRYaA4KvXSFrac16SXva5Ax+zJq9rI+r
+	LKqIO2k2mK28lxfdF/iuh24C3+mqtYH4GrhQslkjecGWb64X6k+NGhPooS8IyDaXNAVS2hpPTbt
+	04AJXHa93kgRL4latIhcc4x38b3nfNIkNfka8xdqI6111lgqaLGS1gTveCBI/mt7UatbvRmx1ui
+	hljz9/e3ukVy41rSGJUd7Yxj97Q4I+0ALqGAW
+X-Google-Smtp-Source: AGHT+IEzv7xWCPYmEuD5fShuCcU8yTtYgmqv0LOPzcLIsCFnP+f3v0+HNVLzzFTb9xkPa5IzUplKRQ==
+X-Received: by 2002:a5d:64ed:0:b0:3a4:d452:fff with SMTP id ffacd0b85a97d-3a5723a15c1mr5994610f8f.17.1750060533317;
+        Mon, 16 Jun 2025 00:55:33 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:6c7:97de:65a8:488a? ([2a01:e0a:3d9:2080:6c7:97de:65a8:488a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e1838e4sm138959705e9.40.2025.06.16.00.55.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 00:55:32 -0700 (PDT)
+Message-ID: <6e52204c-3d79-41c9-8b25-b1a6d7db129c@linaro.org>
+Date: Mon, 16 Jun 2025 09:55:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55a857eb-d83a-452f-026c-08ddacab10d9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2025 07:54:47.8403
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hpsI92c1+vTC4JxUlFEhLdn+AOlZYdmN4hLYbQhBmeYqqrjR0sQud0NGARGII2emQi+gE/87+dvnErQqzk3gEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10555
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v4 3/4] phy: rockchip: usbdp: reset USB3 and reinit on
+ orientation switch
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Frank Wang <frank.wang@rock-chips.com>
+Cc: Alexey Charkov <alchark@gmail.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250610-rk3576-sige5-usb-v4-0-7e7f779619c1@collabora.com>
+ <20250610-rk3576-sige5-usb-v4-3-7e7f779619c1@collabora.com>
+ <49eb73df-9a15-436e-a05c-72dd3aa36bf8@linaro.org>
+ <4115444.Lt9SDvczpP@workhorse>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <4115444.Lt9SDvczpP@workhorse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBtYW5pdmFubmFuLnNhZGhhc2l2
-YW1AbGluYXJvLm9yZw0KPiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+DQo+IFNl
-bnQ6IDIwMjXlubQ25pyIMeaXpSAxOjQ3DQo+IFRvOiBIb25neGluZyBaaHUgPGhvbmd4aW5nLnpo
-dUBueHAuY29tPg0KPiBDYzogQmpvcm4gSGVsZ2FhcyA8aGVsZ2Fhc0BrZXJuZWwub3JnPjsgS3Jp
-c2huYSBDaGFpdGFueWEgQ2h1bmRydQ0KPiA8cXVpY19rcmljaGFpQHF1aWNpbmMuY29tPjsgamlu
-Z29vaGFuMUBnbWFpbC5jb207IEZyYW5rIExpDQo+IDxmcmFuay5saUBueHAuY29tPjsgbC5zdGFj
-aEBwZW5ndXRyb25peC5kZTsgbHBpZXJhbGlzaUBrZXJuZWwub3JnOw0KPiBrd0BsaW51eC5jb207
-IHJvYmhAa2VybmVsLm9yZzsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gc2hhd25ndW9Aa2VybmVs
-Lm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBm
-ZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgaW14QGxpc3RzLmxpbnV4LmRldjsNCj4gbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDEvNF0g
-UENJOiBkd2M6IEFkZCBxdWlyayB0byBmaXggaGFuZyBpc3N1ZSBpbiBMMiBwb2xsIG9mDQo+IHN1
-c3BlbmQNCj4gDQo+IE9uIFdlZCwgQXByIDA5LCAyMDI1IGF0IDAyOjMxOjIyQU0gKzAwMDAsIEhv
-bmd4aW5nIFpodSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4g
-PiBGcm9tOiBCam9ybiBIZWxnYWFzIDxoZWxnYWFzQGtlcm5lbC5vcmc+DQo+ID4gPiBTZW50OiAy
-MDI15bm0NOaciDjml6UgMjI6NTkNCj4gPiA+IFRvOiBIb25neGluZyBaaHUgPGhvbmd4aW5nLnpo
-dUBueHAuY29tPg0KPiA+ID4gQ2M6IGppbmdvb2hhbjFAZ21haWwuY29tOyBGcmFuayBMaSA8ZnJh
-bmsubGlAbnhwLmNvbT47DQo+ID4gPiBsLnN0YWNoQHBlbmd1dHJvbml4LmRlOyBscGllcmFsaXNp
-QGtlcm5lbC5vcmc7IGt3QGxpbnV4LmNvbTsNCj4gPiA+IG1hbml2YW5uYW4uc2FkaGFzaXZhbUBs
-aW5hcm8ub3JnOyByb2JoQGtlcm5lbC5vcmc7DQo+ID4gPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBz
-aGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOw0KPiA+ID4ga2VybmVs
-QHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+ID4gPiBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4g
-PiBpbXhAbGlzdHMubGludXguZGV2OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4g
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDEvNF0gUENJOiBkd2M6IEFkZCBxdWlyayB0byBmaXgg
-aGFuZyBpc3N1ZSBpbg0KPiA+ID4gTDIgcG9sbCBvZiBzdXNwZW5kDQo+ID4gPg0KPiA+ID4gT24g
-VHVlLCBBcHIgMDgsIDIwMjUgYXQgMDI6NTI6MThQTSArMDgwMCwgUmljaGFyZCBaaHUgd3JvdGU6
-DQo+ID4gPiA+IGkuTVg2UVAgUENJZSBpcyBoYW5nIGluIEwyIHBvbGwgZHVyaW5nIHN1c3BlbmQg
-d2hlbiBvbmUgZW5kcG9pbnQNCj4gPiA+ID4gZGV2aWNlIGlzIGNvbm5lY3RlZCwgZm9yIGV4YW1w
-bGUgdGhlIEludGVsIGUxMDAwZSBuZXR3b3JrIGNhcmQuDQo+ID4gPiA+DQo+ID4gPiA+IFJlZmVy
-IHRvIEZpZ3VyZTUtMSBMaW5rIFBvd2VyIE1hbmFnZW1lbnQgU3RhdGUgRmxvdyBEaWFncmFtIG9m
-IFBDSQ0KPiA+ID4gPiBFeHByZXNzIEJhc2UgU3BlYyBSZXY2LjAuIEwwIGNhbiBiZSB0cmFuc2Zl
-cnJlZCB0byBMRG4gZGlyZWN0bHkuDQo+ID4gPg0KPiA+ID4gUGxlYXNlIGluY2x1ZGUgdGhlIHNl
-Y3Rpb24gbnVtYmVyLiAgU2VjdGlvbiBudW1iZXJzIGFyZSBlYXN5IHRvIGZpbmQNCj4gPiA+IGJl
-Y2F1c2UgdGhleSdyZSBpbiB0aGUgc3BlYyBQREYgY29udGVudHMsIGJ1dCBmaWd1cmVzIGFyZSBu
-b3QuDQo+ID4gPiBFLmcuLCAiUENJZSByNi4wLCBzZWMgNS4yLCBmaWcgNS0xIg0KPiA+ID4NCj4g
-PiBPa2F5LCB3b3VsZCBhZGQgdGhlbSBsYXRlci4NCj4gPg0KPiA+ID4gPiBJdCdzIGhhcm1sZXNz
-IHRvIGxldCBkd19wY2llX3N1c3BlbmRfbm9pcnEoKSBwcm9jZWVkIHN1c3BlbmQgYWZ0ZXINCj4g
-PiA+ID4gdGhlIFBNRV9UdXJuX09mZiBpcyBzZW50IG91dCwgd2hhdGV2ZXIgdGhlIGx0c3NtIHN0
-YXRlIGlzIGluIEwyIG9yDQo+ID4gPiA+IEwzIG9uIHNvbWUgUE1FX1R1cm5fT2ZmIGhhbmRzaGFr
-ZSBicm9rZW4gcGxhdGZvcm1zLg0KPiA+ID4NCj4gPiA+IE1heWJlIHdlIGRvbid0IG5lZWQgdG8g
-cG9sbCBmb3IgdGhlc2UgTFRTU00gc3RhdGVzIG9uICphbnkqDQo+ID4gPiBwbGF0Zm9ybSwgYW5k
-IHdlIGNvdWxkIGp1c3QgcmVtb3ZlIHRoZSBwb2xsIGFuZCB0aW1lb3V0IGNvbXBsZXRlbHk/DQo+
-ID4gPg0KPiA+IFllcywgSSB1c2VkIHRvIHN1Z2dlc3QgcmVtb3ZlIHRoZSBMMiBwb2xsIGFuZCB0
-aW1lb3V0IGluIHRoZSBmb2xsb3dpbmcNCj4gPiBkaXNjdXNzaW9uLg0KPiA+IGh0dHBzOi8vZXVy
-MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmxr
-bWwNCj4gPiAub3JnJTJGbGttbCUyRjIwMjQlMkYxMSUyRjE4JTJGMjAwJmRhdGE9MDUlN0MwMiU3
-Q2hvbmd4aW5nLnpodQ0KPiAlNDBueHAuYw0KPiA+DQo+IG9tJTdDNTlkY2JmMjYzMmIzNDBlNzQ4
-YmIwOGRkYTA2YjM0ZTElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWMNCj4gNWMzMDE2DQo+ID4N
-Cj4gMzUlN0MwJTdDMCU3QzYzODg0MzEwNDQ5OTY4MjkyOCU3Q1Vua25vd24lN0NUV0ZwYkdac2Iz
-ZDhleUpGYg0KPiBYQjBlVTFoY0cNCj4gPg0KPiBraU9uUnlkV1VzSWxZaU9pSXdMakF1TURBd01D
-SXNJbEFpT2lKWGFXNHpNaUlzSWtGT0lqb2lUV0ZwYkNJc0lsZFVJam95DQo+ID4NCj4gZlElM0Ql
-M0QlN0MwJTdDJTdDJTdDJnNkYXRhPWVFWFNkMTRvNlhZSEMwd3cwNk5hRkgyTDdQciUyRmdUDQo+
-IFAyRHhyNzd4ZDUNCj4gPiBacDAlM0QmcmVzZXJ2ZWQ9MA0KPiA+IEhpIEtyaXNobmE6DQo+ID4g
-SXMgaXQgZmVhc2libGUgdG8gZWxpbWluYXRlIHRoZSBMMiBwb2xsIGFuZCB0aW1lb3V0IGluIHRo
-aXMgY29udGV4dD8NCj4gPg0KPiANCj4gU3BlYyByNi4wLCBzZWMgNS4yIG1hbmRhdGVzIEwyL0wz
-IFJlYWR5IHN0YXRlOg0KPiANCj4gIkwyL0wzIFJlYWR5IHRyYW5zaXRpb24gcHJvdG9jb2wgc3Vw
-cG9ydCBpcyByZXF1aXJlZC4iDQo+IA0KPiBBbHNvIGluIG1hbnkgcGxhY2VzLCBpdCBzdWdnZXN0
-cyB3YWl0aW5nIGZvciBMMi9MMyBSZWFkeSBzdGF0ZSBiZWZvcmUgcG93ZXJpbmcNCj4gZG93biB0
-aGUgZGV2aWNlLiBTbyBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCBqdXN0IHJlbW92ZSB0aGUgcG9s
-bCBmb3IgYWxsDQo+IHBsYXRmb3Jtcy4NCj4gDQpIaSBNYW5pOg0KVGhhbmtzIGZvciB5b3VyIHJl
-dmlldy4gDQpGb3Igc29tZSBMMiBQT0xMIGJyb2tlbiBwbGF0Zm9ybXMgKGUueCBpLk1YNlFQIFBD
-SWUpLiBDYW4gd2UganVzdCB3YWl0DQogZm9yIGEgZW5vdWdoIGxvbmcgdGltZSBoZXJlIHdpdGhv
-dXQgdGhlIEwyL0wzIHN0YXRlIHBvbGxpbmc/DQpCZWNhdXNlIHRoYXQgYSByZWNvbW1lbmRlZCAx
-MG1zIG1heCB3YWl0IHJlZmVyIHRvIFBDSWUgcjYuMCwgc2VjIDUuMy4zLjIuMQ0KIFBNRSBTeW5j
-aHJvbml6YXRpb24uDQoNCj4gPiA+IElmIG5vdCwgd2UgbmVlZCB0byBleHBsYWluIHdoeSBpdCBp
-cyBzYWZlIHRvIHNraXAgdGhlIHBvbGwgb24gc29tZSBwbGF0Zm9ybXMuDQo+ID4gPiAiU2tpcHBp
-bmcgdGhlIHBvbGwgYXZvaWRzIGEgaGFuZyIgaXMgbm90IGEgc3VmZmljaWVudCBleHBsYW5hdGlv
-bi4NCj4gPiA+DQo+IA0KPiBTbyB0aGUgaXNzdWUgaXMgdGhhdCB0aGUgZGV2aWNlIGRvZXNuJ3Qg
-dHJhbnNpdGlvbiB0byBMMi9MMyBSZWFkeSBzdGF0ZSBhbmQgdGhlDQo+IGhvc3QgcGxhdGZvcm0g
-anVzdCAnaGFuZ3MnPyBEbyB3ZSBrbm93IHdoeSB0aGUgaGFuZyBoYXBwZW5zPw0KPiANCkkgY2Fu
-4oCZdCBmaW5kIHRoZSBleGFjdCByb290IGNhdXNlIG9mIGhhbmQgYWZ0ZXIgSSBsb29rZWQgdGhy
-b3VnaCB0aGUNCiB0cmFjZSBsb2cgY2FwdHVyZWQgYnkgdGhlIHByb3RvY29sIGFuYWx5emVyLiBX
-aXRob3V0IHRoZSBMMiBwb2xsIGJ5IFNXLA0KIHRoZSBQTV9FbnRlcl9MMjMgRExMUChSPC0pIGFu
-ZCBQTV9SZXF1ZXN0X0FjayAgRExMUCAoUi0+KSBjYW4gYmUNCiBjYXB0dXJlZCBhZnRlciBQTUVf
-VHVybl9PZmYgaXMga2lja2VkIG9mZiwgYW5kIFBNRV9UT19BY2sgaXMgcmVjZWl2ZWQuDQoNClNp
-bmNlIHRoZSBkZXNpZ25lciBvZiB0aGUgaS5NWDZRIFBDSWUgY2FuJ3QgYmUgY29udGFjdGVkIGFu
-eW1vcmUuIEkgZG9uJ3QNCmtvbncgd2hhdCdzIGdvaW5nIG9uIHdoZW4gZG8gdGhlIEwyIFBPTEwu
-IEkgc3VzcGVjdCB0aGF0IHRoZSBMVFNTTV9TVEFURSANCnJlZ2lzdGVycyBhcmUgbm90IGFjY2Vz
-c2libGUgYW55bW9yZSBhZnRlciB0aGUgUE1fRW50ZXJfTDIzL1BNX1JlcXVlc3RfQWNrDQogaGFu
-ZHNoYWtlIG9uIGkuTVg2USBQQ0llLg0KDQpCZXN0IFJlZ2FyZHMNClJpY2hhcmQgWmh1DQo+ID4g
-PiBzL2x0c3NtL0xUU1NNLw0KPiA+IE9rYXkuDQo+ID4gPg0KPiA+ID4gPiArKysgYi9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jDQo+ID4gPiA+IEBAIC05
-NDcsNyArOTQ3LDcgQEAgaW50IGR3X3BjaWVfc3VzcGVuZF9ub2lycShzdHJ1Y3QgZHdfcGNpZSAq
-cGNpKQ0KPiB7DQo+ID4gPiA+ICAJdTggb2Zmc2V0ID0gZHdfcGNpZV9maW5kX2NhcGFiaWxpdHko
-cGNpLCBQQ0lfQ0FQX0lEX0VYUCk7DQo+ID4gPiA+ICAJdTMyIHZhbDsNCj4gPiA+ID4gLQlpbnQg
-cmV0Ow0KPiA+ID4gPiArCWludCByZXQgPSAwOw0KPiA+ID4gPg0KPiA+ID4gPiAgCS8qDQo+ID4g
-PiA+ICAJICogSWYgTDFTUyBpcyBzdXBwb3J0ZWQsIHRoZW4gZG8gbm90IHB1dCB0aGUgbGluayBp
-bnRvIEwyIGFzDQo+ID4gPiA+IHNvbWUgQEANCj4gPiA+ID4gLTk2NCwxNSArOTY0LDE3IEBAIGlu
-dCBkd19wY2llX3N1c3BlbmRfbm9pcnEoc3RydWN0IGR3X3BjaWUgKnBjaSkNCj4gPiA+ID4gIAkJ
-CXJldHVybiByZXQ7DQo+ID4gPiA+ICAJfQ0KPiA+ID4gPg0KPiA+ID4gPiAtCXJldCA9IHJlYWRf
-cG9sbF90aW1lb3V0KGR3X3BjaWVfZ2V0X2x0c3NtLCB2YWwsDQo+ID4gPiA+IC0JCQkJdmFsID09
-IERXX1BDSUVfTFRTU01fTDJfSURMRSB8fA0KPiA+ID4gPiAtCQkJCXZhbCA8PSBEV19QQ0lFX0xU
-U1NNX0RFVEVDVF9XQUlULA0KPiA+ID4gPiAtCQkJCVBDSUVfUE1FX1RPX0wyX1RJTUVPVVRfVVMv
-MTAsDQo+ID4gPiA+IC0JCQkJUENJRV9QTUVfVE9fTDJfVElNRU9VVF9VUywgZmFsc2UsIHBjaSk7
-DQo+ID4gPiA+IC0JaWYgKHJldCkgew0KPiA+ID4gPiAtCQkvKiBPbmx5IGxvZyBtZXNzYWdlIHdo
-ZW4gTFRTU00gaXNuJ3QgaW4gREVURUNUIG9yIFBPTEwgKi8NCj4gPiA+ID4gLQkJZGV2X2Vycihw
-Y2ktPmRldiwgIlRpbWVvdXQgd2FpdGluZyBmb3IgTDIgZW50cnkhIExUU1NNOg0KPiAweCV4XG4i
-LA0KPiA+ID4gdmFsKTsNCj4gPiA+ID4gLQkJcmV0dXJuIHJldDsNCj4gPiA+ID4gKwlpZiAoIWR3
-Y19jaGVja19xdWlyayhwY2ksIFFVSVJLX05PTDJQT0xMX0lOX1BNKSkgew0KPiA+ID4gPiArCQly
-ZXQgPSByZWFkX3BvbGxfdGltZW91dChkd19wY2llX2dldF9sdHNzbSwgdmFsLA0KPiA+ID4gPiAr
-CQkJCQl2YWwgPT0gRFdfUENJRV9MVFNTTV9MMl9JRExFIHx8DQo+ID4gPiA+ICsJCQkJCXZhbCA8
-PSBEV19QQ0lFX0xUU1NNX0RFVEVDVF9XQUlULA0KPiA+ID4gPiArCQkJCQlQQ0lFX1BNRV9UT19M
-Ml9USU1FT1VUX1VTLzEwLA0KPiA+ID4gPiArCQkJCQlQQ0lFX1BNRV9UT19MMl9USU1FT1VUX1VT
-LCBmYWxzZSwgcGNpKTsNCj4gPiA+ID4gKwkJaWYgKHJldCkgew0KPiA+ID4gPiArCQkJLyogT25s
-eSBsb2cgbWVzc2FnZSB3aGVuIExUU1NNIGlzbid0IGluIERFVEVDVCBvciBQT0xMICovDQo+ID4g
-PiA+ICsJCQlkZXZfZXJyKHBjaS0+ZGV2LCAiVGltZW91dCB3YWl0aW5nIGZvciBMMiBlbnRyeSEg
-TFRTU006DQo+ID4gPiAweCV4XG4iLCB2YWwpOw0KPiA+ID4gPiArCQkJcmV0dXJuIHJldDsNCj4g
-PiA+ID4gKwkJfQ0KPiA+ID4gPiAgCX0NCj4gPiA+ID4NCj4gPiA+ID4gIAkvKg0KPiA+ID4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmgN
-Cj4gPiA+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaA0K
-PiA+ID4gPiBpbmRleCA1NmFhZmRiY2RhY2EuLjA1ZmU2NTRkNzc2MSAxMDA2NDQNCj4gPiA+ID4g
-LS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmgNCj4gPiA+
-ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmgNCj4g
-PiA+ID4gQEAgLTI4Miw2ICsyODIsOSBAQA0KPiA+ID4gPiAgLyogRGVmYXVsdCBlRE1BIExMUCBt
-ZW1vcnkgc2l6ZSAqLw0KPiA+ID4gPiAgI2RlZmluZSBETUFfTExQX01FTV9TSVpFCQlQQUdFX1NJ
-WkUNCj4gPiA+ID4NCj4gPiA+ID4gKyNkZWZpbmUgUVVJUktfTk9MMlBPTExfSU5fUE0JCUJJVCgw
-KQ0KPiA+ID4gPiArI2RlZmluZSBkd2NfY2hlY2tfcXVpcmsocGNpLCB2YWwpCShwY2ktPnF1aXJr
-X2ZsYWcgJiB2YWwpDQo+ID4gPg0KPiA+ID4gTWF5YmUganVzdCBteSBwZXJzb25hbCBwcmVmZXJl
-bmNlLCBidXQgSSBkb24ndCBsaWtlIHRoaW5ncyBuYW1lZCAiY2hlY2siDQo+ID4gPiBiZWNhdXNl
-IHRoYXQganVzdCBtZWFucyAibG9vayBhdCI7IGl0IGRvZXNuJ3QgZ2l2ZSBhbnkgaGludCBhYm91
-dA0KPiA+ID4gaG93IHRvIGludGVycHJldCB0aGUgcmVzdWx0IG9mIGxvb2tpbmcgYXQgaXQuDQo+
-ID4gPg0KPiA+IEhvdyBhYm91dCBkd2NfbWF0Y2hfcXVpcmsocGNpLCB2YWwpIChwY2ktPnF1aXJr
-X2ZsYWcgJiB2YWwpPw0KPiA+DQo+IA0KPiBNYXliZSBqdXN0IGR3Y19xdWlyaygpPw0KPiANCj4g
-LSBNYW5pDQo+IA0KPiAtLQ0KPiDgrq7grqPgrr/grrXgrqPgr43grqPgrqngr40g4K6a4K6k4K6+
-4K6a4K6/4K614K6u4K+NDQo=
+On 13/06/2025 15:21, Nicolas Frattaroli wrote:
+> On Friday, 13 June 2025 10:55:43 Central European Summer Time neil.armstrong@linaro.org wrote:
+>> Hi,
+>>
+>> On 10/06/2025 16:07, Nicolas Frattaroli wrote:
+>>> Until now, super speed on Type-C only worked in one orientation. This is
+>>> because on an orientation switch, the UDPHY was never reinitialised.
+>>>
+>>> Heiko presented a patch to do this[1], but there were concerns over the
+>>> correctness of it[2]. Experimentally using Heiko's patch on RK3576 did
+>>> make me run into issues, though they seemed to be related to the
+>>> orientation switch actually happening while a clock driving a GRF
+>>> register was disabled.
+>>>
+>>> The key issue is that the hardware wants the USB 3 controller to be held
+>>> in reset while the PHY is being reconfigured, otherwise we may run into
+>>> hard-to-catch race conditions.
+>>>
+>>> Either way, this patch implements the required ordering in a somewhat
+>>> unpleasant way: we get the USB 3 controller from the DT, and use runtime
+>>> power management to forcibly suspend it while the UDPHY is being
+>>> reconfigured, and then forcibly resume it later. As an added pain in the
+>>> rear, the suspend/resume of the USB 3 controller also tries fiddling
+>>> with the USB 3 PHY part of the UDPHY, which means we introduce an atomic
+>>> flag to skip suspending/resuming the UDPHY if we're resetting the USB 3
+>>> controller. We may just need to skip trying to acquire the mutex again,
+>>> but both ways work for me in practice.
+>>>
+>>> This solution may in fact be complete rubbish, but it works to get USB 3
+>>> Super Speed working in both cable orientations on my board.
+>>
+>> Yeah this is kind of a hack, and we have a similar situation on Qualcomm platforms
+>> when dealing with USB2-only and DP-only altmodes, where we need the DWC3 to
+>> disable the usb3 path. Hopefully on Qcom combo PHYs we can switch lanes without
+>> disable the USB3 PHY.
+>>
+>> So the proper solution would have the dwc3 driver to also react to mux and
+>> orientation events and disable the usb3 path to allow the phy to reconfigure
+>> itself.
+>>
+>> We don't have any concrete proposal yet, but we will get something soonish.
+> 
+> Thanks you for the additional insight, I do agree that having the
+> controller be in charge of this is the better solution. That way, the PHY
+> doesn't need to know its controller, and the controller driver is in charge
+> of ordering the resets and reconfigure right, which means the ugly reset
+> loop breaking in this patch isn't needed.
+> 
+> If you do end up sending a patch series with a proposal, please +Cc me,
+> so that I can see if it also works for Rockchip.
+
+Of course I'll add you in CC if this happens
+Neil
+
+> 
+> If the hack isn't acceptable to be merged until then, then I'll drop
+> this patch from future revisions of the series to get the other parts
+> in.
+> 
+>>
+>> Neil
+> 
+> Best regards,
+> Nicolas Frattaroli
+> 
+>>
+>>>
+>>> Link: https://lore.kernel.org/all/20250226103810.3746018-3-heiko@sntech.de/ [1]
+>>> Link: https://lore.kernel.org/linux-rockchip/h57ok2hw6os7bcafqkrqknfvm7hnu25m2oe54qmrsuzdwqlos3@m4och2fcdm7s/ [2]
+>>> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+>>> ---
+>>>    drivers/phy/rockchip/phy-rockchip-usbdp.c | 54 +++++++++++++++++++++++++++++++
+>>>    1 file changed, 54 insertions(+)
+>>>
+>>> diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+>>> index fff54900feea601c8fe6bf4c7123dfebc5661a15..5cd6bbc367f69bca15c2a94a07e72f850b381ae3 100644
+>>> --- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
+>>> +++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+>>> @@ -200,6 +200,10 @@ struct rk_udphy {
+>>>    	/* PHY devices */
+>>>    	struct phy *phy_dp;
+>>>    	struct phy *phy_u3;
+>>> +
+>>> +	/* USB 3 controller device */
+>>> +	struct device *ctrl_u3;
+>>> +	atomic_t ctrl_resetting;
+>>>    };
+>>>    
+>>>    static const struct rk_udphy_dp_tx_drv_ctrl rk3588_dp_tx_drv_ctrl_rbr_hbr[4][4] = {
+>>> @@ -1255,6 +1259,9 @@ static int rk_udphy_usb3_phy_init(struct phy *phy)
+>>>    	struct rk_udphy *udphy = phy_get_drvdata(phy);
+>>>    	int ret = 0;
+>>>    
+>>> +	if (atomic_read(&udphy->ctrl_resetting))
+>>> +		return 0;
+>>> +
+>>>    	mutex_lock(&udphy->mutex);
+>>>    	/* DP only or high-speed, disable U3 port */
+>>>    	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs) {
+>>> @@ -1273,6 +1280,9 @@ static int rk_udphy_usb3_phy_exit(struct phy *phy)
+>>>    {
+>>>    	struct rk_udphy *udphy = phy_get_drvdata(phy);
+>>>    
+>>> +	if (atomic_read(&udphy->ctrl_resetting))
+>>> +		return 0;
+>>> +
+>>>    	mutex_lock(&udphy->mutex);
+>>>    	/* DP only or high-speed */
+>>>    	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs)
+>>> @@ -1401,10 +1411,31 @@ static struct phy *rk_udphy_phy_xlate(struct device *dev, const struct of_phandl
+>>>    	return ERR_PTR(-EINVAL);
+>>>    }
+>>>    
+>>> +static struct device_node *rk_udphy_to_controller(struct rk_udphy *udphy)
+>>> +{
+>>> +	struct device_node *np;
+>>> +
+>>> +	for_each_node_with_property(np, "phys") {
+>>> +		struct of_phandle_iterator it;
+>>> +		int ret;
+>>> +
+>>> +		of_for_each_phandle(&it, ret, np, "phys", NULL, 0) {
+>>> +			if (it.node != udphy->dev->of_node)
+>>> +				continue;
+>>> +
+>>> +			of_node_put(it.node);
+>>> +			return np;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return NULL;
+>>> +}
+>>> +
+>>>    static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+>>>    				 enum typec_orientation orien)
+>>>    {
+>>>    	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
+>>> +	int ret;
+>>>    
+>>>    	mutex_lock(&udphy->mutex);
+>>>    
+>>> @@ -1420,6 +1451,18 @@ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+>>>    	rk_udphy_set_typec_default_mapping(udphy);
+>>>    	rk_udphy_usb_bvalid_enable(udphy, true);
+>>>    
+>>> +	if (udphy->status != UDPHY_MODE_NONE && udphy->ctrl_u3) {
+>>> +		atomic_set(&udphy->ctrl_resetting, 1);
+>>> +		pm_runtime_force_suspend(udphy->ctrl_u3);
+>>> +
+>>> +		ret = rk_udphy_setup(udphy);
+>>> +		if (!ret)
+>>> +			clk_bulk_disable_unprepare(udphy->num_clks, udphy->clks);
+>>> +
+>>> +		pm_runtime_force_resume(udphy->ctrl_u3);
+>>> +		atomic_set(&udphy->ctrl_resetting, 0);
+>>> +	}
+>>> +
+>>>    unlock_ret:
+>>>    	mutex_unlock(&udphy->mutex);
+>>>    	return 0;
+>>> @@ -1430,12 +1473,22 @@ static void rk_udphy_orien_switch_unregister(void *data)
+>>>    	struct rk_udphy *udphy = data;
+>>>    
+>>>    	typec_switch_unregister(udphy->sw);
+>>> +	put_device(udphy->ctrl_u3);
+>>>    }
+>>>    
+>>>    static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
+>>>    {
+>>> +	struct device_node *ctrl = rk_udphy_to_controller(udphy);
+>>>    	struct typec_switch_desc sw_desc = { };
+>>>    
+>>> +	if (ctrl) {
+>>> +		udphy->ctrl_u3 = bus_find_device_by_of_node(udphy->dev->bus, ctrl);
+>>> +		of_node_put(ctrl);
+>>> +	}
+>>> +
+>>> +	if (!udphy->ctrl_u3)
+>>> +		dev_info(udphy->dev, "couldn't find this PHY's USB3 controller\n");
+>>> +
+>>>    	sw_desc.drvdata = udphy;
+>>>    	sw_desc.fwnode = dev_fwnode(udphy->dev);
+>>>    	sw_desc.set = rk_udphy_orien_sw_set;
+>>> @@ -1499,6 +1552,7 @@ static int rk_udphy_probe(struct platform_device *pdev)
+>>>    		return ret;
+>>>    
+>>>    	mutex_init(&udphy->mutex);
+>>> +	atomic_set(&udphy->ctrl_resetting, 0);
+>>>    	platform_set_drvdata(pdev, udphy);
+>>>    
+>>>    	if (device_property_present(dev, "orientation-switch")) {
+>>>
+>>
+>>
+> 
+> 
+> 
+> 
+> 
+
