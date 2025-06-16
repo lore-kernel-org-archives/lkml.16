@@ -1,137 +1,160 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171F827C17E;
-	Mon, 16 Jun 2025 10:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08E327FB34;
+	Mon, 16 Jun 2025 10:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750069602; cv=none; b=cYcMAvuotvti5zUizAddfaebnO4tCCyvOHRwV/Vf/yyhz5oSxqZSHfV+1xsruvf1tk4CTu5/BcnUk3TX08xe2SXFsykBs+Iv104B2ag2gUloFSTOeJczgVm8HMpF5wcKcS7TXuTmB4mv35ZuqZZRUHLns61GKh2Olk9ufTNS4+U=
+	t=1750069602; cv=none; b=JmWfbhldczNAzOTMaHwYbWBdIls/cDMSH6FDrfdfojc5gE4jkiHARMuVgd+AR8bp4WCl7A5DjXa7RoqrbHgZ68LWm1fTCNtwMl7Btne0RzMTwpuqW3RferAxuN6FgXCR/36nbIlm7uvNKjYvhXQo+bsNVlagD3biTRFc1Q/ASTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750069602; c=relaxed/simple;
-	bh=eRNVQNJrQKsKaSgrcVUtf9wi/rXFfzY1K5e6M/Slas0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V6ESIVDLmy9P2WAaf/P8b+PUQcFOyb8qqY81sXAscOm74OUWVLdMVBqQBZKvLK7kiK4SiRdxuN/NiJ+X52y7DBdiVWpnqKDnHmJDYT21K/roH1fjmoBtpb4J8umzaK+F32MqDFCaqY/P2dv00UQ2Wk/mx+DBO19tOfDrh3jyUpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=KIvgy9AJ; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	bh=tm0cg/s0vmolu2Kny17R4DVHWLwGluCROhsO6WcGzxs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sXiqIAzzKjVd/L3eT16VatJVPVDm+of+xlTaI1QesoD7Jy9V8nydxHMv2CUXwpraGp/EG8r8aNhqkPK6rTH1lzJ/Xbd+L4sulXt4oUDx3ZmYnXEdtoH+J4e5NQjRFJ1UGRmAakbxJsTwPw+jMgchmKdoiidzOQWBVZATfPPsKhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b=jj971qK8; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="KIvgy9AJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id E41C76000849;
-	Mon, 16 Jun 2025 11:26:36 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id 5p7B0SOzlH1y; Mon, 16 Jun 2025 11:26:34 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id BFB626000856;
-	Mon, 16 Jun 2025 11:26:34 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1750069594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cZ0d2s6TcJTo/RRpHWcWEd7a2EXHbIrKmLMBoTXec24=;
-	b=KIvgy9AJTbLwthP0BV70CqKk+W28m5DHmojb7PFeZ7hvBP3gt2oF5meCNCmjRq2EriHFj1
-	46eunM1/qX7yppgCkLjJQPI9xgkiNMAsB0WKJSpeVv64nM6kSafloZRqoaENJUyEaVxf91
-	6/LRDUZbtamqGYyqDDC8j3wRGVMKp9Q=
-Received: from [10.158.133.22] (dial-b1-161-46.telepac.pt [194.65.161.46])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 79C3D36006F;
-	Mon, 16 Jun 2025 11:26:34 +0100 (WEST)
-Message-ID: <1ee42017-63e1-4b01-ba1f-8f548cba8733@tecnico.ulisboa.pt>
-Date: Mon, 16 Jun 2025 11:26:34 +0100
+	dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b="jj971qK8"
+DKIM-Signature: v=1; a=rsa-sha256; d=aladdin.ru; s=mail; c=simple/simple;
+	t=1750068666; h=from:subject:to:date:message-id;
+	bh=tm0cg/s0vmolu2Kny17R4DVHWLwGluCROhsO6WcGzxs=;
+	b=jj971qK8nnvu3Rqf/72J7oe78zpuJQ2P8XXHjPZMORAMqLvrY/dlcbHbx691rMzF7Z9uyBRUl5H
+	Yypc/a+VkJRaUUKp7JTP9QVyj8c2Iv1Q5fztxHMW40a6frbTP3HVz9KwCw1ar4FSB2/ck6jDCZ/y/
+	dbdhBBHBRwUl0vcwUjfU0+YSOeFIHJJHRGZB/upoDRdWX7S3l0fGylzTYf4M/e7rUYMeK96chHLVR
+	RuD++KEMepmoHGcfUB2c+Hz7ivM/nlO+kQX543hqnQ14qjfKyqFGlbsX64lM4Y8mYmi2vmC8EhoGL
+	NZolQzIEIMa14T/i3RDfllLtQ+QamqGEJswg==
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: Hin-Tak Leung <hintak.leung@gmail.com>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Larry Finger
+	<Larry.Finger@lwfinger.net>, "John W. Linville" <linville@tuxdriver.com>,
+	<linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH 1/2] rtl818x: Fix potential data race in rtl8187_tx_cb()
+Date: Mon, 16 Jun 2025 13:10:49 +0300
+Message-ID: <20250616101050.6911-2-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250616101050.6911-1-d.dulov@aladdin.ru>
+References: <20250616101050.6911-1-d.dulov@aladdin.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
- <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
- <00f678ae-0b66-403c-bd53-6090e5920b1a@tecnico.ulisboa.pt>
- <c3un5kjfepprcjddchqmecik27huepuxejs6vckuqb3dshrcba@s2jcf23au62n>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-In-Reply-To: <c3un5kjfepprcjddchqmecik27huepuxejs6vckuqb3dshrcba@s2jcf23au62n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-03.aladdin.ru (192.168.1.103) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
+There is a potential data race between rtl8187_tx_cb() and rtl8187_stop().
+It is possible for rtl8187_stop() to clear the queue right after rtl8187_tx_cb()
+checks that queue has more than 5 elements, but before it dequeues any skb.
+This results in skb_dequeue() returns NULL and the pointer is dereferenced
+in ieee80211_tx_status_irqsafe().
 
+ BUG: kernel NULL pointer dereference, address: 0000000000000080
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: Oops: 0000 [#1] SMP NOPTI
+ CPU: 7 UID: 0 PID: 0 Comm: swapper/7 Not tainted 6.15.0 #8 PREEMPT(voluntary)
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+ RIP: 0010:ieee80211_tx_status_irqsafe+0x21/0xc0 [mac80211]
+ Call Trace:
+  <IRQ>
+  rtl8187_tx_cb+0x116/0x150 [rtl8187]
+  __usb_hcd_giveback_urb+0x9d/0x120
+  usb_giveback_urb_bh+0xbb/0x140
+  process_one_work+0x19b/0x3c0
+  bh_worker+0x1a7/0x210
+  tasklet_action+0x10/0x30
+  handle_softirqs+0xf0/0x340
+  __irq_exit_rcu+0xcd/0xf0
+  common_interrupt+0x85/0xa0
+  </IRQ>
 
-On 6/11/25 4:10 PM, Thierry Reding wrote:
-> On Wed, Jun 11, 2025 at 01:04:14PM +0100, Diogo Ivo wrote:
->>
->>
->> On 6/10/25 10:05 AM, Thierry Reding wrote:
->>> On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
->>>> Hello,
->>>>
->>>> This series adds support for the NVJPG hardware accelerator found in the
->>>> Tegra210 SoC.
->>>>
->>>> The kernel driver is essentially a copy of the NVDEC driver as both
->>>> engines are Falcon-based.
->>>>
->>>> For the userspace part I have written a Mesa Gallium backend [1] that,
->>>> while still very much experimental, works in decoding images with VA-API.
->>>>
->>>> I have been using ffmpeg to call VA-API with the following command:
->>>>
->>>> ffmpeg -v verbose -hwaccel vaapi -hwaccel_device /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev /dev/fb0
->>>>
->>>> which decodes <input.jpg> and shows the result in the framebuffer.
->>>>
->>>> The firmware for the engine can be obtained from a Linux for Tegra
->>>> distribution.
->>>
->>> By the way, have you tried running this on anything newer than Tegra210?
->>> Given your progress on this, we can probably start thinking about
->>> submitting the binaries to linux-firmware.
->>
->> Since I don't have access to other Tegra platforms I haven't been able
->> to test this driver there. For this I need help from someone with access
->> to more hardware, I can send a version that just adds the extra compatibles
->> and we could see if it works.
->>
->> As for the firmwares that would be great!
-> 
-> I think both of these are things that Mikko and I can help with.
+In order to avoid potential data races and leading dereference of a NULL
+pointer, acquire the queue lock before any work with the queue is done and
+replace all skb_* calls with their lockless versions.
 
-That would be great (as I imagine you have access to the hardware :) ).
-Let me know if you have any questions!
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
->>>> Due to the way the Gallium implementation works for Tegra
->>>> the GPU also needs to be enabled.
->>>
->>> I wonder if maybe we can get rid of this requirement. While it's
->>> certainly nice to have the GPU enabled, there may be cases where using
->>> only the other engines may be advantageous. Originally when I had worked
->>> on VIC, I was looking at how it could be used for compositing without
->>> getting the GPU involved. That's something that Android devices tend(ed)
->>> to do because of the power savings that come with it.
->>
->> Yes I think this is possible to do, it mainly has involves properly
->> handling the Gallium driver initialization. I'll take a look at it
->> before submitting the MR for the Gallium driver.
-> 
-> Okay, great. But I think it's definitely something that we can defer if
-> it's non-trivial.
+Fixes: 3517afdefc3a ("rtl8187: feedback transmitted packets using tx close descriptor for 8187B")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ .../net/wireless/realtek/rtl818x/rtl8187/dev.c    | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-Perfect then, in that case I'll skip it for now and open a Mesa MR after
-taking care of some final details.
+diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+index 220ac5bdf279..8fe6fdc32e56 100644
+--- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
++++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+@@ -189,6 +189,7 @@ static void rtl8187_tx_cb(struct urb *urb)
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+ 	struct ieee80211_hw *hw = info->rate_driver_data[0];
+ 	struct rtl8187_priv *priv = hw->priv;
++	unsigned long flags;
+ 
+ 	skb_pull(skb, priv->is_rtl8187b ? sizeof(struct rtl8187b_tx_hdr) :
+ 					  sizeof(struct rtl8187_tx_hdr));
+@@ -196,7 +197,8 @@ static void rtl8187_tx_cb(struct urb *urb)
+ 
+ 	if (!(urb->status) && !(info->flags & IEEE80211_TX_CTL_NO_ACK)) {
+ 		if (priv->is_rtl8187b) {
+-			skb_queue_tail(&priv->b_tx_status.queue, skb);
++			spin_lock_irqsave(&priv->b_tx_status.queue.lock, flags);
++			__skb_queue_tail(&priv->b_tx_status.queue, skb);
+ 
+ 			/* queue is "full", discard last items */
+ 			while (skb_queue_len(&priv->b_tx_status.queue) > 5) {
+@@ -205,9 +207,11 @@ static void rtl8187_tx_cb(struct urb *urb)
+ 				dev_dbg(&priv->udev->dev,
+ 					"transmit status queue full\n");
+ 
+-				old_skb = skb_dequeue(&priv->b_tx_status.queue);
++				old_skb = __skb_dequeue(&priv->b_tx_status.queue);
+ 				ieee80211_tx_status_irqsafe(hw, old_skb);
+ 			}
++
++			spin_unlock_irqrestore(&priv->b_tx_status.queue.lock, flags);
+ 			return;
+ 		} else {
+ 			info->flags |= IEEE80211_TX_STAT_ACK;
+@@ -893,6 +897,7 @@ static void rtl8187_work(struct work_struct *work)
+ 				    work.work);
+ 	struct ieee80211_tx_info *info;
+ 	struct ieee80211_hw *dev = priv->dev;
++	unsigned long flags;
+ 	static u16 retry;
+ 	u16 tmp;
+ 	u16 avg_retry;
+@@ -900,6 +905,8 @@ static void rtl8187_work(struct work_struct *work)
+ 
+ 	mutex_lock(&priv->conf_mutex);
+ 	tmp = rtl818x_ioread16(priv, (__le16 *)0xFFFA);
++
++	spin_lock_irqsave(&priv->b_tx_status.queue.lock, flags);
+ 	length = skb_queue_len(&priv->b_tx_status.queue);
+ 	if (unlikely(!length))
+ 		length = 1;
+@@ -909,13 +916,15 @@ static void rtl8187_work(struct work_struct *work)
+ 	while (skb_queue_len(&priv->b_tx_status.queue) > 0) {
+ 		struct sk_buff *old_skb;
+ 
+-		old_skb = skb_dequeue(&priv->b_tx_status.queue);
++		old_skb = __skb_dequeue(&priv->b_tx_status.queue);
+ 		info = IEEE80211_SKB_CB(old_skb);
+ 		info->status.rates[0].count = avg_retry + 1;
+ 		if (info->status.rates[0].count > RETRY_COUNT)
+ 			info->flags &= ~IEEE80211_TX_STAT_ACK;
+ 		ieee80211_tx_status_irqsafe(dev, old_skb);
+ 	}
++	spin_unlock_irqrestore(&priv->b_tx_status.queue.lock, flags);
++
+ 	retry = tmp;
+ 	mutex_unlock(&priv->conf_mutex);
+ }
+-- 
+2.34.1
 
-Thanks,
-Diogo
