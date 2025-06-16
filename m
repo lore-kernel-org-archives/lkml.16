@@ -1,104 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41F32750E9;
-	Mon, 16 Jun 2025 11:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0CCEAF1
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750072517; cv=none; b=BtIscEJAf0zv55tKgtwHtljdy6l6a5CbVR9lMXtg6/4rro69YRGcZ4iBnKp1mVavrTEU3hRKFIPfr9/M+wPRnax8Ew74AawCPNz8P/ePJPVhPynYmuHFDWJhptrKtim89SAGdohdPXdIGXbYEA5Yp7xqxzjXx2B2hCNJYNzPfNw=
+	t=1750072540; cv=none; b=uPspHhU5pjRUPtPBWS+Uw9Cj/+kSdoE1iWcdYH4h3nZ+4HitSl91HwHOvUcYV4b9CcmbdwOrnsi8dlvc7DffmIKN94cS+KlTx/na3U5KRFAT64yVxek+FzH5SXW54aVY1aQSSrDouhzCrIySdxInhaPjNFWy+HUkkGa/jYS9gcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750072517; c=relaxed/simple;
-	bh=7XruesgmCvrpWGKOVk4pK39pQEFV9NmZ788H3C4BwN8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DSbRxbDST0xsStt8kwXqGOj8fZJo0M27sLmUr8p98BrGsY/LMa2UOHVIO+vXzJF+Ina9SeqGSauACCVX5krNPLmUiQHKaMaJp7gnJsRyuZ0hn+Mhp7Z91ieRV1f65P6SPGuFDnNfgtku4+rIxrkrnwdPVZkLGp5/LjnpiFLBI2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xd+a8q+8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xd+a8q+8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E3CC4CEEE;
-	Mon, 16 Jun 2025 11:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750072516;
-	bh=7XruesgmCvrpWGKOVk4pK39pQEFV9NmZ788H3C4BwN8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Xd+a8q+8+XpTU2USUk+pYFAXHGcoYDfYrAc9ElwknnCeiVUhsmB1/nbrAoxCmMij9
-	 7XL6U7mYRCSQKjZzHcro+PLye3yIkq3CFDtDM0Hhie9/gWdKHiOJjeqGtD8fyEDuvJ
-	 WAXdWdovVEcl70QjlBnIPuMPXoD8mHcGfdksnelLVxVyDIADJOedYAXVGIdF5mddMl
-	 vXZbl4BWZC2RY1kOLebMY6J5DTSQdCozKDYUsEhDm2/5Sl1a/0S5yn8XMFvrymTU3W
-	 7twyQDy2GvgR5SB1HELx3Hnft2r0+ZdeAlkA2rk4wxITbQi2JXhbaWPskTDV7REco/
-	 vgZIIO/Xh1c3g==
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-40a4bf1eb0dso2413289b6e.3;
-        Mon, 16 Jun 2025 04:15:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUebzbihFovcXofUPw25G9eZrx919MpeP5E9vLXO51XhsgT5/cd9mgMv5uBra8vvbSQRHXD8tVDvUO9UF5m@vger.kernel.org, AJvYcCVhxPZe5ketXg2z1zIzGPYTzD/4Re1zuP5sN9WEi8lUvooy5+O+bqvlUU+uq8vmTGzszyWOVAUklRBK@vger.kernel.org, AJvYcCXuEt1ICrCjBhu0zqim44d+VLJTUqb8e3theokFEzHr6PTY3xGsdOePyEIovlo+da7Be5DTLqIX8oct@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW0Awb+f2m9BvEIfFsndGHSNhiE5ok4uffTHR/UjAKu9SGzTla
-	LUsC6Jak0qcrM9oU5PaNTaJYBv24U566QdxlpRvQVfAWoMu637x65YKZcw/KBYAh+b02C3qOIEN
-	9yTVi8VcVvwrfAK143YT+elHs2jhmneU=
-X-Google-Smtp-Source: AGHT+IEXNQFfySWCatJvZfvLo+9/K2Xb6V9D2wxdtjt9RUuj8wwr4E1vs+SwmpSWnN545c2RBci1ckd1Rebq0o8cGA4=
-X-Received: by 2002:a05:6808:152c:b0:406:6e89:499f with SMTP id
- 5614622812f47-40a7c18e2abmr6418202b6e.35.1750072515501; Mon, 16 Jun 2025
- 04:15:15 -0700 (PDT)
+	s=arc-20240116; t=1750072540; c=relaxed/simple;
+	bh=TCzi3ed8dsyYfOS7QGDf3ScUMu2NO0cSnD4uHOnhK4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hkg8w+uqQmAU+3TWaCTki4I6YYLCNd5jHKK9YsHKs34kHduPkDG1bY62GSkgAsoR6u9ZiRnTO1sJ5POtvncDcvxcS7YkLnUCaVjmf4uUNC6CUmMru9aE0p4OoRc8QR5OMZ/OZjBLNWyTdP0je6EaGCoWVEmxho6OyPi9QmFYlZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7087E150C;
+	Mon, 16 Jun 2025 04:15:14 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 102C73F673;
+	Mon, 16 Jun 2025 04:15:34 -0700 (PDT)
+Message-ID: <55346820-fbca-4b23-824e-89483601bf61@arm.com>
+Date: Mon, 16 Jun 2025 12:15:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616084420.526381-1-qiaozhe@iscas.ac.cn>
-In-Reply-To: <20250616084420.526381-1-qiaozhe@iscas.ac.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 16 Jun 2025 13:15:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jpJLMZYONVxg3ncEDEKoTy0tyaoBfCSnRrhJYmF8fngA@mail.gmail.com>
-X-Gm-Features: AX0GCFsTGnJNpIoRuI6mVAfFTLL-AckWye-THmELgyOS52Pknrtxspza669re8I
-Message-ID: <CAJZ5v0jpJLMZYONVxg3ncEDEKoTy0tyaoBfCSnRrhJYmF8fngA@mail.gmail.com>
-Subject: Re: [PATCH] PCI/ACPI: Fix double free bug in pci_acpi_scan_root() function
-To: Zhe Qiao <qiaozhe@iscas.ac.cn>
-Cc: sashal@kernel.org, rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com, 
-	kwilczynski@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] arm64: realm: Add support for encrypted data from
+ firmware
+To: linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, catalin.marinas@arm.com, sami.mujawar@arm.com,
+ aneesh.kumar@kernel.org, steven.price@arm.com, linux-kernel@vger.kernel.org,
+ sudeep.holla@arm.com
+References: <20250613111153.1548928-1-suzuki.poulose@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250613111153.1548928-1-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 10:44=E2=80=AFAM Zhe Qiao <qiaozhe@iscas.ac.cn> wro=
-te:
->
-> Fix the double free bug introduced in the patch "PCI/ACPI: Fix
-> allocated memory release on error in pci_acpi_scan_root()".
+On 13/06/2025 12:11, Suzuki K Poulose wrote:
+> Confidential compute firmware may provide secret data via reserved memory regions
+> (e.g., ACPI CCEL, EFI Coco secret area). These must be ioremap'ed() as encrypted.
+> As of now, realm only maps "trusted devices" (RIPAS = RSI_RIPAS_DEV) as encrypted.
+> This series adds support for mapping areas that are protected
+> (i.e., RIPAS = RSI_RIPAS_RAM) as encrypted. Also, extrapolating that, we can map
+> anything that is not RIPAS_EMPTY as protected, as it is guaranteed to be "protected".
+> 
+> With this in place, we can naturally map any firmware provided area based on the
+> RIPAS value. If the firmware provides a shared region (not trusted), it must have
+> set the RIPAS accordingly, before placing the data, as the transition is always
+> destructive.
+> 
+> Also enables the EFI Coco secret area support and Confidential Compute Event
+> Log (CCEL) for arm64.
+> 
 
-More details, please.
+A branch with the patches is also available here:
 
-What's the bug and why is this the best fix?
+git@git.gitlab.arm.com:linux-arm/linux-cca.git  cca-guest/coco-secret/v1
 
-> Fixes: 631b2af2f357 ("PCI/ACPI: Fix allocated memory release on error in =
-pci_acpi_scan_root()")
-> Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
-> ---
->  drivers/pci/pci-acpi.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index b78e0e417324..49b72596ae37 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1653,15 +1653,7 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root *=
-root)
->  }
->
->  /* release_info: free resources allocated by init_info */
-> -static void pci_acpi_generic_release_info(struct acpi_pci_root_info *ci)
-> -{
-> -       struct acpi_pci_generic_root_info *ri;
-> -
-> -       ri =3D container_of(ci, struct acpi_pci_generic_root_info, common=
-);
-> -       pci_ecam_free(ri->cfg);
-> -       kfree(ci->ops);
-> -       kfree(ri);
-> -}
-> +static void pci_acpi_generic_release_info(struct acpi_pci_root_info *ci)=
- {}
 
-Why don't you add a check for info->ops->release_info to
-__acpi_pci_root_release_info() and drop this altogether?
+Suzuki
 
->  /* Interface called from ACPI code to setup PCI host controller */
->  struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
-> --
+
+> 
+> Suzuki K Poulose (3):
+>    arm64: realm: ioremap: Allow mapping memory as encrypted
+>    arm64: Enable EFI secret area Securityfs support
+>    arm64: acpi: Enable ACPI CCEL support
+> 
+>   arch/arm64/include/asm/io.h          |  6 +++++-
+>   arch/arm64/include/asm/rsi.h         |  2 +-
+>   arch/arm64/kernel/acpi.c             |  5 +++++
+>   arch/arm64/kernel/rsi.c              | 26 ++++++++++++++++++++++----
+>   drivers/virt/coco/efi_secret/Kconfig |  2 +-
+>   5 files changed, 34 insertions(+), 7 deletions(-)
+> 
+
