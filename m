@@ -1,560 +1,202 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011028.outbound.protection.outlook.com [52.101.65.28])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010033.outbound.protection.outlook.com [52.101.69.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638122D541F
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.28
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073108; cv=fail; b=LP3mRR2Bs4rjlDW970DxC7QmYy8gU7BqGzQZIubffxit1g90ywEhOBV5MkCLh/9+a0E/1YMsf+OsxQ4cEKroYW9pETkGN6y0VTDHW+KSVj3SzmyP4oAm5fs8YS9+UFdDz6bKvv0mIqsbatC6KVE5+ZKU0jyp+r6pCcvHg2yoMa4=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073108; c=relaxed/simple;
-	bh=yDomShLx3ajLn8cbwqZQ9a2ZgNva6iJ9LaQ3hAwv8bE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HKkQW2bgwV/jKrPwX9U386AdVMKhRTz1RLJZ+P0mq1ZF0fQKHlTJZrw+9oERV23fQZGSosGSYhnBjB26ZMPbCSZH4Gup/DyddsvNgAp7Itu1flOvk4sut6+n74fJAOXlQbdvp5cxG16rk1NjuvqYhQpg4VvzApep1Nfzp3qEN9U=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Ft6pjua2; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Ft6pjua2; arc=fail smtp.client-ip=52.101.65.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793932264AA;
+	Mon, 16 Jun 2025 11:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750073142; cv=fail; b=m1MmlL0C34HCpVY59LF/I/VXKtw94b/2sp9jDBTajwEGJcYUslX6od+2wvfoWxQSOQTxRVWYp3DvAqmDIC73GZ9+ZtcgmpqdpGPou3ejH+ql5mXle9r77L/9ZHtZXabKHtThipbVcFHUORz+ZohOc7FWPPxmqr9HIC5vLen7j8M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750073142; c=relaxed/simple;
+	bh=yAogJA8Vw+Fj17BXhX8nSShQFh7DSCt4aCxJ72hUFK0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=cigLGUreNCgDVmE4IqZVciOa/3L8q46rlMz8w2mHDsZL/XKlBBbWSrSjzoBYidbdul3YsVuQbGClEA51VpcM1LG+OV7FTyyyXfA9lee/gyZtZSGcTU3DeDGfIFtQCzq2SKHPrdvdxN1XWIkzUu1WbVFQBF7DmzTEGCZ+E3wNH4M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=b+J9kR2Y; arc=fail smtp.client-ip=52.101.69.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Ft6pjua2";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Ft6pjua2"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=UxGJbV4hCs0HvjK589PyL7XeXXnPBCTtg64rxtrfn57Tygaj3fI0mUcRmN74DhcnKl9m4yJbbEBmStN+4K1K3HHAGEvscbeB5kqHqmRw7RW4Z1XNv50a4UgIA0JyFVOnMswUKovLHzkthnB51ATCwkYmgQeGoRSJjoYx/30c7IH7djwRD/S+838ESUNZM7Ygwh2kXlXfnA3QCcE53Cb7AqXd122lrJwFOvcEci//2dEMItSryxp9T8D7uvOwmKiSvTZN/Utypout3dr8fJYo9cN3V0O55gEaXFxnI/7KI57YBAKpYaH+oteJhS3z9lCYzv1lew6QeHhE8dWi0AqzUw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hfkc4dImIweFlNsFHmRbM/J+1986+MNbBhwukZ0MUp0=;
- b=wjNSb9c8MlDxUDo7W7eXNj95yl6dY/Kf6ZZRKUKH46mek5RBlupSNWoDWBoXoX7/s2fLih9nnOelS8TQbUHpi6V3w7Aqw03yS3rJ2veUpqh6ezQ6mEp6f4AyyoUownDo91D1piWwXVYzqXPZsJa8kUNHXyHj8JkdJR7CB+mFaH3gFw9UHwcXK7swozbdOJgtqU+iu8fRQ2A8a8b3VU9DAwxciKvMJmydguB6EZKQ+ZH32ZHdv7T1JunWB0fAO11nWP+K6StQ1NkNmug4disyPvkQRL24hJDy7K8FBaQ8cGPAprJdDNBJSYs7yn38wa5JousQ2we8g709/8tSKofyGA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hfkc4dImIweFlNsFHmRbM/J+1986+MNbBhwukZ0MUp0=;
- b=Ft6pjua26kW5oei2pah3gfKsH+euIhYF93ydot/BxBWDkE8cRY8zbvgRYr+VPXkVQc9Z/P5Mzj546wTQahSTcu8cewjziOjN+niZtlQW2PNT1YiFctdC3rn5BthrwGRwgFu/sFq1oJ8r6YCZcMI/JOY3YZKNQbYIiSWBSW3X/3g=
-Received: from DU2PR04CA0278.eurprd04.prod.outlook.com (2603:10a6:10:28c::13)
- by AS8PR08MB9866.eurprd08.prod.outlook.com (2603:10a6:20b:5aa::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 16 Jun
- 2025 11:24:53 +0000
-Received: from DU2PEPF00028D0B.eurprd03.prod.outlook.com
- (2603:10a6:10:28c:cafe::9) by DU2PR04CA0278.outlook.office365.com
- (2603:10a6:10:28c::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Mon,
- 16 Jun 2025 11:24:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF00028D0B.mail.protection.outlook.com (10.167.242.171) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Mon, 16 Jun 2025 11:24:52 +0000
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="b+J9kR2Y"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TY9ljegHilSWysg8TmSLEOUzI6TvZuUQMLois53xXqvHg6bcQ4BITop7rJ9lh3hfKB4CV4zt2G5lO7xanWfBXQ4WoTIdF/+IFzE4DBBwrAyp4+zSykJR6GQusXvxptc/0HURitjGN89Khb+mCmT8wUW6noGMQj9gGhF4GOF/kqZAXWVYa50Pd2DXGOrbB4aF7aMgrCRtzXW+bWNOZthEWDRloJDWy6ZzLF+SoxOe9r8iGRNuSsBr2WCCTiG8h6hN6bT0QdrUVHSU6HXpHF7d7kyS4rhz7cfZIArbq5uqhjKFfGkthdiSyHLlVo4tNvx63fxVZ3DMyu3zJ13m+8fMpQ==
+ b=Wq4e0xr5uZAaZiAe2xNZliJCChffiTWUn09ZA637gS+t2eJhtF6jLl/47dR7UYsTFp+7noCehUFfrnMgGp8E0YuHFWnFImuxKXRjGefSxTRChi/giL4b3cD1IlgsYZZ2Of9xI+IHTtmygq7hIyD8SDxp8szZlkYCQwFePFvfoVgPZNGKnzM3BdVrfb5LTVFa293cNgWFy/BSDpPRjaDIRLBzzFCWSOkmy4wuWJ234sKHtwQ/XkIr9xTvThHDwsSvhk4F9p/cEfxAI9XRZ5DI0rDbrpj8x3pyjc11XDvCuS9wKCnwjmEU2pb/xLt0s7RB0vryYg2X+0ywIs+I/GYgJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hfkc4dImIweFlNsFHmRbM/J+1986+MNbBhwukZ0MUp0=;
- b=GIU2kxA2JF7KHG9UaDCGT59BbBE1glQrx7Pfy24SPNkULrCSoJMkF+kPtZILLAfZc9suvtIvQQ0LBbJNh053y+LA54AGXk7DfNh9bQUeaji14ye96RaKNG4fyfBukd6yeRm1XB+g9vJDjvwPBfbzcieKldR7n9ItIifT7NkAU39WrpHLzKj8Glesq22K6uynmr5886K9G0Yu7V9iV96odvPpnNvfWofPp/nxjLgDVdx675esY/V0EHzAYgDtgZR904ZvQFVzFP7Gvp8+S5rIY3Tk4POhEZtb+1LxBAb/QjBeRGyG+tLQJubjDfHhapM+/ix5QwUbpaYXTqBFZs3DFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ bh=bV+4JlI7Z4IzC6UNQ0l1RfnyszJhEcnlIhvMCGy4VZ4=;
+ b=YSK1N+QQ6qxCvGOzushv1ujleX1Ghh40VODiyFs14nOIryLol+OePWfp0U1XpvhGt4W9x8hhxR3lBYzz+rpJHJ/nKWgv1a5Gmry2J0kwTIkuxyqanQC/I0WMXsekq7JXpnsift+diGEqZtC0DhoIrfLPDbi0/hzHRple42oOfJknM3DQkaJ5mzaRwokonJ4SiSEebCxBl1QDmrcbxibKt9jP3edvEvNzcAelZwp6ezXMBpw1OW1hOo4sxkwejKxzH7lGj9Y2lB1YFNBtYOPcSk1DWjhsiMM2JYI1HTMGl4qs2jiCR35EqzMfWMPQAFa7hl733m6kX3gs95gOHNvh6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=gmail.com smtp.mailfrom=axis.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=axis.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hfkc4dImIweFlNsFHmRbM/J+1986+MNbBhwukZ0MUp0=;
- b=Ft6pjua26kW5oei2pah3gfKsH+euIhYF93ydot/BxBWDkE8cRY8zbvgRYr+VPXkVQc9Z/P5Mzj546wTQahSTcu8cewjziOjN+niZtlQW2PNT1YiFctdC3rn5BthrwGRwgFu/sFq1oJ8r6YCZcMI/JOY3YZKNQbYIiSWBSW3X/3g=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by DU4PR08MB11006.eurprd08.prod.outlook.com (2603:10a6:10:576::15) with
+ bh=bV+4JlI7Z4IzC6UNQ0l1RfnyszJhEcnlIhvMCGy4VZ4=;
+ b=b+J9kR2YGYpUZh8JvRkyzX93o0WEw/kPQ2bHIqG/Xb83KZktHIWYWylg7Jp/avwioapbnTw5rK2fOzwJ0ZHN6nufH7l0r04CbJKOtcTcQ6KOLHSb0ItBZ2o20SLpC3vs7fqCQj4mMmML5NcJlz6cwArC9aIm6NL79slU3DaUqs4=
+Received: from PA7P264CA0092.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:348::17)
+ by DU5PR02MB10486.eurprd02.prod.outlook.com (2603:10a6:10:51e::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
- 2025 11:24:19 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%4]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
- 11:24:18 +0000
-Message-ID: <1c6a7220-5bf8-44f3-8602-ece207aa1a83@arm.com>
-Date: Mon, 16 Jun 2025 16:54:11 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] mm: Optimize mprotect() by PTE batching
-To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250519074824.42909-1-dev.jain@arm.com>
- <20250519074824.42909-4-dev.jain@arm.com>
- <b3064b82-dcea-4b88-940b-9419d869a39a@arm.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <b3064b82-dcea-4b88-940b-9419d869a39a@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0084.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ae::18) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+ 2025 11:25:37 +0000
+Received: from AM4PEPF00025F95.EURPRD83.prod.outlook.com
+ (2603:10a6:102:348:cafe::9d) by PA7P264CA0092.outlook.office365.com
+ (2603:10a6:102:348::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.27 via Frontend Transport; Mon,
+ 16 Jun 2025 11:25:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AM4PEPF00025F95.mail.protection.outlook.com (10.167.16.4) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.0 via Frontend Transport; Mon, 16 Jun 2025 11:25:36 +0000
+Received: from se-mail02w.axis.com (10.20.40.8) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 16 Jun
+ 2025 13:25:36 +0200
+Received: from se-intmail02x.se.axis.com (10.4.0.28) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Mon, 16 Jun 2025 13:25:36 +0200
+Received: from pc51235-2237.se.axis.com (pc51235-2237.se.axis.com [10.96.29.3])
+	by se-intmail02x.se.axis.com (Postfix) with ESMTP id 0467A20F9;
+	Mon, 16 Jun 2025 13:25:36 +0200 (CEST)
+Received: by pc51235-2237.se.axis.com (Postfix, from userid 3319)
+	id 01A9840190D0; Mon, 16 Jun 2025 13:25:35 +0200 (CEST)
+From: Johan Adolfsson <johan.adolfsson@axis.com>
+Date: Mon, 16 Jun 2025 13:25:34 +0200
+Subject: [PATCH v6 1/2] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|DU4PR08MB11006:EE_|DU2PEPF00028D0B:EE_|AS8PR08MB9866:EE_
-X-MS-Office365-Filtering-Correlation-Id: c03afca0-49e2-4913-d21d-08ddacc869be
-x-checkrecipientrouted: true
-NoDisclaimer: true
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250616-led-fix-v6-1-b9df5b63505d@axis.com>
+References: <20250616-led-fix-v6-0-b9df5b63505d@axis.com>
+In-Reply-To: <20250616-led-fix-v6-0-b9df5b63505d@axis.com>
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, Jacek Anaszewski
+	<jacek.anaszewski@gmail.com>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, Johan Adolfsson <johan.adolfsson@axis.com>,
+	<kernel@axis.com>
+X-Mailer: b4 0.13.0
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM4PEPF00025F95:EE_|DU5PR02MB10486:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26cf9a91-061f-4a9e-fd09-08ddacc88444
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?b1hCU01IMFNUdGU1bFJGOUk4U0ZPOVREWkU2anNBcGl5TUFIUzFNTEFDZ1Bm?=
- =?utf-8?B?LzFHdHpqeEN0Q1ppNUlrYjQ3TS9YdkdFT01lVHBXVXUvTWJ6OWt4dGwwOTgv?=
- =?utf-8?B?L2FWUFlkRkw1Mi9EN1h1N0tGUnU0WXBGQnUvWnlKM1ltMFV1ZWs3dkZ2azJW?=
- =?utf-8?B?THNMUUJBRXo3M3FmbkhFUmhTUS9Mc0ZwajRBbStheHVpNG1uYk84dzFsMGtF?=
- =?utf-8?B?UG5HVEl3Z1dWa29QU3FDbmpCdnY5eE1seC83RTk5Z1N3Q1h0Yk43dHViZGVM?=
- =?utf-8?B?SVI1SVlPWU8veHhSWC8wZU9pbzYwcmFIRzRqRzVCUXMxdWlzcmV2RTRqcFIz?=
- =?utf-8?B?NFcrUXRnbFBUd0grZkk4UThlRG8wSEhYeVNaSnhaK2tmVit6K2tPNTJLVG9q?=
- =?utf-8?B?RmhQQUphTUkyTGROdzJ5TlhzUERMNFpXN2dIVmkzK2FDZmJZLzA2cUFGdG1I?=
- =?utf-8?B?aEpCSWZ0em96dFJMcmhLUGJPL0d4VEJXVXVRNkwrb1lpcnBHMGRwbk5uS2FO?=
- =?utf-8?B?R0UzdEFhY29GMjRldzZoOUJmL1N6NndBVGtVT3ZmSWdKMklVOHJEdUFkK2pH?=
- =?utf-8?B?bkpkU3VXaUEzMDBZaXY5MC9tVnp6VGJXK0xzdGZxVHMxcFNhQlVib0hSaFFL?=
- =?utf-8?B?RjYyU0hqN1VZV2NiSUVCMzNGemIrUkxheHNiQ0o2MWlhQmNCZDhCUmJLcTkx?=
- =?utf-8?B?VWNIRVFGZ0UvN2J3dHdqamw2alEzNkViUEZFR1k2OVFQTHlHZE96NlVwdjda?=
- =?utf-8?B?UUlKTmExTjlyWUMzenZncy9hOWR3MlpqQWNxQ0lHcTlvQUdZVEdWQ2RMNFgz?=
- =?utf-8?B?VVltK28xaTh4WTd2V1JsbFYvSG5YYlhxaHNjOWFJVnF1WHZNMVVLUUIxS1ly?=
- =?utf-8?B?WnJheStwOEFrSytsNFlxQ2NqVXlkVnZpTTZYeGtQSncwdXZSVHdaUWozMm1m?=
- =?utf-8?B?QUtpVlNzVDJUaE9MU2YzSCsyZ2xaVEVyWlc4STBPeUhFZDNPZ0xIcFhWcUdX?=
- =?utf-8?B?TjV0TDRWclZQQjl0Mmt0UzE0SSt0VHZPTVdKZzduNjBzYitMMkVCOXhrVnBD?=
- =?utf-8?B?Z1hFUk1FVmdhMDJZQmhwUDBSQTJ4TTlyeUdCMmZHVnRFazYrK0hiN21qY0VJ?=
- =?utf-8?B?bVdkZUNNZjdxbHRvSHZJendTVXg1QUYrUk1sRU1pWHBtQnp3MVh2bTFPVkJy?=
- =?utf-8?B?NFFLU0srbERKVVBhMkhlWTJsbTlvZndBb3ZyaGxUdWNYNWxNS2d4MDlXU1c2?=
- =?utf-8?B?cHF2NlVQUjlMblFaWWlWejd0dXZEV2JyQkRWdHlsZ05SelJUb3V3c1lld2NB?=
- =?utf-8?B?K1lWaTlyTXJpOFR5K1hORFBFanBPejlUNEtaQWwwVnZ3T2ZtY0JFL2VtQTBD?=
- =?utf-8?B?Wmw4NHJVeTBSbUlEM3cwZVAyenl0OTliN0YwVEVlcW10OUVNK3BRV0xubWJp?=
- =?utf-8?B?ZW5XOURHdEdiZUVZSHc5bS9aeXpLbExuZWFCWVMzalJDaXpFWnJXZ0hmTkwy?=
- =?utf-8?B?RXlQbUtqQVFvYkVYR2ZPa0ZpUzhINkdicWdJVmFGTkJhaktxQ2JrRmhINW5N?=
- =?utf-8?B?N2NTVXczMWsyMXcwbGFRbXBGUXgvdC9yamRKNk9FZW5QaExhd29RSlBKejFh?=
- =?utf-8?B?aTlHNG5MdHQ3ZEdLUzVSdUJNbjhFSVI1b0dleFcvdXZIemVESWxkbG4rVkFu?=
- =?utf-8?B?UUcrck9aSm9DNkJOTC90YXhNMnhTenlFaWkrdWw5TFd4Z0s0bHRWZldaYzBr?=
- =?utf-8?B?ak5rL2tTU0VEYUFCOTFlcUFOWlRCZm9DZnJvQWhSNmVyMzZyQmYwcTBYWjZ1?=
- =?utf-8?B?RGVzUCtWZDZxRjk5WG1SbEdwZCtPcjcwK2lFZWQvb3orOHcxdTUyZVozYVNx?=
- =?utf-8?B?aWRjK1VXRDVIR3lIcXhoYkV1YjRCaHlEQ2F6eWJuMDVjWlhUQ09CZ1BueGxE?=
- =?utf-8?Q?2JiJYr49Zqg=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR08MB11006
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D0B.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	2fe02093-2062-4886-61e9-08ddacc85572
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|376014|7416014|82310400026|35042699022|1800799024|36860700013;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VVJ6TGpnUTk0R1JjeDRFUE0yOW05TzlnYm5scnBFb3VXSzFCcE5oN1A5cGQx?=
- =?utf-8?B?UFNWdlZlTCtvN0Z1N2JJWVpLbm1aTkFNS0ViOGFMdk9CMS9mNldzOVZMc1R3?=
- =?utf-8?B?dDNrWVEyQSswQkFLeGJ5RlZNbW96L3ZRVnhkNUZJNjhKQXJ1YXVIYjBWOGcv?=
- =?utf-8?B?TUVVZWFMRk5qNW9HdVZVelZ1YzQxQWVNcC9sTjJHRWtWc25oMk5id21lUU5U?=
- =?utf-8?B?NGxpenRPVkdSSitHQVFYNnJjR3lVNlZrQ1RBQmh2OFQxcVJSVlZXWXRIMzNi?=
- =?utf-8?B?enlIRXZaRjN1blhXbFhoOE1MVHpBWVFDZ2VPMVhrVWF0bjJrYmdUSlRVTDJF?=
- =?utf-8?B?WTUxZk5SQ0swWTM3QldrVlVqVWhuMlprbjBkMHlmOWwrdS9OMTZHLzc1K1Jk?=
- =?utf-8?B?N3lHSDZOK2x6UW1ZMEJkTjA4QXlIUmFMTllHcXNmQ1ZaVTRrMFVGaU95WVRo?=
- =?utf-8?B?WlRPcWZvT25IK0N3S2drYm84ODdySHoxNVdrTmFPK3BPY3c4aGwvUkd2dFZZ?=
- =?utf-8?B?Smd4MzlYTzMrRDIweEdQdE5ORk4yN25JK09RdlRJTTdSMlZ0NnQ1ZmtZVEtw?=
- =?utf-8?B?VVgrTCtDNURCLzBhOUZlWEh3QW5kYUpRS3Z3clU4QlJ3b3JZVm5XYnUwVk5s?=
- =?utf-8?B?U1FhVjRhRUs0NDJnS0liKzhBaTdBdVAxU2JQTXl1Qk5rVEJ4VzBwelVPdmxG?=
- =?utf-8?B?OWVKZzU2SXNNRUkxWHpsWnJuVTRmMXNWellkUUJ4cFhWWk81aXVKYVNXdnhv?=
- =?utf-8?B?R1FDWkhZSERHQXdIZGYzUFREOFNyVDREbnIrbzdlMU9oSlJPTmFZbWcrK0Iw?=
- =?utf-8?B?VEsyMFkydTJQQ01PdHZzN01VWTV0SDEwNFhQZFlwNUhaQkNsd2ovdEE5ckNC?=
- =?utf-8?B?d3I2SXI5c2JJS3ZCSzd2cE5QeG91MDIrRmdnempBdGYzMnlrK2x0VFdOblNF?=
- =?utf-8?B?SXVlUkljVzJiUkYzd1huN2pkUTlkOE55NW1pbXNhWmpkdmdXUHQzaEpsUWE1?=
- =?utf-8?B?MDRPdDRFMURuQzV1NU12ZUc5aDhXNnlFUUgzVWovZzdlVUN5cW41YmllUFVu?=
- =?utf-8?B?bG9UTjJMMk9hN0NBSmJVNitrOGE4RHpzeHRTZTBSUlZHWGRUWkZvNXdwRzRh?=
- =?utf-8?B?S1Q3MXJtYVYwZk9CdFJaWXdEdGJXZC90L05qM09URzk1QjJlaHN5bHVpQXdv?=
- =?utf-8?B?eVdqUGZxN01abm4yQlVQS01Ed0t2dVhBdE9GK1lBbzdEUmk4c0ZjU2xLcnpv?=
- =?utf-8?B?VDYvNm5TUjBRVitCdDZnbkRRc3RMNktUaFRUU1JJUFRBMUs0VFRjaE1IUlB3?=
- =?utf-8?B?RUdCRHd4S0ZxeUt1MktBazA2eDhtR3Y5YkpGSFdFY2lIV1o4ZzBQS1V6aWo1?=
- =?utf-8?B?YURYV25XQjFpN3c1L3Iza1podTlyem5mbDVJR0FldDVNMDFUdm51UUxZQWJK?=
- =?utf-8?B?RlFKeVZaNmU5YXZHNEdIU2pzeUMzNmVNL3dtYW9NZndySk1iZ1BqemM1WWpx?=
- =?utf-8?B?dmhXc0VEcjl4RkYwUHJWN3UvaVpWSTh6SWsydUpDaXNSQzdmQzZUdzFkTlk3?=
- =?utf-8?B?cDErUHlEeHhsZnNyVFhrZ1R0MDZXb1JNcU00QXdIVHVSSmZjZHZUZzdxOFkw?=
- =?utf-8?B?eGNiL3dJeEFJa0pEd0thdDNmM2lwR01rc1RLVnE4RGVOSzJuVE5JMXQvZ0xm?=
- =?utf-8?B?eXFSanJ1T2JYLzBiUGRhZ1FSK3prRVcxdnJsOUNxMlNBcFNRMlhZZW1sQ2Uv?=
- =?utf-8?B?S3pnZWdxNzBEdHBSWS9FZHZLT0RBQVZvNUY1ODRiL1R4aTdJNGN3dlFrUnY2?=
- =?utf-8?B?RnlrUTZrNmMyeVZwd0loOVozeVNiUkJPQ3FDOHRtNTdBalhKUitGQ1lzWXhF?=
- =?utf-8?B?NUNKZmw3YUVVeWF3TFBUcitBbkxFQU9wOXpKQ0w3VTg1SVJtZEt1NUlLcVlY?=
- =?utf-8?B?RW5DOWhmYUhXb3gwVDFCV3V1OG8rVVZaa0F5TE44WGdLUHpuRU15c1RBVFBk?=
- =?utf-8?B?UnAvVHhiR1h1UU9wY3JmRHpZRXlJbktWRXFpd0xPemducnpkWHFWUEs4bUlS?=
- =?utf-8?Q?7Jq/Do?=
+	=?utf-8?B?WEhaZWdqMUNSMHpQRk5rOFBwUmRFNnNCd05PS1hMK2xnNk1wT0s1ZERzZTdQ?=
+ =?utf-8?B?N0RlTlJKbno3bFNMQ2EvQXBYZjh3d1ExV3hiZFJURnluQXQyVk5ERUlTcG41?=
+ =?utf-8?B?dmpzSWptYWwxWFpteWpBdXQ5VXRZZ0dBL2Q0M2RSb0kvYnJBU1VsRndBYU5Y?=
+ =?utf-8?B?OVU0VldOOU53Q0dOenVzanh3S3V1NHI1UDZZOU5LS1VXaXZuRlJHVlJEUUlH?=
+ =?utf-8?B?aEFSelZvOGRQL2k0dHpvYUZMZ3lGeER2Q1VTeTE5Lyt3Y3VGOCtXd2xvRDJt?=
+ =?utf-8?B?cEpaTG5IeEowWkpjK0hJRGlRanl0K2VRMG12RUpZSGlFdEp5b1BNb2tVWDdi?=
+ =?utf-8?B?TkIrOVIxYVFnNlhvTlR0dnhNTlpqWUR0TWdKcnZZazByY3JNZXBjczJxMjJM?=
+ =?utf-8?B?NEtaRkIxWVVJSG54ekFhRVVwMndaV24rTEZ4bHl0czNZWUdpdmFOTjUyUVB1?=
+ =?utf-8?B?UGN4TnJTcHNvMnhxNWdjQm50MEVoTjZSU29IUUtBRjg2QW1vb01vbHBlenI2?=
+ =?utf-8?B?M2RSQmJpUXRleE0ybkw0cW56MmNKWk0vcGZhMEEvczZFTVNwL3gxUWJDQm1i?=
+ =?utf-8?B?M3RkbCtmV2ZLOHg3WXdZemVLTmYzdkUzZGtMd0N2V05ITGtzb3VmazQ5ZVZK?=
+ =?utf-8?B?eVNHbGdCYWg5M1VMZFgvR1dKK3NiUFZjcUEzUVM0c0lQSTVwZXY0ays3RDkw?=
+ =?utf-8?B?Z3Y4NlpTRHVjQVZaYVZHOUtRODZwcFRXUUdDYWg4MmlnMnRSUlpPbmtuVnpj?=
+ =?utf-8?B?YWszWmdwcklIT0ZMVG9UYlNxVGo5WSs5QkNNWWdhSHNUMGllUUUwSUpHTnJT?=
+ =?utf-8?B?anlSRTdiQzhrTC9Zcms5bCt4aHFzSkVteEowL0VieWkxWWJlWFR4ZVcyNkNw?=
+ =?utf-8?B?VDAvSFE4U3RyOXBtM3EzZmV3amNHem4yL1duR1lQSGlsQnFURnVIOTZaOUk2?=
+ =?utf-8?B?bXNJN1dYLzNwbm5EVTNwWHNKZ2srNUdUSGRTL2NjbWh5eXhEc0pkQmN2K2dM?=
+ =?utf-8?B?c0dxeGYxaWhnREEzTldjbjg2TFJCNlFSSXBHNW9xT1dOWHJ1K3czclR4MmZk?=
+ =?utf-8?B?Nk0wdnI3WjNHMmhpK3NBK1hwVWFlaDZDMHZBSGJ1V2pja3pnaTZtMzRLSGox?=
+ =?utf-8?B?ekljSm5qNjN3aTVZaCt2ZVEvaGdCa28yeVNYTS9LSjE4K0EvdjhRZEU1NHNV?=
+ =?utf-8?B?WnRDQjFDcFRrdmgyM0E3TnlJL1p1SXl5ekVRcmJxSUtmUUl2SEtRWjR3M3Y5?=
+ =?utf-8?B?MkJYV0lXU0N2OTV6MFhMUlJ2MEtSRDF4RDQyWlFpZklRSWJkUDF0TUNXTTFY?=
+ =?utf-8?B?em5hOGdBb0tKUk41dGQwOU5CVFZqV2xZbFJoN05CNUdpdGRwR3BtUE5xQnNu?=
+ =?utf-8?B?bGhYNjFDV21NaFdhbUd2Z1V2bVAxMTl1TWxDV0I4b1M4ZHFWbUx6MXo4aGYx?=
+ =?utf-8?B?cUxyOGhhdVlKSzVBK2orUGg0cFRET1RwUFZ2VTFoNkg0RHBPTndqSFQrK1VJ?=
+ =?utf-8?B?NEREdlJGR0UxY0NTZWJpbFpNRi9DNzV3SXpnTEFyQW9DYlBvdFpWRzVUM0FU?=
+ =?utf-8?B?L01LYnpKN3NaWk5kTGlNNmpTTGhwd3pzY1FtbHlzdE0xcXlMM3RvTUcrOENS?=
+ =?utf-8?B?dWNPdFhGQ1lmdEJCbEhnWVZuOHljYk9NUEJhemFCWkwwOEVUbUtEZG9iTXB3?=
+ =?utf-8?B?clRZM3RSbWtuNHV3TTJ6bkdiSGM1NFF1SlFrTjRoMXZwNFRKb2dlQVorV0RX?=
+ =?utf-8?B?eFlua3hScnliWUx1V2ZyRXZmaHhuTVF2ZTlzU0VUc1R2TVYwT281bjJKQUF5?=
+ =?utf-8?B?Uld5T2V6WHlwZmNUQWNlc1ZYd3RjM1NIbGw0ZjZrZTdnelRoR0tmWDZabVZ6?=
+ =?utf-8?B?djNDWTE2Y0lML2tTTTBKeXNrZlFEanVpaXN0Q09nNytHbkY4RmdNSkM0Nm45?=
+ =?utf-8?B?K3BRc0UyS2VVRWFGOHp1RGk4c3NqRE5PVnN1MkxTdDAvcEg4c2NyK1ZzaFZh?=
+ =?utf-8?B?cFp6SHdGaGN3RVo3TFh5N1lka2tpandpODJkWGxZQVpuZHJRSUhVRVpJNy9r?=
+ =?utf-8?Q?dv909k?=
 X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(376014)(7416014)(82310400026)(35042699022)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 11:24:52.2954
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 11:25:36.8602
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c03afca0-49e2-4913-d21d-08ddacc869be
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26cf9a91-061f-4a9e-fd09-08ddacc88444
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D0B.eurprd03.prod.outlook.com
+	AM4PEPF00025F95.EURPRD83.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9866
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR02MB10486
 
+mc_subled used for multi_index needs well defined array indexes,
+to guarantee the desired result, use reg for that.
 
-On 21/05/25 6:56 pm, Ryan Roberts wrote:
-> On 19/05/2025 08:48, Dev Jain wrote:
->> Use folio_pte_batch to batch process a large folio. Reuse the folio from prot_numa
->> case if possible. Since modify_prot_start_ptes() gathers access/dirty bits,
->> it lets us batch around pte_needs_flush() (for parisc, the definition includes
->> the access bit).
-> parisc's pte_needs_flush() is a different (static) function, just coincidentally
-> named - it takes different arguments.
->
-> But powerpc and x86 both specialize it and they consider the dirty bit. Both
-> implementations look to me like they will function correctly but it is a bit
-> ugly. They both conclude that if there is no change or if dirty has gone from
-> clear to set, then no flush is needed. (flush only needed when dirty goes from
-> set to clear). Given after your change, oldpte may have dirty set when it wasn't
-> really set for the pte in question that means the function could detect no
-> change when really its a clear -> set change; it gives the same answer in both
-> cases so it's safe. Perhaps a bit fragile though...
->
->> For all cases other than the PageAnonExclusive case, if the case holds true
->> for one pte in the batch, one can confirm that that case will hold true for
->> other ptes in the batch too; for pte_needs_soft_dirty_wp(), we do not pass
->> FPB_IGNORE_SOFT_DIRTY. modify_prot_start_ptes() collects the dirty and access bits
->> across the batch, therefore batching across pte_dirty(): this is correct since
->> the dirty bit on the PTE really is just an indication that the folio got written
->> to, so even if the PTE is not actually dirty (but one of the PTEs in the batch is),
->> the wp-fault optimization can be made.
->> The crux now is how to batch around the PageAnonExclusive case; we must check
->> the corresponding condition for every single page. Therefore, from the large
->> folio batch, we process sub batches of ptes mapping pages with the same PageAnonExclusive
->> condition, and process that sub batch, then determine and process the next sub batch,
->> and so on. Note that this does not cause any extra overhead; if suppose the size of
->> the folio batch is 512, then the sub batch processing in total will take 512 iterations,
->> which is the same as what we would have done before.
-> This commit log could do with some reformatting; blank lines between paragraphs
-> and break at whatever the usual git commit log char limit is (72 chars?).
->
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>   include/linux/mm.h |   7 ++-
->>   mm/mprotect.c      | 126 +++++++++++++++++++++++++++++++++++----------
->>   2 files changed, 104 insertions(+), 29 deletions(-)
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 43748c8f3454..7d5b96f005dc 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -2542,8 +2542,11 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen);
->>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
->>   					    MM_CP_UFFD_WP_RESOLVE)
->>   
->> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->> -			     pte_t pte);
->> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
->> +			     pte_t pte, int max_len, int *len);
->> +#define can_change_pte_writable(vma, addr, pte)	\
->> +	can_change_ptes_writable(vma, addr, pte, 1, NULL)
-> nit: add an extra tab for readability:
->
-> #define can_change_pte_writable(vma, addr, pte)	\
-> 		can_change_ptes_writable(vma, addr, pte, 1, NULL)
->
->> +
->>   extern long change_protection(struct mmu_gather *tlb,
->>   			      struct vm_area_struct *vma, unsigned long start,
->>   			      unsigned long end, unsigned long cp_flags);
->> diff --git a/mm/mprotect.c b/mm/mprotect.c
->> index 124612ce3d24..6cd8cdc168fa 100644
->> --- a/mm/mprotect.c
->> +++ b/mm/mprotect.c
->> @@ -40,25 +40,36 @@
->>   
->>   #include "internal.h"
->>   
->> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->> -			     pte_t pte)
->> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
->> +			     pte_t pte, int max_len, int *len)
->>   {
->>   	struct page *page;
->> +	bool temp_ret;
->> +	bool ret;
->> +	int i;
->>   
->> -	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
->> -		return false;
->> +	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE))) {
->> +		ret = false;
->> +		goto out;
->> +	}
->>   
->>   	/* Don't touch entries that are not even readable. */
->> -	if (pte_protnone(pte))
->> -		return false;
->> +	if (pte_protnone(pte)) {
->> +		ret = false;
->> +		goto out;
->> +	}
->>   
->>   	/* Do we need write faults for softdirty tracking? */
->> -	if (pte_needs_soft_dirty_wp(vma, pte))
->> -		return false;
->> +	if (pte_needs_soft_dirty_wp(vma, pte)) {
->> +		ret = false;
->> +		goto out;
->> +	}
->>   
->>   	/* Do we need write faults for uffd-wp tracking? */
->> -	if (userfaultfd_pte_wp(vma, pte))
->> -		return false;
->> +	if (userfaultfd_pte_wp(vma, pte)) {
->> +		ret = false;
->> +		goto out;
->> +	}
->>   
->>   	if (!(vma->vm_flags & VM_SHARED)) {
->>   		/*
->> @@ -68,7 +79,19 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>   		 * any additional checks while holding the PT lock.
->>   		 */
->>   		page = vm_normal_page(vma, addr, pte);
->> -		return page && PageAnon(page) && PageAnonExclusive(page);
->> +		ret = (page && PageAnon(page) && PageAnonExclusive(page));
->> +		if (!len)
->> +			return ret;
->> +
->> +		/* Check how many consecutive pages are AnonExclusive or not */
->> +		for (i = 1; i < max_len; ++i) {
->> +			++page;
->> +			temp_ret = (page && PageAnon(page) && PageAnonExclusive(page));
->> +			if (temp_ret != ret)
->> +				break;
->> +		}
->> +		*len = i;
->> +		return ret;
->>   	}
->>   
->>   	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
->> @@ -80,21 +103,55 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>   	 * FS was already notified and we can simply mark the PTE writable
->>   	 * just like the write-fault handler would do.
->>   	 */
->> -	return pte_dirty(pte);
->> +	ret = pte_dirty(pte);
->> +
->> +out:
->> +	/* The entire batch is guaranteed to have the same return value */
->> +	if (len)
->> +		*len = max_len;
->> +	return ret;
->>   }
->>   
->>   static int mprotect_batch(struct folio *folio, unsigned long addr, pte_t *ptep,
->> -		pte_t pte, int max_nr_ptes)
->> +		pte_t pte, int max_nr_ptes, bool ignore_soft_dirty)
-> We'll almost certainly want more flags here in future. I wonder if it's cleaner
-> just to pass "fpb_t extra_flags" here instead of the bool, then OR them in. You
-> can pass 0 or FPB_IGNORE_SOFT_DIRTY at your 2 callsites. No strong opinion
-> though.
->
->>   {
->> -	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->> +	fpb_t flags = FPB_IGNORE_DIRTY;
->>   
->> -	if (!folio_test_large(folio) || (max_nr_ptes == 1))
->> +	if (ignore_soft_dirty)
->> +		flags |= FPB_IGNORE_SOFT_DIRTY;
->> +
->> +	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
->>   		return 1;
->>   
->>   	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
->>   			       NULL, NULL, NULL);
->>   }
->>   
->> +/**
->> + * modify_sub_batch - Identifies a sub-batch which has the same return value
->> + * of can_change_pte_writable(), from within a folio batch. max_len is the
->> + * max length of the possible sub-batch. sub_batch_idx is the offset from
->> + * the start of the original folio batch.
->> + */
->> +static int modify_sub_batch(struct vm_area_struct *vma, struct mmu_gather *tlb,
->> +		unsigned long addr, pte_t *ptep, pte_t oldpte, pte_t ptent,
->> +		int max_len, int sub_batch_idx)
->> +{
->> +	unsigned long new_addr = addr + sub_batch_idx * PAGE_SIZE;
->> +	pte_t new_oldpte = pte_advance_pfn(oldpte, sub_batch_idx);
->> +	pte_t new_ptent = pte_advance_pfn(ptent, sub_batch_idx);
->> +	pte_t *new_ptep = ptep + sub_batch_idx;
->> +	int len = 1;
->> +
->> +	if (can_change_ptes_writable(vma, new_addr, new_ptent, max_len, &len))
->> +		new_ptent = pte_mkwrite(new_ptent, vma);
->> +
->> +	modify_prot_commit_ptes(vma, new_addr, new_ptep, new_oldpte, new_ptent, len);
->> +	if (pte_needs_flush(new_oldpte, new_ptent))
->> +		tlb_flush_pte_range(tlb, new_addr, len * PAGE_SIZE);
->> +	return len;
->> +}
->> +
->>   static long change_pte_range(struct mmu_gather *tlb,
->>   		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
->>   		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
->> @@ -106,7 +163,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
->>   	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
->>   	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
->> -	int nr_ptes;
->> +	int sub_batch_idx, max_len, len, nr_ptes;
->>   
->>   	tlb_change_page_size(tlb, PAGE_SIZE);
->>   	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
->> @@ -121,10 +178,12 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   	flush_tlb_batched_pending(vma->vm_mm);
->>   	arch_enter_lazy_mmu_mode();
->>   	do {
->> +		sub_batch_idx = 0;
->>   		nr_ptes = 1;
->>   		oldpte = ptep_get(pte);
->>   		if (pte_present(oldpte)) {
->>   			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
->> +			struct folio *folio = NULL;
->>   			pte_t ptent;
->>   
->>   			/*
->> @@ -132,7 +191,6 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   			 * pages. See similar comment in change_huge_pmd.
->>   			 */
->>   			if (prot_numa) {
->> -				struct folio *folio;
->>   				int nid;
->>   				bool toptier;
->>   
->> @@ -180,7 +238,8 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   				    toptier) {
->>   skip_batch:
->>   					nr_ptes = mprotect_batch(folio, addr, pte,
->> -								 oldpte, max_nr_ptes);
->> +								 oldpte, max_nr_ptes,
->> +								 true);
->>   					continue;
->>   				}
->>   				if (folio_use_access_time(folio))
->> @@ -188,6 +247,11 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   						jiffies_to_msecs(jiffies));
->>   			}
->>   
->> +			if (!folio)
->> +				folio = vm_normal_folio(vma, addr, oldpte);
->> +
->> +			nr_ptes = mprotect_batch(folio, addr, pte, oldpte,
->> +						 max_nr_ptes, false);
->>   			oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
->>   			ptent = pte_modify(oldpte, newprot);
->>   
->> @@ -209,15 +273,23 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   			 * example, if a PTE is already dirty and no other
->>   			 * COW or special handling is required.
->>   			 */
->> -			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
->> -			    !pte_write(ptent) &&
-> Don't you need to keep the !pte_write(ptent) condition here? No need to sub-
-> batch if write is already set.
->
->> -			    can_change_pte_writable(vma, addr, ptent))
->> -				ptent = pte_mkwrite(ptent, vma);
->> -
->> -			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
->> -			if (pte_needs_flush(oldpte, ptent))
->> -				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
->> -			pages++;
->> +			if (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) {
->> +				max_len = nr_ptes;
->> +				while (sub_batch_idx < nr_ptes) {
->> +
->> +					/* Get length of sub batch */
->> +					len = modify_sub_batch(vma, tlb, addr, pte,
->> +							       oldpte, ptent, max_len,
->> +							       sub_batch_idx);
->> +					sub_batch_idx += len;
->> +					max_len -= len;
->> +				}
->> +			} else {
->> +				modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
->> +				if (pte_needs_flush(oldpte, ptent))
->> +					tlb_flush_pte_range(tlb, addr, nr_ptes * PAGE_SIZE);
->> +			}
-> This if/else block and modify_sub_block() is all pretty ugly. I wonder if
-> something like this would be neater:
->
-> 			use_sub_batch = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
-> 					!pte_write(ptent) &&
-> 					LIKE_can_change_pte_writable(vma, addr, ptent, folio);
->
-> 			while (nr_ptes) {
-> 				if (use_sub_batch)
-> 					sub_nr_ptes = sub_batch(...);
-> 				else
-> 					sub_nr_ptes = nr_ptes;
->
-> 				modify_prot_commit_ptes(vma, addr, pte, oldpte,
-> 							ptent, sub_nr_ptes);
-> 				if (pte_needs_flush(oldpte, ptent))
-> 					tlb_flush_pte_range(tlb, addr,
-> 						sub_nr_ptes * PAGE_SIZE);
->
-> 				addr += sub_nr_ptes * PAGE_SIZE;
-> 				pte += sub_nr_ptes;
-> 				oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
-> 				ptent = pte_advance_pfn(ptent, sub_nr_ptes);
-> 				nr_ptes -= sub_nr_ptes;
-> 				pages += sub_nr_ptes;
-> 			}
->
-> Where:
->
->   - LIKE_can_change_pte_writable() is similar to can_change_pte_writable() but
->     does everything except checking the per-page exclusive flag. Note that we
->     already have the folio so can pass that rather than calling vm_normal_page()
->     again.
->
->   - sub_batch() can be passed the folio and the index of the first page within
->     the folio and the max number of pages to check (nr_ptes). Then returns the
->     number of pages where exclusive flag is the same.
->
-> Obviously they both need better names...
+If devicetree child nodes is processed in random or reverse order
+you may end up with multi_index "blue green red" instead of the expected
+"red green blue".
+If user space apps uses multi_index to deduce how to control the leds
+they would most likely be broken without this patch if devicetree
+processing is reversed (which it appears to be).
 
-I cannot figure a nice way of implementing your suggestion. We need to get the length
-of the sub batch and the true/false return value from can_change_ptes_writable, and
-we also need to call pte_mkwrite in case the ret is true. Doing that in your suggested
-way seems harder to me, along with the fact that it is causing indentation problem by
-one extra tab compared to my current implementation.
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts has reg set
+but I don't see how it can have worked without this change.
 
-I don't know, my method looks pretty neat to me : )
+If reg is not set, an error is returned,
+If reg is out of range, an error is returned.
+reg within led child nodes starts with 0, to map to the iout in each bank.
 
->
-> Thanks,
-> Ryan
->
->
->> +			pages += nr_ptes;
->>   		} else if (is_swap_pte(oldpte)) {
->>   			swp_entry_t entry = pte_to_swp_entry(oldpte);
->>   			pte_t newpte;
+Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+---
+ drivers/leds/leds-lp50xx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
+index 02cb1565a9fb..344791b6c575 100644
+--- a/drivers/leds/leds-lp50xx.c
++++ b/drivers/leds/leds-lp50xx.c
+@@ -476,6 +476,7 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
+ 			return -ENOMEM;
+ 
+ 		fwnode_for_each_child_node(child, led_node) {
++			int multi_index = num_colors;
+ 			ret = fwnode_property_read_u32(led_node, "color",
+ 						       &color_id);
+ 			if (ret) {
+@@ -483,8 +484,16 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
+ 				dev_err(priv->dev, "Cannot read color\n");
+ 				return ret;
+ 			}
++			ret = fwnode_property_read_u32(led_node, "reg", &multi_index);
++			if (ret != 0) {
++				dev_err(priv->dev, "reg must be set\n");
++				return -EINVAL;
++			} else if (multi_index >= LP50XX_LEDS_PER_MODULE) {
++				dev_err(priv->dev, "reg %i out of range\n", multi_index);
++				return -EINVAL;
++			}
+ 
+-			mc_led_info[num_colors].color_index = color_id;
++			mc_led_info[multi_index].color_index = color_id;
+ 			num_colors++;
+ 		}
+ 
+
+-- 
+2.30.2
+
