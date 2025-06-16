@@ -1,87 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C12288503
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBEF265296;
+	Mon, 16 Jun 2025 03:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750044428; cv=none; b=pbOCh6SCFTvxioA1TVORCshbbRTULiIMdsKHYeGhaB8tH1ggtWFbHIhew+xO8cFUvlamwRnEA+dgWtpUEss+3s1FJXJiE7xW9KjNvQLT+kYuzN3g8ZPpds57OQNfQkPMRRlwE3f3DiznM2aRrzzdUWvRh5mRKvgJz5wb2djNRsQ=
+	t=1750044437; cv=none; b=WZnk6m5k5+nyUM4thxD9NDPmFfLSdAOZdc5GmYH493jAPA45eyTgntG0a/tinTG5no0Rklc49X58PN6x+ugxAazHuz9whS44Wu9IU23h0y9Ad3rIOgBQnKvczy/P6TpRNw19V/hyhddMHyq55r6T6gyNdEmqigFFKpR3oqeQlf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750044428; c=relaxed/simple;
-	bh=1isUaEkxKU+8NxNIgj+a8p6XetQvHlnDJA/2nRl2Hr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hZt6vEIMeOk4Wl7gsYr6YF8YFfVWWWoe04nDnwgubNTWjW6sA9OA5G5nQAYpjSobP1FN54RBGbcbyQ0AgxFkDblIn7vAcejIqpS38JyE7qfG2kaYMIfeUondVj5jWBiQiplW1ChHc5kApZ+WQjgvpBMaFMDGXQl24hi7nuyrAfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVZF7ygT; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750044437; c=relaxed/simple;
+	bh=ov17jFVZhhAla01tzQDPNoJqAL0NkucBcljLFqiWedw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RjUa/AnzWqQNpZY7bEjNlso+Zd6HjT/R8eaE/4V1fd6QSUUVVUI+c3aXTJMMtd4P0EY/0u7HG849t0lJhYS/AjZCHnplPJiPhk8y9UuY/7QUw3XGvszZEUdvI3gbTYGSCYGyuvYvRrlIuu8LM3yvZkHO6t6XEQnpI2VNnmxzkfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=OdgbtJr9; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVZF7ygT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750044427; x=1781580427;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1isUaEkxKU+8NxNIgj+a8p6XetQvHlnDJA/2nRl2Hr0=;
-  b=DVZF7ygTYgVcLI9SPesP4S2lA6mnLleoS0dWRC8/hUrA6AxEpfvXRbsQ
-   wRrWsy6MzwhpAX9tp43sAvj9PXqilHXwBstpa9e/CCffsCgc5x0VREQ7v
-   n8Hhn9nb3I2AR59EsSudcEterSWewnFWfb3ASzCgjPSKfuwRoQ5USTb8O
-   F4CKXWNRN0jZypt1OGudFBlWwLmOM6V6dhZHYOapjqk3i3qxnfTm2WQOo
-   NAhmgKcCAXhky/Nuxf6pdjiqUFcAUx1tZfOclmlFU6rCM9sgoaW0iNDDG
-   cLnkS79w2D07zF0Vrie6o1loxoPlJRAhAy1VKRXkCHbEyCbG6YZVC8tvU
-   A==;
-X-CSE-ConnectionGUID: +wdb0zjDTiegRfwcybm+IA==
-X-CSE-MsgGUID: 7GDs9H5kQYm1UVomp4aqqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="51889583"
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="51889583"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 20:27:07 -0700
-X-CSE-ConnectionGUID: 7R/1QlLuSl2G/90d2tiIow==
-X-CSE-MsgGUID: 4y/8BpBJQVO/uJ9JS7qrfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="149229879"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 20:27:02 -0700
-Message-ID: <8ed1d728-084b-42f7-9c15-8c97f565b555@linux.intel.com>
-Date: Mon, 16 Jun 2025 11:26:03 +0800
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="OdgbtJr9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=JhRGK4jXnVQ6+DekEGOh8HvxWAfgHU9rMzaDKfUDnRk=; b=OdgbtJr9jj783tzS1GGx7gt/BG
+	3NWVVg3wKvybuNw4Xv0qkLx/l8Wfe+R8+FYvEkH/5kA+oaNXbkxzL4Rcl9MpumeCBgOp/qt3eilXf
+	cI+oxD5ALq9JHLMk1SLHbgapBxlrleT0KGZFnq9hvsVNc1hkjPTwoFEMRcCLU4bJjFghQLbyMnlol
+	/lFxRxlA1Y9dg5BNsbPR5zEdKI84X4oax/ANWBdBTD137lFxJCtO+bf98lMAOi8y0qZ7rKw4A5ygz
+	T7fK8KIBwuKpdKm/xwCcqpRCtLBcrSI2Z3O3euJ5g2bdF8FvTsPAfN39LA8g0JP4y6E2vjqaXHBrj
+	Rkqlsamw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uR0Ft-000Iud-1C;
+	Mon, 16 Jun 2025 11:27:10 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 16 Jun 2025 11:27:09 +0800
+Date: Mon, 16 Jun 2025 11:27:09 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, Jason@zx2c4.com,
+	ardb@kernel.org, kent.overstreet@linux.dev
+Subject: Re: [PATCH] lib/crypto/poly1305: Fix arm64's poly1305_blocks_arch()
+Message-ID: <aE-PDfmowagPegen@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] iommufd/viommu: Support get_viommu_size and
- viommu_init ops
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com
-Cc: will@kernel.org, robin.murphy@arm.com, joro@8bytes.org, praan@google.com,
- yi.l.liu@intel.com, peterz@infradead.org, jsnitsel@redhat.com,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, patches@lists.linux.dev
-References: <cover.1749882255.git.nicolinc@nvidia.com>
- <35c5fa5926be45bda82f5fc87545cd3180ad4c9c.1749882255.git.nicolinc@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <35c5fa5926be45bda82f5fc87545cd3180ad4c9c.1749882255.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616010654.367302-1-ebiggers@kernel.org>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-On 6/14/25 14:35, Nicolin Chen wrote:
-> To ease the for-driver iommufd APIs, get_viommu_size and viommu_init ops
-> are introduced to replace the viommu_init op.
+Eric Biggers <ebiggers@kernel.org> wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> Let the new viommu_init pathway coexist with the old viommu_alloc one.
-> 
-> Since the viommu_alloc op and its pathway will be soon deprecated, try to
-> minimize the code difference between them by adding a tentative jump tag.
-> 
-> Note that this fails a !viommu->ops case from now on with a WARN_ON_ONCE
-> since a vIOMMU is expected to support an alloc_domain_nested op for now,
-> or some sort of a viommu op in the foreseeable future. This WARN_ON_ONCE
-> can be lifted, if some day there is a use case wanting !viommu->ops.
-> 
-> Suggested-by: Jason Gunthorpe<jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
+> For some reason arm64's Poly1305 code got changed to ignore the padbit
+> argument.  As a result, the output is incorrect when the message length
+> is not a multiple of 16 (which is not reached with the standard
+> ChaCha20Poly1305, but bcachefs could reach this).  Fix this.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Sorry, it was a cut-n-paste error since I copy the code from
+the update function where the padbit is always 1.
+
+> diff --git a/arch/arm64/lib/crypto/poly1305-glue.c b/arch/arm64/lib/crypto/poly1305-glue.c
+> index 6a661cf048213..c9a74766785bd 100644
+> --- a/arch/arm64/lib/crypto/poly1305-glue.c
+> +++ b/arch/arm64/lib/crypto/poly1305-glue.c
+> @@ -36,18 +36,18 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+>        if (static_branch_likely(&have_neon)) {
+>                do {
+>                        unsigned int todo = min_t(unsigned int, len, SZ_4K);
+> 
+>                        kernel_neon_begin();
+> -                       poly1305_blocks_neon(state, src, todo, 1);
+> +                       poly1305_blocks_neon(state, src, todo, padbit);
+
+This would do the wrong thing if someone ever tried to pad a
+message more than 4K and called the block function with padbit == 0.
+Fortunately it can't happen today as there is no digest interface
+to poly1305.
+
+Looking around it seems that this pattern is replicated across
+all of our poly1305 implementations so it isn't a big deal.
+
+I presume you will be picking this up via the lib/crypto tree?
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
