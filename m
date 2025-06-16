@@ -1,131 +1,111 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4B21E9B08;
-	Mon, 16 Jun 2025 21:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFC22BEFED;
+	Mon, 16 Jun 2025 21:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750108766; cv=none; b=rHUnVBV3Al3g/levqLcxxZiCjh0GooNTKjofMzhwluF21LK3KLLDz22BiPWIZYbvIwyECF1mOyhf+6MezlT48d/X2WxSyG2FmJZ9ykVDEUJFgYs2eJmHOrI/SDQQp1AOZ7MJkMkISEGwdO7xSsIXTbwz7oMzoEIT2HT8sHuew8s=
+	t=1750108790; cv=none; b=W0Ppt94u6Cg2iRAb8fXjuQdVQUFaiv3vUpX4v8hMbgltEFwodxCFAUL/U+uTBvywG7Cc7P5lVN993L4ZVsnQfWVvW2LvWm+1xneGKohS9nIaa+NzD5haL0ZF3YcTH1djYfXNXajknIthF5NtAivbQ3XEcbCGhYgI8qYgQSsuIYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750108766; c=relaxed/simple;
-	bh=iFLcAGKrh/I1GWcYINTWT9oulbvPoW+aMXcQxINx8GI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=swzrhnNRWBSuCqYXgkarlQki6cQkkcQndaidO09BB7JL0qp3L3qKheRMA+iWUoPzBVAV+UAJsRQ77bwjgyyZQcccYYcapyzbga4zvbSA79HmHbmJnaLowDQU/uC7wu7WstFYUDCMVE0qJLA/Kf7mxIDnXQsaz1e9qUituvwbthU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/FccOR6; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750108790; c=relaxed/simple;
+	bh=x6V7Wz89+nnBrUFm3+BWloa5RRG+umEIveqscFLOfGk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=irxSrHLRO44tohEepolIHyVE536klJiGZwJdGXz66fS+0oJIwMfZaZGUbTjS2sKR80CKqy6alnQkcvLXHFADsw//Qs3/1fbJdBxez0JN+Dk39rmxwT+N1ct4/wHgU1qdclH6BjWejAuSornAFMS9CLhTOyzyxYV0eF/BC+2gm0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Cd/oy/zH; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/FccOR6"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso3904459b3a.2;
-        Mon, 16 Jun 2025 14:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750108764; x=1750713564; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pt7ZZUFT5+GbfWyskAndCdqkVpTr1SmoNxpD1HrCC38=;
-        b=Y/FccOR6fw9qWAED0cgalCB3yzgHGCsSCcF8H+hLy6CuQyDda1MFjZack8AIxwva3A
-         zL/l78GP1/y37eoBsrsecRbMedr9hGto9hroeXBiQhUIgGEIVPgJvXk+ayKf7NiWw6aG
-         Vz2UMm2v5xAh5+jmhM+pfnPVIJ25EPi7TVFGRNfiSwmAKlVwnNL9C+tLoCOXcV4Inm8Y
-         kfokRaI0UyD5v/nIZoRQI5od1kp1vQdr35VZ2CzafOCMCq0PumDy6MtfptvS3lTII/B0
-         T3/XAzhGKpRWooGPpiRSAvKRws9v5H1dMQ4iIFtqd0K9f4eoGa8vxNoLqIA3iuIEdg6V
-         muKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750108764; x=1750713564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pt7ZZUFT5+GbfWyskAndCdqkVpTr1SmoNxpD1HrCC38=;
-        b=upsYJ/w+S72oN9enPByz+f6Cezhd0v27Frb/SXdbS6y5znFmLWtZM/xORrvcFHwMhk
-         RaKRb6geLb/9Y851gr/BMn/mb9BFH8xjn9tkotmiERNC4Bhi6AtEsoCu6OCtC5e7d7Qq
-         RP45uQgc0+CTI3HrbwUJPfpE8qOasVTA7mE2FocYBudZlRfP3pd3czJZXPhwFFR4TP6i
-         4ZqSzykpP4zJjexpRw13dmMcglE0BvJatiMKgi/1Flbkvx3nyjkop1+KLn4zQgX9e6F1
-         cmfLwrbnzQt5HZKMQ+cF3ikq10oWWA8zWbWIL5wk/TVaO64vSYQEBNFRmGYqMh+0J9LT
-         f0XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmIPj7BqUWMK/6xTOthfiFHVRL0J67EaDDAHqdxpudCjoWnI92pF4bQxkxY1nQEG8FsZI=@vger.kernel.org, AJvYcCX+aAp4XhIPqvndcaQbjh1VuGofNowCrnQXhnV4rCgoe6nBHeWw0AKcp2/4JWwHjfGdaI1LRAWbA9IOd8En@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxgUdFikBxmq7Xz3xbLsuawsMk+iRMKjHoBVhlwyLAYXMoGe2F
-	VdHZ6X4IJTjcdpBo3f2XvJqmrfgmKO/gT90vD4279Kx6KxXmIOZEfQCUThVvOEKvDlp9e6BnfNC
-	ki4neZx7LAE717lYZV7I+U7v3W9IXwrtDRvrBoDQ=
-X-Gm-Gg: ASbGncupHW4hR6rF9/jS9OuovlchCOpdytKX4lPHfC/luQKfwmqYru6GNMN/QkmbMpY
-	M6OrKl2lrUlMu+gH+Uej6DRLuPa1hyFwtiCLIWtlRDRWWsQFbmH8a18fd3+AP+oTgAi4SNophp0
-	88AbIA4xPB7W6ohPLnF8qAL83c6un5sgCYEFVrTaFErVwobTnbLElnZqc54Us=
-X-Google-Smtp-Source: AGHT+IGzWtHKkiilBheuNMzeC3zGOndTaR/LXWbJQdPBXXkA7lFZ+UY9kOHNJS1iAR0MdwpB0qTRKquzQdI5JlA2IDw=
-X-Received: by 2002:a05:6a00:3c8f:b0:746:2c7f:b271 with SMTP id
- d2e1a72fcca58-7489ce0d374mr12913333b3a.9.1750108764065; Mon, 16 Jun 2025
- 14:19:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Cd/oy/zH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750108786;
+	bh=x6V7Wz89+nnBrUFm3+BWloa5RRG+umEIveqscFLOfGk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Cd/oy/zHDRHNvu4kbHm3+77GQ8CLRXM4oupw8B+XFZOWSWmxAGPOGypbArJo/aQMU
+	 xr/krkk9kJ/8nYgUUe9LLup/Ur3Xv8w4EuVHYooykr/s7t8FFQNE0oysYLXH7Nn7IP
+	 MWbgxShf21PhfPGQfj5IWgv1Od1iQqhNBA9lz2gFHIvpH41KO9QF6FRNQQNvWmTtTW
+	 eluK223Ew1Zh1aAsKE5bCNIVDqSbY+xY7aSu24Z6JCGGqKQiglE03zCAf+a41dQ958
+	 cC5o9a1DB5uwnwVJa8NXv++mYHX9XEJiWAjCWisFwObvQWQsmHsAAVbprXwAIWXOMN
+	 LsmbfIb87zZVg==
+Received: from [IPv6:2606:6d00:17:b699::c41] (unknown [IPv6:2606:6d00:17:b699::c41])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C8C8A17E0CE3;
+	Mon, 16 Jun 2025 23:19:44 +0200 (CEST)
+Message-ID: <699cd8c660c255ab3cbec8760292ee76b8d3660f.camel@collabora.com>
+Subject: Re: [PATCH 2/5] dt-bindings: iommu: verisilicon: Add binding for
+ VSI IOMMU
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Conor Dooley <conor@kernel.org>, Benjamin Gaignard
+	 <benjamin.gaignard@collabora.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+ 	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ p.zabel@pengutronix.de, 	mchehab@kernel.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, 	linux-rockchip@lists.infradead.org,
+ linux-media@vger.kernel.org, 	kernel@collabora.com
+Date: Mon, 16 Jun 2025 17:19:42 -0400
+In-Reply-To: <20250616-winter-strict-db98f85db22d@spud>
+References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
+	 <20250616145607.116639-3-benjamin.gaignard@collabora.com>
+	 <20250616-winter-strict-db98f85db22d@spud>
+Organization: Collabora Canada
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-1X+bHapYc8YntJ+olzdY"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616152719.28917-1-chenyuan_fl@163.com>
-In-Reply-To: <20250616152719.28917-1-chenyuan_fl@163.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 16 Jun 2025 14:19:12 -0700
-X-Gm-Features: AX0GCFuYaBTGQrYuUYhvoYlreKcyca58wqgz2SdhZaTdPf4R-kZWlA6L_cDrCxk
-Message-ID: <CAEf4BzbO=E0UTN0OzV9i7G_NsVOkCLJFdOFhRqaUBgTVyG0p3g@mail.gmail.com>
-Subject: Re: [PATCH] bpftool: Fix JSON writer resource leak in version command
-To: Yuan Chen <chenyuan_fl@163.com>
-Cc: qmo@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yuan Chen <chenyuan@kylinos.cn>
+
+
+--=-1X+bHapYc8YntJ+olzdY
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 8:30=E2=80=AFAM Yuan Chen <chenyuan_fl@163.com> wro=
-te:
->
-> From: Yuan Chen <chenyuan@kylinos.cn>
->
-> When using `bpftool --version -j/-p`, the JSON writer object
-> created in do_version() was not properly destroyed after use.
-> This caused a memory leak each time the version command was
-> executed with JSON output.
->
-> Fix: 004b45c0e51a (tools: bpftool: provide JSON output for all possible c=
-ommands)
-> Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
-> Suggested-by: Quentin Monnet <qmo@kernel.org>
-> ---
->  tools/bpf/bpftool/main.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/bpf/bpftool/main.c b/tools/bpf/bpftool/main.c
-> index cd5963cb6058..33c68eccd2c3 100644
-> --- a/tools/bpf/bpftool/main.c
-> +++ b/tools/bpf/bpftool/main.c
-> @@ -533,8 +533,12 @@ int main(int argc, char **argv)
->         if (argc < 0)
->                 usage();
->
-> -       if (version_requested)
-> -               return do_version(argc, argv);
-> +       if (version_requested) {
-> +               ret =3D do_version(argc, argv);
-> +               if (json_output)
-> +                       jsonw_destroy(&json_wtr);
-> +               return ret;
-> +       }
+Hi,
 
-there is also btf__free(base_btf), so instead of jsonw_destroy copy,
-let's maybe just do
+Le lundi 16 juin 2025 =C3=A0 16:14 +0100, Conor Dooley a =C3=A9crit=C2=A0:
+> > +properties:
+> > +=C2=A0 compatible:
+> > +=C2=A0=C2=A0=C2=A0 oneOf:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - items:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: verisi=
+licon,iommu
+>=20
+> You're missing a soc-specific compatible at the very least here, but is
+> there really no versioning on the IP at all? I'd be surprised if
+> verisilicon only produced exactly one version of an iommu IP.
 
-if (version_requested)
-    ret =3D do_version(...);
-else
-    ret =3D cmd_select(...);
+I've dumped the HW ID (base + 6*4), and it reports this IP as an "MM 1.2.0"
+(0x4d4d1200).
 
-jsonw_destroy, btf__free...
+Note, all VSI IP for which rockchip did not rewrite the register
+interface expose a HW ID register, but the from and location can vary.
+This one is following the old school H1/G1/G2 style, using ascii to
+idenity the core type. Interesting fact too, the register layout seem
+to be the same as the Vivante MMU (which is hidden inside the etnaviv
+driver).
 
-return ret;
+I'm fine with having a soc specific compatible, just documenting
+some fact I could dump.
 
-pw-bot: cr
+cheers,
+Nicolas
 
+--=-1X+bHapYc8YntJ+olzdY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
->
->         ret =3D cmd_select(commands, argc, argv, do_help);
->
-> --
-> 2.44.0
->
->
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCaFCKbgAKCRBxUwItrAao
+HOblAKDSSNkF59KB4kGZlOAZFD3NxiROYQCfe1Bhzq/TIVO3L0sddpC9+dFBmPo=
+=HgDp
+-----END PGP SIGNATURE-----
+
+--=-1X+bHapYc8YntJ+olzdY--
