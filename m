@@ -1,60 +1,62 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0229B1FDA
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CF91A9B24
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750067601; cv=none; b=u1zoI32dbK854ksrmx1SFWw+HNnJVGRZU5PDOZis9n/ZTtP/T4DfPEM+Dg2cvNKBlzMI1eIrz8XLVI3Jh1x3TQCOo9ODJsSSxADR5Zp17/ezVRVLJbi2GKds2YdgJIjICjb7xPhiNxHA5buBaOS5tbwFBgyfHxH7EX4n3Fnv7CQ=
+	t=1750067602; cv=none; b=mnmnHpcomOrWRUflNrNe2gF+1KR0oTvAAsM3ycYeEXRhQWim7jCNSJSl6ctr9MmvQ/SM4tyNnscgMw6HFjisd7y93SAwySl2zFqKMbtLNCSNM8k3Rx4ZuD2NbTl6s3sDgV0NL9Q8zONsZGkvjD657vvDtllErlNS+/iY4qU9N0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750067601; c=relaxed/simple;
-	bh=2V4h9aHUxiP/JgkmD0h3V/tVQXQbROT4jEcTXes/cOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kMHeBd6OemTx2nsGBm2PmYl10jzvI1iFtUx35ng5mXJMJWZnjOzxx9EFnLmZF/KGNuO92zeC9DfWsK3rv9O7zWqRZPIDnsTXRnd0U/44cG3v3XKplOX9a/AVsQ9PpWS8t5yoNwYFLwcmaWgfipWfr34tw2bbxXG6HMs152xXn74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCej33HU; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1750067602; c=relaxed/simple;
+	bh=GBPmWSyC2MGJtzTz4Yy94riz8tn1NoYwkw1sPPvqSOQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=r1LHySc0k/8UEMibJ+h4yteqI0jd96yIlgHuTNzBPdSEGsXYI7t7yHicBtwbERdlQN3gEFQAw/juqXDtdCeh9UVRnd0RIRNCWXaA8SZ1Q3X+zoRYekidPXjKMb+Eg8Dvwe+Fw8XHeQwQLhbGy2BST5Srne+f/1W0bkyexTQq4Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BeCv7lri; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCej33HU"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso2479999f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:53:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeCv7lri"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso4211333f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750067598; x=1750672398; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dQhQRM3glVKEvyolY2kzbg63jz/t5M45p5rnwrjEPRU=;
-        b=kCej33HUgGAk3RMoe+fCwVXHO5GC7C8a9n6WzLZzszUBP7pEGi6KRZ3iJY9KimOOfC
-         uR1ae+lXrFoqyMnkdRYFJ+4PQBkuwN3Hs2XmjSpD93rXP+VykINdihvFVWXmICiZmWrx
-         GqqXh5WHA1nQ4AsjWsp5PgtfTnPlaWRfSnaW6YS+rl63Td0H0KhnnRG9yiDD1XXMlr01
-         os0TgVAUo7eojNMxEZdeehevYc7WQUn3hPFuRKH3cEQwdL6pSgNB5btbC7HvBdJer5Yn
-         zAyGC65mkx4x8OLaSTLNKV0QESIPZuXpxL0XqU8q9WGcdvbdRQRWfazj4L8Ese1gYJWe
-         sQAA==
+        d=gmail.com; s=20230601; t=1750067599; x=1750672399; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zad0FfuamqmmuSphFVg+e+P3L+V93hWV6g6wgdLC4Z4=;
+        b=BeCv7lriBxjB/iLkbeNIhQofFBr2uoUb7xv0bNVDkYvno6S2g0De3yNV0S20M5MCUQ
+         4ElIlq54PKFlaR1nMDGiav7jfAJsLV/pNnm8ScKowRVP80+FCcR/602MrV+abZoFgG6P
+         qJTaTunmg3ur0BW84+qmO7eEcBLNXsDhK8NOazUkQdEh4vDmg0MgXeO6zYgFvCdZjzr8
+         43i3AngZrTmvA4InluHgWV23+/YwQUZhI6U+/i8jLZ2FZy+OHS6NMJFdY5CNA8vV4U3t
+         TMVDm5ZXTKVoZP4vRxlYGfC+OMuvH11IEL9a8ZaGjinDXW5UMqHjF9AW8zMsfyHifeq5
+         bV9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750067598; x=1750672398;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dQhQRM3glVKEvyolY2kzbg63jz/t5M45p5rnwrjEPRU=;
-        b=R9UxtzIKyKSbljnHuNYx7hHqELTQ70EFtMU/xb1D0PhDrwZWw+GbDYCE84UZv8fqVo
-         Kl9Uqb3tWaWuEYy4Kuh2KoKF4Vv99hh70K8YRNjdBBfjWHc8ANUh+vU09IOtRuoD6YIU
-         FxQxlVBYfQRnPOdQjfwXpM7VJZez6qb/jcZ0HGcLbpAaOd1TxS6v9yxzPPGqfg74xUVI
-         d2hU6GqXv3Kho/GS8kvsWM54mrqAzceSOCBmLJVxUuRIrj/j/CdyAN0pZ12QdVcbF8Cz
-         1IIawskfckOoMhxygl0eXxjOUYiHGBlXNh0VJp749H3WvJFruMtZKx09bv4Ixq/YwWsb
-         U13g==
-X-Forwarded-Encrypted: i=1; AJvYcCXCaDsi1a4tnJDTv99/459JMXFxT77gM4D4O5uchR9wy7kojhp7vnLDUjwzRhBfh1gRyuXvzsJJZuG2jpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNOnJZtPmrtUkVJ2z0rSogi6sGs5kSnelhWVR/wkgwBsEMefJh
-	RZQ8wvW/7ef6fPOuLqXahXAMtUSokoQXd9KgvRJiWAc1nT8Beih99Tvk
-X-Gm-Gg: ASbGncu26usRoEQOC054ZZ7zyE/J5rxbmxgtCmvfQYycsW5PaGf+sBeRM1Ry0k4lqAx
-	k2cXJYPoWjEyTjvcoL2vSljct+AGXLNjmZ9hee4zxNLRN2tzjbAvYsCJqTM/9Zw10GGXbSvSmfh
-	yN+FjIj1s2Sp6qdYzjA3Agjs3syfR2MQDZLTgyTrzaOFIhabTgef8EYntOOAWQKCo5OpQ6UwfH5
-	+FuBjQCpOBggNXnDyPCNZnK5qx9G1K9FNjSk8/6/XCa5xHdr+R1TNiqVxiWQe8F/tSON3Pxwpyx
-	55Eq2m7ZsKRq3maLyh6GUVHFftBs3BOD0Bdns9pS5k4XM741QUjA5A==
-X-Google-Smtp-Source: AGHT+IGx5JKAydeSKhZtI1U3Z6LenBZ9xpQv3dGrMhbAWOxYgLX45RlwnJlUOF+UhAdFcJzKux0sTg==
-X-Received: by 2002:a05:6000:40db:b0:3a4:ea40:4d3f with SMTP id ffacd0b85a97d-3a572e5d78emr6665497f8f.53.1750067598072;
+        d=1e100.net; s=20230601; t=1750067599; x=1750672399;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zad0FfuamqmmuSphFVg+e+P3L+V93hWV6g6wgdLC4Z4=;
+        b=phBiehRz8ICnRvbTsZ0bLkW0trif/k0BjjpxbjDvu5p9jktS6tuo5nRiLZgmr4raoG
+         p4WlBD+vARKBuCSghU3tXrgcXr6RpAfbNNMV66weiKWJfQZj52oTbXPFWrXBWgG7IfxW
+         fCcpit0THSZaqV89UqCrCqn60bEf6TKahhGejdlhNaj8FJb/czaJMMVoiWadQfVhHgVc
+         EXn9WrfbapUyP5qF4YxW/HvWG20e6ILSEgpZhyZ8j6AVHihjeHiHinBt/huHIDcSPsCQ
+         GBJwDSmEteZQ1trIzChkDZ79VCe6gE5uT6aHvs6rLbFHeWRTvyx/euHPF50kRi4AjRkV
+         BNkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFTbGvHUiqkt1Nht1YBhWWCpGQ2wLBlevZoibTK/1insVng9S2KjRL+2OeCrsAwsVGkxrXl3SWwvATTsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO6GLDuw/DbCYRuP0ZcFi4/ramf+ql+x7aFT+VZC1ht2/gelLt
+	e0RNzLVozSJQy7HalH9RGSmlAieCVEU/UoCbdLXKeUPV7dJsvgkDFmxM
+X-Gm-Gg: ASbGncuhbsFG87DQL7zxV8J9VfCF8Fr2iJUSSwwE5N/FAegZ4hXG4H/BoLcLqaV3vKB
+	S4BFoK6xOKLXnhZOM5KL6LahqPXjrm3slQL5i/NKgzTzOJq/wfPSP1nYSuQE6Hrm/2Lzoo0DLqY
+	4zd9NKji/yA3TU9c1FB25iF3/bgiBck8s8ZfZRuO6sptR+AsrRjWZ/8qu3Ez/SdItX+8RgJV3Xt
+	zaiMNmR/mG7A2tcCWiRpj+C011LEW1Zc2Aj5tSz6w7RK1ecV0qRoLQvoWx4VCu/IYrF7RMcrKva
+	CDzgJiPNmvHoUgSe80H9MRcB2sUrRPHn+17nnu5/eSXwe4k7gFsVJQ==
+X-Google-Smtp-Source: AGHT+IH3XDdLLCfV/9Gs9WOhxQhoe8qxL4r7Ps7bqp7prNbrIL8GNjbNxIEfTYLYIRVHVNygq387ew==
+X-Received: by 2002:a05:6000:288a:b0:3a5:27ba:47d0 with SMTP id ffacd0b85a97d-3a572e5737bmr6909921f8f.56.1750067598973;
         Mon, 16 Jun 2025 02:53:18 -0700 (PDT)
 Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a5407csm10725072f8f.12.2025.06.16.02.53.17
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a5407csm10725072f8f.12.2025.06.16.02.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 02:53:17 -0700 (PDT)
+        Mon, 16 Jun 2025 02:53:18 -0700 (PDT)
 From: Uros Bizjak <ubizjak@gmail.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -64,10 +66,12 @@ Cc: Uros Bizjak <ubizjak@gmail.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 1/2] x86/vdso: Fix output operand size of RDPID insn
-Date: Mon, 16 Jun 2025 11:52:57 +0200
-Message-ID: <20250616095315.230620-1-ubizjak@gmail.com>
+Subject: [PATCH 2/2] x86/vdso: Use RDPID mnemonic in vdso_red_cpunode()
+Date: Mon, 16 Jun 2025 11:52:58 +0200
+Message-ID: <20250616095315.230620-2-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250616095315.230620-1-ubizjak@gmail.com>
+References: <20250616095315.230620-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,14 +80,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RDPID instruction outputs to a word-sized register (64-bit on
-x86_64 and 32-bit on x86_32). Use unsigned long variable to use
-the correct size.
+Current minimum required version of binutils is 2.30,
+which supports RDPID instruction mnemonic.
 
-LSL outputs to 32-bit register, use %k operand prefix
-to always print 32-bit name of the register.
+Replace the byte-wise specification of RDPID with
+this proper mnemonic.
 
-Fixes: ffebbaedc861 ("x86/vdso: Introduce helper functions for CPU and node number")
+No functional change intended.
+
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@kernel.org>
@@ -95,27 +99,21 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
-index 77d8f49b92bd..93fcf0daba01 100644
+index 93fcf0daba01..f59ae7186940 100644
 --- a/arch/x86/include/asm/segment.h
 +++ b/arch/x86/include/asm/segment.h
-@@ -244,7 +244,7 @@ static inline unsigned long vdso_encode_cpunode(int cpu, unsigned long node)
- 
- static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
- {
--	unsigned int p;
-+	unsigned long p;
- 
- 	/*
- 	 * Load CPU and node number from the GDT.  LSL is faster than RDTSCP
-@@ -254,7 +254,7 @@ static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
- 	 *
+@@ -255,9 +255,9 @@ static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
  	 * If RDPID is available, use it.
  	 */
--	alternative_io ("lsl %[seg],%[p]",
-+	alternative_io ("lsl %[seg],%k[p]",
- 			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
+ 	alternative_io ("lsl %[seg],%k[p]",
+-			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
++			"rdpid %[p]",
  			X86_FEATURE_RDPID,
- 			[p] "=a" (p), [seg] "r" (__CPUNODE_SEG));
+-			[p] "=a" (p), [seg] "r" (__CPUNODE_SEG));
++			[p] "=r" (p), [seg] "r" (__CPUNODE_SEG));
+ 
+ 	if (cpu)
+ 		*cpu = (p & VDSO_CPUNODE_MASK);
 -- 
 2.49.0
 
