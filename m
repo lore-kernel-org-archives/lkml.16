@@ -1,151 +1,205 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43012270EBD
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8A6273813
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065768; cv=none; b=MkDgtNPI9s2LoAf6Y8Z9AiaZx68SzihdLKCcewOoQYVRukSfhMN6OzNRn5s2GcljriY+jm07v9nJxJqf7iErlMw8XLunkM2afBKOtVCrRd8vxXNPvwVsxQC7zqiTWmAKNdV+ZYMCEkdudQ5hptGLF/l9c5G/vDcre0rf5ffkEp4=
+	t=1750065771; cv=none; b=U0xIsw7yvVTOnEzQKs+mda8rKU6qHxOjbeHjj5VTv2fMdFRBsnVwsHbqjxxSZzBUlei8CBhcU6F7tgHcJj9Jz13FZSwjjxV3A5wz91flXJGtKz9g1CEheGMHwYlxE+YG/AkdpTr8/En8hJbihDTxmP68vIWpy9Q2jOkIwojHdVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065768; c=relaxed/simple;
-	bh=boaYqs6W2Ch9MV7MIDV7tFHWVXlXvSTuE+SZQidgsAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BzgIk12FWTpHYKNzksIRhpIifNdxBTrFHvENEfd/4EMimVbdoBym7OoCWu8KQKd6KoKpp/hpY7TG9INiVr1fxatWbd8YJUOHkPos7Trg9L0bvS3ugME2DvtrvdB0scDrYV65Po03izKR4Kkm+fmaIs2g3Kx6H+LrYHXKX9SoGx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i6fPRhjn; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750065771; c=relaxed/simple;
+	bh=YuUmC8+91Y1YC/MNS/o4nSYQYgzXWQWdbl2xiX2LYVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=APYOgBjF/57nCaOwpVhcTX+dJSHbKlvjqMSFxfGawz7lcfmFLWjXzQC9vt9gVdeLYH/v6rv9y0Zwrm8w582J0is1sc0NZegqVQDx4+qtv0PShGPbmDyrEw9xLmeqdIDwuOg9zi4ssHd26VrwTGSjsN9suG8O1TgIuTt3f1DM8Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HDEQwkoz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i6fPRhjn"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso1126807e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750065764; x=1750670564; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L4clW0hfNM59uFuEpnawSRjVBJDyxSvonnhwsOilymQ=;
-        b=i6fPRhjnQZjdK8HXqHfTZaEscbWr/UIPbqEg7J++f3Hq1vFi70kq0wIxLaECCi8xXp
-         itBZMq26Hs4HGhrOOJvdVaT/CQPAS07WrfQeD6LAYLF/qU0WSoaujeeYFW0j2tUCXcSt
-         4pMptEtGAzaHx0T7CVq7Iv552TK7/d04NcR/1YfUSqCJwnsSP/rtW7NftW5ROs/p8yFO
-         LTMgI+j+2FJf39hQpYgpR6GFIvw158JH20qFvMg0l93hgXNf+ZXU1BEvoitePGvkcdhJ
-         AsBzBYPQPLNr0OVbPeOHiS0+dIoW78P1Ot20qFvhG9tRGQ4eifcxQgcevJyXeH45C4pv
-         xidw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDEQwkoz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750065768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UBp58qTRV+cYxQwSpwgzVisxa2vKGUXxS+M1OQFGddU=;
+	b=HDEQwkozWCmRQhnwlWQn9kTUohGNjYGMOdYH3iOI7puVrtdogBt1TAMhCZx8MULO5A2DJx
+	53rbeeYgE9DDviyqbDFsFvGyQlbmGAhBXAb1GJ2K0Q0G23L7fZtTO+640M2fin0augDHc/
+	ZtTDU6lW6500pUzTNwg29y9mAmAj2l0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-625-EENrWepbO82ZgY7MhSc34g-1; Mon, 16 Jun 2025 05:22:46 -0400
+X-MC-Unique: EENrWepbO82ZgY7MhSc34g-1
+X-Mimecast-MFC-AGG-ID: EENrWepbO82ZgY7MhSc34g_1750065765
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f3796779so2886249f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:22:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750065764; x=1750670564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L4clW0hfNM59uFuEpnawSRjVBJDyxSvonnhwsOilymQ=;
-        b=je3t4eThMaDxhi5fJGyYd7Q3zu5dyxr3cqfUFR6rZHCmH2a2YzVhuXIPnEFBecer+f
-         EBDOUMZW3TcVKnU9ZX6kOUjHxw0UIKTnHQ2qzTC92rvH55Qph/tnoJxI6FTnSVvAEVps
-         4GPS/FoGSb75+4Qn3LKQS1FUZyfSchYS6/IjCGvSFbPahJrHYJZNKmYgoSYRxd4R9ARJ
-         ais2mzWia9dA9yWzJjBKle5PiOWjULiEGuKyWToZwk9oqKjzNmpK8Oh7DSoRnBbG7dmn
-         OZMtgdv3v1tiRHpHFwaqLRpAMzcVSVeLxxR/MQbmsevJBquP0PdIA6Pg0eDra6bCt9nV
-         yFTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqWyTFHSnjqacAaTfpNA8FfTAEPP4yg7lEfbSBwQnFWE1Nb3RDLFQKe8Kkbkgx/MlNcZrLV3wbJbnrwfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8TEqA0/eR3+JAzUT+Tk3z9PhBUjHSOomyxkQjeZfLHbqnAD2Y
-	lKzaOpQB7oJCH2pcwvoKWME6ACG2HLCloOWCKzwHtsIdmLTlGI5Boa/6thmqDUn6lC6aq6acVoh
-	clcmKOxj35KwD4Jl0My5UMc7d2/nMIEMI+uW6Vh4oqA==
-X-Gm-Gg: ASbGnct+VX86FbWk+A6gztIbIQAnJin7bPduyg2bWwoJuJYFOma6+URFXpcYqE17Bju
-	+2y9F57adzFbeJi06VYmQe40prgR6opvvn+2379Ipfoe39bBr82wc0WlodrbHewAwz+KzES7gHj
-	u1v4+yc/ire7WiD45CdXhy8EW+tOc8YHdYCbh0cXBLHEBqKjDoZ1qKa7R8dieMbqyDoa/ZkgwaM
-	VU=
-X-Google-Smtp-Source: AGHT+IEsBvyH0Zky97WuBrKbbjvEScgzySvzxn3rYYtDfdyw86suCq566xBi9HBUjAShIE2Mm9O+XZUWm2PEcQ1RjmQ=
-X-Received: by 2002:a05:6512:12ca:b0:553:2ed2:15b4 with SMTP id
- 2adb3069b0e04-553b6f4d916mr2068254e87.57.1750065764330; Mon, 16 Jun 2025
- 02:22:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750065765; x=1750670565;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UBp58qTRV+cYxQwSpwgzVisxa2vKGUXxS+M1OQFGddU=;
+        b=nUP6y6RDUe8WXZDzAmfF/2NiDQDT9rbPCVh0sCnay7EBb/249GSQOEHqbwGuVQ5t8+
+         mCcI8jt6eeq23/qmu200DR9BXWucvCEXndiEbFVMezjQ3Z8YSgIPeQ1ZwjbCnwYRqcMK
+         03HhOQVsVSaJAy2/3p5Ot3BkTu35YDo6QbsWc21+LZcqfbuK+cKo51WFEf4K0o5vazKM
+         xzhsaiF1tOiRX9BUbekGZieWVFVUGnDW3RYG+RwRY3XhclJWkloPa2HjMyaudjEE8h5+
+         Gy9xCmIHitolazJXKYImw782ctXWKMviTu927W8Q0SGb8bs/PDPXaX2MQ7mFuYoZxzzh
+         JCjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1nFmmjnDqR4YfDYs+4JDjK7u88UIYAuK4n7N5Tq0T27ikCWmsuHlocfVoNUedT5zwMQJTjMn1ilridKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE4E3MOGJb8MtW+KNPpO8zC4Qlel03/FO90RbVhJ5+bt3rvJDZ
+	Zvvi9kPiF5Yv06m/gu6K+M8IoyS1rBSHkvfC0WbLigAUK964xcdC5NtMtzkWptqF/FRNffmDHCN
+	e4gmhdvaQN6lF4sQ0fEgEblFZAktmlEolLTVOKKya6BhIC8gZgA0G5TqnBbgrnsmLZw==
+X-Gm-Gg: ASbGncu+SHeML4r/8tVBwJlgyq66vswxgyxvqdvrXDg9ubfI1ykug37vfr8H5bF3mL5
+	flHg4ABbU6mrQVScZyjbLmTIDj/BGoVQzQfMt7HinlnloQwkxsfTYJqiibkei5jU3izSgEkEgkY
+	2QooGJpBxNY07wLndG8EJAO7oAb+USztyeXXmswhh0QB0AGqDDQA/Vfxoq+Mwq5neEIVfvm1gOV
+	wOpEiprtxWVsXTBoxnU5dB1ixGPK8EKVZ3ZMlCjaO+ygL/Af6hFhdwAzVr+HmXMqZTPV6m3GeOD
+	f/COnQxXU/cegKJjCNrxPBuUDSqwOWGi10ok5azqIzJNdckUfX8ehvjTaS+LPEIOvBKsbTo/Ms1
+	4VtAv+ULAJH4KFwB6uzggbwKL+8VWuci57x9F9Ahf2kUedRI=
+X-Received: by 2002:a05:6000:1888:b0:3a5:2949:6c38 with SMTP id ffacd0b85a97d-3a572e99690mr7512754f8f.52.1750065765253;
+        Mon, 16 Jun 2025 02:22:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFVgWvb1lvlhTo/Z1qWtDSjFvFI6TANhcAEBmOLtt7hjJLoV4KTqnzo7eEfQlPPBx3hv/xN6Q==
+X-Received: by 2002:a05:6000:1888:b0:3a5:2949:6c38 with SMTP id ffacd0b85a97d-3a572e99690mr7512723f8f.52.1750065764846;
+        Mon, 16 Jun 2025 02:22:44 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:bd00:949:b5a9:e02a:f265? (p200300d82f25bd000949b5a9e02af265.dip0.t-ipconnect.de. [2003:d8:2f25:bd00:949:b5a9:e02a:f265])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087a9sm10713185f8f.55.2025.06.16.02.22.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 02:22:44 -0700 (PDT)
+Message-ID: <a5e098d1-ee5a-447f-9e05-0187b22500e1@redhat.com>
+Date: Mon, 16 Jun 2025 11:22:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614-apr_14_for_sending-v4-8-8e3945c819cd@samsung.com>
- <CGME20250615105256eucas1p21dba29a1450757d9201b2a9c7f0e34e8@eucas1p2.samsung.com>
- <202506151839.IKkZs0Z0-lkp@intel.com> <9765c970-55cc-4413-9fd0-5e0cdfa900fa@samsung.com>
-In-Reply-To: <9765c970-55cc-4413-9fd0-5e0cdfa900fa@samsung.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Jun 2025 11:22:32 +0200
-X-Gm-Features: AX0GCFvGdfEg2CPyKVWjNTkacG-9vOyaV6LbrgzY6YJIQBzVINyrlmiwiBnsQKI
-Message-ID: <CAMRc=MeG40TxMj3ezeC0iUBBo8w99RXQWOQBsfG4ZAJdbA+dYg@mail.gmail.com>
-Subject: Re: [PATCH v4 8/8] drm/imagination: Enable PowerVR driver for RISC-V
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: kernel test robot <lkp@intel.com>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran <fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] mm,hugetlb: Document the reason to lock the folio in
+ the faulting path
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, James Houghton <jthoughton@google.com>,
+ Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250612134701.377855-1-osalvador@suse.de>
+ <20250612134701.377855-3-osalvador@suse.de>
+ <44f0f1cc-307a-46e3-9e73-8b2061e4e938@redhat.com>
+ <aEw0dxfc5n8v1-Mp@localhost.localdomain>
+ <ffeeb3d2-0e45-43d1-b2e1-a55f09b160f5@redhat.com>
+ <aEychl8ZkJDG1-5K@localhost.localdomain>
+ <aE075ld-fOyMipcJ@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aE075ld-fOyMipcJ@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 11:09=E2=80=AFAM Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
->
->
->
-> On 6/15/25 12:51, kernel test robot wrote:
-> > Hi Michal,
-> >
-> > kernel test robot noticed the following build warnings:
-> >
-> > [auto build test WARNING on 4774cfe3543abb8ee98089f535e28ebfd45b975a]
-> >
-> > url:    https://protect2.fireeye.com/v1/url?k=3D6c3bc994-0cd954c9-6c3a4=
-2db-000babd9f1ba-30c2378fa012fc4a&q=3D1&e=3Dc39c960c-4d5f-44d7-aed7-0097394=
-dfc81&u=3Dhttps%3A%2F%2Fgithub.com%2Fintel-lab-lkp%2Flinux%2Fcommits%2FMich=
-al-Wilczynski%2Fpower-sequencing-Add-T-HEAD-TH1520-GPU-power-sequencer-driv=
-er%2F20250615-021142
-> > base:   4774cfe3543abb8ee98089f535e28ebfd45b975a
-> > patch link:    https://lore.kernel.org/r/20250614-apr_14_for_sending-v4=
--8-8e3945c819cd%40samsung.com
-> > patch subject: [PATCH v4 8/8] drm/imagination: Enable PowerVR driver fo=
-r RISC-V
-> > config: riscv-kismet-CONFIG_DRM_GEM_SHMEM_HELPER-CONFIG_DRM_POWERVR-0-0=
- (https://download.01.org/0day-ci/archive/20250615/202506151839.IKkZs0Z0-lk=
-p@intel.com/config)
-> > reproduce: (https://download.01.org/0day-ci/archive/20250615/2025061518=
-39.IKkZs0Z0-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202506151839.IKkZs0Z0-l=
-kp@intel.com/
-> >
-> > kismet warnings: (new ones prefixed by >>)
-> >>> kismet: WARNING: unmet direct dependencies detected for DRM_GEM_SHMEM=
-_HELPER when selected by DRM_POWERVR
-> >    WARNING: unmet direct dependencies detected for DRM_GEM_SHMEM_HELPER
-> >      Depends on [n]: HAS_IOMEM [=3Dy] && DRM [=3Dy] && MMU [=3Dn]
->
-> I believe this is triggered because RISC-V can be compiled without MMU
-> support, while MMU support is mandatory for ARM64.
->
-> Would an acceptable fix be to require an explicit dependency on the MMU,
-> like so?
->
-> depends on (ARM64 || RISCV) && MMU
->
+On 14.06.25 11:07, Oscar Salvador wrote:
+> On Fri, Jun 13, 2025 at 11:47:50PM +0200, Oscar Salvador wrote:
+>> Maybe it's because it's Friday, but I'm confused as to why
+>> do_pte_missing()->do_fault()->do_cow_fault() holds the lock while do_wp_page() doesn't
+>> although it might the file's page we have to copy.
+> 
+> Scratch that, I see my confusion.
+> The first time we map the file privately, the folio must remain stable.
+> But if we already mapped it privately before (R/O), and we write fault on it,
+> we don't need to be stable (e.g: uptodated).
+> 
+> But I think my comment on hugetlb_no_page() still holds, because
+> 
+> hugetlb_fault->hugetlb_no_page->hugetlb_wp
+> 
+> would be similar to do_pte_missing->do_cow, and in do_cow we hold both
+> the reference and the lock.
 
-I'd put them on separate lines. While at it: how about enabling build
-with COMPILE_TEST to extend build coverage too?
+Well, there is an important difference:
 
-Bart
+hugetlb_fault->hugetlb_no_page->hugetlb_wp
 
-> >      Selected by [y]:
-> >      - DRM_POWERVR [=3Dy] && HAS_IOMEM [=3Dy] && (ARM64 || RISCV [=3Dy]=
-) && DRM [=3Dy] && PM [=3Dy]
-> >
->
-> Best regards,
-> --
-> Michal Wilczynski <m.wilczynski@samsung.com>
+already *mapped* the pagecache page into the page table.
+
+See
+	if (anon_rmap)
+		hugetlb_add_new_anon_rmap(folio, vma, vmf->address);
+	else
+		hugetlb_add_file_rmap(folio);
+
+So at that point it would be "stable" unless I am missing something?
+
+So once we are in hugetlb_wp(), that path much rather corresponds to 
+do_wp_page()->wp_page_copy.
+
+> Were we might not need the lock is in hugetlb_fault->hugetlb_wp, which
+> would be similar to do_wp_page()->wp_page_copy.
+
+Exactly.
+
+> Of course we will need to take it if it is an anonymous folio because we need
+> to check the re-use case.
+
+Yes.
+
+> 
+> So, it gets complicated because hugetlb_no_page() needs to call
+> hugetlb_wp() with the lock held in case it is a pagecache folio,
+
+Per above discussion: why? After we mapped the pagecache folio, we can 
+unlock the folio I think.
+
+and
+> and the same time hugetlb_wp() needs to take the lock if it us an anonymous
+> one for the re-use case.
+
+I think it hugetlb_wp() really only needs the lock for the anon folio.
+
+-- 
+Cheers,
+
+David / dhildenb
+
