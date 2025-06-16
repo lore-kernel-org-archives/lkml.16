@@ -1,200 +1,248 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2067.outbound.protection.outlook.com [40.107.95.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D02F1494C2;
-	Mon, 16 Jun 2025 06:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750056709; cv=none; b=OCbkgsL/BU50CEZnAi7wY5RIY0djOB1F83QO4JyVzut1iZhq1X7F9gtcFW/9Yqc5RYEMo88hzxESLh9gM00ZisUaGJV5waJMhHh9kSXcG3cVH5uhpF+Zl2e4D/Ummmp1K8i38DfQg4MO5/hUCFC1NpiNLhnlnDcm2S206vHRxlo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750056709; c=relaxed/simple;
-	bh=659K2a+RVej/0E/JVasPDdOXxmtJmIlt1/h05SIk5TE=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=u+Fas1vHJiz85m6OiJTNcXE7RsZhT0p4fE6m6n2H6izTaYZW9+sifg+7K7n6CKKsqlNJTnCTBt2KZsCXLBplDKvxkkC3bvTXKW3ky8lvnPDCY0tf936hjSdvD0Mfu3+hjA6ATcDCakjsrKA71Mr5rKLwvP9sGHo2NkzU2SA/Cj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bLLJT3mNdz5DN79;
-	Mon, 16 Jun 2025 14:51:37 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bLLJD4wYKz51SW7;
-	Mon, 16 Jun 2025 14:51:24 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 55G6pAJk054921;
-	Mon, 16 Jun 2025 14:51:10 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 16 Jun 2025 14:51:12 +0800 (CST)
-Date: Mon, 16 Jun 2025 14:51:12 +0800 (CST)
-X-Zmail-TransId: 2af9684fbee0696-177c9
-X-Mailer: Zmail v1.0
-Message-ID: <20250616145112048o28iY_4L8DDaySvz_ZR9Z@zte.com.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699851494C2;
+	Mon, 16 Jun 2025 06:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750056722; cv=fail; b=Aq6rw8C52Lk6Alkl7caGsikE72NIONsSFu9OD1hYDDWGDG1Gpr94jG/h3A7syDnQpt6dsx/s/FpbgJ/p86rZ8n9aggExAKCiRKZeENFJXFrMFMQXobwtjYPVaiCl+ocV2AbhGpcV3NmI5eJ9ohEBbC10uVgg6Ug7+G2TFIugNXo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750056722; c=relaxed/simple;
+	bh=raOhG2VLvabg7uV8AGblp4Ppix5ecxug9t3ThRPjnps=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZZLuF6IgPg+JGa2BVKHyHdGWZNiJ8cyUR5HY00t2hqjEIiYdg5YN1QPxk+ZQSiBhpLrVzdFgcAYtctJvDXmG+MP+fKOLN45n9ZXPmWEsyjNLJwrDaBtKVZPdHRS5K6BTz7nqP/nYQJ5qVqHvA61nxrx8g262WgKmnKIMKlv9Xk0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dLhqRMJn; arc=fail smtp.client-ip=40.107.95.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dLhqRMJn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iXWOzXMjnR+SpWM6ZKXQ6/EQbugfg/iwrO07vkU61nfE7Ba6dncEOV3eMuInIu0XDZom0EYDvjx8atuhZY6nZehWTgax1CGM0xcNEwvApGbQW5DUY2W/aZqnlhMjvd3flHGZ/y/jllAGMmFOmUVbs+WQ1ZwwIZQy2J7Y9+XuL+oER35Q/5l6BkBc8o47TQogydvzFt54gRpkWYuB5YYSelcfke9Fn1rHXzj8R0XTaonI0X0ARkzRKzjfOYM4xS1W97hCp03/RbF/baCZRnJ6liVLS9pQcSdxjKd5sXK6++iEc728dOo9jtrHCP32NAyudniwT88VQEaCE8OjHDPl7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XxN7e8eeZm3aKXg8EDN+fMueLGlfp14jo9xKVmCXsug=;
+ b=tm8yZTp5aSKHgJ36ZUCvDMg+bFYPvgC+Yh6k7sfJFcJYqWnuy4KTl1nEf7mfn2y7TgYJUCaoVVZbrNfHKPM8kqdUKKf67eUL5StdGRuuthUWMvnEGPpIad52fm9SX9VZGRQRJSy2hh8lCz5NQ+B430Bup8zxV/VQDJbB9dX/TJujUtJCTrgL/q3ElmTr4Wy+AN51vWhlMwpEdFGgTGfIZNer9dkUVl6IZCmwi0UtBEF4hp+03BFAc9IUZ9hERjswHyQnBD8Tjod7ZpBzlNHANhk7+k7aueBUHkRYpRoFQNWzFGAw/gCek/0/47OrVRSa+H0AYL7aiSO7hy9p5bxRdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XxN7e8eeZm3aKXg8EDN+fMueLGlfp14jo9xKVmCXsug=;
+ b=dLhqRMJnq63vXAAKOHEOlB8ysQmjIBTYaBBh4h1HFLIcX2ehhsrxPwpl8fKwUxTLBN+A6pXUOO3aIqQnpAh1mvel8b0MH+Mgd6a+j8YGI4YeZNZBziis00VsF1vwE0KEJVPHzhOhKH5TeVUVZAXpStPVeDnUH9sowDG9Mr2g0YA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by DM4PR12MB8475.namprd12.prod.outlook.com (2603:10b6:8:190::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 06:51:59 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30%7]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 06:51:58 +0000
+Message-ID: <765a606b-3b87-4a08-8630-69a3c52ed138@amd.com>
+Date: Mon, 16 Jun 2025 08:51:49 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: gpio-xilinx: Mark clocks as
+ required property
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+ Srinivas Neeli <srinivas.neeli@amd.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/ZYNQ ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <8407ef56b11632c1a7abfce8a4534ed8a8ed56cc.1749809570.git.michal.simek@amd.com>
+ <cbde9b9e2b0f9d12fdd1ba24fddb1543159357aa.1749809570.git.michal.simek@amd.com>
+ <2fb10aee-6610-43f4-9d12-88a97e0f66e5@kernel.org>
+ <9dc04095-e397-4a51-a75c-8a5577be197e@amd.com>
+ <1fced39f-1077-4af7-9294-affb99860984@kernel.org>
+Content-Language: en-US
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ mpwx1d8=
+In-Reply-To: <1fced39f-1077-4af7-9294-affb99860984@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0024.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:85::21) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <alexs@kernel.org>
-Cc: <si.yanteng@linux.dev>, <dzm91@hust.edu.cn>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <yang.tao172@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <wang.yaxin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBEb2NzL3poX0NOOiBUcmFuc2xhdGUgdWJpZnMucnN0IHRvIFNpbXBsaWZpZWQgQ2hpbmVzZQ==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55G6pAJk054921
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 684FBEF7.000/4bLLJT3mNdz5DN79
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|DM4PR12MB8475:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9227ea1d-d1f0-45ba-6c02-08ddaca24a28
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SEx2VVBjT0R4cnBtSTl5K3BaZXhhUklmR2p3RkViSWJ4VUhUNGN3Y0JOa05l?=
+ =?utf-8?B?R3djZHY2QUwzYnJZc0ZIQTM3eTZVWi9lMC9odWQ0TTlISWZPT2JvelVWNmFH?=
+ =?utf-8?B?bHJ5QWlhVWxsZzQxUGVOZmUwR1pjdkJQM1V6STNzeUs4em9hcFVjVnlFcW1F?=
+ =?utf-8?B?aEd2eElmcWRwaUhFNlVDb0FYZTN3UXNFbWt3QmU3emYwQkNQRnloeTdzeUNC?=
+ =?utf-8?B?MWcreCsvYytaaktvbGxtQUFQYjN6eUdiOWU4clpiNFpSSjVQVkFpWm00LzV0?=
+ =?utf-8?B?NWVNN1h0MElXVUphbGIybXhJU1VhdWZjZ2hDeWgwVXpXWjdQYXdvL3p6THM5?=
+ =?utf-8?B?bkloNzZiWmttMHpoRmNvbGx1dFA3Z2phaTJZdXpjQjVsSmZLd0VWOCtxRHdZ?=
+ =?utf-8?B?QnFCL3VKQWFhcE9QcTljSGtXRnJRMHFoSHVKemI3aUlwdHZvcmJkaC92UDBX?=
+ =?utf-8?B?US83UWNuTXYrMFJKTXkvZG0rYVFYMm9FZFExUnpuTUlrUUVDSXZXY1RoejMv?=
+ =?utf-8?B?SGRVU3I4WHNlVUlxZmYxUmlVOFlXdGt4bzBXMlR6T1ZZcXYrM2JzeTdwUW1S?=
+ =?utf-8?B?UVYwamRTc1gwYS95V2M3THN5TXN0M1d5VVdqZ2w0cDlUWWMzT3pnWGFGNmV4?=
+ =?utf-8?B?L3h3U2psUHJqazY2RlZ1K3RBNVVXNEpvS2cyL1ZacFlSOHFWYTZhSUJrVDA1?=
+ =?utf-8?B?YnpUam9UTmovS0xJVE1IaEdwUTBlelJPdjdLWG4zb0hUT3F4SmFXWkk0MW1M?=
+ =?utf-8?B?YlpHL0NLSjlmaHFoV1FCbkVrS1NBcmNjeFV4T0ZMK2xmaXBjT1BFd3pOMXdo?=
+ =?utf-8?B?R1RZUWg4RllYdXJxOUNUTXJZTjZtSjNncUR0Q3FlVlNIbFpBRnM5TVc2K1dv?=
+ =?utf-8?B?WEIvNTQwNmtBRElnOGJsK1ZyTnFCVDdpTkczNHZFSXBUZHpLT21kWlZNdDhk?=
+ =?utf-8?B?SlM4SHRDZTgwa1k5cXlVWXUrcTBuY0xBTitzR2ZWMTRhZ2Y3QWFzMWZhbTlS?=
+ =?utf-8?B?VGRrTUgxdDVmMUVGamFramh0ekswdzZZemVqZGdkRzBRbWw3QnhzMVVabjdL?=
+ =?utf-8?B?VjFPRXlFYjBDS3B1bUthY1VSZHJFY1ExVGNFYmxFSTZEdkZzcGF0VURncGN0?=
+ =?utf-8?B?YTVZRzk5MUJtS0NEQU0zTmVsZUd3REpyRXhQbE1oSlpoRnkvNnJHVERaRjZj?=
+ =?utf-8?B?dTF2N0EzS1p4Sys2MDBCL1RoVXptSmdiRUZRbmRON2NxNlM1aC8yWmhGbEFJ?=
+ =?utf-8?B?bi8rQTBHWk1KZy9KWWFRMzZ5RXFQYTExRWZoMWFYdjkxZ0ZwQksyUDlEcjBW?=
+ =?utf-8?B?ZHVNektaZzk5Qjc0Lzdub21xL3V2ZVphSWdTdlJEbzZCL1RkL05pZ1dDaEdi?=
+ =?utf-8?B?cnF0Mnl2aVdHSEVDSXh5U3FIRWlYZWdGd3pvdnd0bFZibFNjaER4bmRvL3k0?=
+ =?utf-8?B?d3N6V0Q5aVYrbVl0S21yUHJMUms5cG5CMTFtdHpDWjF2T21sNHZSai9oTmpt?=
+ =?utf-8?B?dTFhV0VUS25FV2JsSk9EbTMvQmVVK3M4VituQkJ1YTRKR1k0aVBSR1JVZE54?=
+ =?utf-8?B?bjZYdXdNTDlJNXRTWWMxeTVsT3hwSjZOQ3E2SWhPTEIyajlEUlA0WkR6VXg5?=
+ =?utf-8?B?NUd2L2ozWjdCYTRpcHBxM2RuVHh6WE5ZMlBhOUhyVG1pcGZxZVE5eXhCRlgr?=
+ =?utf-8?B?U2tIMm9pSDVqVUkrc0wvS2ZrdkZicTA1b0U5ZWE5Wm5ZVUtvVTcrNHprOUti?=
+ =?utf-8?B?R0VMZlF5MkEvRTZ0WVdONVI4R0p6aGRwc0dDVG9XclZGMmpieG9hMGViVXlw?=
+ =?utf-8?B?RVpmNjFJbDU0TWlMVm1PK3M5UVBLditBMVlqVGpZQXdqeDdVbGVPUGRPUEIx?=
+ =?utf-8?B?bGRNaE9CdElpckdQVW1YejVORTlQSjkwTmxPZTJMTmFCVm1SOURxa3crSmhH?=
+ =?utf-8?Q?D1fnn3DLJYc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VGpIRmprTW5pVElWTUxBYnZIdk9ac0FqSHZqRzNmSzkwZ1VJcEtXN3hGN2Nm?=
+ =?utf-8?B?UVAvNjJNMERTdkVZVy9DRGFGbi9RcVRxcTU3QWtkT09LenZkbmx1K21NbXpZ?=
+ =?utf-8?B?VUxUNEJQVElTQXUrenMrTVVmcENiS00xMVpmRzI3RW5Md0hzWWJ1SEo2Yisw?=
+ =?utf-8?B?cEc5MFlCa0Z1RVdaZm1vNExiZ1Z5TWxyU2x4aUFGL0Y2Snk3Q0gxZjF0b2Z6?=
+ =?utf-8?B?L3hyT01UYWZXNFcybVRpVG5yejZIU1dtQ3hPanhORWt3YUsxMVdpYUxDQm95?=
+ =?utf-8?B?b3N4enlnSTdJTWZpeG5Sb1Fvdk4wdWlvVjNiamhoMklrdXFkcHptUjB6T2xV?=
+ =?utf-8?B?ckNOQk44TmpCd3dRa0Q4MG9LN1IwSjF6Zlh2NHEzL2N6bzR1MEc3bzQvcGox?=
+ =?utf-8?B?QXRXTEtaR0g5R003V0YyWVFHR1BsNUFnbitPMDZTR1ozNC9KemNFZGxiTGN3?=
+ =?utf-8?B?NTVZRDlITmdPUGNEaGJqT0FhUzVqWEo0RVZxcU92aUZ5Zzdtb1ZNTkxwcDlv?=
+ =?utf-8?B?LzFmeHBnbVhEM2RZWUlPY3QvVW1TRmdtYnI4M2VEYnFoUUU2THdGRW5wQ1RD?=
+ =?utf-8?B?OFhaUWJJNFZGSTVFVnVUMWNuUlFLaVhYeENuUW9NZWZZN2pWK0VOZkVpYVc4?=
+ =?utf-8?B?a01nODZQTU9Ob3JYUDBkOWtxUUxla2FmSFpIelczdDJPRmRLdithZm01Qkpy?=
+ =?utf-8?B?dk9xaEJLeDZhaGFMTVVaUksyMHZ6TXFNZEQrRTEvei92UFBYWFBFSHlPT3dO?=
+ =?utf-8?B?azdSRHQ0QUM0djVGd3VWSU5KYnJESzJYTmR4c0NNRXJGUkdCUXRsUTRMVjMy?=
+ =?utf-8?B?c2ZuZGN1aXRweFFVVEQyT1FhZDdXSlNXaWplUERCS2NEUWVjOVdVVzdNVTA4?=
+ =?utf-8?B?WGZ2aEhFVkpQdGxTdjlxUERvTWs5TXFYbzFmSSs0YjFQdExvQi9hN0pTcHZE?=
+ =?utf-8?B?RmJFZmZRaU9DOURYaWhBNjFpcTlEdnNWOW9pMTB2MG1HaUdKZDhxdXZKRFJG?=
+ =?utf-8?B?eml5SFVlaGVEN3Y1cUVnR2dDTDdtUUtVSGxjNkFwKzJVanV6SDYyWks4VUlN?=
+ =?utf-8?B?QURMSlFmUjJqR2F3U01YK3h3L1o0bjFGaXBDVEtIcHJWM1hsL3AzRTNTckhF?=
+ =?utf-8?B?VDBxaGhXUjhabnMwa3RUWVUzdU5tWkVOYnlKc2hiMjFOS1piTGdPSnl5QXE5?=
+ =?utf-8?B?Q1paVW9pZ0RsZXdONm84enJaUWVON3M0ODdERVJtVDNncjEwaERKMnZOa2ow?=
+ =?utf-8?B?SURidnpmYnJRYVpGY254SldPd3RwOW1KUHpieDhya1FjU1NxckZjZUk0WWhj?=
+ =?utf-8?B?dG9IaDlNL01sazhoTnRpNWx6OGtYTmVTSUd5VnBqdU5jWXRuRVZIc2h5SVZH?=
+ =?utf-8?B?a1pGTmFiNUtld2xXa1Z2c1c4QUJWTGYrM1l3N1gxRzVnb3lKWUhWQTV1QUhG?=
+ =?utf-8?B?NXFNT2h1MFdYLzFnWmozTHFJZ2xTemFDVHhVSzBYa3V2UHRsVEQ5VCtESGJK?=
+ =?utf-8?B?TjdPVWNtUlpIM2NKeGx5TEVGUHMvajFpajl3TkV2ODRGYWFHbW1zcm1HSjBj?=
+ =?utf-8?B?NVBMNlhXUWsxMXRMeExQeGlpSUx1S3Q3QjZRVGl3Um9SdDI3OWlUTWphQlI4?=
+ =?utf-8?B?RnZ3SkRIN3lGalJtVFJmQkg3SzIxTGpsMGlVMDFENUg5MERwaGJBaFZZTWVo?=
+ =?utf-8?B?b0xNYnVqckx4TitSZGRRQkpidTFpUXlKc3JxYUdDWG1XWC9nbk1SSGFyaGxq?=
+ =?utf-8?B?U0R4NXlSR1IyNStGMkplcXpwT3pBUkV4NjlyWlBtR2FCbVFNclh4SDZINVp4?=
+ =?utf-8?B?RmZMMXZKQ3dseUxENTg5QzRuMzVoT3FrSHBWckhHOWxmNTQraUFFSUdMRFFB?=
+ =?utf-8?B?d0NpaVpDeWtzQTdia0RsSmZ0TnJCUzhrQ0laaEIwZE1XeUNML1hhSGxxVDdr?=
+ =?utf-8?B?RHIvaVVCVTZuNWs4bXVkeWo5SitteE9PcktvU0hTajlwQkZsUGdIUTJ0Rk0x?=
+ =?utf-8?B?MkR0SnBUVzJ0SGZLeUhZYUNzVGNnMm5YZGhoZGg5NytPZ1ZFMENzWkszVUVT?=
+ =?utf-8?B?UzZvcTQ2M3IrNVVPUFAxeFFDTVdFQXFsaUhuc0V2QXJ2TXQyeW91QVhRU2Fo?=
+ =?utf-8?Q?AQCBAcwgGCETwfvvdvKzIWHWt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9227ea1d-d1f0-45ba-6c02-08ddaca24a28
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 06:51:58.7481
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 186DQoTfSXOWR0HJL4nJpFtvwPLNWhga6UiXQj7et7LWUcK3Py/g4cOpT5GFUOGo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8475
 
-From: Shao Mingyin <shao.mingyin@zte.com.cn>
+Hi,
 
-translate the "ubifs.rst" into Simplified Chinese.
+On 6/16/25 08:41, Krzysztof Kozlowski wrote:
+> On 13/06/2025 13:26, Michal Simek wrote:
+>>>> Based on discussion at
+>>>> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+>>>>
+>>>> Actually this shouldn't be only targetting GPIO but also for example
+>>>> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+>>>> before starting to check other bindings.
+>>>
+>>> IIUC, patch #1 is a prerequisite, so you need to squash them. Otherwise
+>>> dt_binding_check is not bisectable and we want it to be bisectable.
+>>
+>> No issue with squash if necessary. I sent it as series to be applied together
+>> which won't break bisectability of tree and no new error is going to be reported.
+> 
+> You did not say anything about dependencies and merging strategy, to
+> this would go via different trees. Sending something in one patchset
+> does not mean that there is a dependency.
 
-Update to commit 5f5cae9b0e81("Documentation: ubifs: Fix
-compression idiom")
+No offense but I don't think I can agree with this. The main purpose of patchset 
+is to show sequence how things should go one after each other and series should 
+go via single tree.
+Sometimes people are asking for picking up individual patches from series but 
+this is not a normal way. Also seen a lot of time asking for splitting that 
+patches and send them individually instead of picking up from the series.
 
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-Signed-off-by: yang tao <yang.tao172@zte.com.cn>
----
- .../translations/zh_CN/filesystems/index.rst  |   1 +
- .../translations/zh_CN/filesystems/ubifs.rst  | 111 ++++++++++++++++++
- 2 files changed, 112 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/filesystems/ubifs.rst
+Anyway. If you want to me to squash it together I am fine with it.
+If you want to me to create cover letter that's fine for me too.
 
-diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
-index 9f2a8b003778..faaa0f097223 100644
---- a/Documentation/translations/zh_CN/filesystems/index.rst
-+++ b/Documentation/translations/zh_CN/filesystems/index.rst
-@@ -26,4 +26,5 @@ Linux Kernel中的文件系统
-    virtiofs
-    debugfs
-    tmpfs
-+   ubifs
-
-diff --git a/Documentation/translations/zh_CN/filesystems/ubifs.rst b/Documentation/translations/zh_CN/filesystems/ubifs.rst
-new file mode 100644
-index 000000000000..27997777f4ea
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/ubifs.rst
-@@ -0,0 +1,111 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/filesystems/ubifs.rst
-+
-+:翻译:
-+
-+   邵明寅 Shao Mingyin <shao.mingyin@zte.com.cn>
-+
-+:校译:
-+
-+   - 杨涛 yang tao <yang.tao172@zte.com.cn>
-+
-+===============
-+UBI 文件系统
-+===============
-+
-+简介
-+============
-+
-+UBIFS 文件系统全称为 UBI 文件系统（UBI File System）。UBI 代表无序块镜像（Unsorted
-+Block Images）。UBIFS 是一种闪存文件系统，这意味着它专为闪存设备设计。需要理解的是，UBIFS
-+与 Linux 中任何传统文件系统（如 Ext2、XFS、JFS 等）完全不同。UBIFS 代表一类特殊的文件系统，
-+它们工作在 MTD 设备而非块设备上。该类别的另一个 Linux 文件系统是 JFFS2。
-+
-+为更清晰说明，以下是 MTD 设备与块设备的简要比较：
-+
-+1. MTD 设备代表闪存设备，由较大尺寸的擦除块组成，通常约 128KiB。块设备由小块组成，通常 512
-+   字节。
-+2. MTD 设备支持 3 种主要操作：在擦除块内偏移位置读取、在擦除块内偏移位置写入、以及擦除整个擦除
-+   块。块设备支持 2 种主要操作：读取整个块和写入整个块。
-+3. 整个擦除块必须先擦除才能重写内容。块可直接重写。
-+4. 擦除块在经历一定次数的擦写周期后会磨损，通常 SLC NAND 和 NOR 闪存为 100K-1G 次，MLC
-+   NAND 闪存为 1K-10K 次。块设备不具备磨损特性。
-+5. 擦除块可能损坏（仅限 NAND 闪存），软件需处理此问题。硬盘上的块通常不会损坏，因为硬件有坏块
-+   替换机制（至少现代 LBA 硬盘如此）。
-+
-+这充分说明了 UBIFS 与传统文件系统的本质差异。
-+
-+UBIFS 工作在 UBI 层之上。UBI 是一个独立的软件层（位于 drivers/mtd/ubi），本质上是卷管理和
-+磨损均衡层。它提供称为 UBI 卷的高级抽象，比 MTD 设备更上层。UBI 设备的编程模型与 MTD 设备非
-+常相似，仍由大容量擦除块组成，支持读/写/擦除操作，但 UBI 设备消除了磨损和坏块限制（上述列表的第
-+4 和第 5 项）。
-+
-+某种意义上，UBIFS 是 JFFS2 文件系统的下一代产品，但它与 JFFS2 差异巨大且不兼容。主要区别如下：
-+
-+* JFFS2 工作在 MTD 设备之上，UBIFS 依赖于 UBI 并工作在 UBI 卷之上。
-+* JFFS2 没有介质索引，需在挂载时构建索引，这要求全介质扫描。UBIFS 在闪存介质上维护文件系统索引
-+  信息，无需全介质扫描，因此挂载速度远快于 JFFS2。
-+* JFFS2 是直写（write-through）文件系统，而 UBIFS 支持回写（write-back），这使得 UBIFS
-+  写入速度快得多。
-+
-+与 JFFS2 类似，UBIFS 支持实时压缩，可将大量数据存入闪存。
-+
-+与 JFFS2 类似，UBIFS 能容忍异常重启和断电。它不需要类似 fsck.ext2 的工具。UBIFS 会自动重放日
-+志并从崩溃中恢复，确保闪存数据结构的一致性。
-+
-+UBIFS 具有对数级扩展性（其使用的数据结构多为树形），因此挂载时间和内存消耗不像 JFFS2 那样线性依
-+赖于闪存容量。这是因为 UBIFS 在闪存介质上维护文件系统索引。但 UBIFS 依赖于线性扩展的 UBI 层，
-+因此整体 UBI/UBIFS 栈仍是线性扩展。尽管如此，UBIFS/UBI 的扩展性仍显著优于 JFFS2。
-+
-+UBIFS 开发者认为，未来可开发同样具备对数级扩展性的 UBI2。UBI2 将支持与 UBI 相同的 API，但二进
-+制不兼容。因此 UBIFS 无需修改即可使用 UBI2。
-+
-+挂载选项
-+=============
-+
-+(*) 表示默认选项。
-+
-+====================    =======================================================
-+bulk_read               批量读取以利用闪存介质的顺序读取加速特性
-+no_bulk_read (*)        禁用批量读取
-+no_chk_data_crc (*)     跳过数据节点的 CRC 校验以提高读取性能。 仅在闪存
-+                        介质高度可靠时使用此选项。 此选项可能导致文件内容损坏无法被
-+                        察觉。
-+chk_data_crc            强制校验数据节点的 CRC
-+compr=none              覆盖默认压缩器，设置为"none"
-+compr=lzo               覆盖默认压缩器，设置为"LZO"
-+compr=zlib              覆盖默认压缩器，设置为"zlib"
-+auth_key=               指定用于文件系统身份验证的密钥。
-+                        使用此选项将强制启用身份验证。
-+                        传入的密钥必须存在于内核密钥环中， 且类型必须是'logon'
-+auth_hash_name=         用于身份验证的哈希算法。同时用于哈希计算和 HMAC
-+                        生成。典型值包括"sha256"或"sha512"
-+====================    =======================================================
-+
-+快速使用指南
-+========================
-+
-+挂载的 UBI 卷通过 "ubiX_Y" 或 "ubiX:NAME" 语法指定，其中 "X" 是 UBI 设备编号，"Y" 是 UBI
-+卷编号，"NAME" 是 UBI 卷名称。
-+
-+将 UBI 设备 0 的卷 0 挂载到 /mnt/ubifs::
-+
-+    $ mount -t ubifs ubi0_0 /mnt/ubifs
-+
-+将 UBI 设备 0 的 "rootfs" 卷挂载到 /mnt/ubifs（"rootfs" 是卷名）::
-+
-+    $ mount -t ubifs ubi0:rootfs /mnt/ubifs
-+
-+以下是内核启动参数的示例，用于将 mtd0 附加到 UBI 并挂载 "rootfs" 卷：
-+ubi.mtd=0 root=ubi0:rootfs rootfstype=ubifs
-+
-+参考资料
-+==========
-+
-+UBIFS 文档及常见问题解答/操作指南请访问 MTD 官网：
-+
-+- http://www.linux-mtd.infradead.org/doc/ubifs.html
-+- http://www.linux-mtd.infradead.org/faq/ubifs.html
--- 
-2.25.1
+Thanks,
+Michal
