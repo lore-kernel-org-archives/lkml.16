@@ -1,137 +1,152 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C311863E
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E5063CB;
+	Mon, 16 Jun 2025 03:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750045279; cv=none; b=NpK+fwO8P+Nt9MyvwpogJnk1tzmrewrL71Ghiz5gBWx/IAkZzlZqpgrApn1majM+ZlBiSsJL2nvUBIDDHMe21i+fksa5E5Sa4AJOeCv8vcTry6nEPD5eIECA+IGgzZ05IfitS6t1P9pfvM81hNbzlZT4GJ1vSNIqb2oH4y8pMmc=
+	t=1750045615; cv=none; b=nmI2KXtfwPibJkg/7QnM2Pg3hKcVqyP4UoTqga9v9s+PfVtrcvYCIyXLrx7GyR3A5o1akh/r31O6cnpbWDpFi/hLbii0KdeKMuagyp50IqvKydPrVOMewjhNQDHJM3JJQ+uQGb9esU5/ur1SuE0c9/UuTSvMchwFTZfAeFx7Y6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750045279; c=relaxed/simple;
-	bh=3bA7chCM15d+s8mDU6zuce2UCXcrS8l/DCUUssjA3Qs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DVa6v0MRRX2bF7qOwco2/OQiBZqsaB3rH4p//NwrZ3jyU+XY4Kyxog7wDMxD62RNtH0ocJ+UiecfcteqPRx+a5s3Ls33Did/xuvOBQhlcJogVe1k4kl1/mQr0vUaqrQynozPX3BQu5tMgMTFXlcXkxBCFMkaylYrr/Nb4BCN24k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G66oOrwS; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G66oOrwS"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7481600130eso4409894b3a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Jun 2025 20:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750045277; x=1750650077; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KjwCIT4/G6OsPqKKNi7etA9BwyZ290LnHAyZ+vvEmLE=;
-        b=G66oOrwS2MGU0RMPe5Zs1k7eICUqbR5cb48XzOizIclJ+V37lfn7bmyBcmB0Unti8E
-         o5r9rN5yK2WGph9dfnxjNBEqtYkuEMuasXp6Q5QAg80rdRBoLURWGc7+nFON3zdXejSH
-         ASCJmbohtdtTpjlj5jWDv0jEIIbwYzVtWhD5q2lLiIlExKhjgqDIWzpa4pqgHIjvEB1I
-         K6ETNBrTuScW7M8NxAF19gqJ+/rtSfW41vm5N/lHsmq8XLG0eHyQAtLpECA3bHSNI3eN
-         yS/UuiPCVGQLo8Ez2oppn9IbhrVJyPSo5HKEDr9Y8sTUPIuHJSb3keOwmZYl/2kkPL+Q
-         FAXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750045277; x=1750650077;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KjwCIT4/G6OsPqKKNi7etA9BwyZ290LnHAyZ+vvEmLE=;
-        b=qMn7ZS5y82+fpKm8uMp42wtb86MvvCfBGyOC/cnXHW6cH079zwh9b6sgp0JkRaq9Qd
-         /P1DEaBhN9oxnWVThA1Gh9wMUlRpvcz9lOJESkZ8LAg+O/WVls43DvwRBwr8wk8TX4jL
-         OlL1H2QmisgO81Q6L9ZREuhOr2+7AUYLPW0GYjcqjQWQBULMBm3A+PZmVqqp2a3tX3M7
-         /SmjqxWUWZfybS4Dt4n36gpIbEHYdG70X4EzZPF0Kikhuob6XNRG6QbEqbdp/tDWFyWL
-         WeJOgehG2itPiM8RpJQkMVL/HzF0d/RFnXgHs/ZW27+F4uOMG13RCHE0CDJlzYALUa0h
-         U35Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXvAwc8EnEGNuRQlRGcTheU9379jEC0Q1fSCJX9gWvAhuemB0V+ALle+fudakbtGfHbQzFAlmVP4/n5b+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIblYqqp2az+En53YDESXMMtd4+esP4ZtNnPDJyvd+qrAhRXUE
-	VlYTK2cioXu6cNw+5Dz4kGUll6tU6ZXQB/joYetpTeX73lslXLjlChxw
-X-Gm-Gg: ASbGnct8xTXGunuIGnm9VX4sjg/WlcgbIzxIV9k0pLJ0zgXCZSuzHq1rnGkYx+tJysR
-	nZUer7Jm6LipdVnqMi2MucfdBPgtPgvTVR0ypJ7zF0RwnaJjKpyitczWCfRe5XeXna/3q/nEM6n
-	P/pRnu+2LT28iuOThYDs9ePqQ+5gZEAAt70Rt4w0Yt6E06BnSfXua66HWoyAFP09FPky4Nfdgv2
-	YC2NX/SmW80tzyVqTbW+kGO9aHjRuqSW5ldhzFIC7OZ/KT9px9RVxreKHTLDtML6TkBrq0zzr5I
-	RrmBOqm0vamcGFy+yLotL197aexwW5PFeJRJ+7yYmmYD9LDxPTOh1m/n0VS4i4dgeeSczBZDaVo
-	DswaZ
-X-Google-Smtp-Source: AGHT+IFoXXdADq54s1YJVoHHCyU6912PkQq0oVs1W/N3IeK6HcDSKJErbEsGyC7KzvI7wyF0q8jdCg==
-X-Received: by 2002:a05:6a00:2286:b0:736:2a73:6756 with SMTP id d2e1a72fcca58-7489d1999famr11297185b3a.21.1750045276897;
-        Sun, 15 Jun 2025 20:41:16 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.145.159])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b37ddsm5809347b3a.134.2025.06.15.20.41.10
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 15 Jun 2025 20:41:16 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: nphamcs@gmail.com,
-	hannes@cmpxchg.org
-Cc: 21cnbao@gmail.com,
-	akpm@linux-foundation.org,
-	andrew.yang@mediatek.com,
-	angelogioacchino.delregno@collabora.com,
-	casper.li@mediatek.com,
-	chinwen.chang@mediatek.com,
-	james.hsu@mediatek.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-mm@kvack.org,
-	matthias.bgg@gmail.com,
-	minchan@kernel.org,
-	qun-wei.lin@mediatek.com,
-	rppt@kernel.org,
-	senozhatsky@chromium.org
-Subject: Re: [PATCH] mm: Add Kcompressd for accelerated memory compression
-Date: Mon, 16 Jun 2025 15:41:06 +1200
-Message-Id: <20250616034106.1978-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <CAKEwX=MsP6LGjMRNyaHnO5MkE_ne-u-cKLbGfVQcSR-ALoxBwA@mail.gmail.com>
-References: <CAKEwX=MsP6LGjMRNyaHnO5MkE_ne-u-cKLbGfVQcSR-ALoxBwA@mail.gmail.com>
+	s=arc-20240116; t=1750045615; c=relaxed/simple;
+	bh=LDtNMiH8SuKNPezVBkxwDxKKq8DGchl8pwBx2uQky6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K+qTRGGk6PlHg28MqqhEnDvdJcdZIq76JwZlNT4HK0rP8ysr5bwIjmvkTJcNkNKUKPu2xLGsLtH74+yVj4vs0cps7vlKErkUNLEYVwSpwX29N2YeRaGMsG1wge5wN2uhafN6nXW4shjBLKyAiKDggkH6OvRptrGIB6A7MjuMLeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 845e65da4a6411f0b29709d653e92f7d-20250616
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:c53be892-6c29-4028-8e9f-2ddfdc43491b,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:3830bdf148845bb9a5025001a0e6403e,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 845e65da4a6411f0b29709d653e92f7d-20250616
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1857386657; Mon, 16 Jun 2025 11:46:42 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 4684FE00891C;
+	Mon, 16 Jun 2025 11:46:42 +0800 (CST)
+X-ns-mid: postfix-684F93A2-171212898
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 04533E008900;
+	Mon, 16 Jun 2025 11:46:34 +0800 (CST)
+Message-ID: <ee1de994-e59f-4c6c-96f3-66056b002889@kylinos.cn>
+Date: Mon, 16 Jun 2025 11:46:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] PM: Optionally block user fork during freeze to
+ improve performance
+To: Michal Hocko <mhocko@suse.com>
+Cc: David Hildenbrand <david@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, rafael@kernel.org,
+ len.brown@intel.com, pavel@kernel.org, kees@kernel.org, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
+ <20250606082244.GL30486@noisy.programming.kicks-ass.net>
+ <83513599-e007-4d07-ac28-386bc5c7552d@kylinos.cn>
+ <cd548b13-620e-4df5-9901-1702f904d470@redhat.com>
+ <a4370ebc-b1ce-46ba-b3a4-cb628125d7d0@kylinos.cn>
+ <aEvNqY5piB02l20T@tiehlicka>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <aEvNqY5piB02l20T@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nhat, Johannes,
+Hi=C2=A0=C2=A0Michal,
 
->> The way you implemented this adds time-and-space overhead even on
->> systems that don't have any sort of swap compression enabled.
+Thanks for the question.
 
-I agree — we can eliminate the time and space overhead by refining the  
-code to hook kcompressed only when zswap or zram is enabled.
-
+=E5=9C=A8 2025/6/13 15:05, Michal Hocko =E5=86=99=E9=81=93:
+> On Fri 13-06-25 10:37:42, Zihuan Zhang wrote:
+>> Hi David,
+>> Thanks for your advice!
 >>
->> That seems unnecessary. There is an existing method for asynchronous
->> writeback, and pageout() is naturally fully set up to handle this.
->>
->> IMO the better way to do this is to make zswap_store() (and
->> zram_bio_write()?) asynchronous. Make those functions queue the work
->> and wake the compression daemon, and then have the daemon call
->> folio_end_writeback() / bio_endio() when it's done with it.
+>> =E5=9C=A8 2025/6/10 18:50, David Hildenbrand =E5=86=99=E9=81=93:
+>>> =E3=80=80=E3=80=80=E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=E3=80=80 =E3=
+=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=
+=80 =E3=80=80 =E3=80=80=E3=80=80
+>>> Can't this problem be mitigated by simply not scheduling the new fork=
+'ed
+>>> process while the system is frozen?
+>>>
+>>> Or what exact scenario are you worried about?
+>> Let me revisit the core issue for clarity. Under normal conditions, mo=
+st
+>> processes in the system are in a sleep state, and only a few are runna=
+ble.
+>> So even with thousands of processes, the freezer generally works relia=
+bly
+>> and completes within a reasonable time
+> How do you define reasonable time?
+>
 
-> +1.
+To clarify: freezing a process typically takes only a few dozen=20
+microseconds. In our tests, the freezer includes a usleep_range() delay=20
+between retries, which is about 1ms in the first round and doubles in=20
+subsequent rounds. Despite this delay, we observed that around 10% of=20
+the processes were not frozen during the first pass and had to be retried=
+.
 
+This suggests that even with a reasonably sufficient delay, some newly=20
+forked processes do not get frozen in time during the first iteration,=20
+simply due to timing. The freeze latency itself remains small, but not=20
+all processes are caught on the first try.
+>> However, in our fork-based test scenario, we observed repeated freeze
+>> retries.
+> Does this represent any real life scenario that happens on your system?
+> In other words how often do you miss your "reasonable time" treshold
+> while running a regular workload. Does the freezer ever fail?
+>
+> [...]
+In our test scenario, although new processes can indeed be created=20
+during the usleep_range() intervals between freeze iterations, it=E2=80=99=
+s=20
+actually difficult to make the freezer fail outright. This is because=20
+user processes are forcibly frozen: when they return to user space and=20
+check for pending signals, they enter try_to_freeze() and transition=20
+into the refrigerator.
 
-But,
-How could this be possible for zswap? zswap_store() is only a frontend —  
-we still need its return value to determine whether __swap_writepage()  
-is required. Waiting for the result of zswap_store() is inherently a  
-synchronous step.
+However, since the scheduler is fair by design, it gives both newly=20
+forked tasks and yet-to-be-frozen tasks a chance to run. This=20
+competition for CPU time can slightly delay the overall freeze process.=20
+While this typically doesn=E2=80=99t lead to failure, it does cause more =
+retries=20
+than necessary, especially under CPU pressure.
 
-My point is that folio_end_writeback() and bio_endio() can only be  
-called after the entire zswap_store() → __swap_writepage() sequence is  
-completed. That’s why both are placed in the new kcompressed.
-
-The use of folio_end_writeback() and bio_endio() was the case for zRAM  
-in Qun-Wei's RFC.
-
-https://lore.kernel.org/linux-mm/20250307120141.1566673-3-qun-wei.lin@mediatek.com/
-
-However, the implementation tightly coupled zRAM with reclamation logic.  
-For example, zRAM needed to know whether it was running in the kswapd  
-context, which is not ideal for a generic block device — the role zRAM  
-is supposed to play. Additionally, the code was not shared between zswap  
-and zRAM.
-
-Thanks
-Barry
+Given that freezing is a clearly defined and semantically critical state=20
+transition, we believe it makes sense to prioritize the execution of=20
+tasks that are pending freezing over newly forked ones=E2=80=94particular=
+ly in=20
+resource-constrained environments
+>> You=E2=80=99re right =E2=80=94 blocking fork() is quite intrusive, so =
+it=E2=80=99s worth exploring
+>> alternatives. We=E2=80=99ll try implementing your idea of preventing t=
+he newly
+>> forked process from being scheduled while the system is freezing, rath=
+er
+>> than failing the fork() call outright.
+> Just curious, are you interested in global freezer only or is the cgrou=
+p
+> freezer involved as well?
+>
+At this stage, our focus is mainly on the global freezer during system=20
+suspend and hibernate (S3/S4). However, the patch itself is based on the=20
+generic freezing() and freeze_task() logic, so it should also work with=20
+the cgroup freezer as well.
