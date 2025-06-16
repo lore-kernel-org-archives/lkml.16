@@ -1,25 +1,48 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B72207A2A;
-	Mon, 16 Jun 2025 10:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC74B13B7AE;
+	Mon, 16 Jun 2025 10:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070826; cv=none; b=AFe08mDcoedkhRKKtLzZ/p3gTcZ8/xDc3Jead7puTiZvbKbgt9TPdPk35+bEEpAn9ojyRTPUF4OlhjMBETb8iReNcjy1OGN5Pf83LDxA65OO7azAET+pWVt/Kcpw5j3T9fEu2DlP9bGi+PLoGEZUJ2IA1qYeIeVxl3LtgHnr3iU=
+	t=1750070853; cv=none; b=OAe9eqZf9JlT+m0p/MX2s+gZQLCc6fe9RyDDCoD3H78nVqs3yj0bPEKpr2BlxTAXI0Aro9K/ulR2L3NLNcr1r3CN9gUiC33i2CD9RTCio4l3YrQmN6pyc0vUuSW4Afb9V7dR8U7IFu6sQ1nDX0stMsqTsi2zb/Kw/nATQ4IWNlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070826; c=relaxed/simple;
-	bh=acgKaDLxu0s/TwVPFqQDGqrR56gClaZRjK5KQ4b+Mfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FjF9W33clDJ1B3ddMNygLNrPsSbmhIlOkJdVgxGW794K60Vmn9vU9civaA+XJeFmrfpg0a0YLXLro6CyUM2QUsrJhIng2sUbf/HUqxokUH5daN3i3si9+S0/cg5Gplj61s3zc535PS1rX+pB9qxcQxS5vgnrKMOKZHnucFW8zmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 319F8150C;
-	Mon, 16 Jun 2025 03:46:42 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3ECE33F58B;
-	Mon, 16 Jun 2025 03:47:01 -0700 (PDT)
-Message-ID: <8bd3f2a3-09e5-4323-b798-3788a2b70c44@arm.com>
-Date: Mon, 16 Jun 2025 11:47:00 +0100
+	s=arc-20240116; t=1750070853; c=relaxed/simple;
+	bh=l26Y1UKzSX3COjgMaGEwitOzzoKwdFgUTFRPib34s6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FBZA6SzPCjqIoONTup5XZRF1j5v7zH/AERCrFgVSNUWKyb53Elai0PDwxaR8fCE3ehmIjEXDQmpiqMqziEznHF61R3LAhvt+esJ1TbEdIwXJo9OBI+NVSqiKB8HkWJ63FZiHfnRURqf0inbMVmX5AwpQhL3hO/70R/YGpgqJBTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H1IoBz+p; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H1IoBz+p"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TWXl025998;
+	Mon, 16 Jun 2025 10:47:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pVoXjpsfwQSE3a+lpBhScYzkZsvWjpI8XcyTjY56B+E=; b=H1IoBz+psq6931Z4
+	7A7BUtUW4aKB9eSM49lm0B4gNKGe2Yd64Gbuus2kKe/ZnmcOgK5YoTFa/nbM3JSI
+	cIHkctRi7Zdo5ak6orwQE1rKv47O7lNPY3maz3jIDQ8MAJNsE+7W3/ADtBRTe1Y+
+	CFoxa9LuH3NDf0ISOscsEUMQoMd9g54sZFIDAg8EKHikHqnUHk0z0YZMnVTNJYlP
+	ENNpyyM1wJ48EcfzSU/bdvX7LAO/0k7mknFi6EeRjkpPXNU9EkbnaGq+0HDx/ACV
+	+77y2DevPNV9+yjoT5m4f1i08VfaZcktBaT9eCU39tVi2/Wzc6tnke1IGSoWX5sS
+	zRNKYA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h9463a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:47:21 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GAlJgl016618
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 10:47:19 GMT
+Received: from [10.253.79.108] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 03:47:13 -0700
+Message-ID: <9ea68c8b-59ed-48a5-9289-861ae6077fcf@quicinc.com>
+Date: Mon, 16 Jun 2025 18:47:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,268 +50,160 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 07/43] arm64: RME: ioctls to create and configure
- realms
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-8-steven.price@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250611104844.245235-8-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 11/06/2025 11:48, Steven Price wrote:
-> Add the KVM_CAP_ARM_RME_CREATE_RD ioctl to create a realm. This involves
-> delegating pages to the RMM to hold the Realm Descriptor (RD) and for
-> the base level of the Realm Translation Tables (RTT). A VMID also need
-> to be picked, since the RMM has a separate VMID address space a
-> dedicated allocator is added for this purpose.
-> 
-> KVM_CAP_ARM_RME_CONFIG_REALM is provided to allow configuring the realm
-> before it is created. Configuration options can be classified as:
-> 
->   1. Parameters specific to the Realm stage2 (e.g. IPA Size, vmid, stage2
->      entry level, entry level RTTs, number of RTTs in start level, LPA2)
->      Most of these are not measured by RMM and comes from KVM book
->      keeping.
-> 
->   2. Parameters controlling "Arm Architecture features for the VM". (e.g.
->      SVE VL, PMU counters, number of HW BRPs/WPs), configured by the VMM
->      using the "user ID register write" mechanism. These will be
->      supported in the later patches.
-> 
->   3. Parameters are not part of the core Arm architecture but defined
->      by the RMM spec (e.g. Hash algorithm for measurement,
->      Personalisation value). These are programmed via
->      KVM_CAP_ARM_RME_CONFIG_REALM.
-> 
-> For the IPA size there is the possibility that the RMM supports a
-> different size to the IPA size supported by KVM for normal guests. At
-> the moment the 'normal limit' is exposed by KVM_CAP_ARM_VM_IPA_SIZE and
-> the IPA size is configured by the bottom bits of vm_type in
-> KVM_CREATE_VM. This means that it isn't easy for the VMM to discover
-> what IPA sizes are supported for Realm guests. Since the IPA is part of
-> the measurement of the realm guest the current expectation is that the
-> VMM will be required to pick the IPA size demanded by attestation and
-> therefore simply failing if this isn't available is fine. An option
-> would be to expose a new capability ioctl to obtain the RMM's maximum
-> IPA size if this is needed in the future.
-> 
-> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-
-minor nit below.
-
-> ---
-> Changes since v8:
->   * Fix free_delegated_granule() to not call kvm_account_pgtable_pages();
->     a separate wrapper will be introduced in a later patch to deal with
->     RTTs.
->   * Minor code cleanups following review.
-> Changes since v7:
->   * Minor code cleanup following Gavin's review.
-> Changes since v6:
->   * Separate RMM RTT calculations from host PAGE_SIZE. This allows the
->     host page size to be larger than 4k while still communicating with an
->     RMM which uses 4k granules.
-> Changes since v5:
->   * Introduce free_delegated_granule() to replace many
->     undelegate/free_page() instances and centralise the comment on
->     leaking when the undelegate fails.
->   * Several other minor improvements suggested by reviews - thanks for
->     the feedback!
-> Changes since v2:
->   * Improved commit description.
->   * Improved return failures for rmi_check_version().
->   * Clear contents of PGD after it has been undelegated in case the RMM
->     left stale data.
->   * Minor changes to reflect changes in previous patches.
-> ---
->   arch/arm64/include/asm/kvm_emulate.h |   5 +
->   arch/arm64/include/asm/kvm_rme.h     |  19 ++
->   arch/arm64/kvm/arm.c                 |  16 ++
->   arch/arm64/kvm/mmu.c                 |  22 +-
->   arch/arm64/kvm/rme.c                 | 321 +++++++++++++++++++++++++++
->   5 files changed, 381 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-> index 020ced82e5e3..a640bb7dffbc 100644
-> --- a/arch/arm64/include/asm/kvm_emulate.h
-> +++ b/arch/arm64/include/asm/kvm_emulate.h
-> @@ -704,6 +704,11 @@ static inline enum realm_state kvm_realm_state(struct kvm *kvm)
->   	return READ_ONCE(kvm->arch.realm.state);
->   }
->   
-> +static inline bool kvm_realm_is_created(struct kvm *kvm)
-> +{
-> +	return kvm_is_realm(kvm) && kvm_realm_state(kvm) != REALM_STATE_NONE;
-> +}
-> +
->   static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
->   {
->   	return false;
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index 9c8a0b23e0e4..5dc1915de891 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -6,6 +6,8 @@
->   #ifndef __ASM_KVM_RME_H
->   #define __ASM_KVM_RME_H
->   
-> +#include <uapi/linux/kvm.h>
-> +
->   /**
->    * enum realm_state - State of a Realm
->    */
-> @@ -46,11 +48,28 @@ enum realm_state {
->    * struct realm - Additional per VM data for a Realm
->    *
->    * @state: The lifetime state machine for the realm
-> + * @rd: Kernel mapping of the Realm Descriptor (RD)
-> + * @params: Parameters for the RMI_REALM_CREATE command
-> + * @num_aux: The number of auxiliary pages required by the RMM
-> + * @vmid: VMID to be used by the RMM for the realm
-> + * @ia_bits: Number of valid Input Address bits in the IPA
->    */
->   struct realm {
->   	enum realm_state state;
-> +
-> +	void *rd;
-> +	struct realm_params *params;
-> +
-> +	unsigned long num_aux;
-> +	unsigned int vmid;
-> +	unsigned int ia_bits;
->   };
->   
->   void kvm_init_rme(void);
-> +u32 kvm_realm_ipa_limit(void);
-> +
-> +int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
-> +int kvm_init_realm_vm(struct kvm *kvm);
-> +void kvm_destroy_realm(struct kvm *kvm);
->   
->   #endif /* __ASM_KVM_RME_H */
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 59dc992274fa..d1f9ab08c5ac 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -136,6 +136,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->   		}
->   		mutex_unlock(&kvm->lock);
->   		break;
-> +	case KVM_CAP_ARM_RME:
-> +		mutex_lock(&kvm->lock);
-> +		r = kvm_realm_enable_cap(kvm, cap);
-> +		mutex_unlock(&kvm->lock);
-> +		break;
->   	default:
->   		break;
->   	}
-> @@ -198,6 +203,13 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->   
->   	bitmap_zero(kvm->arch.vcpu_features, KVM_VCPU_MAX_FEATURES);
->   
-> +	/* Initialise the realm bits after the generic bits are enabled */
-> +	if (kvm_is_realm(kvm)) {
-> +		ret = kvm_init_realm_vm(kvm);
-> +		if (ret)
-> +			goto err_free_cpumask;
-> +	}
-> +
->   	return 0;
->   
->   err_free_cpumask:
-> @@ -257,6 +269,7 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
->   	kvm_unshare_hyp(kvm, kvm + 1);
->   
->   	kvm_arm_teardown_hypercalls(kvm);
-> +	kvm_destroy_realm(kvm);
->   }
->   
->   static bool kvm_has_full_ptr_auth(void)
-> @@ -411,6 +424,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   	case KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES:
->   		r = BIT(0);
->   		break;
-> +	case KVM_CAP_ARM_RME:
-> +		r = static_key_enabled(&kvm_rme_is_available);
-> +		break;
->   	default:
->   		r = 0;
->   	}
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 2942ec92c5a4..d654a817c063 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -876,12 +876,16 @@ static struct kvm_pgtable_mm_ops kvm_s2_mm_ops = {
->   	.icache_inval_pou	= invalidate_icache_guest_page,
->   };
->   
-> -static int kvm_init_ipa_range(struct kvm_s2_mmu *mmu, unsigned long type)
-> +static int kvm_init_ipa_range(struct kvm *kvm,
-> +			      struct kvm_s2_mmu *mmu, unsigned long type)
->   {
->   	u32 kvm_ipa_limit = get_kvm_ipa_limit();
->   	u64 mmfr0, mmfr1;
->   	u32 phys_shift;
->   
-> +	if (kvm_is_realm(kvm))
-> +		kvm_ipa_limit = kvm_realm_ipa_limit();
-> +
->   	if (type & ~KVM_VM_TYPE_ARM_IPA_SIZE_MASK)
->   		return -EINVAL;
->   
-> @@ -946,7 +950,7 @@ int kvm_init_stage2_mmu(struct kvm *kvm, struct kvm_s2_mmu *mmu, unsigned long t
->   		return -EINVAL;
->   	}
->   
-> -	err = kvm_init_ipa_range(mmu, type);
-> +	err = kvm_init_ipa_range(kvm, mmu, type);
->   	if (err)
->   		return err;
->   
-> @@ -1072,6 +1076,20 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
->   	struct kvm_pgtable *pgt = NULL;
->   
->   	write_lock(&kvm->mmu_lock);
-> +	if (kvm_is_realm(kvm) &&
-> +	    (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
-> +	     kvm_realm_state(kvm) != REALM_STATE_NONE)) {
-> +		/* Tearing down RTTs will be added in a later patch */
-> +		write_unlock(&kvm->mmu_lock);
-> +
-> +		/*
-> +		 * The physical PGD pages are delegated to the RMM, so cannot
-> +		 * be freed at this point. This function will be called again
-> +		 * from kvm_destroy_realm() after the physical pages have been
-> +		 * returned at which point the memory can be freed.
-> +		 */
-
-I think this could be improved a litte bit, to explain the real reason.
-
-	/*
-	 * The PGD pages can be reclaimed only after the Realm (RD)
-	 * is destroyed. We call this again from kvm_destroy_realm()
-	 * after RD is destroyed.
-	 */
+Subject: Re: [PATCH v2 1/2] PCI: qcom: Add equalization settings for 8.0 GT/s
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <jingoohan1@gmail.com>, <mani@kernel.org>,
+        <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <bhelgaas@google.com>, <johan+linaro@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <dmitry.baryshkov@linaro.org>,
+        <manivannan.sadhasivam@linaro.org>, <neil.armstrong@linaro.org>,
+        <abel.vesa@linaro.org>, <kw@linux.com>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <qiang.yu@oss.qualcomm.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250611100319.464803-1-quic_ziyuzhan@quicinc.com>
+ <20250611100319.464803-2-quic_ziyuzhan@quicinc.com>
+ <c24314dd-229f-4e26-befb-1491a5ca4037@oss.qualcomm.com>
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <c24314dd-229f-4e26-befb-1491a5ca4037@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 8LJfrerG8c1opMcQiaovC795OGelrsaa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2NyBTYWx0ZWRfXxBBRb/eK/o5Q
+ HqQ0DNtooDndzlhXWc0gkjtz87y2loGbHchaoqD1d52G5DihuvtMY7fajacifmV4krb+NvqNSYs
+ IMRk+fCQrDdKbxlpF+hGt6LALY02QJHmPv8YKQB2G+JIIBVsm0Gr5dSBEYg1bymxfWR1rkpRBiC
+ P2K7EEvVxmW28QIh/cAZNW2e7a6iIiXTzThViLtBueESwUi1ogcn6Fsy3YHUal1czx/2480jNIw
+ L2JjVb7ziromU1vz+O3sFHu//NPNcGLfPX4d3ym5OMKIqwkY2jTfZEob4OOpRZPlG8yhdK5Pnhv
+ P9UXluBFeZqd5vAI6yaBV8Xi0aKfwxxX+WVoS0czhOhRR7S/UD0abNk9aBuT2iEXUzoa5ITN45b
+ 3R8vUwl/e1WqmCXOY5KfHuI4XhnCJ87ipZvTc6A1lCFvFgHSVKP1qDa837BGSXdj98ZQZJeA
+X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=684ff639 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=Ci0Lskn0Otf-CQ4wiN4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 8LJfrerG8c1opMcQiaovC795OGelrsaa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160067
 
 
-Rest looks good to me.
+On 6/11/2025 11:31 PM, Konrad Dybcio wrote:
+> On 6/11/25 12:03 PM, Ziyue Zhang wrote:
+>> Adding lane equalization setting for 8.0 GT/s to enhance link stability
+>> and fix AER correctable errors reported on some platforms (eg. SA8775P).
+>>
+>> 8.0 GT/s and 16.0GT/s require the same equalization setting. This setting
+>> is programmed into a group of shadow registers, which can be switched to
+>> configure equalization for different GEN speeds by writing 00b, 01b
+>> to `RATE_SHADOW_SEL`.
+>>
+>> Hence program equalization registers in a loop using link speed as index,
+>> so that equalization setting can be programmed for both 8.0 GT/s and
+>> 16.0 GT/s.
+>>
+>> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+>> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+>> ---
+> [...]
+>
+>> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
+>> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
+>>   {
+>>   	u32 reg;
+>> +	u16 speed, max_speed = PCIE_SPEED_16_0GT;
+>> +	struct device *dev = pci->dev;
+>>   
+>>   	/*
+>>   	 * GEN3_RELATED_OFF register is repurposed to apply equalization
+>> @@ -18,33 +20,43 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
+>>   	 * GEN3_EQ_*. The RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF
+>>   	 * determines the data rate for which these equalization settings are
+>>   	 * applied.
+>> +	 *
+>> +	 * TODO:
+>> +	 * EQ settings need to be added for 32.0 T/s in future
+>>   	 */
+>> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+>> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
+>> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
+>> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+>> +	if (pcie_link_speed[pci->max_link_speed] < PCIE_SPEED_32_0GT)
+>> +		max_speed = pcie_link_speed[pci->max_link_speed];
+>> +	else
+>> +		dev_warn(dev, "The target supports 32.0 GT/s, but the EQ setting for 32.0 GT/s is not configured.\n");
+>>   
+>> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+>> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+>> -		GEN3_EQ_FMDC_N_EVALS |
+>> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+>> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
+>> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+>> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+>> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+>> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
+>> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+>> +	for (speed = PCIE_SPEED_8_0GT; speed <= max_speed; ++speed) {
+>> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+>> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
+>> +			  speed - PCIE_SPEED_8_0GT);
+>> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+>>   
+>> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+>> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
+>> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
+>> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
+>> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
+>> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+>> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+>> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+>> +			GEN3_EQ_FMDC_N_EVALS |
+>> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+>> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
+>> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+>> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+>> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+>> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
+>> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+>> +
+>> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+>> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
+>> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
+>> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
+>> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
+>> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+>> +	}
+> this function could receive `speed` as a parameter instead, so that
+> it's easier to parse
+>
+> Konrad
 
-Suzuki
+Hi Konrad,
+
+On the current platform, the register write configurations for both
+8.0 GT/s and 16.0 GT/s are identical, so we believe it's unnecessary to
+pass ‘speed’ as a parameter at this stage.
+
+However, I agree that if future platforms or speed modes introduce
+configuration differences, it would make sense to revisit this and
+consider adding speed as a parameter for better flexibility.
+
+BRs
+Ziyue
+
