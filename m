@@ -1,104 +1,82 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAD627F019
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D324927F019
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750074188; cv=none; b=AzH37Gskyc5Lt4MRcxY/V0eQ2aRUSEgcV+dQwFWxFIfatR9NAByTHsZXG7NAEGjJszIsJOToMHlBXF0cqO7T3l0l1xm3wXjzhx+7fdZa55ACq/od0y8W7VrmiR16a5dWwjjKfPVGG1Tb5Kmo+n/vGMF8ftOVYVVVUOb4i985Ik4=
+	t=1750074225; cv=none; b=Z9IxuT80JenaUFP8t5h5FNiuW08+jrjo/Af1EXvqryweKbPXT7UvkyI2VrjbCPZsGDc++am17FQ1ARMDaDWB1eHlL+2eXl7sWiWinNqvODoKu1BVYTBhnuaUbaj53gqKTvOnZdb8besZqEurafcaHBxtc1yp3qiFqu+CZ6zm7tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750074188; c=relaxed/simple;
-	bh=SlYsr4bUuL71I/0B1fBuLT5I1PNAUlvY0T0xSXsIL6g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sy5q0dmdPUU/ulD5xaCyTUQEPQkHBB/n38wzklKDq1phTZVQTFnNeOvwnYeM/SojiuBTKhyMdbeWfYz7VH4DVkt01zTWKPxNG/6YvM7OZKKumUIKshnNG30SPzDXma4pel2EpEzKuweRHLlFOgbGVl8/tTNTwTdXKWwIbW/pPho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZDLk7ZVs; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750074225; c=relaxed/simple;
+	bh=w+aGyaHQbUooXMEC4LmcTYpand8db+ES07IoksrJl70=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jHsHE5VAOJiZleYhbO+fnoM8C2TLmu874DwZ1A1Ndy4X8YwKgXPvdCHAjIfn66xPu16g/lNAdV/uR52roj2qQLqd7gEhQlVLS09gppSLEOoK6wQM81lwAPhH+bokRdYzkgr6cJvy2C3okDVdZMqL/Tb4818SGP/d62ciQ9GvoZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=q7AvfoGN; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDLk7ZVs"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso2551759f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750074184; x=1750678984; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SlYsr4bUuL71I/0B1fBuLT5I1PNAUlvY0T0xSXsIL6g=;
-        b=ZDLk7ZVsuWv8EGpzNkH5kje+h6ZdTDlu8gF6ua76rta/nR/53VaidGfKmHOSKFcwZw
-         iBBs6mseFtk8nQoODYNYkkbDhKLCYKH9lyJitZF+KlzYBWt/Y+5vOqi9b+ZduNzYtHbU
-         fSiPkVtkwyWw7e0vpvzBLnf5EfhpDKtWcB4Vudi00BrS9fx7aPu52QZ+TdTFMSTJpGx6
-         mLHeDTNS4hDPPfzlhuFCShJEZspD2YJzXvIwy8HimxUApvxFfHo216Rsttx6PXNxU8/o
-         igkZuMxu+hFmoEAh7vqQI8Vg5qnkP5CwuX67lTDcZkuCZc3SbpynML+pq8hWdiTalN+W
-         EeNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750074184; x=1750678984;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SlYsr4bUuL71I/0B1fBuLT5I1PNAUlvY0T0xSXsIL6g=;
-        b=EHXadsGQpbBV+3l+uotN49m2GS3AjIAFuWeDH9ABsNnCtKqbHh7Soe1XAjeehYC8s5
-         X9Sq3yQpUS2Rj/N3U24+YtwmBMcIPdL2YxlD4N7P27pAH8acKR6d5DDWPsFDOxS6t7HU
-         4ax+282uXr/hSI1A9y8gXtqwpfacrs6PEg+J8Aq3MjYoBmsur3xuT37pk6hLgGs7cZ/t
-         yyt3t6jyo4uDI00UKvsTrG4/aJiKto9Q7ujHSMEeAe33YQHKlxdh50th9TBbekgj3Gp+
-         NisDXD9IxcxaXzCFfH0zfFLyaubah71/fV72ZzdbMonj+GKozTHKnivJqFfOVpb3ZtQ7
-         +EIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUqZ19vm/uRewlupeaUtJGm6tgt+5TGEmtUghpDJj7YVYDnEvdAOpWXlOk7xKgW+veObtiKiBT9lCpZ0tY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMQ6U3VYDDrN0+e28JU7b5XdRCKKoU4o0F/xJW/vCiW3GWioJo
-	l7/z9y172Wn+pm1BL/ermdbCl8sjAYYfV/umB02G+QM6GJxpEERkyyzupbSJ/1kVTJA=
-X-Gm-Gg: ASbGncvaANhrDHHqpIT/LygRHiPpovH2qzxZ4zotiFMu3nBqHxET8LLVMWTt3eJQEHq
-	PKN1QJb54hAmDi8LM04Ldk3uT2gZDYQGp7RSN2kPRroFYp8LIhhySXDdHAVFQt9ZJYyi9h+wDx+
-	HNwjCpycv/m5KQgTuhMdkemt/Vjgbs+9zH+UIGd8wijjnNBiJQEi88+CNtFOnJi6KdiOw71i1QL
-	QEtIEMiqPcjTEpbZYrAOKWfUCPq9FgYncah1J1vF1p82uhzsPl8NmBtwf6JYWYRaFcKHawItteF
-	esKqzDdHuwc4F7YM71c0u7yHnuE22kV6p4/k3JG+PbUhflwQcT/R0IbyTSiJC+xncDs=
-X-Google-Smtp-Source: AGHT+IGzR3ZuLPqrDClmDT14/rcbBa024Df4uvC1J4VfbxZQZgOlZKKu8R1O8lRTFylZ0ymEYgXL0w==
-X-Received: by 2002:a05:6000:1ac8:b0:3a5:2b75:56b3 with SMTP id ffacd0b85a97d-3a57237c7femr7023655f8f.24.1750074183744;
-        Mon, 16 Jun 2025 04:43:03 -0700 (PDT)
-Received: from [10.1.1.109] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b70d77sm10962182f8f.94.2025.06.16.04.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 04:43:03 -0700 (PDT)
-Message-ID: <85513da45f564347185d1f5a6bdac242df022071.camel@linaro.org>
-Subject: Re: [PATCH v4 02/32] dt-bindings: clock: samsung,s2mps11: add
- s2mpg10
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
- Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sylwester
- Nawrocki	 <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- Alim Akhtar	 <alim.akhtar@samsung.com>, Michael Turquette
- <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Alexandre Belloni	 <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
-	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rtc@vger.kernel.org
-Date: Mon, 16 Jun 2025 12:43:02 +0100
-In-Reply-To: <20250409-s2mpg10-v4-2-d66d5f39b6bf@linaro.org>
-References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
-	 <20250409-s2mpg10-v4-2-d66d5f39b6bf@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="q7AvfoGN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1750074220; x=1750333420;
+	bh=jrgVndXu5XzRaBU2/sAHMIDj16KJ7vE+lXdcz2gWtsY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=q7AvfoGNY9B1sFvnRaWSugsK9UCD1scmwdYUz7kzQZ84PprVOPIQazGHH95e95LFd
+	 uy3BikelYfK3oO1LkG8ipRU4EHF8MeYX3Eu2zK2nwOvOE74nKopXG9x8Knqnepz9op
+	 lkpoQZkIYU5DSSO9iKH0+b/lWXG/Pk+6F9FngZ3hg8Be2quFFmYXhP+kU+NiRluoyR
+	 8ct1b/hB4rQvGmwVYZV3MCZp6SXvYGEXYDx6rMl7g5qgUTqU//zDSKxtKdQmZ9HBsw
+	 Sxhb6gi0b9TgsIDvR1RSBdi8dPnthIl9ML16VO7suvZ0NwuhiWv5VF7uXh7/KJ0H8w
+	 e3o1TEaM7TkiA==
+Date: Mon, 16 Jun 2025 11:43:34 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+Message-ID: <aFADYBIYqQjMx118@mango>
+In-Reply-To: <87zffvz65x.fsf@kernel.org>
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <d6hUddIgwZqRCgQQQV7L2VG4idnic0hOdWqt67Itt_xixs1RI25dMrPZRMyoIe2W_FS4eL6X66J_iclD2aUA0Q==@protonmail.internalid> <20250502-unique-ref-v10-1-25de64c0307f@pm.me> <87zffvz65x.fsf@kernel.org>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 9f7f1b56034ded4ee6841ab627ffb89fe8ac5524
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-04-09 at 21:37 +0100, Andr=C3=A9 Draszik wrote:
-> The Samsung S2MPG10 clock controller is similar to the existing clock
-> controllers supported by this binding. Register offsets / layout are
-> slightly different, so it needs its own compatible.
+On 250502 1157, Andreas Hindborg wrote:
+> > +
+> > +impl<T: Ownable> Owned<T> {
+> > +    /// Creates a new instance of [`Owned`].
+> > +    ///
+> > +    /// It takes over ownership of the underlying object.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// Callers must ensure that the underlying object is acquired and=
+ can be considered owned by
+> > +    /// Rust.
 >=20
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+>=20
+> This part "the underlying object is acquired" is unclear to me. How about=
+:
+>=20
+>   Callers must ensure that *ownership of* the underlying object has been
+>   acquired. That is, the object can be considered owned by the caller.
+>=20
+>=20
 
-Friendly ping - can this one be merged please?
+Yes, made me think about the phrasing, too. But the main point is, that the
+object must be considered to be owned by the `Owned<T>` after the function
+call, no?
 
+So maybe:
 
-Cheers,
-Andre'
+   Callers must ensure that ownership of the underlying object can be
+   transfered to the `Owned<T>` and must consider it to be transfered
+   after the function call. This usually implies that the object
+   most not be accessed through `ptr` anymore.
+
