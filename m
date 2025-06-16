@@ -1,152 +1,124 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27273280308;
-	Mon, 16 Jun 2025 10:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4343E1DFE1
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070142; cv=none; b=pRQIXmAeG81yjhfXZR/Px+9l5Gv5ac4/i+kM5lKO369G6QearNf8awcpSPk8sOePA0OIvgYsKdYYrbHWNDPmseVMp5kh8idBqvMV+5nE4F6g7FgIigYsB3MP5G+/uaOIVUvy6evmjtTdw2wnnDyBloZrvxJfyUQJE2odTeOZzAo=
+	t=1750070194; cv=none; b=IkPXRcPeF2ien+yUazUZezb0GixZ7mPplCsVSzXbA+piA1KlRDRlTXA+UswYNCEqkg7pHQX8j+8SmiZYbGfvAX+mwUGLVtpmwhAO1mQ/RyvMLuWbPmmHMRl1oGsbw92rEQGt54k92hjYlGHPPIw0k6F9PXh1V1lcWfJ5oRKWZF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070142; c=relaxed/simple;
-	bh=maef49hvU8csUaVh7R/3qgbrlB+8XwClevuCaZC4J3Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PrURD3RMj9i12vROz2hMeF+VAy1y3820bDViqFOWBdaEqXMxLjXsTb6N5Q+7bIAMwk8z7W2AvR2O+cWxpvCqFwVFQHo/bR69CfFT2dcBiQultDw423s3jKD8c6X9IaEg7NSjxbPPgWz9svSF9ewgQ3h7H9CggL1bcgy7wxM8sHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PYN4RxcT; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750070194; c=relaxed/simple;
+	bh=gVihsEkhSJhiI2pYujACptGOSQXIKNBWtFSmOiUqkgE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XjkGiqYt9uie5v4M8p2YbrZILEX1FDZzmjZyXEVfqlfGFZbPACMVYO+iaWTGBoxYGjX6AbwdwjhNjmEDR/GF9BIkTw9PtfM8cai2/CWfnpGGol96P6LYHpfvSuBMzMtjP6vPa2Vm4GaFVkxNUtJ3+7vaoHIuTMySdadkhDoIytY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=koiWb6UH; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PYN4RxcT"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55GAZS4k3711020;
-	Mon, 16 Jun 2025 05:35:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750070128;
-	bh=Kwmb+etCxPtFyT6gOreHcG8PEisRSuh/qUTg+ezSL00=;
-	h=From:To:CC:Subject:Date;
-	b=PYN4RxcTvk3Rki0V9RvwotHd6mOEVZppa4rAE5wYI65Sh39gflpHdrz45T+ZsAzRB
-	 qwVWVblM+huXzuiCcvJjH6eEDg4JtCNpTfhguLILyjY9/Gf+adWJdMA35Tu7yNtO94
-	 AN6p3WGSXq9ocWchFS5RB5SD8rZuH8AeOn5WtIhc=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55GAZSnw874465
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 16 Jun 2025 05:35:28 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 16
- Jun 2025 05:35:28 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 16 Jun 2025 05:35:28 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55GAZRoE4114547;
-	Mon, 16 Jun 2025 05:35:28 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <linux@armlinux.org.uk>,
-        <linux-clk@vger.kernel.org>, <devarsht@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <tomi.valkeinen@ideasonboard.com>,
-        <j-choudhary@ti.com>
-Subject: [PATCH] clk: Add clk_determine_rate function call
-Date: Mon, 16 Jun 2025 16:05:27 +0530
-Message-ID: <20250616103527.509999-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koiWb6UH"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d7de4ae3so28157515e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 03:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750070191; x=1750674991; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hiss5ihr37HezsXrsEfI4Lz996ZbeuImgyLoj8wVpjc=;
+        b=koiWb6UHoybjVzm4GYUprZO88ditHuIrR/AiZMtzBDGwqHXDB+NQGcATFbpycHZzNH
+         OSPwKQure84esI6Ofj5f2ejP6soqoKRvVK2cVX3iUboGFceaz+gmLyzkSaHyEjALNHo9
+         KlGQzS6ZRZdu92Y96zLYwvOqqS2o4wf4DYwz7XYsqlse19QpfgEHFJlHuOYe+y1VSJbt
+         x6xnmwnDL5BSGcm6fZ1Hszoe+QNhdDwOCdJawhhfkha8jaY6Hbe/5YfxVM7D/KtBImQm
+         2OpdYbU+rnoVmcbm7cgxe5+LtB24iWLhcvKkz4pC+4VgMEQjUrBtFHmwjOCPIgyFYscB
+         mA8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750070191; x=1750674991;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hiss5ihr37HezsXrsEfI4Lz996ZbeuImgyLoj8wVpjc=;
+        b=OAOgpW7xDuSxJuIeWE9xwCASLda8nnq7fFQov6q9NApenRb6i7qB8Qa77ZRFrLWb1W
+         n4c9mBZLkQqDcYrNeWdzz0sob/hQPsQg8GUUycMxml6V0DjOKoxlH5M6c9gc4Z+iO/ix
+         iv5ILjez0qG1kaVf64AZGioGhjs2fyItLGDs8w/xLHKShU9qCK4hPIJ2Bu5xEEnTR7Oc
+         GCSNdLvsbt3D+pqOt2qZugarawZuzNFWIoCNB8LA//X+rRqbiIVot56IJpnmgw004I/4
+         /RRdq68BOH2LmvGf4XEI3J1DOnV8YcMr9tSersgSgKrEep5ThiZmX8Aywu7RHFRcXtYx
+         ufNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWi2w3K5JnQNQOsBM2wj/o0TijtxTZTTueFSPRMeJUKXjKPsAXRTb8ubq+azmIV40TOeAiItktUGzhgS9k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxtG+N9bdEWfIbvHH0hP7p9zq94qaIzHsU5GSeYWZTe/TcVIE9
+	BqSKX+pIbQc7xelc0wClQqsD9bRfIaMnp3FeGA2HyjNzoGkHuNu6kNHLTYH4COcxAYHvY0pHBCb
+	r3iFbto7f8uoO36Klkg==
+X-Google-Smtp-Source: AGHT+IEe+NGRwyzIVBGaOXJd+JjEOsMuYq2wMo43vhSk6WwVZAZFAeSvsdAvoGMLbOd64OXop7r7LShg+AbCX80=
+X-Received: from wmbfa7.prod.google.com ([2002:a05:600c:5187:b0:450:d244:bd2e])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1c12:b0:450:b9c0:c7d2 with SMTP id 5b1f17b1804b1-4533ca8b101mr82056445e9.11.1750070191808;
+ Mon, 16 Jun 2025 03:36:31 -0700 (PDT)
+Date: Mon, 16 Jun 2025 10:36:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAKTzT2gC/x2MywqAIBAAf0X2nKCCkv1KdEhbaw89WCWK6N+Tj
+ jMw80BGJszQiQcYT8q0bxV0IyAu4zajpKkyGGWsctpJDoWx2ixxPcotTZusTjEG70eo1cGY6Pq P/fC+H6K2N5hhAAAA
+X-Change-Id: 20250616-rbtree-is-empty-28f51fccb99a
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1249; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=gVihsEkhSJhiI2pYujACptGOSQXIKNBWtFSmOiUqkgE=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoT/Oogfg8E3752+/euiuXrXoPJHL0ZgbsNy5x/
+ F1qFs7ZlvKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaE/zqAAKCRAEWL7uWMY5
+ RkMRD/4iLYBvlMGfISSHIit0SZMEpEPRnlDk9Ek63xEsF1Ec31pyvDYMIJzSDitHUd3YD9ZI6TM
+ cfJqGzx8ZsmrQyBf46GYCdKt98Gkycu/llmGdsEQwl7lY15KlWErw3vgS36yVpdKY/XQBwT/R8S
+ tuKHrathiY0tps3WfcCg00gPaxLH4Eaf6WjLJq0VCd/3uHl3fP3OBtr4rq0LXGIdalsKBl0Hslk
+ NYEnKpmsjCV+IcRcNgJf4NAFIDCeqgCZT9GJkPwwm/o90yYd5iHwFHr/nTt8GMYWgrWpx4sRR5a
+ yfNfixnw9cgxkpSnOWERJqGYQ5dDJTZsrSQ9krUEf/H35aEmo9wN0uggxHDm47QOgnRorIRKLuy
+ srlaPd1pWhPWYyXu9hAaMRP5ITMh7uI1MZYRYjHOqUp8ycx3zZxm/rTfLy5GhV/D12RTGeBompS
+ etDWclOtQHxhHqwS9DfdaIhC/+Q1Dom2tt56NwCgEGPvpPf/1PFNhmxbwLLwL1uejJn7/v03qVk
+ ciBKx+/IwMxhfeEAJsam+Q5WESZ+ji8cpa+PltOZrCBrjwM9+rQfg68O9M9SX0Wflze5AT3wVsy
+ 52WTDCfYmZIMvDzU8XD9PUbp4wHrM/4FeTDUI/Ri3NbPDmStLb9GGlM6zn0RAz635lv36qNOIDh Iv/HGtUgJMH3qeQ==
+X-Mailer: b4 0.14.2
+Message-ID: <20250616-rbtree-is-empty-v1-1-61f7cfb012e3@google.com>
+Subject: [PATCH] rbtree: rust: add RBTree::is_empty
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Add a function to determine if a particular rate can be set for a clock
-with its argument being the clock and the desired rate so that it could
-be exposed to other peripherals.
-For example, the display controllers typically has to perform multiple
-checks for supported display resolutions including those related to
-clock rates. The controller has to check this way before it actually
-enables the clock and has to do it multiple times (typically for each
-mode), and therefore using the clk_set_rate when its not needed, does
-not make sense.
+In Rust Binder I need to be able to determine whether a red/black tree
+is empty. Thus, add a method for that operation to replace
 
-The driver does have "__clk_determine_rate()" but this cannot be used
-by other subsystems because of the function arguments used.
-"clk_hw" is not accessible to other peripherals due to clk and clk_core
-structure definition in driver instead of include file, so we cannot use
-already exisiting "__clk_determine_rate()" in other drivers.
+	rbtree.iter().next().is_none()
 
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+This is terrible, so add a method for this purpose. We do not add a
+RBTree::len method because computing the number of elements requires
+iterating the entire tree, but checking whether it is empty can be done
+cheaply.
+
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- drivers/clk/clk.c   | 22 ++++++++++++++++++++++
- include/linux/clk.h | 15 +++++++++++++++
- 2 files changed, 37 insertions(+)
+ rust/kernel/rbtree.rs | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 0565c87656cf..f72d638cc211 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2566,6 +2566,28 @@ static int clk_core_set_rate_nolock(struct clk_core *core,
- 	return ret;
- }
+diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+index 8d978c8967475cc2631b50721798f7e8cd1551fd..9457134eb3afdf7a214a28fcbe2e6b8065cc9a86 100644
+--- a/rust/kernel/rbtree.rs
++++ b/rust/kernel/rbtree.rs
+@@ -191,6 +191,12 @@ pub fn new() -> Self {
+         }
+     }
  
-+/**
-+ * clk_determine_rate - determine if the rate for clk can be set or not
-+ * @clk: the clk whose rate is being changed
-+ * @rate: the new rate for clk
-+ *
-+ * Check if there is a best match frequency for the desired rate that
-+ * can be set for clk.
-+ * Returns 0 on success, -EERROR otherwise.
-+ */
-+int clk_determine_rate(struct clk *clk, unsigned long rate)
-+{
-+	struct clk_rate_request req;
++    /// Returns true if this tree is empty.
++    #[inline]
++    pub fn is_empty(&self) -> bool {
++        self.root.rb_node.is_null()
++    }
 +
-+	if (!clk)
-+		return 0;
-+
-+	clk_hw_init_rate_request(clk->core->hw, &req, rate);
-+
-+	return __clk_determine_rate(clk->core->hw, &req);
-+}
-+EXPORT_SYMBOL_GPL(clk_determine_rate);
-+
- /**
-  * clk_set_rate - specify a new rate for clk
-  * @clk: the clk whose rate is being changed
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index b607482ca77e..fd81ba738e50 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -829,6 +829,16 @@ void devm_clk_put(struct device *dev, struct clk *clk);
-  */
- long clk_round_rate(struct clk *clk, unsigned long rate);
- 
-+/**
-+ * clk_determine_rate - determine if the clock rate for a clock source
-+ * can be set or not
-+ * @clk: clock source
-+ * @rate: desired clock rate in Hz
-+ *
-+ * Returns success (0) or negative errno.
-+ */
-+int clk_determine_rate(struct clk *clk, unsigned long rate);
-+
- /**
-  * clk_set_rate - set the clock rate for a clock source
-  * @clk: clock source
-@@ -1078,6 +1088,11 @@ static inline unsigned long clk_get_rate(struct clk *clk)
- 	return 0;
- }
- 
-+static inline int clk_determine_rate(struct clk *clk, unsigned long rate)
-+{
-+	return 0;
-+}
-+
- static inline int clk_set_rate(struct clk *clk, unsigned long rate)
- {
- 	return 0;
+     /// Returns an iterator over the tree nodes, sorted by key.
+     pub fn iter(&self) -> Iter<'_, K, V> {
+         Iter {
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250616-rbtree-is-empty-28f51fccb99a
+
+Best regards,
 -- 
-2.34.1
+Alice Ryhl <aliceryhl@google.com>
 
