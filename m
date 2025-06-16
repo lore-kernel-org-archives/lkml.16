@@ -1,40 +1,40 @@
 Received: from naesa03.arrow.com (naesa03.arrow.com [216.150.161.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879E02E88A3;
-	Mon, 16 Jun 2025 11:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CFC2E92D2;
+	Mon, 16 Jun 2025 11:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.150.161.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073071; cv=none; b=XqiY++5iFVwAwBT+icjSUaDpYEgqmJDaXbk4p++6Lhl9f0A5vsK1tX6xJmwH+QZ2w5IW+F/KJiHy5DsF9a2tccA6boiBn1I+amESfp6ykU6pNdQveGi3jMsG3bEGVEdu8K/q9NDLgw4mnxNPL8z8pzBxrnSATnZqjE9twaWUwps=
+	t=1750073073; cv=none; b=cAzqPQVY9iKHc9XYYNqcVtBOAh/dr3Jjp1N6XhDCge47jOzqW70boxajmtfDcy87peWA530BINvssNN9ycSva6/RJ2qoLmLs9BbdNXH6zqzfLvMvIk92PDbFsdY/DGTGiygIFbSr3SDDkFmoJlsMgia0iOXuey8Kq73wnjXguqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073071; c=relaxed/simple;
-	bh=i5P0tKBpmZ6mD0d91tJFPrQutrJ8bbOu8k+h7YJYWME=;
+	s=arc-20240116; t=1750073073; c=relaxed/simple;
+	bh=28J+fyT9lX5TecGCCbT96HUMwY1IUJIWz/FmodfdxZs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DHy6tA1kMO9KZT0hvqDfeaWz8ge1xNxZmuVo4s0ciyml4p3zlu2ocz+om/SSrAJpYrP3TvMbGchs0fGWLzuq8b64VBF31c9c8+fahJ78Vcx+FolPYgyDBOMlI3QzET36uBpQdP5BaMrya/QAwzJwh5sRSJ/Dg2pYuxgHFNjP0ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=V2Ni1+xv; arc=none smtp.client-ip=216.150.161.23
+	 MIME-Version; b=q4QNyUWW1F6z3+mpv0SKqLRctzzVVrlhVij8aGV9sthqs4WGd4ozaKjpBdpQxAhIu+lm2BImFTo247Xx/Gb9LX9ACNhoiQrO145RLrWfdC/tud8RgU5/pdo3yz+HKZxmvrWf5CRRskO9BsEv/mf6VZT1p5GU1d0lfDpkb2bJFeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=ZT9/zQO7; arc=none smtp.client-ip=216.150.161.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="V2Ni1+xv"
+	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="ZT9/zQO7"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=einfochips.com; i=@einfochips.com; l=754; q=dns/txt;
-  s=NAESA-Selector1; t=1750073069; x=1781609069;
+  d=einfochips.com; i=@einfochips.com; l=1173; q=dns/txt;
+  s=NAESA-Selector1; t=1750073071; x=1781609071;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=i5P0tKBpmZ6mD0d91tJFPrQutrJ8bbOu8k+h7YJYWME=;
-  b=V2Ni1+xvm3R3rtErZmDNNV2LC+ggO9rqoEhMRIHXXM/EPBiZvY8xLFKw
-   jS7IqWxLosgRfH+Ki/08372XdUnLBOI3PpM/ctaplIrcmiE/lNeLYBTyO
-   igctGJ6bpibDZLpHhq49ZYQAyauxxbkpOz5JSpbWa58AJ5Nnx3bUiFBHo
-   xYKu+og0kGOMu0Ec2pKrNyqXA/exyYoISFu86xrkcgLHop23Z4H2k9zSF
-   z6YQhBVKxJd3poNzgells2youh/2dStlTWF5KVm7OnS9NtYvN6TviJG14
-   kzu0gphqtPexOIip8U8EL4A+C2Y6tYuLr80JnNVr+ZS/eEWmfoIDwN8nj
+  bh=28J+fyT9lX5TecGCCbT96HUMwY1IUJIWz/FmodfdxZs=;
+  b=ZT9/zQO7XtCk+HyToPUkxGDkvy4WNN8DEs3/8EEnojMzqLAO67q7Vkek
+   2xPMvcOi6nUroNyb2ifR2sptQdvTxSyjdXuHrzBTv9Ke1zKSOAsJolnQF
+   KbXd6jMCvbxCgbCPGXmzuIS6HZcbBfV7w1Y9PViYRMegUlnldHXTYlq20
+   wOMmDh3JSiEynqOTRI/gfBbjeJtzRfgT9tw8qbzvcDh6c6jCTy3Kjc0Eq
+   manBM/D108imSNA4ukOJ4McDYZOUUhU5YTgJ5yssyJs6MkZ2KPRFacb3G
+   mZr/CoT96lTr0/jH2vhmc3VDaRTxmQ6eU50zCHcJLdAZvsopDo7JS0GQb
    g==;
-X-CSE-ConnectionGUID: dumP9f/rQpiSqPkYJCoOzA==
-X-CSE-MsgGUID: I+AyGSUdStSYSUKrXq0ohQ==
+X-CSE-ConnectionGUID: U/uKHpy4QIOuh3HHCpzvwQ==
+X-CSE-MsgGUID: fZ556juoSaWQKDi0Z7d3sg==
 X-IronPort-AV: E=Sophos;i="6.16,241,1744092000"; 
-   d="scan'208";a="86117889"
+   d="scan'208";a="86117895"
 Received: from unknown (HELO eicahmirelay01.einfochips.com) ([10.100.49.50])
-  by naesa03out.arrow.com with ESMTP; 16 Jun 2025 05:23:20 -0600
+  by naesa03out.arrow.com with ESMTP; 16 Jun 2025 05:23:21 -0600
 Received: from AHMCPU1888.ap.corp.arrow.com ([172.25.5.100]) by eicahmirelay01.einfochips.com with Microsoft SMTPSVC(10.0.14393.4169);
 	 Mon, 16 Jun 2025 16:53:16 +0530
 From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
@@ -64,9 +64,9 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/7] riscv: Add Kconfig option for ESWIN platforms
-Date: Mon, 16 Jun 2025 16:53:11 +0530
-Message-Id: <20250616112316.3833343-3-pinkesh.vaghela@einfochips.com>
+Subject: [PATCH v4 3/7] dt-bindings: vendor-prefixes: add eswin
+Date: Mon, 16 Jun 2025 16:53:12 +0530
+Message-Id: <20250616112316.3833343-4-pinkesh.vaghela@einfochips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250616112316.3833343-1-pinkesh.vaghela@einfochips.com>
 References: <20250616112316.3833343-1-pinkesh.vaghela@einfochips.com>
@@ -77,33 +77,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 16 Jun 2025 11:23:16.0452 (UTC) FILETIME=[0E16E240:01DBDEB1]
+X-OriginalArrivalTime: 16 Jun 2025 11:23:16.0546 (UTC) FILETIME=[0E253A20:01DBDEB1]
 
-Create a config option to build ESWIN SoC specific resources
+From: Pritesh Patel <pritesh.patel@einfochips.com>
 
-Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
+Add new vendor string to dt bindings.
+This new vendor string is used by
+- ESWIN EIC770X SoC
+- HiFive Premier P550 board which uses EIC7700 SoC.
+
+Link: https://www.eswin.com/en/
+Signed-off-by: Pritesh Patel <pritesh.patel@einfochips.com>
 Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- arch/riscv/Kconfig.socs | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index a9c3d2f6debc..3cd0999fe84f 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -1,5 +1,11 @@
- menu "SoC selection"
- 
-+config ARCH_ESWIN
-+	bool "ESWIN SoCs"
-+	help
-+	  This enables support for ESWIN SoC platform hardware,
-+	  including the ESWIN EIC7700 SoC.
-+
- config ARCH_MICROCHIP_POLARFIRE
- 	def_bool ARCH_MICROCHIP
- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5d2a7a8d3ac6..f19a1de2a76d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -498,6 +498,8 @@ patternProperties:
+     description: Espressif Systems Co. Ltd.
+   "^est,.*":
+     description: ESTeem Wireless Modems
++  "^eswin,.*":
++    description: Beijing ESWIN Technology Group Co. Ltd.
+   "^ettus,.*":
+     description: NI Ettus Research
+   "^eukrea,.*":
 -- 
 2.25.1
 
