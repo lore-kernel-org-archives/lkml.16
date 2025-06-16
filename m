@@ -1,136 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3FE1DED70
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61B3F4ED
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084566; cv=none; b=fg979gVdxUWpoiAcUgUlc9f04iHauVrD3kpRg3cy0qk5VaXmgI8mjbfxDHvhIsnJ8iBkWNz13uetVTWLdNLyLCKFDo0ayjofYJXHHjJzcZxS0rCRbmncDqeaBJd1UwwpHyf0aIv6k2oiXe30+NTz75PWh/NPkLGwlZaxaGwsEFg=
+	t=1750084654; cv=none; b=u6dA+hECcmgd5FT3RLqzLg+xofcRdGk1uS3qCuCQDdvpcLKgzvG5IRZIIxTVVnVBEzcmK172Haba5soPpa+TBj70EPWk3BgjXzsB8wsBGerrvSFO6DuTXTsMbHdYEFS2ItHwuvrewfkQKPuN9F5uAh85xcVPXA4anRaqglpZe+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084566; c=relaxed/simple;
-	bh=lkkn5j7H4sLb0NDyrQUhe3JZh/b0R5tBG6NCHDSKDxA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hVQxeACB9qtFlLyuGmYdjF6tNyEHLnVQNbtB/NXeL6BbesjZ4sjCF4ViRk/wy5XVdEI9JZ3UdKqXO5YFvTt6AsZK1vufbmVng2/IPrRcGT+xmypCBcnG2A/SaX7TVyrkA0sY/B8sIMlgBXYewXPGfl13OuAN6uBigTttw/Eqt4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N4J4Rtgu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750084654; c=relaxed/simple;
+	bh=Tv1Lo6YhzFqNH8VTTXLCD9vFqIYM6L+1w8v2FhylPYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SwTLmkZy3L/75rb4I07JYFqeQyXUGSph6TqTZA7LWsrKwdbxQzuQ+rItKEFigf0HwDCAiZ9eaAMsiCYOhf7Gy09O4kkajUoTzaRljufBBm4Pgf3nLEOPBX56fsG/lhwrNGoqTopQEYrEm4v5udSjuVR+D9TloJnFDeJpVNio9Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.ntu.edu.tw; spf=pass smtp.mailfrom=csie.ntu.edu.tw; dkim=pass (2048-bit key) header.d=csie.ntu.edu.tw header.i=@csie.ntu.edu.tw header.b=kbbLd2Nn; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.ntu.edu.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csie.ntu.edu.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4J4Rtgu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750084563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8P6C3VOyWCSr/Pw6J8JHTXM1e6kPxEGsyDCYoqRWzKY=;
-	b=N4J4RtguSJeYPdptpQdXF4/nGxmbRdw453KpfUgTJeFIj5MsAdDmXrsK3OwlhEIqL/F03y
-	A7qZW68KRwRtA6gCFeuKI9IHu3c42pWgFv8mRh710mIWxsqtdI9jirb/WZ0P0I4i/zulGb
-	veCzvv/7xqHsGQJ7E5jJjF1iK9mTvD4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-10-A0YSDCDRPDWKqA_PIVDCKg-1; Mon,
- 16 Jun 2025 10:35:46 -0400
-X-MC-Unique: A0YSDCDRPDWKqA_PIVDCKg-1
-X-Mimecast-MFC-AGG-ID: A0YSDCDRPDWKqA_PIVDCKg_1750084543
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 660351809C82;
-	Mon, 16 Jun 2025 14:35:43 +0000 (UTC)
-Received: from [10.22.64.24] (unknown [10.22.64.24])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 68AEE195608F;
-	Mon, 16 Jun 2025 14:35:40 +0000 (UTC)
-Message-ID: <6cf23067-de70-45b9-ad83-90e96c5ea189@redhat.com>
-Date: Mon, 16 Jun 2025 10:35:39 -0400
+	dkim=pass (2048-bit key) header.d=csie.ntu.edu.tw header.i=@csie.ntu.edu.tw header.b="kbbLd2Nn"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-879d2e419b9so4461788a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=csie.ntu.edu.tw; s=google; t=1750084651; x=1750689451; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AkrvKj4WRhOO8zn50L5JIugDkJwYWJauK6qeewS2paw=;
+        b=kbbLd2NnKIBxk+BW3HaKn00XMHhbqdQIRwwZ/l5bMP/Er9CeHPCJJptfaCCvGc9+s2
+         GWuft1XSEVXPaW5Q5KDgG4Rd8/+B9n63tyc4ojje/Ne6AdJ/qmQRKLRRtJo0b832ezH0
+         Bdu/7C0q8rB9iO/Gk7po0UW1GQOmp1Odq+BtD8OHWWL2We/WeCiNDktsPr877cTsyf2n
+         7yFnc5t/k6KPNGtoIAc9t98RMKESEYGo7ADlF6v94d4sBgzNraO1O2UqDCvDQAv1xRjC
+         CBy1yzFWI+vXY6pHTP+wqNNSjSBdHaAreICEkhxdSFb9k8am9vTYSYYAJexttVuuPqVU
+         7/Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750084651; x=1750689451;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AkrvKj4WRhOO8zn50L5JIugDkJwYWJauK6qeewS2paw=;
+        b=urA9g1ya/7XRKJDwhpLOFJ7U1brkOdiB4pQYQDWpMFkh0HT60r1dsPPWjhVhsRoKKu
+         azF1SZm+mLbj3ddz8D4dMg8JeWKv1IAxCF5fNf3dIJV+eRQORH0a+oE+w382D8hbJgeB
+         ywyN3WvWCFnXmPLy0R2jTH+Qm9eFU9UO6uV8SjCocANc9d/cwpkmFRkfa3e0/WX0+RDN
+         J+A4XxD9S1x9pOuBjWMxTH/shwmD0U2HIQWSfuQsQde4Ud+MMdPiFMsbDspJXQhoxFQs
+         MHTkEWO/RDa5UnvczGcs31zC1tfNoPvQxDIxXttQzUGlhah16Vp4BnkxJOKFYgs0tNJf
+         176A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzmA+bWNvSMWQ9123UJkNhR7AHESEbIz13L60b7cqOkbkY9sd8MpFfiEGVVpK/r7xqNeI5Y3Q1Fo0sq+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTKA+ctcMZXJqvADeTD8ni8BhdHJoNgR8n4T0NZXUikW46hG+Q
+	XX27MkDxUmqPPjvmIs7iXi84R0rmPVCXXfvfbxOjeFkyOlOd9XzyKJKs4a9RHNK4gOJodtLmhTE
+	SmKiiFMMKduV5cC9yjPD6aaTCDZDMhmU2BPTQjWT13ttrG5ODAi4tpwJVyhg=
+X-Gm-Gg: ASbGncv/GuzPbbSj3SdSTjTHhK6gcpVDeZlBU1CKeeN72x2zfSufJO+TbuTsmD67RX7
+	EoQpuFFOPOwVKuk/5fIBucj18l9PcjVx2JwAfosBAMs0FOvtGCsODF25eFwTxQSsTcA0Dm8NJZX
+	pnKi+NIzMNwCaBE25mrabIxFM4EomAIuO7MtnTa2Tgz1QR6sx6dwfig2m7FxmtUY6VxwlDROsXr
+	Nx+wJvddaq7y9Zkzq74sgo+6B15Sr3YRCPdUjqBUDKNS4aFyhmp+48vC+ICJDfxArW1II2XEsvB
+	mNIRSL0hJ/4OVW5TXfCFzP6ET9lZm8PT5ZKTvUmlK6318UAniZPF8/DuMSzZ5yEdSgH8M3s5U5z
+	oiVcDZqtMzSRkqekZhkD3RcF7nAO3npkfRoE=
+X-Google-Smtp-Source: AGHT+IHiHWhPvC3rzDccVIiloYznB+/CDW0xPfXegwCPoIernL0gBJI4EEGAaNyjQ6pQCOBf+YUk3g==
+X-Received: by 2002:a05:6a21:600b:b0:218:76dd:a66 with SMTP id adf61e73a8af0-21fbd527f54mr16043044637.13.1750084651197;
+        Mon, 16 Jun 2025 07:37:31 -0700 (PDT)
+Received: from zenbook (36-228-20-239.dynamic-ip.hinet.net. [36.228.20.239])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe168a4b2sm6996769a12.61.2025.06.16.07.37.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 07:37:30 -0700 (PDT)
+Date: Mon, 16 Jun 2025 22:40:03 +0800
+From: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Jintack Lim <jintack@cs.columbia.edu>, Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH] KVM: arm64: nv: Fix s_cpu_if->vgic_lr[] indexing in
+ vgic_v3_put_nested()
+Message-ID: <b5jwzhkkg2ensclxfj4uozpbibo5sgbcdm7tngharnjmqxswqc@ktywljdle6of>
+References: <20250614145721.2504524-1-r09922117@csie.ntu.edu.tw>
+ <aE-xyGGpHXdJ_pcF@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link
- down
-To: "Karan Tilak Kumar (kartilak)" <kartilak@cisco.com>,
- "Sesidhar Baddela (sebaddel)" <sebaddel@cisco.com>
-Cc: "Arulprabhu Ponnusamy (arulponn)" <arulponn@cisco.com>,
- "Dhanraj Jhawar (djhawar)" <djhawar@cisco.com>,
- "Gian Carlo Boffa (gcboffa)" <gcboffa@cisco.com>,
- "Masa Kai (mkai2)" <mkai2@cisco.com>,
- "Satish Kharat (satishkh)" <satishkh@cisco.com>,
- "Arun Easi (aeasi)" <aeasi@cisco.com>,
- "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
- "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "revers@redhat.com" <revers@redhat.com>,
- "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250612221805.4066-1-kartilak@cisco.com>
- <20250612221805.4066-4-kartilak@cisco.com>
- <7a33bd90-7f1b-49ad-b24c-1808073f7f5e@redhat.com>
- <SJ0PR11MB589646EBDF785F570E35E774C377A@SJ0PR11MB5896.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <SJ0PR11MB589646EBDF785F570E35E774C377A@SJ0PR11MB5896.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aE-xyGGpHXdJ_pcF@linux.dev>
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 
-Sounds good to me. Please make these changes in your v5 patch series and I'll approve.
-
-/John
-
-On 6/13/25 5:59 PM, Karan Tilak Kumar (kartilak) wrote:
-> On Friday, June 13, 2025 1:29 PM, John Meneghini <jmeneghi@redhat.com> wrote:
->>
->> Hi Karan.
->>
->> You've got two patches in this series with the same Fixes: tag.
->>
->> [PATCH v4 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
->> Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
->>
->> [PATCH v4 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
->> Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
->>
->> both of these patches modify the same file:
->>
->> drivers/scsi/fnic/fdls_disc.c
->>
->> So I recommend you squash patch 4/5 and patch 2/5 into one.
->>
->> Thanks,
->>
->> /John
+On Sun, Jun 15, 2025 at 10:55:20PM -0700, Oliver Upton wrote:
+> On Sat, Jun 14, 2025 at 10:57:21PM +0800, Wei-Lin Chang wrote:
+> > s_cpu_if->vgic_lr[] is filled continuously from index 0 to
+> > s_cpu_if->used_lrs - 1, but vgic_v3_put_nested() is indexing it using
+> > the positions of the set bits in shadow_if->lr_map. So correct it.
 > 
-> Thanks for your proposal, John.
+> The changelog is a bit too mechanical and doesn't actually add anything
+> to the diff. Maybe:
 > 
-> I'm a bit hesitant to squash them into one since each patch fixes unrelated bugs.
-> The reason they have the same fixes tag is because we found two separate issues in the same commit.
+>   Shadow LRs may exist at different indices from the corresponding LRs
+>   in the guest hypervisor's vgic, as the shadow LRs are populated
+>   contiguously in vgic_v3_create_shadow_lr().
 > 
-> I get your concern, however. What do you think about the following?
-> 
-> Move this patch to the beginning and increment driver version to 1.8.0.1:
-> [PATCH v4 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
-> 
-> Move this patch to the next and increment driver version to 1.8.0.2:
-> [PATCH v4 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
-> 
-> Move this patch to the next:
-> [PATCH v4 3/5] scsi: fnic: Add and improve logs in FDMI and FDMI ABTS paths
-> 
-> Ideally, I would have liked to squash this above patch with the first patch in this series, since it's easier to debug if and when an issue occurs in that path.
-> I separated them since it would be easier to review. I could add a Fixes tag here as well, but I'm not sure about that since they are just log messages,
-> and they are not really fixes.
-> 
-> Move this patch to the end:
-> [PATCH v4 1/5] scsi: fnic: Set appropriate logging level for log message
-> 
-> Regards,
-> Karan
+>   Use the correct shadow LR index when forwarding vIRQ state back to the
+>   guest hypervisor's vgic in vgic_v3_put_nested().
 > 
 
+Hi Oliver,
+
+Although we're not taking this, I still appreciate your help on the
+commit message.
+
+Thanks,
+Wei-Lin Chang
+
+> Diff itself LGTM.
+> 
+> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+> 
+> Thanks,
+> Oliver
