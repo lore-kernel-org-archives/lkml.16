@@ -1,172 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BA72CA9;
-	Mon, 16 Jun 2025 16:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8991E0DFE
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089654; cv=none; b=EDNKsvszoxuvRynDnK/itBVZ/7bfmCNzrY0fcWZp9fnILI2o+o5/Zh40YqcbFq8lvZ7jz8MvlT2omq6XraI9ixEnZDG2CDxw+B5KBtT6VFKXoR+t033/9/6BaE867rUw3yfmy6NcubHrXAUU/PCk9yuMI0ani6En3onnMiDhB1k=
+	t=1750089717; cv=none; b=ambsYvQdGfYqkSnOXhF1t+cqzX/7RnvLcwZrUqwocjpZPS9zu9PdbHhSFrnrgkl8PcZblC8I258CwE+JIvv1ytLSVuYx4R2xmIoLvPnvzYg1a5rQdIb3vTWU9AjKbSNockwZKbZZkg0AJKWhwWON2H2iJVPr64jryHQMAZcbPu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089654; c=relaxed/simple;
-	bh=AGgS9xG+XXtQyt/GqvZ5d2Bo7FUBHRlUWYBdw/v1s6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Klw8C0ee3gQ9/BhSTlsqlcx23G/FH8Qsb0lGFhMQOHc9GVp2TDrHLmwcc3AJJ7UrlaC5aV6vuHJX9gmSavr8okLYQYPEbPPV+1YpFoNuV5gwBEDi8tvyHh2M+XXUvpIdDHLExl+qKMCu1CSLG2TVoh/aH1ftoWNJw5AMFEADCEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGoyOaNs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGoyOaNs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9775C4CEEA;
-	Mon, 16 Jun 2025 16:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750089653;
-	bh=AGgS9xG+XXtQyt/GqvZ5d2Bo7FUBHRlUWYBdw/v1s6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SGoyOaNsHXLG/dyPjvdpKthHE6Yn0f0W7B7fIe0+RDg3s6I6zHdMC2LxzoBMgfKRx
-	 5lHzF18eHFJMwRvJ/9adL3kYDTTQ2fu7fskIIJmHkj1vMjmaNVdu4/sj+tyy/e/o4k
-	 3tucyYGxsTdjIkuJS+vMf7GZiNA05lu3Oq7t3qM6WVlyVd7LFYYItTrJCIaYMDxl5o
-	 M5dWWU1Trgr1XOJtQdoh6c5TGV1cP4VxIMMSDbM3nJojg5+yHIdtQyLRCxonerPwjr
-	 lWFeVkiSV4nW4nAGYpmQPNDqX2btNAtFGLjDKstFATjaeVtiLzJm7FTlu19U4iucnI
-	 EydrqqKmbkVew==
-Date: Mon, 16 Jun 2025 17:00:47 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v10 09/14] dpll: zl3073x: Register DPLL devices
- and pins
-Message-ID: <20250616160047.GG6918@horms.kernel.org>
-References: <20250615201223.1209235-1-ivecera@redhat.com>
- <20250615201223.1209235-10-ivecera@redhat.com>
+	s=arc-20240116; t=1750089717; c=relaxed/simple;
+	bh=VrRMr/oE4Lv+bUa1k3MvYvoDV+jDxeGAn6ThJX58AEs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=inywyRp5p7oCMVrzVpeRswc1eI2jriaia9Yqwsp89fodvZquLn5VUtJYUEzMnPPyQ9lZCvjAlNjah+i/aZm0kaVy0CjFEDRYDppoEEBAod62H0kWDglm91lpe+frUkZRedAs53FRaKU9UEf0b6FAzNuvTzsoUSminAtTlYQLSBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3de0f73f9e0so14857125ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:01:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750089715; x=1750694515;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VrRMr/oE4Lv+bUa1k3MvYvoDV+jDxeGAn6ThJX58AEs=;
+        b=APcumZ2uM6kEkAvfLqAvYoQw46pKHCcYj5ua+EBvJuXuv4eZzs8jCMU0VwX2RQyzRG
+         vX2zAwnPhzalPYT3IOzRyOmmg9ljGQ6wo4wPzmjPnFT+wJeRQID2kMWNbWrb7lf+4nba
+         LLiueiNrSnSti8DVLbRfu+P3GVHDdv/eRStKPcg+Jm/b+Mr7b2EofFU7C7nDSsOiGS7k
+         8sdm6E8j59gXwqxZLWS+ai1z0yH5fP4A42co9IO1plVNM0pBZV8+G94z27Hu9HHJRUTB
+         aAW1hxYH6HpsywBzyW3QQuIahceJRrQAfAPfhh4TgekSffxpbW/mG5eYkqPRTrBrICUz
+         1sqA==
+X-Gm-Message-State: AOJu0YxJ+L/R0e45XTVABDq4wFWCuBZNQqTu+IpG928S48Iy3I51ZnnC
+	rPAsuhpmQzThPGaXY0pPmBlGfxvr4g0EG89uhAqM1kUYW70IEr+XErpoLljrOQiyKHgSaLoljaD
+	susnCLHbHZQ/gBhd2pCYr7GJ52Wi2VOSWOEigjXhVVPMjXkfsZTDpswYwVag=
+X-Google-Smtp-Source: AGHT+IG5KvcaXAzeI4aVFy/9ZrXjyiauQZS9nR6oUSD3BAUXQbJN3OGU0jFfkufS00kcahbILIYjT0syB5Y+CTCslT09Qo40pB4v
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250615201223.1209235-10-ivecera@redhat.com>
+X-Received: by 2002:a05:6e02:338d:b0:3dd:cc26:61c7 with SMTP id
+ e9e14a558f8ab-3de07d34062mr110038985ab.20.1750089715153; Mon, 16 Jun 2025
+ 09:01:55 -0700 (PDT)
+Date: Mon, 16 Jun 2025 09:01:55 -0700
+In-Reply-To: <684df1ed.a00a0220.279073.0024.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68503ff3.050a0220.4562c.0009.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ e04c78d86a9699d136910cfc0bdcf01087e3267e
+From: syzbot <syzbot+d175ca7205b4f18390b1@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 15, 2025 at 10:12:18PM +0200, Ivan Vecera wrote:
-> Enumerate all available DPLL channels and registers a DPLL device for
-> each of them. Check all input references and outputs and register
-> DPLL pins for them.
-> 
-> Number of registered DPLL pins depends on configuration of references
-> and outputs. If the reference or output is configured as differential
-> one then only one DPLL pin is registered. Both references and outputs
-> can be also disabled from firmware configuration and in this case
-> no DPLL pins are registered.
-> 
-> All registrable references are registered to all available DPLL devices
-> with exception of DPLLs that are configured in NCO (numerically
-> controlled oscillator) mode. In this mode DPLL channel acts as PHC and
-> cannot be locked to any reference.
-> 
-> Device outputs are connected to one of synthesizers and each synthesizer
-> is driven by some DPLL channel. So output pins belonging to given output
-> are registered to DPLL device that drives associated synthesizer.
-> 
-> Finally add kworker task to monitor async changes on all DPLL channels
-> and input pins and to notify about them DPLL core. Output pins are not
-> monitored as their parameters are not changed asynchronously by the
-> device.
-> 
-> Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
-> Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-...
+***
 
-> diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e04c78d86a9699d136910cfc0bdcf01087e3267e
+Author: dmantipov@yandex.ru
 
-...
-
-> +static int
-> +zl3073x_devm_dpll_init(struct zl3073x_dev *zldev, u8 num_dplls)
-> +{
-> +	struct kthread_worker *kworker;
-> +	struct zl3073x_dpll *zldpll;
-> +	unsigned int i;
-> +	int rc;
-> +
-> +	INIT_LIST_HEAD(&zldev->dplls);
-> +
-> +	/* Initialize all DPLLs */
-> +	for (i = 0; i < num_dplls; i++) {
-> +		zldpll = zl3073x_dpll_alloc(zldev, i);
-> +		if (IS_ERR(zldpll)) {
-> +			dev_err_probe(zldev->dev, PTR_ERR(zldpll),
-> +				      "Failed to alloc DPLL%u\n", i);
-
-Hi Ivan,
-
-Jumping to the error label will return rc.
-But rc may not be initialised here.
-
-Flagged by Smatch.
-
-> +			goto error;
-> +		}
-> +
-> +		rc = zl3073x_dpll_register(zldpll);
-> +		if (rc) {
-> +			dev_err_probe(zldev->dev, rc,
-> +				      "Failed to register DPLL%u\n", i);
-> +			zl3073x_dpll_free(zldpll);
-> +			goto error;
-> +		}
-> +
-> +		list_add(&zldpll->list, &zldev->dplls);
-> +	}
-> +
-> +	/* Perform initial firmware fine phase correction */
-> +	rc = zl3073x_dpll_init_fine_phase_adjust(zldev);
-> +	if (rc) {
-> +		dev_err_probe(zldev->dev, rc,
-> +			      "Failed to init fine phase correction\n");
-> +		goto error;
-> +	}
-> +
-> +	/* Initialize monitoring thread */
-> +	kthread_init_delayed_work(&zldev->work, zl3073x_dev_periodic_work);
-> +	kworker = kthread_run_worker(0, "zl3073x-%s", dev_name(zldev->dev));
-> +	if (IS_ERR(kworker)) {
-> +		rc = PTR_ERR(kworker);
-> +		goto error;
-> +	}
-> +
-> +	zldev->kworker = kworker;
-> +	kthread_queue_delayed_work(zldev->kworker, &zldev->work, 0);
-> +
-> +	/* Add devres action to release DPLL related resources */
-> +	rc = devm_add_action_or_reset(zldev->dev, zl3073x_dev_dpll_fini, zldev);
-> +	if (rc)
-> +		goto error;
-> +
-> +	return 0;
-> +
-> +error:
-> +	zl3073x_dev_dpll_fini(zldev);
-> +
-> +	return rc;
-> +}
-> +
-
-...
-
--- 
-pw-bot: cr
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e04c78d86a9699d136910cfc0bdcf01087e3267e
