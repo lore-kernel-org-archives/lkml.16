@@ -1,127 +1,203 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD17257458;
-	Mon, 16 Jun 2025 11:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB59413D51E;
+	Mon, 16 Jun 2025 11:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750074995; cv=none; b=jFkZiLds70M446brSYZhpxUauBqhtKyvvLiFermAPl1v14eOZ9e3BHfyKdkCAt68Rlsqrwj2e7XPEbU3Lpc7mjnzUq5OdEt8Fv+7na7L+JAjtqBZBQs7IGg7LNUvRFJBkbh6HfZ/RUKQhbwmxDDL9zl0plFWU8s8kPOVLQuFfLU=
+	t=1750075017; cv=none; b=o06keET/UhXrhzUzWI+6+AZX9Ews2MIHLL1XoONA5uJKzVWoMYfboDRagUCw5Fsa5gzOlXrK79UvMW6plMjkJPh+AVpS4XiGkxNRp9bzyP3obfUUXR/lqRMMtCxiM8pPDsLvOjLrVzSbE2lpaQuoZR/4CaZc6Qy3k5+xu17awjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750074995; c=relaxed/simple;
-	bh=1BYl8vGZcp8qkQIS/k7/EDF7txlfV4e2fvxJT8xn5Oo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pTqff4FAutoDPbVEYRIGyotq3AXhA00ULQkTpV8nu6dGrA3ieeWD/tHCDBB6DC2l3jEC6cxb6Ik77+6jTgLxqKnRVPcjlEk01P3qaZP1wvyfI4c2GrfWNbJ6Kwv1KNPz1XvpBLBrmRSYuBtkFClsJsgANZ8VfnFHPVOmmIYEUZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BIcPgRsF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BIcPgRsF"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8QtHa031850;
-	Mon, 16 Jun 2025 11:56:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZtSOvAt0q/d0enJM4qc+OSsnJ7dqqVOnt42/ihjbwqQ=; b=BIcPgRsFgG3NZJXR
-	71xfl07VSThDwEzHBM0Ku5ofB6k+nhor22vYd6fKn4fd3eV5t4FIebBydqGNDRqP
-	9CSqi8a+kE4deEqOhMVDjldBnweFG47tsTsfz8TYEb6ylqtj/WsccbBPclgiZDMe
-	jbJxsBrbqgChsd1fsg2Ft/iSwe8j2gDDBTEPllFBmyOQ6IxRyDCd/F0RO8kcR3Ad
-	LSFLRjv78xMt0zqxo+VBia5ZWkcOVBO8UKTPc0qjgsxDZmAQar7fn49DX1Lc7JAT
-	HZeX+vGCn0JJHXrfPrcRk0Lc+HaYL+5cJ5Uf4GmU3zfg0hc9oxC7L4Qx0YQbxhcz
-	6pTHdw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792c9varu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:56:30 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GBuTwX031350
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 11:56:30 GMT
-Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 04:56:27 -0700
-Message-ID: <54157ce5-8a6b-75ae-0a21-a8df59242c40@quicinc.com>
-Date: Mon, 16 Jun 2025 17:26:24 +0530
+	s=arc-20240116; t=1750075017; c=relaxed/simple;
+	bh=3KqHxu39UApIOLYF5HgyfX74IQyuDyWpyGrIlCRcXa4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SU2R1QGwnk/0KqD4b/E5ljbpMCQWsBM+3bQZsnGFYf4lL4p0nhNzif6XJS64Q3Zjd/5+c3+Wibtbx+iNQOPChDJW7eKVYvlITWxoxQlIvVY202+M25kZiCaHdFDDavtN/p0Kyl4VFiHiCv6C+rKj1qspnFnp3XI6Q3BHDFH4OXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A661F150C;
+	Mon, 16 Jun 2025 04:56:33 -0700 (PDT)
+Received: from [10.57.28.131] (unknown [10.57.28.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 891413F58B;
+	Mon, 16 Jun 2025 04:56:53 -0700 (PDT)
+Message-ID: <adbbfc9c-5d21-4c8f-ba71-ae1103569037@arm.com>
+Date: Mon, 16 Jun 2025 12:56:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] media: venus: hfi: explicitly release IRQ during teardown
-Content-Language: en-US
-To: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>,
-        <quic_dikshita@quicinc.com>, <bryan.odonoghue@linaro.org>,
-        <loic.poulain@oss.qualcomm.com>, <mchehab@kernel.org>,
-        <hans.verkuil@cisco.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250612082943.2753676-1-jorge.ramirez@oss.qualcomm.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250612082943.2753676-1-jorge.ramirez@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+To: James Clark <james.clark@linaro.org>, Vladimir Oltean
+ <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+ Larisa Grigore <larisa.grigore@nxp.com>, Frank Li <Frank.li@nxp.com>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250613-james-nxp-spi-dma-v2-0-017eecf24aab@linaro.org>
+ <20250613-james-nxp-spi-dma-v2-2-017eecf24aab@linaro.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250613-james-nxp-spi-dma-v2-2-017eecf24aab@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QfcPl0fUP-qRbJVCiZHgP8HGGykswjz2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3NCBTYWx0ZWRfX5OkmvYYblrzY
- TIz039kHECRG2xs1tarlG56pFUiYSIS9Y+3yNqYayfQr3gUPWRGEU5ad6RJJqEtkNLrS+DpWO/b
- ML2J4cvrqBofjJD4dgifpmqNn2oXi+O/iMbwM/mrB/lXDa3WH9/6J02J2/7PzYpJWENe3MVwz0v
- jVBkcYkb+VkpeetPVcQXuWI98tq/LnE6FhQQjHSJAq5NcxVFM2EkA0UbJMYmFajXkhwlFWqB/Tn
- kY1ezHhTnVw8UPtCwcJEYE1mtC3e006btbglyrWGgO4qXNTX1cyrqmuXAgaLg1PmDVffRGY7Q5X
- uBTTZUTDLIxVgTJN0WZiSO+JxmFRadATKpLocgcboZoeyOkL9xG7+26UUNwe1mvofi2SHZhDZHA
- UU/B/w4dTBEyQAIF6MHWnPKjefc1PHXlTi+n9EKJSTBndkYTZGI0tDUFGjUfftOzC6QtS+Yy
-X-Proofpoint-ORIG-GUID: QfcPl0fUP-qRbJVCiZHgP8HGGykswjz2
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=6850066e cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8
- a=EUspDBNiAAAA:8 a=U5IicJL0JrA6Xyt5t0MA:9 a=QEXdDO2ut3YA:10
- a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=767
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160074
 
+On 2025-06-13 10:28 am, James Clark wrote:
+> Using coherent memory here isn't functionally necessary. Because the
+> change to use non-coherent memory isn't overly complex and only a few
+> synchronization points are required, we might as well do it while fixing
+> up some other DMA issues.
 
-On 6/12/2025 1:59 PM, Jorge Ramirez-Ortiz wrote:
-> Ensure the IRQ is released before dismantling the ISR handler and
-> clearing related pointers.
-> 
-> This prevents any possibility of the interrupt triggering after the
-> handler context has been invalidated.
-> 
-> Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
+If it doesn't need coherent memory then does the driver really need to 
+do its own bounce-buffering at all? Could you not simplify the whole lot 
+even more by getting rid of {tx,rx}_dma_buf altogether and relying on 
+the SPI core helpers to DMA-map the messages in-place?
+
+Thanks,
+Robin.
+
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
->  1 file changed, 1 insertion(+)
+>   drivers/spi/spi-fsl-dspi.c | 55 +++++++++++++++++++++++++++++-----------------
+>   1 file changed, 35 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-> index b5f2ea879950..d9d62d965bcf 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
-> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-> @@ -1678,6 +1678,7 @@ void venus_hfi_destroy(struct venus_core *core)
->  	venus_interface_queues_release(hdev);
->  	mutex_destroy(&hdev->lock);
->  	kfree(hdev);
-> +	devm_free_irq(core->dev, core->irq, core);
-Could you please check and add the handling here [1] as well ?
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 744dfc561db2..f19404e10c92 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -379,6 +379,11 @@ static bool is_s32g_dspi(struct fsl_dspi *data)
+>   	       data->devtype_data == &devtype_data[S32G_TARGET];
+>   }
+>   
+> +static int dspi_dma_transfer_size(struct fsl_dspi *dspi)
+> +{
+> +	return dspi->words_in_flight * DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +}
+> +
+>   static void dspi_native_host_to_dev(struct fsl_dspi *dspi, u32 *txdata)
+>   {
+>   	switch (dspi->oper_word_size) {
+> @@ -493,7 +498,10 @@ static void dspi_tx_dma_callback(void *arg)
+>   {
+>   	struct fsl_dspi *dspi = arg;
+>   	struct fsl_dspi_dma *dma = dspi->dma;
+> +	struct device *dev = &dspi->pdev->dev;
+>   
+> +	dma_sync_single_for_cpu(dev, dma->tx_dma_phys,
+> +				dspi_dma_transfer_size(dspi), DMA_TO_DEVICE);
+>   	complete(&dma->cmd_tx_complete);
+>   }
+>   
+> @@ -501,9 +509,13 @@ static void dspi_rx_dma_callback(void *arg)
+>   {
+>   	struct fsl_dspi *dspi = arg;
+>   	struct fsl_dspi_dma *dma = dspi->dma;
+> +	struct device *dev = &dspi->pdev->dev;
+>   	int i;
+>   
+>   	if (dspi->rx) {
+> +		dma_sync_single_for_cpu(dev, dma->rx_dma_phys,
+> +					dspi_dma_transfer_size(dspi),
+> +					DMA_FROM_DEVICE);
+>   		for (i = 0; i < dspi->words_in_flight; i++)
+>   			dspi_push_rx(dspi, dspi->dma->rx_dma_buf[i]);
+>   	}
+> @@ -513,6 +525,7 @@ static void dspi_rx_dma_callback(void *arg)
+>   
+>   static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>   {
+> +	size_t size = dspi_dma_transfer_size(dspi);
+>   	struct device *dev = &dspi->pdev->dev;
+>   	struct fsl_dspi_dma *dma = dspi->dma;
+>   	int time_left;
+> @@ -521,10 +534,9 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>   	for (i = 0; i < dspi->words_in_flight; i++)
+>   		dspi->dma->tx_dma_buf[i] = dspi_pop_tx_pushr(dspi);
+>   
+> +	dma_sync_single_for_device(dev, dma->tx_dma_phys, size, DMA_TO_DEVICE);
+>   	dma->tx_desc = dmaengine_prep_slave_single(dma->chan_tx,
+> -					dma->tx_dma_phys,
+> -					dspi->words_in_flight *
+> -					DMA_SLAVE_BUSWIDTH_4_BYTES,
+> +					dma->tx_dma_phys, size,
+>   					DMA_MEM_TO_DEV,
+>   					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>   	if (!dma->tx_desc) {
+> @@ -539,10 +551,10 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>   		return -EINVAL;
+>   	}
+>   
+> +	dma_sync_single_for_device(dev, dma->rx_dma_phys, size,
+> +				   DMA_FROM_DEVICE);
+>   	dma->rx_desc = dmaengine_prep_slave_single(dma->chan_rx,
+> -					dma->rx_dma_phys,
+> -					dspi->words_in_flight *
+> -					DMA_SLAVE_BUSWIDTH_4_BYTES,
+> +					dma->rx_dma_phys, size,
+>   					DMA_DEV_TO_MEM,
+>   					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>   	if (!dma->rx_desc) {
+> @@ -644,17 +656,17 @@ static int dspi_request_dma(struct fsl_dspi *dspi, phys_addr_t phy_addr)
+>   		goto err_tx_channel;
+>   	}
+>   
+> -	dma->tx_dma_buf = dma_alloc_coherent(dma->chan_tx->device->dev,
+> -					     dma_bufsize, &dma->tx_dma_phys,
+> -					     GFP_KERNEL);
+> +	dma->tx_dma_buf = dma_alloc_noncoherent(dma->chan_tx->device->dev,
+> +						dma_bufsize, &dma->tx_dma_phys,
+> +						DMA_TO_DEVICE, GFP_KERNEL);
+>   	if (!dma->tx_dma_buf) {
+>   		ret = -ENOMEM;
+>   		goto err_tx_dma_buf;
+>   	}
+>   
+> -	dma->rx_dma_buf = dma_alloc_coherent(dma->chan_rx->device->dev,
+> -					     dma_bufsize, &dma->rx_dma_phys,
+> -					     GFP_KERNEL);
+> +	dma->rx_dma_buf = dma_alloc_noncoherent(dma->chan_rx->device->dev,
+> +						dma_bufsize, &dma->rx_dma_phys,
+> +						DMA_FROM_DEVICE, GFP_KERNEL);
+>   	if (!dma->rx_dma_buf) {
+>   		ret = -ENOMEM;
+>   		goto err_rx_dma_buf;
+> @@ -689,11 +701,12 @@ static int dspi_request_dma(struct fsl_dspi *dspi, phys_addr_t phy_addr)
+>   	return 0;
+>   
+>   err_slave_config:
+> -	dma_free_coherent(dma->chan_rx->device->dev,
+> -			  dma_bufsize, dma->rx_dma_buf, dma->rx_dma_phys);
+> +	dma_free_noncoherent(dma->chan_rx->device->dev, dma_bufsize,
+> +			     dma->rx_dma_buf, dma->rx_dma_phys,
+> +			     DMA_FROM_DEVICE);
+>   err_rx_dma_buf:
+> -	dma_free_coherent(dma->chan_tx->device->dev,
+> -			  dma_bufsize, dma->tx_dma_buf, dma->tx_dma_phys);
+> +	dma_free_noncoherent(dma->chan_tx->device->dev, dma_bufsize,
+> +			     dma->tx_dma_buf, dma->tx_dma_phys, DMA_TO_DEVICE);
+>   err_tx_dma_buf:
+>   	dma_release_channel(dma->chan_tx);
+>   err_tx_channel:
+> @@ -714,14 +727,16 @@ static void dspi_release_dma(struct fsl_dspi *dspi)
+>   		return;
+>   
+>   	if (dma->chan_tx) {
+> -		dma_free_coherent(dma->chan_tx->device->dev, dma_bufsize,
+> -				  dma->tx_dma_buf, dma->tx_dma_phys);
+> +		dma_free_noncoherent(dma->chan_tx->device->dev, dma_bufsize,
+> +				     dma->tx_dma_buf, dma->tx_dma_phys,
+> +				     DMA_TO_DEVICE);
+>   		dma_release_channel(dma->chan_tx);
+>   	}
+>   
+>   	if (dma->chan_rx) {
+> -		dma_free_coherent(dma->chan_rx->device->dev, dma_bufsize,
+> -				  dma->rx_dma_buf, dma->rx_dma_phys);
+> +		dma_free_noncoherent(dma->chan_rx->device->dev, dma_bufsize,
+> +				     dma->rx_dma_buf, dma->rx_dma_phys,
+> +				     DMA_FROM_DEVICE);
+>   		dma_release_channel(dma->chan_rx);
+>   	}
+>   }
+> 
 
-[1]
-https://elixir.bootlin.com/linux/v6.16-rc1/source/drivers/media/platform/qcom/venus/core.c#L427
-
-Regards,
-Vikash
->  	core->ops = NULL;
->  }
->  
