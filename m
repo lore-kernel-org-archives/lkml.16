@@ -1,128 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658AF17A2F7;
-	Mon, 16 Jun 2025 14:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A26917A2F7;
+	Mon, 16 Jun 2025 14:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084910; cv=none; b=d75ts4f+1lApkYwET5SvZZYT2+DylM6rEYYL0G4PrQDJYVKxzTQeIFsG4P1cgyrgvmS/crwd6lezQrxbLCfcD21ynBFZ71Wpoq2QpkjrOQrZjukIZrKbb4VwRT/PvRqUUiaDwQruO6K02jaX8jeDM1vWK/u/TfpN6GnQ+TdYsxM=
+	t=1750084933; cv=none; b=OHaTOpH9lqQam2u3h2qdTfLdCsZofGDv+gxZFmNIl3KrnilkJeLPVvp7KCRHimBGPKPVLIrKjLqiZAKMmIEYiWecZ6x8UYcla3T1K95tX5x8A5WOQ+GvG1Ojx+Ub0hMmMQENer+RbkieZstXr8iWszwlqAp5bN2UsX9LoBEj63E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084910; c=relaxed/simple;
-	bh=vhstHZRuSYJvZRwNcZU6+arIkhJ+f2L5XWPkhRILN8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EAmtlZJt+SRVtINFXM4hL4dOWJrjxx69Nb/itPGbyeurCZZdQJy0efxZyf07p+hGBtgNn9/fJZgONxnyQKhRou5qzREpwIdy5Zms7NspXfrAF5PCr4Tlknk5g1EMgXdeeDzhHR67HRrHlYfRiFW0gaUYnbK10GDWeajSi7oKGOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTseeEiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750084933; c=relaxed/simple;
+	bh=pK0+u7cNcOH3UoJCPFzMHWZ+PCQvSBPMj8pEU5KTMIU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bIdd4CkTaNz3zdt/Xya3T1cM6NWhHEWHyUZpBR/avM8/dsUPZX8vobeLGKeGtNsv5Zfg5+9E8arUU1W+28SMAmlIh+X+JCi7w5qag8zOSJset5ZJwb/V8OyaOcaIiaL7OfyLx4IPkVhMxXVud+Aw8BxEmyZYjMfdOMcp5/7Oxy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgbiiSAX; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTseeEiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D384AC4CEF0;
-	Mon, 16 Jun 2025 14:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750084909;
-	bh=vhstHZRuSYJvZRwNcZU6+arIkhJ+f2L5XWPkhRILN8c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YTseeEiKwjqLqpPDiuwU3IR8eq/RSkQXFQAfgeLafgjCnLHYlFDmp9xPCtvZQ9Dvf
-	 RcWFAzlyWJV4VelFVbrx/ojhyhAVPqApBDt5lT0gxC8ErR/kWmx4NoGmuJSnYLZJNV
-	 g4Fkz4FpqXo+lj6y9IpMaL6og5O4g+7PDjXCd+1j4K8ppLOSbykillBxkHrTc2t9Fa
-	 G56/s1fSD3rrPAiPnTlVMz+8OfD6gAY/bhRT85WcMnAOPZjVCh3rbcjlqplzoqVTIw
-	 /52+UoXxarTfMZOfl9Hco8vZcHOwlJ9l+Nv4OxMlyv2+I2H0hS8wYgK6ENQrpwq9XZ
-	 JF52kILaAKD0A==
-Message-ID: <a76789cf-afe1-4d91-afdf-65c3af5ad11f@kernel.org>
-Date: Mon, 16 Jun 2025 16:41:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgbiiSAX"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-748582445cfso2866189b3a.2;
+        Mon, 16 Jun 2025 07:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750084932; x=1750689732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tv34W5VjxfJqW+QLhtik14kbds+hW6UbOSuF3KILzuY=;
+        b=AgbiiSAXN4kZhR1QGNpS0iZ5fu86dRG+2Vg/rwqJro+qwZFTY1bmDftGFV5qz3vrYP
+         A5bJyl0g/JYYLvA5y4FmusDcj21mjy9QX8VJYJYshuqqOvpJpZa/xWie0VVLMHv6J6iu
+         YmPxnZUf9Sr61PRy74jlywgrA1TQyIaqIdVGZtYe+ygj2EfMvTDfi02sR1S9jGIJzNeA
+         8Fj06X7Z7oPeLmeKJqFf0s9xVHhgdBm7AG407t1pNFGhrjW/Luqsc1TlJBIubJs3syDj
+         BktjXzj/jAjspFwEchdi83UIOdbeDBulySIb5UMu42Js34LsqabFs66DUcAl1AcZ8dEQ
+         p7Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750084932; x=1750689732;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tv34W5VjxfJqW+QLhtik14kbds+hW6UbOSuF3KILzuY=;
+        b=in37esPakPjuSgUs6W+qQejQmjRjVd577AY9mGZzVp1KtrYJjcIh8bhs0siwruYkqb
+         Uf+/RbCzE130QqfcH00dMC2Ie6xSZl1le5nwBBkMqWJpFVYKrkWWT4HN5Duv+c6/qC0a
+         DaxJ7MG/oda6tjpfkU/zf9HkhNAHNBEyKUXDxou1x2ferSs/9J2Um3mYFgJBccevG89O
+         IMUp/btsl9nT4RL2MHRLiN9abbXe/smlM7hWwfD/CeziSHMB0y84wcx2N1/qe7zTVwQA
+         ibi4OcK4UHvFLjeyLBWFrogdWcibDgfeIkFE7xzvh6DogBp4C1WyapnoVAeVU+Uqv68L
+         WfFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOKkxjXvgoup1LAfbx/oDN82D72ulXmMiht7QQXrb/lqSFadFFh5YWutikB8ZrBpgm0pQ=@vger.kernel.org, AJvYcCWXkMwWQvoELCuArbPV69ak2WWhKj4poLPs189vHokOL7rA89YR5dg74uRJMC+sjAwU0+IiSKGS@vger.kernel.org, AJvYcCXmiQyo4CNPP/X5imxycCwzNnp20GobKr2cgwtCur0d2Os6WQ4zX6/9ZBA3cuqHe060QoCK6tV3A+GmquMX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVrUSRHEYkS7utF22Vc9XrZfXDNtADL43dPWHh+NTL1h/XPMhS
+	0XYURVqN4KN+ACmcPbhVni/UYyVSfbUwvL3YwwzWoF1qtT9SQWyHVFA2
+X-Gm-Gg: ASbGncvZyutJzBgEjykWaItoGhCB0F8177QY6o44KU5Ol9an55unA1cc0NAoIDsfmyA
+	XUsqM63DmNKSYgfkCh+MSKgdQ4H5QIBjYbqbOTfUHcv9VjfDVRbpPXw/uSQrcM9JOvsKVR4V0Ij
+	xFYBs9sAq534o5szz5s2NrJPgpFDCYbqWfYZWUjdO0WnikflwmddCmnlg3lUQmah0LEPaRVuJEK
+	C/tI4z6bk6up7ZfVXUYB30d6iBuXa12ZeEygsh0ANSdjYR/aSig39mMapdfFb1D9wZ2+5/w1ig3
+	CyKsOZLQF0+nXo/l6AWTyelRnPEtQbLWb036Is7bUJtzTPSl7HhSz4Toy3lPhhn/05dKJPJc8YW
+	d29rqMjP3
+X-Google-Smtp-Source: AGHT+IHEPg4+O4ApNZgch6q2sKZcGIKUpH2RyzdU/+t4+DW38f/ZmE8sPSN34Sk/ocqhx4evU3kalg==
+X-Received: by 2002:a05:6a00:398b:b0:730:9946:5973 with SMTP id d2e1a72fcca58-7489ce012bdmr12266799b3a.5.1750084931399;
+        Mon, 16 Jun 2025 07:42:11 -0700 (PDT)
+Received: from devant.antgroup-inc.local ([47.89.83.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b374csm7104331b3a.137.2025.06.16.07.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 07:42:11 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+To: leonardi@redhat.com
+Cc: davem@davemloft.net,
+	fupan.lfp@antgroup.com,
+	jasowang@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mst@redhat.com,
+	netdev@vger.kernel.org,
+	niuxuewei.nxw@antgroup.com,
+	niuxuewei97@gmail.com,
+	pabeni@redhat.com,
+	sgarzare@redhat.com,
+	stefanha@redhat.com,
+	virtualization@lists.linux.dev,
+	xuanzhuo@linux.alibaba.com
+Subject: Re: [PATCH net-next v2 1/3] vsock: Add support for SIOCINQ ioctl
+Date: Mon, 16 Jun 2025 22:42:00 +0800
+Message-Id: <20250616144200.1187793-1-niuxuewei.nxw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <mrib74zhrw47v4juifp67phnm6tffb7qgfm3xmtcuw5maminlv@4i7z36hg3554>
+References: <mrib74zhrw47v4juifp67phnm6tffb7qgfm3xmtcuw5maminlv@4i7z36hg3554>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: media: venus: Add qcm2290 dt schema
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-Cc: quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
- bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, stanimir.varbanov@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250613140402.3619465-1-jorge.ramirez@oss.qualcomm.com>
- <20250613140402.3619465-2-jorge.ramirez@oss.qualcomm.com>
- <6f4e715f-1c73-450e-b7eb-92781b7fa050@kernel.org> <aFATp3zoSgkrj3YX@trex>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aFATp3zoSgkrj3YX@trex>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 16/06/2025 14:52, Jorge Ramirez wrote:
->>
->>> +  The Venus AR50_LITE IP is a video encode and decode accelerator present
->>> +  on Qualcomm platforms
->>> +
->>> +allOf:
->>> +  - $ref: qcom,venus-common.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: qcom,qcm2290-venus
->>> +
->>> +  power-domains:
->>> +    minItems: 2
->>> +    maxItems: 3
->>> +
->>> +  power-domain-names:
->>> +    minItems: 2
->>
->> Why is this flexible? Either you have two or three. Not mixed.
+> On Mon, Jun 16, 2025 at 03:42:53PM +0200, Luigi Leonardi wrote:
+> >On Fri, Jun 13, 2025 at 11:11:50AM +0800, Xuewei Niu wrote:
+> >>This patch adds support for SIOCINQ ioctl, which returns the number of
+> >>bytes unread in the socket.
+> >>
+> >>Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+> >>---
+> >>include/net/af_vsock.h   |  2 ++
+> >>net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
+> >>2 files changed, 24 insertions(+)
+> >>
+> >>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> >>index d56e6e135158..723a886253ba 100644
+> >>--- a/include/net/af_vsock.h
+> >>+++ b/include/net/af_vsock.h
+> >>@@ -171,6 +171,8 @@ struct vsock_transport {
+> >>
+> >>	/* SIOCOUTQ ioctl */
+> >>	ssize_t (*unsent_bytes)(struct vsock_sock *vsk);
+> >>+	/* SIOCINQ ioctl */
+> >>+	ssize_t (*unread_bytes)(struct vsock_sock *vsk);
+> >>
+> >>	/* Shutdown. */
+> >>	int (*shutdown)(struct vsock_sock *, int);
+> >>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >>index 2e7a3034e965..466b1ebadbbc 100644
+> >>--- a/net/vmw_vsock/af_vsock.c
+> >>+++ b/net/vmw_vsock/af_vsock.c
+> >>@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
+> >>	vsk = vsock_sk(sk);
+> >>
+> >>	switch (cmd) {
+> >>+	case SIOCINQ: {
+> >>+		ssize_t n_bytes;
+> >>+
+> >>+		if (!vsk->transport || !vsk->transport->unread_bytes) {
+> >>+			ret = -EOPNOTSUPP;
+> >>+			break;
+> >>+		}
+> >>+
+> >>+		if (sock_type_connectible(sk->sk_type) &&
+> >>+		    sk->sk_state == TCP_LISTEN) {
+> >>+			ret = -EINVAL;
+> >>+			break;
+> >>+		}
+> >>+
+> >>+		n_bytes = vsk->transport->unread_bytes(vsk);
+> >>+		if (n_bytes < 0) {
+> >>+			ret = n_bytes;
+> >>+			break;
+> >>+		}
+> >>+		ret = put_user(n_bytes, arg);
+> >>+		break;
+> >>+	}
+> >>	case SIOCOUTQ: {
+> >>		ssize_t n_bytes;
+> >>
+> >>-- 
+> >>2.34.1
+> >>
+> >
+> >Reviewed-by: Luigi Leonardi <leonardi@redhat.com>
 > 
-> please check 5b380f242f360256c96e96adabeb7ce9ec784306
+> Stefano is totally right, reusing `virtio_transport_unread_bytes` is a 
+> good idea.
+> 
+> nit: commit message should use 'imperative' language [1]. "This patch 
+> adds" should be avoided.
+> 
+> Sorry for the confusion.
+> 
+> Thanks,
+> Luigi
+> 
+> [1]https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
 
-This does not explain why this is optional HERE. You cannot use for a
-new platform an argument that some existing platform was changed in
-ABI-preserving way.
+Thanks for pointing out. I'll update the commit message following the
+guidelines.
 
-BTW, also subject prefixes needs fixing. For DTS: it is never "arch".
-For this patch: wrong order (see DT submitting patches).
-
-Best regards,
-Krzysztof
+Thanks,
+Xuewei
