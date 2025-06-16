@@ -1,240 +1,204 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E212BF01A
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB98278E79;
+	Mon, 16 Jun 2025 15:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750089205; cv=none; b=ANcwxPJHWBmBwVTMMIQz1+PN4ySwQmfWj1CsgNfV0KcSej+DJNxP5bVN9HiNd7SNrLD14yhzr66Gn88QqNLdFrHw3Zrbk9OjGhgOzXNFDqtQMglXfasbP752MeQ1BfhBurWgVGV3Ces6op0k7rHMEsr5y5ZRK/aQhsiUOfa9qmw=
+	t=1750089274; cv=none; b=WcYDc4l7oTQuu49qk7caVWpfeSvagy3h0ZSrjx+dBVWv4ey0ztIr+Al/gUy5wXG4Z3ZrhFZ1Khb6egzbXl7ii9PKtMScjHSQ3260QT8IzJjOOBaplxTWEwVlBtMEAePgRkfZ4S44dvFYRsGlNK8i3EIZFCZDXzFvwYpFOcZW464=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750089205; c=relaxed/simple;
-	bh=xe8kV5y3CWGlDnK3dNNThBhNLUjz9DxmDV86Vg2im7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LISDkZiWjbU/XLpQw8XvnBRfTKf8QtbTnteLmQHl00LWDfajfGok1pzxajgnjNE08bWfKcXFkorO/WtDyL3kenovScxkK/GzTkjcLAlKEG44w60gko0KKD7SAp5z5Q7GbsjjX9X2HJK0ctvv8zZ1Y1ChU+9/IOWwtj/PzenEh4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YjXswM0i; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750089274; c=relaxed/simple;
+	bh=q3ERfAh5Wy+Y9yDxFKPCc6BxDJQn6ZQJ6Ti16SPnhbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqbRpayHuWPpwdMP4msHPnUcVfPogepjqS5XHsBPBfJPnc7SLVoepNimgO3FjUIdOLyh0xQfB5/Ry6gayxVOgwkSAi6YALZ6yiiIWFZF5jmimSwRYZIANaUqHTiug+SDh+KqJsqLbUKrTTZ/gPQ+MtLB1tSS/zFlkLr2YwnnMjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRw0JrJ0; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YjXswM0i"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8knU0003269
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:53:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ls5lBrZa1Chnre4Poq+4r9uvpQzSemOb2h+RYlU45Y0=; b=YjXswM0iC/mXVieN
-	JntauwXDL0Yu2WWS/tTdJieZzcK9Jsfu0rhDapgiisLOHCsvfNnpFjVMdSAYutZG
-	3+kCinjzgQgseveOc6Cy9J062wHe+nG/oQmRrm2+smJK+d/3gXUWYk2N3ChJts8U
-	6hh9TGiAWxtjdu4tvilSwi2xV/1L96Dd0DTqcRyfh4gfEFvvN3nnfjWNcbKaHlE8
-	Ns5m5+Isl+qDNHK34gSPeEhQMYmWtpM+uT7KtHqesbu1xShK1q5ZG2sYr+SkA87d
-	2kI7AZqmsc4jRisbRvhIgKERvM9ZDIHU9I1LbhCM2aeKMTIF0m04lYSzmbWn0ZF2
-	mzEsvQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ag2318th-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:53:21 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fad29c1b72so66722876d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:53:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRw0JrJ0"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso4241096b3a.1;
+        Mon, 16 Jun 2025 08:54:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750089272; x=1750694072; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DsotLJ0Tq8v8Qep/9/uIKbgNsK/CVWAdf4TKiG2Z1Fk=;
+        b=KRw0JrJ0/VObyXEPKszSsBwQ4E61OOAsrC5AadQ7oLl+nvELFJRjGjxoWcEgixCJ6w
+         eG459Rrb6NUY5YkoPhzXYCvX7bKvBNWLq3aT1PVJfjibSv98Bj6/Nt/Plrb2GW2J+6DP
+         mi1UrO701BfF/ym2BOv0i+L1M14qwLoMDwnnEU21L1r/+eipvMWyA4E3NKDYKvFjYeLN
+         NWU4mXRTbb8WsmoFJi1rW/ID6S/PNny/scP/J/PInMimOhToDkEfVSe7On4ajC81mDF7
+         xObeLRa9YJpZO9vklPMQlIi/PT0QpnYlONRsX+y2x8L7NP4Y2Z2/GIRExNLJjhz6GPL7
+         bZig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750089200; x=1750694000;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ls5lBrZa1Chnre4Poq+4r9uvpQzSemOb2h+RYlU45Y0=;
-        b=FWzNfCJvVvUfGjFAMGgAKUQgRiElXsnq0nB+XkfjunN2PDBNfOIJZEUKVT5P4C3T2S
-         ZFju2QAny5pEfiJgP5NfhcuMetASZ+IabD68DFQxRfNfiW3wx08kZFPWRKGqgWk1c+kn
-         eCxplPkur6OswvFt/pmenBxVcD2jslxGXy2zoqkcAnNrUhcuqGYiDqPIaM/spk+H6l6G
-         DP7ck5UDHFv6nFRUGc4nRGyig64SZXx18nldUwPtCTikjtaRcqo4GB7SeclU0ViOifmk
-         uQwDeGhQySVTUDbfSScHBClUE34dsje3vyVO53tbFAGqGKQLQkzNLBleX2xE5XmzeK9G
-         66Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3XaBS1aRCDVm7z82s+3PKcKMTfTZdoMaHbjZepvLaLhg6f/D7HTV1RYvEZwUSc9VRgdGhiPFNfd4b1a0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPqRe59TNGlCISav2nJ943Cevb786KofruIjEVMr1zYP7MrQKv
-	+3qFZ7t2vUt39n+8rVWH71anMceLBH8Bmo/Vx3rnG5nql6NAxYNlUvkUwTYRJP9F+MHwr/oCbC4
-	wesnSP2uG8Q+5DMC90SLJqH2JAJTBW/Dm0Akf5fzDwueFOGwtGHyrTAAG0eRTfzvLwcg=
-X-Gm-Gg: ASbGncv7HssINfu236nWSNbH3CT6Af+jGbsB1h9I/SYh5FYaBMjfVS5Hf0V8havGXf9
-	uzTcl07cYWj4XSUuiIu1m23meoFW/DZOhM7LWNp5O1fQaOU103WAHjHOwJLS7KoUi6RHTJ1qpkS
-	mAHEArPWsSDg/IVholHpVzggiH1hlQV4NV2/sH4WSDxjVWOSFehzk23PwYME+1WIJOyJgMRyZFz
-	gY/ynmlr/YMlqIeByglrybrD1j3YoAtNOwQ9qEzZfVrdUpf9KLqGoJhSYnuVoHdz+iLcNj6ehW1
-	sGGFUlivGeEdrfSrtAzAasDJnwgyj5j+T5XXfhQqQXVtSs9HyHXefJpiT2FoRz1P1l6utfpyyso
-	cebaM2TpsNFMMhay0RmaPXLiRlqEYHBPspLmC3KfjJACbNePQgpTzCg0EWMAw+yRvq/gHpr+NWk
-	I=
-X-Received: by 2002:a05:6214:4589:b0:6fa:c81a:6229 with SMTP id 6a1803df08f44-6fb477a4fd7mr146959886d6.43.1750089200285;
-        Mon, 16 Jun 2025 08:53:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9lFS4BlqFJWe80LkGYOUJy1z8hb3H4PDMo7stBR5xzLLNxsbI4MtjzfYuC4UMNrju/BVvSw==
-X-Received: by 2002:a05:6214:4589:b0:6fa:c81a:6229 with SMTP id 6a1803df08f44-6fb477a4fd7mr146959496d6.43.1750089199802;
-        Mon, 16 Jun 2025 08:53:19 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:a4:c3fb:c59f:e024:c669:a69b? (2001-14bb-a4-c3fb-c59f-e024-c669-a69b.rev.dnainternet.fi. [2001:14bb:a4:c3fb:c59f:e024:c669:a69b])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1fcea3sm1587702e87.254.2025.06.16.08.53.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 08:53:18 -0700 (PDT)
-Message-ID: <8af6ce19-7aa3-4fc7-a963-d8ab0cd22b02@oss.qualcomm.com>
-Date: Mon, 16 Jun 2025 18:53:16 +0300
+        d=1e100.net; s=20230601; t=1750089272; x=1750694072;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DsotLJ0Tq8v8Qep/9/uIKbgNsK/CVWAdf4TKiG2Z1Fk=;
+        b=kwzNEqlRvnh9HrPmnCEM1nRbtQxTZBtUXMtXsDM/oliYHfWJxCTc2Av7wkZ8ZcKwbq
+         /oKz5ciRgPUiGAj2zJZSOv4HZeZiP0j+u3GgcLNjNv0pbGywh8CUR9iBdIqxmQDs7gft
+         8nMzPSD0Yc8HysXlPSbKow7azZIh/zigDMIPsgjvB1Wjev/jYZJhK7sOkWlb8eHXUnQ6
+         JKZUxv4+NwebFLdiKKtnkyWqAU/ifQYjzj2xyvgpKef7e/ux8AVsDWcY50N9FtK8AXv2
+         UtbgCg9AxeltlAb0WmmzfZBXAkPQUGol4NDOZUuZnBp9e/KjpebZfN3Px2lneVJRCJAL
+         3w3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVL1qFM0dpA83SdzoviLib4mU/RvvZmF8mYyPTCQb2KojmHPloKmjqtGuwKLDfHPFuAcowVrUsf@vger.kernel.org, AJvYcCW3MjX0OTszdMADrndbDB6uYyz5r3gyrtlSksYt2EVq8LjYl8mK4h2o7xX4wV4FzsdYB7Q9/Z49mn0w6ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb4kyJ845W8rFke7rZAPojBOhzQYr/9wIBYRt0pKkYx17H9Ftq
+	4q4vhglSUkNs215iyxHK0hKLsfewB4Hu1jg0ZQpbmAStAE1HqI80OFU=
+X-Gm-Gg: ASbGncvOgel79kQjWNYRftoo3Lqqvb2Nbumg3vJMhDhIsTaIehkTddGm8Sbf0J0hs+e
+	c1qZIVHx3N5jo5S72O9KzXXsJelXQ+UcZ9g9gAwm452HWMF7GeluxtypeeM96c5Zibyd+15s6X2
+	r7WzREvqPOsVtz59xcAPS7P3ddBccal8Gs7MJeogGEtr67eyXK6dTh5vRGthyO6v2KEwfKZse2K
+	E80Ep+fvfezDgn3er7GS2AmA3yD3B2CAm7aqsNfcaIm1qwN9b0Y6y3a84MRbW43Cyb3yGtaFmoE
+	X/nutkVsnBExsMz5Ygn1CQwonkbf3Sv55xa8inyRqvQM720UTsdnLy1XIqiOfxP3IFR7oZ78DVP
+	LZzB5roQ637o/YcMPaLrst2k=
+X-Google-Smtp-Source: AGHT+IGBbQO47U97OyA/s1rEzau9jZN7eao3Sz5Kjh41qnoM5N6war6gzRMxoRY7syzuVYnffzWGyA==
+X-Received: by 2002:a05:6a00:4b01:b0:736:9f2e:1357 with SMTP id d2e1a72fcca58-7489c483195mr14293260b3a.12.1750089271703;
+        Mon, 16 Jun 2025 08:54:31 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748900d736bsm7234336b3a.176.2025.06.16.08.54.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 08:54:31 -0700 (PDT)
+Date: Mon, 16 Jun 2025 08:54:30 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: syzbot <syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] WARNING in __linkwatch_sync_dev (2)
+Message-ID: <aFA-NpGpVF77Fyer@mini-arch>
+References: <684a39aa.a00a0220.1eb5f5.00fa.GAE@google.com>
+ <684c8a60.050a0220.be214.02a6.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/28] interconnect: qcom: icc-rpmh: use NULL-terminated
- arrays and drop static IDs
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Georgi Djakov <djakov@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250616-rework-icc-v1-0-bc1326294d71@oss.qualcomm.com>
- <786e3337-4c14-4281-932e-6a93aac53cf8@linaro.org>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <786e3337-4c14-4281-932e-6a93aac53cf8@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: --wV9OhnOXty4hPhRUKihqN9xMSNrwKW
-X-Authority-Analysis: v=2.4 cv=edY9f6EH c=1 sm=1 tr=0 ts=68503df1 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=ksxQWNrZAAAA:8 a=KKAkSRfTAAAA:8
- a=EUspDBNiAAAA:8 a=_0zWR6m1PiBrtj89O7MA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22 a=l7WU34MJF0Z5EO9KEJC3:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDEwMyBTYWx0ZWRfX74htaQBXB2uL
- 1wGJMKIcrcs5vkcVolxJYn4bX8NgYhX6BiHEmAZJ/dm7tqB542U3nBvPpmmYlQdRPLAAxW3j596
- 23XKbdKsW9+LjRhnbfENc4sn6nR6Fzv5lfDKdQ/7b9o4+DBQS2PXqWrfh5/1OgsTVhrmoeNlz44
- eiJRF2zopviSKStWvNjIyAqX0fkmzXQkluwBSa+BrDP/mxV+ib6t0/cldPB2toGmXAXgT/6l9zx
- iFo1Kk8pVcpZzx4vYjNuBxLfe5sQNJZwUEbEXUO4ijZqTR+0Up2OCqnQ0hvUVbcvgeEI9vPZcFG
- +t8omgc46jr3kgwaRDfWss3lDaUmeM0JQnOnRQ1G9jzXngj3Km+Iqfwykl8hBLQWEg58/1vpXXk
- 4scxIAMk2D5zjz/Ayi+19XptF0mBMbiDj8v/pyvMkbBfIas/Xp2OoH7ifT8vBmh5yCwHhcNS
-X-Proofpoint-GUID: --wV9OhnOXty4hPhRUKihqN9xMSNrwKW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 clxscore=1015 mlxlogscore=853 malwarescore=0
- phishscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160103
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <684c8a60.050a0220.be214.02a6.GAE@google.com>
 
-On 16/06/2025 18:51, neil.armstrong@linaro.org wrote:
-> Hi,
+On 06/13, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
 > 
-> On 16/06/2025 02:28, Dmitry Baryshkov wrote:
->> Qualcomm interconnect code has been using .num_foo fields together with
->> the arrays embedded in the structure, which results in hard-to-notice
->> mistakes if .num_foo gets omitted or incorrect.
->>
->> Rework RPMh interconnect code to use NULL-terminated arrays for the
->> dynamic IDs case (as now all the arrays contain only pointers) and,
->> while we are at it, rework all the drivers to use dynamic IDs and drop
->> static IDs code.
->>
->> This series touches only RPMh interconnect drivers. Corresponding series
->> for RPM drivers will follow up shortly.
+> HEAD commit:    27605c8c0f69 Merge tag 'net-6.16-rc2' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17bb9d70580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8e5a54165d499a9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b8c48ea38ca27d150063
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a7b9d4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1421310c580000
 > 
-> Can you specify on which base thie patchset applies ?
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-27605c8c.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/ab939a8a93b4/vmlinux-27605c8c.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/e90d45016aac/bzImage-27605c8c.xz
 > 
-> I tried v6.15, v6.16-rc1, v6.16-rc2, next-20250613 & next-20250616 and 
-> they all fail to
-> apply on patch 5.
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> RTNL: assertion failed at ./include/net/netdev_lock.h (72)
+> WARNING: CPU: 2 PID: 60 at ./include/net/netdev_lock.h:72 netdev_ops_assert_locked include/net/netdev_lock.h:72 [inline]
+> WARNING: CPU: 2 PID: 60 at ./include/net/netdev_lock.h:72 __linkwatch_sync_dev+0x1ed/0x230 net/core/link_watch.c:279
+> Modules linked in:
+> CPU: 2 UID: 0 PID: 60 Comm: kworker/u32:3 Not tainted 6.16.0-rc1-syzkaller-00101-g27605c8c0f69 #0 PREEMPT(full) 
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Workqueue: bond0 bond_mii_monitor
+> RIP: 0010:netdev_ops_assert_locked include/net/netdev_lock.h:72 [inline]
+> RIP: 0010:__linkwatch_sync_dev+0x1ed/0x230 net/core/link_watch.c:279
+> Code: 05 ff ff ff e8 94 b6 59 f8 c6 05 e9 0f 2e 07 01 90 ba 48 00 00 00 48 c7 c6 c0 8c e3 8c 48 c7 c7 60 8c e3 8c e8 94 7b 18 f8 90 <0f> 0b 90 90 e9 d6 fe ff ff 48 c7 c7 44 3b a8 90 e8 ae 86 c0 f8 e9
+> RSP: 0018:ffffc90000ce79f0 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ffff8880363a2000 RCX: ffffffff817ae368
+> RDX: ffff888022148000 RSI: ffffffff817ae375 RDI: 0000000000000001
+> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000001 R12: 1ffff9200019cf48
+> R13: ffff8880363a2cc5 R14: ffffffff8c5909c0 R15: ffffffff899ba310
+> FS:  0000000000000000(0000) GS:ffff8880d6954000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ffd4122af9c CR3: 000000000e382000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  ethtool_op_get_link+0x1d/0x70 net/ethtool/ioctl.c:63
+>  bond_check_dev_link+0x3f9/0x710 drivers/net/bonding/bond_main.c:863
+>  bond_miimon_inspect drivers/net/bonding/bond_main.c:2745 [inline]
+>  bond_mii_monitor+0x3c0/0x2dc0 drivers/net/bonding/bond_main.c:2967
+>  process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+>  process_scheduled_works kernel/workqueue.c:3321 [inline]
+>  worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+>  kthread+0x3c5/0x780 kernel/kthread.c:464
+>  ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>  </TASK>
+> 
+> 
+> ---
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
 
-I'm sorry, I forgot to mention 
-https://lore.kernel.org/linux-arm-msm/20250613-sc7280-icc-pcie1-fix-v1-1-0b09813e3b09@radxa.com/ 
+#syz test
 
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index c4d53e8e7c15..e2c4bcdb8b1a 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2739,7 +2739,7 @@ static int bond_miimon_inspect(struct bonding *bond)
+ 			ignore_updelay = true;
+ 	}
+ 
+-	bond_for_each_slave_rcu(bond, slave, iter) {
++	bond_for_each_slave(bond, slave, iter) {
+ 		bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+ 
+ 		link_state = bond_check_dev_link(bond, slave->dev, 0);
+@@ -2962,35 +2962,28 @@ static void bond_mii_monitor(struct work_struct *work)
+ 	if (!bond_has_slaves(bond))
+ 		goto re_arm;
+ 
+-	rcu_read_lock();
++	/* Race avoidance with bond_close cancel of workqueue */
++	if (!rtnl_trylock()) {
++		delay = 1;
++		should_notify_peers = false;
++		goto re_arm;
++	}
++
+ 	should_notify_peers = bond_should_notify_peers(bond);
+ 	commit = !!bond_miimon_inspect(bond);
+ 	if (bond->send_peer_notif) {
+-		rcu_read_unlock();
+-		if (rtnl_trylock()) {
+-			bond->send_peer_notif--;
+-			rtnl_unlock();
+-		}
+-	} else {
+-		rcu_read_unlock();
++		bond->send_peer_notif--;
+ 	}
+ 
+ 	if (commit) {
+-		/* Race avoidance with bond_close cancel of workqueue */
+-		if (!rtnl_trylock()) {
+-			delay = 1;
+-			should_notify_peers = false;
+-			goto re_arm;
+-		}
+-
+ 		bond_for_each_slave(bond, slave, iter) {
+ 			bond_commit_link_state(slave, BOND_SLAVE_NOTIFY_LATER);
+ 		}
+ 		bond_miimon_commit(bond);
+-
+-		rtnl_unlock();	/* might sleep, hold no other locks */
+ 	}
+ 
++	rtnl_unlock();	/* might sleep, hold no other locks */
++
+ re_arm:
+ 	if (bond->params.miimon)
+ 		queue_delayed_work(bond->wq, &bond->mii_work, delay);
 
-> 
-> Thanks,
-> Neil
-> 
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->> ---
->> Dmitry Baryshkov (28):
->>        interconnect: qcom: sc8280xp: specify num_links for qnm_a1noc_cfg
->>        interconnect: qcom: sc8180x: specify num_nodes
->>        interconnect: qcom: rpmh: make nodes a NULL_terminated array
->>        interconnect: qcom: rpmh: make link_nodes a NULL_terminated array
->>        interconnect: qcom: sc7280: convert to dynamic IDs
->>        interconnect: qcom: sc8180x: convert to dynamic IDs
->>        interconnect: qcom: sc8280xp: convert to dynamic IDs
->>        interconnect: qcom: sdm845: convert to dynamic IDs
->>        interconnect: qcom: sm8250: convert to dynamic IDs
->>        interconnect: qcom: x1e80100: convert to dynamic IDs
->>        interconnect: qcom: qcs615: convert to dynamic IDs
->>        interconnect: qcom: qcs8300: convert to dynamic IDs
->>        interconnect: qcom: qdu1000: convert to dynamic IDs
->>        interconnect: qcom: sar2130p: convert to dynamic IDs
->>        interconnect: qcom: sc7180: convert to dynamic IDs
->>        interconnect: qcom: sdm670: convert to dynamic IDs
->>        interconnect: qcom: sdx55: convert to dynamic IDs
->>        interconnect: qcom: sdx65: convert to dynamic IDs
->>        interconnect: qcom: sdx75: convert to dynamic IDs
->>        interconnect: qcom: sm6350: convert to dynamic IDs
->>        interconnect: qcom: sm7150: convert to dynamic IDs
->>        interconnect: qcom: sm8150: convert to dynamic IDs
->>        interconnect: qcom: sm8350: convert to dynamic IDs
->>        interconnect: qcom: sm8450: convert to dynamic IDs
->>        interconnect: qcom: sm8550: convert to dynamic IDs
->>        interconnect: qcom: sm8650: convert to dynamic IDs
->>        interconnect: qcom: sm8750: convert to dynamic IDs
->>        interconnect: qcom: icc-rpmh: drop support for non-dynamic IDS
->>
->>   drivers/interconnect/qcom/bcm-voter.c |    4 +-
->>   drivers/interconnect/qcom/icc-rpmh.c  |   20 +-
->>   drivers/interconnect/qcom/icc-rpmh.h  |   13 +-
->>   drivers/interconnect/qcom/qcs615.c    |  713 ++++++++-----------
->>   drivers/interconnect/qcom/qcs615.h    |  128 ----
->>   drivers/interconnect/qcom/qcs8300.c   |  911 +++++++++++-------------
->>   drivers/interconnect/qcom/qcs8300.h   |  177 -----
->>   drivers/interconnect/qcom/qdu1000.c   |  470 ++++++------
->>   drivers/interconnect/qcom/qdu1000.h   |   95 ---
->>   drivers/interconnect/qcom/sa8775p.c   |  493 ++++++-------
->>   drivers/interconnect/qcom/sar2130p.c  |  795 ++++++++-------------
->>   drivers/interconnect/qcom/sc7180.c    |  892 +++++++++++------------
->>   drivers/interconnect/qcom/sc7180.h    |  149 ----
->>   drivers/interconnect/qcom/sc7280.c    |  840 ++++++++++------------
->>   drivers/interconnect/qcom/sc7280.h    |  154 ----
->>   drivers/interconnect/qcom/sc8180x.c   | 1013 +++++++++++++-------------
->>   drivers/interconnect/qcom/sc8180x.h   |  179 -----
->>   drivers/interconnect/qcom/sc8280xp.c  | 1257 +++++++++++++++ 
->> +-----------------
->>   drivers/interconnect/qcom/sc8280xp.h  |  209 ------
->>   drivers/interconnect/qcom/sdm670.c    |  712 +++++++++----------
->>   drivers/interconnect/qcom/sdm670.h    |  128 ----
->>   drivers/interconnect/qcom/sdm845.c    |  986 ++++++++++++--------------
->>   drivers/interconnect/qcom/sdm845.h    |  140 ----
->>   drivers/interconnect/qcom/sdx55.c     |  611 ++++++++--------
->>   drivers/interconnect/qcom/sdx55.h     |   70 --
->>   drivers/interconnect/qcom/sdx65.c     |  577 +++++++--------
->>   drivers/interconnect/qcom/sdx65.h     |   65 --
->>   drivers/interconnect/qcom/sdx75.c     |  498 ++++++-------
->>   drivers/interconnect/qcom/sdx75.h     |   97 ---
->>   drivers/interconnect/qcom/sm6350.c    |  838 +++++++++++-----------
->>   drivers/interconnect/qcom/sm6350.h    |  139 ----
->>   drivers/interconnect/qcom/sm7150.c    |  860 +++++++++++-----------
->>   drivers/interconnect/qcom/sm7150.h    |  140 ----
->>   drivers/interconnect/qcom/sm8150.c    |  930 ++++++++++++------------
->>   drivers/interconnect/qcom/sm8150.h    |  152 ----
->>   drivers/interconnect/qcom/sm8250.c    |  977 ++++++++++++-------------
->>   drivers/interconnect/qcom/sm8250.h    |  168 -----
->>   drivers/interconnect/qcom/sm8350.c    |  901 ++++++++++++-----------
->>   drivers/interconnect/qcom/sm8350.h    |  158 -----
->>   drivers/interconnect/qcom/sm8450.c    |  823 ++++++++++-----------
->>   drivers/interconnect/qcom/sm8450.h    |  169 -----
->>   drivers/interconnect/qcom/sm8550.c    |  683 ++++++++----------
->>   drivers/interconnect/qcom/sm8550.h    |  138 ----
->>   drivers/interconnect/qcom/sm8650.c    |  713 ++++++++-----------
->>   drivers/interconnect/qcom/sm8650.h    |  144 ----
->>   drivers/interconnect/qcom/sm8750.c    |  779 ++++++++------------
->>   drivers/interconnect/qcom/x1e80100.c  |  819 ++++++++++-----------
->>   drivers/interconnect/qcom/x1e80100.h  |  192 -----
->>   48 files changed, 8655 insertions(+), 13464 deletions(-)
->> ---
->> base-commit: 410f15dcfe222c06f0d6379adec630061e88dc72
->> change-id: 20250613-rework-icc-0d3b7276a798
->>
->> Best regards,
-> 
-
-
--- 
-With best wishes
-Dmitry
