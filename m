@@ -1,123 +1,123 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906D51ABEC5;
-	Mon, 16 Jun 2025 12:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3041E4BE
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078268; cv=none; b=d3ylVaYaVqaX6r2F1ipToIoEqXoFLfwVH57NEodjgkn908mjwq+X4PR1pfOXDdBUVE1BMw3jjINDa29Eqe6hRa58xT2xYr4TsQUDFwbPZAk5iMMYU4496vbt7ifZNO+Ja/Q2IobAu+ZplC4tVOhzVXIttYiUdbhSrg6DZ0TdNhk=
+	t=1750078304; cv=none; b=jHcFJh8dX+2xI8bDYainLm0EjOgpa7//PdFUrS7jWE8UGmgUIrfLPXK3L7NrJ/l99EzIRRYhAQDzWSE9Zm5GZK2opCOPtE2d5iAzLmsBpD5gXzTaQr5VA+LKknOFHvZ9lojVU6904NFeeSMf+f35BnCasurCMsScSwA731ubtC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078268; c=relaxed/simple;
-	bh=ob5g0+4JbmSONLghaJGyWFg+GyfiXEdGuasTfAQVUhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PRWrYS2c/QPHmfTKHGEnfD0rqYZps3f1opvQgQ6RipN3EFNUAmBZvxu1dgAZCM6WyIWoqlIBhKqO6cqQGs/5wuCad7DXWiS6cNj4l81IIIH/s46cTxxK6xupMYotpvb9S9NP+1bF6lmgHhVej/vHVqLMfhj9UM9j750g4hmdeXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PE8qN9cr; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750078304; c=relaxed/simple;
+	bh=9k9Wh/NoYsqbKlKsFE6tFkqP7y1xy/55zKbtVtGtJXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ToHqQSKk7hxBQUfRcV9phJBsF4SLUrT5V0+1QBLmjpzw40e0Jsne1mTkrlN7jsX6STBZspR6MYmAz3u5xcIHMp5JkrsVDfBb1pnjwRluTlU5n3GLhSMCvCTzgJpQbnntUPUiDtZc6IhMCo+vS3CR6znq736i+sIBDTMVu0BLL9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=EdILSAIZ; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PE8qN9cr"
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id B3C455820CB;
-	Mon, 16 Jun 2025 12:29:25 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E1EF243896;
-	Mon, 16 Jun 2025 12:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750076957;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9e0ar1sgFXhVsoTqepigfauoukIlQ93Op70pYJgpDmk=;
-	b=PE8qN9crPUfVsmmKX1QwY80baPPMNqjFlfFPzpM5Eq0j5MuzDvPUVMJpKUpg6WV/76Cyw0
-	d7iRil/yVoRQNmsCfRQv+rsi/o5Xa7H9KKAnpaPoMBX94B4lAkPcEj0rL6uorWEet1Cgpt
-	vmDQXP8/yafePzzRl1VVgmiMEqXaF1Mvgpa+AcpEi0yHtzgrNPJAdcnRUTjC9fOcw+kaFT
-	8CVbyEHQYK9g2DwNs8JiLHR/MtnP8AqquUzEaOtd+yih2pO2DsxOQLY7gwYpyiRxdqDXkg
-	FDjcd97wb0m0vlbTllM9Y6+wt/Q17I0PvXaQ6jPcYSCGnUjrx4I0jmliYaeJ/g==
-Date: Mon, 16 Jun 2025 14:29:13 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Josua Mayer <josua.mayer@jm0.eu>
-Cc: Jason Kridner <jkridner@gmail.com>, Tony Lindgren <tony@atomide.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>,
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman
- <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, Russell King
- <linux@armlinux.org.uk>, Paul Barker <paul.barker@sancloud.com>, Marc
- Murphy <marc.murphy@sancloud.com>, Andrew Davis <afd@ti.com>, Bajjuri
- Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/7] ARM: dts: omap: Remove incorrect compatible
- strings from device trees
-Message-ID: <20250616142913.1afad458@kmaincent-XPS-13-7390>
-In-Reply-To: <7e854232-f02f-4ad6-b65e-22c18d1d9fe5@jm0.eu>
-References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
-	<20250613-bbg-v3-2-514cdc768448@bootlin.com>
-	<CA+T6QPnaCFZyRsv9q3bcOrTc22nA0AOXy0tR_SpAkGVVPQqfLg@mail.gmail.com>
-	<20250616103919.2d678c1a@kmaincent-XPS-13-7390>
-	<7e854232-f02f-4ad6-b65e-22c18d1d9fe5@jm0.eu>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="EdILSAIZ"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3da73df6b6bso15888505ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 05:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750078301; x=1750683101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S/rRqga4nciTe+40s1lGUJde2Ttgzu3tg/+nM/gCFAE=;
+        b=EdILSAIZjrQDawlMlERPytnM5jrP/lgXhVtRY0XasclPozbLQw8c033FbZxIYn4h8n
+         5hYvZmkHxE8OA3GtOLSO8f0lVZCoVXQ5MCsy3JpZKtJn4cvFsBP/MMeKHB4Y1qkDiMFM
+         87Q8QWi5SuS5DlZZDRHF0Ga9MPW/bFWlAWfzJl1/0j0hnnf5sxZaEBFNml2bBl1zbYRp
+         CTqeZCENc3XTtQw/ctb3Jay7wLVKllLHOBeWPzL40EwdZJvnPcvMgL9mCZUVAz7uYmOi
+         Z8QSlPYNvsFao4aokb8MT+OW4H+fhWl9vQ527iS7mI/z58LhgRs3se9EJjWrTjgb6+7t
+         t8hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750078301; x=1750683101;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S/rRqga4nciTe+40s1lGUJde2Ttgzu3tg/+nM/gCFAE=;
+        b=Tv1Al5KbplvUH8IubPSAYzt+YjK5XK8Jbkfarc4OEDiqoeji8NIX+7IpD4VXAfXpwR
+         O7Mp3JAOU31prIFbVpaplB9xCprcg8ruGvUt6FPjsGkU3idYY/iPMfCJjDT85M+YXkeQ
+         2zVsnFCqy/9QtCCLE+N+f+mhQZRGNx8RHmbKoZNfYYPt0Eev/FDafKi856i3aGhCOYBx
+         06+yFZZrhvnTZAe8BHMwtzyuO4S1tMGqJTkOztXZrfO72TSq9RQeDwMiAHmDLQFj0gXb
+         kk2JpRU1oYNkVoOx0vVnYJUVhtLrNmB+zKMbkmUbTwiXDlyGHMYUtyfSq68HK45Fa+RU
+         +T4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzp2i08hHktnoLhZO5qfSS/3CF0noI7kNmr+E9sFnIFoN3bgVXs2cwRPFmHf+pe3R6/kBRJVC0/2hk/8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwpB2LXX4QSymt9QStA6zx0//2Q+dd+zjE5D/Eri8sQsyh1imW
+	7FPNVqLZeMGW0jP9zxcIhJkBG18MZNt0G+fEgx6vGWSy4N5xG9Dcxt/PT2Vrmj53n/dlqH46pbW
+	o9vfu
+X-Gm-Gg: ASbGncvauy5xNlt1vksbp6drk+6kBZ0ZnelggTIzlr+NbawccExRCIyOFDVb3Yr2FXx
+	9m/iLH64zyex1QZ7z20C/5KiYgIhfK8shs/FLm6I27ZAwUhXerkQ5UJbZHskDTdbsxzeCEf5UXO
+	9k6su/+EMkpjS2dEDCCSWw2ia0B2q66mOqpSzIuMFp8CqmvzwClPTpmzqSEpPDXY/UGNc1uqHrh
+	BGJm9CHpzal8xVyQ516mZymoQ+YK2DjaOldLbmsd+Q6iSEvZAP16CV/YdgAX6HlP0WIja4Me1Sr
+	v3wUl6sNaVYhPOTi0NnFdhRw8wdOgHjhE2iRBua9WkUVngstrkwZZFPs5CyLBOW5MD4mXZaDH3u
+	ndmVy6abxtttrICIl8CDwBjafjsHHtrk=
+X-Google-Smtp-Source: AGHT+IGBM9IfcIVPXLIx3r77XwCbfXk8tkksQXCR2d/8SBqn06Uhn07s7o49RLoWiyjUv193p5+5QQ==
+X-Received: by 2002:a05:6e02:1529:b0:3dd:cbbb:b731 with SMTP id e9e14a558f8ab-3de07c55b92mr92098655ab.9.1750078300563;
+        Mon, 16 Jun 2025 05:51:40 -0700 (PDT)
+Received: from presto.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de019b442fsm20352865ab.2.2025.06.16.05.51.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 05:51:40 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: andi.shyti@kernel.org,
+	dlan@gentoo.org,
+	troymitchell988@gmail.com
+Cc: elder@riscstar.com,
+	linux-i2c@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] i2c: k1: check for transfer error
+Date: Mon, 16 Jun 2025 07:51:36 -0500
+Message-ID: <20250616125137.1555453-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvieehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehuddtveeigfevgeegfefghefgkeeigfefgefhvdeufeejledtledvgfffieekveenucffohhmrghinhepuggvsghirghnrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtohepjhhoshhurgdrmhgrhigvrhesjhhmtddrvghupdhrtghpthhtohepjhhkrhhiughnvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprggrrhhordhkohhskhhinhgvnhesihhkihdrfhhipdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhho
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Le Mon, 16 Jun 2025 14:39:03 +0300,
-Josua Mayer <josua.mayer@jm0.eu> a =C3=A9crit :
+If spacemit_i2c_xfer_msg() times out waiting for a message transfer to
+complete, or if the hardware reports an error, it returns a negative
+error code (-ETIMEDOUT, -EAGAIN, -ENXIO. or -EIO).
 
-> Hi Kory,
->=20
-> Am 16.06.25 um 11:39 schrieb Kory Maincent:
-> > Le Fri, 13 Jun 2025 13:52:23 -0500,
-> > Jason Kridner <jkridner@gmail.com> a =C3=A9crit :
-> > =20
-> >> On Fri, Jun 13, 2025 at 10:49=E2=80=AFAM Kory Maincent <kory.maincent@=
-bootlin.com>
-> >> wrote:
-> >> =20
->  [...] =20
-> >>
-> >> We have software that looks at these in running systems, so I=E2=80=99=
-d be ok not
-> >> to change. If changing, why not =E2=80=9CBeagleBoard.org BeagleBone=E2=
-=80=9D? Not sure of
-> >> the convention to mention the SoC, but AM335x is not part of the produ=
-ct
-> >> name. =20
-> > Is it ok to change it or not then? Ok to move on to BeagleBoard.org. =20
-> The Debian project most notably uses the "model" string:
->=20
-> https://salsa.debian.org/installer-team/flash-kernel/-/blob/master/db/all=
-.db?ref_type=3Dheads#L2191
->=20
-> When that changes inside a dtb by kernel update, users may be unable to=20
-> boot.
-> Therefore I would recommend against changing "model" values.
+The sole caller of spacemit_i2c_xfer_msg() is spacemit_i2c_xfer(),
+which is the i2c_algorithm->xfer callback function.  It currently
+does not save the value returned by spacemit_i2c_xfer_msg().
 
-Maybe they will have to follow the change.
-Don't know if this should not be changed over time even if they are wrong f=
-rom
-the beginning.
+The result is that transfer errors go unreported, and a caller
+has no indication anything is wrong.
 
-It would be nice to have a devicetree maintainer's opinion on this but I do=
-n't
-think they will reach this message.
+When this code was out for review, the return value *was* checked
+in early versions.  But for some reason, that assignment got dropped
+between versions 5 and 6 of the series, perhaps related to reworking
+the code to merge spacemit_i2c_xfer_core() into spacemit_i2c_xfer().
 
-I think I will keep old model values for this series then, I don't want to
-block this series on this topic.
+Simply assigning the value returned to "ret" fixes the problem.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Fixes: 5ea558473fa31 ("i2c: spacemit: add support for SpacemiT K1 SoC")
+Signed-off-by: Alex Elder <elder@riscstar.com>
+Reviewed-by: Troy Mitchell <troymitchell988@gmail.com>
+---
+v3: Rebased on v6.16-rc2; included version in message subject
+
+ drivers/i2c/busses/i2c-k1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
+index 5965b4cf6220e..b68a21fff0b56 100644
+--- a/drivers/i2c/busses/i2c-k1.c
++++ b/drivers/i2c/busses/i2c-k1.c
+@@ -477,7 +477,7 @@ static int spacemit_i2c_xfer(struct i2c_adapter *adapt, struct i2c_msg *msgs, in
+ 
+ 	ret = spacemit_i2c_wait_bus_idle(i2c);
+ 	if (!ret)
+-		spacemit_i2c_xfer_msg(i2c);
++		ret = spacemit_i2c_xfer_msg(i2c);
+ 	else if (ret < 0)
+ 		dev_dbg(i2c->dev, "i2c transfer error: %d\n", ret);
+ 	else
+-- 
+2.45.2
+
