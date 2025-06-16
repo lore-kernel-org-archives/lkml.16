@@ -1,67 +1,37 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FAF8488;
-	Mon, 16 Jun 2025 16:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6137F1581F0;
+	Mon, 16 Jun 2025 16:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090548; cv=none; b=MSFDrOXWpjXmoW8pElQ8ZAPDFrRiUYwu50CNidEWjl6bJwSJ5BeVet4Ieg2ktOlpHlXLqr4LGYZTyn5Y7Rrn/oXupiwEEPEi2ekwynTcpU9d7Aj20kJxj/Fou3lgXJgwe+eAKeCKnYVXnjrhhNHhb3MqJpGH+mtPPo1L2vuQYYM=
+	t=1750090639; cv=none; b=Qd9p6PP3GlDUKyxKFbcZywLihjcTYt3sRKlzS1J0A1L/V7vHXotCI8l6WFV4UH8So6ti5j7uw5xBUcf2Oc3pgDSMSILLrhBmgDEMEXS7mBf3raERy/3/emRx7+OUMrkpxQLv93c7eyCKk2xaEGl0xaLOQn7XROtXO8P6ylZ7iT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090548; c=relaxed/simple;
-	bh=935zNcaJcGG7oMJzxUyjQsMg/Nx8dBJNpeLAEjg7A8c=;
+	s=arc-20240116; t=1750090639; c=relaxed/simple;
+	bh=h2uGLAlnIh0Xvzr9ZeLjLS22R2sBoxAsvgfuVmi1f5E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNIPKCyQ2BwT/wdVM4HWVK6naFUww2ydFmPR0GyS8CzHy7ETjveMpvXavaO00LB2zdO6gH+ZojBNWUuwKmXrQw2rhsEtJNNtwMXI3mEqLJ+fEmlU+uYIA1rhQFTLt96E35y0WfRSbmwK7//du7F2/+Ljya9QNnxOCGVf+DyJFoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSToxyCB; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=L/dM2xSXEJBE4GH+Jf5ObCcdtnWtCFL9yLju0pPJoNSB1waL2Q0VYgJq4yv2xBtDo0SaIARlbw+k2Pht9R4aQw0x9rgtPy2X+Mhw7+UzGSWcXemdoS1gJXD/zgxSoIBL3b4O7AYNdTJ+TZHs834bDzwApiO9IPJKAQlnrxKdF5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tPdjG3SN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSToxyCB"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d4cba0so41308725ad.2;
-        Mon, 16 Jun 2025 09:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750090546; x=1750695346; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uTrBAG2kfrUAaLMnOEIfmT4aWIhMhsYQt4NXevwF/c=;
-        b=nSToxyCBnNPM8Vqlp3S7E+OsRlUPMVCzRc2hR2qqprhIhZzf3qmPtpTOofQYlxEx7g
-         Pp+tVu/D3/eJwknff+LS2pVprSArSMA+Ctr/hviUG8/jjOeXwgs771ve4YvzmI/a0YYG
-         Ma5m03Sat7NCNpoPd3CgiMUoBPisAYu18ILZ3Rh1WuCGElXg/Q9Z4Vee0vS0o4C+yBpV
-         zRUGXpdRXd2AXx6OgRs1a6PE6R3TuJGr4U2pzsMQ5DIx3QyxobTM2HjCKfEPQb/N197x
-         zVIUo4QvRzLtrqp9pi/3Ksf7RrneonOtLxzSiy6xgkrpH9l7m8hOw5/yW2Cbs8jCnRfQ
-         BamQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750090546; x=1750695346;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0uTrBAG2kfrUAaLMnOEIfmT4aWIhMhsYQt4NXevwF/c=;
-        b=CroCSpMRHaEtW+xpFYtDx5Gbi/GNnuxBAkVPw93laaIzU7jLS8wFaAA38d18cAcIjq
-         jJQenCKm7meeSSPnJWjBgl96ZplgGWuRP2vwDxsvkdanPv63J2mI4/RaLU4MEJ77HB61
-         JsB59wKltKqPCmJfIoMOZhhoAJvGVvRB6bulZPd0Ib0RooPyD6rwXkuDmowsRBdf3F9U
-         1pG0z9yusE95b71QELSAE1oP/N/EnsOwPVa5F+NIMslkk4Qs3E9GY0M/SG0FaHjPi0r2
-         PrukJ8zlzEFcQETavThsigZoyoCdpQ5yvZEgNUQuoWuumO6Xgdzy2G5Wfe/X5ECGTVNV
-         2NVA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7mjO2YfDhX+NJPVKOTxnTwilgZvkmfYMfke6ldzdzU4BZHKIfvb2LDc4RuJHQL8mCn+kzGQhP48g=@vger.kernel.org, AJvYcCVtt5ZEuC/W2UIN8YacOMiQCWC89eriwoKMrBE8F1lfHenyCRccZfVA+TNpM8ak5V+MejAEiEJUzRdOLDC1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA09SbeAIgC6DxYhIpG/cv+ra/VfkrBJ8IDkFvJeed/c/qYgin
-	SFGv/TZDnAw+Q0gsLLNhqTjg5TatmM18pjbuF2EXsc+oA1xQTLqtbXp73LUcPQ==
-X-Gm-Gg: ASbGnctxG4WNIQVhPj3UjNz0WRPAqTRsDhGLCOdrGOr7oJj8+umqHirslRAnTlD/2cf
-	p2ZW/8kZk5Inl5Oa6SE0t1CUsAaPjnJqZ4eN+IJZn6y5nIlo0AvNo+ESHzHPdzjNUIzYr/vYaRC
-	1cPcO0kP6UkWur6WuVzFSUZrvPISG2Tzf82mm8QU/3vVwIePgswaXcvRyYESj0LOiRHN8V7eHjL
-	A5XPf/IQrUwD0Dz0rlN2Scl895GORSQfzL29V8ZPTqCVeH9C3S3vcnRDBmbdBWrttO9dQtjOj2I
-	xWaFQRcun+8b9FzQJrcFL3lrPq4zgiKLGDnvYnLaLyeL4FbzrmfArV5uKwZIilxVLsOcGilYIvE
-	FcXmVQ4Wlo7FqDwSEoPaKUIC6/UqtsNXEQFA=
-X-Google-Smtp-Source: AGHT+IE3tA7AOwwFFvjHA9hJdPQ7s1oXsnxKqkEoFfrcTl0NZisx9y/jSj/aqeB4j77TJbzdQQgPFQ==
-X-Received: by 2002:a17:902:fc8f:b0:235:6e7:8df2 with SMTP id d9443c01a7336-2366b14e74cmr163962135ad.41.1750090545628;
-        Mon, 16 Jun 2025 09:15:45 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78565sm63031435ad.124.2025.06.16.09.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 09:15:45 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <b278e83a-473f-46ee-b353-3f8c14d03aaf@roeck-us.net>
-Date: Mon, 16 Jun 2025 09:15:43 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tPdjG3SN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=qMUs8krXpT3RxJC3nLENkT9+r0tAUvQgrF/aF9nQOVc=; b=tPdjG3SNgqONBCjSzAb74LT7R6
+	qgqINN8bEw7vV0HB3o6Jet97v9TucGDYw4M5+jcPd1IwakNDPixlUiAnPoU23A/uz8Mh+2LP6qyxp
+	h4ll3CEZ5wpKRuNRkY3EPpXesyy1MpLNyGvJ8XsuCwC/2tb3x2FLJmxc29eWFx6TmlXR/LEkQCRtI
+	4VYWZqG3OLBQaTKAUf/Q1a4sCs2imZu45cTWmHQVflixi51tc3ahDMB4W0JOiwftZiMr9t3/zbiGj
+	B1aNMupR4IAKzHztNzB17gLigAKOprfax/2qIjRr50XIcAsKeUfVrOg5IDV2i4A7kSW9GKLWu8RzD
+	zxVvVvfw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRCWB-0000000G8qT-1kZM;
+	Mon, 16 Jun 2025 16:17:07 +0000
+Message-ID: <2bc21d27-c7e9-4b74-bae5-d10ad0963e70@infradead.org>
+Date: Mon, 16 Jun 2025 09:17:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,90 +39,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/2] hwmon: (pmbus/tps53679) Add support for TPS53685
-To: Chiang Brian <chiang.brian@inventec.com>, Jean Delvare
- <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20250610102556.236300-1-chiang.brian@inventec.com>
- <20250610102556.236300-3-chiang.brian@inventec.com>
+Subject: Re: [PATCH v2] Documentation: dma-buf: heaps: Add naming guidelines
+To: Maxime Ripard <mripard@kernel.org>, Sumit Semwal
+ <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jared Kangas <jkangas@redhat.com>,
+ Mattijs Korpershoek <mkorpershoek@kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20250616-dma-buf-heap-names-doc-v2-1-8ae43174cdbf@kernel.org>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20250610102556.236300-3-chiang.brian@inventec.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250616-dma-buf-heap-names-doc-v2-1-8ae43174cdbf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/10/25 03:25, Chiang Brian wrote:
-...
-> @@ -263,6 +282,10 @@ static int tps53679_probe(struct i2c_client *client)
->   		info->identify = tps53681_identify;
->   		info->read_word_data = tps53681_read_word_data;
->   		break;
-> +	case tps53685:
-> +	    info->pages = TPS53679_PAGE_NUM;
-> +	    info->identify = tps53685_identify;
-> +		break;
 
-0-day rightfully complains about the bad alignment above.
 
-If you want this patch to be applied for the next kernel release,
-I would suggest to copy the hardware monitoring list on the first patch
-of the series. Without it, I get
+On 6/16/25 8:21 AM, Maxime Ripard wrote:
+> We've discussed a number of times of how some heap names are bad, but
+> not really what makes a good heap name.
+> 
+> Let's document what we expect the heap names to look like.
+> 
+> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+> Changes in v2:
+> - Added justifications for each requirement / suggestions
+> - Added a mention and example of buffer attributes
+> - Link to v1: https://lore.kernel.org/r/20250520-dma-buf-heap-names-doc-v1-1-ab31f74809ee@kernel.org
+> ---
+>  Documentation/userspace-api/dma-buf-heaps.rst | 38 +++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentation/userspace-api/dma-buf-heaps.rst
+> index 535f49047ce6450796bf4380c989e109355efc05..835ad1c3a65bc07b6f41d387d85c57162909e859 100644
+> --- a/Documentation/userspace-api/dma-buf-heaps.rst
+> +++ b/Documentation/userspace-api/dma-buf-heaps.rst
+> @@ -21,5 +21,43 @@ following heaps:
+>     usually created either through the kernel commandline through the
+>     `cma` parameter, a memory region Device-Tree node with the
+>     `linux,cma-default` property set, or through the `CMA_SIZE_MBYTES` or
+>     `CMA_SIZE_PERCENTAGE` Kconfig options. Depending on the platform, it
+>     might be called ``reserved``, ``linux,cma``, or ``default-pool``.
+> +
+> +Naming Convention
+> +=================
+> +
+> +``dma-buf`` heaps name should meet a number of constraints:
+> +
 
-WARNING: DT compatible string "ti,tps53685" appears un-documented -- check ./Documentation/devicetree/bindings/
-#296: FILE: drivers/hwmon/pmbus/tps53679.c:316:
-+	{.compatible = "ti,tps53685", .data = (void *)tps53685},
+For these points below, I would s/That name/The name/ (3 places).
 
-Since I am not copied on the first patch of the series, that patch has to be applied
-through a different maintainer tree, and I have to wait until that is the case.
-Not that I understand the logic behind it, but I mentioned that before, so I assume
-this is on purpose.
+> +- That name must be stable, and must not change from one version to the
+> +  other. Userspace identifies heaps by their name, so if the names ever
+> +  changes, we would be likely to introduce regressions.
 
-Guenter
+     change,
+
+> +
+> +- That name must describe the memory region the heap will allocate from,
+> +  and must uniquely identify it in a given platform. Since userspace
+> +  applications use the heap name as the discriminant, it must be able to
+> +  tell which heap it wants to use reliably if there's multiple heaps.
+
+                                              if there are
+
+> +
+> +- That name must not mention implementation details, such as the
+> +  allocator. The heap driver will change over time, and implementation
+> +  details when it was introduced might not be relevant in the future.
+> +
+> +- The name should describe properties of the buffers that would be
+> +  allocated. Doing so will make heap identification easier for
+> +  userspace. Such properties are:
+> +
+> +  - ``cacheable`` / ``uncacheable`` for buffers with CPU caches enabled
+> +    or disabled;
+> +
+> +  - ``contiguous`` for physically contiguous buffers;
+> +
+> +  - ``protected`` for encrypted buffers not accessible the OS;
+> +
+> +- The name may describe intended usage. Doing so will make heap
+> +  identification easier for userspace applications and users.
+> +
+> +For example, assuming a platform with a reserved memory region located
+> +at the RAM address 0x42000000, intended to allocate video framebuffers,
+> +physically contiguous, and backed by the CMA kernel allocator. Good
+
+   ^^^ Not a complete sentence. Change '.' to ',':     allocator, good
+
+> +names would be ``memory@42000000-cacheable-contiguous`` or
+> +``video@42000000``, but ``cma-video`` wouldn't.
+> 
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250520-dma-buf-heap-names-doc-31261aa0cfe6
+> 
+> Best regards,
+
+-- 
+~Randy
 
