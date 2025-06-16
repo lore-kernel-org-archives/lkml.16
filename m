@@ -1,184 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51381DED70
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C65C1FDE31;
+	Mon, 16 Jun 2025 14:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084680; cv=none; b=tXud/br54ftotqhFxlfHQmBpcb6uxTLD1HLvdzsp5wIGlJwAVG8DWpvuvRDPo/7k0UY1AZuyjlyLEzj72sgL63DZKpg3EC4FFwGrpbvvg6qgQ8yy+GC2qMVWpmHrGPZ8OHxGpL8H7GY7TEZ2x9JBuuJOfOdx7Gygb/5f3OS8rXc=
+	t=1750084682; cv=none; b=HykOL5aRcFb+m3pcgcBj2S5mXccawh11qTxd+9bnXPrS9wLYE1Ry8/yhhzwLuudjbHLRdyYQ61LNcMZmzXWUWrSx7s+CztqimK61CFhQF1Nz+R/5kzrrX1VjAttqktTz4thzzAQrMZC8Eq1sQ3BNYsC/BOImhleP5nqY5N8Z/qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084680; c=relaxed/simple;
-	bh=+3V6B07QTgyLvlLajJHsodKxoaoAvMotU0ldSwXhncI=;
+	s=arc-20240116; t=1750084682; c=relaxed/simple;
+	bh=cLzVKcuo2jGM7owptZLbLhdR+MJzD8H9+3/gONLBy2k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJCgh2bKVNe3Jy0an9/7fFm+vUgJOS9HMdlm42ug7NWlYzX+dJEu9xLWO/NMcBHocvmmwkUr7Ir/rP0kTnDVLa1ff2QvXB4ErlcflZPOB9wbGWiMtVzXVu6QWP0evBlQf+UxILNI+26qyL0gBsXYnTor609vQpksg1q12PSuZgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fhm+onhd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sum3i54vSmCJfZSmEgjziKbu8FmWiJ+8f83GMgBy3c6sdsxapojiZ81QlrTA7h3BQgzE9tjHY4WO6Eu8Nq3jJNaRqv4WC6vv4/n91UEiv6qecCBuV5FZcYxQgwlorAlLyPfqYmOLyAd2uolWHlod7w7Wq7KwPI+hv3o4kTmOhbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NeXQ1Ez3; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhm+onhd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750084677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5PZUl5rScpx6w7U6u3JWeOhrswycFFkkuG/yAlkmmYU=;
-	b=fhm+onhdawWW8ASxHph/LC/ATGJ079K4XNa+PlsafdoiAg8/SiA3Y9LtooGpRnNssqLmd3
-	UGDJVbCBwygkkTw4CGpThp38zjpO93Krj32g8RlEC4YFkhlsYWLM7/6+/J226ST2mw7yQB
-	+OXLt/Ao08Y2G+2zqjtYCHeTOlG2Z60=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-473-rhwgZkFXOK-wGcKvaHbMLA-1; Mon, 16 Jun 2025 10:37:56 -0400
-X-MC-Unique: rhwgZkFXOK-wGcKvaHbMLA-1
-X-Mimecast-MFC-AGG-ID: rhwgZkFXOK-wGcKvaHbMLA_1750084675
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f6ba526eso2769615f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:37:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NeXQ1Ez3"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3135f3511bcso4600879a91.0;
+        Mon, 16 Jun 2025 07:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750084681; x=1750689481; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8+ACrTU05OqY1Muf5ZfOUtQOxY2AQbFMjqsvwqLrJNk=;
+        b=NeXQ1Ez3ral+erasIIi32P9ziLW9QP1Pbnii8XVoH+QnEv4KMlOmyTB/zuDLVrxkZh
+         EsAuIEG82h/yrhUK4xf9Fk/h5ZqbNnv67I7CKtpwgGPC3wbpQn8flod+RMfk+LSdcIIj
+         7mz9e6mAAFXT/gof/ZTMzwYsv9ULQ4EWQ84RvpsdRxvygO8nsrrfaMHFOZc485bPaSws
+         55jFKYo003cDfS4M4AuzHUHtzMt3k8er2jTYZABWQKcm3xezoGOuZD6/t9cgc012VVLA
+         18R6WiS4PWFUN68bfgyEU0k+L4zyOzfai8qUFaTs1/Vd6q+Bqh9ZLdOcF8cx0W4ZA3Z9
+         Ln/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750084675; x=1750689475;
+        d=1e100.net; s=20230601; t=1750084681; x=1750689481;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5PZUl5rScpx6w7U6u3JWeOhrswycFFkkuG/yAlkmmYU=;
-        b=H1xbjuBQjWOdvwyUb+eUiV6cZfNwaRBPk5k7jSh5Np4qYi+PuxKGqF59jFkIROAJmC
-         cSmn/lLro6qvDExRt14EZgCXFAjV5pZfd5lQdb+sK9WvW9fAMgG7RvuuenwZwEJFbG/z
-         pXsQYAY9GMd0OITuAoU7S8uKRMMOD09qC15u+tytKXxIzCvSC7G7w0d23nLMVdJ432VJ
-         N7WCW3iBdgIGury5gboFPip7JDfbyJmzfXC9zo8t51Ua8PTBzUuLN6hICxaZYNj/zQZC
-         umrSGWACWLzdKVWIRwoNS5MrLIN9mrc+ldL5hrXePgRdNyJ5fKGK5tnHgz6tJIbCJn14
-         pRgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUZTXK/OTotN/gsPpw2NzPdsv4gNMR6xnoihcvIhMhzBdN7sfdR05qc6YwWnaXDFdU5PHfR59WDjcwhaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHE5rDKGiParKg1VZAd1kcK9pr+4wrAgQ1AUx1rZVoWdsQgBfJ
-	ClShA0enxlbT3JIFgw7FEtZGuCrcD/hyVyVrkgqA/8IE/4KJprswWbp3EIcCgLkShlhDbnnZAYh
-	oHUOMOBO4vhskdhMCSYIcUWqQf+Na47VaJ1Eymq+sHswduyZCkgc9JoxVKDTD24jMGA==
-X-Gm-Gg: ASbGncuM8qqT11mmUBuQsYbyXZIJKVzLwgysC2jJMVFg7UusdQyk5Cxlzw6MUzUhHmX
-	v+jARoktd8jz4FFkAhexwQEZumBuWViuZSZOQ42lGZpLO4kqh+GrWmLlgTKy0/+IPG875+esn+N
-	IU80oqjsjM/SVZoQRP+HjqISroOpWEMTqeKp/5qiLOa8uGkGBWDo7R6bJfpLItVo9vxXZeQUypu
-	VBXOfyPEtzh8KyS6yPorCGilo7ThsKrkPrMBDoZ2I+EA0DCloGYEgQ0RY/8qPikIP69+1AYwSmK
-	7V/QlU55BsXD7mMrnKnlq4xbo28=
-X-Received: by 2002:a05:6000:26c3:b0:3a5:2ec5:35a3 with SMTP id ffacd0b85a97d-3a5723af286mr7290028f8f.45.1750084674952;
-        Mon, 16 Jun 2025 07:37:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGal1F7mRxYYjQyfGOqBANwAZxzO8A0ZW64lk9iUjS0uj3llkb1LfY2b4pbZLKU1OZDRyo3lQ==
-X-Received: by 2002:a05:6000:26c3:b0:3a5:2ec5:35a3 with SMTP id ffacd0b85a97d-3a5723af286mr7290002f8f.45.1750084674388;
-        Mon, 16 Jun 2025 07:37:54 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.202.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2449f1sm150540045e9.23.2025.06.16.07.37.51
+        bh=8+ACrTU05OqY1Muf5ZfOUtQOxY2AQbFMjqsvwqLrJNk=;
+        b=uZTO/9mnMkBZo3ZWx8eZliU+m77qN7oX8ty7ex2Mmy607P8XT9CZIMsQJcIAIZ391R
+         pUBvYVoQadhKJvzptu+LYFcPP41Pg2KhMLJqL2DA8Nl95KruQG6nmEQLj4a5joAJdqAU
+         bjANs3PdDMYRgDZacd9z6FZLovako9H7mJR2QFbHyN2lderbnAlIhRfeu6xzVzR13M7m
+         uMwOyXiLT08zlHlGrPsmPoF1ZGroHrqkht0ENxG+inBxdSMtd7bhOnk3MViQhm6oMfzI
+         Vwslyg5GZV83z9wnGS3tCNXg2ySe1FNeCWonUI3sCuIyrwhcMr6CS3/ImTnM/bSTj5CF
+         JCVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRnJUCgxG67bD68pq5zoeD2XPuFF27yPmaRu7kaux1NZYRj6j8G3sU92FtWZEFda/HDV5gDvQUvVZSmCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq+0JhT/KlBFxVOp9P2ggZKjd77n1YWBtfFrHPj3bqWjJ22Dxn
+	NZjpapb4bGdy/bS1xr5RRUx6YH1MTKS/YPe+jbuDSLZ+V3K3GHAPP5c=
+X-Gm-Gg: ASbGncuT8oYdF0Gr4/6BSsTzC8vpEIPW4icgykgMJtPIg5AI7/z5ze/2CnowzEalofE
+	/+nAjLtpYtmaXfZy/yTOAsdwmOJhz4wsqCxMrnTqnPp1MixckWCFVl8BzVdtAzE3T2wJwDSXVPj
+	O7Zk9n/bY53Gw/G9jkaptE7B6Anxu8ofYyjDc2Qws5SbUfTF4kz3bGsdWC5MND+jCLwLj5+4SBt
+	u6mjK6iNUDwBs/sHgJ7oKtsGL9w3MCLFyiSEpaQ4TFuaxpjl+vW1DAlsVAOiG9vbXTztuLPxsyH
+	z8Dd3pyxaieggl0MOZHtUWC/8uh3IoyzWaw3mvTitwFxEgbgt1r74zPn76BmSYWT9frMLqbEoCR
+	PrYLUGFxRnlDA2UNOAynUH+w=
+X-Google-Smtp-Source: AGHT+IHD865TyBBXAhjmeTN3ICmhFosIa32e5E62uOAC6CLnTLRm1L4sgw9QtI+h7yL8wpjDdzoEaw==
+X-Received: by 2002:a17:90b:3f44:b0:311:df4b:4b94 with SMTP id 98e67ed59e1d1-313f1be8a89mr15233629a91.4.1750084680589;
+        Mon, 16 Jun 2025 07:38:00 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365deca379sm61824765ad.210.2025.06.16.07.37.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 07:37:53 -0700 (PDT)
-Date: Mon, 16 Jun 2025 16:37:46 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: davem@davemloft.net, fupan.lfp@antgroup.com, jasowang@redhat.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com, 
-	netdev@vger.kernel.org, niuxuewei.nxw@antgroup.com, pabeni@redhat.com, 
-	stefanha@redhat.com, virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH net-next v2 1/3] vsock: Add support for SIOCINQ ioctl
-Message-ID: <2krp5lm4n5nl24hnlp3cx57gqt5sqw6vagtkipviipxf6xdpsd@bspxnwv6hkfd>
-References: <xshb6hrotqilacvkemcraz3xdqcdhuxp3co6u3jz3heea3sxfi@eeys5zdpcfxb>
- <20250616142822.1183736-1-niuxuewei.nxw@antgroup.com>
+        Mon, 16 Jun 2025 07:38:00 -0700 (PDT)
+Date: Mon, 16 Jun 2025 07:37:59 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, willemb@google.com,
+	sdf@fomichev.me, asml.silence@gmail.com
+Subject: Re: [PATCH net v1] net: netmem: fix skb_ensure_writable with
+ unreadable skbs
+Message-ID: <aFAsRzbS1vTyB_uO@mini-arch>
+References: <20250615200733.520113-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250616142822.1183736-1-niuxuewei.nxw@antgroup.com>
+In-Reply-To: <20250615200733.520113-1-almasrymina@google.com>
 
-On Mon, Jun 16, 2025 at 10:28:22PM +0800, Xuewei Niu wrote:
->> On Fri, Jun 13, 2025 at 11:11:50AM +0800, Xuewei Niu wrote:
->> >This patch adds support for SIOCINQ ioctl, which returns the number of
->> >bytes unread in the socket.
->> >
->> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->> >---
->> > include/net/af_vsock.h   |  2 ++
->> > net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
->> > 2 files changed, 24 insertions(+)
->> >
->> >diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
->> >index d56e6e135158..723a886253ba 100644
->> >--- a/include/net/af_vsock.h
->> >+++ b/include/net/af_vsock.h
->> >@@ -171,6 +171,8 @@ struct vsock_transport {
->> >
->> > 	/* SIOCOUTQ ioctl */
->> > 	ssize_t (*unsent_bytes)(struct vsock_sock *vsk);
->> >+	/* SIOCINQ ioctl */
->> >+	ssize_t (*unread_bytes)(struct vsock_sock *vsk);
->>
->> Instead of adding a new callback, can we just use
->> `vsock_stream_has_data()` ?
->>
->> Maybe adjusting it or changing something in the transports, but for
->> virtio-vsock, it seems to me it does exactly what the new
->> `virtio_transport_unread_bytes()` does, right?
->
->Sorry, I forgot to update this.
+On 06/15, Mina Almasry wrote:
+> skb_ensure_writable should succeed when it's trying to write to the
+> header of the unreadable skbs, so it doesn't need an unconditional
+> skb_frags_readable check. The preceding pskb_may_pull() call will
+> succeed if write_len is within the head and fail if we're trying to
+> write to the unreadable payload, so we don't need an additional check.
+> 
+> Removing this check restores DSCP functionality with unreadable skbs as
+> it's called from dscp_tg.
 
-Don't worry.
-
->
->I am curious that is there a plan to implement dgram support in
->virtio-vsock? If yes, adding a new callback is the right way to go. I
->deadly hope to see that feature. If no, will do in the next.
-
-I don't know the status, there were folks working on it, but I didn't 
-see updates.
-
-IMO we can deal with it later, since also this patch will not work as it 
-is with datagram since you're checking if the socket is "connectible" 
-and also a state. And maybe we also need some 
-"vsock_datagram_has_data()" anyway, so let's do this when we will have 
-the support. For now let's reuse what we have as much as we can.
-
-Thanks.
-Stefano
-
->
->Thanks,
->Xuewei
->
->> Thanks,
->> Stefano
->>
->> >
->> > 	/* Shutdown. */
->> > 	int (*shutdown)(struct vsock_sock *, int);
->> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> >index 2e7a3034e965..466b1ebadbbc 100644
->> >--- a/net/vmw_vsock/af_vsock.c
->> >+++ b/net/vmw_vsock/af_vsock.c
->> >@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
->> > 	vsk = vsock_sk(sk);
->> >
->> > 	switch (cmd) {
->> >+	case SIOCINQ: {
->> >+		ssize_t n_bytes;
->> >+
->> >+		if (!vsk->transport || !vsk->transport->unread_bytes) {
->> >+			ret = -EOPNOTSUPP;
->> >+			break;
->> >+		}
->> >+
->> >+		if (sock_type_connectible(sk->sk_type) &&
->> >+		    sk->sk_state == TCP_LISTEN) {
->> >+			ret = -EINVAL;
->> >+			break;
->> >+		}
->> >+
->> >+		n_bytes = vsk->transport->unread_bytes(vsk);
->> >+		if (n_bytes < 0) {
->> >+			ret = n_bytes;
->> >+			break;
->> >+		}
->> >+		ret = put_user(n_bytes, arg);
->> >+		break;
->> >+	}
->> > 	case SIOCOUTQ: {
->> > 		ssize_t n_bytes;
->> >
->> >--
->> >2.34.1
->> >
->
-
+Can you share more info on which use-case (or which call sites) you're
+trying to fix?
