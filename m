@@ -1,130 +1,140 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552BC288C3A;
-	Mon, 16 Jun 2025 16:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B5D2877F3
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091454; cv=none; b=VOZbl2gtToNrsEJWrZL9C5ewrDIn3lReEeKAjNR3fySS6a+0uJyMgkI/7/XkJ1/oqTEPFkUHBBP29hdAZ/oBTtPYPDlU+zCrT7WSgApGuA5dGp5ZxlcOANjZVH6T1wb6nDxdQ3o6gKa63pm8t1tmuVnDkX0zb8IZV/IndW1JVQU=
+	t=1750091467; cv=none; b=KCU9z2/+ZKwUX507bLMWnx93twsMezQfSWRZ0ClLSOeDRIjhzpxyg3Nj9wcqnqdqveMYudPiKAAasABibOFC70ELw/lHZqVgTLk0GGl5Kzg9B0QAcT2Lj8CqKf676/WoHyPLYbHmarMuBqElijVjPoCtrBGyTp3e7LQX15bfoUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091454; c=relaxed/simple;
-	bh=hQ7LAtYwL7CCEF1tm2AqnVat+ZPScl50ILEGM1zg5ns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z6WROWuelQwwChN/dHXtTrspGjCoE8ghfjOyA7g7QKriYSBCI1TmnnuaaHvUW2lys/eiVs4yqPyx6imQfCpEHX+iEfx3vzceFkaiThnujjtniZPEHUMn5JBth8cB4h/yVKR30/LIO/4iI5rIe/dpBbC7581tlTSQklY1lmuMXj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Yi1rYGT2; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750091467; c=relaxed/simple;
+	bh=Cm5virMos3DWSgEmZWrzNg6yYqKXWG/OooADfpRNMoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ePt5LpCU3UrtuTY+PVaBdlfnbQexHPDvHtVClMRfftGahAnPgYv30ct5IrE2FxKpuillm5vYg8xDr94P+QV2xgHXVU2gYc4mUn1HlOKG2w1XHcwBShEn5hXmm3uqQsSmqmjVHNteBVhC6EMy/Rsh/MZfCWVsVrqhQFEM3f7aPQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aXVGMXHF; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Yi1rYGT2"
-Received: from [192.168.0.172] (mob-5-90-141-184.net.vodafone.it [5.90.141.184])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8E2F7C6C;
-	Mon, 16 Jun 2025 18:30:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750091438;
-	bh=hQ7LAtYwL7CCEF1tm2AqnVat+ZPScl50ILEGM1zg5ns=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Yi1rYGT20sILw6XF5So3R7wF7o7CUwg8HDA9Zcb8a2IvGA/jUN2QLOCijx2yrVU2e
-	 WAxJo/j9UAIuC3aRr1BUPVkXnRSHM000dLwX6cWOS6uYWP0xiSEqJW//K9YyemV7ux
-	 4j5Dsh69KrHa0rh5nC+GEqn3V2PuZzMcTkRN/AUA=
-From: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-Date: Mon, 16 Jun 2025 18:30:38 +0200
-Subject: [PATCH v2 2/2] media: vsp1: vsp1_dl: Count display lists
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aXVGMXHF"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3de210e6076so19525ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750091465; x=1750696265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kq/FoSaNMIyl/e8Lf2VrD4cN1FNaINRo1rslH1GJtZk=;
+        b=aXVGMXHFDNIdamTBXGyFDooUOkgIcehe1c9zCRDwcG3iO7dd9vX1VhSDFn0ZTd+1Yc
+         P4OO54ifsgBmc/IScj+QI7NfH9gaOKvFrB7KtOwrRwCmBSE0bU86ORvNgQcGZg2SZagD
+         viBf293ZGafydCCPkzlqeEcWcBgACvWuWxE2dU5zjvwNioBG14Y6RU16NM3iToPzCUQq
+         3KBW20KjXzmsluI7dL2swVibsz6i3Bty6tHXd4jw1LuEZsrK5x/SOLixR9iICV2i2NdS
+         ZtVvV6m0Cgv1b1nqP5kk1s6+hFPjIJDv5hfZb3Im2tGvDAuGmk6K9gT5QZJj4Cbf7NnI
+         eIhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750091465; x=1750696265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kq/FoSaNMIyl/e8Lf2VrD4cN1FNaINRo1rslH1GJtZk=;
+        b=GH5PTe/c1FXiU+nqOWQsTlVEklwK9/p9fxkgWOlpGESkTs58AV7MuNwD8y1ipq9MKD
+         p0vezSjNyZ7mrJkP3LHJ4NHw4zgGvLXNqZ9FIs0Xa+xhTP8gbftWrbZjc/4NNSEv5m7Y
+         KvaZCip6fuJASYjpLPjkW2TUYf/q8B08kxCmIdg76ZYZHFcETOLHKApFw5jTuawJq2UH
+         kv85z1kUi67ujz/5oRoNMtH08shofRPcZk1sYSVpQtxofKMHU7qcle3by3etTyK0x4ra
+         hYtIpd+zXKC207HQHNhZKM7JrM3EH94+23kCiW/c9TvQ/3dJrvWwib7GR0qFTEgXNeA+
+         4ddQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXw3jX3MXOGnHTaYxTEVuSilbvVAREoQYblJfeaHj7I5ov02aMBWQRdkXDZ7z6/35Q9r8UDacJp081r2Cw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRukdkMLPYX2rtpO1R7f592UYBFCKkdypq1vP+FW38AHLFIXSn
+	seEdRVdDERB7/ltNz+uVLzM/q4dE8o9qeLbbLTMt8hJDXwmb0eCFmqBbxrcnKARezgtOA4EP5H2
+	G0J3RaNWAhMrMtS3aSyF9lBdIwDEJVotMp8JbGYwV
+X-Gm-Gg: ASbGncvWqPo4YRXPqszOO0OBkgoQ2tTGjP6vMBIsTXZuffV2c4X3rPn4JYbyltaG7+Q
+	PtpGEM3e3XQ7dmmZx+bIFYsIjAm1EliVQ2hZnghnv3QAfZk767GI2EUc4kX3Li/mXBDMod4iqdq
+	wXvrrzsKOpr07A28gKp+TQjWGX/i1bH8pX6XZFOehIoIwWrPpWvYmHBm+AysBvi0svPIDEort6X
+	l/GI1N7
+X-Google-Smtp-Source: AGHT+IGHSwvj2lv1V7O9rVJ1zs/I6lV6OAxCiaPZhFpbO2SixxEQ+9O1rvzKl6msJvPcZ2is64kPuSZ5+2UJLLns3iM=
+X-Received: by 2002:a05:6e02:219d:b0:3dd:c9e4:d475 with SMTP id
+ e9e14a558f8ab-3de08e32e89mr6183305ab.22.1750091465130; Mon, 16 Jun 2025
+ 09:31:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-vsp1_dl_list_count-v2-2-7d3f43fb1306@ideasonboard.com>
-References: <20250616-vsp1_dl_list_count-v2-0-7d3f43fb1306@ideasonboard.com>
-In-Reply-To: <20250616-vsp1_dl_list_count-v2-0-7d3f43fb1306@ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2126;
- i=jacopo.mondi+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=hQ7LAtYwL7CCEF1tm2AqnVat+ZPScl50ILEGM1zg5ns=;
- b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoUEa3/HkIZWNcA1meJpW4L5kwdFMz8n2NBjMm8
- 2LmrhoO69uJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaFBGtwAKCRByNAaPFqFW
- PBDlEACJoCq3L9fqPgAOawxFGQB1noWDz/pK0cK8mJwAq6KtPMIZpJR1Grpa7g9q4oLlPASjdrO
- e6w2xCnw+o6mUZSW8K4JYazFqke2dCkqp/XKwNYra+emgsMoB5sh+x4vv0Vk86CD9HgYb7wL3uG
- UwkNYB7tM7P65wPvlRbjqn2LwMR7am8R3/03Ig9DniUkYW1rhoacek1a3L1dm4BLzcWKZpj3GHe
- uGVWbzonOSIyu8JuteAVMf9c9GuQxJkq2SkheAQq6VyxDI7NnEBdFDpG06YGGLdQf0qzJzTJ9cn
- V+hK1WB5JCVdGBrGAonKVg8v2Hmu7fVNUSsO1cYNs3YN2TzhwnTJB9Yr0qHb9PrnkIiEy9hMRuI
- E6lNRP/RwKnpo3pCbPsIesAl3lsiHKNX2mN6J72aVF/GCXIkxcAN/vixLfZ4bMui1fgFpLRhukj
- 50QqTnpqRHgBGVjWdeGn5Q6nMPEE4LyrvB8XL4zAY+48OnfXUoIdr67SFvsRpfnvZvoOeW4fYDT
- jDJ2PIAPExbR8T8dXsk7wCaLzIn07hkIJNoPF1XDJcxXsPHnaIxc78AxV/j6fW4BKUBPqc+KDVp
- jlghsSdOrzHF1nm8YkWbkT05j6uutS9stEZnSBKTsx9iMLsLYtXJHBeZvDGBBOtTt29u4s9pSJi
- 1A8TNex1FTeVb2g==
-X-Developer-Key: i=jacopo.mondi+renesas@ideasonboard.com; a=openpgp;
- fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
+References: <20250614004108.1650988-1-irogers@google.com> <20250614004108.1650988-2-irogers@google.com>
+ <CAP-5=fUz6ViPHDdS9GCAEYUN39L4MpAnRR4CzJWggg0S8vn39A@mail.gmail.com> <aFBFOBUhHnF87R9q@x1>
+In-Reply-To: <aFBFOBUhHnF87R9q@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 16 Jun 2025 09:30:53 -0700
+X-Gm-Features: AX0GCFvE9nrOqBE66rQ8Ea547F5mV_NdM-Lcl5er8Z_7hgpu_f6HZqD3TrsPnK4
+Message-ID: <CAP-5=fWcKkdoP=i9zZMWtHWZ=XWWR_DLKVWEZ8vfxr11j9YADA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] perf evsel: Missed close when probing hybrid core PMUs
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To detect leaks of display lists, store in the display list manager the
-number of allocated display lists when the manager is created and verify
-that when the display manager is reset the same number of lists is
-allocated.
+On Mon, Jun 16, 2025 at 9:24=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, Jun 16, 2025 at 09:04:41AM -0700, Ian Rogers wrote:
+> > On Fri, Jun 13, 2025 at 5:41=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > > Add missing close to avoid leaking perf events. In past perfs this
+> > > mattered little as the function was just used by perf list. As the
+> > > function is now used to detect hybrid PMUs leaking the perf event is
+> > > somewhat more painful.
+>
+> > Given this leads to leaking perf events on hybrid systems it would be
+> > nice to land this 1 liner in the next v6.15 rc pull request fixes if
+> > possible.
+>
+> Sure.
+>
+> Just one nit: while looking at:
+>
+> void evsel__close(struct evsel *evsel)
+> {
+>         if (evsel__is_retire_lat(evsel))
+>                 evsel__tpebs_close(evsel);
+>         perf_evsel__close(&evsel->core);
+>         perf_evsel__free_id(&evsel->core);
+> }
+>
+> And then:
+>
+> void evsel__delete(struct evsel *evsel)
+> {
+>         if (!evsel)
+>                 return;
+>
+>         evsel__exit(evsel);
+>         free(evsel);
+> }
+>
+> and:
+>
+> void evsel__exit(struct evsel *evsel)
+> {
+>         assert(list_empty(&evsel->core.node));
+>         assert(evsel->evlist =3D=3D NULL);
+>         if (evsel__is_retire_lat(evsel))
+>                 evsel__tpebs_close(evsel);
+> <SNIP>
+>
+> I think that tpebs_close could be done just at evsel__close(), no?
+>
+> The way it works I think there is no problem with calling it now twice,
+> but it fits better in evsel__close().
 
-Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
----
- drivers/media/platform/renesas/vsp1/vsp1_dl.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Agreed. It'd be nice if we could assert that it was closed given this
+has been a problem. Retirement latency events are pretty unusual so
+I'm not overly worried about needing this :-)
 
-diff --git a/drivers/media/platform/renesas/vsp1/vsp1_dl.c b/drivers/media/platform/renesas/vsp1/vsp1_dl.c
-index 18617cbb168703b851a9b437fa62f18425934c68..3713730c6ad8739935851e4da464fc8f23da6180 100644
---- a/drivers/media/platform/renesas/vsp1/vsp1_dl.c
-+++ b/drivers/media/platform/renesas/vsp1/vsp1_dl.c
-@@ -215,6 +215,7 @@ struct vsp1_dl_list {
-  * @pending: list waiting to be queued to the hardware
-  * @pool: body pool for the display list bodies
-  * @cmdpool: commands pool for extended display list
-+ * @list_count: number of allocated display lists
-  */
- struct vsp1_dl_manager {
- 	unsigned int index;
-@@ -229,6 +230,8 @@ struct vsp1_dl_manager {
- 
- 	struct vsp1_dl_body_pool *pool;
- 	struct vsp1_dl_cmd_pool *cmdpool;
-+
-+	size_t list_count;
- };
- 
- /* -----------------------------------------------------------------------------
-@@ -1078,6 +1081,7 @@ void vsp1_dlm_setup(struct vsp1_device *vsp1)
- void vsp1_dlm_reset(struct vsp1_dl_manager *dlm)
- {
- 	unsigned long flags;
-+	size_t list_count;
- 
- 	spin_lock_irqsave(&dlm->lock, flags);
- 
-@@ -1085,8 +1089,11 @@ void vsp1_dlm_reset(struct vsp1_dl_manager *dlm)
- 	__vsp1_dl_list_put(dlm->queued);
- 	__vsp1_dl_list_put(dlm->pending);
- 
-+	list_count = list_count_nodes(&dlm->free);
- 	spin_unlock_irqrestore(&dlm->lock, flags);
- 
-+	WARN_ON_ONCE(list_count != dlm->list_count);
-+
- 	dlm->active = NULL;
- 	dlm->queued = NULL;
- 	dlm->pending = NULL;
-@@ -1155,6 +1162,7 @@ struct vsp1_dl_manager *vsp1_dlm_create(struct vsp1_device *vsp1,
- 
- 		list_add_tail(&dl->list, &dlm->free);
- 	}
-+	dlm->list_count = prealloc;
- 
- 	if (vsp1_feature(vsp1, VSP1_HAS_EXT_DL)) {
- 		dlm->cmdpool = vsp1_dl_cmd_pool_create(vsp1,
-
--- 
-2.49.0
-
+Thanks,
+Ian
