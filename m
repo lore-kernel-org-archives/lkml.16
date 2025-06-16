@@ -1,101 +1,129 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F6217BCE
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B1417BCE;
+	Mon, 16 Jun 2025 07:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750057273; cv=none; b=NUUQqn/9O63AyitNP+T3aUhjbeeuUV2pKEcDP75TXIPMCK6e0jpIxK/FWPssofeEVhj8jTTkpsV7VqmQVyg9npIOH6yIwMZ+vd7qOyzDJ/+rHjuZt8nTHMzPuyxVXGy+kB+Gfk1VKzS78HM3VjjpU/0mweWvjQTbH9WxOFB3hPA=
+	t=1750057317; cv=none; b=VpS7Klvb10yA8oNeHoFyIC4efCcPRZFY66Tv3qrrbb9YKcxECy6zHfipsCoGAPJ7KRPpf4iqtNQsk1vkLtwFx1IK6E6uHhrdAf1xGRYHpG1jSsemt1G5qhxZ9KfTLeXC5TUgZOTXIoDOk+Mxbbc2IKE6GD24WFC/cuwndUZmKko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750057273; c=relaxed/simple;
-	bh=SdK7hNT0SsvPg4Kf1lgwrBJghQD6d7y/Csbgr0eUy6c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UkIVFCm+nVd4tKAWb2km7IMeZf07FR8C/Z6KjKAXzggJ/p4CSQFn7F0SD1/Z99vb/bZoDIp23asSmt/KkqPCoucEKnx2eCFcATJYkQdFjE42W1AvPxg1VvRd9hxJDkgXww4kkFSt4J5RmouHqBjmwzGiP7qitemMVmTdL6jjr4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CqNhsg6R; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BndjtlIu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750057317; c=relaxed/simple;
+	bh=InuKAAGjHu/C7GD/p6y1dIS+oWspdPvUrz6/e8cjyKM=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=W5OPfBhXIhvvKRoFubdRIpBJ7DaCtE4NRx1tD1I9BldcgUifMC/wCgOjB9nYyUaAptQV2JTGdow049wyUaCoWBe6NAuYkf1Evvuz8AKvSk+/OdqYhITAYHulsmLft/I7WqrIg2IHDvsavQMWUD4bmgFtLPHDjr8Lut7kjOQdTUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=s2UVLpUK; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CqNhsg6R";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BndjtlIu"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750057269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tR0PpRa25P/6r94RjDMiFci8IhEDIKGx1vacCel/N44=;
-	b=CqNhsg6RcuP2ZqAhLPywpo00mP4z75x/P17aoFmK9IXYliCMJQw2TZ/8UIYjZ681w1rDd9
-	ajaxqPm9MwH8bENFUpSzK/KmN42vQctRbgpJX66g9crvo4Y/PUIShR1DWm0FU0nG3mRp/b
-	V1YKmHUGML4uG92zhpHkoiNA/CZF098n/AB1nUwpctjv2rC2al6rRHQnlmHYMA4nlEMWfO
-	QYy8a0BLo2Qqe9QzMS7En4+1CP0FQyTcCzvh4GVr5mGqaLpasv19YD5QYGol6OkYz+36TJ
-	ten3419VulosIkNSmVvbt88up+ZHweiWmoHNog4ei8TN7yPWhqXgHGC792Phgw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750057269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tR0PpRa25P/6r94RjDMiFci8IhEDIKGx1vacCel/N44=;
-	b=BndjtlIuxE5hJAKzyEfu7RPsa8LaU08slqGF3Ka9EYvRTAH2eSlHO+RrzxS7C1MTLvUHZC
-	hMaaWYeOTUuLCiBw==
-To: Khalid Ali <khaliidcaliy@gmail.com>
-Cc: khaliidcaliy@gmail.com, linux-kernel@vger.kernel.org, luto@kernel.org,
- peterz@infradead.org
-Subject: Re: [PATCH] kernel/entry: Remove unneeded header "common.h"
-In-Reply-To: <20250614194829.10832-1-khaliidcaliy@gmail.com>
-References: <875xgziprs.ffs@tglx>
- <20250614194829.10832-1-khaliidcaliy@gmail.com>
-Date: Mon, 16 Jun 2025 09:01:08 +0200
-Message-ID: <87plf4npaj.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="s2UVLpUK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1750057280; x=1750662080; i=frank-w@public-files.de;
+	bh=InuKAAGjHu/C7GD/p6y1dIS+oWspdPvUrz6/e8cjyKM=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=s2UVLpUKJZyqePN0VoRDHjcH1kF2nvZKAqTZkzdJ3S1G1FhxLe/WJ7aonJgYwff1
+	 2O7pslpgw6AoB9xR1d+Lp2pQuxrpjw4e7vRRvzCQCJE9Le8pURc9y1BzdaDseApBW
+	 vGKi3V4o+j/N+t8sgHoYJlOfYH7EYq5jZ1g3AEaGpqqlIIfpajDNXPPYcaa6QNwtz
+	 HS5/BrZ1I/KpeER6QopNP6/0JUw9kUSZ6tF+9OJjWZ+JZ70abf1sefc9pPUhTNMWT
+	 Bs6vg9RrfIqyhdldZ0+XsproGILWz+1DSAmbEKySlpL5WDQzzQPV9G6OQp2f/k9ZN
+	 VbxjqO4BMB+mS72rWg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [100.67.37.206] ([100.67.37.206]) by
+ trinity-msg-rest-gmx-gmx-live-b647dc579-tr2th (via HTTP); Mon, 16 Jun 2025
+ 07:01:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <trinity-e9eaf8fd-42f1-46d5-b1df-3bfefe02b2fe-1750057280436@trinity-msg-rest-gmx-gmx-live-b647dc579-tr2th>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: mason-cw.chang@mediatek.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+ angelogioacchino.delregno@collabora.com, nfraprado@collabora.com,
+ jpanis@baylibre.com, npitre@baylibre.com, colin.i.king@gmail.com,
+ u.kleine-koenig@baylibre.com, wenst@chromium.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, daniel@makrotopia.org,
+ steven.liu@mediatek.com, sam.shih@mediatek.com
+Cc: mason-cw.chang@mediatek.com
+Subject: Aw: [PATCH 0/3] thermal/drivers/mediatek/lvts_thermal: add mt7988
+ lvts commands
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 16 Jun 2025 07:01:20 +0000
+In-Reply-To: <20250526102659.30225-1-mason-cw.chang@mediatek.com>
+References: <20250526102659.30225-1-mason-cw.chang@mediatek.com>
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:E53Jv9HXOWkrKn1ZmdCThVsKfrzyzuGZargrqRZrhq4Jf1N6adv3cJ2SO3q/CtWy8d1d/
+ QDM9voUlQrOto5dwjYfZWRz4yPGaMpj5j0PIhveWyIfGmukm4lJdw+qRF8g5xZigd97/80PljnoQ
+ H8ZrO1S5pA+KCV21QjyAF1d3rOVeZzzMO0CfDykQZKy1Pztvw0C+hv8rbqBrIxsegEJF5iyfSKP0
+ r4WZa67IPl1lKRtoLF3B1SdTESGO/2b3C5xJh94nV4fOA2mNfxuFfOgbRims31qA5sc6MRAMUNFf
+ lw41SniqEtVepmdTyGLN3TgvPEvq317HVyJqOzvxi5npkIetYQ1kamys4S/E8OxFUA=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PxlaLSE8vxo=;EPEHr1o7va+Z4JcCx7lU/6b8+Cc
+ 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
+ LFSEZB56NrtCrz7ufFA==
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 14 2025 at 19:47, Khalid Ali wrote:
->> The reason why common.h exists is that syscall_user_dispatch() is a
->> internal function, which is on purpose not exposed globally. There is no
->> reason to expose it globally, so it stays where it is.
->> Still there is no strong reason "common.h" could exist, there is no doc
->> explicitly mentions that. 
+
+> Gesendet: Montag, 26. Mai 2025 um 12:26
+> Von: "Mason Chang" <mason-cw.chang@mediatek.com>
+> Betreff: [PATCH 0/3] thermal/drivers/mediatek/lvts_thermal: add mt7988 l=
+vts commands
 >
-> Why can't we just put the prototype into the source since currently it is the
-> only place used is common.c, so we should put it on top of the source. Again don't
+> Add the LVTS commands for Mediatek Filogic 880/MT7988.
+>=20
+> This series fixes severely abnormal and inaccurate LVTS temperature
+> readings when using the default commands.
+>=20
+> Signed-off-by: Mason Chang <mason-cw.chang@mediatek.com>
 
-No. You need the prototype (aka. declaration) for both the usage site
-_and_ the definition.
+Hi
 
-Do I really have to explain the basic C rules?
+just a friedly reminder for maintainers, is the patch series ok or does it=
+ need any changes?
 
-> see strong reason why entire header exist for single function, even on
-> future if more local definations come we should put on top of the
-> source, if there is one single source file using it. This makes
-> consistent across the entire kernel codebase which mostly do what i
-> mentioned.
->
-> The only exception for local headers is if the source file using it is
-> too large and using many structures, enums and prototypes, in that
-> case it is acceptable.
-
-So you define what's acceptable and not?
-
-> However the decision of creation of that local header with no
-> exception makes the header pointless.
->
-> I didn't find any kernel doc that describes the decision, so we should
-> make it consistent with other subsystems if there is no specific
-> reason for that this makes the source file more organized.
-
-I explained it to you already why this header exists and there is a
-strong emphasis in some subsystems to not expose functions globaly so
-that the internals of the subsystem are encapsulated. That's the only
-way you can do that in C and it makes a lot of sense.
-
-This _is_ consistent with the rest of the code and you can argue until
-you're blue, this header with the declaration of that function stays.
-
-Thanks,
-
-        tglx
+regards Frank
