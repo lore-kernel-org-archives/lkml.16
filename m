@@ -1,48 +1,36 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E94D27F016
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 10:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3970F27EFF6;
+	Mon, 16 Jun 2025 10:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750068444; cv=none; b=kl9veiuMnyCqmFvVzQ0YbuSyniScTiYXZpSqawL3qWkXiNBjzjarffOfHFRbrcOg3Ssb+Pdas10mtQXGKbqxonGkeljPwdo451f1AwOEl+ttuCVjy6tstMKGG0FqgcHF4sDnA7a084LA/uIYRBV32ZKa3qnqF8TAUmBCL7WPZWU=
+	t=1750068473; cv=none; b=hZrOPt7DdbvuTDUsXLYR5eroEnJrVBlHsXJ04MQXcT8YlN03K/1xSEauNu4ureJRD327fjQErHWLC7w5svCryP5+Ln0l0nXcuezuObmHGCYt09jbu+VKEVZe96MPt1qQ6YARoZ7LIaqKuQAQAgDdDZ/aiHuuUHb/89o4KpajyXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750068444; c=relaxed/simple;
-	bh=Lq8cqU8VINtW1dQLGxAYS6afiJNutTYBDkfPOaltG2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QMApZ3t636tEV76mnVC1xE6ZHUXgZv2Bj5H8Cctbf7xmn3PFJBO8xVUOPyQQscXcJDraz67JkrMEKz2xgFL7VJZe7+/XQnFITR3Z2sIm+aOY3+UmJ4qHDYzjc7hJ401dvaI30R5pgLShAsuEEzPATfjPU3o3bw35a/itxlhLKMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AoX6/She; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750068473; c=relaxed/simple;
+	bh=3+NUWscYQFNZqNiDoVLK4YsZWnWr4faF6U442YOervk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=TcBYkuhpLirAARI7+B8AcQ2CHyoPB02rLc7KDFQgRAPm0z+3fock3NIEVWUg3DB65fr7Xw5Nbbw7W/i9Z2fH3CiNMr0VqWhLtwx3JlY8YE7jgc2RDlmzRZKfZYuQ6/VnYuA7DG4D5TnFEFmybJbIutYcqCMnNCLablfNBeIcTzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=S50GKCaC; arc=none smtp.client-ip=178.154.239.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AoX6/She"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8RdQC011453;
-	Mon, 16 Jun 2025 10:06:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UWZKq+facjiaX5VfIZfoLXvS21EBNXNgcqPrsZk1JJM=; b=AoX6/ShezdTds7wN
-	yxpRHPu32orf1q3lL+KUAAiRIBWKh1zpp6fok/TRhDb0pja9VsVyQ9RBNUrZY+rV
-	EvuGGSc5maMpBIF3X2pZyoe3p4PaihhJArw+0ykn6kHjXHnX+12DDbibTc1S+vSY
-	eyl1uFFJJSxa6MzUpiaX32KQQAoSZsL09vNPpE5XsGeZ/gkrRl7B8rKKgUbTXRxy
-	q10OaE90DHdyrsY7sQXohkxVC5AnRrfbYyDl2pA02M9Qayb0UK1jEFmh6Bn9KhjX
-	8AmNt9UnLESAPGeU0OudDKXm8uCC5QlzOIzOsDRLUWtWzf5W9HrNEI3yuhZ/XwFz
-	yDaGzQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 479qp5jnbg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 10:06:44 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GA6itq030847
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 10:06:44 GMT
-Received: from [10.253.8.97] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 03:06:39 -0700
-Message-ID: <0c0a9c7a-f36e-4500-bbea-3a22a04431b3@quicinc.com>
-Date: Mon, 16 Jun 2025 18:06:36 +0800
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="S50GKCaC"
+Received: from mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:1984:0:640:94c0:0])
+	by forward500a.mail.yandex.net (Yandex) with ESMTPS id 7DEBF611DA;
+	Mon, 16 Jun 2025 13:01:33 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id W1IY5V13IGk0-thMQg0Br;
+	Mon, 16 Jun 2025 13:01:33 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1750068093; bh=3+NUWscYQFNZqNiDoVLK4YsZWnWr4faF6U442YOervk=;
+	h=In-Reply-To:Subject:To:From:Cc:Date:References:Message-ID;
+	b=S50GKCaCtgSQLOoCOW0vJifev1JEjnz3plRXmKeGvpVTTJLFJalKqO9no6fMjVTdT
+	 5lqvCBcPqDDm1GhesQ6btyXziElV9gKhH0hXZJTAEgM1LMKZ9Tyw/QJTnxz1I1Ddw+
+	 FKsqwvQkFfjZp8VBL4M+FNZYAn3jvc3PXvv9hX14=
+Authentication-Results: mail-nwsmtp-smtp-production-main-64.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <70de6013-a5db-45c6-8288-e7b211a55a1e@yandex.ru>
+Date: Mon, 16 Jun 2025 13:01:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,88 +38,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/5] Add FIELD_MODIFY() helper
-To: Marc Zyngier <maz@kernel.org>
-CC: Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "Nicolas
- Palix" <nicolas.palix@imag.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-        "Joey
- Gouly" <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <cocci@inria.fr>, <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.linux.dev>, <andrew@lunn.ch>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <quic_leiwei@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_pavir@quicinc.com>
-References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
- <86sek5cane.wl-maz@kernel.org>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <86sek5cane.wl-maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Language: en-MW
+To: Fedor Pchelkin <pchelkin@ispras.ru>,
+ Christian Lamparter <chunkeey@gmail.com>
+Cc: linux-wireless@vger.kernel.org,
+ Christian Lamparter <chunkeey@googlemail.com>, linux-kernel@vger.kernel.org
+References: <3qom4fkg7kp4l3bcgrbivmm2yi2wqrmso7rb5qe3xffjj3k7hz@nc7gx4atzfyq>
+From: Dmitry Antipov <dmantipov@yandex.ru>
+Autocrypt: addr=dmantipov@yandex.ru; keydata=
+ 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
+ A/UwwXBRuvydGV0=
+Subject: Re: [PATCH] wifi: carl9170: do not ping device which has failed to
+ load firmware
+In-Reply-To: <3qom4fkg7kp4l3bcgrbivmm2yi2wqrmso7rb5qe3xffjj3k7hz@nc7gx4atzfyq>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9SYfzjF3RGzccne1WkjDRTBZRqXR4qMQ
-X-Proofpoint-ORIG-GUID: 9SYfzjF3RGzccne1WkjDRTBZRqXR4qMQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2NCBTYWx0ZWRfX7UrecK1eCq0L
- 8jXrAGXhthDm1V6AVytgr3qliiXHjBZaL76sRZ3phJrAmJasaSNIHGzGBFhBFi9o5IyFk+xr73/
- IhE0N4gFcbqzn7S0S7Y52KjoBgJTd6vDBFJ3S0u8Ezjm7BywP5onFsmIJfz5KtGQHVhXmdvLKDh
- HhVLEaxXzBMod9Q38nM1Mu16s4l1HX+23Cpf2phN6fdQqmVOmOQE77cCrvquRNryXNGm2E0cfrJ
- YsohgekeAGt6tReiCse3CCm8omb3spIjoUQVI38+9g6ghiU4z1+Vb7SKKDrKHKR/oxWt1t89JMq
- Y7xkqAqi8zKGKRpOOG+X+UF8egA/sye8lBvBpkwGGcAPhX1Ivjfo7H2hFERpSSFfMKN+oAUW6CB
- cjdJ4ljTU/jmgXd3d51GgsVlOh8j6vcM2f64dVA3ksVJFgMn0VPWdcBpNXSVQsIQoxGFMit0
-X-Authority-Analysis: v=2.4 cv=fMc53Yae c=1 sm=1 tr=0 ts=684fecb4 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=r701-TsZq3b5Q2E7mLQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506160064
 
+On 6/15/25 10:54 PM, Fedor Pchelkin wrote:
 
+> So it looks like ar->registered being false here is a "correct" failure
+> condition, i.e. it can be expected when the certain phase of the driver
+> initialization fails and should be handled without any WARNs.
 
-On 6/12/2025 10:11 PM, Marc Zyngier wrote:
-> On Thu, 12 Jun 2025 14:46:07 +0100,
-> Luo Jie <quic_luoj@quicinc.com> wrote:
->>
->> Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
->> macros. It is functionally similar as xxx_replace_bits(), but adds
->> the compile time checking to catch incorrect parameter type errors.
->>
->> This series also converts the four instances of opencoded FIELD_MODIFY()
->> that are found in the core kernel files, to instead use the new
->> FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
->> the script field_modify.cocci.
->>
->> The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
->>
->> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> 
-> I already indicated that the *pre-existing* set of helpers are enough
-> for what we want to do, that we *already* use them for KVM/arm64, and
-> that I didn't need nor want two ways to do the same thing in the same
-> code base.
-> 
-> My opinion hasn't changed on that front, and I don't see a point in
-> these patches.
-> 
-> 	M.
-> 
+Looking through Documentation/process/coding-style.rst, it may be
+better to use pr_warn_once() instead; anyway I would prefer leave
+the final decision to the maintainer.
 
-OK. I will drop the ARM64 patches and only keep the coccinelle script
-patch in the next version.
+Dmitry
+
