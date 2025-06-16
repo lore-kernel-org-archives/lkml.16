@@ -1,175 +1,94 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339881E89C
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB781E89C;
+	Mon, 16 Jun 2025 21:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750107900; cv=none; b=AlXEqvR0gWx7r2HpzPp9r1zIvS9ZWZ4WTxmBb5QhHRUc12LL4c9XrU2oQEjH04Ra/jbudK2wdKaOeApsNxMowgKhQqVe3Y5SJSgaR6dnHBSJxdKs01SDjgsI+S9ZN3q7Mp0soQF9zgpOH1Ez6L5c0jQsQ2E1zM00n0VnZ4rnmVE=
+	t=1750107908; cv=none; b=ssDqSHTiJkFPeeVrFJUGu2oiRTUj/KRNv8gMq5o98cCBs4/PJ06vRYtMHCIZ/CEU3PhoF3un0BLUNJYCdyxik1zhKJqWKmbn2EH6OqqEp/IxVpIPxa9/2sqoMeLzg9X9zzpvM5wt2Ky8hbxbzwc5ZQb4gMRB+/AJyf9zgRRDl/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750107900; c=relaxed/simple;
-	bh=nYaEYN227K6YpIf8VDVu8+1doLEoUJgywiwdWDHeB9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=reVla2kaLdCv4r8xBTbuPhldeqZ2+8Zxc4zBgCntkg9GzpYLdZkCC9ISFZ8xuJa7xrICnxWl0GEdOWAE9FvWqve91qLqexdzOrF9bEZ2xn8fN9DPkREGT+3bIO9J9qoFf5x/KqlicHJDiXdhAJnfunRoVFMcKddyy0GgSemgMwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p8DGSqsc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1N7koLaV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p8DGSqsc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1N7koLaV; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750107908; c=relaxed/simple;
+	bh=+qn2H6nfevlQ7wKmJdpRn7FFdR32WZSW7opnHstQ6Qg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CBkBMBWw6H1TftSZVes65QnyjurfdtKPG/K4rC3xHpsVUcL7Of/rvWSFOZ53q//F8Te3sE9Ha2tVwTjsdzeErwiAANYeJ/4bRsrwsvisunhNF3vJiJjw5XcxNcpQoQHrhDJU+POc0OhB529PzVtJ1K99QWETPWIBst7kCWUWP9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kgx13JBE; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p8DGSqsc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1N7koLaV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p8DGSqsc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1N7koLaV"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 49E1D211F3;
-	Mon, 16 Jun 2025 21:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750107896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
-	b=p8DGSqsc2CftckQ2nvzSWoOQLibQLlL3wwFOr8nKvXRZ3VNV0tfEOhuuiopXojaUrFJ7G3
-	hftFc/Vlt+SbWMDdc4pzi1BO2ZP0Q36Q/EG31t1cMByO5n/GuKBPbrJk4huVhzH8jILUP9
-	czAtB91OCqXpcyKHc7BcDyXuJgv+XKM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750107896;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
-	b=1N7koLaVg2jRSmZIrGjqYIcqCa3lpxVPQg7HxhBIMZYWM1niJDis3q8d4qcKHFhggCFGAw
-	YV4kHDP0rs2OgGBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750107896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
-	b=p8DGSqsc2CftckQ2nvzSWoOQLibQLlL3wwFOr8nKvXRZ3VNV0tfEOhuuiopXojaUrFJ7G3
-	hftFc/Vlt+SbWMDdc4pzi1BO2ZP0Q36Q/EG31t1cMByO5n/GuKBPbrJk4huVhzH8jILUP9
-	czAtB91OCqXpcyKHc7BcDyXuJgv+XKM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750107896;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZdDbZrzcL9G0bDigJineNhZ4KLiEbQRq0D0ScXGgqEM=;
-	b=1N7koLaVg2jRSmZIrGjqYIcqCa3lpxVPQg7HxhBIMZYWM1niJDis3q8d4qcKHFhggCFGAw
-	YV4kHDP0rs2OgGBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9D5AF139E2;
-	Mon, 16 Jun 2025 21:04:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ci3LIveGUGhSQQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Mon, 16 Jun 2025 21:04:55 +0000
-Date: Mon, 16 Jun 2025 22:04:54 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	David Hildenbrand <david@redhat.com>, Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH] MAINTAINERS: add additional mmap-related files to mmap
- section
-Message-ID: <sskcpsimubcpf6uq5dtoiklp23ese3psxgl75r75saxwqpvxgw@m5cf2kfxgqav>
-References: <20250616203503.565448-1-lorenzo.stoakes@oracle.com>
- <cxwmebrnmrhnlzk4n4w5r5zlv5jwzsqfejgmsqup5fljg6jeee@vo377ihsh76r>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kgx13JBE"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23496600df1so6190785ad.2;
+        Mon, 16 Jun 2025 14:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750107906; x=1750712706; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+qn2H6nfevlQ7wKmJdpRn7FFdR32WZSW7opnHstQ6Qg=;
+        b=Kgx13JBEL5xgGP2iPEzljdK+iJPrR+8Hm/w+N/GTsee7iX+gojSB+ZS/W82jqq0rnM
+         tnFeLoOQX3e8DlJ14R9Ids0oO8elMn20r3xFfJNkMjWAXB3g/uPYERHQZgHXFJHFoxKT
+         x5/XqbLQlAqe0nXrCGlTgeqccZPvAo0fWjlBJj/4vWjYifZJVTLXekdXGL84uM4YVoFw
+         Cj4nnFsfcldgO+am+MsZ1dMWL/DR20OGoqAOy+esittXRHNdlmce5LwKk7e1mxvn6jfo
+         zR45UcLfesaySOqzfylE9vsqYnWOgHwmC1k/xELPCpBvgAgLE9mKERgIi+wZBzwnhj51
+         HuWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750107906; x=1750712706;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+qn2H6nfevlQ7wKmJdpRn7FFdR32WZSW7opnHstQ6Qg=;
+        b=JXeV7DYZolOa5FTNhYz3AgnE1FV0gaRb5XcRpMKDwBDmZSGaCgSSdaMeg7yIH6Rv32
+         69I6F8Higptt1DzD2UUsEKZ35a4doO+0dzA14eYv35CHQvJNvnkO8WFp9qRnkW7QasOF
+         wzzFkoS8GEWE0VDt13v7yBIbPzwCIJ8hzD2hoKdPTLYODZmQbtP9x92LO8xN1zmBmUXD
+         ONnpoNYMjxFLiLLxPcGFbdWrY4nuh2vQO9Ex3E1sC/ybKjbE4Aey5tmwBr0GpxLk3tjB
+         bNZOctbK6RxQVW30Ein1JrKlr4d+Mu8663VdDZbBHSwIZBxxNruKCqKo4Task8MzlkmT
+         Vt8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUWzssFx7+rngT5r7bup56xZnFChkFkBDWQLf/kv5nUgmFxzFYJ/ukK8YJRYxoYk5mnB1FLKwblfaUfvDM=@vger.kernel.org, AJvYcCV3Ymx10zOFxOrsiEih+Dq2KIt42Put4bSBM0c/cXRJ3ElzheG+BBmQlbMbW9/WMGVU7iv4OQx4wpjcIwaa6Zo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEoNXurXNIYpEWguAa1hAjC0bkXIqcS0AnNBcmsi1sqfEtLaL2
+	nwI/7GDU2Wj16iO4IKsdF+Vuty8MivWazvupNo5qKc0HBG/IYORcA3XrPCSII8wE+0xsOSCbl36
+	8VJaD6Sjh+zO2VUIS341CQDqg6TKPjoQ=
+X-Gm-Gg: ASbGncv8KuBkO5xM+9wkoszioLPhIXlYtUobamEXAQ3x1gMtkFFqHaEZM3ONxaxAIfg
+	RfW5nK4wQLtOOJfUzgdi7pRelUDXMsZNjcXKAR/TDor9exkalrTFp5Hllbm5PSTu8mNfI1VBIhH
+	XeuOdBrKPFjs5Q+iZ2vqlUZlHrCXKFLutRStAjjZrwF0c=
+X-Google-Smtp-Source: AGHT+IF1S2axf3PVB3z4DKxY9YfUqh2ejZWFt0fQTJLprfKx3NOg48dOG4XgpLdVmaqM9PC31GirVgLnCzf+nO1mg/0=
+X-Received: by 2002:a17:902:d2c5:b0:234:ef42:5d52 with SMTP id
+ d9443c01a7336-2366b202b0fmr58019545ad.6.1750107906018; Mon, 16 Jun 2025
+ 14:05:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cxwmebrnmrhnlzk4n4w5r5zlv5jwzsqfejgmsqup5fljg6jeee@vo377ihsh76r>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-mm.org:url,kvack.org:email,oracle.com:email]
-X-Spam-Level: 
+References: <20250616-userptr-newtype-v3-1-5ff7b2d18d9e@google.com>
+In-Reply-To: <20250616-userptr-newtype-v3-1-5ff7b2d18d9e@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 16 Jun 2025 23:04:53 +0200
+X-Gm-Features: AX0GCFsYLflQK_lRNgAyhjylwzyLukxWj1tfGGW3HXaI5xOsGTLYwG_iZQuKH78
+Message-ID: <CANiq72nGU4A5ZgzrNnpC8LRpnFEZis0U1G7-m41MCPihRZcxXw@mail.gmail.com>
+Subject: Re: [PATCH v3] uaccess: rust: use newtype for user pointers
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Christian Schrefl <chrisi.schrefl@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-(adding a few people on CC)
+On Mon, Jun 16, 2025 at 3:46=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> This is based on top of the strncpy_from_user for Rust patch.
+> https://lore.kernel.org/r/20250616-strncpy-from-user-v5-0-2d3fb0e1f5af@go=
+ogle.com
+>
+> I don't see a clear owner of uaccess in MAINTAINERS, so I suggest that
+> it lands through Miguel's tree.
 
-On Mon, Jun 16, 2025 at 09:49:52PM +0100, Pedro Falcato wrote:
-> On Mon, Jun 16, 2025 at 09:35:03PM +0100, Lorenzo Stoakes wrote:
-> > msync and nommu are directly related to memory mapping, memfd and mincore
-> > are less so but are roughly speaking operating on virtual memory mappings
-> > from the point of view of the user so this seems the most appropriate place
-> > for them.
-> > 
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > ---
-> >  MAINTAINERS | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 4523a6409186..a5d1ff923a62 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15735,7 +15735,6 @@ F:	Documentation/admin-guide/mm/
-> >  F:	Documentation/mm/
-> >  F:	include/linux/gfp.h
-> >  F:	include/linux/gfp_types.h
-> > -F:	include/linux/memfd.h
-> >  F:	include/linux/memory_hotplug.h
-> >  F:	include/linux/memory-tiers.h
-> >  F:	include/linux/mempolicy.h
-> > @@ -15974,12 +15973,17 @@ L:	linux-mm@kvack.org
-> >  S:	Maintained
-> >  W:	http://www.linux-mm.org
-> >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> > +F:	include/linux/memfd.h
-> >  F:	include/trace/events/mmap.h
-> > +F:	mm/memfd.c
-> 
-> memfd is a big stretch, no? I think it would feel more at home with shmem, or even VFS people. 
-> 
-> > +F:	mm/mincore.c
-> >  F:	mm/mlock.c
-> >  F:	mm/mmap.c
-> >  F:	mm/mprotect.c
-> >  F:	mm/mremap.c
-> >  F:	mm/mseal.c
-> > +F:	mm/msync.c
-> > +F:	mm/nommu.c
-> >  F:	mm/vma.c
-> >  F:	mm/vma.h
-> >  F:	mm/vma_exec.c
-> 
-> the rest obviously LGTM.
-> 
+Sounds good to me, also for the dependency, unless someone really
+needs it earlier.
 
-This reminds me: now that we're at it, could we cross-own madvise.c? Now that
-we know it can be done. It's the only mmap-related syscall (i think?) we're
-missing.
-
-Also possibly mmap_lock.c.
-
--- 
-Pedro
+Cheers,
+Miguel
