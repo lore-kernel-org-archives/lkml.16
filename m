@@ -1,163 +1,121 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0393E18E025
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0229B1FDA
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750067484; cv=none; b=klxBu0wxxHP09PG37mcm6K94chraUUfaipiSx4j672x0QLJPSQboDKmgn+N+/qaZFZQDmiLBX3SRgvBpPxwJXKF7YC8Tz7ycdvsIDmfwka65ASjPwbn9Z0M7BLMBfgl/+hRk/E5PHvIiVgMAJEBw4+r1LXXXDZWs0tTzEbnj++g=
+	t=1750067601; cv=none; b=u1zoI32dbK854ksrmx1SFWw+HNnJVGRZU5PDOZis9n/ZTtP/T4DfPEM+Dg2cvNKBlzMI1eIrz8XLVI3Jh1x3TQCOo9ODJsSSxADR5Zp17/ezVRVLJbi2GKds2YdgJIjICjb7xPhiNxHA5buBaOS5tbwFBgyfHxH7EX4n3Fnv7CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750067484; c=relaxed/simple;
-	bh=/cCLZZs4x4Z540xQpODHsqkmEQTBmUNmJ9FJi3TCVXo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=HrxrYxKO4iWwMbh9uXOvhZoJXMiOKsfV+xaVjRQKB9dPcfIHJW7sU1NqbhNf5foxgNR6UxYEMxTzr0Ax4zkNhaRTcH9IefMRuLMN2TqeYpyVJiR6Xe1NXMTmpHMcLq/ImsxrpyhVfh+6+/WHp8slrSdLNZUTm39dIn2nQ7BojE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tog76yPz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750067601; c=relaxed/simple;
+	bh=2V4h9aHUxiP/JgkmD0h3V/tVQXQbROT4jEcTXes/cOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kMHeBd6OemTx2nsGBm2PmYl10jzvI1iFtUx35ng5mXJMJWZnjOzxx9EFnLmZF/KGNuO92zeC9DfWsK3rv9O7zWqRZPIDnsTXRnd0U/44cG3v3XKplOX9a/AVsQ9PpWS8t5yoNwYFLwcmaWgfipWfr34tw2bbxXG6HMs152xXn74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCej33HU; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tog76yPz"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G32qrk016045;
-	Mon, 16 Jun 2025 09:50:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=98MNDMpqZTSUPDBDmSnnEsdlpYfJ
-	x/Fn3bMpLgmmmYU=; b=Tog76yPz3YHUDAJiCbFxWSaAbn0HDoszUroBjHdjEtdY
-	oxTwQbpUm1HCJi4XkohCfiu4zoTf/KI7wTLTEM6K6W8XsNwK3wlaOR97ijJDggGv
-	ArTHONTUozLlwIjcBT3CJTPuLGS7p0BVnl2yGxEHd2aeNrhssbhxIr84uGa5OJsI
-	+X1qInagSw05Xlu7y/+EFszZIgqXGqDmYdAkW8io4INQQbFYGSg6sPQqu+Lwv99y
-	iYIndI+GdgGc6a4m32Nw5/7eFuZWIxShsa3PSuNigDjnooL3kd/hQgEnT7rOpnPX
-	NeksWbPeLRQ2fh60VOcrYYINUpR6nnwPrUNF/oI7mw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790tds2xu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 09:50:55 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55G9YD7p008557;
-	Mon, 16 Jun 2025 09:50:54 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790tds2xp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 09:50:54 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55G7XTXv010817;
-	Mon, 16 Jun 2025 09:50:53 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 479kdt5qq3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 09:50:53 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55G9orDV10879740
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 16 Jun 2025 09:50:53 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E3AD95805B;
-	Mon, 16 Jun 2025 09:50:52 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E98CE5805C;
-	Mon, 16 Jun 2025 09:50:49 +0000 (GMT)
-Received: from [9.204.206.207] (unknown [9.204.206.207])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 16 Jun 2025 09:50:49 +0000 (GMT)
-Message-ID: <81e04fa6-2870-4b0e-82aa-602f9435a848@linux.ibm.com>
-Date: Mon, 16 Jun 2025 15:20:48 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCej33HU"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso2479999f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 02:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750067598; x=1750672398; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dQhQRM3glVKEvyolY2kzbg63jz/t5M45p5rnwrjEPRU=;
+        b=kCej33HUgGAk3RMoe+fCwVXHO5GC7C8a9n6WzLZzszUBP7pEGi6KRZ3iJY9KimOOfC
+         uR1ae+lXrFoqyMnkdRYFJ+4PQBkuwN3Hs2XmjSpD93rXP+VykINdihvFVWXmICiZmWrx
+         GqqXh5WHA1nQ4AsjWsp5PgtfTnPlaWRfSnaW6YS+rl63Td0H0KhnnRG9yiDD1XXMlr01
+         os0TgVAUo7eojNMxEZdeehevYc7WQUn3hPFuRKH3cEQwdL6pSgNB5btbC7HvBdJer5Yn
+         zAyGC65mkx4x8OLaSTLNKV0QESIPZuXpxL0XqU8q9WGcdvbdRQRWfazj4L8Ese1gYJWe
+         sQAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750067598; x=1750672398;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dQhQRM3glVKEvyolY2kzbg63jz/t5M45p5rnwrjEPRU=;
+        b=R9UxtzIKyKSbljnHuNYx7hHqELTQ70EFtMU/xb1D0PhDrwZWw+GbDYCE84UZv8fqVo
+         Kl9Uqb3tWaWuEYy4Kuh2KoKF4Vv99hh70K8YRNjdBBfjWHc8ANUh+vU09IOtRuoD6YIU
+         FxQxlVBYfQRnPOdQjfwXpM7VJZez6qb/jcZ0HGcLbpAaOd1TxS6v9yxzPPGqfg74xUVI
+         d2hU6GqXv3Kho/GS8kvsWM54mrqAzceSOCBmLJVxUuRIrj/j/CdyAN0pZ12QdVcbF8Cz
+         1IIawskfckOoMhxygl0eXxjOUYiHGBlXNh0VJp749H3WvJFruMtZKx09bv4Ixq/YwWsb
+         U13g==
+X-Forwarded-Encrypted: i=1; AJvYcCXCaDsi1a4tnJDTv99/459JMXFxT77gM4D4O5uchR9wy7kojhp7vnLDUjwzRhBfh1gRyuXvzsJJZuG2jpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNOnJZtPmrtUkVJ2z0rSogi6sGs5kSnelhWVR/wkgwBsEMefJh
+	RZQ8wvW/7ef6fPOuLqXahXAMtUSokoQXd9KgvRJiWAc1nT8Beih99Tvk
+X-Gm-Gg: ASbGncu26usRoEQOC054ZZ7zyE/J5rxbmxgtCmvfQYycsW5PaGf+sBeRM1Ry0k4lqAx
+	k2cXJYPoWjEyTjvcoL2vSljct+AGXLNjmZ9hee4zxNLRN2tzjbAvYsCJqTM/9Zw10GGXbSvSmfh
+	yN+FjIj1s2Sp6qdYzjA3Agjs3syfR2MQDZLTgyTrzaOFIhabTgef8EYntOOAWQKCo5OpQ6UwfH5
+	+FuBjQCpOBggNXnDyPCNZnK5qx9G1K9FNjSk8/6/XCa5xHdr+R1TNiqVxiWQe8F/tSON3Pxwpyx
+	55Eq2m7ZsKRq3maLyh6GUVHFftBs3BOD0Bdns9pS5k4XM741QUjA5A==
+X-Google-Smtp-Source: AGHT+IGx5JKAydeSKhZtI1U3Z6LenBZ9xpQv3dGrMhbAWOxYgLX45RlwnJlUOF+UhAdFcJzKux0sTg==
+X-Received: by 2002:a05:6000:40db:b0:3a4:ea40:4d3f with SMTP id ffacd0b85a97d-3a572e5d78emr6665497f8f.53.1750067598072;
+        Mon, 16 Jun 2025 02:53:18 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a5407csm10725072f8f.12.2025.06.16.02.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 02:53:17 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 1/2] x86/vdso: Fix output operand size of RDPID insn
+Date: Mon, 16 Jun 2025 11:52:57 +0200
+Message-ID: <20250616095315.230620-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, j.ne@posteo.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        nnmlinux@linux.ibm.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.16-3 tag
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: zFH7w9_vervdXEVUb4kQuu2nEypuXHIZ
-X-Proofpoint-GUID: V5JGqvKaX-sx4vZbGCZ62RJ1yrPyFTRu
-X-Authority-Analysis: v=2.4 cv=c92rQQ9l c=1 sm=1 tr=0 ts=684fe8ff cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=BtL6d0wylExIv2mDCBkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2MiBTYWx0ZWRfX5h13Ve8iySnl LIJLhbagCLJ6jViKG4qUqZ6DSlVlIa8VXUcgrEoIXFiCYbEo27pmR4BoHVNz8Fwf7WnqEor5LL5 o9rfsjMoXv0KJdis1drKkQ/A9CkR0slEfboEXJ8IL4LsEPneInogaJcPRCkGEfWMTim43HjIFZ5
- ek4hoKSczkKMMoZVJ0elYPgMF7XgwoGTnZcmES9j+Y2yNftiBnT4Pyoqfa8BLBKA99ljGXXnuVn iAOVZ0khxc1VBC/OArJEPj9Src4af0qg3ZhrgA/qZD/ArZW7lFWnsV4OawfN/WlbwA16myWiBbK 56aupHyYcbeWIEpSNAXAEykKUUpz5pBg+Wg14X2/dI//iUFTnsBuugIdwwwmVyNQ7XE8JFlBs67
- QUeBzYce7VAWeIt+4Nt3/1KXd5dpJRuBtG5kCwTva8FeKanVGzS3OMOb2eMVyyJFB+QMoQuJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=939 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160062
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+RDPID instruction outputs to a word-sized register (64-bit on
+x86_64 and 32-bit on x86_32). Use unsigned long variable to use
+the correct size.
 
-Hi Linus,
+LSL outputs to 32-bit register, use %k operand prefix
+to always print 32-bit name of the register.
 
-Please pull powerpc fixes for 6.16:
+Fixes: ffebbaedc861 ("x86/vdso: Introduce helper functions for CPU and node number")
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/segment.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The following changes since commit 0d67f0dee6c9176bc09a5482dd7346e3a0f14d0b:
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index 77d8f49b92bd..93fcf0daba01 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -244,7 +244,7 @@ static inline unsigned long vdso_encode_cpunode(int cpu, unsigned long node)
+ 
+ static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
+ {
+-	unsigned int p;
++	unsigned long p;
+ 
+ 	/*
+ 	 * Load CPU and node number from the GDT.  LSL is faster than RDTSCP
+@@ -254,7 +254,7 @@ static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
+ 	 *
+ 	 * If RDPID is available, use it.
+ 	 */
+-	alternative_io ("lsl %[seg],%[p]",
++	alternative_io ("lsl %[seg],%k[p]",
+ 			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
+ 			X86_FEATURE_RDPID,
+ 			[p] "=a" (p), [seg] "r" (__CPUNODE_SEG));
+-- 
+2.49.0
 
-  powerpc/vas: Return -EINVAL if the offset is non-zero in mmap() (2025-06-10 07:56:41 +0530)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.16-3
-
-for you to fetch changes up to ab107276607af90b13a5994997e19b7b9731e251:
-
-  powerpc: Fix struct termio related ioctl macros (2025-06-13 22:18:50 +0530)
-
-- ------------------------------------------------------------------
-powerpc fixes for 6.16 #3
-
- - Fix to handle VDSO32 with pcrel
- - Couple of dts fixes in microwatt and mpc8315erdb
- - Fix to handle PE bridge reconfiguration in VFIO EEH recovery path
- - Fix ioctl macros related to struct termio
-
-Thanks to: Christophe Leroy, Ganesh Goudar, J. Neuschäfer, Justin M. Forbes, Michael Ellerman, Narayana Murty N, Tulio Magno, Vaibhav Jain
-
-- ------------------------------------------------------------------
-Christophe Leroy (1):
-      powerpc/vdso: Fix build of VDSO32 with pcrel
-
-J. Neuschäfer (2):
-      powerpc/microwatt: Fix model property in device tree
-      powerpc: dts: mpc8315erdb: Add GPIO controller node
-
-Madhavan Srinivasan (1):
-      powerpc: Fix struct termio related ioctl macros
-
-Narayana Murty N (1):
-      powerpc/eeh: Fix missing PE bridge reconfiguration during VFIO EEH recovery
-
-
- arch/powerpc/boot/dts/microwatt.dts    |  2 +-
- arch/powerpc/boot/dts/mpc8315erdb.dts  | 10 ++++++++++
- arch/powerpc/include/asm/ppc_asm.h     |  2 +-
- arch/powerpc/include/uapi/asm/ioctls.h |  8 ++++----
- arch/powerpc/kernel/eeh.c              |  2 ++
- arch/powerpc/kernel/vdso/Makefile      |  2 +-
- 6 files changed, 19 insertions(+), 7 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEqX2DNAOgU8sBX3pRpnEsdPSHZJQFAmhP6CgACgkQpnEsdPSH
-ZJQocg/9Edbt09ToMZMdk2R5CXxDlzeGliFX7bdKV2Q4jwEqyjHMc4J3PqCNGymO
-3GmP2yemB18a4ujl36KQet6CsbRtSPd4RX9yXUyyPTZAEuyo3sNIsrJEYmD2HV4B
-fErrE8xln+/l21HNBlPWQ0EN4m3c4bY6c6K3VaY8dMoxg11A79SGIRY/3cr93tYA
-zjYdbWnCz4rxpgffKmfdM2xu17DmMO2Molq4lfsRp1vkfDBUq+sGGMYvn/njCCMb
-W5I9/CN5xJrhF2iKBwP4U0wl2GsQ1DSgqp2RNvKv3wnuiKt5dUiYg6FswAsM2nQ/
-89YTNgBhjtZsO9rLSX2jk1tmf8o5lJ7CGvByQgXMr35AWt1XhMe5dC+XXIXsU2YQ
-fbK81Eiyf2NMFdfKN77hwwo3SfpdZqP1FC/4bjfsJ8JzsTZPrVfFfVXTV3rIAJsG
-TNIioFauZAz/wlrwHkTyLqkXp77TJXtVsl9dHbvr2tpqblyb1k3b24qgwckWvf1t
-XDc90Y478bdblBN+PThaxUm2AVFhWZSNxLzo2DiltetbtTmC5qeIyzl5PkgdJALr
-Kqxqe2dg2ZkGXhi+FFNWWxicdleEbV8+zKQeY4K/tPnsPdUqe5DoQaqjPoMytRAF
-l5RN5lqxNOY9odAH9gkgJSUlhWXI7+SSSIq2xF1ci6JnWBH+izE=
-=NMl4
------END PGP SIGNATURE-----
