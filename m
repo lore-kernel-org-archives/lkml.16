@@ -1,116 +1,195 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0893482FF
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA42D20F09A
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088439; cv=none; b=gBwlqJLKUg3EvF9b6XPgBT+lpKnCwlCE1L3k9RsQa5dAtCVAzaiiGy3wWjEdvqTg5H7Ld0nwrQ6WXN5LW517Qs43pwlKe4HOjrRFyiVsIN+vQfB8369Q0raigj69Fa9HBzhRVvSqkizZkzcKMMu+d/W/PUwFbd4I4DQKlJUMqiU=
+	t=1750088452; cv=none; b=JdlzuzIkH9uR7PMQ1BJz5KgVOzBSOZocDxJMJUoI9Qh7hozzsj+FFG04zUHKozZw63j/CFWnH5Gx+vHug0rHXQSXK28LfKxmx3Hac4mGecyfWARj9+ZXNF+bi+Mu8dM8v/DkuF+k1avKXcv0BYnCZoyZOCNf606/MaCSbfA15AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088439; c=relaxed/simple;
-	bh=y8LWt9HRv7KyRtBYLPqa8+GDokQcV8+yboEXU+KwbIU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DdmWvzk8Qn+XR6b0SkP3pUpiQr1I5ej42+F8l4mWsHbZXBFn5KXgfT+Gqf9rFkZkKcApTuRDdTqOSMpzEhfi/sXldI8/7LfOcujKz6N1X+HpH8hDHY8lMpmTya0mcWqr/Dju8OyIx9ulspvYrNzSX1BkOtLLbblz26FZNi5r63k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=d4F405nB; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=VK38iCyK; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1750088452; c=relaxed/simple;
+	bh=GulDPnHNMOiMPgHTzF8enV28qBP0ODLdaQ7945icZi4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0f3tEvKpCT1TcWkAUtsKWG1KhxPnj+LmO2OyvmAYb2B+OeSp6RPJ1P+Qf/nvC+e8tPyXetjGMDyIUhUd5PzIZ7AzhtXpS1fZXYrcE2n5ZeZP10DioRrJQ1QnuGhVF6SuQ1AHfPnPeNvM3csx1Sh50wLUxmDDEJ/a2xp0U+/cRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=noZrMPIv; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="d4F405nB";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="VK38iCyK"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bLZ2q4xzmz9spn;
-	Mon, 16 Jun 2025 17:40:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750088435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i0dyI4MRX18W1XQPVub/atygkpPpTT9XkNbCtuNLz8U=;
-	b=d4F405nBtgaidEOWwt0/9Ijnres1SntnusICovssYK/05rh985VqVC5tSbhcmmUGY+V/fB
-	sVq19pyBzBfSh7jOkhXiNzq9y5lA6pGqHOKgzSrilewfT5Wye90YLP7AA3dJzEjvc5fmhD
-	/4FSb0Z8Ywt/VLDMjahcnCTnEaFfbux/nCIFZpPjWGtHmdJ2vrfHj3HoCeR7NbezZRYTup
-	ICHIqdao5mUaALCxihA/0oG++809d/mH+xoyiknb11WnWZ/JPeQFHt8yTLUeFbaCo5Mtdj
-	IbTeZZlch9i840NYZ8++jkmEMzxTbBPn25kiYoXBPhbWXtrKl37DPfJEPYaa4Q==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750088433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i0dyI4MRX18W1XQPVub/atygkpPpTT9XkNbCtuNLz8U=;
-	b=VK38iCyKphvhZzQkyIYlP7iil1wpU9+Y6B1UoGLZZ+W+aKmm+ZM0mtbrXq3yqAvzV1oxE3
-	bwU93R6S5CAcnchdt+ZMFx2hNogebMJbYZB4iJHhtLPewPF3/Q9ZkAag9zRCcJ/pGWkXcR
-	xpqp2NXdp0JF0XZ/arh4x+TCmqMhIbnTQMlji4I5Iwjt0GH8CKwIqUa/wr4qlAohuqM0no
-	KHMpQddpXi64Ci+yHV9ikJBjkdyi6sU0lTVEo4QIwxZoEroX6c9qrUCHzRtQ9Y4fBRhwtk
-	zt79AHZ6RWTbWbPPX4uK/Y6euHgVPbTa2CE9GWJUtLp+Nn7Us/cW7DjCQdcYmA==
-To: linux-arm-kernel@lists.infradead.org
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: rpi-panel-v2: Add shutdown hook
-Date: Mon, 16 Jun 2025 17:40:07 +0200
-Message-ID: <20250616154018.430004-1-marek.vasut+renesas@mailbox.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="noZrMPIv"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3498E346;
+	Mon, 16 Jun 2025 17:40:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750088437;
+	bh=GulDPnHNMOiMPgHTzF8enV28qBP0ODLdaQ7945icZi4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=noZrMPIvU1Mank2i1vNQ1njqr3BZcLasIJ/CeoC6r4lIf4aaFNBgUIwGph6QhREUU
+	 TawlYtLpGkIRhqZ7bVPnboTszbxRWX5DKyFiKZ+UTvcqjttmf2onKP2D/A45VAgtDV
+	 EZwApC+JoEms1Br9jXFhzeWLbfIWK2QyOzWh0nBk=
+Message-ID: <3adb1d12-7cd5-4beb-9978-c3cae702f338@ideasonboard.com>
+Date: Mon, 16 Jun 2025 18:40:44 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: izkkms45zo414kq375membxy8gh3oueu
-X-MBO-RS-ID: db10599e07852c9faa4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
+ pre-enable and post-disable
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+ Dmitry Baryshkov <lumag@kernel.org>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
+ <20250605171524.27222-4-aradhya.bhatia@linux.dev>
+ <CGME20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19@eucas1p2.samsung.com>
+ <2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
+ <306f142f-f9c9-44ab-a5b9-c71db76b2b80@ideasonboard.com>
+ <b4d8c5b2-3ad7-4327-9985-d097d095ccb5@samsung.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <b4d8c5b2-3ad7-4327-9985-d097d095ccb5@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Hi,
 
-Add shutdown hook so that the panel gets powered off with the system.
+On 12/06/2025 09:31, Marek Szyprowski wrote:
+> On 12.06.2025 07:49, Tomi Valkeinen wrote:
+>> On 11/06/2025 13:45, Marek Szyprowski wrote:
+>>> On 05.06.2025 19:15, Aradhya Bhatia wrote:
+>>>> From: Aradhya Bhatia <a-bhatia1@ti.com>
+>>>>
+>>>> Move the bridge pre_enable call before crtc enable, and the bridge
+>>>> post_disable call after the crtc disable.
+>>>>
+>>>> The sequence of enable after this patch will look like:
+>>>>
+>>>> 	bridge[n]_pre_enable
+>>>> 	...
+>>>> 	bridge[1]_pre_enable
+>>>>
+>>>> 	crtc_enable
+>>>> 	encoder_enable
+>>>>
+>>>> 	bridge[1]_enable
+>>>> 	...
+>>>> 	bridge[n]_enable
+>>>>
+>>>> And, the disable sequence for the display pipeline will look like:
+>>>>
+>>>> 	bridge[n]_disable
+>>>> 	...
+>>>> 	bridge[1]_disable
+>>>>
+>>>> 	encoder_disable
+>>>> 	crtc_disable
+>>>>
+>>>> 	bridge[1]_post_disable
+>>>> 	...
+>>>> 	bridge[n]_post_disable
+>>>>
+>>>> The definition of bridge pre_enable hook says that,
+>>>> "The display pipe (i.e. clocks and timing signals) feeding this bridge
+>>>> will not yet be running when this callback is called".
+>>>>
+>>>> Since CRTC is also a source feeding the bridge, it should not be enabled
+>>>> before the bridges in the pipeline are pre_enabled. Fix that by
+>>>> re-ordering the sequence of bridge pre_enable and bridge post_disable.
+>>>>
+>>>> While at it, update the drm bridge API documentation as well.
+>>>>
+>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>>> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>>>> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+>>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+>>>> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+>>> This patch landed in today's linux-next as commit c9b1150a68d9
+>>> ("drm/atomic-helper: Re-order bridge chain pre-enable and
+>>> post-disable"). In my tests I found that it breaks booting of Samsung
+>>> Exynos 5420/5800 based Chromebooks (Peach-Pit and Peach-Pi). Both of
+>>> them use Exynos DRM with Exynos_DP sub-driver (Analogix DP) and EDP
+>>> panel. Booting stops at '[drm] Initialized exynos 1.1.0 for exynos-drm
+>>> on minor 0' message. On the other hand, the Samsung Exynos5250 based
+>>> Snow Chromebook boots fine, but it uses dp-lvds nxp,ptn3460 bridge and
+>>> lvds panel instead of edp panels. This looks like some sort of deadlock,
+>>> because if I disable FBDEV emulation, those boards boots fine and I'm
+>>> able to run modetest and enable the display. Also the DRM kernel logger
+>>> seems to be working fine, although I didn't check the screen output yet,
+>>> as I only have a remote access to those boards. I will investigate it
+>>> further and let You know.
+>> Thanks for the report. I was trying to understand the pipeline, but I'm
+>> a bit confused. Above you say Peach-Pit uses DP and EDP panel, but if I
+>> look at arch/arm/boot/dts/samsung/exynos5420-peach-pit.dts, it connects
+>> a dp->lvds bridge (parade,ps8625). Peach-Pi seems to connect to an eDP
+>> panel.
+>>
+>> Is the above correct? Do both Peach-Pi and Peach-Pit fail?
+> 
+> Yes, sorry, my fault. I much have checked the same (peach-pi) dts 2 
+> times. Both Peach-Pi and Peach-Pit fails, while Snow works fine. All 
+> three use the same Exynos DP (based on analogix dp) driver. I will try 
+> to play a bit more with those boards in the afternoon, hopefully getting 
+> some more hints where the issue is.
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- drivers/regulator/rpi-panel-v2-regulator.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Did you get a chance to test this more? Any hints what happens will help =)
 
-diff --git a/drivers/regulator/rpi-panel-v2-regulator.c b/drivers/regulator/rpi-panel-v2-regulator.c
-index c506fd699d57..30b78aa75ee3 100644
---- a/drivers/regulator/rpi-panel-v2-regulator.c
-+++ b/drivers/regulator/rpi-panel-v2-regulator.c
-@@ -89,9 +89,19 @@ static int rpi_panel_v2_i2c_probe(struct i2c_client *i2c)
- 	if (ret)
- 		return dev_err_probe(&i2c->dev, ret, "Failed to create gpiochip\n");
- 
-+	i2c_set_clientdata(i2c, regmap);
-+
- 	return devm_pwmchip_add(&i2c->dev, pc);
- }
- 
-+static void rpi_panel_v2_i2c_shutdown(struct i2c_client *client)
-+{
-+	struct regmap *regmap = i2c_get_clientdata(client);
-+
-+	regmap_write(regmap, REG_PWM, 0);
-+	regmap_write(regmap, REG_POWERON, 0);
-+}
-+
- static const struct of_device_id rpi_panel_v2_dt_ids[] = {
- 	{ .compatible = "raspberrypi,touchscreen-panel-regulator-v2" },
- 	{ },
-@@ -105,6 +115,7 @@ static struct i2c_driver rpi_panel_v2_regulator_driver = {
- 		.of_match_table = rpi_panel_v2_dt_ids,
- 	},
- 	.probe = rpi_panel_v2_i2c_probe,
-+	.shutdown = rpi_panel_v2_i2c_shutdown,
- };
- 
- module_i2c_driver(rpi_panel_v2_regulator_driver);
--- 
-2.47.2
+ Tomi
 
