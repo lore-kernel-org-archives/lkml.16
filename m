@@ -1,164 +1,183 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D62C1C54AF
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC82E7262B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750109571; cv=none; b=l3kWUZmX8knlUBEo1DI2sonyWxWstUz7Ng9noY1C45vp7A/Q60QrB4yzaczfr0ugdUhioU1fwyItfmrlEwrHLH+/UaJvUDPcp2cFcmH+sCO1S4WV+O0fK6qy2O/eoa2zOdAjgt6n5FFGnppReZICkmquAPwplhi6OcM8f9FHVUU=
+	t=1750109944; cv=none; b=ltQHRIlJuUUi3UF+NkUR652dIQIE4cWLLVOhD1rVvzt/m663UObJzXfLmsDBT1X4LxzTNs4JhWX3RTOaq2okQXywegLEjUINxILEfEH8q2qhlQdLw+ANKlDYwpUIzdrXODKU1YcwPhRZn6JnW2e2gPPG/Zhcq1LrEce4A/7S6oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750109571; c=relaxed/simple;
-	bh=1daXkcpedeVMkdfibmjOiKjSGHv5H5jAWkH3U7rNLWY=;
+	s=arc-20240116; t=1750109944; c=relaxed/simple;
+	bh=QN2i0eqFGWNXPooFbASnWQglHggpPgBSU7wRAUtSHX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H4p3OexLOFvy23ZoG/JhIKpYk91JK62h7jpcT/KxMpjDxCA5FIFlLiNrTqLKaTALU3S/UVyWdthygEmhakUOVySzpb+FGE2RGVfkk+iUxFjGXLtwE0ibjs01qWnmPMrp7XqkrfHd5Yex4Iz2paiYg6XD9JvG42D4FWB5JcCvwjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h30leDPJ; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qJRWdi8GsvWRmMi5vq6VgSnAiZkGaR0LdobU+h9OrIGqQeIEkrMb24NQV2JfNSNPPnVZznsIdwCw7XuuP6DO6xoqmR/lTt7V08ju38A9IWMvSt5rejZq/d+IYnthmSSTJ74SENRTQFF7BI37nb98s4Y9Y7re2santh7riAkAuPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N9s0yTSi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h30leDPJ"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235e389599fso67605ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750109569; x=1750714369; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=diaMMomGVSeMyl9b0SDQ+0jS5CqmoXFRYMyDr82RfPg=;
-        b=h30leDPJKwfat85XPkRXpJLknslyBZB1MxEVPBFu5/677ECoPMwlaFA4qkv6FXoHje
-         nAVhrPCuhlvL4Md56oo3xGPjbf4RA7mQC3khlai7WBQB6jYOQIF7rrsWV8qDnH0AYe1l
-         TCd/qQfUKUYlcGEePQ+T+YwjkBExpcLR4sERQsRm+FQn5Xnh8d/dNpdk/hsZfUdotQeL
-         9V9uVmecMSqFC6jnVflqsVDxC6Zfri4WSNDMQeEBhGo3sktbV+uOXWqrzNjT8Z3bMVjL
-         vf+O0O3wf1eyCtQYHrf7gd2C11wbXhWknuhaO3eUsmtyYu7Ml+v4bM9W/oq6cqqSQ7G/
-         1RVw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N9s0yTSi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750109941;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7emt/zNGr/CBhfVNgDPKicHgy2P2Bp4GbdXMzFzaVxk=;
+	b=N9s0yTSi2DUgcDMwl2XLDF+1jzncb9KWx1Xk9/E9u6Owqe69wQeJNQozswUu7atK7qQpzt
+	ykdGCClt9H5rHwROBU7eKBkbMSI0I2dB8xDaL0/CQUxnKDc74OwIdDkcg4jTMQF9/I3cbQ
+	rAE6R/MY2JxfGixoRhgwPtUZz0qJEG0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-594-Sxp6PRFDMBOFuge5X2UL-A-1; Mon, 16 Jun 2025 17:39:00 -0400
+X-MC-Unique: Sxp6PRFDMBOFuge5X2UL-A-1
+X-Mimecast-MFC-AGG-ID: Sxp6PRFDMBOFuge5X2UL-A_1750109939
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso3139835f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:39:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750109569; x=1750714369;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=diaMMomGVSeMyl9b0SDQ+0jS5CqmoXFRYMyDr82RfPg=;
-        b=i4wh1WOI/luqZlLyU4qIDiBrMdb97+z8NGUjYqGyysGn9VOoueETtAkNCvSwaKMmBq
-         yOCAXseBUE33JD7rnX3GER492rgPBMS4tfn7iw4TjPmUFiB4Vzjq/GYdsXZqgZWevrPm
-         O+ZoPkcfXPb+ZECmVnPg5ixI2jSnhpFJb4lyJMaY7DXFepuVsv90CLy5GWHzyneJph4u
-         +++vdlAFnWv1H2F3OI/t00sgwbg0H7+OmDiphoyfii+HQ3cxWmPwvO4+OFg1coV9tFv1
-         AXtY/sp79vSvFlKyukOVeTWwZLW9M52E81+0jVfKEQ1MyhjNZAkidBMMZx9iyD0LiS14
-         uvFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWdh1uViZO1E13XZoTQXY6DP9ERzHlZGHwTSzAQu9VwifV0asTdZYLMrNUp0hLKW2EywOnNH/4iXMRNNTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdXAviQRASQ9gRLkaZHCihYks2ApQFzeFCutU5gDlhyd6gUPzg
-	S+9Us4lSGFnIyde/KanHaEAGqwqNxSW6G2YX/0nCCG1d7Qe0WI9lB8JlOf7dJ32AfA==
-X-Gm-Gg: ASbGncss32sL8S/Gdhj4vDJyRawEvWaSpRjzG0z0/bq2R5qNXgU7RT90nmairxWqoKk
-	qfjZA+ahiHXzDns0i+Ls22G1KDuBAiDTut+RL0n7GV6GTcmNEWaEducdBjXBvS8cWkliccX4I7j
-	DhZm33PmNissKPaXQl9HmQKQ8Mxl9EZ/uCDFUCPxHxgKkqqpafDdptuO9yMVgLBp/pFiKUNPK0O
-	30koOI2S6+NBbK3EClinqUR+DJR7RNe5vfcqGhp+mNb3X/2ZmlBoEcD/yAct7i76ODJgzhiYgv7
-	PWslL1+1epRb4Nwq/mddrt/fieb0Uot4CPB49AvVhuxaq2XT1EgSW0g8nXUhyjB1nMpxGkwIfjC
-	7X4rYwTAWEp+vr6ZjRdKD
-X-Google-Smtp-Source: AGHT+IFWcQvoP+9fcVVp+c/nzrucrkTOoV642VxsR9D43oNtEPpmRjh6B8M7BM1aG3k8myNk+wmbkw==
-X-Received: by 2002:a17:902:e74f:b0:21f:631c:7fc9 with SMTP id d9443c01a7336-2366c4f491bmr6716645ad.0.1750109569076;
-        Mon, 16 Jun 2025 14:32:49 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31886377a6sm5271665a12.71.2025.06.16.14.32.45
+        d=1e100.net; s=20230601; t=1750109938; x=1750714738;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7emt/zNGr/CBhfVNgDPKicHgy2P2Bp4GbdXMzFzaVxk=;
+        b=EIUmB5pLKMr2kEQnpG275NZfmZVhL/OVROXaQTRiwGZFdzeozqGN6MmHqTc3U7y1gZ
+         ZJSNXHO09YLbZGq9dAB4RDDeq+fNSi2Qe9Whk9liEAkYxQu3btlD8N7OBywpd81GeQxP
+         sPecULo4Tj3NujvWmiTT7gycvFKcVZbfWnTFqtJTBSaxxkt343T3SW2d4tYr59Zg/Xhu
+         rsBOU4bfaYeZmEY4dT+Yw8atqkI+O2Xrmua3AwCPBedENuegNMHKTRBx4KWY/LtrbVZd
+         DhvBvTaqtawp6zc3uxHvMURrFYikOhKPvdfHvhDZuQsae9ZaEnYrA7q6XAi4I4nhSynl
+         IBiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6GSSg3Up8v3evNO8Ul2DI1ah7Zc5UMC552NYcw5RoqtL4xJD3LlwV29chSbL7sFHUnWK88sjl3TMhLmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWBzAkobrmdepG/ZCD45TstrKSZJwb0PFnLkg7uzb5VdvmRpzB
+	b850lmyCi0Nbg7rh/RBAusdqbaOnochOFxXPbFiX/NescCjVGKu6r+qvDfC4ZDn5s2KT0IITPv7
+	5WDElTnSM2AZGxtnGTVzemoptRU0myuhoFhSyGC9dDA6w72vGvkVYzM7Lh9Hn6lYxwSZ+1u62Cf
+	9B
+X-Gm-Gg: ASbGncuN98nZ15mmLGFpyEyKzULLFZFECYuruYFh9sVnuIvUjzOpxtBol00/RGon5L2
+	Ld5HL5+Vbz2T9bHL5XMxDM9l5cyPAoBQs/q+3yQpMsAoH7KOFrMqBgduGUtq2iksm2x7wBwIOb6
+	7VEzmMN9NNg7D+eajxVVeVYEdW2D33VVFJAwDDc+HhwYTqdENHieu09L0zWebVGnZcS1/EJCLvH
+	XkrN+5rED81umW+oZhKtqcPxY5H2Isv5zPf/HrHaHATO7NvvoxZUJijXHz8p+naqUFIKFf/sD2h
+	o2VjvrneSlQ=
+X-Received: by 2002:a05:6000:400a:b0:3a5:2cb5:63fd with SMTP id ffacd0b85a97d-3a57238b522mr9595360f8f.10.1750109938539;
+        Mon, 16 Jun 2025 14:38:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEzpDB07Ow6Aq7oaibwATYH2bwGc1v46BbhwhcmxYHu7okQGHS3ELJ0eFf8b83N36p9EgRDvg==
+X-Received: by 2002:a05:6000:400a:b0:3a5:2cb5:63fd with SMTP id ffacd0b85a97d-3a57238b522mr9595351f8f.10.1750109938128;
+        Mon, 16 Jun 2025 14:38:58 -0700 (PDT)
+Received: from pollux ([2a00:79c0:662:b300:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089a7sm11887641f8f.49.2025.06.16.14.38.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 14:32:48 -0700 (PDT)
-Date: Mon, 16 Jun 2025 21:32:40 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Xueqi Zhang <xueqi.zhang@mediatek.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Project_Global_Chrome_Upstream_Group@mediatek.com,
-	Ning li <ning.li@mediatek.com>, linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 5/8] iommu/arm-smmu-v3: Add IRQ handle for smmu impl
-Message-ID: <aFCNeOP7oRv7NRjQ@google.com>
-References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
- <20250616025628.25454-6-xueqi.zhang@mediatek.com>
+        Mon, 16 Jun 2025 14:38:57 -0700 (PDT)
+Date: Mon, 16 Jun 2025 23:38:55 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Rob Clark <rob.clark@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
+Message-ID: <aFCO7_RHuAaGyq1Q@pollux>
+References: <20250613235705.28006-1-robin.clark@oss.qualcomm.com>
+ <20250613235705.28006-3-robin.clark@oss.qualcomm.com>
+ <aE1RPZ_-oFyM4COy@pollux>
+ <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250616025628.25454-6-xueqi.zhang@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
 
-On Mon, Jun 16, 2025 at 10:56:11AM +0800, Xueqi Zhang wrote:
-> Add IRQ handle for smmu impl
+On Sat, Jun 14, 2025 at 08:03:20AM -0700, Rob Clark wrote:
+> On Sat, Jun 14, 2025 at 3:39 AM Danilo Krummrich <dakr@redhat.com> wrote:
+> >
+> > On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wrote:
+> > > For UNMAP/REMAP steps we could be needing to lock objects that are not
+> > > explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
+> > > VAs.  These helpers handle locking/preparing the needed objects.
+> >
+> > Yes, that's a common use-case. I think drivers typically iterate through their
+> > drm_gpuva_ops to lock those objects.
+> >
+> > I had a look at you link [1] and it seems that you keep a list of ops as well by
+> > calling vm_op_enqueue() with a new struct msm_vm_op from the callbacks.
+> >
+> > Please note that for exactly this case there is the op_alloc callback in
+> > struct drm_gpuvm_ops, such that you can allocate a custom op type (i.e. struct
+> > msm_vm_op) that embedds a struct drm_gpuva_op.
 > 
-> Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 9 ++++++++-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h | 8 ++++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
+> I did use drm_gpuvm_sm_xyz_ops_create() in an earlier iteration of my
+> VM_BIND series, but it wasn't quite what I was after.  I wanted to
+> apply the VM updates immediately to avoid issues with a later
+> map/unmap overlapping an earlier map, which
+> drm_gpuvm_sm_xyz_ops_create() doesn't really handle.  I'm not even
+> sure why this isn't a problem for other drivers unless userspace is
+> providing some guarantees.
+
+The drm_gpuva_ops are usually used in a pattern like this.
+
+	vm_bind {
+		for_each_vm_bind_operation {
+			drm_gpuva_for_each_op {
+				// modify drm_gpuvm's interval tree
+				// pre-allocate memory
+				// lock and prepare objects
+			}
+		}
+		
+		drm_sched_entity_push_job();
+	}
+
+	run_job {
+		for_each_vm_bind_operation {
+			drm_gpuva_for_each_op {
+				// modify page tables
+			}
+		}
+	}
+
+	run_job {
+		for_each_vm_bind_operation {
+			drm_gpuva_for_each_op {
+				// free page table structures, if any
+				// free unused pre-allocated memory
+			}
+		}
+	}
+
+What did you do instead to get map/unmap overlapping? Even more interesting,
+what are you doing now?
+
+> Once I realized I only wanted to defer the
+> application of the pgtable changes, but keep all the
+> locking/allocation/etc in the synchronous part of the ioctl,
+> vm_op_enqueue() was the natural solution.
+
+But vm_op_enqueue() creates exactly this list of operations you would get from
+drm_gpuvm_sm_{map,unmap}_ops_create(), just manually, no?
+
+<snip>
+
+> > > Note that these functions do not strictly require the VM changes to be
+> > > applied before the next drm_gpuvm_sm_map_lock()/_unmap_lock() call.  In
+> > > the case that VM changes from an earlier drm_gpuvm_sm_map()/_unmap()
+> > > call result in a differing sequence of steps when the VM changes are
+> > > actually applied, it will be the same set of GEM objects involved, so
+> > > the locking is still correct.
+> >
+> > I'm not sure about this part, how can we be sure that's the case?
 > 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index d36124a6bb54..154417b380fa 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -1954,7 +1954,8 @@ static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
->  			arm_smmu_decode_event(smmu, evt, &event);
->  			if (arm_smmu_handle_event(smmu, evt, &event))
->  				arm_smmu_dump_event(smmu, evt, &event, &rs);
-> -
-> +			if (smmu->impl && smmu->impl->smmu_evt_handler)
-> +				smmu->impl->smmu_evt_handler(irq, smmu, evt, &rs);
->  			put_device(event.dev);
->  			cond_resched();
->  		}
-> @@ -2091,7 +2092,13 @@ static irqreturn_t arm_smmu_combined_irq_thread(int irq, void *dev)
->  
->  static irqreturn_t arm_smmu_combined_irq_handler(int irq, void *dev)
->  {
-> +	struct arm_smmu_device *smmu = dev;
-> +
->  	arm_smmu_gerror_handler(irq, dev);
-> +
-> +	if (smmu->impl && smmu->impl->combined_irq_handle)
-> +		smmu->impl->combined_irq_handle(irq, smmu);
-> +
->  	return IRQ_WAKE_THREAD;
->  }
->  
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> index 99eeb6143c49..f45c4bf84bc1 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> @@ -792,6 +792,7 @@ struct arm_smmu_device {
->  
->  	struct rb_root			streams;
->  	struct mutex			streams_mutex;
-> +	const struct arm_smmu_v3_impl	*impl;
->  };
->  
->  struct arm_smmu_stream {
-> @@ -998,6 +999,13 @@ int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
->  				struct arm_smmu_cmdq *cmdq, u64 *cmds, int n,
->  				bool sync);
->  
-> +/* Implementation details */
-> +struct arm_smmu_v3_impl {
-> +	int (*combined_irq_handle)(int irq, struct arm_smmu_device *smmu_dev);
-> +	int (*smmu_evt_handler)(int irq, struct arm_smmu_device *smmu_dev,
-> +				u64 *evt, struct ratelimit_state *rs);
-> +};
+> I could be not imaginative enough here, so it is certainly worth a
+> second opinion.  And why I explicitly called it out in the commit msg.
+> But my reasoning is that any new op in the second pass that actually
+> applies the VM updates which results from overlapping with a previous
+> update in the current VM_BIND will only involve GEM objects from that
+> earlier update, which are already locked.
 
-Let's add these to the exisiting struct arm_smmu_impl_ops and invoke
-them like:
+Yeah, it's probably fine, since, as you say, the only additional object can be
+the req_obj from the previous iteration.
 
-	if (smmu->impl && smmu->impl_ops->combined_irq_handle)
-		smmu->impl_ops->combined_irq_handle(irq, smmu);
-
-Or maybe we could merge the existing impl_dev and impl_ops into a single
-structure.
-
-> +
->  struct arm_smmu_device *arm_smmu_v3_impl_init(struct arm_smmu_device *smmu);
->  #if IS_ENABLED(CONFIG_ARM_SMMU_V3_MEDIATEK)
->  struct arm_smmu_device *arm_smmu_v3_impl_mtk_init(struct arm_smmu_device *smmu);
-> -- 
-> 2.46.0
-> 
-> 
