@@ -1,626 +1,164 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011004.outbound.protection.outlook.com [52.101.65.4])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD981ACEDC;
-	Mon, 16 Jun 2025 14:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084163; cv=fail; b=n+Jr8gyAQCXGmNcCdC7lX5GbVrsMq90eOhBIBWVhF5nVbrEI6yYEdANatUTdl7Qh9lY+vutuTE6xSNVGKU6QP9UqjzeeUfec6Ga9qy8PeWT+FyUUOTy1hZ/1ZMLtGe1UoP/bgwA2UFvaYX/P37ZaLvYm5sWw960STP7Ftkf/2zE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084163; c=relaxed/simple;
-	bh=3CyWaU5sQ2qAHS/DaSRvKKaz+4/MsMfIo0akzRvqL9Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=a7cMv4gvTh5saHKKG3K3WmALr4hn2qrt0SvdxRmN5XJMUbnJJ229GBqHer7NZA5MQv4T786bSAQNKNJz4qa/9n7QFgnEjcMxa5pLy2lw5ewzcv/45vZ9r2IDILpG6ALdrTJLoLzyquIQvyjpFt3z8FOL37nJIqmCjlK2B6cq0UE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=kxakv2Fl; arc=fail smtp.client-ip=52.101.65.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAC01F91C7
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750084243; cv=none; b=FO/ZcuQhOjBXZUAs/owtHlxsYINBz8taluuSYXe6YsfdXPaqTOFUyis5u2CuWjhh7giq0UtsEF0wVGuJedpYdtZYQ+kRvjb4zeWrZLdHcv9XVdcvV1zejXbfDQuWuCxE9/9sbL+24lHier/ggNzTDZmHQxjrrNe/hmYRdWS9yOo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750084243; c=relaxed/simple;
+	bh=cBkQGq+aQh2WGhSROw87npSAa+GCGQe8VqIRgDN9+3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L+2p73NbWua36e9a7JIofR3R4mumC0juC4fY+QCRXo5j0xeg+vBWDGY+3ST07degt+t8c6lL5knDuqbKAUUKItCGmV8cWsgCJIjN1SjnLIasmVBxRn6mMfzux6Bi67pwI3aNvuvUgPy70LAF6y0YscytUIFl1Tig2LJdFtoj+60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4hfXkHn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="kxakv2Fl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KbZgLT32LgCOIv/p7/4EHvVV1SijSqRaXoUPth10A1zzRF6XIfi5zBZIBgj81SlYe7/MGOiqlG/9ypkPmAOqi2hZ75AMQxZVeC4LJ/34mC9hMALcO/a1ARFw9UafX0xewXkAsIzsf9hmp+jlU4imCOUjlFsTqZU/YMo4lISmTXuB5Z6pdONL96sRXKH9ItlPXtGTiW8lM0H4nnd5TuhO/a680Nm8QDrCXIBII3KFneSIzcKdGA/vmWMGUHY+E6NEYBO/eYNkLTY3Z+vQ65hIPx9z3VfJ0xRRCvb7e0/hnzDxARYLeoYMSVMWsqtwuYvM8Y8/jIaXsRlNW+X5/7WfIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yuoBMg0V18/M2J7HLJlZ1z5/biRY+PO4IuJiVqAD2Z8=;
- b=tLMEy6tjfBiUY8xp1AUPsk2Z6uUSKKAeN81amU19f5QczAAi9coDvbMp25ZetVZDMc2Jsx81qAr/Y+dZT1I9xntm3l6N12gFBLhWsTDOpuAxgnQBwhiv2PMZKhX3OYO/zzQxObEFc/cyXuhaYp1msNI8lXl71pLkL3Skr7iLxFSyCjc1fgn/+r3UwVieurCG/b/QRLKOs8vXkmSu0CjcVvOeD7XqYWpxNXRraRnEv0fEgQBXBQKXToYh31b+Q4YiUSAeN34XXZrCxTCqTZGZHLHQRsnpahGlCdGSsCl8ENrooWSQbsC9GXspvO4Ap05pQo4TScZRglhV6rDxcncthA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yuoBMg0V18/M2J7HLJlZ1z5/biRY+PO4IuJiVqAD2Z8=;
- b=kxakv2Fl3JZDxrXRNLJYR/UWtHjVMxDcDN1yFIs7ACMI7z6x09BcgndOg9B+zDD1jySx1qyPCqE5to9vbCByodve4kHWPwqO+aWuv6pqJAliwW/dQ2O5lm4qrkyAE6CVE/IPSdzIXnvtwL+kgSHdlz+4mbKmBf1GfIoSkAFicw0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-Received: from AS2PR02MB10373.eurprd02.prod.outlook.com
- (2603:10a6:20b:544::20) by PAWPR02MB9903.eurprd02.prod.outlook.com
- (2603:10a6:102:2ec::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Mon, 16 Jun
- 2025 14:29:15 +0000
-Received: from AS2PR02MB10373.eurprd02.prod.outlook.com
- ([fe80::59a4:74af:158:bc40]) by AS2PR02MB10373.eurprd02.prod.outlook.com
- ([fe80::59a4:74af:158:bc40%3]) with mapi id 15.20.8835.018; Mon, 16 Jun 2025
- 14:29:15 +0000
-Message-ID: <a15141d7-db98-457e-98ee-a978a4c875dc@axis.com>
-Date: Mon, 16 Jun 2025 16:29:14 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rtc: rx8111: Add NVMEM and timestamp functionality
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20250429-rtc-rx8111-events-v1-1-7e2a61126042@axis.com>
-Content-Language: en-US, sv-SE
-From: Anders Sandahl <anders.sandahl@axis.com>
-In-Reply-To: <20250429-rtc-rx8111-events-v1-1-7e2a61126042@axis.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MM0P280CA0048.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:b::30) To AS2PR02MB10373.eurprd02.prod.outlook.com
- (2603:10a6:20b:544::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4hfXkHn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750084240;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b122cq18cIxKAeDyocwvAGBr6eAjHnsn2f9gGHRU4ls=;
+	b=F4hfXkHnVDbTjLCqeAmrIyVFBdh2NOs2lOXBEg4ViYeuys7qTAdos+sJfd34RKO5uJLKVw
+	6IiS2YJBigmnjuXUGNFRhYaWRDP1+4pxe9h5K0pCTXKCktbXO/2ur5s5RjKiSEM5OJtoMX
+	x7mQaGR1F5mODCEHdYEQiLrlER1IwKU=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-201-GPbyLhFZP4uHpDoo1rID7g-1; Mon, 16 Jun 2025 10:30:38 -0400
+X-MC-Unique: GPbyLhFZP4uHpDoo1rID7g-1
+X-Mimecast-MFC-AGG-ID: GPbyLhFZP4uHpDoo1rID7g_1750084236
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f6cc5332so2674212f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 07:30:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750084236; x=1750689036;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b122cq18cIxKAeDyocwvAGBr6eAjHnsn2f9gGHRU4ls=;
+        b=Xms1tNe1v0gb7WmF8uMq6G/zc2CbuUkZ+VR0qatGLk4Q0hZ7bPLvO2RUvas4mVtIYH
+         nO7XZ8dw+hGCSus1Sr9cs9wmVeOWd8CEvBY3wQM06vTpm9xmHvHBQcGpQq3dxvYUIPpP
+         z6cSH60bXUzk6ronq0iI3wWuMW9/ZuYsg5pF48VbaAwMsqPfuqAmFGz1DQgljnrUE4Nj
+         vyoFit1RT45SfD+IOmbX1FRX7KGoI74JslPHMuFEHDh6eEQPUqLx3hWbkFVkWPPruXCK
+         RtXG3YNPxtpKzB9PMkb5r0GqyTNNitSyefMV23ORBK3iadwaUkrQFp77DZf49b7zCBue
+         tMWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHS1QrLE2dDMjK3Q++EsiBry0Xbin8Kam2yCG6dPtNk2OK4XrnLF4Qug82uCxMSTZAnGuXb8qtymeLT2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIozID1lzhhZ8R1HtVCtXWilPjgOJE6woAZBPMtBGoKMhRczOr
+	8i/Hp+kUFCnT31+7W2qV8ZO9Nr2928oB1NpVDfThxzeenazruCG4Fd3Zy/H6pSeKlqJXVHECbha
+	/+38yuqUhbLp6UBL3lmkELqsnokU1swBVu6Jpsl2qpFM0SswOFgn+keGdNucUu/Zulw==
+X-Gm-Gg: ASbGnctkHg6fkEMY0bbQh2Ev+KaylMwKwQpaVmn9j1aV7Y33+M8dIYOzvQN+rjzYGRr
+	iGmFCIh1WfamlKmoPdvTHbwTnD+Mymi4KdWM3JTrGczbio/SmzOHJJ8QkgFqsfgAmxvceSLD7m7
+	PaYNNMg7QYqTdFPmFqXXFLzhlIFWrILEWFxAO0vzJ/IFCWtMOy1d17SB8KPmlkdLBZxZTYIGtqF
+	NAOx5FhClg6eJnohU5Um4nWutyQ9PEOIes+NTOuLprJwPAF/gYHDnQ0D+il25vFfZ308+lT5ET/
+	wsdKzKnW/YbZIz+Us3k6U6CkZM4=
+X-Received: by 2002:a05:6000:4211:b0:3a4:dc42:a0ac with SMTP id ffacd0b85a97d-3a572e4b6eemr8077944f8f.49.1750084235911;
+        Mon, 16 Jun 2025 07:30:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsnkYIGAr+qs47yOUuIjHINelBcn/kxEeTN9OXZQ0z3+Yj1yvrInii/mr9eol6osEokceKog==
+X-Received: by 2002:a05:6000:4211:b0:3a4:dc42:a0ac with SMTP id ffacd0b85a97d-3a572e4b6eemr8077892f8f.49.1750084235405;
+        Mon, 16 Jun 2025 07:30:35 -0700 (PDT)
+Received: from leonardi-redhat ([176.206.17.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b2371bsm11346666f8f.70.2025.06.16.07.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 07:30:35 -0700 (PDT)
+Date: Mon, 16 Jun 2025 16:30:32 +0200
+From: Luigi Leonardi <leonardi@redhat.com>
+To: Xuewei Niu <niuxuewei97@gmail.com>
+Cc: sgarzare@redhat.com, mst@redhat.com, pabeni@redhat.com, 
+	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, davem@davemloft.net, 
+	netdev@vger.kernel.org, stefanha@redhat.com, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com, 
+	Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: Re: [PATCH net-next v2 1/3] vsock: Add support for SIOCINQ ioctl
+Message-ID: <mrib74zhrw47v4juifp67phnm6tffb7qgfm3xmtcuw5maminlv@4i7z36hg3554>
+References: <20250613031152.1076725-1-niuxuewei.nxw@antgroup.com>
+ <20250613031152.1076725-2-niuxuewei.nxw@antgroup.com>
+ <2bsvomi4vmkfn3w6ej4x3lafueergftigs32gdn7letgroffsf@huncf2veibjy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS2PR02MB10373:EE_|PAWPR02MB9903:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9a216b0-86f2-445a-5125-08ddace22baf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cXdZL0Qvd3JsQVRYanJCWFZOdUl3VG9qem9LVW5palJseTFLTUVRZThXMHVR?=
- =?utf-8?B?ajVoTkZmRHlISVJHbzZKak5KckE1b2VhWmNXNkpvZGRBZ2taZWY4UXlsODhi?=
- =?utf-8?B?dkVQQzlMT2hobmhoSUVNcFFMNVFKUWRGUEdremRjREIwRFFIdmE3VXY1VThw?=
- =?utf-8?B?S3R6RUJER3pOY0tad290MmNYQUFQNlk4VVc0TjJWNWtyOFErdk5UM05idFJt?=
- =?utf-8?B?TWtVZnBLVWZxU3JORkZPQXlKYzdlVWd2ZFpLSTJXZmJvSkM5K3RmSmlCU043?=
- =?utf-8?B?NTFiZloyV0NGek1LY3Q1eENOeUw1WVpCcjdiVzFoQnltWkdkSlFvUzRndS9n?=
- =?utf-8?B?TGg3Q21JQW5FQ3BoRzc2RUlSYVJrT2lKRTVDbnh1RlNIeHp6WjJnenBob2dl?=
- =?utf-8?B?QVJIL2VKMFVZa3RxOXdHSlBSMDYreEVxeFBHMUxnU01TVDRiSFNjd1FBMGlK?=
- =?utf-8?B?c0FLUkZhWmhoMWhXZDVIeEcyNm4vaTJTbnpMSWp2YWlyV0FhODNlazFGTmxw?=
- =?utf-8?B?dUd2ZXFQOWZ0b2o4RHRSM253SFdjUW5hT3JFaHFvYVE5blVPbERYR0NTUUpH?=
- =?utf-8?B?cWVoQUFYR1haR2VEMTR4MWtiMlpJTGJUUXhLNURDeTJJTzFyUkRlS1BCUUlC?=
- =?utf-8?B?SjdKVm1UaG9zZlh5dHRudUJHdEFrdU81S0E5Y0hSYS9ESzlnVDd0SmwrWE5X?=
- =?utf-8?B?YzNEdUhQQXhzUG80bmhpZllrc1gzbkRWaTVjcm9hUVVrcFdQUVJYOTdZaUZo?=
- =?utf-8?B?VGJsZlM4YWl5YnNMRW1Ea0ZYQnBacXdrUkU2REt0TGRQRVh4MklFK0ZEUGs2?=
- =?utf-8?B?V1BBcThobUR4YXlIalQrKzZBMlM3ZDdtNHpydnVDRzBUR1V4emNDWU1OZ09L?=
- =?utf-8?B?VTZydTZlSWFyNGc2SGpPbm1UWElYQ0orYVI3QWl5Z1M3Q2VQZU5UWENpaVVy?=
- =?utf-8?B?bWZhTmxLcGtiVldkN1FPcEtnNEtzY2R5UXFrVWFxaEJzNnhoeEM1dklEZGJa?=
- =?utf-8?B?LzVCejZ0MmN3bTVOT1BkUS8rSkI3NURRRkVzMCtnRmtocE1LMldZMCtWWlRS?=
- =?utf-8?B?L2N2VWs5cGFpK2QrMEEzN3JhM09qYW4zRlYxVjRHaWlQTWlnY21GTXBmT2RE?=
- =?utf-8?B?QVk0cXhjYmRabFIzNWF2VmRLSVdWdmMvaXJHSEpHWU5WTFNNWnRLVWJMUEJt?=
- =?utf-8?B?NUtIcVZjNnVKSXg0MTFYSDdpZGY2clJYRE1xNnRvQTNWK3RCc2VlTEl2TU1W?=
- =?utf-8?B?MmhWMkZaZGJPOVF4Rk5vNDN6akhIYUZPK2VQVytZaXpFeEtVN05YbUQrSEtr?=
- =?utf-8?B?dWh1OG02MjVQRHJrc0E1dElwUEdUR0hKekhOcllXVEtIK1lvV1QySHBvTFdF?=
- =?utf-8?B?MlZSQXBjQWoybnlIQVRHN1VyT1ozbTZVZ0N1TVJGaGJIdWVYTDJGdnpOZGRZ?=
- =?utf-8?B?VlNISjE3czZiTFl4Z2taZWRJMVQzUjZDb3IvYVVrRlh0T2FjZzRtOE54WU1C?=
- =?utf-8?B?ZmJZcTNKSXZpSnlmR01YUVp2YTBvL3BGcnVJOVU0aWkzSmFrcTROY09QNkpN?=
- =?utf-8?B?MWdCczlUZElxMVpOY3BWK0J3Y0RpRGlvLzEzci9ZaitqMEVhdjBVWFl2QUdu?=
- =?utf-8?B?UEppUndicjdJK1hGSjFlY3ZVdS9SVlpwS3FuVkVNelBwRUNXRFpEM1dkNWZY?=
- =?utf-8?B?R0RVTFdGemNMMzAxdTZMd1Z1cEphT053VmhEWFJLRnQ3U0VXUGo5Z1VFbXZT?=
- =?utf-8?B?YVZtdzRPbWZLNEhlb3pLZGlYWno1djdIYXZkNUUyeHVnU0VxZFg3Q2tRS29s?=
- =?utf-8?Q?DQxamAtQc/h2tQGh0/TyDOlaCnLLTxgl3x/Q4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS2PR02MB10373.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RFdiTnoycmFUM014MmJxTnpZaHdUdTZnR3NoMVM5cExCZlVvS3E3S2xHR3Vm?=
- =?utf-8?B?Nlk5bG44NnU5b1dDOU81MnJTU2NQT1d0MTZ0S2hPMW9hQW9HcDhpaTYxM3RO?=
- =?utf-8?B?TkJOdjAvdW5DQ1JSRXJzTXRoZTh3WjRzZkdxcUV6WUM0ODVpdmRzZEZUdXQ3?=
- =?utf-8?B?NDJEYVNNUW9RUnJzZzFYNm44QjRKQSsxcFV5eXlMMjR6WitHNTdFa3FSYVRV?=
- =?utf-8?B?UjNyaTVJeTJvRFIvMDh0WnNISG5KK2UxTmJENG9IeDF2S0RTUmQxb1R4bXlE?=
- =?utf-8?B?dzd2a2Era3dENFJmV2JIelpFclRDNlJqaDFDYmZFb3RoRUdvMXZZbDR3VHZz?=
- =?utf-8?B?a0VOTkl4UkhpUTN5U3JLOUp2blJIUzVIZVZER2h4a2UxSUFGQ1g0d2xjNGMx?=
- =?utf-8?B?Y05DZW5JYlFyZVNSTEZoU1gvbE83WnRqdVBRZlNBTzI3RXBSbGN3K1huKzNH?=
- =?utf-8?B?MjIzWEowRU5LMUdMS3RQRmI2Q1V2UG91Z3hsZUJBcjJHZGF5RHFLYTBoUlBx?=
- =?utf-8?B?MzQvckRqLzVYRDlmdm9iS0R2eTRNbzY3WjFnekxQcXAzbGR0YTJZTGtEZmpS?=
- =?utf-8?B?SUdTZGJZS3hMYTJYQk1Qem1qcjYrck9ZcmJ3eWU5dTlvaFNDcUI3U1FWaG5K?=
- =?utf-8?B?eUFXNEx2QXdrYzgzenpnYjJEb0VXbVJWQjJnVjVwUVpMV2dJZ2Z0OWNtYVBL?=
- =?utf-8?B?OE5WQkpwRE9SSnNQTXh1TVJPeGZBTER2QUNTNFlNTWRYUEhXMXJSMU9meEl1?=
- =?utf-8?B?QTBMcFZlSGlZUkJHaS95Wk01Rnc1L2QxbU1meGtHS1JHSmROVmZvWWV5N2Zr?=
- =?utf-8?B?ZHNMMVRTV0xpcUhZTjJiLzJydlo3YzFkV1plaE5RR0ZuQ3FleFNkempPeCtx?=
- =?utf-8?B?dDJtdmJSeVRMVTM2ZVRsZGF1V1g5U3hTa20zS3BhbkxzUk5RcHJ3eXB2TTR5?=
- =?utf-8?B?Z3BXQ0tDYk9FWklaM3c3NVRyRW9CMTh2NG8ycG5JS09FVVB0RHNsYmFzdHF5?=
- =?utf-8?B?eGV5b3luSzh1MllwdmI5bWV2ZWcyOUhNYW5IeXBvck5HbVYySGt4clYxemx5?=
- =?utf-8?B?eWw4R1JOZDhFSjhldG9jNTZ3NitpSUR4eUpmd0tabWJEWFlyc0xxZXAzd2Fz?=
- =?utf-8?B?MVkzZCtoYVN1VkhXVk1lSUU0TUpGN2F0YURUSENYb2Y2ZW1MOW02cjMvQy95?=
- =?utf-8?B?UDFiSmwxSWtvT2F5YUZQaVBsR3Bpc0FZbVdudkVnZGlIWmxqQ09odGZ4NUNB?=
- =?utf-8?B?Q3pwT2xNWXd6TjdKS0xURUVZUGFYNWhwczlnVGRMcFhhdkxYbmZVTW5rV21p?=
- =?utf-8?B?Zzljb1VDZUxmTk9KN004M1FEVUpHdGp1ZzM2L0pXbzlyTWJ1bXQ4RlNxL1dF?=
- =?utf-8?B?dm9EMlNRZCtlQ0RsVUhXQVQ0ZGFLbS9HS1J5Rk9iMXA4ZVVZd2FVc0QyNmFX?=
- =?utf-8?B?NHFqdUZlOFc5MDRMZW04MlBWMXRLbFFKWmJWc21TaE13clZESFI5SVhWR0NS?=
- =?utf-8?B?VmJJOXFCZnFBUWhzSmN2TXJ6L2F6YWxnYko4WnpYRklHTDJ6TTlGQ0E0UWx4?=
- =?utf-8?B?bU1CUysreXB2UFlPWXFScktpdWdydFZsMVp0TTFXM2FIZXhSUzdjQkVhbXY0?=
- =?utf-8?B?QndaOEVQYjlZK0plQzNkSE9tM3RQNG1aMHQvdWQxTWs0MisyYVdTaWd5d0ZU?=
- =?utf-8?B?Z0dWb3BhbGpOMzhVM2p5a1o0NkRVS2hPbS9MR2x3Y2Y1ZXY2UHhvMnFuajNr?=
- =?utf-8?B?VzFHSW9GWWhZczE2MEZxaStKZHA3KzEwaFRmWW5TeHh4Uk1vR3pQdjlxTGdi?=
- =?utf-8?B?R255MzRCVGRWYldzcUZobWFJNi9YSGlRU2xYK2VXV09tb3NYZXBPNnBVY1Jx?=
- =?utf-8?B?UlB6bThSbFI2K2w0aG95UkNjUUViWVlXY0tPRE1paUxzeDNkUDM2cXhsdkp1?=
- =?utf-8?B?NUtxT0ZGb1loQ3ZuR2EzY3l6VTBsdmFGelIvUXZNd3dlVW52THdpVzAwcVFL?=
- =?utf-8?B?SnhpRVRQR0VqMnNpNW5DYStJZ3d1K2NRTldlbENuMVNRR1RhUHFDMXVpZHN5?=
- =?utf-8?B?QUo4NGM1L0MvSERNQmZGM0RNaVJsbWVqUVpyLzJwZEdNZmNQaHFiaTFzUmEy?=
- =?utf-8?Q?TQTSLIIGOMMhT6pvWTCYPN3Kl?=
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9a216b0-86f2-445a-5125-08ddace22baf
-X-MS-Exchange-CrossTenant-AuthSource: AS2PR02MB10373.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 14:29:15.5509
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ir58DbofnB52l84KLpZgeP8R37XXrSEXvlw24VgsSRAoTvr/ks/q122un5QUfeACL/6mBLYLLUIbKqR1B6UD6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB9903
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <2bsvomi4vmkfn3w6ej4x3lafueergftigs32gdn7letgroffsf@huncf2veibjy>
 
-Hello,
+On Mon, Jun 16, 2025 at 03:42:53PM +0200, Luigi Leonardi wrote:
+>On Fri, Jun 13, 2025 at 11:11:50AM +0800, Xuewei Niu wrote:
+>>This patch adds support for SIOCINQ ioctl, which returns the number of
+>>bytes unread in the socket.
+>>
+>>Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+>>---
+>>include/net/af_vsock.h   |  2 ++
+>>net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
+>>2 files changed, 24 insertions(+)
+>>
+>>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>>index d56e6e135158..723a886253ba 100644
+>>--- a/include/net/af_vsock.h
+>>+++ b/include/net/af_vsock.h
+>>@@ -171,6 +171,8 @@ struct vsock_transport {
+>>
+>>	/* SIOCOUTQ ioctl */
+>>	ssize_t (*unsent_bytes)(struct vsock_sock *vsk);
+>>+	/* SIOCINQ ioctl */
+>>+	ssize_t (*unread_bytes)(struct vsock_sock *vsk);
+>>
+>>	/* Shutdown. */
+>>	int (*shutdown)(struct vsock_sock *, int);
+>>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>>index 2e7a3034e965..466b1ebadbbc 100644
+>>--- a/net/vmw_vsock/af_vsock.c
+>>+++ b/net/vmw_vsock/af_vsock.c
+>>@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
+>>	vsk = vsock_sk(sk);
+>>
+>>	switch (cmd) {
+>>+	case SIOCINQ: {
+>>+		ssize_t n_bytes;
+>>+
+>>+		if (!vsk->transport || !vsk->transport->unread_bytes) {
+>>+			ret = -EOPNOTSUPP;
+>>+			break;
+>>+		}
+>>+
+>>+		if (sock_type_connectible(sk->sk_type) &&
+>>+		    sk->sk_state == TCP_LISTEN) {
+>>+			ret = -EINVAL;
+>>+			break;
+>>+		}
+>>+
+>>+		n_bytes = vsk->transport->unread_bytes(vsk);
+>>+		if (n_bytes < 0) {
+>>+			ret = n_bytes;
+>>+			break;
+>>+		}
+>>+		ret = put_user(n_bytes, arg);
+>>+		break;
+>>+	}
+>>	case SIOCOUTQ: {
+>>		ssize_t n_bytes;
+>>
+>>-- 
+>>2.34.1
+>>
+>
+>Reviewed-by: Luigi Leonardi <leonardi@redhat.com>
 
-Please let me know if I need to do something more?
+Stefano is totally right, reusing `virtio_transport_unread_bytes` is a 
+good idea.
 
-BR Anders
+nit: commit message should use 'imperative' language [1]. "This patch 
+adds" should be avoided.
 
-On 4/29/25 15:59, Anders Sandahl wrote:
-> Introduce support for saving a timestamp triggered by an external
-> event via the EVIN pin. After an event detection, the timestamp can be
-> retrieved from timestamp0 in sysfs.
->
-> Also add a sysfs control timestamp0_write_nvmem to enable the RX8111
-> feature that stores timestamps in NVMEM as a circular buffer.
->
-> Signed-off-by: Anders Sandahl <anders.sandahl@axis.com>
-> ---
-> The Epson RX8111 device has support for saving a time stamp when a
-> hardware trigger occurs. It also has a register area that can be used
-> as non-volatile memory.
->
-> Datasheet: https://download.epsondevice.com/td/pdf/app/RX8111CE_en.pdf
->
-> Timestamp is made available in the same manner as in "rtc-rv3028.c"
-> through sys-fs. NVMEM is made available using the framework functions.
-> ---
->   drivers/rtc/rtc-rx8111.c | 351 ++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 349 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-rx8111.c b/drivers/rtc/rtc-rx8111.c
-> index 8450d9f0b566c63bca04988d892ea4db585ac526..4f428eb98f4858b4c70b3a5709d8204a77d0a1ea 100644
-> --- a/drivers/rtc/rtc-rx8111.c
-> +++ b/drivers/rtc/rtc-rx8111.c
-> @@ -58,7 +58,14 @@
->   #define RX8111_FLAG_XST_BIT BIT(0)
->   #define RX8111_FLAG_VLF_BIT BIT(1)
->   
-> +#define RX8111_REG_TS_RAM_START		0x40	/* Timestamp RAM area start. */
-> +#define RX8111_REG_TS_RAM_END		0x7f	/* Timestamp RAM area end. */
-> +
-> +#define RX8111_BIT_EVIN_SETTING_OVW	BIT(1)	/* Enable overwrite timestamp RAM. */
-> +#define RX8111_BIT_EVIN_SETTING_PU1	BIT(3)	/* Pull up select 1. */
-> +
->   #define RX8111_TIME_BUF_SZ (RX8111_REG_YEAR - RX8111_REG_SEC + 1)
-> +#define RX8111_TS_BUF_SZ (RX8111_REG_TS_YEAR - RX8111_REG_TS_SEC + 1)
->   
->   enum rx8111_regfield {
->   	/* RX8111_REG_EXT. */
-> @@ -98,6 +105,11 @@ enum rx8111_regfield {
->   	/* RX8111_REG_STATUS_MON. */
->   	RX8111_REGF_VLOW,
->   
-> +	/* RX8111_REG_TS_CTRL1. */
-> +	RX8111_REGF_TSRAM,
-> +	RX8111_REGF_TSCLR,
-> +	RX8111_REGF_EISEL,
-> +
->   	/* Sentinel value. */
->   	RX8111_REGF_MAX
->   };
-> @@ -134,12 +146,16 @@ static const struct reg_field rx8111_regfields[] = {
->   	[RX8111_REGF_CHGEN]  = REG_FIELD(RX8111_REG_PWR_SWITCH_CTRL, 7, 7),
->   
->   	[RX8111_REGF_VLOW]  = REG_FIELD(RX8111_REG_STATUS_MON, 1, 1),
-> +
-> +	[RX8111_REGF_TSRAM]  = REG_FIELD(RX8111_REG_TS_CTRL1, 0, 0),
-> +	[RX8111_REGF_TSCLR]  = REG_FIELD(RX8111_REG_TS_CTRL1, 1, 1),
-> +	[RX8111_REGF_EISEL]  = REG_FIELD(RX8111_REG_TS_CTRL1, 2, 2),
->   };
->   
->   static const struct regmap_config rx8111_regmap_config = {
->   	.reg_bits = 8,
->   	.val_bits = 8,
-> -	.max_register = RX8111_REG_TS_CTRL3,
-> +	.max_register = RX8111_REG_TS_RAM_END,
->   };
->   
->   struct rx8111_data {
-> @@ -147,8 +163,224 @@ struct rx8111_data {
->   	struct regmap_field *regfields[RX8111_REGF_MAX];
->   	struct device *dev;
->   	struct rtc_device *rtc;
-> +	spinlock_t ts_lock;	/* Don't allow poll of ETS bit when it's temporarily disabled. */
->   };
->   
-> +static ssize_t timestamp0_store(struct device *dev,
-> +				struct device_attribute *attr, const char *buf,
-> +				size_t count)
-> +{
-> +	struct rx8111_data *data = dev_get_drvdata(dev);
-> +	int ret, etsval;
-> +
-> +	/*
-> +	 * Clear event only if events are enabled. This is to protect
-> +	 * us from losing events in the future if events have been disabled
-> +	 * by mistake (error in read function).
-> +	 */
-> +	spin_lock(&data->ts_lock);
-> +	ret = regmap_field_read(data->regfields[RX8111_REGF_ETS], &etsval);
-> +	spin_unlock(&data->ts_lock);
-> +
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not read ETS (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!etsval)
-> +		return -EINVAL;
-> +
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_EVF], 0);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not write EVF bit (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_TSCLR], 1);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not write TSCLR bit (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t timestamp0_show(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	struct rx8111_data *data = dev_get_drvdata(dev);
-> +
-> +	struct rtc_time tm;
-> +	int ret, evfval;
-> +	u8 date[RX8111_TS_BUF_SZ];
-> +
-> +	/* Read out timestamp values only when an event has occurred. */
-> +	ret = regmap_field_read(data->regfields[RX8111_REGF_EVF], &evfval);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not read EVF (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!evfval)
-> +		return 0;
-> +
-> +	spin_lock(&data->ts_lock);
-> +
-> +	/* Disable timestamp during readout to avoid unreliable data. */
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_ETS], 0);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not disable timestamp function (%d)\n",
-> +			ret);
-> +		goto err_out;
-> +	}
-> +
-> +	ret = regmap_bulk_read(data->regmap, RX8111_REG_TS_SEC, date,
-> +			       sizeof(date));
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not read timestamp data (%d)\n", ret);
-> +		goto err_out;
-> +	}
-> +
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_ETS], 1);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not enable timestamp function (%d)\n", ret);
-> +		goto err_out;
-> +	}
-> +
-> +	spin_unlock(&data->ts_lock);
-> +
-> +	tm.tm_sec = bcd2bin(date[0]);
-> +	tm.tm_min = bcd2bin(date[1]);
-> +	tm.tm_hour = bcd2bin(date[2]);
-> +	tm.tm_mday = bcd2bin(date[4]);
-> +	tm.tm_mon = bcd2bin(date[5]) - 1;
-> +	tm.tm_year = bcd2bin(date[6]) + 100;
-> +
-> +	ret = rtc_valid_tm(&tm);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sprintf(buf, "%llu\n",
-> +		       (unsigned long long)rtc_tm_to_time64(&tm));
-> +
-> +err_out:
-> +	spin_unlock(&data->ts_lock);
-> +	return ret;
-> +}
-> +
-> +static DEVICE_ATTR_RW(timestamp0);
-> +
-> +static ssize_t timestamp0_write_nvmem_store(struct device *dev,
-> +					    struct device_attribute *attr,
-> +					    const char *buf, size_t count)
-> +{
-> +	struct rx8111_data *data = dev_get_drvdata(dev);
-> +	bool enable;
-> +	int ret;
-> +
-> +	if (count < 1)
-> +		return -EINVAL;
-> +
-> +	ret = kstrtobool(buf, &enable);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_TSRAM],
-> +				 enable ? 1 : 0);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not set TSRAM bit (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t timestamp0_write_nvmem_show(struct device *dev,
-> +					   struct device_attribute *attr,
-> +					   char *buf)
-> +{
-> +	struct rx8111_data *data = dev_get_drvdata(dev);
-> +	int enable;
-> +	int ret;
-> +
-> +	ret = regmap_field_read(data->regfields[RX8111_REGF_TSRAM], &enable);
-> +	if (ret) {
-> +		dev_dbg(dev, "Could not read TSRAM bit (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return sprintf(buf, "%s\n", enable ? "1" : "0");
-> +}
-> +
-> +static DEVICE_ATTR_RW(timestamp0_write_nvmem);
-> +
-> +static int rx8111_sysfs_register(struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	ret = device_create_file(dev, &dev_attr_timestamp0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = device_create_file(dev, &dev_attr_timestamp0_write_nvmem);
-> +	if (ret)
-> +		device_remove_file(dev, &dev_attr_timestamp0);
-> +
-> +	return ret;
-> +}
-> +
-> +static void rx8111_sysfs_unregister(void *data)
-> +{
-> +	struct device *dev = (struct device *)data;
-> +
-> +	device_remove_file(dev, &dev_attr_timestamp0);
-> +	device_remove_file(dev, &dev_attr_timestamp0_write_nvmem);
-> +}
-> +
-> +static int rx8111_setup(struct rx8111_data *data)
-> +{
-> +	int ret;
-> +
-> +	/* Disable multiple timestamps; area is used for nvmem as default. */
-> +	ret = regmap_write(data->regmap, RX8111_REG_TS_CTRL2, 0);
-> +	if (ret) {
-> +		dev_dbg(data->dev, "Could not setup TS_CTRL2 (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_write(data->regmap, RX8111_REG_TS_CTRL3, 0);
-> +	if (ret) {
-> +		dev_dbg(data->dev, "Could not setup TS_CTRL3 (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Configure EVIN pin, trigger on low level. PU = 1M Ohm. */
-> +	ret = regmap_write(data->regmap, RX8111_REG_EVIN_SETTING,
-> +			   RX8111_BIT_EVIN_SETTING_PU1 |
-> +				   RX8111_BIT_EVIN_SETTING_OVW);
-> +	if (ret) {
-> +		dev_dbg(data->dev, "Could not setup EVIN (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Enable timestamp triggered by EVIN pin. */
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_ETS], 1);
-> +	if (ret) {
-> +		dev_dbg(data->dev, "Could not enable timestamp function (%d)\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Disable all interrupts. */
-> +	ret = regmap_write(data->regmap, RX8111_REG_CTRL, 0);
-> +	if (ret) {
-> +		dev_dbg(data->dev, "Could not disable interrupts (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int rx8111_read_vl_flag(struct rx8111_data *data, unsigned int *vlval)
->   {
->   	int ret;
-> @@ -160,6 +392,17 @@ static int rx8111_read_vl_flag(struct rx8111_data *data, unsigned int *vlval)
->   	return ret;
->   }
->   
-> +static int rx8111_clear_vl_flag(struct rx8111_data *data)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_field_write(data->regfields[RX8111_REGF_VLF], 0);
-> +	if (ret)
-> +		dev_dbg(data->dev, "Could not write VL flag (%d)", ret);
-> +
-> +	return ret;
-> +}
-> +
->   static int rx8111_read_time(struct device *dev, struct rtc_time *tm)
->   {
->   	struct rx8111_data *data = dev_get_drvdata(dev);
-> @@ -289,11 +532,69 @@ static int rx8111_ioctl(struct device *dev, unsigned int cmd, unsigned long arg)
->   		vlval |= regval ? RTC_VL_BACKUP_LOW : 0;
->   
->   		return put_user(vlval, (typeof(vlval) __user *)arg);
-> +	case RTC_VL_CLR:
-> +		return rx8111_clear_vl_flag(data);
->   	default:
->   		return -ENOIOCTLCMD;
->   	}
->   }
->   
-> +static int rx8111_nvram_write(void *priv, unsigned int offset, void *val,
-> +			      size_t bytes)
-> +{
-> +	struct rx8111_data *data = priv;
-> +	int ret, len;
-> +
-> +	/*
-> +	 * The RX8111 device can only handle transfers with repeated start
-> +	 * within the same 16 bytes aligned block.
-> +	 */
-> +	while (bytes > 0) {
-> +		len = ((offset % 15) + bytes > 16) ? 16 - (offset % 16) : bytes;
-> +		ret = regmap_bulk_write(data->regmap,
-> +					RX8111_REG_TS_RAM_START + offset, val,
-> +					len);
-> +		if (ret) {
-> +			dev_dbg(data->dev, "Could not write nvmem (%d)\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		val += len;
-> +		offset += len;
-> +		bytes -= len;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rx8111_nvram_read(void *priv, unsigned int offset, void *val,
-> +			     size_t bytes)
-> +{
-> +	struct rx8111_data *data = priv;
-> +	int ret, len;
-> +
-> +	/*
-> +	 * The RX8111 device can only handle transfers with repeated start
-> +	 * within the same 16 bytes aligned block.
-> +	 */
-> +	while (bytes > 0) {
-> +		len = ((offset % 15) + bytes > 16) ? 16 - (offset % 16) : bytes;
-> +		ret = regmap_bulk_read(data->regmap,
-> +				       RX8111_REG_TS_RAM_START + offset, val,
-> +				       len);
-> +		if (ret) {
-> +			dev_dbg(data->dev, "Could not read nvmem (%d)\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		val += len;
-> +		offset += len;
-> +		bytes -= len;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static const struct rtc_class_ops rx8111_rtc_ops = {
->   	.read_time = rx8111_read_time,
->   	.set_time = rx8111_set_time,
-> @@ -305,6 +606,16 @@ static int rx8111_probe(struct i2c_client *client)
->   	struct rx8111_data *data;
->   	struct rtc_device *rtc;
->   	size_t i;
-> +	int ret;
-> +	struct nvmem_config nvmem_cfg = {
-> +		.name = "rx8111_nvram",
-> +		.word_size = 1,
-> +		.stride = 1,
-> +		.size = RX8111_REG_TS_RAM_END - RX8111_REG_TS_RAM_START + 1,
-> +		.type = NVMEM_TYPE_BATTERY_BACKED,
-> +		.reg_read = rx8111_nvram_read,
-> +		.reg_write = rx8111_nvram_write,
-> +	};
->   
->   	data = devm_kmalloc(&client->dev, sizeof(*data), GFP_KERNEL);
->   	if (!data) {
-> @@ -312,6 +623,8 @@ static int rx8111_probe(struct i2c_client *client)
->   		return -ENOMEM;
->   	}
->   
-> +	spin_lock_init(&data->ts_lock);
-> +
->   	data->dev = &client->dev;
->   	dev_set_drvdata(data->dev, data);
->   
-> @@ -331,6 +644,10 @@ static int rx8111_probe(struct i2c_client *client)
->   		}
->   	}
->   
-> +	ret = rx8111_setup(data);
-> +	if (ret)
-> +		return ret;
-> +
->   	rtc = devm_rtc_allocate_device(data->dev);
->   	if (IS_ERR(rtc)) {
->   		dev_dbg(data->dev, "Could not allocate rtc device\n");
-> @@ -343,7 +660,37 @@ static int rx8111_probe(struct i2c_client *client)
->   
->   	clear_bit(RTC_FEATURE_ALARM, rtc->features);
->   
-> -	return devm_rtc_register_device(rtc);
-> +	ret = devm_rtc_register_device(rtc);
-> +	if (ret) {
-> +		dev_dbg(data->dev,
-> +			"Could not register rtc device (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = rx8111_sysfs_register(data->dev);
-> +	if (ret) {
-> +		dev_dbg(data->dev,
-> +			"Could not create sysfs entry (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_add_action_or_reset(data->dev, &rx8111_sysfs_unregister,
-> +				       data->dev);
-> +	if (ret) {
-> +		dev_dbg(data->dev,
-> +			"Could not add sysfs unregister devres action (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	nvmem_cfg.priv = data;
-> +	ret = devm_rtc_nvmem_register(rtc, &nvmem_cfg);
-> +	if (ret) {
-> +		dev_dbg(data->dev,
-> +			"Could not register rtc nvmem device (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->   }
->   
->   static const struct of_device_id rx8111_of_match[] = {
->
-> ---
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> change-id: 20250424-rtc-rx8111-events-df9a35810a73
->
-> Best regards,
+Sorry for the confusion.
+
+Thanks,
+Luigi
+
+[1]https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+
