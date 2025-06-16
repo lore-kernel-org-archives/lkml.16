@@ -1,289 +1,129 @@
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4C8216E26;
-	Mon, 16 Jun 2025 16:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CEA216E26
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091069; cv=none; b=rbyPAZtWmyeKuFohk2g4lkaIYUiJCTYkEfpmFG5jC1BntL4L4WcimShIcK5agVhQhjgooI0itTLiLeK084KnyuaDCZtsu3gDVW4UTqejtC3D5jtU3uvlQLiOTs5W25RRiukPamTOmx+DUOwIxdhMCxTmoAybI5sa/JBB4bVEaEg=
+	t=1750091075; cv=none; b=R3zFFV5ANmzPHTLd2XKW67jBtZuZbguU9pO+XHTqG+raHfmMeBGsKXN/ZIGfrPDafgnUIW15cJ/NaEWS16gGeb2t/ZRRGOS1BcCrMT4g/q0zr9v0xv6zEilgPU3k36OUx2jvtNpAE+ePVGlH9kuLroDg0L4bb4PZ7YlELNl9jQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091069; c=relaxed/simple;
-	bh=Uz857Oq2+oWLt5i1lXofzZcOyaFI4AsgP0/KjBuTWmM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U/2RQDkrNW0hIaWFi4QFbnCA1f2SO2NL8LKXDglcPcNb7C6Tlxbib0yGUqI4hUSeLbWtuWtfhEz+qZEMOuXZz8M+/fIP0zCL3MSqTZpqv0oMRHffm6VubYBYVZf4rlFvbgfzynSkPQzkCsMyZvpR311fdG8qeZq8f9FiT+j1kF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=qQ/vVQOs; arc=none smtp.client-ip=78.40.148.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.com
+	s=arc-20240116; t=1750091075; c=relaxed/simple;
+	bh=Y4VyjNxxY6W3sU2TV0gRB/KV8PY0ccpcCfdQGFBPWvg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IsNJrxmhk5+fZHJD8NoYmPS3726Tvv1prPXKZLNUNuz+42cM0SvqUox3X86lzHMa4UCV+H3lx8A6TE17ChyU2tY5tho3LiRKlLXQvkH14UXXQQSEnxuHSswgtvUqANyFNaj1HqwunsL7z6c6uWxe0kpgnh/I4zL26cJ31N7OpN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gBvRlXgz; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="qQ/vVQOs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5AGwWrRi8jrgw3xUdQEuuEMteyOTsTLzOSwAaSI3km4=; b=qQ/vVQOsBoTKNxsqcSqzZmGLg9
-	hQyXsN7Q2dUb3Wn7gvf4rdHkEfzF05K0YIYbuLV3gY0n8sVhpTd4hO/RDFQgy8BkXUGMdFMtBIeZ3
-	CatTtdCsuMwvg1nS1BmMiJpobtv/blCC6TU0nUy9vXJvBEc1LSumR5hm7dlVG5KVaS3Zth3jKqUTT
-	RmF/qnVnZH2mtVAWSSXQsbN57U0uX01GdY3C93jRZshGZLWGwv+JfxIjJpfgKCGaLFQgJgSYivQcu
-	QY1N3KOcAXx6AxgH86Df6iXnlCA967X72vOrMprTm0/f1UVwEs/esxWhBCwxlXf2JqWFDT5cEC28Y
-	c8trnfXw==;
-Received: from [167.98.27.226] (helo=rainbowdash)
-	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1uRCGd-003LgT-Fm; Mon, 16 Jun 2025 17:01:04 +0100
-Received: from ben by rainbowdash with local (Exim 4.98.2)
-	(envelope-from <ben@rainbowdash>)
-	id 1uRCGe-00000008pcl-0aOx;
-	Mon, 16 Jun 2025 17:01:04 +0100
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-To: thierry.reding@gmail.com,
-	jonathanh@nvidia.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-tegra@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 2/2] drivers/firware/tegra: add tracing to bpmp code
-Date: Mon, 16 Jun 2025 17:01:03 +0100
-Message-Id: <20250616160103.2105041-3-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.37.2.352.g3c44437643
-In-Reply-To: <20250616160103.2105041-1-ben.dooks@codethink.co.uk>
-References: <20250616160103.2105041-1-ben.dooks@codethink.co.uk>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gBvRlXgz"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-236470b2dceso39745375ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750091070; x=1750695870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jn+pl8Ukndl7fV/3rtDt80K83DzVb4ofgvMyTIgGDxE=;
+        b=gBvRlXgzTj/pLxVOyRF78AMU8rmkAIEv+VXcwr9KsEGabp2BxM2xvZMePz31G3CiYu
+         jSdEyCXeWa0v06QALmIgwjKoDsQWhXaN5cCG2OjHCvUEnPzdybYPfzERv+RyOLkcozOe
+         UCbnTXSkLHw3SFXOZbQUUu42gX1oJ2YYlSWiY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750091070; x=1750695870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jn+pl8Ukndl7fV/3rtDt80K83DzVb4ofgvMyTIgGDxE=;
+        b=wyLwB+efsOSpFJsNaneqwWyjqJ/yNH5wwA2u5qN0qOdx8+jmS0VeLqz0BUAzQSJneV
+         hPn/sQMXOkiN/8XVctVAIuzoBFbDiYI5sA2gWw2ZMx2wgxAlphLCOTx7Z55i/sh9ENIs
+         c6vtkUEEAX9TAQS/tXOgOwh1Tc5S446lP/gwZL/cUejV3hISeleYoFVBKe2xFT3VnmUC
+         y4Nzvw9HCxkEQ3o2ojqAsXrG30RhycdkcoKTwMA53+iKpg7DF1NImMLRnOzyIZm0pz4E
+         QWxM/YBe8arUw4m8XqEfICHtFm2zEsijgbDNVNRTyEBrCN9v3U6q+rrX87C/LeuR0nUp
+         K5SA==
+X-Forwarded-Encrypted: i=1; AJvYcCUahoN8SpYq4Bio9O0rvMLdxLoxrNElClxuA2pC9byET2uWFN+HzMTOT/GvDgzYSLGLz8wYfusKBplx4LU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylcA9UA14zg2Fyk5WJSeZ5TcvthblVVmqm++IsRaFH+SRrx+9z
+	m4R5MgGCVExOSzh+kIhPKA2rbDo6ssfNJmW5ADGF7MFKOZMcTZux8TGwYb6A4aeoO5qiRzT818r
+	eXTg=
+X-Gm-Gg: ASbGncvGBnGJsNwjb4Qp1whrndJI/vaB4A+4HDWdxJEEXwpQtWM0HxgNjICnvUfgCBw
+	FPdHPzVauU1JY0giycD8klbfSR9VZ5dv1T1g0asVt3FPrlJDE3yZuBz+H2YLy5ryJpVA3zng5l5
+	x3Nrx3EpBIOSRvIl0wgX3dmlTCmj9xYao2d9SNt3LkbEwoh42Wx460qP9XvNztlS4vVr4bABcPU
+	XkBGjgPK3BjJqm04T78mDouQRwtWGo7UTvgI2MgyV3wc/vgpZlRaBVQGwe3isyYq37XZcoGdzSD
+	0tta4PailspldwTUZpqr5K+pbzV+duMkrp1uE2H6K17appt8CKthAWA1OStQvZTBmYuKJjg5619
+	FAmY1U7FC6ggn5otEStws4ldO7OoGwA==
+X-Google-Smtp-Source: AGHT+IFhSb0g33+iwpE0YteOGYofG1LGCmkj9VUmu5y+T+TsgMWq5NIUZk8m+XaYjVmyH36otKQR/w==
+X-Received: by 2002:a17:903:32cf:b0:234:e655:a618 with SMTP id d9443c01a7336-2366b3ad2d9mr147687395ad.25.1750091069774;
+        Mon, 16 Jun 2025 09:24:29 -0700 (PDT)
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com. [209.85.214.169])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365decc11fsm62856905ad.222.2025.06.16.09.24.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 09:24:28 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23636167afeso45627385ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:24:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVpmlD2H3J5vzzsfqS8hUDL8UL38O8oM2wGkwN45jKD2PlAeyCwuKeVBZaBpduNq/wIv8j5iOEs2Jjcxok=@vger.kernel.org
+X-Received: by 2002:a17:90b:35ce:b0:311:d670:a10d with SMTP id
+ 98e67ed59e1d1-313f1d96b23mr13483334a91.26.1750091067151; Mon, 16 Jun 2025
+ 09:24:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: srv_ts003@codethink.com
+References: <20250616093240.499094-1-j-choudhary@ti.com>
+In-Reply-To: <20250616093240.499094-1-j-choudhary@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 16 Jun 2025 09:24:15 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Wb=bWXDfCyF8XhJ93dBRU2rUKM+B0X5uYh39FHRgT1Ww@mail.gmail.com>
+X-Gm-Features: AX0GCFvx1jdSZ7AywPO9rUfFoTu7hX2oWiRuFWLsC1T8ClrkXmqFBGVmsbCBYTw
+Message-ID: <CAD=FV=Wb=bWXDfCyF8XhJ93dBRU2rUKM+B0X5uYh39FHRgT1Ww@mail.gmail.com>
+Subject: Re: [PATCH v5] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
+ connector type
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
+	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
+	ernestvanhoecke@gmail.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, kieran.bingham+renesas@ideasonboard.com, 
+	linux-kernel@vger.kernel.org, max.oss.09@gmail.com, devarsht@ti.com, 
+	geert@linux-m68k.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add trace points to the communications with the bpmp
+Hi,
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
- drivers/firmware/tegra/bpmp.c     |  16 +++-
- include/trace/events/tegra_bpmp.h | 140 ++++++++++++++++++++++++++++++
- 2 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/tegra_bpmp.h
+On Mon, Jun 16, 2025 at 2:32=E2=80=AFAM Jayesh Choudhary <j-choudhary@ti.co=
+m> wrote:
+>
+> @@ -1220,6 +1231,27 @@ static void ti_sn65dsi86_debugfs_init(struct drm_b=
+ridge *bridge, struct dentry *
+>         debugfs_create_file("status", 0600, debugfs, pdata, &status_fops)=
+;
+>  }
+>
+> +static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
+> +{
+> +       struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
+> +
+> +       /*
+> +        * Device needs to be powered on before reading the HPD state
+> +        * for reliable hpd detection in ti_sn_bridge_detect() due to
+> +        * the high debounce time.
+> +        */
+> +
+> +       pm_runtime_get_sync(pdata->dev);
+> +}
+> +
+> +static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
+> +{
+> +       struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
+> +
+> +       pm_runtime_mark_last_busy(pdata->dev);
+> +       pm_runtime_put_autosuspend(pdata->dev);
 
-diff --git a/drivers/firmware/tegra/bpmp.c b/drivers/firmware/tegra/bpmp.c
-index c3a1dc344961..b7c005990269 100644
---- a/drivers/firmware/tegra/bpmp.c
-+++ b/drivers/firmware/tegra/bpmp.c
-@@ -20,6 +20,9 @@
- 
- #include "bpmp-private.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/tegra_bpmp.h>
-+
- #define MSG_ACK		BIT(0)
- #define MSG_RING	BIT(1)
- #define TAG_SZ		32
-@@ -227,6 +230,7 @@ static ssize_t tegra_bpmp_channel_read(struct tegra_bpmp_channel *channel,
- unlock:
- 	up(&bpmp->threaded.lock);
- 
-+	trace_tegra_bpmp_channel_read(channel, data, size, ret, err);
- 	return err;
- }
- 
-@@ -240,6 +244,8 @@ static ssize_t __tegra_bpmp_channel_write(struct tegra_bpmp_channel *channel,
- 	if (data && size > 0)
- 		tegra_bpmp_mb_write(&channel->ob, data, size);
- 
-+	trace_tegra_bpmp_channel_write(channel, mrq, flags, data, size);
-+
- 	return tegra_bpmp_post_request(channel);
- }
- 
-@@ -350,8 +356,12 @@ int tegra_bpmp_transfer_atomic(struct tegra_bpmp *bpmp,
- 	if (err < 0)
- 		return err;
- 
--	return __tegra_bpmp_channel_read(channel, msg->rx.data, msg->rx.size,
-+	err =  __tegra_bpmp_channel_read(channel, msg->rx.data, msg->rx.size,
- 					 &msg->rx.ret);
-+
-+	trace_tegra_bpmp_channel_read(channel, msg->rx.data, msg->rx.size,
-+				      &msg->rx.ret, err);
-+	return err;
- }
- EXPORT_SYMBOL_GPL(tegra_bpmp_transfer_atomic);
- 
-@@ -368,6 +378,8 @@ int tegra_bpmp_transfer(struct tegra_bpmp *bpmp,
- 	if (!tegra_bpmp_message_valid(msg))
- 		return -EINVAL;
- 
-+	trace_tegra_bpmp_transfer(bpmp, msg);
-+
- 	if (bpmp->suspended) {
- 		/* Reset BPMP IPC channels during resume based on flags passed */
- 		if (msg->flags & TEGRA_BPMP_MESSAGE_RESET)
-@@ -812,6 +824,7 @@ static int __maybe_unused tegra_bpmp_suspend(struct device *dev)
- {
- 	struct tegra_bpmp *bpmp = dev_get_drvdata(dev);
- 
-+	trace_tegra_bpmp_pm(bpmp, true);
- 	bpmp->suspended = true;
- 
- 	return 0;
-@@ -821,6 +834,7 @@ static int __maybe_unused tegra_bpmp_resume(struct device *dev)
- {
- 	struct tegra_bpmp *bpmp = dev_get_drvdata(dev);
- 
-+	trace_tegra_bpmp_pm(bpmp, false);
- 	bpmp->suspended = false;
- 
- 	if (bpmp->soc->ops->resume)
-diff --git a/include/trace/events/tegra_bpmp.h b/include/trace/events/tegra_bpmp.h
-new file mode 100644
-index 000000000000..63289e475951
---- /dev/null
-+++ b/include/trace/events/tegra_bpmp.h
-@@ -0,0 +1,140 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* tegra memory controller tracepoints
-+ *
-+ * Copyright (c) 2025 Codethink Ltd.
-+ * Ben Dooks <ben.dooks@codethink.co.uk>
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM tegra_bpmp
-+
-+#if !defined(_TRACE_TEGRA_BPMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_TEGRA_BPMP_H
-+
-+#include <linux/tracepoint.h>
-+
-+#include <soc/tegra/bpmp.h>
-+
-+#ifdef CREATE_TRACE_POINTS
-+static inline const char *tegra_bpmp_mrq_name(unsigned mrq)
-+{
-+	switch (mrq) {
-+	case MRQ_PING: return "ping";
-+	case MRQ_QUERY_TAG: return "query-tag";
-+	case MRQ_THREADED_PING: return "threaded-ping";
-+	case MRQ_DEBUGFS: return "debugfs";
-+	case MRQ_RESET: return "reset";
-+	case MRQ_I2C: return "i2c";
-+	case MRQ_CLK: return "clk";
-+	case MRQ_QUERY_ABI: return "query-abi";
-+	case MRQ_THERMAL: return "thermal";
-+	case MRQ_CPU_VHINT: return "cpu-vhint";
-+	case MRQ_ABI_RATCHET: return "abi-ratchet";
-+	case MRQ_EMC_DVFS_LATENCY: return "emc-dvfs-latency";
-+	case MRQ_RINGBUF_CONSOLE: return "ringbuf-console";
-+	case MRQ_PG: return "pg";
-+	case MRQ_CPU_NDIV_LIMITS: return "cpu-ndiv-limits";
-+	case MRQ_STRAP: return "strap";
-+	case MRQ_UPHY: return "uphy";
-+	case MRQ_CPU_AUTO_CC3: return "cpu-auto-cc3";
-+	case MRQ_QUERY_FW_TAG: return "query-fw-tag";
-+	case MRQ_FMON: return "fwmon";
-+	case MRQ_EC: return "ec";
-+	case MRQ_DEBUG: return "debug";
-+	case MRQ_EMC_DVFS_EMCHUB: return "emc-dvfs-emchub";
-+	case MRQ_BWMGR: return "bwmgr";
-+	case MRQ_ISO_CLIENT: return "iso-client";
-+	case MRQ_EMC_DISP_RFL: return "emc-disp-rfl";
-+	case MRQ_TELEMETRY: return "telemetry";
-+	case MRQ_PWR_LIMIT: return "pwr-limit";
-+	case MRQ_GEARS: return "gears";
-+	case MRQ_BWMGR_INT: return "bwmgr-int";
-+	case MRQ_OC_STATUS: return "oc-status";
-+	}
-+
-+	return "";
-+}
-+
-+#define __pm_state(__s) ((__s) ? "suspended" : "active")
-+#endif /* CREATE_TRACE_POINTS */
-+
-+TRACE_EVENT(tegra_bpmp_pm,
-+	    TP_PROTO(struct tegra_bpmp *bpmp, bool suspend),
-+	    TP_ARGS(bpmp, suspend),
-+	    TP_STRUCT__entry(
-+		    __string(dev, dev_name(bpmp->dev))
-+		    __field(bool, suspend)
-+		    __field(bool, prev)),
-+	    TP_fast_assign(
-+		    __assign_str(dev);
-+		    __entry->prev = bpmp->suspended;
-+		    __entry->suspend = suspend;
-+		    ),
-+	    TP_printk("bpmp %s: pm %s to %s",
-+		      __get_str(dev),
-+		      __pm_state(__entry->prev), __pm_state(__entry->suspend))
-+);
-+
-+TRACE_EVENT(tegra_bpmp_transfer,
-+	    TP_PROTO(struct tegra_bpmp *bpmp,
-+		     struct tegra_bpmp_message *msg),
-+	    TP_ARGS(bpmp, msg),
-+	    TP_STRUCT__entry(
-+			     __string(dev, dev_name(bpmp->dev))
-+			     __field_struct(struct tegra_bpmp_message, msg)
-+	    ),
-+	    TP_fast_assign(
-+			   __assign_str(dev);
-+			   __entry->msg = *msg;
-+	    ),
-+	    TP_printk("bpmp %s: tx %px, %zd rx %px, %zd, mrq %u (%s), flags %lu",
-+		      __get_str(dev),
-+		      __entry->msg.tx.data, __entry->msg.tx.size,
-+		      __entry->msg.rx.data, __entry->msg.rx.size,
-+		      __entry->msg.mrq, tegra_bpmp_mrq_name(__entry->msg.mrq),
-+		      __entry->msg.flags)
-+);
-+
-+TRACE_EVENT(tegra_bpmp_channel_write,
-+	    TP_PROTO(struct tegra_bpmp_channel *channel,
-+		     unsigned int mrq, unsigned long flags,
-+		     const void *data, size_t size),
-+	    TP_ARGS(channel, mrq, flags, data, size),
-+	    TP_STRUCT__entry(
-+			     __field(unsigned int, index)
-+			     __field(unsigned int, mrq)
-+			     __field(unsigned long, flags)
-+			     ),
-+	    TP_fast_assign(
-+		    __entry->index = channel->index;
-+		    __entry->mrq = mrq;
-+		    __entry->flags = flags;
-+		    ),
-+	    TP_printk("channel %u: mrq %u (%s), flags %lu",
-+		      __entry->index,
-+		      __entry->mrq, tegra_bpmp_mrq_name(__entry->mrq),
-+		      __entry->flags)
-+);
-+
-+TRACE_EVENT(tegra_bpmp_channel_read,
-+	    TP_PROTO(struct tegra_bpmp_channel *channel,
-+		     void *data, size_t size, int *ret, int err),
-+	    TP_ARGS(channel, data, size, ret, err),
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int, index)
-+		    __field(int, ret)
-+		    __field(int, err)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->index = channel->index;
-+		    __entry->ret = ret ? *ret : -ENOENT;
-+		    __entry->err = err;
-+		    ),
-+	    TP_printk("channel %u: read returned %d, err %d",
-+		      __entry->index, __entry->ret, __entry->err)
-+);
-+
-+#endif /* _TRACE_TEGRA_BPMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
--- 
-2.37.2.352.g3c44437643
+nit: you don't need the pm_runtime_mark_last_busy() here, do you? Just
+call pm_runtime_put_autosuspend().
 
+Aside from the nit, this looks reasonable to me now.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
