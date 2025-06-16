@@ -1,233 +1,218 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B613428A1D9
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C931289E2B
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750102667; cv=none; b=kHSZSGeKpCkHZCM1bC0Hdjm1X3kE52OKPb1NtttFyKq89ZG4c+qYlKBo9eRujhKSBwsUh0BiUCBcFngp7j3yYf720xSfgZdHrkchRP7jSbS3PJsfrS6LfS/xOL4NyrIPeXhNSxwyjDhwUSs57IyrWL78BIh09C9nF29sBziqt+Q=
+	t=1750102816; cv=none; b=Gwf8GxC2aOe7xuILVB88FdIWVfnvE9qo0ErbcEEsRzX9FsjJJpMMavE20bkuu8jnvCEstZp6ieKczwTKGdBiK9hUnWXu2geBh/vhBWjs/adUaR68gOZRXRjWfF+ddeXp3Zzbp7A1x0O8cWEOi3KuOUgJixvMqCBKzTWOAxq8BDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750102667; c=relaxed/simple;
-	bh=MzrFurt+HBpg9fZltfNFjomT7VYJETh208VSpb61j2M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aLmcN/81VmBkhpl1vIP8ighbafloN+R5iarXyJoPQV4MfvpxlevBe8H4WYhDPSMFTfbyQhbhwvbGavJckRe318DCe2GaVQ3DFrzOaawAl+WrwKfNwGf2FQSOntXau7lzzMPdAG6XS/bLedwidEgs+NuiYC1HQPXhBJaiKP9S1HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca; spf=pass smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=gTIirC8b; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1750102816; c=relaxed/simple;
+	bh=2HSj50ZkFeGvip9u2ovexwxRbE+rayK2QY+MngvUtSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KKYJUDWQxwkZ0grqGxqg7GvSkrvkt98NkNxVv3O+RGineXpDaQ/vcrdXYPZDgnR7fo8WDmjc3eufBOvghNg6tz/rNLpk+9iwQT1oUzdQnkb6WYFR3HX+D+0Y5jFNi69mAprADtWNcjv4nf0hldKddPg+lFFE21/3UYQ7KR9a1Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fF43hVTA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="gTIirC8b"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d21cecc11fso947740685a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1750102664; x=1750707464; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O2YgCoNVubGpzpwZU+Tpj9HlgT+VclFnu+kN+9dMbq0=;
-        b=gTIirC8b0Ea1vcCA3zC9IYL0lklFYs3aOuRar7F2auuw0p7ubJShZKLmqiXPeNj5fr
-         wSGJloGBxxPvZhBCF+8f7rxqNaDwJs4BKKGVZ3VDaK7v0al+ZcaCIJ7riwngmB+klYXz
-         2GbfbsUeZn08GkG8m6Rt2p5y+RFerKjZc/UI13gOXV+sLzmdfOoYnG9uQVtalo3w4ivD
-         z+7anlevFM7ll5kOd9MWVnwuzPd1D3h4vxZ8F9t344QcHVhpNgUm77CW/t09od4C1KpJ
-         OBJLA6ZQGS/V7UHQOAlMhWXdSr4g/oAjycU14wFN2EETaNkRqyYyvhNxL82FE1UViOWT
-         4uyA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fF43hVTA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750102810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jv0l4BNCIbAbpcAAOOCGBfYtJjS97nEwM6epWvM50jQ=;
+	b=fF43hVTAfDRzgYUulmljd/nN74DrKMmM1MDUtTJWDTfdVkAD1972+O7+SpDR2NGOnQ/tvr
+	DDJypodfbmM+0N5ubJlhGQSAz05d87FnqpEqKH/xofp6PTEYcS11vq3JybyQtQb0YgE7Ok
+	iBngBKAzcGf/3HiMK6Il9atEF3hvkhk=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-lZGz1GBHOt2QmCSWWTGpig-1; Mon, 16 Jun 2025 15:40:09 -0400
+X-MC-Unique: lZGz1GBHOt2QmCSWWTGpig-1
+X-Mimecast-MFC-AGG-ID: lZGz1GBHOt2QmCSWWTGpig_1750102809
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cff09d29dso62444039f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:40:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750102664; x=1750707464;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=1e100.net; s=20230601; t=1750102808; x=1750707608;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=O2YgCoNVubGpzpwZU+Tpj9HlgT+VclFnu+kN+9dMbq0=;
-        b=JvHWQTjIHc8Dgamw5lcFcCvl3OBdXIl4AGVm90jCccKo7WDpu+tCb8f1rsiuhC6HnH
-         9htk7+BH8PJb3ixG/t0aYXv/Fh0lObryTk+0QBGp2MhY0zrQmTDT0/+ypY/OgyRn5PRU
-         jYB/GtlvQY3hiqDVGdWdCitCZDV3qN7klmZm5F7JZ38uxsnORmMyGcZtVxL5dlcLqoMJ
-         +pKmBRfOmPOTM3mZfGW59mIMEDnj1gzPg3Cfk18QEatn+isIPIGPq2T9WO/arCFREe24
-         66vPIazLTA/ZRtuh2HebSYH3B692lN2LClAKeYjwjwsroelui411RsDI9Z9v1vDsrlEO
-         AI7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXN7DtzB4InuBolAeJk7vWjlVyL+OWl/MQ548APmrPeQ4At+YWeOEXRfo7/jy9hxK1K7SXKDPYW2vpXIlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz41WgsTLm+oF/dKGaMYDVXu2DB4YqJBBg88qGL8kodnvehddPE
-	DS7B+mOaPGIDE/ewkdIQW3VdYEF5B0w7vicqhL8NmDX26DWKw+WOddup8msi2/Wnsfc=
-X-Gm-Gg: ASbGnctmkEjLJN4LvqICnPsyyPN52W8uC/LS5OINYjKu6wOcZP+iYzc7FJPV+0TJgge
-	SMCrJYi1N5HTZM8PrDzsM2ukj6PMHFIjPKMiTNZRT5MGSvAwhfwe8xPqWrp+FtsUTIny1yYWWT6
-	T8FKMgKxjSKOp/joqyUXjGXJ1Z9sjcqfAcLJSpqmXkGBL5tSBtDBohZhiZWOeE8becKIvYt+gFI
-	rixNkvbwt/Xp3Grjjkdsp5UYPS8EQGQSQGdQ7A92ADG6AS5Fz9KweDN94UzSDjeC9KQm+akwN29
-	4Us3dcu/OF6QtFW6dnQHRm8NTsNYCXX30uVc6FUc3ink7ta0tXZTwXztD3gpRvAqAq0t3WAeWnC
-	AUg==
-X-Google-Smtp-Source: AGHT+IGN5ofvK1QLhB3Iq9ZsAFvdbt7jcq5u8oDxQ3gRMavs2JTZOTHJjHcBA7M6zkSdgURMsiy7Cg==
-X-Received: by 2002:a05:620a:2a03:b0:7d3:8df8:cc04 with SMTP id af79cd13be357-7d3c6cc98efmr1651311785a.35.1750102664586;
-        Mon, 16 Jun 2025 12:37:44 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b699::c41? ([2606:6d00:17:b699::c41])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ed6630sm559553685a.89.2025.06.16.12.37.43
+        bh=Jv0l4BNCIbAbpcAAOOCGBfYtJjS97nEwM6epWvM50jQ=;
+        b=TfrGPin7cxKUnIej3H9sC5a8a60RUjhGsqAbfkO3XAsrY3ooTsoUOPyMNWESZ2P7wY
+         HNYJLg6J6jedCOdCm1KLz/0H596mBg0IG9+a3oFHxXkuOWJDjbRtRONq275X2NR1VaCu
+         DRzcJHnuReVfRoy8VWcAZlwEJcchN43wDCRNskMNADSJFsdpWTb/7PXKdHcBZn+BSyJu
+         4589+0aY+iScJ9EXo+p+IELIZ4bntlwmICD3HsYYiEvPmjss1AMvtHasP71hC9CEAD69
+         Phfm0/82Glzpy/OuF/+uQsBYc8k033ozVHW0mxyDc90xRwqs+iSzGGc0E/+KgcdaC0kp
+         RvpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+tXXb+1SJY8nWzqd2L5dbPAcrxsk03VsVbpRd1G6uJFxBX7ViLZtxA8tb0Qiq3IzxkQDpg7c9TwO+Sh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeUSrjNxNYdjTj7ESF7SUMvn9NV1nD87PCo63bcO7qhlyl9I+E
+	kkWaFCgWD6D6UKXv6vKQkpEIfyqq9ccYEQIp9w43vRSGoDnqKWyrMW999sInXGMUzpc8eAWv9FV
+	bqDblSsSw1YSYrMmng6RKGDS3y2U4jCKPdJudh5El9JEt/iGlLbY4oEtJihL2JIDFdQ+S19gINw
+	==
+X-Gm-Gg: ASbGnctDHfJmFkjxQy7nabYCkyNtjfBQkyH7LfRaXt72dzjkRxCuiedYUvxxq6smEwd
+	ltCdXBoOXvvTZxveZJ/wvZOHQZqBERxHQTXTpvrBuqjTyt16RHPKS4PVJX33Mxv6cznFvr6qd7h
+	FV9IG7m66K7Ldwma90V7YNvT90Nmpq6wLqqOQ1Tw/RdirxBspyyIAMkKV+D8K5DQtlrdArPeolf
+	rZS3tY4nREGSn/JnO7wPyhpic2KoeWhVwli0x8Kn7PZmuRhZdPYpIKD8DnUCJkl6bB1DrkKpTqO
+	0q/CHCxwMaK8ksvciWXYsIdv/w==
+X-Received: by 2002:a05:6602:1683:b0:873:13c6:f365 with SMTP id ca18e2360f4ac-875dedfd0efmr313067839f.5.1750102808219;
+        Mon, 16 Jun 2025 12:40:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnRPBkV684dJntapdXKPif4JLdEUHjwAgaMW17ime3UOUTf06bvLAvLx4npqtrBInZ4sL6Jg==
+X-Received: by 2002:a05:6602:1683:b0:873:13c6:f365 with SMTP id ca18e2360f4ac-875dedfd0efmr313066539f.5.1750102807793;
+        Mon, 16 Jun 2025 12:40:07 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149ca3519sm1818547173.144.2025.06.16.12.40.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 12:37:43 -0700 (PDT)
-Message-ID: <3d08da09653034128c48e97c1f6fad59c2ff5f35.camel@ndufresne.ca>
-Subject: Re: [PATCH v7 3/5] media: venus: Remove timeperframe from inst
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Ricardo Ribalda <ribalda@chromium.org>, Vikash Garodia	
- <quic_vgarodia@quicinc.com>, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Stanimir Varbanov	 <stanimir.varbanov@linaro.org>,
- Hans Verkuil <hans.verkuil@cisco.com>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 16 Jun 2025 15:37:42 -0400
-In-Reply-To: <20250616-test-v7-3-b8c0f98494fa@chromium.org>
-References: <20250616-test-v7-0-b8c0f98494fa@chromium.org>
-	 <20250616-test-v7-3-b8c0f98494fa@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+        Mon, 16 Jun 2025 12:40:06 -0700 (PDT)
+Date: Mon, 16 Jun 2025 13:40:04 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jacob Pan <jacob.pan@linux.microsoft.com>, linux-kernel@vger.kernel.org,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "Liu, Yi L"
+ <yi.l.liu@intel.com>, Zhang Yu <zhangyu1@microsoft.com>, Easwar Hariharan
+ <eahariha@linux.microsoft.com>, Saurabh Sengar
+ <ssengar@linux.microsoft.com>
+Subject: Re: [PATCH v2 2/2] vfio: Fix unbalanced vfio_df_close call in
+ no-iommu mode
+Message-ID: <20250616134004.60105ad5.alex.williamson@redhat.com>
+In-Reply-To: <20250616153455.GK1174925@nvidia.com>
+References: <20250603152343.1104-1-jacob.pan@linux.microsoft.com>
+	<20250603152343.1104-2-jacob.pan@linux.microsoft.com>
+	<20250613163103.3bca27cd.alex.williamson@redhat.com>
+	<20250614001555.GR1174925@nvidia.com>
+	<20250616084708.5a94ead7.alex.williamson@redhat.com>
+	<20250616153455.GK1174925@nvidia.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Ricardo,
+On Mon, 16 Jun 2025 12:34:55 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Le lundi 16 juin 2025 =C3=A0 15:29 +0000, Ricardo Ribalda a =C3=A9crit=C2=
-=A0:
-> The driver only cares about whole fps. We can infer the timeperframe
-> from the fps field. Remove the redundant field.
+> On Mon, Jun 16, 2025 at 08:47:08AM -0600, Alex Williamson wrote:
+> > On Fri, 13 Jun 2025 21:15:55 -0300
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >   
+> > > On Fri, Jun 13, 2025 at 04:31:03PM -0600, Alex Williamson wrote:  
+> > > > On Tue,  3 Jun 2025 08:23:43 -0700
+> > > > Jacob Pan <jacob.pan@linux.microsoft.com> wrote:
+> > > >     
+> > > > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > 
+> > > > > For devices with no-iommu enabled in IOMMUFD VFIO compat mode, the group
+> > > > > open path skips vfio_df_open(), leaving open_count at 0. This causes a
+> > > > > warning in vfio_assert_device_open(device) when vfio_df_close() is called
+> > > > > during group close.
+> > > > > 
+> > > > > The correct behavior is to skip only the IOMMUFD bind in the device open
+> > > > > path for no-iommu devices. Commit 6086efe73498 omitted vfio_df_open(),
+> > > > > which was too broad. This patch restores the previous behavior, ensuring
+> > > > > the vfio_df_open is called in the group open path.
+> > > > > 
+> > > > > Fixes: 6086efe73498 ("vfio-iommufd: Move noiommu compat validation out of vfio_iommufd_bind()")
+> > > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > Tested-by: Jacob Pan <jacob.pan@linux.microsoft.com>
+> > > > > Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
+> > > > > ---
+> > > > > v2: Use a fix from Jason
+> > > > > ---
+> > > > >  drivers/vfio/group.c     | 10 +++++-----
+> > > > >  drivers/vfio/iommufd.c   |  3 ---
+> > > > >  drivers/vfio/vfio_main.c | 26 ++++++++++++++++----------
+> > > > >  3 files changed, 21 insertions(+), 18 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
+> > > > > index c321d442f0da..8f5fe8a392de 100644
+> > > > > --- a/drivers/vfio/group.c
+> > > > > +++ b/drivers/vfio/group.c
+> > > > > @@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
+> > > > >  		 * implies they expected translation to exist
+> > > > >  		 */
+> > > > >  		if (!capable(CAP_SYS_RAWIO) ||
+> > > > > -		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
+> > > > > +		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
+> > > > >  			ret = -EPERM;
+> > > > > -		else
+> > > > > -			ret = 0;
+> > > > > -		goto out_put_kvm;
+> > > > > +			goto out_put_kvm;
+> > > > > +		}
+> > > > >  	}
+> > > > >  
+> > > > >  	ret = vfio_df_open(df);
+> > > > >  	if (ret)
+> > > > >  		goto out_put_kvm;
+> > > > >  
+> > > > > -	if (df->iommufd && device->open_count == 1) {
+> > > > > +	if (df->iommufd && device->open_count == 1 &&
+> > > > > +	    !vfio_device_is_noiommu(device)) {    
+> > > > 
+> > > > Why do we need this?    
+> > > 
+> > > What I was trying to do is put all the logic about noiommu into only
+> > > vfio_df..open/close functions instead of sprikling it into a bunch of
+> > > other functions. That seemed to be the right point to make this cut.  
+> > 
+> > Alternatively we could be consistent about breaking out of the
+> > vfio/iommufd.c functions that aren't relevant to noiommu.  The
+> > container side handles noiommu internally, why should iommufd push
+> > handling up to the device file layer?  We're really just missing the
+> > bind path.  
+> 
+> Broadly what I was going for was to just remove the iommufd stuff
+> entirely from the DF layer rather than to half pretend there is an
+> iommufd layer below it. This should ideally go as far as not having an
+> iommufd_ctx at all. So things start to look really weird calling
+> iommufd functions without an iommufd ctx.
+> 
+> > > With this patch we move toward the vfio_df..open/close functions being
+> > > symmetrical in their decision making.  
+> > 
+> > But is it?  We special case all the iommufd paths to filter out noiommu
+> > but it's inconsistent with the legacy paths.  Thanks,  
+> 
+> The container still exists in noiommu mode and internally does things,
+> eg it has a container->noiommu indicationm and the vfio-noiommu ops to
+> manage this.
+> 
+> The iommufd should not exist and should never be used. They are
+> different cases.
+> 
+> If Jacob eventually does what I suggested in another email then we
+> would have a noiommu special mode inside iommufd and it would look
+> more like the container.
 
-I do have reserved about this change. Video standards commonly uses fractio=
-nal
-rates for videos. If my memory is correct, venus uses Q16 ... So with this =
-change,
-we now round all frame rate passed to encoders to an integer, which will in=
-troduce
-error in the resulting bitrate.
+A concise fix would be nice for stable backports though, so even if we
+want to move to testing noiommu in the device file layer or create a
+special mode in iommufd, the smallest, most consistent initial fix
+would be to continue the _group_open:
 
-Perhaps it was already broken, but if so, it should be fixed instead ?
+--- a/drivers/vfio/group.c
++++ b/drivers/vfio/group.c
+@@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
+ 		 * implies they expected translation to exist
+ 		 */
+ 		if (!capable(CAP_SYS_RAWIO) ||
+-		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
++		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
+ 			ret = -EPERM;
+-		else
+-			ret = 0;
+-		goto out_put_kvm;
++			goto out_put_kvm;
++		}
+ 	}
 
-regards,
-Nicolas
 
->=20
-> Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
-> =C2=A0drivers/media/platform/qcom/venus/core.h |=C2=A0 2 --
-> =C2=A0drivers/media/platform/qcom/venus/vdec.c | 15 ++++++++-------
-> =C2=A0drivers/media/platform/qcom/venus/venc.c | 16 ++++++++--------
-> =C2=A03 files changed, 16 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/pla=
-tform/qcom/venus/core.h
-> index 5b1ba1c69adba14c3560a4bc6d09435529f295a6..9cfb860e01e752bf9856a3550=
-f59c8c7b43647d2 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -413,7 +413,6 @@ enum venus_inst_modes {
-> =C2=A0 * @tss:		timestamp metadata
-> =C2=A0 * @payloads:		cache plane payload to use it for clock/BW scaling
-> =C2=A0 * @fps:		holds current FPS
-> - * @timeperframe:	holds current time per frame structure
-> =C2=A0 * @fmt_out:	a reference to output format structure
-> =C2=A0 * @fmt_cap:	a reference to capture format structure
-> =C2=A0 * @num_input_bufs:	holds number of input buffers
-> @@ -484,7 +483,6 @@ struct venus_inst {
-> =C2=A0	struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
-> =C2=A0	unsigned long payloads[VIDEO_MAX_FRAME];
-> =C2=A0	u64 fps;
-> -	struct v4l2_fract timeperframe;
-> =C2=A0	const struct venus_format *fmt_out;
-> =C2=A0	const struct venus_format *fmt_cap;
-> =C2=A0	unsigned int num_input_bufs;
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/pla=
-tform/qcom/venus/vdec.c
-> index fca27be61f4b869840904cc0577949635bc63cab..7d6612234d18a49573dc502d4=
-8ee61a900b63194 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -471,10 +471,12 @@ static int vdec_s_parm(struct file *file, void *fh,=
- struct v4l2_streamparm *a)
-> =C2=A0		return -EINVAL;
-> =C2=A0
-> =C2=A0	memset(cap->reserved, 0, sizeof(cap->reserved));
-> -	if (!timeperframe->denominator)
-> -		timeperframe->denominator =3D inst->timeperframe.denominator;
-> -	if (!timeperframe->numerator)
-> -		timeperframe->numerator =3D inst->timeperframe.numerator;
-> +
-> +	if (!timeperframe->numerator || !timeperframe->denominator) {
-> +		timeperframe->numerator =3D 1;
-> +		timeperframe->denominator =3D inst->fps;
-> +	}
-> +
-> =C2=A0	cap->readbuffers =3D 0;
-> =C2=A0	cap->extendedmode =3D 0;
-> =C2=A0	cap->capability =3D V4L2_CAP_TIMEPERFRAME;
-> @@ -487,7 +489,8 @@ static int vdec_s_parm(struct file *file, void *fh, s=
-truct v4l2_streamparm *a)
-> =C2=A0	fps =3D min(VENUS_MAX_FPS, fps);
-> =C2=A0
-> =C2=A0	inst->fps =3D fps;
-> -	inst->timeperframe =3D *timeperframe;
-> +	timeperframe->numerator =3D 1;
-> +	timeperframe->denominator =3D inst->fps;
-> =C2=A0
-> =C2=A0	return 0;
-> =C2=A0}
-> @@ -1622,8 +1625,6 @@ static void vdec_inst_init(struct venus_inst *inst)
-> =C2=A0	inst->out_width =3D frame_width_min(inst);
-> =C2=A0	inst->out_height =3D frame_height_min(inst);
-> =C2=A0	inst->fps =3D 30;
-> -	inst->timeperframe.numerator =3D 1;
-> -	inst->timeperframe.denominator =3D 30;
-> =C2=A0	inst->opb_buftype =3D HFI_BUFFER_OUTPUT;
-> =C2=A0}
-> =C2=A0
-> diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/pla=
-tform/qcom/venus/venc.c
-> index b9ccee870c3d1238e04cef5e9344bd992d86d737..4979392aa20b6dc94895c7089=
-878531b92b57754 100644
-> --- a/drivers/media/platform/qcom/venus/venc.c
-> +++ b/drivers/media/platform/qcom/venus/venc.c
-> @@ -401,10 +401,10 @@ static int venc_s_parm(struct file *file, void *fh,=
- struct v4l2_streamparm *a)
-> =C2=A0
-> =C2=A0	memset(out->reserved, 0, sizeof(out->reserved));
-> =C2=A0
-> -	if (!timeperframe->denominator)
-> -		timeperframe->denominator =3D inst->timeperframe.denominator;
-> -	if (!timeperframe->numerator)
-> -		timeperframe->numerator =3D inst->timeperframe.numerator;
-> +	if (!timeperframe->numerator || !timeperframe->denominator) {
-> +		timeperframe->numerator =3D 1;
-> +		timeperframe->denominator =3D inst->fps;
-> +	}
-> =C2=A0
-> =C2=A0	out->capability =3D V4L2_CAP_TIMEPERFRAME;
-> =C2=A0
-> @@ -416,8 +416,9 @@ static int venc_s_parm(struct file *file, void *fh, s=
-truct v4l2_streamparm *a)
-> =C2=A0	do_div(fps, us_per_frame);
-> =C2=A0	fps =3D min(VENUS_MAX_FPS, fps);
-> =C2=A0
-> -	inst->timeperframe =3D *timeperframe;
-> =C2=A0	inst->fps =3D fps;
-> +	timeperframe->numerator =3D 1;
-> +	timeperframe->denominator =3D inst->fps;
-> =C2=A0
-> =C2=A0	return 0;
-> =C2=A0}
-> @@ -431,7 +432,8 @@ static int venc_g_parm(struct file *file, void *fh, s=
-truct v4l2_streamparm *a)
-> =C2=A0		return -EINVAL;
-> =C2=A0
-> =C2=A0	a->parm.output.capability |=3D V4L2_CAP_TIMEPERFRAME;
-> -	a->parm.output.timeperframe =3D inst->timeperframe;
-> +	a->parm.output.timeperframe.numerator =3D 1;
-> +	a->parm.output.timeperframe.denominator =3D inst->fps;
-> =C2=A0
-> =C2=A0	return 0;
-> =C2=A0}
-> @@ -1454,8 +1456,6 @@ static void venc_inst_init(struct venus_inst *inst)
-> =C2=A0	inst->out_width =3D 1280;
-> =C2=A0	inst->out_height =3D 720;
-> =C2=A0	inst->fps =3D 15;
-> -	inst->timeperframe.numerator =3D 1;
-> -	inst->timeperframe.denominator =3D 15;
-> =C2=A0	inst->hfi_codec =3D HFI_VIDEO_CODEC_H264;
-> =C2=A0}
-> =C2=A0
+And add a noiommu exit branch to _iommufd_bind, symmetric to unbind.
+Right?  Thanks,
+
+Alex
+
