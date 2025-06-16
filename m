@@ -1,240 +1,150 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from naesa03.arrow.com (naesa03.arrow.com [216.150.161.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30BE2D12EE
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEDD2BF3C3;
+	Mon, 16 Jun 2025 11:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.150.161.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073063; cv=none; b=A5wOB2wZVgl6LuMPxXAqr/eQgJW1RUs1lwnJzZX6xjLv0VNfkNoZmgz8bOGmQ9VpFXMUvPJRIAOeu96kUEjiCJuxj9q4Cuznuvgl0Q46DA0tPy2jNXa2WuDY7mglNh82Sy+28gx8f5TA8SPLc2zOomP3rMZCilOvMgwqsO/XAJI=
+	t=1750073069; cv=none; b=bkJqKTKfZlhdDsR9bPmuzN+lYjv+cUqu1zV2uGwCMvnaWvytdMHdOCP+VXKsOuMmtkwddP8+T3BN6ro7cuGHmRcRAarZVFIx+ezTVSOOM/PmlmNqBU7YRkmS0u0n4tKEWwCnEr1Ccbcfc4QHFMEAkqpezkkXW5XDuRIeSupnfRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073063; c=relaxed/simple;
-	bh=7Y91ERdcVYXY+q+iTdAR87r2brMmDkMx7kZ5H1FMop4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HXoOjGjyHQyB5aCMXxw7jEFHgWpbIfMKN65DvdWmoBGXhbmJeZc1tevAgjPdPG5FsJuXsbCafPl1ni08RtyX7338r+nrZsan1Pw8ppXzfqkmxr9VUmAM5WZRNsi9Y5PRlGq6Rp+zBY2+MM7xWw5av2sIqfpsvHoe6v0iQN0s9Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pQX4w2Tj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750073069; c=relaxed/simple;
+	bh=npKvrSYMx0G7203vj1pvhDj5mrw+axGZsxDIgzM8hM4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sEu9FkmNdHjtrgaeZwwymIu05tVtlZaMD31U8mxkSuzFCXqQmc2wu4/XnfqBwylx6Md7WuePMKdxDO79SBmvEg4WHcpulYICpDaEae9g79IDmIBYtUpyXM+G23zjtm0tDUQ74Nl5JRNco4ycClRA9fsNO2+BJvUmAA2G/fK8ngo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=utjXbm2g; arc=none smtp.client-ip=216.150.161.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pQX4w2Tj"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8Z3xe030943
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:24:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	k7f5B0gAHOa6XpZ/ifKYUiHiV0r4VkXHs7gOP8WPIMI=; b=pQX4w2TjQfxTY0FB
-	j4fuu21HXbdwU2oh6KriUAgAcGFu1e4Zku7y6cuZ+JlyO61A6aHawEG0UkIUwRzU
-	8moiNV1Gqin3w7gPnDRvuqln8SjVaK5mqNjP5juOwns9OTRNXRjCIM89C4hUyN0x
-	bs9+xA/M+wsfIEhwzaOdnDv2GIPOULoKtZAsUYPjRLbxRJVdqPMOXUaei2kTcDK5
-	5VuqAQEC4itBZfoeUanCTSile6o8kWG9yuiqXXUhnbXn68k3hJxBug8exP3cc9/X
-	uJU33b/1eJ6ZCXr1ti9BM27WaPv+62Jd/y8peOjWuZtzanxewv+ZI08UCDx69q9i
-	vUhNwQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791crm86h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:24:20 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fb3487d422so60515386d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:24:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750073060; x=1750677860;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k7f5B0gAHOa6XpZ/ifKYUiHiV0r4VkXHs7gOP8WPIMI=;
-        b=qhJYzA8niJLwg1INs7T8se744Oh3nX+S6luKdnGeh9KZOsFq81x6bSY2dGo6mQ18Hb
-         z0hLUd56clGoxbKAJzL3vJ+CmJebx4+h59CO1/Lhp1/eKmxPx9iXK0Hdyp33Lr9GtPt5
-         KZjfkkDdMlnw9Ssm21R28c01Zll/lziBb5lY1RodMU1gEDQOjLMQMsT/Y18DixU/X6bX
-         ZKzKXkakmza4oI9bnK440gsj7NumyRqkR0cUwQHB0L8D/SnkXdvXiS8xFQeK/wb3sssi
-         fL4MHHqoXw3SEHmsJVpSzvxxRwggf8bgU6PsDm6ABfSgXJcGyMrvY969PPnEuuJFskAf
-         b9Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVtBZL6xXm19fRTmSh3dobCuOxwVJhxVSou8m0s9LM3EBkULacFHa97/IaS7wmVnciNy46zAYjOnlmQd1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzx7lvEkZuqJcIKN2cvTCBuGbMVO2AOiR50RXzZJN6c3K3OhAt
-	uC7RnRyLHENbtsMKkFXfAaV37FUYKgSGHssCpHfGIA80sP4lTocIIU0dNYUpexaDfMBcWc5e/Im
-	QQoQVMuOUAdkZH8b14nhzNpk506zrSC46IbmVBmwdDuLHE6o1mGTU6qHuvjexRQ/98kM=
-X-Gm-Gg: ASbGncscv6v7Je42Pyz2baX5LIea6/en9rFZ7eEpoUy+Z+HlCP+xK969/DlD7XgQ9Ht
-	g1lk9lc873yDhrFdumUK75UlIxPHdaPzo81hRE2Fm8MzdZMw9HS0JESp8PN8fx+OKnvMz+hnT7U
-	1G1kTLdLFXW7CcosbeDxZWXUYIhXDJdFlnf0IYADdyk73U3dGmM8a0doE3HAUmGyN85OCiMA3dN
-	QEZZhqgFEMmbyl7eYoSSgdlqgjlSvyCQqldiEbeaP6GT+S7UCHvVrssEwh9KiOg3S0ZZpHqfLf8
-	QKRQ08Pb8F0LX4Wk6pc8a7N9qwe0qa8DtDi+Wiq/LGkRiJimE8mCFZYW7UVjoI1bmpah1cc9DUa
-	bCh7ymLL0rEDPjbX909rAzfb2XaO5DnC3rnXutIKRh5IICMeLEjYKrBMCPwPl1cB2WVJjJ15dBl
-	U=
-X-Received: by 2002:a05:6214:f0e:b0:6fa:cdc9:8afa with SMTP id 6a1803df08f44-6fb47742e14mr134573236d6.17.1750073059760;
-        Mon, 16 Jun 2025 04:24:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtJiyfX3QkCFTp7F0FQi93DKQasR0p5XngLtnM0qsj5HwT8bo/bstISR/2JTMNMtQS8XeUQg==
-X-Received: by 2002:a05:6214:f0e:b0:6fa:cdc9:8afa with SMTP id 6a1803df08f44-6fb47742e14mr134572686d6.17.1750073059250;
-        Mon, 16 Jun 2025 04:24:19 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:a4:c3fb:c59f:e024:c669:a69b? (2001-14bb-a4-c3fb-c59f-e024-c669-a69b.rev.dnainternet.fi. [2001:14bb:a4:c3fb:c59f:e024:c669:a69b])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1f7db1sm1506770e87.235.2025.06.16.04.24.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 04:24:18 -0700 (PDT)
-Message-ID: <6463f18d-b258-4773-aa12-d3ae3af60715@oss.qualcomm.com>
-Date: Mon, 16 Jun 2025 14:24:16 +0300
+	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="utjXbm2g"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=einfochips.com; i=@einfochips.com; l=2938; q=dns/txt;
+  s=NAESA-Selector1; t=1750073067; x=1781609067;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=npKvrSYMx0G7203vj1pvhDj5mrw+axGZsxDIgzM8hM4=;
+  b=utjXbm2g9XAVUSvFgf9higINEfiNT67yGByK2p0scVO2DcaYT9griIKa
+   ojtVHFaC7E/JC4yCV8THZ0kgLgIa3pobntgX++E7fcJhFf8mpyl4eewKo
+   R3UlBLdEEgHa5jVRSU4lfsGNKCEcPETEm0uH8vOLhJ53n0uDjgmEH1yWk
+   ghL1pkJzZEPDhDvfbHOEGd5NH2xJvYjasuuaqE+LyZUrVt0YljvNQza5G
+   77RIQVKS214cEcS/9xMhc6PJacaiuEAYdZhWMQ55LX0nG+UoUcpurXwzF
+   Yy/NBensGoZyPPLNCcwWZmgbgXU4NnJPgWb44DVPBpyaB+50ex94CJi4Q
+   A==;
+X-CSE-ConnectionGUID: X3b86I94Qtyi3KJOVUTt1A==
+X-CSE-MsgGUID: tu3C4LvuSaWC29l3VOEKSw==
+X-IronPort-AV: E=Sophos;i="6.16,241,1744092000"; 
+   d="scan'208";a="86117878"
+Received: from unknown (HELO eicahmirelay01.einfochips.com) ([10.100.49.50])
+  by naesa03out.arrow.com with ESMTP; 16 Jun 2025 05:23:17 -0600
+Received: from AHMCPU1888.ap.corp.arrow.com ([172.25.5.100]) by eicahmirelay01.einfochips.com with Microsoft SMTPSVC(10.0.14393.4169);
+	 Mon, 16 Jun 2025 16:53:16 +0530
+From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Min Lin <linmin@eswincomputing.com>,
+	Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+	Pritesh Patel <pritesh.patel@einfochips.com>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Yu Chien Peter Lin <peterlin@andestech.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Kanak Shilledar <kanakshilledar@gmail.com>,
+	Darshan Prajapati <darshan.prajapati@einfochips.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	rafal@milecki.pl,
+	Anup Patel <anup@brainfault.org>,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] Basic device tree support for ESWIN EIC7700 RISC-V SoC
+Date: Mon, 16 Jun 2025 16:53:09 +0530
+Message-Id: <20250616112316.3833343-1-pinkesh.vaghela@einfochips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs9075-evk: Add sound card
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
-        kernel@oss.qualcomm.com
-References: <20250616070405.4113564-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250616070405.4113564-3-mohammad.rafi.shaik@oss.qualcomm.com>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250616070405.4113564-3-mohammad.rafi.shaik@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: l3Ti7cSRob43M3Cckjnuv3W1G1i3B_u-
-X-Authority-Analysis: v=2.4 cv=BoedwZX5 c=1 sm=1 tr=0 ts=684ffee4 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=5ARAolRv94kXMxSVR3wA:9 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-GUID: l3Ti7cSRob43M3Cckjnuv3W1G1i3B_u-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MCBTYWx0ZWRfX5R3RRXFejcIs
- afzIp2wBYXd5Bnx0ozpfaANAXehx3jIQ25rUKQcURSdiQc8Hi49wfiIFKAeb3+CmzwbdBUZ8KVl
- kP5fjBvof1CWdQv2ZSHlr4JsMsln6CcN+PNHFfFkNR6P6CYjtWEsXWgfy2InUE7PT7wdHkDdsJM
- XPZZdnSb6OQG4GkwY9MNb/lqiBEASv2BAwYEorSDznNicvx/Ij1WOee+l+VE1IsX4eCe1RUGH8a
- RF3lsqKAAlsfruh1tfbqo2KNvsP43X0GUYoeSGGM1VgYJAx2r44WhDNrKMH3jCqDKAb4x+kvLN/
- gY8mjgz1OVSQwttfR+vQV51QJSgpiZ+KMVhTdvvO/42kR0M4enUBZ5GOHKqPDGwmjjVlkZglQnb
- TfGn1m/hQ7S6q7iWYOVHX/Ao6YhHENHNYUtUn6/ELxh9+9BDg7+kIlXNesbI6+nbfL/BdKNv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160070
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 16 Jun 2025 11:23:16.0327 (UTC) FILETIME=[0E03CF70:01DBDEB1]
 
-On 16/06/2025 10:04, Mohammad Rafi Shaik wrote:
-> Add the sound card node with tested playback over max98357a
-> I2S speakers amplifier and I2S mic.
-> 
-> Introduce HS (High-Speed) MI2S pin control support.
-> The I2S max98357a speaker amplifier is connected via HS0 and I2S
-> microphones utilize the HS2 interface.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> ---
->   .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 52 +++++++++++++++++++
->   arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 14 +++++
->   2 files changed, 66 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> index ab161180d1d5..d073c6f95d4c 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> @@ -5,6 +5,7 @@
->   /dts-v1/;
->   
->   #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/sound/qcom,q6afe.h>
->   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->   
->   #include "qcs9075.dtsi"
-> @@ -21,6 +22,57 @@ aliases {
->   	chosen {
->   		stdout-path = "serial0:115200n8";
->   	};
-> +
-> +	max98357a: audio-codec-0 {
+Add support for ESWIN EIC7700 SoC consisting of SiFive Quad-Core
+P550 CPU cluster and the first development board that uses it, the
+SiFive HiFive Premier P550.
 
-This wasn't sorted out properly.
+This patch series adds initial device tree and also adds ESWIN
+architecture support.
 
-> +		compatible = "maxim,max98357a";
+Boot-tested using intiramfs with Linux v6.16-rc1 on HiFive Premier
+P550 board using U-Boot 2024.01 and OpenSBI 1.4.
 
-No SD_MODE pin?
+Changes in v4:
+- Rebased the patches to kernel v6.16-rc1
+- Drop patches that are already merged
+- Added "Acked-by" tag of "Min Lin" for Patch 4
+- Corrected the commit message of Patch 7 (Patch #10 in v3)
+- Added "Tested-by" tag of "Ariel D'Alessandro" for Patch 7
+- Link to v3: https://lore.kernel.org/lkml/20250410152519.1358964-1-pinkesh.vaghela@einfochips.com/
 
-> +		#sound-dai-cells = <0>;
-> +	};
-> +
-> +	dmic: audio-codec-1 {
-> +		compatible = "dmic-codec";
-> +		#sound-dai-cells = <0>;
-> +		num-channels = <1>;
+Changes in v3:
+- Rebased the patches to kernel 6.15.0-rc1
+- Added "Reviewed-by" tag of "Rob Herring" for Patch 4
+- Updated MAINTAINERS file
+  - Add GIT tree URL
+- Updated DTSI file
+  - Added "dma-noncoherent" property to soc node
+  - Updated GPIO node labels in DTSI file
+- Link to v2: https://lore.kernel.org/lkml/20250320105449.2094192-1-pinkesh.vaghela@einfochips.com/
 
-no enable GPIO, no vref-supply?
+Changes in v2:
+- Added "Acked-by" tag of "Conor Dooley" for Patches 1, 2, 3, 7 and 8
+- Added "Reviewed-by" tag of "Matthias Brugger" for Patch 4
+- Updated MAINTAINERS file
+  - Add the path for the eswin binding file
+- Updated sifive,ccache0.yaml
+  - Add restrictions for "cache-size" property based on the
+    compatible string
+- Link to v1: https://lore.kernel.org/lkml/20250311073432.4068512-1-pinkesh.vaghela@einfochips.com/
 
-> +	};
-> +
-> +	sound {
-> +		compatible = "qcom,qcs9075-sndcard";
-> +		model = "qcs9075-iq-evk-snd-card";
-> +
-> +		pinctrl-0 = <&hs0_mi2s_active>, <&hs2_mi2s_active>;
-> +		pinctrl-names = "default";
-> +
-> +		hs0-mi2s-playback-dai-link {
-> +			link-name = "HS0 mi2s playback";
-> +
-> +			codec {
-> +				sound-dai = <&max98357a>;
-> +			};
-> +
-> +			cpu {
-> +				sound-dai = <&q6apmbedai PRIMARY_MI2S_RX>;
-> +			};
-> +
-> +			platform {
-> +				sound-dai = <&q6apm>;
-> +			};
-> +		};
-> +
-> +		hs2-mi2s-capture-dai-link {
-> +			link-name = "HS2 mi2s capture";
-> +
-> +			codec {
-> +				sound-dai = <&dmic>;
-> +			};
-> +
-> +			cpu {
-> +				sound-dai = <&q6apmbedai TERTIARY_MI2S_TX>;
-> +			};
-> +
-> +			platform {
-> +				sound-dai = <&q6apm>;
-> +			};
-> +		};
-> +	};
->   };
->   
->   &apps_rsc {
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index 07ca6dd4f759..968730da180d 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -4711,6 +4711,20 @@ tlmm: pinctrl@f000000 {
->   			gpio-ranges = <&tlmm 0 0 149>;
->   			wakeup-parent = <&pdc>;
->   
-> +			hs0_mi2s_active: hs0-mi2s-active-state {
-> +				pins = "gpio114", "gpio115", "gpio116", "gpio117";
-> +				function = "hs0_mi2s";
-> +				drive-strength = <8>;
-> +				bias-disable;
-> +			};
-> +
-> +			hs2_mi2s_active: hs2-mi2s-active-state {
-> +				pins = "gpio122", "gpio123", "gpio124", "gpio125";
-> +				function = "hs2_mi2s";
-> +				drive-strength = <8>;
-> +				bias-disable;
-> +			};
-> +
->   			qup_i2c0_default: qup-i2c0-state {
->   				pins = "gpio20", "gpio21";
->   				function = "qup0_se0";
+Darshan Prajapati (2):
+  dt-bindings: riscv: Add SiFive P550 CPU compatible
+  dt-bindings: interrupt-controller: Add ESWIN EIC7700 PLIC
 
+Min Lin (2):
+  riscv: dts: add initial support for EIC7700 SoC
+  riscv: dts: eswin: add HiFive Premier P550 board device tree
+
+Pinkesh Vaghela (1):
+  riscv: Add Kconfig option for ESWIN platforms
+
+Pritesh Patel (2):
+  dt-bindings: vendor-prefixes: add eswin
+  dt-bindings: riscv: Add SiFive HiFive Premier P550 board
+
+ .../sifive,plic-1.0.0.yaml                    |   1 +
+ .../devicetree/bindings/riscv/cpus.yaml       |   1 +
+ .../devicetree/bindings/riscv/eswin.yaml      |  29 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ arch/riscv/Kconfig.socs                       |   6 +
+ arch/riscv/boot/dts/Makefile                  |   1 +
+ arch/riscv/boot/dts/eswin/Makefile            |   2 +
+ .../dts/eswin/eic7700-hifive-premier-p550.dts |  29 ++
+ arch/riscv/boot/dts/eswin/eic7700.dtsi        | 345 ++++++++++++++++++
+ 10 files changed, 425 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/eswin.yaml
+ create mode 100644 arch/riscv/boot/dts/eswin/Makefile
+ create mode 100644 arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
+ create mode 100644 arch/riscv/boot/dts/eswin/eic7700.dtsi
 
 -- 
-With best wishes
-Dmitry
+2.25.1
+
