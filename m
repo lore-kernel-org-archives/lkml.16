@@ -1,74 +1,77 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F0320C030
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 16:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BD728751F;
+	Mon, 16 Jun 2025 16:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091900; cv=none; b=QSOa2+wYyoDhmH8hurOw9MvmFQGU1S0nJoVj+tiQLoJCqJDJIaa4oobWLFzPimS//K4QyQIcUgt/V46xZPrpd2PfNZkPXt55JNeTs+Kg6dDFQSLZLNhAJN2qp0LseXBf2zurVp+GhqruhBf+aoek31xhrFmmREH6ZBcs1xzC0ns=
+	t=1750091935; cv=none; b=R2K65fzt9vRyqTmodaniBAyJroSeDQnHJnv9njLcW7UaFzclaeYS+d9JED6mrPwHSdXyevN1ldM2mqF07QBXJRnc3huz1KFZhmMqB7TRuZ3Jbj64duV6sYPcxytILiS+3uN+UxzvfNlJOmIHByo6jiQEoLa1nXl1GVBc3HAi41g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091900; c=relaxed/simple;
-	bh=VdMj41CG/GoyQ4OV5XmdOE4S5q9Mz3+ag815Parhci4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DsLKRJmy7fw6uOoJGOuVx4Gsns18YMBGJR4/w+ol6pmNEP6zZrgKEcxcWh8XU+F4IFNgfQjYRQgbemy94X3sGPfk6Lv3W3YDzsp+I9oybL8hhgV/9AUZ44s85DGK4UJfxtDyJHUw9Uen3+k2+xNCtBkCQfq3ajtqGqqDQabMe5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwB3kfEf; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1750091935; c=relaxed/simple;
+	bh=wOqPeUwPdUqdKZ7+K/uvr4WY5Mk/P3mjbO5/Bdwu+UI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kARh/IPDL7U3RMvGlZMdHMudXUaabcI6q3RqSCe/VzL0Pz7TEfxcn86ksmWP1h0Ad5tMJ+Y7yPLO9QAYjtsbHSll1GiBDLKrZjc2j9agOyMLsfxieWGfbCu4jreQSULGLhm1IWx2JkLVy5QwynZem1QJdTS1RYZcunWrk4siQJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IyoHsJ+c; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwB3kfEf"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451d54214adso36958545e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 09:38:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IyoHsJ+c"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2f62bbb5d6so3764199a12.0;
+        Mon, 16 Jun 2025 09:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750091897; x=1750696697; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750091933; x=1750696733; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MVOgHFnjJbaqD7diLL14lAkNgZLvbg+9Qxk9fcigUoo=;
-        b=KwB3kfEftSHD4i2ychXQKmyIO1PNzkQc38fsOO3BVYDfjBnxSiCttx0OuKh9AjSWBv
-         KMr235wLXghfj9FGw8eRH3HkDojWj+pznEy23S5dFBMqLqOicGo0u/G1Xmh8kM31IAvr
-         urIZ4o2456km+xvM2ETzKCuFkkeH0wrHm+ricMVgi4POI4hTj2fYVr41WdZqJi2Cxccx
-         J4ZJ6Q0FkUys2zHd3CB9DBdXRSQMSxwEZJPiNesGHv8bLS0Xibk1QUN/GL1aXXHL0f8C
-         ewPVoO5v25r9aBR/fZB7wg1pGQmfguuUL7DobWwZFykhsBhoUib0nBuyRjqBIOvEtxgt
-         yhzw==
+        bh=sWs8wQgAGPAM0o0VVdnXAORTFo9mCsk0jubxv6TpMv8=;
+        b=IyoHsJ+cBKsSPYqWD1uSQxoimjtUgAY2bX31ytL4TMad/IeyMmLUJbGnjiHd/22C6R
+         hBJ3MnWZwvNWp0UcIzOtzQp8v7U6BLTl7QmrrjUYnB8UXDgXsxL3DaDVuzMl1jfKAWkm
+         weBj4WrqGKwTLoHyh+sM5VQ4e0/sV2aa35u/F8RrJ2QPvOjKBbc/Hrl4Ely+aySSixUX
+         ziJtG+bZlih7AakwOoppNx0faejbRpWlLK7/1Yd7DValmrVyFDVNDkwNOOAGaO1xMTGf
+         MfdpHXINpwxyQ1sJC1UenizdrR247aJ/uKyaWMpWjlTQ08qJdXFzrTZoRjZRNbNZfoqD
+         pH8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750091897; x=1750696697;
+        d=1e100.net; s=20230601; t=1750091933; x=1750696733;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MVOgHFnjJbaqD7diLL14lAkNgZLvbg+9Qxk9fcigUoo=;
-        b=gwmBHYgJsci6I9BjkW/52EAn3PJ496KdxG6pPxHMTOV6vNTz4NR8x5FBQ4LRXbR45D
-         vGs4CXwVZ/Qjt+I8OVQ397IvNGZXp+LZihuJagBlXJ7quzpFlzVZ/64xLDKKQzrOmLpr
-         jpNVo9RU221GYFWCPG+9rIQloKVmyoIUERBnW9hhhN96uQPfZXfWDQe+spyTPa4OdloT
-         6EiGlqiK4Cit84U6QqgvuSTxJsIfqptgExBL0aKrSODt1JZe4GVKmxVE3faFb2uZD1hc
-         FzziSZKrlF1pdysFXiDxVSO/9AlMe/GJ13W6nN9R9XEXIO0/bX4sZtmRye/z6ER6Ma6I
-         es1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUUcvaL7LKDLcZpzJN1utN5ESarFb7qBzf8s0wVIGHBbslOUoc1ouLhunuqWfykTzPbeb136mCgMIaBE1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd4H9Qfse4xxq/6soyuj6rs3rbzAs2tpNfl0PTeXqVKKDgYQHj
-	lphqP0Z+4YyXTFR/VQKF7FX9AlreMMwJmiGpc97PWwkdMSduLw3iE/0F
-X-Gm-Gg: ASbGncsvU7mWrOOlzF6GK2v0dVvcHc8hDonyp/VKYYANtHSDvL5ALW09UlqlnUTYc9n
-	qhdmuD89KRC+ntdhozoY4cPf5kOPFyCxOGvYV827zwArRP1OL2pxnSvemwdv6c4zzP1brfgEm1Y
-	Rn7wQtL4vdaleoSO6DI2xQk5dskFNt58/QIB6q67ENGk0pqKIgP4a+95GCtGV6TLg896zOvoEhg
-	HYoZnqyji72zK2sB8FlxBOwMET2Eh91RFrXQdDFXUixlMAIfusOjkHJrQKBD7DC8Teqrg86iK9O
-	YJmXTDBk7myJmrAEY2RfX3HfsbTFF9NUJzHetYMrs9rN6BVSngt1vehL5XpTG1EXFoMIj0WjrM1
-	0HOHWFdNkBFA=
-X-Google-Smtp-Source: AGHT+IEQDiZywIsXkW6ShknHqUsaYVDHo6ekrrWnpwL3ayETYiM2Qs7R99o4HPioFiT8g3kaKRocng==
-X-Received: by 2002:a05:600c:358b:b0:450:6b55:cf91 with SMTP id 5b1f17b1804b1-4533ca4681amr94620725e9.6.1750091896326;
-        Mon, 16 Jun 2025 09:38:16 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e09c2ffsm147725575e9.18.2025.06.16.09.38.14
+        bh=sWs8wQgAGPAM0o0VVdnXAORTFo9mCsk0jubxv6TpMv8=;
+        b=eDKRLavLnVWrS3x1iLe/hJssSJtWZQ8YyXtZ2SE32lJeNUJuVZFUsbY2Hl8WoKBwxj
+         /UeVO9YFzUtA4qwXLpGDrP2xV3U6rgovCL32cF/kCGgMCUbMRZX8J/PQnmmOIVKp8K9e
+         +tM+lMM1iVcaagnpOXTijsMDMAGkc3qjQZB0RcuHhu713UqjLoS00BBmehpXsavOAhDx
+         Rzq/B3iPITeth/4ji81YFekRrx9JflIabFoEuvwSb+YHD+B1vRoJiiyAsfhPJ7sNOem2
+         BcMXSLp7qQFLjFtiocswMCllq9sCDJ3QjxwG1WoobN8wOrJQyB+7TX1DP8uiueDIk50s
+         m+WA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwJYIDurel2ukAsHsk0PXdOApPXGa8FQMPwqXNmFRLXdbvX6388vE7uJd6kgeeUsceHYTArUXci1s=@vger.kernel.org, AJvYcCX8k+iIRsg9cm8rPpyr580Ns1TMutwAAKfHRd97WGmUdJaz4wjWKvmndldB71RREW4rImNYhctV667WRrPX8uOoXIA=@vger.kernel.org, AJvYcCXstatljnVst2K0AUM1uOh5AT2Z2be6VITBGamn8///ZnOyMZLFApAAWR+E9Tvr9LfccdEJjGivBy1Yuns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5qfZejD2M0G5tGQc1M7iBt/gEkuzbcTLT9kkuUY7s+Bj+aZM0
+	TgU9XYBxwj6fmHD+tGRezTOHbyCSTXrd66/4PulGoNYHX8g2eQdczync
+X-Gm-Gg: ASbGncuAhzNe2u8/KbgoySOrAYyeloungCukRyDhgA8s+ca404eeMg1rDGwm1mnmp6x
+	lOnYwisWv8cnz2zoV3nAwALgaiBaKATeomjrSzGr3jJjf+/D1gwU2tRivT4ltKxg40BSmNqMKfp
+	jVtue96GETzpP/8CBEnl46IQl37H9SLhoHjMjlQM+fqK77ujtY6DpU9SjaKZSQaEdpSdgTbkwnW
+	q7Tg3dOLR/zGBweQLy1r0F2gYMi0c8vEmRbW+wt2YJbopzwvQi4FFE79EQTqnflV0Hi0i4yJ/JQ
+	3dFIc0z3AfJJ9U/r73vO2bEkc5ikcLho8uYZAiUDaOGAVL0hFm4/jvjQxQY2p59U3wAC3KW2JJk
+	=
+X-Google-Smtp-Source: AGHT+IH4xd4I2Qt7PPA+9XeEa/AfXG3Kby6dSj3ue9eZ8UR+VJKo7fekmIJ/oBsPB6H67fFEhSIn5Q==
+X-Received: by 2002:a05:6a20:a115:b0:1ee:e20f:f14e with SMTP id adf61e73a8af0-21fbd668cacmr15317222637.38.1750091933163;
+        Mon, 16 Jun 2025 09:38:53 -0700 (PDT)
+Received: from localhost.localdomain ([45.112.0.181])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680c6asm6067882a12.42.2025.06.16.09.38.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 09:38:15 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com
-Cc: x86@kernel.org,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH v2] x86/boot: Don't return encryption mask from __startup_64()
-Date: Mon, 16 Jun 2025 16:36:12 +0000
-Message-ID: <20250616163704.849-1-khaliidcaliy@gmail.com>
+        Mon, 16 Jun 2025 09:38:52 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-pm@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
+	linux-samsung-soc@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [RRC v1 0/3] Simplify Exynos TMU IRQ clean logic
+Date: Mon, 16 Jun 2025 22:08:21 +0530
+Message-ID: <20250616163831.8138-1-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,106 +81,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Avoid returning the SME encryption mask from __startup_64(), and instead
-let the function handle encryption directly as needed. The encryption
-mask is already available to callers and can be accessed via
-sme_get_me_mask() in C code, or directly through the sme_me_mask symbol
-in assembly, if CONFIG_AMD_MEM_ENCRYPT is enabled.
+As per Exynos TMU user manual the interrupt status register, maps the
+active rising and falling edges of interrupt to the appropriate clear bit,
+and writes it to the interrupt clear register to acknowledge and
+clear the interrupt.
 
-This change aligns with how secondary_startup_64_no_verify handles SME
-and keeps the behavior consistent. For Intel CPUs, SME is not relevant,
-so there is no need to retrieve the mask unless CONFIG_AMD_MEM_ENCRYPT
-is enabled.
+Refactors the IRQ clear logic in the Exynos TMU driver to eliminate
+redundant code to use single unified exynos_tmu_clear_irqs()
+function.
 
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- arch/x86/boot/startup/map_kernel.c | 11 +++--------
- arch/x86/include/asm/setup.h       |  2 +-
- arch/x86/kernel/head_64.S          | 12 +++++-------
- 3 files changed, 9 insertions(+), 16 deletions(-)
+Thanks
+-Anand
 
-diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
-index 332dbe6688c4..6fdb340e9147 100644
---- a/arch/x86/boot/startup/map_kernel.c
-+++ b/arch/x86/boot/startup/map_kernel.c
-@@ -30,7 +30,7 @@ static inline bool check_la57_support(void)
- 	return true;
- }
- 
--static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
-+static void __head sme_postprocess_startup(struct boot_params *bp,
- 						    pmdval_t *pmd,
- 						    unsigned long p2v_offset)
- {
-@@ -68,11 +68,6 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
- 		}
- 	}
- 
--	/*
--	 * Return the SME encryption mask (if SME is active) to be used as a
--	 * modifier for the initial pgdir entry programmed into CR3.
--	 */
--	return sme_get_me_mask();
- }
- 
- /*
-@@ -84,7 +79,7 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
-  * the 1:1 mapping of memory. Kernel virtual addresses can be determined by
-  * subtracting p2v_offset from the RIP-relative address.
-  */
--unsigned long __head __startup_64(unsigned long p2v_offset,
-+void __head __startup_64(unsigned long p2v_offset,
- 				  struct boot_params *bp)
- {
- 	pmd_t (*early_pgts)[PTRS_PER_PMD] = rip_rel_ptr(early_dynamic_pgts);
-@@ -213,5 +208,5 @@ unsigned long __head __startup_64(unsigned long p2v_offset,
- 	for (; i < PTRS_PER_PMD; i++)
- 		pmd[i] &= ~_PAGE_PRESENT;
- 
--	return sme_postprocess_startup(bp, pmd, p2v_offset);
-+	 sme_postprocess_startup(bp, pmd, p2v_offset);
- }
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 692af46603a1..29ea24bb85ff 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -50,7 +50,7 @@ extern unsigned long acpi_realmode_flags;
- 
- extern void reserve_standard_io_resources(void);
- extern void i386_reserve_resources(void);
--extern unsigned long __startup_64(unsigned long p2v_offset, struct boot_params *bp);
-+extern void __startup_64(unsigned long p2v_offset, struct boot_params *bp);
- extern void startup_64_setup_gdt_idt(void);
- extern void startup_64_load_idt(void *vc_handler);
- extern void early_setup_idt(void);
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 3e9b3a3bd039..8b50bdd90927 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -106,18 +106,16 @@ SYM_CODE_START_NOALIGN(startup_64)
- 
- 	/*
- 	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
--	 * the kernel and retrieve the modifier (SME encryption mask if SME
--	 * is active) to be added to the initial pgdir entry that will be
--	 * programmed into CR3.
--	 */
-+	 * the kernel.
-+	 /
- 	movq	%r15, %rsi
- 	call	__startup_64
- 
- 	/* Form the CR3 value being sure to include the CR3 modifier */
--	leaq	early_top_pgt(%rip), %rcx
--	addq	%rcx, %rax
--
-+	leaq	early_top_pgt(%rip), %rax
-+	
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-+	addq	sme_me_mask(%rip), %rax
- 	mov	%rax, %rdi
- 
- 	/*
+Anand Moon (3):
+  thermal/drivers/exynos: Remove unused base_second mapping and
+    references
+  thermal/drivers/exynos: Handle temperature threshold interrupts and
+    clear corresponding IRQs
+  thermal/drivers/exynos: Refactor IRQ clear logic using SoC-specific
+    config
+
+ drivers/thermal/samsung/exynos_tmu.c | 118 +++++++++++++++++----------
+ 1 file changed, 73 insertions(+), 45 deletions(-)
+
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
 -- 
 2.49.0
 
