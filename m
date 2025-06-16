@@ -1,33 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEE71BC3F;
-	Mon, 16 Jun 2025 14:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301451BC3F;
+	Mon, 16 Jun 2025 14:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750084716; cv=none; b=ahL2ke2yjmfYUfsbokSWrIzq3KGRsc8AmCNOzNNU5OpS6cCuB8cS/MW69n7bIF4Q2vKZaDLqGn/aq6OMp+3yE5ucTqfUZOfzfA0iZI8aHCZsZO6xZuQf71aDu0ofMlkW+eRi1Bm2/JCyy5ItQ1wNGL5aI2KSh9Od8rs+pC9WcAA=
+	t=1750084724; cv=none; b=RNq/L7Lbddb/k734V0TDQQVqkrKMIsBKG1coT4Xctq1JVFrYk6QLM7FU2nigCcwbW2oBemPLNIxS144JBVS/MePYuQKFbkKXPpKgBrnHqLDvvCyB4XdmExRkICnaJ8q62wI/iNKFTBhC06E8YWeZ8aUhVxxGcxUJDQL82NFEu88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750084716; c=relaxed/simple;
-	bh=/B8FSd3Uau34QUMdkt+6mwLGvL84YtuejKwGuVYL1ZU=;
+	s=arc-20240116; t=1750084724; c=relaxed/simple;
+	bh=hsXrE98KlqHUSD0dJZdLooZZA2oPjVViexsRp35TUWs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SzTkdCdcABN1AVURxsLZBJWkO33j1xv7l+fNexKu2mea63ul4Jud11f7xNN1/1s5Y5k1vUbGF0armO+Ube1mbQoI5juWg0ucTU0vVtblWVgb9Xhxxhd0INTjC5bLq88D+3QRq/d63kv62P2i5v/rwB/zKMZL3x2pfTeYbKRSXD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exqkcegY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=eoTtFloiMwYdHwwYyyn60mBkSwfKTnWsVSb77VpIt8bTndEnlEuIJ8Y4uiBT1CoZrGTdEb+Fptp09CMjC7mM4xzg68g+Dq1ah/b4Mm+d14J/xVtXN2Ys7QhHXj7JLjsAs/1JMUIeqlbucS5oYCqPArn1HJxpW8RXDc974hd9WHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcogmPrR; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exqkcegY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC64C4CEEA;
-	Mon, 16 Jun 2025 14:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750084716;
-	bh=/B8FSd3Uau34QUMdkt+6mwLGvL84YtuejKwGuVYL1ZU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=exqkcegYYED3EXr4O7fP3HnJh5vzpJKGf32T+jkidW0pzXfCxB7FPTe2OlAenqhbC
-	 1p450Tr/MONUGzGhLtaflsLe7MO9xZ1yS4rKvldPJJRddDhoTe7slqRT8wh83sgbbK
-	 +rNlDx86d1eMZNEnPcaQkRuIRnD3z4UvhDo0CNmPYZBhDyrf8Cd8CQjcmC3Cf/AdgK
-	 FQ+Q0xxtTQzwQfqYBnl+TWuawffV/H8F2zUJxayZEV11pX82ZQ1xMn1pEKBk323EQx
-	 1kFlP35+objUm7Wybzi/lbbX/xoHVjf7w41IfEaBhTSdsIJp9AGGnAUA6s70TboKCY
-	 cPZxMmzoAl5YA==
-Message-ID: <d1e5942b-f8e5-42c6-98ae-d346927df3cb@kernel.org>
-Date: Mon, 16 Jun 2025 16:38:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcogmPrR"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3141f9ce4d1so459211a91.2;
+        Mon, 16 Jun 2025 07:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750084721; x=1750689521; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=brw8vLDxjS0ZYgD0tq8LFEfcB6flBc6Ru7WSQFGwR5U=;
+        b=bcogmPrRxnevBvWKvadIdlI3TiJnujmWmg59aHagNGgEc3tvSfPucdjqZnnA2L7Rfx
+         zQclsdrMZqh0Ddfwyg6BpwzkimcryVz2Ul24mc3IYlUtXUeMku61qsMRKwuMSkDHEWPl
+         6KcgZFGqufWoe3v0qIh8WrXD+8ogWWHlTgBsMM5qL7gjoA7YvkK4zaA6PRHSdSaRBjMN
+         y42ky6kl+WvpOfhPcP63k0lH5oTzOQo38SpikPdfSYUgAR42uCu3DfuVPPTjPcpZGUZc
+         6lsoOi/Cm05GECuvPV5csv1mOGoUFTc5BsNgSx5An5AH4xI523Z16NBBmcWAJy8T6spk
+         ZMOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750084721; x=1750689521;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=brw8vLDxjS0ZYgD0tq8LFEfcB6flBc6Ru7WSQFGwR5U=;
+        b=TndcbY261GroFDca0ecY2ZXuw/zSK4jeLEV7OmVk7VWHHLZ8Zq6tag6AFd3Jrh57iC
+         IpDsiUG6miluVbLYvdMlPcm8LhoOhhbifdYeAh7hlfia/HmP6hhMGC8ZWYMyeznC3gf1
+         Oq1Cfd9ubb9GwpndUxWzE4Xx/yURtWIEdZy4eQaKqRgiJX693A4CnhULr3pQ/Krp0tu4
+         0F0wm6/Mka6QJGahv9myU2axiTGfL+82zySE6g/D8tcCpuS4EqdTx4w0zOU+w2FkG1i3
+         UhZ3bIwhuVXtfkYH8MhQqrcTq+x1e7ejvsL7x7FVgTa4qjP6fGojV2ud5R2sEPPs38Ur
+         xwZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWLnBJAgMAr5Tjhd9gu7hVtfF4iAZDbqT2w3JCQPhH+nq9e6M5HzM6lqkuX32HWlhwkgAFzJLSVuA08JG4NaU=@vger.kernel.org, AJvYcCX86eC+PZMflXVD2bfcNYa4pOX0+qeH/pHWR/8czzBO5BeP6n8YB0gDLYHYDx2lrtY6Hj1040NLoqpcLWAu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws/nqnxsZM6d0RJWeJ0GlnhribZrSSDnnV2DKkjDNVxSPYsE2U
+	/N4CKtqgIWRcz/CJN50cOX6wxNB/7JorU40zTtAim6q4o3ql5YgIiwdW
+X-Gm-Gg: ASbGncsgkFOXLPX/ML6O18X1PzwY3PfzT13tY/ZqBR+0RZ8DythESFyvw1ADJIOXCwX
+	w6GrMYEcoSrN6U0PfMdfvUmFpgtvSQ2fTCTwY2rTigYwO1YY9MwjnG4sebTpLlpcBgCmY3frVLI
+	zVIn5gCCSkxS+pdzOjrs+cmj0i2kwRlVIlfkkz8OVyacJciFJA+BUss6iouQpjG3hFMZY+WVk3i
+	fUFXy7bCb8LSapDh1/nGlpatMSFC9tsMoQ/IDHqOkyoJJmcmf+qe+P5YIilKk2yAIl/B+Fmbs04
+	wOXlSJEKOOUERJ6zdNgmORt0P8tcw1UIwUIaWkYZti1e/yvRRGLbfzX7G6a6cIktjgGAMT2ASVE
+	8bNQqDEk1Ebz6mGyPkTuQZsB8xMwSAWu9IzE=
+X-Google-Smtp-Source: AGHT+IH4JKx32xcvkawqbTRj7XMT26PqUuLplt7hpDjxv9zsyYg6lGSR/N2mWsGgMJYuazLBYueVMA==
+X-Received: by 2002:a17:90b:2f4e:b0:312:e731:5a66 with SMTP id 98e67ed59e1d1-313f1ca786dmr13650711a91.3.1750084721307;
+        Mon, 16 Jun 2025 07:38:41 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19b84e5sm9817439a91.2.2025.06.16.07.38.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 07:38:40 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <a749c234-e4e4-4c89-9f26-7f5aa7129c26@roeck-us.net>
+Date: Mon, 16 Jun 2025 07:38:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,185 +69,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
+Subject: Re: [PATCH] hwmon: clean up Makefile after sbrmi driver movement
+To: Lukas Bulwahn <lbulwahn@redhat.com>, Akshay Gupta <akshay.gupta@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org
-References: <20250604-uvc-meta-v6-0-7141d48c322c@chromium.org>
- <20250604-uvc-meta-v6-4-7141d48c322c@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250604-uvc-meta-v6-4-7141d48c322c@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20250529033933.281845-1-lukas.bulwahn@redhat.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <20250529033933.281845-1-lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Ricardo,
-
-On 4-Jun-25 14:16, Ricardo Ribalda wrote:
-> If the camera supports the MSXU_CONTROL_METADATA control, auto set the
-> MSXU_META quirk.
+On 5/28/25 20:39, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 > 
-> Reviewed-by: Hans de Goede <hansg@kernel.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> Commit e15658676405 ("hwmon/misc: amd-sbi: Move core sbrmi from hwmon to
+> misc") removes the config SENSORS_SBRMI, but misses the reference to that
+> config in the Makefile.
+> 
+> Clean up that obsolete line in the Makefile.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+
+The hardware monitoring mailing list was not copied, meaning
+I almost missed this patch. Since the list wasn't copied, I assume
+that someone else is supposed to pick it up. Ok with me.
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
+
 > ---
->  drivers/media/usb/uvc/uvc_metadata.c | 72 ++++++++++++++++++++++++++++++++++++
->  include/linux/usb/uvc.h              |  3 ++
->  2 files changed, 75 insertions(+)
+>   drivers/hwmon/Makefile | 1 -
+>   1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-> index df3f259271c675feb590c4534dad95b3b786f082..cd58427578ff413591b60abe0a210b90802dddc7 100644
-> --- a/drivers/media/usb/uvc/uvc_metadata.c
-> +++ b/drivers/media/usb/uvc/uvc_metadata.c
-> @@ -10,6 +10,7 @@
->  #include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/usb.h>
-> +#include <linux/usb/uvc.h>
->  #include <linux/videodev2.h>
->  
->  #include <media/v4l2-ioctl.h>
-> @@ -188,11 +189,82 @@ static const struct v4l2_file_operations uvc_meta_fops = {
->  	.mmap = vb2_fop_mmap,
->  };
->  
-> +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
-> +
-> +static struct uvc_entity *uvc_meta_find_msxu(struct uvc_device *dev)
-> +{
-> +	struct uvc_entity *entity;
-> +
-> +	list_for_each_entry(entity, &dev->entities, list) {
-> +		if (!memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
-> +			return entity;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +#define MSXU_CONTROL_METADATA 0x9
-> +static int uvc_meta_detect_msxu(struct uvc_device *dev)
-> +{
-> +	u32 *data __free(kfree) = NULL;
-> +	struct uvc_entity *entity;
-> +	int ret;
-> +
-> +	entity = uvc_meta_find_msxu(dev);
-> +	if (!entity)
-> +		return 0;
-> +
-> +	/*
-> +	 * USB requires buffers aligned in a special way, simplest way is to
-> +	 * make sure that query_ctrl will work is to kmalloc() them.
-> +	 */
-> +	data = kmalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	/* Check if the metadata is already enabled. */
-> +	ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id, dev->intfnum,
-> +			     MSXU_CONTROL_METADATA, data, sizeof(*data));
-> +	if (ret)
-> +		return 0;
-> +
-> +	if (*data) {
-> +		dev->quirks |= UVC_QUIRK_MSXU_META;
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * We have seen devices that require 1 to enable the metadata, others
-> +	 * requiring a value != 1 and others requiring a value >1. Luckily for
-> +	 * us, the value from GET_MAX seems to work all the time.
-> +	 */
-> +	ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id, dev->intfnum,
-> +			     MSXU_CONTROL_METADATA, data, sizeof(*data));
-> +	if (ret || !*data)
-> +		return 0;
-> +
-> +	/*
-> +	 * If we can set MSXU_CONTROL_METADATA, the device will report
-> +	 * metadata.
-> +	 */
-> +	ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
-> +			     MSXU_CONTROL_METADATA, data, sizeof(*data));
-> +	if (!ret)
-> +		dev->quirks |= UVC_QUIRK_MSXU_META;
-
-Since we set the ctrl to enable MSXU fmt metadata here, this means that
-cameras which also support V4L2_META_FMT_D4XX will be switched to MSXU
-metadata mode at probe() time.
-
-So even if cameras exist which support both metadata formats, since we
-switch to MSXU at probe() time, disabling V4L2_META_FMT_D4XX support,
-the uvcvideo driver will only support 1 metadata fmt per camera.
-Which is fine supporting more then 1 metadata fmt is not worth
-the trouble IMHO.
-
-This means that Laurent's remark on [PATCH v5 4/4]:
-
-"I would prefer if you could instead add a metadata format field in the
-uvc_device structure (I'd put it right after the info field, and while
-at it you could move the quirks field to that section too). The metadata
-format would be initialized from dev->info (when available) or set to
-the UVC format, and overridden when the MSXU is detected."
-
-is still relevant, which will also make patch 3/4 cleaner.
-
-The idea is to (in patch 3/4):
-
-1. Introduce a dev->meta_format which gets initialized from dev->info->meta_format
-2. Keep the quirk and if the quirk is set override dev->meta_format to
-   V4L2_META_FMT_UVC_MSXU_1_5 thus still allowing testing for MSXU metadata on
-   cameras which lack the MSXU_CONTROL_METADATA control.
-
-Doing things this way avoids the need for the complexity added to
-uvc_meta_v4l2_try_format() / uvc_meta_v4l2_set_format() /
-uvc_meta_v4l2_enum_format(). Instead the only changes necessary there now will
-be replacing dev->info->meta_format with dev->meta_format.
-
-Regards,
-
-Hans
-
-
-
-
-
-> +
-> +	return 0;
-> +}
-> +
->  int uvc_meta_register(struct uvc_streaming *stream)
->  {
->  	struct uvc_device *dev = stream->dev;
->  	struct video_device *vdev = &stream->meta.vdev;
->  	struct uvc_video_queue *queue = &stream->meta.queue;
-> +	int ret;
-> +
-> +	ret = uvc_meta_detect_msxu(dev);
-> +	if (ret)
-> +		return ret;
->  
->  	stream->meta.format = V4L2_META_FMT_UVC;
->  
-> diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
-> index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
-> --- a/include/linux/usb/uvc.h
-> +++ b/include/linux/usb/uvc.h
-> @@ -29,6 +29,9 @@
->  #define UVC_GUID_EXT_GPIO_CONTROLLER \
->  	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
->  	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
-> +#define UVC_GUID_MSXU_1_5 \
-> +	{0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
-> +	 0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
->  
->  #define UVC_GUID_FORMAT_MJPEG \
->  	{ 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
-> 
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 48e5866c0c9a..726ffd9f6a1b 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -196,7 +196,6 @@ obj-$(CONFIG_SENSORS_PWM_FAN)	+= pwm-fan.o
+>   obj-$(CONFIG_SENSORS_QNAP_MCU_HWMON)	+= qnap-mcu-hwmon.o
+>   obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)	+= raspberrypi-hwmon.o
+>   obj-$(CONFIG_SENSORS_SBTSI)	+= sbtsi_temp.o
+> -obj-$(CONFIG_SENSORS_SBRMI)	+= sbrmi.o
+>   obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>   obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+>   obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
 
