@@ -1,133 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD85A29C35C;
-	Mon, 16 Jun 2025 11:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F19E29C35C;
+	Mon, 16 Jun 2025 11:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750073558; cv=none; b=oi0Q/0itA1IScvQZ3G8DqkwLNb47KclUaqRXBjLT+DjmFYsNw2eqDdGL6PiueAlUtbt1hGemb4pVz0s43y6S8AJOI+8Khp7bCsxwnxTGdUyHkt7yEuJtXoHPZRdU8O3kJ/MC5jT693MJsT0HkBE8saCP+7HEFhy6wG2ngIHkZBQ=
+	t=1750073563; cv=none; b=C/cHcPc6jid3XNqfbc2p4d4OLPu41PRHCGk1h4pfjtOH+/1BZ9v3UafddX1GCI8T3vpDsNa1/pVlwqJLuYNLjpQHUp14szmDmBGAyuBEEzYpCNr3B2an5at4V85jPSOEcirgoglqRdihXscDnA1u7dAuX9OHrP1LWBIAN0MVMk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750073558; c=relaxed/simple;
-	bh=K9KWXjUK6ETi9gIw9hOQRn1dglxLURauDPg1WLVBpa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZgU6F0lh3SCIn3VWNtp6g7cvq/NQKyQIJqoNJskDWtw9RgRs4VkWhhl8o/nfL7Gu1M+nZKTgWm2hk5BOCSHwGOw9XNqsty8SCgK4hlFq5Ug1Ayz7BqH+xvmyDI00GbBdJYBztWk0ujqxk0rpa5w861FGSsrxBH6bZVwp0Ojir84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhL/aw41; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750073563; c=relaxed/simple;
+	bh=lek3KmihgUTuFXfPYEuMmeDsFSmrkafqPfUG/bPtZrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hf2MHajd2CFncBzPq49Q4YMRUQ8B9fGHnTcgeOm58EyF8BoLBBlVynechPnyDpQzc4FXAaYKRI5BqBRcv5rdlHtKdeAjkKNeBQKOoUHwL8ZIndvuomDjTmyetpLOXvTfT9sV3ob7jlcIS/g1ZPW0sIxj27JP09BDB7PTJuMNmFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KAkyhy+S; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhL/aw41"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750073557; x=1781609557;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=K9KWXjUK6ETi9gIw9hOQRn1dglxLURauDPg1WLVBpa8=;
-  b=HhL/aw413zoAJjXdVpxZ0DjIY3QCT+TJvVGCzpc2yo0kWsIh/Nt69OuK
-   30A0PbetITLld2Kixncl+WryQSKGmotiXMyvEb1GKs3HnmgHTjc60Mnng
-   o5+0CWZnzZ95ncUSW6OlDVckoYMUBRpFOuZdqqzgvTWog2Uw0srgxn1EI
-   ps5FIrLSPSWIGYPYhQqS+foVrQ+9OzDen+ad2LXq8Q1UEjgiVljhxKSDK
-   +27AGjxTTLy0LQKwH102GGEJxc+peYZ0PUvlZKjQND2fDG+WyQ3upSz6K
-   eVhNxmkxRsrokxm5i2Thd+ptUK1l2sEvMkg0cJWe+C64SH7q79N3OX9HX
-   g==;
-X-CSE-ConnectionGUID: ZSYUzmwbR9O17H0BOLMs2Q==
-X-CSE-MsgGUID: duvoV5RMSBGuHNCZO0pzew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="69657581"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="69657581"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:32:36 -0700
-X-CSE-ConnectionGUID: QDgnZjIbTNK2iCkDaWZJzA==
-X-CSE-MsgGUID: eGPeF19JQ0WYvqZkT3eomA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="152281049"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 04:32:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uR84a-000000073ib-42pq;
-	Mon, 16 Jun 2025 14:32:20 +0300
-Date: Mon, 16 Jun 2025 14:32:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 06/28] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <aFAAxKKmwagLcg9B@smile.fi.intel.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-7-herve.codina@bootlin.com>
- <CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KAkyhy+S"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8Qt8g019929;
+	Mon, 16 Jun 2025 11:32:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UkdYK6XKVqdDkxSVM2WvIQGODHgRqOJlLrCfmDL4dzw=; b=KAkyhy+SHeRd7en6
+	Wre8xIIXJr4lXZ7zrpUOS/MwwqtdksRA89vPbcLQmOnVZKtLsHVCo7gMKGVzvRPL
+	O+VgVMHYz23+iMtBfMrKWNLdOlKcvZJAM9koDROuqQqzAZ8BvLXmXBOv4FQjaPUK
+	vbizF8LR5NqVkVwObVeeY5cFEMOSuc4VvoXCkWnr6hN1BjNw1PP93nfwoBn5jU6d
+	+rbixTLTxEIEfsf1ED/Nu/fKfy1Mi8BEGoF4urdH+JdLUyDuPlIYGTLATXuMswOV
+	WXJYFg09KqQjNTP2Y/EV3SRL/P4DKtPg1QkeRhYKA52OBO9vmtFlT0P1iceWa2T/
+	2FBGCQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfcbkm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:32:35 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GBWYCs017963
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 11:32:34 GMT
+Received: from [10.206.101.41] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
+ 2025 04:32:32 -0700
+Message-ID: <88a7865d-4c42-04fe-ccd8-90647c5e8a2b@quicinc.com>
+Date: Mon, 16 Jun 2025 17:02:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 6/6] media: venus: vdec: Make the range of us_per_frame
+ explicit
+Content-Language: en-US
+To: Ricardo Ribalda <ribalda@chromium.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20250111-fix-cocci-v6-0-1aa7842006cc@chromium.org>
+ <20250111-fix-cocci-v6-6-1aa7842006cc@chromium.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250111-fix-cocci-v6-6-1aa7842006cc@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA3MSBTYWx0ZWRfX+egGT+YwmacP
+ 3jPQLZ7aNbvmgbQe0Z4QN52EA+AlD6fpeqGlDY1c0t374ozAZ0GCYMCmEmpFO3RcZMk6SyeuSmJ
+ DCJlRLkpirdH/MndvsqDRsTxI2KSnaipj8RUDlsTnBzJ5DVzfal4MkGNUds256JamLy1/4OONNm
+ IoBgf3+vkcAKXEg0zB98B3rjM4bkpHH2/aG4r8ODAh5NpnNZ5UtaDid68zRcfNjRlT276cbdG8I
+ AvihZ3/8J3S4FUwX2XUkc7Ruxm/LFKN03nAv6H+InuNIEoYZrtvM6gR8b9VFoj4AUMusaEfe0ZD
+ ZM8aTScCr7eUB8Uz8PXS8DSRzhK4C1oXRGBz9LbbfiMxYn7ntNaCsaO23N6ZJvheh+rNpLW5Rkw
+ xdMn95Or66cdQDM5xhownBBinWo47iJXLf8N0hncN09lT6O2Ni1akHqcz3zSoID647BNd+ca
+X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=685000d3 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8
+ a=cm27Pg_UAAAA:8 a=COk6AnOGAAAA:8 a=Jj35otvxV6_FfqkHW9UA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 2LRMPAE_GVlKsydbvAylR7e1z8Sn-STh
+X-Proofpoint-ORIG-GUID: 2LRMPAE_GVlKsydbvAylR7e1z8Sn-STh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_05,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=997
+ malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506160071
 
-On Fri, Jun 13, 2025 at 02:13:49PM -0700, Saravana Kannan wrote:
-> On Fri, Jun 13, 2025 at 6:49 AM Herve Codina <herve.codina@bootlin.com> wrote:
 
-> > Setting fwnode->dev is specific to fw_devlink.
-> >
-> > In order to avoid having a direct 'fwnode->dev = dev;' in several
-> > place in the kernel, introduce fw_devlink_set_device() helper to perform
-> > this operation.
+On 1/11/2025 3:25 PM, Ricardo Ribalda wrote:
+> Fps bigger than 0.000232829 fps, this fits in a 32 bit us_per_frame.
+> There is no need to do a 64 bit division here.
+> Also, the driver only works with whole fps.
 > 
-> This should not be set anywhere outside the driver core files. I'll
-> get to reviewing the series
-
-Strictly speaking I agree with you, but this is not a some driver case,
-it's very special and also we have some (ab)users of it.
-I can relax the requirement to not set outside of a core functionality,
-(like driver core, PCI core) which are tightly related to driver core
-one.
-
-Just my 2c.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Found by cocci:
+> drivers/media/platform/qcom/venus/vdec.c:488:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead.
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/platform/qcom/venus/vdec.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+> index e160a5508154..aa9ba38186b8 100644
+> --- a/drivers/media/platform/qcom/venus/vdec.c
+> +++ b/drivers/media/platform/qcom/venus/vdec.c
+> @@ -484,8 +484,7 @@ static int vdec_s_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
+>  	do_div(us_per_frame, timeperframe->denominator);
+>  
+>  	us_per_frame = max(USEC_PER_SEC, us_per_frame);
+> -	fps = (u64)USEC_PER_SEC;
+> -	do_div(fps, us_per_frame);
+> +	fps = USEC_PER_SEC / (u32)us_per_frame;
+>  	fps = min(VENUS_MAX_FPS, fps);
+>  
+>  	inst->fps = fps;
+> 
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
