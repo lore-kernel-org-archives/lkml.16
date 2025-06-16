@@ -1,136 +1,236 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98653136349
-	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE4451EB9FA
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750109194; cv=none; b=Em0HgPXX8AiWrrfEd00JDbkvTRsQheDkU34T4J4k37+puHy7vIN4fUbHsTXd+I/6GGoUPt5dNMiG0NUmn/x4OaFkMdOf7eVAkU5n0xxgfTMBT+pt0hs+8Tw4ADQRcKza1WIFi70gGpWd6gfWvRG1f2Kfy142mt5E0lb0M61lDog=
+	t=1750109287; cv=none; b=PoNnFUOmZn3buVbH5GvnWYrA9+LF8Ila8sKu+juo8i6niWPOioLpT+Grp6pUfYDJHRXwXA5pYQOJdEAquO7/4T0tKXleakFOi9Zl2oitSprN1Kmsrn61BYTr/CW02l1+dZ5Odjmm/zr0W85hLxmOq36g00bU1q6P+HylNvsDurY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750109194; c=relaxed/simple;
-	bh=Qx3RgIciF8FScrA3fp7NDvcLUeQpT4dfJxakDbrgEX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V3vq4ypaowbtznW8vu32UwiAoNZlasJ31TBYyPFjBj9rWMY5huCvgFKA6KVJZGKW8Iq5GSRp8AMcasESRjZUIMU/aBaLnFOui+ROYjJ80tceiA/NaFa5j9ej/Pbni2WnxS3eEsTNWTY+8R9A9UBVwAoAdWXnIvAAO8Q2PXwLAI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UiBkq26w; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiBkq26w"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453066fad06so37731955e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 14:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750109191; x=1750713991; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7K/Whje5bbq5X82a9GV6t7IagAg7RVEk9VXUfZi6KFw=;
-        b=UiBkq26w/cOv5ZqQCAOm2+Q59gE0zVOte60MkmszrphRyqjcN7tFb7duPzsDJfiqfb
-         5q6vHyW4UZZCMFEOq0d9MpVuC8GGKy6Mti1zVkJwSAJ6gNxZnn2xsRT8cylg6wIQpP53
-         ew3WOKTm1cSSkyP2OlYuQ8L4x02NKnTQ/W+wzAGz5eKOtVU4vW2HQFTHpk0VLgZ9aVfr
-         Cjzp7roEVEhTFMmxURkK8DA+43q7IpBJJl8zB0AUeNBKyg5txg/RixehDLhdC14kuTOt
-         RBNSvQiKsFS4ivkFQ9dX6r6tRvEYl5eoBRBdzd9XF7bhICbbA0a5A2dOQZqKf5vReKWn
-         CDAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750109191; x=1750713991;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7K/Whje5bbq5X82a9GV6t7IagAg7RVEk9VXUfZi6KFw=;
-        b=W57WhEYwaEAKzXw3omzHubVBT98dIqPa0VlLr1y2q7BARi1VapX/L0KN/DqI/d5OJ1
-         pQbErzqYV20dNOja0CkQjHbnOfOlgAtBSfLqN9CxLUav+1CdPFnFJcO69s+2RcbUD0lb
-         8Ku1pq+H6pI2ICtIYHzEXblm6G82W6UiwDZdAlQ5UXLw4oIovbW1jEmu82xMe/XlvGR3
-         sT7lVd/KQGhtwvtqpJtfRMk++m8qz4SXN/eenStJe5dPxdLAnanfpa05blPycAUa5iAC
-         bmZS/+yobVQ7dNZ76lRvmjh3ghUPPDeSzzHN6hIEcvpkbbYtE1Jn0EP7QRuhm9WMnpOn
-         9A5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVKemRVSzsR5vjXGhPBTWIF349HPQtxhMv05nKUd8DG3bLWxUFk/gkxtICGt1Syy2ui/jEddrdQpxFE/eY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeZgvwsgd6bdWGaclizGgcuYvAM1UQwRRKdIPzFlhzlhuctp77
-	4PA52KiKl9ojvBjdsvUU5oq3dJdSH1DrBZT6NngftuAMUN49IlgWe20O
-X-Gm-Gg: ASbGncsrbl3rDiEC0IovaQVg3XlI5cHwjfSo9Gev1uy7QssCAgkgqaD0XBgaFHvSQhY
-	rpGwOkuY6At1ZYRham+S+FNR/247nL0BK0OlIc+I8weLgv+JB83DIux2LLcPj+MqCkGxvmzvGfF
-	GcKxO9CCWhm0m4wjqe8MrWLEAtB215bNj30aDBKuxLVMDC4iglex98e6lS8v4BUdYdwVpHTOAIc
-	CK/CeEWaMyieWrqJb7++t5PQJfvHa/m0xwUXHzfCLIv1M6ZpNNs/SLOCfI0iuTFS9E3JZ0J28to
-	2y1LmJA+KhwnMg4na79+1g99RppLpO5gJr2kyXzei1rMzZ5gFgFIZtm9yVXnbECwfD4sFWGQ3Sr
-	DAIZzVq80vNTsY0XX4vTUsEOe
-X-Google-Smtp-Source: AGHT+IHx9IRQDvRtg1mLpDGTbJyv9WzL268TwPwvqQ6KNZYc5t1shyGS3ZrVrPkSr44osRE1m8UK3Q==
-X-Received: by 2002:a05:600c:4ed1:b0:453:78f:fa9f with SMTP id 5b1f17b1804b1-4533ca510afmr97441065e9.11.1750109190660;
-        Mon, 16 Jun 2025 14:26:30 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a547ecsm12251433f8f.17.2025.06.16.14.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 14:26:30 -0700 (PDT)
-Date: Mon, 16 Jun 2025 22:26:29 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Nicolas Pitre <npitre@baylibre.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Thomas =?UTF-8?B?V2Vpw59z?=
- =?UTF-8?B?Y2h1aA==?= <linux@weissschuh.net>, Oleg Nesterov
- <oleg@redhat.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <u.kleine-koenig@baylibre.com>, Peter Zijlstra <peterz@infradead.org>, Biju
- Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org, Linus
- Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] mul_u64_u64_div_u64: fix the division-by-zero
- behavior
-Message-ID: <20250616222629.620830f6@pumpkin>
-In-Reply-To: <q246p466-1453-qon9-29so-37105116009q@onlyvoer.pbz>
-References: <q246p466-1453-qon9-29so-37105116009q@onlyvoer.pbz>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1750109287; c=relaxed/simple;
+	bh=lmZMUhJc/RUM1Y2atd9G3IsircftwdnZdNMJDV8MIf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ob/Vt4z2MfV8rTuKAXWsxmthC3mehT3hk+uQ4tvzbSRkO8SVVNVbCL0bT3IdFyjn2K+G0MXKjp4v9K0BLOncDUb0q0xnyTgHfErH8MOFlQSnz+30VFVTpGRy4BvB5vG7En1GcOjFSlwD9ZGuY8mJTTwBV/7QNbvE53mCA/r1bPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E7E2150C;
+	Mon, 16 Jun 2025 14:27:43 -0700 (PDT)
+Received: from [10.57.84.117] (unknown [10.57.84.117])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35D953F58B;
+	Mon, 16 Jun 2025 14:28:00 -0700 (PDT)
+Message-ID: <355818a3-cee2-4802-ab16-2045da1ca950@arm.com>
+Date: Mon, 16 Jun 2025 22:27:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com,
+ pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ david@redhat.com, peterx@redhat.com, mingo@kernel.org,
+ libang.li@antgroup.com, maobibo@loongson.cn, zhengqi.arch@bytedance.com,
+ anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+ yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
+ hughd@google.com
+References: <20250610035043.75448-1-dev.jain@arm.com>
+ <20250610035043.75448-3-dev.jain@arm.com>
+ <CAGsJ_4xPq-eJ7JE-SFhhO2TboH8HKGifaYCwKw8cqd_2K=uD4w@mail.gmail.com>
+ <bf185ecc-8310-48ad-b9cc-5c78e3da6d0b@arm.com>
+ <CAGsJ_4yEJLoxuH=tTJLxgsS5Hu6pPhJfwXAttoFrHNUwJL6=YA@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4yEJLoxuH=tTJLxgsS5Hu6pPhJfwXAttoFrHNUwJL6=YA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 16 Jun 2025 15:22:44 -0400 (EDT)
-Nicolas Pitre <npitre@baylibre.com> wrote:
-
-> The current implementation forces a compile-time 1/0 division, which
-> generates an undefined instruction (ud2 on x86) rather than a proper
-> runtime division-by-zero exception.
+On 10/06/2025 09:11, Barry Song wrote:
+> On Tue, Jun 10, 2025 at 7:45 PM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>> On 10/06/25 12:33 pm, Barry Song wrote:
+>>> Hi Dev,
+>>>
+>>> On Tue, Jun 10, 2025 at 3:51 PM Dev Jain <dev.jain@arm.com> wrote:
+>>>> Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+>>>> are painted with the contig bit, then ptep_get() will iterate through all 16
+>>>> entries to collect a/d bits. Hence this optimization will result in a 16x
+>>>> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
+>>>> will eventually call contpte_try_unfold() on every contig block, thus
+>>>> flushing the TLB for the complete large folio range. Instead, use
+>>>> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
+>>>> do them on the starting and ending contig block.
+>>>>
+>>>> For split folios, there will be no pte batching; nr_ptes will be 1. For
+>>>> pagetable splitting, the ptes will still point to the same large folio;
+>>>> for arm64, this results in the optimization described above, and for other
+>>>> arches (including the general case), a minor improvement is expected due to
+>>>> a reduction in the number of function calls.
+>>>>
+>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>>> ---
+>>>>   mm/mremap.c | 39 ++++++++++++++++++++++++++++++++-------
+>>>>   1 file changed, 32 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/mm/mremap.c b/mm/mremap.c
+>>>> index 180b12225368..18b215521ada 100644
+>>>> --- a/mm/mremap.c
+>>>> +++ b/mm/mremap.c
+>>>> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
+>>>>          return pte;
+>>>>   }
+>>>>
+>>>> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
+>>>> +               pte_t *ptep, pte_t pte, int max_nr)
+>>>> +{
+>>>> +       const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>> +       struct folio *folio;
+>>>> +
+>>>> +       if (max_nr == 1)
+>>>> +               return 1;
+>>>> +
+>>>> +       folio = vm_normal_folio(vma, addr, pte);
+>>>> +       if (!folio || !folio_test_large(folio))
+>>> I'm curious about the following case:
+>>> If the addr/ptep is not the first subpage of the folio—for example, the
+>>> 14th subpage—will mremap_folio_pte_batch() return 3?
+>>
+>> It will return the number of PTEs, starting from the PTE pointing to the 14th
+>> subpage, that point to consecutive pages of the same large folio, up till max_nr.
+>> For an example, if we are operating on a single large folio of order 4, then max_nr
+>> will be 16 - 14 + 1 = 3. So in this case we will return 3, since the 14th, 15th and
+>> 16th PTE point to consec pages of the same large folio.
+>>
+>>> If so, get_and_clear_full_ptes() would operate on 3 subpages of the folio.
+>>> In that case, can unfold still work correctly?
+>>
+>> Yes, first we unfold as in, we do a BBM sequence: cont -> clear -> non-cont.
+>> Then, on this non-contig block, we will clear only the PTEs which were asked
+>> for us to do.
 > 
-> Change to trigger an actual div-by-0 exception at runtime, consistent
-> with other division operations. Use a non-1 dividend to prevent the
-> compiler from optimizing the division into a comparison.
+> While going through the code,
+> 
+> static inline pte_t get_and_clear_full_ptes(struct mm_struct *mm,
+>                                 unsigned long addr, pte_t *ptep,
+>                                 unsigned int nr, int full)
+> {
+>         pte_t pte;
+>         if (likely(nr == 1)) {
+>                 contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
+>                 pte = __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
+>         } else {
+>                 pte = contpte_get_and_clear_full_ptes(mm, addr, ptep, nr, full);
+>         }
+> 
+>         return pte;
+> }
+> 
+> Initially, I thought it only unfolded when nr == 1, but after reading
+> contpte_get_and_clear_full_ptes more closely, I realized we do
+> support partial unfolding—that's what I had missed.
+> 
+> pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
+>                                 unsigned long addr, pte_t *ptep,
+>                                 unsigned int nr, int full)
+> {
+>         contpte_try_unfold_partial(mm, addr, ptep, nr);
+>         return __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
+> }
+> 
+> I think you are right.
 
-Given there is a definite 'plan' to avoid adding more BUG() to code
-I'm not at all sure generating UB here is right at all.
+Yes, Dev is correct; this works as intended. And yes, the code looks a bit dumb,
+but IIRC, this inline special-casing on nr=1 was needed to prevent fork and/or
+munmap microbenchmarks from regressing for the common small folio case.
 
-I don't know the best solution though.
-To my mind returning zero for divide by zero and ~0 for overflow is least
-likely to cause real grief later on in the called code.
-
-	David
+Thanks,
+Ryan
 
 > 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> ---
+>>
+>>>
+>>> Similarly, if the addr/ptep points to the first subpage, but max_nr is
+>>> less than CONT_PTES, what will happen in that case?
+>>>
+>>>
+>>>> +               return 1;
+>>>> +
+>>>> +       return folio_pte_batch(folio, addr, ptep, pte, max_nr, flags, NULL,
+>>>> +                              NULL, NULL);
+>>>> +}
+>>>> +
+>>>>   static int move_ptes(struct pagetable_move_control *pmc,
+>>>>                  unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
+>>>>   {
+>>>> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>          bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+>>>>          struct mm_struct *mm = vma->vm_mm;
+>>>>          pte_t *old_ptep, *new_ptep;
+>>>> -       pte_t pte;
+>>>> +       pte_t old_pte, pte;
+>>>>          pmd_t dummy_pmdval;
+>>>>          spinlock_t *old_ptl, *new_ptl;
+>>>>          bool force_flush = false;
+>>>> @@ -185,6 +202,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>          unsigned long new_addr = pmc->new_addr;
+>>>>          unsigned long old_end = old_addr + extent;
+>>>>          unsigned long len = old_end - old_addr;
+>>>> +       int max_nr_ptes;
+>>>> +       int nr_ptes;
+>>>>          int err = 0;
+>>>>
+>>>>          /*
+>>>> @@ -236,14 +255,16 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>          flush_tlb_batched_pending(vma->vm_mm);
+>>>>          arch_enter_lazy_mmu_mode();
+>>>>
+>>>> -       for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+>>>> -                                  new_ptep++, new_addr += PAGE_SIZE) {
+>>>> +       for (; old_addr < old_end; old_ptep += nr_ptes, old_addr += nr_ptes * PAGE_SIZE,
+>>>> +               new_ptep += nr_ptes, new_addr += nr_ptes * PAGE_SIZE) {
+>>>>                  VM_WARN_ON_ONCE(!pte_none(*new_ptep));
+>>>>
+>>>> -               if (pte_none(ptep_get(old_ptep)))
+>>>> +               nr_ptes = 1;
+>>>> +               max_nr_ptes = (old_end - old_addr) >> PAGE_SHIFT;
+>>>> +               old_pte = ptep_get(old_ptep);
+>>>> +               if (pte_none(old_pte))
+>>>>                          continue;
+>>>>
+>>>> -               pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+>>>>                  /*
+>>>>                   * If we are remapping a valid PTE, make sure
+>>>>                   * to flush TLB before we drop the PTL for the
+>>>> @@ -255,8 +276,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>                   * the TLB entry for the old mapping has been
+>>>>                   * flushed.
+>>>>                   */
+>>>> -               if (pte_present(pte))
+>>>> +               if (pte_present(old_pte)) {
+>>>> +                       nr_ptes = mremap_folio_pte_batch(vma, old_addr, old_ptep,
+>>>> +                                                        old_pte, max_nr_ptes);
+>>>>                          force_flush = true;
+>>>> +               }
+>>>> +               pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr_ptes, 0);
+>>>>                  pte = move_pte(pte, old_addr, new_addr);
+>>>>                  pte = move_soft_dirty_pte(pte);
+>>>>
+>>>> @@ -269,7 +294,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>>>                                  else if (is_swap_pte(pte))
+>>>>                                          pte = pte_swp_clear_uffd_wp(pte);
+>>>>                          }
+>>>> -                       set_pte_at(mm, new_addr, new_ptep, pte);
+>>>> +                       set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
+>>>>                  }
+>>>>          }
+>>>>
+>>>> --
+>>>> 2.30.2
 > 
-> Change from v1 (http://lore.kernel.org/all/q2o7r916-5601-11pn-30pn-8n5ns6p079o7@onlyvoer.pbz):
-> - use OPTIMIZER_HIDE_VAR() in place of the open coded incantation.
-> 
-> diff --git a/lib/math/div64.c b/lib/math/div64.c
-> index 5faa29208bdb..bf77b9843175 100644
-> --- a/lib/math/div64.c
-> +++ b/lib/math/div64.c
-> @@ -212,12 +212,13 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
->  
->  #endif
->  
-> -	/* make sure c is not zero, trigger exception otherwise */
-> -#pragma GCC diagnostic push
-> -#pragma GCC diagnostic ignored "-Wdiv-by-zero"
-> -	if (unlikely(c == 0))
-> -		return 1/0;
-> -#pragma GCC diagnostic pop
-> +	/* make sure c is not zero, trigger runtime exception otherwise */
-> +	if (unlikely(c == 0)) {
-> +		unsigned long zero = 0;
-> +
-> +		OPTIMIZER_HIDE_VAR(zero);
-> +		return ~0UL/zero;
-> +	}
->  
->  	int shift = __builtin_ctzll(c);
->  
+> Thanks
+> Barry
 
