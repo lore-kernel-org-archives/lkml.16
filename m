@@ -1,239 +1,151 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E75E2D0283;
-	Mon, 16 Jun 2025 11:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A1129A9C9
+	for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 11:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750072883; cv=none; b=s3Py/bkJLQZBw3z20+wQuZeGglzfxNwppkcxICWD8IcV1cEmKOX3rnp9cPEeOwA1FforPE/JC5+uBn1ZpSlEpOHWosfp4v/YFk3HMLT3HHsm5bJJiKoOf9rncFD4S4Qktwu5GysHx3iNVgtSbxQ6Hihii8o6rRv7FiDTt75j8aA=
+	t=1750072993; cv=none; b=cZ+LPnT18Qdc7rjaWRJ/a3WUnVbiUBTSq95InHCzkd/k+qdamh8t0gR3M1MknbhO+S87QCjUMs8Fx4nZNdT1qYUQwYR48VfnCadRS4yRUFZJdVbtlrt7sTOrofgu9/RxvhPRHVS0Mbu2Rr8iV6VGmqVGVN+b/dqJVgM2z77eUPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750072883; c=relaxed/simple;
-	bh=1dSXR/UyoNR9Nrxz61oGFFAxMFZZaFzRmt7p4pCLMG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nx93p3RjZ1rE3sQVEsUYXHaxD15UlXCXggk1Qhob5t7CFG4fmHdXuBglRj+0OeZbc7weNDFiUK9SZxLxYlHBucEYxb59LaSp3XThQMDcehuefJ9Ej2gyROimlgjwQ275TV4cyPI4Geiw59Mz3mycOXYtbhfIdPWbEzBSKEqPlX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/t603yT; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750072993; c=relaxed/simple;
+	bh=TBUqiwzRtaQezUHBGrBX7U4S1bkx0b7ClUZFpNH8YFI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=T0YGeyrtKw6bY2bc/+hMZTXK2PAjyV411QW9cy8JxxovsSz6ooog8tHjOJ2PvGIzJBX3z/kc+ZSIc4LZwjyQ1AriOhhbaFyNmeS0WIsufyOdvF9XDR5cFHN5nzc5xoRmQUbqa8sYqLf/rqHC7aMkz0F+FcF5qukYFyIuscsii3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JKHhXktw; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/t603yT"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so25145985e9.1;
-        Mon, 16 Jun 2025 04:21:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKHhXktw"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4e62619afso358738f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 04:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750072880; x=1750677680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HH/XG6DTsco8TheFYVMqA8WWvPjyKgOz5uHAKCaL2jQ=;
-        b=T/t603yTQrxVwdlZimtwaoUvC1kBKqNNvqaX7fTwA00Rtxnxj2OcjDWJJ/3Ob2/g5V
-         ehawDlg9rZB7WYPnQsDvCim1AvPEj8EJSy6v8RQCmJsXlglpfZFhsFcoYCQWyfIKeZml
-         +kVV7LKux+MT3ZXHiQZwwh3AEYJRjviTuLVyQqiE5hAsEBGPrxBpK5V4WMR0/9LcmmBP
-         6L9h05Vf+wrCg/59TSre+6SJVAl5/2sYQcsX/Ks+YxDJIFXk6sVRsvwl3Tc+gvTKFgC2
-         xMsk8MW3kL4NOaNetXtfxi8SluwBk+8BIox1qpzOIfGRzJT3dQ8qXttAYYmKEZ0B/SeS
-         NebQ==
+        d=linaro.org; s=google; t=1750072990; x=1750677790; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2lfnLj0M65lIIz8l2ArV9cQwaq0ywx1I5Ll3Uz7hkVE=;
+        b=JKHhXktwyBboDLFR46y33xripsg71o8eLb9YM0+sn+LZ8doyKbJzRlc5/sbogqR5Xs
+         RQNPrg7SNlbn1140Qn49C+qgi8IG6DzeN4Qm118vb4UNM2Ij6PftXfbDo1wyV6X8Sdxf
+         nAQdQhdpN9mwedM2yCQG27A2jqHm4hqu41xlHp2TblyMbqUc7x34CVNyVL3kIt03vsgf
+         0oCvEu7AnVSXSofH7FWgfRWTxeqmwFaiWraGJ91iWYx2prx4bLTCNt4sE/2S5Jx0OAki
+         AMyqp2aXbDlCd8GnMh4KphP+Y51ohwofLrMYuWh6jaVHgZt9qjpxZ/GV8Ts0JUPeiF4P
+         ddgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750072880; x=1750677680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HH/XG6DTsco8TheFYVMqA8WWvPjyKgOz5uHAKCaL2jQ=;
-        b=riUlVqDstjLSuycfbl7geMS8EnilpfDO3+aYc10BAU5Tg+4fTCjsFikLy/04+dKeYy
-         jeg1qsm3tOLabYd9uobOaPNyp4c6f1ZneBlZeUU/f7S8ftNfnODlkhPGGzClBbafYAPx
-         gUX7B/Cygdwip3//aII4usgYk7f3tThrtrMbvWI20SSShTulyrsHbORV41rk6er+gr4b
-         Y3y286J+N19N7pWoDDH3c30Vs9QnQJ0lxCuHdWYeFUl9l5Ts7ToBQY5r96yNXL8j/TFI
-         N82YByoS5hxKBh2Bx5+JK++DOaSG8L5EmtbcerZ7gFQicyFmsGb4QhI+StPQydMxSHKN
-         qtXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9lcUjNB3jo+LQLoww7i5+ttnlMcJQZ6703AMsvyId1zr3AFx7qPpWsICl2FDDW6LZKfIExi+T7/AhFX9GFvlJwCw=@vger.kernel.org, AJvYcCULw6B1bJzzU7HyZcNNu6JMQgP59g4VGc97XOC8mXIrtQqmrXU7UyqHYGyh7s0iIQPMF2HXo1lWs9T6WjPM@vger.kernel.org, AJvYcCURBfisnMomi9ApvmF3JXq+Bhgs9+EKvQi+JrLwtRmt0OaFeBQuAjuxQro7NzlpWn74ey15hlTdC+4I@vger.kernel.org, AJvYcCXsZcPuTS/IyanZNaO5yKGiWjxkYUQ6++U0dT8VN8Odg8yfRKA/v47OkiMn/NL1CFELXAEGGKgADeiT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHK0fkdgpQk7Pe2e1esP1ejWf1pfMKAVGFaL3/+x9jlievvZrj
-	g7XPMqgXIFFDqyZbtYgo7iJEfsYe9D4lNbiWA2SkERK7RMmg+osbv5JRHnN1sZlHVkqsb+x4UCv
-	PptmzL4xWICULxJXkYJ4VtMkltsfJOSo=
-X-Gm-Gg: ASbGncu2+FWoBoIOlt6iz7RkOGL0wwGTyvV4WHZ+9UUBeU5OjgQgzppX5Hn26dmEPcZ
-	MOx3+YUcbkeMeTdFAZkGJLQuiPJCfeH6Ndem2DfE1EkHxZKx2kwKw1dHSeulBPZXsfZ3CUHFSqF
-	gembjk2ZQfe9xWIsXR6kEOSsr06lk/cP6OBDQxsfunzA==
-X-Google-Smtp-Source: AGHT+IFQFbpkJW8fhrHvXulTMgusuzcINLRFAAfYmf5HJpOcM0iLUansHMeU1JtnA7xzSFm6QhKrX41V1m0Oq6cxIQk=
-X-Received: by 2002:a05:600c:1c0a:b0:451:e394:8920 with SMTP id
- 5b1f17b1804b1-4533cab8564mr76816335e9.27.1750072879570; Mon, 16 Jun 2025
- 04:21:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750072990; x=1750677790;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2lfnLj0M65lIIz8l2ArV9cQwaq0ywx1I5Ll3Uz7hkVE=;
+        b=mvji9jZhkW2JszSgJINQaAUBaOXfoszLPUbJqVWSwG8P2RmyI9kT/38VczFf7NSpCf
+         GpIga7DAUPq6RPEJ1ZnHdjAlhlIvK7LlHHgCpUDXVJP8HuMCD+/G0NQg8LmKTj7yNmYw
+         Mq+j0szZYzufQyHoUOHUsidxBMybVyGjYzNALFgzV7oFyXa92TvjgOzS03kkwly08XXn
+         U0gdWYZiWkxD78sAqCphoMV4EP5zh7739E51nntJbu128OHLNRzLsmgIfKrZlGM+9gZv
+         lB0X4NS8KCnL/UMZ9afhyjjD1XjpuuRngEGYF8ZrtZIlH/FOEs9Kq70nJUiQSTAGZR4Q
+         GWAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo1QSU+Ix9g/hay6FDkHD/zahWC8tZeUSAX/vDROYn+Oknwh6jaqhitnuCwGD3B2U8JY60WMWsFVUct7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJssVkrBFWkojjro1GtC+1pqJ9bjNOOPsSgqUC1yJPO8aNUz2h
+	C9Dk+C8q2l75z8bm4IvTgbyP5sQXGT+aJAlE8Gq2U8L9/x1NowegET00zDoxOH3HJCY=
+X-Gm-Gg: ASbGncsAQQZePZ7cgA6eGDk80nAGluf9d2D3tbLtThx3lT2XwMCO/RP3/DaPWZT12Yy
+	2r4DJs2jXFGlhyYpES/DF9FYbr7UESXjoQn8aVFVsmbceZHVgKgyJAn7bhQU1uvpIbFjTcO7T7h
+	bneEilwzD9w2V+o3kwVX9APlnyV+g9UiUcWKnOJDO8rPlKwgOPb15l6PPWC3BOmGwuBlbNVs/hf
+	szgzuQTDr1ljpJrMyKr43Iy28gOszYiXpg+Vrcz2U4HR2SRPQJ4MnHWuAYGACadGARlqkh83B3t
+	xiMj97ioQy5o7suURFrqBdOklqJwU48THixGpMATX7DSXgy91ieyfEl55yRgGebyZ4aNQj2SiSH
+	rFQ0ahOY=
+X-Google-Smtp-Source: AGHT+IG5vtOhFMtmACAMxc1csTvRVmwkDe3M0Ca3uK/TQLNKVNimgzJ9jqEqjXWfsZ5zQ2okWkbh4Q==
+X-Received: by 2002:a05:6000:4313:b0:3a5:1306:3c30 with SMTP id ffacd0b85a97d-3a57189709emr2830597f8f.0.1750072990395;
+        Mon, 16 Jun 2025 04:23:10 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4531fe85260sm143710155e9.0.2025.06.16.04.23.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 04:23:09 -0700 (PDT)
+Message-ID: <6232e835-921d-4855-8b10-8f873a4e3c30@linaro.org>
+Date: Mon, 16 Jun 2025 13:23:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530171841.423274-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530171841.423274-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TY3PR01MB11346A62FDF84C5F2C1240BBF8677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CA+V-a8sZfTgOENXfR2NnykgjGHd+2-vS9Jk-dNLWTVQyAGbQTw@mail.gmail.com> <TYCPR01MB11332F40696148C7216866D3B8670A@TYCPR01MB11332.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYCPR01MB11332F40696148C7216866D3B8670A@TYCPR01MB11332.jpnprd01.prod.outlook.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 16 Jun 2025 12:20:53 +0100
-X-Gm-Features: AX0GCFtgrcxJq-tg2C4PkYvICy9lU_woFiUNZXsfPzvEdHMwe4O6KkHnXumJ2Xc
-Message-ID: <CA+V-a8tKm4yjEG_ZbajXcgTdOB=GxqA=kt63svJ4ZF609tXHDA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support for
- RZ/V2H(P) SoC
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	"laurent.pinchart" <laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: defconfig: fix renamed Qualcomm EUSB2 PHY symbol
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>,
+ Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, Vinod Koul <vkoul@kernel.org>
+References: <20250616103252.32642-1-johan+linaro@kernel.org>
+ <fdcbaaed-c088-4ccb-8897-bd69080a3346@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <fdcbaaed-c088-4ccb-8897-bd69080a3346@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Biju,
+On 16/06/2025 13:20, Krzysztof Kozlowski wrote:
+> On 16/06/2025 12:32, Johan Hovold wrote:
+>> The Qualcomm Synopsis EUSB2 PHY driver was recently renamed along with
+>> its Kconfig symbol but the defconfig was never updated (which breaks USB
+>> on a number of Qualcomm platforms).
+>>
+>> Fixes: 8d3b5f637546 ("phy: move phy-qcom-snps-eusb2 out of its vendor sub-directory")
+>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>> Cc: Vinod Koul <vkoul@kernel.org>
+>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> 
+> Thanks. This was sent on the lists some time ago and since a week is
+> already in pending-fixes. Should be in coming RC as well.
 
-On Mon, Jun 16, 2025 at 11:54=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.c=
-om> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: Monday, June 16, 2025 11:48 AM
-> > To: Biju Das <biju.das.jz@bp.renesas.com>
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>; Andrzej Hajda
-> > <andrzej.hajda@intel.com>; Neil Armstrong <neil.armstrong@linaro.org>;
-> > Robert Foss <rfoss@kernel.org>; laurent.pinchart
-> > <laurent.pinchart@ideasonboard.com>; Jonas Karlman <jonas@kwiboo.se>;
-> > Jernej Skrabec <jernej.skrabec@gmail.com>; Maarten Lankhorst
-> > <maarten.lankhorst@linux.intel.com>; Maxime Ripard <mripard@kernel.org>=
-;
-> > Thomas Zimmermann <tzimmermann@suse.de>; David Airlie <airlied@gmail.co=
-m>;
-> > Simona Vetter <simona@ffwll.ch>; Rob Herring <robh@kernel.org>; Krzyszt=
-of
-> > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
-> > Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
-> > <sboyd@kernel.org>; Magnus Damm <magnus.damm@gmail.com>; dri-
-> > devel@lists.freedesktop.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
-> > clk@vger.kernel.org; Fabrizio Castro <fabrizio.castro.jz@renesas.com>;
-> > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support =
-for
-> > RZ/V2H(P) SoC
-> >
-> > Hi Biju,
-> >
-> > Thank you for the review.
-> >
-> > On Fri, Jun 13, 2025 at 7:17=E2=80=AFAM Biju Das <biju.das.jz@bp.renesa=
-s.com>
-> > wrote:
-> > >
-> > > Hi Prabhakar,
-> > >
-> > > > -----Original Message-----
-> > > > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > > > Sent: 30 May 2025 18:19
-> > > > Subject: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support
-> > > > for RZ/V2H(P) SoC
-> > > >
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Add DSI support for Renesas RZ/V2H(P) SoC.
-> > > >
-> > > > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > > > Signed-off-by: Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > > v5->v6:
-> > > > - Made use of GENMASK() macro for PLLCLKSET0R_PLL_*,
-> > > >   PHYTCLKSETR_* and PHYTHSSETR_* macros.
-> > > > - Replaced 10000000UL with 10 * MEGA
-> > > > - Renamed mode_freq_hz to mode_freq_khz in rzv2h_dsi_mode_calc
-> > > > - Replaced `i -=3D 1;` with `i--;`
-> > > > - Renamed RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA to
-> > > >   RZV2H_MIPI_DPHY_FOUT_MIN_IN_MHZ and
-> > > >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA to
-> > > >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MHZ.
-> > > >
-> > > > v4->v5:
-> > > > - No changes
-> > > >
-> > > > v3->v4
-> > > > - In rzv2h_dphy_find_ulpsexit() made the array static const.
-> > > >
-> > > > v2->v3:
-> > > > - Simplifed V2H DSI timings array to save space
-> > > > - Switched to use fsleep() instead of udelay()
-> > > >
-> > > > v1->v2:
-> > > > - Dropped unused macros
-> > > > - Added missing LPCLK flag to rzv2h info
-> > > > ---
-> > > >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 345
-> > ++++++++++++++++++
-> > > >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  34 ++
-> > > >  2 files changed, 379 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > > > b/drivers/gpu/drm/renesas/rz- du/rzg2l_mipi_dsi.c index
-> > > > a31f9b6aa920..ea554ced6713 100644
-> > > > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > > > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > > > @@ -5,6 +5,7 @@
-> > > >   * Copyright (C) 2022 Renesas Electronics Corporation
-> > > >   */
-> > > >  #include <linux/clk.h>
-> > > > +#include <linux/clk/renesas-rzv2h-dsi.h>
-> > > >  #include <linux/delay.h>
-> > > >  #include <linux/io.h>
-> > > >  #include <linux/iopoll.h>
-> > <snip>
-> > > > +
-> > > > +static int rzv2h_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsign=
-ed
-> > long mode_freq,
-> > > > +                             u64 *hsfreq_millihz) {
-> > > > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi-
-> > >dsi_parameters;
-> > > > +     unsigned long status;
-> > > > +
-> > > > +     if (dsi->mode_calc.mode_freq_khz !=3D mode_freq) {
-> > > > +             status =3D rzv2h_dphy_mode_clk_check(dsi, mode_freq);
-> > > > +             if (status !=3D MODE_OK) {
-> > > > +                     dev_err(dsi->dev, "No PLL parameters found fo=
-r
-> > mode clk %lu\n",
-> > > > +                             mode_freq);
-> > > > +                     return -EINVAL;
-> > > > +             }
-> > > > +     }
-> > > > +
-> > > > +     clk_set_rate(dsi->vclk, dsi->mode_calc.mode_freq_hz);
-> > >
-> > > Not sure, Can we use the DSI divider required based on the data rate
-> > > (vclk, bpp and numlanes) here
-> > >
-> > > and then the set parent clk of PLLDSI as well here (dsi->vclk * the
-> > divider value) ??
-> > >
-> > > 24MHZ->PLL DSI->DSI DIVIDER->VCLOCK
-> > >
-> > > Maybe then the clock framework has all the information for setting
-> > PLL_DSI and DSI_DIVIDER clks??
-> > >
-> > Can you please elaborate here with a detailed example.
->
-> There will be determine_clk followed by set_clock for setting new rate fo=
-r PLL DSI(dsi->vclk * the divider value)
-> For eg:  vclk_max =3D 187.5 MHz, DSI Divider required =3D 16
-> Then set PLL_DSI =3D 187.5 * 16 MHz using clk_set.
->
-You mean to use `clk_set_rate(dsi->vclk, (clk_get_rate(dsi->vclk) *
-dsi_divider));` ?
+Uh, now I noticed that due some other work I put it on different fixes
+branch and that fixes branch was not feeding pending-fixes. That's my
+bad, I need to fix my workflow.
 
-Cheers,
-Prabhakar
+It was in linux-next, though.
+
+Best regards,
+Krzysztof
