@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3CA288C06;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570F0288CA4;
 	Mon, 16 Jun 2025 01:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750038116; cv=none; b=ho2Alo6lBH1gVL6HEETzFJOTdzzOPS5JIarLluaWlcDoPBhUf5PT6yv9EIh9WL781r/MktEErPiDSZKsSFAdzUgLdejgcP2AQcDSVQu0wAyIs3sFPdzQ9cp2uCcUTt8du8uL/x4/n68eKu5OlDbdZSnEidHoGLX6UTwjp2QiwNI=
+	t=1750038117; cv=none; b=HWCPtrNKgXxnYf3HhJtqvfBdZA6c7plez5n1e80C+9u/zSIo4f0dxXzqRMteAC238bA3Gup2cvVYn0tgh3tVvaHMKkkyeOedGErjqfIC/IekMPfYCmYQbyyvRZ/ZkSj2hfyWPsn5OERevXC5QiFEAEfAu/Jre2vfRofKvvO9A1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750038116; c=relaxed/simple;
-	bh=VjWSxk5rTs8+2YM7TLECuuSPNRzmvS+Q0pNNnwsrogA=;
+	s=arc-20240116; t=1750038117; c=relaxed/simple;
+	bh=UT3F63GhPfuN8dwm7ZZEQWDXVa1RJDqASWr59Op8UtU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QyjfzC/lXXISwe5J7PhhwIP72VrBb0GNP+kSiym0b/JV4gekGqWgZK2U8SNj4JNMqafSiaVmm2iQPv0Zl9cCEqrkU9jP91GXLK+bbGM3bImzIXfBC8ksHqphAgbNnrCROZQhTDw1aUTnachUuJu8j2HQQcV3XzgX+ynZLF6ASz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiAuMb9d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q59ooBX7yxiOiqxgXc6wnxc2RJIWvgOfsGLM8VRu7HyWSrlY2EByw5yyXmeM3ioZno4A8x3C5PShbupYrbXeTW3+2685WR+ZYli45uPGBUMP2wYfr8MpWRhBmiRmpG6Nb+O++Ak04+kJNFAsa8Vs2x3vHHMgkAxtslvz6Dwj+UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8XR/DR/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiAuMb9d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1247C4CEE3;
-	Mon, 16 Jun 2025 01:41:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8XR/DR/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D81C4CEF5;
+	Mon, 16 Jun 2025 01:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750038116;
-	bh=VjWSxk5rTs8+2YM7TLECuuSPNRzmvS+Q0pNNnwsrogA=;
+	bh=UT3F63GhPfuN8dwm7ZZEQWDXVa1RJDqASWr59Op8UtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CiAuMb9d7mmtKBMUulKV3/UTe5RZysm0JpnYZwLbGs6jV1P3vUsg5o4uOvygNJ/83
-	 dw8cGEoVj0DmZI9hYag3R+CAxJcA9AuGaqIVz0NniqY6pBFfuV90Uo3oD6AqMSVP+O
-	 gtRJMEHLyKGkWOtG5D2LGkmD/Y0eG86FpYsP2c+kHCB798QeWbyZ9zzpyRkTsOZxoV
-	 f3UdKrKe7v87n2RfFmdWq7ltSp89FkpaGRMGcHgIN4h2EGbvBa2yW1rdFYeNp0V7XR
-	 0uT+daSuOyX27OcrSxK+kTYbtQqFbMJ0qyufcc0dCs5bgP3nn8oqvNYeOjq15wrM19
-	 hV/0ribyGmzUQ==
+	b=r8XR/DR/zNKcRCabaDN0YDhDtUAzk2t0BSYHybIqrhpWgOMy7c+ipYWtq8lvKoxM3
+	 NVSEplCh9dnzb46ryLAdrl/LFQydRCSw7C+tdhLNRZ5KFe5WX6cIWPLWmDEo15tfp5
+	 JKP3vT+ETTEbtIIUm16r4V9s3V9O7lAS6tsNEkYLpK/x1IYMWAoCOgKU1EbzrichHG
+	 O8oacmgZeGIq9UdflKNJ4hYka29HKQfbZT6z0NogYS1HOyJy8Lr6VhyUvGB+JJ80p+
+	 T4FYX9rUjIZi2gWeW/Izrp0SUIY9wtU/xzivgFB9uu9BsNYLLZaEfOZkfeVOiCdrlp
+	 2EEQWrZ6i5lZg==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Ard Biesheuvel <ardb@kernel.org>,
 	"Jason A . Donenfeld" <Jason@zx2c4.com>,
 	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v2 06/17] crypto: riscv/sha512 - stop depending on sha512_generic_block_fn
-Date: Sun, 15 Jun 2025 18:40:08 -0700
-Message-ID: <20250616014019.415791-7-ebiggers@kernel.org>
+Subject: [PATCH v2 08/17] crypto: sha512 - use same state format as legacy drivers
+Date: Sun, 15 Jun 2025 18:40:10 -0700
+Message-ID: <20250616014019.415791-9-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250616014019.415791-1-ebiggers@kernel.org>
 References: <20250616014019.415791-1-ebiggers@kernel.org>
@@ -54,59 +54,206 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-sha512_generic_block_fn() will no longer be available when the SHA-512
-support in the old-school crypto API is changed to just wrap the SHA-512
-library.  Replace the use of sha512_generic_block_fn() in
-sha512-riscv64-glue.c with temporary code that uses the library's
-__sha512_update().  This is just a temporary workaround to keep the
-kernel building and functional at each commit; this code gets superseded
-when the RISC-V optimized SHA-512 is migrated to lib/crypto/ anyway.
+Make the export and import functions for the sha384, sha512,
+hmac(sha384), and hmac(sha512) shash algorithms use the same format as
+the padlock-sha and nx-sha512 drivers, as required by Herbert.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/riscv/crypto/Kconfig               | 1 +
- arch/riscv/crypto/sha512-riscv64-glue.c | 8 +++++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ crypto/sha512.c | 84 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
-diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
-index cd9b776602f89..53e4e1eacf554 100644
---- a/arch/riscv/crypto/Kconfig
-+++ b/arch/riscv/crypto/Kconfig
-@@ -29,10 +29,11 @@ config CRYPTO_GHASH_RISCV64
- 	  - Zvkg vector crypto extension
+diff --git a/crypto/sha512.c b/crypto/sha512.c
+index ad9c8b2ddb129..0eed801346018 100644
+--- a/crypto/sha512.c
++++ b/crypto/sha512.c
+@@ -10,10 +10,36 @@
+ #include <crypto/internal/hash.h>
+ #include <crypto/sha2.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
  
- config CRYPTO_SHA512_RISCV64
- 	tristate "Hash functions: SHA-384 and SHA-512"
- 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
-+	select CRYPTO_LIB_SHA512
- 	select CRYPTO_SHA512
- 	help
- 	  SHA-384 and SHA-512 secure hash algorithm (FIPS 180)
- 
- 	  Architecture: riscv64 using:
-diff --git a/arch/riscv/crypto/sha512-riscv64-glue.c b/arch/riscv/crypto/sha512-riscv64-glue.c
-index 4634fca78ae24..b3dbc71de07b0 100644
---- a/arch/riscv/crypto/sha512-riscv64-glue.c
-+++ b/arch/riscv/crypto/sha512-riscv64-glue.c
-@@ -36,11 +36,17 @@ static void sha512_block(struct sha512_state *state, const u8 *data,
- 	if (crypto_simd_usable()) {
- 		kernel_vector_begin();
- 		sha512_transform_zvknhb_zvkb(state, data, num_blocks);
- 		kernel_vector_end();
- 	} else {
--		sha512_generic_block_fn(state, data, num_blocks);
-+		struct __sha512_ctx ctx = {};
++/*
++ * Export and import functions.  crypto_shash wants a particular format that
++ * matches that used by some legacy drivers.  It currently is the same as the
++ * library SHA context but with the partial block length as a u8 appended to it.
++ */
 +
-+		static_assert(sizeof(ctx.state) == sizeof(state->state));
-+		memcpy(&ctx.state, state->state, sizeof(ctx.state));
-+		__sha512_update(&ctx, data,
-+				(size_t)num_blocks * SHA512_BLOCK_SIZE);
-+		memcpy(state->state, &ctx.state, sizeof(state->state));
- 	}
++#define SHA512_SHASH_STATE_SIZE 209
++static_assert(offsetof(struct __sha512_ctx, state) == 0);
++static_assert(offsetof(struct __sha512_ctx, bytecount_lo) == 64);
++static_assert(offsetof(struct __sha512_ctx, bytecount_hi) == 72);
++static_assert(offsetof(struct __sha512_ctx, buf) == 80);
++static_assert(sizeof(struct __sha512_ctx) + 1 == SHA512_SHASH_STATE_SIZE);
++
++static int __crypto_sha512_export(const struct __sha512_ctx *ctx, void *out)
++{
++	memcpy(out, ctx, sizeof(*ctx));
++	*((u8 *)out + sizeof(*ctx)) = ctx->bytecount_lo % SHA512_BLOCK_SIZE;
++	return 0;
++}
++
++static int __crypto_sha512_import(struct __sha512_ctx *ctx, const void *in)
++{
++	memcpy(ctx, in, sizeof(*ctx));
++	return 0;
++}
++
+ /* SHA-384 */
+ 
+ const u8 sha384_zero_message_hash[SHA384_DIGEST_SIZE] = {
+ 	0x38, 0xb0, 0x60, 0xa7, 0x51, 0xac, 0x96, 0x38,
+ 	0x4c, 0xd9, 0x32, 0x7e, 0xb1, 0xb1, 0xe3, 0x6a,
+@@ -50,10 +76,20 @@ static int crypto_sha384_digest(struct shash_desc *desc,
+ {
+ 	sha384(data, len, out);
+ 	return 0;
  }
  
- static int riscv64_sha512_update(struct shash_desc *desc, const u8 *data,
- 				 unsigned int len)
++static int crypto_sha384_export(struct shash_desc *desc, void *out)
++{
++	return __crypto_sha512_export(&SHA384_CTX(desc)->ctx, out);
++}
++
++static int crypto_sha384_import(struct shash_desc *desc, const void *in)
++{
++	return __crypto_sha512_import(&SHA384_CTX(desc)->ctx, in);
++}
++
+ /* SHA-512 */
+ 
+ const u8 sha512_zero_message_hash[SHA512_DIGEST_SIZE] = {
+ 	0xcf, 0x83, 0xe1, 0x35, 0x7e, 0xef, 0xb8, 0xbd,
+ 	0xf1, 0x54, 0x28, 0x50, 0xd6, 0x6d, 0x80, 0x07,
+@@ -92,10 +128,20 @@ static int crypto_sha512_digest(struct shash_desc *desc,
+ {
+ 	sha512(data, len, out);
+ 	return 0;
+ }
+ 
++static int crypto_sha512_export(struct shash_desc *desc, void *out)
++{
++	return __crypto_sha512_export(&SHA512_CTX(desc)->ctx, out);
++}
++
++static int crypto_sha512_import(struct shash_desc *desc, const void *in)
++{
++	return __crypto_sha512_import(&SHA512_CTX(desc)->ctx, in);
++}
++
+ /* HMAC-SHA384 */
+ 
+ #define HMAC_SHA384_KEY(tfm) ((struct hmac_sha384_key *)crypto_shash_ctx(tfm))
+ #define HMAC_SHA384_CTX(desc) ((struct hmac_sha384_ctx *)shash_desc_ctx(desc))
+ 
+@@ -131,10 +177,23 @@ static int crypto_hmac_sha384_digest(struct shash_desc *desc,
+ {
+ 	hmac_sha384(HMAC_SHA384_KEY(desc->tfm), data, len, out);
+ 	return 0;
+ }
+ 
++static int crypto_hmac_sha384_export(struct shash_desc *desc, void *out)
++{
++	return __crypto_sha512_export(&HMAC_SHA384_CTX(desc)->ctx.sha_ctx, out);
++}
++
++static int crypto_hmac_sha384_import(struct shash_desc *desc, const void *in)
++{
++	struct hmac_sha384_ctx *ctx = HMAC_SHA384_CTX(desc);
++
++	ctx->ctx.ostate = HMAC_SHA384_KEY(desc->tfm)->key.ostate;
++	return __crypto_sha512_import(&ctx->ctx.sha_ctx, in);
++}
++
+ /* HMAC-SHA512 */
+ 
+ #define HMAC_SHA512_KEY(tfm) ((struct hmac_sha512_key *)crypto_shash_ctx(tfm))
+ #define HMAC_SHA512_CTX(desc) ((struct hmac_sha512_ctx *)shash_desc_ctx(desc))
+ 
+@@ -170,10 +229,23 @@ static int crypto_hmac_sha512_digest(struct shash_desc *desc,
+ {
+ 	hmac_sha512(HMAC_SHA512_KEY(desc->tfm), data, len, out);
+ 	return 0;
+ }
+ 
++static int crypto_hmac_sha512_export(struct shash_desc *desc, void *out)
++{
++	return __crypto_sha512_export(&HMAC_SHA512_CTX(desc)->ctx.sha_ctx, out);
++}
++
++static int crypto_hmac_sha512_import(struct shash_desc *desc, const void *in)
++{
++	struct hmac_sha512_ctx *ctx = HMAC_SHA512_CTX(desc);
++
++	ctx->ctx.ostate = HMAC_SHA512_KEY(desc->tfm)->key.ostate;
++	return __crypto_sha512_import(&ctx->ctx.sha_ctx, in);
++}
++
+ /* Algorithm definitions */
+ 
+ static struct shash_alg algs[] = {
+ 	{
+ 		.base.cra_name		= "sha384",
+@@ -184,11 +256,14 @@ static struct shash_alg algs[] = {
+ 		.digestsize		= SHA384_DIGEST_SIZE,
+ 		.init			= crypto_sha384_init,
+ 		.update			= crypto_sha384_update,
+ 		.final			= crypto_sha384_final,
+ 		.digest			= crypto_sha384_digest,
++		.export			= crypto_sha384_export,
++		.import			= crypto_sha384_import,
+ 		.descsize		= sizeof(struct sha384_ctx),
++		.statesize		= SHA512_SHASH_STATE_SIZE,
+ 	},
+ 	{
+ 		.base.cra_name		= "sha512",
+ 		.base.cra_driver_name	= "sha512-lib",
+ 		.base.cra_priority	= 100,
+@@ -197,11 +272,14 @@ static struct shash_alg algs[] = {
+ 		.digestsize		= SHA512_DIGEST_SIZE,
+ 		.init			= crypto_sha512_init,
+ 		.update			= crypto_sha512_update,
+ 		.final			= crypto_sha512_final,
+ 		.digest			= crypto_sha512_digest,
++		.export			= crypto_sha512_export,
++		.import			= crypto_sha512_import,
+ 		.descsize		= sizeof(struct sha512_ctx),
++		.statesize		= SHA512_SHASH_STATE_SIZE,
+ 	},
+ 	{
+ 		.base.cra_name		= "hmac(sha384)",
+ 		.base.cra_driver_name	= "hmac-sha384-lib",
+ 		.base.cra_priority	= 100,
+@@ -212,11 +290,14 @@ static struct shash_alg algs[] = {
+ 		.setkey			= crypto_hmac_sha384_setkey,
+ 		.init			= crypto_hmac_sha384_init,
+ 		.update			= crypto_hmac_sha384_update,
+ 		.final			= crypto_hmac_sha384_final,
+ 		.digest			= crypto_hmac_sha384_digest,
++		.export			= crypto_hmac_sha384_export,
++		.import			= crypto_hmac_sha384_import,
+ 		.descsize		= sizeof(struct hmac_sha384_ctx),
++		.statesize		= SHA512_SHASH_STATE_SIZE,
+ 	},
+ 	{
+ 		.base.cra_name		= "hmac(sha512)",
+ 		.base.cra_driver_name	= "hmac-sha512-lib",
+ 		.base.cra_priority	= 100,
+@@ -227,11 +308,14 @@ static struct shash_alg algs[] = {
+ 		.setkey			= crypto_hmac_sha512_setkey,
+ 		.init			= crypto_hmac_sha512_init,
+ 		.update			= crypto_hmac_sha512_update,
+ 		.final			= crypto_hmac_sha512_final,
+ 		.digest			= crypto_hmac_sha512_digest,
++		.export			= crypto_hmac_sha512_export,
++		.import			= crypto_hmac_sha512_import,
+ 		.descsize		= sizeof(struct hmac_sha512_ctx),
++		.statesize		= SHA512_SHASH_STATE_SIZE,
+ 	},
+ };
+ 
+ static int __init crypto_sha512_mod_init(void)
+ {
 -- 
 2.49.0
 
