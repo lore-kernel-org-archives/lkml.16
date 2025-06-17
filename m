@@ -1,171 +1,200 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F6D22FF2D
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C7E28C5D2;
+	Tue, 17 Jun 2025 12:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163898; cv=none; b=se9ts1KjqjEXAD8qvMkYlR0GaV81zbOJ8gR7+m5KdScq5UV8S0DLJ9dMpc8Zd1rMDzSmRk5hMdRC4Hmb6g2QrgeatGvOdlk6riO2C1Kz7mfTWKu4ywCyONs21obK4NtieBzJ11JXyEij09DcpfLchJohrTur2IEwpW2F3MB4TCs=
+	t=1750163972; cv=none; b=JQkplmAVk1Li7yhG0FZh3LdbCNWdW9b//wH1IRxl1+CXSKkhxP7f3PaVZlDQDJmRzWmDHD68kaXOiVwPuEiNIpE5Hr6zqPFBqjoNRRlSAIV0eqDfAG8BUCZrjrJ35MDwAOq+WSCVIkbQqlEGYNJMjKuRZp4TRbojP2O/P74Wd0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163898; c=relaxed/simple;
-	bh=govOO8Sb0lfvYc8/pNG+JSTBvpGt8Xu8LaXV/aZgDiQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GSEf0u//nvfqFNi34Ycuf3EDqx7/W5oWgPdcpFEkexvNc0ShGttr22Pjw/qBdVBCqJ3fzfEAbtEfcEOcB1mLABum3fPVD1EuPfMmXlEyieNdnFJotx1vpi83o/+SR1LRkSe0br2Z9xq3vzN8B37fgqi6BoO2Xc4KeMCKK2/7Xhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Te6OFRQY; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750163972; c=relaxed/simple;
+	bh=zILH5TNoJc5zMvfEscKNBmXmXTpPOoWuuNaoGP3L7SU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJrtXiawxz2XRxMzlCFVEVfESUP+Zmosl/YfmkhNTchLGci7eUNevLcq3pcg+/AkozXZ+EaoE6eQKm0SNi8J6WcDA3N4VEJqFzP+zmCqkY0LBL5czqJss+Jwd7AqKNebITda8o9TZWwD2/mxz2SkS+uMqA3prH/65A0bBrZir0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G25B1B90; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Te6OFRQY"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4685152b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750163896; x=1750768696; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MoyRF7Ucv2ZJei5c5Z3iiwvEOE6mahrV6OPr5N+nC6I=;
-        b=Te6OFRQYB5StReBdEsNtJZ67xDpSkV+MyXW7jKGOT2kfDBJHR7rLM4B4EZVjfCPAFh
-         p+AcL+CTQQBd+Qe3uyJlNz8SRhy8fo16WHXZHwXcosGgDT0SJvZZ8vjRZBbHan3O+QYH
-         4yypQuSz5zZ3Dli0fWa+efipt6m2WATy13YpA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750163896; x=1750768696;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MoyRF7Ucv2ZJei5c5Z3iiwvEOE6mahrV6OPr5N+nC6I=;
-        b=kSDEmN5KdLSoO323a7RCiVdZuG45rFNfkn99llIf+NWxfMIBahddluD2bG/tqDGQhw
-         gNvh3ZNgHHNSBIXiLqKNsG4ySwj5hUx+KbfZ/sxsMTORB5bi5jXmfeow2vgPMMwMZtPi
-         k0ZUKGaFc+sbovYJX9BTdTB5E9uABaNIVPBmvZlwycPD3E7UyGtAVJ9L0qYK6o3m6xMu
-         3RW56wHFfauIXCeC+mlkkKFQXEupHhOyP0Shw4cqbjCC8BOTFlfRLh1Pbgaaq3vYNhSV
-         fl6nG322iqz31mWzF9imuyR/QKlZkdA5mggYupp32VVleSOaS+zblljaiskoMp4amkaR
-         bT1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW7T6RAdlcaOvUN94ZIVwWxA1MDpT/I94CGRDPkQDU6EJ+rTpW62jcPnaD9Xv4Dugsq89bxBdVIG5owo50=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm/N5zBKZASutRmDX+9Zm/cKeSa08IsFbKNJyic68kp2CJd6AQ
-	TZYBDwDstXC5ctKxY5Km+Gx6mr4rG+VkooN8bqEjFYfyFxLkziWL0sp1qcG51FhMRbVvKkQjgh2
-	MSuS8QEBQcuwY+kbmXoEHoyAGl5AsEjKRhdhH9D8l
-X-Gm-Gg: ASbGncugOXtQCQaS2yAPu+b5BN2oKdVCy9tHjVqEPZrptZLLHvesLLmEXlh9mxz2Lue
-	MVzPcruoBBxiT9icfKT7YM1hVUFpC1BIbGT9G0DUuZxmQBs7tXxC/Iy8iY/jyyxqFEuzXlvCUNW
-	D6NEtzeNlYj56z78mh7GZBE7IBsZt8c1XRJIR+kBcwect5zWtVjmPbHh2kwh229wIa9d2D
-X-Google-Smtp-Source: AGHT+IGcwG7VCe2N0MX7DXoVynUbfy3BR2JdgAsClrObhggJXBjxy4eU/Z1empHJ7zy1mJYExj1FaQj/LqBg4z9XrUI=
-X-Received: by 2002:a05:6a00:1255:b0:748:33f3:8da3 with SMTP id
- d2e1a72fcca58-7489d0335f6mr17213221b3a.19.1750163896212; Tue, 17 Jun 2025
- 05:38:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G25B1B90"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750163971; x=1781699971;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zILH5TNoJc5zMvfEscKNBmXmXTpPOoWuuNaoGP3L7SU=;
+  b=G25B1B90mnopF5rhe4L1KzG0oBAg9qofRQJVn34iG6lEGUc5fgbsre1E
+   KyNZnjVghU8FDxOQnQNOez9cWtoseFUBgUt4HgtDCiaPaUdlUHDKrD4LJ
+   8fTqmW6ftmb8liGOhUQmCBmuzq3MPB1YvY98kLDn4zC1egzB14HXekaTI
+   qP/1gaXbX2f9nw11g2LkyzYjirOxlJ71hgdvmkLPsTyCoDy9teYSzNJbX
+   TqQtWquM6UriNxB2BFC46QvLdw0QZwWqa2ainNrZsv6SmIbJSwJ1AvVML
+   1BuXzYaKGGxrw1S3eEsEf9cw9DyKGUimQYLPHx+c4YaEKafM7CYIaZLg9
+   w==;
+X-CSE-ConnectionGUID: 3dR3esYETMaW661Tl4qT8A==
+X-CSE-MsgGUID: +jtyI4a9TlqZjdKR6OMEqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63694597"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="63694597"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:39:30 -0700
+X-CSE-ConnectionGUID: uE5B/mTYToyjA3wyKB/qQA==
+X-CSE-MsgGUID: 9C9Sa59nQemNZDhh9ZWPDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="179640279"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 17 Jun 2025 05:39:28 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRVb3-000FyM-2Q;
+	Tue, 17 Jun 2025 12:39:25 +0000
+Date: Tue, 17 Jun 2025 20:38:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+Subject: Re: [PATCH] cgroup/rstat: change cgroup_base_stat to atomic
+Message-ID: <202506172020.kFkGyrEE-lkp@intel.com>
+References: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616133147.1835939-1-akuchynski@chromium.org>
- <20250616133147.1835939-5-akuchynski@chromium.org> <aFE6dnxet4_sm8b1@kuha.fi.intel.com>
-In-Reply-To: <aFE6dnxet4_sm8b1@kuha.fi.intel.com>
-From: Andrei Kuchynski <akuchynski@chromium.org>
-Date: Tue, 17 Jun 2025 14:38:04 +0200
-X-Gm-Features: AX0GCFtqlvORHJFZLdz5McnL-6vzhJjXiWQ9EAC7tyWfPgFhCZapQvWuwd4Rmxk
-Message-ID: <CAMMMRMdwUyxdMy42tA_ccYo77nf=6C+KgokDLHBLEYDa5aOHQw@mail.gmail.com>
-Subject: Re: [PATCH 04/10] usb: typec: Expose alternate mode priorities via sysfs
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Dmitry Baryshkov <lumag@kernel.org>, Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
-	Jameson Thies <jthies@google.com>, Benson Leung <bleung@chromium.org>, 
-	Tzung-Bi Shih <tzungbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guenter Roeck <groeck@chromium.org>, Pooja Katiyar <pooja.katiyar@intel.com>, 
-	Badhri Jagan Sridharan <badhri@google.com>, RD Babiera <rdbabiera@google.com>, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
 
-On Tue, Jun 17, 2025 at 11:50=E2=80=AFAM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Mon, Jun 16, 2025 at 01:31:41PM +0000, Andrei Kuchynski wrote:
-> > This sysfs attribute specifies the preferred order for enabling
-> > DisplayPort alt-mode, Thunderbolt alt-mode, and USB4 mode.
-> >
-> > Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-typec | 17 ++++
-> >  drivers/usb/typec/Makefile                  |  2 +-
-> >  drivers/usb/typec/class.c                   | 26 ++++++
-> >  drivers/usb/typec/class.h                   |  2 +
-> >  drivers/usb/typec/mode_selection.c          | 93 +++++++++++++++++++++
-> >  drivers/usb/typec/mode_selection.h          |  5 ++
-> >  include/linux/usb/typec_altmode.h           |  7 ++
-> >  7 files changed, 151 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/usb/typec/mode_selection.c
-> >  create mode 100644 drivers/usb/typec/mode_selection.h
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentatio=
-n/ABI/testing/sysfs-class-typec
-> > index 38e101c17a00..46eee82042ab 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-typec
-> > +++ b/Documentation/ABI/testing/sysfs-class-typec
-> > @@ -162,6 +162,23 @@ Description:     Lists the supported USB Modes. Th=
-e default USB mode that is used
-> >               - usb3 (USB 3.2)
-> >               - usb4 (USB4)
-> >
-> > +What:                /sys/class/typec/<port>/altmode_priorities
-> > +Date:                June 2025
-> > +Contact:     Andrei Kuchynski <akuchynski@chromium.org>
-> > +Description: Lists the alternate modes supported by the port and their
-> > +             priorities. The priority setting determines the order in =
-which
-> > +             Displayport alt-mode, Thunderbolt alt-mode and USB4 mode =
-will be
-> > +             activated, indicating the preferred selection sequence. A=
- value of -1
-> > +             disables automatic entry into a specific mode, while lowe=
-r numbers
-> > +             indicate higher priority. The default priorities can be m=
-odified by
-> > +             assigning new values. Modes without explicitly set values=
- default to -1,
-> > +             effectively disabling them.
-> > +
-> > +             Example values:
-> > +             - "USB4=3D0 TBT=3D1 DP=3D2"
-> > +             - "USB4=3D-1 TBT=3D0"
-> > +             - "DP=3D-1 USB4=3D-1 TBT=3D-1"
->
-> No. If you want to disable entry to a mode by default, then you
-> deactivate that mode, so -1 is not needed. USB4 is also not an alt
-> mode, so this at the very least should be named differently.
->
-> But I'm not sure this is the correct way to handle the modes in
-> general. Can you please explain what exactly is the use case you are
-> thinking?
+Hi Bertrand,
 
-Hi Heikki,
+kernel test robot noticed the following build warnings:
 
-This implements the mode selection logic within the kernel, replacing
-its userspace counterpart. Implementing this in the kernel offers
-advantages, making the process both more robust and far easier to
-manage.
-This eliminates the need for user space to verify port, partner, or
-cable capabilities, and to control the mode entry process. User space
-doesn't even need to know if USB4 mode is supported by the port or
-partner; unsupported modes are automatically skipped.
-User space's role is now limited to high-level tasks like security,
-with the kernel managing technical implementation. Mode selection and
-activation can occur without user space intervention at all if no
-special rules apply and the default policy (USB4 -> TBT -> DP) is
-acceptable.
+[auto build test WARNING on tj-cgroup/for-next]
+[also build test WARNING on linus/master v6.16-rc2 next-20250617]
+[cannot apply to trace/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->
-> If you just need to prevent for example USB4 entry by default, then
-> you write usb3 (or usb2) to the usb_capability. The alt modes you can
-> deactivate by default, no?
->
-> I can appreciate the convenience that you get from a single file like
-> that, but it does not really give much room to move if for example the
-> user space needs to behave differently in case of failures to enter a
-> specific mode compared to successful entries.
->
+url:    https://github.com/intel-lab-lkp/linux/commits/Bertrand-Wlodarczyk/cgroup-rstat-change-cgroup_base_stat-to-atomic/20250617-183242
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
+patch link:    https://lore.kernel.org/r/20250617102644.752201-2-bertrand.wlodarczyk%40intel.com
+patch subject: [PATCH] cgroup/rstat: change cgroup_base_stat to atomic
+config: arc-randconfig-001-20250617 (https://download.01.org/0day-ci/archive/20250617/202506172020.kFkGyrEE-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250617/202506172020.kFkGyrEE-lkp@intel.com/reproduce)
 
-You are right, this patch series is proposed for its convenience. It
-offers a more convenient method for users to enable or activate any
-mode, without altering existing methods. Users can decide whether they
-prioritize more control or an easier mode selection method.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506172020.kFkGyrEE-lkp@intel.com/
 
-Thanks,
-Andrei
+All warnings (new ones prefixed by >>):
+
+   kernel/cgroup/rstat.c: In function 'css_rstat_init':
+>> kernel/cgroup/rstat.c:415:55: warning: variable 'rstatbc' set but not used [-Wunused-but-set-variable]
+     415 |                         struct cgroup_rstat_base_cpu *rstatbc;
+         |                                                       ^~~~~~~
+   kernel/cgroup/rstat.c: In function 'root_cgroup_cputime':
+   kernel/cgroup/rstat.c:629:42: error: passing argument 2 of 'atomic64_add' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     629 |                 atomic64_add(sys + user, &cputime->sum_exec_runtime);
+         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                          |
+         |                                          atomic_long_t * {aka atomic_t *}
+   In file included from include/linux/atomic.h:82,
+                    from include/asm-generic/bitops/lock.h:5,
+                    from arch/arc/include/asm/bitops.h:188,
+                    from include/linux/bitops.h:67,
+                    from include/linux/thread_info.h:27,
+                    from include/linux/sched.h:14,
+                    from include/linux/cgroup.h:12,
+                    from kernel/cgroup/cgroup-internal.h:5,
+                    from kernel/cgroup/rstat.c:2:
+   include/linux/atomic/atomic-instrumented.h:1680:33: note: expected 'atomic64_t *' but argument is of type 'atomic_long_t *' {aka 'atomic_t *'}
+    1680 | atomic64_add(s64 i, atomic64_t *v)
+         |                     ~~~~~~~~~~~~^
+   In file included from ./arch/arc/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/kernel.h:27,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/sched.h:2209,
+                    from include/linux/cgroup.h:12,
+                    from kernel/cgroup/cgroup-internal.h:5,
+                    from kernel/cgroup/rstat.c:2:
+   kernel/cgroup/rstat.c: In function 'cgroup_base_stat_cputime_show':
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   kernel/cgroup/rstat.c:677:9: note: in expansion of macro 'do_div'
+     677 |         do_div(utime, NSEC_PER_USEC);
+         |         ^~~~~~
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   kernel/cgroup/rstat.c:681:9: note: in expansion of macro 'do_div'
+     681 |         do_div(stime, NSEC_PER_USEC);
+         |         ^~~~~~
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   kernel/cgroup/rstat.c:685:9: note: in expansion of macro 'do_div'
+     685 |         do_div(ntime, NSEC_PER_USEC);
+         |         ^~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/rstatbc +415 kernel/cgroup/rstat.c
+
+a17556f8d9798e Tejun Heo 2018-04-26  380  
+a97915559f5c5f JP Kobryn 2025-04-03  381  int css_rstat_init(struct cgroup_subsys_state *css)
+a17556f8d9798e Tejun Heo 2018-04-26  382  {
+a97915559f5c5f JP Kobryn 2025-04-03  383  	struct cgroup *cgrp = css->cgroup;
+a17556f8d9798e Tejun Heo 2018-04-26  384  	int cpu;
+5da3bfa029d680 JP Kobryn 2025-05-14  385  	bool is_self = css_is_self(css);
+a17556f8d9798e Tejun Heo 2018-04-26  386  
+5da3bfa029d680 JP Kobryn 2025-05-14  387  	if (is_self) {
+5da3bfa029d680 JP Kobryn 2025-05-14  388  		/* the root cgrp has rstat_base_cpu preallocated */
+5da3bfa029d680 JP Kobryn 2025-05-14  389  		if (!cgrp->rstat_base_cpu) {
+5da3bfa029d680 JP Kobryn 2025-05-14  390  			cgrp->rstat_base_cpu = alloc_percpu(struct cgroup_rstat_base_cpu);
+5da3bfa029d680 JP Kobryn 2025-05-14  391  			if (!cgrp->rstat_base_cpu)
+a17556f8d9798e Tejun Heo 2018-04-26  392  				return -ENOMEM;
+a17556f8d9798e Tejun Heo 2018-04-26  393  		}
+5da3bfa029d680 JP Kobryn 2025-05-14  394  	} else if (css->ss->css_rstat_flush == NULL)
+5da3bfa029d680 JP Kobryn 2025-05-14  395  		return 0;
+5da3bfa029d680 JP Kobryn 2025-05-14  396  
+5da3bfa029d680 JP Kobryn 2025-05-14  397  	/* the root cgrp's self css has rstat_cpu preallocated */
+5da3bfa029d680 JP Kobryn 2025-05-14  398  	if (!css->rstat_cpu) {
+5da3bfa029d680 JP Kobryn 2025-05-14  399  		css->rstat_cpu = alloc_percpu(struct css_rstat_cpu);
+5da3bfa029d680 JP Kobryn 2025-05-14  400  		if (!css->rstat_cpu) {
+5da3bfa029d680 JP Kobryn 2025-05-14  401  			if (is_self)
+5da3bfa029d680 JP Kobryn 2025-05-14  402  				free_percpu(cgrp->rstat_base_cpu);
+a17556f8d9798e Tejun Heo 2018-04-26  403  
+f6e9a26e2d488c JP Kobryn 2025-04-03  404  			return -ENOMEM;
+f6e9a26e2d488c JP Kobryn 2025-04-03  405  		}
+f6e9a26e2d488c JP Kobryn 2025-04-03  406  	}
+f6e9a26e2d488c JP Kobryn 2025-04-03  407  
+a17556f8d9798e Tejun Heo 2018-04-26  408  	/* ->updated_children list is self terminated */
+a17556f8d9798e Tejun Heo 2018-04-26  409  	for_each_possible_cpu(cpu) {
+5da3bfa029d680 JP Kobryn 2025-05-14  410  		struct css_rstat_cpu *rstatc = css_rstat_cpu(css, cpu);
+5da3bfa029d680 JP Kobryn 2025-05-14  411  
+5da3bfa029d680 JP Kobryn 2025-05-14  412  		rstatc->updated_children = css;
+a17556f8d9798e Tejun Heo 2018-04-26  413  
+5da3bfa029d680 JP Kobryn 2025-05-14  414  		if (is_self) {
+5da3bfa029d680 JP Kobryn 2025-05-14 @415  			struct cgroup_rstat_base_cpu *rstatbc;
+5da3bfa029d680 JP Kobryn 2025-05-14  416  
+5da3bfa029d680 JP Kobryn 2025-05-14  417  			rstatbc = cgroup_rstat_base_cpu(cgrp, cpu);
+a17556f8d9798e Tejun Heo 2018-04-26  418  		}
+5da3bfa029d680 JP Kobryn 2025-05-14  419  	}
+a17556f8d9798e Tejun Heo 2018-04-26  420  
+a17556f8d9798e Tejun Heo 2018-04-26  421  	return 0;
+a17556f8d9798e Tejun Heo 2018-04-26  422  }
+a17556f8d9798e Tejun Heo 2018-04-26  423  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
