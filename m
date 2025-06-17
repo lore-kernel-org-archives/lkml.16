@@ -1,180 +1,235 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2071.outbound.protection.outlook.com [40.107.92.71])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18833208;
-	Tue, 17 Jun 2025 07:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750146733; cv=fail; b=GYDhaLj6Zuo0yuVEmkJjp8VGnbs47k6ammvnI/1b4phlPR/Mn55t37/X9mPRvVaHIv7j2aNwjhpEZb7BSLISwQvFZHDvAwhb9zWrooZp7at+Rre+eoS18Jxyi4h0i+FHPLFaCNUGaE18wK5ww0rU/OIvg1BnBJVRaLqEcnk9MYc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750146733; c=relaxed/simple;
-	bh=2YI9xT8pcMyzOHxDloGDNJYXlLZnQMwrEvw38hrJhto=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=L2nWMpeW7yMfDdW5saNEeEFxryequy0kfQBI3Hg7qw12TtwDRn3FWFAZ1eLV+TPpAd5KHyEaRVpQX/kQ+0Y6QJWzppS7Pdi4NBKu7l7hCWVRte9W+qB+ygufGsVldoLDFjdVHhNVd6nkMo8z75SP1EYZMZs8flzRl2ObfIPMYz8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sLzz/f6b; arc=fail smtp.client-ip=40.107.92.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54F83208;
+	Tue, 17 Jun 2025 07:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750146788; cv=none; b=VesiqnAnJ6jiUkLq+rmNBb1Qw2WYewL/CscErbjCZHqMgbg9r6hJN9Dk1iY8VOJG8poPqC6PG4qH9qFd4MMUJ7lAtoZaHuosuVPQy8WKF79L7Zld48RGDHfFTDdvmik+Chta7zrinMT8zep8+Dl7zOMOx6cNwrOB0akeOhI8UoA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750146788; c=relaxed/simple;
+	bh=kMDcNRw+UXKRrSAomP+B6MvZtclUqBgtPYqhjTVxwio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SDVW3rv6Qfd0NrLfBxJjxnSWGsZn1NVrQxOLyvMsK8MXrRgKubKCMFoSo+/IwWzUM1zojX6yrJwmnnyUU5OKYNgKMbZZsCOMOG0ckRDNt5cn7EThptcjMA2usBkMkJfL4uNEnb8w+13Ui5cUXxGLDSAg5OXMDzopN/OjY3tAp0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h3LRIu/Z; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sLzz/f6b"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yek/BP8scGw5QQ8Ef1ptbYSkk4wcJd7JUbyC2D8YrQeluj865x5ALxjLgPgmC2Ll8OWOimKBmCkEQT4yOCWFIKWnimbHg0vgBNXu8muI/8FP18bdmtze9R+O8fyNto1JQJXoeg9May0B5eUCXlI+Vq26JQPTrLDmgM8/beK7tf9OSbXIZEykOqoBaC4fCeyTiBJH8RUTJh/3LqBG1yzwstT1tdjR6ZHvJGcmmyhDz7jOLKilX2d9+/+/AE04gcLP30syqPQtXbLsv1PT5kIGsJ5znvvcMsWSszdULvrEceP4GI/QnLlkgUVMvMERif0rBhW5uuVxX/xnRNFpH2Fing==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4jkJ1zENHaZF9JmrWgb7FrCKMpapYa2m8dKZu+vlkgw=;
- b=xEjQGDAzoEhDEEmEYMz9maybp3ZKVz7xN4s/aHeR7/Mj7W/g98Yme28kCJdHZkLx2dr2WS90E30f6G1LHLb341U/nTB0drLY8nrGhral2cOpAhY1f3/XTL6Zx/c04uZpnIKq8cmqDvEOueBFt6BHyYGGPOIGQoSLHufDHssSvdOZzyifIs4tgTumgmwdT2d3nvADeOR9frSU8oeSHOxMKw80w/KC6DIyKgfkRZyt2bUq+cJhBDSoyel0te1slq4CpDuXL+hn9HCEHWg6RMFj1IUA/rYcC1i9CEltIHC8b7D6iWblEIK/Su/HAp3VLVmaFj/ETbKnndchT5JPuBm6gA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4jkJ1zENHaZF9JmrWgb7FrCKMpapYa2m8dKZu+vlkgw=;
- b=sLzz/f6bDdaS1k9DBEu1qOAs2dTEli/+sp46hDxGVVsxxWUE/OXpWcum50y8SGyEDN4yN3gu9utqWluTMHqxGRyQAVw4AwbRFGtR9qImNK3s75/N7wutwTYAbmVamaVcVm8VFm/0553H0aE+cACzvHi3IZpzEmlAl/Pv8yqvsamJHO1u6dOTOZP2zH6AQOi4Mv/WWk7bWFtvGoxBvscOETIjZuVbbAgknZsRrn9xOBg0Tlw79eqPvO/qG4GYud3DxIorvCTZRGT6PQPIv4KqwfL/V1hhqkuE2YpBsSfdGDLvY0HpEFo3/gt873QXkyRoTIaUPjAbuNH5j2HmBNreCA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by DS7PR12MB5864.namprd12.prod.outlook.com (2603:10b6:8:7b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
- 2025 07:52:06 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 07:52:06 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 17 Jun 2025 16:52:02 +0900
-Message-Id: <DAON8H30Y6VO.2WKLGX2Q9DORU@nvidia.com>
-Cc: <mturquette@baylibre.com>, <sboyd@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <lossin@kernel.org>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>
-Subject: Re: [PATCH] Various improvements on clock abstractions
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "onur-ozkan" <work@onurozkan.dev>, <linux-clk@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250616200103.24245-1-work@onurozkan.dev>
-In-Reply-To: <20250616200103.24245-1-work@onurozkan.dev>
-X-ClientProxiedBy: TY1PR01CA0184.jpnprd01.prod.outlook.com (2603:1096:403::14)
- To CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h3LRIu/Z"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H6VKGQ026338;
+	Tue, 17 Jun 2025 07:52:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3+OYCgy/JqPCdFzA5ntqnQBLIRY2eEPVF2Gfe6YJ3iA=; b=h3LRIu/ZdyDIfLgm
+	+xo6RaxjGuQDJQspDNUgcfyHI5yiOm2mjehkJsciekUvA66C4uc8pQVMcgJdgbZ6
+	Q0abIKy/eOcAsbDG7Ey/cZ4f2/B7A08nJ4OqDAXeEX6SxV95imjAKv/ipria3NDO
+	ppCEYLFG2v52r/prEj9Cy450r4C2XRALiHebpGVJ+UDVBRjHmyoP/RxFmzrWJoHO
+	6Xf2xLzvY/DSNDbfB7vAkJ4Z2BqWujWQiQclL4EbHVmFBnNChVKdOjSgUV6yp4Uh
+	SBFaCkDhZitEL7EBus3P6klYQddIIG2t3+1Q5rHdggIQECHqM/1d/EMbiL7TFL6F
+	jZgzSw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hffemr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 07:52:55 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55H7qslA015321
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 07:52:54 GMT
+Received: from [10.64.68.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 17 Jun
+ 2025 00:52:50 -0700
+Message-ID: <19895a7d-4f30-44f1-bc5f-45d200666860@quicinc.com>
+Date: Tue, 17 Jun 2025 15:52:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DS7PR12MB5864:EE_
-X-MS-Office365-Filtering-Correlation-Id: 279d734f-2b14-45ab-80cf-08ddad73da8e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|10070799003|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eU9OL1Z3ekhad1B2QWFBQWx2aWgxVVFMbmZtNVU5MTRXaHM5V0tFcnoyWENk?=
- =?utf-8?B?UGowVk4xSS9BaEpEUUJUTEFWVkNrcTdPS2lEZmo5ZDFYeTVNTnBMM2IxdXp4?=
- =?utf-8?B?MjRHS3FTZWlQSTAwSFoyWjNFZS8vc2UzYzlWNFRkUjhxVWEwSTNZUkRabGUw?=
- =?utf-8?B?dU4zbWQ1RkdZSU5nR0pmOFFzcFJvbytBV1p0VUdIay9NTENhdkhablJ1STZx?=
- =?utf-8?B?ajh4QUpzemJiWUhTYUhtS0tXTytKajhkZEg4SFR5dDlHcEtpS2ZDMjRJbUJl?=
- =?utf-8?B?WWRMczRlVnRpR3c4M2x2ZnE3MERkWlZhZE4wWVNNL3ZWTVpVOERqVUh6eHM4?=
- =?utf-8?B?dzZ5R0huNE1WdVk4dHFabUZ6TWQxTE9UY2trYzlITjdraWRyOXk3ZkdwOGIr?=
- =?utf-8?B?QjRKZG9IVVErZDFCY1RZWHdvU2RpY1d1cVplUGNQRlhsZnQ5b2ExdFl5dlFI?=
- =?utf-8?B?N0Z3a0E3TXpkdWpDNFMrUlFFakpWNFRQZFRzK2EyZEVrdHh1eTNkZzI4SGFr?=
- =?utf-8?B?ZXVib0lvdmxxdGZnZWNwMG9pb3k4eWc5RzY4YVdvMjJFc2pWSDJmL0dPdHlr?=
- =?utf-8?B?MW1LQysvY1VsZ1JQd0MrNWNBRUV3UWZoNkt1S0xFdzM5YUtkbFVGbk0xcjNk?=
- =?utf-8?B?MTVud240NjRWVkhRaVpycS9wREhGb2JDYkJYS0ExdlVIRkJ4VkJYc2NPenI0?=
- =?utf-8?B?WlhjNW9vcGlaZEVXdmZXaEQvbkVaUVNwNHA3RXcxeUl2NzRrZWJOMEdHNmtM?=
- =?utf-8?B?aWJkekZBN0NWMFliSlZQZFJLV2tHTS90bHAxNVd6S092VVhHTlZYejI3UUdU?=
- =?utf-8?B?ZWRYT2NFSzNKVGs4WkhGYVFPYXk1YTY5VGlDSkNHRVROWU81MllBMDhiTGd0?=
- =?utf-8?B?TWJka0FLY3hkdzAvU01BR2dsK3R4RHRqM3NPU2EwYmRqeTBZS3lBOG5FUURD?=
- =?utf-8?B?cEZMRXNSUklWb3Z1TlJERllIbjR0OWFZNVpya1NVdEhFS2Y5NHZNQXg4dWE0?=
- =?utf-8?B?LzNDZ0RoUXE3Vm5uV0JXbWtrY21xYnZoMDJ3UVk2TGF0RHhwOVdmaXhOcnVJ?=
- =?utf-8?B?VnJUWEJlVXpkazJVZ3N5cEZuaDJQMHpVSjNuZzZ1R0kxb1Q3UWF0Y1M1Nlpw?=
- =?utf-8?B?c2NVeVN5R2F4M3IwN0hYdmhWMkppQTZvbTZOTkdpVlBmNmNJM2hkakJZbEpp?=
- =?utf-8?B?SG9jNTQ1Uzh5L1I1aVp5WWx5a2laYXpyajAvWm1nRWJyR0FsK0pPODRaWE9q?=
- =?utf-8?B?VU4yeE54SEEwTTBhQXRyckRXVHM4WjZ5TVJTMXQxVVRCVWxNUzZtNGlXRFBE?=
- =?utf-8?B?N21kWHgyQmJWbUtVelZGQm5CNW9UTng0QkpNZE9rVXBkS0ZZUnpna0MvZEJ5?=
- =?utf-8?B?QjQ0VG5ycCswdWtWNUVhSUlJNzVMU0ovcmc4bi9kS052RGJDZXFrcXlMUWhD?=
- =?utf-8?B?VmdIbkVzT1czMHZEL1FmMHZOdzRtakhkbng5UHprVklKbXcyQ0lxM2hWWncz?=
- =?utf-8?B?SkJoUEdFVGd0RVRrc3NmTG5vT0pqN1ZzNWRzaVNmcTAxQnhQRXpWR1ZwR2wy?=
- =?utf-8?B?cmZLbGdJenJTRVhVOXhvRGJ1MktBeVR2eG5aL0Rpd29mS3dYWXJRYWRKVzho?=
- =?utf-8?B?d3hUMGRvWkovQ2tSMEJMVzZSQ0dkTUFqT05GcWNqc3d2Sk1SaWx4WlFhcnNC?=
- =?utf-8?B?NWVTbktWb0J6Q3FYdnJsdzRjeGM3UjBDbklMRitKUUNKc2l3R2NRaXoxZ1RQ?=
- =?utf-8?B?L2ppb1p2N2YrU3ZuaWhSMkhtNUtiV3lNdzJCTmorTnVhVEFTcWMxMG5tWEpZ?=
- =?utf-8?B?WlNINmtibmRCTVVycnVuSzIza3R4NWMzQXV0dWw4K0xhZ1FLR3ZWUy9MVGRr?=
- =?utf-8?B?QkNodUQvaUtoMmYzUEQzU2xCRHExSnZuYmdsSFRMUkhsdEE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aE5NakxsL3hEcXI1d1dlTkxIUnU2VEtTV3BxcGIvUTBwZW00Y2VSQisrbThF?=
- =?utf-8?B?NEZybXhoTWk4eldlMmYwVERxcXF4L21PL0k4WncxaFlMSU8yWDhqaEpteXcr?=
- =?utf-8?B?MFVwRHFBQmh1bUh0a3dicVBxNEZRQWQwK0I2SzNrTk1FQURwZjZWY3JtM29a?=
- =?utf-8?B?eDdCc3dOdHV6a2wzSC9GemlQZWcxdWR6UHVobDE2bWNiK2JndlZRYzdzRGJi?=
- =?utf-8?B?T2FpczhPTGticVJRVjVVYUFXejBkNkhwSFpsN0E2bEZSd0hMNmdOQjhTdXlD?=
- =?utf-8?B?MG9SQk82Q1pxRlJLSmF6V2lvZUlFN3NZRzVvUzdxb1kwOVdGcXA2aFI0Zk9L?=
- =?utf-8?B?TW5qNlVjNXpnTGJBb1dDaTNsTEVrOFdiM1haUERHNHNNSndBTytwV3l6MDFL?=
- =?utf-8?B?dWdBcnhIdm15RzRVekpxNXNXWkxEMUo5Um1pZmVNQ25lMCttUUFrT3RXRk9P?=
- =?utf-8?B?THg2NzVWVjdaM1AwcWtHRGlvT0N3MWRENEI1Y2h2VmN5N2lFaUk3N1NPWHM3?=
- =?utf-8?B?TCt0U3JvVmVkQXNYWDkxY2g5dWYzTzN4M1B0U28vZ0hKOVpsbStkOU9KbU9O?=
- =?utf-8?B?TWpLR09sWmRLTEpqbXk1dDJxUXY2d3E2cHkxUGpTRzhZUC9VdDEyWXFVRTFO?=
- =?utf-8?B?N1hFU3llNXVVak1MQ3JCcm5uY0xaNzRCV2FoQzZ0ZSs4Tk82aHMxTWZpYVNO?=
- =?utf-8?B?MG15a2craDB4YVd6NjhEQVNuL1hUcEppQ0RRSWRERWxNOGt5b0c1Y0d2NVZC?=
- =?utf-8?B?NU5WL2c3U01oSngxRk9TVVI4VU9JalhEYm5vQ0FhZnBBNE4wWFdyaUFrcDQx?=
- =?utf-8?B?K09TektIa2tMRFVocmVldHoxL2lpNW12Z0NFMFJMRHZ3M2Q3cmgzcmR6L203?=
- =?utf-8?B?QVB6VGRMdzg3dkhaTkxWdmQyRmlrMlErNWRMNUMzYmRIVGxDaE04bEx4eTFt?=
- =?utf-8?B?aGRPZ2VYakYvb3JLcUlZNklTcnlBU0JNakRCaGZkV2tHdWtMU1NvMVZZNEhX?=
- =?utf-8?B?dlFLa1IxWUtSaTZNK3NOUTFaMjE3Q3R2bTdRS01GQ01yYXNuaHpuaDlKQ0tP?=
- =?utf-8?B?RUJlOExNSkJvOTZzWTF4L2FvNzJDRWR0TDVMUFBLZkRWNlFiMXRsV296d1cx?=
- =?utf-8?B?Umt5UTFhRUtOQUNMaGVzMFIxTXR2bU1FMTFaYml5c1dua05pQVdlNXloaThP?=
- =?utf-8?B?SFZtS1JYM2QxNmh1VXdpK0o4WHVQSXhpa3BpVHdKNGEybkg4MVNFZUtVSE5F?=
- =?utf-8?B?cmpjOGQ3bzJiKzNuNHNocWdqb3F5RzZTU0ZYZG05R3NQZnlPV3luVnlKMTJB?=
- =?utf-8?B?Z1g5N1RmNnZHek1Ham9aU2RLU1hzM1ppWTNVYWJHVzNhcnZXNExmUGtqWFdY?=
- =?utf-8?B?VTMvd3ZiWi9jL1MyZTFTeW1EckE1WlBFNDJkY1VRQVIzU0xlOU5jMmN6RUZq?=
- =?utf-8?B?dW4yUnhVT1lLaldTd2JiRGZYb3I0TUVhRWtLWmNMVXRSTlVreFV2QzFSQWVH?=
- =?utf-8?B?czZmU3djZ0FrL0cxMnMrcGRjb2RQRHZUak1mbVg4WkNZMXZkS2lBdmJBbmFh?=
- =?utf-8?B?RVZDc2pJdGtlRG4xSnhUMkhHN3Fpem1ONVhvLzVIeFNuNGJ5cStzQWJhNEVs?=
- =?utf-8?B?UEtSemQ0cGFqbFRvYzdSbHlQZ0FzS1VrK0RweE02aXFVSURaeXBoM2ZnTTZl?=
- =?utf-8?B?NklrcnlKNGRCTG4wVDV1N3NyRE9qemIvTFlqNHc3L3VIUVlkejdvNGtncmJr?=
- =?utf-8?B?WHZvZGhhZXpta2lZNmc1MW1lT2xhTjh2djcyRUdwaDZQdWFvd2ExdkIwcVBx?=
- =?utf-8?B?czhISCtQTVNvTEJqTHV4L2RlUWJDcml2WC90alB2b2Z3TmhTMUlSelNoYXNI?=
- =?utf-8?B?MWZzWWNId0NEWXFGS3ArZk51NmVTd3dNejVXVk9uS1ZZRVdiZVFRN0FWSy9w?=
- =?utf-8?B?WlExT0wvTlE0ZUNsNEpwa2ZaOStNbGN5QTZPME9sNDhiREVEZXJsMEg5N1VR?=
- =?utf-8?B?ZVUyOWlVVFdacHhXd3FyOUY3TG1FcGhyL3FzcWZsYlFFdzd4WitMMzc5b0ZO?=
- =?utf-8?B?UzJ3aUNOVExNeFRQYk5YNTBrMzhlZmU0RWNjQ2diRUk0aWtLSGxseHh5RDgv?=
- =?utf-8?B?ZHQ2ZmhXZ2JnTTRIUWQ4cUhQRElmV04xRGJrMWFQdzVUakhaQ1kxc0ZveVZC?=
- =?utf-8?Q?0rShzw0IytYPRQWbX9ie2zbLh+WdEAwp0mTt0QPKZK0S?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 279d734f-2b14-45ab-80cf-08ddad73da8e
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 07:52:06.3453
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2g7Y1g3z6yEMKYFpdRTKhxMNZImkHew/PJI/zGIOi9bbY8caPZGNw8Nhi+tjQlXUqki3Y/WD6c+FeqS/REjdZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5864
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 29/38] drm/msm/dp: add connector abstraction for DP MST
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-29-a54d8902a23d@quicinc.com>
+ <fcmbo5qhiifo3erfnejgtu6es2nmeo3c5r4plbutj23gdtydng@xy3mqkhbsjia>
+ <1c09642b-7a0c-4073-97d3-f6f6cddbde83@quicinc.com>
+ <7r7vdbeols4suew7rlvogft4b5lmg22osipydxzkubxsychewi@lpyj6vmoapzb>
+Content-Language: en-US
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+In-Reply-To: <7r7vdbeols4suew7rlvogft4b5lmg22osipydxzkubxsychewi@lpyj6vmoapzb>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDA2MSBTYWx0ZWRfX0PTC1Qs1yOGg
+ nEUodtrhGfSZ4vXO406OzaW/FvPIi116JqeNGWWfAMNF/eDBvViiTPOa23cKmaHGl53Iy2Rdf3I
+ s0a8J9TbH7qkRslbZbzwVvIRfWc70NvGEZj4OnF6cTEfrg3RzxjTBGKHxLA/TPgtfJ8ypfAJ6h2
+ 5ANkY3Dfiz3+i7U8hFXFSyRQTVK9GkIh9F/5CCD5syoqJoj7ckXYO4uFWlBAoczZcCCRl3RW/13
+ auARNkGNiohbh+5hIzIMJDgCOdqGBId/UyAhUtyc3iUiSlvAKXyNewWOPey1lMhCl2yptdLJokh
+ 6Py74ejDR8VJz+OEO48uQKCfuTNykqLKG8eeJHB8OBQgu2KaBd1hPLlnSw4pE1Shh+f+Jb/9amp
+ eDE59nfj5xwnclBH1JqK1meG5jIQad0dIsW+eRJt8DtBWTRatUz5e1Mn1CUeEwWYmyDqAMc4
+X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68511ed7 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=T0zqKitVi8GbSOTiMt4A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: dpUf98RlxOmI6yJpy5ItQ58e-UaXG3Tf
+X-Proofpoint-ORIG-GUID: dpUf98RlxOmI6yJpy5ItQ58e-UaXG3Tf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_03,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506170061
 
-On Tue Jun 17, 2025 at 5:01 AM JST, onur-ozkan wrote:
-> A few changes to improve the clock abstractions and make them a little
-> more idiomatic:
->
-> 1. `impl Hertz` functions are now constant and compile-time evaluable.
-> 2. `Hertz` conversions are now done with constant variables, which should
 
-"constant variable" is an oxymoron. :) I think you just want to say
-"constant" here.
 
->     make them more readable.
-> 3. `con_id` is handled in a single line using `map_or` instead of using
->     nested if-else blocks.
+On 2025/6/16 21:48, Dmitry Baryshkov wrote:
+> On Mon, Jun 16, 2025 at 08:43:40PM +0800, Yongxing Mou wrote:
+>>
+>>
+>> On 2025/6/9 23:51, Dmitry Baryshkov wrote:
+>>> On Mon, Jun 09, 2025 at 08:21:48PM +0800, Yongxing Mou wrote:
+>>>> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>>
+>>>> Add connector abstraction for the DP MST. Each MST encoder
+>>>> is connected through a DRM bridge to a MST connector and each
+>>>> MST connector has a DP panel abstraction attached to it.
+>>>>
+>>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+>>>> ---
+>>>>    drivers/gpu/drm/msm/dp/dp_mst_drm.c | 515 ++++++++++++++++++++++++++++++++++++
+>>>>    drivers/gpu/drm/msm/dp/dp_mst_drm.h |   3 +
+>>>>    2 files changed, 518 insertions(+)
+>>>
+>>>> +
+>>>> +static enum drm_mode_status msm_dp_mst_connector_mode_valid(struct drm_connector *connector,
+>>>> +							    const struct drm_display_mode *mode)
+>>>> +{
+>>>> +	struct msm_dp_mst_connector *mst_conn;
+>>>> +	struct msm_dp *dp_display;
+>>>> +	struct drm_dp_mst_port *mst_port;
+>>>> +	struct msm_dp_panel *dp_panel;
+>>>> +	struct msm_dp_mst *mst;
+>>>> +	u16 full_pbn, required_pbn;
+>>>> +	int available_slots, required_slots;
+>>>> +	struct msm_dp_mst_bridge_state *dp_bridge_state;
+>>>> +	int i, slots_in_use = 0, active_enc_cnt = 0;
+>>>> +	const u32 tot_slots = 63;
+>>>> +
+>>>> +	if (drm_connector_is_unregistered(connector))
+>>>> +		return 0;
+>>>> +
+>>>> +	mst_conn = to_msm_dp_mst_connector(connector);
+>>>> +	dp_display = mst_conn->msm_dp;
+>>>> +	mst = dp_display->msm_dp_mst;
+>>>> +	mst_port = mst_conn->mst_port;
+>>>> +	dp_panel = mst_conn->dp_panel;
+>>>> +
+>>>> +	if (!dp_panel || !mst_port)
+>>>> +		return MODE_ERROR;
+>>>> +
+>>>> +	for (i = 0; i < mst->max_streams; i++) {
+>>>> +		dp_bridge_state = to_msm_dp_mst_bridge_state(&mst->mst_bridge[i]);
+>>>> +		if (dp_bridge_state->connector &&
+>>>> +		    dp_bridge_state->connector != connector) {
+>>>> +			active_enc_cnt++;
+>>>> +			slots_in_use += dp_bridge_state->num_slots;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	if (active_enc_cnt < DP_STREAM_MAX) {
+>>>> +		full_pbn = mst_port->full_pbn;
+>>>> +		available_slots = tot_slots - slots_in_use;
+>>>> +	} else {
+>>>> +		DRM_ERROR("all mst streams are active\n");
+>>>> +		return MODE_BAD;
+>>>> +	}
+>>>> +
+>>>> +	required_pbn = drm_dp_calc_pbn_mode(mode->clock, (connector->display_info.bpc * 3) << 4);
+>>>> +
+>>>> +	required_slots = msm_dp_mst_find_vcpi_slots(&mst->mst_mgr, required_pbn);
+>>>> +
+>>>> +	if (required_pbn > full_pbn || required_slots > available_slots) {
+>>>> +		drm_dbg_dp(dp_display->drm_dev,
+>>>> +			   "mode:%s not supported. pbn %d vs %d slots %d vs %d\n",
+>>>> +			   mode->name, required_pbn, full_pbn,
+>>>> +			   required_slots, available_slots);
+>>>> +		return MODE_BAD;
+>>>> +	}
+>>>
+>>> I almost missed this. Could you please point me, do other drivers
+>>> perform mode_valid() check based on the current slots available or not?
+>>> Could you please point me to the relevant code in other drivers? Because
+>>> it doesn't look correct to me. The mode on the screen remains valid no
+>>> matter if I plug or unplug other devices. The atomic_check() should fail
+>>> if we don't have enough resources (which includes slots).
+>>>
+>> Currently, I haven't found other drivers checking available slots during
+>> mode_valid(). Intel will check the PBN in here.
+> 
+> pointer? Also, what do AMD and nouveau do?
+> 
+Hi,here is the link:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/i915/display/intel_dp_mst.c?h=v6.16-rc2#n1504
 
-Please split these 3 changes into 3 patches, I agree that they are
-trivial but a patch should do a single thing. This makes review simpler
-and allows to apply only part of the changes if e.g. one of them needs
-further discussion or is rejected.
+nouveau just check the mode_rate and ds_max_dotclock in MST connector 
+mode_valid().
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/nouveau/nouveau_dp.c?h=v6.16-rc2#n527
 
-The changes in themselves look good though!
+The AMD driver seems much more complex, and I can't understand all the 
+logic. It looks like AMD always tries to enable DSC and use the smallest 
+possible bandwidth.
+>> This condition can help us
+>> in the following case:
+>>
+>> Assume two downstream devices both support 4K 60Hz 10-bit. In MST mode, when
+>> the first device occupies the 4Kx60Hzx10bit mode, the remaining bandwidth is
+>> insufficient to support the same mode for the second device.
+>>
+>> If we check the slots in mode_valid(), the second device will reject the
+>> 4Kx60Hzx10bit mode but accept 4Kx30Hzx10bit. However, if the check is done
+>> in atomic_check(), the second device will display a black screen (because
+>> 4Kx60Hzx10bit is considered valid in mode_valid() but failed in
+>> atomic_check()).
+> 
+> If we filter modes in mode_valid(), then consider the following
+> scenario: we plug monitor A, plug monitor B, then unplug monitor A. At
+> this point we only have monitor B, but it has all modes filtered when A
+> has been plugged. So, it is impossible to select 4k@60x10, even though
+> it is a perfectly valid mode now.
+> 
+> Also, with the check happening in the atomic_check() the user will not
+> get the black screen: the commit will get rejected, letting userspace to
+> lower the mode for the second monitor.
+> 
+Oh, this scenario is indeed just as you described. So let's remove this 
+part of the logic and let userspace decide the final mode.
+>>>> +
+>>>> +	return msm_dp_display_mode_valid(dp_display, &dp_display->connector->display_info, mode);
+>>>> +}
+>>>> +
+>>>
+>>
+> 
+
