@@ -1,91 +1,99 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB2E27461;
-	Tue, 17 Jun 2025 06:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8CBC27461;
+	Tue, 17 Jun 2025 06:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141910; cv=none; b=YF0iEpO3G00fc9zMZmYV3xnoRmdQAHgPW31Fvvojn1EPGqDGpmaVz5aHIygWBrtQZLA7fYI2lczIm4Osfv3JkdEfTUlHunjU7Zva9EmU4+GiTagsThySxpZSaDPvTkqit/A1H2ufahVTDmBauz7UeaP5/RjVjCQIkOFriq3V6uY=
+	t=1750141951; cv=none; b=qz2+61QcTYeVmJFUVcNwz9X84qfZNGDFN9FvexQJoMP40oNNuHbS6mHxrIyrjdBFnA6IRxAi3n6wNLfQ4BHjuQip+fE4SSjnCT0W6kA5ZDFLcNS3g0zd7DCCReFek8cjIP7OuOEcxvzChmIgU3g6YuBZcyxuK7C2mJVC+DBGHQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141910; c=relaxed/simple;
-	bh=Ai7vF5RV57bV/NmagLGT4gN2aemR9Fwghr5/jJb67CM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Iz2Chi7xqBKmK8nkuXMPcY8BX4FOKRiRfgF1d1SSm3CG+n945b57XFLNSasrQ3qk1cAi7KP382498O4afxJdIf8nNrt2zLQSXqvYp1Mc3EYxBoCRmOocjvUG/VAd3S3HoUekKhrCJAs1HFcyOTz5s9pCFhpYBXUity8M0G5owZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=QL+1KHxv; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="QL+1KHxv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Pk2oPHCqJ/oLBd26Ay4PWRHlFgJzTH2Jf8vliD86dZw=;
-	t=1750141908; x=1751351508; b=QL+1KHxvmAmxM6Ix61aUSoAEhm/APFvJBgsoo1dasgcsEy2
-	rLqbTdZ81amqL0eUR7WoF9+knPOmSzWsZWdeQlNtV3GjNN6TAIKcEk5CNMR62Dg48d5DbAHhbX9AD
-	/5nXbC7S4yFuVseCKRh4Tq9FV8K6T/lb16nscr0XCI/7R/q0U9TiiBr6umA/0Fc2y1E7f823JjiYm
-	4Zb25TPSO1gMCaqv/rTgRwe+YPspmcnw+pJY1ueHQX14A8XQp8vdtFuBbsfOJMRsp2pk0pHLK4JIX
-	xgCnO0xFInSGX2NJNRlZcD71i8fR9oQPYTn7gNXPFlt5oKYVZvzmg8YPlrsRVoOw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uRPqz-0000000DxKA-21pr;
-	Tue, 17 Jun 2025 08:31:30 +0200
-Message-ID: <86bbb07755d748c9b582c0ab234e8a4ce0314ce4.camel@sipsolutions.net>
-Subject: Re: [PATCH] wifi: mac80211: fix oob in ieee80211_rx_mgmt_beacon
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Edward Adam Davis <eadavis@qq.com>, 
-	syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Date: Tue, 17 Jun 2025 08:31:27 +0200
-In-Reply-To: <tencent_8DCFF079526DB42E796E5095C0E8E2EE1E0A@qq.com>
-References: <68504add.a70a0220.395abc.01e7.GAE@google.com>
-	 <tencent_8DCFF079526DB42E796E5095C0E8E2EE1E0A@qq.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1750141951; c=relaxed/simple;
+	bh=MQwvrsyatOU2v9XdcxbXbe/0dPzrutKdVRXMXMclAwA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IVCfmvLiYbBTYSbqzOrvmCma39xKfshj2CYK+zOrYSeHR+3pDOXKvoBvja4zdGTSynkp7tibyj32PjD0bB9i+TqZLi2N6qCPy48qxOUZSW4inP+yLyf2dCMo8BBoTIGIHpCk8cTfBLHjNbJn6Nm9JUvmHEub0QqplUlIp0Dctcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Axz3PyC1FoljUYAQ--.55626S3;
+	Tue, 17 Jun 2025 14:32:18 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDx_MTnC1FoNwIeAQ--.23222S2;
+	Tue, 17 Jun 2025 14:32:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>,
+	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
+Date: Tue, 17 Jun 2025 14:32:06 +0800
+Message-ID: <20250617063206.24733-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDx_MTnC1FoNwIeAQ--.23222S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrKF4kCrW8ury7AF1DtFWkGrX_yoW8JF17pr
+	W2kFnxArs8Xwn7JF43tayrZFW5JF1kGFy7WF129a4Fk3ZxX3WxXr1xK3s8GF4Yyr15XFy8
+	Wr95C34a9FykAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-On Tue, 2025-06-17 at 12:41 +0800, Edward Adam Davis wrote:
-> According to ieee80211_s1g_optional_len(), it can be clearly seen that th=
-e
-> maximum size of variable is 4 and it is an array. Based on the above, the
-> parsing of the frame control field and optional field is optimized.
->=20
-> Fixes: 1e1f706fc2ce ("wifi: cfg80211/mac80211: correctly parse S1G beacon=
- optional elements")
-> Reported-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D6554b492c7008bcd3385
-> Tested-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> ---
->  include/linux/ieee80211.h | 2 +-
->  net/mac80211/mlme.c       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
-> index ce377f7fb912..556ce95e0b0f 100644
-> --- a/include/linux/ieee80211.h
-> +++ b/include/linux/ieee80211.h
-> @@ -1278,7 +1278,7 @@ struct ieee80211_ext {
->  			u8 sa[ETH_ALEN];
->  			__le32 timestamp;
->  			u8 change_seq;
-> -			u8 variable[0];
-> +			u8 variable[4];
+JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
+to skip analysis/patching for the respective vulnerability, it is
+safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
+speculation barrier instruction for LoongArch.
 
-That's incorrect when those fields aren't present, and will result in
-wrong sizeof(). I believe the correct fix is one I sent before, to just
-make it []:
+Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-https://lore.kernel.org/linux-wireless/20250614003037.a3e82e882251.I2e8b58e=
-56ff2a9f8b06c66f036578b7c1d4e4685@changeid/
+This is based on the latest bpf-next tree which contains the
+prototype and caller for bpf_jit_bypass_spec_v1/v4().
 
-johannes
+By the way, it needs to update bpf-next tree before building
+on LoongArch:
+
+[Build Error Report] Implicit Function declaration for bpf-next tree
+https://lore.kernel.org/bpf/d602ae87-8bed-1633-d5b6-41c5bd8bbcdc@loongson.cn/
+
+ arch/loongarch/net/bpf_jit.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index fa1500d4aa3e..5de8f4c44700 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+ {
+ 	return true;
+ }
++
++bool bpf_jit_bypass_spec_v1(void)
++{
++	return true;
++}
++
++bool bpf_jit_bypass_spec_v4(void)
++{
++	return true;
++}
+-- 
+2.42.0
+
