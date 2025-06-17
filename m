@@ -1,220 +1,179 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D06C2EF659;
-	Tue, 17 Jun 2025 14:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9149D2EF65D;
+	Tue, 17 Jun 2025 14:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170573; cv=none; b=AMATLyVnoD4cDWPRaAgo7YBQr/nE15TsYxEsPKD34FarPCUm7Y2qx4DVEugJ5TSXA72ugesOSVF5//epfiP1fm6Mzee2FgCzQbRtwEUO+8nCkkHEhw5cveG4OXIZ07rbwsb6J6E18lr03jYPeVb/cfyzzqgRJe1VZSJmBi2MvA0=
+	t=1750170592; cv=none; b=WzBYRBW3YkwPx00PF8IrWR6TC94gd1erE1WVdVFJCOkQKtoUkuY0tVGZo3Ale74R3tRbYEWOswszaoGGC7s3hoZLO4n5WM9fSX+aFWmpSTS6KCPjWTwjoz2O1UJRC8jw+vK6xLA83DnKOZGm6ZyACHI+gy7uMx2h41oNDDVuCOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170573; c=relaxed/simple;
-	bh=6uTWAt2KSetlw4KyfOPztl6CboQRTXwdcr6yCnOKtKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UATBX0uL87BNENxklQoziUuHv0QUEldXtbBK17/xVkwBLZmAW6hKdwL5CDkbNH5E+Y1OjOf5CHz0Lypv0zQdcTXYEkmqF/FHxxcdrObf14GYIzEytPAAMdVtZjqHDe1huxMEhuyyRDlj8/WExk1k88Fg/1WbdiY8hJ/OIaHhUlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YkTc7U6M; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YkTc7U6M"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 78AFF7E1;
-	Tue, 17 Jun 2025 16:29:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750170556;
-	bh=6uTWAt2KSetlw4KyfOPztl6CboQRTXwdcr6yCnOKtKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YkTc7U6MN/3MVBRQ8hkw1iU4btFV0Ee/Tm/D4vpiXi1OhANWh9M/iOBCPq6QW9XPu
-	 P0XDSVQFYwg8Opwly8JywbLY5V8e8QqOEC0wUjf2yA0vx7S787jbcM2FXNEFa/UPSW
-	 yGaCxI7kkzWjwdbIr96i91T/g5Gsaf7jV59lkqWU=
-Date: Tue, 17 Jun 2025 17:29:12 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v4 04/13] media: nxp: imx8-isi: Use
- devm_clk_bulk_get_all() to fetch clocks
-Message-ID: <20250617142912.GF10006@pendragon.ideasonboard.com>
-References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
- <20250408-8qxp_camera-v4-4-ef695f1b47c4@nxp.com>
- <20250421211438.GN17813@pendragon.ideasonboard.com>
- <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
- <20250502155747.GB20093@pendragon.ideasonboard.com>
- <aBylKcZyFInlKQAR@lizhi-Precision-Tower-5810>
- <20250611141449.GA24607@pendragon.ideasonboard.com>
- <20250617141112.GA2051217-robh@kernel.org>
+	s=arc-20240116; t=1750170592; c=relaxed/simple;
+	bh=LIyLij0wTrWveyj9tsMjCsf5lcrhmmEGp8cSiEvEkjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iYlMiAn/8ZLAZAWTqJR0G2/1ElvN0dySAo8LoUKM2xSLb/WGoHeQD1aljD4JXEsj4HyxF5h7QWX0gN0PR4806W1Kug68IHmRY6ujJOe+57o1aTWGYCyvcaGS8ILCU+/gX3vS9OELAG66lMrXAnln4ZC9vXKLVBrl2mPdZqkE1GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id DED2FC0357;
+	Tue, 17 Jun 2025 14:29:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id BEC171C;
+	Tue, 17 Jun 2025 14:29:46 +0000 (UTC)
+Date: Tue, 17 Jun 2025 10:29:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
+ Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Anders Roxell
+ <anders.roxell@linaro.org>
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+Message-ID: <20250617102951.4e8d936f@gandalf.local.home>
+In-Reply-To: <20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
+	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
+	<20250610105337.68df01f4@gandalf.local.home>
+	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
+	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
+	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
+	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250617141112.GA2051217-robh@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: BEC171C
+X-Stat-Signature: phn44jc8oeu4do411zfki11fm9dphr3m
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+yTFeuBs9lHHWznNjtDmuS+6PxVmjY/vM=
+X-HE-Tag: 1750170586-255323
+X-HE-Meta: U2FsdGVkX1/7IqGp0o9oUi3gbK1vBv60r+hV6TbMJeDGYzIvLNNN4kiDFtCACNoL7Xj8ltqX8u6AZ0h+5iU3Yl5FY73M76BXl92rKcsho7yMb3ncQxX294SjhWKi30LFHmQWSybbyHDXrULwsElTBPugxWQ7rC3pw9H+52QmuxPmmFghSUjvkBbydM/MqFcSU1n3KQrGSJM1Lc+vCLF4D5wKXg7VBleBs48L6ezTQnxxLEqXHcYNAfDV6Te5AzgsTYI5hd1qw/xcUHrhiC5mVxeVNUbCbgNhzRxzg9XcqUqZUnmp1A0dEgwX8Cu/qi8QIeOBquRrQp+3VXT9NhxZ7kv6ZNzFcdo5HD11vyNPUbgn3ZpJF4Ny4vNCuk+RmzIGlfsxt4E2awoXnDVnVcX0bNAZMqt3AX/xEj1b3I9OH+B1a8hGNVqCwQWkus7EOe+CAc+TmxgkLVw/7K04ExeyS4GBHYS8s+URNMoe7kCftKU=
 
-Hi Rob,
+On Tue, 17 Jun 2025 19:41:59 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On Tue, Jun 17, 2025 at 09:11:12AM -0500, Rob Herring wrote:
-> On Wed, Jun 11, 2025 at 05:14:49PM +0300, Laurent Pinchart wrote:
-> > On Thu, May 08, 2025 at 08:35:53AM -0400, Frank Li wrote:
-> > > On Fri, May 02, 2025 at 06:57:47PM +0300, Laurent Pinchart wrote:
-> > > > On Thu, May 01, 2025 at 09:02:04PM -0400, Frank Li wrote:
-> > > > > On Tue, Apr 22, 2025 at 12:14:38AM +0300, Laurent Pinchart wrote:
-> > > > > > On Tue, Apr 08, 2025 at 05:53:02PM -0400, Frank Li wrote:
-> > > > > > > Use devm_clk_bulk_get_all() helper to simplify clock handle code.
-> > > > > > >
-> > > > > > > No functional changes intended.
-> > > > > > >
-> > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > > ---
-> > > > > > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
-> > > > > > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
-> > > > > > >  2 files changed, 6 insertions(+), 43 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > > > > index ecfc95882f903..015350c6f2784 100644
-> > > > > > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > > > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > > > > @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
-> > > > > > >  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
-> > > > > > >  };
-> > > > > > >
-> > > > > > > -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
-> > > > > > > -	{ .id = "axi" },
-> > > > > > > -	{ .id = "apb" },
-> > > > > > > -};
-> > > > > > > -
-> > > > > > >  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
-> > > > > > >  	.model			= MXC_ISI_IMX8MN,
-> > > > > > >  	.num_ports		= 1,
-> > > > > > > @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
-> > > > > > >  	.reg_offset		= 0,
-> > > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v1,
-> > > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > > >  	.buf_active_reverse	= false,
-> > > > > > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
-> > > > > > >  	.has_36bit_dma		= false,
-> > > > > > > @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
-> > > > > > >  	.reg_offset		= 0x2000,
-> > > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > > >  	.buf_active_reverse	= true,
-> > > > > > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
-> > > > > > >  	.has_36bit_dma		= true,
-> > > > > > > @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
-> > > > > > >  	.reg_offset		= 0x0,
-> > > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > > >  	.buf_active_reverse	= true,
-> > > > > > >  	.has_36bit_dma		= false,
-> > > > > > >  };
-> > > > > > > @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
-> > > > > > >  	.reg_offset		= 0,
-> > > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > > >  	.buf_active_reverse	= true,
-> > > > > > >  	.gasket_ops		= &mxc_imx93_gasket_ops,
-> > > > > > >  	.has_36bit_dma		= false,
-> > > > > > > @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
-> > > > > > >  {
-> > > > > > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
-> > > > > > >
-> > > > > > > -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
-> > > > > > > +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
-> > > > > > >
-> > > > > > >  	return 0;
-> > > > > > >  }
-> > > > > > > @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
-> > > > > > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
-> > > > > > >  	int ret;
-> > > > > > >
-> > > > > > > -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
-> > > > > > > +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
-> > > > > > >  	if (ret) {
-> > > > > > >  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
-> > > > > > >  		return ret;
-> > > > > > > @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
-> > > > > > >   * Probe, remove & driver
-> > > > > > >   */
-> > > > > > >
-> > > > > > > -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
-> > > > > > > -{
-> > > > > > > -	unsigned int size = isi->pdata->num_clks
-> > > > > > > -			  * sizeof(*isi->clks);
-> > > > > > > -	int ret;
-> > > > > > > -
-> > > > > > > -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
-> > > > > > > -	if (!isi->clks)
-> > > > > > > -		return -ENOMEM;
-> > > > > > > -
-> > > > > > > -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
-> > > > > > > -				isi->clks);
-> > > > > > > -	if (ret < 0) {
-> > > > > > > -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
-> > > > > > > -			ret);
-> > > > > > > -		return ret;
-> > > > > > > -	}
-> > > > > > > -
-> > > > > > > -	return 0;
-> > > > > > > -}
-> > > > > > > -
-> > > > > > >  static int mxc_isi_probe(struct platform_device *pdev)
-> > > > > > >  {
-> > > > > > >  	struct device *dev = &pdev->dev;
-> > > > > > > @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
-> > > > > > >  	if (!isi->pipes)
-> > > > > > >  		return -ENOMEM;
-> > > > > > >
-> > > > > > > -	ret = mxc_isi_clk_get(isi);
-> > > > > > > -	if (ret < 0) {
-> > > > > > > -		dev_err(dev, "Failed to get clocks\n");
-> > > > > > > -		return ret;
-> > > > > > > -	}
-> > > > > > > +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
-> > > > > >
-> > > > > > This prevents validating that the DT contains the expected clocks, which
-> > > > > > could cause hard to debug issues. Isn't it a problem ?
-> > > > >
-> > > > > It is checked by dt-binding. Now no warning by DTB_CHECK under arm64 freecale.
-> > > > > CHECK_DTB should be enough to find expected clocks.
-> > > >
-> > > > Yes, the DTB check will catch issues at build time, but the driver will
-> > > > not enforce that. I'm not sure if there's a clear policy here, and if
-> > > > ensuring at runtime in drivers that the expected clocks are present is
-> > > > considered as a good practice by the DT maintainers. Rob, Krzysztof,
-> > > > Conor, do you have an opinion ?
-> > > 
-> > > Rob:
-> > > 	can you comment this?
-> > 
-> > Rob, any comment on this ?
+> Eventually, I found a bug in text_poke, and jump_label
+> (tracepoint) hit the bug.
 > 
-> My preference is to not do validation of the DT in the kernel. Unless 
-> you need greater control of the clocks, I would use 
-> devm_clk_bulk_get_all(). 
+> The jump_label uses 2 different APIs (single and batch)
+> which independently takes text_mutex lock. 
+> 
+> smp_text_poke_single()
+>   __jump_label_transform()
+>     jump_label_transform() --> lock text_mutex
+> 
+> smp_text_poke_batch_add()
+>   arch_jump_label_transform_queue() -> lock text_mutex
+> 
+> smp_text_poke_batch_finish()
+>   arch_jump_label_transform_apply() -> lock text_mutex
+> 
+> This is allowed by commit 8a6a1b4e0ef1 ("x86/alternatives:
+> Remove the mixed-patching restriction on smp_text_poke_single()"),
+> but smp_text_poke_single() still expects that the batched
+> APIs are run in the same text_mutex lock region.
+> Thus if user calls those APIs in the below order;
+> 
+> arch_jump_label_transform_queue(addr1)
+> jump_label_transform(addr2)
+> arch_jump_label_transform_apply()
+> 
+> And if the addr1 > addr2, the bsearch on the array
+> does not work, and failed to handle int3!
+> 
 
-Thank you for your feedback. We'll go forward with this patch then.
+Nice catch!
 
--- 
-Regards,
+> This can explain the disappeared int3 case. If it happens
+> right before int3 is overwritten, that int3 will be 
+> overwritten when the int3 handler dumps the code, but
+> text_poke_array_refs is still 1.
+> 
+> It seems that commit c8976ade0c1b ("x86/alternatives: 
+> Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+> introduced this problem, because it shares the global array in
+> the text_poke_batch and text_poke_single. Before that commit,
+> text_poke_single (text_poke_bp) uses its local variable.
+> 
+> To fix this issue, Use smp_text_poke_batch_add() in
+> smp_text_poke_single(), which checks whether the array
+> sorted and the array index does not overflow.
+> 
+> Please test below;
+> 
+> 
+> >From e2a49c7cefb4148ea3142c752396d39f103c9f4d Mon Sep 17 00:00:00 2001  
+> From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> Date: Tue, 17 Jun 2025 19:18:37 +0900
+> Subject: [PATCH] x86: alternative: Fix int3 handling failure from broken
+>  text_poke array
+> 
+> Since smp_text_poke_single() does not expect there is another
+> text_poke request is queued, it can make text_poke_array not
+> sorted or cause a buffer overflow on the text_poke_array.vec[].
+> This will cause an Oops in int3, or kernel page fault if it causes
+> a buffer overflow.
 
-Laurent Pinchart
+I would add more of what you found above in the change log. And the issue
+that was triggered I don't think was because of a buffer overflow. It was
+because an entry was added to the text_poke_array out of order causing the
+bsearch to fail.
+
+Please add to the change log that the issue is that smp_text_poke_single()
+can be called while smp_text_poke_batch*() is being used. The locking is
+around the called functions but nothing prevents them from being intermingled.
+
+This means that if we have:
+
+   CPU 0                           CPU 1                      CPU 2
+   -----                           -----                      -----
+
+ smp_text_poke_batch_add()
+
+                                smp_text_poke_single() <<-- Adds out of order
+
+                                                            <int3>
+                                                           [Fails o find address in
+                                                            text_poke_array ]
+                                                           OOPS!
+
+No overflow. This could possibly happen with just two entries!
+
+> 
+> Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
+> so that it correctly flush the queue if needed.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> Fixes: 8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by
+> using tp_vec and existing APIs") Signed-off-by: Masami Hiramatsu (Google)
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
+
+> <mhiramat@kernel.org> ---
+>  arch/x86/kernel/alternative.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index ecfe7b497cad..8038951650c6 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -3107,6 +3107,6 @@ void __ref smp_text_poke_batch_add(void *addr,
+> const void *opcode, size_t len, c */
+>  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t
+> len, const void *emulate) {
+> -	__smp_text_poke_batch_add(addr, opcode, len, emulate);
+> +	smp_text_poke_batch_add(addr, opcode, len, emulate);
+>  	smp_text_poke_batch_finish();
+>  }
+
