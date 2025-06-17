@@ -1,121 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8582EF640;
-	Tue, 17 Jun 2025 14:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720762E3AE7;
+	Tue, 17 Jun 2025 14:17:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169817; cv=none; b=PzeepYFn1P6Gt4mk7Wsy3sEjOpzPkrIqjTvdartCKdb7rUr355j9XxBBtOnZM7uvV2IsIXtsDZuDBlbvQKBXzik//IdNPItOH5qIT+yctTwUzSK27uVEeYoX+orSfStP2AAB6tBkJQUjlVPO40mH+PDJn2QDDVPFCo/h/QFT9C4=
+	t=1750169831; cv=none; b=Krwm0qF2x/XwBVCn4odrQUwWA4NbOXhjRXPvYwxgFG6fgEC6eC4NNIJox1BbpNmTrWlk9Eq+XUUUp4ZgJs+d65Q6a5DufxUco24HPrj+qgLuoY3GwS69PIHeU8OypET+tVSU0t7HhWGNyWOwxgsr/jQTeCIeIIDut8lvPjhJujY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169817; c=relaxed/simple;
-	bh=iEyW4AnJa17J41ytX30hyC0XYY5ykVW3PixyY/HYRVg=;
+	s=arc-20240116; t=1750169831; c=relaxed/simple;
+	bh=3mSinD0JJvo4Mt9YTggDN6jPCaaEW3X4Rzr0cVwpGx8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4xQi+kBvfCL3oroVwUthcU5vkYyZcF3uZQGTQp5NNCoAVl3XxzgXPvhaaqwuSvaupBhdy1TdqOuYOHfr+vCPlXP1WC+rfs+QhMoPi/ioBnMQx4nvOuxkKKTZj9+K3qw04eFfAwXpnJre1M2Jh2mM82ecF/vRd8TE2/hJ/hoLvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldedivNm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjVlXJnECnBhMTf+u1fhy7bSd6QcTOE0V7lS4fzcyWloe5LcFXIivjHeSBU/lBqD3ozCEz9RUg8lOEJsCU1saKC9Ci6ln4MiEksG93MeVYPh+vooS43tmPq9EeVX9fnFtIh31PjgG3kbNK1MNDO2L5+M9CToFmTgI/3gin7kEZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVyMO8g6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldedivNm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6580C4CEE3;
-	Tue, 17 Jun 2025 14:16:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVyMO8g6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19EECC4CEE3;
+	Tue, 17 Jun 2025 14:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750169816;
-	bh=iEyW4AnJa17J41ytX30hyC0XYY5ykVW3PixyY/HYRVg=;
+	s=k20201202; t=1750169831;
+	bh=3mSinD0JJvo4Mt9YTggDN6jPCaaEW3X4Rzr0cVwpGx8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ldedivNmC+Dx33QQGeX6YYlF02DbQyggnZlZuRrMnhpKdB7m1bLbV0x91X65tgwac
-	 DhEuntanyRA4hfLIfYdnBEIzAH2dIfyCAa4IsHU3H0GHhXU7KF/zboBQuB0soGRKoi
-	 YbvERIK3fGE6vQpsnVY9xhf7xFyliq1GygKDbTJ4tVuHWKhu1IqjAaQCw4B7q8Pmi9
-	 brbxZGzZK6k9/QuJKjZ5+0OWGqw9sNBjNWwKHWW+kiTLupotsRNj8UaXOHGMFufYCw
-	 Pqz29c87Ai6cQKfIWaQeHkfEWAa8AQQIwCAxPZPqdy9hUFq5vy27uDcWxvzMYVJTsl
-	 MRQ3Pg408arhg==
-Date: Tue, 17 Jun 2025 15:16:50 +0100
+	b=hVyMO8g6o7tlkp90oFcZWuvEH/bq+nnaD0GZzXPvxd38T+s7Ua6+AeOZYHtp1ey75
+	 VZmZiqkACbhZg7HJTVuN/Zp8t+prqP9E+F87ZVdov/jOn+2Yg3V/uKm8f2ZClRYO/t
+	 Y59IQ6a5pj0RK6JIGo6EnrasACDj5GzrTu7723Qf23FsgtVwSVmH7Efgoem5VrHR8D
+	 bgE5BXAd7syXVpONL8cZxFhAlPid+uVv7tvIm+GgxGOx8tpWVedQG0q8nJCZlOUdkA
+	 +Yk+F/xx6dNiJDcDfVfR2rkwvwrWTDF4bUYG04QsRxuFZBWA36+DuprQwYMgnTC8yT
+	 B/cFm41njB1kg==
+Date: Tue, 17 Jun 2025 15:17:04 +0100
 From: Will Deacon <will@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Nick Chan <towinchenmi@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple
- A7-A11, T2 SoC support
-Message-ID: <20250617141649.GA19021@willie-the-truck>
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
- <CAP-5=fXSwgxMc+uh=PBAFh4Zm96tL5RDyKPOJ8Q40O4s=EaArA@mail.gmail.com>
- <20250616102945.GA17431@willie-the-truck>
- <CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
+To: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
+Cc: Thomas Haas <t.haas@tu-bs.de>, Peter Zijlstra <peterz@infradead.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	lkmm@lists.linux.dev, jonas.oberhauser@huaweicloud.com,
+	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
+Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
+Message-ID: <20250617141704.GB19021@willie-the-truck>
+References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+ <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
+ <20250616142347.GA17781@willie-the-truck>
+ <d66d0351-b523-40da-ae47-8b06f37bf3b6@tu-bs.de>
+ <2b11f09d-b938-4a8e-8c3a-c39b6fea2b21@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
+In-Reply-To: <2b11f09d-b938-4a8e-8c3a-c39b6fea2b21@huaweicloud.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jun 16, 2025 at 03:44:49AM -0700, Ian Rogers wrote:
-> On Mon, Jun 16, 2025 at 3:29â€¯AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Mon, Jun 16, 2025 at 02:36:18AM -0700, Ian Rogers wrote:
-> > > On Sun, Jun 15, 2025 at 6:32â€¯PM Nick Chan <towinchenmi@gmail.com> wrote:
-> > > >
-> > > > This series adds support for the CPU PMU in the older Apple A7-A11, T2
-> > > > SoCs. These PMUs may have a different event layout, less counters, or
-> > > > deliver their interrupts via IRQ instead of a FIQ. Since some of those
-> > > > older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
-> > > > be enabled by the driver where applicable.
-> > > >
-> > > > Patch 1 adds the DT bindings.
-> > > > Patch 2-7 prepares the driver to allow adding support for those
-> > > > older SoCs.
-> > > > Patch 8-12 adds support for the older SoCs.
-> > > > Patch 13-21 are the DT changes.
-> > > >
-> > > > Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> > >
-> > > Hi Nick,
-> > >
-> > > This is substantial work and it looks good to me. Do you know why
-> > > there's been little progress on landing these patches? Buggy Apple ARM
-> > > PMU support in the kernel has led to reworking the perf tool. It seems
-> > > best that we can have the best drivers possible.
-> >
-> > You reworked the perf tool to support these things? Why? These changes
-> > are targetting chips in old iPhones afaict (as opposed to "Apple Silicon").
-> > I think that (a) most people don't particularly care about them and (b)
-> > they're not fully supported _anyway_ because of crazy stuff like [1].
+On Tue, Jun 17, 2025 at 10:42:04AM +0200, Hernan Ponce de Leon wrote:
+> On 6/17/2025 8:19 AM, Thomas Haas wrote:
+> > On 16.06.25 16:23, Will Deacon wrote:
+> > > I'm half inclined to think that the Arm memory model should be tightened
+> > > here; I can raise that with Arm and see what they say.
+> > > 
+> > > Although the cited paper does give examples of store-forwarding from a
+> > > narrow store to a wider load, the case in qspinlock is further
+> > > constrained by having the store come from an atomic rmw and the load
+> > > having acquire semantics. Setting aside the MSA part, that specific case
+> > > _is_ ordered in the Arm memory model (and C++ release sequences rely on
+> > > it iirc), so it's fair to say that Arm CPUs don't permit forwarding from
+> > > an atomic rmw to an acquire load.
+> > > 
+> > > Given that, I don't see how this is going to occur in practice.
+> > 
+> > You are probably right. The ARM model's atomic-ordered-before relation
+> > 
+> >       let aob = rmw | [range(rmw)]; lrs; [A | Q]
+> > 
+> > clearly orders the rmw-store with subsequent acquire loads (lrs = local-
+> > read-successor, A = acquire).
+> > If we treat this relation (at least the second part) as a "global
+> > ordering" and extend it by "si" (same-instruction), then the problematic
+> > reordering under MSA should be gone.
+> > I quickly ran Dartagnan on the MSA litmus tests with this change to the
+> > ARM model and all the tests still pass.
 > 
-> I was meaning that we reworked the perf tool to work around the Apple
-> ARM PMU driver expecting to work as if it were an uncore rather than a
-> core PMU driver. More context here:
-> "[REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5"
-> https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st/
-> But in general it would be nice Apple ARM PMU support were well loved.
-> I think we went 2 or 3 minor releases with the perf tool not working,
-> threats of substantial reverts to avoid the PMU driver bug being
-> exposed, etc.
+> Even with this change I still get violations (both safety and termination)
+> for qspinlock with dartagnan.
 
-It's unfortunate that you've had a torrid time with the Apple PMU driver,
-but I think it's important to realise that it's both unmaintained (it
-ends up with me via the catch-all for drivers/perf/) and was written
-based off whatever reverse-engineering people could be bothered to do in
-their spare time. It's frankly remarkable that it works as well as it
-does.
+Please can you be more specific about the problems you see?
 
-Despite all of that, I still don't think that your concerns apply to the
-patches in _this_ series, which is about adding support for older Apple
-chips.
+> I think the problem is actually with the Internal visibility axiom, because
+> only making that one stronger seems to remove the violations.
 
-> As for which Apple ARM devices should have perf support, it seems the
-> more the merrier.
-
-Easy to say when you don't have to maintain the driver!
+That sounds surprising to me, as there's nothing particularly weird about
+Arm's coherence requirements when compared to other architectures, as far
+as I'm aware.
 
 Will
