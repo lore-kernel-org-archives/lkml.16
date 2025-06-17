@@ -1,80 +1,214 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD612F5312;
-	Tue, 17 Jun 2025 22:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B0D293C5B;
+	Tue, 17 Jun 2025 22:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199297; cv=none; b=qiMVTMSDU7rzOJXGqkyOOoIp4cOwk4tndpO276Kj0jMsul4wjCRTR6KRAbL5TCw0gR79t9HpDV+di7319KOLbqhpa82ZqkVrxHYvYwA8x4fzDAbsVn0xFCR7yC4ooGhnRFfU0rzsSbOqCTgIyRQF7jztAibqm9dIA9ynZuVAxmI=
+	t=1750199398; cv=none; b=dMuEpLK7UnlZ4Ty7vEG++dBk6t0+atHqkifNehukGApK2FlV5qN4tNJeLuu9MUUL8y177HqhIU1iFyWzJsDUGbhyPe6PbbZd/TGnjqFtYxDTbqHhywh5RkJkv7wEFSq2kj3QQuiBILXlJr4wuJFUGXrQ7RcBwMcNcho4HDQOq1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199297; c=relaxed/simple;
-	bh=2ygcoiPdg5tXbbjhveGnMjSSG6kQpW//H1KxZ2agnv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kRUKtUqoVN+A16psdCgZG7q9RTKoIZfNyZyJQ3AaI2+O0duVWf019Csfn0ESRoZs6Yd2hpVeETY9OW9g7sUelx01tbZAjvSZIKdMdRrY3xHXWtstCqftMO+G7crk/0KfWhUkz1p8JGqKlOVngUbE1Gb7lqTaHWdSSxg/kf2FLzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=bRnDxeEY; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1750199398; c=relaxed/simple;
+	bh=E1R8tZTC4zFm0PByz0jO522hOoQZFenFe04oUA8okGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k9UrapZvQLFp+cTjHLWwjRa7uwPBCG5FzPfHkYWOGLTSGiou+Oy7/tVpjbtgCiDLaguByyiHgl1Tc7bCAlSa4d62/n7EvmKmiA+cW2L+DCzUFwATUv00FjJHMu1Lf/J1peFUw5MfG2JQ4FHK7XACzg3Q+lCec0AqAKy8ZyqoH4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r876Iish; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bRnDxeEY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=W0OOXNAeUJvkfL1jvOAbJIXmDdUCK0qiD8aREElX9bc=; b=bRnDxeEYmtsxBY/dzVEQPU1g7+
-	ybaEFJ+5Qx9x/CkDvIRHJnI3/ZBw+f5Np7a1T/GbvA8DptM/IyP87exa/esIAncJaVSyrJ7AIsEXB
-	zp7cY25R5I8JCmbn3tL59sRxarYH/mdnmbe6rA9axu7dgZJ2b0WOL7+6M6K3kih8BewDESCVjI4OD
-	MjosC+jV8GuYPv4Hw1Pp6sBmOi6TvFZdBu8aOcNyv1DDwvT06RZg5OlZ5cjKoo54NUHFwOusSG689
-	9QRAzefeesRcgpvSqoRwS+kiA7oJlOi8DN31ofoc6oEnrOMudCHvBUvCFRH8K7b+ICr/pdkIYq/B7
-	A1U/qVAQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60834)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uRemn-0005eV-1B;
-	Tue, 17 Jun 2025 23:28:09 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uReml-0006As-0G;
-	Tue, 17 Jun 2025 23:28:07 +0100
-Date: Tue, 17 Jun 2025 23:28:06 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
-	devarsht@ti.com, linux-kernel@vger.kernel.org,
-	tomi.valkeinen@ideasonboard.com
-Subject: Re: [PATCH] clk: Add clk_determine_rate function call
-Message-ID: <aFHr9sVnU3Nx6yh0@shell.armlinux.org.uk>
-References: <20250616103527.509999-1-j-choudhary@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r876Iish"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8544C4CEF1;
+	Tue, 17 Jun 2025 22:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750199398;
+	bh=E1R8tZTC4zFm0PByz0jO522hOoQZFenFe04oUA8okGU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r876IishAxc+pn2+pvqnZzqka17ASUqbTJbVRTqL20VRsiOnlfPiaMkAv817AJJGh
+	 sGqJN5H8LVXpj+EKPjnSUI4g4bTGgDzjvYDTevWAqxOIJW7cZMQnFRL/rKd5FUWHBK
+	 HgheC4z3wqYI5pUZgOIWex2e4xR9XOKNKtQEdUGLG6fC7ioQP9legtxFA6s9JQn8ZL
+	 aiRtEdfX93s7BmvRkX5toKuNEtqtwx//Ifm3dTZ/U1mv5DGcLJ7IT8KeNXQLRl14vx
+	 w11r8GkTWnZDuj78P/14I5ydg6GH7U5Wsl5SF6OjemIAnpyTIQxf4bVkYOTIlsAjQd
+	 KaO82TpsNYkCA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 1/9] lib/crypto/arm: move arch/arm/lib/crypto/ to lib/crypto/arm/
+Date: Tue, 17 Jun 2025 15:27:18 -0700
+Message-ID: <20250617222726.365148-2-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250617222726.365148-1-ebiggers@kernel.org>
+References: <20250617222726.365148-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616103527.509999-1-j-choudhary@ti.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 04:05:27PM +0530, Jayesh Choudhary wrote:
-> Add a function to determine if a particular rate can be set for a clock
-> with its argument being the clock and the desired rate so that it could
-> be exposed to other peripherals.
-> For example, the display controllers typically has to perform multiple
-> checks for supported display resolutions including those related to
-> clock rates. The controller has to check this way before it actually
-> enables the clock and has to do it multiple times (typically for each
-> mode), and therefore using the clk_set_rate when its not needed, does
-> not make sense.
+From: Eric Biggers <ebiggers@google.com>
 
-So what's up with using clk_round_rate(), which returns the clock rate
-that one would actually get if one calls clk_set_rate() with the the
-value passed into clk_round_rate() ?
+Move the contents of arch/arm/lib/crypto/ into lib/crypto/arm/.
 
-Why is clk_round_rate() not sufficient?
+The new code organization makes a lot more sense for how this code
+actually works and is developed.  In particular, it makes it possible to
+build each algorithm as a single module, with better inlining and dead
+code elimination.  For a more detailed explanation, see the patchset
+which did this for the CRC library code:
+https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org/.
+Also see the patchset which did this for SHA-512:
+https://lore.kernel.org/linux-crypto/20250616014019.415791-1-ebiggers@kernel.org/
 
+This is just a preparatory commit, which does the move to get the files
+into their new location but keeps them building the same way as before.
+Later commits will make the actual improvements to the way the
+arch-optimized code is integrated for each algorithm.
+
+arch/arm/lib/crypto/.gitignore is intentionally kept for now.  See
+https://lore.kernel.org/r/CAHk-=whu2fb22rEy6+oKx1-+NCHuWucZepvD0H2MD38DrJVKtg@mail.gmail.com/
+I'll remove it later after some time has passed.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ arch/arm/lib/Makefile                                        | 2 --
+ lib/crypto/Kconfig                                           | 2 +-
+ lib/crypto/Makefile                                          | 2 ++
+ lib/crypto/arm/.gitignore                                    | 2 ++
+ {arch/arm/lib/crypto => lib/crypto/arm}/Kconfig              | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/Makefile             | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-core.S       | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-glue.c       | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/chacha-glue.c        | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/chacha-neon-core.S   | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/chacha-scalar-core.S | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-armv4.pl    | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-glue.c      | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/sha256-armv4.pl      | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/sha256-ce.S          | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/sha256.c             | 0
+ 16 files changed, 5 insertions(+), 3 deletions(-)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/Kconfig (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/Makefile (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-core.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-glue.c (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/chacha-glue.c (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/chacha-neon-core.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/chacha-scalar-core.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-armv4.pl (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-glue.c (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/sha256-armv4.pl (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/sha256-ce.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/sha256.c (100%)
+
+diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+index 91ea0e29107af..d05dd672bcd9c 100644
+--- a/arch/arm/lib/Makefile
++++ b/arch/arm/lib/Makefile
+@@ -3,12 +3,10 @@
+ # linux/arch/arm/lib/Makefile
+ #
+ # Copyright (C) 1995-2000 Russell King
+ #
+ 
+-obj-y += crypto/
+-
+ lib-y		:= changebit.o csumipv6.o csumpartial.o               \
+ 		   csumpartialcopy.o csumpartialcopyuser.o clearbit.o \
+ 		   delay.o delay-loop.o findbit.o memchr.o memcpy.o   \
+ 		   memmove.o memset.o setbit.o                        \
+ 		   strchr.o strrchr.o                                 \
+diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
+index dce127a69f131..e14bef8e87af2 100644
+--- a/lib/crypto/Kconfig
++++ b/lib/crypto/Kconfig
+@@ -188,11 +188,11 @@ config CRYPTO_LIB_SHA512_ARCH
+ config CRYPTO_LIB_SM3
+ 	tristate
+ 
+ if !KMSAN # avoid false positives from assembly
+ if ARM
+-source "arch/arm/lib/crypto/Kconfig"
++source "lib/crypto/arm/Kconfig"
+ endif
+ if ARM64
+ source "arch/arm64/lib/crypto/Kconfig"
+ endif
+ if MIPS
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index 4a76169de251b..ddf04e2270f1e 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -100,5 +100,7 @@ obj-$(CONFIG_MPILIB) += mpi/
+ 
+ obj-$(CONFIG_CRYPTO_SELFTESTS)			+= simd.o
+ 
+ obj-$(CONFIG_CRYPTO_LIB_SM3)			+= libsm3.o
+ libsm3-y					:= sm3.o
++
++obj-$(CONFIG_ARM) += arm/
+diff --git a/lib/crypto/arm/.gitignore b/lib/crypto/arm/.gitignore
+index 670a4d97b5684..f6c4e8ef80dae 100644
+--- a/lib/crypto/arm/.gitignore
++++ b/lib/crypto/arm/.gitignore
+@@ -1,2 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++poly1305-core.S
++sha256-core.S
+ sha512-core.S
+diff --git a/arch/arm/lib/crypto/Kconfig b/lib/crypto/arm/Kconfig
+similarity index 100%
+rename from arch/arm/lib/crypto/Kconfig
+rename to lib/crypto/arm/Kconfig
+diff --git a/arch/arm/lib/crypto/Makefile b/lib/crypto/arm/Makefile
+similarity index 100%
+rename from arch/arm/lib/crypto/Makefile
+rename to lib/crypto/arm/Makefile
+diff --git a/arch/arm/lib/crypto/blake2s-core.S b/lib/crypto/arm/blake2s-core.S
+similarity index 100%
+rename from arch/arm/lib/crypto/blake2s-core.S
+rename to lib/crypto/arm/blake2s-core.S
+diff --git a/arch/arm/lib/crypto/blake2s-glue.c b/lib/crypto/arm/blake2s-glue.c
+similarity index 100%
+rename from arch/arm/lib/crypto/blake2s-glue.c
+rename to lib/crypto/arm/blake2s-glue.c
+diff --git a/arch/arm/lib/crypto/chacha-glue.c b/lib/crypto/arm/chacha-glue.c
+similarity index 100%
+rename from arch/arm/lib/crypto/chacha-glue.c
+rename to lib/crypto/arm/chacha-glue.c
+diff --git a/arch/arm/lib/crypto/chacha-neon-core.S b/lib/crypto/arm/chacha-neon-core.S
+similarity index 100%
+rename from arch/arm/lib/crypto/chacha-neon-core.S
+rename to lib/crypto/arm/chacha-neon-core.S
+diff --git a/arch/arm/lib/crypto/chacha-scalar-core.S b/lib/crypto/arm/chacha-scalar-core.S
+similarity index 100%
+rename from arch/arm/lib/crypto/chacha-scalar-core.S
+rename to lib/crypto/arm/chacha-scalar-core.S
+diff --git a/arch/arm/lib/crypto/poly1305-armv4.pl b/lib/crypto/arm/poly1305-armv4.pl
+similarity index 100%
+rename from arch/arm/lib/crypto/poly1305-armv4.pl
+rename to lib/crypto/arm/poly1305-armv4.pl
+diff --git a/arch/arm/lib/crypto/poly1305-glue.c b/lib/crypto/arm/poly1305-glue.c
+similarity index 100%
+rename from arch/arm/lib/crypto/poly1305-glue.c
+rename to lib/crypto/arm/poly1305-glue.c
+diff --git a/arch/arm/lib/crypto/sha256-armv4.pl b/lib/crypto/arm/sha256-armv4.pl
+similarity index 100%
+rename from arch/arm/lib/crypto/sha256-armv4.pl
+rename to lib/crypto/arm/sha256-armv4.pl
+diff --git a/arch/arm/lib/crypto/sha256-ce.S b/lib/crypto/arm/sha256-ce.S
+similarity index 100%
+rename from arch/arm/lib/crypto/sha256-ce.S
+rename to lib/crypto/arm/sha256-ce.S
+diff --git a/arch/arm/lib/crypto/sha256.c b/lib/crypto/arm/sha256.c
+similarity index 100%
+rename from arch/arm/lib/crypto/sha256.c
+rename to lib/crypto/arm/sha256.c
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.49.0
+
