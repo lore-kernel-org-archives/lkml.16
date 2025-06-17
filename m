@@ -1,66 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94482DE1E4;
-	Tue, 17 Jun 2025 13:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD72E266C;
+	Tue, 17 Jun 2025 13:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168093; cv=none; b=PR9ynY09Kjoo4yTw2UfZNonmWlxPIdA6Fqz8YbYqaL8b71UU4ncfwTjEra3S/vEQm53Bh6i9P4JngGS7gbPt/oTJUloCtECpALB4FfIHhcy2sfDcdJ9zKNkNctR6hIhkiCMgmnQgcWKrp3fzF884sMSuvMaOsBiE5jqW3j/eGyo=
+	t=1750168120; cv=none; b=eKR3ILGtoF5vGd/20CQ+DVvSl0QOjcvjVmk9Yfh+BN2dJVNfMM7f692IuyyEfCyGBrPfvd/Z3f1PPJ5iqXCeal+j54d37of+JJRdGmAAsNd6ughnt8kyU6F7pGiBhnwojchi9NGF+IHqC49nTSarr9Mv9MM/95HwG608ZES2IlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168093; c=relaxed/simple;
-	bh=fd4y+lDswDvbSpTkQLBi/lqOL1Y42ddHNclJLmZUuQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kbBY0Gi3yujMwYPMFHOXI8whftI2g53F4abHNIOPuGe9zgdkUcNZky7YoqlPGFJhbLTQqEURiWouo9EhRlMRrZ0zxLhaiIsCvKw/Cjk8+MSnBRtT8zGjyP14PgSw41egAbHOjHdN2x7qorp6Ok8miIux3E5jUYbwQUwyPFO80oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLk18/tS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750168120; c=relaxed/simple;
+	bh=CC0pQmZOifV+kXRbEIORrVEDtXPMfO7f7/1stjrjXiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZZO9GY7Vssq4Cs5AnmJAIIwfwrv+8h0sKn6/tXGUuJS8EBVEMqjuQv051uy27VXR1+vmPFtfdWWNr33DerWJwXOqMCyh+w3zU4SHs6ZKLX61Aj1kR6mNsxvxJQgU3XB8xHNh1p1Fu+B01B0uKH1qh+eeIW6PZ1qEyW0QMhLoOOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPo3mMxF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLk18/tS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2437C4CEE3;
-	Tue, 17 Jun 2025 13:48:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPo3mMxF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD46C4CEE3;
+	Tue, 17 Jun 2025 13:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750168093;
-	bh=fd4y+lDswDvbSpTkQLBi/lqOL1Y42ddHNclJLmZUuQE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TLk18/tSDBzkkIUumdoXHrKsGoitzuViBjlMEY2DkRatD9c6rWnhabdhB5/EyeJL8
-	 1TGuhdbvASYBkuTUuIXU0WXsnezRSj/hu0h1WNw3ONtHdbdfRZ+deN5LvhUNJ7n+2s
-	 CO2qzWZX9cFejbaCuIVxdWY9G/p+tTFgVJNIGSzGUR1s8JZRo2db7sn1EHWLf67Ssu
-	 jOPqXAaiVqOCJmFz/oTn7Hc/PRr52FycywqDLUugd+I1nxBIAUTAuAuJoMDHfU7KU4
-	 mLRB2YcXvu18E/TnmIN0LWTit5D6Bbyjsv1hqXYnwVgemgcREbJZZVq0D19A8AJFCV
-	 1UR+RmD/sKCGw==
-Date: Tue, 17 Jun 2025 06:48:11 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, Shuah Khan
- <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, gustavold@gmail.com
-Subject: Re: [PATCH net-next v3 4/4] netdevsim: account dropped packet
- length in stats on queue free
-Message-ID: <20250617064811.0d4e1490@kernel.org>
-In-Reply-To: <aFFsh6kFOkhGOO7Q@gmail.com>
-References: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
-	<20250617-netdevsim_stat-v3-4-afe4bdcbf237@debian.org>
-	<20250617055934.3fd9d322@kernel.org>
-	<aFFsh6kFOkhGOO7Q@gmail.com>
+	s=k20201202; t=1750168119;
+	bh=CC0pQmZOifV+kXRbEIORrVEDtXPMfO7f7/1stjrjXiM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nPo3mMxFDXUTJA5p3aSGonT/Ar7T710bZtU3yL/w0GY5uc9pExDGlTZGbLNJSz+L9
+	 T5KmmvlpaXGw4iV1hZaXnYkRo6D2CcpJ0zkKsjXVP1Ljc8Hyr/5ca3BMcc/v8jb0s5
+	 e/s7oGvcbKQaMM2NVBYYrtQVZWh4jTWjWBGkygy+/vrFi6bBgKIo8Bc2HCMVslbvMk
+	 o8dtRf2xS8H1Rjh1SET86k18k1UYq+EHD4b23eAt/6y0h2hCUlWulRoPXNz56vptB8
+	 SoqAArWFA80/7gpylEkqyr9CBkCmy1CvXUrdc83+aCrtDptSe6NLxXb8RybvSmRzWv
+	 sZ/agH8cBl4Cw==
+From: Chuck Lever <cel@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] NFSD: Avoid multiple -Wflex-array-member-not-at-end warnings
+Date: Tue, 17 Jun 2025 09:48:34 -0400
+Message-ID: <175016808512.336273.15483620286888395120.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <aFCbJ7mKFOzJ8VZ6@kspp>
+References: <aFCbJ7mKFOzJ8VZ6@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Jun 2025 06:24:23 -0700 Breno Leitao wrote:
-> > here we are in process context and debug checks complain about the use
-> > of this_cpu_ptr(). Let's wrap this in local_bh_disable() / enable() ?  
+From: Chuck Lever <chuck.lever@oracle.com>
+
+On Mon, 16 Jun 2025 16:31:03 -0600, Gustavo A. R. Silva wrote:
+> Replace flexible-array member with a fixed-size array.
 > 
-> Thanks. I was able to reproduce it. Your suggestion avoids the complain.
-> I suppose we should just wrap dev_dstats_rx_dropped_add(), right?
+> With this changes, fix many instances of the following type of
+> warnings:
+> 
+> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:763:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:669:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:549:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> [...]
 
-I think so. I hope that makes the preempt checker happy.
-The reason for bh_disable rather than preempt_disable() is that we 
-should only update the stats from one context, the NAPI poll context.
-So we also need to prevent races with another NAPI running on the same
-core while we free an old queue.
+Applied to nfsd-testing, thanks!
+
+[1/1] NFSD: Avoid multiple -Wflex-array-member-not-at-end warnings
+      commit: 9aa83533d2e694c84d7d09f9c8eab29ad9f2adef
+
+--
+Chuck Lever
+
