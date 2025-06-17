@@ -1,199 +1,139 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F391AA1DB;
-	Tue, 17 Jun 2025 14:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9997B2CCDE;
+	Tue, 17 Jun 2025 14:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171249; cv=none; b=XiVYfWrjPDvwUcRkIJk6sQcsTPkpIpnIQIIq2BHpTEbbX/dv8VwMCz7c8k1HTJaew+F79w8ATAj3JOMbHDxnNosQq35PQupci8S5bOxLIM0YHWiCBNOq528RlOnSf1erQJIceh8r+1PkDodfJiqCLQqByyWFDEdANtCgoBXUf/w=
+	t=1750171270; cv=none; b=d0KAOAvHaM4wIjVryUoZ6qsFaiHnMremXbdi2KGdR95OO6Z3d+/YjO8kxXIrerNNUPyHm5fYQZDDeclSH/wCKg91m1SUSMLmW5Z9xlf79nF3cBZQrJLWQrgUsfNe8p/qPzPLUTjScXcEEHJUfiqjo1VGdqRtdBgqiKwAAxU0zSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171249; c=relaxed/simple;
-	bh=0mb3vGBaE0i3M/SUNhFjCQPgtSzD466nZlwMNKnyljA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VzdxU6iq5zlHQz78oag1VZYQWHV4+zwERNBxxzh3r22DjYNm07IBCYAb+8U+4FPKxlnkvRari9QDICPrTfHs99rdC67DBaVa5aq7tJeSlfIafF/3yniGjoiqHkXEakLtqMuLh2u8vdlQUBI0BfJo2dVfTxv0riEMan6vn3TxxgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BAKxBJ+o; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750171270; c=relaxed/simple;
+	bh=XdJb0Fw4Rr6pT0ZoN+vrT8BJNFqp2n7RZt9bLdoicy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcCjAhgg0L38niekZ8SEGzwmokzFOZhik6zFX4v9WIA+cQdIhBqStlANqZmvRg5Sh+RkBPVU8J3Nwe0/nWO98zHLas07iBkOq4Vj5kdK3i9pX1xie+Hs3nftcQ8IT6pH/dlLJINo3Kf25133l94S8yaO3YRq+CnammmOIrWxvJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSTCRk8U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAKxBJ+o"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32aabfd3813so50183671fa.3;
-        Tue, 17 Jun 2025 07:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750171246; x=1750776046; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nA6qtEQYSObjmTSjXfycB+WycPATkd4P72jiPnHCAA4=;
-        b=BAKxBJ+oh49SUWdP7uSbWB8VFlU9MA5hSvKeIjAz6IFdh73Ji3BKX243i2m2vblQE1
-         bXpVK6pP11myeoWq80Yq2dktPvc2WVFjuVSSEMa5m0MuAsJHccXM3l78e9rVNfF8sP4r
-         ZF8lAy3SjA9sdp28LyOVdAKMvDsRC6mvlMLJuumjW3+FJW1AVAfOVEiT4ZilEHelPxvO
-         Yt/Kw1MzWJmT3FzLndABsEqtmgDdkwBlWI7gDwj8MUTIFiBvSpF2i0rsYCARZXRtp3r1
-         CRyfBpvtmYQjJzVCyN6f8xZBz/q+gU2+DDq8A6c0GmlokVYdnzkp3/NXWCHFd1xFBqyv
-         abnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750171246; x=1750776046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nA6qtEQYSObjmTSjXfycB+WycPATkd4P72jiPnHCAA4=;
-        b=uTVUXChb9FGlEELZyNBQ/2qporOEttZx4ZDzpOXKWIxhYZj6klG8sYcueTrAVY1NYT
-         pLz6JxTzis6wLuMDW9vFEVzP3Htr0uik+vJKRUksh8kFrgYbOIlitCnXWOMeRhVsMZUK
-         9fP/LGWzQHp0XjgAk/MwDd2W+Xfoa5ie8Esu9IIwe+paJtZ8fkkg2hUNk3906qeXZSeY
-         fSA5Y0Vd9GIe/K/OvZbwWw7I1E605aH67FxX9LHP9EiVJNKkjvFkPwmDYzbXEBpcFLl3
-         WxzYd1/2UYiid/UWR5a7/VIMgKC+nl8/xN6aBZtVcqZkMlYRjJJGjLXkmelBQTkN7PG5
-         ygRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCSJfSbzLTPCQxvAduIKxXHSl3WoS84vRlgVKH0g3w+pKfRI9CFmM1WDBMat2y4AoAKUXjgF9pFJLAFgz/sZU=@vger.kernel.org, AJvYcCUk0y6RxSAtqlt4ilsJ8QhjdqrETnUqrLxzWYojJ4qwbYuZZnu8vaC9Rl3MpNYd32CmOlp4rGKg9rB6rrk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvutypLY+CDOSqfNzVnekkSj3/HaQ2SNqDS+NmLLc7x9mI+JTp
-	iz2+lRCiylPtJOFpI+7XEwo2Lb+XxcbYhdU9ZTecN4m+D8jM/LogoxsuZZDzR8upsvGPnbkWXTL
-	NQm8jHrvwGqGVq2otbK5KvlP3k9i5QyA=
-X-Gm-Gg: ASbGncsnROBNWWkBt+1Yfex2cakwnDlqSh5fkQ6qHpu39Wzo8amwvGUEMxgG3k9kLdt
-	4SRm9NGUVMpwCx07nOdLvmxdSD6wVaXrNoh/gl1vqncNrFOoXUTd/bZRGmTeSlKoERTLsG+aWqC
-	Pq7fyjWOajtqEDZxmzZKMqh4kUSVeliLiQXe/4zD7P0+E4S5v7hCwIW0sHjMQ=
-X-Google-Smtp-Source: AGHT+IGkuuKjtvKBNl3QmjTudRGbGevTIb7oBUqZsL6XetkWnP5IqJY5hvQVch1DK/G++9+iLJKtCSGjfz4FCwve8jA=
-X-Received: by 2002:a2e:bc15:0:b0:32a:7122:58cc with SMTP id
- 38308e7fff4ca-32b4a2e24cbmr39908461fa.6.1750171245443; Tue, 17 Jun 2025
- 07:40:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSTCRk8U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD93C4CEE3;
+	Tue, 17 Jun 2025 14:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750171269;
+	bh=XdJb0Fw4Rr6pT0ZoN+vrT8BJNFqp2n7RZt9bLdoicy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dSTCRk8Uwi677vKg6k6lOAWXdtA+M+meFSVzjlFArZ9bvcH54PzhYbqd7CJlg63T/
+	 xJ0+p8rTVazZ6/wO72ITTYo2jiM5Tbugln+L3yIBtD9EBCyLvlK3Uf+wo/ABwAm3Vy
+	 fPAoXHXkEsLyBw49G9HKJjcjV6mofeyhQa4lbM/8mb3sWMomcQgyA7/LvkGC8yKDG9
+	 odnD5n9ZIAUz+x2GSLx7JB/j6pW2RBIQtlbDvHkin8zrtZV/xYDMLS6fmj6g31qdWG
+	 HZkv+V2DMP0ZzeS0iAymfIqkXqCiWdwpzWqjTJXdU4eV1g/aaKOhKSpv5Kz+VAmX7Z
+	 jrf/zUgEtABtw==
+Date: Tue, 17 Jun 2025 16:41:00 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 3/9] rust: pwm: Add driver operations trait and
+ registration support
+Message-ID: <aFF-fNOOEzoiomFu@pollux>
+References: <20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com>
+ <CGME20250617140838eucas1p2a31af5a73297580c2421263c1c6ba700@eucas1p2.samsung.com>
+ <20250617-rust-next-pwm-working-fan-for-sending-v3-3-1cca847c6f9f@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617-opaque-from-raw-v1-1-a2e99efa3ba2@google.com>
-In-Reply-To: <20250617-opaque-from-raw-v1-1-a2e99efa3ba2@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 17 Jun 2025 10:40:09 -0400
-X-Gm-Features: AX0GCFv7lU3SvnR9E3OzendU9NdImRIdabiEAKbvNCS_347sx3bZCnind6a_fJU
-Message-ID: <CAJ-ks9=Sy3S8Rir-RftkF7_ZCV4WVsCOPHYX3WN41MY1ukFwKQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: types: add Opaque::from_raw
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Miguel Ojeda <ojeda@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, dri-devel@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617-rust-next-pwm-working-fan-for-sending-v3-3-1cca847c6f9f@samsung.com>
 
-On Tue, Jun 17, 2025 at 9:38=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> Since commit b20fbbc08a36 ("rust: check type of `$ptr` in
-> `container_of!`") we have enforced that the field pointer passed to
-> container_of! must match the declared field. This caused mismatches when
-> using a pointer to bindings::x for fields of type Opaque<bindings::x>.
->
-> This situation encourages the user to simply pass field.cast() to the
-> container_of! macro, but this is not great because you might
-> accidentally pass a *mut bindings::y when the field type is
-> Opaque<bindings::x>, which would be wrong.
->
-> To help catch this kind of mistake, add a new Opaque::from_raw that
-> wraps a raw pointer in Opaque without changing the inner type.
->
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Tue, Jun 17, 2025 at 04:07:26PM +0200, Michal Wilczynski wrote:
+> +/// Manages the registration of a PWM chip, ensuring `pwmchip_remove` is called on drop.
+> +pub struct Registration {
+> +    chip: ManuallyDrop<ARef<Chip>>,
 
-Reviewed-by: Tamir Duberstein <tamird@gmail.com>
+Why is this ManuallyDrop when you call ManuallyDrop::drop(&mut self.chip) as
+the last thing in Registration::drop()?
 
-> ---
->  rust/kernel/drm/device.rs  | 4 +---
->  rust/kernel/drm/gem/mod.rs | 4 +---
->  rust/kernel/lib.rs         | 7 +++++++
->  rust/kernel/types.rs       | 5 +++++
->  4 files changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
-> index 624d7a4c83ead64b93325189f481d9b37c3c6eae..763c825d53aaba4f874361b78=
-5587b2c5129d49a 100644
-> --- a/rust/kernel/drm/device.rs
-> +++ b/rust/kernel/drm/device.rs
-> @@ -135,11 +135,9 @@ pub(crate) fn as_raw(&self) -> *mut bindings::drm_de=
-vice {
->      ///
->      /// `ptr` must be a valid pointer to a `struct device` embedded in `=
-Self`.
->      unsafe fn from_drm_device(ptr: *const bindings::drm_device) -> *mut =
-Self {
-> -        let ptr: *const Opaque<bindings::drm_device> =3D ptr.cast();
-> -
->          // SAFETY: By the safety requirements of this function `ptr` is =
-a valid pointer to a
->          // `struct drm_device` embedded in `Self`.
-> -        unsafe { crate::container_of!(ptr, Self, dev) }.cast_mut()
-> +        unsafe { crate::container_of!(Opaque::from_raw(ptr), Self, dev) =
-}.cast_mut()
->      }
->
->      /// Not intended to be called externally, except via declare_drm_ioc=
-tls!()
-> diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-> index 4cd69fa84318c3ff2cec57949e9bab05559a3c2f..5b80c248761bb39914a63ad79=
-47aa8d3779054ef 100644
-> --- a/rust/kernel/drm/gem/mod.rs
-> +++ b/rust/kernel/drm/gem/mod.rs
-> @@ -125,11 +125,9 @@ fn as_raw(&self) -> *mut bindings::drm_gem_object {
->      }
->
->      unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> &'a=
- Self {
-> -        let self_ptr: *mut Opaque<bindings::drm_gem_object> =3D self_ptr=
-.cast();
-> -
->          // SAFETY: `obj` is guaranteed to be in an `Object<T>` via the s=
-afety contract of this
->          // function
-> -        unsafe { &*crate::container_of!(self_ptr, Object<T>, obj) }
-> +        unsafe { &*crate::container_of!(Opaque::from_raw(self_ptr), Obje=
-ct<T>, obj) }
->      }
->  }
->
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 6b4774b2b1c37f4da1866e993be6230bc6715841..d2402d42b8776c9399a7dfdbe=
-7bd61de7ef8dba3 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -204,6 +204,13 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
->
->  /// Produces a pointer to an object from a pointer to one of its fields.
->  ///
-> +/// If you encounter a type mismatch due to the [`Opaque`] type, then us=
-e [`Opaque::raw_get`] or
-> +/// [`Opaque::from_raw`] to resolve the mismatch.
-> +///
-> +/// [`Opaque`]: crate::types::Opaque
-> +/// [`Opaque::raw_get`]: crate::types::Opaque::raw_get
-> +/// [`Opaque::from_raw`]: crate::types::Opaque::from_raw
-> +///
->  /// # Safety
->  ///
->  /// The pointer passed to this macro, and the pointer returned by this m=
-acro, must both be in
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 22985b6f69820d6df8ff3aae0bf815fad36a9d92..a79295500b3c812326cea8a9d=
-339a8545a7f457d 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -413,6 +413,11 @@ pub const fn get(&self) -> *mut T {
->      pub const fn raw_get(this: *const Self) -> *mut T {
->          UnsafeCell::raw_get(this.cast::<UnsafeCell<MaybeUninit<T>>>()).c=
-ast::<T>()
->      }
+I think you don't need ManuallyDrop here.
+
+> +}
 > +
-> +    /// The opposite operation of [`Opaque::raw_get`].
-> +    pub const fn from_raw(this: *const T) -> *const Self {
-> +        this.cast()
+> +impl Registration {
+> +    /// Registers a PWM chip (obtained via `Chip::new`) with the PWM subsystem.
+> +    ///
+> +    /// Takes an [`ARef<Chip>`]. On `Drop` of the returned `Registration` object,
+> +    /// `pwmchip_remove` is called for the chip.
+> +    pub fn new(chip: ARef<Chip>, ops_vtable: &'static PwmOpsVTable) -> Result<Self> {
+
+For the reason mentioned in [1] this should either return Result<Devres<Self>>
+or just Result, if you use Devres::new_foreign_owned() (see also [2]).
+
+In case of the latter, the Registration instance is automatically dropped once
+the parent device is unbound.
+
+If you go with the first, you can drop the Devres<Registration> (and hence the
+inner Registration) at any arbitrary point of time, but Devres will still
+gurarantee that the inner Registration is dropped once the parent device is
+unbound, i.e. it can't out-live driver unbind.
+
+This guarantees that the &Device<Bound> instance you provide in the callbacks
+below is guaranteed to be valid.
+
+[1] https://lore.kernel.org/lkml/aFF7qqlexxh540FW@pollux/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/drm/driver.rs#n134
+
+> +        // Get the raw C pointer from ARef<Chip>.
+> +        let c_chip_ptr = chip.as_raw().cast::<bindings::pwm_chip>();
+> +
+> +        // SAFETY: `c_chip_ptr` is valid (guaranteed by ARef existing).
+> +        // `ops_vtable.as_raw()` provides a valid `*const bindings::pwm_ops`.
+> +        // `bindings::__pwmchip_add` preconditions (valid pointers, ops set on chip) are met.
+> +        unsafe {
+> +            (*c_chip_ptr).ops = ops_vtable.as_raw();
+> +            to_result(bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()))?;
+> +        }
+
+Please split this up into separate unsafe blocks.
+
+> +        Ok(Registration {
+> +            chip: ManuallyDrop::new(chip),
+> +        })
 > +    }
->  }
->
->  /// Types that are _always_ reference counted.
->
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250617-opaque-from-raw-ac5b8ef6faa2
->
-> Best regards,
-> --
-> Alice Ryhl <aliceryhl@google.com>
+> +}
+> +
+> +impl Drop for Registration {
+> +    fn drop(&mut self) {
+> +        let chip = &**self.chip;
+> +        let chip_raw: *mut bindings::pwm_chip = chip.as_raw();
+> +
+> +        // SAFETY: `chip_raw` points to a chip that was successfully registered via `Self::new`.
+> +        // `bindings::pwmchip_remove` is the correct C function to unregister it.
+> +        unsafe {
+> +            bindings::pwmchip_remove(chip_raw);
+> +            ManuallyDrop::drop(&mut self.chip); // Drops the ARef<Chip>
+> +        }
+
+Same here, but I don't think ManuallyDrop is needed anyways.
+
+> +    }
+> +}
