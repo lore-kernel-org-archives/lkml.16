@@ -1,594 +1,247 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261332F237C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90AB2ECD39;
+	Tue, 17 Jun 2025 15:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175790; cv=none; b=DCK+3dsNhSfpFobSXsBC7wlBiMMAHhJX7wpwl/U7qk/p0A1QbPWM4lHU7cTpRIZvfiA69ycJ/L9DWpIylbb+Q7176BelTRhRfVIj90DPXZYEFochbZZ4KYYX+qgR+pa05ACscDQ5QsoOCXbG5Q1bz7xpNRBgN7gESYzzycpWTpo=
+	t=1750175802; cv=none; b=UCc/mjVe33HgSK6aL2Bx/C9GXMf/mbL1I1dE/vguD+IPgCFx5p7StC+ksrUqHg5F5wnaTUvUBzmIlXV64fKhe/8aqSIVqFPmCCdEuCJXnBAB7+3AKAIyYhVPzh2MYB4I0s4hlatzpYF8pxoSAOBDPQkkmTB1LFOEsUDl8kZqzl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175790; c=relaxed/simple;
-	bh=RGRnkECr5n3/DDT27ZVZu7IMiTSokd33b4A2E+dwDMQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UystUOZIPORvIylWQJWgfMgjz2I/rAMFdqlgl023Ktq5Qi5WuTm7BqThWnpf8PSaZwwUW7YMNv8PmldesKch94RaiWQIJtUpO0tUcRVmYJo+aefelN5G/FJ+7qH4bOXd+Khqnf+49upF0jaE8jNeJBxEQ/4EZZMPTYCX/ZCTZ2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86cf306fc68so1233349239f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:56:27 -0700 (PDT)
+	s=arc-20240116; t=1750175802; c=relaxed/simple;
+	bh=8rNek47AWJ7c3OQCNyRhFsBSu18ky7i1iuDgjsjnfC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9QuWj04naDxWZeTc6ftKD5O63NWmtFeZTzXNSTlmHwaGhYi92ZpKDesgDi5gTlDYdB5TFesuZOdN3VIK1C9SQVKiVwGEc3rJ5lxlxWBD4Ocag2tavdxWAmtMy2p4LFQ+6u7bL9sScBHxZXlHWXSJHbXp59GvNqXEckKf+5BjP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUKpQtih; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUKpQtih"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso4590393b3a.2;
+        Tue, 17 Jun 2025 08:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750175800; x=1750780600; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8zXKsh95z4tLFSU5Ktbp25I6PYqU0qXoCzfmzGnKQ4w=;
+        b=hUKpQtih+kna1KEhs/VCceSafDQTWLnYJt3jnjHXlfoWcMSTUaoQWNQ6ca/YjVU6T5
+         1Qy3NnWT60QZ7N1HXM/pMXm8bbLCCW/soU8s5j5b0n+h+4dpjgvOU0wcT4Kh5fYHCYmj
+         8GNMbFKlJwBN1CfOgBIEo7sIJxVPxuM+G7QZ5yw6gLEcHBXp5cLFyR3hXjP+NaNgOaBr
+         RD/8akPr8mx6NiCIh6CY/W7k0f4M1wHRXiO0VLDVaG9KdgNqYjOckIBqV5/Nu0PHYcd6
+         zxJARELV0qMxdFfZtseF/3bTpPHNulCNWVzoDiOrLgb7gBnt1vS+Q1SU1HwoL8qnXOdS
+         OBxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750175787; x=1750780587;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LIgPSCKjElwDdYYwEQMlrvQkf1oqMpFPHHeVWEqnJOQ=;
-        b=pMLmeTpWhMIOy7c1j5zbnKkxmF3rcUIGAJshQXbH4sIHC94oJ0zOmjnAXjykqkdDtm
-         +yCn812CFtIrC+Ub9XrYU9lXXpyG7jBtjUB2pnukF7r/KNgd5x+Wf6pJrH5SuqSItn/S
-         gG6GmgUcvWRKoDkt9ouyx/7uTSu/81kr4UNzM5YZXlvS41ONizo8k5VICLewBZdveir/
-         lUaCaXgGF23vZ/cSBxJ0KWAtkZojiUs5A2koxOOZryYmjtV1aPMgKcCC7xqt8I8xGhGQ
-         GHkfJE/kX9LbuRxSJdPdySu6bi5u5LzH68aEbE98nKJUbNdLgL2QYjn0hjJx9qmYrpi2
-         G8Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCW1VZtWbrVv3bUiicp5ANHBEF97bsCmGdhkgo+dRdjq46Ck6ZmkEEe9jZUCIqxGFLv9G+L/ince3IR9x0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTISE9y/QXoojuKRtADauMrwyQ9OIUP6hQK+HfLlJezihYK1Zd
-	nOpwgNbzFsGUuMqLzyjOL3eYEcBE/h4M0h0OZd9eecyddCcevv96LdzoveK3vsyiL4NYfqe4DYz
-	xFV0bt+KJAgq8Ygmk0oKkpAcq/r8hCU/GiBeULg4qNGVrGnYne8dnyCihVak=
-X-Google-Smtp-Source: AGHT+IEUi7GFMDpl47GaU3HqBMpHHwtQ82OzDls8DjvbcpguVzeHDyvfJzY5F8Y2yIljaOGbV/Wn6TWn5H1ywN4pYKoTD2MJpFW1
+        d=1e100.net; s=20230601; t=1750175800; x=1750780600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8zXKsh95z4tLFSU5Ktbp25I6PYqU0qXoCzfmzGnKQ4w=;
+        b=hICEb1hSneQIsSsmk519LQPUTE9/OkuwjExKnp6Tef9nmrwxbD7qGctb6m9866rXJO
+         4Nt+ohyI5cdMKvTUToD8i84cktIfaePjnnN2e6/WvDHEAMKbu/nI1A7Tnf18M1W7S/5V
+         juc0+K9TaDV6WcKTfkgw1VDHeV6AgZ6osJq/40fIMQ+Y2egN5e4m2zMXngBz/yzd5reL
+         7eDGVe2ozqQzwey3sQdX3X4+LaYnW5hWs9wG1d942nPaiL89E+xf1w909Fa2APhC8qG0
+         /SFxU64g0MbbJQrWHQs4ecAzsZqnIFReeAaazERCtPQS1sr2iRwNjjCTERP/QkZrswJL
+         p0BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUz7MNizrQ2afryK3HIuFX98FgKmf3NBsHyRVJuq1RJJb5A5GD7MDNoYMvQW9y39kPHh8GZfzGNIRO1TZA=@vger.kernel.org, AJvYcCVG/IeCExy5Y09V28PKew9BxhWzxbii+WRr+V4kZnv8YZUqcCsXEdWiCc3HFS7RrdNg5aC4DRej7xE+4qn9iL4wgw==@vger.kernel.org, AJvYcCVQQzyXqI7D5FvYi1eqEqRhOzuMPFkZEPKJa47r1JM/dxNDNO5TZZcIEaViK3MkUVux5vdWPlcCne0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO5wFO5LLf6LunO4Nmu/gzq0dynQ9z5yQ3A4rjpePbQrE2fUpW
+	RkWhurWSI41Gx3BwDzQaPrNDFd4f3GZjrvy7wvteA1L/Q7cEdcJ2YdjM
+X-Gm-Gg: ASbGnctPJ/cWB41F+j9poJaZhF6VohWaEn/Nmi1ERwDx07+M09HS118dIm62flKfbq3
+	TZB1iWfjDYr0aDIlcUGrcVGzjKr/DeFGD1Inf2YxlwFrAACmxHboyzR0Do/vfLuNLK71r63SkuN
+	Ogn5OpSvvBVreRFoVkmzYvHR+yLK1B36FYAgW33DG1X0ecEiRn7x/JuFWhNYs+lUGVDBY8V2SDV
+	LEZNWp5ByB3xB992pYdgBvmWbwmUtrWDV26ZXt1j29y1n53xh5YgjUU2thC1UZGYTjvonHowM52
+	tZrXCQ6k/Wak75D779AsAHSCNKDQsN+bB1gw/NmS7/9YC5j3LmTuYPmak58p
+X-Google-Smtp-Source: AGHT+IHFnPKsNBS8sHnXnr7/4mKdYPy1oLLOr2OOz2DUmnatLehoE/ZnOQpYhDpt1UFC6Pg8dUUTNA==
+X-Received: by 2002:a05:6a00:230d:b0:742:a7e3:7c84 with SMTP id d2e1a72fcca58-7489cf97bf8mr17659302b3a.13.1750175799929;
+        Tue, 17 Jun 2025 08:56:39 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748d8a0081asm1385047b3a.14.2025.06.17.08.56.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 08:56:39 -0700 (PDT)
+Date: Tue, 17 Jun 2025 12:56:34 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	"Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
+ pre-booted remote cores
+Message-ID: <20250617155634.5hvqjibutetxjabv@hiago-nb>
+References: <20250602131906.25751-1-hiagofranco@gmail.com>
+ <20250602131906.25751-4-hiagofranco@gmail.com>
+ <PAXPR04MB84594F9ABDF0728D9A71FAFE886CA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250609173115.qecc2noswkcgr3hm@hiago-nb>
+ <PAXPR04MB8459F651D1D0AC8C51F292A48875A@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250612170317.k3cok3utmiy5ptq3@hiago-nb>
+ <20250616160511.wynya4ezbj6nafkd@hiago-nb>
+ <20250617023958.GB30636@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:198e:b0:3dc:7a9a:44d5 with SMTP id
- e9e14a558f8ab-3de07ced270mr156209075ab.22.1750175787196; Tue, 17 Jun 2025
- 08:56:27 -0700 (PDT)
-Date: Tue, 17 Jun 2025 08:56:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6851902b.a70a0220.395abc.0223.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Write in bch2_dirent_init_name
-From: syzbot <syzbot+894877f2c4dd5fdea634@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617023958.GB30636@nxa18884-linux>
 
-Hello,
+On Tue, Jun 17, 2025 at 10:39:58AM +0800, Peng Fan wrote:
+> On Mon, Jun 16, 2025 at 01:05:11PM -0300, Hiago De Franco wrote:
+> >Hi Peng,
+> >
+> >On Thu, Jun 12, 2025 at 02:03:17PM -0300, Hiago De Franco wrote:
+> >> Hi Peng,
+> >> 
+> >> On Wed, Jun 11, 2025 at 03:27:09AM +0000, Peng Fan wrote:
+> >> > > 
+> >> > > Sorry for the delay.
+> >> > > 
+> >> > > I tested it now and there must be something missing on my U-Boot:
+> >> > > 
+> >> > > Disable imx8x-cm4 rsrc 278 not owned
+> >> > > Disable imx8x-cm4 rsrc 297 not owned
+> >> > > 
+> >> > > It removes my nodes from the DT before starting the kernel, so I cannot
+> >> > > attach. Do you know what should I do in this case?
+> >> > 
+> >> > In separate partition case, UBoot will check the permission
+> >> > by checking the rsrc-id, saying power domain id.
+> >> > 
+> >> > You may need to remove the power-domains property
+> >> > from M4 node.
+> >> 
+> >> Without the power-domains property, rproc gives me a kernel panic:
+> >> 
+> >> [    1.253234] remoteproc remoteproc0: imx-rproc is available
+> >> [    1.258501] remoteproc remoteproc0: attaching to imx-rproc
+> >> [    1.263950] Unable to handle kernel paging request at virtual address ffff80005ae57d39
+> >> [    1.271812] Mem abort info:
+> >> [    1.274575]   ESR = 0x0000000096000005
+> >> [    1.278299]   EC = 0x25: DABT (current EL), IL = 32 bits
+> >> [    1.282581] mmc0: SDHCI controller on 5b010000.mmc [5b010000.mmc] using ADMA
+> >> [    1.283607]   SET = 0, FnV = 0
+> >> [    1.293701]   EA = 0, S1PTW = 0
+> >> [    1.296815]   FSC = 0x05: level 1 translation fault
+> >> [    1.301699] Data abort info:
+> >> [    1.304545]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+> >> [    1.310079]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> >> [    1.315073]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> >> [    1.320367] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000096bf3000
+> >> [    1.327061] [ffff80005ae57d39] pgd=0000000000000000, p4d=1000000097085003, pud=0000000000000000
+> >> [    1.335750] Internal error: Oops: 0000000096000005 [#1]  SMP
+> >> [    1.341373] Modules linked in:
+> >> [    1.344414] CPU: 3 UID: 0 PID: 47 Comm: kworker/u16:3 Not tainted 6.16.0-rc1-00024-gfe5d6ab20714-dirty
+> >>  #857 PREEMPT
+> >> [    1.354932] Hardware name: Toradex Colibri iMX8QXP on Colibri Evaluation Board V3 (DT)
+> >> [    1.362837] Workqueue: events_unbound deferred_probe_work_func
+> >> [    1.368651] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> >> [    1.375601] pc : rproc_handle_resources.constprop.0+0x78/0x1d0
+> >> [    1.381421] lr : rproc_boot+0x368/0x578
+> >> [    1.385242] sp : ffff8000819f3990
+> >> [    1.388542] x29: ffff8000819f3990 x28: ffff80005ae57d3d x27: 0000000000000000
+> >> [    1.395671] x26: 0000000000000000 x25: ffff0000016ee038 x24: ffff800080f3c680
+> >> [    1.402793] x23: ffff8000813d6da8 x22: 00000000d999ad39 x21: ffff0000016ee000
+> >> [    1.409917] x20: 00000000266656c3 x19: ffff80005ae57d39 x18: 0000000000000006
+> >> [    1.417040] x17: ffff000002020600 x16: ffff000002020000 x15: 4addd15cca11c529
+> >> [    1.424164] x14: 73ebceed5d6cd787 x13: 4addd15cca11c529 x12: 73ebceed5d6cd787
+> >> [    1.431288] x11: 95a4e33b6b190664 x10: 9e3cdabdb09ca345 x9 : ab3734eafdd6fd1c
+> >> [    1.438412] x8 : d58a055de4cfb385 x7 : de97fab1791acbbe x6 : 9946d97107d0dcda
+> >> [    1.445535] x5 : ffff0000032b2c00 x4 : 00000000000003fc x3 : ffff0000032b2b80
+> >> [    1.452659] x2 : fffffffffffffff0 x1 : ffff8000814bd000 x0 : ffff8000814bd000
+> >> [    1.459786] Call trace:
+> >> [    1.462215]  rproc_handle_resources.constprop.0+0x78/0x1d0 (P)
+> >> [    1.468036]  rproc_boot+0x368/0x578
+> >> [    1.471510]  rproc_add+0x180/0x18c
+> >> [    1.474898]  imx_rproc_probe+0x3e4/0x540
+> >> [    1.475274] mmc0: new HS400 MMC card at address 0001
+> >> [    1.478799]  platform_probe+0x68/0xc0
+> >> [    1.484628] mmcblk0: mmc0:0001 Q2J55L 7.09 GiB
+> >> [    1.487400]  really_probe+0xc0/0x38c
+> >> [    1.487412]  __driver_probe_device+0x7c/0x15c
+> >> [    1.487424]  driver_probe_device+0x3c/0x10c
+> >> [    1.493941]  mmcblk0: p1 p2
+> >> [    1.495392]  __device_attach_driver+0xbc/0x158
+> >> [    1.495405]  bus_for_each_drv+0x84/0xe0
+> >> [    1.495417]  __device_attach+0x9c/0x1ac
+> >> [    1.500468] mmcblk0boot0: mmc0:0001 Q2J55L 16.0 MiB
+> >> [    1.503906]  device_initial_probe+0x14/0x20
+> >> [    1.503918]  bus_probe_device+0xac/0xb0
+> >> [    1.503929]  deferred_probe_work_func+0x9c/0xec
+> >> [    1.509863] mmcblk0boot1: mmc0:0001 Q2J55L 16.0 MiB
+> >> [    1.511117]  process_one_work+0x14c/0x28c
+> >> [    1.511132]  worker_thread+0x2cc/0x3d4
+> >> [    1.511142]  kthread+0x12c/0x208
+> >> [    1.511157]  ret_from_fork+0x10/0x20
+> >> [    1.517964] mmcblk0rpmb: mmc0:0001 Q2J55L 4.00 MiB, chardev (241:0)
+> >> [    1.518770] Code: 8b36c033 9100127c 54000924 d503201f (b9400261)
+> >> [    1.518777] ---[ end trace 0000000000000000 ]---
+> >> 
+> >> Currently I have the M4 partiton defined into the SCU code:
+> >> 
+> >>             /* Create partition */
+> >>             BRD_ERR(rm_partition_create(pt_boot, &pt_m4_0, SC_FALSE,
+> >>                 SC_TRUE, SC_FALSE, SC_TRUE, SC_FALSE, SC_R_M4_0_PID0,
+> >>                 rsrc_list, ARRAY_SIZE(rsrc_list),
+> >>                 pad_list, ARRAY_SIZE(pad_list),
+> >>                 NULL, 0));
+> >> 
+> >>             /* Name partition for debug */
+> >>             PARTITION_NAME(pt_m4_0, "MCU0");
+> >>             
+> >>             /* Allow AP to use SYSTEM (not production!) */
+> >>             BRD_ERR(rm_set_peripheral_permissions(SC_PT, SC_R_SYSTEM,
+> >>                 pt_boot, SC_RM_PERM_SEC_RW));
+> >> 
+> >>             /* Move M4 0 TCM */
+> >>             BRD_ERR(rm_find_memreg(pt_boot, &mr, 0x034FE0000ULL,
+> >>                 0x034FE0000ULL));
+> >>             BRD_ERR(rm_assign_memreg(pt_boot, pt_m4_0, mr));
+> >> 
+> >>             /* Move partition to be owned by SC */
+> >>             BRD_ERR(rm_set_parent(pt_boot, pt_m4_0, SC_PT));
+> >> 
+> >>             /* Check if booting with the no_ap flag set */
+> >>             if (no_ap != SC_FALSE)
+> >>             {
+> >>                 /* Move boot to be owned by M4 0 for Android Automotive */
+> >>                 BRD_ERR(rm_set_parent(SC_PT, pt_boot, pt_m4_0));
+> >>             }
+> >>         }
+> >> 
+> >>         /* Allow all to access the SEMA42s */
+> >>         BRD_ERR(rm_set_peripheral_permissions(SC_PT, SC_R_M4_0_SEMA42,
+> >>             SC_RM_PT_ALL, SC_RM_PERM_FULL));
+> >> 
+> >> I believe this SCU code is correct, at least this is more or less what
+> >> NXP provides as example, right?
+> >
+> >I tested the same SCU code and DTS overlay (removing the power-domains)
+> >with the current master branch of Linux and I got the same kernel panic.
+> >Maybe this part is already broken? Can you also test this on your side
+> >to check if this is currently working?
+> 
+> Does your M4 publish a resource table when M4 image built in flash.bin?
+> 
+> There is no common method to verify whether resource table is valid,
+> so if your M4 image not publish a resource table, there maybe garbage
+> data in it, so rproc_handle_resources may crash. NXP downstream
+> added a sanity check in lf-6.12 Q1 release, you may give a look.
 
-syzbot found the following issue on:
+Thanks Peng, I think the hello_world does not have a resource table, I
+tried with the ping-pong and it worked, the remote core attached
+succesfully.
 
-HEAD commit:    39dfc971e42d arm64/ptrace: Fix stack-out-of-bounds read in..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e965d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=941e423b930a32dc
-dashboard link: https://syzkaller.appspot.com/bug?extid=894877f2c4dd5fdea634
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+I will be preparing the v5 now with all the comments addressed.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ee1a7942f1b9/disk-39dfc971.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5b94ed3d0f7e/vmlinux-39dfc971.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9ce219d3314e/Image-39dfc971.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+894877f2c4dd5fdea634@syzkaller.appspotmail.com
-
-bcachefs (loop3): bucket 0:11 gen 0 data type journal has wrong dirty_sectors: got 0, should be 256, fixing
-  Ratelimiting new instances of previous error
-BUG: MAX_LOCKDEP_CHAINS too low!
-turning off the locking correctness validator.
-CPU: 1 UID: 0 PID: 9405 Comm: syz.3.515 Not tainted 6.16.0-rc1-syzkaller-g39dfc971e42d #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- add_chain_cache kernel/locking/lockdep.c:-1 [inline]
- lookup_chain_cache_add kernel/locking/lockdep.c:3858 [inline]
- validate_chain kernel/locking/lockdep.c:3879 [inline]
- __lock_acquire+0xf9c/0x30a4 kernel/locking/lockdep.c:5240
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5871
- percpu_down_write+0x6c/0x2f0 kernel/locking/percpu-rwsem.c:232
- bch2_gc_accounting_done+0xe64/0x190c fs/bcachefs/disk_accounting.c:625
- bch2_check_allocations+0x3a38/0x3c34 fs/bcachefs/btree_gc.c:1063
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:477 [inline]
- __bch2_run_recovery_passes+0x29c/0xd18 fs/bcachefs/recovery_passes.c:532
- bch2_run_recovery_passes+0x174/0x1f4 fs/bcachefs/recovery_passes.c:603
- bch2_fs_recovery+0x1db8/0x2fd4 fs/bcachefs/recovery.c:974
- bch2_fs_start+0x914/0xbc0 fs/bcachefs/super.c:1200
- bch2_fs_get_tree+0x890/0xfd0 fs/bcachefs/fs.c:2489
- vfs_get_tree+0x90/0x28c fs/super.c:1802
- do_new_mount+0x228/0x814 fs/namespace.c:3885
- path_mount+0x5b4/0xde0 fs/namespace.c:4209
- do_mount fs/namespace.c:4222 [inline]
- __do_sys_mount fs/namespace.c:4433 [inline]
- __se_sys_mount fs/namespace.c:4410 [inline]
- __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4410
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
- done
-bcachefs (loop3): going read-write
-bcachefs (loop3): journal_replay...
- done
-bcachefs (loop3): check_alloc_info... done
-bcachefs (loop3): check_lrus... done
-bcachefs (loop3): check_btree_backpointers... done
-bcachefs (loop3): check_backpointers_to_extents... done
-bcachefs (loop3): check_extents_to_backpointers...
-bcachefs (loop3): scanning for missing backpointers in 4/128 buckets
- done
-bcachefs (loop3): check_alloc_to_lru_refs... done
-bcachefs (loop3): bucket_gens_init... done
-bcachefs (loop3): check_snapshot_trees... done
-bcachefs (loop3): check_snapshots...
-bcachefs (loop3): snapshot points to missing/incorrect tree:
-  u64s 8 type snapshot 0:4294967295:0 len 0 ver 0: subvol parent          0 children          0          0 subvol 1 tree 0, fixing
- done
-bcachefs (loop3): check_subvols... done
-bcachefs (loop3): check_subvol_children... done
-bcachefs (loop3): delete_dead_snapshots... done
-bcachefs (loop3): check_inodes...
-bcachefs (loop3): inode points to missing dirent
-  inum: 4099:4294967295 
-    mode=100755
-    flags=(15300000)
-    journal_seq=5
-    hash_seed=fc917866faeb7b5b
-    hash_type=siphash
-    bi_size=1050
-    bi_sectors=8
-    bi_version=0
-    bi_atime=2770562249
-    bi_ctime=2770562249
-    bi_mtime=2770562249
-    bi_otime=2770562249
-    bi_uid=0
-    bi_gid=0
-    bi_nlink=0
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=0
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=4098
-    bi_dir_offset=8977922886548783724
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
-bcachefs (loop3): inode points to missing dirent
-  inum: 4100:4294967295 
-    mode=120777
-    flags=(15300000)
-    journal_seq=4
-    hash_seed=f4891abdd5c0cd85
-    hash_type=siphash
-    bi_size=38
-    bi_sectors=8
-    bi_version=0
-    bi_atime=2770562249
-    bi_ctime=2780562352
-    bi_mtime=2770562249
-    bi_otime=2770562249
-    bi_uid=0
-    bi_gid=0
-    bi_nlink=0
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=0
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=4098
-    bi_dir_offset=5675548428000973578
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
- done
-bcachefs (loop3): check_extents... done
-bcachefs (loop3): check_indirect_extents... done
-bcachefs (loop3): check_dirents...
-bcachefs (loop3): dirent casefold does not match dir casefold
-  u64s 7 type dirent 4096:189491840996961599:U32_MAX len 0 ver 0: file0 -> 4098 type dir, fixing
-==================================================================
-BUG: KASAN: slab-out-of-bounds in bch2_dirent_init_name+0x28c/0x670 fs/bcachefs/dirent.c:271
-Write of size 1985 at addr ffff0000ce7a8041 by task syz.3.515/9405
-
-CPU: 0 UID: 0 PID: 9405 Comm: syz.3.515 Tainted: G        W           6.16.0-rc1-syzkaller-g39dfc971e42d #0 PREEMPT 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- print_address_description+0xa8/0x254 mm/kasan/report.c:408
- print_report+0x68/0x84 mm/kasan/report.c:521
- kasan_report+0xb0/0x110 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x264/0x2a4 mm/kasan/generic.c:189
- __asan_memset+0x34/0x64 mm/kasan/shadow.c:84
- bch2_dirent_init_name+0x28c/0x670 fs/bcachefs/dirent.c:271
- bch2_dirent_create_key+0x1b4/0x434 fs/bcachefs/dirent.c:316
- check_dirent fs/bcachefs/fsck.c:2223 [inline]
- bch2_check_dirents+0x1d1c/0x27ac fs/bcachefs/fsck.c:2326
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:477 [inline]
- __bch2_run_recovery_passes+0x29c/0xd18 fs/bcachefs/recovery_passes.c:532
- bch2_run_recovery_passes+0x174/0x1f4 fs/bcachefs/recovery_passes.c:603
- bch2_fs_recovery+0x1db8/0x2fd4 fs/bcachefs/recovery.c:974
- bch2_fs_start+0x914/0xbc0 fs/bcachefs/super.c:1200
- bch2_fs_get_tree+0x890/0xfd0 fs/bcachefs/fs.c:2489
- vfs_get_tree+0x90/0x28c fs/super.c:1802
- do_new_mount+0x228/0x814 fs/namespace.c:3885
- path_mount+0x5b4/0xde0 fs/namespace.c:4209
- do_mount fs/namespace.c:4222 [inline]
- __do_sys_mount fs/namespace.c:4433 [inline]
- __se_sys_mount fs/namespace.c:4410 [inline]
- __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4410
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-Allocated by task 9405:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x40/0x78 mm/kasan/common.c:68
- kasan_save_alloc_info+0x44/0x54 mm/kasan/generic.c:562
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x9c/0xb4 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4328 [inline]
- __kmalloc_node_track_caller_noprof+0x304/0x4d0 mm/slub.c:4347
- __do_krealloc mm/slub.c:4905 [inline]
- krealloc_noprof+0x11c/0x2f0 mm/slub.c:4958
- __bch2_trans_kmalloc+0x1f4/0xb8c fs/bcachefs/btree_iter.c:3187
- bch2_trans_kmalloc_ip fs/bcachefs/btree_iter.h:604 [inline]
- bch2_trans_kmalloc+0x10c/0x160 fs/bcachefs/btree_iter.h:616
- bch2_dirent_create_key+0x50/0x434 fs/bcachefs/dirent.c:299
- check_dirent fs/bcachefs/fsck.c:2223 [inline]
- bch2_check_dirents+0x1d1c/0x27ac fs/bcachefs/fsck.c:2326
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:477 [inline]
- __bch2_run_recovery_passes+0x29c/0xd18 fs/bcachefs/recovery_passes.c:532
- bch2_run_recovery_passes+0x174/0x1f4 fs/bcachefs/recovery_passes.c:603
- bch2_fs_recovery+0x1db8/0x2fd4 fs/bcachefs/recovery.c:974
- bch2_fs_start+0x914/0xbc0 fs/bcachefs/super.c:1200
- bch2_fs_get_tree+0x890/0xfd0 fs/bcachefs/fs.c:2489
- vfs_get_tree+0x90/0x28c fs/super.c:1802
- do_new_mount+0x228/0x814 fs/namespace.c:3885
- path_mount+0x5b4/0xde0 fs/namespace.c:4209
- do_mount fs/namespace.c:4222 [inline]
- __do_sys_mount fs/namespace.c:4433 [inline]
- __se_sys_mount fs/namespace.c:4410 [inline]
- __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4410
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-The buggy address belongs to the object at ffff0000ce7a8000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 65 bytes inside of
- allocated 2048-byte region [ffff0000ce7a8000, ffff0000ce7a8800)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10e7a8
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0x5ffc00000000040(head|node=0|zone=2|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 05ffc00000000040 ffff0000c0002000 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000080080008 00000000f5000000 0000000000000000
-head: 05ffc00000000040 ffff0000c0002000 dead000000000100 dead000000000122
-head: 0000000000000000 0000000080080008 00000000f5000000 0000000000000000
-head: 05ffc00000000003 fffffdffc339ea01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff0000ce7a8700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff0000ce7a8780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff0000ce7a8800: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                   ^
- ffff0000ce7a8880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff0000ce7a8900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-bcachefs (loop3): dirent casefold does not match dir casefold
-  u64s 7 type dirent 4096:1896155912177158345:U32_MAX len 0 ver 0: file3 -> 536870913 type reg, fixing
-bcachefs (loop3): dirent casefold does not match dir casefold
-  u64s 7 type dirent 4096:2695648408715017799:U32_MAX len 0 ver 0: file2 -> 536870913 type reg, fixing
-bcachefs (loop3): dirent casefold does not match dir casefold
-  u64s 7 type dirent 4096:4330382808765833931:U32_MAX len 0 ver 0: file1 -> 536870912 type reg, fixing
-bcachefs (loop3): dirent casefold does not match dir casefold
-  u64s 8 type dirent 4096:8130059955150870709:U32_MAX len 0 ver 0: lost+found -> 4097 type dir, fixing
-bcachefs (loop3): dirent casefold does not match dir casefold
-  u64s 8 type dirent 4096:9097378837824744618:U32_MAX len 0 ver 0: file.cold -> 536870914 type reg, fixing
-bcachefs (loop3): directory 4096:4294967295 with wrong i_nlink: got 2, should be 0, fixing
- done
-bcachefs (loop3): check_xattrs... done
-bcachefs (loop3): check_root... done
-bcachefs (loop3): check_unreachable_inodes...
-bcachefs (loop3): unreachable inode:
-  inum: 4099:4294967295 
-    mode=100755
-    flags=(4300000)
-    journal_seq=22
-    hash_seed=fc917866faeb7b5b
-    hash_type=siphash
-    bi_size=1050
-    bi_sectors=8
-    bi_version=0
-    bi_atime=2770562249
-    bi_ctime=2770562249
-    bi_mtime=2770562249
-    bi_otime=2770562249
-    bi_uid=0
-    bi_gid=0
-    bi_nlink=0
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=0
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=0
-    bi_dir_offset=0
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
-bcachefs (loop3): creating //lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop3): creating //lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop3): creating //lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop3): unreachable inode:
-  inum: 4100:4294967295 
-    mode=120777
-    flags=(4300000)
-    journal_seq=22
-    hash_seed=f4891abdd5c0cd85
-    hash_type=siphash
-    bi_size=38
-    bi_sectors=8
-    bi_version=0
-    bi_atime=2770562249
-    bi_ctime=2780562352
-    bi_mtime=2770562249
-    bi_otime=2770562249
-    bi_uid=0
-    bi_gid=0
-    bi_nlink=0
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=0
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=0
-    bi_dir_offset=0
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
-bcachefs (loop3): unreachable inode:
-  inum: 536870913:4294967295 
-    mode=100755
-    flags=(15300000)
-    journal_seq=23
-    hash_seed=b68791a594a6d5ae
-    hash_type=siphash
-    bi_size=25769812776
-    bi_sectors=24
-    bi_version=0
-    bi_atime=2780562352
-    bi_ctime=2780562352
-    bi_mtime=2780562352
-    bi_otime=2780562352
-    bi_uid=0
-    bi_gid=0
-    bi_nlink=1
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=1
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=0
-    bi_dir_offset=2695648408715017799
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
-bcachefs (loop3): unreachable inode:
-  inum: 536870914:4294967295 
-    mode=100755
-    flags=(15300000)
-    journal_seq=23
-    hash_seed=d483206f1ed95abf
-    hash_type=siphash
-    bi_size=100
-    bi_sectors=8
-    bi_version=1126999418470400
-    bi_atime=0
-    bi_ctime=0
-    bi_mtime=0
-    bi_otime=2780562352
-    bi_uid=2780562352
-    bi_gid=0
-    bi_nlink=2780562352
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=0
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=0
-    bi_dir_offset=9097378837824744618
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
- done
-bcachefs (loop3): check_subvolume_structure... done
-bcachefs (loop3): check_directory_structure...
-bcachefs (loop3): inode points to dirent that does not point back:
-u64s 10 type dirent 4096:8130059955150870709:U32_MAX len 0 ver 0: lost+found (casefold lost+found) -> 4101 type dir
-inum: 4097:4294967295 
-  mode=40700
-  flags=has_case_insensitive(15300400)
-  journal_seq=23
-  hash_seed=a9fcff247692d1ca
-  hash_type=siphash
-  bi_size=0
-  bi_sectors=0
-  bi_version=0
-  bi_atime=200535484
-  bi_ctime=200535484
-  bi_mtime=200535484
-  bi_otime=200535484
-  bi_uid=0
-  bi_gid=0
-  bi_nlink=0
-  bi_generation=0
-  bi_dev=0
-  bi_data_checksum=0
-  bi_compression=0
-  bi_project=0
-  bi_background_compression=0
-  bi_data_replicas=0
-  bi_promote_target=0
-  bi_foreground_target=0
-  bi_background_target=0
-  bi_erasure_code=0
-  bi_fields_set=0
-  bi_dir=4096
-  bi_dir_offset=8130059955150870709
-  bi_subvol=0
-  bi_parent_subvol=0
-  bi_nocow=0
-  bi_depth=0
-  bi_inodes_32bit=0
-  bi_casefold=0
-bcachefs (loop3): unreachable inode in check_directory_structure: ENOENT_dirent_doesnt_match_inode
-u64s 17 type inode_v3 0:4097:U32_MAX len 0 ver 0: 
-  mode=40700
-  flags=has_case_insensitive(15300400)
-  journal_seq=23
-  hash_seed=a9fcff247692d1ca
-  hash_type=siphash
-  bi_size=0
-  bi_sectors=0
-  bi_version=0
-  bi_atime=200535484
-  bi_ctime=200535484
-  bi_mtime=200535484
-  bi_otime=200535484
-  bi_uid=0
-  bi_gid=0
-  bi_nlink=0
-  bi_generation=0
-  bi_dev=0
-  bi_data_checksum=0
-  bi_compression=0
-  bi_project=0
-  bi_background_compression=0
-  bi_data_replicas=0
-  bi_promote_target=0
-  bi_foreground_target=0
-  bi_background_target=0
-  bi_erasure_code=0
-  bi_fields_set=0
-  bi_dir=4096
-  bi_dir_offset=8130059955150870709
-  bi_subvol=0
-  bi_parent_subvol=0
-  bi_nocow=0
-  bi_depth=0
-  bi_inodes_32bit=0
-  bi_casefold=0
-bcachefs (loop3): check_path_loop(): error ENOENT_dirent_doesnt_match_inode
-bcachefs (loop3): bch2_check_directory_structure(): error ENOENT_dirent_doesnt_match_inode
-bcachefs (loop3): error in recovery: ENOENT_dirent_doesnt_match_inodeemergency read only at seq 25
-bcachefs (loop3): bch2_fs_start(): error starting filesystem ENOENT_dirent_doesnt_match_inode
-bcachefs (loop3): shutting down
-bcachefs (loop3): shutdown complete
-bcachefs: bch2_fs_get_tree() error: ENOENT_dirent_doesnt_match_inode
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Best Regards,
+Hiago.
