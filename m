@@ -1,99 +1,136 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EAA2E06D5;
-	Tue, 17 Jun 2025 12:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41E827FB26
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163993; cv=none; b=df7+rmY/UklEXzbj/QhzfmZSbw1A0dRAZQ6l0+m5LnyIYFq1NTtmj3qVjxjIcDW+2pmEBPvXtAOJiOKiTxbkvz07ya0NA+3jrEEZ3Us1sNdHkQZOBhJ88JSf1AEe4XI96apuFNimsssyS8d+VL6Pr7teHrkqzmOQEfM7IiX1GW4=
+	t=1750164007; cv=none; b=IOyI8VU7UQs84cdAg8S0bw2z1BAegp+/5TsgiNiqi7dzbSZM/9k2sMDIVVKocSaaTadzGrYOCCk2lXvpPlCCBd7U/mq7PBGmw+UFS3v1+b4uhePn7dfNCUfodHA0otNDmS9ep558lnwUNY/F6MmPvtyxUfi5DR8Rmpt1qlA8ZYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163993; c=relaxed/simple;
-	bh=u7FHmsIUirGkdh9hdjz/wA8Gj0a7ZkHKGmeHuNS4I7o=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=qmGmSC0WXOvgTGQQqJgzWtXcioAn5XfC7CaxnnKeetNRRVt9WsZctK0QtFFkFxtwrb2g3XaAcDrMPYq1tGOWyrqXf1QrWN+2kArJUjDU3wL9c6lI60uDxwl3z7fJgwANm4DernQSIXO28QIdeC/hUWwpgmxNJABA6r+hrdYXwpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NAI0AoIN; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750164007; c=relaxed/simple;
+	bh=ytPjJHvma4FQtvEgnKuyXH/c3dhAU49XIc8L9AzjIyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLAhUb2hMNSKyuoXojbA04vHx2HzrkTpOw0MR7NHReIIRnoB5/S0j93Jdq3mYNi1hBUyeXY8hKVtVELVAhbZkYMYYKhXxnWwKNp/mkokOtA6QJHlEiLGXIzxQE5mOMdOfLa3BlE6tHTzyzBDY2zhcrbo0kei5mSVsAgX0rc29UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bFozL5dC; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAI0AoIN"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b3192eab3c9so3537134a12.3;
-        Tue, 17 Jun 2025 05:39:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bFozL5dC"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d7b50815so47872755e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750163991; x=1750768791; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=plpd7fG8z7aEm2eUC3mp6a7hhKXScffJgSHefA7VW4c=;
-        b=NAI0AoINwiINFQnaKmwPOrRn/yr+wXE8ZUUMCtcYlSw+S1WL9/5ZQgpSHgVa62aSMU
-         KoJnVdXNniYvKflwTh9qgF+iSmRW6OHHyC+/cVoiBt48Q2UaosEW7O2ZrCH3HzX4rVnT
-         PIpP3EHdNjNRq/+S4zThGc++XqZvcyPRcwJ2dyOdn4u3xVCEVTTZMULaEb8VcTCFznmq
-         Sj1pxz4257zaRSJYhRpJ4RSUTHbVVdC5/nvZ/uQYOMjRE0eRRMxklpqT8SQqO4K7HW8W
-         CJd4Z3PbxEMF3VFT1R0Jlwd4+vYo9WXg1hRk/QmoDjqBmYcs1cITyPU8dGN70eCM3Nic
-         zsAQ==
+        d=suse.com; s=google; t=1750164004; x=1750768804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ytPjJHvma4FQtvEgnKuyXH/c3dhAU49XIc8L9AzjIyk=;
+        b=bFozL5dC6bkGRAZtMpl13OdU51XmReaRHy7wo4ekbY1PEN+hLFCik62Viq30Ji56lF
+         oQAbAzX7GN0iutRAauGlaNjp/2obQcgp+j+f3YPf9QErJMkI3xsGNeTgkOPg7OFuuvZh
+         a5TFP71eitU80arUiqoPMWemyrV7k9rKMd4hJyFO/MG9Ya77K29utKTzSg8j88Iz4OwG
+         sNz/DfclkLqwvGIgfWSiQbHhLV7MNbEet2V897AJj9Xz/sL/5qUP9+QOYbXsGqhC2TMF
+         /R4RHy7IbETh6BrMjqjykLyMKHHr/1t/Mnf6iVWEYYdEUXWf9Zf+knkKtcCv13hcE84w
+         pqnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750163991; x=1750768791;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=plpd7fG8z7aEm2eUC3mp6a7hhKXScffJgSHefA7VW4c=;
-        b=KcoeTHjbZLt9QHZ1joALb93SUIaT5vjyDWQZCRUXWQt+0szCAtQfbf1NTfZ/vZDd64
-         Z+thvRoR1qM3pjxNS1xbH37DMZ2y8bVovyE/h14X9rOY9y/O+TD65z7nlg3UUaz+FHbK
-         et2tlFzr1LqtwLo47Glxw+AloGqICZVLIgJmK2ORmrPkxo9zqBJcoNFpRDfqE79Gpwky
-         tr116OZLHbu5B2WUeF9hARD/a2ontGehwZcl4mC0aLraBbCWs0H8raYH/CycZ3RZzGJc
-         hGNZZiUU5omFK6NqX5aReK3R6AWG5PSREfbT3HkAeg5bcYNNOt9qn/q9xWD+EOe+wnAd
-         1bDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXvYM7q+ZDpHOuTku1Lch91LD5WsLqYMvrtCAeGrio5+TTDd0AARlr0rzMv+irozSdVd7SNu+xNHBhDbc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHXK6wZfsEYMNV8ZufP4id+aHOHh7+JdVbS1y+6giqmkrtt9QT
-	yUqUqYprWma1OhEe5q5wn6DolFkKh7MJScUVeAetvLd0yDToL7UsE8+5
-X-Gm-Gg: ASbGncu1El1jpbrrH9K6cFiur4L7yLDRO/Gnr07x0zQNrhbmBt98YqwjIUlkxYqbiSA
-	J4vI0BQ7cVe5xKSSYNDXGhdv4v3nPK7lr773Yhm4qNE6df0cGcEAjnN0hyG7j5d+HPW3sdRi2+c
-	sYTdDe9gxsnbLRW7SO29LNbGjf8nd50lE/iMyYpaorMgmIA9tKcc/nAkxHBgkSDjmEytRtLL6lC
-	+Jiyl3GPguHOsgPMWQzQ0rDnx8OsvEJ9vxnjJW2Q5JhAA6eayItTjEmztRNwCFuEgfH1dDLqJd7
-	d9eB+kPmRa81gFD3TK/LR/V5Jc6kB3rPG/Ug9s8LGxESH7/0mP+8/o+Cl1F9OqiteS3YVT1oTHY
-	SqTjQcZ8=
-X-Google-Smtp-Source: AGHT+IEzwpFm1YNKJQ2uwyWSgTu8baa3dx6wLwvc5mHBvqs9ya0jp4wS4e3UMSEVcrx44o/7KJHGAw==
-X-Received: by 2002:a05:6a00:2e9a:b0:742:9bd3:238a with SMTP id d2e1a72fcca58-7489cf5a845mr18627236b3a.4.1750163991148;
-        Tue, 17 Jun 2025 05:39:51 -0700 (PDT)
-Received: from ubuntu.localdomain ([39.86.156.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890082b1csm8937389b3a.103.2025.06.17.05.39.48
+        d=1e100.net; s=20230601; t=1750164004; x=1750768804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ytPjJHvma4FQtvEgnKuyXH/c3dhAU49XIc8L9AzjIyk=;
+        b=l7X9arBp5InKdoU9URR93kCj9lO4o3y7Jb4me7p3zJkMjYt7a4mmdTrXOIMviHu5Rg
+         v8c8TY0zQ8a2GRRgRGLgXib5zTGiEHKRrnmFRk/DYNoIcB0oxHLKOP9EdunYiR8+Gcbn
+         FOOD4qqlMAQOXQ8F9H8iVHDy9GhJY+95ulBc6gXhVaeCLOGdfaAhYHpO4904NLCfDxAF
+         K6PcNU8F5cLZkVBWIR9DmF4S9L1D6TdYwhqTAx25zEgq58suWz4bLioDBKTY5XEjgC3W
+         d4TN0F//CdJNhnB8U9sQXQMJyNZir6YF4kC80ToTZCRYEBKyoz/gsDb6XzLqpYOJePUZ
+         FbtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6nufgKu2b913F+bRYqz3MfrmDpdLpbbOFZ3D3uYyUNnj2Zp4asC5E9RZR6mAXthU7Fw6tsi3bR/ahz24=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpXsWwRKutX+QTmIyDGnEWPZvICT/wj8JnM06Z+CfDt8QqEuwX
+	GW2fB5E+P6s7LM8bz1exE614Yb0pW0RZsKj7P6YGcY1NUCEH4lr0lyqpE6DlwFvB3xc=
+X-Gm-Gg: ASbGncu/Aj+aIP2TF2jsRBxBZyxvLWlVHRTy85lUqQo7G0q1HxwinLOVUP17vZeQH+r
+	j4uuJccBdAojVWQm8I16akr5UrcDGJB1pQZBmSFTHSW+k8qE0ew4iWYHvW+kp/0AhSKtZ+MJUzn
+	4yUJoKgB2oYg2DXTRYdL+Pnoyi4WLlGPLs7cgdt5vtiLBIh2l4QEHZ5xsKUgsyCo8dMnsmUL6o9
+	2EqSovVPQQj/3hhvpQ8a5kPbONtfO/sZD658ZDV/6clndWIhfOBisOm+y+RLHuFeLK+kMMhbnKl
+	X2A2m5iAZwLD31n5HMaTrqMxyPLUuarD3bWI6k23AClJ60F97ebs180cLRxFmhMw
+X-Google-Smtp-Source: AGHT+IEOdWy2Mwxtgb9/U6R2bT0t5VY/D1i4vnDT8/fObQPqO0r0UDJm0jcaEjvkdQ0vbqb6Bpv8xA==
+X-Received: by 2002:a05:6000:25f9:b0:3a4:f024:6717 with SMTP id ffacd0b85a97d-3a572e9a4a5mr10268668f8f.53.1750164003871;
+        Tue, 17 Jun 2025 05:40:03 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a63a42sm13869802f8f.28.2025.06.17.05.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:39:50 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: axboe@kernel.dk
-Cc: io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Penglei Jiang <superman.xpt@gmail.com>
-Subject: [PATCH] io_uring: fix page leak in io_sqe_buffer_register()
-Date: Tue, 17 Jun 2025 05:39:40 -0700
-Message-Id: <20250617123940.40113-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Jun 2025 05:40:03 -0700 (PDT)
+Date: Tue, 17 Jun 2025 14:40:02 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Cc: Tejun Heo <tj@kernel.org>, Waiman Long <llong@redhat.com>, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
+ cpuset.mems setting option
+Message-ID: <x7wdhodqgp2qcwnwutuuedhe6iuzj2dqzhazallamsyzdxsf7k@n2tcicd4ai3u>
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+ <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com>
+ <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+ <aC4J9HDo2LKXYG6l@slm.duckdns.org>
+ <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+ <aC90-jGtD_tJiP5K@slm.duckdns.org>
+ <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
+ <aDCnnd46qjAvoxZq@slm.duckdns.org>
+ <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="56vaxekarlsmjcqn"
+Content-Disposition: inline
+In-Reply-To: <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
 
-Add missing unpin_user_pages() in the error path
 
-Fixes: d8c2237d0aa9 ("io_uring: add io_pin_pages() helper")
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
----
- io_uring/rsrc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--56vaxekarlsmjcqn
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
+ cpuset.mems setting option
+MIME-Version: 1.0
 
-diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index c592ceace97d..f5ac1b530e21 100644
---- a/io_uring/rsrc.c
-+++ b/io_uring/rsrc.c
-@@ -804,8 +804,10 @@ static struct io_rsrc_node *io_sqe_buffer_register(struct io_ring_ctx *ctx,
- 	}
- 
- 	imu = io_alloc_imu(ctx, nr_pages);
--	if (!imu)
-+	if (!imu) {
-+		unpin_user_pages(pages, nr_pages);
- 		goto done;
-+	}
- 
- 	imu->nr_bvecs = nr_pages;
- 	ret = io_buffer_account_pin(ctx, pages, nr_pages, imu, last_hpage);
--- 
-2.17.1
+Hello.
 
+On Sat, May 24, 2025 at 09:10:21AM +0800, Zhongkun He <hezhongkun.hzk@byted=
+ance.com> wrote:
+> This is a story about optimizing CPU and memory bandwidth utilization.
+> In our production environment, the application exhibits distinct peak
+> and off-peak cycles and the cpuset.mems interface is modified
+> several times within a day.
+>=20
+> During off-peak periods, tasks are evenly distributed across all NUMA nod=
+es.
+> When peak periods arrive, we collectively migrate tasks to a designated n=
+ode,
+> freeing up another node to accommodate new resource-intensive tasks.
+>=20
+> We move the task by modifying the cpuset.cpus and cpuset.mems and
+> the memory migration is an option with cpuset.memory_migrate
+> interface in V1. After we relocate the threads, the memory will be
+> migrated by syscall move_pages in userspace slowly, within a few
+> minutes.
+
+Why do you need cpuset.mems at all?
+IIUC, you could configure cpuset.mems to a union of possible nodes for
+the pod and then you leave up the adjustments of affinity upon the
+userspace.
+
+Thanks,
+Michal
+
+--56vaxekarlsmjcqn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFFiHwAKCRB+PQLnlNv4
+CFnDAQCLg3MASOPWqGFIovOVrrY4FnbPra0YxgV95dieDAtqLQD9FBUJNYwz1AvB
+9lpcr7rNBEV7ussJO3hHD4jym91gjAo=
+=be/q
+-----END PGP SIGNATURE-----
+
+--56vaxekarlsmjcqn--
