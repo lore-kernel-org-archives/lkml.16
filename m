@@ -1,110 +1,178 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7550F21C9FF;
-	Tue, 17 Jun 2025 10:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981EE21C9FF;
+	Tue, 17 Jun 2025 10:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750157699; cv=none; b=sQAbnLY8ziP47BDWVo/8hpFF2sz6wvL3XGDRnGpkPN3Pg8k1IG+O0C0bLb2/9budp0fdumA3csxjQOKj0xhV+Zot9OiQZfyj3woUwQLNS27TtUSBKiM3GfKbWUiYG8RXgOFlgsFQFYjeLCzIgxpHph7sQLIvuU1LQjXP3XcSPPo=
+	t=1750157837; cv=none; b=QotS+I8yOXqUW+j7yXCGnIZErQgt6oH+3zR9dPo+gMvehO/XJ9kw3UfIriiuKMdsbO9r7FMK4khHROWjGY3FBnYAvf4IW9I4WxTEH1aoCaS9c/361eU5Mhd72UyqxansPsrilnSiGxexcrg/R9h91Ot2RhPGMfh8clIN4i64/UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750157699; c=relaxed/simple;
-	bh=x3JRQH8niRtAFZyeQUyetaHm46/MXx+Fttu75P73mkQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Gymap9piT3yaa1iQ0z5wk0aqdJfROz6m5447+62uKKaQikS1f60bodmftgwZ84rWqHV9iUx1uR3yV25arWO/1uMQGvzD/STEywO0fJGjeMwrLyhiLY8hOJd1e+Q6s6ASQqiAIy/nOGAzSpmRbPzbQmX2Q3dmc7264sIvigoeBck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eBUhnSz1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iFe6w24G; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750157837; c=relaxed/simple;
+	bh=NmzERQxeC+Wf2VWr+OrNl8OC5PXA5OvyS6pPpgJXa/s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tXjW9rZayHTM7offhIFiRh9/9zRXeXbr34fMV1l0q1Oo1JU1ABJzTVfLTlskCuCv37ClP7rTEgMiFCCC4W491+UUTvxidWE1m/m04/NDQAcYQlGU3QkaeRvMwTE3BkcJkU04qIo5RJHMmbsUH/f6jatfZG0XRrXH3ZLXWj7J9/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0hzfsPK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eBUhnSz1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iFe6w24G"
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750157695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x3JRQH8niRtAFZyeQUyetaHm46/MXx+Fttu75P73mkQ=;
-	b=eBUhnSz1A1tVqLrAOT/WARW2n885Lw/tG3tdwYIAEe3SsGHKaS7fHwCPWW/ICf3GUfHk0R
-	SLKrbHQUitLfGt1mQmCPhDcowQbassMjf+IBdCPAk4sDiWkUEtqG2mUyuP+w2+zaeL29Jm
-	Iv7kzOjKETEc2Ka5WVX9U26HUyE1FMJYhDAi1ZkC4HpBxVz/dl65JzYVxcrt+2uAMKM7pz
-	YbNVIRLvrAdSGJmu4zliN50NqU7jXXaBd7SE2o2/bvFlTjuKURAx/a+qXBqqbZh+oKFVyx
-	G5YkYCMlmJDzowKqw87lUKBby/IfqG7uSiadTRnj7nICsQ2TYrYeR9gdE5fS9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750157695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x3JRQH8niRtAFZyeQUyetaHm46/MXx+Fttu75P73mkQ=;
-	b=iFe6w24GtplauDSfHxnh+rUFXKSO0nj6s0ef4xpiNqm6gbgiiUNbrc9oByMjHT4bq2BFMc
-	QsGftWU8StJud8CA==
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Marc =?utf-8?Q?Str?=
- =?utf-8?Q?=C3=A4mke?=
- <marc.straemke@eltropuls.de>
-Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to
- intel? IGB
-In-Reply-To: <20250617101507.jU00mupE@linutronix.de>
-References: <20250613145434.T2x2ML8_@linutronix.de>
- <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
- <20250613195838.0-gZ6bqS@linutronix.de>
- <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
- <20250617092814.vqKdu23w@linutronix.de>
- <bb74b5b6-bc23-4aa4-83df-449dc7c9006b@eltropuls.de>
- <20250617100013.1o5lsPLq@linutronix.de>
- <b7179ac8-c64b-44dd-b25a-62b34eb49c24@eltropuls.de>
- <20250617101507.jU00mupE@linutronix.de>
-Date: Tue, 17 Jun 2025 12:54:53 +0200
-Message-ID: <87v7ou7i4i.fsf@jax.kurt.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0hzfsPK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ACF6C4CEE3;
+	Tue, 17 Jun 2025 10:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750157837;
+	bh=NmzERQxeC+Wf2VWr+OrNl8OC5PXA5OvyS6pPpgJXa/s=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=p0hzfsPK4/Yb2c8CGIiL6DAnK1zyOrJJc2OmgspqEekT3SP2COHx7lr9H5a0/PjZ7
+	 /2wo08+//cLL+UDwNAJTkDuoBQ1yQNchmOv8DiNw95ueP6+7+73Ls+GuTQsfTgVcYA
+	 WQ6SDRwzQJfZJE8eXCPTD10tVDH0Rpfd9acjTK3tL3j5zJi7HmQ2tf1dydu/8F04Bb
+	 SdkV5ztUzdgJK4y62kFyk97PBoK0YhsYYBtyjVgypVIN/iWaDB7LDRm7i1C6mmjn++
+	 Z2n3PFTsFem52v5xmoMG7p5wczJ5wX7CC33CxzPdkoa7wywE/eVG+UY8OoqoItcAYs
+	 wV29K041vspUA==
+Message-ID: <0ce7c86caaa57d879ef85471414f80692212a6c6.camel@kernel.org>
+Subject: Re: [PATCH v3][next] NFSD: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+From: Jeff Layton <jlayton@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Chuck Lever	
+ <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Tue, 17 Jun 2025 06:57:15 -0400
+In-Reply-To: <aFCbJ7mKFOzJ8VZ6@kspp>
+References: <aFCbJ7mKFOzJ8VZ6@kspp>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2025-06-16 at 16:31 -0600, Gustavo A. R. Silva wrote:
+> Replace flexible-array member with a fixed-size array.
+>=20
+> With this changes, fix many instances of the following type of
+> warnings:
+>=20
+> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array mem=
+ber is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:763:33: warning: structure containing a flexible array me=
+mber is not at the end of another structure [-Wflex-array-member-not-at-end=
+]
+> fs/nfsd/state.h:669:33: warning: structure containing a flexible array me=
+mber is not at the end of another structure [-Wflex-array-member-not-at-end=
+]
+> fs/nfsd/state.h:549:33: warning: structure containing a flexible array me=
+mber is not at the end of another structure [-Wflex-array-member-not-at-end=
+]
+> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array mem=
+ber is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array mem=
+ber is not at the end of another structure [-Wflex-array-member-not-at-end]
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v3:
+>  - Replace flexible-array member with a fixed-size array. (NeilBrown)
+>=20
+> Changes in v2:
+>  - Use indices into `fh_raw`. (Christoph)
+>  - Remove union and flexible-array member `fh_fsid`. (Christoph)
+>  - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
+>=20
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
+>=20
+>  fs/nfsd/nfsfh.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 5103c2f4d225..760e77f3630b 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -56,7 +56,7 @@ struct knfsd_fh {
+>  			u8		fh_auth_type;	/* deprecated */
+>  			u8		fh_fsid_type;
+>  			u8		fh_fileid_type;
+> -			u32		fh_fsid[]; /* flexible-array member */
+> +			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
+>  		};
+>  	};
+>  };
 
-On Tue Jun 17 2025, Sebastian Andrzej Siewior wrote:
-> On 2025-06-17 12:03:31 [+0200], Marc Str=C3=A4mke wrote:
->> Anyway: Thanks for your help Sebastian! I can probably live well with th=
-ese
->> spikes in latency. I was more concerned that there is a deeper issue wit=
-h my
->> config and the response time could be unbounded.
->
-> You don't have to live with it. You could add a read after the writes in
-> the loop (wrfl()). This should help.
-
-Something like this, which was done for Intel e1000?
-
-https://lore.kernel.org/intel-wired-lan/20241219192743.4499-1-gerhard@engle=
-der-embedded.com/
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmhRSX0THGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzgvMPEACWgIzrHO4Cph0hIe7lPJdWBqZJ9xVO
-qeZa/IcH4J/HexhqRwutvevUK3z8PHNE9I9+CtxzsuLBpbTIJkw9yD28/EmskpkW
-bIwolohpUHrmkqGD28sH5eB/g287SNOFAyQ+HmavjW6Qv5890j/xXKFziz80EtoU
-f6pzyuayc+Up7fCwRhPt7beWwZ4YJ2JMSaVMiFtrdXpgiaeB2FJNBkXWiQtu8dRd
-U9aiOoBnP8OnTz9HZMtloKlEf+JUVSNfo8Det/6f1TEs2Tbmp/BbN3RpjPdsBTeU
-5xyqQWnSB9P+WHsU7hEonU26Wky1LYjzdTQOHmOnmv3a89p2aebncZ5CR38LmggA
-UrJ2QyYU2zUPjx76qnh6LqDRF/w3vab/FHgnEu4VO62dIm2K++C+KTwpqT3nIVkn
-dhZ05bXKOtGo5tUzIUzFnyhzxqeec/B6/qPRDIDV3CwUB0EtU01ilx1a0DtvDqqW
-HiCWT36TPP8TPcl6j9IZqpG+LtkmN91rwnAZvi1oO4VYl2SJy7Z+MAsFkAfBkRjI
-dYPPS3SGv/UXUeepx2o588tSKSx/VdhhyX5zuSQnMZLCw0QpDM1KSjhuknxCPE+U
-pNIIZA4FDFhWWfJcosa315IvhrcSHBoQYnjfHgGrIyQQoOQRQlWN4lYSPdDAIfeg
-T+wYDtIb2qc5VQ==
-=CsxQ
------END PGP SIGNATURE-----
---=-=-=--
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
