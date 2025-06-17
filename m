@@ -1,94 +1,91 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C852C2EF9A9
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BCE2EF9A0;
+	Tue, 17 Jun 2025 18:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185690; cv=none; b=Q/tBfxEqP5o7BqQQafdEj0ouGvmktSQmyQlmUGPa86b5ZC1s7wrTF+XclwIF2ntlgaPGJQiavbjSoAf6CkIid7jMh/GFkeSWGRXOpiwc2xT9NLbR5zKwlUjm7Kr1YSQRuhsiBSnnBySGtQ3/BCF6u7MXbd9iZDxsu8fw/W9hhsQ=
+	t=1750185770; cv=none; b=lWVuQASn/VQrkHabneDvSnlU2JF8BAATwpYGQTaTegyJHEZe3Oaj1lDBmXQ3NvULEbsMfpYyp4ibA/tAgSJIFg4XsAQwqaa+jCVBQmccUlCH3pTzZ+TP4UAS4bypmbip+VmwhUxP5F9tdkSc1FrcPMA0Cyh2gJY2J2kjlcs/GVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185690; c=relaxed/simple;
-	bh=UBxovSv15NDrlLMCfllQ6/CkKKuCdUjcOg0vtiOWstg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tabRtOQBVZZxPBuVJFrWyJJVCxoK42H97gTV7Ko3g+qlPCoskgeJbc2aAkXQqYQujZTJh6EkAPlJpy/SMDTo3fEQPwLr26LOq4Lz1NMRrhVYNLFkJX14ttKJleb78VLdx9Om1faA0adZ++NeNfS70nUqmKuaFOYwTmMn2OnrzNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=upW7zilG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750185770; c=relaxed/simple;
+	bh=8S2U9qHLvtURdDB1hnc3jx1OaEuFXQrxVY9sKdqwrm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VFLNMWUypmXmIE1VBpGB89omPctAQtVsIST4ye+gbUsz5AtLGXUpCaeJhtJAmpxkmLTvufWjZ7TUurmQ48UsGYm/NrBcdyJqh9Qs/3otaS26DNhw7AkaoYwfEaC+ocotvb8JIQ7iCjrweHcPNQ7ocMIDttsZlQ6PGzXmwsKy7eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJz4ERqY; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="upW7zilG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=vZAMd0qU/zu4E2wzGJDTgjB0dodf9eYxECR71B2LM7o=; b=upW7zilGBnxzAhnfo2kySA05Ya
-	UjG9SsvgUidTCdlrsB1tQsZWma4w5iMrM/kYwyTl33km0q8Udwpq5Ar+NRknCvHzTs5gX+bLjEHly
-	IBT2SaMQXGHI+DJBWbhYJoeod8t4NSKO6b9lk8mHundPOpvQsb2Y91Gp/k6LfLSf7ikpBFYVK/474
-	qai4I3y2td85RBZNb+ABMhvi1GljjufrSzBEFw/3EkOT1JSWCUe6REk1YRoGkAu9JZeUsHfZHrmZf
-	fVu6Qk2ilpjZAkYJ5U8uwQd9l9F4bkxIZ17eHhdZ/MsFl2hfB4206n9B7oeftJGMr/ZScrYeVoEbL
-	RB2azmMg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRbFN-0000000HVUJ-22hH;
-	Tue, 17 Jun 2025 18:41:25 +0000
-Message-ID: <7f388a3f-6dcc-4989-9a4e-e15000069b68@infradead.org>
-Date: Tue, 17 Jun 2025 11:41:22 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJz4ERqY"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2fc93728b2so5074158a12.0;
+        Tue, 17 Jun 2025 11:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750185769; x=1750790569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=54YceHIrKZZVlUR0dFkqL6sInfVu/iYSsjlmqLJUSpA=;
+        b=kJz4ERqYohD1qaD9xd2TF3ZbPn0rtZwrClao7VceoUYMbzwaNpSDGDXfuoBhE7Kd0e
+         RnBABb89RcK67OdZaXdGBgZkrUFISvimHx/7YYO8tat1JTyVGeUE1v4385lULIWIR6h6
+         yRrczMPQEftzyS0o3FIfEFWfMUtSdIavhtDf4zV5TFd+kGwiRzgWgkvNA+kITQxkFGQd
+         LeqWIdYWpVwWY9gkzjCGwwzBqv0tsOO5lBbMOWXTqEGKhU4914oAnmZbPHWUVSjFlzoM
+         LQl45M4IaHKYM2K+sFstk2/LRDwWfTjZi2D6K6Wb+gYQbtUlF/K1BrkRyxpYsNHzYSQh
+         qClw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750185769; x=1750790569;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=54YceHIrKZZVlUR0dFkqL6sInfVu/iYSsjlmqLJUSpA=;
+        b=SMkF25cR9lL89wIxSSAbIrbxZWk4+CWz0x5VdQYr1u5nUMSqviiwvtLq6y7UnDUP79
+         +rJW3Bt5oL/8wY4ewBcTUZTM30NlVul3McsjW1713ODXJMHsKY8pv0AgMdptPopudq3a
+         jfuM7oI3XcXp/rCvxFoHu6VLgkekCLgSx1ctSZefahIkAjHq30uiam6W4l/BPUbIsn6l
+         hXIEG3N9TMnEUzm73ogyLb4iGVoWR0JfxYpqUp99y2lSzMipZ6k2kyImBlMp013CU9Vp
+         WG/vzLkapfCyFZhjolzltWejHew9ilMMbN50uKl2eIl9P58AcX6p0C6tY4W+8DQnRtyx
+         5Huw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6xdVOn1EqKSC13GFyaiGItbjczonq94RRrzDMfyzLBYFYRXRPleIkNROXf8EQtweqO5Y65yyT@vger.kernel.org, AJvYcCVUUZzkfGPbzZMerjfXTP3rSQ7H0DBQxdyo99dgFDTi493/ACkektYLSiTcaoUO2Gme9ANY8QIgR3IfaIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWz5MQveId1fig0MN7qwXnq8Gf3BqzSbVcVsyIaZHnAyZc81/K
+	sGtScscApDyfEKh0YSiPeM3Tv9Z2EUJWpSLGSL/Dw0eQLpxD2KyIE/w=
+X-Gm-Gg: ASbGncsfag55GNxoYz7FvkAyE1L6zvsFBE2vvHXDmXU+Rr4mAdOfOi5wSj2vWByBZxO
+	f6O4kRbwR8IPVYgQ47eCejzt8+VU3t9eTGO79Ic7YtKCC48Jw/3i+v5/YCzvnCkzR2uWFgduCTw
+	W1pP4U01TijNLnQtInYfDVvIh88yFS7agjRSKjElUrl1tP8FyYd8wg6TR2zbbz1eRNh4yjj51ur
+	zhnTxnPFC0FknszjTpRjjMnLBp2U4s/UsRzFlxv9wiSEX3+6jX3PGVdTWVp3Ni8qMHy8aibuBY8
+	ivfPJXoG5T0p3ELA/JOGRpwhKXjbEjw6OPBOOpw=
+X-Google-Smtp-Source: AGHT+IHGDC/lrSSRe9clXHUODDRbrxI1IEfIhRoCtqWaFoCqNO8Lj53w+wtRZo2FEQPFAKRgzG+xNg==
+X-Received: by 2002:a05:6a21:330b:b0:21f:5674:3dd8 with SMTP id adf61e73a8af0-21fbd63161cmr20230668637.26.1750185768627;
+        Tue, 17 Jun 2025 11:42:48 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d255fsm9547149b3a.172.2025.06.17.11.42.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 11:42:48 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: yuehaibing@huawei.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	Kuniyuki Iwashima <kuniyu@google.com>
+Subject: Re: [PATCH net-next] tcp: Remove inet_hashinfo2_free_mod()
+Date: Tue, 17 Jun 2025 11:42:41 -0700
+Message-ID: <20250617184245.1816150-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250617130613.498659-1-yuehaibing@huawei.com>
+References: <20250617130613.498659-1-yuehaibing@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers: char: SONYPI depends on HAS_IOPORT
-To: Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Johannes Berg <johannes.berg@intel.com>, kernel test robot <lkp@intel.com>
-References: <20250606071255.7722-2-johannes@sipsolutions.net>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250606071255.7722-2-johannes@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/6/25 12:12 AM, Johannes Berg wrote:
-> From: Johannes Berg <johannes.berg@intel.com>
+From: Yue Haibing <yuehaibing@huawei.com>
+Date: Tue, 17 Jun 2025 21:06:13 +0800
+> DCCP was removed, inet_hashinfo2_free_mod() is unused now.
 > 
-> It already depends on X86_32, but that's also set for ARCH=um.
-> Recent changes made UML no longer have IO port access since
-> it's not needed, but this driver uses it. Build it only for
-> HAS_IOPORT. This is pretty much the same as depending on X86,
-> but on the off-chance that HAS_IOPORT will ever be optional
-> on x86 HAS_IOPORT is the real prerequisite.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506060742.XR3HcxWA-lkp@intel.com/
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
 
-Thanks.
-
-> ---
->  drivers/char/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-> index 8fb33c90482f..36295558dc85 100644
-> --- a/drivers/char/Kconfig
-> +++ b/drivers/char/Kconfig
-> @@ -237,7 +237,7 @@ config APPLICOM
->  
->  config SONYPI
->  	tristate "Sony Vaio Programmable I/O Control Device support"
-> -	depends on X86_32 && PCI && INPUT
-> +	depends on X86_32 && PCI && INPUT && HAS_IOPORT
->  	depends on ACPI_EC || !ACPI
->  	help
->  	  This driver enables access to the Sony Programmable I/O Control
-
--- 
-~Randy
