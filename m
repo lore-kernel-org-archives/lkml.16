@@ -1,119 +1,95 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F82293B4F;
-	Tue, 17 Jun 2025 09:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1160E292908;
+	Tue, 17 Jun 2025 09:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151986; cv=none; b=OQM2oNbpYdCTSaOV6KxGd/pABMsTEneFGn7FZD4t7RtSivMo7CPSoKjboZKC8TdHcPuCUg7qw2wUVOneShQNFRogLVUOG+QzL0s12ulPkhtRhnjn+Vh7YwRHhhUdKty8DwgokAR9pF6z85gSKyz2gk3lO4e+sZP190N68/arp3Q=
+	t=1750152037; cv=none; b=Zo8mx6aKdxJaja8I0hqLLo65UWv+S3OXu/Zaufku6hNf+c5Uk0BdQrOuMVEUNPY80muesOwyTv6PzTe8AhLlPAiYuOu2RDpONcjeo8iLH4jSRvpYovyqzehYHOWmo3didcIFWRQMTjrfQF9LIfMqrrKHbh9p8QwP27ndZVAnoZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151986; c=relaxed/simple;
-	bh=d817WHPRcBKfQfiW+A6CorvDlxwqX4wjsZu8u9kQApo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UjF4AT4sm1Aom1CNJ8NW/NoDhL0NL0BBWq1daGNduEzHxMfNR3vRoGtuyMX9b+JjZWdCN5wLoPNUM00/JL1e6D8d5qHwArpiawGaoIwtoQ6CWWy6W7fr590v4uE84vW77rHDCQF1ybQPSl0Wqpn0WE+V7TrpxviEPUDoNn1cFCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IfYYbDVa; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfYYbDVa"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso470163f8f.2;
-        Tue, 17 Jun 2025 02:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750151983; x=1750756783; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffPakIq+8CljNOP8FRUg8NLCeNR7y2dpIo5YjZ1J2YE=;
-        b=IfYYbDVafm31f6p+eUlkzOVDnOxg7/GipJlxi0o9dBTTr9vMjA+Ljajp21oMjLScrA
-         tmzJiJKFkmlmAgMfcz5EBeShWtrWDjKwtV8CkXwZBIHU/HzK1ujo/m+FupoRPZb3l4zW
-         Ly0Y+L2AzeXJtt9fxe1t6W9qaR2CVoy4fBry3KqJUQSDQrvfQ9u5ZqZxVF3yPkNNm71e
-         1jUdKhBU+C5QNvxWKsCts2vM5DUbBYr+SWYigaDLv3ZSnPqsXJ9zVh3Lz3yMHwL5we23
-         SUd82/1aVLErelQZVdcxu9i6WRU4ffGt23XAOdzvITiOnzSpUUxLB8oMJc46T//rmGOC
-         /cpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750151983; x=1750756783;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ffPakIq+8CljNOP8FRUg8NLCeNR7y2dpIo5YjZ1J2YE=;
-        b=LgYapx2iZ7uYkQvaqXUj3J2+teXLm825lvgLMI6CNEWTpvNvNCd2/2eXSdvV/AA9R+
-         IE/t1kDVA4OoPHTrwukgTlrc647KEYXwkD+A5iDAj4IHfGawoa8eTkx/vqI6xkNVDO5j
-         jkyCaBZudQhPyuzUGTywBpLI+319nPqeux20eBTMwp4Tjtrx34GYeNsCCLOVipVcz0Ry
-         0BB3eHKc56fVhuibLHTyVar6HzltTHg0FoFZcvwQvrDkQ9/ySAalEyBnmBsfuIKFHtI5
-         9uvc0ePsS6ir/RC5AI2Hi27bKy2PMr5eUxg3l7jYACHo813K3/YmevCIBW0xe8HHtEgW
-         Dnbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXO5F2ojVeUVbdzbrAx29HWZylBJg/omeq50UeYfx92ikEdzGctpZ0w94xyFjemNOSrywMk4Mp@vger.kernel.org, AJvYcCWIu5LYUO6DXlyfS5IfchyAWFKCHmuIwq8iXisqZhfDSpb2uZJlS4gBrQPovPyMnpWqRMVfsgEuPQHQluMG@vger.kernel.org, AJvYcCXLE5OTA+yPIQVOMBfIxdXQteL0F0GQBtugUP4YWKcTk9NSHLsyA3Q4kT71nlF5MMqJLoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzuLmEOByqs8jXF6mHeFv2yGzVfvqBOhTVvOQ50jFfCQO0k7MD
-	oCDTS8+gNB8YI/wrDsBJxrGmncp1tuJJxBYYiaYivg6A5ncNVAws7chV
-X-Gm-Gg: ASbGnctNZFMmsZUBaXyhBFV0dJOz11JlY4qmeK0mEnBSIcQMbnnADuP7r7eiorNgbCT
-	UNzyPnwjksUj81Cv2HWc8Sp/U4DtxrS24GNiHgyCHJTstQVxMYX5Feo0WcN0sTdAfjQnAhRtBbX
-	8oAQT4jUV3auVXBiFkD6l+y69ApSuxEd0588PnlHUtZ3aqqy3bFkTouKXoZQ5lJHN+/UX/8Ngcd
-	gFNjXy/8KLWIJt8gKxYAGHITMJrb30DF4pp1G9dC/jW0Gd4sTKqJnV+As1FhJXPGT3ZIEu21XG3
-	6WTLeUraoNglG4rHckG5IqL/V36Ropug9ERXpddP6Mf5zFOoeDAAovYNlmA5Va1rnKZEhaoPYpB
-	zPTxVC1Ou54xgS64tdxE8ko1T69dH2V1cFoM7+1Z0Bb/LKKCVWcshJzmsnNeAnE9wQkk+nDNfzS
-	I=
-X-Google-Smtp-Source: AGHT+IGrmxAXUpkAP9gIxBWotWeEjVIywLjm4/Q3f32fA+oSWwZ/qUgnwqs0P+b9qfskQVl5NoE7Sw==
-X-Received: by 2002:a05:600c:8b45:b0:439:90f5:3919 with SMTP id 5b1f17b1804b1-4533cabba48mr40846875e9.4.1750151982801;
-        Tue, 17 Jun 2025 02:19:42 -0700 (PDT)
-Received: from thomas-precision3591.home (2a01cb00014ec300db8a476a69bb81ed.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:db8a:476a:69bb:81ed])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e14fc98sm175260815e9.29.2025.06.17.02.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:19:42 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH net] ethernet: ionic: Fix DMA mapping test in `ionic_xdp_post_frame()`
-Date: Tue, 17 Jun 2025 11:18:36 +0200
-Message-ID: <20250617091842.29732-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750152037; c=relaxed/simple;
+	bh=1rW3HyzSPxA0/G9x8QtoS7aCPRrs9W8sVGPbPsEVwEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NYClOlQbPYBU8/8D8SsllbjIRh4PSu8tv2ARaLJ3Qhe+sbN3f5z0JiWWS4geIAruF0T4aff+oZtqxHGElio57czdLBcejVZaZUfARpZ3LfEfmjs2cUs20VStt/4h2V16s8lLpOg2ofwCSleYUL9ZwnC60mmWoVOlkZGAnmZ4ufI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bM1Pg14fhz9t0K;
+	Tue, 17 Jun 2025 11:13:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id ezM8RTf2JjnU; Tue, 17 Jun 2025 11:13:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bM1Pg09FTz9syQ;
+	Tue, 17 Jun 2025 11:13:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 007768B77E;
+	Tue, 17 Jun 2025 11:13:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id Vgg_-T-pTeIY; Tue, 17 Jun 2025 11:13:26 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9CA048B776;
+	Tue, 17 Jun 2025 11:13:26 +0200 (CEST)
+Message-ID: <cc895e8c-5dd5-4207-bb35-58e6b923b7bc@csgroup.eu>
+Date: Tue, 17 Jun 2025 11:13:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
+ to memcpy
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <20250617005800.1410112-1-irogers@google.com>
+ <20250617005800.1410112-2-irogers@google.com>
+ <c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu> <20250617063236.GI8289@sol>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250617063236.GI8289@sol>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The `ionic_tx_map_frag()` wrapper function is used which returns 0 or a
-valid DMA address.  Testing that pointer with `dma_mapping_error()`could
-be eroneous since the error value exptected by `dma_mapping_error()` is
-not 0 but `DMA_MAPPING_ERROR` which is often ~0.
++linuxppc list
 
-Fixes: ac8813c0ab7d ("ionic: convert Rx queue buffers to use page_pool")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Le 17/06/2025 à 08:32, Eric Biggers a écrit :
+> On Tue, Jun 17, 2025 at 07:22:57AM +0200, Christophe Leroy wrote:
+>>
+>>
+>> Le 17/06/2025 à 02:57, Ian Rogers a écrit :
+>>> Type punning is necessary for get/put unaligned but the use of a
+>>> packed struct violates strict aliasing rules, requiring
+>>> -fno-strict-aliasing to be passed to the C compiler. Switch to using
+>>> memcpy so that -fno-strict-aliasing isn't necessary.
+>>
+>> VDSO build fails with this patch:
+>>
+>>    VDSO32L arch/powerpc/kernel/vdso/vdso32.so.dbg
+>> arch/powerpc/kernel/vdso/vdso32.so.dbg: dynamic relocations are not
+>> supported
+>> make[2]: *** [arch/powerpc/kernel/vdso/Makefile:79:
+>> arch/powerpc/kernel/vdso/vdso32.so.dbg] Error 1
+>>
+>> Behind the relocation issue, calling memcpy() for a single 4-bytes word
+>> kills performance.
+> 
+> memcpy() does normally do the right thing for unaligned accesses of 1, 2, 4, or
+> 8-byte values.  The snag here seems to be that the VDSO is built with
+> -fno-builtin (and -ffreestanding which implies -fno-builtin).  That causes the
+> compiler to no longer optimize out the calls to memcpy().  If __builtin_memcpy()
+> is used instead of memcpy(), it does work and generates the same code as before.
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-index 2ac59564ded1..beefdc43013e 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-@@ -357,7 +357,7 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
- 			} else {
- 				dma_addr = ionic_tx_map_frag(q, frag, 0,
- 							     skb_frag_size(frag));
--				if (dma_mapping_error(q->dev, dma_addr)) {
-+				if (!dma_addr) {
- 					ionic_tx_desc_unmap_bufs(q, desc_info);
- 					return -EIO;
- 				}
--- 
-2.43.0
+Yes right, changing memcpy() to __builtin_memcpy() seems to work, the 
+exact same code is generated.
 
+Christophe
