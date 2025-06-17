@@ -1,89 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA462EF650
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F19A2EF64C;
+	Tue, 17 Jun 2025 14:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170255; cv=none; b=fs2p0v006multWdHIa8yDJZ5OSWsPT4RnqXb34/1M7kphqHtklKqvE+9gFMRdq5EsFknAUK56HKs5O4kUN0YWmvNebuNTstQUbAFeE0GH8gsf+fEC1MkrHRWSMaCK2Cq6DwblnvJ1rTqsYmIZrLkl85+xa8jP9pabGv4DEbyxHk=
+	t=1750170301; cv=none; b=PZKEMF7J0rIPIkSP6NwsQGuE0H9JhzhMjn3tVYQx/hrJ5rH2KZLcuIWHwoazsXOEVmuhhHUuBG3tblnAHg6EG7g40qY5rxGx9mAk4bMAEIpapjJ7TIomYoBGciSS1Kg/qi0QCfmmSJauVqr3xUcbK6H1PsO+V2UFhKogHh/iOuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170255; c=relaxed/simple;
-	bh=pgRckujxifebMmqGjuPlksy5+XUQ//atvU7V5Z5Wnoc=;
+	s=arc-20240116; t=1750170301; c=relaxed/simple;
+	bh=RKp0dSWKgDenpsXCZCvzvHN8SLhhM9lokbjMKsoO5ck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R/rUBrxT0qXgpMWh3wPhrLVf9JrIezpklMo6zPI5sfEZq2PTmUaPigyjdg6+q9acn0vrWu8InAA8zEbZPmvT2T1rwKaup9+jVmoBeQblwi/cbC+XkRWN5OqXe336eFg5SE8Yn77dwHVazm/oN3Srxd56a9BsKapMIIs16BVrPwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YFeDjSQT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6USRnaxWiXCzIfKLmTl7AGCWemu5sszAS7o4iEOD/l6NPDZ+xdD5HSGiGaqbixtgBC1m3LtIYmxXyjNZmIOMgpxX55URyoQsDkTAfsdWJAUSuVzJhrEsL0oqH/gu9zGAd9AzZbCcfdm7jDbaDP/cgJbkybZYL/ibu6nAYMbQEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIyeNQqd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YFeDjSQT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750170252;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8nZJ22rsS0RPWxh3ZE7aCZVwueQlyLoqt+SFU6IEEhY=;
-	b=YFeDjSQTrqWCTahBS30hWV+IV7DHoV3tktIPAZK6D/rrVqcytVXp66Tc3bjOwCE1PcFNz+
-	RM7s0ECJExLWvuR+IMvwIQoMytkFT+FC7oMWnPjyM4Z+GgORPhoASKBA4lutYjLVP97P5d
-	/EAKX2khl6Z8YajtRZ/jErZe1k/9iRc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-247-6AcTJXLjOPu8zr1UEyeDMg-1; Tue, 17 Jun 2025 10:23:57 -0400
-X-MC-Unique: 6AcTJXLjOPu8zr1UEyeDMg-1
-X-Mimecast-MFC-AGG-ID: 6AcTJXLjOPu8zr1UEyeDMg_1750170236
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d64026baso40020835e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:23:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750170236; x=1750775036;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8nZJ22rsS0RPWxh3ZE7aCZVwueQlyLoqt+SFU6IEEhY=;
-        b=gaQq8DSfuwlfjA7TInWrMzEHgTDgUpOpmRkdCdYgz4PVBOCTmBNFusXwGaCjkjiNDc
-         O4Iksc19ygq05dABbHq2hmhy7by3adyKbE7ekTKvhxPsTzmCuxNi+uoE875awm/M/Eut
-         ZKkw5AaNLOihwsqvYS5FFVP7TWUmXskXhGBNO0r6e23WWNFFLGT/yIlvWUOQ+KBkVnk6
-         +Gw7n3EfSd1d638YvFixzp2ZuoT2D0SF0f+SMvnpsxSe03GjTXz8RKGbX55ASFIlmvkm
-         DYFIS8JJjJHWDKLu+CYSM2IgGgv+O5tLusxDMOdorXQlnPW6P6SACrSFfI2fw7bEspwQ
-         T+ew==
-X-Forwarded-Encrypted: i=1; AJvYcCXwJKcJihoP6yk9fpLAYarhedT/6+863H3wRQJSTs9cypV6vQVXg8JT7i5WzLcx5OI5ggKJ8AORUPxLSc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoXIQqRfnsP5M4S2ZyzIOXbFJV3cH7Jz7TM+Nof1YTDYNS9vwV
-	ctGouSqPA+PriPIRC3Ow/9B2YjaEmM7bh9eDEwZjW6bYgXVuofn9VKQ6yt4qsbh28rmjTH6Nqt2
-	d1jQO7b2vMwToy0E1UcPVzYy+eZJd53XCY8j7VNC9fqCsxhScUH76A1D1W2q3DIVLdA==
-X-Gm-Gg: ASbGncu1V8ZEx1232JxMKBjprM1OP3sJkC82xgiR4HYATB+y2hE14+4hGir1mZ/m1X/
-	jzaTeJNvQSyHoeBJKwCUVRtQsh6ZWDeyqjFMuDfLgerse3bSd+deURPOMZhIE+3WisfWkvGCNYl
-	UroGBbqH4rAZrYq/v55IoC5whp08mAByK7m3Ld0nrLilEfwO2UUm5dWjz44PXK+KA8oRvTJ9l+2
-	kol6Co5GLwPgA6xEA0onf1aSg7REBE2BBD5qzO9DI+fpzedhvJiasV1WAYkaLMcrkFal02vyf5t
-	8bjKKzgNqmZ6BPjdPVXzhl+WTA/cJoXT/xU3wA0Hn9XZLgJlFh5Dzw==
-X-Received: by 2002:a05:600c:5396:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-4533cac8fdbmr122013185e9.29.1750170236073;
-        Tue, 17 Jun 2025 07:23:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFXdSBOaD0bkiX6RgDIIItmoJz66Z98LumAPn/RVxW5in7JWmC1em46bTnPvZqEArSrV/R5Q==
-X-Received: by 2002:a05:600c:5396:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-4533cac8fdbmr122013005e9.29.1750170235702;
-        Tue, 17 Jun 2025 07:23:55 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.151.199])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25302dsm171997755e9.26.2025.06.17.07.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:23:55 -0700 (PDT)
-Date: Tue, 17 Jun 2025 16:23:53 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kuyo Chang <kuyo.chang@mediatek.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	jstultz <jstultz@google.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation
- formula
-Message-ID: <aFF6eYzMahzQ9sxE@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250614020524.631521-1-kuyo.chang@mediatek.com>
- <20250617085558.GN1613376@noisy.programming.kicks-ass.net>
- <aFFgi_9yxLN-auBE@jlelli-thinkpadt14gen4.remote.csb>
- <20250617141437.GW1613376@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIyeNQqd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5819C4CEE3;
+	Tue, 17 Jun 2025 14:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750170300;
+	bh=RKp0dSWKgDenpsXCZCvzvHN8SLhhM9lokbjMKsoO5ck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XIyeNQqdJi42s3GLrTWVJiA9ldEF6TQB1VgOWYIkFcnZPgXIvvdOuAUjFH9ZAezBy
+	 16VsCgej3Fg8e58rWMKQAnqCSckI6RRa2/XtlrWgEjM1/mQLP9LTyGgAnoGais4edQ
+	 Q+OEM8m7lnJC4ssINvEXmcuZcaryB9Kndt8zuYdG1pOl3E53x5iF49a75hCH31HGuq
+	 sv86Fm4lvWlw5H9Uw6YcO/VzzMIOqv5hGEcqCKsq4lTOEjNEi6NQ4F5jan5VtHLKjl
+	 6KhuRhtCU25ChgQx0RJWpXYD5MtGJXd5E9MWOnOxqsqD78VLr+03ReQqYRpjnGmUN7
+	 LiJrSr+z83WBg==
+Date: Tue, 17 Jun 2025 09:24:57 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Praveen Talari <quic_ptalari@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, psodagud@quicinc.com, 
+	djaggi@quicinc.com, quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com, 
+	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
+Subject: Re: [PATCH v6 3/8] soc: qcom: geni-se: Enable QUPs on SA8255p
+ Qualcomm platforms
+Message-ID: <52elmnb77a4kvlnmy5bhheypfyyw6x5qn4k45u22mvzybax7ti@wmpi2ww5uqsg>
+References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
+ <20250606172114.6618-4-quic_ptalari@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,31 +49,207 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617141437.GW1613376@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250606172114.6618-4-quic_ptalari@quicinc.com>
 
-On 17/06/25 16:14, Peter Zijlstra wrote:
-> On Tue, Jun 17, 2025 at 02:33:15PM +0200, Juri Lelli wrote:
-
-...
-
-> > To me it looks like we want this (no scaling) for fair_server (and
-> > possibly scx_server?) as for them we are only looking into a 'fixed
-> > time' type of isolation. Full fledged servers (hierarchical scheduling)
-> > maybe have it configurable, or enabled by default as a start (as we have
-> > it today).
+On Fri, Jun 06, 2025 at 10:51:09PM +0530, Praveen Talari wrote:
+> On the sa8255p platform, resources such as clocks,interconnects
+> and TLMM (GPIO) configurations are managed by firmware.
 > 
-> Right. Then we should write the above like:
+> Introduce a platform data function callback to distinguish whether
+> resource control is performed by firmware or directly by the driver
+> in linux.
 > 
-> 	scaled_delta_exec = delta_exec;
-> 	if (!dl_se->dl_server)
-> 		scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
+> The refactor ensures clear differentiation of resource
+> management mechanisms, improving maintainability and flexibility
+> in handling platform-specific configurations.
 > 
-> and let any later server users add bits on if they want more options.
+> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+> ---
+> v5 -> v6
+> - replaced dev_err with dev_err_probe
+> - added a check for desc->num_clks with MAX_CLKS, an error if
+>   the specified num_clks in descriptor exceeds defined MAX_CLKS.
+> - removed min_t which is not necessary.
+> - renamed callback function names to resources_init.
+> - resolved kernel bot warning error by documenting function
+>   pointer in geni_se_desc structure.
+> 
+> v3 -> v4
+> - declared an empty struct for sa8255p and added check as num clks.
+> - Added version log after ---
+> 
+> v1 -> v2
+> - changed datatype of i from int to unsigned int as per comment.
+> ---
+>  drivers/soc/qcom/qcom-geni-se.c | 77 +++++++++++++++++++++------------
+>  1 file changed, 49 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 4cb959106efa..5c727b9a17e9 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -101,10 +101,13 @@ struct geni_wrapper {
+>   * struct geni_se_desc - Data structure to represent the QUP Wrapper resources
+>   * @clks:		Name of the primary & optional secondary AHB clocks
+>   * @num_clks:		Count of clock names
+> + * @resources_init:	Function pointer for initializing QUP Wrapper resources
+>   */
+>  struct geni_se_desc {
+>  	unsigned int num_clks;
+>  	const char * const *clks;
+> +	int (*resources_init)(struct geni_wrapper *wrapper,
+> +			      const struct geni_se_desc *desc);
+>  };
+>  
+>  static const char * const icc_path_names[] = {"qup-core", "qup-config",
+> @@ -891,10 +894,47 @@ int geni_icc_disable(struct geni_se *se)
+>  }
+>  EXPORT_SYMBOL_GPL(geni_icc_disable);
+>  
+> +static int geni_se_resource_init(struct geni_wrapper *wrapper,
+> +				 const struct geni_se_desc *desc)
+> +{
+> +	struct device *dev = wrapper->dev;
+> +	int ret;
+> +	unsigned int i;
+> +
+> +	if (desc->num_clks > MAX_CLKS)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Too many clocks specified in descriptor:%u (max allowed: %u)\n",
+> +				     desc->num_clks, MAX_CLKS);
+> +
+> +	wrapper->num_clks = desc->num_clks;
+> +
+> +	for (i = 0; i < wrapper->num_clks; ++i)
+> +		wrapper->clks[i].id = desc->clks[i];
+> +
+> +	ret = of_count_phandle_with_args(dev->of_node, "clocks", "#clock-cells");
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "invalid clocks property at %pOF\n", dev->of_node);
+> +
+> +	if (ret < wrapper->num_clks) {
+> +		dev_err(dev, "invalid clocks count at %pOF, expected %d entries\n",
+> +			dev->of_node, wrapper->num_clks);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
+> +	if (ret) {
+> +		dev_err(dev, "Err getting clks %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int geni_se_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct geni_wrapper *wrapper;
+> +	const struct geni_se_desc *desc;
+>  	int ret;
+>  
+>  	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+> @@ -906,36 +946,12 @@ static int geni_se_probe(struct platform_device *pdev)
+>  	if (IS_ERR(wrapper->base))
+>  		return PTR_ERR(wrapper->base);
+>  
+> -	if (!has_acpi_companion(&pdev->dev)) {
+> -		const struct geni_se_desc *desc;
+> -		int i;
+> -
+> -		desc = device_get_match_data(&pdev->dev);
+> -		if (!desc)
+> -			return -EINVAL;
+> -
+> -		wrapper->num_clks = min_t(unsigned int, desc->num_clks, MAX_CLKS);
+> -
+> -		for (i = 0; i < wrapper->num_clks; ++i)
+> -			wrapper->clks[i].id = desc->clks[i];
+> -
+> -		ret = of_count_phandle_with_args(dev->of_node, "clocks", "#clock-cells");
+> -		if (ret < 0) {
+> -			dev_err(dev, "invalid clocks property at %pOF\n", dev->of_node);
+> -			return ret;
+> -		}
+> +	desc = device_get_match_data(&pdev->dev);
+>  
+> -		if (ret < wrapper->num_clks) {
+> -			dev_err(dev, "invalid clocks count at %pOF, expected %d entries\n",
+> -				dev->of_node, wrapper->num_clks);
+> +	if (!has_acpi_companion(&pdev->dev) && desc->num_clks) {
 
-Works for me. Looks cleaner also.
+Reading this again, the only functional change I can spot is the
+addition of this desc->num_clks check. (And the addition of the new
+compatible)
 
-Kuyo, can you please update your patch then?
+The rest of the patch is just moving things out of this if statement
+body, introducing the flexibility of a function pointer with a single
+possible value etc.
+
+
+As I've said before, function pointers are useful to create
+abstractions, but they make it harder to follow the code (both for me
+and the CPU) so you need to provide some value in return - and I'm
+failing to see what that value is.
+
+> +		ret = desc->resources_init(wrapper, desc);
+
+In other words, you can replace this line with:
+
+	ret = geni_se_resource_init();
+
+Or, if this is all we get, then you can do nothing and just add the
+additional expression to the condition and be done with it.
+
+> +		if (ret)
+>  			return -EINVAL;
+> -		}
+> -
+> -		ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
+> -		if (ret) {
+> -			dev_err(dev, "Err getting clks %d\n", ret);
+> -			return ret;
+> -		}
+>  	}
+>  
+>  	dev_set_drvdata(dev, wrapper);
+> @@ -951,8 +967,11 @@ static const char * const qup_clks[] = {
+>  static const struct geni_se_desc qup_desc = {
+>  	.clks = qup_clks,
+>  	.num_clks = ARRAY_SIZE(qup_clks),
+> +	.resources_init = geni_se_resource_init,
+>  };
+>  
+> +static const struct geni_se_desc sa8255p_qup_desc;
+
+This looks like a forward declaration, it took me a while to realize
+that this is giving you the actual all-zero geni_se_desc.
+
+Add a = {}; to make it clear that this is where you declare the
+variable.
 
 Thanks,
-Juri
+Bjorn
 
+> +
+>  static const char * const i2c_master_hub_clks[] = {
+>  	"s-ahb",
+>  };
+> @@ -960,11 +979,13 @@ static const char * const i2c_master_hub_clks[] = {
+>  static const struct geni_se_desc i2c_master_hub_desc = {
+>  	.clks = i2c_master_hub_clks,
+>  	.num_clks = ARRAY_SIZE(i2c_master_hub_clks),
+> +	.resources_init = geni_se_resource_init,
+>  };
+>  
+>  static const struct of_device_id geni_se_dt_match[] = {
+>  	{ .compatible = "qcom,geni-se-qup", .data = &qup_desc },
+>  	{ .compatible = "qcom,geni-se-i2c-master-hub", .data = &i2c_master_hub_desc },
+> +	{ .compatible = "qcom,sa8255p-geni-se-qup", .data = &sa8255p_qup_desc },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, geni_se_dt_match);
+> -- 
+> 2.17.1
+> 
