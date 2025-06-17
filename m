@@ -1,176 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A739A2E7191
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046FA2E2EF4;
+	Tue, 17 Jun 2025 14:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169074; cv=none; b=vGUD62RisaEOLzdjAZpYOtzM4gJcg9tNaCliwofGAc909TzYnebA7JP2TJLKdwZxK6QOO7YCTLxS7CQggAwZudUmddbE4LsGDMaT4UmoLxgrchikQxfC4usiP19h9QpP/Q0jQRK3EbqlPHbCx1lXTmZ/yP4l3jfLM3lsAx6ECuc=
+	t=1750169181; cv=none; b=amIfwVQBt2js+SezU4Y6zsyPZn+tX082Di/xY4jvJmQmoXqcj6QlKkgmlnVJPzCffRsmJZKXmPUB/MHNMy6j3LSKTV2hX6zSNwqlZHM7gwaalvDbl1XXfw1vuoOu7b0XBKTOb+cm/BJfdLKRhTdtBEeekRsxvETLjOH/b8oVAjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169074; c=relaxed/simple;
-	bh=DacUEIOZ4Wmu05in4HxTw8e4vA4fnDEd6CJhgdYfE6I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GoJiRZfzZucVHdgyf+HzdokJzqvPR7jqqNicMXQztaO0/lkBkH0cvZEXmgiJ2RuhO97cMM0iSftkeqdMHb89ctzjClrHB/zAk9xmPZP471qnOHz6I4VFYMAQM84d6x3ECZbDX3UuO90W+T4u9ssRlScaA4lQMjVAWqa/Bxvf+W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chMDOGdA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750169181; c=relaxed/simple;
+	bh=ujEVgJp17HsXe/xyAX0/dp1pdcA2vygvIovjmYs64xM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8ynnJ1Hf2Lujn95rC2Cfz3yxGe41Mrnq5ndLUsAhPNDHhV6dYwM1rSdkpuwxVqX6GWoJNyJxRovy/U2wix5uPxvYzVqFcz2fYCstmsZkoSsombV0oSQ4c8Iu0hmCM07blL5QtIDcsXaSEvQR1i6Igp+I8w1Iow9FqWFjlauvx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=AKthm1gs; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chMDOGdA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750169071;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mvDC1nx99PBAn05PNx0i2guL0ZWIOt26UDKBU6S0cf8=;
-	b=chMDOGdApC0AI3xXa7RGA1NUjds7WByt5dpq4PrY5MXI61eLGteYzrOW/ntYFXUNn/WqK9
-	+0kuIxB3cR28gLfz3F+nUe+o47Ht0/+JaFhQJpN2mQOnZlXcyMe+TbcyoTiqI7iyHQVmwi
-	ln+M7Xfgcm/sLBtgdDuUNP1wLMI2550=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-561-FcGNpJg1O-mpFY8_fq0V8g-1; Tue, 17 Jun 2025 10:04:29 -0400
-X-MC-Unique: FcGNpJg1O-mpFY8_fq0V8g-1
-X-Mimecast-MFC-AGG-ID: FcGNpJg1O-mpFY8_fq0V8g_1750169068
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4535011d48eso11624495e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:04:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750169068; x=1750773868;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mvDC1nx99PBAn05PNx0i2guL0ZWIOt26UDKBU6S0cf8=;
-        b=oM7TVHm++OLat4UEezdKMei7ra0MbqsBe1IhOPrUbik7kUkno1IAU8W3FioUfJGVvZ
-         iClVW+DKabzldC4AGTyhQuzRgodSrmoJXVzny3uQs/89sDh4z+aa/9GXc+CbN6NEtos7
-         4R8+8gmPo57VVHEIbCBzKUp6/TY3LGX+GC9ZqOqJSyjFjmZQV4iE/ll1e58UvMATerKi
-         bok/pex5A9qPuv4t9oTh53d5nGlVrGPzSytY4rZM1Ze61/AZ/egYLmf4ihxclIHD9OKf
-         ey0v/DLa2Xb8xESxqXPds7dqiSTAG9ozBzexVXx0C5ToTfFR/Omlx/oUUcbtkl4zWlQv
-         //Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCQ4jQGeafG+epezL3l6ehnEZDPCzJVfHB8SgrJ0pQZ4ieig2xw/2ePKRpnYEkiUbC9mo5u2XV2hLs5ck=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWGAYXX/Ur6R6l0gUDXC5GiVkhl8geNexn3b38f4W5241q+mCm
-	afl4YF8jJEHc9ydSQOo9R59sYOCorkRYfOjC1C5lsSLp5F69q8EqlD9+MJUYT2t8m85bOJ882Vm
-	ZTeMh+/qYv94OKX2xJUlZGqBJ3J3ccqMxYHEWh3aUVy4ModKfYpyfrZvmUbJvNxK5bPBntFedtw
-	6N
-X-Gm-Gg: ASbGncvCMvpINyeZdCxjAUsZvfgDLIJvuQvXxA6dxzIWxlgnLm+W4bLgfKl2XLHVkPs
-	OdszsI+t0MJlwK2UgVDi6kZRJzgcPqLRav6Tp67rPkR7HIfKYZS2nR/WLk8zhmG7ML4BJgLy71f
-	nH8+VugZ1r7nkRCq+QJ453N/EDtkqN1jOXhHeDH7mmlCpwLR83cWIvLnWfUgruXnZmu4J0VVmls
-	SzfV5H/dru70HCgSqKZIQdW3vLoE31e2D/0geKl4c1PKRIf5Sehk9tPfBJ+CT6Km1uRofz42hfl
-	EHSbVGnjK8e5K+u/h3unoGG120dtC7m8w+fOtoOVPSw3OB9O3cD/GHZKThDuzh0Jt/g35CQJfW/
-	3Z0ZzHOgW7FhqYMIEEzYMccX+4AnmkkIGXBTDn69D74qmLbw=
-X-Received: by 2002:a05:600c:4f95:b0:450:d01f:de6f with SMTP id 5b1f17b1804b1-4533ca84626mr152306155e9.15.1750169068052;
-        Tue, 17 Jun 2025 07:04:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWvx+VbLkHVGiv9bP6lMEQVN/ySPOrPeOw2lBtXxzJFFJl30SyEGfTKNbFaHIi3jpkOPlwSw==
-X-Received: by 2002:a05:600c:4f95:b0:450:d01f:de6f with SMTP id 5b1f17b1804b1-4533ca84626mr152305495e9.15.1750169067621;
-        Tue, 17 Jun 2025 07:04:27 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08dfesm14318806f8f.60.2025.06.17.07.04.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 07:04:27 -0700 (PDT)
-Message-ID: <ccabb051-e645-4a6c-8357-64a2640289c1@redhat.com>
-Date: Tue, 17 Jun 2025 16:04:26 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AKthm1gs"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 15DE37E1;
+	Tue, 17 Jun 2025 16:06:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750169166;
+	bh=ujEVgJp17HsXe/xyAX0/dp1pdcA2vygvIovjmYs64xM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AKthm1gsy+QYt3KxC54bKBFKCQT04uhOdX1ltu29G+NhLXV92t554CL+46clAlTUX
+	 d5gChZn/8MuARCgpyQPEhChYZGYNypFGJWASeRn8jyVGcrwQP+/1qP3xFosSQ0d/i5
+	 5cK514uMEsDInIJyAmFuvfIeFODF0OP3CiAnWeiw=
+Date: Tue, 17 Jun 2025 17:06:02 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Hans Verkuil <hans@jjverkuil.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] media: uvcvideo: Use prio state from v4l2_device
+Message-ID: <20250617140602.GD10006@pendragon.ideasonboard.com>
+References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
+ <20250616-uvc-fop-v4-5-250286570ee7@chromium.org>
+ <CANiDSCur8zys_CSZC9+-QdD0U556A7HLLdSN8mJuOpXm+Ls8Wg@mail.gmail.com>
+ <20250617100730.GA10006@pendragon.ideasonboard.com>
+ <CANiDSCvfbB+wwFqNGJKBbSGNhXWvxxK=dvGuej7VmHc+hAUNEA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
-From: David Hildenbrand <david@redhat.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, lizhe.67@bytedance.com
-Cc: alex.williamson@redhat.com, akpm@linux-foundation.org, peterx@redhat.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250617041821.85555-1-lizhe.67@bytedance.com>
- <20250617041821.85555-3-lizhe.67@bytedance.com>
- <20250617134251.GA1376515@ziepe.ca>
- <460e16a0-c8d9-493a-b54f-2c793c969eb1@redhat.com>
- <21958961-259f-4520-ae60-e234383945d7@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <21958961-259f-4520-ae60-e234383945d7@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANiDSCvfbB+wwFqNGJKBbSGNhXWvxxK=dvGuej7VmHc+hAUNEA@mail.gmail.com>
 
-On 17.06.25 15:58, David Hildenbrand wrote:
-> On 17.06.25 15:45, David Hildenbrand wrote:
->> On 17.06.25 15:42, Jason Gunthorpe wrote:
->>> On Tue, Jun 17, 2025 at 12:18:20PM +0800, lizhe.67@bytedance.com wrote:
->>>
->>>> @@ -360,12 +360,7 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
->>>>     
->>>>     	for (i = 0; i < npages; i += nr) {
->>>>     		folio = gup_folio_range_next(page, npages, i, &nr);
->>>> -		if (make_dirty && !folio_test_dirty(folio)) {
->>>> -			folio_lock(folio);
->>>> -			folio_mark_dirty(folio);
->>>> -			folio_unlock(folio);
->>>> -		}
->>>> -		gup_put_folio(folio, nr, FOLL_PIN);
->>>> +		unpin_user_folio_dirty_locked(folio, nr, make_dirty);
->>>>     	}
->>>
->>> I don't think we should call an exported function here - this is a
->>> fast path for rdma and iommfd, I don't want to see it degrade to save
->>> three duplicated lines :\
->>
->> Any way to quantify? In theory, the compiler could still optimize this
->> within the same file, no?
+On Tue, Jun 17, 2025 at 01:09:38PM +0200, Ricardo Ribalda wrote:
+> On Tue, 17 Jun 2025 at 12:07, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > On Mon, Jun 16, 2025 at 08:30:08PM +0200, Ricardo Ribalda wrote:
+> > > On Mon, 16 Jun 2025 at 17:24, Ricardo Ribalda <ribalda@chromium.org> wrote:
+> > > >
+> > > > Currently, a UVC device can have multiple chains, and each chain maintains
+> > > > its own priority state. While this behavior is technically correct for UVC,
+> > > > uvcvideo is the *only* V4L2 driver that does not utilize the priority state
+> > > > defined within `v4l2_device`.
+> > > >
+> > > > This patch modifies uvcvideo to use the `v4l2_device` priority state. While
+> > > > this might not be strictly "correct" for uvcvideo's multi-chain design, it
+> > > > aligns uvcvideo with the rest of the V4L2 drivers, providing "correct enough"
+> > > > behavior and enabling code cleanup in v4l2-core. Also, multi-chain
+> > > > devices are extremely rare, they are typically implemented as two
+> > > > independent usb devices.
+> > >
+> > > As the cover letter says, this last patch 5/5 is a RFC. We can decide
+> > > if it is worth to keep it or not.
+> > >
+> > > The pros is that we can do some cleanup in the core,
+> >
+> > What cleanups would that be ?
+> >
+> > > the cons is that it might break kAPI.
+> >
+> > Multi-chain devices are essentially multiple video devices inside a
+> > single USB function. They are exposed as completely separate devices to
+> > userspace, having the priority ioctls on one chain impact the other
+> > chain wouldn't make much sense to me. I think we should drop this patch.
 > 
-> Looking at the compiler output, I think the compile is doing exactly that.
+> Ack, let's drop it.
 > 
-> Unless my obdjump -D -S analysis skills are seriously degraded :)
+> PS: Do you know about a multi chain device that is commercially
+> available? I would love to buy one for testing.
+> Also do you know any "output" device that I can buy?
 
-FWIW, while already looking at this, even before this change, the 
-compiler does not inline gup_put_folio() into this function, which is a 
-bit unexpected.
+The only output device I've worked with was a custom camera developed by
+a customer that had a "UVC to VGA" output path. It was a loooooong time
+ago, I don't have a device to test UVC output anymore.
+
+> > > I checked in the debian sourcecode and I could only find a user of
+> > > PRIORITY for dvb and was optional.
+> >
+> > We could discuss deprecating the priority ioctls overall if we think
+> > they're not useful (and used) by userspace. I was however considering
+> > using them in libcamera though, to prevent other applications from
+> > modifying the camera configuration behind the library's back.
+> 
+> For the record:
+> From: https://codesearch.debian.net/search?q=VIDIOC_S_PRIORITY
+> If I am not wrong, this is the only relevant usecase:
+> https://sources.debian.org/src/zvbi/0.2.44-1/daemon/proxyd.c/?hl=1523#L1523
+> 
+> O_EXCL does not work for you?
+
+I haven't tried it, but tt's defined as
+
+    O_EXCL Ensure that this call creates the file: if this flag is
+	   specified in conjunction with O_CREAT, and pathname already
+	   exists, then open() fails with the error EEXIST.
+
+	   When these two flags are specified, symbolic links are not
+	   followed: if pathname is a symbolic link, then open() fails
+	   regardless of where the symbolic link points.
+
+	   In general, the behavior of O_EXCL is undefined if it is used
+	   without O_CREAT.  There is one exception: on Linux 2.6 and
+	   later, O_EXCL can be used without O_CREAT  if  pathname
+	   refers to a block device.  If the block device is in use by
+	   the system (e.g., mounted), open() fails with the error
+	   EBUSY.
+
+so I don't expect it would work.
+
+It's not a big deal, libcamera doesn't get exclusive access to video
+devices today and the world doesn't collapse (at least not because of
+this specific issue). And we don't have priority support on subdevs, so
+we couldn't solve the whole problem anyway.
+
+> > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > > ---
+> > > >  drivers/media/usb/uvc/uvc_driver.c | 2 --
+> > > >  drivers/media/usb/uvc/uvcvideo.h   | 1 -
+> > > >  2 files changed, 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > > > index accfb4ca3c72cb899185ddc8ecf4e29143d58fc6..e3795e40f14dc325e5bd120f5f45b60937841641 100644
+> > > > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > > > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > > > @@ -1728,7 +1728,6 @@ static struct uvc_video_chain *uvc_alloc_chain(struct uvc_device *dev)
+> > > >         INIT_LIST_HEAD(&chain->entities);
+> > > >         mutex_init(&chain->ctrl_mutex);
+> > > >         chain->dev = dev;
+> > > > -       v4l2_prio_init(&chain->prio);
+> > > >
+> > > >         return chain;
+> > > >  }
+> > > > @@ -2008,7 +2007,6 @@ int uvc_register_video_device(struct uvc_device *dev,
+> > > >         vdev->fops = fops;
+> > > >         vdev->ioctl_ops = ioctl_ops;
+> > > >         vdev->release = uvc_release;
+> > > > -       vdev->prio = &stream->chain->prio;
+> > > >         vdev->queue = &queue->queue;
+> > > >         vdev->lock = &queue->mutex;
+> > > >         if (type == V4L2_BUF_TYPE_VIDEO_OUTPUT)
+> > > > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > > > index 3e6d2d912f3a1cfcf63b2bc8edd3f86f3da305db..5ed9785d59c698cc7e0ac69955b892f932961617 100644
+> > > > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > > > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > > > @@ -354,7 +354,6 @@ struct uvc_video_chain {
+> > > >                                                  * uvc_fh.pending_async_ctrls
+> > > >                                                  */
+> > > >
+> > > > -       struct v4l2_prio_state prio;            /* V4L2 priority state */
+> > > >         u32 caps;                               /* V4L2 chain-wide caps */
+> > > >         u8 ctrl_class_bitmap;                   /* Bitmap of valid classes */
+> > > >  };
 
 -- 
-Cheers,
+Regards,
 
-David / dhildenb
-
+Laurent Pinchart
