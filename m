@@ -1,83 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E57199924;
-	Tue, 17 Jun 2025 06:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D019F421
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750140170; cv=none; b=LiZS6illaEm3SGect5LHmgT0MX8cYEooYLK/yDufrhIIaA28zcYy40ei4hUPOUiHeEe9GaQmdoU39CIExfSJVAixR55iP3FA28n1tdzNyZNeAYQkNu2w1CScjCpfn9feoBByMaer1IBzHxwv6iCcql/yFo6v1T8P0oX99kSMEHw=
+	t=1750140215; cv=none; b=Lcaxb5OgMXVQW1JfmV/85DXxApcC9NretO+BUrBA66Z8a8tGcM+MMPnSV+uzGiN89Qt/r0BER7MxZjZiEPzb4yFfX62eDZ1rYMfpDu/1auY2igVjIEHV+w0bOWCt5Ef2bnK3U9qrMLU55ntNU/YgzNnZyLUa9H0wZ3MKADiuPMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750140170; c=relaxed/simple;
-	bh=y3LjvVl5E7KxK3T3g5NR+r6/2sbufh9dPYcDzRkbfdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8ATYWOcTq4aZQEiozy/xuaTwREyauZJ+JE8LTwTclizO75hCnQ9joC6VYJopZ5G/sv+k/D/5ThQ36FRMtUf2sOwi0yLWz1NaWRb7SYmnBJTQy3w9kHYVLYC98a74DwjJEY18GA4CMLw0SbGKLK9xVGoXQj1t2Z3MUolTF7rgQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDqEObYq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750140215; c=relaxed/simple;
+	bh=R85+3xivTi16MpxfaJKqNVPZkr71tEJi5+LtItNg5gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LqAYtvc30OF0uAVM2wsGMbkP2bBPnlxQHoo83puaNeHfk7CjZIE1/fWrTFIcOy3ti3nf0zFUE8qwNTipbfmj5vwyvPl2STyIBMM61e73jF11BEz4uh2AJmJcQBazPttOsOrT0ZnuCaBxOeFjJx38Rjh/lbI0WI5MtuoDARr9UDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BvCNgVhn; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDqEObYq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985FCC4CEE3;
-	Tue, 17 Jun 2025 06:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750140170;
-	bh=y3LjvVl5E7KxK3T3g5NR+r6/2sbufh9dPYcDzRkbfdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vDqEObYqJgZsr3HsU3JEM5UdeuznK8bpOubp16XshTnWA4lQcYuVdnMkfpsodMRMN
-	 z1a5IKqyB0y+o1RcfgyJ46ItVjTYPamCYQ/Qm71gkCNlStAGZGVQpx7sl7POMeF4RK
-	 0KI7oe4MIJZRktHYrKioauhHZHUHpGzYfPBZLjSFxMfDwc8vxkBrqLffqXvZzq+yMv
-	 29xWo4gTwmZYpvTUlPH2ujpdU+I74jbP+MKRW+m2zbr+92LlD1kG7Y8n9iRHR1mI4h
-	 UbKYyQBeARoIQF8nW7oaH3tr2pDf6moA0Yyfo4Ya6y1MNnRDwqg3RQT6UWWp1Gy/e1
-	 TmSHYwDY4gMyg==
-Date: Tue, 17 Jun 2025 11:32:46 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	dlan@gentoo.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
-	drew@pdp7.com, emil.renner.berthing@canonical.com,
-	inochiama@gmail.com, geert+renesas@glider.be, tglx@linutronix.de,
-	hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
-	elder@riscstar.com, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 4/8] dma: mmp_pdma: Add SpacemiT PDMA support with 64-bit
- addressing
-Message-ID: <aFEFBss3RT7NbQkV@vaman>
-References: <20250611125723.181711-1-guodong@riscstar.com>
- <20250611125723.181711-5-guodong@riscstar.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BvCNgVhn"
+Message-ID: <9533ce3a-4d87-4cff-b545-9e2f1afc607f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750140209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dm5gLE8p1RI+b2xU1al9yd130OkPO03e69aDHKUWjS8=;
+	b=BvCNgVhnnJaBfrkxDAcwONceWTm80TxCGOZP6Sa8vhvMtQIkij3HCeciaE/5P5VdCGoaH/
+	gW5+NbNF7zskB9xEJsSwPkDDB3GD6yZoTCOWckPtQRiESpB0OvA9UGXUfI4sEOXNQ/xZfm
+	suIatakHQGU1UT8PlH6WiK06kGGyElE=
+Date: Tue, 17 Jun 2025 14:03:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611125723.181711-5-guodong@riscstar.com>
+Subject: Re: [PATCH 1/1] mm/madvise: initialize prev pointer in
+ madvise_walk_vmas
+Content-Language: en-US
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, jannh@google.com, lorenzo.stoakes@oracle.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Lance Yang <ioworker0@gmail.com>
+References: <20250617020544.57305-1-lance.yang@linux.dev>
+ <CAGsJ_4ySwMuKGYxywY+RH_FkNvjsThhvFQr+d1++KykOqjxarg@mail.gmail.com>
+ <6fe09fdd-ff38-42cc-b101-520204213f82@linux.dev>
+ <CAGsJ_4zsP6i9+eq66981opoFGcA5SYjMxz5GumWc5DGJW4gjPQ@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <CAGsJ_4zsP6i9+eq66981opoFGcA5SYjMxz5GumWc5DGJW4gjPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 11-06-25, 20:57, Guodong Xu wrote:
-> Extend the MMP PDMA driver to support SpacemiT PDMA controllers with
-> 64-bit physical addressing capabilities, as used in the K1 SoC. This
-> change introduces a flexible architecture that maintains compatibility
-> with existing 32-bit Marvell platforms while adding 64-bit support.
+
+
+On 2025/6/17 13:19, Barry Song wrote:
+> On Tue, Jun 17, 2025 at 4:57 PM Lance Yang <lance.yang@linux.dev> wrote:
+>>
+>>
+>>
+>> On 2025/6/17 10:24, Barry Song wrote:
+>>> On Tue, Jun 17, 2025 at 2:05 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>
+>>>> From: Lance Yang <lance.yang@linux.dev>
+>>>>
+>>>> The prev pointer was uninitialized, which could lead to undefined behavior
+>>>> where its address is taken and passed to the visit() callback without being
+>>>> assigned a value.
+>>>>
+>>>> Initializing it to NULL makes the code safer and prevents potential bugs
+>>>> if a future callback function attempts to read from it.
+>>>
+>>> Is there any read-before-write case here? I haven't found one.
+>>
+>>
+>> It appears that the following is a call chain showing the read-before-write
+>> of prev:
+>>
+>> -> madvise_vma_anon_name(..., struct vm_area_struct **prev, ...)
+>>           Receives the address of madvise_walk_vmas's prev.
+>>           Passes this pointer directly to madvise_update_vma.
+>>           Note that prev is not updated before visit() is called
+>>           if !(start > vma->vm_start) in the slow path.
+>>
+>>           -> madvise_update_vma(..., struct vm_area_struct **prev, ...)
+>>                   It calls the next function with *prev.
+>>
+>>                   -> vma_modify_flags_name(..., *prev, ...)
+>>                           Stores the value of madvise_walk_vmas's prev in
+>> vmg.prev
+>>                           using the VMG_VMA_STATE macro.
+>>
+>>                           -> vma_modify(struct vma_merge_struct *vmg)
+>>                                   Receives the vmg struct.
+>>                                   Passes vmg to vma_merge_existing_range.
+>>
+>>                                   -> vma_merge_existing_range(struct
+>> vma_merge_struct *vmg)
+>>                                           Retrieves the value: struct
+>> vm_area_struct *prev = vmg->prev;
+>>                                           The value is now used in a
+>> conditional check:
+>>                                           VM_WARN_ON_VMG(prev && start <=
+>> prev->vm_start, vmg)
+>>                                           If prev was uninitialized, this
+>> would cause a crash.
 > 
-> Key changes:
-> - Add struct mmp_pdma_config to abstract platform-specific behaviors
-> - Implement 64-bit address support through:
->   * New high address registers (DDADRH, DSADRH, DTADRH)
->   * DCSR_LPAEEN bit for Long Physical Address Extension mode
->   * Helper functions for 32/64-bit address handling
-> - Add "spacemit,pdma-1.0" compatible string with associated config
-> - Extend descriptor structure to support 64-bit addresses
-> - Refactor address handling code to be platform-agnostic
-> - Add proper DMA mask configuration for both 32-bit and 64-bit modes
+> Thanks!
 > 
-> The implementation uses a configuration-based approach to keeps all
-> platform-specific code isolated in config structures. It maintains clean
-> separation between 32-bit and 64-bit code paths, provides consistent
-> API for both addressing modes and preserves backward compatibility.
+> Do you have a reproducer? I'd like to try.
 
-I would ask for this to be split, first to to driver changes for adding
-new ops and then adding new soc support. This way the two changes are
-independent
+Not yet ;)
 
--- 
-~Vinod
+It was found during code review to prevent potential bugs, and the
+initialization itself is harmless.
+
+Thanks,
+Lance
+
+> 
+>>
+>> Thanks,
+>> Lance
+>>
+>>>
+>>> It also looks like we're assuming that *prev == NULL implies
+>>> a specific condition:
+>>>
+>>> *prev = NULL;   /* tell sys_madvise we drop mmap_lock */
+>>>
+>>> *prev = NULL; /* mmap_lock has been dropped, prev is stale */
+>>>
+>>>>
+>>>> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+>>>> ---
+>>>>    mm/madvise.c | 4 ++--
+>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/mm/madvise.c b/mm/madvise.c
+>>>> index 267d8e4adf31..c87325000303 100644
+>>>> --- a/mm/madvise.c
+>>>> +++ b/mm/madvise.c
+>>>> @@ -1536,10 +1536,10 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+>>>>                                      struct vm_area_struct **prev, unsigned long start,
+>>>>                                      unsigned long end, void *arg))
+>>>>    {
+>>>> +       struct vm_area_struct *prev = NULL;
+>>>>           struct vm_area_struct *vma;
+>>>> -       struct vm_area_struct *prev;
+>>>> -       unsigned long tmp;
+>>>>           int unmapped_error = 0;
+>>>> +       unsigned long tmp;
+>>>>           int error;
+>>>>
+>>>>           /*
+>>>> --
+>>>> 2.49.0
+>>>>
+>>>
+> 
+> Thanks
+> Barry
+
