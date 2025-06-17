@@ -1,179 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134D92EE60C;
-	Tue, 17 Jun 2025 15:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B9E2EF2BC
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175638; cv=none; b=Wua6ofzH2ItXrnB5h5eYAxlNlOiZ7YI2o1Ssqo5SYBxJkRTo54zi2zN0rEIIFqj3yS1OQXzVyrhc/Go/sVIwNMtlcMkJELUvoFrHXLA2dg8dOrzJtzgPQKIMdwsABZKU5inn8LErA5Ox1uEQS1VNQblYoFSFGlO8RNpNEwKBsII=
+	t=1750175646; cv=none; b=Qc26ife19YpoOFysf0p3JcPNbdWukmKmoSkSBYOQPIVhfENDkAOemKn1VQqchgJxhJ/YzI0yjkvMr7w0LUIferXJEGwHPnELTyREJ7eDHFlokY/XbPoQ4TtjQFqGG6a//WHVUo7k9YAnB9WimrqP2o4YHuwdqP2U6Taz6eaSctw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175638; c=relaxed/simple;
-	bh=Xmi1segpA11UP+V+o5ts0ddLZv32iD3xxVOdV/BoX0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJ9k2GMKUfdwBNqxj/AV3GCgWG4LUZ3OC0IOjTXN2qHGYzoDy0SPhySE2bZFpt61S4JGyif4S/dNgOHv3NzGu3lM2wer+C0zaeD2nHAI0HorgrlGHnr2lpOt8g+TNlB5ueNuC/prnorvxHFEehJEEsrRkJOqyfYi2cSwrgImw+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJnjQyZs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750175646; c=relaxed/simple;
+	bh=GixHo7OCVTSD0sJSxwSZMCjsg1quwRg/ut0ejA/F6/k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JUvKf5suKa3NHe9zMVosCzBczPA8vKPi8EH8/ePuBa6dyZSTVAuaCamcCaHmHk31A5Enl1DG5jFUVZqtCWplD/ct5V/bwJezo8ye8UFtmddEesQyMHj8WojjlLz9uFnNI6AnnuBSodmyQmLVcKmPeMUtALSPfgIrGXdFEsTisj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Js1PFMfb; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJnjQyZs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2CCC4CEE3;
-	Tue, 17 Jun 2025 15:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750175637;
-	bh=Xmi1segpA11UP+V+o5ts0ddLZv32iD3xxVOdV/BoX0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KJnjQyZs2WukgTIGrOZ4NLTHG4aQxtoWKt+MijZ79h2DNRRGnnK40lZLezVngpq9x
-	 xjXq9icUhycIdkZp9Aouq6wkzVoRcvPO6CBuNlrnYWcldqYEGoBtv1WqUnyqP3ojrD
-	 MOTD6sw+tMAjkCI2RLOE/O3G+lahwO6HJCwRZgeBZt/15w7goIiUgj1HOeauKt/atF
-	 BEYBWLp9fyPgxHajrXkAOPePV1oLXV7MgIrEnny+LSDvntDjc3ilNaOdVCsdCg8YbM
-	 UUx/PFfJuqM5x2fc/LKuum1o8V8Kz0yyoAvmrfT8jxbqVV+Ngu1N3Wkloqx48Qq8Y0
-	 HAWJHSVg12lYw==
-Date: Tue, 17 Jun 2025 10:53:54 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Praveen Talari <quic_ptalari@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, psodagud@quicinc.com, 
-	djaggi@quicinc.com, quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com, 
-	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
-Subject: Re: [PATCH v6 7/8] serial: qcom-geni: Enable PM runtime for serial
- driver
-Message-ID: <d6cr4elhrbh27lmlcv5xzuel75uvsgi7klxjkevm7vg4jcbawe@5ojgetrxkag5>
-References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
- <20250606172114.6618-8-quic_ptalari@quicinc.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Js1PFMfb"
+X-UUID: 48305d404b9311f0b33aeb1e7f16c2b6-20250617
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=DM70jmBk+8+pNXMrSmDw0F0d1r4Q4LzFUoMuNsxPcH4=;
+	b=Js1PFMfbr+Kni92Htg/UjrRVzwKN0SJuv+R9I0eBGAeZTW5YUG0Hb9xJYsGSMVqLNxO39RVkVAxTTOsdDTwrrlSRJYnkYNlT7qZlX+W6IFjbaTGraw0itmnfbN455gI1oEY0I0+WDtOFHxPN/uTwFEhcC35k33+CaEh7WSGoIwY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:5b480e38-e146-42eb-84d7-2bc1e7194b3c,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:09905cf,CLOUDID:35561477-7521-4364-b0ef-cd7d9c0ecbde,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
+	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 48305d404b9311f0b33aeb1e7f16c2b6-20250617
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 773875663; Tue, 17 Jun 2025 23:53:59 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Tue, 17 Jun 2025 23:53:57 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Tue, 17 Jun 2025 23:53:57 +0800
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: John Stultz <jstultz@google.com>, kuyo chang <kuyo.chang@mediatek.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: [PATCH v2 1/1] sched/deadline: Fix dl_server runtime calculation formula
+Date: Tue, 17 Jun 2025 23:52:49 +0800
+Message-ID: <20250617155355.1479777-1-kuyo.chang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606172114.6618-8-quic_ptalari@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Fri, Jun 06, 2025 at 10:51:13PM +0530, Praveen Talari wrote:
-> Add Power Management (PM) runtime support to Qualcomm GENI
-> serial driver.
-> 
+From: kuyo chang <kuyo.chang@mediatek.com>
 
-Doesn't this have impact on the behavior outside of your
-project? Or is the transition from qcom_geni_serial_pm() to explicit
-RPM merely moving code around?
+[Symptom]
+The calculation formula for dl_server runtime is based on
+Frequency/capacity scale-invariance.
+This will cause excessive RT latency (expect absolute time).
 
-Seems like this deserves to not be hidden in a middle of a patch series.
+[Analysis]
+Consider the following case under a Big.LITTLE architecture:
 
-> Introduce necessary callbacks and updates to ensure seamless
-> transitions between power states, enhancing overall power
-> efficiency.
-> 
+Assume the runtime is: 50,000,000 ns, and Frequency/capacity
+scale-invariance defined as below:
 
-This commit message fails to state why we need runtime PM support in the
-driver.
+Frequency scale-invariance: 100
+Capacity scale-invariance: 50
+First by Frequency scale-invariance,
+the runtime is scaled to 50,000,000 * 100 >> 10 = 4,882,812
+Then by capacity scale-invariance,
+it is further scaled to 4,882,812 * 50 >> 10 = 238,418.
 
-Also, start your commit message with a problem description, per
-https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+So it will scaled to 238,418 ns.
 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> ---
-> v5 -> v6
-> - added reviewed-by tag in commit
-> - added __maybe_unused to PM callback functions to avoid
->   warnings of defined but not used
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 33 +++++++++++++++++++++++----
->  1 file changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index b6fa7dc9b1fb..3691340ce7e8 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -1686,10 +1686,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->  		old_state = UART_PM_STATE_OFF;
->  
->  	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
-> -		geni_serial_resources_on(uport);
-> +		pm_runtime_resume_and_get(uport->dev);
->  	else if (new_state == UART_PM_STATE_OFF &&
->  		 old_state == UART_PM_STATE_ON)
-> -		geni_serial_resources_off(uport);
-> +		pm_runtime_put_sync(uport->dev);
->  
->  }
->  
-> @@ -1827,9 +1827,11 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	pm_runtime_enable(port->se.dev);
+[Solution]
+The runtime for dl_server should be fixed time
+asis RT bandwidth control.
+Fix the runtime calculation formula for the dl_server.
 
-Any reason not to use devm_pm_runtime_enable() and avoid the
-two pm_runtime_disable() below?
+Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 
-Regards,
-Bjorn
+v1: https://lore.kernel.org/all/20250614020524.631521-1-kuyo.chang@mediatek.com/
 
-> +
->  	ret = uart_add_one_port(drv, uport);
->  	if (ret)
-> -		return ret;
-> +		goto error;
->  
->  	if (port->wakeup_irq > 0) {
->  		device_init_wakeup(&pdev->dev, true);
-> @@ -1839,11 +1841,15 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  			device_init_wakeup(&pdev->dev, false);
->  			ida_free(&port_ida, uport->line);
->  			uart_remove_one_port(drv, uport);
-> -			return ret;
-> +			goto error;
->  		}
->  	}
->  
->  	return 0;
-> +
-> +error:
-> +	pm_runtime_disable(port->se.dev);
-> +	return ret;
->  }
->  
->  static void qcom_geni_serial_remove(struct platform_device *pdev)
-> @@ -1855,9 +1861,26 @@ static void qcom_geni_serial_remove(struct platform_device *pdev)
->  	dev_pm_clear_wake_irq(&pdev->dev);
->  	device_init_wakeup(&pdev->dev, false);
->  	ida_free(&port_ida, uport->line);
-> +	pm_runtime_disable(port->se.dev);
->  	uart_remove_one_port(drv, &port->uport);
->  }
->  
-> +static int __maybe_unused qcom_geni_serial_runtime_suspend(struct device *dev)
-> +{
-> +	struct qcom_geni_serial_port *port = dev_get_drvdata(dev);
-> +	struct uart_port *uport = &port->uport;
-> +
-> +	return geni_serial_resources_off(uport);
-> +}
-> +
-> +static int __maybe_unused qcom_geni_serial_runtime_resume(struct device *dev)
-> +{
-> +	struct qcom_geni_serial_port *port = dev_get_drvdata(dev);
-> +	struct uart_port *uport = &port->uport;
-> +
-> +	return geni_serial_resources_on(uport);
-> +}
-> +
->  static int qcom_geni_serial_suspend(struct device *dev)
->  {
->  	struct qcom_geni_serial_port *port = dev_get_drvdata(dev);
-> @@ -1901,6 +1924,8 @@ static const struct qcom_geni_device_data qcom_geni_uart_data = {
->  };
->  
->  static const struct dev_pm_ops qcom_geni_serial_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(qcom_geni_serial_runtime_suspend,
-> +			   qcom_geni_serial_runtime_resume, NULL)
->  	SYSTEM_SLEEP_PM_OPS(qcom_geni_serial_suspend, qcom_geni_serial_resume)
->  };
->  
-> -- 
-> 2.17.1
-> 
+---
+ kernel/sched/deadline.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ad45a8fea245..f68a158d01e9 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1504,7 +1504,9 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
+ 
+-	scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
++	scaled_delta_exec = delta_exec;
++	if (!dl_se->dl_server)
++		scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
+ 
+ 	dl_se->runtime -= scaled_delta_exec;
+ 
+@@ -1624,7 +1626,9 @@ void dl_server_update_idle_time(struct rq *rq, struct task_struct *p)
+ 	if (delta_exec < 0)
+ 		return;
+ 
+-	scaled_delta_exec = dl_scaled_delta_exec(rq, &rq->fair_server, delta_exec);
++	scaled_delta_exec = delta_exec;
++	if (!rq->fair_server.dl_server)
++		scaled_delta_exec = dl_scaled_delta_exec(rq, &rq->fair_server, delta_exec);
+ 
+ 	rq->fair_server.runtime -= scaled_delta_exec;
+ 
+-- 
+2.45.2
+
