@@ -1,108 +1,119 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC022AE45
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77655288C06;
+	Tue, 17 Jun 2025 07:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750145537; cv=none; b=hgD7vHWe9iD0Q6w+FRCQEt9g2J35lydTY+LM0XTHyix2aw+luNrnMQ6bXahlMze/JqVDvuw1t1kHhZsmjwn2em60ywsKUkAzvLfYt4yB8Kv0deV2X4TERKBPjsGDjTzvvg8kzyYMF1hLyeTMuNWaU6aFKG5QCK+woQ7Fe5PTgBQ=
+	t=1750145628; cv=none; b=GO+b0YuqA4MWYU/mPrqsM1Nn8lxrY4AXXplk3zsi9JLODTuePWl7QNALIOR/hkPpy08GiN0rE1Yf2Gg4jEecNehSgoKEgcCbCAD1ojCjKD9XAfwJ+hgZwrz4PJt7z3I1gn33GwreeXPts6S0rZoochFEFUU0LX5tdZy/HJMBWac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750145537; c=relaxed/simple;
-	bh=rMddHsA3nzBTFN0QMqBt9MpSn7HX6CFwqw9BP1SyU0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EsUWw8H6aaT60GItah7fzbecAJlPbsHC401K4IIy7M3xJPJKA9S7CYIHgeBF7tnoHbTsJcfBjKOojw7eKZ93fcOCz/hXdjC8tsjG7locMap/WIpOABABd73xx6MFQznCwUp2qEt1ke5akQtecHukhayFZxRA7VLJG3plOVTYG4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xhxWABFc; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750145628; c=relaxed/simple;
+	bh=xW1VUV8oxY/+eJvfTBIXObAU4Xts/nmDnxOFIFFOuas=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DiJef3kHmY91VJ5BMf5EAwmGQwLdUDFqS4rtjuvIt7O/WHx7adme9JjqGLNiS9ze7VzIR5Bw1S/ek0iANcOqRcbwzKb3g1VoSWtggarIgShiKnRUXAFbfKmGroI8vyvhDNASugw4KJb3DUl2NEsywa/VIs//um/iCJ6CynWDdxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=vi8K0/Rg; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xhxWABFc"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso9750774a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750145534; x=1750750334; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DitCPFk6i35uURXkN5+J10Jk6mGckO0efyDQ/Ffatgo=;
-        b=xhxWABFcIZeFn8Pt8t83WJmt64nDnT0T0VTvlOAp/BH4BTLM3lGm/h+5rm9elimzEb
-         EBVJuja2f9E36/+xSe81Z9+ffnI1g9vp8Wvo0IpKFE+dsbjk5ekDdaB6n648KFWwaFYn
-         /rQHkOXrKr7Xagn+E9jFrJG5KqbQ9/PqXZjvnQCQ96saCYdLgx9YlDsxhrKZXqaLvF8o
-         d6s6WTFVp/FrwbHGVGIgLQzQ3lf/DZI5vROwOp8QbXrA9AxSe30n3uYTiCDlaxsT2N2s
-         VeF/qWs/cqdpOHNYlioQ7s/3Rc86eEXW9+30jHT9hzsKNxBfNgNQOjLhjrTIHQF6uW8S
-         nxGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750145534; x=1750750334;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DitCPFk6i35uURXkN5+J10Jk6mGckO0efyDQ/Ffatgo=;
-        b=EJ0y0mQ2r5aJHbgx2oE3meHGLVQuTh5qPVFx8Pfl2uiOkuPHo5NN8t7I11QNYImM9m
-         YA9SLoAktq8wlLfyjSylRIIoFp7OW3CMs7FPdLn2VLIrQXdzaK0Ryanycn9Ohz3YWiTc
-         HDX6qhfBHoJ34HPXk4uEZMPl6WhfVq1n6OvsqM/G69rFJayH+hZE55O95qSUbxeVR63N
-         Mv2+xC0UrfjAswYvF/Vtts/avw0226kdep8j+Hme0iHUGH6Qxcb/dUk2y/GrwPqy1uha
-         stO/2dMpSJ6Wz+VhUOU+8LKYCm2opTcRDKEwKzZdvvRmPwqbr/KH2fmVVIdfPP7liai4
-         Gfeg==
-X-Gm-Message-State: AOJu0YzYHr+yvL0qOQx9W3v2C17LquZDnTXrG2gUJ60KZseRLCx77Xta
-	qwmz+8KsYgfPz0asF9dhttV4+BU14gMSzicM/l144XMJuXM8GSsjbbrwSMEaAhHtvojH/0zcp+e
-	9LjaB
-X-Gm-Gg: ASbGncvk/fvgK0EIJirxPdnaEid4gLzXI9YoaEswhfUpDURdfgVu/C5yo3G1jvIX8uB
-	8IXU7PolnGZxa1U0AFnjn07iJXKUZQ91oOsH29p5rh+9skYM0ZVJsPD5Xvhy37uUrlQvrf2N3p4
-	AgRjHJ/JpHGYz5PynkLJQa5Iot9QiLKX2pzzDQLcxyfQ2y0JW4iu6OpIpw4PK3skDCyqsULNFUy
-	kBs3VRWIuNPxYbxNTKfJe6IDKZ3CeLempp0zXWamlGrrFzDRTf7796d/X1hGqWIrnpJDbMOQZhk
-	BsjvmliFUCWMrWyJUSiL4jsiJRNwP9AtfMghxGq1A/2PVDFJyAXXXDjQg81zSkkwc6+10K6qp6+
-	T6aTNrdBpdEDSV+hSQHbEBGa0aTyZ
-X-Google-Smtp-Source: AGHT+IH9/yGt1B2R5aOqGlO4giU7a4MpvEhipVbdlnV+bODahZF4ciyHZm2yTFfr8OIZsO0wiR54nQ==
-X-Received: by 2002:a05:6402:4402:b0:607:d234:7d8f with SMTP id 4fb4d7f45d1cf-608d09af98emr11886262a12.33.1750145533721;
-        Tue, 17 Jun 2025 00:32:13 -0700 (PDT)
-Received: from rayden (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5e72csm7605436a12.48.2025.06.17.00.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 00:32:13 -0700 (PDT)
-Date: Tue, 17 Jun 2025 09:32:11 +0200
-From: Jens Wiklander <jens.wiklander@linaro.org>
-To: arm@kernel.org, soc@kernel.org
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	op-tee@lists.trustedfirmware.org
-Subject: [GIT PULL] OP-TEE fix for 6.16
-Message-ID: <20250617073211.GA1005592@rayden>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vi8K0/Rg"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55H7WY8w1020658
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Tue, 17 Jun 2025 00:32:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55H7WY8w1020658
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750145558;
+	bh=b1wnFPUhDY9iKxorOahzeOJ8uRrpy2/oLWDc7uprxlo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vi8K0/Rg19FFPpdmvoUdsRjwt4k8IzzdSie1RDC3TZKZYovSE9lPCbtxWwkpfvD7I
+	 Ek6QZWWOpqGC3HxtqJU0WBpXg9zS8BSkevz6RJ9B9Amafp5V1HVgY08vgmIfDa6h3s
+	 kH1ZKQ7zQ15AH0Tl8ooe46OFX4e6w6ylE5V69IraXRd+3YJdVqT1lIeJgVr80QIWHe
+	 TNlnwGfJgfJUtheXc1sYaRTAyLlNAArp1qzSdLcw6vpzYYkB6IBbDxotrdS5j/x1SO
+	 gXbBk3lZqW0MVqQHpaUajQxoSyVXwp92IU7v3p1/j13hv+SXYIQAd9aUg+hbPm/BZS
+	 5A63bbLDYuHNw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
+        sohil.mehta@intel.com, brgerst@gmail.com, tony.luck@intel.com,
+        fenghuay@nvidia.com
+Subject: [PATCH v2 0/2] x86/traps: Fix DR6/DR7 initialization
+Date: Tue, 17 Jun 2025 00:32:32 -0700
+Message-ID: <20250617073234.1020644-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hello arm-soc maintainers,
+Sohil reported seeing a split lock warning when running a test that
+generates userspace #DB:
 
-Please pull this patch for the optee driver. It relates to the FF-A driver
-PR https://lore.kernel.org/all/20250609105207.1185570-1-sudeep.holla@arm.com
-but it makes sense on its own and can be applied independently.
+  x86/split lock detection: #DB: sigtrap_loop_64/4614 took a bus_lock trap at address: 0x4011ae
 
-Thanks,
-Jens
 
-The following changes since commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca:
+We investigated the issue and figured out:
 
-  Linux 6.15 (2025-05-25 16:09:23 -0700)
+  1) The warning is a false positive.
 
-are available in the Git repository at:
+  2) It is not caused by the test itself.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/jenswi/linux-tee.git tags/optee-fix-for-v6.16
+  3) It occurs even when Bus Lock Detection (BLD) is disabled.
 
-for you to fetch changes up to 312d02adb959ea199372f375ada06e0186f651e4:
+  4) It only happens on the first #DB on a CPU.
 
-  optee: ffa: fix sleep in atomic context (2025-06-12 12:04:57 +0200)
 
-----------------------------------------------------------------
-A fix in the OP-TEE driver for v6.16
+And the root cause is, at boot time, Linux zeros DR6.  This leads to
+different DR6 values depending on whether the CPU supports BLD:
 
-Fixing a sleep in atomic context in the FF-A notification callback by
-adding a work queue to process in a non-atomic context.
+  1) On CPUs with BLD support, DR6 becomes 0xFFFF07F0 (bit 11, DR6.BLD,
+     is cleared).
 
-----------------------------------------------------------------
-Jens Wiklander (1):
-      optee: ffa: fix sleep in atomic context
+  2) On CPUs without BLD, DR6 becomes 0xFFFF0FF0.
 
- drivers/tee/optee/ffa_abi.c       | 41 ++++++++++++++++++++++++++++++---------
- drivers/tee/optee/optee_private.h |  2 ++
- 2 files changed, 34 insertions(+), 9 deletions(-)
+Since only BLD-induced #DB exceptions clear DR6.BLD and other debug
+exceptions leave it unchanged, even if the first #DB is unrelated to
+BLD, DR6.BLD is still cleared.  As a result, such a first #DB is
+misinterpreted as a BLD #DB, and a false warning is triggerred.
+
+
+Fix the bug by initializing DR6 by writing its architectural reset
+value at boot time.
+
+
+DR7 suffers from a similar issue.  We apply the same fix.
+
+
+This patch set is based on tip/x86/urgent branch as of today.
+
+
+Changes in v2:
+*) Use debug register indexes rather than DR_* macros (PeterZ and Sean).
+*) Use DR7_FIXED_1 as the architectural reset value of DR7 (Sean).
+*) Move the DR6 fix patch to the first of the patch set to ease backporting.
+
+
+Xin Li (Intel) (2):
+  x86/traps: Initialize DR6 by writing its architectural reset value
+  x86/traps: Initialize DR7 by writing its architectural reset value
+
+ arch/x86/include/asm/debugreg.h      | 14 ++++++++----
+ arch/x86/include/asm/kvm_host.h      |  2 +-
+ arch/x86/include/uapi/asm/debugreg.h |  7 +++++-
+ arch/x86/kernel/cpu/common.c         | 17 ++++++--------
+ arch/x86/kernel/kgdb.c               |  2 +-
+ arch/x86/kernel/process_32.c         |  2 +-
+ arch/x86/kernel/process_64.c         |  2 +-
+ arch/x86/kernel/traps.c              | 34 +++++++++++++++++-----------
+ arch/x86/kvm/x86.c                   |  4 ++--
+ 9 files changed, 50 insertions(+), 34 deletions(-)
+
+
+base-commit: 594902c986e269660302f09df9ec4bf1cf017b77
+-- 
+2.49.0
+
