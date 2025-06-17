@@ -1,237 +1,282 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA86C215073;
-	Tue, 17 Jun 2025 19:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750187792; cv=none; b=usY39xM395BNCtZs7fx/cxwFMt7Xkn4exhOLP0HoKm4WvaI/U3EYFqOzZNMctyTZLr3Ab9cc4pDsRLXpk04/IK6oR/oGTDStBGfYRfNJOJb6N5PBC/I+8oMeRgqRnsSE5XfOs2qnPLWyV4RwNG5Lswqdoe6vWeZpS24yyMTzNbE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750187792; c=relaxed/simple;
-	bh=e4ZmAXrMj3T7tIYtIjUVGlwUosdLIiocLhMXZU7REME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=siREmXJWBplidW6OX/4kgD+fC4zSJNFn449q6mwva0mvO+jmc02E0tn09rN8qY5b19tVqqlDOzbT614jD48zSyJxal7h44G+NwEOk1MI8xNaRehUsyH7RUWPcRaOLURHvLaRub++CLng8LKxOKM3CnBPGJ3wOpAl+iOZ6QBtItM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pG9x1vD+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACFC20297C;
+	Tue, 17 Jun 2025 19:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750188049; cv=fail; b=Q330fq1IaFxv7pZdx7Bqm2fGmKRzu01S0ZVy4hPrMT6Uydl1Ck+yL2wRETzcAEWxJGVb64a2SFwCjwXPC/ttvVXCbzYjVhPkC5qSAst63jh226lPflapRw1I6yFXrrEKeOaeDXprLAiDSILtH7G5PwwwBQ/oBtnFktRfFTWjvdc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750188049; c=relaxed/simple;
+	bh=WCcVuO1R7vkFLVn9hjSqjsJDyjbv+gTW7U7B07Q6n4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=M3KmLogTN+w3xSpxc+gh4EoAa1EYgFbDVGUDPFfYvaubpSdImP13DcrvlF9XBpN2uaifkbu3fhVSnmEUK+Zybeijsv00pZ8AqvZ/6kq/6zZZ8wWcH47ooKWakFmjO59uZwWdy4Nq1IGbnqNt10q5uBG73+sxjI8BvYGQ0+zKrzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cohLoZ91; arc=fail smtp.client-ip=40.107.237.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pG9x1vD+"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HFQRPm014469;
-	Tue, 17 Jun 2025 19:16:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MTFCG+fA3J+Tywsn4aalU3NdM1MPIzMKpjg3FMwZsd4=; b=pG9x1vD+koyg1mg3
-	vlQgA94eA5Pju4PBBDep1mzURN7yFolR5z5icd1kgtdYTS1w0v86hBchcCtgh+9m
-	82ArYOXQ03/6qDC7KYZrWH/UfCC3Wbw2cSFIEOaNP5c4s349BzRk6AYf2a3haj9v
-	s9pab7sOzG1cj0b9pAnkmKNmGLAOnVHBOT0xEz4Uc64PWq/dbFwI1lVyt2QUbgpW
-	1lz54oTGR8AdmFc4nL4i3qXBLmu5yNyOVE+efk/1onmga7YTGO0r7h5Jg4tNtVph
-	JxgX3ne2L5wQVDKxvhLAD0TJG7xgljwzPC0JXm0nFiga2Td8HML5hTvnOg4LJ97C
-	ChqzIg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47akuwcy5s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 19:16:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55HJGOCk010033
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 19:16:24 GMT
-Received: from [10.216.17.156] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 17 Jun
- 2025 12:16:17 -0700
-Message-ID: <cc737a89-77e0-43bc-8766-2c8e9cce1863@quicinc.com>
-Date: Wed, 18 Jun 2025 00:46:13 +0530
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cohLoZ91"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CtEk4QO9l0kNYQIVs01X+dXKzZTmHDHER0ewQhFtdGZcsNeiqA/574zkkI9UNNbzG8mJoUL2r6nQTw57y0AKaFifGGt4qMVqk/2tZ/JjlNuoebGDq20DwWhYH8pGj8lPKlc2jfIkMK6fGrJ/hmsWpmISUH2YPau0EE1jU35hgPHl9m5zG/MSv2AguBx8dnoDK3IiyOEufYRaxZi5fqm/CSNFRp9V+9X9BGKBHleuEl9HuLaHBDuZjtPao0nx37xahAenZAPlqszbDJNx5l+4YRI1FmZZssNzYUrmLhmvOuqm2ydDHEzDZ7nzzSFYx1zTzF749+SSjecTUqCEd/5KRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VAtoXTpu3mray1f1ixmSfchadSFtQKXNEFERGHk66Ds=;
+ b=Tx7XFh7SknAQ+Ofh9giqukBWqvGtb/Kko/HwOtNt/afRUAgNrsOuuUjk2AkTc33gP3APYuP6prcH4aCBsRTyxFNNaAQVZ9OgXZNYA0Fh5whGMhCCtyr2TRwA5JoP6OwBvpKqlNaEh9gBgevFkabMqFlaxIOTo826uVUkXw/6dYwWWReF2buM3lFRtIQlKQ57CWdjL+ry92px12TNiqDLAe8ASbzoQyba5dsoInjVOwB5iJlufZH7t+CDIaENh82nxpbnlFYEkRGg8Fe+kCe62ZBHwhCtoih1ZrX7rabklggq5/8xAOobSk8lybNPxTRqMIVdZkCvy2PTY6be5iDwOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VAtoXTpu3mray1f1ixmSfchadSFtQKXNEFERGHk66Ds=;
+ b=cohLoZ91G5407TXUY1PukuL74GXwJU1/BWZyi581hRFWr2bLrTio6dMXM15GwL1cBA87NUcYY9BVHB2l0UdGNXhrRhSTP2NA0KM4VDbTS4mKt2eHuV4U/exsqwsTFgXEbI3ikWITntRK8aEmkqitA+VFJ0/M5FaRKyHIHFfq88JegULKmzecJwH7Itj3s+6XNUyLQg1BSDwUM+xO4q6m6eDdzgl+2KsS68kHkkXWqQY8qhclV79/+F2ElvlSRrCsvNoHcKL+VfpSXkzzeEREi5+HNGR1TJfNvqislassy9muMDxKkUaJe6zl9sLRGg8VrD4Oj1FXyyTq0hA2Gz50aA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8422.namprd12.prod.outlook.com (2603:10b6:208:3de::8)
+ by LV8PR12MB9206.namprd12.prod.outlook.com (2603:10b6:408:186::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
+ 2025 19:20:42 +0000
+Received: from IA0PR12MB8422.namprd12.prod.outlook.com
+ ([fe80::50d8:c62d:5338:5650]) by IA0PR12MB8422.namprd12.prod.outlook.com
+ ([fe80::50d8:c62d:5338:5650%5]) with mapi id 15.20.8835.026; Tue, 17 Jun 2025
+ 19:20:42 +0000
+Date: Tue, 17 Jun 2025 14:20:37 -0500
+From: Daniel Dadap <ddadap@nvidia.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 6/6] vgaarb: Look at all PCI display devices in VGA
+ arbiter
+Message-ID: <aFHABY5yTYrJ4OUw@ddadap-lakeline.nvidia.com>
+References: <20250617175910.1640546-1-superm1@kernel.org>
+ <20250617175910.1640546-7-superm1@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617175910.1640546-7-superm1@kernel.org>
+X-ClientProxiedBy: DM5PR07CA0067.namprd07.prod.outlook.com
+ (2603:10b6:4:ad::32) To IA0PR12MB8422.namprd12.prod.outlook.com
+ (2603:10b6:208:3de::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v5 00/18] clk: qcom: Add support to attach
- multiple power domains in cc probe
-To: Bjorn Andersson <andersson@kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Vladimir
- Zapolskiy" <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
- <174970084192.547582.612305407582982706.b4-ty@kernel.org>
- <65828662-5352-449b-a892-7c09d488a1f4@quicinc.com>
- <91c11e62-b0d4-40e9-91a1-20da9973e415@linaro.org>
- <0d9846f8-da23-4f2a-a593-35350c026b44@quicinc.com>
- <wew4ptjmsugbahtpxe3z6647mapp5k6fyhajdzkd75ml6cqwaz@ulwhe6ikkb6m>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <wew4ptjmsugbahtpxe3z6647mapp5k6fyhajdzkd75ml6cqwaz@ulwhe6ikkb6m>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: WFHuGgN27LitrKrSoHwFoRotCJtNbNoV
-X-Authority-Analysis: v=2.4 cv=He0UTjE8 c=1 sm=1 tr=0 ts=6851bf09 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=d8K3xM53n2JVf4ZB_MIA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: WFHuGgN27LitrKrSoHwFoRotCJtNbNoV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE1NCBTYWx0ZWRfX8rWc0jZEmRZ9
- J3U6ngLuR6FTV2lDvCaGsOiqLpo9PfhSLyIyYaDq43a/FHTkC4lpL13blLJY0/0Zx7him60Lf1i
- d/7jCZCbfCLavcram5isBHaIIehscyNHMh9pqVALlEfsWhOdqCzHCG1nc9EPMenfddV0qVUq31b
- dfzNyO9T0a/d4dbj7WJ2vZG3pvbh/KNPhaO/tn2UB8+L05XvCBdjIxaUIThWFIcmGB8e7oSqmNG
- wcrs+uVHSnO2wzTOsiogNvkHtTiFKfVWBju363OKheXGuDhrMmtm/bXH2ppqy9lTN6qq5Gn0ut6
- +3+EGrTi8YsMhz9uM3FiSkLLQcD9zJB8vjc8YiVpdLS4hue2qgFI2Iv5ERtRA/P2zHkQS1fDN/o
- FmcFxzJ7TW1xSwAIbYhqC+0MaSxzEuIO5fe/cE1AKhePX3an7ugszoLZLVV/0cuJSc0R3oC3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 suspectscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=988 lowpriorityscore=0 phishscore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506170154
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8422:EE_|LV8PR12MB9206:EE_
+X-MS-Office365-Filtering-Correlation-Id: 773e894c-1dce-4fbe-6616-08ddadd40cdf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GTPjhZAOR2zhSs9ZQXv66F+Z0kIJqPFZ05lF5kyJRzBcWCMrMkAiObF8u9KS?=
+ =?us-ascii?Q?rIADtU31hAMNP70sGTCdj7rnpc5gJuygKIjo3cLhAKDkBDhZa4IVnbROncyb?=
+ =?us-ascii?Q?eSgr25ywejJ1JDSI2pBfA/UhPCFWgDSbhTNSxqM9VdtANPVGk4Ros9LRs1bj?=
+ =?us-ascii?Q?b/CwLVAzOQVzZ03l+/STejWp+YON08Ev8k+zWcJjCJr0Wq2wsRgOpcL5kBr/?=
+ =?us-ascii?Q?JvzbpxkikVMfoau2NxWfsIkSx6XQtMqlOMrQXF2XoOYi0sXjhgwmn1cz52A9?=
+ =?us-ascii?Q?5zw27XWCaTVbmkLGwEuWYGgOUkJAn1H3L4c3bfabUB6thENcL1KN7bVSlerJ?=
+ =?us-ascii?Q?tHFKKwVCnug7bCCCl7NatwgqGETgiGfwsT9XqjpgKerEOVgCApV5lN1zsaQp?=
+ =?us-ascii?Q?ZALwKMnTZQLFjSdSmNPXssJgVRFpS/IBsERml5X0rLFuVN0nh/7HmXYyevP2?=
+ =?us-ascii?Q?BQ2J2pVGzWOrx3Eh/rXBbW5tRjlMR8Sl6D8Bx9N7WBQHJFgKX73VCEzWpxlP?=
+ =?us-ascii?Q?2nUu41+gukGs+l/eNYZps8k7/f6BPRXxiTSdwmPmxfZWVieQbMaq2+0jQtSG?=
+ =?us-ascii?Q?kPd1O25+6yfKp++SCkTpFZVlL/6GrGNjyZeEmi7Z0FRn1uKqzR8RH3N7okOX?=
+ =?us-ascii?Q?sL0iZ0x/q+prafGrbbM3XjPVeEZkZH7/UYKz77LAZ1SbblJ5kFFGWd5sZw9X?=
+ =?us-ascii?Q?AhX783xXGjMI8A7LbSyvfE0Z1Ze8WqQeC+ekc0Cn4nUAvtbuo9fDrQhWJEvx?=
+ =?us-ascii?Q?MsZOu1fwFIf2THiLJ46L/8RbF7/5nXNYeBUONrxQ++4D5Z532LFb4tmuXQoc?=
+ =?us-ascii?Q?nlLCqQyGleaxwYij+Vm9IAHMUcMmTgFq5unTq88kAx+TIp13aiP16HHG9vpf?=
+ =?us-ascii?Q?kyu7Md1XS5pQ/7YSwNpPWNhKtixkrvfTREm/ZmAnguBv07Sg/z7xe7Wf6maG?=
+ =?us-ascii?Q?DW9fNPi1uaP9mWL7MbhVPr0/vklYUQRyZSdlx0VbOTjLBKHbBlOJBd/WlRPV?=
+ =?us-ascii?Q?slELOnyDpY47jnmRsctdPtuJIKJbNRUtrmEpHZlErnLeVBh3+2JVzL96Cuk4?=
+ =?us-ascii?Q?MNTDvze5na6QaEhTT9MeSrRD6NrFb1Mm4qM1jKz9m6d4xHOTCrOwni+CXbIT?=
+ =?us-ascii?Q?YEo6ThkpfTddZcizz/lOCgt6BOPg68wmv4KVn2yO27Jr9Gq7/W+/Z/TjH4cC?=
+ =?us-ascii?Q?eQbpCq4Lcc3ewHXX3TK5rsJlV8UJkPnKS6H+sdY6SBQeUTJf+DEb/BmAViXu?=
+ =?us-ascii?Q?PqnWQX/6uCpPIs0Gu90/3PGcN4xQ/HgPku97i7UOegD7fKgHZMiJPGZlPBGN?=
+ =?us-ascii?Q?JpSmmRDg8KZaeHB+IzoqJGXWJJnv/EHTp4YY578JT7Uqb1MRQRJoVIPKZyYh?=
+ =?us-ascii?Q?uZNS6t8lgb2SQnwt9XCSRYyvrLwjP84TM+kbvl5Av+WJutmRCF/gni4OQOph?=
+ =?us-ascii?Q?h3hXGE8J5WI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8422.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FBcpyV6Ukw00ZDv7ajMxIAafP3LkUCSUnaL6E5CAHCGJU8KWj2SSGx5YqTNP?=
+ =?us-ascii?Q?9VHxgyEvBdrTIBgbGqua17byELAnWZycwAQX8YmdOEf0kEA7tCz62GtTOuZe?=
+ =?us-ascii?Q?xwL0a5wALS3GEN7TUKCP6N9EUHErO7QP7MvpLYgLrj7adak2QlV3q3wDbvn3?=
+ =?us-ascii?Q?CW2RJeftp7S73Hz8rewHVZvbv6klQOdInZ5cauV8+iqXWsTuBPRQibXN0WFR?=
+ =?us-ascii?Q?CGJS6EvJpwGV9l+Z9fAwWENqYtOlgYgTFZA7CYLN6bQjSun5hlXl6WCOeJ9k?=
+ =?us-ascii?Q?K4pPDX6HExgmiNhyV7/KyODZdbW5SahhHBKWhjdRGfZlXWsO/YpSLoLz74si?=
+ =?us-ascii?Q?pJ/Vy9SzdNzqjSeDIZERECQ6AmTAtw3pXaLBUTBowQnVqF9KK+xRlItINRR/?=
+ =?us-ascii?Q?fEaO0YZRiN+lGV3Vc/raybN3bFPBlayFOxtq9/aZb69WzxelLUFRB+9o2uDV?=
+ =?us-ascii?Q?s1qX8hUUW6rhM98r21vGj4IEV2aJV1c/r6V5ZmAchhhVQNKPAdjc+U2Y6Tqu?=
+ =?us-ascii?Q?9ic3CABdRbKZXC9EYYhqXungAAvyX2atdau2DL9/uYrBzRVoCxs4Lw3Mo+RV?=
+ =?us-ascii?Q?sH0bBOTUwg1JCYLqS820hvV7WeMAlBEmpI+ezQ1c0jUEFC4o1KjWr3TI9tk/?=
+ =?us-ascii?Q?AGjjIGl15QyH+U3iOKG3AQf2hKTHpptf4tppfYxQbxsL/PV62CKq0QUhH4Ty?=
+ =?us-ascii?Q?1oaqQQCQ9+PcZcxGSwdfSjSzgij15qfeCTdnYgPnoZc7QKNtmsFNpFFXB5d8?=
+ =?us-ascii?Q?KNDda1QL+xhS03a/J5LSf0jrX6zGa8WajYQBTTDCZWzQpfGa/uPG81rmmb7x?=
+ =?us-ascii?Q?+g/ig01046hyiG75gb/tT/58rNi7Jha/QAybLBEIfFwb8aEJyhtPdfOxpI/j?=
+ =?us-ascii?Q?Aji1t8MX2YDi26JOT81IUDCGgokHjy49+6QgwKEc41EO25BCsejoTQ9cnDoB?=
+ =?us-ascii?Q?+JZtsVSs/FGZtKB5ZoUERFTrQJfItcE3ldWTXbp6HK4j2hdm2TdYQXrCm82a?=
+ =?us-ascii?Q?Jl3NARroElqXsper6rdqJ+Ut2mCg20yfdULvL+aeM8XSCSJebQbJMxKUoKFG?=
+ =?us-ascii?Q?d+T7AL7yv/deXQQVd4mlU0Bq/mwjbKa73utfV3h6yCL/gf/ZbV/ua4j6fjhz?=
+ =?us-ascii?Q?YDODvThcRqlltmc3Z6xudR49+tTCUFNM9T1BSOpSbYiewyU5Q8k6fyEQbM5q?=
+ =?us-ascii?Q?+e3wr3PiNE6RLFOW4ifcTKsVYfIoZXHAasvyBAsdTDFqbQPiVT1injpNTkEg?=
+ =?us-ascii?Q?VKfv252RQKKV35oSNLen24HswRtIlgpdR9iScrYOaYthWQjUyREZZXR0p3uu?=
+ =?us-ascii?Q?/SybsAvwmC3nUtRezVmlegsqjNcKB3NLhUC/ibw5gH/XTIkhC367vjfz32LP?=
+ =?us-ascii?Q?7lT2Bdj3oiMsn0PU7PYJmVqe8sa1udJMh4+BUeQWPMeel/zvY/UReja+yr/V?=
+ =?us-ascii?Q?JVEi91+JSlL1XncTUUsXSA63ysJ4gN7ZRdjjg3gWBZZhCfEDK/uhKeCiFs9m?=
+ =?us-ascii?Q?FGEutmVeuuazG/sGssLfYL9ynexrLBUBD4RyXDtgE/mVfSgAv9iAjxIPLBeT?=
+ =?us-ascii?Q?t5odIYtbDyxHcsyS/BOvzKAMeis4jxK8eTyAROVw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 773e894c-1dce-4fbe-6616-08ddadd40cdf
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8422.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 19:20:41.9666
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FfeKCeHH/zXzL3Ip0ZH0250sWh+l39Z3Pg1NMfZqeDS55GZkJLnIPL20tjx/mE2FRqL1rpmuVGKFKmXNK1+eXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9206
 
-
-
-On 6/17/2025 6:57 PM, Bjorn Andersson wrote:
-> On Mon, Jun 16, 2025 at 12:55:47PM +0530, Jagadeesh Kona wrote:
->>
->>
->> On 6/12/2025 4:22 PM, Krzysztof Kozlowski wrote:
->>> On 12/06/2025 12:03, Jagadeesh Kona wrote:
->>>>
->>>>
->>>> On 6/12/2025 9:30 AM, Bjorn Andersson wrote:
->>>>>
->>>>> On Fri, 30 May 2025 18:50:45 +0530, Jagadeesh Kona wrote:
->>>>>> In recent QCOM chipsets, PLLs require more than one power domain to be
->>>>>> kept ON to configure the PLL. But the current code doesn't enable all
->>>>>> the required power domains while configuring the PLLs, this leads to
->>>>>> functional issues due to suboptimal settings of PLLs.
->>>>>>
->>>>>> To address this, add support for handling runtime power management,
->>>>>> configuring plls and enabling critical clocks from qcom_cc_really_probe.
->>>>>> The clock controller can specify PLLs, critical clocks, and runtime PM
->>>>>> requirements using the descriptor data. The code in qcom_cc_really_probe()
->>>>>> ensures all necessary power domains are enabled before configuring PLLs
->>>>>> or critical clocks.
->>>>>>
->>>>>> [...]
->>>>>
->>>>> Applied, thanks!
->>>>>
->>>>> [01/18] dt-bindings: clock: qcom,sm8450-videocc: Add MXC power domain
->>>>>         commit: 1a42f4d4bb92ea961c58599bac837fb8b377a296
->>>>> [02/18] dt-bindings: clock: qcom,sm8450-camcc: Allow to specify two power domains
->>>>>         commit: a02a8f8cb7f6f54b077a6f9eb74ccd840b472416
->>>>> [03/18] dt-bindings: clock: qcom,sm8450-camcc: Move sc8280xp camcc to sa8775p camcc
->>>>>         commit: 842fa748291553d2f56410034991d0eb36b70900
->>>>> [04/18] clk: qcom: clk-alpha-pll: Add support for common PLL configuration function
->>>>>         commit: 0f698c16358ef300ed28a608368b89a4f6a8623a
->>>>> [05/18] clk: qcom: common: Handle runtime power management in qcom_cc_really_probe
->>>>>         commit: c0b6627369bcfec151ccbd091f9ff1cadb1d40c1
->>>>> [06/18] clk: qcom: common: Add support to configure clk regs in qcom_cc_really_probe
->>>>>         commit: 452ae64997dd1db1fe9bec2e7bd65b33338e7a6b
->>>>> [07/18] clk: qcom: videocc-sm8450: Move PLL & clk configuration to really probe
->>>>>         commit: 512af5bf312efe09698de0870e99c0cec4d13e21
->>>>> [08/18] clk: qcom: videocc-sm8550: Move PLL & clk configuration to really probe
->>>>>         commit: a9dc2cc7279a1967f37192a2f954e7111bfa61b7
->>>>> [09/18] clk: qcom: camcc-sm8450: Move PLL & clk configuration to really probe
->>>>>         commit: eb65d754eb5eaeab7db87ce7e64dab27b7d156d8
->>>>> [10/18] clk: qcom: camcc-sm8550: Move PLL & clk configuration to really probe
->>>>>         commit: adb50c762f3a513a363d91722dbd8d1b4afc5f10
->>>>> [11/18] clk: qcom: camcc-sm8650: Move PLL & clk configuration to really probe
->>>>>         commit: 3f8dd231e60b706fc9395edbf0186b7a0756f45d
->>>>> [12/18] clk: qcom: camcc-x1e80100: Move PLL & clk configuration to really probe
->>>>>         commit: d7eddaf0ed07e79ffdfd20acb2f6f2ca53e7851b
->>>>>
->>>>> Best regards,
->>>>
->>>>
->>>> Hi Bjorn,
->>>>
->>>> Thanks for picking these patches. However, the dt-bindings patches are closely linked with
->>>> the DT patches in this series and needs to be picked together. The dt-bindings changes adds
->>>
->>> DT bindings are the DT patches. What do you mean by DT? DTS? If so, then
->>> you introduce regressions without explaining this at all in cover letter
->>> or patches.
->>>
->>>> multiple power domains support for clock controllers, and without the corresponding DT
->>>> patches, dtbs_check will give warnings.
->>>>
->>>> Can you please help to pick DT patches as well?
->>>
->>> Please read soc maintainer profile explaining how DTS is being organized.
->>>
->>
->> I apologize for not mentioning this details in cover letter. Here the dt-bindings documentation
->> changes(patches 1-3) are only applied and the corresponding DTS changes(patches 13-18) are not
->> yet applied via DTS tree, leading to dtbs_check warnings.
->>
+On Tue, Jun 17, 2025 at 12:59:10PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Mentioning this in the cover letter wouldn't change the fact that the
-> binding is changing in an unexpected way.
+> On a mobile system with an AMD integrated GPU + NVIDIA discrete GPU the
+> AMD GPU is not being selected by some desktop environments for any
+> rendering tasks. This is because neither GPU is being treated as
+> "boot_vga" but that is what some environments use to select a GPU [1].
 > 
-> As the binding now express that 2 power-domains is required, the driver
-> author would be free to expect that the loaded DTB has 2 power-domains
-> specified. But the user might still have an older DTB on their system
-> (exactly what dtbs_check is complaining about now).
+> The VGA arbiter driver only looks at devices that report as PCI display
+> VGA class devices. Neither GPU on the system is a PCI display VGA class
+> device:
 > 
-> A quick look makes me think that it's because you removed the maxItems:1
-> which means that the properties needs to match completely. Changing this
-> to minItems:1 should allow for both cases, I think.
+> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
 > 
+> If the GPUs were looked at the vga_is_firmware_default() function actually
+> does do a good job at recognizing the case from the device used for the
+> firmware framebuffer.
 > 
-> Can you please send a patch that fixes up the bindings to allow both the
-> old and new case?
+> Modify the VGA arbiter code and matching sysfs file entries to examine all
+> PCI display class devices. The existing logic stays the same.
 > 
+> This will cause all GPUs to gain a `boot_vga` file, but the correct device
+> (AMD GPU in this case) will now show `1` and the incorrect device shows `0`.
+> Userspace then picks the right device as well.
+> 
+> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
+> Suggested-by: Daniel Dadap <ddadap@nvidia.com>
+> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 2 +-
+>  drivers/pci/vgaarb.c    | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 268c69daa4d57..c314ee1b3f9ac 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  
+> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
+>  		return a->mode;
 
-Thanks Bjorn and Krzysztof for the info and suggestion.
+I can't help but worry about userspace clients that might be checking for
+the presence of the boot_vga sysfs file but don't check its contents. I
+understand that it's the intention to expose the file for non-VGA display
+controllers in the case where none of the display controllers are of the
+VGA subclass, but one of them is the boot console device and should be
+considered "VGA" for the purposes of the overloaded meaning of "VGA", but
+if it isn't too much trouble to minimize the change to UAPI here, I'd be
+more comfortable with only exposing this file for devices that really are
+VGA and/or the firmware default.
 
-I tried adding minItems as 1 to power-domains and required-opps properties
-and dtbs_check is working fine now for both single and multi power-domains cases.
+Maybe something like making the condition:
 
-I have posted the below series with this fixes:
-https://lore.kernel.org/all/20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-0-02e83aeba280@quicinc.com/
+if (a == &dev_attr_boot_vga.attr) {
+	if (pci_is_vga(pdev) ||
+	    (pci_is_display(pdev) && vga_default_device() == pdev))
+		return a->mode;
+}
 
-Thanks,
-Jagadeesh
+(maybe we don't even need the pci_is_display() check at that point? I
+feel more comfortable leaving it in, though)
 
-> Regards,
-> Bjorn
+I'd expect that to do something like (assuming two-GPU hybrid system):
+
+* Systems with one VGA controller and one 3D controller:
+  * VGA controller gets boot_vga file, contents are "1"
+  * 3D controller does not get boot_vga file
+* Systems with no VGA controllers and two 3D controllers:
+  * 3D controller driving the console gets boot_vga file: "1"
+  * 3D controller not driving the console does not get boot_vga file
+* Systems with two VGA controllers and no 3D controllers:
+  * VGA controller driving the console gets boot_vga file: "1"
+  * VGA controller not driving the console gets boot_vga file: "0"
+
+i.e., the behavior would only be visibly different in the case with two
+3D controllers, like the one targeted by this patch. You and I have seen
+the two VGA controller case in the wild, so we know it exists. The one 3D
+and one VGA controller case is what I'd expect to be the common one, and
+hopefully this will have the same behavior before and after this change
+regardless of whether a muxed system defaults to dGPU (like hybrid Mac
+notebooks) or iGPU (like other hybrid systems I'm accustomed to).
+
+>  
+>  	return 0;
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 78748e8d2dbae..63216e5787d73 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -1499,8 +1499,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>  
+>  	vgaarb_dbg(dev, "%s\n", __func__);
+>  
+> -	/* Only deal with VGA class devices */
+> -	if (!pci_is_vga(pdev))
+> +	/* Only deal with PCI display class devices */
+> +	if (!pci_is_display(pdev))
+>  		return 0;
+>  
+>  	/*
+> @@ -1546,12 +1546,12 @@ static int __init vga_arb_device_init(void)
+>  
+>  	bus_register_notifier(&pci_bus_type, &pci_notifier);
+>  
+> -	/* Add all VGA class PCI devices by default */
+> +	/* Add all PCI display class devices by default */
+>  	pdev = NULL;
+>  	while ((pdev =
+>  		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+>  			       PCI_ANY_ID, pdev)) != NULL) {
+> -		if (pci_is_vga(pdev))
+> +		if (pci_is_display(pdev))
+>  			vga_arbiter_add_pci_device(pdev);
+>  	}
+>  
+> -- 
+> 2.43.0
 > 
->> Thanks,
->> Jagadeesh
->>
->>>
->>> Best regards,
->>> Krzysztof
