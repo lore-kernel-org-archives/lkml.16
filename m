@@ -1,106 +1,108 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50BE2DF3CA
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCAF2C08B8;
+	Tue, 17 Jun 2025 13:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750167776; cv=none; b=ONRSHmmKQjk7fi55HWeadWnIt2DiP3cfhQwCngWOjAKtoWvm2A/VpAh3mAGppmXr+pkI5gSIiq4KkotwmqhjUXOL812RWkOLygNbwdT51To6S2DXKNmGaQXL4AOwuuI5NWoF4Wi6xvZ+hSPJou5fqqe3qDeCu7vNfOvrCe+wR/c=
+	t=1750167810; cv=none; b=ZKHcMvTO7ZNyyakWgbjpERQY2GJGNpaTYuRAWsBQLOTslfNw/NnVkdPRfB3Ua+Bi/HH25UZ3eP6MeHPX8eBY/EgFxjzys6ntZlBGzcuEfx2X+OZDmLCe+0KDBnp/6YxqzPz/yS7r0o1m4HVfkMttM+ejTV5yKDrKyVOUqFCEfpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750167776; c=relaxed/simple;
-	bh=cMxHivxmB+8Qj8vZ8+ux+Xy/UOyTCG9DUeFMW8rcqAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R3lOGrObSYOPM/5PxnsQ+CzN0mWrma5M0MiF2tZ2UVRe2RW85+TF7qaE6xk7YSiEEA0FCioOFo9dPZh+AiaAK43oYh6reahTMgkpG25+tf31kH2yq06sBcETUnTiqP0LyJsnrt9xsWxwtGeEgb5c61WPw61xuPnedBPtGLJrrkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=TCyFz5TC; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1750167810; c=relaxed/simple;
+	bh=Tq5rUOpjXriBkipN8jcjoOeGSv4ICYoTA0fxuVN9H94=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VSTv3D0YOrjjGVNYqblO3AMZxhvT25Q/pLiaZDpP6TpS/gYR2ODLeyvMamxDBhqlezpdHuYoYZ8tJzPBNhy45naX+LXCctdvoRCLHnGUc5Qqu5N0yW2POEpNcxcEkNjcYeQ4bqqw45DzwLPh4Ame0ntSG1SpBBi78h78Ld4+WvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2VMXZuy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TCyFz5TC"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fad79433bbso61017376d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1750167773; x=1750772573; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FxBrg9yjhh0CNTc60c5POeHRluMG4w5cQfO2cpUAxgw=;
-        b=TCyFz5TCxr+pgctd+76PT2t2s+tcrA5DEge5xmSvRuGcionl2pK0ZBLSglqWVUUVXM
-         UbSyEICB1roLQWgzc9qSf1m0Py08QTCAI4YGrNjZ0z5GgIH9KUI798y1nIRsTzDXYM9g
-         dm5qRUTwt8yfKe8VohL/s8lUbXWjwrqki5PDYIqfi72wUodGbLnF2KyAjOnUw2HVaDVF
-         3u2F2R1NIVNZakHdnF4JCVU2qv1VCMed9Gjd6qmw+COhCtzvsMPBM6W5mkhpd0cNhb74
-         dApGk56UbvpgwjFlYnIPA9a9EiBWvMs69+P4D9798lOuWNeqeZUUpA8r2QED3wa9V3YE
-         YRWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750167773; x=1750772573;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FxBrg9yjhh0CNTc60c5POeHRluMG4w5cQfO2cpUAxgw=;
-        b=kV9JQeDWQqoOr9lkfshGP21xGQHuOF/JlJ1Jm71M6umxGRsTtbYxEBvEndhNH1Iok6
-         KB4YPXf94CaiYIdRD0XH3MrR8VIRWc8jtqeyePhSjdNuxlWbyf+f704LoTq1mQ6tV8sg
-         aKSByXYUrz5rt2MZTFniuxg42S4s7ECz6/flgbHNrqbY01HAfr4RUcim6b0SRFN8nc+F
-         xBULGwiIoPNL+TPlad2KZzHqaUgU5ghFOmpB5o4DZgh30Hf91zedOc0AUy4kXe/jIFQx
-         +hXWx6ZrzNRd6EaL7c7pa2MJi6t7tnhH8Enz+c+A+TpsvWC2++NJIfd90UFP33SLw3Yl
-         VzNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRDe6nEKX20FnTyZrDhVaCD+7RMw/pJeDEsA91kQoRG4c4Ns2AruJxc1C3cng1OY31Z+tbAGrmOsAWGP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeCqeINjZvPu1bGmsoLbRkBv+N03f0AZ68zRDIX82eiEvGUEG3
-	VivW97TVgU8Cy9Z14U52/is/unsnOGQxLpqAvxt0TPSeFovl9OmT/d44x7yzS5BxtXQ=
-X-Gm-Gg: ASbGncsH3ixAQkpHKtZkt6CzMv5kmR2k1G6iA6AW7oCXvUmZtnl4bKMNr/zs/tdNBkr
-	7bv2iJ4xEBlyI14Rj5d/jQtS0dU3uuvOrbvzzcwGWHM4eFqNKJwXwiKDcvEULhIqXC8ygY/1mVv
-	CalB06KAl63jAyIDhFAYEIl3yZMjW6QY866nG6wJsF6dVQRVhV/JgX0lh0sPD+ynrpLOdhqvThl
-	clxPD9/JWPIg9J7L0tlfKiz76WQA/2OUI1C/rM+ezZKh5l0gdPxrqlSYGmNWRvpu3efYK6rLpfI
-	ErVQdgFyh0Ns5OxsISV+dbT6fGo965A49XM4kxYjIYRoVnOndMJP6BajujDGGQ6UrWF4Ln0L5Al
-	wa6cr17QWWBztcyCBZ+a5tcM3j5eP8hbzCrpL6A==
-X-Google-Smtp-Source: AGHT+IFEZ8nthWy5jI6l0U78X3cHgEw8q6a0mxGxgcwvH61XQjN0X9TnLrxMyQsbjOJQTgPXejMaNw==
-X-Received: by 2002:a05:6214:252b:b0:6fa:cdc9:8b02 with SMTP id 6a1803df08f44-6fb477430a7mr207174626d6.16.1750167773087;
-        Tue, 17 Jun 2025 06:42:53 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb57a66df2sm18569776d6.27.2025.06.17.06.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 06:42:52 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uRWaR-00000006Usp-3gz8;
-	Tue, 17 Jun 2025 10:42:51 -0300
-Date: Tue, 17 Jun 2025 10:42:51 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: lizhe.67@bytedance.com
-Cc: alex.williamson@redhat.com, akpm@linux-foundation.org, david@redhat.com,
-	peterx@redhat.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
-Message-ID: <20250617134251.GA1376515@ziepe.ca>
-References: <20250617041821.85555-1-lizhe.67@bytedance.com>
- <20250617041821.85555-3-lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2VMXZuy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A4E8C4CEE3;
+	Tue, 17 Jun 2025 13:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750167809;
+	bh=Tq5rUOpjXriBkipN8jcjoOeGSv4ICYoTA0fxuVN9H94=;
+	h=From:Subject:Date:To:Cc:From;
+	b=H2VMXZuyU6kbuxsnxDZ0TmEkSbKr3URfhjt3ZDdyNXdL6ivkgmgNDPNrOX9KpE8un
+	 67xPRwP+Ax/wzJc2Ag4PN0uQU0cP705b5qy8C4qngTFaBEQa1rH+Kzsv8IM6Vn+LEz
+	 8CSQ9N0XBnKfvE5wmCJA7G0B8JA8f1RlR0EFVTmL5PUsJkpbPJXpnRcihFHL4WjTOf
+	 sh6EN8lf7ZZku7gd9SslC/G2sikDNq5IMhqoNJJBKGmx43LT1noz6/VO4ojstrL4Vc
+	 y/uoWybaf86e/LHNiEjgDrNXwLqD6NK2POmZIlEW+001ads1kk7oiwhiuB9jH9oZFZ
+	 SdYtNHiRhxS/Q==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH 0/5] blk: introduce block layer helpers to calculate num of
+ queues
+Date: Tue, 17 Jun 2025 15:43:22 +0200
+Message-Id: <20250617-isolcpus-queue-counters-v1-0-13923686b54b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617041821.85555-3-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPpwUWgC/x3MQQrCMBBG4auUWTuQxGpor1Jc1PirA5KkmUaE0
+ rs3uPwW722kKAKlsduo4CsqKTbYU0fhPccXWB7N5Iy7mKv1LJo+IVflpaKCQ6pxRVHu3X02gPf
+ nwVCrc8FTfv/zdNv3A/LaqlZpAAAA
+X-Change-ID: 20250617-isolcpus-queue-counters-42ba0ee77390
+To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, 
+ Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
+ Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+ storagedev@microchip.com, virtualization@lists.linux.dev, 
+ GR-QLogic-Storage-Upstream@marvell.com, Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-On Tue, Jun 17, 2025 at 12:18:20PM +0800, lizhe.67@bytedance.com wrote:
+I am still working on the change request for the "blk: honor isolcpus
+configuration" series [1]. Teaching group_cpus_evenly to use the
+housekeeping mask depending on the context is not a trivial change.
 
-> @@ -360,12 +360,7 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
->  
->  	for (i = 0; i < npages; i += nr) {
->  		folio = gup_folio_range_next(page, npages, i, &nr);
-> -		if (make_dirty && !folio_test_dirty(folio)) {
-> -			folio_lock(folio);
-> -			folio_mark_dirty(folio);
-> -			folio_unlock(folio);
-> -		}
-> -		gup_put_folio(folio, nr, FOLL_PIN);
-> +		unpin_user_folio_dirty_locked(folio, nr, make_dirty);
->  	}
+The first part of the series has already been reviewed and doesn't
+contain any controversial changes, so let's get them processed
+independely.
 
-I don't think we should call an exported function here - this is a
-fast path for rdma and iommfd, I don't want to see it degrade to save
-three duplicated lines :\
+[1] https://patch.msgid.link/20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org
 
-Make the new function an inline?
-Duplicate the lines?
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Changes in from https://patch.msgid.link/20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org
+- limit number of allocated masks to the max allocated number of masks
+- commit message improvements
+- typo fixes
+- formatting fixed
+- collected tags
 
-Jason
+---
+Daniel Wagner (5):
+      lib/group_cpus: Let group_cpu_evenly() return the number of initialized masks
+      blk-mq: add number of queue calc helper
+      nvme-pci: use block layer helpers to calculate num of queues
+      scsi: use block layer helpers to calculate num of queues
+      virtio: blk/scsi: use block layer helpers to calculate num of queues
+
+ block/blk-mq-cpumap.c                     | 46 +++++++++++++++++++++++++++++--
+ drivers/block/virtio_blk.c                |  5 ++--
+ drivers/nvme/host/pci.c                   |  5 ++--
+ drivers/scsi/megaraid/megaraid_sas_base.c | 15 ++++++----
+ drivers/scsi/qla2xxx/qla_isr.c            | 10 +++----
+ drivers/scsi/smartpqi/smartpqi_init.c     |  5 ++--
+ drivers/scsi/virtio_scsi.c                |  1 +
+ drivers/virtio/virtio_vdpa.c              |  9 +++---
+ fs/fuse/virtio_fs.c                       |  6 ++--
+ include/linux/blk-mq.h                    |  2 ++
+ include/linux/group_cpus.h                |  2 +-
+ kernel/irq/affinity.c                     | 11 ++++----
+ lib/group_cpus.c                          | 16 +++++------
+ 13 files changed, 89 insertions(+), 44 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250617-isolcpus-queue-counters-42ba0ee77390
+
+Best regards,
+-- 
+Daniel Wagner <wagi@kernel.org>
+
