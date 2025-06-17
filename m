@@ -1,178 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981EE21C9FF;
-	Tue, 17 Jun 2025 10:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D012D9EC2
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750157837; cv=none; b=QotS+I8yOXqUW+j7yXCGnIZErQgt6oH+3zR9dPo+gMvehO/XJ9kw3UfIriiuKMdsbO9r7FMK4khHROWjGY3FBnYAvf4IW9I4WxTEH1aoCaS9c/361eU5Mhd72UyqxansPsrilnSiGxexcrg/R9h91Ot2RhPGMfh8clIN4i64/UU=
+	t=1750157866; cv=none; b=oBO/O/FnzbXw3EsVhKRlkaKb9BQbHITtzBV4SLRzOgx/WapQnzk0ya3RTuD/F9QbM+JK93WbnZG8J/CAfy8a+vMCinVuElcRl8FTRrbyN9omHskvEvC4LxF/cPMQyIiDjoo995n8OBHKy5R4JjP74QFAhRpbd6cYcTIf9olpqRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750157837; c=relaxed/simple;
-	bh=NmzERQxeC+Wf2VWr+OrNl8OC5PXA5OvyS6pPpgJXa/s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tXjW9rZayHTM7offhIFiRh9/9zRXeXbr34fMV1l0q1Oo1JU1ABJzTVfLTlskCuCv37ClP7rTEgMiFCCC4W491+UUTvxidWE1m/m04/NDQAcYQlGU3QkaeRvMwTE3BkcJkU04qIo5RJHMmbsUH/f6jatfZG0XRrXH3ZLXWj7J9/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0hzfsPK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750157866; c=relaxed/simple;
+	bh=HBk6zJZHV4vsa0VhDW4aY+uhm1/ziG3zTyQp7E0npXw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GJu3jZpWd6swe8YNHJh2bAa8F1I8zamY9C4HRhytfKA4NqIUocM+u2TIDMdRbfIc+pX8j8YqmGCjsIasUWaYNvmPc5TyIFkEl2rsifK8HI7r4k9IeLZt93l42AWe/Ly0Sbp+IOGmHImuFnpqGIZLSws9+5DNupjtb/Dci22FUJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FVpxhL3x; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0hzfsPK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ACF6C4CEE3;
-	Tue, 17 Jun 2025 10:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750157837;
-	bh=NmzERQxeC+Wf2VWr+OrNl8OC5PXA5OvyS6pPpgJXa/s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=p0hzfsPK4/Yb2c8CGIiL6DAnK1zyOrJJc2OmgspqEekT3SP2COHx7lr9H5a0/PjZ7
-	 /2wo08+//cLL+UDwNAJTkDuoBQ1yQNchmOv8DiNw95ueP6+7+73Ls+GuTQsfTgVcYA
-	 WQ6SDRwzQJfZJE8eXCPTD10tVDH0Rpfd9acjTK3tL3j5zJi7HmQ2tf1dydu/8F04Bb
-	 SdkV5ztUzdgJK4y62kFyk97PBoK0YhsYYBtyjVgypVIN/iWaDB7LDRm7i1C6mmjn++
-	 Z2n3PFTsFem52v5xmoMG7p5wczJ5wX7CC33CxzPdkoa7wywE/eVG+UY8OoqoItcAYs
-	 wV29K041vspUA==
-Message-ID: <0ce7c86caaa57d879ef85471414f80692212a6c6.camel@kernel.org>
-Subject: Re: [PATCH v3][next] NFSD: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-From: Jeff Layton <jlayton@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Chuck Lever	
- <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Date: Tue, 17 Jun 2025 06:57:15 -0400
-In-Reply-To: <aFCbJ7mKFOzJ8VZ6@kspp>
-References: <aFCbJ7mKFOzJ8VZ6@kspp>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVpxhL3x"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87f04817bf6so3974772241.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750157863; x=1750762663; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c81IQWCtU+e1Z+bGqEEZMZ9K+kUzvc3Zxz0U0u0EUOc=;
+        b=FVpxhL3xc+wRf7QquZoy4IZMlKq5GYC8EQ1iI87L2ElVjPDQO2dF4ElBlqikrAGrph
+         IFOSHXS4cmTkxl1RdgriGwFDoC9YuNsX6BdXSi/s6X2PoPCIY9QMZhH8WNYp9kcQmg1M
+         3P1eagVBGxxwNuMZb/RT3T55aZAwS71lF6CJKc9ceNm3/ZDjDEbkspkKhtZAmMRa2FhX
+         7ylWIyhldepnhhR5AW3EKZHUMPep4kAT/et4hP6DfxnhCyiSXQ6vwhrHeZpcnaDHEvgY
+         72R2WDExtBl0yN1pep0TE59v9FmEiUQvsQGy4rupjgtIeUp2QPQ3OKACPIizVWKg6PrN
+         HPFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750157863; x=1750762663;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c81IQWCtU+e1Z+bGqEEZMZ9K+kUzvc3Zxz0U0u0EUOc=;
+        b=EoKMCwTRPbe1u53nLMnczoNLgYmQ94+U6UmnnZCzlAC8J9hW2MKpE0esaPbaJUGvGA
+         CR5k/lhIvpi9n1Lo6J4XhuqM2ujUVu2ZThXtrlvfNCelgFskYFEd7jd0ZrmT8ixS0Pwh
+         Z9+AJb+I7HiPcisZtvZDXFWmsPzltsNgaaaRO74PfXdTSZzKQ2QGl49lxqD00B6qOgLf
+         Lwo6gdQ6EfSUkcb2T/pEvCceX9MAhi3qyoEnSeldIaagsH1xVJDhsje1RYzPfotNxNUA
+         YNnwQO6hzAlEzvFhukb89F55o3jS9cmAptrdALwEncWKyPI6UrDs/qV515et1Eznb9L0
+         20IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY8GM4Yy1VrblA/D877wuF6wylMRKlGncdqbZVK0LU/P4GZmlXrWWJfUtDO9cpy7IfVm7/88clElQu2ok=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5gQxpmyTqxxTMfKE/C0RHD8g6qRORPjE3uu4si1K2XbIj0Urv
+	8EoG+VfcPuax6eki0lUR9AupmkWV+tIy2+DpOpufRC3TbpmtXiYaWS2B7ywivbCMRfQWZk76vBC
+	Gts1YnoyM3MbjkZ7qKyh0pYIbMXcaCr7rvufb31yEeQ==
+X-Gm-Gg: ASbGncsu0ZAFFD7fUzxYyrHc8qj9Z26WCKKv15eKlP7JL6bb24eFoCczQM7MzzbiNxS
+	vmYvME0M1QnKjO/EN287ooL85v5Mwu+fRyAkyVhc4hSYbHH1oJitnUD0CZO3n3H8wp0ugoE+5fO
+	+P0rFVyIhKrMyo91UX4yhAlp+wZ9Bhcj+f2QlB7E4hcLjtFUt+H20EqaNf4QJ0zeDxH0UlpD8F+
+	Yt+
+X-Google-Smtp-Source: AGHT+IFG65MJEmLyCiOA9BERiPBGn3eCQfrV2NYScdNTN7N795VvYOJPF7RDGtmA6jqxlIol8QUfzzemKq7HOJv3ueY=
+X-Received: by 2002:a05:6102:2927:b0:4e7:cbf9:43a1 with SMTP id
+ ada2fe7eead31-4e7f6218da4mr8381544137.23.1750157863167; Tue, 17 Jun 2025
+ 03:57:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 17 Jun 2025 16:27:31 +0530
+X-Gm-Features: Ac12FXwULPm4A9nRkKZyjofb2giwdTHhtOl9_auNYX02QYl3DXMx7cn-e5ky_Vc
+Message-ID: <CA+G9fYsiWN1gWhHBk9uruDBzVHvLYCTL-VcxU2iiPMcS1EXyBg@mail.gmail.com>
+Subject: selftests ublk UBLK_IO_F_NEED_REG_BUF undeclared
+To: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Shuah Khan <shuah@kernel.org>, Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+	kbusch@kernel.org, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-06-16 at 16:31 -0600, Gustavo A. R. Silva wrote:
-> Replace flexible-array member with a fixed-size array.
->=20
-> With this changes, fix many instances of the following type of
-> warnings:
->=20
-> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array mem=
-ber is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/state.h:763:33: warning: structure containing a flexible array me=
-mber is not at the end of another structure [-Wflex-array-member-not-at-end=
-]
-> fs/nfsd/state.h:669:33: warning: structure containing a flexible array me=
-mber is not at the end of another structure [-Wflex-array-member-not-at-end=
-]
-> fs/nfsd/state.h:549:33: warning: structure containing a flexible array me=
-mber is not at the end of another structure [-Wflex-array-member-not-at-end=
-]
-> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array mem=
-ber is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array mem=
-ber is not at the end of another structure [-Wflex-array-member-not-at-end]
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v3:
->  - Replace flexible-array member with a fixed-size array. (NeilBrown)
->=20
-> Changes in v2:
->  - Use indices into `fh_raw`. (Christoph)
->  - Remove union and flexible-array member `fh_fsid`. (Christoph)
->  - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
->=20
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
->=20
->  fs/nfsd/nfsfh.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 5103c2f4d225..760e77f3630b 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -56,7 +56,7 @@ struct knfsd_fh {
->  			u8		fh_auth_type;	/* deprecated */
->  			u8		fh_fsid_type;
->  			u8		fh_fileid_type;
-> -			u32		fh_fsid[]; /* flexible-array member */
-> +			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
->  		};
->  	};
->  };
+The following build warnings / errors noticed while building the selftest/ublk
+with gcc-13 and clang-nightly toolchains on Linux next tree.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Please suggest if I am missing something in my build setup.
+
+Regressions found on arm arm64 x86_64
+  -  selftests ublk
+
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
+
+Build regression: selftests ublk UBLK_IO_F_NEED_REG_BUF undeclared
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build log
+
+ CC       kublk
+In file included from kublk.c:6:
+kublk.h: In function 'ublk_io_auto_zc_fallback':
+kublk.h:240:35: error: 'UBLK_IO_F_NEED_REG_BUF' undeclared (first use
+in this function); did you mean 'UBLKSRV_NEED_REG_BUF'?
+  240 |         return !!(iod->op_flags & UBLK_IO_F_NEED_REG_BUF);
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                                   UBLKSRV_NEED_REG_BUF
+kublk.h:240:35: note: each undeclared identifier is reported only once
+for each function it appears in
+kublk.c: In function 'ublk_ctrl_update_size':
+kublk.c:223:27: error: 'UBLK_U_CMD_UPDATE_SIZE' undeclared (first use
+in this function)
+  223 |                 .cmd_op = UBLK_U_CMD_UPDATE_SIZE,
+      |                           ^~~~~~~~~~~~~~~~~~~~~~
+kublk.c: In function 'ublk_ctrl_quiesce_dev':
+kublk.c:235:27: error: 'UBLK_U_CMD_QUIESCE_DEV' undeclared (first use
+in this function); did you mean 'UBLK_U_CMD_DEL_DEV'?
+  235 |                 .cmd_op = UBLK_U_CMD_QUIESCE_DEV,
+      |                           ^~~~~~~~~~~~~~~~~~~~~~
+      |                           UBLK_U_CMD_DEL_DEV
+kublk.c: In function 'ublk_queue_init':
+kublk.c:447:63: error: 'UBLK_F_AUTO_BUF_REG' undeclared (first use in
+this function); did you mean 'UBLKSRV_AUTO_BUF_REG'?
+  447 |         if (dev->dev_info.flags & (UBLK_F_SUPPORT_ZERO_COPY |
+UBLK_F_AUTO_BUF_REG)) {
+      |
+^~~~~~~~~~~~~~~~~~~
+      |
+UBLKSRV_AUTO_BUF_REG
+kublk.c: In function 'ublk_thread_init':
+kublk.c:507:63: error: 'UBLK_F_AUTO_BUF_REG' undeclared (first use in
+this function); did you mean 'UBLKSRV_AUTO_BUF_REG'?
+  507 |         if (dev->dev_info.flags & (UBLK_F_SUPPORT_ZERO_COPY |
+UBLK_F_AUTO_BUF_REG)) {
+      |
+^~~~~~~~~~~~~~~~~~~
+      |
+UBLKSRV_AUTO_BUF_REG
+kublk.c: In function 'ublk_set_auto_buf_reg':
+kublk.c:579:16: error: variable 'buf' has initializer but incomplete type
+  579 |         struct ublk_auto_buf_reg buf = {};
+      |                ^~~~~~~~~~~~~~~~~
+kublk.c:579:34: error: storage size of 'buf' isn't known
+  579 |         struct ublk_auto_buf_reg buf = {};
+      |                                  ^~~
+kublk.c:587:29: error: 'UBLK_AUTO_BUF_REG_FALLBACK' undeclared (first
+use in this function); did you mean 'UBLKSRV_AUTO_BUF_REG_FALLBACK'?
+  587 |                 buf.flags = UBLK_AUTO_BUF_REG_FALLBACK;
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                             UBLKSRV_AUTO_BUF_REG_FALLBACK
+kublk.c:589:21: error: implicit declaration of function
+'ublk_auto_buf_reg_to_sqe_addr'
+[-Werror=implicit-function-declaration]
+  589 |         sqe->addr = ublk_auto_buf_reg_to_sqe_addr(&buf);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kublk.c:579:34: error: unused variable 'buf' [-Werror=unused-variable]
+  579 |         struct ublk_auto_buf_reg buf = {};
+      |                                  ^~~
+kublk.c: In function '__cmd_dev_add':
+kublk.c:1178:25: error: 'UBLK_F_QUIESCE' undeclared (first use in this function)
+ 1178 |         if ((features & UBLK_F_QUIESCE) &&
+      |                         ^~~~~~~~~~~~~~
+kublk.c: In function 'cmd_dev_get_features':
+kublk.c:1381:30: error: 'UBLK_F_UPDATE_SIZE' undeclared (first use in
+this function)
+ 1381 |                 [const_ilog2(UBLK_F_UPDATE_SIZE)] = "UPDATE_SIZE",
+      |                              ^~~~~~~~~~~~~~~~~~
+kublk.c:1369:46: note: in definition of macro 'const_ilog2'
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                                              ^
+kublk.c:1369:24: error: array index in initializer not of integer type
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1381:18: note: in expansion of macro 'const_ilog2'
+ 1381 |                 [const_ilog2(UBLK_F_UPDATE_SIZE)] = "UPDATE_SIZE",
+      |                  ^~~~~~~~~~~
+kublk.c:1369:24: note: (near initialization for 'feat_map')
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1381:18: note: in expansion of macro 'const_ilog2'
+ 1381 |                 [const_ilog2(UBLK_F_UPDATE_SIZE)] = "UPDATE_SIZE",
+      |                  ^~~~~~~~~~~
+kublk.c:1382:30: error: 'UBLK_F_AUTO_BUF_REG' undeclared (first use in
+this function); did you mean 'UBLKSRV_AUTO_BUF_REG'?
+ 1382 |                 [const_ilog2(UBLK_F_AUTO_BUF_REG)] = "AUTO_BUF_REG",
+      |                              ^~~~~~~~~~~~~~~~~~~
+kublk.c:1369:46: note: in definition of macro 'const_ilog2'
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                                              ^
+kublk.c:1369:24: error: array index in initializer not of integer type
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1382:18: note: in expansion of macro 'const_ilog2'
+ 1382 |                 [const_ilog2(UBLK_F_AUTO_BUF_REG)] = "AUTO_BUF_REG",
+      |                  ^~~~~~~~~~~
+kublk.c:1369:24: note: (near initialization for 'feat_map')
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1382:18: note: in expansion of macro 'const_ilog2'
+ 1382 |                 [const_ilog2(UBLK_F_AUTO_BUF_REG)] = "AUTO_BUF_REG",
+      |                  ^~~~~~~~~~~
+kublk.c:1383:30: error: 'UBLK_F_QUIESCE' undeclared (first use in this function)
+ 1383 |                 [const_ilog2(UBLK_F_QUIESCE)] = "QUIESCE",
+      |                              ^~~~~~~~~~~~~~
+kublk.c:1369:46: note: in definition of macro 'const_ilog2'
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                                              ^
+kublk.c:1369:24: error: array index in initializer not of integer type
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1383:18: note: in expansion of macro 'const_ilog2'
+ 1383 |                 [const_ilog2(UBLK_F_QUIESCE)] = "QUIESCE",
+      |                  ^~~~~~~~~~~
+kublk.c:1369:24: note: (near initialization for 'feat_map')
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1383:18: note: in expansion of macro 'const_ilog2'
+ 1383 |                 [const_ilog2(UBLK_F_QUIESCE)] = "QUIESCE",
+      |                  ^~~~~~~~~~~
+kublk.c:1384:30: error: 'UBLK_F_PER_IO_DAEMON' undeclared (first use
+in this function)
+ 1384 |                 [const_ilog2(UBLK_F_PER_IO_DAEMON)] = "PER_IO_DAEMON",
+      |                              ^~~~~~~~~~~~~~~~~~~~
+kublk.c:1369:46: note: in definition of macro 'const_ilog2'
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                                              ^
+kublk.c:1369:24: error: array index in initializer not of integer type
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1384:18: note: in expansion of macro 'const_ilog2'
+ 1384 |                 [const_ilog2(UBLK_F_PER_IO_DAEMON)] = "PER_IO_DAEMON",
+      |                  ^~~~~~~~~~~
+kublk.c:1369:24: note: (near initialization for 'feat_map')
+ 1369 | #define const_ilog2(x) (63 - __builtin_clzll(x))
+      |                        ^
+kublk.c:1384:18: note: in expansion of macro 'const_ilog2'
+ 1384 |                 [const_ilog2(UBLK_F_PER_IO_DAEMON)] = "PER_IO_DAEMON",
+      |                  ^~~~~~~~~~~
+kublk.c: In function 'main':
+kublk.c:1613:46: error: 'UBLK_F_AUTO_BUF_REG' undeclared (first use in
+this function); did you mean 'UBLKSRV_AUTO_BUF_REG'?
+ 1613 |                                 ctx.flags |= UBLK_F_AUTO_BUF_REG;
+      |                                              ^~~~~~~~~~~~~~~~~~~
+      |                                              UBLKSRV_AUTO_BUF_REG
+cc1: all warnings being treated as errors
+
+
+## Source
+* Kernel version: 6.16.0-rc2
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 050f8ad7b58d9079455af171ac279c4b9b828c11
+* Git describe: next-20250616
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250616/
+* Architectures: arm, arm64, x86_64
+* Toolchains: gcc-13, clang nightly
+* Kconfigs: selftest/*/config+defconfig+
+
+## Build arm64
+* Build log clang:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250617/log-parser-build-clang/clang-compiler-null_c-error-use-of-undeclared-identifier-ublk_param_type_segment/
+* Build log gcc:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250617/log-parser-build-gcc/gcc-compiler-null_c-error-ublk_param_type_segment-undeclared-first-use-in-this-function-did-you-mean-ublk_param_type_devt/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250617/log-parser-build-clang/clang-compiler-kublk_c-error-variable-has-incomplete-type-struct-ublk_auto_buf_reg/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ycmBy2r4aPm6emlo7FXwX0my1D/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ycmBy2r4aPm6emlo7FXwX0my1D/config
+
+## Steps to reproduce
+ - tuxmake  \
+    --runtime podman  \
+    --target-arch arm64  \
+    --toolchain gcc-13  \
+    --kconfig defconfig  \
+    --kconfig-add
+https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/netdev.config
+ \
+    --kconfig-add
+https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/systemd.config
+ \
+    --kconfig-add CONFIG_SYN_COOKIES=y  \
+    --kconfig-add CONFIG_SCHEDSTATS=y debugkernel dtbs dtbs-legacy
+headers kernel kselftest modules
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
