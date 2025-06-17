@@ -1,96 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F6F139D0A;
-	Tue, 17 Jun 2025 10:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BA3221568;
+	Tue, 17 Jun 2025 10:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750155312; cv=none; b=uWdyb0f3V1RDt8kAFw9CTSVu+vPPuBV4HgUG7GG6mdRF9p9Sstt1wo8qV9FAHigMfxbdwyansjoALATi+GreRBmp9obte/r9vy74F+ijWFK12sTMcAygAzJzxAFJ5ZYoHyTlMAUyOY2cjGOwdMHNfe+/edgdgXjeDnUTgeBCFtU=
+	t=1750155316; cv=none; b=MHFO4/VEXUfFwBFJO7ifieZEc6UuhAXYauJ9OVqichc82f+4qvX4XdpA2/nVpoQ6/buEgxoahendbyzGiDNqLiLAz29QG+zJDFePTXtNIwpADOA36CLVANt8vCn0kQap7PUWD+01GW3cm28jMWE7mAlcJXfR6ygdV5XZYhb+kao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750155312; c=relaxed/simple;
-	bh=o020+KD1pNUZfL2iwH/vfr7KMOXQU9Zgca+ajYb8GwI=;
+	s=arc-20240116; t=1750155316; c=relaxed/simple;
+	bh=qi167v05pSdImwk+jUtorfAvfqhSdptwLbnqtnr/hK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L6oACa9xLW1rZHn/d3e1OOcJgsLfYrlr4KfAX6CzElz4KDNXQdaKCWPtMzpEv5M9RTbUlf6JhvukLGdNHa4IlUMZ90CDKzPTxShxCJk4lxmoDqgrR/l/Q8vnYV2UB5UwVPeiAgdd9uEeQVkSUbB9/1YTP9mZ1GBQCN1p2COoNm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ypCw5P0B; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bLGGR7UC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=J1J/b/PZS8s7pp12ZnQAnzW/iXW+OlU5YgLGA6XL4LVZTe5jGad2yufZKfXWq6QeKeS2PgnNwdruD+Z/oiLb0m34NxiySeMHqyAx3NrF/r+k+QvzyzxEmIyzpt4jKaD/bh8ATf1CFYO99Hu0yizuZ/VNbI1eQzOTZa297vunSGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=sUBCKre8; arc=none smtp.client-ip=211.125.140.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypCw5P0B";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bLGGR7UC"
-Date: Tue, 17 Jun 2025 12:15:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750155308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o020+KD1pNUZfL2iwH/vfr7KMOXQU9Zgca+ajYb8GwI=;
-	b=ypCw5P0B6pY8H9XqSSk2lvrgfbKnP9dHS6QDw1QHVYUIugEEvTwbuqouq3q+ra0H+AnU7E
-	hcxGHmUfXDgPmmWeSjFS9HuhrlfGW6NzbprU7V76y3hfUiRRFK3L7fqOf9aagPran3idWg
-	+uuN7pPe62gCK8DAEGhTfn7S9KN3F7+ZX414J1Y1Vj0R0m2beGWdUf32eYPoOe1UxBsppJ
-	nGuckIbJGWlEy01rDTqs8rVi3OrYpAWFz+U8cOwAF4iGZf892qYYrmIPjvuDaa/jsYENc1
-	hHxilJGDl6LYYtwzEqiw+cOa+4KrsLU388loTdicYQcEQFrxHUQXQ994xuPLEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750155308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o020+KD1pNUZfL2iwH/vfr7KMOXQU9Zgca+ajYb8GwI=;
-	b=bLGGR7UCKMMyzM7uSLL/+9pbVN8bK7kqSgLoJ9C1OpwO56U/3l1ofG0jxQKLQIgC960Wyx
-	JY4k0hob+LJWpeDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Marc =?utf-8?Q?Str=C3=A4mke?= <marc.straemke@eltropuls.de>
-Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel?
- IGB
-Message-ID: <20250617101507.jU00mupE@linutronix.de>
-References: <20250613145434.T2x2ML8_@linutronix.de>
- <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
- <20250613195838.0-gZ6bqS@linutronix.de>
- <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
- <20250617092814.vqKdu23w@linutronix.de>
- <bb74b5b6-bc23-4aa4-83df-449dc7c9006b@eltropuls.de>
- <20250617100013.1o5lsPLq@linutronix.de>
- <b7179ac8-c64b-44dd-b25a-62b34eb49c24@eltropuls.de>
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="sUBCKre8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=sony.com; s=s1jp; t=1750155313; x=1781691313;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xAGT5VwsBh5YQsXs7TeqXfNEzf33+wLYzOeBX75jZec=;
+  b=sUBCKre8P2o3shBda7aM1/HuH6f1m+BzbtyJIGKonZIlSLNp8FyxBNee
+   vhyGmRVz/nSHM+/nIWolpijPM4dry4Qr+Jg1vq/oAWJS2p6R3NCJuor8P
+   VYUN6C92S/Fhwv7rn267cvxZMvzOzWsyZL78XReQPbvyqEriie9W7rz87
+   kUKTtm/etL0redylHQcwYxvq1tzZ3PdcVT+hhSJMs12R1imYCA+SC3Q1R
+   gndhhb2Sd6r9ebakyqAK3pCU38CFPh3opcAQelXWHWmfL7U7QQEYdsH4B
+   5TGLmbcvGJUFDSHo/mN6lJ0sFppjMr7kL91RUPvpkHIkK+CYr97wnWRx/
+   Q==;
+Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
+  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 19:15:05 +0900
+X-IronPort-AV: E=Sophos;i="6.16,242,1744038000"; 
+   d="scan'208";a="543112704"
+Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
+  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 19:15:05 +0900
+Date: Tue, 17 Jun 2025 19:14:58 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shinya Takumi <shinya.takumi@sony.com>,
+	20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com
+Subject: Re: [PATCH v2 0/2] cpufreq: userspace: add CPUFREQ_GOV_STRICT_TARGET
+ flag
+Message-ID: <aFFAIrGNlsGyKVLc@JPC00244420>
+References: <20250527-userspace-governor-doc-v2-0-0e22c69920f2@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <b7179ac8-c64b-44dd-b25a-62b34eb49c24@eltropuls.de>
+In-Reply-To: <20250527-userspace-governor-doc-v2-0-0e22c69920f2@sony.com>
 
-On 2025-06-17 12:03:31 [+0200], Marc Str=C3=A4mke wrote:
-> Hi Sebastian,
-Hi,
+Hi Rafael,
 
-> On 17.06.25 12:00, Sebastian Andrzej Siewior wrote:
-> > Even if CPU1 would handle CPU0's timers then it would wake cyclictest on
-> > CPU0 but that thread would have to wake until CPU0 is done with the PCI
-> > bus. CPU1 knows nothing about it.
->=20
-> Okay then the latency I see on the other CPU must be from a PCI access do=
-ne
-> by the second CPU which stall on the same shared bus.
+Could you please take a look at this?
 
-Okay.
->=20
-> Anyway: Thanks for your help Sebastian! I can probably live well with the=
-se
-> spikes in latency. I was more concerned that there is a deeper issue with=
- my
-> config and the response time could be unbounded.
+Thanks
 
-You don't have to live with it. You could add a read after the writes in
-the loop (wrfl()). This should help.
-Some Intel CPUs have a MSR bit to disable this kind of caching on the
-PCI bus. Maybe the AMD CPU has this, too. Or there might be a switch in
-the BIOS.
+Regards,
+Shashank
 
-> Marc
-
-Sebastian
+On Tue, May 27, 2025 at 09:59:08PM +0900, Shashank Balaji wrote:
+> In-Reply-To: 20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com
+> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+> ---
+> Changes in v2:
+> - Instead of modifying the documentation to say that variation in frequency is
+> possible despite setting scaling_setspeed, add the CPUFREQ_GOV_STRICT_TARGET
+> flag to the userspace governor to make its behaviour match the expectation when
+> used with the intel_pstate driver with HWP enabled
+> - Mention in the documentation that variation in frequency due to hardware
+> factors is possible
+> - Link to v1: https://lore.kernel.org/r/20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com
+> 
+> ---
+> Shashank Balaji (2):
+>       cpufreq: userspace: set CPUFREQ_GOV_STRICT_TARGET flag
+>       cpufreq, docs: userspace: mention variation in freq due to hw coordination
+> 
+>  Documentation/admin-guide/pm/cpufreq.rst | 4 +++-
+>  drivers/cpufreq/cpufreq_userspace.c      | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 914873bc7df913db988284876c16257e6ab772c6
+> change-id: 20250522-userspace-governor-doc-86380dbab3d5
+> 
+> Best regards,
+> -- 
+> Shashank Balaji <shashank.mahadasyam@sony.com>
+> 
