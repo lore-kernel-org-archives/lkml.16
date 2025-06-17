@@ -1,107 +1,94 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D260CA6F
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAC9CA6F
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750120499; cv=none; b=EmmiprTDQdankq/8atUmMGHh1AKGqIowXFB7FUmhEXMGgnEzOCj2WHZDI4qZzHnM344vjTYK+N8pIPQgZj5oHjpQZjNAPHVAKPxXIEy4bwBnqO/MZYN9QHjP0y++Riz3HijYGhUeZOJ1JNhyKfZsoLMCiItCXkCK+J1+l4ztIpE=
+	t=1750120579; cv=none; b=jQshSDZKdzN7Sc5IsaKmhpp/sngBuX77wJfYibSC5dMH/N2rKSt/Jh+pmEfS0B2DLIK3hMl5uDxShF8nwudgXzknvuqW8G3rjzU3ju3ZiPgL+7jPUw5RvF5/iW7RU6SHVBdOM7CzWxhRsBHIDAmCwtaM7OH4+RtNqu7ZP7M2WI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750120499; c=relaxed/simple;
-	bh=lXAYNDoF+0nx3X7EuIEXp1xqr9oDbb03fHr/r0yjBB8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UL14f3XYdHjjW2YfrjDZEBQuwu2S7eKOM7/SjpUDGuGhQZaVmfFXZWC6BAd4/aKYG6v+gBi10qpYC58Jn1vPh3xys9TDeAWary2B2At0+VqEyvImjsct9usvNU5YZpPjUUnQ5tEMdCUdB88MlPNqswArQb70hSUTOMODhgXoV7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=k8SuKYQR; arc=none smtp.client-ip=46.235.229.95
+	s=arc-20240116; t=1750120579; c=relaxed/simple;
+	bh=JuBTSztdRmKPHzRbqL2cxBw4TBn+Dbm187VF807ZEC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ERhk9N5esLphhqVEax/LNZq/dpBgmiVbodsFszKT58tL8xD+Xflk0b2GVXesl1Y+eLEXSF7jNhOY5RzVdqgCnQgtqGLA1I3EpudHDPKW5W8Doh0ZI0WQFu7mwXfR5Cj3qJ4rRv84+ztLPV+YlqBSJx1Nl7JyfjiFaAPtyaTpSXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=kkGlGFav; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="k8SuKYQR"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="kkGlGFav"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=S/tSuyWBuPRpsvI5FuK9rkOx9m4pHgwRfK9UxskwDbk=; b=k8SuKYQRWQW9N1Wm
-	oc/+onuB1q1AAwYrgBsObkvfRD6OAMtcr4cXdHGKYwsqIu38pHcMr1R86C/pTkfXy28ItvWEDYuNl
-	ihbAZwzAT7CTVf5N79LH+GKlbLgr8VAga/ARz6PpO1Umiqq9K5Y/bO/nassLfKpiUvw1cLQhUFA3v
-	QJnh9JvFc2RWn6xIKLfZfOpAPkHd0oeiq0CMMNHYEsG4anTDCzHt34ZZUfc8V3w0P96RUc7y89rxW
-	MU+EKf7b8fD8tMmy5a7ebe1KiGshiicPQiWzKX5H3SwIevXU7bt/0OSPnP+yBXbXYKHDKsaVMPZ20
-	Ag7DdO4ELvUgA0HqTg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uRKHr-009zzB-1A;
-	Tue, 17 Jun 2025 00:34:51 +0000
-From: linux@treblig.org
-To: alexander.usyskin@intel.com
-Cc: arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] mei: vsc: Remove unused irq functions
-Date: Tue, 17 Jun 2025 01:34:50 +0100
-Message-ID: <20250617003450.118751-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=7hWqOMXV3EuW3+rxnWEfLBOUrnfonUmK2Izy+zK27mU=; b=kkGlGFavs66xVJUF
+	e6MLS8pq8sBrb4GO6wrZdVhsJNVswWjJ57Ec3B4tO0yNzJI67+BRGOm864ApWezyUNFjqfLgTTUQH
+	U1EQFA31Aij/1BGThajVkPi5hGIjpNwWqX4gyITlySpyJjpP4hHi/TtEUySCOr8E0aGS6L3jKPrcW
+	FqeYXwIJZx9UyHCdg/gtwl/LMN7sV0mZ2+dCHd574RGR2yN6Ooy3vl1X112Mix00I5U0nrDGGAGHs
+	YYmGB4Mb1vseY3jdUceRCLuQfWIMVHpRWzWRiYSbqJnUGgHHqeXFzWHCcN1/n9lZBvuiCy+9bWITH
+	el1TDUzaLp2odtGI7A==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uRKJE-00A00N-05;
+	Tue, 17 Jun 2025 00:36:16 +0000
+Date: Tue, 17 Jun 2025 00:36:15 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Of mei suspend/resume unused irq code
+Message-ID: <aFC4f9Z9J1v84Il5@gallifrey>
+References: <aE9MIykCS71RFnA5@gallifrey>
+ <CY5PR11MB6366E9288400660CC23AA8A8ED70A@CY5PR11MB6366.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <CY5PR11MB6366E9288400660CC23AA8A8ED70A@CY5PR11MB6366.namprd11.prod.outlook.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 00:35:30 up 50 days,  8:49,  1 user,  load average: 0.00, 0.01, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+* Usyskin, Alexander (alexander.usyskin@intel.com) wrote:
+> > Subject: Of mei suspend/resume unused irq code
+> > 
+> > Hi,
+> >   My scripts noticed that vsc_tp_request_irq() and vsc_tp_free_irq()
+> > were unused, since your:
+> > 
+> > commit 9b5e045029d8 ("mei: vsc: Don't stop/restart mei device during
+> > system suspend/resume")
+> > 
+> > they were only added just before that one, in the patch that fixes;
+> > so I wondered whether those should be deleted as well?
+> > 
+> > (I've been doing unused function deleting - but don't normally do
+> > recent ones, so thought I'd ask).
+> 
+> It looks like the oversight while removing actual HW operations from
+> suspend /resume flow.
+> These functions can be safely removed.
 
-vsc_tp_request_irq() and vsc_tp_free_irq() last uses were removed in 2024
-by
-commit 9b5e045029d8 ("mei: vsc: Don't stop/restart mei device during system
-suspend/resume")
+Thanks, please see the patch I've just sent:
+ ' [PATCH] mei: vsc: Remove unused irq functions'
 
-Remove them.
+Dave
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/misc/mei/vsc-tp.c | 31 -------------------------------
- 1 file changed, 31 deletions(-)
-
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index 267d0de5fade..99a55451e1fc 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -406,37 +406,6 @@ int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
- }
- EXPORT_SYMBOL_NS_GPL(vsc_tp_register_event_cb, "VSC_TP");
- 
--/**
-- * vsc_tp_request_irq - request irq for vsc_tp device
-- * @tp: vsc_tp device handle
-- */
--int vsc_tp_request_irq(struct vsc_tp *tp)
--{
--	struct spi_device *spi = tp->spi;
--	struct device *dev = &spi->dev;
--	int ret;
--
--	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
--	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
--				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				   dev_name(dev), tp);
--	if (ret)
--		return ret;
--
--	return 0;
--}
--EXPORT_SYMBOL_NS_GPL(vsc_tp_request_irq, "VSC_TP");
--
--/**
-- * vsc_tp_free_irq - free irq for vsc_tp device
-- * @tp: vsc_tp device handle
-- */
--void vsc_tp_free_irq(struct vsc_tp *tp)
--{
--	free_irq(tp->spi->irq, tp);
--}
--EXPORT_SYMBOL_NS_GPL(vsc_tp_free_irq, "VSC_TP");
--
- /**
-  * vsc_tp_intr_synchronize - synchronize vsc_tp interrupt
-  * @tp: vsc_tp device handle
+> - - 
+> Thanks,
+> Sasha
+> 
+> 
+> > 
+> > Dave
+> > --
+> >  -----Open up your eyes, open up your mind, open up your code -------
+> > / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
+> > \        dave @ treblig.org |                               | In Hex /
+> >  \ _________________________|_____ http://www.treblig.org   |_______/
 -- 
-2.49.0
-
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
