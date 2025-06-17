@@ -1,197 +1,222 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7A723AE84;
-	Tue, 17 Jun 2025 18:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D597828B507;
+	Tue, 17 Jun 2025 18:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185329; cv=none; b=Hz651GsAaiMuMB/KSwOYZS27u+2u/G8GBpC3CkDBpHP+v+2d8FqpdjASlzy2e4o8PybSas6Crxlu1MZIEN+6DjuIyoViOyvrv+RgWPtnabJ0HWkfTDIAmPKgXpASw1gW36YISgdGoiHjq6R/LSB0DQSxLMZsCNAvFFttiqLdv9A=
+	t=1750185329; cv=none; b=LE8VM4wgtEcjA4/NRsub9Pz0ENnDunxSuY7KRmZPPLMo3Ov4QwGA1Jv5YPFAmMubkhvx25+Msju5fgXrJBdqfjh4SMadyBx1uucsg4z+PwWtEaA6tJx5e7VKgB9Nyc95eswlxXRpQcTPfkroF2HjC6BPCJUIij374hJrMhF6nIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750185329; c=relaxed/simple;
-	bh=1Te3gUCb3wx4Xfv+yeVdknw42AFZu1cU2lHKKErDv+k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CK8VbvGWPukcsPU8r1tDg15NKeQp39CIBBaQ0pPisLuSoPWZbfch+a+JDEP4AjhPtR3oU3zoXJIGtrQUF56OeMksNXrK6n5GuRXRs9jllNm/alHpHlNZJ//q378uWd70vxKl8SzBdT6zlQIMUcFaoSwyyoh1jkEgNL6Ol/Co3lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=RuGGDr/5; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	bh=z98qWiz2TPOSiS2oB0qvfqGpiJumBiAmrfNf7XULJMk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bwsvOhYBKppm0v0E7JtaBkfOuvyMxcTavkSNRi0pfEMCTLZ1VGJLbUeaFIcLTOuvjnbuxFfGwMNxGx8NlLqfEBA4wNrglMYD2Drjd99te/wdqjv0eDFZxoUh00N/uBYSueIAJ8rg2ro1eohr9LlqTEUOwOI4p3xM9F0SxCtpVYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2CN2WmI; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="RuGGDr/5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mf6hTPlKjBS7l4gbTn3lLHJV8+IbbJlPwtkPqOBsY2A=; b=RuGGDr/56zGcsKtYz20WEhQQ3k
-	31ODKV9V5vwm9OvH6X8CxEnnoj5r1bBLjmotARxCvkVQlsNbzC2eZMQsRI/xgUqv73jAG5CX21nDo
-	yUvoFdS6Jn4wO9hsx7PvZjz3yaI5ts+amFUWufqmYK4ZW0TYOerWedVnkDum7hj0smC2stZFJ23IE
-	9rp2OCtzE/oTnFO2pneOMwGZouqxtok/j8+9eMrn3XF9T2Mw/957ckfgmiIH4EDJ1vBPxENDOjRDk
-	Kdr6ubfNNvhSzyTCKwXzIyhsU31Uj0fFXJUKe599mHdxsLn5GsKQgKa0DDz2YmNjHsv/2tmNQ6ILN
-	OBn9Sg1A==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uRb9T-004j89-2J; Tue, 17 Jun 2025 20:35:19 +0200
-From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Date: Tue, 17 Jun 2025 15:34:23 -0300
-Subject: [PATCH RESEND v4 6/7] futex: Remove the limit of elements for
- sys_set_robust_list2 lists
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2CN2WmI"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so5357298a91.1;
+        Tue, 17 Jun 2025 11:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750185327; x=1750790127; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Bntp77Hs3RcMQMVsD2F77AAd9YdDXm5jtfci1+gUQ14=;
+        b=g2CN2WmI4Ebpbr0GyWnVKB6vJTpGE9jfI50fCvNEJwY4HooAOZSwYaQQto4l/v15aA
+         kvp3ziN7BpEP7cEsZCjIrsFcFNr8UwIKlWGgQi/iNWNMzc2JvGhELD2/FZWv5elwGBV5
+         sbmU+b6pdaq7jdc3kAe51BhuOSGPyfC8u/t6QssxN3sojqlcfy7FBqvPty9A6MeDsT0J
+         PZ79qfiR7MmFwSjmCqiLHyQTz5sdtDOmixDCpTf0cgOtc/xTpukUDVNojtFhHmkAO4yr
+         JY5WPTYEnH8tCKqKaiqdE6kbZuQo/W3CSbplloWEgCoSR2+mxzLo0a2jPs38+DZdGJwT
+         YgGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750185327; x=1750790127;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bntp77Hs3RcMQMVsD2F77AAd9YdDXm5jtfci1+gUQ14=;
+        b=pCUpanstU05cK9VffUMd856getHRkAJepWSGl821N7WKu/Sr9T//nhbv04D/6tYhYq
+         cBUIOEDM0CkRc7VdlKtqg1/7BXyKbGCJSGPilDJlQqE0dZkinFoph2KG5fa597aJa8Gq
+         f2+1yR/SjsG/t6vXYmUn9WXZOkKltLOLGDYZaRHYNdgcKL/6TsTvC+NMsCazAiFPLpWV
+         Q7WNNuFv+m9cai4f1xgsY97n+6O0ZvqchL5agXHYXV+G4HrrRwQrT23QErLxi6W8z2Jf
+         9M/ogsERMXx5IsgWRqMljoyIOabl59NSNoGgn/DuFywc2xWKPYLAKHzXyPp7xm8cQvN1
+         w5bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDVl3u1LVaZ5MVWtXi1CfNHxTHaW+bXeA+z2jUOv+S+MQpL/U7scPjdTIAUYBTCHlA/yIcqJl68SJ7LN8=@vger.kernel.org, AJvYcCXpO2Myirmu7ZOmepw3w0XLUAY90hXrkk7QR2Ys5RQQFu34lpZvNT6FZgWPwLfjjY88TqE8P5hK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/DJNMcUkDmxPHywk4eJWF+D42ax487b8f26tk8yiok1jN9huO
+	X6To7HX82rErDWOaNgD4yror9tPRswnxrshS297ejpaVjGjhocBspN6S
+X-Gm-Gg: ASbGncsY34MtewuyCWix9fTk/jcEXwK2Zzseg2yOeBbq9uSQB6vRpyleDCCnhlJZO1H
+	z/xuyyUN5PDtfXSPtJI3ztkXtq4lr4PcX3hCkaTbpRqmERAMNEYofFNSZh/P7/RntfklUuZz24f
+	Aj3hmyn2TQlUI6BG/7zfCCfX4MTj0F7O3O0rm2QPG1I4BBE5oC6wxLcb36te5wIwPdXVoNUbnzR
+	5brkrSSKkeUMySbCOdfMujuwtV/cLg+sVurBQQnoRs4pBjIVyAbfo9Ey94BBXswKxSCLwTM+99k
+	AaKI4MODaRjwSivDkqVCJQOMAzYrLViXJ907oS1pCzSKPqeIaiQ7O5dUFbYSV/Gm0alMs7hsMAF
+	F9Z/hkNc=
+X-Google-Smtp-Source: AGHT+IGdnat7JAHqcXUEzk7AuYqg9efS1z6IgHRw61xLREkaJw9YC8i5ETUICV3Vo2xPHkSaPRPoQg==
+X-Received: by 2002:a17:90b:48ca:b0:312:e90b:419e with SMTP id 98e67ed59e1d1-313f1cacddfmr27441718a91.12.1750185326908;
+        Tue, 17 Jun 2025 11:35:26 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([106.37.123.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781c7sm83753715ad.128.2025.06.17.11.35.21
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 17 Jun 2025 11:35:26 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Chris Li <chrisl@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/4] mm/shmem, swap: improve cached mTHP handling and fix potential hung
+Date: Wed, 18 Jun 2025 02:35:00 +0800
+Message-ID: <20250617183503.10527-2-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250617183503.10527-1-ryncsn@gmail.com>
+References: <20250617183503.10527-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250617-tonyk-robust_futex-v4-6-6586f5fb9d33@igalia.com>
-References: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
-In-Reply-To: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
- Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Waiman Long <longman@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-api@vger.kernel.org, kernel-dev@igalia.com, 
- =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-X-Mailer: b4 0.14.2
 
-Remove the limit of ROBUST_LIST_LIMIT elements that a robust list can
-have, for the ones created with the new interface. This is done by
-overwritten the list as it's proceeded in a way that we avoid circular
-lists.
+From: Kairui Song <kasong@tencent.com>
 
-For the old interface, we keep the limited behavior to avoid changing
-the API.
+The current swap-in code assumes that, when a swap entry in shmem
+mapping is order 0, its cached folios (if present) must be order 0
+too, which turns out not always correct.
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
+The problem is shmem_split_large_entry is called before verifying the
+folio will eventually be swapped in, one possible race is:
+
+    CPU1                          CPU2
+shmem_swapin_folio
+/* swap in of order > 0 swap entry S1 */
+  folio = swap_cache_get_folio
+  /* folio = NULL */
+  order = xa_get_order
+  /* order > 0 */
+  folio = shmem_swap_alloc_folio
+  /* mTHP alloc failure, folio = NULL */
+  <... Interrupted ...>
+                                 shmem_swapin_folio
+                                 /* S1 is swapped in */
+                                 shmem_writeout
+                                 /* S1 is swapped out, folio cached */
+  shmem_split_large_entry(..., S1)
+  /* S1 is split, but the folio covering it has order > 0 now */
+
+Now any following swapin of S1 will hang: `xa_get_order` returns 0,
+and folio lookup will return a folio with order > 0. The
+`xa_get_order(&mapping->i_pages, index) != folio_order(folio)` will
+always return false causing swap-in to return -EEXIST.
+
+And this looks fragile. So fix this up by allowing seeing a larger folio
+in swap cache, and check the whole shmem mapping range covered by the
+swapin have the right swap value upon inserting the folio. And drop
+the redundant tree walks before the insertion.
+
+This will actually improve the performance, as it avoided two redundant
+Xarray tree walks in the hot path, and the only side effect is that in
+the failure path, shmem may redundantly reallocate a few folios
+causing temporary slight memory pressure.
+
+And worth noting, it may seems the order and value check before
+inserting might help reducing the lock contention, which is not true.
+The swap cache layer ensures raced swapin will either see a swap cache
+folio or failed to do a swapin (we have SWAP_HAS_CACHE bit even if
+swap cache is bypassed), so holding the folio lock and checking the
+folio flag is already good enough for avoiding the lock contention.
+The chance that a folio passes the swap entry value check but the
+shmem mapping slot has changed should be very low.
+
+Cc: stable@vger.kernel.org
+Fixes: 058313515d5a ("mm: shmem: fix potential data corruption during shmem swapin")
+Fixes: 809bc86517cc ("mm: shmem: support large folio swap out")
+Signed-off-by: Kairui Song <kasong@tencent.com>
 ---
- kernel/futex/core.c | 50 ++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 36 insertions(+), 14 deletions(-)
+ mm/shmem.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 49b3bc592948a811f995017027f33ad8f285531f..61f0b48a2bcd8ab926754980ab3454b9ec13a344 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1152,7 +1152,8 @@ static inline int fetch_robust_entry(struct robust_list __user **entry,
-  * We silently return on any sign of list-walking problem.
-  */
- static void exit_robust_list64(struct task_struct *curr,
--			       struct robust_list_head __user *head)
-+			       struct robust_list_head __user *head,
-+			       bool destroyable)
+diff --git a/mm/shmem.c b/mm/shmem.c
+index eda35be2a8d9..4e7ef343a29b 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -884,7 +884,9 @@ static int shmem_add_to_page_cache(struct folio *folio,
+ 				   pgoff_t index, void *expected, gfp_t gfp)
  {
- 	struct robust_list __user *entry, *next_entry, *pending;
- 	unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
-@@ -1196,13 +1197,17 @@ static void exit_robust_list64(struct task_struct *curr,
+ 	XA_STATE_ORDER(xas, &mapping->i_pages, index, folio_order(folio));
+-	long nr = folio_nr_pages(folio);
++	unsigned long nr = folio_nr_pages(folio);
++	swp_entry_t iter, swap;
++	void *entry;
+ 
+ 	VM_BUG_ON_FOLIO(index != round_down(index, nr), folio);
+ 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+@@ -896,14 +898,24 @@ static int shmem_add_to_page_cache(struct folio *folio,
+ 
+ 	gfp &= GFP_RECLAIM_MASK;
+ 	folio_throttle_swaprate(folio, gfp);
++	swap = iter = radix_to_swp_entry(expected);
+ 
+ 	do {
+ 		xas_lock_irq(&xas);
+-		if (expected != xas_find_conflict(&xas)) {
+-			xas_set_err(&xas, -EEXIST);
+-			goto unlock;
++		xas_for_each_conflict(&xas, entry) {
++			/*
++			 * The range must either be empty, or filled with
++			 * expected swap entries. Shmem swap entries are never
++			 * partially freed without split of both entry and
++			 * folio, so there shouldn't be any holes.
++			 */
++			if (!expected || entry != swp_to_radix_entry(iter)) {
++				xas_set_err(&xas, -EEXIST);
++				goto unlock;
++			}
++			iter.val += 1 << xas_get_order(&xas);
  		}
- 		if (rc)
- 			return;
--		entry = next_entry;
--		pi = next_pi;
-+
+-		if (expected && xas_find_conflict(&xas)) {
++		if (expected && iter.val - nr != swap.val) {
+ 			xas_set_err(&xas, -EEXIST);
+ 			goto unlock;
+ 		}
+@@ -2323,7 +2335,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 			error = -ENOMEM;
+ 			goto failed;
+ 		}
+-	} else if (order != folio_order(folio)) {
++	} else if (order > folio_order(folio)) {
  		/*
- 		 * Avoid excessively long or circular lists:
- 		 */
--		if (!--limit)
-+		if (!destroyable && !--limit)
- 			break;
-+		else
-+			put_user(&head->list, &entry->next);
-+
-+		entry = next_entry;
-+		pi = next_pi;
+ 		 * Swap readahead may swap in order 0 folios into swapcache
+ 		 * asynchronously, while the shmem mapping can still stores
+@@ -2348,15 +2360,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
  
- 		cond_resched();
- 	}
-@@ -1214,7 +1219,8 @@ static void exit_robust_list64(struct task_struct *curr,
- }
- #else
- static void exit_robust_list64(struct task_struct *curr,
--			      struct robust_list_head __user *head)
-+			      struct robust_list_head __user *head,
-+			      bool destroyable)
- {
- 	pr_warn("32bit kernel should not allow ROBUST_LIST_64BIT");
- }
-@@ -1252,7 +1258,8 @@ fetch_robust_entry32(u32 *uentry, struct robust_list __user **entry,
-  * We silently return on any sign of list-walking problem.
-  */
- static void exit_robust_list32(struct task_struct *curr,
--			       struct robust_list_head32 __user *head)
-+			       struct robust_list_head32 __user *head,
-+			       bool destroyable)
- {
- 	struct robust_list __user *entry, *next_entry, *pending;
- 	unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
-@@ -1301,14 +1308,17 @@ static void exit_robust_list32(struct task_struct *curr,
+ 			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
  		}
- 		if (rc)
- 			return;
--		uentry = next_uentry;
--		entry = next_entry;
--		pi = next_pi;
- 		/*
- 		 * Avoid excessively long or circular lists:
- 		 */
--		if (!--limit)
-+		if (!destroyable && !--limit)
- 			break;
-+		else
-+			put_user((struct robust_list __user *) &head->list, &entry->next);
-+
-+		uentry = next_uentry;
-+		entry = next_entry;
-+		pi = next_pi;
- 
- 		cond_resched();
- 	}
-@@ -1474,26 +1484,38 @@ static void exit_pi_state_list(struct task_struct *curr)
- static inline void exit_pi_state_list(struct task_struct *curr) { }
- #endif
- 
-+/*
-+ * futex_cleanup - After the task exists, process the robust lists
-+ *
-+ * Walk through the linked list, parsing robust lists and freeing the
-+ * allocated lists. Lists created with the set_robust_list2 don't have a limit
-+ * for sizing and can be destroyed while we walk on it to avoid circular list.
-+ */
- static void futex_cleanup(struct task_struct *tsk)
- {
- 	struct robust_list2_entry *curr, *n;
- 	struct list_head *list2 = &tsk->robust_list2;
-+	bool destroyable = true;
-+	int i = 0;
- 
- 	/*
--	 * Walk through the linked list, parsing robust lists and freeing the
--	 * allocated lists
- 	 */
- 	if (unlikely(!list_empty(list2))) {
- 		list_for_each_entry_safe(curr, n, list2, list) {
-+			destroyable = true;
-+			if (tsk->robust_list_index == i)
-+				destroyable = false;
-+
- 			if (curr->head != NULL) {
- 				if (curr->list_type == ROBUST_LIST_64BIT)
--					exit_robust_list64(tsk, curr->head);
-+					exit_robust_list64(tsk, curr->head, destroyable);
- 				else if (curr->list_type == ROBUST_LIST_32BIT)
--					exit_robust_list32(tsk, curr->head);
-+					exit_robust_list32(tsk, curr->head, destroyable);
- 				curr->head = NULL;
- 			}
- 			list_del_init(&curr->list);
- 			kfree(curr);
-+			i++;
- 		}
++	} else if (order < folio_order(folio)) {
++		swap.val = round_down(swp_type(swap), folio_order(folio));
  	}
  
-
+ alloced:
+ 	/* We have to do this with folio locked to prevent races */
+ 	folio_lock(folio);
+ 	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
+-	    folio->swap.val != swap.val ||
+-	    !shmem_confirm_swap(mapping, index, swap) ||
+-	    xa_get_order(&mapping->i_pages, index) != folio_order(folio)) {
++	    folio->swap.val != swap.val) {
+ 		error = -EEXIST;
+ 		goto unlock;
+ 	}
 -- 
-2.49.0
+2.50.0
 
