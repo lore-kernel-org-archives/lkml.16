@@ -1,101 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA7B2E54A3;
-	Tue, 17 Jun 2025 14:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3581A1EB1AF
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171479; cv=none; b=k5Joo7eq9k0h3A/3GOClDeuRAdXt9N6RGi+A/GxJgdGvVMEOnKrf19aW/doKs+A1iK05Kg14JpKFUMdaBW7kdUfBfongu9Zw5p5yl+ljcb02DvkjJgsfba+bgobzT7S9z+MDVnWj9cTWiZ+c2P9BtK1EOhvsLsdkPngXeklD1aQ=
+	t=1750171548; cv=none; b=Vw/mr+T/xolUUHaqk/hIaBSHAJNHn+6JtE5ZUUkRYY7T8OyqOPGTGO7/4fNARw05keHijLT1t+qnFNQjB3XShk87YHDDzbox+GZg/+LLrQqRrt2fKr18K/hgzelhPr5jVaUijpVhWxKjEf4CLP4mVK72P2/cJ8923urrNpxzEgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171479; c=relaxed/simple;
-	bh=r+1sIvSIxYaTR9LID7Lz+1ggjxbL3RpmshgYY0QT/Yg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtHGo7uIGvskAK06D7MRmk7OUsjQE+nbQ4AcQAsNMR32pFzpUues+forNB6e+JjB/cFwU6yB5nBunn1D/FydKQ/D8WPJea1VnZlhA0ykRZgNgSBQY2FhKnBdzAeS3jls5CCZivV6KwvuJnJpkxliCSRDmZlk118H0m4WcqLGsRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/Oo6HDv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750171548; c=relaxed/simple;
+	bh=ULFNwYQca9wWdUwi5WouClDI7RzoaTU1rxQ8ju3xMX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bl8E1oM7DzzYzjBQH/mSP/GmUONx1mH6HLVm/tkvehq7FtlwqfAFKJ8UDwTrzc5NNtZot7uY64bdyBj0u1L7dTZjFNjMl9DoABgahp3WkRPnkXZuB1LrZVWTLR/EfbxtSEEwkJyMWjvvd68YgIPxCPJFYxZLSB0vdDejZmO51pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PQD8erj0; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/Oo6HDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6C0C4CEE3;
-	Tue, 17 Jun 2025 14:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750171478;
-	bh=r+1sIvSIxYaTR9LID7Lz+1ggjxbL3RpmshgYY0QT/Yg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A/Oo6HDvYzO27Nuyc8XzyehNuqOvA/l80Yn5mh/xvg5wFQH6bgZVWXg3nDbKI5cIE
-	 gpjYE5m37eOqNb1gjt9ho/Xs+ouXdDbZhoZAMaz898sKyORFKPRAyq3j21UmfTOX28
-	 YHnmS+n9E0XvI68fZ2KipIpQJ6SDRqUZYfyi72+rpqsM7ORs/k2YdkxyjyUwLoaNyk
-	 QgNNbc3nwhmYfu1ishW5ZsbeoEp9aKiS7XreLlcVE1wvSZi0X2v4TqsjwslkcBkrUv
-	 SZAjlq/uwGh68kphB9DPqNg1YAS4F9b/UOhjHF8pitf+yCoGzzvaY2yDaI6ZXjrSoh
-	 xOX24kjZMdKpw==
-Date: Tue, 17 Jun 2025 17:44:35 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: linux-sgx@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/sgx: Use ENCLS mnemonic in <kernel/cpu/sgx/encls.h>
-Message-ID: <aFF_UwJ2XlFQSZOi@kernel.org>
-References: <20250616085716.158942-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PQD8erj0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750171544;
+	bh=ULFNwYQca9wWdUwi5WouClDI7RzoaTU1rxQ8ju3xMX4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PQD8erj0C7Hy+ryhmlFfeBMXd63QxZtIVk28bKTsFyrdpP0vqNI2BWU1C3FVzkMzw
+	 TBIdDrGu70jJM1n36OG9XgxQ1na2IXCgdmOshBU41BQs7mnfLYW6wh6Hb6KPi5ynO9
+	 2fW0hfxwsfJLu4cVvzmcYk0uj6sLFPxvCR03+3NTSqneClVFxSubbvrMqMCl0+7qx8
+	 OSZxtc/+lAAhP8xQMIf9ADsfJsqaEj6Nt5tn59QsFjfzvEYGb8jJNPOXiWgdSZRcDI
+	 42s2FZ8c5LbMJ8PCvD8UabhPc4ei38SYwuyslHDgo1XE/UdPUkUys+BQekNY8v3pN/
+	 MssXb3HnHbAoA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9512717E06BF;
+	Tue, 17 Jun 2025 16:45:43 +0200 (CEST)
+Date: Tue, 17 Jun 2025 16:45:40 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org (open list:ARM MALI PANTHOR DRM DRIVER),
+ linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH v5 1/2] drm/panthor: Reset queue slots if termination
+ fails
+Message-ID: <20250617164540.4fb196d4@collabora.com>
+In-Reply-To: <20250603094952.4188093-2-ashley.smith@collabora.com>
+References: <20250603094952.4188093-1-ashley.smith@collabora.com>
+	<20250603094952.4188093-2-ashley.smith@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616085716.158942-1-ubizjak@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 10:56:30AM +0200, Uros Bizjak wrote:
-> Current minimum required version of binutils is 2.30,
-> which supports ENCLS instruction mnemonic.
+On Tue,  3 Jun 2025 10:49:31 +0100
+Ashley Smith <ashley.smith@collabora.com> wrote:
+
+> This fixes a bug where if we timeout after a suspend and the termination
+> fails, due to waiting on a fence that will never be signalled for
+> example, we do not resume the group correctly. The fix forces a reset
+> for groups that are not terminated correctly.
 > 
-> Replace the byte-wise specification of ENCLS with
-> this proper mnemonic.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
+> Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
 > ---
->  arch/x86/kernel/cpu/sgx/encls.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kernel/cpu/sgx/encls.h b/arch/x86/kernel/cpu/sgx/encls.h
-> index 99004b02e2ed..42a088a337c5 100644
-> --- a/arch/x86/kernel/cpu/sgx/encls.h
-> +++ b/arch/x86/kernel/cpu/sgx/encls.h
-> @@ -68,7 +68,7 @@ static inline bool encls_failed(int ret)
->  	({							\
->  	int ret;						\
->  	asm volatile(						\
-> -	"1: .byte 0x0f, 0x01, 0xcf;\n\t"			\
-> +	"1: encls\n"						\
->  	"2:\n"							\
->  	_ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_SGX)		\
->  	: "=a"(ret)						\
-> @@ -111,8 +111,8 @@ static inline bool encls_failed(int ret)
->  	({							\
->  	int ret;						\
->  	asm volatile(						\
-> -	"1: .byte 0x0f, 0x01, 0xcf;\n\t"			\
-> -	"   xor %%eax,%%eax;\n"					\
-> +	"1: encls\n\t"						\
-> +	"xor %%eax,%%eax\n"					\
->  	"2:\n"							\
->  	_ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_SGX)		\
->  	: "=a"(ret), "=b"(rbx_out)				\
-> -- 
-> 2.49.0
-> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index 43ee57728de5..65d8ae3dcac1 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+>  			 * automatically terminate all active groups, so let's
+>  			 * force the state to halted here.
+>  			 */
+> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
+> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
+>  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
+> +
+> +				/* Reset the queue slots manually if the termination
+> +				 * request failed.
+> +				 */
+> +				for (i = 0; i < group->queue_count; i++) {
 
-I don't really see how this is that useful. That said, f a bug fix or
-feature used encls mnemonic, I'd had no problems with acking it.
+group is used uninitialized which leads to a random (most likely NULL)
+pointer deref. Either we go:
 
-BR, Jarkko
+				for (i = 0; i < csg_slot->group->queue_count; i++) {
+
+and we move the group variable to the last for loop, so we're not
+tempted to use it again in places where it's not initialized, or
+we use the group variable consistently accross this function by having
+
+		group = csg_slot->group;
+
+assignments where csg_slot->group is currently used.
+
+We might also want to consider splitting this huge function in
+sub-functions, but probably not in a patch that's flagged for
+backporting.
+
+
+> +					if (group->queues[i])
+> +						cs_slot_reset_locked(ptdev, csg_id, i);
+> +				}
+> +			}
+>  			slot_mask &= ~BIT(csg_id);
+>  		}
+>  	}
+
