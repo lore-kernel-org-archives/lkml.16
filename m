@@ -1,170 +1,116 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C992E9733;
-	Tue, 17 Jun 2025 15:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003192E92A5
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750173094; cv=none; b=N3jZuiY8HDVxyq5moyC5Ay8zsqVPk2zepSTWAGhs5exJ7fnStMbdM1Po8HTIf/I33rvVardpsM63MJiqAyJtOgryWoO8Mk2tMwH63vIcC514jrOoPRUs5zZOzsIC9p05jSqQ9scarbJ1oRBeDgoZjsErfV7eEyCjA42mbJQLvdM=
+	t=1750173099; cv=none; b=r7ehGS5xJRkNxQbwLottotRa2WFbeXUDnbNjDczfOr2khig2SKEhmV1GKyccQXaCPczcc5sMnU1a3pzSl8v/fMb8rAgZq8CoYmKHdLZaszd9L2I0/I0sG4VUxc2LSdW6nBJjRQm1ARXA7b3i6z1xMxEWAKGeKIugQJ5AEL5XxU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750173094; c=relaxed/simple;
-	bh=Zsh5aIo+bj1A7ONN8PodNeASYr6LUKd2rkEpVPlcDeI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jK6adyT52nI2/J2H+V7ic2JGkyPOPfFb94s5gh7kozb/P8ctq5sGBaqIe+mNF1Ks1vUv1fz863nXmPdqa3VtAKhH1vKEt1L0qeilF55Fru0NQyDp/lKgLX1OAUGx/lJMNnATsy3pkm4eBsC7THBF/g6/5Bc4Ft16lIRvQch1SOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a43972dcd7so74762411cf.3;
-        Tue, 17 Jun 2025 08:11:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750173090; x=1750777890;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vO7a97pP4ukARVbDLbAKCzb/am8gMifgt4A7ef66jhM=;
-        b=g9EEG7INJWGa258Oy6rwWUhcAW5siUx754PCwx1qyuK08jwI5gqkjE14bG1xKD/JM8
-         xsAAbt2tvarOnfHUPyUJYX0oFVBT/+iFn5HkuoUV3BVHd+2XiVFiqCHXULydYyura4uN
-         /Yi4GKxEtZYjQEgjqL2v0ZETmrG9zk7ZpVuoyVE+y8zMGfwgrulsqthprMqhK0IJ0snT
-         aS4nRW41jeGadduS7fA8Hss7720VCVGTOne6g8ZJgRCi49WdI+mCFZZXlT4w85+PPmTj
-         6oGtXk0c34EoJdp3ICpjm9zdrNdELv2lnZL44eSJ+cezPCaVhQi/fuZw35S5e1G0JV/t
-         ETyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCODdI5maIZUK8x0b7XIpV7twfijqCLwT0vRSf9GJoUmUxZRxEf4sr5BHcymSm+AmCV68vaKd2@vger.kernel.org, AJvYcCW6QH9AbRhASs8oZSaKpEcXgpept2q2UjaPZ9vWBvKiSyfUXu53BEnyGPyKii3qcacMS/6v37yCsHi+PgHk@vger.kernel.org, AJvYcCXLLEo53Kyqn8oZY1XopYTE7JjcWrcOOqgbRucC5RnN0ZbsThEP+yspSpuQCk//LStr+qSj9hvAT73T@vger.kernel.org, AJvYcCXZMhVHeCEU/DaTls4owpiz/p4bP1845CCTqegH+gBwNNdTmsFn788hM7Pn7wZTFeRxBJ3JZ9IvIthijMiwjTG3gcQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzldXLIHKmXN3T27/zEhLD5EOGy6Pb54tRCWNNoatRNr+pAavAZ
-	VRhNGrNY0KKJ1F/0WhvGaP8mFqv7zPQXbAXIhno82sW+HYUj6MFZOYmkRVygy83l
-X-Gm-Gg: ASbGncuElgRO6SV5/+LcoIL9wDW431E+t5j9a5eVIxhaT87pgP2gMg6kalwOs6nNMFT
-	5owkPGWK+op9ilHvEkuHrfQ92Bi16DbxiJlPmYXjORI5p2loKd+yZ8w3k+s0Di5ZEI+J3CGmHA2
-	sTdRAM4R/0XZhBM2MHzG6JaLl9CW/eKfK/Dg4ivvHFI0zRvPZa528u/E7JZKOJXCd8zEuGXvV+j
-	5n2hMtvlSAWXej1APncljXAayH2dK3JJ+u1teYfXXuo/dwj15ISEm9uXzeY0xktUJ7EcmMQJhxy
-	wwpbAE/GHzXzpLRcHU9yMc1L9mdDZkauApjl8n+3mfQ35P4DAz8+yjz6wjCpE0THRZOHlGCuwN2
-	clFzsS9YB28/C2DHh8M2F57btdafu
-X-Google-Smtp-Source: AGHT+IEX2Bjy6La5Rp4ul7jKmgUKQN0m3E3+9FXnVOfpn6cUDld26sB6pcM1We78L1iu0pDJcE3oYg==
-X-Received: by 2002:a05:622a:18a0:b0:4a4:3d6e:57c8 with SMTP id d75a77b69052e-4a73c5f941cmr219515821cf.34.1750173089864;
-        Tue, 17 Jun 2025 08:11:29 -0700 (PDT)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com. [209.85.222.172])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb4ed60787sm33751536d6.48.2025.06.17.08.11.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 08:11:29 -0700 (PDT)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c5b8d13f73so644463285a.0;
-        Tue, 17 Jun 2025 08:11:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUYcHUlfymYbkzumkB8iWuE177kGit9rIEh//B4Yf5wMBjl2ya0cG2/XKPslSxtioo/T2bfbcL8@vger.kernel.org, AJvYcCV0JcIlH8vn/7IkMizb5q4BwaXLN9CQFYbBZJ/DvD/H4DnXvn/TVrcQKVXAGNEQ6LaGuPEhIpleUu4F@vger.kernel.org, AJvYcCVgBlCeqz1Mf5lBmftoihhUbWbo1yFWIGhesfZ1gxfDDWsYrPtyyvxZGKENoxxgh66YIFQgTe6WMF85FBJO@vger.kernel.org, AJvYcCWPQ6i22dD7bpyARLHlA6my0VBew96gN4Nige6Rn4sgF1bKvdQjGCDpWY+7Zsp+Fxdp0MwO3xysnbOhSpHaeS4/8LQ=@vger.kernel.org
-X-Received: by 2002:a05:620a:4690:b0:7d3:913e:802e with SMTP id
- af79cd13be357-7d3c6cf5d27mr1916389785a.41.1750173089155; Tue, 17 Jun 2025
- 08:11:29 -0700 (PDT)
+	s=arc-20240116; t=1750173099; c=relaxed/simple;
+	bh=D1xpgUiufQqGSAFsktT5SQTgF2ow3I6SW1h/cuQN4NY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Px67/2lVA554GkJdHj1pQ6CuDpLdGj+N6s7xVDDqS+CkOoQzDzDHa0PkMsx9nLNcu1/G8AXSKlerO52SyoovLcs/ionTWgyVmU1L+0zx75ZxWjDLfhsaC1hAATYD3x/6j2bhn/AZYI5gSlO4JJ4eTZRReaZ+eVzrRGLVBN03Upg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UStt92Je; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UStt92Je"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H7Xnl8007806;
+	Tue, 17 Jun 2025 15:11:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=tyE6Jk7I6J4F9U1VAB3dQQj1GhBcvx
+	8L6Dln61RzEUA=; b=UStt92JeOBcqDT2EumuXm+JO9hxJTh8MhVnlhKOqroKtxb
+	iaOJBZKPUPg2LASWLwV5Wt9pOecTACtcyqb0DBUiFET4VNpANRCc7eiySLU7rUrq
+	oclC7b0BaCInSLhzfxs/lMoYygHf1OPPJc4RT56XiccRocJIc6hTeIMi0/yv0pc6
+	0dh5GysrEJ+4vL/bZPWqHjU3v9V79kLlj6pJSR5w+hpmv+8KrYxjmkS5/b9fQQiJ
+	5p0EuPp5EJDAlAW2GI03FqntvomlrwgXHBxIia7QiKE5PxPlXtisjeO3GNKHprO7
+	syDu6ZOTWiCng+rh9Sm8kGi+VnZBlZfhQfQ/SE7g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790te1a6s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 15:11:23 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55HEkeZk029566;
+	Tue, 17 Jun 2025 15:11:23 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790te1a6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 15:11:23 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55HF2GBp011233;
+	Tue, 17 Jun 2025 15:11:22 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 479kdtcc79-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 15:11:22 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55HFBKM854788544
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 15:11:20 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBC012004B;
+	Tue, 17 Jun 2025 15:11:20 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8BDBC20043;
+	Tue, 17 Jun 2025 15:11:20 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 17 Jun 2025 15:11:20 +0000 (GMT)
+Date: Tue, 17 Jun 2025 17:11:19 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 6/6] powerpc/64s: Do not re-activate batched TLB flush
+Message-ID: <aFGFl9Dvb9zdC3JS@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <cover.1749747752.git.agordeev@linux.ibm.com>
+ <8625a1d97dcf4ae499b4bb341e27346f768a7248.1749747752.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com> <20250611061609.15527-2-john.madieu.xa@bp.renesas.com>
-In-Reply-To: <20250611061609.15527-2-john.madieu.xa@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 17 Jun 2025 17:11:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXE-C4FAXOfzQv8xfgFytwpqkARDORGLkosZtCsjK8nmg@mail.gmail.com>
-X-Gm-Features: Ac12FXyQCqP8CWB4cTKabVnuKWIm_-hzOXZkBQa3qOJhr22FARrB3ykfGLTgX08
-Message-ID: <CAMuHMdXE-C4FAXOfzQv8xfgFytwpqkARDORGLkosZtCsjK8nmg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] clk: renesas: r9a09g047: Add clock and reset
- signals for the GBETH IPs
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: andrew+netdev@lunn.ch, conor+dt@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, krzk+dt@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, robh@kernel.org, 
-	biju.das.jz@bp.renesas.com, devicetree@vger.kernel.org, john.madieu@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	magnus.damm@gmail.com, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8625a1d97dcf4ae499b4bb341e27346f768a7248.1749747752.git.agordeev@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TrIPqeZ_BYY-f9iteuBELN1rvGn3U0dS
+X-Proofpoint-GUID: bkIiAnLD45FrZKdAPu1jW7F3_qcF-9OP
+X-Authority-Analysis: v=2.4 cv=c92rQQ9l c=1 sm=1 tr=0 ts=6851859b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=zQje2rQ7M4ZH0Jh3yrQA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDExNSBTYWx0ZWRfXwnUpwC85+dfW F7bc1aXZVbxehg/jtPakxU85aC0c0NZW8qt4Vp8qqdnE3KEChDFenhY4gzZjT9b6V0botJJ3V5+ Qj8d8Fdg+GA1TOKJjSQAaF/28RAFIsydP3bFXqsSSLY3JBd3/DhZ0ZO/W9W19LDGARlzo5mo/Z8
+ GV5Z//BgNNnHgiu8aCDrAqVC5opPk8+ici1DxP2d1Coa6NxtQXR5NxyzmguOGJymULFXG0Pp+sa 8VSTlAt41n56mFUSjqZwvqMZabjNkWxWoC0ZTe7U+hcG7po93k6/i9S7+Z9/fOk+CPT3vx+1w/2 +EG8SFBZWlD62yXPyoAOnpHKeyV4E4US2oLsr0zwcBPNLxnmzQi1iUUbcj90DCAtJoX/7+DiWot
+ H4YidpzZpnvLXM3K4qsRcXNdRPQ3FfRrLTC35WinFTZBcHdci47uDl+nNkSU0EYmiUyIItcv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_06,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=283 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506170115
 
-Hi John,
+On Thu, Jun 12, 2025 at 07:36:13PM +0200, Alexander Gordeev wrote:
+> Since commit b9ef323ea168 ("powerpc/64s: Disable preemption in hash
+> lazy mmu mode") a task can not be preempted while in lazy MMU mode.
+> Therefore, the batch re-activation code is never called, so remove it.
+> 
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/thread_info.h |  2 --
+>  arch/powerpc/kernel/process.c          | 25 -------------------------
+>  2 files changed, 27 deletions(-)
 
-On Wed, 11 Jun 2025 at 11:02, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
-> Add clock and reset entries for the Gigabit Ethernet Interfaces (GBETH 0-1)
-> IPs found on the RZ/G3E SoC. This includes various PLLs, dividers, and mux
-> clocks needed by these two GBETH IPs.
->
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+Hi All,
 
-Thanks for your patch!
+(I trimmed non-ppc mailing lists/people).
 
-> --- a/drivers/clk/renesas/r9a09g047-cpg.c
-> +++ b/drivers/clk/renesas/r9a09g047-cpg.c
-> @@ -85,7 +95,18 @@ static const struct clk_div_table dtable_2_64[] = {
->         {0, 0},
->  };
->
-> +static const struct clk_div_table dtable_2_100[] = {
-> +       {0, 2},
-> +       {1, 10},
-> +       {2, 100},
-> +       {0, 0},
-> +};
-> +
->  /* Mux clock tables */
-> +static const char * const smux2_gbe0_rxclk[] = { ".plleth_gbe0", "et0_rxc_rx_clk" };
-> +static const char * const smux2_gbe0_txclk[] = { ".plleth_gbe0", "et0_txc_tx_clk" };
-> +static const char * const smux2_gbe1_rxclk[] = { ".plleth_gbe1", "et1-rxc-rx_clk" };
-> +static const char * const smux2_gbe1_txclk[] = { ".plleth_gbe1", "et1-txc-tx_clk" };
+The whole series does not seem to make it, but this patch alone is still
+applicable and makes sence, if I am not mistaken.
 
-Please use consistent naming for the external clocks (underscores
-vs. dashes).  However, both differ from the similar names used on
-RZ/V2H and RZ/V2N; perhaps use the naming from the latter instead?
-
->  static const char * const smux2_xspi_clk0[] = { ".pllcm33_div3", ".pllcm33_div4" };
->  static const char * const smux2_xspi_clk1[] = { ".smux2_xspi_clk0", ".pllcm33_div5" };
->
-
-> @@ -214,6 +252,30 @@ static const struct rzv2h_mod_clk r9a09g047_mod_clks[] __initconst = {
->                                                 BUS_MSTOP(8, BIT(4))),
->         DEF_MOD("sdhi_2_aclk",                  CLK_PLLDTY_ACPU_DIV4, 10, 14, 5, 14,
->                                                 BUS_MSTOP(8, BIT(4))),
-> +       DEF_MOD("gbeth_0_clk_tx_i",             CLK_SMUX2_GBE0_TXCLK, 11, 8, 5, 24,
-> +                                               BUS_MSTOP(8, BIT(5))),
-> +       DEF_MOD("gbeth_0_clk_rx_i",             CLK_SMUX2_GBE0_RXCLK, 11, 9, 5, 25,
-> +                                               BUS_MSTOP(8, BIT(5))),
-> +       DEF_MOD("gbeth_0_clk_tx_180_i",         CLK_SMUX2_GBE0_TXCLK, 11, 10, 5, 26,
-> +                                               BUS_MSTOP(8, BIT(5))),
-> +       DEF_MOD("gbeth_0_clk_rx_180_i",         CLK_SMUX2_GBE0_RXCLK, 11, 11, 5, 27,
-> +                                               BUS_MSTOP(8, BIT(5))),
-> +       DEF_MOD("gbeth_0_aclk_csr_i",           CLK_PLLDTY_DIV8, 11, 12, 5, 28,
-> +                                               BUS_MSTOP(8, BIT(5))),
-> +       DEF_MOD("gbeth_0_aclk_i",               CLK_PLLDTY_DIV8, 11, 13, 5, 29,
-> +                                               BUS_MSTOP(8, BIT(5))),
-> +       DEF_MOD("gbeth_1_clk_tx_i",             CLK_SMUX2_GBE1_TXCLK, 11, 14, 5, 30,
-> +                                               BUS_MSTOP(8, BIT(6))),
-> +       DEF_MOD("gbeth_1_clk_rx_i",             CLK_SMUX2_GBE1_RXCLK, 11, 15, 5, 31,
-> +                                               BUS_MSTOP(8, BIT(6))),
-> +       DEF_MOD("gbeth_1_clk_tx_180_i",         CLK_SMUX2_GBE1_TXCLK, 12, 0, 6, 0,
-
-scripts/checkpatch.pl says:
-
-    WARNING: please, no space before tabs
-
-> +                                               BUS_MSTOP(8, BIT(6))),
-> +       DEF_MOD("gbeth_1_clk_rx_180_i",         CLK_SMUX2_GBE1_RXCLK, 12, 1, 6, 1,
-> +                                               BUS_MSTOP(8, BIT(6))),
-> +       DEF_MOD("gbeth_1_aclk_csr_i",           CLK_PLLDTY_DIV8, 12, 2, 6, 2,
-> +                                               BUS_MSTOP(8, BIT(6))),
-> +       DEF_MOD("gbeth_1_aclk_i",               CLK_PLLDTY_DIV8, 12, 3, 6, 3,
-> +                                               BUS_MSTOP(8, BIT(6))),
-
-Shouldn't all of these use DEF_MOD_MUX_EXTERNAL() instead of DEF_MOD(),
-like on RZ/V2H and RZ/V2N?
-
->         DEF_MOD("cru_0_aclk",                   CLK_PLLDTY_ACPU_DIV2, 13, 2, 6, 18,
->                                                 BUS_MSTOP(9, BIT(4))),
->         DEF_MOD_NO_PM("cru_0_vclk",             CLK_PLLVDO_CRU0, 13, 3, 6, 19,
-
-The rest LGTM. Note that I don't have access to the Additional Document,
-so I couldn't verify all details.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks!
