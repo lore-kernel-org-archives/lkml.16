@@ -1,152 +1,119 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A345E23AE84
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E4E2853E0;
+	Tue, 17 Jun 2025 18:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185323; cv=none; b=OFgE5IvFq5XkfsjYzCBNAISwyIG859vUDVCXCXUanfd/vNwQJ2+Xb9eQwma6QKfamS8RvvBtGgMMyk8aAVCOldPWP+EhraiyyMBLClhEv3oABd43oiNM7OdjNH2k+3LTrz7c9qfaqarDDAqC6ubDxEfQBiAgU1MU3iIijSOQCXM=
+	t=1750185328; cv=none; b=QLe+kd5vB+/HyoNLtPny7wTra8pwCh/WmjFp/+9wMSThAwjCae2SoL1DCjhHlspgBSyw0057JIYiIJOolF1TaKCxw78L422K4Aj5DTfzK0Y3dV5z1AMn2YxrhE8sI9Cnlypykmyqr/j6HoLqxJJ7T5800pWP4IGNc25dfHRg1K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185323; c=relaxed/simple;
-	bh=xoRUEZzV6ZQIcKoj181mxwlh5/Ju67llXZhsYplOOxk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xrph8cofBPd55zVB6ZBLgarBZha4jjCW0CIpSveHy66BqzXTFPOF0mILPNjFZL6vi/4Ot+zteJ1BGuPG+MHttlwCQR0gWgxfk93flcqgxPNs1jJFl2xEAd8ppdJTNTTripISa1+FoKxvU6QeiKbZoa73Uc4brQSqhCqeESqT6pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8jMSRgH; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750185328; c=relaxed/simple;
+	bh=HdsgE3dVEvFD0Kza/FGL4PVyH2AyEt8jTw7NRdOU/NU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GvZTNKS94tRjulDB8D3t+c8Uw8z1iz1eK6e8Tdy6zLFnM8zko0hWWgZfYI828BAouxv/h9MEwtvwAo4WAvL0/jJSpH9hEqChLfYZb1b8iu0lI2yIBkpiw7SY7QxlHP1/eV6mq98mbdsbUecDHYChucqhZxMb0iN9YJv9Y1YB84s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=br0MBrsR; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8jMSRgH"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235f9e87f78so63604935ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:35:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750185321; x=1750790121; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7djLTOtEoUl9hyAVxr+uOJrVUsIiPRKfKPff6GsCZXY=;
-        b=c8jMSRgHW+lJ/rOvSMMw36zOTlGk1TgNrCbxkknTRJydkti8EcES5EDUYSeNeG01o1
-         5a6jfzLTHKxZaMdqeTarEJU5b1pWuRkUVsduuZc4RH4Zw8NqXct4LZUcLjLhkpTufRFs
-         msDkKGcdhmy2cWejt9lK2IRWB0jPOAJoXEuDRzkYc1mNXe7Rmha51k76hi9qPPGsZ8+4
-         XPPU+xBNFRSL49wlegKHERaldq2TM5hV0hoxAfulMOH6Qf9P68nt/G5d0ijXljqr300t
-         tXmKmfEan20s8fLQL5l2PIHeSNLzndwAqddfc6p4sqa4w8uywl/yuxZFCkebOUvKgaTz
-         Xa3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750185321; x=1750790121;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7djLTOtEoUl9hyAVxr+uOJrVUsIiPRKfKPff6GsCZXY=;
-        b=t0KCEVeSxyGtfzfawdLpR8CRpg7swrqEWNQJ31Q4xkWFfmOkjyqMylvS3GvV9k0l3i
-         FflyBjlYd2Ed9I2XZqbRODHBEgiMuLVP6zDZowtO6fTBo5mTv1uqztShlwlrZlR8Euac
-         DZuqiRrMkHUKtU5yFDNIq5SZSpMn6uK1kmf9T0QqQ86GxyPSjhhmGqqosfyfkFykiXyJ
-         bgBO/nkfDBND69Zvd/KLN0vywFbEDg6oVuopDGpMvw6w1Gidu90d07Rxt/7keMy6B0H5
-         tHPSAKYV5rVfX552EIf9k8rXGoW6garca6qohY5nAd1sHnhb6OMJunLgVV38ba5nB8lb
-         cdfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAdh9Nnb3DWJGXsqdKTKHMlmDBqVZ2Hn0RLEaqejWGRNIHFQm1azxLkzOIpk8uuXFaEUHUzNJfrl8Sa1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrCnXvttcwlqXEMuinTnYjk207bhKC5PvMhVQV8mnrbnSQnDCn
-	F7Uw5UqFXvuMlzs0uyNOjOHJe9/Nx+ER9RJPhvc4BpFDtB6C4L4tCWIZn+p1B0ni8B4=
-X-Gm-Gg: ASbGncttKPFV7clli2Mu4sS1vVGq7xy7pnPbvvf5mzMJh4sfnCV2T2St24BNHmlRYVs
-	B9TjPcrNWyJ6+ppOvAMccNB4P121hmfg944e1fSQ/Y/wdLfUgeWBQ73sQvPqsh/dSBUX7J2WhCJ
-	wqDsxh0VRt4X4sR4o2rOVMK5mo+OmZK+xbk1cvq3hdeWDVHfhnFkkRomKktTBpK17622gdpkUZT
-	CpGqb0tQu2e49LSGu7yWWW1m7WLGDitKS9biqr9jyzXItj/hb6fELII81mlwTDrsudn38sisobI
-	aD81mC2Y5wZSlxmvkWetrkKR/lsSdetvTWq2xtus9YSw98/nEiYX0K9V63lqw+rlDFgM8HVG2F3
-	BR9ObaKZcqPpFPvnFXg==
-X-Google-Smtp-Source: AGHT+IH/fhCnjvjyePjXry73lNt5hxWzhjJkG1DFqaSWhRwCDAVL4uXMyva6j3FGR4B0I7uhRFXz2A==
-X-Received: by 2002:a17:902:f544:b0:235:a9b:21e0 with SMTP id d9443c01a7336-2366aef565amr226952075ad.0.1750185320716;
-        Tue, 17 Jun 2025 11:35:20 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([106.37.123.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781c7sm83753715ad.128.2025.06.17.11.35.15
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 17 Jun 2025 11:35:20 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Chris Li <chrisl@kernel.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Barry Song <baohua@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH 0/4] mm/shmem, swap: bugfix and improvement of mTHP swap in
-Date: Wed, 18 Jun 2025 02:34:59 +0800
-Message-ID: <20250617183503.10527-1-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.50.0
-Reply-To: Kairui Song <kasong@tencent.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="br0MBrsR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fyXXUndsFU1fi1/cHrhrRGj97R8gSsjU9AE57nmvn3s=; b=br0MBrsRE9RK8fS/T57MdHP6H4
+	VnkGANwToBV2D1zevNfDTTWSDoOPoy1ShzfxLKrwc5GF14DrnhOr8nBiocgx32niK86/sJlXd8Baa
+	S7RxASIfpWCLgwhGOQPHwt17orkvOPoMIMTYrJ6dffwKTOeNvrSOm6UDLn/N6GK4qFGtXqh+z0X9s
+	tvvb9jhye2eef45j1saJ0Qrg12Ts9yN37X4U7QtsVu7hI+lRbfX/M6W3xVoyznfmZvWvI/zeB/l0L
+	pHhjTxNNbotVsY09/v5gRHd4DumcGXP2gjlBYJncOJ8xgzHRA7eUYv6WyQy5zInMuwptirP3heBzo
+	72QjImgQ==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uRb9D-004j89-3M; Tue, 17 Jun 2025 20:35:03 +0200
+From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+Date: Tue, 17 Jun 2025 15:34:18 -0300
+Subject: [PATCH RESEND v4 1/7] selftests/futex: Add ASSERT_ macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250617-tonyk-robust_futex-v4-1-6586f5fb9d33@igalia.com>
+References: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
+In-Reply-To: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-api@vger.kernel.org, kernel-dev@igalia.com, 
+ =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+X-Mailer: b4 0.14.2
 
-From: Kairui Song <kasong@tencent.com>
+Create ASSERT_{EQ, NE, TRUE, FALSE} macros to make test creation easier.
 
-The current mTHP swapin path have several problems. It may potentially
-hang, may cause redundant faults due to false positive swap cache lookup,
-and it will involve at least 4 Xarray tree walks (get order, get order
-again, confirm swap, insert folio). And for !CONFIG_TRANSPARENT_HUGEPAGE
-builds, it will performs some mTHP related checks.
-
-This series fixes all of the mentioned issues, and the code should be more
-robust and prepared for the swap table series. Now tree walks is reduced
-to twice (get order & confirm, insert folio) and added more sanity checks
-and comments. !CONFIG_TRANSPARENT_HUGEPAGE build overhead is also
-minimized, and comes with a sanity check now.
-
-The performance is slightly better after this series, sequential swap in of
-24G data from ZRAM, using transparent_hugepage_tmpfs=always (36 samples each):
-
-Before:        avg: 11.23s, stddev: 0.06
-After patch 1: avg: 10.92s, stddev: 0.05
-After patch 2: avg: 10.93s, stddev: 0.15
-After patch 3: avg: 10.07s, stddev: 0.09
-After patch 4: avg: 10.09s, stddev: 0.08
-
-Each patch improves the performance by a little, which is about ~10%
-faster in total.
-
-Build kernel test showed very slightly improvement, testing with make -j24
-with defconfig in a 256M memcg also using ZRAM as swap, and
-transparent_hugepage_tmpfs=always (6 samples each):
-
-Before:        system time avg: 3945.25s
-After patch 1: system time avg: 3903.21s
-After patch 2: system time avg: 3914.76s
-After patch 3: system time avg: 3907.41s
-After patch 4: system time avg: 3876.24s
-
-Slightly better than noise level given the number of samples.
-
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
 ---
+ tools/testing/selftests/futex/include/logging.h | 38 +++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-Two of the patches in this series comes from the swap table series [1],
-and worth noting that the performance gain of this series is independent
-to the swap table series, we'll see another bigger performance gain and
-reduce of memory usage after the swap table series.
-
-I found these issues while trying to split the shmem changes out of the
-swap table series for easier reviewing, and found several more issues
-while doing stress tests for performance comparision. Barry also mentioned
-that CONFIG_TRANSPARENT_HUGEPAGE may have redundant checks [2] and I
-managed to clean them up properly too.
-
-No issue is found with a few days of stress testing.
-
-Link: https://lore.kernel.org/linux-mm/20250514201729.48420-1-ryncsn@gmail.com/ [1]
-Link: https://lore.kernel.org/linux-mm/CAMgjq7AsKFz7UN+seR5atznE_RBTDC9qjDmwN5saMe+KL3b1mQ@mail.gmail.com/ [2]
-
-Kairui Song (4):
-  mm/shmem, swap: improve cached mTHP handling and fix potential hung
-  mm/shmem, swap: avoid redundant Xarray lookup during swapin
-  mm/shmem, swap: improve mthp swapin process
-  mm/shmem, swap: avoid false positive swap cache lookup
-
- mm/shmem.c | 247 +++++++++++++++++++++++++++--------------------------
- 1 file changed, 126 insertions(+), 121 deletions(-)
+diff --git a/tools/testing/selftests/futex/include/logging.h b/tools/testing/selftests/futex/include/logging.h
+index 874c69ce5cce9efa3a9d6de246f5972a75437dbf..a19755622a877932884570c8f58aaee7371d5f8f 100644
+--- a/tools/testing/selftests/futex/include/logging.h
++++ b/tools/testing/selftests/futex/include/logging.h
+@@ -23,6 +23,44 @@
+ #include <linux/futex.h>
+ #include "kselftest.h"
+ 
++#define ASSERT_EQ(var, value)	\
++do {				\
++	if (var != value) {	\
++		ksft_test_result_fail("%s: expected %ld, but %s has %ld\n", \
++				      __func__, (long) value, #var, \
++				      (long) var); \
++		return;		\
++	}			\
++} while (0)
++
++#define ASSERT_NE(var, value)	\
++do {				\
++	if (var == value) {	\
++		ksft_test_result_fail("%s: expected not %ld, but %s has %ld\n", \
++				      __func__, (long) value, #var, \
++				      (long) var); \
++		return; \
++	}		\
++} while (0)
++
++#define ASSERT_TRUE(var)	\
++do {				\
++	if ((var) == 0) {	\
++		ksft_test_result_fail("%s: expected %s to be true\n", \
++				      __func__, #var); \
++		return;		\
++	}			\
++} while (0)
++
++#define ASSERT_FALSE(var)	\
++do {				\
++	if (var) {		\
++		ksft_test_result_fail("%s: expected %s to be false\n", \
++				      __func__, #var); \
++		return;		\
++	}			\
++} while (0)
++
+ /*
+  * Define PASS, ERROR, and FAIL strings with and without color escape
+  * sequences, default to no color.
 
 -- 
-2.50.0
+2.49.0
 
