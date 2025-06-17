@@ -1,275 +1,230 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FE2293C5C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA0423B615
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152088; cv=none; b=amrkEp4j/DktjnvNPgLpPtttrs7RAfUJ1z4mD6MJVn2BgjynppROOtz5Rot2tJLHv48lwO2T2AFjbneVaOf0EMyNHBEvWXXQsaxEXJW3XOFZKHmQ4c+kCOJczGsjEqz55pt8xmm9pn+PSATENuaTbP0kAIxb20YpOmd8SNA18lI=
+	t=1750152135; cv=none; b=L8S5W+GQ68aV9yePZcHlWINkwVFuRkzwooMafl1lzYFLrOknhve30cvkzJZ+bBuOFx5O2e45+zfIJ5PSWdMDCXh6iLj9urIXTpdUt0rnZRhgZIfmq8F+5e029SZxbSCJYKG5DIuJY3jMI6wApCRgJ2NrffP5CAvST+HF/ghit7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152088; c=relaxed/simple;
-	bh=Ow3AGhVqlqjnFCJ1JQEH8ceZfT2t+7tTzq/V/n123cs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QDLBL3Bp/aybnCQdqitG5tWd0RBFGFhL3kSu8jq/5vd0JE7O8DAlSdPYOlhbVy2CpC0G3qfGOSfXQRwg8ucTY7elg+Op/Znb2kV0Jwe8TcRbCI+bU2bbLzVIyTjdN9xiiSURl+wBudntB5FhC8kczOqql+Ydt1hTY43gXQ2zaKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aVdt8hme; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1750152135; c=relaxed/simple;
+	bh=gGXB13lrWUQFhPpL4EL6VOeiUO/5hI1oH05EdZE0p1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iunszms0g6TuVpUCi4jxx3zDLH0cmq0vzmdLjoKvCK9tQSXbQ5A5HeRJOtfRPLO+Zgq9U02jsJL8onmFOBoecplSJgIrQCRQksXIYWUd4FcDJSLWLSbaxzyPGOgsEuMvqY7S+RQQPMezZEf5TKE07C8zXX7reeTxChUue53ndsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eS8MSOHi; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aVdt8hme"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2fb8226e1cso6108096a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750152084; x=1750756884; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tQhHDdXRASPFShTEMtGhN37rSYP2mIQBC7ckn6Zfygs=;
-        b=aVdt8hmecBkj7Y8zeeB8Svdb1CvkJgAF38Fw4OTwoAYojYi6wa7h4zNcGdOyZLHJem
-         qvDFzLQI/uGX28zSCatiahp+mW0U2gk9cKAjFTyhhXWd6czaWsmlxfIqrO1gDlXSh1DU
-         /4SN/ujhlVA+560kv9/Sx2O8Np5T46j+quzEzKndpwauQDrCuVfHAOdHkkvTLetTzqDv
-         qZvGRL3DO+++u/eSRDFalcCoHCrdC81phkUHb9inDB2GJLflLu+Wv2gGkXGKCN1HDcXE
-         GSWyw7lupVkmEWdmCKANCLQz6JEOElIFrXOh2sBhs0ufa35vW4tTb3BeYLl6vzqecS3M
-         pd7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152084; x=1750756884;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tQhHDdXRASPFShTEMtGhN37rSYP2mIQBC7ckn6Zfygs=;
-        b=spROxl+YVR/yYgSSFZeaFV+Gc4qert/IltCwgEtB9tSvSkRnznAuCVO0UstYQxQLz+
-         n0Tl4JTXzNVDI3Mbfk53c4lkq05vPPnyHD7s1CNz/rCGQfDzluzVJCak18R/Eq0Zlx60
-         1FRkXHJ1OLGUuPgc+b+Uljh9oDblm3BzaY9iOntaNnjOvFZNPicPxcKaCMxSMx0s6Eh6
-         lFaLWIr5XdWRsn7xruypjAV3RdZq14er2vMvHVYoiEy+yJNJN9wWnOepTJzVpSse/iFm
-         xfmwk2U1IIFuqs/4DPgBbh0QR7GxMNScGbjVHuHIxgeEABP70Us24QrhabesGG8C/uP4
-         f5Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAU1NxpmRQJah2M5cbEGXBz+TypUV4TNGDS4JaDNPhN2NYOpUms8leB83QWEaPIIwhMpsRAEre/Wr682k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwapMudCu22jRJfQ+LJr9U+Cutf17ImOb479C6Y/Qkm77DDVqKr
-	X6f1YKmZj4Rxx65pWXrlgyX0WK4TA78xFrN5vySS3H6M4oCcFTPDg2Heya1O5hIMJ6U=
-X-Gm-Gg: ASbGncvptdAmXQ254M423z+rBlhydKGusubVDYfKCVfPuUOyNdbWulCIC/3qVRtnRmy
-	o8gnoGmdopU54lLXl/xDeQYx+ghEzei9xkTDJKBARuqMLq6hJWOEo1GAG4fbt1Kd2ChJUl6Cx2w
-	tfejWmMtbONIs5oHms8jvB8BciqP3nBHLRvECmeon+s5nDCYD+0YP517CwSi2EodfQyzexM8E+n
-	z/d2sj0iRMLGGHNbDtViS58/dM9vHcTIX+Fzj6hO5jLOa/n4yL3mqPt+9g15rZAUgab28rDxl0I
-	HjBos0Ucc12AfLff8E4L57L4SFo5Vj27fVD/AwWag2Bt7XhZ1vFaUjLqW9dSNLJ7p8BK6OoRpOl
-	00HJ99G954dbg1g==
-X-Google-Smtp-Source: AGHT+IH4Lc/yHe2dEENhF5nwP1sRWFMN4XZjeIToef7j+ESUprmceHkDq6MxthbKbJpXxCtADv1M3g==
-X-Received: by 2002:a17:90b:180b:b0:311:1617:5bc4 with SMTP id 98e67ed59e1d1-31427e9f120mr2815486a91.12.1750152084194;
-        Tue, 17 Jun 2025 02:21:24 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88e554sm75458145ad.16.2025.06.17.02.21.20
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 17 Jun 2025 02:21:23 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: david@redhat.com
-Cc: akpm@linux-foundation.org,
-	alex.williamson@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lizhe.67@bytedance.com,
-	peterx@redhat.com
-Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
-Date: Tue, 17 Jun 2025 17:21:17 +0800
-Message-ID: <20250617092117.10772-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <34560ae6-c598-4474-a094-a657c973156b@redhat.com>
-References: <34560ae6-c598-4474-a094-a657c973156b@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eS8MSOHi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=R+yEvGkOHGBrwFRPP1Ra1mW4ovud5RNj/OYyQHzRHXo=; b=eS8MSOHiRgu8WYA19ZchHIHnL9
+	ceDla4/ANUkOCpysaIhPAILO0gHJIgShcOnhyesXcytG9v5o3rBqpR8hRRbfj90T2EjxYy6OpHwwa
+	1fY2r5z8A+eF+yf7hPISaPqKIB0PWC7u3hH8D+df4Toa+OpFWJaAr3zBtasnZYI4IMy24Xz/tCjUi
+	p1hYFH4Oyg+0t2QdD9y5cSIne+qcfvhjD5AMD0BDQ2pnB7A9JJfmlXmEuiJCQh5tbAShi/l/aeu9c
+	1ZPi9ya6pQf2wz7vhOY2Q+16FW4PINi//kaZgaEm+8WSfXq6iI0WEttVSLaUOst0TJs0d3Plh0XpE
+	jN6Bkvag==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRSW9-00000003kqp-2gHm;
+	Tue, 17 Jun 2025 09:22:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 363BD30BDAD; Tue, 17 Jun 2025 11:22:08 +0200 (CEST)
+Date: Tue, 17 Jun 2025 11:22:08 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] sched/fair: Manage lag and run to parity with
+ different slices
+Message-ID: <20250617092208.GQ1613376@noisy.programming.kicks-ass.net>
+References: <20250613140514.2781138-1-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="dg8YfIraIgJZAKwm"
+Content-Disposition: inline
+In-Reply-To: <20250613140514.2781138-1-vincent.guittot@linaro.org>
 
-On Tue, 17 Jun 2025 09:43:56 +0200, david@redhat.com wrote:
+
+--dg8YfIraIgJZAKwm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Jun 13, 2025 at 04:05:10PM +0200, Vincent Guittot wrote:
+> Vincent Guittot (3):
+>   sched/fair: Use protect_slice() instead of direct comparison
+>   sched/fair: Limit run to parity to the min slice of enqueued entities
+>   sched/fair: Improve NO_RUN_TO_PARITY
+
+Ah. I wrote these here patches and then totally forgot about them :/.
+They take a different approach.
+
+The approach I took was to move decision to stick with curr after pick,
+instead of before it. That way we can evaluate the tree at the time of
+preemption.
+
+
+
+--dg8YfIraIgJZAKwm
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="peterz-sched-fair-fix-delayed-requeue.patch"
+
+Subject: sched/fair: Fix requeue_delayed_entity()
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri Apr  4 11:23:00 CEST 2025
+
+Since enqueue_task_fair() doesn't call update_curr() before calling
+requeue_delayed_entity(), which means that update_entity_lag() uses a
+slightly out-of-date avg_vruntime() -- which includes current.
+
+Fixes: 54a58a787791 ("sched/fair: Implement DELAY_ZERO")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/sched/fair.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6893,6 +6893,8 @@ requeue_delayed_entity(struct sched_enti
+ {
+ 	struct cfs_rq *cfs_rq = cfs_rq_of(se);
  
-> On 17.06.25 06:18, lizhe.67@bytedance.com wrote:
-> > From: Li Zhe <lizhe.67@bytedance.com>
-> > 
-> > When vfio_unpin_pages_remote() is called with a range of addresses that
-> > includes large folios, the function currently performs individual
-> > put_pfn() operations for each page. This can lead to significant
-> > performance overheads, especially when dealing with large ranges of pages.
-> > 
-> > This patch optimize this process by batching the put_pfn() operations.
-> > 
-> > The performance test results, based on v6.15, for completing the 16G VFIO
-> > IOMMU DMA unmapping, obtained through unit test[1] with slight
-> > modifications[2], are as follows.
-> > 
-> > Base(v6.15):
-> > ./vfio-pci-mem-dma-map 0000:03:00.0 16
-> > ------- AVERAGE (MADV_HUGEPAGE) --------
-> > VFIO MAP DMA in 0.047 s (338.6 GB/s)
-> > VFIO UNMAP DMA in 0.138 s (116.2 GB/s)
-> > ------- AVERAGE (MAP_POPULATE) --------
-> > VFIO MAP DMA in 0.280 s (57.2 GB/s)
-> > VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
-> > ------- AVERAGE (HUGETLBFS) --------
-> > VFIO MAP DMA in 0.052 s (308.3 GB/s)
-> > VFIO UNMAP DMA in 0.139 s (115.1 GB/s)
-> > 
-> > Map[3] + This patchset:
-> > ------- AVERAGE (MADV_HUGEPAGE) --------
-> > VFIO MAP DMA in 0.028 s (563.9 GB/s)
-> > VFIO UNMAP DMA in 0.049 s (325.1 GB/s)
-> > ------- AVERAGE (MAP_POPULATE) --------
-> > VFIO MAP DMA in 0.294 s (54.4 GB/s)
-> > VFIO UNMAP DMA in 0.296 s (54.1 GB/s)
-> > ------- AVERAGE (HUGETLBFS) --------
-> > VFIO MAP DMA in 0.033 s (485.1 GB/s)
-> > VFIO UNMAP DMA in 0.049 s (324.4 GB/s)
-> > 
-> > For large folio, we achieve an approximate 64% performance improvement
-> > in the VFIO UNMAP DMA item. For small folios, the performance test
-> > results appear to show no significant changes.
-> > 
-> > [1]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
-> > [2]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
-> > [3]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
-> > 
-> > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> > ---
-> >   drivers/vfio/vfio_iommu_type1.c | 35 +++++++++++++++++++++++++++++----
-> >   1 file changed, 31 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index e952bf8bdfab..159ba80082a8 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -806,11 +806,38 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
-> >   				    bool do_accounting)
-> >   {
-> >   	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
-> > -	long i;
-> >   
-> > -	for (i = 0; i < npage; i++)
-> > -		if (put_pfn(pfn++, dma->prot))
-> > -			unlocked++;
-> > +	while (npage) {
-> > +		long nr_pages = 1;
-> > +
-> > +		if (!is_invalid_reserved_pfn(pfn)) {
-> > +			struct page *page = pfn_to_page(pfn);
-> > +			struct folio *folio = page_folio(page);
-> > +			long folio_pages_num = folio_nr_pages(folio);
-> > +
-> > +			/*
-> > +			 * For a folio, it represents a physically
-> > +			 * contiguous set of bytes, and all of its pages
-> > +			 * share the same invalid/reserved state.
-> > +			 *
-> > +			 * Here, our PFNs are contiguous. Therefore, if we
-> > +			 * detect that the current PFN belongs to a large
-> > +			 * folio, we can batch the operations for the next
-> > +			 * nr_pages PFNs.
-> > +			 */
-> > +			if (folio_pages_num > 1)
-> > +				nr_pages = min_t(long, npage,
-> > +					folio_pages_num -
-> > +					folio_page_idx(folio, page));
-> > +
-> 
-> (I know I can be a pain :) )
++	update_curr(cfs_rq);
++
+ 	/*
+ 	 * se->sched_delayed should imply: se->on_rq == 1.
+ 	 * Because a delayed entity is one that is still on
 
-No, not at all! I really appreciate you taking the time to review my
-patch.
+--dg8YfIraIgJZAKwm
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="peterz-sched-fair-fix-preempt-short.patch"
 
-> But the long comment indicates that this is confusing.
-> 
-> 
-> That is essentially the logic in gup_folio_range_next().
-> 
-> What about factoring that out into a helper like
-> 
-> /*
->   * TODO, returned number includes the provided current page.
->   */
-> unsigned long folio_remaining_pages(struct folio *folio,
-> 	struct pages *pages, unsigned long max_pages)
-> {
-> 	if (!folio_test_large(folio))
-> 		return 1;
-> 	return min_t(unsigned long, max_pages,
-> 		     folio_nr_pages(folio) - folio_page_idx(folio, page));
-> }
-> 
-> 
-> Then here you would do
-> 
-> if (!is_invalid_reserved_pfn(pfn)) {
-> 	struct page *page = pfn_to_page(pfn);
-> 	struct folio *folio = page_folio(page);
-> 
-> 	/* We can batch-process pages belonging to the same folio. */
-> 	nr_pages = folio_remaining_pages(folio, page, npage);
-> 
-> 	unpin_user_folio_dirty_locked(folio, nr_pages,
-> 				      dma->prot & IOMMU_WRITE);
-> 	unlocked += nr_pages;
-> }
+Subject: sched/eevdf: Re-arrange current protection in pick_eevdf()
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri Apr 4 10:15:15 CEST 2025
 
-Yes, this indeed makes the code much more comprehensible. Do you think
-the implementation of the patch as follows look viable to you? I have
-added some brief comments on top of your work to explain why we can
-batch-process pages belonging to the same folio. This was suggested by
-Alex[1].
+The way pick_eevdf() limits preemption is by explicitly picking
+current if it is still eligible. It does this without consideration of
+the best in-tree task.
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index e952bf8bdfab..d7653f4c10d5 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -801,16 +801,43 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
-        return pinned;
+Move current protection to after the tree selection such that a follow
+up patch can change the conditions.
+
+Should be an semantics no-op at this point.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/sched/fair.c |   33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -903,6 +903,26 @@ static inline void cancel_protect_slice(
+ 		se->vlag = se->deadline + 1;
  }
  
-+/* Returned number includes the provided current page. */
-+static inline unsigned long folio_remaining_pages(struct folio *folio,
-+               struct page *page, unsigned long max_pages)
++static inline bool __pick_eevdf_curr(struct cfs_rq *cfs_rq, struct sched_entity *best)
 +{
-+       if (!folio_test_large(folio))
-+               return 1;
-+       return min_t(unsigned long, max_pages,
-+                    folio_nr_pages(folio) - folio_page_idx(folio, page));
++	struct sched_entity *curr = cfs_rq->curr;
++
++	/* only called when this is already checked */
++	WARN_ON_ONCE(!curr || !curr->on_rq);
++
++	/*
++	 * Strictly speaking we should allow current to run until its
++	 * deadline. However allow (wakeup) preemption once it is no longer
++	 * eligible.
++	 */
++	if (sched_feat(RUN_TO_PARITY) &&
++	    protect_slice(curr) &&
++	    entity_eligible(cfs_rq, curr))
++		return true;
++
++	return entity_before(curr, best);
 +}
 +
- static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
-                                    unsigned long pfn, unsigned long npage,
-                                    bool do_accounting)
- {
-        long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
--       long i;
+ /*
+  * Earliest Eligible Virtual Deadline First
+  *
+@@ -929,18 +949,15 @@ static struct sched_entity *pick_eevdf(s
+ 	struct sched_entity *curr = cfs_rq->curr;
+ 	struct sched_entity *best = NULL;
  
--       for (i = 0; i < npage; i++)
--               if (put_pfn(pfn++, dma->prot))
--                       unlocked++;
-+       while (npage) {
-+               unsigned long nr_pages = 1;
++	if (curr && !curr->on_rq)
++		curr = NULL;
 +
-+               if (!is_invalid_reserved_pfn(pfn)) {
-+                       struct page *page = pfn_to_page(pfn);
-+                       struct folio *folio = page_folio(page);
-+
-+                       /*
-+                        * We can batch-process pages belonging to the same
-+                        * folio because all pages within a folio share the
-+                        * same invalid/reserved state.
-+                        * */
-+                       nr_pages = folio_remaining_pages(folio, page, npage);
-+                       unpin_user_folio_dirty_locked(folio, nr_pages,
-+                                       dma->prot & IOMMU_WRITE);
-+                       unlocked += nr_pages;
-+               }
-+
-+               pfn += nr_pages;
-+               npage -= nr_pages;
-+       }
+ 	/*
+ 	 * We can safely skip eligibility check if there is only one entity
+ 	 * in this cfs_rq, saving some cycles.
+ 	 */
+ 	if (cfs_rq->nr_queued == 1)
+-		return curr && curr->on_rq ? curr : se;
+-
+-	if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
+-		curr = NULL;
+-
+-	if (sched_feat(RUN_TO_PARITY) && curr && protect_slice(curr))
+-		return curr;
++		return curr ?: se;
  
-        if (do_accounting)
-		vfio_lock_acct(dma, locked - unlocked, true);
+ 	/* Pick the leftmost entity if it's eligible */
+ 	if (se && entity_eligible(cfs_rq, se)) {
+@@ -977,7 +994,7 @@ static struct sched_entity *pick_eevdf(s
+ 		node = node->rb_right;
+ 	}
+ found:
+-	if (!best || (curr && entity_before(curr, best)))
++	if (!best || (curr && __pick_eevdf_curr(cfs_rq, best)))
+ 		best = curr;
+ 
+ 	return best;
+
+--dg8YfIraIgJZAKwm
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="peterz-sched-fair-fix-preempt-short-2.patch"
+
+Subject: sched/eevdf: Fix RUN_TO_PARITY vs PREEMPT_SHORT
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri Apr 4 10:25:03 CEST 2025
+
+Vincent noted that RUN_TO_PARITY can prevent preemption by a shorter
+slice under some conditions.
+
+Reported-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
+ kernel/sched/fair.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Zhe
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -918,7 +918,7 @@ static inline bool __pick_eevdf_curr(str
+ 	if (sched_feat(RUN_TO_PARITY) &&
+ 	    protect_slice(curr) &&
+ 	    entity_eligible(cfs_rq, curr))
+-		return true;
++		return !sched_feat(PREEMPT_SHORT) || curr->slice < best->slice;
+ 
+ 	return entity_before(curr, best);
+ }
+@@ -1195,7 +1195,7 @@ static inline bool did_preempt_short(str
+ 	if (!sched_feat(PREEMPT_SHORT))
+ 		return false;
+ 
+-	if (curr->vlag == curr->deadline)
++	if (protect_slice(curr))
+ 		return false;
+ 
+ 	return !entity_eligible(cfs_rq, curr);
 
-[1]: https://lore.kernel.org/all/20250613113818.584bec0a.alex.williamson@redhat.com/
+--dg8YfIraIgJZAKwm--
