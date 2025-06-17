@@ -1,169 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8983B1DE3DC;
-	Tue, 17 Jun 2025 08:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C0D21CC74;
+	Tue, 17 Jun 2025 08:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750149222; cv=none; b=tyKWQkYxgHnoALqtRKjaKYzaFb9XsARq34Ya3/PFbyr4NYzxfmu2BgWPnFEWT+vF94yWE7uWFTo4ZL2HLfgyj4UgrR5sv3KBseLknG8O2aD0yeeecq9rQ9WOyWLh5lz8Ldu25bbgwNcqJNmgNNabXft3/4Oe6rUOauPficpkEBQ=
+	t=1750149223; cv=none; b=sBs+tvOz0yRqlCCWd/7JIvNxJeTmP1fYI/SLAfTGIBqEo84F3P/LsLVEU0dh1oDrp+nZn1gGNcm/9C1s0ge6jsOtACH5FNPdOc30zom70lsraDDVeU6WBoGJV3lMqSi0WB1fGGVCaQe2S2pq3+EJTh0s0fjQQNJQNbCazaVGb1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750149222; c=relaxed/simple;
-	bh=m+8n+ffzJd8l66Jfjz0sF6qoqRZzq+G/9rK+epTI7eY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EmWVhXyGu72MsCE5COiQJckraL2JGUGTCGOsCpNVSZSQrYFAynEQDzoU6Z85OJyPIoi4erxrs0iPghxC3eehvlSx3HPFhrp4kXTiy1tW2wwSZsOzHu3AHYt/ThzrpBb50CT869kqlIm9lK3PVY8GE3XKMYWVqRV/tEGucAVxo/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9L/oFFW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750149223; c=relaxed/simple;
+	bh=Ja2iMSBc43pbgZ6pp2G6gvZZT6gzTqyX/7QnwMCdDjw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hECdGkClO3zMWh6h57AflLx9rQS/+ROcpz6VvS8jb5VyT1APFiVjrLyZ2TQjSLdxi525THk9zUJ/5/Q8VJsyLKjIJHCqZ0uR/lHgDHmt+OOyYKLjMZ06dauY6FN2d90bgj1Wm1q7lpBrXu8KvT38jBP5pFRtRG8VoF7e/eLLsb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IbNiTkPo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qEiPmGt/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9L/oFFW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20ABBC4CEE3;
-	Tue, 17 Jun 2025 08:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750149222;
-	bh=m+8n+ffzJd8l66Jfjz0sF6qoqRZzq+G/9rK+epTI7eY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P9L/oFFW8YoxSHlypTtC+3V7rn4DKoCckU5vZfuR0t8yEr15sgPD+yHTK1brHcXh4
-	 vLq1NJ7Mq85O+DKEqOj/SibGhDt29q2Eo7+MZrCQnMhD+t1Hn8j2dHTQU6LfbiuiI6
-	 YNryJ4LSnMwQOyojT23EIKIv8PksqBFYE6SbYwyUxUCFUzABaEnIevjjSC5DSC5zs+
-	 w/8XR7RpntPVW4e1jHohM07ZjnjSi3AdgzEIHpYNA/yArsngClzegwE+oj58S2J++J
-	 8yG96lGgA9Jnvp0gjOxymvaBuofbrQlID5DyIWtMl4gBESYmRSuNtNxhhZXA8jxocA
-	 po9WUij+bkzNw==
-Date: Tue, 17 Jun 2025 16:33:35 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] usb: cdnsp: Fix issue with CV Bad Descriptor test
-Message-ID: <20250617083335.GC1716298@nchen-desktop>
-References: <20250617071045.128040-1-pawell@cadence.com>
- <PH7PR07MB95388A30AE3E50D42E0592CADD73A@PH7PR07MB9538.namprd07.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IbNiTkPo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qEiPmGt/"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750149219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fM8Ztj0WNgxkUzsl19NDzLnsVejYkQJiIVQdlZc8OI0=;
+	b=IbNiTkPof//hfDswjM3UX2HjcxjB219ulL79IxtMk2Surwa52FLITsHiIGdSPG8S8Gsk9B
+	vLw+Vy56yeJQZ2CRRB/RCm+QbFGa3zainhEqBBiPrTezwUW3PHMjhAdifdGI2+S1EZyaXs
+	8RSy32gZJtQCmeCgaqJnX8iRp9S4wTShk0L70h6ba11fJXoKf8M0MUPAGOpUg7J2D2lnU/
+	lC+VF+rl8YCFZHsFyIZXXvlQc4UATj/1l5oe0wSu54ytgsn/7R3Ycz/Pi8RO8uVjHJjojk
+	UeQ0zueK4/eI86dw8200fEYtRWMlrscr6O/yh+PSBJbzmEPHMOiIqOaRKo5P5A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750149219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fM8Ztj0WNgxkUzsl19NDzLnsVejYkQJiIVQdlZc8OI0=;
+	b=qEiPmGt/KG74R8s1cTauPdSKufrbj0ktaax/krGPrsd9BNNZSi6RX15w3NkLphktH5Tr+T
+	5QwafYnTNKQcifCg==
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
+ rostedt@goodmis.org, john.ogness@linutronix.de, senozhatsky@chromium.org,
+ pmladek@suse.com, peterz@infradead.org, mojha@qti.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, vincent.guittot@linaro.org,
+ konradybcio@kernel.org, dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+ andersson@kernel.org
+Subject: Re: [RFC][PATCH 09/14] genirq: add irq_kmemdump_register
+In-Reply-To: <6a493968-744a-4fa2-803c-3f64a8e7225e@linaro.org>
+References: <20250422113156.575971-1-eugen.hristev@linaro.org>
+ <20250422113156.575971-10-eugen.hristev@linaro.org> <87h61wn2qq.ffs@tglx>
+ <1331aa82-fee9-4788-abd9-ef741d00909e@linaro.org>
+ <f916cf7f-6d0d-4d31-8e4b-24fc7da13f4d@linaro.org> <87ikkzpcup.ffs@tglx>
+ <6a493968-744a-4fa2-803c-3f64a8e7225e@linaro.org>
+Date: Tue, 17 Jun 2025 10:33:38 +0200
+Message-ID: <87jz5aojh9.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR07MB95388A30AE3E50D42E0592CADD73A@PH7PR07MB9538.namprd07.prod.outlook.com>
+Content-Type: text/plain
 
-On 25-06-17 07:15:06, Pawel Laszczak wrote:
-> The SSP2 controller has extra endpoint state preserve bit (ESP) which
-> setting causes that endpoint state will be preserved during
-> Halt Endpoint command. It is used only for EP0.
-> Without this bit the Command Verifier "TD 9.10 Bad Descriptor Test"
-> failed.
-> Setting this bit doesn't have any impact for SSP controller.
-> 
-> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  drivers/usb/cdns3/cdnsp-debug.h  |  5 +++--
->  drivers/usb/cdns3/cdnsp-ep0.c    | 17 ++++++++++++++---
->  drivers/usb/cdns3/cdnsp-gadget.h |  3 +++
->  drivers/usb/cdns3/cdnsp-ring.c   |  3 ++-
->  4 files changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/usb/cdns3/cdnsp-debug.h b/drivers/usb/cdns3/cdnsp-debug.h
-> index cd138acdcce1..86860686d836 100644
-> --- a/drivers/usb/cdns3/cdnsp-debug.h
-> +++ b/drivers/usb/cdns3/cdnsp-debug.h
-> @@ -327,12 +327,13 @@ static inline const char *cdnsp_decode_trb(char *str, size_t size, u32 field0,
->  	case TRB_RESET_EP:
->  	case TRB_HALT_ENDPOINT:
->  		ret = scnprintf(str, size,
-> -				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c",
-> +				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c %c",
->  				cdnsp_trb_type_string(type),
->  				ep_num, ep_id % 2 ? "out" : "in",
->  				TRB_TO_EP_INDEX(field3), field1, field0,
->  				TRB_TO_SLOT_ID(field3),
-> -				field3 & TRB_CYCLE ? 'C' : 'c');
-> +				field3 & TRB_CYCLE ? 'C' : 'c',
-> +				field3 & TRB_ESP ? 'P' : 'p');
->  		break;
->  	case TRB_STOP_RING:
->  		ret = scnprintf(str, size,
-> diff --git a/drivers/usb/cdns3/cdnsp-ep0.c b/drivers/usb/cdns3/cdnsp-ep0.c
-> index f317d3c84781..567ccfdecded 100644
-> --- a/drivers/usb/cdns3/cdnsp-ep0.c
-> +++ b/drivers/usb/cdns3/cdnsp-ep0.c
-> @@ -414,6 +414,7 @@ static int cdnsp_ep0_std_request(struct cdnsp_device *pdev,
->  void cdnsp_setup_analyze(struct cdnsp_device *pdev)
->  {
->  	struct usb_ctrlrequest *ctrl = &pdev->setup;
-> +	struct cdnsp_ep *pep;
->  	int ret = -EINVAL;
->  	u16 len;
->  
-> @@ -428,9 +429,19 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
->  	}
->  
->  	/* Restore the ep0 to Stopped/Running state. */
-> -	if (pdev->eps[0].ep_state & EP_HALTED) {
-> -		trace_cdnsp_ep0_halted("Restore to normal state");
-> -		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
-> +	if (pep->ep_state & EP_HALTED) {
-> +		/*
-> +		 * Halt Endpoint Command for SSP2 for ep0 preserve current
-> +		 * endpoint state and driver has to synchronise the
+On Mon, Jun 16 2025 at 13:12, Eugen Hristev wrote:
+> On 6/14/25 00:10, Thomas Gleixner wrote:
+> #define KMEMDUMP_VAR(sym) \
+> 	 static struct entry __UNIQUE_ID(kmemdump_entry_##sym) ...
+>
+> is when calling it with e.g. `init_mm.pgd` which will make the `.`
+> inside the name and that can't happen.
+> So I have to figure a way to remove unwanted chars or pass a name to the
+> macro.
 
-%s/synchronise/synchronize
+You can do:
 
-> +		 * software endpointp state with endpoint output context
+KMEMDUMP_VAR_MEMBER(init_mm, pgd);
 
-%s/endpointp/endpoint
+and concatenate with a '.' for the symbol
+and a '_' for the ID.
 
-> +		 * state.
-> +		 */
-> +		if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_HALTED) {
-> +			cdnsp_halt_endpoint(pdev, pep, 0);
-> +		} else {
-> +			pep->ep_state &= ~EP_HALTED;
-> +			pep->ep_state |= EP_STOPPED;
-> +		}
->  	}
->  
->  	/*
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
-> index 2afa3e558f85..c26abef6e1c9 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.h
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
-> @@ -987,6 +987,9 @@ enum cdnsp_setup_dev {
->  #define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31, 16))
->  #define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
->  
-> +/* Halt Endpoint Command TRB field. */
-> +#define TRB_ESP				BIT(9)
-> +
+or simply
 
-Please add comment it is specific for SSP2.
+KMEMDUMP_VAR_ID(init_mm.pgg, INIT_MM_PGD);
 
-Peter
+>> #define kmemdump_alloc(var, id, fn, ...)				\
+>> 	({								\
+>>         	void *__p = fn(##__VA_ARGS__);				\
+>> 									\
+>>                 if (__p)						\
+>>                 	kmemdump_register(__p, sizeof(*var), id);	\
+>> 		__p;
+>>         })
+>> 
+>
+> I was thinking into a new variant of kmalloc, like e.g. kdmalloc() which
+> would be a wrapper over kmalloc and also register the region into
+> kmemdump like you are suggesting.
+> It would be like a `dumpable` kmalloc'ed memory.
+> And it could take an optional ID , if missing, it could generate one.
+>
+> However this would mean yet another k*malloc friend, and it would
+> default to usual kmalloc if CONFIG_KMEMDUMP=n .
+> I am unsure whether this would be welcome by the community
 
->  /* Link TRB specific fields. */
->  #define TRB_TC				BIT(1)
->  
-> diff --git a/drivers/usb/cdns3/cdnsp-ring.c b/drivers/usb/cdns3/cdnsp-ring.c
-> index fd06cb85c4ea..d397d28efc6e 100644
-> --- a/drivers/usb/cdns3/cdnsp-ring.c
-> +++ b/drivers/usb/cdns3/cdnsp-ring.c
-> @@ -2483,7 +2483,8 @@ void cdnsp_queue_halt_endpoint(struct cdnsp_device *pdev, unsigned int ep_index)
->  {
->  	cdnsp_queue_command(pdev, 0, 0, 0, TRB_TYPE(TRB_HALT_ENDPOINT) |
->  			    SLOT_ID_FOR_TRB(pdev->slot_id) |
-> -			    EP_ID_FOR_TRB(ep_index));
-> +			    EP_ID_FOR_TRB(ep_index) |
-> +			    (!ep_index ? TRB_ESP : 0));
->  }
->  
->  void cdnsp_force_header_wakeup(struct cdnsp_device *pdev, int intf_num)
-> -- 
-> 2.43.0
-> 
+That's definitely more welcome than copying boilerplate code all over
+the place. And if you do it the way I suggested, then you only have
+_one_ macro for alloc and _one_ for free because you hand in the
+allocation function with all of its arguments instead of creating an
+ever increasing zoo of dedicated variants. But the MM people might have
+different opinions.
 
--- 
+Thanks,
 
-Best regards,
-Peter
+        tglx
+
+
