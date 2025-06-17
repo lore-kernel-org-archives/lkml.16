@@ -1,88 +1,118 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DA223B619;
-	Tue, 17 Jun 2025 19:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEB52EF9DA;
+	Tue, 17 Jun 2025 19:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750188551; cv=none; b=nWafyWoTSeIxta6vLZ1KNo0LT1ctigUO6zI2oQGLB+Fb9Ff6wacZG/f1Apvfxg4kArakBLRdXzHNYnC2XnHrcdCNPouiGHcR5rpB2rXCCo21r/qIot3NZDCb1rFordHGnIdZDAYl4B2x/M30MceDZa1Mf83vpp9XKWzYZrHyQvo=
+	t=1750188626; cv=none; b=k37D29sO/rSRtNaI0KEHpvI3ep6Jew566tjGh1TREAsSwAQXG9tT/ucKOf0Tch99KuciO4aKqITaB5fgK1MXMUoCPxALmZelYI636liUvhRiFDTAKTh9WSode9/UEGkokRMQ0efjoFxJTgJavc9SX8Vgvnzc/9P1G5T6MyBorow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750188551; c=relaxed/simple;
-	bh=VsJd6ttGqQBN9ks01AazNLFJJg+8RLiWgRSo8ETRZ+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ob99+OENUtBF7r6pM2Tu1TsKBMiNUNdAVwXJEAZvAoT3xEmvbyDHjGiRXuEb0Zpr61GUGmA7/n+oE1sNjN9nfXLa+d0yQmZfQaJUDu829W5t8nOdGlpPHRVac092xcfwJGXlM6LuTn3Qfvksi5oKPnV9fnwFAR6G8PoFno3T8Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 486231D703F;
-	Tue, 17 Jun 2025 19:29:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id C4D4680009;
-	Tue, 17 Jun 2025 19:29:00 +0000 (UTC)
-Date: Tue, 17 Jun 2025 15:29:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
- <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Namhyung Kim <namhyung@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro
- <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
- <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
- Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
- <irogers@google.com>
-Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in
- debugfs
-Message-ID: <20250617152906.2d7ddb9f@gandalf.local.home>
-In-Reply-To: <20250617133614.24e2ba7f@gandalf.local.home>
-References: <20250617133614.24e2ba7f@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750188626; c=relaxed/simple;
+	bh=Q22B5BmjRWYDJ3wy+OdZ8UrQI/3O8aKyIep+1+rXazw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qhHIMlkYohvGS8upudHJ1kbTsL9Bl7L9iRZZwKIlxXWCAXqVa+BEtvIScxj2ZxT5F27HfuCgd+v1mUrrsq5pngOLQSp66Q6gA5TWOwaHDgcPCVZyBHUkVfhdcG6Dd2gjseHx0q57AG6yedjmP/1N1d+cQKYYRGISX3jvdkwbCP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sCtpF/Kl; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sCtpF/Kl"
+Received: from jeffbarnes-ThinkPad-P14s-Gen-2i.corp.microsoft.com (unknown [52.167.115.14])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 28EFC2117FA0;
+	Tue, 17 Jun 2025 12:30:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 28EFC2117FA0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750188617;
+	bh=ir/SqTy2ukWEw+C/xLgwNOdq2SInlhwjnmgWuEINj/o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sCtpF/Kl1X5bBd6TwkG+r70cURR8EDUFjxvtU2bpAN2QVJyFdN0Y7qAKHrdNP0vlK
+	 e34WBgisU2nz6dyum/n91kqiVVnvH+5Lj2YISWrmKmzEVpn48aiPevukwHnDRtTyc6
+	 FF6A+emSTVx2v6AGYJXsz/GGjMjvnb+o+RX8dYEU=
+From: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jeffbarnes@linux.microsoft.com
+Subject: [PATCH] crypto: Restore sha384 and hmac_sha384 drbgs in FIPS mode
+Date: Tue, 17 Jun 2025 15:30:05 -0400
+Message-Id: <20250617193005.1756307-1-jeffbarnes@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: C4D4680009
-X-Stat-Signature: gk36ycgwzjowosfq1zwebfrsrymmoweq
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/St4ra8YZaC4Iaqkr8XbkNC0YnPvl2HGA=
-X-HE-Tag: 1750188540-576187
-X-HE-Meta: U2FsdGVkX1+oC862ZBHjgTGSv07AHA0bEYpWkkCsfjwbQziAB8BonoefGszagsZgbN60zd6cAGeNpnndw/cJmgMKIjNM4uKV2oXZxC+pr0p08j0vczLpKHps5zoXkqz3iZIWKzDVRnb/F6RjrtDaOOpgaYeifM4H8X14udsNskE9AUJ7tk+SvQFImafG/m9sA3eq1B9seOW/+dHcAQdqWyI2ZD5okP+pDLsFJFM3B2IYfVhhmJRmT9/wOyKsQgsTkloksRO/UArhej+Yo9q6pnKR5brC3KEqdWt00n2RjvO3npY4uaGZ0pbmav7tRkq84Ku/qKK/VESgSeCEmOefZnCSIdMKhPz2nwrZ91azQIv/ZgMgn6ixBJEQBudL3aQ/
+Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Jun 2025 13:36:14 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Set .fips_allowed in the following drbg alg_test_desc structs.
 
-> @@ -10311,6 +10313,8 @@ int tracing_init_dentry(void)
->  	if (WARN_ON(!tracefs_initialized()))
->  		return -ENODEV;
->  
-> +#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
-> +	pr_warning("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
+drbg_nopr_hmac_sha384
+drbg_nopr_sha384
+drbg_pr_hmac_sha384
+drbg_pr_sha384
 
-I tested this with the config off but not on.
+The sha384 and hmac_sha384 DRBGs with and without prediction resistance
+were disallowed in an early version of the FIPS 140-3 Implementation
+Guidance document. Hence, the fips_allowed flag in struct alg_test_desc
+pertaining to the affected DRBGs was unset. The IG has been withdrawn
+and they are allowed again.
 
-The above errors with pr_warning() undefined, "do you mean pr_warn?" :-p
+Furthermore, when the DRBGs are configured, /proc/crypto shows that
+drbg_*pr_sha384 and drbg_*pr_hmac_sha384 are fips-approved ("fips: yes")
+but because their self-tests are not run (a consequence of unsetting
+the fips_allowed flag), the drbgs won't load successfully with the seeming
+contradictory "fips: yes" in /proc/crypto.
 
--- Steve
+This series contains a single patch that sets the fips_allowed flag in
+the sha384-impacted DRBGs, which restores the ability to load them in
+FIPS mode.
 
->  	/*
->  	 * As there may still be users that expect the tracing
->  	 * files to exist in debugfs/tracing, we must automount
-> @@ -10319,6 +10323,7 @@ int tracing_init_dentry(void)
->  	 */
->  	tr->dir = debugfs_create_automount("tracing", NULL,
->  					   trace_automount, NULL);
-> +#endif
->  
->  	return 0;
->  }
-> -- 
+Link: https://lore.kernel.org/linux-crypto/979f4f6f-bb74-4b93-8cbf-6ed653604f0e@jvdsn.com/
+Link: https://csrc.nist.gov/CSRC/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
+
+To: Herbert Xu <herbert@gondor.apana.org.au>
+To: David S. Miller <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+---
+ crypto/testmgr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 2f5f6b52b2d4..815d1f31dbac 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -4897,6 +4897,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		 */
+ 		.alg = "drbg_nopr_hmac_sha384",
+ 		.test = alg_test_null,
++		.fips_allowed = 1
+ 	}, {
+ 		.alg = "drbg_nopr_hmac_sha512",
+ 		.test = alg_test_drbg,
+@@ -4915,6 +4916,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		/* covered by drbg_nopr_sha256 test */
+ 		.alg = "drbg_nopr_sha384",
+ 		.test = alg_test_null,
++		.fips_allowed = 1
+ 	}, {
+ 		.alg = "drbg_nopr_sha512",
+ 		.fips_allowed = 1,
+@@ -4946,6 +4948,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		/* covered by drbg_pr_hmac_sha256 test */
+ 		.alg = "drbg_pr_hmac_sha384",
+ 		.test = alg_test_null,
++		.fips_allowed = 1
+ 	}, {
+ 		.alg = "drbg_pr_hmac_sha512",
+ 		.test = alg_test_null,
+@@ -4961,6 +4964,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 		/* covered by drbg_pr_sha256 test */
+ 		.alg = "drbg_pr_sha384",
+ 		.test = alg_test_null,
++		.fips_allowed = 1
+ 	}, {
+ 		.alg = "drbg_pr_sha512",
+ 		.fips_allowed = 1,
+-- 
+2.34.1
+
