@@ -1,92 +1,187 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3A28399;
-	Tue, 17 Jun 2025 05:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750138605; cv=none; b=EkccutisdwLrtxQxiv50h+HgZeAy8yEGtsPu41feARw7cthL7lTvBYZ+8e4RrPQ0SNv3VPloqtYzH/OjtWJz61bKg/uq5jlMHkvcU4r5NOr5o0hvjaxL9FWeKaBCGmZkVcGh8MMtfWoEFZdA5C/rb3DB///hQiy3WhmqeaP9ejs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750138605; c=relaxed/simple;
-	bh=jbP9uGjsDMznmBpJruQX9jR+BpwYKtH06lHDqNl37Ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDnxqCR9vltQBVPBW4SdhNxT47G/wMC8AENYMWQFpHR4ciniMpa8D82wYyJMyD/qYSv/S7EB5WEeH1B5ntaTyvhJS+U5eoMYgWXPL4Qis+1XJsN5uOfR+vp2YV92KRvSJ3T4LlGlh+HtnhybdLPi/YcgUktrMOhruztIjEPtn4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=X1d4KBud; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E13D2397A4
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750138644; cv=fail; b=frnr1lpZWXPN9YN79r50LFgyGEAPVOTTtqjyEcmdNK5+tn1TukyQd4zDZWqTiEk2qE2H56et/JapkRMvkui9DfeCg+FgyIQeEIkBARvbmiD/8KQ8yctmMSt3bAJ42oVQfpOJHZrl1mxJgHae2/VQi9+vmHVOPO0C0wrY6MMR39I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750138644; c=relaxed/simple;
+	bh=S74Pu1J/YNipZpCKYk5MSWZib7Nxh6gWORTqo0OCYzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
+	 In-Reply-To:Content-Type; b=NNlcJnAex96iywgTD1KUsavWu/iovuIfxOGPQC34oGqxrqKd4HC0Zj1WODk1P5sx2ww5/t0IcT/Wget9vKEF5SrBIwTSLFocQZf0CcUZUH2zA3513X61PMnwhePk1VvoW8xi1uW8cVNXveIR3WTFKcmFllaS2d8yEE2wyJfHPUw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LQ+ynNqW; arc=fail smtp.client-ip=40.107.223.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="X1d4KBud"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=fYuxPv6o911HB4LCZgDj4D5PgU252TUBup/qW5CJp1o=; b=X1d4KBud3m/P/cmFBCichdGAsS
-	Z4agd+LbHf/jktjYPjr0UZ12PlmvJTHMmqvYk7u51VmGLMinXgXwBJ+kUi0d0Bd/hl/bQJxa9CMak
-	obu5dv9cx9b0qHzYYQj50NZgyM70T8oGAKpvIztivAE3V5xQIJ54OZwlbQhhlub/2UBWAARvdN5bo
-	bEZcZhcxUDLmYaiUnbDRqDY0UJOcuI0IuHWEbwPXg7aaI6CGkzK+FULoAh7vNqvMnoLnQojtWaaj3
-	eOYJHFZXLPO40htgO86vJIfHcwSoO3MLf4SJZFE3TRxgcaEG+THAzuqze1HlKOkKDMuauNA1EmoNo
-	FJLXeUxg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uROkl-000aIV-0S;
-	Tue, 17 Jun 2025 13:36:39 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 17 Jun 2025 13:36:38 +0800
-Date: Tue, 17 Jun 2025 13:36:38 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aFD-5i8RrA4tHJ6Y@gondor.apana.org.au>
-References: <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
- <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
- <c01e9b258e024e745ef8711bb94e0d5f6d7d4f96.camel@gmail.com>
- <043472e83b086681ff3a6d0130bfa01ceeff5fa8.camel@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LQ+ynNqW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Qq1gcIrj4TZ99EQsduraTb0UfLLb2zFRCXfOW9XudOO/hsZkZtFqSAzdjs5gC1k4FjUbgOGUrfQ+I9/QaYvPPaKMmHHacCoEX2fApQ5RzX6I0Mcnd7/NLbh9TU79zDVjyIoMGEyioqKq42NzYz5aJcB8x9bMjwhyhaj5jfBrb7z/3/BwrzLV6Vkb4FuBpJa5LskHBvoqV1MELdFsnMOAepePSr5L/ICG6S/IGh0v7xXj+NHw+NXdGantRSHVm98w1Rnqcyjjud/prmkCwdTlp9dbyKwQ2M0ii1xBvZPqgg5UloLHdinhWzgml+w4wJz96PzVhfDv1RIjwhAslDT+bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UUapABDFkHeNJIlw0Mk3dOPyzqvJ7Mq6dVZo7Gof7FA=;
+ b=wDDxSmRTGjYsWSGNF+Dj7KuDkR4A2h8/NLXyOHin8ZGYVHgd0kK5jeJTuSXkRMjRqxO3GiIA0KEctTMNgRxEd3rNOjorPOjisi4dByc9As20IGPVqTYU0TV1zKeRtbSHzOQMEz4CJY/plgegumQYZJ3GgcV7YLjRbkOgTZnGzVX/LdBHOir+Pmo07UNTv5JGRIlv/qigJkfCZIydQu8Lkd6K7sVdUl2Scbr1O0Ow97920oud8/O5BmgdOHte8GDPzGdl0EgvVDnZiJzYk6XeHVQ714pS37abCNH6Iye6xcfmIHVK0Zdb95+fpo+92D0Dgia6VruQXqE7s3+VNeWfIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UUapABDFkHeNJIlw0Mk3dOPyzqvJ7Mq6dVZo7Gof7FA=;
+ b=LQ+ynNqWv3WhMUf0j8DeX3OQSkvvHn0V4dNtnbqG2/Gp6jIRsFrQXGSlxu497J3Q9O2NiRZRKVtxvZa7W+Nz9ZM5qWUtkUg2ACK92rYGZiV22zI+y68M0lME1i8pXVnK+K/U0HAKe+4shV14endY4j++0PpEgJ0Ia+jouQhRt7o=
+Received: from MW4PR04CA0073.namprd04.prod.outlook.com (2603:10b6:303:6b::18)
+ by DS0PR12MB6630.namprd12.prod.outlook.com (2603:10b6:8:d2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
+ 2025 05:37:17 +0000
+Received: from SJ5PEPF000001ED.namprd05.prod.outlook.com
+ (2603:10b6:303:6b:cafe::58) by MW4PR04CA0073.outlook.office365.com
+ (2603:10b6:303:6b::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Tue,
+ 17 Jun 2025 05:37:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001ED.mail.protection.outlook.com (10.167.242.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Tue, 17 Jun 2025 05:37:16 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 17 Jun
+ 2025 00:37:16 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 17 Jun 2025 00:37:15 -0500
+Message-ID: <958b71f4-fa5b-6aee-df9b-0b4b35c2fe0f@amd.com>
+Date: Mon, 16 Jun 2025 22:37:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <043472e83b086681ff3a6d0130bfa01ceeff5fa8.camel@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V1] accel/amdxdna: Revise device bo creation and free
+Content-Language: en-US
+To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+References: <20250616091418.2605476-1-lizhi.hou@amd.com>
+ <3e8e19f2-29dc-4644-82cc-85aae6b2598d@linux.intel.com>
+CC: Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <3e8e19f2-29dc-4644-82cc-85aae6b2598d@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001ED:EE_|DS0PR12MB6630:EE_
+X-MS-Office365-Filtering-Correlation-Id: 005bb1b8-5f8c-49c4-317a-08ddad610569
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RlIzUnhwUWttWDhpNWlENlo5UWlXczUwalRpM2lQa2I5Q3g2eEJic0l4U1Zv?=
+ =?utf-8?B?S011bURNZmdMTmp3RTFESmYrWFJjUk8zSGFQRmY5cmI3UVA1U050QlVWdmd0?=
+ =?utf-8?B?TjJxSC9Xd0ZXS2lhUTdsdHc1YnU1TDk4UzZRQURlT0Q5eXBseHQ3SWg4UGJP?=
+ =?utf-8?B?MWJoOWFkYldaQVN4Mmd6cGQyaEF5N084TFRGSVc2S0FRR3gzdCttNlVpRW1C?=
+ =?utf-8?B?TFkyTTdCemsxTFVFdWROdThuZTgxQ1lsUEpaajRsR09ZRW9lbHk0VzQzWVVs?=
+ =?utf-8?B?OFBVTVBiZU9jSkNEcnFhcDVTc3dwY1pXTUFoTDd5Q0lhK1gzdmtKT0dndUFJ?=
+ =?utf-8?B?RDZYVG53MlUwWVllbjZTYzNHbWsvWWNBcmU2ZTdBT2xBQ25CYlZmT3MxVW4y?=
+ =?utf-8?B?ZTllUjV1d1VoOUY1c05BOXF6R3hEWU92Z0xJRENoL0hSeHF2UXJORlNiTVlI?=
+ =?utf-8?B?c3BCTktVNGMxNkYvSFRLTUd0T29aSDRTU2Zja3J3UlJ2cXNCcDljWExzYVVK?=
+ =?utf-8?B?TCs0b1VDdTRrMUZrTVpBUGtpeDh5VkdUSC9yYUNXN0lYWEZpUFAwMFhNRyt4?=
+ =?utf-8?B?R1BwdElMVXVtVURaTWxBaEc1QWs5bm1xUzZjSVdnMnBtVVNzTHgrZ3F0K3lr?=
+ =?utf-8?B?ZmtoejUzTHM5WDVkdUhRSGU0dkYvREtLYWZWcDBLZ1lXUjl2VkY5WkRkakJK?=
+ =?utf-8?B?aXN3dUdRbTY2YVArMk9mY2hhMGdTaUZCU2s3Zlo5Y0lKcEl3N2E5bFdVZ1Ba?=
+ =?utf-8?B?L1FKSk1BR1A2Mnk2K0dsWHRwRmN6WUNWZFh2WjlrRWNBZnZSUjJzTnVRTnJw?=
+ =?utf-8?B?Vlh5WlkvZUFseGh6ZWMxS29qcHlwVFZ3dUw1cDZ6enJ0QXdjdlJMZUZXaENa?=
+ =?utf-8?B?NU9ZQ1NLUlVrRWg3elMzOHg4TGVGT1JqTjkrOVcyOGNLMVdTemp2cXQ2M0xm?=
+ =?utf-8?B?TG93Z0U4MEFsWnpkeFlhMEdpVGV6MEorcTNSSG1Nd2ltU08xWVlpb2ZEWGI1?=
+ =?utf-8?B?ZkY0ZmpSS01XaTB6SUcxTzhFY3pab3U2ZGpJWnR5UEJ3QlNvRng3dThPN2Ex?=
+ =?utf-8?B?R25FQmUvOTdpejBPaG1zTXkxZzJTTVBXZjJ4UjJpVjZUamNqMzBSazFGc0tx?=
+ =?utf-8?B?N0RPVUh1K1U3OEdocnA3bWRPUjk2Kzh2bmNhaWt2S04xaGxpbS9NRDZvSUE5?=
+ =?utf-8?B?LzhweGhnM3BEekNzSnR3VkE5SUdiSzFDOC8xTEkyeEVsSlZ2eVpqK0hhdVk3?=
+ =?utf-8?B?Y1N2dGhLV0pOTEM0Z0VUYWpJQjB3cVZqZ2JSSERZVUxvamY3WFBnK3o4Njc1?=
+ =?utf-8?B?dnBSQnpackMvcGdIbU5sSDFOWG1hbmJFcnRvdkZoOHlwMkI3TFlaaWFiMytJ?=
+ =?utf-8?B?UEFsUU0zUUY2Q25XQ1NmcTVHbnVjK0VmUWpjREpLbFp3NUovZmQ3N1pGcWxN?=
+ =?utf-8?B?bUdlQnBEcUVwTSs3c2w0S0VZdW9aaC9iekg1QVE2dXY1ZW9zNUREdGZ4ZEwy?=
+ =?utf-8?B?QWZPSDFMa25xRHlvdElQL2NSNy9tU2NrSG9xWUxxSjEzQnZlbWx0WGxaRzBh?=
+ =?utf-8?B?K0Z5eWpiMmlMVWkvZzR0cmltWjE0TDlaYU5BWFZKaDRWMzZhSks1WmtKVmJP?=
+ =?utf-8?B?L2pHVW04REdZckc3cnpjOWpRei9hVEMrR3pBWmN4bzdTeHBGL2NPV0lYdFE5?=
+ =?utf-8?B?by9GcVZHTGQxMFZORm1TaXNmdjRhM01vdWpXRVdWS0l3L1JZa1liVndzSEVL?=
+ =?utf-8?B?a3hicldnMzRjbTlqd1FDU1ZMcks0RmFKQzZHcG1QS2tXWmxScXdzczhTWjdS?=
+ =?utf-8?B?RGVmaDRSOVp1bVI5RWs3MUVYM0VsVGxJd3RqZ1dxVk13RFhwUlFJc3E3MXZx?=
+ =?utf-8?B?b1l0dnZ6NzZWSlNXWlp2aUZURDZldEd0M011cC9iOVU4YVRPSVpjcUJBam10?=
+ =?utf-8?B?Q2xMc3d3UVltQUFaYzVyMWw1TGZXOVhxdmJHcnJnOE82cVVWVzlnQzJQQVRC?=
+ =?utf-8?B?b2FjWTM1SWNRUFZWRVJlNWN3NklOVWtHY2gvdVBBMXZORVNIdjM3ZXJrWFUv?=
+ =?utf-8?Q?TUi+0P?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 05:37:16.9344
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 005bb1b8-5f8c-49c4-317a-08ddad610569
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001ED.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6630
 
-On Tue, Jun 17, 2025 at 07:32:28AM +0200, Klaus Kudielka wrote:
-> Hello,
-> 
-> Plain v6.16-rc1 with marvell-cesa as module and CRYPTO_SELFTESTS enabled.
-> Identical behaviour as reported previously with the cryptodev tree (see below).
-> 
-> According to /proc/crypto, all marvell-cesa selftests (including ahash) appear to pass reliably again.
-> 
-> If we can trust the information in /proc/crypto, I would suggest to revert commit
-> e845d2399a00f866f287e0cefbd4fc7d8ef0d2f7 ("crypto: marvell/cesa - Disable hash algorithms")
+Pushed to drm-misc-next
 
-Corentin is still able to reproduce failures reliably.  While
-I have a patch that seems to reduce the failure rate for him it
-is not yet a complete fix.  There is also no full explanation of
-why my patch even works to the extent that it does (the DMA memory
-is supposed to be cache-coherent but perhaps it isn't).
-
-So I think it is still premature at this point.  There is also a
-known problem with the hmac code where it fails to deal with zero-length
-updates correctly.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On 6/16/25 04:30, Jacek Lawrynowicz wrote:
+> Hi,
+>
+> On 6/16/2025 11:14 AM, Lizhi Hou wrote:
+>> The device bo is allocated from the device heap memory. (a trunk of
+>> memory dedicated to device)
+>>
+>> Rename amdxdna_gem_insert_node_locked to amdxdna_gem_heap_alloc
+>> and move related sanity checks into it.
+>>
+>> Add amdxdna_gem_dev_obj_free and move device bo free code into it.
+>>
+>> Calculate the kernel virtual address of device bo by the device
+>> heap memory address and offset.
+>>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> ---
+>>   drivers/accel/amdxdna/aie2_ctx.c    |   2 +-
+>>   drivers/accel/amdxdna/amdxdna_gem.c | 193 +++++++++++++++-------------
+>>   drivers/accel/amdxdna/amdxdna_gem.h |   3 +-
+>>   3 files changed, 106 insertions(+), 92 deletions(-)
+>>
+> ...
+>
+>> @@ -855,10 +868,12 @@ int amdxdna_drm_sync_bo_ioctl(struct drm_device *dev,
+>>   
+>>   	if (is_import_bo(abo))
+>>   		drm_clflush_sg(abo->base.sgt);
+>> -	else if (abo->type == AMDXDNA_BO_DEV)
+>> -		drm_clflush_pages(abo->mem.pages, abo->mem.nr_pages);
+>> -	else
+>> +	else if (abo->mem.kva)
+>> +		drm_clflush_virt_range(abo->mem.kva + args->offset, args->size);
+>> +	else if (abo->base.pages)
+>>   		drm_clflush_pages(abo->base.pages, gobj->size >> PAGE_SHIFT);
+>> +	else
+>> +		WARN(1, "Can not get flush memory");
+> drm_WARN() would also give you the device that caused the warning in case there may be multiple xdna accels.
+>
+> Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+>
+> Regards,
+> Jacek
+>
