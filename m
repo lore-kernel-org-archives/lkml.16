@@ -1,73 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE88220297C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD532EF9A6
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750187035; cv=none; b=Acm5rgKvOcEqh9d/kvaMyP543adlHR6+0xhD9kQufryMPZmf5qhL2EQTm6K7J/hnP2Nue5Nj/9Q/0wSaeSpYYSCA3sZC56YKprrjMPky2rSWb5xhP7NZxW3Qc19VP1HpLGdBNHWYSqjn0jaTv0GlGt5Bc+ctS2jpvbZpnZxoRNU=
+	t=1750187070; cv=none; b=Rc++7EDxWvMgIddfqKIcQV0kRtjmyWyGdfBtperfpjKTyneNEnVbh+XXyglobeKXeXaGw12G3UB2VfP0H0suHTt2HZJcN6eZYcQhEOqxrInxftUcZhp8jOWRk9vi6g0R3wq1A9I23xTugR4LdUIZl9VD/8VUH2nNPXlQryckCjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750187035; c=relaxed/simple;
-	bh=wwOYibFG+0lc4A/gtOOt61sduDspvlNz8GZmN+PC6dk=;
+	s=arc-20240116; t=1750187070; c=relaxed/simple;
+	bh=Z35QAsHKSgy1KbCkPBmJGGgTJ8u76f+fwaSJnjfOlFg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kfmtYO0Il9EGePij/f8KAuV2z+UCYBeIjA57M/fJKFKYGqX6et6Hw072k+u04bpPVUprfG6nn5JHDS9xBLNCIGgZR5fHJViLVJVXv17a1AWK/3X6kfJh6Jj1ersTi3ePCinPvVe2DOCfb6WVvKGAvopKXVX+oZAZQ/Ao2aOoI2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cavMUKDf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=OpXHrIhP+4iUSvR+S0uoJowBvilYZkSS0PtgomvTyT5OjhHg7wcQsTOcW/3C3FQPN2mMUsg8Nsvnxwam4SRdNOvL5ookIRbWdxhgFdX+/fVt9eK4JA7wCwHLIDdu5hICcoB02Vu2CbWP2//IoW9ZKdHwXuxVwiPCWte9U0p5AdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z6Ky39g/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6UDNRcCc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z6Ky39g/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6UDNRcCc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cavMUKDf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750187032;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z6Ky39g/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6UDNRcCc";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z6Ky39g/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6UDNRcCc"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 33DBD2117D;
+	Tue, 17 Jun 2025 19:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750187067; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=APmLizck+xWiMMK/9wwlTCNkq9CY0MJkhFk3I3onfsA=;
-	b=cavMUKDfadL+l3J4B31uCNmrKWgkPDcRou8xa3V+39eoVphBUb+jMk5NggRXZoJD7uBI5x
-	esm3bClc/PgoO+/Rkl5s6K5ZluGqdgE7rS58b4sYHKtbp/6BVDAfxgx3+uxbkMNG/OQv1L
-	eCsV47giYq87kUSzzkB6OR4CiePQumk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-6hSi6jyjPeO7emom7cys3g-1; Tue, 17 Jun 2025 15:03:51 -0400
-X-MC-Unique: 6hSi6jyjPeO7emom7cys3g-1
-X-Mimecast-MFC-AGG-ID: 6hSi6jyjPeO7emom7cys3g_1750187030
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so30182205e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:03:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750187030; x=1750791830;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=APmLizck+xWiMMK/9wwlTCNkq9CY0MJkhFk3I3onfsA=;
-        b=jdJYiF0E7rC1ah9pndEJ+RNmbkT/e89z+VNu6In7XoV7XsocMZb33NOzo1RratE3TY
-         we6zPmlm9ddUop0v+Hzvu688sdcwcvJWf8RvChtSz1ZguJSQUjySMocpRgPqy2OiaC5+
-         Yg85MCaz8eQsD96Fp2Yn6EtK4oPgE6PDOLgZC0DTrsOZ46HqlQK1GEghxJ/WAEhE9Jay
-         4i8Pp5Y/9u8TXLk72VedMAECNV2AC22iBRCRqfMwpkpED8fGvmcZ7xxOm1xTx4O1QrbW
-         ulTqbG5uBGBrB3hTZlQR7D9logDrhnuDm4pVyuH3bJtJ3NlvTxOJco8YYMeQA18PCs/o
-         8ffg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAurp0R66H9FhP6OimnrcjH71MugwaU30XUdWzKnWAHuTKs3YdvZlsqMfvPA5hXkP0O/THXEo8lFhLMjI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzilF3v596YwzldMV0/SOhlJBj7HlNJcTLqwV4zATnvIs6wnPsI
-	gyjx9674FhzRsh7dZfo28/0Ey6iCP7BgfTwPlGAsIClkqxOX2qJF5P/kUs/n0j4X9BM3AeLW0ED
-	oDHI1RrAsj8V4dTzyFyDVrXN0jZq6bYpxOIbxzTMJjaFTl+zX/JeeQga7IB2fXWYCQQ==
-X-Gm-Gg: ASbGncsdxMq87vz9dJfLd9eKtgHz5QSHzL9BV7bpLmPVGtjgDnmTSFuPU6VbJCiu0+2
-	yMUBPmFeB1vf0BXEUDtZWyziniGr40dxlGTCdAkqpsZuHU0PdW8hsLm0+SHkeAdWNSdVFxwbWac
-	43SmUUETo0ErXAoiXUsRFVC1cRJ2xX8JaYzwEUaVIvE66ZlKMwNJJNXi7oW6/KllaQSFB5nnksI
-	iIZH/xvGBKzTMypP9WllJz/OsWZJDbuAnC2LeOBWascTrQnfx6Y+BGXMb2VvJ7nyVzcnJzU4mQv
-	n+HhwUWoPLNyK9/LMzFudaspC8ycObjbA8UGaOu3Vu5UGln6ZX+Kg2fVR/qMPkvnGWfNEsAFB40
-	TelDJ/Y2iXDzHdB/OmtfRGD32Rb5DU+88zpmeRyH97/aFVO0=
-X-Received: by 2002:a05:600c:6097:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-4533caa11ecmr150256955e9.18.1750187029982;
-        Tue, 17 Jun 2025 12:03:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFL6ImA2UU6jpdyVeBNK3EdkZb1tdRvZ2FM1i3UsxlNpHfOcIuOvhidIRSiKHB6ZPekQkc8RA==
-X-Received: by 2002:a05:600c:6097:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-4533caa11ecmr150256565e9.18.1750187029622;
-        Tue, 17 Jun 2025 12:03:49 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e22460bsm194107705e9.6.2025.06.17.12.03.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 12:03:49 -0700 (PDT)
-Message-ID: <42f132ca-63bb-4d21-95cc-9281d95f71f7@redhat.com>
-Date: Tue, 17 Jun 2025 21:03:48 +0200
+	bh=RfLU+6pIN1jgsr4pf9L7d24iZy8/9uKGJ+5yI5oSrTo=;
+	b=z6Ky39g/Tn65m1C5JgV/o86K67tB/zNhKyRD4TYsWIYkD0wb6yN+eD/sFas2UKjYm6y3tq
+	UjT2lsknTJpYtXiH3+QKVyQMSOR3oXosvUc4PPjqhf0YV7e9l3NZ70PDlr/JMINfz7kTWr
+	Z2hXLdhpuUBIcYhTDTnKo+Lb2P6RnVE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750187067;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RfLU+6pIN1jgsr4pf9L7d24iZy8/9uKGJ+5yI5oSrTo=;
+	b=6UDNRcCc9tGS/jjExYcslSh1Na/gr/w9/j827qFPjyy4mctIfA05zvJrhAGc/S3FMStN6a
+	zBxENAKYtQG8EsDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="z6Ky39g/";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6UDNRcCc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750187067; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RfLU+6pIN1jgsr4pf9L7d24iZy8/9uKGJ+5yI5oSrTo=;
+	b=z6Ky39g/Tn65m1C5JgV/o86K67tB/zNhKyRD4TYsWIYkD0wb6yN+eD/sFas2UKjYm6y3tq
+	UjT2lsknTJpYtXiH3+QKVyQMSOR3oXosvUc4PPjqhf0YV7e9l3NZ70PDlr/JMINfz7kTWr
+	Z2hXLdhpuUBIcYhTDTnKo+Lb2P6RnVE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750187067;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RfLU+6pIN1jgsr4pf9L7d24iZy8/9uKGJ+5yI5oSrTo=;
+	b=6UDNRcCc9tGS/jjExYcslSh1Na/gr/w9/j827qFPjyy4mctIfA05zvJrhAGc/S3FMStN6a
+	zBxENAKYtQG8EsDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D6AF139E2;
+	Tue, 17 Jun 2025 19:04:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1ReRBju8UWixOgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 17 Jun 2025 19:04:27 +0000
+Message-ID: <8173e254-f129-4f02-98f1-f9b98374a8c4@suse.cz>
+Date: Tue, 17 Jun 2025 21:04:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,64 +84,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] MAINTAINERS: Update maintainers for HugeTLB
+Content-Language: en-US
 To: Oscar Salvador <osalvador@suse.de>,
  Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
- Peter Xu <peterx@redhat.com>, Michal Hocko <mhocko@suse.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: Muchun Song <muchun.song@linux.dev>, David Hildenbrand
+ <david@redhat.com>, Peter Xu <peterx@redhat.com>,
+ Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
 References: <20250617185910.471406-1-osalvador@suse.de>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
 In-Reply-To: <20250617185910.471406-1-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 33DBD2117D
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,linux.dev:email,suse.cz:mid,suse.cz:dkim,suse.cz:email,kvack.org:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On 17.06.25 20:59, Oscar Salvador wrote:
+On 6/17/25 20:59, Oscar Salvador wrote:
 > Change my role to Maintainer as I am quite involved in HugeTLB development,
 > and will be more so with the upcoming HugetLB-pagewalk unification, so I
 > would like to help Munchun take care of the code.
@@ -143,33 +175,34 @@ On 17.06.25 20:59, Oscar Salvador wrote:
 > and has already provided valuable feedback.
 > 
 > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
 > ---
 > I also asked Peter Xu to become a R, but I think he is currently too busy to
 > commit to that, but he was happy to be CCed instead :-).
+
+Not sure I understand. R: is the way to get CCd by get_maintainers.pl,
+otherwise only the people who know about this would Cc? (unless they
+forget). Or you mean to be CCd on this patch?
+
 > I already talked to Munchun and he agreed.
 > ---
->   MAINTAINERS | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>  MAINTAINERS | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
 > index 4243612aa7ee..7b274ce8a872 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
 > @@ -10975,7 +10975,8 @@ F:	include/linux/platform_data/huawei-gaokun-ec.h
->   
->   HUGETLB SUBSYSTEM
->   M:	Muchun Song <muchun.song@linux.dev>
+>  
+>  HUGETLB SUBSYSTEM
+>  M:	Muchun Song <muchun.song@linux.dev>
 > -R:	Oscar Salvador <osalvador@suse.de>
 > +M:	Oscar Salvador <osalvador@suse.de>
 > +R:	David Hildenbrand <david@redhat.com>
->   L:	linux-mm@kvack.org
->   S:	Maintained
->   F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
+>  L:	linux-mm@kvack.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
 
