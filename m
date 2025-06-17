@@ -1,121 +1,95 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4BB21C179;
-	Tue, 17 Jun 2025 14:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2872BF014;
+	Tue, 17 Jun 2025 14:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172328; cv=none; b=P0qzd+944w6T7Zqu2IIE1S8mfLoMhgIGsykUB0ixA1vgM+7q0jEFzEJlJjh0PtiB/DRpgiYldwfhHs5qhTEw3eF7a8PA4vkxaXmlQsYbZglnjXQ57yv+kDiJNQyS7L+67ywzFPWmHX/4BrjUqoO7sArMxj+u5hLHP0m5g5uiXIU=
+	t=1750172391; cv=none; b=g15yuTlCQRUVdeDyfQ2fPV+bYPnzL3RDyV2Of0B7uCzfKsB0NAycgXdt0Q+1/skGpyXJha3HJs0S6eFNMQfDAS6FRN73eummaxk2ih1gEH2hYcE95Q+4ex9V0b2U2ln97UwWDCSF+9gnyTMWMF9NR2Gh2EFP1KRMpqNadKSfmao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172328; c=relaxed/simple;
-	bh=aNMSlYMqBh7TGkZwIvZm9sYZFPP2n8ZRe16P/iTVhJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ADbc5MGNT/N6cgWdxyedadouIHpjQUdyNhHm0/ukFKpLERrUM0Bbcfp4wg1Tlr4kdFx+MrGVrUBMaGAyAhvT5bzdrTUm3k46IkUa3B/e03wIVL2mHnF2C3o9haNWn3KZ6wjJ9h9UycrFbjvbqRxb/g2MiPkCnWATm4jKY83YSHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RIao7zf4; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750172391; c=relaxed/simple;
+	bh=Lp/eB4U1Un6QvP4XOvYyZTYQsbExFyzr5cs6+/LV4mk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UyGQv87nlqsJj2w7pzx8mhYg3HY/Nk0VJG6dBSqtXldSL2S4S6kFRp2sdOO+0idLu79m7pzdy3TXeVXUdjqhs5FAXEa8bJia16LHFKuMrp+fv5JwW67ZCTLY8DJXQK1ctEJ08KCThptNNglFbLKFES2O4UvGvc1gSNxy3+ix5/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMLPMk2d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIao7zf4"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade58ef47c0so203131866b.1;
-        Tue, 17 Jun 2025 07:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750172325; x=1750777125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tFMbIK8XdkubBwMqAxMT+AE6lntMwC1zhKGYkr2V1/Q=;
-        b=RIao7zf4QsZDfaDHcQu4Z4758i4indZhpB5pDkhoz3dUtylnSwLYsLC61NNGT+zDMA
-         Q0VVhSV4sH7/gOelhcdcQRBefriyGf151r/li0Fo2SbKyY7qjyykDIm6Xj9AqxVAbcHN
-         gbaEgYm7P9vVgJ7rc2VhitQrqKdnL2nvPMHlj8mJv+GLaxIjA1+r30S4/xUk2oqheqML
-         /69jkMutD7GeoGxJ/vxpaEvnlOECYdW8ixGHG8PMDqP7vTnRMCnwy7zQb+mc8aCUqQVU
-         M8U8wzpdHozzMoo5TuNIhLZPJKm0ySwnXL1AhgnIbzNtDHZoO+5dxqnDgCq6EyHxjASx
-         PBZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750172325; x=1750777125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tFMbIK8XdkubBwMqAxMT+AE6lntMwC1zhKGYkr2V1/Q=;
-        b=ueEYb2bfpouZgI07/PlbJQUwehcwHi2FrL/N3gRCHAdAey6i5pmgTKp4+alcfNIlsi
-         cpFvqOgTVv2Dl7rZrZLkzlYUWNbKbe9+TBhTnKdXs1bZu60jC7Ue+XqwM5baJ52Ns7LR
-         jL9W+Wy0BaZv+h4VgLE+qaAv9pq25cN/1rwu8GHxKDIOGNBVSXh/bwlYzhIZ6UlVhUbB
-         8E03KVbbQnD0OkwiZfiIUs3x0QrdE7jqtYup40llXqvnlaPjqwSq49gPNH+QV9tgB2dx
-         mQ2tza5vbyApBT9ooiDH5pDQuTB3PjIaxhu3OM4Vz4QsJq21ZT/KcN+9nXGjuuPmWwIE
-         86Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1zuWt9zWzSW04jSAk3r8PDuQs58cfRzsn6iCFeHP4o9H4yyJk9HVJjCPEmXSVrv600qzbmjXftcipplp/@vger.kernel.org, AJvYcCUnhk4XFQxaTm0cfpXQd17u63Blwj8JeyNKwlxsDckCY9mdzEa10scnh88Ha+yncicA8k4vtET9dIkpM1fq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuljwBSxW++HXu65hZEcalWYTitpoPmhRV3DXsnkQzs9lg2KCs
-	WPQ8P3MrIF2KFwHXNV276qHr/5IB4tqofRKojoa1/rO0nvDlGo/elpVmL/bwE1vpoQZV4rmyoxq
-	H8l5sQ3UjXyWRyDdCM0PO3oL9Ja5fbZM=
-X-Gm-Gg: ASbGncsMyPStklaZRO2sAFF32cWmv6ckK0MYPeAzc1yejVOyQcI7nELDkhUIqbe4oBm
-	r3FmX5NoeEDsmCeHOmcTC87lAigsIyAxHQjJFB3VUVSjKNXncqfyvvCqLaegqE65E0yHYiQLfeJ
-	T1UonHYEeuMsdzPeDH484DfeF79P/Ka5NyjMFLaySl6Q==
-X-Google-Smtp-Source: AGHT+IEETojlBs4zeufKnNAfPKmtN/B8jrW05fqGi8+W2dBQjH4hXvU3OfIrvlGAII9WXyCqbuomLNHiFkYPUz/b9eM=
-X-Received: by 2002:a17:907:6d0a:b0:ad2:27b1:7214 with SMTP id
- a640c23a62f3a-adf9e1d7e73mr1415402966b.17.1750172324179; Tue, 17 Jun 2025
- 07:58:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMLPMk2d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C841DC4CEE3;
+	Tue, 17 Jun 2025 14:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750172391;
+	bh=Lp/eB4U1Un6QvP4XOvYyZTYQsbExFyzr5cs6+/LV4mk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WMLPMk2dAOVz7xSLGDg7idYdBgEd7wg426LO52ywB+o8KkiEPfQ/GccDgDPQrOAsG
+	 THMr361pcJmPeA3rLLaf0drTP5HTCNxL7u5PPKonuUMhdeLI5Lj4ruLMCtfMjN1LQR
+	 tuA+J9L3SMYQFn7/8/tL7IjidlZw4ZpU2pSoI2eS6wK+a3CmWgGeouGrN8LdEYlSiw
+	 33vwb3NL1a+niHyr5oN4pNaKbGG+11DUqzSOiZ79netUyWu4uiwrSauevBHjRfUZYz
+	 Wv1SO6+jpd2P6Y5+t0voeACGn2v1c1uJ1fybYCelJe5wBWDV/EZdO8BRHWw30wpnwb
+	 mN2F9kszPGjtA==
+Date: Tue, 17 Jun 2025 16:59:48 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
+Message-ID: <yw3n2csu4x4mfed33dtvl75zc5scgkjvkzruqilpw64n7esmdn@3fj77ufzm3c2>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+ <20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528175943.12739-1-zxue@semtech.com> <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
-In-Reply-To: <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
-From: Aleksander Morgado <aleksander.morgado@gmail.com>
-Date: Tue, 17 Jun 2025 16:58:30 +0200
-X-Gm-Features: AX0GCFuY-iFnlHE8Oy6B-92n0XRHmRePA1s_4SqNR6ji4ozUguRonyfoH8Ay69c
-Message-ID: <CAA3JqEfpuwn5OL6SasVGRU82+2+D5nNXk-WALzcnWnuz9384kQ@mail.gmail.com>
-Subject: Re: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x
- and set MRU to 32768 for better performance.
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Adam Xue <zxue@semtech.com>, Thomas Perrot <thomas.perrot@bootlin.com>, 
-	Aleksander Morgado <aleksander@aleksander.es>, manivannan.sadhasivam@linaro.org, 
-	slark_xiao@163.com, johan+linaro@kernel.org, quic_vpernami@quicinc.com, 
-	tglx@linutronix.de, fabio.porcedda@gmail.com, quic_msarkar@quicinc.com, 
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imocanu@semtech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ccnztqp4ebdwmdoc"
+Content-Disposition: inline
+In-Reply-To: <20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
 
-On Tue, Jun 17, 2025 at 11:27=E2=80=AFAM Manivannan Sadhasivam <mani@kernel=
-.org> wrote:
->
-> On Wed, May 28, 2025 at 10:59:43AM -0700, Adam Xue wrote:
->
-> + Thomas and Aleksander (for EM919X related question)
->
-> > Add MHI controller config for EM929x. It uses the same configuration
-> > as EM919x. Also set the MRU to 32768 to improve downlink throughput.
-> >
->
-> This also affects the EM919X modem. So I want either Thomas or Aleksander=
- to
-> confirm that it doesn't cause any regression.
->
-> Rest looks good to me.
->
-> - Mani
->
-> > 02:00.0 Unassigned class [ff00]: Qualcomm Technologies, Inc Device 0308
-> >       Subsystem: Device 18d7:0301
-> >
-> > Signed-off-by: Adam Xue <zxue@semtech.com>
-> > ---
-> >  drivers/bus/mhi/host/pci_generic.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/=
-pci_generic.c
-> > index 03aa88795209..9bf8e7991745 100644
-> > --- a/drivers/bus/mhi/host/pci_generic.c
-> > +++ b/drivers/bus/mhi/host/pci_generic.c
-> > @@ -695,6 +695,7 @@ static const struct mhi_pci_dev_info mhi_sierra_em9=
-19x_info =3D {
-> >       .config =3D &modem_sierra_em919x_config,
-> >       .bar_num =3D MHI_PCI_DEFAULT_BAR_NUM,
-> >       .dma_data_width =3D 32,
-> > +     .mru_default =3D 32768,
 
-I cannot test this now, I need to look for the EM9191 that I know I
-have somewhere, but this default MRU update feels right. Hopefully
-Thomas can verify.
+--ccnztqp4ebdwmdoc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
+MIME-Version: 1.0
+
+On Tue, Jun 10, 2025 at 09:34:37AM +0200, Jorge Marques wrote:
+> +static int ad4052_get_samp_freq(struct iio_dev *indio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int *val,
+> +				int *val2)
+> +{
+> +	struct ad4052_state *st = iio_priv(indio_dev);
+> +
+> +	*val = DIV_ROUND_UP_ULL(NSEC_PER_SEC, st->pwm_st.period);
+> +	return IIO_VAL_INT;
+
+st->pwm_st.period is the period that was requested before. If you want
+the real period that is currently emitted, check pwm_get_state_hw().
+
+> +}
+
+Best regards
+Uwe
+
+--ccnztqp4ebdwmdoc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhRguEACgkQj4D7WH0S
+/k5A4wgAlbFUMHh3LtHIRWgkjM61wKadhfZQVlIKuHoXFDWz983UWxN2bZgss2Zd
+xMEhoqvneHvAtH7E5MwOFh9/+WMbpfn6Bu4BRTZXUO0dhpS740XkoFb2B3NxX+0K
+k5PlODZZffbXuH5v90+7weBrFNuoAuYlLDbQ4SglYkg0NPKaTUroVXxHGF+XnH0l
+bvupgHfI2iFM+72ujtJD1Z0mRVn9iT6ZD7XkvXpd8Mddr7Oq2Pm8G80bvRvv1mb9
+c/7o5bk6fmhsuXnpZ3SVWfXyrhQpB697/iJyywbdJJnacpu2LB+VKiaSD7WRsWKz
+XwdqeSN+ok5I+DT7QANfZPeXZXqANg==
+=33LJ
+-----END PGP SIGNATURE-----
+
+--ccnztqp4ebdwmdoc--
