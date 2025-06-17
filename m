@@ -1,102 +1,263 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F09D288CB5
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825A4BA53
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152252; cv=none; b=b0MbQ4KohLN5Ebw4cYkNi3iqxMXweswHiPxhil/Gli61sUcnppqqBUBB6a/N4RM1hGmiNHobxGa4W8MnE2YC8Xr7CTCizXqMEr1ICp6OENV5mlDYovywojzb3ciuz0BFiWu5XRZLzqsTo2Ngum8GAUkpio1z7FmDh7fyt4qbpes=
+	t=1750152323; cv=none; b=jhvpy5zqpZ6eWpUZvTQvgNZVIce2nRKFbF9X+9o8bMpv2Fdyp6O/A1bVjmz1bpEIsEAVI65dkZ4O0vBSZGLBJqp0Iwc6LhgeeM4vmyk0n2yIyT2qt38YVIWG8+rXI2FCLYj+tSktUD3fUqZz28UzFhGbDR654JsJw+kK6X4+ZM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152252; c=relaxed/simple;
-	bh=0FVH0nf1hFWs5snO5t/bUXQFon9Yjbecd6o+YdwqYHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K0gakwZ/ia8O6DIRztRC7rMVZScq9bP5DvXZ7V0G9/rcoyv2eVwWTJtFPnNhl89uXpS4KlcyrIW+FSkagYMvrPNEGw8q7HdyKg1K0llf6pgzK1GevHRlPLiYEb1I0uFFAOL6KE+7LwxGgRFhbb+6hDdMStnJAhdCxOYiKfzfEpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4sK07r3; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750152323; c=relaxed/simple;
+	bh=wWhnXAyX2CPjsnfMuHGcrmqHfLEOeRFBGDWPGeExTLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BWdC1OosW5kGiXsfe5qDz3oCyPxcHavGdiH6cRppUJtAzNwrBHQY9tGsCCTZpJabW7BB67m6HaRRLNA2DDNtmcK1vp3/P4aK7YjY65IB2CRG+OFVxbCNDRB3UBPX57mbXNb7QcCdCRhOWqF54/UB8v9+0l/umLJzguTldLBuVTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KRf+QljU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4sK07r3"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so1386571a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750152249; x=1750757049; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5qmCi5AjNmyApPkeggD1UBIutb08W79XxmIwYywNdyI=;
-        b=j4sK07r3C3B34LEq1JlcgfnUK/UE/dCLXuO4dz8YQQJGIno2LQys94N5/ZyMTCAFOh
-         MGcyy2PEMp8eBZjP0jJMMQ7Ij3t/OnoPzEWbh6/Mactd2fke2/MYh5e80Bud7d1yBJMf
-         /zpP8SbMEIEdZnfEz0+XyiSSsqLhK2f6FmOLhS0P20EY9hVBFW15w7z3gn8N+ScU0N3T
-         L0d9Tv6ZDkNjXSz6pY7nUFgRItZiDVe9Ua9MfiE9Bh2LeV9OBUjRUrebINV3KPPLNE/9
-         I+IENTwKfwK38QsrUHY+lM8foI9HuT2WUk5YufntXLPKd1TtHZxuZtc/7BbZg1wY2Uu9
-         S+Xw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KRf+QljU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750152319;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6zkQFw/Ch3T6ugLEDBuaz32yOTGmLuefrLkmwqJMJuQ=;
+	b=KRf+QljUah1CBJD8g+uNYmULynoqSJDJ2Uf0pQ9vL/X7C50AuqizO3q3LZpLzU6ForEZG4
+	tbQZOIaEMQMfc5v93LAcp2CX0yjvqb0/SH8Q1jI1f+nSIJ/0mUMaufjOqYqVmRGAtmCs7t
+	oa8JOUK3Ps6qBtNg7/omFJfdL4TxMTs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-695-MAv_PF8zP7qFIl9ZwxQYtA-1; Tue, 17 Jun 2025 05:25:18 -0400
+X-MC-Unique: MAv_PF8zP7qFIl9ZwxQYtA-1
+X-Mimecast-MFC-AGG-ID: MAv_PF8zP7qFIl9ZwxQYtA_1750152317
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d244bfabso44470055e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:25:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152249; x=1750757049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5qmCi5AjNmyApPkeggD1UBIutb08W79XxmIwYywNdyI=;
-        b=iPNEqPQV/l6SjWsOPngjHe5cIsaf0qnkxRB/HaTFrlvU8E3SHz1CDTCz3YrFKuYq3F
-         xH0sFJGFT8pQGCqsacfYWZipiUMCkD8crsDFuoL5JkW1LH/8wk4j02uC1HMljrBiR2jx
-         FvLWq8g47ja2Zsbv4Kyfy68jP+MH+fRW7hyq8wn95gC/zew4gc1PDLuSlCg7mbtyidmm
-         7/iXM4fpdr1963oomKOieLVC0GwLhkGsQaZ/s6MeplQDjniextwLIaqVC4MRfC0IRB7i
-         qNORNTdL6Pii4mbfWNNgKSkwDkusGEB2R8vtjP/jSJH3eqYINSVRsuLg1823nGXQMLqx
-         n6MA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyvXOb+2I7dlOg7VSEFLjBfYrU5aHnNMTKTxGdnZqtb3/MF9NWkQqvoTjudx/HaJmHEqOlK0V0XZwf65w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiqkLRyV3ngK4uTdLMhI4zwpLzHTp8J3BQ+k3CmuGmffbWI9tP
-	9fjvezYJDa6TkSrwSNovEB/pc+GZ2VInsDtUb0ZU0UZXQN9DJLqeIRfa8KrycZMj/WA=
-X-Gm-Gg: ASbGncsO2n+CsWqAVGKb3UCEFEISLViWrTMhimsBSfdv00d6DHeBI5MymBdfDFs6Apq
-	nveubRnLSNFx12E/wGmEmWxRcRujNYfBwUfF2fIUvEsn2UgpHaJxq1WT7Xi31yJEGh3KHKu9guE
-	SPvPfaaYwLsXigFFs+AE3T06AC3RdfpkdUxR7rhB1jMc5gKqrXb270MufCt4n8ZKAgLMPRGrD6C
-	tITVIzjsg/mQWrXON3E2befTpwqqCIrcEzz6VZJSIMzrkHxRbJQxNRoo03wJIzqUpzM0+DJdja1
-	FvuNccxi8qKgdlgwA4LSXZyQ4jHmTw5i4Q2ms6RT7W1J9g/HtJf9e48PZe4=
-X-Google-Smtp-Source: AGHT+IEnQHxM84ovHQi50egnS9UEgVOz9GmXYcPlKnLN4jCfbnYv7EbdDH2huGe6x+oNGIph9jx7kw==
-X-Received: by 2002:a05:6402:34ce:b0:600:129:444e with SMTP id 4fb4d7f45d1cf-608ce49deb8mr11863903a12.4.1750152248723;
-        Tue, 17 Jun 2025 02:24:08 -0700 (PDT)
-Received: from linaro.org ([82.79.186.23])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5b6a5sm7931639a12.40.2025.06.17.02.24.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:24:08 -0700 (PDT)
-Date: Tue, 17 Jun 2025 12:24:06 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: Don't
- zero-out registers
-Message-ID: <aFE0Nu8CKFBlCCrd@linaro.org>
-References: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
- <20250617-eusb2-repeater-tuning-v2-2-ed6c484f18ee@fairphone.com>
+        d=1e100.net; s=20230601; t=1750152317; x=1750757117;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6zkQFw/Ch3T6ugLEDBuaz32yOTGmLuefrLkmwqJMJuQ=;
+        b=v0XyL2bP4bCnPKTkLk8oGYULklFlyRZHb/FXrzbjZkEoiI1Ft5lsJ69pDt9cujPiWN
+         9y41XHS8TsEQQmneAXrSFFwzZcSLl5ncyEzEbdp2AukzH0qR0AJ0BdcxbvZsLK9D5TMl
+         Irze0EBZMy+jn3rUgH4RZgvFFHeZiSdODar/lLqR+mW5uYfhY2vHbl9HXqlLsNlQ7YlL
+         t51XNbqFeC1D/a8EgRhoCaztLC2lC/Oo8F3M88GG2Sl/IQJHPu2Wwe0ai2jtTdeJQJti
+         LrQlPQMIibRlKffW59wEsl5BRbjCcpbtbZ/VhqmexGhFH0el+DjmUljvbf9F/9BD8rwu
+         XSmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWt0kjuG9JROSPZFHcmT91BsGtDcaJRgMq1uL9gGOWfLbcotGVgAWYVMUeZFEZcSCn25vp2DCX//KtdMWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2qQsKOD9F6CGTos3m4We8UD5Ocl5ipUhIcxHP9yUERHvx4zG+
+	lvilabYWXCplVK70ePxTePGqPBsMknTFdm690CrWB5Dl2Z6OCzY+RhfjEasxHtC4aavTacgTjPO
+	HzMIwdBcGm4yCsq92ke3soEOuZliI8hWCOu8zxQjF+UGIswNjhP1+hq46cNMUmeI4LA==
+X-Gm-Gg: ASbGnctbkZj1+wdmixsL6rbUT86CmjfszhILY9WTWcory5Iq0IeMz6EZuWaB8KONemO
+	FHclnvtz+SFXyaGpCmXrLV1us6VzlLxLFlCNyroiIKJMu9cFU/t4qoloWffgXw8x90SM9PfK9Sm
+	UO+Q767UpsUEe/aJImcEWKTQSXHFg4FmqcM1ERvYBlQIR8WEtHWnUCDyWMr0EP/FNPR+CxEc4AW
+	gfci8bma+fkmDuy1/IiHs8r22SXbTSKxVMY7bHAbCU0N7bRQdkcO/adidO87740wSrcQGBjM78v
+	18PeLt2sQb5+mcCUuOG44Q1o10e96cVCGbK+fupGvBxEQ84iwqIpNSI2XWJ5nty12pL9pU4Wx7P
+	DWE+fDJ/WdhD5hJP/xcaIzSQRGhY41Rxro++DuKwpPagVZGQ=
+X-Received: by 2002:a05:6000:1447:b0:3a5:2fad:17af with SMTP id ffacd0b85a97d-3a572e58cbemr8127083f8f.57.1750152316855;
+        Tue, 17 Jun 2025 02:25:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNVa+RJrykc/8Xieu2BbPmReEGJ3iCm4JfplZNxZv4/8Vep/Wlu6kppgIaFWfNuw/GXp3OKw==
+X-Received: by 2002:a05:6000:1447:b0:3a5:2fad:17af with SMTP id ffacd0b85a97d-3a572e58cbemr8127063f8f.57.1750152316374;
+        Tue, 17 Jun 2025 02:25:16 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087f8sm13629833f8f.53.2025.06.17.02.25.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:25:15 -0700 (PDT)
+Message-ID: <6afc2e67-3ecb-41a5-9c8f-00ecd64f035a@redhat.com>
+Date: Tue, 17 Jun 2025 11:25:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617-eusb2-repeater-tuning-v2-2-ed6c484f18ee@fairphone.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/14] mm: Filter zone device pages returned from
+ folio_walk_start()
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <11dd5b70546ec67593a4bf79f087b113f15d6bb1.1750075065.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <11dd5b70546ec67593a4bf79f087b113f15d6bb1.1750075065.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 25-06-17 10:26:36, Luca Weiss wrote:
-> Zeroing out registers does not happen in the downstream kernel, and will
-> "tune" the repeater in surely unexpected ways since most registers don't
-> have a reset value of 0x0.
+On 16.06.25 13:58, Alistair Popple wrote:
+> Previously dax pages were skipped by the pagewalk code as pud_special() or
+> vm_normal_page{_pmd}() would be false for DAX pages. Now that dax pages are
+> refcounted normally that is no longer the case, so the pagewalk code will
+> start returning them.
 > 
-> Stop doing that and instead just set the registers that are in the init
-> sequence (though long term I don't think there's actually PMIC-specific
-> init sequences, there's board specific tuning, but that's a story for
-> another day).
+> Most callers already explicitly filter for DAX or zone device pages so
+> don't need updating. However some don't, so add checks to those callers.
 > 
-> Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> 
+> ---
+> 
+> Changes since v1:
+> 
+>   - Dropped "mm/pagewalk: Skip dax pages in pagewalk" and replaced it
+>     with this new patch for v2
+> 
+>   - As suggested by David and Jason we can filter the folios in the
+>     callers instead of doing it in folio_start_walk(). Most callers
+>     already do this (see below).
+> 
+> I audited all callers of folio_walk_start() and found the following:
+> 
+> mm/ksm.c:
+> 
+> break_ksm() - doesn't need to filter zone_device pages because the can
+> never be KSM pages.
+> 
+> get_mergeable_page() - already filters out zone_device pages.
+> scan_get_next_rmap_iterm() - already filters out zone_device_pages.
+> 
+> mm/huge_memory.c:
+> 
+> split_huge_pages_pid() - already checks for DAX with
+> vma_not_suitable_for_thp_split()
+> 
+> mm/rmap.c:
+> 
+> make_device_exclusive() - only works on anonymous pages, although
+> there'd be no issue with finding a DAX page even if support was extended
+> to file-backed pages.
+> 
+> mm/migrate.c:
+> 
+> add_folio_for_migration() - already checks the vma with vma_migratable()
+> do_pages_stat_array() - explicitly checks for zone_device folios
+> 
+> kernel/event/uprobes.c:
+> 
+> uprobe_write_opcode() - only works on anonymous pages, not sure if
+> zone_device could ever work so add an explicit check
+> 
+> arch/s390/mm/fault.c:
+> 
+> do_secure_storage_access() - not sure so be conservative and add a check
+> 
+> arch/s390/kernel/uv.c:
+> 
+> make_hva_secure() - not sure so be conservative and add a check
+> ---
+>   arch/s390/kernel/uv.c   | 2 +-
+>   arch/s390/mm/fault.c    | 2 +-
+>   kernel/events/uprobes.c | 2 +-
+>   3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+> index b99478e..55aa280 100644
+> --- a/arch/s390/kernel/uv.c
+> +++ b/arch/s390/kernel/uv.c
+> @@ -424,7 +424,7 @@ int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header
+>   		return -EFAULT;
+>   	}
+>   	folio = folio_walk_start(&fw, vma, hva, 0);
+> -	if (!folio) {
+> +	if (!folio || folio_is_zone_device(folio)) {
+>   		mmap_read_unlock(mm);
+>   		return -ENXIO;
+>   	}
+> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> index e1ad05b..df1a067 100644
+> --- a/arch/s390/mm/fault.c
+> +++ b/arch/s390/mm/fault.c
+> @@ -449,7 +449,7 @@ void do_secure_storage_access(struct pt_regs *regs)
+>   		if (!vma)
+>   			return handle_fault_error(regs, SEGV_MAPERR);
+>   		folio = folio_walk_start(&fw, vma, addr, 0);
+> -		if (!folio) {
+> +		if (!folio || folio_is_zone_device(folio)) {
+>   			mmap_read_unlock(mm);
+>   			return;
+>   		}
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Curious, does s390 even support ZONE_DEVICE and could trigger this?
+
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 8a601df..f774367 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -539,7 +539,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>   	}
+>   
+>   	ret = 0;
+> -	if (unlikely(!folio_test_anon(folio))) {
+> +	if (unlikely(!folio_test_anon(folio) || folio_is_zone_device(folio))) {
+>   		VM_WARN_ON_ONCE(is_register);
+>   		folio_put(folio);
+>   		goto out;
+
+I wonder if __uprobe_write_opcode() would just work with anon device folios?
+
+We only modify page content, and conditionally zap the page. Would there 
+be a problem with anon device folios?
+
+-- 
+Cheers,
+
+David / dhildenb
+
