@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42111865EE;
-	Tue, 17 Jun 2025 15:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E708D2E889A;
+	Tue, 17 Jun 2025 15:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172942; cv=none; b=QMUuLiiFdCZhvmU6TmOOtli3G8mk/hEqmLl8Lbl1NhEkL0EvKmWVkRABGPZLVql4zLzfhPg2FAbouiBvGh/bJw0oziF5ySJNjEcUe6rXh5Z4KYN0Fmmb0n8C+mcxdjNV2lsnqCCM43/yU7NHRPn9O/ZF22zpRnToajrXBW/iPV0=
+	t=1750173019; cv=none; b=uusAlsXv7o5kGjlmAy/aYeWxh51aOhZB3g6LnDFupEC7ZKgerjTjnM7wAPLpeRyZVLNbFIaIHH86Pb/nAAfvFBDs6Un01EpRJVacj8FKEeNC4UdI94HEOg3nw8p0Xn7GJq+JCuQxK74dbGVTuzgVylTYllY2LuaeNy8RUe+DHps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172942; c=relaxed/simple;
-	bh=GFHXVRfzC0mqtyiNtLvDOfJgC8NaMnttOwFnd4gpPos=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uv1TPFX8L9nmZ9nyyVhssxdogrls6fzBTPgJwMlPMIo5vlw5PWiEixWAgZ8p5KP8IlVaYtUU5ZydpZL8UFP7BoxgCAZb0F+OPCQs196QqP86LKLZu/C+wyF18r6gCb59QZbH5etjwkN3/pteiIR/tXTqQBp8DFsAYNSpgha6CO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+easgqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750173019; c=relaxed/simple;
+	bh=TZcOBjPsqZfGB1DMcUTuXivLLt+YrMUoZ3nRg9JcutA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qs+b4vVpu/W53/PM0eF8RBOs228FmQ3E+JAFQSqQvyLa8pAwgxdA6SYmYhjz3rd5YlNUSm/pnOd/zmiIfEjHhrlDLcNMRtjiROfTJvmaUoEVMFQ0YSYFMv0EFfZ7AtoaX1fUYKFXmzXcLJPVRL1PnqcnBah9FgWr5/B5NBMwru0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1V8IgRl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+easgqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7359C4CEE3;
-	Tue, 17 Jun 2025 15:09:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1V8IgRl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB254C4CEE3;
+	Tue, 17 Jun 2025 15:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750172942;
-	bh=GFHXVRfzC0mqtyiNtLvDOfJgC8NaMnttOwFnd4gpPos=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=u+easgqyr5Nv1UFLjGa/E1qiPETFVvSl5Mw1ks1H5dNWdDhN5AQeioE8a8z2xpels
-	 vQBcgfZS07SupunLRnHH9UIAn/+8P7j4G3+1nxOqQ3ZusnXyEjta9oR6MRJMCdT4qn
-	 oBBsqOoY/Uaj2hOoXcSwxmH19+tF1F6UxyR4IOj8j4jHauqPDaKT+wMU9DGQpfMd0Y
-	 7jYzGESm5km23wghRhfFiTBcHDVP554sTMB3laNnp2/0B5K/YNJhSfjQA6j1Wk+6BO
-	 O/d/B1D74zlauqA56fdKRFyriyW7XMY+DSJG9Ao83zXdbAtR9GjuU7hYsZR5CqaNLY
-	 v9p5UWiEqdjoQ==
-Date: Tue, 17 Jun 2025 17:08:57 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
-Message-ID: <aFGFCc7eiZJM8RKM@pollux>
-References: <20250612144953.111829-2-phasta@kernel.org>
- <aFFy5aG1eOeMU44S@phenom.ffwll.local>
- <aFF3YIAFkgsAKvQV@pollux>
- <aFF6xeu78cXTGFH0@phenom.ffwll.local>
+	s=k20201202; t=1750173018;
+	bh=TZcOBjPsqZfGB1DMcUTuXivLLt+YrMUoZ3nRg9JcutA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l1V8IgRlHTwSpqeHPfwcab6KJbWP4sgrPRjDiY5mVBfW1R1Ysf8BUTKEIPao3PYyQ
+	 lI3B1+Mj6q5O5kBypRlQzoI0+zeVg+I1fwkDRbujK5PcEnZUMljlB8yEQocCjbqlXl
+	 vSAD4DY6nXirSVMcaqOWWV5d61j6LRHxZvTg8UArFI6hBYa6KarYXR+JTOG3pMWy0Q
+	 ltpk+JEFpn0LUZuzNOniyP0LlW9VNrfuBZo8dxB8XEJHh8d8DFdgtkHUqCD/RXZq2Z
+	 BcjKScmmFE7bQHLs4S3AgeqqmssrlnkLDTG7lQ7nEMwFC1/4FwVhOyJn3+Gi8b0qI6
+	 q+AdRLx1gSiEA==
+Date: Tue, 17 Jun 2025 20:31:36 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
+	David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH v3 14/62] KVM: SVM: Track AVIC tables as natively sized
+ pointers, not "struct pages"
+Message-ID: <a7j5yllrxxzaqzjcmpfu3oxh775xgzx7h7nrkw53rmucnrbspy@zlwzwgfd7uke>
+References: <20250611224604.313496-2-seanjc@google.com>
+ <20250611224604.313496-16-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,75 +50,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFF6xeu78cXTGFH0@phenom.ffwll.local>
+In-Reply-To: <20250611224604.313496-16-seanjc@google.com>
 
-On Tue, Jun 17, 2025 at 04:25:09PM +0200, Simona Vetter wrote:
-> On Tue, Jun 17, 2025 at 04:10:40PM +0200, Danilo Krummrich wrote:
-> > On Tue, Jun 17, 2025 at 03:51:33PM +0200, Simona Vetter wrote:
-> > > On Thu, Jun 12, 2025 at 04:49:54PM +0200, Philipp Stanner wrote:
-> > > > + * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
-> > > > + * theoretically can deadlock. It must be guaranteed that submit_wq never has
-> > > > + * more than max_active - 1 active tasks, or if max_active tasks are reached at
-> > > > + * least one of them does not execute operations that may block on dma_fences
-> > > > + * that potentially make progress through this scheduler instance. Otherwise,
-> > > > + * it is possible that all max_active tasks end up waiting on a dma_fence (that
-> > > > + * can only make progress through this schduler instance), while the
-> > > > + * scheduler's queued work waits for at least one of the max_active tasks to
-> > > > + * finish. Thus, this can result in a deadlock.
-> > > 
-> > > Uh if you have an ordered wq you deadlock with just one misuse. I'd just
-> > > explain that the wq must provide sufficient forward-progress guarantees
-> > > for the scheduler, specifically that it's on the dma_fence signalling
-> > > critical path and leave the concrete examples for people to figure out
-> > > when the design a specific locking scheme.
-> > 
-> > This isn't a concrete example, is it? It's exactly what you say in slightly
-> > different words, with the addition of highlighting the impact of the workqueue's
-> > max_active configuration.
-> > 
-> > I think that's relevant, because N - 1 active tasks can be on the dma_fence
-> > signalling critical path without issues.
-> > 
-> > We could change
-> > 
-> > 	"if max_active tasks are reached at least one of them must not execute
-> > 	 operations that may block on dma_fences that potentially make progress
-> > 	 through this scheduler instance"
-> > 
-> > to 
-> > 
-> > 	"if max_active tasks are reached at least one of them must not be on the
-> > 	 dma_fence signalling critical path"
-> > 
-> > which is a bit more to the point I think.
-> 
-> My point was to more state that the wq must be suitable for the scheduler
-> jobs as the general issue, and specifically then also highlight the
-> dma_fence concurrency issue.
+On Wed, Jun 11, 2025 at 03:45:17PM -0700, Sean Christopherson wrote:
+> @@ -277,8 +265,8 @@ static int avic_init_backing_page(struct kvm_vcpu 
+> *vcpu)
+>  		return 0;
+>  	}
+>  
+> -	BUILD_BUG_ON((AVIC_MAX_PHYSICAL_ID + 1) * sizeof(*table) > PAGE_SIZE ||
+> -		     (X2AVIC_MAX_PHYSICAL_ID + 1) * sizeof(*table) > PAGE_SIZE);
+> +	BUILD_BUG_ON((AVIC_MAX_PHYSICAL_ID + 1) * sizeof(new_entry) > PAGE_SIZE ||
+> +		     (X2AVIC_MAX_PHYSICAL_ID + 1) * sizeof(new_entry) > PAGE_SIZE);
 
-Sure, there are more guarantees the driver has to uphold, but this is one of
-them, so I think we should explain it.
+Ah, you change to 'new_entry' here. Would be good to rename it to just 
+'entry', but that's a minor nit. Ignore my comment on the previous 
+patch.
 
-> But it's not the only one, you can have driver locks and other fun involved
-> here too.
+For this patch:
+Acked-by: Naveen N Rao (AMD) <naveen@kernel.org>
 
-Yeah, but it boils down to the same issue, e.g. if a driver takes a lock in
-active work, and this lock is taken elsewhere for activities that violate the
-dma_fence signalling critical path.
 
-All the cases I have in mind boil down to that we potentially, either directly
-or indirectly (through some synchronization primitive), wait for things we are
-not allowed to wait for in the dma_fence signalling critical path.
-
-Or do you mean something different?
-
-> Also since all the paragraphs above talk about ordered wq as the example
-> where specifying your own wq makes sense, it's a bit confusing to now
-> suddenly only talk about the concurrent wq case without again mentioned
-> that the ordered wq case is really limited.
-
-I mean, it talks about both cases in a generic way, i.e. if you set
-max_active == 1 in the text it covers the ordered case.
-
-Or do you mean to say that we should *only* allow ordered workqueues to be
-shared with the driver?
+- Naveen
