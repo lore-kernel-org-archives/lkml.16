@@ -1,49 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2792EFD89;
-	Tue, 17 Jun 2025 20:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625E9155C88;
+	Tue, 17 Jun 2025 20:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750192677; cv=none; b=QO5OBBW+UltPbQMb7nBqJ/TGZ1ugKbWMMFElvO2YUSVFN3gVz1XiHvhEAl2y055FEfDgcOQ4K6G3AaSoaQV3L72k8Mbcjc88CbCkzs7jIi9etIC02dRF+9PfyfMofhdfda0Fhlj5H1aCPy9gGnudItZ/7li/Fsx2PLESiZLRCBk=
+	t=1750192955; cv=none; b=mhhztWH1K5JCYkomQEMaGxUASUxd6FOwtItRa9aabQ4xO8BOMXZ6ZVylO2cUat4WuqcDy4J/9RdVwrROfSq9/iahgUTi3Og+FaaoMOCeWHJyBoq449K3imnPzmu3jp3FeFqAvyRpN9pYowvIc/wHwKL6axQd7LB/m06U5rZ1oIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750192677; c=relaxed/simple;
-	bh=54r4znE4BXFv6bRlHG9/gifwZs8TUeyRhVX7bDrc6rU=;
+	s=arc-20240116; t=1750192955; c=relaxed/simple;
+	bh=q1SGR7cquCfqIcHgDM+KF+k+8AQGKd0ZfPTWkoXLe20=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KMwlUZWDQ/yG8H/B7ShNHEqviTLxDEwQxl9Mjq/ueIdzXxbokKaabCnn4z4qJXiO2NLAoXk72nL3EaFD4Of1s7O6Co+MkG6hjgwLjEcOX5UF9F2ZCgPTKBrigqsk+8uhBg6UbtzkRVlovT4FLAAo6YJpKaPutc5PXDpEDWgkdL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+b+de44; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YrqmSdgBVS71fmSSzfrrWnn5YDNdgB03wAK/m8ArFE2tSdQ/SPynRTEZF5qN4BpedaOZop+L6Zg2zijRn6kIcP3AC4U8pSmoy6HF1nXivlQUYDiVzOTgh89bM+HYofdk3Z4FPWzVrvG72aTp92RwHrcOzGjo2tbVUDAQdhA1jXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g8vS5rjj; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+b+de44"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4624FC4CEE3;
-	Tue, 17 Jun 2025 20:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750192676;
-	bh=54r4znE4BXFv6bRlHG9/gifwZs8TUeyRhVX7bDrc6rU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V+b+de44XCuqsbVM2gPSQqPVm0WdGNUlqRBkLtWrdV+FwOXF3ttT9tRQ3SrjU8XjP
-	 xAajZnol+FMY0k3u6Y/eoNT/xYM8iQ/rfrgq7EinZfzqW4axMOLb+xGQ1YLf4HCIiq
-	 ntSlhcaR2Xl4jESgQFTDTdge2fxELUCsCpW+VVXBO3n4Dhkqishg81CcIOzoVqEmbp
-	 HKwdl3VT77uNQnla0VuHiSdpOBVzK0266GlFGLHUZrFy0BMkM4ZceHOWsZPWu8kmro
-	 HcjgwItg8W6ReZyV9qTGTU2VLTOCjf2zCJleOsH7TCyushCz/0yplJ0tLSz8MvemOL
-	 3bSdC0WwjC0fQ==
-Date: Tue, 17 Jun 2025 13:37:26 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>
-Subject: Re: [PATCH v2 00/17] SHA-512 library functions
-Message-ID: <20250617203726.GC1288@sol>
-References: <20250616014019.415791-1-ebiggers@kernel.org>
- <20250617060523.GH8289@sol>
- <CAHk-=wi5d4K+sF2L=tuRW6AopVxO1DDXzstMQaECmU2QHN13KA@mail.gmail.com>
- <20250617192212.GA1365424@google.com>
- <CAHk-=wiB6XYBt81zpebysAoya4T-YiiZEmW_7+TtoA=FSCA4XQ@mail.gmail.com>
- <20250617195858.GA1288@sol>
- <CAHk-=whJjS_wfxCDhkj2fNp1XPAbxDDdNwF1iqZbamZumBmZPg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g8vS5rjj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750192954; x=1781728954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q1SGR7cquCfqIcHgDM+KF+k+8AQGKd0ZfPTWkoXLe20=;
+  b=g8vS5rjj264+D8tbMXPv5SB7P9CKplc4HPM9clC2RpYpA+n8dJXwEipt
+   /kYvOe9OjgWWpXVZ3dKmMRrwC0U7O0MHzC68+MunvlMgaqxmCLKY5W4/4
+   0xz26rSAQVepTVazr7mAvH4k3NIrZmMv7Ih9oAcquUqjB+JmpfkPDbt/Y
+   uZ1PfPH7E+Ev/D2hEPwinvKdxWm2sCKVUj0k4Gp5Ztk8LIzlw6zipHqLP
+   s9NFDbWKLlwk3WajS+yEvRFbz+YxC9lCmmS0IclvRinzVGX5GFnFh7luk
+   1OGx2IrWhTTkJ9oZN/5zBeHRfwLOdjlk/W/Jo8jc5PJpCeSx5vcO7Tk/w
+   w==;
+X-CSE-ConnectionGUID: W5QXtVt9Q8uWVjy0HiReig==
+X-CSE-MsgGUID: kMbbmpjeTAWJEo1KNW8JVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52092276"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="52092276"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:42:33 -0700
+X-CSE-ConnectionGUID: kCU4Wz79RNqXXf+CqVELjg==
+X-CSE-MsgGUID: +3KcfnBIQ8mKBIY2uYtsig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="149315947"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 17 Jun 2025 13:42:27 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRd8T-000I4w-25;
+	Tue, 17 Jun 2025 20:42:25 +0000
+Date: Wed, 18 Jun 2025 04:41:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>,
+	Guenter Roeck <groeck@chromium.org>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v10 2/7] reboot: hw_protection_trigger: use standardized
+ numeric shutdown/reboot reasons instead of strings
+Message-ID: <202506180402.ly0g2TQe-lkp@intel.com>
+References: <20250617094945.3619360-3-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,126 +82,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whJjS_wfxCDhkj2fNp1XPAbxDDdNwF1iqZbamZumBmZPg@mail.gmail.com>
+In-Reply-To: <20250617094945.3619360-3-o.rempel@pengutronix.de>
 
-On Tue, Jun 17, 2025 at 01:08:14PM -0700, Linus Torvalds wrote:
-> On Tue, 17 Jun 2025 at 12:59, Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > Again, the tests depend on the code they test being added first.
-> 
-> Sure, and that's fine. We have lots of "this depends on that".
-> 
-> > I could do two pull requests, the first with all non-test code and the second
-> > with all test code, where the second depends on the first, i.e. it will have the
-> > last commit of the first as its base commit.  Is that what you want?
-> 
-> Yes.
-> 
-> Or if one single pull request, split out the diffstat with the
-> explanation (that's the "Or at the very least spell things out *very*
-> clearly" option). But two separate pull requests would actually be my
-> preference.
-> 
->           Linus
+Hi Oleksij,
 
-Okay.  For now I'll keep the test commits last and plan for a separate pull
-request with them, based on the first.  I fear I'll quickly run into
-interdependencies, in which case I'll need to fall back to "one pull request and
-spell things out very clearly".  But I'll try it.
+kernel test robot noticed the following build warnings:
 
-Just so it's clear, this is the diffstat of this patchset broken down by
-non-test code (patches 1-3 and 6-17) and tests (4-5):
+[auto build test WARNING on sre-power-supply/for-next]
+[also build test WARNING on broonie-regulator/for-next chrome-platform/for-next chrome-platform/for-firmware-next linus/master v6.16-rc2 next-20250617]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-    Non-test:
-         arch/arm/configs/exynos_defconfig                  |   1 -
-         arch/arm/configs/milbeaut_m10v_defconfig           |   1 -
-         arch/arm/configs/multi_v7_defconfig                |   1 -
-         arch/arm/configs/omap2plus_defconfig               |   1 -
-         arch/arm/configs/pxa_defconfig                     |   1 -
-         arch/arm/crypto/Kconfig                            |  10 -
-         arch/arm/crypto/Makefile                           |  15 -
-         arch/arm/crypto/sha512-glue.c                      | 110 ------
-         arch/arm/crypto/sha512-neon-glue.c                 |  75 ----
-         arch/arm/crypto/sha512.h                           |   3 -
-         arch/arm64/configs/defconfig                       |   1 -
-         arch/arm64/crypto/Kconfig                          |  19 -
-         arch/arm64/crypto/Makefile                         |  14 -
-         arch/arm64/crypto/sha512-ce-glue.c                 |  96 -----
-         arch/arm64/crypto/sha512-glue.c                    |  83 -----
-         arch/mips/cavium-octeon/crypto/Makefile            |   1 -
-         arch/mips/cavium-octeon/crypto/octeon-crypto.c     |   3 +-
-         arch/mips/cavium-octeon/crypto/octeon-md5.c        |   3 +-
-         arch/mips/cavium-octeon/crypto/octeon-sha1.c       |   3 +-
-         arch/mips/cavium-octeon/crypto/octeon-sha256.c     |   3 +-
-         arch/mips/cavium-octeon/crypto/octeon-sha512.c     | 167 ---------
-         arch/mips/configs/cavium_octeon_defconfig          |   1 -
-         arch/mips/crypto/Kconfig                           |  10 -
-         .../asm/octeon/crypto.h}                           |   0
-         arch/riscv/crypto/Kconfig                          |  11 -
-         arch/riscv/crypto/Makefile                         |   3 -
-         arch/riscv/crypto/sha512-riscv64-glue.c            | 124 -------
-         arch/s390/configs/debug_defconfig                  |   1 -
-         arch/s390/configs/defconfig                        |   1 -
-         arch/s390/crypto/Kconfig                           |  10 -
-         arch/s390/crypto/Makefile                          |   1 -
-         arch/s390/crypto/sha512_s390.c                     | 151 --------
-         arch/sparc/crypto/Kconfig                          |  10 -
-         arch/sparc/crypto/Makefile                         |   2 -
-         arch/sparc/crypto/sha512_glue.c                    | 122 -------
-         arch/x86/crypto/Kconfig                            |  13 -
-         arch/x86/crypto/Makefile                           |   3 -
-         arch/x86/crypto/sha512_ssse3_glue.c                | 322 -----------------
-         crypto/Kconfig                                     |   4 +-
-         crypto/Makefile                                    |   2 +-
-         crypto/sha512.c                                    | 338 +++++++++++++++++
-         crypto/sha512_generic.c                            | 217 -----------
-         crypto/testmgr.c                                   |  16 +
-         drivers/crypto/starfive/jh7110-hash.c              |   8 +-
-         include/crypto/sha2.h                              | 350 ++++++++++++++++++
-         include/crypto/sha512_base.h                       | 120 -------
-         lib/crypto/Kconfig                                 |  18 +
-         lib/crypto/Makefile                                |  36 ++
-         lib/crypto/arm/.gitignore                          |   2 +
-         .../arm/crypto => lib/crypto/arm}/sha512-armv4.pl  |   0
-         lib/crypto/arm/sha512.h                            |  38 ++
-         lib/crypto/arm64/.gitignore                        |   2 +
-         .../crypto => lib/crypto/arm64}/sha512-ce-core.S   |  10 +-
-         lib/crypto/arm64/sha512.h                          |  46 +++
-         lib/crypto/mips/sha512.h                           |  74 ++++
-         .../crypto/riscv}/sha512-riscv64-zvknhb-zvkb.S     |   4 +-
-         lib/crypto/riscv/sha512.h                          |  41 +++
-         lib/crypto/s390/sha512.h                           |  28 ++
-         lib/crypto/sha512.c                                | 400 +++++++++++++++++++++
-         lib/crypto/sparc/sha512.h                          |  42 +++
-         .../sparc/crypto => lib/crypto/sparc}/sha512_asm.S |   0
-         .../x86/crypto => lib/crypto/x86}/sha512-avx-asm.S |  11 +-
-         .../crypto => lib/crypto/x86}/sha512-avx2-asm.S    |  11 +-
-         .../crypto => lib/crypto/x86}/sha512-ssse3-asm.S   |  12 +-
-         lib/crypto/x86/sha512.h                            |  54 +++
-         65 files changed, 1524 insertions(+), 1756 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Oleksij-Rempel/power-Extend-power_on_reason-h-for-upcoming-PSCRR-framework/20250617-175433
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+patch link:    https://lore.kernel.org/r/20250617094945.3619360-3-o.rempel%40pengutronix.de
+patch subject: [PATCH v10 2/7] reboot: hw_protection_trigger: use standardized numeric shutdown/reboot reasons instead of strings
+config: hexagon-randconfig-001-20250618 (https://download.01.org/0day-ci/archive/20250618/202506180402.ly0g2TQe-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250618/202506180402.ly0g2TQe-lkp@intel.com/reproduce)
 
-    Test:
-         lib/crypto/Kconfig                    |   2 +
-         lib/crypto/Makefile                   |   2 +
-         lib/crypto/tests/Kconfig              |  24 ++
-         lib/crypto/tests/Makefile             |   6 +
-         lib/crypto/tests/hash-test-template.h | 512 ++++++++++++++++++++++++++
-         lib/crypto/tests/sha224-testvecs.h    | 223 ++++++++++++
-         lib/crypto/tests/sha224_kunit.c       |  50 +++
-         lib/crypto/tests/sha256-testvecs.h    | 223 ++++++++++++
-         lib/crypto/tests/sha256_kunit.c       |  39 ++
-         lib/crypto/tests/sha384-testvecs.h    | 566 +++++++++++++++++++++++++++++
-         lib/crypto/tests/sha384_kunit.c       |  48 +++
-         lib/crypto/tests/sha512-testvecs.h    | 662 ++++++++++++++++++++++++++++++++++
-         lib/crypto/tests/sha512_kunit.c       |  48 +++
-         scripts/crypto/gen-hash-testvecs.py   |  83 +++++
-         14 files changed, 2488 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506180402.ly0g2TQe-lkp@intel.com/
 
-Note that the non-test part includes kerneldoc comments.  I'll assume you aren't
-going to insist on those being in a separate "documentation" pull request...
+All warnings (new ones prefixed by >>):
 
-If I need to resend this patchset for another reason, I'll also split it into
-two patchsets, one depending on the other.  But I'm not planning to resend it
-purely to do that split and with no other changes, as that seems a bit silly.
+>> drivers/regulator/core.c:5280:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+    5280 |         default:
+         |         ^
+   drivers/regulator/core.c:5280:2: note: insert '__attribute__((fallthrough));' to silence this warning
+    5280 |         default:
+         |         ^
+         |         __attribute__((fallthrough)); 
+   drivers/regulator/core.c:5280:2: note: insert 'break;' to avoid fall-through
+    5280 |         default:
+         |         ^
+         |         break; 
+   1 warning generated.
 
-- Eric
+
+vim +5280 drivers/regulator/core.c
+
+  5253	
+  5254	/**
+  5255	 * regulator_handle_critical - Handle events for system-critical regulators.
+  5256	 * @rdev: The regulator device.
+  5257	 * @event: The event being handled.
+  5258	 *
+  5259	 * This function handles critical events such as under-voltage, over-current,
+  5260	 * and unknown errors for regulators deemed system-critical. On detecting such
+  5261	 * events, it triggers a hardware protection shutdown with a defined timeout.
+  5262	 */
+  5263	static void regulator_handle_critical(struct regulator_dev *rdev,
+  5264					      unsigned long event)
+  5265	{
+  5266		enum psc_reason pscr;
+  5267	
+  5268		if (!rdev->constraints->system_critical)
+  5269			return;
+  5270	
+  5271		switch (event) {
+  5272		case REGULATOR_EVENT_UNDER_VOLTAGE:
+  5273			pscr = PSCR_UNDER_VOLTAGE;
+  5274			break;
+  5275		case REGULATOR_EVENT_OVER_CURRENT:
+  5276			pscr = PSCR_OVER_CURRENT;
+  5277			break;
+  5278		case REGULATOR_EVENT_FAIL:
+  5279			pscr = PSCR_REGULATOR_FAILURE;
+> 5280		default:
+  5281			pscr = PSCR_UNKNOWN;
+  5282		}
+  5283	
+  5284		hw_protection_trigger(pscr,
+  5285				      rdev->constraints->uv_less_critical_window_ms);
+  5286	}
+  5287	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
