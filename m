@@ -1,114 +1,170 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from uho.ysoft.cz (uho.ysoft.cz [81.19.3.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36792E7179;
-	Tue, 17 Jun 2025 13:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C65E2E7173;
+	Tue, 17 Jun 2025 13:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.3.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168654; cv=none; b=oiE51dmh1E+W8scrYXPecpw2+BIdj7Zn2Kysr+6QffF/wggwSqhzEPzZqruBfPYxrg6Fp9uJw0O19OSo1LLjVIY5Xjcd+yv/y4yYv86ZBC9/7jM+bwLUXkNansWDti3d8la5eyJVnlv4YZNFGJcsb/gYXVcSekSMO6G13hvvx64=
+	t=1750168685; cv=none; b=daSKrw7mQ7rvcv2QJbnsKY0ogVPqnG5LczFN3Rmg+VhWxUqRQbeyRgQ0tkHpsa1UmF+vp9uTfbArjpiTX7tGdfmTQ2eyM/FugAMprUgPLz2DGswKsYzB4eXz/OMP5BrN0uP27HkGQedRZx8W7YGg6m4nMRP2Bjt7dbFCHSirsSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168654; c=relaxed/simple;
-	bh=Ok+h/hslqpBIYtKWXl+Hk4lXs44vVszLjZf/RHvkAJg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hYtdTTzHVMMtPQGhXPk/eCo070Mf5wdRXgq+2+B+5IBkUCoSjF7ckTPCN8jLTtk8c+c1ZQOi5BI1FbPhPVnUxDQdC/Ft5mTm8v7IitvV1vN7MTiXKfoV/xg/+UwELIrbFTNWtpZPtahBzcShN4TZWlp+93nwzw7gxJZaldbxLxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5308b451df0so1609422e0c.2;
-        Tue, 17 Jun 2025 06:57:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750168651; x=1750773451;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sUxmDYXurhyNXGwP8gjUs30r8dluW8wkF+4NNh3dZLc=;
-        b=wfXnBsXyB7bI13WYUviYBT7jH4hALXDgzHK3jNwZP/3ebyYW91Xb1V1OzA9NC2nw2a
-         urWRGty9LYbdsu785PY+F/l5TbY74FH65tlopfdVRj2a/9CNX55Vox4K9k45ET9vFcGv
-         GxI9+oxWlRjVz0GKBcYFcbFSYRGZxK1XFcM80I3iqv8wgExDllYcr2kgmWdIqUZO+sX2
-         E0asqGU3mx7M+KUshlzfHXutwHUWxkezhG7KJqfLtDLT/EGv5vZLCDBk51Q3Bdv/mQUI
-         kkNwnuENeKIF8zgvUkMuqe/vyf7VtFMCoWM77cWhY/9PLQTK6Z9UffDVrieaVhdC8K06
-         Y+xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYHCVq2iosJxulyit7k91mxszG7qLM4QraDQ/m6v+8cjKcS272au6UCSDQ82bU6a834QvuaOT31YMbq+t4@vger.kernel.org, AJvYcCUy4VmUyQzwX2wFoL+tiCxOaEpXSDYbmuWI9THDxzWPwYRhL22mI683tmZq9/mWHBMer3ewSKj4SGr0gouS@vger.kernel.org, AJvYcCVpcxeRlzVHlVOoqE5teO6l8dcnN5vqWgPnegAwh4mfXeWFuLCtvyG5/atzqyBWNgevUvSY/DodHY5i@vger.kernel.org, AJvYcCWFko/0KEKqHlO9R9MdhAJ6OhFcjpj7iPm1efenvxkUsnH4YA/27ooGJDHRf6ghrymQTY8MN5VQcscLBBje4Wbx8Xw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ7W6Oai+/g1XVna3Rv7ZwEp8T+vMEGxGNKd9VvW8baqWfu9Uj
-	84G/KIC/DmmEM0Y/kS4zms43uNOclv67Ry6jnDdy2bsftPG6+x1Q5+pqqgDqMB5k
-X-Gm-Gg: ASbGnctecoTyZZhK9KhpYPvS66XnTygYtqvqQr4C19AMQowg+PW0cvN7vbf+vxInfIA
-	OFjQFoVlm0V6am2HRplyhVwRPYI/fbt3h5JHwLiLYSFBR5Ot+UQQC1hGq9Yqf5ZeXf1okek4T7/
-	4vFChO6iiN5LixtAEDUsBZ5iSOFIhTHLDWagxzfecGDo98W49iw/WGITEfbPsPZH2Zg8JtmWbyM
-	yge+QbckI8IItUg1ZDR5PSQaBv3WzRHHr+MyJJKvifESs73PW/OwSRoj8b4yvUST4LR6mAfb1M/
-	9WL/Zcj5rcHl7bu/wfiw13nhg+Fm9dZ/5hNaZPb//gH17jABwqVfFa4Mxcy6qsZ68EBgZViyOGw
-	phDBn3+rmUZ7AO5tvNLrrDv34
-X-Google-Smtp-Source: AGHT+IGQMyiDiFb/4WSyDLipPVZRf1Fo/2hZ1NzPqYdHvHfoqGURzZoDTIr+5omvsG1uNxVeI2QGWw==
-X-Received: by 2002:a05:6122:8f8d:b0:531:2afc:463e with SMTP id 71dfb90a1353d-53149551fd7mr8600015e0c.5.1750168650981;
-        Tue, 17 Jun 2025 06:57:30 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5314d938c48sm1208519e0c.39.2025.06.17.06.57.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 06:57:30 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87f30519147so530346241.0;
-        Tue, 17 Jun 2025 06:57:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3myT3KVW8lCjGrPbF/51PreK801XF1dtTqJet6mdMMs//pmMEF6p9IrZ9XsubLt9gAMHTh3HDVlY3@vger.kernel.org, AJvYcCUqDQ8bHvAB2wsC3DjnEtkV20AATqlsiF6MvMn/hV5X3+NgL3ZDp2f/eilHWOeTpNY0J4ms1Z/sWmXVw4Xc@vger.kernel.org, AJvYcCUxBcJ85Due1rg0/vM7/nmJlKsSRuzDX5ITdX1N29hZdjOjuo/rBoAbHPNVA4dcOydYzlBNh2HnobneY0f8iplNJ0s=@vger.kernel.org, AJvYcCVft5cGRZgQ16t+P0hV4wRD0Ber4alTeYmjzPx+4kiojwEAVtbr7N/epn0lyxVuH9SxvjaJPvC0NlJK251a@vger.kernel.org
-X-Received: by 2002:a05:6102:6a8c:b0:4e4:5ed0:19b2 with SMTP id
- ada2fe7eead31-4e7f61646ecmr10361664137.9.1750168650648; Tue, 17 Jun 2025
- 06:57:30 -0700 (PDT)
+	s=arc-20240116; t=1750168685; c=relaxed/simple;
+	bh=OulGcH1UWVL91nQXXpZ1AohB7T6eGwSLmAiup62xQso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VEi9DJh1iOdFgtsObSkhQ/Fo15dSBhQEnldaRW1Z7u1xt3p3Wsfijt7y8+xDvgoh8TB3Pi4AvK3ddEe5h3rI9kEjkV303znRvvWZMJX7uCvGsMLVh1o/YgXMbvZskDresZmOMrOHqa1RlRKMPPnXHItGTfuN9/3fbiLWiAB9psc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ysoft.com; spf=pass smtp.mailfrom=ysoft.com; dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b=RqvNwIGS; arc=none smtp.client-ip=81.19.3.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ysoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ysoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="RqvNwIGS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+	s=20160406-ysoft-com; t=1750168120;
+	bh=6L86m2idLx54i+AuHViJVCNmZf9ivZtdqsaOK2Nildk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RqvNwIGSotcdxW9c27bhgyCIf0nJf6SFzdjY9cY1iT2GBR+tq0VRUeS/4S/JoQEEr
+	 +/c2EZGTcqtzmVtnZkEommezv4awt1H885fPV57grXBUxL43DRhFEa/jTqH/tauUMR
+	 w0wodKpNMfBNP8WBDzVyPq8lZavlxhwIPhKoIjyM=
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+	by uho.ysoft.cz (Postfix) with ESMTP id C84F1A0246;
+	Tue, 17 Jun 2025 15:48:39 +0200 (CEST)
+Message-ID: <7139baaf-cfa8-41f3-8870-2337fb6b37a7@ysoft.com>
+Date: Tue, 17 Jun 2025 15:48:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250617134504.126313-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250617134504.126313-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 17 Jun 2025 15:57:18 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWfsqYvdL16hrbWug3PhK1XrSunaWtduajRzViKBRPeCA@mail.gmail.com>
-X-Gm-Features: Ac12FXx9rL6On1cpfgpw-cjWhbvyIu0jjh2MQYrNFm-hEQyv6wxGvVbnYEQpoQ4
-Message-ID: <CAMuHMdWfsqYvdL16hrbWug3PhK1XrSunaWtduajRzViKBRPeCA@mail.gmail.com>
-Subject: Re: [PATCH v12 7/7] arm64: defconfig: Enable Renesas RZ/T2H serial SCI
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC RESEND] leds: lp55xx: led-cur property is not properly
+ applied to multi-led
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@kernel.org>, Christian Marangi
+ <ansuelsmth@gmail.com>, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250523093142.1498846-1-michal.vokac@ysoft.com>
+ <20250612105712.GD381401@google.com>
+Content-Language: en-US
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+In-Reply-To: <20250612105712.GD381401@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+On 12. 06. 25 15:48, Lee Jones wrote:
+> On Fri, 23 May 2025, Michal Vokáč wrote:
+> 
+>> Hi,
+>>
+>> I am trying to wrap my head around the implementation of the multicolor
+>> LED support in the lp55xx family drivers.
+>>
+>> The situation is quite straight forward when each LED is registered
+>> and controlled individually but it gets quite messy once you use
+>> the multi-color LED binding.
+>>
+>> I am working with the imx6dl-yapp43-pegasus.dts board (in-tree). There
+>> is one RGB LED driven by a LP5562 LED controller. Currently the RGB LED
+>> is modeled as three separate LEDs and each of the LEDs has
+>> individually tuned led-cur property. I would like to change the device
+>> tree and use the multi-led binding to be able to use triggers on a chosen
+>> RGB color.
+>>
+>> When I was experimenting with that, I realized there is something wrong
+>> with the colors and identified that the led-cur property is not properly
+>> applied in case the multi-led binding is used. What ultimately happens is
+>> that the led_current of the first LED in the multi-led group is set to
+>> the value of led-cur property of the last LED in the group.
+>> All the other LEDs in the group are left with the default reset value
+>> of the controller (0xaf in my case).
+> 
+> Does this help you:
+> 
+> https://lore.kernel.org/r/20250526-led-fix-v4-1-33345f6c4a78@axis.com
+> 
 
-On Tue, 17 Jun 2025 at 15:45, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
->
-> Selects RZ/T2H (aka r9a09g077) SCI (serial) specific code.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Unfortunately not.
 
-Thanks for your patch!
+The problem here is that the LP55xx family of LED controllers support
+individually tuned current/max current for each channel but the multicolor
+LED class driver was not designed with this in mind. Even though it was
+actually introduced in the same series with all the relevant changes to
+the lp55xx drivers.
 
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+The problem starts in lp55xx_of_populate_pdata():
 
-I don't expect GregKH to apply this patch (or better: I expect GregKH
-to not apply this patch ;-) so IMO there is no point in including it
-in this series.
+	// One RGB LED connected to the controller = one multiled node = one child.
+	num_channels = of_get_available_child_count(np);
+	if (num_channels == 0) {
+		dev_err(dev, "no LED channels\n");
+		return ERR_PTR(-EINVAL);
+	}
 
-Thierry's original version is still in my queue, together with the
-DTS patches, waiting for the RSCI DT bindings to be accepted...
+	// So we allocate space for only one lp55xx_device_config structure.
+	cfg = devm_kcalloc(dev, num_channels, sizeof(*cfg), GFP_KERNEL);
+	if (!cfg)
+		return ERR_PTR(-ENOMEM);
 
-Gr{oetje,eeting}s,
+	pdata->led_config = &cfg[0];
+	pdata->num_channels = num_channels;
+	cfg->max_channel = chip->cfg->max_channel;
 
-                        Geert
+Later on in lp55xx_parse_common_child():
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+	// This is called 3-times (for each LED color in the multi-led node)
+	// led_number = 0 for each call (because we have one multiled node)
+	// np = led@[0,1,2]
+	int ret;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	// Size of the cfg is "1 lp55xx_led_config"
+	// led_number = 0 for each call
+	// So the name, led_current and max_current struct members are being
+	// overwritten until values from the last led@ subnode are stored.
+	// This seems buggy to me and we should not do that.
+	of_property_read_string(np, "chan-name",
+				&cfg[led_number].name);
+	of_property_read_u8(np, "led-cur",
+			    &cfg[led_number].led_current);
+	of_property_read_u8(np, "max-cur",
+			    &cfg[led_number].max_current);
+
+	// This part is OK. The reg property (chan_nr) is stored in
+	// output_num[num_colors] field member of the cfg structure.
+	ret = of_property_read_u32(np, "reg", chan_nr);
+	if (ret)
+		return ret;
+
+And finally in lp55xx_register_leds():
+
+	// num_channels = 1 (one multi-led node)
+	for (i = 0; i < num_channels; i++) {
+
+		/* do not initialize channels that are not connected */
+		if (pdata->led_config[i].led_current == 0)
+			continue;
+
+		// The pdata->led_config[0].led_current contains the led-cur
+		// property value of the last LED from the multi-led node.
+		// Here we call the lp55xx_init_led() just once so we initialize
+		// just the first LED connected to the controller with a wrong
+		//  value. The others are left with their default register values.
+		led_current = pdata->led_config[i].led_current;
+		each = led + i;
+		ret = lp55xx_init_led(each, chip, i);
+
+My first idea was that we need to enhance the lp55xx_led_config structure
+so that the led_current and max_current will be fields of [num_colors] size.
+It will be also needed to add led_current and max_current members to
+the mc_subled structure and the whole led-class-multiclolor.c must be
+adapted accordingly.
+
+There is also quite big difference that when the LEDs are registered individually,
+max_current and led_current attributes of each LED are available in /sys.
+Once you register the RGB LED as a multi-led, only the multi_intensity can be
+changed but the current control is gone. But that is a different story.
+
+
+It is pretty difficult to describe for me. Hopefully you get the idea what
+is wrong here.
+
+Best regards,
+Michal
