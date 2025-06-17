@@ -1,63 +1,63 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2382E764F;
-	Tue, 17 Jun 2025 13:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6532E975D;
+	Tue, 17 Jun 2025 13:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750167914; cv=none; b=o1NmCkbjd04W9ZxnK56yfagD1mJdO2gaYkBUIQZzxgVLt6Mg9kmKejZddrQQ/IxqclzpfoGTB3YEph5fyCkpFDYN9e+e6ZX5ubRn+1H8iEwy/wJXhIiuUpk9Rsw09IopRTPyS5Z+YThdQ6NW1y4WRQwyED+QbtuD7HK21U4scus=
+	t=1750167918; cv=none; b=E3g5JjKUoVQhAy5cVte5cBIDg0AZArRrH95XpOHaGkTP2IwADq/CxWylqE4dVcSlD+2tl9+uwF8f2XFKCWQ6Fwa0WGGXf/80ld/hzCk4uEuOeFiv1KEHAgIdPxgcVpNBbFMNX6xi8fRs0eno66/C3noShFosbs0NKASue9ZtC14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750167914; c=relaxed/simple;
-	bh=32vaS3oDDxD9wWwCFqvRGlf6S2LFX05pBvdPaXOd9PA=;
+	s=arc-20240116; t=1750167918; c=relaxed/simple;
+	bh=BzxjO2z1leHYDjty4qWmrq5BBlFSqcT0qYJbbm0j/og=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d4zvxSp55qKYUA38F6JyR7AwONj+yklQpamLDp1lFF0JqYEFXjx6rgAoI5ssCBQP595jovZgNEWUz6zmXPRXcUV0fq68zY07qBWWQ8747BsSX4ylXYTTZkDTRvYNoGsEUkXw4MQXmH+JtoJ+GRnCYLJXV2YhQ9rWB0goNFunYVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pl5EmfG0; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version; b=jodBwChpKerVHrrwShxUXzZOMoBwtMorvHIfxbNrwnlx3QRv5c0DQL7DDPij5T+oBODe2fztloZyQE2RwBRUdv407J5xRULJYCfCnCOXN+0iHx6f0Y1dZq8mTSoZyNSWXijmzdgbB8+NRSKhqs4NsaT5VEvGQlk5BdoO7xpQSHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2nK/EcW; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pl5EmfG0"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so4372253f8f.2;
-        Tue, 17 Jun 2025 06:45:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2nK/EcW"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d7b50815so48657655e9.2;
+        Tue, 17 Jun 2025 06:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750167911; x=1750772711; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750167915; x=1750772715; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BAqNzOFflinZMwWtXBZIkd7G8+XaYao2cwGX1v4/ej8=;
-        b=Pl5EmfG0bRHzPKKgJvYKHkAP+1hI0lNQVnQqyc6fzBqCqFpG6RDCIjwvKHom/3UcVH
-         cKpjSl8cU8jKu+txWG2AT1Ui8yDRoauKK5+sI4b6JW0fkBvoXqYr5oea0Cq3r/3Iq7Ll
-         0647CyARml4rVb3oQMO6k2uGZgLTkgono+SWSYpzPMIK1kSoUtFSacyV/hyJtutgnBb9
-         AdogPl3HXS0TgqQBkoOf4GryvKQcAWnMbD3efFdPuABkPmQxyv/Dsdl2rIKT7u3mCyQT
-         XgGShMhMBUNjrlp6Rut6H3fKHkIfE7NqvtEqSaUWxRU59gTH+QqeF0xYoQH+57ixaLpH
-         XWQA==
+        bh=CV8mc/E0A+rPFjLDN5GDkaclgYEmX3SItNdHdGCGzKo=;
+        b=N2nK/EcWsdaGWB+mSGXsZT84fhaVHiWVhRGhB8o0HieDNTcM+w7Z/KHGs5erxbb8Db
+         c0FVpDYRNtYbahNYW8TqzR/I4sdOwG1TJUrZGGAfTRE6oREm8jYfzWogZ7MNmaXEwlq+
+         oNlLFMXKw5YZ/2+Ne7yyRwo4qfScKM9PAr/DlC8B8ynHFgtc6S5jErT00I9YszRB+Ikm
+         j3HrGLLMUQax7At51kyyxLMhGl4QukEOIZoC3ey7kZ+4cV4wtv81khM+aKowpbZEuup+
+         tJhLr/Wrqu1PGZTpWpju4q0osb8PvPM1ZcNjWgG8asC4VUXnnMabV7KJnOKRAHFZ0ABJ
+         jkYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750167911; x=1750772711;
+        d=1e100.net; s=20230601; t=1750167915; x=1750772715;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BAqNzOFflinZMwWtXBZIkd7G8+XaYao2cwGX1v4/ej8=;
-        b=qm0PtLYATbRu9Gdhwcqs5VfM1TXkURW9NJ1x9DfSBv6b0auepQqQW/1OjEzEgqDlIt
-         ny8vTseBdL0R9PeKXj43/alTIXlMpmwXiOcNYUBnUENOhoXnmK5inleea1MhOKAgVlaF
-         6biB1mG8Wv5Rl3RcZR2ns+M6cdJXWuM3XtClxyBDn1lsp4bJ+ws07Fbove2D8/ouclhx
-         FNAeIO3wX6+IMSb0ycDbvTkYw4/7muGHILXk/himWxCXJkZ9EUBMMbbi+8Z6nOoBDJrP
-         MHtD39afMUMinyPe5fR6sLuvfaIDKR4TL1xHJNwOhC2gLS1xU6E3XySp9ffFIu5/wTEU
-         FDTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmT9vgVrpmnAF0+W1Wl3xOmwDjosieqUllLoCS0Q4ZvaOvv14ieOKRoffMWy7/rqIQf3oUc/SvzffO@vger.kernel.org, AJvYcCVI1Zxfjb5xZ+Gm/v+aVM/uV3UunOey/Bu9r6n1VaPheIDWRhjORNDvd/5/rj92rY1ZLQap7TBp9eg7yd356rWQHrk=@vger.kernel.org, AJvYcCW1oBEntu/wZ1Z3ik3TQzSpfe+hwLLLMOt9iyalAFOjmLX/EPJ8KRG3kg4XVgWCsEzCgES9+R7PYws7IdwY@vger.kernel.org, AJvYcCWviDRnE40Wo0/4e034xB65/+qIkcFHLfoNxeMNJnr/cc9oCHkXs5fTZiVtK+FyqZBytog7EYrZCVsSkzS7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkysxvhnf6EEI8sh7YrnMMIcV6brWJ+XHiU51lQsF4b65cQjQz
-	64cVmiGJmg/8jvtrHXAy1IfvN0mUJZKolX75TuWPD0ro6BO4b2xY3iUW
-X-Gm-Gg: ASbGncsWKnBnZ0YJXvt1OeNfdwFJd2hU048E9WO1u5xIXk1mCNiYJAPAKui46EHT4S6
-	CJZwWIupp3iIaStXtjqxG5Efwt7KJitgPYkZCNOcXcVjoVe2PIRtUmiPmt7u3vjRrmVxx8g7KcA
-	6UhWrk1bvSXdCWsn0xc07AI3Hc0SyrIQtGRBS6km/9NKmUFHmpTGPozfD2FDJhSAFJO4HZNo02N
-	U7QKo+DB//ZFioCoZcjLXdtuG/nvl189IfzV+wxQlsgRMztWno7618O+UVD7H6xQVWZ0DoViRxV
-	H8kAy/pK3uyjrmGlQxG730prH5DwTMz32e3Yky7hgbcePIa+TKBrEK5GY3Y7gMo+tEwPHWUPWV3
-	dBFGbVZNFPWw=
-X-Google-Smtp-Source: AGHT+IEIBy/qhhThKzZjZs15iuzXDn5mHLJsctTHGEcXER4Z289sGD5otxtVYLG/NG91JzFkXG6SQw==
-X-Received: by 2002:a05:6000:420c:b0:3a0:aed9:e34 with SMTP id ffacd0b85a97d-3a572e92ff4mr10040312f8f.48.1750167910898;
-        Tue, 17 Jun 2025 06:45:10 -0700 (PDT)
+        bh=CV8mc/E0A+rPFjLDN5GDkaclgYEmX3SItNdHdGCGzKo=;
+        b=gp8k27n44+Ft+bHbJM1M0nCvlmGyTlfMFOHmpX4zdjx7hbdJX//VLbXv4m+S7L0V/s
+         w7EPbR92Ka/zT5RvwWs2OAkE35gZbTa+kARpgjKzZeXLw2q57t6L+VXKi6aObI3m8Sey
+         Em7q7kCPbhzr1bKTgrIk5qF0aeZ5y3oqdRpRBWgo2ItuyZL/77Wfr/Qll4WiML4t0ZbP
+         GNkAipwkpvBli7Q646hPiiw4UX4pa0tJoMvACnc9XHLFzfnuVW3bsmZwRfQj3qHWNQI0
+         l68XxBWXz8DR1pSbOHUcQNxUSMRYIA74EWlY6jnUBpAsUPsKjuk+aomL+NKfrkHoLX0D
+         E4OA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBh0QLXaWTDU8fYGhQpwXACTmq0vS5gjk7KbQP1Py+0cKJKr0mFNz0ihzDTuzmwzIqxDfh40QI3/HzNcT1@vger.kernel.org, AJvYcCV+jhmNzmvVf5p7rFrM5UZcznEpiN76j2T3cST4VjCsR9eLWBSLnsD3p8j605egtW75VmdHRiNnB7JC@vger.kernel.org, AJvYcCVPY0Yt/F0Qj5XTKTdpUKHVmPnyt/WAK8RfDd0rkJVn5nkyIfw9HbsqkZtre/I5EZD5aEnTB3r7K//h/AQB@vger.kernel.org, AJvYcCWcBbPx/rI21HDo3zqSayYLyXfLCGG04yJhRbPoBm7Q+AFNPd0pE5MSFYmY8PzqCl2HYh+yHPbfEr7ZXO20iKx15nc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys64j6gkfpTqu3e2L/c9ixlp+TzdI+ao1OqHWHWFVKalXorDEv
+	ZmaUtqnPOmzz+NdYce9jhG4b30p/jTydsQQysVDyz4sL1YlPx6AXv6wN
+X-Gm-Gg: ASbGncsjszgkVcxigER27WvYM6u+0kRusHpDaLFt4V4PXNqdYbfQuSl/rO2AXRrKrF9
+	3HJ8FPyKBTyBnKLsCcaRcrSPkyna5kuah8oNdjC+CHcPHEBS6e3BFPfB8OJ9QPdyWAgD75BzZ+b
+	VUveUI0d5AHnXMxOelqrMw0rig3Lw2I5HRZCEiRwdiaS7a5v51mZsCCkQHYGtzbCl6LRHnNulMs
+	e70oFWbZA7rMzAYdNccT+k7+GjvN3RpfuiwRmXi/E09kme3lRd6eiqQ8zsMI8e2RNswk8dwpcxJ
+	buh/F7PIAZ7obnZ79CLnFu5U49sdnPRAA6EvHX+Gg/kTadeJF/1mcReQ3LgYdYXERBfYtLiblji
+	yzI/uYCGKDWM=
+X-Google-Smtp-Source: AGHT+IGoVGmy+0cBQSC3INJh3nwC+DMd3BPjaS1S/WZ+Jo80+/MgZyl3Q2iBu4iR7criuZ+EScQZJQ==
+X-Received: by 2002:a05:600c:8b8b:b0:450:d3b9:4b96 with SMTP id 5b1f17b1804b1-4533cae9345mr155234975e9.13.1750167914854;
+        Tue, 17 Jun 2025 06:45:14 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm14239728f8f.16.2025.06.17.06.45.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm14239728f8f.16.2025.06.17.06.45.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 06:45:10 -0700 (PDT)
+        Tue, 17 Jun 2025 06:45:14 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -79,9 +79,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v12 4/7] serial: sh-sci: Replace direct stop_rx/stop_tx calls with port ops in sci_shutdown()
-Date: Tue, 17 Jun 2025 14:45:01 +0100
-Message-ID: <20250617134504.126313-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v12 7/7] arm64: defconfig: Enable Renesas RZ/T2H serial SCI
+Date: Tue, 17 Jun 2025 14:45:04 +0100
+Message-ID: <20250617134504.126313-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -93,33 +93,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-Replace direct calls to sci_stop_rx() and sci_stop_tx() with port ops
-callbacks in sci_shutdown(). This enables the RSCI driver, which reuses
-the SCI core but implements its own stop_rx and stop_tx logic, to reuse
-sci_shutdown() without duplicating code.
+Selects RZ/T2H (aka r9a09g077) SCI (serial) specific code.
 
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/tty/serial/sh-sci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 1c356544a832..5c4283ce542d 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -2289,8 +2289,8 @@ void sci_shutdown(struct uart_port *port)
- 	mctrl_gpio_disable_ms_sync(to_sci_port(port)->gpios);
- 
- 	uart_port_lock_irqsave(port, &flags);
--	sci_stop_rx(port);
--	sci_stop_tx(port);
-+	s->port.ops->stop_rx(port);
-+	s->port.ops->stop_tx(port);
- 	s->ops->shutdown_complete(port);
- 	uart_port_unlock_irqrestore(port, flags);
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 96e21d458867..937ec08cb859 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -495,6 +495,7 @@ CONFIG_SERIAL_TEGRA_TCU=y
+ CONFIG_SERIAL_IMX=y
+ CONFIG_SERIAL_IMX_CONSOLE=y
+ CONFIG_SERIAL_SH_SCI=y
++CONFIG_SERIAL_RSCI=y
+ CONFIG_SERIAL_MSM=y
+ CONFIG_SERIAL_MSM_CONSOLE=y
+ CONFIG_SERIAL_QCOM_GENI=y
 -- 
 2.49.0
 
