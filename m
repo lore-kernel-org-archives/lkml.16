@@ -1,130 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416BA1EB1AF;
-	Tue, 17 Jun 2025 14:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272911DE8BE;
+	Tue, 17 Jun 2025 14:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171616; cv=none; b=OWgd+Hfy5gC/B+TfhYJ/Hq9s0YEr3WUbXecAKtjRHypliGL5OF6LR3Gtll3+w12+lamORzLQc9TCT8Ve2tY5eRwKj2/wtzCxCrQWrxJMQOfkv4mmcRUDYiNNFI86zByR0p6gt0WeGCTqetGlXG9fvcLSkulhjP5bvfkrnvzvssQ=
+	t=1750171644; cv=none; b=uCPgJAxBu6SHcd9oJ4x9MvTuLTYQN6G09YLjZROZf15U5upAm6ePrc4wi0egawtxn8NYsuOMn2OF5ZGScRv/GTWKZr89llocB33/R3aMI/JlrFkyKMxAysXv/8HUAfteBNREAY61iXyRzkJ8JuiTXeaYIVLtTY8KVyhLSAhAZfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171616; c=relaxed/simple;
-	bh=hWbaoenAqCzEM8b4nAI/Su+XmTfwZ/XFIdmcb0kYnF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=RpORbmRVKEd0AumIWbiSoeLUwfAMDvRsxDMKUZVJvjrvv325+++spa3PvcJkIRVr+wB7Bmr/9xhhBGb8bZr7Cir/F6FZ9uqt+CSBXgAhDbDkgrzSSIGvTh/f0C1iztZbROH2BDA7J523oblJbqQfENHcnZJCc8m3Gs//BKSFYUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMoD5RBj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMoD5RBj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFAEC4CEE3;
-	Tue, 17 Jun 2025 14:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750171615;
-	bh=hWbaoenAqCzEM8b4nAI/Su+XmTfwZ/XFIdmcb0kYnF4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pMoD5RBjg2hrWdX5GLO+dzDVRy82xhJby1ktI+4SZVGY3goUcbE1IP2pVhv2BfvYK
-	 WDQSxARTsr7uRdwIu2BMt/biJmS+HH6a4JQm5J/1WoqxZl9Ag+vmcK+PvpZKti9oGW
-	 LeHzcmsumGPqvV3kMkcnJ9xQ3jMBV+QeF7pC/pwuF8BGSKthP6lzerpbCK+b9ouWhV
-	 0DrQSNgXdUkFwUNi1mm0jyHVaNvY6GNV3YGYxBZZWYNF51dP9grnWnluUAbAXcqSV2
-	 79SjDNydKWs8PZVHWBiDMexYMWLr7rS1cFqI+pPPbBb5R72CeS/1sbRDXHz1/FtmGw
-	 +igdSheqcnlVw==
-Date: Tue, 17 Jun 2025 09:46:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"cassel@kernel.org" <cassel@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Simek, Michal" <michal.simek@amd.com>,
-	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
-	"Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
- PERST# signal
-Message-ID: <20250617144654.GA1135267@bhelgaas>
+	s=arc-20240116; t=1750171644; c=relaxed/simple;
+	bh=kNOBX3kDwcJCVjRwO63OOerW1N3E3Inq45ML+Jh9mRc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oiHUk9Nztl0FW3eTd7FaLDpPjG7gCQo1eCOqp+LRE1pKMQ2rMUdgvu1aK8Q1rc5NbSC8AoS6qfk2/XkexlifAXtHRvjOOsRpFiFBkxWgjxp8A9DBdnhhnaQkGWH5B24YrZrzTcIscSZADPxAnPkbZxwVSEJl6kWQW/GctfsVR04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7cadd46ea9aso918484985a.1;
+        Tue, 17 Jun 2025 07:47:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750171641; x=1750776441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZL174OVf+FE8GUAaly+9Noj4AvnbyoVh06lJ5C/YSZk=;
+        b=xAHuEttRpWtypHO80dKxdkyE/zBippV/2iQa72XXN+Kbke2ktt++xv3JXNKEt40HRr
+         nJvvaC6lnEBrFD4ONgb2Qy/c+FU+beKnyiJ+xgb1Hh+BevRTzK3w737+bSQZUQAF3DtM
+         hWpiw1FLcSyfq7Wul90K9sjJ7gSsPZ9+ptp9dyiup54Ri5tdQoFx149/D570ZVTdpdh4
+         HY5SUMbLyptPi6+e84IBE/NBRI5KPuanEqSeINNIeJmS+dDMZeLeN9eE9aBfBtqt3oe7
+         9JydlogqbU/IQWeWFZDgAIRCmjGtEBZnD3+yTxv6io5O95gYRZWNs1WbI3crOiKUP1AC
+         Z/gg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw734szWdmteJW18++k6r7MCXwwOwpiObrbI/KWGEQ5g8unTWwy/Q5Lk2MK59z6gvWI3npQvMHgPHTwEfO@vger.kernel.org, AJvYcCWL7QHeVZZ4BROfX1o3Upkrr75OWMAOlSpMXVSbNYtIUEdUBRJ1GQRNZ705/kviVfUiVSW1akrgRF7O63X2dlerEp8=@vger.kernel.org, AJvYcCX6MpU6JHW4sqfJMcW5In1zPz1FBQSAmH5TFUJfzFeMBfX21LNlYBccuhj0pwKEEMWkA9iVZ7omCWEsC3v5@vger.kernel.org, AJvYcCXfNZjXAvB6aah50IvTb8HvKzCbPK2tE0cHmC6L12MzCU/s//19tQadWXF332P2li9ZIZa/NQnq66lu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ2DXVRPqzirdDg0G/BIHMJJzID92+NOG1Y1FsCLick+1eoXOJ
+	JUZREXzrLGo8FUcYg3lrIDagsz+Qz0ffIecKdfS3SWLxq92lPozXXhyws8uM6V1M
+X-Gm-Gg: ASbGncvJshj5rYXBq6aX0cJZDxlLbjoQcqfyIbeCxaraanBQVQZYpWsMu30PyyvtaXD
+	2aWWXIA2dS1TtNS0xZpt1Hvj4MxSSv8QQIgx2hoiyKPevK/CmrD6/rRyzBMexTBDZStvzkAmaDb
+	I35eoVVudodQNlplclF9zNVdha8i4BGc/hQVCDCs7xtAdYtQ5oXTmZmBtHX9/xmLSMrt0ZemSuX
+	o6IQhB6souRc6W4WwpCKyAg72QOJMQOeHW0uiR+0mj7FwZ/uA5MYzk3UoMOGIL11cNZH8FntEBs
+	emkJVWXdkfhe2p3sXs46MvKWRBZLl8AcnlRW0N0K7xbH56o6JkMRFHSaXGyvy9yMz2DZPOXQUpl
+	j2yvbY+vPPAfKH+/Zpf+TK7rCspZo
+X-Google-Smtp-Source: AGHT+IEYti1h5NrKENasCOdwjBAWss/NVzwxJLdBrl4NNVRcapEG1Xs+MWS7kM3UPTWCsZ22hLozIQ==
+X-Received: by 2002:a05:620a:4101:b0:7c5:3c0a:ab77 with SMTP id af79cd13be357-7d3c6c096ffmr2103611185a.4.1750171640703;
+        Tue, 17 Jun 2025 07:47:20 -0700 (PDT)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eac910sm663345685a.72.2025.06.17.07.47.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 07:47:19 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d20f79a00dso846008185a.0;
+        Tue, 17 Jun 2025 07:47:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVh+de6tLvxtYHL7Uy63G8xEtD7+7fq6NovJgAh5clxmiF9I4///XaaRK6IJVa7i1MUsyN8NFdOXa4DElOl@vger.kernel.org, AJvYcCVpYw58VOP4BaVBHCniK4VS+x0X3ZZX7fyKAdID3Bjl2v8t0JUiGzTfUrsHH36j8uERyW0R6o/TmRMBPj1y@vger.kernel.org, AJvYcCWeReIQ+0uEI8+Lx1xkjfpTCRoPuAwOfak2p1nE25uRq3DlErU8DzTciEOYIm5JBvd5LBR2V1Vf+yjl@vger.kernel.org, AJvYcCWesG/TpqL5g3CkxWtMG03HPazrEQo0D3X82b+dDbRhLBgBTFDmAfCJseFwzispylyU9Z7vB19kx4JmyGpR32Dm6Co=@vger.kernel.org
+X-Received: by 2002:a05:620a:244d:b0:7c7:b5e9:6428 with SMTP id
+ af79cd13be357-7d3c6c193f7mr2182882985a.22.1750171639228; Tue, 17 Jun 2025
+ 07:47:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM4PR12MB615826495B1A4F7DBADCEEF2CD73A@DM4PR12MB6158.namprd12.prod.outlook.com>
+References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250617134504.126313-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWfsqYvdL16hrbWug3PhK1XrSunaWtduajRzViKBRPeCA@mail.gmail.com> <CA+V-a8sx9iuUjn3uvSqq3Sd=JeTj_UMyDiLzisrnj1uQw6nbGQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8sx9iuUjn3uvSqq3Sd=JeTj_UMyDiLzisrnj1uQw6nbGQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Jun 2025 16:47:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXn+Bhhp1KdeX+86ceG8-Tu6-k32Q4e35tr4rnS6ATzww@mail.gmail.com>
+X-Gm-Features: Ac12FXxX_-svUz3B-XW3PKGFENxEpML0XitXkiF8yDYZJw0qOf4W2v_oYmV7urM
+Message-ID: <CAMuHMdXn+Bhhp1KdeX+86ceG8-Tu6-k32Q4e35tr4rnS6ATzww@mail.gmail.com>
+Subject: Re: [PATCH v12 7/7] arm64: defconfig: Enable Renesas RZ/T2H serial SCI
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 04:14:37AM +0000, Musham, Sai Krishna wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> Hi Manivannan,
-> 
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> > Sent: Thursday, June 12, 2025 10:49 PM
-> > To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
-> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> > manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
-> > conor+dt@kernel.org; cassel@kernel.org; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Michal
-> > <michal.simek@amd.com>; Gogada, Bharat Kumar
-> > <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
-> > <thippeswamy.havalige@amd.com>
-> > Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
-> > PERST# signal
+Hi Prabhakar,
+
+On Tue, 17 Jun 2025 at 16:04, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Tue, Jun 17, 2025 at 2:57=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Tue, 17 Jun 2025 at 15:45, Prabhakar <prabhakar.csengg@gmail.com> wr=
+ote:
+> > > From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > >
+> > > Selects RZ/T2H (aka r9a09g077) SCI (serial) specific code.
+> > >
+> > > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> > > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > >
-> > Caution: This message originated from an External Source. Use proper caution
-> > when opening attachments, clicking links, or responding.
+> > Thanks for your patch!
 > >
+> > > ---
+> > >  arch/arm64/configs/defconfig | 1 +
+> > >  1 file changed, 1 insertion(+)
 > >
-> > On Mon, Apr 14, 2025 at 08:53:04AM +0530, Sai Krishna Musham wrote:
-> > > Add support for handling the PCIe Root Port (RP) PERST# signal using
-> > > the GPIO framework, along with the PCIe IP reset. This reset is
-> > > managed by the driver and occurs after the Initial Power Up sequence
-> > > (PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's probe
-> > > function is called.
-
-> > > +     if (do_reset) {
-> > > +             /* Assert the PCIe IP reset */
-> > > +             writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-> > > +
-> > > +             /*
-> > > +              * "PERST# active time", as per Table 2-10: Power Sequencing
-> > > +              * and Reset Signal Timings of the PCIe Electromechanical
-> > > +              * Specification, Revision 6.0, symbol "T_PERST".
-> > > +              */
-> > > +             udelay(100);
+> > I don't expect GregKH to apply this patch (or better: I expect GregKH
+> > to not apply this patch ;-) so IMO there is no point in including it
+> > in this series.
 > >
-> > Are you sure that you need T_PERST here and not T_PVPERL? T_PERST
-> > is only valid while resuming from D3Cold i.e., after power up,
-> > while T_PVPERL is valid during the power up, which is usually the
-> > case when a controller driver probes. Is your driver relying on
-> > power being enabled by the bootloader and the driver just toggling
-> > PERST# to perform conventional reset of the endpoint?
-> 
-> Thanks for pointing that out. Yes, the power-up sequence is handled
-> by the hardware, and the driver relies on power being enabled by it.
-> We're only toggling the PERST# signal in the driver to perform a
-> conventional reset of the endpoint. So, I'm confident that T_PERST
-> is the appropriate timing reference here, not T_PVPERL.
-> 
-> Additionally, this delay was recommended by our hardware team, who
-> confirmed that the power-up sequence is managed in hardware logic,
-> and that T_PERST is the appropriate timing to apply in this context.
-> 
-> I also checked pci.h but couldn't find a predefined macro for
-> T_PERST, so I used 100.  Please let me know if there's a preferred
-> macro I should be using instead.
+> Ok, got you.
+>
+> > Thierry's original version is still in my queue, together with the
+> > DTS patches, waiting for the RSCI DT bindings to be accepted...
+> >
+> I plan to send a new version for RZ/T2H DTS/I which includes fixes
+> from series [0] squashed and also mainly update the model string from
+> "Renesas Development EVK based on r9a09g077m44" to "Renesas RZ/T2H EVK
+> Board based on r9a09g077m44". Is that OK with you?
+>
+> [0] https://lore.kernel.org/all/20250613135614.154100-1-prabhakar.mahadev=
+-lad.rj@bp.renesas.com/
 
-If we need a new macro, please add it.  Include a citation to the
-relevant section of the spec ("PCIe CEM r6.0, sec 2.11.2"; table
-numbers don't appear in the table of contents so they're hard to
-find), and include the units ("_US", I guess) in the macro name.
+Sure, please go ahead.
 
-Given a comment at the macro definition, you don't need to repeat it
-at all the uses.
+Gr{oetje,eeting}s,
 
-Bjorn
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
