@@ -1,73 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87781865EE;
-	Tue, 17 Jun 2025 15:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B632E8882
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172875; cv=none; b=dqnj9FXkzJodzkPjHBJBhXGSCV3GSRZGtdxfn69YdMe3E+iZdAbmwArr2xe4cwElQVsT0/ELRNaouxQPV6vNunFUEGiZy6Wc98DXcGERIIgUckqCbajDJvuZqvcdNS7JTtKFCtXviNYAnRAW2+76EQ200O24qDwZTmtElqdle4Y=
+	t=1750172888; cv=none; b=O6MXyHjgneUYBJzwS6hFEB2kGyb3c054ZxPuGD3JXwlB9o+jNfvbzHwuplH/jEB9QPoNB+gl6DWt9fDo621n82M41v+7B4JEAgpEvxQ2fyds7MkDqLFXVASbExFKY6Ww0oTXiAz1130FVu+/efd4oHMoVwsQ6OspwgtMEWbs2lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172875; c=relaxed/simple;
-	bh=RTyos+xArpipmhaa2xrTlTzTHqAS6FVIM1VdIIXaLUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Ck3EB5WpYnM433HZnPH683+EW8hdaz9FNqcGNMs/Vcf4WTe6/bynBuwgVp++gM8vugB7tcpuRMu74WaQYUYYm3euMfV8kdGfgnZkXyalmtx/x+eS2c+W/AB3EO2AlM2TO6wFsIBkagrBdCHv8T3aX3ComNpDUZUAEMiQTft/sOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdkxNXlR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdkxNXlR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3487EC4CEF0;
-	Tue, 17 Jun 2025 15:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750172875;
-	bh=RTyos+xArpipmhaa2xrTlTzTHqAS6FVIM1VdIIXaLUE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KdkxNXlRcbvUaRalV/h1f37I0zs53G4KItGNuBuj79IToFYcdMed2en2wiXdBK1dr
-	 6tRbc9kb0Spvx49WRn2iANMoKCYiCwdWkVX740Mo/w67zMGHQCZEB/i/10ngNmX2zI
-	 jt9WbXuhvLLuFyi/XxzZayQ1g9MwisbhB/3w+3pa402eGhxz8Sma2sJnOP7Sju37vA
-	 nzMu3rzSDFVv31QJVvWWaAue9XNSHM0RIfKRcWqNUT0HTSulqww9p9LqnXPvMAIZgk
-	 SWO0wN1A+39JFFUgEhd2zp3pm4FadgWK5pOjzunlz3DW09/3sD6vamp+vYM1WxStcn
-	 z+eRv/MsDvKdA==
-Date: Tue, 17 Jun 2025 10:07:53 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Shawn Anastasio <sanastasio@raptorengineering.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.o>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-	amitk@kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	jorge.ramirez@oss.qualcomm.com, Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v7] PCI: Add pcie_link_is_active() to determine if the
- PCIe link
-Message-ID: <20250617150753.GA1135993@bhelgaas>
+	s=arc-20240116; t=1750172888; c=relaxed/simple;
+	bh=MlST4HpCX/8lpMelJ6BJ1R2IsWPXG8rqsXFPnElrw7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/jaBDfqePsqr0VauW/T89gum8FoF4fMRQWsr/KP6yJ8V4dEVEKR1xtTm8pv2yCm1/LulNuieAkNSMotLfhyNXycymjc86PAxZlOFImj+DxBgcoAoXuIo/K+POWIfsz2pU700bOT6xSB3JmvIgHayN2Os2mzgIe2fhqhCmJInMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uRXuZ-0003lG-6t; Tue, 17 Jun 2025 17:07:43 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uRXuX-003zen-1k;
+	Tue, 17 Jun 2025 17:07:41 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 2A3B842AA50;
+	Tue, 17 Jun 2025 15:07:41 +0000 (UTC)
+Date: Tue, 17 Jun 2025 17:07:40 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
+	Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, imx@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de, Frank Li <Frank.Li@nxp.com>, 
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v3 03/10] net: fec: add missing header files
+Message-ID: <20250617-funky-auspicious-stallion-25f396-mkl@pengutronix.de>
+References: <20250617-fec-cleanups-v3-0-a57bfb38993f@pengutronix.de>
+ <20250617-fec-cleanups-v3-3-a57bfb38993f@pengutronix.de>
+ <b6687ad2-1fd9-4cb5-8f5d-8c203599f002@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vb7ad2zc4mjylvxd"
 Content-Disposition: inline
-In-Reply-To: <1581123048.1308046.1750170680177.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <b6687ad2-1fd9-4cb5-8f5d-8c203599f002@intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Jun 17, 2025 at 09:31:20AM -0500, Timothy Pearson wrote:
-> is active
-> 
-> Introduce a common API to check if the PCIe link is active, replacing
-> duplicate code in multiple locations.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
 
-Duplicate post?  You can check https://lore.kernel.org/linux-pci/ to
-see whether it appeared on the list.
+--vb7ad2zc4mjylvxd
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v3 03/10] net: fec: add missing header files
+MIME-Version: 1.0
+
+On 17.06.2025 16:55:19, Alexander Lobakin wrote:
+> From: Marc Kleine-Budde <mkl@pengutronix.de>
+> Date: Tue, 17 Jun 2025 15:24:53 +0200
+>=20
+> > The fec.h isn't self contained. Add missing header files, so that it ca=
+n be
+> > parsed by language servers without errors.
+> >=20
+> > Reviewed-by: Wei Fang <wei.fang@nxp.com>
+> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> > ---
+> >  drivers/net/ethernet/freescale/fec.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/etherne=
+t/freescale/fec.h
+> > index ce1e4fe4d492..4098d439a6ff 100644
+> > --- a/drivers/net/ethernet/freescale/fec.h
+> > +++ b/drivers/net/ethernet/freescale/fec.h
+> > @@ -15,7 +15,9 @@
+> >  /*********************************************************************=
+*******/
+> > =20
+> >  #include <linux/clocksource.h>
+> > +#include <linux/ethtool.h>
+> >  #include <linux/net_tstamp.h>
+> > +#include <linux/phy.h>
+> >  #include <linux/pm_qos.h>
+> >  #include <linux/bpf.h>
+> >  #include <linux/ptp_clock_kernel.h>
+>=20
+> Sort alphabetically while at it? You'd only need to move bpf.h AFAICS.
+
+After sorting, the incremental diff will look like this:
+
+diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/fr=
+eescale/fec.h
+index 15334a5cce0f..1fe5e92afeb3 100644
+--- a/drivers/net/ethernet/freescale/fec.h
++++ b/drivers/net/ethernet/freescale/fec.h
+@@ -14,16 +14,16 @@
+ #define FEC_H
+ /*************************************************************************=
+***/
+=20
++#include <dt-bindings/firmware/imx/rsrc.h>
++#include <linux/bpf.h>
+ #include <linux/clocksource.h>
+ #include <linux/ethtool.h>
++#include <linux/firmware/imx/sci.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/phy.h>
+ #include <linux/pm_qos.h>
+-#include <linux/bpf.h>
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/timecounter.h>
+-#include <dt-bindings/firmware/imx/rsrc.h>
+-#include <linux/firmware/imx/sci.h>
+ #include <net/xdp.h>
+=20
+ #if defined(CONFIG_M523x) || defined(CONFIG_M527x) || defined(CONFIG_M528x=
+) || \
+
+Is that okay? If so, I'll squash it.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--vb7ad2zc4mjylvxd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhRhLkACgkQDHRl3/mQ
+kZynRwf5AfBSqlvS6ZPaUDdzbaT4ChHehHLaV34f0P/3xHED8RIiw7WIX23Zui9c
+JoTWQ6dr2L24g9pj0yaq6sxcuKCLnN5Cg0HXZ/p+ZhQr52HozhR+wT7BHAnNjkfn
+P6rUERHpn/RikEUObpv6UVjfCKTR5IUlNF6ByYDhJeYJ/SVqc99NgnQj/g5FkHV4
+4Fz2zVrwe8Szj0IscA+2BVYEPog5pYDnlRUx+X28G9hE0C9nmatzWnYLcTAn2ooV
+UBPCqwpYHHQUWBwlG3CDUXhmB3ZANddW68zg1jX8lw6lA3cpRU1/tceo67puj9Pp
+VSEwopzAQSPGlsU9RmGwLiZc4a6kqw==
+=1zfJ
+-----END PGP SIGNATURE-----
+
+--vb7ad2zc4mjylvxd--
