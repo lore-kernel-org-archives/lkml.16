@@ -1,286 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C108E2ECD33;
-	Tue, 17 Jun 2025 16:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385CD2DFF05
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750176009; cv=none; b=ozclS2wtY69bwKVtCIG3QrD29JusJhWOusTQyNO+HUXQMiNf0iDgvpS10eeMtTDBiSUTh9IfioT4nUO3l8Cy4tsPELPL2ozIxd15yexYSEa5gVg0wbNlvlMJ+P2sD0KV7qxDCRmVj8ChXserPniYiFggS/5ZPyeVOyOpBg1DKiY=
+	t=1750176042; cv=none; b=efyks85O0yn1asXCg/1Jdf6dLrtY1xcPq13yVvWCrZOX/Hhdu9z26a7ls+K0VJUjqhs7toKYROzwlW5LCEQq02jFRWV15mjT5JSnU7WbrRIALFjtHNLJ8/qUfDOxtSGzrfYU5xQuPtuZFkyth8avRXDisdW+o4HUskIkf16v/BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750176009; c=relaxed/simple;
-	bh=RyjFEiBY6VQWOdFRWsesICSXRLCWbA6jugn3H5Rqqj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qKbFEmYsGevj8hnYHJPhnR25Y1ls4pJL3nBWSOurpqgRT6QB13ZEEtBIoE+Sqhr2AmR+NtamoSq2lgctRh/tdyfa7i9gxZiaZK0pAcFk3CPMLu2gBOT1UElhIFYWS49MZ0Ye2zOnA/Hmlpc4WuEncwzPfs2TiyG8+bIFyE0D4t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyhWfOwV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750176042; c=relaxed/simple;
+	bh=W7JBzyGEiWyG3iUqFnqbYQxPWXtvewFS5AESFU3ByKU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZmeQVO9SsAaWTytZj8wm8xHSb9bY0RyO+5N0pyd65t5A6rlGiDMSAiN4Toubmw/ktEfzSsXdkUKgu5xJoLGsw8PBYX7aEKwrbBVPP92bf2T5NOhu1dCtzub0wa4KCTHa0LONtNROHvafiPjazlnoD1sqaumyEwEvByJIsiILaFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=GHJxQwWa; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyhWfOwV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 030C3C4CEF0;
-	Tue, 17 Jun 2025 16:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750176009;
-	bh=RyjFEiBY6VQWOdFRWsesICSXRLCWbA6jugn3H5Rqqj0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NyhWfOwVdK3L2Bb75J5vSsIdX6gOEeQSFExVwbnkPQ6fTa1GkhQLqeW4MIH0zu6ps
-	 tkAmw0a7l1eXM71V0mnEYz84sMb1R+ifsYhfiZ31Z7O1RvJu3Qgu74E6apfmWeK3UM
-	 C46NzCOtRELdsM7tDF4JBneKytKgKeM3tmyizqMeGRBc/YIIpWZMHPEiGqFvjHiGVM
-	 X23MLpgrm5E4jt8VhfDmnaONt69UTkJO4LF8M/jwql5fqPw6mUg9ExOeqBaPj0k4fE
-	 yJ0IZXWO72X7nv9fHXtPiihMPM+lxaN8P5JXGsO6br6QDedqCrOISzsewDKZsKrFuS
-	 IpD9VAx/T+gPw==
-Date: Tue, 17 Jun 2025 18:00:01 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, "Akira Yokosawa" <akiyks@gmail.com>, "Breno Leitao"
- <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Ignacio Encinas Rubio"
- <ignacio@iencinas.com>, "Jan Stancek" <jstancek@redhat.com>, "Marco Elver"
- <elver@google.com>, "Paolo Abeni" <pabeni@redhat.com>, "Ruben Wauters"
- <rubenru09@aol.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
- joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
- linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
- peterz@infradead.org, stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 10/15] docs: sphinx: add a parser for yaml files for
- Netlink specs
-Message-ID: <20250617180001.46931ba9@sal.lan>
-In-Reply-To: <20250617154049.104ef6ff@sal.lan>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
-	<c407d769c9f47083e8f411c13989522e32262562.1750146719.git.mchehab+huawei@kernel.org>
-	<m27c1ak0k9.fsf@gmail.com>
-	<20250617154049.104ef6ff@sal.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="GHJxQwWa"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553cf020383so625369e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=criticallink.com; s=google; t=1750176038; x=1750780838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W5/cGEPVbEhGxogRtbymQogrM8PjeXwlGoZ+poOqYtw=;
+        b=GHJxQwWaHO7ao9PkfJS/Y1JJoepAaUnCJ4H6H7dMQfz1l0e5mxD4iGz3+l9bP016FQ
+         PRk784YkkmUYNPVkYHuRfD+jMvFbKwMHjDo5hZiEmXfqnXUgGzMaRRvGlPURgyc0RM3Z
+         ry53Bug6Rxp2CkOLtCt9rtdWRIF1X7jJfOj5ujarf5aKo/K5X+Fbes30a6nNrTvXPLHw
+         iZ0O9P3Q6a48QPiuhPh9QJbYnt9q9Et2+Z1kWCsxr4p/Lm2rQWXxQ0oBuRZBWyULAHvX
+         nRW07HYBB8T5sdV75Sq0M1YJnhmXMSH3DWG9186VAywuBGOnXbkC4kcEfiR+lv2KHNel
+         Gs5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750176038; x=1750780838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W5/cGEPVbEhGxogRtbymQogrM8PjeXwlGoZ+poOqYtw=;
+        b=vDqOv5iRKi4TvsC5x84CuV6+fjBkstkuZHRQijxFCVwsB4acF5HoKeY496y1/NPW+E
+         t7J1zq8Q1jDObgrYkJVoxXC6XRBq49H1NpIaYfgYRZdlzbXXHnx6gChpcccash40XUuM
+         +lTbPIzhSY2qHzz5ccNqqbjA5ApjrfWDI2tY+8/oJQ4eCh0Lut6Ig+cxThTaoF3KSWZa
+         WwFE+VneDZEgY8JG9eD5ZULjvL23wUP1WiwRz02hBAavvbQ63h7N95pK/H/x8CuLYVT3
+         7cqdxzL+kmJN0sGSaViv8W579FoxF1pazG0nidEwV1z+cbG30Jxt7xl6Vhp369AxLXrH
+         Losw==
+X-Forwarded-Encrypted: i=1; AJvYcCWg+hEArHWyA6+RQ99yKILK3+tONCvI1+PXsNdF8ZaDAb/mns0Pz0xORiYCFhLKAp4+XydvvuXBi+yRhkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwepAbLMSW6gf0WkxI6cZmatf8x3FGDIxx/fjxKdxZFa/B9oytu
+	HoGwZch3k2C4jzrtfJwYxhd+cOvnemUGHyHYuTd1vfhCjwnV6KFeO5RySqmWAOpYV6wxRCTbumu
+	Dz4MmwIvG5Kus+1XWSrumvFTdi2lAKB9yovxrIM82
+X-Gm-Gg: ASbGncsksUxRnatOpMT7fQa5B+v8KkA3IYljCQPHcLVTLmscFKbAZZq85WOdhQeYthj
+	x+nGrmpmOK76p5ztkJOu9t4XVq6eFGQax4KaRp7JNy8LfgrJZPF4BnkVpGIXpAX3czZyWmmbwhz
+	puTjZVEttXNsUqw5rjMcBAXOCrEbJ0ffFqGiBMzRm0NA==
+X-Google-Smtp-Source: AGHT+IFU6tCYFX6rLeU4r4jG0o0LNAOKh0+H2zldYWfLL3X1Bkf7DM2a/8Myo0nP66Ti4vOwJ0PRhThhpF6KiIE+j4Y=
+X-Received: by 2002:a05:6512:118e:b0:553:65bc:4232 with SMTP id
+ 2adb3069b0e04-553b6f0adb5mr3806046e87.31.1750176038169; Tue, 17 Jun 2025
+ 09:00:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+ <20250520-linux-stable-tps6594-pwrbutton-v1-3-0cc5c6e0415c@criticallink.com> <20250613141105.GG897353@google.com>
+In-Reply-To: <20250613141105.GG897353@google.com>
+From: Job Sava <jsava@criticallink.com>
+Date: Tue, 17 Jun 2025 12:00:27 -0400
+X-Gm-Features: Ac12FXwfPKT9YJfCDfUDOTDxW57qAjgmoI3NzvLaV0dDRdDqEIP6JAr4MAEbwyU
+Message-ID: <CAKMwjwT-74=QRqH_ML9PMe6Bfq8WCJgxoYBjFFegH8EvGMamQA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] mfd: tps6594: Adds support for powering off the PMIC
+To: Lee Jones <lee@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Julien Panis <jpanis@baylibre.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
+	jcormier@criticallink.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Em Tue, 17 Jun 2025 15:40:49 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+On Fri, Jun 13, 2025 at 10:11=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
+>
+> On Tue, 20 May 2025, Job Sava wrote:
+>
+> > When the FSM_I2C_TRIGGER register's bit 0 is set it triggers TRIGGER_I2=
+C_0
+> > and the PMIC is transitioned to the STANDBY state
+> > (table 6-18: SLVSGG7 =E2=80=93 DECEMBER 2023).
+> >
+> > An ON request is required to transition from STANDBY to ACTIVE.
+> >
+> > Signed-off-by: Job Sava <jsava@criticallink.com>
+> > ---
+> >  drivers/mfd/tps6594-core.c | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
+> > index 1b0b3d1bf6c4..f4c434c0d87a 100644
+> > --- a/drivers/mfd/tps6594-core.c
+> > +++ b/drivers/mfd/tps6594-core.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> > +#include <linux/reboot.h>
+> >
+> >  #include <linux/mfd/core.h>
+> >  #include <linux/mfd/tps6594.h>
+> > @@ -615,6 +616,19 @@ static int tps6594_enable_crc(struct tps6594 *tps)
+> >       return ret;
+> >  }
+> >
+> > +static int tps6594_soft_shutdown(struct tps6594 *tps)
+>
+> Why do you have a whole separate function that itself is only called
+> once and only conducts a single one call to one other function?
 
-> > > +            # Parse message with RSTParser
-> > > +            for i, line in enumerate(msg.split('\n')):
-> > > +                result.append(line, document.current_source, i)   =20
-> >=20
-> > This has the effect of associating line numbers from the generated ReST
-> > with the source .yaml file, right? So errors will be reported against
-> > the wrong place in the file. Is there any way to show the cause of the
-> > error in the intermediate ReST? =20
->=20
-> Yes, but this will require modifying the parser. I prefer merging this
-> series without such change, and then having a separate changeset
-> addressing it.
->=20
-> There are two ways we can do that:
->=20
-> 1. The parser can add a ReST comment with the line number. This
->    is what it is done by kerneldoc.py Sphinx extension:
->=20
-> 	lineoffset =3D 0
-> 	line_regex =3D re.compile(r"^\.\. LINENO ([0-9]+)$")
->         for line in lines:
->             match =3D line_regex.search(line)
->             if match:
->                 lineoffset =3D int(match.group(1)) - 1 # sphinx counts li=
-nes from 0
->             else:
->                 doc =3D str(env.srcdir) + "/" + env.docname + ":" + str(s=
-elf.lineno)
->                 result.append(line, doc + ": " + filename, lineoffset)
->                 lineoffset +=3D 1
->=20
->    I kept the same way after its conversion to Python, as right now,
->    it supports both a Python class and a command lin command. I may
->    eventually clean it up in the future.
->=20
-> 2. making the parser return a tuple. At kernel_abi.py, as the parser
->    returns content from multiple files, such tuple is:
->=20
-> 		 (rst_output, filename, line_number)
->=20
->    and the code for it is (cleaned up):
->=20
-> 	for msg, f, ln in kernel_abi.doc(show_file=3Dshow_file,
->                                          show_symbols=3Dshow_symbols,
->                                          filter_path=3Dabi_type):
->=20
->             lines =3D statemachine.string2lines(msg, tab_width,
->                                               convert_whitespace=3DTrue)
->=20
->             for line in lines:
->                 content.append(line, f, ln - 1) # sphinx counts lines fro=
-m 0
->=20
-> (2) is cleaner and faster, but (1) is easier to implement on an=20
-> already-existing code.
+I copied this code from the tps65219 pmic driver, which setup the
+functions in this way. I will merge the two functions.
 
-The logic below implements (1). This seems to be the easiest way for
-pyyaml. I will submit as 2 separate patches at the end of the next
-version.
+>
+> > +{
+> > +     return regmap_update_bits(tps->regmap, TPS6594_REG_FSM_I2C_TRIGGE=
+RS,
+> > +                             TPS6594_BIT_TRIGGER_I2C(0),
+> > +                             TPS6594_BIT_TRIGGER_I2C(0));
+> > +}
+> > +
+> > +static int tps6594_power_off_handler(struct sys_off_data *data)
+> > +{
+> > +     tps6594_soft_shutdown(data->cb_data);
+> > +     return NOTIFY_DONE;
+> > +}
+> > +
+> >  int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+> >  {
+> >       struct device *dev =3D tps->dev;
+> > @@ -623,6 +637,7 @@ int tps6594_device_init(struct tps6594 *tps, bool e=
+nable_crc)
+> >       const struct mfd_cell *cells;
+> >       int n_cells;
+> >       bool pwr_button;
+> > +     bool system_power_controller;
+> >
+> >       if (enable_crc) {
+> >               ret =3D tps6594_enable_crc(tps);
+> > @@ -681,6 +696,15 @@ int tps6594_device_init(struct tps6594 *tps, bool =
+enable_crc)
+> >                       return dev_err_probe(dev, ret, "Failed to add RTC=
+ child device\n");
+> >       }
+> >
+> > +     system_power_controller =3D of_property_read_bool(dev->of_node, "=
+system-power-controller");
+> > +     if (system_power_controller) {
+> > +             ret =3D devm_register_power_off_handler(tps->dev,
+> > +                                                             tps6594_p=
+ower_off_handler,
+> > +                                                             tps);
+>
+> This alignment is odd.
 
-Please notice that I didn't check yet for the "quality" of the
-line numbers. Some tweaks could be needed later on.
+Will have this fixed for the next patch.
 
-Regards,
-Mauro
+>
+> > +             if (ret)
+> > +                     return dev_err_probe(dev, ret, "Failed to registe=
+r power-off handler\n");
+> > +     }
+> > +
+> >       return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(tps6594_device_init);
+> >
+> > --
+> > 2.43.0
+> >
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
 
----
-
-=46rom 750daebebadcd156b5fe9b516f4fae4bd42b9d2c Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date: Tue, 17 Jun 2025 17:54:03 +0200
-Subject: [PATCH] docs: parser_yaml.py: add support for line numbers from the
- parser
-
-Instead of printing line numbers from the temp converted ReST
-file, get them from the original source.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/par=
-ser_yaml.py
-index 635945e1c5ba..15c642fc0bd5 100755
---- a/Documentation/sphinx/parser_yaml.py
-+++ b/Documentation/sphinx/parser_yaml.py
-@@ -29,6 +29,8 @@ class YamlParser(Parser):
-=20
-     netlink_parser =3D YnlDocGenerator()
-=20
-+    re_lineno =3D re.compile(r"\.\. LINENO ([0-9]+)$")
-+
-     def do_parse(self, inputstring, document, msg):
-         """Parse YAML and generate a document tree."""
-=20
-@@ -38,8 +40,14 @@ class YamlParser(Parser):
-=20
-         try:
-             # Parse message with RSTParser
--            for i, line in enumerate(msg.split('\n')):
--                result.append(line, document.current_source, i)
-+            lineoffset =3D 0;
-+            for line in msg.split('\n'):
-+                match =3D self.re_lineno.match(line)
-+                if match:
-+                    lineoffset =3D int(match.group(1))
-+                    continue
-+
-+                result.append(line, document.current_source, lineoffset)
-=20
-             rst_parser =3D RSTParser()
-             rst_parser.parse('\n'.join(result), document)
-
-=46rom 15c1f9db30f3abdce110e19788d87f9fe1417781 Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date: Tue, 17 Jun 2025 17:28:04 +0200
-Subject: [PATCH] tools: netlink_yml_parser.py: add line numbers to parsed d=
-ata
-
-When something goes wrong, we want Sphinx error to point to the
-right line number from the original source, not from the
-processed ReST data.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/tools/net/ynl/pyynl/netlink_yml_parser.py b/tools/net/ynl/pyyn=
-l/netlink_yml_parser.py
-index 866551726723..a9d8ab6f2639 100755
---- a/tools/net/ynl/pyynl/netlink_yml_parser.py
-+++ b/tools/net/ynl/pyynl/netlink_yml_parser.py
-@@ -20,6 +20,16 @@
- from typing import Any, Dict, List
- import yaml
-=20
-+LINE_STR =3D '__lineno__'
-+
-+class NumberedSafeLoader(yaml.SafeLoader):
-+    """Override the SafeLoader class to add line number to parsed data"""
-+
-+    def construct_mapping(self, node):
-+        mapping =3D super().construct_mapping(node)
-+        mapping[LINE_STR] =3D node.start_mark.line
-+
-+        return mapping
-=20
- class RstFormatters:
-     """RST Formatters"""
-@@ -127,6 +137,11 @@ class RstFormatters:
-         """Return a formatted label"""
-         return f".. _{title}:\n\n"
-=20
-+    @staticmethod
-+    def rst_lineno(lineno: int) -> str:
-+        """Return a lineno comment"""
-+        return f".. LINENO {lineno}\n"
-+
- class YnlDocGenerator:
-     """YAML Netlink specs Parser"""
-=20
-@@ -144,6 +159,9 @@ class YnlDocGenerator:
-         """Parse 'do' section and return a formatted string"""
-         lines =3D []
-         for key in do_dict.keys():
-+            if key =3D=3D LINE_STR:
-+                lines.append(self.fmt.rst_lineno(do_dict[key]))
-+                continue
-             lines.append(self.fmt.rst_paragraph(self.fmt.bold(key), level =
-+ 1))
-             if key in ['request', 'reply']:
-                 lines.append(self.parse_do_attributes(do_dict[key], level =
-+ 1) + "\n")
-@@ -174,6 +192,10 @@ class YnlDocGenerator:
-             lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
-=20
-             for key in operation.keys():
-+                if key =3D=3D LINE_STR:
-+                    lines.append(self.fmt.rst_lineno(operation[key]))
-+                    continue
-+
-                 if key in preprocessed:
-                     # Skip the special fields
-                     continue
-@@ -233,6 +255,9 @@ class YnlDocGenerator:
-         for definition in defs:
-             lines.append(self.fmt.rst_section(namespace, 'definition', def=
-inition["name"]))
-             for k in definition.keys():
-+                if k =3D=3D LINE_STR:
-+                    lines.append(self.fmt.rst_lineno(definition[k]))
-+                    continue
-                 if k in preprocessed + ignored:
-                     continue
-                 lines.append(self.fmt.rst_fields(k, self.fmt.sanitize(defi=
-nition[k]), 0))
-@@ -268,6 +293,9 @@ class YnlDocGenerator:
-                 lines.append(self.fmt.rst_subsubsection(attr_line))
-=20
-                 for k in attr.keys():
-+                    if k =3D=3D LINE_STR:
-+                        lines.append(self.fmt.rst_lineno(attr[k]))
-+                        continue
-                     if k in preprocessed + ignored:
-                         continue
-                     if k in linkable:
-@@ -306,6 +334,8 @@ class YnlDocGenerator:
-         lines =3D []
-=20
-         # Main header
-+        lineno =3D obj.get('__lineno__', 0)
-+        lines.append(self.fmt.rst_lineno(lineno))
-=20
-         family =3D obj['name']
-=20
-@@ -354,7 +384,7 @@ class YnlDocGenerator:
-     def parse_yaml_file(self, filename: str) -> str:
-         """Transform the YAML specified by filename into an RST-formatted =
-string"""
-         with open(filename, "r", encoding=3D"utf-8") as spec_file:
--            yaml_data =3D yaml.safe_load(spec_file)
--            content =3D self.parse_yaml(yaml_data)
-+            numbered_yaml =3D yaml.load(spec_file, Loader=3DNumberedSafeLo=
-ader)
-+            content =3D self.parse_yaml(numbered_yaml)
-=20
-         return content
-
+Thank you
+-Job
