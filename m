@@ -1,173 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E753D2FB
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E5228983D;
+	Tue, 17 Jun 2025 07:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750146551; cv=none; b=CCkzHWwHl2k1MqygFUKYSN628Ie2SAx8yer3WD8lzgjMnbXEWjH4zlFLETm4mkL1v0HpMqiOQ7QcDHFPYtm502mWxJ1smKM1apjnO7YrWW3fBxwAuZz2hbB7BnH6afXl8yl39TQal3Kw5xTcX/wnk0fWQllqPuAMLEJ7r//9+TU=
+	t=1750146553; cv=none; b=H8W5B3/kI1sqmcMrLXXzKc/mg7T4rTjh5GRAfc0FtfMWhFfXbh8luKt2PPMPCxRZgQLG4Fvdnlgk7zOEWJYyNBfj1ITD0Gg+CBx9cASNnX9jUIafw4kYox8bYEFf89Qrb45CuZTvYqBDp1NSOoAFq3hBpFHdeiTHo5JI6OVQ4NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750146551; c=relaxed/simple;
-	bh=edgKKuKIHXNY19Bf7dXcjsr8rGZB29QD7qjrFQ312ZU=;
+	s=arc-20240116; t=1750146553; c=relaxed/simple;
+	bh=yJjBc4ZpRECF2hf71qTiHIHrAAo2nQfZj5CEF6HuDu4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GL+70Q8BJgijvANChGovlFMRlEPFGLsII9Z5dbjd+Z+xUOty8LJXQx4iU6PmmCWQ6oHkOYHkLvM0JmXlV7WsbRyFod+71LZPa6E34vE7biv7MujpxAaHdZ4IFm1tQRw4ABllSLhy32QYFb84c2QWKfRaRp2y5z4G8Gw1y63PKAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qg2ZV+7M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qg2ZV+7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1636C4AF0B
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750146551;
-	bh=edgKKuKIHXNY19Bf7dXcjsr8rGZB29QD7qjrFQ312ZU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qg2ZV+7M6wDk5oEos5QuLkHbnWwF6jPYFE78H5PCAba13QBuBDy35OYFoMhglpeW5
-	 NBag6k8dEESHzN8Q4vUqE4JWFUbtpOHYKQcDd6VUMvP4TkWZNzyJhBI3JTYcpFnL6B
-	 0rm2+kHekDrTqYpWRvFNXOgUZ8sTa/5hNOlUq9jT+yT+7JPmZi458L+jYT7I21mPl9
-	 F5jpDgf1PwDzXIC+cd+QGt3SNHv4r+RSnoWHbRdr4Q1vC8s4eofVBnO4e87NYU91U8
-	 4MCPOgblmY72XartoFJndIWWnvzdPo4AY9xyThgeGPYaDZGDA9HWpiw00Dt+9Pay1s
-	 YBRWjkrPJvF8Q==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-310447fe59aso54948951fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:49:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVJ/O4zPIkLEe4FADNZHQuEa1bnvOWqnhfh1vj7oq3ZyFbhluiy9eHOaJK48Wgv5OCRFwARK3FICwLsy7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8k2EJwZ7h+Zu/p2ipyWpoms0OmJIvaC9zOsuZOlDjFR9Quw49
-	Ctp/dWIzr8qO6JGaNvq+hiSpBYjTrKpRthf2XzhlHE7h16YLMggr9w40Iu8BIbv4lccstLhtXQz
-	a11ko8dnwDY44OcG/VBYr2csn5VROw6A=
-X-Google-Smtp-Source: AGHT+IHrRIPcTTe7BlmbCtWLApFzRGHworOqkbPXOiF9QRjABzfBe8quyQOD07oWuiKgft2iwTO2AezAGElWEQA8PXA=
-X-Received: by 2002:a05:6512:1181:b0:553:cc61:170f with SMTP id
- 2adb3069b0e04-553cc611901mr289711e87.31.1750146549176; Tue, 17 Jun 2025
- 00:49:09 -0700 (PDT)
+	 To:Cc:Content-Type; b=Jm/eLdjvrXnPE8xBRhSzoSHT1BrK8bd+UFXrxKqohliAvI9Qw6bTgTwbLPy1sdb4INfgagkzjd0+kdcfx01E2pH+BTxn1Ayain4gkA4Ln1X681AUMrGgpS7aK6JDG1zXfNY32kM+7r/+InnD8dGkHwtR7b9dBvfcx4Qg1MgRtpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e80ff08dd6so1574509137.1;
+        Tue, 17 Jun 2025 00:49:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750146549; x=1750751349;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KTm5y+PBdNYcyQdNoiO0mMLcIK5R2nxCJMVPA2QnTOc=;
+        b=FcpO2fPOBCZVND52E4xcBihg5SaimcI6DzZjeL01I10HXqmSUO2EO+9LSHymSXDA2T
+         ElpwvIL7lop0GF6YK/GYMULMJdVYDRvOSssBTRTyH62iAnCvPJDxiuSMCZy0MAj/AVif
+         OnFr5ebuxXhrbfmWetMoBFoanh0SbPH/lmW4XaFGuMhDvOA35SVTzBEgqEF/xitYQR9u
+         p1Krz0RjaRc+Tkp9YHrg5hiUx95LejPHr9Vw0AojhAJ0Tr8Kp2ptMM4z9b/yEEU/1rtA
+         VaFhzVupBTtNJZd58rHLhn77WnClq6SaD5JmH92P9fZuno3A5NlUAJujP3VxnDOfabcM
+         lF3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUkAQarRASAQU0wjAA8XMhjun9vOgklyznPaATVW3RYBnZltyaC0ZfC1YpL3iwq46uzEIM+G/iVVPXK@vger.kernel.org, AJvYcCWYlPt9NrCddbN6TRPwnmyblTHfi7vUC12Wmv9WlfOpGvpPzjyOTQf8nSGsWp63tx2v8nYfeoJkL+s9q6P4@vger.kernel.org, AJvYcCX9HsBmSne3crEfpGUTYxkq3TSrY4RbWyw7zCED6oWAMOsmEmtvu9VFVymoglwob6glJx58U5tvDJQCIoSbbZjjlLU=@vger.kernel.org, AJvYcCXBL/2NvwuTZ+4fVjXyJ2WHfV227MGuEJM6CHGpGw1Z+rBNivKLPevtjR1hozy3VUxh+MiKn4Q8ZK3xgoAP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf5wV3596S1sV1vLrvy03TBEN3nj6m+RtQKfB5R3oHvPIRQQh2
+	mv0Zgv1lKtPaXqNMAqxvxLKLMWu3C2ykOWXO/727aKmPZmkXYpsArjdmrCtxFZSl
+X-Gm-Gg: ASbGncsldbKvF164g0bGuhQRy0WCumaW+gs/DKdz9qrXz4z9cPkqMwKWQ/4kOxrGMMG
+	rldvRUezdOUi8J8AexDDeDlrKZWiZ0McDqtoC+VrMd4a5p/HeUdRT7o3u2VC0j/ccgm1NTLrCQD
+	3BpPCT3XmRDM1aMW3oaJu+n0gZaEgoJXDuVg5JbNYyaRmKPYCVnxxaOAP7UjV3ts4Fj2RlsfsQE
+	zNMejNOVJhCakiBbdYrQ5IomRf1jNUPsVbXQ01C7HzEXs8vL78HX7lx+4oFaR61i25SNmhyaiDR
+	YYpQswSWiZKnGqB7ph46akcsG8utxCQYOTnQANH2/23t+2LXR2/aXqH8ut/kWpnWHzIoPycAssX
+	IgBvmevtZk9qMxWYKbYRRVNZSRyXIdVcXkt4=
+X-Google-Smtp-Source: AGHT+IGSPVCxTqn0jy3AeHGja7c+hfLTS1h/HxHwaXSmd33baZpr2Ofgmm6YtXdyQ6O1S9RxRLDTSA==
+X-Received: by 2002:a05:6102:4421:b0:4dd:ab6c:7654 with SMTP id ada2fe7eead31-4e7f5e5f524mr9359031137.8.1750146549555;
+        Tue, 17 Jun 2025 00:49:09 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7e70c6449sm1531912137.22.2025.06.17.00.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 00:49:09 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e80ff08dd6so1574477137.1;
+        Tue, 17 Jun 2025 00:49:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVuu4hU0mTVVLx/r6c0K3UPTLtUGxFI9LR1JcN5CfpcfXPW5eCcZu5kH0oG1dUbsXlhxppSX8tp6oVtM0pD@vger.kernel.org, AJvYcCW4zakN4hUPxpkO0rGm3rgJ8fzSZKdVFGR4V8ykW+lIwl6CJEzgnJUtf8BkCF11V1KgL1IPLjGg/QTfO/w+@vger.kernel.org, AJvYcCWL3EJt/xxH3j64TpkAOlGM+eLTnYCpm6aKSOyYhKvgwxQ4aIz2RqKnWsO/OxfvvbswFOqNAdR14gy1@vger.kernel.org, AJvYcCX7+nw/Z8LApLxzhKEmzXMczJViSk67QSaPhsCFtSQgvHceH1xIWiDUApGfBtlWYFktdqAIKPiF1ngKyPJ28TcRqKQ=@vger.kernel.org
+X-Received: by 2002:a05:6102:2d07:b0:4e7:dfc6:5cd8 with SMTP id
+ ada2fe7eead31-4e977acc263mr764329137.8.1750146548618; Tue, 17 Jun 2025
+ 00:49:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617073733.760-1-khaliidcaliy@gmail.com>
-In-Reply-To: <20250617073733.760-1-khaliidcaliy@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 17 Jun 2025 09:48:57 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHAkpynA9avioMtVO1escDhWV4SjzDHt_7enLXQDPx+Tg@mail.gmail.com>
-X-Gm-Features: AX0GCFvqMdBv9k2uHFwQQCR6TRz4_1obSANqbzc1N7IhmKxnNO5-fwVuNy3b5-o
-Message-ID: <CAMj1kXHAkpynA9avioMtVO1escDhWV4SjzDHt_7enLXQDPx+Tg@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/boot: Don't return encryption mask from __startup_64()
-To: Khalid Ali <khaliidcaliy@gmail.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20250616213927.475921-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250616213927.475921-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250616213927.475921-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Jun 2025 09:48:56 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXsipthnXC_Wcmpq2d85TD_TE0wQsL1BLR8XmSkOjnxew@mail.gmail.com>
+X-Gm-Features: AX0GCFsdIT17V50Fsikt0kwm_3QHKdq5Wz36JWJqBvpD7no44PEwh_bTd3t85As
+Message-ID: <CAMuHMdXsipthnXC_Wcmpq2d85TD_TE0wQsL1BLR8XmSkOjnxew@mail.gmail.com>
+Subject: Re: [PATCH v11 2/5] dt-bindings: serial: rsci: Update maintainer entry
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 17 Jun 2025 at 09:38, Khalid Ali <khaliidcaliy@gmail.com> wrote:
+On Mon, 16 Jun 2025 at 23:39, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Avoid returning the SME encryption mask from __startup_64(), and instead
-> let the function handle encryption directly as needed. The encryption
-> mask is already available to callers and can be accessed via
-> sme_get_me_mask() in C code, or directly through the sme_me_mask symbol
-> in assembly, if CONFIG_AMD_MEM_ENCRYPT is enabled.
+> Add myself as the maintainer for the Renesas RSCI device tree binding,
+> as Thierry Bultel no longer works for Renesas.
 >
-> This change aligns with how secondary_startup_64_no_verify handles SME
-> and keeps the behavior consistent. For Intel CPUs, SME is not relevant,
-> so there is no need to retrieve the mask unless CONFIG_AMD_MEM_ENCRYPT
-> is enabled.
->
-> Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506171012.Ji3c5sJh-lkp@intel.com/
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Please drop these lines ^^^ (but no need to resend just for that)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-As it says on the page:
+Gr{oetje,eeting}s,
 
-"If you fix the issue in a separate patch/commit (i.e. not just a new
-version of the same patch/commit), kindly add following tags"
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> ---
->  arch/x86/boot/startup/map_kernel.c | 11 +++--------
->  arch/x86/include/asm/setup.h       |  2 +-
->  arch/x86/kernel/head_64.S          | 10 ++++------
->  3 files changed, 8 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
-> index 332dbe6688c4..6fdb340e9147 100644
-> --- a/arch/x86/boot/startup/map_kernel.c
-> +++ b/arch/x86/boot/startup/map_kernel.c
-> @@ -30,7 +30,7 @@ static inline bool check_la57_support(void)
->         return true;
->  }
->
-> -static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
-> +static void __head sme_postprocess_startup(struct boot_params *bp,
->                                                     pmdval_t *pmd,
->                                                     unsigned long p2v_offset)
->  {
-> @@ -68,11 +68,6 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
->                 }
->         }
->
-> -       /*
-> -        * Return the SME encryption mask (if SME is active) to be used as a
-> -        * modifier for the initial pgdir entry programmed into CR3.
-> -        */
-> -       return sme_get_me_mask();
->  }
->
->  /*
-> @@ -84,7 +79,7 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
->   * the 1:1 mapping of memory. Kernel virtual addresses can be determined by
->   * subtracting p2v_offset from the RIP-relative address.
->   */
-> -unsigned long __head __startup_64(unsigned long p2v_offset,
-> +void __head __startup_64(unsigned long p2v_offset,
->                                   struct boot_params *bp)
->  {
->         pmd_t (*early_pgts)[PTRS_PER_PMD] = rip_rel_ptr(early_dynamic_pgts);
-> @@ -213,5 +208,5 @@ unsigned long __head __startup_64(unsigned long p2v_offset,
->         for (; i < PTRS_PER_PMD; i++)
->                 pmd[i] &= ~_PAGE_PRESENT;
->
-> -       return sme_postprocess_startup(bp, pmd, p2v_offset);
-> +        sme_postprocess_startup(bp, pmd, p2v_offset);
->  }
-> diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-> index 692af46603a1..29ea24bb85ff 100644
-> --- a/arch/x86/include/asm/setup.h
-> +++ b/arch/x86/include/asm/setup.h
-> @@ -50,7 +50,7 @@ extern unsigned long acpi_realmode_flags;
->
->  extern void reserve_standard_io_resources(void);
->  extern void i386_reserve_resources(void);
-> -extern unsigned long __startup_64(unsigned long p2v_offset, struct boot_params *bp);
-> +extern void __startup_64(unsigned long p2v_offset, struct boot_params *bp);
->  extern void startup_64_setup_gdt_idt(void);
->  extern void startup_64_load_idt(void *vc_handler);
->  extern void early_setup_idt(void);
-> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> index 3e9b3a3bd039..4390a28f7dad 100644
-> --- a/arch/x86/kernel/head_64.S
-> +++ b/arch/x86/kernel/head_64.S
-> @@ -106,18 +106,16 @@ SYM_CODE_START_NOALIGN(startup_64)
->
->         /*
->          * Perform pagetable fixups. Additionally, if SME is active, encrypt
-> -        * the kernel and retrieve the modifier (SME encryption mask if SME
-> -        * is active) to be added to the initial pgdir entry that will be
-> -        * programmed into CR3.
-> +        * the kernel.
->          */
->         movq    %r15, %rsi
->         call    __startup_64
->
->         /* Form the CR3 value being sure to include the CR3 modifier */
-> -       leaq    early_top_pgt(%rip), %rcx
-> -       addq    %rcx, %rax
-> -
-> +       leaq    early_top_pgt(%rip), %rax
-> +
->  #ifdef CONFIG_AMD_MEM_ENCRYPT
-> +       addq    sme_me_mask(%rip), %rax
->         mov     %rax, %rdi
->
->         /*
-> --
-> 2.49.0
->
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
