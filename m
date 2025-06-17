@@ -1,142 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A934B2DE203
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5007F219E8
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163435; cv=none; b=El/iiPr5Rlpi9zSMdPdPO4kYqZrTCrHMB+5eQgJt3ZSFhRSK2UHgyTwuQxzHAj/TnPpNw75t6KwglYj/GKkR0gTEYV+iqsojXMGMwTaC1TgBl3e5a+tOhr5ZdePiWjgnjRdHUHObuLkToM2W+vZCOVz0fBueRw2cGZ0gNodoOeg=
+	t=1750163479; cv=none; b=A+Gtxq851riY2ta4GnzB+3I66N/727qVRVhatwiFt8FQVcxw7UCaRRHu/FfefgOQEpXXhUCHbKLN9YLs1DDLsy/XQOw9vhSCQ2rrMzZMIy+UPQYoLmpsbb4AFjTTKTrIYnxqB9VOi4K4L9/WOQNc1I1uIkyyS6KUl4XNqTUAIjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163435; c=relaxed/simple;
-	bh=TB/w16P9pB9DnXe6stqbMfh5xgU3Sips4Ssv9O+y+GY=;
+	s=arc-20240116; t=1750163479; c=relaxed/simple;
+	bh=+uZWDZy9xuYrsdwKUlxju0n0w0AKCo6XtJq5+cSCxW0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F4RU9GFbvRu48DcgVgzVJlIZFidiAP1tOljT+wSHlHmeA9H1CMqosadyKsRZuivjsZlVJq+Ftgz3uPFsUpvA4xi3c3R0Wlt4jFmMSBCtUbIaxW5YI3gUVtiLnSZK2aeXvWWYdC+8qkDgvhlV42ZJcEW9PwfjbX6dinxoTiEL3j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fcGV2Eqk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=fMVFZufmWRFERToo7cZx2Fy/zPBJvx9swdgTz3EsMBgbVCHudq7pkBMmLuchwz58rqaIH546HF7Fab3087jTGtO8k67cWNmzkkuhQL1jrKAI/Ninq+V5NG7suD1dNG3Wcm+IKVb4uhivpvPNNH7pXWX1NC4HegZa8Zj2SYxpx7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zFrSc1YN; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fcGV2Eqk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750163432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C4KpzV7mfKG7YJcI56fObFy+07qjMjy6zIN0X7a6W3Y=;
-	b=fcGV2EqkpwmV0BYWpkWiPoZAyeDypJkFY84lfgbm8I3pTN+a5gdEybWtbpeo+1lqTWBt5+
-	/324+flPE68+pQ1o2l/05aSI7mBudpUMftk/Nufq7cA2tsmrKZLfraxngJ5o+8fxKhPKIw
-	J50q0vMsbJEvERlkImHWE72Tn5gP2cQ=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-19-a6kBgiL_M-umOWDjdJQMMw-1; Tue, 17 Jun 2025 08:30:31 -0400
-X-MC-Unique: a6kBgiL_M-umOWDjdJQMMw-1
-X-Mimecast-MFC-AGG-ID: a6kBgiL_M-umOWDjdJQMMw_1750163430
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2c3e576201so5230246a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:30:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFrSc1YN"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5240764f7c1so1526902e0c.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:31:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750163477; x=1750768277; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+uZWDZy9xuYrsdwKUlxju0n0w0AKCo6XtJq5+cSCxW0=;
+        b=zFrSc1YNRGBtR/+Y+DJkaGURtEdEORjQuztfZLbYSjfCDU7UI02oSFZH5b+5Qy10py
+         Zi3O1g1WQYVxrv7E/h6KlemWVAoHGEGyjXeE+JWWsvVSJZEZLHATv7UQ2W0m5n0U8lD7
+         XOYu3z0iNCm2E0e6AYzeqLiITiXrTwdtiTnxAMBejs5/cIdS2hGOx8eCmsCTleJYMYZ9
+         vSerqidLN8I8rGVg5YLnmExDi6m0UinSJxZF3QPMItLQyL4r5xnls5UcvLecmzpWu3h/
+         GN6hY/IL8+uJaN8+ZTX9c24RvY119d+OLqen2N4ASMILmf5bG0Oc5E2zuN/8pRWP5mTb
+         RDdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750163430; x=1750768230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C4KpzV7mfKG7YJcI56fObFy+07qjMjy6zIN0X7a6W3Y=;
-        b=O2NXoeRS1mvsenVJbi5Xw5wU38Yo5rMN3/1vsyHYT8WGLdpAD1J/jIZ2V4oNBUmM+a
-         pB2z7p6+ii71+4aSmJAhjZhu+ep5t9Hvgb7YrJd8W3lwvfWzz9B7b8cfPER9smSBKzWI
-         7L0dkYzBkGtng4w/YngPZ/qBCkrxJEVmuZTgkLdvTthn5mnxOD/vckmhLMaaeiizzRHO
-         HQZ1pt0yiRcQcZJqJZVsWyGRyJ6sEEtE48km87vcvad3R5H7qe3Z0xvbSZCxkt1kaat4
-         Wi68TkoVyFP2LYqGs+QLlZzC5ob3xOTlgZck4KFlKAzhgvl5EXHiqLnUbQucWDRS2LLS
-         ItcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfftOrtDWuEAiH06V7pWBSEJYEEQNL/zoCoxlyvUdlptndBbmxFGetHpyo6/45NrODyMiESAeCahnewXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx10Y516tRAuxL0RChuOgDF1B+ax+gtBQvC3VYDuPyjeZTA1T4U
-	lgdKwh4t4U9g82aLwGXsqk4fz3ouV3IsRUghM2YtkBCoTX40o1NsXdXQNGora3nQX6t4lacum6v
-	N6za+x+AZ4+akBzz1sjf5Ek+EpnMvE3xTLdSRA3u4VW8IugygcLVtusm1pGLlI3ghcJQgvDJPZ6
-	fEg6o835Rn30F49YSMiTXt2Ju28wP5mAgmsOuxBacB
-X-Gm-Gg: ASbGncvzPWRu8WR3SCzYx5qm3LjKqKTbmcvKyY9GMkLk2spfrVUGnFbbPrkxYQPJt7O
-	6bGe45tJ6/R9nmJPf2iNw8REFC4hC75aJayPj9XKKaQH0q3EfU5+zt7y4GqUxgCAl5XHghFY4QX
-	Os1g==
-X-Received: by 2002:a17:90b:57c5:b0:314:2cd2:595d with SMTP id 98e67ed59e1d1-3142cd260camr1982709a91.8.1750163430338;
-        Tue, 17 Jun 2025 05:30:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQNEBXEy5uriJtOkqUSJvEhCCTvxWbcelcAhaQW4UNtVmCQ1n9HvM1d8Jev83IHABwhp+As21PazyBz3dX5LY=
-X-Received: by 2002:a17:90b:57c5:b0:314:2cd2:595d with SMTP id
- 98e67ed59e1d1-3142cd260camr1982671a91.8.1750163429917; Tue, 17 Jun 2025
- 05:30:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750163477; x=1750768277;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+uZWDZy9xuYrsdwKUlxju0n0w0AKCo6XtJq5+cSCxW0=;
+        b=trEvZy7RU49/0yndY3JXfXqQqmDEczoauK5ECKmvy8qugFI9yFEP9LrJ1ZQm0LKxzt
+         OO3qEvVCy+zIe2F3HgXGS19seCnthZLPPHT0/VWDMI+I2yBzJXWWQJ4aLlnvpXToXwST
+         X+09bqgBHxVoL6Qy0abGqhn5ZbZ40YunOVN5NNjRqhpcliJU9AfB5K4Frz/QEbcM31hT
+         GtC7j7K/+3+5ZPSS/zneMJr1zc5ka9AirZ9rIN9aRbvf17xO1Fe6nuKM0vHHdLeddlFo
+         DYnLEURRv+TIysPYjR9uDZA1W7rvNRdN7XfuNqPcev6s995rB7wkasTtCMqpyqHSQw0m
+         4knw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXOJ1H/4D7tEkFrpEDZhpAyvBNeAs3J3l8xCLfiTc8GDj/3dh3UpS4k+HCI6IDy9hBeRJvOXEZyk8R8aQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPUyNN/YfK1Fh7o3W7Db/jEWz40CqhQYZd2pvHiwc3jvP+OvLK
+	NVzz76vn9hH6nOtP+AVFfRTGIkli0JXuIyAsF4McNvUD7PVti7f+TImFcb7JoLrfdVg2fMTj0ON
+	KiRtfl4ZUsB43FfxSQr2DwAUx9KmpHYLcp4w+RUTnFg==
+X-Gm-Gg: ASbGncvhgN0sgi/YiP+B4Rt6nmWUJxhoEmQEzRdetX0DetpTmO5Q0xNkkqeyegfUphQ
+	PISOhJ945APyOGO6y0teeFeVwAcr9LpCa2hV/MKHGsFQIVadN5+zEWocN46H6SDbuUZ919kCXoR
+	oMfTt+PnNNAyXMMvg4nm92YssDVOSSCUFdU/D/JRzD6lkeWCgZdkTnF9WFeBIu4CfyMFSY7jJet
+	MFn
+X-Google-Smtp-Source: AGHT+IHI6oUlH5le8/OtMwtl++u2ijNoxmk+ioHAnyJhKHp6pNKG3NNl2OPoTIdi6yloM5vSnSDZbuh68sxd1gcl+YE=
+X-Received: by 2002:a05:6122:2789:b0:531:45f1:604d with SMTP id
+ 71dfb90a1353d-53149816854mr7875030e0c.6.1750163477167; Tue, 17 Jun 2025
+ 05:31:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616082518.10411-1-jasowang@redhat.com>
-In-Reply-To: <20250616082518.10411-1-jasowang@redhat.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Tue, 17 Jun 2025 14:29:53 +0200
-X-Gm-Features: AX0GCFusAvHVE3AZoZTULayMywUaufTKyuftKIh_kB3-gFeGtOgP4a0XWHoJg-U
-Message-ID: <CAJaqyWehyX6TvfCk_8L_dKxkkpR-P2CwHbobGOs5tX8rhxQyjw@mail.gmail.com>
-Subject: Re: [PATCH V3 00/19] virtio_ring in order support
-To: Jason Wang <jasowang@redhat.com>
-Cc: mst@redhat.com, xuanzhuo@linux.alibaba.com, virtualization@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+ <20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org> <CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
+ <20250610105337.68df01f4@gandalf.local.home> <CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
+ <20250613172753.3479f786d40c29ec7b51df0a@kernel.org> <20250616163659.d372cf60ee0c476168cd448e@kernel.org>
+ <20250617194159.d74b9cde9268ee8ace8e9018@kernel.org> <CA+G9fYtuiFHYBuRpB5MVwnZqc+WVRnnYMRHUExXAyu3_jMVurQ@mail.gmail.com>
+ <20250617082544.24b54ad2@gandalf.local.home>
+In-Reply-To: <20250617082544.24b54ad2@gandalf.local.home>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 17 Jun 2025 18:01:04 +0530
+X-Gm-Features: Ac12FXxCGs0F6LOD5zr-FDIYJxshsssKbqKQ3P9XTP8O1m-gA3462K0iaVF_BEg
+Message-ID: <CA+G9fYuedWTRHrhf_+eu+=D5QaQnEkwPaD5YoXWL7F2S5E29zQ@mail.gmail.com>
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 10:25=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
+On Tue, 17 Jun 2025 at 17:55, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> Hello all:
+> On Tue, 17 Jun 2025 17:40:25 +0530
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 >
-> This sereis tries to implement the VIRTIO_F_IN_ORDER to
-> virtio_ring. This is done by introducing virtqueue ops so we can
-> implement separate helpers for different virtqueue layout/features
-> then the in-order were implemented on top.
+> > > Please test below;
+> > >
+> >
+> > Do you mean only this single patch on top of the Linux next ?
 >
-> Tests shows 3%-5% imporvment with packed virtqueue PPS with KVM guest
-> testpmd on the host.
->
-> Changes since V2:
->
-> - Fix build warning when DEBUG is enabled
->
-> Changes since V1:
->
-> - use const global array of function pointers to avoid indirect
->   branches to eliminate retpoline when mitigation is enabled
-> - fix used length calculation when processing used ids in a batch
-> - fix sparse warnings
->
-> Please review.
->
-> Thanks
->
-> Jason Wang (19):
->   virtio_ring: rename virtqueue_reinit_xxx to virtqueue_reset_xxx()
->   virtio_ring: switch to use vring_virtqueue in virtqueue_poll variants
->   virtio_ring: unify logic of virtqueue_poll() and more_used()
->   virtio_ring: switch to use vring_virtqueue for virtqueue resize
->     variants
->   virtio_ring: switch to use vring_virtqueue for virtqueue_kick_prepare
->     variants
->   virtio_ring: switch to use vring_virtqueue for virtqueue_add variants
->   virtio: switch to use vring_virtqueue for virtqueue_add variants
->   virtio_ring: switch to use vring_virtqueue for enable_cb_prepare
->     variants
->   virtio_ring: use vring_virtqueue for enable_cb_delayed variants
->   virtio_ring: switch to use vring_virtqueue for disable_cb variants
->   virtio_ring: switch to use vring_virtqueue for detach_unused_buf
->     variants
->   virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
->   virtio_ring: introduce virtqueue ops
->   virtio_ring: determine descriptor flags at one time
->   virtio_ring: factor out core logic of buffer detaching
->   virtio_ring: factor out core logic for updating last_used_idx
->   virtio_ring: factor out split indirect detaching logic
->   virtio_ring: factor out split detaching logic
->   virtio_ring: add in order support
->
->  drivers/virtio/virtio_ring.c | 896 ++++++++++++++++++++++++++---------
->  1 file changed, 684 insertions(+), 212 deletions(-)
->
+> Looking at Masami's analysis, yeah, I think you only need that one patch.
 
-Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+Testing is in progress.
 
-Thanks!
-
+>
+> -- Steve
