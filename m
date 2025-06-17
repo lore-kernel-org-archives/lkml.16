@@ -1,135 +1,191 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EFC1DE4F3
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2F12206A6
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750162215; cv=none; b=Uhe0S67XENgfNWMzDdQdQLL1Y3t7utm5zTQfatszBDEZNRf9vYKW9j/zXNDi2TmYtb1/rHlAFWXSZd1FS+HL/aKtMJ/HnPuXoVmWaIENOqq0xnJzAOfkTA6QHKBNgJ9faVF19PKnw0I8fZUhFRdE0G3I4HsOmmnfWcQhRsN2fgg=
+	t=1750162240; cv=none; b=CjInT583GekQzYcMs4vGEQM1/hf3UPs7NgEvatdoSfsMQgcKkRIrwBmsBO6Dy+mcsVboVr7vr6jyDo2mnVRhMzlN4pxZP1SvGkQYLwukMOKSb1HnmOxbPNL5mIEICnfFWENhmCveWXDos6MtRDeB6IrtBCO5sXLuO1TvbUXEWss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750162215; c=relaxed/simple;
-	bh=MzzTZSj+R1wdb3vL1PAlZe0jy+u4Fwp/sFHKQSnRePg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxkOO0QA6/UXpdTvYiOolRvIDaUH/yfD7uD3oJ8F6BdYdiKEu7fYYTPzR0QbRCtgeAr1jdBo1c5SKa6SBIvF9FamiSrc9wFJhTuNknxa8snjUpkGv69VZlx5LH7Q0+dljkkEFBWSD12QkgvYFpnnf5+0pqCjr7ldwBQ8GAwvSRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WHLNpWqm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y35zgBKQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WHLNpWqm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y35zgBKQ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750162240; c=relaxed/simple;
+	bh=eQbtgAXVim/V7lKvfBJCMdtJg5asI7FbXt5KYJh6f+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L/3F/ht1Efws4CA8o/MLt3c9Qq1dtkc6WJcXkpufoyq5+OTpvtBteJzTASlcMcwlDfEe8bgBmabQzKe0LTKOyeYE6HKp3xV0ftLQkS7gLI/9Q8GiXue/02dWaeiCgwQjNB3ZvguanL93VhydcHb0rzjApirqF6k7+8nUCJhOv4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gD1tcwYZ; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WHLNpWqm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y35zgBKQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WHLNpWqm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y35zgBKQ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A91DA1F78B;
-	Tue, 17 Jun 2025 12:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750162211; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H3tv14WSt0c8uWmDlD5dHVqan5MBcFz+Okygv/WCaY4=;
-	b=WHLNpWqm0bSM54bEz567SLE49aGHEyqV1E2viIy5ugL7YlvRq2RqQifWbujG5C/baZl8pP
-	xXMMU82b9C9vp7Fc74uN/1bjgOs/+AvRccfFrg+tWjkSsJUN3Yg5zGAIIKUagc1jVa8J3+
-	6YRq+EnWk5TCtYVbFeaUi6wHEICvAMM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750162211;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H3tv14WSt0c8uWmDlD5dHVqan5MBcFz+Okygv/WCaY4=;
-	b=Y35zgBKQJQ0pt00ITua8nmr4M/m5p1Phc8OY/3+593btN6KHqeapD1srXspP2I6CIz8Hsj
-	wK3VOU6lavXOqYCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750162211; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H3tv14WSt0c8uWmDlD5dHVqan5MBcFz+Okygv/WCaY4=;
-	b=WHLNpWqm0bSM54bEz567SLE49aGHEyqV1E2viIy5ugL7YlvRq2RqQifWbujG5C/baZl8pP
-	xXMMU82b9C9vp7Fc74uN/1bjgOs/+AvRccfFrg+tWjkSsJUN3Yg5zGAIIKUagc1jVa8J3+
-	6YRq+EnWk5TCtYVbFeaUi6wHEICvAMM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750162211;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H3tv14WSt0c8uWmDlD5dHVqan5MBcFz+Okygv/WCaY4=;
-	b=Y35zgBKQJQ0pt00ITua8nmr4M/m5p1Phc8OY/3+593btN6KHqeapD1srXspP2I6CIz8Hsj
-	wK3VOU6lavXOqYCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A47513AE2;
-	Tue, 17 Jun 2025 12:10:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id q5ZYByNbUWhWPQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 17 Jun 2025 12:10:11 +0000
-Date: Tue, 17 Jun 2025 14:10:09 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	James Houghton <jthoughton@google.com>,
-	Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] mm,hugetlb: Document the reason to lock the folio in
- the faulting path
-Message-ID: <aFFbIXLHdYbM3ooa@localhost.localdomain>
-References: <ffeeb3d2-0e45-43d1-b2e1-a55f09b160f5@redhat.com>
- <aEychl8ZkJDG1-5K@localhost.localdomain>
- <aE075ld-fOyMipcJ@localhost.localdomain>
- <a5e098d1-ee5a-447f-9e05-0187b22500e1@redhat.com>
- <aFAlupvoJ_w7jCIU@localhost.localdomain>
- <1297fdd5-3de2-45bc-b146-e14061643fee@redhat.com>
- <aFE9YTNcCHAGBtKi@localhost.localdomain>
- <11a1d0f7-ef4e-4836-9bde-d7651eebcd03@redhat.com>
- <aFFZtD4zN_qINo9P@localhost.localdomain>
- <3eb8e1e2-5887-47ed-addc-3be664dd7053@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gD1tcwYZ"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d0976776dcso613763285a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750162237; x=1750767037; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=03J8IjZSa7RJs746bHjxfihX5+FUeZTPfOgcNc5eBLg=;
+        b=gD1tcwYZHSF0BuSGF5QfkRrbjlWxapVlp7F6cxx4SX5/ZG3eZzMXH894FpiV1O9OUQ
+         KrEKjxHi9udATRgXNvKlk2QW46BpKHSR5/ZTFizXhsfrsAMIFg0xigj+Z6SsLfgXpHXZ
+         6WRwzbh21H4gkRPzz6mN+QTTSGVeU19IgPUSroFqnYSAPEjZI3gfZ9runKID5djHmp6m
+         pkZujb/Hn/Ixiz6jJ0ZWfWnduCzYiIopNnSQHr7QDkmPvCZRov49dtXWNm3cX8nRBq4H
+         oJtuGZS1RAlFTS9DwdhUfGyABGJSdIonMjTdabpAu7Va/s5G1vnFjRNF+NRALX4+2PF7
+         vJtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750162237; x=1750767037;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=03J8IjZSa7RJs746bHjxfihX5+FUeZTPfOgcNc5eBLg=;
+        b=byDzSuShm6hGuk0SWn6G1raBA85TbtHX9/XtSL4j4Dr8wiPrEBytVGqk3Z/zmElD9R
+         T31B031H1oS0myxk23TaR5AZb5QiAoJkdbkmsQxX9gNumBFXOtIFPQ5HZRTRET4hfmRm
+         mGGMItNOa6oyBxtx/EMnLQWZo02JkXFficRBKg6qVKe2jhwyv3/2jr2PBcC/dfx33raz
+         Bi7/SvIXAfKmQ5m6qkWs3biUswUsI+IEm0QQtiwHkVClbLV34rdyDoNA/9GSIuAsdmQW
+         yBJ2EambpL4pVNVkOqCselaL2+l6XZCZ7ZDGoAA3km94XjLvNs7zF1fnZULhqt3eUliS
+         Ntxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBx7ZzSe72j8pXd8/N/zdA1O0R1/ida7YTPmmK6LjKofOWuSty7LFsgB0sv7Ms5s4Gsr964Wo1WIgbOkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYrlP/KGB7qzZQieLSyeGnTo/Z8iJqKrFo+Kou3pPwANrXV4Of
+	NWR1L/ND0YFVUmQobSrvMkGFZ9QhipNqdhwl390yl/lSP7aTput7XuyHQqW7ief2tIC3LyoIiis
+	+zHNQSgY3RzumArjj8zgiyjXx4+chRqDa9hIBoHd64g==
+X-Gm-Gg: ASbGncvHQ/y+SM1n8jtpKnm5qfUOuvC31Wr8xOAEbnr/D57/e+ZUgsgGyK7U9j9tL+5
+	gPqAbKr0wnZIMy8aASFhox0A/9E+UJZijP7mizq3dArmJXsd3EuwX3ek+v9iS3XJioQAj+GY7Um
+	yje4JCtxB5sccnJtZXTX3RNv3fY2I7KlIHCau3QbshHJZWZNmCUU1K5crIG+s9NYRh6gR8JMsHs
+	vz3
+X-Google-Smtp-Source: AGHT+IH1N0alZSpS2og/YRtrO6BJSrFoQcgwn2EAt1dnwxk6JId43IAh6DG97xNIAsNPpYTwM0BzsECiOdp6WxQ9Kck=
+X-Received: by 2002:a05:620a:4156:b0:7d3:9ecb:74ee with SMTP id
+ af79cd13be357-7d3c6c20910mr1798287185a.20.1750162236905; Tue, 17 Jun 2025
+ 05:10:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3eb8e1e2-5887-47ed-addc-3be664dd7053@redhat.com>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid]
-X-Spam-Level: 
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+ <20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org> <CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
+ <20250610105337.68df01f4@gandalf.local.home> <CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
+ <20250613172753.3479f786d40c29ec7b51df0a@kernel.org> <20250616163659.d372cf60ee0c476168cd448e@kernel.org>
+ <20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
+In-Reply-To: <20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 17 Jun 2025 17:40:25 +0530
+X-Gm-Features: Ac12FXxoVZqyTzWtPceVbJMbpvfCSWZtPP8iCGPF7196lDnB0gKWM5O37iKTTJw
+Message-ID: <CA+G9fYtuiFHYBuRpB5MVwnZqc+WVRnnYMRHUExXAyu3_jMVurQ@mail.gmail.com>
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 02:08:16PM +0200, David Hildenbrand wrote:
-> folio lock is a sleeping lock, PTL is a spinlock. :)
+Hi Masami,
 
-Lol yes, overlooked that totally.
-And I also saw the comment from mm/rmap.c about lockin order.
+On Tue, 17 Jun 2025 at 16:12, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> On Mon, 16 Jun 2025 16:36:59 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>
+> > > So the fundamental issue is that smp_text_poke_batch missed
+> > > handling INT3.
+> > >
+> > > I guess some text_poke user do not get text_mutex?
+> >
+> > Hmm, I've checked the smp_text_poke_* users, but it seems no problem.
+> > Basically, those smp_text_poke* user locks text_mutex, and another
+> > suspicious ftrace_start_up is also set under ftrace_lock.
+> > ftrace_arch_code_modify_post_process() is also paired with
+> > ftrace_arch_code_modify_prepare() and under ftrace_lock.
+>
+> Eventually, I found a bug in text_poke, and jump_label
+> (tracepoint) hit the bug.
+>
+> The jump_label uses 2 different APIs (single and batch)
+> which independently takes text_mutex lock.
+>
+> smp_text_poke_single()
+>   __jump_label_transform()
+>     jump_label_transform() --> lock text_mutex
+>
+> smp_text_poke_batch_add()
+>   arch_jump_label_transform_queue() -> lock text_mutex
+>
+> smp_text_poke_batch_finish()
+>   arch_jump_label_transform_apply() -> lock text_mutex
+>
+> This is allowed by commit 8a6a1b4e0ef1 ("x86/alternatives:
+> Remove the mixed-patching restriction on smp_text_poke_single()"),
+> but smp_text_poke_single() still expects that the batched
+> APIs are run in the same text_mutex lock region.
+> Thus if user calls those APIs in the below order;
+>
+> arch_jump_label_transform_queue(addr1)
+> jump_label_transform(addr2)
+> arch_jump_label_transform_apply()
+>
+> And if the addr1 > addr2, the bsearch on the array
+> does not work, and failed to handle int3!
+>
+> This can explain the disappeared int3 case. If it happens
+> right before int3 is overwritten, that int3 will be
+> overwritten when the int3 handler dumps the code, but
+> text_poke_array_refs is still 1.
+>
+> It seems that commit c8976ade0c1b ("x86/alternatives:
+> Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+> introduced this problem, because it shares the global array in
+> the text_poke_batch and text_poke_single. Before that commit,
+> text_poke_single (text_poke_bp) uses its local variable.
+>
+> To fix this issue, Use smp_text_poke_batch_add() in
+> smp_text_poke_single(), which checks whether the array
+> sorted and the array index does not overflow.
+>
+> Please test below;
+>
 
+Do you mean only this single patch on top of the Linux next ?
 
--- 
-Oscar Salvador
-SUSE Labs
+>
+> From e2a49c7cefb4148ea3142c752396d39f103c9f4d Mon Sep 17 00:00:00 2001
+> From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> Date: Tue, 17 Jun 2025 19:18:37 +0900
+> Subject: [PATCH] x86: alternative: Fix int3 handling failure from broken
+>  text_poke array
+>
+> Since smp_text_poke_single() does not expect there is another
+> text_poke request is queued, it can make text_poke_array not
+> sorted or cause a buffer overflow on the text_poke_array.vec[].
+> This will cause an Oops in int3, or kernel page fault if it causes
+> a buffer overflow.
+>
+> Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
+> so that it correctly flush the queue if needed.
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> Fixes: 8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  arch/x86/kernel/alternative.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index ecfe7b497cad..8038951650c6 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -3107,6 +3107,6 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
+>   */
+>  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
+>  {
+> -       __smp_text_poke_batch_add(addr, opcode, len, emulate);
+> +       smp_text_poke_batch_add(addr, opcode, len, emulate);
+>         smp_text_poke_batch_finish();
+>  }
+> --
+> 2.50.0.rc2.692.g299adb8693-goog
+>
+>
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
