@@ -1,152 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683772DE1E0
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CCD2DE1E0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750162874; cv=none; b=QdPZLq00xM/95/8FWYc2aVBX6QicIoLxmadWjdOGUPaHaTVEY43uHifSPiT5zX6NMPIeLpA3BvMvD07gYY38JIu1446vNkAU5IOtDqBxLQGaQK+W6wcBijOXok/3+tXPC/DrJn6pMN9aNsABOvGhYj+qzkIlogVjix31bloGd8k=
+	t=1750162993; cv=none; b=KyA6GGKYn0X430FFxuBIdQLa+TuTdPI/8Y9yct8XVleaBlxdVv6cI4ehHBQkcJHRjnDEUeiCc+ghTuCpR6xorEuCfDvQM2WLx+otdz+UJFMV714FCzrjNdyo8nqakPFy6jPIS4T0U9Ct6hy/X/gQ5wJJAxGWjhOKntsN6G9oZ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750162874; c=relaxed/simple;
-	bh=+iFEKsrNEpT2xbTy++KT2dWotgeE2bVlaPMJ1iFaUdI=;
+	s=arc-20240116; t=1750162993; c=relaxed/simple;
+	bh=qfKqs81FRx7r4u3rTvzSKZpY15wIyvtyPSbbF+hvRF8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L8rQ6VBVfftZ3XE0EkH+eChkSbz116w37dkn1gA5jMehDR0oueqes0CHQyGOVbH6KhUp+ILBzY/NlhxUuOAEdyeYKStTxXlHA/eNZMvrEsbibz13PiNTqZg9b7Iv7/6HzGCozGwIl1CuFBFw6QBERsuoAENFvAASi3eLl76nkLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S2CwKANI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYf3ctSINmeqqT40N3AbyWBdeiBT0ky5OHZZe5L01sUAXhhkUwI9Scp5l3w+zml670TV+gOFJi+ookP8wlWID2J/Ut6FflHkGbGNpBe+zx6pQVPFn2g6cVsipcGXGY7EJ9tM67RTjttVtD2qD2PN5DrUjJ1+f6oxBECHihZ77Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O/dwLbdq; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S2CwKANI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750162871;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hWbGPsCL+dHyM0VVvvwNT45eKA8G9B5bfX+3auMPkdM=;
-	b=S2CwKANIfJ649Xm/Nj0zKnAk2wpq55hnB0JTRNMuIY95amn8J0a0ih7Fs54X5gRu/JhJo7
-	ZnTKFTuxZ4mCFN/cId5WoSBXcLpvoLJLk1Mz7Kw0f5vQqWWBfJZiYy04sZLAcQ8X49uIef
-	Yv1KwZ/hdYQAFvRjtfRJIjIA2HZnse4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-ApzKROTePlKgz5m4jSg7jg-1; Tue, 17 Jun 2025 08:21:09 -0400
-X-MC-Unique: ApzKROTePlKgz5m4jSg7jg-1
-X-Mimecast-MFC-AGG-ID: ApzKROTePlKgz5m4jSg7jg_1750162869
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f8192e2cso2725481f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:21:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O/dwLbdq"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so37399475e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750162990; x=1750767790; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=21Go1wj0x49xdQOFnhkIKy1MZpMdJcDxWBqyIqwuot8=;
+        b=O/dwLbdqRgCV3UX2tu9kiKgBGCP/E4fjWf1QSnLRmIcZQmoYGp0H8fMaysIIgMs7CJ
+         1n4Z3+6xWyMYLCZ9a7xwny70dyFO80upCi01Mj7Zh+l1m+6ooD0xBv3X3gZ9ybkznwf7
+         os8nGbe7ZDgCmibH0nNRBxPeGs8CFvoiiISGPlyEd6fUP2hCIuDXbfN6ddhquaUdqstK
+         /vmTHrle/HN0kSf/vTWJZegMfIiEivlxmpefW3b0+mWcFL9aoFKKK+f2BW/+HJ4QesHO
+         CHdV9IMCF6IeXyZB9ukF3130V/epTCBA55VoQLQ22zAVProNQMOrOJSHhHTFkLg+ztnw
+         k5NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750162868; x=1750767668;
+        d=1e100.net; s=20230601; t=1750162990; x=1750767790;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hWbGPsCL+dHyM0VVvvwNT45eKA8G9B5bfX+3auMPkdM=;
-        b=oyCFfkqRWmp8LzmJBXPT2naMVI7NF7uwE3VumXs3X5jTdZjttQ+t2aZAiaQEU+PArK
-         GRHIg2G9s+VoLivB6/jMqeOl6b1/y45g6G0M9dsMJ4qVxfIGKSC65lnzqIYvBK+tZZPm
-         YbuyVNdXMyQcYdBqd/CgMomnSQeD462RJlNRWRbKIerTHua81QJR+/Rla+xklJiyeH+i
-         jW4T75jrGSsp8TMeLhVI26YTL11Ns58F+uBL8RRLOZyN4dICtASd0iA4EQTeV2edrQxm
-         xuXl5O9yUCZHIGTdh4xsPA5BrKMbdLMFWyTdj6mRkKi83zt/US3rIqyggil5Vf7jMll4
-         a8+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBhLfx6vHTf0HQvcOp3OHLh9YJxOP5e/m7wJqQIbG2B165CKFGaq33/3BB2Wd3ThSuPDBcC3tBMjfCTMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3pMGvTWQJ+SKtDSJ8UljigeHihVZmvSYOO08OV9t24kuchh05
-	2yZFfZpaPpqQCqU9mD4fViKCYRj0BfgqyLQtdysBjliAXn35QKAeZzhw57aour4Ew7knuZAmiyh
-	PUOejNlDfYCbPH+PNEpVLUqAVNpds7I3Ne7vXxxKjbhnGCSiFb9Kpm//XkWeN2A98tA==
-X-Gm-Gg: ASbGncuYQ98/+rMvrH3j3IQA1S7OnSS0NBMrUzpiM+e/ySrXDgPg8Rno+oy8DsEQX4W
-	nI0tKUBdEDWu6ij9alvNb7CL9sxD8rJrEcj1ZBwkbpkEJi4E7la99H0gEZVazEASVWM9r+wzgdS
-	pJSRLMp404yu1Z9DhYMcc/47Qx+xefrQddCpvoC88Pb/VyE4mZhO1tZqKUinMaQxFaWpmqIW/Od
-	apEOy9fmGo3f8dO9JnYuDp7vgcmHSp6sAD58faeDvlY8UwmD4nKxh4dWoVINVckg5lnspTwnvt3
-	2CCO9KpX157AdNIVNzoFPvWw9hmpxPIJ7D/eMZ1JH4L7Gm3NjLfdFw==
-X-Received: by 2002:a5d:64c2:0:b0:3a4:fbd9:58e6 with SMTP id ffacd0b85a97d-3a572e56e89mr10226295f8f.50.1750162868608;
-        Tue, 17 Jun 2025 05:21:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZ6HFIcgPA61VTLE6MxwcViqBvvaSiTLm55w5wu/A8YbCBmIm2sEb6MdwAS+c2/XoeDsQZRA==
-X-Received: by 2002:a5d:64c2:0:b0:3a4:fbd9:58e6 with SMTP id ffacd0b85a97d-3a572e56e89mr10226267f8f.50.1750162868192;
-        Tue, 17 Jun 2025 05:21:08 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.151.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089c2sm14026313f8f.59.2025.06.17.05.21.06
+        bh=21Go1wj0x49xdQOFnhkIKy1MZpMdJcDxWBqyIqwuot8=;
+        b=h/flRyv+i7mWYYNlthwN1QwAgILXcPQneA1IqiFfAZfZVATIJ4wwdm+nkSASy8iGjf
+         TbV+TY+wqFQfQfS2CNYxGVqpijfqX7pNnMOEUZybDjbgCpK0TTyoMzJmbctbrFX/Hfux
+         lXjC0KWbIz3iyuPVurhWmoL1b2AkZIqlRKCz47eMizAl5xje8Zn/8DSID9M0Hw2I0doS
+         5UzANWHNHOWlcujNfPM2Tx356O3D9kW6CTJkczdtrTyNiThgML3+rSnKLaKaO0Lh0NzQ
+         8hPPsoQArXBIcEGsldvdeORTL9jwiYK2vXyPlwdps7YxFYpjbabtuShBmCFAj1K1ZjBM
+         s00Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0uYfR7RV8zhCsNWiToqt314UgqgUjioh/m7SUHx4TynXCH6etzMHZPZboVEMaUv2KDkYATyqzDjyx8Vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUlEiEiLn7fgKrRTQKRQM9dsSQa7bMC7MP4x/BrUeoHb0IXqbp
+	/mL+tcrNWtiatFByF+IBTCWdfwKIaM/mxwVc0TkBO64dEoxOcOJ3gFKzMePbQRLadmc=
+X-Gm-Gg: ASbGncvQMPepG7p/NBO3RQ3/mrHF/luWdtFNBnPspl/Tn7rPmDnGYMyWeL06F6ztcJX
+	kAmIMSJ+9Safe7ldTJw1O5Hg8JOUfpg5VyZ5VQi47PcNhreh9monB1fbb4uQhfk9a2HO+9QFYvO
+	HKQk037XOpA/9W40synJlC94A6BDUBwJOxYfUmCjpTa8Ba8pWxAgCSGd7L0/T+LLTvzNae5rHOY
+	SfDo7shwdOFTfSTQ/IuquNZNU39Ef1ULsw9pUSfnJxx9DiFDskC6FaKFOlUIaJroNrVWE29sC6C
+	fBIOyr597f4XBScZgET4Z3oTCjA/Jb3DAUSQYLoWBb7/wtQO9iGrC26MYTtvvQYjUiIq9pk42V4
+	=
+X-Google-Smtp-Source: AGHT+IHemldAx08RKX+2t2fiuYieKOkNAzOmNF3+c2oFhTT/lpYZSkgPImE52/XFg7cSXUZMXu6Gcw==
+X-Received: by 2002:a05:600c:3587:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-4533cb48951mr120152275e9.16.1750162990026;
+        Tue, 17 Jun 2025 05:23:10 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224617sm176822635e9.2.2025.06.17.05.23.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:21:07 -0700 (PDT)
-Date: Tue, 17 Jun 2025 14:21:05 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
-Cc: luca abeni <luca.abeni@santannapisa.it>, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vineeth Pillai <vineeth@bitbyteword.org>
-Subject: Re: SCHED_DEADLINE tasks missing their deadline with
- SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
-Message-ID: <aFFdseGAqImLtVCH@jlelli-thinkpadt14gen4.remote.csb>
-References: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
- <aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
- <f532441d8b3cf35e7058305fd9cd3f2cbd3a9fac.camel@codethink.co.uk>
- <20250507222549.183e0b4a@nowhere>
- <92690eb9158c1019dc0945f8298800cad17cae05.camel@codethink.co.uk>
- <20250523214603.043833e3@nowhere>
- <c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
- <aDgrOWgYKb1_xMT6@jlelli-thinkpadt14gen4.remote.csb>
- <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
+        Tue, 17 Jun 2025 05:23:09 -0700 (PDT)
+Date: Tue, 17 Jun 2025 14:23:07 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: youngjun.park@lge.com
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, shikemeng@huaweicloud.com, 
+	kasong@tencent.com, nphamcs@gmail.com, bhe@redhat.com, baohua@kernel.org, 
+	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, 
+	taejoon.song@lge.com, gunho.lee@lge.com
+Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
+ per cgroup swap priority control
+Message-ID: <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
+References: <20250612103743.3385842-1-youngjun.park@lge.com>
+ <20250612103743.3385842-2-youngjun.park@lge.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cxa6tdutywia4blb"
 Content-Disposition: inline
-In-Reply-To: <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
+In-Reply-To: <20250612103743.3385842-2-youngjun.park@lge.com>
 
-On 02/06/25 16:59, Marcel Ziswiler wrote:
-> Hi Juri
-> 
-> On Thu, 2025-05-29 at 11:39 +0200, Juri Lelli wrote:
 
-...
+--cxa6tdutywia4blb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
+ per cgroup swap priority control
+MIME-Version: 1.0
 
-> > It should help us to better understand your setup and possibly reproduce
-> > the problem you are seeing.
+Hello.
 
-OK, it definitely took a while (apologies), but I think I managed to
-reproduce the issue you are seeing.
+On Thu, Jun 12, 2025 at 07:37:43PM +0900, youngjun.park@lge.com wrote:
+> Example:
+> cat memory.swap.priority
+> Inactive
+> /dev/sdb	unique:1	 prio:10
+> /dev/sdc	unique:2	 prio:5
+>=20
+> - Creation
+> echo  "unique id of swapdev 1: priority, unique id of swapdev 2: priority=
+ ..."
+> > memory.swap.priority
+>=20
+> - Destruction
+> Reset through the memory.swap.priority interface.
+> Example: echo "" > memory.swap.priority
+>=20
+> And also be destroyed when the mem_cgroup is removed.
+>=20
+> 3. Priority Mechanism
+>=20
+> - Follows the original concept of swap priority.
+> (This includes automatic binding of swap devices to NUMA nodes.)
 
-I added SCHED_FLAG_RECLAIM support to rt-app [1], so it's easier for me
-to play with the taskset and got to the following two situations when
-running your coreX taskset on CPU1 of my system (since the issue is
-already reproducible, I think it's OK to ignore the other tasksets as
-they are running isolated on different CPUs anyway).
+How is this supposed to work
+cg1     /dev/sda	prio:10
+        /dev/sdb	prio:5
+` cg3     /dev/sda	  prio:5
+   	  /dev/sdb	  prio:10
+cg2     /dev/sda	prio:5
+        /dev/sdb	prio:10
+` cg4     /dev/sda	  prio:10
+   	  /dev/sdb	  prio:5
 
-This is your coreX taskset, in which the last task is the bad behaving one that
-will run without/with RECLAIM in the test.
+when there are competitors from cg3 and cg4? Which device should be
+preferred by each cgroup?
 
-|sched_deadline = sched_period | sched_runtime | CP max run time 90% of sched_runtime | utilisation | reclaim |
-| -- | -- | -- | -- | -- |
-|  5 ms  | 0.15 ms | 0.135 ms |  3.00% | no |
-| 10 ms  | 1.8 ms  | 1.62 ms  | 18.00% | no |
-| 10 ms  | 2.1 ms  | 1.89 ms  | 21.00% | no |
-| 14 ms  | 2.3 ms  | 2.07 ms  | 16.43% | no |
-| 50 ms  | 8.0 ms  | 7.20 ms  | 16:00% | no |
-| 10 ms  | 0.5 ms  | **1      |  5.00% | no |
+Interface note -- try to make it "Nested keyed" or "Flat keyed" as
+described in Documentation/admin-guide/cgroup-v2.rst (like io.max or
+io.weight), so that it is consistent with other cgroup v2 APIs.
 
-Without reclaim everything looks good (apart from the 1st tasks that I
-think suffers a bit from the granularity/precision of rt-app runtime
-loop):
 
-https://github.com/jlelli/misc/blob/main/deadline-no-reclaim.png
+HTH,
+Michal
 
-Order is the same as above, last tasks gets constantly throttled and
-makes no harm to the rest.
+--cxa6tdutywia4blb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-With reclaim (only last misbehaving task) we indeed seem to have a problem:
+-----BEGIN PGP SIGNATURE-----
 
-https://github.com/jlelli/misc/blob/main/deadline-reclaim.png
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFFeKQAKCRB+PQLnlNv4
+CM9nAQChEzdekCNE43fNB7rnSRjzNssuFzuex9JUVSGIfGo09QD/e/YzVdE7mQ7l
+29U75wiBDcAwyoo351mIl2azH41iKgc=
+=C+Kh
+-----END PGP SIGNATURE-----
 
-Essentially all other tasks are experiencing long wakeup delays that
-cause deadline misses. The bad behaving task seems to be able to almost
-monopolize the CPU. Interesting to notice that, even if I left max
-available bandwidth to 95%, the CPU is busy at 100%.
-
-So, yeah, Luca, I think we have a problem. :-)
-
-Will try to find more time soon and keep looking into this.
-
-Thanks,
-Juri
-
-1 - https://github.com/jlelli/rt-app/tree/reclaim
-
+--cxa6tdutywia4blb--
