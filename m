@@ -1,282 +1,484 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2182516C850;
-	Tue, 17 Jun 2025 14:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D875E1EEA40
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170685; cv=none; b=a7Zffg4Cnbr31rfsBHWPxR5ncLV10XpMZYXzJAteg6mF1Ncb7NcJKubfwrlfGH71bzcnde0AmUkq/QLhy+A8uRZ+NK9yxFyYPJEkzrt0ZqS+GnV/4iiQtsaB+NA5NjZh/pRNMimVzG13rtXiGtPEoypsE2kVNkQoJAR9SQY7/D4=
+	t=1750170775; cv=none; b=GVE/Tqg17gnFDVuPRxbVo3TOSyajJQufd97yU2YAgIS5QPo9FzG4WOhPhAFFxo7WN21mo86l0VJ0Bi5hmLs29YAmF5hQBIUEkGpIjN7aBHb6SX0avCg7UblIFh7WJsWFG2pVkUPc8dRJZg0dr1oqtjzwOfYD+WzC33gCI23P5cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170685; c=relaxed/simple;
-	bh=fjblYqco9O2pK2/UG66z+ix0P+/RjiRxHTHn4GLpv6k=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=Ug116Uwa9bvc64PezFD26Cv01i9TgMp++rV64/H1bOU5tnQH8y6mryY0CBwQRCr23Hk2virWX1yXpaU2MvR2HAKU3KPZdSyYizrq+eOgAHjgwHAqmKY1kCm6ojGpOHv9UftURhJ0pVQho17h3+jsDbkgm3xVLnkFyDF5w0TMyYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=ehLhXi/Y; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1750170775; c=relaxed/simple;
+	bh=gY/EiL5/HPBQu5F9qCoDYTlRiYUCxLxD3zVI/uYFCNc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AL/Nxm1DP3iYmHISxx6L/IVGebb8U4Z1TSfrmsmqi/+hV3YuihYZP9Xv4jtjUmxtlksFZPoSaRRclNeg9tqd2rXyP250F/YFTyiPRu6CB8gE73VBvegAdpLHXxUlMf8soH9wgYo1hglQ1CFS0mqKPYjHZgL8oheWe+iAmg45qDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=Tqj+yguu; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="ehLhXi/Y"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id DF82182856F8;
-	Tue, 17 Jun 2025 09:31:21 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 0--oJCWWxd3v; Tue, 17 Jun 2025 09:31:20 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 9211E8286FBD;
-	Tue, 17 Jun 2025 09:31:20 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 9211E8286FBD
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Tqj+yguu"
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d3e270a62so105523241.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750170680; bh=aunofFWjbhf0ebvsXaS+3/oQyj1Pul1Wqor5cviReNg=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=ehLhXi/YHfQfXpXaWjPddQEuDeGS3q8spg8C8ai4iGm/jfzQn7dwU9toEg1UKEmXq
-	 MwDbyysltHWR7ZK8TrdthPgXXwx23APcc0C/c82PyJ/bTC7ToTtwQSmenMvfiVssjl
-	 80WuuK6paHuD+hNb4Ppm8NS4z+aELtNZwldo6/Bg=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id OsWGbPjsCkx3; Tue, 17 Jun 2025 09:31:20 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 5449982856F8;
-	Tue, 17 Jun 2025 09:31:20 -0500 (CDT)
-Date: Tue, 17 Jun 2025 09:31:20 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Shawn Anastasio <sanastasio@raptorengineering.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Rob Herring <robh@kernel.o>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	chaitanya chundru <quic_krichai@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, 
-	Jingoo Han <jingoohan1@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com, 
-	amitk@kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	jorge.ramirez@oss.qualcomm.com, Dmitry Baryshkov <lumag@kernel.org>
-Message-ID: <1581123048.1308046.1750170680177.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v7] PCI: Add pcie_link_is_active() to determine if the PCIe
- link
+        d=raspberrypi.com; s=google; t=1750170772; x=1750775572; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UpVuhd57p5ZA9u9v7o/i9FRvWvTDiDOi5Kza2mP66e0=;
+        b=Tqj+yguuVTiLPY4pyUUDtljyw4kR4Q8yYs88lbbvDVlp1FBmuoslrR9TZOYBHCgery
+         Wdc23EIhGRpZ1aq6aOkiURYec1JemsXdXPWmte2aOlka8LzbTXzHXxJOycBaU/RworP7
+         +yYnaib7jbmt4bzZBPAZo18htywZUxz53p2Cg3EbMRi1r0aKvH+AD3/48MFvpVffd2wq
+         22wcvWFSIukdx5Xor9dUNT8vXM3tHVqcVQXifRWa8jqmduLXYi82tB6usQ96Ml4ED5rb
+         lqnQOhnWHy/41QU8FCXupA8xAl2du+OzHpLVC1mRM3t0bPys4cNdu5wzUbm6qFm5BeF/
+         Umcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750170772; x=1750775572;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UpVuhd57p5ZA9u9v7o/i9FRvWvTDiDOi5Kza2mP66e0=;
+        b=wSPa/E2gPl7MNN9j9v7JxfO3RrsIpzBLj/Yb9IInnwohXbrdgCyccw6OI/WI8K2yE4
+         5Gn4M6P/sZrhRvHbDv7Kox6I40H5icRm4/+9veS6Llwy/v1upuN6S4F8XaFIGzOOC9Qg
+         0fVkfVPfTxNf8i3XyVph/cGOYxeNYo9Nj4dYDbJ6I/Kvr13KJASb+uYsLA82A1r+gof2
+         ezYskptU+4Jae4x/Hl6z1NkT6Dur1WZbrzmRIJ98KLkH8LN6ZQojvFqqc7Kw883AzUrF
+         nTaRjuAj3aQx4mzEcy9MUb7IbvqSa9fEIzBW5MjmMEaDkfQ2qvfysBEo5FwpJkl/ih3m
+         mchw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGViIIoOTPkaZ47uNExQPAtg7+ZCPUJgxW0o1WeVlkPO0zJMiLTUkhm5z+sGvMJY5LKGkPs4l69gkw+vM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx86ZQPjd59hDAsoALfxSEHcZMrU0AYrIn3V2k862jxvuyoT5O3
+	lGhCZWQoBfN5w/q78AtLPssrv3QoqwF2GzIKxHKn9qO+0SIzbleLo1/GR1/5fY7bU8zj+2l6SMh
+	MFRHFkNdTL8y6WfSrgh+hAniZzkwi/ftjP1eoqGTVaQ==
+X-Gm-Gg: ASbGncuZrx9/ikYqhpsUz+n2ydsL5/cpEquPG4XxeCIF4mRkO48hnDRxUj9YgPw5QSn
+	xeKGEjjH4hdA9xdOWApdd/sOLUURuquQqk24B13yklG+41ubYgdRROiZ73Y8d7CRZw3PU1++myd
+	9mylio0KkREvRTY2rpxk9ByFtbAa2yNP8SmUyL19l/
+X-Google-Smtp-Source: AGHT+IGTVqsuzTLaFuVqtYIazEIZdLZAOFPRgX/KC9sHF4LyTsKoJCWIlkyH4YKO1sxPGdRaHqYpvDzMTKK+6itImNA=
+X-Received: by 2002:ac5:c74d:0:b0:52f:44fc:3b30 with SMTP id
+ 71dfb90a1353d-5314940abf8mr2321729e0c.2.1750170772352; Tue, 17 Jun 2025
+ 07:32:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Index: wD146B6OyvES+Feuh0TpgiI26pdz2Q==
-Thread-Topic: Add pcie_link_is_active() to determine if the PCIe link
+References: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-0-e58ae199c17d@ideasonboard.com>
+ <20250617-pispbe-mainline-split-jobs-handling-v6-v8-3-e58ae199c17d@ideasonboard.com>
+In-Reply-To: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-3-e58ae199c17d@ideasonboard.com>
+From: Naushir Patuck <naush@raspberrypi.com>
+Date: Tue, 17 Jun 2025 15:32:17 +0100
+X-Gm-Features: Ac12FXx8nCXb9hHGOd7Z8EnpOMRizDD1-QFHNkx6xBX-t_x8Y1VpsEYROY0dKEs
+Message-ID: <CAEmqJPokx39uXWPLLw0YBXsw+jqS4cTYfZDMbQAJCp2xVDW8sw@mail.gmail.com>
+Subject: Re: [PATCH v8 3/4] media: pisp_be: Split jobs creation and scheduling
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>, 
+	David Plowman <david.plowman@raspberrypi.com>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-is active
+Hi Jacopo,
 
-Introduce a common API to check if the PCIe link is active, replacing
-duplicate code in multiple locations.
+On Tue, 17 Jun 2025 at 14:54, Jacopo Mondi
+<jacopo.mondi@ideasonboard.com> wrote:
+>
+> Currently the 'pispbe_schedule()' function does two things:
+>
+> 1) Tries to assemble a job by inspecting all the video node queues
+>    to make sure all the required buffers are available
+> 2) Submit the job to the hardware
+>
+> The pispbe_schedule() function is called at:
+>
+> - video device start_streaming() time
+> - video device qbuf() time
+> - irq handler
+>
+> As assembling a job requires inspecting all queues, it is a rather
+> time consuming operation which is better not run in IRQ context.
+>
+> To avoid executing the time consuming job creation in interrupt
+> context split the job creation and job scheduling in two distinct
+> operations. When a well-formed job is created, append it to the
+> newly introduced 'pispbe->job_queue' where it will be dequeued from
+> by the scheduling routine.
+>
+> As the per-node 'ready_queue' buffer list is only accessed in vb2 ops
+> callbacks, protected by the node->queue_lock mutex, it is not necessary
+> to guard it with a dedicated spinlock so drop it. Also use the
+> spin_lock_irq() variant in all functions not called from an IRQ context
+> where the spin_lock_irqsave() version was used.
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
----
- arch/powerpc/kernel/eeh_driver.c  |  8 +++++++-
- drivers/pci/hotplug/pciehp.h      |  1 -
- drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
- drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
- drivers/pci/pci.c                 | 31 ++++++++++++++++++++++++++---
- include/linux/pci.h               |  4 ++++
- 6 files changed, 43 insertions(+), 36 deletions(-)
+Reviewed-by: Naushir Patuck <naush@raspberrypi.com>
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 441a3562bddd..4fdd62432f2c 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -1097,8 +1097,14 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 		eeh_pe_dev_mode_mark(pe, EEH_DEV_REMOVED);
- 
- 		pci_lock_rescan_remove();
--		pci_hp_remove_devices(bus);
-+		bus = eeh_pe_bus_get(pe);
-+		if (bus)
-+			pci_hp_remove_devices(bus);
-+		else
-+			pr_err("%s: PCI bus for PHB#%x-PE#%x disappeared\n",
-+				__func__, pe->phb->global_number, pe->addr);
- 		pci_unlock_rescan_remove();
-+
- 		/* The passed PE should no longer be used */
- 		return;
- 	}
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index debc79b0adfb..79df49cc9946 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
- int pciehp_card_present(struct controller *ctrl);
- int pciehp_card_present_or_link_active(struct controller *ctrl);
- int pciehp_check_link_status(struct controller *ctrl);
--int pciehp_check_link_active(struct controller *ctrl);
- bool pciehp_device_replaced(struct controller *ctrl);
- void pciehp_release_ctrl(struct controller *ctrl);
- 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index bcc938d4420f..6cc1b27b3b11 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	/* Turn the slot on if it's occupied or link is up */
- 	mutex_lock(&ctrl->state_lock);
- 	present = pciehp_card_present(ctrl);
--	link_active = pciehp_check_link_active(ctrl);
-+	link_active = pcie_link_is_active(ctrl->pcie->port);
- 	if (present <= 0 && link_active <= 0) {
- 		if (ctrl->state == BLINKINGON_STATE) {
- 			ctrl->state = OFF_STATE;
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index ebd342bda235..d29ce3715a44 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
- 	pcie_do_write_cmd(ctrl, cmd, mask, false);
- }
- 
--/**
-- * pciehp_check_link_active() - Is the link active
-- * @ctrl: PCIe hotplug controller
-- *
-- * Check whether the downstream link is currently active. Note it is
-- * possible that the card is removed immediately after this so the
-- * caller may need to take it into account.
-- *
-- * If the hotplug controller itself is not available anymore returns
-- * %-ENODEV.
-- */
--int pciehp_check_link_active(struct controller *ctrl)
--{
--	struct pci_dev *pdev = ctrl_dev(ctrl);
--	u16 lnk_status;
--	int ret;
--
--	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
--	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
--		return -ENODEV;
--
--	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
--	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
--
--	return ret;
--}
--
- static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
- {
- 	u32 l;
-@@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
- 	if (ret)
- 		return ret;
- 
--	return pciehp_check_link_active(ctrl);
-+	return pcie_link_is_active(ctrl_dev(ctrl));
- }
- 
- int pciehp_query_power_fault(struct controller *ctrl)
-@@ -614,7 +587,7 @@ static void pciehp_ignore_link_change(struct controller *ctrl,
- 	 * Synthesize it to ensure that it is acted on.
- 	 */
- 	down_read_nested(&ctrl->reset_lock, ctrl->depth);
--	if (!pciehp_check_link_active(ctrl) || pciehp_device_replaced(ctrl))
-+	if (!pcie_link_is_active(ctrl_dev(ctrl)) || pciehp_device_replaced(ctrl))
- 		pciehp_request(ctrl, ignored_events);
- 	up_read(&ctrl->reset_lock);
- }
-@@ -921,7 +894,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
- 	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
- 				   PCI_EXP_SLTSTA_DLLSC);
- 
--	if (!pciehp_check_link_active(ctrl))
-+	if (!pcie_link_is_active(ctrl_dev(ctrl)))
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
- 
- 	return 0;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e9448d55113b..ad639e60f3bd 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4908,7 +4908,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		return 0;
- 
- 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		u16 status;
- 
- 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
- 		msleep(delay);
-@@ -4924,8 +4923,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		if (!dev->link_active_reporting)
- 			return -ENOTTY;
- 
--		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
--		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-+		if (pcie_link_is_active(dev) <= 0)
- 			return -ENOTTY;
- 
- 		return pci_dev_wait(child, reset_type,
-@@ -6230,6 +6228,33 @@ void pcie_print_link_status(struct pci_dev *dev)
- }
- EXPORT_SYMBOL(pcie_print_link_status);
- 
-+/**
-+ * pcie_link_is_active() - Checks if the link is active or not
-+ * @pdev: PCI device to query
-+ *
-+ * Check whether the physical link is active or not. Note it is
-+ * possible that the card is removed immediately after this so the
-+ * caller may need to take it into account.
-+ *
-+ * If the PCI device itself is not available anymore returns
-+ * %-ENODEV.
-+ *
-+ * Return: link state, or -ENODEV if the config read failes.
-+ */
-+int pcie_link_is_active(struct pci_dev *pdev)
-+{
-+	u16 lnk_status;
-+	int ret;
-+
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-+	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-+		return -ENODEV;
-+
-+	pci_dbg(pdev, "lnk_status = %x\n", lnk_status);
-+	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-+}
-+EXPORT_SYMBOL(pcie_link_is_active);
-+
- /**
-  * pci_select_bars - Make BAR mask from the type of resource
-  * @dev: the PCI device for which BAR mask is made
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 05e68f35f392..5d1c9f718ac8 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1993,6 +1993,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
- 			    pci_select_bars(pdev, IORESOURCE_MEM));
- }
- 
-+int pcie_link_is_active(struct pci_dev *dev);
- #else /* CONFIG_PCI is not enabled */
- 
- static inline void pci_set_flags(int flags) { }
-@@ -2141,6 +2142,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
- {
- 	return -ENOSPC;
- }
-+
-+static inline bool pcie_link_is_active(struct pci_dev *dev)
-+{ return false; }
- #endif /* CONFIG_PCI */
- 
- /* Include architecture-dependent settings and functions */
--- 
-2.39.5
+> ---
+>  .../media/platform/raspberrypi/pisp_be/pisp_be.c   | 161 +++++++++++----------
+>  1 file changed, 87 insertions(+), 74 deletions(-)
+>
+> diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> index 92c452891d6c2d68aff9aa269c06fa1af77e3885..ccc6cb99868b842ac0d295f9ec28470303e60788 100644
+> --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-ioctl.h>
+>  #include <media/videobuf2-dma-contig.h>
+> @@ -161,8 +162,6 @@ struct pispbe_node {
+>         struct mutex node_lock;
+>         /* vb2_queue lock */
+>         struct mutex queue_lock;
+> -       /* Protect pispbe_node->ready_queue and pispbe_buffer->ready_list */
+> -       spinlock_t ready_lock;
+>         struct list_head ready_queue;
+>         struct vb2_queue queue;
+>         struct v4l2_format format;
+> @@ -190,6 +189,8 @@ struct pispbe_hw_enables {
+>
+>  /* Records a job configuration and memory addresses. */
+>  struct pispbe_job_descriptor {
+> +       struct list_head queue;
+> +       struct pispbe_buffer *buffers[PISPBE_NUM_NODES];
+>         dma_addr_t hw_dma_addrs[N_HW_ADDRESSES];
+>         struct pisp_be_tiles_config *config;
+>         struct pispbe_hw_enables hw_enables;
+> @@ -215,8 +216,10 @@ struct pispbe_dev {
+>         unsigned int sequence;
+>         u32 streaming_map;
+>         struct pispbe_job queued_job, running_job;
+> -       spinlock_t hw_lock; /* protects "hw_busy" flag and streaming_map */
+> +       /* protects "hw_busy" flag, streaming_map and job_queue */
+> +       spinlock_t hw_lock;
+>         bool hw_busy; /* non-zero if a job is queued or is being started */
+> +       struct list_head job_queue;
+>         int irq;
+>         u32 hw_version;
+>         u8 done, started;
+> @@ -440,42 +443,48 @@ static void pispbe_xlate_addrs(struct pispbe_dev *pispbe,
+>   * For Output0, Output1, Tdn and Stitch, a buffer only needs to be
+>   * available if the blocks are enabled in the config.
+>   *
+> - * Needs to be called with hw_lock held.
+> + * If all the buffers required to form a job are available, append the
+> + * job descriptor to the job queue to be later queued to the HW.
+>   *
+>   * Returns 0 if a job has been successfully prepared, < 0 otherwise.
+>   */
+> -static int pispbe_prepare_job(struct pispbe_dev *pispbe,
+> -                             struct pispbe_job_descriptor *job)
+> +static int pispbe_prepare_job(struct pispbe_dev *pispbe)
+>  {
+> +       struct pispbe_job_descriptor __free(kfree) *job = NULL;
+>         struct pispbe_buffer *buf[PISPBE_NUM_NODES] = {};
+> +       unsigned int streaming_map;
+>         unsigned int config_index;
+>         struct pispbe_node *node;
+> -       unsigned long flags;
+>
+> -       lockdep_assert_held(&pispbe->hw_lock);
+> +       lockdep_assert_irqs_enabled();
+>
+> -       memset(job, 0, sizeof(struct pispbe_job_descriptor));
+> +       scoped_guard(spinlock_irq, &pispbe->hw_lock) {
+> +               static const u32 mask = BIT(CONFIG_NODE) | BIT(MAIN_INPUT_NODE);
+>
+> -       if (((BIT(CONFIG_NODE) | BIT(MAIN_INPUT_NODE)) &
+> -               pispbe->streaming_map) !=
+> -                       (BIT(CONFIG_NODE) | BIT(MAIN_INPUT_NODE)))
+> -               return -ENODEV;
+> +               if ((pispbe->streaming_map & mask) != mask)
+> +                       return -ENODEV;
+> +
+> +               /*
+> +                * Take a copy of streaming_map: nodes activated after this
+> +                * point are ignored when preparing this job.
+> +                */
+> +               streaming_map = pispbe->streaming_map;
+> +       }
+> +
+> +       job = kzalloc(sizeof(*job), GFP_KERNEL);
+> +       if (!job)
+> +               return -ENOMEM;
+>
+>         node = &pispbe->node[CONFIG_NODE];
+> -       spin_lock_irqsave(&node->ready_lock, flags);
+>         buf[CONFIG_NODE] = list_first_entry_or_null(&node->ready_queue,
+>                                                     struct pispbe_buffer,
+>                                                     ready_list);
+> -       if (buf[CONFIG_NODE]) {
+> -               list_del(&buf[CONFIG_NODE]->ready_list);
+> -               pispbe->queued_job.buf[CONFIG_NODE] = buf[CONFIG_NODE];
+> -       }
+> -       spin_unlock_irqrestore(&node->ready_lock, flags);
+> -
+> -       /* Exit early if no config buffer has been queued. */
+>         if (!buf[CONFIG_NODE])
+>                 return -ENODEV;
+>
+> +       list_del(&buf[CONFIG_NODE]->ready_list);
+> +       job->buffers[CONFIG_NODE] = buf[CONFIG_NODE];
+> +
+>         config_index = buf[CONFIG_NODE]->vb.vb2_buf.index;
+>         job->config = &pispbe->config[config_index];
+>         job->tiles = pispbe->config_dma_addr +
+> @@ -495,7 +504,7 @@ static int pispbe_prepare_job(struct pispbe_dev *pispbe,
+>                         continue;
+>
+>                 buf[i] = NULL;
+> -               if (!(pispbe->streaming_map & BIT(i)))
+> +               if (!(streaming_map & BIT(i)))
+>                         continue;
+>
+>                 if ((!(rgb_en & PISP_BE_RGB_ENABLE_OUTPUT0) &&
+> @@ -522,25 +531,28 @@ static int pispbe_prepare_job(struct pispbe_dev *pispbe,
+>                 node = &pispbe->node[i];
+>
+>                 /* Pull a buffer from each V4L2 queue to form the queued job */
+> -               spin_lock_irqsave(&node->ready_lock, flags);
+>                 buf[i] = list_first_entry_or_null(&node->ready_queue,
+>                                                   struct pispbe_buffer,
+>                                                   ready_list);
+>                 if (buf[i]) {
+>                         list_del(&buf[i]->ready_list);
+> -                       pispbe->queued_job.buf[i] = buf[i];
+> +                       job->buffers[i] = buf[i];
+>                 }
+> -               spin_unlock_irqrestore(&node->ready_lock, flags);
+>
+>                 if (!buf[i] && !ignore_buffers)
+>                         goto err_return_buffers;
+>         }
+>
+> -       pispbe->queued_job.valid = true;
+> -
+>         /* Convert buffers to DMA addresses for the hardware */
+>         pispbe_xlate_addrs(pispbe, job, buf);
+>
+> +       scoped_guard(spinlock_irq, &pispbe->hw_lock) {
+> +               list_add_tail(&job->queue, &pispbe->job_queue);
+> +       }
+> +
+> +       /* Set job to NULL to avoid automatic release due to __free(). */
+> +       job = NULL;
+> +
+>         return 0;
+>
+>  err_return_buffers:
+> @@ -551,33 +563,37 @@ static int pispbe_prepare_job(struct pispbe_dev *pispbe,
+>                         continue;
+>
+>                 /* Return the buffer to the ready_list queue */
+> -               spin_lock_irqsave(&n->ready_lock, flags);
+>                 list_add(&buf[i]->ready_list, &n->ready_queue);
+> -               spin_unlock_irqrestore(&n->ready_lock, flags);
+>         }
+>
+> -       memset(&pispbe->queued_job, 0, sizeof(pispbe->queued_job));
+> -
+>         return -ENODEV;
+>  }
+>
+>  static void pispbe_schedule(struct pispbe_dev *pispbe, bool clear_hw_busy)
+>  {
+> -       struct pispbe_job_descriptor job;
+> -       unsigned long flags;
+> -       int ret;
+> +       struct pispbe_job_descriptor *job;
+> +
+> +       scoped_guard(spinlock_irqsave, &pispbe->hw_lock) {
+> +               if (clear_hw_busy)
+> +                       pispbe->hw_busy = false;
+>
+> -       spin_lock_irqsave(&pispbe->hw_lock, flags);
+> +               if (pispbe->hw_busy)
+> +                       return;
+>
+> -       if (clear_hw_busy)
+> -               pispbe->hw_busy = false;
+> +               job = list_first_entry_or_null(&pispbe->job_queue,
+> +                                              struct pispbe_job_descriptor,
+> +                                              queue);
+> +               if (!job)
+> +                       return;
+>
+> -       if (pispbe->hw_busy)
+> -               goto unlock_and_return;
+> +               list_del(&job->queue);
+>
+> -       ret = pispbe_prepare_job(pispbe, &job);
+> -       if (ret)
+> -               goto unlock_and_return;
+> +               for (unsigned int i = 0; i < PISPBE_NUM_NODES; i++)
+> +                       pispbe->queued_job.buf[i] = job->buffers[i];
+> +               pispbe->queued_job.valid = true;
+> +
+> +               pispbe->hw_busy = true;
+> +       }
+>
+>         /*
+>          * We can kick the job off without the hw_lock, as this can
+> @@ -585,16 +601,8 @@ static void pispbe_schedule(struct pispbe_dev *pispbe, bool clear_hw_busy)
+>          * only when the following job has been queued and an interrupt
+>          * is rised.
+>          */
+> -       pispbe->hw_busy = true;
+> -       spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+> -
+> -       pispbe_queue_job(pispbe, &job);
+> -
+> -       return;
+> -
+> -unlock_and_return:
+> -       /* No job has been queued, just release the lock and return. */
+> -       spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+> +       pispbe_queue_job(pispbe, job);
+> +       kfree(job);
+>  }
+>
+>  static void pispbe_isr_jobdone(struct pispbe_dev *pispbe,
+> @@ -846,18 +854,16 @@ static void pispbe_node_buffer_queue(struct vb2_buffer *buf)
+>                 container_of(vbuf, struct pispbe_buffer, vb);
+>         struct pispbe_node *node = vb2_get_drv_priv(buf->vb2_queue);
+>         struct pispbe_dev *pispbe = node->pispbe;
+> -       unsigned long flags;
+>
+>         dev_dbg(pispbe->dev, "%s: for node %s\n", __func__, NODE_NAME(node));
+> -       spin_lock_irqsave(&node->ready_lock, flags);
+>         list_add_tail(&buffer->ready_list, &node->ready_queue);
+> -       spin_unlock_irqrestore(&node->ready_lock, flags);
+>
+>         /*
+>          * Every time we add a buffer, check if there's now some work for the hw
+>          * to do.
+>          */
+> -       pispbe_schedule(pispbe, false);
+> +       if (!pispbe_prepare_job(pispbe))
+> +               pispbe_schedule(pispbe, false);
+>  }
+>
+>  static int pispbe_node_start_streaming(struct vb2_queue *q, unsigned int count)
+> @@ -865,17 +871,16 @@ static int pispbe_node_start_streaming(struct vb2_queue *q, unsigned int count)
+>         struct pispbe_node *node = vb2_get_drv_priv(q);
+>         struct pispbe_dev *pispbe = node->pispbe;
+>         struct pispbe_buffer *buf, *tmp;
+> -       unsigned long flags;
+>         int ret;
+>
+>         ret = pm_runtime_resume_and_get(pispbe->dev);
+>         if (ret < 0)
+>                 goto err_return_buffers;
+>
+> -       spin_lock_irqsave(&pispbe->hw_lock, flags);
+> -       node->pispbe->streaming_map |=  BIT(node->id);
+> -       node->pispbe->sequence = 0;
+> -       spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+> +       scoped_guard(spinlock_irq, &pispbe->hw_lock) {
+> +               node->pispbe->streaming_map |=  BIT(node->id);
+> +               node->pispbe->sequence = 0;
+> +       }
+>
+>         dev_dbg(pispbe->dev, "%s: for node %s (count %u)\n",
+>                 __func__, NODE_NAME(node), count);
+> @@ -883,17 +888,16 @@ static int pispbe_node_start_streaming(struct vb2_queue *q, unsigned int count)
+>                 node->pispbe->streaming_map);
+>
+>         /* Maybe we're ready to run. */
+> -       pispbe_schedule(pispbe, false);
+> +       if (!pispbe_prepare_job(pispbe))
+> +               pispbe_schedule(pispbe, false);
+>
+>         return 0;
+>
+>  err_return_buffers:
+> -       spin_lock_irqsave(&pispbe->hw_lock, flags);
+>         list_for_each_entry_safe(buf, tmp, &node->ready_queue, ready_list) {
+>                 list_del(&buf->ready_list);
+>                 vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
+>         }
+> -       spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+>
+>         return ret;
+>  }
+> @@ -902,8 +906,9 @@ static void pispbe_node_stop_streaming(struct vb2_queue *q)
+>  {
+>         struct pispbe_node *node = vb2_get_drv_priv(q);
+>         struct pispbe_dev *pispbe = node->pispbe;
+> +       struct pispbe_job_descriptor *job, *temp;
+>         struct pispbe_buffer *buf;
+> -       unsigned long flags;
+> +       LIST_HEAD(tmp_list);
+>
+>         /*
+>          * Now this is a bit awkward. In a simple M2M device we could just wait
+> @@ -915,11 +920,7 @@ static void pispbe_node_stop_streaming(struct vb2_queue *q)
+>          * This may return buffers out of order.
+>          */
+>         dev_dbg(pispbe->dev, "%s: for node %s\n", __func__, NODE_NAME(node));
+> -       spin_lock_irqsave(&pispbe->hw_lock, flags);
+>         do {
+> -               unsigned long flags1;
+> -
+> -               spin_lock_irqsave(&node->ready_lock, flags1);
+>                 buf = list_first_entry_or_null(&node->ready_queue,
+>                                                struct pispbe_buffer,
+>                                                ready_list);
+> @@ -927,15 +928,26 @@ static void pispbe_node_stop_streaming(struct vb2_queue *q)
+>                         list_del(&buf->ready_list);
+>                         vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
+>                 }
+> -               spin_unlock_irqrestore(&node->ready_lock, flags1);
+>         } while (buf);
+> -       spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+>
+>         vb2_wait_for_all_buffers(&node->queue);
+>
+> -       spin_lock_irqsave(&pispbe->hw_lock, flags);
+> +       spin_lock_irq(&pispbe->hw_lock);
+>         pispbe->streaming_map &= ~BIT(node->id);
+> -       spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+> +
+> +       if (pispbe->streaming_map == 0) {
+> +               /*
+> +                * If all nodes have stopped streaming release all jobs
+> +                * without holding the lock.
+> +                */
+> +               list_splice_init(&pispbe->job_queue, &tmp_list);
+> +       }
+> +       spin_unlock_irq(&pispbe->hw_lock);
+> +
+> +       list_for_each_entry_safe(job, temp, &tmp_list, queue) {
+> +               list_del(&job->queue);
+> +               kfree(job);
+> +       }
+>
+>         pm_runtime_mark_last_busy(pispbe->dev);
+>         pm_runtime_put_autosuspend(pispbe->dev);
+> @@ -1393,7 +1405,6 @@ static int pispbe_init_node(struct pispbe_dev *pispbe, unsigned int id)
+>         mutex_init(&node->node_lock);
+>         mutex_init(&node->queue_lock);
+>         INIT_LIST_HEAD(&node->ready_queue);
+> -       spin_lock_init(&node->ready_lock);
+>
+>         node->format.type = node->buf_type;
+>         pispbe_node_def_fmt(node);
+> @@ -1677,6 +1688,8 @@ static int pispbe_probe(struct platform_device *pdev)
+>         if (!pispbe)
+>                 return -ENOMEM;
+>
+> +       INIT_LIST_HEAD(&pispbe->job_queue);
+> +
+>         dev_set_drvdata(&pdev->dev, pispbe);
+>         pispbe->dev = &pdev->dev;
+>         platform_set_drvdata(pdev, pispbe);
+>
+> --
+> 2.49.0
+>
