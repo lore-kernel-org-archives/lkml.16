@@ -1,167 +1,252 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB66115C140;
-	Tue, 17 Jun 2025 21:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8220D1F461A
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194343; cv=none; b=Z5V2avpdASkpg6QCDiovbSjomiT4Gtrrwag3i74+MSrK+qoCckC8OtnUwIR7Ot1LVGqLQOnFhcrNON31InjQ+zKtOKTe8ap8QIFgVjyh+p2fMl3XgGQlgdLV2DqGgHS4yIW+Bnx19gShzpLvZpNlRCN+wVZpj1eQSes21gD6mEA=
+	t=1750194459; cv=none; b=XZrk3/qhnyZycgJzEv5ja41V0d+5UjzDenBmEPOekGmiTF7bVC2MuciWRTQjj9AuWOfI4dcrEL6K7n6EKG+CFrzo/qSYve1iI6OY0efgKmQptFtnujfIJGaYYOPRh2D81GdkLDbZo8qKbxIUvanvynOz34ywyO5y2TZvH/6wAwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194343; c=relaxed/simple;
-	bh=K/e54EAvNiLlkzbiKQYq+G8jP/1PnG8jLy6urW7N7iQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NC/lXiInhF5Y2wI1rKrMbi/mNJpDZ7CjLceni92PgSYXG9OfT6zoz2aZbpga/38oH0IGbBwTGNvQ2koH3r5ddILC0mvBF/au3SjqRelxK9m6jD6pKWyFhgXyrpKELjYk2Vm50IgaTKP0HU//tdqiaWlyI++CvKm8chW6tu3xdOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UsLbzwUp; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750194459; c=relaxed/simple;
+	bh=/YMbad19V6TpsG3MEiZ2mbTgkuu9Y0VSL2UolHVg1UE=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UjVTYCSVPaU9O3C1nf5fc1xhk49BMMGsTvbpoOI4nDjyPmM2d8hKc5zfx8elwJcgoPnPZ4NafigFUrSN02nGLhxr6DvbB5mSdD1NVPOndeZx0v7429kl1qyCrDKAdmKFw4VQjaGTFKIR3LK+tq8+fG6kZ/4p42HXGjVdzoBT3sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BT8SN6/y; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsLbzwUp"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23649faf69fso61609515ad.0;
-        Tue, 17 Jun 2025 14:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750194339; x=1750799139; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MWZI32CNOnN9IhM9ZQkkMorkMQBTP2lW8bYrpv0gJAY=;
-        b=UsLbzwUpDfCDepfRerocs8xr/fJfiIRxEHVw4ZPyj92XN5JoAAZNKdcco5TVaIbZTQ
-         Az3Y8zJ0hb9MGGUz3P6xe3pa1/QgpCoIsLa56iMeTH5+fX+4jNaXEyBtz/lQhpxbzVhE
-         Dmi9tRD4pljCsYnCJ8srF6RGIJ08k94o4tAyRgyefJvLvsautuv8A++MU9lIqPP+Wtbr
-         auuI44IX7emMBjDT4Xx7fLRWh8B7tjwtJKFAy+w7GnEkuGSnf2p1nazENfhmVS4qO0Ax
-         mlPJl9+FZ/DqtWXc//rDpq0ORfb5gjaayupL3i5R/zenldTgd0t5NzTkC+MLp+LPm4nW
-         rLCQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BT8SN6/y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750194456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9waNqRMmOjunuN18CikjvGF9bugNIg2AINTl6Y0HXgo=;
+	b=BT8SN6/yzXX6+muAoHdxwKv8ML8gBXo0y29CdzojdvVNmPooO0Fld1vnvJgineSQSNiFOH
+	pujhdUZ0WBeo4go763+6o6slYVAB+Vt/tTnP23x/wZhMpXpaAe9dCK7vb/jAKlhWAqnKs+
+	GivrFrO8IQhqdg2VptNHUnJ+H5aIkLE=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-33-VjSjiNc-NyqKEbYZFL2Brw-1; Tue, 17 Jun 2025 17:07:35 -0400
+X-MC-Unique: VjSjiNc-NyqKEbYZFL2Brw-1
+X-Mimecast-MFC-AGG-ID: VjSjiNc-NyqKEbYZFL2Brw_1750194454
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a4369e7413so130675801cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:07:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750194339; x=1750799139;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MWZI32CNOnN9IhM9ZQkkMorkMQBTP2lW8bYrpv0gJAY=;
-        b=kox4Qaem0bTBi/0WJKW2v8ibTjAVySb58+2BuB+fAoOdm7Dbn4xGy9KJV91qnwzD+M
-         0PNcbTtpDAFMhWxrkSelzVqCcdJ2smpUlwPHcp15L0MYX2TiJUGplTSbKyZTwZ25eFX0
-         K6glW76zaAnVBz7XqJoGFMaIMcYZXaCNIzjg6mesIIiX+7zYucjWw0QuXbj4eZhvW1/k
-         LgJHfhYooOU4fLLnWjsNPsVM826HwMiHvnAh3LLwsdl5MIqOELHipQfo606Be9rjUnhw
-         2d0coPwmCKz/GRv1aLnEx1LWX6rfc7qNf7cPxxRPn/zw4UeOwInQ19ZBJbhsD3AkkXrl
-         ziTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCk6+M8lk7UBW1mw3LlOAhGbxP7oaTMLKGIpqUWnIhm9HgLEXgWOU8ZfE/o/YWJQhyHFdMPUs+hu5tz+Fk@vger.kernel.org, AJvYcCWuZCZZWQD4gTPntha/5zo52Hx/WLK1zX/3W/+U68+0zhvBv+opaz/FYDLV4bcT6bPcSM2YsM7J@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7FLtW+eckrpcWm1diqO4XVZvtjOZN4HEQuHNfLMvSvFxAMIlS
-	MgQ6r1SCCHwMuI7DNfyLHTGgqCkpT2IdPOwQTz9SM568YnmTaz7Le0H8
-X-Gm-Gg: ASbGnctbdljFYhZLCHK7ahZ/VjKsm2Qez84RKdilchO9NompxykOIXvUssQOxZ4IGPg
-	avs3gY03P7zdZkc9wyWMKuB4B1wkxNHhoIX1ft79cBxSrF0V4EfgTmYKNCpuRV5ArYKl3WXwwEE
-	ZvFoqkbU7xkYzEIiknTo/lFmMIxnxF1l8SNlomHjaEM/qd7j1eO3X7pzDCEbOsM2ATQ76LAg/MA
-	0/8qUPcfvCc4ig0NgAjir39jO9OknnxAg9vx/5Ozi24DLl6DuAOBDFE3O9Z6S9K9vmIrK3MGJO/
-	MtjDWVlVNjkwXRKBsnviIlqt9I5TbH3wIux5TB/Mr1esWt0bZsuVKUlsKtdHIaU8fZUspGrG2aU
-	+p2NnCsdCyIWM2BXMbPCGFCldshhXzD4PITc=
-X-Google-Smtp-Source: AGHT+IHJ8Zz+Wa41Mi58v0WVUmeQPuLbyqXhrbVushVSr8N5IOiRmInDATrimOPjEYn0atMSm4xAKg==
-X-Received: by 2002:a17:902:f652:b0:234:cb4a:bc1b with SMTP id d9443c01a7336-2366b17c593mr237597885ad.49.1750194339137;
-        Tue, 17 Jun 2025 14:05:39 -0700 (PDT)
-Received: from ?IPV6:2601:648:8100:3b5:c6ef:bbff:fec0:9e95? ([2601:648:8100:3b5:c6ef:bbff:fec0:9e95])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365decb5f9sm85041815ad.194.2025.06.17.14.05.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 14:05:38 -0700 (PDT)
-Message-ID: <5f055416-9c49-42c0-9ba0-e45f6aaeac04@gmail.com>
-Date: Tue, 17 Jun 2025 14:05:37 -0700
+        d=1e100.net; s=20230601; t=1750194454; x=1750799254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9waNqRMmOjunuN18CikjvGF9bugNIg2AINTl6Y0HXgo=;
+        b=kytCRur9YXiMcGK6q4wxDv2/2toUqAfaxPFlJ2dqV35vmoXQrUHsG5TDNYlU52QrMz
+         yFPB4iq5bwGv9GEgzkrKUzuezwcf/3yQPVjSQNnay+7WvQxI4qk8mvyarnbMXn4Q41mH
+         g5JYZxYwS02tSOZkM+qYlXAdd2jGlYQBZYkooKzgsyethStSET5v6UVMCp0cI+EUocUF
+         Hx+AqVnShuYVKuem0vV874P9UinkKHWYzHgv87lHHQ1VllF1yKf/ukudzb5AMdTMK4ab
+         HIuohus12EXwgJ3WvXw0k8ek+bqzkr/bJGKyyE5VL90Vnb/eimXZdBdd+d/5Qjio34Pt
+         cN7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW8ybmpH3HlQhEeblGEMaj2KWFeMHfWGD8a3unNhu+9rluwPCvAenig+5TpJoiQ7V62ESm4x9JmPAPkXNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXxSSAT4luk57G0JLfm6hhFsDdP7WtmnQb9kgXcGv5DkY4WzeR
+	89fsa71N4PYqgUJxSKj00bvA02O7OvQS9bLdRpfpVMvVBke2li46Dwn3UcMQpVWud5C7oAm4cQE
+	hgye44IzdSjph6l41h4TBQrntB/qPOZ3qA4dMqtJhSBWE++Bmbe/i7Ko7WoROmVd6Qg==
+X-Gm-Gg: ASbGncte8wmI3lyoNJwCW24LC4I1srYgGPtGBSeiIA7aNNznCOAU9AE6TtTu5Bq57sA
+	HDPfJe64Mf7tagdoo5PEWp6XhbfxMXneXhmryp/IwKTeTUAPNMHN0Z/+JTTqsoSsxePHuH2kZD9
+	Er0x7UkVhjLHW9+xmE0o3pKhz/I7RLTGwgh+h5g9KKJ6A4DHPYAK1VtUSiUqlaVZIvRUm82vmKy
+	wIbJgfoBjWR/5U1yc34h2+FSOt/RovtCH0yxSC5aZ2/r4Ynl1ENuZ0q0PPoV8aDacBeD7sxku5E
+	oMYR+25yL8UggQ==
+X-Received: by 2002:a05:620a:40c3:b0:7d2:2698:aab1 with SMTP id af79cd13be357-7d3c6c18fc1mr2412799585a.19.1750194454397;
+        Tue, 17 Jun 2025 14:07:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEjDInY101hnNdJuIa1SM4o6S/CNrzg2R+QnI69RAx4dIk51ymk26jNQS+KJeGfyRDLUZEXbQ==
+X-Received: by 2002:a05:620a:40c3:b0:7d2:2698:aab1 with SMTP id af79cd13be357-7d3c6c18fc1mr2412795385a.19.1750194454011;
+        Tue, 17 Jun 2025 14:07:34 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e2173csm690984185a.52.2025.06.17.14.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 14:07:33 -0700 (PDT)
+Date: Tue, 17 Jun 2025 17:07:30 -0400
+From: Peter Xu <peterx@redhat.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
+Message-ID: <aFHZEtepArJdkLB0@x1.local>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-3-peterx@redhat.com>
+ <4rypovqoa4j6f4fyfqzrm5xeiv3dng5hc5dlfhmnehkydk6gcd@z6f3k3joaoli>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cgroup/rstat: change cgroup_base_stat to atomic
-To: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>, tj@kernel.org,
- hannes@cmpxchg.org, mkoutny@suse.com, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
-Content-Language: en-US
-From: JP Kobryn <inwardvessel@gmail.com>
-In-Reply-To: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4rypovqoa4j6f4fyfqzrm5xeiv3dng5hc5dlfhmnehkydk6gcd@z6f3k3joaoli>
 
-On 6/17/25 3:26 AM, Bertrand Wlodarczyk wrote:
-> The kernel currently faces scalability issues when multiple userspace
-> programs attempt to read cgroup statistics concurrently.
+On Sat, Jun 14, 2025 at 12:11:22AM -0400, Liam R. Howlett wrote:
+> * Peter Xu <peterx@redhat.com> [691231 23:00]:
+> > Only mips and loongarch implemented this API, however what it does was
+> > checking against stack overflow for either len or addr.  That's already
+> > done in arch's arch_get_unmapped_area*() functions, hence not needed.
 > 
-> The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush,
-> which prevents access and updates to the statistics
-> of the css from multiple CPUs in parallel.
+> I'm not as confident..
 > 
-> Given that rstat operates on a per-CPU basis and only aggregates
-> statistics in the parent cgroup, there is no compelling reason
-> why these statistics cannot be atomic.
+> > 
+> > It means the whole API is pretty much obsolete at least now, remove it
+> > completely.
+> > 
+> > Cc: Huacai Chen <chenhuacai@kernel.org>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Muchun Song <muchun.song@linux.dev>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: loongarch@lists.linux.dev
+> > Cc: linux-mips@vger.kernel.org
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >  arch/loongarch/include/asm/hugetlb.h | 14 --------------
+> >  arch/mips/include/asm/hugetlb.h      | 14 --------------
+> >  fs/hugetlbfs/inode.c                 |  8 ++------
+> >  include/asm-generic/hugetlb.h        |  8 --------
+> >  include/linux/hugetlb.h              |  6 ------
+> >  5 files changed, 2 insertions(+), 48 deletions(-)
+> > 
+> > diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+> > index 4dc4b3e04225..ab68b594f889 100644
+> > --- a/arch/loongarch/include/asm/hugetlb.h
+> > +++ b/arch/loongarch/include/asm/hugetlb.h
+> > @@ -10,20 +10,6 @@
+> >  
+> >  uint64_t pmd_to_entrylo(unsigned long pmd_val);
+> >  
+> > -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+> > -static inline int prepare_hugepage_range(struct file *file,
+> > -					 unsigned long addr,
+> > -					 unsigned long len)
+> > -{
+> > -	unsigned long task_size = STACK_TOP;
+> > -
+> > -	if (len > task_size)
+> > -		return -ENOMEM;
+> > -	if (task_size - len < addr)
+> > -		return -EINVAL;
+> > -	return 0;
+> > -}
+> > -
+> >  #define __HAVE_ARCH_HUGE_PTE_CLEAR
+> >  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+> >  				  pte_t *ptep, unsigned long sz)
+> > diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+> > index fbc71ddcf0f6..8c460ce01ffe 100644
+> > --- a/arch/mips/include/asm/hugetlb.h
+> > +++ b/arch/mips/include/asm/hugetlb.h
+> > @@ -11,20 +11,6 @@
+> >  
+> >  #include <asm/page.h>
+> >  
+> > -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+> > -static inline int prepare_hugepage_range(struct file *file,
+> > -					 unsigned long addr,
+> > -					 unsigned long len)
+> > -{
+> > -	unsigned long task_size = STACK_TOP;
+> 
+> arch/mips/include/asm/processor.h:#define STACK_TOP             mips_stack_top()
+> 
+> 
+> unsigned long mips_stack_top(void)                                                                                                                                                                                                             
+> {       
+>         unsigned long top = TASK_SIZE & PAGE_MASK;                                                                                                                                                                                             
+>         
+>         if (IS_ENABLED(CONFIG_MIPS_FP_SUPPORT)) {
+>                 /* One page for branch delay slot "emulation" */                                                                                                                                                                               
+>                 top -= PAGE_SIZE;                                                                                                                                                                                                              
+>         }                                                                                                                                                                                                                                      
+>         
+>         /* Space for the VDSO, data page & GIC user page */                                                                                                                                                                                    
+>         top -= PAGE_ALIGN(current->thread.abi->vdso->size);                                                                                                                                                                                    
+>         top -= PAGE_SIZE;
+>         top -= mips_gic_present() ? PAGE_SIZE : 0;                                                                                                                                                                                             
+>         
+>         /* Space for cache colour alignment */                                                                                                                                                                                                 
+>         if (cpu_has_dc_aliases)
+>                 top -= shm_align_mask + 1;                                                                                                                                                                                                     
+>         
+>         /* Space to randomize the VDSO base */                                                                                                                                                                                                 
+>         if (current->flags & PF_RANDOMIZE)
+>                 top -= VDSO_RANDOMIZE_SIZE;                                                                                                                                                                                                    
+>         
+>         return top;                                                                                                                                                                                                                            
+> }
+> 
+> This seems different than TASK_SIZE.
+> 
+> Code is from:
+> commit ea7e0480a4b695d0aa6b3fa99bd658a003122113
+> Author: Paul Burton <paulburton@kernel.org>
+> Date:   Tue Sep 25 15:51:26 2018 -0700
+> 
+> 
+> > -	if (len > task_size)
+> > -		return -ENOMEM;
+> > -	if (task_size - len < addr)
+> > -		return -EINVAL;
+> > -	return 0;
+> > -}
+> > -
+> 
+> Unfortunately, the commit message for the addition of this code are not
+> helpful.
+> 
+> commit 50a41ff292fafe1e937102be23464b54fed8b78c
+> Author: David Daney <ddaney@caviumnetworks.com>
+> Date:   Wed May 27 17:47:42 2009 -0700
+> 
+> ... But the dates are helpful.  This code used to use:
+> #define STACK_TOP      ((TASK_SIZE & PAGE_MASK) - PAGE_SIZE)
+> 
+> It's not exactly task size either.
+> 
+> I don't think this is an issue to remove this check because the overflow
+> should be caught later (or trigger the opposite search).  But it's not
+> clear why STACK_TOP was done in the first place.. Maybe just because we
+> know the overflow here would be an issue later, but then we'd avoid the
+> opposite search - and maybe that's the point?
+> 
+> Either way, your comment about the same check existing doesn't seem
+> correct.
 
-Have you considered the "tearing" that will occur when writes and reads
-are happening in parallel?
-The existing state is more of a snapshot approach. Changing the fields
-involved to atomic and lockless reading/writing can result in
-inconsistent values, i.e. fieldA might be more current than fieldB.
+I will fix up the commit message to mention both archs:
 
-> By eliminating the lock, each CPU can traverse its rstat hierarchy
-> independently, without blocking. Synchronization is achieved during
-> parent propagation through atomic operations.
+  Only mips and loongarch implemented this API, however what it does was
+  checking against stack overflow for either len or addr.  That's already
+  done in arch's arch_get_unmapped_area*() functions, even though it may not
+  be 100% identical checks.
 
-Even if the tearing scenario mentioned above is acceptable, removing
-the lock will break synchronization of flushing non-base stat
-subsystems.
+  For example, for both of the architectures, there will be a trivial
+  difference on how stack top was defined.  The old code uses STACK_TOP which
+  may be slightly smaller than TASK_SIZE on either of them, but the hope is
+  that shouldn't be a problem.
+
+  It means the whole API is pretty much obsolete at least now, remove it
+  completely.
 
 > 
-> This change significantly enhances performance in scenarios
-> where multiple CPUs access CPU rstat within a single cgroup hierarchy,
-> yielding a performance improvement of around 50 times compared
-> to the mainline version.
-> Notably, performance for memory and I/O rstats remains unchanged,
-> as these are managed in separate submodules.
-> 
-> Additionally, this patch addresses a race condition detectable
-> in the current mainline by KCSAN in __cgroup_account_cputime,
-> which occurs when attempting to read a single hierarchy
-> from multiple CPUs.
-> 
-> Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
-> ---
-> Benchmark code: https://gist.github.com/bwlodarcz/c955b36b5667f0167dffcff23953d1da
-> 
-> Tested on Intel(R) Xeon(R) Platinum 8468V, 2s 48c 2tpc, 377GiB RAM, Fedora 41:
-> +--------+-------+
-> |Mainline|Patched|
-> +--------+-------+
-> |369.95s |6.52s  |
-> +--------+-------+
-> 
-[..]
-> @@ -820,7 +813,6 @@ struct cgroup_subsys {
->   	 */
->   	unsigned int depends_on;
->   
-> -	spinlock_t rstat_ss_lock;
+> I haven't checked loong arch, but I'd be willing to wager this was just
+> cloned mips code... because this happens so much.
 
-This lock is not used with base stats. The base stats are not a formal
-subsystem.
+They define STACK_TOP differently, but AFAIU there're some duplications in
+pattern of the two archs.
 
-[..]
-> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-> index cbeaa499a96a..36af2b883440 100644
-> --- a/kernel/cgroup/rstat.c
-> +++ b/kernel/cgroup/rstat.c
-> @@ -9,7 +9,6 @@
->   
->   #include <trace/events/cgroup.h>
->   
-> -static DEFINE_SPINLOCK(rstat_base_lock);
->   static DEFINE_PER_CPU(raw_spinlock_t, rstat_base_cpu_lock);
->   
->   static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
-> @@ -37,14 +36,6 @@ static struct cgroup_rstat_base_cpu *cgroup_rstat_base_cpu(
->   	return per_cpu_ptr(cgrp->rstat_base_cpu, cpu);
->   }
->   
-> -static spinlock_t *ss_rstat_lock(struct cgroup_subsys *ss)
-> -{
-> -	if (ss)
-> -		return &ss->rstat_ss_lock;
+Please let me know if the fixed commit message works for you above, thanks.
 
-This was needed for non-base stat subsystems like memory and io.
+-- 
+Peter Xu
 
-> -
-> -	return &rstat_base_lock;
-> -}
