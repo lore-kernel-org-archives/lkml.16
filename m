@@ -1,165 +1,141 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6061E5383;
-	Tue, 17 Jun 2025 10:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C502BEFF3;
+	Tue, 17 Jun 2025 10:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750155547; cv=none; b=Ur8Hlkc/W/w+Gylh2I3cxvWGHsT4Cj0pJ4I3QTK4njkoJGz3YnGjqGktvbCdoDnVmh9u/OvZ0FU0gPjQSb6hthXZV89YO8NJzqw+arRZp9J/FJLyXwt8EmfEy5xl2CiiffQIDDKuI/ZHXbDtc2MD+Uob05lvpi6/4AkcO2aHe4w=
+	t=1750155630; cv=none; b=VzLMn9NJIeRkJGv4h/oKu1iTP0w3FfHXFveVFnXzIo0XEmwndKnOzuoH0P4mxHBGtRGZAHJFIzgwXkAqaPAsF0wEL9ffI79WrPMvVj3xsnCJBTCdFOPe26DqxuIbLZCAkgmiNeF9txbal+taSgYB5UZzvfhKc0619I+a8uVBXnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750155547; c=relaxed/simple;
-	bh=lWVgHkdCmmhxPJ/pPYm/0EoMpSP4kpv53wc1doly1l0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FhqFUVxvLFRHsvuTQju4XQf1xKsIYd/B2H+TH9wmwENIChHhdDAFW2uhgPVgOdGkLv/8tLG/t6zCK86WLM6nYvzjQq3Kx1b3LFtSUG6XLERRELZxEREoJJwMaregQhsRmmmqIVdbeHI+EfI3qxClLmQGa0POBmT4kFd4C0DWaCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DInoz4Q8; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750155630; c=relaxed/simple;
+	bh=ShE75AzzcjMtFveguCfs50L+tbA1hP344vJlSCdWg5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSHybytaVAXMsA3iNfXiRQfB7csVLwMP+swIojr/sbAscZiB9dmKoY9+aRivJnT6KDFxSx1jM2IGTIELvbPTCXCrSeevK0Mxh9xeQ0RT/HvAys3BHb8wsl5T8uZmsX95pIsQSd7gjJX+jOh+Jf2+0UvamjPA2W4ZlDDAmplCo20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHED9/FG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DInoz4Q8"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55HAId552851641;
-	Tue, 17 Jun 2025 05:18:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750155519;
-	bh=H5JYcPxPvOm/wQvlylxZSm+Bf6z0WAAFiSnAvpWknfg=;
-	h=From:To:CC:Subject:Date;
-	b=DInoz4Q8qwcy235WKiiEeVQ7+yWTB9Sd9QZPsMXp3wip8Kq0PzBC72IK9eIL1BZAO
-	 fsIg1Ak6nA6z/3KtXfjGw5ZSBDZgO7qy6RcfxhfLDCM1mIlxPkEPRbrbW9r4X0nIQE
-	 p0fN5f2X6ocbMJUOi5+M6FxmZW1g80fz2JMpEsOQ=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55HAId4Q3522504
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 17 Jun 2025 05:18:39 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 17
- Jun 2025 05:18:38 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 17 Jun 2025 05:18:38 -0500
-Received: from localhost (akira.dhcp.ti.com [10.24.69.4])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55HAIb9A1511897;
-	Tue, 17 Jun 2025 05:18:38 -0500
-From: Himanshu Mittal <h-mittal1@ti.com>
-To: <h-mittal1@ti.com>, <pabeni@redhat.com>, <kuba@kernel.org>,
-        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
-        <m-malladi@ti.com>, <pratheesh@ti.com>, <prajith@ti.com>
-Subject: [PATCH net-next v2] net: ti: icssg-prueth: Add prp offload support to ICSSG driver
-Date: Tue, 17 Jun 2025 15:48:37 +0530
-Message-ID: <20250617101837.381217-1-h-mittal1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHED9/FG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECE7C4CEED;
+	Tue, 17 Jun 2025 10:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750155630;
+	bh=ShE75AzzcjMtFveguCfs50L+tbA1hP344vJlSCdWg5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rHED9/FG0fmuUoq4vdCO8uCeFLdJ/PDuIFbE+dRFUsFpqyRI/eXUdtCiRQEsLQOCa
+	 GZGy22OTcbJoYqdPgheZ0jMD13xyWzgDY0Nu89PNkdOKVbBYkIwq4pchZni+NbvhQZ
+	 xV2l+kCNBEYlEM3NS9TFCrbsXZhidBtGMcfK+FpYmTL3mbF9QuxwFj9UvH9NMv2I+A
+	 DaEjWaCnJlmnl9PX8/w4c8pd1V+nRvYjJkVc9kOFVjEKEBiq65UVx+/t2ye+6RIsXo
+	 +PZS1E+CnK0OqRTiimOV/WSQ3qxVxprHnscyq+5t8xpiD038xAt0nNZf+O5HjYCSti
+	 X0bk1Uw4f/IBA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRTQZ-000000005RT-0bGw;
+	Tue, 17 Jun 2025 12:20:27 +0200
+Date: Tue, 17 Jun 2025 12:20:27 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Qiang Yu <qiang.yu@oss.qualcomm.com>
+Cc: Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
+	will@kernel.org, linux-arm-kernel@lists.infradead.org,
+	andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, vkoul@kernel.org, kishon@kernel.org,
+	sfr@canb.auug.org.au, linux-phy@lists.infradead.org,
+	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, quic_cang@quicinc.com,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Subject: Re: [PATCH v4 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
+Message-ID: <aFFBa9ZESDheGAhr@hovoldconsulting.com>
+References: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
+ <20250604080237.494014-6-quic_wenbyao@quicinc.com>
+ <aEBh2xHu3QDtUrxe@hovoldconsulting.com>
+ <aELATuLue/Vs8lHz@hu-qianyu-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aELATuLue/Vs8lHz@hu-qianyu-lv.qualcomm.com>
 
-Add support for ICSSG PRP mode which supports offloading of:
- - Packet duplication and PRP trailer insertion
- - Packet duplicate discard and PRP trailer removal
+On Fri, Jun 06, 2025 at 03:17:50AM -0700, Qiang Yu wrote:
+> On Wed, Jun 04, 2025 at 05:10:19PM +0200, Johan Hovold wrote:
+> > On Wed, Jun 04, 2025 at 04:02:37PM +0800, Wenbin Yao wrote:
+> > > From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > > 
+> > > All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
+> > > clocks provided by the TCSR device.
+> > 
+> > As I just mentioned in the thread where this is still being discussed:
+> > 
+> > 	https://lore.kernel.org/all/aEBfV2M-ZqDF7aRz@hovoldconsulting.com
+> > 
+> > you need to provide a lot more detail on why you think modelling these
+> > supplies as PHY supplies (which they are not) is the right thing to do.
+> 
+> TCSR_PCIE_xx_CLKREF_EN is not always in TCSR, they're custom
+> bits to enable pieces of the distribution network. We always classify them
+> as "TCSR" even though they're not always in that module.
+> 
+> So even if we put the QREF supplies in tscr device tree node, it still
+> doesn't describe the hardware correctly as the hardware itself does't have
+> a unified structure.
 
-Signed-off-by: Himanshu Mittal <h-mittal1@ti.com>
----
-v2-v1:
-- Align with recent firmware name handling updates made in:
- https://lore.kernel.org/all/20250613064547.44394-1-danishanwar@ti.com/
+It still seems like a better approximation of the hardware.
 
-v1: https://lore.kernel.org/all/42ac0736-cb5a-4d99-a11c-6f861adbdb5f@ti.com/
+> Since the TCSR_PCIE_xx_CLKREF_EN is only required by PCIe, why can't we
+> model these supplies consumed by TCSR_PCIE_xx_CLKREF_EN as PHY supplies,
+> treating PCIe PHY and TCSR_PCIE_xx_CLKREF_EN as a whole.
 
- drivers/net/ethernet/ti/icssg/icssg_prueth.c | 12 +++++++++++-
- drivers/net/ethernet/ti/icssg/icssg_prueth.h |  4 ++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+First, you are only adding one qref supply to the PHY binding, but
+apparently there are two or three supplies needed per refclock on X1E
+based on the mapping you provided below.
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index a1e013b0a0eb..2aa812cbab92 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -148,8 +148,10 @@ static int prueth_emac_start(struct prueth *prueth)
- 
- 	if (prueth->is_switch_mode)
- 		firmwares = prueth->icssg_switch_firmwares;
--	else if (prueth->is_hsr_offload_mode)
-+	else if (prueth->is_hsr_offload_mode && HSR_V1 == prueth->hsr_prp_version)
- 		firmwares = prueth->icssg_hsr_firmwares;
-+	else if (prueth->is_hsr_offload_mode && PRP_V1 == prueth->hsr_prp_version)
-+		firmwares = prueth->icssg_prp_firmwares;
- 	else
- 		firmwares = prueth->icssg_emac_firmwares;
- 
-@@ -1527,6 +1529,7 @@ static int prueth_netdevice_event(struct notifier_block *unused,
- 	struct netdev_notifier_changeupper_info *info;
- 	struct prueth_emac *emac = netdev_priv(ndev);
- 	struct prueth *prueth = emac->prueth;
-+	enum hsr_version hsr_ndev_version;
- 	int ret = NOTIFY_DONE;
- 
- 	if (ndev->netdev_ops != &emac_netdev_ops)
-@@ -1538,6 +1541,11 @@ static int prueth_netdevice_event(struct notifier_block *unused,
- 
- 		if ((ndev->features & NETIF_PRUETH_HSR_OFFLOAD_FEATURES) &&
- 		    is_hsr_master(info->upper_dev)) {
-+			hsr_get_version(info->upper_dev, &hsr_ndev_version);
-+			if (hsr_ndev_version != HSR_V1 && hsr_ndev_version != PRP_V1)
-+				return -EOPNOTSUPP;
-+			prueth->hsr_prp_version = hsr_ndev_version;
-+
- 			if (info->linking) {
- 				if (!prueth->hsr_dev) {
- 					prueth->hsr_dev = info->upper_dev;
-@@ -1858,6 +1866,8 @@ static int prueth_probe(struct platform_device *pdev)
- 				  prueth->icssg_switch_firmwares, "eth", "sw");
- 	icssg_mode_firmware_names(dev, prueth->icssg_emac_firmwares,
- 				  prueth->icssg_hsr_firmwares, "eth", "hsr");
-+	icssg_mode_firmware_names(dev, prueth->icssg_emac_firmwares,
-+				  prueth->icssg_prp_firmwares, "eth", "prp");
- 
- 	spin_lock_init(&prueth->vtbl_lock);
- 	spin_lock_init(&prueth->stats_lock);
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-index c03e3b3626c1..4a9940b12e47 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-@@ -13,6 +13,7 @@
- #include <linux/etherdevice.h>
- #include <linux/genalloc.h>
- #include <linux/if_vlan.h>
-+#include <linux/if_hsr.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
-@@ -290,6 +291,7 @@ struct icssg_firmwares {
-  * @vlan_tbl: VLAN-FID table pointer
-  * @hw_bridge_dev: pointer to HW bridge net device
-  * @hsr_dev: pointer to the HSR net device
-+ * @hsr_prp_version: enum to store the protocol version of hsr master
-  * @br_members: bitmask of bridge member ports
-  * @hsr_members: bitmask of hsr member ports
-  * @prueth_netdevice_nb: netdevice notifier block
-@@ -332,6 +334,7 @@ struct prueth {
- 
- 	struct net_device *hw_bridge_dev;
- 	struct net_device *hsr_dev;
-+	enum hsr_version hsr_prp_version;
- 	u8 br_members;
- 	u8 hsr_members;
- 	struct notifier_block prueth_netdevice_nb;
-@@ -349,6 +352,7 @@ struct prueth {
- 	struct icssg_firmwares icssg_emac_firmwares[PRUETH_NUM_MACS];
- 	struct icssg_firmwares icssg_switch_firmwares[PRUETH_NUM_MACS];
- 	struct icssg_firmwares icssg_hsr_firmwares[PRUETH_NUM_MACS];
-+	struct icssg_firmwares icssg_prp_firmwares[PRUETH_NUM_MACS];
- };
- 
- struct emac_tx_ts_response {
--- 
-2.34.1
+At least on the T14s, these additional qref supplies are identical to
+the "phy" and "pll" supplies currently managed by the PHY driver, but is
+that always guaranteed to be the case?
 
+Second, the supply properties are supposed to reflect the actual supply
+pins on the SoC, but the mapping from the qref supply pins to this new
+"qref" supply cannot be inferred without access to internal
+documentation. That mapping could go in a driver with a new binding
+describing all of the qref supplies, which an integrator can easily
+look up from the machine schematics. That driver would also handle any
+ordering constraints between the supplies.
+
+Third, what about the other TCSR reference clocks? On X1E there are at
+least eleven that besides PCIe are used for USB, eDP and UFS. Don't you
+risk disabling a qref supply underneath these drivers as well? A
+complete mapping in a clock driver would take care of this too.
+
+What does the mapping look like for the remaining TCSR clocks?
+
+> > Also please answer the question I've asked three times now on how the
+> > QREF supplies map to PHY supplies on X1E as no one will be able to use
+> > this binding unless this is documented somewhere (and similar for other
+> > SoCs).
+> >
+> 
+> PCIe3,
+> VDD_A_QREFS_0P875_0,
+> VDD_A_QREFS_0P875_B,
+> VDD_A_QREFS_1P2_B,
+> 
+> PCIe4,
+> VDD_A_QREFS_0P875_B,
+> VDD_A_QREFS_1P2_B
+> 
+> PCIe5,
+> VDD_A_QREFS_0P875_2,
+> VDD_A_QREFS_0P875_B,
+> VDD_A_QREFS_1P2_B,
+> 
+> PCIe6
+> VDD_A_QREFS_0P875_A,
+> VDD_A_QREFS_1P2_A
+
+Thanks for providing these.
+
+Johan
