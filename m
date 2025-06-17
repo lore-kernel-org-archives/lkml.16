@@ -1,210 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11D9D2EF9B7
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4E427FD58;
+	Tue, 17 Jun 2025 18:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185415; cv=none; b=SMOeO6Qe5k64VG6m1N47A0YuH9RXpWZERh2A6qpQ9aED7Kmm2FGvCOFKSIdmgwA4ImFWvticd3vVGVUKpIpn5mgY+kuhs09o3FNkvrxrAved2yRskZcUOVhIqGumxo+fV4yJ1xRJnN5Zn32EJRzFmncIPNaQhRiznfaEmWYnxjU=
+	t=1750185465; cv=none; b=RDYQVxnaWq5xoGkApK0k2qGaD59cyqHxMPC1dTVGpSPsjGjbHgBrEdg1X3VgBajG4xzHGekL/4Ji6a77F9EZD3PZTVoBrRBW0KjsidztKnvKSH0n19eSUTMGNSUcaanXyRzTrwFN8RXtaj0bQfkIAl/JeEbp+7LpdJ0mhS4LbE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185415; c=relaxed/simple;
-	bh=CCsMW2Y4vgWxPuHdWABQb40IsOOZLbjksJf8mcF8rtI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r6L8MQ03vslNyQWInSJAXheDFmWv4RtP+gQ4vhwMPiakmC5VyGt5vCraINtdVMKhZXRAPi+2P8TucfA2FQxxT7WGL6PPhZ3YSxqPeu540lekF1hOeqgzgKH/NrE2wEjNG8iA27D1Fjwlv/J9rPtKPOUvW9ncwZi6Ua0/pQxuZh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ACE11688;
-	Tue, 17 Jun 2025 11:36:32 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 615863F58B;
-	Tue, 17 Jun 2025 11:36:51 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	oliver.upton@linux.dev,
-	ardb@kernel.org,
-	frederic@kernel.org,
-	james.morse@arm.com,
-	joey.gouly@arm.com,
-	scott@os.amperecomputing.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v3 7/7] arm64/futex: support futex with FEAT_LSUI
-Date: Tue, 17 Jun 2025 19:36:35 +0100
-Message-Id: <20250617183635.1266015-8-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250617183635.1266015-1-yeoreum.yun@arm.com>
-References: <20250617183635.1266015-1-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1750185465; c=relaxed/simple;
+	bh=vRMXvV+hLCzXEsUSwZA8PSD9NUAJa8mnTAp20kjQkRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnG0N2lbw+xs0X2ui57dXdvCdF2BpaavOcftOeQM3gZrougyC7io7zIKAnIX9Ux3H+ENaicvPATIM1Yzl2yM5EflHttqRx754rpfSBsGTTKOito+O14Tnr7XZbSrKeb9cx0qjC2ymHeBEgejbalknh92mBZBRPkanOUOeQ8fSc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgA1BsRe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgA1BsRe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71789C4CEE3;
+	Tue, 17 Jun 2025 18:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750185465;
+	bh=vRMXvV+hLCzXEsUSwZA8PSD9NUAJa8mnTAp20kjQkRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UgA1BsRerfxN1gGACB6pt6pwpd34FDWN8FKswypZJOPhnPDoROdTihb2z+YeXW/q1
+	 vdmyMtB5Xw7Dx6co34CzG+cM6Ponw/6icj8oX5vVxzhZNXh90JGp1giqODr2TE2co3
+	 zHTiIbPMLD/VMwtD7PFDywixHfk5xj2QSj7v8ElLItRXf1LP0tMD4LLWTg/U6FCcVk
+	 ZPyqFJ+5d88PnS576TwDygUdR5zPVcejidc6hNQWSXCgI+CcmqAWN8CkF4CPO1eB2W
+	 ZUGrBuQd417Chv1Dnyjd5TcvAtELZySs7k6VxZuDqG9Jdo2MZunBsnFrNAWsH+Hgok
+	 NXLhlkucdIQlA==
+Date: Tue, 17 Jun 2025 19:37:41 +0100
+From: Simon Horman <horms@kernel.org>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
+	kvm@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] vhost: Fix typos in comments and clarity on alignof usage
+Message-ID: <20250617183741.GD2545@horms.kernel.org>
+References: <20250615173933.1610324-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250615173933.1610324-1-alok.a.tiwari@oracle.com>
 
-Since Armv9.6, FEAT_LSUI supplies load/store unprevileged instructions
-for kernel to access user memory without clearing PSTATE.PAN.
+On Sun, Jun 15, 2025 at 10:39:11AM -0700, Alok Tiwari wrote:
+> This patch fixes multiple typos and improves comment clarity across
+> vhost.c.
+> - Correct spelling errors: "thead" -> "thread", "RUNNUNG" -> "RUNNING"
+>   and "available".
+> - Improve comment by replacing informal comment ("Supersize me!")
+>   with a clear description.
+> - Use __alignof__ correctly on dereferenced pointer types for better
+>   readability and alignment with kernel documentation.
 
-This patch makes futex use futex_atomic operations implemented with these
-instruction when cpu supports FEAT_LSUI otherwise they work with
-ldxr/stlxr with clearing PSTATE.PAN bit.
+Could you expand on the last point?
+I see that the patch uses __alignof__ with rather than without parentheses.
+But I don't follow how that corresponds with the comment above.
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- arch/arm64/include/asm/futex.h | 99 +++++++++++-----------------------
- 1 file changed, 31 insertions(+), 68 deletions(-)
+> 
+> These changes enhance code readability and maintainability.
+> 
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
-diff --git a/arch/arm64/include/asm/futex.h b/arch/arm64/include/asm/futex.h
-index bc06691d2062..ed4586776655 100644
---- a/arch/arm64/include/asm/futex.h
-+++ b/arch/arm64/include/asm/futex.h
-@@ -9,71 +9,60 @@
- #include <linux/uaccess.h>
- 
- #include <asm/errno.h>
-+#include <asm/lsui.h>
- 
--#define FUTEX_MAX_LOOPS	128 /* What's the largest number you can think of? */
--
--#define __futex_atomic_op(insn, ret, oldval, uaddr, tmp, oparg)		\
--do {									\
--	unsigned int loops = FUTEX_MAX_LOOPS;				\
--									\
--	uaccess_enable_privileged();					\
--	asm volatile(							\
--"	prfm	pstl1strm, %2\n"					\
--"1:	ldxr	%w1, %2\n"						\
--	insn "\n"							\
--"2:	stlxr	%w0, %w3, %2\n"						\
--"	cbz	%w0, 3f\n"						\
--"	sub	%w4, %w4, %w0\n"					\
--"	cbnz	%w4, 1b\n"						\
--"	mov	%w0, %w6\n"						\
--"3:\n"									\
--"	dmb	ish\n"							\
--	_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %w0)				\
--	_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %w0)				\
--	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp),	\
--	  "+r" (loops)							\
--	: "r" (oparg), "Ir" (-EAGAIN)					\
--	: "memory");							\
--	uaccess_disable_privileged();					\
--} while (0)
-+#define FUTEX_ATOMIC_OP(op)										\
-+static __always_inline int										\
-+__futex_atomic_##op(int oparg, u32 __user *uaddr, int *oval)	\
-+{									\
-+	return __lsui_ll_sc_u_body(futex_atomic_##op, oparg, uaddr, oval);					\
-+}
-+
-+FUTEX_ATOMIC_OP(add)
-+FUTEX_ATOMIC_OP(or)
-+FUTEX_ATOMIC_OP(and)
-+FUTEX_ATOMIC_OP(eor)
-+FUTEX_ATOMIC_OP(set)
-+
-+#undef FUTEX_ATOMIC_OP
-+
-+static __always_inline int
-+__futex_cmpxchg(u32 __user *uaddr, u32 oldval, u32 newval, u32 *oval)
-+{
-+	return __lsui_ll_sc_u_body(futex_cmpxchg, uaddr, oldval, newval, oval);
-+}
- 
- static inline int
- arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
- {
--	int oldval = 0, ret, tmp;
--	u32 __user *uaddr = __uaccess_mask_ptr(_uaddr);
-+	int ret;
-+	u32 __user *uaddr;
- 
- 	if (!access_ok(_uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
-+	uaddr = __uaccess_mask_ptr(_uaddr);
-+
- 	switch (op) {
- 	case FUTEX_OP_SET:
--		__futex_atomic_op("mov	%w3, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_set(oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_ADD:
--		__futex_atomic_op("add	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_add(oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_OR:
--		__futex_atomic_op("orr	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_or(oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_ANDN:
--		__futex_atomic_op("and	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, ~oparg);
-+		ret = __futex_atomic_and(~oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_XOR:
--		__futex_atomic_op("eor	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_eor(oparg, uaddr, oval);
- 		break;
- 	default:
- 		ret = -ENOSYS;
- 	}
- 
--	if (!ret)
--		*oval = oldval;
--
- 	return ret;
- }
- 
-@@ -81,40 +70,14 @@ static inline int
- futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *_uaddr,
- 			      u32 oldval, u32 newval)
- {
--	int ret = 0;
--	unsigned int loops = FUTEX_MAX_LOOPS;
--	u32 val, tmp;
- 	u32 __user *uaddr;
- 
- 	if (!access_ok(_uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
- 	uaddr = __uaccess_mask_ptr(_uaddr);
--	uaccess_enable_privileged();
--	asm volatile("// futex_atomic_cmpxchg_inatomic\n"
--"	prfm	pstl1strm, %2\n"
--"1:	ldxr	%w1, %2\n"
--"	sub	%w3, %w1, %w5\n"
--"	cbnz	%w3, 4f\n"
--"2:	stlxr	%w3, %w6, %2\n"
--"	cbz	%w3, 3f\n"
--"	sub	%w4, %w4, %w3\n"
--"	cbnz	%w4, 1b\n"
--"	mov	%w0, %w7\n"
--"3:\n"
--"	dmb	ish\n"
--"4:\n"
--	_ASM_EXTABLE_UACCESS_ERR(1b, 4b, %w0)
--	_ASM_EXTABLE_UACCESS_ERR(2b, 4b, %w0)
--	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp), "+r" (loops)
--	: "r" (oldval), "r" (newval), "Ir" (-EAGAIN)
--	: "memory");
--	uaccess_disable_privileged();
--
--	if (!ret)
--		*uval = val;
- 
--	return ret;
-+	return __futex_cmpxchg(uaddr, oldval, newval, uval);
- }
- 
- #endif /* __ASM_FUTEX_H */
--- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+...
 
+> @@ -1898,8 +1898,8 @@ static long vhost_vring_set_addr(struct vhost_dev *d,
+>  		return -EFAULT;
+>  
+>  	/* Make sure it's safe to cast pointers to vring types. */
+> -	BUILD_BUG_ON(__alignof__ *vq->avail > VRING_AVAIL_ALIGN_SIZE);
+> -	BUILD_BUG_ON(__alignof__ *vq->used > VRING_USED_ALIGN_SIZE);
+> +	BUILD_BUG_ON(__alignof__(*vq->avail) > VRING_AVAIL_ALIGN_SIZE);
+> +	BUILD_BUG_ON(__alignof__(*vq->used) > VRING_USED_ALIGN_SIZE);
+>  	if ((a.avail_user_addr & (VRING_AVAIL_ALIGN_SIZE - 1)) ||
+>  	    (a.used_user_addr & (VRING_USED_ALIGN_SIZE - 1)) ||
+>  	    (a.log_guest_addr & (VRING_USED_ALIGN_SIZE - 1)))
+
+...
