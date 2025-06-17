@@ -1,139 +1,143 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42B42E264B;
-	Tue, 17 Jun 2025 13:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59922E719F;
+	Tue, 17 Jun 2025 13:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165221; cv=none; b=drTUv/NenOz4Kt6ml49rh9XoxLr09Zd3GTUBIjgVUSW9Y8KW0w/HhueRU9fyhmRA41zrr4ltYNy8DqgIvgfbzxq5QaOHu4wFjjaIlyzKkFsBuSaYCKbwU05MFtodtYGUEOke0TwLpfBSdxDAikEtMhs85q6bL1t3ipsWHnZj+SE=
+	t=1750165283; cv=none; b=r5lJIlR5U/gl00rUwC6TLh0h11K0a/brYDfNt/facDex6GwpQnEMQeAi8DhZvbfMQhxzwrxcrRxEotOUdr5+rbvLygItqctrzcyg9Wqg+EzUGFz1Wr3adz98d6W6Qt3ZQx+QIY7ajZkUzibW5WWjBjIGBLoTCWI8SqAM+nbzpO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165221; c=relaxed/simple;
-	bh=x5Wrb85DRWbVNOvnfzFdGgHoRKBrMPTvOnwfQ5uCOG4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=bu7SxGmSXY5jOh78ZTzc3UFkmWr4mS5vKPWDQv2ApwSsGkpEnfyDPiTXYiJ3u8KQnMp4yao39EZWhnmEd2rh84qgL67Ejqo91F0HH7HWFZ6sPFkI2RknfigEdHqrGBfY5SFXErutwKWWzeC2L3J7cSZX7y59+thM7D2UeMGRrnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4bE92Kx; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750165283; c=relaxed/simple;
+	bh=qA2Ta6/U0VAg7wGZf08fGR/tC/NpdtEsYBXGvczlt9U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kFuWigFaJMVAMol7vo2m6AEwUR8MXlezWcMAsBJ/i92Kvg3mrDY1ROUjoFPfZemZhrJUiWlzGDLmfkNccGBm2KnFkmOSnK/bcruon7W/KrdvvhFZ+mzLwYGX8vlXcAkSAj4zrrUqRZXkUieOw+fmBAiSQulMUhIx6nKB/3qWOwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1ntl3NP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4bE92Kx"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4530921461aso49077485e9.0;
-        Tue, 17 Jun 2025 06:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750165217; x=1750770017; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCBsAUdKLlXHFAS2dv9cOixZKTFpwiXbiHVQbvH0Ze8=;
-        b=h4bE92KxAdOXyBEKrY5gB5XgkzGk8Eph8KqhITj9Tb1e3oTkaqlP7PQuYUydP8OW9/
-         wG6ayXjrPYsrJYIzEKzOiQjVFbEheHQa2Zik3eQBX0Rr4o76DjwLNzs1Rq+zVsuGqkBB
-         xyOBAY+kWKOhr2b86R9CVgypu4GbiB+11+NISwEUS6I/bt9x2zeCQclgDtX1evpNpyFJ
-         7vt5bJ7MoEHA2MCPihfqT2V0gseKKrqSXHF4xYyh3gvVOb/AEsad65wfvCaURmioR4Zo
-         W58b8DYIbstHz+YLReFr+zNWAveFs2WOGS+f3xiNQOyxOYN2kDAleimI4r1jLqCKn8/s
-         SP7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750165217; x=1750770017;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UCBsAUdKLlXHFAS2dv9cOixZKTFpwiXbiHVQbvH0Ze8=;
-        b=i9F9tRiZxfpujeIwLoyOrhYlcE2ftGNmPt6fZ31e+7nQdUqWs7UPkJu59PF/LUjamZ
-         hAnDY84+W7Hxt74/RsRx8Jt47I3EvSXZDYZT4rBBjkGpcJAitDdHVCSfjrV4wwuyGIHO
-         W4tV3VDyt/Kx7hHTiwjHLOiMTf1RThCRpts9MvMi+YZFkvg43p+4Tu6GtvEF4guUZ9n8
-         axhOKywGJ33mfyk4Mm1/rSsNOfqzlql5FxeICMX5IISevbn5nbpPHgR2nRJ/xT/3FIOJ
-         dABRXyiYp1GlQw0pzRpZUmQYo0tSmg/ZMnNSONLTH6M5f5nepLVpzoxo5gn6+EGhsOPh
-         NLIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOKl8+VquoLbDuOIFovN07USfDVJJp65K/VfqsXh2Y8Djc8D3k3Wh8fPTNEdNtVoreu+Zy4wch@vger.kernel.org, AJvYcCVfzDA9Imm+pWL1btdSUq67lJaRVmLJKDviWFknwLdv6bGnK26sVpLCrGOMfoqNRcZqIMrkBSnIKXU3zFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLG5Ogrru2TT2bN0iO29Q+U54N8s5J2YixpyVDa+glSHwOzYsR
-	PgwsGB9MLyG6k4GwJLkWlVkHL9Q+1l2VI2RSi3S36bHETg6fSfvKzdeOYOz0Moa+
-X-Gm-Gg: ASbGncvqLLgGGx/adrjoUMSA0lIfQDAiBidWuMsiWalVYJGN/BC02N/WKqAanjcH6yA
-	FyHEcyWeo3tUx4X6gpg4ZHEhzXnxa2e55ULJt6HqUjCBO0J7J2VE4PDcWtxvt9jzRxDUltz8WOw
-	1wTXbzKu0C5Z9E6AITrulgWGbm8spulgox5ffc6GAi539GumkuTshxtjsJOW+jS+VMU/s1fXbR7
-	c/iy+3ZYqYDKup+zO9sLIS8+lFpxxUHAGXI4pgQqfukHh8GuFsgOPFTCihnrwQWFfEvXTFpd1Kf
-	9LU5XcP0MUh8fvc2y0zq6VtLS17POpy+JlZra6drnxHBSr90okMCVnohsx+uEpJ4jFrqiGLevQM
-	=
-X-Google-Smtp-Source: AGHT+IE47uR89T5Uem9MM2qCkm1YZX6jwmHcz73YYxvO/Jmwjj1PBFbbbUyCJLNhhaUZOFeMr0rGbg==
-X-Received: by 2002:a05:600c:37c3:b0:43c:fe90:1279 with SMTP id 5b1f17b1804b1-453561ce33bmr8920735e9.21.1750165217074;
-        Tue, 17 Jun 2025 06:00:17 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:8931:baa3:a9ed:4f01])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e1838fasm173538455e9.38.2025.06.17.06.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 06:00:16 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
- <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
- <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
- Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
-  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
- <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
- <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
-  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
-  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
-  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v5 00/15] Don't generate netlink .rst files inside
- $(srctree)
-In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
-Date: Tue, 17 Jun 2025 13:58:11 +0100
-Message-ID: <m2msa6ikyk.fsf@gmail.com>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1ntl3NP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B52C4CEE3;
+	Tue, 17 Jun 2025 13:01:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750165283;
+	bh=qA2Ta6/U0VAg7wGZf08fGR/tC/NpdtEsYBXGvczlt9U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=M1ntl3NPO/HAMHtSjVG/7Xt3nA86JS965QA57CHjGlAaSKzYV40DgrIQf9SQagZWj
+	 sQTno/CNppX2vqSWn0erIYqDUcoADC7gkCBks0K8yHB4rp+t+i/oRpnYHV4xF+zPiQ
+	 YitJy+sLGjfhiXJJ666hOFjpAie/n9iH5nWftNQ/kKUKos4ovJyfhC6IEC6M3ULNsz
+	 N+gHb0Ie/Pq0zM3rMkOQ0xoGclaFEmN2MN0Hp/U0m22Yku+HYtqyGv2qnRp0fNJGbM
+	 LwJ0aTRQvQhDyx7uSFQ2+m7fyEg3R+Ct8gOjMKSwWZtdo8iLUeY8RRBAW31JYqGKu0
+	 UY6OiaH9P6Deg==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-addda47ebeaso1147874666b.1;
+        Tue, 17 Jun 2025 06:01:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMIrdQFJ0PeFIFDaLsKASnWT0+Y8EbAoYi/JMYMoXTAik7UZ2SzI5Gtfhkii+vcX+yAUhvCezb6i6/Ui4J@vger.kernel.org, AJvYcCVmW1sVAyceXAeuPGaMRSF7idYE8WmY3l7sxQOGrfH0sL4IKJTwCA7Y/WnLN3XtwUMNZU/ov76z1zPa@vger.kernel.org, AJvYcCWdlPKG/mdPpRamhTCNAx234r0T3nDXNu4/ZiFY5w8/xMml2Zu+hcef/MdZJIXEk2Rq/mAksiN5qwhvu96Scxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/e18UV6+KrGNJBEKlrzyTIomNnW8u6KFZXtdyZA0gB1mAvzvq
+	r74/JDEYmp/im4ydSTLOhFgZ+U0uK4Gvk3jnz58SoSOIb45keypy1J3/RXlu/KJn97HbSMkK/UB
+	BLV9PfU5Cee2dXZVMi2yJ8ADRRLVbqQ==
+X-Google-Smtp-Source: AGHT+IG9M1oo969JfgUiiSzgSAoKMZK9natZ+rqQw3z6YHuoXhuV5j/ioO15HhqLpQ8uoiPvSP8B555iJcGbCUxTsVA=
+X-Received: by 2002:a17:907:7e92:b0:adb:2e9f:5d11 with SMTP id
+ a640c23a62f3a-adfad4515f3mr1053840666b.37.1750165280323; Tue, 17 Jun 2025
+ 06:01:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250616154511.1862909-1-remo@buenzli.dev> <20250616154511.1862909-4-remo@buenzli.dev>
+In-Reply-To: <20250616154511.1862909-4-remo@buenzli.dev>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 17 Jun 2025 08:01:08 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
+X-Gm-Features: AX0GCFvmJU-fnb9jTXvPd-qWR-SSg2EzNna8ZQCIRDR0t8tdHpfy0WVf6pC0pMA
+Message-ID: <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] samples: rust: platform: Add property child and
+ reference args examples
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Mark Brown <broonie@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-
-> As discussed at:
->    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
+On Mon, Jun 16, 2025 at 10:45=E2=80=AFAM Remo Senekowitsch <remo@buenzli.de=
+v> wrote:
 >
-> changeset f061c9f7d058 ("Documentation: Document each netlink family")
-> added a logic which generates *.rst files inside $(srctree). This is bad
-> when O=<BUILDDIR> is used.
+> Add some example usage of the device property methods for reading
+> DT/ACPI/swnode child nodes and reference args.
 >
-> A recent change renamed the yaml files used by Netlink, revealing a bad
-> side effect: as "make cleandocs" don't clean the produced files and symbols
-> appear duplicated for people that don't build the kernel from scratch.
->
-> This series adds an yaml parser extension and uses an index file with glob for
-> *. We opted to write such extension in a way that no actual yaml conversion
-> code is inside it. This makes it flexible enough to handle other types of yaml
-> files in the future. The actual yaml conversion logic were placed at 
-> netlink_yml_parser.py. 
->
-> As requested by YNL maintainers, this version has netlink_yml_parser.py
-> inside tools/net/ynl/pyynl/ directory. I don't like mixing libraries with
-> binaries, nor to have Python libraries spread all over the Kernel. IMO,
-> the best is to put all of them on a common place (scripts/lib, python/lib,
-> lib/python, ...) but, as this can be solved later, for now let's keep it this
-> way.
->
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 > ---
+>  drivers/of/unittest-data/tests-platform.dtsi |  7 +++++++
+>  samples/rust/rust_driver_platform.rs         | 13 ++++++++++++-
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/un=
+ittest-data/tests-platform.dtsi
+> index 50a51f38afb6..509eb614ab2b 100644
+> --- a/drivers/of/unittest-data/tests-platform.dtsi
+> +++ b/drivers/of/unittest-data/tests-platform.dtsi
+> @@ -40,6 +40,13 @@ test-device@2 {
+>
+>                                 test,u32-prop =3D <0xdeadbeef>;
+>                                 test,i16-array =3D /bits/ 16 <1 2 (-3) (-=
+4)>;
+> +
+> +                               ref_child_0: child@0 {
 
-Note that the series leaves the YNL build broken.
+child-0 or you need to add 'reg' property if you keep the unit-address.
 
-make -C tools/net/ynl/
-make: Entering directory '/home/donaldh/net-next/tools/net/ynl'
-make[1]: Entering directory '/home/donaldh/net-next/tools/net/ynl/lib'
-make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/home/donaldh/net-next/tools/net/ynl/lib'
-make[1]: Entering directory '/home/donaldh/net-next/tools/net/ynl/generated'
-	GEN_RST conntrack.rst
-Traceback (most recent call last):
-  File "/home/donaldh/net-next/tools/net/ynl/generated/../pyynl/ynl_gen_rst.py", line 90, in <module>
-    main()
-    ~~~~^^
-  File "/home/donaldh/net-next/tools/net/ynl/generated/../pyynl/ynl_gen_rst.py", line 86, in main
-    write_to_rstfile(content, args.output)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/donaldh/net-next/tools/net/ynl/generated/../pyynl/ynl_gen_rst.py", line 64, in write_to_rstfile
-    os.makedirs(directory, exist_ok=True)
-    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen os>", line 227, in makedirs
-FileNotFoundError: [Errno 2] No such file or directory: ''
-make[1]: *** [Makefile:56: conntrack.rst] Error 1
-make[1]: Leaving directory '/home/donaldh/net-next/tools/net/ynl/generated'
-make: *** [Makefile:25: generated] Error 2
-make: Leaving directory '/home/donaldh/net-next/tools/net/ynl'
+> +                                       test,ref-arg =3D <&ref_child_1 0x=
+20 0x32>;
+> +                               };
+> +                               ref_child_1: child@1 {
+> +                                       test,ref-arg =3D <&ref_child_0 0x=
+10 0x64>;
+> +                               };
+>                         };
+>                 };
+>
+> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_dri=
+ver_platform.rs
+> index c0abf78d0683..4dcedb22a4bb 100644
+> --- a/samples/rust/rust_driver_platform.rs
+> +++ b/samples/rust/rust_driver_platform.rs
+> @@ -4,7 +4,11 @@
+>
+>  use kernel::{
+>      c_str,
+> -    device::{self, Core},
+> +    device::{
+> +        self,
+> +        property::{FwNodeReferenceArgs, NArgs},
+> +        Core,
+> +    },
+>      of, platform,
+>      prelude::*,
+>      str::CString,
+> @@ -91,6 +95,13 @@ fn properties_parse(dev: &device::Device) -> Result {
+>          let prop: KVec<i16> =3D fwnode.property_read_array_vec(name, 4)?=
+.required_by(dev)?;
+>          dev_info!(dev, "'{name}'=3D'{prop:?}' (KVec)\n");
+>
+> +        for child in fwnode.children() {
+> +            let name =3D c_str!("test,ref-arg");
+> +            let nargs =3D NArgs::N(2);
+> +            let prop: FwNodeReferenceArgs =3D child.property_get_referen=
+ce_args(name, nargs, 0)?;
+
+Is there some reason we can just pass 2 in rather than nargs? Seems
+overly verbose for my tastes.
+
+> +            dev_info!(dev, "'{name}'=3D'{prop:?}'\n");
+> +        }
+> +
+>          Ok(())
+>      }
+>  }
+> --
+> 2.49.0
+>
