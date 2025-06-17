@@ -1,154 +1,171 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5961CD2FB
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4DCBE65
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147894; cv=none; b=NbNXsTC1Gbbe5U62Yh41gWzQyJMwpnz6htb82vLzy+lDak/+/+GzFq2+do1PAymDid15+4HZzAKllOJ3Kr5CelD5WRwVU1JXbYkId+Be0zvOATwqFGJyb1PuoJMbBrJp+mMsF85ifx0J1GKqCmR4twZUy9sB3BXhK4YEUnhd1ro=
+	t=1750147893; cv=none; b=RUZKxEmoMc1P8Mx9E62zHW9v6oYFFB9qoFEr+hnmaFqAJzTzsrl8a6ZGM9PHSb/cufMVjRXCs0Y8juXFUEkCHP9vJMwNxIYp5nGRI/iyYrdTFGFxAfp2D+2t3RTNdV6/aRs5yIimmpSQFPXrc5znbUeM5OCFUHvM+wv3xlETxyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147894; c=relaxed/simple;
-	bh=aJDMKLvSD4FsH9IzZ8n5o90Yxqp4mzXt9RIHIAdAX/s=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=opE69qRqgZi7wh5GOLRVUROXi81IITzMHg9Myb9ZR31SK3aiNqlWprFqukTk3bH5xpav4Rel+95yi2XmKXbyo4RuACpePOOEE7eRDTYJZGGZgNLLVVYOdX2GotmPzXDYxavOPvDxfUCovsdbqh14Xsin2HEFqy6Gxt/T++hA9FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+	s=arc-20240116; t=1750147893; c=relaxed/simple;
+	bh=BI7RwyuzscKlUbx6sWqCbc8t0miAH0Q20fqfT0TGP5I=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=R95dq1Dd7Bkw/vSRvo8d+K3L+Fzw0tGmp/DHSnIgseQ52q35p2NUOt9pwRFmQ1Iti2GD1pEUNQqEXt6gYHb+b30A2+DtHhGgonmk0ku7UvedsmpdMlYWDPWztDx4Y1a3xVrTpgtAZ1bdsz8T78WddPKyEiIOthdPZtnKanDi+aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddd03db24dso45725885ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:11:32 -0700 (PDT)
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddbec809acso64414875ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:11:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750147891; x=1750752691;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aYzFrCMb6kG6IH/YxFgUA1tFuW21p0F2EED3xtBQjvE=;
-        b=WeWpemMByEcaA/AoBXK1hMKh6bbB6GoGyiWyIRqG5SrP/9OOWygfBi9hKGHjkYQ3+k
-         hZoqxUvyrmOIwx/xuY48q77/p8qgpZep4hnie7lDJzI4I96mhqbT3m+KrW75rlAcRgz5
-         /hlM0KTmCGyzqKlNMb3wNJ43pyNqQjwUH1kiOw/Rz0mN+w4sNda3BtFJDyX5QWCorw5/
-         cSU10YSPhgnb15Wt4UhDLa+82hor4Tvsy3+MBCHuMUy/b2YOK8xMvu3N3RPJPkq+JWa6
-         CbrymdVVI2hTM+PtJ2x6azIXKROCooTEwAd5SxzM7MNdzGsuLOs+0rtNiZlaxXmZZ61N
-         3MDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcrmezmqQZMoYzT/zLGvggO3c9qhtSr959V/EjP8w0JMQ/CwQiOwaQgsmHAQhmY2kY/Vd2N8q/RwK9WoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQMN+CdNgTOSZB02GQmmXxSZtCOjIKjo8AbmX5AK6PgE+9hHzK
-	OgiZFYVZVt/tcAPkQwmSeMssGFd1k6DqskqudrzNzI8S/5eV0h8Da99+CU98jaKReOrzumKCQeT
-	DlDSrywy2PqzYCFU+ls+v+jjBaDGoNb5ZVr9jUkf5bupKNoLqIYopU8tUh0g=
-X-Google-Smtp-Source: AGHT+IGNguvuLEC/zxZL/TOlNFNAS8BFX0Utgu1krU1KL/N49/lokGZz8LJNMOEzaujIQUutWHecFwJTuUypvDV+MUPxUSoS2ZJq
+        bh=QPi7Ekv5g3ZL6/X6dunEU4RdGlyN0m7FkX1Pfyz6sh0=;
+        b=VBBQfX7cWNXRpxH+22XbfkpnjNg6v7P7sknEXJiVAE43KTx+4tG4b4sHHqmZCzM/Z9
+         vf7elqj9YGJCONlqHPrxnolZkwfJEVIqbTwH4L3+4Q+jiQqTyfsluWDHvjF3zEgsiXBb
+         6kemLLy3uFN3GLSv8PCpVR3oi0tktdWedvhbWyQlUyAt7CmruIas0kuSwNYNcHxXAuEf
+         bAld8l60QD+sQHCSUt4VAKWoxeigdo8xsYGbg0a9R/oM3sL5LmxgyW40edrwEO1yYVwl
+         czq5PYjr7obSbj6QH+gHkvUT433Vhg5eISZvgZ7Q6Psr97Fk6QJ6gXJZQolgBjdwjQuB
+         5elw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZu2TLVsKxIpm7HY6I/SHpBwbNv6O/DHhn3iHZ3yr9YB0c7xFR4gFDo3Xa5JLvq4xLxxFFUO9f3yM98G8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8yiEzaUXnNvsIfcOXfhKOEr8aMmn3KjGWPi9T9IuLPan7kpqm
+	8VNN/aaFrQyK0zmbTi/M7BeVmzGZY4MOBMYt818aEw3iLOWEwsFZDJltu9gHXfLN41V/euAdBzV
+	x36aEnhcu2yhGEBQboAhVZYRjVUeDfxqH2lKrx4XnS1OuhDvm8OmSFwAJHX4=
+X-Google-Smtp-Source: AGHT+IH/J7Wpt4NFbRv9BtURosJVddO1HK+FYtLEPiQsoCWa/FprlUSFtXDb3q/U3AcZivmNe1ep5qKlh8mgPPJMm/4JnoKWmUq0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1449:b0:3dd:d7ea:ae4c with SMTP id
- e9e14a558f8ab-3de07d34057mr158515775ab.21.1750147891443; Tue, 17 Jun 2025
+X-Received: by 2002:a05:6e02:260e:b0:3dd:d18a:2d71 with SMTP id
+ e9e14a558f8ab-3de07c4c33cmr154018645ab.2.1750147891201; Tue, 17 Jun 2025
  01:11:31 -0700 (PDT)
 Date: Tue, 17 Jun 2025 01:11:31 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68512333.a70a0220.395abc.0206.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KMSAN: uninit-value in __bch2_alloc_v4_to_text
-From: syzbot <syzbot+8eb51728519f6659ef7b@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <68512333.a70a0220.395abc.0205.GAE@google.com>
+Subject: [syzbot] [mm?] WARNING: bad unlock balance in move_pgt_entry
+From: syzbot <syzbot+52343d77314d6c0447fe@syzkaller.appspotmail.com>
+To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	pfalcato@suse.de, syzkaller-bugs@googlegroups.com, vbabka@suse.cz
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    e04c78d86a96 Linux 6.16-rc2
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16fdc90c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
-dashboard link: https://syzkaller.appspot.com/bug?extid=8eb51728519f6659ef7b
+HEAD commit:    050f8ad7b58d Add linux-next specific files for 20250616
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16389e82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2efc7740224b93a
+dashboard link: https://syzkaller.appspot.com/bug?extid=52343d77314d6c0447fe
 compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11fdc90c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132995d4580000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11389e82580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16824370580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c0f064a5f302/disk-e04c78d8.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b71205c143e3/vmlinux-e04c78d8.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2abdee22b79e/bzImage-e04c78d8.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/3838d178b843/mount_2.gz
+disk image: https://storage.googleapis.com/syzbot-assets/49faa18d2f53/disk-050f8ad7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7c6f9cd7fe5d/vmlinux-050f8ad7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/84a08d6403ee/bzImage-050f8ad7.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8eb51728519f6659ef7b@syzkaller.appspotmail.com
+Reported-by: syzbot+52343d77314d6c0447fe@syzkaller.appspotmail.com
 
-    cached_sectors       0
-    stripe               0
-    stripe_redundancy    0
-    io_time[READ]        1
-    io_time[WRITE]       1024
-    fragmentation     0
-    bp_start          7
-  
-  incorrectly set at freespace:0:37:0 (free 0, genbits 0 should be 0), fixing
-=====================================================
-BUG: KMSAN: uninit-value in __bch2_alloc_v4_to_text+0x7a4/0xdf0 fs/bcachefs/alloc_background.c:355
- __bch2_alloc_v4_to_text+0x7a4/0xdf0 fs/bcachefs/alloc_background.c:355
- bch2_alloc_v4_to_text+0x181/0x1f0 fs/bcachefs/alloc_background.c:380
- bch2_val_to_text fs/bcachefs/bkey_methods.c:321 [inline]
- bch2_bkey_val_to_text+0x1e8/0x280 fs/bcachefs/bkey_methods.c:331
- bch2_check_discard_freespace_key+0xe35/0x1a30 fs/bcachefs/alloc_background.c:1436
- try_alloc_bucket fs/bcachefs/alloc_foreground.c:272 [inline]
- bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:420 [inline]
- bch2_bucket_alloc_trans+0x225d/0x3a40 fs/bcachefs/alloc_foreground.c:544
- bch2_bucket_alloc_set_trans+0xebb/0x1c10 fs/bcachefs/alloc_foreground.c:728
- __open_bucket_add_buckets+0x21f8/0x37b0 fs/bcachefs/alloc_foreground.c:925
- open_bucket_add_buckets+0x347/0x580 fs/bcachefs/alloc_foreground.c:957
- bch2_alloc_sectors_start_trans+0x1de1/0x3560 fs/bcachefs/alloc_foreground.c:-1
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:320 [inline]
- bch2_btree_reserve_get+0x9fd/0x2120 fs/bcachefs/btree_update_interior.c:534
- bch2_btree_update_start+0x2cf3/0x3620 fs/bcachefs/btree_update_interior.c:1289
- bch2_btree_node_rewrite+0x1cd/0x1b50 fs/bcachefs/btree_update_interior.c:2245
- bch2_btree_node_rewrite_key fs/bcachefs/btree_update_interior.c:2311 [inline]
- async_btree_node_rewrite_work+0x6e8/0x10d0 fs/bcachefs/btree_update_interior.c:2368
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
- worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
- kthread+0xd5c/0xf00 kernel/kthread.c:464
- ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+=====================================
+WARNING: bad unlock balance detected!
+6.16.0-rc2-next-20250616-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor359/6969 is trying to release lock (&mapping->i_mmap_rwsem) at:
+[<ffffffff82104277>] i_mmap_unlock_write include/linux/fs.h:557 [inline]
+[<ffffffff82104277>] maybe_drop_rmap_locks mm/mremap.c:197 [inline]
+[<ffffffff82104277>] move_pgt_entry+0xfa7/0x1170 mm/mremap.c:686
+but there are no more locks to release!
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4154 [inline]
- slab_alloc_node mm/slub.c:4197 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x95f/0x1310 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- __bkey_cached_alloc fs/bcachefs/btree_key_cache.c:139 [inline]
- bkey_cached_alloc fs/bcachefs/btree_key_cache.c:162 [inline]
- btree_key_cache_create fs/bcachefs/btree_key_cache.c:231 [inline]
- btree_key_cache_fill+0x784/0x4780 fs/bcachefs/btree_key_cache.c:344
- bch2_btree_path_traverse_cached+0x10d7/0x1870 fs/bcachefs/btree_key_cache.c:399
- bch2_btree_path_traverse_one+0x6db/0x4060 fs/bcachefs/btree_iter.c:1179
- bch2_btree_path_traverse fs/bcachefs/btree_iter.h:250 [inline]
- bch2_btree_iter_peek_slot+0xd74/0x3910 fs/bcachefs/btree_iter.c:2781
- __bch2_bkey_get_iter fs/bcachefs/btree_iter.h:632 [inline]
- bch2_bkey_get_iter fs/bcachefs/btree_iter.h:646 [inline]
- bch2_check_discard_freespace_key+0x321/0x1a30 fs/bcachefs/alloc_background.c:1414
- try_alloc_bucket fs/bcachefs/alloc_foreground.c:272 [inline]
- bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:420 [inline]
- bch2_bucket_alloc_trans+0x225d/0x3a40 fs/bcachefs/alloc_foreground.c:544
- bch2_bucket_alloc_set_trans+0xebb/0x1c10 fs/bcachefs/alloc_foreground.c:728
- __open_bucket_add_buckets+0x21f8/0x37b0 fs/bcachefs/alloc_foreground.c:925
- open_bucket_add_buckets+0x347/0x580 fs/bcachefs/alloc_foreground.c:957
- bch2_alloc_sectors_start_trans+0x1de1/0x3560 fs/bcachefs/alloc_foreground.c:-1
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:320 [inline]
- bch2_btree_reserve_get+0x9fd/0x2120 fs/bcachefs/btree_update_interior.c:534
- bch2_btree_update_start+0x2cf3/0x3620 fs/bcachefs/btree_update_interior.c:1289
- bch2_btree_node_rewrite+0x1cd/0x1b50 fs/bcachefs/btree_update_interior.c:2245
- bch2_btree_node_rewrite_key fs/bcachefs/btree_update_interior.c:2311 [inline]
- async_btree_node_rewrite_work+0x6e8/0x10d0 fs/bcachefs/btree_update_interior.c:2368
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
- worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
- kthread+0xd5c/0xf00 kernel/kthread.c:464
- ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+other info that might help us debug this:
+1 lock held by syz-executor359/6969:
+ #0: ffff88802f641760 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock_killable include/linux/mmap_lock.h:374 [inline]
+ #0: ffff88802f641760 (&mm->mmap_lock){++++}-{4:4}, at: do_mremap mm/mremap.c:2371 [inline]
+ #0: ffff88802f641760 (&mm->mmap_lock){++++}-{4:4}, at: __do_sys_mremap mm/mremap.c:2453 [inline]
+ #0: ffff88802f641760 (&mm->mmap_lock){++++}-{4:4}, at: __se_sys_mremap+0x3c0/0xc60 mm/mremap.c:2421
 
-CPU: 1 UID: 0 PID: 4181 Comm: kworker/u8:21 Not tainted 6.16.0-rc2-syzkaller #0 PREEMPT(undef) 
+stack backtrace:
+CPU: 1 UID: 0 PID: 6969 Comm: syz-executor359 Not tainted 6.16.0-rc2-next-20250616-syzkaller #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: btree_node_rewrite async_btree_node_rewrite_work
-=====================================================
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_unlock_imbalance_bug+0xdc/0xf0 kernel/locking/lockdep.c:5301
+ __lock_release kernel/locking/lockdep.c:5540 [inline]
+ lock_release+0x269/0x3e0 kernel/locking/lockdep.c:5892
+ up_write+0x2d/0x420 kernel/locking/rwsem.c:1629
+ i_mmap_unlock_write include/linux/fs.h:557 [inline]
+ maybe_drop_rmap_locks mm/mremap.c:197 [inline]
+ move_pgt_entry+0xfa7/0x1170 mm/mremap.c:686
+ move_page_tables+0xcde/0x2940 mm/mremap.c:1367
+ copy_vma_and_data mm/mremap.c:1807 [inline]
+ move_vma+0xd5e/0x2010 mm/mremap.c:1913
+ mremap_to+0x7e7/0x8b0 mm/mremap.c:2106
+ do_mremap mm/mremap.c:2396 [inline]
+ __do_sys_mremap mm/mremap.c:2453 [inline]
+ __se_sys_mremap+0x8f5/0xc60 mm/mremap.c:2421
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f33da2e43b9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 11 1d 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f33da273168 EFLAGS: 00000246 ORIG_RAX: 0000000000000019
+RAX: ffffffffffffffda RBX: 00007f33da3673f8 RCX: 00007f33da2e43b9
+RDX: 0000000000200000 RSI: 0000000000600600 RDI: 0000200000000000
+RBP: 00007f33da3673f0 R08: 0000200000a00000 R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 00007f33da3673fc
+R13: 000000000000006e R14: 00007ffccf0ef660 R15: 00007ffccf0ef748
+ </TASK>
+------------[ cut here ]------------
+DEBUG_RWSEMS_WARN_ON((rwsem_owner(sem) != current) && !rwsem_test_oflags(sem, RWSEM_NONSPINNABLE)): count = 0x0, magic = 0xffff888033554d00, owner = 0x0, curr 0xffff888033b15a00, list empty
+WARNING: kernel/locking/rwsem.c:1368 at __up_write kernel/locking/rwsem.c:1367 [inline], CPU#1: syz-executor359/6969
+WARNING: kernel/locking/rwsem.c:1368 at up_write+0x3a2/0x420 kernel/locking/rwsem.c:1630, CPU#1: syz-executor359/6969
+Modules linked in:
+CPU: 1 UID: 0 PID: 6969 Comm: syz-executor359 Not tainted 6.16.0-rc2-next-20250616-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:__up_write kernel/locking/rwsem.c:1367 [inline]
+RIP: 0010:up_write+0x3a2/0x420 kernel/locking/rwsem.c:1630
+Code: d0 48 c7 c7 60 ee 8a 8b 48 c7 c6 80 f0 8a 8b 48 8b 14 24 4c 89 f1 4d 89 e0 4c 8b 4c 24 08 41 52 e8 23 3b e6 ff 48 83 c4 08 90 <0f> 0b 90 90 e9 6d fd ff ff 48 c7 c1 34 81 a1 8f 80 e1 07 80 c1 03
+RSP: 0018:ffffc9000b2ff498 EFLAGS: 00010282
+RAX: 636aee1c3dfaec00 RBX: ffff888033554d00 RCX: ffff888033b15a00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
+RBP: dffffc0000000000 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bfaa14 R12: 0000000000000000
+R13: ffff888033554d58 R14: ffff888033554d00 R15: 1ffff110066aa9a1
+FS:  00007f33da2736c0(0000) GS:ffff888125d40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f33da29ba90 CR3: 000000002c068000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ i_mmap_unlock_write include/linux/fs.h:557 [inline]
+ maybe_drop_rmap_locks mm/mremap.c:197 [inline]
+ move_pgt_entry+0xfa7/0x1170 mm/mremap.c:686
+ move_page_tables+0xcde/0x2940 mm/mremap.c:1367
+ copy_vma_and_data mm/mremap.c:1807 [inline]
+ move_vma+0xd5e/0x2010 mm/mremap.c:1913
+ mremap_to+0x7e7/0x8b0 mm/mremap.c:2106
+ do_mremap mm/mremap.c:2396 [inline]
+ __do_sys_mremap mm/mremap.c:2453 [inline]
+ __se_sys_mremap+0x8f5/0xc60 mm/mremap.c:2421
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f33da2e43b9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 11 1d 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f33da273168 EFLAGS: 00000246 ORIG_RAX: 0000000000000019
+RAX: ffffffffffffffda RBX: 00007f33da3673f8 RCX: 00007f33da2e43b9
+RDX: 0000000000200000 RSI: 0000000000600600 RDI: 0000200000000000
+RBP: 00007f33da3673f0 R08: 0000200000a00000 R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 00007f33da3673fc
+R13: 000000000000006e R14: 00007ffccf0ef660 R15: 00007ffccf0ef748
+ </TASK>
 
 
 ---
