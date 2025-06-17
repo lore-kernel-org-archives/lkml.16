@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908A629B221;
-	Tue, 17 Jun 2025 22:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2932C2E54A0;
+	Tue, 17 Jun 2025 22:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199400; cv=none; b=Cp+zBP/tTNFVlceBc4Ox0ikBMdy5ttbhnImGriouTD794XFOzsyqHnCnsJt5+PA7dq4dPR1QvAxpgyNV3vbrVWBS2lvA3qNQtbh3xwW6/roZQkPLl7aYDyZhyBs2iTBGEh5vyh51F9o1qSZSMtr0DgeD2gMWsU9cOpDj0XkFBXg=
+	t=1750199402; cv=none; b=ng3x6muhAeYYTVLWS3z8Ud13KJAuYskhM1VPzNrVXlc+7ZmStpiYDjQ8E7P/JlBI1deEq0xZIDEfksi0WN9kV4jTqhndKMThQzHcglN4ZVmcHqLYJZ5gTekV7Fd7PXxt/PIpDInyUzfr1XlcAJJbljOoVwIM24DY0lvC+Q1C/wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199400; c=relaxed/simple;
-	bh=VbE9czpaU9jNxtjMDcOio0GOQz7YJt+xzskruq3kFzs=;
+	s=arc-20240116; t=1750199402; c=relaxed/simple;
+	bh=oGJq6YZzLbO82TcEMZLZBS9E98OIIOd5KDDOCIIYowQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D2Va0nJm9VgVPHdwhvizW7kyAOFaMCmtloYCAKMx57jO7Y9se6TsYC5Zk9OS7StwGy5Uxbr7VsV31DMyQskDZirwZGkC7kkjE7VGVJ6O58A8rJmAvTewyFaxPyZRY9DI73yWwjJkq9OiK72QP787XkMEJURoxaDnTJbjgtH+clc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTaZtDOX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jPMIFCZiIVVcsYln0yh0IW0fz5qKqGQFwS1wsXKbyhwBA84xF7XBSpglF0g7ePz9xDfG2FbB9Ax6+Lie9N3Z64bVeIVadKVe2iX0kAeq9fzCaKMqOiPm9JXITaEnvmQMcESjyA44bzCRT0PFAoVuNrIZyG9QRPzfmWmAKdjTuVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SovLzznF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTaZtDOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6A8C4CEF1;
-	Tue, 17 Jun 2025 22:29:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SovLzznF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF370C4CEF8;
+	Tue, 17 Jun 2025 22:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750199400;
-	bh=VbE9czpaU9jNxtjMDcOio0GOQz7YJt+xzskruq3kFzs=;
+	s=k20201202; t=1750199402;
+	bh=oGJq6YZzLbO82TcEMZLZBS9E98OIIOd5KDDOCIIYowQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PTaZtDOXV75LW7zhlMetRWriUCGRO9uBwPIiM9o0/jEGpdN+igUnmxQnEp4plB8z2
-	 45lRWfeggFJliDHOVY2MKce3WTRRndV5f2cx8yM9CqnvMAaGpPnoCiBrWww0aTm1Vw
-	 mb/ykxw5+1+sj3X/ZWy1+swIdw1jIQK1T2UVoQzR0k5DDwYg9Um4xB5KgtupYEyyrY
-	 xGTrU+hBphtguYh6B2FokcvxM265qfbLomsSN+rM0M8skgWVKadi9zOf4tpHUhOr3H
-	 lnujVLmhVQ+4tf7rjpOMO0cB1eYfI9J3Y63Gi9APd8owp+0RFif64XVknd3zuXeD5x
-	 tr1mB08xo0mnw==
+	b=SovLzznFPfIAEgcoGd3wa7ftl9jecC4+XnxcYbmljKPn6KsHB6owxneOsiWiHlnab
+	 muiKIw9awT6KzPqUeNlzqPMNRQ6FYy7/UhXGHPM/wLDCfc1FPzhQZtrSQX6W5VQKa4
+	 50B2rUTWfZHWORPDSaKSt4nf8HFzuFx1dUcky6sSdjuVTg5jP3l3Ie8z4zoxN0BeIB
+	 5vJahEvic3FD72FGGK9qwYIGiNTNyNAnjg9FNwA98XjMM+3bCyH7NImzGI7tl4fW1C
+	 By1EilFtNRcoK8uUYNAou3W+ESJ441BuamWF8ppNnSTp3K+Rnnx3FCX2Vt8euhkRiM
+	 JB91sT3DxJ9UQ==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-s390@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH 5/9] lib/crypto/riscv: move arch/riscv/lib/crypto/ to lib/crypto/riscv/
-Date: Tue, 17 Jun 2025 15:27:22 -0700
-Message-ID: <20250617222726.365148-6-ebiggers@kernel.org>
+Subject: [PATCH 9/9] MAINTAINERS: drop arch/*/lib/crypto/ pattern
+Date: Tue, 17 Jun 2025 15:27:26 -0700
+Message-ID: <20250617222726.365148-10-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250617222726.365148-1-ebiggers@kernel.org>
 References: <20250617222726.365148-1-ebiggers@kernel.org>
@@ -54,105 +54,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Move the contents of arch/riscv/lib/crypto/ into lib/crypto/riscv/.
-
-The new code organization makes a lot more sense for how this code
-actually works and is developed.  In particular, it makes it possible to
-build each algorithm as a single module, with better inlining and dead
-code elimination.  For a more detailed explanation, see the patchset
-which did this for the CRC library code:
-https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org/.
-Also see the patchset which did this for SHA-512:
-https://lore.kernel.org/linux-crypto/20250616014019.415791-1-ebiggers@kernel.org/
-
-This is just a preparatory commit, which does the move to get the files
-into their new location but keeps them building the same way as before.
-Later commits will make the actual improvements to the way the
-arch-optimized code is integrated for each algorithm.
+arch/*/lib/crypto/ will no longer be used, and its contents have been
+moved to lib/crypto/.  (Well, except for a few .gitignore files which
+are intentionally being kept for a while.)  Therefore, remove the
+arch/*/lib/crypto/ pattern from MAINTAINERS.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/riscv/lib/Makefile                                         | 1 -
- lib/crypto/Kconfig                                              | 2 +-
- lib/crypto/Makefile                                             | 1 +
- {arch/riscv/lib/crypto => lib/crypto/riscv}/Kconfig             | 0
- {arch/riscv/lib/crypto => lib/crypto/riscv}/Makefile            | 0
- .../riscv/lib/crypto => lib/crypto/riscv}/chacha-riscv64-glue.c | 0
- .../riscv/lib/crypto => lib/crypto/riscv}/chacha-riscv64-zvkb.S | 0
- .../crypto/riscv}/sha256-riscv64-zvknha_or_zvknhb-zvkb.S        | 0
- {arch/riscv/lib/crypto => lib/crypto/riscv}/sha256.c            | 0
- 9 files changed, 2 insertions(+), 2 deletions(-)
- rename {arch/riscv/lib/crypto => lib/crypto/riscv}/Kconfig (100%)
- rename {arch/riscv/lib/crypto => lib/crypto/riscv}/Makefile (100%)
- rename {arch/riscv/lib/crypto => lib/crypto/riscv}/chacha-riscv64-glue.c (100%)
- rename {arch/riscv/lib/crypto => lib/crypto/riscv}/chacha-riscv64-zvkb.S (100%)
- rename {arch/riscv/lib/crypto => lib/crypto/riscv}/sha256-riscv64-zvknha_or_zvknhb-zvkb.S (100%)
- rename {arch/riscv/lib/crypto => lib/crypto/riscv}/sha256.c (100%)
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index 0baec92d2f55b..b1c46153606a6 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-y			+= crypto/
- lib-y			+= delay.o
- lib-y			+= memcpy.o
- lib-y			+= memset.o
- lib-y			+= memmove.o
- ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
-diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
-index f4f9a70dd0891..a2b58ca2df0cc 100644
---- a/lib/crypto/Kconfig
-+++ b/lib/crypto/Kconfig
-@@ -200,11 +200,11 @@ source "lib/crypto/mips/Kconfig"
- endif
- if PPC
- source "lib/crypto/powerpc/Kconfig"
- endif
- if RISCV
--source "arch/riscv/lib/crypto/Kconfig"
-+source "lib/crypto/riscv/Kconfig"
- endif
- if S390
- source "arch/s390/lib/crypto/Kconfig"
- endif
- if SPARC
-diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
-index 47c889b881b2a..0fe9200a031d6 100644
---- a/lib/crypto/Makefile
-+++ b/lib/crypto/Makefile
-@@ -105,5 +105,6 @@ libsm3-y					:= sm3.o
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a92290fffa163..8ca374b24a806 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6408,11 +6408,10 @@ M:	Jason A. Donenfeld <Jason@zx2c4.com>
+ M:	Ard Biesheuvel <ardb@kernel.org>
+ L:	linux-crypto@vger.kernel.org
+ S:	Maintained
+ T:	git https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git libcrypto-next
+ T:	git https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git libcrypto-fixes
+-F:	arch/*/lib/crypto/
+ F:	lib/crypto/
  
- obj-$(CONFIG_ARM) += arm/
- obj-$(CONFIG_ARM64) += arm64/
- obj-$(CONFIG_MIPS) += mips/
- obj-$(CONFIG_PPC) += powerpc/
-+obj-$(CONFIG_RISCV) += riscv/
-diff --git a/arch/riscv/lib/crypto/Kconfig b/lib/crypto/riscv/Kconfig
-similarity index 100%
-rename from arch/riscv/lib/crypto/Kconfig
-rename to lib/crypto/riscv/Kconfig
-diff --git a/arch/riscv/lib/crypto/Makefile b/lib/crypto/riscv/Makefile
-similarity index 100%
-rename from arch/riscv/lib/crypto/Makefile
-rename to lib/crypto/riscv/Makefile
-diff --git a/arch/riscv/lib/crypto/chacha-riscv64-glue.c b/lib/crypto/riscv/chacha-riscv64-glue.c
-similarity index 100%
-rename from arch/riscv/lib/crypto/chacha-riscv64-glue.c
-rename to lib/crypto/riscv/chacha-riscv64-glue.c
-diff --git a/arch/riscv/lib/crypto/chacha-riscv64-zvkb.S b/lib/crypto/riscv/chacha-riscv64-zvkb.S
-similarity index 100%
-rename from arch/riscv/lib/crypto/chacha-riscv64-zvkb.S
-rename to lib/crypto/riscv/chacha-riscv64-zvkb.S
-diff --git a/arch/riscv/lib/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S b/lib/crypto/riscv/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-similarity index 100%
-rename from arch/riscv/lib/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-rename to lib/crypto/riscv/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-diff --git a/arch/riscv/lib/crypto/sha256.c b/lib/crypto/riscv/sha256.c
-similarity index 100%
-rename from arch/riscv/lib/crypto/sha256.c
-rename to lib/crypto/riscv/sha256.c
+ CRYPTO SPEED TEST COMPARE
+ M:	Wang Jinchao <wangjinchao@xfusion.com>
+ L:	linux-crypto@vger.kernel.org
 -- 
 2.49.0
 
