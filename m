@@ -1,115 +1,141 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF1B5C96
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8401EDA3C;
+	Tue, 17 Jun 2025 11:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750159755; cv=none; b=X5WMdc3OXZ35ouJUeH4Yg9uitjDTgVQ9KHBu+4R0ZCdykNN7BmV2Nwp3K9kNCLnLmm3n1b6fZ+5AaPACzrwWoW74pX5sxJgIVGS0LJZfyHEkE+XunTSuEsbzvf3xtslXQsVEYvt7si9NHuNsE4Aa89silr0AROqiCA/HHmX7/Vk=
+	t=1750159851; cv=none; b=NT4miekeSdjRiBjwDQJQeq65ts9dQcSm07QVQ4ckS38eWf0FzOv41PjOgZmsdsL5MFUbJnPSkI39svUpGK9EkOdAddPhLaYeAt8qr1xyCKI3NDRDkf//dlIFa1Wl2u7HOCUCLyTDGwBJ7fOZOfwD8wbpTAPhngkMFf6RzUvv3XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750159755; c=relaxed/simple;
-	bh=3xcJ0cPhiXwOy9vyZg4oGHHyyRHelk2sChqNHBP/aBs=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=J5fAPHn1QBeZbpVKwxlUkMkJ2u7LoxL8eM/imPwGtShbILgqdN3prxnD09jvCP8AwxLvnGvNrQZy62dNXpjLgCFEq6KTaeNBpKC4FDZkfVpHCl+KeLO8sRjVHS5vkTQs4Qt7AfLYVWrK0vw2lY+Mf12rf316jpFsfziXpPf0Ugo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9dXBrF0; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750159851; c=relaxed/simple;
+	bh=6U82WYyW+bhJEQaJbsyh/F0bmSo9xdIKxkvx8FzUrWg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VVsdeJgGiw1NNxFxj3LxEq6yQ7R+RVPZbTZsFvJr6LLAECc8Ky0r5cG3m3T9n2DY8e7oN02rAln0pI+hPHzJSSQyTGg1y57PfPmpgZmLaK42Z5AY3IwYalRRH/vg4biq5KkiQV4oNY6rjdaxJkElyqSREURMiajrNVAf4sGcmKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKAbfP9z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9dXBrF0"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6face367320so54047246d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750159753; x=1750764553; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
-         :message-id:references:cc:to:from:subject:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aGJ/HiUb5eBipOSI0rw//oci8YTcU8Pjqz7ygAKFHRs=;
-        b=k9dXBrF0SmsZMmtRvCQ2Epdwum8Lma2l4dabJeluER3L+s6vVzULXhseYi6qpRCyGt
-         bsWBWeiDA2Vc82+xWMX9S/xd4Qxdctk5f2mGxUdxIMBAtGcxybz6iDksvhe1nbNHT6dS
-         ALH30M4kJDP5cTaizivjFXQ1La0KqqmRj9O75W0o9W1KjwRxirRvbmIWy2m37QvkHzgH
-         TcVw1H6+YWvdurPld1JEsBZIb7tXCanYNabddgmMVqO9389uS0PkPjlt1NwQuBu2zp1r
-         nipriKiZiuBHHIb72vNBKvZAgMCKNS0DtsrtM6r0tdv8Ae8PLj9ywMOHJRqMMWl+7SgI
-         38pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750159753; x=1750764553;
-        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
-         :message-id:references:cc:to:from:subject:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aGJ/HiUb5eBipOSI0rw//oci8YTcU8Pjqz7ygAKFHRs=;
-        b=b3fBY1H3/+c67pk5lawoGEMOO9xXs+KAJP7sHJ6q5RO5rsKi3NkipRBYq83drt11M9
-         xXAN/w1MW45IdR/VvloqGEaw87D8eBu3g0jkmDpt3WlhwIP0pcfBziWyoH60D5H79nLE
-         UrRObE+Sr4VVZ/cokZIOcymgglUN31l8fZN3YWiJG8IMs4J2E2sPSSArflDNM5d7ehuT
-         p5LwaXiidv8oQyHRF/7M4WodDXawWkYu224RWlQp8qVpWYjcM2S8C927z6GB9S9+uUWE
-         bXohhRdUg+mDdDGNkT/a3zcsPKYpbA4RSyHvSmNwHjx+n/0t+N2TDcc9gB/7srCt5dvV
-         gLFA==
-X-Gm-Message-State: AOJu0YyPxJHRjCnLwzVNtZ+gTWTvJ+gUBz7T3A/uZ4Ly+KpTuZT7Vc/+
-	y4RYiRWrQocBFyu4cOYBxFZtRrElA3BM18ApTECc704LNZMPhPRunEc=
-X-Gm-Gg: ASbGncvVDw+ZBJEeVpQ8XfQIvnCoHBHwkBzYr3VPEr3KrXPiCBDBLNZrqDW2D3+FK3z
-	nFppCYIUJySndRjHqODMhODU3d4XyTVkKTrfHAwErFEcp+4vHkuiQh6cPxfiLp4MGSnQ5K5BdsS
-	Z6q3HuflVlsF2Kird8WueYYUhhW/iV9D97k1OSjsVkxkQ7cUdbKx8wDtpLKVov0ImIL/FZxHb1U
-	Bsjxj+L6sTVb9d2/mpKgcCjRoe/LI4emZz3JvY+SKwUF+tkXeWdxcJ5f4VF+lhgEr+CrnBRCag6
-	ddatSCQ+GkrFnqXV6rA4zmNUCPg5tWmsgmeoc5rIVoUCROEsesFjwNncrdxl9MalEECJiKc8qPf
-	lb0U55tW7dE07jZc=
-X-Google-Smtp-Source: AGHT+IGq2C1yzKBdKiEGu19AoeKD/sPEyQ0mjtHqzC2KU/RUfvQ4isAYnCbaChB0Yzf2Yi7tAXcY6A==
-X-Received: by 2002:a05:6214:4909:b0:6fa:cdc9:8aff with SMTP id 6a1803df08f44-6fb4777843fmr201308206d6.25.1750159752907;
-        Tue, 17 Jun 2025 04:29:12 -0700 (PDT)
-Received: from [120.7.1.23] (135-23-93-252.cpe.pppoe.ca. [135.23.93.252])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4e7edasm59907621cf.67.2025.06.17.04.29.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 04:29:12 -0700 (PDT)
-Subject: Re: Regression in 6.16-rc1 iwlwifi: IRQ issue
-From: Woody Suwalski <terraluna977@gmail.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>,
- johannes.berg@intel.com
-References: <e8c45d32-6129-8a5e-af80-ccc42aaf200b@gmail.com>
-Message-ID: <31460147-3df4-cb16-4537-ab3a0b5b9eb5@gmail.com>
-Date: Tue, 17 Jun 2025 07:29:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101
- Firefox/128.0 SeaMonkey/2.53.21
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKAbfP9z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD78C4CEE3;
+	Tue, 17 Jun 2025 11:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750159851;
+	bh=6U82WYyW+bhJEQaJbsyh/F0bmSo9xdIKxkvx8FzUrWg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=AKAbfP9zRX8b53yeE8YUQpsTbbsvPXHCVm0IrQQJK5snVEHuHh7R9YwsQD4a07jBL
+	 sslikHOZytcgBHWrniW+akefv103y5y36xjYDsJ+/1mnoXNW/saqijKbsrdBsP8tHn
+	 YAZje4Q4ZdOWW4rKpTp+GGFvFSWSU62cES8f3rO29IdbP77RO0xQWLaXshMMspgI8N
+	 QBpMpzNCsVrApHxk/BOgBhiFaGmQetaT7zObmsev6cEeukZhYQzce3nH/R1vYc7WG5
+	 dIEN3XgcsETdKyHS3dOjic4/d04+l+c6Y4H76TCUiZkpIZUFFqzLtRKbF6287Q0qJB
+	 G/56cJ6H5iJMQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Lyude Paul" <lyude@redhat.com>
+Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  "Boqun Feng" <boqun.feng@gmail.com>,  "FUJITA Tomonori"
+ <fujita.tomonori@gmail.com>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "John Stultz" <jstultz@google.com>,  "Stephen
+ Boyd" <sboyd@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex
+ Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin" <lossin@kernel.org>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v5 6/7] rust: hrtimer: Add HrTimer::raw_cb_time()
+In-Reply-To: <20250613232754.451450-7-lyude@redhat.com> (Lyude Paul's message
+	of "Fri, 13 Jun 2025 19:22:27 -0400")
+References: <20250613232754.451450-1-lyude@redhat.com>
+	<4TbClQnbyQckuIEF2SqIwmeX5XIEl_pAJVKS5S7JCGA1OCWbA1vTjhPs6NDpQQ9RlUvb79n00_21CV2PTi-ZWQ==@protonmail.internalid>
+	<20250613232754.451450-7-lyude@redhat.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 17 Jun 2025 13:30:43 +0200
+Message-ID: <87plf2a9lo.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e8c45d32-6129-8a5e-af80-ccc42aaf200b@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Woody Suwalski wrote:
-> Hi Miri,
->
-> Just had a chance to try 6.16-rc1 on an older Dell XPS and noticed a 
-> constant stream of warning messages
-> similar to
->
-> "wrong command queue 0 (should be 9), sequence 0x0 readp=40 writep=40"
->
-> However actual WiFi connection seems functional.
->
-> Is it something you have taken care of in -next already or have I 
-> found a new problem?
-> And if the latter - can you make a quick patch to test, or will you 
-> need a full bisection to analyze?
->
-> Thanks, Woody
->
->
-Fixed by a patch from Johannes:
+"Lyude Paul" <lyude@redhat.com> writes:
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/main.c b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-index dbfd45948e8b..66211426aa3a 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-@@ -1316,6 +1316,7 @@ static struct iwl_op_mode *iwl_op_mode_dvm_start(struct iwl_trans *trans,
-  		     sizeof(trans->conf.no_reclaim_cmds));
-  	memcpy(trans->conf.no_reclaim_cmds, no_reclaim_cmds,
-  	       sizeof(no_reclaim_cmds));
-+	trans->conf.n_no_reclaim_cmds = ARRAY_SIZE(no_reclaim_cmds);
-  
-  	switch (iwlwifi_mod_params.amsdu_size) {
-  	case IWL_AMSDU_DEF:
+> This is a simple private unsafe wrapper for retrieving the current time
+> according to the hrtimer_clock_base struct for a given timer. This will be
+> used for implementing functions such as forward_now(), which rely on
+> retrieving the current time from the hrtimer's clock base.
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+>
+> ---
+> V2:
+> - Convert safety comment to invariant comment in from_raw()
+> - Add raw_clock_base() and implement clock_base() on HrTimer<T> as well
+>
+> V4:
+> - Drop HrTimerClockBase entirely, reword commit as this is now about adding
+>   raw_cb_time()
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  rust/kernel/time.rs         |  1 -
+>  rust/kernel/time/hrtimer.rs | 27 +++++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+), 1 deletion(-)
+>
+> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+> index eed77297d58a6..27ee78070d72e 100644
+> --- a/rust/kernel/time.rs
+> +++ b/rust/kernel/time.rs
+> @@ -209,7 +209,6 @@ pub(crate) fn into_nanos(self) -> i64 {
+>      /// # Safety
+>      ///
+>      /// The caller promises that `nanos` is in the range from 0 to `KTIME_MAX`.
+> -    #[expect(unused)]
+>      #[inline]
+>      pub(crate) unsafe fn from_nanos(nanos: i64) -> Self {
+>          debug_assert!(nanos >= 0);
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> index 4a8416fbd187d..79d86e1099a1e 100644
+> --- a/rust/kernel/time/hrtimer.rs
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -193,6 +193,33 @@ unsafe fn raw_forward(self_ptr: *mut Self, now: HrTimerInstant<T>, interval: Del
+>          }
+>      }
+>
+> +    /// Retrieve the current time according to the `struct hrtimer_clock_base` for `self_ptr`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// - `self_ptr` must point to a valid `Self`.
+> +    /// - The caller must ensure that the `hrtimer_clock_base` cannot possibly change in the context
+> +    ///   this function is being called in. This means either exclusive access to `self_ptr` is
+> +    ///   required, or we must be from within the timer callback context of `self_ptr`.
+> +    #[expect(unused)]
+> +    unsafe fn raw_cb_time(self_ptr: *const Self) -> HrTimerInstant<T>
 
-Thanks, Woody
+Can we call it `raw_clock_base_time`?
+
+> +    where
+> +        T: HasHrTimer<T>,
+> +    {
+> +        // SAFETY: We're guaranteed `self_ptr` points to a valid `Self` by our safety contract.
+> +        let clock_base = unsafe { (*Self::raw_get(self_ptr)).base };
+> +
+> +        // SAFETY: The C API guarantees that `get_time` is initialized to a valid function pointer
+> +        // for as long as we expose hrtimers to users.
+> +        let get_time_fn = unsafe { (*clock_base).get_time.unwrap_unchecked() };
+> +
+> +        // SAFETY:
+> +        // - get_time_fn() returns a ktime_t, so we're guaranteed its return value is between `0`
+> +        //   and `KTIME_MAX`.
+> +        // - get_time_fn() itself has no special requirements.
+> +        unsafe { Instant::from_nanos(get_time_fn()) }
+> +    }
+> +
+
+How does this differ from Instant<C>::now()? Could we do this statically
+by going through `<<T as HasHrTimer<T>>::TimerMode as HrTimerMode>::Clock`?
+
+
+Best regards,
+Andreas Hindborg
+
 
