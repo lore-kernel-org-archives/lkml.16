@@ -1,175 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2075.outbound.protection.outlook.com [40.107.223.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8364928BABE;
-	Tue, 17 Jun 2025 23:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750203625; cv=none; b=BC61ASCR6UzcHF10y9C5d6ZoiJhOp1fpd/dEt86gvmpAm11EUUQkaEgJijh8OHuR+sbnyxzY+ftiOIIDt1wkwqbce5tCs1feFz98uR3xnxh/kwfOaFIRtbxoWq3l6hnGzfJf6kpnyUvbV9NAGr720gQOdv77/ANI2VcL+WXS2uw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750203625; c=relaxed/simple;
-	bh=/z3iN1khOpZmUMgnOifZps7TuwKv1jRjOjzM28piwsM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BiCsU0o+N1pFfZAZE6wRZcmki/fRZHjo8x+U1zhc5DvqFPfJF4TZ79EowqTBVFbR4T8BmfnAbn1xEJ7XD89BujVC3U3SpXDpx8Zxq+qt+wE6vhkr0SGylwT4vFOe3iy6/CoAEh2vMZSIIo4m/ekaL1aCVw1jhDhByVSIXWd6nQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmT6sTt0; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FF28BABE;
+	Tue, 17 Jun 2025 23:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750203764; cv=fail; b=V5Cd6ZbjDos0Rc6iJX0yVfsDin/gtS+OrEeJ93HFIlHfVUULNa1BETJ6QEmWNt/uBthdnwMIiqCXulMJt6zv3W9DJKtpVYRlwR2KmxunAT3XFvksqsS7CUO7drbYV0DoojVSHLUQQ6Agox44GlSJtWBr6wmLvFQgYp96I6gM+Ug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750203764; c=relaxed/simple;
+	bh=YEcE9gEKtls3jo9lHbvNPhfC/KGfPigWq8MosbXc12c=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RsWiDabtvfwaMTAbovstzTxeTfpyqFJVeOJ/FI4Ut+2m7oI21b4hd+xu3kSoY0NzEV4ES58+XS9jvgoiVXwHF+dvwjAk04LQa/2mGuS7Oy6XL6Rv0d0lufAWbi10HRWcAKd86Dt1oq++7l0h7xvpHofYRiLD040Jv+AcKMm5UAg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4cHxXAf/; arc=fail smtp.client-ip=40.107.223.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmT6sTt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86F1C4CEE3;
-	Tue, 17 Jun 2025 23:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750203625;
-	bh=/z3iN1khOpZmUMgnOifZps7TuwKv1jRjOjzM28piwsM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gmT6sTt0UcHk3m8n9ewawyjnp0oCTqUuIe//6DF1GaWp0mH2e1pWnyG/b5oi0pYAv
-	 5ZUP/c6YEuKA/UGQj02BX3cJ3tRKI8r3bq4PSjljYFslMib+6w1z2pQM+GJuGLqSK/
-	 TfImou9YuKsQVITjAm5JVFYMinTjdCY5vu2o5iiwIgULMdnvABNXsEdwnMDt5PQE4j
-	 PjwdQpEPGIqmMKVBJP39Q/QD8oylFAkFjc70xP4sduaw2J0CgqvJBWW2/ilO+g55kL
-	 3tx+Gyu5u0JacEOZ8/cbHOIhDGIlosf0asaDWUWrOatOKMZZ+72eoY2O2kix99SnHL
-	 OQwFg+BSXPZ3w==
-Date: Wed, 18 Jun 2025 08:40:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-Id: <20250618084022.db09168befebc193c5b13a6f@kernel.org>
-In-Reply-To: <20250617102951.4e8d936f@gandalf.local.home>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
-	<20250610105337.68df01f4@gandalf.local.home>
-	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
-	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
-	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
-	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
-	<20250617102951.4e8d936f@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4cHxXAf/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qxP0qDwPaQPkPqnVRVZGIu7XATz+Qm3U7Uw9f6PHxE661DeFVp4W9w+OnMKhHu5GD4EYPaM0Iz9sXBOJtjKAZ/v2Pehuddeu/uY61xrXE7A3Z1Q8BulL/Jc/1yf+SPS124U+XpGpktHZAj6l89mCpAcyWTJnHU/8dsxgJySOhLQBTSDFLC8N9e8JUTHC86LbAAAl1VHlw3Y/rnf1upNZPz63c6B7qP9OyRCmzFdCYhczzAAjWPcPQEJqFDoFziaY73ooKa+dARODTilS8Dux1VO8P4wd5/CDlESDfhNBM2Zi9DrXf2M53CfL4hwsb5aOFEYUgUNjliPxCIvLBKHG5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5zIeUlEMXcgmPhqNxH5sUhXwmH4o2o6nxYiAOk4joiM=;
+ b=hqeZnNIyiu0zCQnsO+YKjTfIPFnViAkvFMk4WNACBGUYogJ+G4kAJyhIVYg86EWFvKhVGY+a7VCs76H+z/wEv820Q8E4gGDXeYrxycQoflZBdK8Y6dPTW3MkYuZK+4V4k9yDJqfqCE1+Crssxbhi/TtHR2TS3ea+Z06AEf/0DVtRmgLZ4V05cs1KJKZeT90ocwK9K5oMaMxjwDJs8+hyW8mmJ5WQzLY34OhSN25wET4JqTLB6ztPEHtJvdacqk9oBWF85ZdfZeFJhMJcrFsoM7V3vWhYXm0kBaCg8O6KUMXpyDVBN8bvOqFvMbtzYbx3RBrRYRtimM4Mq0UqC+f5Sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5zIeUlEMXcgmPhqNxH5sUhXwmH4o2o6nxYiAOk4joiM=;
+ b=4cHxXAf/PITnH8dyrmwGSdWRbLrj7kECXEPYr6Uui75T3SQRXgfmdi7CYCW3zV2m1T/DU1AFc2Ayv+gr/yArx4L2NqmnPBohtHkZAX2TD8UAvzzmhZLZLFRgEOisRxYNAln8HwHbaEcR89XKQqkHhwkLA6/YB4crlKmezWWbfzc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
+ by SA3PR12MB7807.namprd12.prod.outlook.com (2603:10b6:806:304::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Tue, 17 Jun
+ 2025 23:42:39 +0000
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1%5]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 23:42:39 +0000
+Message-ID: <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
+Date: Tue, 17 Jun 2025 17:42:35 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] drm/amd/display: Radeon 840M/860M: bisected suspend
+ crash
+To: ggo@tuxedocomputers.com, stable@vger.kernel.org,
+ regressions@lists.linux.dev,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ Werner Sembach <wse@tuxedocomputers.com>,
+ Christoffer Sandberg <cs@tuxedocomputers.com>
+References: <fd10cda4-cd9b-487e-b7c6-83c98c9db3f8@tuxedocomputers.com>
+Content-Language: en-US
+From: Alex Hung <alex.hung@amd.com>
+In-Reply-To: <fd10cda4-cd9b-487e-b7c6-83c98c9db3f8@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0056.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:88::28) To DM4PR12MB8476.namprd12.prod.outlook.com
+ (2603:10b6:8:17e::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|SA3PR12MB7807:EE_
+X-MS-Office365-Filtering-Correlation-Id: f074a88d-23af-4774-0eca-08ddadf8a500
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y3djRkxMVnZGb1ZBNWpQUzcyeUlKQ1J2ZXFteHBQdjRESklmNm0vdmNyS0tF?=
+ =?utf-8?B?VGhya052VDZJYi9LdHZUMkIvWVBkYU1LSGFYTFRRSWVXT3laQi9RbmJ1ZUxS?=
+ =?utf-8?B?L0JZVWRTeUlmKzNxdXArUDJvSXh4SGtiSFVzTm1YT3drWWMwWmN5SlFZS2pX?=
+ =?utf-8?B?TjdYQXFSOUxDT2VnVzFKWjdINnNHRnNIU1BTb0RqRWxnRFhZZkVVeEhha1Fy?=
+ =?utf-8?B?Z3p4QU1mdUx1WnErMTcwQU43N2NlZTNwT3VaYXhrMzI0cjRYZEtOeTh6VjJZ?=
+ =?utf-8?B?cTF1eElXV21uS2Vrdks3VVdpK0taTkNFK25Mc0MxSXE2VnlzczEzT0ZLdmxl?=
+ =?utf-8?B?R0hUTC9jcXpIWVRNb21kNTRoSGM0YzRCeVpDcXlzRVZWVGxBcmtNYWYydG1Q?=
+ =?utf-8?B?SmZzUDR3c2d2ZWp0c0JiZ3Q2bGdSMjhFNUFOSGdnZ3lVdEljRTEwNkNuV1p1?=
+ =?utf-8?B?NmFoU1AyMmpTbmdwTkQ4ZTRuM3ppS01jSFpxM1pXeVdHd3JienMxM01BbXdx?=
+ =?utf-8?B?VTFwbDFsQ1g2dUVWZTRQelRGK2c1a2VMdjNWNElBQjc5RmJsVzd0dW9lNXJQ?=
+ =?utf-8?B?ckVkMzltMW9STkk0ZWdqYkNGWDQ0TFNPU2hmcGxxdnhUZVpYWHl6RldOYTRv?=
+ =?utf-8?B?VlFTOERHYWdTL0dzV1hWTCtHd3NCYU9iaUhIbXRQdWp0NHVKME5pbUcza3Bi?=
+ =?utf-8?B?UUx4bXF6cUkvcVR1YytDUE0zblREaDJzeXhxc1JDak01SU5YbTA3NWRHRVA1?=
+ =?utf-8?B?ZHJqZlJRMnRlRFpGY0cvaGZkdWRBNUZVSFhLRmZoYnFWd0tTRjlLYWNuUk4w?=
+ =?utf-8?B?RXB6NktFYVlIbE1BM29ucUlQbE9XZTJjOS9iUXo4elVOS1hMekVkbjlUYjMr?=
+ =?utf-8?B?bEVUTmtQMGFrNWNYKzVEQXZlMzJQd2lEVFk3Wkp5SXJKN083OHhDZEhQL0lP?=
+ =?utf-8?B?TlRUVk5kY0dZaVdBUVB4UkJzd3RUd1ExOEhIWnFieFRiWlhvYW5IWVYzM0dW?=
+ =?utf-8?B?czFrTHl5WjZEMU5kVUNBY3UxUVdGN2c2UEZDWHZMaVRoU3V6RkIxUk1kL0RO?=
+ =?utf-8?B?UEQ4cWlacm1RTFkrQS9MOGdjaTdhMzMzOW91eDZsYkNxNFFaSWZKOWRDVUZE?=
+ =?utf-8?B?a25ISldIR3pQbE5vVG5XSlpObmVFY0hoekJoSGdVd3pkV3EwKzIwNG42VDk2?=
+ =?utf-8?B?Q1F6eHZYME9Tc3hCTzRpODlSY0I1UEJILzN0UkQzZVVUMUljRi9hQXNRQWg2?=
+ =?utf-8?B?MUwzS0d3TFBJTnA3Q2dYVExmS2diaGV5Sld4c0o2dlBrbGtLZ2RncVdGTDdT?=
+ =?utf-8?B?SS84NDY3aVVBY1lJaEJXNkxDck9Bc2dYNnlCUnk4VTNmYXZnSzMrUGpjNmtR?=
+ =?utf-8?B?d0g3cVlHV3hCT2FwUHhsaSs3UlBHVVZ3SmZqRHcxSTErMm5oWmZ4bVpoRnAx?=
+ =?utf-8?B?N0RnMi9tcUFHTkdjTjVlUEExRVRNcmpBM21mWUVXcEVXdXdBSDQxVE1KN1Vv?=
+ =?utf-8?B?QllyMWRUSnBsdHg1Zld1bXlpN2lUcC9KZlBieVZpcUpTemRuYlRKVzhBbUtF?=
+ =?utf-8?B?OCs4aTc3T2Z3Qnl1UVcwZDRnUTUzZGlHNFk2OHlpZnh0U1VuaGsxZXEyQ0VC?=
+ =?utf-8?B?aGhMM3k3VTd3US9XczZPek9IenlGSzlYUW9rbnJ2S1hWNTJoMEdVUGljM3p6?=
+ =?utf-8?B?QUJYSmNFVlZPcm9JN0QzY1BmVTlMYkNKZDdlS1crNDIwWjluQ2RzSzFObk9M?=
+ =?utf-8?B?L1NMcThzVDNsbnhIUWdFRXVmQ2Q5eGdIZnhwNWsyWjVjL1VUVGJvaUZlZE1s?=
+ =?utf-8?Q?hg0huzr8IZ0Q+IpmA0R9lsOcYefTtLgnmtO7c=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QVZKMGxtNlFDUDI2THpmOHNVQXRFTVJDYkV5SlVqNDM5clpjSy9uY1dheElE?=
+ =?utf-8?B?U3YrSThsTm1IOFlqQ1hMdFcva3B2UnkwYkpUZmNyb1RoNThTdjlENHhkMzJS?=
+ =?utf-8?B?WitnWk03Qkp6UnZnR3VqU2JIdGpGZWE0dXFYMy8vU1Z2eStqRDBWVHpZMTBR?=
+ =?utf-8?B?SU95ek05OUZlY3BhTkh0VXV6RGtoSjhMU0xQWFJoekgxVitJdHU2U2c2aTVa?=
+ =?utf-8?B?NmZFMXd2alJtVExWNjk5Sjlad1FITnVWejMwMGVvYkJiM3MrSk51NGQxVjJw?=
+ =?utf-8?B?VUkxaFhuUjVaYnVFcHM3MW9RLzlVNW04aDBuOGhrKzc1SEJMeXI3RkhYZk0v?=
+ =?utf-8?B?MDk1eXhFOWgrUm10VEVhcEJ3RmIyRkZ6NnovRGlQSmFYaWtLKzd2T3k0Wk16?=
+ =?utf-8?B?b1I3L3RXdUVVZk00NFN6Z1lmT1ZkTENJVFhvZXdWbitDeWZRTGNMYTM0S3Qv?=
+ =?utf-8?B?d1NnVHBDLzJtellhKytaZ1hMRGdtRmRwMWNSeDJ6bHRFVkpIcnpRSmJpcG95?=
+ =?utf-8?B?NTFMYXRvdThEY3RyN3E3OTFDMUtqSlVGOTFkNXBwSGUrSG1QS1k2ZDZ6RE5E?=
+ =?utf-8?B?QjJFQWZaenVmZjQ0OFQxOVl0TGVuRXFaNzBSMWxrNnV2b2U4WUgwR1ArMjVL?=
+ =?utf-8?B?ZlJDN0F4aG45SjdKWmQ2Nk9rSTlSZHUxcHNkZXNOUmo5bmd6eFdoNmhIc1Fu?=
+ =?utf-8?B?cnZya25QSitzVTlNY2tWM0kwU0Ntc09RRURaSmVtMlZGTGh5ZWxZaHo5YmMw?=
+ =?utf-8?B?OVAzZVVFZlVDdENWa211RFdyc0hYM3pnMkpnRkJPTksrc2RRWGRWOTJqNTcx?=
+ =?utf-8?B?Yzh1MG9OWTZZd3hqWDhDL0ZmN0dQRlBuMWpqY3dzTFhvak4vRG9VbWpXUzIx?=
+ =?utf-8?B?OStWZ1dWckJsMjJSald3QjMyZ3VnUjIzR2tMc2ZtaE5vY21XR05ibi83Vy83?=
+ =?utf-8?B?NzZFaW0yYnhadm44aVJEZEdCV2VQcEVFOHN1UTJ0bHl6LzBQY3R6ZXlUMHE0?=
+ =?utf-8?B?Q2NrUzQrTWlMWXV6c29xVEpYNERkV2JBSVhaNkU2WkE5YnZ0eEZjajVjbjdT?=
+ =?utf-8?B?amw2aVU3WStVZENRRUZYREJocWx4ZTRUWFZpYWNDODdJZkpHRFBuNkhTdGxr?=
+ =?utf-8?B?MXpMdW9JZUdtMXRycm5KY3gwYXo1VlE1cG50c2p3ZnpBaS92aGtGMHE2RkRn?=
+ =?utf-8?B?eXIrZE5qa2lzYlUxZDUyb3ZXb0pNcFBNRnVPMTgrWTZ6LzJHbmIrZTNXSnFO?=
+ =?utf-8?B?QkxlUzVtM2YxZ25jR24xQ0l6K0tRQ1d2UUU0cXY3VGxRWEhzNHN6ZTlWeXBK?=
+ =?utf-8?B?aDZ3QWhJUW9sUGpWQjcxZCs4NE94NGJiam9pT2ViQWxvR1lkTDhXaml5YlRu?=
+ =?utf-8?B?Rm1tUEpYczc5M3d3blYvUEZ3eEpIcGRBbDh3elNBU3dqK1Z5OXZyd1JudlZp?=
+ =?utf-8?B?VjhsSXJWU1VTRms1dXFxOEhkd0lhRXdPc0lSMkZxMHplVTVZeTUvNVk3WElK?=
+ =?utf-8?B?SmZoUzdaSFk4U0xRcVV2bTQrNm1sUkxsSGJZTGJmOTRZbjJtY3A3a254UFBG?=
+ =?utf-8?B?SjFqL08xRDhYMzEzbmJFaHoxcEo2NHZWbXVWYm1reEoremU0N1phcFArL3FM?=
+ =?utf-8?B?cjVPUy9jaTE2T3ZzdlhDTGMzRjAzRUtDOHRINXQ1T0VISXdjU3VXZWhpUFlo?=
+ =?utf-8?B?dy96VjhodFVhY2V2dUxSSmYwZzlIdlVlWnRaTzdLeHdkWVFGQUVoTUtWK1ZW?=
+ =?utf-8?B?MEUvYzVpZ082R3BVRjlZa0tVTmN3bDlhQ2JvZDExeUZleGRDVEFJNldDL0c1?=
+ =?utf-8?B?NURxWndjUEhGdzk3RHBjbEVIT0MwYzAzRG15OVhsdjZ0TnZKQURwVlJaL0NI?=
+ =?utf-8?B?cUVLdk8reHB3dk9iNWFTeWplVkZhZnhZdlRPeEdHUXNudFk5ZVRsWnBPdFM0?=
+ =?utf-8?B?QzhFSGxyOS9VSjNkUEhaTWhiTVRpRk5hVXN5L2U5ck5mT1FxK1JleXI3Nnpw?=
+ =?utf-8?B?K0wwdy9NWjRkc2FPMEF1b01TUHVZSTJqWVFTUE5ubUhjK1pPU3pscDZTLzZD?=
+ =?utf-8?B?KzRHMFhjdG1pQ0J6SGwxbnQ1cXRZWm1NNTM2QmJGVHZHOHZnWVZnUW0wdm9X?=
+ =?utf-8?Q?a7ja2HKjixl73EZcpLPpxLgJQ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f074a88d-23af-4774-0eca-08ddadf8a500
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 23:42:38.9784
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vmCBJZ4+LXQu3cd7dQZyvJjLh28U96csR5BwytnY2EWz2wYGtqR1FrOpdr71E4OH6WS/YZ7GkPPiQGBOk3td9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7807
 
-On Tue, 17 Jun 2025 10:29:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
 
-> > >From e2a49c7cefb4148ea3142c752396d39f103c9f4d Mon Sep 17 00:00:00 2001  
-> > From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-> > Date: Tue, 17 Jun 2025 19:18:37 +0900
-> > Subject: [PATCH] x86: alternative: Fix int3 handling failure from broken
-> >  text_poke array
-> > 
-> > Since smp_text_poke_single() does not expect there is another
-> > text_poke request is queued, it can make text_poke_array not
-> > sorted or cause a buffer overflow on the text_poke_array.vec[].
-> > This will cause an Oops in int3, or kernel page fault if it causes
-> > a buffer overflow.
+Thanks for reporting. Can you please create a bug at 
+https://gitlab.freedesktop.org/drm/amd/-/issues/ for issue tracking and 
+log collection.
+
+On 6/12/25 08:08, ggo@tuxedocomputers.com wrote:
+> Hi,
 > 
-> I would add more of what you found above in the change log. And the issue
-> that was triggered I don't think was because of a buffer overflow. It was
-> because an entry was added to the text_poke_array out of order causing the
-> bsearch to fail.
-
-There are two patterns of bugs I saw, one is "Oops: int3" and another is
-"#PF in smp_text_poke_batch_finish (or smp_text_poke_int3_handler)".
-The latter comes from buffer overflow.
-
------
-[  164.164215] BUG: unable to handle page fault for address: ffffffff32c00000
-[  164.166999] #PF: supervisor read access in kernel mode
-[  164.169096] #PF: error_code(0x0000) - not-present page
-[  164.171143] PGD 8364b067 P4D 8364b067 PUD 0 
-[  164.172954] Oops: Oops: 0000 [#1] SMP PTI
-[  164.174581] CPU: 4 UID: 0 PID: 2702 Comm: sh Tainted: G        W           6.15.0-next-20250606-00002-g75b4e49588c2 #239 PREEMPT(voluntary) 
-[  164.179193] Tainted: [W]=WARN
-[  164.180926] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  164.184696] RIP: 0010:smp_text_poke_batch_finish+0xb9/0x400
-[  164.186873] Code: e4 4c 8d 6d c2 85 c9 74 39 48 63 03 b9 01 00 00 00 4c 89 ea 41 83 c4 01 48 c7 c7 d0 f7 f7 b2 48 83 c3 10 48 8d b0 00 00 c0 b2 <0f> b6 80 00 00 c0 b2 88 43 ff e8 68 e3 ff ff 44 3b 25 d1 29 5f 02
------
-
-This is because smp_text_poke_single() overwrites the
-text_poke_array.vec[TEXT_POKE_ARRAY_MAX], which is nr_entries (and
-the variables next to text_poke_array.)
-
------
-static struct smp_text_poke_array {
-	struct smp_text_poke_loc vec[TEXT_POKE_ARRAY_MAX];
-	int nr_entries;
-} text_poke_array;
------
-
+> I have discovered that two small form factor desktops with Ryzen AI 7
+> 350 and Ryzen AI 5 340 crash when woken up from suspend. I can see how
+> the LED on the USB mouse is switched on when I trigger a resume via
+> keyboard button, but the display remains black. The kernel also no
+> longer responds to Magic SysRq keys in this state.
 > 
-> Please add to the change log that the issue is that smp_text_poke_single()
-> can be called while smp_text_poke_batch*() is being used. The locking is
-> around the called functions but nothing prevents them from being intermingled.
-
-OK.
-
+> The problem affects all kernels after merge b50753547453 (v6.11.0). But
+> this merge only adds PCI_DEVICE_ID_AMD_1AH_M60H_ROOT with commit
+> 59c34008d (necessary to trigger this bug with Ryzen AI CPU).
+> I cherry-picked this commit and continued searching. Which finally led
+> me to commit f6098641d3e - drm/amd/display: fix s2idle entry for DCN3.5+
 > 
-> This means that if we have:
+> If I remove the code, which has changed somewhat in the meantime, then
+> the suspend works without any problems. See the following patch.
 > 
->    CPU 0                           CPU 1                      CPU 2
->    -----                           -----                      -----
+> Regards,
+> Georg
 > 
->  smp_text_poke_batch_add()
 > 
->                                 smp_text_poke_single() <<-- Adds out of order
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index d3100f641ac6..76204ae70acc 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -3121,9 +3121,6 @@ static int dm_suspend(struct amdgpu_ip_block
+> *ip_block)
 > 
->                                                             <int3>
->                                                            [Fails o find address in
->                                                             text_poke_array ]
->                                                            OOPS!
-
-Thanks for the chart!
-
+>   	dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D3);
 > 
-> No overflow. This could possibly happen with just two entries!
-
-Yes, that was actually I observed (by a debug patch)
-
+> -	if (dm->dc->caps.ips_support && adev->in_s0ix)
+> -		dc_allow_idle_optimizations(dm->dc, true);
+> -
+>   	dc_dmub_srv_set_power_state(dm->dc->ctx->dmub_srv,
+> DC_ACPI_CM_POWER_STATE_D3);
 > 
-> > 
-> > Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
-> > so that it correctly flush the queue if needed.
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
-> > Fixes: 8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by
-> > using tp_vec and existing APIs") Signed-off-by: Masami Hiramatsu (Google)
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Thank you!
-
-> 
-> -- Steve
-> 
-> > <mhiramat@kernel.org> ---
-> >  arch/x86/kernel/alternative.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> > index ecfe7b497cad..8038951650c6 100644
-> > --- a/arch/x86/kernel/alternative.c
-> > +++ b/arch/x86/kernel/alternative.c
-> > @@ -3107,6 +3107,6 @@ void __ref smp_text_poke_batch_add(void *addr,
-> > const void *opcode, size_t len, c */
-> >  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t
-> > len, const void *emulate) {
-> > -	__smp_text_poke_batch_add(addr, opcode, len, emulate);
-> > +	smp_text_poke_batch_add(addr, opcode, len, emulate);
-> >  	smp_text_poke_batch_finish();
-> >  }
+>   	return 0;
 > 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
