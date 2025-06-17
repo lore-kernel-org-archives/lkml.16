@@ -1,333 +1,207 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012060.outbound.protection.outlook.com [52.101.71.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A4A2BFC65
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750155827; cv=none; b=WWFaFp3GQMRAincDFp62uazAd+P2NiSobiUZO7N8nVYtE3pfl72hPaWsCd47BRtqxpiY8Hlj9GUI/76g1oiCrMlxyIirUdheGb3z0DzZPiM8IOB+FF2Y7RrqowybPtw/CMhVMeAfd9Bb/JLolx4w7k8RVnMpPTDsm/ieMfvr30U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750155827; c=relaxed/simple;
-	bh=4UEi0t7UFFoGYzmfM4kkoh7sJE8752F+vgflGGIA2WE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oqZk79NnRAn1ZiOvCa8kwZXjG0Mi7IcjTk5deu9cTElrl1EDoqWo3ITadeUksJx245vSp2EatIa72uPnaHTjeNWNN5iUveEyQ8ys/Op1WrdVX8kqQ4kNF9fXH1eoT1zVhRE9Bj3DPEZwU+UNBU+0HP5q0gSTEK0UHkWiwDZmVgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0vtO1r83; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MFXM112g; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0vtO1r83; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MFXM112g; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11424216E2A;
+	Tue, 17 Jun 2025 10:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750155846; cv=fail; b=usN+zspGdw2Ht3l3T0i7esE2NK1v8CvYkgUi0jXWZoRSpz7P04RkCvscQPwUFnS/0C4t10uwtJmAtlQPApYkX1za8e/NT1jWAUZuTvz+q6kuquAz8as3yfN6hbck9PfLcbu2ij2xio3PGc13pzR7qlP7d+iM5FRTzxcno8hL9gU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750155846; c=relaxed/simple;
+	bh=zSBCmZH2vxcHGgdqFfBALqcoYNOaTn0v9/CUCN+n/Ek=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=oIQtDfPrd0iv2XkJIsmvSx84kMGS7pyrDkNLL+cpAAOCkOqNEbt4ouSNZgLlqdXz6EdexmwZLnvvd71aIjL5P+qD08KmoT6In9gNaGYzr56neZLrH+SwPqF4irixRDkXb7tIlASNmWh2JQko1VkUmgWQr40miLdjjKX2f3Qx/9Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=cdkKjN97; arc=fail smtp.client-ip=52.101.71.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0vtO1r83";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MFXM112g";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0vtO1r83";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MFXM112g"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C05DC211BF;
-	Tue, 17 Jun 2025 10:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750155821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mgKx+Rhufud+xyv84CkP5jQpT6pJPjmkPqgzNgofRZY=;
-	b=0vtO1r83WRAKyen/sl74pMYrwEeINd06w3kouKw4XtQ9dQRPADLJ6CM5JYXunqVAkAUnGT
-	9C9SJGFB86ITz6p0vbKmlWMotVPtFVkgbtgpanOBzpBUJ5FoTXmS1oeJ2zbY4BlWg4Kjqe
-	3fQ7eXKJ56YE6xUi6J3Ype8YfurulIE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750155821;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mgKx+Rhufud+xyv84CkP5jQpT6pJPjmkPqgzNgofRZY=;
-	b=MFXM112gzLzycqzUCeXn0pDIkj1ZAFT7HH7Jay35zGiLu/sJ0s7oopW+e62NvCfn15BsWZ
-	ycahuii9UnS1A+BA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750155821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mgKx+Rhufud+xyv84CkP5jQpT6pJPjmkPqgzNgofRZY=;
-	b=0vtO1r83WRAKyen/sl74pMYrwEeINd06w3kouKw4XtQ9dQRPADLJ6CM5JYXunqVAkAUnGT
-	9C9SJGFB86ITz6p0vbKmlWMotVPtFVkgbtgpanOBzpBUJ5FoTXmS1oeJ2zbY4BlWg4Kjqe
-	3fQ7eXKJ56YE6xUi6J3Ype8YfurulIE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750155821;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mgKx+Rhufud+xyv84CkP5jQpT6pJPjmkPqgzNgofRZY=;
-	b=MFXM112gzLzycqzUCeXn0pDIkj1ZAFT7HH7Jay35zGiLu/sJ0s7oopW+e62NvCfn15BsWZ
-	ycahuii9UnS1A+BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE27C13AE2;
-	Tue, 17 Jun 2025 10:23:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5BYQKi1CUWhfHAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 17 Jun 2025 10:23:41 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5CF2BA29F0; Tue, 17 Jun 2025 12:23:41 +0200 (CEST)
-Date: Tue, 17 Jun 2025 12:23:41 +0200
-From: Jan Kara <jack@suse.cz>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Benjamin LaHaise <bcrl@kvack.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Tigran A . Aivazian" <aivazian.tigran@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, 
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Dave Kleikamp <shaggy@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Carlos Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
-	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-mm@kvack.org, linux-btrfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
-	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 09/10] fs: convert most other generic_file_*mmap() users
- to .mmap_prepare()
-Message-ID: <gexpfonlstqrggxbwxlorn7c6qvt42e2dof6lahipfyfecgfru@vexc23jbaxwc>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <08db85970d89b17a995d2cffae96fb4cc462377f.1750099179.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="cdkKjN97"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RUtlZvUqGjK0kEUfud1HaNNNq60bOqzVHM6yRQS/husNOPOpA2IygQKc/NEZO1PJxT/uYN5FGczGHV27MEx30iLvRwvNzK7DySlv0ISLDSRzl+vWH1OtFlu7dEM3b+OAWzPchF1s+SmSur5CC/V70ptbob3HvsBc+Ip8mQjCqwA1sceCVkzukEA8DGCUCp2XCAERaNC1vKiLtP2ieKkrPSuSCDffb7XWtNkrSEUTYseka9GMf5XEEK8Xuv+X0N1rh1DkS7gxMy6YOsG6QIHBhrkMnD8qCzxzavgkEt2Fu/EE7/us3IU13v/cVZHw628fgQj3NeX3TgU7JUDbmXuIEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ekA463wGXDLjl33aKQP7+7BuiKijAtkzQnkBYiudE8w=;
+ b=S3vayBJFBP3X7ibVmd3EHEnTnbk6uGZe5yzvstv7FzDu/DmgDwh+fAheXYDeUIu5iBBgoZZMcC+VcL92DjkMfd72GsJV7gM+ASmq5edWEtQCK+9R8lfnMaw0t/Sqwf8qb6zCIPS5q7QCS2jEU0qk4jEAgv4CCZfCg2p/xibGPZfcADyVUZoyupgSwX383EAoWsQAcg/JOmCPhpOjCfS9QlPvzbS5U4zY8Jj054yTbRRuzl2wwx6Qn4QGGaNcfApSUZO+fU2LnWhweU4qN8M9ON4hmXB2600GqScmu7LrA15CoqwGygZ0VWlbDAqPqkRI3GORZ7T4ws9W8pMx4hsEhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=gmail.com smtp.mailfrom=axis.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=axis.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ekA463wGXDLjl33aKQP7+7BuiKijAtkzQnkBYiudE8w=;
+ b=cdkKjN97TpyUDOQeVrHI8lyRXhUFggBICodEb1J1iy/fNTFN1DTGwFVOplheQxY78viSXiZgGDONP8QUngzeCs47mZLOql79TTyQVXDHblpwsGMgyKtUzptm31dYXtWNvw7VKrLmrB2PJBGvQJmwj2iM4EilsXIH0aQa1sTqkc8=
+Received: from AM9P193CA0021.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:21e::26)
+ by PAXPR02MB7296.eurprd02.prod.outlook.com (2603:10a6:102:1bd::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Tue, 17 Jun
+ 2025 10:24:01 +0000
+Received: from AM3PEPF0000A793.eurprd04.prod.outlook.com
+ (2603:10a6:20b:21e:cafe::30) by AM9P193CA0021.outlook.office365.com
+ (2603:10a6:20b:21e::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.27 via Frontend Transport; Tue,
+ 17 Jun 2025 10:24:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AM3PEPF0000A793.mail.protection.outlook.com (10.167.16.122) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Tue, 17 Jun 2025 10:24:01 +0000
+Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 17 Jun
+ 2025 12:23:55 +0200
+Received: from se-mail01w.axis.com (10.20.40.7) by SE-MAILARCH01W.axis.com
+ (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 17 Jun
+ 2025 12:23:55 +0200
+Received: from se-intmail01x.se.axis.com (10.4.0.28) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Tue, 17 Jun 2025 12:23:55 +0200
+Received: from pc51235-2237.se.axis.com (pc51235-2237.se.axis.com [10.96.29.3])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 7E5D8278A;
+	Tue, 17 Jun 2025 12:23:55 +0200 (CEST)
+Received: by pc51235-2237.se.axis.com (Postfix, from userid 3319)
+	id 6E9034033836; Tue, 17 Jun 2025 12:23:55 +0200 (CEST)
+From: Johan Adolfsson <johan.adolfsson@axis.com>
+Date: Tue, 17 Jun 2025 12:23:55 +0200
+Subject: [PATCH v7 2/2] dt-bindings: leds: lp50xx: Document child reg, fix
+ example
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08db85970d89b17a995d2cffae96fb4cc462377f.1750099179.git.lorenzo.stoakes@oracle.com>
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,kernel.dk,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,kernel.org,ionkov.net,codewreck.org,crudebyte.com,suse.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,kvack.org,szeredi.hu,linux.dev,fb.com,toxicpanda.com,cs.cmu.edu,tyhicks.com,linux.alibaba.com,google.com,huawei.com,samsung.com,sony.com,mit.edu,dilger.ca,mail.parknet.co.jp,dubeyko.com,physik.fu-berlin.de,vivo.com,nod.at,cambridgegreys.com,sipsolutions.net,artax.karlin.mff.cuni.cz,infradead.org,paragon-software.com,fasheh.com,evilplan.org,bobcopeland.com,omnibond.com,samba.org,manguebit.org,microsoft.com,talpey.com,wdc.com,suse.de,vger.kernel.org,lists.freedesktop.org,lists.linux.dev,lists.infradead.org,coda.cs.cmu.edu,lists.ozlabs.org,lists.sourceforge.net,lists.orangefs.org,lists.samba.org];
-	URIBL_BLOCKED(0.00)[oracle.com:email,suse.com:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[113];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.30
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250617-led-fix-v7-2-cdbe8efc88fa@axis.com>
+References: <20250617-led-fix-v7-0-cdbe8efc88fa@axis.com>
+In-Reply-To: <20250617-led-fix-v7-0-cdbe8efc88fa@axis.com>
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, Jacek Anaszewski
+	<jacek.anaszewski@gmail.com>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, Johan Adolfsson <johan.adolfsson@axis.com>,
+	<kernel@axis.com>
+X-Mailer: b4 0.13.0
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM3PEPF0000A793:EE_|PAXPR02MB7296:EE_
+X-MS-Office365-Filtering-Correlation-Id: b9650365-27b5-45b8-3b5a-08ddad8913fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TE9yTWE5Ui80dWhPTHE1SVI5QnA5SWJkYzJTc3VQVGNkYnZxQWIrU1hNWVhO?=
+ =?utf-8?B?bmM4ejduRStBWThVQUtjcnJhb3N0OExJVWhWKzBNVTBVdjI0YVJOY3FrN1Zz?=
+ =?utf-8?B?YU1GNXpOa0tqZjNkeWxubGM0UWhYRHRqdE14aGprQTBVMForZThpSWxpd0xL?=
+ =?utf-8?B?OVJmZGxxelFmbk1HY3loQkFQYlNnMkNPcTZsbnFKUDd2aEpSRDdCaWwvSERP?=
+ =?utf-8?B?bXR4WFZScktZbG54WDdlRGNMRDZVQk82akg4Ry9LeXpmem1HaWhUbEZZdE8z?=
+ =?utf-8?B?d2ZIZFArTTFsUm9TWkNKcjI3SmVKSDR2WGxrZ1ZzdFhyelpyVG9DZGR2Y1Vk?=
+ =?utf-8?B?K0d5MHVzWHZrd0IyVXRQdnZTbmlGYWtYNURpL0F5Q29QcE9yMzdnS3RDSVJU?=
+ =?utf-8?B?YWVZTnd4cWVmVGJqK1MyTUR2Q01LWmEvRmZMeUNuQXF0eWFrMHJoS2xNMnY2?=
+ =?utf-8?B?WVE1VUtmV1VPLzNoMGVJUFc0aVZsdi9sKzRqWHRteDNnMVdQNTR4UVFIMDFK?=
+ =?utf-8?B?bHNOWC9iYkk1emptR0lWa25lQ1E2UHhFQ1RMU0JNK0tXTEZIaUhza3lzUEdp?=
+ =?utf-8?B?M3B5MHBnK0NNb2hCZVpRdGtQbENUQnlyY0hyM1hDdmJOV0RQMnphbVFGTmhn?=
+ =?utf-8?B?TWxHRG1YRXdHbTdxRXZwNlBYZ1c1dUVvYW0xYWlTNGN2TVk2S0JFbjVmUlZL?=
+ =?utf-8?B?d2RTQndEb0VkL1lZN3FmUXB1UXdCU3RHOUl6dDJZdDFuU0FJcm5HamxYUHlz?=
+ =?utf-8?B?V210UHF1eDVwYmRPN1EyNmw2Z2UxK3B3SnBCN1N3NEVsa3RPUlZGODBWZlRi?=
+ =?utf-8?B?bGhBem9Gdms1c0k4bVBBZ2ljOS9SRGFCb2IvSXZHeCtEd2srSWxCYkdsY3JW?=
+ =?utf-8?B?bWRKQlVnV0l5bEEzRi8xaUlMeEtnbjVZQk8rWU9RS2YwMUN6cVgwdzVTaTZD?=
+ =?utf-8?B?b1I0UXRkTFdrQ3FreU5SNzIydVJDaWRKMmRndXliTEJNb0xJMVV4OXhDVytl?=
+ =?utf-8?B?QnBVd3Y2NEZWWHhPYW1Ea1o0L3g3aU1JWjloY3VDNUxxRG5Tc3hsZUtweVll?=
+ =?utf-8?B?cDNlM0JCaVN6VFFucnBsZWpuZXhvanh3bmVxUjF1dzdrNXlzYlRCc3pOMUNu?=
+ =?utf-8?B?QVNaalJCWSthanpFb3h0OFhIaUpVR0tUSmhSWC91VXJvRE9yc01mSDNRcm1O?=
+ =?utf-8?B?aDBrbitVN2hka3NBTUl6TTJEdWZBSHhkQ0VuTVV6MXhVc0s1MDEwcGczaTFa?=
+ =?utf-8?B?T1A5c3NnL241WXpyT2crVTErMHBmVU5xZzV6Y2ROVWFLRHl5Zmk4VWRWTjJj?=
+ =?utf-8?B?eFNRcmlnNW1FRTVndzFOcTYyZ3dYYWhLNzJ3VEdyOWhYUVRLWlNvYXF2UDdz?=
+ =?utf-8?B?V2RXN3N5aXhadDRVSm1FYkRHQTNsSjVvUXNYc0FIdy8rcTROTXNOMC92dTJ5?=
+ =?utf-8?B?bjVXL1pLbm9wNmlIdG0xKzN6VVRMR0JLQmkzM0xRb1k5WTlJTlVYUnBmWHFz?=
+ =?utf-8?B?cFI2V3kxYTEyZGRKRFFKT3NIaDA5TXhYMVNxTU0za1kzdWZOVVZQOWVPL1Bk?=
+ =?utf-8?B?bW5rV3hQSTQ0am5yWlVpVXpNdlB1dzZjeFhBeENqaVNJYzBsTUkxTEphdG81?=
+ =?utf-8?B?ZXlKcWRVK3ZkSWNsVzFhS3dTK0t4OWdKVmRrSmJXOFFwb1VwTTVTWlE4S0p1?=
+ =?utf-8?B?OW5kQ2NzbmhacG1abWxoK0d3UDFSNHVUdFlNMWt3emkvREp3bjNaUXphK1Bv?=
+ =?utf-8?B?TWNqN3ZHNm5xall0RWxHVmYwdEQyMVVxendJd2lPdzlnVVZXcmkvZWNvbEN6?=
+ =?utf-8?B?UHNGS0gxQ09aeHozTzRBc1lMMGE4RkZRNlYvOXo0dTMvT3lCMks4TUFmRFZh?=
+ =?utf-8?B?c24yUG00SkQyUkRrTXNuTld3S0RlRzlHVXI0ejNmN3NlNDlxQlV6TDJKOEZi?=
+ =?utf-8?B?UjNhWmNXbFhNMDQwQUswNlZWTGpMQ1E0VUFrd2d3bWlIdkJES0FIc0F2eUt0?=
+ =?utf-8?B?cjFkRm9QeTk2MU1idmo3eUZUK28xajZWR1F1eFNqcnExbm55Vy93Z29adGsx?=
+ =?utf-8?Q?CN754V?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 10:24:01.3532
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9650365-27b5-45b8-3b5a-08ddad8913fd
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM3PEPF0000A793.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR02MB7296
 
-On Mon 16-06-25 20:33:28, Lorenzo Stoakes wrote:
-> Update nearly all generic_file_mmap() and generic_file_readonly_mmap()
-> callers to use generic_file_mmap_prepare() and
-> generic_file_readonly_mmap_prepare() respectively.
-> 
-> We update blkdev, 9p, afs, erofs, ext2, nfs, ntfs3, smb, ubifs and vboxsf
-> file systems this way.
-> 
-> Remaining users we cannot yet update are ecryptfs, fuse and cramfs. The
-> former two are nested file systems that must support any underlying file
-> ssytem, and cramfs inserts a mixed mapping which currently requires a VMA.
-> 
-> Once all file systems have been converted to mmap_prepare(), we can then
-> update nested file systems.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+The led child reg node is the index within the bank, document that
+and update the example accordingly.
+The reg property in child node is limited to 0-2 since there are 3 leds
+per bank, previous value in example was speculative.
 
-Overall the patch looks good. Just a couple of notes regarding pointless
-local variable being created...
+Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+---
+ .../devicetree/bindings/leds/leds-lp50xx.yaml         | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-> ---
->  block/fops.c           |  9 +++++----
->  fs/9p/vfs_file.c       | 11 ++++++-----
->  fs/afs/file.c          | 11 ++++++-----
->  fs/erofs/data.c        | 16 +++++++++-------
->  fs/ext2/file.c         | 12 +++++++-----
->  fs/nfs/file.c          | 13 +++++++------
->  fs/nfs/internal.h      |  2 +-
->  fs/nfs/nfs4file.c      |  2 +-
->  fs/ntfs3/file.c        | 15 ++++++++-------
->  fs/smb/client/cifsfs.c | 12 ++++++------
->  fs/smb/client/cifsfs.h |  4 ++--
->  fs/smb/client/file.c   | 14 ++++++++------
->  fs/ubifs/file.c        |  8 ++++----
->  fs/vboxsf/file.c       |  8 ++++----
->  14 files changed, 74 insertions(+), 63 deletions(-)
-> 
-> diff --git a/block/fops.c b/block/fops.c
-> index 1309861d4c2c..5a0ebc81e489 100644
-> --- a/block/fops.c
-> +++ b/block/fops.c
-> @@ -911,14 +911,15 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
->  	return error;
->  }
->  
-> -static int blkdev_mmap(struct file *file, struct vm_area_struct *vma)
-> +static int blkdev_mmap_prepare(struct vm_area_desc *desc)
->  {
-> +	struct file *file = desc->file;
->  	struct inode *bd_inode = bdev_file_inode(file);
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+index 402c25424525..23f809906ba7 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+@@ -81,7 +81,12 @@ patternProperties:
+ 
+         properties:
+           reg:
+-            maxItems: 1
++            items:
++              - minimum: 0
++                maximum: 2
++
++            description:
++              This property denotes the index within the LED bank.
+ 
+         required:
+           - reg
+@@ -138,18 +143,18 @@ examples:
+                 color = <LED_COLOR_ID_RGB>;
+                 function = LED_FUNCTION_STANDBY;
+ 
+-                led@3 {
+-                    reg = <0x3>;
++                led@0 {
++                    reg = <0x0>;
+                     color = <LED_COLOR_ID_RED>;
+                 };
+ 
+-                led@4 {
+-                    reg = <0x4>;
++                led@1 {
++                    reg = <0x1>;
+                     color = <LED_COLOR_ID_GREEN>;
+                 };
+ 
+-                led@5 {
+-                    reg = <0x5>;
++                led@2 {
++                    reg = <0x2>;
+                     color = <LED_COLOR_ID_BLUE>;
+                 };
+             };
 
-I guess no need to create 'file' variable here since it has only one use in
-the line above...
-
->  
->  	if (bdev_read_only(I_BDEV(bd_inode)))
-> -		return generic_file_readonly_mmap(file, vma);
-> +		return generic_file_readonly_mmap_prepare(desc);
->  
-> -	return generic_file_mmap(file, vma);
-> +	return generic_file_mmap_prepare(desc);
->  }
->  
->  const struct file_operations def_blk_fops = {
-
-...
-
-> @@ -492,16 +492,17 @@ static void afs_drop_open_mmap(struct afs_vnode *vnode)
->  /*
->   * Handle setting up a memory mapping on an AFS file.
->   */
-> -static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> +static int afs_file_mmap_prepare(struct vm_area_desc *desc)
->  {
-> +	struct file *file = desc->file;
->  	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
-
-Same comment about pointless local variable here as well.
-
->  	int ret;
->  
->  	afs_add_open_mmap(vnode);
->  
-> -	ret = generic_file_mmap(file, vma);
-> +	ret = generic_file_mmap_prepare(desc);
->  	if (ret == 0)
-> -		vma->vm_ops = &afs_vm_ops;
-> +		desc->vm_ops = &afs_vm_ops;
->  	else
->  		afs_drop_open_mmap(vnode);
->  	return ret;
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index 6a329c329f43..52dfd1a44c43 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -409,20 +409,22 @@ static const struct vm_operations_struct erofs_dax_vm_ops = {
->  	.huge_fault	= erofs_dax_huge_fault,
->  };
->  
-> -static int erofs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> +static int erofs_file_mmap_prepare(struct vm_area_desc *desc)
->  {
-> +	struct file *file = desc->file;
-> +
->  	if (!IS_DAX(file_inode(file)))
-
-And here...
-
-> -		return generic_file_readonly_mmap(file, vma);
-> +		return generic_file_readonly_mmap_prepare(desc);
->  
-> -	if ((vma->vm_flags & VM_SHARED) && (vma->vm_flags & VM_MAYWRITE))
-> +	if ((desc->vm_flags & VM_SHARED) && (desc->vm_flags & VM_MAYWRITE))
->  		return -EINVAL;
->  
-> -	vma->vm_ops = &erofs_dax_vm_ops;
-> -	vm_flags_set(vma, VM_HUGEPAGE);
-> +	desc->vm_ops = &erofs_dax_vm_ops;
-> +	desc->vm_flags |= VM_HUGEPAGE;
->  	return 0;
->  }
-...
-> diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-> index 9835672267d2..2ed5173cfa73 100644
-> --- a/fs/smb/client/file.c
-> +++ b/fs/smb/client/file.c
-> @@ -2995,8 +2995,9 @@ static const struct vm_operations_struct cifs_file_vm_ops = {
->  	.page_mkwrite = cifs_page_mkwrite,
->  };
->  
-> -int cifs_file_strict_mmap(struct file *file, struct vm_area_struct *vma)
-> +int cifs_file_strict_mmap_prepare(struct vm_area_desc *desc)
->  {
-> +	struct file *file = desc->file;
->  	int xid, rc = 0;
->  	struct inode *inode = file_inode(file);
-
-Again pointless local variable 'file' here.
-
->  
-> @@ -3005,16 +3006,17 @@ int cifs_file_strict_mmap(struct file *file, struct vm_area_struct *vma)
->  	if (!CIFS_CACHE_READ(CIFS_I(inode)))
->  		rc = cifs_zap_mapping(inode);
->  	if (!rc)
-> -		rc = generic_file_mmap(file, vma);
-> +		rc = generic_file_mmap_prepare(desc);
->  	if (!rc)
-> -		vma->vm_ops = &cifs_file_vm_ops;
-> +		desc->vm_ops = &cifs_file_vm_ops;
->  
->  	free_xid(xid);
->  	return rc;
->  }
->  
-> -int cifs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> +int cifs_file_mmap_prepare(struct vm_area_desc *desc)
->  {
-> +	struct file *file = desc->file;
->  	int rc, xid;
-
-And here (the only use is in cifs_revalidate_file(file)).
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.30.2
+
