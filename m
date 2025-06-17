@@ -1,424 +1,430 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8B72EAB64;
-	Tue, 17 Jun 2025 18:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CEE2EAB67
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750186583; cv=none; b=PqhyITMTTy4zVPhrmZl6F44i9W+LE8whS1fNRptcPgf+zkQ7UAJWnfNd1INcUb8gJxpnwNw4rrPM5Sx37uD08xcx8rUS/tJXLdv6itrwolwz4ERtZcWj8YqvpuK3XFht240FZrLBlhW4vORKHK317cRTYcKQI3ag5F0uzYLor0I=
+	t=1750186685; cv=none; b=MZXpZhJZKuukzckBay0MSIXP2okW8QWzOgQk/P2JhW2ASPVS12H5WkV+vkNtpZqCSXH+WHFMbef2B1+E+qqNQaTBWqI5PaPeplgOyoULfAF3cE45jClIwNQbT8USApk62GJGygQ2UeGy8rRYVht87OoTQHj5ZIB5sDy/Mo4e2vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750186583; c=relaxed/simple;
-	bh=BmAfJrzVultOfC2eUw0e9/7gnZO+N5yHLkG90+6Itkg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o9DSNDbp2AYsPf4spfo+Ic5qLsd8J73RTARChAqw+Ejk1JKDjgsguocdLNHHXgNZF8ymfg1G7HCSBnEEIhdFJXmXcszl6G69MYbEQlA1V3Ww1wbvwsvQRpcj5C/RaEzqcA1jNik9NR3zHgdcGBw1Jm5Ke/BtOsa2yr2hcKdq6t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fFvhQ6bq; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750186685; c=relaxed/simple;
+	bh=szqGztQmJDSY7et8LHJCKiY3zsAU/FrD96MjQ0Re0s8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UxbcN2RGpuQdhnE/j66Yzwh8/pm77HYHZqi7TUQNt5RZyoYyPQdYPlwe3633kdXmpYfGj9BnKvLiBr6v9HWLtiGQ2yC7nk0wIZy9B8X6yTZ23o+9SiyUBwnQCdj5LPglL4kN+Zsg2BGoQFsp+1Cr/x2eu1CefzJpw2PaCQUwxek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZVKFtgJx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5D1gAnpO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZVKFtgJx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5D1gAnpO; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fFvhQ6bq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750186580; x=1781722580;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=BmAfJrzVultOfC2eUw0e9/7gnZO+N5yHLkG90+6Itkg=;
-  b=fFvhQ6bqkOcKm18MYUAnG46NOg335OHTbbCP6lSfqvhNxEiAKIbGrjFR
-   y3bftQuhKWWVtuSXQUtCxGrapzFY8OxKQYD3vJln+1zoOcbrxat9rS80C
-   eEZgd13/u4NSa8coiRSfC5xuYnhtWy2enb8AONs2E6MKmIeRqr5VVTzqG
-   /lIV+eYgfMxKKiA1wJv2m71h8G3M4CA2rhORbRLDwAWat9BwxG0h7F28n
-   aK1FyRnGKTdyNfNI/3Sd80QoIWulFq4qsViRkaZy4PAmTM/TZPgj3QpIR
-   jy3vkYPzYFsO43NLXNBiicmUhb4qvsXAF/p8yPv1w8t0sicGHGxU+t0TP
-   A==;
-X-CSE-ConnectionGUID: GGRbxjCpTjmIWHmEypfuDw==
-X-CSE-MsgGUID: sWBB1URbS6uvGNwMf7DLDQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52520214"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="52520214"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 11:56:19 -0700
-X-CSE-ConnectionGUID: 9wykvPMnQc+1mbuVaNJ/+A==
-X-CSE-MsgGUID: TlUODuEcTPmE2AxibPFaLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="149791868"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 17 Jun 2025 11:56:15 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRbTh-000I0E-1v;
-	Tue, 17 Jun 2025 18:56:13 +0000
-Date: Wed, 18 Jun 2025 02:55:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
- to memcpy
-Message-ID: <202506180203.PSKW4lGq-lkp@intel.com>
-References: <20250617005800.1410112-2-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZVKFtgJx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5D1gAnpO";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZVKFtgJx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5D1gAnpO"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7590F1F7B2;
+	Tue, 17 Jun 2025 18:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750186679; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RgNDel3KBIdFRD20NWYscLXk0kRO4T4FPA8qn3r4sXM=;
+	b=ZVKFtgJxgU6rST6x9dHOvq53H+ZPhdDkqsTMNZ7d/0yKJ+jcnU1S6R0rBWo8a7kKqVmKDR
+	ENZeVprBsNGqAloTMjfmaopwBrFh1v3JFCTUXrAM3nsjylqULQ91szWdRb3GulZRtVMafj
+	G1fZdguD9n3huUX618MPIWVd8mTvJbs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750186679;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RgNDel3KBIdFRD20NWYscLXk0kRO4T4FPA8qn3r4sXM=;
+	b=5D1gAnpOzFQUDBJ63fx53UMHmj/Pinvy/HjB9v/V1oneL2XPt7iaxB1I7N+BFb4hFJ+WzO
+	uMSoKL7nLRlBoMDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ZVKFtgJx;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5D1gAnpO
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750186679; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RgNDel3KBIdFRD20NWYscLXk0kRO4T4FPA8qn3r4sXM=;
+	b=ZVKFtgJxgU6rST6x9dHOvq53H+ZPhdDkqsTMNZ7d/0yKJ+jcnU1S6R0rBWo8a7kKqVmKDR
+	ENZeVprBsNGqAloTMjfmaopwBrFh1v3JFCTUXrAM3nsjylqULQ91szWdRb3GulZRtVMafj
+	G1fZdguD9n3huUX618MPIWVd8mTvJbs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750186679;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RgNDel3KBIdFRD20NWYscLXk0kRO4T4FPA8qn3r4sXM=;
+	b=5D1gAnpOzFQUDBJ63fx53UMHmj/Pinvy/HjB9v/V1oneL2XPt7iaxB1I7N+BFb4hFJ+WzO
+	uMSoKL7nLRlBoMDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9AF47139E2;
+	Tue, 17 Jun 2025 18:57:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id niR8Jba6UWjwOAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 17 Jun 2025 18:57:58 +0000
+Message-ID: <be9523c7-d06e-4c5a-b040-94109420cfed@suse.cz>
+Date: Tue, 17 Jun 2025 20:57:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250617005800.1410112-2-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] mm: rename call_mmap/mmap_prepare to
+ vfs_mmap/mmap_prepare
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe
+ <axboe@kernel.dk>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>,
+ Marc Dionne <marc.dionne@auristor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Amir Goldstein <amir73il@gmail.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ "Tigran A . Aivazian" <aivazian.tigran@gmail.com>,
+ Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
+ coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, Gao Xiang
+ <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+ <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
+ Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
+ Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+ Viacheslav Dubeyko <slava@dubeyko.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+ David Woodhouse <dwmw2@infradead.org>, Dave Kleikamp <shaggy@kernel.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>,
+ Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg
+ <martin@omnibond.com>, Steve French <sfrench@samba.org>,
+ Paulo Alcantara <pc@manguebit.org>,
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Bharath SM <bharathsm@microsoft.com>, Zhihao Cheng
+ <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>,
+ Carlos Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
+ Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-aio@kvack.org, linux-unionfs@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-mm@kvack.org,
+ linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org,
+ linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+ linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
+References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+ <8d389f4994fa736aa8f9172bef8533c10a9e9011.1750099179.git.lorenzo.stoakes@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <8d389f4994fa736aa8f9172bef8533c10a9e9011.1750099179.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,oracle.com:email];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,kernel.dk,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,kernel.org,ionkov.net,codewreck.org,crudebyte.com,suse.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,kvack.org,szeredi.hu,linux.dev,fb.com,toxicpanda.com,cs.cmu.edu,tyhicks.com,linux.alibaba.com,google.com,huawei.com,samsung.com,sony.com,mit.edu,dilger.ca,mail.parknet.co.jp,dubeyko.com,physik.fu-berlin.de,vivo.com,nod.at,cambridgegreys.com,sipsolutions.net,artax.karlin.mff.cuni.cz,infradead.org,paragon-software.com,fasheh.com,evilplan.org,bobcopeland.com,omnibond.com,samba.org,manguebit.org,microsoft.com,talpey.com,wdc.com,suse.de,vger.kernel.org,lists.freedesktop.org,lists.linux.dev,lists.infradead.org,coda.cs.cmu.edu,lists.ozlabs.org,lists.sourceforge.net,lists.orangefs.org,lists.samba.org];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[112];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 7590F1F7B2
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.01
 
-Hi Ian,
+On 6/16/25 21:33, Lorenzo Stoakes wrote:
+> The call_mmap() function violates the existing convention in
+> include/linux/fs.h whereby invocations of virtual file system hooks is
+> performed by functions prefixed with vfs_xxx().
+> 
+> Correct this by renaming call_mmap() to vfs_mmap(). This also avoids
+> confusion as to the fact that f_op->mmap_prepare may be invoked here.
+> 
+> Also rename __call_mmap_prepare() function to vfs_mmap_prepare() and adjust
+> to accept a file parameter, this is useful later for nested file systems.
+> 
+> Finally, fix up the VMA userland tests and ensure the mmap_prepare -> mmap
+> shim is implemented there.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-kernel test robot noticed the following build warnings:
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc2 next-20250617]
-[cannot apply to tip/timers/vdso acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> ---
+>  drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c |  2 +-
+>  fs/backing-file.c                          |  2 +-
+>  fs/coda/file.c                             |  4 +--
+>  include/linux/fs.h                         |  5 ++--
+>  ipc/shm.c                                  |  2 +-
+>  mm/internal.h                              |  2 +-
+>  mm/vma.c                                   |  2 +-
+>  tools/testing/vma/vma_internal.h           | 32 ++++++++++++++++++----
+>  8 files changed, 35 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+> index 05e440643aa2..f4f1c979d1b9 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+> @@ -105,7 +105,7 @@ static int i915_gem_dmabuf_mmap(struct dma_buf *dma_buf, struct vm_area_struct *
+>  	if (!obj->base.filp)
+>  		return -ENODEV;
+>  
+> -	ret = call_mmap(obj->base.filp, vma);
+> +	ret = vfs_mmap(obj->base.filp, vma);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/fs/backing-file.c b/fs/backing-file.c
+> index 763fbe9b72b2..04018679bf69 100644
+> --- a/fs/backing-file.c
+> +++ b/fs/backing-file.c
+> @@ -339,7 +339,7 @@ int backing_file_mmap(struct file *file, struct vm_area_struct *vma,
+>  	vma_set_file(vma, file);
+>  
+>  	old_cred = override_creds(ctx->cred);
+> -	ret = call_mmap(vma->vm_file, vma);
+> +	ret = vfs_mmap(vma->vm_file, vma);
+>  	revert_creds(old_cred);
+>  
+>  	if (ctx->accessed)
+> diff --git a/fs/coda/file.c b/fs/coda/file.c
+> index 148856a582a9..2e6ea9319b35 100644
+> --- a/fs/coda/file.c
+> +++ b/fs/coda/file.c
+> @@ -199,10 +199,10 @@ coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
+>  	spin_unlock(&cii->c_lock);
+>  
+>  	vma->vm_file = get_file(host_file);
+> -	ret = call_mmap(vma->vm_file, vma);
+> +	ret = vfs_mmap(vma->vm_file, vma);
+>  
+>  	if (ret) {
+> -		/* if call_mmap fails, our caller will put host_file so we
+> +		/* if vfs_mmap fails, our caller will put host_file so we
+>  		 * should drop the reference to the coda_file that we got.
+>  		 */
+>  		fput(coda_file);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 93ee0d2d6f1a..7120f80255b3 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2278,7 +2278,7 @@ static inline bool file_has_valid_mmap_hooks(struct file *file)
+>  
+>  int compat_vma_mmap_prepare(struct file *file, struct vm_area_struct *vma);
+>  
+> -static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
+> +static inline int vfs_mmap(struct file *file, struct vm_area_struct *vma)
+>  {
+>  	if (file->f_op->mmap_prepare)
+>  		return compat_vma_mmap_prepare(file, vma);
+> @@ -2286,8 +2286,7 @@ static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
+>  	return file->f_op->mmap(file, vma);
+>  }
+>  
+> -static inline int __call_mmap_prepare(struct file *file,
+> -		struct vm_area_desc *desc)
+> +static inline int vfs_mmap_prepare(struct file *file, struct vm_area_desc *desc)
+>  {
+>  	return file->f_op->mmap_prepare(desc);
+>  }
+> diff --git a/ipc/shm.c b/ipc/shm.c
+> index 492fcc699985..a9310b6dbbc3 100644
+> --- a/ipc/shm.c
+> +++ b/ipc/shm.c
+> @@ -602,7 +602,7 @@ static int shm_mmap(struct file *file, struct vm_area_struct *vma)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = call_mmap(sfd->file, vma);
+> +	ret = vfs_mmap(sfd->file, vma);
+>  	if (ret) {
+>  		__shm_close(sfd);
+>  		return ret;
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 3823fb356d3b..a55c88afff6d 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -165,7 +165,7 @@ static inline void *folio_raw_mapping(const struct folio *folio)
+>   */
+>  static inline int mmap_file(struct file *file, struct vm_area_struct *vma)
+>  {
+> -	int err = call_mmap(file, vma);
+> +	int err = vfs_mmap(file, vma);
+>  
+>  	if (likely(!err))
+>  		return 0;
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 5d35adadf2b5..f548bede3bbe 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -2582,7 +2582,7 @@ static int call_mmap_prepare(struct mmap_state *map)
+>  	};
+>  
+>  	/* Invoke the hook. */
+> -	err = __call_mmap_prepare(map->file, &desc);
+> +	err = vfs_mmap_prepare(map->file, &desc);
+>  	if (err)
+>  		return err;
+>  
+> diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
+> index d7fea56e3bb3..51dd122b8d50 100644
+> --- a/tools/testing/vma/vma_internal.h
+> +++ b/tools/testing/vma/vma_internal.h
+> @@ -1458,6 +1458,27 @@ static inline void free_anon_vma_name(struct vm_area_struct *vma)
+>  	(void)vma;
+>  }
+>  
+> +/* Declared in vma.h. */
+> +static inline void set_vma_from_desc(struct vm_area_struct *vma,
+> +		struct vm_area_desc *desc);
+> +
+> +static inline struct vm_area_desc *vma_to_desc(struct vm_area_struct *vma,
+> +		struct vm_area_desc *desc);
+> +
+> +static int compat_vma_mmap_prepare(struct file *file,
+> +		struct vm_area_struct *vma)
+> +{
+> +	struct vm_area_desc desc;
+> +	int err;
+> +
+> +	err = file->f_op->mmap_prepare(vma_to_desc(vma, &desc));
+> +	if (err)
+> +		return err;
+> +	set_vma_from_desc(vma, &desc);
+> +
+> +	return 0;
+> +}
+> +
+>  /* Did the driver provide valid mmap hook configuration? */
+>  static inline bool file_has_valid_mmap_hooks(struct file *file)
+>  {
+> @@ -1467,22 +1488,21 @@ static inline bool file_has_valid_mmap_hooks(struct file *file)
+>  	/* Hooks are mutually exclusive. */
+>  	if (WARN_ON_ONCE(has_mmap && has_mmap_prepare))
+>  		return false;
+> -	if (WARN_ON_ONCE(!has_mmap && !has_mmap_prepare))
+> +	if (!has_mmap && !has_mmap_prepare)
+>  		return false;
+>  
+>  	return true;
+>  }
+>  
+> -static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
+> +static inline int vfs_mmap(struct file *file, struct vm_area_struct *vma)
+>  {
+> -	if (WARN_ON_ONCE(file->f_op->mmap_prepare))
+> -		return -EINVAL;
+> +	if (file->f_op->mmap_prepare)
+> +		return compat_vma_mmap_prepare(file, vma);
+>  
+>  	return file->f_op->mmap(file, vma);
+>  }
+>  
+> -static inline int __call_mmap_prepare(struct file *file,
+> -		struct vm_area_desc *desc)
+> +static inline int vfs_mmap_prepare(struct file *file, struct vm_area_desc *desc)
+>  {
+>  	return file->f_op->mmap_prepare(desc);
+>  }
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/vdso-Switch-get-put-unaligned-from-packed-struct-to-memcpy/20250617-085916
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250617005800.1410112-2-irogers%40google.com
-patch subject: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
-config: i386-randconfig-062-20250617 (https://download.01.org/0day-ci/archive/20250618/202506180203.PSKW4lGq-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250618/202506180203.PSKW4lGq-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506180203.PSKW4lGq-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   drivers/scsi/megaraid/megaraid_sas_base.c:4656:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:4656:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:4656:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:4907:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:4907:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:4907:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:6748:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:6748:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:6748:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:4563:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:4563:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:4563:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:204:26: sparse: sparse: symbol 'megasas_mgmt_info' was not declared. Should it be static?
-   drivers/scsi/megaraid/megaraid_sas_base.c:293:31: sparse: sparse: restricted __le16 degrades to integer
-   drivers/scsi/megaraid/megaraid_sas_base.c:299:31: sparse: sparse: cast from restricted __le16
-   drivers/scsi/megaraid/megaraid_sas_base.c:425:29: sparse: sparse: cast to restricted __le32
-   drivers/scsi/megaraid/megaraid_sas_base.c:1235:32: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] opcode @@     got restricted __le32 [usertype] opcode @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:1235:32: sparse:     expected unsigned int [usertype] opcode
-   drivers/scsi/megaraid/megaraid_sas_base.c:1235:32: sparse:     got restricted __le32 [usertype] opcode
-   drivers/scsi/megaraid/megaraid_sas_base.c:2019:33: sparse: sparse: cast to restricted __le32
-   drivers/scsi/megaraid/megaraid_sas_base.c:2060:34: sparse: sparse: cast to restricted __le32
-   drivers/scsi/megaraid/megaraid_sas_base.c: note: in included file:
-   drivers/scsi/megaraid/megaraid_sas.h:2485:32: sparse: sparse: array of flexible structures
-   drivers/scsi/megaraid/megaraid_sas_base.c:4787:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:4787:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:4787:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:5027:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:5027:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:5027:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:5212:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:5212:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:5212:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:5294:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:5294:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:5294:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:6301:42: sparse: sparse: cast removes address space '__iomem' of expression
-   drivers/scsi/megaraid/megaraid_sas_base.c:6300:57: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected unsigned int [noderef] [usertype] __iomem * @@     got unsigned int [usertype] * @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:6300:57: sparse:     expected unsigned int [noderef] [usertype] __iomem *
-   drivers/scsi/megaraid/megaraid_sas_base.c:6300:57: sparse:     got unsigned int [usertype] *
-   drivers/scsi/megaraid/megaraid_sas_base.c:6305:34: sparse: sparse: cast removes address space '__iomem' of expression
-   drivers/scsi/megaraid/megaraid_sas_base.c:6304:57: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected unsigned int [noderef] [usertype] __iomem * @@     got unsigned int [usertype] * @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:6304:57: sparse:     expected unsigned int [noderef] [usertype] __iomem *
-   drivers/scsi/megaraid/megaraid_sas_base.c:6304:57: sparse:     got unsigned int [usertype] *
-   drivers/scsi/megaraid/megaraid_sas_base.c:6612:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:6612:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:6612:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:6826:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:6826:21: sparse:     expected restricted __le16 [usertype] flags
-   drivers/scsi/megaraid/megaraid_sas_base.c:6826:21: sparse:     got int
-   drivers/scsi/megaraid/megaraid_sas_base.c:7583:44: sparse: sparse: restricted __le32 degrades to integer
-   drivers/scsi/megaraid/megaraid_sas_base.c:8200:23: sparse: sparse: incorrect type in assignment (different base types) @@     expected int crash_support @@     got restricted __le32 @@
-   drivers/scsi/megaraid/megaraid_sas_base.c:8200:23: sparse:     expected int crash_support
-   drivers/scsi/megaraid/megaraid_sas_base.c:8200:23: sparse:     got restricted __le32
-   drivers/scsi/megaraid/megaraid_sas_base.c:8284:31: sparse: sparse: invalid assignment: &=
-   drivers/scsi/megaraid/megaraid_sas_base.c:8284:31: sparse:    left side has type restricted __le16
-   drivers/scsi/megaraid/megaraid_sas_base.c:8284:31: sparse:    right side has type int
->> drivers/scsi/megaraid/megaraid_sas_base.c:8438:32: sparse: sparse: Using plain integer as NULL pointer
-   drivers/scsi/megaraid/megaraid_sas_base.c:8809:46: sparse: sparse: restricted __le32 degrades to integer
-
-vim +8438 drivers/scsi/megaraid/megaraid_sas_base.c
-
-fc62b3fc902152 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8225  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8226  /**
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8227   * megasas_mgmt_fw_ioctl -	Issues management ioctls to FW
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8228   * @instance:			Adapter soft state
-2b46e5c14218c7 drivers/scsi/megaraid/megaraid_sas_base.c Damien Le Moal             2020-07-06  8229   * @user_ioc:			User's ioctl packet
-2b46e5c14218c7 drivers/scsi/megaraid/megaraid_sas_base.c Damien Le Moal             2020-07-06  8230   * @ioc:			ioctl packet
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8231   */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8232  static int
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8233  megasas_mgmt_fw_ioctl(struct megasas_instance *instance,
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8234  		      struct megasas_iocpacket __user * user_ioc,
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8235  		      struct megasas_iocpacket *ioc)
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8236  {
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8237  	struct megasas_sge64 *kern_sge64 = NULL;
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8238  	struct megasas_sge32 *kern_sge32 = NULL;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8239  	struct megasas_cmd *cmd;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8240  	void *kbuff_arr[MAX_IOCTL_SGE];
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8241  	dma_addr_t buf_handle = 0;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8242  	int error = 0, i;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8243  	void *sense = NULL;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8244  	dma_addr_t sense_handle;
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8245  	void *sense_ptr;
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8246  	u32 opcode = 0;
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8247  	int ret = DCMD_SUCCESS;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8248  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8249  	memset(kbuff_arr, 0, sizeof(kbuff_arr));
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8250  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8251  	if (ioc->sge_count > MAX_IOCTL_SGE) {
-1be1825453f6d7 drivers/scsi/megaraid/megaraid_sas_base.c Bjorn Helgaas              2015-07-07  8252  		dev_printk(KERN_DEBUG, &instance->pdev->dev, "SGE count [%d] >  max limit [%d]\n",
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8253  		       ioc->sge_count, MAX_IOCTL_SGE);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8254  		return -EINVAL;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8255  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8256  
-f870bcbe9a9912 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2018-01-05  8257  	if ((ioc->frame.hdr.cmd >= MFI_CMD_OP_COUNT) ||
-f870bcbe9a9912 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2018-01-05  8258  	    ((ioc->frame.hdr.cmd == MFI_CMD_NVME) &&
-58136856167d10 drivers/scsi/megaraid/megaraid_sas_base.c Chandrakanth Patil         2019-06-25  8259  	    !instance->support_nvme_passthru) ||
-58136856167d10 drivers/scsi/megaraid/megaraid_sas_base.c Chandrakanth Patil         2019-06-25  8260  	    ((ioc->frame.hdr.cmd == MFI_CMD_TOOLBOX) &&
-58136856167d10 drivers/scsi/megaraid/megaraid_sas_base.c Chandrakanth Patil         2019-06-25  8261  	    !instance->support_pci_lane_margining)) {
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8262  		dev_err(&instance->pdev->dev,
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8263  			"Received invalid ioctl command 0x%x\n",
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8264  			ioc->frame.hdr.cmd);
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8265  		return -ENOTSUPP;
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8266  	}
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8267  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8268  	cmd = megasas_get_cmd(instance);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8269  	if (!cmd) {
-1be1825453f6d7 drivers/scsi/megaraid/megaraid_sas_base.c Bjorn Helgaas              2015-07-07  8270  		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Failed to get a cmd packet\n");
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8271  		return -ENOMEM;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8272  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8273  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8274  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8275  	 * User's IOCTL packet has 2 frames (maximum). Copy those two
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8276  	 * frames into our cmd's frames. cmd->frame's context will get
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8277  	 * overwritten when we copy from user's frames. So set that value
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8278  	 * alone separately
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8279  	 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8280  	memcpy(cmd->frame, ioc->frame.raw, 2 * MEGAMFI_FRAME_SIZE);
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8281  	cmd->frame->hdr.context = cpu_to_le32(cmd->index);
-c35188377f12e5 drivers/scsi/megaraid/megaraid_sas.c      Yang, Bo                   2009-10-06  8282  	cmd->frame->hdr.pad_0 = 0;
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8283  
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8284  	cmd->frame->hdr.flags &= (~MFI_FRAME_IEEE);
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8285  
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8286  	if (instance->consistent_mask_64bit)
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8287  		cmd->frame->hdr.flags |= cpu_to_le16((MFI_FRAME_SGL64 |
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8288  				       MFI_FRAME_SENSE64));
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8289  	else
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8290  		cmd->frame->hdr.flags &= cpu_to_le16(~(MFI_FRAME_SGL64 |
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8291  					       MFI_FRAME_SENSE64));
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8292  
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8293  	if (cmd->frame->hdr.cmd == MFI_CMD_DCMD)
-8823abeddbbcef drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-08-23  8294  		opcode = le32_to_cpu(cmd->frame->dcmd.opcode);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8295  
-8823abeddbbcef drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-08-23  8296  	if (opcode == MR_DCMD_CTRL_SHUTDOWN) {
-7fa3174b3ef4e5 drivers/scsi/megaraid/megaraid_sas_base.c Chandrakanth Patil         2019-06-25  8297  		mutex_lock(&instance->reset_mutex);
-95c060869e6872 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-02-10  8298  		if (megasas_get_ctrl_info(instance) != DCMD_SUCCESS) {
-95c060869e6872 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-02-10  8299  			megasas_return_cmd(instance, cmd);
-7fa3174b3ef4e5 drivers/scsi/megaraid/megaraid_sas_base.c Chandrakanth Patil         2019-06-25  8300  			mutex_unlock(&instance->reset_mutex);
-95c060869e6872 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-02-10  8301  			return -1;
-95c060869e6872 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-02-10  8302  		}
-7fa3174b3ef4e5 drivers/scsi/megaraid/megaraid_sas_base.c Chandrakanth Patil         2019-06-25  8303  		mutex_unlock(&instance->reset_mutex);
-95c060869e6872 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-02-10  8304  	}
-95c060869e6872 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-02-10  8305  
-8823abeddbbcef drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-08-23  8306  	if (opcode == MR_DRIVER_SET_APP_CRASHDUMP_MODE) {
-fc62b3fc902152 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8307  		error = megasas_set_crash_dump_params_ioctl(cmd);
-fc62b3fc902152 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8308  		megasas_return_cmd(instance, cmd);
-fc62b3fc902152 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8309  		return error;
-fc62b3fc902152 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8310  	}
-fc62b3fc902152 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8311  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8312  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8313  	 * The management interface between applications and the fw uses
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8314  	 * MFI frames. E.g, RAID configuration changes, LD property changes
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8315  	 * etc are accomplishes through different kinds of MFI frames. The
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8316  	 * driver needs to care only about substituting user buffers with
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8317  	 * kernel buffers in SGLs. The location of SGL is embedded in the
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8318  	 * struct iocpacket itself.
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8319  	 */
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8320  	if (instance->consistent_mask_64bit)
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8321  		kern_sge64 = (struct megasas_sge64 *)
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8322  			((unsigned long)cmd->frame + ioc->sgl_off);
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8323  	else
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8324  		kern_sge32 = (struct megasas_sge32 *)
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8325  			((unsigned long)cmd->frame + ioc->sgl_off);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8326  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8327  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8328  	 * For each user buffer, create a mirror buffer and copy in
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8329  	 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8330  	for (i = 0; i < ioc->sge_count; i++) {
-98cb7e4413d189 drivers/scsi/megaraid/megaraid_sas_base.c Bjørn Mork                 2011-01-19  8331  		if (!ioc->sgl[i].iov_len)
-98cb7e4413d189 drivers/scsi/megaraid/megaraid_sas_base.c Bjørn Mork                 2011-01-19  8332  			continue;
-98cb7e4413d189 drivers/scsi/megaraid/megaraid_sas_base.c Bjørn Mork                 2011-01-19  8333  
-9f35fa8a14e621 drivers/scsi/megaraid/megaraid_sas.c      Sumant Patro               2007-02-14  8334  		kbuff_arr[i] = dma_alloc_coherent(&instance->pdev->dev,
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8335  						    ioc->sgl[i].iov_len,
-9f35fa8a14e621 drivers/scsi/megaraid/megaraid_sas.c      Sumant Patro               2007-02-14  8336  						    &buf_handle, GFP_KERNEL);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8337  		if (!kbuff_arr[i]) {
-1be1825453f6d7 drivers/scsi/megaraid/megaraid_sas_base.c Bjorn Helgaas              2015-07-07  8338  			dev_printk(KERN_DEBUG, &instance->pdev->dev, "Failed to alloc "
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8339  			       "kernel SGL buffer for IOCTL\n");
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8340  			error = -ENOMEM;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8341  			goto out;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8342  		}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8343  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8344  		/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8345  		 * We don't change the dma_coherent_mask, so
-60ee6529511601 drivers/scsi/megaraid/megaraid_sas_base.c Christoph Hellwig          2018-10-10  8346  		 * dma_alloc_coherent only returns 32bit addresses
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8347  		 */
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8348  		if (instance->consistent_mask_64bit) {
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8349  			kern_sge64[i].phys_addr = cpu_to_le64(buf_handle);
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8350  			kern_sge64[i].length = cpu_to_le32(ioc->sgl[i].iov_len);
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8351  		} else {
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8352  			kern_sge32[i].phys_addr = cpu_to_le32(buf_handle);
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8353  			kern_sge32[i].length = cpu_to_le32(ioc->sgl[i].iov_len);
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8354  		}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8355  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8356  		/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8357  		 * We created a kernel buffer corresponding to the
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8358  		 * user buffer. Now copy in from the user buffer
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8359  		 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8360  		if (copy_from_user(kbuff_arr[i], ioc->sgl[i].iov_base,
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8361  				   (u32) (ioc->sgl[i].iov_len))) {
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8362  			error = -EFAULT;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8363  			goto out;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8364  		}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8365  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8366  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8367  	if (ioc->sense_len) {
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8368  		/* make sure the pointer is part of the frame */
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8369  		if (ioc->sense_off >
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8370  		    (sizeof(union megasas_frame) - sizeof(__le64))) {
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8371  			error = -EINVAL;
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8372  			goto out;
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8373  		}
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8374  
-9f35fa8a14e621 drivers/scsi/megaraid/megaraid_sas.c      Sumant Patro               2007-02-14  8375  		sense = dma_alloc_coherent(&instance->pdev->dev, ioc->sense_len,
-9f35fa8a14e621 drivers/scsi/megaraid/megaraid_sas.c      Sumant Patro               2007-02-14  8376  					     &sense_handle, GFP_KERNEL);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8377  		if (!sense) {
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8378  			error = -ENOMEM;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8379  			goto out;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8380  		}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8381  
-b112036535eda3 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2021-01-05  8382  		/* always store 64 bits regardless of addressing */
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8383  		sense_ptr = (void *)cmd->frame + ioc->sense_off;
-381d34e376e3d9 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8384  		put_unaligned_le64(sense_handle, sense_ptr);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8385  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8386  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8387  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8388  	 * Set the sync_cmd flag so that the ISR knows not to complete this
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8389  	 * cmd to the SCSI mid-layer
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8390  	 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8391  	cmd->sync_cmd = 1;
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8392  
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8393  	ret = megasas_issue_blocked_cmd(instance, cmd, 0);
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8394  	switch (ret) {
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8395  	case DCMD_INIT:
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8396  	case DCMD_BUSY:
-6d40afbc7d1335 drivers/scsi/megaraid/megaraid_sas_base.c Sumit Saxena               2016-01-28  8397  		cmd->sync_cmd = 0;
-6d40afbc7d1335 drivers/scsi/megaraid/megaraid_sas_base.c Sumit Saxena               2016-01-28  8398  		dev_err(&instance->pdev->dev,
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8399  			"return -EBUSY from %s %d cmd 0x%x opcode 0x%x cmd->cmd_status_drv 0x%x\n",
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8400  			 __func__, __LINE__, cmd->frame->hdr.cmd, opcode,
-82add4e1b354f9 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8401  			 cmd->cmd_status_drv);
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8402  		error = -EBUSY;
-201a810cc188af drivers/scsi/megaraid/megaraid_sas_base.c Anand Lodnoor              2020-01-14  8403  		goto out;
-6d40afbc7d1335 drivers/scsi/megaraid/megaraid_sas_base.c Sumit Saxena               2016-01-28  8404  	}
-6d40afbc7d1335 drivers/scsi/megaraid/megaraid_sas_base.c Sumit Saxena               2016-01-28  8405  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8406  	cmd->sync_cmd = 0;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8407  
-aa00832b4ca649 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-11-17  8408  	if (instance->unload == 1) {
-aa00832b4ca649 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-11-17  8409  		dev_info(&instance->pdev->dev, "Driver unload is in progress "
-aa00832b4ca649 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-11-17  8410  			"don't submit data to application\n");
-aa00832b4ca649 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-11-17  8411  		goto out;
-aa00832b4ca649 drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-11-17  8412  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8413  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8414  	 * copy out the kernel buffers to user buffers
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8415  	 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8416  	for (i = 0; i < ioc->sge_count; i++) {
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8417  		if (copy_to_user(ioc->sgl[i].iov_base, kbuff_arr[i],
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8418  				 ioc->sgl[i].iov_len)) {
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8419  			error = -EFAULT;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8420  			goto out;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8421  		}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8422  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8423  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8424  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8425  	 * copy out the sense
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8426  	 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8427  	if (ioc->sense_len) {
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8428  		void __user *uptr;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8429  		/*
-b70a41e077b340 drivers/scsi/megaraid/megaraid_sas.c      bo yang                    2008-03-18  8430  		 * sense_ptr points to the location that has the user
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8431  		 * sense buffer address
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8432  		 */
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8433  		sense_ptr = (void *)ioc->frame.raw + ioc->sense_off;
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8434  		if (in_compat_syscall())
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8435  			uptr = compat_ptr(get_unaligned((compat_uptr_t *)
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8436  							sense_ptr));
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8437  		else
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30 @8438  			uptr = get_unaligned((void __user **)sense_ptr);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8439  
-bba84aeccafb57 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2020-10-30  8440  		if (copy_to_user(uptr, sense, ioc->sense_len)) {
-1be1825453f6d7 drivers/scsi/megaraid/megaraid_sas_base.c Bjorn Helgaas              2015-07-07  8441  			dev_err(&instance->pdev->dev, "Failed to copy out to user "
-b10c36a57552f0 drivers/scsi/megaraid/megaraid_sas.c      bo yang                    2007-11-09  8442  					"sense data\n");
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8443  			error = -EFAULT;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8444  			goto out;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8445  		}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8446  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8447  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8448  	/*
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8449  	 * copy the status codes returned by the fw
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8450  	 */
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8451  	if (copy_to_user(&user_ioc->frame.hdr.cmd_status,
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8452  			 &cmd->frame->hdr.cmd_status, sizeof(u8))) {
-1be1825453f6d7 drivers/scsi/megaraid/megaraid_sas_base.c Bjorn Helgaas              2015-07-07  8453  		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error copying out cmd_status\n");
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8454  		error = -EFAULT;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8455  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8456  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8457  out:
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8458  	if (sense) {
-9f35fa8a14e621 drivers/scsi/megaraid/megaraid_sas.c      Sumant Patro               2007-02-14  8459  		dma_free_coherent(&instance->pdev->dev, ioc->sense_len,
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8460  				    sense, sense_handle);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8461  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8462  
-7a6a731bd00ca9 drivers/scsi/megaraid/megaraid_sas_base.c Bjørn Mork                 2012-11-21  8463  	for (i = 0; i < ioc->sge_count; i++) {
-3deb9438d34a09 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2016-03-14  8464  		if (kbuff_arr[i]) {
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8465  			if (instance->consistent_mask_64bit)
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8466  				dma_free_coherent(&instance->pdev->dev,
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8467  					le32_to_cpu(kern_sge64[i].length),
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8468  					kbuff_arr[i],
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8469  					le64_to_cpu(kern_sge64[i].phys_addr));
-107a60dd71b5f5 drivers/scsi/megaraid/megaraid_sas_base.c Shivasharan S              2017-10-19  8470  			else
-9f35fa8a14e621 drivers/scsi/megaraid/megaraid_sas.c      Sumant Patro               2007-02-14  8471  				dma_free_coherent(&instance->pdev->dev,
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8472  					le32_to_cpu(kern_sge32[i].length),
-7a6a731bd00ca9 drivers/scsi/megaraid/megaraid_sas_base.c Bjørn Mork                 2012-11-21  8473  					kbuff_arr[i],
-94cd65ddf4d70b drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@lsi.com       2013-09-06  8474  					le32_to_cpu(kern_sge32[i].phys_addr));
-90dc9d98f01bdf drivers/scsi/megaraid/megaraid_sas_base.c Sumit.Saxena@avagotech.com 2014-09-12  8475  			kbuff_arr[i] = NULL;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8476  		}
-3deb9438d34a09 drivers/scsi/megaraid/megaraid_sas_base.c Arnd Bergmann              2016-03-14  8477  	}
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8478  
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8479  	megasas_return_cmd(instance, cmd);
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8480  	return error;
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8481  }
-c4a3e0a529ab3e drivers/scsi/megaraid/megaraid_sas.c      Bagalkote, Sreenivas       2005-09-20  8482  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
