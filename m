@@ -1,138 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AC028ECCD;
-	Tue, 17 Jun 2025 07:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E2F288CAC
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147151; cv=none; b=nzpRFkFMYZeWjba0C+U4Z6ghAmg6I3+O5CV9E/IwckRdRoQBIA8Sit6QF8uYgfbty+FUoGhVMM/8cCxQFP3Nqc96Ja/V4QaRJgCWtheMuqTp+FttPXept50jd4G35EjqNpzkFw5mKvqeyPFkYhGicPkXT3ZJrmAlv/fJkgAqL6Y=
+	t=1750147205; cv=none; b=uhawo3ffgL/oRgSBTn0fxh8cHSfJyKqnIg3uL3ye+oq/4SKBGR7taDAB5zpgIHLXqHZQlvZpbL1SBOKBCCkntkwTsXdJbINXrngUn72y4847D6DbI3fLN8utGo8b2TpUm9cGvPJzwpTA7B8T57KNT6hcQjON95S1JShayJbSfdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147151; c=relaxed/simple;
-	bh=NIgJ6S2IMm67sNgLluaxm/t93R9SpN5EK5tTKzscYko=;
+	s=arc-20240116; t=1750147205; c=relaxed/simple;
+	bh=UbMrgrxGSnG5QmILlu9vBgJIYjFRInQ4JmymSgsLo2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rg8UqNTLUtGw/5zPkUs1SpKD2yxfxptljTPMIbHfOgIUbBzA1fj9ASL6FfJCkH6m9EtZ5o71AeT1Bbn8b9ecoV5Qa9keC+5QdC19TTKDdqC+hKVgZj0sMFhnmGwwdkl6ryuyUx56+8NpSfL1EfAF1yylnBVCSwqAvnu02gPaQVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=riuj8blw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3dlU8pnc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyqOeKIYSYRC5LvVD2lluVDXHtaaTFT+4lfTo9fG8Ui0ABLh+f9s000CdSyQq0z72JJUlf7p0IQcx23rs7bdW6HEscu2PKs+it1S347/RaZMaEg6jguQMLFPzDcYym7NiSrvSKjLODw6sU367MRFH4A99OQOzIm8+qI5x8mHL44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WclTdQBf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="riuj8blw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3dlU8pnc"
-Date: Tue, 17 Jun 2025 09:59:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750147148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hj2LJB5Pz+vjWi8da/Iv2JkklxNhs1V6axP5pIrqxJM=;
-	b=riuj8blwvDOsP6wUDdP3Ci9HXHbVoAlg32Weak2qNVuiCsD1ol6m/pAdmc6Wz+nOKmmqKg
-	3IeYSlbgY2321vJgf0z88CN2TJeN2qF5hfUcRL4jBlVM2dUs3HE7qD16NAvAmHP/2Q0Tiu
-	Bv4zf2GgxWNfyv3tMCpI3wG2QM2gYLo0w2MiidaFYgj1M6iVe1g6wxrJ1VTkOJvr9Jf1rH
-	cXvYeuXURM43LbebVBKLsOIftA5ESr5OIcgKGY3NSdHi38sICPCCjfkEXkqUUNYg//cVI+
-	+91Qelw5eKrsAUCwxPXvtbH9iLIk+rBeQm+lUtOKp6N02yrLbZppHMyNUJ3vEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750147148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hj2LJB5Pz+vjWi8da/Iv2JkklxNhs1V6axP5pIrqxJM=;
-	b=3dlU8pncy0paXbKmJi5ztkGhzw3FggNzV5ZHCn4tYoW6SfRQ/nfHyS2G+ZITRQ05Cj+PIu
-	F15f2+z9rzshWKDQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, workflows@vger.kernel.org
-Subject: Re: [PATCH v3 04/16] kbuild: userprogs: add nolibc support
-Message-ID: <20250617095102-d3df1c46-3d51-4f77-af0a-8299f5e71ad9@linutronix.de>
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
- <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
- <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WclTdQBf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1530C4CEE3;
+	Tue, 17 Jun 2025 08:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750147205;
+	bh=UbMrgrxGSnG5QmILlu9vBgJIYjFRInQ4JmymSgsLo2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WclTdQBfOSaaufAvyHlWwcjStHDYL4M9cpu5/5VMtFa+5cTFiTiqa4KjssJXInsOt
+	 otcWW9J1+eWGaFlxjuLtmPzEprLNAX2vGyg584/eMoHpwxWp4ipxZ/p2WQKOrMngz/
+	 NOy5Ow1vOAKi7zk4cYSJQd3Sz7izNLe/SHmsAOO65OgsMvUUYFvvF9aeY1or9msxhO
+	 QMItb3spCa4PhopjX94f0Qkts6xygeBweWT/Mvyfc5WcgbbaMEANcMr92rUzX0FkW6
+	 SR1Xnyea2W0tkBRJ+/bdSKfXhl+284HQFYJ6DJgPSzjhiYUyKurjad5/9n8QHBeR/Q
+	 bAthUrajeXs8w==
+Date: Tue, 17 Jun 2025 10:00:01 +0200
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, 
+	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: [PATCH] bus: moxtet: Use dev_fwnode()
+Message-ID: <32qyokqqrdauwzjph45cga2ypqwn4i6aa3yiusasq6syxwhxlr@e2n7zb6rip2d>
+References: <20250611104348.192092-1-jirislaby@kernel.org>
+ <20250611104348.192092-3-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
+In-Reply-To: <20250611104348.192092-3-jirislaby@kernel.org>
 
-On Tue, Jun 17, 2025 at 12:35:07AM +0900, Masahiro Yamada wrote:
-> On Wed, Jun 11, 2025 at 4:38â€¯PM Thomas WeiÃŸschuh
-> <thomas.weissschuh@linutronix.de> wrote:
-> >
-> > Userprogs are built with the regular kernel compiler $CC.
-> > A kernel compiler does not necessarily contain a libc which is required
-> > for a normal userspace application.
-> > However the kernel tree does contain a minimal libc implementation
-> > "nolibc" which can be used to build userspace applications.
-> >
-> > Introduce support to build userprogs against nolibc instead of the
-> > default libc of the compiler, which may not exist.
-> >
-> > Signed-off-by: Thomas WeiÃŸschuh <thomas.weissschuh@linutronix.de>
-> >
-> > ---
-> > This could probably be moved out of the generic kbuild makefiles.
-> > I think the ergonimics would suffer and this functionality could be
-> > used by other users of userprogs.
-> >
-> > Also this does currently not support out-of-tree builds.
-> > For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-> > installed into the build directory.
+Reviewed-by: Marek Behún <kabel@kernel.org>
 
-<snip>
-
-> > --- a/scripts/Makefile.userprogs
-> > +++ b/scripts/Makefile.userprogs
-> > @@ -16,10 +16,17 @@ user-csingle        := $(addprefix $(obj)/, $(user-csingle))
-> >  user-cmulti    := $(addprefix $(obj)/, $(user-cmulti))
-> >  user-cobjs     := $(addprefix $(obj)/, $(user-cobjs))
-> >
-> > +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
-> > +                     -ffreestanding -fno-stack-protector \
-> > +                     -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
+On Wed, Jun 11, 2025 at 12:43:31PM +0200, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
 > 
-> The tools/ directory is a different world, and Kbuild scripts do not know
-> anything about it.
-
-Ack.
-
-How does this statement affect the next patch which creates
-tools/include/nolibc/Kconfig.nolibc ?
-Is it fine to create the Kconfig file in tools/ or should I move it?
-I do want to maintain this file as part of nolibc and not KUnit.
-The possibilities I see are init/Kconfig.nolibc or lib/Kconfig.nolibc.
-
-> And, you do not need to implement this in scripts/Makefile.userprogs
-> because you can move this to lib/kunit/Makefile.kunit-uapi or somewhere.
-
-Understood. This is not unexpected, as hinted in the commit message.
-
-> > +user_nolibc_ldflags := -nostdlib -nostdinc -static
-> > +
-> >  user_ccflags   = -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
-> > -                       $($(target-stem)-userccflags)
-> > -user_ldflags   = $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
-> > -user_ldlibs    = $(userldlibs) $($(target-stem)-userldlibs)
-> > +                       $($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
-> > +user_ldflags   = $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
-> > +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
-> > +user_ldlibs    = $(userldlibs) $($(target-stem)-userldlibs) \
-> > +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
-> >
-> >  # Create an executable from a single .c file
-> >  quiet_cmd_user_cc_c = CC [U]  $@
-
-
-Thomas
+> So use the dev_fwnode() helper.
+> 
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: "Marek Behún" <kabel@kernel.org>
+> ---
+>  drivers/bus/moxtet.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
+> index 6c3e5c5dae10..7ce61d629a87 100644
+> --- a/drivers/bus/moxtet.c
+> +++ b/drivers/bus/moxtet.c
+> @@ -737,8 +737,7 @@ static int moxtet_irq_setup(struct moxtet *moxtet)
+>  {
+>  	int i, ret;
+>  
+> -	moxtet->irq.domain = irq_domain_create_simple(of_fwnode_handle(moxtet->dev->of_node),
+> -						      MOXTET_NIRQS, 0,
+> +	moxtet->irq.domain = irq_domain_create_simple(dev_fwnode(moxtet->dev), MOXTET_NIRQS, 0,
+>  						      &moxtet_irq_domain, moxtet);
+>  	if (moxtet->irq.domain == NULL) {
+>  		dev_err(moxtet->dev, "Could not add IRQ domain\n");
+> -- 
+> 2.49.0
+> 
