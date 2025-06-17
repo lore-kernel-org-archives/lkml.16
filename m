@@ -1,80 +1,75 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B928F54;
-	Tue, 17 Jun 2025 03:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7682BEFF1;
+	Tue, 17 Jun 2025 03:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750131774; cv=none; b=M9j1LsgyAnOfUHKSN/uuXRLoOU5ysx25roM43omsMJl0+GXo8P37qa5RfAqeaFgCfz83TutycfcS9yTbcVJp21TWsC3NE0XO9tO1aOv3Hs0DchxceNWZKKQfeHRchxDXZTShHPM4FTHVzPbi8MztiYKIIUglpLKje5hoPWDDwzU=
+	t=1750131831; cv=none; b=fJPinA7IwjEhmlGWMcOXPHVH52yMhJjufgu9jVn9GnSwNOz9nL5tvkEuwh+3QZOTr6H+G9MZDXnW66KI3ZvaMIwDI53GShyaD1qIa1UpxMJnUUXjmn6ZdmyUqrJwkIqrs+lBxVKDrAC+cOGz/grwKiAAm8fF0FM1IIu5yzbUxZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750131774; c=relaxed/simple;
-	bh=WqqMW+qsiOfAWMlck+pU6E3joWu1LWgnjALA2SeRfBM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kqm6n4tN1duduwWdjOOZHv/Gt5nek4pjzP8TR3E5Je7fTkZx9CEM9EWdUxPH3uGyoaxgYWjZmx8JcxLl0WhmajqKKnYHhntC9xAa1zUWqrJpP2IE2b4ZyeGlZ0ZsP2GuzaebcVK87l3dlr5Vw68+t8kbqo9bPgaW6A1jg52nizc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ar8hT+LR; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750131831; c=relaxed/simple;
+	bh=IVM+SBWwe+LMKFMWidQm7buxQDhFKeBN3mUZ21V7TPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPeTMlc7zpaTKuY5l9Inp49VRZV2YAt4Mtz0qZDAbjUSYg1/izB/4DsRT5psvw9qCsaDpC3FRoTaVbmzDbFo9TkkDmVDtqiOorT+Zt9DvKnVcj68BG8aNjG6pdOGFPlivxg2qW1lCmZsiE6sF3ynkNOvicoKExnfrskIvVaIo0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAcrH6Xb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ar8hT+LR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=xNzm8JTZrL0Z+qIuK4t25ph3zxJy8ovZdHxX/XhkomY=; b=ar8hT+LRFuEQwMuvFTpHjF8sTS
-	OSj7wPZtHc7grShSNi7S3IAWCTHVLBWiOqnSlV122P0nDOby+uB2IzKxJBpJacdO8rNMv6vVwFByC
-	LDHJ5RKiIoVU37aElKs/8Qwf1LT2FBKlhej8s9K/AjmmtE4g/iGxGzmGSsIwgNd/zzjPNIfYZBpoG
-	rRyCqdLzBeH4veiwvaXkUfKVyupJdGg326kCN/MbkG74xQsLoy4+HGnu+AUUar9fq5O8z1llJxCqx
-	ohN1tPZ7g9Pvx0O1ATmKZ93olz0p+bcqGROPXIsGExSniidGgmM2z8iWxJmo3kewOjQq6OIHaFBpa
-	fVkLok+w==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRNDm-000000067FP-24iY;
-	Tue, 17 Jun 2025 03:42:50 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Melody Olvera <melody.olvera@oss.qualcomm.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH] phy: qcom: add linux/bitfield.h header to fix a build error
-Date: Mon, 16 Jun 2025 20:42:49 -0700
-Message-ID: <20250617034249.2067135-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAcrH6Xb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FBD3C4CEEA;
+	Tue, 17 Jun 2025 03:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750131831;
+	bh=IVM+SBWwe+LMKFMWidQm7buxQDhFKeBN3mUZ21V7TPI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JAcrH6XbiAwgi+V5HDUMIjbGBiQoZGczC2WI3Q6KOTaKlAMEd48zKG0fEeIUPmLyi
+	 a7AzEBlj7k9gJaW3HgAlzzhCpT1UcfYr+wrM6HOmgAPB0KKkm4R5ioKZckwcQBTE0H
+	 qeFqgTIFzK5t6/b260r6yViE8AzxSV+8ytzyGzRCVcUIsxC4x88fo6T84WFKktE9h9
+	 ImIVeKg5goPrcFuOvOlachVs3piFEwFDU8oxEh8COOa7PwvXV34wysv+QCIPzeQJp7
+	 Yizf+HBuxBCSgCcN8+gFY+OTYStn2l7Gy8OEiyMc7IH4kdtDtO9eFVnHSyIWFmsI4G
+	 B41fu0bpo89MA==
+Date: Mon, 16 Jun 2025 20:43:21 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] PCI/PTM: Build debugfs code only if CONFIG_DEBUG_FS is
+ enabled
+Message-ID: <20250617034321.GF8289@sol>
+References: <20250608033305.15214-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250608033305.15214-1-manivannan.sadhasivam@linaro.org>
 
-Add the <linux/bitfield.h> header to prevent a build error:
+On Sun, Jun 08, 2025 at 09:03:05AM +0530, Manivannan Sadhasivam wrote:
+> Otherwise, the following build error will happen for CONFIG_DEBUG_FS=n &&
+> CONFIG_PCIE_PTM=y.
+> 
+>     drivers/pci/pcie/ptm.c:498:25: error: redefinition of 'pcie_ptm_create_debugfs'
+>       498 | struct pci_ptm_debugfs *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
+>           |                         ^
+>     ./include/linux/pci.h:1915:2: note: previous definition is here
+>      1915 | *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
+>           |  ^
+>     drivers/pci/pcie/ptm.c:546:6: error: redefinition of 'pcie_ptm_destroy_debugfs'
+>       546 | void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
+>           |      ^
+>     ./include/linux/pci.h:1918:1: note: previous definition is here
+>      1918 | pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs) { }
+>           |
+> 
+> Fixes: 132833405e61 ("PCI: Add debugfs support for exposing PTM context")
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/20250607025506.GA16607@sol
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/pcie/ptm.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-drivers/phy/qualcomm/phy-qcom-m31-eusb2.c: In function 'm31eusb2_phy_init':
-drivers/phy/qualcomm/phy-qcom-m31-eusb2.c:210:37: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
-  210 |                                     FIELD_PREP(FSEL, data->fsel));
+This is still broken in mainline.  Bjorn, can you apply this?
 
-Fixes: 9c8504861cc4 ("phy: qcom: Add M31 based eUSB2 PHY driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Wesley Cheng <quic_wcheng@quicinc.com>
-Cc: Melody Olvera <melody.olvera@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-phy@lists.infradead.org
-Cc: linux-arm-msm@vger.kernel.org
----
- drivers/phy/qualcomm/phy-qcom-m31-eusb2.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20250616.orig/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
-+++ linux-next-20250616/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/err.h>
+- Eric
