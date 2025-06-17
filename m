@@ -1,125 +1,105 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC902F532C;
-	Tue, 17 Jun 2025 23:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21C12F532C;
+	Tue, 17 Jun 2025 23:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750201766; cv=none; b=cdbSi5j1eF6SxdgCKDSO0iEAKCG9kaJfdOxzqqNJLJmzZdvWW+ZH3m8l4R/i73L3qt1xG94Zcd0Q+Y7KXua4h4b7aQKILfwKutBKbMhBWNSCafSGHg2ObOUeXDDlcrd3pZ0eiYSdutR3VTmLFgJXwIXEJpWbbFWUEqc1zetJzK0=
+	t=1750201794; cv=none; b=qpAMJI+SVHGhxKQSN3xGh3R5MlkwwqIMYLeLUMmtGpO7ISoFYIGYa/fye03H09P595bMf6FejA+zKZu6jWq13no/lKd88BJixydRV3z4T5A/IwzTHe+l3aoru7wQ1/uat2g6/zBk596TF5M1RE52QsWM0FAqCcoZtHtQRGspgBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750201766; c=relaxed/simple;
-	bh=/lPytD/D3cajYO2gj+Ujkh1JW+PnI0w/YfVrlYEE3xs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTL41IcYOOW8TTjmNBjaQrmt14xBKLT2K2iRRIWf9G80atdB0tHquCn0zas4oOZ4csCO/f+pLsx7yteyTU3nManRXjOTvXS/fX8p19C91Q9ICuZPxyuW4m7VnC9L5E4G7j9AIx/gwhbPM5lRgPs1LScsA/jMheXjB0K5xsIife8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=T+qboT5M; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750201794; c=relaxed/simple;
+	bh=4mlsD4R+YlfaDZH1rr1OERln+xr4wTttNjF3y5BbMSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gCMiQGSD5vBc+jYuZM9Z5za4pj8Uf2ilI3lb1NWSZ8f8U7Wb6NKOTtlDmLI7Ewoeiy0ej9oXQHRkPydIGNGRWn4JRUIlZVVg4txC8er6X3DLltZPfcDf57SI0x9OQWWYWENj8ty27eV++VtalFjvXjOrk/ilCUWGVuJlQ6t4GEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnUCvvON; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="T+qboT5M"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55HN8qJe1308572
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 17 Jun 2025 16:08:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55HN8qJe1308572
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750201734;
-	bh=YFyQUnHfC6MCqPgzwbmXxqWCFr4/Lqi2i8XL/zaI6KI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T+qboT5Mm9+r4r6CX9urHDGSfRrgCyY13NjxBRW8AloQZXbgK94N8a8j0KvDZeuoR
-	 +byWoUgBwm4krVeFyV8A1OY7L1LkobNd8HhkpoRH8A/bJZC9myLgnTdJQ9YpfwaCkm
-	 rQBjLAqszcaqoxo3tpg8SAUMZ4cCcaZR+hw+e5wGyXYHbOm7t8THHNZPxm9i+SkJw4
-	 CIJf3EaZnD9QQMAKFXucDszCx2HzeV+NRSBd+Z4+/uSHcExdmOC25sygICCJeTlUsb
-	 uKsS98X3xMOJHqXQm7F4bIO+rWuFDPl4a/GAtjCRbeOIig1S7MA3ee9NgCJcD0AF0K
-	 DEsErzH8hkJBg==
-Message-ID: <9720c605-c542-4969-b7f0-b4477bc2ab1e@zytor.com>
-Date: Tue, 17 Jun 2025 16:08:51 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnUCvvON"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-606fdbd20afso12661160a12.1;
+        Tue, 17 Jun 2025 16:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750201791; x=1750806591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ijuXcN+9xKfs803mnDn4fM0Qa1boQaJPIZqmUO1kH4=;
+        b=dnUCvvONEzt3JkMHSc6LZc+TNht/wLYp/5f4dKRnI/UcRta+IhSa59oSugnDLk5Lba
+         ozzDZnegJTHewnHDISTxkrwxwVSskjH4v/Y6MLBk+glz9sATHr6iGHbwAoDKjuMCTDLl
+         Q7sBgetTuM4zZuMH7SSdrFbPlFkEeABYEPp5eUMzdUz6jTCdkK8hZoeyj7H4oRb0y822
+         d2Dlp94BHuAdkRnnex24xnen+QVGpDTtGgqzX3EZ9yfNAMr9kvFLpPHxphI/106PwoUs
+         Y1cdA/U1pckkBN3kD6089mf2Crn20Lc7cLACgEKLelyGNLwOuYTPkBjiquDFHBrg15Z1
+         gnYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750201791; x=1750806591;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2ijuXcN+9xKfs803mnDn4fM0Qa1boQaJPIZqmUO1kH4=;
+        b=bZOPXtV9THyLGO2agH/uoY4n1mjm+4iGuBiHLMgwbWdvuVpHEeTC1hYmTipIGlV5oY
+         h3eghjzzhHZeiBLVHQnijWxNzEpkocGq52qcnV5pc4ZZXuFJA7HPPvYmz6LYxaFtcaki
+         10nhFIf0p7KTbV7Eb0hqb+z0dlbjAvlPcyzJ1OA6Btdh7snFYFeUNI957/nEZQD2kUaM
+         n7lseO89x1/sTqRlLCy8cIEJGDNb4/f2TdO31g9UU/eOleh9hqMVYQmQ9p5VXjfJrEkg
+         I3glOufcA3b1l8FW3eGeahr5enj4vOeOD27C2ScqU2LZ8MERXwNaxdJNGSoA2EuzpnXa
+         a/gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6ehxan46ElCWwQvROycbgIpFwMV6azpe9CH2tc9UyYQftafQTIczfTW+RrH4tnK6JQimn1S02ipdlVboc@vger.kernel.org, AJvYcCX65phqRlccDlH/qIIwBX7JHLu1iYsnDsv1mWU+fO7Y32FicczLabqOE5T/KdkGy0r1J3tUNz2dmhnKdypP@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiQ1jHM1ULRdsS6WFg2O1VArsB/mn8gcLc7GRd6ZnVPnZQgUDC
+	XFzQh5B2tPo8QytCqbMWc6q7aMXb8JbkHgF2DHpZx0YQxB/0r1zdp/vK
+X-Gm-Gg: ASbGncvOSfJS/qskrF9Y7eWWH7hQTRJRtmQdbWk4g7c0bUopZnauaEE2iLRm5zXjt9H
+	TTb7DhfkeI36cWSOu8olEdpYdBk6egH3PX5Dkq+ttpGTetsTu4nbPb/IXXoI4AnGGTzK16ZG/Oh
+	/CC0YMoIICIDlc0ShqsF50r3cjLld5Dn3kn7u+3kuhOJoBIfDEa7jQGwRJCICqQLkqdYjPjC+0I
+	6T7gZ0AQYqPCZOCrUj1Pf213nXwCHtHz3O2Gn91hMGAbLTXGWeAajAExHHOpCYFbNvKmQl9rpFW
+	NDYAVCHfKw2TdejUfk+pVNePoSyNVtddvon30U95somOT66/FVmRzB/EVSLhoEqMwrczdF8O5Fo
+	o4ZTSdt2co8i4Plz2wg==
+X-Google-Smtp-Source: AGHT+IEkWNe5n2i3tNvju+E4XDIP5jku/6cLDxMf7MZin5vvhN+GTV/ap3DVtiwvf//9mQ+V/3xFog==
+X-Received: by 2002:a05:6402:5186:b0:608:64ff:c9b5 with SMTP id 4fb4d7f45d1cf-608d08b4922mr13425767a12.8.1750201790977;
+        Tue, 17 Jun 2025 16:09:50 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:3035:ee0:8caf:dee0:4ae2:6dd4:be2c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608f8e20459sm6216126a12.37.2025.06.17.16.09.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 16:09:50 -0700 (PDT)
+From: RubenKelevra <rubenkelevra@gmail.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org
+Cc: jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	RubenKelevra <rubenkelevra@gmail.com>
+Subject: [PATCH] fs_context: fix parameter name in infofc() macro
+Date: Wed, 18 Jun 2025 01:09:27 +0200
+Message-ID: <20250617230927.1790401-1-rubenkelevra@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] x86/traps: Initialize DR7 by writing its
- architectural reset value
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-        peterz@infradead.org, sohil.mehta@intel.com, brgerst@gmail.com,
-        tony.luck@intel.com, fenghuay@nvidia.com
-References: <20250617073234.1020644-1-xin@zytor.com>
- <20250617073234.1020644-3-xin@zytor.com> <aFFvECpO3lBCjo1l@google.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aFFvECpO3lBCjo1l@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/17/2025 6:35 AM, Sean Christopherson wrote:
-> On Tue, Jun 17, 2025, Xin Li (Intel) wrote:
->> Initialize DR7 by writing its architectural reset value to ensure
->> compliance with the specification.
-> 
-> I wouldn't describe this as a "compliance with the specificiation" issue.  To me,
-> that implies that clearing bit 10 would somehow be in violation of the SDM, and
-> that's simply not true.  MOV DR7 won't #GP, the CPU (hopefully) won't catch fire,
-> etc.
-> 
-> The real motiviation is similar to the DR6 fix: if the architecture changes and
-> the bit is no longer reserved, at which point clearing it could actually have
-> meaning.  Something like this?
-> 
->    Always set bit 10, which is reserved to '1', when "clearing" DR7 so as not
->    to trigger unanticipated behavior if said bit is ever unreserved, e.g. as
->    a feature enabling flag with inverted polarity.
+The macro takes a parameter called "p" but references "fc" internally.
+This happens to compile as long as callers pass a variable named fc,
+but breaks otherwise. Rename the first parameter to “fc” to match the
+usage and to be consistent with warnfc() / errorfc().
 
-I will use your description.
+Fixes: a3ff937b33d9 ("prefix-handling analogues of errorf() and friends")
+Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
+---
+ include/linux/fs_context.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I hope the bit will be kept reserved to 1 *forever*, because inverted
-polarity seems causing confusing and complicated code only.
-
-> 
-> With a tweaked changelog,
-> 
-> Acked-by: Sean Christopherson <seanjc@google.com>
-
-Thanks!
-     Xin
-
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index a19e4bd32e4d..7773eb870039 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -200,7 +200,7 @@ void logfc(struct fc_log *log, const char *prefix, char level, const char *fmt,
+  */
+ #define infof(fc, fmt, ...) __logfc(fc, 'i', fmt, ## __VA_ARGS__)
+ #define info_plog(p, fmt, ...) __plog(p, 'i', fmt, ## __VA_ARGS__)
+-#define infofc(p, fmt, ...) __plog((&(fc)->log), 'i', fmt, ## __VA_ARGS__)
++#define infofc(fc, fmt, ...) __plog((&(fc)->log), 'i', fmt, ## __VA_ARGS__)
+ 
+ /**
+  * warnf - Store supplementary warning message
+-- 
+2.49.0
 
